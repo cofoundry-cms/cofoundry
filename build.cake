@@ -4,7 +4,7 @@
 
 var target = Argument("target", "Default");
 var configuration = Argument("configuration", "Release");
-var pushPackages = Convert.ToBoolean(Argument("PushPackages", "false"));
+var pushPackages = Argument("PushPackages", "false") == "true";
 var build = Convert.ToInt32(EnvironmentVariable("APPVEYOR_BUILD_VERSION") ?? "0");
 var semVersion = "0.1.0";
 var assemblyVersion = semVersion + "." + build;
@@ -98,10 +98,12 @@ Task("PushNuGetPackage")
     .IsDependentOn("Pack")
     .Does(() =>
 {
-    var nugets = GetFiles("../build/artifacts/*.nupkg");
-
+    var nugets = GetFiles("./artifacts/*.nupkg");
+    
     if (pushPackages)
     {
+        Information("Pushing packages");
+        
         NuGetPush(nugets, new NuGetPushSettings {
             Source = "https://nuget.org/",
             ApiKey = EnvironmentVariable("NUGET_API_KEY")
