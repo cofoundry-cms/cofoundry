@@ -1,4 +1,4 @@
-version: 1.0.{build}
+version: {build}
 image: Visual Studio 2015
 branches:
   only:
@@ -8,5 +8,5 @@ environment:
   NUGET_API_KEY:
     secure: ZipOsavSURgYiPIWD01xFd9ug5f8/qaNNsHRwuPsqlSFrr6adAwd4yG4qgDQ6jOC
 build_script:
-- cmd: PowerShell -Version 2.0 .\build.ps1
+- cmd: PowerShell -Version 2.0 .\build.ps1 -PushPackages true
 test: off
