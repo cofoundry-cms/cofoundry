@@ -1,0 +1,43 @@
+﻿<cms-page-header cms-title="Upload"
+                 cms-parent-title="Documents"></cms-page-header>
+
+<cms-form cms-name="mainForm" ng-submit="vm.save()">
+
+    <!-- Default toolbar -->
+    <cms-page-actions>
+
+        <cms-button-submit class="main-cta" cms-text="Save" ng-disabled="vm.mainForm.$invalid || vm.saveLoadState.isLoading"></cms-button-submit>
+        <cms-button cms-text="Cancel" ng-click="vm.cancel()"></cms-button>
+
+    </cms-page-actions>
+
+    <cms-page-body cms-content-type="form">
+
+        <cms-form-status></cms-form-status>
+
+        <!--Page URL-->
+        <cms-form-section cms-title="Document details">
+
+            <cms-form-field-document-upload cms-title="File"
+                                            cms-model="vm.command.file"
+                                            cms-load-state="vm.saveLoadState"
+                                            cms-change="vm.onFileChanged()"
+                                            ng-required="true"></cms-form-field-document-upload>
+
+            <cms-form-field-text cms-title="Title"
+                                 cms-model="vm.command.title"
+                                 cms-description="A short descriptive title e.g. 'Today's Menu' or 'Directions to our office'."
+                                 max-length="100"
+                                 required></cms-form-field-text>
+
+            <cms-form-field-text-area cms-title="Description"
+                                      cms-model="vm.command.description"></cms-form-field-text-area>
+
+            <cms-form-field-tags cms-title="CMS Tags"
+                                 cms-model="vm.command.tags"></cms-form-field-tags>
+
+        </cms-form-section>
+
+    </cms-page-body>
+
+</cms-form>

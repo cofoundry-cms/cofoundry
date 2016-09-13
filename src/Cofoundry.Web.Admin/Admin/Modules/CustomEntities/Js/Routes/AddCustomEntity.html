@@ -1,0 +1,61 @@
+﻿<cms-page-header cms-title="Create"
+                 cms-parent-title="{{::vm.options.name}}"></cms-page-header>
+
+<cms-form cms-name="mainForm"
+          ng-submit="vm.save()"
+          cms-loading="vm.formLoadState.isLoading">
+
+    <cms-page-actions>
+
+        <cms-button-submit cms-text="Save Draft"
+                           cms-loading="vm.saveLoadState.isLoading"
+                           ng-if="::!vm.options.autoPublish"
+                           ng-disabled="vm.mainForm.$invalid"></cms-button-submit>
+
+        <cms-button cms-text="{{::vm.saveButtonText}}"
+                    cms-loading="vm.saveAndPublishLoadState.isLoading"
+                    ng-disabled="vm.mainForm.$invalid"
+                    ng-click="vm.saveAndPublish()"></cms-button>
+
+        <cms-button cms-text="Cancel"
+                    ng-click="vm.cancel()"></cms-button>
+
+    </cms-page-actions>
+
+    <cms-page-body cms-content-type="form">
+
+        <cms-form-status></cms-form-status>
+
+        <!--Main-->
+        <cms-form-section cms-title="Main">
+
+            <cms-form-field-locale-selector cms-model="vm.command.localeId"
+                                            cms-on-loaded="vm.onLocalesLoaded()" 
+                                            ng-if="::vm.options.hasLocale"></cms-form-field-locale-selector>
+
+            <cms-form-field-text cms-title="{{::vm.options.terms['title']}}"
+                                 cms-model="vm.command.title"
+                                 cms-change="vm.onNameChanged()"
+                                 required
+                                 maxlength="200"></cms-form-field-text>
+
+            <cms-form-field-text cms-title="{{::vm.options.terms['urlSlug']}}"
+                                 cms-model="vm.command.urlSlug"
+                                 description="Lower case and containing only letter, numbers, underscores and hyphens. E.g. 'rock-and-roll'"
+                                 ng-if="::!vm.options.autoGenerateUrlSlug"
+                                 required
+                                 maxlength="200"></cms-form-field-text>
+
+        </cms-form-section>
+
+        <!--DYNAMIC DATA-->
+
+        <cms-form-section cms-title="Properties" ng-if="vm.formDataSource.modelMetaData.dataModelProperties">
+            <cms-form-dynamic-field-set cms-data-source="vm.formDataSource"
+                                        cms-additional-parameters="vm.additionalParameters">
+
+            </cms-form-dynamic-field-set>
+        </cms-form-section>
+
+    </cms-page-body>
+</cms-form>

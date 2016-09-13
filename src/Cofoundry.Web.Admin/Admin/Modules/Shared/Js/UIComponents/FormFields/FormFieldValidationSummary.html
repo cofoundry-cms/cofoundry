@@ -1,0 +1,6 @@
+﻿<div ng-if="vm.formScope.editMode && (vm.validators.length || vm.customErrors.length) && (vm.form[vm.modelName].$dirty || vm.customErrors.length)" class="form-validation-summary">
+    <ul>
+        <li ng-repeat="error in vm.customErrors"><i class="fa fa-exclamation-circle alert"></i> {{error.message}}</li>
+        <li ng-repeat="validator in vm.validators" ng-show="vm.form[vm.modelName].$error[validator.name]"><i class="fa fa-exclamation-circle alert"></i> {{validator.message}}</li>
+    </ul>
+</div>

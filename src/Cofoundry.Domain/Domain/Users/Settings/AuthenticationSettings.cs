@@ -1,0 +1,51 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Cofoundry.Core.Configuration;
+
+namespace Cofoundry.Domain
+{
+    public class AuthenticationSettings : IConfigurationSettings
+    {
+        public AuthenticationSettings()
+        {
+            MaxIPAttempts = 50;
+            MaxUsernameAttempts = 20;
+            MaxIPAttemptsBoundaryInMinutes = 60;
+            MaxUsernameAttemptsBoundaryInMinutes = 60;
+            NumHoursPasswordResetLinkValid = 16;
+        }
+
+        /// <summary>
+        /// The number of hours a password reset link is valid for. Defaults to 16
+        /// </summary>
+        public int NumHoursPasswordResetLinkValid { get; set; }
+
+        /// <summary>
+        /// The maximum number of failed login attempts allower per ip address 
+        /// during the time window described by the MaxIPAttemptsBoundaryInMinutes
+        /// property. The default value is 60.
+        /// </summary>
+        public int MaxIPAttempts { get; set; }
+
+        /// <summary>
+        /// The maximum number of failed login attempts allower per username 
+        /// during the time window described by the MaxUsernameAttemptsBoundaryInMinutes
+        /// property. The default value is 40.
+        /// </summary>
+        public int MaxUsernameAttempts { get; set; }
+
+        /// <summary>
+        /// The time window to measure login attempts when testing for blocking by IP 
+        /// address. The default value is 40.
+        /// </summary>
+        public int MaxIPAttemptsBoundaryInMinutes { get; set; }
+
+        /// <summary>
+        /// The time window to measure login attempts when testing for blocking by 
+        /// username. The default value is 20.
+        /// </summary>
+        public int MaxUsernameAttemptsBoundaryInMinutes { get; set; }
+    }
+}

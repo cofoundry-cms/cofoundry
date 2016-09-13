@@ -1,0 +1,123 @@
+// This is where we define layouts for global elements that are not components. 
+// This should be pretty slim.
+
+* {
+    box-sizing:border-box;
+}
+
+html {
+
+}
+
+body {
+    font-family: $fontstack-default;
+    background-color:$color-lightgrey;
+}
+
+main {
+    position: relative;
+    min-height:600px;
+    height:80vh;
+    min-width:850px;
+}
+
+footer {
+    position: fixed;
+    bottom: 0px;
+    right: 0px;
+    width: 100%;
+    text-align: right;
+    color: #ccc;
+    z-index: 900;
+    clear:both;
+    background-color:$color-lightgrey;
+    height:25px;
+    border-top:1px solid #e3e3e3;
+
+    p {
+        padding:6px 20px 0 0;
+    }
+
+    a {
+        color: #ccc;
+    }
+}
+
+.content {
+    @include transition(width .3s, left .3s, padding .3s);
+    @include clearfix;
+    position:absolute;
+    left:$nav-width-slim;
+    top:0;
+    @include calc(width, "100% - 228px");
+    padding:25px 30px;
+    z-index:1;
+}
+
+.main-menu {
+    position:absolute;
+    left:0;
+    top:0;
+    width:100px;
+    height:100%;
+    background:red;
+
+    .apps > ul {
+        position: absolute;
+        z-index: 1;
+        width:150px;
+        height:100%;
+        left:100px;
+        top:0;
+        background:yellow;
+    }
+}
+
+.collection-actions {
+    position: absolute;
+    top: 0px;
+    right: 0;
+}
+
+.dashboard-item {
+    float:left;
+    width:48%;
+    margin-bottom:2%;
+
+    h3 {
+        font-weight:bold;
+        background: white;
+        padding: 10px;
+        border-top: 2px solid $color-red;
+    }
+
+    &:nth-of-type(1), &:nth-of-type(2) {
+        margin-top:80px;
+    }
+
+    &:nth-child(even) {
+        clear:left;
+    }
+
+    &:nth-child(odd) {
+        margin-left:2%;
+    }
+
+    .btn-group {
+        text-align:right;
+        padding:10px 0;
+    }
+
+    .btn {
+        display: inline-block;
+    }
+}
+
+
+@media screen and (min-width: 950px) {
+    .content {
+        @include calc(width, "100% - 288px");
+        left:$nav-width;
+        padding:25px 40px;
+    }
+}

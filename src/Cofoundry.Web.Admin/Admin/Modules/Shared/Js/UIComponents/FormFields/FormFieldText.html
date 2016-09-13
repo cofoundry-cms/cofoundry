@@ -1,0 +1,19 @@
+﻿<div class="control-group">
+    <cms-field>
+        <label class="control-label" for="{{vm.modelName}}">{{vm.title}}:</label>
+        <div class="controls">
+            <input ng-show="vm.formScope.editMode"
+                   type="text"
+                   ng-model="vm.model"
+                   ng-disabled="vm.disabled"
+                   ng-change="vm.onChange()"
+                   id="{{vm.modelName}}"
+                   name="{{vm.modelName}}" />
+            <span ng-hide="vm.formScope.editMode">{{vm.model}}</span>
+            <cms-form-field-validation-summary></cms-form-field-validation-summary>
+        </div>
+    </cms-field>
+    <p class="help-inline" ng-if="vm.description">
+        <small>{{vm.description}}</small>
+    </p>
+</div>

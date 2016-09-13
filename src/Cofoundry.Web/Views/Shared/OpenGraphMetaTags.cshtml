@@ -1,0 +1,21 @@
+﻿@inherits CofoundryWebViewPage<IPageWithMetaDataViewModel>
+@using Cofoundry.Web
+@using Cofoundry.Domain
+
+@if (Model is PageViewModel)
+{
+    var og = ((PageViewModel)Model).Page.OpenGraph;
+    if (!string.IsNullOrWhiteSpace(og.Title))
+    {
+        <meta property="og:title" content="@og.Title" /> 
+    }
+    if (!string.IsNullOrWhiteSpace(og.Description))
+    {
+        <meta property="og:description" content="@og.Description" /> 
+    }
+    if (og.Image != null)
+    {
+        <meta property="og:image" content="@Cofoundry.Routing.ImageAsset(og.Image)" /> 
+    }
+}
+<meta property="og:url" content="@(Request.Url.AbsoluteUri.Contains("?") ? Request.Url.AbsoluteUri.Substring(0, Request.Url.AbsoluteUri.IndexOf("?")) : Request.Url.AbsoluteUri)" /> 

@@ -1,0 +1,22 @@
+﻿<cms-modal-dialog-container>
+
+    <cms-modal-dialog-header ng-if="::title">
+        {{::title}}
+    </cms-modal-dialog-header>
+
+    <cms-modal-dialog-actions>
+        <cms-button cms-text="{{::okButtonTitle}}"
+                    class="main-cta"
+                    ng-click="close(true)"
+                    cms-loading="onOkLoadState.isLoading"
+                    ng-disabled="onOkLoadState.isLoading"></cms-button>
+
+        <cms-button cms-text="{{::cancelButtonTitle}}"
+                    ng-click="close(false)"></cms-button>
+    </cms-modal-dialog-actions>
+
+    <cms-modal-dialog-body>
+        {{::message}}
+    </cms-modal-dialog-body>
+
+</cms-modal-dialog-container>

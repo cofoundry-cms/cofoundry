@@ -1,0 +1,14 @@
+﻿<configuration xmlns:xdt="http://schemas.microsoft.com/XML-Document-Transform">
+
+  <connectionStrings>
+    <add name="Cofoundry" 
+         connectionString="TODO: Add Cofoundry Connection String" 
+         providerName="System.Data.SqlClient"
+         xdt:Transform="InsertIfMissing" xdt:Locator="Match(name)"/>
+  </connectionStrings>
+
+  <appSettings>
+    <add key="SiteUriResolver:SiteUriRoot" value="http://localhost:TODO:ADDPORT" xdt:Transform="InsertIfMissing" xdt:Locator="Match(key)"  />
+  </appSettings>
+
+</configuration>

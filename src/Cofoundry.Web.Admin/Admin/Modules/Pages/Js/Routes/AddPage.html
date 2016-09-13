@@ -1,0 +1,120 @@
+﻿<cms-page-header cms-title="Create"
+                 cms-parent-title="Pages"></cms-page-header>
+
+<cms-form cms-name="mainForm"
+          ng-submit="vm.save()"
+          cms-loading="vm.formLoadState.isLoading">
+
+    <cms-page-actions>
+
+        <cms-button-submit cms-text="Save Draft"
+                           cms-loading="vm.saveLoadState.isLoading"
+                           ng-disabled="vm.mainForm.$invalid"></cms-button-submit>
+
+        <cms-button cms-text="Save &amp; Publish"
+                    cms-loading="vm.saveAndPublishLoadState.isLoading"
+                    ng-disabled="vm.mainForm.$invalid"
+                    ng-click="vm.saveAndPublish()"></cms-button>
+
+        <cms-button cms-text="Cancel"
+                    ng-click="vm.cancel()"></cms-button>
+
+    </cms-page-actions>
+
+    <cms-page-body cms-content-type="form">
+
+        <cms-form-status></cms-form-status>
+
+        <!--MAIN-->
+        <cms-form-section cms-title="Main">
+
+            <cms-form-field-dropdown cms-title="Page Type"
+                                     cms-options="vm.pageTypes"
+                                     cms-option-name="name"
+                                     cms-option-value="value"
+                                     cms-model="vm.command.pageType"
+                                     cms-change="vm.onPageTypeChanged()"
+                                     cms-description="Usually this will be 'Generic' but other page types can be used for special functions"
+                                     required>
+            </cms-form-field-dropdown>
+
+            <cms-form-field-text cms-title="Title"
+                                 cms-model="vm.command.title"
+                                 cms-description="A few words descriptive page title, e.g. 'About the team'. Google SERP shows a maximum of 66 characters"
+                                 required
+                                 cms-change="vm.onNameChanged()"
+                                 maxlength="70"></cms-form-field-text>
+
+            <cms-form-field-dropdown cms-title="Page Template"
+                                     cms-options="vm.pageTemplates"
+                                     cms-option-name="name"
+                                     cms-option-value="pageTemplateId"
+                                     cms-model="vm.command.pageTemplateId"
+                                     required></cms-form-field-dropdown>
+
+            <cms-form-field-tags cms-title="CMS Tags"
+                                 cms-model="vm.command.tags"></cms-form-field-tags>
+
+        </cms-form-section>
+
+        <!--Page URL-->
+        <cms-form-section cms-title="Page url">
+
+            <cms-form-field-locale-selector cms-model="vm.command.localeId"
+                                            cms-on-loaded="vm.onLocalesLoaded()"></cms-form-field-locale-selector>
+
+            <cms-form-field-directory-selector cms-model="vm.command.webDirectoryId"
+                                                   cms-on-loaded="vm.onWebDirectoriesLoaded()"
+                                                   required></cms-form-field-directory-selector>
+
+            <cms-form-field-text cms-title="Page Path"
+                                 cms-model="vm.command.urlPath"
+                                 ng-if="vm.command.pageType !== 'CustomEntityDetails'"
+                                 description="Lower case and containing only letter, numbers, underscores and hyphens. E.g. 'about-the-team'"
+                                 maxlength="70"></cms-form-field-text>
+
+            <cms-form-field-dropdown cms-title="Route Format"
+                                     cms-options="vm.routingRules"
+                                     cms-option-name="routeFormat"
+                                     cms-option-value="routeFormat"
+                                     cms-model="vm.command.customEntityRoutingRule"
+                                     ng-if="vm.command.pageType === 'CustomEntityDetails'"
+                                     required></cms-form-field-dropdown>
+        </cms-form-section>
+
+        <!--META DATA-->
+        <cms-form-section cms-title="SEO">
+
+            <cms-form-field-text-area cms-title="Meta Description"
+                                      cms-model="vm.command.metaDescription"
+                                      required
+                                      maxlength="256"
+                                      cms-description="Ideally 25-250 characters. The Google SERP shows only the first 150 characters"></cms-form-field-text-area>
+
+            <cms-form-field-text cms-title="Meta Keywords"
+                                 cms-model="vm.command.metaKeywords"
+                                 cms-description="Optional. A comma separated list of (ideally at least 3) keywords specific to this page e.g. 'dog,golden retriever,animal'. These will be combined with the site wide keywords."></cms-form-field-text>
+
+            <cms-form-field-text cms-title="OpenGraph Title"
+                                 cms-model="vm.command.openGraphTitle"
+                                 cms-description="Optional. Use this title to override what Facebook sees as the title of the page"></cms-form-field-text>
+
+            <cms-form-field-text cms-title="OpenGraph Description"
+                                 cms-model="vm.command.openGraphDescription"
+                                 cms-description="Optional. This description shows up in Facebook"></cms-form-field-text>
+
+            <cms-form-field-image-asset cms-title="OpenGraph Image"
+                                        cms-load-state="vm.saveLoadState"
+                                        cms-asset="vm.openGraphImage"
+                                        cms-model="vm.command.openGraphImageId"
+                                        cms-val-min-width="200"
+                                        cms-val-min-height="200"
+                                        cms-description="Optional. An image to show up within Facebook. The image must be at least 200px by 200px (though minimum 1500px by 1500px is preferred) and have a maximum aspect ratio of 3:1."></cms-form-field-image-asset>
+
+            <cms-form-field-checkbox cms-title="Show in sitemap"
+                                     cms-model="vm.command.showInSiteMap"
+                                     cms-description="Indicates whether this page should be included in the site map file used by search engine robots"></cms-form-field-checkbox>
+
+        </cms-form-section>
+    </cms-page-body>
+</cms-form>

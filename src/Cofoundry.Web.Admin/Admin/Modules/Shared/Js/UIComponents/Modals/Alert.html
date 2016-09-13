@@ -1,0 +1,16 @@
+﻿<cms-modal-dialog-container>
+
+    <cms-modal-dialog-header ng-if="::title">
+        {{::title}}
+    </cms-modal-dialog-header>
+
+    <cms-modal-dialog-body>
+        {{::message}}
+    </cms-modal-dialog-body>
+
+    <cms-modal-dialog-footer>
+        <cms-button cms-text="OK"
+                    ng-click="close()"></cms-button>
+    </cms-modal-dialog-footer>
+
+</cms-modal-dialog-container>

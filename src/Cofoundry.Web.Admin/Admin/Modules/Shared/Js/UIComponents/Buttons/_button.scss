@@ -1,0 +1,110 @@
+﻿%button {
+    @include transition(all .3s);
+    @include border-radius(30px);
+    font-weight:$fontweight-regular;
+    display:block;
+    border:1px solid #b8b8b8;
+    background-color:#e5e5e5;
+    padding:10px 15px;
+    font-size:75%;
+    text-decoration:none;
+    text-transform:uppercase;
+    text-align:center;
+    color:#333;
+    cursor:pointer;
+    position:relative;
+
+    &:hover {
+        background-color:#a9a9a9;
+        color:#fff;
+    }
+
+    &.main-cta {
+        background-color:$color-red;
+        color:#fff;
+        border-color:$color-red;
+
+        &:hover {
+            background-color:$color-darkred;
+            border-color:$color-darkred;
+        }
+    }
+
+    @media screen and (min-width: 1200px) {
+        font-size:85%;
+    }
+}
+
+.btn {
+    @extend %button;
+
+    .fa {
+        position: absolute;
+        left: 4px;
+        top: 4px;
+        border-radius: 20px;
+        padding: 5px;
+    }
+}
+
+.btn-icon {
+    text-decoration: none;
+    border: none;
+    background-color: transparent;
+    padding: 0;
+    cursor:pointer;
+    outline:none;
+
+    .fa {
+        @include transition(color .3s);
+        font-size:1.3em;
+        color:black;
+        padding:10px;
+
+        .collection-actions & {
+            padding-left:0;
+        }
+    }
+
+    &:hover .fa {
+        color:$color-red;
+    }
+}
+
+/**
+ * Enabled disabled anchor elements
+ * http://stackoverflow.com/a/10276157/716689
+ */
+a[disabled], button[disabled], input[disabled] {
+    @include opacity(.5);
+    pointer-events: none;
+    background:#e5e5e5!important;
+    border-color:#b8b8b8!important;
+    color:#333!important;
+
+    &:hover {
+        background:#e5e5e5!important;
+    }
+}
+
+/**
+    When a button action has been initiated we can set it as 'loading' which should show some sort
+    of loading gif to let the user know the action is in progress.
+*/
+.btn.loading {
+    background: url("img/loaders/generic-horizontal.gif") no-repeat 50%;
+    text-indent: -9999px;
+    min-width: 100px;
+
+    /**
+        Override some transition bits that bootstrap adds on hover
+    */
+    &:hover {
+        background-position: 50%;
+        transition: none;
+    }
+}
+
+.btn-icon.loading {
+
+}

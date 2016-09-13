@@ -1,0 +1,24 @@
+﻿<div class="control-group">
+    <cms-field>
+        <label class="control-label" for="{{vm.modelName}}">{{vm.title}}:</label>
+        <div class="controls">
+            <select id="{{vm.modelName}}"
+                    ng-if="vm.options"
+                    name="{{vm.modelName}}"
+                    ng-show="vm.formScope.editMode"
+                    ng-model="vm.model"
+                    ng-change="vm.onChange()"
+                    ng-required="vm.isRequiredAttributeDefined || vm.required"
+                    ng-disabled="vm.disabled"
+                    ng-options="o[vm.optionValue] as o[vm.optionName] for o in vm.options">
+                <option ng-show="!vm.isRequiredAttributeDefined && !vm.required" value='' selected>{{vm.defaultItemText}}</option>
+            </select>
+
+            <span ng-hide="vm.formScope.editMode">{{vm.displayValue}}</span>
+            <cms-form-field-validation-summary></cms-form-field-validation-summary>
+        </div>
+    </cms-field>
+    <p class="help-inline" ng-if="vm.description">
+        <small>{{vm.description}}</small>
+    </p>
+</div>

@@ -1,0 +1,40 @@
+﻿<cms-table-container>
+    <table>
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th># pages</th>
+                <th class="lowPriority">Created</th>
+                <th cms-table-column-actions>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-if="!vm.webDirectories.length">
+                <td colspan="100" class="empty">Sorry, no directories could be found.</td>
+            </tr>
+            <tr ng-repeat="webDirectory in ::vm.webDirectories">
+                <td>
+                    <span>{{::vm.getPathDepthIndicator(webDirectory.depth)}}</span>
+                    <a ng-href="#/{{::webDirectory.webDirectoryId}}">{{::webDirectory.name }}</a><br />
+
+                    <span>{{::vm.getPathDepthIndicator(webDirectory.depth)}}</span>
+                    {{::webDirectory.fullUrlPath}}
+                </td>
+                <td>
+                    <a ng-href="pages#/?webDirectoryId={{::webDirectory.webDirectoryId}}">{{::webDirectory.numPages}}</a>
+                </td>
+                <td class="lowPriority">
+                    <cms-table-cell-created-audit-data cms-audit-data="::webDirectory.auditData"></cms-table-cell-created-audit-data>
+                </td>
+                <td cms-table-column-actions>
+                    <a href="#/{{::webDirectory.webDirectoryId}}" class="btn-icon" title="Edit" ng-if="!vm.redirect">
+                        <i class="fa fa-pencil"></i>
+                    </a>
+                    <a href="#/{{::webDirectory.webDirectoryId}}" class="btn-icon" title="Edit" ng-if="vm.redirect">
+                        <i class="fa fa-external-link"></i>
+                    </a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</cms-table-container>

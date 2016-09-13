@@ -1,0 +1,35 @@
+﻿<div ng-file-drop
+     ng-show="vm.isEditMode"
+     ng-file-change="vm.fileChanged($files, $event)"
+     accept="image/gif,image/jpeg,image/png,image/tiff,image/bmp,.tif"
+     hideondropnotavailable="false"
+     drag-over-class="{accept:'dragover-accepted', reject:'dragover-rejected'}"
+     id="{{vm.modelName}}"
+     name="{{vm.modelName}}"
+     ng-model="vm.ngModel">
+
+    <img ng-if="vm.ngModel" ng-src="{{vm.previewUrl}}" class="img-polaroid" width="220" />
+    <div>{{vm.ngModel.name}}</div>
+    <cms-progress-bar load-state="vm.loadState" ng-if="vm.ngModel && !vm.ngModel.isCurrentFile"></cms-progress-bar>
+    <div>
+        <button class="btn-icon" ng-file-select title="{{vm.buttonText}}"
+                type="button"
+                ng-file-change="vm.fileChanged($files, $event)"
+                accept="image/gif,image/jpeg,image/png,image/tiff,image/bmp,.tif" ,
+                reset-on-click="false"
+                ng-disabled="vm.loadState.isLoading">
+            <i class="fa fa-upload"></i>
+        </button>
+        <button type="button"
+                ng-if="vm.isRemovable"
+                ng-click="vm.remove()"
+                ng-disabled="vm.loadState.isLoading">
+            Remove
+        </button>
+    </div>
+</div>
+
+<div ng-show="!vm.isEditMode">
+    <img ng-src="{{vm.previewUrl}}" class="img-polaroid" width="220" />
+    <div>{{vm.ngModel.name}}</div>
+</div>

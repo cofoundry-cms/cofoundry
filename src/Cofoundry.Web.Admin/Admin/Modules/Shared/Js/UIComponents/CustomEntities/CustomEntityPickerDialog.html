@@ -1,0 +1,82 @@
+﻿<cms-modal-dialog-container cms-modal-size="large">
+
+    <cms-modal-dialog-header>
+        Find {{ customEntityDefinition.name }}
+    </cms-modal-dialog-header>
+
+    <cms-page-actions>
+
+        <!--RESULTS-->
+        <cms-pager cms-result="result"
+                   cms-query="query"></cms-pager>
+
+        <cms-button cms-text="Ok" ng-click="onOk()"></cms-button>
+        <cms-button cms-text="Cancel" ng-click="onCancel()"></cms-button>
+
+        <!--FILTER-->
+
+        <cms-button cms-text="Filter"
+                    ng-click="toggleFilter()"></cms-button>
+
+        <cms-search-filter cms-query="query"
+                           cms-filter="filter"
+                           ng-show="isFilterVisible">
+
+            <cms-form-field-text cms-title="Text"
+                                 cms-model="filter.text"></cms-form-field-text>
+
+        </cms-search-filter>
+
+    </cms-page-actions>
+
+    <cms-page-body>
+
+        <cms-table-container cms-loading="gridLoadState.isLoading">
+            <table>
+                <thead>
+                    <tr>
+                        <th>{{::customEntityDefinition.terms['title']}}</th>
+                        <th>Status</th>
+                        <th>Created</th>
+                        <th cms-table-column-actions>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-if="result.items.length == 0">
+                        <td colspan="100" class="empty">Sorry, no {{::customEntityDefinition.namePlural.toLowerCase()}} could be found.</td>
+                    </tr>
+                    <tr ng-repeat="entity in result.items"
+                        ng-class="(isSelected(entity)) ? 'selected' : 'selectable'"
+                        ng-click="onSelect(entity)"
+                        ng-dblclick="onSelectAndClose(entity)">
+                        <td>
+                            <strong>
+                                <cms-custom-entity-link cms-custom-entity-definition="::customEntityDefinition"
+                                                        cms-custom-entity="::entity"></cms-custom-entity-link>
+                            </strong>
+                        </td>
+                        <td ng-if="::entity.isPublished">
+                            Published <span ng-if="::entity.isPublished && entity.hasDraft">(Pending Draft)</span>
+                        </td>
+                        <td ng-if="::!entity.isPublished">
+                            Draft
+                        </td>
+                        <td class="lowPriority">
+                            <cms-table-cell-created-audit-data cms-audit-data="::entity.auditData"></cms-table-cell-created-audit-data>
+                        </td>
+                        <td cms-table-column-actions>
+                            <a href="" ng-if="!isSelected(entity)" class="btn-icon" title="Select">
+                                <i class="fa fa-square-o"></i>
+                            </a>
+                            <a href="" ng-if="isSelected(entity)" class="btn-icon" title="Selected">
+                                <i class="fa fa-check-square-o"></i>
+                            </a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </cms-table-container>
+
+    </cms-page-body>
+
+</cms-modal-dialog-container>

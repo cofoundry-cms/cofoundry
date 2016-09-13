@@ -1,0 +1,7 @@
+%link {
+    color:red;
+}
+
+.inline-link {
+    @extend %link;
+}

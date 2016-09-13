@@ -1,0 +1,48 @@
+﻿<cms-modal-dialog-container cms-modal-size="large">
+
+    <cms-modal-dialog-header>
+        Change Url: {{::customEntity.latestVersion.title}}
+    </cms-modal-dialog-header>
+
+    <cms-form cms-name="updateUrlForm" 
+              cms-loading="formLoadState.isLoading">
+
+        <cms-page-actions>
+            <cms-button-submit cms-text="Save"
+                               ng-click="save()"
+                               ng-disabled="updateUrlForm.$invalid || submitLoadState.isLoading"
+                               cms-loading="submitLoadState.isLoading"></cms-button-submit>
+
+            <cms-button cms-text="Cancel"
+                        ng-click="close()"></cms-button>
+        </cms-page-actions>
+
+        <cms-page-body>
+
+            <cms-warning-message ng-if="customEntity.isPublished && customEntity.fullPath">
+                WARNING: This {{::options.nameSingular.toLowerCase()}} has been published. Changing the url will
+                break external links to this page (e.g. via google search)
+            </cms-warning-message>
+
+            <cms-form-status></cms-form-status>
+
+            <cms-form-section cms-title="Settings">
+
+                <cms-form-field-locale-selector cms-model="command.localeId"
+                                                cms-on-loaded="localesLoaded()"
+                                                ng-if="::options.hasLocale"></cms-form-field-locale-selector>
+
+                <cms-form-field-text cms-title="{{::options.terms['urlSlug']}}"
+                                     cms-model="command.urlSlug"
+                                     cms-description="Lower case and containing only letter, numbers and hyphens. E.g. 'rock-and-roll'."
+                                     ng-if="::!options.autoGenerateUrlSlug"
+                                     maxlength="200"
+                                     required></cms-form-field-text>
+
+            </cms-form-section>
+
+</cms-page-body>
+
+</cms-form>
+
+</cms-modal-dialog-container>

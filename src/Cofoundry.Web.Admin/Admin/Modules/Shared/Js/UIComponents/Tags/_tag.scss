@@ -1,0 +1,10 @@
+﻿.tag {
+    @include border-radius(25px);
+    padding:5px 10px;
+    background-color:#ddd;
+    color:$color-darkgrey;
+    font-size: 90%;
+    text-decoration: none;
+    display: inline-block;
+    margin-bottom: 5px;
+}

@@ -1,0 +1,22 @@
+﻿<cms-form-section cms-title="Audit Data">
+
+    <cms-form-field-container cms-title="Created By"
+                              ng-if="auditData.creator">
+        <cms-user-link cms-user="::auditData.creator"></cms-user-link>
+    </cms-form-field-container>
+
+    <cms-form-field-container cms-title="Create Date">
+        <cms-time-ago cms-time="::auditData.createDate"></cms-time-ago>
+    </cms-form-field-container>
+
+    <cms-form-field-container cms-title="Last Modified By"
+                              ng-if="auditData.updater">
+        <cms-user-link cms-user="auditData.updater"></cms-user-link>
+    </cms-form-field-container>
+
+    <cms-form-field-container cms-title="Modified Date"
+                              ng-if="auditData.updateDate">
+        <cms-time-ago cms-time="auditData.updateDate"></cms-time-ago>
+    </cms-form-field-container>
+
+</cms-form-section>

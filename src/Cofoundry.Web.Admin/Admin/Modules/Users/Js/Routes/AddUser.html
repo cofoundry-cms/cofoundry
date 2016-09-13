@@ -1,0 +1,56 @@
+﻿<cms-page-header cms-title="Create"
+                 cms-parent-title="{{::vm.userArea.name}} Users"></cms-page-header>
+
+<cms-form cms-name="mainForm" 
+          ng-submit="vm.save()">
+
+    <cms-page-actions>
+        <cms-button-submit cms-text="Save" 
+                           ng-disabled="vm.mainForm.$invalid"
+                           cms-loading="vm.globalLoadState.isLoading"></cms-button-submit>
+        <cms-button cms-text="Cancel" 
+                    ng-click="vm.cancel()"
+                    ng-disabled="vm.globalLoadState.isLoading"></cms-button>
+    </cms-page-actions>
+
+
+    <cms-page-body cms-content-type="form">
+
+        <cms-form-status></cms-form-status>
+
+        <cms-form-section cms-title="User Details">
+
+            <cms-form-field-text cms-title="First Name"
+                                 cms-model="vm.command.firstName"
+                                 maxlength="32"
+                                 required></cms-form-field-text>
+
+            <cms-form-field-text cms-title="Last Name"
+                                 cms-model="vm.command.lastName"
+                                 maxlength="32"
+                                 required></cms-form-field-text>
+
+            <cms-form-field-text cms-title="Username"
+                                 cms-model="vm.command.username"
+                                 ng-if="::!vm.userArea.useEmailAsUsername"
+                                 maxlength="150"
+                                 required></cms-form-field-text>
+
+            <cms-form-field-email-address cms-title="Email"
+                                          cms-model="vm.command.email"
+                                          ng-if="::vm.userArea.useEmailAsUsername"
+                                          maxlength="150"
+                                          required></cms-form-field-email-address>
+
+            <cms-form-field-dropdown cms-title="Role"
+                                     cms-options="vm.roles"
+                                     cms-option-name="title"
+                                     cms-option-value="roleId"
+                                     cms-model="vm.command.roleId"
+                                     required></cms-form-field-dropdown>
+
+        </cms-form-section>
+
+    </cms-page-body>
+
+</cms-form>

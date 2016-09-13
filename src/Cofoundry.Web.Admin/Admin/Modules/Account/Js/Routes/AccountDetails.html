@@ -1,0 +1,85 @@
+﻿<cms-page-header cms-title="My Account"></cms-page-header>
+
+<cms-form cms-name="mainForm"
+          cms-edit-mode="vm.editMode"
+          ng-submit="vm.save()"
+          cms-loading="vm.formLoadState.isLoading">
+
+    <!-- Default toolbar -->
+    <cms-page-actions ng-show="!vm.editMode">
+
+        <cms-button-link cms-text="Change Password"
+                         href="#/change-password"></cms-button-link>
+
+        <cms-button cms-text="Edit"
+                    ng-click="vm.edit()"
+                    ng-show="!vm.editMode"
+                    ng-disabled="vm.globalLoadState.isLoading"></cms-button>
+
+    </cms-page-actions>
+
+    <!-- Edit toolbar -->
+    <cms-page-actions ng-show="vm.editMode">
+
+        <cms-button-submit cms-text="Save"
+                           ng-show="vm.editMode"
+                           ng-disabled="vm.mainForm.$invalid || vm.globalLoadState.isLoading"
+                           cms-loading="vm.saveLoadState.isLoading"></cms-button-submit>
+
+        <cms-button cms-text="Cancel"
+                    ng-click="vm.cancel()"
+                    ng-show="vm.editMode"
+                    ng-disabled="vm.globalLoadState.isLoading"></cms-button>
+
+    </cms-page-actions>
+
+    <!-- Scrollable content area -->
+    <cms-page-body cms-content-type="form">
+
+        <cms-form-status></cms-form-status>
+
+        <!--MAIN-->
+        <cms-form-section cms-title="My Profile">
+
+            <cms-form-field-text cms-title="First Name"
+                                 cms-model="vm.command.firstName"
+                                 maxlength="32"
+                                 required></cms-form-field-text>
+
+            <cms-form-field-text cms-title="Last Name"
+                                 cms-model="vm.command.lastName"
+                                 maxlength="32"
+                                 required></cms-form-field-text>
+
+            <cms-form-field-email-address cms-title="Email"
+                                          cms-model="vm.command.email"
+                                          maxlength="128"
+                                          required></cms-form-field-email-address>
+
+
+        </cms-form-section>
+
+        <!--AUDIT DATA-->
+        <cms-form-section cms-title="Audit Data">
+
+            <cms-form-field-container cms-title="Password Last Changed">
+                <cms-time-ago cms-time="::vm.user.lastPasswordChangeDate"></cms-time-ago>
+            </cms-form-field-container>
+
+            <cms-form-field-container cms-title="Logged in">
+                <cms-time-ago cms-time="::vm.user.lastLoginDate"></cms-time-ago>
+            </cms-form-field-container>
+
+            <cms-form-field-container cms-title="Previous Login">
+                <cms-time-ago cms-time="::vm.user.previousLoginDate"></cms-time-ago>
+            </cms-form-field-container>
+
+            <cms-form-field-container cms-title="Created">
+                <cms-time-ago cms-time="::vm.user.auditData.createDate"></cms-time-ago>
+            </cms-form-field-container>
+
+        </cms-form-section>
+
+    </cms-page-body>
+
+</cms-form>

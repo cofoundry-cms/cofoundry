@@ -1,0 +1,16 @@
+﻿@inherits Cofoundry.Web.CofoundryWebViewPage
+@using System.Web.Mvc.Html
+@using Cofoundry.Web.Admin
+@using System.Web.Optimization
+
+@{
+    Layout = LayoutPaths.DefaultLayout;    
+}
+
+@section FooterScripts {
+    @AngularHelper.Boostrap(SetupRouteLibrary.Js, Cofoundry.CurrentUser)
+}
+
+<div ng-view=""></div>
+
+

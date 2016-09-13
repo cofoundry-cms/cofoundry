@@ -1,0 +1,52 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>Cofoundry.Web.Admin</id>
+    <version>$version$</version>
+    <title>Cofoundry.Web.Admin</title>
+    <authors>Cofoundry</authors>
+    <owners>Cofoundry</owners>
+    <licenseUrl>https://github.com/cofoundry-cms/cofoundry/blob/master/LICENSE</licenseUrl>
+    <projectUrl>http://www.cofoundry.org</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>
+      Adds the Cofoundry admin panel to a website.
+    </description>
+    <copyright>Cofoundry.org</copyright>
+    <tags>Cofoundry Web Admin CMS</tags>
+    <dependencies>
+      <dependency id="Antlr" version="3.5.0.2" />
+      <dependency id="AutoMapper" version="5.1.1" />
+      <dependency id="CommonServiceLocator" version="1.3" />
+      <dependency id="Conditions" version="2.1.0" />
+      <dependency id="EntityFramework" version="6.1.3" />
+      <dependency id="HtmlAgilityPack" version="1.4.9.5" />
+      <dependency id="Microsoft.AspNet.Mvc" version="5.2.3" />
+      <dependency id="Microsoft.AspNet.OData" version="5.9.1" />
+      <dependency id="Microsoft.AspNet.Razor" version="3.2.3" />
+      <dependency id="Microsoft.AspNet.Web.Optimization" version="1.1.3" />
+      <dependency id="Microsoft.AspNet.WebApi" version="5.2.3" />
+      <dependency id="Microsoft.AspNet.WebApi.Client" version="5.2.3" />
+      <dependency id="Microsoft.AspNet.WebApi.Core" version="5.2.3" />
+      <dependency id="Microsoft.AspNet.WebApi.WebHost" version="5.2.3" />
+      <dependency id="Microsoft.AspNet.WebPages" version="3.2.3" />
+      <dependency id="Microsoft.CodeDom.Providers.DotNetCompilerPlatform" version="1.0.1" />
+      <dependency id="Microsoft.OData.Core" version="6.15.0" />
+      <dependency id="Microsoft.OData.Edm" version="6.15.0" />
+      <dependency id="Microsoft.Spatial" version="6.15.0" />
+      <dependency id="Microsoft.Web.Infrastructure" version="1.0.0.0" />
+      <dependency id="Newtonsoft.Json" version="9.0.1" />
+      <dependency id="Owin" version="1.0" />
+      <dependency id="WebGrease" version="1.6.0" />
+      <dependency id="Cofoundry.Core" version="$version$" />
+      <dependency id="Cofoundry.Domain" version="$version$" />
+      <dependency id="Cofoundry.Web" version="$version$" />
+    </dependencies>
+  </metadata>
+  <files>
+    <file src="bin\Cofoundry.Web.Admin.dll" target="lib\net461" />
+    <file src="bin\Cofoundry.Web.Admin.XML" target="lib\net461" />
+    <file src="nuget\content\*" target="content" />
+    <file src="nuget\content\**\*" target="content" />
+  </files>
+</package>

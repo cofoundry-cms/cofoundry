@@ -1,0 +1,14 @@
+﻿@inherits Cofoundry.Web.CofoundryWebViewPage<CustomEntityModuleOptions>
+@using Cofoundry.Web.Admin
+
+@{
+    Layout = LayoutPaths.DefaultLayout;    
+}
+
+@section FooterScripts {
+    @AngularHelper.Boostrap(CustomEntitiesRouteLibrary.Js, Cofoundry.CurrentUser, Model)
+}
+
+<div ng-view=""></div>
+
+

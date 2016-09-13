@@ -1,0 +1,86 @@
+﻿<!--HEADER-->
+<cms-page-header cms-title="Images"></cms-page-header>
+
+<cms-page-sub-header>
+    <cms-page-header-buttons>
+        <a class="btn-icon" cms-text="Filter"
+           ng-click="vm.toggleFilter()">
+            <i class="fa fa-search"></i>
+        </a>
+
+        <!--FILTER-->
+        <cms-search-filter cms-query="vm.query"
+                           cms-filter="vm.filter"
+                           ng-show="vm.isFilterVisible">
+
+            <cms-form-field-text cms-title="Tags"
+                                 cms-model="vm.filter.tags"></cms-form-field-text>
+            <cms-form-field-number cms-title="Width"
+                                   cms-model="vm.filter.width"></cms-form-field-number>
+
+            <cms-form-field-number cms-title="Height"
+                                   cms-model="vm.filter.height"></cms-form-field-number>
+
+        </cms-search-filter>
+    </cms-page-header-buttons>
+</cms-page-sub-header>
+
+<!-- Default toolbar -->
+<cms-page-actions ng-show="!vm.editMode">
+    <cms-pager cms-result="vm.result"
+               cms-query="vm.query"></cms-pager>
+
+    <cms-button-link class="main-cta" cms-text="Upload Image"
+                     cms-icon="plus"
+                     cms-href="#/new"></cms-button-link>
+
+</cms-page-actions>
+
+<!-- Scrollable content area -->
+<cms-page-body cms-content-type="form"
+               cms-sub-header="with-header">
+
+    <cms-table-container cms-loading="vm.gridLoadState.isLoading">
+        <table>
+            <thead>
+                <tr>
+                    <th>Image</th>
+                    <th>Title</th>
+                    <th>Size</th>
+                    <th>Tags</th>
+                    <th>Modified</th>
+                    <th cms-table-column-actions>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-if="vm.result.items.length == 0">
+                    <td colspan="100" class="empty">Sorry, no images could be found.</td>
+                </tr>
+                <tr ng-repeat="image in vm.result.items">
+                    <td>
+                        <cms-table-cell-image cms-image="image"></cms-table-cell-image>
+                    </td>
+                    <td>
+                        <a href="#/{{ image.imageAssetId }}">{{ ::image.title }}</a>
+                    </td>
+                    <td>
+                        <strong>{{image.width}} x {{image.height}}</strong>
+                        <div>{{image.fileSizeInBytes | bytes}}</div>
+                    </td>
+                    <td>
+                        <cms-tag-list cms-tags="image.tags"></cms-tag-list>
+                    </td>
+                    <td class="lowPriority">
+                        <cms-table-cell-updated-audit-data cms-audit-data="image.auditData"></cms-table-cell-updated-audit-data>
+                    </td>
+                    <td cms-table-column-actions>
+                        <a href="#/{{image.imageAssetId}}" class="btn-icon" title="Edit">
+                            <i class="fa fa-pencil"></i>
+                        </a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </cms-table-container>
+
+</cms-page-body>

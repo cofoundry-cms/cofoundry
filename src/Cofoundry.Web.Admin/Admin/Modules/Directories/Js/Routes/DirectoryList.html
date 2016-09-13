@@ -1,0 +1,21 @@
+﻿<!--HEADER-->
+<cms-page-header cms-title="Directories"></cms-page-header>
+
+<cms-page-actions>
+
+    <!--RESULTS-->
+    <cms-pager cms-result="vm.result"
+               cms-query="vm.query"></cms-pager>
+
+    <cms-button-link cms-text="Create"
+                     cms-icon="plus"
+                     cms-href="#/new"></cms-button-link>
+
+</cms-page-actions>
+
+<cms-page-body cms-content-type="form">
+
+    <cms-directory-grid cms-directories="vm.result"
+                        cms-loading="vm.gridLoadState.isLoading"></cms-directory-grid>
+
+</cms-page-body>

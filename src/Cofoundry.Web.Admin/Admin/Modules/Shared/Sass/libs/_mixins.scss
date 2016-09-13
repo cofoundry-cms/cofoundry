@@ -1,0 +1,49 @@
+// This is where we define custom mixins. If it grow signigicantly larger, it should be split into multiple files.
+
+@mixin font-size($size, $modifier:1.2) {
+    // IE 8 fallback in pixels
+    $pixel-size: ($size * 10) * $modifier; 
+    font-size: #{$pixel-size}px;
+
+    // fontsize in REM
+    font-size: #{$size}rem;
+}
+
+@mixin calc($property, $operation) {
+    #{$property}: -webkit-calc(#{$operation});
+    #{$property}:    -moz-calc(#{$operation});
+    #{$property}:         calc(#{$operation});
+}
+
+@mixin disable-animation() {
+    -webkit-transition: none !important;
+       -moz-transition: none !important;
+            transition: none !important; 
+}
+
+@mixin center-button() {
+    @include translateX(-1.4em);
+    margin:auto;
+}
+
+// makes inline image behave kinda like background image with cover positioning
+@mixin emulate-cover() {
+    overflow:hidden;
+    position: relative;
+
+    img {
+        position:absolute;
+        top:50%;
+        left:50%;
+        @include translate(-50%, -50%);
+
+        width:100%;
+        height:auto;
+    }
+}
+
+@mixin hide-in-print {
+    @media print {
+        display:none;
+    }
+}

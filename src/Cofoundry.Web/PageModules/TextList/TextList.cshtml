@@ -1,0 +1,27 @@
+﻿@inherits WebViewPage<TextListDisplayModel>
+@using Cofoundry.Web
+@using System.Web.Mvc
+@using System.Web.Mvc.Html
+
+@if (!string.IsNullOrEmpty(Model.Title))
+{
+    <h3>@Model.Title</h3>
+}
+@if (Model.IsNumbered)
+{
+    <ol>
+    @foreach (var Line in Model.TextListItems)
+    {
+        <li>@Line</li>
+    }
+    </ol>
+}
+else
+{
+    <ul>
+    @foreach (var Line in Model.TextListItems)
+    {
+        <li>@Line</li>
+    }
+    </ul>
+}

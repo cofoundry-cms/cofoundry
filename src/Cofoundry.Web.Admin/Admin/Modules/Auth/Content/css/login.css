@@ -1,0 +1,88 @@
+﻿/*!
+* Login screen styles
+*/
+
+/* #### General #### */
+body {
+    background: #ccc;
+}
+
+h1 {
+    background: #d31245 url(/admin/modules/shared/content/img/logo.png) no-repeat 30px center;
+    height: 90px;
+    margin: 0px;
+    overflow: hidden;
+    text-indent: 100%;
+    white-space: nowrap;
+}
+
+
+
+/* #### Form #### */
+#loginContainer {
+    background: #fff;
+    margin: 70px auto 0 auto;
+    width: 500px;
+}
+
+    #loginContainer form {
+        padding-top: 10px;
+    }
+
+
+        #loginContainer form legend,
+        #loginContainer form p {
+            margin-left: auto;
+            margin-right: auto;
+            width: 90%;
+        }
+
+.form-actions {
+    padding-right: 30px;
+}
+
+
+
+/* #### Remember me #### */
+#rememberMeContainer {
+}
+
+    #rememberMeContainer label {
+        clear: none;
+        font-family: Arial, Sans-Serif;
+        font-style: normal;
+    }
+
+    #rememberMeContainer input {
+        float: left;
+        margin: 10px 6px 0 108px;
+    }
+
+
+
+/* #### Forgotten password #### */
+.login-footer-links {
+    float: right;
+    font-size: 85%;
+    font-weight: normal;
+    margin: 0;
+    padding: 0;
+    text-align: right;
+    white-space: nowrap;
+}
+
+    .login-footer-links a {
+        color: #d31245;
+        margin: 0;
+        text-decoration: none;
+    }
+
+        .login-footer-links a:hover {
+            text-decoration: underline;
+        }
+
+
+/* #### Validation #### */
+.field-validation-error {
+    width: 324px;
+}

@@ -1,0 +1,136 @@
+﻿.modal-background {
+    @include transition(all .2s);
+    position:fixed;
+    top:0;
+    left:0;
+    right:0;
+    bottom:0;
+    z-index:999;
+    background-color:rgba(0,0,0,0);
+
+    &.modal--show {
+        background-color:rgba(0,0,0,0.8);
+    }
+}
+
+.modal {
+    @include opacity(0);
+    @include border-radius(3px);
+    @include transform(scale(0.7,0.7));
+    @include transition(all .2s);
+    font-family:$fontstack-default;
+    font-size: 13px;
+    position:fixed;
+    top:35%;
+    left:50%;
+    width:400px;
+    height:250px;
+    background:#ebebeb;
+    z-index:1000;
+    margin-left:-200px;
+
+    &.modal-lg {
+        width:80%;
+        height:auto;
+        left:10%;
+        top:12%;
+        bottom:15%;
+        margin-left:0px;
+    }
+
+    &.modal--show {
+        @include transform(scale(1,1));
+        @include opacity(1);
+    }
+
+    .page-actions {
+        margin-top: 80px;
+        z-index:2;
+    }
+
+    .page-body {
+        margin-left:170px;
+        margin-top: 60px;
+        position: absolute;
+        left:0;
+        top: 0;
+        bottom: 0;
+        overflow-y: scroll;
+        right: 2px;
+
+        .form-wrap {
+            padding:20px 20px 20px 0;
+        }
+
+        @media screen and (min-width: 1200px) {
+            margin-left:195px;
+        }
+    }
+}
+
+.modal-dialog {
+    height: 100%;
+
+    .search-filter {
+        top:auto;
+        right: auto;
+
+        &:before, &:after {
+            right:auto;
+            left:10px;
+        }
+
+        &:after {
+            left: 9px;
+        }
+    }
+}
+
+.modal-header {
+    @include border-top-left-radius(3px);
+    @include border-top-right-radius(3px);
+    font-size: 150%;
+    position: absolute;
+    background: #fff;
+    top: 0;
+    left: 0;
+    padding: 20px;
+    width: 100%;
+    border-bottom: 1px solid $color-lightgrey;
+    z-index: 10;
+
+    .close {
+        position: absolute;
+        right: 10px;
+        top: 10px;
+        font-size: 0.8em;
+        color: black;
+    }
+}
+
+.modal-content {
+    padding-left: 20px;
+}
+
+.modal-body {
+    position: absolute;
+    top: 80px;
+    left: 20px;
+    right: 20px;
+    line-height: 15px;
+}
+
+.modal-actions {
+    position: absolute;
+    bottom: 10px;
+    right: 0;
+    border-top: 1px solid #dddddd;
+    width: 100%;
+    padding-top: 10px;
+    padding-right: 20px;
+    text-align: right;
+
+    .btn {
+        display:inline-block;
+    }
+}

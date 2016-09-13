@@ -1,0 +1,143 @@
+﻿<cms-page-header cms-title="Create"
+                 cms-parent-title="Page Templates"></cms-page-header>
+
+<cms-form cms-name="step1Form" 
+          ng-submit="vm.setStep(2)" 
+          ng-if="vm.currentStep === 1">
+
+    <cms-page-actions>
+
+        <cms-pager cms-result="vm.result"
+                   cms-query="vm.query"></cms-pager>
+
+        <cms-button cms-text="Cancel" ng-click="vm.cancel()"></cms-button>
+
+        <cms-button-submit cms-text="Next" ng-disabled="!vm.selectedFile"></cms-button-submit>
+    </cms-page-actions>
+
+    <cms-page-body>
+
+        <cms-table-container cms-loading="vm.gridLoadState.isLoading">
+            <table>
+                <tr>
+                    <th>&nbsp;</th>
+                    <th>Name</th>
+                    <th>File Path</th>
+                </tr>
+                <tr ng-if="!vm.result.items.length">
+                    <td colspan="100" class="empty">Sorry, no unregistered template files could be found.</td>
+                </tr>
+                <tr ng-repeat="file in vm.result.items"
+                    ng-class="(vm.isFileSelected(file)) ? 'selected' : 'selectable'"
+                    ng-click="vm.onFileClick(file)"
+                    ng-dblclick="vm.onFileDblClick(file)">
+                    <th>
+                        <input type="radio" ng-model="vm.selectedFile" ng-value="file" />
+                    </th>
+                    <td>
+                        {{::file.name}}
+                    </td>
+                    <td>
+                        {{::file.fullPath}}
+                    </td>
+                </tr>
+            </table>
+        </cms-table-container>
+
+    </cms-page-body>
+
+</cms-form>
+
+<cms-form cms-name="step2Form"
+          ng-submit="vm.save()"
+          ng-if="vm.currentStep === 2"
+          cms-loading="vm.step2LoadState.isLoading">
+
+    <cms-page-actions>
+        <cms-button cms-text="Cancel" ng-click="vm.cancel()"></cms-button>
+        <cms-button cms-text="Previous" ng-click="vm.setStep(1)"
+                    ng-disabled="vm.globalLoadState.isLoading"></cms-button>
+        <cms-button-submit cms-text="Finish"
+                           ng-disabled="vm.step2Form.$invalid || vm.sectionsGridLoadState.isLoading || vm.globalLoadState.isLoading"
+                           cms-loading="vm.saveLoadState.isLoading"></cms-button-submit>
+    </cms-page-actions>
+
+    <cms-page-body>
+
+        <cms-form-status></cms-form-status>
+
+        <!--Page URL-->
+        <cms-form-section cms-title="Template Details">
+
+            <cms-form-field-text cms-title="Name"
+                                 cms-model="vm.command.name"
+                                 maxlength="100"
+                                 required></cms-form-field-text>
+
+            <cms-form-field-text-area cms-title="Description"
+                                      cms-model="vm.command.description"></cms-form-field-text-area>
+
+            <cms-form-field-readonly cms-title="File path"
+                                     cms-model="vm.selectedFile.fullPath"></cms-form-field-readonly>
+
+            <cms-form-field-container cms-title="Page Type">
+                <span>{{vm.fileInfo.pageType == 'CustomEntityDetails' ? vm.fileInfo.customEntityDefinition.name + ' Details' : vm.fileInfo.pageType}}</span>
+            </cms-form-field-container>
+
+            <cms-form-field-readonly cms-title="Model Type"
+                                     cms-model="vm.fileInfo.customEntityModelType"
+                                     ng-if="vm.fileInfo.pageType == 'CustomEntityDetails'"></cms-form-field-readonly>
+
+        </cms-form-section>
+
+        <cms-form-section cms-title="Sections">
+            <cms-form-field-container>
+
+                <cms-table-container>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th ng-if="vm.fileInfo.customEntityDefinition">Entity</th>
+                                <th>Allowed Modules</th>
+                                <th cms-table-column-actions style="width: 150px;">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-if="!vm.fileInfo.sections.length">
+                                <td colspan="100" class="empty">None.</td>
+                            </tr>
+                            <tr ng-repeat="section in vm.fileInfo.sections">
+                                <td>
+                                    {{::section.name}}
+                                </td>
+                                <td ng-if="vm.fileInfo.customEntityDefinition">
+                                    <span ng-if="::section.isCustomEntitySection">{{::vm.fileInfo.customEntityDefinition.name}}</span>
+                                    <span ng-if="::!section.isCustomEntitySection">Page</span>
+                                </td>
+                                <td>
+                                    <span ng-repeat-start="moduleType in section.moduleTypes"
+                                          ng-if="!section.hasAllModuleTypes"
+                                          title="{{moduleType.description}}"
+                                          ng-bind="moduleType.name">
+                                    </span><span ng-repeat-end ng-if="!$last && !section.hasAllModuleTypes">, </span>
+
+                                    <span ng-if="section.hasAllModuleTypes">
+                                        Any Generic
+                                    </span>
+                                </td>
+                                <td cms-table-column-actions>
+                                    <cms-button-icon cms-title="Edit modules"
+                                                     cms-icon="pencil"
+                                                     ng-click="vm.editModuleTypes(section)"
+                                                     ng-if="!vm.globalLoadState.isLoading">
+                                    </cms-button-icon>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </cms-table-container>
+            </cms-form-field-container>
+        </cms-form-section>
+    </cms-page-body>
+</cms-form>

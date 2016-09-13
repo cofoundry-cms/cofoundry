@@ -1,0 +1,58 @@
+﻿<div class="control-group">
+    <cms-field>
+        <label class="control-label" for="{{vm.modelName}}">{{vm.title}}:</label>
+        <div class="controls">
+            <div class="image-asset">
+                <input type="hidden"
+                       id="{{vm.modelName}}"
+                       name="{{vm.modelName}}"
+                       ng-model="vm.model"
+                       ng-change="vm.onChange()" />
+
+                <cms-image-asset ng-if="vm.previewAsset"
+                                 cms-image="vm.previewAsset"
+                                 cms-width="{{vm.previewWidth}}"
+                                 cms-height="{{vm.previewHeight}}"
+                                 class="img-polaroid"></cms-image-asset>
+
+                <i class="fa fa-picture-o"
+                   ng-hide="vm.formScope.editMode"
+                   ng-if="!vm.previewAsset"></i>
+
+                <cms-button-icon cms-title="{{vm.buttonText}}"
+                                 cms-icon="picture-o"
+                                 ng-show="vm.formScope.editMode"
+                                 ng-if="!vm.previewAsset"
+                                 ng-click="vm.showPicker()"
+                                 ng-disabled="vm.loadState.isLoading || vm.disabled">
+            </div>
+
+            <cms-form-field-validation-summary></cms-form-field-validation-summary>
+            <div class="collection-actions">
+                <div ng-show="vm.formScope.editMode">
+                    <cms-button-icon cms-href="/admin/images#/{{vm.previewAsset.imageAssetId}}"
+                                     cms-external="true"
+                                     cms-title="Edit image"
+                                     cms-icon="external-link"
+                                     ng-disabled="vm.loadState.isLoading || vm.disabled"
+                                     ng-if="vm.previewAsset">
+                    </cms-button-icon>
+                    <cms-button-icon cms-title="{{vm.buttonText}}"
+                                     cms-icon="cog"
+                                     ng-click="vm.showPicker()"
+                                     ng-disabled="vm.loadState.isLoading || vm.disabled">
+                    </cms-button-icon>
+                    <cms-button-icon cms-title="Remove"
+                                     cms-icon="trash-o"
+                                     ng-if="vm.isRemovable"
+                                     ng-click="vm.remove()"
+                                     ng-disabled="vm.loadState.isLoading || vm.disabled">
+                    </cms-button-icon>
+                </div>
+            </div>
+        </div>
+    </cms-field>
+    <p class="help-inline" ng-if="vm.description">
+        <small>{{vm.description}}</small>
+    </p>
+</div>

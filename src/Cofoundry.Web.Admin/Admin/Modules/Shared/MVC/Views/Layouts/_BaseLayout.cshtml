@@ -1,0 +1,38 @@
+﻿@inherits System.Web.Mvc.WebViewPage
+@using System.Web.Optimization
+@using Cofoundry.Web.Admin
+
+<!doctype html>
+<html class="no-js" lang="en">
+<head>
+
+    <title>@ViewBag.Title - Cofoundry</title>
+
+    <meta charset="utf-8">
+    <meta name="robots" content="noindex, nofollow">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+
+    <link rel="shortcut icon" href="@SharedRouteLibrary.StaticContent.Url("favicon.ico")">
+    <link href='//fonts.googleapis.com/css?family=Open+Sans:400,700,300' rel='stylesheet' type='text/css'>
+
+    @RenderSection("Meta", required: false)
+
+    @Styles.Render(SharedRouteLibrary.Css.Main)
+
+    @RenderSection("Styles", required: false)
+
+    <!--[if lt IE 9]>
+    @Scripts.Render(SharedRouteLibrary.Js.Html5Shiv)
+    <![endif]-->
+    @RenderSection("HeaderScripts", required: false)
+
+</head>
+
+<body>
+
+    @RenderBody()
+
+    @RenderSection("FooterScripts", required: false)
+
+</body>
+</html>

@@ -1,0 +1,67 @@
+﻿<cms-page-header cms-title="Site Setup"></cms-page-header>
+
+<cms-page-body ng-if="vm.isSetupComplete">
+    <cms-success-message>
+        Setup complete. Please <a href="{{::vm.urlLibrary.login()}}">login</a> to continue.
+    </cms-success-message>
+</cms-page-body>
+
+<cms-form cms-name="mainForm"
+          cms-edit-mode="true"
+          ng-if="!vm.isSetupComplete"
+          ng-submit="vm.save()">
+
+    <cms-page-actions>
+        <cms-button-submit cms-text="Save"
+                           ng-disabled="vm.mainForm.$invalid || vm.saveLoadState.isLoading"
+                           cms-loading="vm.saveLoadState.isLoading"></cms-button-submit>
+    </cms-page-actions>
+
+    <cms-page-body cms-content-type="form">
+
+        <cms-form-status></cms-form-status>
+
+        <!--General-->
+        <cms-form-section title="General">
+
+            <cms-form-field-text cms-title="Company Name"
+                                 cms-model="vm.command.companyName"
+                                 maxlength="100"
+                                 required></cms-form-field-text>
+
+        </cms-form-section>
+
+        <!--User Account-->
+        <cms-form-section title="Admin User Account">
+
+            <cms-form-field-text cms-title="First Name"
+                                 cms-model="vm.command.userFirstName"
+                                 maxlength="32"
+                                 required></cms-form-field-text>
+
+            <cms-form-field-text cms-title="Last Name"
+                                 cms-model="vm.command.userLastName"
+                                 maxlength="32"
+                                 required></cms-form-field-text>
+
+            <cms-form-field-email-address cms-title="Email"
+                                          cms-model="vm.command.userEmail"
+                                          maxlength="150"
+                                          required></cms-form-field-email-address>
+
+            <cms-form-field-password cms-title="Password"
+                                     cms-model="vm.command.userPassword"
+                                     minlength="8"
+                                     maxlength="300"
+                                     required></cms-form-field-password>
+
+            <cms-form-field-password cms-title="Confirm password"
+                                     cms-model="vm.command.confirmUserPassword"
+                                     cms-match="vm.command.userPassword"
+                                     cms-match-val-msg="Passwords must match"
+                                     maxlength="300"
+                                     required></cms-form-field-password>
+        </cms-form-section>
+    </cms-page-body>
+
+</cms-form>

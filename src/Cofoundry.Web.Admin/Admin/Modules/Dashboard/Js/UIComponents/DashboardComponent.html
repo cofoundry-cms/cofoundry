@@ -1,0 +1,11 @@
+﻿<div class="dashboard-item">
+    <h3>{{vm.heading}}</h3>
+    <p class="alert" ng-if="vm.numItems === 0">There are no {{vm.entityNamePlural}}</p>
+    <div ng-transclude ng-if="vm.numItems || vm.loader.isLoading" cms-loading="vm.loader.isLoading">
+
+    </div>
+    <div class="btn-group">
+        <a class="btn btn-small" href="{{vm.listUrl}}" ng-if="vm.listUrl"><i class="icon-list"></i> All {{vm.entityNamePlural}}</a>
+        <a class="btn btn-small" href="{{vm.createUrl}}" ng-if="vm.createUrl"><i class="icon-plus"></i> New {{vm.entityName}}</a>
+    </div>
+</div>

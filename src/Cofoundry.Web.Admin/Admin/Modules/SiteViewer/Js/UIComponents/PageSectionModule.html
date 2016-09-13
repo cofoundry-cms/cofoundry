@@ -1,0 +1,65 @@
+﻿<div class="module-popover-container"
+     ng-style="css"
+     ng-if="isOver"
+     ng-mouseenter="setIsOver(true)"
+     ng-mouseleave="setIsOver(false)"
+     id="cms-module-popover">
+    <ul ng-class="{ disabled: globalLoadState.isLoading }">
+        <li class="up"
+            ng-click="moveModuleUp()"
+            ng-if="isMultiModule">
+            <a href="" title="Move this module up">
+                <i class="fa fa-chevron-up"></i>
+            </a>
+        </li>
+
+        <li class="down"
+            ng-click="moveModuleDown()"
+            ng-if="isMultiModule">
+            <a href="" title="Move this module down">
+                <i class="fa fa-chevron-down"></i>
+            </a>
+        </li>
+
+        <li class="edit"
+            ng-if="versionModuleId"
+            ng-click="editModule()">
+            <a href="" title="Edit this module">
+                <i class="fa fa-edit"></i>
+            </a>
+        </li>
+
+        <li class="add"
+            ng-if="!versionModuleId"
+            ng-click="addModule()">
+            <a href="" title="Add a new module">
+                <i class="fa fa-plus"></i>
+            </a>
+        </li>
+
+        <li class="delete"
+            ng-if="versionModuleId"
+            ng-click="deleteModule()">
+            <a href="" title="Delete this module">
+                <i class="fa fa-trash-o"></i>
+            </a>
+        </li>
+
+        <li class="addAbove"
+            ng-click="addModuleAbove()"
+            ng-if="isMultiModule">
+            <a href="" title="Add a new module above">
+                <i class="fa fa-chevron-circle-up"></i>
+            </a>
+        </li>
+
+        <li class="addBelow"
+            ng-click="addModuleBelow()"
+            ng-if="isMultiModule">
+            <a href="" title="Add a new module below">
+                <i class="fa fa-chevron-circle-down"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+

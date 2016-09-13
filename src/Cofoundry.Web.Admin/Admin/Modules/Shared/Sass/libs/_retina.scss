@@ -1,0 +1,16 @@
+@mixin retina {
+  $retina-support-respondjs: 0 !default;
+
+  @media (-webkit-min-device-pixel-ratio: 1.5), (min--moz-device-pixel-ratio: 1.5), (-o-min-device-pixel-ratio: 3/2), (min-device-pixel-ratio: 1.5), (min-resolution: 144dppx) {
+    // Note: Respond.js does not support pixel-ratio media queries so older browsers (IE8) will apply styles defined within the query.
+    // To hide the styles from IE8, add the code within html.mediaqueries
+    @if ($retina-support-respondjs == 1) {
+      html.mediaqueries & {
+        @content;
+      }
+    }
+    @else if $mq-support {
+      @content;
+    }
+  }
+}

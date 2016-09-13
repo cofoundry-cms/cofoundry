@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>Cofoundry.Core</id>
+    <version>$version$</version>
+    <title>Cofoundry.Core</title>
+    <authors>Cofoundry</authors>
+    <owners>Cofoundry</owners>
+    <licenseUrl>https://github.com/cofoundry-cms/cofoundry/blob/master/LICENSE</licenseUrl>
+    <projectUrl>http://www.cofoundry.org</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Cofoundry Core components and interfaces</description>
+    <copyright>Cofoundry.org</copyright>
+    <tags>Cofoundry Core</tags>
+    <dependencies>
+      <dependency id="AutoMapper" version="5.1.1" />
+      <dependency id="Conditions" version="2.1.0" />
+      <dependency id="EntityFramework" version="6.1.3" />
+      <dependency id="HtmlAgilityPack" version="1.4.9.5" />
+      <dependency id="Microsoft.AspNet.Razor" version="3.2.3" />
+      <dependency id="Newtonsoft.Json" version="9.0.1" />
+      <dependency id="RazorEngine" version="3.9.0" />
+    </dependencies>
+  </metadata>
+  <files>
+    <file src="bin\Release\Cofoundry.Core.dll" target="lib\net461" />
+    <file src="bin\Release\Cofoundry.Core.XML" target="lib\net461" />
+  </files>
+</package>

@@ -1,0 +1,19 @@
+%heading {
+    text-transform: uppercase;
+    font-weight: bold;
+}   
+
+.heading-primary {
+    @extend %heading;
+    @include font-size(3);
+}
+
+.heading-secondary {
+    @extend %heading;
+    @include font-size(2);
+}
+
+.heading-tertiary {
+    @extend %heading;
+    @include font-size(1.5);
+}

@@ -1,0 +1,14 @@
+﻿<cms-form cms-name="searchFilterForm"
+          class="search-filter"
+          ng-submit="vm.setFilter()"
+          ng-show="vm.ngShow">
+    <form-section cms-title="Filter this list"
+                  ng-transclude>
+
+    </form-section>
+    <div class="form-actions">
+        <cms-button-submit cms-text="Apply"></cms-button-submit>
+        <cms-button cms-text="Cancel"
+                    ng-click="vm.cancel()"></cms-button>
+    </div>
+</cms-form>

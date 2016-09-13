@@ -1,0 +1,19 @@
+﻿@inherits WebViewPage<ImageDisplayModel>
+@using Cofoundry.Web
+@using System.Web.Mvc
+@using System.Web.Mvc.Html
+
+@{
+    Layout = null;
+}
+
+@if (string.IsNullOrEmpty(Model.LinkPath))
+{
+    <img src="@Model.Source" alt="@Model.AltText" />
+}
+else
+{
+    <a href="@Model.LinkPath" target="@Model.LinkTarget">
+        <img src="@Model.Source" alt="@Model.AltText" />
+    </a>
+}

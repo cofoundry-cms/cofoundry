@@ -1,0 +1,35 @@
+﻿<div class="control-group">
+    <label class="control-label" for="{{vm.modelName}}">Video Id:</label>
+
+    <div class="controls">
+        <div ng-show="!vm.isEditing">
+            {{vm.model}}
+            <cms-button cms-text="Change"
+                        ng-click="vm.setEditing()"></cms-button>
+        </div>
+        <div ng-show="vm.isEditing">
+
+            <input type="text"
+                   id="{{vm.modelName}}"
+                   name="{{vm.modelName}}"
+                   placeholder="enter a youtube url or id"
+                   ng-change="vm.onChange()"
+                   ng-model="vm.idOrUrlInput"
+                   ng-disabled="vm.disabled" />
+
+            <cms-button cms-text="Ok"
+                        ng-click="vm.updateVideoId()"
+                        cms-loading="vm.updateIdLoadState.isLoading"></cms-button>
+
+            <cms-button cms-text="Cancel"
+                        ng-click="vm.cancelEditing()"
+                        ng-if="vm.model"></cms-button>
+        </div>
+
+        <cms-form-field-validation-summary></cms-form-field-validation-summary>
+
+        <p class="help-inline" ng-if="vm.description">
+            <small>The numerical identifier of the Youtube video</small>
+        </p>
+    </div>
+</div>

@@ -1,0 +1,82 @@
+﻿<!--HEADER-->
+<cms-page-header cms-title="{{vm.userArea.name}} Users"></cms-page-header>
+
+<cms-page-sub-header>
+    <cms-page-header-buttons>
+        <a class="btn-icon" cms-text="Filter"
+           ng-click="vm.toggleFilter()">
+            <i class="fa fa-search"></i>
+        </a>
+
+        <!--FILTER-->
+        <cms-search-filter cms-query="vm.query"
+                           cms-filter="vm.filter"
+                           ng-show="vm.isFilterVisible">
+
+            <cms-form-field-text cms-title="Name"
+                                 cms-model="vm.filter.name"></cms-form-field-text>
+
+            <cms-form-field-text cms-title="Email"
+                                 cms-model="vm.filter.email"></cms-form-field-text>
+
+        </cms-search-filter>
+    </cms-page-header-buttons>
+</cms-page-sub-header>
+
+<!-- Default toolbar -->
+<cms-page-actions>
+
+    <cms-pager cms-result="vm.result"
+               cms-query="vm.query"></cms-pager>
+
+    <cms-button-link cms-text="Create"
+                     cms-icon="plus"
+                     cms-href="{{::vm.urlLibrary.userNew(vm.userArea)}}"></cms-button-link>
+
+</cms-page-actions>
+
+<!-- Scrollable content area -->
+<cms-page-body cms-content-type="form"
+               cms-sub-header="with-header">
+
+    <cms-table-container cms-loading="vm.gridLoadState.isLoading">
+        <table>
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Role</th>
+                    <th>Last Logged In</th>
+                    <th>Created</th>
+                    <th cms-table-column-actions>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-if="!vm.result.items.length">
+                    <td colspan="100" class="empty">Sorry, no users could be found.</td>
+                </tr>
+                <tr ng-repeat="user in vm.result.items">
+                    <td>
+                        <cms-user-link cms-user="::user"></cms-user-link>
+                        <br />
+                        <a href="{{::vm.urlLibrary.userDetails(user.userArea, user.userId)}}">{{::user.email}}</a>
+                    </td>
+                    <td>
+                        <a href="{{::vm.urlLibrary.roleDetails(user.role.roleId)}}">{{::user.role.title}}</a>
+                    </td>
+                    <td>
+                        <span ng-if="::!user.lastLoginDate">Never</span>
+                        <cms-time-ago cms-time="::user.lastLoginDate"></cms-time-ago>
+                    </td>
+                    <td class="lowPriority">
+                        <cms-table-cell-created-audit-data cms-audit-data="::user.auditData"></cms-table-cell-created-audit-data>
+                    </td>
+                    <td cms-table-column-actions>
+                        <a href="{{::vm.urlLibrary.userDetails(user.userArea, user.userId)}}" class="btn-icon" title="Edit">
+                            <i class="fa fa-pencil"></i>
+                        </a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </cms-table-container>
+</cms-page-body>

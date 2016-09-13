@@ -1,0 +1,128 @@
+﻿<!--HEADER-->
+<cms-page-header cms-title="Pages"></cms-page-header>
+
+<cms-page-sub-header>
+    <a href="">Site root</a> /
+    <cms-page-header-buttons>
+
+        <a class="btn-icon" cms-text="Filter"
+                    ng-click="vm.toggleFilter()">
+            <i class="fa fa-search"></i>
+        </a>
+
+        <!--FILTER-->
+        <cms-search-filter cms-query="vm.query"
+                           cms-filter="vm.filter"
+                           ng-show="vm.isFilterVisible">
+
+            <cms-form-field-text cms-title="Tags"
+                                 cms-model="vm.filter.tags"></cms-form-field-text>
+
+            <cms-form-field-locale-selector cms-model="vm.filter.localeId"
+                                            cms-default-item-text="Any"></cms-form-field-locale-selector>
+
+            <cms-form-field-web-directory-selector cms-model="vm.filter.webDirectoryId"
+                                                   cms-default-item-text="Any"></cms-form-field-web-directory-selector>
+
+            <cms-form-field-dropdown cms-title="Workflow Status"
+                                     cms-options="vm.workFlowStatus"
+                                     cms-option-name="name"
+                                     cms-option-value="name"
+                                     cms-default-item-text="Any"
+                                     cms-model="vm.filter.workFlowStatus"></cms-form-field-dropdown>
+
+            <cms-form-field-dropdown cms-title="Template"
+                                     cms-options="vm.pageTemplates"
+                                     cms-option-name="name"
+                                     cms-option-value="pageTemplateId"
+                                     cms-default-item-text="Any"
+                                     cms-model="vm.filter.pageTemplateId"></cms-form-field-dropdown>
+
+        </cms-search-filter>
+
+    </cms-page-header-buttons>
+</cms-page-sub-header>
+
+<cms-page-actions>
+
+    <!--RESULTS-->
+    <cms-pager cms-result="vm.result"
+               cms-query="vm.query"></cms-pager>
+
+    <cms-button-link cms-text="Create"
+                     cms-icon="plus"
+                     cms-href="#/new"></cms-button-link>
+
+</cms-page-actions>
+
+<cms-page-body cms-sub-header="with-header"
+               cms-content-type="form">
+    <cms-table-container cms-loading="vm.gridLoadState.isLoading">
+        <table>
+            <thead>
+                <tr>
+                    <th>Type</th>
+                    <th>Name</th>
+                    <!--<th>Market</th>-->
+                    <!--<th>Tags</th>-->
+                    <th>Status</th>
+                    <th>Created</th>
+                    <th cms-table-column-actions>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-if="!vm.result.items.length">
+                    <td colspan="100" class="empty">Sorry, no pages could be found.</td>
+                </tr>
+                <tr ng-repeat="page in vm.result.items">
+                    <td class="row-type">
+                        <a href="#/{{ page.pageId }}">
+                            <i class="fa fa-file-code-o"></i>
+                        </a>
+                    </td>
+                    <td>
+                        <a href="#/{{ page.pageId }}">{{ page.title }}</a>
+                        <br />
+                        <a href="{{page.fullPath}}">{{page.fullPath}}</a>
+                    </td>
+                    <!--<td>
+                    <span ng-if="page.locale">{{ page.locale.name }} ({{ page.locale.ietfLanguageTag}})</span>
+                </td>-->
+                    <!--<td>
+                    <cms-tag-list cms-tags="page.tags"></cms-tag-list>
+                </td>-->
+                    <td ng-if="page.isPublished">
+                        Published
+                        <br />
+                        <a href="{{ page.fullPath }}" ng-if="page.isPublished && page.hasDraft">(Pending Draft)</a>
+                    </td>
+                    <td ng-if="!page.isPublished">
+                        Draft
+                    </td>
+                    <td class="lowPriority">
+                        <cms-table-cell-created-audit-data cms-audit-data="page.auditData"></cms-table-cell-created-audit-data>
+                    </td>
+                    <td cms-table-column-actions>
+                        <!--<cms-button-icon cms-icon="pencil"
+                         cms-href="#/{{ page.pageId }}"
+                         cms-title="Edit"></cms-button-icon>-->
+
+                        <a href="#/{{ page.pageId }}" class="btn-icon" title="Edit">
+                            <i class="fa fa-pencil"></i>
+                        </a>
+                        <a href="{{page.fullPath}}" class="btn-icon" title="Browse to page" target="_blank">
+                            <i class="fa fa-external-link"></i>
+                        </a>
+                        <a href=""
+                           ng-if="!page.isPublished"
+                           ng-click="vm.publish(page.pageId)"
+                           ng-disabled="vm.globalLoadState.isLoading" class="btn-icon" title="Publish">
+                            <i class="fa fa-globe"></i>
+                        </a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+    </cms-table-container>
+</cms-page-body>

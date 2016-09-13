@@ -1,0 +1,18 @@
+﻿@inherits EmailTemplateBase<NewUserWelcomeMailTemplate>
+@using Cofoundry.Domain.MailTemplates
+@using Cofoundry.Core.Mail
+
+@{
+    Layout = TemplatePath.DefaultLayoutPath_Text;
+}
+
+Hi @Model.FirstName
+
+An account has been created for you on Cofoundry. Please use your e-mail as your login.
+Your temporary password is: @Model.TemporaryPassword
+
+Login here: @Url.ToAbsolute(UrlLibrary.Login)
+
+
+Thanks,
+Cofoundry

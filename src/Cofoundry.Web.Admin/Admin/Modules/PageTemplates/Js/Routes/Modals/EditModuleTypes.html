@@ -1,0 +1,64 @@
+﻿<cms-modal-dialog-container cms-modal-size="large">
+
+    <cms-modal-dialog-header>
+        Allowed Module Types: {{::section.name}}
+    </cms-modal-dialog-header>
+
+    <cms-form cms-name="allowedModuleTypesForm"
+              cms-loading="formLoadState.isLoading">
+
+        <cms-page-actions>
+            <cms-button-submit cms-text="Ok"
+                               ng-click="save()"
+                               ng-disabled="allowedModuleTypesForm.$invalid || submitLoadState.isLoading"
+                               cms-loading="submitLoadState.isLoading"></cms-button-submit>
+
+            <cms-button cms-text="Cancel" ng-click="close()"></cms-button>
+        </cms-page-actions>
+
+        <cms-page-body>
+            <cms-form-status></cms-form-status>
+
+            <!-- Main -->
+            <cms-form-section cms-title="Types">
+
+                <cms-form-field-checkbox cms-title="Allow all generic"
+                                         cms-model="command.hasAllModuleTypes"
+                                         ng-disabled="submitLoadState.isLoading"></cms-form-field-checkbox>
+
+                <cms-form-field-container cms-title="Module Types"
+                                          ng-if="!command.hasAllModuleTypes"
+                                          class="form-field-checkbox-list">
+                    
+                    <cms-table-container>
+                        <table>
+                            <tbody ng-repeat="(isCustom, set) in moduleTypeGroups">
+                                <tr>
+                                    <th colspan="2">
+                                        <cms-table-group-heading>{{isCustom === 'true' ? 'Custom' : 'Generic'}}</cms-table-group-heading>
+                                    </th>
+                                </tr>
+                                <tr ng-repeat="moduleType in set">
+                                    <td><label for="moduleType{{moduleType.pageModuleTypeId}}">{{moduleType.name}}</label></td>
+                                    <td class="row-type" style="width:30px; text-align:center;">
+                                        <input type="checkbox"
+                                               id="moduleType{{moduleType.pageModuleTypeId}}"
+                                               name="moduleType{{moduleType.pageModuleTypeId}}"
+                                               value="{{moduleType.pageModuleTypeId}}"
+                                               ng-disabled="submitLoadState.isLoading"
+                                               ng-model="moduleType.selected">
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </cms-table-container>
+
+                </cms-form-field-container>
+
+            </cms-form-section>
+
+        </cms-page-body>
+
+</cms-form>
+
+</cms-modal-dialog-container>

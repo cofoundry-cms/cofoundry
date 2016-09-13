@@ -1,0 +1,78 @@
+﻿<!--HEADER-->
+<cms-page-header cms-title="Documents"></cms-page-header>
+
+<cms-page-sub-header>
+    <cms-page-header-buttons>
+        <a class="btn-icon" cms-text="Filter"
+           ng-click="vm.toggleFilter()">
+            <i class="fa fa-search"></i>
+        </a>
+
+        <!--FILTER-->
+        <cms-search-filter cms-query="vm.query"
+                           cms-filter="vm.filter"
+                           ng-show="vm.isFilterVisible">
+
+            <cms-form-field-text cms-title="Tags"
+                                 cms-model="vm.filter.tags"></cms-form-field-text>
+
+            <cms-form-field-document-type-selector cms-model="vm.filter.fileExtension"></cms-form-field-document-type-selector>
+
+        </cms-search-filter>
+    </cms-page-header-buttons>
+</cms-page-sub-header>
+
+<!-- Default toolbar -->
+<cms-page-actions ng-show="!vm.editMode">
+    <!--RESULTS-->
+    <cms-pager cms-result="vm.result"
+               cms-query="vm.query"></cms-pager>
+
+    <cms-button-link class="main-cta" 
+                     cms-text="Upload Document"
+                     cms-icon="plus"
+                     cms-href="#/new"></cms-button-link>
+</cms-page-actions>
+
+<cms-page-body cms-content-type="form"
+               cms-sub-header="with-header">
+
+    <cms-table-container cms-loading="vm.gridLoadState.isLoading">
+        <table>
+            <thead>
+                <tr>
+                    <th>Title</th>
+                    <th>File</th>
+                    <th>Tags</th>
+                    <th>Modified</th>
+                    <th cms-table-column-actions>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-if="vm.result.items.length == 0">
+                    <td colspan="100" class="empty">Sorry, no documents could be found.</td>
+                </tr>
+                <tr ng-repeat="document in vm.result.items">
+                    <td>
+                        <a href="#/{{ ::document.documentAssetId }}">{{ ::document.title }}</a><br />
+                    </td>
+                    <td>
+                        <cms-document-asset cms-document="document" /><br />
+                        {{document.fileSizeInBytes | bytes}}
+                    </td>
+                    <td>
+                        <cms-tag-list cms-tags="document.tags"></cms-tag-list>
+                    </td>
+                    <td class="lowPriority">
+                        <cms-table-cell-updated-audit-data cms-audit-data="::document.auditData"></cms-table-cell-updated-audit-data>
+                    </td>
+                    <td cms-table-column-actions>
+                        <a href="#/{{document.documentAssetId}}" class="btn-icon" title="Edit">
+                            <i class="fa fa-pencil"></i>
+                        </a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </cms-table-container>
+</cms-page-body>

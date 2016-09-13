@@ -1,0 +1,20 @@
+﻿<div class="control-group">
+    <cms-field>
+        <label class="control-label" for="{{vm.modelName}}">{{vm.title}}:</label>
+        <div class="controls">
+            <input id="{{vm.modelName}}"
+                   name="{{vm.modelName}}"
+                   ng-show="vm.formScope.editMode"
+                   ng-model="vm.model"
+                   ng-change="vm.onChange()"
+                   ng-diabled="vm.disabled"
+                   type="checkbox" />
+
+            <span ng-hide="vm.formScope.editMode">{{vm.model ? 'Yes' : 'No'}}</span>
+            <cms-form-field-validation-summary></cms-form-field-validation-summary>
+        </div>
+    </cms-field>
+    <p class="help-inline" ng-if="vm.description">
+        <small>{{vm.description}}</small>
+    </p>
+</div>

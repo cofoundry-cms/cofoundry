@@ -1,0 +1,114 @@
+﻿label {
+    &:after {
+
+    }
+}
+
+input[type="text"], input[type="email"], input[type="password"], input[type="number"], input[type="date"], input[type="url"], input[type="tel"], textarea, select {
+    @include border-radius(2px);
+    font-family:$fontstack-default;
+    border:1px solid #d2d2d2;
+    padding:10px;
+    width: 100%;
+
+    &.ng-invalid {
+        //box-shadow: 0px 0px 3px $color-orange!important;
+        //border-color:$color-orange;
+    }
+}
+
+input[type="color"] {
+    @include border-radius(2px);
+    font-family:$fontstack-default;
+    border:1px solid #d2d2d2;
+    width:40px;
+    height:40px;
+}
+
+.text-block-display-value {
+    padding: 1rem;
+    background: #fafafa;
+}
+
+.color-box {
+    @include border-radius(3px);
+    width: 40px;
+    height: 40px;
+    display: block;
+    text-align: center;
+    padding-top: 13px;
+    text-indent:50px;
+
+    &.edit {
+        position: absolute;
+        top: 0;
+        z-index: -1;
+    }
+}
+
+.filtered-dd {
+    .btn-icon .fa {
+        padding:9px;
+    }
+
+    .btn-remove {
+        position: absolute;
+        right: 25px;
+        top: 0px;
+        z-index:2;
+    }
+}
+
+.form-validation-summary li {
+    padding:5px;
+    margin-top: -1px;
+    border-left: 1px solid #d2d2d2;
+    border-right: 1px solid #d2d2d2;
+    border-bottom: 1px solid #d2d2d2;
+    border-top: 1px dashed white;
+    z-index: 10;
+    position: relative;
+}
+
+.selectize-input, .selectize-control.single .selectize-input {
+    @include box-shadow(none);
+}
+
+.selectize-dropdown {
+    position:relative!important;
+    top:auto!important;
+}
+
+.selectize-control {
+    width:100%!important;
+}
+.selectize-control.single .selectize-input {
+    background:none;
+}
+.ui-select-container[theme="selectize"].direction-up .ui-select-dropdown {
+    box-shadow:none;
+    margin-top:-4px;
+}
+.selectize-dropdown .active {
+    background:$color-selected;
+    color:#000;
+}
+.selectize-control.single .selectize-input, .selectize-dropdown.single {
+    border-color: #d2d2d2;
+}
+.selectize-control.single .selectize-input {
+
+    &:after {
+        @include transition(color .3s);
+        font-family: FontAwesome;
+        content: "\f013";
+        font-size: 1.3em;
+        border: none;
+        top: 11px;
+        right: 23px;
+    }
+
+    &:hover:after {
+        color:$color-red;
+    }
+}

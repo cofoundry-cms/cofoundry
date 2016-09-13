@@ -1,0 +1,71 @@
+﻿<cms-modal-dialog-container cms-modal-size="large">
+
+    <cms-modal-dialog-header>
+        Re-scan Template File
+    </cms-modal-dialog-header>
+
+    <cms-form cms-name="allowedModuleTypesForm"
+              cms-loading="formLoadState.isLoading">
+
+        <cms-page-actions>
+            <cms-button-submit cms-text="Ok"
+                               ng-click="save()"
+                               ng-disabled="formLoadState.isLoading || submitLoadState.isLoading"
+                               cms-loading="submitLoadState.isLoading"></cms-button-submit>
+
+            <cms-button cms-text="Cancel" ng-click="close()"></cms-button>
+        </cms-page-actions>
+
+        <cms-page-body>
+            <p ng-if="!hasChanges && !hasModelChanged">
+                No changes detected.
+            </p>
+            <div ng-if="hasChanges || hasModelChanged">
+                <cms-warning-message ng-if="hasModelChanged">
+                    The model type will be updated from {{pageTemplate.customEntityModelType}}
+                    to {{newCustomEntityModelType}}
+                </cms-warning-message>
+                <cms-warning-message ng-if="hasDeletions && pageTemplate.numPages">
+                    WARNING: Some sections have been removed. Proceeding will delete
+                    module content in pages that use this template.
+                </cms-warning-message>
+                <cms-table-container ng-if="hasChanges">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th ng-if="hasDeletions">Rename From</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-if="!sections.length">
+                                <td colspan="100" class="empty">None.</td>
+                            </tr>
+                            <tr ng-repeat="section in sections">
+                                <td>
+                                    {{::section.name}}
+                                </td>
+                                <td ng-if="hasDeletions">
+                                    <select ng-model="section.renameAs"
+                                            ng-if="::section.status === 'Added'"
+                                            ng-options="s.name for s in section.renameAsOptions"
+                                            ng-disabled="submitLoadState.isLoading"
+                                            ng-change="onRenameAsChanged()">
+                                        <option value=""></option>
+                                    </select>
+                                </td>
+                                <td ng-class="section.statusCls">
+                                    {{::section.status}}
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </cms-table-container>
+            </div>
+
+        </cms-page-body>
+
+    </cms-form>
+
+</cms-modal-dialog-container>

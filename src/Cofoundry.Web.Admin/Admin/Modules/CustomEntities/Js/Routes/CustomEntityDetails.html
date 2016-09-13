@@ -1,0 +1,184 @@
+﻿<cms-page-header cms-title="{{vm.customEntity.latestVersion.title}}"
+                 cms-parent-title="{{::vm.options.name}}"></cms-page-header>
+
+<cms-form cms-name="mainForm"
+          cms-edit-mode="vm.editMode"
+          ng-submit="vm.save()"
+          cms-loading="vm.formLoadState.isLoading">
+
+    <!-- Default toolbar -->
+    <cms-page-actions ng-show="!vm.editMode">
+
+        <cms-button cms-text="Edit"
+                    class="main-cta"
+                    ng-click="vm.edit()"
+                    ng-disabled="vm.globalLoadState.isLoading"></cms-button>
+
+        <cms-button-link cms-text="Browse to page"
+                         cms-icon="eye-open"
+                         ng-if="vm.customEntity.fullPath"
+                         cms-href="{{vm.customEntity.fullPath}}"></cms-button-link>
+
+        <cms-button cms-text="Publish"
+                    ng-click="vm.publish()"
+                    ng-disabled="vm.globalLoadState.isLoading"
+                    ng-if="!vm.options.autoPublish || !vm.customEntity.isPublished"></cms-button>
+
+        <cms-button cms-text="Unpublish"
+                    ng-click="vm.unpublish()"
+                    ng-disabled="vm.globalLoadState.isLoading"
+                    ng-if="!vm.options.autoPublish && vm.customEntity.isPublished"></cms-button>
+
+        <cms-button cms-text="Change Url"
+                    ng-click="vm.changeUrl()"
+                    ng-if="::vm.canChangeUrl"
+                    ng-disabled="vm.globalLoadState.isLoading"></cms-button>
+
+        <cms-button cms-text="Delete"
+                    ng-click="vm.deleteCustomEntity()"
+                    ng-disabled="vm.globalLoadState.isLoading"></cms-button>
+
+    </cms-page-actions>
+
+    <!-- Edit mode toolbar -->
+    <cms-page-actions ng-show="vm.editMode">
+
+        <cms-button-submit cms-text="Save Draft"
+                           cms-loading="vm.saveLoadState.isLoading"
+                           class="main-cta"
+                           ng-if="::!vm.options.autoPublish"
+                           ng-disabled="vm.mainForm.$invalid || vm.globalLoadState.isLoading"></cms-button-submit>
+
+        <cms-button cms-text="{{::vm.saveButtonText}}"
+                    cms-loading="vm.saveAndPublishLoadState.isLoading"
+                    ng-disabled="vm.mainForm.$invalid || vm.globalLoadState.isLoading"
+                    ng-click="vm.saveAndPublish()"></cms-button>
+
+        <cms-button cms-text="Cancel"
+                    ng-click="vm.cancel()"
+                    ng-disabled="vm.globalLoadState.isLoading"></cms-button>
+    </cms-page-actions>
+
+    <!-- Scrollable content area -->
+    <cms-page-body cms-content-type="form">
+
+        <cms-form-status></cms-form-status>
+
+        <!--Main-->
+        <cms-form-section cms-title="Main">
+
+            <cms-form-field-text cms-title="{{::vm.options.terms['title']}}"
+                                 cms-model="vm.updateCommand.title"
+                                 required
+                                 maxlength="200"></cms-form-field-text>
+
+            <cms-form-field-readonly cms-title="Market"
+                                     cms-model="vm.customEntity.locale.ietfLanguageTag"
+                                     ng-if="::vm.options.hasLocale"></cms-form-field-readonly>
+
+            <cms-form-field-container cms-title="Url" ng-if="vm.customEntity.fullPath">
+                <a ng-href="{{vm.customEntity.fullPath}}">{{vm.customEntity.fullPath}}</a>
+            </cms-form-field-container>
+
+            <cms-form-field-checkbox cms-title="Is Published"
+                                     cms-model="vm.customEntity.isPublished"
+                                     ng-if="!vm.options.autoPublish || !vm.customEntity.isPublished"
+                                     disabled></cms-form-field-checkbox>
+
+        </cms-form-section>
+
+        <!--DYNAMIC DATA-->
+
+        <cms-form-section cms-title="Properties" ng-if="vm.formDataSource.modelMetaData.dataModelProperties">
+            <cms-form-dynamic-field-set cms-data-source="vm.formDataSource"
+                                        cms-additional-parameters="vm.additionalParameters">
+
+            </cms-form-dynamic-field-set>
+        </cms-form-section>
+
+        <!--VERSIONS-->
+
+        <cms-form-section cms-title="Versions"
+                          ng-if="!vm.options.autoPublish">
+            <cms-form-field-container>
+
+                <cms-table-container>
+
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Version</th>
+                                <th>Title</th>
+                                <th>Status</th>
+                                <th class="lowPriority">Created</th>
+                                <th cms-table-column-actions
+                                    ng-show="!vm.editMode">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="version in vm.versions">
+                                <td>
+                                    {{::version.customEntityVersionId}}
+                                </td>
+                                <td>
+                                    {{::version.title}}
+                                </td>
+                                <td>
+                                    {{::version.workFlowStatus}}
+                                </td>
+                                <td class="lowPriority">
+                                    <cms-table-cell-created-audit-data cms-audit-data="::version.auditData"></cms-table-cell-created-audit-data>
+                                </td>
+                                <td cms-table-column-actions ng-switch="version.workFlowStatus" ng-show="!vm.editMode">
+                                    <div ng-switch-when="Draft">
+                                        <a href="{{::vm.customEntity.fullPath}}?mode=draft"
+                                           ng-if="::vm.customEntity.fullPath"
+                                           class="btn-icon" title="Open">
+                                            <i class="fa fa-external-link"></i>
+                                        </a>
+                                        <a href="" ng-click="vm.loading || vm.publish(vm.customEntity.customEntityId)" class="btn-icon" title="Publish">
+                                            <i class="fa fa-cloud-upload"></i>
+                                        </a>
+                                        <span ng-if="vm.versions.length > 1">
+                                            <a href="" ng-click="vm.loading || vm.discardDraft()" class="btn-icon" title="Discard">
+                                                <i class="fa fa-trash-o"></i>
+                                            </a>
+                                        </span>
+                                    </div>
+                                    <div ng-switch-when="Published">
+                                        <a href="{{::vm.customEntity.fullPath}}?mode=live"
+                                           ng-if="::vm.customEntity.fullPath"
+                                           class="btn-icon" title="Open">
+                                            <i class="fa fa-external-link"></i>
+                                        </a>
+                                        <a href="" ng-click="vm.loading || vm.unpublish()" class="btn-icon" title="Un-publish">
+                                            <i class="fa fa-cloud-download"></i>
+                                        </a>
+                                    </div>
+                                    <div ng-switch-default>
+                                        <a href="{{vm.customEntity.fullPath}}?version={{version.customEntityVersionId}}"
+                                           ng-if="::vm.customEntity.fullPath"
+                                           class="btn-icon" title="Open">
+                                            <i class="fa fa-external-link"></i>
+                                        </a>
+                                        <a href="" ng-click="vm.loading || vm.copyToDraft(version)" class="btn-icon" title="Copy to draft">
+                                            <i class="fa fa-files-o"></i>
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                </cms-table-container>
+            </cms-form-field-container>
+        </cms-form-section>
+
+        <!--AUDIT DATA-->
+        <cms-form-section-audit-data cms-audit-data="vm.customEntity.auditData"></cms-form-section-audit-data>
+
+    </cms-page-body>
+
+</cms-form>
+
+

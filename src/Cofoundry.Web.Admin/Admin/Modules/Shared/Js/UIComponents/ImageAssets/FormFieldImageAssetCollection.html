@@ -1,0 +1,64 @@
+﻿<div class="control-group">
+    <cms-field>
+        <label class="control-label" for="{{vm.modelName}}">{{vm.title}}:</label>
+        <div class="controls">
+            <input type="hidden"
+                   id="{{vm.modelName}}"
+                   name="{{vm.modelName}}"
+                   ng-model="vm.model"
+                   ng-change="vm.onChange()" />
+
+            <cms-table-container cms-loading="vm.gridLoadState.isLoading">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Image</th>
+                            <th>Title</th>
+                            <th cms-table-column-actions
+                                ng-if="vm.formScope.editMode">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-if="!vm.gridData.length">
+                            <td colspan="100" class="empty">None</td>
+                        </tr>
+                        <tr ng-repeat="image in vm.gridData track by $index"
+                            ui-draggable="vm.formScope.editMode"
+                            data-drag="image"
+                            data-drag-channel="asset-{{vm.modelName}}"
+                            ui-on-drop="vm.onDrop($index, $data)"
+                            data-drop-channel="asset-{{vm.modelName}}">
+                            <td>
+                                <cms-table-cell-image cms-image="image"></cms-table-cell-image>
+                            </td>
+                            <td>{{image.title}}</td>
+                            <td cms-table-column-actions ng-if="vm.formScope.editMode">
+                                <cms-button-icon cms-href="/admin/images#/{{image.imageAssetId}}"
+                                                 cms-external="true"
+                                                 cms-title="Edit image"
+                                                 cms-icon="external-link">
+                                </cms-button-icon>
+                                <cms-button-icon cms-title="Remove"
+                                                 cms-icon="trash-o"
+                                                 ng-click="vm.remove(image)">
+                                </cms-button-icon>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <cms-table-actions>
+                    <a href="" class="btn-icon" title="Add"
+                       ng-click="vm.showPicker()"
+                       ng-if="vm.formScope.editMode"
+                       ng-disabled="vm.gridLoadState.isLoading || vm.disabled">
+                        <i class="fa fa-plus-circle"></i>
+                    </a>
+                </cms-table-actions>
+            </cms-table-container>
+            <cms-form-field-validation-summary></cms-form-field-validation-summary>
+        </div>
+    </cms-field>
+    <p class="help-inline" ng-if="vm.description">
+        <small>{{vm.description}}</small>
+    </p>
+</div>

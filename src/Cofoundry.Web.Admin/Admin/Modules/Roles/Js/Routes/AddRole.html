@@ -1,0 +1,45 @@
+﻿<cms-page-header cms-title="Create"
+                 cms-parent-title="Roles"></cms-page-header>
+
+<cms-form cms-name="mainForm"
+          ng-submit="vm.save()"
+          cms-loading="vm.formLoadState.isLoading">
+
+    <cms-page-actions>
+        <cms-button-submit cms-text="Save"
+                           ng-disabled="vm.mainForm.$invalid"
+                           cms-loading="vm.globalLoadState.isLoading"></cms-button-submit>
+        <cms-button cms-text="Cancel"
+                    ng-click="vm.cancel()"
+                    ng-disabled="vm.globalLoadState.isLoading"></cms-button>
+    </cms-page-actions>
+
+
+    <cms-page-body cms-content-type="form">
+
+        <cms-form-status></cms-form-status>
+
+        <cms-form-section cms-title="Role">
+
+            <cms-form-field-text cms-title="Title"
+                                 cms-model="vm.command.title"
+                                 maxlength="50"
+                                 required></cms-form-field-text>
+
+            <cms-form-field-dropdown cms-title="User Area"
+                                     cms-options="vm.userAreas"
+                                     cms-option-name="name"
+                                     cms-option-value="userAreaCode"
+                                     cms-model="vm.command.userAreaCode"
+                                     ng-if="vm.userAreas.length > 1"
+                                     required></cms-form-field-dropdown>
+        </cms-form-section>
+
+        <cms-form-section cms-title="Permissions">
+            <cms-form-field-permissions-collection cms-model="vm.command.permissions"
+                                                   cms-global-load-state="vm.globalLoadState"></cms-form-field-permissions-collection>
+        </cms-form-section>
+
+    </cms-page-body>
+
+</cms-form>

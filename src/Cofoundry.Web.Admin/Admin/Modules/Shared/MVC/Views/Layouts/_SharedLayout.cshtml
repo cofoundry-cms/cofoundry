@@ -1,0 +1,38 @@
+﻿@inherits Cofoundry.Web.CofoundryWebViewPage
+@using System.Web.Mvc.Html
+@using Cofoundry.Web.Admin
+
+@{
+    Layout = LayoutPaths.BaseLayout;
+    var siteViewerDeviceView = Cofoundry.Settings.GetCurrentDeviceView();
+}
+
+@section Meta
+{
+    @RenderSection("Meta", required: false)
+}
+
+@section Styles
+{
+    @RenderSection("Styles", required: false)
+}
+
+@section HeaderScripts
+{
+    @RenderSection("HeaderScripts", required: false)
+}
+
+@section FooterScripts
+{
+    @RenderSection("FooterScripts", required: false)
+}
+
+<div id="wrapper" @Cofoundry.Html.ClassIf(!string.IsNullOrEmpty(siteViewerDeviceView), "device " + siteViewerDeviceView)>
+
+    @RenderBody()
+
+    <footer>
+        <p class="copyright">&copy; @DateTime.Now.Year Cofoundry. All Rights Reserved. Version @Cofoundry.GetType().Assembly.GetName().Version</p>
+    </footer>
+
+</div>

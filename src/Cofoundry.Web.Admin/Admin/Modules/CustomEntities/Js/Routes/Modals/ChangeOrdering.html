@@ -1,0 +1,114 @@
+﻿<cms-modal-dialog-container cms-modal-size="large">
+
+    <cms-modal-dialog-header>
+        Update Ordering
+    </cms-modal-dialog-header>
+
+    <cms-form cms-name="step1Form"
+              cms-loading="formLoadState.isLoading"
+              ng-submit="setStep(2)"
+              ng-if="currentStep === 1">
+
+        <cms-page-actions>
+
+            <cms-button-submit cms-text="Next"></cms-button-submit>
+
+            <cms-button cms-text="Cancel" ng-click="close()"></cms-button>
+
+        </cms-page-actions>
+
+        <cms-page-body>
+
+            <cms-form-section cms-title="Market">
+
+                <cms-form-status></cms-form-status>
+
+                <cms-form-field-locale-selector cms-model="command.localeId"
+                                                cms-on-loaded="onLocalesLoaded()"></cms-form-field-locale-selector>
+
+
+            </cms-form-section>
+
+        </cms-page-body>
+
+    </cms-form>
+
+    <cms-form cms-name="step2Form"
+              cms-loading="formLoadState.isLoading"
+              ng-submit="save()"
+              ng-if="currentStep === 2">
+
+        <cms-page-actions>
+
+            <cms-button cms-text="Previous" ng-click="setStep(1)"
+                        ng-if="allowStep1"
+                        ng-disabled="formLoadState.isLoading"></cms-button>
+
+            <cms-button-submit cms-text="Save"
+                               cms-loading="submitLoadState.isLoading"
+                               ng-disabled="formLoadState.isLoading"></cms-button-submit>
+
+            <cms-button cms-text="Cancel" ng-click="close()"></cms-button>
+
+        </cms-page-actions>
+
+        <cms-page-body>
+            <cms-warning-message ng-if="gridData.length >= 60">
+                WARNING: Ordering is only supported on the first 60 items.
+            </cms-warning-message>
+            <cms-table-container>
+                <table cms-loading="gridLoadState.isLoading">
+                    <thead>
+                        <tr>
+                            <th>{{::options.terms['title']}}</th>
+                            <th>Status</th>
+                            <th cms-table-column-actions ng-if="isPartialOrdering">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-if="!gridData.length">
+                            <td colspan="100" class="empty">None</td>
+                        </tr>
+                        <tr ng-repeat="entity in gridData track by $index"
+                            ui-draggable="true"
+                            data-drag="entity"
+                            data-drag-channel="custom-entity-{{vm.modelName}}"
+                            ui-on-drop="onDrop($index, $data)"
+                            data-drop-channel="custom-entity-{{vm.modelName}}">
+                            <td>
+                                <strong>
+                                    <cms-custom-entity-link cms-custom-entity-definition="options"
+                                                            cms-custom-entity="entity"></cms-custom-entity-link>
+                                </strong>
+                            </td>
+                            <td ng-if="entity.isPublished">
+                                Published
+                                <span ng-if="entity.isPublished && entity.hasDraft">(Pending Draft)</span>
+                            </td>
+                            <td ng-if="!entity.isPublished">
+                                Draft
+                            </td>
+                            <td cms-table-column-actions ng-if="isPartialOrdering">
+                                <cms-button-icon cms-title="Remove"
+                                                 cms-icon="trash-o"
+                                                 ng-click="remove(entity)">
+                                </cms-button-icon>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <cms-table-actions>
+                    <a href="" class="btn-icon" title="Add"
+                       cms-icon="plus-circle"
+                       ng-click="showPicker()"
+                       ng-if="isPartialOrdering"
+                       ng-disabled="submitLoadState.isLoading">
+                        <i class="fa fa-plus-circle"></i>
+                    </a>
+                </cms-table-actions>
+            </cms-table-container>
+        </cms-page-body>
+
+    </cms-form>
+
+</cms-modal-dialog-container>

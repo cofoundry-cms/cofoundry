@@ -1,0 +1,18 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using Cofoundry.Domain.CQS;
+
+namespace Cofoundry.Domain
+{
+    public class WebDirectoryEntityDefinition : IEntityDefinition
+    {
+        public static string DefinitionCode = "COFDIR";
+
+        public string EntityDefinitionCode { get { return DefinitionCode; } }
+
+        public string Name { get { return "Web Directory"; } }
+    }
+}

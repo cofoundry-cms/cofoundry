@@ -1,0 +1,41 @@
+﻿<cms-page-header cms-title="Upload"
+                 cms-parent-title="Images"></cms-page-header>
+
+<cms-form cms-name="mainForm" ng-submit="vm.save()">
+
+    <cms-page-actions>
+
+        <cms-button-submit cms-text="Save" class="main-cta" ng-disabled="vm.mainForm.$invalid || vm.saveLoadState.isLoading"></cms-button-submit>
+        <cms-button cms-text="Cancel" ng-click="vm.cancel()"></cms-button>
+
+    </cms-page-actions>
+
+    <!-- Scrollable content area -->
+    <cms-page-body cms-content-type="form">
+
+        <cms-form-status></cms-form-status>
+
+        <!--Page URL-->
+        <cms-form-section cms-title="Image details">
+
+            <cms-form-field-image-upload cms-title="File"
+                                         cms-model="vm.command.file"
+                                         cms-change="vm.onFileChanged()"
+                                         cms-load-state="vm.saveLoadState"
+                                         required></cms-form-field-image-upload>
+
+            <cms-form-field-text cms-title="Title"
+                                 cms-model="vm.command.title"
+                                 max-length="120"
+                                 required></cms-form-field-text>
+
+            <cms-form-field-tags cms-title="CMS Tags"
+                                 cms-model="vm.command.tags"></cms-form-field-tags>
+
+            <cms-form-field-image-anchor-location-selector cms-model="vm.command.defaultAnchorLocation"></cms-form-field-image-anchor-location-selector>
+
+        </cms-form-section>
+
+    </cms-page-body>
+
+</cms-form>

@@ -1,0 +1,88 @@
+﻿<cms-modal-dialog-container cms-modal-size="large">
+
+    <cms-modal-dialog-header>
+        Find a document
+    </cms-modal-dialog-header>
+
+    <cms-page-actions>
+
+        <cms-pager result="result"
+                   query="query"></cms-pager>
+
+        <cms-button cms-text="Ok" ng-click="onOk()" class="main-cta"></cms-button>
+        <cms-button cms-text="Cancel" ng-click="onCancel()"></cms-button>
+
+        <!--FILTER-->
+
+        <cms-button cms-text="Filter"
+                    ng-click="toggleFilter()"></cms-button>
+
+        <cms-search-filter cms-query="query"
+                           cms-filter="filter"
+                           ng-show="isFilterVisible">
+
+            <cms-form-field-text cms-title="Tags"
+                                 cms-model="filter.tags"
+                                 cms-disabled="presetFilter.tags"></cms-form-field-text>
+
+            <cms-form-field-readonly cms-title="File Extensions"
+                                     cms-model="filter.fileExtensions"
+                                     ng-if="filter.fileExtensions">
+            </cms-form-field-readonly>
+
+            <cms-form-field-document-type-selector cms-model="filter.fileExtension"
+                                                   ng-if="filter.fileExtension"></cms-form-field-document-type-selector>
+
+        </cms-search-filter>
+
+    </cms-page-actions>
+
+    <!--RESULTS-->
+
+    <cms-page-body>
+
+        <cms-table-container cms-loading="gridLoadState.isLoading">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Title</th>
+                        <th>File</th>
+                        <th>Tags</th>
+                        <th>Modified</th>
+                        <th cms-table-column-actions>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-if="result.items.length == 0">
+                        <td colspan="100" class="empty">Sorry, no documents could be found.</td>
+                    </tr>
+                    <tr ng-repeat="document in result.items"
+                        ng-class="(isDocumentSelected(document)) ? 'selected' : 'selectable'"
+                        ng-click="onSelect(document)"
+                        ng-dblclick="onSelectAndClose(document)">
+
+                        <td>
+                            {{ ::document.title }}
+                        </td>
+                        <td>
+                            <cms-document-asset cms-document="::document" /><br />
+                            {{ ::document.fileSizeInBytes | bytes}}
+                        </td>
+                        <td>
+                            <cms-tag-list cms-tags="::document.tags"></cms-tag-list>
+                        </td>
+                        <td class="lowPriority">
+                            <cms-table-cell-updated-audit-data cms-audit-data="::document.auditData"></cms-table-cell-updated-audit-data>
+                        </td>
+                        <td cms-table-column-actions>
+
+                            <a href="" ng-click="onSelect(document)" ng-if="!isDocumentSelected(document)">select</a><br />
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </cms-table-container>
+
+    </cms-page-body>
+
+</cms-modal-dialog-container>

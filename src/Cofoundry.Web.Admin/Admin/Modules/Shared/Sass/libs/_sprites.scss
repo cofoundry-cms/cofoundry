@@ -1,0 +1,34 @@
+
+@function sprite-height($name, $sprites-name: 0) {
+
+	$index: 2;
+	$len: length($retina-sprite-names);
+
+	@for $i from $index through $len {
+	@if $sprites-name == nth($retina-sprite-names, $i) {
+		$index: $i;
+	}
+	}
+
+	$sprites       : nth($retina-sprite-sprites, $index);
+
+	@return image-height(sprite-file($sprites, $name));
+
+	// (sprite-width($sprites, mobile-menu)
+}
+
+@function sprite-width($name, $sprites-name: 0) {
+
+	$index: 2;
+	$len: length($retina-sprite-names);
+
+	@for $i from $index through $len {
+	@if $sprites-name == nth($retina-sprite-names, $i) {
+		$index: $i;
+	}
+	}
+
+	$sprites       : nth($retina-sprite-sprites, $index);
+
+	@return image-width(sprite-file($sprites, $name));
+}

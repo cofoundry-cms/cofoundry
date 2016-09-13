@@ -1,0 +1,150 @@
+﻿@inherits CofoundryWebViewPage<SiteViewerPageViewModel>
+@using Cofoundry.Web
+@using System.Web.Mvc.Html
+@using Cofoundry.Domain
+@using Cofoundry.Web.Admin
+@using System.Web.Optimization
+
+@{
+    Layout = LayoutPaths.BaseLayout;
+
+    var isEditing = Model.SiteViewerMode == SiteViewerMode.Edit;
+    var isCustomEntityRoute = Model.Version is CustomEntityVersionRoute;
+    var entityNameSingular = isCustomEntityRoute ? Model.CustomEntityDefinition.Name : "Page";
+    
+    object ngOptions = null;
+     
+    if (!Model.IsStaticPage)
+    {
+        ViewBag.Title = Model.Version.Title + " - Site Viewer";
+        
+        ngOptions = new
+        {
+            IsInEditMode = isEditing,
+            PageId = Model.PageRoutingInfo.PageRoute.PageId,
+            VersionId = Model.Version.VersionId,
+            IsCustomEntityRoute = isCustomEntityRoute,
+            EntityNameSingular = entityNameSingular,
+            EntityId = isCustomEntityRoute ? Model.PageRoutingInfo.CustomEntityRoute.CustomEntityId : Model.PageRoutingInfo.PageRoute.PageId,
+            HasDraftVersion = Model.HasDraftVersion
+        };
+    }
+}
+
+@section Styles
+{
+    @Styles.Render(SiteViewerRouteLibrary.Css.OuterSiteViewer)
+}
+
+
+@section FooterScripts {
+    @if (!Model.IsStaticPage)
+    {
+        @AngularHelper.Boostrap(SiteViewerRouteLibrary.Js, Cofoundry.CurrentUser, ngOptions);
+    }
+}
+
+<div id="wrapper" ng-controller="SiteViewerController as vm">
+    <header class="site-viewer-actions">
+
+        <div class="actions-left">
+            <a href="@DashboardRouteLibrary.Urls.Dashboard()" class="action">
+                <i class="fa fa-chevron-left"></i>
+                Back to admin
+            </a>
+            @*<a href=""
+               class="action">
+                <i class="fa fa-desktop"></i>
+                View options
+            </a>*@
+        </div>
+
+        <div class="actions-centre">
+            @if (!Model.IsStaticPage)
+            {
+                <a href="?mode=live" class="action @Cofoundry.Html.TextIf(Model.Version.WorkFlowStatus == WorkFlowStatus.Published, "active")">
+                    <i class="fa fa-cloud"></i>
+                    Current live
+                </a>
+
+                if (Model.IsEditTypeSwitchRequired() && Model.CanEditPage())
+                {
+                    <a href="?mode=edit&edittype=page" class="action @Cofoundry.Html.TextIf(Model.Version is PageVersionRoute && isEditing, "active")">
+                        <i class="fa fa-pencil"></i>
+                        Edit Page
+                    </a>
+                    <a href="?mode=edit&edittype=entity" class="action @Cofoundry.Html.TextIf(Model.Version is CustomEntityVersionRoute && isEditing, "active")">
+                        <i class="fa fa-pencil"></i>
+                        Edit @Model.CustomEntityDefinition.Name
+                    </a>
+                }
+                else if (Model.CanEditPage())
+                {
+                    <a href="?mode=edit" class="action @Cofoundry.Html.TextIf(isEditing, "active")">
+                        <i class="fa fa-pencil"></i>
+                        Edit draft
+                    </a>
+                    <a href="?mode=preview" class="action @Cofoundry.Html.TextIf(!isEditing && Model.Version.WorkFlowStatus == WorkFlowStatus.Draft, "active")">
+                        <i class="fa fa-eye"></i>
+                        Preview draft
+                    </a>
+                }
+            }
+        </div>
+
+        <div class="actions-right">
+            @*<a href=""
+               class="action">
+                <i class="fa fa-files-o"></i>
+                Versions
+            </a>*@
+            @if (Model.SiteViewerMode == SiteViewerMode.Draft || isEditing)
+            {
+                <a href=""
+                   class="action publish popup"
+                   ng-disabled="vm.globalLoadState.isLoading"
+                   ng-click="vm.publish()">
+                    <i class="fa fa-cloud-upload"></i>
+                    Publish @entityNameSingular
+                </a>
+            }
+            else if (Model.SiteViewerMode == SiteViewerMode.Live)
+            {
+                <a href=""
+                   class="action publish popup"
+                   ng-disabled="vm.globalLoadState.isLoading"
+                   ng-click="vm.unpublish()">
+                    <i class="fa fa-cloud-download"></i>
+                    Unpublish @entityNameSingular
+                </a>
+            }
+            else if (Model.SiteViewerMode == SiteViewerMode.SpecificVersion)
+            {
+                <a href=""
+                   class="action publish popup"
+                   title="Copy this version to a new draft version"
+                   ng-disabled="vm.globalLoadState.isLoading"
+                   ng-click="vm.copyToDraft()">
+                    <i class="fa fa-files-o"></i>
+                    Copy to draft
+                </a>
+            }
+        </div>
+        
+    </header>
+
+    <div id="siteFrameContainer">
+        <iframe id="siteFrame"
+                cms-site-page-frame
+                src="@(Request.Url.PathAndQuery + (Request.Url.PathAndQuery.Contains("?") ? "&" : "?"))siteviewer=true"
+                allowtransparency="true"></iframe>
+
+        <div class="cms-module-hightlight"></div>
+        <div class="cms-module-controls"></div>
+    </div>
+</div>
+
+
+
+
+

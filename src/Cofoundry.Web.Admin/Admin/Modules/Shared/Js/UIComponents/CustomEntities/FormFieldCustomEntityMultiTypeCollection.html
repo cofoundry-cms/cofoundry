@@ -1,0 +1,71 @@
+﻿<div class="control-group">
+    <div class="control-group-area">
+        <label class="control-label" for="{{vm.modelName}}">{{vm.title}}:</label>
+        <div class="controls">
+            <input type="hidden"
+                   id="{{vm.modelName}}"
+                   name="{{vm.modelName}}"
+                   ng-model="vm.model"
+                   ng-change="vm.onChange()" />
+
+            <cms-table-container cms-loading="vm.gridLoadState.isLoading">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Type</th>
+                            <th>Title</th>
+                            <th>Status</th>
+                            <th cms-table-column-actions
+                                ng-if="vm.formScope.editMode">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-if="!vm.gridData.length">
+                            <td colspan="100" class="empty">None</td>
+                        </tr>
+                        <tr ng-repeat="entity in vm.gridData track by $index"
+                            ui-draggable="vm.formScope.editMode && vm.orderable"
+                            data-drag="entity"
+                            data-drag-channel="custom-entity-{{vm.modelName}}"
+                            ui-on-drop="vm.onDrop($index, $data)"
+                            data-drop-channel="custom-entity-{{vm.modelName}}">
+                            <td>{{vm.customEntityDefinitions[entity.customEntityDefinitionCode].name}}</td>
+                            <td>
+                                <strong>
+                                    <cms-custom-entity-link cms-custom-entity-definition="vm.customEntityDefinitions[entity.customEntityDefinitionCode]"
+                                                            cms-custom-entity="entity"></cms-custom-entity-link>
+                                </strong>
+                            </td>
+                            <td ng-if="entity.isPublished">
+                                Published
+                                <span ng-if="entity.isPublished && entity.hasDraft">(Pending Draft)</span>
+                            </td>
+                            <td ng-if="!entity.isPublished">
+                                Draft
+                            </td>
+                            <td cms-table-column-actions ng-if="vm.formScope.editMode">
+                                <cms-button-icon cms-title="Remove"
+                                                 cms-icon="trash-o"
+                                                 ng-click="vm.remove(entity)">
+                                </cms-button-icon>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <cms-table-actions ng-if="vm.formScope.editMode">
+                    <cms-menu>
+                        <cms-button ng-repeat="(code, definition) in vm.customEntityDefinitions"
+                                    cms-text="Add or remove {{definition.name}}"
+                                    ng-click="vm.showPicker(definition)"
+                                    ng-disabled="vm.gridLoadState.isLoading || vm.disabled"></cms-button>
+                    </cms-menu>
+                </cms-table-actions>
+            </cms-table-container>
+
+            <cms-form-field-validation-summary></cms-form-field-validation-summary>
+        </div>
+    </div>
+    <p class="help-inline" ng-if="vm.description">
+        <small>{{vm.description}}</small>
+    </p>
+</div>

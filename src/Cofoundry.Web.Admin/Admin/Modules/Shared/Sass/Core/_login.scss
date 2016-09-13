@@ -1,0 +1,73 @@
+﻿.login-container {
+    width: 500px;
+    height: 300px;
+    margin-left: -250px;
+    left: 50%;
+    top: 50%;
+    position: absolute;
+    margin-top: -250px;
+
+    .wrap {
+        @include border-radius(3px);
+        padding: 20px;
+        background: #fff;
+    }
+
+    h1 {
+        @include border-top-left-radius(3px);
+        @include border-top-right-radius(3px);
+        font-size:150%;
+        padding:20px;
+        position:absolute;
+        left:0;
+        top:0;
+        width:100%;
+        color:#fff;
+        background-color:$color-red;
+    }
+
+    form {
+        margin-top:60px;
+    }
+
+    label {
+        font-weight:$fontweight-bold;
+        text-transform:uppercase;
+        font-size:100%;
+        padding:10px 0;
+        display:block;
+    }
+
+    .checkbox {
+        float: left;
+    }
+
+    .actions {
+        margin-top:15px;
+        float:right;
+
+        .btn {
+            width:100%;
+        }
+    }
+
+    .field-validation-error {
+        @include border-radius(2px);
+        padding:5px;
+        border:1px solid $color-orange;
+        background-color:#ffcc99;
+        width:100%;
+        margin-top:5px;
+        display:block;
+    }
+}
+
+.login-footer {
+    text-align:center;
+    padding:20px;
+
+    a {
+        color:#000;
+        display:block;
+    }
+}

@@ -1,0 +1,57 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using Cofoundry.Domain.CQS;
+namespace Cofoundry.Domain
+{
+    /// <summary>
+    /// Simple facade over page data access queries/commands to them more discoverable
+    /// in implementations.
+    /// </summary>
+    public interface IPageRepository
+    {
+        Task<int> AddPageAsync(AddPageCommand command, IExecutionContext executionContext = null);
+        Task<int> AddPageDraftVersionAsync(AddPageDraftVersionCommand command, IExecutionContext executionContext = null);
+        Task<int> AddPageVersionModuleAsync(AddPageVersionModuleCommand command, IExecutionContext executionContext = null);
+        Task DeletePageAsync(int pageId, IExecutionContext executionContext = null);
+        Task DeletePageDraftVersionAsync(int pageId, IExecutionContext executionContext = null);
+        Task DeletePageVersionModuleAsync(int pageVersionModuleId, IExecutionContext executionContext = null);
+        bool DoesPageHaveDraftVersion(int pageId, IExecutionContext executionContext = null);
+        Task DuplicatePageAsync(DuplicatePageCommand command, IExecutionContext executionContext = null);
+        IEnumerable<PageModuleTypeSummary> GetAllPageModuleTypeSummaries(IExecutionContext executionContext = null);
+        Task<IEnumerable<PageModuleTypeSummary>> GetAllPageModuleTypeSummariesAsync(IExecutionContext executionContext = null);
+        IEnumerable<PageRoute> GetAllPageRoutes(IExecutionContext executionContext = null);
+        Task<IEnumerable<PageRoute>> GetAllPageRoutesAsync(IExecutionContext executionContext = null);
+        Task<PageRoute> GetNotFoundPageRouteByPathAsync(GetNotFoundPageRouteByPathQuery query, IExecutionContext executionContext = null);
+        PageDetails GetPageDetailsById(int id, IExecutionContext executionContext = null);
+        Task<PageDetails> GetPageDetailsByIdAsync(int id, IExecutionContext executionContext = null);
+        PageModuleTypeSummary GetPageModuleTypeSummaryById(int id, IExecutionContext executionContext = null);
+        Task<PageRenderDetails> GetPageRenderDetailsAsync(GetPageRenderDetailsByIdQuery query, IExecutionContext executionContext = null);
+        PageRoute GetPageRouteById(int pageId, IExecutionContext executionContext = null);
+        Task<PageRoute> GetPageRouteByIdAsync(int pageId, IExecutionContext executionContext = null);
+
+        /// <summary>
+        /// Attempts to find a matching page route using the supplied path. The path
+        /// has to be an absolute match, i.e. the query does not try and find a fall-back similar route.
+        /// </summary>
+        Task<PageRoutingInfo> GetPageRoutingInfoByPathAsync(GetPageRoutingInfoByPathQuery query, IExecutionContext executionContext = null);
+        Task<IDictionary<int, PageRoute>> GetPageRouteByIdRangeAsync(int[] pageIds, IExecutionContext executionContext = null);
+        IEnumerable<PageRoute> GetPageRoutesByWebDirectoryId(int webDirectoryId, IExecutionContext executionContext = null);
+        Task<IEnumerable<PageRoutingInfo>> GetPageRoutingInfoByCustomEntityId(string customEntityDefinitionCode, int customEntityId, IExecutionContext executionContext = null);
+        Task<IDictionary<int, IEnumerable<PageRoutingInfo>>> GetPageRoutingInfoByCustomEntityId(string customEntityDefinitionCode, int[] customEntityIds, IExecutionContext executionContext = null);
+        Task<IEnumerable<PageVersionDetails>> GetPageVersionDetailsByPageIdAsync(int pageId, IExecutionContext executionContext = null);
+        IEnumerable<PageVersionDetails> GetPageVersionDetailsByPageId(int pageId, IExecutionContext executionContext = null);
+        Task<PageVersionModuleRenderDetails> GetPageVersionModuleRenderDetailsByIdAsync(GetPageVersionModuleRenderDetailsByIdQuery query, IExecutionContext executionContext = null);
+        PageVersionModuleRenderDetails GetPageVersionModuleRenderDetailsById(GetPageVersionModuleRenderDetailsByIdQuery query, IExecutionContext executionContext = null);
+        bool IsPagePathUnique(IsPagePathUniqueQuery query, IExecutionContext executionContext = null);
+        Task<bool> IsPagePathUniqueAsync(IsPagePathUniqueQuery query, IExecutionContext executionContext = null);
+        Task MovePageVersionModuleAsync(MovePageVersionModuleCommand command, IExecutionContext executionContext = null);
+        Task PublishPageCommandAsync(int pageId, IExecutionContext executionContext = null);
+        Task<PagedQueryResult<PageSummary>> SearchPageSummariesAsync(SearchPageSummariesQuery query, IExecutionContext executionContext = null);
+        Task UnPublishPageCommandAsync(int pageId, IExecutionContext executionContext = null);
+        Task UpdatePageAsync(UpdatePageCommand command, IExecutionContext executionContext = null);
+        Task UpdatePageDraftVersionAsync(UpdatePageDraftVersionCommand command, IExecutionContext executionContext = null);
+        Task UpdatePageUrlAsync(UpdatePageUrlCommand command, IExecutionContext executionContext = null);
+        Task UpdatePageVersionModuleAsync(UpdatePageVersionModuleCommand command, IExecutionContext executionContext = null);
+    }
+}

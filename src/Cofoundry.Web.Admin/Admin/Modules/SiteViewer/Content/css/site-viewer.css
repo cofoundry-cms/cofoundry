@@ -1,0 +1,550 @@
+/*===============================
+	Required compass includes
+=================================*/
+/* line 5, ../../../../../../../../../../Ruby22-x64/lib/ruby/gems/2.2.0/gems/compass-core-1.0.3/stylesheets/compass/reset/_utilities.scss */
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed,
+figure, figcaption, footer, header, hgroup,
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font: inherit;
+  font-size: 100%;
+  vertical-align: baseline;
+}
+
+/* line 22, ../../../../../../../../../../Ruby22-x64/lib/ruby/gems/2.2.0/gems/compass-core-1.0.3/stylesheets/compass/reset/_utilities.scss */
+html {
+  line-height: 1;
+}
+
+/* line 24, ../../../../../../../../../../Ruby22-x64/lib/ruby/gems/2.2.0/gems/compass-core-1.0.3/stylesheets/compass/reset/_utilities.scss */
+ol, ul {
+  list-style: none;
+}
+
+/* line 26, ../../../../../../../../../../Ruby22-x64/lib/ruby/gems/2.2.0/gems/compass-core-1.0.3/stylesheets/compass/reset/_utilities.scss */
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+/* line 28, ../../../../../../../../../../Ruby22-x64/lib/ruby/gems/2.2.0/gems/compass-core-1.0.3/stylesheets/compass/reset/_utilities.scss */
+caption, th, td {
+  text-align: left;
+  font-weight: normal;
+  vertical-align: middle;
+}
+
+/* line 30, ../../../../../../../../../../Ruby22-x64/lib/ruby/gems/2.2.0/gems/compass-core-1.0.3/stylesheets/compass/reset/_utilities.scss */
+q, blockquote {
+  quotes: none;
+}
+/* line 103, ../../../../../../../../../../Ruby22-x64/lib/ruby/gems/2.2.0/gems/compass-core-1.0.3/stylesheets/compass/reset/_utilities.scss */
+q:before, q:after, blockquote:before, blockquote:after {
+  content: "";
+  content: none;
+}
+
+/* line 32, ../../../../../../../../../../Ruby22-x64/lib/ruby/gems/2.2.0/gems/compass-core-1.0.3/stylesheets/compass/reset/_utilities.scss */
+a img {
+  border: none;
+}
+
+/* line 116, ../../../../../../../../../../Ruby22-x64/lib/ruby/gems/2.2.0/gems/compass-core-1.0.3/stylesheets/compass/reset/_utilities.scss */
+article, aside, details, figcaption, figure, footer, header, hgroup, main, menu, nav, section, summary {
+  display: block;
+}
+
+/*
+    THIRD PARTY
+    Next we import any 3rd Party libraries we need (CSS or SASS)
+*/
+/*
+    LIBRARIES
+    Now we include any libraries/utilities we have written
+*/
+/**
+ * A mixin to create retina sprites with hover & active states
+ *
+ * You have to register a pair of sprites using `{@link #retina-sprite-add}` and then you can use this mixin:
+ *
+ *     @include retina-sprite-add(icons, "icons/*.png", "icons-retina/*.png");
+ *
+ *     .my-icon {
+ *       @include retina-sprite(icon-name, icons);
+ *     }
+ *
+ * @param {String} $name
+ * @param {String} [$sprites-name]
+ * @param {Boolean} [$hover=false]
+ * @param {Boolean} [$active=false]
+ */
+/**
+ * @param {String} $name
+ * @param {String} $path
+ * @param {String} $path2x
+ */
+/*
+    CONFIG
+    Here we include any config we want to use, such as colour and dimension maps. 
+*/
+/*
+    COMMON BASE
+    Next we import any common base styles, which are reused by UI components. 
+    These common styles get extended 
+*/
+/* line 1, ../../../Shared/Sass/Common/_heading.scss */
+.heading-primary, .heading-secondary, .heading-tertiary {
+  text-transform: uppercase;
+  font-weight: bold;
+}
+
+/* line 6, ../../../Shared/Sass/Common/_heading.scss */
+.heading-primary {
+  font-size: 36px;
+  font-size: 3rem;
+}
+
+/* line 11, ../../../Shared/Sass/Common/_heading.scss */
+.heading-secondary {
+  font-size: 24px;
+  font-size: 2rem;
+}
+
+/* line 16, ../../../Shared/Sass/Common/_heading.scss */
+.heading-tertiary {
+  font-size: 18px;
+  font-size: 1.5rem;
+}
+
+/* line 1, ../../../Shared/Sass/Common/_link.scss */
+.inline-link {
+  color: red;
+}
+
+/*
+    COMPONENTS
+    We import component styles from wherever they may be living. These should be kept as modular as possible, extending from common base styles where needed.
+*/
+/* No files to import found in ../Js/UIComponents/**\/* */
+
+/* line 10, ../../Sass/_outer-site-viewer.scss */
+html, body {
+  height: 100%;
+}
+
+/* line 14, ../../Sass/_outer-site-viewer.scss */
+body {
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  -ms-box-sizing: border-box;
+  box-sizing: border-box;
+  padding: 0 0 60px 0;
+}
+
+/* line 22, ../../Sass/_outer-site-viewer.scss */
+.site-viewer-actions {
+  font-family: "Open Sans", sans-serif;
+  font-size: 65%;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background-color: #4d4d4d;
+  height: 60px;
+}
+/* line 33, ../../Sass/_outer-site-viewer.scss */
+.site-viewer-actions .actions-left {
+  position: absolute;
+  left: 0;
+  right: 70%;
+  bottom: 0;
+  top: 0;
+  z-index: 10;
+}
+/* line 42, ../../Sass/_outer-site-viewer.scss */
+.site-viewer-actions .actions-right {
+  position: absolute;
+  right: 0;
+  left: 70%;
+  bottom: 0;
+  top: 0;
+  text-align: right;
+  z-index: 10;
+}
+/* line 52, ../../Sass/_outer-site-viewer.scss */
+.site-viewer-actions .actions-centre {
+  position: absolute;
+  left: 0;
+  right: 0;
+  z-index: 2;
+  text-align: center;
+}
+/* line 60, ../../Sass/_outer-site-viewer.scss */
+.site-viewer-actions .action {
+  -moz-transition: all 0.3s;
+  -o-transition: all 0.3s;
+  -webkit-transition: all 0.3s;
+  transition: all 0.3s;
+  display: inline-block;
+  height: 63px;
+  border-top: 3px solid #4d4d4d;
+  border-bottom: 3px solid #4d4d4d;
+  padding: 10px 20px 0;
+  color: #939191;
+  text-transform: uppercase;
+  text-decoration: none;
+  text-align: center;
+  position: relative;
+}
+/* line 74, ../../Sass/_outer-site-viewer.scss */
+.site-viewer-actions .action:before {
+  content: '';
+  position: absolute;
+  width: 1px;
+  height: 70px;
+  left: 0;
+  top: -3px;
+}
+/* line 88, ../../Sass/_outer-site-viewer.scss */
+.site-viewer-actions .action:hover {
+  background-color: #3c3c3c;
+  border-top: 3px solid #d31245;
+  color: #fff;
+}
+/* line 94, ../../Sass/_outer-site-viewer.scss */
+.site-viewer-actions .action.active {
+  background-color: #d31245;
+  border-top: 3px solid #d31245;
+  color: #fff;
+}
+/* line 100, ../../Sass/_outer-site-viewer.scss */
+.site-viewer-actions .action i.fa {
+  display: block;
+  margin-bottom: 5px;
+  font-size: 1.8em;
+}
+/* line 108, ../../Sass/_outer-site-viewer.scss */
+.site-viewer-actions .actions-centre .action {
+  border-left: none;
+  width: 125px;
+}
+
+/* line 115, ../../Sass/_outer-site-viewer.scss */
+#statusBar {
+  background: #eaeaea;
+}
+
+/* line 119, ../../Sass/_outer-site-viewer.scss */
+#wrapper {
+  height: 100%;
+  min-width: 240px;
+  position: relative;
+  width: auto;
+}
+
+/* line 126, ../../Sass/_outer-site-viewer.scss */
+#wrapper.device {
+  overflow: scroll;
+  overflow-x: hidden;
+  overflow-y: scroll;
+}
+
+/* line 132, ../../Sass/_outer-site-viewer.scss */
+#siteFrameContainer {
+  height: 100%;
+  width: 100%;
+}
+/* line 136, ../../Sass/_outer-site-viewer.scss */
+#siteFrameContainer .cms-module-highlight {
+  outline: 1px dotted red;
+  position: absolute;
+  z-index: 1;
+  pointer-events: none;
+  background: rgba(0, 0, 0, 0.2);
+}
+/* line 144, ../../Sass/_outer-site-viewer.scss */
+#siteFrameContainer .cms-module-controls {
+  position: absolute;
+  background: red;
+  z-index: 2;
+  height: 30px;
+}
+
+/* line 152, ../../Sass/_outer-site-viewer.scss */
+#wrapper.device #siteFrameContainer {
+  margin: 2% auto 2% auto;
+  height: 10%;
+  width: 10%;
+  -webkit-transform: scale(0.75);
+  -webkit-transform-origin: 50% 0;
+  -moz-transform: scale(0.75);
+  -moz-transform-origin: 50% 0;
+  -ms-transform: scale(0.75);
+  -ms-transform-origin: 50% 0;
+  -o-transform: scale(0.75);
+  -o-transform-origin: 50% 0;
+  transform: scale(0.75);
+  transform-origin: 50% 0;
+  -webkit-transition: all 240ms ease;
+  -moz-transition: all 240ms ease;
+  -ms-transition: all 240ms ease;
+  -o-transition: all 240ms ease;
+  transition: all 240ms ease;
+}
+
+/* line 173, ../../Sass/_outer-site-viewer.scss */
+#wrapper.iPhonePortrait #siteFrameContainer {
+  background: url(img/devices/iPhone3Portrait.png) no-repeat left top;
+  height: 480px;
+  padding: 120px 33px 119px 36px;
+  width: 320px;
+}
+
+/* line 180, ../../Sass/_outer-site-viewer.scss */
+#wrapper.iPhoneLandscape #siteFrameContainer {
+  background: url(img/devices/iPhone3Landscape.png) no-repeat left top;
+  height: 320px;
+  padding: 36px 120px 33px 119px;
+  width: 480px;
+}
+
+/* line 187, ../../Sass/_outer-site-viewer.scss */
+#wrapper.iPadPortrait #siteFrameContainer {
+  background: url(img/devices/iPadPortrait.png) no-repeat left top;
+  height: 1024px;
+  padding: 127px 114px 125px 115px;
+  width: 768px;
+}
+
+/* line 194, ../../Sass/_outer-site-viewer.scss */
+#wrapper.iPadLandscape #siteFrameContainer {
+  background: url(img/devices/iPadLandscape.png) no-repeat left top;
+  height: 768px;
+  padding: 115px 128px 115px 124px;
+  width: 1024px;
+}
+
+/* #### Site frame #### */
+/* line 204, ../../Sass/_outer-site-viewer.scss */
+iframe#siteFrame {
+  background: transparent;
+  border: 0;
+  height: 100%;
+  width: 100%;
+}
+
+/* line 211, ../../Sass/_outer-site-viewer.scss */
+#wrapper.device iframe#siteFrame::-webkit-scrollbar {
+  display: none;
+}
+
+/* #### Device menu #### */
+/* line 218, ../../Sass/_outer-site-viewer.scss */
+ul#deviceMenu {
+  bottom: 0;
+  left: 0;
+  margin: 0;
+  overflow: auto;
+  padding: 0;
+  position: fixed;
+}
+
+/* line 227, ../../Sass/_outer-site-viewer.scss */
+ul#deviceMenu li {
+  border-right: 1px solid #970D31;
+  display: block;
+  float: left;
+  list-style: none;
+}
+
+/* line 234, ../../Sass/_outer-site-viewer.scss */
+ul#deviceMenu li a {
+  background: #D31245 url(img/icons.png) no-repeat;
+  display: block;
+  height: 30px;
+  overflow: hidden;
+  text-indent: 100%;
+  white-space: nowrap;
+  width: 30px;
+}
+
+/* line 244, ../../Sass/_outer-site-viewer.scss */
+ul#deviceMenu li.active, ul#deviceMenu li:hover {
+  background-color: #8e8d8d;
+  -webkit-box-shadow: inset 0 0 3px 1px rgba(0, 0, 0, 0.7);
+  -moz-box-shadow: inset 0 0 3px 1px rgba(0, 0, 0, 0.7);
+  box-shadow: inset 0 0 3px 1px rgba(0, 0, 0, 0.7);
+  background: #8e8d8d;
+  background: -moz-linear-gradient(top, #8e8d8d 0%, #4d4c4c 100%);
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #8e8d8d), color-stop(100%, #4d4c4c));
+  background: -webkit-linear-gradient(top, #8e8d8d 0%, #4d4c4c 100%);
+  background: -o-linear-gradient(top, #8e8d8d 0%, #4d4c4c 100%);
+  background: -ms-linear-gradient(top, #8e8d8d 0%, #4d4c4c 100%);
+  background: linear-gradient(to bottom, #8e8d8d 0%, #4d4c4c 100%);
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#8e8d8d', endColorstr='#4d4c4c',GradientType=0 );
+}
+
+/* line 259, ../../Sass/_outer-site-viewer.scss */
+ul#deviceMenu li.active a, ul#deviceMenu li a:hover {
+  background-color: transparent;
+}
+
+/* line 263, ../../Sass/_outer-site-viewer.scss */
+ul#deviceMenu li.auto a {
+  background-position: -5px -725px;
+}
+
+/* line 267, ../../Sass/_outer-site-viewer.scss */
+ul#deviceMenu li.iPhonePortrait a {
+  background-position: -5px -565px;
+}
+
+/* line 271, ../../Sass/_outer-site-viewer.scss */
+ul#deviceMenu li.iPhoneLandscape a {
+  background-position: -5px -605px;
+}
+
+/* line 275, ../../Sass/_outer-site-viewer.scss */
+ul#deviceMenu li.iPadPortrait a {
+  background-position: -5px -645px;
+}
+
+/* line 279, ../../Sass/_outer-site-viewer.scss */
+ul#deviceMenu li.iPadLandscape a {
+  background-position: -5px -685px;
+}
+
+/* #### Hovering #### */
+/* line 285, ../../Sass/_outer-site-viewer.scss */
+.section-popover-container, .module-popover-container {
+  font-family: "Open Sans", sans-serif;
+  font-size: 85%;
+  position: absolute;
+  border-radius: 4px;
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  -webkit-box-shadow: 0px 15px 32px rgba(1, 0, 0, 0.75);
+  -moz-box-shadow: 0px 15px 32px rgba(1, 0, 0, 0.75);
+  box-shadow: 0px 15px 32px rgba(1, 0, 0, 0.75);
+}
+
+/* #### Section hovering #### */
+/* line 302, ../../Sass/_outer-site-viewer.scss */
+.section-popover-inner {
+  background: #585858;
+  color: #fff;
+  height: 30px;
+  line-height: 30px;
+  overflow: hidden;
+  padding: 0 10px;
+  position: relative;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+/* line 314, ../../Sass/_outer-site-viewer.scss */
+.section-popover-inner h2 {
+  font-weight: normal;
+  float: left;
+  font-size: 90%;
+  font-style: normal;
+  height: 30px;
+  line-height: 30px;
+  margin: 0;
+}
+
+/* line 324, ../../Sass/_outer-site-viewer.scss */
+.section-popover-inner a {
+  float: right;
+  color: #939191;
+  overflow: hidden;
+  white-space: nowrap;
+  width: 19px;
+  margin-left: 10px;
+  position: relative;
+  text-align: center;
+}
+/* line 334, ../../Sass/_outer-site-viewer.scss */
+.section-popover-inner a:hover {
+  color: #fff;
+}
+
+/* #### Module hovering #### */
+/* line 342, ../../Sass/_outer-site-viewer.scss */
+.module-popover-container {
+  position: fixed;
+}
+
+/* line 346, ../../Sass/_outer-site-viewer.scss */
+.module-popover-container ul {
+  background: #4d4d4d;
+  display: block;
+  margin: 0px;
+  padding: 0px;
+}
+
+/* line 353, ../../Sass/_outer-site-viewer.scss */
+.module-popover-container li {
+  border: 1px solid #585858;
+  border-width: 0 0 1px 0;
+  display: block;
+}
+
+/* line 359, ../../Sass/_outer-site-viewer.scss */
+.module-popover-container li a {
+  -moz-transition: all 0.3s;
+  -o-transition: all 0.3s;
+  -webkit-transition: all 0.3s;
+  transition: all 0.3s;
+  background-position: center center;
+  display: block;
+  height: 32px;
+  color: #939191;
+  width: 34px;
+  padding-top: 7px;
+  text-align: center;
+  font-size: 1.1em;
+}
+/* line 370, ../../Sass/_outer-site-viewer.scss */
+.module-popover-container li a:hover {
+  color: #fff;
+}
+
+/* line 375, ../../Sass/_outer-site-viewer.scss */
+.module-popover-container .disabled a {
+  cursor: default;
+  opacity: 0.4;
+  -khtml-opacity: 0.4;
+  -moz-opacity: 0.4;
+  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=40)";
+  filter: alpha(opacity=40);
+}
+
+/* line 384, ../../Sass/_outer-site-viewer.scss */
+.module-popover-area {
+  border: 1px solid red;
+  min-height: 50px;
+}
+
+/* #### Footer #### */
+/* line 390, ../../Sass/_outer-site-viewer.scss */
+footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+}
+
+/*# sourceMappingURL=site-viewer.css.map */

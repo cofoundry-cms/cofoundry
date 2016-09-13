@@ -1,0 +1,15 @@
+﻿@inherits WebViewPage<SingleLineTextDisplayModel>
+@using Cofoundry.Web
+@using System.Web.Mvc
+@using System.Web.Mvc.Html
+
+<h3>
+    @if (Model == null)
+    {
+        @:<!-- No text data --->
+    }
+    else
+    {
+        @:@Model.Text
+    }
+</h3>

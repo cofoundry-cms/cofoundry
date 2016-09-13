@@ -1,0 +1,14 @@
+﻿@inherits Cofoundry.Web.CofoundryWebViewPage<ModuleJsRouteLibrary>
+@using Cofoundry.Web.Admin
+
+@{
+    Layout = LayoutPaths.DefaultLayout;    
+}
+
+@section FooterScripts {
+    @AngularHelper.Boostrap(Model, Cofoundry.CurrentUser)
+}
+
+<div ng-view=""></div>
+
+

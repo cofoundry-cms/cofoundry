@@ -1,0 +1,56 @@
+﻿<cms-modal-dialog-container cms-modal-size="large">
+
+    <cms-modal-dialog-header>
+        Change Url: {{::page.latestVersion.title}}
+    </cms-modal-dialog-header>
+
+    <cms-form cms-name="updateUrlForm" 
+              cms-loading="formLoadState.isLoading">
+
+        <cms-page-actions>
+            <cms-button-submit cms-text="Save"
+                               ng-click="save()"
+                               ng-disabled="updateUrlForm.$invalid || submitLoadState.isLoading"
+                               cms-loading="submitLoadState.isLoading"></cms-button-submit>
+
+            <cms-button cms-text="Cancel"
+                        ng-click="close()"></cms-button>
+        </cms-page-actions>
+
+        <cms-page-body>
+
+            <cms-warning-message ng-if="page.pageRoute.isPublished">
+                WARNING: This page has been published. Changing the url will
+                break external links to this page (e.g. via Google search)
+            </cms-warning-message>
+
+            <cms-form-section cms-title="Settings">
+
+                <cms-form-status></cms-form-status>
+
+                <cms-form-field-locale-selector cms-model="command.localeId"
+                                                cms-on-loaded="localesLoaded()"></cms-form-field-locale-selector>
+
+                <cms-form-field-directory-selector cms-model="command.webDirectoryId"
+                                                       cms-on-loaded="webDirectoriesLoaded()"></cms-form-field-directory-selector>
+
+                <cms-form-field-text cms-title="Url path"
+                                     cms-model="command.urlPath"
+                                     cms-description="Lower case and containing only letter, numbers and hyphens. E.g. 'about-the-team'."
+                                     ng-if="::!isCustomEntityRoute"
+                                     maxlength="70"></cms-form-field-text>
+
+                <cms-form-field-dropdown cms-title="Route Format"
+                                         cms-options="routingRules"
+                                         cms-option-name="routeFormat"
+                                         cms-option-value="routeFormat"
+                                         cms-model="command.customEntityRoutingRule"
+                                         ng-if="::isCustomEntityRoute"
+                                         required></cms-form-field-dropdown>
+            </cms-form-section>
+
+        </cms-page-body>
+
+    </cms-form>
+
+</cms-modal-dialog-container>

@@ -1,0 +1,19 @@
+﻿<div class="control-group form-field-text-area">
+    <cms-field>
+        <label class="control-label" for="{{vm.modelName}}">{{vm.title}}:</label>
+        <div class="controls">
+            <textarea ng-show="vm.formScope.editMode"
+                      ng-model="vm.model"
+                      ng-disabled="vm.disabled"
+                      ng-change="vm.onChange()"
+                      id="{{vm.modelName}}"
+                      name="{{vm.modelName}}" />
+
+            <div ng-hide="vm.formScope.editMode" ng-bind="vm.model" class="text-block-display-value"></div>
+            <cms-form-field-validation-summary></cms-form-field-validation-summary>
+        </div>
+    </cms-field>
+    <p class="help-inline" ng-if="vm.description">
+        <small>{{vm.description}}</small>
+    </p>
+</div>

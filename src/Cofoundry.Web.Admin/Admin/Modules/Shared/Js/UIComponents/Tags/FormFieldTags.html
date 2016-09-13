@@ -1,0 +1,22 @@
+﻿<div class="control-group">
+    <cms-field>
+        <label class="control-label" for="{{vm.modelName}}">{{vm.title}}:</label>
+        <div class="controls">
+            <input ng-show="vm.formScope.editMode"
+                   type="text"
+                   ng-model="vm.model"
+                   ng-change="vm.onChange()"
+                   id="{{vm.modelName}}"
+                   name="{{vm.modelName}}"
+                   cms-tags-input />
+
+            <span ng-if="!vm.formScope.editMode">
+                <cms-tag-list cms-tags="vm.model"></cms-tag-list>
+            </span>
+            <cms-form-field-validation-summary></cms-form-field-validation-summary>
+        </div>
+    </cms-field>
+    <p class="help-inline">
+        <small>Separate each tag with a comma: dog, animal, canine. Used internally for searching for things.</small>
+    </p>
+</div>

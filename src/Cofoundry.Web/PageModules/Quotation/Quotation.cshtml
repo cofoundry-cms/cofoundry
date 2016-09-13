@@ -1,0 +1,30 @@
+﻿@inherits WebViewPage<QuotationDisplayModel>
+@using Cofoundry.Web
+@using System.Web.Mvc
+@using System.Web.Mvc.Html
+
+@if (Model != null)
+{
+    if (!string.IsNullOrEmpty(Model.Title))
+    {
+        <h3>@Model.Title</h3>
+    }
+    <blockquote@(string.IsNullOrEmpty(Model.CitationUrl) ? string.Empty : string.Format(" cite=\"{0}\"", Model.CitationUrl))>
+        <p>
+            @Html.Raw(Model.Quotation)
+        </p>
+    </blockquote>
+    if (!string.IsNullOrEmpty(Model.CitationText))
+    {
+        <cite>
+            @if (!string.IsNullOrEmpty(Model.CitationUrl))
+            {
+                <a href="@Model.CitationUrl">@Html.Raw(Model.CitationText)</a>
+            }
+            else
+            {
+                @Html.Raw(Model.CitationText)
+            }
+        </cite>
+    }
+}

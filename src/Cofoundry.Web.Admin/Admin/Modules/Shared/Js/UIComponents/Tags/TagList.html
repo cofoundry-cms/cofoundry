@@ -1,0 +1,10 @@
+﻿<span ng-if="isInModal">
+    <span ng-bind="tag"
+       ng-repeat-start="tag in tags"></span><span ng-repeat-end ng-if="!$last">, </span>
+</span>
+<span ng-if="!isInModal">
+    <a href="/admin/tags/{{tag}}" class="tag"
+       ng-if="!isInModal"
+       ng-bind="tag"
+       ng-repeat-start="tag in tags"></a><span ng-repeat-end ng-if="!$last"> </span>
+</span>

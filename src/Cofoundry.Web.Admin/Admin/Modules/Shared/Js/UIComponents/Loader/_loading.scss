@@ -1,0 +1,17 @@
+﻿/** LOADERS **/
+
+/**
+ * When content is loading, hide the child content and display a loader.
+ * This is for block content (I suppose this needs to be everything except
+ * buttons at the moment).
+ */
+form.loading, table.loading, div.loading, fieldset.loading {
+    background: url("img/loaders/ajax-loader.gif") no-repeat 50%;
+    border: none;
+	min-height: 200px;
+    max-height: 600px;
+    
+    > * {
+        visibility: hidden;
+    }
+}

@@ -1,0 +1,847 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.1\build\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props" Condition="Exists('..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.1\build\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props')" />
+  <Import Project="..\packages\Microsoft.Net.Compilers.1.3.2\build\Microsoft.Net.Compilers.props" Condition="Exists('..\packages\Microsoft.Net.Compilers.1.3.2\build\Microsoft.Net.Compilers.props')" />
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>
+    </ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{2A937234-77BC-42D2-B8CA-97CC0962ACD5}</ProjectGuid>
+    <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Cofoundry.Web.Admin</RootNamespace>
+    <AssemblyName>Cofoundry.Web.Admin</AssemblyName>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <UseIISExpress>true</UseIISExpress>
+    <IISExpressSSLPort />
+    <IISExpressAnonymousAuthentication />
+    <IISExpressWindowsAuthentication />
+    <IISExpressUseClassicPipelineMode />
+    <UseGlobalApplicationHostFile />
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Cofoundry.Web.Admin.XML</DocumentationFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Antlr3.Runtime, Version=3.5.0.2, Culture=neutral, PublicKeyToken=eb42632606e9261f, processorArchitecture=MSIL">
+      <HintPath>..\packages\Antlr.3.5.0.2\lib\Antlr3.Runtime.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="AutoMapper, Version=5.1.1.0, Culture=neutral, PublicKeyToken=be96cd2c38ef1005, processorArchitecture=MSIL">
+      <HintPath>..\packages\AutoMapper.5.1.1\lib\net45\AutoMapper.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Conditions, Version=2.1.0.24, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Conditions.2.1.0\lib\portable-net45+win+wpa81+wp80+MonoAndroid10+MonoTouch10\Conditions.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="HtmlAgilityPack, Version=1.4.9.5, Culture=neutral, PublicKeyToken=bd319b19eaf3b43a, processorArchitecture=MSIL">
+      <HintPath>..\packages\HtmlAgilityPack.1.4.9.5\lib\Net45\HtmlAgilityPack.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.CodeDom.Providers.DotNetCompilerPlatform, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.1\lib\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Microsoft.OData.Core, Version=6.15.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.OData.Core.6.15.0\lib\portable-net45+win+wpa81\Microsoft.OData.Core.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.OData.Edm, Version=6.15.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.OData.Edm.6.15.0\lib\portable-net45+win+wpa81\Microsoft.OData.Edm.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Practices.ServiceLocation, Version=1.3.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\CommonServiceLocator.1.3\lib\portable-net4+sl5+netcore45+wpa81+wp8\Microsoft.Practices.ServiceLocation.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Spatial, Version=6.15.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Spatial.6.15.0\lib\portable-net45+win+wpa81\Microsoft.Spatial.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=9.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.9.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Owin, Version=1.0.0.0, Culture=neutral, PublicKeyToken=f0ebd12fd5e55cc5, processorArchitecture=MSIL">
+      <HintPath>..\packages\Owin.1.0\lib\net40\Owin.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Net.Http.Formatting, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Client.5.2.3\lib\net45\System.Net.Http.Formatting.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.DynamicData" />
+    <Reference Include="System.Web.Entity" />
+    <Reference Include="System.Web.ApplicationServices" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Web.Helpers, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.Helpers.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.Http, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Core.5.2.3\lib\net45\System.Web.Http.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.Http.WebHost, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.WebHost.5.2.3\lib\net45\System.Web.Http.WebHost.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.Mvc, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Mvc.5.2.3\lib\net45\System.Web.Mvc.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.OData, Version=5.9.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.OData.5.9.1\lib\net45\System.Web.OData.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.Optimization, Version=1.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Web.Optimization.1.1.3\lib\net40\System.Web.Optimization.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Razor.3.2.3\lib\net45\System.Web.Razor.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.WebPages, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.WebPages.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Deployment, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.WebPages.Deployment.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.WebPages.Razor.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Web.Services" />
+    <Reference Include="System.EnterpriseServices" />
+    <Reference Include="WebGrease, Version=1.6.5135.21930, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\WebGrease.1.6.0\lib\WebGrease.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Admin\Modules\Account\Js\Bootstrap\Module.js" />
+    <Content Include="Admin\Modules\Account\Js\Bootstrap\Routing.js" />
+    <Content Include="Admin\Modules\Account\Js\DataServices\AccountService.js" />
+    <Content Include="Admin\Modules\Account\Js\Routes\AccountDetails.html" />
+    <Content Include="Admin\Modules\Account\Js\Routes\AccountDetailsController.js" />
+    <Content Include="Admin\Modules\Account\Js\Routes\ChangePassword.html" />
+    <Content Include="Admin\Modules\Account\Js\Routes\ChangePasswordController.js" />
+    <Content Include="Admin\Modules\Auth\Content\css\login.css" />
+    <Content Include="Admin\Modules\Auth\MVC\Views\ChangePassword.js" />
+    <Content Include="Admin\Modules\Auth\MVC\Views\ForgotPassword.js" />
+    <Content Include="Admin\Modules\Auth\MVC\Views\Login.js" />
+    <Content Include="Admin\Modules\CustomEntities\Js\Bootstrap\Module.js" />
+    <Content Include="Admin\Modules\CustomEntities\Js\Bootstrap\Routing.js" />
+    <Content Include="Admin\Modules\CustomEntities\Js\DataServices\CustomEntityService.js" />
+    <Content Include="Admin\Modules\CustomEntities\Js\Routes\AddCustomEntity.html" />
+    <Content Include="Admin\Modules\CustomEntities\Js\Routes\AddCustomEntityController.js" />
+    <Content Include="Admin\Modules\CustomEntities\Js\Routes\CustomEntityDetails.html" />
+    <Content Include="Admin\Modules\CustomEntities\Js\Routes\CustomEntityDetailsController.js" />
+    <Content Include="Admin\Modules\CustomEntities\Js\Routes\CustomEntityList.html" />
+    <Content Include="Admin\Modules\CustomEntities\Js\Routes\CustomEntityListController.js" />
+    <Content Include="Admin\Modules\CustomEntities\Js\Routes\Modals\ChangeOrdering.html" />
+    <Content Include="Admin\Modules\CustomEntities\Js\Routes\Modals\ChangeOrderingController.js" />
+    <Content Include="Admin\Modules\CustomEntities\Js\Routes\Modals\ChangeUrl.html" />
+    <Content Include="Admin\Modules\CustomEntities\Js\Routes\Modals\ChangeUrlController.js" />
+    <Content Include="Admin\Modules\Dashboard\Js\Bootstrap\Module.js" />
+    <Content Include="Admin\Modules\Dashboard\Js\Bootstrap\Routing.js" />
+    <Content Include="Admin\Modules\Dashboard\Js\DataServices\DashboardService.js" />
+    <Content Include="Admin\Modules\Dashboard\Js\Routes\Dashboard.html" />
+    <Content Include="Admin\Modules\Dashboard\Js\Routes\DashboardController.js" />
+    <Content Include="Admin\Modules\Dashboard\Js\UIComponents\DashboardComponent.html" />
+    <Content Include="Admin\Modules\Dashboard\Js\UIComponents\DashboardComponent.js" />
+    <Content Include="Admin\Modules\Directories\Js\Bootstrap\Module.js" />
+    <Content Include="Admin\Modules\Directories\Js\Bootstrap\Routing.js" />
+    <Content Include="Admin\Modules\Directories\Js\DataServices\DirectoryService.js" />
+    <Content Include="Admin\Modules\Directories\Js\DataServices\Models\DirectoryTree.js" />
+    <Content Include="Admin\Modules\Directories\Js\Routes\AddDirectory.html" />
+    <Content Include="Admin\Modules\Directories\Js\Routes\AddDirectoryController.js" />
+    <Content Include="Admin\Modules\Directories\Js\Routes\DirectoryDetails.html" />
+    <Content Include="Admin\Modules\Directories\Js\Routes\DirectoryDetailsController.js" />
+    <Content Include="Admin\Modules\Directories\Js\Routes\DirectoryList.html" />
+    <Content Include="Admin\Modules\Directories\Js\Routes\DirectoryListController.js" />
+    <Content Include="Admin\Modules\Directories\Js\UIComponents\Directories\DirectoryGrid.html" />
+    <Content Include="Admin\Modules\Directories\Js\UIComponents\Directories\DirectoryGrid.js" />
+    <Content Include="Admin\Modules\Directories\Js\UIComponents\Directories\FormFieldDirectorySelector.html" />
+    <Content Include="Admin\Modules\Directories\Js\UIComponents\Directories\FormFieldDirectorySelector.js" />
+    <Content Include="Admin\Modules\Documents\Js\Bootstrap\Module.js" />
+    <Content Include="Admin\Modules\Documents\Js\Bootstrap\Routing.js" />
+    <Content Include="Admin\Modules\Documents\Js\DataServices\DocumentService.js" />
+    <Content Include="Admin\Modules\Documents\Js\Routes\AddDocument.html" />
+    <Content Include="Admin\Modules\Documents\Js\Routes\AddDocumentController.js" />
+    <Content Include="Admin\Modules\Documents\Js\Routes\DocumentDetails.html" />
+    <Content Include="Admin\Modules\Documents\Js\Routes\DocumentDetailsController.js" />
+    <Content Include="Admin\Modules\Documents\Js\Routes\DocumentList.html" />
+    <Content Include="Admin\Modules\Documents\Js\Routes\DocumentListController.js" />
+    <Content Include="Admin\Modules\Images\Js\Bootstrap\Module.js" />
+    <Content Include="Admin\Modules\Images\Js\Bootstrap\Routing.js" />
+    <Content Include="Admin\Modules\Images\Js\DataServices\ImageService.js" />
+    <Content Include="Admin\Modules\Images\Js\Routes\AddImage.html" />
+    <Content Include="Admin\Modules\Images\Js\Routes\AddImageController.js" />
+    <Content Include="Admin\Modules\Images\Js\Routes\ImageDetails.html" />
+    <Content Include="Admin\Modules\Images\Js\Routes\ImageDetailsController.js" />
+    <Content Include="Admin\Modules\Images\Js\Routes\ImageList.html" />
+    <Content Include="Admin\Modules\Images\Js\Routes\ImageListController.js" />
+    <Content Include="Admin\Modules\Images\Js\UIComponents\FormFieldImageAnchorLocationSelector.html" />
+    <Content Include="Admin\Modules\Images\Js\UIComponents\FormFieldImageAnchorLocationSelector.js" />
+    <Content Include="Admin\Modules\Pages\Js\Bootstrap\Module.js" />
+    <Content Include="Admin\Modules\Pages\Js\Bootstrap\Routing.js" />
+    <Content Include="Admin\Modules\Pages\Js\DataServices\CustomEntityService.js" />
+    <Content Include="Admin\Modules\Pages\Js\DataServices\DirectoryService.js" />
+    <Content Include="Admin\Modules\Pages\Js\DataServices\PageService.js" />
+    <Content Include="Admin\Modules\Pages\Js\DataServices\PageTemplateService.js" />
+    <Content Include="Admin\Modules\Pages\Js\Routes\AddPage.html" />
+    <Content Include="Admin\Modules\Pages\Js\Routes\AddPageController.js" />
+    <Content Include="Admin\Modules\Pages\Js\Routes\Modals\ChangePageUrl.html" />
+    <Content Include="Admin\Modules\Pages\Js\Routes\Modals\ChangePageUrlController.js" />
+    <Content Include="Admin\Modules\Pages\Js\Routes\Modals\DuplicatePage.html" />
+    <Content Include="Admin\Modules\Pages\Js\Routes\Modals\DuplicatePageController.js" />
+    <Content Include="Admin\Modules\Pages\Js\Routes\PageDetails.html" />
+    <Content Include="Admin\Modules\Pages\Js\Routes\PageDetailsController.js" />
+    <Content Include="Admin\Modules\Pages\Js\Routes\PageList.html" />
+    <Content Include="Admin\Modules\Pages\Js\Routes\PageListController.js" />
+    <Content Include="Admin\Modules\Pages\Js\Routes\Partials\PageVersionList.html" />
+    <Content Include="Admin\Modules\Pages\Js\UIComponents\Directories\FormFieldDirectorySelector.html" />
+    <Content Include="Admin\Modules\Pages\Js\UIComponents\Directories\FormFieldDirectorySelector.js" />
+    <Content Include="Admin\Modules\PageTemplates\Js\Bootstrap\Module.js" />
+    <Content Include="Admin\Modules\PageTemplates\Js\Bootstrap\Routing.js" />
+    <Content Include="Admin\Modules\PageTemplates\Js\DataServices\PageModuleTypeService.js" />
+    <Content Include="Admin\Modules\PageTemplates\Js\DataServices\PageTemplateService.js" />
+    <Content Include="Admin\Modules\PageTemplates\Js\Routes\AddPageTemplate.html" />
+    <Content Include="Admin\Modules\PageTemplates\Js\Routes\AddPageTemplateController.js" />
+    <Content Include="Admin\Modules\PageTemplates\Js\Routes\Modals\EditModuleTypes.html" />
+    <Content Include="Admin\Modules\PageTemplates\Js\Routes\Modals\EditModuleTypesController.js" />
+    <Content Include="Admin\Modules\PageTemplates\Js\Routes\Modals\ReScanTemplateSections.html" />
+    <Content Include="Admin\Modules\PageTemplates\Js\Routes\Modals\ReScanTemplateSectionsController.js" />
+    <Content Include="Admin\Modules\PageTemplates\Js\Routes\PageTemplateDetails.html" />
+    <Content Include="Admin\Modules\PageTemplates\Js\Routes\PageTemplateDetailsController.js" />
+    <Content Include="Admin\Modules\PageTemplates\Js\Routes\PageTemplateList.html" />
+    <Content Include="Admin\Modules\PageTemplates\Js\Routes\PageTemplateListController.js" />
+    <Content Include="Admin\Modules\Roles\Js\Bootstrap\Module.js" />
+    <Content Include="Admin\Modules\Roles\Js\Bootstrap\Routing.js" />
+    <Content Include="Admin\Modules\Roles\Js\DataServices\PermissionService.js" />
+    <Content Include="Admin\Modules\Roles\Js\DataServices\RoleService.js" />
+    <Content Include="Admin\Modules\Roles\Js\DataServices\UserAreaService.js" />
+    <Content Include="Admin\Modules\Roles\Js\Routes\AddRole.html" />
+    <Content Include="Admin\Modules\Roles\Js\Routes\AddRoleController.js" />
+    <Content Include="Admin\Modules\Roles\Js\Routes\RoleDetails.html" />
+    <Content Include="Admin\Modules\Roles\Js\Routes\RoleDetailsController.js" />
+    <Content Include="Admin\Modules\Roles\Js\Routes\RoleList.html" />
+    <Content Include="Admin\Modules\Roles\Js\Routes\RoleListController.js" />
+    <Content Include="Admin\Modules\Roles\Js\UIComponents\FormFieldPermissionsCollection.html" />
+    <Content Include="Admin\Modules\Roles\Js\UIComponents\FormFieldPermissionsCollection.js" />
+    <Content Include="Admin\Modules\Settings\Js\Bootstrap\Module.js" />
+    <Content Include="Admin\Modules\Settings\Js\Bootstrap\Routing.js" />
+    <Content Include="Admin\Modules\Settings\Js\DataServices\SettingsService.js" />
+    <Content Include="Admin\Modules\Settings\Js\Routes\SettingsDetails.html" />
+    <Content Include="Admin\Modules\Settings\Js\Routes\SettingsDetailsController.js" />
+    <Content Include="Admin\Modules\Setup\Js\Bootstrap\Module.js" />
+    <Content Include="Admin\Modules\Setup\Js\Bootstrap\Routing.js" />
+    <Content Include="Admin\Modules\Setup\Js\DataServices\SetupService.js" />
+    <Content Include="Admin\Modules\Setup\Js\Routes\SetupDetails.html" />
+    <Content Include="Admin\Modules\Setup\Js\Routes\SetupDetailsController.js" />
+    <Content Include="Admin\Modules\Shared\Content\css\img\devices\iPadLandscape.png" />
+    <Content Include="Admin\Modules\Shared\Content\css\img\devices\iPadPortrait.png" />
+    <Content Include="Admin\Modules\Shared\Content\css\img\devices\iPhone3Landscape.png" />
+    <Content Include="Admin\Modules\Shared\Content\css\img\devices\iPhone3Portrait.png" />
+    <Content Include="Admin\Modules\Shared\Content\css\img\devices\iPhone4Landscape.png" />
+    <Content Include="Admin\Modules\Shared\Content\css\img\devices\iPhone4Portrait.png" />
+    <Content Include="Admin\Modules\Shared\Content\css\img\icons\normal.png" />
+    <Content Include="Admin\Modules\Shared\Content\css\img\icons\normal\icon-action-edit.png" />
+    <Content Include="Admin\Modules\Shared\Content\css\img\icons\normal\icon-action-open.png" />
+    <Content Include="Admin\Modules\Shared\Content\css\img\icons\normal\icon-doc.png" />
+    <Content Include="Admin\Modules\Shared\Content\css\img\icons\normal\icon-folder.png" />
+    <Content Include="Admin\Modules\Shared\Content\css\img\icons\normal\icon-nav-manage.png" />
+    <Content Include="Admin\Modules\Shared\Content\css\img\icons\normal\icon-nav-people.png" />
+    <Content Include="Admin\Modules\Shared\Content\css\img\icons\normal\icon-nav-search.png" />
+    <Content Include="Admin\Modules\Shared\Content\css\img\icons\normal\icon-nav-settings.png" />
+    <Content Include="Admin\Modules\Shared\Content\css\img\icons\normal\logo.png" />
+    <Content Include="Admin\Modules\Shared\Content\css\img\icons\retina.png" />
+    <Content Include="Admin\Modules\Shared\Content\css\img\icons\retina\icon-action-edit.png" />
+    <Content Include="Admin\Modules\Shared\Content\css\img\icons\retina\icon-action-open.png" />
+    <Content Include="Admin\Modules\Shared\Content\css\img\icons\retina\icon-doc.png" />
+    <Content Include="Admin\Modules\Shared\Content\css\img\icons\retina\icon-folder.png" />
+    <Content Include="Admin\Modules\Shared\Content\css\img\icons\retina\icon-nav-manage.png" />
+    <Content Include="Admin\Modules\Shared\Content\css\img\icons\retina\icon-nav-people.png" />
+    <Content Include="Admin\Modules\Shared\Content\css\img\icons\retina\icon-nav-search.png" />
+    <Content Include="Admin\Modules\Shared\Content\css\img\icons\retina\icon-nav-settings.png" />
+    <Content Include="Admin\Modules\Shared\Content\css\img\icons\retina\logo.png" />
+    <Content Include="Admin\Modules\Shared\Content\css\img\loaders\ajax-loader.gif" />
+    <Content Include="Admin\Modules\Shared\Content\css\img\loaders\generic-horizontal.gif" />
+    <Content Include="Admin\Modules\Shared\Content\css\lib\font-awesome\font-awesome.css" />
+    <Content Include="Admin\Modules\Shared\Content\css\lib\font-awesome\fonts\fontawesome-webfont.svg" />
+    <Content Include="Admin\Modules\Shared\Content\css\lib\jquery-ui\images\ui-bg_diagonals-thick_75_f3d8d8_40x40.png" />
+    <Content Include="Admin\Modules\Shared\Content\css\lib\jquery-ui\images\ui-bg_dots-small_65_a6a6a6_2x2.png" />
+    <Content Include="Admin\Modules\Shared\Content\css\lib\jquery-ui\images\ui-bg_flat_0_333333_40x100.png" />
+    <Content Include="Admin\Modules\Shared\Content\css\lib\jquery-ui\images\ui-bg_flat_65_ffffff_40x100.png" />
+    <Content Include="Admin\Modules\Shared\Content\css\lib\jquery-ui\images\ui-bg_flat_75_ffffff_40x100.png" />
+    <Content Include="Admin\Modules\Shared\Content\css\lib\jquery-ui\images\ui-bg_glass_55_fbf8ee_1x400.png" />
+    <Content Include="Admin\Modules\Shared\Content\css\lib\jquery-ui\images\ui-bg_highlight-hard_100_eeeeee_1x100.png" />
+    <Content Include="Admin\Modules\Shared\Content\css\lib\jquery-ui\images\ui-bg_highlight-hard_100_f6f6f6_1x100.png" />
+    <Content Include="Admin\Modules\Shared\Content\css\lib\jquery-ui\images\ui-bg_highlight-soft_15_cc0000_1x100.png" />
+    <Content Include="Admin\Modules\Shared\Content\css\lib\jquery-ui\images\ui-icons_004276_256x240.png" />
+    <Content Include="Admin\Modules\Shared\Content\css\lib\jquery-ui\images\ui-icons_cc0000_256x240.png" />
+    <Content Include="Admin\Modules\Shared\Content\css\lib\jquery-ui\images\ui-icons_ffffff_256x240.png" />
+    <Content Include="Admin\Modules\Shared\Content\css\lib\jquery-ui\jquery-ui.css" />
+    <Content Include="Admin\Modules\Shared\Content\css\lib\selectize.default.css" />
+    <Content Include="Admin\Modules\Shared\Content\css\lib\textangular.css" />
+    <Content Include="Admin\Modules\Shared\Content\css\lib\ui-select.css" />
+    <Content Include="Admin\Modules\Shared\Content\css\shared.css" />
+    <Content Include="Admin\Modules\Shared\Content\favicon.ico" />
+    <Content Include="Admin\Modules\Shared\Content\videoplayer.swf" />
+    <Content Include="Admin\Modules\Shared\Js\bootstrap\Module.js" />
+    <Content Include="Admin\Modules\Shared\Js\DataServices\CustomEntityService.js" />
+    <Content Include="Admin\Modules\Shared\Js\DataServices\DocumentService.js" />
+    <Content Include="Admin\Modules\Shared\Js\DataServices\EntityVersionService.js" />
+    <Content Include="Admin\Modules\Shared\Js\DataServices\ImageService.js" />
+    <Content Include="Admin\Modules\Shared\Js\DataServices\LocaleService.js" />
+    <Content Include="Admin\Modules\Shared\Js\DataServices\VimeoService.js" />
+    <Content Include="Admin\Modules\Shared\Js\DataServices\YouTubeService.js" />
+    <Content Include="Admin\Modules\Shared\Js\Filters\Bytes.js" />
+    <Content Include="Admin\Modules\Shared\Js\Filters\FilterWatcher.js" />
+    <Content Include="Admin\Modules\Shared\Js\Filters\GroupBy.js" />
+    <Content Include="Admin\Modules\Shared\Js\Framework\AuthenticationService.js" />
+    <Content Include="Admin\Modules\Shared\Js\Framework\ErrorService.js" />
+    <Content Include="Admin\Modules\Shared\Js\Framework\ExceptionHandler.js" />
+    <Content Include="Admin\Modules\Shared\Js\Framework\FocusService.js" />
+    <Content Include="Admin\Modules\Shared\Js\Framework\HttpInterceptor.js" />
+    <Content Include="Admin\Modules\Shared\Js\Framework\HttpProviderConfig.js" />
+    <Content Include="Admin\Modules\Shared\Js\Framework\PermissionValidationService.js" />
+    <Content Include="Admin\Modules\Shared\Js\Framework\ValidationErrorService.js" />
+    <Content Include="Admin\Modules\Shared\Js\lib\angular.min.js" />
+    <Content Include="Admin\Modules\Shared\Js\lib\AngularModules\angular-file-upload.js" />
+    <Content Include="Admin\Modules\Shared\Js\lib\AngularModules\angular-route.js" />
+    <Content Include="Admin\Modules\Shared\Js\lib\AngularModules\angularModalService.js" />
+    <Content Include="Admin\Modules\Shared\Js\lib\AngularModules\draganddrop.js" />
+    <Content Include="Admin\Modules\Shared\Js\lib\AngularModules\FileUploadShim\angular-file-upload-shim.min.js" />
+    <Content Include="Admin\Modules\Shared\Js\lib\AngularModules\FileUploadShim\FileAPI.flash.swf" />
+    <Content Include="Admin\Modules\Shared\Js\lib\AngularModules\FileUploadShim\FileAPI.min.js" />
+    <Content Include="Admin\Modules\Shared\Js\lib\AngularModules\TextAngular\textAngular-rangy.min.js" />
+    <Content Include="Admin\Modules\Shared\Js\lib\AngularModules\TextAngular\textAngular-sanitize.min.js" />
+    <Content Include="Admin\Modules\Shared\Js\lib\AngularModules\TextAngular\textAngular.min.js" />
+    <Content Include="Admin\Modules\Shared\Js\lib\AngularModules\ui-select.js" />
+    <Content Include="Admin\Modules\Shared\Js\lib\html5shiv.js" />
+    <Content Include="Admin\Modules\Shared\Js\lib\underscore.min.js" />
+    <Content Include="Admin\Modules\Shared\Js\UIComponents\Buttons\Button.html" />
+    <Content Include="Admin\Modules\Shared\Js\UIComponents\Buttons\Button.js" />
+    <Content Include="Admin\Modules\Shared\Js\UIComponents\Buttons\ButtonIcon.html" />
+    <Content Include="Admin\Modules\Shared\Js\UIComponents\Buttons\ButtonIcon.js" />
+    <Content Include="Admin\Modules\Shared\Js\UIComponents\Buttons\ButtonLink.html" />
+    <Content Include="Admin\Modules\Shared\Js\UIComponents\Buttons\ButtonLink.js" />
+    <Content Include="Admin\Modules\Shared\Js\UIComponents\Buttons\ButtonSubmit.html" />
+    <Content Include="Admin\Modules\Shared\Js\UIComponents\Buttons\ButtonSubmit.js" />
+    <Content Include="Admin\Modules\Shared\Js\UIComponents\CustomEntities\CustomEntityLink.html" />
+    <Content Include="Admin\Modules\Shared\Js\UIComponents\CustomEntities\CustomEntityLink.js" />
+    <Content Include="Admin\Modules\Shared\Js\UIComponents\CustomEntities\CustomEntityPickerDialog.html" />
+    <Content Include="Admin\Modules\Shared\Js\UIComponents\CustomEntities\CustomEntityPickerDialog.js" />
+    <Content Include="Admin\Modules\Shared\Js\UIComponents\CustomEntities\FormFieldCustomEntityCollection.html" />
+    <Content Include="Admin\Modules\Shared\Js\UIComponents\CustomEntities\FormFieldCustomEntityCollection.js" />
+    <Content Include="Admin\Modules\Shared\Js\UIComponents\CustomEntities\FormFieldCustomEntityMultiTypeCollection.html" />
+    <Content Include="Admin\Modules\Shared\Js\UIComponents\CustomEntities\FormFieldCustomEntityMultiTypeCollection.js" />
+    <Content Include="Admin\Modules\Shared\Js\UIComponents\CustomEntities\FormFieldCustomEntitySelector.html" />
+    <Content Include="Admin\Modules\Shared\Js\UIComponents\CustomEntities\FormFieldCustomEntitySelector.js" />
+    <Content Include="Admin\Modules\Shared\Js\UIComponents\DocumentAssets\DocumentAsset.html" />
+    <Content Include="Admin\Modules\Shared\Js\UIComponents\DocumentAssets\DocumentAsset.js" />
+    <Content Include="Admin\Modules\Shared\Js\UIComponents\DocumentAssets\DocumentAssetPickerDialog.html" />
+    <Content Include="Admin\Modules\Shared\Js\UIComponents\DocumentAssets\DocumentAssetPickerDialog.js" />
+    <Content Include="Admin\Modules\Shared\Js\UIComponents\DocumentAssets\DocumentUpload.html" />
+    <Content Include="Admin\Modules\Shared\Js\UIComponents\DocumentAssets\DocumentUpload.js" />
+    <Content Include="Admin\Modules\Shared\Js\UIComponents\DocumentAssets\FormFieldDocumentAsset.html" />
+    <Content Include="Admin\Modules\Shared\Js\UIComponents\DocumentAssets\FormFieldDocumentAsset.js" />
+    <Content Include="Admin\Modules\Shared\Js\UIComponents\DocumentAssets\FormFieldDocumentTypeSelector.html" />
+    <Content Include="Admin\Modules\Shared\Js\UIComponents\DocumentAssets\FormFieldDocumentTypeSelector.js" />
+    <Content Include="Admin\Modules\Shared\Js\UIComponents\DocumentAssets\FormFieldDocumentUpload.html" />
+    <Content Include="Admin\Modules\Shared\Js\UIComponents\DocumentAssets\FormFieldDocumentUpload.js" />
+    <Content Include="Admin\Modules\Shared\Js\UIComponents\EntityVersionDialogs\EntityVersionModalDialogService.js" />
+    <Content Include="Admin\Modules\Shared\Js\UIComponents\FormDynamicFieldSet\FormDynamicFieldSet.html" />
+    <Content Include="Admin\Modules\Shared\Js\UIComponents\FormDynamicFieldSet\FormDynamicFieldSet.js" />
+    <Content Include="Admin\Modules\Shared\Js\UIComponents\FormFields\BaseFormFieldFactory.js" />
+    <Content Include="Admin\Modules\Shared\Js\UIComponents\FormFields\FormFieldCheckbox.html" />
+    <Content Include="Admin\Modules\Shared\Js\UIComponents\FormFields\FormFieldCheckbox.js" />
+    <Content Include="Admin\Modules\Shared\Js\UIComponents\FormFields\FormFieldColor.html" />
+    <Content Include="Admin\Modules\Shared\Js\UIComponents\FormFields\FormFieldColor.js" />
+    <Content Include="Admin\Modules\Shared\Js\UIComponents\FormFields\FormFieldContainer.html" />
+    <Content Include="Admin\Modules\Shared\Js\UIComponents\FormFields\FormFieldContainer.js" />
+    <Content Include="Admin\Modules\Shared\Js\UIComponents\FormFields\FormFieldDate.html" />
+    <Content Include="Admin\Modules\Shared\Js\UIComponents\FormFields\FormFieldDate.js" />
+    <Content Include="Admin\Modules\Shared\Js\UIComponents\FormFields\FormFieldDropdown.html" />
+    <Content Include="Admin\Modules\Shared\Js\UIComponents\FormFields\FormFieldDropdown.js" />
+    <Content Include="Admin\Modules\Shared\Js\UIComponents\FormFields\FormFieldEmailAddress.html" />
+    <Content Include="Admin\Modules\Shared\Js\UIComponents\FormFields\FormFieldEmailAddress.js" />
+    <Content Include="Admin\Modules\Shared\Js\UIComponents\FormFields\FormFieldFilteredDropdown.html" />
+    <Content Include="Admin\Modules\Shared\Js\UIComponents\FormFields\FormFieldFilteredDropdown.js" />
+    <Content Include="Admin\Modules\Shared\Js\UIComponents\FormFields\FormFieldHtml.html" />
+    <Content Include="Admin\Modules\Shared\Js\UIComponents\FormFields\FormFieldHtml.js" />
+    <Content Include="Admin\Modules\Shared\Js\UIComponents\FormFields\FormFieldNumber.html" />
+    <Content Include="Admin\Modules\Shared\Js\UIComponents\FormFields\FormFieldNumber.js" />
+    <Content Include="Admin\Modules\Shared\Js\UIComponents\FormFields\FormFieldPassword.html" />
+    <Content Include="Admin\Modules\Shared\Js\UIComponents\FormFields\FormFieldPassword.js" />
+    <Content Include="Admin\Modules\Shared\Js\UIComponents\FormFields\FormFieldReadonly.html" />
+    <Content Include="Admin\Modules\Shared\Js\UIComponents\FormFields\FormFieldReadonly.js" />
+    <Content Include="Admin\Modules\Shared\Js\UIComponents\FormFields\FormFieldText.html" />
+    <Content Include="Admin\Modules\Shared\Js\UIComponents\FormFields\FormFieldText.js" />
+    <Content Include="Admin\Modules\Shared\Js\UIComponents\FormFields\FormFieldTextArea.html" />
+    <Content Include="Admin\Modules\Shared\Js\UIComponents\FormFields\FormFieldTextArea.js" />
+    <Content Include="Admin\Modules\Shared\Js\UIComponents\FormFields\FormFieldUrl.html" />
+    <Content Include="Admin\Modules\Shared\Js\UIComponents\FormFields\FormFieldUrl.js" />
+    <Content Include="Admin\Modules\Shared\Js\UIComponents\FormFields\FormFieldValidationSummary.html" />
+    <Content Include="Admin\Modules\Shared\Js\UIComponents\FormFields\FormFieldValidationSummary.js" />
+    <Content Include="Admin\Modules\Shared\Js\UIComponents\FormFields\HttpPrefix.js" />
+    <Content Include="Admin\Modules\Shared\Js\UIComponents\FormValidators\MatchValidator.js" />
+    <Content Include="Admin\Modules\Shared\Js\UIComponents\Form\Form.html" />
+    <Content Include="Admin\Modules\Shared\Js\UIComponents\Form\Form.js" />
+    <Content Include="Admin\Modules\Shared\Js\UIComponents\Form\FormSection.html" />
+    <Content Include="Admin\Modules\Shared\Js\UIComponents\Form\FormSection.js" />
+    <Content Include="Admin\Modules\Shared\Js\UIComponents\Form\FormSectionAuditData.html" />
+    <Content Include="Admin\Modules\Shared\Js\UIComponents\Form\FormSectionAuditData.js" />
+    <Content Include="Admin\Modules\Shared\Js\UIComponents\Form\FormStatus.html" />
+    <Content Include="Admin\Modules\Shared\Js\UIComponents\Form\FormStatus.js" />
+    <Content Include="Admin\Modules\Shared\Js\UIComponents\ImageAssets\FormFieldImageAsset.html" />
+    <Content Include="Admin\Modules\Shared\Js\UIComponents\ImageAssets\FormFieldImageAsset.js" />
+    <Content Include="Admin\Modules\Shared\Js\UIComponents\ImageAssets\FormFieldImageAssetCollection.html" />
+    <Content Include="Admin\Modules\Shared\Js\UIComponents\ImageAssets\FormFieldImageAssetCollection.js" />
+    <Content Include="Admin\Modules\Shared\Js\UIComponents\ImageAssets\FormFieldImageUpload.html" />
+    <Content Include="Admin\Modules\Shared\Js\UIComponents\ImageAssets\FormFieldImageUpload.js" />
+    <Content Include="Admin\Modules\Shared\Js\UIComponents\ImageAssets\ImageAsset.html" />
+    <Content Include="Admin\Modules\Shared\Js\UIComponents\ImageAssets\ImageAsset.js" />
+    <Content Include="Admin\Modules\Shared\Js\UIComponents\ImageAssets\ImageAssetPickerDialog.html" />
+    <Content Include="Admin\Modules\Shared\Js\UIComponents\ImageAssets\ImageAssetPickerDialog.js" />
+    <Content Include="Admin\Modules\Shared\Js\UIComponents\ImageAssets\ImageUpload.html" />
+    <Content Include="Admin\Modules\Shared\Js\UIComponents\ImageAssets\ImageUpload.js" />
+    <Content Include="Admin\Modules\Shared\Js\UIComponents\Layout\Field.html" />
+    <Content Include="Admin\Modules\Shared\Js\UIComponents\Layout\Field.js" />
+    <Content Include="Admin\Modules\Shared\Js\UIComponents\Layout\Navigation.js" />
+    <Content Include="Admin\Modules\Shared\Js\UIComponents\Layout\PageActions.js" />
+    <Content Include="Admin\Modules\Shared\Js\UIComponents\Layout\PageBody.js" />
+    <Content Include="Admin\Modules\Shared\Js\UIComponents\Layout\PageFilter.js" />
+    <Content Include="Admin\Modules\Shared\Js\UIComponents\Layout\PageHeader.js" />
+    <Content Include="Admin\Modules\Shared\Js\UIComponents\Layout\PageHeaderButtons.js" />
+    <Content Include="Admin\Modules\Shared\Js\UIComponents\Layout\PageSubHeader.js" />
+    <Content Include="Admin\Modules\Shared\Js\UIComponents\Loader\Loading.js" />
+    <Content Include="Admin\Modules\Shared\Js\UIComponents\Loader\LoadState.js" />
+    <Content Include="Admin\Modules\Shared\Js\UIComponents\Loader\ProgressBar.html" />
+    <Content Include="Admin\Modules\Shared\Js\UIComponents\Loader\ProgressBar.js" />
+    <Content Include="Admin\Modules\Shared\Js\UIComponents\Locales\FormFieldLocaleSelector.html" />
+    <Content Include="Admin\Modules\Shared\Js\UIComponents\Locales\FormFieldLocaleSelector.js" />
+    <Content Include="Admin\Modules\Shared\Js\UIComponents\Menus\Menu.html" />
+    <Content Include="Admin\Modules\Shared\Js\UIComponents\Menus\Menu.js" />
+    <Content Include="Admin\Modules\Shared\Js\UIComponents\Modals\Alert.html" />
+    <Content Include="Admin\Modules\Shared\Js\UIComponents\Modals\Alert.js" />
+    <Content Include="Admin\Modules\Shared\Js\UIComponents\Modals\ConfirmDialog.html" />
+    <Content Include="Admin\Modules\Shared\Js\UIComponents\Modals\ConfirmDialog.js" />
+    <Content Include="Admin\Modules\Shared\Js\UIComponents\Modals\ModalDialogActions.html" />
+    <Content Include="Admin\Modules\Shared\Js\UIComponents\Modals\ModalDialogActions.js" />
+    <Content Include="Admin\Modules\Shared\Js\UIComponents\Modals\ModalDialogBody.html" />
+    <Content Include="Admin\Modules\Shared\Js\UIComponents\Modals\ModalDialogBody.js" />
+    <Content Include="Admin\Modules\Shared\Js\UIComponents\Modals\ModalDialogContainer.html" />
+    <Content Include="Admin\Modules\Shared\Js\UIComponents\Modals\ModalDialogContainer.js" />
+    <Content Include="Admin\Modules\Shared\Js\UIComponents\Modals\ModalDialogHeader.html" />
+    <Content Include="Admin\Modules\Shared\Js\UIComponents\Modals\ModalDialogHeader.js" />
+    <Content Include="Admin\Modules\Shared\Js\UIComponents\Modals\ModalDialogService.js" />
+    <Content Include="Admin\Modules\Shared\Js\UIComponents\Pages\PageModalDialogService.js" />
+    <Content Include="Admin\Modules\Shared\Js\UIComponents\Search\Pager.html" />
+    <Content Include="Admin\Modules\Shared\Js\UIComponents\Search\Pager.js" />
+    <Content Include="Admin\Modules\Shared\Js\UIComponents\Search\SearchFilter.html" />
+    <Content Include="Admin\Modules\Shared\Js\UIComponents\Search\SearchFilter.js" />
+    <Content Include="Admin\Modules\Shared\Js\UIComponents\Search\SearchQuery.js" />
+    <Content Include="Admin\Modules\Shared\Js\UIComponents\StatusMessages\SuccessMessage.html" />
+    <Content Include="Admin\Modules\Shared\Js\UIComponents\StatusMessages\SuccessMessage.js" />
+    <Content Include="Admin\Modules\Shared\Js\UIComponents\StatusMessages\WarningMessage.html" />
+    <Content Include="Admin\Modules\Shared\Js\UIComponents\StatusMessages\WarningMessage.js" />
+    <Content Include="Admin\Modules\Shared\Js\UIComponents\Table\TableActions.html" />
+    <Content Include="Admin\Modules\Shared\Js\UIComponents\Table\TableActions.js" />
+    <Content Include="Admin\Modules\Shared\Js\UIComponents\Table\TableCellCreatedAuditData.html" />
+    <Content Include="Admin\Modules\Shared\Js\UIComponents\Table\TableCellCreatedAuditData.js" />
+    <Content Include="Admin\Modules\Shared\Js\UIComponents\Table\TableCellImage.html" />
+    <Content Include="Admin\Modules\Shared\Js\UIComponents\Table\TableCellImage.js" />
+    <Content Include="Admin\Modules\Shared\Js\UIComponents\Table\TableCellUpdatedAuditData.html" />
+    <Content Include="Admin\Modules\Shared\Js\UIComponents\Table\TableCellUpdatedAuditData.js" />
+    <Content Include="Admin\Modules\Shared\Js\UIComponents\Table\TableColumnActions.js" />
+    <Content Include="Admin\Modules\Shared\Js\UIComponents\Table\TableContainer.html" />
+    <Content Include="Admin\Modules\Shared\Js\UIComponents\Table\TableContainer.js" />
+    <Content Include="Admin\Modules\Shared\Js\UIComponents\Table\TableGroupHeading.js" />
+    <Content Include="Admin\Modules\Shared\Js\UIComponents\Table\TableRowInactive.js" />
+    <Content Include="Admin\Modules\Shared\Js\UIComponents\Tags\FormFieldTags.html" />
+    <Content Include="Admin\Modules\Shared\Js\UIComponents\Tags\FormFieldTags.js" />
+    <Content Include="Admin\Modules\Shared\Js\UIComponents\Tags\TagList.html" />
+    <Content Include="Admin\Modules\Shared\Js\UIComponents\Tags\TagList.js" />
+    <Content Include="Admin\Modules\Shared\Js\UIComponents\Tags\TagsInput.js" />
+    <Content Include="Admin\Modules\Shared\Js\UIComponents\Time\TimeAgo.html" />
+    <Content Include="Admin\Modules\Shared\Js\UIComponents\Time\TimeAgo.js" />
+    <Content Include="Admin\Modules\Shared\Js\UIComponents\User\UserLink.html" />
+    <Content Include="Admin\Modules\Shared\Js\UIComponents\User\UserLink.js" />
+    <Content Include="Admin\Modules\Shared\Js\UIComponents\Utility\AutoTargetBlank.js" />
+    <Content Include="Admin\Modules\Shared\Js\UIComponents\Utility\ModelAsDate.js" />
+    <Content Include="Admin\Modules\Shared\Js\UIComponents\Vimeo\FormFieldVimeo.html" />
+    <Content Include="Admin\Modules\Shared\Js\UIComponents\Vimeo\FormFieldVimeo.js" />
+    <Content Include="Admin\Modules\Shared\Js\UIComponents\Vimeo\FormFieldVimeoId.html" />
+    <Content Include="Admin\Modules\Shared\Js\UIComponents\Vimeo\FormFieldVimeoId.js" />
+    <Content Include="Admin\Modules\Shared\Js\UIComponents\Vimeo\VimeoPickerDialog.html" />
+    <Content Include="Admin\Modules\Shared\Js\UIComponents\Vimeo\VimeoPickerDialog.js" />
+    <Content Include="Admin\Modules\Shared\Js\UIComponents\Vimeo\VimeoVideo.html" />
+    <Content Include="Admin\Modules\Shared\Js\UIComponents\Vimeo\VimeoVideo.js" />
+    <Content Include="Admin\Modules\Shared\Js\UIComponents\YouTube\FormFieldYouTube.html" />
+    <Content Include="Admin\Modules\Shared\Js\UIComponents\YouTube\FormFieldYouTube.js" />
+    <Content Include="Admin\Modules\Shared\Js\UIComponents\YouTube\FormFieldYouTubeId.html" />
+    <Content Include="Admin\Modules\Shared\Js\UIComponents\YouTube\FormFieldYouTubeId.js" />
+    <Content Include="Admin\Modules\Shared\Js\UIComponents\YouTube\YouTubePickerDialog.html" />
+    <Content Include="Admin\Modules\Shared\Js\UIComponents\YouTube\YouTubePickerDialog.js" />
+    <Content Include="Admin\Modules\Shared\Js\UIComponents\YouTube\YouTubeVideo.html" />
+    <Content Include="Admin\Modules\Shared\Js\UIComponents\YouTube\YouTubeVideo.js" />
+    <Content Include="Admin\Modules\Shared\Js\Utilities\ArrayUtilities.js" />
+    <Content Include="Admin\Modules\Shared\Js\Utilities\DirectiveUtilities.js" />
+    <Content Include="Admin\Modules\Shared\Js\Utilities\JqLiteExtensions.js" />
+    <Content Include="Admin\Modules\Shared\Js\Utilities\RoutingUtilities.js" />
+    <Content Include="Admin\Modules\Shared\Js\Utilities\StringUtilities.js" />
+    <Content Include="Admin\Modules\Shared\Js\Utilities\UrlLibrary.js" />
+    <Content Include="Admin\Modules\SiteViewer\Content\css\img\devices\iPadLandscape.png" />
+    <Content Include="Admin\Modules\SiteViewer\Content\css\img\devices\iPadPortrait.png" />
+    <Content Include="Admin\Modules\SiteViewer\Content\css\img\devices\iPhone3Landscape.png" />
+    <Content Include="Admin\Modules\SiteViewer\Content\css\img\devices\iPhone3Portrait.png" />
+    <Content Include="Admin\Modules\SiteViewer\Content\css\img\devices\iPhone4Landscape.png" />
+    <Content Include="Admin\Modules\SiteViewer\Content\css\img\devices\iPhone4Portrait.png" />
+    <Content Include="Admin\Modules\SiteViewer\Content\css\img\icons.png" />
+    <Content Include="Admin\Modules\SiteViewer\Content\css\inner-site-viewer.css" />
+    <Content Include="Admin\Modules\SiteViewer\Content\css\site-viewer.css" />
+    <Content Include="Admin\Modules\SiteViewer\Js\Bootstrap\Module.js" />
+    <Content Include="Admin\Modules\SiteViewer\Js\ContentPage\EventAggregator.js" />
+    <Content Include="Admin\Modules\SiteViewer\Js\DataServices\PageModuleService.js" />
+    <Content Include="Admin\Modules\SiteViewer\Js\Routes\Modals\AddModule.html" />
+    <Content Include="Admin\Modules\SiteViewer\Js\Routes\Modals\AddModuleController.js" />
+    <Content Include="Admin\Modules\SiteViewer\Js\Routes\Modals\EditModule.html" />
+    <Content Include="Admin\Modules\SiteViewer\Js\Routes\Modals\EditModuleController.js" />
+    <Content Include="Admin\Modules\SiteViewer\Js\Routes\SiteViewerController.js" />
+    <Content Include="Admin\Modules\SiteViewer\Js\UIComponents\PageSection.html" />
+    <Content Include="Admin\Modules\SiteViewer\Js\UIComponents\PageSection.js" />
+    <Content Include="Admin\Modules\SiteViewer\Js\UIComponents\PageSectionModule.html" />
+    <Content Include="Admin\Modules\SiteViewer\Js\UIComponents\PageSectionModule.js" />
+    <Content Include="Admin\Modules\SiteViewer\Js\UIComponents\SiteFrame.js" />
+    <Content Include="Admin\Modules\Users\Js\Bootstrap\Module.js" />
+    <Content Include="Admin\Modules\Users\Js\Bootstrap\Routing.js" />
+    <Content Include="Admin\Modules\Users\Js\DataServices\RoleService.js" />
+    <Content Include="Admin\Modules\Users\Js\DataServices\UserService.js" />
+    <Content Include="Admin\Modules\Users\Js\Routes\AddUser.html" />
+    <Content Include="Admin\Modules\Users\Js\Routes\AddUserController.js" />
+    <Content Include="Admin\Modules\Users\Js\Routes\UserDetails.html" />
+    <Content Include="Admin\Modules\Users\Js\Routes\UserDetailsController.js" />
+    <Content Include="Admin\Modules\Users\Js\Routes\UserList.html" />
+    <Content Include="Admin\Modules\Users\Js\Routes\UserListController.js" />
+    <Content Include="Build\Gruntfile.js" />
+    <Content Include="packages.config" />
+    <Content Include="Admin\Modules\Auth\MVC\Views\ChangePassword.cshtml" />
+    <Content Include="Admin\Modules\Auth\MVC\Views\ForgotPassword.cshtml" />
+    <Content Include="Admin\Modules\Auth\MVC\Views\Login.cshtml" />
+    <Content Include="Admin\Modules\Auth\MVC\Views\ResetPassword.cshtml" />
+    <Content Include="Admin\Modules\Auth\MVC\Views\ResetPasswordComplete.cshtml" />
+    <Content Include="Admin\Modules\Auth\MVC\Views\ResetPasswordRequestInvalid.cshtml" />
+    <Content Include="Admin\Modules\Auth\MVC\Views\_LoginLayout.cshtml" />
+    <Content Include="Admin\Modules\CustomEntities\Mvc\Views\Index.cshtml" />
+    <Content Include="Admin\Modules\Setup\MVC\Views\Index.cshtml" />
+    <Content Include="Admin\Modules\Shared\config.rb" />
+    <Content Include="Admin\Modules\Shared\Content\css\lib\font-awesome\fonts\fontawesome-webfont.eot" />
+    <Content Include="Admin\Modules\Shared\Content\css\lib\font-awesome\fonts\fontawesome-webfont.ttf" />
+    <Content Include="Admin\Modules\Shared\Content\css\lib\font-awesome\fonts\fontawesome-webfont.woff" />
+    <Content Include="Admin\Modules\Shared\Content\css\lib\font-awesome\fonts\fontawesome-webfont.woff2" />
+    <Content Include="Admin\Modules\Shared\Content\css\lib\font-awesome\fonts\FontAwesome.otf" />
+    <Content Include="Admin\Modules\Shared\Content\css\shared.css.map" />
+    <Content Include="Admin\Modules\Shared\Js\UIComponents\Buttons\_button.scss" />
+    <Content Include="Admin\Modules\Shared\Js\UIComponents\CustomEntities\_customentities.scss" />
+    <Content Include="Admin\Modules\Shared\Js\UIComponents\FormFields\_formfields.scss" />
+    <Content Include="Admin\Modules\Shared\Js\UIComponents\FormFields\_textangular.scss" />
+    <Content Include="Admin\Modules\Shared\Js\UIComponents\Form\_form.scss" />
+    <Content Include="Admin\Modules\Shared\Js\UIComponents\ImageAssets\_image-asset.scss" />
+    <Content Include="Admin\Modules\Shared\Js\UIComponents\Layout\_layout.scss" />
+    <Content Include="Admin\Modules\Shared\Js\UIComponents\Loader\_loading.scss" />
+    <Content Include="Admin\Modules\Shared\Js\UIComponents\Loader\_progressbar.scss" />
+    <Content Include="Admin\Modules\Shared\Js\UIComponents\Menus\_menus.scss" />
+    <Content Include="Admin\Modules\Shared\Js\UIComponents\Modals\_modals.scss" />
+    <Content Include="Admin\Modules\Shared\Js\UIComponents\Search\_pager.scss" />
+    <Content Include="Admin\Modules\Shared\Js\UIComponents\StatusMessages\_messages.scss" />
+    <Content Include="Admin\Modules\Shared\Js\UIComponents\Table\_table.scss" />
+    <Content Include="Admin\Modules\Shared\Js\UIComponents\Tags\_tag.scss" />
+    <Content Include="Admin\Modules\Shared\Js\UIComponents\Vimeo\_vimeo.scss" />
+    <Content Include="Admin\Modules\Shared\MVC\Views\Error.cshtml" />
+    <Content Include="Admin\Modules\Shared\MVC\Views\Forbidden.cshtml" />
+    <Content Include="Admin\Modules\Shared\MVC\Views\Layouts\_BaseLayout.cshtml" />
+    <Content Include="Admin\Modules\Shared\MVC\Views\Layouts\_DefaultLayout.cshtml" />
+    <Content Include="Admin\Modules\Shared\MVC\Views\Layouts\_MinimalLayout.cshtml" />
+    <Content Include="Admin\Modules\Shared\MVC\Views\Layouts\_SharedLayout.cshtml" />
+    <Content Include="Admin\Modules\Shared\MVC\Views\NotFound.cshtml" />
+    <Content Include="Admin\Modules\Shared\MVC\Views\Partials\MainMenu.cshtml" />
+    <Content Include="Admin\Modules\Shared\Sass\Common\_heading.scss" />
+    <Content Include="Admin\Modules\Shared\Sass\Common\_link.scss" />
+    <Content Include="Admin\Modules\Shared\Sass\config\_colors.scss" />
+    <Content Include="Admin\Modules\Shared\Sass\config\_dimensions.scss" />
+    <Content Include="Admin\Modules\Shared\Sass\config\_fonts.scss" />
+    <Content Include="Admin\Modules\Shared\Sass\config\_settings.scss" />
+    <Content Include="Admin\Modules\Shared\Sass\Core\_layout.scss" />
+    <Content Include="Admin\Modules\Shared\Sass\Core\_login.scss" />
+    <Content Include="Admin\Modules\Shared\Sass\Core\_navigation.scss" />
+    <Content Include="Admin\Modules\Shared\Sass\Core\_typography.scss" />
+    <Content Include="Admin\Modules\Shared\Sass\libs\_mixins.scss" />
+    <Content Include="Admin\Modules\Shared\Sass\libs\_retina-sprites.scss" />
+    <Content Include="Admin\Modules\Shared\Sass\libs\_retina.scss" />
+    <Content Include="Admin\Modules\Shared\Sass\libs\_sprites.scss" />
+    <Content Include="Admin\Modules\Shared\Sass\README.md" />
+    <Content Include="Admin\Modules\Shared\Sass\shared.scss" />
+    <Content Include="Admin\Modules\SiteViewer\config.rb" />
+    <Content Include="Admin\Modules\SiteViewer\Content\css\site-viewer.css.map" />
+    <Content Include="Admin\Modules\SiteViewer\MVC\Views\SiteViewer.cshtml" />
+    <Content Include="Admin\Modules\SiteViewer\Sass\site-viewer.scss" />
+    <Content Include="Admin\Modules\SiteViewer\Sass\_outer-site-viewer.scss" />
+    <Content Include="Admin\Modules\Users\Mvc\Views\Index.cshtml" />
+    <Content Include="Build\package.json" />
+    <EmbeddedResource Include="Framework\StandardAngularModules\Routes\Index.cshtml" />
+    <Content Include="Cofoundry.Web.Admin.nuspec" />
+    <Content Include="Nuget\Content\Web.config.install.xdt" />
+    <Content Include="Nuget\Content\Web.config.uninstall.xdt" />
+    <None Include="Web.Debug.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </None>
+    <None Include="Web.Release.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Web.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\SolutionInfo.cs">
+      <Link>Properties\SolutionInfo.cs</Link>
+    </Compile>
+    <Compile Include="Admin\Api\Account\AccountApiController.cs" />
+    <Compile Include="Admin\Api\Account\Models\UpdateCurrentUserUserPasswordCommandDto.cs" />
+    <Compile Include="Admin\Api\CustomEntities\ActionDataTypes\CustomEntityVersionPageModulesActionDataType.cs" />
+    <Compile Include="Admin\Api\CustomEntities\CustomEntitiesApiController.cs" />
+    <Compile Include="Admin\Api\CustomEntities\CustomEntityDefinitionsApiController.cs" />
+    <Compile Include="Admin\Api\CustomEntities\CustomEntityRoutingRulesApiController.cs" />
+    <Compile Include="Admin\Api\CustomEntities\CustomEntityVersionPageModulesApiController.cs" />
+    <Compile Include="Admin\Api\CustomEntities\CustomEntityVersionsApiController.cs" />
+    <Compile Include="Admin\Api\CustomEntities\ModelBinder\CustomEntityDataModelCommandModelBinder.cs" />
+    <Compile Include="Admin\Api\CustomEntities\ModelBinder\CustomEntityVersionDataModelJsonConverter.cs" />
+    <Compile Include="Admin\Api\CustomEntities\ModelBinder\NullPageModuleDataModelJsonConverter.cs" />
+    <Compile Include="Admin\Api\Documents\DocumentFileTypesApiController.cs" />
+    <Compile Include="Admin\Api\Documents\DocumentsApiController.cs" />
+    <Compile Include="Admin\Api\Images\ImagesApiController.cs" />
+    <Compile Include="Admin\Api\Locales\LocalesApiController.cs" />
+    <Compile Include="Admin\Api\Pages\ActionDataTypes\PageVersionSectionModulesActionDataType.cs" />
+    <Compile Include="Admin\Api\Pages\ModelBinder\NullPageModuleDataModelJsonConverter.cs" />
+    <Compile Include="Admin\Api\Pages\ModelBinder\PageModuleDataModelJsonConverter.cs" />
+    <Compile Include="Admin\Api\Pages\ModelBinder\PageVersionModuleDataModelCommandModelBinder.cs" />
+    <Compile Include="Admin\Api\Pages\PageModuleTypesApiController.cs" />
+    <Compile Include="Admin\Api\Pages\PagesApiController.cs" />
+    <Compile Include="Admin\Api\Pages\PageVersionsApiController.cs" />
+    <Compile Include="Admin\Api\Pages\PageVersionSectionModulesApiController.cs" />
+    <Compile Include="Admin\Api\PageTemplates\PageTemplateFilesApiController.cs" />
+    <Compile Include="Admin\Api\PageTemplates\PageTemplatesApiController.cs" />
+    <Compile Include="Admin\Api\PageTemplates\PageTemplateSectionsApiController.cs" />
+    <Compile Include="Admin\Api\Roles\PermissionsApiController.cs" />
+    <Compile Include="Admin\Api\Roles\RolesApiController.cs" />
+    <Compile Include="Admin\Api\Settings\CacheApiController.cs" />
+    <Compile Include="Admin\Api\Settings\SettingsApiController.cs" />
+    <Compile Include="Admin\Api\Setup\Models\SetupCofoundryCommandDto.cs" />
+    <Compile Include="Admin\Api\Setup\SetupApiController.cs" />
+    <Compile Include="Admin\Api\Users\UserAreasApiController.cs" />
+    <Compile Include="Admin\Api\Users\UsersApiController.cs" />
+    <Compile Include="Admin\Api\WebDirectories\WebDirectoriesApiController.cs" />
+    <Compile Include="Admin\Modules\Account\Bootstrap\AccountModuleRegistration.cs" />
+    <Compile Include="Admin\Modules\Account\Constants\AccountRouteLibrary.cs" />
+    <Compile Include="Admin\Modules\Auth\Bootstrap\AuthBundleRegistration.cs" />
+    <Compile Include="Admin\Modules\Auth\Bootstrap\AuthEmbeddedResourceRouteRegistration.cs" />
+    <Compile Include="Admin\Modules\Auth\Constants\AuthCssRouteLibrary.cs" />
+    <Compile Include="Admin\Modules\Auth\Constants\AuthJSRouteLibrary.cs" />
+    <Compile Include="Admin\Modules\Auth\Constants\AuthRouteLibrary.cs" />
+    <Compile Include="Admin\Modules\Auth\MVC\Controllers\AuthController.cs" />
+    <Compile Include="Admin\Modules\CustomEntities\Bootstrap\CustomEntitiesBundleRegistration.cs" />
+    <Compile Include="Admin\Modules\CustomEntities\Bootstrap\CustomEntitiesAdminModuleRegistration.cs" />
+    <Compile Include="Admin\Modules\CustomEntities\Bootstrap\CustomEntitiesEmbeddedRouteRegistrations.cs" />
+    <Compile Include="Admin\Modules\CustomEntities\Bootstrap\CustomEntitiesRouteRegistration.cs" />
+    <Compile Include="Admin\Modules\CustomEntities\Constants\CustomEntitiesRouteLibrary.cs" />
+    <Compile Include="Admin\Modules\CustomEntities\Mvc\Controllers\CustomEntityModuleController.cs" />
+    <Compile Include="Admin\Modules\CustomEntities\Mvc\Models\CustomEntityModuleOptions.cs" />
+    <Compile Include="Admin\Modules\Dashboard\Bootstrap\DashboardModuleRegistration.cs" />
+    <Compile Include="Admin\Modules\Dashboard\Constants\DashboardRouteLibrary.cs" />
+    <Compile Include="Admin\Modules\Directories\Bootstrap\DirectoriesModuleRegistration.cs" />
+    <Compile Include="Admin\Modules\Directories\Constants\DirectoriesRouteLibrary.cs" />
+    <Compile Include="Admin\Modules\Documents\Bootstrap\DocumentsModuleRegistration.cs" />
+    <Compile Include="Admin\Modules\Documents\Constants\DocumentsRouteLibrary.cs" />
+    <Compile Include="Admin\Modules\Images\Bootstrap\ImagesModuleRegistration.cs" />
+    <Compile Include="Admin\Modules\Images\Constants\ImagesRouteLibrary.cs" />
+    <Compile Include="Admin\Modules\Pages\Bootstrap\PagesModuleRegistration.cs" />
+    <Compile Include="Admin\Modules\Pages\Constants\PagesRouteLibrary.cs" />
+    <Compile Include="Admin\Modules\PageTemplates\Bootstrap\PageTemplatesModuleRegistration.cs" />
+    <Compile Include="Admin\Modules\PageTemplates\Constants\PageTemplatesRouteLibrary.cs" />
+    <Compile Include="Admin\Modules\Roles\Bootstrap\RolesModuleRegistration.cs" />
+    <Compile Include="Admin\Modules\Roles\Constants\RolesRouteLibrary.cs" />
+    <Compile Include="Admin\Modules\Settings\Bootstrap\SettingsModuleRegistration.cs" />
+    <Compile Include="Admin\Modules\Settings\Constants\SettingsRouteLibrary.cs" />
+    <Compile Include="Admin\Modules\Setup\Bootstrap\SetupBundleRegistration.cs" />
+    <Compile Include="Admin\Modules\Setup\Bootstrap\SetupEmbeddedResourceRouteRegistration.cs" />
+    <Compile Include="Admin\Modules\Setup\Constants\SetupRouteLibrary.cs" />
+    <Compile Include="Admin\Modules\Setup\MVC\Controllers\SetupController.cs" />
+    <Compile Include="Admin\Modules\Shared\Bootstrap\SharedBundleRegistration.cs" />
+    <Compile Include="Admin\Modules\Shared\Bootstrap\SharedEmbeddedResourceRouteRegistration.cs" />
+    <Compile Include="Admin\Modules\Shared\Bootstrap\SharedModuleViewLocationRegistration.cs" />
+    <Compile Include="Admin\Modules\Shared\Constants\SharedCssRouteLibrary.cs" />
+    <Compile Include="Admin\Modules\Shared\Constants\SharedJsRouteLibrary.cs" />
+    <Compile Include="Admin\Modules\Shared\Constants\SharedRouteLibrary.cs" />
+    <Compile Include="Admin\Modules\Shared\MVC\Controllers\AdminMenuController.cs" />
+    <Compile Include="Admin\Modules\Shared\MVC\Helpers\AngularHelper.cs" />
+    <Compile Include="Admin\Modules\Shared\MVC\Models\AdminMenuViewModel.cs" />
+    <Compile Include="Admin\Modules\SiteViewer\Bootstrap\SiteViewerBundleRegistration.cs" />
+    <Compile Include="Admin\Modules\SiteViewer\Bootstrap\SiteViewerEmbeddedResourceRouteRegistration.cs" />
+    <Compile Include="Admin\Modules\SiteViewer\Constants\SiteViewerCssRouteLibrary.cs" />
+    <Compile Include="Admin\Modules\SiteViewer\Constants\SiteViewerJsRouteLibrary.cs" />
+    <Compile Include="Admin\Modules\SiteViewer\Constants\SiteViewerRouteLibrary.cs" />
+    <Compile Include="Admin\Modules\SiteViewer\MVC\ActionFilters\SiteViewerContentFilterAttribute.cs" />
+    <Compile Include="Admin\Modules\SiteViewer\MVC\ActionFilters\SiteViewerContentStream.cs" />
+    <Compile Include="Admin\Modules\SiteViewer\MVC\Framework\SiteViewerRouteContraint.cs" />
+    <Compile Include="Admin\Modules\Users\Bootstrap\UsersBundleRegistration.cs" />
+    <Compile Include="Admin\Modules\Users\Bootstrap\UsersEmbeddedRouteRegistrations.cs" />
+    <Compile Include="Admin\Modules\Users\Bootstrap\UsersModuleRegistration.cs" />
+    <Compile Include="Admin\Modules\Users\Bootstrap\UsersRouteRegistration.cs" />
+    <Compile Include="Admin\Modules\Users\Constants\UsersRouteLibrary.cs" />
+    <Compile Include="Admin\Modules\Users\Mvc\Controllers\UsersModuleController.cs" />
+    <Compile Include="Admin\Modules\Users\Mvc\Models\UsersModuleOptions.cs" />
+    <Compile Include="App_Start\SiteViewerRouteRegistrationStartupTask.cs" />
+    <Compile Include="App_Start\MvcFilterConfigurationStartupTask.cs" />
+    <Compile Include="Framework\Bootstrap\CofoundryAdminAssemblyResourceRegistration.cs" />
+    <Compile Include="Framework\Bootstrap\CofoundryAdminDependencyRegistration.cs" />
+    <Compile Include="Framework\Bootstrap\CofoundryAdminViewLocationRegistration.cs" />
+    <Compile Include="Framework\Bundling\AngularTemplateBundle.cs" />
+    <Compile Include="Framework\Bundling\AngularTemplateBundleTransform.cs" />
+    <Compile Include="Framework\Bundling\BundlingExtensions.cs" />
+    <Compile Include="Framework\Constants\AngularJsDirectoryLibrary.cs" />
+    <Compile Include="Framework\Constants\LayoutPaths.cs" />
+    <Compile Include="Framework\Constants\RouteConstants.cs" />
+    <Compile Include="Framework\Constants\UrlLibraries\ModuleJsRouteLibrary.cs" />
+    <Compile Include="Framework\Constants\UrlLibraries\ModuleRouteLibrary.cs" />
+    <Compile Include="Framework\Constants\UrlLibraries\ModuleStaticContentRouteLibrary.cs" />
+    <Compile Include="Framework\ControllerBase\AdminApiRoutePrefixAttribute.cs" />
+    <Compile Include="Framework\ControllerBase\BaseAdminApiController.cs" />
+    <Compile Include="Framework\ControllerBase\BaseAdminMvcController.cs" />
+    <Compile Include="Framework\Filters\AdminApiAuthorizeAttribute.cs" />
+    <Compile Include="Framework\Filters\AdminAuthorizeAttribute.cs" />
+    <Compile Include="Framework\Helpers\SettingsViewHelperExtensions.cs" />
+    <Compile Include="Framework\StandardAngularModules\IPluginAngularModuleRegistration.cs" />
+    <Compile Include="Framework\StandardAngularModules\IInternalAngularModuleRegistration.cs" />
+    <Compile Include="Framework\StandardAngularModules\IStandardAngularModuleRegistration.cs" />
+    <Compile Include="Framework\StandardAngularModules\Routes\StandardModuleController.cs" />
+    <Compile Include="Framework\StandardAngularModules\StandardAngularModuleBootstrapper.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Admin\Modules\Setup\Framework\SetupPageActionFactory.cs" />
+    <Compile Include="Admin\Modules\SiteViewer\MVC\Framework\SiteViewerActionFactory.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Cofoundry.Core\Cofoundry.Core.csproj">
+      <Project>{b06a84c3-005b-4ffa-9c9a-81a96b59e1d4}</Project>
+      <Name>Cofoundry.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Cofoundry.Domain\Cofoundry.Domain.csproj">
+      <Project>{64809192-86de-490a-8dad-5f1550499a86}</Project>
+      <Name>Cofoundry.Domain</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Cofoundry.Web\Cofoundry.Web.csproj">
+      <Project>{dd92daf1-5aa2-4498-a83b-a2f5a0434c2d}</Project>
+      <Name>Cofoundry.Web</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Admin\Modules\Shared\MVC\Views\StandardModule\" />
+    <Folder Include="Admin\Modules\Shared\Sass\Modules\" />
+    <Folder Include="Admin\Modules\Users\Js\UIControls\" />
+  </ItemGroup>
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
+    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+  </PropertyGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" Condition="false" />
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
+        <WebProjectProperties>
+          <UseIIS>True</UseIIS>
+          <AutoAssignPort>True</AutoAssignPort>
+          <DevelopmentServerPort>59549</DevelopmentServerPort>
+          <DevelopmentServerVPath>/</DevelopmentServerVPath>
+          <IISUrl>http://localhost:59549/</IISUrl>
+          <NTLMAuthentication>False</NTLMAuthentication>
+          <UseCustomServer>False</UseCustomServer>
+          <CustomServerUrl>
+          </CustomServerUrl>
+          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+        </WebProjectProperties>
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\Microsoft.Net.Compilers.1.3.2\build\Microsoft.Net.Compilers.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.Net.Compilers.1.3.2\build\Microsoft.Net.Compilers.props'))" />
+    <Error Condition="!Exists('..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.1\build\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.1\build\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props'))" />
+  </Target>
+  <Target Name="BeforeBuild">
+    <ItemGroup>
+      <EmbeddedResource Include="admin\modules\*\mvc\views\**\*.cshtml;admin\modules\*\mvc\views\**\*.js;admin\modules\*\js\**\*.*;admin\modules\*\content\**\*.*;" />
+    </ItemGroup>
+  </Target>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

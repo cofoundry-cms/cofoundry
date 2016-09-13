@@ -1,0 +1,85 @@
+﻿<!--HEADER-->
+<cms-page-header cms-title="Dashboard"></cms-page-header>
+
+<cms-dashboard-component cms-heading="Recent Pages"
+                            cms-entity-name="page"
+                            cms-entity-name-plural="pages"
+                            cms-list-url="{{::vm.urlLibrary.pageList()}}"
+                            cms-create-url="{{::vm.urlLibrary.pageNew()}}"
+                            cms-loader="vm.pagesLoadState"
+                            cms-num-items="::vm.pages.length">
+
+    <table class="table table-condensed">
+        <tbody>
+            <tr ng-repeat="page in ::vm.pages">
+                <td>
+                    <a class="highlight" href="{{::page.fullPath}}" title="{{::title}}">{{::page.fullPath}}</a>
+                    <em>(<cms-time-ago cms-time="::page.auditData.createDate"></cms-time-ago>)</em>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+</cms-dashboard-component>
+
+<cms-dashboard-component cms-heading="Draft Pages"
+                            cms-entity-name="draft"
+                            cms-entity-name-plural="drafts"
+                            cms-list-url="{{::vm.urlLibrary.pageList({ workFlowStatus: 'Draft' })}}"
+                            cms-loader="vm.draftPagesLoadState"
+                            cms-num-items="::vm.draftPages.length">
+
+    <table class="table table-condensed">
+        <tbody>
+            <tr ng-repeat="draft in ::vm.draftPages">
+                <td>
+                    <a class="highlight" href="{{::draft.fullPath}}" title="{{::title}}">{{::draft.fullPath}}</a>
+                    <em>(<cms-time-ago cms-time="::draft.auditData.createDate"></cms-time-ago>)</em>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+</cms-dashboard-component>
+
+<cms-dashboard-component cms-heading="Page Templates"
+                            cms-entity-name="page template"
+                            cms-entity-name-plural="page templates"
+                            cms-list-url="{{::vm.urlLibrary.pageTemplateList()}}"
+                            cms-create-url="{{::vm.urlLibrary.pageTemplateNew()}}"
+                            cms-loader="vm.pageTemplatesLoadState"
+                            cms-num-items="::vm.pageTemplates.length">
+
+    <table class="table table-condensed">
+        <tbody>
+            <tr ng-repeat="template in ::vm.pageTemplates">
+                <td>
+                    <a class="highlight" href="{{::vm.urlLibrary.pageTemplateDetails(template.pageTemplateId)}}">{{::template.name}}</a>
+                    <em>({{::template.numPages}} pages)</em>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+</cms-dashboard-component>
+
+<cms-dashboard-component cms-heading="Users"
+                            cms-entity-name="user"
+                            cms-entity-name-plural="users"
+                            cms-list-url="{{::vm.urlLibrary.userList()}}"
+                            cms-create-url="{{::vm.urlLibrary.userNew()}}"
+                            cms-loader="vm.usersLoadState"
+                            cms-num-items="::vm.users.length">
+
+    <table class="table table-condensed">
+        <tbody>
+            <tr ng-repeat="user in ::vm.users">
+                <td>
+                    <cms-user-link cms-user="user" class="highlight"></cms-user-link>
+                    <em>(<cms-time-ago cms-time="::user.auditData.createDate"></cms-time-ago>)</em>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+</cms-dashboard-component>

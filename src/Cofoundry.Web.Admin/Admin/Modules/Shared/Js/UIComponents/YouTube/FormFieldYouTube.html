@@ -1,0 +1,36 @@
+﻿<div class="control-group form-field-youtube-preview">
+    <cms-field>
+        <label class="control-label" for="{{vm.modelName}}">{{vm.title}}:</label>
+        <div class="controls">
+            <input type="hidden"
+                   id="{{vm.modelName}}"
+                   name="{{vm.modelName}}"
+                   ng-model="vm.model"
+                   ng-change="vm.onChange()" />
+
+            <cms-vimeo-video cms-model="vm.model"
+                             class="form-field-youtube-preview"></cms-vimeo-video>
+            <div ng-if="vm.model.videoUrl">{{vm.model.title}}</div>
+            <div ng-if="vm.model.videoUrl">{{vm.model.descripion}}</div>
+
+            <div ng-show="vm.formScope.editMode">
+                <cms-button-icon cms-title="{{vm.buttonText}}"
+                                 cms-icon="check-cog"
+                                 ng-click="vm.showPicker()"
+                                 ng-disabled="vm.disabled">
+                </cms-button-icon>
+                <cms-button-icon cms-title="Remove"
+                                 cms-icon="check-trash-o"
+                                 ng-if="vm.isRemovable"
+                                 ng-click="vm.remove()"
+                                 ng-disabled="vm.disabled">
+                </cms-button-icon>
+            </div>
+
+            <cms-form-field-validation-summary></cms-form-field-validation-summary>
+        </div>
+    </cms-field>
+    <p class="help-inline" ng-if="vm.description">
+        <small>{{vm.description}}</small>
+    </p>
+</div>

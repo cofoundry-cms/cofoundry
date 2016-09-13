@@ -1,0 +1,50 @@
+﻿@inherits Cofoundry.Web.CofoundryWebViewPage<Cofoundry.Web.ErrorPageViewModel>
+@using System.Web.Mvc
+@using System.Web.Mvc.Html
+@using Cofoundry.Web.Admin
+
+@{
+    ViewBag.Title = "Error";
+    Layout = LayoutPaths.MinimalLayout;
+}
+
+@if (Request.Url.Host.ToLower() == "localhost" || Request.RequestContext.HttpContext.IsDebuggingEnabled)
+{
+    <h1>Server error</h1>
+    
+    <h2>@Html.Raw(Html.Encode(Model.Exception.GetBaseException().Message).Split(new string[] { "\r\n", "\n" }, StringSplitOptions.None).Aggregate((a, b) => a + "<br/>" + b))</h2>
+    
+    <p>An unhandled exception occurred during the execution of the current web request. Please review the stack trace for more information about the error and where it originated in the code.</p>
+    
+    <dl>
+        <dt>Action name</dt>
+        <dd>@Model.ActionName</dd>
+
+        <dt>Controller name</dt> 
+        <dd>@Model.ControllerName</dd>
+
+        <dt>Target site</dt>
+        <dd>@Model.Exception.GetBaseException().TargetSite</dd>
+
+        <dt>Source</dt>
+        <dd>@Model.Exception.GetBaseException().Source</dd>
+
+        <dt>Stack trace</dt>
+        <dd>
+            @Html.Raw(Model.Exception.GetBaseException().StackTrace.Split(new string[] { "\r\n", "\n" }, StringSplitOptions.None).Aggregate((a, b) => a + "<br/>" + b))
+        </dd>
+    </dl>
+}
+else
+{
+    <h1>Error</h1>
+
+    <h2>Sorry, there has been an error</h2>
+
+    <p>Please press back and try again. If the error persists then then please contact us.</p>
+}
+
+
+<div class="btns">
+    <a href="@DashboardRouteLibrary.Urls.Dashboard()" class="btn back">Go to my dashboard</a>
+</div>

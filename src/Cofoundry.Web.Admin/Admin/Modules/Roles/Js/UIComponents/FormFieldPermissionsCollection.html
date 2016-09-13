@@ -1,0 +1,33 @@
+﻿<cms-form-field-container>
+
+    <cms-table-container cms-loading="permissionsLoadState.isLoading">
+        <table>
+            <tbody ng-repeat="group in permissionGroups">
+                <tr>
+                    <th colspan="2">
+                        <cms-table-group-heading>{{group.title}}</cms-table-group-heading>
+                    </th>
+                    <th style="width:30px; text-align:center;">
+                        <input type="checkbox"
+                               ng-disabled="globalLoadState.isLoading"
+                               ng-show="formScope.editMode"
+                               ng-click="toggleGroup($event, group)">
+                    </th>
+                </tr>
+                <tr ng-repeat="permission in group.permissions">
+                    <td><label for="{{permission.uniqueId}}">{{permission.permissionType.name}}</label></td>
+                    <td>{{permission.permissionType.description}}</td>
+                    <td class="row-type" style="width:30px; text-align:center;">
+                        <input type="checkbox"
+                               id="{{permission.uniqueId}}"
+                               name="{{permission.uniqueId}}"
+                               ng-disabled="globalLoadState.isLoading || !formScope.editMode || (!permission.isRead && !group.isReadPermitted)"
+                               ng-model="permission.selected"
+                               ng-change="permissionChanged(permission, group)">
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </cms-table-container>
+
+</cms-form-field-container>

@@ -1,0 +1,19 @@
+﻿@inherits WebViewPage<PlainTextDataModel>
+@using Cofoundry.Web
+@using System.Web.Mvc
+@using System.Web.Mvc.Html
+
+@{
+    Layout = null;
+}
+
+@if (Model == null)
+{
+    @:<!-- No text data --->
+}
+else
+{
+    <span>
+        @Html.Raw(Html.Encode(Model.PlainText).Replace(System.Environment.NewLine, "<br />"))
+    </span>
+}

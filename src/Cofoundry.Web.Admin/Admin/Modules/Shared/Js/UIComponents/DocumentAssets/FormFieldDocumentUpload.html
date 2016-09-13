@@ -1,0 +1,20 @@
+﻿<div class="control-group form-field-image-upload">
+    <cms-field>
+        <label class="control-label" for="{{vm.modelName}}">{{vm.title}}:</label>
+        <div class="controls">
+            <div class="image-asset">
+                <cms-document-upload cms-asset="vm.asset"
+                                     cms-load-state="vm.loadState"
+                                     cms-is-edit-mode="vm.formScope.editMode"
+                                     cms-model-name="vm.modelName"
+                                     cms-on-change="vm.change()"
+                                     ng-model="vm.model">
+                </cms-document-upload>
+            </div>
+            <cms-form-field-validation-summary></cms-form-field-validation-summary>
+        </div>
+    </cms-field>
+    <p class="help-inline" ng-if="vm.description">
+        <small>{{vm.description}}</small>
+    </p>
+</div>

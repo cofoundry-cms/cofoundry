@@ -1,0 +1,6 @@
+﻿@inherits WebViewPage<HorizontalLineDataModel>
+@using Cofoundry.Web
+@using System.Web.Mvc
+@using System.Web.Mvc.Html
+
+<div class="hr"@Html.Raw(Model.PercentageWidth.HasValue ? string.Format(" style=\"width: {0}%\"", Model.PercentageWidth) : "")><hr /></div>
