@@ -8,5 +8,5 @@ environment:
   NUGET_API_KEY:
     secure: ZipOsavSURgYiPIWD01xFd9ug5f8/qaNNsHRwuPsqlSFrr6adAwd4yG4qgDQ6jOC
 build_script:
-- cmd: PowerShell -Version 2.0 .\build\build.ps1
+- cmd: PowerShell -Version 2.0 .\build.ps1
 test: off
