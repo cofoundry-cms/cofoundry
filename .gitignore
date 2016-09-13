@@ -153,5 +153,5 @@ $RECYCLE.BIN/
 src/.vs
 
 # Cake Build
-build/tools
-build/artifacts
+/tools
+/artifacts
