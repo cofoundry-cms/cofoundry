@@ -5,8 +5,8 @@
 //------------------------------------------------------------------------------
 using System.Reflection;
 
-[assembly: AssemblyVersion("0.1.0.0")]
-[assembly: AssemblyFileVersion("0.1.0.0")]
-[assembly: AssemblyInformationalVersion("0.1.0+3.Branch.master.Sha.e9244a0349c207423d2b6454957a34752cb56ae7")]
+[assembly: AssemblyVersion("0.1.1.0")]
+[assembly: AssemblyFileVersion("0.1.1.0")]
+[assembly: AssemblyInformationalVersion("0.1.1+2.Branch.master.Sha.6e40c4bb3323303727a25b0b45bf9ac149e873c9")]
 [assembly: AssemblyCopyright("Copyright © Cofoundry.org 2016")]
 
