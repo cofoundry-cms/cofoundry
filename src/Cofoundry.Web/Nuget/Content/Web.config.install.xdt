@@ -1,6 +1,6 @@
 ﻿<configuration xmlns:xdt="http://schemas.microsoft.com/XML-Document-Transform">
 
-  <connectionStrings>
+  <connectionStrings xdt:Transform="InsertIfMissing">
     <add name="Cofoundry" 
          connectionString="TODO: Add Cofoundry Connection String" 
          providerName="System.Data.SqlClient"
