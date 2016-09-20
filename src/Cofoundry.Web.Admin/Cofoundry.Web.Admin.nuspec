@@ -33,6 +33,8 @@
       <dependency id="Microsoft.CodeDom.Providers.DotNetCompilerPlatform" version="1.0.1" />
       <dependency id="Microsoft.OData.Core" version="6.15.0" />
       <dependency id="Microsoft.OData.Edm" version="6.15.0" />
+      <dependency id="Microsoft.Owin" version="3.0.1" />
+      <dependency id="Microsoft.Owin.Host.SystemWeb" version="3.0.1" />
       <dependency id="Microsoft.Spatial" version="6.15.0" />
       <dependency id="Microsoft.Web.Infrastructure" version="1.0.0.0" />
       <dependency id="Newtonsoft.Json" version="9.0.1" />
