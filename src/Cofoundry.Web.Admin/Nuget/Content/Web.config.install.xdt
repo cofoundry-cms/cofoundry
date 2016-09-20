@@ -1,6 +1,6 @@
 ﻿<configuration xmlns:xdt="http://schemas.microsoft.com/XML-Document-Transform">
-  
-  <system.web>
+
+  <system.web xdt:Transform="InsertIfMissing">
     <authentication mode="Forms" xdt:Transform="InsertIfMissing">
       <forms cookieless="UseCookies" loginUrl="~/admin/auth/login" name=".MyAppAuth" slidingExpiration="true" timeout="43200" />
     </authentication>
