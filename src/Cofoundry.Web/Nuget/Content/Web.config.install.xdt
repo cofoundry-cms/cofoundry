@@ -8,7 +8,8 @@
   </connectionStrings>
 
   <appSettings>
-    <add key="SiteUriResolver:SiteUriRoot" value="http://localhost:TODO:ADDPORT" xdt:Transform="InsertIfMissing" xdt:Locator="Match(key)"  />
+    <add key="Cofoundry:SiteUriResolver:SiteUriRoot" value="http://localhost:TODO-ADD-PORT" xdt:Transform="InsertIfMissing" xdt:Locator="Match(key)"  />
+    <add key="Cofoundry:Mail:DefaultFromAddress" value="auto@TODO-ADD-DOMAIN.org" xdt:Transform="InsertIfMissing" xdt:Locator="Match(key)"  />
   </appSettings>
 
 </configuration>
