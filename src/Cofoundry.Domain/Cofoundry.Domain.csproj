@@ -1041,7 +1041,7 @@
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="BeforeBuild">
     <ItemGroup>
-      <EmbeddedResource Include="MailTemplates\CMSMailTemplates\**\*.cshtml;MailTemplates\CMSMailTemplates\*\content\**\*.*;" />
+      <EmbeddedResource Include="MailTemplates\AdminMailTemplates\**\*.cshtml;MailTemplates\AdminMailTemplates\*\content\**\*.*;" />
     </ItemGroup>
   </Target>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
