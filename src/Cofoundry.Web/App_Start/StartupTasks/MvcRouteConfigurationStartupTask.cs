@@ -85,7 +85,7 @@ namespace Cofoundry.Web
             var controllerNamespace = new string[] { typeof(PagesController).Namespace };
 
             routes.MapRoute(
-                "ImageAsset",
+                "Cofoundry_ImageAsset",
                 "assets/images/{assetId}_{fileName}.{extension}",
                 new { controller = "Assets", action = "Image" },
                 new { assetId = @"\d+" },
@@ -93,7 +93,7 @@ namespace Cofoundry.Web
 
             // File assets
             routes.MapRoute(
-                "DocumentAsset",
+                "Cofoundry_DocumentAsset",
                 "assets/files/{assetId}_{fileName}.{extension}",
                 new { controller = "Assets", action = "File" },
                 new { assetId = @"\d+" },
@@ -102,7 +102,7 @@ namespace Cofoundry.Web
             RegisterInjectedRoutes(routes);
 
             routes.MapRoute(
-                "Page",
+                "Cofoundry_Page",
                 "{*path}",
                 new { controller = "Pages", action = "Page" },
                 controllerNamespace);
