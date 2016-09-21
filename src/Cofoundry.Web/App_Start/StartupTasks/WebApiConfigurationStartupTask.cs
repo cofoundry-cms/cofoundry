@@ -16,13 +16,13 @@ namespace Cofoundry.Web
     /// </summary>
     public class WebApiConfigurationStartupTask : IStartupTask
     {
-        private readonly IJsonSerializerSettingsFactory _jsonSerializerSettingsFactory;
+        private readonly IWebApiStartupConfiguration _webApiStartupConfiguration;
 
         public WebApiConfigurationStartupTask(
-            IJsonSerializerSettingsFactory jsonSerializerSettingsFactory
+            IWebApiStartupConfiguration webApiStartupConfiguration
             )
         {
-            _jsonSerializerSettingsFactory = jsonSerializerSettingsFactory;
+            _webApiStartupConfiguration = webApiStartupConfiguration;
         }
 
         /// <summary>
@@ -40,25 +40,8 @@ namespace Cofoundry.Web
 
         private void Register(HttpConfiguration config)
         {
-            config.MapHttpAttributeRoutes();
-
-            ConfigureJsonFormatter(config);
-
-            config.Formatters.Add(new MultipartFormDataFormatter());
-
-            config.Services.Add(typeof(IExceptionLogger), new WebApiExceptionLogger());
+            _webApiStartupConfiguration.Configure(config);
             config.EnsureInitialized();
-        }
-
-        private void ConfigureJsonFormatter(HttpConfiguration config)
-        {
-            var jsonFormatter = config.Formatters.JsonFormatter;
-
-            // make json default response
-            jsonFormatter.SupportedMediaTypes.Add(new MediaTypeHeaderValue("text/html"));
-
-            jsonFormatter.SerializerSettings = _jsonSerializerSettingsFactory.Create();
-            jsonFormatter.SerializerSettings.ContractResolver = new DeltaContractResolver();
         }
     }
 }

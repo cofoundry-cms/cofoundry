@@ -351,6 +351,8 @@
     <Compile Include="Framework\ModularMvc\ViewEngine\ViewLocations\DefaultViewLocationRegistration.cs" />
     <Compile Include="Framework\ModularMvc\ViewEngine\ViewLocations\IViewLocationRegistration.cs" />
     <Compile Include="Framework\ModularMvc\ViewEngine\ViewLocations\ViewLocations.cs" />
+    <Compile Include="Framework\WebApi\Configuration\IWebApiStartupConfiguration.cs" />
+    <Compile Include="Framework\WebApi\Configuration\WebApiStartupConfiguration.cs" />
     <Compile Include="Framework\Mvc\ControllerHelpers\ControllerResponseHelper.cs" />
     <Compile Include="Framework\Mvc\ControllerHelpers\IControllerResponseHelper.cs" />
     <Compile Include="Framework\Mvc\ControllerHelpers\IRedirectResponseHelper.cs" />

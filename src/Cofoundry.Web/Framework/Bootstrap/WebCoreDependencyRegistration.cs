@@ -49,6 +49,7 @@ namespace Cofoundry.Web
                 .RegisterType<IModuleRenderer, ModuleRenderer>()
                 .RegisterType<IRedirectResponseHelper, RedirectResponseHelper>()
                 .RegisterType<IPathResolver, SitePathResolver>()
+                .RegisterType<IWebApiStartupConfiguration, WebApiStartupConfiguration>()
                 ; 
         }
     }
