@@ -52,6 +52,7 @@ namespace Cofoundry.Domain
                 setting.SettingKey = SETTING_KEY;
                 setting.CreateDate = executionContext.ExecutionDate;
                 setting.UpdateDate = executionContext.ExecutionDate;
+                _dbContext.Settings.Add(setting);
             }
 
             setting.SettingValue = "true";
