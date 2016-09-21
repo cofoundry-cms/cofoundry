@@ -9,7 +9,7 @@ namespace Cofoundry.Domain
     /// Simple facade over custom entity data access queries/commands to them more discoverable
     /// in implementations.
     /// </summary>
-    interface ICustomEntityRepository
+    public interface ICustomEntityRepository
     {
         Task<int> AddCustomEntityAsync(AddCustomEntityCommand command, IExecutionContext executionContext = null);
 
