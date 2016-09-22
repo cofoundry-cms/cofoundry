@@ -31,5 +31,22 @@ namespace Cofoundry.Core.DependencyInjection
         /// implementation. The RegistrationOverridePriority enum gives guidance and sensible defaults.
         /// </summary>
         public int RegistrationOverridePriority { get; set; }
+
+        /// <summary>
+        /// A quick way of creatinf a new options set which sets the
+        /// ReplaceExisting property to true
+        /// </summary>
+        /// <param name="overridePriority">Optionally specify an override priority</param>
+        public static RegistrationOptions Override(RegistrationOverridePriority? overridePriority = null)
+        {
+            var options = new RegistrationOptions();
+
+            if (overridePriority.HasValue)
+            {
+                options.RegistrationOverridePriority = (int)overridePriority;
+            }
+
+            return options;
+        }
     }
 }

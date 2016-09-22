@@ -1,4 +1,5 @@
-﻿using Conditions;
+﻿using Cofoundry.Core;
+using Conditions;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -18,22 +19,25 @@ namespace Cofoundry.Domain.Data
         private readonly Lazy<string> _fileRoot;
 
         private readonly FileSystemFileStorageSettings _fileSystemFileStorageSettings;
+        private readonly IPathResolver _pathResolver;
 
         public FileSystemFileStoreService(
-            FileSystemFileStorageSettings fileSystemFileStorageSettings
+            FileSystemFileStorageSettings fileSystemFileStorageSettings,
+            IPathResolver pathResolver
             )
         {
             _fileSystemFileStorageSettings = fileSystemFileStorageSettings;
+            _pathResolver = pathResolver;
             _fileRoot = new Lazy<string>(SetFilePath);
         }
 
         private string SetFilePath()
         {
-            string fileRoot = _fileSystemFileStorageSettings.FileRoot;
+            string fileRoot = _pathResolver.MapPath(_fileSystemFileStorageSettings.FileRoot);
 
             if (!Directory.Exists(fileRoot))
             {
-                throw new ArgumentException("Root path does not exist", "fileRoot");
+                Directory.CreateDirectory(fileRoot);
             }
 
             return fileRoot;
