@@ -19,11 +19,13 @@ namespace Cofoundry.Domain
         private readonly CofoundryDbContext _dbContext;
         private readonly IEntityDefinitionRepository _entityDefinitionRepository;
         private readonly IPermissionRepository _permissionRepository;
+        private readonly ICommandExecutor _commandExecutor;
 
         public UpdateUnstructuredDataDependenciesCommandHandler(
             CofoundryDbContext dbContext,
             IEntityDefinitionRepository entityDefinitionRepository,
-            IPermissionRepository permissionRepository
+            IPermissionRepository permissionRepository,
+            ICommandExecutor commandExecutor
             )
         {
             _dbContext = dbContext;
@@ -39,6 +41,13 @@ namespace Cofoundry.Domain
         {
             var existingDependencies = await QueryDepenencies(command).ToListAsync();
             var relations = GetDistinctRelations(command.Model);
+            var ensureEntityDefinitionExistsCommands = GetEntityCheckCommands(command, existingDependencies, relations);
+
+            foreach (var ensureEntityDefinitionExistsCommand in ensureEntityDefinitionExistsCommands)
+            {
+                await _commandExecutor.ExecuteAsync(ensureEntityDefinitionExistsCommand, executionContext);
+            }
+
             ApplyChanges(command, existingDependencies, relations);
             await _dbContext.SaveChangesAsync();
         }
@@ -47,6 +56,12 @@ namespace Cofoundry.Domain
         {
             var existingDependencies = QueryDepenencies(command).ToList();
             var relations = GetDistinctRelations(command.Model);
+            var ensureEntityDefinitionExistsCommands = GetEntityCheckCommands(command, existingDependencies, relations);
+
+            foreach (var ensureEntityDefinitionExistsCommand in ensureEntityDefinitionExistsCommands)
+            {
+                _commandExecutor.Execute(ensureEntityDefinitionExistsCommand, executionContext);
+            }
             ApplyChanges(command, existingDependencies, relations);
             _dbContext.SaveChanges();
         }
@@ -104,6 +119,18 @@ namespace Cofoundry.Domain
                     yield return relation;
                 }
             }
+        }
+
+        private IEnumerable<EnsureEntityDefinitionExistsCommand> GetEntityCheckCommands(UpdateUnstructuredDataDependenciesCommand command, List<UnstructuredDataDependency> existingDependencies, IEnumerable<EntityDependency> relations)
+        {
+            var commands = relations
+                .Select(r => r.EntityDefinitionCode)
+                .Union(new string[] { command.RootEntityDefinitionCode })
+                .Except(existingDependencies.Select(r => r.RelatedEntityDefinitionCode))
+                .Distinct()
+                .Select(c => new EnsureEntityDefinitionExistsCommand(c));
+
+            return commands;
         }
 
         private void ApplyChanges(UpdateUnstructuredDataDependenciesCommand command, List<UnstructuredDataDependency> existingDependencies, IEnumerable<EntityDependency> relations)
