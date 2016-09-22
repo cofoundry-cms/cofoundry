@@ -31,6 +31,7 @@ namespace Cofoundry.Domain
             _dbContext = dbContext;
             _entityDefinitionRepository = entityDefinitionRepository;
             _permissionRepository = permissionRepository;
+            _commandExecutor = commandExecutor;
         }
 
         #endregion
