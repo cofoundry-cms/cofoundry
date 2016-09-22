@@ -12,11 +12,6 @@
       validation="SHA1" decryption="AES" />
   </system.web>
 
-  <system.webServer xdt:Transform="InsertIfMissing">
-    <!--Required so we can route static files embedded in assemblies, which normally wouldn't run through the pipeline-->
-    <modules runAllManagedModulesForAllRequests="true" xdt:Transform="InsertIfMissing"/>
-  </system.webServer>
-
   <location path="admin" xdt:Transform="InsertIfMissing" xdt:Locator="Match(path)">
     <system.web>
       <httpRuntime maxRequestLength="102400" />

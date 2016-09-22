@@ -20,6 +20,26 @@ namespace Cofoundry.Core
         }
 
         /// <summary>
+        /// Trims whitespace from a string, returning null values as String.Empty
+        /// </summary>
+        public static string NullAsEmptyAndTrim(string s)
+        {
+            if (s == null) return string.Empty;
+
+            return s.Trim();
+        }
+
+        /// <summary>
+        /// Trims whitespace from a string if not null
+        /// </summary>
+        public static string TrimOrNull(string s)
+        {
+            if (s == null) return s;
+
+            return s.Trim();
+        }
+
+        /// <summary>
         /// Returns a string as null if it is empty or whitespace
         /// </summary>
         public static string EmptyAsNull(string s)

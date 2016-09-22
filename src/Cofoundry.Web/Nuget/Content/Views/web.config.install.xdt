@@ -10,5 +10,10 @@
       </namespaces>
     </pages>
   </system.web.webPages.razor>
+
+  <system.webServer xdt:Transform="InsertIfMissing">
+    <!--Required so we can route images with file extensions, which normally wouldn't run through the pipeline-->
+    <modules runAllManagedModulesForAllRequests="true" xdt:Transform="InsertIfMissing"/>
+  </system.webServer>
   
 </configuration>
