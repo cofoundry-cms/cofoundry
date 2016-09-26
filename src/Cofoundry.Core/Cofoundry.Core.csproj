@@ -190,6 +190,7 @@
     <Compile Include="Mail\Framework\RazorEngine\IViewFileReader.cs" />
     <Compile Include="Mail\Framework\RazorEngine\IMailViewRenderer.cs" />
     <Compile Include="Mail\Framework\RazorEngine\RazorEngineActivator.cs" />
+    <Compile Include="Mail\Framework\RazorEngine\ViewBase\IEmailTemplateWithUrlHelper.cs" />
     <Compile Include="Mail\Framework\RazorEngine\ViewBase\RazorEngineHtmlHelper.cs" />
     <Compile Include="Mail\Framework\RazorEngine\RazorEngineViewRenderer.cs" />
     <Compile Include="Mail\Framework\RazorEngine\ViewBase\RazorEngineUrlHelper.cs" />

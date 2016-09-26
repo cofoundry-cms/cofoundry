@@ -12,7 +12,7 @@
         }
 
         function onEmailChange() {
-            var qs;
+            var qs = '';
 
             if (emailInput.value.length) {
                 qs = "?email=" + encodeURIComponent(emailInput.value);

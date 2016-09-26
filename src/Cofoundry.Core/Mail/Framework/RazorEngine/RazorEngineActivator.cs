@@ -24,12 +24,15 @@ namespace Cofoundry.Core.Mail
 
         public ITemplate CreateInstance(InstanceContext context)
         {
-            if (_resolutionContext.IsRegistered(context.TemplateType))
+            var instance = context.Loader.CreateInstance(context.TemplateType);
+            
+            // Just doing some simple building up of the url helper. Could do something more scaleable if here if required.
+            if (instance is IEmailTemplateWithUrlHelper)
             {
-                return (ITemplate)_resolutionContext.Resolve(context.TemplateType);
+                ((IEmailTemplateWithUrlHelper)instance).Url = _resolutionContext.Resolve<RazorEngineUrlHelper>();
             }
 
-            return context.Loader.CreateInstance(context.TemplateType);
+            return instance;
         }
     }
 }

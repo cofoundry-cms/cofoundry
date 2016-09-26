@@ -49,8 +49,6 @@ namespace Cofoundry.Domain
             }
 
             CheckAdditionalPermissionHandlers(commandHandler, executionContext, _permissionValidationService);
-
-            commandHandler.Execute(command, executionContext);
         }
 
         public void Validate<TQuery, TResult>(TQuery query, IAsyncQueryHandler<TQuery, TResult> queryHandler, IExecutionContext executionContext) where TQuery : IQuery<TResult>
@@ -64,7 +62,6 @@ namespace Cofoundry.Domain
             }
 
             CheckAdditionalPermissionHandlers(queryHandler, executionContext, _permissionValidationService);
-
         }
 
         public void Validate<TQuery, TResult>(TQuery query, IQueryHandler<TQuery, TResult> queryHandler, IExecutionContext executionContext) where TQuery : IQuery<TResult>
@@ -78,7 +75,6 @@ namespace Cofoundry.Domain
             }
 
             CheckAdditionalPermissionHandlers(queryHandler, executionContext, _permissionValidationService);
-
         }
 
         #region private

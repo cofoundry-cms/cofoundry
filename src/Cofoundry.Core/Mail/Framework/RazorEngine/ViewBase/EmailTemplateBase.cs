@@ -11,14 +11,11 @@ namespace Cofoundry.Core.Mail
     /// <summary>
     /// A base template model contianing helper functions for email templating.
     /// </summary>
-    public class EmailTemplateBase : TemplateBase
+    public class EmailTemplateBase : TemplateBase, IEmailTemplateWithUrlHelper
     {
-        public EmailTemplateBase(
-            ISiteUriResolver siteUriResolver
-            )
+        public EmailTemplateBase()
         {
             Html = new RazorEngineHtmlHelper();
-            Url = new RazorEngineUrlHelper(siteUriResolver);
         }
 
         public RazorEngineHtmlHelper Html { get; set; }
@@ -26,13 +23,20 @@ namespace Cofoundry.Core.Mail
         public RazorEngineUrlHelper Url { get; set; }
     }
 
-    public class EmailTemplateBase<T> : TemplateBase<T>
+    /// <summary>
+    /// A base template model contianing helper functions for email templating.
+    /// </summary>
+    public class EmailTemplateBase<T> : TemplateBase<T>, IEmailTemplateWithUrlHelper
     {
+        public EmailTemplateBase()
+        {
+            Html = new RazorEngineHtmlHelper();
+        }
+
         public EmailTemplateBase(
             ISiteUriResolver siteUriResolver
             )
         {
-            Html = new RazorEngineHtmlHelper();
             Url = new RazorEngineUrlHelper(siteUriResolver);
         }
 

@@ -40,6 +40,7 @@
       <dependency id="Microsoft.Web.Infrastructure" version="1.0.0.0" />
       <dependency id="Newtonsoft.Json" version="9.0.1" />
       <dependency id="Owin" version="1.0" />
+      <dependency id="RazorEngine" version="3.9.0" />
       <dependency id="WebGrease" version="1.6.0" />
       <dependency id="Cofoundry.Core" version="$version$" />
       <dependency id="Cofoundry.Domain" version="$version$" />

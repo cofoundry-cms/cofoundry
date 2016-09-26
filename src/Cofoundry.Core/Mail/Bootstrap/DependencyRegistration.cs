@@ -23,7 +23,8 @@ namespace Cofoundry.Core.Mail
                 .RegisterType<IViewFileReader, ViewFileReader>()
                 .RegisterType<IActivator, RazorEngineActivator>()
                 .RegisterType<IMailViewRenderer, RazorEngineViewRenderer>()
-                .RegisterType<EmailTemplateBase, EmailTemplateBase>()
+                .RegisterType<EmailTemplateBase>()
+                .RegisterType<RazorEngineUrlHelper>()
                 .RegisterGeneric(typeof(EmailTemplateBase<>), typeof(EmailTemplateBase<>))
                 ; 
         }
