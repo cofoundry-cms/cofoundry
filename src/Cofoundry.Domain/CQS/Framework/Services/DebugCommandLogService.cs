@@ -47,7 +47,7 @@ namespace Cofoundry.Domain.CQS
 
         public Task LogFailedAsync<TCommand>(TCommand command, IExecutionContext executionContext, Exception ex = null) where TCommand : ICommand
         {
-            LogFailedAsync(command, executionContext);
+            LogFailed(command, executionContext);
             return Task.FromResult(true);
         }
     }
