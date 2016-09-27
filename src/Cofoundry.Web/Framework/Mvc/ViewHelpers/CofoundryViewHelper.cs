@@ -1,4 +1,5 @@
 ﻿using Cofoundry.Core.Web;
+using Cofoundry.Domain;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,7 +14,7 @@ namespace Cofoundry.Web
         public CofoundryHelper(HtmlHelper htmlHelper)
         {
             // DI because mvc framework doesn't support injection yet
-            Routing = IckyDependencyResolution.ResolveFromMvcContext<IRouteViewHelper>();
+            Routing = IckyDependencyResolution.ResolveFromMvcContext<IContentRouteLibrary>();
             Settings = IckyDependencyResolution.ResolveFromMvcContext<ISettingsViewHelper>();
             CurrentUser = IckyDependencyResolution.ResolveFromMvcContext<ICurrentUserViewHelper>();
             Js = IckyDependencyResolution.ResolveFromMvcContext<IJavascriptViewHelper>(); ;
@@ -22,7 +23,7 @@ namespace Cofoundry.Web
             UI = new UIViewHelper(htmlHelper);
         }
 
-        public IRouteViewHelper Routing { get; private set; }
+        public IContentRouteLibrary Routing { get; private set; }
 
         public ISettingsViewHelper Settings { get; private set; }
 

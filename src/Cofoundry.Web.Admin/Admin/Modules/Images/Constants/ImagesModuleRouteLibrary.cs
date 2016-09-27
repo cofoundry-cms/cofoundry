@@ -5,13 +5,13 @@ using System.Web;
 
 namespace Cofoundry.Web.Admin
 {
-    public class DocumentsRouteLibrary : ModuleRouteLibrary
+    public class ImagesModuleRouteLibrary : ModuleRouteLibrary
     {
         #region statics
 
-        public const string RoutePrefix = "documents";
+        public const string RoutePrefix = "images";
 
-        public static readonly DocumentsRouteLibrary Urls = new DocumentsRouteLibrary();
+        public static readonly ImagesModuleRouteLibrary Urls = new ImagesModuleRouteLibrary();
 
         public static readonly ModuleJsRouteLibrary Js = new ModuleJsRouteLibrary(Urls);
 
@@ -19,7 +19,7 @@ namespace Cofoundry.Web.Admin
 
         #region constructor
 
-        public DocumentsRouteLibrary()
+        public ImagesModuleRouteLibrary()
             : base(RoutePrefix, RouteConstants.InternalModuleResourcePathPrefix)
         {
         }

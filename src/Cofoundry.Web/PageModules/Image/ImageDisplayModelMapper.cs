@@ -13,12 +13,15 @@ namespace Cofoundry.Web
         #region Constructor
 
         private IQueryExecutor _queryExecutor;
+        private IImageAssetRouteLibrary _imageAssetRouteLibrary;
 
         public ImageDisplayModelMapper(
-            IQueryExecutor queryExecutor
+            IQueryExecutor queryExecutor,
+            IImageAssetRouteLibrary imageAssetRouteLibrary
             )
         {
             _queryExecutor = queryExecutor;
+            _imageAssetRouteLibrary = imageAssetRouteLibrary;
         }
 
         #endregion
@@ -32,8 +35,8 @@ namespace Cofoundry.Web
                 var output = Mapper.Map<ImageDisplayModel>(input.DataModel);
 
                 var image = images.GetOrDefault(input.DataModel.ImageId);
-                output.Source = AssetRouteLibrary.ImageAsset(image);
-
+                output.Source = _imageAssetRouteLibrary.ImageAsset(image);
+                
                 yield return input.CreateOutput(output);
             }
         }

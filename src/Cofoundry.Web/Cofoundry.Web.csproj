@@ -389,7 +389,6 @@
     <Compile Include="Framework\Mvc\ViewHelpers\Interfaces\ICurrentUserViewHelper.cs" />
     <Compile Include="Framework\Mvc\ViewHelpers\Interfaces\IHtmlSanitizerHelper.cs" />
     <Compile Include="Framework\Mvc\ViewHelpers\Interfaces\IJavascriptViewHelper.cs" />
-    <Compile Include="Framework\Mvc\ViewHelpers\Interfaces\IRouteViewHelper.cs" />
     <Compile Include="Framework\Mvc\ViewHelpers\Interfaces\ISettingsViewHelper.cs" />
     <Compile Include="Framework\Mvc\ViewHelpers\Interfaces\IUIViewHelper.cs" />
     <Compile Include="Framework\Mvc\ViewHelpers\Interfaces\IUIViewHelperT.cs" />
@@ -401,11 +400,6 @@
     <Compile Include="Framework\Mvc\ViewHelpers\UrlHelperExtensions.cs" />
     <Compile Include="Framework\ModularMvc\ViewEngine\PageTemplateViewFileLocator.cs" />
     <Compile Include="Framework\Mvc\ViewRenderer\RazorViewRenderer.cs" />
-    <Compile Include="Framework\RouteLibraries\AssetRouteLibrary.cs" />
-    <Compile Include="Framework\RouteLibraries\DocumentAssetUrlResolutionService.cs" />
-    <Compile Include="Framework\RouteLibraries\IDocumentAssetUrlResolutionService.cs" />
-    <Compile Include="Framework\RouteLibraries\IImageAssetUrlResolutionService.cs" />
-    <Compile Include="Framework\RouteLibraries\ImageAssetUrlResolutionService.cs" />
     <Compile Include="Framework\WebApi\Deltas\DeltaContractResolver.cs" />
     <Compile Include="Framework\WebApi\Files\WebApiUploadedFile.cs" />
     <Compile Include="Framework\WebApi\Filters\ValidateApiAntiForgeryTokenAttribute.cs" />

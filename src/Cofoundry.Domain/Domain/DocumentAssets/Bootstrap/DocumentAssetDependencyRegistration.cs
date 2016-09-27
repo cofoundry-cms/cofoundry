@@ -12,7 +12,9 @@ namespace Cofoundry.Domain.Bootstrap
         public void Register(IContainerRegister container)
         {
             container
-                .RegisterType<DocumentAssetCommandHelper>();
+                .RegisterType<DocumentAssetCommandHelper>()
+                .RegisterType<IDocumentAssetRouteLibrary, DocumentAssetRouteLibrary>()
+                ;
         }
     }
 }

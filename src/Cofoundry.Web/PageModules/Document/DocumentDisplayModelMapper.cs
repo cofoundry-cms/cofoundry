@@ -13,12 +13,15 @@ namespace Cofoundry.Web
         #region Constructor
 
         private IQueryExecutor _queryExecutor;
+        private IDocumentAssetRouteLibrary _documentAssetRouteLibrary;
 
         public DocumentDisplayModelMapper(
-            IQueryExecutor queryExecutor
+            IQueryExecutor queryExecutor,
+            IDocumentAssetRouteLibrary documentAssetRouteLibrary
             )
         {
             _queryExecutor = queryExecutor;
+            _documentAssetRouteLibrary = documentAssetRouteLibrary;
         }
 
         #endregion
@@ -36,7 +39,7 @@ namespace Cofoundry.Web
                 {
                     output.Description = document.Description;
                     output.Title = document.Title;
-                    output.Url = AssetRouteLibrary.DocumentAsset(document);
+                    output.Url = _documentAssetRouteLibrary.DocumentAsset(document);
                 }
 
                 yield return input.CreateOutput(output);

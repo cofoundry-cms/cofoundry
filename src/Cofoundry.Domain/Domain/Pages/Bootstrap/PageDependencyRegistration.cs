@@ -24,7 +24,8 @@ namespace Cofoundry.Domain.Bootstrap
                 .RegisterAll<ICustomEntityVersionDataModel>()
                 .RegisterAllGenericImplementations(typeof(IPageModuleDisplayModelMapper<>))
                 .RegisterType<IPageRepository, PageRepository>()
-                ;
+                .RegisterType<IPageRouteLibrary, PageRouteLibrary>()
+                ; 
         }
     }
 }

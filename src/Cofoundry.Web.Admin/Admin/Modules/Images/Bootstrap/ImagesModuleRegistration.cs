@@ -17,7 +17,7 @@ namespace Cofoundry.Web.Admin
                 Description = "Manage the images in your site.",
                 MenuCategory = AdminModuleMenuCategory.ManageSite,
                 PrimaryOrdering = AdminModuleMenuPrimaryOrdering.Secondry,
-                Url = ImagesRouteLibrary.Urls.List(),
+                Url = ImagesModuleRouteLibrary.Urls.List(),
                 RestrictedToPermission = new ImageAssetAdminModulePermission()
             };
 
@@ -26,7 +26,7 @@ namespace Cofoundry.Web.Admin
 
         public string RoutePrefix
         {
-            get { return ImagesRouteLibrary.RoutePrefix; }
+            get { return ImagesModuleRouteLibrary.RoutePrefix; }
         }
     }
 }

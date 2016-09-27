@@ -17,7 +17,7 @@ namespace Cofoundry.Web.Admin
                 Description = "Manage the documents in your site.",
                 MenuCategory = AdminModuleMenuCategory.ManageSite,
                 PrimaryOrdering = AdminModuleMenuPrimaryOrdering.Secondry,
-                Url = DocumentsRouteLibrary.Urls.List(),
+                Url = DocumentsModuleRouteLibrary.Urls.List(),
                 RestrictedToPermission = new DocumentAssetAdminModulePermission()
             };
 
@@ -26,7 +26,7 @@ namespace Cofoundry.Web.Admin
 
         public string RoutePrefix
         {
-            get { return DocumentsRouteLibrary.RoutePrefix; }
+            get { return DocumentsModuleRouteLibrary.RoutePrefix; }
         }
     }
 }

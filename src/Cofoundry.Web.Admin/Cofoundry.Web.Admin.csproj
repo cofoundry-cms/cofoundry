@@ -727,11 +727,11 @@
     <Compile Include="Admin\Modules\Directories\Bootstrap\DirectoriesModuleRegistration.cs" />
     <Compile Include="Admin\Modules\Directories\Constants\DirectoriesRouteLibrary.cs" />
     <Compile Include="Admin\Modules\Documents\Bootstrap\DocumentsModuleRegistration.cs" />
-    <Compile Include="Admin\Modules\Documents\Constants\DocumentsRouteLibrary.cs" />
+    <Compile Include="Admin\Modules\Documents\Constants\DocumentsModuleRouteLibrary.cs" />
     <Compile Include="Admin\Modules\Images\Bootstrap\ImagesModuleRegistration.cs" />
-    <Compile Include="Admin\Modules\Images\Constants\ImagesRouteLibrary.cs" />
+    <Compile Include="Admin\Modules\Images\Constants\ImagesModuleRouteLibrary.cs" />
     <Compile Include="Admin\Modules\Pages\Bootstrap\PagesModuleRegistration.cs" />
-    <Compile Include="Admin\Modules\Pages\Constants\PagesRouteLibrary.cs" />
+    <Compile Include="Admin\Modules\Pages\Constants\PagesModuleRouteLibrary.cs" />
     <Compile Include="Admin\Modules\PageTemplates\Bootstrap\PageTemplatesModuleRegistration.cs" />
     <Compile Include="Admin\Modules\PageTemplates\Constants\PageTemplatesRouteLibrary.cs" />
     <Compile Include="Admin\Modules\Roles\Bootstrap\RolesModuleRegistration.cs" />

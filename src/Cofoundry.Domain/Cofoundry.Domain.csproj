@@ -426,6 +426,8 @@
     <Compile Include="Domain\DocumentAssets\Queries\GetUpdateDocumentAssetCommandByIdQueryHandler.cs" />
     <Compile Include="Domain\DocumentAssets\Queries\SearchDocumentAssetSummariesQuery.cs" />
     <Compile Include="Domain\DocumentAssets\Queries\SearchDocumentAssetSummariesQueryHandler.cs" />
+    <Compile Include="Domain\DocumentAssets\Routes\IDocumentAssetRouteLibrary.cs" />
+    <Compile Include="Domain\DocumentAssets\Routes\DocumentAssetRouteLibrary.cs" />
     <Compile Include="Domain\DynamicData\Bootstrap\DynamicDataDependencyRegistration.cs" />
     <Compile Include="Domain\DynamicData\Mapping\DynamicDataModelSchemaMapper.cs" />
     <Compile Include="Domain\DynamicData\Models\DynamicDataModelSchemaProperty.cs" />
@@ -470,6 +472,8 @@
     <Compile Include="Domain\ImageAssets\Models\Resizing\ImageCropAnchor.cs" />
     <Compile Include="Domain\ImageAssets\Models\Resizing\ImageFitMode.cs" />
     <Compile Include="Domain\ImageAssets\Models\Resizing\ImageScaleMode.cs" />
+    <Compile Include="Domain\ImageAssets\Routes\IImageAssetRouteLibrary.cs" />
+    <Compile Include="Domain\ImageAssets\Routes\ImageAssetRouteLibrary.cs" />
     <Compile Include="Domain\ImageAssets\Services\SimpleResizedImageAssetFileService.cs" />
     <Compile Include="Domain\ImageAssets\Services\IResizedImageAssetFileService.cs" />
     <Compile Include="Domain\ImageAssets\Commands\AddImageAssetCommand.cs" />
@@ -660,6 +664,8 @@
     <Compile Include="Domain\Pages\Queries\SearchPageSummariesQueryHandler.cs" />
     <Compile Include="Domain\Pages\Repositories\IPageRepository.cs" />
     <Compile Include="Domain\Pages\Repositories\PageRepository.cs" />
+    <Compile Include="Domain\Pages\Routes\IPageRouteLibrary.cs" />
+    <Compile Include="Domain\Pages\Routes\PageRouteLibrary.cs" />
     <Compile Include="Domain\PageTemplates\Bootstrap\PageTemplateDefinition.cs" />
     <Compile Include="Domain\PageTemplates\Bootstrap\PageTemplateDependencyRegistration.cs" />
     <Compile Include="Domain\PageTemplates\Bootstrap\PageTemplatesAutoMapProfile.cs" />
@@ -846,6 +852,8 @@
     <Compile Include="Domain\Shared\Models\Paging\IPagedQueryResult.cs" />
     <Compile Include="Domain\Shared\Models\Paging\IPagedQueryResultExtensions.cs" />
     <Compile Include="Domain\Shared\Models\UpdateAuditData.cs" />
+    <Compile Include="Domain\Shared\Routes\ContentRouteLibrary.cs" />
+    <Compile Include="Domain\Shared\Routes\IContentRouteLibrary.cs" />
     <Compile Include="Domain\UserAreas\Bootstrap\UserAreaAutoMapProfile.cs" />
     <Compile Include="Domain\UserAreas\Bootstrap\UserAreaDependencyRegistration.cs" />
     <Compile Include="Domain\UserAreas\Permissions\IUserAreaPermissionTemplate.cs" />

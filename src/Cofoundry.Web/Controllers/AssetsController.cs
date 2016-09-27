@@ -19,16 +19,19 @@ namespace Cofoundry.Web
         private readonly IQueryExecutor _queryExecutor;
         private readonly IResizedImageAssetFileService _resizedImageAssetFileService;
         private readonly IErrorLoggingService _errorLoggingService;
+        private readonly IImageAssetRouteLibrary _imageAssetRouteLibrary;
 
         public AssetsController(
             IQueryExecutor queryExecutor,
             IResizedImageAssetFileService resizedImageAssetFileService,
-            IErrorLoggingService errorLoggingService
+            IErrorLoggingService errorLoggingService,
+            IImageAssetRouteLibrary imageAssetRouteLibrary
             )
         {
             _queryExecutor = queryExecutor;
             _resizedImageAssetFileService = resizedImageAssetFileService;
             _errorLoggingService = errorLoggingService;
+            _imageAssetRouteLibrary = imageAssetRouteLibrary;
         }
 
         #endregion
@@ -53,7 +56,7 @@ namespace Cofoundry.Web
 
             if (SlugFormatter.ToSlug(asset.FileName) != fileName)
             {
-                var url = AssetRouteLibrary.ImageAsset(asset, settings);
+                var url = _imageAssetRouteLibrary.ImageAsset(asset, settings);
                 return RedirectPermanent(url);
             }
 

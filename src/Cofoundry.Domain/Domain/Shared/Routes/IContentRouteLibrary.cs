@@ -1,0 +1,76 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Cofoundry.Domain
+{
+    /// <summary>
+    /// Route library for all the core Cofoundry routes.
+    /// </summary>
+    public interface IContentRouteLibrary
+    {
+        #region pages
+
+        /// <summary>
+        /// Simple but less efficient way of getting a page url if you only know 
+        /// the id. Use the overload accepting an IPageRoute if possible to save a 
+        /// potential db query if the route isn't cached.
+        /// </summary>
+        string Page(int? pageId);
+
+        /// <summary>
+        /// Gets the full url of a page
+        /// </summary>
+        string Page(IPageRoute route);
+
+        #endregion
+
+        #region images
+
+        /// <summary>
+        /// Simple but less efficient way of getting an image url if you only know 
+        /// the id. Use the overload accepting an IImageAssetRenderable if possible to save a 
+        /// potential db query if the route isn't cached.
+        /// </summary>
+        /// <param name="imageAssetId">Id of the image asset to get the url for</param>
+        /// <param name="settings">Optional resizing settings for the image</param>
+        string ImageAsset(int? imageAssetId, IImageResizeSettings settings = null);
+
+        /// <summary>
+        /// Gets the url for an image asset, with optional resizing parameters
+        /// </summary>
+        /// <param name="asset">asset to get the url for</param>
+        /// <param name="settings">Optional resizing settings for the image</param>
+        string ImageAsset(IImageAssetRenderable image, IImageResizeSettings settings = null);
+
+        /// <summary>
+        /// Gets the url for an image asset, with optional resizing parameters
+        /// </summary>
+        /// <param name="asset">asset to get the url for</param>
+        /// <param name="width">width to resize the image to</param>
+        /// <param name="height">height to resize the image to</param>
+        string ImageAsset(IImageAssetRenderable image, int? width, int? height = null);
+
+        #endregion
+
+        #region documents
+
+        /// <summary>
+        /// Simple but less efficient way of getting a document url if you only know 
+        /// the id. Use the overload accepting an IDocumentAssetRenderable if possible to save a 
+        /// potential db query if the asset isn't cached.
+        /// </summary>
+        /// <param name="documentAssetId">Id of the document asset to get the url for</param>
+        string DocumentAsset(int? documentAssetId);
+
+        /// <summary>
+        /// Gets the url for a document asset
+        /// </summary>
+        /// <param name="asset">asset to get the url for</param>
+        string DocumentAsset(IDocumentAssetRenderable asset);
+
+        #endregion
+    }
+}

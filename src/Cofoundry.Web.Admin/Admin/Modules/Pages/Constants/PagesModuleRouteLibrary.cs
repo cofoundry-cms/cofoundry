@@ -5,21 +5,22 @@ using System.Web;
 
 namespace Cofoundry.Web.Admin
 {
-    public class ImagesRouteLibrary : ModuleRouteLibrary
+    public class PagesModuleRouteLibrary : ModuleRouteLibrary
     {
         #region statics
 
-        public const string RoutePrefix = "images";
+        public const string RoutePrefix = "pages";
 
-        public static readonly ImagesRouteLibrary Urls = new ImagesRouteLibrary();
+        public static readonly PagesModuleRouteLibrary Urls = new PagesModuleRouteLibrary();
 
         public static readonly ModuleJsRouteLibrary Js = new ModuleJsRouteLibrary(Urls);
+
 
         #endregion
 
         #region constructor
 
-        public ImagesRouteLibrary()
+        public PagesModuleRouteLibrary()
             : base(RoutePrefix, RouteConstants.InternalModuleResourcePathPrefix)
         {
         }
@@ -41,6 +42,20 @@ namespace Cofoundry.Web.Admin
         public string Details(int id)
         {
             return CreateAngularRoute(id.ToString());
+        }
+
+        public string WebDirectoryList()
+        {
+            return CreateWebDirectoryRoute();
+        }
+
+        #endregion
+
+        #region helpers
+
+        private string CreateWebDirectoryRoute(string path = null)
+        {
+            return "/" + UrlPrefix + "#/directories/" + path;
         }
 
         #endregion

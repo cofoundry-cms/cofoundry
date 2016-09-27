@@ -17,7 +17,7 @@ namespace Cofoundry.Web.Admin
                 Description = "Manage the pages in your site.",
                 MenuCategory = AdminModuleMenuCategory.ManageSite,
                 PrimaryOrdering = AdminModuleMenuPrimaryOrdering.Primary,
-                Url = PagesRouteLibrary.Urls.List(),
+                Url = PagesModuleRouteLibrary.Urls.List(),
                 RestrictedToPermission = new PageAdminModulePermission()
             };
 
@@ -26,7 +26,7 @@ namespace Cofoundry.Web.Admin
 
         public string RoutePrefix
         {
-            get { return PagesRouteLibrary.RoutePrefix; }
+            get { return PagesModuleRouteLibrary.RoutePrefix; }
         }
     }
 }
