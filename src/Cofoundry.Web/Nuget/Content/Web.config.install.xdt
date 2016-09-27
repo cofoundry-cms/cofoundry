@@ -1,11 +1,11 @@
 ﻿<configuration xmlns:xdt="http://schemas.microsoft.com/XML-Document-Transform">
 
-  <connectionStrings xdt:Transform="InsertIfMissing">
+  <!--<connectionStrings xdt:Transform="InsertIfMissing">
     <add name="Cofoundry" 
          connectionString="TODO: Add Cofoundry Connection String" 
          providerName="System.Data.SqlClient"
          xdt:Transform="InsertIfMissing" xdt:Locator="Match(name)"/>
-  </connectionStrings>
+  </connectionStrings>-->
 
   <appSettings xdt:Transform="InsertIfMissing">
     <add key="Cofoundry:SiteUriResolver:SiteUriRoot" value="http://localhost:TODO-ADD-PORT" xdt:Transform="InsertIfMissing" xdt:Locator="Match(key)"  />
