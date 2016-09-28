@@ -44,30 +44,44 @@ namespace Cofoundry.Web.Admin
 
         private void AddMainScriptBundle(BundleCollection bundles)
         {
-            var sharedMainBundle = new ScriptBundle(SharedRouteLibrary.Js.Main)
-               .Include(SharedRouteLibrary.Js.Bundle("lib/underscore.min.js"))
-               .Include(SharedRouteLibrary.Js.Bundle("lib/angular.min.js"))
-               .Include(SharedRouteLibrary.Js.Bundle("Lib/AngularModules/TextAngular/textAngular-rangy.min.js"))
-               .Include(SharedRouteLibrary.Js.Bundle("Lib/AngularModules/TextAngular/textAngular-sanitize.min.js"))
-               .Include(SharedRouteLibrary.Js.Bundle("Lib/AngularModules/TextAngular/textAngular.min.js"))
-               .IncludeDirectory(SharedRouteLibrary.Js.Bundle("Lib/AngularModules/"), "*.js", false)
-               .IncludeDirectory(SharedRouteLibrary.Js.Bundle(AngularJsDirectoryLibrary.Bootstrap + "/"), "*.js", true)
-               .IncludeDirectory(SharedRouteLibrary.Js.Bundle(AngularJsDirectoryLibrary.DataServices + "/"), "*.js", true)
-               .IncludeDirectory(SharedRouteLibrary.Js.Bundle("utilities/"), "*.js", true)
-               .IncludeDirectory(SharedRouteLibrary.Js.Bundle("filters/"), "*.js", true)
-               .IncludeDirectory(SharedRouteLibrary.Js.Bundle("framework/"), "*.js", true)
-               .IncludeDirectory(SharedRouteLibrary.Js.Bundle(AngularJsDirectoryLibrary.UIComponents + "/"), "*.js", true);
+            var sharedMainBundle = new ScriptBundle(SharedRouteLibrary.Js.Main);
+
+            sharedMainBundle.Include(SharedRouteLibrary.Js.Bundle("lib/underscore.min.js"));
+            sharedMainBundle.Include(SharedRouteLibrary.Js.Bundle("lib/angular.min.js"));
+            sharedMainBundle.Include(SharedRouteLibrary.Js.Bundle("lib/AngularModules/TextAngular/textAngular-rangy.min.js"));
+            sharedMainBundle.Include(SharedRouteLibrary.Js.Bundle("lib/AngularModules/TextAngular/textAngular-sanitize.min.js"));
+            sharedMainBundle.Include(SharedRouteLibrary.Js.Bundle("lib/AngularModules/TextAngular/textAngular.min.js"));
+            IncludeDirectory(sharedMainBundle, SharedRouteLibrary.Js.Bundle("Lib/AngularModules/"), false);
+            IncludeDirectory(sharedMainBundle, SharedRouteLibrary.Js.Bundle(AngularJsDirectoryLibrary.Bootstrap + "/"), true);
+            IncludeDirectory(sharedMainBundle, SharedRouteLibrary.Js.Bundle(AngularJsDirectoryLibrary.DataServices + "/"), true);
+            IncludeDirectory(sharedMainBundle, SharedRouteLibrary.Js.Bundle("Utilities/"), true);
+            IncludeDirectory(sharedMainBundle, SharedRouteLibrary.Js.Bundle("Filters/"), true);
+            IncludeDirectory(sharedMainBundle, SharedRouteLibrary.Js.Bundle("Framework/"), true);
+            IncludeDirectory(sharedMainBundle, SharedRouteLibrary.Js.Bundle(AngularJsDirectoryLibrary.UIComponents + "/"), true);
 
             // In an implementation shared scripts are nested in a different folder to avoid name clashes, import them here.
-            AddAlternateJsDirectoryIfExists(sharedMainBundle, "Lib");
+            AddAlternateJsDirectoryIfExists(sharedMainBundle, "lib");
             AddAlternateJsDirectoryIfExists(sharedMainBundle, AngularJsDirectoryLibrary.Bootstrap);
             AddAlternateJsDirectoryIfExists(sharedMainBundle, AngularJsDirectoryLibrary.DataServices);
-            AddAlternateJsDirectoryIfExists(sharedMainBundle, "utilities");
-            AddAlternateJsDirectoryIfExists(sharedMainBundle, "filters");
-            AddAlternateJsDirectoryIfExists(sharedMainBundle, "framework");
+            AddAlternateJsDirectoryIfExists(sharedMainBundle, "Utilities");
+            AddAlternateJsDirectoryIfExists(sharedMainBundle, "Filters");
+            AddAlternateJsDirectoryIfExists(sharedMainBundle, "Framework");
             AddAlternateJsDirectoryIfExists(sharedMainBundle, AngularJsDirectoryLibrary.UIComponents);
 
             bundles.Add(sharedMainBundle);
+        }
+
+        private void IncludeDirectory(ScriptBundle scriptBundle, string path, bool includeSubDirectories)
+        {
+            // Having some issues here with empty directories when publishing to azure, so lets try and give some more info
+            try
+            {
+                scriptBundle.IncludeDirectory(path, "*.js", true);
+            }
+            catch (ArgumentException ex)
+            {
+                throw new ApplicationException("Error adding bundle path '" + path + "'", ex);
+            }
         }
 
         private void AddTemplateBundles(BundleCollection bundles)

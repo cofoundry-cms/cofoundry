@@ -352,7 +352,7 @@
     <Content Include="Admin\Modules\Shared\Content\css\shared.css" />
     <Content Include="Admin\Modules\Shared\Content\favicon.ico" />
     <Content Include="Admin\Modules\Shared\Content\videoplayer.swf" />
-    <Content Include="Admin\Modules\Shared\Js\bootstrap\Module.js" />
+    <Content Include="Admin\Modules\Shared\Js\Bootstrap\Module.js" />
     <Content Include="Admin\Modules\Shared\Js\DataServices\CustomEntityService.js" />
     <Content Include="Admin\Modules\Shared\Js\DataServices\DocumentService.js" />
     <Content Include="Admin\Modules\Shared\Js\DataServices\EntityVersionService.js" />
@@ -450,6 +450,7 @@
     <Content Include="Admin\Modules\Shared\Js\UIComponents\FormFields\FormFieldValidationSummary.html" />
     <Content Include="Admin\Modules\Shared\Js\UIComponents\FormFields\FormFieldValidationSummary.js" />
     <Content Include="Admin\Modules\Shared\Js\UIComponents\FormFields\HttpPrefix.js" />
+    <Content Include="Admin\Modules\Shared\Js\UIComponents\Placeholder.js" />
     <Content Include="Admin\Modules\Shared\Js\UIComponents\FormValidators\MatchValidator.js" />
     <Content Include="Admin\Modules\Shared\Js\UIComponents\Form\Form.html" />
     <Content Include="Admin\Modules\Shared\Js\UIComponents\Form\Form.js" />

@@ -10,10 +10,10 @@ namespace Cofoundry.Web.Admin
     /// </summary>
     public class AngularJsDirectoryLibrary
     {
-        public static string UIComponents = "uicomponents";
-        public static string Routes = "routes";
-        public static string Bootstrap = "bootstrap";
-        public static string DataServices = "dataservices";
-        public static string Filters = "filters";
+        public static string UIComponents = "UIComponents";
+        public static string Routes = "Routes";
+        public static string Bootstrap = "Bootstrap";
+        public static string DataServices = "DataServices";
+        public static string Filters = "Filters";
     }
 }
