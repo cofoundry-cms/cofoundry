@@ -11,6 +11,6 @@ namespace Cofoundry.Core.BackgroundTasks
     /// </summary>
     public interface IAsyncBackgroundTask
     {
-        void ExecuteAsync();
+        Task ExecuteAsync();
     }
 }
