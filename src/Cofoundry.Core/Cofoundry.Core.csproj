@@ -125,9 +125,11 @@
     <Compile Include="AutoUpdate\Services\AutoUpdateService.cs" />
     <Compile Include="AutoUpdate\Services\IAutoUpdateService.cs" />
     <Compile Include="BackgroundTasks\Bootstrap\BackgroundTasksDependencyRegistration.cs" />
+    <Compile Include="BackgroundTasks\Framework\IAsyncBackgroundTask.cs" />
     <Compile Include="BackgroundTasks\Framework\IBackgroundTask.cs" />
     <Compile Include="BackgroundTasks\Framework\IBackgroundTaskRegistration.cs" />
     <Compile Include="BackgroundTasks\Framework\IBackgroundTaskScheduler.cs" />
+    <Compile Include="BackgroundTasks\Framework\IAsyncRecurringBackgroundTask.cs" />
     <Compile Include="BackgroundTasks\Framework\IRecurringBackgroundTask.cs" />
     <Compile Include="Caching\Bootstrap\CachingDependencyRegistration.cs" />
     <Compile Include="Caching\InMemoryObjectCache.cs" />
