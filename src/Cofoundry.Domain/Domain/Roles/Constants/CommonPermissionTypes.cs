@@ -9,7 +9,7 @@ namespace Cofoundry.Domain
 {
     /// <summary>
     /// These are common permissions types used by most entity types and are defined here
-    /// ro make them easy to re-use when defining IEntityPermission objects.
+    /// to make them easy to re-use when defining IEntityPermission objects.
     /// </summary>
     public static class CommonPermissionTypes
     {

@@ -13,10 +13,19 @@ namespace Cofoundry.Domain
     /// </summary>
     public class PermissionType
     {
+        /// <summary>
+        /// Creates a new PermissionType instance
+        /// </summary>
         public PermissionType()
         {
         }
 
+        /// <summary>
+        /// Creates a new PermissionType instance with the specified settings
+        /// </summary>
+        /// <param name="code">The unique 6 charachter key of the permission type</param>
+        /// <param name="name">A user friendly name for the permission</param>
+        /// <param name="description">A description to display against the permission in the user interface</param>
         public PermissionType(string code, string name, string description)
         {
             Code = code;
@@ -25,7 +34,7 @@ namespace Cofoundry.Domain
         }
 
         /// <summary>
-        /// The unique key of the permission type.
+        /// The unique 6 charachter key of the permission type
         /// </summary>
         public string Code { get; set; }
 
@@ -35,8 +44,7 @@ namespace Cofoundry.Domain
         public string Name { get; set; }
 
         /// <summary>
-        /// A description to display against the permission in the 
-        /// user interface.
+        /// A description to display against the permission in the user interface
         /// </summary>
         public string Description { get; set; }
     }
