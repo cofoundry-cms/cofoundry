@@ -23,8 +23,18 @@ namespace Cofoundry.Domain
         /// </summary>
         Task<IUserContext> GetSuperAdminUserContextAsync();
 
+        /// <summary>
+        /// Use this to get a user context for the super admin, useful
+        /// if you need to impersonate the user to perform an action with elevated 
+        /// privileges
+        /// </summary>
         IUserContext GetSuperAdminUserContext();
 
+        /// <summary>
+        /// Clears out the cached user context if one exists. Typically the user 
+        /// context is cached for the duration of the request so it needs clearing if
+        /// it changes (i.e. logged in.out)
+        /// </summary>
         void ClearCache();
     }
 }

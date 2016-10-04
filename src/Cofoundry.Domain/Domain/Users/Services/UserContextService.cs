@@ -8,6 +8,9 @@ using Cofoundry.Domain.Data;
 
 namespace Cofoundry.Domain
 {
+    /// <summary>
+    /// Service for retreiving user connection information.
+    /// </summary>
     public class UserContextService : IUserContextService
     {
         private bool _isUserContextCached = false;
@@ -108,6 +111,11 @@ namespace Cofoundry.Domain
             return impersonatedUserContext;
         }
 
+        /// <summary>
+        /// Clears out the cached user context if one exists. The user 
+        /// context is cached for the duration of the request so it needs clearing if
+        /// it changes (i.e. logged in.out)
+        /// </summary>
         public void ClearCache()
         {
             _isUserContextCached = false;

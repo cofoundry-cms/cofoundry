@@ -76,7 +76,7 @@ namespace Cofoundry.Web.Admin
             // Having some issues here with empty directories when publishing to azure, so lets try and give some more info
             try
             {
-                scriptBundle.IncludeDirectory(path, "*.js", true);
+                scriptBundle.IncludeDirectory(path, "*.js", includeSubDirectories);
             }
             catch (ArgumentException ex)
             {

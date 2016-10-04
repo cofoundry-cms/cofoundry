@@ -72,5 +72,15 @@ namespace Cofoundry.Domain
         string DocumentAsset(IDocumentAssetRenderable asset);
 
         #endregion
+
+        #region utility
+
+        /// <summary>
+        /// Maps a relative url to an absolute one.
+        /// </summary>
+        /// <param name="url">The relative url to map</param>
+        string ToAbsolute(string url);
+
+        #endregion
     }
 }
