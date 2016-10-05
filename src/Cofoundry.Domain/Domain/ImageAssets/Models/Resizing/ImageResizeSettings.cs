@@ -95,10 +95,7 @@ namespace Cofoundry.Domain
 
             settings.Width = IntParser.ParseOrDefault(qs[QS_WIDTH]);
             settings.Height = IntParser.ParseOrDefault(qs[QS_HEIGHT]);
-            if (!string.IsNullOrEmpty(qs[QS_ANCHOR]))
-            {
-                settings.Anchor = EnumParser.ParseOrDefault<ImageAnchorLocation>(qs[QS_ANCHOR], settings.Anchor);
-            }
+            settings.Anchor = EnumParser.ParseOrDefault<ImageAnchorLocation>(qs[QS_ANCHOR], settings.Anchor);
             settings.Mode = EnumParser.ParseOrDefault<ImageFitMode>(qs[QS_MODE], settings.Mode);
             settings.Scale = EnumParser.ParseOrDefault<ImageScaleMode>(qs[QS_SCALE], settings.Scale);
             settings.BackgroundColor = StringHelper.EmptyAsNull(qs[QS_BACKGROUND_COLOR]);
