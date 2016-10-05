@@ -22,7 +22,7 @@ namespace Cofoundry.Core
 
             TEnum e;
 
-            if (Enum.TryParse<TEnum>(s, out e))
+            if (Enum.TryParse<TEnum>(s, true, out e))
             {
                 return e;
             }
