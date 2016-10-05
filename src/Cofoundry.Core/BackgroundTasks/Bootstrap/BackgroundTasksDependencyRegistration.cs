@@ -12,6 +12,7 @@ namespace Cofoundry.Core.BackgroundTasks
         public void Register(IContainerRegister container)
         {
             container.RegisterAll<IRecurringBackgroundTask>();
+            container.RegisterAll<IAsyncRecurringBackgroundTask>();
             container.RegisterAll<IBackgroundTaskRegistration>();
         }
     }
