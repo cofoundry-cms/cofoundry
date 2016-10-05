@@ -115,6 +115,10 @@ namespace Cofoundry.Domain
 
         #region utility
 
+        /// <summary>
+        /// Maps a relative url to an absolute one.
+        /// </summary>
+        /// <param name="url">The relative url to map</param>
         public string ToAbsolute(string url)
         {
             if (string.IsNullOrWhiteSpace(url)) return url;

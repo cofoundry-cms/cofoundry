@@ -11,8 +11,7 @@ namespace Cofoundry.Domain
     {
         public void Register(IContainerRegister container)
         {
-            // TODO: I'm not sure why this is PerLifetime. I rember having issues with the scoping
-            // but this should probably be tested out to make sure the scope is as expected.
+            // Per lifetime because in MVC filters, controllers etc don't resolve from a single lifetime context
             var perLifetimeScopeRegistrationOptions = new RegistrationOptions() { InstanceScope = InstanceScope.PerLifetimeScope };
 
             container

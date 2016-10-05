@@ -24,14 +24,6 @@ namespace Cofoundry.Web.Admin
             }
         }
 
-        public string FileUploadShim
-        {
-            get
-            {
-                return Bundle("lib/angularmodules/fileuploadshim/angular-file-upload-shim.min.js");
-            }
-        }
-
         #endregion
     }
 }

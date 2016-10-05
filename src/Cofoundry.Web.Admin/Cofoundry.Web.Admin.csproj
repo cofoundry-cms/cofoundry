@@ -376,9 +376,6 @@
     <Content Include="Admin\Modules\Shared\Js\lib\AngularModules\angular-route.js" />
     <Content Include="Admin\Modules\Shared\Js\lib\AngularModules\angularModalService.js" />
     <Content Include="Admin\Modules\Shared\Js\lib\AngularModules\draganddrop.js" />
-    <Content Include="Admin\Modules\Shared\Js\lib\AngularModules\FileUploadShim\angular-file-upload-shim.min.js" />
-    <Content Include="Admin\Modules\Shared\Js\lib\AngularModules\FileUploadShim\FileAPI.flash.swf" />
-    <Content Include="Admin\Modules\Shared\Js\lib\AngularModules\FileUploadShim\FileAPI.min.js" />
     <Content Include="Admin\Modules\Shared\Js\lib\AngularModules\TextAngular\textAngular-rangy.min.js" />
     <Content Include="Admin\Modules\Shared\Js\lib\AngularModules\TextAngular\textAngular-sanitize.min.js" />
     <Content Include="Admin\Modules\Shared\Js\lib\AngularModules\TextAngular\textAngular.min.js" />

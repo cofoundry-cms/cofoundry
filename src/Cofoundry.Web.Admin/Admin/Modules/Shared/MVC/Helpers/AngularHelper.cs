@@ -21,11 +21,7 @@ namespace Cofoundry.Web.Admin
         public static IHtmlString Boostrap(ModuleJsRouteLibrary routeLibrary, ICurrentUserViewHelper currentUserHelper, object options = null)
         {
             var script = string.Concat(
-                //"<script src='/Admin/Modules/Shared/Js/Lib/test.js'></script>",
                 RenderScript(SharedRouteLibrary.Js.Main),
-                "<!--[if lt IE 9]>",
-                RenderScript(SharedRouteLibrary.Js.FileUploadShim),
-                "<![endif]-->",
                 RenderScript(SharedRouteLibrary.Js.Templates),
                 RenderScript(routeLibrary.Main),
                 RenderScript(routeLibrary.Templates),

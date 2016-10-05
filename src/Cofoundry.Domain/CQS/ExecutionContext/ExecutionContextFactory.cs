@@ -12,6 +12,8 @@ namespace Cofoundry.Domain.CQS
     /// </summary>
     public class ExecutionContextFactory : IExecutionContextFactory
     {
+        #region constructor
+
         private readonly IUserContextService _userContextService;
 
         public ExecutionContextFactory(
@@ -21,11 +23,22 @@ namespace Cofoundry.Domain.CQS
             _userContextService = userContextService;
         }
 
+        #endregion
+
+        /// <summary>
+        /// Creates an instance of IExecutionContext from the currently
+        /// logged in user.
+        /// </summary>
         public IExecutionContext Create()
         {
             return Create(_userContextService.GetCurrentContext());
         }
 
+        /// <summary>
+        /// Creates an instance of IExecutionContext from the
+        /// specified IUserContext. Can be used to impersonate another user.
+        /// </summary>
+        /// <param name="userContext">IUserContext to impersonate</param>
         public IExecutionContext Create(IUserContext userContext)
         {
             Condition.Requires(userContext).IsNotNull();
@@ -35,6 +48,28 @@ namespace Cofoundry.Domain.CQS
             newContext.UserContext = userContext;
 
             return newContext;
+        }
+
+        /// <summary>
+        /// Creates an instance of IExecutionContext using a Super Admin
+        /// level account. Should be used sparingly for elevating permissions,
+        /// typically for back-end processes.
+        /// </summary>
+        public IExecutionContext CreateSuperAdminContext()
+        {
+            var userContext = _userContextService.GetSuperAdminUserContext();
+            return Create(userContext);
+        }
+
+        /// <summary>
+        /// Creates an instance of IExecutionContext using a Super Admin
+        /// level account. Should be used sparingly for elevating permissions,
+        /// typically for back-end processes.
+        /// </summary>
+        public async Task<IExecutionContext> CreateSuperAdminContextAsync()
+        {
+            var userContext = await _userContextService.GetSuperAdminUserContextAsync();
+            return Create(userContext);
         }
     }
 }
