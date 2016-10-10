@@ -17,8 +17,8 @@ namespace Cofoundry.Domain
     public class ImageResizeSettings : IImageResizeSettings
     {
         const string QS_ANCHOR = "anchor";
-        const string QS_WIDTH = "w";
-        const string QS_HEIGHT = "h";
+        const string QS_WIDTH = "width";
+        const string QS_HEIGHT = "height";
         const string QS_MODE = "mode";
         const string QS_SCALE = "scale";
         const string QS_BACKGROUND_COLOR = "bgcolor";

@@ -22,7 +22,7 @@ namespace Cofoundry.Core
 
             TEnum e;
 
-            if (Enum.TryParse<TEnum>(s, out e))
+            if (Enum.TryParse<TEnum>(s, true, out e))
             {
                 return e;
             }
@@ -39,7 +39,7 @@ namespace Cofoundry.Core
         /// <returns>TEnum value if the string could be parsed; otherwise null.</returns>
         public static TEnum ParseOrDefault<TEnum>(string s, TEnum? defaultVaue = null) where TEnum : struct
         {
-            return ParseOrNull<TEnum>(s) ?? default(TEnum);
+            return ParseOrNull<TEnum>(s) ?? defaultVaue ?? default(TEnum);
         }
     }
 }
