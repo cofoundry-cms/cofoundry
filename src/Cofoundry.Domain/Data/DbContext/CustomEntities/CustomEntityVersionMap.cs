@@ -16,9 +16,6 @@ namespace Cofoundry.Domain.Data
                 .IsRequired();
 
             // Relationships
-            HasRequired(t => t.WorkFlowStatus)
-                .WithMany()
-                .HasForeignKey(d => d.WorkFlowStatusId);
 
             HasRequired(t => t.CustomEntity)
                 .WithMany(t => t.CustomEntityVersions)

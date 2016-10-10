@@ -30,7 +30,6 @@ namespace Cofoundry.Domain.Data
         public virtual Page Page { get; set; }
         public virtual ICollection<PageVersion> ChildPageVersions { get; set; }
         public virtual PageVersion BasedOnPageVersion { get; set; }
-        public virtual WorkFlowStatus WorkFlowStatus { get; set; }
         
         #region ICreateAuditable
 

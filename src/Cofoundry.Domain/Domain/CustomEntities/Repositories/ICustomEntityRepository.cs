@@ -48,8 +48,12 @@ namespace Cofoundry.Domain
         ICustomEntityRoutingRule GetCustomEntityRoutingRuleByRouteFormat(string routeFormat, IExecutionContext executionContext = null);
         Task<CustomEntityVersionPageModuleRenderDetails> GetCustomEntityVersionPageModuleRenderDetailsByIdAsync(GetCustomEntityVersionPageModuleRenderDetailsByIdQuery query, IExecutionContext executionContext = null);
         Task<IEnumerable<CustomEntityVersionSummary>> GetCustomEntityVersionSummariesByCustomEntityIdAsync(int id, IExecutionContext executionContext = null);
-        Task<PagedQueryResult<CustomEntitySummary>> GetCustomEntityVersionSummariesByCustomEntityIdAsync(SearchCustomEntitySummariesQuery query, IExecutionContext executionContext = null);
+        Task<PagedQueryResult<CustomEntitySummary>> SearchCustomEntitySummariesAsync(SearchCustomEntitySummariesQuery query, IExecutionContext executionContext = null);
+        Task<PagedQueryResult<CustomEntityRenderSummary>> SearchCustomEntityRenderSummaries(SearchCustomEntityRenderSummariesQuery query, IExecutionContext executionContext = null);
+
         bool IsCustomEntityPathUnique(IsCustomEntityPathUniqueQuery query, IExecutionContext executionContext = null);
+
+
         Task<bool> IsCustomEntityPathUniqueAsync(IsCustomEntityPathUniqueQuery query, IExecutionContext executionContext = null);
         Task MoveCustomEntityVersionPageModuleAsync(MoveCustomEntityVersionPageModuleCommand command, IExecutionContext executionContext = null);
         Task PublishCustomEntityAsync(int customEntityId, IExecutionContext executionContext = null);

@@ -784,7 +784,7 @@ create table Cofoundry.UnstructuredDataDependency (
 	constraint FK_UnstructuredDataDependency_RelatedEntityCascadeAction foreign key (RelatedEntityCascadeActionId) references Cofoundry.RelatedEntityCascadeAction (RelatedEntityCascadeActionId),
 	constraint FK_UnstructuredDataDependency_RelatedEntityDefinition foreign key (RelatedEntityDefinitionCode) references Cofoundry.EntityDefinition (EntityDefinitionCode),
 	constraint FK_UnstructuredDataDependency_RootEntityDefinition foreign key (RootEntityDefinitionCode) references Cofoundry.EntityDefinition (EntityDefinitionCode),
-	constraint CK_UnstructuredDataDependency_NotSelf check (RootEntityDefinitionCode<>RelatedEntityDefinitionCode and RootEntityId<>RelatedEntityId)
+	constraint CK_UnstructuredDataDependency_NotSelf check (RootEntityDefinitionCode<>RelatedEntityDefinitionCode or RootEntityId<>RelatedEntityId)
 )
 
 

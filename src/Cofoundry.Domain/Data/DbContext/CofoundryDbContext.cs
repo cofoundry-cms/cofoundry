@@ -61,7 +61,6 @@ namespace Cofoundry.Domain.Data
         public DbSet<UnstructuredDataDependency> UnstructuredDataDependencies { get; set; }
         public DbSet<WebDirectory> WebDirectories { get; set; }
         public DbSet<WebDirectoryLocale> WebDirectoryLocales { get; set; }
-        public DbSet<WorkFlowStatus> WorkFlowStatuses { get; set; }
 
         #endregion
         
@@ -94,7 +93,7 @@ namespace Cofoundry.Domain.Data
                 .Map(new UserPasswordResetRequestMap())
                 .Map(new WebDirectoryMap())
                 .Map(new WebDirectoryLocaleMap())
-                .Map(new WorkFlowStatusMap());
+                ;
         }
 
         #endregion

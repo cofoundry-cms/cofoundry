@@ -201,8 +201,6 @@
     <Compile Include="Data\DbContext\Pages\WebDirectoryLocale.cs" />
     <Compile Include="Data\DbContext\Pages\WebDirectoryLocaleMap.cs" />
     <Compile Include="Data\DbContext\Pages\WebDirectoryMap.cs" />
-    <Compile Include="Data\DbContext\Pages\WorkFlowStatus.cs" />
-    <Compile Include="Data\DbContext\Pages\WorkFlowStatusMap.cs" />
     <Compile Include="Data\DbContext\PageTemplates\PageTemplate.cs" />
     <Compile Include="Data\DbContext\PageTemplates\PageTemplateMap.cs" />
     <Compile Include="Data\DbContext\PageTemplates\PageTemplateSection.cs" />
@@ -228,6 +226,7 @@
     <Compile Include="Data\DbContext\Users\UserPasswordResetRequestMap.cs" />
     <Compile Include="Data\DbContext\Users\UserQueryExtensions.cs" />
     <Compile Include="Data\QueryHelpers\EntityFrameworkPagingExtensions.cs" />
+    <Compile Include="Data\QueryHelpers\OrderBySortDirectionExtentions.cs" />
     <Compile Include="Data\UnstructuredData\DbUnstructuredDataSerializer.cs" />
     <Compile Include="Data\UnstructuredData\IDbUnstructuredDataSerializer.cs" />
     <Compile Include="Domain\ClientConnection\Bootstrap\ClientConnectionDependencyRegistration.cs" />
@@ -345,6 +344,7 @@
     <Compile Include="Domain\CustomEntities\Permissions\CustomEntityUpdatePermission.cs" />
     <Compile Include="Domain\CustomEntities\Permissions\CustomEntityUpdateUrlPermission.cs" />
     <Compile Include="Domain\CustomEntities\Permissions\Framework\ICustomEntityPermissionTemplate.cs" />
+    <Compile Include="Domain\CustomEntities\Queries\CustomEntityQuerySortType.cs" />
     <Compile Include="Domain\CustomEntities\Queries\GetAllCustomEntityDefinitionMicroSummariesQueryHandler.cs" />
     <Compile Include="Domain\CustomEntities\Queries\GetAllCustomEntityDefinitionSummariesQueryHandler.cs" />
     <Compile Include="Domain\CustomEntities\Queries\GetAllCustomEntityRoutingRulesQueryHandler.cs" />
@@ -385,6 +385,8 @@
     <Compile Include="Domain\CustomEntities\Queries\IsCustomEntityPathUniqueQueryHandler.cs" />
     <Compile Include="Domain\CustomEntities\Queries\QueryHelpers\CustomEntitySummaryQueryModel.cs" />
     <Compile Include="Domain\CustomEntities\Queries\QueryHelpers\CustomEntityVersionQueryExtensions.cs" />
+    <Compile Include="Domain\CustomEntities\Queries\SearchCustomEntityRenderSummariesQueryHandler.cs" />
+    <Compile Include="Domain\CustomEntities\Queries\SearchCustomEntityRenderSummariesQuery.cs" />
     <Compile Include="Domain\CustomEntities\Queries\SearchCustomEntitySummariesQuery.cs" />
     <Compile Include="Domain\CustomEntities\Queries\SearchCustomEntitySummariesQueryHandler.cs" />
     <Compile Include="Domain\CustomEntities\Repositories\CustomEntityCodeDefinitionRepository.cs" />
@@ -854,6 +856,7 @@
     <Compile Include="Domain\Shared\Models\UpdateAuditData.cs" />
     <Compile Include="Domain\Shared\Routes\ContentRouteLibrary.cs" />
     <Compile Include="Domain\Shared\Routes\IContentRouteLibrary.cs" />
+    <Compile Include="Domain\Shared\Sorting\SortDirection.cs" />
     <Compile Include="Domain\UserAreas\Bootstrap\UserAreaAutoMapProfile.cs" />
     <Compile Include="Domain\UserAreas\Bootstrap\UserAreaDependencyRegistration.cs" />
     <Compile Include="Domain\UserAreas\Permissions\IUserAreaPermissionTemplate.cs" />

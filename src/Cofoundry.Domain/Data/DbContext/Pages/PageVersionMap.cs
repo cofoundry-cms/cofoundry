@@ -36,9 +36,6 @@ namespace Cofoundry.Domain.Data
             HasOptional(t => t.BasedOnPageVersion)
                 .WithMany(t => t.ChildPageVersions)
                 .HasForeignKey(d => d.BasedOnPageVersionId);
-            HasRequired(t => t.WorkFlowStatus)
-                .WithMany(t => t.PageVersions)
-                .HasForeignKey(d => d.WorkFlowStatusId);
 
             CreateAuditableMappingHelper.Map(this);
         }

@@ -86,16 +86,7 @@ namespace Cofoundry.Domain
                 entities.Add(entity);
             }
 
-            // Map Result
-            var result = new PagedQueryResult<CustomEntitySummary>();
-
-            result.PageCount = dbPagedResult.PageCount;
-            result.PageNumber = dbPagedResult.PageNumber;
-            result.PageSize = dbPagedResult.PageSize;
-            result.TotalItems = dbPagedResult.TotalItems;
-            result.Items = entities.ToArray();
-
-            return result;
+            return dbPagedResult.ChangeType(entities);
         }
 
         private IQueryable<CustomEntitySummaryQueryModel> GetQuery(SearchCustomEntitySummariesQuery query, CustomEntityDefinitionSummary definition)
