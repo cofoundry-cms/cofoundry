@@ -31,14 +31,16 @@ namespace Cofoundry.Web.ModularMvc
 
                 ViewLocationFormats = new string[] {
                     "~/Views/{1}/{0}.cshtml",
-                    "~/Views/Shared/{0}.cshtml"
+                    "~/Views/Shared/{0}.cshtml",
+                    "~/Cofoundry/PageTemplates/{0}.cshtml"
                 },
 
                 PartialViewLocationFormats = new string[] {
                     "~/Views/{1}/Partials/{0}.cshtml",
                     "~/Views/{1}/{0}.cshtml",
                     "~/Views/Shared/{0}.cshtml",
-                    "~/Views/Shared/Partials/{0}.cshtml"
+                    "~/Views/Shared/Partials/{0}.cshtml",
+                    "/Cofoundry/PageTemplates/Partials/{0}.cshtml"
                 },
 
                 MasterLocationFormats = new string[] {
