@@ -67,7 +67,8 @@ namespace Cofoundry.Domain
                 var uniqueQuery = new IsUsernameUniqueQuery()
                 {
                     Username = command.Email,
-                    UserId = userId
+                    UserId = userId,
+                    UserAreaCode = CofoundryAdminUserArea.AreaCode
                 };
 
                 if (!await _queryExecutor.ExecuteAsync(uniqueQuery))
