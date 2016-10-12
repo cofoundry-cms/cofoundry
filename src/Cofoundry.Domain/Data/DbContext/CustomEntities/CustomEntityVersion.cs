@@ -22,8 +22,6 @@ namespace Cofoundry.Domain.Data
 
         public virtual CustomEntity CustomEntity { get; set; }
 
-        public virtual WorkFlowStatus WorkFlowStatus { get; set; }
-
         public virtual ICollection<CustomEntityVersionPageModule> CustomEntityVersionPageModules { get; set; }
 
         #region ICreateAuditable
