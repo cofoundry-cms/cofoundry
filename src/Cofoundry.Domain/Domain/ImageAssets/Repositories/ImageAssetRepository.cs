@@ -11,7 +11,7 @@ namespace Cofoundry.Domain
     /// Simple facade over image asset data access queries/commands to them more discoverable
     /// in implementations.
     /// </summary>
-    public class ImageAssetRepository
+    public class ImageAssetRepository : IImageAssetRepository
     {
         #region constructor
 
