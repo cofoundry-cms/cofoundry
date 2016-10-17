@@ -21,18 +21,21 @@ namespace Cofoundry.Domain
         private readonly CustomEntityDataModelMapper _customEntityDataModelMapper;
         private readonly EntityVersionPageModuleMapper _entityVersionPageModuleMapper;
         private readonly IPermissionValidationService _permissionValidationService;
+        private readonly IQueryExecutor _queryExecutor;
 
         public GetCustomEntityRenderDetailsByIdQueryHandler(
             CofoundryDbContext dbContext,
             CustomEntityDataModelMapper customEntityDataModelMapper,
             EntityVersionPageModuleMapper entityVersionPageModuleMapper,
-            IPermissionValidationService permissionValidationService
+            IPermissionValidationService permissionValidationService,
+            IQueryExecutor queryExecutor
             )
         {
             _dbContext = dbContext;
             _customEntityDataModelMapper = customEntityDataModelMapper;
             _entityVersionPageModuleMapper = entityVersionPageModuleMapper;
             _permissionValidationService = permissionValidationService;
+            _queryExecutor = queryExecutor;
         }
 
         #endregion
@@ -70,7 +73,33 @@ namespace Cofoundry.Domain
 
             await _entityVersionPageModuleMapper.MapSections<CustomEntityVersionPageModuleRenderDetails>(dbModules, entity.Sections, query.WorkFlowStatus, executionContext);
 
+            var routingQuery = new GetPageRoutingInfoByCustomEntityIdQuery(dbResult.CustomEntityId);
+            var routing = await _queryExecutor.ExecuteAsync(routingQuery, executionContext);
+            entity.DetailsPageUrls = MapPageRoutings(routing, dbResult);
+
             return entity;
+        }
+
+        private IEnumerable<string> MapPageRoutings(
+            IEnumerable<PageRoutingInfo> allRoutings,
+            CustomEntityVersion dbResult
+            )
+        {
+            if (allRoutings == null) return Enumerable.Empty<string>();
+
+            var urls = new List<string>(allRoutings.Count());
+
+            foreach (var detailsRouting in allRoutings
+                .Where(r => r.CustomEntityRouteRule != null))
+            {
+                var detailsUrl = detailsRouting
+                    .CustomEntityRouteRule
+                    .MakeUrl(detailsRouting.PageRoute, detailsRouting.CustomEntityRoute);
+
+                urls.Add(detailsUrl);
+            }
+
+            return urls;
         }
 
         #endregion

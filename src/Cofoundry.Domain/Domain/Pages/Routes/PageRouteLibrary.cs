@@ -1,4 +1,5 @@
-﻿using Cofoundry.Domain.CQS;
+﻿using Cofoundry.Core;
+using Cofoundry.Domain.CQS;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -34,12 +35,45 @@ namespace Cofoundry.Domain
         }
 
         /// <summary>
-        /// Gets the full url of a page
+        /// Gets the full (relative) url of a page
         /// </summary>
         public string Page(IPageRoute route)
         {
             if (route == null) return string.Empty;
             return route.FullPath;
+        }
+
+        /// <summary>
+        /// Gets the full (relative) url of a page
+        /// </summary>
+        public string Page(PageRoutingInfo route)
+        {
+            if (route == null) return string.Empty;
+
+            if (route.CustomEntityRouteRule != null && route.CustomEntityRoute != null)
+            {
+                return route.CustomEntityRouteRule.MakeUrl(route.PageRoute, route.CustomEntityRoute);
+            }
+
+            return Page(route.PageRoute);
+        }
+
+        /// <summary>
+        /// Gets the full (relative) url of a page
+        /// </summary>
+        public string Page(ICustomEntityRoutable customEntity)
+        {
+            if (customEntity == null || EnumerableHelper.IsNullOrEmpty(customEntity.DetailsPageUrls)) return string.Empty;
+
+            // Multiple details routes are technically possible, but
+            // shouldn't really happen and if they are then it's reasonable
+            // to expect someone to construct the routes manually themselves.
+            var route = customEntity
+                .DetailsPageUrls
+                .OrderBy(r => r.Length)
+                .FirstOrDefault();
+            
+            return route;
         }
     }
 }

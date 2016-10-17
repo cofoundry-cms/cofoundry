@@ -19,20 +19,17 @@ namespace Cofoundry.Domain
         #region constructor
 
         private readonly CofoundryDbContext _dbContext;
-        private readonly CustomEntityDataModelMapper _customEntityDataModelMapper;
-        private readonly IQueryExecutor _queryExecutor;
+        private readonly ICustomEntityRenderSummaryMapper _customEntityRenderSummaryMapper;
         private readonly ICustomEntityCodeDefinitionRepository _customEntityDefinitionRepository;
 
         public GetCustomEntityRenderSummaryByDefinitionCodeQueryHandler(
             CofoundryDbContext dbContext,
-            IQueryExecutor queryExecutor,
-            CustomEntityDataModelMapper customEntityDataModelMapper,
+            ICustomEntityRenderSummaryMapper customEntityRenderSummaryMapper,
             ICustomEntityCodeDefinitionRepository customEntityDefinitionRepository
             )
         {
             _dbContext = dbContext;
-            _customEntityDataModelMapper = customEntityDataModelMapper;
-            _queryExecutor = queryExecutor;
+            _customEntityRenderSummaryMapper = customEntityRenderSummaryMapper;
             _customEntityDefinitionRepository = customEntityDefinitionRepository;
         }
 
@@ -43,7 +40,7 @@ namespace Cofoundry.Domain
         public async Task<IEnumerable<CustomEntityRenderSummary>> ExecuteAsync(GetCustomEntityRenderSummaryByDefinitionCodeQuery query, IExecutionContext executionContext)
         {
             var dbResults = await Query(query).ToListAsync();
-            var results = Map(dbResults).ToList();
+            var results = await _customEntityRenderSummaryMapper.MapSummariesAsync(dbResults, executionContext);
 
             return results;
         }
@@ -51,7 +48,7 @@ namespace Cofoundry.Domain
         public IEnumerable<CustomEntityRenderSummary> Execute(GetCustomEntityRenderSummaryByDefinitionCodeQuery query, IExecutionContext executionContext)
         {
             var dbResults = Query(query).ToList();
-            var results = Map(dbResults).ToList();
+            var results = _customEntityRenderSummaryMapper.MapSummaries(dbResults, executionContext);
 
             return results;
         }
@@ -67,22 +64,11 @@ namespace Cofoundry.Domain
                 .AsNoTracking()
                 .FilterByCustomEntityDefinitionCode(query.CustomEntityDefinitionCode)
                 .FilterByWorkFlowStatusQuery(query.WorkFlowStatus)
-                .Include(e => e.CustomEntity)
-                .Include(e => e.CustomEntity.Locale);
+                .Include(e => e.CustomEntity);
 
             return dbQuery;
         }
-
-        private IEnumerable<CustomEntityRenderSummary> Map(List<CustomEntityVersion> dbResults)
-        {
-            foreach (var dbResult in dbResults)
-            {
-                var entity = Mapper.Map<CustomEntityRenderSummary>(dbResult);
-                entity.Model = _customEntityDataModelMapper.Map(dbResult.CustomEntity.CustomEntityDefinitionCode, dbResult.SerializedData);
-                yield return entity;
-            }
-        }
-
+        
         #endregion
 
         #region Permission

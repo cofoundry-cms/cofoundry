@@ -14,13 +14,9 @@ namespace Cofoundry.Domain
         {
         }
 
-        public GetPageRoutingInfoByCustomEntityIdRangeQuery(string customEntityDefinitionCode, IEnumerable<int> ids)
+        public GetPageRoutingInfoByCustomEntityIdRangeQuery(IEnumerable<int> ids)
         {
             Ids = ids.ToArray();
-            CustomEntityDefinitionCode = customEntityDefinitionCode;
         }
-
-        [Required]
-        public string CustomEntityDefinitionCode { get; set; }
     }
 }

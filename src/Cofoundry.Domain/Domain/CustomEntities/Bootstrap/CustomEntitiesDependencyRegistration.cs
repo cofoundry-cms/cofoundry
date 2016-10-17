@@ -21,6 +21,7 @@ namespace Cofoundry.Domain
                 .RegisterAll<ICustomEntityDisplayModel>()
                 .RegisterAllGenericImplementations(typeof(ICustomEntityDetailsDisplayModelMapper<,>))
                 .RegisterInstance<ICustomEntityCodeDefinitionRepository, CustomEntityCodeDefinitionRepository>()
+                .RegisterType<ICustomEntityRenderSummaryMapper, CustomEntityMapper>()
                 ;
         }
     }

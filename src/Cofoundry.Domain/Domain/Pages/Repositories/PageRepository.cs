@@ -91,7 +91,12 @@ namespace Cofoundry.Domain
             return _queryExecutor.GetByIdAsync<PageRoute>(pageId, executionContext);
         }
 
-        public Task<IDictionary<int, PageRoute>> GetPageRouteByIdRangeAsync(int[] pageIds, IExecutionContext executionContext = null)
+        public IDictionary<int, PageRoute> GetPageRoutesByIdRange(int[] pageIds, IExecutionContext executionContext = null)
+        {
+            return _queryExecutor.GetByIdRange<PageRoute>(pageIds, executionContext);
+        }
+
+        public Task<IDictionary<int, PageRoute>> GetPageRoutesByIdRangeAsync(int[] pageIds, IExecutionContext executionContext = null)
         {
             return _queryExecutor.GetByIdRangeAsync<PageRoute>(pageIds, executionContext);
         }
@@ -101,14 +106,24 @@ namespace Cofoundry.Domain
             return _queryExecutor.Execute(new GetPageRoutesByWebDirectoryIdQuery(webDirectoryId), executionContext);
         }
 
-        public Task<IEnumerable<PageRoutingInfo>> GetPageRoutingInfoByCustomEntityId(string customEntityDefinitionCode, int customEntityId, IExecutionContext executionContext = null)
+        public IDictionary<int, IEnumerable<PageRoutingInfo>> GetPageRoutingInfoByCustomEntityIdRange(int[] customEntityIds, IExecutionContext executionContext = null)
         {
-            return _queryExecutor.ExecuteAsync(new GetPageRoutingInfoByCustomEntityIdQuery(customEntityDefinitionCode, customEntityId), executionContext);
+            return _queryExecutor.Execute(new GetPageRoutingInfoByCustomEntityIdRangeQuery(customEntityIds), executionContext);
         }
 
-        public Task<IDictionary<int, IEnumerable<PageRoutingInfo>>> GetPageRoutingInfoByCustomEntityId(string customEntityDefinitionCode, int[] customEntityIds, IExecutionContext executionContext = null)
+        public IEnumerable<PageRoutingInfo> GetPageRoutingInfoByCustomEntityId(int customEntityId, IExecutionContext executionContext = null)
         {
-            return _queryExecutor.ExecuteAsync(new GetPageRoutingInfoByCustomEntityIdRangeQuery(customEntityDefinitionCode, customEntityIds), executionContext);
+            return _queryExecutor.Execute(new GetPageRoutingInfoByCustomEntityIdQuery(customEntityId), executionContext);
+        }
+
+        public Task<IEnumerable<PageRoutingInfo>> GetPageRoutingInfoByCustomEntityIdAsync(int customEntityId, IExecutionContext executionContext = null)
+        {
+            return _queryExecutor.ExecuteAsync(new GetPageRoutingInfoByCustomEntityIdQuery(customEntityId), executionContext);
+        }
+
+        public Task<IDictionary<int, IEnumerable<PageRoutingInfo>>> GetPageRoutingInfoByCustomEntityIdRangeAsync(int[] customEntityIds, IExecutionContext executionContext = null)
+        {
+            return _queryExecutor.ExecuteAsync(new GetPageRoutingInfoByCustomEntityIdRangeQuery(customEntityIds), executionContext);
         }
 
         /// <summary>

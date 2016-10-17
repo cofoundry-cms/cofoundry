@@ -35,10 +35,13 @@ namespace Cofoundry.Domain
         /// has to be an absolute match, i.e. the query does not try and find a fall-back similar route.
         /// </summary>
         Task<PageRoutingInfo> GetPageRoutingInfoByPathAsync(GetPageRoutingInfoByPathQuery query, IExecutionContext executionContext = null);
-        Task<IDictionary<int, PageRoute>> GetPageRouteByIdRangeAsync(int[] pageIds, IExecutionContext executionContext = null);
+        IDictionary<int, PageRoute> GetPageRoutesByIdRange(int[] pageIds, IExecutionContext executionContext = null);
+        Task<IDictionary<int, PageRoute>> GetPageRoutesByIdRangeAsync(int[] pageIds, IExecutionContext executionContext = null);
         IEnumerable<PageRoute> GetPageRoutesByWebDirectoryId(int webDirectoryId, IExecutionContext executionContext = null);
-        Task<IEnumerable<PageRoutingInfo>> GetPageRoutingInfoByCustomEntityId(string customEntityDefinitionCode, int customEntityId, IExecutionContext executionContext = null);
-        Task<IDictionary<int, IEnumerable<PageRoutingInfo>>> GetPageRoutingInfoByCustomEntityId(string customEntityDefinitionCode, int[] customEntityIds, IExecutionContext executionContext = null);
+        IEnumerable<PageRoutingInfo> GetPageRoutingInfoByCustomEntityId(int customEntityId, IExecutionContext executionContext = null);
+        Task<IEnumerable<PageRoutingInfo>> GetPageRoutingInfoByCustomEntityIdAsync(int customEntityId, IExecutionContext executionContext = null);
+        IDictionary<int, IEnumerable<PageRoutingInfo>> GetPageRoutingInfoByCustomEntityIdRange(int[] customEntityIds, IExecutionContext executionContext = null);
+        Task<IDictionary<int, IEnumerable<PageRoutingInfo>>> GetPageRoutingInfoByCustomEntityIdRangeAsync(int[] customEntityIds, IExecutionContext executionContext = null);
         Task<IEnumerable<PageVersionDetails>> GetPageVersionDetailsByPageIdAsync(int pageId, IExecutionContext executionContext = null);
         IEnumerable<PageVersionDetails> GetPageVersionDetailsByPageId(int pageId, IExecutionContext executionContext = null);
         Task<PageVersionModuleRenderDetails> GetPageVersionModuleRenderDetailsByIdAsync(GetPageVersionModuleRenderDetailsByIdQuery query, IExecutionContext executionContext = null);

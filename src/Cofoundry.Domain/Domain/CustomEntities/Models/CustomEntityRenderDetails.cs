@@ -10,7 +10,7 @@ namespace Cofoundry.Domain
     /// Data used for rendering a specific version of a custom entity
     /// out to a page.
     /// </summary>
-    public class CustomEntityRenderDetails
+    public class CustomEntityRenderDetails : ICustomEntityRoutable
     {
         public int CustomEntityId { get; set; }
 
@@ -33,5 +33,13 @@ namespace Cofoundry.Domain
         public DateTime CreateDate { get; set; }
 
         public IEnumerable<CustomEntityPageSectionRenderDetails> Sections { get; set; }
+
+        /// <summary>
+        /// If this custom entity has page routes asspciated with it
+        /// they will be included here. Typically you'd only expect a
+        /// single page on a site to be associated with a custom entitiy 
+        /// details, but it's technically possible to have many.
+        /// </summary>
+        public IEnumerable<string> DetailsPageUrls { get; set; }
     }
 }

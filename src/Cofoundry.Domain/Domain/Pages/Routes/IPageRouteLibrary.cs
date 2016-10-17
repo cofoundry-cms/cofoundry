@@ -20,8 +20,13 @@ namespace Cofoundry.Domain
         string Page(int? pageId);
 
         /// <summary>
-        /// Gets the full url of a page
+        /// Gets the full (relative) url of a page
         /// </summary>
         string Page(IPageRoute route);
+
+        /// <summary>
+        /// Gets the full (relative) url of a custom entity details page
+        /// </summary>
+        string Page(ICustomEntityRoutable customEntity);
     }
 }

@@ -15,17 +15,12 @@ namespace Cofoundry.Domain
         }
 
         public GetPageRoutingInfoByCustomEntityIdQuery(
-            string customEntityDefinitionCode, 
             int customEntityId
             )
         {
-            CustomEntityDefinitionCode = customEntityDefinitionCode;
             CustomEntityId = customEntityId;
         }
 
         public int CustomEntityId { get; set; }
-
-        [Required]
-        public string CustomEntityDefinitionCode { get; set; }
     }
 }

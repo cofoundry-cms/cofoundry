@@ -23,7 +23,7 @@ namespace Cofoundry.Domain
 
             CreateMap<CustomEntityVersion, CustomEntityRenderSummary>()
                 .ForMember(d => d.CustomEntityDefinitionCode, o => o.MapFrom(s => s.CustomEntity.CustomEntityDefinitionCode))
-                .ForMember(d => d.Locale, o => o.MapFrom(s => s.CustomEntity.Locale))
+                .ForMember(d => d.Locale, o => o.Ignore())
                 .ForMember(d => d.UrlSlug, o => o.MapFrom(s => s.CustomEntity.UrlSlug))
                 .ForMember(d => d.CreateDate, o => o.MapFrom(s => s.CustomEntity.CreateDate))
                 .ForMember(d => d.WorkFlowStatus, o => o.MapFrom(s => (Cofoundry.Domain.WorkFlowStatus)s.WorkFlowStatusId))
@@ -32,7 +32,7 @@ namespace Cofoundry.Domain
             
             CreateMap<CustomEntityVersion, CustomEntityRenderDetails>()
                 .ForMember(d => d.CustomEntityDefinitionCode, o => o.MapFrom(s => s.CustomEntity.CustomEntityDefinitionCode))
-                .ForMember(d => d.Locale, o => o.MapFrom(s => s.CustomEntity.Locale))
+                .ForMember(d => d.Locale, o => o.Ignore())
                 .ForMember(d => d.UrlSlug, o => o.MapFrom(s => s.CustomEntity.UrlSlug))
                 .ForMember(d => d.CreateDate, o => o.MapFrom(s => s.CustomEntity.CreateDate))
                 .ForMember(d => d.WorkFlowStatus, o => o.MapFrom(s => (Cofoundry.Domain.WorkFlowStatus)s.WorkFlowStatusId))

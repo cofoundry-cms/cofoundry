@@ -290,7 +290,9 @@
     <Compile Include="Domain\CustomEntities\DataAnnotations\CustomEntityMultiTypeCollectionAttribute.cs" />
     <Compile Include="Domain\CustomEntities\Mapping\CustomEntityDataModelMapper.cs" />
     <Compile Include="Domain\CustomEntities\Mapping\CustomEntityDisplayModelMapper.cs" />
+    <Compile Include="Domain\CustomEntities\Mapping\CustomEntityMapper.cs" />
     <Compile Include="Domain\CustomEntities\Mapping\ICustomEntityDisplayModelMapper.cs" />
+    <Compile Include="Domain\CustomEntities\Mapping\ICustomEntityRenderSummaryMapper.cs" />
     <Compile Include="Domain\CustomEntities\Messages\CustomEntityAddedMessage.cs" />
     <Compile Include="Domain\CustomEntities\Messages\CustomEntityDeletedMessage.cs" />
     <Compile Include="Domain\CustomEntities\Messages\CustomEntityDraftVersionAddedMessage.cs" />
@@ -311,6 +313,7 @@
     <Compile Include="Domain\CustomEntities\Models\CustomEntityIdentity.cs" />
     <Compile Include="Domain\CustomEntities\Models\CustomEntityPageSectionRenderDetails.cs" />
     <Compile Include="Domain\CustomEntities\Models\CustomEntityRenderDetails.cs" />
+    <Compile Include="Domain\CustomEntities\Models\ICustomEntityRoutable.cs" />
     <Compile Include="Domain\CustomEntities\Models\CustomEntityRenderSummary.cs" />
     <Compile Include="Domain\CustomEntities\Models\CustomEntityRoute.cs" />
     <Compile Include="Domain\CustomEntities\Models\CustomEntityRoutingParameters.cs" />
@@ -637,7 +640,7 @@
     <Compile Include="Domain\Pages\Queries\GetPageRenderDetailsByIdQuery.cs" />
     <Compile Include="Domain\Pages\Queries\GetPageRenderDetailsByIdQueryHandler.cs" />
     <Compile Include="Domain\Pages\Queries\GetPageRouteByIdQueryHandler.cs" />
-    <Compile Include="Domain\Pages\Queries\GetPageRouteByIdRangeQueryHandler.cs" />
+    <Compile Include="Domain\Pages\Queries\GetPageRoutesByIdRangeQueryHandler.cs" />
     <Compile Include="Domain\Pages\Queries\GetPageRoutesByWebDirectoryIdQuery.cs" />
     <Compile Include="Domain\Pages\Queries\GetPageRoutesByWebDirectoryIdQueryHandler.cs" />
     <Compile Include="Domain\Pages\Queries\GetPageRoutingInfoByCustomEntityIdQuery.cs" />

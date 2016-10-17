@@ -51,7 +51,7 @@ namespace Cofoundry.Domain
             // Execute Query
             var dbPagedResult = dbQuery.ToPagedResult(query);
 
-            var routingsQuery = new GetPageRoutingInfoByCustomEntityIdRangeQuery(query.CustomEntityDefinitionCode, dbPagedResult.Items.Select(e => e.CustomEntityId));
+            var routingsQuery = new GetPageRoutingInfoByCustomEntityIdRangeQuery(dbPagedResult.Items.Select(e => e.CustomEntityId));
             var routings = await _queryExecutor.ExecuteAsync(routingsQuery);
             var allLocales = (await _queryExecutor.GetAllAsync<ActiveLocale>()).ToDictionary(l => l.LocaleId);
 

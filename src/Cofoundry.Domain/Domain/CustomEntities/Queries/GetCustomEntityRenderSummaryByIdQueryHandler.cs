@@ -18,20 +18,18 @@ namespace Cofoundry.Domain
         #region constructor
 
         private readonly CofoundryDbContext _dbContext;
-        private readonly CustomEntityDataModelMapper _customEntityDataModelMapper;
-        private readonly IQueryExecutor _queryExecutor;
+        private readonly ICustomEntityRenderSummaryMapper _customEntityRenderSummaryMapper;
         private readonly IPermissionValidationService _permissionValidationService;
 
         public GetCustomEntityRenderSummaryByIdQueryHandler(
             CofoundryDbContext dbContext,
-            IQueryExecutor queryExecutor,
-            CustomEntityDataModelMapper customEntityDataModelMapper,
+            IQueryExecutor queryExecutor, 
+            ICustomEntityRenderSummaryMapper customEntityRenderSummaryMapper,
             IPermissionValidationService permissionValidationService
             )
         {
             _dbContext = dbContext;
-            _customEntityDataModelMapper = customEntityDataModelMapper;
-            _queryExecutor = queryExecutor;
+            _customEntityRenderSummaryMapper = customEntityRenderSummaryMapper;
             _permissionValidationService = permissionValidationService;
         }
 
@@ -42,7 +40,9 @@ namespace Cofoundry.Domain
         public async Task<CustomEntityRenderSummary> ExecuteAsync(GetCustomEntityRenderSummaryByIdQuery query, IExecutionContext executionContext)
         {
             var dbResult = await Query(query).SingleOrDefaultAsync();
-            var result = Map(dbResult);
+            if (dbResult == null) return null;
+            EnforcePermission(dbResult);
+            var result = await _customEntityRenderSummaryMapper.MapSummaryAsync(dbResult, executionContext);
 
             return result;
         }
@@ -50,7 +50,9 @@ namespace Cofoundry.Domain
         public CustomEntityRenderSummary Execute(GetCustomEntityRenderSummaryByIdQuery query, IExecutionContext executionContext)
         {
             var dbResult = Query(query).SingleOrDefault();
-            var result = Map(dbResult);
+            if (dbResult == null) return null;
+            EnforcePermission(dbResult);
+            var result = _customEntityRenderSummaryMapper.MapSummary(dbResult, executionContext);
 
             return result;
         }
@@ -66,21 +68,13 @@ namespace Cofoundry.Domain
                 .AsNoTracking()
                 .FilterByCustomEntityId(query.CustomEntityId)
                 .FilterByWorkFlowStatusQuery(query.WorkFlowStatus)
-                .Include(e => e.CustomEntity)
-                .Include(e => e.CustomEntity.Locale);
+                .Include(e => e.CustomEntity);
             return dbQuery;
         }
 
-        private CustomEntityRenderSummary Map(CustomEntityVersion dbResult)
+        private void EnforcePermission(CustomEntityVersion dbResult)
         {
-            if (dbResult == null) return null;
-
             _permissionValidationService.EnforceCustomEntityPermission<CustomEntityReadPermission>(dbResult.CustomEntity.CustomEntityDefinitionCode);
-
-            var entity = Mapper.Map<CustomEntityRenderSummary>(dbResult);
-            entity.Model = _customEntityDataModelMapper.Map(dbResult.CustomEntity.CustomEntityDefinitionCode, dbResult.SerializedData);
-
-            return entity;
         }
 
         #endregion

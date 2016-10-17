@@ -50,6 +50,14 @@ namespace Cofoundry.Domain
             return _pageRouteLibrary.Page(route);
         }
 
+        /// <summary>
+        /// Gets the full (relative) url of a custom entity details page
+        /// </summary>
+        public string Page(ICustomEntityRoutable customEntity)
+        {
+            return _pageRouteLibrary.Page(customEntity);
+        }
+
         #endregion
 
         #region images

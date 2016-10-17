@@ -19,16 +19,19 @@ namespace Cofoundry.Domain
 
         private readonly CofoundryDbContext _dbContext;
         private readonly CustomEntityDataModelMapper _customEntityDataModelMapper;
+        private readonly ICustomEntityRenderSummaryMapper _customEntityRenderSummaryMapper;
         private readonly IPermissionValidationService _permissionValidationService;
 
         public GetCustomEntityRenderSummaryByIdRangeQueryHandler(
             CofoundryDbContext dbContext,
             CustomEntityDataModelMapper customEntityDataModelMapper,
+            ICustomEntityRenderSummaryMapper customEntityRenderSummaryMapper,
             IPermissionValidationService permissionValidationService
             )
         {
             _dbContext = dbContext;
             _customEntityDataModelMapper = customEntityDataModelMapper;
+            _customEntityRenderSummaryMapper = customEntityRenderSummaryMapper;
             _permissionValidationService = permissionValidationService;
         }
 
@@ -36,20 +39,22 @@ namespace Cofoundry.Domain
 
         #region execution
 
-        public async Task<Dictionary<int, CustomEntityRenderSummary>> ExecuteAsync(GetCustomEntityRenderSummaryByIdRangeQuery query, IExecutionContext executionContext)
-        {
-            var dbResults = await Query(query).ToListAsync();
-            var results = Map(dbResults, executionContext);
-
-            return results;
-        }
-
         public Dictionary<int, CustomEntityRenderSummary> Execute(GetCustomEntityRenderSummaryByIdRangeQuery query, IExecutionContext executionContext)
         {
             var dbResults = Query(query).ToList();
-            var results = Map(dbResults, executionContext);
+            EnforcePermissions(dbResults, executionContext);
+            var results = _customEntityRenderSummaryMapper.MapSummaries(dbResults, executionContext);
 
-            return results;
+            return results.ToDictionary(r => r.CustomEntityId);
+        }
+
+        public async Task<Dictionary<int, CustomEntityRenderSummary>> ExecuteAsync(GetCustomEntityRenderSummaryByIdRangeQuery query, IExecutionContext executionContext)
+        {
+            var dbResults = await Query(query).ToListAsync();
+            EnforcePermissions(dbResults, executionContext);
+            var results = await _customEntityRenderSummaryMapper.MapSummariesAsync(dbResults, executionContext);
+
+            return results.ToDictionary(r => r.CustomEntityId);
         }
 
         #endregion
@@ -69,21 +74,10 @@ namespace Cofoundry.Domain
             return dbQuery;
         }
 
-        private Dictionary<int, CustomEntityRenderSummary> Map(List<CustomEntityVersion> dbResults, IExecutionContext executionContext)
+        private void EnforcePermissions(List<CustomEntityVersion> dbResults, IExecutionContext executionContext)
         {
             var definitionCodes = dbResults.Select(r => r.CustomEntity.CustomEntityDefinitionCode);
             _permissionValidationService.EnforceCustomEntityPermission<CustomEntityReadPermission>(definitionCodes, executionContext.UserContext);
-
-            var results = new Dictionary<int, CustomEntityRenderSummary>(dbResults.Count);
-
-            foreach (var dbResult in dbResults)
-            {
-                var entity = Mapper.Map<CustomEntityRenderSummary>(dbResult);
-                entity.Model = _customEntityDataModelMapper.Map(dbResult.CustomEntity.CustomEntityDefinitionCode, dbResult.SerializedData);
-                results.Add(entity.CustomEntityId, entity);
-            }
-
-            return results;
         }
 
         #endregion

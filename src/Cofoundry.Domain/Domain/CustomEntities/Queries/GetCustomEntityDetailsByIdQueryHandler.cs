@@ -77,7 +77,7 @@ namespace Cofoundry.Domain
 
         private async Task MapFullPath(CustomEntityVersion dbVersion, CustomEntityDetails entity)
         {
-            var routingsQuery = new GetPageRoutingInfoByCustomEntityIdQuery(dbVersion.CustomEntity.CustomEntityDefinitionCode, dbVersion.CustomEntityId);
+            var routingsQuery = new GetPageRoutingInfoByCustomEntityIdQuery(dbVersion.CustomEntityId);
             var routings = await _queryExecutor.ExecuteAsync(routingsQuery);
             var detailsRouting = routings.FirstOrDefault(r => r.CustomEntityRouteRule != null);
             if (detailsRouting != null)
