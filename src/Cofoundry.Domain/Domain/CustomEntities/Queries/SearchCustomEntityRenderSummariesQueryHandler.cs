@@ -8,6 +8,7 @@ using AutoMapper.QueryableExtensions;
 using Cofoundry.Core;
 using Cofoundry.Domain.CQS;
 using Cofoundry.Domain.Data;
+using System.Data.Entity;
 
 namespace Cofoundry.Domain
 {
@@ -20,19 +21,19 @@ namespace Cofoundry.Domain
 
         private readonly CofoundryDbContext _dbContext;
         private readonly IQueryExecutor _queryExecutor;
-        private readonly CustomEntityDataModelMapper _customEntityDataModelMapper;
         private readonly ICustomEntityCodeDefinitionRepository _customEntityDefinitionRepository;
+        private readonly ICustomEntityRenderSummaryMapper _customEntityRenderSummaryMapper;
 
         public SearchCustomEntityRenderSummariesQueryHandler(
             CofoundryDbContext dbContext,
             IQueryExecutor queryExecutor,
-            CustomEntityDataModelMapper customEntityDataModelMapper,
+            ICustomEntityRenderSummaryMapper customEntityRenderSummaryMapper,
             ICustomEntityCodeDefinitionRepository customEntityDefinitionRepository
             )
         {
             _dbContext = dbContext;
             _queryExecutor = queryExecutor;
-            _customEntityDataModelMapper = customEntityDataModelMapper;
+            _customEntityRenderSummaryMapper = customEntityRenderSummaryMapper;
             _customEntityDefinitionRepository = customEntityDefinitionRepository;
         }
 
@@ -44,37 +45,21 @@ namespace Cofoundry.Domain
         {
             var dbQuery = GetQuery(query);
             var dbPagedResult = dbQuery.ToPagedResult(query);
-            var results = Map(dbPagedResult);
+            var results = _customEntityRenderSummaryMapper.MapSummaries(dbPagedResult.Items, executionContext);
 
-            return results;
+            return dbPagedResult.ChangeType(results);
         }
 
         public async Task<PagedQueryResult<CustomEntityRenderSummary>> ExecuteAsync(SearchCustomEntityRenderSummariesQuery query, IExecutionContext executionContext)
         {
             var dbQuery = GetQuery(query);
             var dbPagedResult = await dbQuery.ToPagedResultAsync(query);
-            var results = Map(dbPagedResult);
+            var results = await _customEntityRenderSummaryMapper.MapSummariesAsync(dbPagedResult.Items, executionContext);
 
-            return results;
+            return dbPagedResult.ChangeType(results);
         }
-
-        private PagedQueryResult<CustomEntityRenderSummary> Map(PagedQueryResult<CustomEntitySummaryQueryModel> dbPagedResult)
-        {
-            // Map Items
-            var entities = new List<CustomEntityRenderSummary>(dbPagedResult.Items.Length);
-
-            foreach (var dbVersion in dbPagedResult.Items)
-            {
-                var entity = Mapper.Map<CustomEntityRenderSummary>(dbVersion);
-                entity.Model = _customEntityDataModelMapper.Map(dbVersion.CustomEntityDefinitionCode, dbVersion.SerializedData);
-                entities.Add(entity);
-            }
-
-            // Change Result
-            return dbPagedResult.ChangeType(entities);
-        }
-
-        private IQueryable<CustomEntitySummaryQueryModel> GetQuery(SearchCustomEntityRenderSummariesQuery query)
+        
+        private IQueryable<CustomEntityVersion> GetQuery(SearchCustomEntityRenderSummariesQuery query)
         {
             var definition = _queryExecutor.GetById<CustomEntityDefinitionSummary>(query.CustomEntityDefinitionCode);
             EntityNotFoundException.ThrowIfNull(definition, query.CustomEntityDefinitionCode);
@@ -84,7 +69,8 @@ namespace Cofoundry.Domain
                 .AsNoTracking()
                 .Where(e => e.CustomEntity.CustomEntityDefinitionCode == query.CustomEntityDefinitionCode)
                 .Where(v => v.WorkFlowStatusId == (int)Domain.WorkFlowStatus.Draft || v.WorkFlowStatusId == (int)Domain.WorkFlowStatus.Published)
-                .GroupBy(e => e.CustomEntityId, (key, g) => g.OrderByDescending(v => v.WorkFlowStatusId == (int)Domain.WorkFlowStatus.Draft).FirstOrDefault());
+                .GroupBy(e => e.CustomEntityId, (key, g) => g.OrderByDescending(v => v.WorkFlowStatusId == (int)Domain.WorkFlowStatus.Draft).FirstOrDefault())
+                .Include(e => e.CustomEntity);
 
             // Filter by locale 
             if (query.LocaleId > 0)
@@ -123,46 +109,9 @@ namespace Cofoundry.Domain
                     break;
             }
 
-            return dbQuery.ProjectTo<CustomEntitySummaryQueryModel>();
+            return dbQuery;
         }
-
-        private class CustomEntitySummaryQueryModel
-        {
-            public int CustomEntityId { get; set; }
-
-            public string CustomEntityDefinitionCode { get; set; }
-
-            public string Title { get; set; }
-
-            public string UrlSlug { get; set; }
-
-            /// <summary>
-            /// The full path of the entity including directories and the locale. 
-            /// </summary>
-            public string FullPath { get; set; }
-
-            /// <summary>
-            /// Indicates if the entity has at least one published version and is currently
-            /// viewable in the live site.
-            /// </summary>
-            public bool IsPublished { get; set; }
-
-            /// <summary>
-            /// Indicates whether there is a draft version of this entity available.
-            /// </summary>
-            public bool HasDraft { get; set; }
-
-            public int? LocaleId { get; set; }
-
-            public int? Ordering { get; set; }
-
-            public string SerializedData { get; set; }
-
-            public CreateAuditData AuditData { get; set; }
-
-            public CreateAuditData VersionAuditData { get; set; }
-        }
-
+        
         #endregion
 
         #region Permission

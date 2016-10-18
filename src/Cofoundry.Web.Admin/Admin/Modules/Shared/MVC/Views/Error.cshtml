@@ -6,13 +6,14 @@
 @{
     ViewBag.Title = "Error";
     Layout = LayoutPaths.MinimalLayout;
+    var baseException = Model.Exception.GetBaseException();
 }
 
 @if (Request.Url.Host.ToLower() == "localhost" || Request.RequestContext.HttpContext.IsDebuggingEnabled)
 {
     <h1>Server error</h1>
     
-    <h2>@Html.Raw(Html.Encode(Model.Exception.GetBaseException().Message).Split(new string[] { "\r\n", "\n" }, StringSplitOptions.None).Aggregate((a, b) => a + "<br/>" + b))</h2>
+    <h2>@Html.Raw(Html.Encode(baseException.Message).Split(new string[] { "\r\n", "\n" }, StringSplitOptions.None).Aggregate((a, b) => a + "<br/>" + b))</h2>
     
     <p>An unhandled exception occurred during the execution of the current web request. Please review the stack trace for more information about the error and where it originated in the code.</p>
     
@@ -24,14 +25,14 @@
         <dd>@Model.ControllerName</dd>
 
         <dt>Target site</dt>
-        <dd>@Model.Exception.GetBaseException().TargetSite</dd>
+        <dd>@baseException.TargetSite</dd>
 
         <dt>Source</dt>
-        <dd>@Model.Exception.GetBaseException().Source</dd>
+        <dd>@baseException.Source</dd>
 
         <dt>Stack trace</dt>
         <dd>
-            @Html.Raw(Model.Exception.GetBaseException().StackTrace.Split(new string[] { "\r\n", "\n" }, StringSplitOptions.None).Aggregate((a, b) => a + "<br/>" + b))
+            @Html.Raw(baseException.StackTrace.Split(new string[] { "\r\n", "\n" }, StringSplitOptions.None).Aggregate((a, b) => a + "<br/>" + b))
         </dd>
     </dl>
 }

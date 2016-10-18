@@ -38,7 +38,7 @@ namespace Cofoundry.Domain
         #region ICustomEntityRenderSummaryMapper Implementation
 
         public IEnumerable<CustomEntityRenderSummary> MapSummaries(
-            List<CustomEntityVersion> dbResults,
+            ICollection<CustomEntityVersion> dbResults,
             IExecutionContext executionContext)
         {
             var routingsQuery = GetPageRoutingQuery(dbResults);
@@ -49,7 +49,7 @@ namespace Cofoundry.Domain
         }
 
         public async Task<IEnumerable<CustomEntityRenderSummary>> MapSummariesAsync(
-            List<CustomEntityVersion> dbResults,
+            ICollection<CustomEntityVersion> dbResults,
             IExecutionContext executionContext
             )
         {
@@ -98,7 +98,7 @@ namespace Cofoundry.Domain
 
         #region helpers
 
-        private static GetPageRoutingInfoByCustomEntityIdRangeQuery GetPageRoutingQuery(List<CustomEntityVersion> dbResults)
+        private static GetPageRoutingInfoByCustomEntityIdRangeQuery GetPageRoutingQuery(ICollection<CustomEntityVersion> dbResults)
         {
             return new GetPageRoutingInfoByCustomEntityIdRangeQuery(dbResults.Select(e => e.CustomEntityId));
         }
@@ -110,7 +110,7 @@ namespace Cofoundry.Domain
         }
 
         private IEnumerable<CustomEntityRenderSummary> Map(
-            List<CustomEntityVersion> dbResults,
+            ICollection<CustomEntityVersion> dbResults,
             IDictionary<int, IEnumerable<PageRoutingInfo>> allRoutings,
             IEnumerable<ActiveLocale> allLocalesAsEnumerable
             )

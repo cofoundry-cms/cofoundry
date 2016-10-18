@@ -16,7 +16,7 @@ namespace Cofoundry.Domain
         CustomEntityRenderSummary MapSummary(CustomEntityVersion dbResult, IExecutionContext executionContext);
         Task<CustomEntityRenderSummary> MapSummaryAsync(CustomEntityVersion dbResult, IExecutionContext executionContext);
 
-        IEnumerable<CustomEntityRenderSummary> MapSummaries(List<CustomEntityVersion> dbResults, IExecutionContext executionContext);
-        Task<IEnumerable<CustomEntityRenderSummary>> MapSummariesAsync(List<CustomEntityVersion> dbResults, IExecutionContext executionContext);
+        IEnumerable<CustomEntityRenderSummary> MapSummaries(ICollection<CustomEntityVersion> dbResults, IExecutionContext executionContext);
+        Task<IEnumerable<CustomEntityRenderSummary>> MapSummariesAsync(ICollection<CustomEntityVersion> dbResults, IExecutionContext executionContext);
     }
 }

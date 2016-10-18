@@ -69,6 +69,7 @@ namespace Cofoundry.Domain
                 .FilterByCustomEntityId(query.CustomEntityId)
                 .FilterByWorkFlowStatusQuery(query.WorkFlowStatus)
                 .Include(e => e.CustomEntity);
+
             return dbQuery;
         }
 
