@@ -44,7 +44,7 @@ namespace Cofoundry.Domain
             {
                 dbModule.PageModuleTypeTemplate = await _dbContext
                     .PageModuleTypeTemplates
-                    .SingleOrDefaultAsync(m => m.PageModuleTypeId == dbModule.PageModuleTypeId && m.PageModuleTypeTemplateId == command.PageModuleTypeTemplateId);
+                    .SingleOrDefaultAsync(m => m.PageModuleTypeId == command.PageModuleTypeId && m.PageModuleTypeTemplateId == command.PageModuleTypeTemplateId);
                 EntityNotFoundException.ThrowIfNull(dbModule.PageModuleTypeTemplate, command.PageModuleTypeTemplateId);
             }
             else if (command.PageModuleTypeTemplateId != dbModule.PageModuleTypeTemplateId)
