@@ -8,6 +8,7 @@ namespace Cofoundry.Web
 {
     public class PlainTextDataModel : IPageModuleDataModel, IPageModuleDisplayModel
     {
+        [MultiLineText]
         public string PlainText { get; set; }
     }
 }
