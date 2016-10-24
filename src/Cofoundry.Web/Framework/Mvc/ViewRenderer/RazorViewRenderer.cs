@@ -31,6 +31,7 @@ namespace Cofoundry.Web
         {
             viewName = GetViewName(viewName);
             var viewResult = ViewEngines.Engines.FindView(_controllerContext, viewName, null);
+            ValidateViewFound(viewName, viewResult);
 
             return Render(viewResult);
         }
@@ -39,6 +40,7 @@ namespace Cofoundry.Web
         {
             viewName = GetViewName(viewName);
             var viewResult = ViewEngines.Engines.FindView(_controllerContext, viewName, null);
+            ValidateViewFound(viewName, viewResult);
 
             return Render(viewResult, model);
         }
@@ -47,6 +49,7 @@ namespace Cofoundry.Web
         {
             viewName = GetViewName(viewName);
             var viewResult = ViewEngines.Engines.FindPartialView(_controllerContext, viewName);
+            ValidateViewFound(viewName, viewResult);
 
             return Render(viewResult);
         }
@@ -55,6 +58,7 @@ namespace Cofoundry.Web
         {
             viewName = GetViewName(viewName);
             var viewResult = ViewEngines.Engines.FindPartialView(_controllerContext, viewName);
+            ValidateViewFound(viewName, viewResult);
 
             return Render(viewResult, model);
         }
@@ -96,6 +100,14 @@ namespace Cofoundry.Web
             }
 
             return viewName;
+        }
+
+        private static void ValidateViewFound(string viewName, ViewEngineResult viewResult)
+        {
+            if (viewResult == null || viewResult.View == null)
+            {
+                throw new ViewNotFoundException(viewName, viewResult?.SearchedLocations);
+            }
         }
 
         #endregion
