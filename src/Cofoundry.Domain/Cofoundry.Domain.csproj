@@ -561,12 +561,16 @@
     <Compile Include="Domain\Pages\Commands\UpdatePageVersionModuleCommandHandler.cs" />
     <Compile Include="Domain\Pages\Factories\IModuleDataModelTypeFactory.cs" />
     <Compile Include="Domain\Pages\Factories\ModuleDataModelTypeFactory.cs" />
+    <Compile Include="Domain\Pages\Helpers\IPageModuleCommandHelper.cs" />
     <Compile Include="Domain\Pages\Helpers\PageModuleCommandHelper.cs" />
+    <Compile Include="Domain\Pages\Helpers\IPagePathHelper.cs" />
     <Compile Include="Domain\Pages\Helpers\PagePathHelper.cs" />
     <Compile Include="Domain\Pages\Mapping\AutoMapperPageModuleDisplayModelMapper.cs" />
+    <Compile Include="Domain\Pages\Mapping\IEntityVersionPageModuleMapper.cs" />
     <Compile Include="Domain\Pages\Mapping\EntityVersionPageModuleMapper.cs" />
     <Compile Include="Domain\Pages\Mapping\IPageModuleDisplayModelMapper.cs" />
     <Compile Include="Domain\Pages\Mapping\IPageVersionModuleModelMapper.cs" />
+    <Compile Include="Domain\Pages\Mapping\IPageMetaDataMapper.cs" />
     <Compile Include="Domain\Pages\Mapping\PageMetaDataMapper.cs" />
     <Compile Include="Domain\Pages\Mapping\PageModuleDisplayModelMapperInput.cs" />
     <Compile Include="Domain\Pages\Mapping\PageModuleDisplayModelMapperOutput.cs" />

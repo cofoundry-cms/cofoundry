@@ -20,7 +20,7 @@ namespace Cofoundry.Domain
         private readonly EntityAuditHelper _entityAuditHelper;
         private readonly EntityOrderableHelper _entityOrderableHelper;
         private readonly IPageCache _pageCache;
-        private readonly PageModuleCommandHelper _pageModuleCommandHelper;
+        private readonly IPageModuleCommandHelper _pageModuleCommandHelper;
         private readonly ICommandExecutor _commandExecutor;
         private readonly IMessageAggregator _messageAggregator;
         private readonly ITransactionScopeFactory _transactionScopeFactory;
@@ -30,7 +30,7 @@ namespace Cofoundry.Domain
             EntityAuditHelper entityAuditHelper,
             EntityOrderableHelper entityOrderableHelper,
             IPageCache pageCache,
-            PageModuleCommandHelper pageModuleCommandHelper,
+            IPageModuleCommandHelper pageModuleCommandHelper,
             ICommandExecutor commandExecutor,
             IMessageAggregator messageAggregator,
             ITransactionScopeFactory transactionScopeFactory

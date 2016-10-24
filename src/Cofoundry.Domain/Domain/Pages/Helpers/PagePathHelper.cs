@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Cofoundry.Domain
 {
-    public class PagePathHelper
+    public class PagePathHelper : IPagePathHelper
     {
         const string PATH_DELIMITER = "/";
 

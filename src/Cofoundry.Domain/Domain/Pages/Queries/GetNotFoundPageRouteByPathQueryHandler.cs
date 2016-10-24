@@ -14,11 +14,11 @@ namespace Cofoundry.Domain
         , IPermissionRestrictedQueryHandler<GetNotFoundPageRouteByPathQuery, PageRoute>
     {
         private readonly IQueryExecutor _queryExecutor;
-        private readonly PagePathHelper _pathHelper;
+        private readonly IPagePathHelper _pathHelper;
 
         public GetNotFoundPageRouteByPathQueryHandler(
             IQueryExecutor queryExecutor,
-            PagePathHelper pathHelper
+            IPagePathHelper pathHelper
             )
         {
             _queryExecutor = queryExecutor;

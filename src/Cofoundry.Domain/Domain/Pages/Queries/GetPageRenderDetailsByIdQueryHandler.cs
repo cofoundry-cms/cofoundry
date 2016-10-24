@@ -16,13 +16,13 @@ namespace Cofoundry.Domain
         #region constructor
 
         private readonly CofoundryDbContext _dbContext;
-        private readonly EntityVersionPageModuleMapper _entityVersionPageModuleMapper;
-        private readonly PageMetaDataMapper _pageMetaDataMapper;
+        private readonly IEntityVersionPageModuleMapper _entityVersionPageModuleMapper;
+        private readonly IPageMetaDataMapper _pageMetaDataMapper;
 
         public GetPageRenderDetailsByIdQueryHandler(
             CofoundryDbContext dbContext,
-            EntityVersionPageModuleMapper entityVersionPageModuleMapper,
-            PageMetaDataMapper pageMetaDataMapper
+            IEntityVersionPageModuleMapper entityVersionPageModuleMapper,
+            IPageMetaDataMapper pageMetaDataMapper
             )
         {
             _dbContext = dbContext;
@@ -47,7 +47,7 @@ namespace Cofoundry.Domain
                 .Where(m => m.PageVersionId == page.PageVersionId)
                 .ToListAsync();
 
-            await _entityVersionPageModuleMapper.MapSections<PageVersionModuleRenderDetails>(dbModules, page.Sections, query.WorkFlowStatus, executionContext);
+            await _entityVersionPageModuleMapper.MapSectionsAsync<PageVersionModuleRenderDetails>(dbModules, page.Sections, query.WorkFlowStatus, executionContext);
 
             return page;
         }

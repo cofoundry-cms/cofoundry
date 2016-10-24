@@ -9,7 +9,10 @@ using Cofoundry.Core;
 
 namespace Cofoundry.Domain
 {
-    public class PageModuleCommandHelper
+    /// <summary>
+    /// Shared helper between add/update page module commands for updating the db model
+    /// </summary>
+    public class PageModuleCommandHelper : IPageModuleCommandHelper
     {
         private readonly CofoundryDbContext _dbContext;
         private readonly IDbUnstructuredDataSerializer _dbUnstructuredDataSerializer;
@@ -25,7 +28,6 @@ namespace Cofoundry.Domain
 
         public async Task UpdateModelAsync(IPageVersionModuleDataModelCommand command, IEntityVersionPageModule dbModule)
         {
-
             if (command.PageModuleTypeId != dbModule.PageModuleTypeId)
             {
                 var pageTemplateSectionId = dbModule.PageTemplateSection != null ? dbModule.PageTemplateSection.PageTemplateSectionId : dbModule.PageTemplateSectionId;

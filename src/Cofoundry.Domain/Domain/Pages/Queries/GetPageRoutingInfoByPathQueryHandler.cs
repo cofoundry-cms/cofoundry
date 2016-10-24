@@ -15,11 +15,11 @@ namespace Cofoundry.Domain
         , IPermissionRestrictedQueryHandler<GetPageRoutingInfoByPathQuery, PageRoutingInfo>
     {
         private readonly IQueryExecutor _queryExecutor;
-        private readonly PagePathHelper _pathHelper;
+        private readonly IPagePathHelper _pathHelper;
 
         public GetPageRoutingInfoByPathQueryHandler(
             IQueryExecutor queryExecutor,
-            PagePathHelper pathHelper
+            IPagePathHelper pathHelper
             )
         {
             _queryExecutor = queryExecutor;

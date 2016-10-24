@@ -7,7 +7,7 @@ using Cofoundry.Domain.CQS;
 
 namespace Cofoundry.Domain
 {
-    public class PageMetaDataMapper
+    public class PageMetaDataMapper : IPageMetaDataMapper
     {
         private static readonly char[] SPLIT_CHARS = new char[] { ',' };
         private static readonly char[] TRIM_CHARS = new char[] { ',', ' ' };

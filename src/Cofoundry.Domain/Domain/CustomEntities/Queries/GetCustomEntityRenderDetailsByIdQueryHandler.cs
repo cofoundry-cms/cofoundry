@@ -19,14 +19,14 @@ namespace Cofoundry.Domain
 
         private readonly CofoundryDbContext _dbContext;
         private readonly CustomEntityDataModelMapper _customEntityDataModelMapper;
-        private readonly EntityVersionPageModuleMapper _entityVersionPageModuleMapper;
+        private readonly IEntityVersionPageModuleMapper _entityVersionPageModuleMapper;
         private readonly IPermissionValidationService _permissionValidationService;
         private readonly IQueryExecutor _queryExecutor;
 
         public GetCustomEntityRenderDetailsByIdQueryHandler(
             CofoundryDbContext dbContext,
             CustomEntityDataModelMapper customEntityDataModelMapper,
-            EntityVersionPageModuleMapper entityVersionPageModuleMapper,
+            IEntityVersionPageModuleMapper entityVersionPageModuleMapper,
             IPermissionValidationService permissionValidationService,
             IQueryExecutor queryExecutor
             )
@@ -71,7 +71,7 @@ namespace Cofoundry.Domain
                 .Where(m => m.CustomEntityVersionId == entity.CustomEntityVersionId)
                 .ToListAsync();
 
-            await _entityVersionPageModuleMapper.MapSections<CustomEntityVersionPageModuleRenderDetails>(dbModules, entity.Sections, query.WorkFlowStatus, executionContext);
+            await _entityVersionPageModuleMapper.MapSectionsAsync<CustomEntityVersionPageModuleRenderDetails>(dbModules, entity.Sections, query.WorkFlowStatus, executionContext);
 
             var routingQuery = new GetPageRoutingInfoByCustomEntityIdQuery(dbResult.CustomEntityId);
             var routing = await _queryExecutor.ExecuteAsync(routingQuery, executionContext);

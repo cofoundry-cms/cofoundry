@@ -9,7 +9,7 @@ using Cofoundry.Domain.CQS;
 
 namespace Cofoundry.Domain
 {
-    public class EntityVersionPageModuleMapper
+    public class EntityVersionPageModuleMapper : IEntityVersionPageModuleMapper
     {
         #region constructor
 
@@ -43,7 +43,7 @@ namespace Cofoundry.Domain
 
         #region public methods
 
-        public async Task MapSections<TModuleRenderDetails>(IEnumerable<IEntityVersionPageModule> dbModules, IEnumerable<IEntitySectionRenderDetails<TModuleRenderDetails>> sections, WorkFlowStatusQuery workflowStatus, IExecutionContext executionContext)
+        public async Task MapSectionsAsync<TModuleRenderDetails>(IEnumerable<IEntityVersionPageModule> dbModules, IEnumerable<IEntitySectionRenderDetails<TModuleRenderDetails>> sections, WorkFlowStatusQuery workflowStatus, IExecutionContext executionContext)
             where TModuleRenderDetails : IEntityVersionPageModuleRenderDetails, new()
         {
             var allModuleTypes = await _queryExecutor.GetAllAsync<PageModuleTypeSummary>(executionContext);

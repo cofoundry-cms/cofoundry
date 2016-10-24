@@ -21,7 +21,7 @@ namespace Cofoundry.Domain
         private readonly CofoundryDbContext _dbContext;
         private readonly ICommandExecutor _commandExecutor;
         private readonly ICustomEntityCache _customEntityCache;
-        private readonly PageModuleCommandHelper _pageModuleCommandHelper;
+        private readonly IPageModuleCommandHelper _pageModuleCommandHelper;
         private readonly IMessageAggregator _messageAggregator;
         private readonly IPermissionValidationService _permissionValidationService;
         private readonly ITransactionScopeFactory _transactionScopeFactory;
@@ -30,7 +30,7 @@ namespace Cofoundry.Domain
             CofoundryDbContext dbContext,
             ICommandExecutor commandExecutor,
             ICustomEntityCache pageCache,
-            PageModuleCommandHelper pageModuleCommandHelper,
+            IPageModuleCommandHelper pageModuleCommandHelper,
             IMessageAggregator messageAggregator,
             IPermissionValidationService permissionValidationService,
             ITransactionScopeFactory transactionScopeFactory
