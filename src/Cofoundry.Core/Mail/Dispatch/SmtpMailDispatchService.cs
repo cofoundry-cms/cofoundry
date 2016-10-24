@@ -136,7 +136,7 @@ namespace Cofoundry.Core.Mail
             {
                 if (string.IsNullOrEmpty(_mailSettings.DebugEmailAddress))
                 {
-                    throw new ApplicationException("MailSendMode.SendToDebugAddress requested but MailSettings.DebugEmailAddress setting is not defined.");
+                    throw new ApplicationException("MailSendMode.SendToDebugAddress requested but Cofoundry:SmtpMail:DebugEmailAddress setting is not defined.");
                 }
                 toAddress = CreateMailAddress(_mailSettings.DebugEmailAddress, message.To.DisplayName);
             }
@@ -225,7 +225,7 @@ namespace Cofoundry.Core.Mail
         {
             if (string.IsNullOrEmpty(_smtpMailSettings.DebugMailDropDirectory))
             {
-                throw new ApplicationException("DebugMailDropDirectory configuration has been requested and is not set.");
+                throw new ApplicationException("Cofoundry:SmtpMail:DebugMailDropDirectory configuration has been requested and is not set.");
             }
 
             var debugMailDropDirectory = _pathResolver.MapPath(_smtpMailSettings.DebugMailDropDirectory);

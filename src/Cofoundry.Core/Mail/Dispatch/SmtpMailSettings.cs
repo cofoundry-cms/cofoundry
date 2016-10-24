@@ -9,8 +9,13 @@ namespace Cofoundry.Core.Mail
 {
     public class SmtpMailSettings : CofoundryConfigurationSettingsBase
     {
+        public SmtpMailSettings()
+        {
+            DebugMailDropDirectory = "~/App_Data/Emails";
+        }
         /// <summary>
-        /// The path to the folder to save mail to when using SendMode.LocalDrop.
+        /// The path to the folder to save mail to when using SendMode.LocalDrop. Defaults 
+        /// to ~/App_Data/Emails
         /// </summary>
         public string DebugMailDropDirectory { get; set; }
     }
