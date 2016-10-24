@@ -189,7 +189,7 @@
     <Content Include="PageModules\PlainText\PlainText.cshtml" />
     <Content Include="PageModules\Quotation\Quotation.cshtml" />
     <Content Include="PageModules\RawHtml\RawHtml.cshtml" />
-    <Content Include="PageModules\RichTextWithMedia\RichTextWithMediaWithMedia.cshtml" />
+    <Content Include="PageModules\RichTextWithMedia\RichTextWithMedia.cshtml" />
     <Content Include="PageModules\RichText\RichText.cshtml" />
     <Content Include="PageModules\SingleLineText\SingleLineText.cshtml" />
     <Content Include="PageModules\SingleLineText\Templates\H1.cshtml" />
