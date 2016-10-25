@@ -80,12 +80,12 @@ namespace Cofoundry.Domain
             return _queryExecutor.ExecuteAsync(query, executionContext);
         }
 
-        public IEnumerable<CustomEntityRenderSummary> GetCustomEntityRenderSummaryByDefinitionCode(GetCustomEntityRenderSummaryByDefinitionCodeQuery query, IExecutionContext executionContext = null)
+        public IEnumerable<CustomEntityRenderSummary> GetCustomEntityRenderSummariesByDefinitionCode(GetCustomEntityRenderSummariesByDefinitionCodeQuery query, IExecutionContext executionContext = null)
         {
             return _queryExecutor.Execute(query, executionContext);
         }
 
-        public Task<IEnumerable<CustomEntityRenderSummary>> GetCustomEntityRenderSummaryByDefinitionCodeAsync(GetCustomEntityRenderSummaryByDefinitionCodeQuery query, IExecutionContext executionContext = null)
+        public Task<IEnumerable<CustomEntityRenderSummary>> GetCustomEntityRenderSummariesByDefinitionCodeAsync(GetCustomEntityRenderSummariesByDefinitionCodeQuery query, IExecutionContext executionContext = null)
         {
             return _queryExecutor.ExecuteAsync(query, executionContext);
         }
@@ -100,12 +100,12 @@ namespace Cofoundry.Domain
             return _queryExecutor.ExecuteAsync(query, executionContext);
         }
 
-        public IDictionary<int, CustomEntityRenderSummary> GetCustomEntityRenderSummaryByIdRange(GetCustomEntityRenderSummaryByIdRangeQuery query, IExecutionContext executionContext = null)
+        public IDictionary<int, CustomEntityRenderSummary> GetCustomEntityRenderSummariesByIdRange(GetCustomEntityRenderSummariesByIdRangeQuery query, IExecutionContext executionContext = null)
         {
             return _queryExecutor.Execute(query, executionContext);
         }
 
-        public Task<Dictionary<int, CustomEntityRenderSummary>> GetCustomEntityRenderSummaryByIdRangeAsync(GetCustomEntityRenderSummaryByIdRangeQuery query, IExecutionContext executionContext = null)
+        public Task<Dictionary<int, CustomEntityRenderSummary>> GetCustomEntityRenderSummariesByIdRangeAsync(GetCustomEntityRenderSummariesByIdRangeQuery query, IExecutionContext executionContext = null)
         {
             return _queryExecutor.ExecuteAsync(query, executionContext);
         }

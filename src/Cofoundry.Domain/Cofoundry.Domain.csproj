@@ -361,12 +361,12 @@
     <Compile Include="Domain\CustomEntities\Queries\GetCustomEntityEntityMicroSummariesByIdRangeQueryHandler.cs" />
     <Compile Include="Domain\CustomEntities\Queries\GetCustomEntityRenderDetailsByIdQuery.cs" />
     <Compile Include="Domain\CustomEntities\Queries\GetCustomEntityRenderDetailsByIdQueryHandler.cs" />
-    <Compile Include="Domain\CustomEntities\Queries\GetCustomEntityRenderSummaryByDefinitionCodeQuery.cs" />
-    <Compile Include="Domain\CustomEntities\Queries\GetCustomEntityRenderSummaryByDefinitionCodeQueryHandler.cs" />
+    <Compile Include="Domain\CustomEntities\Queries\GetCustomEntityRenderSummariesByDefinitionCodeQuery.cs" />
+    <Compile Include="Domain\CustomEntities\Queries\GetCustomEntityRenderSummariesByDefinitionCodeQueryHandler.cs" />
     <Compile Include="Domain\CustomEntities\Queries\GetCustomEntityRenderSummaryByIdQuery.cs" />
     <Compile Include="Domain\CustomEntities\Queries\GetCustomEntityRenderSummaryByIdQueryHandler.cs" />
-    <Compile Include="Domain\CustomEntities\Queries\GetCustomEntityRenderSummaryByIdRangeQuery.cs" />
-    <Compile Include="Domain\CustomEntities\Queries\GetCustomEntityRenderSummaryByIdRangeQueryHandler.cs" />
+    <Compile Include="Domain\CustomEntities\Queries\GetCustomEntityRenderSummariesByIdRangeQuery.cs" />
+    <Compile Include="Domain\CustomEntities\Queries\GetCustomEntityRenderSummariesByIdRangeQueryHandler.cs" />
     <Compile Include="Domain\CustomEntities\Queries\GetCustomEntityRouteByPathQuery.cs" />
     <Compile Include="Domain\CustomEntities\Queries\GetCustomEntityRouteByPathQueryHandler.cs" />
     <Compile Include="Domain\CustomEntities\Queries\GetCustomEntityRoutesByDefinitionCodeQuery.cs" />

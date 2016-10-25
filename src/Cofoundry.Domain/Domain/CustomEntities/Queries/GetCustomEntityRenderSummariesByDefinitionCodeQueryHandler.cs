@@ -11,10 +11,10 @@ using AutoMapper;
 
 namespace Cofoundry.Domain
 {
-    public class GetCustomEntityRenderSummaryByDefinitionCodeQueryHandler 
-        : IQueryHandler<GetCustomEntityRenderSummaryByDefinitionCodeQuery, IEnumerable<CustomEntityRenderSummary>>
-        , IAsyncQueryHandler<GetCustomEntityRenderSummaryByDefinitionCodeQuery, IEnumerable<CustomEntityRenderSummary>>
-        , IPermissionRestrictedQueryHandler<GetCustomEntityRenderSummaryByDefinitionCodeQuery, IEnumerable<CustomEntityRenderSummary>>
+    public class GetCustomEntityRenderSummariesByDefinitionCodeQueryHandler
+        : IQueryHandler<GetCustomEntityRenderSummariesByDefinitionCodeQuery, IEnumerable<CustomEntityRenderSummary>>
+        , IAsyncQueryHandler<GetCustomEntityRenderSummariesByDefinitionCodeQuery, IEnumerable<CustomEntityRenderSummary>>
+        , IPermissionRestrictedQueryHandler<GetCustomEntityRenderSummariesByDefinitionCodeQuery, IEnumerable<CustomEntityRenderSummary>>
     {
         #region constructor
 
@@ -22,7 +22,7 @@ namespace Cofoundry.Domain
         private readonly ICustomEntityRenderSummaryMapper _customEntityRenderSummaryMapper;
         private readonly ICustomEntityCodeDefinitionRepository _customEntityDefinitionRepository;
 
-        public GetCustomEntityRenderSummaryByDefinitionCodeQueryHandler(
+        public GetCustomEntityRenderSummariesByDefinitionCodeQueryHandler(
             CofoundryDbContext dbContext,
             ICustomEntityRenderSummaryMapper customEntityRenderSummaryMapper,
             ICustomEntityCodeDefinitionRepository customEntityDefinitionRepository
@@ -37,7 +37,7 @@ namespace Cofoundry.Domain
 
         #region execution
 
-        public async Task<IEnumerable<CustomEntityRenderSummary>> ExecuteAsync(GetCustomEntityRenderSummaryByDefinitionCodeQuery query, IExecutionContext executionContext)
+        public async Task<IEnumerable<CustomEntityRenderSummary>> ExecuteAsync(GetCustomEntityRenderSummariesByDefinitionCodeQuery query, IExecutionContext executionContext)
         {
             var dbResults = await Query(query).ToListAsync();
             var results = await _customEntityRenderSummaryMapper.MapSummariesAsync(dbResults, executionContext);
@@ -45,7 +45,7 @@ namespace Cofoundry.Domain
             return results;
         }
 
-        public IEnumerable<CustomEntityRenderSummary> Execute(GetCustomEntityRenderSummaryByDefinitionCodeQuery query, IExecutionContext executionContext)
+        public IEnumerable<CustomEntityRenderSummary> Execute(GetCustomEntityRenderSummariesByDefinitionCodeQuery query, IExecutionContext executionContext)
         {
             var dbResults = Query(query).ToList();
             var results = _customEntityRenderSummaryMapper.MapSummaries(dbResults, executionContext);
@@ -57,7 +57,7 @@ namespace Cofoundry.Domain
 
         #region private helpers
 
-        private IQueryable<CustomEntityVersion> Query(GetCustomEntityRenderSummaryByDefinitionCodeQuery query)
+        private IQueryable<CustomEntityVersion> Query(GetCustomEntityRenderSummariesByDefinitionCodeQuery query)
         {
             var dbQuery = _dbContext
                 .CustomEntityVersions
@@ -73,7 +73,7 @@ namespace Cofoundry.Domain
 
         #region Permission
 
-        public IEnumerable<IPermissionApplication> GetPermissions(GetCustomEntityRenderSummaryByDefinitionCodeQuery query)
+        public IEnumerable<IPermissionApplication> GetPermissions(GetCustomEntityRenderSummariesByDefinitionCodeQuery query)
         {
             var definition = _customEntityDefinitionRepository.GetByCode(query.CustomEntityDefinitionCode);
             yield return new CustomEntityReadPermission(definition);

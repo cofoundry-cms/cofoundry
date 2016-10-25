@@ -9,13 +9,13 @@ using Cofoundry.Domain.CQS;
 
 namespace Cofoundry.Domain
 {
-    public class GetCustomEntityRenderSummaryByIdRangeQuery : IQuery<Dictionary<int, CustomEntityRenderSummary>>
+    public class GetCustomEntityRenderSummariesByIdRangeQuery : IQuery<Dictionary<int, CustomEntityRenderSummary>>
     {
-        public GetCustomEntityRenderSummaryByIdRangeQuery()
+        public GetCustomEntityRenderSummariesByIdRangeQuery()
         {
         }
 
-        public GetCustomEntityRenderSummaryByIdRangeQuery(
+        public GetCustomEntityRenderSummariesByIdRangeQuery(
             IEnumerable<int> customEntityIds,
             WorkFlowStatusQuery workflowStatus = WorkFlowStatusQuery.Latest
             )

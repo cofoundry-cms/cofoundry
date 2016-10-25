@@ -8,13 +8,13 @@ using Cofoundry.Domain.CQS;
 
 namespace Cofoundry.Domain
 {
-    public class GetCustomEntityRenderSummaryByDefinitionCodeQuery : IQuery<IEnumerable<CustomEntityRenderSummary>>
+    public class GetCustomEntityRenderSummariesByDefinitionCodeQuery : IQuery<IEnumerable<CustomEntityRenderSummary>>
     {
-        public GetCustomEntityRenderSummaryByDefinitionCodeQuery()
+        public GetCustomEntityRenderSummariesByDefinitionCodeQuery()
         {
         }
 
-        public GetCustomEntityRenderSummaryByDefinitionCodeQuery(
+        public GetCustomEntityRenderSummariesByDefinitionCodeQuery(
             string customEntityDefinitionCode,
             WorkFlowStatusQuery workflowStatus = WorkFlowStatusQuery.Latest
             )

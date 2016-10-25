@@ -16,12 +16,15 @@ namespace Cofoundry.Web.Admin
         #region Constructor
 
         private readonly IQueryExecutor _queryExecutor;
+        private readonly ILoginService _loginService;
 
         public SetupController(
-            IQueryExecutor queryExecutor
+            IQueryExecutor queryExecutor,
+            ILoginService loginService
             )
         {
             _queryExecutor = queryExecutor;
+            _loginService = loginService;
         }
 
         #endregion
@@ -36,6 +39,9 @@ namespace Cofoundry.Web.Admin
             {
                 return RedirectToDashboard();
             }
+
+            // force sign-out - solves a rare case where you're re-initializing a db after being signed into a previous version.
+            _loginService.SignOut();
 
             return View();
         }
