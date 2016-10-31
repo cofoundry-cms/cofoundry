@@ -18,7 +18,7 @@ namespace Cofoundry.Web.Admin
         /// specified module and then boostraps it.
         /// </summary>
         /// <param name="routeLibrary">Js routing library for the module to boostrap,</param>
-        public static IHtmlString Boostrap(ModuleJsRouteLibrary routeLibrary, ICurrentUserViewHelper currentUserHelper, object options = null)
+        public static IHtmlString Bootstrap(ModuleJsRouteLibrary routeLibrary, ICurrentUserViewHelper currentUserHelper, object options = null)
         {
             var script = string.Concat(
                 RenderScript(SharedRouteLibrary.Js.Main),
