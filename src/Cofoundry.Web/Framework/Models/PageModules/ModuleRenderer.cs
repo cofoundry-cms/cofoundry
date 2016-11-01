@@ -21,7 +21,7 @@ namespace Cofoundry.Web
         public string RenderModule(ControllerBase controller, IEditablePageViewModel pageViewModel, IEntityVersionPageModuleRenderDetails moduleViewModel)
         {
             var displayData = GetModuleDisplayData(pageViewModel, moduleViewModel);
-            string viewPath = GetViewPath(controller.ControllerContext, moduleViewModel);
+            string viewPath = GetViewPath(moduleViewModel);
 
             var viewRenderer = new RazorViewRenderer(controller.ControllerContext);
             string html = viewRenderer.RenderPartialView(viewPath, displayData);
@@ -66,7 +66,7 @@ namespace Cofoundry.Web
             return moduleViewModel.DisplayModel;
         }
 
-        private string GetViewPath(ControllerContext controllerContext, IEntityVersionPageModuleRenderDetails moduleViewModel)
+        private string GetViewPath(IEntityVersionPageModuleRenderDetails moduleViewModel)
         {
             string viewPath;
             string fileName = moduleViewModel.ModuleType.FileName;
