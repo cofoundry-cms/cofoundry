@@ -2,23 +2,18 @@
     <cms-field>
         <label class="control-label" for="{{vm.modelName}}">{{vm.title}}:</label>
         <div class="controls">
-            <text-angular ta-toolbar="vm.toolbar"
-                          ng-show=" vm.formScope.editMode"
-                          ng-model="vm.taModel"
-                          ng-change="vm.onChange()"
-                          ng-disabled="vm.disabled"
-                          id="{{vm.modelName}}"
-                          name="{{vm.modelName}}"></text-angular>
+            <textarea ui-tinymce="vm.tinymceOptions"
+                      ng-show="vm.formScope.editMode"
+                      ng-model="vm.editorModel"
+                      ng-change="vm.onChange()"
+                      ng-disabled="vm.disabled"
+                      name="{{vm.modelName}}"></textarea>
 
             <div ng-hide="vm.formScope.editMode"
                   ng-bind-html="vm.rawHtml"
                   class="text-block-display-value ta-text"></div>
 
             <cms-form-field-validation-summary></cms-form-field-validation-summary>
-
-            <p class="help-inline" ng-if="vm.description">
-                <small>{{vm.description}}</small>
-            </p>
         </div>
     </cms-field>
     <p class="help-inline" ng-if="vm.description">

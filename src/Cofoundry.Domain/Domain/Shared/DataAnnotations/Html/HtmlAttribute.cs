@@ -40,10 +40,7 @@ namespace Cofoundry.Domain
         public HtmlToolbarPreset[] Toolbars { get; private set; }
 
         /// <summary>
-        /// Custom toolbar string to pass through to the client. Should be in the 
-        /// format "['h1','h2','h3'],['bold','italics']". For syntax/options
-        /// see https://github.com/fraywing/textAngular/wiki/Customising-The-Toolbar
-        /// but don't include the outer array brackets.
+        /// https://www.tinymce.com/docs/advanced/editor-control-identifiers/#toolbarcontrols
         /// </summary>
         public string CustomToolbar { get; set; }
     }

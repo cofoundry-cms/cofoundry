@@ -409,8 +409,8 @@
     <Compile Include="Framework\WebApi\ResponseHelpers\ApiResponseHelper.cs" />
     <Compile Include="Framework\WebApi\ResponseHelpers\SimpleCommandResponseData.cs" />
     <Compile Include="Framework\WebApi\ResponseHelpers\SimpleResponseData.cs" />
-    <Compile Include="PageModules\Boostrap\PageModulesAutoMapBootstrap.cs" />
-    <Compile Include="PageModules\Boostrap\PageModuleViewLocationRegistration.cs" />
+    <Compile Include="PageModules\Bootstrap\PageModulesAutoMapBootstrap.cs" />
+    <Compile Include="PageModules\Bootstrap\PageModuleViewLocationRegistration.cs" />
     <Compile Include="PageModules\Document\DocumentDataModel.cs" />
     <Compile Include="PageModules\Document\DocumentDisplayModel.cs" />
     <Compile Include="PageModules\Document\DocumentDisplayModelMapper.cs" />

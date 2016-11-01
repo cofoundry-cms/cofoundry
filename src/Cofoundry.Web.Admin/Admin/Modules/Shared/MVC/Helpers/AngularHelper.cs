@@ -15,9 +15,9 @@ namespace Cofoundry.Web.Admin
     {
         /// <summary>
         /// Adds scripts/templates for the core angular framework and the
-        /// specified module and then boostraps it.
+        /// specified module and then bootstraps it.
         /// </summary>
-        /// <param name="routeLibrary">Js routing library for the module to boostrap,</param>
+        /// <param name="routeLibrary">Js routing library for the module to bootstrap,</param>
         public static IHtmlString Bootstrap(ModuleJsRouteLibrary routeLibrary, ICurrentUserViewHelper currentUserHelper, object options = null)
         {
             var script = string.Concat(

@@ -163,7 +163,7 @@ fieldset .table thead {
 /**
     Highlight valid/invalid cell data.
     Ideally these would alternate slightly with striped rows, here we just 
-    have to override the existing boostrap class
+    have to override the existing bootstrap class
 */
 .table td.error, .table-striped tbody tr:nth-child(odd) td.error {
     background-color: #FC4C54;
