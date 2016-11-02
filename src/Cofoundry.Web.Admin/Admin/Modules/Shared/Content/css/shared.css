@@ -369,9 +369,8 @@ footer a {
 
 /**
  * Navigation styles
- *
  */
-/* line 7, ../../Sass/Core/_navigation.scss */
+/* line 5, ../../Sass/Core/_navigation.scss */
 .main-nav {
   -moz-transition: width 0.3s;
   -o-transition: width 0.3s;
@@ -385,12 +384,12 @@ footer a {
   height: 100vh;
   z-index: 999;
 }
-/* line 17, ../../Sass/Core/_navigation.scss */
+/* line 15, ../../Sass/Core/_navigation.scss */
 .main-nav.fix {
   position: fixed;
   top: 0px;
 }
-/* line 22, ../../Sass/Core/_navigation.scss */
+/* line 20, ../../Sass/Core/_navigation.scss */
 .main-nav ol, .main-nav ul {
   margin: 0;
   padding: 0;
@@ -398,15 +397,15 @@ footer a {
   position: relative;
   background: #3c3c3c;
 }
-/* line 29, ../../Sass/Core/_navigation.scss */
+/* line 27, ../../Sass/Core/_navigation.scss */
 .main-nav ol li, .main-nav ul li {
   z-index: 1;
 }
-/* line 32, ../../Sass/Core/_navigation.scss */
+/* line 30, ../../Sass/Core/_navigation.scss */
 .main-nav ol li .void, .main-nav ul li .void {
   z-index: 2;
 }
-/* line 38, ../../Sass/Core/_navigation.scss */
+/* line 36, ../../Sass/Core/_navigation.scss */
 .main-nav .home {
   background-color: #d31245;
   display: block;
@@ -414,7 +413,7 @@ footer a {
   color: #fff;
   height: 70px;
 }
-/* line 45, ../../Sass/Core/_navigation.scss */
+/* line 43, ../../Sass/Core/_navigation.scss */
 .main-nav .home i {
   display: inline-block;
   vertical-align: middle;
@@ -429,7 +428,7 @@ footer a {
   margin-top: 24px;
 }
 @media (-webkit-min-device-pixel-ratio: 1.5), (min--moz-device-pixel-ratio: 1.5), (-o-min-device-pixel-ratio: 3 / 2), (min-device-pixel-ratio: 1.5), (min-resolution: 144dppx) {
-  /* line 45, ../../Sass/Core/_navigation.scss */
+  /* line 43, ../../Sass/Core/_navigation.scss */
   .main-nav .home i {
     background-image: url('/Admin/Modules/Shared/Content/css/img/icons/retina.png');
     background-position: 0 -201px;
@@ -439,18 +438,18 @@ footer a {
     background-size: 93px auto;
   }
 }
-/* line 51, ../../Sass/Core/_navigation.scss */
+/* line 49, ../../Sass/Core/_navigation.scss */
 .main-nav .category {
   width: 100%;
 }
-/* line 55, ../../Sass/Core/_navigation.scss */
+/* line 53, ../../Sass/Core/_navigation.scss */
 .main-nav .category.void .fill {
   position: relative;
   background-color: #3c3c3c;
   z-index: 20;
   width: 288px;
 }
-/* line 63, ../../Sass/Core/_navigation.scss */
+/* line 61, ../../Sass/Core/_navigation.scss */
 .main-nav .category .main-button {
   -moz-transition: all 0.3s;
   -o-transition: all 0.3s;
@@ -474,7 +473,7 @@ footer a {
   border-bottom: 1px solid #686868;
   border-left: 4px solid #4d4d4d;
 }
-/* line 83, ../../Sass/Core/_navigation.scss */
+/* line 81, ../../Sass/Core/_navigation.scss */
 .main-nav .category .main-button i {
   -moz-transition: opacity 0.3s;
   -o-transition: opacity 0.3s;
@@ -483,7 +482,7 @@ footer a {
   filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=50);
   opacity: 0.5;
 }
-/* line 89, ../../Sass/Core/_navigation.scss */
+/* line 87, ../../Sass/Core/_navigation.scss */
 .main-nav .category i {
   position: absolute;
   left: 50%;
@@ -492,7 +491,7 @@ footer a {
   font-size: 2em;
   margin-left: -10px;
 }
-/* line 98, ../../Sass/Core/_navigation.scss */
+/* line 96, ../../Sass/Core/_navigation.scss */
 .main-nav .category .sub-nav {
   -moz-transition: width 0.3s;
   -o-transition: width 0.3s;
@@ -506,26 +505,26 @@ footer a {
   width: 148px;
   display: none;
 }
-/* line 111, ../../Sass/Core/_navigation.scss */
+/* line 109, ../../Sass/Core/_navigation.scss */
 .main-nav .category:hover .main-button, .main-nav .category.selected .main-button {
   color: #fff;
   background-color: #3c3c3c;
   border-left: 3px solid #d31245;
 }
-/* line 116, ../../Sass/Core/_navigation.scss */
+/* line 114, ../../Sass/Core/_navigation.scss */
 .main-nav .category:hover .main-button i, .main-nav .category.selected .main-button i {
   filter: progid:DXImageTransform.Microsoft.Alpha(enabled=false);
   opacity: 1;
 }
-/* line 120, ../../Sass/Core/_navigation.scss */
+/* line 118, ../../Sass/Core/_navigation.scss */
 .main-nav .category:hover .main-button:after, .main-nav .category:hover .main-button:before, .main-nav .category.selected .main-button:after, .main-nav .category.selected .main-button:before {
   display: none;
 }
-/* line 125, ../../Sass/Core/_navigation.scss */
+/* line 123, ../../Sass/Core/_navigation.scss */
 .main-nav .category:hover .sub-nav, .main-nav .category.selected .sub-nav {
   display: block;
 }
-/* line 131, ../../Sass/Core/_navigation.scss */
+/* line 129, ../../Sass/Core/_navigation.scss */
 .main-nav .results {
   width: 100%;
   overflow: auto;
@@ -534,11 +533,11 @@ footer a {
   bottom: 140px;
   position: absolute;
 }
-/* line 140, ../../Sass/Core/_navigation.scss */
+/* line 138, ../../Sass/Core/_navigation.scss */
 .main-nav .result {
   padding: 0 18px 2px;
 }
-/* line 143, ../../Sass/Core/_navigation.scss */
+/* line 141, ../../Sass/Core/_navigation.scss */
 .main-nav .result a {
   width: 100%;
   display: block;
@@ -546,7 +545,7 @@ footer a {
   text-decoration: none;
   padding: 10px 12px;
 }
-/* line 150, ../../Sass/Core/_navigation.scss */
+/* line 148, ../../Sass/Core/_navigation.scss */
 .main-nav .result a span {
   -moz-border-radius: 50%;
   -webkit-border-radius: 50%;
@@ -557,25 +556,25 @@ footer a {
   padding: 2px 5px;
   font-size: 80%;
 }
-/* line 159, ../../Sass/Core/_navigation.scss */
+/* line 157, ../../Sass/Core/_navigation.scss */
 .main-nav .result a:hover {
   -moz-border-radius: 2px;
   -webkit-border-radius: 2px;
   border-radius: 2px;
   background-color: #2c2c2c;
 }
-/* line 165, ../../Sass/Core/_navigation.scss */
+/* line 163, ../../Sass/Core/_navigation.scss */
 .main-nav .result:last-of-type a {
   border-bottom: 0px;
 }
-/* line 170, ../../Sass/Core/_navigation.scss */
+/* line 168, ../../Sass/Core/_navigation.scss */
 .main-nav .result.active a {
   -moz-border-radius: 2px;
   -webkit-border-radius: 2px;
   border-radius: 2px;
   background-color: #2c2c2c;
 }
-/* line 177, ../../Sass/Core/_navigation.scss */
+/* line 175, ../../Sass/Core/_navigation.scss */
 .main-nav .logout, .main-nav .view-site {
   position: absolute;
   bottom: 30px;
@@ -583,7 +582,7 @@ footer a {
   width: 80px;
   text-align: center;
 }
-/* line 184, ../../Sass/Core/_navigation.scss */
+/* line 182, ../../Sass/Core/_navigation.scss */
 .main-nav .logout a, .main-nav .view-site a {
   -moz-transition: all 0.3s;
   -o-transition: all 0.3s;
@@ -594,31 +593,31 @@ footer a {
   color: #919191;
   text-decoration: none;
 }
-/* line 191, ../../Sass/Core/_navigation.scss */
+/* line 189, ../../Sass/Core/_navigation.scss */
 .main-nav .logout a:hover, .main-nav .view-site a:hover {
   color: #fff;
 }
-/* line 197, ../../Sass/Core/_navigation.scss */
+/* line 195, ../../Sass/Core/_navigation.scss */
 .main-nav .view-site {
   left: 110px;
   text-align: left;
   width: auto;
 }
-/* line 202, ../../Sass/Core/_navigation.scss */
+/* line 200, ../../Sass/Core/_navigation.scss */
 .main-nav .view-site i {
   position: absolute;
   top: 2px;
 }
-/* line 207, ../../Sass/Core/_navigation.scss */
+/* line 205, ../../Sass/Core/_navigation.scss */
 .main-nav .view-site span {
   margin-left: 22px;
 }
 @media screen and (min-width: 950px) {
-  /* line 7, ../../Sass/Core/_navigation.scss */
+  /* line 5, ../../Sass/Core/_navigation.scss */
   .main-nav {
     width: 288px;
   }
-  /* line 216, ../../Sass/Core/_navigation.scss */
+  /* line 214, ../../Sass/Core/_navigation.scss */
   .main-nav .category .sub-nav {
     width: 208px;
   }
@@ -2327,7 +2326,7 @@ fieldset .table thead {
 /**
     Highlight valid/invalid cell data.
     Ideally these would alternate slightly with striped rows, here we just 
-    have to override the existing boostrap class
+    have to override the existing bootstrap class
 */
 /* line 168, ../../Js/UIComponents/Table/_table.scss */
 .table td.error, .table-striped tbody tr:nth-child(odd) td.error {
