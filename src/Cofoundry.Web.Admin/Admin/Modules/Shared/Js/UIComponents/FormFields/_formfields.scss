@@ -12,8 +12,8 @@ input[type="text"], input[type="email"], input[type="password"], input[type="num
     width: 100%;
 
     &.ng-invalid {
-        //box-shadow: 0px 0px 3px $color-orange!important;
-        //border-color:$color-orange;
+        //box-shadow: 0px 0px 3px $color-warning!important;
+        //border-color:$color-warning;
     }
 }
 
@@ -109,6 +109,17 @@ input[type="color"] {
     }
 
     &:hover:after {
-        color:$color-red;
+        color:$color-primary;
+    }
+}
+
+.form-field-text-area {
+    z-index:10000!important;
+
+    .mce-fullscreen {
+        top:70px;
+        left:288px;
+        width:auto;
+        right: 0;
     }
 }

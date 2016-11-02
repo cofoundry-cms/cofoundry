@@ -9,10 +9,10 @@
 .message {
     &.success {
         @extend %msg;
-        border-color:$color-green;
+        border-color:$color-success;
     }
     &.warning {
         @extend %msg;
-        border-color:$color-orange;
+        border-color:$color-warning;
     }
 }

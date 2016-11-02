@@ -23,7 +23,7 @@ body {
     width: 100%;
     background-color:$color-midgrey;
     height: 60px;
-    //border-top:2px solid $color-red;
+    //border-top:2px solid $color-primary;
 
     .actions-left {
         position: absolute;
@@ -82,13 +82,13 @@ body {
 
         &:hover {
             background-color:$color-darkgrey;
-            border-top:3px solid $color-red;
+            border-top:3px solid $color-primary;
             color:#fff;
         }
 
         &.active {
-            background-color:$color-red;
-            border-top:3px solid $color-red;
+            background-color:$color-primary;
+            border-top:3px solid $color-primary;
             color:#fff;
         }
 
@@ -227,7 +227,7 @@ ul#deviceMenu {
     }
 
         ul#deviceMenu li a {
-            background: #D31245 url(img/icons.png) no-repeat;
+            background: $color-primary url(img/icons.png) no-repeat;
             display: block;
             height: 30px;
             overflow: hidden;
