@@ -89,6 +89,39 @@
             </div>
         </div>
 
+        <div class="cofoundry-sv__versions">
+            @if (versions.Any())
+                {
+                <div class="cofoundry-sv__mini-menu">
+                    <div class="cofoundry-sv__mini-menu__content">
+                        <h3>Page Versions</h3>
+                        <ol class="cofoundry-sv__version-list">
+                            @foreach (var version in versions)
+                            {
+                                var link = "?version=" + version.VersionId;
+                                if (version.WorkFlowStatus == WorkFlowStatus.Draft || version.WorkFlowStatus == WorkFlowStatus.Published)
+                                {
+                                    link = "?mode=" + (version.WorkFlowStatus == WorkFlowStatus.Published ? "live": "preview");
+                                }
+
+                                <li>
+                                    <a href="@link" class="cofoundry-sv__version-list__item @Cofoundry.Html.TextIf(version == Model.Version, "active")">
+                                        <span class="@version.WorkFlowStatus.ToString().ToLower()"></span>
+                                        @version.WorkFlowStatus (Created on @version.CreateDate)
+                                    </a>
+                                </li>
+                            }
+                        </ol>
+                    </div>
+
+                    <button type="button" class="cofoundry-sv__mini-menu__toggle">
+                        <span></span>
+                        Versions (@versions.Count())
+                    </button>
+                </div>
+                }
+        </div>
+
         <div class="cofoundry-sv__mode">
 
             @if (!Model.IsStaticPage && !isViewingSpecificVersion)
@@ -127,76 +160,44 @@
                 }
             }
 
-        </div>
+            <div class="cofoundry-sv__options">
 
-        <div class="cofoundry-sv__options">
+                @if (Model.SiteViewerMode == SiteViewerMode.Draft || isEditing)
+                {
+                    <a href=""
+                       class="cofoundry-sv__options__button publish popup"
+                       ng-disabled="vm.globalLoadState.isLoading"
+                       ng-click="vm.publish()">
+                        <span class="fa fa-cloud-upload"></span>
+                        Publish @entityNameSingular
+                    </a>
+                }
+                else if (Model.SiteViewerMode == SiteViewerMode.Live)
+                {
+                    <a href=""
+                       class="cofoundry-sv__options__button publish popup"
+                       ng-disabled="vm.globalLoadState.isLoading"
+                       ng-click="vm.unpublish()">
+                        <span class="fa fa-cloud-download"></span>
+                        Unpublish @entityNameSingular
+                    </a>
+                }
+                else if (Model.SiteViewerMode == SiteViewerMode.SpecificVersion)
+                {
+                    <a href=""
+                       class="cofoundry-sv__options__button publish popup"
+                       title="Copy this version to a new draft version"
+                       ng-disabled="vm.globalLoadState.isLoading"
+                       ng-click="vm.copyToDraft()">
+                        <span class="fa fa-files-o"></span>
+                        Copy to draft
+                    </a>
+                }
 
-            @if (Model.SiteViewerMode == SiteViewerMode.Draft || isEditing)
-            {
-                <a href=""
-                   class="cofoundry-sv__options__button publish popup"
-                   ng-disabled="vm.globalLoadState.isLoading"
-                   ng-click="vm.publish()">
-                    <span class="fa fa-cloud-upload"></span>
-                    Publish @entityNameSingular
-                </a>
-            }
-            else if (Model.SiteViewerMode == SiteViewerMode.Live)
-            {
-                <a href=""
-                   class="cofoundry-sv__options__button publish popup"
-                   ng-disabled="vm.globalLoadState.isLoading"
-                   ng-click="vm.unpublish()">
-                    <span class="fa fa-cloud-download"></span>
-                    Unpublish @entityNameSingular
-                </a>
-            }
-            else if (Model.SiteViewerMode == SiteViewerMode.SpecificVersion)
-            {
-                <a href=""
-                   class="cofoundry-sv__options__button publish popup"
-                   title="Copy this version to a new draft version"
-                   ng-disabled="vm.globalLoadState.isLoading"
-                   ng-click="vm.copyToDraft()">
-                    <span class="fa fa-files-o"></span>
-                    Copy to draft
-                </a>
-            }
-
+            </div>
         </div>
 
         <div class="cofoundry-sv__settings">
-            @if (versions.Any())
-            {
-            <div class="cofoundry-sv__mini-menu">
-                <div class="cofoundry-sv__mini-menu__content">
-                    <h3>Page Versions</h3>
-                    <ol class="cofoundry-sv__version-list">
-                        @foreach (var version in versions)
-                        {
-                            var link = "?version=" + version.VersionId;
-                            if (version.WorkFlowStatus == WorkFlowStatus.Draft || version.WorkFlowStatus == WorkFlowStatus.Published)
-                            {
-                                link = "?mode=" + (version.WorkFlowStatus == WorkFlowStatus.Published ? "live": "preview");
-                            }
-
-                            <li>
-                                <a href="@link" class="cofoundry-sv__version-list__item @Cofoundry.Html.TextIf(version == Model.Version, "active")">
-                                    <span class="@version.WorkFlowStatus.ToString().ToLower()"></span>
-                                    @version.WorkFlowStatus (Created on @version.CreateDate)
-                                </a>
-                            </li>
-                        }
-                    </ol>
-                </div>
-
-                <button type="button" class="cofoundry-sv__mini-menu__toggle">
-                    <span></span>
-                    Versions (@versions.Count())
-                </button>
-            </div>
-            }
-
             <div class="cofoundry-sv__mini-menu cofoundry-sv__mini-menu--large">
                 <div class="cofoundry-sv__mini-menu__content">
                     <h3>Edit Mode Options</h3>
@@ -255,8 +256,8 @@
                     View Options
                 </button>
             </div>
-
         </div>
+
     </div>
 
     <div id="siteFrameContainer">
