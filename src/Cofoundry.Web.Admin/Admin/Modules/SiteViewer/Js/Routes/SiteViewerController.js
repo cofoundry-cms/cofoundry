@@ -1,5 +1,6 @@
 ﻿angular.module('cms.siteViewer').controller('SiteViewerController', [
     '$window',
+    '$scope',
     '_',
     'shared.LoadState',
     'shared.entityVersionModalDialogService',
@@ -7,6 +8,7 @@
     'siteViewer.options',
 function (
     $window,
+    $scope,
     _,
     LoadState,
     entityVersionModalDialogService,
@@ -31,9 +33,23 @@ function (
         vm.publish = publish;
         vm.unpublish = unpublish;
         vm.copyToDraft = copyToDraft;
+        vm.toggleVersionMenu = toggleVersionMenu;
+        vm.toggleViewOptionsMenu = toggleViewOptionsMenu;
+        vm.versionMenuActive = false;
+        vm.viewOptionsMenuActive = false;
     }
 
     /* UI ACTIONS */
+
+    function toggleVersionMenu() {
+        vm.versionMenuActive = !vm.versionMenuActive;
+        vm.viewOptionsMenuActive = false;
+    }
+
+    function toggleViewOptionsMenu() {
+        vm.viewOptionsMenuActive = !vm.viewOptionsMenuActive;
+        vm.versionMenuActive = false;
+    }
 
     function publish() {
 

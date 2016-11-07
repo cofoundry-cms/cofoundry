@@ -9,15 +9,16 @@
     Layout = LayoutPaths.BaseLayout;
 
     var isEditing = Model.SiteViewerMode == SiteViewerMode.Edit;
+    var isViewingSpecificVersion = Model.SiteViewerMode == SiteViewerMode.SpecificVersion;
     var isCustomEntityRoute = Model.Version is CustomEntityVersionRoute;
     var entityNameSingular = isCustomEntityRoute ? Model.CustomEntityDefinition.Name : "Page";
-    
+
     object ngOptions = null;
-     
+
     if (!Model.IsStaticPage)
     {
         ViewBag.Title = Model.Version.Title + " - Site Viewer";
-        
+
         ngOptions = new
         {
             IsInEditMode = isEditing,
@@ -28,6 +29,19 @@
             EntityId = isCustomEntityRoute ? Model.PageRoutingInfo.CustomEntityRoute.CustomEntityId : Model.PageRoutingInfo.PageRoute.PageId,
             HasDraftVersion = Model.HasDraftVersion
         };
+    }
+
+    var backToAdminLink = DashboardRouteLibrary.Urls.Dashboard();
+    var versions = new List<IVersionRoute>();
+
+    if (isCustomEntityRoute)
+    {
+        backToAdminLink = CustomEntitiesRouteLibrary.Urls.Details(Model.CustomEntityDefinition, Model.PageRoutingInfo.CustomEntityRoute.CustomEntityId);
+        versions.AddRange(Model.PageRoutingInfo.CustomEntityRoute.Versions);
+    }
+    else
+    {
+        versions.AddRange(Model.PageRoutingInfo.PageRoute.Versions);
     }
 }
 
@@ -45,93 +59,205 @@
 }
 
 <div id="wrapper" ng-controller="SiteViewerController as vm">
-    <header class="site-viewer-actions">
 
-        <div class="actions-left">
-            <a href="@DashboardRouteLibrary.Urls.Dashboard()" class="action">
-                <i class="fa fa-chevron-left"></i>
-                Back to admin
-            </a>
-            @*<a href=""
-               class="action">
-                <i class="fa fa-desktop"></i>
-                View options
-            </a>*@
+    <div id="cofoundry-sv" class="cofoundry-sv active">
+        <button type="button" id="cofoundry-sv_button" class="cofoundry-sv__toggle">Hide</button>
+
+        <a class="cofoundry-sv__back" href="@backToAdminLink">
+            <span class="fa fa-chevron-left"></span>
+        </a>
+
+        <div class="cofoundry-sv__page-details">
+            <div class="cofoundry-sv__mini-menu cofoundry-sv__mini-menu--flow">
+                <div class="cofoundry-sv__mini-menu__content">
+                    <h3>Pages</h3>
+                    <ol class="cofoundry-sv__version-list">
+                        <li>
+                            <a href="#" class="cofoundry-sv__version-list__item">
+                                <span class="published"></span>
+                                Version
+                            </a>
+                        </li>
+                    </ol>
+                </div>
+
+                <button type="button" class="cofoundry-sv__mini-menu__toggle">
+                    <span class="cofoundry-sv__page-details__status @Model.Version.WorkFlowStatus.ToString().ToLower()"></span>
+                    <span class="cofoundry-sv__page-details__name">@Model.Version.Title</span>
+                    <span class="cofoundry-sv__page-details__url">@Model.PageRoutingInfo.CustomEntityRoute.UrlSlug</span>
+                </button>
+            </div>
         </div>
 
-        <div class="actions-centre">
-            @if (!Model.IsStaticPage)
+        <div class="cofoundry-sv__mode">
+
+            @if (!Model.IsStaticPage && !isViewingSpecificVersion)
             {
-                <a href="?mode=live" class="action @Cofoundry.Html.TextIf(Model.Version.WorkFlowStatus == WorkFlowStatus.Published, "active")">
-                    <i class="fa fa-cloud"></i>
+                <a href="?mode=live" class="cofoundry-sv__mode__button @Cofoundry.Html.TextIf(Model.Version.WorkFlowStatus == WorkFlowStatus.Published, "active")">
+                    <span class="fa fa-cloud"></span>
                     Current live
                 </a>
 
-                if (Model.IsEditTypeSwitchRequired() && Model.CanEditPage())
+                if (Model.CanEditPage())
                 {
-                    <a href="?mode=edit&edittype=page" class="action @Cofoundry.Html.TextIf(Model.Version is PageVersionRoute && isEditing, "active")">
-                        <i class="fa fa-pencil"></i>
-                        Edit Page
-                    </a>
-                    <a href="?mode=edit&edittype=entity" class="action @Cofoundry.Html.TextIf(Model.Version is CustomEntityVersionRoute && isEditing, "active")">
-                        <i class="fa fa-pencil"></i>
-                        Edit @Model.CustomEntityDefinition.Name
-                    </a>
-                }
-                else if (Model.CanEditPage())
-                {
-                    <a href="?mode=edit" class="action @Cofoundry.Html.TextIf(isEditing, "active")">
-                        <i class="fa fa-pencil"></i>
-                        Edit draft
-                    </a>
-                    <a href="?mode=preview" class="action @Cofoundry.Html.TextIf(!isEditing && Model.Version.WorkFlowStatus == WorkFlowStatus.Draft, "active")">
-                        <i class="fa fa-eye"></i>
+                    if (Model.IsEditTypeSwitchRequired())
+                    {
+                        <span class="cofoundry-sv__mode__button__group">
+                            <a href="?mode=edit&edittype=entity" class="cofoundry-sv__mode__button @Cofoundry.Html.TextIf(isCustomEntityRoute && isEditing, "active")">
+                                <span class="fa fa-pencil-square-o"></span>
+                                Edit @Model.CustomEntityDefinition.Name
+                            </a>
+                            <a href="?mode=edit&edittype=page" class="cofoundry-sv__mode__button @Cofoundry.Html.TextIf(!isCustomEntityRoute && isEditing, "active")">
+                                <span class="fa fa-pencil-square-o"></span>
+                                Edit @(Model.IsEditTypeSwitchRequired() ? "template" : "draft")
+                            </a>
+                        </span>
+                    }
+                    else
+                    {
+                        <a href="?mode=edit&edittype=page" class="cofoundry-sv__mode__button @Cofoundry.Html.TextIf(!isCustomEntityRoute && isEditing, "active")">
+                            <span class="fa fa-pencil-square-o"></span>
+                            Edit @(Model.IsEditTypeSwitchRequired() ? "template" : "draft")
+                        </a>
+                    }
+                    <a href="?mode=preview" class="cofoundry-sv__mode__button @Cofoundry.Html.TextIf(!isEditing && Model.Version.WorkFlowStatus == WorkFlowStatus.Draft, "active")">
+                        <span class="fa fa-eye"></span>
                         Preview draft
                     </a>
                 }
             }
+
         </div>
 
-        <div class="actions-right">
-            @*<a href=""
-               class="action">
-                <i class="fa fa-files-o"></i>
-                Versions
-            </a>*@
+        <div class="cofoundry-sv__options">
+
             @if (Model.SiteViewerMode == SiteViewerMode.Draft || isEditing)
             {
                 <a href=""
-                   class="action publish popup"
+                   class="cofoundry-sv__options__button publish popup"
                    ng-disabled="vm.globalLoadState.isLoading"
                    ng-click="vm.publish()">
-                    <i class="fa fa-cloud-upload"></i>
+                    <span class="fa fa-cloud-upload"></span>
                     Publish @entityNameSingular
                 </a>
             }
             else if (Model.SiteViewerMode == SiteViewerMode.Live)
             {
                 <a href=""
-                   class="action publish popup"
+                   class="cofoundry-sv__options__button publish popup"
                    ng-disabled="vm.globalLoadState.isLoading"
                    ng-click="vm.unpublish()">
-                    <i class="fa fa-cloud-download"></i>
+                    <span class="fa fa-cloud-download"></span>
                     Unpublish @entityNameSingular
                 </a>
             }
             else if (Model.SiteViewerMode == SiteViewerMode.SpecificVersion)
             {
                 <a href=""
-                   class="action publish popup"
+                   class="cofoundry-sv__options__button publish popup"
                    title="Copy this version to a new draft version"
                    ng-disabled="vm.globalLoadState.isLoading"
                    ng-click="vm.copyToDraft()">
-                    <i class="fa fa-files-o"></i>
+                    <span class="fa fa-files-o"></span>
                     Copy to draft
                 </a>
             }
+
         </div>
-        
-    </header>
+
+        <div class="cofoundry-sv__settings">
+            @if (versions.Any())
+            {
+            <div class="cofoundry-sv__mini-menu">
+                <div class="cofoundry-sv__mini-menu__content">
+                    <h3>Page Versions</h3>
+                    <ol class="cofoundry-sv__version-list">
+                        @foreach (var version in versions)
+                        {
+                            var link = "?version=" + version.VersionId;
+                            if (version.WorkFlowStatus == WorkFlowStatus.Draft || version.WorkFlowStatus == WorkFlowStatus.Published)
+                            {
+                                link = "?mode=" + (version.WorkFlowStatus == WorkFlowStatus.Published ? "live": "preview");
+                            }
+
+                            <li>
+                                <a href="@link" class="cofoundry-sv__version-list__item @Cofoundry.Html.TextIf(version == Model.Version, "active")">
+                                    <span class="@version.WorkFlowStatus.ToString().ToLower()"></span>
+                                    @version.WorkFlowStatus (Created on @version.CreateDate)
+                                </a>
+                            </li>
+                        }
+                    </ol>
+                </div>
+
+                <button type="button" class="cofoundry-sv__mini-menu__toggle">
+                    <span></span>
+                    Versions (@versions.Count())
+                </button>
+            </div>
+            }
+
+            <div class="cofoundry-sv__mini-menu cofoundry-sv__mini-menu--large">
+                <div class="cofoundry-sv__mini-menu__content">
+                    <h3>Edit Mode Options</h3>
+                    <div class="cofoundry-sv__edit-mode">
+                        <div class="cofoundry-sv__edit-mode__half">
+                            <input id="toggle-show-editable" type="checkbox">
+                            <label for="toggle-show-editable">Always show editable areas</label>
+                        </div>
+
+                        <div class="cofoundry-sv__edit-mode__half">
+                            <input id="show-editable-color" type="color"
+                                   value="#47FEF2">
+                            <label for="show-editable-color">Outline Color</label>
+                        </div>
+                    </div>
+
+                    <h3>Display Size</h3>
+                    <div class="cofoundry-sv__tabs">
+                        <ul>
+                            <li class="cofoundry-sv__tab-item active" data-id="tab-1">
+                                Desktop
+                            </li>
+                            <li class="cofoundry-sv__tab-item" data-id="tab-2">
+                                Mobile
+                            </li>
+                            <li class="cofoundry-sv__tab-item" data-id="tab-3">
+                                Tablets
+                            </li>
+                            <li class="cofoundry-sv__tab-item" data-id="tab-4">
+                                More
+                            </li>
+                        </ul>
+                        <div id="tab-1" class="cofoundry-sv__tab-content active">
+                            <ul class="cofoundry-sv__info-list">
+                                <li class="cofoundry-sv__info-list__item">Desktop Full HD <span>1920x1080</span></li>
+                                <li class="cofoundry-sv__info-list__item">Desktop HD <span>1440x900</span></li>
+                                <li class="cofoundry-sv__info-list__item">Ultrabook <span>1366x768</span></li>
+                                <li class="cofoundry-sv__info-list__item">Netbook <span>1280x800</span></li>
+                                <li class="cofoundry-sv__info-list__item">Old Desktop <span>1024x768</span></li>
+                            </ul>
+                        </div>
+                        <div id="tab-2" class="cofoundry-sv__tab-content">
+                            Content of tab bar
+                        </div>
+                        <div id="tab-3" class="cofoundry-sv__tab-content">
+                            Content of tab bar
+                        </div>
+                        <div id="tab-4" class="cofoundry-sv__tab-content">
+                            Content of tab bar
+                        </div>
+                    </div>
+                </div>
+
+                <button type="button" class="cofoundry-sv__mini-menu__toggle">
+                    <span></span>
+                    View Options
+                </button>
+            </div>
+
+        </div>
+    </div>
 
     <div id="siteFrameContainer">
         <iframe id="siteFrame"

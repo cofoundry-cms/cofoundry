@@ -1,0 +1,7 @@
+{
+"version": 3,
+"mappings": ";AAAA,OAAQ;EACJ,KAAK,EAAE,IAAI;EACX,MAAM,EAAE,IAAI",
+"sources": ["../../../Sass/blocks/combined.scss"],
+"names": [],
+"file": "combined.css"
+}

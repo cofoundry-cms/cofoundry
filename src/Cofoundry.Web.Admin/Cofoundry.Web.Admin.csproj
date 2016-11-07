@@ -571,8 +571,6 @@
     <Content Include="Admin\Modules\SiteViewer\Content\css\img\devices\iPhone4Landscape.png" />
     <Content Include="Admin\Modules\SiteViewer\Content\css\img\devices\iPhone4Portrait.png" />
     <Content Include="Admin\Modules\SiteViewer\Content\css\img\icons.png" />
-    <Content Include="Admin\Modules\SiteViewer\Content\css\inner-site-viewer.css" />
-    <Content Include="Admin\Modules\SiteViewer\Content\css\site-viewer.css" />
     <Content Include="Admin\Modules\SiteViewer\Js\Bootstrap\Module.js" />
     <Content Include="Admin\Modules\SiteViewer\Js\ContentPage\EventAggregator.js" />
     <Content Include="Admin\Modules\SiteViewer\Js\DataServices\PageModuleService.js" />
@@ -586,6 +584,8 @@
     <Content Include="Admin\Modules\SiteViewer\Js\UIComponents\PageSectionModule.html" />
     <Content Include="Admin\Modules\SiteViewer\Js\UIComponents\PageSectionModule.js" />
     <Content Include="Admin\Modules\SiteViewer\Js\UIComponents\SiteFrame.js" />
+    <Content Include="Admin\Modules\SiteViewer\Sass\inner-site-viewer.scss" />
+    <None Include="Admin\Modules\SiteViewer\Sass\_inner-site-viewer.scss" />
     <Content Include="Admin\Modules\Users\Js\Bootstrap\Module.js" />
     <Content Include="Admin\Modules\Users\Js\Bootstrap\Routing.js" />
     <Content Include="Admin\Modules\Users\Js\DataServices\RoleService.js" />
@@ -655,10 +655,8 @@
     <Content Include="Admin\Modules\Shared\Sass\README.md" />
     <Content Include="Admin\Modules\Shared\Sass\shared.scss" />
     <Content Include="Admin\Modules\SiteViewer\config.rb" />
-    <Content Include="Admin\Modules\SiteViewer\Content\css\site-viewer.css.map" />
     <Content Include="Admin\Modules\SiteViewer\MVC\Views\SiteViewer.cshtml" />
     <Content Include="Admin\Modules\SiteViewer\Sass\site-viewer.scss" />
-    <Content Include="Admin\Modules\SiteViewer\Sass\_outer-site-viewer.scss" />
     <Content Include="Admin\Modules\Users\Mvc\Views\Index.cshtml" />
     <Content Include="Build\package.json" />
     <EmbeddedResource Include="Framework\StandardAngularModules\Routes\Index.cshtml" />
@@ -675,6 +673,22 @@
     <Content Include="Admin\Modules\Shared\Content\css\lib\tinymce\fonts\tinymce.ttf" />
     <Content Include="Admin\Modules\Shared\Content\css\lib\tinymce\fonts\tinymce.woff" />
     <Content Include="Admin\Modules\Shared\Content\css\lib\tinymce\skin.json" />
+    <Content Include="Admin\Modules\SiteViewer\Sass\_outer-site-viewer.scss" />
+    <Content Include="Admin\Modules\SiteViewer\Sass\base\_colors.scss" />
+    <Content Include="Admin\Modules\SiteViewer\Sass\blocks\_mini-menu.scss" />
+    <Content Include="Admin\Modules\SiteViewer\Sass\blocks\_preview-menu.scss" />
+    <Content Include="Admin\Modules\SiteViewer\Sass\blocks\_tabs.scss" />
+    <Content Include="Admin\Modules\SiteViewer\Sass\blocks\_version-list.scss" />
+    <Content Include="Admin\Modules\SiteViewer\Sass\elements\_edit-mode.scss" />
+    <Content Include="Admin\Modules\SiteViewer\Sass\elements\_info-list.scss" />
+    <Content Include="Admin\Modules\SiteViewer\Sass\elements\_mode.scss" />
+    <Content Include="Admin\Modules\SiteViewer\Sass\elements\_options.scss" />
+    <Content Include="Admin\Modules\SiteViewer\Sass\elements\_page-details.scss" />
+    <Content Include="Admin\Modules\SiteViewer\Sass\elements\_settings.scss" />
+    <Content Include="Admin\Modules\SiteViewer\Sass\sassutils\README.md" />
+    <Content Include="Admin\Modules\SiteViewer\Sass\sassutils\_functions.scss" />
+    <Content Include="Admin\Modules\SiteViewer\Sass\sassutils\_mixins.scss" />
+    <Content Include="Admin\Modules\SiteViewer\Sass\sassutils\_vendor.scss" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

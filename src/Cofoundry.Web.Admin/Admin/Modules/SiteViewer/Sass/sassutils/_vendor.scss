@@ -1,0 +1,21 @@
+/* Cross browser Opacity */
+@mixin opacity($opacity : 0.35) {
+	$opacity_ie: $opacity * 100;
+	/* IE 8 */
+	  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity='#{$opacity_ie}')";
+	  /* IE 5-7 */
+	  filter: alpha(opacity=$opacity_ie);
+    -moz-opacity : $opacity;
+    -khtml-opacity : $opacity;
+    -webkit-opacity : $opacity;
+    opacity : $opacity;
+}
+
+/* Non-inheriting cross browser opacity with white bg color */
+@mixin opacity_no_inherit($opacity : 0.35) {
+	$opacity_ie: $opacity * 100;
+	background:rgb(255,255,255);
+	background:rgba(255,255,255,$opacity);
+	-ms-filter:alpha(opacity=$opacity_ie);
+	filter:alpha(opacity=$opacity_ie)
+}

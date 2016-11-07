@@ -1,0 +1,130 @@
+@mixin font-size($size, $modifier:1.2) {
+    // IE 8 fallback in pixels
+    $pixel-size: ($size * 10) * $modifier; 
+    font-size: #{$pixel-size}px;
+
+    // fontsize in REM
+    font-size: #{$size}rem;
+}
+
+// New retina sprite mixin
+// Look for sprite classes in 'base/sprites'
+@mixin retina-sprite($sprite) {
+    @include sprite($sprite, block);
+    @extend .icon;
+}
+
+@mixin calc($property, $operation) {
+    #{$property}: -webkit-calc(#{$operation});
+    #{$property}:    -moz-calc(#{$operation});
+    #{$property}:         calc(#{$operation});
+}
+
+@mixin clearfix(){
+    zoom: 1;
+    &:before, &:after { content: "\0020"; display: block; height: 0; overflow: hidden; }
+    &:after { clear: both; } 
+}
+
+/* See https://gist.github.com/taupecat/4090271 */
+@mixin modernizr($test) {
+    html.#{$test} & {
+        @content;
+    }
+}
+
+// Adapted from http://jakearchibald.github.io/sass-ie/
+$mq-support: true !default;
+$mq-max-width: 1200px;
+@mixin respond-min($width) {
+
+	// Check for units on the width
+	@if unitless($width){
+		@warn "Assuming #{$width} to be in pixels, change to #{$width}px or another unit of measurement";
+		$width: $width * 1px;
+	}
+
+	@if $mq-support {
+		@media screen and (min-width: em($width)) {
+            @content;
+        }
+	} @else {
+
+		// Check media query applies
+		@if (em($width) <= em($mq-max-width)) {
+			@content;
+		}
+	}
+}
+
+@mixin respond-max($width) {
+
+	// Check for units on the width
+	@if unitless($width){
+		@warn "Assuming #{$width} to be in pixels, change to #{$width}px or another unit of measurement";
+		$width: $width * 1px;
+	}
+
+	@if $mq-support {
+		@media screen and (max-width: em($width)) {
+            @content;
+        }
+	} @else {
+
+		// Check media query applies
+		@if (em($width) >= em($mq-max-width)) {
+			@content;
+		}
+	}
+}
+
+@mixin sliderThumb {
+    &::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        @content;
+    }
+
+    &::-moz-range-thumb {
+        @content;
+    }
+
+    &::-ms-thumb {
+        @content;
+    }
+}
+
+@mixin sliderRail {
+    &::-webkit-slider-runnable-track {
+        @content;
+    }
+
+    &::-moz-range-track {
+        @content;
+    }
+
+    &::-ms-track {
+        @content;
+    }
+}
+
+
+// Converts px to em from a base context. Adapted from http://web-design-weekly.com/blog/snippets/converts-pixels-to-ems-with-sass/
+$browser-context: 16; // Default
+@function em($pixels, $context: $browser-context) {
+	@if unitless($pixels){
+		@return ($pixels/$context) * 1em
+	}
+	@elseif (unit($pixels) == "px") {
+		@return (strip-units($pixels)/$context) * 1em
+	}
+	@elseif (unit($pixels) == "em") {
+		@return $pixels
+	} @else {
+		@return $pixels * 1em
+	}
+}
+
+// Removes units from a size string, e.g. strip-units(13.48cm) gives 13.48. See http://stackoverflow.com/a/12335841/486434
+@function strip-units($number) {
+    @return $number / ($number * 0 + 1);
+}
