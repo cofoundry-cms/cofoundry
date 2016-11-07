@@ -357,7 +357,6 @@
     <Compile Include="Framework\ModularMvc\ViewEngine\ViewLocations\ViewLocations.cs" />
     <Compile Include="Framework\Mvc\ViewBases\CofoundryTemplatePageT.cs" />
     <Compile Include="Framework\Mvc\ViewHelpers\CofoundryTemplatePageHelperT.cs" />
-    <Compile Include="Framework\Mvc\ViewHelpers\PageTemplates\ICustomEntityPageTemplateHelper.cs" />
     <Compile Include="Framework\Mvc\ViewHelpers\PageTemplates\IPageTemplateHelper.cs" />
     <Compile Include="Framework\Mvc\ViewHelpers\PageTemplates\PageTemplateHelperExtensions.cs" />
     <Compile Include="Framework\Mvc\ViewHelpers\PageTemplates\PageTemplateHelper.cs" />
