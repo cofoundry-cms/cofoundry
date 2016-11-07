@@ -7,16 +7,12 @@ angular.module('cms.shared').directive('cmsFormFieldHtml', [
     '_',
     'shared.internalModulePath', 
     'shared.stringUtilities',
-    'taApplyCustomRenderers',
-    'textAngularManager',
     'baseFormFieldFactory', 
 function (
     $sce,
     _,
     modulePath, 
     stringUtilities,
-    taApplyCustomRenderers,
-    textAngularManager,
     baseFormFieldFactory) {
 
     var config = {
@@ -41,7 +37,13 @@ function (
 
     function Controller() {
         var vm = this;
-        vm.toolbar = parseToolbarButtons(vm.toolbarsConfig, vm.toolbarCustomConfig);
+        vm.tinymceOptions = {
+            toolbar: parseToolbarButtons(vm.toolbarsConfig, vm.toolbarCustomConfig),
+            plugins: 'link image media fullscreen code',
+            content_css: "/admin/modules/shared/content/css/lib/tinymce/content.min.css",
+            menubar: false,
+            min_height: 250
+        };
     }
 
    
@@ -51,34 +53,30 @@ function (
         // call base
         baseFormFieldFactory.defaultConfig.link.apply(this, arguments);
         
-        scope.$watch("vm.model", setTextAngularModel);
-        scope.$watch("vm.taModel", setCmsModel);
+        scope.$watch("vm.model", setEditorModel);
+        scope.$watch("vm.editorModel", setCmsModel);
 
         el.on('$destroy', function () {
-            textAngularManager.unregisterEditor(vm.modelName);
+            //textAngularManager.unregisterEditor(vm.modelName);
         });
 
-        function setTextAngularModel(value) {
-            var transformedValue = value ? taReverseCustomRenderers(value) : value;
-
-            if (transformedValue !== vm.taModel) {
-                vm.taModel = taReverseCustomRenderers(value);
+        function setEditorModel(value) {
+            if (value !== vm.editorModel) {
+                vm.editorModel = value;
                 vm.rawHtml = $sce.trustAsHtml(value);
             }
         }
 
         function setCmsModel(value) {
-            var transformedValue = formatValueForCMS(value);
-
-            if (transformedValue !== vm.model) {
-                vm.model = transformedValue;
-                vm.rawHtml = $sce.trustAsHtml(transformedValue);
+            if (value !== vm.model) {
+                vm.model = value;
+                vm.rawHtml = $sce.trustAsHtml(value);
             }
         }
     }
 
     function getInputEl(rootEl) {
-        return rootEl.find('text-angular');
+        return rootEl.find('textarea');
     }
 
     /* HELPERS */
@@ -86,11 +84,11 @@ function (
     function parseToolbarButtons(toolbarsConfig, toolbarCustomConfig) {
         var DEFAULT_CONFIG = 'headings,basicFormatting',
             buttonConfig = {
-                headings: ['h1', 'h2', 'h3'],
-                basicFormatting: ['p', 'bold', 'italics', 'underline', 'ul', 'ol', 'insertLink'],
-                media: ['insertImage', 'insertVideo'],
-                source: ['html'],
-            }, toolbar = [];
+                headings: 'formatselect',
+                basicFormatting: 'fullscreen undo redo | bold italic underline | link unlink',
+                media: 'image media',
+                source: 'code',
+            }, toolbar = '';
 
         toolbarsConfig = toolbarsConfig || DEFAULT_CONFIG;
 
@@ -102,7 +100,7 @@ function (
                 toolbar = _.union(toolbar, parseCustomConfig(toolbarCustomConfig));
 
             } else if (buttonConfig[configItem]) {
-                toolbar.push(buttonConfig[configItem]);
+                toolbar = toolbar.concat((toolbar.length ? ' | ': '') + buttonConfig[configItem]);
             }
         });
 
@@ -124,50 +122,5 @@ function (
 
             return [];
         }
-    }
-
-    function formatValueForCMS(val) {
-
-        if (!val) return val;
-
-        val = taApplyCustomRenderers(val);
-
-        return val;
-    }
-
-    /**
-     * Need to parse the text from the server and convert it to a text angular format
-     * https://github.com/fraywing/textAngular/issues/769
-     */
-    function taReverseCustomRenderers(val) {
-        var element = angular.element('<div></div>');
-        element[0].innerHTML = val;
-        elements = element.find('iframe');
-        
-        angular.forEach(elements, function ($element) {
-            var embedSlug = youtubeParser($element.src);
-            _element = angular.element($element);
-
-            var embedHtml = '<img class="ta-insert-video" src="https://img.youtube.com/vi/' + embedSlug + '/hqdefault.jpg" ta-insert-video="' + $element.src + '" contenteditable="false" allowfullscreen="true" frameborder="0"';
-
-            if ($element.style.cssText) {
-                embedHtml += ' style="' + $element.style.cssText + '"';
-            }
-            if ($element.width) {
-                embedHtml += ' width="' + $element.width + '"';
-            }
-            if ($element.height) {
-                embedHtml += ' height="' + $element.height + '"';
-            }
-            embedHtml += ' />';
-            _element.replaceWith(embedHtml);
-        });
-
-        return element[0].innerHTML;
-    }
-
-    function youtubeParser(url) {
-        var match = url && url.match((/^.*(youtu\.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/));
-        return match && match[2].length === 11 ? match[2] : false;
     }
 }]);

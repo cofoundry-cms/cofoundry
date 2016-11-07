@@ -348,6 +348,16 @@
     <Content Include="Admin\Modules\Shared\Content\css\lib\jquery-ui\jquery-ui.css" />
     <Content Include="Admin\Modules\Shared\Content\css\lib\selectize.default.css" />
     <Content Include="Admin\Modules\Shared\Content\css\lib\textangular.css" />
+    <Content Include="Admin\Modules\Shared\Content\css\lib\tinymce\content.inline.min.css" />
+    <Content Include="Admin\Modules\Shared\Content\css\lib\tinymce\content.min.css" />
+    <Content Include="Admin\Modules\Shared\Content\css\lib\tinymce\fonts\tinymce-small.svg" />
+    <Content Include="Admin\Modules\Shared\Content\css\lib\tinymce\fonts\tinymce.svg" />
+    <Content Include="Admin\Modules\Shared\Content\css\lib\tinymce\img\anchor.gif" />
+    <Content Include="Admin\Modules\Shared\Content\css\lib\tinymce\img\loader.gif" />
+    <Content Include="Admin\Modules\Shared\Content\css\lib\tinymce\img\object.gif" />
+    <Content Include="Admin\Modules\Shared\Content\css\lib\tinymce\img\trans.gif" />
+    <Content Include="Admin\Modules\Shared\Content\css\lib\tinymce\skin.ie7.min.css" />
+    <Content Include="Admin\Modules\Shared\Content\css\lib\tinymce\skin.min.css" />
     <Content Include="Admin\Modules\Shared\Content\css\lib\ui-select.css" />
     <Content Include="Admin\Modules\Shared\Content\css\shared.css" />
     <Content Include="Admin\Modules\Shared\Content\favicon.ico" />
@@ -376,9 +386,8 @@
     <Content Include="Admin\Modules\Shared\Js\lib\AngularModules\angular-route.js" />
     <Content Include="Admin\Modules\Shared\Js\lib\AngularModules\angularModalService.js" />
     <Content Include="Admin\Modules\Shared\Js\lib\AngularModules\draganddrop.js" />
-    <Content Include="Admin\Modules\Shared\Js\lib\AngularModules\TextAngular\textAngular-rangy.min.js" />
-    <Content Include="Admin\Modules\Shared\Js\lib\AngularModules\TextAngular\textAngular-sanitize.min.js" />
-    <Content Include="Admin\Modules\Shared\Js\lib\AngularModules\TextAngular\textAngular.min.js" />
+    <Content Include="Admin\Modules\Shared\Js\lib\AngularModules\TinyMce\tinymce.min.js" />
+    <Content Include="Admin\Modules\Shared\Js\lib\AngularModules\TinyMce\ui-tinymce.min.js" />
     <Content Include="Admin\Modules\Shared\Js\lib\AngularModules\ui-select.js" />
     <Content Include="Admin\Modules\Shared\Js\lib\html5shiv.js" />
     <Content Include="Admin\Modules\Shared\Js\lib\underscore.min.js" />
@@ -656,6 +665,16 @@
     <Content Include="Cofoundry.Web.Admin.nuspec" />
     <Content Include="Nuget\Content\Web.config.install.xdt" />
     <Content Include="Nuget\Content\Web.config.uninstall.xdt" />
+    <Content Include="Admin\Modules\Shared\Content\css\lib\tinymce\fonts\readme.md" />
+    <Content Include="Admin\Modules\Shared\Content\css\lib\tinymce\fonts\tinymce-small.eot" />
+    <Content Include="Admin\Modules\Shared\Content\css\lib\tinymce\fonts\tinymce-small.json" />
+    <Content Include="Admin\Modules\Shared\Content\css\lib\tinymce\fonts\tinymce-small.ttf" />
+    <Content Include="Admin\Modules\Shared\Content\css\lib\tinymce\fonts\tinymce-small.woff" />
+    <Content Include="Admin\Modules\Shared\Content\css\lib\tinymce\fonts\tinymce.eot" />
+    <Content Include="Admin\Modules\Shared\Content\css\lib\tinymce\fonts\tinymce.json" />
+    <Content Include="Admin\Modules\Shared\Content\css\lib\tinymce\fonts\tinymce.ttf" />
+    <Content Include="Admin\Modules\Shared\Content\css\lib\tinymce\fonts\tinymce.woff" />
+    <Content Include="Admin\Modules\Shared\Content\css\lib\tinymce\skin.json" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

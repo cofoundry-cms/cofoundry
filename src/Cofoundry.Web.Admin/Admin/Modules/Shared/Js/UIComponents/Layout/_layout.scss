@@ -20,6 +20,11 @@
     a {
         color:#000;
         text-decoration: none;
+
+        &:hover {
+            color:$color-primary;
+            text-decoration:underline;
+        }
     }
 }
 
@@ -38,7 +43,7 @@
     height: 55px;
 
     a {
-        color:$color-red;
+        color:$color-primary;
     }
 
     &:hover {
@@ -148,6 +153,7 @@
         position:relative;
 
         &:before {
+            @include transition(all .2s);
             content:'';
             position:absolute;
             top:0;
@@ -161,6 +167,7 @@
         }
 
         &:after {
+            @include transition(all .2s);
             content: '';
             position: absolute;
             bottom: -20px;
@@ -187,6 +194,7 @@
         }*/
 
         legend {
+            @include transition(all .2s);
             font-size:150%;
             width: 100%;
             background-color: #fff;
@@ -197,26 +205,107 @@
             z-index:10;
 
             &:before {
-                border-top: 3px solid #d31245;
+                @include transition(all .2s);
+                border-top: 3px solid $color-primary;
                 content:'';
                 position:absolute;
                 top:0;
                 left:0;
                 width:100%;
             }
+
+            button {
+                display:none;
+
+                &.show {
+                    @include transition(color .3s);
+                    overflow:hidden;
+                    background-color:transparent;
+                    color: #d2d2d2;
+                    border:none;
+                    display: inline-block;
+                    font: normal normal normal 15px/1 FontAwesome;
+                    position:absolute;
+                    right:15px;
+                    top:15px;
+
+                    &:hover {
+                        color:$color-darkgrey;
+                    }
+
+                    &.active {
+                        color: $color-primary;
+                    }
+                }
+            }
         }
 
-        @media screen and (min-width: 1200px) {
-            &:before, &:after {
-                right: 28%;
+        .control-group-area {
+            @include transition(all .2s);
+        }
+
+        .help-inline {
+            display:none;
+        }
+
+        &.show-helpers {
+            .help-inline {
+                @include transition(all .2s);
+                border-color:#fff;
+                background-color:#fff;
+                color:#989098;
+                width:100%;
+                display:block;
+                float:right;
+                padding: 20px;
+                position:relative;
+                left:-10px;
+                z-index:2;
+                top: -25px;
+
+                &:before {
+                    @include transition(all .3s);
+                    content:'';
+                    position:absolute;
+                    left:-20px;
+                    top:10px;
+                    border-left:10px solid transparent;
+                    border-right:10px solid #fff;
+                    border-top:10px solid transparent;
+                    border-bottom:10px solid transparent;
+                }
             }
 
-            &:after {
-                width: 72%;
-            }
+            @media screen and (min-width: 1200px) {
+                .control-group-area {
+                    width:72%;
+                }
 
-            legend {
-                 width: 72%;
+                .help-inline {
+                    @include border-radius(3px);
+                    border:1px solid #e3e3e3;
+                    width:25%;
+                    padding: 15px;
+                    top:23px;
+                    margin-bottom:10px;
+                }
+
+            }
+        }
+
+        &.show-helpers {
+            @media screen and (min-width: 1200px) {
+                &:before, &:after {
+                    right: 28%;
+                }
+
+                &:after {
+                    width: 72%;
+                }
+
+                & legend {
+                    width: 72%;
+                }
             }
         }
     }
@@ -279,13 +368,12 @@
             &.editmode {
                 label {
                     &:after {
-                        @include opacity(0.5);
                         position:absolute;
                         right:28px;
                         width: 15px;
                         font-family: FontAwesome;
                         content:'\f00c';
-                        color: $color-green;
+                        color: $color-success;
                     }
                 }
             }
@@ -294,7 +382,7 @@
                 label {
                     &:after {
                         content:'\f069';
-                        color: $color-orange;
+                        color: $color-warning;
                     }
                 }
             }
@@ -303,7 +391,7 @@
                 label {
                     &:after {
                         content:'\f069';
-                        color: $color-red;
+                        color: $color-error;
                     }
                 }
             }
@@ -316,58 +404,6 @@
                 }
             }
         }
-
-        .help-inline {
-            @include transition(all .3s);
-            color:#989098;
-            width:100%;
-            display:block;
-            float:right;
-            padding: 20px;
-            position:relative;
-            left:0;
-            z-index:2;
-            top: -25px;
-
-            &:before {
-                @include transition(all .3s);
-                content:'';
-                position:absolute;
-                left:-20px;
-                top:10px;
-                border-left:10px solid transparent;
-                border-right:10px solid transparent;
-                border-top:10px solid transparent;
-                border-bottom:10px solid transparent;
-            }
-        }
-
-        @media screen and (min-width: 1200px) {
-            .control-group-area {
-                width:72%;
-            }
-
-            .help-inline {
-                @include border-radius(3px);
-                border:1px solid #e3e3e3;
-                width:25%;
-                padding: 15px;
-                top:23px;
-                margin-bottom:10px;
-            }
-
-            &:hover, &:active {
-                .help-inline {
-                    border-color:#fff;
-                    background-color:#fff;
-                    left:-10px;
-
-                    &:before {
-                        border-right:10px solid #fff;
-                    }
-                }
-            }
-        }
     }
 
     @media screen and (min-width: 1200px) {
@@ -376,8 +412,8 @@
 }
 
 .on-drag-hover {
-    border-top:2px solid $color-red;
-    border-bottom:2px solid $color-red;
+    border-top:2px solid $color-primary;
+    border-bottom:2px solid $color-primary;
 }
 
 [draggable] {
@@ -393,7 +429,7 @@
     font-size:1.4em;
 
     &.alert {
-        color:$color-orange;
+        color:$color-warning;
         margin-right: 5px;
     }
 }

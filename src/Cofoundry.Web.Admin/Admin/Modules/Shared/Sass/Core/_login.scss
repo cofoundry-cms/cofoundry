@@ -23,7 +23,7 @@
         top:0;
         width:100%;
         color:#fff;
-        background-color:$color-red;
+        background-color:$color-primary;
     }
 
     form {
@@ -54,7 +54,7 @@
     .field-validation-error {
         @include border-radius(2px);
         padding:5px;
-        border:1px solid $color-orange;
+        border:1px solid $color-warning;
         background-color:#ffcc99;
         width:100%;
         margin-top:5px;

@@ -34,7 +34,7 @@
 	}
 
 	.home {
-		background-color:$color-red;
+		background-color:$color-primary;
 		display: block;
         text-align:center;
         color:#fff;
@@ -109,7 +109,7 @@
             .main-button {
                 color:#fff;
                 background-color:$color-darkgrey;
-                border-left:3px solid $color-red;
+                border-left:3px solid $color-primary;
 
                 i {
                     @include opacity(1);

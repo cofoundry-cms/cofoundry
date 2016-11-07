@@ -3,8 +3,7 @@
         'ngRoute',
         'angularModalService',
         'angularFileUpload',
-        'textAngular',
-        'ngSanitize',
+        'ui.tinymce',
         'ang-drag-drop',
         'ui.select'
     ])

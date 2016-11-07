@@ -8,7 +8,7 @@ body {
 }
 
 h1 {
-    background: #d31245 url(/admin/modules/shared/content/img/logo.png) no-repeat 30px center;
+    background: $color-primary url(/admin/modules/shared/content/img/logo.png) no-repeat 30px center;
     height: 90px;
     margin: 0px;
     overflow: hidden;
@@ -72,7 +72,7 @@ h1 {
 }
 
     .login-footer-links a {
-        color: #d31245;
+        color: $color-primary;
         margin: 0;
         text-decoration: none;
     }

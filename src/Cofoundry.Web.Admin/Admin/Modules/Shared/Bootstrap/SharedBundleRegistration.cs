@@ -18,7 +18,7 @@ namespace Cofoundry.Web.Admin
 
             var cssBundle = new StyleBundle(SharedRouteLibrary.Css.Main)
                     .Include(SharedRouteLibrary.Css.Bundle("lib/font-awesome/font-awesome.css"), urlTransform)
-                    .Include(SharedRouteLibrary.Css.Bundle("lib/textangular.css"))
+                    .Include(SharedRouteLibrary.Css.Bundle("lib/tinymce/skin.min.css"))
                     .Include(SharedRouteLibrary.Css.Bundle("lib/ui-select.css"))
                     .Include(SharedRouteLibrary.Css.Bundle("lib/selectize.default.css"))
                     .Include(SharedRouteLibrary.Css.Bundle("shared.css"), urlTransform);
@@ -48,9 +48,9 @@ namespace Cofoundry.Web.Admin
 
             sharedMainBundle.Include(SharedRouteLibrary.Js.Bundle("lib/underscore.min.js"));
             sharedMainBundle.Include(SharedRouteLibrary.Js.Bundle("lib/angular.min.js"));
-            sharedMainBundle.Include(SharedRouteLibrary.Js.Bundle("lib/AngularModules/TextAngular/textAngular-rangy.min.js"));
-            sharedMainBundle.Include(SharedRouteLibrary.Js.Bundle("lib/AngularModules/TextAngular/textAngular-sanitize.min.js"));
-            sharedMainBundle.Include(SharedRouteLibrary.Js.Bundle("lib/AngularModules/TextAngular/textAngular.min.js"));
+            sharedMainBundle.Include(SharedRouteLibrary.Js.Bundle("lib/AngularModules/TinyMce/tinymce.min.js"));
+            sharedMainBundle.Include(SharedRouteLibrary.Js.Bundle("lib/AngularModules/TinyMce/ui-tinymce.min.js"));
+
             IncludeDirectory(sharedMainBundle, SharedRouteLibrary.Js.Bundle("Lib/AngularModules/"), false);
             IncludeDirectory(sharedMainBundle, SharedRouteLibrary.Js.Bundle(AngularJsDirectoryLibrary.Bootstrap + "/"), true);
             IncludeDirectory(sharedMainBundle, SharedRouteLibrary.Js.Bundle(AngularJsDirectoryLibrary.DataServices + "/"), true);

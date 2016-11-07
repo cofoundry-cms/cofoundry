@@ -28,7 +28,7 @@
     border: 1px solid #d2d2d2;
     margin-bottom: 10px;
     padding:1px;
-    border-top: 3px solid #d31245;
+    border-top: 3px solid $color-primary;
 	position:relative;
 }
 
@@ -90,7 +90,7 @@
                 @extend %row-type;
                 @include border-top-left-radius(2px);
                 @include border-bottom-left-radius(2px);
-                background-color:$color-red;
+                background-color:$color-primary;
                 display:block;
                 
                 i {
@@ -163,7 +163,7 @@ fieldset .table thead {
 /**
     Highlight valid/invalid cell data.
     Ideally these would alternate slightly with striped rows, here we just 
-    have to override the existing boostrap class
+    have to override the existing bootstrap class
 */
 .table td.error, .table-striped tbody tr:nth-child(odd) td.error {
     background-color: #FC4C54;

@@ -20,13 +20,13 @@
     }
 
     &.main-cta {
-        background-color:$color-red;
+        background-color:$color-primary;
         color:#fff;
-        border-color:$color-red;
+        border-color:$color-primary;
 
         &:hover {
-            background-color:$color-darkred;
-            border-color:$color-darkred;
+            background-color:$color-primary-dark;
+            border-color:$color-primary-dark;
         }
     }
 
@@ -67,7 +67,7 @@
     }
 
     &:hover .fa {
-        color:$color-red;
+        color:$color-primary;
     }
 }
 

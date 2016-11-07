@@ -249,7 +249,7 @@ footer a {
   font-weight: bold;
   background: white;
   padding: 10px;
-  border-top: 2px solid #d31245;
+  border-top: 2px solid #3366cc;
 }
 /* line 94, ../../Sass/Core/_layout.scss */
 .dashboard-item:nth-of-type(1), .dashboard-item:nth-of-type(2) {
@@ -316,7 +316,7 @@ footer a {
   top: 0;
   width: 100%;
   color: #fff;
-  background-color: #d31245;
+  background-color: #3366cc;
 }
 /* line 29, ../../Sass/Core/_login.scss */
 .login-container form {
@@ -369,9 +369,8 @@ footer a {
 
 /**
  * Navigation styles
- *
  */
-/* line 7, ../../Sass/Core/_navigation.scss */
+/* line 5, ../../Sass/Core/_navigation.scss */
 .main-nav {
   -moz-transition: width 0.3s;
   -o-transition: width 0.3s;
@@ -385,12 +384,12 @@ footer a {
   height: 100vh;
   z-index: 999;
 }
-/* line 17, ../../Sass/Core/_navigation.scss */
+/* line 15, ../../Sass/Core/_navigation.scss */
 .main-nav.fix {
   position: fixed;
   top: 0px;
 }
-/* line 22, ../../Sass/Core/_navigation.scss */
+/* line 20, ../../Sass/Core/_navigation.scss */
 .main-nav ol, .main-nav ul {
   margin: 0;
   padding: 0;
@@ -398,23 +397,23 @@ footer a {
   position: relative;
   background: #3c3c3c;
 }
-/* line 29, ../../Sass/Core/_navigation.scss */
+/* line 27, ../../Sass/Core/_navigation.scss */
 .main-nav ol li, .main-nav ul li {
   z-index: 1;
 }
-/* line 32, ../../Sass/Core/_navigation.scss */
+/* line 30, ../../Sass/Core/_navigation.scss */
 .main-nav ol li .void, .main-nav ul li .void {
   z-index: 2;
 }
-/* line 38, ../../Sass/Core/_navigation.scss */
+/* line 36, ../../Sass/Core/_navigation.scss */
 .main-nav .home {
-  background-color: #d31245;
+  background-color: #3366cc;
   display: block;
   text-align: center;
   color: #fff;
   height: 70px;
 }
-/* line 45, ../../Sass/Core/_navigation.scss */
+/* line 43, ../../Sass/Core/_navigation.scss */
 .main-nav .home i {
   display: inline-block;
   vertical-align: middle;
@@ -429,7 +428,7 @@ footer a {
   margin-top: 24px;
 }
 @media (-webkit-min-device-pixel-ratio: 1.5), (min--moz-device-pixel-ratio: 1.5), (-o-min-device-pixel-ratio: 3 / 2), (min-device-pixel-ratio: 1.5), (min-resolution: 144dppx) {
-  /* line 45, ../../Sass/Core/_navigation.scss */
+  /* line 43, ../../Sass/Core/_navigation.scss */
   .main-nav .home i {
     background-image: url('/Admin/Modules/Shared/Content/css/img/icons/retina.png');
     background-position: 0 -201px;
@@ -439,18 +438,18 @@ footer a {
     background-size: 93px auto;
   }
 }
-/* line 51, ../../Sass/Core/_navigation.scss */
+/* line 49, ../../Sass/Core/_navigation.scss */
 .main-nav .category {
   width: 100%;
 }
-/* line 55, ../../Sass/Core/_navigation.scss */
+/* line 53, ../../Sass/Core/_navigation.scss */
 .main-nav .category.void .fill {
   position: relative;
   background-color: #3c3c3c;
   z-index: 20;
   width: 288px;
 }
-/* line 63, ../../Sass/Core/_navigation.scss */
+/* line 61, ../../Sass/Core/_navigation.scss */
 .main-nav .category .main-button {
   -moz-transition: all 0.3s;
   -o-transition: all 0.3s;
@@ -474,7 +473,7 @@ footer a {
   border-bottom: 1px solid #686868;
   border-left: 4px solid #4d4d4d;
 }
-/* line 83, ../../Sass/Core/_navigation.scss */
+/* line 81, ../../Sass/Core/_navigation.scss */
 .main-nav .category .main-button i {
   -moz-transition: opacity 0.3s;
   -o-transition: opacity 0.3s;
@@ -483,7 +482,7 @@ footer a {
   filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=50);
   opacity: 0.5;
 }
-/* line 89, ../../Sass/Core/_navigation.scss */
+/* line 87, ../../Sass/Core/_navigation.scss */
 .main-nav .category i {
   position: absolute;
   left: 50%;
@@ -492,7 +491,7 @@ footer a {
   font-size: 2em;
   margin-left: -10px;
 }
-/* line 98, ../../Sass/Core/_navigation.scss */
+/* line 96, ../../Sass/Core/_navigation.scss */
 .main-nav .category .sub-nav {
   -moz-transition: width 0.3s;
   -o-transition: width 0.3s;
@@ -506,26 +505,26 @@ footer a {
   width: 148px;
   display: none;
 }
-/* line 111, ../../Sass/Core/_navigation.scss */
+/* line 109, ../../Sass/Core/_navigation.scss */
 .main-nav .category:hover .main-button, .main-nav .category.selected .main-button {
   color: #fff;
   background-color: #3c3c3c;
-  border-left: 3px solid #d31245;
+  border-left: 3px solid #3366cc;
 }
-/* line 116, ../../Sass/Core/_navigation.scss */
+/* line 114, ../../Sass/Core/_navigation.scss */
 .main-nav .category:hover .main-button i, .main-nav .category.selected .main-button i {
   filter: progid:DXImageTransform.Microsoft.Alpha(enabled=false);
   opacity: 1;
 }
-/* line 120, ../../Sass/Core/_navigation.scss */
+/* line 118, ../../Sass/Core/_navigation.scss */
 .main-nav .category:hover .main-button:after, .main-nav .category:hover .main-button:before, .main-nav .category.selected .main-button:after, .main-nav .category.selected .main-button:before {
   display: none;
 }
-/* line 125, ../../Sass/Core/_navigation.scss */
+/* line 123, ../../Sass/Core/_navigation.scss */
 .main-nav .category:hover .sub-nav, .main-nav .category.selected .sub-nav {
   display: block;
 }
-/* line 131, ../../Sass/Core/_navigation.scss */
+/* line 129, ../../Sass/Core/_navigation.scss */
 .main-nav .results {
   width: 100%;
   overflow: auto;
@@ -534,11 +533,11 @@ footer a {
   bottom: 140px;
   position: absolute;
 }
-/* line 140, ../../Sass/Core/_navigation.scss */
+/* line 138, ../../Sass/Core/_navigation.scss */
 .main-nav .result {
   padding: 0 18px 2px;
 }
-/* line 143, ../../Sass/Core/_navigation.scss */
+/* line 141, ../../Sass/Core/_navigation.scss */
 .main-nav .result a {
   width: 100%;
   display: block;
@@ -546,7 +545,7 @@ footer a {
   text-decoration: none;
   padding: 10px 12px;
 }
-/* line 150, ../../Sass/Core/_navigation.scss */
+/* line 148, ../../Sass/Core/_navigation.scss */
 .main-nav .result a span {
   -moz-border-radius: 50%;
   -webkit-border-radius: 50%;
@@ -557,25 +556,25 @@ footer a {
   padding: 2px 5px;
   font-size: 80%;
 }
-/* line 159, ../../Sass/Core/_navigation.scss */
+/* line 157, ../../Sass/Core/_navigation.scss */
 .main-nav .result a:hover {
   -moz-border-radius: 2px;
   -webkit-border-radius: 2px;
   border-radius: 2px;
   background-color: #2c2c2c;
 }
-/* line 165, ../../Sass/Core/_navigation.scss */
+/* line 163, ../../Sass/Core/_navigation.scss */
 .main-nav .result:last-of-type a {
   border-bottom: 0px;
 }
-/* line 170, ../../Sass/Core/_navigation.scss */
+/* line 168, ../../Sass/Core/_navigation.scss */
 .main-nav .result.active a {
   -moz-border-radius: 2px;
   -webkit-border-radius: 2px;
   border-radius: 2px;
   background-color: #2c2c2c;
 }
-/* line 177, ../../Sass/Core/_navigation.scss */
+/* line 175, ../../Sass/Core/_navigation.scss */
 .main-nav .logout, .main-nav .view-site {
   position: absolute;
   bottom: 30px;
@@ -583,7 +582,7 @@ footer a {
   width: 80px;
   text-align: center;
 }
-/* line 184, ../../Sass/Core/_navigation.scss */
+/* line 182, ../../Sass/Core/_navigation.scss */
 .main-nav .logout a, .main-nav .view-site a {
   -moz-transition: all 0.3s;
   -o-transition: all 0.3s;
@@ -594,31 +593,31 @@ footer a {
   color: #919191;
   text-decoration: none;
 }
-/* line 191, ../../Sass/Core/_navigation.scss */
+/* line 189, ../../Sass/Core/_navigation.scss */
 .main-nav .logout a:hover, .main-nav .view-site a:hover {
   color: #fff;
 }
-/* line 197, ../../Sass/Core/_navigation.scss */
+/* line 195, ../../Sass/Core/_navigation.scss */
 .main-nav .view-site {
   left: 110px;
   text-align: left;
   width: auto;
 }
-/* line 202, ../../Sass/Core/_navigation.scss */
+/* line 200, ../../Sass/Core/_navigation.scss */
 .main-nav .view-site i {
   position: absolute;
   top: 2px;
 }
-/* line 207, ../../Sass/Core/_navigation.scss */
+/* line 205, ../../Sass/Core/_navigation.scss */
 .main-nav .view-site span {
   margin-left: 22px;
 }
 @media screen and (min-width: 950px) {
-  /* line 7, ../../Sass/Core/_navigation.scss */
+  /* line 5, ../../Sass/Core/_navigation.scss */
   .main-nav {
     width: 288px;
   }
-  /* line 216, ../../Sass/Core/_navigation.scss */
+  /* line 214, ../../Sass/Core/_navigation.scss */
   .main-nav .category .sub-nav {
     width: 208px;
   }
@@ -663,14 +662,14 @@ html {
 }
 /* line 22, ../../Js/UIComponents/Buttons/_button.scss */
 .main-cta.btn {
-  background-color: #d31245;
+  background-color: #3366cc;
   color: #fff;
-  border-color: #d31245;
+  border-color: #3366cc;
 }
 /* line 27, ../../Js/UIComponents/Buttons/_button.scss */
 .main-cta.btn:hover {
-  background-color: #ba0433;
-  border-color: #ba0433;
+  background-color: #003399;
+  border-color: #003399;
 }
 @media screen and (min-width: 1200px) {
   /* line 1, ../../Js/UIComponents/Buttons/_button.scss */
@@ -713,7 +712,7 @@ html {
 }
 /* line 69, ../../Js/UIComponents/Buttons/_button.scss */
 .btn-icon:hover .fa {
-  color: #d31245;
+  color: #3366cc;
 }
 
 /**
@@ -855,7 +854,7 @@ input[type="color"] {
 
 /* line 92, ../../Js/UIComponents/FormFields/_formfields.scss */
 .selectize-dropdown .active {
-  background: #fbe7ec;
+  background: #d0defc;
   color: #000;
 }
 
@@ -879,339 +878,19 @@ input[type="color"] {
 }
 /* line 111, ../../Js/UIComponents/FormFields/_formfields.scss */
 .selectize-control.single .selectize-input:hover:after {
-  color: #d31245;
+  color: #3366cc;
 }
 
-/*
-@license textAngular
-Author : Austin Anderson
-License : 2013 MIT
-Version 1.3.7
-
-See README.md or https://github.com/fraywing/textAngular/wiki for requirements and use.
-*/
-/* line 10, ../../Js/UIComponents/FormFields/_textangular.scss */
-.ta-hidden-input {
-  width: 1px;
-  height: 1px;
-  border: none;
-  margin: 0;
-  padding: 0;
-  position: absolute;
-  top: -10000px;
-  left: -10000px;
-  opacity: 0;
-  overflow: hidden;
+/* line 116, ../../Js/UIComponents/FormFields/_formfields.scss */
+.form-field-text-area {
+  z-index: 10000 !important;
 }
-
-/* add generic styling for the editor */
-/* line 24, ../../Js/UIComponents/FormFields/_textangular.scss */
-.ta-root.focussed > .ta-scroll-window.form-control {
-  outline: 0;
-}
-
-/* line 28, ../../Js/UIComponents/FormFields/_textangular.scss */
-.ta-editor.ta-html, .ta-scroll-window.form-control {
-  min-height: 300px;
-  height: auto;
-  overflow: auto;
-  font-family: inherit;
-  font-size: 100%;
-}
-
-/* line 36, ../../Js/UIComponents/FormFields/_textangular.scss */
-.ta-scroll-window.form-control {
-  position: relative;
-  padding: 0;
-  border-bottom-right-radius: 3px;
-  border-bottom-left-radius: 3px;
-  border: 1px solid #d2d2d2;
-}
-/* line 43, ../../Js/UIComponents/FormFields/_textangular.scss */
-.ta-scroll-window.form-control b, .ta-scroll-window.form-control strong {
-  font-weight: bold;
-}
-/* line 47, ../../Js/UIComponents/FormFields/_textangular.scss */
-.ta-scroll-window.form-control i {
-  font-style: italic;
-}
-/* line 51, ../../Js/UIComponents/FormFields/_textangular.scss */
-.ta-scroll-window.form-control p {
-  margin-bottom: 1em;
-}
-
-/* line 56, ../../Js/UIComponents/FormFields/_textangular.scss */
-.ta-scroll-window > .ta-bind {
-  height: auto;
-  min-height: 300px;
-  padding: 6px 12px;
-}
-
-/* line 62, ../../Js/UIComponents/FormFields/_textangular.scss */
-.ta-editor:focus {
-  user-select: text;
-}
-
-/* line 66, ../../Js/UIComponents/FormFields/_textangular.scss */
-.ta-toolbar {
-  background: #f2f2f2;
-  border-top: 1px solid #d2d2d2;
-  border-left: 1px solid #d2d2d2;
-  border-right: 1px solid #d2d2d2;
-  border-top-right-radius: 3px;
-  border-top-left-radius: 3px;
-}
-/* line 74, ../../Js/UIComponents/FormFields/_textangular.scss */
-.ta-toolbar .btn-group {
-  border-bottom: 1px solid #d2d2d2;
-  border-right: 1px solid #d2d2d2;
-  display: inline-block;
-}
-/* line 78, ../../Js/UIComponents/FormFields/_textangular.scss */
-.ta-toolbar .btn-group:last-of-type {
-  border-right: 0;
-}
-/* line 83, ../../Js/UIComponents/FormFields/_textangular.scss */
-.ta-toolbar .btn {
-  border-radius: 0;
-  border: none;
-  background: none;
-  border-right: 1px solid #d2d2d2;
-  height: 33px;
-  width: 42px;
-  font-size: 1em;
-}
-/* line 92, ../../Js/UIComponents/FormFields/_textangular.scss */
-.ta-toolbar .btn i.fa {
-  left: 9px;
-  font-size: 1.4em;
-  color: #000;
-}
-/* line 98, ../../Js/UIComponents/FormFields/_textangular.scss */
-.ta-toolbar .btn:hover {
-  background: #e4e1e1;
-  color: black;
-}
-
-/* add the styling for the awesomness of the resizer */
-/* line 106, ../../Js/UIComponents/FormFields/_textangular.scss */
-.ta-resizer-handle-overlay {
-  z-index: 100;
-  position: absolute;
-  display: none;
-}
-
-/* line 112, ../../Js/UIComponents/FormFields/_textangular.scss */
-.ta-resizer-handle-overlay > .ta-resizer-handle-info {
-  position: absolute;
-  bottom: 16px;
-  right: 16px;
-  border: 1px solid black;
-  background-color: #FFF;
-  padding: 0 4px;
-  opacity: 0.7;
-}
-
-/* line 122, ../../Js/UIComponents/FormFields/_textangular.scss */
-.ta-resizer-handle-overlay > .ta-resizer-handle-background {
-  position: absolute;
-  bottom: 5px;
-  right: 5px;
-  left: 5px;
-  top: 5px;
-  border: 1px solid black;
-  background-color: rgba(0, 0, 0, 0.2);
-}
-
-/* line 132, ../../Js/UIComponents/FormFields/_textangular.scss */
-.ta-resizer-handle-overlay > .ta-resizer-handle-corner {
-  width: 10px;
-  height: 10px;
-  position: absolute;
-}
-
-/* line 138, ../../Js/UIComponents/FormFields/_textangular.scss */
-.ta-resizer-handle-overlay > .ta-resizer-handle-corner-tl {
-  top: 0;
-  left: 0;
-  border-left: 1px solid black;
-  border-top: 1px solid black;
-}
-
-/* line 145, ../../Js/UIComponents/FormFields/_textangular.scss */
-.ta-resizer-handle-overlay > .ta-resizer-handle-corner-tr {
-  top: 0;
+/* line 119, ../../Js/UIComponents/FormFields/_formfields.scss */
+.form-field-text-area .mce-fullscreen {
+  top: 70px;
+  left: 288px;
+  width: auto;
   right: 0;
-  border-right: 1px solid black;
-  border-top: 1px solid black;
-}
-
-/* line 152, ../../Js/UIComponents/FormFields/_textangular.scss */
-.ta-resizer-handle-overlay > .ta-resizer-handle-corner-bl {
-  bottom: 0;
-  left: 0;
-  border-left: 1px solid black;
-  border-bottom: 1px solid black;
-}
-
-/* line 159, ../../Js/UIComponents/FormFields/_textangular.scss */
-.ta-resizer-handle-overlay > .ta-resizer-handle-corner-br {
-  bottom: 0;
-  right: 0;
-  border: 1px solid black;
-  cursor: se-resize;
-  background-color: white;
-}
-
-/* copy the popover code from bootstrap so this will work even without it */
-/* line 168, ../../Js/UIComponents/FormFields/_textangular.scss */
-.popover {
-  position: absolute;
-  top: 0;
-  left: 0;
-  z-index: 1060;
-  display: none;
-  max-width: 276px;
-  padding: 1px;
-  font-size: 14px;
-  font-weight: normal;
-  line-height: 1.42857143;
-  text-align: left;
-  white-space: normal;
-  background-color: #fff;
-  -webkit-background-clip: padding-box;
-  background-clip: padding-box;
-  border: 1px solid #ccc;
-  border: 1px solid rgba(0, 0, 0, 0.2);
-  border-radius: 6px;
-  -webkit-box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
-  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
-}
-
-/* line 190, ../../Js/UIComponents/FormFields/_textangular.scss */
-.popover.top {
-  margin-top: -10px;
-}
-
-/* line 193, ../../Js/UIComponents/FormFields/_textangular.scss */
-.popover.bottom {
-  margin-top: 10px;
-}
-
-/* line 196, ../../Js/UIComponents/FormFields/_textangular.scss */
-.popover-title {
-  padding: 8px 14px;
-  margin: 0;
-  font-size: 14px;
-  background-color: #f7f7f7;
-  border-bottom: 1px solid #ebebeb;
-  border-radius: 5px 5px 0 0;
-}
-
-/* line 204, ../../Js/UIComponents/FormFields/_textangular.scss */
-.popover-content {
-  padding: 9px 14px;
-}
-
-/* line 207, ../../Js/UIComponents/FormFields/_textangular.scss */
-.popover > .arrow,
-.popover > .arrow:after {
-  position: absolute;
-  display: block;
-  width: 0;
-  height: 0;
-  border-color: transparent;
-  border-style: solid;
-}
-
-/* line 216, ../../Js/UIComponents/FormFields/_textangular.scss */
-.popover > .arrow {
-  border-width: 11px;
-}
-
-/* line 219, ../../Js/UIComponents/FormFields/_textangular.scss */
-.popover > .arrow:after {
-  content: "";
-  border-width: 10px;
-}
-
-/* line 223, ../../Js/UIComponents/FormFields/_textangular.scss */
-.popover.top > .arrow {
-  bottom: -11px;
-  left: 50%;
-  margin-left: -11px;
-  border-top-color: #999;
-  border-top-color: rgba(0, 0, 0, 0.25);
-  border-bottom-width: 0;
-}
-
-/* line 231, ../../Js/UIComponents/FormFields/_textangular.scss */
-.popover.top > .arrow:after {
-  bottom: 1px;
-  margin-left: -10px;
-  content: " ";
-  border-top-color: #fff;
-  border-bottom-width: 0;
-}
-
-/* line 238, ../../Js/UIComponents/FormFields/_textangular.scss */
-.popover.bottom > .arrow {
-  top: -11px;
-  left: 50%;
-  margin-left: -11px;
-  border-top-width: 0;
-  border-bottom-color: #999;
-  border-bottom-color: rgba(0, 0, 0, 0.25);
-}
-
-/* line 246, ../../Js/UIComponents/FormFields/_textangular.scss */
-.popover.bottom > .arrow:after {
-  top: 1px;
-  margin-left: -10px;
-  content: " ";
-  border-top-width: 0;
-  border-bottom-color: #fff;
-}
-
-/* Text Editor Styles */
-/* line 258, ../../Js/UIComponents/FormFields/_textangular.scss */
-.ta-text h1, .ta-text h2, .ta-text h3, .ta-text h4, .ta-text h5 {
-  font-weight: bold;
-  margin-bottom: 1rem;
-}
-/* line 262, ../../Js/UIComponents/FormFields/_textangular.scss */
-.ta-text h1 {
-  font-size: 2rem;
-}
-/* line 266, ../../Js/UIComponents/FormFields/_textangular.scss */
-.ta-text h2 {
-  font-size: 1.6rem;
-}
-/* line 270, ../../Js/UIComponents/FormFields/_textangular.scss */
-.ta-text h3 {
-  font-size: 1.3rem;
-}
-/* line 274, ../../Js/UIComponents/FormFields/_textangular.scss */
-.ta-text ul {
-  list-style-type: disc;
-  list-style-position: inside;
-}
-/* line 278, ../../Js/UIComponents/FormFields/_textangular.scss */
-.ta-text ol {
-  list-style-type: decimal;
-  list-style-position: inside;
-}
-/* line 282, ../../Js/UIComponents/FormFields/_textangular.scss */
-.ta-text ul ul, .ta-text ol ul {
-  list-style-type: circle;
-  list-style-position: inside;
-  margin-left: 15px;
-}
-/* line 287, ../../Js/UIComponents/FormFields/_textangular.scss */
-.ta-text ol ol, .ta-text ul ol {
-  list-style-type: lower-latin;
-  list-style-position: inside;
-  margin-left: 15px;
 }
 
 /* line 1, ../../Js/UIComponents/ImageAssets/_image-asset.scss */
@@ -1260,8 +939,13 @@ See README.md or https://github.com/fraywing/textAngular/wiki for requirements a
   color: #000;
   text-decoration: none;
 }
+/* line 24, ../../Js/UIComponents/Layout/_layout.scss */
+.page-header a:hover {
+  color: #3366cc;
+  text-decoration: underline;
+}
 
-/* line 26, ../../Js/UIComponents/Layout/_layout.scss */
+/* line 31, ../../Js/UIComponents/Layout/_layout.scss */
 .page-sub-header {
   filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=80);
   opacity: 0.8;
@@ -1277,16 +961,16 @@ See README.md or https://github.com/fraywing/textAngular/wiki for requirements a
   top: 70px;
   height: 55px;
 }
-/* line 40, ../../Js/UIComponents/Layout/_layout.scss */
+/* line 45, ../../Js/UIComponents/Layout/_layout.scss */
 .page-sub-header a {
-  color: #d31245;
+  color: #3366cc;
 }
-/* line 44, ../../Js/UIComponents/Layout/_layout.scss */
+/* line 49, ../../Js/UIComponents/Layout/_layout.scss */
 .page-sub-header:hover {
   filter: progid:DXImageTransform.Microsoft.Alpha(enabled=false);
   opacity: 1;
 }
-/* line 48, ../../Js/UIComponents/Layout/_layout.scss */
+/* line 53, ../../Js/UIComponents/Layout/_layout.scss */
 .page-sub-header .page-header-buttons {
   position: absolute;
   right: 370px;
@@ -1294,7 +978,7 @@ See README.md or https://github.com/fraywing/textAngular/wiki for requirements a
   text-align: right;
 }
 
-/* line 56, ../../Js/UIComponents/Layout/_layout.scss */
+/* line 61, ../../Js/UIComponents/Layout/_layout.scss */
 .search-filter {
   -moz-box-shadow: 0px 0px 15px 0px rgba(0, 0, 0, 0.3);
   -webkit-box-shadow: 0px 0px 15px 0px rgba(0, 0, 0, 0.3);
@@ -1310,7 +994,7 @@ See README.md or https://github.com/fraywing/textAngular/wiki for requirements a
   padding: 10px;
   z-index: -1;
 }
-/* line 69, ../../Js/UIComponents/Layout/_layout.scss */
+/* line 74, ../../Js/UIComponents/Layout/_layout.scss */
 .search-filter:before {
   content: '';
   position: absolute;
@@ -1322,7 +1006,7 @@ See README.md or https://github.com/fraywing/textAngular/wiki for requirements a
   border-left-color: transparent;
   border-right-color: transparent;
 }
-/* line 81, ../../Js/UIComponents/Layout/_layout.scss */
+/* line 86, ../../Js/UIComponents/Layout/_layout.scss */
 .search-filter:after {
   content: '';
   position: absolute;
@@ -1335,59 +1019,59 @@ See README.md or https://github.com/fraywing/textAngular/wiki for requirements a
   border-right-color: transparent;
   z-index: 2;
 }
-/* line 94, ../../Js/UIComponents/Layout/_layout.scss */
+/* line 99, ../../Js/UIComponents/Layout/_layout.scss */
 .search-filter label {
   display: block;
   padding-top: 10px;
   padding-bottom: 5px;
 }
-/* line 100, ../../Js/UIComponents/Layout/_layout.scss */
+/* line 105, ../../Js/UIComponents/Layout/_layout.scss */
 .search-filter input[type="text"], .search-filter input[type="email"], .search-filter input[type="password"], .search-filter input[type="number"], .search-filter input[type="date"], .search-filter input[type="color"], .search-filter input[type="url"], .search-filter input[type="tel"], .search-filter textarea, .search-filter select {
   padding: 5px;
   font-size: 1em;
 }
-/* line 105, ../../Js/UIComponents/Layout/_layout.scss */
+/* line 110, ../../Js/UIComponents/Layout/_layout.scss */
 .search-filter .form-actions {
   text-align: right;
   padding-top: 10px;
 }
-/* line 109, ../../Js/UIComponents/Layout/_layout.scss */
+/* line 114, ../../Js/UIComponents/Layout/_layout.scss */
 .search-filter .form-actions input, .search-filter .form-actions button {
   float: right;
 }
-/* line 113, ../../Js/UIComponents/Layout/_layout.scss */
+/* line 118, ../../Js/UIComponents/Layout/_layout.scss */
 .search-filter .form-actions input {
   margin-left: 5px;
 }
 
-/* line 119, ../../Js/UIComponents/Layout/_layout.scss */
+/* line 124, ../../Js/UIComponents/Layout/_layout.scss */
 .page-actions {
   position: fixed;
   width: 125px;
   margin-right: 25px;
 }
-/* line 128, ../../Js/UIComponents/Layout/_layout.scss */
+/* line 133, ../../Js/UIComponents/Layout/_layout.scss */
 .page-actions .btn:not(.pager) {
   width: 100%;
   margin-bottom: 10px;
 }
 @media screen and (min-width: 1200px) {
-  /* line 119, ../../Js/UIComponents/Layout/_layout.scss */
+  /* line 124, ../../Js/UIComponents/Layout/_layout.scss */
   .page-actions {
     width: 150px;
   }
 }
 
-/* line 138, ../../Js/UIComponents/Layout/_layout.scss */
+/* line 143, ../../Js/UIComponents/Layout/_layout.scss */
 .page-body {
   margin-left: 150px;
   margin-top: 80px;
 }
-/* line 142, ../../Js/UIComponents/Layout/_layout.scss */
+/* line 147, ../../Js/UIComponents/Layout/_layout.scss */
 .page-body.with-header {
   margin-top: 140px;
 }
-/* line 146, ../../Js/UIComponents/Layout/_layout.scss */
+/* line 151, ../../Js/UIComponents/Layout/_layout.scss */
 .page-body fieldset {
   margin-bottom: 20px;
   position: relative;
@@ -1405,8 +1089,12 @@ See README.md or https://github.com/fraywing/textAngular/wiki for requirements a
       height:10px;
   }*/
 }
-/* line 150, ../../Js/UIComponents/Layout/_layout.scss */
+/* line 155, ../../Js/UIComponents/Layout/_layout.scss */
 .page-body fieldset:before {
+  -moz-transition: all 0.2s;
+  -o-transition: all 0.2s;
+  -webkit-transition: all 0.2s;
+  transition: all 0.2s;
   content: '';
   position: absolute;
   top: 0;
@@ -1418,8 +1106,12 @@ See README.md or https://github.com/fraywing/textAngular/wiki for requirements a
   left: 0;
   height: 100%;
 }
-/* line 163, ../../Js/UIComponents/Layout/_layout.scss */
+/* line 169, ../../Js/UIComponents/Layout/_layout.scss */
 .page-body fieldset:after {
+  -moz-transition: all 0.2s;
+  -o-transition: all 0.2s;
+  -webkit-transition: all 0.2s;
+  transition: all 0.2s;
   content: '';
   position: absolute;
   bottom: -20px;
@@ -1430,8 +1122,12 @@ See README.md or https://github.com/fraywing/textAngular/wiki for requirements a
   z-index: 2;
   border-top: 3px solid #dddddd;
 }
-/* line 189, ../../Js/UIComponents/Layout/_layout.scss */
+/* line 196, ../../Js/UIComponents/Layout/_layout.scss */
 .page-body fieldset legend {
+  -moz-transition: all 0.2s;
+  -o-transition: all 0.2s;
+  -webkit-transition: all 0.2s;
+  transition: all 0.2s;
   font-size: 150%;
   width: 100%;
   background-color: #fff;
@@ -1441,30 +1137,123 @@ See README.md or https://github.com/fraywing/textAngular/wiki for requirements a
   position: relative;
   z-index: 10;
 }
-/* line 199, ../../Js/UIComponents/Layout/_layout.scss */
+/* line 207, ../../Js/UIComponents/Layout/_layout.scss */
 .page-body fieldset legend:before {
-  border-top: 3px solid #d31245;
+  -moz-transition: all 0.2s;
+  -o-transition: all 0.2s;
+  -webkit-transition: all 0.2s;
+  transition: all 0.2s;
+  border-top: 3px solid #3366cc;
   content: '';
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
 }
+/* line 217, ../../Js/UIComponents/Layout/_layout.scss */
+.page-body fieldset legend button {
+  display: none;
+}
+/* line 220, ../../Js/UIComponents/Layout/_layout.scss */
+.page-body fieldset legend button.show {
+  -moz-transition: color 0.3s;
+  -o-transition: color 0.3s;
+  -webkit-transition: color 0.3s;
+  transition: color 0.3s;
+  overflow: hidden;
+  background-color: transparent;
+  color: #d2d2d2;
+  border: none;
+  display: inline-block;
+  font: normal normal normal 15px/1 FontAwesome;
+  position: absolute;
+  right: 15px;
+  top: 15px;
+}
+/* line 232, ../../Js/UIComponents/Layout/_layout.scss */
+.page-body fieldset legend button.show:hover {
+  color: #3c3c3c;
+}
+/* line 236, ../../Js/UIComponents/Layout/_layout.scss */
+.page-body fieldset legend button.show.active {
+  color: #3366cc;
+}
+/* line 243, ../../Js/UIComponents/Layout/_layout.scss */
+.page-body fieldset .control-group-area {
+  -moz-transition: all 0.2s;
+  -o-transition: all 0.2s;
+  -webkit-transition: all 0.2s;
+  transition: all 0.2s;
+}
+/* line 247, ../../Js/UIComponents/Layout/_layout.scss */
+.page-body fieldset .help-inline {
+  display: none;
+}
+/* line 252, ../../Js/UIComponents/Layout/_layout.scss */
+.page-body fieldset.show-helpers .help-inline {
+  -moz-transition: all 0.2s;
+  -o-transition: all 0.2s;
+  -webkit-transition: all 0.2s;
+  transition: all 0.2s;
+  border-color: #fff;
+  background-color: #fff;
+  color: #989098;
+  width: 100%;
+  display: block;
+  float: right;
+  padding: 20px;
+  position: relative;
+  left: -10px;
+  z-index: 2;
+  top: -25px;
+}
+/* line 266, ../../Js/UIComponents/Layout/_layout.scss */
+.page-body fieldset.show-helpers .help-inline:before {
+  -moz-transition: all 0.3s;
+  -o-transition: all 0.3s;
+  -webkit-transition: all 0.3s;
+  transition: all 0.3s;
+  content: '';
+  position: absolute;
+  left: -20px;
+  top: 10px;
+  border-left: 10px solid transparent;
+  border-right: 10px solid #fff;
+  border-top: 10px solid transparent;
+  border-bottom: 10px solid transparent;
+}
 @media screen and (min-width: 1200px) {
-  /* line 210, ../../Js/UIComponents/Layout/_layout.scss */
-  .page-body fieldset:before, .page-body fieldset:after {
-    right: 28%;
-  }
-  /* line 214, ../../Js/UIComponents/Layout/_layout.scss */
-  .page-body fieldset:after {
+  /* line 280, ../../Js/UIComponents/Layout/_layout.scss */
+  .page-body fieldset.show-helpers .control-group-area {
     width: 72%;
   }
-  /* line 218, ../../Js/UIComponents/Layout/_layout.scss */
-  .page-body fieldset legend {
+  /* line 284, ../../Js/UIComponents/Layout/_layout.scss */
+  .page-body fieldset.show-helpers .help-inline {
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+    border-radius: 3px;
+    border: 1px solid #e3e3e3;
+    width: 25%;
+    padding: 15px;
+    top: 23px;
+    margin-bottom: 10px;
+  }
+}
+@media screen and (min-width: 1200px) {
+  /* line 298, ../../Js/UIComponents/Layout/_layout.scss */
+  .page-body fieldset.show-helpers:before, .page-body fieldset.show-helpers:after {
+    right: 28%;
+  }
+  /* line 302, ../../Js/UIComponents/Layout/_layout.scss */
+  .page-body fieldset.show-helpers:after {
+    width: 72%;
+  }
+  /* line 306, ../../Js/UIComponents/Layout/_layout.scss */
+  .page-body fieldset.show-helpers legend {
     width: 72%;
   }
 }
-/* line 224, ../../Js/UIComponents/Layout/_layout.scss */
+/* line 313, ../../Js/UIComponents/Layout/_layout.scss */
 .page-body .control-group {
   overflow: hidden;
   *zoom: 1;
@@ -1473,7 +1262,7 @@ See README.md or https://github.com/fraywing/textAngular/wiki for requirements a
   position: relative;
   z-index: 1;
 }
-/* line 231, ../../Js/UIComponents/Layout/_layout.scss */
+/* line 320, ../../Js/UIComponents/Layout/_layout.scss */
 .page-body .control-group:before {
   content: '';
   position: absolute;
@@ -1486,15 +1275,15 @@ See README.md or https://github.com/fraywing/textAngular/wiki for requirements a
   right: 28%;
   left: 0;
 }
-/* line 245, ../../Js/UIComponents/Layout/_layout.scss */
+/* line 334, ../../Js/UIComponents/Layout/_layout.scss */
 .page-body .control-group:last-of-type:before {
   margin-bottom: 10px;
 }
-/* line 250, ../../Js/UIComponents/Layout/_layout.scss */
+/* line 339, ../../Js/UIComponents/Layout/_layout.scss */
 .page-body .control-group:hover {
   z-index: 9999;
 }
-/* line 254, ../../Js/UIComponents/Layout/_layout.scss */
+/* line 343, ../../Js/UIComponents/Layout/_layout.scss */
 .page-body .control-group .control-group-area {
   overflow: hidden;
   *zoom: 1;
@@ -1509,11 +1298,11 @@ See README.md or https://github.com/fraywing/textAngular/wiki for requirements a
   border-left: 1px solid #dddddd;
   border-right: 1px solid #dddddd;
 }
-/* line 267, ../../Js/UIComponents/Layout/_layout.scss */
+/* line 356, ../../Js/UIComponents/Layout/_layout.scss */
 .page-body .control-group .control-group-area .table-wrap {
   border-top: 1px solid #d2d2d2;
 }
-/* line 271, ../../Js/UIComponents/Layout/_layout.scss */
+/* line 360, ../../Js/UIComponents/Layout/_layout.scss */
 .page-body .control-group .control-group-area label {
   display: block;
   font-size: 100%;
@@ -1521,10 +1310,8 @@ See README.md or https://github.com/fraywing/textAngular/wiki for requirements a
   text-transform: uppercase;
   padding-bottom: 10px;
 }
-/* line 281, ../../Js/UIComponents/Layout/_layout.scss */
+/* line 370, ../../Js/UIComponents/Layout/_layout.scss */
 .page-body .control-group .control-group-area.editmode label:after {
-  filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=50);
-  opacity: 0.5;
   position: absolute;
   right: 28px;
   width: 15px;
@@ -1532,117 +1319,59 @@ See README.md or https://github.com/fraywing/textAngular/wiki for requirements a
   content: '\f00c';
   color: #339900;
 }
-/* line 295, ../../Js/UIComponents/Layout/_layout.scss */
+/* line 383, ../../Js/UIComponents/Layout/_layout.scss */
 .page-body .control-group .control-group-area.required.editmode label:after {
   content: '\f069';
   color: #ff6600;
 }
-/* line 304, ../../Js/UIComponents/Layout/_layout.scss */
+/* line 392, ../../Js/UIComponents/Layout/_layout.scss */
 .page-body .control-group .control-group-area.invalid.editmode label:after {
   content: '\f069';
-  color: #d31245;
+  color: #ff0000;
 }
-/* line 311, ../../Js/UIComponents/Layout/_layout.scss */
+/* line 399, ../../Js/UIComponents/Layout/_layout.scss */
 .page-body .control-group .control-group-area .controls {
   position: relative;
 }
-/* line 314, ../../Js/UIComponents/Layout/_layout.scss */
+/* line 402, ../../Js/UIComponents/Layout/_layout.scss */
 .page-body .control-group .control-group-area .controls .btn {
   display: inline-block;
 }
-/* line 320, ../../Js/UIComponents/Layout/_layout.scss */
-.page-body .control-group .help-inline {
-  -moz-transition: all 0.3s;
-  -o-transition: all 0.3s;
-  -webkit-transition: all 0.3s;
-  transition: all 0.3s;
-  color: #989098;
-  width: 100%;
-  display: block;
-  float: right;
-  padding: 20px;
-  position: relative;
-  left: 0;
-  z-index: 2;
-  top: -25px;
-}
-/* line 332, ../../Js/UIComponents/Layout/_layout.scss */
-.page-body .control-group .help-inline:before {
-  -moz-transition: all 0.3s;
-  -o-transition: all 0.3s;
-  -webkit-transition: all 0.3s;
-  transition: all 0.3s;
-  content: '';
-  position: absolute;
-  left: -20px;
-  top: 10px;
-  border-left: 10px solid transparent;
-  border-right: 10px solid transparent;
-  border-top: 10px solid transparent;
-  border-bottom: 10px solid transparent;
-}
 @media screen and (min-width: 1200px) {
-  /* line 346, ../../Js/UIComponents/Layout/_layout.scss */
-  .page-body .control-group .control-group-area {
-    width: 72%;
-  }
-  /* line 350, ../../Js/UIComponents/Layout/_layout.scss */
-  .page-body .control-group .help-inline {
-    -moz-border-radius: 3px;
-    -webkit-border-radius: 3px;
-    border-radius: 3px;
-    border: 1px solid #e3e3e3;
-    width: 25%;
-    padding: 15px;
-    top: 23px;
-    margin-bottom: 10px;
-  }
-  /* line 360, ../../Js/UIComponents/Layout/_layout.scss */
-  .page-body .control-group:hover .help-inline, .page-body .control-group:active .help-inline {
-    border-color: #fff;
-    background-color: #fff;
-    left: -10px;
-  }
-  /* line 365, ../../Js/UIComponents/Layout/_layout.scss */
-  .page-body .control-group:hover .help-inline:before, .page-body .control-group:active .help-inline:before {
-    border-right: 10px solid #fff;
-  }
-}
-@media screen and (min-width: 1200px) {
-  /* line 138, ../../Js/UIComponents/Layout/_layout.scss */
+  /* line 143, ../../Js/UIComponents/Layout/_layout.scss */
   .page-body {
     margin-left: 175px;
   }
 }
 
-/* line 378, ../../Js/UIComponents/Layout/_layout.scss */
+/* line 414, ../../Js/UIComponents/Layout/_layout.scss */
 .on-drag-hover {
-  border-top: 2px solid #d31245;
-  border-bottom: 2px solid #d31245;
+  border-top: 2px solid #3366cc;
+  border-bottom: 2px solid #3366cc;
 }
 
-/* line 383, ../../Js/UIComponents/Layout/_layout.scss */
+/* line 419, ../../Js/UIComponents/Layout/_layout.scss */
 [draggable] {
   cursor: move;
 }
 
-/* line 387, ../../Js/UIComponents/Layout/_layout.scss */
+/* line 423, ../../Js/UIComponents/Layout/_layout.scss */
 .dropdown-menu {
   background: #fff;
   left: 0;
 }
 
-/* line 392, ../../Js/UIComponents/Layout/_layout.scss */
+/* line 428, ../../Js/UIComponents/Layout/_layout.scss */
 .fa {
   font-size: 1.4em;
 }
-/* line 395, ../../Js/UIComponents/Layout/_layout.scss */
+/* line 431, ../../Js/UIComponents/Layout/_layout.scss */
 .fa.alert {
   color: #ff6600;
   margin-right: 5px;
 }
 
-/* line 401, ../../Js/UIComponents/Layout/_layout.scss */
+/* line 437, ../../Js/UIComponents/Layout/_layout.scss */
 .fa-picture-o, .btn-icon .fa-picture-o {
   font-size: 3em;
   color: #dddddd;
@@ -1710,7 +1439,7 @@ form.loading > *, table.loading > *, div.loading > *, fieldset.loading > * {
   line-height: 20px;
   color: #ffffff;
   text-align: center;
-  background-color: #d31245;
+  background-color: #3366cc;
   -webkit-transition: width 0.6s ease;
   -o-transition: width 0.6s ease;
   transition: width 0.6s ease;
@@ -1846,12 +1575,12 @@ form.loading > *, table.loading > *, div.loading > *, fieldset.loading > * {
 }
 /* line 55, ../../Js/UIComponents/Menus/_menus.scss */
 .menu .menu-options .btn:hover {
-  background-color: #fbe7ec;
+  background-color: #d0defc;
   color: #000;
 }
 /* line 63, ../../Js/UIComponents/Menus/_menus.scss */
 .menu:hover i {
-  color: #d31245;
+  color: #3366cc;
 }
 /* line 67, ../../Js/UIComponents/Menus/_menus.scss */
 .menu:hover .menu-options {
@@ -1884,10 +1613,10 @@ form.loading > *, table.loading > *, div.loading > *, fieldset.loading > * {
   -moz-border-radius: 3px;
   -webkit-border-radius: 3px;
   border-radius: 3px;
-  -moz-transform: scale(0.7, 0.7);
-  -ms-transform: scale(0.7, 0.7);
-  -webkit-transform: scale(0.7, 0.7);
-  transform: scale(0.7, 0.7);
+  -moz-transform: scale(0.85);
+  -ms-transform: scale(0.85);
+  -webkit-transform: scale(0.85);
+  transform: scale(0.85);
   -moz-transition: all 0.2s;
   -o-transition: all 0.2s;
   -webkit-transition: all 0.2s;
@@ -1905,14 +1634,15 @@ form.loading > *, table.loading > *, div.loading > *, fieldset.loading > * {
 }
 /* line 32, ../../Js/UIComponents/Modals/_modals.scss */
 .modal.modal-lg {
-  width: 80%;
+  width: 95%;
   height: auto;
-  left: 10%;
-  top: 12%;
-  bottom: 15%;
+  left: 2.5%;
+  right: 2.5%;
+  top: 2.5%;
+  bottom: 2.5%;
   margin-left: 0px;
 }
-/* line 41, ../../Js/UIComponents/Modals/_modals.scss */
+/* line 42, ../../Js/UIComponents/Modals/_modals.scss */
 .modal.modal--show {
   -moz-transform: scale(1, 1);
   -ms-transform: scale(1, 1);
@@ -1921,53 +1651,83 @@ form.loading > *, table.loading > *, div.loading > *, fieldset.loading > * {
   filter: progid:DXImageTransform.Microsoft.Alpha(enabled=false);
   opacity: 1;
 }
-/* line 46, ../../Js/UIComponents/Modals/_modals.scss */
+/* line 47, ../../Js/UIComponents/Modals/_modals.scss */
 .modal .page-actions {
-  margin-top: 80px;
+  -moz-border-radius: 0px 0px 3px 3px;
+  -webkit-border-radius: 0px;
+  border-radius: 0px 0px 3px 3px;
+  border-top: 1px solid #ebebeb;
+  padding: 8px;
   z-index: 2;
+  bottom: 0;
+  width: 100%;
+  height: 50px;
+  background: #fff;
+  left: 0;
 }
-/* line 51, ../../Js/UIComponents/Modals/_modals.scss */
+/* line 59, ../../Js/UIComponents/Modals/_modals.scss */
+.modal .pagination {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+}
+/* line 65, ../../Js/UIComponents/Modals/_modals.scss */
 .modal .page-body {
-  margin-left: 170px;
+  margin-left: 20px;
   margin-top: 60px;
   position: absolute;
   left: 0;
   top: 0;
-  bottom: 0;
+  bottom: 50px;
   overflow-y: scroll;
   right: 2px;
 }
-/* line 61, ../../Js/UIComponents/Modals/_modals.scss */
+/* line 75, ../../Js/UIComponents/Modals/_modals.scss */
 .modal .page-body .form-wrap {
   padding: 20px 20px 20px 0;
 }
-@media screen and (min-width: 1200px) {
-  /* line 51, ../../Js/UIComponents/Modals/_modals.scss */
-  .modal .page-body {
-    margin-left: 195px;
-  }
+/* line 80, ../../Js/UIComponents/Modals/_modals.scss */
+.modal .page-actions .btn:not(.pager) {
+  margin-left: 5px;
+  width: auto;
+  float: right;
+  min-width: 80px;
+}
+/* line 87, ../../Js/UIComponents/Modals/_modals.scss */
+.modal .mce-fullscreen {
+  top: 59px;
+  left: 0;
+  bottom: 50px;
 }
 
-/* line 71, ../../Js/UIComponents/Modals/_modals.scss */
+/* line 94, ../../Js/UIComponents/Modals/_modals.scss */
 .modal-dialog {
   height: 100%;
 }
-/* line 74, ../../Js/UIComponents/Modals/_modals.scss */
+/* line 97, ../../Js/UIComponents/Modals/_modals.scss */
 .modal-dialog .search-filter {
+  transform: translateY(-100%) translateX(-10%);
+  margin-top: -50px;
+}
+/* line 101, ../../Js/UIComponents/Modals/_modals.scss */
+.modal-dialog .search-filter:before, .modal-dialog .search-filter:after {
   top: auto;
   right: auto;
+  left: 30px;
+  bottom: -14px;
+  border-bottom-color: transparent;
+  border-top-color: #d2d2d2;
 }
-/* line 78, ../../Js/UIComponents/Modals/_modals.scss */
-.modal-dialog .search-filter:before, .modal-dialog .search-filter:after {
-  right: auto;
-  left: 10px;
-}
-/* line 83, ../../Js/UIComponents/Modals/_modals.scss */
+/* line 110, ../../Js/UIComponents/Modals/_modals.scss */
 .modal-dialog .search-filter:after {
-  left: 9px;
+  top: auto;
+  left: 29px;
+  bottom: -14px;
+  border-bottom-color: transparent;
+  border-top-color: #fff;
 }
 
-/* line 89, ../../Js/UIComponents/Modals/_modals.scss */
+/* line 120, ../../Js/UIComponents/Modals/_modals.scss */
 .modal-header {
   -moz-border-radius-topleft: 3px;
   -webkit-border-top-left-radius: 3px;
@@ -1985,7 +1745,7 @@ form.loading > *, table.loading > *, div.loading > *, fieldset.loading > * {
   border-bottom: 1px solid #ebebeb;
   z-index: 10;
 }
-/* line 102, ../../Js/UIComponents/Modals/_modals.scss */
+/* line 133, ../../Js/UIComponents/Modals/_modals.scss */
 .modal-header .close {
   position: absolute;
   right: 10px;
@@ -1994,12 +1754,12 @@ form.loading > *, table.loading > *, div.loading > *, fieldset.loading > * {
   color: black;
 }
 
-/* line 111, ../../Js/UIComponents/Modals/_modals.scss */
+/* line 142, ../../Js/UIComponents/Modals/_modals.scss */
 .modal-content {
   padding-left: 20px;
 }
 
-/* line 115, ../../Js/UIComponents/Modals/_modals.scss */
+/* line 146, ../../Js/UIComponents/Modals/_modals.scss */
 .modal-body {
   position: absolute;
   top: 80px;
@@ -2008,7 +1768,7 @@ form.loading > *, table.loading > *, div.loading > *, fieldset.loading > * {
   line-height: 15px;
 }
 
-/* line 123, ../../Js/UIComponents/Modals/_modals.scss */
+/* line 154, ../../Js/UIComponents/Modals/_modals.scss */
 .modal-actions {
   position: absolute;
   bottom: 10px;
@@ -2019,7 +1779,7 @@ form.loading > *, table.loading > *, div.loading > *, fieldset.loading > * {
   padding-right: 20px;
   text-align: right;
 }
-/* line 133, ../../Js/UIComponents/Modals/_modals.scss */
+/* line 164, ../../Js/UIComponents/Modals/_modals.scss */
 .modal-actions .btn {
   display: inline-block;
 }
@@ -2109,7 +1869,7 @@ form.loading > *, table.loading > *, div.loading > *, fieldset.loading > * {
   border: 1px solid #d2d2d2;
   margin-bottom: 10px;
   padding: 1px;
-  border-top: 3px solid #d31245;
+  border-top: 3px solid #3366cc;
   position: relative;
 }
 
@@ -2177,7 +1937,7 @@ form.loading > *, table.loading > *, div.loading > *, fieldset.loading > * {
   -moz-border-radius-bottomleft: 2px;
   -webkit-border-bottom-left-radius: 2px;
   border-bottom-left-radius: 2px;
-  background-color: #d31245;
+  background-color: #3366cc;
   display: block;
 }
 /* line 96, ../../Js/UIComponents/Table/_table.scss */
@@ -2300,7 +2060,7 @@ form.loading > *, table.loading > *, div.loading > *, fieldset.loading > * {
 }
 /* line 135, ../../Js/UIComponents/Table/_table.scss */
 .table tbody tr.selected td:not(.empty), .table tbody tr:hover td:not(.empty) {
-  background-color: #fbe7ec;
+  background-color: #d0defc;
 }
 /* line 139, ../../Js/UIComponents/Table/_table.scss */
 .table tbody tr a {
@@ -2327,7 +2087,7 @@ fieldset .table thead {
 /**
     Highlight valid/invalid cell data.
     Ideally these would alternate slightly with striped rows, here we just 
-    have to override the existing boostrap class
+    have to override the existing bootstrap class
 */
 /* line 168, ../../Js/UIComponents/Table/_table.scss */
 .table td.error, .table-striped tbody tr:nth-child(odd) td.error {

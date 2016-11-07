@@ -1,4 +1,4 @@
-﻿angular.module('cms.shared').directive('cmsFormSection', ['shared.internalModulePath', function (modulePath) {
+﻿angular.module('cms.shared').directive('cmsFormSection', ['shared.internalModulePath', '$timeout', function (modulePath, $timeout) {
     return {
         restrict: 'E',
         templateUrl: modulePath + 'UIComponents/Form/FormSection.html',
@@ -6,6 +6,24 @@
             title: '@cmsTitle'
         },
         replace: true,
-        transclude: true
+        transclude: true,
+        link: link
     };
+
+    function link(scope, elem, attrs) {
+        var btn = angular.element(elem[0].querySelector('.toggle-helpers'));
+
+        // Wait a moment until child components are rendered before searching the dom
+        $timeout(function () {
+            var helpers = angular.element(elem[0].querySelector('.help-inline'));
+            if (helpers.length) {
+                btn
+                    .addClass('show')
+                    .on('click', function () {
+                        btn.toggleClass('active');
+                        elem.toggleClass('show-helpers');
+                    });
+            }
+        }, 100);
+    }
 }]);
