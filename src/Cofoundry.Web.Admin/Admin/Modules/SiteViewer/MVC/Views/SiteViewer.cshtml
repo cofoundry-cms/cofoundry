@@ -58,10 +58,10 @@
     }
 }
 
-<div id="wrapper" ng-controller="SiteViewerController as vm">
+<div id="wrapper" class="{{vm.displayClass}}" ng-controller="SiteViewerController as vm">
 
     <div id="cofoundry-sv" class="cofoundry-sv" ng-class="vm.siteViewerActive ? 'active' : ''">
-        <button type="button" id="cofoundry-sv_button" class="cofoundry-sv__toggle "ng-click="vm.toggleOpen()" ng-bind="vm.siteViewerText"></button>
+        <button type="button" id="cofoundry-sv_button" class="cofoundry-sv__toggle" ng-click="vm.toggleOpen()" ng-bind="vm.siteViewerActive === true ? 'Hide' : 'Show'"></button>
 
         <a class="cofoundry-sv__back" href="@backToAdminLink">
             <span class="fa fa-chevron-left"></span>
@@ -134,44 +134,21 @@
 
                         <div class="cofoundry-sv__edit-mode__half">
                             <input id="show-editable-color" type="color"
-                                   value="#47FEF2">
+                                   value="#47FEF2" disabled>
                             <label for="show-editable-color">Outline Color</label>
                         </div>
                     </div>
 
                     <h3>Display Size</h3>
                     <div class="cofoundry-sv__tabs">
-                        <ul>
-                            <li class="cofoundry-sv__tab-item active" data-id="tab-1">
-                                Desktop
-                            </li>
-                            <li class="cofoundry-sv__tab-item" data-id="tab-2">
-                                Mobile
-                            </li>
-                            <li class="cofoundry-sv__tab-item" data-id="tab-3">
-                                Tablets
-                            </li>
-                            <li class="cofoundry-sv__tab-item" data-id="tab-4">
-                                More
-                            </li>
-                        </ul>
-                        <div id="tab-1" class="cofoundry-sv__tab-content active">
+                        <div class="cofoundry-sv__tab-content active">
                             <ul class="cofoundry-sv__info-list">
-                                <li class="cofoundry-sv__info-list__item">Desktop Full HD <span>1920x1080</span></li>
-                                <li class="cofoundry-sv__info-list__item">Desktop HD <span>1440x900</span></li>
-                                <li class="cofoundry-sv__info-list__item">Ultrabook <span>1366x768</span></li>
-                                <li class="cofoundry-sv__info-list__item">Netbook <span>1280x800</span></li>
-                                <li class="cofoundry-sv__info-list__item">Old Desktop <span>1024x768</span></li>
+                                <li class="cofoundry-sv__info-list__item" ng-click="vm.switchDisplaySize('full')">Full Screen</li>
+                                <li class="cofoundry-sv__info-list__item" ng-click="vm.switchDisplaySize('desktop')">Desktop HD <span>1440x900</span></li>
+                                <li class="cofoundry-sv__info-list__item" ng-click="vm.switchDisplaySize('iPadLandscape')">Tablet Landscape <span>1024x768</span></li>
+                                <li class="cofoundry-sv__info-list__item" ng-click="vm.switchDisplaySize('iPadPortrait')">Tablet Portrait <span>768x1024</span></li>
+                                <li class="cofoundry-sv__info-list__item" ng-click="vm.switchDisplaySize('iPhonePortrait')">Mobile <span>375x667</span></li>
                             </ul>
-                        </div>
-                        <div id="tab-2" class="cofoundry-sv__tab-content">
-                            Content of tab bar
-                        </div>
-                        <div id="tab-3" class="cofoundry-sv__tab-content">
-                            Content of tab bar
-                        </div>
-                        <div id="tab-4" class="cofoundry-sv__tab-content">
-                            Content of tab bar
                         </div>
                     </div>
                 </div>
@@ -258,15 +235,10 @@
     <div id="siteFrameContainer">
         <iframe id="siteFrame"
                 cms-site-page-frame
-                src="@(Request.Url.PathAndQuery + (Request.Url.PathAndQuery.Contains("?") ? "&" : "?"))siteviewer=true"
+                src="@(Request.Url.PathAndQuery + (Request.Url.PathAndQuery.Contains('?') ? '&' : '?'))siteviewer=true"
                 allowtransparency="true"></iframe>
 
         <div class="cms-module-hightlight"></div>
         <div class="cms-module-controls"></div>
     </div>
 </div>
-
-
-
-
-

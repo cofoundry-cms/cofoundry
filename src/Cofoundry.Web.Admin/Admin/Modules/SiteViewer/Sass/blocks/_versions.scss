@@ -1,6 +1,10 @@
 .cofoundry-sv__versions {
     float: left;
     height: 100%;
+
+    .cofoundry-sv__mini-menu__toggle {
+        border-left: 0;
+    }
 }
 
 .cofoundry-sv__version-list {

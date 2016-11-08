@@ -92,31 +92,51 @@ body {
 }
 
 #wrapper.iPhonePortrait #siteFrameContainer {
-    background: url(img/devices/iPhone3Portrait.png) no-repeat left top;
     height: 480px;
-    padding: 120px 33px 119px 36px;
     width: 320px;
-}
-
-#wrapper.iPhoneLandscape #siteFrameContainer {
-    background: url(img/devices/iPhone3Landscape.png) no-repeat left top;
-    height: 320px;
-    padding: 36px 120px 33px 119px;
-    width: 480px;
+    position: absolute;
+    padding-bottom: 0;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    border: 30px solid #000;
+    border-radius: 20px;
 }
 
 #wrapper.iPadPortrait #siteFrameContainer {
-    background: url(img/devices/iPadPortrait.png) no-repeat left top;
     height: 1024px;
-    padding: 127px 114px 125px 115px;
     width: 768px;
+    position: absolute;
+    padding-bottom: 0;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    border: 50px solid #000;
+    border-radius: 40px;
 }
 
 #wrapper.iPadLandscape #siteFrameContainer {
-    background: url(img/devices/iPadLandscape.png) no-repeat left top;
     height: 768px;
-    padding: 115px 128px 115px 124px;
     width: 1024px;
+    position: absolute;
+    padding-bottom: 0;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    border: 50px solid #000;
+    border-radius: 40px;
+}
+
+#wrapper.desktop #siteFrameContainer {
+    height: 768px;
+    width: 1024px;
+    position: absolute;
+    padding-bottom: 0;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    border: 50px solid #000;
+    border-radius: 40px;
 }
 
 
@@ -133,6 +153,14 @@ iframe#siteFrame {
     display: none;
 }
 
+#wrapper.device iframe#siteFrame html {
+    overflow-x: hidden;
+}
+
+#wrapper.device iframe#siteFrame html::-webkit-scrollbar {
+    display: none;
+}
+
 
 
 /* #### Device menu #### */
@@ -145,61 +173,61 @@ ul#deviceMenu {
     position: fixed;
 }
 
-    ul#deviceMenu li {
-        border-right: 1px solid #970D31;
-        display: block;
-        float: left;
-        list-style: none;
+ul#deviceMenu li {
+    border-right: 1px solid #970D31;
+    display: block;
+    float: left;
+    list-style: none;
+}
+
+ul#deviceMenu li a {
+    background: $color-primary url(img/icons.png) no-repeat;
+    display: block;
+    height: 30px;
+    overflow: hidden;
+    text-indent: 100%;
+    white-space: nowrap;
+    width: 30px;
+}
+
+ul#deviceMenu li.active, ul#deviceMenu li:hover {
+    background-color: #8e8d8d;
+    -webkit-box-shadow: inset 0 0 3px 1px rgba(0, 0, 0, .7);
+    -moz-box-shadow: inset 0 0 3px 1px rgba(0, 0, 0, .7);
+    box-shadow: inset 0 0 3px 1px rgba(0, 0, 0, .7);
+    background: #8e8d8d;
+    background: -moz-linear-gradient(top, #8e8d8d 0%, #4d4c4c 100%);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#8e8d8d), color-stop(100%,#4d4c4c));
+    background: -webkit-linear-gradient(top, #8e8d8d 0%,#4d4c4c 100%);
+    background: -o-linear-gradient(top, #8e8d8d 0%,#4d4c4c 100%);
+    background: -ms-linear-gradient(top, #8e8d8d 0%,#4d4c4c 100%);
+    background: linear-gradient(to bottom, #8e8d8d 0%,#4d4c4c 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#8e8d8d', endColorstr='#4d4c4c',GradientType=0 );
+}
+
+    ul#deviceMenu li.active a, ul#deviceMenu li a:hover {
+        background-color: transparent;
     }
 
-        ul#deviceMenu li a {
-            background: $color-primary url(img/icons.png) no-repeat;
-            display: block;
-            height: 30px;
-            overflow: hidden;
-            text-indent: 100%;
-            white-space: nowrap;
-            width: 30px;
-        }
+ul#deviceMenu li.auto a {
+    background-position: -5px -725px;
+}
 
-        ul#deviceMenu li.active, ul#deviceMenu li:hover {
-            background-color: #8e8d8d;
-            -webkit-box-shadow: inset 0 0 3px 1px rgba(0, 0, 0, .7);
-            -moz-box-shadow: inset 0 0 3px 1px rgba(0, 0, 0, .7);
-            box-shadow: inset 0 0 3px 1px rgba(0, 0, 0, .7);
-            background: #8e8d8d;
-            background: -moz-linear-gradient(top, #8e8d8d 0%, #4d4c4c 100%);
-            background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#8e8d8d), color-stop(100%,#4d4c4c));
-            background: -webkit-linear-gradient(top, #8e8d8d 0%,#4d4c4c 100%);
-            background: -o-linear-gradient(top, #8e8d8d 0%,#4d4c4c 100%);
-            background: -ms-linear-gradient(top, #8e8d8d 0%,#4d4c4c 100%);
-            background: linear-gradient(to bottom, #8e8d8d 0%,#4d4c4c 100%);
-            filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#8e8d8d', endColorstr='#4d4c4c',GradientType=0 );
-        }
+ul#deviceMenu li.iPhonePortrait a {
+    background-position: -5px -565px;
+}
 
-            ul#deviceMenu li.active a, ul#deviceMenu li a:hover {
-                background-color: transparent;
-            }
+ul#deviceMenu li.iPhoneLandscape a {
+    background-position: -5px -605px;
+}
 
-        ul#deviceMenu li.auto a {
-            background-position: -5px -725px;
-        }
+ul#deviceMenu li.iPadPortrait a {
+    background-position: -5px -645px;
+}
 
-        ul#deviceMenu li.iPhonePortrait a {
-            background-position: -5px -565px;
-        }
-
-        ul#deviceMenu li.iPhoneLandscape a {
-            background-position: -5px -605px;
-        }
-
-        ul#deviceMenu li.iPadPortrait a {
-            background-position: -5px -645px;
-        }
-
-        ul#deviceMenu li.iPadLandscape a {
-            background-position: -5px -685px;
-        }
+ul#deviceMenu li.iPadLandscape a {
+    background-position: -5px -685px;
+}
 
 
 /* #### Hovering #### */
@@ -217,45 +245,45 @@ ul#deviceMenu {
 .cofoundry-sv__section-popover-container {
 }
 
-    .cofoundry-sv__section-popover-inner {
-        @include border-radius(2px);
-        background: #fff;
-        border: 1px solid $color-darkgrey;
-        border-left:3px solid $color-primary;
-        color: $color-darkgrey;
-        height: 30px;
-        line-height: 30px;
-        overflow: hidden;
-        padding: 0 10px;
-        position: relative;
-        text-transform: uppercase;
-        white-space: nowrap;
-    }
+.cofoundry-sv__section-popover-inner {
+    @include border-radius(2px);
+    background: #fff;
+    border: 1px solid $color-darkgrey;
+    border-left:3px solid $color-primary;
+    color: $color-darkgrey;
+    height: 30px;
+    line-height: 30px;
+    overflow: hidden;
+    padding: 0 10px;
+    position: relative;
+    text-transform: uppercase;
+    white-space: nowrap;
+}
 
-    .cofoundry-sv__section-popover-inner h2 {
-        font-weight: bold;
-        float: left;
-        font-size: 90%;
-        font-style: normal;
-        height: 30px;
-        line-height: 27px;
-        margin: 0;
-    }
+.cofoundry-sv__section-popover-inner h2 {
+    font-weight: bold;
+    float: left;
+    font-size: 90%;
+    font-style: normal;
+    height: 30px;
+    line-height: 27px;
+    margin: 0;
+}
 
-    .cofoundry-sv__section-popover-inner a {
-        float: right;
-        color: $color-darkgrey;
-        overflow: hidden;
-        white-space: nowrap;
-        width: 19px;
-        margin-left:10px;
-        position:relative;
-        text-align:center;
+.cofoundry-sv__section-popover-inner a {
+    float: right;
+    color: $color-darkgrey;
+    overflow: hidden;
+    white-space: nowrap;
+    width: 19px;
+    margin-left:10px;
+    position:relative;
+    text-align:center;
 
-        &:hover {
-            color:$color-primary;
-        }
+    &:hover {
+        color:$color-primary;
     }
+}
 
 
 
@@ -264,46 +292,46 @@ ul#deviceMenu {
     position: fixed;
 }
 
-    .cofoundry-sv__module-popover-container ul {
-        @include border-radius(2px);
-        border: 1px solid $color-darkgrey;
-        border-top:3px solid $color-primary;
-        background:#fff;
-        display: block;
-        margin: 0px;
-        padding: 0px;
+.cofoundry-sv__module-popover-container ul {
+    @include border-radius(2px);
+    border: 1px solid $color-darkgrey;
+    border-top:3px solid $color-primary;
+    background:#fff;
+    display: block;
+    margin: 0px;
+    padding: 0px;
+}
+
+.cofoundry-sv__module-popover-container li:not(:last-of-type) {
+    border: 1px solid $color-lightgrey;
+    border-width: 0 0 1px 0;
+    display: block;
+}
+
+.cofoundry-sv__module-popover-container li a {
+    @include transition(all .3s);
+    background-position: center center;
+    display: block;
+    height: 32px;
+    color: $color-darkgrey;
+    width: 34px;
+    padding-top:7px;
+    text-align:center;
+    font-size:1.1em;
+
+    &:hover {
+        color:$color-primary;
     }
+}
 
-    .cofoundry-sv__module-popover-container li:not(:last-of-type) {
-        border: 1px solid $color-lightgrey;
-        border-width: 0 0 1px 0;
-        display: block;
-    }
-
-        .cofoundry-sv__module-popover-container li a {
-            @include transition(all .3s);
-            background-position: center center;
-            display: block;
-            height: 32px;
-            color: $color-darkgrey;
-            width: 34px;
-            padding-top:7px;
-            text-align:center;
-            font-size:1.1em;
-
-            &:hover {
-                color:$color-primary;
-            }
-        }
-
-            .cofoundry-sv__module-popover-container .disabled a {
-                cursor: default;
-                opacity: 0.4;
-                -khtml-opacity: 0.4;
-                -moz-opacity: 0.4;
-                -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=40)";
-                filter: alpha(opacity=40);
-            }
+.cofoundry-sv__module-popover-container .disabled a {
+    cursor: default;
+    opacity: 0.4;
+    -khtml-opacity: 0.4;
+    -moz-opacity: 0.4;
+    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=40)";
+    filter: alpha(opacity=40);
+}
 
 /* #### Footer #### */
 footer {

@@ -151,13 +151,14 @@ article, aside, details, figcaption, figure, footer, header, hgroup, main, menu,
   height: 70px;
   background-color: #3c3c3c;
   transform: translateY(100%);
+  z-index: 1000;
 }
-/* line 11, ../../Sass/blocks/_preview-menu.scss */
+/* line 12, ../../Sass/blocks/_preview-menu.scss */
 .cofoundry-sv.active {
   transform: translateY(0);
 }
 
-/* line 16, ../../Sass/blocks/_preview-menu.scss */
+/* line 17, ../../Sass/blocks/_preview-menu.scss */
 .cofoundry-sv__toggle {
   position: absolute;
   left: 0;
@@ -176,7 +177,7 @@ article, aside, details, figcaption, figure, footer, header, hgroup, main, menu,
   cursor: pointer;
 }
 
-/* line 35, ../../Sass/blocks/_preview-menu.scss */
+/* line 36, ../../Sass/blocks/_preview-menu.scss */
 .cofoundry-sv__back {
   display: block;
   height: 100%;
@@ -186,7 +187,7 @@ article, aside, details, figcaption, figure, footer, header, hgroup, main, menu,
   color: #A6ACA9;
   text-align: center;
 }
-/* line 44, ../../Sass/blocks/_preview-menu.scss */
+/* line 45, ../../Sass/blocks/_preview-menu.scss */
 .cofoundry-sv__back span {
   position: absolute;
   font-size: 0.8em;
@@ -194,7 +195,7 @@ article, aside, details, figcaption, figure, footer, header, hgroup, main, menu,
   margin-top: -6px;
   left: 15px;
 }
-/* line 51, ../../Sass/blocks/_preview-menu.scss */
+/* line 52, ../../Sass/blocks/_preview-menu.scss */
 .cofoundry-sv__back:hover {
   background-color: #3366cc;
   color: #fff;
@@ -292,15 +293,19 @@ article, aside, details, figcaption, figure, footer, header, hgroup, main, menu,
   float: left;
   height: 100%;
 }
+/* line 5, ../../Sass/blocks/_versions.scss */
+.cofoundry-sv__versions .cofoundry-sv__mini-menu__toggle {
+  border-left: 0;
+}
 
-/* line 6, ../../Sass/blocks/_versions.scss */
+/* line 10, ../../Sass/blocks/_versions.scss */
 .cofoundry-sv__version-list {
   padding: 0;
   margin: 0;
   list-style: none;
 }
 
-/* line 12, ../../Sass/blocks/_versions.scss */
+/* line 16, ../../Sass/blocks/_versions.scss */
 .cofoundry-sv__version-list__item {
   -moz-border-radius: 2px;
   -webkit-border-radius: 2px;
@@ -314,7 +319,7 @@ article, aside, details, figcaption, figure, footer, header, hgroup, main, menu,
   color: #A6ACA9;
   text-decoration: none;
 }
-/* line 23, ../../Sass/blocks/_versions.scss */
+/* line 27, ../../Sass/blocks/_versions.scss */
 .cofoundry-sv__version-list__item span {
   background-color: #3c3c3c;
   width: 10px;
@@ -323,33 +328,33 @@ article, aside, details, figcaption, figure, footer, header, hgroup, main, menu,
   margin-right: 5px;
   display: inline-block;
 }
-/* line 32, ../../Sass/blocks/_versions.scss */
+/* line 36, ../../Sass/blocks/_versions.scss */
 .cofoundry-sv__version-list__item .published {
   background-color: #339900 !important;
 }
-/* line 36, ../../Sass/blocks/_versions.scss */
+/* line 40, ../../Sass/blocks/_versions.scss */
 .cofoundry-sv__version-list__item .approved {
   background-color: #ff6600 !important;
 }
-/* line 40, ../../Sass/blocks/_versions.scss */
+/* line 44, ../../Sass/blocks/_versions.scss */
 .cofoundry-sv__version-list__item .draft {
   border: 1px solid #ff6600;
   background-color: transparent !important;
 }
-/* line 45, ../../Sass/blocks/_versions.scss */
+/* line 49, ../../Sass/blocks/_versions.scss */
 .cofoundry-sv__version-list__item:last-of-type {
   border: 0;
 }
-/* line 49, ../../Sass/blocks/_versions.scss */
+/* line 53, ../../Sass/blocks/_versions.scss */
 .cofoundry-sv__version-list__item:hover {
   background-color: #3c3c3c;
   border-color: #1a1d22;
 }
-/* line 53, ../../Sass/blocks/_versions.scss */
+/* line 57, ../../Sass/blocks/_versions.scss */
 .cofoundry-sv__version-list__item:hover span {
   background-color: #2c2c2c;
 }
-/* line 58, ../../Sass/blocks/_versions.scss */
+/* line 62, ../../Sass/blocks/_versions.scss */
 .cofoundry-sv__version-list__item.active {
   background-color: #3366cc;
   color: #fff;
@@ -584,9 +589,91 @@ article, aside, details, figcaption, figure, footer, header, hgroup, main, menu,
   margin: 20px 0 30px;
   display: flex;
   flex-direction: row;
+  /* checkbox */
+  /* color input */
+}
+/* line 8, ../../Sass/elements/_edit-mode.scss */
+.cofoundry-sv__edit-mode input[type="checkbox"] {
+  opacity: 0;
+  position: relative;
+  z-index: 1;
+  cursor: pointer;
+}
+/* line 15, ../../Sass/elements/_edit-mode.scss */
+.cofoundry-sv__edit-mode input[type="checkbox"] + label {
+  margin-left: -22px;
+  position: relative;
+  z-index: 0;
+  color: #888;
+}
+/* line 22, ../../Sass/elements/_edit-mode.scss */
+.cofoundry-sv__edit-mode input[type="checkbox"] + label:before {
+  content: '';
+  width: 10px;
+  height: 10px;
+  display: inline-block;
+  border: 1px solid #888;
+  border-radius: 50%;
+  margin-right: 5px;
+  position: relative;
+  top: 2px;
+}
+/* line 34, ../../Sass/elements/_edit-mode.scss */
+.cofoundry-sv__edit-mode input[type="checkbox"]:checked + label {
+  color: #fff;
+  cursor: pointer;
+}
+/* line 39, ../../Sass/elements/_edit-mode.scss */
+.cofoundry-sv__edit-mode input[type="checkbox"]:checked + label:before {
+  border-color: #fff;
+}
+/* line 43, ../../Sass/elements/_edit-mode.scss */
+.cofoundry-sv__edit-mode input[type="checkbox"]:checked + label:after {
+  content: '';
+  background-color: #fff;
+  width: 6px;
+  height: 6px;
+  display: inline-block;
+  border-radius: 50%;
+  position: absolute;
+  left: 3px;
+  top: 5px;
+}
+/* line 56, ../../Sass/elements/_edit-mode.scss */
+.cofoundry-sv__edit-mode input[type="color"] {
+  background-color: transparent;
+  width: 24px;
+  height: 17px;
+  border: 1px solid #fff;
+  border-radius: 7px;
+  margin-right: 5px;
+  -webkit-appearance: none;
+}
+/* line 66, ../../Sass/elements/_edit-mode.scss */
+.cofoundry-sv__edit-mode input[type="color"]:disabled {
+  opacity: 0.3;
+}
+/* line 70, ../../Sass/elements/_edit-mode.scss */
+.cofoundry-sv__edit-mode ::-webkit-color-swatch-wrapper {
+  padding: 1px;
+  border: 0;
+  background-color: transparent;
+}
+/* line 75, ../../Sass/elements/_edit-mode.scss */
+.cofoundry-sv__edit-mode ::-webkit-color-swatch {
+  border: 0;
+  border-radius: 5px;
+}
+/* line 80, ../../Sass/elements/_edit-mode.scss */
+.cofoundry-sv__edit-mode input[type="color"] + label {
+  color: #fff;
+}
+/* line 84, ../../Sass/elements/_edit-mode.scss */
+.cofoundry-sv__edit-mode input[type="color"]:disabled + label {
+  color: #888;
 }
 
-/* line 8, ../../Sass/elements/_edit-mode.scss */
+/* line 89, ../../Sass/elements/_edit-mode.scss */
 .cofoundry-sv__edit-mode__half {
   width: 50%;
 }
@@ -605,12 +692,13 @@ article, aside, details, figcaption, figure, footer, header, hgroup, main, menu,
   padding: 10px 0;
   border-bottom: 1px solid #4a4e56;
   cursor: pointer;
+  color: #fff;
 }
-/* line 14, ../../Sass/elements/_info-list.scss */
+/* line 15, ../../Sass/elements/_info-list.scss */
 .cofoundry-sv__info-list__item:last-of-type {
   border: 0;
 }
-/* line 18, ../../Sass/elements/_info-list.scss */
+/* line 19, ../../Sass/elements/_info-list.scss */
 .cofoundry-sv__info-list__item span {
   float: right;
   font-weight: 400;
@@ -697,38 +785,58 @@ body {
 
 /* line 94, ../../Sass/_outer-site-viewer.scss */
 #wrapper.iPhonePortrait #siteFrameContainer {
-  background: url(img/devices/iPhone3Portrait.png) no-repeat left top;
   height: 480px;
-  padding: 120px 33px 119px 36px;
   width: 320px;
+  position: absolute;
+  padding-bottom: 0;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  border: 30px solid #000;
+  border-radius: 20px;
 }
 
-/* line 101, ../../Sass/_outer-site-viewer.scss */
-#wrapper.iPhoneLandscape #siteFrameContainer {
-  background: url(img/devices/iPhone3Landscape.png) no-repeat left top;
-  height: 320px;
-  padding: 36px 120px 33px 119px;
-  width: 480px;
-}
-
-/* line 108, ../../Sass/_outer-site-viewer.scss */
+/* line 106, ../../Sass/_outer-site-viewer.scss */
 #wrapper.iPadPortrait #siteFrameContainer {
-  background: url(img/devices/iPadPortrait.png) no-repeat left top;
   height: 1024px;
-  padding: 127px 114px 125px 115px;
   width: 768px;
+  position: absolute;
+  padding-bottom: 0;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  border: 50px solid #000;
+  border-radius: 40px;
 }
 
-/* line 115, ../../Sass/_outer-site-viewer.scss */
+/* line 118, ../../Sass/_outer-site-viewer.scss */
 #wrapper.iPadLandscape #siteFrameContainer {
-  background: url(img/devices/iPadLandscape.png) no-repeat left top;
   height: 768px;
-  padding: 115px 128px 115px 124px;
   width: 1024px;
+  position: absolute;
+  padding-bottom: 0;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  border: 50px solid #000;
+  border-radius: 40px;
+}
+
+/* line 130, ../../Sass/_outer-site-viewer.scss */
+#wrapper.desktop #siteFrameContainer {
+  height: 768px;
+  width: 1024px;
+  position: absolute;
+  padding-bottom: 0;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  border: 50px solid #000;
+  border-radius: 40px;
 }
 
 /* #### Site frame #### */
-/* line 125, ../../Sass/_outer-site-viewer.scss */
+/* line 145, ../../Sass/_outer-site-viewer.scss */
 iframe#siteFrame {
   background: transparent;
   border: 0;
@@ -736,13 +844,23 @@ iframe#siteFrame {
   width: 100%;
 }
 
-/* line 132, ../../Sass/_outer-site-viewer.scss */
+/* line 152, ../../Sass/_outer-site-viewer.scss */
 #wrapper.device iframe#siteFrame::-webkit-scrollbar {
   display: none;
 }
 
+/* line 156, ../../Sass/_outer-site-viewer.scss */
+#wrapper.device iframe#siteFrame html {
+  overflow-x: hidden;
+}
+
+/* line 160, ../../Sass/_outer-site-viewer.scss */
+#wrapper.device iframe#siteFrame html::-webkit-scrollbar {
+  display: none;
+}
+
 /* #### Device menu #### */
-/* line 139, ../../Sass/_outer-site-viewer.scss */
+/* line 167, ../../Sass/_outer-site-viewer.scss */
 ul#deviceMenu {
   bottom: 0;
   left: 0;
@@ -752,7 +870,7 @@ ul#deviceMenu {
   position: fixed;
 }
 
-/* line 148, ../../Sass/_outer-site-viewer.scss */
+/* line 176, ../../Sass/_outer-site-viewer.scss */
 ul#deviceMenu li {
   border-right: 1px solid #970D31;
   display: block;
@@ -760,7 +878,7 @@ ul#deviceMenu li {
   list-style: none;
 }
 
-/* line 155, ../../Sass/_outer-site-viewer.scss */
+/* line 183, ../../Sass/_outer-site-viewer.scss */
 ul#deviceMenu li a {
   background: #3366cc url(img/icons.png) no-repeat;
   display: block;
@@ -771,7 +889,7 @@ ul#deviceMenu li a {
   width: 30px;
 }
 
-/* line 165, ../../Sass/_outer-site-viewer.scss */
+/* line 193, ../../Sass/_outer-site-viewer.scss */
 ul#deviceMenu li.active, ul#deviceMenu li:hover {
   background-color: #8e8d8d;
   -webkit-box-shadow: inset 0 0 3px 1px rgba(0, 0, 0, 0.7);
@@ -787,38 +905,38 @@ ul#deviceMenu li.active, ul#deviceMenu li:hover {
   filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#8e8d8d', endColorstr='#4d4c4c',GradientType=0 );
 }
 
-/* line 180, ../../Sass/_outer-site-viewer.scss */
+/* line 208, ../../Sass/_outer-site-viewer.scss */
 ul#deviceMenu li.active a, ul#deviceMenu li a:hover {
   background-color: transparent;
 }
 
-/* line 184, ../../Sass/_outer-site-viewer.scss */
+/* line 212, ../../Sass/_outer-site-viewer.scss */
 ul#deviceMenu li.auto a {
   background-position: -5px -725px;
 }
 
-/* line 188, ../../Sass/_outer-site-viewer.scss */
+/* line 216, ../../Sass/_outer-site-viewer.scss */
 ul#deviceMenu li.iPhonePortrait a {
   background-position: -5px -565px;
 }
 
-/* line 192, ../../Sass/_outer-site-viewer.scss */
+/* line 220, ../../Sass/_outer-site-viewer.scss */
 ul#deviceMenu li.iPhoneLandscape a {
   background-position: -5px -605px;
 }
 
-/* line 196, ../../Sass/_outer-site-viewer.scss */
+/* line 224, ../../Sass/_outer-site-viewer.scss */
 ul#deviceMenu li.iPadPortrait a {
   background-position: -5px -645px;
 }
 
-/* line 200, ../../Sass/_outer-site-viewer.scss */
+/* line 228, ../../Sass/_outer-site-viewer.scss */
 ul#deviceMenu li.iPadLandscape a {
   background-position: -5px -685px;
 }
 
 /* #### Hovering #### */
-/* line 206, ../../Sass/_outer-site-viewer.scss */
+/* line 234, ../../Sass/_outer-site-viewer.scss */
 .cofoundry-sv__section-popover-container, .cofoundry-sv__module-popover-container {
   font-family: "Open Sans", sans-serif;
   font-size: 85%;
@@ -829,7 +947,7 @@ ul#deviceMenu li.iPadLandscape a {
 }
 
 /* #### Section hovering #### */
-/* line 220, ../../Sass/_outer-site-viewer.scss */
+/* line 248, ../../Sass/_outer-site-viewer.scss */
 .cofoundry-sv__section-popover-inner {
   -moz-border-radius: 2px;
   -webkit-border-radius: 2px;
@@ -847,7 +965,7 @@ ul#deviceMenu li.iPadLandscape a {
   white-space: nowrap;
 }
 
-/* line 235, ../../Sass/_outer-site-viewer.scss */
+/* line 263, ../../Sass/_outer-site-viewer.scss */
 .cofoundry-sv__section-popover-inner h2 {
   font-weight: bold;
   float: left;
@@ -858,7 +976,7 @@ ul#deviceMenu li.iPadLandscape a {
   margin: 0;
 }
 
-/* line 245, ../../Sass/_outer-site-viewer.scss */
+/* line 273, ../../Sass/_outer-site-viewer.scss */
 .cofoundry-sv__section-popover-inner a {
   float: right;
   color: #3c3c3c;
@@ -869,18 +987,18 @@ ul#deviceMenu li.iPadLandscape a {
   position: relative;
   text-align: center;
 }
-/* line 255, ../../Sass/_outer-site-viewer.scss */
+/* line 283, ../../Sass/_outer-site-viewer.scss */
 .cofoundry-sv__section-popover-inner a:hover {
   color: #3366cc;
 }
 
 /* #### Module hovering #### */
-/* line 263, ../../Sass/_outer-site-viewer.scss */
+/* line 291, ../../Sass/_outer-site-viewer.scss */
 .cofoundry-sv__module-popover-container {
   position: fixed;
 }
 
-/* line 267, ../../Sass/_outer-site-viewer.scss */
+/* line 295, ../../Sass/_outer-site-viewer.scss */
 .cofoundry-sv__module-popover-container ul {
   -moz-border-radius: 2px;
   -webkit-border-radius: 2px;
@@ -893,14 +1011,14 @@ ul#deviceMenu li.iPadLandscape a {
   padding: 0px;
 }
 
-/* line 277, ../../Sass/_outer-site-viewer.scss */
+/* line 305, ../../Sass/_outer-site-viewer.scss */
 .cofoundry-sv__module-popover-container li:not(:last-of-type) {
   border: 1px solid #ebebeb;
   border-width: 0 0 1px 0;
   display: block;
 }
 
-/* line 283, ../../Sass/_outer-site-viewer.scss */
+/* line 311, ../../Sass/_outer-site-viewer.scss */
 .cofoundry-sv__module-popover-container li a {
   -moz-transition: all 0.3s;
   -o-transition: all 0.3s;
@@ -915,12 +1033,12 @@ ul#deviceMenu li.iPadLandscape a {
   text-align: center;
   font-size: 1.1em;
 }
-/* line 294, ../../Sass/_outer-site-viewer.scss */
+/* line 322, ../../Sass/_outer-site-viewer.scss */
 .cofoundry-sv__module-popover-container li a:hover {
   color: #3366cc;
 }
 
-/* line 299, ../../Sass/_outer-site-viewer.scss */
+/* line 327, ../../Sass/_outer-site-viewer.scss */
 .cofoundry-sv__module-popover-container .disabled a {
   cursor: default;
   opacity: 0.4;
@@ -931,7 +1049,7 @@ ul#deviceMenu li.iPadLandscape a {
 }
 
 /* #### Footer #### */
-/* line 309, ../../Sass/_outer-site-viewer.scss */
+/* line 337, ../../Sass/_outer-site-viewer.scss */
 footer {
   position: fixed;
   bottom: 0;

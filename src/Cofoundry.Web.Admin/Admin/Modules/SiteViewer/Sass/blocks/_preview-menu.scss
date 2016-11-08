@@ -7,6 +7,7 @@
     height: 70px;
     background-color: $color-darkgrey;
     transform: translateY(100%);
+    z-index: 1000;
 
     &.active {
         transform: translateY(0);    

@@ -36,8 +36,9 @@ function (
         vm.toggleOpen = toggleOpen;
         vm.toggleVersionMenu = toggleVersionMenu;
         vm.toggleViewOptionsMenu = toggleViewOptionsMenu;
+        vm.switchDisplaySize = switchDisplaySize;
+        vm.displayClass = '';
         vm.siteViewerActive = true;
-        vm.siteViewerText = 'Hide';
         vm.versionMenuActive = false;
         vm.viewOptionsMenuActive = false;
     }
@@ -79,8 +80,8 @@ function (
         vm.siteViewerActive = !vm.siteViewerActive;
     }
 
-    function toggleButtonText() {
-        vm.siteViewerText = vm.siteViewerActive === true ? 'Hide' : 'Show';
+    function switchDisplaySize(displayClass) {
+        vm.displayClass = displayClass;
     }
 
     /* PRIVATE FUNCS */
