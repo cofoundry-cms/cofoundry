@@ -582,6 +582,13 @@ article, aside, details, figcaption, figure, footer, header, hgroup, main, menu,
   right: 0;
   transform: translate(0, -100%);
 }
+/* line 15, ../../Sass/elements/_settings.scss */
+.cofoundry-sv__settings .cofoundry-sv__version-list__item span {
+  float: right;
+  width: auto;
+  height: auto;
+  background-color: transparent;
+}
 
 /* line 1, ../../Sass/elements/_edit-mode.scss */
 .cofoundry-sv__edit-mode {

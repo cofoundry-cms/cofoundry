@@ -80,7 +80,19 @@ function (
         vm.siteViewerActive = !vm.siteViewerActive;
     }
 
-    function switchDisplaySize(displayClass) {
+    function switchDisplaySize(e, displayClass) {
+        var list = document.getElementById('display-list'),
+            links = list.getElementsByTagName('li'),
+            targetLink = e.target;
+
+        console.log(links);
+
+        for (var i = 0; i < links.length; i++) {
+            links[i].classList.remove('active');
+        }
+
+        targetLink.classList.add('active');
+
         vm.displayClass = displayClass;
     }
 

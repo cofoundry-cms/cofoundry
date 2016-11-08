@@ -125,7 +125,7 @@
         <div class="cofoundry-sv__settings">
             <div class="cofoundry-sv__mini-menu cofoundry-sv__mini-menu--large">
                 <div class="cofoundry-sv__mini-menu__content">
-                    <h3>Edit Mode Options</h3>
+                    <!-- <h3>Edit Mode Options</h3>
                     <div class="cofoundry-sv__edit-mode">
                         <div class="cofoundry-sv__edit-mode__half">
                             <input id="toggle-show-editable" type="checkbox">
@@ -137,17 +137,16 @@
                                    value="#47FEF2" disabled>
                             <label for="show-editable-color">Outline Color</label>
                         </div>
-                    </div>
+                    </div> -->
 
                     <h3>Display Size</h3>
                     <div class="cofoundry-sv__tabs">
                         <div class="cofoundry-sv__tab-content active">
-                            <ul class="cofoundry-sv__info-list">
-                                <li class="cofoundry-sv__info-list__item" ng-click="vm.switchDisplaySize('full')">Full Screen</li>
-                                <li class="cofoundry-sv__info-list__item" ng-click="vm.switchDisplaySize('desktop')">Desktop HD <span>1440x900</span></li>
-                                <li class="cofoundry-sv__info-list__item" ng-click="vm.switchDisplaySize('iPadLandscape')">Tablet Landscape <span>1024x768</span></li>
-                                <li class="cofoundry-sv__info-list__item" ng-click="vm.switchDisplaySize('iPadPortrait')">Tablet Portrait <span>768x1024</span></li>
-                                <li class="cofoundry-sv__info-list__item" ng-click="vm.switchDisplaySize('iPhonePortrait')">Mobile <span>375x667</span></li>
+                            <ul id="display-list" class="cofoundry-sv__version-list">
+                                <li class="cofoundry-sv__version-list__item active" ng-click="vm.switchDisplaySize($event, 'full')">Full Screen</li>
+                                <li class="cofoundry-sv__version-list__item" ng-click="vm.switchDisplaySize($event, 'iPadLandscape')">Tablet Landscape <span>1024x768</span></li>
+                                <li class="cofoundry-sv__version-list__item" ng-click="vm.switchDisplaySize($event, 'iPadPortrait')">Tablet Portrait <span>768x1024</span></li>
+                                <li class="cofoundry-sv__version-list__item" ng-click="vm.switchDisplaySize($event, 'iPhonePortrait')">Mobile <span>375x667</span></li>
                             </ul>
                         </div>
                     </div>
