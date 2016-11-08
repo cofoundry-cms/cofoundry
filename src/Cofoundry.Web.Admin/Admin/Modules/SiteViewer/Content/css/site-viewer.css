@@ -1,7 +1,7 @@
 /*===============================
 	Required compass includes
 =================================*/
-/* line 5, ../../../../../../../../../../../Ruby22-x64/lib/ruby/gems/2.2.0/gems/compass-core-1.0.3/stylesheets/compass/reset/_utilities.scss */
+/* line 5, ../../../../../../../../../../../../../usr/local/lib/ruby/gems/2.2.0/gems/compass-core-1.0.3/stylesheets/compass/reset/_utilities.scss */
 html, body, div, span, applet, object, iframe,
 h1, h2, h3, h4, h5, h6, p, blockquote, pre,
 a, abbr, acronym, address, big, cite, code,
@@ -23,45 +23,45 @@ time, mark, audio, video {
   vertical-align: baseline;
 }
 
-/* line 22, ../../../../../../../../../../../Ruby22-x64/lib/ruby/gems/2.2.0/gems/compass-core-1.0.3/stylesheets/compass/reset/_utilities.scss */
+/* line 22, ../../../../../../../../../../../../../usr/local/lib/ruby/gems/2.2.0/gems/compass-core-1.0.3/stylesheets/compass/reset/_utilities.scss */
 html {
   line-height: 1;
 }
 
-/* line 24, ../../../../../../../../../../../Ruby22-x64/lib/ruby/gems/2.2.0/gems/compass-core-1.0.3/stylesheets/compass/reset/_utilities.scss */
+/* line 24, ../../../../../../../../../../../../../usr/local/lib/ruby/gems/2.2.0/gems/compass-core-1.0.3/stylesheets/compass/reset/_utilities.scss */
 ol, ul {
   list-style: none;
 }
 
-/* line 26, ../../../../../../../../../../../Ruby22-x64/lib/ruby/gems/2.2.0/gems/compass-core-1.0.3/stylesheets/compass/reset/_utilities.scss */
+/* line 26, ../../../../../../../../../../../../../usr/local/lib/ruby/gems/2.2.0/gems/compass-core-1.0.3/stylesheets/compass/reset/_utilities.scss */
 table {
   border-collapse: collapse;
   border-spacing: 0;
 }
 
-/* line 28, ../../../../../../../../../../../Ruby22-x64/lib/ruby/gems/2.2.0/gems/compass-core-1.0.3/stylesheets/compass/reset/_utilities.scss */
+/* line 28, ../../../../../../../../../../../../../usr/local/lib/ruby/gems/2.2.0/gems/compass-core-1.0.3/stylesheets/compass/reset/_utilities.scss */
 caption, th, td {
   text-align: left;
   font-weight: normal;
   vertical-align: middle;
 }
 
-/* line 30, ../../../../../../../../../../../Ruby22-x64/lib/ruby/gems/2.2.0/gems/compass-core-1.0.3/stylesheets/compass/reset/_utilities.scss */
+/* line 30, ../../../../../../../../../../../../../usr/local/lib/ruby/gems/2.2.0/gems/compass-core-1.0.3/stylesheets/compass/reset/_utilities.scss */
 q, blockquote {
   quotes: none;
 }
-/* line 103, ../../../../../../../../../../../Ruby22-x64/lib/ruby/gems/2.2.0/gems/compass-core-1.0.3/stylesheets/compass/reset/_utilities.scss */
+/* line 103, ../../../../../../../../../../../../../usr/local/lib/ruby/gems/2.2.0/gems/compass-core-1.0.3/stylesheets/compass/reset/_utilities.scss */
 q:before, q:after, blockquote:before, blockquote:after {
   content: "";
   content: none;
 }
 
-/* line 32, ../../../../../../../../../../../Ruby22-x64/lib/ruby/gems/2.2.0/gems/compass-core-1.0.3/stylesheets/compass/reset/_utilities.scss */
+/* line 32, ../../../../../../../../../../../../../usr/local/lib/ruby/gems/2.2.0/gems/compass-core-1.0.3/stylesheets/compass/reset/_utilities.scss */
 a img {
   border: none;
 }
 
-/* line 116, ../../../../../../../../../../../Ruby22-x64/lib/ruby/gems/2.2.0/gems/compass-core-1.0.3/stylesheets/compass/reset/_utilities.scss */
+/* line 116, ../../../../../../../../../../../../../usr/local/lib/ruby/gems/2.2.0/gems/compass-core-1.0.3/stylesheets/compass/reset/_utilities.scss */
 article, aside, details, figcaption, figure, footer, header, hgroup, main, menu, nav, section, summary {
   display: block;
 }
@@ -287,14 +287,20 @@ article, aside, details, figcaption, figure, footer, header, hgroup, main, menu,
   color: #fff;
 }
 
-/* line 1, ../../Sass/blocks/_version-list.scss */
+/* line 1, ../../Sass/blocks/_versions.scss */
+.cofoundry-sv__versions {
+  float: left;
+  height: 100%;
+}
+
+/* line 6, ../../Sass/blocks/_versions.scss */
 .cofoundry-sv__version-list {
   padding: 0;
   margin: 0;
   list-style: none;
 }
 
-/* line 7, ../../Sass/blocks/_version-list.scss */
+/* line 12, ../../Sass/blocks/_versions.scss */
 .cofoundry-sv__version-list__item {
   -moz-border-radius: 2px;
   -webkit-border-radius: 2px;
@@ -308,7 +314,7 @@ article, aside, details, figcaption, figure, footer, header, hgroup, main, menu,
   color: #A6ACA9;
   text-decoration: none;
 }
-/* line 18, ../../Sass/blocks/_version-list.scss */
+/* line 23, ../../Sass/blocks/_versions.scss */
 .cofoundry-sv__version-list__item span {
   background-color: #3c3c3c;
   width: 10px;
@@ -317,33 +323,33 @@ article, aside, details, figcaption, figure, footer, header, hgroup, main, menu,
   margin-right: 5px;
   display: inline-block;
 }
-/* line 27, ../../Sass/blocks/_version-list.scss */
+/* line 32, ../../Sass/blocks/_versions.scss */
 .cofoundry-sv__version-list__item .published {
   background-color: #339900 !important;
 }
-/* line 31, ../../Sass/blocks/_version-list.scss */
+/* line 36, ../../Sass/blocks/_versions.scss */
 .cofoundry-sv__version-list__item .approved {
   background-color: #ff6600 !important;
 }
-/* line 35, ../../Sass/blocks/_version-list.scss */
+/* line 40, ../../Sass/blocks/_versions.scss */
 .cofoundry-sv__version-list__item .draft {
   border: 1px solid #ff6600;
   background-color: transparent !important;
 }
-/* line 40, ../../Sass/blocks/_version-list.scss */
+/* line 45, ../../Sass/blocks/_versions.scss */
 .cofoundry-sv__version-list__item:last-of-type {
   border: 0;
 }
-/* line 44, ../../Sass/blocks/_version-list.scss */
+/* line 49, ../../Sass/blocks/_versions.scss */
 .cofoundry-sv__version-list__item:hover {
   background-color: #3c3c3c;
   border-color: #1a1d22;
 }
-/* line 48, ../../Sass/blocks/_version-list.scss */
+/* line 53, ../../Sass/blocks/_versions.scss */
 .cofoundry-sv__version-list__item:hover span {
   background-color: #2c2c2c;
 }
-/* line 53, ../../Sass/blocks/_version-list.scss */
+/* line 58, ../../Sass/blocks/_versions.scss */
 .cofoundry-sv__version-list__item.active {
   background-color: #3366cc;
   color: #fff;
@@ -450,14 +456,12 @@ article, aside, details, figcaption, figure, footer, header, hgroup, main, menu,
 
 /* line 1, ../../Sass/elements/_mode.scss */
 .cofoundry-sv__mode {
-  position: absolute;
-  left: 50%;
   height: 100%;
   padding: 5px;
-  transform: translateX(-50%);
+  float: right;
 }
 
-/* line 9, ../../Sass/elements/_mode.scss */
+/* line 7, ../../Sass/elements/_mode.scss */
 .cofoundry-sv__mode__button {
   -moz-border-radius: 4px;
   -webkit-border-radius: 4px;
@@ -475,7 +479,7 @@ article, aside, details, figcaption, figure, footer, header, hgroup, main, menu,
   text-align: center;
   text-decoration: none;
 }
-/* line 24, ../../Sass/elements/_mode.scss */
+/* line 22, ../../Sass/elements/_mode.scss */
 .cofoundry-sv__mode__button span {
   margin: 0 auto;
   display: block;
@@ -484,29 +488,29 @@ article, aside, details, figcaption, figure, footer, header, hgroup, main, menu,
   font-size: 2em;
   padding: 8px 0 2px;
 }
-/* line 33, ../../Sass/elements/_mode.scss */
+/* line 31, ../../Sass/elements/_mode.scss */
 .cofoundry-sv__mode__button:last-of-type {
   margin-right: 0;
 }
-/* line 37, ../../Sass/elements/_mode.scss */
+/* line 35, ../../Sass/elements/_mode.scss */
 .cofoundry-sv__mode__button:hover, .cofoundry-sv__mode__button.active, .cofoundry-sv__mode__button.JS-active {
   background-color: #3366cc;
   color: #fff;
   cursor: pointer;
 }
 
-/* line 47, ../../Sass/elements/_mode.scss */
+/* line 45, ../../Sass/elements/_mode.scss */
 .cofoundry-sv__mode__button__group .cofoundry-sv__mode__button {
   margin-right: 0;
   border-right: 1px solid #3c3c3c;
 }
-/* line 52, ../../Sass/elements/_mode.scss */
+/* line 50, ../../Sass/elements/_mode.scss */
 .cofoundry-sv__mode__button__group .cofoundry-sv__mode__button:first-of-type {
   -moz-border-radius: 4px 0 0 4px;
   -webkit-border-radius: 4px;
   border-radius: 4px 0 0 4px;
 }
-/* line 56, ../../Sass/elements/_mode.scss */
+/* line 54, ../../Sass/elements/_mode.scss */
 .cofoundry-sv__mode__button__group .cofoundry-sv__mode__button:last-of-type {
   -moz-border-radius: 0 4px 4px 0;
   -webkit-border-radius: 0;
@@ -518,11 +522,13 @@ article, aside, details, figcaption, figure, footer, header, hgroup, main, menu,
 /* line 1, ../../Sass/elements/_options.scss */
 .cofoundry-sv__options {
   float: right;
-  padding: 5px;
+  padding: 0 5px 0 0;
+  margin-left: 10px;
+  border-left: 1px solid #4d4d4d;
   height: 100%;
 }
 
-/* line 7, ../../Sass/elements/_options.scss */
+/* line 9, ../../Sass/elements/_options.scss */
 .cofoundry-sv__options__button {
   display: inline-block;
   background-color: #2c2c2c;
@@ -538,7 +544,7 @@ article, aside, details, figcaption, figure, footer, header, hgroup, main, menu,
   text-align: center;
   text-decoration: none;
 }
-/* line 22, ../../Sass/elements/_options.scss */
+/* line 24, ../../Sass/elements/_options.scss */
 .cofoundry-sv__options__button span {
   margin: 0 auto;
   display: block;
@@ -547,11 +553,11 @@ article, aside, details, figcaption, figure, footer, header, hgroup, main, menu,
   font-size: 2em;
   padding: 8px 0 2px;
 }
-/* line 31, ../../Sass/elements/_options.scss */
+/* line 33, ../../Sass/elements/_options.scss */
 .cofoundry-sv__options__button:first-of-type {
   margin: 0 10px;
 }
-/* line 35, ../../Sass/elements/_options.scss */
+/* line 37, ../../Sass/elements/_options.scss */
 .cofoundry-sv__options__button:hover {
   background-color: #3366cc;
 }
@@ -560,6 +566,16 @@ article, aside, details, figcaption, figure, footer, header, hgroup, main, menu,
 .cofoundry-sv__settings {
   float: right;
   height: 100%;
+}
+/* line 5, ../../Sass/elements/_settings.scss */
+.cofoundry-sv__settings .cofoundry-sv__mini-menu {
+  width: 40px;
+}
+/* line 9, ../../Sass/elements/_settings.scss */
+.cofoundry-sv__settings .cofoundry-sv__mini-menu__content {
+  left: auto;
+  right: 0;
+  transform: translate(0, -100%);
 }
 
 /* line 1, ../../Sass/elements/_edit-mode.scss */

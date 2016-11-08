@@ -60,8 +60,8 @@
 
 <div id="wrapper" ng-controller="SiteViewerController as vm">
 
-    <div id="cofoundry-sv" class="cofoundry-sv active">
-        <button type="button" id="cofoundry-sv_button" class="cofoundry-sv__toggle">Hide</button>
+    <div id="cofoundry-sv" class="cofoundry-sv" ng-class="vm.siteViewerActive ? 'active' : ''">
+        <button type="button" id="cofoundry-sv_button" class="cofoundry-sv__toggle "ng-click="vm.toggleOpen()" ng-bind="vm.siteViewerText"></button>
 
         <a class="cofoundry-sv__back" href="@backToAdminLink">
             <span class="fa fa-chevron-left"></span>
@@ -84,7 +84,7 @@
                 <button type="button" class="cofoundry-sv__mini-menu__toggle">
                     <span class="cofoundry-sv__page-details__status @Model.Version.WorkFlowStatus.ToString().ToLower()"></span>
                     <span class="cofoundry-sv__page-details__name">@Model.Version.Title</span>
-                    <span class="cofoundry-sv__page-details__url">@Model.PageRoutingInfo.CustomEntityRoute.UrlSlug</span>
+                    <span class="cofoundry-sv__page-details__url">@Model.PageRoutingInfo.PageRoute.UrlPath</span>
                 </button>
             </div>
         </div>
@@ -120,81 +120,6 @@
                     </button>
                 </div>
                 }
-        </div>
-
-        <div class="cofoundry-sv__mode">
-
-            @if (!Model.IsStaticPage && !isViewingSpecificVersion)
-            {
-                <a href="?mode=live" class="cofoundry-sv__mode__button @Cofoundry.Html.TextIf(Model.Version.WorkFlowStatus == WorkFlowStatus.Published, "active")">
-                    <span class="fa fa-cloud"></span>
-                    Current live
-                </a>
-
-                if (Model.CanEditPage())
-                {
-                    if (Model.IsEditTypeSwitchRequired())
-                    {
-                        <span class="cofoundry-sv__mode__button__group">
-                            <a href="?mode=edit&edittype=entity" class="cofoundry-sv__mode__button @Cofoundry.Html.TextIf(isCustomEntityRoute && isEditing, "active")">
-                                <span class="fa fa-pencil-square-o"></span>
-                                Edit @Model.CustomEntityDefinition.Name
-                            </a>
-                            <a href="?mode=edit&edittype=page" class="cofoundry-sv__mode__button @Cofoundry.Html.TextIf(!isCustomEntityRoute && isEditing, "active")">
-                                <span class="fa fa-pencil-square-o"></span>
-                                Edit @(Model.IsEditTypeSwitchRequired() ? "template" : "draft")
-                            </a>
-                        </span>
-                    }
-                    else
-                    {
-                        <a href="?mode=edit&edittype=page" class="cofoundry-sv__mode__button @Cofoundry.Html.TextIf(!isCustomEntityRoute && isEditing, "active")">
-                            <span class="fa fa-pencil-square-o"></span>
-                            Edit @(Model.IsEditTypeSwitchRequired() ? "template" : "draft")
-                        </a>
-                    }
-                    <a href="?mode=preview" class="cofoundry-sv__mode__button @Cofoundry.Html.TextIf(!isEditing && Model.Version.WorkFlowStatus == WorkFlowStatus.Draft, "active")">
-                        <span class="fa fa-eye"></span>
-                        Preview draft
-                    </a>
-                }
-            }
-
-            <div class="cofoundry-sv__options">
-
-                @if (Model.SiteViewerMode == SiteViewerMode.Draft || isEditing)
-                {
-                    <a href=""
-                       class="cofoundry-sv__options__button publish popup"
-                       ng-disabled="vm.globalLoadState.isLoading"
-                       ng-click="vm.publish()">
-                        <span class="fa fa-cloud-upload"></span>
-                        Publish @entityNameSingular
-                    </a>
-                }
-                else if (Model.SiteViewerMode == SiteViewerMode.Live)
-                {
-                    <a href=""
-                       class="cofoundry-sv__options__button publish popup"
-                       ng-disabled="vm.globalLoadState.isLoading"
-                       ng-click="vm.unpublish()">
-                        <span class="fa fa-cloud-download"></span>
-                        Unpublish @entityNameSingular
-                    </a>
-                }
-                else if (Model.SiteViewerMode == SiteViewerMode.SpecificVersion)
-                {
-                    <a href=""
-                       class="cofoundry-sv__options__button publish popup"
-                       title="Copy this version to a new draft version"
-                       ng-disabled="vm.globalLoadState.isLoading"
-                       ng-click="vm.copyToDraft()">
-                        <span class="fa fa-files-o"></span>
-                        Copy to draft
-                    </a>
-                }
-
-            </div>
         </div>
 
         <div class="cofoundry-sv__settings">
@@ -252,9 +177,79 @@
                 </div>
 
                 <button type="button" class="cofoundry-sv__mini-menu__toggle">
-                    <span></span>
-                    View Options
+                    <span class="fa fa-desktop"></span>
                 </button>
+            </div>
+        </div>
+
+        <div class="cofoundry-sv__mode">
+            @if (!Model.IsStaticPage && !isViewingSpecificVersion)
+            {
+                <a href="?mode=live" class="cofoundry-sv__mode__button @Cofoundry.Html.TextIf(Model.Version.WorkFlowStatus == WorkFlowStatus.Published, "active")">
+                    <span class="fa fa-cloud"></span>
+                    Current live
+                </a>
+
+                if (Model.CanEditPage())
+                {
+                    if (Model.IsEditTypeSwitchRequired())
+                    {
+                        <span class="cofoundry-sv__mode__button__group">
+                            <a href="?mode=edit&edittype=entity" class="cofoundry-sv__mode__button @Cofoundry.Html.TextIf(isCustomEntityRoute && isEditing, "active")">
+                                <span class="fa fa-pencil-square-o"></span>
+                                Edit @Model.CustomEntityDefinition.Name
+                            </a>
+                            <a href="?mode=edit&edittype=page" class="cofoundry-sv__mode__button @Cofoundry.Html.TextIf(!isCustomEntityRoute && isEditing, "active")">
+                                <span class="fa fa-pencil-square-o"></span>
+                                Edit @(Model.IsEditTypeSwitchRequired() ? "template" : "draft")
+                            </a>
+                        </span>
+                    }
+                    else
+                    {
+                        <a href="?mode=edit&edittype=page" class="cofoundry-sv__mode__button @Cofoundry.Html.TextIf(!isCustomEntityRoute && isEditing, "active")">
+                            <span class="fa fa-pencil-square-o"></span>
+                            Edit @(Model.IsEditTypeSwitchRequired() ? "template" : "draft")
+                        </a>
+                    }
+                    <a href="?mode=preview" class="cofoundry-sv__mode__button @Cofoundry.Html.TextIf(!isEditing && Model.Version.WorkFlowStatus == WorkFlowStatus.Draft, "active")">
+                        <span class="fa fa-eye"></span>
+                        Preview draft
+                    </a>
+                }
+            }
+            <div class="cofoundry-sv__options">
+                @if (Model.SiteViewerMode == SiteViewerMode.Draft || isEditing)
+                {
+                    <a href=""
+                       class="cofoundry-sv__options__button publish popup"
+                       ng-disabled="vm.globalLoadState.isLoading"
+                       ng-click="vm.publish()">
+                        <span class="fa fa-cloud-upload"></span>
+                        Publish @entityNameSingular
+                    </a>
+                }
+                else if (Model.SiteViewerMode == SiteViewerMode.Live)
+                {
+                    <a href=""
+                       class="cofoundry-sv__options__button publish popup"
+                       ng-disabled="vm.globalLoadState.isLoading"
+                       ng-click="vm.unpublish()">
+                        <span class="fa fa-cloud-download"></span>
+                        Unpublish @entityNameSingular
+                    </a>
+                }
+                else if (Model.SiteViewerMode == SiteViewerMode.SpecificVersion)
+                {
+                    <a href=""
+                       class="cofoundry-sv__options__button publish popup"
+                       title="Copy this version to a new draft version"
+                       ng-disabled="vm.globalLoadState.isLoading"
+                       ng-click="vm.copyToDraft()">
+                        <span class="fa fa-files-o"></span>
+                        Copy to draft
+                    </a>
+                }
             </div>
         </div>
 

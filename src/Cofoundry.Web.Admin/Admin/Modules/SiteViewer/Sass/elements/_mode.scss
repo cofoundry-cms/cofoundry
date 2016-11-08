@@ -1,9 +1,7 @@
 .cofoundry-sv__mode {
-    position: absolute;
-    left: 50%;
     height: 100%;
     padding: 5px;
-    transform: translateX(-50%);
+    float: right;
 }
 
 .cofoundry-sv__mode__button {

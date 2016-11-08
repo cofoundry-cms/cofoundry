@@ -33,8 +33,11 @@ function (
         vm.publish = publish;
         vm.unpublish = unpublish;
         vm.copyToDraft = copyToDraft;
+        vm.toggleOpen = toggleOpen;
         vm.toggleVersionMenu = toggleVersionMenu;
         vm.toggleViewOptionsMenu = toggleViewOptionsMenu;
+        vm.siteViewerActive = true;
+        vm.siteViewerText = 'Hide';
         vm.versionMenuActive = false;
         vm.viewOptionsMenuActive = false;
     }
@@ -52,7 +55,6 @@ function (
     }
 
     function publish() {
-
         entityVersionModalDialogService
             .publish(options.entityId, setLoadingOn, entityDialogServiceConfig)
             .then(reload)
@@ -71,6 +73,14 @@ function (
             .copyToDraft(options.entityId, options.versionId, options.hasDraftVersion, setLoadingOn, entityDialogServiceConfig)
             .then(reload)
             .catch(setLoadingOff);
+    }
+
+    function toggleOpen() {
+        vm.siteViewerActive = !vm.siteViewerActive;
+    }
+
+    function toggleButtonText() {
+        vm.siteViewerText = vm.siteViewerActive === true ? 'Hide' : 'Show';
     }
 
     /* PRIVATE FUNCS */

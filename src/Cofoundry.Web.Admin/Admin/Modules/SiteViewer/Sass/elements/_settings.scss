@@ -5,4 +5,10 @@
     .cofoundry-sv__mini-menu {
         width: 40px;
     }
+
+    .cofoundry-sv__mini-menu__content {
+        left: auto;
+        right: 0;
+        transform: translate(0, -100%);
+    }
 }
