@@ -2,13 +2,11 @@
 @import "sassutils/mixins";
 @import "sassutils/vendor";
 
-// Base styles
-@import "base/colors";
-
 // // Block styles
 @import "blocks/preview-menu";
 @import "blocks/mini-menu";
 @import "blocks/versions";
+@import "blocks/navmenu";
 @import "blocks/tabs";
 
 // Element styles

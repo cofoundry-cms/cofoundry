@@ -22,16 +22,15 @@
 }
 
 .cofoundry-sv__mini-menu__content {
+    @include transform(translate(0%, -100%));
     display:none;
     background-color: $color-offblack;
     position: absolute;
-    left: 50%;
     top: 0;
     width: 320px;
     padding: 15px 15px 30px;
     border-top-left-radius: 4px;
     border-top-right-radius: 4px;
-    transform: translate(-50%, -100%);
 
     .cofoundry-sv__mini-menu--large & {
         width: 480px;
@@ -40,6 +39,16 @@
 
     .cofoundry-sv__mini-menu--flow & {
         width: 100%;
+    }
+
+    .cofoundry-sv__mini-menu--align-left & {
+        border-top-left-radius: 0px;
+    }
+
+    .cofoundry-sv__mini-menu--align-right & {
+        @include transform(translate(-50%, -100%));
+        left: 50%;
+        border-top-right-radius: 0px;
     }
 
     h3 {
@@ -70,7 +79,7 @@
 
 .cofoundry-sv__mini-menu:last-of-type {
     .cofoundry-sv__mini-menu__toggle {
-        border-right:1px solid $color-midgrey;
+        //border-right:1px solid $color-midgrey;
     }
 }
 

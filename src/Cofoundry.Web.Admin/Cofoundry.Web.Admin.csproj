@@ -585,6 +585,8 @@
     <Content Include="Admin\Modules\SiteViewer\Js\UIComponents\PageSectionModule.js" />
     <Content Include="Admin\Modules\SiteViewer\Js\UIComponents\SiteFrame.js" />
     <Content Include="Admin\Modules\SiteViewer\Sass\inner-site-viewer.scss" />
+    <Content Include="Admin\Modules\SiteViewer\Sass\blocks\_versions.scss" />
+    <Content Include="Admin\Modules\SiteViewer\Sass\blocks\_navmenu.scss" />
     <None Include="Admin\Modules\SiteViewer\Sass\_inner-site-viewer.scss" />
     <Content Include="Admin\Modules\Users\Js\Bootstrap\Module.js" />
     <Content Include="Admin\Modules\Users\Js\Bootstrap\Routing.js" />
@@ -674,11 +676,9 @@
     <Content Include="Admin\Modules\Shared\Content\css\lib\tinymce\fonts\tinymce.woff" />
     <Content Include="Admin\Modules\Shared\Content\css\lib\tinymce\skin.json" />
     <Content Include="Admin\Modules\SiteViewer\Sass\_outer-site-viewer.scss" />
-    <Content Include="Admin\Modules\SiteViewer\Sass\base\_colors.scss" />
     <Content Include="Admin\Modules\SiteViewer\Sass\blocks\_mini-menu.scss" />
     <Content Include="Admin\Modules\SiteViewer\Sass\blocks\_preview-menu.scss" />
     <Content Include="Admin\Modules\SiteViewer\Sass\blocks\_tabs.scss" />
-    <Content Include="Admin\Modules\SiteViewer\Sass\blocks\_version-list.scss" />
     <Content Include="Admin\Modules\SiteViewer\Sass\elements\_edit-mode.scss" />
     <Content Include="Admin\Modules\SiteViewer\Sass\elements\_info-list.scss" />
     <Content Include="Admin\Modules\SiteViewer\Sass\elements\_mode.scss" />
