@@ -672,6 +672,23 @@
     <Content Include="Admin\Modules\Shared\Content\css\lib\tinymce\fonts\tinymce.json" />
     <Content Include="Admin\Modules\Shared\Content\css\lib\tinymce\fonts\tinymce.ttf" />
     <Content Include="Admin\Modules\Shared\Content\css\lib\tinymce\fonts\tinymce.woff" />
+    <Content Include="Admin\Modules\SiteViewer\Sass\blocks\_mini-menu.scss" />
+    <Content Include="Admin\Modules\SiteViewer\Sass\blocks\_navmenu.scss" />
+    <Content Include="Admin\Modules\SiteViewer\Sass\blocks\_preview-menu.scss" />
+    <Content Include="Admin\Modules\SiteViewer\Sass\blocks\_tabs.scss" />
+    <Content Include="Admin\Modules\SiteViewer\Sass\blocks\_versions.scss" />
+    <Content Include="Admin\Modules\SiteViewer\Sass\elements\_edit-mode.scss" />
+    <Content Include="Admin\Modules\SiteViewer\Sass\elements\_info-list.scss" />
+    <Content Include="Admin\Modules\SiteViewer\Sass\elements\_mode.scss" />
+    <Content Include="Admin\Modules\SiteViewer\Sass\elements\_options.scss" />
+    <Content Include="Admin\Modules\SiteViewer\Sass\elements\_page-details.scss" />
+    <Content Include="Admin\Modules\SiteViewer\Sass\elements\_settings.scss" />
+    <Content Include="Admin\Modules\SiteViewer\Sass\inner-site-viewer.scss" />
+    <Content Include="Admin\Modules\SiteViewer\Sass\sassutils\README.md" />
+    <Content Include="Admin\Modules\SiteViewer\Sass\sassutils\_functions.scss" />
+    <Content Include="Admin\Modules\SiteViewer\Sass\sassutils\_mixins.scss" />
+    <Content Include="Admin\Modules\SiteViewer\Sass\sassutils\_vendor.scss" />
+    <Content Include="Admin\Modules\SiteViewer\Sass\_inner-site-viewer.scss" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -839,7 +856,7 @@
     <VisualStudio>
       <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
         <WebProjectProperties>
-          <UseIIS>True</UseIIS>
+          <UseIIS>False</UseIIS>
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>59549</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
