@@ -1613,10 +1613,10 @@ form.loading > *, table.loading > *, div.loading > *, fieldset.loading > * {
   -moz-border-radius: 3px;
   -webkit-border-radius: 3px;
   border-radius: 3px;
-  -moz-transform: scale(0.85);
-  -ms-transform: scale(0.85);
-  -webkit-transform: scale(0.85);
-  transform: scale(0.85);
+  -moz-transform: scale(0.85, 0.85);
+  -ms-transform: scale(0.85, 0.85);
+  -webkit-transform: scale(0.85, 0.85);
+  transform: scale(0.85, 0.85);
   -moz-transition: all 0.2s;
   -o-transition: all 0.2s;
   -webkit-transition: all 0.2s;
@@ -1634,15 +1634,14 @@ form.loading > *, table.loading > *, div.loading > *, fieldset.loading > * {
 }
 /* line 32, ../../Js/UIComponents/Modals/_modals.scss */
 .modal.modal-lg {
-  width: 95%;
+  width: 80%;
   height: auto;
-  left: 2.5%;
-  right: 2.5%;
-  top: 2.5%;
-  bottom: 2.5%;
+  left: 10%;
+  top: 12%;
+  bottom: 15%;
   margin-left: 0px;
 }
-/* line 42, ../../Js/UIComponents/Modals/_modals.scss */
+/* line 41, ../../Js/UIComponents/Modals/_modals.scss */
 .modal.modal--show {
   -moz-transform: scale(1, 1);
   -ms-transform: scale(1, 1);
@@ -1651,83 +1650,53 @@ form.loading > *, table.loading > *, div.loading > *, fieldset.loading > * {
   filter: progid:DXImageTransform.Microsoft.Alpha(enabled=false);
   opacity: 1;
 }
-/* line 47, ../../Js/UIComponents/Modals/_modals.scss */
+/* line 46, ../../Js/UIComponents/Modals/_modals.scss */
 .modal .page-actions {
-  -moz-border-radius: 0px 0px 3px 3px;
-  -webkit-border-radius: 0px;
-  border-radius: 0px 0px 3px 3px;
-  border-top: 1px solid #ebebeb;
-  padding: 8px;
+  margin-top: 80px;
   z-index: 2;
-  bottom: 0;
-  width: 100%;
-  height: 50px;
-  background: #fff;
-  left: 0;
 }
-/* line 59, ../../Js/UIComponents/Modals/_modals.scss */
-.modal .pagination {
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
-}
-/* line 65, ../../Js/UIComponents/Modals/_modals.scss */
+/* line 51, ../../Js/UIComponents/Modals/_modals.scss */
 .modal .page-body {
-  margin-left: 20px;
+  margin-left: 170px;
   margin-top: 60px;
   position: absolute;
   left: 0;
   top: 0;
-  bottom: 50px;
+  bottom: 0;
   overflow-y: scroll;
   right: 2px;
 }
-/* line 75, ../../Js/UIComponents/Modals/_modals.scss */
+/* line 61, ../../Js/UIComponents/Modals/_modals.scss */
 .modal .page-body .form-wrap {
   padding: 20px 20px 20px 0;
 }
-/* line 80, ../../Js/UIComponents/Modals/_modals.scss */
-.modal .page-actions .btn:not(.pager) {
-  margin-left: 5px;
-  width: auto;
-  float: right;
-  min-width: 80px;
-}
-/* line 87, ../../Js/UIComponents/Modals/_modals.scss */
-.modal .mce-fullscreen {
-  top: 59px;
-  left: 0;
-  bottom: 50px;
+@media screen and (min-width: 1200px) {
+  /* line 51, ../../Js/UIComponents/Modals/_modals.scss */
+  .modal .page-body {
+    margin-left: 195px;
+  }
 }
 
-/* line 94, ../../Js/UIComponents/Modals/_modals.scss */
+/* line 71, ../../Js/UIComponents/Modals/_modals.scss */
 .modal-dialog {
   height: 100%;
 }
-/* line 97, ../../Js/UIComponents/Modals/_modals.scss */
+/* line 74, ../../Js/UIComponents/Modals/_modals.scss */
 .modal-dialog .search-filter {
-  transform: translateY(-100%) translateX(-10%);
-  margin-top: -50px;
-}
-/* line 101, ../../Js/UIComponents/Modals/_modals.scss */
-.modal-dialog .search-filter:before, .modal-dialog .search-filter:after {
   top: auto;
   right: auto;
-  left: 30px;
-  bottom: -14px;
-  border-bottom-color: transparent;
-  border-top-color: #d2d2d2;
 }
-/* line 110, ../../Js/UIComponents/Modals/_modals.scss */
+/* line 78, ../../Js/UIComponents/Modals/_modals.scss */
+.modal-dialog .search-filter:before, .modal-dialog .search-filter:after {
+  right: auto;
+  left: 10px;
+}
+/* line 83, ../../Js/UIComponents/Modals/_modals.scss */
 .modal-dialog .search-filter:after {
-  top: auto;
-  left: 29px;
-  bottom: -14px;
-  border-bottom-color: transparent;
-  border-top-color: #fff;
+  left: 9px;
 }
 
-/* line 120, ../../Js/UIComponents/Modals/_modals.scss */
+/* line 89, ../../Js/UIComponents/Modals/_modals.scss */
 .modal-header {
   -moz-border-radius-topleft: 3px;
   -webkit-border-top-left-radius: 3px;
@@ -1745,7 +1714,7 @@ form.loading > *, table.loading > *, div.loading > *, fieldset.loading > * {
   border-bottom: 1px solid #ebebeb;
   z-index: 10;
 }
-/* line 133, ../../Js/UIComponents/Modals/_modals.scss */
+/* line 102, ../../Js/UIComponents/Modals/_modals.scss */
 .modal-header .close {
   position: absolute;
   right: 10px;
@@ -1754,12 +1723,12 @@ form.loading > *, table.loading > *, div.loading > *, fieldset.loading > * {
   color: black;
 }
 
-/* line 142, ../../Js/UIComponents/Modals/_modals.scss */
+/* line 111, ../../Js/UIComponents/Modals/_modals.scss */
 .modal-content {
   padding-left: 20px;
 }
 
-/* line 146, ../../Js/UIComponents/Modals/_modals.scss */
+/* line 115, ../../Js/UIComponents/Modals/_modals.scss */
 .modal-body {
   position: absolute;
   top: 80px;
@@ -1768,7 +1737,7 @@ form.loading > *, table.loading > *, div.loading > *, fieldset.loading > * {
   line-height: 15px;
 }
 
-/* line 154, ../../Js/UIComponents/Modals/_modals.scss */
+/* line 123, ../../Js/UIComponents/Modals/_modals.scss */
 .modal-actions {
   position: absolute;
   bottom: 10px;
@@ -1779,7 +1748,7 @@ form.loading > *, table.loading > *, div.loading > *, fieldset.loading > * {
   padding-right: 20px;
   text-align: right;
 }
-/* line 164, ../../Js/UIComponents/Modals/_modals.scss */
+/* line 133, ../../Js/UIComponents/Modals/_modals.scss */
 .modal-actions .btn {
   display: inline-block;
 }
