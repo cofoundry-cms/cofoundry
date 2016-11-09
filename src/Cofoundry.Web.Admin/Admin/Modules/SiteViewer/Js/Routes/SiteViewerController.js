@@ -1,5 +1,6 @@
 ﻿angular.module('cms.siteViewer').controller('SiteViewerController', [
     '$window',
+    '$scope',
     '_',
     'shared.LoadState',
     'shared.entityVersionModalDialogService',
@@ -7,6 +8,7 @@
     'siteViewer.options',
 function (
     $window,
+    $scope,
     _,
     LoadState,
     entityVersionModalDialogService,
@@ -31,12 +33,29 @@ function (
         vm.publish = publish;
         vm.unpublish = unpublish;
         vm.copyToDraft = copyToDraft;
+        vm.toggleOpen = toggleOpen;
+        vm.toggleVersionMenu = toggleVersionMenu;
+        vm.toggleViewOptionsMenu = toggleViewOptionsMenu;
+        vm.switchDisplaySize = switchDisplaySize;
+        vm.displayClass = '';
+        vm.siteViewerActive = true;
+        vm.versionMenuActive = false;
+        vm.viewOptionsMenuActive = false;
     }
 
     /* UI ACTIONS */
 
-    function publish() {
+    function toggleVersionMenu() {
+        vm.versionMenuActive = !vm.versionMenuActive;
+        vm.viewOptionsMenuActive = false;
+    }
 
+    function toggleViewOptionsMenu() {
+        vm.viewOptionsMenuActive = !vm.viewOptionsMenuActive;
+        vm.versionMenuActive = false;
+    }
+
+    function publish() {
         entityVersionModalDialogService
             .publish(options.entityId, setLoadingOn, entityDialogServiceConfig)
             .then(reload)
@@ -55,6 +74,26 @@ function (
             .copyToDraft(options.entityId, options.versionId, options.hasDraftVersion, setLoadingOn, entityDialogServiceConfig)
             .then(reload)
             .catch(setLoadingOff);
+    }
+
+    function toggleOpen() {
+        vm.siteViewerActive = !vm.siteViewerActive;
+    }
+
+    function switchDisplaySize(e, displayClass) {
+        var list = document.getElementById('display-list'),
+            links = list.getElementsByTagName('li'),
+            targetLink = e.target;
+
+        console.log(links);
+
+        for (var i = 0; i < links.length; i++) {
+            links[i].classList.remove('active');
+        }
+
+        targetLink.classList.add('active');
+
+        vm.displayClass = displayClass;
     }
 
     /* PRIVATE FUNCS */

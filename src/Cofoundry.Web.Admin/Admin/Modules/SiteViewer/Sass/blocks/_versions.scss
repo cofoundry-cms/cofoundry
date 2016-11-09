@@ -1,0 +1,66 @@
+.cofoundry-sv__versions {
+    float: left;
+    height: 100%;
+
+    .cofoundry-sv__mini-menu__toggle {
+        border-left: 0;
+    }
+}
+
+.cofoundry-sv__version-list {
+    padding: 0;
+    margin: 0;
+    list-style: none;
+}
+
+.cofoundry-sv__version-list__item {
+    @include border-radius(2px);
+    margin: 0;
+    padding: 10px;
+    display:block;
+    font-size: 11px;
+    border-bottom: 1px solid #555;
+    cursor: pointer; 
+    color: $color-text;
+    text-decoration:none;
+
+    span {
+        background-color: $color-darkgrey;
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        margin-right: 5px;
+        display: inline-block;
+    }
+
+    .published {
+        background-color: $color-success!important;
+    }
+
+    .approved {
+        background-color: $color-warning!important;
+    }
+
+    .draft {
+        border: 1px solid $color-warning;
+        background-color: transparent!important;
+    }
+
+    &:last-of-type {
+        border: 0;
+    }
+
+    &:hover {
+        background-color: $color-darkgrey;
+        border-color: #1a1d22;
+
+        span {
+            background-color: $color-offblack;
+        }
+    }
+
+    &.active {
+        background-color: $color-primary;
+        color:#fff;
+    }
+}

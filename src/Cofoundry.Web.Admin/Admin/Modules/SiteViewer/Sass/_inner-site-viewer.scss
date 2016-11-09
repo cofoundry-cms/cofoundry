@@ -1,0 +1,31 @@
+﻿/*!
+* This is used to style the siteviewer
+*/
+
+/* #### Use a minimum height for sections so that they can be hovered over when there are no modules in them #### */
+.cofoundry-sv__section, .cofoundry-sv__module-empty {
+    min-height: 30px;
+}
+/* for Internet Explorer */
+/*\*/
+* html .cofoundry__sv-section {
+    height: 30px;
+}
+
+/* Editable Section/Module Hover */
+.cofoundry-sv__hover-module { 
+    box-shadow: 0px 0px 2px $color-primary!important;
+}
+.cofoundry-sv__hover-module.mask { 
+    //box-shadow: 0px 0px 1px 1px rgba(0,0,0,.5)!important; 
+}
+
+.cofoundry-sv__hover-section { 
+    //outline: 1px solid $color-primary-dark!important;
+    box-shadow: 0px 0px 1px $color-primary-dark!important;
+}
+
+/* Used when the html for a section is being replaced */
+.cofoundry-sv__section-loading {
+    opacity: 0.5;
+}

@@ -1,0 +1,56 @@
+.cofoundry-sv {
+    font-family: $fontstack-default;
+    width: 100%;
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    height: 70px;
+    background-color: $color-darkgrey;
+    transform: translateY(100%);
+    z-index: 1000;
+
+    &.active {
+        transform: translateY(0);    
+    }
+}
+
+.cofoundry-sv__toggle {
+    position: absolute;
+    left: 0;
+    top: 0;
+    transform: translateY(-100%);
+    background-color: $color-midgrey;
+    border: 0;
+    border-radius: 0 3px;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+    padding: 10px 25px;
+
+    text-transform: uppercase;
+    font-size: 10px;
+    font-weight: 700;
+    color: $color-text-alt;
+    cursor: pointer;
+}
+
+.cofoundry-sv__back {
+    display: block;
+    height: 100%;
+    width: 40px;
+    float: left;
+    text-decoration: none;
+    color: $cms-text-color;
+    text-align: center;
+
+    span {
+        position:absolute;
+        font-size:0.8em;
+        top:50%;
+        margin-top:-6px;
+        left: 15px;
+    }
+    &:hover {
+        background-color: $color-primary;
+        color:#fff;
+    }
+}

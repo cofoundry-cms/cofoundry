@@ -125,7 +125,7 @@ function (
                 }
 
                 // popover hovers in the right hand corner of the element
-                var right = -8 + $window.innerWidth - (elementOffset.left + newAnchorElement[0].offsetWidth - iframeDoc.scrollLeft);
+                var right = 2 + $window.innerWidth - (elementOffset.left + newAnchorElement[0].offsetWidth - iframeDoc.scrollLeft);
 
                 scope.css = {
                     top: top + 'px',
@@ -155,7 +155,7 @@ function (
         }
 
         function setAnchorOver(anchorEl, isOver) {
-            if (anchorEl) anchorEl.toggleClass('cms-hover-section', isOver);
+            if (anchorEl) anchorEl.toggleClass('cofoundry-sv__hover-section', isOver);
         }
     }
 

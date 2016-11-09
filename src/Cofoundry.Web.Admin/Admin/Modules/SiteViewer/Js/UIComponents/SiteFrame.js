@@ -151,11 +151,11 @@ function (
         function reloadElementBySelector(selector) {
             var oldSectionElement = siteFrameEl[0].contentDocument.querySelector(selector),
                 loadingNode = oldSectionElement.cloneNode(true),
-                hoveredModule = loadingNode.querySelector('.cms-hover-module');
+                hoveredModule = loadingNode.querySelector('.cofoundry-sv__hover-module');
 
             // set loading, clone the node to remove event handlers
-            loadingNode.className += ' cms-section-loading';
-            if (hoveredModule) hoveredModule.className = hoveredModule.className.replace('cms-hover-module', '');
+            loadingNode.className += ' cofoundry-sv__section-loading';
+            if (hoveredModule) hoveredModule.className = hoveredModule.className.replace('cofoundry-sv__hover-module', '');
             oldSectionElement.parentNode.replaceChild(loadingNode, oldSectionElement);
 
             return getPageContent().then(function (content) {
