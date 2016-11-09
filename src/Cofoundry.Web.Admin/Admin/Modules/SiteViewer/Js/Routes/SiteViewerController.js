@@ -78,21 +78,29 @@ function (
 
     function toggleOpen() {
         vm.siteViewerActive = !vm.siteViewerActive;
+
+        if (vm.siteViewerActive === false) switchDisplaySize(null, 'full');
     }
 
     function switchDisplaySize(e, displayClass) {
         var list = document.getElementById('display-list'),
-            links = list.getElementsByTagName('li'),
-            targetLink = e.target;
+            links = list.getElementsByTagName('li');
 
-        console.log(links);
+        if (e === null) {
+            targetLink = document.getElementById('display-default');
+        }
+        else if (e.target.tagName.toLowerCase() == 'span') {
+            targetLink = e.target.parentElement;
+        }
+        else {
+            targetLink = e.target;
+        }
 
         for (var i = 0; i < links.length; i++) {
             links[i].classList.remove('active');
         }
 
         targetLink.classList.add('active');
-
         vm.displayClass = displayClass;
     }
 
