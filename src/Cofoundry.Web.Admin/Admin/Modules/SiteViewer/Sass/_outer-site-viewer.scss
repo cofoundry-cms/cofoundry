@@ -68,6 +68,10 @@ body {
     }
 }
 
+#wrapper.full-height #siteFrameContainer {
+    padding-bottom: 0px;
+}
+
 #wrapper.device #siteFrameContainer {
     margin: 2% auto 2% auto;
     height: 10%;
