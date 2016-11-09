@@ -79,7 +79,12 @@ function (
     function toggleOpen() {
         vm.siteViewerActive = !vm.siteViewerActive;
 
-        if (vm.siteViewerActive === false) switchDisplaySize(null, 'full');
+        if (vm.siteViewerActive === false) {
+            switchDisplaySize(null, 'full-height');
+        }
+        else {
+            switchDisplaySize(null, 'full');
+        }
     }
 
     function switchDisplaySize(e, displayClass) {
