@@ -347,8 +347,6 @@
     <Content Include="Admin\Modules\Shared\Content\css\lib\jquery-ui\images\ui-icons_ffffff_256x240.png" />
     <Content Include="Admin\Modules\Shared\Content\css\lib\jquery-ui\jquery-ui.css" />
     <Content Include="Admin\Modules\Shared\Content\css\lib\selectize.default.css" />
-    <Content Include="Admin\Modules\Shared\Content\css\lib\textangular.css" />
-    <Content Include="Admin\Modules\Shared\Content\css\lib\tinymce\content.inline.min.css" />
     <Content Include="Admin\Modules\Shared\Content\css\lib\tinymce\content.min.css" />
     <Content Include="Admin\Modules\Shared\Content\css\lib\tinymce\fonts\tinymce-small.svg" />
     <Content Include="Admin\Modules\Shared\Content\css\lib\tinymce\fonts\tinymce.svg" />
@@ -356,7 +354,6 @@
     <Content Include="Admin\Modules\Shared\Content\css\lib\tinymce\img\loader.gif" />
     <Content Include="Admin\Modules\Shared\Content\css\lib\tinymce\img\object.gif" />
     <Content Include="Admin\Modules\Shared\Content\css\lib\tinymce\img\trans.gif" />
-    <Content Include="Admin\Modules\Shared\Content\css\lib\tinymce\skin.ie7.min.css" />
     <Content Include="Admin\Modules\Shared\Content\css\lib\tinymce\skin.min.css" />
     <Content Include="Admin\Modules\Shared\Content\css\lib\ui-select.css" />
     <Content Include="Admin\Modules\Shared\Content\css\shared.css" />
@@ -456,6 +453,8 @@
     <Content Include="Admin\Modules\Shared\Js\UIComponents\FormFields\FormFieldValidationSummary.html" />
     <Content Include="Admin\Modules\Shared\Js\UIComponents\FormFields\FormFieldValidationSummary.js" />
     <Content Include="Admin\Modules\Shared\Js\UIComponents\FormFields\HttpPrefix.js" />
+    <Content Include="Admin\Modules\Shared\Js\UIComponents\EditorDialogs\ImageAssetEditorDialog.html" />
+    <Content Include="Admin\Modules\Shared\Js\UIComponents\EditorDialogs\ImageAssetEditorDialog.js" />
     <Content Include="Admin\Modules\Shared\Js\UIComponents\Placeholder.js" />
     <Content Include="Admin\Modules\Shared\Js\UIComponents\FormValidators\MatchValidator.js" />
     <Content Include="Admin\Modules\Shared\Js\UIComponents\Form\Form.html" />
@@ -617,7 +616,6 @@
     <Content Include="Admin\Modules\Shared\Js\UIComponents\Buttons\_button.scss" />
     <Content Include="Admin\Modules\Shared\Js\UIComponents\CustomEntities\_customentities.scss" />
     <Content Include="Admin\Modules\Shared\Js\UIComponents\FormFields\_formfields.scss" />
-    <Content Include="Admin\Modules\Shared\Js\UIComponents\FormFields\_textangular.scss" />
     <Content Include="Admin\Modules\Shared\Js\UIComponents\Form\_form.scss" />
     <Content Include="Admin\Modules\Shared\Js\UIComponents\ImageAssets\_image-asset.scss" />
     <Content Include="Admin\Modules\Shared\Js\UIComponents\Layout\_layout.scss" />
@@ -674,7 +672,6 @@
     <Content Include="Admin\Modules\Shared\Content\css\lib\tinymce\fonts\tinymce.json" />
     <Content Include="Admin\Modules\Shared\Content\css\lib\tinymce\fonts\tinymce.ttf" />
     <Content Include="Admin\Modules\Shared\Content\css\lib\tinymce\fonts\tinymce.woff" />
-    <Content Include="Admin\Modules\Shared\Content\css\lib\tinymce\skin.json" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

@@ -7,12 +7,14 @@ angular.module('cms.shared').directive('cmsFormFieldHtml', [
     '_',
     'shared.internalModulePath', 
     'shared.stringUtilities',
+    'shared.modalDialogService',
     'baseFormFieldFactory', 
 function (
     $sce,
     _,
     modulePath, 
     stringUtilities,
+    modalDialogService,
     baseFormFieldFactory) {
 
     var config = {
@@ -39,14 +41,32 @@ function (
         var vm = this;
         vm.tinymceOptions = {
             toolbar: parseToolbarButtons(vm.toolbarsConfig, vm.toolbarCustomConfig),
-            plugins: 'link image media fullscreen code',
+            plugins: 'link image media fullscreen imagetools code',
             content_css: "/admin/modules/shared/content/css/lib/tinymce/content.min.css",
-            menubar: false,
-            min_height: 250
+            menubar: true,
+            min_height: 300,
+            setup: function (editor) {
+                editor.addButton('cfimage', {
+                    icon: 'image',
+                    onclick: function () {
+                        var currentElement = editor.selection.getContent({ format: 'image' });
+                        var currentImage = currentElement.length ? angular.element(currentElement) : null;
+                        modalDialogService.show({
+                            templateUrl: modulePath + 'UIComponents/EditorDialogs/ImageAssetEditorDialog.html',
+                            controller: 'ImageAssetEditorDialogController',
+                            options: {
+                                imageAssetHtml: currentImage, 
+                                onSelected: function (output) {
+                                    editor.insertContent(output.html);
+                                }
+                            }
+                        });
+                    }
+                });
+            }
         };
     }
 
-   
     function link(scope, el, attributes) {
         var vm = scope.vm;
 
@@ -57,7 +77,7 @@ function (
         scope.$watch("vm.editorModel", setCmsModel);
 
         el.on('$destroy', function () {
-            //textAngularManager.unregisterEditor(vm.modelName);
+
         });
 
         function setEditorModel(value) {
@@ -84,9 +104,9 @@ function (
     function parseToolbarButtons(toolbarsConfig, toolbarCustomConfig) {
         var DEFAULT_CONFIG = 'headings,basicFormatting',
             buttonConfig = {
-                headings: 'formatselect',
+                headings: 'formatselect justifyleft justifycenter justifyright justifyfull',
                 basicFormatting: 'fullscreen undo redo | bold italic underline | link unlink',
-                media: 'image media',
+                media: 'cfimage media',
                 source: 'code',
             }, toolbar = '';
 
