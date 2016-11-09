@@ -37,7 +37,7 @@ function (
         vm.toggleVersionMenu = toggleVersionMenu;
         vm.toggleViewOptionsMenu = toggleViewOptionsMenu;
         vm.switchDisplaySize = switchDisplaySize;
-        vm.displayClass = '';
+        vm.displayClass = 'full';
         vm.siteViewerActive = true;
         vm.versionMenuActive = false;
         vm.viewOptionsMenuActive = false;
@@ -79,7 +79,13 @@ function (
     function toggleOpen() {
         vm.siteViewerActive = !vm.siteViewerActive;
 
-        if (vm.siteViewerActive === false) switchDisplaySize(null, 'full');
+        if (vm.displayClass === 'full' && vm.siteViewerActive === false) {
+            switchDisplaySize(null, 'full-height');
+        }
+        
+        if (vm.displayClass === 'full-height' && vm.siteViewerActive === true) {
+            switchDisplaySize(null, 'full');
+        }
     }
 
     function switchDisplaySize(e, displayClass) {
