@@ -13,6 +13,12 @@
     var isCustomEntityRoute = Model.Version is CustomEntityVersionRoute;
     var entityNameSingular = isCustomEntityRoute ? Model.CustomEntityDefinition.Name : "Page";
 
+    // If we are on a page with custom entities, it makes more sense to refer to the page as a template
+    if (Model.IsEditTypeSwitchRequired() && !isCustomEntityRoute)
+    {
+        entityNameSingular = "Template";
+    }
+
     object ngOptions = null;
 
     if (!Model.IsStaticPage)
@@ -116,7 +122,7 @@
                 @if (versions.Any())
                 {
                 <div class="cofoundry-sv__mini-menu__content">
-                    <h3>Page Versions</h3>
+                    <h3>@entityNameSingular Versions</h3>
                     <ol class="cofoundry-sv__version-list">
                         @foreach (var version in versions)
                         {
@@ -125,6 +131,7 @@
                             {
                                 link = "?mode=" + (version.WorkFlowStatus == WorkFlowStatus.Published ? "live" : "preview");
                             }
+                            link += "&edittype=" + (isCustomEntityRoute ? "entity" : "page");
 
                             <li>
                                 <a href="@link" class="cofoundry-sv__version-list__item @Cofoundry.Html.TextIf(version == Model.Version, "active")">
