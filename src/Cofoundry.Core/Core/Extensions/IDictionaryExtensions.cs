@@ -10,6 +10,7 @@ namespace Cofoundry.Core
         /// <param name="key">Key of the dictionary item to get</param>
         public static TValue GetOrDefault<TKey, TValue>(this IDictionary<TKey, TValue> source, TKey key)
         {
+            if (key == null) return default(TValue);
             TValue value;
             return source.TryGetValue(key, out value) ? value : default(TValue);
         }
@@ -21,6 +22,7 @@ namespace Cofoundry.Core
         /// <param name="def">Default value to return if it is missing.</param>
         public static TValue GetOrDefault<TKey, TValue>(this IDictionary<TKey, TValue> source, TKey key, TValue def)
         {
+            if (key == null) return def;
             TValue value;
             return source.TryGetValue(key, out value) ? value : def;
         }
