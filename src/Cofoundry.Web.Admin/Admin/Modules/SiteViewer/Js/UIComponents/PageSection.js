@@ -48,6 +48,8 @@ function (
 
             scope.setIsOver = setIsOver;
             scope.addModule = addModule;
+            scope.startScrollY = 0;
+            scope.currentScrollY = 0;
 
             scope.$watch('sectionAnchorElement', onAnchorChanged);
             scope.$watch('isSectionOver', setIsOver);
@@ -77,7 +79,6 @@ function (
         }
 
         function setIsOver(isOver) {
-
             if (isOver) {
                 if (overTimer) {
                     $timeout.cancel(overTimer);
@@ -132,12 +133,15 @@ function (
                     right: (right || 0) + 'px'
                 };
 
+                scope.startScrollY = scope.currentScrollY;
                 scope.startY = top;
             }
         }
 
         function onScroll(e) {
-            var y = scope.startY - e;
+            scope.currentScrollY = (e || 0);
+            var y = scope.startY + (scope.startScrollY - e);
+            if (y < 0) y = 0;
             if (y) {
                 scope.css = {
                     top: y + 'px',
