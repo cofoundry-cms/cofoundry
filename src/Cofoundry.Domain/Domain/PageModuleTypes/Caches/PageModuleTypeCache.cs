@@ -7,17 +7,16 @@ using System.Threading.Tasks;
 
 namespace Cofoundry.Domain
 {
-    public class ModuleCache : IModuleCache
+    public class PageModuleTypeCache : IPageModuleTypeCache
     {
         #region constructor
 
         private const string MODULETYPESUMMARY_CACHEKEY = "ModuleTypeSummaries";
-        private const string PAGEROUTES_CACHEKEY = "PageRoutes";
         private const string CACHEKEY = "COF_PageModules";
 
         private readonly IObjectCache _cache;
 
-        public ModuleCache(IObjectCacheFactory cacheFactory)
+        public PageModuleTypeCache(IObjectCacheFactory cacheFactory)
         {
             _cache = cacheFactory.Get(CACHEKEY);
         }

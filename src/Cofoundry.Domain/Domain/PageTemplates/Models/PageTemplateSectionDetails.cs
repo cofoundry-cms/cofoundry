@@ -16,10 +16,6 @@ namespace Cofoundry.Domain
 
         public bool IsCustomEntitySection { get; set; }
 
-        public bool HasAllModuleTypes { get; set; }
-
-        public PageModuleTypeSummary[] ModuleTypes { get; set; }
-
         public CreateAuditData AuditData { get; set; }
     }
 }

@@ -33,7 +33,7 @@ namespace Cofoundry.Domain
                 var pageTemplateSectionId = dbModule.PageTemplateSection != null ? dbModule.PageTemplateSection.PageTemplateSectionId : dbModule.PageTemplateSectionId;
                 var pageModuleType = await _dbContext
                     .PageModuleTypes
-                    .Where(m => m.PageModuleTypeId == command.PageModuleTypeId && m.PageTemplateSections.Any(s => s.PageTemplateSectionId == pageTemplateSectionId))
+                    .Where(m => m.PageModuleTypeId == command.PageModuleTypeId)
                     .SingleOrDefaultAsync();
 
                 EntityNotFoundException.ThrowIfNull(pageModuleType, command.PageModuleTypeId);

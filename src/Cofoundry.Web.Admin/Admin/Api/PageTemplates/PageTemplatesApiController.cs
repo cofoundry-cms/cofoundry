@@ -60,34 +60,6 @@ namespace Cofoundry.Web.Admin
 
         #endregion
 
-        #region commands
-
-        [HttpPost]
-        [Route()]
-        public async Task<IHttpActionResult> Post(AddPageTemplateCommand command)
-        {
-            return await _apiResponseHelper.RunCommandAsync(this, command);
-        }
-
-        [HttpPatch]
-        [Route(ID_ROUTE)]
-        public async Task<IHttpActionResult> Patch(int id, Delta<UpdatePageTemplateCommand> delta)
-        {
-            return await _apiResponseHelper.RunCommandAsync(this, id, delta);
-        }
-
-        [HttpDelete]
-        [Route(ID_ROUTE)]
-        public async Task<IHttpActionResult> Delete(int id)
-        {
-            var command = new DeletePageTemplateCommand();
-            command.PageTemplateId = id;
-
-            return await _apiResponseHelper.RunCommandAsync(this, command);
-        }
-
-        #endregion
-
         #endregion
     }
 }

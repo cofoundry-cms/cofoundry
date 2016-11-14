@@ -32,10 +32,9 @@ namespace Cofoundry.Domain
             var dbSection = await _dbContext
                 .PageTemplateSections
                 .AsNoTracking()
-                .Include(l => l.PageModuleTypes)
                 .SingleOrDefaultAsync(l => l.PageTemplateSectionId == query.Id);
 
-            var section = _pageTemplateSectionMapper.MapDetails(dbSection);
+            var section = Mapper.Map<PageTemplateSectionDetails>(dbSection);
 
             return section;
         }

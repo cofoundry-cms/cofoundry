@@ -85,13 +85,6 @@ namespace Cofoundry.Domain
 
             #region modules
 
-            CreateMap<PageModuleType, PageModuleTypeSummary>()
-                .ForMember(d => d.Templates, o => o.MapFrom(s => s.PageModuleTemplates.OrderBy(t => t.Name)))
-                ;
-
-            CreateMap<PageModuleTypeSummary, PageModuleTypeDetails>();
-            CreateMap<PageModuleTypeTemplate, PageModuleTypeTemplateSummary>();
-
             CreateMap<PageVersionModule, UpdatePageVersionModuleCommand>();
 
             #endregion

@@ -29,8 +29,6 @@ namespace Cofoundry.Domain.Data
             HasOptional(t => t.CustomEntityDefinition)
                 .WithMany()
                 .HasForeignKey(d => d.CustomEntityDefinitionCode);
-
-            CreateAuditableMappingHelper.Map(this);
         }
     }
 }

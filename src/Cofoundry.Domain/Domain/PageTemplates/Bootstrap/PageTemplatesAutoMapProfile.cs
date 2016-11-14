@@ -42,10 +42,6 @@ namespace Cofoundry.Domain
             CreateMap<PageTemplateSection, PageTemplateSectionDetails>()
                 .ForMember(d => d.AuditData, o => o.MapFrom(s => s))
                 ;
-            CreateMap<PageTemplate, UpdatePageTemplateCommand>();
-            CreateMap<UpdatePageTemplateCommand, PageTemplate>();
-
-            CreateMap<PageTemplateSection, UpdatePageTemplateSectionCommand>();
             
             #endregion
         }

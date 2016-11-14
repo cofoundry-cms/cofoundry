@@ -8,25 +8,25 @@ namespace Cofoundry.Domain.Data
         public CustomEntityVersionPageModuleMap()
         {
             // Properties
-            Property(t => t.SerializedData)
+            Property(s => s.SerializedData)
                 .IsRequired();
 
             // Relationships
-            HasRequired(t => t.CustomEntityVersion)
-                .WithMany(t => t.CustomEntityVersionPageModules)
-                .HasForeignKey(d => d.CustomEntityVersionId);
+            HasRequired(s => s.CustomEntityVersion)
+                .WithMany(d => d.CustomEntityVersionPageModules)
+                .HasForeignKey(s => s.CustomEntityVersionId);
 
-            HasRequired(t => t.PageModuleType)
-                .WithMany()
-                .HasForeignKey(d => d.PageModuleTypeId);
+            HasRequired(s => s.PageModuleType)
+                .WithMany(d => d.CustomEntityVersionPageModules)
+                .HasForeignKey(s => s.PageModuleTypeId);
 
-            HasRequired(t => t.PageTemplateSection)
+            HasRequired(s => s.PageTemplateSection)
                 .WithMany()
-                .HasForeignKey(d => d.PageTemplateSectionId);
+                .HasForeignKey(s => s.PageTemplateSectionId);
 
-            HasOptional(t => t.PageModuleTypeTemplate)
+            HasOptional(s => s.PageModuleTypeTemplate)
                 .WithMany()
-                .HasForeignKey(d => d.PageModuleTypeTemplateId);
+                .HasForeignKey(s => s.PageModuleTypeTemplateId);
 
         }
     }

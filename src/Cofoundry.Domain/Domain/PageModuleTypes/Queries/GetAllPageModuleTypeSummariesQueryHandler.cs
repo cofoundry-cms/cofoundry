@@ -10,7 +10,7 @@ using System.Data.Entity;
 
 namespace Cofoundry.Domain
 {
-    public class GetAllPageModuleTypeSummariesHandler 
+    public class GetAllPageModuleTypeSummariesQueryHandler
         : IQueryHandler<GetAllQuery<PageModuleTypeSummary>, IEnumerable<PageModuleTypeSummary>>
         , IAsyncQueryHandler<GetAllQuery<PageModuleTypeSummary>, IEnumerable<PageModuleTypeSummary>>
         , IPermissionRestrictedQueryHandler<GetAllQuery<PageModuleTypeSummary>, IEnumerable<PageModuleTypeSummary>>
@@ -18,11 +18,11 @@ namespace Cofoundry.Domain
         #region constructor
 
         private readonly CofoundryDbContext _dbContext;
-        private readonly IModuleCache _moduleCache;
+        private readonly IPageModuleTypeCache _moduleCache;
 
-        public GetAllPageModuleTypeSummariesHandler(
+        public GetAllPageModuleTypeSummariesQueryHandler(
             CofoundryDbContext dbContext,
-            IModuleCache moduleCache
+            IPageModuleTypeCache moduleCache
             )
         {
             _dbContext = dbContext;

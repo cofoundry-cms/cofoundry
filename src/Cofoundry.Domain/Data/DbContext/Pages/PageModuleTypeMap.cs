@@ -10,14 +10,14 @@ namespace Cofoundry.Domain.Data
             // Properties
             Property(t => t.Name)
                 .IsRequired()
-                .HasMaxLength(32);
+                .HasMaxLength(50);
 
             Property(t => t.Description)
                 .IsRequired();
 
             Property(t => t.FileName)
                 .IsRequired()
-                .HasMaxLength(32);
+                .HasMaxLength(50);
         }
     }
 }

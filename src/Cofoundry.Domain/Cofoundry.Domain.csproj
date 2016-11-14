@@ -523,6 +523,12 @@
     <Compile Include="Domain\Locales\Queries\GetAllActiveLocalesQueryHandler.cs" />
     <Compile Include="Domain\Locales\Queries\GetCurrentActiveLocaleQuery.cs" />
     <Compile Include="Domain\Locales\Queries\GetCurrentActiveLocaleQueryHandler.cs" />
+    <Compile Include="Domain\PageModuleTypes\Bootstrap\PageModuleAutoMapProfile.cs" />
+    <Compile Include="Domain\PageModuleTypes\Bootstrap\PageModuleDependencyRegistration.cs" />
+    <Compile Include="Domain\PageModuleTypes\Commands\RegisterPageModuleTypesCommand.cs" />
+    <Compile Include="Domain\PageModuleTypes\Commands\RegisterPageModuleTypesCommandHandler.cs" />
+    <Compile Include="Domain\PageModuleTypes\Repositories\IPageModuleRepository.cs" />
+    <Compile Include="Domain\PageModuleTypes\Repositories\PageModuleRepository.cs" />
     <Compile Include="Domain\Pages\Bootstrap\PageAutoMapProfile.cs" />
     <Compile Include="Domain\Pages\Bootstrap\PageDependencyRegistration.cs" />
     <Compile Include="Domain\Pages\Bootstrap\PageEntityDefinition.cs" />
@@ -559,8 +565,8 @@
     <Compile Include="Domain\Pages\Commands\UpdatePageUrlCommandHandler.cs" />
     <Compile Include="Domain\Pages\Commands\UpdatePageVersionModuleCommand.cs" />
     <Compile Include="Domain\Pages\Commands\UpdatePageVersionModuleCommandHandler.cs" />
-    <Compile Include="Domain\Pages\Factories\IModuleDataModelTypeFactory.cs" />
-    <Compile Include="Domain\Pages\Factories\ModuleDataModelTypeFactory.cs" />
+    <Compile Include="Domain\PageModuleTypes\Factories\IModuleDataModelTypeFactory.cs" />
+    <Compile Include="Domain\PageModuleTypes\Factories\ModuleDataModelTypeFactory.cs" />
     <Compile Include="Domain\Pages\Helpers\IPageModuleCommandHelper.cs" />
     <Compile Include="Domain\Pages\Helpers\PageModuleCommandHelper.cs" />
     <Compile Include="Domain\Pages\Helpers\IPagePathHelper.cs" />
@@ -593,9 +599,9 @@
     <Compile Include="Domain\Pages\Messages\PageVersionUpdatedMessage.cs" />
     <Compile Include="Domain\Pages\Models\Interfaces\IEntitySectionRenderDetails.cs" />
     <Compile Include="Domain\Pages\Models\Interfaces\IEntityVersionModuleRenderDetails.cs" />
-    <Compile Include="Domain\Pages\Models\Interfaces\IListablePageModuleDisplayModel.cs" />
-    <Compile Include="Domain\Pages\Models\Interfaces\IPageModuleDataModel.cs" />
-    <Compile Include="Domain\Pages\Models\Interfaces\IPageModuleDisplayModel.cs" />
+    <Compile Include="Domain\PageModuleTypes\Models\Interfaces\IListablePageModuleDisplayModel.cs" />
+    <Compile Include="Domain\PageModuleTypes\Models\Interfaces\IPageModuleDataModel.cs" />
+    <Compile Include="Domain\PageModuleTypes\Models\Interfaces\IPageModuleDisplayModel.cs" />
     <Compile Include="Domain\Pages\Models\Interfaces\IPageRoute.cs" />
     <Compile Include="Domain\Pages\Models\Interfaces\IVersionRoute.cs" />
     <Compile Include="Domain\Pages\Models\Interfaces\IVersionRouteExtensions.cs" />
@@ -605,9 +611,9 @@
     <Compile Include="Domain\Pages\Models\PageGroupMicroSummary.cs" />
     <Compile Include="Domain\Pages\Models\PageGroupSummary.cs" />
     <Compile Include="Domain\Pages\Models\PageMetaData.cs" />
-    <Compile Include="Domain\Pages\Models\PageModuleTypeDetails.cs" />
-    <Compile Include="Domain\Pages\Models\PageModuleTypeSummary.cs" />
-    <Compile Include="Domain\Pages\Models\PageModuleTypeTemplateSummary.cs" />
+    <Compile Include="Domain\PageModuleTypes\Models\PageModuleTypeDetails.cs" />
+    <Compile Include="Domain\PageModuleTypes\Models\PageModuleTypeSummary.cs" />
+    <Compile Include="Domain\PageModuleTypes\Models\PageModuleTypeTemplateSummary.cs" />
     <Compile Include="Domain\Pages\Models\PageRenderDetails.cs" />
     <Compile Include="Domain\Pages\Models\PageRoute.cs" />
     <Compile Include="Domain\Pages\Models\PageRouteExtensions.cs" />
@@ -632,15 +638,15 @@
     <Compile Include="Domain\Pages\Queries\DoesPageHaveDraftVersionQueryHandler.cs" />
     <Compile Include="Domain\Pages\Queries\GetAllPageGroupMicroSummaryQueryHandler.cs" />
     <Compile Include="Domain\Pages\Queries\GetAllPageGroupSummaryQueryHandler.cs" />
-    <Compile Include="Domain\Pages\Queries\GetAllPageModuleTypeSummariesHandler.cs" />
+    <Compile Include="Domain\PageModuleTypes\Queries\GetAllPageModuleTypeSummariesQueryHandler.cs" />
     <Compile Include="Domain\Pages\Queries\GetAllPageRoutesQueryHandler.cs" />
     <Compile Include="Domain\Pages\Queries\GetNotFoundPageRouteByPathQuery.cs" />
     <Compile Include="Domain\Pages\Queries\GetNotFoundPageRouteByPathQueryHandler.cs" />
     <Compile Include="Domain\Pages\Queries\GetPageDetailsByIdQueryHandler.cs" />
     <Compile Include="Domain\Pages\Queries\GetPageEntityMicroSummariesByIdRangeQuery.cs" />
     <Compile Include="Domain\Pages\Queries\GetPageEntityMicroSummariesByIdRangeQueryHandler.cs" />
-    <Compile Include="Domain\Pages\Queries\GetPageModuleTypeDetailsByIdQueryHandler.cs" />
-    <Compile Include="Domain\Pages\Queries\GetPageModuleTypeSummaryByIdHandler.cs" />
+    <Compile Include="Domain\PageModuleTypes\Queries\GetPageModuleTypeDetailsByIdQueryHandler.cs" />
+    <Compile Include="Domain\PageModuleTypes\Queries\GetPageModuleTypeSummaryByIdHandler.cs" />
     <Compile Include="Domain\Pages\Queries\GetPageRenderDetailsByIdQuery.cs" />
     <Compile Include="Domain\Pages\Queries\GetPageRenderDetailsByIdQueryHandler.cs" />
     <Compile Include="Domain\Pages\Queries\GetPageRouteByIdQueryHandler.cs" />
@@ -678,23 +684,12 @@
     <Compile Include="Domain\PageTemplates\Bootstrap\PageTemplateDefinition.cs" />
     <Compile Include="Domain\PageTemplates\Bootstrap\PageTemplateDependencyRegistration.cs" />
     <Compile Include="Domain\PageTemplates\Bootstrap\PageTemplatesAutoMapProfile.cs" />
-    <Compile Include="Domain\PageTemplates\Caches\IModuleCache.cs" />
-    <Compile Include="Domain\PageTemplates\Caches\ModuleCache.cs" />
-    <Compile Include="Domain\PageTemplates\Commands\AddPageTemplateCommand.cs" />
-    <Compile Include="Domain\PageTemplates\Commands\AddPageTemplateCommandHandler.cs" />
-    <Compile Include="Domain\PageTemplates\Commands\AddPageTemplateSectionCommand.cs" />
-    <Compile Include="Domain\PageTemplates\Commands\AddPageTemplateSectionCommandHandler.cs" />
-    <Compile Include="Domain\PageTemplates\Commands\AddPageTemplateSectionWithPageTemplateCommand.cs" />
-    <Compile Include="Domain\PageTemplates\Commands\DeletePageTemplateCommand.cs" />
-    <Compile Include="Domain\PageTemplates\Commands\DeletePageTemplateCommandHandler.cs" />
-    <Compile Include="Domain\PageTemplates\Commands\DeletePageTemplateSectionCommand.cs" />
-    <Compile Include="Domain\PageTemplates\Commands\DeletePageTemplateSectionCommandHandler.cs" />
-    <Compile Include="Domain\PageTemplates\Commands\UpdatePageTemplateCommand.cs" />
-    <Compile Include="Domain\PageTemplates\Commands\UpdatePageTemplateCommandHandler.cs" />
-    <Compile Include="Domain\PageTemplates\Commands\UpdatePageTemplateSectionCommand.cs" />
-    <Compile Include="Domain\PageTemplates\Commands\UpdatePageTemplateSectionCommandHandler.cs" />
-    <Compile Include="Domain\PageTemplates\Commands\UpdatePageTemplateSectionModuleTypesCommand.cs" />
-    <Compile Include="Domain\PageTemplates\Commands\UpdatePageTemplateSectionModuleTypesCommandHandler.cs" />
+    <Compile Include="Domain\PageModuleTypes\Caches\IPageModuleTypeCache.cs" />
+    <Compile Include="Domain\PageModuleTypes\Caches\PageModuleTypeCache.cs" />
+    <Compile Include="Domain\PageTemplates\Commands\RegisterPageTemplatesCommandHandler.cs" />
+    <Compile Include="Domain\PageTemplates\Commands\RegisterPageTemplatesCommand.cs" />
+    <Compile Include="Domain\PageModuleTypes\Exceptions\PageModuleTypeRegistrationException.cs" />
+    <Compile Include="Domain\PageTemplates\Exceptions\PageTemplateRegistrationException.cs" />
     <Compile Include="Domain\PageTemplates\Mapping\PageTemplateCustomEntityTypeMapper.cs" />
     <Compile Include="Domain\PageTemplates\Mapping\PageTemplateCustomEntityTypeValueResolver.cs" />
     <Compile Include="Domain\PageTemplates\Mapping\PageTemplateSectionMapper.cs" />
@@ -717,8 +712,6 @@
     <Compile Include="Domain\PageTemplates\Queries\GetPageTemplateSectionDetailsByIdQueryHandler.cs" />
     <Compile Include="Domain\PageTemplates\Queries\GetPageTemplateSectionsByPageTemplateIdQuery.cs" />
     <Compile Include="Domain\PageTemplates\Queries\GetPageTemplateSectionsByPageTemplateIdQueryHandler.cs" />
-    <Compile Include="Domain\PageTemplates\Queries\GetUpdatePageTemplateCommandByIdQueryHandler.cs" />
-    <Compile Include="Domain\PageTemplates\Queries\GetUpdatePageTemplateSectionCommandByIdQueryHandler.cs" />
     <Compile Include="Domain\PageTemplates\Queries\IsPageTemplateNameUniqueQuery.cs" />
     <Compile Include="Domain\PageTemplates\Queries\IsPageTemplateNameUniqueQueryHandler.cs" />
     <Compile Include="Domain\PageTemplates\Queries\IsPageTemplateSectionNameUniqueQuery.cs" />
@@ -1055,6 +1048,9 @@
     <EmbeddedResource Include="Install\Db\Triggers\Cofoundry.Permission_CascadeDelete.sql" />
     <EmbeddedResource Include="Install\Db\Triggers\Cofoundry.Role_CascadeDelete.sql" />
     <EmbeddedResource Include="Install\Db\Triggers\Cofoundry.User_CascadeDelete.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Install\Db\Schema\00002.sql" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="BeforeBuild">

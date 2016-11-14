@@ -14,15 +14,11 @@ namespace Cofoundry.Domain.Bootstrap
             container
                 .RegisterType<IPagePathHelper, PagePathHelper>()
                 .RegisterType<IPageVersionModuleModelMapper, PageVersionModuleModelMapper>()
-                .RegisterType<IModuleDataModelTypeFactory, ModuleDataModelTypeFactory>()
                 .RegisterType<IPageCache, PageCache>()
-                .RegisterType<IModuleCache, ModuleCache>()
                 .RegisterType<IEntityVersionPageModuleMapper, EntityVersionPageModuleMapper>()
                 .RegisterType<IPageMetaDataMapper, PageMetaDataMapper>()
                 .RegisterType<IPageModuleCommandHelper, PageModuleCommandHelper>()
-                .RegisterAll<IPageModuleDataModel>()
                 .RegisterAll<ICustomEntityVersionDataModel>()
-                .RegisterAllGenericImplementations(typeof(IPageModuleDisplayModelMapper<>))
                 .RegisterType<IPageRepository, PageRepository>()
                 .RegisterType<IPageRouteLibrary, PageRouteLibrary>()
                 ; 

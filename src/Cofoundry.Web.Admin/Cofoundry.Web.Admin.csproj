@@ -712,7 +712,6 @@
     <Compile Include="Admin\Api\Pages\PagesApiController.cs" />
     <Compile Include="Admin\Api\Pages\PageVersionsApiController.cs" />
     <Compile Include="Admin\Api\Pages\PageVersionSectionModulesApiController.cs" />
-    <Compile Include="Admin\Api\PageTemplates\PageTemplateFilesApiController.cs" />
     <Compile Include="Admin\Api\PageTemplates\PageTemplatesApiController.cs" />
     <Compile Include="Admin\Api\PageTemplates\PageTemplateSectionsApiController.cs" />
     <Compile Include="Admin\Api\Roles\PermissionsApiController.cs" />

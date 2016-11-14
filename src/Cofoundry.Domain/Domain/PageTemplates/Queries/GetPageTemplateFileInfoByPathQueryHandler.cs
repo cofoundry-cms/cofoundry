@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -18,6 +17,15 @@ namespace Cofoundry.Domain
         , IPermissionRestrictedQueryHandler<GetPageTemplateFileInfoByPathQuery, PageTemplateFileInfo>
     {
         #region constructor
+
+        const string PLACEHOLDER_FUNC = "Cofoundry.Template.Section";
+        const string CUSTOM_ENTITY_PLACEHOLDER_FUNC = "Cofoundry.Template.CustomEntitySection";
+        const string TEMPLATE_DESCRIPTION_FUNC = "Cofoundry.Template.UseTemplateDescription";
+
+        const string PARTIAL_FUNC = "Html.Partial";
+        const string RENDER_PARTIAL_FUNC = "Html.RenderPartial";
+
+        const string REGEX_REMOVE_METHOD_WHITEPSPACE = @"(Cofoundry+\s*\.Template+\s*\.[A-Za-z]+)";
 
         private readonly IQueryExecutor _queryExecutor;
         private readonly IPageTemplateViewFileLocator _viewLocator;
@@ -52,12 +60,17 @@ namespace Cofoundry.Domain
             return pageTemplateFileInfo;
         }
 
+        /// <summary>
+        /// Here we run through each line of the view file and try and work out 
+        /// what the sections are and extract a few other bits of imformation.
+        /// </summary>
+        /// <remarks>
+        /// Hopefully asp.net 5 will make it easier for us to compile and execute a view file
+        /// which will give us a more robust route for extracting this data.
+        /// </remarks>
         private async Task<PageTemplateFileInfo> ParseViewFile(string viewFile, bool isRootFile, IExecutionContext executionContext)
         {
-            const string PLACEHOLDER_FUNC = "Cofoundry.UI.PageTemplateSection";
-            const string CUSTOM_ENTITY_PLACEHOLDER_FUNC = "Cofoundry.UI.CustomEntitySection";
-            const string PARTIAL_FUNC = "Html.Partial";
-            const string RENDER_PARTIAL_FUNC = "Html.RenderPartial";
+            viewFile = PrepareViewFileForParsing(viewFile);
 
             var pageTemplateFileInfo = new PageTemplateFileInfo();
             pageTemplateFileInfo.PageType = PageType.Generic;
@@ -94,12 +107,31 @@ namespace Cofoundry.Domain
                     {
                         sections.AddRange(await ParsePartialView(line, RENDER_PARTIAL_FUNC, executionContext));
                     }
+                    else if (line.Contains(TEMPLATE_DESCRIPTION_FUNC))
+                    {
+                        pageTemplateFileInfo.Description = ParseFunctionParameter(line, CUSTOM_ENTITY_PLACEHOLDER_FUNC);
+                    }
                 }
             }
 
             pageTemplateFileInfo.Sections = sections.ToArray();
 
             return pageTemplateFileInfo;
+        }
+
+        /// <summary>
+        /// Removes whitespace when using section definitions in 
+        /// a fluent manner across multiple code lines.
+        /// </summary>
+        private string PrepareViewFileForParsing(string viewFile)
+        {
+            return Regex.Replace(viewFile, REGEX_REMOVE_METHOD_WHITEPSPACE, RemoveWhitepace);
+        }
+
+        private string RemoveWhitepace(Match e)
+        {
+            const string REGEX_TRIM_WHITESPACE = @"\s+";
+            return Regex.Replace(e.Value, REGEX_TRIM_WHITESPACE, string.Empty);
         }
 
         private void SetCustomModelTypeFields(PageTemplateFileInfo pageTemplateFileInfo, string line, IExecutionContext ex)

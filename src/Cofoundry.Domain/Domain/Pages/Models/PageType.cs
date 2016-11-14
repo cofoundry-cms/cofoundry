@@ -8,7 +8,7 @@ namespace Cofoundry.Domain
 {
     /// <summary>
     /// Most pages are generic pages but they could have some sort of
-    /// spcial function e.g. NotFound, CustomEntityDetails.
+    /// special function e.g. NotFound, CustomEntityDetails.
     /// </summary>
     public enum PageType
     {

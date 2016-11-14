@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace Cofoundry.Domain
 {
-    public interface IModuleCache
+    public interface IPageModuleTypeCache
     {
         PageModuleTypeSummary[] GetOrAdd(Func<PageModuleTypeSummary[]> getter);
 

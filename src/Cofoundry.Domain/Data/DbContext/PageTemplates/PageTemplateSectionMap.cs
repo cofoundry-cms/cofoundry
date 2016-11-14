@@ -10,23 +10,13 @@ namespace Cofoundry.Domain.Data
             // Properties
             Property(t => t.Name)
                 .IsRequired()
-                .HasMaxLength(32);
+                .HasMaxLength(50);
 
             // Relationships
-            HasMany(t => t.PageModuleTypes)
-                .WithMany(t => t.PageTemplateSections)
-                .Map(m =>
-                    {
-                        m.ToTable("PageTemplateSectionPageModuleType");
-                        m.MapLeftKey("PageTemplateSectionId");
-                        m.MapRightKey("PageModuleTypeId");
-                    });
 
             HasRequired(t => t.PageTemplate)
                 .WithMany(t => t.PageTemplateSections)
                 .HasForeignKey(d => d.PageTemplateId);
-
-            CreateAuditableMappingHelper.Map(this);
         }
     }
 }

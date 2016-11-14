@@ -10,18 +10,16 @@ namespace Cofoundry.Domain.Data
             // Properties
             Property(t => t.Name)
                 .IsRequired()
-                .HasMaxLength(32);
+                .HasMaxLength(50);
 
             Property(t => t.FileName)
                 .IsRequired()
-                .HasMaxLength(32);
+                .HasMaxLength(50);
 
             // Relationships
             HasRequired(t => t.PageModuleType)
                 .WithMany(t => t.PageModuleTemplates)
                 .HasForeignKey(d => d.PageModuleTypeId);
-
-            CreateAuditableMappingHelper.Map(this);
         }
     }
 }
