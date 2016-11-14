@@ -923,7 +923,7 @@ input[type="color"] {
   -webkit-transition: left 0.3s, padding 0.3s;
   transition: left 0.3s, padding 0.3s;
   position: fixed;
-  z-index: 99998;
+  z-index: 99999;
   width: 100%;
   background-color: #fff;
   padding: 10px 30px;
@@ -932,7 +932,7 @@ input[type="color"] {
   line-height: 50px;
   top: 0;
   left: 228px;
-  border-bottom: 1px solid #4d4d4d;
+  border-bottom: 2px solid #ebebeb;
 }
 @media screen and (min-width: 950px) {
   /* line 1, ../../Js/UIComponents/Layout/_layout.scss */
@@ -956,33 +956,43 @@ input[type="color"] {
 .page-sub-header {
   filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=80);
   opacity: 0.8;
-  position: absolute;
+  position: fixed;
   width: 100%;
+  padding: 20px 0;
   font-size: 120%;
   font-weight: 700;
-  z-index: 99999;
-  top: 0px;
-  padding: 15px;
+  border-bottom: 1px solid #b8b8b8;
+  margin-bottom: 30px;
+  background-color: #ebebeb;
+  z-index: 11;
+  top: 70px;
+  height: 55px;
 }
-/* line 41, ../../Js/UIComponents/Layout/_layout.scss */
+/* line 45, ../../Js/UIComponents/Layout/_layout.scss */
 .page-sub-header a {
   color: #3366cc;
 }
-/* line 45, ../../Js/UIComponents/Layout/_layout.scss */
+/* line 49, ../../Js/UIComponents/Layout/_layout.scss */
 .page-sub-header:hover {
   filter: progid:DXImageTransform.Microsoft.Alpha(enabled=false);
   opacity: 1;
 }
-/* line 49, ../../Js/UIComponents/Layout/_layout.scss */
+/* line 53, ../../Js/UIComponents/Layout/_layout.scss */
 .page-sub-header .page-header-buttons {
-  float: right;
+  position: absolute;
+  right: 370px;
+  top: 8px;
+  text-align: right;
 }
 
-/* line 54, ../../Js/UIComponents/Layout/_layout.scss */
+/* line 61, ../../Js/UIComponents/Layout/_layout.scss */
 .search-filter {
+  -moz-box-shadow: 0px 0px 15px 0px rgba(0, 0, 0, 0.3);
+  -webkit-box-shadow: 0px 0px 15px 0px rgba(0, 0, 0, 0.3);
+  box-shadow: 0px 0px 15px 0px rgba(0, 0, 0, 0.3);
   position: absolute;
-  right: 19px;
-  top: 55px;
+  right: 2px;
+  top: 42px;
   border: 1px solid #d2d2d2;
   background: #fff;
   width: 240px;
@@ -991,7 +1001,7 @@ input[type="color"] {
   padding: 10px;
   z-index: -1;
 }
-/* line 66, ../../Js/UIComponents/Layout/_layout.scss */
+/* line 74, ../../Js/UIComponents/Layout/_layout.scss */
 .search-filter:before {
   content: '';
   position: absolute;
@@ -1003,7 +1013,7 @@ input[type="color"] {
   border-left-color: transparent;
   border-right-color: transparent;
 }
-/* line 78, ../../Js/UIComponents/Layout/_layout.scss */
+/* line 86, ../../Js/UIComponents/Layout/_layout.scss */
 .search-filter:after {
   content: '';
   position: absolute;
@@ -1016,65 +1026,64 @@ input[type="color"] {
   border-right-color: transparent;
   z-index: 2;
 }
-/* line 91, ../../Js/UIComponents/Layout/_layout.scss */
+/* line 99, ../../Js/UIComponents/Layout/_layout.scss */
 .search-filter label {
   display: block;
   padding-top: 10px;
   padding-bottom: 5px;
 }
-/* line 97, ../../Js/UIComponents/Layout/_layout.scss */
+/* line 105, ../../Js/UIComponents/Layout/_layout.scss */
 .search-filter input[type="text"], .search-filter input[type="email"], .search-filter input[type="password"], .search-filter input[type="number"], .search-filter input[type="date"], .search-filter input[type="color"], .search-filter input[type="url"], .search-filter input[type="tel"], .search-filter textarea, .search-filter select {
   padding: 5px;
   font-size: 1em;
 }
-/* line 102, ../../Js/UIComponents/Layout/_layout.scss */
+/* line 110, ../../Js/UIComponents/Layout/_layout.scss */
 .search-filter .form-actions {
   text-align: right;
   padding-top: 10px;
 }
-/* line 106, ../../Js/UIComponents/Layout/_layout.scss */
+/* line 114, ../../Js/UIComponents/Layout/_layout.scss */
 .search-filter .form-actions input, .search-filter .form-actions button {
   float: right;
 }
-/* line 110, ../../Js/UIComponents/Layout/_layout.scss */
+/* line 118, ../../Js/UIComponents/Layout/_layout.scss */
 .search-filter .form-actions input {
   margin-left: 5px;
 }
 
-/* line 116, ../../Js/UIComponents/Layout/_layout.scss */
+/* line 124, ../../Js/UIComponents/Layout/_layout.scss */
 .page-actions {
   position: fixed;
   width: 125px;
-  margin: 0 20px;
+  margin-right: 25px;
 }
-/* line 125, ../../Js/UIComponents/Layout/_layout.scss */
+/* line 133, ../../Js/UIComponents/Layout/_layout.scss */
 .page-actions .btn:not(.pager) {
   width: 100%;
   margin-bottom: 10px;
 }
 @media screen and (min-width: 1200px) {
-  /* line 116, ../../Js/UIComponents/Layout/_layout.scss */
+  /* line 124, ../../Js/UIComponents/Layout/_layout.scss */
   .page-actions {
-    width: 160px;
+    width: 150px;
   }
 }
 
-/* line 135, ../../Js/UIComponents/Layout/_layout.scss */
+/* line 143, ../../Js/UIComponents/Layout/_layout.scss */
 .page-body {
   margin-left: 150px;
   margin-top: 80px;
-  margin-right: 20px;
 }
-/* line 140, ../../Js/UIComponents/Layout/_layout.scss */
+/* line 147, ../../Js/UIComponents/Layout/_layout.scss */
 .page-body.with-header {
-  margin-top: 70px;
+  margin-top: 140px;
 }
-/* line 144, ../../Js/UIComponents/Layout/_layout.scss */
+/* line 151, ../../Js/UIComponents/Layout/_layout.scss */
 .page-body fieldset {
   margin-bottom: 20px;
   position: relative;
 }
-/* line 148, ../../Js/UIComponents/Layout/_layout.scss */
+/* line 155, ../../Js/UIComponents/Layout/_layout.scss */
 .page-body fieldset:before {
   content: '';
   position: absolute;
@@ -1085,7 +1094,7 @@ input[type="color"] {
   left: 0;
   height: 100%;
 }
-/* line 159, ../../Js/UIComponents/Layout/_layout.scss */
+/* line 166, ../../Js/UIComponents/Layout/_layout.scss */
 .page-body fieldset:after {
   -moz-transition: all 0.2s;
   -o-transition: all 0.2s;
@@ -1101,7 +1110,7 @@ input[type="color"] {
   z-index: 2;
   border-top: 3px solid #dddddd;
 }
-/* line 172, ../../Js/UIComponents/Layout/_layout.scss */
+/* line 179, ../../Js/UIComponents/Layout/_layout.scss */
 .page-body fieldset legend {
   font-size: 150%;
   width: 100%;
@@ -1110,7 +1119,7 @@ input[type="color"] {
   position: relative;
   z-index: 10;
 }
-/* line 180, ../../Js/UIComponents/Layout/_layout.scss */
+/* line 187, ../../Js/UIComponents/Layout/_layout.scss */
 .page-body fieldset legend:before {
   -moz-transition: all 0.2s;
   -o-transition: all 0.2s;
@@ -1123,19 +1132,19 @@ input[type="color"] {
   left: 0;
   width: 100%;
 }
-/* line 190, ../../Js/UIComponents/Layout/_layout.scss */
+/* line 197, ../../Js/UIComponents/Layout/_layout.scss */
 .page-body fieldset legend button {
   display: none;
   cursor: pointer;
   outline: none;
 }
-/* line 195, ../../Js/UIComponents/Layout/_layout.scss */
+/* line 202, ../../Js/UIComponents/Layout/_layout.scss */
 .page-body fieldset legend button i {
   font: normal normal normal 15px/1 FontAwesome;
   position: absolute;
   left: 0;
 }
-/* line 201, ../../Js/UIComponents/Layout/_layout.scss */
+/* line 208, ../../Js/UIComponents/Layout/_layout.scss */
 .page-body fieldset legend button.show {
   -moz-transition: color 0.3s;
   -o-transition: color 0.3s;
@@ -1153,19 +1162,19 @@ input[type="color"] {
   width: 45px;
   text-align: right;
 }
-/* line 215, ../../Js/UIComponents/Layout/_layout.scss */
+/* line 222, ../../Js/UIComponents/Layout/_layout.scss */
 .page-body fieldset legend button.show:hover {
   color: #003399;
 }
-/* line 219, ../../Js/UIComponents/Layout/_layout.scss */
+/* line 226, ../../Js/UIComponents/Layout/_layout.scss */
 .page-body fieldset legend button.show.active {
   color: #3366cc;
 }
-/* line 226, ../../Js/UIComponents/Layout/_layout.scss */
+/* line 233, ../../Js/UIComponents/Layout/_layout.scss */
 .page-body fieldset .help-inline {
   display: none;
 }
-/* line 231, ../../Js/UIComponents/Layout/_layout.scss */
+/* line 238, ../../Js/UIComponents/Layout/_layout.scss */
 .page-body fieldset.show-helpers .help-inline {
   -moz-transition: all 0.2s;
   -o-transition: all 0.2s;
@@ -1184,7 +1193,7 @@ input[type="color"] {
   z-index: 2;
   top: -25px;
 }
-/* line 246, ../../Js/UIComponents/Layout/_layout.scss */
+/* line 253, ../../Js/UIComponents/Layout/_layout.scss */
 .page-body fieldset.show-helpers .help-inline:before {
   -moz-transition: all 0.3s;
   -o-transition: all 0.3s;
@@ -1199,7 +1208,7 @@ input[type="color"] {
   border-top: 6px solid transparent;
   border-bottom: 6px solid transparent;
 }
-/* line 258, ../../Js/UIComponents/Layout/_layout.scss */
+/* line 265, ../../Js/UIComponents/Layout/_layout.scss */
 .page-body fieldset.show-helpers .help-inline:after {
   -moz-transition: all 0.3s;
   -o-transition: all 0.3s;
@@ -1214,17 +1223,17 @@ input[type="color"] {
   border-top: 5px solid transparent;
   border-bottom: 5px solid transparent;
 }
-/* line 270, ../../Js/UIComponents/Layout/_layout.scss */
+/* line 277, ../../Js/UIComponents/Layout/_layout.scss */
 .page-body fieldset.show-helpers .help-inline small {
   font-size: 95%;
   line-height: 105%;
 }
 @media screen and (min-width: 1200px) {
-  /* line 277, ../../Js/UIComponents/Layout/_layout.scss */
+  /* line 284, ../../Js/UIComponents/Layout/_layout.scss */
   .page-body fieldset.show-helpers .control-group-area {
     width: 72%;
   }
-  /* line 281, ../../Js/UIComponents/Layout/_layout.scss */
+  /* line 288, ../../Js/UIComponents/Layout/_layout.scss */
   .page-body fieldset.show-helpers .help-inline {
     -moz-border-radius: 3px;
     -webkit-border-radius: 3px;
@@ -1236,7 +1245,7 @@ input[type="color"] {
     margin-bottom: 10px;
   }
 }
-/* line 294, ../../Js/UIComponents/Layout/_layout.scss */
+/* line 301, ../../Js/UIComponents/Layout/_layout.scss */
 .page-body .control-group {
   overflow: hidden;
   *zoom: 1;
@@ -1245,7 +1254,7 @@ input[type="color"] {
   position: relative;
   z-index: 1;
 }
-/* line 301, ../../Js/UIComponents/Layout/_layout.scss */
+/* line 308, ../../Js/UIComponents/Layout/_layout.scss */
 .page-body .control-group:before {
   content: '';
   position: absolute;
@@ -1258,15 +1267,15 @@ input[type="color"] {
   right: 28%;
   left: 0;
 }
-/* line 315, ../../Js/UIComponents/Layout/_layout.scss */
+/* line 322, ../../Js/UIComponents/Layout/_layout.scss */
 .page-body .control-group:last-of-type:before {
   margin-bottom: 10px;
 }
-/* line 320, ../../Js/UIComponents/Layout/_layout.scss */
+/* line 327, ../../Js/UIComponents/Layout/_layout.scss */
 .page-body .control-group:hover {
   z-index: 9999;
 }
-/* line 324, ../../Js/UIComponents/Layout/_layout.scss */
+/* line 331, ../../Js/UIComponents/Layout/_layout.scss */
 .page-body .control-group .control-group-area {
   overflow: hidden;
   *zoom: 1;
@@ -1279,11 +1288,11 @@ input[type="color"] {
   background: #fff;
   padding: 0 20px 30px;
 }
-/* line 335, ../../Js/UIComponents/Layout/_layout.scss */
+/* line 342, ../../Js/UIComponents/Layout/_layout.scss */
 .page-body .control-group .control-group-area .table-wrap {
   border-top: 1px solid #d2d2d2;
 }
-/* line 339, ../../Js/UIComponents/Layout/_layout.scss */
+/* line 346, ../../Js/UIComponents/Layout/_layout.scss */
 .page-body .control-group .control-group-area label {
   display: block;
   font-size: 100%;
@@ -1291,7 +1300,7 @@ input[type="color"] {
   text-transform: uppercase;
   padding-bottom: 10px;
 }
-/* line 349, ../../Js/UIComponents/Layout/_layout.scss */
+/* line 356, ../../Js/UIComponents/Layout/_layout.scss */
 .page-body .control-group .control-group-area.editmode label:after {
   position: absolute;
   right: 28px;
@@ -1300,59 +1309,59 @@ input[type="color"] {
   content: '\f00c';
   color: #339900;
 }
-/* line 362, ../../Js/UIComponents/Layout/_layout.scss */
+/* line 369, ../../Js/UIComponents/Layout/_layout.scss */
 .page-body .control-group .control-group-area.required.editmode label:after {
   content: '\f069';
   color: #ff6600;
 }
-/* line 371, ../../Js/UIComponents/Layout/_layout.scss */
+/* line 378, ../../Js/UIComponents/Layout/_layout.scss */
 .page-body .control-group .control-group-area.invalid.editmode label:after {
   content: '\f069';
   color: #ff0000;
 }
-/* line 378, ../../Js/UIComponents/Layout/_layout.scss */
+/* line 385, ../../Js/UIComponents/Layout/_layout.scss */
 .page-body .control-group .control-group-area .controls {
   position: relative;
 }
-/* line 381, ../../Js/UIComponents/Layout/_layout.scss */
+/* line 388, ../../Js/UIComponents/Layout/_layout.scss */
 .page-body .control-group .control-group-area .controls .btn {
   display: inline-block;
 }
 @media screen and (min-width: 1200px) {
-  /* line 135, ../../Js/UIComponents/Layout/_layout.scss */
+  /* line 143, ../../Js/UIComponents/Layout/_layout.scss */
   .page-body {
-    margin-left: 200px;
+    margin-left: 175px;
   }
 }
 
-/* line 393, ../../Js/UIComponents/Layout/_layout.scss */
+/* line 400, ../../Js/UIComponents/Layout/_layout.scss */
 .on-drag-hover {
   border-top: 2px solid #3366cc;
   border-bottom: 2px solid #3366cc;
 }
 
-/* line 398, ../../Js/UIComponents/Layout/_layout.scss */
+/* line 405, ../../Js/UIComponents/Layout/_layout.scss */
 [draggable] {
   cursor: move;
 }
 
-/* line 402, ../../Js/UIComponents/Layout/_layout.scss */
+/* line 409, ../../Js/UIComponents/Layout/_layout.scss */
 .dropdown-menu {
   background: #fff;
   left: 0;
 }
 
-/* line 407, ../../Js/UIComponents/Layout/_layout.scss */
+/* line 414, ../../Js/UIComponents/Layout/_layout.scss */
 .fa {
   font-size: 1.4em;
 }
-/* line 410, ../../Js/UIComponents/Layout/_layout.scss */
+/* line 417, ../../Js/UIComponents/Layout/_layout.scss */
 .fa.alert {
   color: #ff6600;
   margin-right: 5px;
 }
 
-/* line 416, ../../Js/UIComponents/Layout/_layout.scss */
+/* line 423, ../../Js/UIComponents/Layout/_layout.scss */
 .fa-picture-o, .btn-icon .fa-picture-o {
   font-size: 3em;
   color: #dddddd;
@@ -1635,9 +1644,8 @@ form.loading > *, table.loading > *, div.loading > *, fieldset.loading > * {
 .modal .page-actions {
   margin-top: 80px;
   z-index: 2;
-  left: 0;
 }
-/* line 52, ../../Js/UIComponents/Modals/_modals.scss */
+/* line 51, ../../Js/UIComponents/Modals/_modals.scss */
 .modal .page-body {
   margin-left: 170px;
   margin-top: 60px;
@@ -1648,37 +1656,37 @@ form.loading > *, table.loading > *, div.loading > *, fieldset.loading > * {
   overflow-y: scroll;
   right: 2px;
 }
-/* line 62, ../../Js/UIComponents/Modals/_modals.scss */
+/* line 61, ../../Js/UIComponents/Modals/_modals.scss */
 .modal .page-body .form-wrap {
   padding: 20px 20px 20px 0;
 }
 @media screen and (min-width: 1200px) {
-  /* line 52, ../../Js/UIComponents/Modals/_modals.scss */
+  /* line 51, ../../Js/UIComponents/Modals/_modals.scss */
   .modal .page-body {
     margin-left: 195px;
   }
 }
 
-/* line 72, ../../Js/UIComponents/Modals/_modals.scss */
+/* line 71, ../../Js/UIComponents/Modals/_modals.scss */
 .modal-dialog {
   height: 100%;
 }
-/* line 75, ../../Js/UIComponents/Modals/_modals.scss */
+/* line 74, ../../Js/UIComponents/Modals/_modals.scss */
 .modal-dialog .search-filter {
   top: auto;
   right: auto;
 }
-/* line 79, ../../Js/UIComponents/Modals/_modals.scss */
+/* line 78, ../../Js/UIComponents/Modals/_modals.scss */
 .modal-dialog .search-filter:before, .modal-dialog .search-filter:after {
   right: auto;
   left: 10px;
 }
-/* line 84, ../../Js/UIComponents/Modals/_modals.scss */
+/* line 83, ../../Js/UIComponents/Modals/_modals.scss */
 .modal-dialog .search-filter:after {
   left: 9px;
 }
 
-/* line 90, ../../Js/UIComponents/Modals/_modals.scss */
+/* line 89, ../../Js/UIComponents/Modals/_modals.scss */
 .modal-header {
   -moz-border-radius-topleft: 3px;
   -webkit-border-top-left-radius: 3px;
@@ -1696,7 +1704,7 @@ form.loading > *, table.loading > *, div.loading > *, fieldset.loading > * {
   border-bottom: 1px solid #ebebeb;
   z-index: 10;
 }
-/* line 103, ../../Js/UIComponents/Modals/_modals.scss */
+/* line 102, ../../Js/UIComponents/Modals/_modals.scss */
 .modal-header .close {
   position: absolute;
   right: 10px;
@@ -1705,12 +1713,12 @@ form.loading > *, table.loading > *, div.loading > *, fieldset.loading > * {
   color: black;
 }
 
-/* line 112, ../../Js/UIComponents/Modals/_modals.scss */
+/* line 111, ../../Js/UIComponents/Modals/_modals.scss */
 .modal-content {
   padding-left: 20px;
 }
 
-/* line 116, ../../Js/UIComponents/Modals/_modals.scss */
+/* line 115, ../../Js/UIComponents/Modals/_modals.scss */
 .modal-body {
   position: absolute;
   top: 80px;
@@ -1719,7 +1727,7 @@ form.loading > *, table.loading > *, div.loading > *, fieldset.loading > * {
   line-height: 15px;
 }
 
-/* line 124, ../../Js/UIComponents/Modals/_modals.scss */
+/* line 123, ../../Js/UIComponents/Modals/_modals.scss */
 .modal-actions {
   position: absolute;
   bottom: 10px;
@@ -1730,7 +1738,7 @@ form.loading > *, table.loading > *, div.loading > *, fieldset.loading > * {
   padding-right: 20px;
   text-align: right;
 }
-/* line 134, ../../Js/UIComponents/Modals/_modals.scss */
+/* line 133, ../../Js/UIComponents/Modals/_modals.scss */
 .modal-actions .btn {
   display: inline-block;
 }
@@ -1817,34 +1825,35 @@ form.loading > *, table.loading > *, div.loading > *, fieldset.loading > * {
   -moz-border-radius: 3px;
   -webkit-border-radius: 3px;
   border-radius: 3px;
+  border: 1px solid #d2d2d2;
   margin-bottom: 10px;
+  padding: 1px;
   border-top: 3px solid #3366cc;
   position: relative;
 }
 
-/* line 33, ../../Js/UIComponents/Table/_table.scss */
+/* line 35, ../../Js/UIComponents/Table/_table.scss */
 .table {
   width: 100.1%;
 }
-/* line 36, ../../Js/UIComponents/Table/_table.scss */
+/* line 38, ../../Js/UIComponents/Table/_table.scss */
 .table.header {
   margin-top: 80px;
 }
-/* line 40, ../../Js/UIComponents/Table/_table.scss */
+/* line 42, ../../Js/UIComponents/Table/_table.scss */
 .table thead {
   background-color: #fff;
 }
-/* line 45, ../../Js/UIComponents/Table/_table.scss */
+/* line 47, ../../Js/UIComponents/Table/_table.scss */
 .table thead tr th {
-  padding: 20px 10px;
-  text-transform: uppercase;
+  padding: 10px;
 }
-/* line 49, ../../Js/UIComponents/Table/_table.scss */
+/* line 50, ../../Js/UIComponents/Table/_table.scss */
 .table thead tr th.actions {
   text-indent: -2000px;
   overflow: hidden;
 }
-/* line 55, ../../Js/UIComponents/Table/_table.scss */
+/* line 56, ../../Js/UIComponents/Table/_table.scss */
 .table tbody tr {
   background-color: #fff;
   -webkit-user-select: none;
@@ -1852,34 +1861,34 @@ form.loading > *, table.loading > *, div.loading > *, fieldset.loading > * {
   -khtml-user-select: none;
   -ms-user-select: none;
 }
-/* line 62, ../../Js/UIComponents/Table/_table.scss */
+/* line 63, ../../Js/UIComponents/Table/_table.scss */
 .table tbody tr:nth-child(odd) {
   background-color: #f8f8f8;
 }
-/* line 66, ../../Js/UIComponents/Table/_table.scss */
+/* line 67, ../../Js/UIComponents/Table/_table.scss */
 .table tbody tr td {
   border-top: 1px solid #dddddd;
   border-bottom: 1px solid #dddddd;
   padding: 10px;
   position: relative;
 }
-/* line 72, ../../Js/UIComponents/Table/_table.scss */
+/* line 73, ../../Js/UIComponents/Table/_table.scss */
 .table tbody tr td img.img-polaroid {
   width: 120px;
   height: 70px;
 }
-/* line 77, ../../Js/UIComponents/Table/_table.scss */
+/* line 78, ../../Js/UIComponents/Table/_table.scss */
 .table tbody tr td label {
   font-weight: 400;
   font-weight: 400 !important;
   text-transform: none !important;
 }
-/* line 83, ../../Js/UIComponents/Table/_table.scss */
+/* line 84, ../../Js/UIComponents/Table/_table.scss */
 .table tbody tr td .row-type {
   width: 52px;
   position: relative;
 }
-/* line 88, ../../Js/UIComponents/Table/_table.scss */
+/* line 89, ../../Js/UIComponents/Table/_table.scss */
 .table tbody tr td .row-type-folder {
   -moz-border-radius-topleft: 2px;
   -webkit-border-top-left-radius: 2px;
@@ -1890,7 +1899,7 @@ form.loading > *, table.loading > *, div.loading > *, fieldset.loading > * {
   background-color: #3366cc;
   display: block;
 }
-/* line 95, ../../Js/UIComponents/Table/_table.scss */
+/* line 96, ../../Js/UIComponents/Table/_table.scss */
 .table tbody tr td .row-type-folder i {
   display: inline-block;
   vertical-align: middle;
@@ -1906,7 +1915,7 @@ form.loading > *, table.loading > *, div.loading > *, fieldset.loading > * {
   margin-top: -7.5px;
 }
 @media (-webkit-min-device-pixel-ratio: 1.5), (min--moz-device-pixel-ratio: 1.5), (-o-min-device-pixel-ratio: 3 / 2), (min-device-pixel-ratio: 1.5), (min-resolution: 144dppx) {
-  /* line 95, ../../Js/UIComponents/Table/_table.scss */
+  /* line 96, ../../Js/UIComponents/Table/_table.scss */
   .table tbody tr td .row-type-folder i {
     background-image: url('/Admin/Modules/Shared/Content/css/img/icons/retina.png');
     background-position: 0 -89px;
@@ -1916,7 +1925,7 @@ form.loading > *, table.loading > *, div.loading > *, fieldset.loading > * {
     background-size: 93px auto;
   }
 }
-/* line 102, ../../Js/UIComponents/Table/_table.scss */
+/* line 103, ../../Js/UIComponents/Table/_table.scss */
 .table tbody tr td .row-type-doc {
   -moz-border-radius-topleft: 2px;
   -webkit-border-top-left-radius: 2px;
@@ -1926,7 +1935,7 @@ form.loading > *, table.loading > *, div.loading > *, fieldset.loading > * {
   border-bottom-left-radius: 2px;
   display: block;
 }
-/* line 108, ../../Js/UIComponents/Table/_table.scss */
+/* line 109, ../../Js/UIComponents/Table/_table.scss */
 .table tbody tr td .row-type-doc i {
   display: inline-block;
   vertical-align: middle;
@@ -1942,7 +1951,7 @@ form.loading > *, table.loading > *, div.loading > *, fieldset.loading > * {
   margin-top: -9px;
 }
 @media (-webkit-min-device-pixel-ratio: 1.5), (min--moz-device-pixel-ratio: 1.5), (-o-min-device-pixel-ratio: 3 / 2), (min-device-pixel-ratio: 1.5), (min-resolution: 144dppx) {
-  /* line 108, ../../Js/UIComponents/Table/_table.scss */
+  /* line 109, ../../Js/UIComponents/Table/_table.scss */
   .table tbody tr td .row-type-doc i {
     background-image: url('/Admin/Modules/Shared/Content/css/img/icons/retina.png');
     background-position: 0 -70px;
@@ -1952,7 +1961,7 @@ form.loading > *, table.loading > *, div.loading > *, fieldset.loading > * {
     background-size: 93px auto;
   }
 }
-/* line 115, ../../Js/UIComponents/Table/_table.scss */
+/* line 116, ../../Js/UIComponents/Table/_table.scss */
 .table tbody tr td .action-edit {
   display: inline-block;
   vertical-align: middle;
@@ -1966,7 +1975,7 @@ form.loading > *, table.loading > *, div.loading > *, fieldset.loading > * {
   background-repeat: no-repeat;
 }
 @media (-webkit-min-device-pixel-ratio: 1.5), (min--moz-device-pixel-ratio: 1.5), (-o-min-device-pixel-ratio: 3 / 2), (min-device-pixel-ratio: 1.5), (min-resolution: 144dppx) {
-  /* line 115, ../../Js/UIComponents/Table/_table.scss */
+  /* line 116, ../../Js/UIComponents/Table/_table.scss */
   .table tbody tr td .action-edit {
     background-image: url('/Admin/Modules/Shared/Content/css/img/icons/retina.png');
     background-position: 0 0;
@@ -1976,7 +1985,7 @@ form.loading > *, table.loading > *, div.loading > *, fieldset.loading > * {
     background-size: 93px auto;
   }
 }
-/* line 120, ../../Js/UIComponents/Table/_table.scss */
+/* line 121, ../../Js/UIComponents/Table/_table.scss */
 .table tbody tr td .action-open {
   display: inline-block;
   vertical-align: middle;
@@ -1990,7 +1999,7 @@ form.loading > *, table.loading > *, div.loading > *, fieldset.loading > * {
   background-repeat: no-repeat;
 }
 @media (-webkit-min-device-pixel-ratio: 1.5), (min--moz-device-pixel-ratio: 1.5), (-o-min-device-pixel-ratio: 3 / 2), (min-device-pixel-ratio: 1.5), (min-resolution: 144dppx) {
-  /* line 120, ../../Js/UIComponents/Table/_table.scss */
+  /* line 121, ../../Js/UIComponents/Table/_table.scss */
   .table tbody tr td .action-open {
     background-image: url('/Admin/Modules/Shared/Content/css/img/icons/retina.png');
     background-position: 0 -35px;
@@ -2000,27 +2009,27 @@ form.loading > *, table.loading > *, div.loading > *, fieldset.loading > * {
     background-size: 93px auto;
   }
 }
-/* line 125, ../../Js/UIComponents/Table/_table.scss */
+/* line 126, ../../Js/UIComponents/Table/_table.scss */
 .table tbody tr td.actions {
   text-align: right;
 }
-/* line 128, ../../Js/UIComponents/Table/_table.scss */
+/* line 129, ../../Js/UIComponents/Table/_table.scss */
 .table tbody tr td.actions .fa {
   padding-right: 0;
 }
-/* line 134, ../../Js/UIComponents/Table/_table.scss */
+/* line 135, ../../Js/UIComponents/Table/_table.scss */
 .table tbody tr.selected td:not(.empty), .table tbody tr:hover td:not(.empty) {
   background-color: #d0defc;
 }
-/* line 138, ../../Js/UIComponents/Table/_table.scss */
+/* line 139, ../../Js/UIComponents/Table/_table.scss */
 .table tbody tr a {
   color: #000;
 }
-/* line 142, ../../Js/UIComponents/Table/_table.scss */
+/* line 143, ../../Js/UIComponents/Table/_table.scss */
 .table tbody tr strong {
   font-weight: bold;
 }
-/* line 147, ../../Js/UIComponents/Table/_table.scss */
+/* line 148, ../../Js/UIComponents/Table/_table.scss */
 .table tbody tr:last-of-type td {
   border-bottom: 0px;
 }
@@ -2029,7 +2038,7 @@ form.loading > *, table.loading > *, div.loading > *, fieldset.loading > * {
     When nested in a fieldset reduce the border size, because the parent
     fieldset also has a 3px top border
 */
-/* line 158, ../../Js/UIComponents/Table/_table.scss */
+/* line 159, ../../Js/UIComponents/Table/_table.scss */
 fieldset .table thead {
   border-top-width: 0px;
 }
@@ -2039,35 +2048,35 @@ fieldset .table thead {
     Ideally these would alternate slightly with striped rows, here we just 
     have to override the existing bootstrap class
 */
-/* line 167, ../../Js/UIComponents/Table/_table.scss */
+/* line 168, ../../Js/UIComponents/Table/_table.scss */
 .table td.error, .table-striped tbody tr:nth-child(odd) td.error {
   background-color: #FC4C54;
   color: #fff;
 }
 
-/* line 171, ../../Js/UIComponents/Table/_table.scss */
+/* line 172, ../../Js/UIComponents/Table/_table.scss */
 .table td.warning, .table-striped tbody tr:nth-child(odd) td.warning {
   background-color: #EBC942;
   color: #fff;
 }
 
-/* line 175, ../../Js/UIComponents/Table/_table.scss */
+/* line 176, ../../Js/UIComponents/Table/_table.scss */
 .table td.success, .table-striped tbody tr:nth-child(odd) td.success {
   background-color: #22D65B;
   color: #fff;
 }
 
-/* line 179, ../../Js/UIComponents/Table/_table.scss */
+/* line 180, ../../Js/UIComponents/Table/_table.scss */
 .table tr.inactive, .table tr.inactive a {
   color: #888;
 }
 
-/* line 183, ../../Js/UIComponents/Table/_table.scss */
+/* line 184, ../../Js/UIComponents/Table/_table.scss */
 .table tr.inactive img {
   opacity: 0.5;
 }
 
-/* line 187, ../../Js/UIComponents/Table/_table.scss */
+/* line 188, ../../Js/UIComponents/Table/_table.scss */
 .table-group-heading {
   -moz-border-radius-topleft: 2px;
   -webkit-border-top-left-radius: 2px;
