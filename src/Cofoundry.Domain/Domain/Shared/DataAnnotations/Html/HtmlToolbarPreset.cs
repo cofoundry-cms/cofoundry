@@ -18,9 +18,14 @@ namespace Cofoundry.Domain
         Headings,
 
         /// <summary>
-        /// Toolbar items for bold, italic, underline, ul/ol, links
+        /// Toolbar items for bold, italic, underline, links
         /// </summary>
         BasicFormatting,
+
+        /// <summary>
+        /// Toolbar items for alignment, blockquote & lists
+        /// </summary>
+        AdvancedFormatting,
 
         /// <summary>
         /// Insert pictures, video

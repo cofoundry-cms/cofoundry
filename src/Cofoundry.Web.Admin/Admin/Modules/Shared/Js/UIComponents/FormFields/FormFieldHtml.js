@@ -43,7 +43,7 @@ function (
             toolbar: parseToolbarButtons(vm.toolbarsConfig, vm.toolbarCustomConfig),
             plugins: 'link image media fullscreen imagetools code',
             content_css: "/admin/modules/shared/content/css/lib/tinymce/content.min.css",
-            menubar: true,
+            menubar: false,
             min_height: 300,
             setup: function (editor) {
                 editor.addButton('cfimage', {
@@ -104,10 +104,11 @@ function (
     function parseToolbarButtons(toolbarsConfig, toolbarCustomConfig) {
         var DEFAULT_CONFIG = 'headings,basicFormatting',
             buttonConfig = {
-                headings: 'formatselect justifyleft justifycenter justifyright justifyfull',
+                headings: 'formatselect',
                 basicFormatting: 'fullscreen undo redo | bold italic underline | link unlink',
+                advancedFormatting: 'bullist numlist blockquote | alignleft aligncenter alignright alignjustify',
                 media: 'cfimage media',
-                source: 'code',
+                source: 'code removeformat',
             }, toolbar = '';
 
         toolbarsConfig = toolbarsConfig || DEFAULT_CONFIG;
