@@ -1,7 +1,7 @@
 /*===============================
 	Required compass includes
 =================================*/
-/* line 5, ../../../../../../../../../../../Ruby22-x64/lib/ruby/gems/2.2.0/gems/compass-core-1.0.3/stylesheets/compass/reset/_utilities.scss */
+/* line 5, ../../../../../../../../../../../../../usr/local/lib/ruby/gems/2.2.0/gems/compass-core-1.0.3/stylesheets/compass/reset/_utilities.scss */
 html, body, div, span, applet, object, iframe,
 h1, h2, h3, h4, h5, h6, p, blockquote, pre,
 a, abbr, acronym, address, big, cite, code,
@@ -23,45 +23,45 @@ time, mark, audio, video {
   vertical-align: baseline;
 }
 
-/* line 22, ../../../../../../../../../../../Ruby22-x64/lib/ruby/gems/2.2.0/gems/compass-core-1.0.3/stylesheets/compass/reset/_utilities.scss */
+/* line 22, ../../../../../../../../../../../../../usr/local/lib/ruby/gems/2.2.0/gems/compass-core-1.0.3/stylesheets/compass/reset/_utilities.scss */
 html {
   line-height: 1;
 }
 
-/* line 24, ../../../../../../../../../../../Ruby22-x64/lib/ruby/gems/2.2.0/gems/compass-core-1.0.3/stylesheets/compass/reset/_utilities.scss */
+/* line 24, ../../../../../../../../../../../../../usr/local/lib/ruby/gems/2.2.0/gems/compass-core-1.0.3/stylesheets/compass/reset/_utilities.scss */
 ol, ul {
   list-style: none;
 }
 
-/* line 26, ../../../../../../../../../../../Ruby22-x64/lib/ruby/gems/2.2.0/gems/compass-core-1.0.3/stylesheets/compass/reset/_utilities.scss */
+/* line 26, ../../../../../../../../../../../../../usr/local/lib/ruby/gems/2.2.0/gems/compass-core-1.0.3/stylesheets/compass/reset/_utilities.scss */
 table {
   border-collapse: collapse;
   border-spacing: 0;
 }
 
-/* line 28, ../../../../../../../../../../../Ruby22-x64/lib/ruby/gems/2.2.0/gems/compass-core-1.0.3/stylesheets/compass/reset/_utilities.scss */
+/* line 28, ../../../../../../../../../../../../../usr/local/lib/ruby/gems/2.2.0/gems/compass-core-1.0.3/stylesheets/compass/reset/_utilities.scss */
 caption, th, td {
   text-align: left;
   font-weight: normal;
   vertical-align: middle;
 }
 
-/* line 30, ../../../../../../../../../../../Ruby22-x64/lib/ruby/gems/2.2.0/gems/compass-core-1.0.3/stylesheets/compass/reset/_utilities.scss */
+/* line 30, ../../../../../../../../../../../../../usr/local/lib/ruby/gems/2.2.0/gems/compass-core-1.0.3/stylesheets/compass/reset/_utilities.scss */
 q, blockquote {
   quotes: none;
 }
-/* line 103, ../../../../../../../../../../../Ruby22-x64/lib/ruby/gems/2.2.0/gems/compass-core-1.0.3/stylesheets/compass/reset/_utilities.scss */
+/* line 103, ../../../../../../../../../../../../../usr/local/lib/ruby/gems/2.2.0/gems/compass-core-1.0.3/stylesheets/compass/reset/_utilities.scss */
 q:before, q:after, blockquote:before, blockquote:after {
   content: "";
   content: none;
 }
 
-/* line 32, ../../../../../../../../../../../Ruby22-x64/lib/ruby/gems/2.2.0/gems/compass-core-1.0.3/stylesheets/compass/reset/_utilities.scss */
+/* line 32, ../../../../../../../../../../../../../usr/local/lib/ruby/gems/2.2.0/gems/compass-core-1.0.3/stylesheets/compass/reset/_utilities.scss */
 a img {
   border: none;
 }
 
-/* line 116, ../../../../../../../../../../../Ruby22-x64/lib/ruby/gems/2.2.0/gems/compass-core-1.0.3/stylesheets/compass/reset/_utilities.scss */
+/* line 116, ../../../../../../../../../../../../../usr/local/lib/ruby/gems/2.2.0/gems/compass-core-1.0.3/stylesheets/compass/reset/_utilities.scss */
 article, aside, details, figcaption, figure, footer, header, hgroup, main, menu, nav, section, summary {
   display: block;
 }
@@ -869,58 +869,50 @@ body {
 
 /* line 96, ../../Sass/_outer-site-viewer.scss */
 #wrapper.iPhonePortrait #siteFrameContainer {
-  height: 480px;
   width: 320px;
   position: absolute;
-  padding-bottom: 0;
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
-  border: 30px solid #000;
-  border-radius: 20px;
+  border: 1px solid #eaeaea;
+  box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.25);
 }
 
-/* line 108, ../../Sass/_outer-site-viewer.scss */
+/* line 106, ../../Sass/_outer-site-viewer.scss */
 #wrapper.iPadPortrait #siteFrameContainer {
-  height: 1024px;
   width: 768px;
   position: absolute;
-  padding-bottom: 0;
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
-  border: 50px solid #000;
-  border-radius: 40px;
+  border: 1px solid #eaeaea;
+  box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.25);
 }
 
-/* line 120, ../../Sass/_outer-site-viewer.scss */
+/* line 116, ../../Sass/_outer-site-viewer.scss */
 #wrapper.iPadLandscape #siteFrameContainer {
-  height: 768px;
   width: 1024px;
   position: absolute;
-  padding-bottom: 0;
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
-  border: 50px solid #000;
-  border-radius: 40px;
+  border: 1px solid #eaeaea;
+  box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.25);
 }
 
-/* line 132, ../../Sass/_outer-site-viewer.scss */
+/* line 126, ../../Sass/_outer-site-viewer.scss */
 #wrapper.desktop #siteFrameContainer {
-  height: 768px;
   width: 1024px;
   position: absolute;
-  padding-bottom: 0;
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
-  border: 50px solid #000;
-  border-radius: 40px;
+  border: 1px solid #eaeaea;
+  box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.25);
 }
 
 /* #### Site frame #### */
-/* line 147, ../../Sass/_outer-site-viewer.scss */
+/* line 139, ../../Sass/_outer-site-viewer.scss */
 iframe#siteFrame {
   background: transparent;
   border: 0;
@@ -928,23 +920,23 @@ iframe#siteFrame {
   width: 100%;
 }
 
-/* line 154, ../../Sass/_outer-site-viewer.scss */
+/* line 146, ../../Sass/_outer-site-viewer.scss */
 #wrapper.device iframe#siteFrame::-webkit-scrollbar {
   display: none;
 }
 
-/* line 158, ../../Sass/_outer-site-viewer.scss */
+/* line 150, ../../Sass/_outer-site-viewer.scss */
 #wrapper.device iframe#siteFrame html {
   overflow-x: hidden;
 }
 
-/* line 162, ../../Sass/_outer-site-viewer.scss */
+/* line 154, ../../Sass/_outer-site-viewer.scss */
 #wrapper.device iframe#siteFrame html::-webkit-scrollbar {
   display: none;
 }
 
 /* #### Device menu #### */
-/* line 169, ../../Sass/_outer-site-viewer.scss */
+/* line 161, ../../Sass/_outer-site-viewer.scss */
 ul#deviceMenu {
   bottom: 0;
   left: 0;
@@ -954,7 +946,7 @@ ul#deviceMenu {
   position: fixed;
 }
 
-/* line 178, ../../Sass/_outer-site-viewer.scss */
+/* line 170, ../../Sass/_outer-site-viewer.scss */
 ul#deviceMenu li {
   border-right: 1px solid #970D31;
   display: block;
@@ -962,7 +954,7 @@ ul#deviceMenu li {
   list-style: none;
 }
 
-/* line 185, ../../Sass/_outer-site-viewer.scss */
+/* line 177, ../../Sass/_outer-site-viewer.scss */
 ul#deviceMenu li a {
   background: #3366cc url(img/icons.png) no-repeat;
   display: block;
@@ -973,7 +965,7 @@ ul#deviceMenu li a {
   width: 30px;
 }
 
-/* line 195, ../../Sass/_outer-site-viewer.scss */
+/* line 187, ../../Sass/_outer-site-viewer.scss */
 ul#deviceMenu li.active, ul#deviceMenu li:hover {
   background-color: #8e8d8d;
   -webkit-box-shadow: inset 0 0 3px 1px rgba(0, 0, 0, 0.7);
@@ -989,38 +981,38 @@ ul#deviceMenu li.active, ul#deviceMenu li:hover {
   filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#8e8d8d', endColorstr='#4d4c4c',GradientType=0 );
 }
 
-/* line 210, ../../Sass/_outer-site-viewer.scss */
+/* line 202, ../../Sass/_outer-site-viewer.scss */
 ul#deviceMenu li.active a, ul#deviceMenu li a:hover {
   background-color: transparent;
 }
 
-/* line 214, ../../Sass/_outer-site-viewer.scss */
+/* line 206, ../../Sass/_outer-site-viewer.scss */
 ul#deviceMenu li.auto a {
   background-position: -5px -725px;
 }
 
-/* line 218, ../../Sass/_outer-site-viewer.scss */
+/* line 210, ../../Sass/_outer-site-viewer.scss */
 ul#deviceMenu li.iPhonePortrait a {
   background-position: -5px -565px;
 }
 
-/* line 222, ../../Sass/_outer-site-viewer.scss */
+/* line 214, ../../Sass/_outer-site-viewer.scss */
 ul#deviceMenu li.iPhoneLandscape a {
   background-position: -5px -605px;
 }
 
-/* line 226, ../../Sass/_outer-site-viewer.scss */
+/* line 218, ../../Sass/_outer-site-viewer.scss */
 ul#deviceMenu li.iPadPortrait a {
   background-position: -5px -645px;
 }
 
-/* line 230, ../../Sass/_outer-site-viewer.scss */
+/* line 222, ../../Sass/_outer-site-viewer.scss */
 ul#deviceMenu li.iPadLandscape a {
   background-position: -5px -685px;
 }
 
 /* #### Hovering #### */
-/* line 236, ../../Sass/_outer-site-viewer.scss */
+/* line 228, ../../Sass/_outer-site-viewer.scss */
 .cofoundry-sv__section-popover-container, .cofoundry-sv__module-popover-container {
   font-family: "Open Sans", sans-serif;
   font-size: 85%;
@@ -1031,7 +1023,7 @@ ul#deviceMenu li.iPadLandscape a {
 }
 
 /* #### Section hovering #### */
-/* line 250, ../../Sass/_outer-site-viewer.scss */
+/* line 242, ../../Sass/_outer-site-viewer.scss */
 .cofoundry-sv__section-popover-inner {
   -moz-border-radius: 2px;
   -webkit-border-radius: 2px;
@@ -1049,7 +1041,7 @@ ul#deviceMenu li.iPadLandscape a {
   white-space: nowrap;
 }
 
-/* line 265, ../../Sass/_outer-site-viewer.scss */
+/* line 257, ../../Sass/_outer-site-viewer.scss */
 .cofoundry-sv__section-popover-inner h2 {
   font-weight: bold;
   float: left;
@@ -1060,7 +1052,7 @@ ul#deviceMenu li.iPadLandscape a {
   margin: 0;
 }
 
-/* line 275, ../../Sass/_outer-site-viewer.scss */
+/* line 267, ../../Sass/_outer-site-viewer.scss */
 .cofoundry-sv__section-popover-inner a {
   float: right;
   color: #3c3c3c;
@@ -1071,18 +1063,18 @@ ul#deviceMenu li.iPadLandscape a {
   position: relative;
   text-align: center;
 }
-/* line 285, ../../Sass/_outer-site-viewer.scss */
+/* line 277, ../../Sass/_outer-site-viewer.scss */
 .cofoundry-sv__section-popover-inner a:hover {
   color: #3366cc;
 }
 
 /* #### Module hovering #### */
-/* line 293, ../../Sass/_outer-site-viewer.scss */
+/* line 285, ../../Sass/_outer-site-viewer.scss */
 .cofoundry-sv__module-popover-container {
   position: fixed;
 }
 
-/* line 297, ../../Sass/_outer-site-viewer.scss */
+/* line 289, ../../Sass/_outer-site-viewer.scss */
 .cofoundry-sv__module-popover-container ul {
   -moz-border-radius: 2px;
   -webkit-border-radius: 2px;
@@ -1095,14 +1087,14 @@ ul#deviceMenu li.iPadLandscape a {
   padding: 0px;
 }
 
-/* line 307, ../../Sass/_outer-site-viewer.scss */
+/* line 299, ../../Sass/_outer-site-viewer.scss */
 .cofoundry-sv__module-popover-container li:not(:last-of-type) {
   border: 1px solid #ebebeb;
   border-width: 0 0 1px 0;
   display: block;
 }
 
-/* line 313, ../../Sass/_outer-site-viewer.scss */
+/* line 305, ../../Sass/_outer-site-viewer.scss */
 .cofoundry-sv__module-popover-container li a {
   -moz-transition: all 0.3s;
   -o-transition: all 0.3s;
@@ -1117,12 +1109,12 @@ ul#deviceMenu li.iPadLandscape a {
   text-align: center;
   font-size: 1.1em;
 }
-/* line 324, ../../Sass/_outer-site-viewer.scss */
+/* line 316, ../../Sass/_outer-site-viewer.scss */
 .cofoundry-sv__module-popover-container li a:hover {
   color: #3366cc;
 }
 
-/* line 329, ../../Sass/_outer-site-viewer.scss */
+/* line 321, ../../Sass/_outer-site-viewer.scss */
 .cofoundry-sv__module-popover-container .disabled a {
   cursor: default;
   opacity: 0.4;
@@ -1133,7 +1125,7 @@ ul#deviceMenu li.iPadLandscape a {
 }
 
 /* #### Footer #### */
-/* line 339, ../../Sass/_outer-site-viewer.scss */
+/* line 331, ../../Sass/_outer-site-viewer.scss */
 footer {
   position: fixed;
   bottom: 0;
