@@ -9,7 +9,8 @@
     <!-- Default toolbar -->
     <cms-page-actions ng-show="!vm.editMode">
 
-        <cms-button cms-text="Edit"
+        <cms-button class="main-cta"
+                    cms-text="Edit"
                     ng-click="vm.edit()"
                     ng-show="!vm.editMode && vm.webDirectory.depth !== 0"
                     ng-disabled="vm.globalLoadState.isLoading"></cms-button>
@@ -70,11 +71,11 @@
             <cms-form-field-readonly cms-title="Full Path"
                                      cms-model="vm.webDirectory.fullUrlPath"></cms-form-field-readonly>
 
-            <cms-form-field-container cms-title="Num Pages">
+            <cms-form-field-container cms-title="Pages">
                 <a ng-href="pages#/?webDirectoryId={{::vm.webDirectory.webDirectoryId}}">{{::vm.webDirectory.numPages}}</a>
             </cms-form-field-container>
 
-            <cms-form-field-readonly cms-title="Num Child Directories"
+            <cms-form-field-readonly cms-title="Child Directories"
                                      cms-model="::vm.webDirectory.childWebDirectories.length"></cms-form-section>
 
         <!--DIRECTORIES-->

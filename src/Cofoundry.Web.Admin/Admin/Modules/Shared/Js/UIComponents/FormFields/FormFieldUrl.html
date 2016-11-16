@@ -10,7 +10,8 @@
                    cms-http-prefix
                    id="{{vm.modelName}}"
                    name="{{vm.modelName}}" />
-            <span ng-hide="vm.formScope.editMode">{{vm.model}}</span>
+            <div class="text-block-display-value" ng-hide="vm.formScope.editMode">{{vm.model}}</div>
+            <div ng-hide="vm.formScope.editMode" ng-if="!vm.model" class="text-block-display-value">None</div>
             <cms-form-field-validation-summary></cms-form-field-validation-summary>
         </div>
     </cms-field>

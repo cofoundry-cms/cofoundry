@@ -51,7 +51,7 @@
                         <ol>
                             @foreach (var module in Model.SettingsModules)
                             {
-                                <li class="result">
+                                <li class="result @ActiveIfModule(module)">
                                     <a href="@module.Url" title="@module.Description" @ActiveIfModule(module)>@module.Title</a>
                                 </li>
                             }

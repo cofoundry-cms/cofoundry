@@ -37,7 +37,10 @@
 <cms-page-body cms-content-type="form"
                cms-sub-header="with-header">
 
-    <cms-table-container cms-loading="vm.gridLoadState.isLoading">
+    <span ng-if="vm.result.items.length == 0">
+        No documents could be found.
+    </span>
+    <cms-table-container cms-loading="vm.gridLoadState.isLoading" ng-if="vm.result.items.length > 0">
         <table>
             <thead>
                 <tr>
@@ -49,9 +52,6 @@
                 </tr>
             </thead>
             <tbody>
-                <tr ng-if="vm.result.items.length == 0">
-                    <td colspan="100" class="empty">Sorry, no documents could be found.</td>
-                </tr>
                 <tr ng-repeat="document in vm.result.items">
                     <td>
                         <a href="#/{{ ::document.documentAssetId }}">{{ ::document.title }}</a><br />
@@ -68,7 +68,7 @@
                     </td>
                     <td cms-table-column-actions>
                         <a href="#/{{document.documentAssetId}}" class="btn-icon" title="Edit">
-                            <i class="fa fa-pencil"></i>
+                            <i class="fa fa-pencil-square-o"></i>
                         </a>
                     </td>
                 </tr>

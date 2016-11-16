@@ -1,4 +1,4 @@
-﻿<cms-table-container>
+﻿<cms-table-container ng-if="vm.webDirectories.length">
     <table>
         <thead>
             <tr>
@@ -9,16 +9,11 @@
             </tr>
         </thead>
         <tbody>
-            <tr ng-if="!vm.webDirectories.length">
-                <td colspan="100" class="empty">Sorry, no directories could be found.</td>
-            </tr>
             <tr ng-repeat="webDirectory in ::vm.webDirectories">
                 <td>
                     <span>{{::vm.getPathDepthIndicator(webDirectory.depth)}}</span>
-                    <a ng-href="#/{{::webDirectory.webDirectoryId}}">{{::webDirectory.name }}</a><br />
-
+                    <a ng-href="#/{{::webDirectory.webDirectoryId}}">{{::webDirectory.name }}</a> ({{::webDirectory.fullUrlPath}})
                     <span>{{::vm.getPathDepthIndicator(webDirectory.depth)}}</span>
-                    {{::webDirectory.fullUrlPath}}
                 </td>
                 <td>
                     <a ng-href="pages#/?webDirectoryId={{::webDirectory.webDirectoryId}}">{{::webDirectory.numPages}}</a>
@@ -28,7 +23,7 @@
                 </td>
                 <td cms-table-column-actions>
                     <a href="#/{{::webDirectory.webDirectoryId}}" class="btn-icon" title="Edit" ng-if="!vm.redirect">
-                        <i class="fa fa-pencil"></i>
+                        <i class="fa fa-pencil-square-o"></i>
                     </a>
                     <a href="#/{{::webDirectory.webDirectoryId}}" class="btn-icon" title="Edit" ng-if="vm.redirect">
                         <i class="fa fa-external-link"></i>
@@ -38,3 +33,4 @@
         </tbody>
     </table>
 </cms-table-container>
+<span ng-if="!vm.webDirectories.length">No directories could be found.</span>

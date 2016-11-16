@@ -10,11 +10,11 @@
     line-height: 50px;
     top:0;
     left:$nav-width-slim;
-    border-bottom:1px solid $color-midgrey;
+    border-bottom:1px solid #ccc;
 
     @media screen and (min-width: 950px) {
         left:$nav-width;
-        padding:10px 40px;
+        padding:10px 25px;
     }
 
     a {
@@ -30,12 +30,13 @@
 
 .page-sub-header {
     @include opacity(0.8);
-    position:absolute;
+    position:fixed;
     width:100%;
     font-size:120%;
     font-weight:$fontweight-bold;
     z-index:99999;
     top: 0px;
+    left: 0;
     padding: 15px;
 
     a {
@@ -116,7 +117,6 @@
 .page-actions {
     position:fixed;
     width:125px;
-    margin:0 20px;
 
     &.with-header {
             
@@ -176,6 +176,7 @@
             padding: 20px;
             position:relative;
             z-index:10;
+            margin-bottom: 20px;
 
             &:before {
                 @include transition(all .2s);
@@ -333,7 +334,7 @@
             padding: 0 20px 30px;
 
             .table-wrap {
-                border-top: 1px solid #d2d2d2;
+                border-top: 0px solid #d2d2d2;
             }
 
             label {
@@ -386,7 +387,7 @@
     }
 
     @media screen and (min-width: 1200px) {
-        margin-left:200px;
+        margin-left:185px;
     }
 }
 

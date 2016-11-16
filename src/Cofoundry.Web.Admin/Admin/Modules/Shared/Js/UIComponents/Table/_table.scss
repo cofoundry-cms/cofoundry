@@ -24,10 +24,13 @@
 }
 
 .table-wrap {
-    @include border-radius(3px);
     margin-bottom: 10px;
     border-top: 3px solid $color-primary;
 	position:relative;
+
+    .control-group-area & {
+        border:1px solid $color-lightgrey!important;
+    }
 }
 
 .table {

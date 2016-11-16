@@ -10,7 +10,7 @@
                    ng-diabled="vm.disabled"
                    type="checkbox" />
 
-            <span ng-hide="vm.formScope.editMode">{{vm.model ? 'Yes' : 'No'}}</span>
+            <div ng-hide="vm.formScope.editMode" class="text-block-display-value">{{vm.model ? 'Yes' : 'No'}}</div>
             <cms-form-field-validation-summary></cms-form-field-validation-summary>
         </div>
     </cms-field>

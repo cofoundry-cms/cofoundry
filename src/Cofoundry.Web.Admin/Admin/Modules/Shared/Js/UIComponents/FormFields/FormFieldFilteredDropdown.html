@@ -29,8 +29,9 @@
                     <div ng-bind-html="dataItem[vm.optionName] | highlight: $select.search"></div>
                 </ui-select-choices>
             </ui-select>
-            <span ng-hide="vm.formScope.editMode" ng-if="!vm.selectedText">None</span>
-            <span ng-hide="vm.formScope.editMode">{{vm.selectedText}}</span>
+
+            <div ng-hide="vm.formScope.editMode" ng-if="vm.selectedText">{{vm.selectedText}}</div>
+            <div ng-hide="vm.formScope.editMode" ng-if="!vm.selectedText" class="text-block-display-value">None</div>
 
             <cms-form-field-validation-summary></cms-form-field-validation-summary>
         </div>

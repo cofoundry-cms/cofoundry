@@ -3,7 +3,6 @@
     <table>
         <thead>
             <tr>
-                <th>Type</th>
                 <th>Version</th>
                 <th>Page title</th>
                 <th>Status</th>
@@ -13,11 +12,6 @@
         </thead>
         <tbody>
             <tr ng-repeat="version in vm.versions">
-                <td class="row-type">
-                    <a href="#/{{ version.pageId }}">
-                        <i class="fa fa-file-code-o"></i>
-                    </a>
-                </td>
                 <td>
                     {{version.pageVersionId}}
                 </td>
@@ -32,32 +26,32 @@
                 </td>
                 <td cms-table-column-actions ng-switch="version.workFlowStatus" ng-show="!vm.editMode">
                     <div ng-switch-when="Draft">
-                        <a href="{{vm.page.pageRoute.fullPath}}?mode=draft" class="btn-icon" target="_blank" title="Browse to page (draft)">
-                            <i class="fa fa-external-link"></i>
-                        </a>
-                        <a href="" ng-click="vm.loading || vm.publish(vm.pageId)" class="btn-icon" title="Publish">
-                            <i class="fa fa-cloud-upload"></i>
-                        </a>
                         <span ng-if="vm.versions.length > 1">
                             <a href="" ng-click="vm.loading || vm.discardDraft()" class="btn-icon" title="Discard draft">
                                 <i class="fa fa-trash-o"></i>
                             </a>
                         </span>
-                    </div>
-                    <div ng-switch-when="Published">
-                        <a href="{{vm.page.pageRoute.fullPath}}?mode=live" class="btn-icon" target="_blank" title="Browse to page (live)">
+                        <a href="" ng-click="vm.loading || vm.publish(vm.pageId)" class="btn-icon" title="Publish">
+                            <i class="fa fa-cloud-upload"></i>
+                        </a>
+                        <a href="{{vm.page.pageRoute.fullPath}}?mode=draft" class="btn-icon" target="_blank" title="Browse to page (draft)">
                             <i class="fa fa-external-link"></i>
                         </a>
+                    </div>
+                    <div ng-switch-when="Published">
                         <a href="" ng-click="vm.loading || vm.unpublish()" class="btn-icon" title="Un-publish">
                             <i class="fa fa-cloud-download"></i>
                         </a>
-                    </div>
-                    <div ng-switch-default>
-                        <a href="{{vm.page.pageRoute.fullPath}}?version={{version.pageVersionId}}" class="btn-icon" target="_blank" title="Browse to page (version: {{version.pageVersionId}})">
+                        <a href="{{vm.page.pageRoute.fullPath}}?mode=live" class="btn-icon" target="_blank" title="Browse to page (live)">
                             <i class="fa fa-external-link"></i>
                         </a>
+                    </div>
+                    <div ng-switch-default>
                         <a href="" ng-click="vm.loading || vm.copyToDraft(version)" class="btn-icon" title="Copy to draft">
                             <i class="fa fa-files-o"></i>
+                        </a>
+                        <a href="{{vm.page.pageRoute.fullPath}}?version={{version.pageVersionId}}" class="btn-icon" target="_blank" title="Browse to page (version: {{version.pageVersionId}})">
+                            <i class="fa fa-external-link"></i>
                         </a>
                     </div>
                 </td>

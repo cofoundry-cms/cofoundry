@@ -23,12 +23,13 @@
 <!-- Default toolbar -->
 <cms-page-actions>
 
-    <cms-pager cms-result="vm.result"
-               cms-query="vm.query"></cms-pager>
-
-    <cms-button-link cms-text="Create"
+    <cms-button-link class="main-cta"
+                     cms-text="Create"
                      cms-icon="plus"
                      cms-href="#/new"></cms-button-link>
+
+    <cms-pager cms-result="vm.result"
+               cms-query="vm.query"></cms-pager>
 
 </cms-page-actions>
 
@@ -56,7 +57,7 @@
                     </td>
                     <td cms-table-column-actions>
                         <a href="#/{{::role.roleId}}" class="btn-icon" title="Edit">
-                            <i class="fa fa-pencil"></i>
+                            <i class="fa fa-pencil-square-o"></i>
                         </a>
                     </td>
                 </tr>

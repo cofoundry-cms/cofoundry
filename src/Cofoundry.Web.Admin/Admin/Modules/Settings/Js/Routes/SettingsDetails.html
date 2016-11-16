@@ -7,7 +7,8 @@
 
     <!-- Default toolbar -->
     <cms-page-actions ng-show="!vm.editMode">
-        <cms-button cms-text="Edit"
+        <cms-button class="main-cta"
+                    cms-text="Edit"
                     ng-click="vm.edit()"
                     ng-show="!vm.editMode"
                     ng-disabled="vm.globalLoadState.isLoading"></cms-button>

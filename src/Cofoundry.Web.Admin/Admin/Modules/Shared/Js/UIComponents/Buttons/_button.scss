@@ -1,6 +1,6 @@
 ﻿%button {
-    @include transition(all .3s);
-    @include border-radius(30px);
+    @include transition(all .2s);
+    @include border-radius(3px);
     font-weight:$fontweight-regular;
     display:block;
     border:1px solid #b8b8b8;
