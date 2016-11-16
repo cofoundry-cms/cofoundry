@@ -207,7 +207,7 @@ footer a {
   width: -webkit-calc(100% - 228px);
   width: -moz-calc(100% - 228px);
   width: calc(100% - 228px);
-  padding: 25px 30px;
+  padding: 25px 0px;
   z-index: 1;
 }
 
@@ -280,7 +280,7 @@ footer a {
     width: -moz-calc(100% - 288px);
     width: calc(100% - 288px);
     left: 288px;
-    padding: 25px 40px;
+    padding: 25px 0px;
   }
 }
 /* line 1, ../../Sass/Core/_login.scss */
