@@ -365,6 +365,7 @@
     <Content Include="Admin\Modules\Shared\Js\DataServices\EntityVersionService.js" />
     <Content Include="Admin\Modules\Shared\Js\DataServices\ImageService.js" />
     <Content Include="Admin\Modules\Shared\Js\DataServices\LocaleService.js" />
+    <Content Include="Admin\Modules\Shared\Js\DataServices\LocalStorageService.js" />
     <Content Include="Admin\Modules\Shared\Js\DataServices\VimeoService.js" />
     <Content Include="Admin\Modules\Shared\Js\DataServices\YouTubeService.js" />
     <Content Include="Admin\Modules\Shared\Js\Filters\Bytes.js" />

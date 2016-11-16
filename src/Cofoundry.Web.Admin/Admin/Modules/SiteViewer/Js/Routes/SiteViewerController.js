@@ -4,6 +4,7 @@
     '_',
     'shared.LoadState',
     'shared.entityVersionModalDialogService',
+    'shared.localStorage',
     'siteViewer.modulePath',
     'siteViewer.options',
 function (
@@ -12,6 +13,7 @@ function (
     _,
     LoadState,
     entityVersionModalDialogService,
+    localStorageService,
     modulePath,
     options
     ) {
@@ -41,6 +43,16 @@ function (
         vm.siteViewerActive = true;
         vm.versionMenuActive = false;
         vm.viewOptionsMenuActive = false;
+
+        checkLocalStorage();
+    }
+
+    function checkLocalStorage() {
+        var displayMode = localStorageService.getValue('displayMode');
+
+        if (displayMode == null || displayMode == 'null') return;
+
+        switchDisplaySize(null, displayMode);
     }
 
     /* UI ACTIONS */
@@ -92,14 +104,11 @@ function (
         var list = document.getElementById('display-list'),
             links = list.getElementsByTagName('li');
 
-        if (e === null) {
-            targetLink = document.getElementById('display-default');
-        }
-        else if (e.target.tagName.toLowerCase() == 'span') {
+        if (e !== null && e.target.tagName.toLowerCase() == 'span') {
             targetLink = e.target.parentElement;
         }
         else {
-            targetLink = e.target;
+            targetLink = document.getElementById('display-' + displayClass);
         }
 
         for (var i = 0; i < links.length; i++) {
@@ -108,6 +117,8 @@ function (
 
         targetLink.classList.add('active');
         vm.displayClass = displayClass;
+
+        localStorageService.setValue('displayMode', vm.displayClass);
     }
 
     /* PRIVATE FUNCS */
