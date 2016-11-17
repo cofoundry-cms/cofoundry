@@ -89,14 +89,14 @@ function (
     }
 
     function toggleOpen() {
+        var wrapper = document.getElementById('wrapper');
         vm.siteViewerActive = !vm.siteViewerActive;
 
-        if (vm.displayClass === 'full' && vm.siteViewerActive === false) {
-            switchDisplaySize(null, 'full-height');
+        if (vm.siteViewerActive === false) {
+            wrapper.classList.add('down');
         }
-        
-        if (vm.displayClass === 'full-height' && vm.siteViewerActive === true) {
-            switchDisplaySize(null, 'full');
+        else {
+            wrapper.classList.remove('down');
         }
     }
 
