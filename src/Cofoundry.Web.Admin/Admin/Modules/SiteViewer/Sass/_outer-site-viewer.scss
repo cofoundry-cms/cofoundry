@@ -240,6 +240,7 @@ ul#deviceMenu li.iPadLandscape a {
 }
 
 .cofoundry-sv__section-popover-inner {
+    @include transform(translateX(-100%));
     @include border-radius(2px);
     background: #fff;
     border: 1px solid $color-darkgrey;
@@ -256,24 +257,23 @@ ul#deviceMenu li.iPadLandscape a {
 
 .cofoundry-sv__section-popover-inner h2 {
     font-weight: bold;
-    float: left;
     font-size: 90%;
     font-style: normal;
     height: 30px;
     line-height: 27px;
     margin: 0;
+    padding-left: 20px;
 }
 
 .cofoundry-sv__section-popover-inner a {
-    float: right;
     color: $color-darkgrey;
     overflow: hidden;
     white-space: nowrap;
     width: 19px;
-    margin-left:10px;
-    position:relative;
+    position:absolute;
     text-align:center;
-
+    left: 5px;
+        
     &:hover {
         color:$color-primary;
     }

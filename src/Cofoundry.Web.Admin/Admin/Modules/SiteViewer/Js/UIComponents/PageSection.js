@@ -54,6 +54,7 @@ function (
             scope.$watch('sectionAnchorElement', onAnchorChanged);
             scope.$watch('isSectionOver', setIsOver);
             scope.$watch('scrolled', onScroll);
+            scope.$watch('resized', onResize);
         }
 
         /* UI Actions */
@@ -126,16 +127,21 @@ function (
                 }
 
                 // popover hovers in the right hand corner of the element
-                var right = 2 + $window.innerWidth - (elementOffset.left + newAnchorElement[0].offsetWidth - iframeDoc.scrollLeft);
+                var left = (($window.innerWidth - siteFrameEl[0].clientWidth) / 2) + (elementOffset.left + newAnchorElement[0].offsetWidth);
 
                 scope.css = {
                     top: top + 'px',
-                    right: (right || 0) + 'px'
+                    left: (left || 0) + 'px'
                 };
 
                 scope.startScrollY = scope.currentScrollY;
                 scope.startY = top;
             }
+        }
+
+        function onResize(e) {
+            scope.isOver = false;
+            scope.sectionAnchorElement = '';
         }
 
         function onScroll(e) {
@@ -145,7 +151,7 @@ function (
             if (y) {
                 scope.css = {
                     top: y + 'px',
-                    right: scope.css.right
+                    left: scope.css.left
                 }
             }
         }

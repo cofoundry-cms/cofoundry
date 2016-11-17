@@ -4,7 +4,6 @@
      ng-mouseenter="setIsOver(true)"
      ng-mouseleave="setIsOver(false)">
     <div class="cofoundry-sv__section-popover-inner">
-        <h2>{{sectionName}}</h2>
         <a href=""
            class="popup"
            title="Add a new module"
@@ -12,6 +11,7 @@
            ng-click="addModule()">
             <i class="fa fa-plus-circle"></i>
         </a>
+        <h2>{{sectionName}}</h2>
     </div>
 
     <cms-page-section-module anchor-element="moduleAnchorElement"

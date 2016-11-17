@@ -42,6 +42,10 @@ function (
                     scope.$apply();
                 });
 
+                win.addEventListener('resize', function (e) {
+                    scope.resized = angular.element(this)[0].innerWidth;
+                });
+
                 if (pageLoadDeferred) {
                     pageLoadDeferred.resolve();
                 }

@@ -199,7 +199,7 @@ function (
                 }
 
                 // popover hovers in the left hand corner of the element
-                var left = 2 + elementOffset.left - iframeDoc.scrollLeft;
+                var left = (elementOffset.left - iframeDoc.scrollLeft) + (($window.innerWidth - siteFrameEl[0].clientWidth) / 2) + 2;
 
                 scope.css = {
                     top: top + 'px',
