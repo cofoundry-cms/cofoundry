@@ -58,6 +58,11 @@ function (
     function initEditableContent(scope, doc, el) {
         var popover = new PageSectionPopOver(scope, el);
         addMouseEvents(doc, popover);
+
+        // Add class to iFrame doc. Used for admin UI 
+        angular.element(doc)
+            .find('html')
+            .addClass(options.isCustomEntityRoute ? 'cofoundry-editmode__custom-entity' : 'cofoundry-editmode__page');
     }
 
     /**

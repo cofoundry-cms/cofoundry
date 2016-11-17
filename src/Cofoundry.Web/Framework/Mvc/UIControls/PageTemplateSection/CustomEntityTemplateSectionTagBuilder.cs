@@ -176,7 +176,7 @@ namespace Cofoundry.Web
             attrs.Add("data-cms-page-section-name", pageSection.Name);
             attrs.Add("data-cms-custom-entity-section", string.Empty);
 
-            attrs.Add("class", "cms-section");
+            attrs.Add("class", "cofoundry__sv-section");
             
             if (_allowMultipleModules)
             {

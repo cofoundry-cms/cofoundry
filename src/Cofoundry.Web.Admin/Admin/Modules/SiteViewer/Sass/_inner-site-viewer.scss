@@ -10,6 +10,17 @@
 /*\*/
 * html .cofoundry__sv-section {
     height: 30px;
+    opacity: 1;
+}
+
+.cofoundry-editmode__custom-entity .cofoundry__sv-section[data-cms-page-section] {
+    cursor: not-allowed;
+    opacity: .5;
+}
+
+.cofoundry-editmode__page .cofoundry__sv-section[data-cms-custom-entity-section] {
+    cursor: not-allowed;
+    opacity: .5;
 }
 
 /* Editable Section/Module Hover */
