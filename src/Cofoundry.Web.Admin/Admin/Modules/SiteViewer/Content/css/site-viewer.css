@@ -841,8 +841,8 @@ body {
 }
 
 /* line 71, ../../Sass/_outer-site-viewer.scss */
-#wrapper.full-height #siteFrameContainer {
-  padding-bottom: 0px;
+#wrapper.down #siteFrameContainer {
+  padding-bottom: 0px !important;
 }
 
 /* line 75, ../../Sass/_outer-site-viewer.scss */

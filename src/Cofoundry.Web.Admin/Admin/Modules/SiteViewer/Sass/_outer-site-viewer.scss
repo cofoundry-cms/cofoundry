@@ -68,8 +68,8 @@ body {
     }
 }
 
-#wrapper.full-height #siteFrameContainer {
-    padding-bottom: 0px;
+#wrapper.down #siteFrameContainer {
+    padding-bottom: 0px !important;
 }
 
 #wrapper.device #siteFrameContainer {
