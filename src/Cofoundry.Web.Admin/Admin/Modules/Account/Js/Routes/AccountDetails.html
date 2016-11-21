@@ -8,13 +8,15 @@
     <!-- Default toolbar -->
     <cms-page-actions ng-show="!vm.editMode">
 
-        <cms-button-link cms-text="Change Password"
-                         href="#/change-password"></cms-button-link>
-
-        <cms-button cms-text="Edit"
+        <cms-button class="main-cta"
+                    cms-text="Edit"
                     ng-click="vm.edit()"
                     ng-show="!vm.editMode"
                     ng-disabled="vm.globalLoadState.isLoading"></cms-button>
+
+        <cms-button-link cms-text="Change Password"
+                         href="#/change-password"></cms-button-link>
+
 
     </cms-page-actions>
 

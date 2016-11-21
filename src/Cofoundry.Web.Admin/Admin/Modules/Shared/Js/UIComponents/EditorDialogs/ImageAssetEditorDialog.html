@@ -1,0 +1,53 @@
+﻿<cms-modal-dialog-container cms-modal-size="large">
+
+    <cms-modal-dialog-header>
+        Insert an image
+    </cms-modal-dialog-header>
+
+    <cms-form cms-name="editorDialogForm"
+              ng-submit="vm.onInsert()">
+
+        <cms-page-actions>
+
+            <cms-button cms-text="Insert" ng-click="onInsert()" class="main-cta"></cms-button>
+            <cms-button cms-text="Cancel" ng-click="onCancel()"></cms-button>
+
+        </cms-page-actions>
+
+        <cms-page-body cms-content-type="form">
+
+            <cms-form-status></cms-form-status>
+
+            <!--MAIN-->
+            <cms-form-section cms-title="">
+
+                <cms-form-field-image-asset cms-title="Image"
+                                            cms-load-state="saveLoadState"
+                                            cms-asset="command.imageAsset"
+                                            cms-model="command.imageAssetId"
+                                            cms-update-asset="true"
+                                            required
+                                            cms-description=""></cms-form-field-image-asset>
+
+                <cms-form-field-text cms-title="Alt tag"
+                                     cms-model="command.altTag"
+                                     cms-description="A sentence that best describes the image."
+                                     maxlength="255"></cms-form-field-text>
+
+                <cms-form-field-text cms-title="Width"
+                                     cms-model="command.width"
+                                     cms-description="Specify a width in px or %. If you would like this image to scale with the page size, enter a width of 100% and height of auto."
+                                     maxlength="10"></cms-form-field-text>
+
+                <cms-form-field-text cms-title="Height"
+                                     cms-model="command.height"
+                                     cms-description="Enter auto in here if you would like the height to respect the ratio"
+                                     maxlength="10"></cms-form-field-text>
+
+            </cms-form-section>
+
+        </cms-page-body>
+
+    </cms-form>
+
+</cms-modal-dialog-container>

@@ -26,12 +26,13 @@
 <!-- Default toolbar -->
 <cms-page-actions>
 
-    <cms-pager cms-result="vm.result"
-               cms-query="vm.query"></cms-pager>
-
-    <cms-button-link cms-text="Create"
+    <cms-button-link class="main-cta"
+                     cms-text="Create"
                      cms-icon="plus"
                      cms-href="{{::vm.urlLibrary.userNew(vm.userArea)}}"></cms-button-link>
+
+    <cms-pager cms-result="vm.result"
+               cms-query="vm.query"></cms-pager>
 
 </cms-page-actions>
 
@@ -57,8 +58,6 @@
                 <tr ng-repeat="user in vm.result.items">
                     <td>
                         <cms-user-link cms-user="::user"></cms-user-link>
-                        <br />
-                        <a href="{{::vm.urlLibrary.userDetails(user.userArea, user.userId)}}">{{::user.email}}</a>
                     </td>
                     <td>
                         <a href="{{::vm.urlLibrary.roleDetails(user.role.roleId)}}">{{::user.role.title}}</a>
@@ -72,7 +71,7 @@
                     </td>
                     <td cms-table-column-actions>
                         <a href="{{::vm.urlLibrary.userDetails(user.userArea, user.userId)}}" class="btn-icon" title="Edit">
-                            <i class="fa fa-pencil"></i>
+                            <i class="fa fa-pencil-square-o"></i>
                         </a>
                     </td>
                 </tr>

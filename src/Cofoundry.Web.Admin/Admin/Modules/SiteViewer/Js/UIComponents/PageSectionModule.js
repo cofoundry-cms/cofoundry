@@ -199,7 +199,7 @@ function (
                 }
 
                 // popover hovers in the left hand corner of the element
-                var left = -6 + elementOffset.left - iframeDoc.scrollLeft;
+                var left = (elementOffset.left - iframeDoc.scrollLeft) + (($window.innerWidth - siteFrameEl[0].clientWidth) / 2) + 2;
 
                 scope.css = {
                     top: top + 'px',
@@ -211,7 +211,7 @@ function (
 
                 // Wait for next digest cycle and check the position of the element
                 $timeout(function () {
-                    var popoverEl = document.getElementById('cms-module-popover'),
+                    var popoverEl = document.getElementById('cofoundry-sv__module-popover'),
                         popoverElHeight, popoverElHeight;
 
                     // If moving quickly the element might have been removed
@@ -247,7 +247,7 @@ function (
         }
 
         function setAnchorOver(anchorEl, isOver) {
-            if (anchorEl) anchorEl.toggleClass('cms-hover-module', isOver);
+            if (anchorEl) anchorEl.toggleClass('cofoundry-sv__hover-module', isOver);
         }
 
         function updateSectionParams() {

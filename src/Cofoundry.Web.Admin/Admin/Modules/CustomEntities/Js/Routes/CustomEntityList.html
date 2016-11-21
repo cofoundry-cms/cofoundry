@@ -25,16 +25,17 @@
 
 <!--ACTIONS-->
 <cms-page-actions>
-    <cms-pager cms-result="vm.result"
-               cms-query="vm.query"></cms-pager>
-
-    <cms-button-link cms-text="Create"
+    <cms-button-link class="main-cta"
+                     cms-text="Create"
                      cms-icon="plus"
                      cms-href="#/new"></cms-button-link>
 
     <cms-button cms-text="Change Ordering"
                 ng-click="vm.changeOrdering()"
                 ng-hide="vm.options.ordering === 'None'"></cms-button>
+
+    <cms-pager cms-result="vm.result"
+               cms-query="vm.query"></cms-pager>
 
 </cms-page-actions>
 
@@ -63,8 +64,10 @@
                         <span ng-if="::entity.locale">{{ ::entity.locale.name }} ({{ ::entity.locale.ietfLanguageTag}})</span>
                     </td>
                     <td>
-                        <strong><a href="#/{{::entity.customEntityId}}">{{::entity.title}}</a></strong><br />
-                        <a ng-if="::entity.fullPath" href="{{::entity.fullPath}}">{{::entity.fullPath}}</a>
+                        <a href="#/{{::entity.customEntityId}}">{{::entity.title}}</a> 
+                        <span ng-if="entity.fullPath">
+                            ({{::entity.fullPath}})
+                        </span>
                     </td>
                     <td ng-if="::entity.isPublished">
                         Published
@@ -78,7 +81,7 @@
                     </td>
                     <td cms-table-column-actions>
                         <a href="#/{{::entity.customEntityId}}" class="btn-icon" title="Edit">
-                            <i class="fa fa-pencil"></i>
+                            <i class="fa fa-pencil-square-o"></i>
                         </a>
                         <a ng-if="::entity.fullPath" href="{{::entity.fullPath}}" class="btn-icon" title="View">
                             <i class="fa fa-external-link"></i>

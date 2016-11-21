@@ -1,0 +1,47 @@
+.cofoundry-sv__tabs {
+    position: relative;
+    font-size: 11px;
+}
+
+.cofoundry-sv__tabs > ul {
+    margin: 0 0 15px 0;
+    padding: 0;
+    list-style: none;
+    text-align: center;
+}
+
+.cofoundry-sv__tab-item {
+    border-radius: 15px;
+    padding: 7px 12px;
+    display: inline-block;
+
+    color: #4a4e56;
+    text-decoration: none;
+    cursor: pointer;
+
+    &.active {
+        background-color: #1a1d22;
+        color: #fff;
+        cursor: auto;
+
+        span {
+            background-color: #fff;    
+        }
+    }
+
+    span {
+        background-color: #4a4e56;
+        width: 10px;
+        height: 10px;
+        display: inline-block;
+        margin-right: 5px;  
+    }
+}
+
+.cofoundry-sv__tab-content {
+    display: none;
+
+    &.active {
+        display: block;        
+    }
+}

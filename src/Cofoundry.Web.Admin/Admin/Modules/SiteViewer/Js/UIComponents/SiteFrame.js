@@ -42,6 +42,10 @@ function (
                     scope.$apply();
                 });
 
+                win.addEventListener('resize', function (e) {
+                    scope.resized = angular.element(this)[0].innerWidth;
+                });
+
                 if (pageLoadDeferred) {
                     pageLoadDeferred.resolve();
                 }
@@ -54,6 +58,11 @@ function (
     function initEditableContent(scope, doc, el) {
         var popover = new PageSectionPopOver(scope, el);
         addMouseEvents(doc, popover);
+
+        // Add class to iFrame doc. Used for admin UI 
+        angular.element(doc)
+            .find('html')
+            .addClass(options.isCustomEntityRoute ? 'cofoundry-editmode__custom-entity' : 'cofoundry-editmode__page');
     }
 
     /**
@@ -151,11 +160,11 @@ function (
         function reloadElementBySelector(selector) {
             var oldSectionElement = siteFrameEl[0].contentDocument.querySelector(selector),
                 loadingNode = oldSectionElement.cloneNode(true),
-                hoveredModule = loadingNode.querySelector('.cms-hover-module');
+                hoveredModule = loadingNode.querySelector('.cofoundry-sv__hover-module');
 
             // set loading, clone the node to remove event handlers
-            loadingNode.className += ' cms-section-loading';
-            if (hoveredModule) hoveredModule.className = hoveredModule.className.replace('cms-hover-module', '');
+            loadingNode.className += ' cofoundry-sv__section-loading';
+            if (hoveredModule) hoveredModule.className = hoveredModule.className.replace('cofoundry-sv__hover-module', '');
             oldSectionElement.parentNode.replaceChild(loadingNode, oldSectionElement);
 
             return getPageContent().then(function (content) {

@@ -48,10 +48,13 @@ function (
 
             scope.setIsOver = setIsOver;
             scope.addModule = addModule;
+            scope.startScrollY = 0;
+            scope.currentScrollY = 0;
 
             scope.$watch('sectionAnchorElement', onAnchorChanged);
             scope.$watch('isSectionOver', setIsOver);
             scope.$watch('scrolled', onScroll);
+            scope.$watch('resized', onResize);
         }
 
         /* UI Actions */
@@ -77,7 +80,6 @@ function (
         }
 
         function setIsOver(isOver) {
-
             if (isOver) {
                 if (overTimer) {
                     $timeout.cancel(overTimer);
@@ -125,23 +127,31 @@ function (
                 }
 
                 // popover hovers in the right hand corner of the element
-                var right = -8 + $window.innerWidth - (elementOffset.left + newAnchorElement[0].offsetWidth - iframeDoc.scrollLeft);
+                var left = (($window.innerWidth - siteFrameEl[0].clientWidth) / 2) + (elementOffset.left + newAnchorElement[0].offsetWidth);
 
                 scope.css = {
                     top: top + 'px',
-                    right: (right || 0) + 'px'
+                    left: (left || 0) + 'px'
                 };
 
+                scope.startScrollY = scope.currentScrollY;
                 scope.startY = top;
             }
         }
 
+        function onResize(e) {
+            scope.isOver = false;
+            scope.sectionAnchorElement = '';
+        }
+
         function onScroll(e) {
-            var y = scope.startY - e;
+            scope.currentScrollY = (e || 0);
+            var y = scope.startY + (scope.startScrollY - e);
+            if (y < 0) y = 0;
             if (y) {
                 scope.css = {
                     top: y + 'px',
-                    right: scope.css.right
+                    left: scope.css.left
                 }
             }
         }
@@ -155,7 +165,7 @@ function (
         }
 
         function setAnchorOver(anchorEl, isOver) {
-            if (anchorEl) anchorEl.toggleClass('cms-hover-section', isOver);
+            if (anchorEl) anchorEl.toggleClass('cofoundry-sv__hover-section', isOver);
         }
     }
 

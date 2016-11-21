@@ -1,0 +1,59 @@
+.cofoundry-sv__mode {
+    height: 100%;
+    padding: 5px;
+    float: right;
+}
+
+.cofoundry-sv__mode__button {
+    @include border-radius(4px);
+    float: left;
+    margin-right:4px;
+    background-color: $color-offblack;
+    height: 100%;
+    width: 92px;
+    border: 0;
+    color: #A6ACA9;
+    text-transform: uppercase;
+    font-size: 10px;
+    vertical-align:top;
+    text-align:center;
+    text-decoration: none;
+
+    span {
+        margin: 0 auto;
+        display: block;
+        text-align: center;
+        text-decoration: none;
+        font-size: 2em;
+        padding: 8px 0 2px;
+    }
+
+    &:last-of-type {
+        margin-right:0;
+    }
+
+    &:hover,
+    &.active,
+    &.JS-active {
+        background-color: $color-primary;
+        color: #fff;
+        cursor: pointer;
+    }
+}
+
+.cofoundry-sv__mode__button__group {
+    .cofoundry-sv__mode__button {
+        margin-right:0;
+        border-right:1px solid $color-darkgrey;
+    }
+
+    .cofoundry-sv__mode__button:first-of-type {
+        @include border-radius(4px 0 0 4px);
+    }
+
+    .cofoundry-sv__mode__button:last-of-type {
+        @include border-radius(0 4px 4px 0);
+        border-right:none;
+        margin-right:4px;
+    }
+}

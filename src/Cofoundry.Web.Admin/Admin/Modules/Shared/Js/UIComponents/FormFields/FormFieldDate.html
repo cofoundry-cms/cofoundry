@@ -10,8 +10,8 @@
                    ng-disabled="vm.disabled"
                    ng-change="vm.onChange()"
                    type="date" />
-
-            <span ng-hide="vm.formScope.editMode">{{vm.model | date : fullDate}}</span>
+            <div ng-hide="vm.formScope.editMode" ng-if="!vm.model" class="text-block-display-value">None</div>
+            <div ng-hide="vm.formScope.editMode" ng-if="vm.model" class="text-block-display-value">{{vm.model | date : fullDate}}</div>
             <cms-form-field-validation-summary></cms-form-field-validation-summary>
         </div>
     </cms-field>

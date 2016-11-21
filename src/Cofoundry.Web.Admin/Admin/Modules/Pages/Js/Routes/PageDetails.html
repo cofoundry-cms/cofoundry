@@ -6,9 +6,6 @@
           ng-submit="vm.save()"
           cms-loading="vm.formLoadState.isLoading">
 
-    <cms-page-sub-header>
-        Last saved {{vm.page.auditData.createDate}}
-    </cms-page-sub-header>
     <!-- Default toolbar -->
     <cms-page-actions ng-show="!vm.editMode">
         <cms-button cms-text="Edit"

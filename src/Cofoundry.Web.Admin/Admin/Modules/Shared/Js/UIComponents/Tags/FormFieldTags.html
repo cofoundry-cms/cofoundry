@@ -13,6 +13,7 @@
             <span ng-if="!vm.formScope.editMode">
                 <cms-tag-list cms-tags="vm.model"></cms-tag-list>
             </span>
+            <div ng-hide="vm.formScope.editMode" ng-if="!vm.model.length" class="text-block-display-value">None</div>
             <cms-form-field-validation-summary></cms-form-field-validation-summary>
         </div>
     </cms-field>

@@ -7,15 +7,16 @@
 
     <cms-page-actions>
 
+        <cms-button class="main-cta"
+                    cms-text="{{::vm.saveButtonText}}"
+                    cms-loading="vm.saveAndPublishLoadState.isLoading"
+                    ng-disabled="vm.mainForm.$invalid"
+                    ng-click="vm.saveAndPublish()"></cms-button>
+
         <cms-button-submit cms-text="Save Draft"
                            cms-loading="vm.saveLoadState.isLoading"
                            ng-if="::!vm.options.autoPublish"
                            ng-disabled="vm.mainForm.$invalid"></cms-button-submit>
-
-        <cms-button cms-text="{{::vm.saveButtonText}}"
-                    cms-loading="vm.saveAndPublishLoadState.isLoading"
-                    ng-disabled="vm.mainForm.$invalid"
-                    ng-click="vm.saveAndPublish()"></cms-button>
 
         <cms-button cms-text="Cancel"
                     ng-click="vm.cancel()"></cms-button>

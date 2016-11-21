@@ -1,9 +1,25 @@
-/*!
-* This is used to style the siteviewer
-*/
+@import "sassutils/functions";
+@import "sassutils/mixins";
+@import "sassutils/vendor";
+
+// // Block styles
+@import "blocks/preview-menu";
+@import "blocks/mini-menu";
+@import "blocks/versions";
+@import "blocks/navmenu";
+@import "blocks/tabs";
+
+// Element styles
+@import "elements/page-details";
+@import "elements/mode";
+@import "elements/options";
+@import "elements/settings";
+@import "elements/edit-mode";
+@import "elements/info-list";
 
 html, body {
     height: 100%;
+    overflow:hidden;
 }
 
 body {
@@ -11,100 +27,7 @@ body {
     -webkit-box-sizing: border-box;
     -ms-box-sizing: border-box;
     box-sizing: border-box;
-    padding: 0 0 60px 0;
-}
-
-.site-viewer-actions {
-    font-family:$fontstack-default;
-    font-size: 65%;
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    background-color:$color-midgrey;
-    height: 60px;
-    //border-top:2px solid $color-primary;
-
-    .actions-left {
-        position: absolute;
-        left: 0;
-        right: 70%;
-        bottom: 0;
-        top: 0;
-        z-index: 10;
-    }
-
-    .actions-right {
-        position: absolute;
-        right: 0;
-        left: 70%;
-        bottom: 0;
-        top: 0;
-        text-align:right;
-        z-index: 10;
-    }
-
-    .actions-centre {
-        position: absolute;
-        left: 0;
-        right: 0;
-        z-index: 2;
-        text-align: center;
-    }
-
-    .action {
-        @include transition(all .3s);
-        display: inline-block;
-        height: 63px;
-        border-top:3px solid $color-midgrey;
-        border-bottom:3px solid $color-midgrey;
-        padding: 10px 20px 0;
-        color:#939191;
-        text-transform: uppercase;
-        text-decoration: none;
-        //border-left:1px solid $color-darkgrey;
-        text-align:center;
-        position:relative;
-
-        &:before {
-            content:'';
-            position:absolute;
-            width:1px;
-            height:70px;
-            left:0;
-            top:-3px;
-            //background-color:$color-darkgrey;
-        }
-
-        &:last-of-type {
-            //border-right:1px solid $color-darkgrey;
-        }
-
-        &:hover {
-            background-color:$color-darkgrey;
-            border-top:3px solid $color-primary;
-            color:#fff;
-        }
-
-        &.active {
-            background-color:$color-primary;
-            border-top:3px solid $color-primary;
-            color:#fff;
-        }
-
-        i.fa {
-            display:block;
-            margin-bottom:5px;
-            font-size:1.8em;
-        }
-    }
-
-    .actions-centre {
-        .action {
-            border-left:none;
-            width: 125px;
-        }
-    }
+    padding: 0;
 }
 
 #statusBar {
@@ -127,8 +50,9 @@ body {
 #siteFrameContainer {
     height: 100%;
     width: 100%;
+    padding-bottom: 70px;
 
-    .cms-module-highlight {
+    .cofoundry-sv__module-highlight {
         outline:1px dotted red;
 	    position:absolute;
 	    z-index:1;
@@ -136,12 +60,16 @@ body {
 	    background:rgba(0,0,0,.2);
     }
 
-    .cms-module-controls {
+    .cofoundry-sv__module-controls {
         position:absolute;
 	    background:red;
 	    z-index:2;
 	    height:30px;
     }
+}
+
+#wrapper.down #siteFrameContainer {
+    padding-bottom: 0px !important;
 }
 
 #wrapper.device #siteFrameContainer {
@@ -166,31 +94,43 @@ body {
 }
 
 #wrapper.iPhonePortrait #siteFrameContainer {
-    background: url(img/devices/iPhone3Portrait.png) no-repeat left top;
-    height: 480px;
-    padding: 120px 33px 119px 36px;
     width: 320px;
-}
-
-#wrapper.iPhoneLandscape #siteFrameContainer {
-    background: url(img/devices/iPhone3Landscape.png) no-repeat left top;
-    height: 320px;
-    padding: 36px 120px 33px 119px;
-    width: 480px;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    border: 1px solid #eaeaea;
+    box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.25);
 }
 
 #wrapper.iPadPortrait #siteFrameContainer {
-    background: url(img/devices/iPadPortrait.png) no-repeat left top;
-    height: 1024px;
-    padding: 127px 114px 125px 115px;
     width: 768px;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    border: 1px solid #eaeaea;
+    box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.25);
 }
 
 #wrapper.iPadLandscape #siteFrameContainer {
-    background: url(img/devices/iPadLandscape.png) no-repeat left top;
-    height: 768px;
-    padding: 115px 128px 115px 124px;
     width: 1024px;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    border: 1px solid #eaeaea;
+    box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.25);
+}
+
+#wrapper.desktop #siteFrameContainer {
+    width: 1024px;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    border: 1px solid #eaeaea;
+    box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.25);
 }
 
 
@@ -207,6 +147,14 @@ iframe#siteFrame {
     display: none;
 }
 
+#wrapper.device iframe#siteFrame html {
+    overflow-x: hidden;
+}
+
+#wrapper.device iframe#siteFrame html::-webkit-scrollbar {
+    display: none;
+}
+
 
 
 /* #### Device menu #### */
@@ -219,166 +167,164 @@ ul#deviceMenu {
     position: fixed;
 }
 
-    ul#deviceMenu li {
-        border-right: 1px solid #970D31;
-        display: block;
-        float: left;
-        list-style: none;
+ul#deviceMenu li {
+    border-right: 1px solid #970D31;
+    display: block;
+    float: left;
+    list-style: none;
+}
+
+ul#deviceMenu li a {
+    background: $color-primary url(img/icons.png) no-repeat;
+    display: block;
+    height: 30px;
+    overflow: hidden;
+    text-indent: 100%;
+    white-space: nowrap;
+    width: 30px;
+}
+
+ul#deviceMenu li.active, ul#deviceMenu li:hover {
+    background-color: #8e8d8d;
+    -webkit-box-shadow: inset 0 0 3px 1px rgba(0, 0, 0, .7);
+    -moz-box-shadow: inset 0 0 3px 1px rgba(0, 0, 0, .7);
+    box-shadow: inset 0 0 3px 1px rgba(0, 0, 0, .7);
+    background: #8e8d8d;
+    background: -moz-linear-gradient(top, #8e8d8d 0%, #4d4c4c 100%);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#8e8d8d), color-stop(100%,#4d4c4c));
+    background: -webkit-linear-gradient(top, #8e8d8d 0%,#4d4c4c 100%);
+    background: -o-linear-gradient(top, #8e8d8d 0%,#4d4c4c 100%);
+    background: -ms-linear-gradient(top, #8e8d8d 0%,#4d4c4c 100%);
+    background: linear-gradient(to bottom, #8e8d8d 0%,#4d4c4c 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#8e8d8d', endColorstr='#4d4c4c',GradientType=0 );
+}
+
+    ul#deviceMenu li.active a, ul#deviceMenu li a:hover {
+        background-color: transparent;
     }
 
-        ul#deviceMenu li a {
-            background: $color-primary url(img/icons.png) no-repeat;
-            display: block;
-            height: 30px;
-            overflow: hidden;
-            text-indent: 100%;
-            white-space: nowrap;
-            width: 30px;
-        }
+ul#deviceMenu li.auto a {
+    background-position: -5px -725px;
+}
 
-        ul#deviceMenu li.active, ul#deviceMenu li:hover {
-            background-color: #8e8d8d;
-            -webkit-box-shadow: inset 0 0 3px 1px rgba(0, 0, 0, .7);
-            -moz-box-shadow: inset 0 0 3px 1px rgba(0, 0, 0, .7);
-            box-shadow: inset 0 0 3px 1px rgba(0, 0, 0, .7);
-            background: #8e8d8d;
-            background: -moz-linear-gradient(top, #8e8d8d 0%, #4d4c4c 100%);
-            background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#8e8d8d), color-stop(100%,#4d4c4c));
-            background: -webkit-linear-gradient(top, #8e8d8d 0%,#4d4c4c 100%);
-            background: -o-linear-gradient(top, #8e8d8d 0%,#4d4c4c 100%);
-            background: -ms-linear-gradient(top, #8e8d8d 0%,#4d4c4c 100%);
-            background: linear-gradient(to bottom, #8e8d8d 0%,#4d4c4c 100%);
-            filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#8e8d8d', endColorstr='#4d4c4c',GradientType=0 );
-        }
+ul#deviceMenu li.iPhonePortrait a {
+    background-position: -5px -565px;
+}
 
-            ul#deviceMenu li.active a, ul#deviceMenu li a:hover {
-                background-color: transparent;
-            }
+ul#deviceMenu li.iPhoneLandscape a {
+    background-position: -5px -605px;
+}
 
-        ul#deviceMenu li.auto a {
-            background-position: -5px -725px;
-        }
+ul#deviceMenu li.iPadPortrait a {
+    background-position: -5px -645px;
+}
 
-        ul#deviceMenu li.iPhonePortrait a {
-            background-position: -5px -565px;
-        }
-
-        ul#deviceMenu li.iPhoneLandscape a {
-            background-position: -5px -605px;
-        }
-
-        ul#deviceMenu li.iPadPortrait a {
-            background-position: -5px -645px;
-        }
-
-        ul#deviceMenu li.iPadLandscape a {
-            background-position: -5px -685px;
-        }
+ul#deviceMenu li.iPadLandscape a {
+    background-position: -5px -685px;
+}
 
 
 /* #### Hovering #### */
-.section-popover-container, .module-popover-container {
+.cofoundry-sv__section-popover-container, .cofoundry-sv__module-popover-container {
     font-family:$fontstack-default;
     font-size:85%;
     position: absolute;
     border-radius: 4px;
     -webkit-border-radius: 4px;
     -moz-border-radius: 4px;
-    -webkit-box-shadow: 0px 15px 32px rgba(1, 0, 0, 0.75);
-    -moz-box-shadow: 0px 15px 32px rgba(1, 0, 0, 0.75);
-    box-shadow: 0px 15px 32px rgba(1, 0, 0, 0.75);
 }
 
 
 /* #### Section hovering #### */
-.section-popover-container {
+.cofoundry-sv__section-popover-container {
 }
 
-    .section-popover-inner {
-        background: #585858;
-        color: #fff;
-        height: 30px;
-        line-height: 30px;
-        overflow: hidden;
-        padding: 0 10px;
-        position: relative;
-        text-transform: uppercase;
-        white-space: nowrap;
-    }
+.cofoundry-sv__section-popover-inner {
+    @include transform(translateX(-100%));
+    @include border-radius(2px);
+    background: #fff;
+    border: 1px solid $color-darkgrey;
+    border-left:3px solid $color-primary;
+    color: $color-darkgrey;
+    height: 30px;
+    line-height: 30px;
+    overflow: hidden;
+    padding: 0 10px;
+    position: relative;
+    text-transform: uppercase;
+    white-space: nowrap;
+}
 
-    .section-popover-inner h2 {
-        font-weight: normal;
-        float: left;
-        font-size: 90%;
-        font-style: normal;
-        height: 30px;
-        line-height: 30px;
-        margin: 0;
-    }
+.cofoundry-sv__section-popover-inner h2 {
+    font-weight: bold;
+    font-size: 90%;
+    font-style: normal;
+    height: 30px;
+    line-height: 27px;
+    margin: 0;
+    padding-left: 20px;
+}
 
-    .section-popover-inner a {
-        float: right;
-        color: #939191;
-        overflow: hidden;
-        white-space: nowrap;
-        width: 19px;
-        margin-left:10px;
-        position:relative;
-        text-align:center;
-
-        &:hover {
-            color:#fff;
-        }
+.cofoundry-sv__section-popover-inner a {
+    color: $color-darkgrey;
+    overflow: hidden;
+    white-space: nowrap;
+    width: 19px;
+    position:absolute;
+    text-align:center;
+    left: 5px;
+        
+    &:hover {
+        color:$color-primary;
     }
+}
 
 
 
 /* #### Module hovering #### */
-.module-popover-container {
+.cofoundry-sv__module-popover-container {
     position: fixed;
 }
 
-    .module-popover-container ul {
-        background: #4d4d4d;
-        display: block;
-        margin: 0px;
-        padding: 0px;
+.cofoundry-sv__module-popover-container ul {
+    @include border-radius(2px);
+    border: 1px solid $color-darkgrey;
+    border-top:3px solid $color-primary;
+    background:#fff;
+    display: block;
+    margin: 0px;
+    padding: 0px;
+}
+
+.cofoundry-sv__module-popover-container li:not(:last-of-type) {
+    border: 1px solid $color-lightgrey;
+    border-width: 0 0 1px 0;
+    display: block;
+}
+
+.cofoundry-sv__module-popover-container li a {
+    @include transition(all .3s);
+    background-position: center center;
+    display: block;
+    height: 32px;
+    color: $color-darkgrey;
+    width: 34px;
+    padding-top:7px;
+    text-align:center;
+    font-size:1.1em;
+
+    &:hover {
+        color:$color-primary;
     }
+}
 
-    .module-popover-container li {
-        border: 1px solid #585858;
-        border-width: 0 0 1px 0;
-        display: block;
-    }
-
-        .module-popover-container li a {
-            @include transition(all .3s);
-            background-position: center center;
-            display: block;
-            height: 32px;
-            color:#939191;
-            width: 34px;
-            padding-top:7px;
-            text-align:center;
-            font-size:1.1em;
-
-            &:hover {
-                color:#fff;
-            }
-        }
-
-            .module-popover-container .disabled a {
-                cursor: default;
-                opacity: 0.4;
-                -khtml-opacity: 0.4;
-                -moz-opacity: 0.4;
-                -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=40)";
-                filter: alpha(opacity=40);
-            }
-
-.module-popover-area {
-    border:1px solid red;
-    min-height:50px;
+.cofoundry-sv__module-popover-container .disabled a {
+    cursor: default;
+    opacity: 0.4;
+    -khtml-opacity: 0.4;
+    -moz-opacity: 0.4;
+    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=40)";
+    filter: alpha(opacity=40);
 }
 
 /* #### Footer #### */

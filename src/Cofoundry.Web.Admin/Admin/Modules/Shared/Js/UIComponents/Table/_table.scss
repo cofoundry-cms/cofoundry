@@ -24,12 +24,13 @@
 }
 
 .table-wrap {
-    @include border-radius(3px);
-    border: 1px solid #d2d2d2;
     margin-bottom: 10px;
-    padding:1px;
     border-top: 3px solid $color-primary;
 	position:relative;
+
+    .control-group-area & {
+        border:1px solid $color-lightgrey!important;
+    }
 }
 
 .table {
@@ -45,7 +46,8 @@
 
     thead tr {
         th {
-            padding:10px;
+            padding:20px 10px;
+            text-transform:uppercase;
 
             &.actions {
                 text-indent:-2000px;

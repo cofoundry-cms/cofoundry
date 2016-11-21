@@ -2,7 +2,6 @@
 <cms-page-header cms-title="Pages"></cms-page-header>
 
 <cms-page-sub-header>
-    <a href="">Site root</a> /
     <cms-page-header-buttons>
 
         <a class="btn-icon" cms-text="Filter"
@@ -45,13 +44,14 @@
 
 <cms-page-actions>
 
+    <cms-button-link class="main-cta" 
+                     cms-text="Create"
+                     cms-icon="plus"
+                     cms-href="#/new"></cms-button-link>
+
     <!--RESULTS-->
     <cms-pager cms-result="vm.result"
                cms-query="vm.query"></cms-pager>
-
-    <cms-button-link cms-text="Create"
-                     cms-icon="plus"
-                     cms-href="#/new"></cms-button-link>
 
 </cms-page-actions>
 
@@ -61,7 +61,6 @@
         <table>
             <thead>
                 <tr>
-                    <th>Type</th>
                     <th>Name</th>
                     <!--<th>Market</th>-->
                     <!--<th>Tags</th>-->
@@ -75,15 +74,8 @@
                     <td colspan="100" class="empty">Sorry, no pages could be found.</td>
                 </tr>
                 <tr ng-repeat="page in vm.result.items">
-                    <td class="row-type">
-                        <a href="#/{{ page.pageId }}">
-                            <i class="fa fa-file-code-o"></i>
-                        </a>
-                    </td>
                     <td>
-                        <a href="#/{{ page.pageId }}">{{ page.title }}</a>
-                        <br />
-                        <a href="{{page.fullPath}}">{{page.fullPath}}</a>
+                        <a href="#/{{ page.pageId }}">{{ page.title }}</a> ({{page.fullPath}})
                     </td>
                     <!--<td>
                     <span ng-if="page.locale">{{ page.locale.name }} ({{ page.locale.ietfLanguageTag}})</span>
@@ -108,7 +100,7 @@
                          cms-title="Edit"></cms-button-icon>-->
 
                         <a href="#/{{ page.pageId }}" class="btn-icon" title="Edit">
-                            <i class="fa fa-pencil"></i>
+                            <i class="fa fa-pencil-square-o"></i>
                         </a>
                         <a href="{{page.fullPath}}" class="btn-icon" title="Browse to page" target="_blank">
                             <i class="fa fa-external-link"></i>

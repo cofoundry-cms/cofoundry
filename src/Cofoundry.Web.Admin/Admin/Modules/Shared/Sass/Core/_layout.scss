@@ -50,7 +50,7 @@ footer {
     left:$nav-width-slim;
     top:0;
     @include calc(width, "100% - 228px");
-    padding:25px 30px;
+    padding:25px 0 25px 25px;
     z-index:1;
 }
 
@@ -118,6 +118,5 @@ footer {
     .content {
         @include calc(width, "100% - 288px");
         left:$nav-width;
-        padding:25px 40px;
     }
 }

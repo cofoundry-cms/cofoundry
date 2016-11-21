@@ -7,40 +7,43 @@
 
     <cms-page-actions>
 
+        <cms-button-submit cms-text="Next" ng-disabled="!vm.selectedFile"></cms-button-submit>
+
         <cms-pager cms-result="vm.result"
                    cms-query="vm.query"></cms-pager>
 
-        <cms-button cms-text="Cancel" ng-click="vm.cancel()"></cms-button>
-
-        <cms-button-submit cms-text="Next" ng-disabled="!vm.selectedFile"></cms-button-submit>
     </cms-page-actions>
 
     <cms-page-body>
 
         <cms-table-container cms-loading="vm.gridLoadState.isLoading">
             <table>
-                <tr>
-                    <th>&nbsp;</th>
-                    <th>Name</th>
-                    <th>File Path</th>
-                </tr>
-                <tr ng-if="!vm.result.items.length">
-                    <td colspan="100" class="empty">Sorry, no unregistered template files could be found.</td>
-                </tr>
-                <tr ng-repeat="file in vm.result.items"
-                    ng-class="(vm.isFileSelected(file)) ? 'selected' : 'selectable'"
-                    ng-click="vm.onFileClick(file)"
-                    ng-dblclick="vm.onFileDblClick(file)">
-                    <th>
-                        <input type="radio" ng-model="vm.selectedFile" ng-value="file" />
-                    </th>
-                    <td>
-                        {{::file.name}}
-                    </td>
-                    <td>
-                        {{::file.fullPath}}
-                    </td>
-                </tr>
+                <thead>
+                    <tr>
+                        <th>&nbsp;</th>
+                        <th>Name</th>
+                        <th>File Path</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-if="!vm.result.items.length">
+                        <td colspan="100" class="empty">Sorry, no unregistered template files could be found.</td>
+                    </tr>
+                    <tr ng-repeat="file in vm.result.items"
+                        ng-class="(vm.isFileSelected(file)) ? 'selected' : 'selectable'"
+                        ng-click="vm.onFileClick(file)"
+                        ng-dblclick="vm.onFileDblClick(file)">
+                        <th>
+                            <input type="radio" ng-model="vm.selectedFile" ng-value="file" />
+                        </th>
+                        <td>
+                            {{::file.name}}
+                        </td>
+                        <td>
+                            {{::file.fullPath}}
+                        </td>
+                    </tr>
+                </tbody>
             </table>
         </cms-table-container>
 

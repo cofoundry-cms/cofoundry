@@ -9,20 +9,21 @@
     <!-- Default toolbar -->
     <cms-page-actions ng-if="!vm.editMode">
 
-        <cms-button cms-text="Edit"
+        <cms-button class="main-cta"
+                    cms-text="Edit"
                     ng-click="vm.edit()"
                     ng-show="!vm.editMode"
                     ng-disabled="vm.globalLoadState.isLoading"></cms-button>
-
-        <cms-button cms-text="Delete"
-                    ng-click="vm.deleteLayout()"
-                    ng-disabled="vm.pageTemplate.numPages || vm.editMode || vm.globalLoadState.isLoading"
-                    title="{{vm.deleteTitle}}"></cms-button>
 
         <cms-button cms-text="Re-scan File"
                     ng-click="vm.rescanFile()"
                     ng-disabled="vm.editMode || vm.globalLoadState.isLoading"
                     title="Re-scan the template file for updates."></cms-button>
+
+        <cms-button cms-text="Delete"
+                    ng-click="vm.deleteLayout()"
+                    ng-disabled="vm.pageTemplate.numPages || vm.editMode || vm.globalLoadState.isLoading"
+                    title="{{vm.deleteTitle}}"></cms-button>
 
     </cms-page-actions>
 

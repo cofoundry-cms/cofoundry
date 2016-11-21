@@ -1,24 +1,47 @@
-﻿/*!
+/*!
 * This is used to style the siteviewer
 */
-
 /* #### Use a minimum height for sections so that they can be hovered over when there are no modules in them #### */
-.cms-section, .cms-module-empty {
-    min-height: 30px;
+/* line 6, ../../Sass/_inner-site-viewer.scss */
+.cofoundry-sv__section, .cofoundry-sv__module-empty {
+  min-height: 30px;
 }
+
 /* for Internet Explorer */
 /*\*/
-* html .cms-section {
-    height: 30px;
+/* line 11, ../../Sass/_inner-site-viewer.scss */
+* html .cofoundry__sv-section {
+  height: 30px;
+  opacity: 1;
+}
+
+/* line 16, ../../Sass/_inner-site-viewer.scss */
+.cofoundry-editmode__custom-entity .cofoundry__sv-section[data-cms-page-section] {
+  cursor: not-allowed;
+  opacity: .5;
+}
+
+/* line 21, ../../Sass/_inner-site-viewer.scss */
+.cofoundry-editmode__page .cofoundry__sv-section[data-cms-custom-entity-section] {
+  cursor: not-allowed;
+  opacity: .5;
 }
 
 /* Editable Section/Module Hover */
-.cms-hover-module { box-shadow: 0px 0px 10px #0892d0!important; }
-.cms-hover-module.mask { box-shadow: 0px 0px 3000px 3000px rgba(0,0,0,.5)!important; }
+/* line 27, ../../Sass/_inner-site-viewer.scss */
+.cofoundry-sv__hover-module {
+  box-shadow: 0px 0px 2px #3366cc !important;
+}
 
-.cms-hover-section { outline: 1px dotted #4d4d4d; }
+/* line 34, ../../Sass/_inner-site-viewer.scss */
+.cofoundry-sv__hover-section {
+  box-shadow: 0px 0px 1px #003399 !important;
+}
 
 /* Used when the html for a section is being replaced */
-.cms-section-loading {
-    opacity: 0.5;
+/* line 40, ../../Sass/_inner-site-viewer.scss */
+.cofoundry-sv__section-loading {
+  opacity: 0.5;
 }
+
+/*# sourceMappingURL=inner-site-viewer.css.map */

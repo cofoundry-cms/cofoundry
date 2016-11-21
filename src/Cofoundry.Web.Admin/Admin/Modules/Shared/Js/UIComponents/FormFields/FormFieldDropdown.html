@@ -14,7 +14,8 @@
                 <option ng-show="!vm.isRequiredAttributeDefined && !vm.required" value='' selected>{{vm.defaultItemText}}</option>
             </select>
 
-            <span ng-hide="vm.formScope.editMode">{{vm.displayValue}}</span>
+            <div ng-hide="vm.formScope.editMode" ng-if="vm.displayValue">{{vm.displayValue}}</div>
+            <div ng-hide="vm.formScope.editMode" ng-if="!vm.displayValue" class="text-block-display-value">None</div>
             <cms-form-field-validation-summary></cms-form-field-validation-summary>
         </div>
     </cms-field>
