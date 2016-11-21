@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Cofoundry.Domain;
+using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -14,7 +16,7 @@ namespace Cofoundry.Web.Admin
     /// make the site viewer work.
     /// </summary>
     /// <remarks>
-    /// Designed only for us with SiteViewerContentFilterAttribute. 
+    /// Designed only for use with SiteViewerContentFilterAttribute. 
     /// </remarks>
     internal class SiteViewerContentStream : MemoryStream
     {
@@ -22,12 +24,17 @@ namespace Cofoundry.Web.Admin
 
         const char TAB = '\t';
 
-        private readonly StringBuilder outputString = new StringBuilder();
-        private readonly Stream outputStream = null;
+        private readonly StringBuilder _outputString = new StringBuilder();
+        private readonly Stream _outputStream = null;
+        private readonly IPageResponseData _pageResponseData;
 
-        public SiteViewerContentStream(Stream outputStream)
+        public SiteViewerContentStream(
+            Stream outputStream,
+            IPageResponseData pageResponseData
+            )
         {
-            this.outputStream = outputStream;
+            _outputStream = outputStream;
+            _pageResponseData = pageResponseData;
         }
 
         #endregion
@@ -37,26 +44,25 @@ namespace Cofoundry.Web.Admin
         public override void Write(byte[] buffer, int offset, int count)
         {
             // Write out the entire stream to memory before manipulating it.
-            outputString.Append(Encoding.UTF8.GetString(buffer));
+            _outputString.Append(Encoding.UTF8.GetString(buffer));
         }
 
         public override void Close()
         {
-            string html = outputString.ToString();
+            string html = _outputString.ToString();
 
             // Check for not XML
             if (!html.StartsWith("<?xml"))
             {
-                html = AddBaseTag(html);
                 html = AddCofoundryJavascript(html);
             }
 
             // Write the string back to the response
             byte[] rawResult = Encoding.UTF8.GetBytes(html);
-            outputStream.Write(rawResult, 0, rawResult.Length);
+            _outputStream.Write(rawResult, 0, rawResult.Length);
 
             base.Close();
-            outputStream.Close();
+            _outputStream.Close();
         }
 
         #endregion
@@ -78,42 +84,14 @@ namespace Cofoundry.Web.Admin
                     + html.Substring(insertIndex);
             }
 
-            return html;
-        }
-
-        /// <summary>
-        /// Adds a base tag to the html to make sure links in the content page open in the 
-        /// site viewer frame.
-        /// </summary>
-        private string AddBaseTag(string html)
-        {
-            const string TARGET_TAG = "<base target=\"_top\" />";
-            const string TITLE_TAG_START = "<title>";
-            const string TITLE_TAG_END = "</title>";
-
-            var titleStartIndex = html.IndexOf(TITLE_TAG_START, StringComparison.OrdinalIgnoreCase);
-            var titleEndIndex = html.IndexOf(TITLE_TAG_END, StringComparison.OrdinalIgnoreCase);
-
-            // Check that we have a title and that there isn't already a base tag
-            if (titleStartIndex > -1 && titleEndIndex > -1 && html.IndexOf("<base>", StringComparison.OrdinalIgnoreCase) == -1)
+            // TODO: something with the data
+            // If _pageResponseData is null then it's a static page
+            // else its a pagey page
+            if (_pageResponseData != null)
             {
-                // The index we will insert the base tag
-                int index = titleEndIndex + TITLE_TAG_END.Length;
-
-                // Work out how many tab/space characters we need to tab out the generator tag by the same amount as the previous tag
-                string tabChars = string.Empty;
-                int currentIndex = titleStartIndex - 1;
-                while (html[currentIndex] != '\n' && html[currentIndex] != '\r' && (html[currentIndex] == ' ' || html[currentIndex] ==  TAB))
-                {
-                    tabChars += html[currentIndex];
-                    --currentIndex;
-                }
-
-                html = html.Substring(0, index)
-                    + Environment.NewLine
-                    + tabChars
-                    + TARGET_TAG
-                    + html.Substring(index);
+                var responseJson = JsonConvert.SerializeObject(_pageResponseData);
+                // DO we also need the user data so we can work out permissions?
+                // ICurrentUserViewHelper is what we provide in the angular helper, would need to inject that in
             }
 
             return html;
