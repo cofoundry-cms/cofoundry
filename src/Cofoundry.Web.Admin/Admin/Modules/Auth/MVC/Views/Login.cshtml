@@ -14,9 +14,9 @@
     @Scripts.Render(AuthRouteLibrary.Js.Login)
 }
 
-<div class="wrap">
-    <h1>Cofoundry | Login</h1>
+<h1>Cofoundry</h1>
 
+<div class="wrap">
     @using (Html.BeginForm(null, null, FormMethod.Post, new { @class = "form-horizontal" }))
     {
         @Html.Hidden("ReturnUrl", Request["ReturnUrl"])
@@ -43,7 +43,7 @@
             </label>
 
             <div class="actions">
-                <input type="submit" class="btn btn-primary" value="Login" />
+                <input type="submit" class="btn main-cta btn-primary" value="Login" />
             </div>
         </fieldset>
     }

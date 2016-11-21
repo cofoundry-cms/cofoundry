@@ -11,7 +11,7 @@
         }
 
         .cofoundry-sv__mini-menu__toggle {
-            background-color: $color-offblack;
+            background-color: $color-secondary-dark;
             color: #fff;
         }
     }
@@ -24,7 +24,7 @@
 .cofoundry-sv__mini-menu__content {
     @include transform(translate(0%, -100%));
     display:none;
-    background-color: $color-offblack;
+    background-color: $color-secondary-dark;
     position: absolute;
     top: 0;
     width: 320px;
@@ -64,7 +64,7 @@
     height: 100%;
     background-color: transparent;
     outline:none;
-    color: #A6ACA9;
+    color: #fff;
     font-size: 10px;
 
     &.active {
