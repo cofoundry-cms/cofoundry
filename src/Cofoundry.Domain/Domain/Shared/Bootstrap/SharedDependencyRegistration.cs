@@ -19,6 +19,7 @@ namespace Cofoundry.Domain.Bootstrap
                 .RegisterType<EntityTagHelper, EntityTagHelper>()
                 .RegisterType<EntityOrderableHelper, EntityOrderableHelper>()
                 .RegisterType<IContentRouteLibrary, ContentRouteLibrary>()
+                .RegisterType<IViewFileReader, ViewFileReader>()
                 ;
         }
     }

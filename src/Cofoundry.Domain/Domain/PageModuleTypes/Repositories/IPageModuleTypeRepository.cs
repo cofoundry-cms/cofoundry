@@ -8,7 +8,7 @@ namespace Cofoundry.Domain
     /// Simple facade over page data access queries/commands to them more discoverable
     /// in implementations.
     /// </summary>
-    public interface IPageModuleRepository
+    public interface IPageModuleTypeRepository
     {
         IEnumerable<PageModuleTypeSummary> GetAllPageModuleTypeSummaries(IExecutionContext executionContext = null);
         Task<IEnumerable<PageModuleTypeSummary>> GetAllPageModuleTypeSummariesAsync(IExecutionContext executionContext = null);

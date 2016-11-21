@@ -53,6 +53,7 @@ alter table Cofoundry.PageModuleType drop column IsCustom
 alter table Cofoundry.PageModuleTypeTemplate drop column CreatorId
 alter table Cofoundry.PageModuleTypeTemplate alter column [Name] nvarchar(50) not null
 alter table Cofoundry.PageModuleTypeTemplate alter column [FileName] nvarchar(50) not null
+alter table Cofoundry.PageModuleTypeTemplate add [Description] nvarchar(max) null
 
 drop index UIX_PageModuleType_Name on Cofoundry.PageModuleType
 

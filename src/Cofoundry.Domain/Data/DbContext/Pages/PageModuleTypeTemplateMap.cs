@@ -16,6 +16,9 @@ namespace Cofoundry.Domain.Data
                 .IsRequired()
                 .HasMaxLength(50);
 
+            Property(t => t.Description)
+                .IsMaxLength();
+
             // Relationships
             HasRequired(t => t.PageModuleType)
                 .WithMany(t => t.PageModuleTemplates)

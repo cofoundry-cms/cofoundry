@@ -92,7 +92,7 @@ namespace Cofoundry.Domain
                 if (true)
                 {
                     isUpdated = true;
-                    existingModule.Description = "TODO";
+                    existingModule.Description = "TODO: YAH, then do templates";
                 }
 
                 if (isUpdated)

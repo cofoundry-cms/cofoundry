@@ -20,7 +20,7 @@ namespace Cofoundry.Domain
 
         const string PLACEHOLDER_FUNC = "Cofoundry.Template.Section";
         const string CUSTOM_ENTITY_PLACEHOLDER_FUNC = "Cofoundry.Template.CustomEntitySection";
-        const string TEMPLATE_DESCRIPTION_FUNC = "Cofoundry.Template.UseTemplateDescription";
+        const string TEMPLATE_DESCRIPTION_FUNC = "Cofoundry.Template.UseDescription";
 
         const string PARTIAL_FUNC = "Html.Partial";
         const string RENDER_PARTIAL_FUNC = "Html.RenderPartial";

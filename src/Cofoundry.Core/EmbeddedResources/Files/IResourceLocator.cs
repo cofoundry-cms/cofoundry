@@ -30,7 +30,7 @@ namespace Cofoundry.Core.EmbeddedResources
         bool DirectoryExists(string virtualDir);
 
         /// <summary>
-        /// Gets a reference to the director at the specified path if it exists, otherwise returns false
+        /// Gets a reference to the directory at the specified path if it exists, otherwise returns null
         /// </summary>
         IResourceDirectory GetDirectory(string virtualDir);
 

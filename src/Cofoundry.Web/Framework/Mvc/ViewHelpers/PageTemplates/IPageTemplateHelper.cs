@@ -27,6 +27,6 @@ namespace Cofoundry.Web
         /// should be used for.
         /// </summary>
         /// <param name="description">A plain text description about this template</param>
-        IHtmlString UseTemplateDescription(string description);
+        IHtmlString UseDescription(string description);
     }
 }

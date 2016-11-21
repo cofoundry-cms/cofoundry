@@ -45,7 +45,7 @@ namespace Cofoundry.Web
         /// should be used for.
         /// </summary>
         /// <param name="description">A plain text description about this template</param>
-        public IHtmlString UseTemplateDescription(string description)
+        public IHtmlString UseDescription(string description)
         {
             // nothing is rendered here, this is just used as a convention for adding template meta data
             return null;

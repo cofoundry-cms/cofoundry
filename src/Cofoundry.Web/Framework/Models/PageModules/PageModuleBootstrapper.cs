@@ -10,7 +10,7 @@ namespace Cofoundry.Web.PageModules
     /// <summary>
     /// Bootstraps the registration of PageModule view locations, enabling PageModules to be included in non-standard places.
     /// </summary>
-    public class PageModuleBootstrapper : IEmbeddedResourceRouteRegistration, IViewLocationRegistration
+    public class PageModuleBootstrapper : IViewLocationRegistration // , IEmbeddedResourceRouteRegistration
     {
         private readonly IPageModuleViewLocationRegistration[] _pageModuleViewLocationRegistrations;
 
@@ -21,15 +21,17 @@ namespace Cofoundry.Web.PageModules
             _pageModuleViewLocationRegistrations = pageModuleViewLocationRegistrations;
         }
 
-        public IEnumerable<string> GetEmbeddedResourcePaths()
-        {
-            var pathsToRegister = _pageModuleViewLocationRegistrations
-                .SelectMany(r => r.GetPathPrefixes())
-                .Select(p => FormatEmbeddedResourcePath(p))
-                .Where(p => p != null);
+        // TODO: Not sure why this implements IEmbeddedResourceRouteRegistration? module views don't need to be served as static resources...
+        // Is it supposed to be assembly resource registration?
+        //public IEnumerable<string> GetEmbeddedResourcePaths()
+        //{
+        //    var pathsToRegister = _pageModuleViewLocationRegistrations
+        //        .SelectMany(r => r.GetPathPrefixes())
+        //        .Select(p => FormatEmbeddedResourcePath(p))
+        //        .Where(p => p != null);
 
-            return pathsToRegister;
-        }
+        //    return pathsToRegister;
+        //}
 
         public ViewLocations GetLocations()
         {
@@ -58,13 +60,13 @@ namespace Cofoundry.Web.PageModules
             return path;
         }
 
-        private string FormatEmbeddedResourcePath(string pathPrefix)
-        {
-            if (string.IsNullOrWhiteSpace(pathPrefix)) return null;
+        //private string FormatEmbeddedResourcePath(string pathPrefix)
+        //{
+        //    if (string.IsNullOrWhiteSpace(pathPrefix)) return null;
 
-            var path = "/" + pathPrefix.Trim('/');
+        //    var path = "/" + pathPrefix.Trim('/');
 
-            return path;
-        }
+        //    return path;
+        //}
     }
 }

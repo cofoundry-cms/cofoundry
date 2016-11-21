@@ -54,23 +54,6 @@ namespace Cofoundry.Web
             return GetUnorderedPageTemplateFiles(searchText).OrderBy(l => l.Name);
         }
 
-        public async Task<string> ReadViewFileAsync(string path)
-        {
-            string result = null;
-
-            if (!FileExists(path)) return result;
-
-            var file = _resourceLocator.GetFile(path);
-
-            using (var stream = file.Open())
-            using (var reader = new StreamReader(stream))
-            {
-                result = await reader.ReadToEndAsync();
-            }
-
-            return result;
-        }
-
         public string ResolvePageTemplatePartialViewPath(string partialName)
         {
             if (FileExists(partialName))
@@ -92,14 +75,6 @@ namespace Cofoundry.Web
         #endregion
 
         #region private helpers
-
-        private bool FileExists(string path)
-        {
-            if (string.IsNullOrEmpty(path)) return false;
-            if (path[0] != '~' && path[0] != '/') return false;
-
-            return _resourceLocator.FileExists(path);
-        }
 
         private IEnumerable<PageTemplateFile> GetUnorderedPageTemplateFiles(string searchText)
         {

@@ -352,11 +352,16 @@
     <Compile Include="Framework\ModularMvc\ViewEngine\AssemblyResourceViewEngine.cs" />
     <Compile Include="Framework\ModularMvc\ViewEngine\IAssemblyResourceViewEngineInitializer.cs" />
     <Compile Include="Framework\ModularMvc\ViewEngine\AssemblyResourceViewEngineInitializer.cs" />
+    <Compile Include="Framework\ModularMvc\ViewEngine\PageModuleTypeViewFileLocator.cs" />
     <Compile Include="Framework\ModularMvc\ViewEngine\ViewLocations\DefaultViewLocationRegistration.cs" />
     <Compile Include="Framework\ModularMvc\ViewEngine\ViewLocations\IViewLocationRegistration.cs" />
     <Compile Include="Framework\ModularMvc\ViewEngine\ViewLocations\ViewLocations.cs" />
+    <Compile Include="Framework\Mvc\ViewBases\CofoundryPageModuleT.cs" />
     <Compile Include="Framework\Mvc\ViewBases\CofoundryTemplatePageT.cs" />
+    <Compile Include="Framework\Mvc\ViewHelpers\CofoundryPageModuleHelperT.cs" />
     <Compile Include="Framework\Mvc\ViewHelpers\CofoundryTemplatePageHelperT.cs" />
+    <Compile Include="Framework\Mvc\ViewHelpers\PageModules\IPageModuleHelper.cs" />
+    <Compile Include="Framework\Mvc\ViewHelpers\PageModules\PageModuleHelper.cs" />
     <Compile Include="Framework\Mvc\ViewHelpers\PageTemplates\IPageTemplateHelper.cs" />
     <Compile Include="Framework\Mvc\ViewHelpers\PageTemplates\PageTemplateHelperExtensions.cs" />
     <Compile Include="Framework\Mvc\ViewHelpers\PageTemplates\PageTemplateHelper.cs" />

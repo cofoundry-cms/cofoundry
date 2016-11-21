@@ -11,13 +11,13 @@ namespace Cofoundry.Domain
     /// Simple facade over page data access queries/commands to them more discoverable
     /// in implementations.
     /// </summary>
-    public class PageModuleRepository : IPageModuleRepository
+    public class PageModuleTypeRepository : IPageModuleTypeRepository
     {
         #region constructor
 
         private readonly IQueryExecutor _queryExecutor;
 
-        public PageModuleRepository(
+        public PageModuleTypeRepository(
             IQueryExecutor queryExecutor
             )
         {

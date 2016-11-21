@@ -41,6 +41,6 @@ namespace Cofoundry.Domain
         /// <summary>
         /// An optional paragraph-length description of the template
         /// </summary>
-        public string Description { get; internal set; }
+        public string Description { get; set; }
     }
 }
