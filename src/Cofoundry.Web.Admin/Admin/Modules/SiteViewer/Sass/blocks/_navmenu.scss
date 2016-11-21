@@ -8,6 +8,15 @@
 
     .cofoundry-sv__mini-menu__toggle {
         border-left: 0;
+
+        span {
+            width: 40px;
+            position: relative;
+        }
+
+        img {
+            width: 100%;
+        }
     }
 }
 
@@ -45,12 +54,11 @@
     }
 
     &:hover {
-        background-color: $color-darkgrey;
-        border-color: #1a1d22;
+        color: #fff;
     }
 
     &.active {
-        background-color: $color-primary;
+        background-color: $color-secondary;
         color:#fff;
     }
 }

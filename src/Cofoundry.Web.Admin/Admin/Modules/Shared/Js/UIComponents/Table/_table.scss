@@ -25,7 +25,7 @@
 
 .table-wrap {
     margin-bottom: 10px;
-    border-top: 3px solid $color-primary;
+    border-top: 3px solid $color-secondary;
 	position:relative;
 
     .control-group-area & {
@@ -63,7 +63,7 @@
         -ms-user-select: none;
 
         &:nth-child(odd) {
-            background-color:#f8f8f8;
+            //background-color:#f8f8f8;
         }
 
         td {

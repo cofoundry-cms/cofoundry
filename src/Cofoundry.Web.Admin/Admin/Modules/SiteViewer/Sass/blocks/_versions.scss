@@ -19,6 +19,7 @@
     padding: 10px;
     display:block;
     font-size: 11px;
+    border: 1px solid transparent;
     // border-bottom: 1px solid #555;
     cursor: pointer; 
     color: $color-text;
@@ -51,8 +52,7 @@
     }
 
     &:hover {
-        background-color: $color-darkgrey;
-        border-color: #1a1d22;
+        color: #fff;
 
         span {
             background-color: $color-offblack;
@@ -60,7 +60,7 @@
     }
 
     &.active {
-        background-color: $color-primary;
+        background-color: $color-secondary;
         color:#fff;
     }
 }

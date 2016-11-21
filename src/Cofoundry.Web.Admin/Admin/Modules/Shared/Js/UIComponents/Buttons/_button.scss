@@ -15,18 +15,17 @@
     position:relative;
 
     &:hover {
-        background-color:#a9a9a9;
-        color:#fff;
+        border-color:$color-secondary;
     }
 
     &.main-cta {
-        background-color:$color-primary;
+        background-color:$color-secondary;
         color:#fff;
-        border-color:$color-primary;
+        border-color:$color-secondary;
 
         &:hover {
-            background-color:$color-primary-dark;
-            border-color:$color-primary-dark;
+            background-color:$color-secondary-dark;
+            border-color:$color-secondary-dark;
         }
     }
 

@@ -143,13 +143,13 @@ article, aside, details, figcaption, figure, footer, header, hgroup, main, menu,
 /* Non-inheriting cross browser opacity with white bg color */
 /* line 1, ../../Sass/blocks/_preview-menu.scss */
 .cofoundry-sv {
-  font-family: "Open Sans", sans-serif;
+  font-family: "Cabin", sans-serif;
   width: 100%;
   position: absolute;
   left: 0;
   bottom: 0;
   height: 70px;
-  background-color: #3c3c3c;
+  background-color: #413851;
   transform: translateY(100%);
   z-index: 1000;
 }
@@ -161,15 +161,16 @@ article, aside, details, figcaption, figure, footer, header, hgroup, main, menu,
 /* line 17, ../../Sass/blocks/_preview-menu.scss */
 .cofoundry-sv__toggle {
   position: absolute;
-  left: 0;
+  left: 50%;
   top: 0;
   transform: translateY(-100%);
-  background-color: #4d4d4d;
+  background-color: #413851;
   border: 0;
-  border-radius: 0 3px;
+  border-radius: 3px;
   border-bottom-left-radius: 0;
   border-bottom-right-radius: 0;
-  padding: 10px 25px;
+  width: 80px;
+  margin-left: -40px;
   text-transform: uppercase;
   font-size: 10px;
   font-weight: 700;
@@ -197,7 +198,7 @@ article, aside, details, figcaption, figure, footer, header, hgroup, main, menu,
 }
 /* line 52, ../../Sass/blocks/_preview-menu.scss */
 .cofoundry-sv__back:hover {
-  background-color: #3366cc;
+  background-color: #4af386;
   color: #fff;
 }
 
@@ -215,7 +216,7 @@ article, aside, details, figcaption, figure, footer, header, hgroup, main, menu,
 }
 /* line 13, ../../Sass/blocks/_mini-menu.scss */
 .cofoundry-sv__mini-menu:hover .cofoundry-sv__mini-menu__toggle {
-  background-color: #2c2c2c;
+  background-color: #2c263d;
   color: #fff;
 }
 
@@ -231,7 +232,7 @@ article, aside, details, figcaption, figure, footer, header, hgroup, main, menu,
   -webkit-transform: translate(0%, -100%);
   transform: translate(0%, -100%);
   display: none;
-  background-color: #2c2c2c;
+  background-color: #2c263d;
   position: absolute;
   top: 0;
   width: 320px;
@@ -275,7 +276,7 @@ article, aside, details, figcaption, figure, footer, header, hgroup, main, menu,
   height: 100%;
   background-color: transparent;
   outline: none;
-  color: #A6ACA9;
+  color: #fff;
   font-size: 10px;
 }
 /* line 70, ../../Sass/blocks/_mini-menu.scss */
@@ -324,11 +325,12 @@ article, aside, details, figcaption, figure, footer, header, hgroup, main, menu,
   padding: 10px;
   display: block;
   font-size: 11px;
+  border: 1px solid transparent;
   cursor: pointer;
   color: #A6ACA9;
   text-decoration: none;
 }
-/* line 27, ../../Sass/blocks/_versions.scss */
+/* line 28, ../../Sass/blocks/_versions.scss */
 .cofoundry-sv__version-list__item span {
   background-color: #3c3c3c;
   width: 10px;
@@ -337,27 +339,26 @@ article, aside, details, figcaption, figure, footer, header, hgroup, main, menu,
   margin-right: 5px;
   display: inline-block;
 }
-/* line 36, ../../Sass/blocks/_versions.scss */
+/* line 37, ../../Sass/blocks/_versions.scss */
 .cofoundry-sv__version-list__item .published {
   background-color: #339900 !important;
 }
-/* line 40, ../../Sass/blocks/_versions.scss */
+/* line 41, ../../Sass/blocks/_versions.scss */
 .cofoundry-sv__version-list__item .approved {
   background-color: #ff6600 !important;
 }
-/* line 44, ../../Sass/blocks/_versions.scss */
+/* line 45, ../../Sass/blocks/_versions.scss */
 .cofoundry-sv__version-list__item .draft {
   border: 1px solid #ff6600;
   background-color: transparent !important;
 }
-/* line 49, ../../Sass/blocks/_versions.scss */
+/* line 50, ../../Sass/blocks/_versions.scss */
 .cofoundry-sv__version-list__item:last-of-type {
   border: 0;
 }
-/* line 53, ../../Sass/blocks/_versions.scss */
+/* line 54, ../../Sass/blocks/_versions.scss */
 .cofoundry-sv__version-list__item:hover {
-  background-color: #3c3c3c;
-  border-color: #1a1d22;
+  color: #fff;
 }
 /* line 57, ../../Sass/blocks/_versions.scss */
 .cofoundry-sv__version-list__item:hover span {
@@ -365,7 +366,7 @@ article, aside, details, figcaption, figure, footer, header, hgroup, main, menu,
 }
 /* line 62, ../../Sass/blocks/_versions.scss */
 .cofoundry-sv__version-list__item.active {
-  background-color: #3366cc;
+  background-color: #413851;
   color: #fff;
 }
 
@@ -382,21 +383,30 @@ article, aside, details, figcaption, figure, footer, header, hgroup, main, menu,
 .cofoundry-sv__navmenu .cofoundry-sv__mini-menu__toggle {
   border-left: 0;
 }
+/* line 12, ../../Sass/blocks/_navmenu.scss */
+.cofoundry-sv__navmenu .cofoundry-sv__mini-menu__toggle span {
+  width: 40px;
+  position: relative;
+}
+/* line 17, ../../Sass/blocks/_navmenu.scss */
+.cofoundry-sv__navmenu .cofoundry-sv__mini-menu__toggle img {
+  width: 100%;
+}
 
-/* line 14, ../../Sass/blocks/_navmenu.scss */
+/* line 23, ../../Sass/blocks/_navmenu.scss */
 .cofoundry-sv__navmenu-list {
   padding: 0;
   margin: 0;
   list-style: none;
 }
-/* line 19, ../../Sass/blocks/_navmenu.scss */
+/* line 28, ../../Sass/blocks/_navmenu.scss */
 .cofoundry-sv__navmenu-list .cofoundry-sv__navmenu-list__divider {
   border-top: 1px solid #3c3c3c;
   padding-top: 5px;
   margin-top: 10px;
 }
 
-/* line 26, ../../Sass/blocks/_navmenu.scss */
+/* line 35, ../../Sass/blocks/_navmenu.scss */
 .cofoundry-sv__navmenu-list__item {
   -moz-border-radius: 2px;
   -webkit-border-radius: 2px;
@@ -409,25 +419,24 @@ article, aside, details, figcaption, figure, footer, header, hgroup, main, menu,
   color: #A6ACA9;
   text-decoration: none;
 }
-/* line 36, ../../Sass/blocks/_navmenu.scss */
+/* line 45, ../../Sass/blocks/_navmenu.scss */
 .cofoundry-sv__navmenu-list__item span {
   width: 10px;
   height: 10px;
   font-size: 1em;
   margin-right: 2px;
 }
-/* line 43, ../../Sass/blocks/_navmenu.scss */
+/* line 52, ../../Sass/blocks/_navmenu.scss */
 .cofoundry-sv__navmenu-list__item:last-of-type {
   border: 0;
 }
-/* line 47, ../../Sass/blocks/_navmenu.scss */
+/* line 56, ../../Sass/blocks/_navmenu.scss */
 .cofoundry-sv__navmenu-list__item:hover {
-  background-color: #3c3c3c;
-  border-color: #1a1d22;
+  color: #fff;
 }
-/* line 52, ../../Sass/blocks/_navmenu.scss */
+/* line 60, ../../Sass/blocks/_navmenu.scss */
 .cofoundry-sv__navmenu-list__item.active {
-  background-color: #3366cc;
+  background-color: #413851;
   color: #fff;
 }
 
@@ -545,18 +554,17 @@ article, aside, details, figcaption, figure, footer, header, hgroup, main, menu,
   border-radius: 4px;
   float: left;
   margin-right: 4px;
-  background-color: #2c2c2c;
   height: 100%;
   width: 92px;
   border: 0;
-  color: #A6ACA9;
+  color: #fff;
   text-transform: uppercase;
   font-size: 10px;
   vertical-align: top;
   text-align: center;
   text-decoration: none;
 }
-/* line 22, ../../Sass/elements/_mode.scss */
+/* line 21, ../../Sass/elements/_mode.scss */
 .cofoundry-sv__mode__button span {
   margin: 0 auto;
   display: block;
@@ -565,29 +573,29 @@ article, aside, details, figcaption, figure, footer, header, hgroup, main, menu,
   font-size: 2em;
   padding: 8px 0 2px;
 }
-/* line 31, ../../Sass/elements/_mode.scss */
+/* line 30, ../../Sass/elements/_mode.scss */
 .cofoundry-sv__mode__button:last-of-type {
   margin-right: 0;
 }
-/* line 35, ../../Sass/elements/_mode.scss */
+/* line 34, ../../Sass/elements/_mode.scss */
 .cofoundry-sv__mode__button:hover, .cofoundry-sv__mode__button.active, .cofoundry-sv__mode__button.JS-active {
-  background-color: #3366cc;
+  background-color: #2c263d;
   color: #fff;
   cursor: pointer;
 }
 
-/* line 45, ../../Sass/elements/_mode.scss */
+/* line 44, ../../Sass/elements/_mode.scss */
 .cofoundry-sv__mode__button__group .cofoundry-sv__mode__button {
   margin-right: 0;
   border-right: 1px solid #3c3c3c;
 }
-/* line 50, ../../Sass/elements/_mode.scss */
+/* line 49, ../../Sass/elements/_mode.scss */
 .cofoundry-sv__mode__button__group .cofoundry-sv__mode__button:first-of-type {
   -moz-border-radius: 4px 0 0 4px;
   -webkit-border-radius: 4px;
   border-radius: 4px 0 0 4px;
 }
-/* line 54, ../../Sass/elements/_mode.scss */
+/* line 53, ../../Sass/elements/_mode.scss */
 .cofoundry-sv__mode__button__group .cofoundry-sv__mode__button:last-of-type {
   -moz-border-radius: 0 4px 4px 0;
   -webkit-border-radius: 0;
@@ -601,14 +609,13 @@ article, aside, details, figcaption, figure, footer, header, hgroup, main, menu,
   float: right;
   padding: 0 5px 0 0;
   margin-left: 10px;
-  border-left: 1px solid #4d4d4d;
+  border-left: 1px solid #2c263d;
   height: 100%;
 }
 
 /* line 9, ../../Sass/elements/_options.scss */
 .cofoundry-sv__options__button {
   display: inline-block;
-  background-color: #2c2c2c;
   border-radius: 4px;
   border: none;
   height: 100%;
@@ -621,7 +628,7 @@ article, aside, details, figcaption, figure, footer, header, hgroup, main, menu,
   text-align: center;
   text-decoration: none;
 }
-/* line 24, ../../Sass/elements/_options.scss */
+/* line 23, ../../Sass/elements/_options.scss */
 .cofoundry-sv__options__button span {
   margin: 0 auto;
   display: block;
@@ -630,13 +637,13 @@ article, aside, details, figcaption, figure, footer, header, hgroup, main, menu,
   font-size: 2em;
   padding: 8px 0 2px;
 }
-/* line 33, ../../Sass/elements/_options.scss */
+/* line 32, ../../Sass/elements/_options.scss */
 .cofoundry-sv__options__button:first-of-type {
   margin: 0 10px;
 }
-/* line 37, ../../Sass/elements/_options.scss */
+/* line 36, ../../Sass/elements/_options.scss */
 .cofoundry-sv__options__button:hover {
-  background-color: #3366cc;
+  background-color: #2c263d;
 }
 
 /* line 1, ../../Sass/elements/_settings.scss */
@@ -875,10 +882,11 @@ body {
   top: 50%;
   transform: translate(-50%, -50%);
   border: 1px solid #eaeaea;
+  border-bottom: 0;
   box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.25);
 }
 
-/* line 106, ../../Sass/_outer-site-viewer.scss */
+/* line 107, ../../Sass/_outer-site-viewer.scss */
 #wrapper.iPadPortrait #siteFrameContainer {
   width: 768px;
   position: absolute;
@@ -889,7 +897,7 @@ body {
   box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.25);
 }
 
-/* line 116, ../../Sass/_outer-site-viewer.scss */
+/* line 117, ../../Sass/_outer-site-viewer.scss */
 #wrapper.iPadLandscape #siteFrameContainer {
   width: 1024px;
   position: absolute;
@@ -900,7 +908,7 @@ body {
   box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.25);
 }
 
-/* line 126, ../../Sass/_outer-site-viewer.scss */
+/* line 127, ../../Sass/_outer-site-viewer.scss */
 #wrapper.desktop #siteFrameContainer {
   width: 1024px;
   position: absolute;
@@ -912,7 +920,7 @@ body {
 }
 
 /* #### Site frame #### */
-/* line 139, ../../Sass/_outer-site-viewer.scss */
+/* line 140, ../../Sass/_outer-site-viewer.scss */
 iframe#siteFrame {
   background: transparent;
   border: 0;
@@ -920,23 +928,23 @@ iframe#siteFrame {
   width: 100%;
 }
 
-/* line 146, ../../Sass/_outer-site-viewer.scss */
+/* line 147, ../../Sass/_outer-site-viewer.scss */
 #wrapper.device iframe#siteFrame::-webkit-scrollbar {
   display: none;
 }
 
-/* line 150, ../../Sass/_outer-site-viewer.scss */
+/* line 151, ../../Sass/_outer-site-viewer.scss */
 #wrapper.device iframe#siteFrame html {
   overflow-x: hidden;
 }
 
-/* line 154, ../../Sass/_outer-site-viewer.scss */
+/* line 155, ../../Sass/_outer-site-viewer.scss */
 #wrapper.device iframe#siteFrame html::-webkit-scrollbar {
   display: none;
 }
 
 /* #### Device menu #### */
-/* line 161, ../../Sass/_outer-site-viewer.scss */
+/* line 162, ../../Sass/_outer-site-viewer.scss */
 ul#deviceMenu {
   bottom: 0;
   left: 0;
@@ -946,7 +954,7 @@ ul#deviceMenu {
   position: fixed;
 }
 
-/* line 170, ../../Sass/_outer-site-viewer.scss */
+/* line 171, ../../Sass/_outer-site-viewer.scss */
 ul#deviceMenu li {
   border-right: 1px solid #970D31;
   display: block;
@@ -954,9 +962,9 @@ ul#deviceMenu li {
   list-style: none;
 }
 
-/* line 177, ../../Sass/_outer-site-viewer.scss */
+/* line 178, ../../Sass/_outer-site-viewer.scss */
 ul#deviceMenu li a {
-  background: #3366cc url(img/icons.png) no-repeat;
+  background: #4af386 url(img/icons.png) no-repeat;
   display: block;
   height: 30px;
   overflow: hidden;
@@ -965,7 +973,7 @@ ul#deviceMenu li a {
   width: 30px;
 }
 
-/* line 187, ../../Sass/_outer-site-viewer.scss */
+/* line 188, ../../Sass/_outer-site-viewer.scss */
 ul#deviceMenu li.active, ul#deviceMenu li:hover {
   background-color: #8e8d8d;
   -webkit-box-shadow: inset 0 0 3px 1px rgba(0, 0, 0, 0.7);
@@ -981,40 +989,40 @@ ul#deviceMenu li.active, ul#deviceMenu li:hover {
   filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#8e8d8d', endColorstr='#4d4c4c',GradientType=0 );
 }
 
-/* line 202, ../../Sass/_outer-site-viewer.scss */
+/* line 203, ../../Sass/_outer-site-viewer.scss */
 ul#deviceMenu li.active a, ul#deviceMenu li a:hover {
   background-color: transparent;
 }
 
-/* line 206, ../../Sass/_outer-site-viewer.scss */
+/* line 207, ../../Sass/_outer-site-viewer.scss */
 ul#deviceMenu li.auto a {
   background-position: -5px -725px;
 }
 
-/* line 210, ../../Sass/_outer-site-viewer.scss */
+/* line 211, ../../Sass/_outer-site-viewer.scss */
 ul#deviceMenu li.iPhonePortrait a {
   background-position: -5px -565px;
 }
 
-/* line 214, ../../Sass/_outer-site-viewer.scss */
+/* line 215, ../../Sass/_outer-site-viewer.scss */
 ul#deviceMenu li.iPhoneLandscape a {
   background-position: -5px -605px;
 }
 
-/* line 218, ../../Sass/_outer-site-viewer.scss */
+/* line 219, ../../Sass/_outer-site-viewer.scss */
 ul#deviceMenu li.iPadPortrait a {
   background-position: -5px -645px;
 }
 
-/* line 222, ../../Sass/_outer-site-viewer.scss */
+/* line 223, ../../Sass/_outer-site-viewer.scss */
 ul#deviceMenu li.iPadLandscape a {
   background-position: -5px -685px;
 }
 
 /* #### Hovering #### */
-/* line 228, ../../Sass/_outer-site-viewer.scss */
+/* line 229, ../../Sass/_outer-site-viewer.scss */
 .cofoundry-sv__section-popover-container, .cofoundry-sv__module-popover-container {
-  font-family: "Open Sans", sans-serif;
+  font-family: "Cabin", sans-serif;
   font-size: 85%;
   position: absolute;
   border-radius: 4px;
@@ -1023,7 +1031,7 @@ ul#deviceMenu li.iPadLandscape a {
 }
 
 /* #### Section hovering #### */
-/* line 242, ../../Sass/_outer-site-viewer.scss */
+/* line 243, ../../Sass/_outer-site-viewer.scss */
 .cofoundry-sv__section-popover-inner {
   -moz-transform: translateX(-100%);
   -ms-transform: translateX(-100%);
@@ -1034,7 +1042,7 @@ ul#deviceMenu li.iPadLandscape a {
   border-radius: 2px;
   background: #fff;
   border: 1px solid #3c3c3c;
-  border-left: 3px solid #3366cc;
+  border-left: 3px solid #4af386;
   color: #3c3c3c;
   height: 30px;
   line-height: 30px;
@@ -1045,7 +1053,7 @@ ul#deviceMenu li.iPadLandscape a {
   white-space: nowrap;
 }
 
-/* line 258, ../../Sass/_outer-site-viewer.scss */
+/* line 259, ../../Sass/_outer-site-viewer.scss */
 .cofoundry-sv__section-popover-inner h2 {
   font-weight: bold;
   font-size: 90%;
@@ -1056,7 +1064,7 @@ ul#deviceMenu li.iPadLandscape a {
   padding-left: 20px;
 }
 
-/* line 268, ../../Sass/_outer-site-viewer.scss */
+/* line 269, ../../Sass/_outer-site-viewer.scss */
 .cofoundry-sv__section-popover-inner a {
   color: #3c3c3c;
   overflow: hidden;
@@ -1066,38 +1074,38 @@ ul#deviceMenu li.iPadLandscape a {
   text-align: center;
   left: 5px;
 }
-/* line 277, ../../Sass/_outer-site-viewer.scss */
+/* line 278, ../../Sass/_outer-site-viewer.scss */
 .cofoundry-sv__section-popover-inner a:hover {
-  color: #3366cc;
+  color: #4af386;
 }
 
 /* #### Module hovering #### */
-/* line 285, ../../Sass/_outer-site-viewer.scss */
+/* line 286, ../../Sass/_outer-site-viewer.scss */
 .cofoundry-sv__module-popover-container {
   position: fixed;
 }
 
-/* line 289, ../../Sass/_outer-site-viewer.scss */
+/* line 290, ../../Sass/_outer-site-viewer.scss */
 .cofoundry-sv__module-popover-container ul {
   -moz-border-radius: 2px;
   -webkit-border-radius: 2px;
   border-radius: 2px;
   border: 1px solid #3c3c3c;
-  border-top: 3px solid #3366cc;
+  border-top: 3px solid #4af386;
   background: #fff;
   display: block;
   margin: 0px;
   padding: 0px;
 }
 
-/* line 299, ../../Sass/_outer-site-viewer.scss */
+/* line 300, ../../Sass/_outer-site-viewer.scss */
 .cofoundry-sv__module-popover-container li:not(:last-of-type) {
   border: 1px solid #ebebeb;
   border-width: 0 0 1px 0;
   display: block;
 }
 
-/* line 305, ../../Sass/_outer-site-viewer.scss */
+/* line 306, ../../Sass/_outer-site-viewer.scss */
 .cofoundry-sv__module-popover-container li a {
   -moz-transition: all 0.3s;
   -o-transition: all 0.3s;
@@ -1112,12 +1120,12 @@ ul#deviceMenu li.iPadLandscape a {
   text-align: center;
   font-size: 1.1em;
 }
-/* line 316, ../../Sass/_outer-site-viewer.scss */
+/* line 317, ../../Sass/_outer-site-viewer.scss */
 .cofoundry-sv__module-popover-container li a:hover {
-  color: #3366cc;
+  color: #4af386;
 }
 
-/* line 321, ../../Sass/_outer-site-viewer.scss */
+/* line 322, ../../Sass/_outer-site-viewer.scss */
 .cofoundry-sv__module-popover-container .disabled a {
   cursor: default;
   opacity: 0.4;
@@ -1128,7 +1136,7 @@ ul#deviceMenu li.iPadLandscape a {
 }
 
 /* #### Footer #### */
-/* line 331, ../../Sass/_outer-site-viewer.scss */
+/* line 332, ../../Sass/_outer-site-viewer.scss */
 footer {
   position: fixed;
   bottom: 0;

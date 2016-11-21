@@ -2,6 +2,7 @@
 // This should be pretty slim.
 
 * {
+    font-family: $fontstack-default;
     box-sizing:border-box;
 }
 
@@ -10,7 +11,6 @@ html {
 }
 
 body {
-    font-family: $fontstack-default;
     background-color:$color-lightgrey;
 }
 
@@ -88,7 +88,7 @@ footer {
         font-weight:bold;
         background: white;
         padding: 10px;
-        border-top: 2px solid $color-primary;
+        border-top: 2px solid $color-secondary;
     }
 
     &:nth-of-type(1), &:nth-of-type(2) {
