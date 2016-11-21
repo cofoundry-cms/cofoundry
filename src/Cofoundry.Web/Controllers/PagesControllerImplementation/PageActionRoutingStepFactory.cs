@@ -22,7 +22,6 @@ namespace Cofoundry.Web
             IValidateDraftVersionRoutingStep validateDraftVersionRoutingStep,
             IValidateSpecificVersionRoutingRoutingStep validateSpecificVersionRoutingRoutingStep,
             IGetNotFoundRouteRoutingStep getNotFoundRouteRoutingStep,
-            IShowSiteViewerRoutingStep showSiteViewerRoutingStep,
             IGetPageRenderDataRoutingStep getPageRenderDataRoutingStep,
             ISetCachePolicyRoutingStep setCachePolicyRoutingStep,
             IGetFinalResultRoutingStep getFinalResultRoutingStep
@@ -41,7 +40,6 @@ namespace Cofoundry.Web
                 validateDraftVersionRoutingStep,
                 validateSpecificVersionRoutingRoutingStep,
                 getNotFoundRouteRoutingStep,
-                showSiteViewerRoutingStep,
                 getPageRenderDataRoutingStep,
                 setCachePolicyRoutingStep,
                 getFinalResultRoutingStep

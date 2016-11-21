@@ -790,7 +790,6 @@
     <Compile Include="Admin\Modules\SiteViewer\Constants\SiteViewerRouteLibrary.cs" />
     <Compile Include="Admin\Modules\SiteViewer\MVC\ActionFilters\SiteViewerContentFilterAttribute.cs" />
     <Compile Include="Admin\Modules\SiteViewer\MVC\ActionFilters\SiteViewerContentStream.cs" />
-    <Compile Include="Admin\Modules\SiteViewer\MVC\Framework\SiteViewerRouteContraint.cs" />
     <Compile Include="Admin\Modules\Users\Bootstrap\UsersBundleRegistration.cs" />
     <Compile Include="Admin\Modules\Users\Bootstrap\UsersEmbeddedRouteRegistrations.cs" />
     <Compile Include="Admin\Modules\Users\Bootstrap\UsersModuleRegistration.cs" />
@@ -798,7 +797,6 @@
     <Compile Include="Admin\Modules\Users\Constants\UsersRouteLibrary.cs" />
     <Compile Include="Admin\Modules\Users\Mvc\Controllers\UsersModuleController.cs" />
     <Compile Include="Admin\Modules\Users\Mvc\Models\UsersModuleOptions.cs" />
-    <Compile Include="App_Start\SiteViewerRouteRegistrationStartupTask.cs" />
     <Compile Include="App_Start\MvcFilterConfigurationStartupTask.cs" />
     <Compile Include="Framework\Bootstrap\CofoundryAdminAssemblyResourceRegistration.cs" />
     <Compile Include="Framework\Bootstrap\CofoundryAdminDependencyRegistration.cs" />
@@ -825,7 +823,6 @@
     <Compile Include="Framework\StandardAngularModules\StandardAngularModuleBootstrapper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Admin\Modules\Setup\Framework\SetupPageActionFactory.cs" />
-    <Compile Include="Admin\Modules\SiteViewer\MVC\Framework\SiteViewerActionFactory.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Cofoundry.Core\Cofoundry.Core.csproj">

@@ -18,14 +18,17 @@ namespace Cofoundry.Web
     {
         private readonly IQueryExecutor _queryExecutor;
         private readonly IPageViewModelMapper _pageViewModelMapper;
+        private readonly IPageResponseDataCache _pageRenderDataCache;
 
         public GetFinalResultRoutingStep(
             IQueryExecutor queryExecutor,
-            IPageViewModelMapper pageViewModelMapper
+            IPageViewModelMapper pageViewModelMapper,
+            IPageResponseDataCache pageRenderDataCache
             )
         {
             _queryExecutor = queryExecutor;
             _pageViewModelMapper = pageViewModelMapper;
+            _pageRenderDataCache = pageRenderDataCache;
         }
 
         public async Task ExecuteAsync(Controller controller, PageActionRoutingState state)
@@ -58,6 +61,10 @@ namespace Cofoundry.Web
                     break;
             }
 
+
+            // set cache
+            SetCache(vm, state);
+
             var result = new ViewResult()
             {
                 ViewData = new ViewDataDictionary(vm),
@@ -65,6 +72,57 @@ namespace Cofoundry.Web
             };
 
             return result;
+        }
+
+        public void SetCache(IEditablePageViewModel vm, PageActionRoutingState state)
+        {
+            var siteViewerMode = state.SiteViewerMode;
+            var workFlowStatusQuery = state.SiteViewerMode.ToWorkFlowStatusQuery();
+            var pageVersions = state.PageRoutingInfo.PageRoute.Versions;
+
+            // Force a viewer mode
+            if (siteViewerMode == SiteViewerMode.Any)
+            {
+                var version = state.PageRoutingInfo.GetVersionRoute(
+                    state.InputParameters.IsEditingCustomEntity,
+                    state.SiteViewerMode.ToWorkFlowStatusQuery(),
+                    state.InputParameters.VersionId);
+
+                switch (version.WorkFlowStatus)
+                {
+                    case WorkFlowStatus.Draft:
+                        siteViewerMode = SiteViewerMode.Draft;
+                        break;
+                    case WorkFlowStatus.Published:
+                        siteViewerMode = SiteViewerMode.Live;
+                        break;
+                    default:
+                        throw new ApplicationException("WorkFlowStatus." + version.WorkFlowStatus + " is not valid for SiteViewerMode.Any");
+                }
+            }
+
+            var pageResponseData = new PageResponseData();
+            pageResponseData.Page = vm;
+            pageResponseData.SiteViewerMode = siteViewerMode;
+            pageResponseData.PageRoutingInfo = state.PageRoutingInfo;
+            pageResponseData.HasDraftVersion = state.PageRoutingInfo.GetVersionRoute(state.InputParameters.IsEditingCustomEntity, WorkFlowStatusQuery.Draft, null) != null;
+            pageResponseData.Version = state.PageRoutingInfo.GetVersionRoute(state.InputParameters.IsEditingCustomEntity, workFlowStatusQuery, state.InputParameters.VersionId);
+
+            if (!string.IsNullOrEmpty(state.PageRoutingInfo.PageRoute.CustomEntityDefinitionCode))
+            {
+                pageResponseData.CustomEntityDefinition = _queryExecutor.GetById<CustomEntityDefinitionSummary>(state.PageRoutingInfo.PageRoute.CustomEntityDefinitionCode);
+            }
+
+            if (state.InputParameters.IsEditingCustomEntity)
+            {
+                pageResponseData.PageVersion = pageVersions.GetVersionRouting(WorkFlowStatusQuery.Latest);
+            }
+            else
+            {
+                pageResponseData.PageVersion = pageVersions.GetVersionRouting(workFlowStatusQuery, state.InputParameters.VersionId);
+            }
+
+            _pageRenderDataCache.Set(pageResponseData);
         }
 
         private async Task<CustomEntityRenderDetails> GetCustomEntityModel(PageActionRoutingState state)

@@ -20,7 +20,6 @@ namespace Cofoundry.Web.Admin
                 .RegisterAll<IStandardAngularModuleRegistration>()
                 .RegisterType<StandardAngularModuleRegistrationBootstrapper>()
                 .RegisterType<ISetupPageActionFactory, SetupPageActionFactory>(options)
-                .RegisterType<ISiteViewerActionFactory, SiteViewerActionFactory>(options)
                 ;
         }
     }

@@ -27,11 +27,6 @@ namespace Cofoundry.Web
         public int? VersionId { get; set; }
 
         /// <summary>
-        /// Whether the page has been requested from inside the site viewer iframe
-        /// </summary>
-        public bool IsSiteViewerRequested { get; set; }
-
-        /// <summary>
         /// When routing to a custom entity this determines if we are editing the 
         /// custom entity or the overall page template. Both cannot be edited at the same
         /// time since it would be confusing to manage both version states.
