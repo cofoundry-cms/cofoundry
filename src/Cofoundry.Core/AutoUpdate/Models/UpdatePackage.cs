@@ -15,7 +15,7 @@ namespace Cofoundry.Core.AutoUpdate
 
         public UpdatePackage()
         {
-            Commands = Enumerable.Empty<IUpdateCommand>();
+            VersionedCommands = Enumerable.Empty<IVersionedUpdateCommand>();
             DependentModules = Enumerable.Empty<string>();
         }
 
@@ -29,12 +29,17 @@ namespace Cofoundry.Core.AutoUpdate
         public string ModuleIdentifier { get; set; }
 
         /// <summary>
-        /// Commands to run when updating the module
+        /// Commands to run when updating the module to a specific version
         /// </summary>
-        public IEnumerable<IUpdateCommand> Commands { get; set; }
+        public IEnumerable<IVersionedUpdateCommand> VersionedCommands { get; set; }
 
         /// <summary>
-        /// A collection of module identifiers that this module is dependent on.
+        /// Commands to run after all versioned commands have been run
+        /// </summary>
+        public IEnumerable<IAlwaysRunUpdateCommand> AlwaysUpdateCommands { get; set; }
+
+        /// <summary>
+        /// A collection of module identifiers that this module is dependent on
         /// </summary>
         public IEnumerable<string> DependentModules { get; set; }
 

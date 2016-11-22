@@ -23,7 +23,7 @@ namespace Cofoundry.Core.AutoUpdate
         /// <param name="currentVersion">The current version of the module</param>
         /// <param name="scriptPath">The folder path of the script files which defaults to 'Install.Db.' (which equates to 'Install/Db/')</param>
         /// <returns>Collecton of IUpdateCommands that represents all the required db updates</returns>
-        public IEnumerable<IUpdateCommand> Create(Assembly assembly, ModuleVersion currentVersion, string scriptPath = "Install.Db.")
+        public IEnumerable<IVersionedUpdateCommand> Create(Assembly assembly, ModuleVersion currentVersion, string scriptPath = "Install.Db.")
         {
             Condition.Requires(assembly).IsNotNull();
             var scriptFiles = GetScripts(assembly, scriptPath);
@@ -56,7 +56,7 @@ namespace Cofoundry.Core.AutoUpdate
                 }
             }
 
-            if (!commands.Any()) return Enumerable.Empty<IUpdateCommand>();
+            if (!commands.Any()) return Enumerable.Empty<IVersionedUpdateCommand>();
 
             foreach (var scriptFile in scriptFiles.Where(s => !s.Contains(".Schema.")))
             {

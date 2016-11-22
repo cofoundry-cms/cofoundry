@@ -10,6 +10,8 @@ namespace Cofoundry.Domain
         PageModuleTypeSummary[] GetOrAdd(Func<PageModuleTypeSummary[]> getter);
 
         Task<PageModuleTypeSummary[]> GetOrAddAsync(Func<Task<PageModuleTypeSummary[]>> getter);
+
+        Dictionary<string, PageModuleTypeFileLocation> GetOrAddFileLocations(Func<Dictionary<string, PageModuleTypeFileLocation>> getter);
         
         void Clear();
     }

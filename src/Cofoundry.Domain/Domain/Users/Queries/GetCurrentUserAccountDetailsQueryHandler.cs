@@ -29,6 +29,7 @@ namespace Cofoundry.Domain
             var user = _dbContext
                 .Users
                 .FilterById(executionContext.UserContext.UserId.Value)
+                .FilterCanLogIn()
                 .ProjectTo<UserAccountDetails>()
                 .SingleOrDefaultAsync();
 

@@ -7,10 +7,10 @@ using System.Threading.Tasks;
 namespace Cofoundry.Core.AutoUpdate
 {
     /// <summary>
-    /// Base interface for IUpdateCommands handlers
+    /// Base interface for IVersionedUpdateCommand handlers
     /// </summary>
     /// <typeparam name="TCommand">Type of command to execute</typeparam>
-    public interface IUpdateCommandHandler<in TCommand> where TCommand : IUpdateCommand
+    public interface IVersionedUpdateCommandHandler<in TCommand> where TCommand : IVersionedUpdateCommand
     {
     }
 }

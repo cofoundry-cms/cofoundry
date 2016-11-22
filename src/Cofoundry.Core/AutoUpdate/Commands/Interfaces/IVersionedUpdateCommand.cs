@@ -10,7 +10,7 @@ namespace Cofoundry.Core.AutoUpdate
     /// A command that updates a part of a module or application to a
     /// specific version number.
     /// </summary>
-    public interface IUpdateCommand
+    public interface IVersionedUpdateCommand
     {
         /// <summary>
         /// The version of the command to run. Version numbers

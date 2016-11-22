@@ -16,7 +16,8 @@ namespace Cofoundry.Core.AutoUpdate
     {
         #region private variables
 
-        private static readonly MethodInfo _runMethod = typeof(AutoUpdateService).GetMethod("ExecuteGenericCommand", BindingFlags.NonPublic | BindingFlags.Instance);
+        private static readonly MethodInfo _runVersionedCommandMethod = typeof(AutoUpdateService).GetMethod("ExecuteGenericVersionedCommand", BindingFlags.NonPublic | BindingFlags.Instance);
+        private static readonly MethodInfo _runAlwaysRunCommandMethod = typeof(AutoUpdateService).GetMethod("ExecuteGenericAlwaysRunCommand", BindingFlags.NonPublic | BindingFlags.Instance);
 
         private readonly IUpdatePackageFactory[] _updatePackageFactories;
         private readonly IUpdateCommandHandlerFactory _commandHandlerFactory;
@@ -49,16 +50,16 @@ namespace Cofoundry.Core.AutoUpdate
         /// Async because sometimes UpdateCommands need to be async to save having to create
         /// sync versions of methods that would not normally require them. E.g. when calling into
         /// shared command handlers. I don't really think there's much benefit in making any other
-        /// part asyn because nothing else useful should be happening while the db update is going on anyway.
+        /// part async because nothing else useful should be happening while the db update is going on anyway.
         /// </remarks>
         public async Task UpdateAsync()
         {
-            var versions = GetModuleVersions();
+            var previouslyAppliedVersions = GetUpdateVersionHistory();
 
             // Make sure Cofoundry packages are installed first, even if someone has forgotten to mark it as a dependency
             var packages = _updatePackageFactories
-                .SelectMany(f => f.Create(versions))
-                .Where(p => p.Commands.Any())
+                .SelectMany(f => f.Create(previouslyAppliedVersions))
+                .Where(p => !EnumerableHelper.IsNullOrEmpty(p.VersionedCommands) || !EnumerableHelper.IsNullOrEmpty(p.AlwaysUpdateCommands))
                 .OrderByDescending(p => p.ModuleIdentifier == CofoundryModuleInfo.ModuleIdentifier)
                 .ThenBy(p => p)
                 .ToList();
@@ -70,7 +71,8 @@ namespace Cofoundry.Core.AutoUpdate
 
             foreach (var package in packages)
             {
-                foreach (var command in package.Commands)
+                // Versioned Commands
+                foreach (var command in EnumerableHelper.Enumerate(package.VersionedCommands))
                 {
                     try
                     {
@@ -83,6 +85,13 @@ namespace Cofoundry.Core.AutoUpdate
                     }
 
                     LogUpdateSuccess(package.ModuleIdentifier, command.Version, command.Description);
+                }
+
+                // Always Run Commands
+                foreach (var command in EnumerableHelper.Enumerate(package.AlwaysUpdateCommands))
+                {
+                    await ExecuteCommandAsync(command);
+                    // TODO: Run, remove if (packages.Any()..
                 }
             }
         }
@@ -123,32 +132,60 @@ namespace Cofoundry.Core.AutoUpdate
             }
         }
 
-        private async Task ExecuteCommandAsync(IUpdateCommand command)
+        private Task ExecuteCommandAsync(IVersionedUpdateCommand command)
         {
-            var task = (Task)_runMethod
+            var task = (Task)_runVersionedCommandMethod
                 .MakeGenericMethod(command.GetType())
                 .Invoke(this, new object[] { command });
 
-            await task;
+            return task;
         }
 
-        private async Task ExecuteGenericCommand<TCommand>(TCommand command) where TCommand : IUpdateCommand
+        private Task ExecuteCommandAsync(IAlwaysRunUpdateCommand command)
         {
-            var runner = _commandHandlerFactory.Create<TCommand>();
+            var task = (Task)_runAlwaysRunCommandMethod
+                .MakeGenericMethod(command.GetType())
+                .Invoke(this, new object[] { command });
 
-            if (runner is IAsyncUpdateCommandHandler<TCommand>)
+            return task;
+        }
+
+        private Task ExecuteGenericVersionedCommand<TCommand>(TCommand command) where TCommand : IVersionedUpdateCommand
+        {
+            var runner = _commandHandlerFactory.CreateVersionedCommand<TCommand>();
+
+            if (runner is IAsyncVersionedUpdateCommandHandler<TCommand>)
             {
-                await ((IAsyncUpdateCommandHandler<TCommand>)runner).ExecuteAsync(command);
+                return ((IAsyncVersionedUpdateCommandHandler<TCommand>)runner).ExecuteAsync(command);
             }
             else
             {
-                ((ISyncUpdateCommandHandler<TCommand>)runner).Execute(command);
+                ((ISyncVersionedUpdateCommandHandler<TCommand>)runner).Execute(command);
+                return Task.CompletedTask;
             }
         }
 
-        private IEnumerable<ModuleVersion> GetModuleVersions()
+        private Task ExecuteGenericAlwaysRunCommand<TCommand>(TCommand command) where TCommand : IAlwaysRunUpdateCommand
         {
-            // check both schemas since this was removed in v2
+            var runner = _commandHandlerFactory.CreateAlwaysRunCommand<TCommand>();
+
+            if (runner is IAsyncAlwaysRunUpdateCommandHandler<TCommand>)
+            {
+                return ((IAsyncAlwaysRunUpdateCommandHandler<TCommand>)runner).ExecuteAsync(command);
+            }
+            else
+            {
+                ((ISyncAlwaysRunUpdateCommandHandler<TCommand>)runner).Execute(command);
+                return Task.CompletedTask;
+            }
+        }
+
+        /// <summary>
+        /// Gets a collections of module updates that have already been applied
+        /// to the system.
+        /// </summary>
+        private IEnumerable<ModuleVersion> GetUpdateVersionHistory()
+        {
             var query = @"
                 if (exists (select * 
                                  from information_schema.tables 

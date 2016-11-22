@@ -62,7 +62,8 @@ namespace Cofoundry.Domain
         {
             var user = _dbContext
                 .Users
-                .FilterById(command.UserId);
+                .FilterById(command.UserId)
+                .FilterCanLogIn();
 
             return user;
         }

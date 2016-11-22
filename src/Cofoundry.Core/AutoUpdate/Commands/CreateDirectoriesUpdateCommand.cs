@@ -9,7 +9,7 @@ namespace Cofoundry.Core.AutoUpdate
     /// <summary>
     /// A command that creates one or more directories in the file system.
     /// </summary>
-    public class CreateDirectoriesUpdateCommand : IUpdateCommand
+    public class CreateDirectoriesUpdateCommand : IVersionedUpdateCommand
     {
         /// <summary>
         /// The version of the command to run. Version numbers

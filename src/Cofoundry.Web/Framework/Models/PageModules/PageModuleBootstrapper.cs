@@ -2,15 +2,15 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Cofoundry.Core.EmbeddedResources;
 using Cofoundry.Web.ModularMvc;
+using Cofoundry.Domain;
 
 namespace Cofoundry.Web.PageModules
 {
     /// <summary>
     /// Bootstraps the registration of PageModule view locations, enabling PageModules to be included in non-standard places.
     /// </summary>
-    public class PageModuleBootstrapper : IViewLocationRegistration // , IEmbeddedResourceRouteRegistration
+    public class PageModuleBootstrapper : IViewLocationRegistration
     {
         private readonly IPageModuleViewLocationRegistration[] _pageModuleViewLocationRegistrations;
 
@@ -20,19 +20,7 @@ namespace Cofoundry.Web.PageModules
         {
             _pageModuleViewLocationRegistrations = pageModuleViewLocationRegistrations;
         }
-
-        // TODO: Not sure why this implements IEmbeddedResourceRouteRegistration? module views don't need to be served as static resources...
-        // Is it supposed to be assembly resource registration?
-        //public IEnumerable<string> GetEmbeddedResourcePaths()
-        //{
-        //    var pathsToRegister = _pageModuleViewLocationRegistrations
-        //        .SelectMany(r => r.GetPathPrefixes())
-        //        .Select(p => FormatEmbeddedResourcePath(p))
-        //        .Where(p => p != null);
-
-        //    return pathsToRegister;
-        //}
-
+        
         public ViewLocations GetLocations()
         {
             // Register paths as partial views so that the standard view locator can find them.
@@ -59,14 +47,5 @@ namespace Cofoundry.Web.PageModules
 
             return path;
         }
-
-        //private string FormatEmbeddedResourcePath(string pathPrefix)
-        //{
-        //    if (string.IsNullOrWhiteSpace(pathPrefix)) return null;
-
-        //    var path = "/" + pathPrefix.Trim('/');
-
-        //    return path;
-        //}
     }
 }

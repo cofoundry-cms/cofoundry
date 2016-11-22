@@ -9,7 +9,7 @@ namespace Cofoundry.Core.AutoUpdate
     /// <summary>
     /// A command that executes a sql db script.
     /// </summary>
-    public class UpdateDbCommand : IUpdateCommand
+    public class UpdateDbCommand : IVersionedUpdateCommand
     {
         /// <summary>
         /// The name of the sql file without the .sql extension. For single

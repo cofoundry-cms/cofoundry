@@ -43,7 +43,10 @@ namespace Cofoundry.Domain
                 throw new ValidationException("Site is already set up.");
             }
 
-            if (await _dbContext.Users.AnyAsync(u => u.Role.SpecialistRoleTypeCode == SpecialistRoleTypeCodes.SuperAdministrator))
+            if (await _dbContext
+                .Users
+                .FilterCanLogIn()
+                .AnyAsync(u => u.Role.SpecialistRoleTypeCode == SpecialistRoleTypeCodes.SuperAdministrator))
             {
                 throw new ValidationException("Cannot create a master user when master users already exist in the database.");
             }

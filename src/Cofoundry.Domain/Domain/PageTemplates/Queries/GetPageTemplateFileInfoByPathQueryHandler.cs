@@ -29,17 +29,20 @@ namespace Cofoundry.Domain
 
         private readonly IQueryExecutor _queryExecutor;
         private readonly IPageTemplateViewFileLocator _viewLocator;
+        private readonly IViewFileReader _viewFileReader;
         private readonly PageTemplateCustomEntityTypeMapper _pageTemplateCustomEntityTypeMapper;
 
         public GetPageTemplateFileInfoByPathQueryHandler(
             IPageTemplateViewFileLocator viewLocator,
             IQueryExecutor queryExecutor,
+            IViewFileReader viewFileReader,
             PageTemplateCustomEntityTypeMapper pageTemplateCustomEntityTypeMapper
             )
         {
             _queryExecutor = queryExecutor;
             _viewLocator = viewLocator;
             _pageTemplateCustomEntityTypeMapper = pageTemplateCustomEntityTypeMapper;
+            _viewFileReader = viewFileReader;
         }
 
         #endregion
@@ -48,7 +51,7 @@ namespace Cofoundry.Domain
 
         public async Task<PageTemplateFileInfo> ExecuteAsync(GetPageTemplateFileInfoByPathQuery query, IExecutionContext executionContext)
         {
-            var view = await _viewLocator.ReadViewFileAsync(query.FullPath);
+            var view = await _viewFileReader.ReadViewFileAsync(query.FullPath);
 
             if (view == null)
             {
@@ -167,7 +170,7 @@ namespace Cofoundry.Domain
             Debug.Assert(!string.IsNullOrEmpty(partialPath), "Partial View file not found: " + partialName);
 
             if (string.IsNullOrEmpty(partialPath)) return Enumerable.Empty<PageTemplateFileSection>();
-            var partialFile = await _viewLocator.ReadViewFileAsync(partialPath);
+            var partialFile = await _viewFileReader.ReadViewFileAsync(partialPath);
 
             return (await ParseViewFile(partialFile, false, executionContext)).Sections;
         }

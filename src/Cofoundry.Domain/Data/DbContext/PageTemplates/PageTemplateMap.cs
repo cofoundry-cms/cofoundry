@@ -23,7 +23,7 @@ namespace Cofoundry.Domain.Data
                 .HasMaxLength(100);
 
             Property(t => t.Description)
-                .IsRequired();
+                .IsMaxLength();
 
             // Relationships
             HasOptional(t => t.CustomEntityDefinition)

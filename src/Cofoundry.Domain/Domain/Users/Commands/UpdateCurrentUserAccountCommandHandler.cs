@@ -45,7 +45,7 @@ namespace Cofoundry.Domain
 
             var user = await _dbContext
                 .Users
-                .FilterActive()
+                .FilterCanLogIn()
                 .FilterById(userId)
                 .SingleOrDefaultAsync();
 

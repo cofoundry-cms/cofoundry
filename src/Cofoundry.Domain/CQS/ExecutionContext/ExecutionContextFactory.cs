@@ -51,24 +51,22 @@ namespace Cofoundry.Domain.CQS
         }
 
         /// <summary>
-        /// Creates an instance of IExecutionContext using a Super Admin
-        /// level account. Should be used sparingly for elevating permissions,
-        /// typically for back-end processes.
+        /// Creates an instance of IExecutionContext using the system account. Should 
+        /// be used sparingly for elevating permissions, typically for back-end processes.
         /// </summary>
-        public IExecutionContext CreateSuperAdminContext()
+        public IExecutionContext CreateSystemUserContext()
         {
-            var userContext = _userContextService.GetSuperAdminUserContext();
+            var userContext = _userContextService.GetSystemUserContext();
             return Create(userContext);
         }
 
         /// <summary>
-        /// Creates an instance of IExecutionContext using a Super Admin
-        /// level account. Should be used sparingly for elevating permissions,
-        /// typically for back-end processes.
+        /// Creates an instance of IExecutionContext using the system account. Should 
+        /// be used sparingly for elevating permissions, typically for back-end processes.
         /// </summary>
-        public async Task<IExecutionContext> CreateSuperAdminContextAsync()
+        public async Task<IExecutionContext> CreateSystemUserContextAsync()
         {
-            var userContext = await _userContextService.GetSuperAdminUserContextAsync();
+            var userContext = await _userContextService.GetSystemUserContextAsync();
             return Create(userContext);
         }
     }

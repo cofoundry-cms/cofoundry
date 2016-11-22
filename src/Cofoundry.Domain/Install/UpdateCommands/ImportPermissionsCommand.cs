@@ -7,7 +7,7 @@ using Cofoundry.Core.AutoUpdate;
 
 namespace Cofoundry.Domain.Installation
 {
-    public class ImportPermissionsCommand : IUpdateCommand
+    public class ImportPermissionsCommand : IVersionedUpdateCommand
     {
         public string Description
         {

@@ -33,7 +33,7 @@ namespace Cofoundry.Domain
             var user = await _dbContext
                 .Users
                 .AsNoTracking()
-                .FilterActive()
+                .FilterCanLogIn()
                 .FilterById(executionContext.UserContext.UserId.Value)
                 .ProjectTo<UpdateCurrentUserAccountCommand>()
                 .SingleOrDefaultAsync();

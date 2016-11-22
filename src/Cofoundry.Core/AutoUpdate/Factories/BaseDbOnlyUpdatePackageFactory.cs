@@ -33,7 +33,7 @@ namespace Cofoundry.Core.AutoUpdate
             var package = new UpdatePackage();
             var dbCommandFactory = new DbUpdateCommandFactory();
 
-            package.Commands = dbCommandFactory.Create(GetType().Assembly, moduleVersion, ScriptPath);
+            package.VersionedCommands = dbCommandFactory.Create(GetType().Assembly, moduleVersion, ScriptPath);
             package.ModuleIdentifier = ModuleIdentifier;
             package.DependentModules = DependentModules;
 

@@ -10,8 +10,8 @@ namespace Cofoundry.Core.AutoUpdate
     /// Handler for executing IUpdateCommands synchronously
     /// </summary>
     /// <typeparam name="TCommand">Type of command to execute</typeparam>
-    public interface ISyncUpdateCommandHandler<in TCommand> : IUpdateCommandHandler<TCommand>
-        where TCommand : IUpdateCommand
+    public interface ISyncVersionedUpdateCommandHandler<in TCommand> : IVersionedUpdateCommandHandler<TCommand>
+        where TCommand : IVersionedUpdateCommand
     {
         /// <summary>
         /// Executes the specified command.

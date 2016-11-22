@@ -21,15 +21,27 @@ namespace Cofoundry.Core.AutoUpdate
             _resolutionContext = resolutionContext;
         }
 
-        public IUpdateCommandHandler<TCommand> Create<TCommand>() where TCommand : IUpdateCommand
+        public IVersionedUpdateCommandHandler<TCommand> CreateVersionedCommand<TCommand>() where TCommand : IVersionedUpdateCommand
         {
-            if (_resolutionContext.IsRegistered<IAsyncUpdateCommandHandler<TCommand>>())
+            if (_resolutionContext.IsRegistered<IAsyncVersionedUpdateCommandHandler<TCommand>>())
             {
-                return _resolutionContext.Resolve<IAsyncUpdateCommandHandler<TCommand>>();
+                return _resolutionContext.Resolve<IAsyncVersionedUpdateCommandHandler<TCommand>>();
             }
             else
             {
-                return _resolutionContext.Resolve<ISyncUpdateCommandHandler<TCommand>>();
+                return _resolutionContext.Resolve<ISyncVersionedUpdateCommandHandler<TCommand>>();
+            }
+        }
+
+        public IAlwaysRunUpdateCommandHandler<TCommand> CreateAlwaysRunCommand<TCommand>() where TCommand : IAlwaysRunUpdateCommand
+        {
+            if (_resolutionContext.IsRegistered<IAsyncAlwaysRunUpdateCommandHandler<TCommand>>())
+            {
+                return _resolutionContext.Resolve<IAsyncAlwaysRunUpdateCommandHandler<TCommand>>();
+            }
+            else
+            {
+                return _resolutionContext.Resolve<ISyncAlwaysRunUpdateCommandHandler<TCommand>>();
             }
         }
     }

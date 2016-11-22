@@ -56,7 +56,7 @@ namespace Cofoundry.Domain
 
             if (!isSuperAdmin)
             {
-                throw new NotPermittedException();
+                throw new NotPermittedException("SuperAdmin access is required to perform this action");
             }
         }
 
@@ -141,7 +141,7 @@ namespace Cofoundry.Domain
         {
             if (!IsCurrentUserOrHasPermission<TPermission>(userId))
             {
-                throw new NotPermittedException();
+                throw new PermissionValidationFailedException(new TPermission(), _userContextService.GetCurrentContext());
             }
         }
 
@@ -157,7 +157,7 @@ namespace Cofoundry.Domain
         {
             if (!IsCurrentUserOrHasPermission<TPermission>(userId))
             {
-                throw new NotPermittedException();
+                throw new PermissionValidationFailedException(new TPermission(), currentUserContext);
             }
         }
 
@@ -230,7 +230,7 @@ namespace Cofoundry.Domain
         {
             if (!HasPermission(permission, userContext))
             {
-                throw new NotPermittedException();
+                throw new PermissionValidationFailedException(permission, userContext);
             }
         }
 

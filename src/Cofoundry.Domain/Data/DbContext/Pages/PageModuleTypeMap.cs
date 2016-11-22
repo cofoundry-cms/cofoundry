@@ -13,7 +13,7 @@ namespace Cofoundry.Domain.Data
                 .HasMaxLength(50);
 
             Property(t => t.Description)
-                .IsRequired();
+                .IsMaxLength();
 
             Property(t => t.FileName)
                 .IsRequired()

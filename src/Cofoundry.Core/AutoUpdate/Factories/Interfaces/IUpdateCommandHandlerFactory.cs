@@ -11,6 +11,7 @@ namespace Cofoundry.Core.AutoUpdate
     /// </summary>
     public interface IUpdateCommandHandlerFactory
     {
-        IUpdateCommandHandler<TCommand> Create<TCommand>() where TCommand : IUpdateCommand;
+        IVersionedUpdateCommandHandler<TCommand> CreateVersionedCommand<TCommand>() where TCommand : IVersionedUpdateCommand;
+        IAlwaysRunUpdateCommandHandler<TCommand> CreateAlwaysRunCommand<TCommand>() where TCommand : IAlwaysRunUpdateCommand;
     }
 }

@@ -56,6 +56,7 @@ namespace Cofoundry.Domain
             var user = _dbContext
                 .Users
                 .FilterByUserArea(command.UserAreaCode)
+                .FilterCanLogIn()
                 .Where(u => u.Username == command.Username.Trim());
 
             return user;

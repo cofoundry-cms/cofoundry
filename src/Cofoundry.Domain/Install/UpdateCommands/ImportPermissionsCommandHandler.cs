@@ -7,7 +7,7 @@ using Cofoundry.Core.AutoUpdate;
 
 namespace Cofoundry.Domain.Installation
 {
-    public class ImportPermissionsCommandHandler : IAsyncUpdateCommandHandler<ImportPermissionsCommand>
+    public class ImportPermissionsCommandHandler : IAsyncVersionedUpdateCommandHandler<ImportPermissionsCommand>
     {
         private readonly Database _db;
         private readonly IPermissionRepository _permissionRepository;

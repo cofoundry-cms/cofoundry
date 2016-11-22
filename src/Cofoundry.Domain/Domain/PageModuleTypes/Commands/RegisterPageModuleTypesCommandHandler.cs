@@ -53,17 +53,18 @@ namespace Cofoundry.Domain
 
             await DeleteModules(executionContext, dbPageModules, moduleDataModels);
 
-            UpdateModules(executionContext, dbPageModules, moduleDataModels);
+            await UpdateModulesAsync(executionContext, dbPageModules, moduleDataModels);
 
             await _dbContext.SaveChangesAsync();
             _pageCache.Clear();
             _moduleCache.Clear();
         }
 
-        private static void UpdateModules(
+        private async Task UpdateModulesAsync(
             IExecutionContext executionContext, 
             Dictionary<string, PageModuleType> dbPageModules, 
-            Dictionary<string, IPageModuleDataModel> moduleDataModels)
+            Dictionary<string, IPageModuleDataModel> moduleDataModels
+            )
         {
             foreach (var model in moduleDataModels)
             {
@@ -71,10 +72,11 @@ namespace Cofoundry.Domain
                 var existingModule = dbPageModules.GetOrDefault(fileName);
                 bool isUpdated = false;
 
+                var fileDetails = await _queryExecutor.ExecuteAsync(new GetPageModuleTypeFileDetailsByFileNameQuery(fileName), executionContext);
+                var name = string.IsNullOrWhiteSpace(fileDetails.Name) ? TextFormatter.PascalCaseToSentence(fileName) : fileDetails.Name;
                 if (existingModule == null)
                 {
                     existingModule = new PageModuleType();
-                    existingModule.Name = TextFormatter.PascalCaseToSentence(fileName);
                     existingModule.FileName = fileName;
                     existingModule.CreateDate = executionContext.ExecutionDate;
                     isUpdated = true;
@@ -83,22 +85,58 @@ namespace Cofoundry.Domain
                 if (existingModule.IsArchived)
                 {
                     isUpdated = true;
-                    existingModule.IsArchived = true;
+                    existingModule.IsArchived = false;
                 }
 
-                // TODO get module templates
-                //existingModule.PageModuleTemplates = fileName;
-
-                if (true)
+                if (existingModule.Name != name)
                 {
                     isUpdated = true;
-                    existingModule.Description = "TODO: YAH, then do templates";
+                    existingModule.Name = name;
                 }
+
+                if (existingModule.Description != fileDetails.Description)
+                {
+                    isUpdated = true;
+                    existingModule.Description = fileDetails.Description;
+                }
+
+                UpdateTemplates(executionContext, existingModule, fileDetails);
 
                 if (isUpdated)
                 {
                     existingModule.UpdateDate = executionContext.ExecutionDate;
                 }
+            }
+        }
+
+        private void UpdateTemplates(
+            IExecutionContext executionContext, 
+            PageModuleType existingModule, 
+            PageModuleTypeFileDetails fileDetails
+            )
+        {
+            var templatesToDelete = existingModule
+                                .PageModuleTemplates
+                                .Where(mt => !fileDetails.Templates.Any(t => t.FileName.Equals(mt.FileName, StringComparison.OrdinalIgnoreCase)))
+                                .ToList();
+            _dbContext.PageModuleTypeTemplates.RemoveRange(templatesToDelete);
+
+            foreach (var fileTemplate in fileDetails.Templates)
+            {
+                var existingTemplate = existingModule
+                    .PageModuleTemplates
+                    .FirstOrDefault(t => t.FileName.Equals(fileTemplate.FileName, StringComparison.OrdinalIgnoreCase));
+
+                if (existingTemplate == null)
+                {
+                    existingTemplate = new PageModuleTypeTemplate();
+                    existingTemplate.CreateDate = executionContext.ExecutionDate;
+                    existingModule.PageModuleTemplates.Add(existingTemplate);
+                }
+
+                existingTemplate.FileName = fileTemplate.FileName;
+                existingTemplate.Name = fileTemplate.Name;
+                existingTemplate.Description = fileTemplate.Description;
             }
         }
 
@@ -139,7 +177,7 @@ namespace Cofoundry.Domain
                     .Where(m => m.Count() > 1)
                     .FirstOrDefault();
 
-            if (duplicateModuleDefinitions.Any())
+            if (!EnumerableHelper.IsNullOrEmpty(duplicateModuleDefinitions))
             {
                 var moduleTypes = string.Join(", ", duplicateModuleDefinitions.Select(t => t.GetType().FullName));
                 throw new PageModuleTypeRegistrationException(

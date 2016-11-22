@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Cofoundry.Core;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -30,5 +31,12 @@ namespace Cofoundry.Domain
         /// of these permissions to pass the evaluation of this application.
         /// </summary>
         public IPermission[] Permissions { get; set; }
+
+        public override string ToString()
+        {
+            if (EnumerableHelper.IsNullOrEmpty(Permissions)) return base.ToString();
+
+            return string.Join(", ", Permissions.Select(p => p.ToString()));
+        }
     }
 }

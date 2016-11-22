@@ -312,7 +312,6 @@
     <Compile Include="Framework\Models\Errors\ErrorPageViewModel.cs" />
     <Compile Include="Framework\Models\Errors\NotFoundPageViewModel.cs" />
     <Compile Include="Framework\Models\PageModules\IModuleRenderer.cs" />
-    <Compile Include="Framework\Models\PageModules\IPageModuleViewLocationRegistration.cs" />
     <Compile Include="Framework\Models\PageModules\IPageModuleWithParentPageData.cs" />
     <Compile Include="Framework\Models\PageModules\ModuleRenderer.cs" />
     <Compile Include="Framework\Models\PageModules\PageModuleBootstrapper.cs" />
@@ -352,7 +351,6 @@
     <Compile Include="Framework\ModularMvc\ViewEngine\AssemblyResourceViewEngine.cs" />
     <Compile Include="Framework\ModularMvc\ViewEngine\IAssemblyResourceViewEngineInitializer.cs" />
     <Compile Include="Framework\ModularMvc\ViewEngine\AssemblyResourceViewEngineInitializer.cs" />
-    <Compile Include="Framework\ModularMvc\ViewEngine\PageModuleTypeViewFileLocator.cs" />
     <Compile Include="Framework\ModularMvc\ViewEngine\ViewLocations\DefaultViewLocationRegistration.cs" />
     <Compile Include="Framework\ModularMvc\ViewEngine\ViewLocations\IViewLocationRegistration.cs" />
     <Compile Include="Framework\ModularMvc\ViewEngine\ViewLocations\ViewLocations.cs" />

@@ -11,8 +11,9 @@ namespace Cofoundry.Domain
     {
         #region constructor
 
-        private const string MODULETYPESUMMARY_CACHEKEY = "ModuleTypeSummaries";
-        private const string CACHEKEY = "COF_PageModules";
+        private const string SUMMARIES_CACHEKEY = "Summaries";
+        private const string FILE_LOCATIONS_CACHEKEY = "FileLocations";
+        private const string CACHEKEY = "Cofoundry.Domain.PageModuleTypeCache";
 
         private readonly IObjectCache _cache;
 
@@ -27,12 +28,17 @@ namespace Cofoundry.Domain
 
         public PageModuleTypeSummary[] GetOrAdd(Func<PageModuleTypeSummary[]> getter)
         {
-            return _cache.GetOrAdd(MODULETYPESUMMARY_CACHEKEY, getter);
+            return _cache.GetOrAdd(SUMMARIES_CACHEKEY, getter);
         }
 
-        public async Task<PageModuleTypeSummary[]> GetOrAddAsync(Func<Task<PageModuleTypeSummary[]>> getter)
+        public Task<PageModuleTypeSummary[]> GetOrAddAsync(Func<Task<PageModuleTypeSummary[]>> getter)
         {
-            return await _cache.GetOrAddAsync(MODULETYPESUMMARY_CACHEKEY, getter);
+            return _cache.GetOrAddAsync(SUMMARIES_CACHEKEY, getter);
+        }
+
+        public Dictionary<string, PageModuleTypeFileLocation> GetOrAddFileLocations(Func<Dictionary<string, PageModuleTypeFileLocation>> getter)
+        {
+            return _cache.GetOrAdd(FILE_LOCATIONS_CACHEKEY, getter);
         }
 
         public void Clear()

@@ -78,11 +78,10 @@ namespace Cofoundry.Domain
                 if (templateView == null) continue;
 
                 var templateViewData = ParseViewFile(templateView);
-
+                templateViewData.FileName = Path.GetFileNameWithoutExtension(templatePath);
                 if (string.IsNullOrWhiteSpace(templateViewData.Name))
                 {
-                    var fileName = Path.GetFileNameWithoutExtension(templatePath);
-                    templateViewData.Name = TextFormatter.PascalCaseToSentence(fileName);
+                    templateViewData.Name = TextFormatter.PascalCaseToSentence(templateViewData.FileName);
                 }
 
                 templateFileDetails.Add(templateViewData);

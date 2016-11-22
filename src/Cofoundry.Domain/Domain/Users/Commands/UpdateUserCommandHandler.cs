@@ -46,7 +46,7 @@ namespace Cofoundry.Domain
             // Get User
             var user = await _dbContext
                 .Users
-                .FilterActive()
+                .FilterCanLogIn()
                 .FilterById(command.UserId)
                 .SingleOrDefaultAsync();
             EntityNotFoundException.ThrowIfNull(user, command.UserId);

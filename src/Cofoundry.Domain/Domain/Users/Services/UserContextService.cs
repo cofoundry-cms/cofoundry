@@ -58,6 +58,7 @@ namespace Cofoundry.Domain
                     .Users
                     .AsNoTracking()
                     .FilterById(userId.Value)
+                    .FilterCanLogIn()
                     .SingleOrDefault();
 
                 if (dbResult == null)
@@ -82,14 +83,14 @@ namespace Cofoundry.Domain
         }
 
         /// <summary>
-        /// Use this to get a user context for the super admin, useful
+        /// Use this to get a user context for the system user, useful
         /// if you need to impersonate the user to perform an action with elevated 
         /// privileges
         /// </summary>
-        public async Task<IUserContext> GetSuperAdminUserContextAsync()
+        public async Task<IUserContext> GetSystemUserContextAsync()
         {
             // Grab the first super admin user.
-            var dbUser = await QuerySuperAdminUser().FirstOrDefaultAsync();
+            var dbUser = await QuerySystemUser().FirstOrDefaultAsync();
             EntityNotFoundException.ThrowIfNull(dbUser, SpecialistRoleTypeCodes.SuperAdministrator);
             var impersonatedUserContext = _userContextMapper.Map(dbUser);
 
@@ -97,14 +98,14 @@ namespace Cofoundry.Domain
         }
 
         /// <summary>
-        /// Use this to get a user context for the super admin, useful
+        /// Use this to get a user context for the system user, useful
         /// if you need to impersonate the user to perform an action with elevated 
         /// privileges
         /// </summary>
-        public IUserContext GetSuperAdminUserContext()
+        public IUserContext GetSystemUserContext()
         {
             // Grab the first super admin user.
-            var dbUser = QuerySuperAdminUser().FirstOrDefault();
+            var dbUser = QuerySystemUser().FirstOrDefault();
             EntityNotFoundException.ThrowIfNull(dbUser, SpecialistRoleTypeCodes.SuperAdministrator);
             var impersonatedUserContext = _userContextMapper.Map(dbUser);
 
@@ -124,13 +125,13 @@ namespace Cofoundry.Domain
 
         #region helpers
 
-        private IQueryable<User> QuerySuperAdminUser()
+        private IQueryable<User> QuerySystemUser()
         {
             var query = _dbContext
                 .Users
                 .FilterByUserArea(CofoundryAdminUserArea.AreaCode)
                 .FilterActive()
-                .Where(u => u.Role.SpecialistRoleTypeCode == SpecialistRoleTypeCodes.SuperAdministrator);
+                .Where(u => u.IsSystemAccount);
 
             return query;
         }

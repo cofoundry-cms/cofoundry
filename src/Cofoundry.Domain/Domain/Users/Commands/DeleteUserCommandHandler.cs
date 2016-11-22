@@ -68,6 +68,10 @@ namespace Cofoundry.Domain
 
         private void ValidateCustomPermissions(User user, IExecutionContext executionContext, RoleDetails executorRole)
         {
+            if (user.IsSystemAccount)
+            {
+                throw new NotPermittedException("You cannot delete the system account.");
+            }
             if (user.UserAreaCode == CofoundryAdminUserArea.AreaCode)
             {
                 _permissionValidationService.EnforcePermission(new CofoundryUserUpdatePermission(), executionContext.UserContext);

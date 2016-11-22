@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Cofoundry.Core.AutoUpdate
 {
-    public class CreateDirectoriesUpdateCommandHandler : ISyncUpdateCommandHandler<CreateDirectoriesUpdateCommand>
+    public class CreateDirectoriesUpdateCommandHandler : ISyncVersionedUpdateCommandHandler<CreateDirectoriesUpdateCommand>
     {
         IPathResolver _pathResolver;
 

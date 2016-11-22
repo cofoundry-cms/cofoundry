@@ -20,17 +20,23 @@ namespace Cofoundry.Domain.Installation
             var package = new UpdatePackage();
             var dbCommandFactory = new DbUpdateCommandFactory();
 
-            var commands = new List<IUpdateCommand>();
+            var commands = new List<IVersionedUpdateCommand>();
             commands.AddRange(dbCommandFactory.Create(GetType().Assembly, moduleVersion));
             commands.AddRange(GetAdditionalCommands(moduleVersion));
 
-            package.Commands = commands;
+            package.VersionedCommands = commands;
+            package.AlwaysUpdateCommands = GetAlwaysUpdateCommand().ToList();
             package.ModuleIdentifier = CofoundryModuleInfo.ModuleIdentifier;
 
             yield return package;
         }
 
-        private IEnumerable<IUpdateCommand> GetAdditionalCommands(ModuleVersion moduleVersion)
+        private IEnumerable<IAlwaysRunUpdateCommand> GetAlwaysUpdateCommand()
+        {
+            yield return new RegisterPageTemplatesAndModuleTypesCommand();
+        }
+
+        private IEnumerable<IVersionedUpdateCommand> GetAdditionalCommands(ModuleVersion moduleVersion)
         {
             if (moduleVersion == null)
             {

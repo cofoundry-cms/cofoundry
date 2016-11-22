@@ -76,6 +76,11 @@ namespace Cofoundry.Domain
                 throw new InvalidOperationException("Request received through an invalid route");
             }
 
+            if (request.User.IsDeleted || request.User.IsSystemAccount)
+            {
+                throw new InvalidOperationException("User not permitted to change password");
+            }
+
             var userArea = _userAreaRepository.GetByCode(request.User.UserAreaCode);
 
             if (!userArea.AllowPasswordLogin)

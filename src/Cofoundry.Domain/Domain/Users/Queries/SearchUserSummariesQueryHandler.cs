@@ -42,7 +42,8 @@ namespace Cofoundry.Domain
             var dbQuery = _dbContext
                 .Users
                 .AsNoTracking()
-                .Where(p => !p.IsDeleted && p.UserAreaCode == query.UserAreaCode);
+                .FilterCanLogIn()
+                .Where(p => p.UserAreaCode == query.UserAreaCode);
 
             if (!string.IsNullOrEmpty(query.Email))
             {

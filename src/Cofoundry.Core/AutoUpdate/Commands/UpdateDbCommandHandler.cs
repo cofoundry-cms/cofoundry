@@ -8,7 +8,7 @@ using System.Text.RegularExpressions;
 
 namespace Cofoundry.Core.AutoUpdate
 {
-    public class UpdateDbCommandHandler : ISyncUpdateCommandHandler<UpdateDbCommand>
+    public class UpdateDbCommandHandler : ISyncVersionedUpdateCommandHandler<UpdateDbCommand>
     {
         private readonly IDatabase _database;
 

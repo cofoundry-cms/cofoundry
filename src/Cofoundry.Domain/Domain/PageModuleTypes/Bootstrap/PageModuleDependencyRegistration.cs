@@ -15,6 +15,7 @@ namespace Cofoundry.Domain.Bootstrap
                 .RegisterType<IModuleDataModelTypeFactory, ModuleDataModelTypeFactory>()
                 .RegisterType<IPageModuleTypeCache, PageModuleTypeCache>()
                 .RegisterType<IPageModuleTypeRepository, PageModuleTypeRepository>()
+                .RegisterType<IPageModuleTypeViewFileLocator, PageModuleTypeViewFileLocator>()
                 .RegisterAll<IPageModuleDataModel>()
                 .RegisterAllGenericImplementations(typeof(IPageModuleDisplayModelMapper<>))
                 ; 

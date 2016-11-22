@@ -31,7 +31,8 @@ namespace Cofoundry.Domain
             var user = _dbContext
                 .Users
                 .AsNoTracking()
-                .FirstOrDefault(u => u.Username == query.Username && !u.IsDeleted);
+                .FilterCanLogIn()
+                .FirstOrDefault(u => u.Username == query.Username);
             
             if (_userAuthenticationHelper.IsPasswordCorrect(user, query.Password))
             {

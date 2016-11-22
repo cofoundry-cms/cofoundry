@@ -17,18 +17,18 @@ namespace Cofoundry.Domain
         IUserContext GetCurrentContext();
 
         /// <summary>
-        /// Use this to get a user context for the super admin, useful
+        /// Use this to get a user context for the system user, useful
         /// if you need to impersonate the user to perform an action with elevated 
         /// privileges
         /// </summary>
-        Task<IUserContext> GetSuperAdminUserContextAsync();
+        Task<IUserContext> GetSystemUserContextAsync();
 
         /// <summary>
-        /// Use this to get a user context for the super admin, useful
+        /// Use this to get a user context for the system user, useful
         /// if you need to impersonate the user to perform an action with elevated 
         /// privileges
         /// </summary>
-        IUserContext GetSuperAdminUserContext();
+        IUserContext GetSystemUserContext();
 
         /// <summary>
         /// Clears out the cached user context if one exists. Typically the user 

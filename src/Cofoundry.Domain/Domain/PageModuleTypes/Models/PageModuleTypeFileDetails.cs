@@ -13,9 +13,7 @@ namespace Cofoundry.Domain
     public class PageModuleTypeFileDetails
     {
         /// <summary>
-        /// Information about each of the sections found by parsing the 
-        /// file. Partial files are also scanned as part fo the process 
-        /// so sections can be included in these too.
+        /// Information about any alternative template files 
         /// </summary>
         public IEnumerable<PageModuleTypeTemplateFileDetails> Templates { get; set; }
 

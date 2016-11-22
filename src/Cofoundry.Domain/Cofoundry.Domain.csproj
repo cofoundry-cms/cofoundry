@@ -527,6 +527,8 @@
     <Compile Include="Domain\PageModuleTypes\Bootstrap\PageModuleDependencyRegistration.cs" />
     <Compile Include="Domain\PageModuleTypes\Commands\RegisterPageModuleTypesCommand.cs" />
     <Compile Include="Domain\PageModuleTypes\Commands\RegisterPageModuleTypesCommandHandler.cs" />
+    <Compile Include="Domain\PageModuleTypes\Models\PageModuleTypeTemplateFileLocation.cs" />
+    <Compile Include="Domain\PageModuleTypes\Models\PageModuleTypeFileLocation.cs" />
     <Compile Include="Domain\PageModuleTypes\Models\PageModuleTypeTemplateFileDetails.cs" />
     <Compile Include="Domain\PageModuleTypes\Models\PageModuleTypeFileDetails.cs" />
     <Compile Include="Domain\PageModuleTypes\Queries\GetPageModuleTypeFileDetailsByFileNameQuery.cs" />
@@ -534,6 +536,8 @@
     <Compile Include="Domain\PageModuleTypes\Repositories\IPageModuleTypeRepository.cs" />
     <Compile Include="Domain\PageModuleTypes\Repositories\PageModuleTypeRepository.cs" />
     <Compile Include="Domain\PageModuleTypes\ViewFiles\IPageModuleTypeViewFileLocator.cs" />
+    <Compile Include="Domain\PageModuleTypes\ViewFiles\IPageModuleViewLocationRegistration.cs" />
+    <Compile Include="Domain\PageModuleTypes\ViewFiles\PageModuleTypeViewFileLocator.cs" />
     <Compile Include="Domain\Pages\Bootstrap\PageAutoMapProfile.cs" />
     <Compile Include="Domain\Pages\Bootstrap\PageDependencyRegistration.cs" />
     <Compile Include="Domain\Pages\Bootstrap\PageEntityDefinition.cs" />
@@ -757,6 +761,7 @@
     <Compile Include="Domain\Roles\Commands\UpdateRoleCommandHandler.cs" />
     <Compile Include="Domain\Roles\Constants\CommonPermissionTypes.cs" />
     <Compile Include="Domain\Roles\Constants\SpecialistRoleTypeCodes.cs" />
+    <Compile Include="Domain\Roles\Exceptions\PermissionValidationFailedException.cs" />
     <Compile Include="Domain\Roles\Mapping\RoleMappingHelper.cs" />
     <Compile Include="Domain\Roles\Models\CompositePermissionApplication.cs" />
     <Compile Include="Domain\Roles\Models\IEntityPermission.cs" />
@@ -986,6 +991,8 @@
     <Compile Include="Domain\WebDirectories\Queries\IsWebDirectoryPathUniqueQueryHandler.cs" />
     <Compile Include="Domain\YouTubeVideo\DataAnnotations\YouTubeAttribute.cs" />
     <Compile Include="Domain\YouTubeVideo\Models\YouTubeVideo.cs" />
+    <Compile Include="Install\AlwaysUpdateCommands\RegisterPageTemplatesAndModuleTypesCommandHandler.cs" />
+    <Compile Include="Install\AlwaysUpdateCommands\RegisterPageTemplatesAndModuleTypesCommand.cs" />
     <Compile Include="Install\CofoundryUpdatePackageFactory.cs" />
     <Compile Include="Install\UpdateCommands\ImportPermissionsCommand.cs" />
     <Compile Include="Install\UpdateCommands\ImportPermissionsCommandHandler.cs" />

@@ -26,18 +26,21 @@ namespace Cofoundry.Domain
 
         private readonly CofoundryDbContext _dbContext;
         private readonly IQueryExecutor _queryExecutor;
+        private readonly ICommandExecutor _commandExecutor;
         private readonly IPageCache _pageCache;
         private readonly IPageTemplateViewFileLocator _pageTemplateViewFileLocator;
 
         public RegisterPageTemplatesCommandHandler(
             CofoundryDbContext dbContext,
             IQueryExecutor queryExecutor,
+            ICommandExecutor commandExecutor,
             IPageCache pageCache,
             IPageTemplateViewFileLocator pageTemplateViewFileLocator
             )
         {
             _dbContext = dbContext;
             _queryExecutor = queryExecutor;
+            _commandExecutor = commandExecutor;
             _pageCache = pageCache;
             _pageTemplateViewFileLocator = pageTemplateViewFileLocator;
         }
@@ -73,17 +76,20 @@ namespace Cofoundry.Domain
         {
             foreach (var fileTemplate in fileTemplates)
             {
-                var fileTemplateDetails = await _queryExecutor.ExecuteAsync(new GetPageTemplateFileInfoByPathQuery(fileTemplate.FullPath));
+                var fileTemplateDetails = await _queryExecutor.ExecuteAsync(new GetPageTemplateFileInfoByPathQuery(fileTemplate.FullPath), executionContext);
                 EntityNotFoundException.ThrowIfNull(fileTemplateDetails, fileTemplate.FullPath);
                 var dbPageTemplate = dbPageTemplates.GetOrDefault(fileTemplate.FileName);
 
-                await UpdateTemplate(executionContext, dbPageTemplate, fileTemplate, fileTemplateDetails);
+                // Run this first because it may commit changes
+                await EnsureCustomEntityDefinitionExists(fileTemplateDetails, dbPageTemplate);
+
+                dbPageTemplate = await UpdateTemplate(executionContext, dbPageTemplate, fileTemplate, fileTemplateDetails);
 
                 // No need to update archived template sections
                 if (dbPageTemplate.IsArchived) continue;
 
                 // Update Sections
-                UpdateSections(fileTemplate, fileTemplateDetails, dbPageTemplate);
+                UpdateSections(fileTemplate, fileTemplateDetails, dbPageTemplate, executionContext);
             }
         }
 
@@ -117,7 +123,7 @@ namespace Cofoundry.Domain
                 .Where(f => f.Count() > 1)
                 .FirstOrDefault();
 
-            if (duplicateTemplateFiles.Any())
+            if (!EnumerableHelper.IsNullOrEmpty(duplicateTemplateFiles))
             {
                 var moduleTypes = string.Join(", ", duplicateTemplateFiles.Select(f => f.FullPath));
                 throw new PageTemplateRegistrationException(
@@ -125,7 +131,28 @@ namespace Cofoundry.Domain
             }
         }
 
-        private async Task UpdateTemplate(
+        /// <summary>
+        /// Checks that a custom entity definition exists if it is required by the tempate. This
+        /// can cause a DbContext.SaveChanges to run.
+        /// </summary>
+        private Task EnsureCustomEntityDefinitionExists(
+            PageTemplateFileInfo fileTemplateDetails,
+            PageTemplate dbPageTemplate
+            )
+        {
+            var definitionCode = fileTemplateDetails.CustomEntityDefinition?.CustomEntityDefinitionCode;
+
+            // Only update/check the definition if it has changed to potentially save a query
+            if (!string.IsNullOrEmpty(definitionCode) && (dbPageTemplate == null || definitionCode != dbPageTemplate.CustomEntityDefinitionCode))
+            {
+                var command = new EnsureCustomEntityDefinitionExistsCommand(fileTemplateDetails.CustomEntityDefinition.CustomEntityDefinitionCode);
+                return _commandExecutor.ExecuteAsync(command);
+            }
+
+            return Task.CompletedTask;
+        }
+
+        private async Task<PageTemplate> UpdateTemplate(
             IExecutionContext executionContext, 
             PageTemplate dbPageTemplate, 
             PageTemplateFile fileTemplate,
@@ -162,8 +189,8 @@ namespace Cofoundry.Domain
             else
             {
                 dbPageTemplate.PageTypeId = (int)PageType.CustomEntityDetails;
-                dbPageTemplate.CustomEntityDefinitionCode = fileTemplateDetails.CustomEntityDefinition.CustomEntityDefinitionCode;
                 dbPageTemplate.CustomEntityModelType = fileTemplateDetails.CustomEntityModelType;
+                dbPageTemplate.CustomEntityDefinitionCode = fileTemplateDetails.CustomEntityDefinition.CustomEntityDefinitionCode;
             }
 
             if (dbPageTemplate.IsArchived)
@@ -172,12 +199,20 @@ namespace Cofoundry.Domain
                 dbPageTemplate.IsArchived = false;
             }
 
+            dbPageTemplate.Name = fileTemplate.Name;
             dbPageTemplate.Description = fileTemplateDetails.Description;
             dbPageTemplate.FullPath = fileTemplate.FullPath;
             dbPageTemplate.UpdateDate = executionContext.ExecutionDate;
+
+            return dbPageTemplate;
         }
 
-        private void UpdateSections(PageTemplateFile fileTemplate, PageTemplateFileInfo fileTemplateDetails, PageTemplate dbPageTemplate)
+        private void UpdateSections(
+            PageTemplateFile fileTemplate, 
+            PageTemplateFileInfo fileTemplateDetails, 
+            PageTemplate dbPageTemplate,
+            IExecutionContext executionContext
+            )
         {
             // De-dup section names
             var duplicateSectionName = fileTemplateDetails
@@ -211,13 +246,24 @@ namespace Cofoundry.Domain
                 if (existing == null)
                 {
                     existing = new PageTemplateSection();
-                    dbPageTemplate.PageTemplateSections.Add(existing);
+                    existing.PageTemplate = dbPageTemplate;
+                    existing.CreateDate = executionContext.ExecutionDate;
+                    _dbContext.PageTemplateSections.Add(existing);
                 }
 
                 // casing might have changed
-                existing.Name = fileSection.Name;
+                if (existing.Name != fileSection.Name)
+                {
+                    existing.Name = fileSection.Name;
+                    existing.UpdateDate = executionContext.ExecutionDate;
+                }
+
                 // this will detach section data but there's no migrating that...
-                existing.IsCustomEntitySection = fileSection.IsCustomEntitySection;
+                if (existing.IsCustomEntitySection != fileSection.IsCustomEntitySection)
+                {
+                    existing.IsCustomEntitySection = fileSection.IsCustomEntitySection;
+                    existing.UpdateDate = executionContext.ExecutionDate;
+                }
             }
         }
 
@@ -243,6 +289,7 @@ namespace Cofoundry.Domain
         {
             return _dbContext
                 .PageVersions
+                .AsNoTracking()
                 .AnyAsync(v => v.PageTemplateId == pageTemplate.PageTemplateId);
         }
 

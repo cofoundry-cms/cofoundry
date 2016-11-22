@@ -76,6 +76,14 @@ namespace Cofoundry.Web
 
         #region private helpers
 
+        private bool FileExists(string path)
+        {
+            if (string.IsNullOrEmpty(path)) return false;
+            if (path[0] != '~' && path[0] != '/') return false;
+
+            return _resourceLocator.FileExists(path);
+        }
+
         private IEnumerable<PageTemplateFile> GetUnorderedPageTemplateFiles(string searchText)
         {
             var viewDirectories = _viewEngine
@@ -115,7 +123,8 @@ namespace Cofoundry.Web
 
         private PageTemplateFile MapPageTemplateFile(IResourceFile file)
         {
-            var name = TextFormatter.PascalCaseToSentence(Path.ChangeExtension(file.Name, null).TrimStart(new char[] { '_', '-' }));
+            var fileName = Path.ChangeExtension(file.Name, null).TrimStart(new char[] { '_', '-' });
+            var name = TextFormatter.PascalCaseToSentence(fileName);
 
             // if the file is just called 'layout' expand the name to the parent folder.
             if (name.Equals(DEFAULT_LAYOUT_NAME, StringComparison.OrdinalIgnoreCase))
@@ -132,10 +141,11 @@ namespace Cofoundry.Web
 
             var templateFile = new PageTemplateFile()
             {
-                FileName = file.Name,
+                FileName = fileName,
                 FullPath = file.VirtualPath,
                 Name = name
             };
+
             return templateFile;
         }
 

@@ -114,7 +114,9 @@ namespace Cofoundry.Domain
             return _dbContext
                 .UserPasswordResetRequests
                 .Include(r => r.User)
-                .Where(r => r.UserPasswordResetRequestId == command.UserPasswordResetRequestId);
+                .Where(r => r.UserPasswordResetRequestId == command.UserPasswordResetRequestId
+                    && !r.User.IsSystemAccount
+                    && !r.User.IsDeleted);
         }
 
         private ValidatePasswordResetRequestQuery CreateValidationQuery(CompleteUserPasswordResetCommand command)
