@@ -1,0 +1,23 @@
+﻿@inherits CofoundryWebViewPage<VisualEditorPageViewModel>
+@using Cofoundry.Web
+@using Cofoundry.Domain
+@using Cofoundry.Web.Admin
+@using System.Web.Optimization
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title></title>
+    @Styles.Render(SharedRouteLibrary.Css.Main)
+</head>
+<body class="cofoundry-visual-editor-frame">
+    <div ng-controller="VisualEditorController as vm"></div>
+    @AngularHelper.Bootstrap(VisualEditorRouteLibrary.Js, Cofoundry.CurrentUser, new { })
+</body>
+</html>

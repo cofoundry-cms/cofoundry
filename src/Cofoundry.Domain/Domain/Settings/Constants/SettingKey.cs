@@ -17,6 +17,6 @@ namespace Cofoundry.Domain
         public const string HumansTxt = "HumansTxt";
         public const string MetaKeywords = "MetaKeywords";
         public const string RobotsTxt = "RobotsTxt";
-        public const string SiteViewerDeviceView = "SiteViewerDeviceView";
+        public const string VisualEditorDeviceView = "VisualEditorDeviceView";
     }
 }

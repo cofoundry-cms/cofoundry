@@ -323,9 +323,9 @@
     <Compile Include="Framework\Models\Pages\PageViewModel.cs" />
     <Compile Include="Framework\Models\Pages\PageViewModelMapper.cs" />
     <Compile Include="Framework\Models\Pages\SimplePageViewModel.cs" />
-    <Compile Include="Framework\Models\SiteViewer\SiteViewerMode.cs" />
-    <Compile Include="Framework\Models\SiteViewer\SiteViewerModeExtensions.cs" />
-    <Compile Include="Framework\Models\SiteViewer\SiteViewerPageViewModel.cs" />
+    <Compile Include="Framework\Models\VisualEditor\SiteViewerMode.cs" />
+    <Compile Include="Framework\Models\VisualEditor\VisualEditorModeExtensions.cs" />
+    <Compile Include="Framework\Models\VisualEditor\VisualEditorPageViewModel.cs" />
     <Compile Include="Framework\Bootstrap\WebCoreAssemblyResourceRegistration.cs" />
     <Compile Include="Framework\ModularMvc\Bootstrap\ModularMvcDependencyRegistration.cs" />
     <Compile Include="Framework\ModularMvc\Bundling\IBundleInitializer.cs" />

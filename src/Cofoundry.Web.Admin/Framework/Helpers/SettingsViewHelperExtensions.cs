@@ -15,7 +15,7 @@ namespace Cofoundry.Web.Admin
 
         public static string GetCurrentDeviceView(this ISettingsViewHelper helper)
         {
-            return helper.Get<SiteViewerSettings>().SiteViewerDeviceView;
+            return helper.Get<VisualEditorSettings>().VisualEditorDeviceView;
         }
     }
 }
