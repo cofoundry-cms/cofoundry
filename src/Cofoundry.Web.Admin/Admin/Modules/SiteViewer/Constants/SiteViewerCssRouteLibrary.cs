@@ -23,22 +23,11 @@ namespace Cofoundry.Web.Admin
         /// <summary>
         /// Styles for the outer shell of the site viewer
         /// </summary>
-        public string OuterSiteViewer
+        public string SiteViewer
         {
             get
             {
-                return Bundle("outersiteviewer");
-            }
-        }
-
-        /// <summary>
-        /// Style for site viewer content (i.e. page)
-        /// </summary>
-        public string InnerSiteViewer
-        {
-            get
-            {
-                return Bundle("innersiteviewer");
+                return Bundle("siteviewer");
             }
         }
 

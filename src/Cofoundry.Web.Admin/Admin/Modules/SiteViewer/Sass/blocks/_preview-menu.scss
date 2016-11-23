@@ -1,13 +1,13 @@
 .cofoundry-sv {
     font-family: $fontstack-default;
     width: 100%;
-    position: absolute;
+    position: fixed;
     left: 0;
     bottom: 0;
     height: 70px;
     background-color: $color-darkgrey;
     transform: translateY(100%);
-    z-index: 1000;
+    z-index: 9999999;
 
     &.active {
         transform: translateY(0);    

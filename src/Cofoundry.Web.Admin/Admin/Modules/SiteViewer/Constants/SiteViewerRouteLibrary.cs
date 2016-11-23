@@ -38,6 +38,11 @@ namespace Cofoundry.Web.Admin
             return Urls.ResourcePrefix + "mvc/views/SiteViewer.cshtml";
         }
 
+        public static string SiteViewerToolbarViewPath()
+        {
+            return Urls.ResourcePrefix + "mvc/views/Toolbar.cshtml";
+        }
+
         #endregion
     }
 }

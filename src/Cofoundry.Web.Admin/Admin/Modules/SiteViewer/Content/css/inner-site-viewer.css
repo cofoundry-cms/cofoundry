@@ -1,47 +1,62 @@
-/*!
-* This is used to style the siteviewer
+/*
+Error: File to import not found or unreadable: _inner-site-viewer.
+       Load paths:
+         Compass::SpriteImporter
+         D:/Uber/Dev/Repos/Cofoundry/cofoundry/src/Cofoundry.Web.Admin/Admin/Modules/SiteViewer/Sass
+         C:/Ruby23-x64/lib/ruby/gems/2.3.0/gems/compass-core-1.0.3/stylesheets
+         Sass::Globbing::Importer
+        on line 2 of D:/Uber/Dev/Repos/Cofoundry/cofoundry/src/Cofoundry.Web.Admin/Build/../Admin/Modules/SiteViewer/Sass/inner-site-viewer.scss
+
+1: @import "../../Shared/Sass/Config/colors";
+2: @import "_inner-site-viewer";
+
+Backtrace:
+D:/Uber/Dev/Repos/Cofoundry/cofoundry/src/Cofoundry.Web.Admin/Build/../Admin/Modules/SiteViewer/Sass/inner-site-viewer.scss:2
+C:/Ruby23-x64/lib/ruby/gems/2.3.0/gems/sass-3.4.22/lib/sass/tree/import_node.rb:67:in `rescue in import'
+C:/Ruby23-x64/lib/ruby/gems/2.3.0/gems/sass-3.4.22/lib/sass/tree/import_node.rb:45:in `import'
+C:/Ruby23-x64/lib/ruby/gems/2.3.0/gems/sass-3.4.22/lib/sass/tree/import_node.rb:28:in `imported_file'
+C:/Ruby23-x64/lib/ruby/gems/2.3.0/gems/sass-3.4.22/lib/sass/tree/import_node.rb:37:in `css_import?'
+C:/Ruby23-x64/lib/ruby/gems/2.3.0/gems/sass-3.4.22/lib/sass/tree/visitors/perform.rb:313:in `visit_import'
+C:/Ruby23-x64/lib/ruby/gems/2.3.0/gems/sass-3.4.22/lib/sass/tree/visitors/base.rb:36:in `visit'
+C:/Ruby23-x64/lib/ruby/gems/2.3.0/gems/sass-3.4.22/lib/sass/tree/visitors/perform.rb:160:in `block in visit'
+C:/Ruby23-x64/lib/ruby/gems/2.3.0/gems/sass-3.4.22/lib/sass/stack.rb:79:in `block in with_base'
+C:/Ruby23-x64/lib/ruby/gems/2.3.0/gems/sass-3.4.22/lib/sass/stack.rb:115:in `with_frame'
+C:/Ruby23-x64/lib/ruby/gems/2.3.0/gems/sass-3.4.22/lib/sass/stack.rb:79:in `with_base'
+C:/Ruby23-x64/lib/ruby/gems/2.3.0/gems/sass-3.4.22/lib/sass/tree/visitors/perform.rb:160:in `visit'
+C:/Ruby23-x64/lib/ruby/gems/2.3.0/gems/sass-3.4.22/lib/sass/tree/visitors/base.rb:52:in `block in visit_children'
+C:/Ruby23-x64/lib/ruby/gems/2.3.0/gems/sass-3.4.22/lib/sass/tree/visitors/base.rb:52:in `map'
+C:/Ruby23-x64/lib/ruby/gems/2.3.0/gems/sass-3.4.22/lib/sass/tree/visitors/base.rb:52:in `visit_children'
+C:/Ruby23-x64/lib/ruby/gems/2.3.0/gems/sass-3.4.22/lib/sass/tree/visitors/perform.rb:169:in `block in visit_children'
+C:/Ruby23-x64/lib/ruby/gems/2.3.0/gems/sass-3.4.22/lib/sass/tree/visitors/perform.rb:181:in `with_environment'
+C:/Ruby23-x64/lib/ruby/gems/2.3.0/gems/sass-3.4.22/lib/sass/tree/visitors/perform.rb:168:in `visit_children'
+C:/Ruby23-x64/lib/ruby/gems/2.3.0/gems/sass-3.4.22/lib/sass/tree/visitors/base.rb:36:in `block in visit'
+C:/Ruby23-x64/lib/ruby/gems/2.3.0/gems/sass-3.4.22/lib/sass/tree/visitors/perform.rb:188:in `visit_root'
+C:/Ruby23-x64/lib/ruby/gems/2.3.0/gems/sass-3.4.22/lib/sass/tree/visitors/base.rb:36:in `visit'
+C:/Ruby23-x64/lib/ruby/gems/2.3.0/gems/sass-3.4.22/lib/sass/tree/visitors/perform.rb:159:in `visit'
+C:/Ruby23-x64/lib/ruby/gems/2.3.0/gems/sass-3.4.22/lib/sass/tree/visitors/perform.rb:8:in `visit'
+C:/Ruby23-x64/lib/ruby/gems/2.3.0/gems/sass-3.4.22/lib/sass/tree/root_node.rb:36:in `css_tree'
+C:/Ruby23-x64/lib/ruby/gems/2.3.0/gems/sass-3.4.22/lib/sass/tree/root_node.rb:29:in `render_with_sourcemap'
+C:/Ruby23-x64/lib/ruby/gems/2.3.0/gems/sass-3.4.22/lib/sass/engine.rb:381:in `_render_with_sourcemap'
+C:/Ruby23-x64/lib/ruby/gems/2.3.0/gems/sass-3.4.22/lib/sass/engine.rb:298:in `render_with_sourcemap'
+C:/Ruby23-x64/lib/ruby/gems/2.3.0/gems/compass-import-once-1.0.5/lib/compass/import-once/engine.rb:23:in `block in render_with_sourcemap'
+C:/Ruby23-x64/lib/ruby/gems/2.3.0/gems/compass-import-once-1.0.5/lib/compass/import-once/engine.rb:29:in `with_import_scope'
+C:/Ruby23-x64/lib/ruby/gems/2.3.0/gems/compass-import-once-1.0.5/lib/compass/import-once/engine.rb:22:in `render_with_sourcemap'
+C:/Ruby23-x64/lib/ruby/gems/2.3.0/gems/sass-3.4.22/lib/sass/plugin/compiler.rb:492:in `update_stylesheet'
+C:/Ruby23-x64/lib/ruby/gems/2.3.0/gems/sass-3.4.22/lib/sass/plugin/compiler.rb:215:in `block in update_stylesheets'
+C:/Ruby23-x64/lib/ruby/gems/2.3.0/gems/sass-3.4.22/lib/sass/plugin/compiler.rb:209:in `each'
+C:/Ruby23-x64/lib/ruby/gems/2.3.0/gems/sass-3.4.22/lib/sass/plugin/compiler.rb:209:in `update_stylesheets'
+C:/Ruby23-x64/lib/ruby/gems/2.3.0/gems/compass-1.0.3/lib/compass/sass_compiler.rb:40:in `compile!'
+C:/Ruby23-x64/lib/ruby/gems/2.3.0/gems/compass-1.0.3/lib/compass/commands/update_project.rb:49:in `perform'
+C:/Ruby23-x64/lib/ruby/gems/2.3.0/gems/compass-1.0.3/lib/compass/commands/base.rb:18:in `execute'
+C:/Ruby23-x64/lib/ruby/gems/2.3.0/gems/compass-1.0.3/lib/compass/commands/project_base.rb:19:in `execute'
+C:/Ruby23-x64/lib/ruby/gems/2.3.0/gems/compass-1.0.3/lib/compass/exec/sub_command_ui.rb:43:in `perform!'
+C:/Ruby23-x64/lib/ruby/gems/2.3.0/gems/compass-1.0.3/lib/compass/exec/sub_command_ui.rb:15:in `run!'
+C:/Ruby23-x64/lib/ruby/gems/2.3.0/gems/compass-1.0.3/bin/compass:30:in `block in <top (required)>'
+C:/Ruby23-x64/lib/ruby/gems/2.3.0/gems/compass-1.0.3/bin/compass:44:in `<top (required)>'
+C:/Ruby23-x64/bin/compass:23:in `load'
+C:/Ruby23-x64/bin/compass:23:in `<main>'
 */
-/* #### Use a minimum height for sections so that they can be hovered over when there are no modules in them #### */
-/* line 6, ../../Sass/_inner-site-viewer.scss */
-.cofoundry-sv__section, .cofoundry-sv__module-empty {
-  min-height: 30px;
-}
-
-/* for Internet Explorer */
-/*\*/
-/* line 11, ../../Sass/_inner-site-viewer.scss */
-* html .cofoundry__sv-section {
-  height: 30px;
-  opacity: 1;
-}
-
-/* line 16, ../../Sass/_inner-site-viewer.scss */
-.cofoundry-editmode__custom-entity .cofoundry__sv-section[data-cms-page-section] {
-  cursor: not-allowed;
-  opacity: .5;
-}
-
-/* line 21, ../../Sass/_inner-site-viewer.scss */
-.cofoundry-editmode__page .cofoundry__sv-section[data-cms-custom-entity-section] {
-  cursor: not-allowed;
-  opacity: .5;
-}
-
-/* Editable Section/Module Hover */
-/* line 27, ../../Sass/_inner-site-viewer.scss */
-.cofoundry-sv__hover-module {
-  box-shadow: 0px 0px 2px #3366cc !important;
-}
-
-/* line 34, ../../Sass/_inner-site-viewer.scss */
-.cofoundry-sv__hover-section {
-  box-shadow: 0px 0px 1px #003399 !important;
-}
-
-/* Used when the html for a section is being replaced */
-/* line 40, ../../Sass/_inner-site-viewer.scss */
-.cofoundry-sv__section-loading {
-  opacity: 0.5;
-}
-
-/*# sourceMappingURL=inner-site-viewer.css.map */
+body:before {
+  white-space: pre;
+  font-family: monospace;
+  content: "Error: File to import not found or unreadable: _inner-site-viewer.\A        Load paths:\A          Compass::SpriteImporter\A          D:/Uber/Dev/Repos/Cofoundry/cofoundry/src/Cofoundry.Web.Admin/Admin/Modules/SiteViewer/Sass\A          C:/Ruby23-x64/lib/ruby/gems/2.3.0/gems/compass-core-1.0.3/stylesheets\A          Sass::Globbing::Importer\A         on line 2 of D:/Uber/Dev/Repos/Cofoundry/cofoundry/src/Cofoundry.Web.Admin/Build/../Admin/Modules/SiteViewer/Sass/inner-site-viewer.scss\A \A 1: @import \"../../Shared/Sass/Config/colors\";\A 2: @import \"_inner-site-viewer\";"; }

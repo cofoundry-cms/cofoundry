@@ -161,8 +161,12 @@ body {
   font-family: "Open Sans", sans-serif;
   background-color: #ebebeb;
 }
+/* line 16, ../../Sass/Core/_layout.scss */
+body.cofoundry-visual-editor-frame {
+  background-color: transparent;
+}
 
-/* line 17, ../../Sass/Core/_layout.scss */
+/* line 21, ../../Sass/Core/_layout.scss */
 main {
   position: relative;
   min-height: 600px;
@@ -170,7 +174,7 @@ main {
   min-width: 850px;
 }
 
-/* line 24, ../../Sass/Core/_layout.scss */
+/* line 28, ../../Sass/Core/_layout.scss */
 footer {
   position: fixed;
   bottom: 0px;
@@ -184,16 +188,16 @@ footer {
   height: 25px;
   border-top: 1px solid #e3e3e3;
 }
-/* line 37, ../../Sass/Core/_layout.scss */
+/* line 41, ../../Sass/Core/_layout.scss */
 footer p {
   padding: 6px 20px 0 0;
 }
-/* line 41, ../../Sass/Core/_layout.scss */
+/* line 45, ../../Sass/Core/_layout.scss */
 footer a {
   color: #ccc;
 }
 
-/* line 46, ../../Sass/Core/_layout.scss */
+/* line 50, ../../Sass/Core/_layout.scss */
 .content {
   -moz-transition: width 0.3s, left 0.3s, padding 0.3s;
   -o-transition: width 0.3s, left 0.3s, padding 0.3s;
@@ -211,7 +215,7 @@ footer a {
   z-index: 1;
 }
 
-/* line 57, ../../Sass/Core/_layout.scss */
+/* line 61, ../../Sass/Core/_layout.scss */
 .main-menu {
   position: absolute;
   left: 0;
@@ -220,7 +224,7 @@ footer a {
   height: 100%;
   background: red;
 }
-/* line 65, ../../Sass/Core/_layout.scss */
+/* line 69, ../../Sass/Core/_layout.scss */
 .main-menu .apps > ul {
   position: absolute;
   z-index: 1;
@@ -231,50 +235,50 @@ footer a {
   background: yellow;
 }
 
-/* line 76, ../../Sass/Core/_layout.scss */
+/* line 80, ../../Sass/Core/_layout.scss */
 .collection-actions {
   position: absolute;
   top: 0px;
   right: 0;
 }
 
-/* line 82, ../../Sass/Core/_layout.scss */
+/* line 86, ../../Sass/Core/_layout.scss */
 .dashboard-item {
   float: left;
   width: 48%;
   margin-bottom: 2%;
 }
-/* line 87, ../../Sass/Core/_layout.scss */
+/* line 91, ../../Sass/Core/_layout.scss */
 .dashboard-item h3 {
   font-weight: bold;
   background: white;
   padding: 10px;
   border-top: 2px solid #3366cc;
 }
-/* line 94, ../../Sass/Core/_layout.scss */
+/* line 98, ../../Sass/Core/_layout.scss */
 .dashboard-item:nth-of-type(1), .dashboard-item:nth-of-type(2) {
   margin-top: 80px;
 }
-/* line 98, ../../Sass/Core/_layout.scss */
+/* line 102, ../../Sass/Core/_layout.scss */
 .dashboard-item:nth-child(even) {
   clear: left;
 }
-/* line 102, ../../Sass/Core/_layout.scss */
+/* line 106, ../../Sass/Core/_layout.scss */
 .dashboard-item:nth-child(odd) {
   margin-left: 2%;
 }
-/* line 106, ../../Sass/Core/_layout.scss */
+/* line 110, ../../Sass/Core/_layout.scss */
 .dashboard-item .btn-group {
   text-align: right;
   padding: 10px 0;
 }
-/* line 111, ../../Sass/Core/_layout.scss */
+/* line 115, ../../Sass/Core/_layout.scss */
 .dashboard-item .btn {
   display: inline-block;
 }
 
 @media screen and (min-width: 950px) {
-  /* line 118, ../../Sass/Core/_layout.scss */
+  /* line 122, ../../Sass/Core/_layout.scss */
   .content {
     width: -webkit-calc(100% - 288px);
     width: -moz-calc(100% - 288px);
@@ -422,7 +426,7 @@ footer a {
   height: 21px;
   width: 93px;
   background-image: url('/Admin/Modules/Shared/Content/css/img/icons/normal.png');
-  background-position: 0 -209px;
+  background-position: 0 -269px;
   background-repeat: no-repeat;
   margin-top: 24px;
 }
@@ -430,7 +434,7 @@ footer a {
   /* line 43, ../../Sass/Core/_navigation.scss */
   .main-nav .home i {
     background-image: url('/Admin/Modules/Shared/Content/css/img/icons/retina.png');
-    background-position: 0 -201px;
+    background-position: 0 -260px;
     -moz-background-size: 93px auto;
     -o-background-size: 93px auto;
     -webkit-background-size: 93px auto;

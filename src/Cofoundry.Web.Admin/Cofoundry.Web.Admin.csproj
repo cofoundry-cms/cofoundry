@@ -574,6 +574,8 @@
     <Content Include="Admin\Modules\SiteViewer\Content\css\inner-site-viewer.css" />
     <Content Include="Admin\Modules\SiteViewer\Content\css\site-viewer.css" />
     <Content Include="Admin\Modules\SiteViewer\Js\Bootstrap\Module.js" />
+    <Content Include="Admin\Modules\SiteViewer\Js\ContentPage\Index.js" />
+    <Content Include="Admin\Modules\SiteViewer\Js\ContentPage\GuiController.js" />
     <Content Include="Admin\Modules\SiteViewer\Js\ContentPage\EventAggregator.js" />
     <Content Include="Admin\Modules\SiteViewer\Js\DataServices\PageModuleService.js" />
     <Content Include="Admin\Modules\SiteViewer\Js\Routes\Modals\AddModule.html" />
@@ -655,9 +657,7 @@
     <Content Include="Admin\Modules\Shared\Sass\shared.scss" />
     <Content Include="Admin\Modules\SiteViewer\config.rb" />
     <Content Include="Admin\Modules\SiteViewer\Content\css\site-viewer.css.map" />
-    <Content Include="Admin\Modules\SiteViewer\MVC\Views\SiteViewer.cshtml" />
     <Content Include="Admin\Modules\SiteViewer\Sass\site-viewer.scss" />
-    <Content Include="Admin\Modules\SiteViewer\Sass\_outer-site-viewer.scss" />
     <Content Include="Admin\Modules\Users\Mvc\Views\Index.cshtml" />
     <Content Include="Build\package.json" />
     <EmbeddedResource Include="Framework\StandardAngularModules\Routes\Index.cshtml" />
@@ -684,12 +684,14 @@
     <Content Include="Admin\Modules\SiteViewer\Sass\elements\_options.scss" />
     <Content Include="Admin\Modules\SiteViewer\Sass\elements\_page-details.scss" />
     <Content Include="Admin\Modules\SiteViewer\Sass\elements\_settings.scss" />
-    <Content Include="Admin\Modules\SiteViewer\Sass\inner-site-viewer.scss" />
     <Content Include="Admin\Modules\SiteViewer\Sass\sassutils\README.md" />
     <Content Include="Admin\Modules\SiteViewer\Sass\sassutils\_functions.scss" />
     <Content Include="Admin\Modules\SiteViewer\Sass\sassutils\_mixins.scss" />
     <Content Include="Admin\Modules\SiteViewer\Sass\sassutils\_vendor.scss" />
-    <Content Include="Admin\Modules\SiteViewer\Sass\_inner-site-viewer.scss" />
+    <Content Include="Admin\Modules\SiteViewer\MVC\Views\Frame.cshtml" />
+    <Content Include="Admin\Modules\SiteViewer\Sass\blocks\_frame.scss" />
+    <Content Include="Admin\Modules\SiteViewer\Sass\blocks\_page-ui.scss" />
+    <Content Include="Admin\Modules\SiteViewer\MVC\Views\Toolbar.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -790,6 +792,7 @@
     <Compile Include="Admin\Modules\SiteViewer\Constants\SiteViewerRouteLibrary.cs" />
     <Compile Include="Admin\Modules\SiteViewer\MVC\ActionFilters\SiteViewerContentFilterAttribute.cs" />
     <Compile Include="Admin\Modules\SiteViewer\MVC\ActionFilters\SiteViewerContentStream.cs" />
+    <Compile Include="Admin\Modules\SiteViewer\MVC\Controllers\SiteViewerController.cs" />
     <Compile Include="Admin\Modules\Users\Bootstrap\UsersBundleRegistration.cs" />
     <Compile Include="Admin\Modules\Users\Bootstrap\UsersEmbeddedRouteRegistrations.cs" />
     <Compile Include="Admin\Modules\Users\Bootstrap\UsersModuleRegistration.cs" />

@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using System.Web.Mvc;
 using System.Web.Optimization;
 
 namespace Cofoundry.Web.Admin
@@ -27,14 +28,17 @@ namespace Cofoundry.Web.Admin
         private readonly StringBuilder _outputString = new StringBuilder();
         private readonly Stream _outputStream = null;
         private readonly IPageResponseData _pageResponseData;
+        private readonly ControllerContext _context;
 
         public SiteViewerContentStream(
             Stream outputStream,
-            IPageResponseData pageResponseData
+            IPageResponseData pageResponseData,
+            ControllerContext context
             )
         {
             _outputStream = outputStream;
             _pageResponseData = pageResponseData;
+            _context = context;
         }
 
         #endregion
@@ -72,29 +76,48 @@ namespace Cofoundry.Web.Admin
         private string AddCofoundryJavascript(string html)
         {
             const string HEAD_TAG_END = "</head>";
+            const string BODY_TAG_END = "</body>";
 
-            var insertIndex = html.IndexOf(HEAD_TAG_END, StringComparison.OrdinalIgnoreCase) - 1;
+            var insertHeadIndex = html.IndexOf(HEAD_TAG_END, StringComparison.OrdinalIgnoreCase) - 1;
 
-            if (insertIndex > 0)
+            if (insertHeadIndex > 0)
             {
-                html = html.Substring(0, insertIndex)
+                html = html.Substring(0, insertHeadIndex)
                     + Environment.NewLine + TAB
-                    + Scripts.Render(SiteViewerRouteLibrary.Js.EventAggregator).ToString() + TAB
-                    + Styles.Render(SiteViewerRouteLibrary.Css.InnerSiteViewer).ToString()
-                    + html.Substring(insertIndex);
+                    + Scripts.Render(SiteViewerRouteLibrary.Js.SiteViewer).ToString() + TAB
+                    + Styles.Render(SiteViewerRouteLibrary.Css.SiteViewer).ToString()
+                    + html.Substring(insertHeadIndex);
             }
 
-            // TODO: something with the data
-            // If _pageResponseData is null then it's a static page
-            // else its a pagey page
-            if (_pageResponseData != null)
+            var insertBodyIndex = html.IndexOf(BODY_TAG_END, StringComparison.OrdinalIgnoreCase) - 1;
+
+            if (insertBodyIndex > 0)
             {
                 var responseJson = JsonConvert.SerializeObject(_pageResponseData);
-                // DO we also need the user data so we can work out permissions?
-                // ICurrentUserViewHelper is what we provide in the angular helper, would need to inject that in
+
+                html = html.Substring(0, insertBodyIndex)
+                    + Environment.NewLine + TAB
+                    + string.Format("<script>var pageResponseData = {0}</script>", responseJson) + TAB
+                    + RenderRazorViewToString(SiteViewerRouteLibrary.SiteViewerToolbarViewPath(), _pageResponseData)
+                    + html.Substring(insertBodyIndex);
             }
 
             return html;
+        }
+
+        #endregion
+
+        #region helpers
+        public string RenderRazorViewToString(string viewName, object model)
+        {
+            using (var sw = new StringWriter())
+            {
+                var viewResult = ViewEngines.Engines.FindPartialView(_context, viewName);
+                var viewContext = new ViewContext(_context, viewResult.View, new ViewDataDictionary { { "model", model } }, new TempDataDictionary { }, sw);
+                viewResult.View.Render(viewContext, sw);
+                viewResult.ViewEngine.ReleaseView(_context, viewResult.View);
+                return sw.GetStringBuilder().ToString();
+            }
         }
 
         #endregion

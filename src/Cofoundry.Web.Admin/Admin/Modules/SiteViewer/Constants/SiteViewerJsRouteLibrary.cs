@@ -16,11 +16,11 @@ namespace Cofoundry.Web.Admin
 
         #region custom routes
 
-        public string EventAggregator
+        public string SiteViewer
         {
             get
             {
-                return Bundle("EventAggregator");
+                return Bundle("SiteViewer");
             }
         }
 

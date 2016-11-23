@@ -11,10 +11,7 @@ namespace Cofoundry.Web.Admin
         public void RegisterBundles(BundleCollection bundles)
         {
             // CSS
-            bundles.Add(new StyleBundle(SiteViewerRouteLibrary.Css.InnerSiteViewer)
-                    .Include(SiteViewerRouteLibrary.Css.Bundle("inner-site-viewer.css"))
-                );
-            bundles.Add(new StyleBundle(SiteViewerRouteLibrary.Css.OuterSiteViewer)
+            bundles.Add(new StyleBundle(SiteViewerRouteLibrary.Css.SiteViewer)
                     .Include(SiteViewerRouteLibrary.Css.Bundle("site-viewer.css"))
                 );
 
@@ -29,10 +26,11 @@ namespace Cofoundry.Web.Admin
                 AngularJsDirectoryLibrary.Routes,
                 AngularJsDirectoryLibrary.UIComponents);
 
-            bundles.Add(new ScriptBundle(SiteViewerRouteLibrary.Js.EventAggregator)
+            bundles.Add(new ScriptBundle(SiteViewerRouteLibrary.Js.SiteViewer)
+                    .Include(SiteViewerRouteLibrary.Js.Bundle("ContentPage/Index.js"))
+                    .Include(SiteViewerRouteLibrary.Js.Bundle("ContentPage/GuiController.js"))
                     .Include(SiteViewerRouteLibrary.Js.Bundle("ContentPage/EventAggregator.js"))
                 );
         }
-
     }
 }

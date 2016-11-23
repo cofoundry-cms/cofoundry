@@ -35,10 +35,11 @@ namespace Cofoundry.Web.Admin
             if (cofoundryUser != null)
             {
                 var responseDataCache = IckyDependencyResolution.ResolveFromMvcContext<IPageResponseDataCache>();
-                var resonseData = responseDataCache.Get();
+                var responseData = responseDataCache.Get();
 
                 var response = filterContext.HttpContext.Response;
-                response.Filter = new SiteViewerContentStream(response.Filter, resonseData);
+                var context = filterContext.Controller.ControllerContext;
+                response.Filter = new SiteViewerContentStream(response.Filter, responseData, context);
             }
         }
 

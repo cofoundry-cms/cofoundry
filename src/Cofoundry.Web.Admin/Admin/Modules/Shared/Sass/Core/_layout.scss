@@ -12,6 +12,10 @@ html {
 body {
     font-family: $fontstack-default;
     background-color:$color-lightgrey;
+
+    &.cofoundry-visual-editor-frame {
+        background-color: transparent;
+    }
 }
 
 main {

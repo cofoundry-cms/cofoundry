@@ -1,6 +1,4 @@
-﻿var CMS = CMS || {};
-
-CMS.events = {
+﻿Cofoundry.events = {
     on: function (ev, callback) {
         var calls = this._callbacks || (this._callbacks = {});
         (this._callbacks[ev] || (this._callbacks[ev] = [])).push(callback);

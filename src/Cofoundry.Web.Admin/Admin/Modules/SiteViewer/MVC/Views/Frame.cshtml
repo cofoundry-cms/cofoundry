@@ -1,0 +1,23 @@
+﻿@inherits CofoundryWebViewPage<SiteViewerPageViewModel>
+@using Cofoundry.Web
+@using Cofoundry.Domain
+@using Cofoundry.Web.Admin
+@using System.Web.Optimization
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title></title>
+    @Styles.Render(SharedRouteLibrary.Css.Main)
+</head>
+<body class="cofoundry-visual-editor-frame">
+    <div ng-controller="SiteViewerController as vm"></div>
+    @AngularHelper.Bootstrap(SiteViewerRouteLibrary.Js, Cofoundry.CurrentUser, new { })
+</body>
+</html>
