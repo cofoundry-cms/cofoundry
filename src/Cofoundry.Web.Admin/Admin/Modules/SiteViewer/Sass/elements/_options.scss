@@ -7,9 +7,9 @@
 }
 
 .cofoundry-sv__options__button {
+    border:1px solid $color-secondary-dark;
     display:inline-block;
     border-radius: 4px;
-    border: none;
     height: 100%;
     width: 97px;
     color: #fff;
@@ -35,5 +35,7 @@
 
     &:hover {
         background-color: $color-secondary-dark;
+        color:#fff;
+        text-decoration: none;
     }
 }

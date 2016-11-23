@@ -67,12 +67,6 @@ Cofoundry.siteViewer = (function () {
                     click: _internal.copyToDraft
                 });
             }
-
-            _toolBar.addButton({
-                title: 'Test',
-                classNames: 'publish popup',
-                click: _internal.copyToDraft
-            });
         },
 
         // Actions
