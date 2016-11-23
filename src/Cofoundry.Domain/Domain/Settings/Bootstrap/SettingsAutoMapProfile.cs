@@ -16,7 +16,7 @@ namespace Cofoundry.Domain
 
             CreateMap<GeneralSiteSettings, UpdateGeneralSiteSettingsCommand>();
             CreateMap<SeoSettings, UpdateSeoSettingsCommand>();
-            CreateMap<SiteViewerSettings, UpdateSiteViewerSettingsCommand>();
+            CreateMap<VisualEditorSettings, UpdateVisualEditorSettingsCommand>();
 
             #endregion
         }

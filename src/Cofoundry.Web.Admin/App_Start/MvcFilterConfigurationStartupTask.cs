@@ -15,7 +15,7 @@ namespace Cofoundry.Web.Admin
         public void Run(IAppBuilder app)
         {
             var filters = GlobalFilters.Filters;
-            filters.Add(new SiteViewerContentFilterAttribute());
+            filters.Add(new VisualEditorContentFilterAttribute());
         }
     }
 }
