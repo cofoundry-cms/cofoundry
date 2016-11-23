@@ -186,6 +186,13 @@
                     modalScope.$destroy();
                     //  Remove the element from the dom.
                     modalElement.remove();
+                    // Tell the parent that we have closed the modal
+                    if (parent) {
+                        parent.postMessage({
+                            type: 'MODAL_CLOSE'
+
+                        }, document.location.origin);
+                    }
                 }
 
                 /**

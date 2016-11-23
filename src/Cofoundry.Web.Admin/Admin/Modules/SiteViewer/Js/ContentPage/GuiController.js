@@ -6,22 +6,17 @@ Cofoundry.siteViewer = (function () {
     var _internal = {
         createIframe: function () {
             // Create dom elements
-            var iFrameWrapper = document.createElement('div'),
-                iFrame = document.createElement('iframe'),
-                overlay = document.createElement('div'),
+            var iFrame = document.createElement('iframe'),
                 body = document.getElementsByTagName('body')[0];
 
-            iFrameWrapper.appendChild(overlay);
-            iFrameWrapper.appendChild(iFrame);
-
+            // Point iFrame at razor view that bootstraps angular admin components
             iFrame.src = '/admin/site-viewer/frame';
 
             // Add styles to the iFrame elements
-            overlay.className = 'cofoundry-sv__iFrameOverlay';
-            iFrameWrapper.className = 'cofoundry-sv__iFrameWrapper';
+            iFrame.className = 'cofoundry-sv__iFrame';
 
             // Insert iFrame at the end of the body element
-            body.insertBefore(iFrameWrapper, body.childNodes[body.childNodes.length]);
+            body.insertBefore(iFrame, body.childNodes[body.childNodes.length]);
 
             // Store ref to iFrame
             __IFRAME = iFrame;
@@ -30,6 +25,22 @@ Cofoundry.siteViewer = (function () {
             __IFRAME.contentWindow.postMessage({
                 action: 'config', args: [false, 'EntityNameSingular']
             }, document.location.origin);
+
+            // Create IE + others compatible event handler
+            var eventMethod = window.addEventListener ? "addEventListener" : "attachEvent",
+                postMessageListener = window[eventMethod],
+                messageEvent = eventMethod == "attachEvent" ? "onmessage" : "message";
+
+            // Listen to events from inside the iFrame
+            postMessageListener(messageEvent, _internal.handleMessage);
+        },
+
+        handleMessage: function (e) {
+            switch (e.data.type) {
+                case 'MODAL_CLOSE':
+                    __IFRAME.style.display = 'none';
+                    break;
+            }
         },
 
         bindToolbar: function () {
@@ -75,6 +86,7 @@ Cofoundry.siteViewer = (function () {
             __IFRAME.contentWindow.postMessage({
                 action: 'publish', args: [{ entityId: 1 }]
             }, document.location.origin);
+            __IFRAME.style.display = 'block';
         },
 
         unpublish: function (e) {

@@ -118,7 +118,7 @@
             </div>
 
             <button type="button" class="cofoundry-sv__mini-menu__toggle">
-                <span class="fa fa-bars"></span>
+                <img src="~/Admin/Modules/SiteViewer/Content/img/logo-thumb.png" />
             </button>
         </div>
     </div>
@@ -127,6 +127,8 @@
         <div class="cofoundry-sv__mini-menu cofoundry-sv__mini-menu--flow">
             @if (versions.Any())
             {
+                var count = 1;
+
                 <div class="cofoundry-sv__mini-menu__content">
                     <h3>@entityNameSingular Versions</h3>
                     <ol class="cofoundry-sv__version-list">
@@ -142,9 +144,11 @@
                             <li>
                                 <a href="@link" class="cofoundry-sv__version-list__item @Cofoundry.Html.TextIf(version == model.Version, "active")">
                                     <span class="@version.WorkFlowStatus.ToString().ToLower()"></span>
-                                    @version.WorkFlowStatus (Created on @version.CreateDate)
+                                    @("V" + count), Created on @version.CreateDate
                                 </a>
                             </li>
+
+                            count++;
                         }
                     </ol>
 
@@ -160,7 +164,7 @@
             </button>
         </div>
     </div>
-
+    @*
     <div class="cofoundry-sv__settings">
         <div class="cofoundry-sv__mini-menu cofoundry-sv__mini-menu--large cofoundry-sv__mini-menu--align-right">
             <div class="cofoundry-sv__mini-menu__content">
@@ -196,7 +200,7 @@
             </button>
         </div>
     </div>
-
+    *@
     <div class="cofoundry-sv__mode">
         @if (!isStaticPage && !isViewingSpecificVersion)
         {

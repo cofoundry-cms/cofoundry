@@ -27,7 +27,12 @@ function (
     /* INIT */
 
     function init() {
-        $window.addEventListener('message', handleMessage);
+        // Create IE + others compatible event handler
+        var eventMethod = $window.addEventListener ? "addEventListener" : "attachEvent",
+            postMessageListener = window[eventMethod],
+            messageEvent = eventMethod == "attachEvent" ? "onmessage" : "message";
+
+        postMessageListener(messageEvent, handleMessage);
 
         vm.globalLoadState = new LoadState();
         vm.config = config;
