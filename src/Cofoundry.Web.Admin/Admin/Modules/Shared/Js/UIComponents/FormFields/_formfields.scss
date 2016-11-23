@@ -7,6 +7,7 @@
 input[type="text"], input[type="email"], input[type="password"], input[type="number"], input[type="date"], input[type="url"], input[type="tel"], textarea, select {
     @include border-radius(2px);
     font-family:$fontstack-default;
+    font-size:1em;
     border:1px solid #d2d2d2;
     padding:10px;
     width: 100%;

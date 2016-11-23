@@ -14,20 +14,10 @@
     }
 
     h1 {
-        @include border-top-left-radius(3px);
-        @include border-top-right-radius(3px);
-        font-size:150%;
-        padding:20px;
-        position:absolute;
-        left:0;
-        top:0;
-        width:100%;
-        color:#fff;
-        background-color:$color-primary;
-    }
-
-    form {
-        margin-top:60px;
+        @include retina-sprite(logo-full);
+        margin-bottom: 20px;
+        text-indent:-2000px;
+        overflow:hidden;
     }
 
     label {

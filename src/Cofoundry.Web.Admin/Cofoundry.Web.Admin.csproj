@@ -318,6 +318,7 @@
     <Content Include="Admin\Modules\Shared\Content\css\img\icons\normal\icon-nav-people.png" />
     <Content Include="Admin\Modules\Shared\Content\css\img\icons\normal\icon-nav-search.png" />
     <Content Include="Admin\Modules\Shared\Content\css\img\icons\normal\icon-nav-settings.png" />
+    <Content Include="Admin\Modules\Shared\Content\css\img\icons\normal\logo-full.png" />
     <Content Include="Admin\Modules\Shared\Content\css\img\icons\normal\logo.png" />
     <Content Include="Admin\Modules\Shared\Content\css\img\icons\retina.png" />
     <Content Include="Admin\Modules\Shared\Content\css\img\icons\retina\icon-action-edit.png" />
@@ -328,6 +329,7 @@
     <Content Include="Admin\Modules\Shared\Content\css\img\icons\retina\icon-nav-people.png" />
     <Content Include="Admin\Modules\Shared\Content\css\img\icons\retina\icon-nav-search.png" />
     <Content Include="Admin\Modules\Shared\Content\css\img\icons\retina\icon-nav-settings.png" />
+    <Content Include="Admin\Modules\Shared\Content\css\img\icons\retina\logo-full.png" />
     <Content Include="Admin\Modules\Shared\Content\css\img\icons\retina\logo.png" />
     <Content Include="Admin\Modules\Shared\Content\css\img\loaders\ajax-loader.gif" />
     <Content Include="Admin\Modules\Shared\Content\css\img\loaders\generic-horizontal.gif" />
@@ -564,13 +566,14 @@
     <Content Include="Admin\Modules\Shared\Js\Utilities\RoutingUtilities.js" />
     <Content Include="Admin\Modules\Shared\Js\Utilities\StringUtilities.js" />
     <Content Include="Admin\Modules\Shared\Js\Utilities\UrlLibrary.js" />
-    <Content Include="Admin\Modules\SiteViewer\Content\css\img\devices\iPadLandscape.png" />
-    <Content Include="Admin\Modules\SiteViewer\Content\css\img\devices\iPadPortrait.png" />
-    <Content Include="Admin\Modules\SiteViewer\Content\css\img\devices\iPhone3Landscape.png" />
-    <Content Include="Admin\Modules\SiteViewer\Content\css\img\devices\iPhone3Portrait.png" />
-    <Content Include="Admin\Modules\SiteViewer\Content\css\img\devices\iPhone4Landscape.png" />
-    <Content Include="Admin\Modules\SiteViewer\Content\css\img\devices\iPhone4Portrait.png" />
-    <Content Include="Admin\Modules\SiteViewer\Content\css\img\icons.png" />
+    <Content Include="Admin\Modules\SiteViewer\Content\css\images\devices\iPadLandscape.png" />
+    <Content Include="Admin\Modules\SiteViewer\Content\css\images\devices\iPadPortrait.png" />
+    <Content Include="Admin\Modules\SiteViewer\Content\css\images\devices\iPhone3Landscape.png" />
+    <Content Include="Admin\Modules\SiteViewer\Content\css\images\devices\iPhone3Portrait.png" />
+    <Content Include="Admin\Modules\SiteViewer\Content\css\images\devices\iPhone4Landscape.png" />
+    <Content Include="Admin\Modules\SiteViewer\Content\css\images\devices\iPhone4Portrait.png" />
+    <Content Include="Admin\Modules\SiteViewer\Content\css\images\icons.png" />
+    <Content Include="Admin\Modules\SiteViewer\Content\img\logo-thumb.png" />
     <Content Include="Admin\Modules\SiteViewer\Content\css\inner-site-viewer.css" />
     <Content Include="Admin\Modules\SiteViewer\Content\css\site-viewer.css" />
     <Content Include="Admin\Modules\SiteViewer\Js\Bootstrap\Module.js" />
@@ -844,6 +847,8 @@
   <ItemGroup>
     <Folder Include="Admin\Modules\Shared\MVC\Views\StandardModule\" />
     <Folder Include="Admin\Modules\Shared\Sass\Modules\" />
+    <Folder Include="Admin\Modules\SiteViewer\Content\css\images\icons\normal\" />
+    <Folder Include="Admin\Modules\SiteViewer\Content\css\images\icons\retina\" />
     <Folder Include="Admin\Modules\Users\Js\UIControls\" />
   </ItemGroup>
   <PropertyGroup>

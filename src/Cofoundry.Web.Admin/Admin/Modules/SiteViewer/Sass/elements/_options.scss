@@ -2,13 +2,12 @@
     float: right;
     padding: 0 5px 0 0;
     margin-left: 10px;
-    border-left: 1px solid $color-midgrey;
+    border-left: 1px solid $color-secondary-dark;
     height: 100%;
 }
 
 .cofoundry-sv__options__button {
     display:inline-block;
-    background-color: $color-offblack;
     border-radius: 4px;
     border: none;
     height: 100%;
@@ -35,6 +34,6 @@
     }
 
     &:hover {
-        background-color: $color-primary;
+        background-color: $color-secondary-dark;
     }
 }
