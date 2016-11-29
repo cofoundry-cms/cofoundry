@@ -1,6 +1,10 @@
-﻿@inherits WebViewPage<RichTextWithMediaDisplayModel>
+﻿@inherits CofoundryPageModule<RichTextWithMediaDisplayModel>
 @using Cofoundry.Web
 @using System.Web.Mvc
 @using System.Web.Mvc.Html
 
-@Model.RawHtml
+@{
+    Cofoundry.Module.UseDescription("Text entry with simple formatting and image/video media functionality");
+}
+ 
+@Cofoundry.Sanitizer.Sanitize(Model.RawHtml)

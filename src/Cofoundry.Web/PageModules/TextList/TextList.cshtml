@@ -1,7 +1,10 @@
-﻿@inherits WebViewPage<TextListDisplayModel>
+﻿@inherits CofoundryPageModule<TextListDisplayModel>
 @using Cofoundry.Web
 @using System.Web.Mvc
-@using System.Web.Mvc.Html
+
+@{ 
+    Cofoundry.Module.UseDescription("Text list items");
+}
 
 @if (!string.IsNullOrEmpty(Model.Title))
 {

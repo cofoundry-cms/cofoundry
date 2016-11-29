@@ -1,10 +1,13 @@
-﻿@inherits WebViewPage<PlainTextDataModel>
+﻿@inherits CofoundryPageModule<PlainTextDataModel>
 @using Cofoundry.Web
+@using Cofoundry.Core
 @using System.Web.Mvc
 @using System.Web.Mvc.Html
 
 @{
+    Cofoundry.Module.UseDescription("Multiple lines of simple text");
     Layout = null;
+    
 }
 
 @if (Model == null)
@@ -14,6 +17,6 @@
 else
 {
     <span>
-        @Html.Raw(Html.Encode(Model.PlainText).Replace(System.Environment.NewLine, "<br />"))
+        @Cofoundry.Sanitizer.Sanitize(HtmlFormatter.ConvertToBasicHtml(Model.PlainText))
     </span>
 }

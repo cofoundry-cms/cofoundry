@@ -1,7 +1,11 @@
-﻿@inherits WebViewPage<QuotationDisplayModel>
+﻿@inherits CofoundryPageModule<QuotationDisplayModel>
 @using Cofoundry.Web
 @using System.Web.Mvc
 @using System.Web.Mvc.Html
+
+@{
+    Cofoundry.Module.UseDescription("Quotation with optional citation and title");
+}
 
 @if (Model != null)
 {
@@ -19,11 +23,11 @@
         <cite>
             @if (!string.IsNullOrEmpty(Model.CitationUrl))
             {
-                <a href="@Model.CitationUrl">@Html.Raw(Model.CitationText)</a>
+                <a href="@Model.CitationUrl">@Cofoundry.Sanitizer.Sanitize(Model.CitationText)</a>
             }
             else
             {
-                @Html.Raw(Model.CitationText)
+                @Cofoundry.Sanitizer.Sanitize(Model.CitationText)
             }
         </cite>
     }

@@ -1,6 +1,10 @@
-﻿@inherits WebViewPage<HorizontalLineDataModel>
+﻿@inherits CofoundryPageModule<HorizontalLineDataModel>
 @using Cofoundry.Web
 @using System.Web.Mvc
 @using System.Web.Mvc.Html
 
+@{
+    Cofoundry.Module.UseDescription("A horizontal line indicating a thematic break in content");
+    Layout = null;
+}
 <div class="hr"@Html.Raw(Model.PercentageWidth.HasValue ? string.Format(" style=\"width: {0}%\"", Model.PercentageWidth) : "")><hr /></div>

@@ -1,6 +1,9 @@
-﻿@inherits WebViewPage<RawHtmlDisplayModel>
+﻿@inherits CofoundryPageModule<RawHtmlDisplayModel>
 @using Cofoundry.Web
 @using System.Web.Mvc
 @using System.Web.Mvc.Html
 
-@Model.RawHtml
+@{
+    Cofoundry.Module.UseDescription("Html text with full HTML editing");
+}
+@Cofoundry.Sanitizer.Sanitize(Model.RawHtml)

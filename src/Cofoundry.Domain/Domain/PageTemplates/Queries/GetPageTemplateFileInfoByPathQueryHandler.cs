@@ -112,7 +112,7 @@ namespace Cofoundry.Domain
                     }
                     else if (line.Contains(TEMPLATE_DESCRIPTION_FUNC))
                     {
-                        pageTemplateFileInfo.Description = ParseFunctionParameter(line, CUSTOM_ENTITY_PLACEHOLDER_FUNC);
+                        pageTemplateFileInfo.Description = ParseFunctionParameter(line, TEMPLATE_DESCRIPTION_FUNC);
                     }
                 }
             }

@@ -79,6 +79,7 @@ namespace Cofoundry.Domain
                     existingModule = new PageModuleType();
                     existingModule.FileName = fileName;
                     existingModule.CreateDate = executionContext.ExecutionDate;
+                    _dbContext.PageModuleTypes.Add(existingModule);
                     isUpdated = true;
                 }
 

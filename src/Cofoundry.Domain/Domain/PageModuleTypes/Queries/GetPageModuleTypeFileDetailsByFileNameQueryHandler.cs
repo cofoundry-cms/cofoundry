@@ -102,7 +102,7 @@ namespace Cofoundry.Domain
                 {
                     if (line.Contains(TEMPLATE_NAME_FUNC))
                     {
-                        fileDetails.Name = ParseFunctionParameter(line, TEMPLATE_DESCRIPTION_FUNC);
+                        fileDetails.Name = ParseFunctionParameter(line, TEMPLATE_NAME_FUNC);
                     }
                     else if (line.Contains(TEMPLATE_DESCRIPTION_FUNC))
                     {

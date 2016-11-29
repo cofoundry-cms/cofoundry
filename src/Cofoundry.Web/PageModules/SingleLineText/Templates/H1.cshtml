@@ -1,8 +1,11 @@
-﻿@inherits WebViewPage<SingleLineTextDisplayModel>
+﻿@inherits CofoundryPageModule<SingleLineTextDisplayModel>
 @using Cofoundry.Web
 @using System.Web.Mvc
 @using System.Web.Mvc.Html
 
+@{
+    Cofoundry.Module.UseDescription("Wraps the text in an H1 heading tag");
+}
 <h1>
     @if (Model == null)
     {

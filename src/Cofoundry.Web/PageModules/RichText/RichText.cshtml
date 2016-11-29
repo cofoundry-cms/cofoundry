@@ -1,6 +1,10 @@
-﻿@inherits WebViewPage<RichTextDisplayModel>
+﻿@inherits CofoundryPageModule<RichTextDisplayModel>
 @using Cofoundry.Web
 @using System.Web.Mvc
 @using System.Web.Mvc.Html
 
-@Model.RawHtml
+@{
+    Cofoundry.Module.UseDescription("Text entry with simple formatting like headings and lists");
+}
+
+@Cofoundry.Sanitizer.Sanitize(Model.RawHtml)
