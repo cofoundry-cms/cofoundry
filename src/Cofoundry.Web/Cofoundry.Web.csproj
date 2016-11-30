@@ -379,8 +379,8 @@
     <Compile Include="Framework\Mvc\ViewHelpers\PageTemplates\PageTemplateSection\CustomEntityTemplateSectionTagBuilder.cs" />
     <Compile Include="Framework\Mvc\ViewHelpers\PageTemplates\PageTemplateSection\Factories\CustomEntityTemplateSectionTagBuilderFactory.cs" />
     <Compile Include="Framework\Mvc\ViewHelpers\PageTemplates\PageTemplateSection\Factories\ICustomEntityTemplateSectionTagBuilderFactory.cs" />
-    <Compile Include="Framework\Mvc\ViewHelpers\PageTemplates\PageTemplateSection\Factories\IPageTemplateSectionTagBuilder.cs" />
-    <Compile Include="Framework\Mvc\ViewHelpers\PageTemplates\PageTemplateSection\Factories\PageTemplateSectionTagBuilder.cs" />
+    <Compile Include="Framework\Mvc\ViewHelpers\PageTemplates\PageTemplateSection\Factories\IPageTemplateSectionTagBuilderFactory.cs" />
+    <Compile Include="Framework\Mvc\ViewHelpers\PageTemplates\PageTemplateSection\Factories\PageTemplateSectionTagBuilderFactory.cs" />
     <Compile Include="Framework\Mvc\ViewHelpers\PageTemplates\PageTemplateSection\ICustomEntityTemplateSectionTagBuilder.cs" />
     <Compile Include="Framework\Mvc\ViewHelpers\PageTemplates\PageTemplateSection\IPageTemplateSectionTagBuilder.cs" />
     <Compile Include="Framework\Mvc\ViewHelpers\PageTemplates\PageTemplateSection\PageTemplateSectionTagBuilder.cs" />

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Cofoundry.Domain
 {
-    public class PageTemplateSectionDetails : ICreateAudited
+    public class PageTemplateSectionDetails
     {
         public int PageTemplateSectionId { get; set; }
 
@@ -16,6 +16,18 @@ namespace Cofoundry.Domain
 
         public bool IsCustomEntitySection { get; set; }
 
-        public CreateAuditData AuditData { get; set; }
+        #region Auditing
+
+        /// <summary>
+        /// The date the template was created
+        /// </summary>
+        public DateTime CreateDate { get; set; }
+
+        /// <summary>
+        /// The date the template was last updated
+        /// </summary>
+        public DateTime UpdateDate { get; set; }
+
+        #endregion
     }
 }

@@ -23,13 +23,15 @@ namespace Cofoundry.Domain
         private readonly IPageCache _pageCache;
         private readonly IPageModuleTypeCache _moduleCache;
         private readonly IPageModuleDataModel[] _allPageModuleDataModels;
-        
+        private readonly IPageModuleTypeFileNameFormatter _moduleTypeFileNameFormatter;
+
         public RegisterPageModuleTypesCommandHandler(
             CofoundryDbContext dbContext,
             IQueryExecutor queryExecutor,
             IPageCache pageCache,
             IPageModuleTypeCache moduleCache,
-            IPageModuleDataModel[] allPageModuleDataModels
+            IPageModuleDataModel[] allPageModuleDataModels,
+            IPageModuleTypeFileNameFormatter moduleTypeFileNameFormatter
             )
         {
             _dbContext = dbContext;
@@ -37,6 +39,7 @@ namespace Cofoundry.Domain
             _pageCache = pageCache;
             _allPageModuleDataModels = allPageModuleDataModels;
             _moduleCache = moduleCache;
+            _moduleTypeFileNameFormatter = moduleTypeFileNameFormatter;
         }
 
         public async Task ExecuteAsync(RegisterPageModuleTypesCommand command, IExecutionContext executionContext)
@@ -186,6 +189,11 @@ namespace Cofoundry.Domain
             }
         }
 
+        private string FormatModuleFileName(IPageModuleDataModel m)
+        {
+            return _moduleTypeFileNameFormatter.FormatFromDataModelType(m.GetType());
+        }
+
         private Task<bool> IsModuleInUse(int pageModuleId)
         {
             var isInUSe = _dbContext
@@ -195,20 +203,6 @@ namespace Cofoundry.Domain
                 .AnyAsync(m => m.PageVersionModules.Any() || m.CustomEntityVersionPageModules.Any());
 
             return isInUSe;
-        }
-
-        private string FormatModuleFileName<T>(T dataModel)
-            where T : IPageModuleDataModel
-        {
-            const string DATA_MODEL_TEXT = "DataModel";
-            var name = dataModel.GetType().Name;
-
-            if (name.EndsWith(DATA_MODEL_TEXT, StringComparison.OrdinalIgnoreCase))
-            {
-                return name.Remove(name.Length - DATA_MODEL_TEXT.Length);
-            }
-
-            return name;
         }
 
         #region permissions

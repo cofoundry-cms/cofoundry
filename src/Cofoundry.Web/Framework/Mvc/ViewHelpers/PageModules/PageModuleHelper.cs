@@ -39,5 +39,14 @@ namespace Cofoundry.Web
             // nothing is rendered here, this is just used as a convention for adding template meta data
             return this;
         }
+
+        /// <summary>
+        /// Overridden to make sure no output is rendered into a view when
+        /// we use method chaining
+        /// </summary>
+        public override string ToString()
+        {
+            return string.Empty;
+        }
     }
 }

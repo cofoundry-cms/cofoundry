@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Cofoundry.Domain
 {
-    public class PageTemplateSummary : ICreateAudited
+    public class PageTemplateSummary
     {
         public int PageTemplateId { get; set; }
 
@@ -20,6 +20,20 @@ namespace Cofoundry.Domain
 
         public int NumPages { get; set; }
 
-        public CreateAuditData AuditData { get; set; }
+        public bool IsArchived { get; set; }
+
+        #region Auditing
+
+        /// <summary>
+        /// The date the template was created
+        /// </summary>
+        public DateTime CreateDate { get; set; }
+
+        /// <summary>
+        /// The date the template was last updated
+        /// </summary>
+        public DateTime UpdateDate { get; set; }
+
+        #endregion
     }
 }

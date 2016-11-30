@@ -17,5 +17,7 @@ namespace Cofoundry.Domain
         public Type CustomEntityModelType { get; set; }
 
         public string CustomEntityDefinitionCode { get; set; }
+
+        public bool IsArchived { get; set; }
     }
 }

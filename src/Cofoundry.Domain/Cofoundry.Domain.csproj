@@ -527,6 +527,8 @@
     <Compile Include="Domain\PageModuleTypes\Bootstrap\PageModuleDependencyRegistration.cs" />
     <Compile Include="Domain\PageModuleTypes\Commands\RegisterPageModuleTypesCommand.cs" />
     <Compile Include="Domain\PageModuleTypes\Commands\RegisterPageModuleTypesCommandHandler.cs" />
+    <Compile Include="Domain\PageModuleTypes\Helpers\PageModuleTypeFileNameFormatter.cs" />
+    <Compile Include="Domain\PageModuleTypes\Helpers\IPageModuleTypeFileNameFormatter.cs" />
     <Compile Include="Domain\PageModuleTypes\Models\PageModuleTypeTemplateFileLocation.cs" />
     <Compile Include="Domain\PageModuleTypes\Models\PageModuleTypeFileLocation.cs" />
     <Compile Include="Domain\PageModuleTypes\Models\PageModuleTypeTemplateFileDetails.cs" />

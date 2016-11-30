@@ -11,6 +11,15 @@ namespace Cofoundry.Web
 {
     public class ModuleRenderer : IModuleRenderer
     {
+        private readonly IPageModuleTypeViewFileLocator _pageModuleTypeViewFileLocator;
+
+        public ModuleRenderer(
+            IPageModuleTypeViewFileLocator pageModuleTypeViewFileLocator
+            )
+        {
+            _pageModuleTypeViewFileLocator = pageModuleTypeViewFileLocator;
+        }
+
         #region public methods
 
         public string RenderModule(HtmlHelper htmlHelper, IEditablePageViewModel pageViewModel, IEntityVersionPageModuleRenderDetails moduleViewModel)
@@ -73,14 +82,15 @@ namespace Cofoundry.Web
 
             if (moduleViewModel.Template == null)
             {
-                viewPath = fileName + '/' + fileName;
+                viewPath = _pageModuleTypeViewFileLocator.GetPathByFileName(fileName);
             }
             else
             {
-                viewPath = fileName + "/Templates/" + moduleViewModel.Template.FileName;
+                viewPath = _pageModuleTypeViewFileLocator.GetTemplatePathByTemplateFileName(fileName, moduleViewModel.Template.FileName);
             }
 
-            return viewPath;
+            if (viewPath == null) return null;
+            return "~" + viewPath;
         }
 
         /// <summary>

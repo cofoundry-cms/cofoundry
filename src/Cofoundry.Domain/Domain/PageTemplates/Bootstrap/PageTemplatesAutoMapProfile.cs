@@ -19,7 +19,6 @@ namespace Cofoundry.Domain
                 ;
             
             CreateMap<PageTemplate, PageTemplateSummary>()
-                .ForMember(d => d.AuditData, o => o.MapFrom(s => s))
                 .ForMember(d => d.PageType, o => o.MapFrom(s => (PageType)s.PageTypeId))
                 .ForMember(d => d.NumPages, o => o.MapFrom(s => s
                     .PageVersions
@@ -31,7 +30,6 @@ namespace Cofoundry.Domain
                 ;
 
             CreateMap<PageTemplate, PageTemplateDetails>()
-                .ForMember(d => d.AuditData, o => o.MapFrom(s => s))
                 .ForMember(d => d.NumPages, o => o.MapFrom(s => s
                     .PageVersions
                     .GroupBy(p => p.PageId)
@@ -39,9 +37,7 @@ namespace Cofoundry.Domain
                 .ForMember(d => d.PageType, o => o.MapFrom(s => (PageType)s.PageTypeId))
                 ;
 
-            CreateMap<PageTemplateSection, PageTemplateSectionDetails>()
-                .ForMember(d => d.AuditData, o => o.MapFrom(s => s))
-                ;
+            CreateMap<PageTemplateSection, PageTemplateSectionDetails>();
             
             #endregion
         }

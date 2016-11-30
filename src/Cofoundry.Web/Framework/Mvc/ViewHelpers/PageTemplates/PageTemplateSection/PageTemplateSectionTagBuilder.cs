@@ -9,6 +9,7 @@ using System.Web;
 using System.Web.Mvc;
 using Cofoundry.Domain;
 using Cofoundry.Core.Web;
+using Newtonsoft.Json;
 
 namespace Cofoundry.Web
 {
@@ -23,9 +24,13 @@ namespace Cofoundry.Web
         private readonly IEditablePageViewModel _pageViewModel;
         private readonly HtmlHelper _htmlHelper;
         private readonly IModuleRenderer _moduleRenderer;
+        private readonly IModuleDataModelTypeFactory _moduleDataModelTypeFactory;
+        private readonly IPageModuleTypeFileNameFormatter _moduleTypeFileNameFormatter;
 
         public PageTemplateSectionTagBuilder(
             IModuleRenderer moduleRenderer,
+            IModuleDataModelTypeFactory moduleDataModelTypeFactory,
+            IPageModuleTypeFileNameFormatter moduleTypeFileNameFormatter,
             HtmlHelper htmlHelper,
             IEditablePageViewModel pageViewModel, 
             string sectionName)
@@ -34,6 +39,8 @@ namespace Cofoundry.Web
             Condition.Requires(pageViewModel).IsNotNull();
 
             _moduleRenderer = moduleRenderer;
+            _moduleDataModelTypeFactory = moduleDataModelTypeFactory;
+            _moduleTypeFileNameFormatter = moduleTypeFileNameFormatter;
             _sectionName = sectionName;
             _pageViewModel = pageViewModel;
             _htmlHelper = htmlHelper;
@@ -48,6 +55,7 @@ namespace Cofoundry.Web
         private bool _allowMultipleModules = false;
         private int? _emptyContentMinHeight = null;
         private Dictionary<string, string> _additonalHtmlAttributes = null;
+        private Dictionary<string, object> _permittedModules = new Dictionary<string, object>();
 
         #endregion
 
@@ -119,7 +127,7 @@ namespace Cofoundry.Web
         /// <returns>IPageTemplateSectionTagBuilder for method chaining</returns>
         public IPageTemplateSectionTagBuilder AllowModuleType<TModuleType>() where TModuleType : IPageModuleDataModel
         {
-            // Not yet validated, method just for module scanning
+            AddModuleToAllowedTypes(typeof(TModuleType).Name);
             return this;
         }
 
@@ -128,11 +136,12 @@ namespace Cofoundry.Web
         /// section. By default all modules are available but using this method changes 
         /// the module selection to an 'opt-in' configuration.
         /// </summary>
-        /// <param name="moduleType">The name of the moduletype to register e.g. "RawHtml" or "PlainText"</param>
+        /// <param name="moduleTypeName">The name of the moduletype to register e.g. "RawHtml" or "PlainText"</param>
         /// <returns>IPageTemplateSectionTagBuilder for method chaining</returns>
-        public IPageTemplateSectionTagBuilder AllowModuleType(string moduleType)
+        public IPageTemplateSectionTagBuilder AllowModuleType(string moduleTypeName)
         {
-            // Not yet validated, method just for module scanning
+            AddModuleToAllowedTypes(moduleTypeName);
+
             return this;
         }
 
@@ -142,12 +151,30 @@ namespace Cofoundry.Web
         /// the module selection to an 'opt-in' configuration.
         /// configuration.
         /// </summary>
-        /// <param name="moduleTypes">The names of the moduletype to register e.g. "RawHtml" or "PlainText"</param>
+        /// <param name="moduleTypeNames">The names of the moduletype to register e.g. "RawHtml" or "PlainText"</param>
         /// <returns>IPageTemplateSectionTagBuilder for method chaining</returns>
-        public IPageTemplateSectionTagBuilder AllowModuleTypes(params string[] moduleTypes)
+        public IPageTemplateSectionTagBuilder AllowModuleTypes(params string[] moduleTypeNames)
         {
-            // Not yet validated, method just for module scanning
+            foreach (var moduleTypeName in moduleTypeNames)
+            {
+                AddModuleToAllowedTypes(moduleTypeName);
+            }
             return this;
+        }
+
+        private void AddModuleToAllowedTypes(string moduleTypeName)
+        {
+            // Get the file name if we haven't already got it, e.g. we could have the file name or 
+            // full type name passed into here (we shouldn't be fussy)
+            var fileName = _moduleTypeFileNameFormatter.FormatFromDataModelName(moduleTypeName);
+
+            // Validate the model type, will throw exception if not implemented
+            var moduleType = _moduleDataModelTypeFactory.CreateByPageModuleTypeName(fileName);
+
+            // Make sure we have the correct name casing
+            var formattedModuleTypeName = _moduleTypeFileNameFormatter.FormatFromDataModelType(moduleType);
+
+            _permittedModules.Add(formattedModuleTypeName, null);
         }
 
         #endregion
@@ -183,12 +210,14 @@ namespace Cofoundry.Web
         {
             string modulesHtml = string.Empty;
 
-            if (pageSection.Modules.Any())
-            {
-                var moduleHtmlParts = pageSection
-                            .Modules
-                            .Select(m => _moduleRenderer.RenderModule(_htmlHelper, _pageViewModel, m));
+            // No _permittedModules means any is allowed. 
+            var moduleHtmlParts = pageSection
+                .Modules
+                .Where(m => _permittedModules.Count == 0 || _permittedModules.ContainsKey(m.ModuleType.FileName))
+                .Select(m => _moduleRenderer.RenderModule(_htmlHelper, _pageViewModel, m));
 
+            if (moduleHtmlParts.Any())
+            {
                 if (!_allowMultipleModules)
                 {
                     // If for some reason another module has been added in error, make sure we only display one.
@@ -222,7 +251,13 @@ namespace Cofoundry.Web
             attrs.Add("data-cms-page-section-name", pageSection.Name);
             attrs.Add("data-cms-page-section", string.Empty);
             attrs.Add("class", "cofoundry__sv-section");
-            
+
+            if (_permittedModules.Any())
+            {
+                var permittedModules = _permittedModules.Select(m => m.Key);
+                attrs.Add("data-cms-page-section-allowed-modules", JsonConvert.SerializeObject(permittedModules));
+            }
+
             if (_allowMultipleModules)
             {
                 attrs.Add("data-cms-multi-module", "true");

@@ -12,14 +12,17 @@ namespace Cofoundry.Domain
 
         private readonly IPageModuleDataModel[] _allPageModuleDataModels;
         private readonly IQueryExecutor _queryExecutor;
+        private readonly IPageModuleTypeFileNameFormatter _moduleTypeFileNameFormatter;
 
         public ModuleDataModelTypeFactory(
             IPageModuleDataModel[] allPageModuleDataModels,
-            IQueryExecutor queryExecutor
+            IQueryExecutor queryExecutor,
+            IPageModuleTypeFileNameFormatter moduleTypeFileNameFormatter
             )
         {
             _allPageModuleDataModels = allPageModuleDataModels;
             _queryExecutor = queryExecutor;
+            _moduleTypeFileNameFormatter = moduleTypeFileNameFormatter;
         }
 
         #endregion
@@ -31,16 +34,16 @@ namespace Cofoundry.Domain
             // and the only alternative is searching through all assembly types which is very slow.
             var dataModelTypes = _allPageModuleDataModels
                 .Select(t => t.GetType())
-                .Where(t => t.Name.Equals(moduleTypeName + "DataModel", StringComparison.OrdinalIgnoreCase));
+                .Where(t => _moduleTypeFileNameFormatter.FormatFromDataModelType(t).Equals(moduleTypeName, StringComparison.OrdinalIgnoreCase));
 
             if (!dataModelTypes.Any())
             {
-                throw new InvalidOperationException(string.Format("Page Module type {0}DataModel not yet implemented", moduleTypeName));
+                throw new InvalidOperationException(string.Format("DataModel for page module type {0} not yet implemented", moduleTypeName));
             }
 
             if (dataModelTypes.Count() > 1)
             {
-                throw new InvalidOperationException(string.Format("Page Module type {0}DataModel is registered multiple times. Please use unique class names.", moduleTypeName));
+                throw new InvalidOperationException(string.Format("DataModel for page module type {0} is registered multiple times. Please use unique class names.", moduleTypeName));
             }
 
             return dataModelTypes.First();

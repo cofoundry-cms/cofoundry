@@ -16,12 +16,6 @@ namespace Cofoundry.Domain
 
         public string FileName { get; set; }
 
-        /// <summary>
-        /// Indictaes whther this is a custom module type implemented outside of the core
-        /// Cofoundry system.
-        /// </summary>
-        public bool IsCustom { get; set; }
-
         public IEnumerable<PageModuleTypeTemplateSummary> Templates { get; set; }
     }
 }

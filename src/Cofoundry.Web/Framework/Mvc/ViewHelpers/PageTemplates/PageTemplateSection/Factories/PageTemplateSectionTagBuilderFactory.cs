@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Cofoundry.Domain;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -15,11 +16,18 @@ namespace Cofoundry.Web
     public class PageTemplateSectionTagBuilderFactory : IPageTemplateSectionTagBuilderFactory
     {
         private readonly IModuleRenderer _moduleRenderer;
+        private readonly IModuleDataModelTypeFactory _moduleDataModelTypeFactory;
+        private readonly IPageModuleTypeFileNameFormatter _moduleTypeFileNameFormatter;
 
         public PageTemplateSectionTagBuilderFactory(
-            IModuleRenderer moduleRenderer)
+            IModuleRenderer moduleRenderer,
+            IModuleDataModelTypeFactory moduleDataModelTypeFactory,
+            IPageModuleTypeFileNameFormatter moduleTypeFileNameFormatter
+            )
         {
             _moduleRenderer = moduleRenderer;
+            _moduleDataModelTypeFactory = moduleDataModelTypeFactory;
+            _moduleTypeFileNameFormatter = moduleTypeFileNameFormatter;
         }
 
         public IPageTemplateSectionTagBuilder Create(
@@ -28,7 +36,14 @@ namespace Cofoundry.Web
             string sectionName
             )
         {
-            return new PageTemplateSectionTagBuilder(_moduleRenderer, htmlHelper, pageViewModel, sectionName);
+            return new PageTemplateSectionTagBuilder(
+                _moduleRenderer, 
+                _moduleDataModelTypeFactory,
+                _moduleTypeFileNameFormatter,
+                htmlHelper,
+                pageViewModel,
+                sectionName
+                );
         }
     }
 }

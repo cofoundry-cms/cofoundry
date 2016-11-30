@@ -10,10 +10,6 @@ begin
     delete Cofoundry.PageVersionModule
 	from Cofoundry.PageVersionModule e
 	inner join deleted d on e.PageTemplateSectionId = d.PageTemplateSectionId
-	
-    delete Cofoundry.PageTemplateSectionPageModuleType
-	from Cofoundry.PageTemplateSectionPageModuleType e
-	inner join deleted d on e.PageTemplateSectionId = d.PageTemplateSectionId
 
     delete Cofoundry.CustomEntityVersionPageModule
 	from Cofoundry.CustomEntityVersionPageModule e

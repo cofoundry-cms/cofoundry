@@ -27,15 +27,18 @@ namespace Cofoundry.Web
 
         public bool IsEditTypeSwitchRequired()
         {
-            return PageRoutingInfo.CustomEntityRoute != null
+            return PageRoutingInfo != null
+                && PageVersion != null
+                && PageRoutingInfo.CustomEntityRoute != null
                 && PageVersion.HasCustomEntityModuleSections
                 && PageVersion.HasPageModuleSections;
         }
 
         public bool CanEditPage()
         {
-            return PageVersion.HasCustomEntityModuleSections
-                || PageVersion.HasPageModuleSections;
+            return PageVersion != null
+                && (PageVersion.HasCustomEntityModuleSections
+                || PageVersion.HasPageModuleSections);
         }
     }
 }
