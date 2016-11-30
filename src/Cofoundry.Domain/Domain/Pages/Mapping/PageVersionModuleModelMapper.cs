@@ -20,12 +20,12 @@ namespace Cofoundry.Domain
 
         private readonly IResolutionContext _resolutionContext;
         private readonly IDbUnstructuredDataSerializer _dbUnstructuredDataSerializer;
-        private readonly IModuleDataModelTypeFactory _moduleDataModelTypeFactory;
+        private readonly IPageModuleDataModelTypeFactory _moduleDataModelTypeFactory;
 
         public PageVersionModuleModelMapper(
             IResolutionContext resolutionContext,
             IDbUnstructuredDataSerializer dbUnstructuredDataSerializer,
-            IModuleDataModelTypeFactory moduleDataModelTypeFactory
+            IPageModuleDataModelTypeFactory moduleDataModelTypeFactory
             )
         {
             _resolutionContext = resolutionContext;
@@ -47,7 +47,7 @@ namespace Cofoundry.Domain
         public List<PageModuleDisplayModelMapperOutput> MapDisplayModel(string typeName, IEnumerable<IEntityVersionPageModule> versionModules, WorkFlowStatusQuery workflowStatus)
         {
             // Find the data-provider class for this type of module
-            Type modelType = _moduleDataModelTypeFactory.CreateByPageModuleTypeName(typeName);
+            Type modelType = _moduleDataModelTypeFactory.CreateByPageModuleTypeFileName(typeName);
             
             if (typeof(IPageModuleDisplayModel).IsAssignableFrom(modelType))
             {
@@ -76,7 +76,7 @@ namespace Cofoundry.Domain
 
         public IPageModuleDataModel MapDataModel(string typeName, IEntityVersionPageModule versionModule)
         {
-            Type modelType = _moduleDataModelTypeFactory.CreateByPageModuleTypeName(typeName);
+            Type modelType = _moduleDataModelTypeFactory.CreateByPageModuleTypeFileName(typeName);
             var model = (IPageModuleDataModel)_dbUnstructuredDataSerializer.Deserialize(versionModule.SerializedData, modelType);
 
             return model;

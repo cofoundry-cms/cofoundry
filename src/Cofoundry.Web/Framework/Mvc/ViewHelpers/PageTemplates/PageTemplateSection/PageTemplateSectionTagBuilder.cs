@@ -24,12 +24,12 @@ namespace Cofoundry.Web
         private readonly IEditablePageViewModel _pageViewModel;
         private readonly HtmlHelper _htmlHelper;
         private readonly IModuleRenderer _moduleRenderer;
-        private readonly IModuleDataModelTypeFactory _moduleDataModelTypeFactory;
+        private readonly IPageModuleDataModelTypeFactory _moduleDataModelTypeFactory;
         private readonly IPageModuleTypeFileNameFormatter _moduleTypeFileNameFormatter;
 
         public PageTemplateSectionTagBuilder(
             IModuleRenderer moduleRenderer,
-            IModuleDataModelTypeFactory moduleDataModelTypeFactory,
+            IPageModuleDataModelTypeFactory moduleDataModelTypeFactory,
             IPageModuleTypeFileNameFormatter moduleTypeFileNameFormatter,
             HtmlHelper htmlHelper,
             IEditablePageViewModel pageViewModel, 
@@ -169,7 +169,7 @@ namespace Cofoundry.Web
             var fileName = _moduleTypeFileNameFormatter.FormatFromDataModelName(moduleTypeName);
 
             // Validate the model type, will throw exception if not implemented
-            var moduleType = _moduleDataModelTypeFactory.CreateByPageModuleTypeName(fileName);
+            var moduleType = _moduleDataModelTypeFactory.CreateByPageModuleTypeFileName(fileName);
 
             // Make sure we have the correct name casing
             var formattedModuleTypeName = _moduleTypeFileNameFormatter.FormatFromDataModelType(moduleType);
@@ -255,7 +255,7 @@ namespace Cofoundry.Web
             if (_permittedModules.Any())
             {
                 var permittedModules = _permittedModules.Select(m => m.Key);
-                attrs.Add("data-cms-page-section-allowed-modules", JsonConvert.SerializeObject(permittedModules));
+                attrs.Add("data-cms-page-section-permitted-module-types", string.Join(",", permittedModules));
             }
 
             if (_allowMultipleModules)

@@ -16,12 +16,12 @@ namespace Cofoundry.Web
     public class PageTemplateSectionTagBuilderFactory : IPageTemplateSectionTagBuilderFactory
     {
         private readonly IModuleRenderer _moduleRenderer;
-        private readonly IModuleDataModelTypeFactory _moduleDataModelTypeFactory;
+        private readonly IPageModuleDataModelTypeFactory _moduleDataModelTypeFactory;
         private readonly IPageModuleTypeFileNameFormatter _moduleTypeFileNameFormatter;
 
         public PageTemplateSectionTagBuilderFactory(
             IModuleRenderer moduleRenderer,
-            IModuleDataModelTypeFactory moduleDataModelTypeFactory,
+            IPageModuleDataModelTypeFactory moduleDataModelTypeFactory,
             IPageModuleTypeFileNameFormatter moduleTypeFileNameFormatter
             )
         {

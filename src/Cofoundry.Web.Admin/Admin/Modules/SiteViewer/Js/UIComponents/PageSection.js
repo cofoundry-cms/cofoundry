@@ -30,7 +30,8 @@ function (
                 'refreshContent',
                 'pageTemplateSectionId',
                 'isMultiModule',
-                'isCustomEntity'
+                'isCustomEntity',
+                'permittedModuleTypes'
             ]);
         }
     };
@@ -61,7 +62,6 @@ function (
         function addModule() {
 
             scope.isPopupActive = true;
-
             modalDialogService.show({
                 templateUrl: modulePath + 'routes/modals/addmodule.html',
                 controller: 'AddModuleController',
@@ -71,6 +71,7 @@ function (
                     onClose: onClose,
                     refreshContent: refreshSection,
                     isCustomEntity: scope.isCustomEntity,
+                    permittedModuleTypes: scope.permittedModuleTypes
                 }
             });
 
@@ -107,12 +108,19 @@ function (
                 scope.pageTemplateSectionId = newAnchorElement.attr('data-cms-page-template-section-id');
                 scope.sectionName = newAnchorElement.attr('data-cms-page-section-name');
                 scope.isMultiModule = newAnchorElement.attr('data-cms-multi-module');
+                scope.permittedModuleTypes = parseModuleTypes(newAnchorElement.attr('data-cms-page-section-permitted-module-types'));
                 scope.isCustomEntity = newAnchorElement[0].hasAttribute('data-cms-custom-entity-section');
                 setPosition();
             }
 
             // Remove over css if the overTimer was cancelled
             setAnchorOver(oldAnchorElement, false)
+
+            function parseModuleTypes(moduleTypeValue) {
+                if (!moduleTypeValue) return [];
+
+                return moduleTypeValue.split(',');
+            }
 
             function setPosition() {
                 var siteFrameEl = scope.siteFrameEl,

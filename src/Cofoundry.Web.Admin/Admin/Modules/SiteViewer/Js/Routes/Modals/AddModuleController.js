@@ -1,5 +1,6 @@
 ﻿angular.module('cms.siteViewer').controller('AddModuleController', [
     '$scope',
+    '$q',
     '_',
     'shared.LoadState',
     'siteViewer.pageModuleService',
@@ -8,6 +9,7 @@
     'close',
 function (
     $scope,
+    $q,
     _,
     LoadState,
     pageModuleService,
@@ -48,18 +50,33 @@ function (
     function initData() {
         setStep(1);
 
-        pageModuleService
-            .getSection(options.pageTemplateSectionId)
-            .then(onLoaded);
+        $q.all([
+            pageModuleService.getSection(options.pageTemplateSectionId),
+            pageModuleService.getAllModuleTypes()
+        ]).then(onLoaded);
 
-        function onLoaded(section) {
+        function onLoaded(result) {
+            var section = result[0],
+                allModuleTypes = result[1];
+
             $scope.title = section.name;
+            console.log('allModuleTypes', allModuleTypes);
+            console.log('options.permittedModuleTypes', options.permittedModuleTypes);
 
-            if (section.moduleTypes.length == 1) {
-                $scope.command.pageModuleTypeId = section.moduleTypes[0].pageModuleTypeId;
+            if (options.permittedModuleTypes.length) {
+                // Filter the permitted modules list to those specified
+                $scope.moduleTypes = _.filter(allModuleTypes, function (moduleType) {
+                    return _.contains(options.permittedModuleTypes, moduleType.fileName);
+                });
+            } else {
+                // Empty means 'all' module types
+                $scope.moduleTypes = allModuleTypes;
+            }
+
+            if ($scope.moduleTypes.length == 1) {
+                $scope.command.pageModuleTypeId = $scope.moduleTypes[0].pageModuleTypeId;
                 setStep(2);
             } else {
-                $scope.moduleTypes = section.moduleTypes;
                 $scope.allowStep1 = true;
             }
 

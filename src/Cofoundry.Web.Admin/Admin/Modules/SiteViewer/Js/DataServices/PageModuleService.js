@@ -17,6 +17,10 @@ function (
 
     /* QUERIES */
 
+    service.getAllModuleTypes = function () {
+        return $http.get(serviceBase + 'page-module-types/');
+    }
+
     service.getPageVersionModuleById = function (isCustomEntityRoute, pageVersionModuleId) {
         return $http.get(getIdRoute(isCustomEntityRoute, pageVersionModuleId) + '?datatype=updatecommand');
     }   

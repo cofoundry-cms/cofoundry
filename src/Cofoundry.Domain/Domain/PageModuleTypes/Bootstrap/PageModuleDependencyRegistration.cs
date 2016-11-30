@@ -12,7 +12,7 @@ namespace Cofoundry.Domain.Bootstrap
         public void Register(IContainerRegister container)
         {
             container
-                .RegisterType<IModuleDataModelTypeFactory, ModuleDataModelTypeFactory>()
+                .RegisterType<IPageModuleDataModelTypeFactory, PageModuleDataModelTypeFactory>()
                 .RegisterType<IPageModuleTypeCache, PageModuleTypeCache>()
                 .RegisterType<IPageModuleTypeRepository, PageModuleTypeRepository>()
                 .RegisterType<IPageModuleTypeViewFileLocator, PageModuleTypeViewFileLocator>()

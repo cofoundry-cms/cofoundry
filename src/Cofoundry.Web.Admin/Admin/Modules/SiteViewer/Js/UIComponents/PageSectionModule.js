@@ -113,6 +113,7 @@ function (
                     insertMode: insertMode,
                     refreshContent: refreshSection,
                     isCustomEntity: sectionParams.isCustomEntity,
+                    permittedModuleTypes: sectionParams.permittedModuleTypes,
                     onClose: onClose
                 }
             });

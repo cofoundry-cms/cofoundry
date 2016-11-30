@@ -38,7 +38,7 @@ namespace Cofoundry.Web.Admin
 
         private JsonConverter GetModuleDataTypeConverter(int pageModuleTypeId)
         {
-            var moduleDataModelTypeFactory = Resolve<IModuleDataModelTypeFactory>();
+            var moduleDataModelTypeFactory = Resolve<IPageModuleDataModelTypeFactory>();
             var dataModelType = moduleDataModelTypeFactory.CreateByPageModuleTypeId(pageModuleTypeId);
             var converterType = typeof(PageModuleDataModelJsonConverter<>).MakeGenericType(dataModelType);
 

@@ -576,8 +576,8 @@
     <Compile Include="Domain\Pages\Commands\UpdatePageUrlCommandHandler.cs" />
     <Compile Include="Domain\Pages\Commands\UpdatePageVersionModuleCommand.cs" />
     <Compile Include="Domain\Pages\Commands\UpdatePageVersionModuleCommandHandler.cs" />
-    <Compile Include="Domain\PageModuleTypes\Factories\IModuleDataModelTypeFactory.cs" />
-    <Compile Include="Domain\PageModuleTypes\Factories\ModuleDataModelTypeFactory.cs" />
+    <Compile Include="Domain\PageModuleTypes\Factories\IPageModuleDataModelTypeFactory.cs" />
+    <Compile Include="Domain\PageModuleTypes\Factories\PageModuleDataModelTypeFactory.cs" />
     <Compile Include="Domain\Pages\Helpers\IPageModuleCommandHelper.cs" />
     <Compile Include="Domain\Pages\Helpers\PageModuleCommandHelper.cs" />
     <Compile Include="Domain\Pages\Helpers\IPagePathHelper.cs" />

@@ -6,7 +6,10 @@ using Cofoundry.Core;
 
 namespace Cofoundry.Domain
 {
-    public class ModuleDataModelTypeFactory : IModuleDataModelTypeFactory
+    /// <summary>
+    /// Used to create data model types and validate they exist
+    /// </summary>
+    public class PageModuleDataModelTypeFactory : IPageModuleDataModelTypeFactory
     {
         #region constructor
 
@@ -14,7 +17,7 @@ namespace Cofoundry.Domain
         private readonly IQueryExecutor _queryExecutor;
         private readonly IPageModuleTypeFileNameFormatter _moduleTypeFileNameFormatter;
 
-        public ModuleDataModelTypeFactory(
+        public PageModuleDataModelTypeFactory(
             IPageModuleDataModel[] allPageModuleDataModels,
             IQueryExecutor queryExecutor,
             IPageModuleTypeFileNameFormatter moduleTypeFileNameFormatter
@@ -27,7 +30,14 @@ namespace Cofoundry.Domain
 
         #endregion
 
-        public Type CreateByPageModuleTypeName(string moduleTypeName)
+        /// <summary>
+        /// Creates a data model type from the file name
+        /// string i.e. 'PlainText' not 'PlainTextDataModel'. Throws 
+        /// an InvalidOperationException if the requested type is not register
+        /// or has been defined multiple times
+        /// </summary>
+        /// <param name="moduleTypeFileName">The unique name of the module type</param>
+        public Type CreateByPageModuleTypeFileName(string moduleTypeName)
         {
             // take advantage of the cached type list in the dependency resolver to get a collection of DataModel instances
             // we dont actually use these instances, we just use them to get the type. A bit wasteful perhaps but object creation is cheap 
@@ -49,12 +59,18 @@ namespace Cofoundry.Domain
             return dataModelTypes.First();
         }
 
+        /// <summary>
+        /// Creates a data model type from the database id. Throws 
+        /// an InvalidOperationException if the requested type is not register
+        /// or has been defined multiple times
+        /// </summary>
+        /// <param name="pageModuleTypeId">Id of the page module type in the database</param>
         public Type CreateByPageModuleTypeId(int pageModuleTypeId)
         {
             var moduleType = _queryExecutor.GetById<PageModuleTypeSummary>(pageModuleTypeId);
             EntityNotFoundException.ThrowIfNull(moduleType, pageModuleTypeId);
 
-            return CreateByPageModuleTypeName(moduleType.FileName);
+            return CreateByPageModuleTypeFileName(moduleType.FileName);
         }
     }
 }
