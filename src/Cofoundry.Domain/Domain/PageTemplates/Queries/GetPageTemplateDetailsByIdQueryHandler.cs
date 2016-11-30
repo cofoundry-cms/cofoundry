@@ -45,10 +45,7 @@ namespace Cofoundry.Domain
             {
                 template.CustomEntityDefinition = _queryExecutor.GetById<CustomEntityDefinitionMicroSummary>(template.CustomEntityDefinition.CustomEntityDefinitionCode);
             }
-
-            var sectionQuery = new GetPageTemplateSectionsByPageTemplateIdQuery() { PageTemplateId = query.Id };
-            template.Sections = (await _queryExecutor.ExecuteAsync(sectionQuery)).ToArray();
-
+            
             return template;
         }
 

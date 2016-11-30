@@ -25,11 +25,6 @@
 <!-- Default toolbar -->
 <cms-page-actions ng-show="!vm.editMode">
 
-    <cms-button-link class="main-cta"
-                     cms-text="Create"
-                     cms-icon="plus"
-                     cms-href="#/new"></cms-button-link>
-
     <!--RESULTS-->
     <cms-pager cms-result="vm.result"
                cms-query="vm.query"></cms-pager>
@@ -47,8 +42,7 @@
                     <th>File Name</th>
                     <th>Sections</th>
                     <th>Pages</th>
-                    <th>Created</th>
-                    <th cms-table-column-actions>Actions</th>
+                    <th>Updated</th>
                 </tr>
             </thead>
             <tbody>
@@ -69,13 +63,7 @@
                         <a href="/admin/pages#/?pageTemplateId={{::pageTemplate.pageTemplateId}}">{{::pageTemplate.numPages}}</a>
                     </td>
                     <td class="lowPriority">
-                        <cms-table-cell-created-audit-data cms-audit-data="::pageTemplate.auditData"></cms-table-cell-created-audit-data>
-                    </td>
-                    <td cms-table-column-actions>
-                        <cms-button-icon cms-href="#/{{::pageTemplate.pageTemplateId}}"
-                                         cms-title="Edit"
-                                         cms-icon="pencil-square-o">
-                        </cms-button-icon>
+                        <cms-time-ago cms-time="::pageTemplate.updateDate"></cms-time-ago>
                     </td>
                 </tr>
             </tbody>

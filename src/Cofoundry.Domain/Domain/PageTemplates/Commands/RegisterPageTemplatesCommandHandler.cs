@@ -199,7 +199,7 @@ namespace Cofoundry.Domain
                 dbPageTemplate.IsArchived = false;
             }
 
-            dbPageTemplate.Name = fileTemplate.Name;
+            dbPageTemplate.Name = TextFormatter.PascalCaseToSentence(fileTemplate.FileName);
             dbPageTemplate.Description = fileTemplateDetails.Description;
             dbPageTemplate.FullPath = fileTemplate.FullPath;
             dbPageTemplate.UpdateDate = executionContext.ExecutionDate;

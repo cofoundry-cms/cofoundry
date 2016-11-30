@@ -40,7 +40,7 @@ namespace Cofoundry.Web.ModularMvc
                     "~/Views/{1}/{0}.cshtml",
                     "~/Views/Shared/{0}.cshtml",
                     "~/Views/Shared/Partials/{0}.cshtml",
-                    "/Cofoundry/PageTemplates/Partials/{0}.cshtml"
+                    "~/Cofoundry/PageTemplates/Partials/{0}.cshtml"
                 },
 
                 MasterLocationFormats = new string[] {

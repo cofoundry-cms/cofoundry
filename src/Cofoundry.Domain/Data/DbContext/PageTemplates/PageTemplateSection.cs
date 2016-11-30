@@ -27,14 +27,17 @@ namespace Cofoundry.Domain.Data
         public int PageTemplateId { get; set; }
 
         /// <summary>
-        /// Each section must have a unique name 
+        /// Section names can be any text string but will likely be 
+        /// alpha-numerical human readable names like 'Heading', 'Main Content'.
+        /// Section names should be unique (non-case sensitive) irrespective of
+        /// whether thy are custom entity sections or not.
         /// </summary>
         public string Name { get; set; }
 
         /// <summary>
         /// Indicates whether this section should apply to the Page (false) or
         /// to a CustomEntity (true). This is only relevant for Templates with 
-        /// a type of CustomEntityDetails
+        /// a type of PageType.CustomEntityDetails
         /// </summary>
         public bool IsCustomEntitySection { get; set; }
 

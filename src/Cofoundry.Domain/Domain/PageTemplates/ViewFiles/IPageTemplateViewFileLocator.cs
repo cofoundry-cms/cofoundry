@@ -19,6 +19,15 @@ namespace Cofoundry.Domain
         /// <param name="searchText">Optional search string to filter results.</param>
         IEnumerable<PageTemplateFile> GetPageTemplateFiles(string searchText = null);
 
+
+        /// <summary>
+        /// Gets the virtual path of a partial view referenced from inside a 
+        /// page template, returning null if it does not exist.
+        /// </summary>
+        /// <param name="partialName">
+        /// The name or full virtual path of the view file. If the full virtual
+        /// path is already specified and exists then that path is returned
+        /// </param>
         string ResolvePageTemplatePartialViewPath(string partialName);
     }
 }

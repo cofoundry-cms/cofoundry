@@ -17,13 +17,11 @@ namespace Cofoundry.Web
     public class PageTemplateViewFileLocator : IPageTemplateViewFileLocator
     {
         const string FILE_EXTENSION = ".cshtml";
-        const string DEFAULT_LAYOUT_NAME = "layout";
         const string PAGE_TEMPLATES_FOLDER_NAME = "PageTemplates";
         const string PARTIALS_FOLDER_NAME = "partials";
         static string[] PAGE_TEMPLATE_DIRECTORIES_TO_EXCLUDE = new string[] {
             "/admin/"
         };
-
 
         #region constructor
 
@@ -51,9 +49,17 @@ namespace Cofoundry.Web
         /// <param name="searchText">Optional search string to filter results.</param>
         public IEnumerable<PageTemplateFile> GetPageTemplateFiles(string searchText = null)
         {
-            return GetUnorderedPageTemplateFiles(searchText).OrderBy(l => l.Name);
+            return GetUnorderedPageTemplateFiles(searchText).OrderBy(l => l.FileName);
         }
 
+        /// <summary>
+        /// Gets the virtual path of a partial view referenced from inside a 
+        /// page template, returning null if it does not exist.
+        /// </summary>
+        /// <param name="partialName">
+        /// The name or full virtual path of the view file. If the full virtual
+        /// path is already specified and exists then that path is returned
+        /// </param>
         public string ResolvePageTemplatePartialViewPath(string partialName)
         {
             if (FileExists(partialName))
@@ -124,26 +130,11 @@ namespace Cofoundry.Web
         private PageTemplateFile MapPageTemplateFile(IResourceFile file)
         {
             var fileName = Path.ChangeExtension(file.Name, null).TrimStart(new char[] { '_', '-' });
-            var name = TextFormatter.PascalCaseToSentence(fileName);
-
-            // if the file is just called 'layout' expand the name to the parent folder.
-            if (name.Equals(DEFAULT_LAYOUT_NAME, StringComparison.OrdinalIgnoreCase))
-            {
-                var parts = file
-                    .VirtualPath
-                    .Split('/');
-
-                if (parts.Length > 2)
-                {
-                    name = parts[parts.Length - 2] + " " + name;
-                }
-            }
 
             var templateFile = new PageTemplateFile()
             {
                 FileName = fileName,
-                FullPath = file.VirtualPath,
-                Name = name
+                FullPath = file.VirtualPath
             };
 
             return templateFile;

@@ -6,10 +6,20 @@ using System.Threading.Tasks;
 
 namespace Cofoundry.Domain
 {
+    /// <summary>
+    /// Information the location of a physical (or virtual) template file
+    /// </summary>
     public class PageTemplateFile
     {
-        public string Name { get; set; }
+        /// <summary>
+        /// File name excluding extension and any leading underscores
+        /// </summary>
         public string FileName { get; set; }
+
+        /// <summary>
+        /// Full virtual path to the view file including the filename. This will
+        /// be unique
+        /// </summary>
         public string FullPath { get; set; }
     }
 }

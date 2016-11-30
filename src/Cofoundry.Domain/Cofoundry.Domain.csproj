@@ -720,15 +720,6 @@
     <Compile Include="Domain\PageTemplates\Queries\GetPageTemplateDetailsByIdQueryHandler.cs" />
     <Compile Include="Domain\PageTemplates\Queries\GetPageTemplateFileInfoByPathQuery.cs" />
     <Compile Include="Domain\PageTemplates\Queries\GetPageTemplateFileInfoByPathQueryHandler.cs" />
-    <Compile Include="Domain\PageTemplates\Queries\GetPageTemplateSectionDetailsByIdQueryHandler.cs" />
-    <Compile Include="Domain\PageTemplates\Queries\GetPageTemplateSectionsByPageTemplateIdQuery.cs" />
-    <Compile Include="Domain\PageTemplates\Queries\GetPageTemplateSectionsByPageTemplateIdQueryHandler.cs" />
-    <Compile Include="Domain\PageTemplates\Queries\IsPageTemplateNameUniqueQuery.cs" />
-    <Compile Include="Domain\PageTemplates\Queries\IsPageTemplateNameUniqueQueryHandler.cs" />
-    <Compile Include="Domain\PageTemplates\Queries\IsPageTemplateSectionNameUniqueQuery.cs" />
-    <Compile Include="Domain\PageTemplates\Queries\IsPageTemplateSectionNameUniqueQueryHandler.cs" />
-    <Compile Include="Domain\PageTemplates\Queries\SearchPageTemplateFilesQuery.cs" />
-    <Compile Include="Domain\PageTemplates\Queries\SearchPageTemplateFilesQueryHandler.cs" />
     <Compile Include="Domain\PageTemplates\Queries\SearchPageTemplateSummariesQuery.cs" />
     <Compile Include="Domain\PageTemplates\Queries\SearchPageTemplateSummariesQueryHandler.cs" />
     <Compile Include="Domain\RewriteRules\Bootstrap\RewriteRuleAutoMapProfile.cs" />

@@ -33,22 +33,24 @@ namespace Cofoundry.Domain.Data
         public int PageTypeId { get; set; }
 
         /// <summary>
-        /// Filename excluding extension and any leading underscores.
+        /// File name excluding extension and any leading underscores
         /// </summary>
         public string FileName { get; set; }
 
         /// <summary>
-        /// Full path to the view file including the filename
+        /// Full virtual path to the view file including the filename. This must
+        /// be unique
         /// </summary>
         public string FullPath { get; set; }
 
         /// <summary>
-        /// Display name
+        /// Human readable display name. This must be unique to avoid 
+        /// confusion when selecting a template from a list
         /// </summary>
         public string Name { get; set; }
 
         /// <summary>
-        /// Long description, not nullable but can be empty.
+        /// Long description, nullable and can be empty
         /// </summary>
         public string Description { get; set; }
 
@@ -78,7 +80,7 @@ namespace Cofoundry.Domain.Data
         /// Indicates if the template has been archived and is no longer available 
         /// to be used in new Pages. An archived template may still be used in an 
         /// active page to support scenarios where you need to transition between
-        /// an old template to a new templat.
+        /// an old template to a new template.
         /// </summary>
         public bool IsArchived { get; set; }
 
