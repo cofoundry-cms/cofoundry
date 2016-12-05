@@ -14,10 +14,10 @@ namespace Cofoundry.Web
     /// </remarks>
     public class CustomEntityTemplateSectionTagBuilderFactory : ICustomEntityTemplateSectionTagBuilderFactory
     {
-        private readonly IModuleRenderer _moduleRenderer;
+        private readonly IPageModuleRenderer _moduleRenderer;
 
         public CustomEntityTemplateSectionTagBuilderFactory(
-            IModuleRenderer moduleRenderer)
+            IPageModuleRenderer moduleRenderer)
         {
             _moduleRenderer = moduleRenderer;
         }

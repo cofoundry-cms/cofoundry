@@ -311,9 +311,9 @@
     <Compile Include="Framework\Models\CustomEntities\ICustomEntityDetailsDisplayViewModel.cs" />
     <Compile Include="Framework\Models\Errors\ErrorPageViewModel.cs" />
     <Compile Include="Framework\Models\Errors\NotFoundPageViewModel.cs" />
-    <Compile Include="Framework\Models\PageModules\IModuleRenderer.cs" />
+    <Compile Include="Framework\Models\PageModules\IPageModuleRenderer.cs" />
     <Compile Include="Framework\Models\PageModules\IPageModuleWithParentPageData.cs" />
-    <Compile Include="Framework\Models\PageModules\ModuleRenderer.cs" />
+    <Compile Include="Framework\Models\PageModules\PageModuleRenderer.cs" />
     <Compile Include="Framework\Models\PageModules\PageModuleBootstrapper.cs" />
     <Compile Include="Framework\Models\Pages\IEditablePageViewModel.cs" />
     <Compile Include="Framework\Models\Pages\IPageRoutableViewModel.cs" />

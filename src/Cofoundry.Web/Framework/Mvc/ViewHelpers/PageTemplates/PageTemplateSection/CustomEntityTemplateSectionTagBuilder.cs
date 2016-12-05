@@ -22,11 +22,11 @@ namespace Cofoundry.Web
         const string DEFAULT_TAG ="div";
         private readonly CustomEntityDetailsPageViewModel<TModel> _customEntityViewModel;
         private readonly HtmlHelper _htmlHelper;
-        private readonly IModuleRenderer _moduleRenderer;
+        private readonly IPageModuleRenderer _moduleRenderer;
         private readonly List<string> _allowedModules = new List<string>();
 
         public CustomEntityTemplateSectionTagBuilder(
-            IModuleRenderer moduleRenderer,
+            IPageModuleRenderer moduleRenderer,
             HtmlHelper htmlHelper,
             CustomEntityDetailsPageViewModel<TModel> customEntityViewModel, 
             string sectionName)
@@ -186,12 +186,10 @@ namespace Cofoundry.Web
 
             if (pageSection.Modules.Any())
             {
-                // TODO: 
-                // - moduleRenderer.RenderModule
-                // - moduleRenderer.RenderPlaceholderModule
+                var controllerContext = _htmlHelper.ViewContext.Controller.ControllerContext;
                 var moduleHtmlParts = pageSection
                             .Modules
-                            .Select(m => _moduleRenderer.RenderModule(_htmlHelper, _customEntityViewModel, m));
+                            .Select(m => _moduleRenderer.RenderModule(controllerContext, _customEntityViewModel, m));
 
                 if (!_allowMultipleModules)
                 {

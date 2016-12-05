@@ -23,12 +23,12 @@ namespace Cofoundry.Web
         const string DEFAULT_TAG ="div";
         private readonly IEditablePageViewModel _pageViewModel;
         private readonly HtmlHelper _htmlHelper;
-        private readonly IModuleRenderer _moduleRenderer;
+        private readonly IPageModuleRenderer _moduleRenderer;
         private readonly IPageModuleDataModelTypeFactory _moduleDataModelTypeFactory;
         private readonly IPageModuleTypeFileNameFormatter _moduleTypeFileNameFormatter;
 
         public PageTemplateSectionTagBuilder(
-            IModuleRenderer moduleRenderer,
+            IPageModuleRenderer moduleRenderer,
             IPageModuleDataModelTypeFactory moduleDataModelTypeFactory,
             IPageModuleTypeFileNameFormatter moduleTypeFileNameFormatter,
             HtmlHelper htmlHelper,
@@ -210,11 +210,12 @@ namespace Cofoundry.Web
         {
             string modulesHtml = string.Empty;
 
+            var controllerContext = _htmlHelper.ViewContext.Controller.ControllerContext;
             // No _permittedModules means any is allowed. 
             var moduleHtmlParts = pageSection
                 .Modules
                 .Where(m => _permittedModules.Count == 0 || _permittedModules.ContainsKey(m.ModuleType.FileName))
-                .Select(m => _moduleRenderer.RenderModule(_htmlHelper, _pageViewModel, m));
+                .Select(m => _moduleRenderer.RenderModule(controllerContext, _pageViewModel, m));
 
             if (moduleHtmlParts.Any())
             {

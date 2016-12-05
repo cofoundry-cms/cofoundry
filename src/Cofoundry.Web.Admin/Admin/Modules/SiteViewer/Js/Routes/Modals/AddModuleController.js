@@ -50,18 +50,13 @@ function (
     function initData() {
         setStep(1);
 
-        $q.all([
-            pageModuleService.getSection(options.pageTemplateSectionId),
-            pageModuleService.getAllModuleTypes()
-        ]).then(onLoaded);
+        pageModuleService
+            .getAllModuleTypes()
+            .then(onLoaded);
 
-        function onLoaded(result) {
-            var section = result[0],
-                allModuleTypes = result[1];
+        function onLoaded(allModuleTypes) {;
 
-            $scope.title = section.name;
-            console.log('allModuleTypes', allModuleTypes);
-            console.log('options.permittedModuleTypes', options.permittedModuleTypes);
+            $scope.title = options.sectionName;
 
             if (options.permittedModuleTypes.length) {
                 // Filter the permitted modules list to those specified

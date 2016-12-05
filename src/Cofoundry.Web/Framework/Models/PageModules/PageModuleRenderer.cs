@@ -9,11 +9,15 @@ using Cofoundry.Core.Web;
 
 namespace Cofoundry.Web
 {
-    public class ModuleRenderer : IModuleRenderer
+    /// <summary>
+    /// Controls rendering of page modules, rendering the razor templates out to 
+    /// a string
+    /// </summary>
+    public class PageModuleRenderer : IPageModuleRenderer
     {
         private readonly IPageModuleTypeViewFileLocator _pageModuleTypeViewFileLocator;
 
-        public ModuleRenderer(
+        public PageModuleRenderer(
             IPageModuleTypeViewFileLocator pageModuleTypeViewFileLocator
             )
         {
@@ -22,17 +26,19 @@ namespace Cofoundry.Web
 
         #region public methods
 
-        public string RenderModule(HtmlHelper htmlHelper, IEditablePageViewModel pageViewModel, IEntityVersionPageModuleRenderDetails moduleViewModel)
-        {
-            return RenderModule(htmlHelper.ViewContext.Controller, pageViewModel, moduleViewModel);
-        }
-
-        public string RenderModule(ControllerBase controller, IEditablePageViewModel pageViewModel, IEntityVersionPageModuleRenderDetails moduleViewModel)
+        /// <summary>
+        /// Renders a page module by finding the template and applying the specified model to it
+        /// </summary>
+        /// <param name="controllerContext">ControllerContext is required so we can render the razor view</param>
+        /// <param name="pageViewModel">The view model for the page being rendered</param>
+        /// <param name="moduleViewModel">The view model for the module being rendered</param>
+        /// <returns>The rednered module html</returns>
+        public string RenderModule(ControllerContext controllerContext, IEditablePageViewModel pageViewModel, IEntityVersionPageModuleRenderDetails moduleViewModel)
         {
             var displayData = GetModuleDisplayData(pageViewModel, moduleViewModel);
             string viewPath = GetViewPath(moduleViewModel);
 
-            var viewRenderer = new RazorViewRenderer(controller.ControllerContext);
+            var viewRenderer = new RazorViewRenderer(controllerContext);
             string html = viewRenderer.RenderPartialView(viewPath, displayData);
 
             if (pageViewModel.IsPageEditMode)
