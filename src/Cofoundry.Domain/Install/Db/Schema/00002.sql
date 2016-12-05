@@ -93,8 +93,10 @@ update Cofoundry.[User] set IsSystemAccount = 0
 declare @RoleId int
 select @RoleId = RoleId from Cofoundry.[Role] where UserAreaCode = 'COF' and SpecialistRoleTypeCode = 'SUP'
 
+-- The system user is never allowed to be loggged in, the application forbids this. 
+-- As an extra measure we pass in a guid as the password hash so the value is junk and at least different between applications
 insert into Cofoundry.[User] (FirstName, LastName, [Username], [Password], CreateDate, IsDeleted, LastPasswordChangeDate, RequirePasswordChange, RoleId, UserAreaCode, IsSystemAccount) 
-values ('System', 'User', 'System', '', GetUtcDate(), 0, GetUtcDate(), 0, @RoleId, 'COF', 1)
+values ('System', 'User', 'System', NEWID(), GetUtcDate(), 0, GetUtcDate(), 0, @RoleId, 'COF', 1)
 go
 -- Make sure that only 1 system account can be created
 create index UIX_User_IsSystemAccount on Cofoundry.[User] (IsSystemAccount) where IsSystemAccount = 1
