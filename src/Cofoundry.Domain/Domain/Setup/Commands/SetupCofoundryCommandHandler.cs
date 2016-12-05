@@ -7,6 +7,7 @@ using Cofoundry.Domain.CQS;
 using System.Data.Entity;
 using Cofoundry.Core.EntityFramework;
 using Cofoundry.Core;
+using Cofoundry.Core.Caching;
 
 namespace Cofoundry.Domain
 {
@@ -21,13 +22,15 @@ namespace Cofoundry.Domain
         private readonly CofoundryDbContext _dbContext;
         private readonly ITransactionScopeFactory _transactionScopeFactory;
         private readonly UserContextMapper _userContextMapper;
-        
+        private readonly IObjectCacheFactory _objectCacheFactory;
+
         public SetupCofoundryCommandHandler(
             ICommandExecutor commandExecutor,
             IQueryExecutor queryExecutor,
             CofoundryDbContext dbContext,
             ITransactionScopeFactory transactionScopeFactory,
-            UserContextMapper userContextMapper
+            UserContextMapper userContextMapper,
+            IObjectCacheFactory objectCacheFactory
             )
         {
             _commandExecutor = commandExecutor;
@@ -35,6 +38,7 @@ namespace Cofoundry.Domain
             _dbContext = dbContext;
             _transactionScopeFactory = transactionScopeFactory;
             _userContextMapper = userContextMapper;
+            _objectCacheFactory = objectCacheFactory;
         }
 
         #endregion
@@ -58,9 +62,8 @@ namespace Cofoundry.Domain
                 settingsCommand.CompanyName = command.CompanyName;
                 await _commandExecutor.ExecuteAsync(settingsCommand, impersonatedUserContext);
 
-                // Create the root directory
-                var wdCommand = new AddRootWebDirectoryCommand();
-                await _commandExecutor.ExecuteAsync(wdCommand, impersonatedUserContext);
+                // Take the opportunity to break the cache in case any additional install scripts have been run since initialization
+                _objectCacheFactory.Clear();
 
                 // Setup Complete
                 await _commandExecutor.ExecuteAsync(new MarkAsSetUpCommand(), impersonatedUserContext);

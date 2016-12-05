@@ -958,8 +958,6 @@
     <Compile Include="Domain\WebDirectories\Bootstrap\WebDirectoryEntityDefinition.cs" />
     <Compile Include="Domain\WebDirectories\Caching\IWebDirectoryCache.cs" />
     <Compile Include="Domain\WebDirectories\Caching\WebDirectoryCache.cs" />
-    <Compile Include="Domain\WebDirectories\Commands\AddRootWebDirectoryCommand.cs" />
-    <Compile Include="Domain\WebDirectories\Commands\AddRootWebDirectoryCommandHandler.cs" />
     <Compile Include="Domain\WebDirectories\Commands\AddWebDirectoryCommand.cs" />
     <Compile Include="Domain\WebDirectories\Commands\AddWebDirectoryCommandHandler.cs" />
     <Compile Include="Domain\WebDirectories\Commands\DeleteWebDirectoryCommand.cs" />

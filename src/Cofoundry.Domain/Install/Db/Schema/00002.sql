@@ -100,5 +100,15 @@ values ('System', 'User', 'System', NEWID(), GetUtcDate(), 0, GetUtcDate(), 0, @
 go
 -- Make sure that only 1 system account can be created
 create index UIX_User_IsSystemAccount on Cofoundry.[User] (IsSystemAccount) where IsSystemAccount = 1
+go
 
+-- Add the root directory if it doesn't exist
+declare @sysUserId int
+select @sysUserId = UserId from Cofoundry.[User] where IsSystemAccount = 1
+
+if (not exists(select * from Cofoundry.WebDirectory where ParentWebDirectoryId is null))
+begin
+	insert into Cofoundry.WebDirectory ([Name], UrlPath, IsActive, CreateDate, CreatorId) 
+		values  ('Root', '', 1, GetUtcDate(), @sysUserId)
+end
 
