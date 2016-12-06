@@ -25,6 +25,7 @@ namespace Cofoundry.Core
         /// </summary>
         /// <remarks>
         /// Used in place of Humanizer to avoid a dependency.
+        /// </remarks>
         public static string PascalCaseToSentence(string s)
         {
             if (s == null) return string.Empty;

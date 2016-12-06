@@ -206,7 +206,9 @@
     <Content Include="Cofoundry.Web.nuspec" />
     <Content Include="Nuget\Content\Views\web.config.install.xdt" />
     <Content Include="Nuget\Content\Views\web.config.uninstall.xdt" />
-    <Content Include="Nuget\Content\Web.config.install.xdt" />
+    <Content Include="Nuget\Content\Web.config.install.xdt">
+      <SubType>Designer</SubType>
+    </Content>
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
