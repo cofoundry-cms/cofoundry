@@ -23,30 +23,11 @@ namespace Cofoundry.Web.Admin
         /// <summary>
         /// Styles for the outer shell of the site viewer
         /// </summary>
-<<<<<<< HEAD:src/Cofoundry.Web.Admin/Admin/Modules/SiteViewer/Constants/SiteViewerCssRouteLibrary.cs
-        public string OuterSiteViewer
-        {
-            get
-            {
-                return Bundle("outersiteviewer");
-            }
-        }
-
-        /// <summary>
-        /// Style for site viewer content (i.e. page)
-        /// </summary>
-        public string InnerSiteViewer
-        {
-            get
-            {
-                return Bundle("innersiteviewer");
-=======
         public string VisualEditor
         {
             get
             {
                 return Bundle("visualeditor");
->>>>>>> refactored siteViewer refs to visualEditor:src/Cofoundry.Web.Admin/Admin/Modules/VisualEditor/Constants/VisualEditorCssRouteLibrary.cs
             }
         }
 
