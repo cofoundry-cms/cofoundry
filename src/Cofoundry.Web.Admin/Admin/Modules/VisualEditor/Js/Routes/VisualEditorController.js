@@ -4,9 +4,13 @@
     '_',
     'shared.LoadState',
     'shared.entityVersionModalDialogService',
+<<<<<<< HEAD
     'shared.modalDialogService',
     'shared.localStorage',
     'visualEditor.pageModuleService',
+=======
+    'shared.localStorage',
+>>>>>>> 933c7fc0845629bb31aaffb54e147e5ca5b8bc07
     'visualEditor.modulePath',
     'visualEditor.options',
 function (
@@ -15,17 +19,25 @@ function (
     _,
     LoadState,
     entityVersionModalDialogService,
+<<<<<<< HEAD
     modalDialogService,
     localStorageService,
     pageModuleService,
+=======
+    localStorageService,
+>>>>>>> 933c7fc0845629bb31aaffb54e147e5ca5b8bc07
     modulePath,
     options
     ) {
 
     var vm = this,
         document = $window.document,
+<<<<<<< HEAD
         entityDialogServiceConfig,
         globalLoadState = new LoadState();
+=======
+        entityDialogServiceConfig;
+>>>>>>> 933c7fc0845629bb31aaffb54e147e5ca5b8bc07
 
     init();
 
@@ -39,11 +51,16 @@ function (
 
         postMessageListener(messageEvent, handleMessage);
 
+<<<<<<< HEAD
         vm.globalLoadState = globalLoadState;
+=======
+        vm.globalLoadState = new LoadState();
+>>>>>>> 933c7fc0845629bb31aaffb54e147e5ca5b8bc07
         vm.config = config;
         vm.publish = publish;
         vm.unpublish = unpublish;
         vm.copyToDraft = copyToDraft;
+<<<<<<< HEAD
         vm.addSectionModule = addSectionModule;
         vm.addModule = addModule;
         vm.addModuleAbove = addModule;
@@ -52,6 +69,8 @@ function (
         vm.moveModuleUp = moveModule;
         vm.moveModuleDown = moveModule;
         vm.deleteModule = deleteModule;
+=======
+>>>>>>> 933c7fc0845629bb31aaffb54e147e5ca5b8bc07
     }
 
     /* UI ACTIONS */
@@ -88,6 +107,7 @@ function (
             .catch(setLoadingOff);
     }
 
+<<<<<<< HEAD
     function addSectionModule(args) {
         modalDialogService.show({
             templateUrl: modulePath + 'routes/modals/addmodule.html',
@@ -195,6 +215,12 @@ function (
 
     function reload() {
         $window.parent.location = $window.parent.location;
+=======
+    /* PRIVATE FUNCS */
+
+    function reload() {
+        $window.location = $window.location.pathname;
+>>>>>>> 933c7fc0845629bb31aaffb54e147e5ca5b8bc07
     }
 
     function setLoadingOn(loadState) {

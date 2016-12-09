@@ -38,7 +38,11 @@ namespace Cofoundry.Web
         CustomEntityDefinitionSummary CustomEntityDefinition { get; set; }
 
         bool HasDraftVersion { get; set; }
+<<<<<<< HEAD
 
         bool IsCustomEntityRoute { get; set; }
 }
+=======
+    }
+>>>>>>> 933c7fc0845629bb31aaffb54e147e5ca5b8bc07
 }

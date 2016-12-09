@@ -1,5 +1,6 @@
 ﻿// Internals
 Cofoundry.siteViewer = (function () {
+<<<<<<< HEAD
 
     /*
     !!!IMPORTANT!!!
@@ -26,6 +27,26 @@ Cofoundry.siteViewer = (function () {
             var iFrame = document.getElementById('cofoundry-src__iFrame'),
                 body = document.getElementsByTagName('body')[0];
 
+=======
+    var __IFRAME;
+    var __TOOLBAR;
+    var __TOOLBAR_BUTTONS;
+    var _internal = {
+        createIframe: function () {
+            // Create dom elements
+            var iFrame = document.createElement('iframe'),
+                body = document.getElementsByTagName('body')[0];
+
+            // Point iFrame at razor view that bootstraps angular admin components
+            iFrame.src = '/admin/visual-editor/frame';
+
+            // Add styles to the iFrame elements
+            iFrame.className = 'cofoundry-sv__iFrame';
+
+            // Insert iFrame at the end of the body element
+            body.insertBefore(iFrame, body.childNodes[body.childNodes.length]);
+
+>>>>>>> 933c7fc0845629bb31aaffb54e147e5ca5b8bc07
             // Store ref to iFrame
             __IFRAME = iFrame;
 
@@ -40,6 +61,7 @@ Cofoundry.siteViewer = (function () {
                 messageEvent = eventMethod == "attachEvent" ? "onmessage" : "message";
 
             // Listen to events from inside the iFrame
+<<<<<<< HEAD
             postMessageListener(messageEvent, handleMessage);
 
             // Handle events received from the iFrame
@@ -49,13 +71,27 @@ Cofoundry.siteViewer = (function () {
                         __IFRAME.style.display = 'none';
                         break;
                 }
+=======
+            postMessageListener(messageEvent, _internal.handleMessage);
+        },
+
+        handleMessage: function (e) {
+            switch (e.data.type) {
+                case 'MODAL_CLOSE':
+                    __IFRAME.style.display = 'none';
+                    break;
+>>>>>>> 933c7fc0845629bb31aaffb54e147e5ca5b8bc07
             }
         },
 
         bindToolbar: function () {
             var toolbar = document.getElementById('cofoundry-sv'),
+<<<<<<< HEAD
                 siteViewerMode = _internal.model.siteViewerMode
                 ;
+=======
+                siteViewerMode = _internal.model.siteViewerMode;
+>>>>>>> 933c7fc0845629bb31aaffb54e147e5ca5b8bc07
 
             // Internal refs
             __TOOLBAR = toolbar;
@@ -90,6 +126,7 @@ Cofoundry.siteViewer = (function () {
             }
         },
 
+<<<<<<< HEAD
         bindGui() {
             var toolbar_section = document.getElementById('cofoundry-sv__section-popover-container'),
                 toolbar_module = document.getElementById('cofoundry-sv__module-popover-container'),
@@ -353,6 +390,8 @@ Cofoundry.siteViewer = (function () {
             }
         },
 
+=======
+>>>>>>> 933c7fc0845629bb31aaffb54e147e5ca5b8bc07
         // Actions
         publish: function (e) {
             e.preventDefault();
@@ -412,8 +451,12 @@ Cofoundry.siteViewer = (function () {
     window.onload = function () {
         // pageResponseData object is a serialized object inserted into the page
         _internal.model = pageResponseData;
+<<<<<<< HEAD
         _internal.bindIframe();
         _internal.bindGui();
+=======
+        _internal.createIframe();
+>>>>>>> 933c7fc0845629bb31aaffb54e147e5ca5b8bc07
         _internal.bindToolbar();
     }
 

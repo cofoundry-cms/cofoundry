@@ -326,7 +326,10 @@
     <Compile Include="Framework\Models\Pages\SimplePageViewModel.cs" />
     <Compile Include="Framework\Models\VisualEditor\SiteViewerMode.cs" />
     <Compile Include="Framework\Models\VisualEditor\VisualEditorModeExtensions.cs" />
+<<<<<<< HEAD
     <Compile Include="Framework\Models\VisualEditor\VisualEditorFrameModel.cs" />
+=======
+>>>>>>> 933c7fc0845629bb31aaffb54e147e5ca5b8bc07
     <Compile Include="Framework\Models\VisualEditor\VisualEditorPageViewModel.cs" />
     <Compile Include="Framework\Bootstrap\WebCoreAssemblyResourceRegistration.cs" />
     <Compile Include="Framework\ModularMvc\Bootstrap\ModularMvcDependencyRegistration.cs" />

@@ -39,9 +39,15 @@ namespace Cofoundry.Web.Admin
 
         #region routes
 
+<<<<<<< HEAD
         public ActionResult Frame(VisualEditorFrameModel model)
         {
             return View(model);
+=======
+        public ActionResult Frame()
+        {
+            return View();
+>>>>>>> 933c7fc0845629bb31aaffb54e147e5ca5b8bc07
         }
 
         #endregion
