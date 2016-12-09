@@ -39,6 +39,8 @@ namespace Cofoundry.Web
 
         public bool HasDraftVersion { get; set; }
 
+        public bool IsCustomEntityRoute { get; set; }
+
         //public bool IsEditTypeSwitchRequired()
         //{
         //    return PageRoutingInfo.CustomEntityRoute != null

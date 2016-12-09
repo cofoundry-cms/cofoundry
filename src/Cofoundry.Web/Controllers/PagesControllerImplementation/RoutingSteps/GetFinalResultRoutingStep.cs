@@ -107,6 +107,7 @@ namespace Cofoundry.Web
             pageResponseData.PageRoutingInfo = state.PageRoutingInfo;
             pageResponseData.HasDraftVersion = state.PageRoutingInfo.GetVersionRoute(state.InputParameters.IsEditingCustomEntity, WorkFlowStatusQuery.Draft, null) != null;
             pageResponseData.Version = state.PageRoutingInfo.GetVersionRoute(state.InputParameters.IsEditingCustomEntity, workFlowStatusQuery, state.InputParameters.VersionId);
+            pageResponseData.IsCustomEntityRoute = pageResponseData.Version is CustomEntityVersionRoute;
 
             if (!string.IsNullOrEmpty(state.PageRoutingInfo.PageRoute.CustomEntityDefinitionCode))
             {

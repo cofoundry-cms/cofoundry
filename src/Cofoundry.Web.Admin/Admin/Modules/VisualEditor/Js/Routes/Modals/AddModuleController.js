@@ -31,6 +31,8 @@ function (
             adjacentVersionModuleId: options.adjacentVersionModuleId,
             insertMode: options.insertMode || 'Last'
         };
+
+        console.log(visualEditorOptions);
         
         $scope.submitLoadState = new LoadState();
         $scope.formLoadState = new LoadState(true);

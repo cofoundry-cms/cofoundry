@@ -987,7 +987,7 @@ ul#deviceMenu li.iPadLandscape a {
 
 /* #### Hovering #### */
 /* line 241, ../../Sass/site-viewer.scss */
-.cofoundry-sv__section-popover-container, .cofoundry-sv__module-popover-container {
+#cofoundry-sv__section-popover-container, #cofoundry-sv__module-popover-container {
   font-family: "Cabin", sans-serif;
   font-size: 85%;
   position: absolute;
@@ -1047,12 +1047,7 @@ ul#deviceMenu li.iPadLandscape a {
 
 /* #### Module hovering #### */
 /* line 298, ../../Sass/site-viewer.scss */
-.cofoundry-sv__module-popover-container {
-  position: fixed;
-}
-
-/* line 302, ../../Sass/site-viewer.scss */
-.cofoundry-sv__module-popover-container ul {
+#cofoundry-sv__module-popover-container ul {
   -moz-border-radius: 2px;
   -webkit-border-radius: 2px;
   border-radius: 2px;
@@ -1064,15 +1059,15 @@ ul#deviceMenu li.iPadLandscape a {
   padding: 0px;
 }
 
-/* line 312, ../../Sass/site-viewer.scss */
-.cofoundry-sv__module-popover-container li:not(:last-of-type) {
+/* line 308, ../../Sass/site-viewer.scss */
+#cofoundry-sv__module-popover-container li:not(:last-of-type) {
   border: 1px solid #ebebeb;
   border-width: 0 0 1px 0;
   display: block;
 }
 
-/* line 318, ../../Sass/site-viewer.scss */
-.cofoundry-sv__module-popover-container li a {
+/* line 314, ../../Sass/site-viewer.scss */
+#cofoundry-sv__module-popover-container li a {
   -moz-transition: all 0.3s;
   -o-transition: all 0.3s;
   -webkit-transition: all 0.3s;
@@ -1086,13 +1081,13 @@ ul#deviceMenu li.iPadLandscape a {
   text-align: center;
   font-size: 1.1em;
 }
-/* line 329, ../../Sass/site-viewer.scss */
-.cofoundry-sv__module-popover-container li a:hover {
+/* line 325, ../../Sass/site-viewer.scss */
+#cofoundry-sv__module-popover-container li a:hover {
   color: #4af386;
 }
 
-/* line 334, ../../Sass/site-viewer.scss */
-.cofoundry-sv__module-popover-container .disabled a {
+/* line 330, ../../Sass/site-viewer.scss */
+#cofoundry-sv__module-popover-container .disabled a {
   cursor: default;
   opacity: 0.4;
   -khtml-opacity: 0.4;

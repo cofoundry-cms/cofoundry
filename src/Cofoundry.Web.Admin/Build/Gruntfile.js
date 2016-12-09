@@ -15,10 +15,10 @@
             },
             siteViewer : {
                 files: [
-                    '../Admin/Modules/SiteViewer/Sass/**/*.scss', 
-                    '../Admin/Modules/SiteViewer/Js/UIComponents/**/*.scss',
+                    '../Admin/Modules/VisualEditor/Sass/**/*.scss', 
+                    '../Admin/Modules/VisualEditor/Js/UIComponents/**/*.scss',
                 ],
-                tasks: ['compass:siteViewer']
+                tasks: ['compass:visualEditor']
             },
             options: {
                 spawn: false
@@ -38,10 +38,10 @@
                     basePath : '../Admin/Modules/Shared',
                 },
             },
-            siteViewer : {
-                config : '../Admin/Modules/SiteViewer/config.rb',
+            visualEditor: {
+                config: '../Admin/Modules/VisualEditor/config.rb',
                 options: {
-                    basePath : '../Admin/Modules/SiteViewer',
+                    basePath: '../Admin/Modules/VisualEditor',
                 },
             }
         },

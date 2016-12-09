@@ -1,8 +1,25 @@
 ﻿// Internals
 Cofoundry.siteViewer = (function () {
-    var __IFRAME;
-    var __TOOLBAR;
-    var __TOOLBAR_BUTTONS;
+
+    /*
+    !!!IMPORTANT!!!
+    THIS FILE WILL BE INJECTED INTO THE SITE TEMPLATES,
+    THEREFORE THIS FILE SHOULD CONTAIN NO THIRD PARTY DEPENDENCIES
+    TO MINIMIZE ANY RISKS OF CONFLICTS
+
+    ALL ADMIN UNPUTS ARE PROXIED VIA AN IFRAME TO ENSURE THE ANGULAR WORLD IS
+    CONTAINED AWAY FROM THE SITE TEMPLATES
+    
+    */
+
+    // Private variables
+    var __IFRAME,
+        __TOOLBAR,
+        __TOOLBAR_BUTTONS,
+        __TOOLBAR_SECTION,
+        __TOOLBAR_MODULE
+        ;
+
     var _internal = {
         createIframe: function () {
             // Create dom elements
@@ -32,20 +49,22 @@ Cofoundry.siteViewer = (function () {
                 messageEvent = eventMethod == "attachEvent" ? "onmessage" : "message";
 
             // Listen to events from inside the iFrame
-            postMessageListener(messageEvent, _internal.handleMessage);
-        },
+            postMessageListener(messageEvent, handleMessage);
 
-        handleMessage: function (e) {
-            switch (e.data.type) {
-                case 'MODAL_CLOSE':
-                    __IFRAME.style.display = 'none';
-                    break;
+            // Handle events received from the iFrame
+            function handleMessage (e) {
+                switch (e.data.type) {
+                    case 'MODAL_CLOSE':
+                        __IFRAME.style.display = 'none';
+                        break;
+                }
             }
         },
 
         bindToolbar: function () {
             var toolbar = document.getElementById('cofoundry-sv'),
-                siteViewerMode = _internal.model.siteViewerMode;
+                siteViewerMode = _internal.model.siteViewerMode
+                ;
 
             // Internal refs
             __TOOLBAR = toolbar;
@@ -77,6 +96,269 @@ Cofoundry.siteViewer = (function () {
                     classNames: 'publish popup',
                     click: _internal.copyToDraft
                 });
+            }
+        },
+
+        bindGui() {
+            var toolbar_section = document.getElementById('cofoundry-sv__section-popover-container'),
+                toolbar_module = document.getElementById('cofoundry-sv__module-popover-container'),
+                scope = {}
+                ;
+
+            // Internal refs
+            __TOOLBAR_SECTION = toolbar_section;
+            __TOOLBAR_MODULE = toolbar_module;
+
+            // Add class to doc. Used for admin UI 
+            document.getElementsByTagName('html')[0]
+                .className = (_internal.model.isCustomEntityRoute ? 'cofoundry-editmode__custom-entity' : 'cofoundry-editmode__page');
+
+            // Bind events
+            addMouseEvents(document);
+            addButtonEvents();
+            addDocumentEvents();
+
+            function addMouseEvents(rootElement, popover) {
+                var entityType = _internal.model.isCustomEntityRoute ? 'custom-entity' : 'page';
+                addEventsForComponent('section', onSectionMouseEnter, onSectionMouseLeave);
+                addEventsForComponent('section-module', onModuleMouseEnter, onModuleMouseLeave);
+
+                function addEventsForComponent(componentName, onMouseEnterFn, onMouseLeaveFn) {
+                    var selectorAttribute = 'data-cms-' + entityType + '-' + componentName,
+                        elements, len, i;
+
+                    if (rootElement.hasAttribute && rootElement.hasAttribute(selectorAttribute)) {
+                        // we are passing the element directly to bind events
+                        elements = [rootElement];
+                    } else {
+                        // we need to query the children to find elements to bind events to
+                        elements = rootElement.querySelectorAll('[' + selectorAttribute + ']');
+                    }
+
+                    len = elements.length;
+                    for (i = 0; i < len; ++i) {
+                        elements[i].addEventListener('mouseenter', onMouseEnterFn);
+                        elements[i].addEventListener('mouseleave', onMouseLeaveFn);
+                    }
+                }
+            }
+
+            function addButtonEvents() {
+                // Buttons
+                var addSectionModuleButton = __TOOLBAR_SECTION.querySelectorAll('#cofoundry-sv__btn-add-section-module')[0],
+                    moveupModuleButton = __TOOLBAR_MODULE.querySelectorAll('#cofoundry-sv__btn-module-moveup')[0],
+                    movedownModuleButton = __TOOLBAR_MODULE.querySelectorAll('#cofoundry-sv__btn-module-movedown')[0],
+                    editModuleButton = __TOOLBAR_MODULE.querySelectorAll('#cofoundry-sv__btn-module-edit')[0],
+                    addModuleButton = __TOOLBAR_MODULE.querySelectorAll('#cofoundry-sv__btn-module-add')[0],
+                    deleteModuleButton = __TOOLBAR_MODULE.querySelectorAll('#cofoundry-sv__btn-module-delete')[0],
+                    addaboveModuleButton = __TOOLBAR_MODULE.querySelectorAll('#cofoundry-sv__btn-module-addabove')[0],
+                    addbelowModuleButton = __TOOLBAR_MODULE.querySelectorAll('#cofoundry-sv__btn-module-addbelow')[0];
+
+
+                // Bind click events
+                addSectionModuleButton.addEventListener('click', onAddSectionModule);
+                moveupModuleButton.addEventListener('click', onMoveupModule);
+                movedownModuleButton.addEventListener('click', onMovedownModule);
+                editModuleButton.addEventListener('click', onEditModule);
+                addModuleButton.addEventListener('click', onAddModule);
+                addaboveModuleButton.addEventListener('click', onAddaboveModule);
+                addbelowModuleButton.addEventListener('click', onAddbelowModule);
+                deleteModuleButton.addEventListener('click', onDeleteModule);
+
+                // Handlers
+                function onAddSectionModule() {
+                    handler('addSectionModule', {
+                        pageTemplateSectionId: scope.pageTemplateSectionId,
+                        isCustomEntity: _internal.model.isCustomEntityRoute
+                    });
+                }
+
+                function onMoveupModule() {
+                    handler('moveModuleUp', {
+                        versionModuleId: scope.versionModuleId,
+                        isUp: true
+                    });
+                }
+
+                function onMovedownModule() {
+                    handler('moveModuleDown', {
+                        versionModuleId: scope.versionModuleId,
+                        isUp: false
+                    });
+                }
+
+                function onEditModule() {
+                    handler('editModule', {
+                        versionModuleId: scope.versionModuleId,
+                        pageModuleTypeId: scope.pageModuleTypeId,
+                        isCustomEntity: _internal.model.isCustomEntityRoute
+                    });
+                }
+
+                function onAddModule() {
+                    handler('addModule', {
+                        insertMode: 'Last',
+                        pageTemplateSectionId: scope.pageTemplateSectionId,
+                        versionModuleId: scope.versionModuleId,
+                        pageModuleTypeId: scope.pageModuleTypeId,
+                        isCustomEntity: _internal.model.isCustomEntityRoute
+                    });
+                }
+
+                function onAddaboveModule() {
+                    handler('addModuleAbove', {
+                        insertMode: 'BeforeItem',
+                        pageTemplateSectionId: scope.pageTemplateSectionId,
+                        versionModuleId: scope.versionModuleId,
+                        pageModuleTypeId: scope.pageModuleTypeId,
+                        isCustomEntity: _internal.model.isCustomEntityRoute
+                    });
+                }
+
+                function onAddbelowModule() {
+                    handler('addModuleBelow', {
+                        insertMode: 'AfterItem',
+                        pageTemplateSectionId: scope.pageTemplateSectionId,
+                        versionModuleId: scope.versionModuleId,
+                        pageModuleTypeId: scope.pageModuleTypeId,
+                        isCustomEntity: _internal.model.isCustomEntityRoute
+                    });
+                }
+
+                function onDeleteModule() {
+                    handler('deleteModule', {
+                        versionModuleId: scope.versionModuleId,
+                        isCustomEntity: _internal.model.isCustomEntityRoute
+                    });
+                }
+
+                // Helper
+                function handler(action, args) {
+                    __IFRAME.contentWindow.postMessage({
+                        action: action, args: [args]
+                    }, document.location.origin);
+                    __IFRAME.style.display = 'block';
+                }
+            }
+
+            function addDocumentEvents() {
+                document.addEventListener('resize', onResize);
+                document.addEventListener('scroll', onScroll);
+
+                function onResize(e) {
+                    onSectionGuiChange();
+                }
+                
+                function onScroll(e) {
+                    onSectionGuiChange();
+                }
+            }
+
+            function onSectionMouseEnter(e) {
+                onSectionGuiChange(e.target);
+            }
+
+            function onSectionMouseLeave() {
+                //onGuiEnd();
+            }
+
+            function onModuleMouseEnter(e) {
+                onModuleGuiChange(e.target);
+            }
+
+            function onModuleMouseLeave() {
+                //onGuiEnd();
+            }
+
+            function onSectionGuiChange(el) {
+                if (el) {
+                    scope.currentElement = el;
+                    scope.pageTemplateSectionId = el.getAttribute('data-cms-page-template-section-id');
+                    scope.sectionName = el.getAttribute('data-cms-page-section-name');
+                    scope.isMultiModule = el.getAttribute('data-cms-multi-module');
+                    scope.isCustomEntity = el.hasAttribute('data-cms-custom-entity-section');
+                }
+
+                setPosition();
+                
+                function setPosition() {
+                    var elementOffset = offset(scope.currentElement),
+                        top = elementOffset.top,
+                        left = elementOffset.left + scope.currentElement.offsetWidth;
+
+                    scope.css = {
+                        top: top + 'px',
+                        left: (left || 0) + 'px'
+                    };
+
+                    scope.startScrollY = scope.currentScrollY;
+                    scope.startY = top;
+
+                    __TOOLBAR_SECTION.style.display = 'block';
+                    __TOOLBAR_SECTION.style.top = scope.css.top;
+                    __TOOLBAR_SECTION.style.left = scope.css.left;
+                }
+            }
+
+            function onModuleGuiChange(el) {
+                var css = {};
+
+                if (el) {
+                    scope.versionModuleId = el.getAttribute('data-cms-version-module-id');
+                    scope.pageModuleTypeId = el.getAttribute('data-cms-page-module-type-id');
+                }
+
+                setPosition();
+
+                function setPosition() {
+                    var elementOffset = offset(el),
+                        top = elementOffset.top,
+                        left = elementOffset.left + 2;
+
+                    css = {
+                        top: top + 'px',
+                        left: (left || 0) + 'px'
+                    };
+
+                    scope.startScroll = scope.currentScrollY;
+                    scope.startY = top;
+
+                    __TOOLBAR_MODULE.style.display = 'block';
+                    __TOOLBAR_MODULE.style.top = css.top;
+                    __TOOLBAR_MODULE.style.left = css.left;
+                }
+            }
+
+            function onGuiEnd() {
+                scope.guiTimeout = setTimeout(function () {
+                    __TOOLBAR_SECTION.style.display =
+                    __TOOLBAR_MODULE.style.display = 'none';
+                }, 300);
+            }
+
+            function offset(el) {
+                var rect = el.getBoundingClientRect();
+                return {
+                    top: rect.top + document.body.scrollTop,
+                    left: rect.left + document.body.scrollLeft
+                }
+            }
+
+            function onResize(e) {
+                scope.isOver = false;
+                scope.sectionAnchorElement = '';
+            }
+
+            function onScroll(e) {
+                scope.currentScrollY = (e || 0);
+                var y = scope.startY + (scope.startScrollY - e);
+                if (y < 0) y = 0;
+                if (y) {
+                    scope.css = {
+                        top: y + 'px',
+                        left: scope.css.left
+                    }
+                }
             }
         },
 
@@ -140,6 +422,7 @@ Cofoundry.siteViewer = (function () {
         // pageResponseData object is a serialized object inserted into the page
         _internal.model = pageResponseData;
         _internal.createIframe();
+        _internal.bindGui();
         _internal.bindToolbar();
     }
 

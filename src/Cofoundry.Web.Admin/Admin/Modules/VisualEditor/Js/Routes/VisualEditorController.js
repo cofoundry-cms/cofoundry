@@ -4,7 +4,9 @@
     '_',
     'shared.LoadState',
     'shared.entityVersionModalDialogService',
+    'shared.modalDialogService',
     'shared.localStorage',
+    'visualEditor.pageModuleService',
     'visualEditor.modulePath',
     'visualEditor.options',
 function (
@@ -13,14 +15,17 @@ function (
     _,
     LoadState,
     entityVersionModalDialogService,
+    modalDialogService,
     localStorageService,
+    pageModuleService,
     modulePath,
     options
     ) {
 
     var vm = this,
         document = $window.document,
-        entityDialogServiceConfig;
+        entityDialogServiceConfig,
+        globalLoadState = new LoadState();
 
     init();
 
@@ -34,11 +39,19 @@ function (
 
         postMessageListener(messageEvent, handleMessage);
 
-        vm.globalLoadState = new LoadState();
+        vm.globalLoadState = globalLoadState;
         vm.config = config;
         vm.publish = publish;
         vm.unpublish = unpublish;
         vm.copyToDraft = copyToDraft;
+        vm.addSectionModule = addSectionModule;
+        vm.addModule = addModule;
+        vm.addModuleAbove = addModule;
+        vm.addModuleBelow = addModule;
+        vm.editModule = editModule;
+        vm.moveModuleUp = moveModule;
+        vm.moveModuleDown = moveModule;
+        vm.deleteModule = deleteModule;
     }
 
     /* UI ACTIONS */
@@ -75,10 +88,113 @@ function (
             .catch(setLoadingOff);
     }
 
+    function addSectionModule(args) {
+        modalDialogService.show({
+            templateUrl: modulePath + 'routes/modals/addmodule.html',
+            controller: 'AddModuleController',
+            options: {
+                pageTemplateSectionId: args.pageTemplateSectionId,
+                onClose: onClose,
+                refreshContent: refreshSection,
+                isCustomEntity: args.isCustomEntity,
+            }
+        });
+
+        function onClose() {
+            globalLoadState.off();
+        }
+    }
+
+    function addModule(args) {
+
+        if (globalLoadState.isLoading) return;
+        globalLoadState.on();
+
+        //scope.isPopupActive = true;
+
+        modalDialogService.show({
+            templateUrl: modulePath + 'routes/modals/addmodule.html',
+            controller: 'AddModuleController',
+            options: {
+                pageTemplateSectionId: args.pageTemplateSectionId,
+                adjacentVersionModuleId: args.versionModuleId,
+                insertMode: args.insertMode,
+                refreshContent: refreshSection,
+                isCustomEntity: args.isCustomEntity,
+                onClose: onClose
+            }
+        });
+
+        function onClose() {
+            globalLoadState.off();
+        }
+    }
+
+    function editModule(args) {
+
+        if (globalLoadState.isLoading) return;
+        globalLoadState.on();
+        //scope.isPopupActive = true;
+
+        modalDialogService.show({
+            templateUrl: modulePath + 'routes/modals/editmodule.html',
+            controller: 'EditModuleController',
+            options: {
+                versionModuleId: args.versionModuleId,
+                pageModuleTypeId: args.pageModuleTypeId,
+                isCustomEntity: args.isCustomEntity,
+                refreshContent: refreshSection,
+                onClose: onClose
+            }
+        });
+
+        function onClose() {
+            globalLoadState.off();
+        }
+    }
+
+    function moveModule(args) {
+        var fn = args.isUp ? pageModuleService.moveUp : pageModuleService.moveDown;
+
+        if (globalLoadState.isLoading) return;
+
+        globalLoadState.on();
+
+        fn(args.isCustomEntity, args.versionModuleId)
+            .then(refreshSection)
+            .finally(globalLoadState.off);
+    }
+
+    function deleteModule(args) {
+        var isCustomEntity = args.isCustomEntity,
+            options = {
+                title: 'Delete Module',
+                message: 'Are you sure you want to delete this module?',
+                okButtonTitle: 'Yes, delete it',
+                onOk: onOk
+            };
+
+        if (globalLoadState.isLoading) return;
+        globalLoadState.on();
+
+        modalDialogService.confirm(options);
+
+        function onOk() {
+            return pageModuleService
+                .remove(isCustomEntity, args.versionModuleId)
+                .then(refreshSection)
+                .finally(globalLoadState.off);
+        }
+    }
+
     /* PRIVATE FUNCS */
 
+    function refreshSection() {
+        reload();
+    }
+
     function reload() {
-        $window.location = $window.location.pathname;
+        $window.parent.location = $window.parent.location;
     }
 
     function setLoadingOn(loadState) {
