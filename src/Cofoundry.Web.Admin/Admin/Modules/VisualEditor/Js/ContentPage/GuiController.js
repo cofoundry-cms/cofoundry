@@ -21,19 +21,10 @@ Cofoundry.siteViewer = (function () {
         ;
 
     var _internal = {
-        createIframe: function () {
+        bindIframe: function () {
             // Create dom elements
-            var iFrame = document.createElement('iframe'),
+            var iFrame = document.getElementById('cofoundry-src__iFrame'),
                 body = document.getElementsByTagName('body')[0];
-
-            // Point iFrame at razor view that bootstraps angular admin components
-            iFrame.src = '/admin/visual-editor/frame';
-
-            // Add styles to the iFrame elements
-            iFrame.className = 'cofoundry-sv__iFrame';
-
-            // Insert iFrame at the end of the body element
-            body.insertBefore(iFrame, body.childNodes[body.childNodes.length]);
 
             // Store ref to iFrame
             __IFRAME = iFrame;
@@ -421,7 +412,7 @@ Cofoundry.siteViewer = (function () {
     window.onload = function () {
         // pageResponseData object is a serialized object inserted into the page
         _internal.model = pageResponseData;
-        _internal.createIframe();
+        _internal.bindIframe();
         _internal.bindGui();
         _internal.bindToolbar();
     }

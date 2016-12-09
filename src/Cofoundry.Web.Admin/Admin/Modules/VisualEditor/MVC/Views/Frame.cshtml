@@ -1,11 +1,22 @@
-﻿@inherits CofoundryWebViewPage<VisualEditorPageViewModel>
+﻿@inherits CofoundryWebViewPage<VisualEditorFrameModel>
 @using Cofoundry.Web
 @using Cofoundry.Domain
 @using Cofoundry.Web.Admin
 @using System.Web.Optimization
 
 @{
-    Layout = null;
+    object ngOptions = null;
+
+    ngOptions = new
+    {
+        IsInEditMode = Model.IsInEditMode,
+        PageId = Model.PageId,
+        VersionId = Model.VersionId,
+        IsCustomEntityRoute = Model.IsCustomEntityRoute,
+        EntityNameSingular = Model.EntityNameSingular,
+        EntityId = Model.EntityId,
+        HasDraftVersion = Model.HasDraftVersion
+    };
 }
 
 <!DOCTYPE html>
@@ -18,6 +29,6 @@
 </head>
 <body class="cofoundry-visual-editor-frame">
     <div ng-controller="VisualEditorController as vm"></div>
-    @AngularHelper.Bootstrap(VisualEditorRouteLibrary.Js, Cofoundry.CurrentUser, new { })
+    @AngularHelper.Bootstrap(VisualEditorRouteLibrary.Js, Cofoundry.CurrentUser,  ngOptions)
 </body>
 </html>
