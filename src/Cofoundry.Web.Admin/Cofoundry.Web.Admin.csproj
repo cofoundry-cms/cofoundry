@@ -373,6 +373,7 @@
     <Content Include="Admin\Modules\Shared\Js\Framework\HttpProviderConfig.js" />
     <Content Include="Admin\Modules\Shared\Js\Framework\PermissionValidationService.js" />
     <Content Include="Admin\Modules\Shared\Js\Framework\ValidationErrorService.js" />
+    <Content Include="Admin\Modules\Shared\Js\lib\angular-sanitize.min.js" />
     <Content Include="Admin\Modules\Shared\Js\lib\angular.min.js" />
     <Content Include="Admin\Modules\Shared\Js\lib\AngularModules\angular-file-upload.js" />
     <Content Include="Admin\Modules\Shared\Js\lib\AngularModules\angular-route.js" />

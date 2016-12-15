@@ -48,6 +48,7 @@ namespace Cofoundry.Web.Admin
 
             sharedMainBundle.Include(SharedRouteLibrary.Js.Bundle("lib/underscore.min.js"));
             sharedMainBundle.Include(SharedRouteLibrary.Js.Bundle("lib/angular.min.js"));
+            sharedMainBundle.Include(SharedRouteLibrary.Js.Bundle("lib/angular-sanitize.min.js"));
             sharedMainBundle.Include(SharedRouteLibrary.Js.Bundle("lib/AngularModules/TinyMce/tinymce.min.js"));
             sharedMainBundle.Include(SharedRouteLibrary.Js.Bundle("lib/AngularModules/TinyMce/ui-tinymce.min.js"));
 
