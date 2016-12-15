@@ -57,41 +57,46 @@
                     '../Admin/Modules/Shared/Content/Css/img/icons/retina.png': '../Admin/Modules/Shared/Content/Css/img/icons/retina.png'
                 }
             }
-        }
+        },
 
-        // svgmin: {
-        //     prod: {
-        //         files: [{
-        //             expand: true,
-        //             cwd: '../Content/images/svg',
-        //             src: ['*.svg'],
-        //             dest: '../Content/images/grunticon-source'
-        //         }]
-        //     }
-        // },
-        // grunticon: {
-        //     prod: {
-        //         files: [{
-        //             expand: true,
-        //             cwd: '../Content/images/grunticon-source',
-        //             src: ['*.svg', '*.png'],
-        //             dest: '../Content/images/grunticon-output'
-        //         }],
-        //         options: {
-        //         }
-        //     }
-        // }
+        svgmin: {
+             prod: {
+                 files: [{
+                     expand: true,
+                     cwd: '../Admin/Modules/Shared/Content/Css/svg',
+                     src: ['*.svg'],
+                     dest: '../Admin/Modules/Shared/Content/Css/svg-dist'
+                 }]
+             }
+        },
+
+        svgcombine: {
+            all: {
+                files: {
+                    '../Admin/Modules/VisualEditor/Content/svg-cache.html': ['../Admin/Modules/VisualEditor/Content/svg/*.svg'],
+                }
+            }
+        },
+
+         //grunticon: {
+         //    prod: {
+         //        files: [{
+         //            expand: true,
+         //            cwd: '../Content/images/grunticon-source',
+         //            src: ['*.svg', '*.png'],
+         //            dest: '../Content/images/grunticon-output'
+         //        }],
+         //        options: {
+         //        }
+         //    }
+         //}
     });
     
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-contrib-compass');
     grunt.loadNpmTasks('grunt-contrib-imagemin');
-    // grunt.loadNpmTasks('grunt-grunticon');
-    // grunt.loadNpmTasks('grunt-svgmin');
+    grunt.loadNpmTasks('grunt-svg-combine');
 
-    grunt.registerTask('all_sass', ['compass:shared', 'compass:pages']);
-
-    grunt.registerTask('default', ['all_sass']);
-    // grunt.registerTask("svg", ["svgmin:prod", "grunticon:prod"]);
-    
+    grunt.registerTask('svgcombine', ['svgcombine:all']);
+    grunt.registerTask('default', ['compass:shared', 'svgcombine']);
 };

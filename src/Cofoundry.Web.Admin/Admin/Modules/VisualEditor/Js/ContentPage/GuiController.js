@@ -1,6 +1,5 @@
 ﻿// Internals
 Cofoundry.siteViewer = (function () {
-<<<<<<< HEAD
 
     /*
     !!!IMPORTANT!!!
@@ -27,26 +26,6 @@ Cofoundry.siteViewer = (function () {
             var iFrame = document.getElementById('cofoundry-src__iFrame'),
                 body = document.getElementsByTagName('body')[0];
 
-=======
-    var __IFRAME;
-    var __TOOLBAR;
-    var __TOOLBAR_BUTTONS;
-    var _internal = {
-        createIframe: function () {
-            // Create dom elements
-            var iFrame = document.createElement('iframe'),
-                body = document.getElementsByTagName('body')[0];
-
-            // Point iFrame at razor view that bootstraps angular admin components
-            iFrame.src = '/admin/visual-editor/frame';
-
-            // Add styles to the iFrame elements
-            iFrame.className = 'cofoundry-sv__iFrame';
-
-            // Insert iFrame at the end of the body element
-            body.insertBefore(iFrame, body.childNodes[body.childNodes.length]);
-
->>>>>>> 933c7fc0845629bb31aaffb54e147e5ca5b8bc07
             // Store ref to iFrame
             __IFRAME = iFrame;
 
@@ -58,10 +37,9 @@ Cofoundry.siteViewer = (function () {
             // Create IE + others compatible event handler
             var eventMethod = window.addEventListener ? "addEventListener" : "attachEvent",
                 postMessageListener = window[eventMethod],
-                messageEvent = eventMethod == "attachEvent" ? "onmessage" : "message";
+                messageEvent = eventMethod === "attachEvent" ? "onmessage" : "message";
 
             // Listen to events from inside the iFrame
-<<<<<<< HEAD
             postMessageListener(messageEvent, handleMessage);
 
             // Handle events received from the iFrame
@@ -71,32 +49,18 @@ Cofoundry.siteViewer = (function () {
                         __IFRAME.style.display = 'none';
                         break;
                 }
-=======
-            postMessageListener(messageEvent, _internal.handleMessage);
-        },
-
-        handleMessage: function (e) {
-            switch (e.data.type) {
-                case 'MODAL_CLOSE':
-                    __IFRAME.style.display = 'none';
-                    break;
->>>>>>> 933c7fc0845629bb31aaffb54e147e5ca5b8bc07
             }
         },
 
         bindToolbar: function () {
             var toolbar = document.getElementById('cofoundry-sv'),
-<<<<<<< HEAD
                 siteViewerMode = _internal.model.siteViewerMode
                 ;
-=======
-                siteViewerMode = _internal.model.siteViewerMode;
->>>>>>> 933c7fc0845629bb31aaffb54e147e5ca5b8bc07
 
             // Internal refs
             __TOOLBAR = toolbar;
 
-            if (siteViewerMode == 'Draft' || siteViewerMode == 'Edit') {
+            if (siteViewerMode === 'Draft' || siteViewerMode === 'Edit') {
                 // Insert publish button
                 _toolBar.addButton({
                     icon: 'fa-cloud-upload',
@@ -105,7 +69,7 @@ Cofoundry.siteViewer = (function () {
                     classNames: 'publish popup',
                     click: _internal.publish
                 });
-            } else if (siteViewerMode == 'Live') {
+            } else if (siteViewerMode === 'Live') {
                 // Insert unpublish button
                 _toolBar.addButton({
                     icon: 'fa-cloud-download',
@@ -114,7 +78,7 @@ Cofoundry.siteViewer = (function () {
                     classNames: 'publish popup',
                     click: _internal.unpublish
                 });
-            } else if (siteViewerMode == 'SpecificVersion') {
+            } else if (siteViewerMode === 'SpecificVersion') {
                 // Insert copy to draft button
                 _toolBar.addButton({
                     icon: 'fa-files-o',
@@ -126,11 +90,12 @@ Cofoundry.siteViewer = (function () {
             }
         },
 
-<<<<<<< HEAD
         bindGui() {
             var toolbar_section = document.getElementById('cofoundry-sv__section-popover-container'),
                 toolbar_module = document.getElementById('cofoundry-sv__module-popover-container'),
-                scope = {}
+                scope = {
+                    buttons: {}
+                }
                 ;
 
             // Internal refs
@@ -141,10 +106,12 @@ Cofoundry.siteViewer = (function () {
             document.getElementsByTagName('html')[0]
                 .className = (_internal.model.isCustomEntityRoute ? 'cofoundry-editmode__custom-entity' : 'cofoundry-editmode__page');
 
-            // Bind events
-            addMouseEvents(document);
-            addButtonEvents();
-            addDocumentEvents();
+            if (_internal.model.siteViewerMode === 'Edit') {
+                // Bind events
+                addMouseEvents(document);
+                addButtonEvents();
+                addDocumentEvents();
+            }
 
             function addMouseEvents(rootElement, popover) {
                 var entityType = _internal.model.isCustomEntityRoute ? 'custom-entity' : 'page';
@@ -182,21 +149,21 @@ Cofoundry.siteViewer = (function () {
                     addaboveModuleButton = __TOOLBAR_MODULE.querySelectorAll('#cofoundry-sv__btn-module-addabove')[0],
                     addbelowModuleButton = __TOOLBAR_MODULE.querySelectorAll('#cofoundry-sv__btn-module-addbelow')[0];
 
-
                 // Bind click events
-                addSectionModuleButton.addEventListener('click', onAddSectionModule);
-                moveupModuleButton.addEventListener('click', onMoveupModule);
-                movedownModuleButton.addEventListener('click', onMovedownModule);
-                editModuleButton.addEventListener('click', onEditModule);
-                addModuleButton.addEventListener('click', onAddModule);
-                addaboveModuleButton.addEventListener('click', onAddaboveModule);
-                addbelowModuleButton.addEventListener('click', onAddbelowModule);
-                deleteModuleButton.addEventListener('click', onDeleteModule);
+                bindEventHandler(addSectionModuleButton, 'addSectionModule', onAddSectionModule);
+                bindEventHandler(moveupModuleButton, 'moveModuleUp', onMoveupModule);
+                bindEventHandler(movedownModuleButton, 'moveModuleDown', onMovedownModule);
+                bindEventHandler(editModuleButton, 'editModule', onEditModule);
+                bindEventHandler(addModuleButton, 'addModule', onAddModule);
+                bindEventHandler(addaboveModuleButton, 'addModuleAbove', onAddaboveModule);
+                bindEventHandler(addbelowModuleButton, 'addModuleBelow', onAddbelowModule);
+                bindEventHandler(deleteModuleButton, 'deleteModule', onDeleteModule);
 
                 // Handlers
                 function onAddSectionModule() {
                     handler('addSectionModule', {
                         pageTemplateSectionId: scope.pageTemplateSectionId,
+                        permittedModuleTypes: scope.permittedModuleTypes,
                         isCustomEntity: _internal.model.isCustomEntityRoute
                     });
                 }
@@ -204,6 +171,7 @@ Cofoundry.siteViewer = (function () {
                 function onMoveupModule() {
                     handler('moveModuleUp', {
                         versionModuleId: scope.versionModuleId,
+                        isCustomEntity: _internal.model.isCustomEntityRoute,
                         isUp: true
                     });
                 }
@@ -211,6 +179,7 @@ Cofoundry.siteViewer = (function () {
                 function onMovedownModule() {
                     handler('moveModuleDown', {
                         versionModuleId: scope.versionModuleId,
+                        isCustomEntity: _internal.model.isCustomEntityRoute,
                         isUp: false
                     });
                 }
@@ -227,6 +196,7 @@ Cofoundry.siteViewer = (function () {
                     handler('addModule', {
                         insertMode: 'Last',
                         pageTemplateSectionId: scope.pageTemplateSectionId,
+                        permittedModuleTypes: scope.permittedModuleTypes,
                         versionModuleId: scope.versionModuleId,
                         pageModuleTypeId: scope.pageModuleTypeId,
                         isCustomEntity: _internal.model.isCustomEntityRoute
@@ -237,6 +207,7 @@ Cofoundry.siteViewer = (function () {
                     handler('addModuleAbove', {
                         insertMode: 'BeforeItem',
                         pageTemplateSectionId: scope.pageTemplateSectionId,
+                        permittedModuleTypes: scope.permittedModuleTypes,
                         versionModuleId: scope.versionModuleId,
                         pageModuleTypeId: scope.pageModuleTypeId,
                         isCustomEntity: _internal.model.isCustomEntityRoute
@@ -247,6 +218,7 @@ Cofoundry.siteViewer = (function () {
                     handler('addModuleBelow', {
                         insertMode: 'AfterItem',
                         pageTemplateSectionId: scope.pageTemplateSectionId,
+                        permittedModuleTypes: scope.permittedModuleTypes,
                         versionModuleId: scope.versionModuleId,
                         pageModuleTypeId: scope.pageModuleTypeId,
                         isCustomEntity: _internal.model.isCustomEntityRoute
@@ -261,7 +233,13 @@ Cofoundry.siteViewer = (function () {
                 }
 
                 // Helper
+                function bindEventHandler(button, action, handler) {
+                    scope.buttons[action] = button;
+                    button.addEventListener('click', handler);
+                }
+
                 function handler(action, args) {
+                    scope.buttons[action]
                     __IFRAME.contentWindow.postMessage({
                         action: action, args: [args]
                     }, document.location.origin);
@@ -302,12 +280,26 @@ Cofoundry.siteViewer = (function () {
                 if (el) {
                     scope.currentElement = el;
                     scope.pageTemplateSectionId = el.getAttribute('data-cms-page-template-section-id');
+                    scope.permittedModuleTypes = parseModuleTypes(el.getAttribute('data-cms-page-section-permitted-module-types'));
                     scope.sectionName = el.getAttribute('data-cms-page-section-name');
                     scope.isMultiModule = el.getAttribute('data-cms-multi-module');
                     scope.isCustomEntity = el.hasAttribute('data-cms-custom-entity-section');
+
+                    var sectionName = __TOOLBAR_SECTION.querySelectorAll('#cofoundry-sv__section-name')[0];
+                    if (sectionName) {
+                        sectionName.innerHTML = scope.sectionName;
+                    }
+
+                    showHideButton('addSectionModule', scope.isMultiModule);
                 }
 
                 setPosition();
+
+                function parseModuleTypes(moduleTypeValue) {
+                    if (!moduleTypeValue) return [];
+
+                    return moduleTypeValue.split(',');
+                }
                 
                 function setPosition() {
                     var elementOffset = offset(scope.currentElement),
@@ -334,6 +326,14 @@ Cofoundry.siteViewer = (function () {
                 if (el) {
                     scope.versionModuleId = el.getAttribute('data-cms-version-module-id');
                     scope.pageModuleTypeId = el.getAttribute('data-cms-page-module-type-id');
+
+                    showHideButton('addModule', !scope.versionModuleId);
+                    showHideButton('editModule', scope.versionModuleId);
+                    showHideButton('deleteModule', scope.versionModuleId);
+                    showHideButton('moveModuleUp', scope.isMultiModule);
+                    showHideButton('moveModuleDown', scope.isMultiModule);
+                    showHideButton('addModuleAbove', scope.isMultiModule);
+                    showHideButton('addModuleBelow', scope.isMultiModule);
                 }
 
                 setPosition();
@@ -364,6 +364,10 @@ Cofoundry.siteViewer = (function () {
                 }, 300);
             }
 
+            function showHideButton(action, condition) {
+                scope.buttons[action].style.display = condition ? 'block' : 'none';
+            }
+
             function offset(el) {
                 var rect = el.getBoundingClientRect();
                 return {
@@ -390,8 +394,6 @@ Cofoundry.siteViewer = (function () {
             }
         },
 
-=======
->>>>>>> 933c7fc0845629bb31aaffb54e147e5ca5b8bc07
         // Actions
         publish: function (e) {
             e.preventDefault();
@@ -425,7 +427,7 @@ Cofoundry.siteViewer = (function () {
             var type = options.type || 'secondary',
                 btn = document.createElement('a');
 
-            btn.className = (type == 'primary' ? 'cofoundry-sv__options__button' : 'cofoundry-sv__mode__button') + ' ' + options.classNames;
+            btn.className = (type === 'primary' ? 'cofoundry-sv__options__button' : 'cofoundry-sv__mode__button') + ' ' + options.classNames;
             btn.innerHTML = options.title;
 
             if (options.click) {
@@ -441,7 +443,7 @@ Cofoundry.siteViewer = (function () {
                 btn.insertBefore(icon, btn.firstChild);
             }
 
-            __TOOLBAR_BUTTONS = __TOOLBAR.getElementsByClassName(type == 'primary' ? 'cofoundry-sv__options' : 'cofoundry-sv__mode')[0];
+            __TOOLBAR_BUTTONS = __TOOLBAR.getElementsByClassName(type === 'primary' ? 'cofoundry-sv__options' : 'cofoundry-sv__mode')[0];
             if (__TOOLBAR_BUTTONS) {
                 __TOOLBAR_BUTTONS.appendChild(btn);
             }
@@ -451,12 +453,8 @@ Cofoundry.siteViewer = (function () {
     window.onload = function () {
         // pageResponseData object is a serialized object inserted into the page
         _internal.model = pageResponseData;
-<<<<<<< HEAD
         _internal.bindIframe();
         _internal.bindGui();
-=======
-        _internal.createIframe();
->>>>>>> 933c7fc0845629bb31aaffb54e147e5ca5b8bc07
         _internal.bindToolbar();
     }
 

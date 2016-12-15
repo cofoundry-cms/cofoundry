@@ -250,6 +250,7 @@ ul#deviceMenu li.iPadLandscape a {
 
 /* #### Section hovering #### */
 #cofoundry-sv__section-popover-container {
+    display:none;
 }
 
 .cofoundry-sv__section-popover-inner {
@@ -278,14 +279,15 @@ ul#deviceMenu li.iPadLandscape a {
     padding-left: 20px;
 }
 
-.cofoundry-sv__section-popover-inner a {
+.cofoundry-sv__section-popover-inner button {
     color: $color-darkgrey;
     overflow: hidden;
     white-space: nowrap;
     width: 19px;
+    line-height:24px;
     position:absolute;
     text-align:center;
-    left: 5px;
+    left: 0px;
         
     &:hover {
         color:$color-primary;
@@ -295,6 +297,10 @@ ul#deviceMenu li.iPadLandscape a {
 
 
 /* #### Module hovering #### */
+#cofoundry-sv__module-popover-container {
+    display:none;
+}
+
 #cofoundry-sv__module-popover-container ul {
     @include border-radius(2px);
     border: 1px solid $color-darkgrey;
@@ -303,12 +309,20 @@ ul#deviceMenu li.iPadLandscape a {
     display: block;
     margin: 0px;
     padding: 0px;
+    list-style: none;
 }
 
 #cofoundry-sv__module-popover-container li:not(:last-of-type) {
     border: 1px solid $color-lightgrey;
     border-width: 0 0 1px 0;
     display: block;
+}
+
+#cofoundry-sv__module-popover-container li {
+    button {
+        border:none;
+        width:100%;
+    }
 }
 
 #cofoundry-sv__module-popover-container li a {

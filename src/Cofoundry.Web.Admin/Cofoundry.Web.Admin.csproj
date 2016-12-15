@@ -360,6 +360,7 @@
     <Content Include="Admin\Modules\Shared\Content\css\lib\ui-select.css" />
     <Content Include="Admin\Modules\Shared\Content\css\shared.css" />
     <Content Include="Admin\Modules\Shared\Content\favicon.ico" />
+    <Content Include="Admin\Modules\VisualEditor\Content\svg-cache.html" />
     <Content Include="Admin\Modules\Shared\Content\videoplayer.swf" />
     <Content Include="Admin\Modules\Shared\Js\Bootstrap\Module.js" />
     <Content Include="Admin\Modules\Shared\Js\DataServices\CustomEntityService.js" />
@@ -848,6 +849,7 @@
     <Folder Include="Admin\Modules\Users\Js\UIControls\" />
     <Folder Include="Admin\Modules\VisualEditor\Content\css\images\icons\normal\" />
     <Folder Include="Admin\Modules\VisualEditor\Content\css\images\icons\retina\" />
+    <Folder Include="Admin\Modules\VisualEditor\Content\svg\" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

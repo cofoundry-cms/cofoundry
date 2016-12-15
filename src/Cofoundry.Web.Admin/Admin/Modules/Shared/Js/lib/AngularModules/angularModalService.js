@@ -59,10 +59,13 @@
             var me = this,
                 stack = [];
 
+            me.count = 0;
+
             me.push = function (modal) {
                 setTopElVisibility(false);
                 stack.push(modal);
                 setTopElVisibility(true);
+                me.count = stack.length;
             }
 
             me.pop = function () {
@@ -70,6 +73,7 @@
                     setTopElVisibility(false);
                     stack.pop();
                     setTopElVisibility(true);
+                    me.count = stack.length;
                 }
             }
 
@@ -109,11 +113,14 @@
 
             function loadModal(template) {
 
-                var MODAL_HIDE_CLS = 'modal-hide',
+                var MODAL_PAUSE_CLS = 'modal--pause',
+                    MODAL_SHOW_CLS = 'modal--show',
                     modalScope = $rootScope.$new(),
                     closeDeferred = $q.defer(),
                     inputs = getInputs(modalScope),
                     parentEl = getModalParentElement();
+
+                modalScope.isRootModal = options.stack.count === 0;
 
                 var modalElement = createModalElement(template, modalScope);
                 inputs.$element = modalElement;
@@ -170,7 +177,8 @@
                 }
 
                 function close(result, delay) {
-                    if (delay === undefined || delay === null) delay = 0;
+                    if (delay === undefined || delay === null) delay = 500;
+                    modal.element.children().removeClass(MODAL_SHOW_CLS);
                     $timeout(function () {
                         closeDeferred.resolve(result);
                     }, delay);
@@ -187,7 +195,7 @@
                     //  Remove the element from the dom.
                     modalElement.remove();
                     // Tell the parent that we have closed the modal
-                    if (parent) {
+                    if (parent && options.stack.count === 0) {
                         parent.postMessage({
                             type: 'MODAL_CLOSE'
 
@@ -204,8 +212,7 @@
                     if (isVisible) {
                         fnName = 'removeClass'
                     }
-
-                    modal.element[fnName](MODAL_HIDE_CLS);
+                    modal.element[fnName](MODAL_PAUSE_CLS);
                 }
 
             }

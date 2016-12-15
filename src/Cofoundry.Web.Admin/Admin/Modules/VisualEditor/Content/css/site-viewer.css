@@ -987,11 +987,7 @@ ul#deviceMenu li.iPadLandscape a {
 
 /* #### Hovering #### */
 /* line 241, ../../Sass/site-viewer.scss */
-<<<<<<< HEAD:src/Cofoundry.Web.Admin/Admin/Modules/VisualEditor/Content/css/site-viewer.css
 #cofoundry-sv__section-popover-container, #cofoundry-sv__module-popover-container {
-=======
-.cofoundry-sv__section-popover-container, .cofoundry-sv__module-popover-container {
->>>>>>> 933c7fc0845629bb31aaffb54e147e5ca5b8bc07:src/Cofoundry.Web.Admin/Admin/Modules/VisualEditor/Content/css/site-viewer.css
   font-family: "Cabin", sans-serif;
   font-size: 85%;
   position: absolute;
@@ -1001,7 +997,12 @@ ul#deviceMenu li.iPadLandscape a {
 }
 
 /* #### Section hovering #### */
-/* line 255, ../../Sass/site-viewer.scss */
+/* line 252, ../../Sass/site-viewer.scss */
+#cofoundry-sv__section-popover-container {
+  display: none;
+}
+
+/* line 256, ../../Sass/site-viewer.scss */
 .cofoundry-sv__section-popover-inner {
   -moz-transform: translateX(-100%);
   -ms-transform: translateX(-100%);
@@ -1023,7 +1024,7 @@ ul#deviceMenu li.iPadLandscape a {
   white-space: nowrap;
 }
 
-/* line 271, ../../Sass/site-viewer.scss */
+/* line 272, ../../Sass/site-viewer.scss */
 .cofoundry-sv__section-popover-inner h2 {
   font-weight: bold;
   font-size: 90%;
@@ -1034,33 +1035,30 @@ ul#deviceMenu li.iPadLandscape a {
   padding-left: 20px;
 }
 
-/* line 281, ../../Sass/site-viewer.scss */
-.cofoundry-sv__section-popover-inner a {
+/* line 282, ../../Sass/site-viewer.scss */
+.cofoundry-sv__section-popover-inner button {
   color: #3c3c3c;
   overflow: hidden;
   white-space: nowrap;
   width: 19px;
+  line-height: 24px;
   position: absolute;
   text-align: center;
-  left: 5px;
+  left: 0px;
 }
-/* line 290, ../../Sass/site-viewer.scss */
-.cofoundry-sv__section-popover-inner a:hover {
+/* line 292, ../../Sass/site-viewer.scss */
+.cofoundry-sv__section-popover-inner button:hover {
   color: #4af386;
 }
 
 /* #### Module hovering #### */
-/* line 298, ../../Sass/site-viewer.scss */
-<<<<<<< HEAD:src/Cofoundry.Web.Admin/Admin/Modules/VisualEditor/Content/css/site-viewer.css
-#cofoundry-sv__module-popover-container ul {
-=======
-.cofoundry-sv__module-popover-container {
-  position: fixed;
+/* line 300, ../../Sass/site-viewer.scss */
+#cofoundry-sv__module-popover-container {
+  display: none;
 }
 
-/* line 302, ../../Sass/site-viewer.scss */
-.cofoundry-sv__module-popover-container ul {
->>>>>>> 933c7fc0845629bb31aaffb54e147e5ca5b8bc07:src/Cofoundry.Web.Admin/Admin/Modules/VisualEditor/Content/css/site-viewer.css
+/* line 304, ../../Sass/site-viewer.scss */
+#cofoundry-sv__module-popover-container ul {
   -moz-border-radius: 2px;
   -webkit-border-radius: 2px;
   border-radius: 2px;
@@ -1070,27 +1068,24 @@ ul#deviceMenu li.iPadLandscape a {
   display: block;
   margin: 0px;
   padding: 0px;
+  list-style: none;
 }
 
-<<<<<<< HEAD:src/Cofoundry.Web.Admin/Admin/Modules/VisualEditor/Content/css/site-viewer.css
-/* line 308, ../../Sass/site-viewer.scss */
+/* line 315, ../../Sass/site-viewer.scss */
 #cofoundry-sv__module-popover-container li:not(:last-of-type) {
-=======
-/* line 312, ../../Sass/site-viewer.scss */
-.cofoundry-sv__module-popover-container li:not(:last-of-type) {
->>>>>>> 933c7fc0845629bb31aaffb54e147e5ca5b8bc07:src/Cofoundry.Web.Admin/Admin/Modules/VisualEditor/Content/css/site-viewer.css
   border: 1px solid #ebebeb;
   border-width: 0 0 1px 0;
   display: block;
 }
 
-<<<<<<< HEAD:src/Cofoundry.Web.Admin/Admin/Modules/VisualEditor/Content/css/site-viewer.css
-/* line 314, ../../Sass/site-viewer.scss */
+/* line 322, ../../Sass/site-viewer.scss */
+#cofoundry-sv__module-popover-container li button {
+  border: none;
+  width: 100%;
+}
+
+/* line 328, ../../Sass/site-viewer.scss */
 #cofoundry-sv__module-popover-container li a {
-=======
-/* line 318, ../../Sass/site-viewer.scss */
-.cofoundry-sv__module-popover-container li a {
->>>>>>> 933c7fc0845629bb31aaffb54e147e5ca5b8bc07:src/Cofoundry.Web.Admin/Admin/Modules/VisualEditor/Content/css/site-viewer.css
   -moz-transition: all 0.3s;
   -o-transition: all 0.3s;
   -webkit-transition: all 0.3s;
@@ -1104,23 +1099,13 @@ ul#deviceMenu li.iPadLandscape a {
   text-align: center;
   font-size: 1.1em;
 }
-<<<<<<< HEAD:src/Cofoundry.Web.Admin/Admin/Modules/VisualEditor/Content/css/site-viewer.css
-/* line 325, ../../Sass/site-viewer.scss */
+/* line 339, ../../Sass/site-viewer.scss */
 #cofoundry-sv__module-popover-container li a:hover {
   color: #4af386;
 }
 
-/* line 330, ../../Sass/site-viewer.scss */
+/* line 344, ../../Sass/site-viewer.scss */
 #cofoundry-sv__module-popover-container .disabled a {
-=======
-/* line 329, ../../Sass/site-viewer.scss */
-.cofoundry-sv__module-popover-container li a:hover {
-  color: #4af386;
-}
-
-/* line 334, ../../Sass/site-viewer.scss */
-.cofoundry-sv__module-popover-container .disabled a {
->>>>>>> 933c7fc0845629bb31aaffb54e147e5ca5b8bc07:src/Cofoundry.Web.Admin/Admin/Modules/VisualEditor/Content/css/site-viewer.css
   cursor: default;
   opacity: 0.4;
   -khtml-opacity: 0.4;

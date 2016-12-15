@@ -32,8 +32,6 @@ function (
             insertMode: options.insertMode || 'Last'
         };
 
-        console.log(visualEditorOptions);
-        
         $scope.submitLoadState = new LoadState();
         $scope.formLoadState = new LoadState(true);
 
@@ -70,7 +68,7 @@ function (
                 $scope.moduleTypes = allModuleTypes;
             }
 
-            if ($scope.moduleTypes.length == 1) {
+            if ($scope.moduleTypes.length === 1) {
                 $scope.command.pageModuleTypeId = $scope.moduleTypes[0].pageModuleTypeId;
                 setStep(2);
             } else {
@@ -137,7 +135,7 @@ function (
     /* PUBLIC HELPERS */
 
     function isModuleTypeSelected(moduleType) {
-        return moduleType && moduleType.pageModuleTypeId == $scope.command.pageModuleTypeId;
+        return moduleType && moduleType.pageModuleTypeId === $scope.command.pageModuleTypeId;
     }
 
 }]);

@@ -1,8 +1,4 @@
-<<<<<<< HEAD
-﻿@inherits CofoundryPage<PageResponseData>
-=======
-﻿@inherits CofoundryWebViewPage<IPageResponseData>
->>>>>>> 933c7fc0845629bb31aaffb54e147e5ca5b8bc07
+@inherits CofoundryPage<PageResponseData>
 @using Cofoundry.Web
 @using System.Web.Mvc.Html
 @using Cofoundry.Domain
@@ -24,7 +20,6 @@
 }
 
 @{
-<<<<<<< HEAD
     var model = ViewData["model"] as PageResponseData;
     var isStaticPage = model == null;
 
@@ -88,58 +83,6 @@
 <!-- PAGE TOOLBAR -->
 <div id="cofoundry-sv" class="cofoundry-sv active">
     <button type="button" id="cofoundry-sv_button" class="cofoundry-sv__toggle"></button>
-=======
-    var model = ViewData["model"] as IPageResponseData;
-    var isEditing = model.SiteViewerMode == SiteViewerMode.Edit;
-    var isViewingSpecificVersion = model.SiteViewerMode == SiteViewerMode.SpecificVersion;
-    var isCustomEntityRoute = model.Version is CustomEntityVersionRoute;
-    var entityNameSingular = isCustomEntityRoute ? model.CustomEntityDefinition.Name : "Page";
-    var isEditTypeSwitchRequired = IsEditTypeSwitchRequired(model);
-    var isStaticPage = false; //TODO: Find a way to resolve this
-
-    // If we are on a page with custom entities, it makes more sense to refer to the page as a template
-    if (isEditTypeSwitchRequired && !isCustomEntityRoute)
-    {
-        entityNameSingular = "Template";
-    }
-
-    object ngOptions = null;
-
-    if (!isStaticPage)
-    {
-        ViewBag.Title = model.Version.Title + " - Site Viewer";
-
-        ngOptions = new
-        {
-            IsInEditMode = isEditing,
-            PageId = model.PageRoutingInfo.PageRoute.PageId,
-            VersionId = model.Version.VersionId,
-            IsCustomEntityRoute = isCustomEntityRoute,
-            EntityNameSingular = entityNameSingular,
-            EntityId = isCustomEntityRoute ? model.PageRoutingInfo.CustomEntityRoute.CustomEntityId : model.PageRoutingInfo.PageRoute.PageId,
-            HasDraftVersion = model.HasDraftVersion
-        };
-    }
-
-    var backToAdminLink = DashboardRouteLibrary.Urls.Dashboard();
-    var versions = new List<IVersionRoute>();
-
-    if (isCustomEntityRoute)
-    {
-        backToAdminLink = CustomEntitiesRouteLibrary.Urls.Details(model.CustomEntityDefinition, model.PageRoutingInfo.CustomEntityRoute.CustomEntityId);
-        versions.AddRange(model.PageRoutingInfo.CustomEntityRoute.Versions);
-    }
-    else
-    {
-        versions.AddRange(model.PageRoutingInfo.PageRoute.Versions);
-    }
-
-    versions = versions.OrderByDescending(v => v.WorkFlowStatus).ToList();
-}
-
-<div id="cofoundry-sv" class="cofoundry-sv active">
-    <button type="button" id="cofoundry-sv_button" class="cofoundry-sv__toggle" ng-click="vm.toggleOpen()" ng-bind="vm.siteViewerActive === true ? 'Hide' : 'Show'"></button>
->>>>>>> 933c7fc0845629bb31aaffb54e147e5ca5b8bc07
 
     <div class="cofoundry-sv__navmenu">
         <div class="cofoundry-sv__mini-menu cofoundry-sv__mini-menu--align-left">
@@ -175,11 +118,7 @@
                             Settings
                         </a>
                     </li>
-<<<<<<< HEAD
                     @if (!isStaticPage && CanEditPage(model) && !isViewingSpecificVersion && isCustomEntityRoute)
-=======
-                    @if (CanEditPage(model) && !isViewingSpecificVersion && isCustomEntityRoute)
->>>>>>> 933c7fc0845629bb31aaffb54e147e5ca5b8bc07
                     {
                         <li class="cofoundry-sv__navmenu-list__divider">
                             <a href="@backToAdminLink" class="cofoundry-sv__navmenu-list__item">
@@ -199,11 +138,7 @@
 
     <div class="cofoundry-sv__page-details">
         <div class="cofoundry-sv__mini-menu cofoundry-sv__mini-menu--flow">
-<<<<<<< HEAD
             @if (!isStaticPage && versions.Any())
-=======
-            @if (versions.Any())
->>>>>>> 933c7fc0845629bb31aaffb54e147e5ca5b8bc07
             {
                 var count = 1;
 
@@ -232,8 +167,6 @@
 
                 </div>
             }
-<<<<<<< HEAD
-
             @if (!isStaticPage)
             {
                 <button type="button" class="cofoundry-sv__mini-menu__toggle">
@@ -254,55 +187,6 @@
             }
         </div>
     </div>
-=======
-            <button type="button" class="cofoundry-sv__mini-menu__toggle">
-                <span class="cofoundry-sv__page-details__status @model.Version.WorkFlowStatus.ToString().ToLower()"></span>
-                <span class="cofoundry-sv__page-details__name">@model.Version.Title</span>
-                @if (Request.Url.AbsolutePath.Length > 1)
-                {
-                    <span class="cofoundry-sv__page-details__url">@Request.Url.AbsolutePath</span>
-                }
-            </button>
-        </div>
-    </div>
-    @*
-    <div class="cofoundry-sv__settings">
-        <div class="cofoundry-sv__mini-menu cofoundry-sv__mini-menu--large cofoundry-sv__mini-menu--align-right">
-            <div class="cofoundry-sv__mini-menu__content">
-                <!-- <h3>Edit Mode Options</h3>
-                <div class="cofoundry-sv__edit-mode">
-                    <div class="cofoundry-sv__edit-mode__half">
-                        <input id="toggle-show-editable" type="checkbox">
-                        <label for="toggle-show-editable">Always show editable areas</label>
-                    </div>
-
-                    <div class="cofoundry-sv__edit-mode__half">
-                        <input id="show-editable-color" type="color"
-                               value="#47FEF2" disabled>
-                        <label for="show-editable-color">Outline Color</label>
-                    </div>
-                </div> -->
-
-                <h3>Display Size</h3>
-                <div class="cofoundry-sv__tabs">
-                    <div class="cofoundry-sv__tab-content active">
-                        <ul id="display-list" class="cofoundry-sv__version-list">
-                            <li id="display-full" class="cofoundry-sv__version-list__item active" ng-click="vm.switchDisplaySize($event, 'full')">Full Screen</li>
-                            <li id="display-iPadLandscape" class="cofoundry-sv__version-list__item" ng-click="vm.switchDisplaySize($event, 'iPadLandscape')">Tablet Landscape <span>1024px wide</span></li>
-                            <li id="display-iPadPortrait" class="cofoundry-sv__version-list__item" ng-click="vm.switchDisplaySize($event, 'iPadPortrait')">Tablet Portrait <span>768px wide</span></li>
-                            <li id="display-iPhonePortrait" class="cofoundry-sv__version-list__item" ng-click="vm.switchDisplaySize($event, 'iPhonePortrait')">Mobile <span>375px wide</span></li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-
-            <button type="button" class="cofoundry-sv__mini-menu__toggle">
-                <span class="fa fa-desktop"></span>
-            </button>
-        </div>
-    </div>
-    *@
->>>>>>> 933c7fc0845629bb31aaffb54e147e5ca5b8bc07
     <div class="cofoundry-sv__mode">
         @if (!isStaticPage && !isViewingSpecificVersion)
         {
@@ -343,10 +227,11 @@
 
         </div>
     </div>
-<<<<<<< HEAD
 </div>
 <!-- END PAGE TOOLBAR -->
 
+@if (!isStaticPage && isEditing)
+{
 <!-- SECTION TOOLBAR UI -->
 <div id="cofoundry-sv__section-popover-container">
     <div class="cofoundry-sv__section-popover-inner">
@@ -356,9 +241,9 @@
             class="popup"
             title="Add a new module"
             ng-if="isMultiModule">
-            Add
+            +
         </button>
-        <h2>{{sectionName}}</h2>
+        <h2 id="cofoundry-sv__section-name">{{sectionName}}</h2>
     </div>
 </div>
 <!-- END SECTION TOOLBAR UI -->
@@ -438,6 +323,4 @@
     </ul>
 </div>
 <!-- END MODULE TOOLBAR UI -->
-=======
-</div>
->>>>>>> 933c7fc0845629bb31aaffb54e147e5ca5b8bc07
+}
