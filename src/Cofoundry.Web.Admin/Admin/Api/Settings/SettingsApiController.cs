@@ -18,7 +18,7 @@ namespace Cofoundry.Web.Admin
 
         const string GENERAL_SITE_SETTINGS_ROUTE = "GeneralSite";
         const string SEO_SETTINGS_ROUTE = "Seo";
-        const string SITE_VIEWER_SETTINGS_ROUTE = "SiteViewer";
+        const string VISUAL_EDITOR_SETTINGS_ROUTE = "VisualEditor";
 
         private readonly IQueryExecutor _queryExecutor;
         private readonly ApiResponseHelper _apiResponseHelper;
@@ -77,8 +77,8 @@ namespace Cofoundry.Web.Admin
         }
 
         [HttpPatch]
-        [Route(SITE_VIEWER_SETTINGS_ROUTE)]
-        public async Task<IHttpActionResult> PatchSiteViewerSettings(Delta<UpdateSiteViewerSettingsCommand> delta)
+        [Route(VISUAL_EDITOR_SETTINGS_ROUTE)]
+        public async Task<IHttpActionResult> PatchVisualEditorSettings(Delta<UpdateVisualEditorSettingsCommand> delta)
         {
             return await _apiResponseHelper.RunCommandAsync(this, delta);
         }

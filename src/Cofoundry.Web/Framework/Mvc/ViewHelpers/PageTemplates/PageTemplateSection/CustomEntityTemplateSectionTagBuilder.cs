@@ -23,10 +23,14 @@ namespace Cofoundry.Web
         private readonly CustomEntityDetailsPageViewModel<TModel> _customEntityViewModel;
         private readonly HtmlHelper _htmlHelper;
         private readonly IPageModuleRenderer _moduleRenderer;
+        private readonly IPageModuleDataModelTypeFactory _moduleDataModelTypeFactory;
+        private readonly IPageModuleTypeFileNameFormatter _moduleTypeFileNameFormatter;
         private readonly List<string> _allowedModules = new List<string>();
 
         public CustomEntityTemplateSectionTagBuilder(
             IPageModuleRenderer moduleRenderer,
+            IPageModuleDataModelTypeFactory moduleDataModelTypeFactory,
+            IPageModuleTypeFileNameFormatter moduleTypeFileNameFormatter,
             HtmlHelper htmlHelper,
             CustomEntityDetailsPageViewModel<TModel> customEntityViewModel, 
             string sectionName)
@@ -35,6 +39,8 @@ namespace Cofoundry.Web
             Condition.Requires(customEntityViewModel).IsNotNull();
 
             _moduleRenderer = moduleRenderer;
+            _moduleDataModelTypeFactory = moduleDataModelTypeFactory;
+            _moduleTypeFileNameFormatter = moduleTypeFileNameFormatter;
             _sectionName = sectionName;
             _customEntityViewModel = customEntityViewModel;
             _htmlHelper = htmlHelper;
@@ -49,6 +55,7 @@ namespace Cofoundry.Web
         private bool _allowMultipleModules = false;
         private int? _emptyContentMinHeight = null;
         private Dictionary<string, string> _additonalHtmlAttributes = null;
+        private Dictionary<string, object> _permittedModules = new Dictionary<string, object>();
 
         #endregion
 
@@ -120,7 +127,7 @@ namespace Cofoundry.Web
         /// <returns>ICustomEntityTemplateSectionTagBuilder for method chaining</returns>
         public ICustomEntityTemplateSectionTagBuilder<TModel> AllowModuleType<TModuleType>() where TModuleType : IPageModuleDataModel
         {
-            // Not yet validated, method just for module scanning
+            AddModuleToAllowedTypes(typeof(TModuleType).Name);
             return this;
         }
 
@@ -129,11 +136,11 @@ namespace Cofoundry.Web
         /// section. By default all modules are available but using this method changes 
         /// the module selection to an 'opt-in' configuration.
         /// </summary>
-        /// <param name="moduleType">The name of the moduletype to register e.g. "RawHtml" or "PlainText"</param>
+        /// <param name="moduleTypeName">The name of the moduletype to register e.g. "RawHtml" or "PlainText"</param>
         /// <returns>ICustomEntityTemplateSectionTagBuilder for method chaining</returns>
-        public ICustomEntityTemplateSectionTagBuilder<TModel> AllowModuleType(string moduleType)
+        public ICustomEntityTemplateSectionTagBuilder<TModel> AllowModuleType(string moduleTypeName)
         {
-            // Not yet validated, method just for module scanning
+            AddModuleToAllowedTypes(moduleTypeName);
             return this;
         }
 
@@ -143,12 +150,30 @@ namespace Cofoundry.Web
         /// the module selection to an 'opt-in' configuration.
         /// configuration.
         /// </summary>
-        /// <param name="moduleTypes">The names of the moduletype to register e.g. "RawHtml" or "PlainText"</param>
+        /// <param name="moduleTypeNames">The names of the moduletype to register e.g. "RawHtml" or "PlainText"</param>
         /// <returns>ICustomEntityTemplateSectionTagBuilder for method chaining</returns>
-        public ICustomEntityTemplateSectionTagBuilder<TModel> AllowModuleTypes(params string[] moduleTypes)
+        public ICustomEntityTemplateSectionTagBuilder<TModel> AllowModuleTypes(params string[] moduleTypeNames)
         {
-            // Not yet validated, method just for module scanning
+            foreach (var moduleTypeName in moduleTypeNames)
+            {
+                AddModuleToAllowedTypes(moduleTypeName);
+            }
             return this;
+        }
+
+        private void AddModuleToAllowedTypes(string moduleTypeName)
+        {
+            // Get the file name if we haven't already got it, e.g. we could have the file name or 
+            // full type name passed into here (we shouldn't be fussy)
+            var fileName = _moduleTypeFileNameFormatter.FormatFromDataModelName(moduleTypeName);
+
+            // Validate the model type, will throw exception if not implemented
+            var moduleType = _moduleDataModelTypeFactory.CreateByPageModuleTypeFileName(fileName);
+
+            // Make sure we have the correct name casing
+            var formattedModuleTypeName = _moduleTypeFileNameFormatter.FormatFromDataModelType(moduleType);
+
+            _permittedModules.Add(formattedModuleTypeName, null);
         }
 
         #endregion
@@ -225,7 +250,13 @@ namespace Cofoundry.Web
             attrs.Add("data-cms-custom-entity-section", string.Empty);
 
             attrs.Add("class", "cofoundry__sv-section");
-            
+
+            if (_permittedModules.Any())
+            {
+                var permittedModules = _permittedModules.Select(m => m.Key);
+                attrs.Add("data-cms-page-section-permitted-module-types", string.Join(",", permittedModules));
+            }
+
             if (_allowMultipleModules)
             {
                 attrs.Add("data-cms-multi-module", "true");

@@ -13,7 +13,6 @@ namespace Cofoundry.Web.Bootstrap
             container
                 .RegisterPerRequestScope<INotFoundViewHelper, NotFoundViewHelper>()
                 .RegisterType<IPageLocaleParser, PageLocaleParser>()
-                .RegisterType<ISiteViewerActionFactory, DefaultSiteViewerActionFactory>()
                 .RegisterType<ISetupPageActionFactory, DefaultSetupPageActionFactory>()
                 .RegisterType<IPageActionRoutingStepFactory, PageActionRoutingStepFactory>()
 
@@ -24,10 +23,10 @@ namespace Cofoundry.Web.Bootstrap
                 .RegisterType<IValidateDraftVersionRoutingStep, ValidateDraftVersionRoutingStep>()
                 .RegisterType<IValidateSpecificVersionRoutingRoutingStep, ValidateSpecificVersionRoutingRoutingStep>()
                 .RegisterType<IGetNotFoundRouteRoutingStep, GetNotFoundRouteRoutingStep>()
-                .RegisterType<IShowSiteViewerRoutingStep, ShowSiteViewerRoutingStep>()
                 .RegisterType<IGetPageRenderDataRoutingStep, GetPageRenderDataRoutingStep>()
                 .RegisterType<ISetCachePolicyRoutingStep, SetCachePolicyRoutingStep>()
                 .RegisterType<IGetFinalResultRoutingStep, GetFinalResultRoutingStep>()
+                .RegisterType<IPageResponseDataCache, PageResponseDataCache>()
                 ;
         }
     }

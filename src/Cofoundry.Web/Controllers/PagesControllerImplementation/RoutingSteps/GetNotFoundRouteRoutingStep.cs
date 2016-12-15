@@ -18,19 +18,16 @@ namespace Cofoundry.Web
         private readonly IQueryExecutor _queryExecutor;
         private readonly INotFoundViewHelper _notFoundViewHelper;
         private readonly IRedirectResponseHelper _redirectResponseHelper;
-        private readonly ISiteViewerActionFactory _siteViewerActionFactory;
 
         public GetNotFoundRouteRoutingStep(
             IQueryExecutor queryExecutor,
             INotFoundViewHelper notFoundViewHelper,
-            IRedirectResponseHelper redirectResponseHelper,
-            ISiteViewerActionFactory siteViewerActionFactory
+            IRedirectResponseHelper redirectResponseHelper
             )
         {
             _queryExecutor = queryExecutor;
             _notFoundViewHelper = notFoundViewHelper;
             _redirectResponseHelper = redirectResponseHelper;
-            _siteViewerActionFactory = siteViewerActionFactory;
         }
 
         public async Task ExecuteAsync(Controller controller, PageActionRoutingState state)
@@ -48,7 +45,7 @@ namespace Cofoundry.Web
                 // If we still can't find a 404, fall back to the generic 404 view
                 if (state.PageRoutingInfo == null)
                 {
-                    state.Result = GetGenericPageNotFoundResult(controller, state);
+                    state.Result = _notFoundViewHelper.GetView();
                 }
             }
         }
@@ -61,7 +58,7 @@ namespace Cofoundry.Web
             {
                 string writeTo = rewriteRule.WriteTo;
                 var response = new RedirectResult(rewriteRule.WriteTo, true);
-                return _redirectResponseHelper.IncludeQueryParameters(response, "siteviewer");
+                return response;
             }
 
             return null;
@@ -85,24 +82,6 @@ namespace Cofoundry.Web
             {
                 PageRoute = pageRoute
             };
-        }
-
-        private ActionResult GetGenericPageNotFoundResult(Controller controller, PageActionRoutingState state)
-        {
-            ActionResult result = null;
-
-            // NB: the page is not found, but this might fall through to a standard controller route.
-            if (state.InputParameters.IsSiteViewerRequested && state.UserContext.IsCofoundryUser())
-            {
-                result = _siteViewerActionFactory.GetSiteViewerAction(controller, state);
-            }
-
-            if (result == null)
-            {
-                result = _notFoundViewHelper.GetView();
-            }
-
-            return result;
         }
     }
 }

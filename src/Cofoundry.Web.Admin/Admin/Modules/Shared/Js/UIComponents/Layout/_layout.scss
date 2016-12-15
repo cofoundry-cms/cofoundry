@@ -22,7 +22,7 @@
         text-decoration: none;
 
         &:hover {
-            color:$color-primary;
+            color:$color-secondary;
             text-decoration:underline;
         }
     }
@@ -40,7 +40,7 @@
     padding: 15px;
 
     a {
-        color:$color-primary;
+        color:$color-secondary;
     }
 
     &:hover {
@@ -180,7 +180,7 @@
 
             &:before {
                 @include transition(all .2s);
-                border-top: 3px solid $color-primary;
+                border-top: 3px solid $color-secondary;
                 content:'';
                 position:absolute;
                 top:0;
@@ -214,11 +214,11 @@
                     text-align: right;
 
                     &:hover {
-                        color:$color-primary-dark;
+                        color:$color-secondary-dark;
                     }
 
                     &.active {
-                        color: $color-primary;
+                        color: $color-secondary-dark;
                     }
                 }
             }
@@ -230,17 +230,18 @@
 
         &.show-helpers {
             .help-inline {
+                @include border-radius(3px);
                 @include transition(all .2s);
-                border-color:#fff;
+                margin: 5px 25px;
+                border:1px solid $color-secondary;
+                border-color: $color-secondary;
                 background-color:#fff;
-                color:$color-primary-light;
+                color:$color-secondary;
                 font-style:italic;
-                width:100%;
                 display:block;
-                float:right;
-                padding: 10px;
+                float:left;
+                padding: 10px 20px;
                 position:relative;
-                left:-20px;
                 z-index:2;
                 top: -25px;
 
@@ -248,24 +249,24 @@
                     @include transition(all .3s);
                     content:'';
                     position:absolute;
-                    left:-12px;
-                    top:10px;
+                    left:12px;
+                    top:-12px;
                     border-left:6px solid transparent;
-                    border-right:6px solid $color-primary-light;
+                    border-right:6px solid transparent;
                     border-top:6px solid transparent;
-                    border-bottom:6px solid transparent;
+                    border-bottom:6px solid $color-secondary;
                 }
 
                 &:after {
                     @include transition(all .3s);
                     content:'';
                     position:absolute;
-                    left:-10px;
-                    top:11px;
+                    left:13px;
+                    top:-10px;
                     border-left:5px solid transparent;
-                    border-right:5px solid #fff;
+                    border-right:5px solid transparent;
                     border-top:5px solid transparent;
-                    border-bottom:5px solid transparent;
+                    border-bottom:5px solid #fff;
                 }
 
                 small {
@@ -280,12 +281,37 @@
                 }
 
                 .help-inline {
-                    @include border-radius(3px);
-                    border:1px solid $color-primary-light;
+                    margin: 0;
                     width:25%;
                     padding: 10px;
                     top:23px;
+                    left:-20px;
+                    float:right;
                     margin-bottom:10px;
+
+                    &:before {
+                        @include transition(all .3s);
+                        content:'';
+                        position:absolute;
+                        left:-12px;
+                        top:10px;
+                        border-left:6px solid transparent;
+                        border-right:6px solid $color-secondary;
+                        border-top:6px solid transparent;
+                        border-bottom:6px solid transparent;
+                    }
+
+                    &:after {
+                        @include transition(all .3s);
+                        content:'';
+                        position:absolute;
+                        left:-10px;
+                        top:11px;
+                        border-left:5px solid transparent;
+                        border-right:5px solid #fff;
+                        border-top:5px solid transparent;
+                        border-bottom:5px solid transparent;
+                    }
                 }
 
             }
