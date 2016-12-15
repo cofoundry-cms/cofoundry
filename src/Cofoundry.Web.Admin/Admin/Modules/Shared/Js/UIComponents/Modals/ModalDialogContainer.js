@@ -15,11 +15,12 @@ function (
 
     function link(scope, el, attributes) {
         var cls = attributes.cmsModalSize === 'large' ? 'modal-lg' : '';
+        cls += (scope.isRootModal ? ' is-root-modal' : ' is-child-modal');
         if (attributes.cmsModalSize === 'large') {
             scope.sizeCls = cls;
         }
         $timeout(function () {
             scope.sizeCls = cls + ' modal--show';
-        }, 100);
+        }, 1);
     }
 }]);

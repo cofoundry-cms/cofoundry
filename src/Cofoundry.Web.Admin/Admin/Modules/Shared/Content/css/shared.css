@@ -153,16 +153,20 @@ article, aside, details, figcaption, figure, footer, header, hgroup, main, menu,
 =================================*/
 /* line 4, ../../Sass/Core/_layout.scss */
 * {
+  font-family: "Cabin", sans-serif;
   box-sizing: border-box;
 }
 
-/* line 12, ../../Sass/Core/_layout.scss */
+/* line 13, ../../Sass/Core/_layout.scss */
 body {
-  font-family: "Open Sans", sans-serif;
   background-color: #ebebeb;
 }
+/* line 16, ../../Sass/Core/_layout.scss */
+body.cofoundry-visual-editor-frame {
+  background-color: transparent;
+}
 
-/* line 17, ../../Sass/Core/_layout.scss */
+/* line 21, ../../Sass/Core/_layout.scss */
 main {
   position: relative;
   min-height: 600px;
@@ -170,7 +174,7 @@ main {
   min-width: 850px;
 }
 
-/* line 24, ../../Sass/Core/_layout.scss */
+/* line 28, ../../Sass/Core/_layout.scss */
 footer {
   position: fixed;
   bottom: 0px;
@@ -184,16 +188,16 @@ footer {
   height: 25px;
   border-top: 1px solid #e3e3e3;
 }
-/* line 37, ../../Sass/Core/_layout.scss */
+/* line 41, ../../Sass/Core/_layout.scss */
 footer p {
   padding: 6px 20px 0 0;
 }
-/* line 41, ../../Sass/Core/_layout.scss */
+/* line 45, ../../Sass/Core/_layout.scss */
 footer a {
   color: #ccc;
 }
 
-/* line 46, ../../Sass/Core/_layout.scss */
+/* line 50, ../../Sass/Core/_layout.scss */
 .content {
   -moz-transition: width 0.3s, left 0.3s, padding 0.3s;
   -o-transition: width 0.3s, left 0.3s, padding 0.3s;
@@ -211,7 +215,7 @@ footer a {
   z-index: 1;
 }
 
-/* line 57, ../../Sass/Core/_layout.scss */
+/* line 61, ../../Sass/Core/_layout.scss */
 .main-menu {
   position: absolute;
   left: 0;
@@ -220,7 +224,7 @@ footer a {
   height: 100%;
   background: red;
 }
-/* line 65, ../../Sass/Core/_layout.scss */
+/* line 69, ../../Sass/Core/_layout.scss */
 .main-menu .apps > ul {
   position: absolute;
   z-index: 1;
@@ -231,50 +235,50 @@ footer a {
   background: yellow;
 }
 
-/* line 76, ../../Sass/Core/_layout.scss */
+/* line 80, ../../Sass/Core/_layout.scss */
 .collection-actions {
   position: absolute;
   top: 0px;
   right: 0;
 }
 
-/* line 82, ../../Sass/Core/_layout.scss */
+/* line 86, ../../Sass/Core/_layout.scss */
 .dashboard-item {
   float: left;
   width: 48%;
   margin-bottom: 2%;
 }
-/* line 87, ../../Sass/Core/_layout.scss */
+/* line 91, ../../Sass/Core/_layout.scss */
 .dashboard-item h3 {
   font-weight: bold;
   background: white;
   padding: 10px;
-  border-top: 2px solid #3366cc;
+  border-top: 2px solid #413851;
 }
-/* line 94, ../../Sass/Core/_layout.scss */
+/* line 98, ../../Sass/Core/_layout.scss */
 .dashboard-item:nth-of-type(1), .dashboard-item:nth-of-type(2) {
   margin-top: 80px;
 }
-/* line 98, ../../Sass/Core/_layout.scss */
+/* line 102, ../../Sass/Core/_layout.scss */
 .dashboard-item:nth-child(even) {
   clear: left;
 }
-/* line 102, ../../Sass/Core/_layout.scss */
+/* line 106, ../../Sass/Core/_layout.scss */
 .dashboard-item:nth-child(odd) {
   margin-left: 2%;
 }
-/* line 106, ../../Sass/Core/_layout.scss */
+/* line 110, ../../Sass/Core/_layout.scss */
 .dashboard-item .btn-group {
   text-align: right;
   padding: 10px 0;
 }
-/* line 111, ../../Sass/Core/_layout.scss */
+/* line 115, ../../Sass/Core/_layout.scss */
 .dashboard-item .btn {
   display: inline-block;
 }
 
 @media screen and (min-width: 950px) {
-  /* line 118, ../../Sass/Core/_layout.scss */
+  /* line 122, ../../Sass/Core/_layout.scss */
   .content {
     width: -webkit-calc(100% - 288px);
     width: -moz-calc(100% - 288px);
@@ -302,26 +306,32 @@ footer a {
 }
 /* line 16, ../../Sass/Core/_login.scss */
 .login-container h1 {
-  -moz-border-radius-topleft: 3px;
-  -webkit-border-top-left-radius: 3px;
-  border-top-left-radius: 3px;
-  -moz-border-radius-topright: 3px;
-  -webkit-border-top-right-radius: 3px;
-  border-top-right-radius: 3px;
-  font-size: 150%;
-  padding: 20px;
-  position: absolute;
-  left: 0;
-  top: 0;
-  width: 100%;
-  color: #fff;
-  background-color: #3366cc;
+  display: inline-block;
+  vertical-align: middle;
+  *vertical-align: auto;
+  *zoom: 1;
+  *display: inline;
+  height: 58px;
+  width: 250px;
+  background-image: url('/Admin/Modules/Shared/Content/css/img/icons/normal.png');
+  background-position: 0 -209px;
+  background-repeat: no-repeat;
+  margin-bottom: 20px;
+  text-indent: -2000px;
+  overflow: hidden;
 }
-/* line 29, ../../Sass/Core/_login.scss */
-.login-container form {
-  margin-top: 60px;
+@media (-webkit-min-device-pixel-ratio: 1.5), (min--moz-device-pixel-ratio: 1.5), (-o-min-device-pixel-ratio: 3 / 2), (min-device-pixel-ratio: 1.5), (min-resolution: 144dppx) {
+  /* line 16, ../../Sass/Core/_login.scss */
+  .login-container h1 {
+    background-image: url('/Admin/Modules/Shared/Content/css/img/icons/retina.png');
+    background-position: 0 -201px;
+    -moz-background-size: 250px auto;
+    -o-background-size: 250px auto;
+    -webkit-background-size: 250px auto;
+    background-size: 250px auto;
+  }
 }
-/* line 33, ../../Sass/Core/_login.scss */
+/* line 23, ../../Sass/Core/_login.scss */
 .login-container label {
   font-weight: 700;
   text-transform: uppercase;
@@ -329,20 +339,20 @@ footer a {
   padding: 10px 0;
   display: block;
 }
-/* line 41, ../../Sass/Core/_login.scss */
+/* line 31, ../../Sass/Core/_login.scss */
 .login-container .checkbox {
   float: left;
 }
-/* line 45, ../../Sass/Core/_login.scss */
+/* line 35, ../../Sass/Core/_login.scss */
 .login-container .actions {
   margin-top: 15px;
   float: right;
 }
-/* line 49, ../../Sass/Core/_login.scss */
+/* line 39, ../../Sass/Core/_login.scss */
 .login-container .actions .btn {
   width: 100%;
 }
-/* line 54, ../../Sass/Core/_login.scss */
+/* line 44, ../../Sass/Core/_login.scss */
 .login-container .field-validation-error {
   -moz-border-radius: 2px;
   -webkit-border-radius: 2px;
@@ -355,12 +365,12 @@ footer a {
   display: block;
 }
 
-/* line 65, ../../Sass/Core/_login.scss */
+/* line 55, ../../Sass/Core/_login.scss */
 .login-footer {
   text-align: center;
   padding: 20px;
 }
-/* line 69, ../../Sass/Core/_login.scss */
+/* line 59, ../../Sass/Core/_login.scss */
 .login-footer a {
   color: #000;
   display: block;
@@ -375,10 +385,10 @@ footer a {
   -o-transition: width 0.3s;
   -webkit-transition: width 0.3s;
   transition: width 0.3s;
-  font-family: "Open Sans", sans-serif;
+  font-family: "Cabin", sans-serif;
   float: left;
   position: relative;
-  background: #4d4d4d;
+  background: #413851;
   width: 228px;
   height: 100vh;
   z-index: 999;
@@ -394,7 +404,7 @@ footer a {
   padding: 0;
   list-style: none;
   position: relative;
-  background: #3c3c3c;
+  background: #2c263d;
 }
 /* line 27, ../../Sass/Core/_navigation.scss */
 .main-nav ol li, .main-nav ul li {
@@ -406,58 +416,58 @@ footer a {
 }
 /* line 36, ../../Sass/Core/_navigation.scss */
 .main-nav .home {
-  background-color: #3366cc;
-  display: block;
-  text-align: center;
-  color: #fff;
-  height: 70px;
-}
-/* line 43, ../../Sass/Core/_navigation.scss */
-.main-nav .home i {
   display: inline-block;
   vertical-align: middle;
   *vertical-align: auto;
   *zoom: 1;
   *display: inline;
-  height: 21px;
-  width: 93px;
+  height: 80px;
+  width: 80px;
   background-image: url('/Admin/Modules/Shared/Content/css/img/icons/normal.png');
-  background-position: 0 -209px;
+  background-position: 0 -269px;
   background-repeat: no-repeat;
-  margin-top: 24px;
+  background-color: #413851;
+  display: block;
+  text-align: center;
+  color: #fff;
+  position: absolute;
+  z-index: 99;
+  width: 80px;
+  height: 80px;
 }
 @media (-webkit-min-device-pixel-ratio: 1.5), (min--moz-device-pixel-ratio: 1.5), (-o-min-device-pixel-ratio: 3 / 2), (min-device-pixel-ratio: 1.5), (min-resolution: 144dppx) {
-  /* line 43, ../../Sass/Core/_navigation.scss */
-  .main-nav .home i {
+  /* line 36, ../../Sass/Core/_navigation.scss */
+  .main-nav .home {
     background-image: url('/Admin/Modules/Shared/Content/css/img/icons/retina.png');
-    background-position: 0 -201px;
-    -moz-background-size: 93px auto;
-    -o-background-size: 93px auto;
-    -webkit-background-size: 93px auto;
-    background-size: 93px auto;
+    background-position: 0 -260px;
+    -moz-background-size: 250px auto;
+    -o-background-size: 250px auto;
+    -webkit-background-size: 250px auto;
+    background-size: 250px auto;
   }
 }
-/* line 49, ../../Sass/Core/_navigation.scss */
+/* line 48, ../../Sass/Core/_navigation.scss */
 .main-nav .category {
   width: 100%;
 }
-/* line 53, ../../Sass/Core/_navigation.scss */
+/* line 52, ../../Sass/Core/_navigation.scss */
 .main-nav .category.void .fill {
   position: relative;
   background-color: #3c3c3c;
   z-index: 20;
   width: 288px;
 }
-/* line 61, ../../Sass/Core/_navigation.scss */
+/* line 60, ../../Sass/Core/_navigation.scss */
 .main-nav .category .main-button {
   -moz-transition: all 0.3s;
   -o-transition: all 0.3s;
   -webkit-transition: all 0.3s;
   transition: all 0.3s;
+  top: 80px;
   position: relative;
-  background-color: #4d4d4d;
+  background-color: #413851;
   border: none;
-  padding-top: 45px;
+  padding-top: 42px;
   z-index: 2;
   width: 80px;
   height: 80px;
@@ -469,8 +479,7 @@ footer a {
   display: block;
   font-size: 80%;
   text-decoration: none;
-  border-bottom: 1px solid #686868;
-  border-left: 4px solid #4d4d4d;
+  border-left: 4px solid #413851;
 }
 /* line 81, ../../Sass/Core/_navigation.scss */
 .main-nav .category .main-button i {
@@ -485,9 +494,9 @@ footer a {
 .main-nav .category i {
   position: absolute;
   left: 50%;
-  top: 18px;
+  top: 22px;
   width: 21px;
-  font-size: 2em;
+  font-size: 1.75em;
   margin-left: -10px;
 }
 /* line 96, ../../Sass/Core/_navigation.scss */
@@ -497,7 +506,7 @@ footer a {
   -webkit-transition: width 0.3s;
   transition: width 0.3s;
   position: absolute;
-  background: #3c3c3c;
+  background: #2c263d;
   top: 0;
   margin-left: 80px;
   height: 100vh;
@@ -507,8 +516,8 @@ footer a {
 /* line 109, ../../Sass/Core/_navigation.scss */
 .main-nav .category:hover .main-button, .main-nav .category.selected .main-button {
   color: #fff;
-  background-color: #3c3c3c;
-  border-left: 3px solid #3366cc;
+  background-color: #2c263d;
+  border-left: 3px solid #4af386;
 }
 /* line 114, ../../Sass/Core/_navigation.scss */
 .main-nav .category:hover .main-button i, .main-nav .category.selected .main-button i {
@@ -528,13 +537,9 @@ footer a {
   width: 100%;
   overflow: auto;
   overflow-y: auto;
-  top: 18px;
+  top: 0px;
   bottom: 140px;
   position: absolute;
-}
-/* line 138, ../../Sass/Core/_navigation.scss */
-.main-nav .result {
-  padding: 0 18px 2px;
 }
 /* line 141, ../../Sass/Core/_navigation.scss */
 .main-nav .result a {
@@ -542,7 +547,7 @@ footer a {
   display: block;
   color: #fff;
   text-decoration: none;
-  padding: 10px 12px;
+  padding: 14px 20px;
 }
 /* line 148, ../../Sass/Core/_navigation.scss */
 .main-nav .result a span {
@@ -550,30 +555,27 @@ footer a {
   -webkit-border-radius: 50%;
   border-radius: 50%;
   display: block;
-  background-color: #4d4d4d;
+  background-color: #000;
   float: right;
   padding: 2px 5px;
   font-size: 80%;
 }
 /* line 157, ../../Sass/Core/_navigation.scss */
 .main-nav .result a:hover {
-  -moz-border-radius: 2px;
-  -webkit-border-radius: 2px;
-  border-radius: 2px;
-  background-color: #2c2c2c;
+  background-color: #000;
 }
-/* line 163, ../../Sass/Core/_navigation.scss */
+/* line 162, ../../Sass/Core/_navigation.scss */
 .main-nav .result:last-of-type a {
   border-bottom: 0px;
 }
-/* line 168, ../../Sass/Core/_navigation.scss */
+/* line 167, ../../Sass/Core/_navigation.scss */
 .main-nav .result.active a {
   -moz-border-radius: 2px;
   -webkit-border-radius: 2px;
   border-radius: 2px;
-  background-color: #2c2c2c;
+  background-color: #000;
 }
-/* line 175, ../../Sass/Core/_navigation.scss */
+/* line 174, ../../Sass/Core/_navigation.scss */
 .main-nav .logout, .main-nav .view-site {
   position: absolute;
   bottom: 30px;
@@ -581,33 +583,33 @@ footer a {
   width: 80px;
   text-align: center;
 }
-/* line 182, ../../Sass/Core/_navigation.scss */
+/* line 181, ../../Sass/Core/_navigation.scss */
 .main-nav .logout a, .main-nav .view-site a {
   -moz-transition: all 0.3s;
   -o-transition: all 0.3s;
   -webkit-transition: all 0.3s;
   transition: all 0.3s;
   position: relative;
-  font-family: "Open Sans", sans-serif;
+  font-family: "Cabin", sans-serif;
   color: #919191;
   text-decoration: none;
 }
-/* line 189, ../../Sass/Core/_navigation.scss */
+/* line 188, ../../Sass/Core/_navigation.scss */
 .main-nav .logout a:hover, .main-nav .view-site a:hover {
   color: #fff;
 }
-/* line 195, ../../Sass/Core/_navigation.scss */
+/* line 194, ../../Sass/Core/_navigation.scss */
 .main-nav .view-site {
   left: 110px;
   text-align: left;
   width: auto;
 }
-/* line 200, ../../Sass/Core/_navigation.scss */
+/* line 199, ../../Sass/Core/_navigation.scss */
 .main-nav .view-site i {
   position: absolute;
   top: 2px;
 }
-/* line 205, ../../Sass/Core/_navigation.scss */
+/* line 204, ../../Sass/Core/_navigation.scss */
 .main-nav .view-site span {
   margin-left: 22px;
 }
@@ -616,7 +618,7 @@ footer a {
   .main-nav {
     width: 288px;
   }
-  /* line 214, ../../Sass/Core/_navigation.scss */
+  /* line 213, ../../Sass/Core/_navigation.scss */
   .main-nav .category .sub-nav {
     width: 208px;
   }
@@ -624,7 +626,7 @@ footer a {
 
 /* line 3, ../../Sass/Core/_typography.scss */
 html {
-  font-family: "Open Sans", sans-serif;
+  font-family: "Cabin", sans-serif;
   font-size: 80%;
 }
 
@@ -641,7 +643,7 @@ html {
   -moz-border-radius: 3px;
   -webkit-border-radius: 3px;
   border-radius: 3px;
-  font-weight: 400;
+  font-weight: 500;
   display: block;
   border: 1px solid #b8b8b8;
   background-color: #e5e5e5;
@@ -656,19 +658,18 @@ html {
 }
 /* line 17, ../../Js/UIComponents/Buttons/_button.scss */
 .btn:hover {
-  background-color: #a9a9a9;
-  color: #fff;
+  border-color: #413851;
 }
-/* line 22, ../../Js/UIComponents/Buttons/_button.scss */
+/* line 21, ../../Js/UIComponents/Buttons/_button.scss */
 .main-cta.btn {
-  background-color: #3366cc;
+  background-color: #413851;
   color: #fff;
-  border-color: #3366cc;
+  border-color: #413851;
 }
-/* line 27, ../../Js/UIComponents/Buttons/_button.scss */
+/* line 26, ../../Js/UIComponents/Buttons/_button.scss */
 .main-cta.btn:hover {
-  background-color: #003399;
-  border-color: #003399;
+  background-color: #2c263d;
+  border-color: #2c263d;
 }
 @media screen and (min-width: 1200px) {
   /* line 1, ../../Js/UIComponents/Buttons/_button.scss */
@@ -677,7 +678,7 @@ html {
   }
 }
 
-/* line 41, ../../Js/UIComponents/Buttons/_button.scss */
+/* line 40, ../../Js/UIComponents/Buttons/_button.scss */
 .btn .fa {
   position: absolute;
   left: 4px;
@@ -686,7 +687,7 @@ html {
   padding: 5px;
 }
 
-/* line 50, ../../Js/UIComponents/Buttons/_button.scss */
+/* line 49, ../../Js/UIComponents/Buttons/_button.scss */
 .btn-icon {
   text-decoration: none;
   border: none;
@@ -695,7 +696,7 @@ html {
   cursor: pointer;
   outline: none;
 }
-/* line 58, ../../Js/UIComponents/Buttons/_button.scss */
+/* line 57, ../../Js/UIComponents/Buttons/_button.scss */
 .btn-icon .fa {
   -moz-transition: color 0.3s;
   -o-transition: color 0.3s;
@@ -705,20 +706,20 @@ html {
   color: black;
   padding: 10px;
 }
-/* line 64, ../../Js/UIComponents/Buttons/_button.scss */
+/* line 63, ../../Js/UIComponents/Buttons/_button.scss */
 .collection-actions .btn-icon .fa {
   padding-left: 0;
 }
-/* line 69, ../../Js/UIComponents/Buttons/_button.scss */
+/* line 68, ../../Js/UIComponents/Buttons/_button.scss */
 .btn-icon:hover .fa {
-  color: #3366cc;
+  color: #4af386;
 }
 
 /**
  * Enabled disabled anchor elements
  * http://stackoverflow.com/a/10276157/716689
  */
-/* line 78, ../../Js/UIComponents/Buttons/_button.scss */
+/* line 77, ../../Js/UIComponents/Buttons/_button.scss */
 a[disabled], button[disabled], input[disabled] {
   filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=50);
   opacity: 0.5;
@@ -727,7 +728,7 @@ a[disabled], button[disabled], input[disabled] {
   border-color: #b8b8b8 !important;
   color: #333 !important;
 }
-/* line 85, ../../Js/UIComponents/Buttons/_button.scss */
+/* line 84, ../../Js/UIComponents/Buttons/_button.scss */
 a[disabled]:hover, button[disabled]:hover, input[disabled]:hover {
   background: #e5e5e5 !important;
 }
@@ -736,7 +737,7 @@ a[disabled]:hover, button[disabled]:hover, input[disabled]:hover {
     When a button action has been initiated we can set it as 'loading' which should show some sort
     of loading gif to let the user know the action is in progress.
 */
-/* line 94, ../../Js/UIComponents/Buttons/_button.scss */
+/* line 93, ../../Js/UIComponents/Buttons/_button.scss */
 .btn.loading {
   background: url("img/loaders/generic-horizontal.gif") no-repeat 50%;
   text-indent: -9999px;
@@ -745,7 +746,7 @@ a[disabled]:hover, button[disabled]:hover, input[disabled]:hover {
       Override some transition bits that bootstrap adds on hover
   */
 }
-/* line 102, ../../Js/UIComponents/Buttons/_button.scss */
+/* line 101, ../../Js/UIComponents/Buttons/_button.scss */
 .btn.loading:hover {
   background-position: 50%;
   transition: none;
@@ -756,30 +757,31 @@ input[type="text"], input[type="email"], input[type="password"], input[type="num
   -moz-border-radius: 2px;
   -webkit-border-radius: 2px;
   border-radius: 2px;
-  font-family: "Open Sans", sans-serif;
+  font-family: "Cabin", sans-serif;
+  font-size: 1em;
   border: 1px solid #d2d2d2;
   padding: 10px;
   width: 100%;
 }
 
-/* line 20, ../../Js/UIComponents/FormFields/_formfields.scss */
+/* line 21, ../../Js/UIComponents/FormFields/_formfields.scss */
 input[type="color"] {
   -moz-border-radius: 2px;
   -webkit-border-radius: 2px;
   border-radius: 2px;
-  font-family: "Open Sans", sans-serif;
+  font-family: "Cabin", sans-serif;
   border: 1px solid #d2d2d2;
   width: 40px;
   height: 40px;
 }
 
-/* line 28, ../../Js/UIComponents/FormFields/_formfields.scss */
+/* line 29, ../../Js/UIComponents/FormFields/_formfields.scss */
 .text-block-display-value {
   padding: 1rem;
   background: #fafafa;
 }
 
-/* line 33, ../../Js/UIComponents/FormFields/_formfields.scss */
+/* line 34, ../../Js/UIComponents/FormFields/_formfields.scss */
 .color-box {
   -moz-border-radius: 3px;
   -webkit-border-radius: 3px;
@@ -791,18 +793,18 @@ input[type="color"] {
   padding-top: 13px;
   text-indent: 50px;
 }
-/* line 42, ../../Js/UIComponents/FormFields/_formfields.scss */
+/* line 43, ../../Js/UIComponents/FormFields/_formfields.scss */
 .color-box.edit {
   position: absolute;
   top: 0;
   z-index: -1;
 }
 
-/* line 50, ../../Js/UIComponents/FormFields/_formfields.scss */
+/* line 51, ../../Js/UIComponents/FormFields/_formfields.scss */
 .filtered-dd .btn-icon .fa {
   padding: 9px;
 }
-/* line 54, ../../Js/UIComponents/FormFields/_formfields.scss */
+/* line 55, ../../Js/UIComponents/FormFields/_formfields.scss */
 .filtered-dd .btn-remove {
   position: absolute;
   right: 25px;
@@ -810,7 +812,7 @@ input[type="color"] {
   z-index: 2;
 }
 
-/* line 62, ../../Js/UIComponents/FormFields/_formfields.scss */
+/* line 63, ../../Js/UIComponents/FormFields/_formfields.scss */
 .form-validation-summary li {
   padding: 5px;
   margin-top: -1px;
@@ -822,47 +824,47 @@ input[type="color"] {
   position: relative;
 }
 
-/* line 73, ../../Js/UIComponents/FormFields/_formfields.scss */
+/* line 74, ../../Js/UIComponents/FormFields/_formfields.scss */
 .selectize-input, .selectize-control.single .selectize-input {
   -moz-box-shadow: none;
   -webkit-box-shadow: none;
   box-shadow: none;
 }
 
-/* line 77, ../../Js/UIComponents/FormFields/_formfields.scss */
+/* line 78, ../../Js/UIComponents/FormFields/_formfields.scss */
 .selectize-dropdown {
   position: relative !important;
   top: auto !important;
 }
 
-/* line 82, ../../Js/UIComponents/FormFields/_formfields.scss */
+/* line 83, ../../Js/UIComponents/FormFields/_formfields.scss */
 .selectize-control {
   width: 100% !important;
 }
 
-/* line 85, ../../Js/UIComponents/FormFields/_formfields.scss */
+/* line 86, ../../Js/UIComponents/FormFields/_formfields.scss */
 .selectize-control.single .selectize-input {
   background: none;
 }
 
-/* line 88, ../../Js/UIComponents/FormFields/_formfields.scss */
+/* line 89, ../../Js/UIComponents/FormFields/_formfields.scss */
 .ui-select-container[theme="selectize"].direction-up .ui-select-dropdown {
   box-shadow: none;
   margin-top: -4px;
 }
 
-/* line 92, ../../Js/UIComponents/FormFields/_formfields.scss */
+/* line 93, ../../Js/UIComponents/FormFields/_formfields.scss */
 .selectize-dropdown .active {
-  background: #d0defc;
+  background: #f5f5f6;
   color: #000;
 }
 
-/* line 96, ../../Js/UIComponents/FormFields/_formfields.scss */
+/* line 97, ../../Js/UIComponents/FormFields/_formfields.scss */
 .selectize-control.single .selectize-input, .selectize-dropdown.single {
   border-color: #d2d2d2;
 }
 
-/* line 101, ../../Js/UIComponents/FormFields/_formfields.scss */
+/* line 102, ../../Js/UIComponents/FormFields/_formfields.scss */
 .selectize-control.single .selectize-input:after {
   -moz-transition: color 0.3s;
   -o-transition: color 0.3s;
@@ -875,16 +877,16 @@ input[type="color"] {
   top: 11px;
   right: 23px;
 }
-/* line 111, ../../Js/UIComponents/FormFields/_formfields.scss */
+/* line 112, ../../Js/UIComponents/FormFields/_formfields.scss */
 .selectize-control.single .selectize-input:hover:after {
-  color: #3366cc;
+  color: #4af386;
 }
 
-/* line 116, ../../Js/UIComponents/FormFields/_formfields.scss */
+/* line 117, ../../Js/UIComponents/FormFields/_formfields.scss */
 .form-field-text-area {
   z-index: 10000 !important;
 }
-/* line 119, ../../Js/UIComponents/FormFields/_formfields.scss */
+/* line 120, ../../Js/UIComponents/FormFields/_formfields.scss */
 .form-field-text-area .mce-fullscreen {
   top: 70px;
   bottom: 0;
@@ -893,7 +895,7 @@ input[type="color"] {
   right: 0;
 }
 @media screen and (min-width: 950px) {
-  /* line 128, ../../Js/UIComponents/FormFields/_formfields.scss */
+  /* line 129, ../../Js/UIComponents/FormFields/_formfields.scss */
   .form-field-text-area .mce-fullscreen {
     left: 288px;
   }
@@ -927,7 +929,7 @@ input[type="color"] {
   background-color: #fff;
   padding: 10px 30px;
   font-size: 180%;
-  font-weight: 300;
+  font-weight: 400;
   line-height: 50px;
   top: 0;
   left: 228px;
@@ -947,7 +949,7 @@ input[type="color"] {
 }
 /* line 24, ../../Js/UIComponents/Layout/_layout.scss */
 .page-header a:hover {
-  color: #3366cc;
+  color: #413851;
   text-decoration: underline;
 }
 
@@ -966,7 +968,7 @@ input[type="color"] {
 }
 /* line 42, ../../Js/UIComponents/Layout/_layout.scss */
 .page-sub-header a {
-  color: #3366cc;
+  color: #413851;
 }
 /* line 46, ../../Js/UIComponents/Layout/_layout.scss */
 .page-sub-header:hover {
@@ -1116,7 +1118,7 @@ input[type="color"] {
   -o-transition: all 0.2s;
   -webkit-transition: all 0.2s;
   transition: all 0.2s;
-  border-top: 3px solid #3366cc;
+  border-top: 3px solid #413851;
   content: '';
   position: absolute;
   top: 0;
@@ -1155,11 +1157,11 @@ input[type="color"] {
 }
 /* line 216, ../../Js/UIComponents/Layout/_layout.scss */
 .page-body fieldset legend button.show:hover {
-  color: #003399;
+  color: #2c263d;
 }
 /* line 220, ../../Js/UIComponents/Layout/_layout.scss */
 .page-body fieldset legend button.show.active {
-  color: #3366cc;
+  color: #2c263d;
 }
 /* line 227, ../../Js/UIComponents/Layout/_layout.scss */
 .page-body fieldset .help-inline {
@@ -1167,24 +1169,27 @@ input[type="color"] {
 }
 /* line 232, ../../Js/UIComponents/Layout/_layout.scss */
 .page-body fieldset.show-helpers .help-inline {
+  -moz-border-radius: 3px;
+  -webkit-border-radius: 3px;
+  border-radius: 3px;
   -moz-transition: all 0.2s;
   -o-transition: all 0.2s;
   -webkit-transition: all 0.2s;
   transition: all 0.2s;
-  border-color: #fff;
+  margin: 5px 25px;
+  border: 1px solid #413851;
+  border-color: #413851;
   background-color: #fff;
-  color: #6699ff;
+  color: #413851;
   font-style: italic;
-  width: 100%;
   display: block;
-  float: right;
-  padding: 10px;
+  float: left;
+  padding: 10px 20px;
   position: relative;
-  left: -20px;
   z-index: 2;
   top: -25px;
 }
-/* line 247, ../../Js/UIComponents/Layout/_layout.scss */
+/* line 248, ../../Js/UIComponents/Layout/_layout.scss */
 .page-body fieldset.show-helpers .help-inline:before {
   -moz-transition: all 0.3s;
   -o-transition: all 0.3s;
@@ -1192,14 +1197,14 @@ input[type="color"] {
   transition: all 0.3s;
   content: '';
   position: absolute;
-  left: -12px;
-  top: 10px;
+  left: 12px;
+  top: -12px;
   border-left: 6px solid transparent;
-  border-right: 6px solid #6699ff;
+  border-right: 6px solid transparent;
   border-top: 6px solid transparent;
-  border-bottom: 6px solid transparent;
+  border-bottom: 6px solid #413851;
 }
-/* line 259, ../../Js/UIComponents/Layout/_layout.scss */
+/* line 260, ../../Js/UIComponents/Layout/_layout.scss */
 .page-body fieldset.show-helpers .help-inline:after {
   -moz-transition: all 0.3s;
   -o-transition: all 0.3s;
@@ -1207,36 +1212,65 @@ input[type="color"] {
   transition: all 0.3s;
   content: '';
   position: absolute;
-  left: -10px;
-  top: 11px;
+  left: 13px;
+  top: -10px;
   border-left: 5px solid transparent;
-  border-right: 5px solid #fff;
+  border-right: 5px solid transparent;
   border-top: 5px solid transparent;
-  border-bottom: 5px solid transparent;
+  border-bottom: 5px solid #fff;
 }
-/* line 271, ../../Js/UIComponents/Layout/_layout.scss */
+/* line 272, ../../Js/UIComponents/Layout/_layout.scss */
 .page-body fieldset.show-helpers .help-inline small {
   font-size: 95%;
   line-height: 105%;
 }
 @media screen and (min-width: 1200px) {
-  /* line 278, ../../Js/UIComponents/Layout/_layout.scss */
+  /* line 279, ../../Js/UIComponents/Layout/_layout.scss */
   .page-body fieldset.show-helpers .control-group-area {
     width: 72%;
   }
-  /* line 282, ../../Js/UIComponents/Layout/_layout.scss */
+  /* line 283, ../../Js/UIComponents/Layout/_layout.scss */
   .page-body fieldset.show-helpers .help-inline {
-    -moz-border-radius: 3px;
-    -webkit-border-radius: 3px;
-    border-radius: 3px;
-    border: 1px solid #6699ff;
+    margin: 0;
     width: 25%;
     padding: 10px;
     top: 23px;
+    left: -20px;
+    float: right;
     margin-bottom: 10px;
   }
+  /* line 292, ../../Js/UIComponents/Layout/_layout.scss */
+  .page-body fieldset.show-helpers .help-inline:before {
+    -moz-transition: all 0.3s;
+    -o-transition: all 0.3s;
+    -webkit-transition: all 0.3s;
+    transition: all 0.3s;
+    content: '';
+    position: absolute;
+    left: -12px;
+    top: 10px;
+    border-left: 6px solid transparent;
+    border-right: 6px solid #413851;
+    border-top: 6px solid transparent;
+    border-bottom: 6px solid transparent;
+  }
+  /* line 304, ../../Js/UIComponents/Layout/_layout.scss */
+  .page-body fieldset.show-helpers .help-inline:after {
+    -moz-transition: all 0.3s;
+    -o-transition: all 0.3s;
+    -webkit-transition: all 0.3s;
+    transition: all 0.3s;
+    content: '';
+    position: absolute;
+    left: -10px;
+    top: 11px;
+    border-left: 5px solid transparent;
+    border-right: 5px solid #fff;
+    border-top: 5px solid transparent;
+    border-bottom: 5px solid transparent;
+  }
 }
-/* line 295, ../../Js/UIComponents/Layout/_layout.scss */
+/* line 321, ../../Js/UIComponents/Layout/_layout.scss */
 .page-body .control-group {
   overflow: hidden;
   *zoom: 1;
@@ -1245,7 +1279,7 @@ input[type="color"] {
   position: relative;
   z-index: 1;
 }
-/* line 302, ../../Js/UIComponents/Layout/_layout.scss */
+/* line 328, ../../Js/UIComponents/Layout/_layout.scss */
 .page-body .control-group:before {
   content: '';
   position: absolute;
@@ -1258,15 +1292,15 @@ input[type="color"] {
   right: 28%;
   left: 0;
 }
-/* line 316, ../../Js/UIComponents/Layout/_layout.scss */
+/* line 342, ../../Js/UIComponents/Layout/_layout.scss */
 .page-body .control-group:last-of-type:before {
   margin-bottom: 10px;
 }
-/* line 321, ../../Js/UIComponents/Layout/_layout.scss */
+/* line 347, ../../Js/UIComponents/Layout/_layout.scss */
 .page-body .control-group:hover {
   z-index: 9999;
 }
-/* line 325, ../../Js/UIComponents/Layout/_layout.scss */
+/* line 351, ../../Js/UIComponents/Layout/_layout.scss */
 .page-body .control-group .control-group-area {
   overflow: hidden;
   *zoom: 1;
@@ -1279,11 +1313,11 @@ input[type="color"] {
   background: #fff;
   padding: 0 20px 30px;
 }
-/* line 336, ../../Js/UIComponents/Layout/_layout.scss */
+/* line 362, ../../Js/UIComponents/Layout/_layout.scss */
 .page-body .control-group .control-group-area .table-wrap {
   border-top: 0px solid #d2d2d2;
 }
-/* line 340, ../../Js/UIComponents/Layout/_layout.scss */
+/* line 366, ../../Js/UIComponents/Layout/_layout.scss */
 .page-body .control-group .control-group-area label {
   display: block;
   font-size: 100%;
@@ -1291,7 +1325,7 @@ input[type="color"] {
   text-transform: uppercase;
   padding-bottom: 10px;
 }
-/* line 350, ../../Js/UIComponents/Layout/_layout.scss */
+/* line 376, ../../Js/UIComponents/Layout/_layout.scss */
 .page-body .control-group .control-group-area.editmode label:after {
   position: absolute;
   right: 28px;
@@ -1300,21 +1334,21 @@ input[type="color"] {
   content: '\f00c';
   color: #339900;
 }
-/* line 363, ../../Js/UIComponents/Layout/_layout.scss */
+/* line 389, ../../Js/UIComponents/Layout/_layout.scss */
 .page-body .control-group .control-group-area.required.editmode label:after {
   content: '\f069';
   color: #ff6600;
 }
-/* line 372, ../../Js/UIComponents/Layout/_layout.scss */
+/* line 398, ../../Js/UIComponents/Layout/_layout.scss */
 .page-body .control-group .control-group-area.invalid.editmode label:after {
   content: '\f069';
   color: #ff0000;
 }
-/* line 379, ../../Js/UIComponents/Layout/_layout.scss */
+/* line 405, ../../Js/UIComponents/Layout/_layout.scss */
 .page-body .control-group .control-group-area .controls {
   position: relative;
 }
-/* line 382, ../../Js/UIComponents/Layout/_layout.scss */
+/* line 408, ../../Js/UIComponents/Layout/_layout.scss */
 .page-body .control-group .control-group-area .controls .btn {
   display: inline-block;
 }
@@ -1325,34 +1359,34 @@ input[type="color"] {
   }
 }
 
-/* line 394, ../../Js/UIComponents/Layout/_layout.scss */
+/* line 420, ../../Js/UIComponents/Layout/_layout.scss */
 .on-drag-hover {
-  border-top: 2px solid #3366cc;
-  border-bottom: 2px solid #3366cc;
+  border-top: 2px solid #4af386;
+  border-bottom: 2px solid #4af386;
 }
 
-/* line 399, ../../Js/UIComponents/Layout/_layout.scss */
+/* line 425, ../../Js/UIComponents/Layout/_layout.scss */
 [draggable] {
   cursor: move;
 }
 
-/* line 403, ../../Js/UIComponents/Layout/_layout.scss */
+/* line 429, ../../Js/UIComponents/Layout/_layout.scss */
 .dropdown-menu {
   background: #fff;
   left: 0;
 }
 
-/* line 408, ../../Js/UIComponents/Layout/_layout.scss */
+/* line 434, ../../Js/UIComponents/Layout/_layout.scss */
 .fa {
   font-size: 1.4em;
 }
-/* line 411, ../../Js/UIComponents/Layout/_layout.scss */
+/* line 437, ../../Js/UIComponents/Layout/_layout.scss */
 .fa.alert {
   color: #ff6600;
   margin-right: 5px;
 }
 
-/* line 417, ../../Js/UIComponents/Layout/_layout.scss */
+/* line 443, ../../Js/UIComponents/Layout/_layout.scss */
 .fa-picture-o, .btn-icon .fa-picture-o {
   font-size: 3em;
   color: #dddddd;
@@ -1420,7 +1454,7 @@ form.loading > *, table.loading > *, div.loading > *, fieldset.loading > * {
   line-height: 20px;
   color: #ffffff;
   text-align: center;
-  background-color: #3366cc;
+  background-color: #4af386;
   -webkit-transition: width 0.6s ease;
   -o-transition: width 0.6s ease;
   transition: width 0.6s ease;
@@ -1556,12 +1590,12 @@ form.loading > *, table.loading > *, div.loading > *, fieldset.loading > * {
 }
 /* line 55, ../../Js/UIComponents/Menus/_menus.scss */
 .menu .menu-options .btn:hover {
-  background-color: #d0defc;
+  background-color: #f5f5f6;
   color: #000;
 }
 /* line 63, ../../Js/UIComponents/Menus/_menus.scss */
 .menu:hover i {
-  color: #3366cc;
+  color: #4af386;
 }
 /* line 67, ../../Js/UIComponents/Menus/_menus.scss */
 .menu:hover .menu-options {
@@ -1570,10 +1604,6 @@ form.loading > *, table.loading > *, div.loading > *, fieldset.loading > * {
 
 /* line 1, ../../Js/UIComponents/Modals/_modals.scss */
 .modal-background {
-  -moz-transition: all 0.2s;
-  -o-transition: all 0.2s;
-  -webkit-transition: all 0.2s;
-  transition: all 0.2s;
   position: fixed;
   top: 0;
   left: 0;
@@ -1594,15 +1624,11 @@ form.loading > *, table.loading > *, div.loading > *, fieldset.loading > * {
   -moz-border-radius: 3px;
   -webkit-border-radius: 3px;
   border-radius: 3px;
-  -moz-transform: scale(0.85, 0.85);
-  -ms-transform: scale(0.85, 0.85);
-  -webkit-transform: scale(0.85, 0.85);
-  transform: scale(0.85, 0.85);
-  -moz-transition: all 0.2s;
-  -o-transition: all 0.2s;
-  -webkit-transition: all 0.2s;
-  transition: all 0.2s;
-  font-family: "Open Sans", sans-serif;
+  -moz-transition: -moz-transform 0.25s, opacity 0.25s;
+  -o-transition: -o-transform 0.25s, opacity 0.25s;
+  -webkit-transition: -webkit-transform 0.25s, opacity 0.25s;
+  transition: transform 0.25s, opacity 0.25s;
+  font-family: "Cabin", sans-serif;
   font-size: 13px;
   position: fixed;
   top: 35%;
@@ -1612,8 +1638,27 @@ form.loading > *, table.loading > *, div.loading > *, fieldset.loading > * {
   background: #ebebeb;
   z-index: 1000;
   margin-left: -200px;
+  overflow: hidden;
 }
 /* line 32, ../../Js/UIComponents/Modals/_modals.scss */
+.modal.is-root-modal {
+  -moz-transform: scale(0.9, 0.9);
+  -ms-transform: scale(0.9, 0.9);
+  -webkit-transform: scale(0.9, 0.9);
+  transform: scale(0.9, 0.9);
+}
+/* line 36, ../../Js/UIComponents/Modals/_modals.scss */
+.modal.is-child-modal .modal-dialog {
+  -moz-transition: -moz-transform 0.25s, opacity 0.25s;
+  -o-transition: -o-transform 0.25s, opacity 0.25s;
+  -webkit-transition: -webkit-transform 0.25s, opacity 0.25s;
+  transition: transform 0.25s, opacity 0.25s;
+  -moz-transform: translateY(100%);
+  -ms-transform: translateY(100%);
+  -webkit-transform: translateY(100%);
+  transform: translateY(100%);
+}
+/* line 41, ../../Js/UIComponents/Modals/_modals.scss */
 .modal.modal-lg {
   width: 80%;
   height: auto;
@@ -1622,8 +1667,8 @@ form.loading > *, table.loading > *, div.loading > *, fieldset.loading > * {
   bottom: 15%;
   margin-left: 0px;
 }
-/* line 41, ../../Js/UIComponents/Modals/_modals.scss */
-.modal.modal--show {
+/* line 50, ../../Js/UIComponents/Modals/_modals.scss */
+.modal.is-root-modal.modal--show {
   -moz-transform: scale(1, 1);
   -ms-transform: scale(1, 1);
   -webkit-transform: scale(1, 1);
@@ -1631,12 +1676,24 @@ form.loading > *, table.loading > *, div.loading > *, fieldset.loading > * {
   filter: progid:DXImageTransform.Microsoft.Alpha(enabled=false);
   opacity: 1;
 }
-/* line 46, ../../Js/UIComponents/Modals/_modals.scss */
+/* line 55, ../../Js/UIComponents/Modals/_modals.scss */
+.modal.is-child-modal.modal--show {
+  filter: progid:DXImageTransform.Microsoft.Alpha(enabled=false);
+  opacity: 1;
+}
+/* line 58, ../../Js/UIComponents/Modals/_modals.scss */
+.modal.is-child-modal.modal--show .modal-dialog {
+  -moz-transform: translateY(0%);
+  -ms-transform: translateY(0%);
+  -webkit-transform: translateY(0%);
+  transform: translateY(0%);
+}
+/* line 63, ../../Js/UIComponents/Modals/_modals.scss */
 .modal .page-actions {
   margin-top: 80px;
   z-index: 2;
 }
-/* line 51, ../../Js/UIComponents/Modals/_modals.scss */
+/* line 68, ../../Js/UIComponents/Modals/_modals.scss */
 .modal .page-body {
   margin-left: 170px;
   margin-top: 60px;
@@ -1647,37 +1704,37 @@ form.loading > *, table.loading > *, div.loading > *, fieldset.loading > * {
   overflow-y: scroll;
   right: 2px;
 }
-/* line 61, ../../Js/UIComponents/Modals/_modals.scss */
+/* line 78, ../../Js/UIComponents/Modals/_modals.scss */
 .modal .page-body .form-wrap {
   padding: 20px 20px 20px 0;
 }
 @media screen and (min-width: 1200px) {
-  /* line 51, ../../Js/UIComponents/Modals/_modals.scss */
+  /* line 68, ../../Js/UIComponents/Modals/_modals.scss */
   .modal .page-body {
     margin-left: 195px;
   }
 }
 
-/* line 71, ../../Js/UIComponents/Modals/_modals.scss */
+/* line 88, ../../Js/UIComponents/Modals/_modals.scss */
 .modal-dialog {
   height: 100%;
 }
-/* line 74, ../../Js/UIComponents/Modals/_modals.scss */
+/* line 91, ../../Js/UIComponents/Modals/_modals.scss */
 .modal-dialog .search-filter {
   top: auto;
   right: auto;
 }
-/* line 78, ../../Js/UIComponents/Modals/_modals.scss */
+/* line 95, ../../Js/UIComponents/Modals/_modals.scss */
 .modal-dialog .search-filter:before, .modal-dialog .search-filter:after {
   right: auto;
   left: 10px;
 }
-/* line 83, ../../Js/UIComponents/Modals/_modals.scss */
+/* line 100, ../../Js/UIComponents/Modals/_modals.scss */
 .modal-dialog .search-filter:after {
   left: 9px;
 }
 
-/* line 89, ../../Js/UIComponents/Modals/_modals.scss */
+/* line 106, ../../Js/UIComponents/Modals/_modals.scss */
 .modal-header {
   -moz-border-radius-topleft: 3px;
   -webkit-border-top-left-radius: 3px;
@@ -1695,7 +1752,7 @@ form.loading > *, table.loading > *, div.loading > *, fieldset.loading > * {
   border-bottom: 1px solid #ebebeb;
   z-index: 10;
 }
-/* line 102, ../../Js/UIComponents/Modals/_modals.scss */
+/* line 119, ../../Js/UIComponents/Modals/_modals.scss */
 .modal-header .close {
   position: absolute;
   right: 10px;
@@ -1704,12 +1761,12 @@ form.loading > *, table.loading > *, div.loading > *, fieldset.loading > * {
   color: black;
 }
 
-/* line 111, ../../Js/UIComponents/Modals/_modals.scss */
+/* line 128, ../../Js/UIComponents/Modals/_modals.scss */
 .modal-content {
   padding-left: 20px;
 }
 
-/* line 115, ../../Js/UIComponents/Modals/_modals.scss */
+/* line 132, ../../Js/UIComponents/Modals/_modals.scss */
 .modal-body {
   position: absolute;
   top: 80px;
@@ -1718,7 +1775,7 @@ form.loading > *, table.loading > *, div.loading > *, fieldset.loading > * {
   line-height: 15px;
 }
 
-/* line 123, ../../Js/UIComponents/Modals/_modals.scss */
+/* line 140, ../../Js/UIComponents/Modals/_modals.scss */
 .modal-actions {
   position: absolute;
   bottom: 10px;
@@ -1729,7 +1786,7 @@ form.loading > *, table.loading > *, div.loading > *, fieldset.loading > * {
   padding-right: 20px;
   text-align: right;
 }
-/* line 133, ../../Js/UIComponents/Modals/_modals.scss */
+/* line 150, ../../Js/UIComponents/Modals/_modals.scss */
 .modal-actions .btn {
   display: inline-block;
 }
@@ -1815,7 +1872,7 @@ form.loading > *, table.loading > *, div.loading > *, fieldset.loading > * {
 /* line 26, ../../Js/UIComponents/Table/_table.scss */
 .table-wrap {
   margin-bottom: 10px;
-  border-top: 3px solid #3366cc;
+  border-top: 3px solid #413851;
   position: relative;
 }
 /* line 31, ../../Js/UIComponents/Table/_table.scss */
@@ -1853,10 +1910,6 @@ form.loading > *, table.loading > *, div.loading > *, fieldset.loading > * {
   -khtml-user-select: none;
   -ms-user-select: none;
 }
-/* line 65, ../../Js/UIComponents/Table/_table.scss */
-.table tbody tr:nth-child(odd) {
-  background-color: #f8f8f8;
-}
 /* line 69, ../../Js/UIComponents/Table/_table.scss */
 .table tbody tr td {
   border-top: 1px solid #dddddd;
@@ -1871,7 +1924,7 @@ form.loading > *, table.loading > *, div.loading > *, fieldset.loading > * {
 }
 /* line 80, ../../Js/UIComponents/Table/_table.scss */
 .table tbody tr td label {
-  font-weight: 400;
+  font-weight: 500;
   font-weight: 400 !important;
   text-transform: none !important;
 }
@@ -1888,7 +1941,7 @@ form.loading > *, table.loading > *, div.loading > *, fieldset.loading > * {
   -moz-border-radius-bottomleft: 2px;
   -webkit-border-bottom-left-radius: 2px;
   border-bottom-left-radius: 2px;
-  background-color: #3366cc;
+  background-color: #4af386;
   display: block;
 }
 /* line 98, ../../Js/UIComponents/Table/_table.scss */
@@ -1911,10 +1964,10 @@ form.loading > *, table.loading > *, div.loading > *, fieldset.loading > * {
   .table tbody tr td .row-type-folder i {
     background-image: url('/Admin/Modules/Shared/Content/css/img/icons/retina.png');
     background-position: 0 -89px;
-    -moz-background-size: 93px auto;
-    -o-background-size: 93px auto;
-    -webkit-background-size: 93px auto;
-    background-size: 93px auto;
+    -moz-background-size: 250px auto;
+    -o-background-size: 250px auto;
+    -webkit-background-size: 250px auto;
+    background-size: 250px auto;
   }
 }
 /* line 105, ../../Js/UIComponents/Table/_table.scss */
@@ -1947,10 +2000,10 @@ form.loading > *, table.loading > *, div.loading > *, fieldset.loading > * {
   .table tbody tr td .row-type-doc i {
     background-image: url('/Admin/Modules/Shared/Content/css/img/icons/retina.png');
     background-position: 0 -70px;
-    -moz-background-size: 93px auto;
-    -o-background-size: 93px auto;
-    -webkit-background-size: 93px auto;
-    background-size: 93px auto;
+    -moz-background-size: 250px auto;
+    -o-background-size: 250px auto;
+    -webkit-background-size: 250px auto;
+    background-size: 250px auto;
   }
 }
 /* line 118, ../../Js/UIComponents/Table/_table.scss */
@@ -1971,10 +2024,10 @@ form.loading > *, table.loading > *, div.loading > *, fieldset.loading > * {
   .table tbody tr td .action-edit {
     background-image: url('/Admin/Modules/Shared/Content/css/img/icons/retina.png');
     background-position: 0 0;
-    -moz-background-size: 93px auto;
-    -o-background-size: 93px auto;
-    -webkit-background-size: 93px auto;
-    background-size: 93px auto;
+    -moz-background-size: 250px auto;
+    -o-background-size: 250px auto;
+    -webkit-background-size: 250px auto;
+    background-size: 250px auto;
   }
 }
 /* line 123, ../../Js/UIComponents/Table/_table.scss */
@@ -1995,10 +2048,10 @@ form.loading > *, table.loading > *, div.loading > *, fieldset.loading > * {
   .table tbody tr td .action-open {
     background-image: url('/Admin/Modules/Shared/Content/css/img/icons/retina.png');
     background-position: 0 -35px;
-    -moz-background-size: 93px auto;
-    -o-background-size: 93px auto;
-    -webkit-background-size: 93px auto;
-    background-size: 93px auto;
+    -moz-background-size: 250px auto;
+    -o-background-size: 250px auto;
+    -webkit-background-size: 250px auto;
+    background-size: 250px auto;
   }
 }
 /* line 128, ../../Js/UIComponents/Table/_table.scss */
@@ -2011,7 +2064,7 @@ form.loading > *, table.loading > *, div.loading > *, fieldset.loading > * {
 }
 /* line 137, ../../Js/UIComponents/Table/_table.scss */
 .table tbody tr.selected td:not(.empty), .table tbody tr:hover td:not(.empty) {
-  background-color: #d0defc;
+  background-color: #f5f5f6;
 }
 /* line 141, ../../Js/UIComponents/Table/_table.scss */
 .table tbody tr a {

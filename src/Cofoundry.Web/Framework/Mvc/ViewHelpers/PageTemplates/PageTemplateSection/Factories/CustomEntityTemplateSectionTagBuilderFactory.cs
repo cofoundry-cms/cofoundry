@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Cofoundry.Domain;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -15,11 +16,17 @@ namespace Cofoundry.Web
     public class CustomEntityTemplateSectionTagBuilderFactory : ICustomEntityTemplateSectionTagBuilderFactory
     {
         private readonly IPageModuleRenderer _moduleRenderer;
+        private readonly IPageModuleDataModelTypeFactory _moduleDataModelTypeFactory;
+        private readonly IPageModuleTypeFileNameFormatter _moduleTypeFileNameFormatter;
 
         public CustomEntityTemplateSectionTagBuilderFactory(
-            IPageModuleRenderer moduleRenderer)
+            IPageModuleRenderer moduleRenderer,
+            IPageModuleDataModelTypeFactory moduleDataModelTypeFactory,
+            IPageModuleTypeFileNameFormatter moduleTypeFileNameFormatter)
         {
             _moduleRenderer = moduleRenderer;
+            _moduleDataModelTypeFactory = moduleDataModelTypeFactory;
+            _moduleTypeFileNameFormatter = moduleTypeFileNameFormatter;
         }
 
         public ICustomEntityTemplateSectionTagBuilder<TModel> Create<TModel>(
@@ -29,7 +36,7 @@ namespace Cofoundry.Web
             )
             where TModel : ICustomEntityDetailsDisplayViewModel
         {
-            return new CustomEntityTemplateSectionTagBuilder<TModel>(_moduleRenderer, htmlHelper, customEntityViewModel, sectionName);
+            return new CustomEntityTemplateSectionTagBuilder<TModel>(_moduleRenderer, _moduleDataModelTypeFactory, _moduleTypeFileNameFormatter, htmlHelper, customEntityViewModel, sectionName);
         }
     }
 }

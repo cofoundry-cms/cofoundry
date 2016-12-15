@@ -1,0 +1,41 @@
+.cofoundry-sv__options {
+    float: right;
+    padding: 0 5px 0 0;
+    margin-left: 10px;
+    border-left: 1px solid $color-secondary-dark;
+    height: 100%;
+}
+
+.cofoundry-sv__options__button {
+    border:1px solid $color-secondary-dark;
+    display:inline-block;
+    border-radius: 4px;
+    height: 100%;
+    width: 97px;
+    color: #fff;
+    text-transform: uppercase;
+    font-size: 10px;
+    cursor: pointer;
+    vertical-align:top;
+    text-align:center;
+    text-decoration: none;
+
+    span {
+        margin: 0 auto;
+        display: block;
+        text-align: center;
+        text-decoration: none;
+        font-size: 2em;
+        padding: 8px 0 2px;
+    }
+
+    &:first-of-type {
+        margin: 0 10px;
+    }
+
+    &:hover {
+        background-color: $color-secondary-dark;
+        color:#fff;
+        text-decoration: none;
+    }
+}

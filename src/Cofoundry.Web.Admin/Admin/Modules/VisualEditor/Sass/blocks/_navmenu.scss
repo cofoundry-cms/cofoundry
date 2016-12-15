@@ -1,0 +1,65 @@
+.cofoundry-sv__navmenu {
+    float: left;
+    height: 100%;
+
+    .cofoundry-sv__mini-menu {
+        width:40px;
+    }
+
+    .cofoundry-sv__mini-menu__toggle {
+        border-left: 0;
+
+        span {
+            width: 40px;
+            position: relative;
+        }
+
+        img {
+            width: 100%;
+        }
+    }
+}
+
+.cofoundry-sv__navmenu-list {
+    padding: 0;
+    margin: 0;
+    list-style: none;
+
+    .cofoundry-sv__navmenu-list__divider {
+        border-top: 1px solid $color-secondary;
+        padding-top: 5px;
+        margin-top: 10px;
+    }
+}
+
+.cofoundry-sv__navmenu-list__item {
+    @include border-radius(2px);
+    margin: 0;
+    padding: 10px;
+    display:block;
+    font-size: 11px;
+    cursor: pointer; 
+    color: $color-text;
+    text-decoration:none;
+
+    span {
+        width: 10px;
+        height: 10px;
+        font-size: 1em;
+        margin-right: 2px;
+    }
+
+    &:last-of-type {
+        border: 0;
+    }
+
+    &:hover {
+        color: #fff;
+        text-decoration: none;
+    }
+
+    &.active {
+        background-color: $color-secondary;
+        color:#fff;
+    }
+}

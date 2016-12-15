@@ -61,7 +61,6 @@ namespace Cofoundry.Web
         public async Task<ActionResult> Page(
             string path, 
             string mode, 
-            bool siteviewer = false, 
             int? version = null,
             string editType = "entity"
             )
@@ -73,7 +72,6 @@ namespace Cofoundry.Web
             {
                 Path = path,
                 SiteViewerMode = mode,
-                IsSiteViewerRequested = !siteviewer,
                 VersionId = version,
                 IsEditingCustomEntity = editType == "entity"
             };

@@ -1,5 +1,5 @@
 ﻿.modal-background {
-    @include transition(all .2s);
+    //@include transition(all .2s);
     position:fixed;
     top:0;
     left:0;
@@ -16,8 +16,7 @@
 .modal {
     @include opacity(0);
     @include border-radius(3px);
-    @include transform(scale(0.85,0.85));
-    @include transition(all .2s);
+    @include transition(transform .25s, opacity .25s);
     font-family:$fontstack-default;
     font-size: 13px;
     position:fixed;
@@ -28,6 +27,16 @@
     background:#ebebeb;
     z-index:1000;
     margin-left:-200px;
+    overflow:hidden;
+
+    &.is-root-modal {
+        @include transform(scale(0.90,0.90));
+    }
+
+    &.is-child-modal .modal-dialog {
+        @include transition(transform .25s, opacity .25s);
+        @include transform(translateY(100%));
+    }
 
     &.modal-lg {
         width:80%;
@@ -38,9 +47,17 @@
         margin-left:0px;
     }
 
-    &.modal--show {
+    &.is-root-modal.modal--show {
         @include transform(scale(1,1));
         @include opacity(1);
+    }
+
+    &.is-child-modal.modal--show {
+        @include opacity(1);
+
+        .modal-dialog {
+            @include transform(translateY(0%));
+        }
     }
 
     .page-actions {

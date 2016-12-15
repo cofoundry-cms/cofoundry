@@ -1,0 +1,21 @@
+.cofoundry-sv__settings {
+    float: right;
+    height: 100%;
+
+    .cofoundry-sv__mini-menu {
+        width: 40px;
+    }
+
+    .cofoundry-sv__mini-menu__content {
+        left: auto;
+        right: 0;
+        transform: translate(0, -100%);
+    }
+
+    .cofoundry-sv__version-list__item span {
+        float: right;
+        width: auto;
+        height: auto;
+        background-color: transparent;
+    }
+}
