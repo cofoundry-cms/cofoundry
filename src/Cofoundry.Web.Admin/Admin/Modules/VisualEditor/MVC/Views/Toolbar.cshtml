@@ -234,55 +234,21 @@
 {
 <!-- SECTION TOOLBAR UI -->
 <div id="cofoundry-sv__section-popover-container">
-    <div class="cofoundry-sv__section-popover-inner">
-        <button
-            id="cofoundry-sv__btn-add-section-module"
-            type="button"
-            class="popup"
-            title="Add a new module"
-            ng-if="isMultiModule">
-            +
-        </button>
-        <h2 id="cofoundry-sv__section-name">{{sectionName}}</h2>
-    </div>
+    <button
+        id="cofoundry-sv__btn-add-section-module"
+        type="button"
+        class="popup"
+        title="Add a new module">
+        +
+    </button>
+    <div class="cofoundry-sv__section-popover__line"></div>
 </div>
 <!-- END SECTION TOOLBAR UI -->
 
 <!-- MODULE TOOLBAR UI -->
 <div id="cofoundry-sv__module-popover-container">
-    <ul ng-class="{ disabled: globalLoadState.isLoading }">
-        <li class="up"
-            ng-if="isMultiModule">
-            <button 
-                id="cofoundry-sv__btn-module-moveup"
-                type="button" 
-                title="Move this module up">
-                <i class="fa fa-chevron-up"></i> Move up
-            </button>
-        </li>
-
-        <li class="down"
-            ng-if="isMultiModule">
-            <button 
-                id="cofoundry-sv__btn-module-movedown"
-                type="button"
-                title="Move this module down">
-                <i class="fa fa-chevron-down"></i> Move down
-            </button>
-        </li>
-
-        <li class="edit"
-            ng-if="versionModuleId">
-            <button
-                id="cofoundry-sv__btn-module-edit"
-                type="button"
-                title="Edit this module">
-                <i class="fa fa-edit"></i> Edit
-            </button>
-        </li>
-
-        <li class="add"
-            ng-if="!versionModuleId">
+    <ul class="cofoundry-sv__module-popover--main-actions">
+        <li class="add">
             <button 
                 id="cofoundry-sv__btn-module-add"
                 type="button"
@@ -290,35 +256,58 @@
                 <i class="fa fa-plus"></i> Add
             </button>
         </li>
-
-        <li class="delete"
-            ng-if="versionModuleId">
-            <button 
-                id="cofoundry-sv__btn-module-delete"
-                type="button"
-                title="Delete this module">
-                <i class="fa fa-trash-o"></i> Delete
+        <li class="edit">
+            <button id="cofoundry-sv__btn-module-edit"
+                    type="button"
+                    title="Edit this module">
+                <i class="fa fa-edit"></i> Edit
             </button>
         </li>
-
-        <li class="addAbove"
-            ng-if="isMultiModule">
-            <button 
-                id="cofoundry-sv__btn-module-addabove"
-                type="button"
-                title="Add a new module above">
-                <i class="fa fa-chevron-circle-up"></i> Add above
-            </button>
-        </li>
-
-        <li class="addBelow"
-            ng-if="isMultiModule">
-            <button 
-                id="cofoundry-sv__btn-module-addbelow"
-                type="button"
-                title="Add a new module below">
-                <i class="fa fa-chevron-circle-down"></i> Add below
-            </button>
+        <li class="advanced">
+            <button type="button">...</button>
+            <div class="cofoundry-sv__module-popover--adv-actions">
+                
+                <ul>
+                    <li>
+                        <span class="cofoundry-sv__section-name">{{sectionName}}</span>
+                    </li>
+                    <li class="up">
+                        <button id="cofoundry-sv__btn-module-moveup"
+                                type="button"
+                                title="Move this module up">
+                            <i class="fa fa-chevron-up"></i> Move up
+                        </button>
+                    </li>
+                    <li class="down">
+                        <button id="cofoundry-sv__btn-module-movedown"
+                                type="button"
+                                title="Move this module down">
+                            <i class="fa fa-chevron-down"></i> Move down
+                        </button>
+                    </li>
+                    <li class="addAbove">
+                        <button id="cofoundry-sv__btn-module-addabove"
+                                type="button"
+                                title="Add a new module above">
+                            <i class="fa fa-chevron-circle-up"></i> Add above
+                        </button>
+                    </li>
+                    <li class="addBelow">
+                        <button id="cofoundry-sv__btn-module-addbelow"
+                                type="button"
+                                title="Add a new module below">
+                            <i class="fa fa-chevron-circle-down"></i> Add below
+                        </button>
+                    </li>
+                    <li class="delete">
+                        <button id="cofoundry-sv__btn-module-delete"
+                                type="button"
+                                title="Delete this module">
+                            <i class="fa fa-trash-o"></i> Delete
+                        </button>
+                    </li>
+                </ul>
+            </div>
         </li>
     </ul>
 </div>

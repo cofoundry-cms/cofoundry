@@ -94,7 +94,8 @@ Cofoundry.siteViewer = (function () {
             var toolbar_section = document.getElementById('cofoundry-sv__section-popover-container'),
                 toolbar_module = document.getElementById('cofoundry-sv__module-popover-container'),
                 scope = {
-                    buttons: {}
+                    buttons: {},
+                    sectionY: -1
                 }
                 ;
 
@@ -115,10 +116,10 @@ Cofoundry.siteViewer = (function () {
 
             function addMouseEvents(rootElement, popover) {
                 var entityType = _internal.model.isCustomEntityRoute ? 'custom-entity' : 'page';
-                addEventsForComponent('section', onSectionMouseEnter, onSectionMouseLeave);
+                addEventsForComponent('section', onSectionMouseEnter, onSectionMouseLeave, onSectionMouseMove);
                 addEventsForComponent('section-module', onModuleMouseEnter, onModuleMouseLeave);
 
-                function addEventsForComponent(componentName, onMouseEnterFn, onMouseLeaveFn) {
+                function addEventsForComponent(componentName, onMouseEnterFn, onMouseLeaveFn, onMouseMoveFn) {
                     var selectorAttribute = 'data-cms-' + entityType + '-' + componentName,
                         elements, len, i;
 
@@ -134,6 +135,9 @@ Cofoundry.siteViewer = (function () {
                     for (i = 0; i < len; ++i) {
                         elements[i].addEventListener('mouseenter', onMouseEnterFn);
                         elements[i].addEventListener('mouseleave', onMouseLeaveFn);
+                        if (onMouseMoveFn) {
+                            elements[i].addEventListener('mousemove', onMouseMoveFn);
+                        }
                     }
                 }
             }
@@ -161,9 +165,16 @@ Cofoundry.siteViewer = (function () {
 
                 // Handlers
                 function onAddSectionModule() {
-                    handler('addSectionModule', {
+                    var action = scope.sectionAddAction || 'addSectionModule',
+                        insertMode = 'BeforeItem';
+                    if (action.indexOf('Below') > -1) insertMode = 'AfterItem';
+
+                    handler(scope.sectionAddAction || 'addSectionModule', {
+                        insertMode: insertMode,
                         pageTemplateSectionId: scope.pageTemplateSectionId,
                         permittedModuleTypes: scope.permittedModuleTypes,
+                        versionModuleId: scope.versionModuleId,
+                        pageModuleTypeId: scope.pageModuleTypeId,
                         isCustomEntity: _internal.model.isCustomEntityRoute
                     });
                 }
@@ -252,20 +263,24 @@ Cofoundry.siteViewer = (function () {
                 document.addEventListener('scroll', onScroll);
 
                 function onResize(e) {
-                    onSectionGuiChange();
+                    onSectionGuiChange(e);
                 }
                 
                 function onScroll(e) {
-                    onSectionGuiChange();
+                    onSectionGuiChange(e);
                 }
             }
 
             function onSectionMouseEnter(e) {
-                onSectionGuiChange(e.target);
+                onSectionGuiChange(e, e.target);
             }
 
             function onSectionMouseLeave() {
                 //onGuiEnd();
+            }
+
+            function onSectionMouseMove(e) {
+                onSectionGuiChange(e);
             }
 
             function onModuleMouseEnter(e) {
@@ -275,8 +290,33 @@ Cofoundry.siteViewer = (function () {
             function onModuleMouseLeave() {
                 //onGuiEnd();
             }
+        
+            function getSectionData(e, sectionEl, moduleEl) {
+                var data = {};
+                data.sectionAddAction = 'addSectionModule';
 
-            function onSectionGuiChange(el) {
+                // Position based on modules
+                if (moduleEl) {
+                    data.y = offset(moduleEl).top;
+                    data.el = moduleEl;
+                    data.sectionAddAction = 'addModuleAbove';
+
+                    var relativeY = e.clientY - data.y;
+                    if (relativeY > (data.el.offsetHeight / 2)) {
+                        data.y += data.el.offsetHeight;
+                        data.sectionAddAction = 'addModuleBelow';
+                    }
+
+                // No modules found so base on overall section
+                } else if (sectionEl) {
+                    data.y = offset(sectionEl).top;
+                    data.el = sectionEl;
+                }
+
+                return data;
+            }
+
+            function onSectionGuiChange(e, el) {
                 if (el) {
                     scope.currentElement = el;
                     scope.pageTemplateSectionId = el.getAttribute('data-cms-page-template-section-id');
@@ -285,13 +325,12 @@ Cofoundry.siteViewer = (function () {
                     scope.isMultiModule = el.getAttribute('data-cms-multi-module');
                     scope.isCustomEntity = el.hasAttribute('data-cms-custom-entity-section');
 
-                    var sectionName = __TOOLBAR_SECTION.querySelectorAll('#cofoundry-sv__section-name')[0];
-                    if (sectionName) {
-                        sectionName.innerHTML = scope.sectionName;
-                    }
-
                     showHideButton('addSectionModule', scope.isMultiModule);
                 }
+
+                var sectionData = getSectionData(e, scope.currentElement, scope.currentModuleElement);
+                scope.sectionY = sectionData.y;
+                scope.sectionAddAction = sectionData.sectionAddAction;
 
                 setPosition();
 
@@ -302,9 +341,11 @@ Cofoundry.siteViewer = (function () {
                 }
                 
                 function setPosition() {
+                    if (!scope.currentElement) return;
+
                     var elementOffset = offset(scope.currentElement),
-                        top = elementOffset.top,
-                        left = elementOffset.left + scope.currentElement.offsetWidth;
+                        top = scope.sectionY,
+                        left = elementOffset.left + (scope.currentElement.offsetWidth / 2);
 
                     scope.css = {
                         top: top + 'px',
@@ -317,6 +358,9 @@ Cofoundry.siteViewer = (function () {
                     __TOOLBAR_SECTION.style.display = 'block';
                     __TOOLBAR_SECTION.style.top = scope.css.top;
                     __TOOLBAR_SECTION.style.left = scope.css.left;
+
+                    var line = __TOOLBAR_SECTION.getElementsByClassName('cofoundry-sv__section-popover__line')[0];
+                    line.style.width = scope.currentElement.offsetWidth + 'px';
                 }
             }
 
@@ -324,6 +368,7 @@ Cofoundry.siteViewer = (function () {
                 var css = {};
 
                 if (el) {
+                    scope.currentModuleElement = el;
                     scope.versionModuleId = el.getAttribute('data-cms-version-module-id');
                     scope.pageModuleTypeId = el.getAttribute('data-cms-page-module-type-id');
 
@@ -334,6 +379,11 @@ Cofoundry.siteViewer = (function () {
                     showHideButton('moveModuleDown', scope.isMultiModule);
                     showHideButton('addModuleAbove', scope.isMultiModule);
                     showHideButton('addModuleBelow', scope.isMultiModule);
+
+                    var sectionName = __TOOLBAR_MODULE.querySelectorAll('.cofoundry-sv__section-name')[0];
+                    if (sectionName) {
+                        sectionName.innerHTML = scope.sectionName;
+                    }
                 }
 
                 setPosition();
@@ -369,6 +419,11 @@ Cofoundry.siteViewer = (function () {
             }
 
             function offset(el) {
+                if (!el) return {
+                    left: 0,
+                    top: 0
+                };
+
                 var rect = el.getBoundingClientRect();
                 return {
                     top: rect.top + document.body.scrollTop,

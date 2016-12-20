@@ -36,3 +36,182 @@
 .cofoundry-sv__section-loading {
     opacity: 0.5;
 }
+
+/* #### Hovering #### */
+#cofoundry-sv__section-popover-container, #cofoundry-sv__module-popover-container {
+    font-family:$fontstack-default;
+    font-size:85%;
+    position: absolute;
+    border-radius: 4px;
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+}
+
+/* #### Section hovering #### */
+#cofoundry-sv__section-popover-container {
+    z-index:9999999;
+    display:none;
+
+    button {
+        @include transform(translateX(-100%) translateY(-50%));
+        @include border-radius(50%);
+        border:3px solid $color-primary;
+        background-color: $color-primary;
+        color: $color-darkgrey;
+        overflow: hidden;
+        white-space: nowrap;
+        position:absolute;
+        text-align:center;
+        left: 0px;
+        
+        &:hover {
+            background-color: $color-primary;
+            color:#fff;
+        }
+    }
+
+    div {
+        width: 520px;
+        height: 2px;
+        background: #4af386;
+        margin-left: -5px;
+        position: absolute;
+        top: 0px;
+        transform: translateX(-50%);
+        z-index: -1;
+    }
+}
+
+
+/* #### Module hovering #### */
+#cofoundry-sv__module-popover-container {
+    z-index:9999999;
+    display:none;
+
+    &:before {
+        border-top-left-radius:2px;
+        border-top-right-radius:2px;
+        content: 'Module';
+        position: absolute;
+        top: -13px;
+        left: 0;
+        line-height: 10px;
+        font-size: 9px;
+        color: #fff;
+        padding: 2px 5px;
+        background:$color-secondary;
+    }
+
+    .cofoundry-sv__module-popover--main-actions {
+        border-bottom-left-radius:2px;
+        border-bottom-right-radius:2px;
+        border-top-right-radius:2px;
+        border: 1px solid $color-secondary;
+        background:#fff;
+        display: block;
+        margin: 0px;
+        padding: 0px;
+        list-style: none;
+
+        > li {
+            display:inline-block;
+        }
+    }
+
+    li {
+        button {
+            padding:5px;
+            text-transform:uppercase;
+            font-size:10px;
+            border:none;
+            width:100%;
+            background-color:transparent;
+
+            &:hover {
+                background-color:$color-lightgrey;
+            }
+        }
+
+        a {
+            @include transition(all .3s);
+            background-position: center center;
+            display: block;
+            height: 32px;
+            color: $color-darkgrey;
+            width: 34px;
+            padding-top:7px;
+            text-align:center;
+            font-size:1.1em;
+
+            &:hover {
+                color:$color-primary;
+            }
+        }
+
+        &.advanced {
+            > button {
+                display:block;
+                width: 30px;
+                text-align:center;
+
+                &:hover {
+                    background-color:$color-secondary;
+                    color:#fff;
+                }
+            }
+        }
+    }
+
+    .disabled a {
+        cursor: default;
+        opacity: 0.4;
+        -khtml-opacity: 0.4;
+        -moz-opacity: 0.4;
+        -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=40)";
+        filter: alpha(opacity=40);
+    }
+
+    .cofoundry-sv__module-popover--adv-actions {
+        display:none;
+
+        ul {
+            background-color:#fff;
+            position: absolute;
+            border:1px solid $color-secondary;
+            list-style:none;
+            width:100px;
+            padding:0;
+            left:0;
+        }
+
+        li {
+            width:100%;
+        }
+
+        button {
+            text-align:left;
+            text-decoration:none;
+            padding: 5px;
+        }
+    }
+
+    .cofoundry-sv__section-name {
+        background-color:$color-secondary;
+        color:#fff;
+        display:block;
+        padding: 5px;
+        font-style: italic;
+    }
+
+    .advanced:hover {
+        background-color:$color-secondary;
+
+        > button {
+            color:#fff;
+        }
+
+        .cofoundry-sv__module-popover--adv-actions {
+            display:block;
+        }
+    }
+}

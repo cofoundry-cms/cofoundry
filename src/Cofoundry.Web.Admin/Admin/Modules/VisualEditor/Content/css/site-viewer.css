@@ -56,9 +56,6 @@
 }
 
 /* No files to import found in ../Js/UIComponents/**\/* */
-/*
-    SITEVIEWER
-*/
 /* See https://gist.github.com/taupecat/4090271 */
 /* Cross browser Opacity */
 /* Non-inheriting cross browser opacity with white bg color */
@@ -105,6 +102,191 @@
   opacity: 0.5;
 }
 
+/* #### Hovering #### */
+/* line 41, ../../Sass/blocks/_page-ui.scss */
+#cofoundry-sv__section-popover-container, #cofoundry-sv__module-popover-container {
+  font-family: "Cabin", sans-serif;
+  font-size: 85%;
+  position: absolute;
+  border-radius: 4px;
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+}
+
+/* #### Section hovering #### */
+/* line 51, ../../Sass/blocks/_page-ui.scss */
+#cofoundry-sv__section-popover-container {
+  z-index: 9999999;
+  display: none;
+}
+/* line 55, ../../Sass/blocks/_page-ui.scss */
+#cofoundry-sv__section-popover-container button {
+  -moz-transform: translateX(-100%) translateY(-50%);
+  -ms-transform: translateX(-100%) translateY(-50%);
+  -webkit-transform: translateX(-100%) translateY(-50%);
+  transform: translateX(-100%) translateY(-50%);
+  -moz-border-radius: 50%;
+  -webkit-border-radius: 50%;
+  border-radius: 50%;
+  border: 3px solid #4af386;
+  background-color: #4af386;
+  color: #3c3c3c;
+  overflow: hidden;
+  white-space: nowrap;
+  position: absolute;
+  text-align: center;
+  left: 0px;
+}
+/* line 67, ../../Sass/blocks/_page-ui.scss */
+#cofoundry-sv__section-popover-container button:hover {
+  background-color: #4af386;
+  color: #fff;
+}
+/* line 73, ../../Sass/blocks/_page-ui.scss */
+#cofoundry-sv__section-popover-container div {
+  width: 520px;
+  height: 2px;
+  background: #4af386;
+  margin-left: -5px;
+  position: absolute;
+  top: 0px;
+  transform: translateX(-50%);
+  z-index: -1;
+}
+
+/* #### Module hovering #### */
+/* line 87, ../../Sass/blocks/_page-ui.scss */
+#cofoundry-sv__module-popover-container {
+  z-index: 9999999;
+  display: none;
+}
+/* line 91, ../../Sass/blocks/_page-ui.scss */
+#cofoundry-sv__module-popover-container:before {
+  border-top-left-radius: 2px;
+  border-top-right-radius: 2px;
+  content: 'Module';
+  position: absolute;
+  top: -13px;
+  left: 0;
+  line-height: 10px;
+  font-size: 9px;
+  color: #fff;
+  padding: 2px 5px;
+  background: #413851;
+}
+/* line 105, ../../Sass/blocks/_page-ui.scss */
+#cofoundry-sv__module-popover-container .cofoundry-sv__module-popover--main-actions {
+  border-bottom-left-radius: 2px;
+  border-bottom-right-radius: 2px;
+  border-top-right-radius: 2px;
+  border: 1px solid #413851;
+  background: #fff;
+  display: block;
+  margin: 0px;
+  padding: 0px;
+  list-style: none;
+}
+/* line 116, ../../Sass/blocks/_page-ui.scss */
+#cofoundry-sv__module-popover-container .cofoundry-sv__module-popover--main-actions > li {
+  display: inline-block;
+}
+/* line 122, ../../Sass/blocks/_page-ui.scss */
+#cofoundry-sv__module-popover-container li button {
+  padding: 5px;
+  text-transform: uppercase;
+  font-size: 10px;
+  border: none;
+  width: 100%;
+  background-color: transparent;
+}
+/* line 130, ../../Sass/blocks/_page-ui.scss */
+#cofoundry-sv__module-popover-container li button:hover {
+  background-color: #ebebeb;
+}
+/* line 135, ../../Sass/blocks/_page-ui.scss */
+#cofoundry-sv__module-popover-container li a {
+  -moz-transition: all 0.3s;
+  -o-transition: all 0.3s;
+  -webkit-transition: all 0.3s;
+  transition: all 0.3s;
+  background-position: center center;
+  display: block;
+  height: 32px;
+  color: #3c3c3c;
+  width: 34px;
+  padding-top: 7px;
+  text-align: center;
+  font-size: 1.1em;
+}
+/* line 146, ../../Sass/blocks/_page-ui.scss */
+#cofoundry-sv__module-popover-container li a:hover {
+  color: #4af386;
+}
+/* line 152, ../../Sass/blocks/_page-ui.scss */
+#cofoundry-sv__module-popover-container li.advanced > button {
+  display: block;
+  width: 30px;
+  text-align: center;
+}
+/* line 157, ../../Sass/blocks/_page-ui.scss */
+#cofoundry-sv__module-popover-container li.advanced > button:hover {
+  background-color: #413851;
+  color: #fff;
+}
+/* line 165, ../../Sass/blocks/_page-ui.scss */
+#cofoundry-sv__module-popover-container .disabled a {
+  cursor: default;
+  opacity: 0.4;
+  -khtml-opacity: 0.4;
+  -moz-opacity: 0.4;
+  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=40)";
+  filter: alpha(opacity=40);
+}
+/* line 174, ../../Sass/blocks/_page-ui.scss */
+#cofoundry-sv__module-popover-container .cofoundry-sv__module-popover--adv-actions {
+  display: none;
+}
+/* line 177, ../../Sass/blocks/_page-ui.scss */
+#cofoundry-sv__module-popover-container .cofoundry-sv__module-popover--adv-actions ul {
+  background-color: #fff;
+  position: absolute;
+  border: 1px solid #413851;
+  list-style: none;
+  width: 100px;
+  padding: 0;
+  left: 0;
+}
+/* line 187, ../../Sass/blocks/_page-ui.scss */
+#cofoundry-sv__module-popover-container .cofoundry-sv__module-popover--adv-actions li {
+  width: 100%;
+}
+/* line 191, ../../Sass/blocks/_page-ui.scss */
+#cofoundry-sv__module-popover-container .cofoundry-sv__module-popover--adv-actions button {
+  text-align: left;
+  text-decoration: none;
+  padding: 5px;
+}
+/* line 198, ../../Sass/blocks/_page-ui.scss */
+#cofoundry-sv__module-popover-container .cofoundry-sv__section-name {
+  background-color: #413851;
+  color: #fff;
+  display: block;
+  padding: 5px;
+  font-style: italic;
+}
+/* line 206, ../../Sass/blocks/_page-ui.scss */
+#cofoundry-sv__module-popover-container .advanced:hover {
+  background-color: #413851;
+}
+/* line 209, ../../Sass/blocks/_page-ui.scss */
+#cofoundry-sv__module-popover-container .advanced:hover > button {
+  color: #fff;
+}
+/* line 213, ../../Sass/blocks/_page-ui.scss */
+#cofoundry-sv__module-popover-container .advanced:hover .cofoundry-sv__module-popover--adv-actions {
+  display: block;
+}
+
 /* line 1, ../../Sass/blocks/_frame.scss */
 .cofoundry-sv__iFrame {
   display: none;
@@ -113,7 +295,7 @@
   top: 0;
   width: 100%;
   height: 100%;
-  z-index: 9999999;
+  z-index: 99999999;
 }
 
 /* line 1, ../../Sass/blocks/_preview-menu.scss */
@@ -770,348 +952,6 @@
 .cofoundry-sv__info-list__item span {
   float: right;
   font-weight: 400;
-}
-
-/* line 46, ../../Sass/site-viewer.scss */
-#statusBar {
-  background: #eaeaea;
-}
-
-/* line 50, ../../Sass/site-viewer.scss */
-#wrapper {
-  height: 100%;
-  min-width: 240px;
-  position: relative;
-  width: auto;
-}
-
-/* line 57, ../../Sass/site-viewer.scss */
-#wrapper.device {
-  overflow: scroll;
-  overflow-x: hidden;
-  overflow-y: scroll;
-}
-
-/* line 63, ../../Sass/site-viewer.scss */
-#siteFrameContainer {
-  height: 100%;
-  width: 100%;
-  padding-bottom: 70px;
-}
-/* line 68, ../../Sass/site-viewer.scss */
-#siteFrameContainer .cofoundry-sv__module-highlight {
-  outline: 1px dotted red;
-  position: absolute;
-  z-index: 1;
-  pointer-events: none;
-  background: rgba(0, 0, 0, 0.2);
-}
-/* line 76, ../../Sass/site-viewer.scss */
-#siteFrameContainer .cofoundry-sv__module-controls {
-  position: absolute;
-  background: red;
-  z-index: 2;
-  height: 30px;
-}
-
-/* line 84, ../../Sass/site-viewer.scss */
-#wrapper.down #siteFrameContainer {
-  padding-bottom: 0px !important;
-}
-
-/* line 88, ../../Sass/site-viewer.scss */
-#wrapper.device #siteFrameContainer {
-  margin: 2% auto 2% auto;
-  height: 10%;
-  width: 10%;
-  -webkit-transform: scale(0.75);
-  -webkit-transform-origin: 50% 0;
-  -moz-transform: scale(0.75);
-  -moz-transform-origin: 50% 0;
-  -ms-transform: scale(0.75);
-  -ms-transform-origin: 50% 0;
-  -o-transform: scale(0.75);
-  -o-transform-origin: 50% 0;
-  transform: scale(0.75);
-  transform-origin: 50% 0;
-  -webkit-transition: all 240ms ease;
-  -moz-transition: all 240ms ease;
-  -ms-transition: all 240ms ease;
-  -o-transition: all 240ms ease;
-  transition: all 240ms ease;
-}
-
-/* line 109, ../../Sass/site-viewer.scss */
-#wrapper.iPhonePortrait #siteFrameContainer {
-  width: 320px;
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
-  border: 1px solid #eaeaea;
-  box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.25);
-}
-
-/* line 119, ../../Sass/site-viewer.scss */
-#wrapper.iPadPortrait #siteFrameContainer {
-  width: 768px;
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
-  border: 1px solid #eaeaea;
-  box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.25);
-}
-
-/* line 129, ../../Sass/site-viewer.scss */
-#wrapper.iPadLandscape #siteFrameContainer {
-  width: 1024px;
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
-  border: 1px solid #eaeaea;
-  box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.25);
-}
-
-/* line 139, ../../Sass/site-viewer.scss */
-#wrapper.desktop #siteFrameContainer {
-  width: 1024px;
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
-  border: 1px solid #eaeaea;
-  box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.25);
-}
-
-/* #### Site frame #### */
-/* line 152, ../../Sass/site-viewer.scss */
-iframe#siteFrame {
-  background: transparent;
-  border: 0;
-  height: 100%;
-  width: 100%;
-}
-
-/* line 159, ../../Sass/site-viewer.scss */
-#wrapper.device iframe#siteFrame::-webkit-scrollbar {
-  display: none;
-}
-
-/* line 163, ../../Sass/site-viewer.scss */
-#wrapper.device iframe#siteFrame html {
-  overflow-x: hidden;
-}
-
-/* line 167, ../../Sass/site-viewer.scss */
-#wrapper.device iframe#siteFrame html::-webkit-scrollbar {
-  display: none;
-}
-
-/* #### Device menu #### */
-/* line 174, ../../Sass/site-viewer.scss */
-ul#deviceMenu {
-  bottom: 0;
-  left: 0;
-  margin: 0;
-  overflow: auto;
-  padding: 0;
-  position: fixed;
-}
-
-/* line 183, ../../Sass/site-viewer.scss */
-ul#deviceMenu li {
-  border-right: 1px solid #970D31;
-  display: block;
-  float: left;
-  list-style: none;
-}
-
-/* line 190, ../../Sass/site-viewer.scss */
-ul#deviceMenu li a {
-  background: #4af386 url(img/icons.png) no-repeat;
-  display: block;
-  height: 30px;
-  overflow: hidden;
-  text-indent: 100%;
-  white-space: nowrap;
-  width: 30px;
-}
-
-/* line 200, ../../Sass/site-viewer.scss */
-ul#deviceMenu li.active, ul#deviceMenu li:hover {
-  background-color: #8e8d8d;
-  -webkit-box-shadow: inset 0 0 3px 1px rgba(0, 0, 0, 0.7);
-  -moz-box-shadow: inset 0 0 3px 1px rgba(0, 0, 0, 0.7);
-  box-shadow: inset 0 0 3px 1px rgba(0, 0, 0, 0.7);
-  background: #8e8d8d;
-  background: -moz-linear-gradient(top, #8e8d8d 0%, #4d4c4c 100%);
-  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #8e8d8d), color-stop(100%, #4d4c4c));
-  background: -webkit-linear-gradient(top, #8e8d8d 0%, #4d4c4c 100%);
-  background: -o-linear-gradient(top, #8e8d8d 0%, #4d4c4c 100%);
-  background: -ms-linear-gradient(top, #8e8d8d 0%, #4d4c4c 100%);
-  background: linear-gradient(to bottom, #8e8d8d 0%, #4d4c4c 100%);
-  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#8e8d8d', endColorstr='#4d4c4c',GradientType=0 );
-}
-
-/* line 215, ../../Sass/site-viewer.scss */
-ul#deviceMenu li.active a, ul#deviceMenu li a:hover {
-  background-color: transparent;
-}
-
-/* line 219, ../../Sass/site-viewer.scss */
-ul#deviceMenu li.auto a {
-  background-position: -5px -725px;
-}
-
-/* line 223, ../../Sass/site-viewer.scss */
-ul#deviceMenu li.iPhonePortrait a {
-  background-position: -5px -565px;
-}
-
-/* line 227, ../../Sass/site-viewer.scss */
-ul#deviceMenu li.iPhoneLandscape a {
-  background-position: -5px -605px;
-}
-
-/* line 231, ../../Sass/site-viewer.scss */
-ul#deviceMenu li.iPadPortrait a {
-  background-position: -5px -645px;
-}
-
-/* line 235, ../../Sass/site-viewer.scss */
-ul#deviceMenu li.iPadLandscape a {
-  background-position: -5px -685px;
-}
-
-/* #### Hovering #### */
-/* line 241, ../../Sass/site-viewer.scss */
-#cofoundry-sv__section-popover-container, #cofoundry-sv__module-popover-container {
-  font-family: "Cabin", sans-serif;
-  font-size: 85%;
-  position: absolute;
-  border-radius: 4px;
-  -webkit-border-radius: 4px;
-  -moz-border-radius: 4px;
-}
-
-/* #### Section hovering #### */
-/* line 252, ../../Sass/site-viewer.scss */
-#cofoundry-sv__section-popover-container {
-  display: none;
-}
-
-/* line 256, ../../Sass/site-viewer.scss */
-.cofoundry-sv__section-popover-inner {
-  -moz-transform: translateX(-100%);
-  -ms-transform: translateX(-100%);
-  -webkit-transform: translateX(-100%);
-  transform: translateX(-100%);
-  -moz-border-radius: 2px;
-  -webkit-border-radius: 2px;
-  border-radius: 2px;
-  background: #fff;
-  border: 1px solid #3c3c3c;
-  border-left: 3px solid #4af386;
-  color: #3c3c3c;
-  height: 30px;
-  line-height: 30px;
-  overflow: hidden;
-  padding: 0 10px;
-  position: relative;
-  text-transform: uppercase;
-  white-space: nowrap;
-}
-
-/* line 272, ../../Sass/site-viewer.scss */
-.cofoundry-sv__section-popover-inner h2 {
-  font-weight: bold;
-  font-size: 90%;
-  font-style: normal;
-  height: 30px;
-  line-height: 27px;
-  margin: 0;
-  padding-left: 20px;
-}
-
-/* line 282, ../../Sass/site-viewer.scss */
-.cofoundry-sv__section-popover-inner button {
-  color: #3c3c3c;
-  overflow: hidden;
-  white-space: nowrap;
-  width: 19px;
-  line-height: 24px;
-  position: absolute;
-  text-align: center;
-  left: 0px;
-}
-/* line 292, ../../Sass/site-viewer.scss */
-.cofoundry-sv__section-popover-inner button:hover {
-  color: #4af386;
-}
-
-/* #### Module hovering #### */
-/* line 300, ../../Sass/site-viewer.scss */
-#cofoundry-sv__module-popover-container {
-  display: none;
-}
-
-/* line 304, ../../Sass/site-viewer.scss */
-#cofoundry-sv__module-popover-container ul {
-  -moz-border-radius: 2px;
-  -webkit-border-radius: 2px;
-  border-radius: 2px;
-  border: 1px solid #3c3c3c;
-  border-top: 3px solid #4af386;
-  background: #fff;
-  display: block;
-  margin: 0px;
-  padding: 0px;
-  list-style: none;
-}
-
-/* line 315, ../../Sass/site-viewer.scss */
-#cofoundry-sv__module-popover-container li:not(:last-of-type) {
-  border: 1px solid #ebebeb;
-  border-width: 0 0 1px 0;
-  display: block;
-}
-
-/* line 322, ../../Sass/site-viewer.scss */
-#cofoundry-sv__module-popover-container li button {
-  border: none;
-  width: 100%;
-}
-
-/* line 328, ../../Sass/site-viewer.scss */
-#cofoundry-sv__module-popover-container li a {
-  -moz-transition: all 0.3s;
-  -o-transition: all 0.3s;
-  -webkit-transition: all 0.3s;
-  transition: all 0.3s;
-  background-position: center center;
-  display: block;
-  height: 32px;
-  color: #3c3c3c;
-  width: 34px;
-  padding-top: 7px;
-  text-align: center;
-  font-size: 1.1em;
-}
-/* line 339, ../../Sass/site-viewer.scss */
-#cofoundry-sv__module-popover-container li a:hover {
-  color: #4af386;
-}
-
-/* line 344, ../../Sass/site-viewer.scss */
-#cofoundry-sv__module-popover-container .disabled a {
-  cursor: default;
-  opacity: 0.4;
-  -khtml-opacity: 0.4;
-  -moz-opacity: 0.4;
-  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=40)";
-  filter: alpha(opacity=40);
 }
 
 /*# sourceMappingURL=site-viewer.css.map */
