@@ -1,6 +1,7 @@
 ﻿angular
     .module('cms.shared', [
         'ngRoute',
+        'ngSanitize',
         'angularModalService',
         'angularFileUpload',
         'ui.tinymce',
