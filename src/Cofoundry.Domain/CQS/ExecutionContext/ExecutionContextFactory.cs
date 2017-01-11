@@ -49,7 +49,7 @@ namespace Cofoundry.Domain.CQS
 
             if (executionContextToCopy != null)
             {
-                newContext.ExecutionDate = newContext.ExecutionDate;
+                newContext.ExecutionDate = executionContextToCopy.ExecutionDate;
             }
             else
             {
