@@ -12,7 +12,7 @@ namespace Cofoundry.Web.Identity
 {
     /// <summary>
     /// A helper class with shared functionality between controllers
-    /// that manage use login.
+    /// that manage user login.
     /// </summary>
     public class AuthenticationControllerHelper
     {

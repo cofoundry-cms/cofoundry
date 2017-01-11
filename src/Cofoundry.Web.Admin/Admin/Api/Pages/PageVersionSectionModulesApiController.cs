@@ -24,7 +24,7 @@ namespace Cofoundry.Web.Admin
         private const string ID_ROUTE = "{pageVersionModuleId:int}";
 
         private readonly IQueryExecutor _queryExecutor;
-        private readonly ApiResponseHelper _apiResponseHelper;
+        private readonly IApiResponseHelper _apiResponseHelper;
         private readonly ICommandExecutor _commandExecutor;
 
         #endregion
@@ -34,7 +34,7 @@ namespace Cofoundry.Web.Admin
         public PageVersionSectionModulesApiController(
             IQueryExecutor queryExecutor,
             ICommandExecutor commandExecutor,
-            ApiResponseHelper apiResponseHelper
+            IApiResponseHelper apiResponseHelper
             )
         {
             _queryExecutor = queryExecutor;

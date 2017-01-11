@@ -20,7 +20,7 @@ namespace Cofoundry.Web.Admin
         #region private member variables
 
         private readonly IQueryExecutor _queryExecutor;
-        private readonly ApiResponseHelper _apiResponseHelper;
+        private readonly IApiResponseHelper _apiResponseHelper;
         private readonly IUserContextService _userContextService;
 
         #endregion
@@ -29,7 +29,7 @@ namespace Cofoundry.Web.Admin
 
         public AccountApiController(
             IQueryExecutor queryExecutor,
-            ApiResponseHelper apiResponseHelper,
+            IApiResponseHelper apiResponseHelper,
             IUserContextService userContextService
             )
         {

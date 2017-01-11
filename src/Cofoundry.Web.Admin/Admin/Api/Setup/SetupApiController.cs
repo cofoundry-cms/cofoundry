@@ -14,14 +14,14 @@ namespace Cofoundry.Web.Admin
     {
         #region private member variables
 
-        private readonly ApiResponseHelper _apiResponseHelper;
+        private readonly IApiResponseHelper _apiResponseHelper;
 
         #endregion
 
         #region constructor
 
         public SetupApiController(
-            ApiResponseHelper apiResponseHelper
+            IApiResponseHelper apiResponseHelper
             )
         {
             _apiResponseHelper = apiResponseHelper;

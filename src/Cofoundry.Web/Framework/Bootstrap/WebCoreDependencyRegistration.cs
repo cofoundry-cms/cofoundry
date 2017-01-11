@@ -34,7 +34,7 @@ namespace Cofoundry.Web
                 .RegisterPerRequestScope<IUserSessionService, UserSessionService>()
                 .RegisterPerRequestScope<ILoginService, LoginService>()
                 
-                .RegisterPerRequestScope<ApiResponseHelper, ApiResponseHelper>()
+                .RegisterPerRequestScope<IApiResponseHelper, ApiResponseHelper>()
 
                 .RegisterAll<IPageModuleViewLocationRegistration>()
                 .RegisterAll<IModelMetaDataDecorator>()

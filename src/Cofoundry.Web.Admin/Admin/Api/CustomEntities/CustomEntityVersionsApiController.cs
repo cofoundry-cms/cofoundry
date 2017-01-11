@@ -16,7 +16,7 @@ namespace Cofoundry.Web.Admin
         #region private member variables
 
         private readonly IQueryExecutor _queryExecutor;
-        private readonly ApiResponseHelper _apiResponseHelper;
+        private readonly IApiResponseHelper _apiResponseHelper;
         private readonly ICommandExecutor _commandExecutor;
 
         #endregion
@@ -26,7 +26,7 @@ namespace Cofoundry.Web.Admin
         public CustomEntityVersionsApiController(
             IQueryExecutor queryExecutor,
             ICommandExecutor commandExecutor,
-            ApiResponseHelper apiResponseHelper
+            IApiResponseHelper apiResponseHelper
             )
         {
             _queryExecutor = queryExecutor;

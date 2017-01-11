@@ -19,7 +19,7 @@ namespace Cofoundry.Web.Admin
         private const string ID_ROUTE = "{documentAssetId:int}";
 
         private readonly IQueryExecutor _queryExecutor;
-        private readonly ApiResponseHelper _apiResponseHelper;
+        private readonly IApiResponseHelper _apiResponseHelper;
 
         #endregion
 
@@ -27,7 +27,7 @@ namespace Cofoundry.Web.Admin
 
         public DocumentsApiController(
             IQueryExecutor queryExecutor,
-            ApiResponseHelper apiResponseHelper
+            IApiResponseHelper apiResponseHelper
             )
         {
             _queryExecutor = queryExecutor;

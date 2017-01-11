@@ -28,7 +28,7 @@ namespace Cofoundry.Domain.Installation
 
         public async Task ExecuteAsync(RegisterPageTemplatesAndModuleTypesCommand command)
         {
-            var cx = await _executionContextFactory.CreateSystemUserContextAsync();
+            var cx = await _executionContextFactory.CreateSystemUserExecutionContextAsync();
             await _commandExecutor.ExecuteAsync(new RegisterPageTemplatesCommand(), cx);
             await _commandExecutor.ExecuteAsync(new RegisterPageModuleTypesCommand(), cx);
         }

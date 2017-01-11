@@ -22,18 +22,21 @@ namespace Cofoundry.Domain.CQS
         /// specified IUserContext. Can be used to impersonate another user.
         /// </summary>
         /// <param name="userContext">IUserContext to impersonate</param>
-        IExecutionContext Create(IUserContext userContext);
+        /// <param name="executionContextToCopy">Optional execution context to base the new context on</param>
+        IExecutionContext Create(IUserContext userContext, IExecutionContext executionContextToCopy = null);
 
         /// <summary>
         /// Creates an instance of IExecutionContext using the system account. Should 
         /// be used sparingly for elevating permissions, typically for back-end processes.
         /// </summary>
-        IExecutionContext CreateSystemUserContext();
+        /// <param name="executionContextToCopy">Optional execution context to base the new context on</param>
+        IExecutionContext CreateSystemUserExecutionContext(IExecutionContext executionContextToCopy = null);
 
         /// <summary>
         /// Creates an instance of IExecutionContext using the system account. Should 
         /// be used sparingly for elevating permissions, typically for back-end processes.
         /// </summary>
-        Task<IExecutionContext> CreateSystemUserContextAsync();
+        /// <param name="executionContextToCopy">Optional execution context to base the new context on</param>
+        Task<IExecutionContext> CreateSystemUserExecutionContextAsync(IExecutionContext executionContextToCopy = null);
     }
 }

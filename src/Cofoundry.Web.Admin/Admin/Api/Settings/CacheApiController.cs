@@ -15,14 +15,14 @@ namespace Cofoundry.Web.Admin
         #region private member variables
 
         private readonly IObjectCacheFactory _objectCacheFactory;
-        private readonly ApiResponseHelper _apiResponseHelper;
+        private readonly IApiResponseHelper _apiResponseHelper;
 
         #endregion
 
         #region constructor
 
         public CacheApiController(
-            ApiResponseHelper apiResponseHelper,
+            IApiResponseHelper apiResponseHelper,
             IObjectCacheFactory objectCacheFactory
             )
         {

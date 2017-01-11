@@ -21,7 +21,7 @@ namespace Cofoundry.Web.Admin
         const string VISUAL_EDITOR_SETTINGS_ROUTE = "VisualEditor";
 
         private readonly IQueryExecutor _queryExecutor;
-        private readonly ApiResponseHelper _apiResponseHelper;
+        private readonly IApiResponseHelper _apiResponseHelper;
 
         #endregion
 
@@ -29,7 +29,7 @@ namespace Cofoundry.Web.Admin
 
         public SettingsApiController(
             IQueryExecutor queryExecutor,
-            ApiResponseHelper apiResponseHelper
+            IApiResponseHelper apiResponseHelper
             )
         {
             _queryExecutor = queryExecutor;

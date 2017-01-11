@@ -39,13 +39,22 @@ namespace Cofoundry.Domain.CQS
         /// specified IUserContext. Can be used to impersonate another user.
         /// </summary>
         /// <param name="userContext">IUserContext to impersonate</param>
-        public IExecutionContext Create(IUserContext userContext)
+        /// <param name="executionContextToCopy">Optional execution context to base the new context on</param>
+        public IExecutionContext Create(IUserContext userContext, IExecutionContext executionContextToCopy = null)
         {
             Condition.Requires(userContext).IsNotNull();
 
             var newContext = new ExecutionContext();
-            newContext.ExecutionDate = DateTime.UtcNow;
             newContext.UserContext = userContext;
+
+            if (executionContextToCopy != null)
+            {
+                newContext.ExecutionDate = newContext.ExecutionDate;
+            }
+            else
+            {
+                newContext.ExecutionDate = DateTime.UtcNow;
+            }
 
             return newContext;
         }
@@ -54,20 +63,22 @@ namespace Cofoundry.Domain.CQS
         /// Creates an instance of IExecutionContext using the system account. Should 
         /// be used sparingly for elevating permissions, typically for back-end processes.
         /// </summary>
-        public IExecutionContext CreateSystemUserContext()
+        /// <param name="executionContextToCopy">Optional execution context to base the new context on</param>
+        public IExecutionContext CreateSystemUserExecutionContext(IExecutionContext executionContextToCopy = null)
         {
             var userContext = _userContextService.GetSystemUserContext();
-            return Create(userContext);
+            return Create(userContext, executionContextToCopy);
         }
 
         /// <summary>
         /// Creates an instance of IExecutionContext using the system account. Should 
         /// be used sparingly for elevating permissions, typically for back-end processes.
         /// </summary>
-        public async Task<IExecutionContext> CreateSystemUserContextAsync()
+        /// <param name="executionContextToCopy">Optional execution context to base the new context on</param>
+        public async Task<IExecutionContext> CreateSystemUserExecutionContextAsync(IExecutionContext executionContextToCopy = null)
         {
             var userContext = await _userContextService.GetSystemUserContextAsync();
-            return Create(userContext);
+            return Create(userContext, executionContextToCopy);
         }
     }
 }

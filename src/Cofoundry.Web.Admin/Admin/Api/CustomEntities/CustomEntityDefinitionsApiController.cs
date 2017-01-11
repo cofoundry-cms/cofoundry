@@ -20,7 +20,7 @@ namespace Cofoundry.Web.Admin
         private const string ID_ROUTE = "{customEntityDefinitionCode}";
 
         private readonly IQueryExecutor _queryExecutor;
-        private readonly ApiResponseHelper _apiResponseHelper;
+        private readonly IApiResponseHelper _apiResponseHelper;
 
         #endregion
 
@@ -28,7 +28,7 @@ namespace Cofoundry.Web.Admin
 
         public CustomEntityDefinitionsApiController(
             IQueryExecutor queryExecutor,
-            ApiResponseHelper apiResponseHelper
+            IApiResponseHelper apiResponseHelper
             )
         {
             _queryExecutor = queryExecutor;

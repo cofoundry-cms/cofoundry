@@ -19,14 +19,14 @@ namespace Cofoundry.Web.Admin
         private const string ID_ROUTE = "{pageId:int}";
 
         private readonly IQueryExecutor _queryExecutor;
-        private readonly ApiResponseHelper _apiResponseHelper;
+        private readonly IApiResponseHelper _apiResponseHelper;
         #endregion
 
         #region constructor
 
         public PagesApiController(
             IQueryExecutor queryExecutor,
-            ApiResponseHelper apiResponseHelper
+            IApiResponseHelper apiResponseHelper
             )
         {
             _queryExecutor = queryExecutor;
