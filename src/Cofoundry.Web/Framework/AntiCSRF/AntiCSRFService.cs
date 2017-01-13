@@ -7,6 +7,10 @@ using System.Web.Helpers;
 
 namespace Cofoundry.Web
 {
+    /// <summary>
+    /// Service for generating and validation tokens to prevent
+    /// cross site request forgery attacks.
+    /// </summary>
     public class AntiCSRFService : IAntiCSRFService
     {
         public string GetToken()

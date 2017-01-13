@@ -11,6 +11,10 @@ using System.Web.Http.Filters;
 
 namespace Cofoundry.Web.WebApi
 {
+    /// <summary>
+    /// Ensures that a CSRF token is included in the "X-XSRF-Token" header of
+    /// the request for all HttpMethod types except HttpMethod.Get.
+    /// </summary>
     [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class)]
     public class ValidateApiAntiForgeryTokenAttribute : ActionFilterAttribute
     {

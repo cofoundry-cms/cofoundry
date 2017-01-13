@@ -6,6 +6,12 @@ using System.Threading.Tasks;
 
 namespace Cofoundry.Web.WebApi
 {
+    /// <summary>
+    /// A simple container for wrapping data output via a rest api. Used
+    /// to provide a consistent response from a rest api and to prevent
+    /// potential JSON hijacking vulnerability.
+    /// </summary>
+    /// <typeparam name="T">Type of the data being returned</typeparam>
     [Serializable]
     public class SimpleResponseData<T>
     {
