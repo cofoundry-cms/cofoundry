@@ -49,6 +49,7 @@ namespace Cofoundry.Domain.Data
         public static DbModelBuilder Map<TEntityType>(this DbModelBuilder modelBuilder, EntityTypeConfiguration<TEntityType> entityTypeConfiguration) where TEntityType : class
         {
             modelBuilder.Configurations.Add<TEntityType>(entityTypeConfiguration);
+
             return modelBuilder;
         }
 
@@ -60,10 +61,11 @@ namespace Cofoundry.Domain.Data
         /// <returns>DbModelBuilder for method chaining</returns>
         public static DbModelBuilder MapCofoundryImageAssets(this DbModelBuilder modelBuilder)
         {
-            modelBuilder.Map(new ImageAssetMap());
-            modelBuilder.Map(new ImageAssetGroupMap());
-            modelBuilder.Map(new ImageAssetGroupItemMap());
-            modelBuilder.Map(new ImageAssetTagMap());
+            modelBuilder
+                .Map(new ImageAssetMap())
+                .Map(new ImageAssetGroupMap())
+                .Map(new ImageAssetGroupItemMap())
+                .Map(new ImageAssetTagMap());
 
             return modelBuilder;
         }
@@ -74,10 +76,11 @@ namespace Cofoundry.Domain.Data
         /// <returns>DbModelBuilder for method chaining</returns>
         public static DbModelBuilder MapCofoundryDocumentAssets(this DbModelBuilder modelBuilder)
         {
-            modelBuilder.Map(new DocumentAssetMap());
-            modelBuilder.Map(new DocumentAssetGroupMap());
-            modelBuilder.Map(new DocumentAssetGroupItemMap());
-            modelBuilder.Map(new DocumentAssetTagMap());
+            modelBuilder
+                .Map(new DocumentAssetMap())
+                .Map(new DocumentAssetGroupMap())
+                .Map(new DocumentAssetGroupItemMap())
+                .Map(new DocumentAssetTagMap());
 
             return modelBuilder;
         }
@@ -88,10 +91,12 @@ namespace Cofoundry.Domain.Data
         /// <returns>DbModelBuilder for method chaining</returns>
         public static DbModelBuilder MapCofoundryUsers(this DbModelBuilder modelBuilder)
         {
-            modelBuilder.Map(new UserMap());
-            modelBuilder.Map(new UserAreaMap());
-            modelBuilder.Map(new RoleMap());
-            modelBuilder.Map(new PermissionMap());
+            modelBuilder
+                .Map(new UserMap())
+                .Map(new UserAreaMap())
+                .Map(new RoleMap())
+                .Map(new PermissionMap())
+                .Map(new UserPasswordResetRequestMap());
 
             return modelBuilder;
         }
@@ -119,26 +124,36 @@ namespace Cofoundry.Domain.Data
         }
 
         /// <summary>
-        /// Maps Cofoundry entity definition and unscructured dependency classes to the DbModelBuilder
+        /// Maps Cofoundry page, custom entities, images and all dependency classes 
+        /// to the DbModelBuilder.
         /// </summary>
         /// <returns>DbModelBuilder for method chaining</returns>
-        public static DbModelBuilder MapCofoundryEntityDefinitions(this DbModelBuilder modelBuilder)
+        public static DbModelBuilder MapCofoundryContent(this DbModelBuilder modelBuilder)
         {
-            modelBuilder.Map(new EntityDefinitionMap());
-            modelBuilder.Map(new UnstructuredDataDependencyMap());
-
-            return modelBuilder;
-        }
-
-        /// <summary>
-        /// Maps Cofoundry custom entity classes to the DbModelBuilder
-        /// </summary>
-        /// <returns>DbModelBuilder for method chaining</returns>
-        public static DbModelBuilder MapCofoundryCustomEntities(this DbModelBuilder modelBuilder)
-        {
-            modelBuilder.Map(new CustomEntityDefinitionMap());
-            modelBuilder.Map(new CustomEntityMap());
-            modelBuilder.Map(new CustomEntityVersionMap());
+            modelBuilder
+                .MapCofoundryLocales()
+                .MapCofoundryUsers()
+                .MapCofoundryTags()
+                .MapCofoundryImageAssets()
+                .MapCofoundryDocumentAssets()
+                .Map(new CustomEntityVersionPageModuleMap())
+                .Map(new PageTemplateMap())
+                .Map(new PageTemplateSectionMap())
+                .Map(new ModuleTemplateMap())
+                .Map(new PageModuleTypeMap())
+                .Map(new PageGroupItemMap())
+                .Map(new PageGroupMap())
+                .Map(new PageVersionModuleMap())
+                .Map(new PageMap())
+                .Map(new PageTagMap())
+                .Map(new PageVersionMap())
+                .Map(new WebDirectoryMap())
+                .Map(new WebDirectoryLocaleMap())
+                .Map(new EntityDefinitionMap())
+                .Map(new UnstructuredDataDependencyMap())
+                .Map(new CustomEntityDefinitionMap())
+                .Map(new CustomEntityMap())
+                .Map(new CustomEntityVersionMap());
 
             return modelBuilder;
         }

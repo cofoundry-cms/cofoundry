@@ -70,29 +70,9 @@ namespace Cofoundry.Domain.Data
         {
             modelBuilder
                 .UseDefaultConfig(DbConstants.CofoundrySchema)
-                .MapCofoundryUsers()
-                .MapCofoundryTags()
-                .MapCofoundryImageAssets()
-                .MapCofoundryDocumentAssets()
-                .MapCofoundryLocales()
-                .MapCofoundryEntityDefinitions()
-                .MapCofoundryCustomEntities()
-                .Map(new CustomEntityVersionPageModuleMap())
-                .Map(new PageTemplateMap())
-                .Map(new PageTemplateSectionMap())
-                .Map(new ModuleTemplateMap())
-                .Map(new PageModuleTypeMap())
-                .Map(new PageGroupItemMap())
-                .Map(new PageGroupMap())
-                .Map(new PageVersionModuleMap())
-                .Map(new PageMap())
-                .Map(new PageTagMap())
-                .Map(new PageVersionMap())
-                .Map(new RewriteRuleMap())
+                .MapCofoundryContent()
                 .Map(new SettingMap())
-                .Map(new UserPasswordResetRequestMap())
-                .Map(new WebDirectoryMap())
-                .Map(new WebDirectoryLocaleMap())
+                .Map(new RewriteRuleMap())
                 ;
         }
 

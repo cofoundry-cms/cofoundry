@@ -7,7 +7,7 @@ using Cofoundry.Web.WebApi;
 namespace Cofoundry.Web.Admin
 {
     [AdminApiAuthorize]
-    [ValidateApiAntiForgeryTokenAttribute]
+    [ValidateApiAntiForgeryToken]
     public class BaseAdminApiController : ApiController
     {
     }

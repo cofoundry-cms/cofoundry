@@ -29,7 +29,7 @@ namespace Cofoundry.Web.WebApi
 
             config.Formatters.Add(new MultipartFormDataFormatter());
 
-            config.Services.Add(typeof(IExceptionLogger), new WebApiExceptionLogger());
+            config.Services.Replace(typeof(IExceptionLogger), new WebApiExceptionLogger());
         }
 
         private void ConfigureJsonFormatter(HttpConfiguration config)
