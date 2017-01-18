@@ -19,7 +19,8 @@ namespace Cofoundry.Domain.CQS
     /// Service for executing commands of various types.
     /// </summary>
     /// <remarks>
-    /// See http://www.cuttingedge.it/blogs/steven/pivot/entry.php?id=91
+    /// Inspiration taken from http://www.cuttingedge.it/blogs/steven/pivot/entry.php?id=91,
+    /// but has been adapted a fair bit.
     /// </remarks>
     public class CommandExecutor : ICommandExecutor
     {
