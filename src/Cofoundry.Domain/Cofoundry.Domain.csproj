@@ -431,6 +431,8 @@
     <Compile Include="Domain\DocumentAssets\Queries\GetUpdateDocumentAssetCommandByIdQueryHandler.cs" />
     <Compile Include="Domain\DocumentAssets\Queries\SearchDocumentAssetSummariesQuery.cs" />
     <Compile Include="Domain\DocumentAssets\Queries\SearchDocumentAssetSummariesQueryHandler.cs" />
+    <Compile Include="Domain\DocumentAssets\Repositories\IDocumentAssetRepository.cs" />
+    <Compile Include="Domain\DocumentAssets\Repositories\DocumentAssetRepository.cs" />
     <Compile Include="Domain\DocumentAssets\Routes\IDocumentAssetRouteLibrary.cs" />
     <Compile Include="Domain\DocumentAssets\Routes\DocumentAssetRouteLibrary.cs" />
     <Compile Include="Domain\DynamicData\Bootstrap\DynamicDataDependencyRegistration.cs" />

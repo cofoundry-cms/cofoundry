@@ -12,7 +12,8 @@ using System.Data.Entity;
 namespace Cofoundry.Domain
 {
     public class GetDocumentAssetRenderDetailsByIdQueryHandler 
-        : IAsyncQueryHandler<GetByIdQuery<DocumentAssetRenderDetails>, DocumentAssetRenderDetails>
+        : IQueryHandler<GetByIdQuery<DocumentAssetRenderDetails>, DocumentAssetRenderDetails>
+        , IAsyncQueryHandler<GetByIdQuery<DocumentAssetRenderDetails>, DocumentAssetRenderDetails>
         , IPermissionRestrictedQueryHandler<GetByIdQuery<DocumentAssetRenderDetails>, DocumentAssetRenderDetails>
     {
         #region constructor
@@ -30,16 +31,29 @@ namespace Cofoundry.Domain
 
         #region execution
 
+        public DocumentAssetRenderDetails Execute(GetByIdQuery<DocumentAssetRenderDetails> query, IExecutionContext executionContext)
+        {
+            var result = Query(query)
+                .SingleOrDefault();
+
+            return result;
+        }
+
         public async Task<DocumentAssetRenderDetails> ExecuteAsync(GetByIdQuery<DocumentAssetRenderDetails> query, IExecutionContext executionContext)
         {
-            var result = await _dbContext
-                .DocumentAssets
-                .AsNoTracking()
-                .FilterById(query.Id)
-                .ProjectTo<DocumentAssetRenderDetails>()
+            var result = await Query(query)
                 .SingleOrDefaultAsync();
 
             return result;
+        }
+
+        private IQueryable<DocumentAssetRenderDetails> Query(GetByIdQuery<DocumentAssetRenderDetails> query)
+        {
+            return _dbContext
+                .DocumentAssets
+                .AsNoTracking()
+                .FilterById(query.Id)
+                .ProjectTo<DocumentAssetRenderDetails>();
         }
 
         #endregion

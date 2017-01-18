@@ -8,6 +8,9 @@ using Cofoundry.Domain;
 
 namespace Cofoundry.Web
 {
+    /// <summary>
+    /// Data model representing a single line of text, without formatting
+    /// </summary>
     public class SingleLineTextDataModel : IPageModuleDataModel
     {
         [Required]

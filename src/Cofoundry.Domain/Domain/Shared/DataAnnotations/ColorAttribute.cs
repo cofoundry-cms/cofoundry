@@ -10,7 +10,7 @@ namespace Cofoundry.Domain
 {
     /// <summary>
     /// Use this to decorate a string field and provide a UI hint to the admin interface 
-    /// to display a color picker field and validate a hexidecimal color value
+    /// to display a color picker field and validates a hexidecimal color value
     /// </summary>
     [AttributeUsage(AttributeTargets.Property)]
     public class ColorAttribute : RegularExpressionAttribute, IMetadataAttribute

@@ -8,6 +8,9 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Cofoundry.Web
 {
+    /// <summary>
+    /// Data model representing text entry with simple formatting like headings and lists
+    /// </summary>
     public class RichTextDataModel : IPageModuleDataModel
     {
         [Required, Display(Name = "Rich Text")]

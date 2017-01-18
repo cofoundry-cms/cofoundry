@@ -7,6 +7,9 @@ using Cofoundry.Domain;
 
 namespace Cofoundry.Web
 {
+    /// <summary>
+    /// Data model representing an embedded a Vimeo video 
+    /// </summary>
     public class VimeoVideoDataModel : IPageModuleDataModel, IPageModuleDisplayModel
     {
         [Required]

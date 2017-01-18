@@ -8,6 +8,9 @@ using Cofoundry.Domain;
 
 namespace Cofoundry.Web
 {
+    /// <summary>
+    /// Data model representing an embedded YouTube video
+    /// </summary>
     public class YoutubeVideoDataModel : IPageModuleDataModel, IPageModuleDisplayModel
     {
         [Required]
