@@ -7,7 +7,7 @@
     height: 70px;
     background-color: $color-secondary;
     transform: translateY(100%);
-    z-index: 9999999;
+    z-index: 99999999;
 
     &.active {
         transform: translateY(0);    

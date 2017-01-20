@@ -153,7 +153,7 @@ article, aside, details, figcaption, figure, footer, header, hgroup, main, menu,
 =================================*/
 /* line 4, ../../Sass/Core/_layout.scss */
 * {
-  font-family: "Cabin", sans-serif;
+  font-family: Tahoma, Geneva, sans-serif;
   box-sizing: border-box;
 }
 
@@ -385,7 +385,7 @@ footer a {
   -o-transition: width 0.3s;
   -webkit-transition: width 0.3s;
   transition: width 0.3s;
-  font-family: "Cabin", sans-serif;
+  font-family: Tahoma, Geneva, sans-serif;
   float: left;
   position: relative;
   background: #413851;
@@ -590,7 +590,7 @@ footer a {
   -webkit-transition: all 0.3s;
   transition: all 0.3s;
   position: relative;
-  font-family: "Cabin", sans-serif;
+  font-family: Tahoma, Geneva, sans-serif;
   color: #919191;
   text-decoration: none;
 }
@@ -626,7 +626,7 @@ footer a {
 
 /* line 3, ../../Sass/Core/_typography.scss */
 html {
-  font-family: "Cabin", sans-serif;
+  font-family: Tahoma, Geneva, sans-serif;
   font-size: 80%;
 }
 
@@ -757,7 +757,7 @@ input[type="text"], input[type="email"], input[type="password"], input[type="num
   -moz-border-radius: 2px;
   -webkit-border-radius: 2px;
   border-radius: 2px;
-  font-family: "Cabin", sans-serif;
+  font-family: Tahoma, Geneva, sans-serif;
   font-size: 1em;
   border: 1px solid #d2d2d2;
   padding: 10px;
@@ -769,7 +769,7 @@ input[type="color"] {
   -moz-border-radius: 2px;
   -webkit-border-radius: 2px;
   border-radius: 2px;
-  font-family: "Cabin", sans-serif;
+  font-family: Tahoma, Geneva, sans-serif;
   border: 1px solid #d2d2d2;
   width: 40px;
   height: 40px;
@@ -1628,7 +1628,7 @@ form.loading > *, table.loading > *, div.loading > *, fieldset.loading > * {
   -o-transition: -o-transform 0.25s, opacity 0.25s;
   -webkit-transition: -webkit-transform 0.25s, opacity 0.25s;
   transition: transform 0.25s, opacity 0.25s;
-  font-family: "Cabin", sans-serif;
+  font-family: Tahoma, Geneva, sans-serif;
   font-size: 13px;
   position: fixed;
   top: 35%;

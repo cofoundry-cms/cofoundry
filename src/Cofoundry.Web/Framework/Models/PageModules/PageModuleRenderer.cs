@@ -60,7 +60,7 @@ namespace Cofoundry.Web
             {
                 styles = " style='min-height:" + minHeight + "px'";
             }
-            var html = ParseModuleForEditing("<div class='cms-module-empty'" + styles + "></div>", null);
+            var html = ParseModuleForEditing("<div class='cofoundry-sv__module-empty'" + styles + "></div>", null);
 
             return html;
         }
@@ -108,13 +108,14 @@ namespace Cofoundry.Web
             string entityType = moduleViewModel is CustomEntityVersionPageModuleRenderDetails ? "custom-entity" : "page";
 
             var attrs = new Dictionary<string, string>();
-            attrs.Add("class", "cms-module");
+            attrs.Add("class", "cofoundry-sv__module");
             attrs.Add("data-cms-" + entityType + "-section-module", string.Empty);
             
             if (moduleViewModel != null)
             {
                 attrs.Add("data-cms-version-module-id", moduleViewModel.EntityVersionPageModuleId.ToString());
                 attrs.Add("data-cms-page-module-type-id", moduleViewModel.ModuleType.PageModuleTypeId.ToString());
+                attrs.Add("data-cms-page-module-title", moduleViewModel.ModuleType.Name.ToString());
             }
 
             var editModuleHtml = new HtmlDocument();
