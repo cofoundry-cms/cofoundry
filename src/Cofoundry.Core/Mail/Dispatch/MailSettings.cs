@@ -25,13 +25,14 @@ namespace Cofoundry.Core.Mail
         public string DebugEmailAddress { get; set; }
 
         /// <summary>
-        /// The address to send emails from.
+        /// The default address to send emails. To override this your
+        /// template should implement IMailTemplateWithCustomFromAddress
         /// </summary>
         [Required]
         public string DefaultFromAddress { get; set; }
 
         /// <summary>
-        /// Optionally the name to display as the From Address
+        /// Optionally the name to display with the default From Address
         /// </summary>
         public string DefaultFromAddressDisplayName { get; set; }
     }

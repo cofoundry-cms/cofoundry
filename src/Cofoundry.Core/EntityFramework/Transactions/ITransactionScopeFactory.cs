@@ -14,6 +14,10 @@ namespace Cofoundry.Core.EntityFramework
     /// <summary>
     /// An abstraction over EF transactions which allows for nested transaction scopes.
     /// </summary>
+    /// <remarks>
+    /// Why not use TransactionScope? There are issues with using TransactionScope and 
+    /// EF async and also it is not supported in .Net Core.
+    /// </remarks>
     public interface ITransactionScopeFactory : IDisposable
     {
         /// <summary>

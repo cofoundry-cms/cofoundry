@@ -12,7 +12,7 @@ using System.Xml.Linq;
 namespace Cofoundry.Core.EntityFramework
 {
     /// <summary>
-    /// A service for executing raw SQL statements agsint an EF DataContext.
+    /// A service for executing raw SQL statements against an EF DataContext.
     /// </summary>
     public interface IEntityFrameworkSqlExecutor
     {
