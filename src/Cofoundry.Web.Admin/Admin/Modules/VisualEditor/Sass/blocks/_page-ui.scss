@@ -4,7 +4,7 @@
 }
 /* for Internet Explorer */
 /*\*/
-* html .cofoundry__sv-section {
+* html .cofoundry-sv__section {
     height: 30px;
     opacity: 1;
 }
@@ -63,10 +63,34 @@
         position:absolute;
         text-align:center;
         left: 0px;
-        
+        height: 20px;
+        width: 20px;
+        top: 1px;
+
+        &:after {
+            content:'';
+            position:absolute;
+            height:2px;
+            width:8px;
+            background:white;
+            top: 6px;
+            left: 3px;
+        }
+
+        &:before {
+            content:'';
+            position:absolute;
+            height:8px;
+            width:2px;
+            background:white;
+            top: 3px;
+            left: 6px;
+        }
+
         &:hover {
-            background-color: $color-primary;
-            color:#fff;
+            &:after, &:before {
+                background:$color-secondary;
+            }
         }
     }
 
@@ -82,30 +106,47 @@
     }
 }
 
+.cofoundry-sv__section-wrap {
+    position:absolute;
+    border:1px dashed #dddcdc;
+    min-height:30px;
+
+    .cofoundry-sv__section_module-name {
+        transform: translateY(-100%);
+        background: #dddcdc;
+        top:0px;
+    }
+}
+
+.cofoundry-sv__module-wrap {
+    position:absolute;
+    border:1px dashed $color-secondary;
+    min-height:30px;
+    min-width: 100px;
+
+    .cofoundry-sv__section_module-name {
+        background: $color-secondary;
+        color:#fff;
+    }
+}
+
+.cofoundry-sv__section_module-name {
+    position: absolute;
+    font-size: 8px;
+    text-transform: uppercase;
+    padding: 2px 4px;
+    background: #ccc;
+    right: -1px;
+    top: -1px;
+}
+
 
 /* #### Module hovering #### */
 #cofoundry-sv__module-popover-container {
     z-index:9999999;
     display:none;
 
-    &:before {
-        border-top-left-radius:2px;
-        border-top-right-radius:2px;
-        content: 'Module';
-        position: absolute;
-        top: -13px;
-        left: 0;
-        line-height: 10px;
-        font-size: 9px;
-        color: #fff;
-        padding: 2px 5px;
-        background:$color-secondary;
-    }
-
     .cofoundry-sv__module-popover--main-actions {
-        border-bottom-left-radius:2px;
-        border-bottom-right-radius:2px;
-        border-top-right-radius:2px;
         border: 1px solid $color-secondary;
         background:#fff;
         display: block;
@@ -155,8 +196,8 @@
                 text-align:center;
 
                 &:hover {
-                    background-color:$color-secondary;
-                    color:#fff;
+                    //background-color:$color-secondary;
+                    //color:#fff;
                 }
             }
         }
@@ -191,7 +232,7 @@
         button {
             text-align:left;
             text-decoration:none;
-            padding: 5px;
+            padding: 5px 9px;
         }
     }
 
@@ -201,13 +242,14 @@
         display:block;
         padding: 5px;
         font-style: italic;
+        font-size:11px;
     }
 
     .advanced:hover {
-        background-color:$color-secondary;
+        //background-color:$color-secondary;
 
         > button {
-            color:#fff;
+            //color:#fff;
         }
 
         .cofoundry-sv__module-popover--adv-actions {
