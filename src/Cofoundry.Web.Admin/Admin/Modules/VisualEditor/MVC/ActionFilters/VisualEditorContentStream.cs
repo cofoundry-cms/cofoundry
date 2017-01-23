@@ -1,4 +1,5 @@
-﻿using Cofoundry.Domain;
+﻿using Cofoundry.Core.EmbeddedResources;
+using Cofoundry.Domain;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -28,16 +29,19 @@ namespace Cofoundry.Web.Admin
         private readonly StringBuilder _outputString = new StringBuilder();
         private readonly Stream _outputStream = null;
         private readonly IPageResponseData _pageResponseData;
+        private readonly IResourceLocator _resourceLocator;
         private readonly ControllerContext _context;
 
         public VisualEditorContentStream(
             Stream outputStream,
             IPageResponseData pageResponseData,
+            IResourceLocator resourceLocator,
             ControllerContext context
             )
         {
             _outputStream = outputStream;
             _pageResponseData = pageResponseData;
+            _resourceLocator = resourceLocator;
             _context = context;
         }
 
@@ -58,7 +62,7 @@ namespace Cofoundry.Web.Admin
             // Check for not XML
             if (!html.StartsWith("<?xml"))
             {
-                html = AddCofoundryJavascript(html);
+                html = AddCofoundryDependencies(html);
             }
 
             // Write the string back to the response
@@ -73,7 +77,7 @@ namespace Cofoundry.Web.Admin
 
         #region html modifiers
 
-        private string AddCofoundryJavascript(string html)
+        private string AddCofoundryDependencies(string html)
         {
             const string HEAD_TAG_END = "</head>";
             const string BODY_TAG_END = "</body>";
@@ -99,6 +103,7 @@ namespace Cofoundry.Web.Admin
                     + Environment.NewLine + TAB
                     + string.Format("<script>var pageResponseData = {0}</script>", responseJson) + TAB
                     + RenderRazorViewToString(VisualEditorRouteLibrary.VisualEditorToolbarViewPath(), _pageResponseData)
+                    + string.Format("<!-- SVG ICONS --><div style='{0}'>{1}</div><!-- END SVG ICONS -->", "display:none", RenderSvgToString())
                     + html.Substring(insertBodyIndex);
             }
 
@@ -117,6 +122,17 @@ namespace Cofoundry.Web.Admin
                 viewResult.View.Render(viewContext, sw);
                 viewResult.ViewEngine.ReleaseView(_context, viewResult.View);
                 return sw.GetStringBuilder().ToString();
+            }
+        }
+
+        public string RenderSvgToString()
+        {
+            var virtualFile = _resourceLocator.GetFile(VisualEditorRouteLibrary.StaticContent.Url("svg-cache.html"));
+
+            using (var stream = virtualFile.Open())
+            {
+                var reader = new StreamReader(stream);
+                return reader.ReadToEnd();
             }
         }
 

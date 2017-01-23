@@ -1,7 +1,7 @@
 .cofoundry-sv__mode {
-    height: 100%;
-    padding: 5px;
-    float: right;
+    position: absolute;
+    top:3px;
+    right: 0;
 }
 
 .cofoundry-sv__mode__button {
@@ -9,7 +9,6 @@
     border:1px solid $color-secondary-dark;
     float: left;
     margin-right:4px;
-    height: 100%;
     width: 92px;
     height: 60px;
     color: #fff;

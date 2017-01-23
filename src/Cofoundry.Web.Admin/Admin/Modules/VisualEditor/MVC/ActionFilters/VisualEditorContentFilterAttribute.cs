@@ -1,4 +1,5 @@
-﻿using Cofoundry.Domain;
+﻿using Cofoundry.Core.EmbeddedResources;
+using Cofoundry.Domain;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -37,9 +38,11 @@ namespace Cofoundry.Web.Admin
                 var responseDataCache = IckyDependencyResolution.ResolveFromMvcContext<IPageResponseDataCache>();
                 var responseData = responseDataCache.Get();
 
+                var resourceLocator = IckyDependencyResolution.ResolveFromMvcContext<IResourceLocator>();
+
                 var response = filterContext.HttpContext.Response;
                 var context = filterContext.Controller.ControllerContext;
-                response.Filter = new VisualEditorContentStream(response.Filter, responseData, context);
+                response.Filter = new VisualEditorContentStream(response.Filter, responseData, resourceLocator, context);
             }
         }
 

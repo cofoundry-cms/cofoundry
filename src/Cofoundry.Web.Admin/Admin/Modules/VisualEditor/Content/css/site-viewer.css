@@ -727,9 +727,10 @@
   font-weight: 700;
   font-size: 13px;
   padding-left: 35px;
+  font-weight: normal;
 }
 
-/* line 41, ../../Sass/elements/_page-details.scss */
+/* line 42, ../../Sass/elements/_page-details.scss */
 .cofoundry-sv__page-details__url {
   color: #c1c6c8;
   padding-left: 35px;
@@ -738,9 +739,9 @@
 
 /* line 1, ../../Sass/elements/_mode.scss */
 .cofoundry-sv__mode {
-  height: 100%;
-  padding: 5px;
-  float: right;
+  position: absolute;
+  top: 3px;
+  right: 0;
 }
 
 /* line 7, ../../Sass/elements/_mode.scss */
@@ -751,7 +752,6 @@
   border: 1px solid #2c263d;
   float: left;
   margin-right: 4px;
-  height: 100%;
   width: 92px;
   height: 60px;
   color: #fff;
@@ -762,7 +762,7 @@
   text-decoration: none;
   line-height: 1.3em;
 }
-/* line 24, ../../Sass/elements/_mode.scss */
+/* line 23, ../../Sass/elements/_mode.scss */
 .cofoundry-sv__mode__button span {
   margin: 0 auto;
   display: block;
@@ -771,11 +771,11 @@
   font-size: 2em;
   padding: 8px 0 2px;
 }
-/* line 33, ../../Sass/elements/_mode.scss */
+/* line 32, ../../Sass/elements/_mode.scss */
 .cofoundry-sv__mode__button:last-of-type {
   margin-right: 0;
 }
-/* line 37, ../../Sass/elements/_mode.scss */
+/* line 36, ../../Sass/elements/_mode.scss */
 .cofoundry-sv__mode__button:hover, .cofoundry-sv__mode__button.active, .cofoundry-sv__mode__button.JS-active {
   background-color: #2c263d;
   color: #fff;
@@ -783,17 +783,17 @@
   text-decoration: none;
 }
 
-/* line 48, ../../Sass/elements/_mode.scss */
+/* line 47, ../../Sass/elements/_mode.scss */
 .cofoundry-sv__mode__button__group .cofoundry-sv__mode__button {
   margin-right: 0;
 }
-/* line 52, ../../Sass/elements/_mode.scss */
+/* line 51, ../../Sass/elements/_mode.scss */
 .cofoundry-sv__mode__button__group .cofoundry-sv__mode__button:first-of-type {
   -moz-border-radius: 4px 0 0 4px;
   -webkit-border-radius: 4px;
   border-radius: 4px 0 0 4px;
 }
-/* line 56, ../../Sass/elements/_mode.scss */
+/* line 55, ../../Sass/elements/_mode.scss */
 .cofoundry-sv__mode__button__group .cofoundry-sv__mode__button:last-of-type {
   -moz-border-radius: 0 4px 4px 0;
   -webkit-border-radius: 0;
@@ -807,7 +807,7 @@
   padding: 0 5px 0 0;
   margin-left: 10px;
   border-left: 1px solid #2c263d;
-  height: 100%;
+  height: 60px;
 }
 
 /* line 9, ../../Sass/elements/_options.scss */
@@ -815,7 +815,7 @@
   border: 1px solid #2c263d;
   display: inline-block;
   border-radius: 4px;
-  height: 100%;
+  height: 60px;
   width: 97px;
   color: #fff;
   text-transform: uppercase;
