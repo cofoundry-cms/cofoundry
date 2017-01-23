@@ -1,6 +1,6 @@
 .cofoundry-sv__mode {
     position: absolute;
-    top:3px;
+    top:5px;
     right: 0;
 }
 
@@ -14,14 +14,22 @@
     color: #fff;
     text-transform: uppercase;
     font-size: 10px;
+    font-weight:normal;
     vertical-align:top;
     text-align:center;
     text-decoration: none;
-    line-height: 1.3em;
-
 
     span {
+        font-size: 10px;
+        font-weight:normal;
+        transform: translateY(-50%);
+        display: block;
+        margin-top: 28px;
+    }
+
+    svg {
         margin: 0 auto;
+        max-width:16px;
         display: block;
         text-align: center;
         text-decoration: none;

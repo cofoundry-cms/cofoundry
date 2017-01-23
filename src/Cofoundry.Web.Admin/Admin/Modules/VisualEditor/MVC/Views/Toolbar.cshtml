@@ -82,7 +82,7 @@
 
 <!-- PAGE TOOLBAR -->
 <div id="cofoundry-sv" class="cofoundry-sv active">
-    <button type="button" id="cofoundry-sv_button" class="cofoundry-sv__toggle"></button>
+    @*<button type="button" id="cofoundry-sv_button" class="cofoundry-sv__toggle"></button>*@
 
     <div class="cofoundry-sv__navmenu">
         <div class="cofoundry-sv__mini-menu cofoundry-sv__mini-menu--align-left">
@@ -191,8 +191,12 @@
         @if (!isStaticPage && !isViewingSpecificVersion)
         {
             <a href="?mode=live" class="cofoundry-sv__mode__button @Cofoundry.Html.TextIf(model.Version.WorkFlowStatus == WorkFlowStatus.Published, "active")">
-                <span class="fa fa-cloud"></span>
-                Current<br />live
+                <span>
+                    @*<svg class="icon" viewBox="0 0 80 80">
+                        <use xlink:href="#currentlive" x="0" y="0" />
+                    </svg>*@
+                    Current<br />live
+                </span>
             </a>
 
             if (CanEditPage(model))
@@ -201,25 +205,41 @@
                 {
                     <span class="cofoundry-sv__mode__button__group">
                         <a href="?mode=edit&edittype=entity" class="cofoundry-sv__mode__button @Cofoundry.Html.TextIf(isCustomEntityRoute && isEditing, "active")">
-                            <span class="fa fa-pencil-square-o"></span>
-                            Edit<br />@model.CustomEntityDefinition.Name
+                            <span>
+                                @*<svg class="icon" viewBox="0 0 80 80">
+                                    <use xlink:href="#editentity" x="0" y="0" />
+                                </svg>*@
+                                Edit<br />@model.CustomEntityDefinition.Name
+                            </span>
                         </a>
                         <a href="?mode=edit&edittype=page" class="cofoundry-sv__mode__button @Cofoundry.Html.TextIf(!isCustomEntityRoute && isEditing, "active")">
-                            <span class="fa fa-pencil-square-o"></span>
-                            Edit<br />@(isEditTypeSwitchRequired ? "template" : "draft")
+                            <span>
+                                @*<svg class="icon" viewBox="0 0 80 80">
+                                    <use xlink:href="#edittemplate" x="0" y="0" />
+                                </svg>*@
+                                Edit<br />@(isEditTypeSwitchRequired ? "template" : "draft")
+                            </span>
                         </a>
                     </span>
                 }
                 else
                 {
                     <a href="?mode=edit&edittype=page" class="cofoundry-sv__mode__button @Cofoundry.Html.TextIf(!isCustomEntityRoute && isEditing, "active")">
-                        <span class="fa fa-pencil-square-o"></span>
-                        Edit<br />@(isEditTypeSwitchRequired ? "template" : "draft")
+                        <span>
+                            @*<svg class="icon" viewBox="0 0 80 80">
+                                <use xlink:href="#edittemplate" x="0" y="0" />
+                            </svg>*@
+                            Edit<br />@(isEditTypeSwitchRequired ? "template" : "draft")
+                        </span>
                     </a>
                 }
                 <a href="?mode=preview" class="cofoundry-sv__mode__button @Cofoundry.Html.TextIf(!isEditing && model.Version.WorkFlowStatus == WorkFlowStatus.Draft, "active")">
-                    <span class="fa fa-eye"></span>
-                    Preview<br />draft
+                    <span>
+                        @*<svg class="icon" viewBox="0 0 80 80">
+                            <use xlink:href="#preview" x="0" y="0" />
+                        </svg>*@
+                        Preview<br />draft
+                    </span>
                 </a>
             }
         }

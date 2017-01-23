@@ -15,18 +15,18 @@
     color: #fff;
     text-transform: uppercase;
     font-size: 10px;
+    font-weight:normal;
     cursor: pointer;
     vertical-align:top;
     text-align:center;
     text-decoration: none;
 
     span {
-        margin: 0 auto;
+        font-size: 10px;
+        font-weight:normal;
+        transform: translateY(-50%);
         display: block;
-        text-align: center;
-        text-decoration: none;
-        font-size: 2em;
-        padding: 8px 0 2px;
+        margin-top: 28px;
     }
 
     &:first-of-type {

@@ -49,7 +49,7 @@
 
 /* #### Section hovering #### */
 #cofoundry-sv__section-popover-container {
-    z-index:9999999;
+    z-index:99999999;
     display:none;
 
     button {
@@ -125,8 +125,12 @@
     min-width: 100px;
 
     .cofoundry-sv__section_module-name {
+        transform: translateY(-100%);
         background: $color-secondary;
         color:#fff;
+        left:-1px;
+        top:0px;
+        right:auto;
     }
 }
 
