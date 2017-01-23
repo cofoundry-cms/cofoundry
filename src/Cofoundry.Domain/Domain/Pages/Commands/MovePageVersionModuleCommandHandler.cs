@@ -55,6 +55,11 @@ namespace Cofoundry.Domain
                 .SingleOrDefaultAsync();
             EntityNotFoundException.ThrowIfNull(dbResult, command.PageVersionModuleId);
 
+            if (dbResult.WorkFlowStatusId != (int)WorkFlowStatus.Draft)
+            {
+                throw new NotPermittedException("Page modules cannot be moved unless the page version is in draft status");
+            }
+
             var module = dbResult.Module;
             var moduleToSwapWithQuery =  _dbContext
                 .PageVersionModules
@@ -94,8 +99,7 @@ namespace Cofoundry.Domain
             await _messageAggregator.PublishAsync(new PageVersionModuleMovedMessage()
             {
                 PageId = dbResult.PageId,
-                PageVersionModuleId = command.PageVersionModuleId,
-                HasPublishedVersionChanged = dbResult.WorkFlowStatusId == (int)WorkFlowStatus.Published
+                PageVersionModuleId = command.PageVersionModuleId
             });
         }
 

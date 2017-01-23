@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace Cofoundry.Domain
 {
+    /// <summary>
+    /// Message published when a page module has been updated on a custom entity
+    /// </summary>
     public class CustomEntityVersionModuleUpdatedMessage : ICustomEntityContentUpdatedMessage
     {
         /// <summary>
@@ -18,8 +21,14 @@ namespace Cofoundry.Domain
         /// </summary>
         public string CustomEntityDefinitionCode { get; set; }
 
+        /// <summary>
+        /// Id of the version that contains the module that was updated
+        /// </summary>
         public int CustomEntityVersionModuleId { get; set; }
 
-        public bool HasPublishedVersionChanged { get; set; }
+        /// <summary>
+        /// Always false because only a draft version can be edited
+        /// </summary>
+        public bool HasPublishedVersionChanged { get { return false; } }
     }
 }

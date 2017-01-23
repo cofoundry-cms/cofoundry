@@ -6,6 +6,10 @@ using System.Threading.Tasks;
 
 namespace Cofoundry.Domain
 {
+    /// <summary>
+    /// Message published when a custom entity has gone from published to 
+    /// draft state.
+    /// </summary>
     public class CustomEntityUnPublishedMessage : ICustomEntityContentUpdatedMessage
     {
         /// <summary>
@@ -18,6 +22,9 @@ namespace Cofoundry.Domain
         /// </summary>
         public string CustomEntityDefinitionCode { get; set; }
 
+        /// <summary>
+        /// True, because the published version has been changed to draft
+        /// </summary>
         public bool HasPublishedVersionChanged { get { return true; } }
     }
 }

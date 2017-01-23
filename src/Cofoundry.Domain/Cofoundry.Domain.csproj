@@ -301,7 +301,7 @@
     <Compile Include="Domain\CustomEntities\Messages\CustomEntityPublishedMessage.cs" />
     <Compile Include="Domain\CustomEntities\Messages\CustomEntityUnPublishedMessage.cs" />
     <Compile Include="Domain\CustomEntities\Messages\CustomEntityUrlChangedMessage.cs" />
-    <Compile Include="Domain\CustomEntities\Messages\CustomEntityVersionDeletedMessage.cs" />
+    <Compile Include="Domain\CustomEntities\Messages\CustomEntityDraftVersionDeletedMessage.cs" />
     <Compile Include="Domain\CustomEntities\Messages\CustomEntityVersionModuleAddedMessage.cs" />
     <Compile Include="Domain\CustomEntities\Messages\CustomEntityVersionModuleDeletedMessage.cs" />
     <Compile Include="Domain\CustomEntities\Messages\CustomEntityVersionModuleMovedMessage.cs" />
@@ -609,7 +609,6 @@
     <Compile Include="Domain\Pages\Messages\PageVersionModuleDeletedMessage.cs" />
     <Compile Include="Domain\Pages\Messages\PageVersionModuleMovedMessage.cs" />
     <Compile Include="Domain\Pages\Messages\PageVersionModuleUpdatedMessage.cs" />
-    <Compile Include="Domain\Pages\Messages\PageVersionUpdatedMessage.cs" />
     <Compile Include="Domain\Pages\Models\Interfaces\IEntitySectionRenderDetails.cs" />
     <Compile Include="Domain\Pages\Models\Interfaces\IEntityVersionModuleRenderDetails.cs" />
     <Compile Include="Domain\PageModuleTypes\Models\Interfaces\IListablePageModuleDisplayModel.cs" />

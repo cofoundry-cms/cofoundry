@@ -6,6 +6,10 @@ using System.Threading.Tasks;
 
 namespace Cofoundry.Domain
 {
+    /// <summary>
+    /// Message published when the information that makes up a url on a custom
+    /// entity has been changed (slug/locale)
+    /// </summary>
     public class CustomEntityUrlChangedMessage : ICustomEntityContentUpdatedMessage
     {
         /// <summary>
@@ -18,6 +22,9 @@ namespace Cofoundry.Domain
         /// </summary>
         public string CustomEntityDefinitionCode { get; set; }
 
-        public bool HasPublishedVersionChanged { get { return true; } }
+        /// <summary>
+        /// True if the custom entity has a published version
+        /// </summary>
+        public bool HasPublishedVersionChanged { get; set; }
     }
 }

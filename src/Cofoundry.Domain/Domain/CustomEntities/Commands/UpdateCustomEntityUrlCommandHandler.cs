@@ -50,6 +50,7 @@ namespace Cofoundry.Domain
         {
             var entity = await _dbContext
                 .CustomEntities
+                .Include(c => c.CustomEntityVersions)
                 .Where(e => e.CustomEntityId == command.CustomEntityId)
                 .SingleOrDefaultAsync();
             EntityNotFoundException.ThrowIfNull(entity, command.CustomEntityId);
@@ -61,6 +62,7 @@ namespace Cofoundry.Domain
             await ValidateIsUnique(command, definition);
 
             Map(command, entity, definition);
+            var isPublished = entity.CustomEntityVersions.Any(v => v.WorkFlowStatusId == (int)WorkFlowStatus.Published);
 
             await _dbContext.SaveChangesAsync();
             _customEntityCache.Clear(entity.CustomEntityDefinitionCode, command.CustomEntityId);
@@ -68,7 +70,8 @@ namespace Cofoundry.Domain
             await _messageAggregator.PublishAsync(new CustomEntityUrlChangedMessage()
             {
                 CustomEntityId = command.CustomEntityId,
-                CustomEntityDefinitionCode = entity.CustomEntityDefinitionCode
+                CustomEntityDefinitionCode = entity.CustomEntityDefinitionCode,
+                HasPublishedVersionChanged = isPublished
             });
         }
 

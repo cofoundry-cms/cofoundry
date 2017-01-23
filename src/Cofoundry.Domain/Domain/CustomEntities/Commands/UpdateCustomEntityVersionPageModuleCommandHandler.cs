@@ -62,6 +62,11 @@ namespace Cofoundry.Domain
             EntityNotFoundException.ThrowIfNull(dbModule, command.CustomEntityVersionPageModuleId);
             _permissionValidationService.EnforceCustomEntityPermission<CustomEntityUpdatePermission>(dbModule.CustomEntityVersion.CustomEntity.CustomEntityDefinitionCode);
 
+            if (dbModule.CustomEntityVersion.WorkFlowStatusId != (int)WorkFlowStatus.Draft)
+            {
+                throw new NotPermittedException("Page modules cannot be updated unless the entity is in draft status");
+            }
+
             using (var scope = _transactionScopeFactory.Create())
             {
                 await _pageModuleCommandHelper.UpdateModelAsync(command, dbModule);
@@ -83,8 +88,7 @@ namespace Cofoundry.Domain
             {
                 CustomEntityId = dbModule.CustomEntityVersion.CustomEntityId,
                 CustomEntityDefinitionCode = dbModule.CustomEntityVersion.CustomEntity.CustomEntityDefinitionCode,
-                CustomEntityVersionModuleId = dbModule.CustomEntityVersionPageModuleId,
-                HasPublishedVersionChanged = dbModule.CustomEntityVersion.WorkFlowStatusId == (int)WorkFlowStatus.Published
+                CustomEntityVersionModuleId = dbModule.CustomEntityVersionPageModuleId
             });
         }
 

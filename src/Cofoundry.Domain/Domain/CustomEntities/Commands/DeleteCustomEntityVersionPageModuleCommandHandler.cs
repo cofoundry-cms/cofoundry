@@ -8,6 +8,7 @@ using Cofoundry.Domain.CQS;
 using System.Data.Entity;
 using Cofoundry.Core.MessageAggregator;
 using Cofoundry.Core.EntityFramework;
+using Cofoundry.Core;
 
 namespace Cofoundry.Domain
 {
@@ -55,13 +56,19 @@ namespace Cofoundry.Domain
                 {
                     Module = m,
                     CustomEntityId = m.CustomEntityVersion.CustomEntityId,
-                    CustomEntityDefinitionCode = m.CustomEntityVersion.CustomEntity.CustomEntityDefinitionCode
+                    CustomEntityDefinitionCode = m.CustomEntityVersion.CustomEntity.CustomEntityDefinitionCode,
+                    WorkFlowStatusId = m.CustomEntityVersion.WorkFlowStatusId
                 })
                 .SingleOrDefaultAsync();
 
             if (dbResult != null)
             {
                 _permissionValidationService.EnforceCustomEntityPermission<CustomEntityUpdatePermission>(dbResult.CustomEntityDefinitionCode);
+
+                if (dbResult.WorkFlowStatusId != (int)WorkFlowStatus.Draft)
+                {
+                    throw new NotPermittedException("Page modules cannot be deleted unless the entity is in draft status");
+                }
 
                 var customEntityVersionModuleId = dbResult.Module.CustomEntityVersionPageModuleId;
 

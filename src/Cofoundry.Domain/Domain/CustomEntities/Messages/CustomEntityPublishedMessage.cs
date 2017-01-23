@@ -6,6 +6,12 @@ using System.Threading.Tasks;
 
 namespace Cofoundry.Domain
 {
+    /// <summary>
+    /// Message published when a custom entity has gone from a draft to 
+    /// publish state. This is not invoked when a new custom entity is
+    /// created, to capture that event use CustomEntityAddedMessage and check
+    /// the HasPublishedVersionChanged property.
+    /// </summary>
     public class CustomEntityPublishedMessage : ICustomEntityContentUpdatedMessage
     {
         /// <summary>
@@ -18,6 +24,9 @@ namespace Cofoundry.Domain
         /// </summary>
         public string CustomEntityDefinitionCode { get; set; }
 
+        /// <summary>
+        /// True, obvs.
+        /// </summary>
         public bool HasPublishedVersionChanged { get { return true; } }
     }
 }

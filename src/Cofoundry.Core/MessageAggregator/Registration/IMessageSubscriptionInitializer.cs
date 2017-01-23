@@ -6,6 +6,11 @@ using System.Threading.Tasks;
 
 namespace Cofoundry.Core.MessageAggregator
 {
+    /// <summary>
+    /// Used to run all instances of IMessageSubscriptionRegistration registered
+    /// with the DI container. Typically run when Cofoundry startsup, but you can
+    /// run this manually if you're not using the Cofoundry startup process.
+    /// </summary>
     public interface IMessageSubscriptionInitializer
     {
         /// <summary>

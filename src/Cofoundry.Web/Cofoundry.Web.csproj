@@ -243,7 +243,7 @@
     <Compile Include="App_Start\StartupTasks\ViewEngineInitializationStartupTask.cs" />
     <Compile Include="App_Start\StartupTasks\AutoUpdateMiddlewareRegistrationStartupTask.cs" />
     <Compile Include="App_Start\StartupTasks\StartupTaskOrdering.cs" />
-    <Compile Include="App_Start\StartupTasks\IStartupConfig.cs" />
+    <Compile Include="App_Start\StartupTasks\IStartupTask.cs" />
     <Compile Include="App_Start\StartupTasks\JsonConverterConfigurationStartupTask.cs" />
     <Compile Include="App_Start\Middleware\AutoUpdateMiddleware.cs" />
     <Compile Include="App_Start\CofoundryStartupConfiguration.cs" />

@@ -60,6 +60,11 @@ namespace Cofoundry.Domain
             EntityNotFoundException.ThrowIfNull(dbResult, command.CustomEntityVersionPageModuleId);
             _permissionValidationService.EnforceCustomEntityPermission<CustomEntityUpdatePermission>(dbResult.CustomEntityDefinitionCode);
 
+            if (dbResult.WorkFlowStatusId != (int)WorkFlowStatus.Draft)
+            {
+                throw new NotPermittedException("Page modules cannot be moved unless the entity is in draft status");
+            }
+
             var module = dbResult.Module;
             var moduleToSwapWithQuery =  _dbContext
                 .CustomEntityVersionPageModules
@@ -98,8 +103,7 @@ namespace Cofoundry.Domain
             {
                 CustomEntityId = dbResult.CustomEntityId,
                 CustomEntityDefinitionCode = dbResult.CustomEntityDefinitionCode,
-                CustomEntityVersionModuleId = dbResult.Module.CustomEntityVersionPageModuleId,
-                HasPublishedVersionChanged = dbResult.WorkFlowStatusId == (int)WorkFlowStatus.Published
+                CustomEntityVersionModuleId = dbResult.Module.CustomEntityVersionPageModuleId
             });
         }
 

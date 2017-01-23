@@ -64,6 +64,11 @@ namespace Cofoundry.Domain
             EntityNotFoundException.ThrowIfNull(customEntityVersion, command.CustomEntityVersionId);
             _permissionValidationService.EnforceCustomEntityPermission<CustomEntityUpdatePermission>(customEntityVersion.CustomEntity.CustomEntityDefinitionCode);
 
+            if (customEntityVersion.WorkFlowStatusId != (int)WorkFlowStatus.Draft)
+            {
+                throw new NotPermittedException("Page modules cannot be deleted unless the entity is in draft status");
+            }
+
             var templateSectionSection = await _dbContext
                 .PageTemplateSections
                 .FirstOrDefaultAsync(l => l.PageTemplateSectionId == command.PageTemplateSectionId);
@@ -113,8 +118,7 @@ namespace Cofoundry.Domain
             {
                 CustomEntityId = customEntityVersion.CustomEntityId,
                 CustomEntityVersionPageModuleId = newModule.CustomEntityVersionPageModuleId,
-                CustomEntityDefinitionCode = customEntityVersion.CustomEntity.CustomEntityDefinitionCode,
-                HasPublishedVersionChanged = customEntityVersion.WorkFlowStatusId == (int)WorkFlowStatus.Published
+                CustomEntityDefinitionCode = customEntityVersion.CustomEntity.CustomEntityDefinitionCode
             });
         }
 
