@@ -52,7 +52,8 @@ namespace Cofoundry.Web.Admin
         public override void Write(byte[] buffer, int offset, int count)
         {
             // Write out the entire stream to memory before manipulating it.
-            _outputString.Append(Encoding.UTF8.GetString(buffer));
+            var data = Encoding.UTF8.GetString(buffer);
+            _outputString.Append(data);
         }
 
         public override void Close()
