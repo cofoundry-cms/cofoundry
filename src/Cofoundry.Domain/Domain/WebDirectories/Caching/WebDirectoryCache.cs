@@ -7,6 +7,10 @@ using System.Threading.Tasks;
 
 namespace Cofoundry.Domain
 {
+    /// <summary>
+    /// Cache for wbe directories, which are frequently requested to 
+    /// work out routing
+    /// </summary>
     public class WebDirectoryCache : IWebDirectoryCache
     {
         #region constructor
@@ -30,11 +34,20 @@ namespace Cofoundry.Domain
 
         #region public methods
 
+        /// <summary>
+        /// Gets a collection of web directory routes, if the collection is already cached it 
+        /// is returned, otherwise the getter is invoked and the result is cached and returned
+        /// </summary>
+        /// <param name="getter">Function to invoke if the rewrite rules are not in the cache</param>
         public WebDirectoryRoute[] GetOrAdd(Func<WebDirectoryRoute[]> getter)
         {
             return _cache.GetOrAdd(WEBDIRECTORYROUTES_CACHEKEY, getter);
         }
 
+        /// <summary>
+        /// Clears all items in the web directory cache. This also clears out
+        /// the pages cache because page routes are dependent on web directories.
+        /// </summary>
         public void Clear()
         {
             _cache.Clear();

@@ -7,6 +7,10 @@ using System.Threading.Tasks;
 
 namespace Cofoundry.Domain
 {
+    /// <summary>
+    /// Cache for locale data, which is frequently requested to 
+    /// work out routing
+    /// </summary>
     public class LocaleCache : ILocaleCache
     {
         #region constructor
@@ -24,11 +28,21 @@ namespace Cofoundry.Domain
 
         #region public methods
 
+        /// <summary>
+        /// Gets all active locales if they are already cached, otherwise the 
+        /// getter is invoked and the result is cached and returned
+        /// </summary>
+        /// <param name="getter">Function to invoke if the locales aren't in the cache</param>
         public ActiveLocale[] GetOrAdd(Func<ActiveLocale[]> getter)
         {
             return _cache.GetOrAdd(ACTIVELOCALE_CACHEKEY, getter);
         }
 
+        /// <summary>
+        /// Gets all active locales if they are already cached, otherwise the 
+        /// getter is invoked and the result is cached and returned
+        /// </summary>
+        /// <param name="getter">Function to invoke if the locales aren't in the cache</param>
         public async Task<ActiveLocale[]> GetOrAddAsync(Func<Task<ActiveLocale[]>> getter)
         {
             return await _cache.GetOrAddAsync(ACTIVELOCALE_CACHEKEY, getter);
