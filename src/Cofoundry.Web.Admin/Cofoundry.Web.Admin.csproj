@@ -278,12 +278,6 @@
     <Content Include="Admin\Modules\PageTemplates\Js\Bootstrap\Routing.js" />
     <Content Include="Admin\Modules\PageTemplates\Js\DataServices\PageModuleTypeService.js" />
     <Content Include="Admin\Modules\PageTemplates\Js\DataServices\PageTemplateService.js" />
-    <Content Include="Admin\Modules\PageTemplates\Js\Routes\AddPageTemplate.html" />
-    <Content Include="Admin\Modules\PageTemplates\Js\Routes\AddPageTemplateController.js" />
-    <Content Include="Admin\Modules\PageTemplates\Js\Routes\Modals\EditModuleTypes.html" />
-    <Content Include="Admin\Modules\PageTemplates\Js\Routes\Modals\EditModuleTypesController.js" />
-    <Content Include="Admin\Modules\PageTemplates\Js\Routes\Modals\ReScanTemplateSections.html" />
-    <Content Include="Admin\Modules\PageTemplates\Js\Routes\Modals\ReScanTemplateSectionsController.js" />
     <Content Include="Admin\Modules\PageTemplates\Js\Routes\PageTemplateDetails.html" />
     <Content Include="Admin\Modules\PageTemplates\Js\Routes\PageTemplateDetailsController.js" />
     <Content Include="Admin\Modules\PageTemplates\Js\Routes\PageTemplateList.html" />
