@@ -538,22 +538,18 @@ Cofoundry.visualEditor = (function () {
     var _toolBar = {
         addButton: function (options) {
             var type = options.type || 'secondary',
-                btn = document.createElement('a');
+                btn = document.createElement('a'),
+                spn = document.createElement('span');
+            btn.appendChild(spn);
 
             btn.className = (type === 'primary' ? 'cofoundry-sv__options__button' : 'cofoundry-sv__mode__button') + ' ' + options.classNames;
-            btn.innerHTML = options.title;
+            spn.innerHTML = options.title;
 
             if (options.click) {
                 btn.href = '#';
                 btn.addEventListener('click', options.click, false);
             } else {
                 btn.href = options.href || '#';
-            }
-
-            if (options.icon) {
-                var icon = document.createElement('span');
-                icon.className = 'fa ' + options.icon;
-                btn.insertBefore(icon, btn.firstChild);
             }
 
             __TOOLBAR_BUTTONS = __TOOLBAR.getElementsByClassName(type === 'primary' ? 'cofoundry-sv__options' : 'cofoundry-sv__mode')[0];

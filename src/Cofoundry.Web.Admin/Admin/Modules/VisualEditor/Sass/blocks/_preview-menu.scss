@@ -1,5 +1,6 @@
 .cofoundry-sv {
-    font-family: $fontstack-default;
+    font-family: $fontstack-default!important;
+    font-weight:normal!important;
     width: 100%;
     position: fixed;
     left: 0;
@@ -7,7 +8,7 @@
     height: 70px;
     background-color: $color-secondary;
     transform: translateY(100%);
-    z-index: 99999999;
+    z-index: 999999999;
 
     &.active {
         transform: translateY(0);    

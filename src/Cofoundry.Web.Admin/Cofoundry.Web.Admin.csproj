@@ -586,6 +586,11 @@
     <Content Include="Admin\Modules\VisualEditor\Content\img\logo-thumb.png" />
     <Content Include="Admin\Modules\VisualEditor\Content\css\inner-site-viewer.css" />
     <Content Include="Admin\Modules\VisualEditor\Content\css\site-viewer.css" />
+    <Content Include="Admin\Modules\VisualEditor\Content\svg\current-live.svg" />
+    <Content Include="Admin\Modules\VisualEditor\Content\svg\edit-entity.svg" />
+    <Content Include="Admin\Modules\VisualEditor\Content\svg\edit-template.svg" />
+    <Content Include="Admin\Modules\VisualEditor\Content\svg\preview.svg" />
+    <Content Include="Admin\Modules\VisualEditor\Content\svg\publish.svg" />
     <Content Include="Admin\Modules\VisualEditor\Js\Bootstrap\Module.js" />
     <Content Include="Admin\Modules\VisualEditor\Js\ContentPage\Index.js" />
     <Content Include="Admin\Modules\VisualEditor\Js\ContentPage\GuiController.js" />
@@ -858,7 +863,6 @@
     <Folder Include="Admin\Modules\Users\Js\UIControls\" />
     <Folder Include="Admin\Modules\VisualEditor\Content\css\images\icons\normal\" />
     <Folder Include="Admin\Modules\VisualEditor\Content\css\images\icons\retina\" />
-    <Folder Include="Admin\Modules\VisualEditor\Content\svg\" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

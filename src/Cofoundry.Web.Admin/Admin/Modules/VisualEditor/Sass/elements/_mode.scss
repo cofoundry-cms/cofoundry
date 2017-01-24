@@ -1,7 +1,7 @@
 .cofoundry-sv__mode {
-    height: 100%;
-    padding: 5px;
-    float: right;
+    position: absolute;
+    top:5px;
+    right: 0;
 }
 
 .cofoundry-sv__mode__button {
@@ -9,20 +9,27 @@
     border:1px solid $color-secondary-dark;
     float: left;
     margin-right:4px;
-    height: 100%;
     width: 92px;
     height: 60px;
     color: #fff;
     text-transform: uppercase;
     font-size: 10px;
+    font-weight:normal;
     vertical-align:top;
     text-align:center;
     text-decoration: none;
-    line-height: 1.3em;
-
 
     span {
+        font-size: 10px;
+        font-weight:normal;
+        transform: translateY(-50%);
+        display: block;
+        margin-top: 28px;
+    }
+
+    svg {
         margin: 0 auto;
+        max-width:16px;
         display: block;
         text-align: center;
         text-decoration: none;
