@@ -19,9 +19,6 @@ namespace Cofoundry.Web
         public void Register(IContainerRegister container)
         {
             container
-                .RegisterFactory<OptimizationSettings, ConfigurationSettingsFactory<OptimizationSettings>>()
-                .RegisterFactory<ContentSettings, ConfigurationSettingsFactory<ContentSettings>>()
-
                 .RegisterPerRequestScope<IControllerResponseHelper, ControllerResponseHelper>()
 
                 .RegisterPerRequestScope<ISettingsViewHelper, SettingsViewHelper>()

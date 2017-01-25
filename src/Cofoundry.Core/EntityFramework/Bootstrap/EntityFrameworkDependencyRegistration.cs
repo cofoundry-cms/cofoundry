@@ -13,7 +13,6 @@ namespace Cofoundry.Core.EntityFramework
         public void Register(IContainerRegister container)
         {
             container
-                .RegisterFactory<CoreDbSettings, ConfigurationSettingsFactory<CoreDbSettings>>()
                 .RegisterType<IEntityFrameworkSqlExecutor, EntityFrameworkSqlExecutor>()
                 .RegisterType<ITransactionScopeFactory, TransactionScopeFactory>()
                 .RegisterType<ISqlParameterFactory, SqlParameterFactory>()

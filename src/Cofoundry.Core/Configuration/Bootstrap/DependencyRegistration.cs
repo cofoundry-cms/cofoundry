@@ -13,7 +13,8 @@ namespace Cofoundry.Core.Configuration
         {
             container
                 .RegisterInstance<IConfigurationService, ConfigurationService>()
-                .RegisterGeneric(typeof(IConfigurationSettingsFactory<>), typeof(ConfigurationSettingsFactory<>));
+                .RegisterGeneric(typeof(IConfigurationSettingsFactory<>), typeof(ConfigurationSettingsFactory<>))
+                .RegisterAllWithFactory(typeof(IConfigurationSettings), typeof(IConfigurationSettingsFactory<>));
         }
     }
 }

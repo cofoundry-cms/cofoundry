@@ -16,7 +16,6 @@ namespace Cofoundry.Web.ModularMvc
         public void Register(IContainerRegister container)
         {
             container
-                .RegisterFactory<AssemblyResourceProviderSettings, ConfigurationSettingsFactory<AssemblyResourceProviderSettings>>()
                 .RegisterAll<IViewLocationRegistration>()
                 .RegisterAll<IBundleRegistration>()
                 .RegisterAll<IRouteRegistration>()
