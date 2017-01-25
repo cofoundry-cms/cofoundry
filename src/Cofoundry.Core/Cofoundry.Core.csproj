@@ -141,6 +141,7 @@
     <Compile Include="Caching\IObjectCache.cs" />
     <Compile Include="Caching\IObjectCacheFactory.cs" />
     <Compile Include="Configuration\Exceptions\InvalidConfigurationException.cs" />
+    <Compile Include="Configuration\Settings\IConfigurationSettingsFactory.cs" />
     <Compile Include="Configuration\Settings\PluginConfigurationSettingsBase.cs" />
     <Compile Include="Configuration\Settings\CofoundryConfigurationSettingsBase.cs" />
     <Compile Include="Configuration\Settings\INamespacedConfigurationSettings.cs" />

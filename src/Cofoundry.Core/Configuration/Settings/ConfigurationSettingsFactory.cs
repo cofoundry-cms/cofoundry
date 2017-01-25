@@ -15,7 +15,7 @@ namespace Cofoundry.Core.Configuration
     /// An InjectionFactory for transforming application configuration files into settings objects.
     /// </summary>
     /// <typeparam name="TSettings">Type of settings object to instantiate</typeparam>
-    public class ConfigurationSettingsFactory<TSettings> : IInjectionFactory<TSettings> where TSettings : IConfigurationSettings, new()
+    public class ConfigurationSettingsFactory<TSettings> : IConfigurationSettingsFactory<TSettings> where TSettings : IConfigurationSettings, new()
     {
         #region constructor
 
