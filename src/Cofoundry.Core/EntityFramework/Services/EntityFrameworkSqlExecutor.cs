@@ -37,7 +37,6 @@ namespace Cofoundry.Core.EntityFramework
         /// <summary>
         /// Executes a stored procedure returning the results as an array forcing query execution.
         /// </summary>
-        /// <param name="dbContext">EF DbContext to run the query on.</param>
         /// <param name="spName">Name of the stored procedure to run</param>
         /// <param name="sqlParams">Collection of SqlParameters to pass to the command</param>
         /// <returns>
@@ -52,7 +51,6 @@ namespace Cofoundry.Core.EntityFramework
         /// <summary>
         /// Executes a stored procedure returning the results as an array forcing query execution.
         /// </summary>
-        /// <param name="dbContext">EF DbContext to run the query on.</param>
         /// <param name="spName">Name of the stored procedure to run</param>
         /// <param name="sqlParams">Collection of SqlParameters to pass to the command</param>
         /// <returns>
@@ -184,14 +182,18 @@ namespace Cofoundry.Core.EntityFramework
         #region ExecuteCommandWithOutput
 
         /// <summary>
-        /// Executes a stored procedure or function returning the value of the first output parameter passed 
-        /// in the parameters collection.
+        /// Executes a stored procedure or function returning the value of the 
+        /// output paramter. The output parameter is created for you so you do not need
+        /// to specify it in the sqlParams collection. If more than one output parameter
+        /// is specified only the first is returned. The generic type parameter is used
+        /// as the output parameter type.
         /// </summary>
         /// <typeparam name="T">Type of the returned output parameter.</typeparam>
         /// <param name="spName">Name of the stored procedure to run</param>
+        /// <param name="outputParameterName">Name to use when creating the output parameter</param>
         /// <param name="sqlParams">Collection of SqlParameters to pass to the command</param>
         /// <returns>
-        /// The value of the first output parameter passed in the parameters collection.
+        /// The value of the first output parameter in the executed query.
         /// </returns>
         public T ExecuteCommandWithOutput<T>(string spName, string outputParameterName, params SqlParameter[] sqlParams)
         {
@@ -204,14 +206,18 @@ namespace Cofoundry.Core.EntityFramework
         }
 
         /// <summary>
-        /// Executes a stored procedure or function returning the value of the first output parameter passed 
-        /// in the parameters collection.
+        /// Executes a stored procedure or function returning the value of the 
+        /// output paramter. The output parameter is created for you so you do not need
+        /// to specify it in the sqlParams collection. If more than one output parameter
+        /// is specified only the first is returned. The generic type parameter is used
+        /// as the output parameter type.
         /// </summary>
         /// <typeparam name="T">Type of the returned output parameter.</typeparam>
         /// <param name="spName">Name of the stored procedure to run</param>
+        /// <param name="outputParameterName">Name to use when creating the output parameter</param>
         /// <param name="sqlParams">Collection of SqlParameters to pass to the command</param>
         /// <returns>
-        /// The value of the first output parameter passed in the parameters collection.
+        /// The value of the first output parameter in the executed query.
         /// </returns>
         public async Task<T> ExecuteCommandWithOutputAsync<T>(string spName, string outputParameterName, params SqlParameter[] sqlParams)
         {

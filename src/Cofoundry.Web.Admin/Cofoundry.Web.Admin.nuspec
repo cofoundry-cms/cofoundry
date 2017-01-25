@@ -90,7 +90,7 @@
       <dependency id="System.Threading.Timer" version="4.3.0" />
       <dependency id="System.Xml.ReaderWriter" version="4.3.0" />
       <dependency id="System.Xml.XDocument" version="4.3.0" />
-      <dependency id="WebGrease" version="1.6.0" >/
+      <dependency id="WebGrease" version="1.6.0" />
       <dependency id="Cofoundry.Core" version="$version$" />
       <dependency id="Cofoundry.Domain" version="$version$" />
       <dependency id="Cofoundry.Web" version="$version$" />
