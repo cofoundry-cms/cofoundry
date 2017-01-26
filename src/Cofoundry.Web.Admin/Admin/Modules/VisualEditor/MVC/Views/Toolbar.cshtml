@@ -253,29 +253,18 @@
 @if (!isStaticPage && isEditing)
 {
 <!-- SECTION TOOLBAR UI -->
-<div id="cofoundry-sv__section-popover-container">
-    <button
-        id="cofoundry-sv__btn-add-section-module"
-        type="button"
-        class="popup"
-        title="Add a new module">
-        
-    </button>
-    <div class="cofoundry-sv__section-popover__line"></div>
-</div>
+<button
+    id="cofoundry-sv__btn-add-module"
+    class="cofoundry-sv__btn-add-module"
+    type="button"
+    style="display:none;">
+</button>
+
 <!-- END SECTION TOOLBAR UI -->
 
 <!-- MODULE TOOLBAR UI -->
 <div id="cofoundry-sv__module-popover-container">
     <ul class="cofoundry-sv__module-popover--main-actions">
-        <li class="add">
-            <button 
-                id="cofoundry-sv__btn-module-add"
-                type="button"
-                title="Add a new module">
-                <i class="fa fa-plus"></i> Add
-            </button>
-        </li>
         <li class="edit">
             <button id="cofoundry-sv__btn-module-edit"
                     type="button"
@@ -330,9 +319,7 @@
 </div>
 <!-- END MODULE TOOLBAR UI -->
 
-<div id="cofoundry-sv__section-wrap-container">
-</div>
-<div id="cofoundry-sv__section-wrap" class="cofoundry-sv__section-wrap">
-    <div class="cofoundry-sv__section_module-name">Placeholder</div>
+<div id="cofoundry-sv__ui-wrap" style="display:none;">
+    <div class="cofoundry-sv__ui-wrap-name">Placeholder</div>
 </div>
 }

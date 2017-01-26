@@ -104,7 +104,7 @@
 
 /* #### Hovering #### */
 /* line 41, ../../Sass/blocks/_page-ui.scss */
-#cofoundry-sv__section-popover-container, #cofoundry-sv__module-popover-container {
+#cofoundry-sv__module-popover-container {
   font-family: Tahoma, Geneva, sans-serif;
   font-size: 85%;
   position: absolute;
@@ -115,19 +115,15 @@
 
 /* #### Section hovering #### */
 /* line 51, ../../Sass/blocks/_page-ui.scss */
-#cofoundry-sv__section-popover-container {
-  z-index: 99999999;
-  display: none;
-}
-/* line 55, ../../Sass/blocks/_page-ui.scss */
-#cofoundry-sv__section-popover-container button {
-  -moz-transform: translateX(-100%) translateY(-50%);
-  -ms-transform: translateX(-100%) translateY(-50%);
-  -webkit-transform: translateX(-100%) translateY(-50%);
-  transform: translateX(-100%) translateY(-50%);
+.cofoundry-sv__btn-add-module {
+  -moz-transform: translateY(-50%) translateX(-50%);
+  -ms-transform: translateY(-50%) translateX(-50%);
+  -webkit-transform: translateY(-50%) translateX(-50%);
+  transform: translateY(-50%) translateX(-50%);
   -moz-border-radius: 50%;
   -webkit-border-radius: 50%;
   border-radius: 50%;
+  z-index: 999999998;
   border: 3px solid #4af386;
   background-color: #4af386;
   color: #3c3c3c;
@@ -140,8 +136,8 @@
   width: 20px;
   top: 1px;
 }
-/* line 70, ../../Sass/blocks/_page-ui.scss */
-#cofoundry-sv__section-popover-container button:after {
+/* line 67, ../../Sass/blocks/_page-ui.scss */
+.cofoundry-sv__btn-add-module:after {
   content: '';
   position: absolute;
   height: 2px;
@@ -150,8 +146,8 @@
   top: 6px;
   left: 3px;
 }
-/* line 80, ../../Sass/blocks/_page-ui.scss */
-#cofoundry-sv__section-popover-container button:before {
+/* line 77, ../../Sass/blocks/_page-ui.scss */
+.cofoundry-sv__btn-add-module:before {
   content: '';
   position: absolute;
   height: 8px;
@@ -160,44 +156,44 @@
   top: 3px;
   left: 6px;
 }
-/* line 91, ../../Sass/blocks/_page-ui.scss */
-#cofoundry-sv__section-popover-container button:hover:after, #cofoundry-sv__section-popover-container button:hover:before {
+/* line 88, ../../Sass/blocks/_page-ui.scss */
+.cofoundry-sv__btn-add-module:hover:after, .cofoundry-sv__btn-add-module:hover:before {
   background: #413851;
 }
-/* line 97, ../../Sass/blocks/_page-ui.scss */
-#cofoundry-sv__section-popover-container div {
-  width: 520px;
-  height: 2px;
-  background: #4af386;
-  margin-left: -5px;
-  position: absolute;
-  top: 0px;
-  transform: translateX(-50%);
-  z-index: -1;
-}
 
-/* line 109, ../../Sass/blocks/_page-ui.scss */
-.cofoundry-sv__section-wrap {
+/* line 98, ../../Sass/blocks/_page-ui.scss */
+.cofoundry-sv__ui-wrap--section {
+  display: block !important;
+  pointer-events: none;
   position: absolute;
-  border: 1px dashed #dddcdc;
+  border: 1px dashed #4af386;
   min-height: 30px;
+  z-index: 999999996;
 }
-/* line 114, ../../Sass/blocks/_page-ui.scss */
-.cofoundry-sv__section-wrap .cofoundry-sv__section_module-name {
+/* line 106, ../../Sass/blocks/_page-ui.scss */
+.cofoundry-sv__ui-wrap--section .cofoundry-sv__ui-wrap-name {
+  z-index: 1;
   transform: translateY(-100%);
-  background: #dddcdc;
+  background: #4af386;
+  color: #413851;
   top: 0px;
 }
 
-/* line 121, ../../Sass/blocks/_page-ui.scss */
-.cofoundry-sv__module-wrap {
+/* line 115, ../../Sass/blocks/_page-ui.scss */
+.cofoundry-sv__ui-wrap--module {
+  display: block !important;
+  pointer-events: none;
   position: absolute;
   border: 1px dashed #413851;
   min-height: 30px;
   min-width: 100px;
+  z-index: 999999997;
 }
-/* line 127, ../../Sass/blocks/_page-ui.scss */
-.cofoundry-sv__module-wrap .cofoundry-sv__section_module-name {
+/* line 124, ../../Sass/blocks/_page-ui.scss */
+.cofoundry-sv__ui-wrap--module .cofoundry-sv__ui-wrap-name {
+  z-index: 1;
+  font-family: Tahoma, Geneva, sans-serif;
+  line-height: 12px;
   transform: translateY(-100%);
   background: #413851;
   color: #fff;
@@ -207,7 +203,9 @@
 }
 
 /* line 137, ../../Sass/blocks/_page-ui.scss */
-.cofoundry-sv__section_module-name {
+.cofoundry-sv__ui-wrap-name {
+  font-family: Tahoma, Geneva, sans-serif;
+  line-height: 12px;
   position: absolute;
   font-size: 8px;
   text-transform: uppercase;
@@ -218,12 +216,12 @@
 }
 
 /* #### Module hovering #### */
-/* line 149, ../../Sass/blocks/_page-ui.scss */
+/* line 151, ../../Sass/blocks/_page-ui.scss */
 #cofoundry-sv__module-popover-container {
-  z-index: 9999999;
+  z-index: 999999998;
   display: none;
 }
-/* line 153, ../../Sass/blocks/_page-ui.scss */
+/* line 155, ../../Sass/blocks/_page-ui.scss */
 #cofoundry-sv__module-popover-container .cofoundry-sv__module-popover--main-actions {
   border: 1px solid #413851;
   background: #fff;
@@ -232,11 +230,11 @@
   padding: 0px;
   list-style: none;
 }
-/* line 161, ../../Sass/blocks/_page-ui.scss */
+/* line 163, ../../Sass/blocks/_page-ui.scss */
 #cofoundry-sv__module-popover-container .cofoundry-sv__module-popover--main-actions > li {
   display: inline-block;
 }
-/* line 167, ../../Sass/blocks/_page-ui.scss */
+/* line 169, ../../Sass/blocks/_page-ui.scss */
 #cofoundry-sv__module-popover-container li button {
   padding: 5px;
   text-transform: uppercase;
@@ -245,11 +243,11 @@
   width: 100%;
   background-color: transparent;
 }
-/* line 175, ../../Sass/blocks/_page-ui.scss */
+/* line 177, ../../Sass/blocks/_page-ui.scss */
 #cofoundry-sv__module-popover-container li button:hover {
   background-color: #ebebeb;
 }
-/* line 180, ../../Sass/blocks/_page-ui.scss */
+/* line 182, ../../Sass/blocks/_page-ui.scss */
 #cofoundry-sv__module-popover-container li a {
   -moz-transition: all 0.3s;
   -o-transition: all 0.3s;
@@ -264,17 +262,17 @@
   text-align: center;
   font-size: 1.1em;
 }
-/* line 191, ../../Sass/blocks/_page-ui.scss */
+/* line 193, ../../Sass/blocks/_page-ui.scss */
 #cofoundry-sv__module-popover-container li a:hover {
   color: #4af386;
 }
-/* line 197, ../../Sass/blocks/_page-ui.scss */
+/* line 199, ../../Sass/blocks/_page-ui.scss */
 #cofoundry-sv__module-popover-container li.advanced > button {
   display: block;
   width: 30px;
   text-align: center;
 }
-/* line 210, ../../Sass/blocks/_page-ui.scss */
+/* line 212, ../../Sass/blocks/_page-ui.scss */
 #cofoundry-sv__module-popover-container .disabled a {
   cursor: default;
   opacity: 0.4;
@@ -283,11 +281,11 @@
   -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=40)";
   filter: alpha(opacity=40);
 }
-/* line 219, ../../Sass/blocks/_page-ui.scss */
+/* line 221, ../../Sass/blocks/_page-ui.scss */
 #cofoundry-sv__module-popover-container .cofoundry-sv__module-popover--adv-actions {
   display: none;
 }
-/* line 222, ../../Sass/blocks/_page-ui.scss */
+/* line 224, ../../Sass/blocks/_page-ui.scss */
 #cofoundry-sv__module-popover-container .cofoundry-sv__module-popover--adv-actions ul {
   background-color: #fff;
   position: absolute;
@@ -297,17 +295,17 @@
   padding: 0;
   left: 0;
 }
-/* line 232, ../../Sass/blocks/_page-ui.scss */
+/* line 234, ../../Sass/blocks/_page-ui.scss */
 #cofoundry-sv__module-popover-container .cofoundry-sv__module-popover--adv-actions li {
   width: 100%;
 }
-/* line 236, ../../Sass/blocks/_page-ui.scss */
+/* line 238, ../../Sass/blocks/_page-ui.scss */
 #cofoundry-sv__module-popover-container .cofoundry-sv__module-popover--adv-actions button {
   text-align: left;
   text-decoration: none;
   padding: 5px 9px;
 }
-/* line 243, ../../Sass/blocks/_page-ui.scss */
+/* line 245, ../../Sass/blocks/_page-ui.scss */
 #cofoundry-sv__module-popover-container .cofoundry-sv__section-name {
   background-color: #413851;
   color: #fff;
@@ -316,7 +314,7 @@
   font-style: italic;
   font-size: 11px;
 }
-/* line 259, ../../Sass/blocks/_page-ui.scss */
+/* line 261, ../../Sass/blocks/_page-ui.scss */
 #cofoundry-sv__module-popover-container .advanced:hover .cofoundry-sv__module-popover--adv-actions {
   display: block;
 }
@@ -462,12 +460,13 @@
 .cofoundry-sv__mini-menu__content h3 {
   font-family: Tahoma, Geneva, sans-serif;
   font-size: 14px;
+  font-weight: normal;
   margin: 0 0 10px;
   color: #fff;
   padding: 15px 15px 0;
 }
 
-/* line 63, ../../Sass/blocks/_mini-menu.scss */
+/* line 64, ../../Sass/blocks/_mini-menu.scss */
 .cofoundry-sv__mini-menu__toggle {
   border: 0;
   border-left: 1px solid #2c263d;
@@ -478,21 +477,21 @@
   color: #fff;
   font-size: 10px;
 }
-/* line 73, ../../Sass/blocks/_mini-menu.scss */
+/* line 74, ../../Sass/blocks/_mini-menu.scss */
 .cofoundry-sv__mini-menu__toggle.active {
   background-color: #2c2c2c;
   color: #fff;
 }
-/* line 78, ../../Sass/blocks/_mini-menu.scss */
+/* line 79, ../../Sass/blocks/_mini-menu.scss */
 .cofoundry-sv__mini-menu--flow .cofoundry-sv__mini-menu__toggle {
   text-align: left;
 }
 
-/* line 90, ../../Sass/blocks/_mini-menu.scss */
+/* line 91, ../../Sass/blocks/_mini-menu.scss */
 .cofoundry-sv__mini-menu.active .cofoundry-sv__mini-menu__content {
   display: block;
 }
-/* line 94, ../../Sass/blocks/_mini-menu.scss */
+/* line 95, ../../Sass/blocks/_mini-menu.scss */
 .cofoundry-sv__mini-menu.active .cofoundry-sv__mini-menu__toggle {
   background-color: #333841;
   color: #fff;
@@ -775,8 +774,9 @@
   transform: translateY(-50%);
   display: block;
   margin-top: 28px;
+  line-height: 14px;
 }
-/* line 30, ../../Sass/elements/_mode.scss */
+/* line 31, ../../Sass/elements/_mode.scss */
 .cofoundry-sv__mode__button svg {
   margin: 0 auto;
   max-width: 16px;
@@ -786,11 +786,11 @@
   font-size: 2em;
   padding: 8px 0 2px;
 }
-/* line 40, ../../Sass/elements/_mode.scss */
+/* line 41, ../../Sass/elements/_mode.scss */
 .cofoundry-sv__mode__button:last-of-type {
   margin-right: 0;
 }
-/* line 44, ../../Sass/elements/_mode.scss */
+/* line 45, ../../Sass/elements/_mode.scss */
 .cofoundry-sv__mode__button:hover, .cofoundry-sv__mode__button.active, .cofoundry-sv__mode__button.JS-active {
   background-color: #2c263d;
   color: #fff;
@@ -798,17 +798,17 @@
   text-decoration: none;
 }
 
-/* line 55, ../../Sass/elements/_mode.scss */
+/* line 56, ../../Sass/elements/_mode.scss */
 .cofoundry-sv__mode__button__group .cofoundry-sv__mode__button {
   margin-right: 0;
 }
-/* line 59, ../../Sass/elements/_mode.scss */
+/* line 60, ../../Sass/elements/_mode.scss */
 .cofoundry-sv__mode__button__group .cofoundry-sv__mode__button:first-of-type {
   -moz-border-radius: 4px 0 0 4px;
   -webkit-border-radius: 4px;
   border-radius: 4px 0 0 4px;
 }
-/* line 63, ../../Sass/elements/_mode.scss */
+/* line 64, ../../Sass/elements/_mode.scss */
 .cofoundry-sv__mode__button__group .cofoundry-sv__mode__button:last-of-type {
   -moz-border-radius: 0 4px 4px 0;
   -webkit-border-radius: 0;
