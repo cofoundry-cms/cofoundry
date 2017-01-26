@@ -12,11 +12,11 @@ namespace Cofoundry.Core.Web
     /// out the root path. This will fail if not used during an asp.net request so use
     /// an alternative resolver if this is a requirement.
     /// </summary>
-    public class RequestBasedSiteUriResolver : SiteUriResolverBase
+    public class RequestBasedSiteUrlResolver : SiteUrlResolverBase
     {
         protected override string GetSiteRoot()
         {
-            if (HttpContext.Current == null || HttpContext.Current.Request == null)
+            if (!CanResolve())
             {
                 throw new InvalidOperationException("HttpContext.Current.Request is null, if you are trying to resolve a Uri outside of an request please use SiteUriResolver instead");
             }
@@ -30,6 +30,15 @@ namespace Cofoundry.Core.Web
                 request.ApplicationPath);
 
             return siteRoot;
+        }
+
+        /// <summary>
+        /// Indicates whether we arte in a web request and that
+        /// we are able to resolve a url from HttpContext.Current.Request
+        /// </summary>
+        public bool CanResolve()
+        {
+            return HttpContext.Current != null && HttpContext.Current.Request != null;
         }
 
         private string GetPortUrlPart(HttpRequest request)

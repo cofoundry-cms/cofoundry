@@ -16,12 +16,14 @@ namespace Cofoundry.Domain
     public interface IUserArea
     {
         /// <summary>
-        /// 3 letter code identifying this user area.
+        /// A unique 3 letter code identifying this user area. The cofoundry 
+        /// user are uses the code "COF" so you can pick anything else!
         /// </summary>
         string UserAreaCode { get; }
 
         /// <summary>
         /// Display name of the area, used in the Cofoundry admin panel
+        /// as the navigation link to manage your users
         /// </summary>
         string Name { get; }
 

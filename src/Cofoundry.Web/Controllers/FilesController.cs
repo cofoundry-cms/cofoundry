@@ -16,13 +16,13 @@ namespace Cofoundry.Web
     public class FilesController : Controller
     {
         private readonly IQueryExecutor _queryExecutor;
-        private readonly ISiteUriResolver _siteUriResolver;
+        private readonly ISiteUrlResolver _siteUriResolver;
 
         #region Constructors
 
         public FilesController(
             IQueryExecutor queryExecutor,
-            ISiteUriResolver siteUriResolver
+            ISiteUrlResolver siteUriResolver
             )
         {
             _queryExecutor = queryExecutor;

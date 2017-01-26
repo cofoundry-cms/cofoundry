@@ -174,7 +174,6 @@
     <Compile Include="ErrorLogging\Services\SimpleErrorLoggingService.cs" />
     <Compile Include="ErrorLogging\Services\IErrorLoggingService.cs" />
     <Compile Include="EntityFramework\Bootstrap\EntityFrameworkDependencyRegistration.cs" />
-    <Compile Include="EntityFramework\Configuration\CoreDbSettings.cs" />
     <Compile Include="EntityFramework\Services\EntityFrameworkSqlExecutor.cs" />
     <Compile Include="EntityFramework\Services\IEntityFrameworkSqlExecutor.cs" />
     <Compile Include="EntityFramework\Services\ISqlParameterFactory.cs" />
@@ -293,11 +292,12 @@
     <Compile Include="Web\Utilities\HtmlSanitizer\PermittedTag.cs" />
     <Compile Include="Web\Utilities\QueryStringBuilder\QueryStringBuilder.cs" />
     <Compile Include="Web\Utilities\SitePathResolver.cs" />
-    <Compile Include="Web\Utilities\UriResolvers\ISiteUriResolver.cs" />
-    <Compile Include="Web\Utilities\UriResolvers\RequestBasedSiteUriResolver.cs" />
-    <Compile Include="Web\Utilities\UriResolvers\SiteUriResolver.cs" />
-    <Compile Include="Web\Utilities\UriResolvers\SiteUriResolverBase.cs" />
-    <Compile Include="Web\Utilities\UriResolvers\SiteUriResolverSettings.cs" />
+    <Compile Include="Web\Utilities\UriResolvers\CompositeSiteUrlResolver.cs" />
+    <Compile Include="Web\Utilities\UriResolvers\ISiteUrlResolver.cs" />
+    <Compile Include="Web\Utilities\UriResolvers\RequestBasedSiteUrlResolver.cs" />
+    <Compile Include="Web\Utilities\UriResolvers\ConfigBasedSiteUrlResolver.cs" />
+    <Compile Include="Web\Utilities\UriResolvers\SiteUrlResolverBase.cs" />
+    <Compile Include="Web\Utilities\UriResolvers\SiteUrlResolverSettings.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
