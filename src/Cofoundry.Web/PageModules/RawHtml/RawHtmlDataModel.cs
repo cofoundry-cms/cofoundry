@@ -8,6 +8,9 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Cofoundry.Web
 {
+    /// <summary>
+    /// Data model representing html text with full html editing
+    /// </summary>
     public class RawHtmlDataModel : IPageModuleDataModel
     {
         [Required, Display(Name = "Raw html")]

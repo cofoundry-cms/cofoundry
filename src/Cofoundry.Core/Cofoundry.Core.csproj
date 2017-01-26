@@ -141,6 +141,7 @@
     <Compile Include="Caching\IObjectCache.cs" />
     <Compile Include="Caching\IObjectCacheFactory.cs" />
     <Compile Include="Configuration\Exceptions\InvalidConfigurationException.cs" />
+    <Compile Include="Configuration\Settings\IConfigurationSettingsFactory.cs" />
     <Compile Include="Configuration\Settings\PluginConfigurationSettingsBase.cs" />
     <Compile Include="Configuration\Settings\CofoundryConfigurationSettingsBase.cs" />
     <Compile Include="Configuration\Settings\INamespacedConfigurationSettings.cs" />
@@ -300,7 +301,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-    <None Include="Cofoundry.Core.nuspec" />
+    <None Include="Cofoundry.Core.nuspec">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup />

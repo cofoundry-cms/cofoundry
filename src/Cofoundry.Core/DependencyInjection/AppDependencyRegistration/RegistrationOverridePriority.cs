@@ -14,14 +14,14 @@ namespace Cofoundry.Core.DependencyInjection
     public enum RegistrationOverridePriority
     {
         /// <summary>
-        /// Will override the default implementation and northing more. Typically used
+        /// Will override the default implementation and nothing more. Typically used
         /// inside the framework to override a default/empty implementation lower down 
         /// in the framework.
         /// </summary>
         Low = -50,
 
         /// <summary>
-        /// Default and one to use in typical use in a plugin. Will override the existing 
+        /// Default and the option to typically use in a plugin. Will override the existing 
         /// implementation and any low level (typically default/placeholder) implementation.
         /// </summary>
         Normal = 0,

@@ -52,13 +52,14 @@ namespace Cofoundry.Domain
             EntityNotFoundException.ThrowIfNull(page, command.PageId);
 
             MapPage(command, executionContext, page);
-
+            var isPublished = page.PageVersions.Any(v => v.WorkFlowStatusId == (int)WorkFlowStatus.Draft);
             await _dbContext.SaveChangesAsync();
             _pageCache.Clear(command.PageId);
 
             await _messageAggregator.PublishAsync(new PageUpdatedMessage()
             {
-                PageId = command.PageId
+                PageId = command.PageId,
+                HasPublishedVersionChanged = isPublished
             });
         }
 
@@ -70,6 +71,7 @@ namespace Cofoundry.Domain
         {
             return _dbContext
                 .Pages
+                .Include(p => p.PageVersions)
                 .Include(p => p.PageTags)
                 .Include(p => p.PageTags.Select(pt => pt.Tag))
                 .Where(p => p.PageId == id && !p.IsDeleted);

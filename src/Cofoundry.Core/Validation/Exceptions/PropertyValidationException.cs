@@ -28,7 +28,7 @@ namespace Cofoundry.Core.Validation
         /// Creates a new PropertyValidationException relating to a single a property
         /// </summary>
         /// <param name="message">The message to assign to the exception</param>
-        /// <param name="properties">The property that failed validation.</param>
+        /// <param name="property">The property that failed validation.</param>
         /// <param name="value">Optionally value of the object/properties that caused the attribute to trigger validation error.</param>
         public PropertyValidationException(string message, string property, object value = null)
             : base(GetValidationResult(message, new string[] { property }), null, value)

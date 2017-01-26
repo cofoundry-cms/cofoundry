@@ -8,6 +8,7 @@ using Cofoundry.Domain.CQS;
 using System.Data.Entity;
 using Cofoundry.Core.MessageAggregator;
 using Cofoundry.Core.EntityFramework;
+using Cofoundry.Core;
 
 namespace Cofoundry.Domain
 {
@@ -50,12 +51,18 @@ namespace Cofoundry.Domain
                 .Select(p => new 
                 {
                     Module = p,
-                    PageId = p.PageVersion.PageId
+                    PageId = p.PageVersion.PageId,
+                    WorkFlowStatusId = p.PageVersion.WorkFlowStatusId
                 })
                 .SingleOrDefaultAsync();
 
             if (dbResult != null)
             {
+                if (dbResult.WorkFlowStatusId != (int)WorkFlowStatus.Draft)
+                {
+                    throw new NotPermittedException("Page modules cannot be deleted unless the page version is in draft status");
+                }
+
                 var versionId = dbResult.Module.PageVersionId;
                 using (var scope = _transactionScopeFactory.Create())
                 {

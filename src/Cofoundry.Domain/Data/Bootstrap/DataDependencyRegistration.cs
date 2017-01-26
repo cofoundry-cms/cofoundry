@@ -17,7 +17,6 @@ namespace Cofoundry.Domain.Data
             container
                 .RegisterType<CofoundryDbContext>(new Type[] { typeof(CofoundryDbContext), typeof(DbContext) }, perRequestOptions)
                 .RegisterType<IFileStoreService, FileSystemFileStoreService>()
-                .RegisterFactory<FileSystemFileStorageSettings, ConfigurationSettingsFactory<FileSystemFileStorageSettings>>()
                 .RegisterType<IDbUnstructuredDataSerializer, DbUnstructuredDataSerializer>();
                 ;
         }

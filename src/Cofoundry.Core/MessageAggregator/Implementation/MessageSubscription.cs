@@ -8,6 +8,11 @@ using Cofoundry.Core.DependencyInjection;
 
 namespace Cofoundry.Core.MessageAggregator
 {
+    /// <summary>
+    /// Represents an individual subscription to a message
+    /// </summary>
+    /// <typeparam name="TMessageSubscribedTo">Type of message subscribed to</typeparam>
+    /// <typeparam name="TMessageHandler">Type of handler to invoke when a message is published</typeparam>
     public class MessageSubscription<TMessageSubscribedTo, TMessageHandler>
         : IMessageSubscription
         where TMessageSubscribedTo : class

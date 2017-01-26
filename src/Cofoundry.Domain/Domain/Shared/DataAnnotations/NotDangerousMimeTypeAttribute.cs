@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace Cofoundry.Domain
 {
     /// <summary>
-    /// Validates that a mime-type property isnt on a blacklist of miome types
+    /// Validates that a mime-type property isnt on a blacklist of mime types
     /// for dangerous file types.
     /// </summary>
     public class NotDangerousMimeTypeAttribute : ValidationAttribute

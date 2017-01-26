@@ -16,8 +16,6 @@ namespace Cofoundry.Core.Mail
             container
                 .RegisterType<IMailService, SimpleMailService>()
                 .RegisterType<IMailDispatchService, SmtpMailDispatchService>()
-                .RegisterFactory<MailSettings, ConfigurationSettingsFactory<MailSettings>>()
-                .RegisterFactory<SmtpMailSettings, ConfigurationSettingsFactory<SmtpMailSettings>>()
                 .RegisterType<IMailMessageRenderer, MailMessageRenderer>()
                 .RegisterType<ITemplateManager, VirtualPathTemplateManager>()
                 .RegisterType<IViewFileReader, ViewFileReader>()

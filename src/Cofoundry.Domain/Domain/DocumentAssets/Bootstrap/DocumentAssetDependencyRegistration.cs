@@ -14,6 +14,7 @@ namespace Cofoundry.Domain.Bootstrap
             container
                 .RegisterType<DocumentAssetCommandHelper>()
                 .RegisterType<IDocumentAssetRouteLibrary, DocumentAssetRouteLibrary>()
+                .RegisterType<IDocumentAssetRepository, DocumentAssetRepository>()
                 ;
         }
     }

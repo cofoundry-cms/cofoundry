@@ -85,7 +85,6 @@ namespace Cofoundry.Domain
                 scope.Complete();
             }
 
-
             _customEntityCache.ClearRoutes(definition.CustomEntityDefinitionCode);
 
             // Set Ouput

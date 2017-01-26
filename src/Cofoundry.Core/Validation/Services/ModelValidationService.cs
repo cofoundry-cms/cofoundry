@@ -34,7 +34,7 @@ namespace Cofoundry.Core.Validation
         /// the validation process.
         /// </summary>
         /// <typeparam name="T">Type of model to validate.</typeparam>
-        /// <param name="modelToValidate">The object to validate.</param>
+        /// <param name="modelsToValidate">Collection of objects to validate.</param>
         /// <returns>Enumerable collection of any errors found. Will be empty if the model is valid.</returns>
         public IEnumerable<ValidationError> GetErrors<T>(IEnumerable<T> modelsToValidate)
         {
@@ -53,7 +53,7 @@ namespace Cofoundry.Core.Validation
         /// the validation process.
         /// </summary>
         /// <typeparam name="T">Type of model to validate.</typeparam>
-        /// <param name="modelsToValidate">Collection of objects to validate.</param>
+        /// <param name="modelToValidate">The object to validate.</param>
         /// <returns>Enumerable collection of any errors found. Will be empty if the model is valid.</returns>
         public IEnumerable<ValidationError> GetErrors<T>(T modelToValidate)
         {
@@ -90,6 +90,5 @@ namespace Cofoundry.Core.Validation
             error.Properties = result.MemberNames.ToArray();
             return error;
         }
-
     }
 }

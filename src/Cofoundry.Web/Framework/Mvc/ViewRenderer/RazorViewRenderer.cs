@@ -88,7 +88,9 @@ namespace Cofoundry.Web
                 var viewContext = new ViewContext(_controllerContext, viewResult.View, viewData, tempData, sw);
                 viewResult.View.Render(viewContext, sw);
 
-                return sw.GetStringBuilder().ToString().Trim(@"\r\n".ToCharArray());
+                var result = sw.GetStringBuilder().ToString().Trim();
+
+                return result;
             }
         }
 

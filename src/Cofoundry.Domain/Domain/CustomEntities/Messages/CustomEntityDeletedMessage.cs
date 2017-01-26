@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace Cofoundry.Domain
 {
+    /// <summary>
+    /// Message published when a custom entity has been deleted
+    /// </summary>
     public class CustomEntityDeletedMessage
     {
         /// <summary>

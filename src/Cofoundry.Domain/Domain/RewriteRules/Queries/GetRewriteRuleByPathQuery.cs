@@ -17,7 +17,7 @@ namespace Cofoundry.Domain
     public class GetRewriteRuleByPathQuery : IQuery<RewriteRuleSummary>
     {
         /// <summary>
-        /// Path to check for a rewrite rule. for non-file paths the trailing slash 
+        /// Path to check for a rewrite rule. For non-file paths the trailing slash 
         /// is optional. Also supports '*' wildcard matching at the end of the path.
         /// </summary>
         [Required]

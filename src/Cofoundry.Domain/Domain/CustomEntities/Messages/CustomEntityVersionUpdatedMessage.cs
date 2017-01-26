@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace Cofoundry.Domain
 {
+    /// <summary>
+    /// Message published when a custom entity version has been update
+    /// </summary>
     public class CustomEntityVersionUpdatedMessage
     {
         /// <summary>
@@ -18,6 +21,9 @@ namespace Cofoundry.Domain
         /// </summary>
         public string CustomEntityDefinitionCode { get; set; }
 
+        /// <summary>
+        /// Id of the custom entity version that has been updated
+        /// </summary>
         public int CustomEntityVersionId { get; set; }
     }
 }

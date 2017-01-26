@@ -7,6 +7,9 @@ using Cofoundry.Domain;
 
 namespace Cofoundry.Web
 {
+    /// <summary>
+    /// Data model representing a single image
+    /// </summary>
     public class ImageDataModel : IPageModuleDataModel
     {
         [Image]

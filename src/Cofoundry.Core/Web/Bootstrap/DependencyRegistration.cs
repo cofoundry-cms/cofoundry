@@ -14,7 +14,6 @@ namespace Cofoundry.Core.Web.Bootstrap
         public void Register(IContainerRegister container)
         {
             container
-                .RegisterFactory<SiteUriResolverSettings, ConfigurationSettingsFactory<SiteUriResolverSettings>>()
                 .RegisterType<ISiteUriResolver, RequestBasedSiteUriResolver>()
                 .RegisterType<IHtmlSanitizer, HtmlSanitizer>()
                 .RegisterType<IDefaultHtmlSanitizationRuleSetFactory, DefaultHtmlSanitizationRuleSetFactory>()

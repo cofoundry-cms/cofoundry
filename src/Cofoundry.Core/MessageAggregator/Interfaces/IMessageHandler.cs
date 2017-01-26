@@ -13,6 +13,10 @@ namespace Cofoundry.Core.MessageAggregator
     /// <typeparam name="TMessage">Type of message that this handler can process</typeparam>
     public interface IMessageHandler<TMessage>
     {
+        /// <summary>
+        /// Method to invoke when a message of type TMessage is published 
+        /// </summary>
+        /// <param name="message">Message instance to handle</param>
         Task HandleAsync(TMessage message);
     }
 }

@@ -55,7 +55,7 @@ namespace Cofoundry.Domain
         int Width { get; set; }
 
         /// <summary>
-        /// Gets a querystring that represent this set of settings in the format ?w=20&h=30
+        /// Gets a querystring that represent this set of settings in the format ?w=20&amp;h=30
         /// </summary>
         string ToQueryString();
     }

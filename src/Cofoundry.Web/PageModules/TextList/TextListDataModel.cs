@@ -8,6 +8,9 @@ using Cofoundry.Domain;
 
 namespace Cofoundry.Web
 {
+    /// <summary>
+    /// Data model representing a list of text items 
+    /// </summary>
     public class TextListDataModel : IPageModuleDataModel
     {
         [Display(Name = "Title")]

@@ -56,7 +56,7 @@ namespace Cofoundry.Web
 
         /// <summary>
         /// Helper for sanitizing html before it output to the page. You'd typically
-        /// want to use this when redering out user inputted data which may be 
+        /// want to use this when rendering out user inputted data which may be 
         /// vulnerable to XSS attacks.
         /// </summary>
         public IHtmlSanitizerHelper Sanitizer { get; private set; }

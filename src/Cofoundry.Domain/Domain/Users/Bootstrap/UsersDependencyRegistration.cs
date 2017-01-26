@@ -20,7 +20,7 @@ namespace Cofoundry.Domain
                 .RegisterType<IResetUserPasswordCommandHelper, ResetUserPasswordCommandHelper>()
                 .RegisterType<IUserContextService, UserContextService>(perLifetimeScopeRegistrationOptions)
                 .RegisterAll<IUserArea>()
-                .RegisterFactory<AuthenticationSettings, ConfigurationSettingsFactory<AuthenticationSettings>>();
+                ;
         }
     }
 }

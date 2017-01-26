@@ -59,6 +59,11 @@ namespace Cofoundry.Domain
                 .FirstOrDefault(v => v.PageVersionId == command.PageVersionId);
             EntityNotFoundException.ThrowIfNull(pageVersion, command.PageVersionId);
 
+            if (pageVersion.WorkFlowStatusId != (int)WorkFlowStatus.Draft)
+            {
+                throw new NotPermittedException("Page modules cannot be added unless the page version is in draft status");
+            }
+
             var pageVersionModules = pageVersion
                 .PageVersionModules
                 .Where(m => m.PageTemplateSectionId == templateSectionSection.PageTemplateSectionId);
@@ -102,8 +107,7 @@ namespace Cofoundry.Domain
             await _messageAggregator.PublishAsync(new PageVersionModuleAddedMessage()
             {
                 PageId = pageVersion.PageId,
-                PageVersionModuleId = newModule.PageVersionModuleId,
-                HasPublishedVersionChanged = pageVersion.WorkFlowStatusId == (int)WorkFlowStatus.Published
+                PageVersionModuleId = newModule.PageVersionModuleId
             });
         }
 

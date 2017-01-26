@@ -7,6 +7,9 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Cofoundry.Web
 {
+    /// <summary>
+    /// Data model representing a quotation with optional citation and title
+    /// </summary>
     public class QuotationDataModel : IPageModuleDataModel
     {
         [Display(Name = "Title (optional)")]

@@ -82,6 +82,21 @@ namespace Cofoundry.Core.DependencyInjection
         IContainerRegister RegisterAll<TToRegister>();
 
         /// <summary>
+        /// Registers all services that implement typeToRegisterImplementationsOf as their
+        /// concrete type and as a collection services. The types are constructed
+        /// using a resolved instance of the genericFactoryType which should implement 
+        /// IInjectionFactory
+        /// </summary>
+        /// <param name="typeToRegisterImplementationsOf">Type to scan for implementations</param>
+        /// <param name="genericFactoryType">
+        /// Open generic type of factory to use for construction. Should inherit
+        /// from IInjectionFactory<>
+        /// </param>
+        /// <param name="options">Optional options argument.</param>
+        /// <returns>The IContainerRegister instance for method chaining.</returns>
+        IContainerRegister RegisterAllWithFactory(Type typeToRegisterImplementationsOf, Type genericFactoryType, RegistrationOptions options = null);
+
+        /// <summary>
         /// Registers all services that implement a generic interface. Each service
         /// is registered individually as a separate generic implementation of TGeneric
         /// </summary>

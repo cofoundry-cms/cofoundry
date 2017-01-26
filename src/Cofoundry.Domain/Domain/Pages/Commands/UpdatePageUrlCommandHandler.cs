@@ -47,19 +47,22 @@ namespace Cofoundry.Domain
             var page = await _dbContext
                 .Pages
                 .FilterById(command.PageId)
+                .Include(p => p.UrlPath)
                 .SingleOrDefaultAsync();
             EntityNotFoundException.ThrowIfNull(page, command.PageId);
 
             await ValidateIsPageUniqueAsync(command, page, executionContext);
 
             MapPage(command, executionContext, page);
+            var isPublished = page.PageVersions.Any(v => v.WorkFlowStatusId == (int)WorkFlowStatus.Published);
 
             await _dbContext.SaveChangesAsync();
             _pageCache.Clear(command.PageId);
 
             await _messageAggregator.PublishAsync(new PageUrlChangedMessage()
             {
-                PageId = command.PageId
+                PageId = command.PageId,
+                HasPublishedVersionChanged = isPublished
             });
         }
 

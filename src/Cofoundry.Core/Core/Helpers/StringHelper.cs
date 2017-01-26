@@ -76,6 +76,10 @@ namespace Cofoundry.Core
         /// Splits a string, removing empty entires and trimming each entry.
         /// </summary>
         /// <param name="source">String to split</param>
+        /// <param name="separator">
+        /// A character array that delimits the substrings in this string, an empty array
+        /// that contains no delimiters, or null.
+        /// </param>
         /// <returns>Collection of string results.</returns>
         public static IEnumerable<string> SplitAndTrim(string source, params char[] separator)
         {
