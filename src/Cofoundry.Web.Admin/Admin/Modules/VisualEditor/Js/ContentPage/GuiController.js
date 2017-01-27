@@ -91,10 +91,10 @@ Cofoundry.visualEditor = (function () {
         },
 
         bindGui() {
-            var toolbar_section = document.getElementById('cofoundry-sv__section-popover-container'),
+            var toolbar_add_module = document.getElementById('cofoundry-sv__btn-add-module'),
                 toolbar_module = document.getElementById('cofoundry-sv__module-popover-container'),
-                section_wrap_ui_container = document.getElementById('cofoundry-sv__section-wrap-container');
-                section_wrap_ui = document.getElementById('cofoundry-sv__section-wrap'),
+                wrap_ui_container = document.getElementsByTagName('body')[0];
+                wrap_ui_template = document.getElementById('cofoundry-sv__ui-wrap'),
                 current_ui_elements = [],
                 timer = null,
                 scope = {
@@ -104,7 +104,6 @@ Cofoundry.visualEditor = (function () {
                 ;
 
             // Internal refs
-            __TOOLBAR_SECTION = toolbar_section;
             __TOOLBAR_MODULE = toolbar_module;
 
             // Add class to doc. Used for admin UI 
@@ -113,7 +112,7 @@ Cofoundry.visualEditor = (function () {
 
             if (_internal.model.siteViewerMode === 'Edit') {
                 // Bind events
-                addSectionUI(document);
+                addUI(document);
                 addButtonEvents();
                 addDocumentEvents();
             }
@@ -124,8 +123,8 @@ Cofoundry.visualEditor = (function () {
 
                 function onResize(e) {
                     onGuiEnd();
-                    removeSectionUI();
-                    addSectionUIAfterResize();
+                    removeUI();
+                    addUIAfterResize();
                 }
 
                 function onScroll(e) {
@@ -133,19 +132,19 @@ Cofoundry.visualEditor = (function () {
                 }
             }
 
-            function addSectionUIAfterResize() {
+            function addUIAfterResize() {
                 if (timer) clearTimeout(timer);
-                timer = setTimeout(function () { addSectionUI(document); }, 500);
+                timer = setTimeout(function () { addUI(document); }, 500);
             }
 
-            function addSectionUI(rootElement, popover) {
+            function addUI(rootElement, popover) {
                 var entityType = _internal.model.isCustomEntityRoute ? 'custom-entity' : 'page';
                 addForComponent('section', onSectionMouseEnter, onSectionMouseLeave, onSectionMouseMove);
                 addForComponent('section-module', onModuleMouseEnter, onModuleMouseLeave);
 
                 function addForComponent(componentName, onMouseEnterFn, onMouseLeaveFn, onMouseMoveFn) {
                     var selectorAttribute = 'data-cms-' + entityType + '-' + componentName,
-                        elements, len, i;
+                        elements, multiMode = false, len, i;
 
                     if (rootElement.hasAttribute && rootElement.hasAttribute(selectorAttribute)) {
                         // we are passing the element directly to bind events
@@ -158,24 +157,41 @@ Cofoundry.visualEditor = (function () {
                     len = elements.length;
                     for (i = 0; i < len; ++i) {
                         var el = elements[i],
-                            sectionData = getSectionData(el),
-                            section_wrap = section_wrap_ui.cloneNode(true),
-                            isModule = componentName === "section-module";
+                            el_data = getElementData(el, componentName)
+                        ;
 
-                        // 
-                        section_wrap.style.top = sectionData.y + 'px';
-                        section_wrap.style.left = sectionData.x + 'px';
-                        section_wrap.style.width = sectionData.width + 'px';
-                        section_wrap.style.height = sectionData.height + 'px';
-                        section_wrap.style.zIndex = '-1';
-                        section_wrap.firstChild.nextSibling.innerHTML =
-                            el.getAttribute(isModule ? 'data-cms-page-module-title' : 'data-cms-page-section-name');
-
-                        if (isModule) {
-                            section_wrap.className = 'cofoundry-sv__module-wrap';
+                        // If name is null then discard as its an empty placeholder module
+                        if (!el_data.name) {
+                            return;
                         }
 
-                        section_wrap_ui_container.appendChild(section_wrap);
+                        // If we have a placeholder module then we add an overall add module UI then return
+                        if (!el_data.isModule && !el_data.hasChildren) {
+                            var ui_wrap_add_module = createAddModuleIcon(el_data);
+                            wrap_ui_container.appendChild(ui_wrap_add_module);
+                        }
+
+                        // Check to see if the section allows for multiple modules
+                        if (!el_data.isModule) {
+                            // Section
+                            multiMode = Boolean(el.getAttribute('data-cms-multi-module'));
+                        } else {
+                            // Module
+                            multiMode = Boolean(el.parentNode.getAttribute('data-cms-multi-module'));
+                        }
+
+                        // Store index so we can create unique element ID
+                        el_data.index = i;
+
+                        // Create overlay to show bounds of editable area
+                        var ui_wrap = createWrapElement(el_data);
+                        wrap_ui_container.appendChild(ui_wrap);
+
+                        // Create a plus icon for adding new modules
+                        if (multiMode) {
+                            var ui_wrap_add_module = createAddModuleIcon(el_data);
+                            wrap_ui_container.appendChild(ui_wrap_add_module);
+                        }
 
                         // Add event handlers to sections/modules
                         el.addEventListener('mouseenter', onMouseEnterFn);
@@ -185,40 +201,102 @@ Cofoundry.visualEditor = (function () {
                         }
 
                         current_ui_elements.push({
-                            section_el: el,
-                            section_wrap: section_wrap,
+                            el: el,
+                            ui_elements: [ui_wrap, ui_wrap_add_module],
+                            remove: removeUIElement,
                             events: {
                                 'mouseenter': onMouseEnterFn,
                                 'mouseleave': onMouseLeaveFn,
                                 'mousemove': onMouseMoveFn
-                            },
-                            remove: function () {
-                                // Remove event listeners
-                                for (var e in this.events) {
-                                    if (this.events.hasOwnProperty(e)) {
-                                        this.section_el.removeEventListener(e, this.events[e])
-                                    }
-                                }
-
-                                // Remove DOM elements
-                                section_wrap_ui_container.removeChild(this.section_wrap);
                             }
                         });
                     }
                 }
             }
 
-            function removeSectionUI() {
+            function getElementData(el, componentName) {
+                var data = {},
+                    isModule = componentName === "section-module",
+                    rootEl = isModule ? el.parentNode : el;
+                    ;
+
+                if (!el.offsetWidth) {
+                    el.style.width = '100%';
+                }
+
+                var os = offset(el);
+                data.idName = (data.isModule ? 'module' : 'section') + '_ui_wrap';
+                data.isModule = isModule;
+                data.y = os.top;
+                data.x = os.left;
+                data.width = el.offsetWidth;
+                data.height = el.offsetHeight;
+                data.el = el;
+                data.hasChildren = el.hasChildNodes();
+                data.name = el.getAttribute(isModule ? 'data-cms-page-module-title' : 'data-cms-page-section-name');
+                data.sectionName = rootEl.getAttribute('data-cms-page-section-name');
+                data.className = isModule ? 'cofoundry-sv__ui-wrap--module' : 'cofoundry-sv__ui-wrap--section';
+
+                // Store data from attributes
+                parseModuleAttributes(el, data);
+                parseSectionAttributes(rootEl, data);
+
+                return data;
+            }
+
+            function createWrapElement(data) {
+                var ui_wrap = wrap_ui_template.cloneNode(true);
+                ui_wrap.id = data.idName + '_' + data.index;
+                ui_wrap.className = data.className;
+                ui_wrap.style.top = data.y + 'px';
+                ui_wrap.style.left = data.x + 'px';
+                ui_wrap.style.width = data.width + 'px';
+                ui_wrap.style.height = data.height + 'px';
+                ui_wrap.firstChild.nextSibling.innerHTML = data.name;
+                return ui_wrap;
+            }
+
+            function createAddModuleIcon(data) {
+                var ui_wrap_add_module = toolbar_add_module.cloneNode(true);
+                if (!data.isModule && !data.hasChildren) {
+                    ui_wrap_add_module.className += ' cofoundry-sv__btn-add-module--empty';
+                    ui_wrap_add_module.style.top = data.y + (data.height/2) + 'px';
+                } else {
+                    ui_wrap_add_module.style.top = (data.isModule ? (data.y + data.height) : data.y) + 'px';
+                }
+                ui_wrap_add_module.style.left = data.x + (data.width / 2) + 'px';
+                ui_wrap_add_module.style.display = 'block';
+                ui_wrap_add_module.title = 'Add module to ' + data.sectionName;
+                ui_wrap_add_module.addEventListener('click', function () { onAddSectionModule(data); });
+                return ui_wrap_add_module;
+            }
+
+            function removeUI() {
                 current_ui_elements.forEach(function (item, index) {
                     item.remove();
                 });
                 current_ui_elements = [];
             }
 
+            function removeUIElement() {
+                // Remove event listeners
+                for (var e in this.events) {
+                    if (this.events.hasOwnProperty(e)) {
+                        this.el.removeEventListener(e, this.events[e]);
+                    }
+                }
+
+                // Remove DOM elements
+                for (var ui_i = 0; ui_i < this.ui_elements.length; ui_i++) {
+                    if (this.ui_elements[ui_i]) {
+                        wrap_ui_container.removeChild(this.ui_elements[ui_i]);
+                    }
+                }
+            }
+
             function addButtonEvents() {
                 // Buttons
-                var addSectionModuleButton = __TOOLBAR_SECTION.querySelectorAll('#cofoundry-sv__btn-add-section-module')[0],
-                    moveupModuleButton = __TOOLBAR_MODULE.querySelectorAll('#cofoundry-sv__btn-module-moveup')[0],
+                var moveupModuleButton = __TOOLBAR_MODULE.querySelectorAll('#cofoundry-sv__btn-module-moveup')[0],
                     movedownModuleButton = __TOOLBAR_MODULE.querySelectorAll('#cofoundry-sv__btn-module-movedown')[0],
                     editModuleButton = __TOOLBAR_MODULE.querySelectorAll('#cofoundry-sv__btn-module-edit')[0],
                     addModuleButton = __TOOLBAR_MODULE.querySelectorAll('#cofoundry-sv__btn-module-add')[0],
@@ -227,7 +305,6 @@ Cofoundry.visualEditor = (function () {
                     addbelowModuleButton = __TOOLBAR_MODULE.querySelectorAll('#cofoundry-sv__btn-module-addbelow')[0];
 
                 // Bind click events
-                bindEventHandler(addSectionModuleButton, 'addSectionModule', onAddSectionModule);
                 bindEventHandler(moveupModuleButton, 'moveModuleUp', onMoveupModule);
                 bindEventHandler(movedownModuleButton, 'moveModuleDown', onMovedownModule);
                 bindEventHandler(editModuleButton, 'editModule', onEditModule);
@@ -235,100 +312,101 @@ Cofoundry.visualEditor = (function () {
                 bindEventHandler(addaboveModuleButton, 'addModuleAbove', onAddaboveModule);
                 bindEventHandler(addbelowModuleButton, 'addModuleBelow', onAddbelowModule);
                 bindEventHandler(deleteModuleButton, 'deleteModule', onDeleteModule);
+            }
 
-                // Handlers
-                function onAddSectionModule() {
-                    var action = scope.sectionAddAction || 'addSectionModule',
-                        insertMode = 'BeforeItem';
-                    if (action.indexOf('Below') > -1) insertMode = 'AfterItem';
-
-                    handler(scope.sectionAddAction || 'addSectionModule', {
-                        insertMode: insertMode,
-                        pageTemplateSectionId: scope.pageTemplateSectionId,
-                        permittedModuleTypes: scope.permittedModuleTypes,
-                        versionModuleId: scope.versionModuleId,
-                        pageModuleTypeId: scope.pageModuleTypeId,
-                        isCustomEntity: _internal.model.isCustomEntityRoute
-                    });
+            // Handlers
+            function onAddSectionModule(data) {
+                var insertMode = 'First';
+                if (data.isModule) {
+                    insertMode = 'AfterItem';
                 }
 
-                function onMoveupModule() {
-                    handler('moveModuleUp', {
-                        versionModuleId: scope.versionModuleId,
-                        isCustomEntity: _internal.model.isCustomEntityRoute,
-                        isUp: true
-                    });
-                }
+                buttonHandler('addSectionModule', {
+                    insertMode: insertMode,
+                    pageTemplateSectionId: data.pageTemplateSectionId,
+                    permittedModuleTypes: data.permittedModuleTypes,
+                    versionModuleId: data.versionModuleId,
+                    pageModuleTypeId: data.pageModuleTypeId,
+                    isCustomEntity: _internal.model.isCustomEntityRoute
+                });
+            }
 
-                function onMovedownModule() {
-                    handler('moveModuleDown', {
-                        versionModuleId: scope.versionModuleId,
-                        isCustomEntity: _internal.model.isCustomEntityRoute,
-                        isUp: false
-                    });
-                }
+            function onMoveupModule() {
+                buttonHandler('moveModuleUp', {
+                    versionModuleId: scope.versionModuleId,
+                    isCustomEntity: _internal.model.isCustomEntityRoute,
+                    isUp: true
+                });
+            }
 
-                function onEditModule() {
-                    handler('editModule', {
-                        versionModuleId: scope.versionModuleId,
-                        pageModuleTypeId: scope.pageModuleTypeId,
-                        isCustomEntity: _internal.model.isCustomEntityRoute
-                    });
-                }
+            function onMovedownModule() {
+                buttonHandler('moveModuleDown', {
+                    versionModuleId: scope.versionModuleId,
+                    isCustomEntity: _internal.model.isCustomEntityRoute,
+                    isUp: false
+                });
+            }
 
-                function onAddModule() {
-                    handler('addModule', {
-                        insertMode: 'Last',
-                        pageTemplateSectionId: scope.pageTemplateSectionId,
-                        permittedModuleTypes: scope.permittedModuleTypes,
-                        versionModuleId: scope.versionModuleId,
-                        pageModuleTypeId: scope.pageModuleTypeId,
-                        isCustomEntity: _internal.model.isCustomEntityRoute
-                    });
-                }
+            function onEditModule() {
+                buttonHandler('editModule', {
+                    versionModuleId: scope.versionModuleId,
+                    pageModuleTypeId: scope.pageModuleTypeId,
+                    isCustomEntity: _internal.model.isCustomEntityRoute
+                });
+            }
 
-                function onAddaboveModule() {
-                    handler('addModuleAbove', {
-                        insertMode: 'BeforeItem',
-                        pageTemplateSectionId: scope.pageTemplateSectionId,
-                        permittedModuleTypes: scope.permittedModuleTypes,
-                        versionModuleId: scope.versionModuleId,
-                        pageModuleTypeId: scope.pageModuleTypeId,
-                        isCustomEntity: _internal.model.isCustomEntityRoute
-                    });
-                }
+            function onAddModule() {
+                buttonHandler('addModule', {
+                    insertMode: 'Last',
+                    pageTemplateSectionId: scope.pageTemplateSectionId,
+                    permittedModuleTypes: scope.permittedModuleTypes,
+                    versionModuleId: scope.versionModuleId,
+                    pageModuleTypeId: scope.pageModuleTypeId,
+                    isCustomEntity: _internal.model.isCustomEntityRoute
+                });
+            }
 
-                function onAddbelowModule() {
-                    handler('addModuleBelow', {
-                        insertMode: 'AfterItem',
-                        pageTemplateSectionId: scope.pageTemplateSectionId,
-                        permittedModuleTypes: scope.permittedModuleTypes,
-                        versionModuleId: scope.versionModuleId,
-                        pageModuleTypeId: scope.pageModuleTypeId,
-                        isCustomEntity: _internal.model.isCustomEntityRoute
-                    });
-                }
+            function onAddaboveModule() {
+                buttonHandler('addModuleAbove', {
+                    insertMode: 'BeforeItem',
+                    pageTemplateSectionId: scope.pageTemplateSectionId,
+                    permittedModuleTypes: scope.permittedModuleTypes,
+                    versionModuleId: scope.versionModuleId,
+                    pageModuleTypeId: scope.pageModuleTypeId,
+                    isCustomEntity: _internal.model.isCustomEntityRoute
+                });
+            }
 
-                function onDeleteModule() {
-                    handler('deleteModule', {
-                        versionModuleId: scope.versionModuleId,
-                        isCustomEntity: _internal.model.isCustomEntityRoute
-                    });
-                }
+            function onAddbelowModule() {
+                buttonHandler('addModuleBelow', {
+                    insertMode: 'AfterItem',
+                    pageTemplateSectionId: scope.pageTemplateSectionId,
+                    permittedModuleTypes: scope.permittedModuleTypes,
+                    versionModuleId: scope.versionModuleId,
+                    pageModuleTypeId: scope.pageModuleTypeId,
+                    isCustomEntity: _internal.model.isCustomEntityRoute
+                });
+            }
 
-                // Helper
-                function bindEventHandler(button, action, handler) {
-                    scope.buttons[action] = button;
-                    button.addEventListener('click', handler);
-                }
+            function onDeleteModule() {
+                buttonHandler('deleteModule', {
+                    versionModuleId: scope.versionModuleId,
+                    isCustomEntity: _internal.model.isCustomEntityRoute
+                });
+            }
 
-                function handler(action, args) {
-                    scope.buttons[action]
-                    __IFRAME.contentWindow.postMessage({
-                        action: action, args: [args]
-                    }, document.location.origin);
-                    __IFRAME.style.display = 'block';
-                }
+            function bindEventHandler(button, action, handler) {
+                if (!button) return;
+                scope.buttons[action] = button;
+                button.addEventListener('click', handler);
+            }
+
+            function buttonHandler(action, args) {
+                scope.buttons[action]
+                __IFRAME.contentWindow.postMessage({
+                    action: action, args: [args]
+                }, document.location.origin);
+                __IFRAME.style.display = 'block';
             }
 
             function onSectionMouseEnter(e) {
@@ -350,82 +428,32 @@ Cofoundry.visualEditor = (function () {
             function onModuleMouseLeave() {
                 //onGuiEnd();
             }
-        
-            function getSectionData(sectionEl, moduleEl, evnt) {
-                var data = {};
-                data.sectionAddAction = 'addSectionModule';
 
-                // Position based on modules
-                if (moduleEl) {
-                    data.y = offset(moduleEl).top;
-                    data.el = moduleEl;
-                    data.sectionAddAction = 'addModuleAbove';
+            function parseSectionAttributes(el, store) {
+                store.currentElement = el;
+                store.pageTemplateSectionId = el.getAttribute('data-cms-page-template-section-id');
+                store.permittedModuleTypes = parseModuleTypes(el.getAttribute('data-cms-page-section-permitted-module-types'));
+                store.sectionName = el.getAttribute('data-cms-page-section-name');
+                store.isMultiModule = el.getAttribute('data-cms-multi-module');
+                store.isCustomEntity = el.hasAttribute('data-cms-custom-entity-section');
+            }
 
-                    //console.log(evnt.offsetY);
-                    var relativeY = (evnt.offsetY / data.el.offsetHeight) * 100;//data.y - evnt.clientY;
-                    if (relativeY > 50) {
-                        data.y += data.el.offsetHeight;
-                        data.sectionAddAction = 'addModuleBelow';
-                    }
+            function parseModuleAttributes(el, store) {
+                store.currentModuleElement = el;
+                store.versionModuleId = el.getAttribute('data-cms-version-module-id');
+                store.pageModuleTypeId = el.getAttribute('data-cms-page-module-type-id');
+            }
 
-                // No modules found so base on overall section
-                } else if (sectionEl) {
-                    var os = offset(sectionEl);
-                    data.y = os.top;
-                    data.x = os.left;
-                    data.width = sectionEl.offsetWidth;
-                    data.height = sectionEl.offsetHeight;
-                    data.el = sectionEl;
-                }
+            function parseModuleTypes(moduleTypeValue) {
+                if (!moduleTypeValue) return [];
 
-                return data;
+                return moduleTypeValue.split(',');
             }
 
             function onSectionGuiChange(e, el) {
                 if (el) {
-                    scope.currentElement = el;
-                    scope.pageTemplateSectionId = el.getAttribute('data-cms-page-template-section-id');
-                    scope.permittedModuleTypes = parseModuleTypes(el.getAttribute('data-cms-page-section-permitted-module-types'));
-                    scope.sectionName = el.getAttribute('data-cms-page-section-name');
-                    scope.isMultiModule = el.getAttribute('data-cms-multi-module');
-                    scope.isCustomEntity = el.hasAttribute('data-cms-custom-entity-section');
-
+                    parseSectionAttributes(el, scope);
                     showHideButton('addSectionModule', scope.isMultiModule);
-                }
-
-                var sectionData = getSectionData(scope.currentElement, scope.currentModuleElement, e);
-                scope.sectionY = sectionData.y;
-                scope.sectionAddAction = sectionData.sectionAddAction;
-
-                setPosition();
-
-                function parseModuleTypes(moduleTypeValue) {
-                    if (!moduleTypeValue) return [];
-
-                    return moduleTypeValue.split(',');
-                }
-                
-                function setPosition() {
-                    if (!scope.currentElement) return;
-
-                    var elementOffset = offset(scope.currentElement),
-                        top = scope.sectionY,
-                        left = elementOffset.left + (scope.currentElement.offsetWidth / 2);
-
-                    scope.css = {
-                        top: top + 'px',
-                        left: ((left + 5) || 0) + 'px'
-                    };
-
-                    scope.startScrollY = scope.currentScrollY;
-                    scope.startY = top;
-
-                    __TOOLBAR_SECTION.style.display = 'block';
-                    __TOOLBAR_SECTION.style.top = scope.css.top;
-                    __TOOLBAR_SECTION.style.left = scope.css.left;
-
-                    var line = __TOOLBAR_SECTION.getElementsByClassName('cofoundry-sv__section-popover__line')[0];
-                    line.style.width = scope.currentElement.offsetWidth + 'px';
                 }
             }
 
@@ -433,9 +461,7 @@ Cofoundry.visualEditor = (function () {
                 var css = {};
 
                 if (el) {
-                    scope.currentModuleElement = el;
-                    scope.versionModuleId = el.getAttribute('data-cms-version-module-id');
-                    scope.pageModuleTypeId = el.getAttribute('data-cms-page-module-type-id');
+                    parseModuleAttributes(el, scope);
 
                     showHideButton('addModule', !scope.versionModuleId);
                     showHideButton('editModule', scope.versionModuleId);
@@ -446,9 +472,9 @@ Cofoundry.visualEditor = (function () {
                     showHideButton('addModuleBelow', scope.isMultiModule);
                 }
 
-                setPosition();
+                setUIPosition();
 
-                function setPosition() {
+                function setUIPosition() {
                     var elementOffset = offset(el),
                         top = elementOffset.top,
                         left = elementOffset.left;
@@ -468,12 +494,13 @@ Cofoundry.visualEditor = (function () {
             }
 
             function onGuiEnd() {
-                __TOOLBAR_SECTION.style.display =
                 __TOOLBAR_MODULE.style.display = 'none';
             }
 
             function showHideButton(action, condition) {
-                scope.buttons[action].style.display = condition ? 'block' : 'none';
+                var btn = scope.buttons[action];
+                if (!btn) return;
+                btn.style.display = condition ? 'block' : 'none';
             }
 
             function offset(el) {
@@ -511,7 +538,11 @@ Cofoundry.visualEditor = (function () {
         publish: function (e) {
             e.preventDefault();
             __IFRAME.contentWindow.postMessage({
-                action: 'publish', args: [{ entityId: 1 }]
+                action: 'publish', args: [{
+                    entityId: _internal.model.page.page.pageId,
+                    isCustomEntity: _internal.model.isCustomEntityRoute,
+
+                }]
             }, document.location.origin);
             __IFRAME.style.display = 'block';
         },
@@ -519,7 +550,7 @@ Cofoundry.visualEditor = (function () {
         unpublish: function (e) {
             e.preventDefault();
             __IFRAME.contentWindow.postMessage({
-                action: 'unpublish', args: [{ entityId: 1 }]
+                action: 'unpublish', args: [{ entityId: _internal.model.page.page.pageId }]
             }, document.location.origin);
         },
 
@@ -527,8 +558,8 @@ Cofoundry.visualEditor = (function () {
             e.preventDefault();
             __IFRAME.contentWindow.postMessage({
                 action: 'copyToDraft', args: [{
-                    entityId: 1,
-                    versionId: 1,
+                    entityId: _internal.model.page.page.pageId,
+                    versionId: _internal.model.page.page.versionId,
                     hasDraftVersion: false
                 }]
             }, document.location.origin);

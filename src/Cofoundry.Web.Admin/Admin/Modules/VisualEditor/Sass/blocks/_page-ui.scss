@@ -38,7 +38,7 @@
 }
 
 /* #### Hovering #### */
-#cofoundry-sv__section-popover-container, #cofoundry-sv__module-popover-container {
+#cofoundry-sv__module-popover-container {
     font-family:$fontstack-default;
     font-size:85%;
     position: absolute;
@@ -48,93 +48,95 @@
 }
 
 /* #### Section hovering #### */
-#cofoundry-sv__section-popover-container {
-    z-index:99999999;
-    display:none;
+.cofoundry-sv__btn-add-module {
+    @include transform(translateY(-50%) translateX(-50%));
+    @include border-radius(50%);
+    z-index: 999999998;
+    border:3px solid $color-primary;
+    background-color: $color-primary;
+    color: $color-darkgrey;
+    overflow: hidden;
+    white-space: nowrap;
+    position:absolute;
+    text-align:center;
+    left: 0px;
+    height: 20px;
+    width: 20px;
+    top: 1px;
 
-    button {
-        @include transform(translateX(-100%) translateY(-50%));
-        @include border-radius(50%);
-        border:3px solid $color-primary;
-        background-color: $color-primary;
-        color: $color-darkgrey;
-        overflow: hidden;
-        white-space: nowrap;
+    &:after {
+        content:'';
         position:absolute;
-        text-align:center;
-        left: 0px;
-        height: 20px;
-        width: 20px;
-        top: 1px;
+        height:2px;
+        width:8px;
+        background:white;
+        top: 6px;
+        left: 3px;
+    }
 
-        &:after {
-            content:'';
-            position:absolute;
-            height:2px;
-            width:8px;
-            background:white;
-            top: 6px;
-            left: 3px;
-        }
+    &:before {
+        content:'';
+        position:absolute;
+        height:8px;
+        width:2px;
+        background:white;
+        top: 3px;
+        left: 6px;
+    }
 
-        &:before {
-            content:'';
-            position:absolute;
-            height:8px;
-            width:2px;
-            background:white;
-            top: 3px;
-            left: 6px;
-        }
-
-        &:hover {
-            &:after, &:before {
-                background:$color-secondary;
-            }
+    &:hover {
+        &:after, &:before {
+            background:$color-secondary;
         }
     }
 
-    div {
-        width: 520px;
-        height: 2px;
-        background: #4af386;
-        margin-left: -5px;
-        position: absolute;
-        top: 0px;
-        transform: translateX(-50%);
-        z-index: -1;
+    &.cofoundry-sv__btn-add-module--empty {
+
     }
 }
 
-.cofoundry-sv__section-wrap {
+.cofoundry-sv__ui-wrap--section {
+    display:block!important;
+    pointer-events: none;
     position:absolute;
-    border:1px dashed #dddcdc;
+    border:1px dashed $color-primary;
     min-height:30px;
+    z-index:999999996;
 
-    .cofoundry-sv__section_module-name {
+    .cofoundry-sv__ui-wrap-name {
+        z-index: 1;
         transform: translateY(-100%);
-        background: #dddcdc;
+        background: $color-primary;
+        color: $color-secondary;
         top:0px;
     }
 }
 
-.cofoundry-sv__module-wrap {
+.cofoundry-sv__ui-wrap--module {
+    display:block!important;
+    pointer-events: none;
     position:absolute;
     border:1px dashed $color-secondary;
     min-height:30px;
     min-width: 100px;
+    z-index:999999997;
 
-    .cofoundry-sv__section_module-name {
+    .cofoundry-sv__ui-wrap-name {
+        z-index: 1;
+        font-family:$fontstack-default;
+        line-height:12px;
         transform: translateY(-100%);
         background: $color-secondary;
-        color:#fff;
+        color: #fff;
         left:-1px;
         top:0px;
         right:auto;
     }
 }
 
-.cofoundry-sv__section_module-name {
+.cofoundry-sv__ui-wrap-name {
+    font-family:$fontstack-default;
+    line-height:12px;
     position: absolute;
     font-size: 8px;
     text-transform: uppercase;
@@ -147,7 +149,7 @@
 
 /* #### Module hovering #### */
 #cofoundry-sv__module-popover-container {
-    z-index:9999999;
+    z-index:999999998;
     display:none;
 
     .cofoundry-sv__module-popover--main-actions {

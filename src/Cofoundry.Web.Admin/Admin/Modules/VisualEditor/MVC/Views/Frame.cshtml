@@ -6,9 +6,7 @@
 @using System.Web.Optimization
 
 @{
-    object ngOptions = null;
-
-    ngOptions = new
+    object ngOptions = new
     {
         IsInEditMode = Model.IsInEditMode,
         PageId = Model.PageId,
@@ -30,6 +28,6 @@
 </head>
 <body class="cofoundry-visual-editor-frame">
     <div ng-controller="VisualEditorController as vm"></div>
-    @AngularHelper.Bootstrap(VisualEditorRouteLibrary.Js, Cofoundry.CurrentUser,  ngOptions)
+    @AngularHelper.Bootstrap(VisualEditorRouteLibrary.Js, Cofoundry.CurrentUser, ngOptions)
 </body>
 </html>

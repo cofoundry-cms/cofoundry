@@ -60,10 +60,10 @@ function (
         vm[e.data.action].apply(this, e.data.args);
     }
 
-    function config(isCustomEntityRoute, entityNameSingular) {
+    function config() {
         entityDialogServiceConfig = {
-            entityNameSingular: entityNameSingular,
-            isCustomEntity: isCustomEntityRoute
+            entityNameSingular: options.entityNameSingular,
+            isCustomEntity: options.isCustomEntityRoute
         };
     }
 
@@ -93,7 +93,9 @@ function (
             templateUrl: modulePath + 'routes/modals/addmodule.html',
             controller: 'AddModuleController',
             options: {
+                insertMode: args.insertMode,
                 pageTemplateSectionId: args.pageTemplateSectionId,
+                adjacentVersionModuleId: args.versionModuleId,
                 permittedModuleTypes: args.permittedModuleTypes,
                 onClose: onClose,
                 refreshContent: refreshSection,
