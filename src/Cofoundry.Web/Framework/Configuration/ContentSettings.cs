@@ -12,7 +12,7 @@ namespace Cofoundry.Web
     public class ContentSettings : IConfigurationSettings
     {
         /// <summary>
-        /// A developer setting which can be used to view unpublished versions of pages 
+        /// A developer setting which can be used to view unpublished versions of content 
         /// without being logged into the administrator site.
         /// </summary>
         /// <remarks>
@@ -20,6 +20,6 @@ namespace Cofoundry.Web
         /// be used so that a developer could preview a page without putting it live, presumably when 
         /// developing content against a live db.
         /// </remarks>
-        public bool AlwaysShowUnpublishedPages { get; set; }
+        public bool AlwaysShowUnpublishedData { get; set; }
     }
 }

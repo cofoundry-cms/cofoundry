@@ -6,6 +6,9 @@ using Cofoundry.Core.Configuration;
 
 namespace Cofoundry.Domain
 {
+    /// <summary>
+    /// Settings to do with authentication security features.
+    /// </summary>
     public class AuthenticationSettings : IConfigurationSettings
     {
         public AuthenticationSettings()
@@ -18,33 +21,33 @@ namespace Cofoundry.Domain
         }
 
         /// <summary>
-        /// The number of hours a password reset link is valid for. Defaults to 16
+        /// The number of hours a password reset link is valid for. Defaults to 16 hours.
         /// </summary>
         public int NumHoursPasswordResetLinkValid { get; set; }
 
         /// <summary>
-        /// The maximum number of failed login attempts allower per ip address 
+        /// The maximum number of failed login attempts allowed per IP address 
         /// during the time window described by the MaxIPAttemptsBoundaryInMinutes
-        /// property. The default value is 60.
+        /// property. The default value is 60 minutes.
         /// </summary>
         public int MaxIPAttempts { get; set; }
 
         /// <summary>
-        /// The maximum number of failed login attempts allower per username 
+        /// The maximum number of failed login attempts allowed per username 
         /// during the time window described by the MaxUsernameAttemptsBoundaryInMinutes
-        /// property. The default value is 40.
+        /// property. The default value is 40 minutes.
         /// </summary>
         public int MaxUsernameAttempts { get; set; }
 
         /// <summary>
         /// The time window to measure login attempts when testing for blocking by IP 
-        /// address. The default value is 40.
+        /// address. The default value is 40 minutes.
         /// </summary>
         public int MaxIPAttemptsBoundaryInMinutes { get; set; }
 
         /// <summary>
         /// The time window to measure login attempts when testing for blocking by 
-        /// username. The default value is 20.
+        /// username. The default value is 20 minutes.
         /// </summary>
         public int MaxUsernameAttemptsBoundaryInMinutes { get; set; }
     }

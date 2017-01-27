@@ -17,7 +17,7 @@ namespace Cofoundry.Web
 
         /// <summary>
         /// By default css/js is only bundles in release mode, set this to true to override
-        /// this behavior
+        /// this behavior (only applicable when using the asp.net bundling system).
         /// </summary>
         public bool ForceBundling { get; set; }
     }
