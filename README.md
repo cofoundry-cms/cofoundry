@@ -11,15 +11,15 @@ Cofoundry is an open source .Net application framework & content management plat
 - Extensible & flexible architecture
 - Simple & user friendly content administration
 
-Find out more at [Cofoundry.org](http://www.cofoundry.org)
+Find out more at [Cofoundry.org](http://www.cofoundry.org) or head to the [docs wiki](https://github.com/cofoundry-cms/cofoundry/wiki) to get started
 
 ### Getting Started
 
-- [Overview](Overview)
-- [Sample Projects](Sample-Projects)
-- [Installing](Installing)
-- [Status and Roadmap](Status-and-Roadmap)
-- [Feedback & Community](Feedback-&-Community)
+- [Overview](https://github.com/cofoundry-cms/cofoundry/wiki/Overview)
+- [Sample Projects](https://github.com/cofoundry-cms/cofoundry/wiki/Sample-Projects)
+- [Installing](https://github.com/cofoundry-cms/cofoundry/wiki/Installing)
+- [Status and Roadmap](https://github.com/cofoundry-cms/cofoundry/wiki/Status-and-Roadmap)
+- [Feedback & Community](https://github.com/cofoundry-cms/cofoundry/wiki/Feedback-&-Community)
 - [Full Documentation](https://github.com/cofoundry-cms/cofoundry/wiki)
 
 
