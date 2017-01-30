@@ -1,0 +1,42 @@
+﻿<cms-modal-dialog-container cms-modal-size="large">
+
+    <cms-modal-dialog-header>
+        Upload an image
+    </cms-modal-dialog-header>
+
+    <cms-form cms-name="mainForm" ng-submit="onUpload()">
+        <cms-page-actions>
+
+            <cms-button cms-text="Upload" ng-click="onUpload()" class="main-cta" ng-disabled="mainForm.$invalid || saveLoadState.isLoading"></cms-button>
+            <cms-button cms-text="Cancel" ng-click="onCancel()"></cms-button>
+
+        </cms-page-actions>
+
+        <cms-page-body>
+
+            <cms-warning-message ng-if="hasFilterRestrictions()">The image field you are assigning to has image restrictions. If you are unsure, cancel this dialog and check the filters menu.</cms-warning-message>
+
+            <cms-form-section cms-title="Image details">
+
+                <cms-form-field-image-upload cms-title="File"
+                                             cms-model="command.file"
+                                             cms-change="onFileChanged()"
+                                             cms-load-state="saveLoadState"
+                                             required></cms-form-field-image-upload>
+
+                <cms-form-field-text cms-title="Title"
+                                     cms-model="command.title"
+                                     max-length="120"
+                                     required></cms-form-field-text>
+
+                <cms-form-field-tags cms-title="CMS Tags"
+                                     cms-model="command.tags"></cms-form-field-tags>
+
+                <cms-form-field-image-anchor-location-selector cms-model="command.defaultAnchorLocation"></cms-form-field-image-anchor-location-selector>
+
+            </cms-form-section>
+
+        </cms-page-body>
+    </cms-form>
+
+</cms-modal-dialog-container>
