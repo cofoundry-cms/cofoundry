@@ -34,7 +34,7 @@ namespace Cofoundry.Core.Mail
         }
 
         public EmailTemplateBase(
-            ISiteUriResolver siteUriResolver
+            ISiteUrlResolver siteUriResolver
             )
         {
             Url = new RazorEngineUrlHelper(siteUriResolver);

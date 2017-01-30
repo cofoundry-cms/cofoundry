@@ -11,10 +11,10 @@ namespace Cofoundry.Core.Mail
     /// </summary>
     public class RazorEngineUrlHelper
     {
-        private readonly ISiteUriResolver _siteUriResolver;
+        private readonly ISiteUrlResolver _siteUriResolver;
 
         public RazorEngineUrlHelper(
-            ISiteUriResolver siteUriResolver
+            ISiteUrlResolver siteUriResolver
             )
         {
             _siteUriResolver = siteUriResolver;

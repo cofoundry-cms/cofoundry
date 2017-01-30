@@ -46,7 +46,7 @@ namespace Cofoundry.Web
                     siteViewerMode = SiteViewerMode.Any;
                 }
             }
-            else if (_contentSettings.AlwaysShowUnpublishedPages)
+            else if (_contentSettings.AlwaysShowUnpublishedData)
             {
                 // We can optionally set the siteviewer mode to any - ie show draft and published pages
                 // This is used in scenarios where devs are making modifications against a live db using a 

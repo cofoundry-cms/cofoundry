@@ -2,14 +2,18 @@
 
 namespace Cofoundry.Core.Web
 {
-    public abstract class SiteUriResolverBase :  ISiteUriResolver
+    /// <summary>
+    /// Base class for an ISiteUrlResolver that includes most of the bare functionality
+    /// appart from working out the root url itself.
+    /// </summary>
+    public abstract class SiteUrlResolverBase :  ISiteUrlResolver
     {
         #region public methods
 
         /// <summary>
-        /// Maps a relative path to an absolute path
+        /// Maps a relative path to an absolute path.
         /// </summary>
-        /// <param name="path">path to resolve</param>
+        /// <param name="path">Path to resolve.</param>
         /// <returns>The absolute path, or an empty string if the supplied path is null or empty.</returns>
         public string MakeAbsolute(string path)
         {
@@ -37,7 +41,7 @@ namespace Cofoundry.Core.Web
         #endregion
 
         #region private helpers
-
+        
         protected abstract string GetSiteRoot();
 
         private string MakeSsl(string path, bool forceSsl)

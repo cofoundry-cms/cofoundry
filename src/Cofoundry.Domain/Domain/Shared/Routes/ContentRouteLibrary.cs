@@ -15,13 +15,13 @@ namespace Cofoundry.Domain
         private readonly IDocumentAssetRouteLibrary _documentAssetRouteLibrary;
         private readonly IImageAssetRouteLibrary _imageAssetRouteLibrary;
         private readonly IPageRouteLibrary _pageRouteLibrary;
-        private readonly ISiteUriResolver _siteUriResolver;
+        private readonly ISiteUrlResolver _siteUriResolver;
 
         public ContentRouteLibrary(
             IPageRouteLibrary pageRouteLibrary,
             IImageAssetRouteLibrary imageAssetRouteLibrary,
             IDocumentAssetRouteLibrary documentAssetRouteLibrary,
-            ISiteUriResolver siteUriResolver
+            ISiteUrlResolver siteUriResolver
             )
         {
             _pageRouteLibrary = pageRouteLibrary;
