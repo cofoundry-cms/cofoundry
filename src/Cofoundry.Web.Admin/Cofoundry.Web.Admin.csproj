@@ -431,7 +431,6 @@
     <Content Include="Admin\Modules\Shared\Content\css\lib\tinymce\skin.min.css" />
     <Content Include="Admin\Modules\Shared\Content\css\lib\ui-select.css" />
     <Content Include="Admin\Modules\Shared\Content\css\shared.css" />
-    <Content Include="Admin\Modules\Shared\Content\favicon.ico" />
     <Content Include="Admin\Modules\VisualEditor\Content\svg-cache.html" />
     <Content Include="Admin\Modules\Shared\Content\videoplayer.swf" />
     <Content Include="Admin\Modules\Shared\Js\Bootstrap\Module.js" />
