@@ -1,14 +1,19 @@
-﻿angular.module('cms.shared').directive('cmsFormFieldImageAnchorLocationSelector', ['_', 'images.modulePath', function (_, modulePath) {
-    return {
-        restrict: 'E',
-        templateUrl: modulePath + 'uicomponents/FormFieldImageAnchorLocationSelector.html',
-        scope: {
-            model: '=cmsModel'
-        },
-        controller: Controller,
-        controllerAs: 'vm',
-        bindToController: true
-    };
+﻿angular.module('cms.shared').directive('cmsFormFieldImageAnchorLocationSelector', [
+        '_',
+        'shared.internalModulePath',
+    function (
+        _,
+        modulePath) {
+        return {
+            restrict: 'E',
+            templateUrl: modulePath + 'UIComponents/ImageAssets/FormFieldImageAnchorLocationSelector.html',
+            scope: {
+                model: '=cmsModel'
+            },
+            controller: Controller,
+            controllerAs: 'vm',
+            bindToController: true
+        };
 
     /* CONTROLLER */
 

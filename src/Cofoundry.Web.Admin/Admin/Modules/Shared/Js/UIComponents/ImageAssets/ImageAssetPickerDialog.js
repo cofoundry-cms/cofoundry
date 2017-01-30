@@ -3,6 +3,8 @@
     'shared.LoadState',
     'shared.imageService',
     'shared.SearchQuery',
+    'shared.modalDialogService',
+    'shared.internalModulePath',
     'options',
     'close',
 function (
@@ -10,6 +12,8 @@ function (
     LoadState,
     imageService,
     SearchQuery,
+    modalDialogService,
+    modulePath,
     options,
     close) {
     
@@ -24,6 +28,7 @@ function (
         vm.onOk = onOk;
         vm.onCancel = onCancel;
         vm.onSelect = onSelect;
+        vm.onUpload = onUpload;
         vm.selectedAsset = vm.currentAsset; // currentAsset is null in single mode
         vm.onSelectAndClose = onSelectAndClose;
         vm.close = onCancel;
@@ -103,6 +108,21 @@ function (
         }
 
         close();
+    }
+
+    function onUpload() {
+        modalDialogService.show({
+            templateUrl: modulePath + 'UIComponents/ImageAssets/UploadImageAssetDialog.html',
+            controller: 'UploadImageAssetDialogController',
+            options: {
+                filter: options.filter,
+                onUploadComplete: onUploadComplete
+            }
+        });
+
+        function onUploadComplete() {
+            loadGrid();
+        }
     }
 
     /* PUBLIC HELPERS */

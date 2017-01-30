@@ -323,8 +323,8 @@
     <Content Include="Admin\Modules\Images\Js\Routes\ImageDetailsController.js" />
     <Content Include="Admin\Modules\Images\Js\Routes\ImageList.html" />
     <Content Include="Admin\Modules\Images\Js\Routes\ImageListController.js" />
-    <Content Include="Admin\Modules\Images\Js\UIComponents\FormFieldImageAnchorLocationSelector.html" />
-    <Content Include="Admin\Modules\Images\Js\UIComponents\FormFieldImageAnchorLocationSelector.js" />
+    <Content Include="Admin\Modules\Shared\Js\UIComponents\ImageAssets\FormFieldImageAnchorLocationSelector.html" />
+    <Content Include="Admin\Modules\Shared\Js\UIComponents\ImageAssets\FormFieldImageAnchorLocationSelector.js" />
     <Content Include="Admin\Modules\Pages\Js\Bootstrap\Module.js" />
     <Content Include="Admin\Modules\Pages\Js\Bootstrap\Routing.js" />
     <Content Include="Admin\Modules\Pages\Js\DataServices\CustomEntityService.js" />
@@ -432,6 +432,8 @@
     <Content Include="Admin\Modules\Shared\Content\css\lib\ui-select.css" />
     <Content Include="Admin\Modules\Shared\Content\css\shared.css" />
     <Content Include="Admin\Modules\Shared\Content\favicon.ico" />
+    <Content Include="Admin\Modules\Shared\Js\UIComponents\ImageAssets\UploadImageAssetDialog.js" />
+    <Content Include="Admin\Modules\Shared\Js\UIComponents\ImageAssets\UploadImageAssetDialog.html" />
     <Content Include="Admin\Modules\VisualEditor\Content\svg-cache.html" />
     <Content Include="Admin\Modules\Shared\Content\videoplayer.swf" />
     <Content Include="Admin\Modules\Shared\Js\Bootstrap\Module.js" />
@@ -922,6 +924,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Admin\Modules\Images\Js\UIComponents\" />
     <Folder Include="Admin\Modules\Shared\MVC\Views\StandardModule\" />
     <Folder Include="Admin\Modules\Shared\Sass\Modules\" />
     <Folder Include="Admin\Modules\Users\Js\UIControls\" />
