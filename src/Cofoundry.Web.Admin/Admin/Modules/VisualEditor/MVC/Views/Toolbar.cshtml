@@ -13,6 +13,13 @@
             && model.PageVersion.HasPageModuleSections;
     }
 
+    bool IsCustomEntityEditOnly(IPageResponseData model)
+    {
+        return model.PageRoutingInfo.CustomEntityRoute != null
+            && model.PageVersion.HasCustomEntityModuleSections
+            && !model.PageVersion.HasPageModuleSections;
+    }
+
     bool CanEditPage(IPageResponseData model)
     {
         return model.PageVersion.HasCustomEntityModuleSections || model.PageVersion.HasPageModuleSections;
@@ -27,6 +34,7 @@
     bool isViewingSpecificVersion = false;
     bool isCustomEntityRoute = false;
     bool isEditTypeSwitchRequired = false;
+    bool isCustomEntityEditOnly = false;
     string entityNameSingular = string.Empty;
     string backToAdminLink = string.Empty;
     var versions = new List<IVersionRoute>();
@@ -39,6 +47,7 @@
         isCustomEntityRoute = model.IsCustomEntityRoute;
         entityNameSingular = isCustomEntityRoute ? model.CustomEntityDefinition.Name : "Page";
         isEditTypeSwitchRequired = IsEditTypeSwitchRequired(model);
+        isCustomEntityEditOnly = IsCustomEntityEditOnly(model);
 
         // If we are on a page with custom entities, it makes more sense to refer to the page as a template
         if (isEditTypeSwitchRequired && !isCustomEntityRoute)
@@ -224,12 +233,12 @@
                 }
                 else
                 {
-                    <a href="?mode=edit&edittype=page" class="cofoundry-sv__mode__button @Cofoundry.Html.TextIf(!isCustomEntityRoute && isEditing, "active")">
+                    <a href="?mode=edit&edittype=@(isCustomEntityEditOnly ? "entity":"page")" class="cofoundry-sv__mode__button @Cofoundry.Html.TextIf(!isCustomEntityRoute && isEditing, "active")">
                         <span>
                             @*<svg class="icon" viewBox="0 0 80 80">
                                 <use xlink:href="#edittemplate" x="0" y="0" />
                             </svg>*@
-                            Edit<br />@(isEditTypeSwitchRequired ? "template" : "draft")
+                            Edit<br />draft
                         </span>
                     </a>
                 }
