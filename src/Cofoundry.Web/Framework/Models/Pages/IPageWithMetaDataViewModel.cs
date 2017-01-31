@@ -8,6 +8,6 @@ namespace Cofoundry.Web
     public interface IPageWithMetaDataViewModel
     {
         string PageTitle { get; set; }
-        PageMetaData MetaData { get; set; }
+        string MetaDescription { get; set; }
     }
 }

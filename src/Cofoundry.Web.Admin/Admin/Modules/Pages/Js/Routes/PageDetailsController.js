@@ -235,8 +235,7 @@ function (
         return {
             pageId: page.pageId,
             title: version.title,
-            metaDescription: version.metaData.description,
-            metaKeywords: version.metaData.keywords,
+            metaDescription: version.metaDescription,
             openGraphTitle: ogData.title,
             openGraphDescription: ogData.description,
             openGraphImageId: ogData.image ? ogData.image.ImageAssetId : undefined,

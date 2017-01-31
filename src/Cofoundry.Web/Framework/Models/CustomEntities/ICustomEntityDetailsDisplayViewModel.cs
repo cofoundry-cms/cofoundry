@@ -12,7 +12,7 @@ namespace Cofoundry.Web
     {
         string PageTitle { get; set; }
 
-        PageMetaData MetaData { get; set; }
+        string MetaDescription { get; set; }
     }
 
     /// <summary>

@@ -77,7 +77,7 @@ namespace Cofoundry.Web
 
                 ErrorPageViewModel viewModel = new ErrorPageViewModel(filterContext.Exception, controllerName, actionName)
                 {
-                    MetaData = new PageMetaData() { Description = "Sorry, there has been an error" },
+                    MetaDescription = "Sorry, there has been an error",
                     PageTitle = "Error"
                 };
 

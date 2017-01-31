@@ -16,8 +16,6 @@ namespace Cofoundry.Domain.Bootstrap
                 .RegisterType<SettingQueryHelper>()
                 .RegisterType<SettingCommandHelper>()
                 .RegisterType<IInternalSettingsRepository, InternalSettingsRepository>()
-                .RegisterType<ISiteKeywordService, SiteKeywordService>()
-                .RegisterType<MergeSiteKeywordsValueResolver>()
                 ;
         }
     }

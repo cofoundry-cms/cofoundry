@@ -147,7 +147,6 @@ namespace Cofoundry.Domain
             pageVersion.Title = command.Title;
             pageVersion.ExcludeFromSitemap = !command.ShowInSiteMap;
             pageVersion.MetaDescription = command.MetaDescription ?? string.Empty;
-            pageVersion.MetaKeywords = command.MetaKeywords ?? string.Empty;
             pageVersion.WorkFlowStatusId = command.Publish ? (int)WorkFlowStatus.Published : (int)WorkFlowStatus.Draft;
             pageVersion.OpenGraphTitle = command.OpenGraphTitle;
             pageVersion.OpenGraphDescription = command.OpenGraphDescription;

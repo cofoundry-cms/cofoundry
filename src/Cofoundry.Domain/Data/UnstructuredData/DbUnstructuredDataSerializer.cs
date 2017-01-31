@@ -1,4 +1,5 @@
 ﻿using Cofoundry.Core.ErrorLogging;
+using Cofoundry.Core.Json;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using System;
@@ -19,12 +20,15 @@ namespace Cofoundry.Domain.Data
         #region constructor
 
         private readonly IErrorLoggingService _errorLoggingService;
+        private readonly IJsonSerializerSettingsFactory _jsonSerializerSettingsFactory;
 
         public DbUnstructuredDataSerializer(
-            IErrorLoggingService errorLoggingService
+            IErrorLoggingService errorLoggingService,
+            IJsonSerializerSettingsFactory jsonSerializerSettingsFactory
             )
         {
             _errorLoggingService = errorLoggingService;
+            _jsonSerializerSettingsFactory = jsonSerializerSettingsFactory;
         }
 
         #endregion
@@ -62,7 +66,7 @@ namespace Cofoundry.Domain.Data
 
         private JsonSerializerSettings GetDeserializerSettings()
         {
-            var settings = JsonConvert.DefaultSettings();
+            var settings = _jsonSerializerSettingsFactory.Create();
             settings.Error = HandleDeserializationError;
 
             return settings;

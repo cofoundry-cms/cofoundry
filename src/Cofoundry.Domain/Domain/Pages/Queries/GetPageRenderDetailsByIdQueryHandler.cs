@@ -17,17 +17,14 @@ namespace Cofoundry.Domain
 
         private readonly CofoundryDbContext _dbContext;
         private readonly IEntityVersionPageModuleMapper _entityVersionPageModuleMapper;
-        private readonly IPageMetaDataMapper _pageMetaDataMapper;
 
         public GetPageRenderDetailsByIdQueryHandler(
             CofoundryDbContext dbContext,
-            IEntityVersionPageModuleMapper entityVersionPageModuleMapper,
-            IPageMetaDataMapper pageMetaDataMapper
+            IEntityVersionPageModuleMapper entityVersionPageModuleMapper
             )
         {
             _dbContext = dbContext;
             _entityVersionPageModuleMapper = entityVersionPageModuleMapper;
-            _pageMetaDataMapper = pageMetaDataMapper;
         }
 
         #endregion
@@ -38,8 +35,6 @@ namespace Cofoundry.Domain
         {
             var page = await GetPage(query);
             if (page == null) return null;
-
-            _pageMetaDataMapper.MergeSitewideData(page.MetaData);
 
             var dbModules = await _dbContext
                 .PageVersionModules

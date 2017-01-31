@@ -10,6 +10,6 @@ namespace Cofoundry.Web
     {
         public string PageTitle { get; set; }
         
-        public PageMetaData MetaData { get; set; }
+        public string MetaDescription { get; set; }
     }
 }

@@ -18,7 +18,7 @@ namespace Cofoundry.Domain
         /// </summary>
         public bool ShowInSiteMap { get; set; }
         
-        public PageMetaData MetaData { get; set; }
+        public string MetaDescription { get; set; }
 
         public OpenGraphData OpenGraph { get; set; }
 

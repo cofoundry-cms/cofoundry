@@ -11,6 +11,14 @@ namespace Cofoundry.Domain
 {
     public class GetCustomEntityRenderSummaryByIdQuery : IQuery<CustomEntityRenderSummary>
     {
+        public GetCustomEntityRenderSummaryByIdQuery() { }
+
+        public GetCustomEntityRenderSummaryByIdQuery(int customEntityId, WorkFlowStatusQuery workFlowStatus = WorkFlowStatusQuery.Latest)
+        {
+            CustomEntityId = customEntityId;
+            WorkFlowStatus = workFlowStatus;
+        }
+
         [Required]
         [PositiveInteger]
         public int CustomEntityId { get; set; }

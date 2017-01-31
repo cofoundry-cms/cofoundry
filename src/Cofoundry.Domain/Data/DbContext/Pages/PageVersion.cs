@@ -17,7 +17,6 @@ namespace Cofoundry.Domain.Data
         public Nullable<int> BasedOnPageVersionId { get; set; }
         public string Title { get; set; }
         public string MetaDescription { get; set; }
-        public string MetaKeywords { get; set; }
         public int WorkFlowStatusId { get; set; }
         public bool IsDeleted { get; set; }
         public bool ExcludeFromSitemap { get; set; }

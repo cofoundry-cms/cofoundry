@@ -15,7 +15,6 @@ namespace Cofoundry.Domain
     {
         public PageRenderDetails()
         {
-            MetaData = new PageMetaData();
             OpenGraph = new OpenGraphData();
         }
 
@@ -23,9 +22,9 @@ namespace Cofoundry.Domain
         public int PageVersionId { get; set; }
 
         public string Title { get; set; }
+        public string MetaDescription { get; set; }
         public WorkFlowStatus WorkFlowStatus { get; set; }
 
-        public PageMetaData MetaData { get; set; }
         public OpenGraphData OpenGraph { get; set; }
 
         public PageTemplateMicroSummary Template { get; set; }

@@ -25,17 +25,17 @@ namespace Cofoundry.Web
             }
         }
 
-        public PageMetaData MetaData 
+        public string MetaDescription
         { 
             get
             {
                 if (Page == null) return null;
-                return Page.MetaData;
+                return Page.MetaDescription;
             }
             set
             {
-                SetPagePropertyNullCheck("MetaData");
-                Page.MetaData = value;
+                SetPagePropertyNullCheck("MetaDescription");
+                Page.MetaDescription = value;
             } 
         }
 

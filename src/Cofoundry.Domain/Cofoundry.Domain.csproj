@@ -589,8 +589,6 @@
     <Compile Include="Domain\Pages\Mapping\EntityVersionPageModuleMapper.cs" />
     <Compile Include="Domain\Pages\Mapping\IPageModuleDisplayModelMapper.cs" />
     <Compile Include="Domain\Pages\Mapping\IPageVersionModuleModelMapper.cs" />
-    <Compile Include="Domain\Pages\Mapping\IPageMetaDataMapper.cs" />
-    <Compile Include="Domain\Pages\Mapping\PageMetaDataMapper.cs" />
     <Compile Include="Domain\Pages\Mapping\PageModuleDisplayModelMapperInput.cs" />
     <Compile Include="Domain\Pages\Mapping\PageModuleDisplayModelMapperOutput.cs" />
     <Compile Include="Domain\Pages\Mapping\PageSummaryMapper.cs" />
@@ -622,7 +620,6 @@
     <Compile Include="Domain\Pages\Models\PageDetails.cs" />
     <Compile Include="Domain\Pages\Models\PageGroupMicroSummary.cs" />
     <Compile Include="Domain\Pages\Models\PageGroupSummary.cs" />
-    <Compile Include="Domain\Pages\Models\PageMetaData.cs" />
     <Compile Include="Domain\PageModuleTypes\Models\PageModuleTypeDetails.cs" />
     <Compile Include="Domain\PageModuleTypes\Models\PageModuleTypeSummary.cs" />
     <Compile Include="Domain\PageModuleTypes\Models\PageModuleTypeTemplateSummary.cs" />
@@ -792,7 +789,6 @@
     <Compile Include="Domain\Roles\Services\IPermissionRestrictedQueryHandler.cs" />
     <Compile Include="Domain\Roles\Services\IPermissionValidationService.cs" />
     <Compile Include="Domain\Roles\Services\PermissionValidationService.cs" />
-    <Compile Include="Domain\Settings\AutoMapperResolvers\MergeSiteKeywordsValueResolver.cs" />
     <Compile Include="Domain\Settings\Bootstrap\SettingsAutoMapProfile.cs" />
     <Compile Include="Domain\Settings\Bootstrap\SettingsDependencyRegistration.cs" />
     <Compile Include="Domain\Settings\Bootstrap\SettingsEntityDefinition.cs" />
@@ -807,8 +803,6 @@
     <Compile Include="Domain\Settings\Commands\UpdateVisualEditorSettingsCommand.cs" />
     <Compile Include="Domain\Settings\Commands\UpdateVisualEditorSettingsCommandHandler.cs" />
     <Compile Include="Domain\Settings\Constants\SettingKey.cs" />
-    <Compile Include="Domain\Settings\Services\ISiteKeywordService.cs" />
-    <Compile Include="Domain\Settings\Services\SiteKeywordService.cs" />
     <Compile Include="Domain\Settings\Helpers\SettingCommandHelper.cs" />
     <Compile Include="Domain\Settings\Helpers\SettingQueryHelper.cs" />
     <Compile Include="Domain\Settings\Models\GeneralSiteSettings.cs" />
@@ -1057,6 +1051,9 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Install\Db\Schema\00002.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Install\Db\Schema\00003.sql" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="BeforeBuild">
