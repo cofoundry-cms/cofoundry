@@ -163,7 +163,6 @@
                 }
 
                 function createModalElement(template, scope) {
-
                     //  Parse the modal HTML into a DOM element (in template form).
                     var modalElementTemplate = angular.element(template);
 
