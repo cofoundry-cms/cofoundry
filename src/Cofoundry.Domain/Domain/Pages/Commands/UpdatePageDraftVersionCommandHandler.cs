@@ -112,7 +112,6 @@ namespace Cofoundry.Domain
             draft.Title = command.Title;
             draft.ExcludeFromSitemap = !command.ShowInSiteMap;
             draft.MetaDescription = command.MetaDescription ?? string.Empty;
-            draft.MetaKeywords = command.MetaKeywords ?? string.Empty;
             draft.OpenGraphTitle = command.OpenGraphTitle;
             draft.OpenGraphDescription = command.OpenGraphDescription;
             draft.OpenGraphImageId = command.OpenGraphImageId;

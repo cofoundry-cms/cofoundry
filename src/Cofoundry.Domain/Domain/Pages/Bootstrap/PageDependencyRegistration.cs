@@ -16,7 +16,6 @@ namespace Cofoundry.Domain.Bootstrap
                 .RegisterType<IPageVersionModuleModelMapper, PageVersionModuleModelMapper>()
                 .RegisterType<IPageCache, PageCache>()
                 .RegisterType<IEntityVersionPageModuleMapper, EntityVersionPageModuleMapper>()
-                .RegisterType<IPageMetaDataMapper, PageMetaDataMapper>()
                 .RegisterType<IPageModuleCommandHelper, PageModuleCommandHelper>()
                 .RegisterAll<ICustomEntityVersionDataModel>()
                 .RegisterType<IPageRepository, PageRepository>()

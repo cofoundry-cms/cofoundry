@@ -10,8 +10,6 @@ namespace Cofoundry.Domain
     {
         public string GoogleAnalyticsUAId { get; set; }
 
-        public string MetaKeywords { get; set; }
-
         public string RobotsTxt { get; set; }
 
         public string HumansTxt { get; set; }

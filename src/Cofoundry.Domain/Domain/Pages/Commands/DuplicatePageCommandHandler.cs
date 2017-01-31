@@ -83,7 +83,6 @@ namespace Cofoundry.Domain
             addPageCommand.ShowInSiteMap = !toDup.Version.ExcludeFromSitemap;
             addPageCommand.PageTemplateId = toDup.Version.PageTemplateId;
             addPageCommand.MetaDescription = toDup.Version.MetaDescription;
-            addPageCommand.MetaKeywords = toDup.Version.MetaKeywords;
             addPageCommand.OpenGraphDescription = toDup.Version.OpenGraphDescription;
             addPageCommand.OpenGraphImageId = toDup.Version.OpenGraphImageId;
             addPageCommand.OpenGraphTitle = toDup.Version.OpenGraphTitle;

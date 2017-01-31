@@ -22,17 +22,17 @@ namespace Cofoundry.Web
             }
         }
 
-        public PageMetaData MetaData
+        public string MetaDescription
         {
             get
             {
                 if (IsCustomModelNull()) return null;
-                return CustomEntity.Model.MetaData;
+                return CustomEntity.Model.MetaDescription;
             }
             set
             {
-                SetCustomModelPropertyNullCheck("MetaData");
-                CustomEntity.Model.MetaData = value;
+                SetCustomModelPropertyNullCheck("MetaDescription");
+                CustomEntity.Model.MetaDescription = value;
             }
         }
 

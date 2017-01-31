@@ -55,7 +55,6 @@ namespace Cofoundry.Domain
             _getSettingQueryHelper.SetSettingProperty(settings, s => s.GoogleAnalyticsUAId, allSettings);
             _getSettingQueryHelper.SetSettingProperty(settings, s => s.HumansTxt, allSettings);
             _getSettingQueryHelper.SetSettingProperty(settings, s => s.RobotsTxt, allSettings);
-            _getSettingQueryHelper.SetSettingProperty(settings, s => s.MetaKeywords, allSettings);
 
             return settings;
         }

@@ -41,7 +41,6 @@ namespace Cofoundry.Domain
             #region page versions
 
             CreateMap<PageVersion, PageRenderDetails>()
-                .ForMember(d => d.MetaData, o => o.MapFrom(s => s))
                 .ForMember(d => d.Template, o => o.MapFrom(s => s.PageTemplate))
                 .ForMember(d => d.Sections, o => o.MapFrom(s => s.PageTemplate.PageTemplateSections))
                 .ForMember(d => d.WorkFlowStatus, o => o.MapFrom(s => (Cofoundry.Domain.WorkFlowStatus)s.WorkFlowStatusId))
@@ -52,13 +51,7 @@ namespace Cofoundry.Domain
                 .ForMember(d => d.WorkFlowStatus, o => o.MapFrom(s => (Cofoundry.Domain.WorkFlowStatus)s.WorkFlowStatusId))
                 .ForMember(d => d.ShowInSiteMap, o => o.MapFrom(s => !s.ExcludeFromSitemap))
                 .ForMember(d => d.AuditData, o => o.MapFrom(s => s))
-                .ForMember(d => d.MetaData, o => o.MapFrom(s => s))
                 .ForMember(d => d.OpenGraph, o => o.MapFrom(s => s))
-                ;
-
-            CreateMap<PageVersion, PageMetaData>()
-                .ForMember(d => d.Description, o => o.MapFrom(s => s.MetaDescription))
-                .ForMember(d => d.Keywords, o => o.MapFrom(s => s.MetaKeywords))
                 ;
 
             CreateMap<PageVersion, OpenGraphData>()

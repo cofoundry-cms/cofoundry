@@ -37,15 +37,10 @@ namespace Cofoundry.Web
             var result = GetRewriteResult(path);
             if (result != null) return result;
 
-            var metaKeywords = _queryExecutor.Get<SeoSettings>().MetaKeywords;
             var vm = new NotFoundPageViewModel
             {
                 PageTitle = "Page not found",
-                MetaData = new PageMetaData()
-                {
-                    Description = "Sorry, that page could not be found",
-                    Keywords = metaKeywords
-                }
+                MetaDescription = "Sorry, that page could not be found"
             };
 
             HttpContext.Current.Response.StatusCode = 404;

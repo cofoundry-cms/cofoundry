@@ -72,9 +72,9 @@
 
             <cms-form-field-text cms-title="Title"
                                  cms-model="vm.updateDraftCommand.title"
-                                 cms-description="A few words descriptive page title, e.g. 'About the team'. Google SERP shows a maximum of 66 characters"
+                                 cms-description="A few words descriptive page title, e.g. 'About the team'. Google SERP typically shows 50-60 characters"
                                  required
-                                 maxlength="70"></cms-form-field-text>
+                                 maxlength="300"></cms-form-field-text>
 
             <cms-form-field-readonly cms-title="Market"
                                      cms-model="vm.page.pageRoute.locale.ietfLanguageTag"></cms-form-field-readonly>
@@ -98,21 +98,17 @@
             <cms-form-field-text-area cms-title="Meta Description"
                                       cms-model="vm.updateDraftCommand.metaDescription"
                                       cms-description="Ideally 25-250 characters. The Google SERP shows only the first 150 characters"
-                                      required
                                       rows="3"
-                                      maxlength="256"></cms-form-field-text-area>
-
-            <cms-form-field-text cms-title="Meta Keywords"
-                                 cms-model="vm.updateDraftCommand.metaKeywords"
-                                 cms-description="Optional. A comma separated list of (ideally at least 3) keywords specific to this page e.g. 'dog,golden retriever,animal'. These will be combined with the site wide keywords."></cms-form-field-text>
+                                      maxlength="300"></cms-form-field-text-area>
 
             <cms-form-field-text cms-title="OpenGraph Title"
                                  cms-model="vm.updateDraftCommand.openGraphTitle"
-                                 cms-description="Optional. Use this title to override what Facebook sees as the title of the page"></cms-form-field-text>
+                                 maxlength="300"
+                                 cms-description="Optional. The title that shows up when sharing the page on social media"></cms-form-field-text>
 
             <cms-form-field-text-area cms-title="OpenGraph Description"
                                       cms-model="vm.updateDraftCommand.openGraphDescription"
-                                      cms-description="Optional. This description shows up in Facebook"
+                                      cms-description="Optional. The description that shows up when sharing the page on social media"
                                       rows="3"></cms-form-field-text-area>
 
             <cms-form-field-image-asset cms-title="OpenGraph Image"
@@ -122,7 +118,7 @@
                                         cms-val-min-width="200"
                                         cms-val-min-height="200"
                                         cms-update-asset="true"
-                                        cms-description="Optional. An image to show up within Facebook. The image must be at least 200px by 200px (though minimum 1500px by 1500px is preferred) and have a maximum aspect ratio of 3:1."></cms-form-field-image-asset>
+                                        cms-description="Optional. An image to show up when sharing the page on social media"></cms-form-field-image-asset>
 
             <cms-form-field-checkbox cms-title="Show in sitemap"
                                      cms-model="vm.updateDraftCommand.showInSiteMap"

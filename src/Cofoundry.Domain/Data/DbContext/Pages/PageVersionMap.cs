@@ -10,18 +10,14 @@ namespace Cofoundry.Domain.Data
             // Properties
             Property(t => t.Title)
                 .IsRequired()
-                .HasMaxLength(70);
+                .HasMaxLength(300);
 
             Property(t => t.MetaDescription)
                 .IsRequired()
-                .HasMaxLength(256);
-
-            Property(t => t.MetaKeywords)
-                .IsRequired()
-                .HasMaxLength(256);
+                .HasMaxLength(300);
 
             Property(t => t.OpenGraphTitle)
-                .HasMaxLength(64);
+                .HasMaxLength(300);
 
             // Relationships
             HasOptional(t => t.OpenGraphImageAsset)
