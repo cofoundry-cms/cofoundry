@@ -47,7 +47,8 @@ namespace Cofoundry.Domain
             var page = await _dbContext
                 .Pages
                 .FilterById(command.PageId)
-                .Include(p => p.UrlPath)
+                .Include(p => p.Locale)
+                .Include(p => p.WebDirectory)
                 .SingleOrDefaultAsync();
             EntityNotFoundException.ThrowIfNull(page, command.PageId);
 
