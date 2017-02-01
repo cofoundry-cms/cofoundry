@@ -23,7 +23,8 @@ namespace Cofoundry.Domain
 
         /// <summary>
         /// Display name of the area, used in the Cofoundry admin panel
-        /// as the navigation link to manage your users
+        /// as the navigation link to manage your users. This should be singular
+        /// because "Users" is appended to the link text.
         /// </summary>
         string Name { get; }
 

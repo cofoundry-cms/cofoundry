@@ -228,8 +228,17 @@ namespace Cofoundry.Domain
         {
             var query = new IsPagePathUniqueQuery();
             query.LocaleId = command.LocaleId;
-            query.UrlPath = command.UrlPath;
             query.WebDirectoryId = command.WebDirectoryId;
+
+            if (command.PageType == PageType.CustomEntityDetails)
+            {
+                query.UrlPath = command.CustomEntityRoutingRule;
+            }
+            else
+            {
+                query.UrlPath = command.UrlPath;
+            }
+
             return query;
         }
 
