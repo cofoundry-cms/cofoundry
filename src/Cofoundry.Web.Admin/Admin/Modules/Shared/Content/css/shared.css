@@ -752,6 +752,26 @@ a[disabled]:hover, button[disabled]:hover, input[disabled]:hover {
   transition: none;
 }
 
+/* line 1, ../../Js/UIComponents/Form/_form.scss */
+.form-message.success, .form-message.error, .message.success, .message.warning {
+  -moz-border-radius: 2px;
+  -webkit-border-radius: 2px;
+  border-radius: 2px;
+  border-left: 3px solid #4d4d4d;
+  background-color: #fff;
+  margin-bottom: 20px;
+  padding: 10px;
+}
+
+/* line 10, ../../Js/UIComponents/Form/_form.scss */
+.form-message.success {
+  border-color: #339900 !important;
+}
+/* line 14, ../../Js/UIComponents/Form/_form.scss */
+.form-message.error {
+  border-color: #ff0000 !important;
+}
+
 /* line 7, ../../Js/UIComponents/FormFields/_formfields.scss */
 input[type="text"], input[type="email"], input[type="password"], input[type="number"], input[type="date"], input[type="url"], input[type="tel"], textarea, select {
   -moz-border-radius: 2px;
@@ -1824,7 +1844,7 @@ form.loading > *, table.loading > *, div.loading > *, fieldset.loading > * {
 }
 
 /* line 1, ../../Js/UIComponents/StatusMessages/_messages.scss */
-.message.success, .message.warning {
+.form-message.success, .form-message.error, .message.success, .message.warning {
   -moz-border-radius: 2px;
   -webkit-border-radius: 2px;
   border-radius: 2px;

@@ -165,12 +165,6 @@ Cofoundry.visualEditor = (function () {
                             return;
                         }
 
-                        // If we have a placeholder module then we add an overall add module UI then return
-                        if (!el_data.isModule && !el_data.hasChildren) {
-                            var ui_wrap_add_module = createAddModuleIcon(el_data);
-                            wrap_ui_container.appendChild(ui_wrap_add_module);
-                        }
-
                         // Check to see if the section allows for multiple modules
                         if (!el_data.isModule) {
                             // Section
@@ -593,7 +587,7 @@ Cofoundry.visualEditor = (function () {
     window.onload = function () {
         // pageResponseData object is a serialized object inserted into the page
         _internal.model = pageResponseData;
-       
+
         if (_internal.model != null) {
             _internal.bindIframe();
             _internal.bindGui();
