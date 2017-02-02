@@ -1,0 +1,18 @@
+%msg {
+    @include border-radius(2px);
+    border-left:3px solid $color-midgrey;
+    background-color:#fff;
+    margin-bottom:20px;
+    padding:10px;
+}
+
+.form-message {
+    &.success {
+        @extend %msg;
+        border-color:$color-success!important;
+    }
+    &.error {
+        @extend %msg;
+        border-color:$color-error!important;
+    }
+}
