@@ -8,7 +8,7 @@ namespace Cofoundry.Web.Admin
 {
     /// <summary>
     /// A set of useful settings and options output as a js object for the front
-    /// end UI. Includes properties from an IUserArea but 
+    /// end UI. Includes properties from an IUserAreaDefinition but 
     /// could include other information too.
     /// </summary>
     public class UsersModuleOptions

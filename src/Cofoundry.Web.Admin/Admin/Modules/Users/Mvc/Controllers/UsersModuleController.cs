@@ -10,7 +10,7 @@ namespace Cofoundry.Web.Admin
     {
         private static readonly Dictionary<string, string> EmptyTerms = new Dictionary<string, string>();
 
-        public ActionResult Index(IUserArea userArea)
+        public ActionResult Index(IUserAreaDefinition userArea)
         {
             var options = new UsersModuleOptions()
             {

@@ -18,7 +18,7 @@
         <cms-button cms-text="Delete"
                     ng-click="vm.deleteRole()"
                     ng-disabled="vm.editMode || vm.globalLoadState.isLoading"
-                    ng-show="!vm.role.isSuperAdministrator && !vm.role.isAnonymousRole"></cms-button>
+                    ng-show="!vm.role.specialistRoleTypeCode"></cms-button>
 
     </cms-page-actions>
 

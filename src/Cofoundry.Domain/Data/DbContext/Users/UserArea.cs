@@ -6,7 +6,7 @@ namespace Cofoundry.Domain.Data
     /// <summary>
     /// Users can be partitioned into different 'User Areas' that enabled the identity system use by the Cofoundry administration area 
     /// to be reused for other purposes, but this isn't a common scenario and often there will only be the Cofoundry UserArea. UserAreas
-    /// are defined in code by defining an IUserArea
+    /// are defined in code by defining an IUserAreaDefinition
     /// </summary>
     public partial class UserArea
     {

@@ -1083,16 +1083,13 @@ insert Cofoundry.UserArea (UserAreaCode, Name) values (N'COF', N'Cofoundry')
 
 /****** Cofoundry.[Role] ******/
 
-insert Cofoundry.[Role] (Title, SpecialistRoleTypeCode, UserAreaCode) values (N'Anonymous', N'ANO', N'COF')
 insert Cofoundry.[Role] (Title, SpecialistRoleTypeCode, UserAreaCode) values (N'Super Administrator', N'SUP', N'COF')
-insert Cofoundry.[Role] (Title, SpecialistRoleTypeCode, UserAreaCode) values (N'Administrator', null, N'COF')
 
 
 /****** Cofoundry.Setting ******/
 
-insert Cofoundry.Setting (SettingKey, SettingValue, CreateDate, UpdateDate) values ('CompanyName', N'"Cofoundry"', GetUtcDate(), GetUtcDate())
+insert Cofoundry.Setting (SettingKey, SettingValue, CreateDate, UpdateDate) values ('ApplicationName', N'"Cofoundry"', GetUtcDate(), GetUtcDate())
 insert Cofoundry.Setting (SettingKey, SettingValue, CreateDate, UpdateDate) values ('RobotsTxt', N'"User-agent: *\r\nSitemap: /sitemap.xml"', GetUtcDate(), GetUtcDate())
-insert Cofoundry.Setting (SettingKey, SettingValue, CreateDate, UpdateDate) values ('MetaKeywords', N'""', GetUtcDate(), GetUtcDate())
 insert Cofoundry.Setting (SettingKey, SettingValue, CreateDate, UpdateDate) values ('HumansTxt', N'""', GetUtcDate(), GetUtcDate())
 insert Cofoundry.Setting (SettingKey, SettingValue, CreateDate, UpdateDate) values ('GoogleAnalyticsUAId', N'""', GetUtcDate(), GetUtcDate())
 insert Cofoundry.Setting (SettingKey, SettingValue, CreateDate, UpdateDate) values ('IsSetup', N'false', GetUtcDate(), GetUtcDate())

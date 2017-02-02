@@ -14,6 +14,11 @@ namespace Cofoundry.Domain
     public static class CommonPermissionTypes
     {
         public static readonly string ReadPermissionCode = "COMRED";
+        public static readonly string CreatePermissionCode = "COMCRT";
+        public static readonly string UpdatePermissionCode = "COMUPD";
+        public static readonly string DeletePermissionCode = "COMDEL";
+        public static readonly string WritePermissionCode = "COMWRT";
+        public static readonly string AdminModulePermissionCode = "COMMOD";
 
         /// <summary>
         /// Access to create a new entity
@@ -22,7 +27,7 @@ namespace Cofoundry.Domain
         public static PermissionType Create(string entityNamePlural)
         {
             Condition.Requires(entityNamePlural).IsNotNullOrWhiteSpace();
-            return new PermissionType("COMCRT", "Create", "Create new " + entityNamePlural.ToLower());
+            return new PermissionType(CreatePermissionCode, "Create", "Create new " + entityNamePlural.ToLower());
         }
         /// <summary>
         /// Basic read access to an new entity, required to do anything at all with 
@@ -42,7 +47,7 @@ namespace Cofoundry.Domain
         public static PermissionType AdminModule(string entityNamePlural)
         {
             Condition.Requires(entityNamePlural).IsNotNullOrWhiteSpace();
-            return new PermissionType("COMMOD", "Admin Module", "View the " + entityNamePlural.ToLower() + " module in the admin panel");
+            return new PermissionType(AdminModulePermissionCode, "Admin Module", "View the " + entityNamePlural.ToLower() + " module in the admin panel");
         }
 
         /// <summary>
@@ -52,7 +57,7 @@ namespace Cofoundry.Domain
         public static PermissionType Update(string entityNamePlural)
         {
             Condition.Requires(entityNamePlural).IsNotNullOrWhiteSpace();
-            return new PermissionType("COMUPD", "Update", "Update " + entityNamePlural.ToLower());
+            return new PermissionType(UpdatePermissionCode, "Update", "Update " + entityNamePlural.ToLower());
         }
 
         /// <summary>
@@ -62,7 +67,7 @@ namespace Cofoundry.Domain
         public static PermissionType Delete(string entityNamePlural)
         {
             Condition.Requires(entityNamePlural).IsNotNullOrWhiteSpace();
-            return new PermissionType("COMDEL", "Delete", "Delete " + entityNamePlural.ToLower());
+            return new PermissionType(DeletePermissionCode, "Delete", "Delete " + entityNamePlural.ToLower());
         }
 
         /// <summary>
@@ -73,7 +78,7 @@ namespace Cofoundry.Domain
         public static PermissionType Write(string entityNamePlural)
         {
             Condition.Requires(entityNamePlural).IsNotNullOrWhiteSpace();
-            return new PermissionType("COMWRT", "Write", "Add, update or delete " + entityNamePlural.ToLower());
+            return new PermissionType(WritePermissionCode, "Write", "Add, update or delete " + entityNamePlural.ToLower());
         }
     }
 }

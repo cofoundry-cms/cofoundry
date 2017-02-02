@@ -7,7 +7,9 @@ using System.Threading.Tasks;
 namespace Cofoundry.Domain
 {
     /// <summary>
-    /// A basic permission.
+    /// A basic permission that allows a user to perform an 
+    /// action e.g. "view dashboard" or "view error log" but more
+    /// commonly associated with an entity type using IEntityPermission
     /// </summary>
     public interface IPermission : IPermissionApplication
     {

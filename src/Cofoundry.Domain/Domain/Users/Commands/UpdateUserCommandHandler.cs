@@ -70,7 +70,7 @@ namespace Cofoundry.Domain
             await _dbContext.SaveChangesAsync();
         }
 
-        private static void Map(UpdateUserCommand command, User user, IUserArea userArea)
+        private static void Map(UpdateUserCommand command, User user, IUserAreaDefinition userArea)
         {
             user.FirstName = command.FirstName;
             user.LastName = command.LastName;
@@ -88,7 +88,7 @@ namespace Cofoundry.Domain
             user.RequirePasswordChange = command.RequirePasswordChange;
         }
 
-        private void ValidateCommand(UpdateUserCommand command, IUserArea userArea)
+        private void ValidateCommand(UpdateUserCommand command, IUserAreaDefinition userArea)
         {
             // Email
             if (userArea.UseEmailAsUsername && string.IsNullOrEmpty(command.Email))
@@ -103,7 +103,7 @@ namespace Cofoundry.Domain
             }
         }
 
-        private async Task ValidateIsUnique(UpdateUserCommand command, IUserArea userArea)
+        private async Task ValidateIsUnique(UpdateUserCommand command, IUserAreaDefinition userArea)
         {
             var query = new IsUsernameUniqueQuery()
             {
@@ -139,7 +139,7 @@ namespace Cofoundry.Domain
         
         #region Permission
 
-        public void ValidatePermissions(IUserArea userArea, IExecutionContext executionContext)
+        public void ValidatePermissions(IUserAreaDefinition userArea, IExecutionContext executionContext)
         {
             if (userArea is CofoundryAdminUserArea)
             {

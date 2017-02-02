@@ -95,7 +95,7 @@ namespace Cofoundry.Domain
         /// Perform some additional command validation that we can't do using data 
         /// annotations.
         /// </summary>
-        private void ValidateCommand(AddUserCommand command, IUserArea userArea)
+        private void ValidateCommand(AddUserCommand command, IUserAreaDefinition userArea)
         {
             // Password
             var isPasswordEmpty = string.IsNullOrWhiteSpace(command.Password);
@@ -126,14 +126,14 @@ namespace Cofoundry.Domain
             }
         }
 
-        private IQueryable<UserArea> QueryUserArea(IUserArea userArea)
+        private IQueryable<UserArea> QueryUserArea(IUserAreaDefinition userArea)
         {
             return _dbContext
                 .UserAreas
                 .Where(a => a.UserAreaCode == userArea.UserAreaCode);
         }
 
-        private UserArea AddUserAreaIfNotExists(IUserArea userArea, UserArea dbUserArea)
+        private UserArea AddUserAreaIfNotExists(IUserAreaDefinition userArea, UserArea dbUserArea)
         {
             if (dbUserArea == null)
             {
@@ -146,7 +146,7 @@ namespace Cofoundry.Domain
             return dbUserArea;
         }
 
-        private User MapAndAddUser(AddUserCommand command, IExecutionContext executionContext, Role role, IUserArea userArea, UserArea dbUserArea)
+        private User MapAndAddUser(AddUserCommand command, IExecutionContext executionContext, Role role, IUserAreaDefinition userArea, UserArea dbUserArea)
         {
             var user = new User();
             user.FirstName = command.FirstName.Trim();
@@ -181,7 +181,7 @@ namespace Cofoundry.Domain
             return user;
         }
 
-        private void ValidateIsUnique(bool isUnique, IUserArea userArea)
+        private void ValidateIsUnique(bool isUnique, IUserAreaDefinition userArea)
         {
             if (!isUnique)
             {
@@ -196,7 +196,7 @@ namespace Cofoundry.Domain
             }
         }
 
-        private IsUsernameUniqueQuery GetUniqueQuery(AddUserCommand command, IUserArea userArea)
+        private IsUsernameUniqueQuery GetUniqueQuery(AddUserCommand command, IUserAreaDefinition userArea)
         {
             var query = new IsUsernameUniqueQuery();
 

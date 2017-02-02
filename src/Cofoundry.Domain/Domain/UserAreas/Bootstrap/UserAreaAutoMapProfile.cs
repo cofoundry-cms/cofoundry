@@ -13,7 +13,7 @@ namespace Cofoundry.Domain
         public UserAreaAutoMapProfile()
         {
             CreateMap<UserArea, UserAreaMicroSummary>();
-            CreateMap<IUserArea, UserAreaMicroSummary>();
+            CreateMap<IUserAreaDefinition, UserAreaMicroSummary>();
             
         }
     }

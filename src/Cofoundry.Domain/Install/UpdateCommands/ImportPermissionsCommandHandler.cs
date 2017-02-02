@@ -7,6 +7,11 @@ using Cofoundry.Core.AutoUpdate;
 
 namespace Cofoundry.Domain.Installation
 {
+    /// <summary>
+    /// This import job is to add all the permissions defined in code in
+    /// a single batch job, reducing the burden of doing this individually 
+    /// as roles are created
+    /// </summary>
     public class ImportPermissionsCommandHandler : IAsyncVersionedUpdateCommandHandler<ImportPermissionsCommand>
     {
         private readonly Database _db;
@@ -43,27 +48,6 @@ namespace Cofoundry.Domain.Installation
                     sb.AppendLine(string.Format("insert into Cofoundry.[Permission] (PermissionCode) values ('{0}')", permission.PermissionType.Code));
                 }
             }
-
-            sb.AppendLine();
-            sb.AppendLine(@"
-                insert into Cofoundry.RolePermission (RoleId, PermissionId)
-                select r.[RoleId], p.PermissionId  
-                from Cofoundry.[Role] r
-                cross join Cofoundry.Permission p
-                where r.SpecialistRoleTypeCode is null and UserAreaCode = '" + CofoundryAdminUserArea.AreaCode + @"'
-                ");
-            
-            sb.AppendLine();
-            sb.AppendLine(@"
-                -- Add read permissions to all objects for anonymous role except users
-                insert into Cofoundry.RolePermission (RoleId, PermissionId)
-                select r.[RoleId], p.PermissionId  
-                from Cofoundry.[Role] r
-                cross join Cofoundry.Permission p
-                where r.SpecialistRoleTypeCode = '" + SpecialistRoleTypeCodes.Anonymous + @"' 
-                    and p.PermissionCode = '" + CommonPermissionTypes.ReadPermissionCode + @"' 
-                    and (p.EntityDefinitionCode is null or p.EntityDefinitionCode <> '" + UserEntityDefinition.DefinitionCode + @"')
-                ");
 
             var sql = sb.ToString();
             _db.Execute(sql);

@@ -8,7 +8,7 @@ namespace Cofoundry.Domain
 {
     public class GeneralSiteSettings : ICofoundrySettings
     {
-        public string CompanyName { get; set; }
+        public string ApplicationName { get; set; }
         public bool AllowAutomaticUpdates { get; set; }
     }
 }

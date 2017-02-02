@@ -19,7 +19,7 @@ namespace Cofoundry.Domain
         /// the only user area will be Cofoundry Admin, but some sites may have additional custom user areas
         /// e.g. a members area.
         /// </summary>
-        IUserArea UserArea { get; set; }
+        IUserAreaDefinition UserArea { get; set; }
 
         /// <summary>
         /// Indicates if the user should be required to change thier password when they log on.

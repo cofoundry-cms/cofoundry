@@ -53,7 +53,7 @@ namespace Cofoundry.Domain
         {
             var settings = new GeneralSiteSettings();
 
-            _getSettingQueryHelper.SetSettingProperty(settings, s => s.CompanyName, allSettings);
+            _getSettingQueryHelper.SetSettingProperty(settings, s => s.ApplicationName, allSettings);
             settings.AllowAutomaticUpdates = !_autoUpdateService.IsLocked();
             return settings;
         }

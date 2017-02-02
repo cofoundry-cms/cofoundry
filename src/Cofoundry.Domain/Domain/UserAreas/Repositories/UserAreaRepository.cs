@@ -10,10 +10,10 @@ namespace Cofoundry.Domain
     {
         #region constructor
 
-        private readonly Dictionary<string, IUserArea> _userAreas;
+        private readonly Dictionary<string, IUserAreaDefinition> _userAreas;
 
         public UserAreaRepository(
-            IUserArea[] userAreas
+            IUserAreaDefinition[] userAreas
             )
         {
             _userAreas = userAreas
@@ -27,7 +27,7 @@ namespace Cofoundry.Domain
         /// Gets a registered user area by it's code, thowing an exception if
         /// the area does not exist.
         /// </summary>
-        public IUserArea GetByCode(string code)
+        public IUserAreaDefinition GetByCode(string code)
         {
             var area = _userAreas.GetOrDefault(code);
 
@@ -40,7 +40,7 @@ namespace Cofoundry.Domain
         }
 
 
-        public IEnumerable<IUserArea> GetAll()
+        public IEnumerable<IUserAreaDefinition> GetAll()
         {
             return _userAreas.Select(a => a.Value);
         }

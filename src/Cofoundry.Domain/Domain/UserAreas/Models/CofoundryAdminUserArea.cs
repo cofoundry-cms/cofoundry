@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Cofoundry.Domain
 {
-    public class CofoundryAdminUserArea : IUserArea
+    public class CofoundryAdminUserArea : IUserAreaDefinition
     {
         public static string AreaCode = "COF";
 
