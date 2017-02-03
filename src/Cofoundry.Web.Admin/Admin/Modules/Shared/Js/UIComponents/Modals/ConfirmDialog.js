@@ -8,7 +8,9 @@
         var resolver = result ? options.ok : options.cancel;
 
         if (resolver) {
-            resolver().finally(closeIfRequired);
+            resolver()
+                .then(closeIfRequired)
+                .finally(options.onCancel);
         }
     }
 

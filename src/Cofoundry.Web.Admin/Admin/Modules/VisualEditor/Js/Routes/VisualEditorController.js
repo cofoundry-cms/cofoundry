@@ -113,8 +113,6 @@ function (
         if (globalLoadState.isLoading) return;
         globalLoadState.on();
 
-        //scope.isPopupActive = true;
-
         modalDialogService.show({
             templateUrl: modulePath + 'routes/modals/addmodule.html',
             controller: 'AddModuleController',
@@ -138,7 +136,6 @@ function (
 
         if (globalLoadState.isLoading) return;
         globalLoadState.on();
-        //scope.isPopupActive = true;
 
         modalDialogService.show({
             templateUrl: modulePath + 'routes/modals/editmodule.html',
@@ -175,7 +172,8 @@ function (
                 title: 'Delete Module',
                 message: 'Are you sure you want to delete this module?',
                 okButtonTitle: 'Yes, delete it',
-                onOk: onOk
+                onOk: onOk,
+                onCancel: onCancel
             };
 
         if (globalLoadState.isLoading) return;
@@ -188,6 +186,10 @@ function (
                 .remove(isCustomEntity, args.versionModuleId)
                 .then(refreshSection)
                 .finally(globalLoadState.off);
+        }
+
+        function onCancel() {
+            globalLoadState.off();
         }
     }
 
