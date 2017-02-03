@@ -44,11 +44,16 @@ namespace Cofoundry.Domain
         public async Task<PageModuleTypeFileDetails> ExecuteAsync(GetPageModuleTypeFileDetailsByFileNameQuery query, IExecutionContext executionContext)
         {
             var viewPath = _viewLocator.GetPathByFileName(query.FileName);
+            if (string.IsNullOrEmpty(viewPath))
+            {
+                throw new FileNotFoundException($"Page module view file '{query.FileName}' not found.");
+            }
+
             var view = await _viewFileReader.ReadViewFileAsync(viewPath);
 
             if (view == null)
             {
-                throw new ApplicationException("View file not found: " + query.FileName);
+                throw new FileNotFoundException($"Page module view file '{query.FileName}' not found at location '{viewPath}'.");
             }
 
             var parsedData = ParseViewFile(view);

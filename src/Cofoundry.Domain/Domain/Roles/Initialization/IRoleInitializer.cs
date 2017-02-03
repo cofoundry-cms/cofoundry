@@ -8,7 +8,7 @@ namespace Cofoundry.Domain
 {
     /// <summary>
     /// A role initializer allows you to define the permissions that
-    /// should be added to a role in code. This is typically only used
+    /// should be added to a role defined in code. This is typically only used
     /// when a role is first created, but could be used to update permissions
     /// if running RegisterDefinedRolesCommand manually.
     /// </summary>
