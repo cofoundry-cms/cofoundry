@@ -15,7 +15,9 @@ namespace Cofoundry.Core.Mail
     public class MailSettings : CofoundryConfigurationSettingsBase
     {
         /// <summary>
-        /// Indicates whether emails should be sent and how.
+        /// Indicates whether emails should be sent and how. The default 
+        /// value is LocalDrop, so you should set this to Send in production
+        /// deployments
         /// </summary>
         public MailSendMode SendMode { get; set; }
         
