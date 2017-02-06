@@ -13,7 +13,7 @@ namespace Cofoundry.Web
     /// </summary>
     public class RichTextDataModel : IPageModuleDataModel
     {
-        [Required, Display(Name = "Rich Text")]
+        [Required, Display(Name = "Text")]
         [AllowHtml]
         [Html(HtmlToolbarPreset.BasicFormatting, HtmlToolbarPreset.Headings)]
         //[Searchable]
