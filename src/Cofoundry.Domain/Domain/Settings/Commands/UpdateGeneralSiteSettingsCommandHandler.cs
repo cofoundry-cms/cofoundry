@@ -43,7 +43,7 @@ namespace Cofoundry.Domain
                 .Settings
                 .ToListAsync();
 
-            _settingCommandHelper.SetSettingProperty(command, c => c.CompanyName, allSettings, executionContext);
+            _settingCommandHelper.SetSettingProperty(command, c => c.ApplicationName, allSettings, executionContext);
 
             await _dbContext.SaveChangesAsync();
             _autoUpdateService.SetLocked(!command.AllowAutomaticUpdates);

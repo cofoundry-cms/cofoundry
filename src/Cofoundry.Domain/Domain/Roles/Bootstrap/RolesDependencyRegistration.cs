@@ -8,9 +8,8 @@ using Cofoundry.Domain.CQS;
 
 namespace Cofoundry.Domain
 {
-    public class PermissionsDependencyRegistration : IDependencyRegistration
+    public class RolesDependencyRegistration : IDependencyRegistration
     {
-
         public void Register(IContainerRegister container)
         {
             container
@@ -21,6 +20,10 @@ namespace Cofoundry.Domain
                 .RegisterInstance<IPermissionRepository, PermissionRepository>()
                 .RegisterInstance<IInternalRoleRepository, InternalRoleRepository>()
                 .RegisterInstance<RoleMappingHelper>()
+
+                .RegisterAll<IRoleDefinition>()
+                .RegisterAllGenericImplementations(typeof(IRoleInitializer<>))
+                .RegisterType<IRoleInitializerFactory, RoleInitializerFactory>()
                 ;
         }
     }

@@ -22,15 +22,13 @@ namespace Cofoundry.Domain
         private readonly ICommandExecutor _commandExecutor;
         private readonly IPermissionRepository _permissionRepository;
         private readonly IPermissionValidationService _permissionValidationService;
-        private readonly IUserAreaRepository _userAreaRepository;
 
         public AddRoleCommandHandler(
             CofoundryDbContext dbContext,
             IQueryExecutor queryExecutor,
             IPermissionRepository permissionRepository,
             ICommandExecutor commandExecutor,
-            IPermissionValidationService permissionValidationService,
-            IUserAreaRepository userAreaRepository
+            IPermissionValidationService permissionValidationService
             )
         {
             _dbContext = dbContext;
@@ -38,7 +36,6 @@ namespace Cofoundry.Domain
             _permissionRepository = permissionRepository;
             _commandExecutor = commandExecutor;
             _permissionValidationService = permissionValidationService;
-            _userAreaRepository = userAreaRepository;
         }
 
         #endregion
@@ -51,9 +48,9 @@ namespace Cofoundry.Domain
             var isUnique = await _queryExecutor.ExecuteAsync(GetUniqueQuery(command));
             ValidateIsUnique(isUnique);
 
-            var dbUserArea = await GetOrAddUserArea(command);
+            await EnsureUserAreaExists(command);
             var permissions = await GetCommandPermissions(command);
-            var role = MapAndAddRole(command, executionContext, permissions, dbUserArea);
+            var role = MapAndAddRole(command, executionContext, permissions);
             await _dbContext.SaveChangesAsync();
 
             command.OutputRoleId = role.RoleId;
@@ -63,31 +60,18 @@ namespace Cofoundry.Domain
 
         #region helpers
 
-        private async Task<UserArea> GetOrAddUserArea(AddRoleCommand command)
+        private Task EnsureUserAreaExists(AddRoleCommand command)
         {
-            var userArea = _userAreaRepository.GetByCode(command.UserAreaCode);
-            var dbUserArea = await  _dbContext
-                .UserAreas
-                .SingleOrDefaultAsync(a => a.UserAreaCode == userArea.UserAreaCode);
-
-            if (dbUserArea == null)
-            {
-                dbUserArea = new UserArea();
-                dbUserArea.UserAreaCode = userArea.UserAreaCode;
-                dbUserArea.Name = userArea.Name;
-                _dbContext.UserAreas.Add(dbUserArea);
-            }
-
-            return dbUserArea;
+            return _commandExecutor.ExecuteAsync(new EnsureUserAreaExistsCommand(command.UserAreaCode));
         }
 
-        private Role MapAndAddRole(AddRoleCommand command, IExecutionContext executionContext, List<Permission> permissions, UserArea dbUserArea)
+        private Role MapAndAddRole(AddRoleCommand command, IExecutionContext executionContext, List<Permission> permissions)
         {
             _permissionValidationService.EnforceHasPermissionToUserArea(command.UserAreaCode, executionContext.UserContext);
 
             var role = new Role();
             role.Title = command.Title.Trim();
-            role.UserArea = dbUserArea;
+            role.UserAreaCode = command.UserAreaCode;
 
             foreach (var permission in EnumerableHelper.Enumerate(permissions))
             {
@@ -125,7 +109,7 @@ namespace Cofoundry.Domain
         {
             if (!isUnique)
             {
-                throw new PropertyValidationException("A role with this title already exists", "Title");
+                throw new PropertyValidationException("A role with this title already exists", nameof(Role.Title));
             }
         }
 

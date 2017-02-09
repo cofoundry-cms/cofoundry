@@ -12,6 +12,6 @@
     .constant('shared.pluginModulePath', '/plugins/admin/modules/shared/js/')
     .constant('shared.modulePath', '/cofoundry/admin/modules/shared/js/')
     .constant('shared.serviceBase', '/admin/api/')
-    .constant('shared.pluginServiceBase', '/admin/api/plugins')
+    .constant('shared.pluginServiceBase', '/admin/api/plugins/')
     .constant('shared.urlBaseBase', '/admin/')
     .constant('shared.contentPath', '/admin/modules/shared/content/');

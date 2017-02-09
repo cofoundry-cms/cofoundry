@@ -4,7 +4,6 @@
 
 @{
     Layout = LayoutPaths.BaseLayout;
-    var siteViewerDeviceView = Cofoundry.Settings.GetCurrentDeviceView();
 }
 
 @section Meta
@@ -27,7 +26,7 @@
     @RenderSection("FooterScripts", required: false)
 }
 
-<div id="wrapper" @Cofoundry.Html.ClassIf(!string.IsNullOrEmpty(siteViewerDeviceView), "device " + siteViewerDeviceView)>
+<div id="wrapper">
 
     @RenderBody()
 

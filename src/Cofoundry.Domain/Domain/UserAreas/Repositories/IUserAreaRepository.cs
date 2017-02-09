@@ -7,7 +7,7 @@ namespace Cofoundry.Domain
 {
     public interface IUserAreaRepository
     {
-        IUserArea GetByCode(string code);
-        IEnumerable<IUserArea> GetAll();
+        IUserAreaDefinition GetByCode(string code);
+        IEnumerable<IUserAreaDefinition> GetAll();
     }
 }

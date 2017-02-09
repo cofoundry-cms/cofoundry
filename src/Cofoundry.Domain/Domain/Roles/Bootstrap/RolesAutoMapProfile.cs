@@ -8,9 +8,9 @@ using Cofoundry.Domain.Data;
 
 namespace Cofoundry.Domain
 {
-    public class PermissionsAutoMapProfile : Profile
+    public class RolesAutoMapProfile : Profile
     {
-        public PermissionsAutoMapProfile()
+        public RolesAutoMapProfile()
         {
             CreateMap<Role, RoleDetails>()
                 .ForMember(d => d.Permissions, o => o.Ignore())

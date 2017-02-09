@@ -7,6 +7,7 @@ using System.Web;
 using System.Web.Security;
 using Cofoundry.Core;
 using Cofoundry.Domain;
+using System.Security.Principal;
 
 namespace Cofoundry.Web
 {
@@ -36,7 +37,11 @@ namespace Cofoundry.Web
         public void SetCurrentUserId(int userId, bool rememberUser)
         {
             Condition.Requires(userId).IsGreaterThan(0);
-            FormsAuthentication.SetAuthCookie(Convert.ToString(userId), rememberUser);
+            var stringId = Convert.ToString(userId);
+            FormsAuthentication.SetAuthCookie(stringId, rememberUser);
+            // Need to manually set the user here so it is available in the rest of the request
+            // http://stackoverflow.com/questions/7233939/mvc3-antiforgerytoken-issue
+            HttpContext.Current.User = new GenericPrincipal(new GenericIdentity(stringId), null);
             userIdCache = userId;
         }
 

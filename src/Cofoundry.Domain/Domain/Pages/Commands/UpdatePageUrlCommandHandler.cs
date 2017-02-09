@@ -104,7 +104,7 @@ namespace Cofoundry.Domain
         {
             var query = GetUniquenessQuery(command, page);
             var isUnique = await _queryExecutor.ExecuteAsync(query, executionContext);
-            ValidateUnique(command, isUnique);
+            ValidateUnique(command, page, isUnique);
         }
 
         private IsPagePathUniqueQuery GetUniquenessQuery(UpdatePageUrlCommand command, Page page)
@@ -112,26 +112,35 @@ namespace Cofoundry.Domain
             var query = new IsPagePathUniqueQuery();
             query.PageId = page.PageId;
             query.LocaleId = command.LocaleId;
-            if (page.PageTypeId == (int)PageType.CustomEntityDetails)
-            {
-                query.UrlPath = command.UrlPath;
-            }
-            else
-            {
-                query.UrlPath = command.CustomEntityRoutingRule;
-            }
 
+            query.UrlPath = GetUrlPath(command, page);
             query.WebDirectoryId = command.WebDirectoryId;
 
             return query;
         }
 
-        private void ValidateUnique(UpdatePageUrlCommand command, bool isUnique)
+        private static string GetUrlPath(UpdatePageUrlCommand command, Page page)
+        {
+            string urlPath;
+            if (page.PageTypeId == (int)PageType.CustomEntityDetails)
+            {
+                urlPath = command.UrlPath;
+            }
+            else
+            {
+                urlPath = command.CustomEntityRoutingRule;
+            }
+
+            return urlPath;
+        }
+
+        private void ValidateUnique(UpdatePageUrlCommand command, Page page, bool isUnique)
         {
             if (!isUnique)
             {
-                var message = string.Format("A page already exists with the path '{0}' in that directory", command.UrlPath);
-                throw new UniqueConstraintViolationException(message, "UrlPath", command.UrlPath);
+                var path = GetUrlPath(command, page);
+                var message = string.Format("A page already exists with the path '{0}' in that directory", path);
+                throw new UniqueConstraintViolationException(message, "UrlPath", path);
             }
         }
 

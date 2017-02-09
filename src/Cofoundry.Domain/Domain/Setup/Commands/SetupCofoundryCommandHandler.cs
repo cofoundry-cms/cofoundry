@@ -59,7 +59,7 @@ namespace Cofoundry.Domain
                 var impersonatedUserContext = await GetImpersonatedUserContext(executionContext, userId);
 
                 var settingsCommand = await _queryExecutor.GetAsync<UpdateGeneralSiteSettingsCommand>();
-                settingsCommand.CompanyName = command.CompanyName;
+                settingsCommand.ApplicationName = command.ApplicationName;
                 await _commandExecutor.ExecuteAsync(settingsCommand, impersonatedUserContext);
 
                 // Take the opportunity to break the cache in case any additional install scripts have been run since initialization

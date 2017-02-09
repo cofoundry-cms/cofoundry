@@ -43,7 +43,7 @@ namespace Cofoundry.Web.Identity
 
         #region Log in
 
-        public AuthenticationResult LogUserIn(Controller controller, ILoginViewModel vm, IUserArea userAreaToLogInTo)
+        public AuthenticationResult LogUserIn(Controller controller, ILoginViewModel vm, IUserAreaDefinition userAreaToLogInTo)
         {
             Condition.Requires(controller).IsNotNull();
             Condition.Requires(userAreaToLogInTo).IsNotNull();
@@ -102,7 +102,7 @@ namespace Cofoundry.Web.Identity
             }
         }
 
-        private bool ValidateLoginArea(Controller controller, IUserArea userAreaToLogInto, string userArea)
+        private bool ValidateLoginArea(Controller controller, IUserAreaDefinition userAreaToLogInto, string userArea)
         {
             if (userAreaToLogInto.UserAreaCode != userArea)
             {
@@ -138,7 +138,7 @@ namespace Cofoundry.Web.Identity
 
         #region forgot password
 
-        public void SendPasswordResetNotification<TNotificationViewModel>(Controller controller, IForgotPasswordViewModel vm, TNotificationViewModel notificationTemplate, IUserArea userArea) 
+        public void SendPasswordResetNotification<TNotificationViewModel>(Controller controller, IForgotPasswordViewModel vm, TNotificationViewModel notificationTemplate, IUserAreaDefinition userArea) 
             where TNotificationViewModel : IResetPasswordTemplate
         {
             if (!controller.ModelState.IsValid) return;
@@ -151,7 +151,7 @@ namespace Cofoundry.Web.Identity
             _controllerResponseHelper.ExecuteIfValid(controller, command);
         }
 
-        public PasswordResetRequestAuthenticationResult IsPasswordRequestValid(Controller controller, string requestId, string token, IUserArea userAreaToLogInTo)
+        public PasswordResetRequestAuthenticationResult IsPasswordRequestValid(Controller controller, string requestId, string token, IUserAreaDefinition userAreaToLogInTo)
         {
             var result = new PasswordResetRequestAuthenticationResult();
             result.ValidationErrorMessage = "Invalid password reset request";
@@ -181,7 +181,7 @@ namespace Cofoundry.Web.Identity
             return result;
         }
 
-        public void CompletePasswordReset<TNotificationTemplate>(Controller controller, ICompletePasswordResetViewModel vm, TNotificationTemplate notificationTemplate, IUserArea userAreaToLogInTo) where TNotificationTemplate : IPasswordChangedTemplate
+        public void CompletePasswordReset<TNotificationTemplate>(Controller controller, ICompletePasswordResetViewModel vm, TNotificationTemplate notificationTemplate, IUserAreaDefinition userAreaToLogInTo) where TNotificationTemplate : IPasswordChangedTemplate
         {
             if (!controller.ModelState.IsValid) return;
             

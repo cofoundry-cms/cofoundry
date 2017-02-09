@@ -8,14 +8,9 @@ namespace Cofoundry.Web.Admin
 {
     public static class SettingsViewHelperExtensions
     {
-        public static string GetCompanyName(this ISettingsViewHelper helper)
+        public static string GetApplicationName(this ISettingsViewHelper helper)
         {
-            return helper.Get<GeneralSiteSettings>().CompanyName;
-        }
-
-        public static string GetCurrentDeviceView(this ISettingsViewHelper helper)
-        {
-            return helper.Get<VisualEditorSettings>().VisualEditorDeviceView;
+            return helper.Get<GeneralSiteSettings>().ApplicationName;
         }
     }
 }

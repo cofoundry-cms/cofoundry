@@ -13,7 +13,7 @@ namespace Cofoundry.Web
     /// </summary>
     public class RawHtmlDataModel : IPageModuleDataModel
     {
-        [Required, Display(Name = "Raw html")]
+        [Required, Display(Name = "Html")]
         [Html(HtmlToolbarPreset.BasicFormatting, HtmlToolbarPreset.Headings, HtmlToolbarPreset.Source, HtmlToolbarPreset.Media)]
         //[Searchable]
         public string RawHtml { get; set; }

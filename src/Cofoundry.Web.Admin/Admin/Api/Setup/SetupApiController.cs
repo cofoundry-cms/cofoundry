@@ -39,7 +39,7 @@ namespace Cofoundry.Web.Admin
         {
             var command = new SetupCofoundryCommand()
             {
-                CompanyName = dto.CompanyName,
+                ApplicationName = dto.ApplicationName,
                 UserEmail = dto.UserEmail,
                 UserFirstName = dto.UserFirstName,
                 UserLastName = dto.UserLastName,

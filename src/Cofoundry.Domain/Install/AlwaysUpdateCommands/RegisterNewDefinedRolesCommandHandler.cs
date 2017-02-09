@@ -8,12 +8,16 @@ using Cofoundry.Domain.CQS;
 
 namespace Cofoundry.Domain.Installation
 {
-    public class RegisterPageTemplatesAndModuleTypesCommandHandler : IAsyncAlwaysRunUpdateCommandHandler<RegisterPageTemplatesAndModuleTypesCommand>
+    /// <summary>
+    /// Runs the RegisterDefinedRolesCommand at startup, adding new roles
+    /// defined in code to the system, but leaving existing ones alone.
+    /// </summary>
+    public class RegisterNewDefinedRolesCommandHandler : IAsyncAlwaysRunUpdateCommandHandler<RegisterNewDefinedRolesCommand>
     {
         private readonly ICommandExecutor _commandExecutor;
         private readonly IExecutionContextFactory _executionContextFactory;
 
-        public RegisterPageTemplatesAndModuleTypesCommandHandler(
+        public RegisterNewDefinedRolesCommandHandler(
             ICommandExecutor commandExecutor,
             IExecutionContextFactory executionContextFactory
             )
@@ -23,11 +27,10 @@ namespace Cofoundry.Domain.Installation
         }
 
 
-        public async Task ExecuteAsync(RegisterPageTemplatesAndModuleTypesCommand command)
+        public async Task ExecuteAsync(RegisterNewDefinedRolesCommand command)
         {
             var cx = await _executionContextFactory.CreateSystemUserExecutionContextAsync();
-            await _commandExecutor.ExecuteAsync(new RegisterPageTemplatesCommand(), cx);
-            await _commandExecutor.ExecuteAsync(new RegisterPageModuleTypesCommand(), cx);
+            await _commandExecutor.ExecuteAsync(new RegisterDefinedRolesCommand(), cx);
         }
     }
 }

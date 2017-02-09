@@ -9,8 +9,8 @@ namespace Cofoundry.Web.Admin
     public class SetupCofoundryCommandDto
     {
         [Required]
-        [StringLength(32)]
-        public string CompanyName { get; set; }
+        [StringLength(50)]
+        public string ApplicationName { get; set; }
 
         [Required]
         [StringLength(32)]
