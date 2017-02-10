@@ -24,6 +24,7 @@ function (
         vm.edit = edit;
         vm.save = save;
         vm.cancel = reset;
+        vm.clearCache = clearCache;
 
         // Properties
         vm.editMode = false;
@@ -56,6 +57,14 @@ function (
         vm.editMode = false;
         resetData();
         vm.mainForm.formStatus.clear();
+    }
+
+    function clearCache() {
+        vm.globalLoadState.on();
+
+        settingsService.clearCache()
+            .then(onSuccess.bind(null, 'Cache cleared'))
+            .finally(vm.globalLoadState.off);
     }
 
     /* PRIVATE FUNCS */
