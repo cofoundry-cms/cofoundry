@@ -8,7 +8,7 @@
     <owners>Cofoundry</owners>
     <licenseUrl>https://github.com/cofoundry-cms/cofoundry/blob/master/LICENSE</licenseUrl>
     <projectUrl>http://www.cofoundry.org</projectUrl>
-    <iconUrl>http://cofoundry.org/logo-nuget-64x64.png</iconUrl>
+	<iconUrl>http://cofoundry.org/Content/images/external/logo-nuget-64x64.png</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>
       Contains the domain and data access layer for Cofoundry. You can reference this

@@ -13,6 +13,10 @@
                     ng-show="!vm.editMode"
                     ng-disabled="vm.globalLoadState.isLoading"></cms-button>
 
+        <cms-button cms-text="Clear Cache"
+                    ng-click="vm.clearCache()"
+                    ng-show="!vm.editMode"
+                    ng-disabled="vm.globalLoadState.isLoading"></cms-button>
     </cms-page-actions>
 
     <!-- Edit mode toolbar -->
@@ -21,7 +25,7 @@
                            ng-show="vm.editMode"
                            ng-disabled="vm.mainForm.$invalid || vm.globalLoadState.isLoading"
                            cms-loading="vm.saveLoadState.isLoading"></cms-button-submit>
-
+        
         <cms-button cms-text="Cancel"
                     ng-click="vm.cancel()"
                     ng-show="vm.editMode"
@@ -66,9 +70,6 @@
                                  ng-pattern="/^UA-\d{4,10}-\d{1,4}$/"
                                  pattern-val-msg="The analytics id must be in the format UA-8343056-1"></cms-form-field-text>
 
-            <cms-form-field-text cms-title="Bing Webmaster Tools Api Id"
-                                 cms-model="vm.seoSettingsCommand.bingWebmasterToolsApiKey"
-                                 maxlength="32"></cms-form-field-text>
         </cms-form-section>
 
     </cms-page-body>

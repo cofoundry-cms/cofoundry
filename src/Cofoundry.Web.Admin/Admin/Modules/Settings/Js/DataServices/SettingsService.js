@@ -34,5 +34,10 @@ function (
         return $http.patch(seoSettingsRoute, command);
     }
 
+    service.clearCache = function (command) {
+
+        return $http.delete(serviceBase + 'cache');
+    }
+
     return service;
 }]);
