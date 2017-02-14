@@ -4,13 +4,13 @@
 @using System.Web.Optimization
 
 @{
-    Layout = LayoutPaths.DefaultLayout;    
+    Layout = SetupRouteLibrary.SetupLayoutPath;    
 }
 
 @section FooterScripts {
     @AngularHelper.Bootstrap(SetupRouteLibrary.Js, Cofoundry.CurrentUser)
 }
 
-<div ng-view=""></div>
+<h1>Cofoundry</h1>
 
-
+<div class="wrap" ng-view=""></div>

@@ -1,9 +1,10 @@
-﻿<cms-page-header cms-title="Site Setup"></cms-page-header>
-
-<cms-page-body ng-if="vm.isSetupComplete">
-    <cms-success-message>
-        Setup complete. Please <a href="{{::vm.urlLibrary.login()}}">login</a> to continue.
-    </cms-success-message>
+﻿<cms-page-body ng-if="vm.isSetupComplete">
+    <cms-form-section cms-title="Setup complete">
+        <p>You're all set to go. Please follow the link below to login to Cofoundry.</p>
+        <div class="actions">
+            <a class="btn main-cta" href="{{::vm.urlLibrary.login()}}">Login</a>
+        </div>
+    </cms-form-section>
 </cms-page-body>
 
 <cms-form cms-name="mainForm"
@@ -11,28 +12,18 @@
           ng-if="!vm.isSetupComplete"
           ng-submit="vm.save()">
 
-    <cms-page-actions>
-        <cms-button-submit cms-text="Save"
-                           ng-disabled="vm.mainForm.$invalid || vm.saveLoadState.isLoading"
-                           cms-loading="vm.saveLoadState.isLoading"></cms-button-submit>
-    </cms-page-actions>
-
-    <cms-page-body cms-content-type="form">
+    <cms-page-body cms-content-type="form-basic">
 
         <cms-form-status></cms-form-status>
 
-        <!--General-->
-        <cms-form-section title="General">
+        <cms-form-section cms-title="Site setup">
+
+            <p>Before we get started, we're gonna need some basic setup information from you. This will give your application a name and also create the default login account.</p>
 
             <cms-form-field-text cms-title="Application Name"
                                  cms-model="vm.command.applicationName"
                                  maxlength="100"
                                  required></cms-form-field-text>
-
-        </cms-form-section>
-
-        <!--User Account-->
-        <cms-form-section title="Admin User Account">
 
             <cms-form-field-text cms-title="First Name"
                                  cms-model="vm.command.userFirstName"
@@ -61,7 +52,15 @@
                                      cms-match-val-msg="Passwords must match"
                                      maxlength="300"
                                      required></cms-form-field-password>
+            
+            <div class="actions">
+                <cms-button-submit cms-text="Save"
+                       ng-disabled="vm.mainForm.$invalid || vm.saveLoadState.isLoading"
+                       cms-loading="vm.saveLoadState.isLoading"></cms-button-submit>
+            </div>
         </cms-form-section>
+
+        
     </cms-page-body>
 
 </cms-form>

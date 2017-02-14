@@ -15,6 +15,8 @@ namespace Cofoundry.Web.Admin
 
         public static readonly ModuleJsRouteLibrary Js = new ModuleJsRouteLibrary(Urls);
 
+        public const string SetupLayoutPath = "~/Admin/Modules/Setup/MVC/Views/_SetupLayout.cshtml";
+
         #endregion
 
         #region constructor
