@@ -357,8 +357,6 @@
     <Compile Include="Controllers\PagesControllerImplementation\RoutingSteps\ValidateSpecificVersionRoutingRoutingStep.cs" />
     <Compile Include="Framework\AntiCSRF\AntiCSRFService.cs" />
     <Compile Include="Framework\AntiCSRF\IAntiCSRFService.cs" />
-    <Compile Include="Framework\Auth\ILoginService.cs" />
-    <Compile Include="Framework\Auth\LoginService.cs" />
     <Compile Include="Framework\Auth\UserSessionService.cs" />
     <Compile Include="Framework\Bootstrap\WebCoreDependencyRegistration.cs" />
     <Compile Include="Framework\Configuration\ContentSettings.cs" />

@@ -23,6 +23,14 @@ namespace Cofoundry.Web
         /// </summary>
         private int? userIdCache = null;
 
+        /// <summary>
+        /// Gets the UserId of the user currently logged
+        /// in to this session
+        /// </summary>
+        /// <returns>
+        /// UserId of the user currently logged
+        /// in to this session
+        /// </returns>
         public int? GetCurrentUserId()
         {
             // Use the cache if it has been set
@@ -34,6 +42,14 @@ namespace Cofoundry.Web
             return userId;
         }
 
+        /// <summary>
+        /// Assigns the specified UserId to the current session.
+        /// </summary>
+        /// <param name="userId">UserId belonging to the owner of the current session.</param>
+        /// <param name="rememberUser">
+        /// True if the session should last indefinately; false if the 
+        /// session should close after a timeout period.
+        /// </param>
         public void SetCurrentUserId(int userId, bool rememberUser)
         {
             Condition.Requires(userId).IsGreaterThan(0);

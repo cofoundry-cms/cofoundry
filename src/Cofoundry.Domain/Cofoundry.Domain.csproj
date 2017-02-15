@@ -896,9 +896,11 @@
     <Compile Include="Domain\Users\Commands\Helpers\ResetUserPasswordCommandHelper.cs" />
     <Compile Include="Domain\Users\Commands\IResetUserPasswordCommand.cs" />
     <Compile Include="Domain\Users\Commands\LogAuthenticatedUserInCommand.cs" />
+    <Compile Include="Domain\Users\Commands\LogUserInWithCredentialsCommandHandler.cs" />
     <Compile Include="Domain\Users\Commands\LogAuthenticatedUserInCommandHandler.cs" />
     <Compile Include="Domain\Users\Commands\LogFailedLoginAttemptCommand.cs" />
     <Compile Include="Domain\Users\Commands\LogFailedLoginAttemptCommandHandler.cs" />
+    <Compile Include="Domain\Users\Commands\LogUserInWithCredentialsCommand.cs" />
     <Compile Include="Domain\Users\Commands\ResetUserPasswordByUserIdCommand.cs" />
     <Compile Include="Domain\Users\Commands\ResetUserPasswordByUserIdCommandHandler.cs" />
     <Compile Include="Domain\Users\Commands\ResetUserPasswordByUsernameCommand.cs" />
@@ -952,8 +954,10 @@
     <Compile Include="Domain\Users\Queries\SearchUserSummariesQueryHandler.cs" />
     <Compile Include="Domain\Users\Queries\ValidatePasswordResetRequestQuery.cs" />
     <Compile Include="Domain\Users\Queries\ValidatePasswordResetRequestQueryHandler.cs" />
+    <Compile Include="Domain\Users\Services\ILoginService.cs" />
     <Compile Include="Domain\Users\Services\IUserContextService.cs" />
     <Compile Include="Domain\Users\Services\IUserSessionService.cs" />
+    <Compile Include="Domain\Users\Services\LoginService.cs" />
     <Compile Include="Domain\Users\Services\UserContextService.cs" />
     <Compile Include="Domain\Users\Settings\AuthenticationSettings.cs" />
     <Compile Include="Domain\PageTemplates\ViewFiles\IPageTemplateViewFileLocator.cs" />

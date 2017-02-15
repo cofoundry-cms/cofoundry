@@ -29,7 +29,6 @@ namespace Cofoundry.Web
                 .RegisterPerRequestScope<IJavascriptViewHelper, JavascriptViewHelper>()
                 .RegisterPerRequestScope<ICofoundryHtmlHelper, CofoundryHtmlHelper>()
                 .RegisterPerRequestScope<IUserSessionService, UserSessionService>()
-                .RegisterPerRequestScope<ILoginService, LoginService>()
                 
                 .RegisterPerRequestScope<IApiResponseHelper, ApiResponseHelper>()
 

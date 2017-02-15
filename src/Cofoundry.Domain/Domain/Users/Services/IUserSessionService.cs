@@ -11,8 +11,24 @@ namespace Cofoundry.Domain
     /// </summary>
     public interface IUserSessionService
     {
+        /// <summary>
+        /// Gets the UserId of the user currently logged
+        /// in to this session
+        /// </summary>
+        /// <returns>
+        /// UserId of the user currently logged
+        /// in to this session
+        /// </returns>
         int? GetCurrentUserId();
 
+        /// <summary>
+        /// Assigns the specified UserId to the current session.
+        /// </summary>
+        /// <param name="userId">UserId belonging to the owner of the current session.</param>
+        /// <param name="rememberUser">
+        /// True if the session should last indefinately; false if the 
+        /// session should close after a timeout period.
+        /// </param>
         void SetCurrentUserId(int userId, bool rememberUser);
 
         /// <summary>

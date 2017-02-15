@@ -10,11 +10,12 @@ using Cofoundry.Core.DependencyInjection;
 namespace Cofoundry.Domain
 {
     /// <summary>
-    /// Class for mapping page version module data from an unstructured db source to a model instance.
+    /// Helper for mapping page and custom entity version module data from an 
+    /// unstructured db source to a display model instance.
     /// </summary>
     public class PageVersionModuleModelMapper : IPageVersionModuleModelMapper
     {
-        private static readonly MethodInfo _mapGenericMethod = typeof(PageVersionModuleModelMapper).GetMethod("MapGeneric", BindingFlags.NonPublic | BindingFlags.Instance);
+        private static readonly MethodInfo _mapGenericMethod = typeof(PageVersionModuleModelMapper).GetMethod(nameof(MapGeneric), BindingFlags.NonPublic | BindingFlags.Instance);
 
         #region constructor
 
@@ -37,13 +38,21 @@ namespace Cofoundry.Domain
 
         #region public methods
 
-        public IPageModuleDisplayModel MapDisplayModel(string typeName, IEntityVersionPageModule pageModule, WorkFlowStatusQuery workflowStatus)
-        {
-            return MapDisplayModel(typeName, new IEntityVersionPageModule[] { pageModule }, workflowStatus)
-                .Select(m => m.DisplayModel)
-                .SingleOrDefault();
-        }
-
+        /// <summary>
+        /// Maps a batch of the same type of page module data to a collection
+        /// of display models ready for rendering.
+        /// </summary>
+        /// <param name="typeName">The module type name e.g. 'PlainText', 'RawHtml'.</param>
+        /// <param name="versionModule">The version data to get the serialized model from.</param>
+        /// <param name="workflowStatus">
+        /// The workflow status of the parent page or custom entity 
+        /// being mapped. This is provided so dependent entities can use
+        /// the same workflow status.
+        /// </param>
+        /// <returns>
+        /// Collection of mapped display models, wrapped in an output class that
+        /// can be used to identify them.
+        /// </returns>
         public List<PageModuleDisplayModelMapperOutput> MapDisplayModel(string typeName, IEnumerable<IEntityVersionPageModule> versionModules, WorkFlowStatusQuery workflowStatus)
         {
             // Find the data-provider class for this type of module
@@ -74,6 +83,31 @@ namespace Cofoundry.Domain
             }
         }
 
+        /// <summary>
+        /// Maps a single page module data model to a concrete
+        /// display model.
+        /// </summary>
+        /// <param name="typeName">The module type name e.g. 'PlainText', 'RawHtml'.</param>
+        /// <param name="versionModule">The version data to get the serialized model from.</param>
+        /// <param name="workflowStatus">
+        /// The workflow status of the parent page or custom entity 
+        /// being mapped. This is provided so dependent entities can use
+        /// the same workflow status.
+        /// </param>
+        /// <returns>Mapped display model.</returns>
+        public IPageModuleDisplayModel MapDisplayModel(string typeName, IEntityVersionPageModule versionModule, WorkFlowStatusQuery workflowStatus)
+        {
+            return MapDisplayModel(typeName, new IEntityVersionPageModule[] { versionModule }, workflowStatus)
+                .Select(m => m.DisplayModel)
+                .SingleOrDefault();
+        }
+
+        /// <summary>
+        /// Deserialized a module data model to a stongly typed model.
+        /// </summary>
+        /// <param name="typeName">The module type name e.g. 'PlainText', 'RawHtml'.</param>
+        /// <param name="versionModule">The version data to get the serialized model from.</param>
+        /// <returns>Strongly typed data model including deserialized data.</returns>
         public IPageModuleDataModel MapDataModel(string typeName, IEntityVersionPageModule versionModule)
         {
             Type modelType = _moduleDataModelTypeFactory.CreateByPageModuleTypeFileName(typeName);

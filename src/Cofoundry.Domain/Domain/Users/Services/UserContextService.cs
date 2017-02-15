@@ -36,6 +36,11 @@ namespace Cofoundry.Domain
 
         #endregion
 
+        #region public methods
+
+        /// <summary>
+        /// Get the connection context of the current user.
+        /// </summary>
         public IUserContext GetCurrentContext()
         {
             if (!_isUserContextCached)
@@ -45,41 +50,6 @@ namespace Cofoundry.Domain
             }
 
             return _userContext;
-        }
-
-        private void SetUserContext(int? userId)
-        {
-            UserContext cx = null;
-
-            if (userId.HasValue)
-            {
-                // Raw query required here because using IQueryExecutor will cause a stack overflow
-                var dbResult = _dbContext
-                    .Users
-                    .AsNoTracking()
-                    .FilterById(userId.Value)
-                    .FilterCanLogIn()
-                    .SingleOrDefault();
-
-                if (dbResult == null)
-                {
-                    // User no longer valid
-                    _userSessionService.Abandon();
-                    ClearCache();
-                }
-                else
-                {
-                    cx = _userContextMapper.Map(dbResult);
-                }
-            }
-
-            if (cx == null)
-            {
-                cx = new UserContext();
-            }
-
-            _userContext = cx;
-            _isUserContextCached = true;
         }
 
         /// <summary>
@@ -123,7 +93,44 @@ namespace Cofoundry.Domain
             _userContext = null;
         }
 
+        #endregion
+
         #region helpers
+
+        private void SetUserContext(int? userId)
+        {
+            UserContext cx = null;
+
+            if (userId.HasValue)
+            {
+                // Raw query required here because using IQueryExecutor will cause a stack overflow
+                var dbResult = _dbContext
+                    .Users
+                    .AsNoTracking()
+                    .FilterById(userId.Value)
+                    .FilterCanLogIn()
+                    .SingleOrDefault();
+
+                if (dbResult == null)
+                {
+                    // User no longer valid
+                    _userSessionService.Abandon();
+                    ClearCache();
+                }
+                else
+                {
+                    cx = _userContextMapper.Map(dbResult);
+                }
+            }
+
+            if (cx == null)
+            {
+                cx = new UserContext();
+            }
+
+            _userContext = cx;
+            _isUserContextCached = true;
+        }
 
         private IQueryable<User> QuerySystemUser()
         {

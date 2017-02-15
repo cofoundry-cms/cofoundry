@@ -51,79 +51,28 @@ namespace Cofoundry.Web.Identity
 
             var result = new AuthenticationResult();
             result.ReturnUrl = controller.Request["ReturnUrl"];
+            if (!controller.ModelState.IsValid) return result;
 
-            // If user logged into another area, log them out first
-            var currentContext = _userContextService.GetCurrentContext() as IUserContext;
-            var isLoggedIntoDifferentUserArea = currentContext.UserArea != null && currentContext.UserArea.UserAreaCode != userAreaToLogInTo.UserAreaCode;
-
-            if (currentContext.UserId.HasValue && !isLoggedIntoDifferentUserArea)
+            var command = new LogUserInWithCredentialsCommand()
             {
-                result.IsAuthenticated = true;
-                return result;
-            }
+                UserAreaCode = userAreaToLogInTo.UserAreaCode,
+                Username = vm.EmailAddress,
+                Password = vm.Password,
+                RememberUser = vm.RememberMe
+            };
 
-            CheckLoginMaxLoginAttemptsNotExceeded(controller, userAreaToLogInTo.UserAreaCode, vm.EmailAddress);
+            _controllerResponseHelper.ExecuteIfValid(controller, command);
 
             if (controller.ModelState.IsValid)
             {
-                var user = Authenticate(vm.EmailAddress, vm.Password);
-
-                if (user == null)
-                {
-                    _loginService.LogFailedLoginAttempt(userAreaToLogInTo.UserAreaCode, vm.EmailAddress);
-
-                    controller.ModelState.AddModelError("EmailAddress", "The give username/password combination was invalid");
-                }
-                else if (ValidateLoginArea(controller, userAreaToLogInTo, user.UserAreaCode))
-                {
-                    result.IsAuthenticated = true;
-                    _loginService.LogAuthenticatedUserIn(user.UserId, vm.RememberMe);
-
-                    result.RequiresPasswordChange = user.RequirePasswordChange;
-                }
+                result.IsAuthenticated = true;
+                var currentContext = _userContextService.GetCurrentContext();
+                result.RequiresPasswordChange = currentContext.IsPasswordChangeRequired;
             }
 
             return result;
         }
 
-        private void CheckLoginMaxLoginAttemptsNotExceeded(Controller controller, string userAreaCode, string username)
-        {
-            if (!controller.ModelState.IsValid || string.IsNullOrWhiteSpace(username)) return;
-
-            var query = new HasExceededMaxLoginAttemptsQuery()
-            {
-                UserAreaCode = userAreaCode,
-                Username = username
-            };
-
-            if (_queryExecutor.Execute(query))
-            {
-                controller.ModelState.AddModelError("Password", "Too many failed login attempts have been detected, please try again later.");
-            }
-        }
-
-        private bool ValidateLoginArea(Controller controller, IUserAreaDefinition userAreaToLogInto, string userArea)
-        {
-            if (userAreaToLogInto.UserAreaCode != userArea)
-            {
-                controller.ModelState.AddModelError("EmailAddress", "This user account is not permitted to log in via this route.");
-                return false;
-            }
-
-            return true;
-        }
-
-        private UserLoginInfo Authenticate(string email, string password)
-        {
-            var authCommand = new GetUserLoginInfoIfAuthenticatedQuery()
-            {
-                Username = email,
-                Password = password
-            };
-            var user = _queryExecutor.Execute(authCommand);
-
-            return user;
-        }
 
         #endregion
 
