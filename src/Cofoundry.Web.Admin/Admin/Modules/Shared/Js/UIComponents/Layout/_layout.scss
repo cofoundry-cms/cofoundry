@@ -133,9 +133,50 @@
 }
 
 .page-body {
-    margin-left:150px;
-    margin-top: 80px;
-    margin-right: 20px;
+    &.form {
+        margin-left:150px;
+        margin-top: 80px;
+        margin-right: 20px;
+
+        fieldset {
+            legend {
+                margin-bottom: 20px;
+
+                &:before {
+                    @include transition(all .2s);
+                    border-top: 3px solid $color-secondary;
+                    content:'';
+                    position:absolute;
+                    top:0;
+                    left:0;
+                    width:100%;
+                }
+            }
+            &:before {
+                content:'';
+                position:absolute;
+                top:0;
+                background:#fff;
+                z-index:1;
+                right: 0;
+                left: 0;
+                height:100%;
+            }
+
+            &:after {
+                @include transition(all .2s);
+                content: '';
+                position: absolute;
+                bottom: -20px;
+                background-color: #ebebeb;
+                width: 100%;
+                right:0;
+                height: 17px;
+                z-index: 2;
+                border-top: 3px solid #dddddd;
+            }
+        }
+    }
 
     &.with-header {
         margin-top:70px;
@@ -145,30 +186,6 @@
         margin-bottom:20px;
         position:relative;
 
-        &:before {
-            content:'';
-            position:absolute;
-            top:0;
-            background:#fff;
-            z-index:1;
-            right: 0;
-            left: 0;
-            height:100%;
-        }
-
-        &:after {
-            @include transition(all .2s);
-            content: '';
-            position: absolute;
-            bottom: -20px;
-            background-color: #ebebeb;
-            width: 100%;
-            right:0;
-            height: 17px;
-            z-index: 2;
-            border-top: 3px solid #dddddd;
-        }
-
         legend {
             font-size:150%;
             width: 100%;
@@ -176,17 +193,6 @@
             padding: 20px;
             position:relative;
             z-index:10;
-            margin-bottom: 20px;
-
-            &:before {
-                @include transition(all .2s);
-                border-top: 3px solid $color-secondary;
-                content:'';
-                position:absolute;
-                top:0;
-                left:0;
-                width:100%;
-            }
 
             button {
                 display:none;
@@ -413,7 +419,9 @@
     }
 
     @media screen and (min-width: 1200px) {
-        margin-left:185px;
+        &.form {
+            margin-left:185px;
+        }
     }
 }
 
