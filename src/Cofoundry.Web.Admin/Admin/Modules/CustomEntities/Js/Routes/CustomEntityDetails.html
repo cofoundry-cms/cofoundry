@@ -22,7 +22,7 @@
         <cms-button cms-text="Publish"
                     ng-click="vm.publish()"
                     ng-disabled="vm.globalLoadState.isLoading"
-                    ng-if="!vm.options.autoPublish || !vm.customEntity.isPublished"></cms-button>
+                    ng-if="!vm.options.autoPublish && vm.customEntity.hasDraft"></cms-button>
 
         <cms-button cms-text="Unpublish"
                     ng-click="vm.unpublish()"

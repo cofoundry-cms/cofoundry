@@ -20,7 +20,7 @@
         <cms-button cms-text="Publish"
                     ng-click="vm.publish()"
                     ng-disabled="vm.editMode || vm.globalLoadState.isLoading"
-                    ng-if="!vm.page.pageRoute.isPublished"></cms-button>
+                    ng-if="vm.page.pageRoute.hasDraft"></cms-button>
 
         <cms-button cms-text="Unpublish"
                     ng-click="vm.unpublish()"
