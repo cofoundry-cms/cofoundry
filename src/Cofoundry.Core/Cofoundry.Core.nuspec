@@ -7,8 +7,8 @@
     <authors>Cofoundry</authors>
     <owners>Cofoundry</owners>
     <licenseUrl>https://github.com/cofoundry-cms/cofoundry/blob/master/LICENSE</licenseUrl>
-    <projectUrl>http://www.cofoundry.org</projectUrl>
-	<iconUrl>http://cofoundry.org/Content/images/external/logo-nuget-64x64.png</iconUrl>
+    <projectUrl>https://www.cofoundry.org</projectUrl>
+	<iconUrl>https://www.cofoundry.org/Content/images/external/logo-nuget-64x64.png</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>Cofoundry Core components and interfaces</description>
     <copyright>Cofoundry.org</copyright>
