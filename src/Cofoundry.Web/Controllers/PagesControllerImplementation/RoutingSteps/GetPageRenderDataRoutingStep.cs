@@ -36,14 +36,14 @@ namespace Cofoundry.Web
             // If we're editing a custom entity, then get the latest version
             if (!state.InputParameters.IsEditingCustomEntity)
             {
-                query.WorkFlowStatus = state.SiteViewerMode.ToWorkFlowStatusQuery();
+                query.WorkFlowStatus = state.VisualEditorMode.ToWorkFlowStatusQuery();
                 query.PageVersionId = state.InputParameters.VersionId;
             }
 
             state.PageData = await _queryExecutor.ExecuteAsync(query);
 
             // if no data is found there was an issue with creating a draft earlier on.
-            if (state.PageData == null && state.SiteViewerMode == SiteViewerMode.Edit)
+            if (state.PageData == null && state.VisualEditorMode == VisualEditorMode.Edit)
             {
                 throw new ApplicationException("Draft version missing for page id " + query.PageId);
             }

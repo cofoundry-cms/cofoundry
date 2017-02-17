@@ -36,7 +36,7 @@ namespace Cofoundry.Web
             var pageQuery = new GetPageRoutingInfoByPathQuery()
             {
                 Path = state.InputParameters.Path,
-                IncludeUnpublished = state.SiteViewerMode != SiteViewerMode.Live
+                IncludeUnpublished = state.VisualEditorMode != VisualEditorMode.Live
             };
 
             if (state.Locale != null)

@@ -9,7 +9,7 @@ namespace Cofoundry.Web
     /// The view modes of a page when logged into
     /// the admin panel.
     /// </summary>
-    public enum SiteViewerMode
+    public enum VisualEditorMode
     {
         /// <summary>
         /// Shows the latest version of the page, showing a draft if it is available

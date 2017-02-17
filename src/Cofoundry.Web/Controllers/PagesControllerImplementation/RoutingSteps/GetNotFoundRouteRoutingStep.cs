@@ -40,7 +40,7 @@ namespace Cofoundry.Web
                 if (state.Result != null) return;
 
                 // else try and find a 404 page route
-                state.PageRoutingInfo = await TryFindNotFoundPageRoute(state.InputParameters.Path, state.SiteViewerMode);
+                state.PageRoutingInfo = await TryFindNotFoundPageRoute(state.InputParameters.Path, state.VisualEditorMode);
 
                 // If we still can't find a 404, fall back to the generic 404 view
                 if (state.PageRoutingInfo == null)
@@ -67,12 +67,12 @@ namespace Cofoundry.Web
         /// <summary>
         /// Try and find a page route for a 404 page.
         /// </summary>
-        private async Task<PageRoutingInfo> TryFindNotFoundPageRoute(string path, SiteViewerMode siteViewerMode)
+        private async Task<PageRoutingInfo> TryFindNotFoundPageRoute(string path, VisualEditorMode siteViewerMode)
         {
             var notFoundQuery = new GetNotFoundPageRouteByPathQuery()
             {
                 Path = path,
-                IncludeUnpublished = siteViewerMode != SiteViewerMode.Live
+                IncludeUnpublished = siteViewerMode != VisualEditorMode.Live
             };
             var pageRoute = await _queryExecutor.ExecuteAsync(notFoundQuery);
 

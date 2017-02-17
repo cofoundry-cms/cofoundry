@@ -34,26 +34,26 @@ namespace Cofoundry.Web
             // Work out whether to view the page in live/draft/edit mode.
             // We use live by default (for logged out users) or for authenticated
             // users we can show draft too.
-            var siteViewerMode = SiteViewerMode.Live;
+            var visualEditorMode = VisualEditorMode.Live;
             if (state.UserContext.IsCofoundryUser())
             {
                 if (state.InputParameters.VersionId.HasValue)
                 {
-                    siteViewerMode = SiteViewerMode.SpecificVersion;
+                    visualEditorMode = VisualEditorMode.SpecificVersion;
                 }
-                else if (!Enum.TryParse(state.InputParameters.SiteViewerMode, true, out siteViewerMode))
+                else if (!Enum.TryParse(state.InputParameters.SiteViewerMode, true, out visualEditorMode))
                 {
-                    siteViewerMode = SiteViewerMode.Any;
+                    visualEditorMode = VisualEditorMode.Any;
                 }
             }
             else if (_contentSettings.AlwaysShowUnpublishedData)
             {
-                // We can optionally set the siteviewer mode to any - ie show draft and published pages
+                // We can optionally set the visual editor mode to any - ie show draft and published pages
                 // This is used in scenarios where devs are making modifications against a live db using a 
                 // local debug version of the site but aren't ready to publish the pages yet.
-                siteViewerMode = SiteViewerMode.Any;
+                visualEditorMode = VisualEditorMode.Any;
             }
-            state.SiteViewerMode = siteViewerMode;
+            state.VisualEditorMode = visualEditorMode;
 
             return Task.FromResult(true);
         }

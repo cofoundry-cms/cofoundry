@@ -12,7 +12,7 @@ namespace Cofoundry.Web
             IEnumerable<PageRoute> pageRoutes,
             IEnumerable<WebDirectoryRoute> webDirectoryRoutes,
             PageRoute currentPageRoute,
-            SiteViewerMode siteViewerMode,
+            VisualEditorMode siteViewerMode,
             int? currentPageVersionId
             )
         {
@@ -23,7 +23,7 @@ namespace Cofoundry.Web
             CurrentPageVersionId = currentPageVersionId;
         }
 
-        public SiteViewerMode SiteViewerMode { get; private set; }
+        public VisualEditorMode SiteViewerMode { get; private set; }
         public PageRoute CurrentPageRoute { get; private set; }
         public IEnumerable<PageRoute> PageRoutes { get; private set; }
         public IEnumerable<WebDirectoryRoute> WebDirectoryRoutes { get; private set; }

@@ -9,16 +9,16 @@ namespace Cofoundry.Web
 {
     public static class VisualEditorModeExtensions
     {
-        public static WorkFlowStatusQuery ToWorkFlowStatusQuery(this SiteViewerMode siteViewerMode)
+        public static WorkFlowStatusQuery ToWorkFlowStatusQuery(this VisualEditorMode siteViewerMode)
         {
             switch (siteViewerMode)
             {
-                case SiteViewerMode.Draft:
-                case SiteViewerMode.Edit:
+                case VisualEditorMode.Draft:
+                case VisualEditorMode.Edit:
                     return WorkFlowStatusQuery.Draft;
-                case SiteViewerMode.Any:
+                case VisualEditorMode.Any:
                     return WorkFlowStatusQuery.Latest;
-                case SiteViewerMode.SpecificVersion:
+                case VisualEditorMode.SpecificVersion:
                     return WorkFlowStatusQuery.SpecificVersion;
                 default:
                     return WorkFlowStatusQuery.Published;

@@ -29,7 +29,7 @@ namespace Cofoundry.Web
 
         #region public methods
 
-        public PageViewModel Map(PageRenderDetails page, SiteViewerMode siteViewerMode)
+        public PageViewModel Map(PageRenderDetails page, VisualEditorMode siteViewerMode)
         {
             return Map<PageViewModel>(page, siteViewerMode);
         }
@@ -38,19 +38,19 @@ namespace Cofoundry.Web
             Type displayModelType, 
             PageRenderDetails page, 
             CustomEntityRenderDetails customEntityRenderDetails, 
-            SiteViewerMode siteViewerMode)
+            VisualEditorMode siteViewerMode)
         {
             return (IEditablePageViewModel)_mapMethod
                 .MakeGenericMethod(displayModelType)
                 .Invoke(this, new object[] { page, customEntityRenderDetails, siteViewerMode });
         }
 
-        public T Map<T>(PageRenderDetails page, SiteViewerMode siteViewerMode) where T : IEditablePageViewModel, IPageRoutableViewModel, new()
+        public T Map<T>(PageRenderDetails page, VisualEditorMode siteViewerMode) where T : IEditablePageViewModel, IPageRoutableViewModel, new()
         {
             var vm = new T();
             vm.Page = page;
             vm.PageRoutingHelper = CreatePageRoutingHelper(page.PageId, page.PageVersionId, siteViewerMode);
-            vm.IsPageEditMode = siteViewerMode == SiteViewerMode.Edit;
+            vm.IsPageEditMode = siteViewerMode == VisualEditorMode.Edit;
 
             return vm;
         }
@@ -62,7 +62,7 @@ namespace Cofoundry.Web
         private CustomEntityDetailsPageViewModel<TDisplayModel> MapCustomEntityModel<TDisplayModel>(
             PageRenderDetails page,
             CustomEntityRenderDetails customEntityRenderDetails,
-            SiteViewerMode siteViewerMode
+            VisualEditorMode siteViewerMode
             ) where TDisplayModel : ICustomEntityDetailsDisplayViewModel
         {
             var vm = Map<CustomEntityDetailsPageViewModel<TDisplayModel>>(page, siteViewerMode);
@@ -82,7 +82,7 @@ namespace Cofoundry.Web
             return vm;
         }
 
-        private PageRoutingHelper CreatePageRoutingHelper(int pageId, int pageVersionId, SiteViewerMode siteViewerMode)
+        private PageRoutingHelper CreatePageRoutingHelper(int pageId, int pageVersionId, VisualEditorMode siteViewerMode)
         {
             var allRoutes = _queryExecutor.GetAll<PageRoute>();
             var allDirectories = _queryExecutor.GetAll<WebDirectoryRoute>();
