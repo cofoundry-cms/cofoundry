@@ -182,7 +182,8 @@ Cofoundry.visualEditor = (function () {
                         wrap_ui_container.appendChild(ui_wrap);
 
                         // Create a plus icon for adding new modules
-                        if (multiMode || (!multiMode && !el_data.hasChildren)) {
+                        if (multiMode || (!multiMode && !el_data.hasContent)) {
+                            console.log(el_data.hasContent);
                             var ui_wrap_add_module = createAddModuleIcon(el_data);
                             wrap_ui_container.appendChild(ui_wrap_add_module);
                         }
@@ -226,7 +227,8 @@ Cofoundry.visualEditor = (function () {
                 data.width = el.offsetWidth;
                 data.height = el.offsetHeight;
                 data.el = el;
-                data.hasChildren = el.hasChildNodes();
+                data.hasContent = el.innerHTML.length > 0;
+                data.html = el.innerHTML;
                 data.name = el.getAttribute(isModule ? 'data-cms-page-module-title' : 'data-cms-page-section-name');
                 data.sectionName = rootEl.getAttribute('data-cms-page-section-name');
                 data.className = isModule ? 'cofoundry-sv__ui-wrap--module' : 'cofoundry-sv__ui-wrap--section';
