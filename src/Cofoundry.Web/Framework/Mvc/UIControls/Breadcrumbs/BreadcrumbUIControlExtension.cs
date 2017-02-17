@@ -84,7 +84,7 @@ namespace Cofoundry.Web
         private static BreadcrumbsViewModel GetBreadcrumbs(PageRoutingHelper pageRouting)
         {
             if (pageRouting.CurrentPageRoute == null) return null;
-            var version = pageRouting.CurrentPageRoute.Versions.GetVersionRouting(pageRouting.SiteViewerMode.ToWorkFlowStatusQuery(), pageRouting.CurrentPageVersionId);
+            var version = pageRouting.CurrentPageRoute.Versions.GetVersionRouting(pageRouting.VisualEditorMode.ToWorkFlowStatusQuery(), pageRouting.CurrentPageVersionId);
             var crumbs = new List<BreadcrumbViewModel>
                 {
                     new BreadcrumbViewModel { Title = version.Title, Href = string.Empty }

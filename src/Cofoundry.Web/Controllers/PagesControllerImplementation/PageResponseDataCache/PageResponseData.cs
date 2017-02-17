@@ -22,9 +22,9 @@ namespace Cofoundry.Web
         public IEditablePageViewModel Page { get; set; }
 
         /// <summary>
-        /// The current SiteViewerMode
+        /// The current VisualEditorMode
         /// </summary>
-        public VisualEditorMode SiteViewerMode { get; set; }
+        public VisualEditorMode VisualEditorMode { get; set; }
 
         public PageRoutingInfo PageRoutingInfo { get; set; }
 

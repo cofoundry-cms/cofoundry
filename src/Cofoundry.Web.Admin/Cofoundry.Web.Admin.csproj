@@ -777,6 +777,7 @@
     <Content Include="Admin\Modules\VisualEditor\MVC\Views\Toolbar.cshtml" />
     <Content Include="Admin\Modules\Setup\MVC\Views\_SetupLayout.cshtml" />
     <Content Include="Admin\Modules\Shared\Sass\Core\_setup.scss" />
+    <Content Include="Admin\Modules\Shared\Sass\Core\_dashboard.scss" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

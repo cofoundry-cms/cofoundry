@@ -27,7 +27,7 @@ namespace Cofoundry.Web
                     state.VisualEditorMode.ToWorkFlowStatusQuery(),
                     state.InputParameters.VersionId);
 
-                // If this isn't an old version of a page, set the SiteViewerMode accordingly.
+                // If this isn't an old version of a page, set the VisualEditorMode accordingly.
                 if (versionRoute != null)
                 {
                     switch (versionRoute.WorkFlowStatus)

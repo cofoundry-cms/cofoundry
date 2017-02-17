@@ -11,7 +11,7 @@ namespace Cofoundry.Web
 {
     /// <summary>
     /// Initialises the key parameters of the PageActionRoutingState
-    /// object e.g. the UserContext and SiteViewerMode properties
+    /// object e.g. the UserContext and VisualEditorMode properties
     /// </summary>
     public class InitStateRoutingStep : IInitStateRoutingStep
     {
@@ -41,7 +41,7 @@ namespace Cofoundry.Web
                 {
                     visualEditorMode = VisualEditorMode.SpecificVersion;
                 }
-                else if (!Enum.TryParse(state.InputParameters.SiteViewerMode, true, out visualEditorMode))
+                else if (!Enum.TryParse(state.InputParameters.VisualEditorMode, true, out visualEditorMode))
                 {
                     visualEditorMode = VisualEditorMode.Any;
                 }

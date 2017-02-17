@@ -18,7 +18,7 @@ namespace Cofoundry.Web
         /// <summary>
         /// String representation of the request site viewer mode.
         /// </summary>
-        public string SiteViewerMode { get; set; }
+        public string VisualEditorMode { get; set; }
 
         /// <summary>
         /// Optionally a VersionId can be specified to

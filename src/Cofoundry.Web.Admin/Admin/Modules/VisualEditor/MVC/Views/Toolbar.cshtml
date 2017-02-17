@@ -44,8 +44,8 @@
 
     if (!isStaticPage)
     {
-        isEditing = model.SiteViewerMode == SiteViewerMode.Edit;
-        isViewingSpecificVersion = model.SiteViewerMode == SiteViewerMode.SpecificVersion;
+        isEditing = model.VisualEditorMode == VisualEditorMode.Edit;
+        isViewingSpecificVersion = model.VisualEditorMode == VisualEditorMode.SpecificVersion;
         isCustomEntityRoute = model.IsCustomEntityRoute;
         entityNameSingular = isCustomEntityRoute ? model.CustomEntityDefinition.Name : "Page";
         isEditTypeSwitchRequired = IsEditTypeSwitchRequired(model);

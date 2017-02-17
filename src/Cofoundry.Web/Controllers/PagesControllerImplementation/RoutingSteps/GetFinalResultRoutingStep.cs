@@ -97,13 +97,13 @@ namespace Cofoundry.Web
                         siteViewerMode = VisualEditorMode.Live;
                         break;
                     default:
-                        throw new ApplicationException("WorkFlowStatus." + version.WorkFlowStatus + " is not valid for SiteViewerMode.Any");
+                        throw new ApplicationException("WorkFlowStatus." + version.WorkFlowStatus + " is not valid for VisualEditorMode.Any");
                 }
             }
 
             var pageResponseData = new PageResponseData();
             pageResponseData.Page = vm;
-            pageResponseData.SiteViewerMode = siteViewerMode;
+            pageResponseData.VisualEditorMode = siteViewerMode;
             pageResponseData.PageRoutingInfo = state.PageRoutingInfo;
             pageResponseData.HasDraftVersion = state.PageRoutingInfo.GetVersionRoute(state.InputParameters.IsEditingCustomEntity, WorkFlowStatusQuery.Draft, null) != null;
             pageResponseData.Version = state.PageRoutingInfo.GetVersionRoute(state.InputParameters.IsEditingCustomEntity, workFlowStatusQuery, state.InputParameters.VersionId);

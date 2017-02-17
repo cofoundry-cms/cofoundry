@@ -10,7 +10,7 @@ namespace Cofoundry.Web
     {
         public bool IsStaticPage { get; set; }
 
-        public VisualEditorMode SiteViewerMode { get; set; }
+        public VisualEditorMode VisualEditorMode { get; set; }
 
         public PageRoutingInfo PageRoutingInfo { get; set; }
 

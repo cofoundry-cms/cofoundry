@@ -7,7 +7,7 @@ namespace Cofoundry.Web
 {
     /// <summary>
     /// Initialises the key parameters of the PageActionRoutingState
-    /// object e.g. the UserContext and SiteViewerMode properties
+    /// object e.g. the UserContext and VisualEditorMode properties
     /// </summary>
     public interface IInitStateRoutingStep : IPageActionRoutingStep
     {

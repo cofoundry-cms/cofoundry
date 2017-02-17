@@ -71,7 +71,7 @@ namespace Cofoundry.Web
             state.InputParameters = new PageActionInputParameters()
             {
                 Path = path,
-                SiteViewerMode = mode,
+                VisualEditorMode = mode,
                 VersionId = version,
                 IsEditingCustomEntity = editType == "entity"
             };

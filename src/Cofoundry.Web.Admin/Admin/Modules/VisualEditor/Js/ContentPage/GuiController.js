@@ -183,7 +183,6 @@ Cofoundry.visualEditor = (function () {
 
                         // Create a plus icon for adding new modules
                         if (multiMode || (!multiMode && !el_data.hasContent)) {
-                            console.log(el_data.hasContent);
                             var ui_wrap_add_module = createAddModuleIcon(el_data);
                             wrap_ui_container.appendChild(ui_wrap_add_module);
                         }

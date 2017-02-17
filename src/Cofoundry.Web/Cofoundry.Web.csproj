@@ -480,7 +480,6 @@
     <Compile Include="Framework\Mvc\ViewHelpers\ChildHelpers\IUIViewHelper.cs" />
     <Compile Include="Framework\Mvc\ViewHelpers\ChildHelpers\IUIViewHelperT.cs" />
     <Compile Include="Framework\Mvc\ViewHelpers\ChildHelpers\JavascriptViewHelper.cs" />
-    <Compile Include="Framework\Mvc\ViewHelpers\ChildHelpers\RouteViewHelper.cs" />
     <Compile Include="Framework\Mvc\ViewHelpers\ChildHelpers\SettingsViewHelper.cs" />
     <Compile Include="Framework\Mvc\ViewHelpers\ChildHelpers\UIViewHelper.cs" />
     <Compile Include="Framework\Mvc\ViewHelpers\ChildHelpers\UIViewHelperT.cs" />

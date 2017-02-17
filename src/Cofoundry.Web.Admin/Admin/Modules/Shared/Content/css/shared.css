@@ -705,6 +705,43 @@ html {
   font-size: 80%;
 }
 
+/* line 8, ../../Sass/Core/_typography.scss */
+h2 {
+  font-size: 2em;
+  padding-bottom: 1em;
+}
+
+/* line 13, ../../Sass/Core/_typography.scss */
+h3 {
+  font-size: 1.5em;
+  padding: .6em 0;
+}
+
+/* line 18, ../../Sass/Core/_typography.scss */
+p {
+  padding-bottom: 1em;
+}
+
+/* line 22, ../../Sass/Core/_typography.scss */
+ul {
+  list-style-type: circle;
+  padding: 0 0 1em 1em;
+}
+/* line 26, ../../Sass/Core/_typography.scss */
+ul li {
+  padding: 0 0 .5em .5em;
+}
+
+/* line 31, ../../Sass/Core/_typography.scss */
+a {
+  color: #413851;
+}
+
+/* line 35, ../../Sass/Core/_typography.scss */
+a:hover {
+  color: #2c263d;
+}
+
 /*===============================
     COMPONENTS
     We import component styles from wherever they may be living. These should be kept as modular as possible, extending from common base styles where needed.

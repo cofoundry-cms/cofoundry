@@ -4,3 +4,34 @@ html {
     font-family:$fontstack-default;
     font-size:80%;
 }
+
+h2 {
+    font-size:2em;
+    padding-bottom:1em;
+}
+
+h3 {
+    font-size:1.5em;
+    padding:.6em 0;
+}
+
+p {
+    padding-bottom:1em;
+}
+
+ul {
+    list-style-type:circle;
+    padding:0 0 1em 1em;
+
+    li {
+        padding: 0 0 .5em .5em;
+    }
+}
+
+a {
+    color:$color-secondary;
+}
+
+a:hover {
+    color:$color-secondary-dark;
+}
