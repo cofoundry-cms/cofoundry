@@ -29,9 +29,9 @@ namespace Cofoundry.Web
         public IUserContext UserContext { get; set; }
 
         /// <summary>
-        /// The Requested site viewer mode.
+        /// The requested visual editor mode.
         /// </summary>
-        public SiteViewerMode SiteViewerMode { get; set; }
+        public VisualEditorMode VisualEditorMode { get; set; }
 
         /// <summary>
         /// A PageRoute if one is found during the pipeline process.

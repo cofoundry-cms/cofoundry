@@ -16,7 +16,7 @@ namespace Cofoundry.Web
         public Task ExecuteAsync(Controller controller, PageActionRoutingState state)
         {
             // Ensure that non-authenticated users can't access previous versions
-            if (state.SiteViewerMode != SiteViewerMode.SpecificVersion)
+            if (state.VisualEditorMode != VisualEditorMode.SpecificVersion)
             {
                 state.InputParameters.VersionId = null;
             }
@@ -24,7 +24,7 @@ namespace Cofoundry.Web
             {
                 var versionRoute = state.PageRoutingInfo.GetVersionRoute(
                     state.InputParameters.IsEditingCustomEntity,
-                    state.SiteViewerMode.ToWorkFlowStatusQuery(),
+                    state.VisualEditorMode.ToWorkFlowStatusQuery(),
                     state.InputParameters.VersionId);
 
                 // If this isn't an old version of a page, set the SiteViewerMode accordingly.
@@ -33,10 +33,10 @@ namespace Cofoundry.Web
                     switch (versionRoute.WorkFlowStatus)
                     {
                         case Cofoundry.Domain.WorkFlowStatus.Draft:
-                            state.SiteViewerMode = SiteViewerMode.Draft;
+                            state.VisualEditorMode = VisualEditorMode.Draft;
                             break;
                         case Cofoundry.Domain.WorkFlowStatus.Published:
-                            state.SiteViewerMode = SiteViewerMode.Live;
+                            state.VisualEditorMode = VisualEditorMode.Live;
                             break;
                     }
                 }

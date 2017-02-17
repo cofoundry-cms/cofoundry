@@ -8,12 +8,12 @@ namespace Cofoundry.Web
 {
     public interface IPageViewModelMapper
     {
-        PageViewModel Map(PageRenderDetails page, SiteViewerMode siteViewerMode);
+        PageViewModel Map(PageRenderDetails page, VisualEditorMode siteViewerMode);
         IEditablePageViewModel MapCustomEntityModel(
             Type displayModelType,
             PageRenderDetails page,
             CustomEntityRenderDetails customEntityRenderDetails,
-            SiteViewerMode siteViewerMode);
-        T Map<T>(PageRenderDetails page, SiteViewerMode siteViewerMode) where T : IEditablePageViewModel, IPageRoutableViewModel, new();
+            VisualEditorMode siteViewerMode);
+        T Map<T>(PageRenderDetails page, VisualEditorMode siteViewerMode) where T : IEditablePageViewModel, IPageRoutableViewModel, new();
     }
 }

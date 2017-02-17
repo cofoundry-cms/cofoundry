@@ -24,7 +24,7 @@ namespace Cofoundry.Web
         /// <summary>
         /// The current SiteViewerMode
         /// </summary>
-        SiteViewerMode SiteViewerMode { get; set; }
+        VisualEditorMode SiteViewerMode { get; set; }
 
         PageRoutingInfo PageRoutingInfo { get; set; }
 
