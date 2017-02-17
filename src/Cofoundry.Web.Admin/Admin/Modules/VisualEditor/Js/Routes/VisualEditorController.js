@@ -8,6 +8,7 @@
     'shared.localStorage',
     'visualEditor.pageModuleService',
     'visualEditor.modulePath',
+    'shared.urlLibrary',
     'visualEditor.options',
 function (
     $window,
@@ -19,6 +20,7 @@ function (
     localStorageService,
     pageModuleService,
     modulePath,
+    urlLibrary,
     options
     ) {
 
@@ -70,7 +72,7 @@ function (
     function publish(args) {
         entityVersionModalDialogService
             .publish(args.entityId, setLoadingOn, entityDialogServiceConfig)
-            .then(reload)
+            .then(preview)
             .catch(setLoadingOff);
     }
 
@@ -197,6 +199,14 @@ function (
 
     function refreshSection() {
         reload();
+    }
+
+    function preview() {
+        var location = $window.parent.location.href;
+        if (location.indexOf('mode=edit') > -1) {
+            location = location.replace('mode=edit', 'mode=preview')
+        }
+        $window.parent.location = location;
     }
 
     function reload() {

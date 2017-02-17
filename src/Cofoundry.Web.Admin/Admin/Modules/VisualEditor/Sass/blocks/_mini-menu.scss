@@ -62,6 +62,7 @@
 }
 
 .cofoundry-sv__mini-menu__toggle {
+    display:block;
     border: 0;
     border-left: 1px solid $color-secondary-dark;
     width: 100%;
@@ -78,6 +79,14 @@
 
     .cofoundry-sv__mini-menu--flow & {
         text-align:left;
+    }
+
+    img.logo {
+        display: block;
+        position: relative;
+        max-width: 30px;
+        margin: 0 auto;
+        padding-top: 20px;
     }
 }
 

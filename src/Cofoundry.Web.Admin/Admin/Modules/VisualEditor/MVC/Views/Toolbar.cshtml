@@ -30,6 +30,8 @@
     var model = ViewData["model"] as PageResponseData;
     var isStaticPage = model == null;
 
+    int currentVersion = 0;
+    int versionCount = 0;
     bool isEditing = false;
     bool isViewingSpecificVersion = false;
     bool isCustomEntityRoute = false;
@@ -139,9 +141,9 @@
                 </ol>
             </div>
 
-            <button type="button" class="cofoundry-sv__mini-menu__toggle">
-                <img src="~/Admin/Modules/VisualEditor/Content/img/logo-thumb.png" />
-            </button>
+            <a href="/admin" type="button" class="cofoundry-sv__mini-menu__toggle">
+                <img class="logo" src="~/Admin/Modules/VisualEditor/Content/img/logo-thumb.png" />
+            </a>
         </div>
     </div>
 
@@ -149,13 +151,12 @@
         <div class="cofoundry-sv__mini-menu cofoundry-sv__mini-menu--flow">
             @if (!isStaticPage && versions.Any())
             {
-                var count = 1;
-
                 <div class="cofoundry-sv__mini-menu__content">
                     <h3>@entityNameSingular Versions</h3>
                     <ol class="cofoundry-sv__version-list">
                         @foreach (var version in versions)
                         {
+                            versionCount++;
                             var link = "?version=" + version.VersionId;
                             if (version.WorkFlowStatus == WorkFlowStatus.Draft || version.WorkFlowStatus == WorkFlowStatus.Published)
                             {
@@ -163,14 +164,19 @@
                             }
                             link += "&edittype=" + (isCustomEntityRoute ? "entity" : "page");
 
+                            bool isActive = false;
+                            if (version == model.Version)
+                            {
+                                isActive = true;
+                                currentVersion = versionCount;
+                            }
+
                             <li>
-                                <a href="@link" class="cofoundry-sv__version-list__item @Cofoundry.Html.TextIf(version == model.Version, "active")">
+                                <a href="@link" class="cofoundry-sv__version-list__item @Cofoundry.Html.TextIf(isActive, "active")">
                                     <span class="@version.WorkFlowStatus.ToString().ToLower()"></span>
-                                    @("V" + count), Created on @version.CreateDate
+                                    @("V" + versionCount), Created on @version.CreateDate
                                 </a>
                             </li>
-
-                            count++;
                         }
                     </ol>
 
@@ -180,7 +186,7 @@
             {
                 <button type="button" class="cofoundry-sv__mini-menu__toggle">
                     <span class="cofoundry-sv__page-details__status @model.Version.WorkFlowStatus.ToString().ToLower()"></span>
-                    <span class="cofoundry-sv__page-details__name">@model.Version.Title</span>
+                    <span class="cofoundry-sv__page-details__name">@("V" + currentVersion), @model.Version.Title</span>
                     @if (Request.Url.AbsolutePath.Length > 1)
                     {
                         <span class="cofoundry-sv__page-details__url">@Request.Url.AbsolutePath</span>
@@ -189,10 +195,10 @@
             }
             else
             {
-                <div class="cofoundry-sv__mini-menu__toggle">
+                <button class="cofoundry-sv__mini-menu__toggle">
                     <span class="cofoundry-sv__page-details__name">@Request.Url.AbsolutePath</span>
                     <span class="cofoundry-sv__page-details__url">Static page</span>
-                </div>
+                </button>
             }
         </div>
     </div>

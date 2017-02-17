@@ -101,7 +101,7 @@ Cofoundry.visualEditor = (function () {
                     buttons: {},
                     sectionY: -1
                 }
-                ;
+            ;
 
             // Internal refs
             __TOOLBAR_MODULE = toolbar_module;
@@ -533,9 +533,9 @@ Cofoundry.visualEditor = (function () {
             e.preventDefault();
             __IFRAME.contentWindow.postMessage({
                 action: 'publish', args: [{
-                    entityId: _internal.model.page.page.pageId,
+                    entityId: _internal.model.isCustomEntityRoute ? _internal.model.page.customEntity.customEntityId : _internal.model.page.page.pageId,
                     isCustomEntity: _internal.model.isCustomEntityRoute,
-
+                    customEntityDefinition: _internal.model.customEntityDefinition
                 }]
             }, document.location.origin);
             __IFRAME.style.display = 'block';
@@ -544,8 +544,12 @@ Cofoundry.visualEditor = (function () {
         unpublish: function (e) {
             e.preventDefault();
             __IFRAME.contentWindow.postMessage({
-                action: 'unpublish', args: [{ entityId: _internal.model.page.page.pageId }]
+                action: 'unpublish', args: [{ 
+                    entityId: _internal.model.isCustomEntityRoute ? _internal.model.page.customEntity.customEntityId : _internal.model.page.page.pageId,
+                    isCustomEntity: _internal.model.isCustomEntityRoute,
+                }]
             }, document.location.origin);
+            __IFRAME.style.display = 'block';
         },
 
         copyToDraft: function (e) {
@@ -557,6 +561,7 @@ Cofoundry.visualEditor = (function () {
                     hasDraftVersion: false
                 }]
             }, document.location.origin);
+            __IFRAME.style.display = 'block';
         }
     }
 

@@ -468,6 +468,7 @@
 
 /* line 64, ../../Sass/blocks/_mini-menu.scss */
 .cofoundry-sv__mini-menu__toggle {
+  display: block;
   border: 0;
   border-left: 1px solid #2c263d;
   width: 100%;
@@ -477,21 +478,29 @@
   color: #fff;
   font-size: 10px;
 }
-/* line 74, ../../Sass/blocks/_mini-menu.scss */
+/* line 75, ../../Sass/blocks/_mini-menu.scss */
 .cofoundry-sv__mini-menu__toggle.active {
   background-color: #2c2c2c;
   color: #fff;
 }
-/* line 79, ../../Sass/blocks/_mini-menu.scss */
+/* line 80, ../../Sass/blocks/_mini-menu.scss */
 .cofoundry-sv__mini-menu--flow .cofoundry-sv__mini-menu__toggle {
   text-align: left;
 }
+/* line 84, ../../Sass/blocks/_mini-menu.scss */
+.cofoundry-sv__mini-menu__toggle img.logo {
+  display: block;
+  position: relative;
+  max-width: 30px;
+  margin: 0 auto;
+  padding-top: 20px;
+}
 
-/* line 91, ../../Sass/blocks/_mini-menu.scss */
+/* line 100, ../../Sass/blocks/_mini-menu.scss */
 .cofoundry-sv__mini-menu.active .cofoundry-sv__mini-menu__content {
   display: block;
 }
-/* line 95, ../../Sass/blocks/_mini-menu.scss */
+/* line 104, ../../Sass/blocks/_mini-menu.scss */
 .cofoundry-sv__mini-menu.active .cofoundry-sv__mini-menu__toggle {
   background-color: #333841;
   color: #fff;
