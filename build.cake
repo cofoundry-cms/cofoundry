@@ -1,3 +1,5 @@
+#tool "nuget:?package=GitVersion.CommandLine"
+
 //////////////////////////////////////////////////////////////////////
 // ARGUMENTS
 //////////////////////////////////////////////////////////////////////
@@ -5,10 +7,8 @@
 var target = Argument("target", "Default");
 var configuration = Argument("configuration", "Release");
 var pushPackages = Argument("PushPackages", "false") == "true";
-var build = Convert.ToInt32(EnvironmentVariable("APPVEYOR_BUILD_VERSION") ?? "0");
-var semVersion = "0.1.0";
-var assemblyVersion = semVersion + "." + build;
-var nugetVersion = semVersion + "-beta" + build.ToString("D4");
+bool isPrerelease = false;
+GitVersion versionInfo = null;
 
 //////////////////////////////////////////////////////////////////////
 // PREPARATION
@@ -42,21 +42,20 @@ Task("Patch-Assembly-Version")
     .IsDependentOn("Clean")
     .Does(() =>
 {
-    // GitVersion(new GitVersionSettings{
-    //     UpdateAssemblyInfo = false,
-    //     OutputType = GitVersionOutput.BuildServer
-    // });
+    versionInfo = GitVersion(new GitVersionSettings{
+        UpdateAssemblyInfo = false
+    });
 
-    // versionInfo = GitVersion(new GitVersionSettings{ OutputType = GitVersionOutput.Json });
+    Information("Building version {0} of Cofoundry.", versionInfo.InformationalVersion);
 
-    Information("Building version {0} of Cofoundry.", nugetVersion);
+    isPrerelease = !string.IsNullOrEmpty(versionInfo.PreReleaseNumber);
 
     var file = "./src/SolutionInfo.cs";
 	CreateAssemblyInfo(file, new AssemblyInfoSettings {
-		Version = semVersion,
-		FileVersion = assemblyVersion,
-		InformationalVersion = nugetVersion,
-		Copyright = "Copyright © Cofoundry.org 2016"
+		Version = versionInfo.AssemblySemVer,
+		FileVersion = versionInfo.MajorMinorPatch + ".0",
+		InformationalVersion = versionInfo.InformationalVersion,
+		Copyright = "Copyright © Cofoundry.org " + DateTime.Now.Year
 	});
 });
 
@@ -70,7 +69,6 @@ Task("Build")
       // Use MSBuild
       MSBuild("./src/Cofoundry.sln", settings => settings.SetConfiguration(configuration));
     }
-    // Git Link: http://www.michael-whelan.net/continuous-delivery-github-cake-gittools-appveyor/
 });
 
 Task("Pack")
@@ -81,7 +79,7 @@ Task("Pack")
     
     var nuGetPackSettings = new NuGetPackSettings
     {   
-        Version = nugetVersion,
+        Version = versionInfo.NuGetVersion,
         OutputDirectory = nugetPackageDir,
         Verbosity = NuGetVerbosity.Detailed,
         ArgumentCustomization = args => args.Append("-Prop Configuration=" + configuration)
@@ -104,10 +102,20 @@ Task("PushNuGetPackage")
     {
         Information("Pushing packages");
         
-        NuGetPush(nugets, new NuGetPushSettings {
-            Source = "https://nuget.org/",
-            ApiKey = EnvironmentVariable("NUGET_API_KEY")
-        });
+        if (isPrerelease)
+        {
+            NuGetPush(nugets, new NuGetPushSettings {
+                Source = "https://www.myget.org/F/cofoundry/api/v2/package",
+                ApiKey = EnvironmentVariable("MYGET_API_KEY")
+            });
+        }
+        else
+        {
+            NuGetPush(nugets, new NuGetPushSettings {
+                Source = "https://nuget.org/",
+                ApiKey = EnvironmentVariable("NUGET_API_KEY")
+            });
+        }
     }
 });
 
