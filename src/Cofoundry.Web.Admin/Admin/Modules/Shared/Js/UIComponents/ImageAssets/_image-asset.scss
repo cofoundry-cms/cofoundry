@@ -10,3 +10,44 @@
         max-height: 150px;
     }
 }
+
+.dragarea {
+    @include transition(all .3s);
+    border:3px dashed transparent;
+    min-height: 70px;
+    padding-bottom: 18px;
+}
+.image-upload-drop-info, .image-upload-drop-rejected {
+    display:none;
+}
+.dragover-accepted {
+    border:3px dashed $color-primary;
+
+    .image-upload-info {
+        display:none;
+    }
+
+    .image-upload-drop-info {
+        display:block;
+        color:$color-primary;
+    }
+}
+
+.dragover-rejected {
+    border:3px dashed $color-warning;
+
+    .image-upload-info, .image-upload-drop-info {
+        display:none;
+    }
+
+    .image-upload-drop-rejected {
+        display:block;
+        color:$color-warning;
+    }
+}
+
+.image-upload-cog {
+    position:absolute;
+    top:0;
+    right:0;
+}

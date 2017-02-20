@@ -6,19 +6,31 @@
      drag-over-class="{accept:'dragover-accepted', reject:'dragover-rejected'}"
      id="{{vm.modelName}}"
      name="{{vm.modelName}}"
-     ng-model="vm.ngModel">
+     ng-model="vm.ngModel"
+     class="dragarea">
 
-    <img ng-if="vm.ngModel" ng-src="{{vm.previewUrl}}" class="img-polaroid" width="220" />
-    <div>{{vm.ngModel.name}}</div>
+    <img ng-if="vm.ngModel" ng-src="{{vm.previewUrl}}" class="img-polaroid" width="220" alt="{{vm.ngModel.name}}" />
     <cms-progress-bar load-state="vm.loadState" ng-if="vm.ngModel && !vm.ngModel.isCurrentFile"></cms-progress-bar>
     <div>
-        <button class="btn-icon" ng-file-select title="{{vm.buttonText}}"
+        <button ng-if="!vm.ngModel"
+                class="btn-icon" 
+                ng-file-select title="{{vm.buttonText}}"
                 type="button"
                 ng-file-change="vm.fileChanged($files, $event)"
                 accept="image/gif,image/jpeg,image/png,image/tiff,image/bmp,.tif" ,
                 reset-on-click="false"
                 ng-disabled="vm.loadState.isLoading">
-            <i class="fa fa-upload"></i>
+            <i class="fa fa-picture-o"></i>
+        </button>
+        <button ng-if="vm.ngModel"
+                class="btn-icon image-upload-cog" 
+                ng-file-select title="{{vm.buttonText}}"
+                type="button"
+                ng-file-change="vm.fileChanged($files, $event)"
+                accept="image/gif,image/jpeg,image/png,image/tiff,image/bmp,.tif" ,
+                reset-on-click="false"
+                ng-disabled="vm.loadState.isLoading">
+            <i class="fa fa-cog"></i>
         </button>
         <button type="button"
                 ng-if="vm.isRemovable"
@@ -27,9 +39,11 @@
             Remove
         </button>
     </div>
+    <div class="image-upload-info" ng-if="!vm.ngModel">Click the icon above or drag and drop a file here</div>
+    <div class="image-upload-drop-info">Drop file here</div>
+    <div class="image-upload-drop-rejected">This file is not valid</div>
 </div>
 
 <div ng-show="!vm.isEditMode">
-    <img ng-src="{{vm.previewUrl}}" class="img-polaroid" width="220" />
-    <div>{{vm.ngModel.name}}</div>
+    <img ng-src="{{vm.previewUrl}}" class="img-polaroid" width="220" alt="{{vm.ngModel.name}}" />
 </div>

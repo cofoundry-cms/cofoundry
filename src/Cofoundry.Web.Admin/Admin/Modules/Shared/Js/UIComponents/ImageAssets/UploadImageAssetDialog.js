@@ -75,8 +75,8 @@ function (
         close();
     }
 
-    function uploadComplete() {
-        options.onUploadComplete();
+    function uploadComplete(imageAssetId) {
+        options.onUploadComplete(imageAssetId);
         close();
     }
 

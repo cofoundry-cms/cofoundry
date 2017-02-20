@@ -1049,6 +1049,57 @@ input[type="color"] {
   max-height: 150px;
 }
 
+/* line 14, ../../Js/UIComponents/ImageAssets/_image-asset.scss */
+.dragarea {
+  -moz-transition: all 0.3s;
+  -o-transition: all 0.3s;
+  -webkit-transition: all 0.3s;
+  transition: all 0.3s;
+  border: 3px dashed transparent;
+  min-height: 70px;
+  padding-bottom: 18px;
+}
+
+/* line 20, ../../Js/UIComponents/ImageAssets/_image-asset.scss */
+.image-upload-drop-info, .image-upload-drop-rejected {
+  display: none;
+}
+
+/* line 23, ../../Js/UIComponents/ImageAssets/_image-asset.scss */
+.dragover-accepted {
+  border: 3px dashed #4af386;
+}
+/* line 26, ../../Js/UIComponents/ImageAssets/_image-asset.scss */
+.dragover-accepted .image-upload-info {
+  display: none;
+}
+/* line 30, ../../Js/UIComponents/ImageAssets/_image-asset.scss */
+.dragover-accepted .image-upload-drop-info {
+  display: block;
+  color: #4af386;
+}
+
+/* line 36, ../../Js/UIComponents/ImageAssets/_image-asset.scss */
+.dragover-rejected {
+  border: 3px dashed #ff6600;
+}
+/* line 39, ../../Js/UIComponents/ImageAssets/_image-asset.scss */
+.dragover-rejected .image-upload-info, .dragover-rejected .image-upload-drop-info {
+  display: none;
+}
+/* line 43, ../../Js/UIComponents/ImageAssets/_image-asset.scss */
+.dragover-rejected .image-upload-drop-rejected {
+  display: block;
+  color: #ff6600;
+}
+
+/* line 49, ../../Js/UIComponents/ImageAssets/_image-asset.scss */
+.image-upload-cog {
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+
 /* line 1, ../../Js/UIComponents/Layout/_layout.scss */
 .page-header {
   -moz-transition: left 0.3s, padding 0.3s;

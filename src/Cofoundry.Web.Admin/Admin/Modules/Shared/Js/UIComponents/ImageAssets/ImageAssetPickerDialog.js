@@ -120,8 +120,8 @@ function (
             }
         });
 
-        function onUploadComplete() {
-            loadGrid();
+        function onUploadComplete(imageAssetId) {
+            onSelectAndClose({ imageAssetId: imageAssetId });
         }
     }
 
