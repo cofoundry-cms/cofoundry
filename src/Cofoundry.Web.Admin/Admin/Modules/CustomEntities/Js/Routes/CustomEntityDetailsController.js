@@ -6,7 +6,7 @@
     'shared.LoadState',
     'shared.modalDialogService',
     'shared.entityVersionModalDialogService',
-    'customEntities.customEntityService',
+    'shared.customEntityService',
     'customEntities.modulePath',
     'customEntities.options',
 function (
@@ -216,7 +216,7 @@ function (
         }
 
         function getMetaData() {
-            return customEntityService.getDataModelSchema();
+            return customEntityService.getDataModelSchema(moduleOptions.customEntityDefinitionCode);
         }
 
         function getCustomEntity() {

@@ -62,7 +62,7 @@
     font-size: 0.8em;
     text-align: left;
     padding:10px;
-    z-index:-1;
+    z-index:999;
 
     &:before {
         content:'';

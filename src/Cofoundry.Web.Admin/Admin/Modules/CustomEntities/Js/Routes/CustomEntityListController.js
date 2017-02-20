@@ -3,7 +3,7 @@
     'shared.LoadState',
     'shared.SearchQuery',
     'shared.modalDialogService',
-    'customEntities.customEntityService',
+    'shared.customEntityService',
     'customEntities.modulePath',
     'customEntities.options',
 function (

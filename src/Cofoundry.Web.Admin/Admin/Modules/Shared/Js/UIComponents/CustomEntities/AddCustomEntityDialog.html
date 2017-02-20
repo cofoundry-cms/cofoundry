@@ -1,0 +1,66 @@
+﻿<cms-modal-dialog-container cms-modal-size="large">
+
+    <cms-modal-dialog-header>
+        Create {{options.name}}
+    </cms-modal-dialog-header>
+
+    <cms-form cms-name="mainForm"
+              ng-submit="save()"
+              cms-loading="formLoadState.isLoading">
+
+        <cms-page-actions>
+
+            <cms-button class="main-cta"
+                        cms-text="{{::saveButtonText}}"
+                        cms-loading="saveAndPublishLoadState.isLoading"
+                        ng-disabled="mainForm.$invalid"
+                        ng-click="saveAndPublish()"></cms-button>
+
+            <cms-button-submit cms-text="Save Draft"
+                               cms-loading="saveLoadState.isLoading"
+                               ng-if="::!options.autoPublish"
+                               ng-disabled="mainForm.$invalid"></cms-button-submit>
+
+            <cms-button cms-text="Cancel"
+                        ng-click="cancel()"></cms-button>
+
+        </cms-page-actions>
+
+        <cms-page-body cms-content-type="form">
+
+            <cms-form-status></cms-form-status>
+
+            <!--Main-->
+            <cms-form-section cms-title="Main">
+
+                <cms-form-field-locale-selector cms-model="command.localeId"
+                                                cms-on-loaded="onLocalesLoaded()"
+                                                ng-if="::options.hasLocale"></cms-form-field-locale-selector>
+
+                <cms-form-field-text cms-title="{{::options.terms['title']}}"
+                                     cms-model="command.title"
+                                     cms-change="onNameChanged()"
+                                     required
+                                     maxlength="200"></cms-form-field-text>
+
+                <cms-form-field-text cms-title="{{::options.terms['urlSlug']}}"
+                                     cms-model="command.urlSlug"
+                                     description="Lower case and containing only letter, numbers, underscores and hyphens. E.g. 'rock-and-roll'"
+                                     ng-if="::!options.autoGenerateUrlSlug"
+                                     required
+                                     maxlength="200"></cms-form-field-text>
+
+            </cms-form-section>
+
+            <!--DYNAMIC DATA-->
+
+            <cms-form-section cms-title="Properties" ng-if="formDataSource.modelMetaData.dataModelProperties">
+                <cms-form-dynamic-field-set cms-data-source="formDataSource"
+                                            cms-additional-parameters="additionalParameters">
+
+                </cms-form-dynamic-field-set>
+            </cms-form-section>
+
+        </cms-page-body>
+    </cms-form>
+</cms-modal-dialog-container>

@@ -1,27 +1,28 @@
-﻿angular.module('cms.customEntities').controller('AddCustomEntityController', [
+﻿angular.module('cms.shared').controller('AddCustomEntityDialogController', [
     '$scope',
     '$location',
     'shared.stringUtilities',
     'shared.LoadState',
     'shared.customEntityService',
-    'customEntities.options',
+    'options',
+    'close',
 function (
     $scope,
     $location,
     stringUtilities,
     LoadState,
     customEntityService,
-    moduleOptions) {
+    options,
+    close) {
 
-    var vm = this;
+    var vm = $scope;
 
     init();
 
     /* INIT */
 
     function init() {
-
-        initData();
+        angular.extend($scope, options.customEntityDefinition);
 
         vm.globalLoadState = new LoadState();
         vm.saveLoadState = new LoadState();
@@ -29,13 +30,16 @@ function (
 
         vm.formLoadState = new LoadState(true);
         vm.editMode = false;
-        vm.options = moduleOptions;
-        vm.saveButtonText = moduleOptions.autoPublish ? 'Save' : 'Save & Publish';
+        vm.options = options.customEntityDefinition;
+        vm.saveButtonText = options.customEntityDefinition.autoPublish ? 'Save' : 'Save & Publish';
 
         vm.save = save.bind(null, false);
         vm.saveAndPublish = save.bind(null, true);
-        vm.cancel = cancel;
+        vm.cancel = onCancel;
+        vm.close = onCancel;
         vm.onNameChanged = onNameChanged;
+
+        initData();
     }
 
     /* EVENTS */
@@ -53,29 +57,29 @@ function (
         setLoadingOn(loadState);
 
         customEntityService
-            .add(vm.command)
-            .then(redirectToList)
-            .finally(setLoadingOff.bind(null, loadState));
+            .add(vm.command, options.customEntityDefinition.customEntityDefinitionCode)
+            .then(complete)
+            .finally(setLoadingOff.bind(null, loadState))
+        ;
     }
 
     function onNameChanged() {
         vm.command.urlSlug = stringUtilities.slugify(vm.command.title);
     }
 
+    function onCancel() {
+        close();
+    }
+
+    function complete(entityId) {
+        options.onComplete(entityId);
+        close();
+    }
 
     /* PRIVATE FUNCS */
-    
-    function cancel() {
-        redirectToList();
-    }
-
-    function redirectToList() {
-        $location.path('/');
-    }
 
     function initData() {
-
-        customEntityService.getDataModelSchema(moduleOptions.customEntityDefinitionCode).then(loadModelSchema);
+        customEntityService.getDataModelSchema(options.customEntityDefinition.customEntityDefinitionCode).then(loadModelSchema);
         vm.command = {};
 
         $scope.$watch('vm.command.localeId', function (localeId) {

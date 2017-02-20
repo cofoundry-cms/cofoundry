@@ -273,7 +273,6 @@
     <Content Include="Admin\Modules\Auth\MVC\Views\Login.js" />
     <Content Include="Admin\Modules\CustomEntities\Js\Bootstrap\Module.js" />
     <Content Include="Admin\Modules\CustomEntities\Js\Bootstrap\Routing.js" />
-    <Content Include="Admin\Modules\CustomEntities\Js\DataServices\CustomEntityService.js" />
     <Content Include="Admin\Modules\CustomEntities\Js\Routes\AddCustomEntity.html" />
     <Content Include="Admin\Modules\CustomEntities\Js\Routes\AddCustomEntityController.js" />
     <Content Include="Admin\Modules\CustomEntities\Js\Routes\CustomEntityDetails.html" />
@@ -323,6 +322,8 @@
     <Content Include="Admin\Modules\Images\Js\Routes\ImageDetailsController.js" />
     <Content Include="Admin\Modules\Images\Js\Routes\ImageList.html" />
     <Content Include="Admin\Modules\Images\Js\Routes\ImageListController.js" />
+    <Content Include="Admin\Modules\Shared\Js\UIComponents\CustomEntities\AddCustomEntityDialog.html" />
+    <Content Include="Admin\Modules\Shared\Js\UIComponents\CustomEntities\AddCustomEntityDialog.js" />
     <Content Include="Admin\Modules\Shared\Js\UIComponents\ImageAssets\FormFieldImageAnchorLocationSelector.html" />
     <Content Include="Admin\Modules\Shared\Js\UIComponents\ImageAssets\FormFieldImageAnchorLocationSelector.js" />
     <Content Include="Admin\Modules\Pages\Js\Bootstrap\Module.js" />

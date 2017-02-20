@@ -3,7 +3,7 @@
     '$q',
     '$location',
     'shared.LoadState',
-    'customEntities.customEntityService',
+    'shared.customEntityService',
     'customEntities.options',
     'options',
     'close',

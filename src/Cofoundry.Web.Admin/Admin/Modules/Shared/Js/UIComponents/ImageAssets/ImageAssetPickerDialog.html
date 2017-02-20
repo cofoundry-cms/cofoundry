@@ -48,8 +48,6 @@
 
         </cms-search-filter>
 
-        <cms-button cms-text="Upload" ng-click="onUpload()"></cms-button>
-
     </cms-page-actions>
 
     <cms-page-body>
@@ -104,6 +102,13 @@
                     </tr>
                 </tbody>
             </table>
+            <cms-table-actions>
+                <a href="" class="btn-icon" title="Upload"
+                   cms-icon="plus-circle"
+                   ng-click="onUpload()">
+                    <i class="fa fa-plus-circle"></i>
+                </a>
+            </cms-table-actions>
         </cms-table-container>
 
     </cms-page-body>

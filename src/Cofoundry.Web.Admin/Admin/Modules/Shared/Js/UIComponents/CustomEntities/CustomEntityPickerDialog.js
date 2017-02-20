@@ -3,6 +3,8 @@
     'shared.LoadState',
     'shared.customEntityService',
     'shared.SearchQuery',
+    'shared.modalDialogService',
+    'shared.internalModulePath',
     'options',
     'close',
 function (
@@ -10,6 +12,8 @@ function (
     LoadState,
     customEntityService,
     SearchQuery,
+    modalDialogService,
+    modulePath,
     options,
     close) {
     
@@ -24,6 +28,7 @@ function (
         vm.onOk = onOk;
         vm.onCancel = onCancel;
         vm.onSelect = onSelect;
+        vm.onCreate = onCreate;
         vm.selectedEntity = vm.currentEntity; // current entity is null in single mode
         vm.onSelectAndClose = onSelectAndClose;
         vm.close = onCancel;
@@ -60,7 +65,7 @@ function (
     function loadGrid() {
         vm.gridLoadState.on();
 
-        return customEntityService.getAll(options.customEntityDefinition.customEntityDefinitionCode, vm.query.getParameters()).then(function (result) {
+        return customEntityService.getAll(vm.query.getParameters(), options.customEntityDefinition.customEntityDefinitionCode).then(function (result) {
             vm.result = result;
             vm.gridLoadState.off();
         });
@@ -104,6 +109,22 @@ function (
         }
 
         close();
+    }
+
+    function onCreate() {
+        modalDialogService.show({
+            templateUrl: modulePath + 'UIComponents/CustomEntities/AddCustomEntityDialog.html',
+            controller: 'AddCustomEntityDialogController',
+            options: {
+                customEntityDefinition: options.customEntityDefinition,
+                onComplete: onComplete
+            }
+        });
+
+        function onComplete(customEntityId) {
+            addOrRemove({ customEntityId: customEntityId });
+            loadGrid();
+        }
     }
 
     /* PUBLIC HELPERS */

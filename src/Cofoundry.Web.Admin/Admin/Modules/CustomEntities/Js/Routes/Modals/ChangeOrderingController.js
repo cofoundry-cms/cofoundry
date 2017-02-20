@@ -7,7 +7,7 @@
     'shared.arrayUtilities',
     'shared.internalModulePath',
     'shared.modalDialogService',
-    'customEntities.customEntityService',
+    'shared.customEntityService',
     'customEntities.options',
     'options',
     'close',
