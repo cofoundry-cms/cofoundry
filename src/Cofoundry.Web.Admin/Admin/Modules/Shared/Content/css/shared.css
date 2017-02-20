@@ -1047,9 +1047,10 @@ input[type="color"] {
 .image-asset img {
   max-width: 85%;
   max-height: 150px;
+  cursor: pointer;
 }
 
-/* line 14, ../../Js/UIComponents/ImageAssets/_image-asset.scss */
+/* line 15, ../../Js/UIComponents/ImageAssets/_image-asset.scss */
 .dragarea {
   -moz-transition: all 0.3s;
   -o-transition: all 0.3s;
@@ -1060,40 +1061,40 @@ input[type="color"] {
   padding-bottom: 18px;
 }
 
-/* line 20, ../../Js/UIComponents/ImageAssets/_image-asset.scss */
+/* line 21, ../../Js/UIComponents/ImageAssets/_image-asset.scss */
 .image-upload-drop-info, .image-upload-drop-rejected {
   display: none;
 }
 
-/* line 23, ../../Js/UIComponents/ImageAssets/_image-asset.scss */
+/* line 24, ../../Js/UIComponents/ImageAssets/_image-asset.scss */
 .dragover-accepted {
   border: 3px dashed #4af386;
 }
-/* line 26, ../../Js/UIComponents/ImageAssets/_image-asset.scss */
+/* line 27, ../../Js/UIComponents/ImageAssets/_image-asset.scss */
 .dragover-accepted .image-upload-info {
   display: none;
 }
-/* line 30, ../../Js/UIComponents/ImageAssets/_image-asset.scss */
+/* line 31, ../../Js/UIComponents/ImageAssets/_image-asset.scss */
 .dragover-accepted .image-upload-drop-info {
   display: block;
   color: #4af386;
 }
 
-/* line 36, ../../Js/UIComponents/ImageAssets/_image-asset.scss */
+/* line 37, ../../Js/UIComponents/ImageAssets/_image-asset.scss */
 .dragover-rejected {
   border: 3px dashed #ff6600;
 }
-/* line 39, ../../Js/UIComponents/ImageAssets/_image-asset.scss */
+/* line 40, ../../Js/UIComponents/ImageAssets/_image-asset.scss */
 .dragover-rejected .image-upload-info, .dragover-rejected .image-upload-drop-info {
   display: none;
 }
-/* line 43, ../../Js/UIComponents/ImageAssets/_image-asset.scss */
+/* line 44, ../../Js/UIComponents/ImageAssets/_image-asset.scss */
 .dragover-rejected .image-upload-drop-rejected {
   display: block;
   color: #ff6600;
 }
 
-/* line 49, ../../Js/UIComponents/ImageAssets/_image-asset.scss */
+/* line 50, ../../Js/UIComponents/ImageAssets/_image-asset.scss */
 .image-upload-cog {
   position: absolute;
   top: 0;
