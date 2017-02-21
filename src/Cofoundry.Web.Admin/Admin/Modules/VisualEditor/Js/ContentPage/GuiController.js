@@ -54,13 +54,13 @@ Cofoundry.visualEditor = (function () {
 
         bindToolbar: function () {
             var toolbar = document.getElementById('cofoundry-sv'),
-                siteViewerMode = _internal.model.siteViewerMode
+                visualEditorMode = _internal.model.visualEditorMode
                 ;
 
             // Internal refs
             __TOOLBAR = toolbar;
 
-            if (siteViewerMode === 'Draft' || siteViewerMode === 'Edit') {
+            if (visualEditorMode === 'Draft' || visualEditorMode === 'Edit') {
                 // Insert publish button
                 _toolBar.addButton({
                     icon: 'fa-cloud-upload',
@@ -69,7 +69,7 @@ Cofoundry.visualEditor = (function () {
                     classNames: 'publish popup',
                     click: _internal.publish
                 });
-            } else if (siteViewerMode === 'Live') {
+            } else if (visualEditorMode === 'Live') {
                 // Insert unpublish button
                 _toolBar.addButton({
                     icon: 'fa-cloud-download',
@@ -78,7 +78,7 @@ Cofoundry.visualEditor = (function () {
                     classNames: 'publish popup',
                     click: _internal.unpublish
                 });
-            } else if (siteViewerMode === 'SpecificVersion') {
+            } else if (visualEditorMode === 'SpecificVersion') {
                 // Insert copy to draft button
                 _toolBar.addButton({
                     icon: 'fa-files-o',
@@ -110,7 +110,7 @@ Cofoundry.visualEditor = (function () {
             document.getElementsByTagName('html')[0]
                 .className = (_internal.model.isCustomEntityRoute ? 'cofoundry-editmode__custom-entity' : 'cofoundry-editmode__page');
 
-            if (_internal.model.siteViewerMode === 'Edit') {
+            if (_internal.model.visualEditorMode === 'Edit') {
                 // Bind events
                 addUI(document);
                 addButtonEvents();

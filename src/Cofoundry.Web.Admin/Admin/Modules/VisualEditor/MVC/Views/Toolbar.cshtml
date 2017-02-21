@@ -239,7 +239,7 @@
                 }
                 else
                 {
-                    <a href="?mode=edit&edittype=@(isCustomEntityEditOnly ? "entity":"page")" class="cofoundry-sv__mode__button @Cofoundry.Html.TextIf(!isCustomEntityRoute && isEditing, "active")">
+                    <a href="?mode=edit&edittype=@(isCustomEntityEditOnly ? "entity":"page")" class="cofoundry-sv__mode__button @Cofoundry.Html.TextIf(isEditing, "active")">
                         <span>
                             @*<svg class="icon" viewBox="0 0 80 80">
                                 <use xlink:href="#edittemplate" x="0" y="0" />
