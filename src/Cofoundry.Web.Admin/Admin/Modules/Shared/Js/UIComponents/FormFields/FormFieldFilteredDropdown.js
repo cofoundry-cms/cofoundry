@@ -72,8 +72,8 @@ function (
 
             function setSelectedItem(item) {
                 if (item) {
-                    console.log(item, item[vm.optionName]);
                     vm.selectedText = item[vm.optionName];
+                    refreshDataSource(vm.selectedText);
                 }
             }
         }

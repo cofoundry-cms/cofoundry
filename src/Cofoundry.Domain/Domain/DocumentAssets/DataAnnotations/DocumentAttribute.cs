@@ -25,7 +25,7 @@ namespace Cofoundry.Domain
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ImageAttribute"/> class.
+        /// Initializes a new instance of the <see cref="DocumentAttribute"/> class.
         /// </summary>
         /// <param name="tags">An array of tags for which to filter when browsing for this document</param>
         public DocumentAttribute(params string[] tags)

@@ -43,11 +43,11 @@ namespace Cofoundry.Web
                 MetaDescription = "Sorry, that page could not be found"
             };
 
-            HttpContext.Current.Response.StatusCode = 404;
+            HttpContext.Current.Response.StatusCode = (int)HttpStatusCode.NotFound;
 
             return new ViewResult()
             {
-                ViewName = HttpStatusCode.NotFound.ToString(),
+                ViewName = "NotFound",
                 ViewData = new ViewDataDictionary(vm)
             };
         }
