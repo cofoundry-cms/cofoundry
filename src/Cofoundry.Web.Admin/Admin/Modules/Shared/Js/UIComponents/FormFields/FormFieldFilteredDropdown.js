@@ -26,8 +26,8 @@ function (
             required: '@cmsRequired'
         }),
         require: _.union(baseFormFieldFactory.defaultConfig.require, ['?^^cmsFormDynamicFieldSet']),
-        link: link
-
+        link: link,
+        transclude: true
     };
 
     return baseFormFieldFactory.create(config);
@@ -59,7 +59,6 @@ function (
             vm.selectedText = '';
 
             if (id && vm.dataSource && vm.dataSource.length) {
-
                 var item = _.find(vm.dataSource, function (item) {
                     return id == item[vm.optionValue];
                 });
@@ -73,6 +72,7 @@ function (
 
             function setSelectedItem(item) {
                 if (item) {
+                    console.log(item, item[vm.optionName]);
                     vm.selectedText = item[vm.optionName];
                 }
             }

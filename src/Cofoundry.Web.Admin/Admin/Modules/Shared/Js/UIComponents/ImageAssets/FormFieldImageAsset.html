@@ -9,12 +9,18 @@
                        ng-model="vm.model"
                        ng-change="vm.onChange()" />
 
-                <cms-image-asset ng-if="vm.previewAsset"
+                <cms-image-asset ng-if="vm.previewAsset && !vm.formScope.editMode"
+                                 cms-image="vm.previewAsset"
+                                 cms-width="{{vm.previewWidth}}"
+                                 cms-height="{{vm.previewHeight}}"
+                                 class="img-polaroid"></cms-image-asset>
+
+                <cms-image-asset ng-if="vm.previewAsset && vm.formScope.editMode"
                                  cms-image="vm.previewAsset"
                                  cms-width="{{vm.previewWidth}}"
                                  cms-height="{{vm.previewHeight}}"
                                  ng-click="vm.showPicker()"
-                                 class="img-polaroid"></cms-image-asset>
+                                 class="img-polaroid selectable"></cms-image-asset>
 
                 <i class="fa fa-picture-o"
                    ng-hide="vm.formScope.editMode"

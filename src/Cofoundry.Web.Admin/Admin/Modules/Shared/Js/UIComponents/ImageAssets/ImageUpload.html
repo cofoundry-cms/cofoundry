@@ -15,9 +15,10 @@
          accept="image/gif,image/jpeg,image/png,image/tiff,image/bmp,.tif"
          reset-on-click="false"
          ng-src="{{vm.previewUrl}}" 
-         class="img-polaroid" 
+         class="img-polaroid selectable" 
          width="220" 
          alt="{{vm.ngModel.name}}" />
+
     <cms-progress-bar load-state="vm.loadState" ng-if="vm.ngModel && !vm.ngModel.isCurrentFile"></cms-progress-bar>
     <div>
         <button ng-if="!vm.ngModel"

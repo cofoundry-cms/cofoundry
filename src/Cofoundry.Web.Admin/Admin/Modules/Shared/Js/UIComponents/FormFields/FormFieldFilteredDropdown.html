@@ -22,7 +22,7 @@
                        ng-disabled="vm.disabled"
                        ng-show="vm.formScope.editMode">
                 <ui-select-match placeholder="{{vm.placeholder}}"
-                                 allow-clear="{{!vm.required && !vm.hasRequiredAttribute}}">{{$select.selected[vm.optionName]}}</ui-select-match>
+                                 allow-clear="{{!vm.required && !vm.hasRequiredAttribute}}">{{vm.selectedText}}</ui-select-match>
                 <ui-select-choices repeat="dataItem[vm.optionValue] as dataItem in vm.dataSource track by $index"
                                    refresh="vm.refreshDataSource($select.search)"
                                    refresh-delay="200">
@@ -30,10 +30,12 @@
                 </ui-select-choices>
             </ui-select>
 
-            <div ng-hide="vm.formScope.editMode" ng-if="vm.selectedText">{{vm.selectedText}}</div>
+            <div ng-hide="vm.formScope.editMode" ng-if="vm.selectedText" class="text-block-display-value">{{vm.selectedText}}</div>
             <div ng-hide="vm.formScope.editMode" ng-if="!vm.selectedText" class="text-block-display-value">None</div>
 
             <cms-form-field-validation-summary></cms-form-field-validation-summary>
+
+            <div ng-show="vm.formScope.editMode" ng-transclude></div>
         </div>
     </cms-field>
     <p class="help-inline" ng-if="vm.description">

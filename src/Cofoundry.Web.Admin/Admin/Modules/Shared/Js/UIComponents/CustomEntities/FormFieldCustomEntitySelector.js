@@ -3,11 +3,13 @@
     'shared.internalModulePath',
     'shared.customEntityService',
     'shared.directiveUtilities',
+    'shared.modalDialogService',
 function (
     _,
     modulePath,
     customEntityService,
-    directiveUtilities
+    directiveUtilities,
+    modalDialogService
     ) {
 
     return {
@@ -43,8 +45,31 @@ function (
         directiveUtilities.setModelName(vm, attrs);
 
         vm.search = function (query) {
-            return customEntityService.getAll(vm.customEntityDefinitionCode, query);
+            return customEntityService.getAll(query, vm.customEntityDefinitionCode);
         };
+
+        customEntityService
+            .getDefinition(vm.customEntityDefinitionCode)
+            .then(setCustomEntityDefinition);
+
+        function setCustomEntityDefinition(customEntityDefinition) {
+            vm.customEntityDefinition = customEntityDefinition;
+        }
+
+        vm.create = function () {
+            modalDialogService.show({
+                templateUrl: modulePath + 'UIComponents/CustomEntities/AddCustomEntityDialog.html',
+                controller: 'AddCustomEntityDialogController',
+                options: {
+                    customEntityDefinition: vm.customEntityDefinition,
+                    onComplete: onCompleted
+                }
+            });
+
+            function onCompleted(newEntityId) {
+                vm.model = newEntityId;
+            }
+        }
 
         vm.initialItemFunction = function (id) {
             return customEntityService.getByIdRange([id]).then(function (results) {

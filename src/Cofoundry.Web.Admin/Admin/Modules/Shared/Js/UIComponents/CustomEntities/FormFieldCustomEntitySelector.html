@@ -1,8 +1,17 @@
-﻿<cms-form-field-filtered-dropdown cms-title="{{vm.title}}"
-                                  cms-model-name="{{vm.modelName}}"
-                                  cms-model="vm.model"
-                                  cms-required="vm.isRequired"
-                                  cms-search-function="vm.search($query)"
-                                  cms-initial-item-function="vm.initialItemFunction(id)"
-                                  cms-option-name="title"
-                                  cms-option-value="customEntityId"></cms-form-field-filtered-dropdown>
+﻿<cms-form-field-filtered-dropdown 
+    cms-title="{{vm.title}}"
+    cms-model-name="{{vm.modelName}}"
+    cms-model="vm.model"
+    cms-required="vm.isRequired"
+    cms-search-function="vm.search($query)"
+    cms-initial-item-function="vm.initialItemFunction(id)"
+    cms-option-name="title"
+    cms-option-value="customEntityId">
+
+    <cms-button-icon cms-icon="plus-circle"
+                     cms-title="Add"
+                     class="btn-add" 
+                     ng-click="vm.create()">
+    </cms-button-icon>
+
+</cms-form-field-filtered-dropdown>

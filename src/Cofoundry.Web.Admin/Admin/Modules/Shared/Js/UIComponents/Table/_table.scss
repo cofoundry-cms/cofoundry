@@ -33,7 +33,7 @@
     }
 
     .collection-actions {
-        top:8px;
+        top:3px;
     }
 }
 
@@ -45,12 +45,16 @@
     }
 
     thead {
-        background-color:#fff;
+        background-color: #fff;
+
+        .control-group-area & {
+            background-color: $color-lightgrey;
+        }
     }
 
     thead tr {
         th {
-            padding:20px 10px;
+            padding:15px 10px;
             text-transform:uppercase;
 
             &.actions {

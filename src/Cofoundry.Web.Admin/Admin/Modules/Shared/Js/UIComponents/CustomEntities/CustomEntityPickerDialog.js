@@ -122,8 +122,12 @@ function (
         });
 
         function onComplete(customEntityId) {
-            addOrRemove({ customEntityId: customEntityId });
-            loadGrid();
+            if (!vm.multiMode) {
+                onSelect({ customEntityId: customEntityId });
+                loadGrid();
+            } else {
+                onSelectAndClose({ customEntityId: customEntityId });
+            }
         }
     }
 
