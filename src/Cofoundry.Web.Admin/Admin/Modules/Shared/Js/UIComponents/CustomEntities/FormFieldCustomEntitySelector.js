@@ -35,7 +35,7 @@ function (
     function preLink(scope, el, attrs, controllers) {
         var vm = scope.vm,
             dynamicFormFieldController = controllers[0];
-        console.log(attrs);
+
         if (angular.isDefined(attrs.required)) {
             vm.isRequired = true;
         } else {
