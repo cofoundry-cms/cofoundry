@@ -26,7 +26,7 @@ namespace Cofoundry.Domain
         public bool HasDraft { get; set; }
 
         /// <summary>
-        /// The full path of the entity including directories and the locale. 
+        /// The full path of the default details page. 
         /// </summary>
         public string FullPath { get; set; }
 

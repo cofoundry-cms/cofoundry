@@ -9,17 +9,17 @@ using AutoMapper;
 
 namespace Cofoundry.Domain
 {
-    public class GetPageVersionDetailsByPageIdQueryHandler 
-        : IQueryHandler<GetPageVersionDetailsByPageIdQuery, IEnumerable<PageVersionDetails>>
-        , IAsyncQueryHandler<GetPageVersionDetailsByPageIdQuery, IEnumerable<PageVersionDetails>>
-        , IPermissionRestrictedQueryHandler<GetPageVersionDetailsByPageIdQuery, IEnumerable<PageVersionDetails>>
+    public class GetPageVersionSummariesByPageIdQueryHandler
+        : IQueryHandler<GetPageVersionSummariesByPageIdQuery, IEnumerable<PageVersionSummary>>
+        , IAsyncQueryHandler<GetPageVersionSummariesByPageIdQuery, IEnumerable<PageVersionSummary>>
+        , IPermissionRestrictedQueryHandler<GetPageVersionSummariesByPageIdQuery, IEnumerable<PageVersionSummary>>
     {
         #region constructor
 
         private readonly CofoundryDbContext _dbContext;
         private readonly IQueryExecutor _queryExecutor;
 
-        public GetPageVersionDetailsByPageIdQueryHandler(
+        public GetPageVersionSummariesByPageIdQueryHandler(
             CofoundryDbContext dbContext,
             IQueryExecutor queryExecutor
             )
@@ -32,7 +32,7 @@ namespace Cofoundry.Domain
 
         #region execution
 
-        public IEnumerable<PageVersionDetails> Execute(GetPageVersionDetailsByPageIdQuery query, IExecutionContext executionContext)
+        public IEnumerable<PageVersionSummary> Execute(GetPageVersionSummariesByPageIdQuery query, IExecutionContext executionContext)
         {
             var dbVersions = Query(query.PageId).ToList();
             var versions = Map(dbVersions);
@@ -40,7 +40,7 @@ namespace Cofoundry.Domain
             return versions;
         }
 
-        public async Task<IEnumerable<PageVersionDetails>> ExecuteAsync(GetPageVersionDetailsByPageIdQuery query, IExecutionContext executionContext)
+        public async Task<IEnumerable<PageVersionSummary>> ExecuteAsync(GetPageVersionSummariesByPageIdQuery query, IExecutionContext executionContext)
         {
             var dbVersions = await Query(query.PageId).ToListAsync();
             var versions = Map(dbVersions);
@@ -66,9 +66,9 @@ namespace Cofoundry.Domain
                 .ThenByDescending(v => v.CreateDate);
         }
 
-        private IEnumerable<PageVersionDetails> Map(List<PageVersion> dbVersions)
+        private IEnumerable<PageVersionSummary> Map(List<PageVersion> dbVersions)
         {
-            var versions = Mapper.Map<IEnumerable<PageVersionDetails>>(dbVersions);
+            var versions = Mapper.Map<IEnumerable<PageVersionSummary>>(dbVersions);
             return versions;
         }
 
@@ -76,7 +76,7 @@ namespace Cofoundry.Domain
 
         #region Permission
 
-        public IEnumerable<IPermissionApplication> GetPermissions(GetPageVersionDetailsByPageIdQuery query)
+        public IEnumerable<IPermissionApplication> GetPermissions(GetPageVersionSummariesByPageIdQuery query)
         {
             yield return new PageReadPermission();
         }

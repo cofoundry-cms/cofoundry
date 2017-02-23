@@ -23,10 +23,17 @@ namespace Cofoundry.Domain
         IEnumerable<PageRoute> GetAllPageRoutes(IExecutionContext executionContext = null);
         Task<IEnumerable<PageRoute>> GetAllPageRoutesAsync(IExecutionContext executionContext = null);
         Task<PageRoute> GetNotFoundPageRouteByPathAsync(GetNotFoundPageRouteByPathQuery query, IExecutionContext executionContext = null);
+
         PageDetails GetPageDetailsById(int id, IExecutionContext executionContext = null);
         Task<PageDetails> GetPageDetailsByIdAsync(int id, IExecutionContext executionContext = null);
+
+        IEnumerable<PageSectionDetails> GetPageSectionDetailsByPageVersionId(int pageVersionId, IExecutionContext executionContext = null);
+        Task<IEnumerable<PageSectionDetails>> GetPageSectionDetailsByPageVersionIdAsync(int pageVersionId, IExecutionContext executionContext = null);
+        
         PageModuleTypeSummary GetPageModuleTypeSummaryById(int id, IExecutionContext executionContext = null);
+
         Task<PageRenderDetails> GetPageRenderDetailsAsync(GetPageRenderDetailsByIdQuery query, IExecutionContext executionContext = null);
+
         PageRoute GetPageRouteById(int pageId, IExecutionContext executionContext = null);
         Task<PageRoute> GetPageRouteByIdAsync(int pageId, IExecutionContext executionContext = null);
 
@@ -42,8 +49,8 @@ namespace Cofoundry.Domain
         Task<IEnumerable<PageRoutingInfo>> GetPageRoutingInfoByCustomEntityIdAsync(int customEntityId, IExecutionContext executionContext = null);
         IDictionary<int, IEnumerable<PageRoutingInfo>> GetPageRoutingInfoByCustomEntityIdRange(int[] customEntityIds, IExecutionContext executionContext = null);
         Task<IDictionary<int, IEnumerable<PageRoutingInfo>>> GetPageRoutingInfoByCustomEntityIdRangeAsync(int[] customEntityIds, IExecutionContext executionContext = null);
-        Task<IEnumerable<PageVersionDetails>> GetPageVersionDetailsByPageIdAsync(int pageId, IExecutionContext executionContext = null);
-        IEnumerable<PageVersionDetails> GetPageVersionDetailsByPageId(int pageId, IExecutionContext executionContext = null);
+        Task<IEnumerable<PageVersionSummary>> GetPageVersionSummariesByPageIdAsync(int pageId, IExecutionContext executionContext = null);
+        IEnumerable<PageVersionSummary> GetPageVersionSummariesByPageId(int pageId, IExecutionContext executionContext = null);
         Task<PageVersionModuleRenderDetails> GetPageVersionModuleRenderDetailsByIdAsync(GetPageVersionModuleRenderDetailsByIdQuery query, IExecutionContext executionContext = null);
         PageVersionModuleRenderDetails GetPageVersionModuleRenderDetailsById(GetPageVersionModuleRenderDetailsByIdQuery query, IExecutionContext executionContext = null);
         bool IsPagePathUnique(IsPagePathUniqueQuery query, IExecutionContext executionContext = null);

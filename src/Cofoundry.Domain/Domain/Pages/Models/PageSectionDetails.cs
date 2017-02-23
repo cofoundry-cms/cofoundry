@@ -7,15 +7,16 @@ using System.Threading.Tasks;
 namespace Cofoundry.Domain
 {
     /// <summary>
-    /// Page section information for rendering a page including 
-    /// full module details with mapped display models.
+    /// A lighter weight version of PageSectionRender details
+    /// without full display model mapping for modules. Includes 
+    /// only raw data model data.
     /// </summary>
-    public class PageSectionRenderDetails : IEntitySectionRenderDetails<PageVersionModuleRenderDetails>
+    public class PageSectionDetails
     {
         public int PageTemplateSectionId { get; set; }
 
         public string Name { get; set; }
 
-        public PageVersionModuleRenderDetails[] Modules { get; set; }
+        public PageVersionModuleDetails[] Modules { get; set; }
     }
 }

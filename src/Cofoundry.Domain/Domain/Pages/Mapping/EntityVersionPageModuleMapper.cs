@@ -13,18 +13,15 @@ namespace Cofoundry.Domain
     {
         #region constructor
 
-        private readonly IDbUnstructuredDataSerializer _dbUnstructuredDataSerializer;
         private readonly IPageVersionModuleModelMapper _pageVersionModuleModelMapper;
         private readonly IQueryExecutor _queryExecutor;
 
         public EntityVersionPageModuleMapper(
             IQueryExecutor queryExecutor,
-            IDbUnstructuredDataSerializer dbUnstructuredDataSerializer,
             IPageVersionModuleModelMapper pageVersionModuleModelMapper
             )
         {
             _queryExecutor = queryExecutor;
-            _dbUnstructuredDataSerializer = dbUnstructuredDataSerializer;
             _pageVersionModuleModelMapper = pageVersionModuleModelMapper;
         }
 
@@ -60,6 +57,7 @@ namespace Cofoundry.Domain
                 section.Modules = ToModuleRenderDetails<TModuleRenderDetails>(sectionMappedModules).ToArray();
             }
         }
+
 
         #endregion
 

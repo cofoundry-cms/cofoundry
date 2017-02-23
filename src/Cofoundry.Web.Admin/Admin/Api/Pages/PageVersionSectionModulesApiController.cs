@@ -14,7 +14,7 @@ namespace Cofoundry.Web.Admin
     /// This could be nested under the page versions api, but it seemed silly to have to specify
     /// all the route paramters when just a pageVersionModuleId would do. To achieve a heirachical route 
     /// as well we could sub-class this type and create two versions with diffent route constraints. See
-    /// http://stackoverflow.com/a/24969829/716689 for more info abotu route inheritance.
+    /// http://stackoverflow.com/a/24969829/716689 for more info about route inheritance.
     /// </remarks>
     [AdminApiRoutePrefix("page-version-section-modules")]
     public class PageVersionSectionModulesApiController : BaseAdminApiController

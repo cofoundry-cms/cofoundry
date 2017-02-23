@@ -42,7 +42,7 @@ namespace Cofoundry.Domain
                 .Where(m => m.PageVersionId == page.PageVersionId)
                 .ToListAsync();
 
-            await _entityVersionPageModuleMapper.MapSectionsAsync<PageVersionModuleRenderDetails>(dbModules, page.Sections, query.WorkFlowStatus, executionContext);
+            await _entityVersionPageModuleMapper.MapSectionsAsync(dbModules, page.Sections, query.WorkFlowStatus, executionContext);
 
             return page;
         }

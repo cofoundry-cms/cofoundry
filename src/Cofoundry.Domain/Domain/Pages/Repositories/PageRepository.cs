@@ -71,6 +71,34 @@ namespace Cofoundry.Domain
             return _queryExecutor.GetById<PageDetails>(id, executionContext);
         }
 
+        /// <summary>
+        /// Gets a collection of the content managed sections and
+        /// modules for a specific version of a page. These are the 
+        /// modules that get rendered in the page template linked
+        /// to the page version.
+        /// </summary>
+        /// <param name="pageVersionId">Database id of the page version to get content data for.</param>
+        /// <param name="executionContext">Optional execution context to use when executing the query. Useful if you need to temporarily elevate your permission level.</param>
+        public IEnumerable<PageSectionDetails> GetPageSectionDetailsByPageVersionId(int pageVersionId, IExecutionContext executionContext = null)
+        {
+            var query = new GetPageSectionDetailsByPageVersionIdQuery(pageVersionId);
+            return _queryExecutor.Execute(query, executionContext);
+        }
+
+        /// <summary>
+        /// Gets a collection of the content managed sections and
+        /// modules for a specific version of a page. These are the 
+        /// modules that get rendered in the page template linked
+        /// to the page version.
+        /// </summary>
+        /// <param name="pageVersionId">Database id of the page version to get content data for.</param>
+        /// <param name="executionContext">Optional execution context to use when executing the query. Useful if you need to temporarily elevate your permission level.</param>
+        public Task<IEnumerable<PageSectionDetails>> GetPageSectionDetailsByPageVersionIdAsync(int pageVersionId, IExecutionContext executionContext = null)
+        {
+            var query = new GetPageSectionDetailsByPageVersionIdQuery(pageVersionId);
+            return _queryExecutor.ExecuteAsync(query, executionContext);
+        }
+
         public PageModuleTypeSummary GetPageModuleTypeSummaryById(int id, IExecutionContext executionContext = null)
         {
             return _queryExecutor.GetById<PageModuleTypeSummary>(id, executionContext);
@@ -135,14 +163,14 @@ namespace Cofoundry.Domain
             return _queryExecutor.ExecuteAsync(query, executionContext);
         }
 
-        public IEnumerable<PageVersionDetails> GetPageVersionDetailsByPageId(int pageId, IExecutionContext executionContext = null)
+        public IEnumerable<PageVersionSummary> GetPageVersionSummariesByPageId(int pageId, IExecutionContext executionContext = null)
         {
-            return _queryExecutor.Execute(new GetPageVersionDetailsByPageIdQuery(pageId), executionContext);
+            return _queryExecutor.Execute(new GetPageVersionSummariesByPageIdQuery(pageId), executionContext);
         }
 
-        public Task<IEnumerable<PageVersionDetails>> GetPageVersionDetailsByPageIdAsync(int pageId, IExecutionContext executionContext = null)
+        public Task<IEnumerable<PageVersionSummary>> GetPageVersionSummariesByPageIdAsync(int pageId, IExecutionContext executionContext = null)
         {
-            return _queryExecutor.ExecuteAsync(new GetPageVersionDetailsByPageIdQuery(pageId), executionContext);
+            return _queryExecutor.ExecuteAsync(new GetPageVersionSummariesByPageIdQuery(pageId), executionContext);
         }
 
         public PageVersionModuleRenderDetails GetPageVersionModuleRenderDetailsById(GetPageVersionModuleRenderDetailsByIdQuery query, IExecutionContext executionContext = null)

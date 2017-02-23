@@ -10,7 +10,7 @@ namespace Cofoundry.Domain
     /// Contains version specific information about a page. This includes
     /// basic audit data intended for use in the admin area.
     /// </summary>
-    public class PageVersionDetails : ICreateAudited
+    public class PageVersionSummary : ICreateAudited
     {
         public int PageVersionId { get; set; }
 
@@ -22,16 +22,10 @@ namespace Cofoundry.Domain
         /// </summary>
         public bool ShowInSiteMap { get; set; }
         
-        public string MetaDescription { get; set; }
-
-        public OpenGraphData OpenGraph { get; set; }
-
         public WorkFlowStatus WorkFlowStatus { get; set; }
 
         public PageTemplateMicroSummary Template { get; set; }
-
-        public IEnumerable<PageSectionDetails> Sections { get; set; }
-
+        
         public CreateAuditData AuditData { get; set; }
     }
 }
