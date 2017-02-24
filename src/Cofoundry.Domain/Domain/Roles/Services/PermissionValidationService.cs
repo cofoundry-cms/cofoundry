@@ -16,11 +16,11 @@ namespace Cofoundry.Domain
 
         private readonly IUserContextService _userContextService;
         private readonly IInternalRoleRepository _internalRoleRepository;
-        private readonly ICustomEntityCodeDefinitionRepository _customEntityDefinitionRepository;
+        private readonly ICustomEntityDefinitionRepository _customEntityDefinitionRepository;
 
         public PermissionValidationService(
             IUserContextService userContextService,
-            ICustomEntityCodeDefinitionRepository customEntityDefinitionRepository,
+            ICustomEntityDefinitionRepository customEntityDefinitionRepository,
             IInternalRoleRepository internalRoleRepository
             )
         {

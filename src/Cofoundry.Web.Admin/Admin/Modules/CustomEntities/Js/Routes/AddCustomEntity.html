@@ -58,5 +58,26 @@
             </cms-form-dynamic-field-set>
         </cms-form-section>
 
+        <!-- DETAILS PAGES -->
+
+        <div ng-repeat="pageRoute in vm.pageRoutes">
+
+            <cms-form-section cms-title="Template: {{pageRoute.title}}"
+                              ng-if="vm.command.pageType !== 'CustomEntityDetails'">
+                <cms-form-field-container>
+                    <div>
+                        Template content can only be managed after the {{::vm.options.nameSingular}}
+                        has been created.
+                    </div>
+
+                    <cms-button cms-text="Save Draft & Edit Content"
+                                cms-loading="vm.saveLoadState.isLoading"
+                                ng-disabled="vm.mainForm.$invalid"
+                                ng-click="vm.saveAndEdit(pageRoute)"></cms-button>
+
+                </cms-form-field-container>
+            </cms-form-section>
+        </div>
+
     </cms-page-body>
 </cms-form>

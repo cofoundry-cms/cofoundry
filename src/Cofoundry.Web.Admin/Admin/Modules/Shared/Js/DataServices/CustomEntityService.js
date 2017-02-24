@@ -28,6 +28,10 @@ function (
         return $http.get(getCustomEntityDefinitionServiceBase(customEntityDefinitionCode) + '/data-model-schema');
     }
 
+    service.getPageRoutes = function (customEntityDefinitionCode) {
+        return $http.get(getCustomEntityDefinitionServiceBase(customEntityDefinitionCode) + '/routes');
+    }
+
     service.getDefinitionsByIdRange = function (customEntityDefinitionCodes) {
         return $http.get(getCustomEntityDefinitionServiceBase()).then(filterByIdRange);
 

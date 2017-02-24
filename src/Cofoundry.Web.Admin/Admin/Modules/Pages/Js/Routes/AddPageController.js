@@ -2,6 +2,7 @@
     '_',
     '$q',
     '$location',
+    '$window',
     'shared.LoadState',
     'shared.stringUtilities',
     'pages.pageService',
@@ -11,6 +12,7 @@ function (
     _,
     $q,
     $location,
+    $window,
     LoadState,
     stringUtilities,
     pageService,
@@ -28,8 +30,9 @@ function (
 
     function init() {
 
-        vm.save = save.bind(null, false);
-        vm.saveAndPublish = save.bind(null, true);
+        vm.save = save.bind(null, false, redirectToDetails);
+        vm.saveAndPublish = save.bind(null, true, redirectToDetails);
+        vm.saveAndEdit = save.bind(null, false, redirectToVisualEditor);
         vm.cancel = cancel;
         vm.onNameChanged = onNameChanged;
         vm.onPageTypeChanged = onPageTypeChanged;
@@ -47,7 +50,7 @@ function (
 
     /* EVENTS */
 
-    function save(publish) {
+    function save(publish, redirectToCommand) {
         var loadState;
 
         if (publish) {
@@ -61,11 +64,23 @@ function (
 
         pageService
             .add(vm.command)
-            .then(redirectToDetails)
+            .then(redirectToCommand)
             .finally(setLoadingOff.bind(null, loadState));
 
-        function redirectToDetails(id) {
-            $location.path('/' + id);
+    }
+
+    function redirectToDetails(id) {
+        $location.path('/' + id);
+    }
+
+    function redirectToVisualEditor(id) {
+
+        return pageService
+            .getById(id)
+            .then(redirect);
+
+        function redirect(page) {
+            $window.location.href = page.pageRoute.fullPath;
         }
     }
 

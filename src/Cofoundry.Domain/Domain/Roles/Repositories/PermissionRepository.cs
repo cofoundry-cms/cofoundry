@@ -15,7 +15,7 @@ namespace Cofoundry.Domain
 
         public PermissionRepository(
             IPermission[] permissions,
-            ICustomEntityCodeDefinitionRepository customEntityDefinitionRepository
+            ICustomEntityDefinitionRepository customEntityDefinitionRepository
             )
         {
             var customEntityPermissions = GetCustomEntityPermissions(permissions, customEntityDefinitionRepository).ToList();
@@ -40,7 +40,7 @@ namespace Cofoundry.Domain
             }
         }
 
-        private IEnumerable<IPermission> GetCustomEntityPermissions(IPermission[] permissions, ICustomEntityCodeDefinitionRepository customEntityDefinitionRepository)
+        private IEnumerable<IPermission> GetCustomEntityPermissions(IPermission[] permissions, ICustomEntityDefinitionRepository customEntityDefinitionRepository)
         {
             var customEntityDefinitions = customEntityDefinitionRepository.GetAll();
 

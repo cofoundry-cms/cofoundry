@@ -18,13 +18,13 @@ namespace Cofoundry.Domain
         private readonly CofoundryDbContext _dbContext;
         private readonly CustomEntityDataModelMapper _customEntityDataModelMapper;
         private readonly IQueryExecutor _queryExecutor;
-        private readonly ICustomEntityCodeDefinitionRepository _customEntityDefinitionRepository;
+        private readonly ICustomEntityDefinitionRepository _customEntityDefinitionRepository;
 
         public CustomEntityMapper(
             CofoundryDbContext dbContext,
             IQueryExecutor queryExecutor,
             CustomEntityDataModelMapper customEntityDataModelMapper,
-            ICustomEntityCodeDefinitionRepository customEntityDefinitionRepository
+            ICustomEntityDefinitionRepository customEntityDefinitionRepository
             )
         {
             _dbContext = dbContext;

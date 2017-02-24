@@ -26,7 +26,7 @@ namespace Cofoundry.Domain
         private readonly ICustomEntityCache _customEntityCache;
         private readonly IDbUnstructuredDataSerializer _dbUnstructuredDataSerializer;
         private readonly IMessageAggregator _messageAggregator;
-        private readonly ICustomEntityCodeDefinitionRepository _customEntityDefinitionRepository;
+        private readonly ICustomEntityDefinitionRepository _customEntityDefinitionRepository;
         private readonly IPermissionValidationService _permissionValidationService;
         private readonly ITransactionScopeFactory _transactionScopeFactory;
         
@@ -38,7 +38,7 @@ namespace Cofoundry.Domain
             ICustomEntityCache customEntityCache,
             IDbUnstructuredDataSerializer dbUnstructuredDataSerializer,
             IMessageAggregator messageAggregator,
-            ICustomEntityCodeDefinitionRepository customEntityDefinitionRepository,
+            ICustomEntityDefinitionRepository customEntityDefinitionRepository,
             IPermissionValidationService permissionValidationService,
             ITransactionScopeFactory transactionScopeFactory
             )

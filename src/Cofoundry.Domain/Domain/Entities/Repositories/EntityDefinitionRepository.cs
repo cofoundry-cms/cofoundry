@@ -15,7 +15,7 @@ namespace Cofoundry.Domain
 
         public EntityDefinitionRepository(
             IEntityDefinition[] customEntityDefinitions,
-            ICustomEntityCodeDefinitionRepository customEntityDefinitionRepository
+            ICustomEntityDefinitionRepository customEntityDefinitionRepository
             )
         {
             var dynamicDefinitions = customEntityDefinitionRepository

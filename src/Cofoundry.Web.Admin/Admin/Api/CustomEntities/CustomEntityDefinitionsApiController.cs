@@ -56,6 +56,16 @@ namespace Cofoundry.Web.Admin
             var result = await _queryExecutor.GetByIdAsync<CustomEntityDefinitionSummary>(customEntityDefinitionCode);
             return _apiResponseHelper.SimpleQueryResponse(this, result);
         }
+        
+        [HttpGet]
+        [Route(ID_ROUTE + "/routes")]
+        public async Task<IHttpActionResult> GetCustomEntityRoutes(string customEntityDefinitionCode)
+        {
+            var query = new GetPageRoutesByCustomEntityDefinitionCodeQuery(customEntityDefinitionCode);
+            var result = await _queryExecutor.ExecuteAsync(query);
+
+            return _apiResponseHelper.SimpleQueryResponse(this, result);
+        }
 
         [HttpGet]
         [Route(ID_ROUTE + "/data-model-schema")]

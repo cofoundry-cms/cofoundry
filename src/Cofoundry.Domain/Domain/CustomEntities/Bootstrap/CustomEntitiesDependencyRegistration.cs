@@ -20,7 +20,7 @@ namespace Cofoundry.Domain
                 .RegisterAll<ICustomEntityDefinition>()
                 .RegisterAll<ICustomEntityDisplayModel>()
                 .RegisterAllGenericImplementations(typeof(ICustomEntityDetailsDisplayModelMapper<,>))
-                .RegisterInstance<ICustomEntityCodeDefinitionRepository, CustomEntityCodeDefinitionRepository>()
+                .RegisterInstance<ICustomEntityDefinitionRepository, CustomEntityDefinitionRepository>()
                 .RegisterType<ICustomEntityRenderSummaryMapper, CustomEntityMapper>()
                 ;
         }

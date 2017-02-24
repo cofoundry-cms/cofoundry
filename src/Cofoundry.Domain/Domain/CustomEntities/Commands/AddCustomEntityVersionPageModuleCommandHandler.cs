@@ -34,7 +34,7 @@ namespace Cofoundry.Domain
             ICustomEntityCache customEntityCache,
             IPageModuleCommandHelper pageModuleCommandHelper,
             IMessageAggregator messageAggregator,
-            ICustomEntityCodeDefinitionRepository customEntityDefinitionRepository,
+            ICustomEntityDefinitionRepository customEntityDefinitionRepository,
             IPermissionValidationService permissionValidationService,
             ITransactionScopeFactory transactionScopeFactory
             )

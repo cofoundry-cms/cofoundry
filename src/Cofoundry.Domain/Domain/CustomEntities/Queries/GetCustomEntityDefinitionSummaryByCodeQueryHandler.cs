@@ -13,10 +13,10 @@ namespace Cofoundry.Domain
         , IAsyncQueryHandler<GetByStringQuery<CustomEntityDefinitionSummary>, CustomEntityDefinitionSummary>
         , IIgnorePermissionCheckHandler
     {
-        private readonly ICustomEntityCodeDefinitionRepository _customEntityDefinitionRepository;
+        private readonly ICustomEntityDefinitionRepository _customEntityDefinitionRepository;
 
         public GetCustomEntityDefinitionSummaryByCodeQueryHandler(
-            ICustomEntityCodeDefinitionRepository customEntityDefinitionRepository
+            ICustomEntityDefinitionRepository customEntityDefinitionRepository
             )
         {
             _customEntityDefinitionRepository = customEntityDefinitionRepository;

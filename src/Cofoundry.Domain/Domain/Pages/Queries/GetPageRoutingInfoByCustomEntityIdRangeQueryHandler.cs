@@ -152,9 +152,9 @@ namespace Cofoundry.Domain
         private static IEnumerable<GetCustomEntityRoutesByDefinitionCodeQuery> GetCustomEntityRoutingQuery(List<IdQueryResult> idSets)
         {
             return idSets
-                            .Select(i => i.CustomEntityDefinitionCode)
-                            .Distinct()
-                            .Select(c => new GetCustomEntityRoutesByDefinitionCodeQuery(c));
+                .Select(i => i.CustomEntityDefinitionCode)
+                .Distinct()
+                .Select(c => new GetCustomEntityRoutesByDefinitionCodeQuery(c));
         }
 
         #endregion

@@ -9,6 +9,8 @@ namespace Cofoundry.Domain
 {
     public class GetPageRoutesByWebDirectoryIdQuery : IQuery<IEnumerable<PageRoute>>
     {
+        public GetPageRoutesByWebDirectoryIdQuery() { }
+
         public GetPageRoutesByWebDirectoryIdQuery(int id)
         {
             WebDirectoryId = id;

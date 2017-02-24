@@ -6,9 +6,14 @@ using System.Text;
 using System.Threading.Tasks;
 using Cofoundry.Domain.Data;
 using Cofoundry.Domain.CQS;
+using Conditions;
 
 namespace Cofoundry.Domain
 {
+    /// <summary>
+    /// A mapping helper containing a couple of mapping methods used in multiple queires
+    /// to map page modules in regular pages as well as custom entity details pages.
+    /// </summary>
     public class EntityVersionPageModuleMapper : IEntityVersionPageModuleMapper
     {
         #region constructor
@@ -58,7 +63,6 @@ namespace Cofoundry.Domain
             }
         }
 
-
         #endregion
 
         #region private methods
@@ -101,7 +105,7 @@ namespace Cofoundry.Domain
                 module.EntityVersionPageModuleId = dbModule.PageModule.GetVersionModuleId();
                 module.ModuleType = dbModule.ModuleType;
                 module.DisplayModel = dbModule.DisplayModel;
-                module.Template = GetCustomTemplate(dbModule.PageModule, module);
+                module.Template = GetCustomTemplate(dbModule.PageModule, dbModule.ModuleType);
 
                 // Add any list context information.
                 var displayData = module.DisplayModel as IListablePageModuleDisplayModel;
@@ -121,13 +125,20 @@ namespace Cofoundry.Domain
             }
         }
 
-        public PageModuleTypeTemplateSummary GetCustomTemplate<TModuleRenderDetails>(IEntityVersionPageModule pageModule, TModuleRenderDetails moduleRenderDetails)
-            where TModuleRenderDetails : IEntityVersionPageModuleRenderDetails, new()
+        /// <summary>
+        /// Locates and returns the correct templates for a module if it a custom template 
+        /// assigned, otherwise null is returned.
+        /// </summary>
+        /// <param name="pageModule">An unmapped database module to locate the template for.</param>
+        /// <param name="moduleType">The module type associated with the module in which to look for the template.</param>
+        public PageModuleTypeTemplateSummary GetCustomTemplate(IEntityVersionPageModule pageModule, PageModuleTypeSummary moduleType)
         {
+            Condition.Requires(pageModule, nameof(pageModule)).IsNotNull();
+            Condition.Requires(pageModule, nameof(moduleType)).IsNotNull();
+
             if (!pageModule.PageModuleTypeTemplateId.HasValue) return null;
 
-            var template = moduleRenderDetails
-                .ModuleType
+            var template = moduleType
                 .Templates
                 .FirstOrDefault(t => t.PageModuleTypeTemplateId == pageModule.PageModuleTypeTemplateId);
 

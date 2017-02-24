@@ -26,16 +26,19 @@ namespace Cofoundry.Domain
         private readonly CofoundryDbContext _dbContext;
         private readonly IQueryExecutor _queryExecutor;
         private readonly IPageVersionModuleModelMapper _pageVersionModuleModelMapper;
-
+        private readonly IEntityVersionPageModuleMapper _entityVersionPageModuleMapper;
+        
         public GetPageSectionDetailsByPageVersionIdQueryHandler(
             CofoundryDbContext dbContext,
             IQueryExecutor queryExecutor,
-            IPageVersionModuleModelMapper pageVersionModuleModelMapper
+            IPageVersionModuleModelMapper pageVersionModuleModelMapper,
+            IEntityVersionPageModuleMapper entityVersionPageModuleMapper
             )
         {
             _dbContext = dbContext;
             _queryExecutor = queryExecutor;
             _pageVersionModuleModelMapper = pageVersionModuleModelMapper;
+            _entityVersionPageModuleMapper = entityVersionPageModuleMapper;
         }
 
         #endregion
@@ -93,22 +96,9 @@ namespace Cofoundry.Domain
             module.ModuleType = moduleType;
             module.DataModel = _pageVersionModuleModelMapper.MapDataModel(moduleType.FileName, dbModule);
             module.PageVersionModuleId = dbModule.PageVersionModuleId;
-            module.Template = GetCustomTemplate(dbModule, moduleType);
+            module.Template = _entityVersionPageModuleMapper.GetCustomTemplate(dbModule, moduleType);
 
             return module;
-        }
-
-        public PageModuleTypeTemplateSummary GetCustomTemplate(IEntityVersionPageModule pageModule, PageModuleTypeSummary moduleType)
-        {
-            if (!pageModule.PageModuleTypeTemplateId.HasValue) return null;
-
-            var template = moduleType
-                .Templates
-                .FirstOrDefault(t => t.PageModuleTypeTemplateId == pageModule.PageModuleTypeTemplateId);
-
-            Debug.Assert(template != null, string.Format("The module template with id {0} could not be found for {1} {2}", pageModule.PageModuleTypeTemplateId, pageModule.GetType().Name, pageModule.GetVersionModuleId()));
-
-            return template;
         }
 
         private IQueryable<PageSectionDetails> GetSections(GetPageSectionDetailsByPageVersionIdQuery query)

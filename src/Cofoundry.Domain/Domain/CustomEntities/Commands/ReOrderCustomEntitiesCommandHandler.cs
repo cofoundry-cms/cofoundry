@@ -24,14 +24,14 @@ namespace Cofoundry.Domain
         private readonly IEntityFrameworkSqlExecutor _sqlExecutor;
         private readonly ICustomEntityCache _customEntityCache;
         private readonly IMessageAggregator _messageAggregator;
-        private readonly ICustomEntityCodeDefinitionRepository _customEntityDefinitionRepository;
+        private readonly ICustomEntityDefinitionRepository _customEntityDefinitionRepository;
 
         public ReOrderCustomEntitiesCommandHandler(
             CofoundryDbContext dbContext,
             IEntityFrameworkSqlExecutor sqlExecutor,
             ICustomEntityCache customEntityCache,
             IMessageAggregator messageAggregator,
-            ICustomEntityCodeDefinitionRepository customEntityDefinitionRepository
+            ICustomEntityDefinitionRepository customEntityDefinitionRepository
             )
         {
             _dbContext = dbContext;

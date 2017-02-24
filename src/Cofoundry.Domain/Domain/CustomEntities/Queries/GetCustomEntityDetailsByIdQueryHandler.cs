@@ -21,6 +21,7 @@ namespace Cofoundry.Domain
         private readonly IQueryExecutor _queryExecutor;
         private readonly IDbUnstructuredDataSerializer _dbUnstructuredDataSerializer;
         private readonly IPageVersionModuleModelMapper _pageVersionModuleModelMapper;
+        private readonly IEntityVersionPageModuleMapper _entityVersionPageModuleMapper;
         private readonly IPermissionValidationService _permissionValidationService;
 
         public GetCustomEntityDetailsByIdQueryHandler(
@@ -28,6 +29,7 @@ namespace Cofoundry.Domain
             IQueryExecutor queryExecutor,
             IDbUnstructuredDataSerializer dbUnstructuredDataSerializer,
             IPageVersionModuleModelMapper pageVersionModuleModelMapper,
+            IEntityVersionPageModuleMapper entityVersionPageModuleMapper,
             IPermissionValidationService permissionValidationService
             )
         {
@@ -35,6 +37,7 @@ namespace Cofoundry.Domain
             _queryExecutor = queryExecutor;
             _dbUnstructuredDataSerializer = dbUnstructuredDataSerializer;
             _pageVersionModuleModelMapper = pageVersionModuleModelMapper;
+            _entityVersionPageModuleMapper = entityVersionPageModuleMapper;
             _permissionValidationService = permissionValidationService;
         }
 
@@ -164,23 +167,9 @@ namespace Cofoundry.Domain
             module.ModuleType = moduleType;
             module.DataModel = _pageVersionModuleModelMapper.MapDataModel(moduleType.FileName, dbModule);
             module.CustomEntityVersionPageModuleId = dbModule.CustomEntityVersionPageModuleId;
-            module.Template = GetCustomTemplate(dbModule, moduleType);
+            module.Template = _entityVersionPageModuleMapper.GetCustomTemplate(dbModule, moduleType);
 
             return module;
-        }
-
-        // TODO:
-        public PageModuleTypeTemplateSummary GetCustomTemplate(IEntityVersionPageModule pageModule, PageModuleTypeSummary moduleType)
-        {
-            if (!pageModule.PageModuleTypeTemplateId.HasValue) return null;
-
-            var template = moduleType
-                .Templates
-                .FirstOrDefault(t => t.PageModuleTypeTemplateId == pageModule.PageModuleTypeTemplateId);
-
-            //Debug.Assert(template != null, string.Format("The module template with id {0} could not be found for {1} {2}", pageModule.PageModuleTypeTemplateId, pageModule.GetType().Name, pageModule.GetVersionModuleId()));
-
-            return template;
         }
 
         private IQueryable<CustomEntityVersion> Query(int id)

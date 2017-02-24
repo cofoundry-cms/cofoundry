@@ -25,7 +25,7 @@ namespace Cofoundry.Domain
         private readonly ICustomEntityCache _customEntityCache;
         private readonly IMessageAggregator _messageAggregator;
         private readonly IPermissionValidationService _permissionValidationService;
-        private readonly ICustomEntityCodeDefinitionRepository _customEntityDefinitionRepository;
+        private readonly ICustomEntityDefinitionRepository _customEntityDefinitionRepository;
         private readonly ITransactionScopeFactory _transactionScopeFactory;
 
         public PublishCustomEntityCommandHandler(
@@ -35,7 +35,7 @@ namespace Cofoundry.Domain
             ICustomEntityCache customEntityCache,
             IMessageAggregator messageAggregator,
             IPermissionValidationService permissionValidationService,
-            ICustomEntityCodeDefinitionRepository customEntityDefinitionRepository,
+            ICustomEntityDefinitionRepository customEntityDefinitionRepository,
             ITransactionScopeFactory transactionScopeFactory
             )
         {

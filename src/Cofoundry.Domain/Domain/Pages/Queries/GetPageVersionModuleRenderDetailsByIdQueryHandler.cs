@@ -132,24 +132,6 @@ namespace Cofoundry.Domain
                 .Where(m => m.PageVersionModuleId == pageVersionModuleId);
         }
 
-        /// <summary>
-        /// Gets the custom view template to render the module as if one
-        /// is assigned, otherwise null.
-        /// </summary>
-        public PageModuleTypeTemplateSummary GetCustomTemplate(PageVersionModule pageModule, PageVersionModuleRenderDetails moduleRenderDetails)
-        {
-            if (!pageModule.PageModuleTypeTemplateId.HasValue) return null;
-
-            var template = moduleRenderDetails
-                .ModuleType
-                .Templates
-                .FirstOrDefault(t => t.PageModuleTypeTemplateId == pageModule.PageModuleTypeTemplateId);
-
-            Debug.Assert(template != null, string.Format("The module template with id {0} could not be found for module {1}", pageModule.PageModuleTypeTemplateId, pageModule.PageVersionModuleId));
-
-            return template;
-        }
-
         #endregion
 
         #region Permission

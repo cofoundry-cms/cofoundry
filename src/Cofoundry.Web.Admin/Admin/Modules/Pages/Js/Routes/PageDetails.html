@@ -126,6 +126,47 @@
 
         </cms-form-section>
 
+
+        <cms-form-section cms-title="Template Content">
+            <cms-form-field-container>
+                <div ng-if="!vm.page.latestVersion.sections.length">
+                    This template has no managed content
+                </div>
+
+                <cms-button-link cms-text="Manage in Visual Editor"
+                                 cms-icon="eye-open"
+                                 ng-show="!vm.editMode"
+                                 cms-href="{{vm.page.pageRoute.fullPath}}"></cms-button-link>
+
+                <div ng-if="vm.page.latestVersion.sections.length > 0 && vm.editMode">
+                    Page content is edited in the visual editor.
+                </div>
+
+                <cms-table-container ng-if="vm.page.latestVersion.sections.length > 0">
+
+                    <table>
+                        <tbody ng-repeat="section in vm.page.latestVersion.sections">
+                            <tr>
+                                <th colspan="2">
+                                    <cms-table-group-heading>Section: {{section.name}}</cms-table-group-heading>
+                                </th>
+                            </tr>
+                            <tr ng-if="!section.modules.length">
+                                <td colspan="2">No content</td>
+                            </tr>
+                            <tr ng-repeat="module in section.modules">
+                                <td>{{module.moduleType.name}}</td>
+                                <!--<td>{{module.moduleType.description}}</td>-->
+                                <td class="row-type" style="width:30px; text-align:center;">
+                                    <!--TODO: Action-->
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </cms-table-container>
+        </cms-form-field-container>
+</cms-form-section>
+
         <!-- Page versions -->
         <cms-form-section cms-title="Versions">
             <cms-form-field-container>
@@ -136,6 +177,6 @@
         <!-- Audit data -->
         <cms-form-section-audit-data cms-audit-data="vm.page.auditData"></cms-form-section-audit-data>
 
-    </cms-page-body>
+</cms-page-body>
 
 </cms-form>

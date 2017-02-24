@@ -20,12 +20,12 @@ namespace Cofoundry.Domain
 
         private readonly CofoundryDbContext _dbContext;
         private readonly ICustomEntityRenderSummaryMapper _customEntityRenderSummaryMapper;
-        private readonly ICustomEntityCodeDefinitionRepository _customEntityDefinitionRepository;
+        private readonly ICustomEntityDefinitionRepository _customEntityDefinitionRepository;
 
         public GetCustomEntityRenderSummariesByDefinitionCodeQueryHandler(
             CofoundryDbContext dbContext,
             ICustomEntityRenderSummaryMapper customEntityRenderSummaryMapper,
-            ICustomEntityCodeDefinitionRepository customEntityDefinitionRepository
+            ICustomEntityDefinitionRepository customEntityDefinitionRepository
             )
         {
             _dbContext = dbContext;

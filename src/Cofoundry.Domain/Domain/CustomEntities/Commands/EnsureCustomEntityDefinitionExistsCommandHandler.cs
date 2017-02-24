@@ -17,12 +17,12 @@ namespace Cofoundry.Domain
 
         private readonly ICommandExecutor _commandExecutor;
         private readonly CofoundryDbContext _dbContext;
-        private readonly ICustomEntityCodeDefinitionRepository _customEntityDefinitionRepository;
+        private readonly ICustomEntityDefinitionRepository _customEntityDefinitionRepository;
 
         public EnsureCustomEntityDefinitionExistsCommandHandler(
             ICommandExecutor commandExecutor,
             CofoundryDbContext dbContext,
-            ICustomEntityCodeDefinitionRepository customEntityDefinitionRepository
+            ICustomEntityDefinitionRepository customEntityDefinitionRepository
             )
         {
             _commandExecutor = commandExecutor;

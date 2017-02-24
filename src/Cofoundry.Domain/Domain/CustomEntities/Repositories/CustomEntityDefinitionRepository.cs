@@ -7,13 +7,13 @@ using Cofoundry.Core;
 
 namespace Cofoundry.Domain
 {
-    public class CustomEntityCodeDefinitionRepository : ICustomEntityCodeDefinitionRepository
+    public class CustomEntityDefinitionRepository : ICustomEntityDefinitionRepository
     {
         #region constructor
 
         private readonly Dictionary<string, ICustomEntityDefinition> _customEntityDefinitions;
 
-        public CustomEntityCodeDefinitionRepository(
+        public CustomEntityDefinitionRepository(
             ICustomEntityDefinition[] customEntityDefinitions
             )
         {

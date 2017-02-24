@@ -112,5 +112,21 @@
                                      cms-description="Indicates whether this page should be included in the site map file used by search engine robots"></cms-form-field-checkbox>
 
         </cms-form-section>
+
+        <cms-form-section cms-title="Template Content"
+                          ng-if="vm.command.pageType !== 'CustomEntityDetails'">
+            <cms-form-field-container>
+                <div>
+                    Template content can only be managed after the page
+                    has been created.
+                </div>
+
+                <cms-button cms-text="Save Draft & Edit Content"
+                            cms-loading="vm.saveLoadState.isLoading"
+                            ng-disabled="vm.mainForm.$invalid"
+                            ng-click="vm.saveAndEdit()"></cms-button>
+
+            </cms-form-field-container>
+        </cms-form-section>
     </cms-page-body>
 </cms-form>

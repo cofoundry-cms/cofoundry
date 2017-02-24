@@ -1,6 +1,8 @@
 ﻿angular.module('cms.customEntities').controller('AddCustomEntityController', [
     '$scope',
     '$location',
+    '$q',
+    '$window',
     'shared.stringUtilities',
     'shared.LoadState',
     'shared.customEntityService',
@@ -8,6 +10,8 @@
 function (
     $scope,
     $location,
+    $q,
+    $window,
     stringUtilities,
     LoadState,
     customEntityService,
@@ -21,8 +25,6 @@ function (
 
     function init() {
 
-        initData();
-
         vm.globalLoadState = new LoadState();
         vm.saveLoadState = new LoadState();
         vm.saveAndPublishLoadState = new LoadState();
@@ -32,15 +34,18 @@ function (
         vm.options = moduleOptions;
         vm.saveButtonText = moduleOptions.autoPublish ? 'Save' : 'Save & Publish';
 
-        vm.save = save.bind(null, false);
-        vm.saveAndPublish = save.bind(null, true);
+        vm.save = save.bind(null, false, redirectToDetails);
+        vm.saveAndPublish = save.bind(null, true, redirectToDetails);
+        vm.saveAndEdit = save.bind(null, true, redirectToVisualEditor);
         vm.cancel = cancel;
         vm.onNameChanged = onNameChanged;
+
+        initData();
     }
 
     /* EVENTS */
 
-    function save(publish) {
+    function save(publish, redirectToCommand) {
         var loadState;
 
         if (publish) {
@@ -54,28 +59,47 @@ function (
 
         customEntityService
             .add(vm.command)
-            .then(redirectToList)
+            .then(redirectToCommand)
             .finally(setLoadingOff.bind(null, loadState));
     }
 
     function onNameChanged() {
         vm.command.urlSlug = stringUtilities.slugify(vm.command.title);
     }
-
-
+    
     /* PRIVATE FUNCS */
     
     function cancel() {
         redirectToList();
     }
 
-    function redirectToList() {
-        $location.path('/');
+    function redirectToDetails(id) {
+        $location.path('/' + id);
+    }
+
+    function redirectToVisualEditor(id) {
+
+        return customEntityService
+            .getById(id)
+            .then(redirect);
+
+        function redirect(customEntity) {
+            $window.location.href = customEntity.fullPath;
+        }
     }
 
     function initData() {
 
-        customEntityService.getDataModelSchema(moduleOptions.customEntityDefinitionCode).then(loadModelSchema);
+        var schemaDefferred = customEntityService
+            .getDataModelSchema(moduleOptions.customEntityDefinitionCode)
+            .then(loadModelSchema);
+
+        var pageRoutesDefferred = customEntityService
+            .getPageRoutes(moduleOptions.customEntityDefinitionCode)
+            .then(loadPageRoutes);
+
+        vm.formLoadState.offWhen(schemaDefferred, pageRoutesDefferred);
+
         vm.command = {};
 
         $scope.$watch('vm.command.localeId', function (localeId) {
@@ -95,11 +119,14 @@ function (
             vm.formDataSource = {
                 model: vm.command.model,
                 modelMetaData: modelMetaData
-            }
+            };
+        }
 
-            vm.formLoadState.off();
+        function loadPageRoutes(pageRoutes) {
+            vm.pageRoutes = pageRoutes;
         }
     }
+
     function setLoadingOn(loadState) {
         vm.globalLoadState.on();
         if (loadState && _.isFunction(loadState.on)) loadState.on();

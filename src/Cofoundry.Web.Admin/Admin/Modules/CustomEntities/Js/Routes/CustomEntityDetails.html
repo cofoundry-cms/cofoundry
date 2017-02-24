@@ -96,6 +96,55 @@
             </cms-form-dynamic-field-set>
         </cms-form-section>
 
+        <!-- DETAILS PAGES -->
+
+        <div ng-repeat="page in vm.customEntity.latestVersion.pages">
+
+            <cms-form-section cms-title="Template: {{page.pageRoute.title}}">
+                <cms-form-field-container>
+                    <div ng-if="!page.sections.length">
+                        This template has no managed content
+                    </div>
+
+                    <cms-button-link cms-text="Manage in Visual Editor"
+                                     cms-icon="eye-open"
+                                     ng-show="!vm.editMode"
+                                     cms-href="{{page.fullPath}}"></cms-button-link>
+
+                    <div ng-if="page.sections.length > 0 && vm.editMode">
+                        Page content is edited in the visual editor.
+                    </div>
+
+                    <cms-table-container ng-if="page.sections.length > 0">
+
+                        <table>
+                            <tbody ng-repeat="section in page.sections">
+                                <tr>
+                                    <th colspan="2">
+                                        <cms-table-group-heading>Section: {{section.name}}</cms-table-group-heading>
+                                    </th>
+                                </tr>
+
+                                <tr ng-if="!section.modules.length">
+                                    <td colspan="2">No content</td>
+                                </tr>
+
+                                <tr ng-repeat="module in section.modules">
+                                    <td>{{module.moduleType.name}}</td>
+                                    <!--<td>{{module.moduleType.description}}</td>-->
+                                    <td class="row-type" style="width:30px; text-align:center;">
+                                        <!--TODO: Action-->
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </cms-table-container>
+                </cms-form-field-container>
+            </cms-form-section>
+        </div>
+
+
+
         <!--VERSIONS-->
 
         <cms-form-section cms-title="Versions"

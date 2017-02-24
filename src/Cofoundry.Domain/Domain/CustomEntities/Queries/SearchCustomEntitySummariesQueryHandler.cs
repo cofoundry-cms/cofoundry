@@ -21,13 +21,13 @@ namespace Cofoundry.Domain
         private readonly CofoundryDbContext _dbContext;
         private readonly IQueryExecutor _queryExecutor;
         private readonly IDbUnstructuredDataSerializer _dbUnstructuredDataSerializer;
-        private readonly ICustomEntityCodeDefinitionRepository _customEntityDefinitionRepository;
+        private readonly ICustomEntityDefinitionRepository _customEntityDefinitionRepository;
 
         public SearchCustomEntitySummariesQueryHandler(
             CofoundryDbContext dbContext,
             IQueryExecutor queryExecutor,
             IDbUnstructuredDataSerializer dbUnstructuredDataSerializer,
-            ICustomEntityCodeDefinitionRepository customEntityDefinitionRepository
+            ICustomEntityDefinitionRepository customEntityDefinitionRepository
             )
         {
             _dbContext = dbContext;

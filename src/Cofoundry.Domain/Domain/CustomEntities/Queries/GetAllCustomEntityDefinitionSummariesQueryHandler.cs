@@ -15,10 +15,10 @@ namespace Cofoundry.Domain
     {
         #region constructor 
         
-        private readonly ICustomEntityCodeDefinitionRepository _customEntityDefinitionRepository;
+        private readonly ICustomEntityDefinitionRepository _customEntityDefinitionRepository;
 
         public GetAllCustomEntityDefinitionSummariesQueryHandler(
-            ICustomEntityCodeDefinitionRepository customEntityDefinitionRepository
+            ICustomEntityDefinitionRepository customEntityDefinitionRepository
             )
         {
             _customEntityDefinitionRepository = customEntityDefinitionRepository;

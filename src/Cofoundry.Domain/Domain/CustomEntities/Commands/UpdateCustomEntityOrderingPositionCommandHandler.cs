@@ -25,14 +25,14 @@ namespace Cofoundry.Domain
         private readonly CofoundryDbContext _dbContext;
         private readonly ICustomEntityCache _customEntityCache;
         private readonly IMessageAggregator _messageAggregator;
-        private readonly ICustomEntityCodeDefinitionRepository _customEntityDefinitionRepository;
+        private readonly ICustomEntityDefinitionRepository _customEntityDefinitionRepository;
         private readonly IPermissionValidationService _permissionValidationService;
 
         public UpdateCustomEntityOrderingPositionCommandHandler(
             CofoundryDbContext dbContext,
             ICustomEntityCache customEntityCache,
             IMessageAggregator messageAggregator,
-            ICustomEntityCodeDefinitionRepository customEntityDefinitionRepository,
+            ICustomEntityDefinitionRepository customEntityDefinitionRepository,
             IPermissionValidationService permissionValidationService
             )
         {

@@ -11,7 +11,7 @@ namespace Cofoundry.Domain
     /// A repository to make it easier to get hold of in-code
     /// definitions to custom entities
     /// </summary>
-    public interface ICustomEntityCodeDefinitionRepository
+    public interface ICustomEntityDefinitionRepository
     {
         ICustomEntityDefinition GetByCode(string code);
         IEnumerable<ICustomEntityDefinition> GetAll();

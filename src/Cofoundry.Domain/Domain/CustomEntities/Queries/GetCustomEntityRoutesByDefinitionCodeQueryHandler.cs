@@ -21,13 +21,13 @@ namespace Cofoundry.Domain
         private readonly CofoundryDbContext _dbContext;
         private readonly ICustomEntityCache _customEntityCache;
         private readonly CustomEntityDataModelMapper _customEntityDataModelMapper;
-        private readonly CustomEntityCodeDefinitionRepository _customEntityDefinitionRepository;
+        private readonly CustomEntityDefinitionRepository _customEntityDefinitionRepository;
 
         public GetCustomEntityRoutesByDefinitionCodeQueryHandler(
             CofoundryDbContext dbContext,
             ICustomEntityCache customEntityCache,
             CustomEntityDataModelMapper customEntityDataModelMapper,
-            CustomEntityCodeDefinitionRepository customEntityDefinitionRepository
+            CustomEntityDefinitionRepository customEntityDefinitionRepository
             )
         {
             _dbContext = dbContext;

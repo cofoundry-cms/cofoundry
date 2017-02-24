@@ -395,9 +395,9 @@
     <Compile Include="Domain\CustomEntities\Queries\SearchCustomEntityRenderSummariesQuery.cs" />
     <Compile Include="Domain\CustomEntities\Queries\SearchCustomEntitySummariesQuery.cs" />
     <Compile Include="Domain\CustomEntities\Queries\SearchCustomEntitySummariesQueryHandler.cs" />
-    <Compile Include="Domain\CustomEntities\Repositories\CustomEntityCodeDefinitionRepository.cs" />
+    <Compile Include="Domain\CustomEntities\Repositories\CustomEntityDefinitionRepository.cs" />
     <Compile Include="Domain\CustomEntities\Repositories\CustomEntityRepository.cs" />
-    <Compile Include="Domain\CustomEntities\Repositories\ICustomEntityCodeDefinitionRepository.cs" />
+    <Compile Include="Domain\CustomEntities\Repositories\ICustomEntityDefinitionRepository.cs" />
     <Compile Include="Domain\CustomEntities\Repositories\ICustomEntityRepository.cs" />
     <Compile Include="Domain\Dashboards\Permissions\DashboardAdminModulePermission.cs" />
     <Compile Include="Domain\DocumentAssets\Bootstrap\DocumentAssetAutoMapProfile.cs" />
@@ -666,7 +666,9 @@
     <Compile Include="Domain\Pages\Queries\GetPageRenderDetailsByIdQueryHandler.cs" />
     <Compile Include="Domain\Pages\Queries\GetPageRouteByIdQueryHandler.cs" />
     <Compile Include="Domain\Pages\Queries\GetPageRoutesByIdRangeQueryHandler.cs" />
+    <Compile Include="Domain\Pages\Queries\GetPageRoutesByCustomEntityDefinitionCodeQuery.cs" />
     <Compile Include="Domain\Pages\Queries\GetPageRoutesByWebDirectoryIdQuery.cs" />
+    <Compile Include="Domain\Pages\Queries\GetPageRoutesByCustomEntityDefinitionCodeQueryHandler.cs" />
     <Compile Include="Domain\Pages\Queries\GetPageRoutesByWebDirectoryIdQueryHandler.cs" />
     <Compile Include="Domain\Pages\Queries\GetPageRoutingInfoByCustomEntityIdQuery.cs" />
     <Compile Include="Domain\Pages\Queries\GetPageRoutingInfoByCustomEntityIdQueryHandler.cs" />
