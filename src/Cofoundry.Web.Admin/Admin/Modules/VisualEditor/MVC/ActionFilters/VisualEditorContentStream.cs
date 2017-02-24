@@ -25,8 +25,7 @@ namespace Cofoundry.Web.Admin
         #region constructor
 
         const char TAB = '\t';
-
-        private readonly StringBuilder _outputString = new StringBuilder();
+        
         private readonly Stream _outputStream = null;
         private readonly IPageResponseData _pageResponseData;
         private readonly IResourceLocator _resourceLocator;
@@ -49,16 +48,9 @@ namespace Cofoundry.Web.Admin
 
         #region implementation
 
-        public override void Write(byte[] buffer, int offset, int count)
-        {
-            // Write out the entire stream to memory before manipulating it.
-            var data = Encoding.UTF8.GetString(buffer);
-            _outputString.Append(data);
-        }
-
         public override void Close()
         {
-            string html = _outputString.ToString();
+            var html = Encoding.UTF8.GetString(this.ToArray());
 
             // Check for not XML
             if (!html.StartsWith("<?xml"))
