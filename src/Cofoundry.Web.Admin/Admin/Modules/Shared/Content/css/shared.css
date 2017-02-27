@@ -883,6 +883,27 @@ a[disabled]:hover, button[disabled]:hover, input[disabled]:hover {
   border-color: #ff0000 !important;
 }
 
+/* line 20, ../../Js/UIComponents/Form/_form.scss */
+.form-section-actions {
+  position: absolute;
+  right: 20px;
+  top: 20px;
+  z-index: 10;
+}
+/* line 26, ../../Js/UIComponents/Form/_form.scss */
+.form-section-actions .btn {
+  padding: 8px 10px;
+  font-size: 75%;
+}
+
+/* line 32, ../../Js/UIComponents/Form/_form.scss */
+.form-section-message {
+  display: block;
+  position: relative;
+  z-index: 99;
+  padding: 0 20px 20px;
+}
+
 /* line 7, ../../Js/UIComponents/FormFields/_formfields.scss */
 input[type="text"], input[type="email"], input[type="password"], input[type="number"], input[type="date"], input[type="url"], input[type="tel"], textarea, select {
   -moz-border-radius: 2px;
@@ -1312,8 +1333,9 @@ input[type="color"] {
 .page-body fieldset {
   margin-bottom: 20px;
   position: relative;
+  max-width: 800px;
 }
-/* line 190, ../../Js/UIComponents/Layout/_layout.scss */
+/* line 191, ../../Js/UIComponents/Layout/_layout.scss */
 .page-body fieldset legend {
   font-size: 150%;
   width: 100%;
@@ -1322,19 +1344,19 @@ input[type="color"] {
   position: relative;
   z-index: 10;
 }
-/* line 198, ../../Js/UIComponents/Layout/_layout.scss */
+/* line 199, ../../Js/UIComponents/Layout/_layout.scss */
 .page-body fieldset legend button {
   display: none;
   cursor: pointer;
   outline: none;
 }
-/* line 203, ../../Js/UIComponents/Layout/_layout.scss */
+/* line 204, ../../Js/UIComponents/Layout/_layout.scss */
 .page-body fieldset legend button i {
   font: normal normal normal 15px/1 FontAwesome;
   position: absolute;
   left: 0;
 }
-/* line 209, ../../Js/UIComponents/Layout/_layout.scss */
+/* line 210, ../../Js/UIComponents/Layout/_layout.scss */
 .page-body fieldset legend button.show {
   -moz-transition: color 0.3s;
   -o-transition: color 0.3s;
@@ -1352,19 +1374,19 @@ input[type="color"] {
   width: 45px;
   text-align: right;
 }
-/* line 223, ../../Js/UIComponents/Layout/_layout.scss */
+/* line 224, ../../Js/UIComponents/Layout/_layout.scss */
 .page-body fieldset legend button.show:hover {
   color: #2c263d;
 }
-/* line 227, ../../Js/UIComponents/Layout/_layout.scss */
+/* line 228, ../../Js/UIComponents/Layout/_layout.scss */
 .page-body fieldset legend button.show.active {
   color: #2c263d;
 }
-/* line 234, ../../Js/UIComponents/Layout/_layout.scss */
+/* line 235, ../../Js/UIComponents/Layout/_layout.scss */
 .page-body fieldset .help-inline {
   display: none;
 }
-/* line 239, ../../Js/UIComponents/Layout/_layout.scss */
+/* line 240, ../../Js/UIComponents/Layout/_layout.scss */
 .page-body fieldset.show-helpers .help-inline {
   -moz-border-radius: 3px;
   -webkit-border-radius: 3px;
@@ -1386,7 +1408,7 @@ input[type="color"] {
   z-index: 2;
   top: -25px;
 }
-/* line 255, ../../Js/UIComponents/Layout/_layout.scss */
+/* line 256, ../../Js/UIComponents/Layout/_layout.scss */
 .page-body fieldset.show-helpers .help-inline:before {
   -moz-transition: all 0.3s;
   -o-transition: all 0.3s;
@@ -1401,7 +1423,7 @@ input[type="color"] {
   border-top: 6px solid transparent;
   border-bottom: 6px solid #413851;
 }
-/* line 267, ../../Js/UIComponents/Layout/_layout.scss */
+/* line 268, ../../Js/UIComponents/Layout/_layout.scss */
 .page-body fieldset.show-helpers .help-inline:after {
   -moz-transition: all 0.3s;
   -o-transition: all 0.3s;
@@ -1416,17 +1438,17 @@ input[type="color"] {
   border-top: 5px solid transparent;
   border-bottom: 5px solid #fff;
 }
-/* line 279, ../../Js/UIComponents/Layout/_layout.scss */
+/* line 280, ../../Js/UIComponents/Layout/_layout.scss */
 .page-body fieldset.show-helpers .help-inline small {
   font-size: 95%;
   line-height: 105%;
 }
 @media screen and (min-width: 1200px) {
-  /* line 286, ../../Js/UIComponents/Layout/_layout.scss */
+  /* line 287, ../../Js/UIComponents/Layout/_layout.scss */
   .page-body fieldset.show-helpers .control-group-area {
     width: 72%;
   }
-  /* line 290, ../../Js/UIComponents/Layout/_layout.scss */
+  /* line 291, ../../Js/UIComponents/Layout/_layout.scss */
   .page-body fieldset.show-helpers .help-inline {
     margin: 0;
     width: 25%;
@@ -1436,7 +1458,7 @@ input[type="color"] {
     float: right;
     margin-bottom: 10px;
   }
-  /* line 299, ../../Js/UIComponents/Layout/_layout.scss */
+  /* line 300, ../../Js/UIComponents/Layout/_layout.scss */
   .page-body fieldset.show-helpers .help-inline:before {
     -moz-transition: all 0.3s;
     -o-transition: all 0.3s;
@@ -1451,7 +1473,7 @@ input[type="color"] {
     border-top: 6px solid transparent;
     border-bottom: 6px solid transparent;
   }
-  /* line 311, ../../Js/UIComponents/Layout/_layout.scss */
+  /* line 312, ../../Js/UIComponents/Layout/_layout.scss */
   .page-body fieldset.show-helpers .help-inline:after {
     -moz-transition: all 0.3s;
     -o-transition: all 0.3s;
@@ -1467,7 +1489,7 @@ input[type="color"] {
     border-bottom: 5px solid transparent;
   }
 }
-/* line 328, ../../Js/UIComponents/Layout/_layout.scss */
+/* line 329, ../../Js/UIComponents/Layout/_layout.scss */
 .page-body .control-group {
   overflow: hidden;
   *zoom: 1;
@@ -1476,7 +1498,7 @@ input[type="color"] {
   position: relative;
   z-index: 1;
 }
-/* line 335, ../../Js/UIComponents/Layout/_layout.scss */
+/* line 336, ../../Js/UIComponents/Layout/_layout.scss */
 .page-body .control-group:before {
   content: '';
   position: absolute;
@@ -1489,15 +1511,15 @@ input[type="color"] {
   right: 28%;
   left: 0;
 }
-/* line 349, ../../Js/UIComponents/Layout/_layout.scss */
+/* line 350, ../../Js/UIComponents/Layout/_layout.scss */
 .page-body .control-group:last-of-type:before {
   margin-bottom: 10px;
 }
-/* line 354, ../../Js/UIComponents/Layout/_layout.scss */
+/* line 355, ../../Js/UIComponents/Layout/_layout.scss */
 .page-body .control-group:hover {
   z-index: 9999;
 }
-/* line 358, ../../Js/UIComponents/Layout/_layout.scss */
+/* line 359, ../../Js/UIComponents/Layout/_layout.scss */
 .page-body .control-group .control-group-area {
   overflow: hidden;
   *zoom: 1;
@@ -1510,11 +1532,11 @@ input[type="color"] {
   background: #fff;
   padding: 0 20px 30px;
 }
-/* line 369, ../../Js/UIComponents/Layout/_layout.scss */
+/* line 370, ../../Js/UIComponents/Layout/_layout.scss */
 .page-body .control-group .control-group-area .table-wrap {
   border-top: 0px solid #d2d2d2;
 }
-/* line 373, ../../Js/UIComponents/Layout/_layout.scss */
+/* line 374, ../../Js/UIComponents/Layout/_layout.scss */
 .page-body .control-group .control-group-area label {
   display: block;
   font-size: 100%;
@@ -1522,7 +1544,7 @@ input[type="color"] {
   text-transform: uppercase;
   padding-bottom: 10px;
 }
-/* line 383, ../../Js/UIComponents/Layout/_layout.scss */
+/* line 384, ../../Js/UIComponents/Layout/_layout.scss */
 .page-body .control-group .control-group-area.editmode label:after {
   position: absolute;
   right: 28px;
@@ -1531,59 +1553,59 @@ input[type="color"] {
   content: '\f00c';
   color: #339900;
 }
-/* line 396, ../../Js/UIComponents/Layout/_layout.scss */
+/* line 397, ../../Js/UIComponents/Layout/_layout.scss */
 .page-body .control-group .control-group-area.required.editmode label:after {
   content: '\f069';
   color: #ff6600;
 }
-/* line 405, ../../Js/UIComponents/Layout/_layout.scss */
+/* line 406, ../../Js/UIComponents/Layout/_layout.scss */
 .page-body .control-group .control-group-area.invalid.editmode label:after {
   content: '\f069';
   color: #ff0000;
 }
-/* line 412, ../../Js/UIComponents/Layout/_layout.scss */
+/* line 413, ../../Js/UIComponents/Layout/_layout.scss */
 .page-body .control-group .control-group-area .controls {
   position: relative;
 }
-/* line 415, ../../Js/UIComponents/Layout/_layout.scss */
+/* line 416, ../../Js/UIComponents/Layout/_layout.scss */
 .page-body .control-group .control-group-area .controls .btn {
   display: inline-block;
 }
 @media screen and (min-width: 1200px) {
-  /* line 423, ../../Js/UIComponents/Layout/_layout.scss */
+  /* line 424, ../../Js/UIComponents/Layout/_layout.scss */
   .page-body.form {
     margin-left: 185px;
   }
 }
 
-/* line 429, ../../Js/UIComponents/Layout/_layout.scss */
+/* line 430, ../../Js/UIComponents/Layout/_layout.scss */
 .on-drag-hover {
   border-top: 2px solid #4af386;
   border-bottom: 2px solid #4af386;
 }
 
-/* line 434, ../../Js/UIComponents/Layout/_layout.scss */
+/* line 435, ../../Js/UIComponents/Layout/_layout.scss */
 [draggable] {
   cursor: move;
 }
 
-/* line 438, ../../Js/UIComponents/Layout/_layout.scss */
+/* line 439, ../../Js/UIComponents/Layout/_layout.scss */
 .dropdown-menu {
   background: #fff;
   left: 0;
 }
 
-/* line 443, ../../Js/UIComponents/Layout/_layout.scss */
+/* line 444, ../../Js/UIComponents/Layout/_layout.scss */
 .fa {
   font-size: 1.4em;
 }
-/* line 446, ../../Js/UIComponents/Layout/_layout.scss */
+/* line 447, ../../Js/UIComponents/Layout/_layout.scss */
 .fa.alert {
   color: #ff6600;
   margin-right: 5px;
 }
 
-/* line 452, ../../Js/UIComponents/Layout/_layout.scss */
+/* line 453, ../../Js/UIComponents/Layout/_layout.scss */
 .fa-picture-o, .btn-icon .fa-picture-o {
   font-size: 3em;
   color: #dddddd;
@@ -2108,6 +2130,16 @@ form.loading > *, table.loading > *, div.loading > *, fieldset.loading > * {
   overflow: hidden;
 }
 /* line 66, ../../Js/UIComponents/Table/_table.scss */
+.table tbody {
+  padding-top: 20px;
+  border-top: 20px solid white;
+}
+/* line 70, ../../Js/UIComponents/Table/_table.scss */
+.table tbody:first-of-type {
+  padding-top: 0;
+  border-top: 0px;
+}
+/* line 75, ../../Js/UIComponents/Table/_table.scss */
 .table tbody tr {
   background-color: #fff;
   -webkit-user-select: none;
@@ -2115,30 +2147,30 @@ form.loading > *, table.loading > *, div.loading > *, fieldset.loading > * {
   -khtml-user-select: none;
   -ms-user-select: none;
 }
-/* line 77, ../../Js/UIComponents/Table/_table.scss */
+/* line 86, ../../Js/UIComponents/Table/_table.scss */
 .table tbody tr td {
   border-top: 1px solid #dddddd;
   border-bottom: 1px solid #dddddd;
   padding: 10px;
   position: relative;
 }
-/* line 83, ../../Js/UIComponents/Table/_table.scss */
+/* line 92, ../../Js/UIComponents/Table/_table.scss */
 .table tbody tr td img.img-polaroid {
   width: 120px;
   height: 70px;
 }
-/* line 88, ../../Js/UIComponents/Table/_table.scss */
+/* line 97, ../../Js/UIComponents/Table/_table.scss */
 .table tbody tr td label {
   font-weight: 500;
   font-weight: 400 !important;
   text-transform: none !important;
 }
-/* line 94, ../../Js/UIComponents/Table/_table.scss */
+/* line 103, ../../Js/UIComponents/Table/_table.scss */
 .table tbody tr td .row-type {
   width: 52px;
   position: relative;
 }
-/* line 99, ../../Js/UIComponents/Table/_table.scss */
+/* line 108, ../../Js/UIComponents/Table/_table.scss */
 .table tbody tr td .row-type-folder {
   -moz-border-radius-topleft: 2px;
   -webkit-border-top-left-radius: 2px;
@@ -2149,7 +2181,7 @@ form.loading > *, table.loading > *, div.loading > *, fieldset.loading > * {
   background-color: #4af386;
   display: block;
 }
-/* line 106, ../../Js/UIComponents/Table/_table.scss */
+/* line 115, ../../Js/UIComponents/Table/_table.scss */
 .table tbody tr td .row-type-folder i {
   display: inline-block;
   vertical-align: middle;
@@ -2165,7 +2197,7 @@ form.loading > *, table.loading > *, div.loading > *, fieldset.loading > * {
   margin-top: -7.5px;
 }
 @media (-webkit-min-device-pixel-ratio: 1.5), (min--moz-device-pixel-ratio: 1.5), (-o-min-device-pixel-ratio: 3 / 2), (min-device-pixel-ratio: 1.5), (min-resolution: 144dppx) {
-  /* line 106, ../../Js/UIComponents/Table/_table.scss */
+  /* line 115, ../../Js/UIComponents/Table/_table.scss */
   .table tbody tr td .row-type-folder i {
     background-image: url('/Admin/Modules/Shared/Content/css/img/icons/retina.png');
     background-position: 0 -89px;
@@ -2175,7 +2207,7 @@ form.loading > *, table.loading > *, div.loading > *, fieldset.loading > * {
     background-size: 250px auto;
   }
 }
-/* line 113, ../../Js/UIComponents/Table/_table.scss */
+/* line 122, ../../Js/UIComponents/Table/_table.scss */
 .table tbody tr td .row-type-doc {
   -moz-border-radius-topleft: 2px;
   -webkit-border-top-left-radius: 2px;
@@ -2185,7 +2217,7 @@ form.loading > *, table.loading > *, div.loading > *, fieldset.loading > * {
   border-bottom-left-radius: 2px;
   display: block;
 }
-/* line 119, ../../Js/UIComponents/Table/_table.scss */
+/* line 128, ../../Js/UIComponents/Table/_table.scss */
 .table tbody tr td .row-type-doc i {
   display: inline-block;
   vertical-align: middle;
@@ -2201,7 +2233,7 @@ form.loading > *, table.loading > *, div.loading > *, fieldset.loading > * {
   margin-top: -9px;
 }
 @media (-webkit-min-device-pixel-ratio: 1.5), (min--moz-device-pixel-ratio: 1.5), (-o-min-device-pixel-ratio: 3 / 2), (min-device-pixel-ratio: 1.5), (min-resolution: 144dppx) {
-  /* line 119, ../../Js/UIComponents/Table/_table.scss */
+  /* line 128, ../../Js/UIComponents/Table/_table.scss */
   .table tbody tr td .row-type-doc i {
     background-image: url('/Admin/Modules/Shared/Content/css/img/icons/retina.png');
     background-position: 0 -70px;
@@ -2211,7 +2243,7 @@ form.loading > *, table.loading > *, div.loading > *, fieldset.loading > * {
     background-size: 250px auto;
   }
 }
-/* line 126, ../../Js/UIComponents/Table/_table.scss */
+/* line 135, ../../Js/UIComponents/Table/_table.scss */
 .table tbody tr td .action-edit {
   display: inline-block;
   vertical-align: middle;
@@ -2225,7 +2257,7 @@ form.loading > *, table.loading > *, div.loading > *, fieldset.loading > * {
   background-repeat: no-repeat;
 }
 @media (-webkit-min-device-pixel-ratio: 1.5), (min--moz-device-pixel-ratio: 1.5), (-o-min-device-pixel-ratio: 3 / 2), (min-device-pixel-ratio: 1.5), (min-resolution: 144dppx) {
-  /* line 126, ../../Js/UIComponents/Table/_table.scss */
+  /* line 135, ../../Js/UIComponents/Table/_table.scss */
   .table tbody tr td .action-edit {
     background-image: url('/Admin/Modules/Shared/Content/css/img/icons/retina.png');
     background-position: 0 0;
@@ -2235,7 +2267,7 @@ form.loading > *, table.loading > *, div.loading > *, fieldset.loading > * {
     background-size: 250px auto;
   }
 }
-/* line 131, ../../Js/UIComponents/Table/_table.scss */
+/* line 140, ../../Js/UIComponents/Table/_table.scss */
 .table tbody tr td .action-open {
   display: inline-block;
   vertical-align: middle;
@@ -2249,7 +2281,7 @@ form.loading > *, table.loading > *, div.loading > *, fieldset.loading > * {
   background-repeat: no-repeat;
 }
 @media (-webkit-min-device-pixel-ratio: 1.5), (min--moz-device-pixel-ratio: 1.5), (-o-min-device-pixel-ratio: 3 / 2), (min-device-pixel-ratio: 1.5), (min-resolution: 144dppx) {
-  /* line 131, ../../Js/UIComponents/Table/_table.scss */
+  /* line 140, ../../Js/UIComponents/Table/_table.scss */
   .table tbody tr td .action-open {
     background-image: url('/Admin/Modules/Shared/Content/css/img/icons/retina.png');
     background-position: 0 -35px;
@@ -2259,27 +2291,27 @@ form.loading > *, table.loading > *, div.loading > *, fieldset.loading > * {
     background-size: 250px auto;
   }
 }
-/* line 136, ../../Js/UIComponents/Table/_table.scss */
+/* line 145, ../../Js/UIComponents/Table/_table.scss */
 .table tbody tr td.actions {
   text-align: right;
 }
-/* line 139, ../../Js/UIComponents/Table/_table.scss */
+/* line 148, ../../Js/UIComponents/Table/_table.scss */
 .table tbody tr td.actions .fa {
   padding-right: 0;
 }
-/* line 145, ../../Js/UIComponents/Table/_table.scss */
+/* line 154, ../../Js/UIComponents/Table/_table.scss */
 .table tbody tr.selected td:not(.empty), .table tbody tr:hover td:not(.empty) {
   background-color: #f5f5f6;
 }
-/* line 149, ../../Js/UIComponents/Table/_table.scss */
+/* line 158, ../../Js/UIComponents/Table/_table.scss */
 .table tbody tr a {
   color: #000;
 }
-/* line 153, ../../Js/UIComponents/Table/_table.scss */
+/* line 162, ../../Js/UIComponents/Table/_table.scss */
 .table tbody tr strong {
   font-weight: bold;
 }
-/* line 158, ../../Js/UIComponents/Table/_table.scss */
+/* line 167, ../../Js/UIComponents/Table/_table.scss */
 .table tbody tr:last-of-type td {
   border-bottom: 0px;
 }
@@ -2288,7 +2320,7 @@ form.loading > *, table.loading > *, div.loading > *, fieldset.loading > * {
     When nested in a fieldset reduce the border size, because the parent
     fieldset also has a 3px top border
 */
-/* line 169, ../../Js/UIComponents/Table/_table.scss */
+/* line 179, ../../Js/UIComponents/Table/_table.scss */
 fieldset .table thead {
   border-top-width: 0px;
 }
@@ -2298,35 +2330,35 @@ fieldset .table thead {
     Ideally these would alternate slightly with striped rows, here we just 
     have to override the existing bootstrap class
 */
-/* line 178, ../../Js/UIComponents/Table/_table.scss */
+/* line 188, ../../Js/UIComponents/Table/_table.scss */
 .table td.error, .table-striped tbody tr:nth-child(odd) td.error {
   background-color: #FC4C54;
   color: #fff;
 }
 
-/* line 182, ../../Js/UIComponents/Table/_table.scss */
+/* line 192, ../../Js/UIComponents/Table/_table.scss */
 .table td.warning, .table-striped tbody tr:nth-child(odd) td.warning {
   background-color: #EBC942;
   color: #fff;
 }
 
-/* line 186, ../../Js/UIComponents/Table/_table.scss */
+/* line 196, ../../Js/UIComponents/Table/_table.scss */
 .table td.success, .table-striped tbody tr:nth-child(odd) td.success {
   background-color: #22D65B;
   color: #fff;
 }
 
-/* line 190, ../../Js/UIComponents/Table/_table.scss */
+/* line 200, ../../Js/UIComponents/Table/_table.scss */
 .table tr.inactive, .table tr.inactive a {
   color: #888;
 }
 
-/* line 194, ../../Js/UIComponents/Table/_table.scss */
+/* line 204, ../../Js/UIComponents/Table/_table.scss */
 .table tr.inactive img {
   opacity: 0.5;
 }
 
-/* line 198, ../../Js/UIComponents/Table/_table.scss */
+/* line 208, ../../Js/UIComponents/Table/_table.scss */
 .table-group-heading {
   -moz-border-radius-topleft: 2px;
   -webkit-border-top-left-radius: 2px;

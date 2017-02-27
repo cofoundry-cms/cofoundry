@@ -324,6 +324,8 @@
     <Content Include="Admin\Modules\Images\Js\Routes\ImageListController.js" />
     <Content Include="Admin\Modules\Shared\Js\UIComponents\CustomEntities\AddCustomEntityDialog.html" />
     <Content Include="Admin\Modules\Shared\Js\UIComponents\CustomEntities\AddCustomEntityDialog.js" />
+    <Content Include="Admin\Modules\Shared\Js\UIComponents\Form\FormSectionActions.js" />
+    <Content Include="Admin\Modules\Shared\Js\UIComponents\Form\FormSectionActions.html" />
     <Content Include="Admin\Modules\Shared\Js\UIComponents\ImageAssets\FormFieldImageAnchorLocationSelector.html" />
     <Content Include="Admin\Modules\Shared\Js\UIComponents\ImageAssets\FormFieldImageAnchorLocationSelector.js" />
     <Content Include="Admin\Modules\Pages\Js\Bootstrap\Module.js" />

@@ -70,7 +70,7 @@ function (
     /* PRIVATE FUNCS */
     
     function cancel() {
-        redirectToList();
+        $location.path('/');
     }
 
     function redirectToDetails(id) {

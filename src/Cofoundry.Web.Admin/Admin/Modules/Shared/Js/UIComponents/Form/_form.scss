@@ -16,3 +16,22 @@
         border-color:$color-error!important;
     }
 }
+
+.form-section-actions {
+    position:absolute;
+    right:20px;
+    top:20px;
+    z-index: 10;
+
+    .btn {
+        padding: 8px 10px;
+        font-size: 75%;
+    }
+}
+
+.form-section-message {
+    display: block;
+    position: relative;
+    z-index: 99;
+    padding: 0 20px 20px;
+}
