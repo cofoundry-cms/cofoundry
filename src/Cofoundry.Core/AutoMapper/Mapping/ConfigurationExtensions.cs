@@ -16,8 +16,8 @@ namespace Cofoundry.Core.AutoMapper
         public static IMapperConfigurationExpression AddHtmlStringConverters(this IMapperConfigurationExpression cfg)
         {
             cfg.CreateMap<string, ProjectableHtmlString>().ProjectUsing(s => new ProjectableHtmlString() { Value = s });
-            cfg.CreateMap<string, HtmlString>().ConvertUsing<StringToHtmlStringConverter>();
-            cfg.CreateMap<HtmlString, string>().ConvertUsing<HtmlStringToStringConverter>();
+            cfg.CreateMap<string, HtmlString>().ConvertUsing(new StringToHtmlStringConverter());
+            cfg.CreateMap<HtmlString, string>().ConvertUsing(new HtmlStringToStringConverter());
 
             return cfg;
         }

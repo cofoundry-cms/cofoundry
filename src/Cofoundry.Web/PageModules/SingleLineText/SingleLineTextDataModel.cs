@@ -14,7 +14,7 @@ namespace Cofoundry.Web
     public class SingleLineTextDataModel : IPageModuleDataModel
     {
         [Required]
-        [Display(Name = "Text", Description = "Normally just text but HTML is accepted, for example for inline quotes, line breaks etc.")]
+        [Display(Name = "Text", Description = "Normally just text but basic HTML is accepted.")]
         [AllowHtml]
         //[Searchable]
         public string Text { get; set; }
