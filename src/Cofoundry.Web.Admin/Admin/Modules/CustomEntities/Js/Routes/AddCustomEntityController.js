@@ -6,6 +6,7 @@
     'shared.stringUtilities',
     'shared.LoadState',
     'shared.customEntityService',
+    'shared.urlLibrary',
     'customEntities.options',
 function (
     $scope,
@@ -15,6 +16,7 @@ function (
     stringUtilities,
     LoadState,
     customEntityService,
+    urlLibrary,
     moduleOptions) {
 
     var vm = this;
@@ -84,7 +86,7 @@ function (
             .then(redirect);
 
         function redirect(customEntity) {
-            $window.location.href = customEntity.fullPath;
+            $window.location.href = urlLibrary.customEntityVisualEditor(customEntity, true);
         }
     }
 

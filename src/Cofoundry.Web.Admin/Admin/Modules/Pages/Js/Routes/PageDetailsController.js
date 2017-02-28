@@ -6,6 +6,7 @@
     'shared.LoadState',
     'shared.modalDialogService',
     'shared.entityVersionModalDialogService',
+    'shared.urlLibrary',
     'pages.pageService',
     'pages.modulePath',
 function (
@@ -16,6 +17,7 @@ function (
     LoadState,
     modalDialogService,
     entityVersionModalDialogService,
+    urlLibrary,
     pageService,
     modulePath
     ) {
@@ -50,6 +52,7 @@ function (
         vm.saveLoadState = new LoadState();
         vm.saveAndPublishLoadState = new LoadState();
         vm.formLoadState = new LoadState(true);
+        vm.urlLibrary = urlLibrary;
 
         // Init
         initData(vm.formLoadState);

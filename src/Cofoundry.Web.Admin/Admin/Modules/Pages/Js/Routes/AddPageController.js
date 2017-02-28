@@ -5,6 +5,7 @@
     '$window',
     'shared.LoadState',
     'shared.stringUtilities',
+    'shared.urlLibrary',
     'pages.pageService',
     'pages.pageTemplateService',
     'pages.customEntityService',
@@ -15,6 +16,7 @@ function (
     $window,
     LoadState,
     stringUtilities,
+    urlLibrary,
     pageService,
     pageTemplateService,
     customEntityService
@@ -80,7 +82,7 @@ function (
             .then(redirect);
 
         function redirect(page) {
-            $window.location.href = page.pageRoute.fullPath;
+            $window.location.href = urlLibrary.pageVisualEditor(page.pageRoute, true);
         }
     }
 

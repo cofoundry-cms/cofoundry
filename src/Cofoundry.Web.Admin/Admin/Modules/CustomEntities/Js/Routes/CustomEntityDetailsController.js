@@ -7,6 +7,7 @@
     'shared.modalDialogService',
     'shared.entityVersionModalDialogService',
     'shared.customEntityService',
+    'shared.urlLibrary',
     'customEntities.modulePath',
     'customEntities.options',
 function (
@@ -18,6 +19,7 @@ function (
     modalDialogService,
     entityVersionModalDialogService,
     customEntityService,
+    urlLibrary,
     modulePath,
     moduleOptions
     ) {
@@ -55,6 +57,7 @@ function (
         vm.saveAndPublishLoadState = new LoadState();
         vm.formLoadState = new LoadState(true);
         vm.options = moduleOptions;
+        vm.urlLibrary = urlLibrary;
         vm.saveButtonText = moduleOptions.autoPublish ? 'Save' : 'Save & Publish';
         vm.canChangeUrl = !moduleOptions.autoGenerateUrlSlug || moduleOptions.hasLocale;
 

@@ -105,7 +105,7 @@
                     <cms-button-link cms-text="Manage in Visual Editor"
                                      cms-icon="eye-open"
                                      ng-show="!vm.editMode"
-                                     cms-href="{{vm.page.pageRoute.fullPath}}"></cms-button-link>
+                                     cms-href="{{vm.urlLibrary.customEntityVisualEditor(page, true)}}"></cms-button-link>
                 </cms-form-section-actions>
 
                 <div class="form-section-message" ng-if="!page.sections.length">

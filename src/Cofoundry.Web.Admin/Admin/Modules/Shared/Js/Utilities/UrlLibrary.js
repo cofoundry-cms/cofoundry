@@ -92,6 +92,18 @@ function (
         return urlBaseBase + 'auth';
     }
 
+    /* Pages */
+
+    service.pageVisualEditor = function (pageRoute, isEditMode) {
+        var path = pageRoute.fullPath;
+
+        if (isEditMode) {
+            path += '?mode=edit';
+        }
+
+        return path;
+    }
+
     /* Custom Entities */
 
     service.customEntityList = function (customEntityDefinition) {
@@ -100,6 +112,18 @@ function (
 
     service.customEntityDetails = function (customEntityDefinition, id) {
         return service.makePath(stringUtilities.slugify(customEntityDefinition.name), id);
+    }
+
+    service.customEntityVisualEditor = function(customEntityDetails, isEditMode) {
+        var path = customEntityDetails.fullPath;
+
+        if (!path) return path;
+
+        if (isEditMode) {
+            path += '?mode=edit&edittype=entity';
+        }
+
+        return path;
     }
 
     /* Users */
