@@ -21,7 +21,7 @@ Find out more at [Cofoundry.org](https://www.cofoundry.org/) or head to the [doc
 - [Status and Roadmap](https://github.com/cofoundry-cms/cofoundry/wiki/Status-and-Roadmap)
 - [Feedback & Community](https://github.com/cofoundry-cms/cofoundry/wiki/Feedback-&-Community)
 - [Full Documentation](https://github.com/cofoundry-cms/cofoundry/wiki)
-
+ 
 
 
 
