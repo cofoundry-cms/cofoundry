@@ -361,7 +361,6 @@
     <Compile Include="Framework\Bootstrap\WebCoreDependencyRegistration.cs" />
     <Compile Include="Framework\Configuration\ContentSettings.cs" />
     <Compile Include="Framework\Configuration\OptimizationSettings.cs" />
-    <Compile Include="Framework\DataAnnotations\ModelMetaDataDecorators\AllowHtmlAttributeModelMedtaDataDecorator.cs" />
     <Compile Include="Framework\DataAnnotations\ModelMetaDataDecorators\CompareAttributeModelMetaDataDecorator.cs" />
     <Compile Include="Framework\DataAnnotations\ModelMetaDataDecorators\MaxLengthAttributeModelMetaDataDecorator.cs" />
     <Compile Include="Framework\DataAnnotations\ModelMetaDataDecorators\MinLengthAttributeModelMetaDataDecorator.cs" />
