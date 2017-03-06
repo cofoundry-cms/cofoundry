@@ -8,6 +8,9 @@ using AutoMapper.QueryableExtensions;
 
 namespace Cofoundry.Domain
 {
+    /// <summary>
+    /// Seaches roles based on simple filter criteria and returns a paged result. 
+    /// </summary>
     public class SearchRolesQueryHandler 
         : IAsyncQueryHandler<SearchRolesQuery, PagedQueryResult<RoleMicroSummary>>
         , IPermissionRestrictedQueryHandler<SearchRolesQuery, PagedQueryResult<RoleMicroSummary>>

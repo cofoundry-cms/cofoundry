@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using System.Data.Entity;
 using Cofoundry.Domain.Data;
 using Cofoundry.Core;
+using System.Collections.ObjectModel;
 
 namespace Cofoundry.Domain
 {

@@ -9,6 +9,9 @@ using Cofoundry.Domain.CQS;
 
 namespace Cofoundry.Domain
 {
+    /// <summary>
+    /// Deletes a role with the specified database id.
+    /// </summary>
     public class DeleteRoleCommandHandler 
         : IAsyncCommandHandler<DeleteRoleCommand>
         , IPermissionRestrictedCommandHandler<DeleteRoleCommand>

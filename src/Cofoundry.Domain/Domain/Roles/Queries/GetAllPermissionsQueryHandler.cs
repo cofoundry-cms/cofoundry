@@ -7,10 +7,15 @@ using Cofoundry.Domain.CQS;
 
 namespace Cofoundry.Domain
 {
+    /// <summary>
+    /// Returns all IPermission instances registered with Cofoundry.
+    /// </summary>
     public class GetAllPermissionsQueryHandler 
         : IAsyncQueryHandler<GetAllQuery<IPermission>, IEnumerable<IPermission>>
         , IPermissionRestrictedQueryHandler<GetAllQuery<IPermission>, IEnumerable<IPermission>>
     {
+        #region constructor
+
         private readonly IPermissionRepository _permissionRepository;
 
         public GetAllPermissionsQueryHandler(
@@ -19,6 +24,10 @@ namespace Cofoundry.Domain
         {
             _permissionRepository = permissionRepository;
         }
+
+        #endregion
+
+        #region execution
 
         public Task<IEnumerable<IPermission>> ExecuteAsync(GetAllQuery<IPermission> query, IExecutionContext executionContext)
         {
@@ -36,6 +45,8 @@ namespace Cofoundry.Domain
 
             return "ZZZ";
         }
+
+        #endregion
 
         #region permissions
 

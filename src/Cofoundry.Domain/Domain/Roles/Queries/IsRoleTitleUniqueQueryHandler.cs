@@ -9,6 +9,10 @@ using Cofoundry.Domain.CQS;
 
 namespace Cofoundry.Domain
 {
+    /// <summary>
+    /// Determines if a role title is unique within a specific UserArea.
+    /// Role titles only have to be unique per UserArea.
+    /// </summary>
     public class IsRoleTitleUniqueQueryHandler 
         : IAsyncQueryHandler<IsRoleTitleUniqueQuery, bool>
         , IPermissionRestrictedQueryHandler<IsRoleTitleUniqueQuery, bool>

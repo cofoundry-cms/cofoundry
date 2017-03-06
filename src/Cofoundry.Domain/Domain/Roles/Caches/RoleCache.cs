@@ -1,6 +1,7 @@
 ﻿using Cofoundry.Core.Caching;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -15,6 +16,7 @@ namespace Cofoundry.Domain
     {
         #region constructor
 
+        private const string ROLE_CODE_LOOKUP_CACHEKEY = "RoleCodes";
         private const string ROLE_DETAILS_CACHEKEY = "RoleDetails";
         private const string ANON_ROLE_CACHEKEY = "AnonymousRole";
         private const string CACHEKEY = "COF_Roles";
@@ -29,6 +31,26 @@ namespace Cofoundry.Domain
         #endregion
 
         #region public methods
+
+        /// <summary>
+        /// Gets a dictionary used to lookup role ids from role codes. This is used
+        /// because roles are cached by id rather than by code.
+        /// </summary>
+        /// <param name="getter">Function to invoke if the lookup isn't in the cache</param>
+        public ReadOnlyDictionary<string, int> GetOrAddSpecialistRoleTypeCodeLookup(Func<ReadOnlyDictionary<string, int>> getter)
+        {
+            return _cache.GetOrAdd(ROLE_CODE_LOOKUP_CACHEKEY, getter);
+        }
+
+        /// <summary>
+        /// Gets a dictionary used to lookup role ids from role codes. This is used
+        /// because roles are cached by id rather than by code.
+        /// </summary>
+        /// <param name="getter">Function to invoke if the lookup isn't in the cache</param>
+        public Task<ReadOnlyDictionary<string, int>> GetOrAddSpecialistRoleTypeCodeLookupAsync(Func<Task<ReadOnlyDictionary<string, int>>> getter)
+        {
+            return _cache.GetOrAddAsync(ROLE_CODE_LOOKUP_CACHEKEY, getter);
+        }
 
         /// <summary>
         /// Gets a role if it's already cached, otherwise the getter is invoked
@@ -47,9 +69,9 @@ namespace Cofoundry.Domain
         /// </summary>
         /// <param name="roleId">Id of the role to return</param>
         /// <param name="getter">Function to invoke if the role isn't in the cache</param>
-        public async Task<RoleDetails> GetOrAddAsync(int roleId, Func<Task<RoleDetails>> getter)
+        public Task<RoleDetails> GetOrAddAsync(int roleId, Func<Task<RoleDetails>> getter)
         {
-            return await _cache.GetOrAddAsync(ROLE_DETAILS_CACHEKEY + roleId, getter);
+            return _cache.GetOrAddAsync(ROLE_DETAILS_CACHEKEY + roleId, getter);
         }
 
         /// <summary>
@@ -67,9 +89,9 @@ namespace Cofoundry.Domain
         /// and the result is cached and returned
         /// </summary>
         /// <param name="getter">Function to invoke if the annonymous role isn't in the cache</param>
-        public async Task<RoleDetails> GetOrAddAnonymousRoleAsync(Func<Task<RoleDetails>> getter)
+        public Task<RoleDetails> GetOrAddAnonymousRoleAsync(Func<Task<RoleDetails>> getter)
         {
-            return await _cache.GetOrAddAsync(ANON_ROLE_CACHEKEY, getter);
+            return _cache.GetOrAddAsync(ANON_ROLE_CACHEKEY, getter);
         }
 
         /// <summary>

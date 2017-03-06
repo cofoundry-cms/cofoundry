@@ -788,6 +788,8 @@
     <Compile Include="Domain\Roles\Permissions\RoleReadPermission.cs" />
     <Compile Include="Domain\Roles\Permissions\RoleUpdatePermission.cs" />
     <Compile Include="Domain\Roles\Queries\GetAllPermissionsQueryHandler.cs" />
+    <Compile Include="Domain\Roles\Queries\GetRoleDetailsBySpecialistRoleTypeCodeHandler.cs" />
+    <Compile Include="Domain\Roles\Queries\GetRoleDetailsBySpecialistRoleTypeCode.cs" />
     <Compile Include="Domain\Roles\Queries\GetRoleDetailsByIdQuery.cs" />
     <Compile Include="Domain\Roles\Queries\GetRoleDetailsByIdQueryHandler.cs" />
     <Compile Include="Domain\Roles\Queries\GetUpdateRoleCommandByIdQueryHandler.cs" />
@@ -798,6 +800,8 @@
     <Compile Include="Domain\Roles\Repositories\IInternalRoleRepository.cs" />
     <Compile Include="Domain\Roles\Repositories\InternalRoleRepository.cs" />
     <Compile Include="Domain\Roles\Repositories\IPermissionRepository.cs" />
+    <Compile Include="Domain\Roles\Repositories\RoleRepository.cs" />
+    <Compile Include="Domain\Roles\Repositories\IRoleRepository.cs" />
     <Compile Include="Domain\Roles\Repositories\PermissionRepository.cs" />
     <Compile Include="Domain\Roles\Services\ExecutePermissionValidationService.cs" />
     <Compile Include="Domain\Roles\Services\ICofoundryUserPermissionCheckHandler.cs" />

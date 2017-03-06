@@ -57,6 +57,9 @@ function (
 
         function loadAreas(results) {
             vm.userAreas = results;
+            if (results.length == 1) {
+                vm.command.userAreaCode = results[0].userAreaCode;
+            }
             vm.formLoadState.off();
         }
     }

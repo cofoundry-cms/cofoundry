@@ -16,6 +16,7 @@ namespace Cofoundry.Domain
                 .RegisterType<IPermissionValidationService, PermissionValidationService>()
                 .RegisterType<IExecutePermissionValidationService, ExecutePermissionValidationService>()
                 .RegisterType<IRoleCache, RoleCache>()
+                .RegisterType<IRoleRepository, RoleRepository>()
                 .RegisterAll<IPermission>()
                 .RegisterInstance<IPermissionRepository, PermissionRepository>()
                 .RegisterInstance<IInternalRoleRepository, InternalRoleRepository>()

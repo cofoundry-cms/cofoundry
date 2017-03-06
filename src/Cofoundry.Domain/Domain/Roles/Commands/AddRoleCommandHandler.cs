@@ -11,6 +11,9 @@ using Cofoundry.Core;
 
 namespace Cofoundry.Domain
 {
+    /// <summary>
+    /// Adds a new role to a user area with a set of permissions.
+    /// </summary>
     public class AddRoleCommandHandler 
         : IAsyncCommandHandler<AddRoleCommand>
         , IPermissionRestrictedCommandHandler<AddRoleCommand>

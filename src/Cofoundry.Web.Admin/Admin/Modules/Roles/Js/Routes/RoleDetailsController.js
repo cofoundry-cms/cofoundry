@@ -39,7 +39,7 @@ function (
         vm.formLoadState = new LoadState(true);
 
         // Init
-        $q.all([initData(), initForm()]).then(setLoadingOff.bind(null, vm.formLoadState));
+        initData().then(setLoadingOff.bind(null, vm.formLoadState));
     }
 
     /* UI ACTIONS */
@@ -90,20 +90,6 @@ function (
             .then(vm.mainForm.formStatus.success.bind(null, message));
     }
 
-    function initForm() {
-
-        return permissionService
-            .getAll()
-            .then(load);
-
-        function load(result) {
-
-            if (result) {
-                vm.roles = result.items;
-            }
-        }
-    }
-
     function initData() {
         var roleId = $routeParams.id;
 
@@ -115,6 +101,8 @@ function (
             vm.role = role;
             vm.command = mapUpdateCommand(role);
             vm.editMode = false;
+
+            console.log(role);
         }
     }
 

@@ -31,7 +31,6 @@ function (
     /* COMMANDS */
 
     service.add = function (command) {
-        command.userArea = COFOUNDRY_USER_AREA_CODE;
         return $http.post(roleServiceBase, command);
     }
 

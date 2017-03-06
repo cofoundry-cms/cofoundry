@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 
 namespace Cofoundry.Domain
@@ -11,6 +12,20 @@ namespace Cofoundry.Domain
     /// </summary>
     public interface IRoleCache
     {
+        /// <summary>
+        /// Gets a dictionary used to lookup role ids from role codes. This is used
+        /// because roles are cached by id rather than by code.
+        /// </summary>
+        /// <param name="getter">Function to invoke if the lookup isn't in the cache</param>
+        ReadOnlyDictionary<string, int> GetOrAddSpecialistRoleTypeCodeLookup(Func<ReadOnlyDictionary<string, int>> getter);
+
+        /// <summary>
+        /// Gets a dictionary used to lookup role ids from role codes. This is used
+        /// because roles are cached by id rather than by code.
+        /// </summary>
+        /// <param name="getter">Function to invoke if the lookup isn't in the cache</param>
+        Task<ReadOnlyDictionary<string, int>> GetOrAddSpecialistRoleTypeCodeLookupAsync(Func<Task<ReadOnlyDictionary<string, int>>> getter);
+
         /// <summary>
         /// Gets a role if it's already cached, otherwise the getter is invoked
         /// and the result is cached and returned
