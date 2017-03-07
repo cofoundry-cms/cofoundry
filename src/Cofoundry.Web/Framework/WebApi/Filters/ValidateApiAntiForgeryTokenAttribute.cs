@@ -35,8 +35,8 @@ namespace Cofoundry.Web.WebApi
                 {
                     throw new ApplicationException($"The CSRF token is missing. Please add the {TOKEN_HEADER} header with a valid token.");
                 }
-
-                var service = new AntiCSRFService();
+                
+                var service = IckyDependencyResolution.ResolveInWebApiContext<IAntiCSRFService>();
                 service.ValidateToken(token);
             }
         }

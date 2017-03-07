@@ -40,6 +40,7 @@ namespace Cofoundry.Core.DependencyInjection
         public static RegistrationOptions Override(RegistrationOverridePriority? overridePriority = null)
         {
             var options = new RegistrationOptions();
+            options.ReplaceExisting = true;
 
             if (overridePriority.HasValue)
             {

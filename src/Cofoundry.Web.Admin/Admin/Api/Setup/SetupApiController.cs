@@ -9,7 +9,7 @@ using Cofoundry.Web.WebApi;
 namespace Cofoundry.Web.Admin
 {
     [AdminApiRoutePrefix("setup")]
-    [ValidateApiAntiForgeryTokenAttribute]
+    [ValidateApiAntiForgeryToken]
     public class SetupApiController : ApiController
     {
         #region private member variables

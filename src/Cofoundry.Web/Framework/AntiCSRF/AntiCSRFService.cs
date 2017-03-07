@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Cofoundry.Core;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -13,11 +14,13 @@ namespace Cofoundry.Web
     /// </summary>
     public class AntiCSRFService : IAntiCSRFService
     {
+        const char TOKEN_DELIMITER = ':';
+
         public string GetToken()
         {
             string cookieToken, formToken;
             AntiForgery.GetTokens(null, out cookieToken, out formToken);
-            return cookieToken + ":" + formToken;
+            return cookieToken + TOKEN_DELIMITER + formToken;
         }
 
         public void ValidateToken(string token)
@@ -27,7 +30,15 @@ namespace Cofoundry.Web
 
             if (!string.IsNullOrWhiteSpace(token))
             {
-                string[] tokens = token.Split(':');
+                // Asp.Net doesn't split up multiple values from the header and
+                // for some reason an additional token is added to the header 
+                // presumable by the browser of an extension and we need to ignore it
+                // so here we strip any additional tokens and assume ours if the first.
+                token = StringHelper
+                    .SplitAndTrim(token, ',')
+                    .First();
+
+                string[] tokens = token.Split(TOKEN_DELIMITER);
                 if (tokens.Length == 2)
                 {
                     cookieToken = tokens[0].Trim();

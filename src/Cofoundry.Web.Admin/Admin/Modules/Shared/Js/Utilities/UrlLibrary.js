@@ -95,6 +95,8 @@ function (
     /* Pages */
 
     service.pageVisualEditor = function (pageRoute, isEditMode) {
+        if (!pageRoute) return '';
+
         var path = pageRoute.fullPath;
 
         if (isEditMode) {
@@ -115,6 +117,8 @@ function (
     }
 
     service.customEntityVisualEditor = function(customEntityDetails, isEditMode) {
+        if (!customEntityDetails) return '';
+
         var path = customEntityDetails.fullPath;
 
         if (!path) return path;

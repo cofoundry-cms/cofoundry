@@ -13,7 +13,7 @@ using Cofoundry.Web.WebApi;
 namespace Cofoundry.Web.Admin
 {
     [AdminApiAuthorize]
-    [ValidateApiAntiForgeryTokenAttribute]
+    [ValidateApiAntiForgeryToken]
     [RoutePrefix(RouteConstants.ApiRoutePrefix + "/Account")]
     public class AccountApiController : ApiController
     {
