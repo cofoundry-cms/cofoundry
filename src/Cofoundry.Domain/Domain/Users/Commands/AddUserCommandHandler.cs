@@ -11,8 +11,13 @@ using Cofoundry.Core.Mail;
 
 namespace Cofoundry.Domain
 {
+    /// <summary>
+    /// A generic user creation command for use with Cofoundry users and
+    /// other non-Cofoundry users. Does not send any email notifications.
+    /// </summary>
     public class AddUserCommandHandler 
-        : ICommandHandler<AddUserCommand>, IAsyncCommandHandler<AddUserCommand>
+        : ICommandHandler<AddUserCommand>
+        , IAsyncCommandHandler<AddUserCommand>
         , IPermissionRestrictedCommandHandler<AddUserCommand>
     {
         #region constructor

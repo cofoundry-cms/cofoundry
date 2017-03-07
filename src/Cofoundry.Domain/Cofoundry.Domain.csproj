@@ -957,7 +957,9 @@
     <Compile Include="Domain\Users\Queries\GetUserDetailsByIdQueryHandler.cs" />
     <Compile Include="Domain\Users\Queries\GetUserLoginInfoIfAuthenticatedQuery.cs" />
     <Compile Include="Domain\Users\Queries\GetUserLoginInfoIfAuthenticatedQueryHandler.cs" />
+    <Compile Include="Domain\Users\Queries\GetUserMicroSummaryByUsernameQuery.cs" />
     <Compile Include="Domain\Users\Queries\GetUserMicroSummaryByEmailQuery.cs" />
+    <Compile Include="Domain\Users\Queries\GetUserMicroSummaryByUsernameQueryHandler.cs" />
     <Compile Include="Domain\Users\Queries\GetUserMicroSummaryByEmailQueryHandler.cs" />
     <Compile Include="Domain\Users\Queries\GetUserMicroSummaryByIdQueryHandler.cs" />
     <Compile Include="Domain\Users\Queries\HasExceededMaxLoginAttemptsQuery.cs" />
@@ -968,6 +970,8 @@
     <Compile Include="Domain\Users\Queries\SearchUserSummariesQueryHandler.cs" />
     <Compile Include="Domain\Users\Queries\ValidatePasswordResetRequestQuery.cs" />
     <Compile Include="Domain\Users\Queries\ValidatePasswordResetRequestQueryHandler.cs" />
+    <Compile Include="Domain\Users\Repositories\IUserRepository.cs" />
+    <Compile Include="Domain\Users\Repositories\UserRepository.cs" />
     <Compile Include="Domain\Users\Services\ILoginService.cs" />
     <Compile Include="Domain\Users\Services\IUserContextService.cs" />
     <Compile Include="Domain\Users\Services\IUserSessionService.cs" />

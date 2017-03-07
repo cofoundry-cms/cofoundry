@@ -10,6 +10,10 @@ using Cofoundry.Core;
 
 namespace Cofoundry.Domain
 {
+    /// <summary>
+    /// Updates the password of the currently logged in user, using the
+    /// OldPassword field to authenticate the request.
+    /// </summary>
     public class UpdateCurrentUserUserPasswordCommandHandler 
         : ICommandHandler<UpdateCurrentUserUserPasswordCommand>
         , IAsyncCommandHandler<UpdateCurrentUserUserPasswordCommand>

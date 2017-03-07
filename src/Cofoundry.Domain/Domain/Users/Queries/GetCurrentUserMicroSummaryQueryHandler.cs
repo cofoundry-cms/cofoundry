@@ -6,8 +6,13 @@ using Cofoundry.Domain.CQS;
 
 namespace Cofoundry.Domain
 {
+    /// <summary>
+    /// Gets a UserMicroSummary object representing the currently logged in 
+    /// user. If the user is not logged in then null is returned.
+    /// </summary>
     public class GetCurrentUserMicroSummaryQueryHandler 
         : IQueryHandler<GetCurrentUserMicroSummaryQuery, UserMicroSummary>
+        , IAsyncQueryHandler<GetCurrentUserMicroSummaryQuery, UserMicroSummary>
         , IIgnorePermissionCheckHandler
     {
         private readonly IQueryExecutor _queryExecutor;
@@ -24,6 +29,14 @@ namespace Cofoundry.Domain
             if (!executionContext.UserContext.UserId.HasValue) return null;
 
             var user = _queryExecutor.GetById<UserMicroSummary>(executionContext.UserContext.UserId.Value);
+            return user;
+        }
+
+        public Task<UserMicroSummary> ExecuteAsync(GetCurrentUserMicroSummaryQuery query, IExecutionContext executionContext)
+        {
+            if (!executionContext.UserContext.UserId.HasValue) return null;
+
+            var user = _queryExecutor.GetByIdAsync<UserMicroSummary>(executionContext.UserContext.UserId.Value);
             return user;
         }
     }

@@ -10,6 +10,10 @@ using System.Data.Entity;
 
 namespace Cofoundry.Domain
 {
+    /// <summary>
+    /// Finds a user by a database id returning a UserDetails object if it 
+    /// is found, otherwise null.
+    /// </summary>
     public class GetUserDetailsByIdQueryHandler 
         : IAsyncQueryHandler<GetByIdQuery<UserDetails>, UserDetails>
         , IIgnorePermissionCheckHandler

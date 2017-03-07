@@ -10,10 +10,31 @@ namespace Cofoundry.Domain.Data
     /// </summary>
     public partial class User
     {
+        /// <summary>
+        /// Database id of the user.
+        /// </summary>
         public int UserId { get; set; }
+
+        /// <summary>
+        /// The first name is required.
+        /// </summary>
         public string FirstName { get; set; }
+
+        /// <summary>
+        /// The last name is required.
+        /// </summary>
         public string LastName { get; set; }
+
+        /// <summary>
+        /// The email address isn't always required depending on the 
+        /// user area settings.
+        /// </summary>
         public string Email { get; set; }
+
+        /// <summary>
+        /// The username is always required and depending on the user area
+        /// settings this might just be a copy of the email address.
+        /// </summary>
         public string Username { get; set; }
 
         /// <summary>
@@ -63,7 +84,7 @@ namespace Cofoundry.Domain.Data
 
         /// <summary>
         /// The role that this user is assigned to. The role is required and
-        /// determines the permissions availabel to the user
+        /// determines the permissions available to the user
         /// </summary>
         public int RoleId { get; set; }
 
@@ -75,7 +96,7 @@ namespace Cofoundry.Domain.Data
 
         /// <summary>
         /// The Cofoundry user system can be partitioned into user areas. Each
-        /// user area has a 3 letter code, e.g. The Cofoundryadmin area code is
+        /// user area has a 3 letter code, e.g. The Cofoundry admin area code is
         /// 'COF'.
         /// </summary>
         public string UserAreaCode { get; set; }

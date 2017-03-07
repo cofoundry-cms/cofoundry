@@ -11,6 +11,9 @@ using Cofoundry.Core;
 
 namespace Cofoundry.Domain
 {
+    /// <summary>
+    /// Marks a user as deleted in the database (soft delete).
+    /// </summary>
     public class DeleteUserCommandHandler 
         : ICommandHandler<DeleteUserCommand>, IAsyncCommandHandler<DeleteUserCommand>
         , IPermissionRestrictedCommandHandler<DeleteUserCommand>

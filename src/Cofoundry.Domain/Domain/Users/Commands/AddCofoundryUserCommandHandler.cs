@@ -9,12 +9,10 @@ using Cofoundry.Domain.MailTemplates;
 
 namespace Cofoundry.Domain
 {
+    /// <summary>
+    /// Adds a user to the Cofoundry user area and sends a welcome notification.
+    /// </summary>
     /// <remarks>
-    /// Currently this is used for adding a Cofoundry user and sending a notification, but really
-    /// we should think about how that will work with adding other users from other user areas 
-    /// when added from the Cofoundry back-end. Currently they won't get a notification, but there's no 
-    /// use-case yet. This is something we could perhaps add to the UserArea definition (NotificationType)? 
-    /// </remarks>
     public class AddCofoundryUserCommandHandler
         : ICommandHandler<AddCofoundryUserCommand>
         , IAsyncCommandHandler<AddCofoundryUserCommand>

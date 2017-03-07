@@ -7,11 +7,18 @@ using System.Threading.Tasks;
 using Cofoundry.Domain.Data;
 using Cofoundry.Domain.CQS;
 using AutoMapper.QueryableExtensions;
+using System.Data.Entity;
 
 namespace Cofoundry.Domain
 {
+    /// <summary>
+    /// Finds a user with a specific email address in a specific user area 
+    /// returning null if the user could not be found. Note that if the user
+    /// area does not support email addresses then the email field will be empty.
+    /// </summary>
     public class GetUserMicroSummaryByEmailQueryHandler 
         : IQueryHandler<GetUserMicroSummaryByEmailQuery, UserMicroSummary>
+        , IAsyncQueryHandler<GetUserMicroSummaryByEmailQuery, UserMicroSummary>
         , IPermissionRestrictedQueryHandler<GetUserMicroSummaryByEmailQuery, UserMicroSummary>
     {
         #region constructor
@@ -31,19 +38,27 @@ namespace Cofoundry.Domain
 
         public UserMicroSummary Execute(GetUserMicroSummaryByEmailQuery query, IExecutionContext executionContext)
         {
-            if (string.IsNullOrWhiteSpace(query.Email))
-            {
-                return null;
-            }
+            if (string.IsNullOrWhiteSpace(query.Email)) return null;
 
-            var user = _dbContext
-                .Users
-                .AsNoTracking()
-                .Where(u => u.Email == query.Email)
-                .ProjectTo<UserMicroSummary>()
-                .SingleOrDefault();
+            var user = Query(query).SingleOrDefault();
 
             return user;
+        }
+
+        public Task<UserMicroSummary> ExecuteAsync(GetUserMicroSummaryByEmailQuery query, IExecutionContext executionContext)
+        {
+            if (string.IsNullOrWhiteSpace(query.Email)) return null;
+
+            return Query(query).SingleOrDefaultAsync();
+        }
+
+        private IQueryable<UserMicroSummary> Query(GetUserMicroSummaryByEmailQuery query)
+        {
+            return _dbContext
+                .Users
+                .AsNoTracking()
+                .Where(u => u.Email == query.Email && u.UserAreaCode == query.UserAreaCode)
+                .ProjectTo<UserMicroSummary>();
         }
 
         #endregion

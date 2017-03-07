@@ -10,6 +10,9 @@ using Cofoundry.Core;
 
 namespace Cofoundry.Domain
 {
+    /// <summary>
+    /// Updates the user account of the currently logged in user.
+    /// </summary>
     public class UpdateCurrentUserAccountCommandHandler 
         : IAsyncCommandHandler<UpdateCurrentUserAccountCommand>
         , IPermissionRestrictedCommandHandler<UpdateCurrentUserAccountCommand>

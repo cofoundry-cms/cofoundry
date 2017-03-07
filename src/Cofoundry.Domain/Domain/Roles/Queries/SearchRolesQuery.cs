@@ -24,7 +24,7 @@ namespace Cofoundry.Domain
         public bool ExcludeAnonymous { get; set; }
 
         /// <summary>
-        /// Roles are partitioned by UserArea so use this to filter to one specified 
+        /// Roles are partitioned by UserArea so use this to filter to a single
         /// user area only.
         /// </summary>
         public string UserAreaCode { get; set; }

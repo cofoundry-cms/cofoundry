@@ -24,6 +24,7 @@ namespace Cofoundry.Domain
         /// Role titles only have to be unique per UserArea.
         /// </summary>
         [Required]
+        [StringLength(3)]
         public string UserAreaCode { get; set; }
 
         /// <summary>

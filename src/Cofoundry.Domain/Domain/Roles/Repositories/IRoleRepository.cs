@@ -58,13 +58,12 @@ namespace Cofoundry.Domain
         /// </summary>
         /// <param name="query">The parameters run the query with.</param>
         /// <returns>True if the title is unique; otherwise false.</returns>
-        bool IsRoleTitleUniqueAsync(IsRoleTitleUniqueQuery query);
+        bool IsRoleTitleUnique(IsRoleTitleUniqueQuery query);
 
         /// <summary>
-        /// 
+        /// Seaches roles based on simple filter criteria and returns a paged result. 
         /// </summary>
-        /// <param name="query"></param>
-        /// <returns></returns>
+        /// <param name="query">Search query parameters.</param>
         Task<PagedQueryResult<RoleMicroSummary>> SearchRolesAsync(SearchRolesQuery query);
 
         #endregion

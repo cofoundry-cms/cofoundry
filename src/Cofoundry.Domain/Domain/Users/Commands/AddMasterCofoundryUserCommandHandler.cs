@@ -10,6 +10,11 @@ using Cofoundry.Core;
 
 namespace Cofoundry.Domain
 {
+    /// <summary>
+    /// Creates the initial super admin account for the site as part
+    /// of the setup process. This cannot be run once the site is set up
+    /// because by design it has to forgo permission checks.
+    /// </summary>
     public class AddMasterCofoundryUserCommandHandler
         : IAsyncCommandHandler<AddMasterCofoundryUserCommand>
         , IIgnorePermissionCheckHandler

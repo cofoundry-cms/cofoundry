@@ -9,6 +9,10 @@ using Cofoundry.Domain.CQS;
 
 namespace Cofoundry.Domain
 {
+    /// <summary>
+    /// Determines if a username is unique within a specific UserArea.
+    /// Usernames only have to be unique per UserArea.
+    /// </summary>
     public class IsUsernameUniqueQueryHandler 
         : IQueryHandler<IsUsernameUniqueQuery, bool>
         , IAsyncQueryHandler<IsUsernameUniqueQuery, bool>

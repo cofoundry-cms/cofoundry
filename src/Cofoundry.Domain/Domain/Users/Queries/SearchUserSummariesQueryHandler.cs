@@ -8,6 +8,9 @@ using AutoMapper.QueryableExtensions;
 
 namespace Cofoundry.Domain
 {
+    /// <summary>
+    /// Seaches users based on simple filter criteria and returns a paged result. 
+    /// </summary>
     public class SearchUserSummariesQueryHandler 
         : IAsyncQueryHandler<SearchUserSummariesQuery, PagedQueryResult<UserSummary>>
         , IPermissionRestrictedQueryHandler<SearchUserSummariesQuery, PagedQueryResult<UserSummary>>

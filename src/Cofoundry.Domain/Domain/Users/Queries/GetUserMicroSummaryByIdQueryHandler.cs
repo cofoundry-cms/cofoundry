@@ -7,11 +7,17 @@ using System.Threading.Tasks;
 using Cofoundry.Domain.Data;
 using Cofoundry.Domain.CQS;
 using AutoMapper.QueryableExtensions;
+using System.Data.Entity;
 
 namespace Cofoundry.Domain
 {
+    /// <summary>
+    /// Finds a user by a database id returning a UserMicroSummary object if it 
+    /// is found, otherwise null.
+    /// </summary>
     public class GetUserMicroSummaryByIdQueryHandler 
         : IQueryHandler<GetByIdQuery<UserMicroSummary>, UserMicroSummary>
+        , IAsyncQueryHandler<GetByIdQuery<UserMicroSummary>, UserMicroSummary>
         , IIgnorePermissionCheckHandler
     {
         #region constructor
@@ -34,23 +40,41 @@ namespace Cofoundry.Domain
 
         public UserMicroSummary Execute(GetByIdQuery<UserMicroSummary> query, IExecutionContext executionContext)
         {
-            var user = _dbContext
+            var user = Query(query).SingleOrDefault();
+            ValidatePermission(query, executionContext, user);
+
+            return user;
+        }
+
+        public async Task<UserMicroSummary> ExecuteAsync(GetByIdQuery<UserMicroSummary> query, IExecutionContext executionContext)
+        {
+            var user = await Query(query).SingleOrDefaultAsync();
+            ValidatePermission(query, executionContext, user);
+
+            return user;
+        }
+
+        private IQueryable<UserMicroSummary> Query(GetByIdQuery<UserMicroSummary> query)
+        {
+            return _dbContext
                 .Users
                 .AsNoTracking()
                 .Where(u => u.UserId == query.Id)
-                .ProjectTo<UserMicroSummary>()
-                .SingleOrDefault();
+                .ProjectTo<UserMicroSummary>();
+        }
 
-            if (user != null && user.UserArea.UserAreaCode == CofoundryAdminUserArea.AreaCode)
+        private void ValidatePermission(GetByIdQuery<UserMicroSummary> query, IExecutionContext executionContext, UserMicroSummary user)
+        {
+            if (user == null) return;
+
+            if (user.UserArea.UserAreaCode == CofoundryAdminUserArea.AreaCode)
             {
                 _permissionValidationService.EnforceCurrentUserOrHasPermission<CofoundryUserReadPermission>(query.Id, executionContext.UserContext);
             }
-            else if (user != null)
+            else
             {
                 _permissionValidationService.EnforceCurrentUserOrHasPermission<NonCofoundryUserReadPermission>(query.Id, executionContext.UserContext);
             }
-
-            return user;
         }
 
         #endregion

@@ -16,6 +16,7 @@ namespace Cofoundry.Domain
 
             container
                 .RegisterType<IUserAreaRepository, UserAreaRepository>()
+                .RegisterType<IUserRepository, UserRepository>()
                 .RegisterType<UserContextMapper>()
                 .RegisterType<IResetUserPasswordCommandHelper, ResetUserPasswordCommandHelper>()
                 .RegisterType<IUserContextService, UserContextService>(perLifetimeScopeRegistrationOptions)

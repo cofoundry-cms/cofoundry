@@ -7,6 +7,10 @@ using Cofoundry.Domain.CQS;
 
 namespace Cofoundry.Domain
 {
+    /// <summary>
+    /// Gets a UserMicroSummary object representing the currently logged in 
+    /// user. If the user is not logged in then null is returned.
+    /// </summary>
     public class GetCurrentUserMicroSummaryQuery : IQuery<UserMicroSummary>
     {
     }

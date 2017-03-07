@@ -9,6 +9,10 @@ using Cofoundry.Domain.CQS;
 
 namespace Cofoundry.Domain
 {
+    /// <summary>
+    /// Updates the password of the currently logged in user, using the
+    /// OldPassword field to authenticate the request.
+    /// </summary>
     public class UpdateCurrentUserUserPasswordCommand : ICommand, ILoggableCommand
     {
         [Required]
