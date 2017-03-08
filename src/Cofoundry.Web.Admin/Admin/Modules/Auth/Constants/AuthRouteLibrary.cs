@@ -19,7 +19,7 @@ namespace Cofoundry.Web.Admin
 
         public static readonly AuthCssRouteLibrary Css = new AuthCssRouteLibrary(StaticContent);
 
-        public const string LoginLayoutPath = "~/Admin/Modules/Auth/MVC/Views/_LoginLayout.cshtml";
+        public static readonly string LoginLayoutPath = ViewPathFormatter.View("Auth", "_LoginLayout");
 
         #endregion
 

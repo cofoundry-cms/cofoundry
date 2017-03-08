@@ -50,6 +50,7 @@ namespace Cofoundry.Web.Admin
                 vm.SelectedModule = selectedItem.Module;
             }
 
+            var viewPath = ViewPathFormatter.View("AdminMenu", "Partials/" + nameof(MainMenu));
             return PartialView(vm);
         }
     }

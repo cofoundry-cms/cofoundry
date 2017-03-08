@@ -890,10 +890,10 @@
     <Compile Include="App_Start\MvcFilterConfigurationStartupTask.cs" />
     <Compile Include="Framework\Bootstrap\CofoundryAdminAssemblyResourceRegistration.cs" />
     <Compile Include="Framework\Bootstrap\CofoundryAdminDependencyRegistration.cs" />
-    <Compile Include="Framework\Bootstrap\CofoundryAdminViewLocationRegistration.cs" />
     <Compile Include="Framework\Bundling\AngularTemplateBundle.cs" />
     <Compile Include="Framework\Bundling\AngularTemplateBundleTransform.cs" />
     <Compile Include="Framework\Bundling\BundlingExtensions.cs" />
+    <Compile Include="Framework\Constants\AdminViewPaths.cs" />
     <Compile Include="Framework\Constants\AngularJsDirectoryLibrary.cs" />
     <Compile Include="Framework\Constants\LayoutPaths.cs" />
     <Compile Include="Framework\Constants\RouteConstants.cs" />
@@ -929,7 +929,6 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Admin\Modules\Shared\MVC\Views\StandardModule\" />
     <Folder Include="Admin\Modules\Shared\Sass\Modules\" />
     <Folder Include="Admin\Modules\Users\Js\UIControls\" />
     <Folder Include="Admin\Modules\VisualEditor\Content\css\images\icons\normal\" />

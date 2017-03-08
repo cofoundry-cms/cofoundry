@@ -13,15 +13,15 @@ namespace Cofoundry.Web.Admin
             var locations = new ViewLocations()
             {
                 AreaViewLocationFormats = new string[] {
-                    RouteConstants.InternalModuleResourcePathPrefix + "shared/mvc/views/{0}.cshtml"
+                    "~" + RouteConstants.InternalModuleResourcePathPrefix + "shared/mvc/views/{0}.cshtml"
                 },
 
                 PartialViewLocationFormats = new string[] {
-                    RouteConstants.InternalModuleResourcePathPrefix + "shared/mvc/views/partials/{0}.cshtml"
+                    "~" + RouteConstants.InternalModuleResourcePathPrefix + "shared/mvc/views/partials/{0}.cshtml"
                 },
 
                 MasterLocationFormats = new string[] {
-                    RouteConstants.InternalModuleResourcePathPrefix + "shared/mvc/views/{0}.cshtml"
+                    "~" + RouteConstants.InternalModuleResourcePathPrefix + "shared/mvc/views/{0}.cshtml"
                 }
             };
 

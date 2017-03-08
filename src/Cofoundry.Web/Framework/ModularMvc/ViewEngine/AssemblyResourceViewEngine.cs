@@ -17,7 +17,11 @@ namespace Cofoundry.Web.ModularMvc
             IViewLocationRegistration[] viewLocationRegistrations
             )
         {
-            var locations = viewLocationRegistrations.Select(l => l.GetLocations());
+            // Make sure we put the default view locations up front so these are checked first.
+            var locations = viewLocationRegistrations
+                .OrderByDescending(l => l is DefaultViewLocationRegistration)
+                .Select(l => l.GetLocations())
+                .ToList();
 
             Init(locations);
         }

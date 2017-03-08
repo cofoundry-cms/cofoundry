@@ -29,7 +29,8 @@ namespace Cofoundry.Web.Admin
                 options.Ordering = ((IOrderableCustomEntityDefinition)definition).Ordering;
             }
             
-            return View("~/Admin/Modules/CustomEntities/Mvc/Views/Index.cshtml", options);
+            var viewPath = ViewPathFormatter.View("CustomEntities", nameof(Index));
+            return View(viewPath, options);
         }
     }
 }

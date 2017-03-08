@@ -15,6 +15,8 @@ namespace Cofoundry.Web.Admin
     [Route("{action=login}")]
     public class AuthController : Controller
     {
+        private static readonly string CONTROLLER_NAME = "Auth";
+
         #region Constructors
 
         private readonly IQueryExecutor _queryExecutor;
@@ -62,7 +64,11 @@ namespace Cofoundry.Web.Admin
         {
             var user = _userContextService.GetCurrentContext();
             if (user.IsCofoundryUser()) return GetLoggedInDefaultRedirectAction();
-            return View(new LoginViewModel { EmailAddress = email });
+
+            var viewPath = ViewPathFormatter.View(CONTROLLER_NAME, nameof(Login));
+            var vm = new LoginViewModel { EmailAddress = email };
+
+            return View(viewPath, vm);
         }
 
         [HttpPost]
@@ -84,7 +90,8 @@ namespace Cofoundry.Web.Admin
                 return GetLoggedInDefaultRedirectAction();
             }
 
-            return View(command);
+            var viewPath = ViewPathFormatter.View(CONTROLLER_NAME, nameof(Login));
+            return View(viewPath, command);
         }
 
         public ActionResult Logout()
@@ -99,7 +106,8 @@ namespace Cofoundry.Web.Admin
             var user = _userContextService.GetCurrentContext();
             if (user.IsCofoundryUser()) return GetLoggedInDefaultRedirectAction();
 
-            return View(new ForgotPasswordViewModel { Username = email });
+            var viewPath = ViewPathFormatter.View(CONTROLLER_NAME, nameof(ForgotPassword));
+            return View(viewPath, new ForgotPasswordViewModel { Username = email });
         }
 
         [Route("forgot-password")]
@@ -109,7 +117,8 @@ namespace Cofoundry.Web.Admin
             var template = new ResetPasswordTemplate();
             _authenticationHelper.SendPasswordResetNotification(this, command, template, new CofoundryAdminUserArea());
 
-            return View(command);
+            var viewPath = ViewPathFormatter.View(CONTROLLER_NAME, nameof(ForgotPassword));
+            return View(viewPath, command);
         }
 
         [Route("reset-password")]
@@ -126,7 +135,8 @@ namespace Cofoundry.Web.Admin
             vm.UserPasswordResetRequestId = i;
             vm.Token = t;
 
-            return View(vm);
+            var viewPath = ViewPathFormatter.View(CONTROLLER_NAME, nameof(ResetPassword));
+            return View(viewPath, vm);
         }
 
         [Route("reset-password")]
@@ -149,7 +159,8 @@ namespace Cofoundry.Web.Admin
             var user = _userContextService.GetCurrentContext();
             if (!user.IsPasswordChangeRequired) return GetLoggedInDefaultRedirectAction();
 
-            return View(new ChangePasswordViewModel());
+            var viewPath = ViewPathFormatter.View(CONTROLLER_NAME, nameof(ChangePassword));
+            return View(viewPath, new ChangePasswordViewModel());
         }
 
         [AdminAuthorize]
@@ -174,7 +185,8 @@ namespace Cofoundry.Web.Admin
                 }
             }
 
-            return View(vm);
+            var viewPath = ViewPathFormatter.View(CONTROLLER_NAME, nameof(ChangePassword));
+            return View(viewPath, vm);
         }
 
         #endregion

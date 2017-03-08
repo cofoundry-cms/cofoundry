@@ -20,7 +20,8 @@ namespace Cofoundry.Web.Admin
                 UseEmailAsUsername = userArea.UseEmailAsUsername
             };
 
-            return View("~/Admin/Modules/Users/Mvc/Views/Index.cshtml", options);
+            var viewPath = ViewPathFormatter.View("Users", nameof(Index));
+            return View(viewPath, options);
         }
     }
 }
