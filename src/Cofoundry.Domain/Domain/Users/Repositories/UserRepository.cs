@@ -39,9 +39,10 @@ namespace Cofoundry.Domain
         /// </summary>
         /// <param name="email">The email address to use to locate the user.</param>
         /// <param name="userAreaCode">This query must be run against a specific user area.</param>
-        public UserMicroSummary GetUserMicroSummaryByEmail(string email, string userAreaCode)
+        /// <param name="executionContext">Optional execution context to use when executing the query. Useful if you need to temporarily elevate your permission level.</param>
+        public UserMicroSummary GetUserMicroSummaryByEmail(string email, string userAreaCode, IExecutionContext executionContext = null)
         {
-            return _queryExecutor.Execute(new GetUserMicroSummaryByEmailQuery(email, userAreaCode));
+            return _queryExecutor.Execute(new GetUserMicroSummaryByEmailQuery(email, userAreaCode), executionContext);
         }
 
         /// <summary>
@@ -51,9 +52,10 @@ namespace Cofoundry.Domain
         /// </summary>
         /// <param name="email">The email address to use to locate the user.</param>
         /// <param name="userAreaCode">This query must be run against a specific user area.</param>
-        public Task<UserMicroSummary> GetUserMicroSummaryByEmailAsync(string email, string userAreaCode)
+        /// <param name="executionContext">Optional execution context to use when executing the query. Useful if you need to temporarily elevate your permission level.</param>
+        public Task<UserMicroSummary> GetUserMicroSummaryByEmailAsync(string email, string userAreaCode, IExecutionContext executionContext = null)
         {
-            return _queryExecutor.ExecuteAsync(new GetUserMicroSummaryByEmailQuery(email, userAreaCode));
+            return _queryExecutor.ExecuteAsync(new GetUserMicroSummaryByEmailQuery(email, userAreaCode), executionContext);
         }
 
         /// <summary>
@@ -63,9 +65,10 @@ namespace Cofoundry.Domain
         /// </summary>
         /// <param name="username">The username to use to locate the user.</param>
         /// <param name="userAreaCode">This query must be run against a specific user area.</param>
-        public UserMicroSummary GetUserMicroSummaryByUsername(string username, string userAreaCode)
+        /// <param name="executionContext">Optional execution context to use when executing the query. Useful if you need to temporarily elevate your permission level.</param>
+        public UserMicroSummary GetUserMicroSummaryByUsername(string username, string userAreaCode, IExecutionContext executionContext = null)
         {
-            return _queryExecutor.Execute(new GetUserMicroSummaryByUsernameQuery(username, userAreaCode));
+            return _queryExecutor.Execute(new GetUserMicroSummaryByUsernameQuery(username, userAreaCode), executionContext);
         }
 
         /// <summary>
@@ -75,9 +78,10 @@ namespace Cofoundry.Domain
         /// </summary>
         /// <param name="username">The username to use to locate the user.</param>
         /// <param name="userAreaCode">This query must be run against a specific user area.</param>
-        public Task<UserMicroSummary> GetUserMicroSummaryByUsernameAsync(string username, string userAreaCode)
+        /// <param name="executionContext">Optional execution context to use when executing the query. Useful if you need to temporarily elevate your permission level.</param>
+        public Task<UserMicroSummary> GetUserMicroSummaryByUsernameAsync(string username, string userAreaCode, IExecutionContext executionContext = null)
         {
-            return _queryExecutor.ExecuteAsync(new GetUserMicroSummaryByUsernameQuery(username, userAreaCode));
+            return _queryExecutor.ExecuteAsync(new GetUserMicroSummaryByUsernameQuery(username, userAreaCode), executionContext);
         }
 
         /// <summary>
@@ -85,18 +89,20 @@ namespace Cofoundry.Domain
         /// is found, otherwise null.
         /// </summary>
         /// <param name="userId">The database id of the user to find.</param>
-        public Task<UserDetails> GetUserDetailsByIdAsync(int userId)
+        /// <param name="executionContext">Optional execution context to use when executing the query. Useful if you need to temporarily elevate your permission level.</param>
+        public Task<UserDetails> GetUserDetailsByIdAsync(int userId, IExecutionContext executionContext = null)
         {
-            return _queryExecutor.GetByIdAsync<UserDetails>(userId);
+            return _queryExecutor.GetByIdAsync<UserDetails>(userId, executionContext);
         }
 
         /// <summary>
         /// Finds a user by a database id returning a UserDetails object if it 
         /// is found, otherwise null.
         /// </summary>
-        public UserMicroSummary GetUserMicroSummaryById(int userId)
+        /// <param name="executionContext">Optional execution context to use when executing the query. Useful if you need to temporarily elevate your permission level.</param>
+        public UserMicroSummary GetUserMicroSummaryById(int userId, IExecutionContext executionContext = null)
         {
-            return _queryExecutor.GetById<UserMicroSummary>(userId);
+            return _queryExecutor.GetById<UserMicroSummary>(userId, executionContext);
         }
 
         #endregion
@@ -107,36 +113,40 @@ namespace Cofoundry.Domain
         /// Finds a user by a database id returning a UserDetails object if it 
         /// is found, otherwise null.
         /// </summary>
-        public Task<UserMicroSummary> GetUserMicroSummaryByIdAsync(int userId)
+        /// <param name="executionContext">Optional execution context to use when executing the query. Useful if you need to temporarily elevate your permission level.</param>
+        public Task<UserMicroSummary> GetUserMicroSummaryByIdAsync(int userId, IExecutionContext executionContext = null)
         {
-            return _queryExecutor.GetByIdAsync<UserMicroSummary>(userId);
+            return _queryExecutor.GetByIdAsync<UserMicroSummary>(userId, executionContext);
         }
 
         /// <summary>
         /// Gets a UserMicroSummary object representing the currently logged in 
         /// user. If the user is not logged in then null is returned.
         /// </summary>
-        public UserMicroSummary GetCurrentUserMicroSummary()
+        /// <param name="executionContext">Optional execution context to use when executing the query. Useful if you need to temporarily elevate your permission level.</param>
+        public UserMicroSummary GetCurrentUserMicroSummary(IExecutionContext executionContext = null)
         {
-            return _queryExecutor.Execute(new GetCurrentUserMicroSummaryQuery());
+            return _queryExecutor.Execute(new GetCurrentUserMicroSummaryQuery(), executionContext);
         }
 
         /// <summary>
         /// Gets a UserMicroSummary object representing the currently logged in 
         /// user. If the user is not logged in then null is returned.
         /// </summary>
-        public Task<UserMicroSummary> GetCurrentUserMicroSummaryAsync()
+        /// <param name="executionContext">Optional execution context to use when executing the query. Useful if you need to temporarily elevate your permission level.</param>
+        public Task<UserMicroSummary> GetCurrentUserMicroSummaryAsync(IExecutionContext executionContext = null)
         {
-            return _queryExecutor.ExecuteAsync(new GetCurrentUserMicroSummaryQuery());
+            return _queryExecutor.ExecuteAsync(new GetCurrentUserMicroSummaryQuery(), executionContext);
         }
 
         /// <summary>
         /// Gets a UserAccountDetails object representing the currently logged in 
         /// user. If the user is not logged in then null is returned.
         /// </summary>
-        public Task<UserAccountDetails> GetCurrentUserAccountDetailsAsync()
+        /// <param name="executionContext">Optional execution context to use when executing the query. Useful if you need to temporarily elevate your permission level.</param>
+        public Task<UserAccountDetails> GetCurrentUserAccountDetailsAsync(IExecutionContext executionContext = null)
         {
-            return _queryExecutor.ExecuteAsync(new GetCurrentUserAccountDetailsQuery());
+            return _queryExecutor.ExecuteAsync(new GetCurrentUserAccountDetailsQuery(), executionContext);
         }
 
         #endregion
@@ -147,9 +157,10 @@ namespace Cofoundry.Domain
         /// Seaches users based on simple filter criteria and returns a paged result. 
         /// </summary>
         /// <param name="query">Search query parameters.</param>
-        public Task<PagedQueryResult<UserSummary>> SearchUserSummariesAsync(SearchUserSummariesQuery query)
+        /// <param name="executionContext">Optional execution context to use when executing the query. Useful if you need to temporarily elevate your permission level.</param>
+        public Task<PagedQueryResult<UserSummary>> SearchUserSummariesAsync(SearchUserSummariesQuery query, IExecutionContext executionContext = null)
         {
-            return _queryExecutor.ExecuteAsync(query);
+            return _queryExecutor.ExecuteAsync(query, executionContext);
         }
 
         #endregion
@@ -161,10 +172,11 @@ namespace Cofoundry.Domain
         /// Usernames only have to be unique per UserArea.
         /// </summary>
         /// <param name="query">The parameters run the query with.</param>
+        /// <param name="executionContext">Optional execution context to use when executing the query. Useful if you need to temporarily elevate your permission level.</param>
         /// <returns>True if the username is unique; otherwise false.</returns>
-        public bool IsUsernameUnique(IsUsernameUniqueQuery query)
+        public bool IsUsernameUnique(IsUsernameUniqueQuery query, IExecutionContext executionContext = null)
         {
-            return _queryExecutor.Execute(query);
+            return _queryExecutor.Execute(query, executionContext);
         }
 
         /// <summary>
@@ -172,10 +184,11 @@ namespace Cofoundry.Domain
         /// Usernames only have to be unique per UserArea.
         /// </summary>
         /// <param name="query">The parameters run the query with.</param>
+        /// <param name="executionContext">Optional execution context to use when executing the query. Useful if you need to temporarily elevate your permission level.</param>
         /// <returns>True if the username is unique; otherwise false.</returns>
-        public Task<bool> IsUsernameUniqueAsync(IsUsernameUniqueQuery query)
+        public Task<bool> IsUsernameUniqueAsync(IsUsernameUniqueQuery query, IExecutionContext executionContext = null)
         {
-            return _queryExecutor.ExecuteAsync(query);
+            return _queryExecutor.ExecuteAsync(query, executionContext);
         }
 
         #endregion
@@ -188,53 +201,59 @@ namespace Cofoundry.Domain
         /// A generic user creation command for use with Cofoundry users and
         /// other non-Cofoundry users. Does not send any email notifications.
         /// </summary>
-        public Task AddUserAsync(AddUserCommand command)
+        /// <param name="executionContext">Optional execution context to use when executing the command. Useful if you need to temporarily elevate your permission level.</param>
+        public Task AddUserAsync(AddUserCommand command, IExecutionContext executionContext = null)
         {
-            return _commandExecutor.ExecuteAsync(command);
+            return _commandExecutor.ExecuteAsync(command, executionContext);
         }
 
         /// <summary>
         /// Adds a user to the Cofoundry user area and sends a welcome notification
         /// containing a generated password which must be changed at first login.
         /// </summary>
-        public Task AddCofoundryUserAsync(AddCofoundryUserCommand command)
+        /// <param name="executionContext">Optional execution context to use when executing the command. Useful if you need to temporarily elevate your permission level.</param>
+        public Task AddCofoundryUserAsync(AddCofoundryUserCommand command, IExecutionContext executionContext = null)
         {
-            return _commandExecutor.ExecuteAsync(command);
+            return _commandExecutor.ExecuteAsync(command, executionContext);
         }
 
         /// <summary>
         /// A generic user update command for use with Cofoundry users and
         /// other non-Cofoundry users.
         /// </summary>
-        public Task UpdateUserAsync(UpdateUserCommand command)
+        /// <param name="executionContext">Optional execution context to use when executing the command. Useful if you need to temporarily elevate your permission level.</param>
+        public Task UpdateUserAsync(UpdateUserCommand command, IExecutionContext executionContext = null)
         {
-            return _commandExecutor.ExecuteAsync(command);
+            return _commandExecutor.ExecuteAsync(command, executionContext);
         }
 
         /// <summary>
         /// Marks a user as deleted in the database (soft delete).
         /// </summary>
         /// <param name="userId">Id of the role to delete.</param>
-        public Task DeleteUserAsync(int userId)
+        /// <param name="executionContext">Optional execution context to use when executing the command. Useful if you need to temporarily elevate your permission level.</param>
+        public Task DeleteUserAsync(int userId, IExecutionContext executionContext = null)
         {
-            return _commandExecutor.ExecuteAsync(new DeleteUserCommand(userId));
+            return _commandExecutor.ExecuteAsync(new DeleteUserCommand(userId), executionContext);
         }
 
         /// <summary>
         /// Updates the user account of the currently logged in user.
         /// </summary>
-        public Task UpdateCurrentUserAccountAsync(UpdateCurrentUserAccountCommand command)
+        /// <param name="executionContext">Optional execution context to use when executing the command. Useful if you need to temporarily elevate your permission level.</param>
+        public Task UpdateCurrentUserAccountAsync(UpdateCurrentUserAccountCommand command, IExecutionContext executionContext = null)
         {
-            return _commandExecutor.ExecuteAsync(command);
+            return _commandExecutor.ExecuteAsync(command, executionContext);
         }
 
         /// <summary>
         /// Updates the password of the currently logged in user, using the
         /// OldPassword field to authenticate the request.
         /// </summary>
-        public Task UpdateCurrentUserUserPasswordAsync(UpdateCurrentUserUserPasswordCommand command)
+        /// <param name="executionContext">Optional execution context to use when executing the command. Useful if you need to temporarily elevate your permission level.</param>
+        public Task UpdateCurrentUserUserPasswordAsync(UpdateCurrentUserUserPasswordCommand command, IExecutionContext executionContext = null)
         {
-            return _commandExecutor.ExecuteAsync(command);
+            return _commandExecutor.ExecuteAsync(command, executionContext);
         }
 
         #endregion

@@ -33,9 +33,10 @@ namespace Cofoundry.Domain
         /// <summary>
         /// Returns all IPermission instances registered with Cofoundry.
         /// </summary>
-        public Task<IEnumerable<IPermission>> GetAllPermissionsAsync()
+        /// <param name="executionContext">Optional execution context to use when executing the query. Useful if you need to temporarily elevate your permission level.</param>
+        public Task<IEnumerable<IPermission>> GetAllPermissionsAsync(IExecutionContext executionContext = null)
         {
-            return _queryExecutor.GetAllAsync<IPermission>();
+            return _queryExecutor.GetAllAsync<IPermission>(executionContext);
         }
 
         /// <summary>
@@ -44,9 +45,10 @@ namespace Cofoundry.Domain
         /// role is returned.
         /// </summary>
         /// <param name="roleId">Database id of the role, or null to return the anonymous role.</param>
-        public RoleDetails GetRoleDetailsById(int? roleId)
+        /// <param name="executionContext">Optional execution context to use when executing the query. Useful if you need to temporarily elevate your permission level.</param>
+        public RoleDetails GetRoleDetailsById(int? roleId, IExecutionContext executionContext = null)
         {
-            return _queryExecutor.Execute(new GetRoleDetailsByIdQuery(roleId));
+            return _queryExecutor.Execute(new GetRoleDetailsByIdQuery(roleId), executionContext);
         }
 
         /// <summary>
@@ -55,9 +57,10 @@ namespace Cofoundry.Domain
         /// role is returned.
         /// </summary>
         /// <param name="roleId">Database id of the role, or null to return the anonymous role.</param>
-        public Task<RoleDetails> GetRoleDetailsByIdAsync(int? roleId)
+        /// <param name="executionContext">Optional execution context to use when executing the query. Useful if you need to temporarily elevate your permission level.</param>
+        public Task<RoleDetails> GetRoleDetailsByIdAsync(int? roleId, IExecutionContext executionContext = null)
         {
-            return _queryExecutor.ExecuteAsync(new GetRoleDetailsByIdQuery(roleId));
+            return _queryExecutor.ExecuteAsync(new GetRoleDetailsByIdQuery(roleId), executionContext);
         }
 
         /// <summary>
@@ -67,9 +70,10 @@ namespace Cofoundry.Domain
         /// rather than the GUI. For GUI generated roles use GetRoleDetailsByIdQuery.
         /// </summary>
         /// <param name="specialistRoleTypeCode">The code to find a matching role with. Codes are 3 characters long (fixed length).</param>
-        public RoleDetails GetRoleDetailsBySpecialistRoleTypeCode(string specialistRoleTypeCode)
+        /// <param name="executionContext">Optional execution context to use when executing the query. Useful if you need to temporarily elevate your permission level.</param>
+        public RoleDetails GetRoleDetailsBySpecialistRoleTypeCode(string specialistRoleTypeCode, IExecutionContext executionContext = null)
         {
-            return _queryExecutor.Execute(new GetRoleDetailsBySpecialistRoleTypeCode(specialistRoleTypeCode));
+            return _queryExecutor.Execute(new GetRoleDetailsBySpecialistRoleTypeCode(specialistRoleTypeCode), executionContext);
         }
 
         /// <summary>
@@ -79,9 +83,10 @@ namespace Cofoundry.Domain
         /// rather than the GUI. For GUI generated roles use GetRoleDetailsByIdQuery.
         /// </summary>
         /// <param name="specialistRoleTypeCode">The code to find a matching role with. Codes are 3 characters long (fixed length).</param>
-        public Task<RoleDetails> GetRoleDetailsBySpecialistRoleTypeCodeAsync(string specialistRoleTypeCode)
+        /// <param name="executionContext">Optional execution context to use when executing the query. Useful if you need to temporarily elevate your permission level.</param>
+        public Task<RoleDetails> GetRoleDetailsBySpecialistRoleTypeCodeAsync(string specialistRoleTypeCode, IExecutionContext executionContext = null)
         {
-            return _queryExecutor.ExecuteAsync(new GetRoleDetailsBySpecialistRoleTypeCode(specialistRoleTypeCode));
+            return _queryExecutor.ExecuteAsync(new GetRoleDetailsBySpecialistRoleTypeCode(specialistRoleTypeCode), executionContext);
         }
 
         /// <summary>
@@ -89,19 +94,21 @@ namespace Cofoundry.Domain
         /// Role titles only have to be unique per UserArea.
         /// </summary>
         /// <param name="query">The parameters run the query with.</param>
+        /// <param name="executionContext">Optional execution context to use when executing the query. Useful if you need to temporarily elevate your permission level.</param>
         /// <returns>True if the title is unique; otherwise false.</returns>
-        public bool IsRoleTitleUnique(IsRoleTitleUniqueQuery query)
+        public bool IsRoleTitleUnique(IsRoleTitleUniqueQuery query, IExecutionContext executionContext = null)
         {
-            return _queryExecutor.Execute(query);
+            return _queryExecutor.Execute(query, executionContext);
         }
 
         /// <summary>
         /// Seaches roles based on simple filter criteria and returns a paged result. 
         /// </summary>
         /// <param name="query">Search query parameters.</param>
-        public Task<PagedQueryResult<RoleMicroSummary>> SearchRolesAsync(SearchRolesQuery query)
+        /// <param name="executionContext">Optional execution context to use when executing the query. Useful if you need to temporarily elevate your permission level.</param>
+        public Task<PagedQueryResult<RoleMicroSummary>> SearchRolesAsync(SearchRolesQuery query, IExecutionContext executionContext = null)
         {
-            return _queryExecutor.ExecuteAsync(query);
+            return _queryExecutor.ExecuteAsync(query, executionContext);
         }
 
         #endregion
@@ -111,35 +118,45 @@ namespace Cofoundry.Domain
         /// <summary>
         /// Adds a new role to a user area with a specific set of permissions.
         /// </summary>
-        public Task AddRoleAsync(AddRoleCommand command)
+        /// <param name="executionContext">Optional execution context to use when executing the query. Useful if you need to temporarily elevate your permission level.</param>
+        public Task AddRoleAsync(AddRoleCommand command, IExecutionContext executionContext = null)
         {
-            return _commandExecutor.ExecuteAsync(command);
+            return _commandExecutor.ExecuteAsync(command, executionContext);
         }
 
         /// <summary>
         /// Updates an existing role. Also updates the role permission set.
         /// </summary>
-        public Task UpdateRoleAsync(UpdateRoleCommand command)
+        /// <param name="executionContext">Optional execution context to use when executing the query. Useful if you need to temporarily elevate your permission level.</param>
+        public Task UpdateRoleAsync(UpdateRoleCommand command, IExecutionContext executionContext = null)
         {
-            return _commandExecutor.ExecuteAsync(command);
+            return _commandExecutor.ExecuteAsync(command, executionContext);
         }
 
         /// <summary>
         /// Deletes a role with the specified database id.
         /// </summary>
         /// <param name="roleId">Id of the role to delete.</param>
-        public Task DeleteRoleAsync(int roleId)
+        /// <param name="executionContext">Optional execution context to use when executing the query. Useful if you need to temporarily elevate your permission level.</param>
+        public Task DeleteRoleAsync(int roleId, IExecutionContext executionContext = null)
         {
-            return _commandExecutor.ExecuteAsync(new DeleteRoleCommand(roleId));
+            return _commandExecutor.ExecuteAsync(new DeleteRoleCommand(roleId), executionContext);
         }
 
         /// <summary>
         /// Registers new roles defined in code via IRoleDefinition and initializes
         /// permissions when an IRoleInitializer has been implemented.
         /// </summary>
-        public Task RegisterDefinedRoles(bool updateExistingRoles = false)
+        /// <param name="updateExistingRoles">
+        /// By default we don't update roles once they
+        /// are in the system because we don't want to overwrite
+        /// changes made in the UI, but you can force the update
+        /// by running this command manually with this flag.
+        /// </param>
+        /// <param name="executionContext">Optional execution context to use when executing the query. Useful if you need to temporarily elevate your permission level.</param>
+        public Task RegisterDefinedRoles(bool updateExistingRoles, IExecutionContext executionContext = null)
         {
-            return _commandExecutor.ExecuteAsync(new RegisterDefinedRolesCommand() { UpdateExistingRoles = updateExistingRoles });
+            return _commandExecutor.ExecuteAsync(new RegisterDefinedRolesCommand() { UpdateExistingRoles = updateExistingRoles }, executionContext);
         }
 
         #endregion
