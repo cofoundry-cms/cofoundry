@@ -55,6 +55,58 @@ namespace Cofoundry.Domain
 
         #endregion
 
+        #region routes
+
+        public Task<CustomEntityRoute> GetCustomEntityRouteByPathAsync(GetCustomEntityRouteByPathQuery query, IExecutionContext executionContext = null)
+        {
+            return _queryExecutor.ExecuteAsync(query, executionContext);
+        }
+
+        /// <summary>
+        /// Gets CustomEntityRoute data for all custom entities of a 
+        /// specific type. These route objects are small and cached which
+        /// makes them good for quick lookups.
+        /// </summary>
+        /// <param name="customEntityDefinitionCode">
+        /// The code identifier for the custom entity type
+        /// to query for.
+        /// </param>
+        /// <param name="executionContext">Optional execution context to use when executing the query. Useful if you need to temporarily elevate your permission level.</param>
+        public IEnumerable<CustomEntityRoute> GetCustomEntityRoutesByDefinitionCode(string customEntityDefinitionCode, IExecutionContext executionContext = null)
+        {
+            var query = new GetCustomEntityRoutesByDefinitionCodeQuery(customEntityDefinitionCode);
+            return _queryExecutor.Execute(query, executionContext);
+        }
+
+        /// <summary>
+        /// Gets CustomEntityRoute data for all custom entities of a 
+        /// specific type. These route objects are small and cached which
+        /// makes them good for quick lookups.
+        /// </summary>
+        /// <param name="customEntityDefinitionCode">
+        /// The code identifier for the custom entity type
+        /// to query for.
+        /// </param>
+        /// <param name="executionContext">Optional execution context to use when executing the query. Useful if you need to temporarily elevate your permission level.</param>
+        public Task<IEnumerable<CustomEntityRoute>> GetCustomEntityRoutesByDefinitionCodeAsync(string customEntityDefinitionCode, IExecutionContext executionContext = null)
+        {
+            var query = new GetCustomEntityRoutesByDefinitionCodeQuery(customEntityDefinitionCode);
+            return _queryExecutor.ExecuteAsync(query, executionContext);
+        }
+
+        public ICustomEntityRoutingRule GetCustomEntityRoutingRuleByRouteFormat(string routeFormat, IExecutionContext executionContext = null)
+        {
+            var query = new GetCustomEntityRoutingRuleByRouteFormatQuery(routeFormat);
+            return _queryExecutor.Execute(query, executionContext);
+        }
+
+        public Task<ICustomEntityRoutingRule> GetCustomEntityRoutingRuleByRouteFormatAsync(string routeFormat, IExecutionContext executionContext = null)
+        {
+            var query = new GetCustomEntityRoutingRuleByRouteFormatQuery(routeFormat);
+            return _queryExecutor.ExecuteAsync(query, executionContext);
+        }
+
+        #endregion
         public IEnumerable<ICustomEntityRoutingRule> GetAllCustomEntityRoutingRules(IExecutionContext executionContext = null)
         {
             return _queryExecutor.GetAll<ICustomEntityRoutingRule>(executionContext);
@@ -109,36 +161,7 @@ namespace Cofoundry.Domain
         {
             return _queryExecutor.ExecuteAsync(query, executionContext);
         }
-
-        public Task<CustomEntityRoute> GetCustomEntityRouteByPathAsync(GetCustomEntityRouteByPathQuery query, IExecutionContext executionContext = null)
-        {
-            return _queryExecutor.ExecuteAsync(query, executionContext);
-        }
-
-        public IEnumerable<CustomEntityRoute> GetCustomEntityRoutesByDefinitionCode(string customEntityDefinitionCode, IExecutionContext executionContext = null)
-        {
-            var query = new GetCustomEntityRoutesByDefinitionCodeQuery(customEntityDefinitionCode);
-            return _queryExecutor.Execute(query, executionContext);
-        }
-
-        public Task<IEnumerable<CustomEntityRoute>> GetCustomEntityRoutesByDefinitionCodeAsync(string customEntityDefinitionCode, IExecutionContext executionContext = null)
-        {
-            var query = new GetCustomEntityRoutesByDefinitionCodeQuery(customEntityDefinitionCode);
-            return _queryExecutor.ExecuteAsync(query, executionContext);
-        }
-
-        public ICustomEntityRoutingRule GetCustomEntityRoutingRuleByRouteFormat(string routeFormat, IExecutionContext executionContext = null)
-        {
-            var query = new GetCustomEntityRoutingRuleByRouteFormatQuery(routeFormat);
-            return _queryExecutor.Execute(query, executionContext);
-        }
-
-        public Task<ICustomEntityRoutingRule> GetCustomEntityRoutingRuleByRouteFormatAsync(string routeFormat, IExecutionContext executionContext = null)
-        {
-            var query = new GetCustomEntityRoutingRuleByRouteFormatQuery(routeFormat);
-            return _queryExecutor.ExecuteAsync(query, executionContext);
-        }
-
+        
         public IDictionary<int, CustomEntitySummary> GetCustomEntityRenderSummaryByIdRange(IEnumerable<int> ids, IExecutionContext executionContext = null)
         {
             return _queryExecutor.GetByIdRange<CustomEntitySummary>(ids, executionContext);

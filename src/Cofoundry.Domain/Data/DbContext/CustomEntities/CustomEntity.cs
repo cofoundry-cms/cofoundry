@@ -10,6 +10,9 @@ namespace Cofoundry.Domain.Data
             CustomEntityVersions = new List<CustomEntityVersion>();
         }
 
+        /// <summary>
+        /// Database id of the custom entity.
+        /// </summary>
         public int CustomEntityId { get; set; }
 
         public string CustomEntityDefinitionCode { get; set; }

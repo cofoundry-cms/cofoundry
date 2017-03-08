@@ -11,6 +11,11 @@ using Cofoundry.Core;
 
 namespace Cofoundry.Domain
 {
+    /// <summary>
+    /// Gets CustomEntityRoute data for all custom entities of a 
+    /// specific type. These route objects are small and cached which
+    /// makes them good for quick lookups.
+    /// </summary>
     public class GetCustomEntityRoutesByDefinitionCodeQueryHandler 
         : IQueryHandler<GetCustomEntityRoutesByDefinitionCodeQuery, IEnumerable<CustomEntityRoute>>
         , IAsyncQueryHandler<GetCustomEntityRoutesByDefinitionCodeQuery, IEnumerable<CustomEntityRoute>>
