@@ -6,14 +6,34 @@ using System.Threading.Tasks;
 
 namespace Cofoundry.Domain
 {
+    /// <summary>
+    /// WebDirectories represent a folder in the dynamic web page hierarchy.
+    /// This representation is used in dynamic page routing and is designed to
+    /// be lightweight and cached.
+    /// </summary>
     public class WebDirectoryRoute : IEquatable<WebDirectoryRoute>
     {
+        /// <summary>
+        /// Database id of the web directory.
+        /// </summary>
         public int WebDirectoryId { get; set; }
 
+        /// <summary>
+        /// Id of the parent directory. This can only be null for the 
+        /// root web directory.
+        /// </summary>
         public int? ParentWebDirectoryId { get; set; }
 
+        /// <summary>
+        /// Url slug used to create a path for this directory. Should not
+        /// contain any slashes, just alpha-numerical with dashes.
+        /// </summary>
         public string UrlPath { get; set; }
 
+        /// <summary>
+        /// The complete path of up to and including
+        /// this directory. Does not use a trailing slash.
+        /// </summary>
         public string FullUrlPath { get; set; }
 
         /// <summary>

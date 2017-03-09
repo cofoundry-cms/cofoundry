@@ -9,6 +9,10 @@ using Cofoundry.Domain.CQS;
 
 namespace Cofoundry.Domain
 {
+    /// <summary>
+    /// Determines if a webdirectory UrlPath is unique
+    /// within its parent directory.
+    /// </summary>
     public class IsWebDirectoryPathUniqueQueryHandler 
         : IQueryHandler<IsWebDirectoryPathUniqueQuery, bool>
         , IAsyncQueryHandler<IsWebDirectoryPathUniqueQuery, bool>

@@ -10,6 +10,9 @@ using Cofoundry.Core;
 
 namespace Cofoundry.Domain
 {
+    /// <summary>
+    /// Returns all web directories as WebDirectoryRoute objects. The results of this query are cached.
+    /// </summary>
     public class GetAllWebDirectoryRoutesQueryHandler 
         : IQueryHandler<GetAllQuery<WebDirectoryRoute>, IEnumerable<WebDirectoryRoute>>
         , IAsyncQueryHandler<GetAllQuery<WebDirectoryRoute>, IEnumerable<WebDirectoryRoute>>

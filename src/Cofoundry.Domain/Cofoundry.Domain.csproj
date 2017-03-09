@@ -1008,6 +1008,8 @@
     <Compile Include="Domain\WebDirectories\Queries\GetWebDirectoryTreeQueryHandler.cs" />
     <Compile Include="Domain\WebDirectories\Queries\IsWebDirectoryPathUniqueQuery.cs" />
     <Compile Include="Domain\WebDirectories\Queries\IsWebDirectoryPathUniqueQueryHandler.cs" />
+    <Compile Include="Domain\WebDirectories\Repositories\IWebDirectoryRepository.cs" />
+    <Compile Include="Domain\WebDirectories\Repositories\WebDirectoryRepository.cs" />
     <Compile Include="Domain\YouTubeVideo\DataAnnotations\YouTubeAttribute.cs" />
     <Compile Include="Domain\YouTubeVideo\Models\YouTubeVideo.cs" />
     <Compile Include="Install\AlwaysUpdateCommands\RegisterNewDefinedRolesCommand.cs" />

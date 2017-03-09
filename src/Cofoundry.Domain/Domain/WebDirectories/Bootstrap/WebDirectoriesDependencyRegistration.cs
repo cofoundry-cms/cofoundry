@@ -13,6 +13,7 @@ namespace Cofoundry.Domain.Bootstrap
         {
             container
                 .RegisterType<IWebDirectoryCache, WebDirectoryCache>()
+                .RegisterType<IWebDirectoryRepository, WebDirectoryRepository>()
                 ;
         }
     }

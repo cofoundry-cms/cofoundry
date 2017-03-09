@@ -118,6 +118,7 @@ namespace Cofoundry.Domain
         /// <summary>
         /// Adds a new role to a user area with a specific set of permissions.
         /// </summary>
+        /// <param name="command">Command to run.</param>
         /// <param name="executionContext">Optional execution context to use when executing the query. Useful if you need to temporarily elevate your permission level.</param>
         public Task AddRoleAsync(AddRoleCommand command, IExecutionContext executionContext = null)
         {
@@ -127,6 +128,7 @@ namespace Cofoundry.Domain
         /// <summary>
         /// Updates an existing role. Also updates the role permission set.
         /// </summary>
+        /// <param name="command">Command to run.</param>
         /// <param name="executionContext">Optional execution context to use when executing the query. Useful if you need to temporarily elevate your permission level.</param>
         public Task UpdateRoleAsync(UpdateRoleCommand command, IExecutionContext executionContext = null)
         {

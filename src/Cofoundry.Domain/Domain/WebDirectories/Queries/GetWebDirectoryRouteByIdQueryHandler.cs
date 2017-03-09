@@ -11,6 +11,9 @@ using System.IO;
 
 namespace Cofoundry.Domain
 {
+    /// <summary>
+    /// Returns a web directory with the specified id as a WebDirectoryRoute instance.
+    /// </summary>
     public class GetWebDirectoryRouteByIdQueryHandler 
         : IQueryHandler<GetByIdQuery<WebDirectoryRoute>, WebDirectoryRoute>
         , IAsyncQueryHandler<GetByIdQuery<WebDirectoryRoute>, WebDirectoryRoute>

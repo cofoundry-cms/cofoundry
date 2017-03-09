@@ -10,6 +10,10 @@ using Cofoundry.Core;
 
 namespace Cofoundry.Domain
 {
+    /// <summary>
+    /// Returns a complete tree of web directory nodes, starting
+    /// with the root webdirectory as a single node.
+    /// </summary>
     public class GetWebDirectoryTreeQueryHandler 
         : IQueryHandler<GetWebDirectoryTreeQuery, WebDirectoryNode>
         , IAsyncQueryHandler<GetWebDirectoryTreeQuery, WebDirectoryNode>
@@ -60,7 +64,6 @@ namespace Cofoundry.Domain
 
         private WebDirectoryNode Map(List<WebDirectoryNode> allWebDirectories)
         {
-
             if (allWebDirectories == null) return null;
 
             // Build the urls
