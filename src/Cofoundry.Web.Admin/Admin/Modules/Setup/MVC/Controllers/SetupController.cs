@@ -44,7 +44,7 @@ namespace Cofoundry.Web.Admin
             _loginService.SignOut();
 
             var viewPath = ViewPathFormatter.View("Setup", nameof(Index));
-            return View();
+            return View(viewPath);
         }
 
         #endregion
