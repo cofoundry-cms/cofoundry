@@ -45,6 +45,7 @@ function (
         vm.toggleFilter = toggleFilter;
         vm.isSelected = isSelected;
         vm.multiMode = vm.selectedIds ? true : false;
+        vm.okText = vm.multiMode ? 'Ok' : 'Select';
 
         toggleFilter(false);
         loadGrid();

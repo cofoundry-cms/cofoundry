@@ -10,7 +10,7 @@
         <cms-pager cms-result="result"
                    cms-query="query"></cms-pager>
 
-        <cms-button cms-text="Select" ng-click="onOk()" class="main-cta" ng-disabled="!selectedAsset"></cms-button>
+        <cms-button cms-text="{{okText}}" ng-click="onOk()" class="main-cta" ng-disabled="!multiMode && !selectedAsset"></cms-button>
         <cms-button cms-text="Cancel" ng-click="onCancel()"></cms-button>
 
         <!--FILTER-->
