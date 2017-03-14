@@ -47,7 +47,7 @@ namespace Cofoundry.Web.Admin
         public ActionResult Frame(VisualEditorFrameModel model)
         {
             var viewPath = ViewPathFormatter.View("VisualEditor", nameof(Frame));
-            return View(model);
+            return View(viewPath, model);
         }
 
         #endregion
