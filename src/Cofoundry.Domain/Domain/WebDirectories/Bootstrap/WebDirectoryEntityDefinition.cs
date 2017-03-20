@@ -7,12 +7,17 @@ using Cofoundry.Domain.CQS;
 
 namespace Cofoundry.Domain
 {
-    public class WebDirectoryEntityDefinition : IEntityDefinition
+    public class WebDirectoryEntityDefinition : IDependableEntityDefinition
     {
         public static string DefinitionCode = "COFDIR";
 
         public string EntityDefinitionCode { get { return DefinitionCode; } }
 
         public string Name { get { return "Web Directory"; } }
+
+        public IQuery<IDictionary<int, RootEntityMicroSummary>> CreateGetEntityMicroSummariesByIdRangeQuery(IEnumerable<int> ids)
+        {
+            return new GetWebDirectoryEntityMicroSummariesByIdRangeQuery(ids);
+        }
     }
 }

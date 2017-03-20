@@ -6,7 +6,7 @@
     'shared.LoadState',
     'shared.stringUtilities',
     'shared.urlLibrary',
-    'pages.pageService',
+    'shared.pageService',
     'pages.pageTemplateService',
     'pages.customEntityService',
 function (

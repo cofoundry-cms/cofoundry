@@ -3,7 +3,7 @@
     '$q',
     '$location',
     'shared.LoadState',
-    'pages.pageService',
+    'shared.pageService',
     'pages.customEntityService',
     'options',
     'close',

@@ -21,11 +21,11 @@ namespace Cofoundry.Domain
         {
             if (WorkFlowStatus == WorkFlowStatusQuery.SpecificVersion && (!PageVersionId.HasValue || PageVersionId < 1))
             {
-                yield return new ValidationResult("Value cannot be null if WorkFlowStatusQuery.SpecificVersion is specified", new string[] { "PageVersionId" });
+                yield return new ValidationResult("Value cannot be null if WorkFlowStatusQuery.SpecificVersion is specified", new string[] { nameof(PageVersionId) });
             }
             else if (WorkFlowStatus != WorkFlowStatusQuery.SpecificVersion && PageVersionId.HasValue)
             {
-                yield return new ValidationResult("Value should be null if WorkFlowStatusQuery.SpecificVersion is not specified", new string[] { "PageVersionId" });
+                yield return new ValidationResult("Value should be null if WorkFlowStatusQuery.SpecificVersion is not specified", new string[] { nameof(PageVersionId) });
             }
         }
     }

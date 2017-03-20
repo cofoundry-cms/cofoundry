@@ -61,7 +61,7 @@
         <table>
             <thead>
                 <tr>
-                    <th>Name</th>
+                    <th>Page</th>
                     <!--<th>Market</th>-->
                     <!--<th>Tags</th>-->
                     <th>Status</th>
@@ -75,7 +75,7 @@
                 </tr>
                 <tr ng-repeat="page in vm.result.items">
                     <td>
-                        <a href="#/{{ page.pageId }}">{{ page.title }}</a> ({{page.fullPath}})
+                        <a href="#/{{ page.pageId }}">{{ page.fullPath }}</a> ({{page.title}})
                     </td>
                     <!--<td>
                     <span ng-if="page.locale">{{ page.locale.name }} ({{ page.locale.ietfLanguageTag}})</span>

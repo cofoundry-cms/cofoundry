@@ -583,6 +583,8 @@
     <Compile Include="Domain\Pages\Commands\UpdatePageVersionModuleCommandHandler.cs" />
     <Compile Include="Domain\PageModuleTypes\Factories\IPageModuleDataModelTypeFactory.cs" />
     <Compile Include="Domain\PageModuleTypes\Factories\PageModuleDataModelTypeFactory.cs" />
+    <Compile Include="Domain\Pages\DataAnnotations\PageAttribute.cs" />
+    <Compile Include="Domain\Pages\DataAnnotations\PageCollectionAttribute.cs" />
     <Compile Include="Domain\Pages\Helpers\IPageModuleCommandHelper.cs" />
     <Compile Include="Domain\Pages\Helpers\PageModuleCommandHelper.cs" />
     <Compile Include="Domain\Pages\Helpers\IPagePathHelper.cs" />
@@ -678,6 +680,7 @@
     <Compile Include="Domain\Pages\Queries\GetPageRoutingInfoByPathQueryHandler.cs" />
     <Compile Include="Domain\Pages\Queries\GetPageSectionDetailsByPageVersionIdQueryHandler.cs" />
     <Compile Include="Domain\Pages\Queries\GetPageSectionDetailsByPageVersionIdQuery.cs" />
+    <Compile Include="Domain\Pages\Queries\GetPageSummariesByIdRangeQuery.cs" />
     <Compile Include="Domain\Pages\Queries\GetPageVersionSummariesByPageIdQuery.cs" />
     <Compile Include="Domain\Pages\Queries\GetPageVersionSummariesByPageIdQueryHandler.cs" />
     <Compile Include="Domain\Pages\Queries\GetPageVersionEntityMicroSummariesByIdRangeQuery.cs" />
@@ -695,6 +698,7 @@
     <Compile Include="Domain\Pages\Queries\SearchPagesQuery.cs" />
     <Compile Include="Domain\Pages\Queries\SearchPagesQueryHandler.cs" />
     <Compile Include="Domain\Pages\Queries\SearchPageSummariesQuery.cs" />
+    <Compile Include="Domain\Pages\Queries\GetPageSummariesByIdRangeQueryHandler.cs" />
     <Compile Include="Domain\Pages\Queries\SearchPageSummariesQueryHandler.cs" />
     <Compile Include="Domain\Pages\Repositories\IPageRepository.cs" />
     <Compile Include="Domain\Pages\Repositories\PageRepository.cs" />
@@ -992,6 +996,7 @@
     <Compile Include="Domain\WebDirectories\Commands\DeleteWebDirectoryCommandHandler.cs" />
     <Compile Include="Domain\WebDirectories\Commands\UpdateWebDirectoryCommand.cs" />
     <Compile Include="Domain\WebDirectories\Commands\UpdateWebDirectoryCommandHandler.cs" />
+    <Compile Include="Domain\WebDirectories\DataAnnotations\WebDirectoryAttribute.cs" />
     <Compile Include="Domain\WebDirectories\Models\WebDirectoryNode.cs" />
     <Compile Include="Domain\WebDirectories\Models\WebDirectoryRoute.cs" />
     <Compile Include="Domain\WebDirectories\Models\WebDirectoryRouteLocale.cs" />
@@ -1001,6 +1006,8 @@
     <Compile Include="Domain\WebDirectories\Permissions\WebDirectoryReadPermission.cs" />
     <Compile Include="Domain\WebDirectories\Permissions\WebDirectoryUpdatePermission.cs" />
     <Compile Include="Domain\WebDirectories\Queries\GetAllWebDirectoryRoutesQueryHandler.cs" />
+    <Compile Include="Domain\WebDirectories\Queries\GetWebDirectoryEntityMicroSummariesByIdRangeQuery.cs" />
+    <Compile Include="Domain\WebDirectories\Queries\GetWebDirectoryEntityMicroSummariesByIdRangeQueryHandler.cs" />
     <Compile Include="Domain\WebDirectories\Queries\GetUpdateWebDirectoryCommandByIdQueryHandler.cs" />
     <Compile Include="Domain\WebDirectories\Queries\GetWebDirectoryRouteByIdQueryHandler.cs" />
     <Compile Include="Domain\WebDirectories\Queries\GetWebDirectoryTreeNodeByIdQueryHandler.cs" />

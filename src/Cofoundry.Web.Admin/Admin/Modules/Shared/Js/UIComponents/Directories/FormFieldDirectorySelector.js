@@ -1,8 +1,8 @@
-﻿angular.module('cms.directories').directive('cmsFormFieldDirectorySelector', [
+﻿angular.module('cms.shared').directive('cmsFormFieldDirectorySelector', [
     '_',
     'shared.directiveUtilities',
-    'directories.modulePath',
-    'directories.directoryService',
+    'shared.internalModulePath',
+    'shared.directoryService',
 function (
     _,
     directiveUtilities,
@@ -12,9 +12,10 @@ function (
 
     return {
         restrict: 'E',
-        templateUrl: modulePath + 'uicomponents/directories/FormFieldDirectorySelector.html',
+        templateUrl: modulePath + 'UIComponents/Directories/FormFieldDirectorySelector.html',
         scope: {
             model: '=cmsModel',
+            title: '@cmsTitle',
             onLoaded: '&cmsOnLoaded'
         },
         link: {
@@ -48,6 +49,7 @@ function (
 
         directoryService.getAll().then(function (webDirectories) {
             vm.webDirectories = webDirectories;
+            console.log(webDirectories);
             if (vm.onLoaded) vm.onLoaded();
         });
     }

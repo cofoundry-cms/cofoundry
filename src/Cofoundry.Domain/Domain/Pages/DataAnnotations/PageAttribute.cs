@@ -11,31 +11,23 @@ using System.Web.Mvc;
 namespace Cofoundry.Domain
 {
     /// <summary>
-    /// Use this to decorate an integer and indicate that it should be the id for a custom entity
-    /// of a specific type. If the integer is nullable then this signals
+    /// Use this to decorate an (nullable) integer and indicate that it should be the 
+    /// database id for a Page. If the integer is nullable then this signals
     /// that the property is optional.
     /// </summary>
     [AttributeUsage(AttributeTargets.Property)]
-    public class CustomEntityAttribute : RegularExpressionAttribute, IMetadataAttribute, IEntityRelationAttribute
+    public class PageAttribute : RegularExpressionAttribute, IMetadataAttribute, IEntityRelationAttribute
     {
-        public CustomEntityAttribute(string customEntityDefinitionCode)
+        public PageAttribute()
             : base(@"^[1-9]\d*$")
         {
             ErrorMessage = "The {0} field is required";
-            CustomEntityDefinitionCode = customEntityDefinitionCode;
         }
 
         public void Process(ModelMetadata modelMetaData)
         {
-            modelMetaData.AddAdditionalValueIfNotEmpty("CustomEntityDefinitionCode", CustomEntityDefinitionCode);
-
-            modelMetaData.TemplateHint = "CustomEntitySelector";
+            modelMetaData.TemplateHint = "PageSelector";
         }
-
-        /// <summary>
-        /// The code of the custom entity which is allowed to be attached to the collection.
-        /// </summary>
-        public string CustomEntityDefinitionCode { get; set; }
 
         public IEnumerable<EntityDependency> GetRelations(object model, PropertyInfo propertyInfo)
         {
@@ -47,7 +39,7 @@ namespace Cofoundry.Domain
 
             if (id.HasValue)
             {
-                yield return new EntityDependency(CustomEntityDefinitionCode, id.Value, isRequired);
+                yield return new EntityDependency(PageEntityDefinition.DefinitionCode, id.Value, isRequired);
             }
         }
     }

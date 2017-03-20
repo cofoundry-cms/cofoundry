@@ -8,6 +8,7 @@ using System.Web.OData;
 using Cofoundry.Domain;
 using Cofoundry.Domain.CQS;
 using Cofoundry.Web.WebApi;
+using Cofoundry.Core;
 
 namespace Cofoundry.Web.Admin
 {
@@ -41,8 +42,17 @@ namespace Cofoundry.Web.Admin
 
         [HttpGet]
         [Route]
-        public async Task<IHttpActionResult> Get([FromUri] SearchPageSummariesQuery query)
+        public async Task<IHttpActionResult> Get(
+            [FromUri] SearchPageSummariesQuery query,
+            [FromUri] GetPageSummariesByIdRangeQuery rangeQuery
+            )
         {
+            if (rangeQuery != null && rangeQuery.PageIds != null)
+            {
+                var rangeResults = await _queryExecutor.ExecuteAsync(rangeQuery);
+                return _apiResponseHelper.SimpleQueryResponse(this, rangeResults.ToFilteredAndOrderedCollection(rangeQuery.PageIds));
+            }
+
             if (query == null) query = new SearchPageSummariesQuery();
 
             var results = await _queryExecutor.ExecuteAsync(query);
@@ -56,6 +66,7 @@ namespace Cofoundry.Web.Admin
             var result = await _queryExecutor.GetByIdAsync<PageDetails>(pageId);
             return _apiResponseHelper.SimpleQueryResponse(this, result);
         }
+        
 
         #endregion
 

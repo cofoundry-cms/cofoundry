@@ -183,6 +183,41 @@ namespace Cofoundry.Domain
             return _queryExecutor.ExecuteAsync(query, executionContext);
         }
 
+        #region page summaries
+
+        /// <summary>
+        /// Finds pages with the specified page ids and returns them as PageSummary 
+        /// objects. Note that this query does not account for WorkFlowStatus and so
+        /// pages will be returned irrecpective of whether they aree published or not.
+        /// </summary>
+        /// <param name="pageIds">A collection of database ids of the pages to fetch.</param>
+        /// <param name="executionContext">Optional execution context to use when executing the query. Useful if you need to temporarily elevate your permission level.</param>
+        public IDictionary<int, PageSummary> GetPageVersionSummariesByPageId(IEnumerable<int> pageIds, IExecutionContext executionContext = null)
+        {
+            return _queryExecutor.Execute(new GetPageSummariesByIdRangeQuery(pageIds), executionContext);
+        }
+
+        /// <summary>
+        /// Finds pages with the specified page ids and returns them as PageSummary 
+        /// objects. Note that this query does not account for WorkFlowStatus and so
+        /// pages will be returned irrecpective of whether they aree published or not.
+        /// </summary>
+        /// <param name="pageIds">A collection of database ids of the pages to fetch.</param>
+        /// <param name="executionContext">Optional execution context to use when executing the query. Useful if you need to temporarily elevate your permission level.</param>
+        public Task<IDictionary<int, PageSummary>> GetPageVersionSummariesByPageIdAsync(IEnumerable<int> pageIds, IExecutionContext executionContext = null)
+        {
+            return _queryExecutor.ExecuteAsync(new GetPageSummariesByIdRangeQuery(pageIds), executionContext);
+        }
+
+        public Task<PagedQueryResult<PageSummary>> SearchPageSummariesAsync(SearchPageSummariesQuery query, IExecutionContext executionContext = null)
+        {
+            return _queryExecutor.ExecuteAsync(query, executionContext);
+        }
+
+        #endregion
+
+        #region utility
+
         public bool IsPagePathUnique(IsPagePathUniqueQuery query, IExecutionContext executionContext = null)
         {
             return _queryExecutor.Execute(query, executionContext);
@@ -193,10 +228,7 @@ namespace Cofoundry.Domain
             return _queryExecutor.ExecuteAsync(query, executionContext);
         }
 
-        public Task<PagedQueryResult<PageSummary>> SearchPageSummariesAsync(SearchPageSummariesQuery query, IExecutionContext executionContext = null)
-        {
-            return _queryExecutor.ExecuteAsync(query, executionContext);
-        }
+        #endregion
 
         #endregion
 

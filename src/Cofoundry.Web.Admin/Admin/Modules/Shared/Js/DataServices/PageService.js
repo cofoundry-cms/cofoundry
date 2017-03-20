@@ -1,4 +1,4 @@
-﻿angular.module('cms.pages').factory('pages.pageService', [
+﻿angular.module('cms.shared').factory('shared.pageService', [
     '$http',
     'shared.serviceBase',
 function (
@@ -16,6 +16,14 @@ function (
         });
     }
 
+    service.getByIdRange = function (pageIds) {
+        return $http.get(pagesServiceBase, {
+            params: {
+                'pageIds': pageIds
+            }
+        });
+    }
+    
     service.getById = function (pageId) {
 
         return $http.get(service.getIdRoute(pageId));

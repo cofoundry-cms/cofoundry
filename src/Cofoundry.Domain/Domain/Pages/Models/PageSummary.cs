@@ -6,6 +6,12 @@ using System.Threading.Tasks;
 
 namespace Cofoundry.Domain
 {
+    /// <summary>
+    /// A page summary contains information used when listing pages in the
+    /// admin panel. The model isn't version specific and should not be used 
+    /// to render content out to a live page, since the page may not be 
+    /// published.
+    /// </summary>
     public class PageSummary : ICreateAudited, IPageRoute
     {
         #region properties shared with page route

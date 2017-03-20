@@ -7,7 +7,7 @@
     'shared.modalDialogService',
     'shared.entityVersionModalDialogService',
     'shared.urlLibrary',
-    'pages.pageService',
+    'shared.pageService',
     'pages.modulePath',
 function (
     $routeParams,

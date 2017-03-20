@@ -3,7 +3,7 @@
     'shared.entityVersionModalDialogService',
     'shared.LoadState',
     'shared.SearchQuery',
-    'pages.pageService',
+    'shared.pageService',
     'pages.pageTemplateService',
 function (
     _,
