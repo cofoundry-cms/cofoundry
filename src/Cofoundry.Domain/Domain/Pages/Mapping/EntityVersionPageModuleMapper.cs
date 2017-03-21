@@ -19,14 +19,12 @@ namespace Cofoundry.Domain
         #region constructor
 
         private readonly IPageVersionModuleModelMapper _pageVersionModuleModelMapper;
-        private readonly IQueryExecutor _queryExecutor;
 
         public EntityVersionPageModuleMapper(
             IQueryExecutor queryExecutor,
             IPageVersionModuleModelMapper pageVersionModuleModelMapper
             )
         {
-            _queryExecutor = queryExecutor;
             _pageVersionModuleModelMapper = pageVersionModuleModelMapper;
         }
 
@@ -45,10 +43,14 @@ namespace Cofoundry.Domain
 
         #region public methods
 
-        public async Task MapSectionsAsync<TModuleRenderDetails>(IEnumerable<IEntityVersionPageModule> dbModules, IEnumerable<IEntitySectionRenderDetails<TModuleRenderDetails>> sections, WorkFlowStatusQuery workflowStatus, IExecutionContext executionContext)
+        public void MapSections<TModuleRenderDetails>(
+            IEnumerable<IEntityVersionPageModule> dbModules,
+            IEnumerable<IEntitySectionRenderDetails<TModuleRenderDetails>> sections,
+            IEnumerable<PageModuleTypeSummary> allModuleTypes,
+            WorkFlowStatusQuery workflowStatus
+            )
             where TModuleRenderDetails : IEntityVersionPageModuleRenderDetails, new()
         {
-            var allModuleTypes = await _queryExecutor.GetAllAsync<PageModuleTypeSummary>(executionContext);
             var mappedModules = ToModuleMappingData(dbModules, allModuleTypes, workflowStatus);
 
             // Map Sections
@@ -62,6 +64,29 @@ namespace Cofoundry.Domain
                 section.Modules = ToModuleRenderDetails<TModuleRenderDetails>(sectionMappedModules).ToArray();
             }
         }
+
+        /// <summary>
+        /// Locates and returns the correct templates for a module if it a custom template 
+        /// assigned, otherwise null is returned.
+        /// </summary>
+        /// <param name="pageModule">An unmapped database module to locate the template for.</param>
+        /// <param name="moduleType">The module type associated with the module in which to look for the template.</param>
+        public PageModuleTypeTemplateSummary GetCustomTemplate(IEntityVersionPageModule pageModule, PageModuleTypeSummary moduleType)
+        {
+            Condition.Requires(pageModule, nameof(pageModule)).IsNotNull();
+            Condition.Requires(pageModule, nameof(moduleType)).IsNotNull();
+
+            if (!pageModule.PageModuleTypeTemplateId.HasValue) return null;
+
+            var template = moduleType
+                .Templates
+                .FirstOrDefault(t => t.PageModuleTypeTemplateId == pageModule.PageModuleTypeTemplateId);
+
+            Debug.Assert(template != null, string.Format("The module template with id {0} could not be found for {1} {2}", pageModule.PageModuleTypeTemplateId, pageModule.GetType().Name, pageModule.GetVersionModuleId()));
+
+            return template;
+        }
+
 
         #endregion
 
@@ -123,28 +148,6 @@ namespace Cofoundry.Domain
 
                 yield return module;
             }
-        }
-
-        /// <summary>
-        /// Locates and returns the correct templates for a module if it a custom template 
-        /// assigned, otherwise null is returned.
-        /// </summary>
-        /// <param name="pageModule">An unmapped database module to locate the template for.</param>
-        /// <param name="moduleType">The module type associated with the module in which to look for the template.</param>
-        public PageModuleTypeTemplateSummary GetCustomTemplate(IEntityVersionPageModule pageModule, PageModuleTypeSummary moduleType)
-        {
-            Condition.Requires(pageModule, nameof(pageModule)).IsNotNull();
-            Condition.Requires(pageModule, nameof(moduleType)).IsNotNull();
-
-            if (!pageModule.PageModuleTypeTemplateId.HasValue) return null;
-
-            var template = moduleType
-                .Templates
-                .FirstOrDefault(t => t.PageModuleTypeTemplateId == pageModule.PageModuleTypeTemplateId);
-
-            Debug.Assert(template != null, string.Format("The module template with id {0} could not be found for {1} {2}", pageModule.PageModuleTypeTemplateId, pageModule.GetType().Name, pageModule.GetVersionModuleId()));
-
-            return template;
         }
 
         #endregion

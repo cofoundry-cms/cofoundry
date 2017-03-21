@@ -9,21 +9,29 @@ using AutoMapper;
 
 namespace Cofoundry.Domain
 {
+    /// <summary>
+    /// Gets a page object that contains the data required to render a page, including template 
+    /// data for all the content-editable sections.
+    /// </summary>
     public class GetPageRenderDetailsByIdQueryHandler 
-        : IAsyncQueryHandler<GetPageRenderDetailsByIdQuery, PageRenderDetails>
+        : IQueryHandler<GetPageRenderDetailsByIdQuery, PageRenderDetails>
+        , IAsyncQueryHandler<GetPageRenderDetailsByIdQuery, PageRenderDetails>
         , IPermissionRestrictedQueryHandler<GetPageRenderDetailsByIdQuery, PageRenderDetails>
     {
         #region constructor
 
         private readonly CofoundryDbContext _dbContext;
+        private readonly IQueryExecutor _queryExecutor;
         private readonly IEntityVersionPageModuleMapper _entityVersionPageModuleMapper;
 
         public GetPageRenderDetailsByIdQueryHandler(
             CofoundryDbContext dbContext,
+            IQueryExecutor queryExecutor,
             IEntityVersionPageModuleMapper entityVersionPageModuleMapper
             )
         {
             _dbContext = dbContext;
+            _queryExecutor = queryExecutor;
             _entityVersionPageModuleMapper = entityVersionPageModuleMapper;
         }
 
@@ -31,18 +39,31 @@ namespace Cofoundry.Domain
 
         #region public methods
 
+        public PageRenderDetails Execute(GetPageRenderDetailsByIdQuery query, IExecutionContext executionContext)
+        {
+            var dbPage = QueryPage(query).FirstOrDefault();
+            if (dbPage == null) return null;
+            var page = Mapper.Map<PageRenderDetails>(dbPage);
+            page.PageRoute = _queryExecutor.GetById<PageRoute>(page.PageId, executionContext);
+
+            var dbModules = QueryModules(page).ToList();
+            var allModuleTypes = _queryExecutor.GetAll<PageModuleTypeSummary>(executionContext);
+            _entityVersionPageModuleMapper.MapSections(dbModules, page.Sections, allModuleTypes, query.WorkFlowStatus);
+
+            return page;
+        }
+
         public async Task<PageRenderDetails> ExecuteAsync(GetPageRenderDetailsByIdQuery query, IExecutionContext executionContext)
         {
-            var page = await GetPage(query);
-            if (page == null) return null;
+            var dbPage = await QueryPage(query).FirstOrDefaultAsync();
+            if (dbPage == null) return null;
+            var page = Mapper.Map<PageRenderDetails>(dbPage);
+            page.PageRoute = await _queryExecutor.GetByIdAsync<PageRoute>(page.PageId, executionContext);
 
-            var dbModules = await _dbContext
-                .PageVersionModules
-                .AsNoTracking()
-                .Where(m => m.PageVersionId == page.PageVersionId)
-                .ToListAsync();
+            var dbModules = await QueryModules(page).ToListAsync();
+            var allModuleTypes = await _queryExecutor.GetAllAsync<PageModuleTypeSummary>(executionContext);
 
-            await _entityVersionPageModuleMapper.MapSectionsAsync(dbModules, page.Sections, query.WorkFlowStatus, executionContext);
+            _entityVersionPageModuleMapper.MapSections(dbModules, page.Sections, allModuleTypes, query.WorkFlowStatus);
 
             return page;
         }
@@ -51,7 +72,7 @@ namespace Cofoundry.Domain
 
         #region private helpers
 
-        private async Task<PageRenderDetails> GetPage(GetPageRenderDetailsByIdQuery query)
+        private IQueryable<PageVersion> QueryPage(GetPageRenderDetailsByIdQuery query)
         {
             IQueryable<PageVersion> dbQuery = _dbContext
                 .PageVersions
@@ -84,9 +105,15 @@ namespace Cofoundry.Domain
                     throw new ArgumentException("Unknown WorkFlowStatusQuery: " + query.WorkFlowStatus);
             }
 
-            var dbResult = await dbQuery.FirstOrDefaultAsync();
-            var result = Mapper.Map<PageRenderDetails>(dbResult);
-            return result;
+            return dbQuery;
+        }
+
+        private IQueryable<PageVersionModule> QueryModules(PageRenderDetails page)
+        {
+            return _dbContext
+                .PageVersionModules
+                .AsNoTracking()
+                .Where(m => m.PageVersionId == page.PageVersionId);
         }
 
         #endregion

@@ -664,7 +664,9 @@
     <Compile Include="Domain\Pages\Queries\GetPageEntityMicroSummariesByIdRangeQueryHandler.cs" />
     <Compile Include="Domain\PageModuleTypes\Queries\GetPageModuleTypeDetailsByIdQueryHandler.cs" />
     <Compile Include="Domain\PageModuleTypes\Queries\GetPageModuleTypeSummaryByIdHandler.cs" />
+    <Compile Include="Domain\Pages\Queries\GetPageRenderDetailsByIdRangeQuery.cs" />
     <Compile Include="Domain\Pages\Queries\GetPageRenderDetailsByIdQuery.cs" />
+    <Compile Include="Domain\Pages\Queries\GetPageRenderDetailsByIdRangeQueryHandler.cs" />
     <Compile Include="Domain\Pages\Queries\GetPageRenderDetailsByIdQueryHandler.cs" />
     <Compile Include="Domain\Pages\Queries\GetPageRouteByIdQueryHandler.cs" />
     <Compile Include="Domain\Pages\Queries\GetPageRoutesByIdRangeQueryHandler.cs" />

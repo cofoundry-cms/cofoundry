@@ -11,6 +11,22 @@ namespace Cofoundry.Domain
 {
     public class GetCustomEntityRenderDetailsByIdQuery : IQuery<CustomEntityRenderDetails>, IValidatableObject
     {
+        public GetCustomEntityRenderDetailsByIdQuery() { }
+
+        /// <summary>
+        /// Initializes the query with the specified parameters.
+        /// </summary>
+        /// <param name="customEntityId">CustomEntityId of the custom entity to get.</param>
+        /// <param name="workFlowStatus">Used to determine which version of the page to include data for.</param>
+        public GetCustomEntityRenderDetailsByIdQuery(int customEntityId, WorkFlowStatusQuery? workFlowStatus = null)
+        {
+            CustomEntityId = customEntityId;
+            if (workFlowStatus.HasValue)
+            {
+                WorkFlowStatus = workFlowStatus.Value;
+            }
+        }
+
         [Required]
         [PositiveInteger]
         public int CustomEntityId { get; set; }

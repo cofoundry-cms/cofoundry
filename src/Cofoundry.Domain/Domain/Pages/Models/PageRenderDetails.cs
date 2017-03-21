@@ -26,6 +26,7 @@ namespace Cofoundry.Domain
         public WorkFlowStatus WorkFlowStatus { get; set; }
 
         public OpenGraphData OpenGraph { get; set; }
+        public PageRoute PageRoute { get; set; }
 
         public PageTemplateMicroSummary Template { get; set; }
         public IEnumerable<PageSectionRenderDetails> Sections { get; set; }

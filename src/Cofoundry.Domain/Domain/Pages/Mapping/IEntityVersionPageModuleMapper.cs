@@ -13,7 +13,12 @@ namespace Cofoundry.Domain
     /// </summary>
     public interface IEntityVersionPageModuleMapper
     {
-        Task MapSectionsAsync<TModuleRenderDetails>(IEnumerable<IEntityVersionPageModule> dbModules, IEnumerable<IEntitySectionRenderDetails<TModuleRenderDetails>> sections, WorkFlowStatusQuery workflowStatus, IExecutionContext executionContext)
+        void MapSections<TModuleRenderDetails>(
+            IEnumerable<IEntityVersionPageModule> dbModules, 
+            IEnumerable<IEntitySectionRenderDetails<TModuleRenderDetails>> sections, 
+            IEnumerable<PageModuleTypeSummary> allModuleTypes,
+            WorkFlowStatusQuery workflowStatus
+            )
             where TModuleRenderDetails : IEntityVersionPageModuleRenderDetails, new();
 
         /// <summary>
