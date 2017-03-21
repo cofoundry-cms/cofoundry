@@ -66,7 +66,7 @@ namespace Cofoundry.Domain
                     RootEntityTitle = v.Title,
                     EntityDefinitionName = v.CustomEntity.CustomEntityDefinition.EntityDefinition.Name,
                     EntityDefinitionCode = v.CustomEntity.CustomEntityDefinition.EntityDefinition.EntityDefinitionCode,
-                    IsPreviousVersion = v.WorkFlowStatusId != (int)WorkFlowStatus.Published || v.WorkFlowStatusId != (int)WorkFlowStatus.Draft
+                    IsPreviousVersion = v.WorkFlowStatusId != (int)WorkFlowStatus.Published && v.WorkFlowStatusId != (int)WorkFlowStatus.Draft
                 });
 
             return dbQuery;

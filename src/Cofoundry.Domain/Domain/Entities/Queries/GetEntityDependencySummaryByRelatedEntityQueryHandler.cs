@@ -66,7 +66,11 @@ namespace Cofoundry.Domain
 
                     var entityDependencySummary = new EntityDependencySummary();
                     entityDependencySummary.Entity = entityMicroSummary.Value;
-                    entityDependencySummary.CanDelete = dbDependency.RelatedEntityCascadeActionId != (int)RelatedEntityCascadeAction.None;
+
+                    // relations for previous versions can be removed even when they are required.
+                    entityDependencySummary.CanDelete = 
+                        dbDependency.RelatedEntityCascadeActionId != (int)RelatedEntityCascadeAction.None 
+                        || entityDependencySummary.Entity.IsPreviousVersion;
 
                     allRelatedEntities.Add(entityDependencySummary);
                 }

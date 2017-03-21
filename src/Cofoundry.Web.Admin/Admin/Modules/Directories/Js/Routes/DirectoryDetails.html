@@ -7,18 +7,16 @@
           cms-loading="vm.formLoadState.isLoading">
 
     <!-- Default toolbar -->
-    <cms-page-actions ng-show="!vm.editMode">
+    <cms-page-actions ng-show="!vm.editMode && vm.webDirectory.depth !== 0">
 
         <cms-button class="main-cta"
                     cms-text="Edit"
                     ng-click="vm.edit()"
-                    ng-show="!vm.editMode && vm.webDirectory.depth !== 0"
                     ng-disabled="vm.globalLoadState.isLoading"></cms-button>
-
-        <cms-button-submit cms-text="Save"
-                           ng-show="vm.editMode"
-                           ng-disabled="vm.mainForm.$invalid || vm.globalLoadState.isLoading"
-                           cms-loading="vm.saveLoadState.isLoading"></cms-button-submit>
+        
+        <cms-button cms-text="Delete"
+                    ng-click="vm.deleteDirectory()"
+                    ng-disabled="vm.globalLoadState.isLoading"></cms-button>
 
     </cms-page-actions>
 
@@ -26,19 +24,21 @@
     <cms-page-actions ng-show="vm.editMode">
 
         <cms-button-submit cms-text="Save"
-                           ng-show="vm.editMode"
                            ng-disabled="vm.mainForm.$invalid || vm.globalLoadState.isLoading"
                            cms-loading="vm.saveLoadState.isLoading"></cms-button-submit>
 
         <cms-button cms-text="Cancel"
                     ng-click="vm.cancel()"
-                    ng-show="vm.editMode"
                     ng-disabled="vm.globalLoadState.isLoading"></cms-button>
 
     </cms-page-actions>
 
     <!-- Scrollable content area -->
     <cms-page-body cms-content-type="form">
+
+        <cms-warning-message ng-show="vm.webDirectory.depth === 0">
+            The root directory cannot be modified.
+        </cms-warning-message>
 
         <cms-form-status></cms-form-status>
 

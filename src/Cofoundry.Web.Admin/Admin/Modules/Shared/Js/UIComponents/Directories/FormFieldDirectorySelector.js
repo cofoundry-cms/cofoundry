@@ -49,7 +49,7 @@ function (
 
         directoryService.getAll().then(function (webDirectories) {
             vm.webDirectories = webDirectories;
-            console.log(webDirectories);
+
             if (vm.onLoaded) vm.onLoaded();
         });
     }

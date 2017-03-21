@@ -44,8 +44,11 @@ function (
 
             var optionsWatch = scope.$watch('vm.options', function () {
                 bindDisplayValue();
-                // remove watch
-                optionsWatch();
+
+                if (vm.options) {
+                    // remove watch
+                    optionsWatch();
+                }
             });
 
             scope.$watch('vm.model', bindDisplayValue);

@@ -132,7 +132,7 @@ function (
     }
 
     function redirectToList() {
-        $location.path('/directories');
+        $location.path('');
     }
 
     function setLoadingOn(loadState) {
