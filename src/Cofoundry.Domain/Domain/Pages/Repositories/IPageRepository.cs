@@ -138,6 +138,8 @@ namespace Cofoundry.Domain
         /// <param name="executionContext">Optional execution context to use when executing the query. Useful if you need to temporarily elevate your permission level.</param>
         Task<IDictionary<int, PageSummary>> GetPageSummariesByPageIdAsync(IEnumerable<int> pageIds, IExecutionContext executionContext = null);
 
+        PagedQueryResult<PageSummary> SearchPageSummaries(SearchPageSummariesQuery query, IExecutionContext executionContext = null);
+
         Task<PagedQueryResult<PageSummary>> SearchPageSummariesAsync(SearchPageSummariesQuery query, IExecutionContext executionContext = null);
 
         #endregion

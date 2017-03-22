@@ -227,6 +227,11 @@ namespace Cofoundry.Domain
             return _queryExecutor.ExecuteAsync(new GetPageSummariesByIdRangeQuery(pageIds), executionContext);
         }
 
+        public PagedQueryResult<PageSummary> SearchPageSummaries(SearchPageSummariesQuery query, IExecutionContext executionContext = null)
+        {
+            return _queryExecutor.Execute(query, executionContext);
+        }
+
         public Task<PagedQueryResult<PageSummary>> SearchPageSummariesAsync(SearchPageSummariesQuery query, IExecutionContext executionContext = null)
         {
             return _queryExecutor.ExecuteAsync(query, executionContext);
