@@ -151,6 +151,14 @@ namespace Cofoundry.Core.Web
         /// <summary>
         /// Remove HTML tags from string
         /// </summary>
+        public string StripHtml(IHtmlString source)
+        {
+            return StripHtml(source?.ToString());
+        }
+
+        /// <summary>
+        /// Remove HTML tags from string
+        /// </summary>
         /// <see cref="http://www.dotnetperls.com/remove-html-tags"/>
         public string StripHtml(string source)
         {

@@ -33,5 +33,10 @@ namespace Cofoundry.Core.Web
         /// Takes a raw source and removes all HTML tags
         /// </summary>
         string StripHtml(string source);
+
+        /// <summary>
+        /// Takes a raw source and removes all HTML tags
+        /// </summary>
+        string StripHtml(IHtmlString source);
     }
 }
