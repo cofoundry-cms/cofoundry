@@ -53,7 +53,11 @@ namespace Cofoundry.Domain
         /// Collection of mapped display models, wrapped in an output class that
         /// can be used to identify them.
         /// </returns>
-        public List<PageModuleDisplayModelMapperOutput> MapDisplayModel(string typeName, IEnumerable<IEntityVersionPageModule> versionModules, WorkFlowStatusQuery workflowStatus)
+        public List<PageModuleDisplayModelMapperOutput> MapDisplayModel(
+            string typeName, 
+            IEnumerable<IEntityVersionPageModule> versionModules, 
+            WorkFlowStatusQuery workflowStatus
+            )
         {
             // Find the data-provider class for this type of module
             Type modelType = _moduleDataModelTypeFactory.CreateByPageModuleTypeFileName(typeName);
@@ -74,10 +78,12 @@ namespace Cofoundry.Domain
             }
             else
             {
+                var moduleWorkflowStatus = TranslateWorkFlowStatusForModules(workflowStatus);
+
                 // We have to use a mapping class to do some custom mapping
                 var displayModels = (List<PageModuleDisplayModelMapperOutput>)_mapGenericMethod
                     .MakeGenericMethod(modelType)
-                    .Invoke(this, new object[] { versionModules, workflowStatus });
+                    .Invoke(this, new object[] { versionModules, moduleWorkflowStatus });
 
                 return displayModels;
             }
@@ -95,7 +101,11 @@ namespace Cofoundry.Domain
         /// the same workflow status.
         /// </param>
         /// <returns>Mapped display model.</returns>
-        public IPageModuleDisplayModel MapDisplayModel(string typeName, IEntityVersionPageModule versionModule, WorkFlowStatusQuery workflowStatus)
+        public IPageModuleDisplayModel MapDisplayModel(
+            string typeName,
+            IEntityVersionPageModule versionModule, 
+            WorkFlowStatusQuery workflowStatus
+            )
         {
             return MapDisplayModel(typeName, new IEntityVersionPageModule[] { versionModule }, workflowStatus)
                 .Select(m => m.DisplayModel)
@@ -119,6 +129,24 @@ namespace Cofoundry.Domain
         #endregion
 
         #region privates
+
+        /// <summary>
+        /// When working with child entities, the WorkFlosStatus we apply to
+        /// them is not neccessarily the status used to query the parent. If we are 
+        /// loading a page using the Draft status, then we cannot expect that all 
+        /// dependencies should have a draft version, so we re-write it to Latest.
+        /// The same applies if we're loading a specific version.
+        /// </summary>
+        /// <param name="workflowStatus">The original workflow status of the parent entity.</param>
+        private WorkFlowStatusQuery TranslateWorkFlowStatusForModules(WorkFlowStatusQuery workflowStatus)
+        {
+            if (workflowStatus == WorkFlowStatusQuery.Draft || workflowStatus == WorkFlowStatusQuery.SpecificVersion)
+            {
+                workflowStatus = WorkFlowStatusQuery.Latest;
+            }
+
+            return workflowStatus;
+        }
 
         private List<PageModuleDisplayModelMapperOutput> MapGeneric<T>(IEnumerable<IEntityVersionPageModule> versionModules, WorkFlowStatusQuery workflowStatus) where T : IPageModuleDataModel
         {
