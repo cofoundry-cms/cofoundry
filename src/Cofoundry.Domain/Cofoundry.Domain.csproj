@@ -709,6 +709,7 @@
     <Compile Include="Domain\PageTemplates\Commands\RegisterPageTemplatesCommand.cs" />
     <Compile Include="Domain\PageModuleTypes\Exceptions\PageModuleTypeRegistrationException.cs" />
     <Compile Include="Domain\PageTemplates\Exceptions\PageTemplateRegistrationException.cs" />
+    <Compile Include="Domain\PageTemplates\Mapping\IPageTemplateCustomEntityTypeMapper.cs" />
     <Compile Include="Domain\PageTemplates\Mapping\PageTemplateCustomEntityTypeMapper.cs" />
     <Compile Include="Domain\PageTemplates\Mapping\PageTemplateCustomEntityTypeValueResolver.cs" />
     <Compile Include="Domain\PageTemplates\Mapping\PageTemplateSectionMapper.cs" />

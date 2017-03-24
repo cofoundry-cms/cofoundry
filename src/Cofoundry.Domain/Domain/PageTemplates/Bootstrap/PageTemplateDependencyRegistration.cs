@@ -13,9 +13,8 @@ namespace Cofoundry.Domain.Bootstrap
         {
             container
                 .RegisterType<PageTemplateSectionMapper, PageTemplateSectionMapper>()
-                .RegisterType<PageTemplateCustomEntityTypeMapper, PageTemplateCustomEntityTypeMapper>()
+                .RegisterType<IPageTemplateCustomEntityTypeMapper, PageTemplateCustomEntityTypeMapper>()
                 .RegisterType<PageTemplateCustomEntityTypeValueResolver, PageTemplateCustomEntityTypeValueResolver>()
-
                 ;
         }
     }
