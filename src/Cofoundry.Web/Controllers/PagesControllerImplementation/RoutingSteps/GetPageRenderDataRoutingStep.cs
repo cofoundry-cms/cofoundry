@@ -51,7 +51,7 @@ namespace Cofoundry.Web
             // If we can't find any page data, then return a 404
             if (state.PageData == null)
             {
-                state.Result = _notFoundViewHelper.GetView();
+                state.Result = await _notFoundViewHelper.GetViewAsync();
             }
         }
     }

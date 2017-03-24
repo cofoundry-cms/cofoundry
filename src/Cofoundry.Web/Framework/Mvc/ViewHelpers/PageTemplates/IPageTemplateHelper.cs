@@ -8,7 +8,7 @@ using System.Web.Mvc;
 
 namespace Cofoundry.Web
 {
-    public interface IPageTemplateHelper<TModel>
+    public interface IPageTemplateHelper<out TModel>
         where TModel : IEditablePageViewModel
     {
         HtmlHelper HtmlHelper { get; }

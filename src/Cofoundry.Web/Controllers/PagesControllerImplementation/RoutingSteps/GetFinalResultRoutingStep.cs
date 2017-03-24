@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Web.Mvc;
 using Cofoundry.Domain;
 using Cofoundry.Domain.CQS;
+using System.Reflection;
 
 namespace Cofoundry.Web
 {
@@ -16,18 +17,20 @@ namespace Cofoundry.Web
     /// </summary>
     public class GetFinalResultRoutingStep : IGetFinalResultRoutingStep
     {
+        private static readonly MethodInfo _methodInfo_GenericBuildCustomEntityModelAsync = typeof(GetFinalResultRoutingStep).GetMethod(nameof(GenericBuildCustomEntityModelAsync), BindingFlags.NonPublic | BindingFlags.Instance);
+
         private readonly IQueryExecutor _queryExecutor;
-        private readonly IPageViewModelMapper _pageViewModelMapper;
+        private readonly IPageViewModelBuilder _pageViewModelBuilder;
         private readonly IPageResponseDataCache _pageRenderDataCache;
 
         public GetFinalResultRoutingStep(
             IQueryExecutor queryExecutor,
-            IPageViewModelMapper pageViewModelMapper,
+            IPageViewModelBuilder pageViewModelBuilder,
             IPageResponseDataCache pageRenderDataCache
             )
         {
             _queryExecutor = queryExecutor;
-            _pageViewModelMapper = pageViewModelMapper;
+            _pageViewModelBuilder = pageViewModelBuilder;
             _pageRenderDataCache = pageRenderDataCache;
         }
 
@@ -46,18 +49,24 @@ namespace Cofoundry.Web
             {
                 case PageType.NotFound:
                     controller.Response.StatusCode = (int)HttpStatusCode.NotFound;
-                    vm = _pageViewModelMapper.Map(state.PageData, state.VisualEditorMode);
+                    // Not sure why we're not using a NotFoundViewModel here, but this is old
+                    // and untested functionality. Content managable not found pages will need to be looked at at a later date
+                    var notFoundPageParams = new PageViewModelBuilderParameters(state.PageData, state.VisualEditorMode);
+                    vm = await _pageViewModelBuilder.BuildPageViewModelAsync(notFoundPageParams);
                     break;
                 case PageType.CustomEntityDetails:
                     var model = await GetCustomEntityModel(state);
-                    vm = _pageViewModelMapper.MapCustomEntityModel(state.PageData.Template.CustomEntityModelType, state.PageData, model, state.VisualEditorMode);
+                    var customEntityParams = new CustomEntityDetailsPageViewModelBuilderParameters(state.PageData, state.VisualEditorMode, model);
+
+                    vm = await BuildCustomEntityViewModelAsync(state.PageData.Template.CustomEntityModelType, customEntityParams);
                     break;
                 //case PageType.Error:
                 //    Response.StatusCode = (int)HttpStatusCode.InternalServerError;
-                //    vm = _pageViewModelMapper.Map(page, siteViewerMode);
+                //    vm = _pageViewModelMapper.MapPage(page, siteViewerMode);
                 //    break;
                 default:
-                    vm = _pageViewModelMapper.Map(state.PageData, state.VisualEditorMode);
+                    var pageParams = new PageViewModelBuilderParameters(state.PageData, state.VisualEditorMode);
+                    vm = await _pageViewModelBuilder.BuildPageViewModelAsync(pageParams);
                     break;
             }
 
@@ -140,6 +149,26 @@ namespace Cofoundry.Web
             }
             var model = await _queryExecutor.ExecuteAsync(query);
             return model;
+        }
+
+        private async Task<IEditablePageViewModel> BuildCustomEntityViewModelAsync(
+            Type displayModelType,
+            CustomEntityDetailsPageViewModelBuilderParameters mappingParameters
+            )
+        {
+            var task = (Task<IEditablePageViewModel>)_methodInfo_GenericBuildCustomEntityModelAsync
+                .MakeGenericMethod(displayModelType)
+                .Invoke(this, new object[] { mappingParameters });
+
+            return await task;
+        }
+
+        private async Task<IEditablePageViewModel> GenericBuildCustomEntityModelAsync<TDisplayModel>(
+            CustomEntityDetailsPageViewModelBuilderParameters mappingParameters
+            ) where TDisplayModel : ICustomEntityDetailsDisplayViewModel
+        {
+            var result = await _pageViewModelBuilder.BuildCustomEntityModelAsync<TDisplayModel>(mappingParameters);
+            return result;
         }
     }
 }

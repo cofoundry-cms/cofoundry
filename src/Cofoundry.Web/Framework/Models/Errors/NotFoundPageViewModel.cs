@@ -6,7 +6,7 @@ using Cofoundry.Domain;
 
 namespace Cofoundry.Web
 {
-    public class NotFoundPageViewModel : IPageWithMetaDataViewModel
+    public class NotFoundPageViewModel : INotFoundPageViewModel
     {
         public string PageTitle { get; set; }
         

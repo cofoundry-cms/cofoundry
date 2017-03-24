@@ -31,7 +31,7 @@ namespace Cofoundry.Web
 
         public ICustomEntityTemplateSectionTagBuilder<TModel> Create<TModel>(
             HtmlHelper htmlHelper,
-            CustomEntityDetailsPageViewModel<TModel> customEntityViewModel, 
+            ICustomEntityDetailsPageViewModel<TModel> customEntityViewModel, 
             string sectionName
             )
             where TModel : ICustomEntityDetailsDisplayViewModel
