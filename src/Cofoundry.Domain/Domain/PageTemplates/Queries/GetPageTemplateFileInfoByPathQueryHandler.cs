@@ -89,10 +89,15 @@ namespace Cofoundry.Domain
                 {
                     if (parseCustomModelType)
                     {
+                        // Check for model type on first line only
                         SetCustomModelTypeFields(pageTemplateFileInfo, line, executionContext);
-                        parseCustomModelType = false;
+                        if (pageTemplateFileInfo.CustomEntityDefinition != null)
+                        {
+                            parseCustomModelType = false;
+                        }
                     }
-                    else if (line.Contains(PLACEHOLDER_FUNC))
+
+                    if (line.Contains(PLACEHOLDER_FUNC))
                     {
                         var sectionName = ParseFunctionParameter(line, PLACEHOLDER_FUNC);
                         sections.Add(new PageTemplateFileSection() { Name = sectionName });
@@ -139,17 +144,17 @@ namespace Cofoundry.Domain
 
         private void SetCustomModelTypeFields(PageTemplateFileInfo pageTemplateFileInfo, string line, IExecutionContext ex)
         {
-            const string CUSTOM_ENTITY_MODEL_REGEX = @"CustomEntityDetailsPageViewModel<(\w+)";
+            // This regex find models with generic parameters and captures the last generic type
+            // This could be the custom entity display model type and may have a namespace prefix
+            const string CUSTOM_ENTITY_MODEL_REGEX = @"\s*@(?:inherits|model)\s+[\w+<.]*<([\w\.]+)";
 
             var match = Regex.Match(line, CUSTOM_ENTITY_MODEL_REGEX);
             if (match.Success)
             {
+                // Try and find a matching custom entity model type.
                 var modelType = _pageTemplateCustomEntityTypeMapper.Map(match.Groups[1].Value);
-
-                if (modelType == null)
-                {
-                    throw new ApplicationException("ICustomEntityDisplayModel<T> of type " + match.Value + " not registered");
-                }
+                
+                if (modelType == null) return;
 
                 var query = new GetCustomEntityDefinitionMicroSummaryByDisplayModelTypeQuery();
                 query.DisplayModelType = modelType;

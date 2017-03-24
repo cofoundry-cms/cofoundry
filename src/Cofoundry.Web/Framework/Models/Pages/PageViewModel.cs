@@ -5,7 +5,7 @@ using Cofoundry.Domain;
 
 namespace Cofoundry.Web
 {
-    public class PageViewModel : IPageWithMetaDataViewModel, IEditablePageViewModel, IPageRoutableViewModel
+    public class PageViewModel : IPageViewModel
     {
         public PageRenderDetails Page { get; set; }
         

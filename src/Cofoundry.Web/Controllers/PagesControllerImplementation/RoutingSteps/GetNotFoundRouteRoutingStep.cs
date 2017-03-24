@@ -45,7 +45,7 @@ namespace Cofoundry.Web
                 // If we still can't find a 404, fall back to the generic 404 view
                 if (state.PageRoutingInfo == null)
                 {
-                    state.Result = _notFoundViewHelper.GetView();
+                    state.Result = await _notFoundViewHelper.GetViewAsync();
                 }
             }
         }

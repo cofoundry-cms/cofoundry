@@ -282,7 +282,7 @@ namespace Cofoundry.Domain
             }
 
             // If custom entity page: compare details.
-            return pageTemplate.CustomEntityDefinitionCode != fileInfo.CustomEntityDefinition.CustomEntityDefinitionCode;
+            return pageTemplate.CustomEntityDefinitionCode != fileInfo.CustomEntityDefinition?.CustomEntityDefinitionCode;
         }
 
         private Task<bool> IsTemplateInUse(PageTemplate pageTemplate)

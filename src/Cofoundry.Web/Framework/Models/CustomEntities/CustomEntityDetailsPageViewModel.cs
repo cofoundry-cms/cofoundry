@@ -6,7 +6,8 @@ using System.Web;
 
 namespace Cofoundry.Web
 {
-    public class CustomEntityDetailsPageViewModel<TModel> : IPageWithMetaDataViewModel, IEditablePageViewModel, IPageRoutableViewModel where TModel : ICustomEntityDetailsDisplayViewModel
+    public class CustomEntityDetailsPageViewModel<TModel> : ICustomEntityDetailsPageViewModel<TModel>
+        where TModel : ICustomEntityDetailsDisplayViewModel
     {
         public string PageTitle
         {

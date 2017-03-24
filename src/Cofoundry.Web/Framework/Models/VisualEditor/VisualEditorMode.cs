@@ -6,8 +6,9 @@ using System.Threading.Tasks;
 namespace Cofoundry.Web
 {
     /// <summary>
-    /// The view modes of a page when logged into
-    /// the admin panel.
+    /// The view modes of a page when logged into the admin panel.
+    /// This indicates the version and editiability of the page or 
+    /// entity being loaded in the visual editor.
     /// </summary>
     public enum VisualEditorMode
     {

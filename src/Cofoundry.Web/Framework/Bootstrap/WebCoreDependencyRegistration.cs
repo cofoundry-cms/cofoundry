@@ -25,10 +25,13 @@ namespace Cofoundry.Web
                 .RegisterPerRequestScope<ICurrentUserViewHelper, CurrentUserViewHelper>()
                 .RegisterPerRequestScope<IPageTemplateViewFileLocator, PageTemplateViewFileLocator>()
                 .RegisterPerRequestScope<IHtmlSanitizerHelper, HtmlSanitizerHelper>()
-                .RegisterPerRequestScope<IPageViewModelMapper, PageViewModelMapper>()
                 .RegisterPerRequestScope<IJavascriptViewHelper, JavascriptViewHelper>()
                 .RegisterPerRequestScope<ICofoundryHtmlHelper, CofoundryHtmlHelper>()
                 .RegisterPerRequestScope<IUserSessionService, UserSessionService>()
+
+                .RegisterPerRequestScope<IPageViewModelMapper, PageViewModelMapper>()
+                .RegisterPerRequestScope<IPageViewModelFactory, PageViewModelFactory>()
+                .RegisterPerRequestScope<IPageViewModelBuilder, PageViewModelBuilder>()
                 
                 .RegisterPerRequestScope<IApiResponseHelper, ApiResponseHelper>()
 

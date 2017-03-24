@@ -20,7 +20,7 @@ namespace Cofoundry.Web
         #region constructor
 
         const string DEFAULT_TAG ="div";
-        private readonly CustomEntityDetailsPageViewModel<TModel> _customEntityViewModel;
+        private readonly ICustomEntityDetailsPageViewModel<TModel> _customEntityViewModel;
         private readonly HtmlHelper _htmlHelper;
         private readonly IPageModuleRenderer _moduleRenderer;
         private readonly IPageModuleDataModelTypeFactory _moduleDataModelTypeFactory;
@@ -32,7 +32,7 @@ namespace Cofoundry.Web
             IPageModuleDataModelTypeFactory moduleDataModelTypeFactory,
             IPageModuleTypeFileNameFormatter moduleTypeFileNameFormatter,
             HtmlHelper htmlHelper,
-            CustomEntityDetailsPageViewModel<TModel> customEntityViewModel, 
+            ICustomEntityDetailsPageViewModel<TModel> customEntityViewModel, 
             string sectionName)
         {
             Condition.Requires(sectionName).IsNotNullOrWhiteSpace();

@@ -6,42 +6,53 @@ using System.Web.Mvc;
 using Cofoundry.Domain.CQS;
 using Cofoundry.Domain;
 using System.Net;
+using System.Threading.Tasks;
 
 namespace Cofoundry.Web
 {
     /// <summary>
-    /// Helper designed to return ActionResults pointing to
-    /// the 404/NotFound page
+    /// Use this in your controllers to return a 404 result using the Cofoundry custom 404 page system. This 
+    /// has the added benefit of checking for Rewrite Rules and automatically redirecting.
     /// </summary>
     public class NotFoundViewHelper : INotFoundViewHelper
     {
         private readonly IQueryExecutor _queryExecutor;
+        private readonly IPageViewModelBuilder _pageViewModelBuilder;
 
         #region constructor
 
         public NotFoundViewHelper(
-            IQueryExecutor queryExecutor
+            IQueryExecutor queryExecutor,
+            IPageViewModelBuilder pageViewModelBuilder
             )
         {
             _queryExecutor = queryExecutor;
+            _pageViewModelBuilder = pageViewModelBuilder;
         }
 
         #endregion
 
         #region public methods
 
+        [Obsolete("This api has been removed in favor of an async version. Please use GetViewAsync instead.")]
         public ActionResult GetView()
+        {
+            throw new NotImplementedException("This api has been removed in favor of an async version. Please use GetViewAsync instead.");
+        }
+
+        /// <summary>
+        /// Use this in your controllers to return a 404 result using the Cofoundry custom 404 page system. This 
+        /// has the added benefit of checking for Rewrite Rules and automatically redirecting.
+        /// </summary>
+        public async Task<ActionResult> GetViewAsync()
         {
             var path = HttpContext.Current.Request.Path;
 
-            var result = GetRewriteResult(path);
+            var result = await GetRewriteResultAsync(path);
             if (result != null) return result;
 
-            var vm = new NotFoundPageViewModel
-            {
-                PageTitle = "Page not found",
-                MetaDescription = "Sorry, that page could not be found"
-            };
+            var vmParams = new NotFoundPageViewModelBuilderParameters(path);
+            var vm = await _pageViewModelBuilder.BuildNotFoundPageViewModelAsync(vmParams);
 
             HttpContext.Current.Response.StatusCode = (int)HttpStatusCode.NotFound;
 
@@ -60,10 +71,10 @@ namespace Cofoundry.Web
         /// If a page isnt found, check to see if we have a redirection rule
         /// in place for the url.
         /// </summary>
-        private ActionResult GetRewriteResult(string path)
+        private async Task<ActionResult> GetRewriteResultAsync(string path)
         {
             var query = new GetRewriteRuleByPathQuery() { Path = path };
-            var rewriteRule = _queryExecutor.Execute(query);
+            var rewriteRule = await _queryExecutor.ExecuteAsync(query);
 
             if (rewriteRule != null)
             {
