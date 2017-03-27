@@ -17,20 +17,22 @@
     @include opacity(0);
     @include border-radius(3px);
     @include transition(transform .25s, opacity .25s);
-    font-family:$fontstack-default;
+    @include transform(translateX(-50%));
+    font-family: $fontstack-default;
     font-size: 13px;
-    position:fixed;
-    top:35%;
-    left:50%;
-    width:400px;
-    height:250px;
-    background:#ebebeb;
-    z-index:1000;
-    margin-left:-200px;
-    overflow:hidden;
+    position: fixed;
+    top: 35%;
+    left: 50%;
+    width: 400px;
+    height: 250px;
+    background: #ebebeb;
+    z-index: 1000;
+    margin-left: -200px;
+    overflow: hidden;
+    max-width: 1100px;
 
     &.is-root-modal {
-        @include transform(scale(0.90,0.90));
+        @include transform(translateY(100%) translateX(-50%));
     }
 
     &.is-child-modal .modal-dialog {
@@ -39,16 +41,15 @@
     }
 
     &.modal-lg {
-        width:80%;
-        height:auto;
-        left:10%;
-        top:12%;
-        bottom:15%;
-        margin-left:0px;
+        width: 80%;
+        height: auto;
+        top: 12%;
+        bottom: 15%;
+        margin-left: 0px;
     }
 
     &.is-root-modal.modal--show {
-        @include transform(scale(1,1));
+        @include transform(translateY(0%) translateX(-50%));
         @include opacity(1);
     }
 
@@ -62,25 +63,25 @@
 
     .page-actions {
         margin-top: 80px;
-        z-index:2;
+        z-index: 2;
     }
 
     .page-body {
-        margin-left:170px;
+        margin-left: 170px;
         margin-top: 60px;
         position: absolute;
-        left:0;
+        left: 0;
         top: 0;
         bottom: 0;
         overflow-y: scroll;
         right: 2px;
 
         .form-wrap {
-            padding:20px 20px 20px 0;
+            padding: 20px 20px 20px 0;
         }
 
         @media screen and (min-width: 1200px) {
-            margin-left:195px;
+            margin-left: 195px;
         }
     }
 }

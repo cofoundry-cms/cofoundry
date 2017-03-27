@@ -4,7 +4,6 @@
         <thead>
             <tr>
                 <th>Version</th>
-                <th>Page title</th>
                 <th>Status</th>
                 <th>Created</th>
                 <th cms-table-column-actions ng-show="!vm.editMode">Actions</th>
@@ -14,9 +13,6 @@
             <tr ng-repeat="version in vm.versions">
                 <td>
                     {{version.pageVersionId}}
-                </td>
-                <td>
-                    {{ version.title }}
                 </td>
                 <td>
                     {{ version.workFlowStatus }}
