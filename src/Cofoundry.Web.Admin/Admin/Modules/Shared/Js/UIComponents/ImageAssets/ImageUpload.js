@@ -40,7 +40,7 @@ angular.module('cms.shared').directive('cmsImageUpload', [
         link: link
     };
 
-
+    
     /* LINK */
 
     function link(scope, el, attributes, ngModelController) {

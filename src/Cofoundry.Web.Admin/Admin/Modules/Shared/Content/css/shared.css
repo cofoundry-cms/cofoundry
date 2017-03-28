@@ -1274,17 +1274,21 @@ input[type="color"] {
   }
 }
 
-/* line 136, ../../Js/UIComponents/Layout/_layout.scss */
+/* line 135, ../../Js/UIComponents/Layout/_layout.scss */
+.page-body {
+  max-width: 900px;
+}
+/* line 138, ../../Js/UIComponents/Layout/_layout.scss */
 .page-body.form {
   margin-left: 150px;
   margin-top: 80px;
   margin-right: 20px;
 }
-/* line 142, ../../Js/UIComponents/Layout/_layout.scss */
+/* line 144, ../../Js/UIComponents/Layout/_layout.scss */
 .page-body.form fieldset legend {
   margin-bottom: 20px;
 }
-/* line 145, ../../Js/UIComponents/Layout/_layout.scss */
+/* line 147, ../../Js/UIComponents/Layout/_layout.scss */
 .page-body.form fieldset legend:before {
   -moz-transition: all 0.2s;
   -o-transition: all 0.2s;
@@ -1297,7 +1301,7 @@ input[type="color"] {
   left: 0;
   width: 100%;
 }
-/* line 155, ../../Js/UIComponents/Layout/_layout.scss */
+/* line 157, ../../Js/UIComponents/Layout/_layout.scss */
 .page-body.form fieldset:before {
   content: '';
   position: absolute;
@@ -1309,7 +1313,7 @@ input[type="color"] {
   height: 100%;
   min-height: 80px;
 }
-/* line 167, ../../Js/UIComponents/Layout/_layout.scss */
+/* line 169, ../../Js/UIComponents/Layout/_layout.scss */
 .page-body.form fieldset:after {
   -moz-transition: all 0.2s;
   -o-transition: all 0.2s;
@@ -1325,17 +1329,17 @@ input[type="color"] {
   z-index: 2;
   border-top: 3px solid #dddddd;
 }
-/* line 182, ../../Js/UIComponents/Layout/_layout.scss */
+/* line 184, ../../Js/UIComponents/Layout/_layout.scss */
 .page-body.with-header {
   margin-top: 70px;
 }
-/* line 186, ../../Js/UIComponents/Layout/_layout.scss */
+/* line 188, ../../Js/UIComponents/Layout/_layout.scss */
 .page-body fieldset {
   margin-bottom: 20px;
   position: relative;
   max-width: 800px;
 }
-/* line 191, ../../Js/UIComponents/Layout/_layout.scss */
+/* line 193, ../../Js/UIComponents/Layout/_layout.scss */
 .page-body fieldset legend {
   font-size: 150%;
   width: 100%;
@@ -1344,19 +1348,19 @@ input[type="color"] {
   position: relative;
   z-index: 10;
 }
-/* line 199, ../../Js/UIComponents/Layout/_layout.scss */
+/* line 201, ../../Js/UIComponents/Layout/_layout.scss */
 .page-body fieldset legend button {
   display: none;
   cursor: pointer;
   outline: none;
 }
-/* line 204, ../../Js/UIComponents/Layout/_layout.scss */
+/* line 206, ../../Js/UIComponents/Layout/_layout.scss */
 .page-body fieldset legend button i {
   font: normal normal normal 15px/1 FontAwesome;
   position: absolute;
   left: 0;
 }
-/* line 210, ../../Js/UIComponents/Layout/_layout.scss */
+/* line 212, ../../Js/UIComponents/Layout/_layout.scss */
 .page-body fieldset legend button.show {
   -moz-transition: color 0.3s;
   -o-transition: color 0.3s;
@@ -1374,19 +1378,19 @@ input[type="color"] {
   width: 45px;
   text-align: right;
 }
-/* line 224, ../../Js/UIComponents/Layout/_layout.scss */
+/* line 226, ../../Js/UIComponents/Layout/_layout.scss */
 .page-body fieldset legend button.show:hover {
   color: #2c263d;
 }
-/* line 228, ../../Js/UIComponents/Layout/_layout.scss */
+/* line 230, ../../Js/UIComponents/Layout/_layout.scss */
 .page-body fieldset legend button.show.active {
   color: #2c263d;
 }
-/* line 235, ../../Js/UIComponents/Layout/_layout.scss */
+/* line 237, ../../Js/UIComponents/Layout/_layout.scss */
 .page-body fieldset .help-inline {
   display: none;
 }
-/* line 240, ../../Js/UIComponents/Layout/_layout.scss */
+/* line 242, ../../Js/UIComponents/Layout/_layout.scss */
 .page-body fieldset.show-helpers .help-inline {
   -moz-border-radius: 3px;
   -webkit-border-radius: 3px;
@@ -1408,7 +1412,7 @@ input[type="color"] {
   z-index: 2;
   top: -25px;
 }
-/* line 256, ../../Js/UIComponents/Layout/_layout.scss */
+/* line 258, ../../Js/UIComponents/Layout/_layout.scss */
 .page-body fieldset.show-helpers .help-inline:before {
   -moz-transition: all 0.3s;
   -o-transition: all 0.3s;
@@ -1423,7 +1427,7 @@ input[type="color"] {
   border-top: 6px solid transparent;
   border-bottom: 6px solid #413851;
 }
-/* line 268, ../../Js/UIComponents/Layout/_layout.scss */
+/* line 270, ../../Js/UIComponents/Layout/_layout.scss */
 .page-body fieldset.show-helpers .help-inline:after {
   -moz-transition: all 0.3s;
   -o-transition: all 0.3s;
@@ -1438,17 +1442,17 @@ input[type="color"] {
   border-top: 5px solid transparent;
   border-bottom: 5px solid #fff;
 }
-/* line 280, ../../Js/UIComponents/Layout/_layout.scss */
+/* line 282, ../../Js/UIComponents/Layout/_layout.scss */
 .page-body fieldset.show-helpers .help-inline small {
   font-size: 95%;
   line-height: 105%;
 }
 @media screen and (min-width: 1200px) {
-  /* line 287, ../../Js/UIComponents/Layout/_layout.scss */
+  /* line 289, ../../Js/UIComponents/Layout/_layout.scss */
   .page-body fieldset.show-helpers .control-group-area {
     width: 72%;
   }
-  /* line 291, ../../Js/UIComponents/Layout/_layout.scss */
+  /* line 293, ../../Js/UIComponents/Layout/_layout.scss */
   .page-body fieldset.show-helpers .help-inline {
     margin: 0;
     width: 25%;
@@ -1458,7 +1462,7 @@ input[type="color"] {
     float: right;
     margin-bottom: 10px;
   }
-  /* line 300, ../../Js/UIComponents/Layout/_layout.scss */
+  /* line 302, ../../Js/UIComponents/Layout/_layout.scss */
   .page-body fieldset.show-helpers .help-inline:before {
     -moz-transition: all 0.3s;
     -o-transition: all 0.3s;
@@ -1473,7 +1477,7 @@ input[type="color"] {
     border-top: 6px solid transparent;
     border-bottom: 6px solid transparent;
   }
-  /* line 312, ../../Js/UIComponents/Layout/_layout.scss */
+  /* line 314, ../../Js/UIComponents/Layout/_layout.scss */
   .page-body fieldset.show-helpers .help-inline:after {
     -moz-transition: all 0.3s;
     -o-transition: all 0.3s;
@@ -1489,7 +1493,7 @@ input[type="color"] {
     border-bottom: 5px solid transparent;
   }
 }
-/* line 329, ../../Js/UIComponents/Layout/_layout.scss */
+/* line 331, ../../Js/UIComponents/Layout/_layout.scss */
 .page-body .control-group {
   overflow: hidden;
   *zoom: 1;
@@ -1498,7 +1502,7 @@ input[type="color"] {
   position: relative;
   z-index: 1;
 }
-/* line 336, ../../Js/UIComponents/Layout/_layout.scss */
+/* line 338, ../../Js/UIComponents/Layout/_layout.scss */
 .page-body .control-group:before {
   content: '';
   position: absolute;
@@ -1511,15 +1515,15 @@ input[type="color"] {
   right: 28%;
   left: 0;
 }
-/* line 350, ../../Js/UIComponents/Layout/_layout.scss */
+/* line 352, ../../Js/UIComponents/Layout/_layout.scss */
 .page-body .control-group:last-of-type:before {
   margin-bottom: 10px;
 }
-/* line 355, ../../Js/UIComponents/Layout/_layout.scss */
+/* line 357, ../../Js/UIComponents/Layout/_layout.scss */
 .page-body .control-group:hover {
   z-index: 9999;
 }
-/* line 359, ../../Js/UIComponents/Layout/_layout.scss */
+/* line 361, ../../Js/UIComponents/Layout/_layout.scss */
 .page-body .control-group .control-group-area {
   overflow: hidden;
   *zoom: 1;
@@ -1532,11 +1536,11 @@ input[type="color"] {
   background: #fff;
   padding: 0 20px 30px;
 }
-/* line 370, ../../Js/UIComponents/Layout/_layout.scss */
+/* line 372, ../../Js/UIComponents/Layout/_layout.scss */
 .page-body .control-group .control-group-area .table-wrap {
   border-top: 0px solid #d2d2d2;
 }
-/* line 374, ../../Js/UIComponents/Layout/_layout.scss */
+/* line 376, ../../Js/UIComponents/Layout/_layout.scss */
 .page-body .control-group .control-group-area label {
   display: block;
   font-size: 100%;
@@ -1544,7 +1548,7 @@ input[type="color"] {
   text-transform: uppercase;
   padding-bottom: 10px;
 }
-/* line 384, ../../Js/UIComponents/Layout/_layout.scss */
+/* line 386, ../../Js/UIComponents/Layout/_layout.scss */
 .page-body .control-group .control-group-area.editmode label:after {
   position: absolute;
   right: 28px;
@@ -1553,59 +1557,59 @@ input[type="color"] {
   content: '\f00c';
   color: #339900;
 }
-/* line 397, ../../Js/UIComponents/Layout/_layout.scss */
+/* line 399, ../../Js/UIComponents/Layout/_layout.scss */
 .page-body .control-group .control-group-area.required.editmode label:after {
   content: '\f069';
   color: #ff6600;
 }
-/* line 406, ../../Js/UIComponents/Layout/_layout.scss */
+/* line 408, ../../Js/UIComponents/Layout/_layout.scss */
 .page-body .control-group .control-group-area.invalid.editmode label:after {
   content: '\f069';
   color: #ff0000;
 }
-/* line 413, ../../Js/UIComponents/Layout/_layout.scss */
+/* line 415, ../../Js/UIComponents/Layout/_layout.scss */
 .page-body .control-group .control-group-area .controls {
   position: relative;
 }
-/* line 416, ../../Js/UIComponents/Layout/_layout.scss */
+/* line 418, ../../Js/UIComponents/Layout/_layout.scss */
 .page-body .control-group .control-group-area .controls .btn {
   display: inline-block;
 }
 @media screen and (min-width: 1200px) {
-  /* line 424, ../../Js/UIComponents/Layout/_layout.scss */
+  /* line 426, ../../Js/UIComponents/Layout/_layout.scss */
   .page-body.form {
     margin-left: 185px;
   }
 }
 
-/* line 430, ../../Js/UIComponents/Layout/_layout.scss */
+/* line 432, ../../Js/UIComponents/Layout/_layout.scss */
 .on-drag-hover {
   border-top: 2px solid #4af386;
   border-bottom: 2px solid #4af386;
 }
 
-/* line 435, ../../Js/UIComponents/Layout/_layout.scss */
+/* line 437, ../../Js/UIComponents/Layout/_layout.scss */
 [draggable] {
   cursor: move;
 }
 
-/* line 439, ../../Js/UIComponents/Layout/_layout.scss */
+/* line 441, ../../Js/UIComponents/Layout/_layout.scss */
 .dropdown-menu {
   background: #fff;
   left: 0;
 }
 
-/* line 444, ../../Js/UIComponents/Layout/_layout.scss */
+/* line 446, ../../Js/UIComponents/Layout/_layout.scss */
 .fa {
   font-size: 1.4em;
 }
-/* line 447, ../../Js/UIComponents/Layout/_layout.scss */
+/* line 449, ../../Js/UIComponents/Layout/_layout.scss */
 .fa.alert {
   color: #ff6600;
   margin-right: 5px;
 }
 
-/* line 453, ../../Js/UIComponents/Layout/_layout.scss */
+/* line 455, ../../Js/UIComponents/Layout/_layout.scss */
 .fa-picture-o, .btn-icon .fa-picture-o {
   font-size: 3em;
   color: #dddddd;
@@ -1847,6 +1851,10 @@ form.loading > *, table.loading > *, div.loading > *, fieldset.loading > * {
   -o-transition: -o-transform 0.25s, opacity 0.25s;
   -webkit-transition: -webkit-transform 0.25s, opacity 0.25s;
   transition: transform 0.25s, opacity 0.25s;
+  -moz-transform: translateX(-50%);
+  -ms-transform: translateX(-50%);
+  -webkit-transform: translateX(-50%);
+  transform: translateX(-50%);
   font-family: Tahoma, Geneva, sans-serif;
   font-size: 13px;
   position: fixed;
@@ -1858,15 +1866,16 @@ form.loading > *, table.loading > *, div.loading > *, fieldset.loading > * {
   z-index: 1000;
   margin-left: -200px;
   overflow: hidden;
+  max-width: 1100px;
 }
-/* line 32, ../../Js/UIComponents/Modals/_modals.scss */
+/* line 34, ../../Js/UIComponents/Modals/_modals.scss */
 .modal.is-root-modal {
-  -moz-transform: scale(0.9, 0.9);
-  -ms-transform: scale(0.9, 0.9);
-  -webkit-transform: scale(0.9, 0.9);
-  transform: scale(0.9, 0.9);
+  -moz-transform: translateY(100%) translateX(-50%);
+  -ms-transform: translateY(100%) translateX(-50%);
+  -webkit-transform: translateY(100%) translateX(-50%);
+  transform: translateY(100%) translateX(-50%);
 }
-/* line 36, ../../Js/UIComponents/Modals/_modals.scss */
+/* line 38, ../../Js/UIComponents/Modals/_modals.scss */
 .modal.is-child-modal .modal-dialog {
   -moz-transition: -moz-transform 0.25s, opacity 0.25s;
   -o-transition: -o-transform 0.25s, opacity 0.25s;
@@ -1877,42 +1886,41 @@ form.loading > *, table.loading > *, div.loading > *, fieldset.loading > * {
   -webkit-transform: translateY(100%);
   transform: translateY(100%);
 }
-/* line 41, ../../Js/UIComponents/Modals/_modals.scss */
+/* line 43, ../../Js/UIComponents/Modals/_modals.scss */
 .modal.modal-lg {
   width: 80%;
   height: auto;
-  left: 10%;
   top: 12%;
   bottom: 15%;
   margin-left: 0px;
 }
-/* line 50, ../../Js/UIComponents/Modals/_modals.scss */
+/* line 51, ../../Js/UIComponents/Modals/_modals.scss */
 .modal.is-root-modal.modal--show {
-  -moz-transform: scale(1, 1);
-  -ms-transform: scale(1, 1);
-  -webkit-transform: scale(1, 1);
-  transform: scale(1, 1);
+  -moz-transform: translateY(0%) translateX(-50%);
+  -ms-transform: translateY(0%) translateX(-50%);
+  -webkit-transform: translateY(0%) translateX(-50%);
+  transform: translateY(0%) translateX(-50%);
   filter: progid:DXImageTransform.Microsoft.Alpha(enabled=false);
   opacity: 1;
 }
-/* line 55, ../../Js/UIComponents/Modals/_modals.scss */
+/* line 56, ../../Js/UIComponents/Modals/_modals.scss */
 .modal.is-child-modal.modal--show {
   filter: progid:DXImageTransform.Microsoft.Alpha(enabled=false);
   opacity: 1;
 }
-/* line 58, ../../Js/UIComponents/Modals/_modals.scss */
+/* line 59, ../../Js/UIComponents/Modals/_modals.scss */
 .modal.is-child-modal.modal--show .modal-dialog {
   -moz-transform: translateY(0%);
   -ms-transform: translateY(0%);
   -webkit-transform: translateY(0%);
   transform: translateY(0%);
 }
-/* line 63, ../../Js/UIComponents/Modals/_modals.scss */
+/* line 64, ../../Js/UIComponents/Modals/_modals.scss */
 .modal .page-actions {
   margin-top: 80px;
   z-index: 2;
 }
-/* line 68, ../../Js/UIComponents/Modals/_modals.scss */
+/* line 69, ../../Js/UIComponents/Modals/_modals.scss */
 .modal .page-body {
   margin-left: 170px;
   margin-top: 60px;
@@ -1923,37 +1931,37 @@ form.loading > *, table.loading > *, div.loading > *, fieldset.loading > * {
   overflow-y: scroll;
   right: 2px;
 }
-/* line 78, ../../Js/UIComponents/Modals/_modals.scss */
+/* line 79, ../../Js/UIComponents/Modals/_modals.scss */
 .modal .page-body .form-wrap {
   padding: 20px 20px 20px 0;
 }
 @media screen and (min-width: 1200px) {
-  /* line 68, ../../Js/UIComponents/Modals/_modals.scss */
+  /* line 69, ../../Js/UIComponents/Modals/_modals.scss */
   .modal .page-body {
     margin-left: 195px;
   }
 }
 
-/* line 88, ../../Js/UIComponents/Modals/_modals.scss */
+/* line 89, ../../Js/UIComponents/Modals/_modals.scss */
 .modal-dialog {
   height: 100%;
 }
-/* line 91, ../../Js/UIComponents/Modals/_modals.scss */
+/* line 92, ../../Js/UIComponents/Modals/_modals.scss */
 .modal-dialog .search-filter {
   top: auto;
   right: auto;
 }
-/* line 95, ../../Js/UIComponents/Modals/_modals.scss */
+/* line 96, ../../Js/UIComponents/Modals/_modals.scss */
 .modal-dialog .search-filter:before, .modal-dialog .search-filter:after {
   right: auto;
   left: 10px;
 }
-/* line 100, ../../Js/UIComponents/Modals/_modals.scss */
+/* line 101, ../../Js/UIComponents/Modals/_modals.scss */
 .modal-dialog .search-filter:after {
   left: 9px;
 }
 
-/* line 106, ../../Js/UIComponents/Modals/_modals.scss */
+/* line 107, ../../Js/UIComponents/Modals/_modals.scss */
 .modal-header {
   -moz-border-radius-topleft: 3px;
   -webkit-border-top-left-radius: 3px;
@@ -1971,7 +1979,7 @@ form.loading > *, table.loading > *, div.loading > *, fieldset.loading > * {
   border-bottom: 1px solid #ebebeb;
   z-index: 10;
 }
-/* line 119, ../../Js/UIComponents/Modals/_modals.scss */
+/* line 120, ../../Js/UIComponents/Modals/_modals.scss */
 .modal-header .close {
   position: absolute;
   right: 10px;
@@ -1980,12 +1988,12 @@ form.loading > *, table.loading > *, div.loading > *, fieldset.loading > * {
   color: black;
 }
 
-/* line 128, ../../Js/UIComponents/Modals/_modals.scss */
+/* line 129, ../../Js/UIComponents/Modals/_modals.scss */
 .modal-content {
   padding-left: 20px;
 }
 
-/* line 132, ../../Js/UIComponents/Modals/_modals.scss */
+/* line 133, ../../Js/UIComponents/Modals/_modals.scss */
 .modal-body {
   position: absolute;
   top: 80px;
@@ -1994,7 +2002,7 @@ form.loading > *, table.loading > *, div.loading > *, fieldset.loading > * {
   line-height: 15px;
 }
 
-/* line 140, ../../Js/UIComponents/Modals/_modals.scss */
+/* line 141, ../../Js/UIComponents/Modals/_modals.scss */
 .modal-actions {
   position: absolute;
   bottom: 10px;
@@ -2005,7 +2013,7 @@ form.loading > *, table.loading > *, div.loading > *, fieldset.loading > * {
   padding-right: 20px;
   text-align: right;
 }
-/* line 150, ../../Js/UIComponents/Modals/_modals.scss */
+/* line 151, ../../Js/UIComponents/Modals/_modals.scss */
 .modal-actions .btn {
   display: inline-block;
 }
