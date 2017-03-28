@@ -488,7 +488,7 @@
   text-align: left;
 }
 /* line 84, ../../Sass/blocks/_mini-menu.scss */
-.cofoundry-sv__mini-menu__toggle img.logo {
+.cofoundry-sv__mini-menu__toggle img.cofoundry-sv__logo {
   display: block;
   position: relative;
   max-width: 30px;
