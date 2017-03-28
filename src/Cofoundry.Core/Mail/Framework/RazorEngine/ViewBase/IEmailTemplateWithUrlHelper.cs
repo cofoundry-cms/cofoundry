@@ -10,8 +10,8 @@ namespace Cofoundry.Core.Mail
     /// Used to mark up a RazorEngine base class with a url helper (e.g. EmailTemplateBase) 
     /// to allow the url helper to be injected.
     /// </summary>
-    public interface IEmailTemplateWithUrlHelper
-    {
-        RazorEngineUrlHelper Url { get; set; }
-    }
+    //public interface IEmailTemplateWithUrlHelper
+    //{
+    //    RazorEngineUrlHelper Url { get; set; }
+    //}
 }

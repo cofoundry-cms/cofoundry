@@ -3,9 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using HtmlAgilityPack;
 using System.Text;
-using System.Web;
 using System.Net;
-using System.Web.Security.AntiXss;
+using Microsoft.AspNetCore.Html;
 
 namespace Cofoundry.Core.Web
 {
@@ -36,7 +35,7 @@ namespace Cofoundry.Core.Web
 
         #endregion
 
-        public string Sanitize(IHtmlString source)
+        public string Sanitize(IHtmlContent source)
         {
             if (source == null) return string.Empty;
             HtmlSanitizationRuleSet ruleSet = null;
@@ -123,11 +122,11 @@ namespace Cofoundry.Core.Web
                             }
                             else if (a.Name == "class" || a.Name == "style")
                             {
-                                a.Value = AntiXssEncoder.CssEncode(a.Value);
+                                //a.Value = AntiXssEncoder.CssEncode(a.Value);
                             }
                             else
                             {
-                                a.Value = HttpUtility.HtmlAttributeEncode(HttpUtility.HtmlDecode(a.Value)); // amended to prevent double encoding
+                                //a.Value = HttpUtility.HtmlAttributeEncode(HttpUtility.HtmlDecode(a.Value)); // amended to prevent double encoding
                             }
                         }
                     }
@@ -151,9 +150,11 @@ namespace Cofoundry.Core.Web
         /// <summary>
         /// Remove HTML tags from string
         /// </summary>
-        public string StripHtml(IHtmlString source)
+        public string StripHtml(HtmlString content)
         {
-            return StripHtml(source?.ToString());
+            if (content == null) return null;
+            
+            return StripHtml(content?.Value);
         }
 
         /// <summary>
@@ -187,6 +188,7 @@ namespace Cofoundry.Core.Web
                     arrayIndex++;
                 }
             }
+
             return new string(array, 0, arrayIndex);
         }
         

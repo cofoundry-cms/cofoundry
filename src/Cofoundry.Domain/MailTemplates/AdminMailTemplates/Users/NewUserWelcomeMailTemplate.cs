@@ -1,4 +1,5 @@
 ﻿using Cofoundry.Core.Mail;
+using Microsoft.AspNetCore.Html;
 using System;
 using System.Collections.Generic;
 using System.Linq;

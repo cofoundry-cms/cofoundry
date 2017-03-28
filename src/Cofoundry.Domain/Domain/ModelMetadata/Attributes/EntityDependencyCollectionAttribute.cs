@@ -1,25 +1,21 @@
-﻿using System;
+﻿using Conditions;
+using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.ComponentModel.DataAnnotations;
-using System.Web.Mvc;
 using System.Reflection;
-using Conditions;
 
 namespace Cofoundry.Domain
 {
     /// <summary>
-    /// This can be used to decorate an integer id property that links to another entity. The entity
+    /// This can be used to decorate an integer id array property that links to a set of entities. The entity
     /// must have a definition that implements IDependableEntityDefinition.  Defining relations allow the system to
     /// detect and prevent entities used in required fields from being removed.
     /// </summary>
     [AttributeUsage(AttributeTargets.Property)]
-    public class EntityDependencyAttribute : Attribute, IEntityRelationAttribute
+    public class EntityDependencyCollectionAttribute : Attribute, IEntityRelationAttribute
     {
         #region constructors
 
-        public EntityDependencyAttribute(string entityDefinitionCode)
+        public EntityDependencyCollectionAttribute(string entityDefinitionCode)
         {
             Condition.Requires(entityDefinitionCode)
                 .IsNotNull()
@@ -37,12 +33,14 @@ namespace Cofoundry.Domain
             Condition.Requires(model).IsNotNull();
             Condition.Requires(propertyInfo).IsNotNull();
 
-            var isRequired = !(model is int?);
-            var id = (int?)propertyInfo.GetValue(model);
+            var ids = propertyInfo.GetValue(model) as int[];
 
-            if (id.HasValue)
+            if (ids != null)
             {
-                yield return new EntityDependency(EntityDefinitionCode, id.Value, isRequired);
+                foreach (var id in ids)
+                {
+                    yield return new EntityDependency(EntityDefinitionCode, id, false);
+                }
             }
         }
 

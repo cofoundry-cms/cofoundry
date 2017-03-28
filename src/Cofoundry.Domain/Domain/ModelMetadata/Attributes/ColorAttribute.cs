@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Web.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Metadata;
 
 namespace Cofoundry.Domain
 {
@@ -22,7 +22,7 @@ namespace Cofoundry.Domain
             ErrorMessage = "{0} must be a hexadecimal colour value e.g. '#EFEFEF' or '#fff'";
         }
 
-        public void Process(ModelMetadata modelMetaData)
+        public void Process(DisplayMetadata modelMetaData)
         {
             modelMetaData.TemplateHint = "Color";
         }

@@ -1,26 +1,21 @@
-﻿using System;
+﻿using Cofoundry.Core;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Metadata;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Web.Mvc;
-using Cofoundry.Domain;
-using Cofoundry.Core;
 
-namespace Cofoundry.Web
+namespace Cofoundry.Domain
 {
-    /// <summary>
-    /// A custom MetaData provider to enable extra attributes. Additonal attributes
-    /// should implement IMetadataAttribute.
-    /// </summary>
-    public class CofoundryModelMetadataProvider : DataAnnotationsModelMetadataProvider
+    public class CofoundryDisplayMetadataProvider : IDisplayMetadataProvider
     {
         #region constructor
 
-        private readonly IModelMetaDataDecorator[] _modelMetaDataDecorators;
+        private readonly IModelMetadataDecorator[] _modelMetaDataDecorators;
 
-        public CofoundryModelMetadataProvider(
-            IModelMetaDataDecorator[] modelMetaDataDecorators
+        public CofoundryDisplayMetadataProvider(
+            IModelMetadataDecorator[] modelMetaDataDecorators
             )
         {
             _modelMetaDataDecorators = modelMetaDataDecorators;
@@ -28,21 +23,18 @@ namespace Cofoundry.Web
 
         #endregion
 
-        protected override ModelMetadata CreateMetadata(
-            IEnumerable<Attribute> attributes,
-            Type containerType,
-            Func<object> modelAccessor,
-            Type modelType,
-            string propertyName)
+        public void CreateDisplayMetadata(DisplayMetadataProviderContext context)
         {
-            var modelMetadata = base.CreateMetadata(attributes, containerType, modelAccessor, modelType, propertyName);
 
-            if (modelMetadata.DisplayName == null && !string.IsNullOrEmpty(propertyName))
+            var modelMetadata = context.DisplayMetadata;
+
+            //if (modelMetadata.DisplayName == null && !string.IsNullOrEmpty(propertyName))
+            if (modelMetadata.DisplayName == null && !string.IsNullOrEmpty(context.Key.Name))
             {
-                modelMetadata.DisplayName = HumanizePropertyName(propertyName);
+                modelMetadata.DisplayName = () => HumanizePropertyName(context.Key.Name);
             }
 
-            foreach (var attribute in attributes)
+            foreach (var attribute in context.Attributes)
             {
                 if (attribute is IMetadataAttribute)
                 {
@@ -58,8 +50,6 @@ namespace Cofoundry.Web
                     }
                 }
             }
-
-            return modelMetadata;
         }
 
         /// <summary>

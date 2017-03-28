@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.ComponentModel.DataAnnotations;
-using System.Web.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Metadata;
 using System.Reflection;
 using Conditions;
 
@@ -38,7 +38,7 @@ namespace Cofoundry.Domain
 
         #region interface implementation
 
-        public void Process(ModelMetadata modelMetaData)
+        public void Process(DisplayMetadata modelMetaData)
         {
             modelMetaData
                 .AddAdditionalValueIfNotEmpty("Tags", Tags)

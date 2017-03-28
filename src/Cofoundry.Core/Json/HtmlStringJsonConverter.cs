@@ -1,4 +1,5 @@
 ﻿using Cofoundry.Core.AutoMapper;
+using Microsoft.AspNetCore.Html;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -13,17 +14,17 @@ namespace Cofoundry.Core.Json
     {
         public override bool CanConvert(Type objectType)
         {
-            return typeof(IHtmlString).IsAssignableFrom(objectType);
+            return typeof(HtmlString).IsAssignableFrom(objectType);
         }
 
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
         {
             var value = reader.Value as string;
 
-            if (objectType == typeof(ProjectableHtmlString))
-            {
-                return new ProjectableHtmlString(value);
-            }
+            //if (objectType == typeof(ProjectableHtmlString))
+            //{
+            //    return new ProjectableHtmlString(value);
+            //}
 
             if (objectType == typeof(HtmlString))
             {

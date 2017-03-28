@@ -1,11 +1,11 @@
 ﻿using Conditions;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Metadata;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
-using System.Web.Mvc;
 
 namespace Cofoundry.Domain
 {
@@ -22,7 +22,7 @@ namespace Cofoundry.Domain
             CustomEntityDefinitionCode = customEntityDefinitionCode;
         }
 
-        public void Process(ModelMetadata modelMetaData)
+        public void Process(DisplayMetadata modelMetaData)
         {
             modelMetaData
                 .AddAdditionalValueIfNotEmpty("CustomEntityDefinitionCode", CustomEntityDefinitionCode)

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
-using System.Web.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Metadata;
 
 namespace Cofoundry.Domain
 {
@@ -23,7 +23,7 @@ namespace Cofoundry.Domain
             
         }
 
-        public void Process(ModelMetadata modelMetaData)
+        public void Process(DisplayMetadata modelMetaData)
         {
             modelMetaData.TemplateHint = "YouTube";
         }

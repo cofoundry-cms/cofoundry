@@ -36,9 +36,6 @@ namespace Cofoundry.Web
                 .RegisterPerRequestScope<IApiResponseHelper, ApiResponseHelper>()
 
                 .RegisterAll<IPageModuleViewLocationRegistration>()
-                .RegisterAll<IModelMetaDataDecorator>()
-
-                .RegisterInstance<ModelMetadataProvider, CofoundryModelMetadataProvider>()
                 .RegisterInstance<IAntiCSRFService, AntiCSRFService>()
 
                 .RegisterType<ICustomEntityTemplateSectionTagBuilderFactory, CustomEntityTemplateSectionTagBuilderFactory>()

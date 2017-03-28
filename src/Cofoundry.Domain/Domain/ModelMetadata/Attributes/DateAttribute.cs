@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Web.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Metadata;
 
 namespace Cofoundry.Domain
 {
@@ -14,7 +14,7 @@ namespace Cofoundry.Domain
     [AttributeUsage(AttributeTargets.Property)]
     public class DateAttribute : Attribute, IMetadataAttribute
     {
-        public void Process(ModelMetadata modelMetaData)
+        public void Process(DisplayMetadata modelMetaData)
         {
             modelMetaData.TemplateHint = "Date";
         }

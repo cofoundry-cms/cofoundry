@@ -1,10 +1,10 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Mvc.ModelBinding.Metadata;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Web.Mvc;
 
 namespace Cofoundry.Domain
 {
@@ -20,7 +20,7 @@ namespace Cofoundry.Domain
         /// <param name="property">The name of the property (key) to add to the collection.</param>
         /// <param name="value">The value to add to the collection.</param>
         /// <returns>ModelMetadata instance for method chaining</returns>
-        public static ModelMetadata AddAdditionalValueIf(this ModelMetadata modelMetaData, bool condition, string property, object value)
+        public static DisplayMetadata AddAdditionalValueIf(this DisplayMetadata modelMetaData, bool condition, string property, object value)
         {
             if (condition)
             {
@@ -36,7 +36,7 @@ namespace Cofoundry.Domain
         /// <param name="property">The name of the property (key) to add to the collection.</param>
         /// <param name="value">The value to add to the collection.</param>
         /// <returns>ModelMetadata instance for method chaining</returns>
-        public static ModelMetadata AddAdditionalValueIfNotNull(this ModelMetadata modelMetaData, string property, object value)
+        public static DisplayMetadata AddAdditionalValueIfNotNull(this DisplayMetadata modelMetaData, string property, object value)
         {
             if (value != null)
             {
@@ -52,7 +52,7 @@ namespace Cofoundry.Domain
         /// <param name="property">The name of the property (key) to add to the collection.</param>
         /// <param name="value">The value to add to the collection.</param>
         /// <returns>ModelMetadata instance for method chaining</returns>
-        public static ModelMetadata AddAdditionalValueIfNotEmpty<T>(this ModelMetadata modelMetaData, string property, T value)
+        public static DisplayMetadata AddAdditionalValueIfNotEmpty<T>(this DisplayMetadata modelMetaData, string property, T value)
         {
             if (value != null && !EqualityComparer<T>.Default.Equals(value, default(T)))
             {
@@ -68,7 +68,7 @@ namespace Cofoundry.Domain
         /// <param name="property">The name of the property (key) to add to the collection.</param>
         /// <param name="value">The collection value to add to the collection.</param>
         /// <returns>ModelMetadata instance for method chaining</returns>
-        public static ModelMetadata AddAdditionalValueIfNotEmpty<T>(this ModelMetadata modelMetaData, string property, IEnumerable<T> value)
+        public static DisplayMetadata AddAdditionalValueIfNotEmpty<T>(this DisplayMetadata modelMetaData, string property, IEnumerable<T> value)
         {
             if (value != null && value.Any())
             {
@@ -87,10 +87,10 @@ namespace Cofoundry.Domain
         /// <param name="value">The value to add to the collection.</param>
         /// <param name="attribute">The attribute from which the validation message will be extracted.</param>
         /// <returns>ModelMetadata instance for method chaining</returns>
-        public static ModelMetadata AddAdditionalValueWithValidationMessage(this ModelMetadata modelMetaData, string key, object value, ValidationAttribute attribute)
+        public static DisplayMetadata AddAdditionalValueWithValidationMessage(this DisplayMetadata modelMetaData, string key, object value, ValidationAttribute attribute)
         {
             modelMetaData.AdditionalValues.Add(key, value);
-            modelMetaData.AdditionalValues.Add(key + "ValMsg", attribute.FormatErrorMessage(modelMetaData.DisplayName));
+            modelMetaData.AdditionalValues.Add(key + "ValMsg", attribute.FormatErrorMessage(modelMetaData.DisplayName()));
 
             return modelMetaData;
         }

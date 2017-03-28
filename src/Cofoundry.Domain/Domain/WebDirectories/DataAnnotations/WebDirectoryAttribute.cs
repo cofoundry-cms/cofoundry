@@ -6,7 +6,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
-using System.Web.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Metadata;
 
 namespace Cofoundry.Domain
 {
@@ -24,7 +24,7 @@ namespace Cofoundry.Domain
             ErrorMessage = "The {0} field is required";
         }
 
-        public void Process(ModelMetadata modelMetaData)
+        public void Process(DisplayMetadata modelMetaData)
         {
             modelMetaData.TemplateHint = "DirectorySelector";
         }

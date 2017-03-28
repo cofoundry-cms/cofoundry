@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Html;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,31 +13,32 @@ namespace Cofoundry.Core.AutoMapper
     /// I think this issue https://github.com/AutoMapper/AutoMapper/issues/654 covers this and will
     /// hopefully get resolved soon.
     /// </summary>
-    public class ProjectableHtmlString : IHtmlString
-    {
-        public ProjectableHtmlString()
-        {
-        }
+    //public class ProjectableHtmlString : HtmlString
+    //{
+    //    public ProjectableHtmlString()
+    //        : base(string.Empty)
+    //    {
+    //    }
 
-        public ProjectableHtmlString(string value)
-        {
-            Value = value;
-        }
+    //    public ProjectableHtmlString(string value)
+    //    {
+    //        Value = value;
+    //    }
 
-        public string Value { get; set; }
+    //    public string Value { get; set; }
 
-        #region methods
+    //    #region methods
 
-        public string ToHtmlString()
-        {
-            return Value;
-        }
+    //    public string ToHtmlString()
+    //    {
+    //        return Value;
+    //    }
 
-        public override string ToString()
-        {
-            return Value;
-        }
+    //    public override string ToString()
+    //    {
+    //        return Value;
+    //    }
 
-        #endregion
-    }
+    //    #endregion
+    //}
 }

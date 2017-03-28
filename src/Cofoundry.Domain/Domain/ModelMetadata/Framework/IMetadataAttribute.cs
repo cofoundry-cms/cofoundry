@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Web.Mvc;
+﻿using Microsoft.AspNetCore.Mvc.ModelBinding.Metadata;
 
 namespace Cofoundry.Domain
 {
@@ -17,6 +12,6 @@ namespace Cofoundry.Domain
         /// Implement this to customize the model metadata, adding
         /// any items to the AdditionalValues. 
         /// </summary>
-        void Process(ModelMetadata modelMetaData);
+        void Process(DisplayMetadata modelMetaData);
     }
 }

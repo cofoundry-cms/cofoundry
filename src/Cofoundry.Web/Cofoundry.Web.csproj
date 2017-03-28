@@ -361,13 +361,6 @@
     <Compile Include="Framework\Bootstrap\WebCoreDependencyRegistration.cs" />
     <Compile Include="Framework\Configuration\ContentSettings.cs" />
     <Compile Include="Framework\Configuration\OptimizationSettings.cs" />
-    <Compile Include="Framework\DataAnnotations\ModelMetaDataDecorators\CompareAttributeModelMetaDataDecorator.cs" />
-    <Compile Include="Framework\DataAnnotations\ModelMetaDataDecorators\MaxLengthAttributeModelMetaDataDecorator.cs" />
-    <Compile Include="Framework\DataAnnotations\ModelMetaDataDecorators\MinLengthAttributeModelMetaDataDecorator.cs" />
-    <Compile Include="Framework\DataAnnotations\ModelMetaDataDecorators\RangeAttributeModelMetaDataDecorator.cs" />
-    <Compile Include="Framework\DataAnnotations\ModelMetaDataDecorators\StringLengthAttributeModelMetaDataDecorator.cs" />
-    <Compile Include="Framework\DataAnnotations\ModelMetaDataProvider\CofoundryModelMetadataProvider.cs" />
-    <Compile Include="Framework\DataAnnotations\ModelMetaDataProvider\IModelMetaDataDecorator.cs" />
     <Compile Include="Framework\DependencyInjection\IckyDependencyResolution.cs" />
     <Compile Include="Framework\DependencyInjection\IContainerRegisterExtensions.cs" />
     <Compile Include="Framework\Identity\Bootstrap\IdentityDependencyRegistration.cs" />

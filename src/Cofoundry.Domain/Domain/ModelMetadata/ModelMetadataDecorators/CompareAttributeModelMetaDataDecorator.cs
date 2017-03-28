@@ -6,18 +6,18 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Cofoundry.Domain;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Metadata;
 
 namespace Cofoundry.Web
 {
-    public class CompareAttributeModelMetaDataDecorator : IModelMetaDataDecorator
+    public class CompareAttributeModelMetadataDecorator : IModelMetadataDecorator
     {
         public bool CanDecorateType(Type type)
         {
-            return type == typeof(CompareAttribute)
-                || type == typeof(System.Web.Mvc.CompareAttribute);
+            return type == typeof(CompareAttribute);
         }
 
-        public void Decorate(Attribute attribute, System.Web.Mvc.ModelMetadata modelMetaData)
+        public void Decorate(object attribute, DisplayMetadata modelMetaData)
         {
             Condition.Requires(attribute).IsNotNull();
             string otherProperty;
@@ -26,12 +26,6 @@ namespace Cofoundry.Web
             if (attribute is CompareAttribute)
             {
                 var compareAttribtue = (CompareAttribute)attribute;
-                otherProperty = compareAttribtue.OtherProperty;
-                valAttribute = compareAttribtue;
-            }
-            else if (attribute is System.Web.Mvc.CompareAttribute)
-            {
-                var compareAttribtue = (System.Web.Mvc.CompareAttribute)attribute;
                 otherProperty = compareAttribtue.OtherProperty;
                 valAttribute = compareAttribtue;
             }

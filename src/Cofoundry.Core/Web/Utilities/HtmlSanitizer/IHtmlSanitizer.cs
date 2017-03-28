@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using HtmlAgilityPack;
 using System.Web;
+using Microsoft.AspNetCore.Html;
 
 namespace Cofoundry.Core.Web
 {
@@ -11,7 +12,7 @@ namespace Cofoundry.Core.Web
     /// </summary>
     public interface IHtmlSanitizer
     {
-        string Sanitize(IHtmlString source);
+        string Sanitize(IHtmlContent source);
 
         /// <summary>
         /// Takes raw HTML input and cleans against a whitelist
@@ -37,6 +38,6 @@ namespace Cofoundry.Core.Web
         /// <summary>
         /// Takes a raw source and removes all HTML tags
         /// </summary>
-        string StripHtml(IHtmlString source);
+        string StripHtml(HtmlString source);
     }
 }

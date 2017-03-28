@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Cofoundry.Core.DependencyInjection;
 using Cofoundry.Core.Configuration;
-using RazorEngine.Templating;
+//using RazorEngine.Templating;
 
 namespace Cofoundry.Core.Mail
 {
@@ -17,13 +17,13 @@ namespace Cofoundry.Core.Mail
                 .RegisterType<IMailService, SimpleMailService>()
                 .RegisterType<IMailDispatchService, SmtpMailDispatchService>()
                 .RegisterType<IMailMessageRenderer, MailMessageRenderer>()
-                .RegisterType<ITemplateManager, VirtualPathTemplateManager>()
                 .RegisterType<IViewFileReader, ViewFileReader>()
-                .RegisterType<IActivator, RazorEngineActivator>()
-                .RegisterType<IMailViewRenderer, RazorEngineViewRenderer>()
-                .RegisterType<EmailTemplateBase>()
-                .RegisterType<RazorEngineUrlHelper>()
-                .RegisterGeneric(typeof(EmailTemplateBase<>), typeof(EmailTemplateBase<>))
+                //.RegisterType<ITemplateManager, VirtualPathTemplateManager>()
+                //.RegisterType<IActivator, RazorEngineActivator>()
+                //.RegisterType<IMailViewRenderer, RazorEngineViewRenderer>()
+                //.RegisterType<EmailTemplateBase>()
+                //.RegisterType<RazorEngineUrlHelper>()
+                //.RegisterGeneric(typeof(EmailTemplateBase<>), typeof(EmailTemplateBase<>))
                 ; 
         }
     }

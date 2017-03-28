@@ -6,17 +6,18 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Cofoundry.Domain;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Metadata;
 
 namespace Cofoundry.Web
 {
-    public class RangeAttributeModelMetaDataDecorator : IModelMetaDataDecorator
+    public class RangeAttributeModelMetadataDecorator : IModelMetadataDecorator
     {
         public bool CanDecorateType(Type type)
         {
             return type == typeof(RangeAttribute);
         }
 
-        public void Decorate(Attribute attribute, System.Web.Mvc.ModelMetadata modelMetaData)
+        public void Decorate(object attribute, DisplayMetadata modelMetaData)
         {
             Condition.Requires(attribute).IsNotNull();
             Condition.Requires(attribute).IsOfType(typeof(RangeAttribute));

@@ -5,6 +5,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Web;
 using System.Globalization;
+using Microsoft.AspNetCore.Html;
 
 namespace Cofoundry.Core
 {
@@ -79,7 +80,7 @@ namespace Cofoundry.Core
         /// <param name="s">String to convert</param>
         /// <param name="formatOptions">Options to use in the converstion</param>
         /// <returns>HtmlString version of the input string formatted to basic html.</returns>
-        public static IHtmlString ConvertToBasicHtml(string s, BasicHtmlFormatOption formatOptions = BasicHtmlFormatOption.None)
+        public static IHtmlContent ConvertToBasicHtml(string s, BasicHtmlFormatOption formatOptions = BasicHtmlFormatOption.None)
         {
             if (string.IsNullOrEmpty(s)) return new HtmlString(string.Empty);
             var html = ConvertLineBreaksToBrTags(s);

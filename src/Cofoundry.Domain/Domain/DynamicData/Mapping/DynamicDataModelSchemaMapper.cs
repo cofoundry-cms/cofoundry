@@ -3,17 +3,17 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Web.Mvc;
 using Cofoundry.Core;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace Cofoundry.Domain
 {
     public class DynamicDataModelSchemaMapper
     {
-        private readonly ModelMetadataProvider _modelMetadataProvider;
+        private readonly IModelMetadataProvider _modelMetadataProvider;
 
         public DynamicDataModelSchemaMapper(
-            ModelMetadataProvider modelMetadataProvider
+            IModelMetadataProvider modelMetadataProvider
             )
         {
             _modelMetadataProvider = modelMetadataProvider;
@@ -24,14 +24,14 @@ namespace Cofoundry.Domain
             Condition.Requires(details).IsNotNull();
             Condition.Requires(modelType).IsNotNull();
 
-            var dataModelMetaData = _modelMetadataProvider.GetMetadataForType(null, modelType);
+            var dataModelMetaData = _modelMetadataProvider.GetMetadataForType(modelType);
 
             details.DataTemplateName = StringHelper.FirstNonEmpty(
                 dataModelMetaData.TemplateHint,
                 dataModelMetaData.DataTypeName
                 );
 
-            var properiesMetaData = _modelMetadataProvider.GetMetadataForProperties(null, modelType);
+            var properiesMetaData = _modelMetadataProvider.GetMetadataForProperties(modelType);
 
             var dataModelProperties = new List<DynamicDataModelSchemaProperty>();
             foreach (var propertyMetaData in properiesMetaData.OrderBy(p => p.Order))
@@ -48,7 +48,12 @@ namespace Cofoundry.Domain
                     propertyMetaData.IsNullableValueType ? propertyMetaData.ModelType.GenericTypeArguments[0].Name : propertyMetaData.ModelType.Name
                     );
 
-                property.AdditionalAttributes = propertyMetaData.AdditionalValues;
+                // Not sure why the keys here could be objects, but we're not interested in 
+                // them if they are.
+                property.AdditionalAttributes = propertyMetaData
+                    .AdditionalValues
+                    .Where(d => d.Key is string)
+                    .ToDictionary(d => (string)d.Key, d => d.Value);
 
                 dataModelProperties.Add(property);
             }
