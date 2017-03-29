@@ -68,8 +68,7 @@ namespace Cofoundry.Domain
                 .CustomEntityVersions
                 .AsNoTracking()
                 .Where(e => e.CustomEntity.CustomEntityDefinitionCode == query.CustomEntityDefinitionCode)
-                .Where(v => v.WorkFlowStatusId == (int)Domain.WorkFlowStatus.Draft || v.WorkFlowStatusId == (int)Domain.WorkFlowStatus.Published)
-                .GroupBy(e => e.CustomEntityId, (key, g) => g.OrderByDescending(v => v.WorkFlowStatusId == (int)Domain.WorkFlowStatus.Draft).FirstOrDefault())
+                .FilterByWorkFlowStatusQuery(query.WorkFlowStatus)
                 .Include(e => e.CustomEntity);
 
             // Filter by locale 
@@ -91,12 +90,12 @@ namespace Cofoundry.Domain
                         dbQuery = dbQuery
                             .OrderByWithSortDirection(e => !e.CustomEntity.Ordering.HasValue, query.SortDirection)
                             .ThenByWithSortDirection(e => e.CustomEntity.Ordering, query.SortDirection)
-                            .ThenByDescendingWithSortDirection(e => e.CreateDate, query.SortDirection);
+                            .ThenByDescendingWithSortDirection(e => e.CustomEntity.CreateDate, query.SortDirection);
                     }
                     else
                     {
                         dbQuery = dbQuery
-                            .OrderByDescendingWithSortDirection(e => e.CreateDate, query.SortDirection);
+                            .OrderByDescendingWithSortDirection(e => e.CustomEntity.CreateDate, query.SortDirection);
                     }
                     break;
                 case CustomEntityQuerySortType.Title:
@@ -105,7 +104,7 @@ namespace Cofoundry.Domain
                     break;
                 case CustomEntityQuerySortType.CreateDate:
                     dbQuery = dbQuery
-                        .OrderByDescendingWithSortDirection(e => e.CreateDate, query.SortDirection);
+                        .OrderByDescendingWithSortDirection(e => e.CustomEntity.CreateDate, query.SortDirection);
                     break;
             }
 
