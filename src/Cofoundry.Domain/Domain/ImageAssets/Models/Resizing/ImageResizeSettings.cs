@@ -7,6 +7,8 @@ using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web;
+using Microsoft.AspNetCore.WebUtilities;
+using Microsoft.Extensions.Primitives;
 
 namespace Cofoundry.Domain
 {
@@ -90,17 +92,22 @@ namespace Cofoundry.Domain
 
         public static IImageResizeSettings ParseFromQueryString(string queryString)
         {
-            var qs = HttpUtility.ParseQueryString(queryString);
+            var qs = QueryHelpers.ParseQuery(queryString);
             var settings = new ImageResizeSettings();
 
-            settings.Width = IntParser.ParseOrDefault(qs[QS_WIDTH]);
-            settings.Height = IntParser.ParseOrDefault(qs[QS_HEIGHT]);
-            settings.Anchor = EnumParser.ParseOrDefault<ImageAnchorLocation>(qs[QS_ANCHOR], settings.Anchor);
-            settings.Mode = EnumParser.ParseOrDefault<ImageFitMode>(qs[QS_MODE], settings.Mode);
-            settings.Scale = EnumParser.ParseOrDefault<ImageScaleMode>(qs[QS_SCALE], settings.Scale);
-            settings.BackgroundColor = StringHelper.EmptyAsNull(qs[QS_BACKGROUND_COLOR]);
+            settings.Width = IntParser.ParseOrDefault(GetQueryStringValue(qs, QS_WIDTH));
+            settings.Height = IntParser.ParseOrDefault(GetQueryStringValue(qs, QS_HEIGHT));
+            settings.Anchor = EnumParser.ParseOrDefault<ImageAnchorLocation>(GetQueryStringValue(qs, QS_ANCHOR), settings.Anchor);
+            settings.Mode = EnumParser.ParseOrDefault<ImageFitMode>(GetQueryStringValue(qs, QS_MODE), settings.Mode);
+            settings.Scale = EnumParser.ParseOrDefault<ImageScaleMode>(GetQueryStringValue(qs, QS_SCALE), settings.Scale);
+            settings.BackgroundColor = StringHelper.EmptyAsNull(GetQueryStringValue(qs, QS_BACKGROUND_COLOR));
 
             return settings;
+        }
+
+        private static string GetQueryStringValue(Dictionary<string, StringValues> queryString, string key)
+        {
+            return queryString.GetOrDefault(QS_WIDTH).FirstOrDefault();
         }
     }
 }

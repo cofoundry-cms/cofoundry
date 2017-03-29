@@ -10,9 +10,14 @@ using Cofoundry.Core;
 using System.Web;
 using System.Data.Entity;
 using Cofoundry.Core.Web;
+using Microsoft.AspNetCore.Html;
 
 namespace Cofoundry.Domain
 {
+    /// <summary>
+    /// Full-text page searching has not been looked at yet and this should not be used, but
+    /// remains in place for compatibility.
+    /// </summary>
     public class SearchPagesQueryHandler 
         : IQueryHandler<SearchPagesQuery, IEnumerable<PageSearchResult>>
         , IPermissionRestrictedQueryHandler<SearchPagesQuery, IEnumerable<PageSearchResult>>
@@ -145,7 +150,7 @@ namespace Cofoundry.Domain
                 .GroupBy(m => m.Key.PageVersion.PageVersionId)
                 .ToDictionary(
                     g => g.First().Key.PageVersion,
-                    g => g.First().Value.Select(m => (IHtmlString)new HtmlString(m))
+                    g => g.First().Value.Select(m => new HtmlString(m))
                     );
             
             // Add any pages matched by title to the list of matches

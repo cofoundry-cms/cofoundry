@@ -7,6 +7,10 @@ using Cofoundry.Domain.CQS;
 
 namespace Cofoundry.Domain
 {
+    /// <summary>
+    /// Full-text page searching has not been looked at yet and this should not be used, but
+    /// remains in place for compatibility.
+    /// </summary>
     public class SearchPagesQuery : IQuery<IEnumerable<PageSearchResult>>
     {
         public string Text { get; set; }

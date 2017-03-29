@@ -6,6 +6,7 @@ using System.Web;
 using Cofoundry.Domain.CQS;
 using Cofoundry.Core.Mail;
 using Cofoundry.Domain.MailTemplates;
+using Microsoft.AspNetCore.Html;
 
 namespace Cofoundry.Domain
 {
