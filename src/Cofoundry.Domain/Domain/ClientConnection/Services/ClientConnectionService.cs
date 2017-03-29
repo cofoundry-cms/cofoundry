@@ -1,9 +1,8 @@
-﻿using System;
+﻿using Cofoundry.Core;
+using Microsoft.AspNetCore.Http;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Web;
 
 namespace Cofoundry.Domain
 {
@@ -12,24 +11,27 @@ namespace Cofoundry.Domain
     /// </summary>
     public class ClientConnectionService : IClientConnectionService
     {
+        private readonly IHttpContextAccessor _httpContextAccessor;
+
+        public ClientConnectionService(
+            IHttpContextAccessor httpContextAccessor
+            )
+        {
+            _httpContextAccessor = httpContextAccessor;
+        }
         public ClientConnectionInfo GetConnectionInfo()
         {
+            var context = _httpContextAccessor.HttpContext;
+
             var info = new ClientConnectionInfo();
 
-            if (HttpContext.Current != null && HttpContext.Current.Request != null)
+            if (context != null && context.Request != null)
             {
-                var request = HttpContext.Current.Request;
-
-                info.IPAddress = GetIPAddress(request);
-                info.UserAgent = request.UserAgent;
+                info.IPAddress = context?.Connection?.RemoteIpAddress?.ToString();
+                info.UserAgent = context.Request?.Headers?.GetOrDefault("User-Agent");
             }
 
             return info;
-        }
-
-        private static string GetIPAddress(HttpRequest request)
-        {
-            return request.UserHostAddress;
         }
     }
 

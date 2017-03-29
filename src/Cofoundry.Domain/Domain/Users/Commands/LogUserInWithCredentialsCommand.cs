@@ -30,7 +30,6 @@ namespace Cofoundry.Domain
         /// </summary>
         [Required]
         [DataType(DataType.Password)]
-        [AllowHtml]
         public string Password { get; set; }
 
         /// <summary>
