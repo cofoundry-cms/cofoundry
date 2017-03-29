@@ -24,5 +24,7 @@ namespace Cofoundry.Domain
         /// with a null locale are shown
         /// </summary>
         public int? LocaleId { get; set; }
+
+        public WorkFlowStatusQuery WorkFlowStatus { get; set; }
     }
 }

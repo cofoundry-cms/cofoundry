@@ -68,8 +68,7 @@ namespace Cofoundry.Domain
                 .CustomEntityVersions
                 .AsNoTracking()
                 .Where(e => e.CustomEntity.CustomEntityDefinitionCode == query.CustomEntityDefinitionCode)
-                .Where(v => v.WorkFlowStatusId == (int)Domain.WorkFlowStatus.Draft || v.WorkFlowStatusId == (int)Domain.WorkFlowStatus.Published)
-                .GroupBy(e => e.CustomEntityId, (key, g) => g.OrderByDescending(v => v.WorkFlowStatusId == (int)Domain.WorkFlowStatus.Draft).FirstOrDefault())
+                .FilterByWorkFlowStatusQuery(query.WorkFlowStatus)
                 .Include(e => e.CustomEntity);
 
             // Filter by locale 
