@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Web.Mvc;
 
 namespace Cofoundry.Web
 {
@@ -17,8 +16,8 @@ namespace Cofoundry.Web
     public class CofoundryPageModuleHelper<TModel> 
         : CofoundryPageHelper<TModel> where TModel : IPageModuleDisplayModel
     {
-        public CofoundryPageModuleHelper(HtmlHelper htmlHelper, TModel model)
-            : base(htmlHelper, model)
+        public CofoundryPageModuleHelper(TModel model)
+            : base(model)
         {
             Module = new PageModuleHelper<TModel>();
         }

@@ -1,11 +1,8 @@
-﻿using Cofoundry.Core.Web;
-using Cofoundry.Domain;
+﻿using Cofoundry.Domain;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using System.Web.Mvc;
 
 namespace Cofoundry.Web
 {
@@ -17,16 +14,15 @@ namespace Cofoundry.Web
     /// </summary>
     public class CofoundryPageHelper
     {
-        public CofoundryPageHelper(HtmlHelper htmlHelper)
+        public CofoundryPageHelper()
         {
             // DI because mvc framework doesn't support injection yet
             Routing = IckyDependencyResolution.ResolveFromMvcContext<IContentRouteLibrary>();
             Settings = IckyDependencyResolution.ResolveFromMvcContext<ISettingsViewHelper>();
             CurrentUser = IckyDependencyResolution.ResolveFromMvcContext<ICurrentUserViewHelper>();
-            Js = IckyDependencyResolution.ResolveFromMvcContext<IJavascriptViewHelper>(); ;
-            Sanitizer = IckyDependencyResolution.ResolveFromMvcContext<IHtmlSanitizerHelper>(); ;
-            Html = IckyDependencyResolution.ResolveFromMvcContext<ICofoundryHtmlHelper>(); ;
-            UI = new UIViewHelper(htmlHelper);
+            Js = IckyDependencyResolution.ResolveFromMvcContext<IJavascriptViewHelper>();
+            Sanitizer = IckyDependencyResolution.ResolveFromMvcContext<IHtmlSanitizerHelper>();
+            Html = IckyDependencyResolution.ResolveFromMvcContext<ICofoundryHtmlHelper>();
         }
 
         /// <summary>
@@ -43,11 +39,6 @@ namespace Cofoundry.Web
         /// Helpers for accessing information about the currently logged in user
         /// </summary>
         public ICurrentUserViewHelper CurrentUser { get; private set; }
-
-        /// <summary>
-        /// Helper for accessing Cofoundry UI controls.
-        /// </summary>
-        public IUIViewHelper UI { get; private set; }
 
         /// <summary>
         /// Helper for working with javascript from .net code

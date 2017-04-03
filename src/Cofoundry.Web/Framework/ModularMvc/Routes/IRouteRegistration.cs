@@ -1,9 +1,7 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Routing;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Web.Routing;
 
 namespace Cofoundry.Web.ModularMvc
 {
@@ -17,6 +15,6 @@ namespace Cofoundry.Web.ModularMvc
         /// <summary>
         /// Register routes with the mvc RouteCollection. 
         /// </summary>
-        void RegisterRoutes(RouteCollection routes);
+        void RegisterRoutes(IRouteBuilder routes);
     }
 }

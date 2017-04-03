@@ -1,9 +1,7 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Routing;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Web.Routing;
 
 namespace Cofoundry.Web.ModularMvc
 {
@@ -25,7 +23,7 @@ namespace Cofoundry.Web.ModularMvc
         /// Runs RegisterRoutes() on all instances of IRouteRegistration 
         /// registered in the dependency container.
         /// </summary>
-        public void Initialize(RouteCollection routes)
+        public void Initialize(IRouteBuilder routes)
         {
             foreach (var routeRegistration in _routeRegistrations)
             {

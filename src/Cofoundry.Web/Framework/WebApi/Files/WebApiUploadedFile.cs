@@ -9,6 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Web;
 using Cofoundry.Domain;
+using Cofoundry.Core.Web;
 
 namespace Cofoundry.Web.WebApi
 {
@@ -16,13 +17,16 @@ namespace Cofoundry.Web.WebApi
     {
         private HttpContent _fileData = null;
 
-        public WebApiUploadedFile(HttpContent fileData)
+        public WebApiUploadedFile(
+            HttpContent fileData, 
+            IMimeTypeService mimeTypeService
+            )
         {
             Condition.Requires(fileData, "fileData").IsNotNull();
 
             _fileData = fileData;
             FileName = fileData.Headers.ContentDisposition.FileName.Trim('\"');
-            MimeType = string.IsNullOrEmpty(fileData.Headers.ContentType.MediaType) ? MimeMapping.GetMimeMapping(FileName) : fileData.Headers.ContentType.MediaType;
+            MimeType = string.IsNullOrEmpty(fileData.Headers.ContentType.MediaType) ? mimeTypeService.MapFromFileName(FileName) : fileData.Headers.ContentType.MediaType;
             FileLength = fileData.Headers.ContentLength.Value;
         }
 

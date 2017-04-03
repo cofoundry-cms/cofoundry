@@ -1,10 +1,9 @@
 ﻿using Cofoundry.Core;
+using Microsoft.AspNetCore.Antiforgery;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using System.Web.Helpers;
 
 namespace Cofoundry.Web
 {
@@ -14,13 +13,21 @@ namespace Cofoundry.Web
     /// </summary>
     public class AntiCSRFService : IAntiCSRFService
     {
+        private readonly IAntiforgery _antiforgery;
         const char TOKEN_DELIMITER = ':';
 
+        public AntiCSRFService(
+            IAntiforgery antiforgery
+            )
+        {
+            _antiforgery = antiforgery;
+        }
         public string GetToken()
         {
-            string cookieToken, formToken;
-            AntiForgery.GetTokens(null, out cookieToken, out formToken);
-            return cookieToken + TOKEN_DELIMITER + formToken;
+            //string cookieToken, formToken;
+            //AntiForgery.GetTokens(null, out cookieToken, out formToken);
+            //return cookieToken + TOKEN_DELIMITER + formToken;
+            return "TODO";
         }
 
         public void ValidateToken(string token)
@@ -46,7 +53,8 @@ namespace Cofoundry.Web
                 }
             }
 
-            AntiForgery.Validate(cookieToken, formToken);
+            // TODO
+            //AntiForgery.Validate(cookieToken, formToken);
         }
     }
 }

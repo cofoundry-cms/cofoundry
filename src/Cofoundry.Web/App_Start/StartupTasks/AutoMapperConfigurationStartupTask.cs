@@ -1,9 +1,8 @@
 ﻿using Cofoundry.Core.AutoMapper;
-using Owin;
+using Microsoft.AspNetCore.Builder;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 
 namespace Cofoundry.Web
 {
@@ -26,12 +25,13 @@ namespace Cofoundry.Web
             get { return (int)StartupTaskOrdering.Normal; }
         }
 
-        public void Run(IAppBuilder app)
+        public void Run(IApplicationBuilder app)
         {
             _autoMapBootstrapper.Configure(cfg =>
             {
                 cfg
                     .AddHtmlStringConverters()
+                    // TODO: What to do about this? Rip out automapper?
                     .ConstructServicesUsing(IckyDependencyResolution.ResolveFromMvcContext);
             });
         }

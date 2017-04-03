@@ -1,14 +1,14 @@
 ﻿using Cofoundry.Domain;
+using Microsoft.AspNetCore.Html;
 using System;
 using System.Collections.Generic;
-using System.Web;
 
 namespace Cofoundry.Web
 {
     /// <summary>
     /// Fluent builder for defining a page template section configuration using method chaining
     /// </summary>
-    public interface IPageTemplateSectionTagBuilder : IHtmlString
+    public interface IPageTemplateSectionTagBuilder : IHtmlContent
     {
         /// <summary>
         /// Permits the page module associated with the specified data model type

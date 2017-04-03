@@ -1,10 +1,9 @@
-﻿using Owin;
+﻿using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
-using System.Web.Mvc;
-using System.Web.Optimization;
 
 namespace Cofoundry.Web
 {
@@ -15,19 +14,19 @@ namespace Cofoundry.Web
         /// Cofoundry StartupTasks. You must install and register a Cofoundry DI Integration 
         /// nuget package before calling this method (e.g. app.UseCofoundryAutoFacIntegration())
         /// </summary>
-        /// <param name="app">Owin AppBuilder</param>
+        /// <param name="application">Application configuration</param>
         /// <param name="configBuilder">Additional configuration options</param>
-        public static void UseCofoundry(this IAppBuilder app, Action<CofoundryStartupConfiguration> configBuilder = null)
+        public static void UseCofoundry(this IApplicationBuilder application, Action<CofoundryStartupConfiguration> configBuilder = null)
         {
             var configuration = new CofoundryStartupConfiguration();
             if (configBuilder != null) configBuilder(configuration);
-            
-            // We're not in a request scope here so open and close our own scope to tidy up resources
-            using (var childContext = IckyDependencyResolution.CreateNewChildContextFromRoot())
+
+            using (var childContext = application.ApplicationServices.CreateScope())
             {
                 // Use the fullname secondry ordering here to get predicatable task ordering
                 IEnumerable<IStartupTask> startupTasks = childContext
-                    .ResolveAll<IStartupTask>()
+                    .ServiceProvider
+                    .GetServices<IStartupTask>()
                     .OrderBy(i => i.Ordering)
                     .ThenBy(i => i.GetType().FullName);
 
@@ -38,9 +37,30 @@ namespace Cofoundry.Web
 
                 foreach (var startupTask in startupTasks)
                 {
-                    startupTask.Run(app);
+                    startupTask.Run(application);
                 }
             }
         }
+
+        public static void AddCofoundry(this IServiceCollection services)
+        {
+            services.AddMvc(ConfigureMvc);
+        }
+
+        private static void ConfigureMvc(MvcOptions options)
+        {
+            //options.Filters.Add(typeof(ExceptionLogAttribute));
+
+        }
+
+        //private static void ConfigureMvcOptions(IMvcBuilder builder)
+        //{
+        //    builder.AddJsonOptions(o =>
+        //    {
+        //        //o.SerializerSettings = _jsonSerializerSettingsFactory.Create();
+        //        o.SerializerSettings.ContractResolver = new DeltaContractResolver();
+        //    });
+
+        //}
     }
 }

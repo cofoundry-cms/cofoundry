@@ -1,9 +1,9 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Html;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Web;
-using System.Web.Mvc;
 
 namespace Cofoundry.Web
 {
@@ -15,15 +15,15 @@ namespace Cofoundry.Web
             where TModel : IEditablePageViewModel
     {
         public PageTemplateHelper(
-            HtmlHelper helper,
+            ViewContext viewContext,
             TModel model
             )
         {
-            HtmlHelper = helper;
+            ViewContext = viewContext;
             Model = model;
         }
 
-        public HtmlHelper HtmlHelper { get; private set; }
+        public ViewContext ViewContext { get; private set; }
         public TModel Model { get; private set; }
 
         /// <summary>
@@ -45,10 +45,10 @@ namespace Cofoundry.Web
         /// should be used for.
         /// </summary>
         /// <param name="description">A plain text description about this template</param>
-        public IHtmlString UseDescription(string description)
+        public IHtmlContent UseDescription(string description)
         {
             // nothing is rendered here, this is just used as a convention for adding template meta data
-            return null;
+            return HtmlString.Empty;
         }
     }
 }

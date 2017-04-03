@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web.Mvc;
 using System.Threading.Tasks;
 using Cofoundry.Domain;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Cofoundry.Web
 {
@@ -37,22 +37,22 @@ namespace Cofoundry.Web
 
         #region controller lifecycle 
 
-        protected override void Initialize(System.Web.Routing.RequestContext requestContext)
-        {
-            base.Initialize(requestContext);
+        //protected override void Initialize(System.Web.Routing.RequestContext requestContext)
+        //{
+        //    base.Initialize(requestContext);
 
-            // Do some pre-init before the page action executes, to find the locale
-            if ((string)requestContext.RouteData.Values["action"] == "Page")
-            {
-                string path = (string)requestContext.RouteData.Values["path"];
+        //    // Do some pre-init before the page action executes, to find the locale
+        //    if ((string)requestContext.RouteData.Values["action"] == "Page")
+        //    {
+        //        string path = (string)requestContext.RouteData.Values["path"];
 
-                _locale = _pageLocaleParser.ParseLocale(path);
-                if (_locale != null)
-                {
-                    _cultureContextService.SetCurrent(_locale.IETFLanguageTag);
-                }
-            }
-        }
+        //        _locale = _pageLocaleParser.ParseLocale(path);
+        //        if (_locale != null)
+        //        {
+        //            _cultureContextService.SetCurrent(_locale.IETFLanguageTag);
+        //        }
+        //    }
+        //}
 
         #endregion
 

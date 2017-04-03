@@ -1,4 +1,5 @@
 ﻿using Cofoundry.Domain;
+using Microsoft.AspNetCore.Mvc.Razor;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,15 +8,22 @@ using System.Threading.Tasks;
 namespace Cofoundry.Web
 {
     public abstract class CofoundryPageModule<TModel> 
-        : System.Web.Mvc.WebViewPage<TModel> where TModel : IPageModuleDisplayModel
+        : RazorPage<TModel> where TModel : IPageModuleDisplayModel
     {
-        public override void InitHelpers()
-        {
-            base.InitHelpers();
-            Cofoundry = new CofoundryPageModuleHelper<TModel>(Html, this.Model);
-        }
+        private CofoundryPageModuleHelper<TModel> _cofoundryPageHelper = null;
 
-        public CofoundryPageModuleHelper<TModel> Cofoundry { get; private set; }
+        public CofoundryPageModuleHelper<TModel> Cofoundry
+        {
+            get
+            {
+                if (_cofoundryPageHelper == null && ViewContext != null)
+                {
+                    _cofoundryPageHelper = new CofoundryPageModuleHelper<TModel>(Model);
+                }
+
+                return _cofoundryPageHelper;
+            }
+        }
     }
 
 }

@@ -1,8 +1,7 @@
-﻿using Owin;
+﻿using Microsoft.AspNetCore.Builder;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 
 namespace Cofoundry.Web
 {
@@ -21,6 +20,6 @@ namespace Cofoundry.Web
         /// <summary>
         /// Executes the startup task
         /// </summary>
-        void Run(IAppBuilder app);
+        void Run(IApplicationBuilder app);
     }
 }

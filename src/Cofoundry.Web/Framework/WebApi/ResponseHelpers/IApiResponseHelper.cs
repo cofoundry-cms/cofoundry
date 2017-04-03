@@ -6,6 +6,7 @@ using System.Web.OData;
 using Cofoundry.Core;
 using Cofoundry.Core.Validation;
 using Cofoundry.Domain.CQS;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Cofoundry.Web.WebApi
 {
@@ -22,9 +23,9 @@ namespace Cofoundry.Web.WebApi
         /// the value is extracted and returned in the response.
         /// </summary>
         /// <typeparam name="TCommand">Type of the command to execute</typeparam>
-        /// <param name="controller">The ApiController instance using the helper</param>
+        /// <param name="controller">The Controller instance using the helper</param>
         /// <param name="command">The command to execute</param>
-        Task<IHttpActionResult> RunCommandAsync<TCommand>(ApiController controller, TCommand command) where TCommand : ICommand;
+        Task<IHttpActionResult> RunCommandAsync<TCommand>(Controller controller, TCommand command) where TCommand : ICommand;
 
         /// <summary>
         /// Executes a command in a "Patch" style, allowing for a partial update of a resource. In
@@ -34,9 +35,9 @@ namespace Cofoundry.Web.WebApi
         /// handling any validation errors and permission errors.
         /// </summary>
         /// <typeparam name="TCommand">Type of the command to execute</typeparam>
-        /// <param name="controller">The ApiController instance using the helper</param>
+        /// <param name="controller">The Controller instance using the helper</param>
         /// <param name="delta">The delta of the command to patch and execute</param>
-        Task<IHttpActionResult> RunCommandAsync<TCommand>(ApiController controller, Delta<TCommand> delta) where TCommand : class, ICommand;
+        Task<IHttpActionResult> RunCommandAsync<TCommand>(Controller controller, Delta<TCommand> delta) where TCommand : class, ICommand;
 
         /// <summary>
         /// Executes a command in a "Patch" style, allowing for a partial update of a resource. In
@@ -46,9 +47,9 @@ namespace Cofoundry.Web.WebApi
         /// handling any validation errors and permission errors.
         /// </summary>
         /// <typeparam name="TCommand">Type of the command to execute</typeparam>
-        /// <param name="controller">The ApiController instance using the helper</param>
+        /// <param name="controller">The Controller instance using the helper</param>
         /// <param name="delta">The delta of the command to patch and execute</param>
-        Task<IHttpActionResult> RunCommandAsync<TCommand>(ApiController controller, int id, Delta<TCommand> delta) where TCommand : class, ICommand;
+        Task<IHttpActionResult> RunCommandAsync<TCommand>(Controller controller, int id, Delta<TCommand> delta) where TCommand : class, ICommand;
 
         /// <summary>
         /// Executes an action and returns a formatted IHttpActionResult, handling any validation 
@@ -56,7 +57,7 @@ namespace Cofoundry.Web.WebApi
         /// </summary>
         /// <param name="controller">The ApiController instance using the helper</param>
         /// <param name="action">The action to execute</param>
-        Task<IHttpActionResult> RunAsync(ApiController controller, Func<Task> action);
+        Task<IHttpActionResult> RunAsync(Controller controller, Func<Task> action);
 
         /// <summary>
         /// Executes a function and returns a formatted IHttpActionResult, handling any validation 
@@ -65,31 +66,31 @@ namespace Cofoundry.Web.WebApi
         /// <typeparam name="TResult">Type of result returned from the function</typeparam>
         /// <param name="controller">The ApiController instance using the helper</param>
         /// <param name="function">The function to execute</param>
-        Task<IHttpActionResult> RunWithResultAsync<TResult>(ApiController controller, Func<Task<TResult>> function);
+        Task<IHttpActionResult> RunWithResultAsync<TResult>(Controller controller, Func<Task<TResult>> function);
 
         /// <summary>
         /// Returns a formatted 403 error response using the message of the specified exception
         /// </summary>
-        /// <param name="controller">The ApiController instance using the helper</param>
+        /// <param name="controller">The Controller instance using the helper</param>
         /// <param name="ex">The NotPermittedException to extract the message from</param>
-        IHttpActionResult NotPermittedResponse(ApiController controller, NotPermittedException ex);
+        IHttpActionResult NotPermittedResponse(Controller controller, NotPermittedException ex);
 
         /// <summary>
         /// Formats the result of a query. Results are wrapped inside an object with a data property
         /// for consistency and prevent a vulnerability with return JSON arrays. 
         /// </summary>
         /// <typeparam name="T">Type of the result</typeparam>
-        /// <param name="controller">The ApiController instance using the helper</param>
+        /// <param name="controller">The Controller instance using the helper</param>
         /// <param name="result">The result to return</param>
-        IHttpActionResult SimpleQueryResponse<T>(ApiController controller, T result);
+        IHttpActionResult SimpleQueryResponse<T>(Controller controller, T result);
 
         /// <summary>
         /// Formats a command response wrapping it in a SimpleCommandResponse object and setting
         /// properties based on the presence of validation errors.
         /// </summary>
-        /// <param name="controller">The ApiController instance using the helper</param>
+        /// <param name="controller">The Controller instance using the helper</param>
         /// <param name="validationErrors">Validation errors, if any, to be returned.</param>
-        IHttpActionResult SimpleCommandResponse(ApiController controller, IEnumerable<ValidationError> validationErrors);
+        IHttpActionResult SimpleCommandResponse(Controller controller, IEnumerable<ValidationError> validationErrors);
 
         /// <summary>
         /// Formats a command response wrapping it in a SimpleCommandResponse object and setting
@@ -98,6 +99,6 @@ namespace Cofoundry.Web.WebApi
         /// </summary>
         /// <param name="controller">The ApiController instance using the helper</param>
         /// <param name="validationErrors">Validation errors, if any, to be returned.</param>
-        IHttpActionResult SimpleCommandResponse<T>(ApiController controller, IEnumerable<ValidationError> validationErrors, T returnData);
+        IHttpActionResult SimpleCommandResponse<T>(Controller controller, IEnumerable<ValidationError> validationErrors, T returnData);
     }
 }

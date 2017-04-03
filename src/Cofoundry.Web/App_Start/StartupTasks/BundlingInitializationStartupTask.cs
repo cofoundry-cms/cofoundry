@@ -1,10 +1,8 @@
 ﻿using Cofoundry.Web.ModularMvc;
-using Owin;
+using Microsoft.AspNetCore.Builder;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web.Mvc;
-using System.Web.Routing;
 
 namespace Cofoundry.Web
 {
@@ -31,7 +29,7 @@ namespace Cofoundry.Web
             get { return (int)StartupTaskOrdering.Normal; }
         }
 
-        public void Run(IAppBuilder app)
+        public void Run(IApplicationBuilder app)
         {
             _bundleInitializer.Initialize();
         }

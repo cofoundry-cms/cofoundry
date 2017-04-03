@@ -5,18 +5,15 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Web;
-using System.Web.Mvc;
 using Cofoundry.Domain;
 using Cofoundry.Core.Web;
-using Newtonsoft.Json;
 
 namespace Cofoundry.Web
 {
     /// <summary>
     /// Fluent builder for defining a page template section configuration using method chaining
     /// </summary>
-    public class PageTemplateSectionTagBuilder : IHtmlString, IPageTemplateSectionTagBuilder
+    public class PageTemplateSectionTagBuilder : IPageTemplateSectionTagBuilder
     {
         #region constructor
 

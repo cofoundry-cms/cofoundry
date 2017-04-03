@@ -1,107 +1,105 @@
-﻿using System;
+﻿using Cofoundry.Core;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Microsoft.AspNetCore.Mvc.Razor;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.Mvc.ViewEngines;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
+using Microsoft.AspNetCore.Routing;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Web.Mvc;
 
 namespace Cofoundry.Web
 {
     /// <summary>
-    /// Class for rendering views to strings
+    /// Locates and renders razor view files to strings.
     /// </summary>
-    public class RazorViewRenderer
+    public class RazorViewRenderer : IRazorViewRenderer
     {
         #region constructor
 
-        private readonly ControllerContext _controllerContext;
+        private readonly IRazorViewEngine _razorViewEngine;
 
         public RazorViewRenderer(
-            ControllerContext controllerContext
+            IRazorViewEngine razorViewEngine
             )
         {
-            _controllerContext = controllerContext;
+            _razorViewEngine = razorViewEngine;
         }
 
         #endregion
 
         #region public methods
 
-        public string RenderView(string viewName)
+        /// <summary>
+        /// Renders a view to a string using an existing ViewContext
+        /// </summary>
+        /// <param name="viewContext">An existing view context to copy data from when rendering the new view.</param>
+        /// <param name="viewName">The name of the view to locate. Supports view location and full paths.</param>
+        public Task<string> RenderViewAsync(
+            ViewContext viewContext, 
+            string viewName
+            )
         {
-            viewName = GetViewName(viewName);
-            var viewResult = ViewEngines.Engines.FindView(_controllerContext, viewName, null);
+            var viewResult = FindView(viewContext, viewName);
             ValidateViewFound(viewName, viewResult);
 
-            return Render(viewResult);
+            return RenderViewAsync(viewContext, viewResult, null);
         }
 
-        public string RenderView<T>(string viewName, T model)
+        /// <summary>
+        /// Renders a view to a string using an existing ViewContext
+        /// </summary>
+        /// <param name="viewContext">An existing view context to copy data from when rendering the new view.</param>
+        /// <param name="viewName">The name of the view to locate. Supports view location and full paths.</param>
+        /// <param name="model">The data model to render the view with.</param>
+        public Task<string> RenderViewAsync(
+            ViewContext viewContext, 
+            string viewName, 
+            object model
+            )
         {
-            viewName = GetViewName(viewName);
-            var viewResult = ViewEngines.Engines.FindView(_controllerContext, viewName, null);
+            var viewResult = FindView(viewContext, viewName);
             ValidateViewFound(viewName, viewResult);
 
-            return Render(viewResult, model);
-        }
-
-        public string RenderPartialView(string viewName)
-        {
-            viewName = GetViewName(viewName);
-            var viewResult = ViewEngines.Engines.FindPartialView(_controllerContext, viewName);
-            ValidateViewFound(viewName, viewResult);
-
-            return Render(viewResult);
-        }
-
-        public string RenderPartialView<T>(string viewName, T model)
-        {
-            viewName = GetViewName(viewName);
-            var viewResult = ViewEngines.Engines.FindPartialView(_controllerContext, viewName);
-            ValidateViewFound(viewName, viewResult);
-
-            return Render(viewResult, model);
+            return RenderViewAsync(viewContext, viewResult, model);
         }
 
         #endregion
 
         #region helpers
 
-        private string Render<T>(ViewEngineResult viewResult, T model)
+        private ViewEngineResult FindView(ViewContext viewContext, string viewName)
         {
-            var viewData = new ViewDataDictionary<T>(model);
-            return RenderViewData(viewResult, viewData);
+            var viewResult = _razorViewEngine.FindView(viewContext, viewName, false);
+            ValidateViewFound(viewName, viewResult);
+            return viewResult;
         }
 
-        private string Render(ViewEngineResult viewResult)
+        private async Task<string> RenderViewAsync(ViewContext viewContext, ViewEngineResult viewResult, object model)
         {
-            var viewData = new ViewDataDictionary();
-            return RenderViewData(viewResult, viewData);
-        }
-
-        private string RenderViewData(ViewEngineResult viewResult, ViewDataDictionary viewData)
-        {
-            var tempData = new TempDataDictionary();
+            var viewDictionary = new ViewDataDictionary(new EmptyModelMetadataProvider(), new ModelStateDictionary())
+            {
+                Model = model
+            };
 
             using (var sw = new StringWriter())
             {
-                var viewContext = new ViewContext(_controllerContext, viewResult.View, viewData, tempData, sw);
-                viewResult.View.Render(viewContext, sw);
+                var componentViewContext = new ViewContext(
+                    viewContext,
+                    viewResult.View,
+                    viewDictionary,
+                    sw
+                );
 
-                var result = sw.GetStringBuilder().ToString().Trim();
+                await viewResult.View.RenderAsync(viewContext);
 
-                return result;
+                return sw.ToString();
             }
-        }
-
-        private string GetViewName(string viewName)
-        {
-            if (string.IsNullOrEmpty(viewName))
-            {
-                viewName = _controllerContext.RouteData.GetRequiredString("action");
-            }
-
-            return viewName;
         }
 
         private static void ValidateViewFound(string viewName, ViewEngineResult viewResult)

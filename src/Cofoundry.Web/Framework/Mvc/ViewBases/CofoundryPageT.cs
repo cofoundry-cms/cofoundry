@@ -1,19 +1,27 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Mvc.Razor;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace Cofoundry.Web
 {
-    public abstract class CofoundryPage<TModel> : System.Web.Mvc.WebViewPage<TModel>
+    public abstract class CofoundryPage<TModel> : RazorPage<TModel>
     {
-        public override void InitHelpers()
+        private CofoundryPageHelper<TModel> _cofoundryPageHelper = null;
+        
+        public CofoundryPageHelper<TModel> Cofoundry
         {
-            base.InitHelpers();
-            Cofoundry = new CofoundryPageHelper<TModel>(Html, this.Model);
-        }
+            get
+            {
+                if (_cofoundryPageHelper == null && ViewContext != null)
+                {
+                    _cofoundryPageHelper = new CofoundryPageHelper<TModel>(Model);
+                }
 
-        public CofoundryPageHelper<TModel> Cofoundry { get; private set; }
+                return _cofoundryPageHelper;
+            }
+        }
     }
 
 }

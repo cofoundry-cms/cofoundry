@@ -6,6 +6,7 @@ using System.Web.Mvc;
 using HtmlAgilityPack;
 using Cofoundry.Domain;
 using Cofoundry.Core.Web;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace Cofoundry.Web
 {
@@ -33,13 +34,17 @@ namespace Cofoundry.Web
         /// <param name="pageViewModel">The view model for the page being rendered</param>
         /// <param name="moduleViewModel">The view model for the module being rendered</param>
         /// <returns>The rednered module html</returns>
-        public string RenderModule(ControllerContext controllerContext, IEditablePageViewModel pageViewModel, IEntityVersionPageModuleRenderDetails moduleViewModel)
+        public string RenderModule(
+            ViewContext viewContext, 
+            IEditablePageViewModel pageViewModel, 
+            IEntityVersionPageModuleRenderDetails moduleViewModel
+            )
         {
             var displayData = GetModuleDisplayData(pageViewModel, moduleViewModel);
             string viewPath = GetViewPath(moduleViewModel);
 
-            var viewRenderer = new RazorViewRenderer(controllerContext);
-            string html = viewRenderer.RenderPartialView(viewPath, displayData);
+            var viewRenderer = new RazorViewRenderer();
+            string html = viewRenderer.RenderPartialView(viewContext, viewPath, displayData);
 
             if (pageViewModel.IsPageEditMode)
             {

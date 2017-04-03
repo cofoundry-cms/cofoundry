@@ -59,7 +59,7 @@ namespace Cofoundry.Web.Admin
             
             var query = new GetPageVersionModuleRenderDetailsByIdQuery() { PageVersionModuleId = pageVersionModuleId, WorkFlowStatus = WorkFlowStatusQuery.Latest };
             var results = await _queryExecutor.ExecuteAsync(query);
-
+            
             return _apiResponseHelper.SimpleQueryResponse(this, results);
         }
 

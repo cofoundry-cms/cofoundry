@@ -332,7 +332,6 @@
     <Compile Include="Core\IO\PathResolvers\FileSystemPathResolver.cs" />
     <Compile Include="Core\IO\PathResolvers\IPathResolver.cs" />
     <Compile Include="Core\IO\Utf8StringWriter.cs" />
-    <Compile Include="Core\IO\WhitespaceStream.cs" />
     <Compile Include="Core\Parsers\BoolParser.cs" />
     <Compile Include="Core\Parsers\DecimalParser.cs" />
     <Compile Include="Core\Parsers\IntParser.cs" />
@@ -362,6 +361,9 @@
     <Compile Include="Web\Utilities\HtmlSanitizer\IHtmlSanitizer.cs" />
     <Compile Include="Web\Utilities\HtmlSanitizer\HtmlSanitizer.cs" />
     <Compile Include="Web\Utilities\HtmlSanitizer\PermittedTag.cs" />
+    <Compile Include="Web\Utilities\MimeMapping\MimeTypeService.cs" />
+    <Compile Include="Web\Utilities\MimeMapping\IMimeTypeService.cs" />
+    <Compile Include="Web\Utilities\MimeMapping\MimeMapping.cs" />
     <Compile Include="Web\Utilities\QueryStringBuilder\QueryStringBuilder.cs" />
     <Compile Include="Web\Utilities\SitePathResolver.cs" />
     <Compile Include="Web\Utilities\UriResolvers\CompositeSiteUrlResolver.cs" />

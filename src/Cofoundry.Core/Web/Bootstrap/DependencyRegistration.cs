@@ -19,6 +19,7 @@ namespace Cofoundry.Core.Web.Bootstrap
                 .RegisterType<ISiteUrlResolver, CompositeSiteUrlResolver>()
                 .RegisterType<IHtmlSanitizer, HtmlSanitizer>()
                 .RegisterType<IDefaultHtmlSanitizationRuleSetFactory, DefaultHtmlSanitizationRuleSetFactory>()
+                .RegisterType<IMimeTypeService, MimeTypeService>()
                 ;
         }
     }

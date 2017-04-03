@@ -1,6 +1,6 @@
 ﻿using System;
-using System.Web.Mvc;
 using Cofoundry.Domain;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace Cofoundry.Web
 {
@@ -17,7 +17,11 @@ namespace Cofoundry.Web
         /// <param name="pageViewModel">The view model for the page being rendered</param>
         /// <param name="moduleViewModel">The view model for the module being rendered</param>
         /// <returns>The rednered module html</returns>
-        string RenderModule(ControllerContext controllerContext, IEditablePageViewModel pageViewModel, IEntityVersionPageModuleRenderDetails moduleViewModel);
+        string RenderModule(
+            ViewContext controllerContext, 
+            IEditablePageViewModel pageViewModel, 
+            IEntityVersionPageModuleRenderDetails moduleViewModel
+            );
 
         /// <summary>
         /// Renders an default placeholder element for use when a module has not yet been added to a section.

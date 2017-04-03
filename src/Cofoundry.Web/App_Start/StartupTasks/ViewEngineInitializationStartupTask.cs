@@ -1,5 +1,5 @@
 ﻿using Cofoundry.Web.ModularMvc;
-using Owin;
+using Microsoft.AspNetCore.Builder;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,7 +26,7 @@ namespace Cofoundry.Web
             get { return (int)StartupTaskOrdering.Early; }
         }
 
-        public void Run(IAppBuilder app)
+        public void Run(IApplicationBuilder app)
         {
             _assemblyResourceViewEngineInitializer.Initialize();
         }

@@ -1,8 +1,8 @@
 ﻿using Cofoundry.Core.Json;
+using Microsoft.AspNetCore.Builder;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Serialization;
-using Owin;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -32,7 +32,7 @@ namespace Cofoundry.Web
             get { return (int)StartupTaskOrdering.Early; }
         }
 
-        public void Run(IAppBuilder app)
+        public void Run(IApplicationBuilder app)
         {
             JsonConvert.DefaultSettings = _jsonSerializerSettingsFactory.Create;
         }

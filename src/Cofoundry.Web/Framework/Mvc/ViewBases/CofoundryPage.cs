@@ -1,18 +1,14 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Mvc.Razor;
+using Microsoft.AspNetCore.Mvc.Razor.Internal;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace Cofoundry.Web
 {
-    public abstract class CofoundryPage : System.Web.Mvc.WebViewPage
+    public abstract class CofoundryPage : RazorPage
     {
-        public override void InitHelpers()
-        {
-            base.InitHelpers();
-            Cofoundry = new CofoundryPageHelper(Html);
-        }
-
-        public CofoundryPageHelper Cofoundry { get; private set; }
+        public CofoundryPageHelper Cofoundry { get; set; }
     }
 }

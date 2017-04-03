@@ -13,10 +13,10 @@ namespace Cofoundry.Core.AutoMapper
     /// </summary>
     public class AutoMapBootstrapper : IAutoMapBootstrapper
     {
-        private readonly Profile[] _autoMapProfiles;
+        private readonly IEnumerable<Profile> _autoMapProfiles;
 
         public AutoMapBootstrapper(
-            Profile[] autoMapProfiles
+            IEnumerable<Profile> autoMapProfiles
             )
         {
             _autoMapProfiles = autoMapProfiles;

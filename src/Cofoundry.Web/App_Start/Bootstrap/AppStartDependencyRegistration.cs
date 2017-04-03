@@ -1,14 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Web.Hosting;
-using System.Web.Mvc;
-using Cofoundry.Core.DependencyInjection;
-using Cofoundry.Core.Configuration;
-using Cofoundry.Web.WebApi;
-using Cofoundry.Domain;
+﻿using Cofoundry.Core.DependencyInjection;
 
 namespace Cofoundry.Web
 {

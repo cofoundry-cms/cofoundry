@@ -1,12 +1,8 @@
-﻿using Owin;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+﻿using System;
 using System.Net;
 using Cofoundry.Core.AutoUpdate;
-using Microsoft.Owin;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 
 namespace Cofoundry.Web
 {
@@ -14,7 +10,7 @@ namespace Cofoundry.Web
     /// Runs the auto-updater module during the first request and locks out other requests
     /// until the update is complete.
     /// </summary>
-    public class AutoUpdateMiddleware : OwinMiddleware
+    public class AutoUpdateMiddleware
     {
         private enum UpdateStatus
         {
@@ -26,12 +22,19 @@ namespace Cofoundry.Web
         private static UpdateStatus _updateStatus = UpdateStatus.NotStarted;
         private static object _updateStatusLock = new object();
 
-        public AutoUpdateMiddleware(OwinMiddleware next) 
-            : base(next)
+        private readonly RequestDelegate _next;
+        private readonly IAutoUpdateService _autoUpdateService;
+
+        public AutoUpdateMiddleware(
+            RequestDelegate next,
+            IAutoUpdateService autoUpdateService
+            ) 
         {
+            _next = next;
+            _autoUpdateService = autoUpdateService;
         }
 
-        public async override Task Invoke(IOwinContext cx)
+        public async Task Invoke(HttpContext cx)
         {
             bool runUpdate = false;
 
@@ -50,11 +53,7 @@ namespace Cofoundry.Web
                 {
                     try
                     {
-                        using (var cs = IckyDependencyResolution.CreateNewChildContextFromRoot())
-                        {
-                            var service = cs.Resolve<IAutoUpdateService>();
-                            await service.UpdateAsync();
-                        }
+                        await _autoUpdateService.UpdateAsync();
                         _updateStatus = UpdateStatus.Complete;
                     }
                     catch (Exception ex)
@@ -72,7 +71,7 @@ namespace Cofoundry.Web
             }
             else
             {
-                await Next.Invoke(cx);
+                await _next.Invoke(cx);
             }
         }
     }

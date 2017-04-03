@@ -1,47 +1,27 @@
-﻿using System;
+﻿using Cofoundry.Core;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Web;
-using System.Web.Mvc;
 
 namespace Cofoundry.Web
 {
     public class EnumBinder<T> : IModelBinder where T : struct
     {
-        private T? DefaultValue { get; set; }
-        public EnumBinder(T? defaultValue)
+        public Task BindModelAsync(ModelBindingContext bindingContext)
         {
-            if (!typeof(T).IsEnum)
-                throw new ArgumentException("T must be an enumerated type");
+            var value = bindingContext.ValueProvider.GetValue(bindingContext.ModelName);
 
-            DefaultValue = defaultValue;
-        }
+            var parsedValue = EnumParser.ParseOrNull<T>(value.FirstValue);
 
-        #region IModelBinder Members
-        public object BindModel(ControllerContext controllerContext, ModelBindingContext bindingContext)
-        {
-            ValueProviderResult value = bindingContext.ValueProvider.GetValue(bindingContext.ModelName);
+            if (parsedValue.HasValue)
+            {
+                bindingContext.Result = ModelBindingResult.Success(value);
+            }
 
-            return (value == null || string.IsNullOrEmpty(value.AttemptedValue))
-                ? DefaultValue
-                : GetEnumValue(DefaultValue, value.AttemptedValue);
-        }
-
-        #endregion
-
-        public static U? GetEnumValue<U>(U? defaultValue, string value) where U : struct
-        {
-            U? enumType = defaultValue;
-
-            if ((!String.IsNullOrEmpty(value)) && (Contains(typeof(T), value)))
-                enumType = (U)Enum.Parse(typeof(U), value, true);
-
-            return enumType;
-        }
-
-        public static bool Contains(Type enumType, string value)
-        {
-            return Enum.GetNames(enumType).Contains(value, StringComparer.OrdinalIgnoreCase);
+            return Task.CompletedTask;
         }
     }
 }

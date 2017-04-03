@@ -1,15 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
-using System.Web.Mvc;
-using System.Xml.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Cofoundry.Domain.CQS;
 using Cofoundry.Domain;
-using Cofoundry.Core.IO;
 using Cofoundry.Core.Web;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Cofoundry.Web
 {

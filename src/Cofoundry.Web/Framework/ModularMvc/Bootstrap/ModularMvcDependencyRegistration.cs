@@ -3,10 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Web.Hosting;
-using System.Web.Mvc;
 using Cofoundry.Core.DependencyInjection;
-using Cofoundry.Core.Configuration;
 using Cofoundry.Core.EmbeddedResources;
 
 namespace Cofoundry.Web.ModularMvc

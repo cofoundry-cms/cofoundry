@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25123.0
+# Visual Studio 15
+VisualStudioVersion = 15.0.26228.9
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cofoundry.Core", "Cofoundry.Core\Cofoundry.Core.csproj", "{B06A84C3-005B-4FFA-9C9A-81A96B59E1D4}"
 EndProject
@@ -10,6 +10,14 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cofoundry.Web", "Cofoundry.Web\Cofoundry.Web.csproj", "{DD92DAF1-5AA2-4498-A83B-A2F5A0434C2D}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cofoundry.Web.Admin", "Cofoundry.Web.Admin\Cofoundry.Web.Admin.csproj", "{2A937234-77BC-42D2-B8CA-97CC0962ACD5}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{4996A61A-00E1-4363-9BC7-1F877E4AD933}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{EAA517AB-9245-45E4-9929-C28E3BC944CC}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "samples", "samples", "{8FCDFF68-9BCF-499B-8E2D-7E08E824F40A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cofoundry.Sandbox", "Cofoundry.Sandbox\Cofoundry.Sandbox.csproj", "{B867864A-DB89-4B99-8A73-ABA40FABDF7D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,8 +41,19 @@ Global
 		{2A937234-77BC-42D2-B8CA-97CC0962ACD5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2A937234-77BC-42D2-B8CA-97CC0962ACD5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2A937234-77BC-42D2-B8CA-97CC0962ACD5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B867864A-DB89-4B99-8A73-ABA40FABDF7D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B867864A-DB89-4B99-8A73-ABA40FABDF7D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B867864A-DB89-4B99-8A73-ABA40FABDF7D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B867864A-DB89-4B99-8A73-ABA40FABDF7D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{B06A84C3-005B-4FFA-9C9A-81A96B59E1D4} = {4996A61A-00E1-4363-9BC7-1F877E4AD933}
+		{64809192-86DE-490A-8DAD-5F1550499A86} = {4996A61A-00E1-4363-9BC7-1F877E4AD933}
+		{DD92DAF1-5AA2-4498-A83B-A2F5A0434C2D} = {4996A61A-00E1-4363-9BC7-1F877E4AD933}
+		{2A937234-77BC-42D2-B8CA-97CC0962ACD5} = {4996A61A-00E1-4363-9BC7-1F877E4AD933}
+		{B867864A-DB89-4B99-8A73-ABA40FABDF7D} = {8FCDFF68-9BCF-499B-8E2D-7E08E824F40A}
 	EndGlobalSection
 EndGlobal

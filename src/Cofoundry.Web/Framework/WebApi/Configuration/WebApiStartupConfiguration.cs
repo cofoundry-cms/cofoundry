@@ -5,42 +5,36 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http.Headers;
 using System.Web;
-using System.Web.Http;
-using System.Web.Http.ExceptionHandling;
 
 namespace Cofoundry.Web.WebApi
 {
-    public class WebApiStartupConfiguration : IWebApiStartupConfiguration
-    {
-        private readonly IJsonSerializerSettingsFactory _jsonSerializerSettingsFactory;
+    //public class WebApiStartupConfiguration : IWebApiStartupConfiguration
+    //{
+    //    private readonly IJsonSerializerSettingsFactory _jsonSerializerSettingsFactory;
 
-        public WebApiStartupConfiguration(
-            IJsonSerializerSettingsFactory jsonSerializerSettingsFactory
-            )
-        {
-            _jsonSerializerSettingsFactory = jsonSerializerSettingsFactory;
-        }
+    //    public WebApiStartupConfiguration(
+    //        IJsonSerializerSettingsFactory jsonSerializerSettingsFactory
+    //        )
+    //    {
+    //        _jsonSerializerSettingsFactory = jsonSerializerSettingsFactory;
+    //    }
 
-        public void Configure(HttpConfiguration config)
-        {
-            config.MapHttpAttributeRoutes();
+    //    public void Configure(HttpConfiguration config)
+    //    {
+    //        ConfigureJsonFormatter(config);
 
-            ConfigureJsonFormatter(config);
+    //        config.Formatters.Add(new MultipartFormDataFormatter());
+    //    }
 
-            config.Formatters.Add(new MultipartFormDataFormatter());
+    //    private void ConfigureJsonFormatter(HttpConfiguration config)
+    //    {
+    //        var jsonFormatter = config.Formatters.JsonFormatter;
 
-            config.Services.Replace(typeof(IExceptionLogger), new WebApiExceptionLogger());
-        }
+    //        // make json default response
+    //        jsonFormatter.SupportedMediaTypes.Add(new MediaTypeHeaderValue("text/html"));
 
-        private void ConfigureJsonFormatter(HttpConfiguration config)
-        {
-            var jsonFormatter = config.Formatters.JsonFormatter;
-
-            // make json default response
-            jsonFormatter.SupportedMediaTypes.Add(new MediaTypeHeaderValue("text/html"));
-
-            jsonFormatter.SerializerSettings = _jsonSerializerSettingsFactory.Create();
-            jsonFormatter.SerializerSettings.ContractResolver = new DeltaContractResolver();
-        }
-    }
+    //        jsonFormatter.SerializerSettings = _jsonSerializerSettingsFactory.Create();
+    //        jsonFormatter.SerializerSettings.ContractResolver = new DeltaContractResolver();
+    //    }
+    //}
 }
