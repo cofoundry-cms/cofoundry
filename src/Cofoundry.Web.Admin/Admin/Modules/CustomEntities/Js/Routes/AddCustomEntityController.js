@@ -60,7 +60,7 @@ function (
         setLoadingOn(loadState);
 
         customEntityService
-            .add(vm.command)
+            .add(vm.command, moduleOptions.customEntityDefinitionCode)
             .then(redirectToCommand)
             .finally(setLoadingOff.bind(null, loadState));
     }
