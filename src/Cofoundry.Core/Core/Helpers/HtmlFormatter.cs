@@ -58,14 +58,17 @@ namespace Cofoundry.Core
 
                 string additionalAttributes = string.Empty;
 
-                if (formatOptions.HasFlag(BasicHtmlFormatOption.LinksNoFollow))
+                if (formatOptions.HasFlag(BasicHtmlFormatOption.LinksNoFollow) && formatOptions.HasFlag(BasicHtmlFormatOption.LinksToNewWindow))
+                {
+                    additionalAttributes += " target='_blank' rel='nofollow noopener'";
+                }
+                else if (formatOptions.HasFlag(BasicHtmlFormatOption.LinksNoFollow))
                 {
                     additionalAttributes += " rel='nofollow'";
                 }
-
-                if (formatOptions.HasFlag(BasicHtmlFormatOption.LinksToNewWindow))
+                else if (formatOptions.HasFlag(BasicHtmlFormatOption.LinksToNewWindow))
                 {
-                    additionalAttributes += " target='_blank'";
+                    additionalAttributes += " target='_blank' rel='noopener'";
                 }
 
                 return "<a href='" + href + "'" + additionalAttributes + ">" + displayText + "</a>";
