@@ -1,4 +1,5 @@
 ﻿using Cofoundry.Core.EmbeddedResources;
+using Cofoundry.Core.Json;
 using Cofoundry.Domain;
 using System;
 using System.Collections.Generic;
@@ -39,10 +40,11 @@ namespace Cofoundry.Web.Admin
                 var responseData = responseDataCache.Get();
 
                 var resourceLocator = IckyDependencyResolution.ResolveFromMvcContext<IResourceLocator>();
+                var jsonSerializerSettingsFactory = IckyDependencyResolution.ResolveFromMvcContext<IJsonSerializerSettingsFactory>();
 
                 var response = filterContext.HttpContext.Response;
                 var context = filterContext.Controller.ControllerContext;
-                response.Filter = new VisualEditorContentStream(response.Filter, responseData, resourceLocator, context);
+                response.Filter = new VisualEditorContentStream(response.Filter, responseData, resourceLocator, jsonSerializerSettingsFactory, context);
             }
         }
 

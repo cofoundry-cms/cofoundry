@@ -158,7 +158,7 @@ function (
         }
 
         customEntityService
-            .getAll(query)
+            .getAll(query, customEntityOptions.customEntityDefinitionCode)
             .then(onLoaded);
 
         function onLoaded(result) {

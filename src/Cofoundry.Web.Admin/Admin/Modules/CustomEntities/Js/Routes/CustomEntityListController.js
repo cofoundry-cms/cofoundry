@@ -65,7 +65,7 @@ function (
     function loadGrid() {
         vm.gridLoadState.on();
 
-        return customEntityService.getAll(vm.query.getParameters()).then(function (result) {
+        return customEntityService.getAll(vm.query.getParameters(), options.customEntityDefinitionCode).then(function (result) {
             vm.result = result;
             vm.gridLoadState.off();
         });
