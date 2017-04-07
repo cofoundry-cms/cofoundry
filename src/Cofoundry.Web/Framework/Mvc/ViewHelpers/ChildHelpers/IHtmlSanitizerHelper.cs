@@ -27,5 +27,17 @@ namespace Cofoundry.Web
         /// </summary>
         /// <param name="s">Html content to sanitize</param>
         IHtmlString Sanitize(IHtmlString s);
+
+        /// <summary>
+        /// Takes a string and removes all HTML tags
+        /// </summary>
+        /// <param name="source">String content to sanitize</param>
+        string StripHtml(string source);
+
+        /// <summary>
+        /// Takes a raw source and removes all HTML tags
+        /// </summary>
+        /// <param name="source">IHtmlString content to sanitize</param>
+        string StripHtml(IHtmlString source);
     }
 }
