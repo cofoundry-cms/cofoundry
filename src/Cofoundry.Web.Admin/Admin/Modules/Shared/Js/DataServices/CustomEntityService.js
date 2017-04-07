@@ -2,12 +2,11 @@
     '$http',
     '_',
     'shared.serviceBase',
-    'customEntities.options',
 function (
     $http,
     _,
-    serviceBase,
-    options) {
+    serviceBase
+    ) {
 
     var service = {},
         customEntityServiceBase = serviceBase + 'custom-entities';
@@ -15,7 +14,7 @@ function (
     /* QUERIES */
 
     service.getAll = function (query, customEntityDefinitionCode) {
-        return $http.get(getCustomEntityDefinitionServiceBase(customEntityDefinitionCode ? customEntityDefinitionCode : options.customEntityDefinitionCode) + '/custom-entities', {
+        return $http.get(getCustomEntityDefinitionServiceBase(customEntityDefinitionCode) + '/custom-entities', {
             params: query
         });
     }
@@ -65,7 +64,7 @@ function (
     /* COMMANDS */
 
     service.add = function (command, customEntityDefinitionCode) {
-        command.customEntityDefinitionCode = customEntityDefinitionCode ? customEntityDefinitionCode : options.customEntityDefinitionCode;
+        command.customEntityDefinitionCode = customEntityDefinitionCode;
         return $http.post(customEntityServiceBase, command);
     }
 
@@ -80,7 +79,7 @@ function (
     }
 
     service.updateDraft = function (command, customEntityDefinitionCode) {
-        command.customEntityDefinitionCode = customEntityDefinitionCode ? customEntityDefinitionCode : options.customEntityDefinitionCode;
+        command.customEntityDefinitionCode = customEntityDefinitionCode;
 
         return $http.put(getVerionsRoute(command.customEntityId) + '/draft', command);
     }

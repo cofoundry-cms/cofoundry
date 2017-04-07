@@ -85,7 +85,7 @@ function (
 
         setLoadingOn(loadState);
 
-        customEntityService.updateDraft(vm.updateCommand)
+        customEntityService.updateDraft(vm.updateCommand, moduleOptions.customEntityDefinitionCode)
             .then(onSuccess.bind(null, 'Changes were saved successfully'))
             .finally(setLoadingOff.bind(null, loadState));
     }

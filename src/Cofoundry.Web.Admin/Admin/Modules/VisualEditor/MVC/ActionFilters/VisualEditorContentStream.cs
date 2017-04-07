@@ -1,4 +1,5 @@
 ﻿using Cofoundry.Core.EmbeddedResources;
+using Cofoundry.Core.Json;
 using Cofoundry.Domain;
 using Newtonsoft.Json;
 using System;
@@ -29,18 +30,21 @@ namespace Cofoundry.Web.Admin
         private readonly Stream _outputStream = null;
         private readonly IPageResponseData _pageResponseData;
         private readonly IResourceLocator _resourceLocator;
+        private readonly IJsonSerializerSettingsFactory _jsonSerializerSettingsFactory;
         private readonly ControllerContext _context;
 
         public VisualEditorContentStream(
             Stream outputStream,
             IPageResponseData pageResponseData,
             IResourceLocator resourceLocator,
+            IJsonSerializerSettingsFactory jsonSerializerSettingsFactory,
             ControllerContext context
             )
         {
             _outputStream = outputStream;
             _pageResponseData = pageResponseData;
             _resourceLocator = resourceLocator;
+            _jsonSerializerSettingsFactory = jsonSerializerSettingsFactory;
             _context = context;
         }
 
@@ -90,7 +94,12 @@ namespace Cofoundry.Web.Admin
 
             if (insertBodyIndex > 0)
             {
-                var responseJson = JsonConvert.SerializeObject(_pageResponseData);
+                // When using IPageModuleWithParentPageData and referencing the parent page we get a
+                // Self referencing loop error. Rather than set this globally we ignore this specifically here
+                var settings = _jsonSerializerSettingsFactory.Create();
+                settings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
+
+                var responseJson = JsonConvert.SerializeObject(_pageResponseData, settings);
 
                 html = html.Substring(0, insertBodyIndex)
                     + Environment.NewLine + TAB
