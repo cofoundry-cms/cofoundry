@@ -1,6 +1,7 @@
 ﻿<div class="control-group">
     <cms-field>
         <label class="control-label" for="{{vm.modelName}}">{{vm.title}}:</label>
+        <div class="filtered-dd--actions" ng-show="vm.formScope.editMode" ng-transclude></div>
         <div class="controls filtered-dd">
 
             <input type="hidden"
@@ -36,7 +37,6 @@
 
             <cms-form-field-validation-summary></cms-form-field-validation-summary>
 
-            <div ng-show="vm.formScope.editMode" ng-transclude></div>
         </div>
     </cms-field>
     <p class="help-inline" ng-if="vm.description">
