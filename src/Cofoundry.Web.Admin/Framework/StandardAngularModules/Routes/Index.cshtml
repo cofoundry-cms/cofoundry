@@ -1,14 +1,15 @@
 ﻿@inherits Cofoundry.Web.CofoundryPage<ModuleJsRouteLibrary>
 @using Cofoundry.Web.Admin
+@using System.Web.Optimization
 
 @{
     Layout = LayoutPaths.DefaultLayout;    
 }
 
 @section FooterScripts {
-    @AngularHelper.Bootstrap(Model, Cofoundry.CurrentUser)
+    @AngularHelper.Bootstrap_vNext(Cofoundry.CurrentUser)
 }
 
-<div ng-view=""></div>
+<cms-app>Loading...</cms-app>
 
 

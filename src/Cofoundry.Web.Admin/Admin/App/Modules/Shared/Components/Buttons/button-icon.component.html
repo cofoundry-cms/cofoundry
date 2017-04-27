@@ -1,0 +1,6 @@
+<button type="button" *ngIf="!href" class="btn-icon" title="{{title}}">
+    <i class="fa {{iconCls}}"></i>
+</button>
+<a *ngIf="href" href="{{href}}" class="btn-icon" title="{{title}}" target="{{external ? '_blank' : '_self'}}">
+    <i class="fa {{iconCls}}"></i>
+</a>

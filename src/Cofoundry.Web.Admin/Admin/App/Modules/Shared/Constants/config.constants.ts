@@ -1,0 +1,1 @@
+export const SELECTOR_PREFIX = 'cms-';

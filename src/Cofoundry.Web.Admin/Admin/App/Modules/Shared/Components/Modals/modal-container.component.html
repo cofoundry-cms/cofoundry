@@ -1,0 +1,8 @@
+<div class="modal" *ngClass="sizeCls">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <ng-content></ng-content>
+        </div>
+    </div>
+</div>
+<div class="modal-background" *ngClass="sizeCls" (click)="close()"></div>

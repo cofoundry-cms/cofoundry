@@ -1,0 +1,8 @@
+<div class="dashboard-item">
+    <h3>{{title}}</h3>
+    <ng-content></ng-content>
+    <div class="btn-group">
+        <a class="btn btn-small" href="{{listurl}}" *ngIf="listurl"><i class="icon-list"></i> All {{entitynameplural}}</a>
+        <a class="btn btn-small" href="{{createurl}}" *ngIf="createurl"><i class="icon-plus"></i> New {{entityname}}</a>
+    </div>
+</div>

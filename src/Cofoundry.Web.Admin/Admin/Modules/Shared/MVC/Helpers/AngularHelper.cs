@@ -32,6 +32,18 @@ namespace Cofoundry.Web.Admin
 
         }
 
+        public static IHtmlString Bootstrap_vNext(ICurrentUserViewHelper currentUserHelper)
+        {
+            var script = string.Concat(
+                //RenderScript(SharedRouteLibrary.Js.Main),
+                //RenderScript(SharedRouteLibrary.Js.Templates),
+                RenderScript("~/scripts/vnext")
+                );
+
+            return new HtmlString(script);
+
+        }
+
         #region private helpers
 
         private static string RenderBootstrapper(ModuleJsRouteLibrary routeLibrary, ICurrentUserViewHelper currentUserHelper, object options)

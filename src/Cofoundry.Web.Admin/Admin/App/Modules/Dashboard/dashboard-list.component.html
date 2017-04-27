@@ -1,0 +1,102 @@
+<!--HEADER-->
+<cms-dashboard-component title="Recent Pages"
+                         entityname="page"
+                         entitynameplural="pages"
+                         [listurl]="urlLibrary.pageList()"
+                         [createurl]="urlLibrary.pageNew()"
+                         [loader]="pagesLoadState"
+                         [numitems]="pages.length">
+
+    <table class="table table-condensed">
+        <tbody>
+            <tr *ngFor="let page of pages">
+                <td>
+                    <a class="highlight" href="{{page.fullPath}}" title="{{title}}">{{page.fullPath}}</a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+</cms-dashboard-component>
+
+<cms-dashboard-component title="Draft Pages"
+                         entityname="draft"
+                         entitynameplural="drafts"
+                         [listurl]="urlLibrary.pageList({ workFlowStatus: 'Draft' })"
+                         [loader]="draftPagesLoadState"
+                         [numitems]="draftPages.length">
+
+    <table class="table table-condensed">
+        <tbody>
+            <tr *ngFor="let draft of draftPages">
+                <td>
+                    <a class="highlight" href="{{draft.fullPath}}" title="{{title}}">{{draft.fullPath}}</a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+</cms-dashboard-component>
+
+<cms-dashboard-component title="Page Templates"
+                         entityname="page template"
+                         entitynameplural="page templates"
+                         [listurl]="urlLibrary.pageTemplateList()"
+                         [createurl]="urlLibrary.pageTemplateNew()"
+                         [loader]="pageTemplatesLoadState"
+                         [numitems]="pageTemplates.length">
+
+    <table class="table table-condensed">
+        <tbody>
+            <tr *ngFor="let template of pageTemplates">
+                <td>
+                    <a class="highlight" href="{{urlLibrary.pageTemplateDetails(template.pageTemplateId)}}">{{template.name}}</a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+</cms-dashboard-component>
+
+<button type="button" (click)="onModalOpen()">Open Modal</button>
+
+<br clear="all">
+
+<!--
+<cms-form>
+    <cms-form-field-textbox
+        key="firstName"
+        title="First Name"
+        required>
+    </cms-form-field-textbox>
+    <cms-form-field-textbox
+        key="emailAddress"
+        title="Email Address"
+        type="email"
+        required>
+    </cms-form-field-textbox>
+    <button 
+        type="submit">Submit</button>
+</cms-form>
+-->
+<!--
+<cms-dashboard-component title="Users"
+                         entityname="user"
+                         entitynameplural="users"
+                         listurl="{{urlLibrary.userList()}}"
+                         createurl="{{urlLibrary.userNew()}}"
+                         [loader]="usersLoadState"
+                         [numitems]="users.length">
+
+    <table class="table table-condensed">
+        <tbody>
+            <tr>
+                <td>
+                    {{users.length}}
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+</cms-dashboard-component>
+-->
