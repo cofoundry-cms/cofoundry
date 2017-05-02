@@ -17,14 +17,14 @@ export class DashboardListComponent implements OnInit {
     draftPages = [];
     pageTemplates = [];
     users = [];
-    
+
     constructor(
         private dashboardService: DashboardService,
         private urlLibrary: UrlLibrary,
         private modalService: ModalService) {
         this.urlLibrary = urlLibrary;
     }
-    
+
     ngOnInit() {
         this.loadGrid('getPages', 'pages');
         this.loadGrid('getDraftPages', 'draftPages');
@@ -33,7 +33,7 @@ export class DashboardListComponent implements OnInit {
     }
 
     loadGrid(queryExecutor, resultProperty) {
-        var loadState = new LoadState(true);
+        let loadState = new LoadState(true);
         this[resultProperty + 'LoadState'] = loadState;
 
         return this.dashboardService[queryExecutor]()

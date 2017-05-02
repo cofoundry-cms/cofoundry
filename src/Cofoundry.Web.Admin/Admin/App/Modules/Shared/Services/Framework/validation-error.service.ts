@@ -14,7 +14,9 @@ export default class ValidationErrorService {
         errors.forEach((error) => {
             let errorHandlers = _.filter(this.handlers, (handler) => {
                 return _.find(error.properties, (prop: string) => {
-                    if (!prop || !handler.prop) return false;
+                    if (!prop || !handler.prop) {
+                        return false;
+                    }
                     return handler.prop.toLowerCase() === prop.toLowerCase();
                 });
             });

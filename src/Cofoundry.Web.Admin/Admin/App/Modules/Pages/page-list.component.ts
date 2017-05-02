@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-//import * as _ from 'lodash';
-var _ = require("lodash");
+import * as _ from 'lodash';
 import { LoadState } from '../shared/components';
 import { SearchQuery } from '../shared/components/search/search-query.component';
 import { PageService } from './page.service';

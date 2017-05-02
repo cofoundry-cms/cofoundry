@@ -155,3 +155,6 @@ src/.vs
 # Cake Build
 /tools
 /artifacts
+/src/Cofoundry.Web.Admin/.vscode
+/src/Cofoundry.Web.Admin/Admin/App/dist
+/src/Cofoundry.Web.Admin/Admin/App/node_modules

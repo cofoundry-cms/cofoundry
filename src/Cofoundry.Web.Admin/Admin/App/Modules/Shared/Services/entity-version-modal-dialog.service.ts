@@ -18,9 +18,9 @@ export class EntityVersionModalDialogService {
     }
 
     publish(entityId, onLoadingStart, customEntityConfig) {
-        var config = customEntityConfig || this.pageEntityConfig;
+        let config = customEntityConfig || this.pageEntityConfig;
 
-        var options = {
+        let options = {
             title: 'Publish ' + config.entityNameSingular,
             message: 'Are you sure you want to publish this ' + config.entityNameSingular.toLowerCase() + '?',
             okButtonTitle: 'Yes, publish it',
@@ -34,14 +34,14 @@ export class EntityVersionModalDialogService {
     }
 
     unpublish(entityId, onLoadingStart, customEntityConfig) {
-        var config = customEntityConfig || this.pageEntityConfig;
-
-        var options = {
-            title: 'Unpublish ' + config.entityNameSingular,
-            message: 'Unpublishing this ' + config.entityNameSingular.toLowerCase() + ' will remove it from the live site and put it into draft status. Are you sure you want to continue?',
-            okButtonTitle: 'Yes, unpublish it',
-            onOk: onOk
-        };
+        let config = customEntityConfig || this.pageEntityConfig,
+            options = {
+                title: 'Unpublish ' + config.entityNameSingular,
+                message: `Unpublishing this ' + config.entityNameSingular.toLowerCase() + ' will remove it from the 
+                live site and put it into draft status. Are you sure you want to continue?`,
+                okButtonTitle: 'Yes, unpublish it',
+                onOk: onOk
+            };
 
         return this.modalDialogService.confirm(options);
 
@@ -53,21 +53,21 @@ export class EntityVersionModalDialogService {
     }
 
     copyToDraft(entityId, entityVersionId, hasDraft, onLoadingStart, customEntityConfig) {
-        var config = customEntityConfig || this.pageEntityConfig;
-
-        var options = {
-            title: 'Copy ' + config.entityNameSingular + ' Version',
-            message: 'A draft version of this ' + config.entityNameSingular.toLowerCase() + ' already exists. Copying this version will delete the current draft. Do you wish to continue?',
-            okButtonTitle: 'Yes, replace it',
-            onOk: () => {
-                onLoadingStart();
-                return this.entityVersionService
-                    .removeDraft(config.isCustomEntity, entityId)
-                    .subscribe(() => {
-                        return this.entityVersionService.duplicateDraft(config.isCustomEntity, entityId, entityVersionId);
-                    });
-            }
-        };
+        let config = customEntityConfig || this.pageEntityConfig,
+            options = {
+                title: 'Copy ' + config.entityNameSingular + ' Version',
+                message: `A draft version of this ' + config.entityNameSingular.toLowerCase() + ' already 
+                exists. Copying this version will delete the current draft. Do you wish to continue?`,
+                okButtonTitle: 'Yes, replace it',
+                onOk: () => {
+                    onLoadingStart();
+                    return this.entityVersionService
+                        .removeDraft(config.isCustomEntity, entityId)
+                        .subscribe(() => {
+                            return this.entityVersionService.duplicateDraft(config.isCustomEntity, entityId, entityVersionId);
+                        });
+                }
+            };
 
         if (hasDraft) {
             // If there's a draft already, warn the user

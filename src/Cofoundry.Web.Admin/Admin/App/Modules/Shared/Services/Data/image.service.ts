@@ -23,7 +23,7 @@ export default class ImageService {
 
     getByIdRange(ids) {
         let searchParams = new URLSearchParams();
-        searchParams.set("ids", ids);
+        searchParams.set('ids', ids);
 
         return this.http
             .get(this.imagesServiceBase + '/', {

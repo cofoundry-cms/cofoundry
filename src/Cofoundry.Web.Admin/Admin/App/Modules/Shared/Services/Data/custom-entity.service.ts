@@ -6,13 +6,12 @@ import * as _ from 'lodash';
 @Injectable()
 export default class CustomEntityService {
     private http: Http;
+    customEntityDefinitionServiceBase = SERVICE_BASE + 'custom-entity-definitions/';
+    customEntityServiceBase = SERVICE_BASE + 'custom-entities';
 
     constructor(http: Http) {
         this.http = http;
     }
-
-    customEntityDefinitionServiceBase = SERVICE_BASE + 'custom-entity-definitions/';
-    customEntityServiceBase = SERVICE_BASE + 'custom-entities';
 
     /* QUERIES */
 
@@ -43,7 +42,7 @@ export default class CustomEntityService {
     getByIdRange(ids) {
         let searchParams = new URLSearchParams();
         searchParams.set('ids', ids);
-        
+
         return this.http
             .get(this.customEntityServiceBase + '/', {
                 search: searchParams

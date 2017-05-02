@@ -22,18 +22,18 @@ export default class EntityVersionService {
     }
 
     duplicateDraft(isCustomEntity, entityId, entityVersionId) {
-        var command;
+        let command;
 
         if (isCustomEntity) {
             command = {
                 customEntityId: entityId,
                 copyFromCustomEntityVersionId: entityVersionId
-            }
+            };
         } else {
             command = {
                 pageId: entityId,
                 copyFromPageVersionId: entityVersionId
-            }
+            };
         }
 
         return this.http

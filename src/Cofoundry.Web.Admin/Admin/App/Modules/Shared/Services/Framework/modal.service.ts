@@ -1,4 +1,5 @@
-import { NgModuleFactoryLoader, Injectable, Component, ComponentFactoryResolver, ViewContainerRef, ComponentFactory, ReflectiveInjector, ComponentRef } from '@angular/core';
+import { NgModuleFactoryLoader, Injectable, Component, ComponentFactoryResolver, 
+    ViewContainerRef, ComponentFactory, ReflectiveInjector, ComponentRef } from '@angular/core';
 import { ModalOptionsArgs } from '../index';
 
 @Injectable()
@@ -10,11 +11,11 @@ export default class ModalService {
         private componentResolver: ComponentFactoryResolver) {}
 
     public alert() {
-        
+
     }
 
     public confirm() {
-        
+
     }
 
     public open(component, args?: ModalOptionsArgs) {
