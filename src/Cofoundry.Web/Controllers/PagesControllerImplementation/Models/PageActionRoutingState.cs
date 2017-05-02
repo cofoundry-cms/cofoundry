@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Cofoundry.Domain;
-using System.Web.Mvc;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Cofoundry.Web
 {
@@ -47,6 +47,6 @@ namespace Cofoundry.Web
         /// An action result to return from the Page action. Set this at any point in the
         /// pipline and it will be returned after the current method has finished executing.
         /// </summary>
-        public ActionResult Result { get; set; }
+        public IActionResult Result { get; set; }
     }
 }

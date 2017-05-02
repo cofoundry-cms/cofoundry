@@ -2,19 +2,24 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using System.Web.Mvc;
 
 namespace Cofoundry.Web
 {
-    public class ErrorPageViewModel : HandleErrorInfo, IPageWithMetaDataViewModel
+    public class ErrorPageViewModel : IPageWithMetaDataViewModel
     {
         public ErrorPageViewModel(Exception exception, string controllerName, string actionName)
-            : base(exception, controllerName, actionName)
         {
-
+            Exception = exception;
+            ControllerName = controllerName;
+            ActionName = actionName;
         }
+
+        public Exception Exception { get; set; }
+
+        public string ControllerName { get; set; }
+
+        public string ActionName { get; set; }
 
         public string PageTitle { get; set; }
         public string MetaDescription { get; set; }

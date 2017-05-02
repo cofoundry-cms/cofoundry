@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using System.Web.Http;
-using System.Web.OData;
 using Cofoundry.Core;
 using Cofoundry.Core.Validation;
 using Cofoundry.Domain.CQS;
@@ -25,7 +23,7 @@ namespace Cofoundry.Web.WebApi
         /// <typeparam name="TCommand">Type of the command to execute</typeparam>
         /// <param name="controller">The Controller instance using the helper</param>
         /// <param name="command">The command to execute</param>
-        Task<IHttpActionResult> RunCommandAsync<TCommand>(Controller controller, TCommand command) where TCommand : ICommand;
+        Task<IActionResult> RunCommandAsync<TCommand>(Controller controller, TCommand command) where TCommand : ICommand;
 
         /// <summary>
         /// Executes a command in a "Patch" style, allowing for a partial update of a resource. In
@@ -37,7 +35,7 @@ namespace Cofoundry.Web.WebApi
         /// <typeparam name="TCommand">Type of the command to execute</typeparam>
         /// <param name="controller">The Controller instance using the helper</param>
         /// <param name="delta">The delta of the command to patch and execute</param>
-        Task<IHttpActionResult> RunCommandAsync<TCommand>(Controller controller, Delta<TCommand> delta) where TCommand : class, ICommand;
+        //Task<IActionResult> RunCommandAsync<TCommand>(Controller controller, Delta<TCommand> delta) where TCommand : class, ICommand;
 
         /// <summary>
         /// Executes a command in a "Patch" style, allowing for a partial update of a resource. In
@@ -49,31 +47,31 @@ namespace Cofoundry.Web.WebApi
         /// <typeparam name="TCommand">Type of the command to execute</typeparam>
         /// <param name="controller">The Controller instance using the helper</param>
         /// <param name="delta">The delta of the command to patch and execute</param>
-        Task<IHttpActionResult> RunCommandAsync<TCommand>(Controller controller, int id, Delta<TCommand> delta) where TCommand : class, ICommand;
+        //Task<IActionResult> RunCommandAsync<TCommand>(Controller controller, int id, Delta<TCommand> delta) where TCommand : class, ICommand;
 
         /// <summary>
         /// Executes an action and returns a formatted IHttpActionResult, handling any validation 
         /// errors and permission errors.
         /// </summary>
-        /// <param name="controller">The ApiController instance using the helper</param>
+        /// <param name="controller">The Controller instance using the helper</param>
         /// <param name="action">The action to execute</param>
-        Task<IHttpActionResult> RunAsync(Controller controller, Func<Task> action);
+        Task<IActionResult> RunAsync(Controller controller, Func<Task> action);
 
         /// <summary>
         /// Executes a function and returns a formatted IHttpActionResult, handling any validation 
         /// and permission errors. The result of the function is returned in the response data.
         /// </summary>
         /// <typeparam name="TResult">Type of result returned from the function</typeparam>
-        /// <param name="controller">The ApiController instance using the helper</param>
+        /// <param name="controller">The Controller instance using the helper</param>
         /// <param name="function">The function to execute</param>
-        Task<IHttpActionResult> RunWithResultAsync<TResult>(Controller controller, Func<Task<TResult>> function);
+        Task<IActionResult> RunWithResultAsync<TResult>(Controller controller, Func<Task<TResult>> function);
 
         /// <summary>
         /// Returns a formatted 403 error response using the message of the specified exception
         /// </summary>
         /// <param name="controller">The Controller instance using the helper</param>
         /// <param name="ex">The NotPermittedException to extract the message from</param>
-        IHttpActionResult NotPermittedResponse(Controller controller, NotPermittedException ex);
+        IActionResult NotPermittedResponse(Controller controller, NotPermittedException ex);
 
         /// <summary>
         /// Formats the result of a query. Results are wrapped inside an object with a data property
@@ -82,7 +80,7 @@ namespace Cofoundry.Web.WebApi
         /// <typeparam name="T">Type of the result</typeparam>
         /// <param name="controller">The Controller instance using the helper</param>
         /// <param name="result">The result to return</param>
-        IHttpActionResult SimpleQueryResponse<T>(Controller controller, T result);
+        IActionResult SimpleQueryResponse<T>(Controller controller, T result);
 
         /// <summary>
         /// Formats a command response wrapping it in a SimpleCommandResponse object and setting
@@ -90,15 +88,15 @@ namespace Cofoundry.Web.WebApi
         /// </summary>
         /// <param name="controller">The Controller instance using the helper</param>
         /// <param name="validationErrors">Validation errors, if any, to be returned.</param>
-        IHttpActionResult SimpleCommandResponse(Controller controller, IEnumerable<ValidationError> validationErrors);
+        IActionResult SimpleCommandResponse(Controller controller, IEnumerable<ValidationError> validationErrors);
 
         /// <summary>
         /// Formats a command response wrapping it in a SimpleCommandResponse object and setting
         /// properties based on the presence of validation errors. This overload allows you to include
         /// extra response data
         /// </summary>
-        /// <param name="controller">The ApiController instance using the helper</param>
+        /// <param name="controller">The Controller instance using the helper</param>
         /// <param name="validationErrors">Validation errors, if any, to be returned.</param>
-        IHttpActionResult SimpleCommandResponse<T>(Controller controller, IEnumerable<ValidationError> validationErrors, T returnData);
+        IActionResult SimpleCommandResponse<T>(Controller controller, IEnumerable<ValidationError> validationErrors, T returnData);
     }
 }

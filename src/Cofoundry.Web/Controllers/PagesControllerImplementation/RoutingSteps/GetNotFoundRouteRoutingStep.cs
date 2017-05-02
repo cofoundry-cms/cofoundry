@@ -16,17 +16,14 @@ namespace Cofoundry.Web
     {
         private readonly IQueryExecutor _queryExecutor;
         private readonly INotFoundViewHelper _notFoundViewHelper;
-        private readonly IRedirectResponseHelper _redirectResponseHelper;
 
         public GetNotFoundRouteRoutingStep(
             IQueryExecutor queryExecutor,
-            INotFoundViewHelper notFoundViewHelper,
-            IRedirectResponseHelper redirectResponseHelper
+            INotFoundViewHelper notFoundViewHelper
             )
         {
             _queryExecutor = queryExecutor;
             _notFoundViewHelper = notFoundViewHelper;
-            _redirectResponseHelper = redirectResponseHelper;
         }
 
         public async Task ExecuteAsync(Controller controller, PageActionRoutingState state)
@@ -44,7 +41,7 @@ namespace Cofoundry.Web
                 // If we still can't find a 404, fall back to the generic 404 view
                 if (state.PageRoutingInfo == null)
                 {
-                    state.Result = await _notFoundViewHelper.GetViewAsync();
+                    state.Result = await _notFoundViewHelper.GetViewAsync(controller);
                 }
             }
         }

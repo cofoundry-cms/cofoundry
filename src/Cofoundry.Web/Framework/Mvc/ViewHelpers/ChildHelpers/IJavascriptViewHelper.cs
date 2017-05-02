@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Html;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -16,6 +17,6 @@ namespace Cofoundry.Web
         /// Serializes the specified object into json using the default json serializer
         /// </summary>
         /// <param name="value">Object to serialize</param>
-        IHtmlString ToJson<T>(T value);
+        IHtmlContent ToJson<T>(T value);
     }
 }

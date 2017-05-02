@@ -1,17 +1,19 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Html;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web;
-using System.Web.Mvc;
 
 namespace Cofoundry.Web
 {
     public interface IPageTemplateHelper<out TModel>
         where TModel : IEditablePageViewModel
     {
-        HtmlHelper HtmlHelper { get; }
+        ViewContext ViewContext { get; }
+
         TModel Model { get; }
 
         /// <summary>
@@ -27,6 +29,6 @@ namespace Cofoundry.Web
         /// should be used for.
         /// </summary>
         /// <param name="description">A plain text description about this template</param>
-        IHtmlString UseDescription(string description);
+        IHtmlContent UseDescription(string description);
     }
 }

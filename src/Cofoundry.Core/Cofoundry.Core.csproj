@@ -62,6 +62,24 @@
       <HintPath>..\packages\Microsoft.AspNetCore.Razor.1.1.1\lib\net451\Microsoft.AspNetCore.Razor.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Microsoft.Extensions.FileProviders.Abstractions, Version=1.1.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Extensions.FileProviders.Abstractions.1.1.0\lib\netstandard1.0\Microsoft.Extensions.FileProviders.Abstractions.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Extensions.FileProviders.Composite, Version=1.1.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Extensions.FileProviders.Composite.1.1.0\lib\netstandard1.0\Microsoft.Extensions.FileProviders.Composite.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Extensions.FileProviders.Embedded, Version=1.1.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Extensions.FileProviders.Embedded.1.1.0\lib\net451\Microsoft.Extensions.FileProviders.Embedded.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Extensions.FileProviders.Physical, Version=1.1.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Extensions.FileProviders.Physical.1.1.0\lib\net451\Microsoft.Extensions.FileProviders.Physical.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Extensions.FileSystemGlobbing, Version=1.1.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Extensions.FileSystemGlobbing.1.1.0\lib\net45\Microsoft.Extensions.FileSystemGlobbing.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Extensions.Primitives, Version=1.1.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Extensions.Primitives.1.1.0\lib\netstandard1.0\Microsoft.Extensions.Primitives.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.Win32.Primitives, Version=4.0.2.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Win32.Primitives.4.3.0\lib\net46\Microsoft.Win32.Primitives.dll</HintPath>
       <Private>True</Private>
@@ -118,6 +136,9 @@
     </Reference>
     <Reference Include="System.Numerics" />
     <Reference Include="System.Runtime.Caching" />
+    <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=4.0.2.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Runtime.CompilerServices.Unsafe.4.3.0\lib\netstandard1.0\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
+    </Reference>
     <Reference Include="System.Runtime.InteropServices.RuntimeInformation, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Runtime.InteropServices.RuntimeInformation.4.3.0\lib\net45\System.Runtime.InteropServices.RuntimeInformation.dll</HintPath>
       <Private>True</Private>
@@ -235,12 +256,16 @@
     <Compile Include="Core\Parsers\EnumParser.cs" />
     <Compile Include="DependencyInjection\AppDependencyRegistration\RegistrationOverridePriority.cs" />
     <Compile Include="DependencyInjection\ContainerSpecificInterfaces\IContainerRegisterExtensions.cs" />
-    <Compile Include="EmbeddedResources\Bootstrap\EmbeddedResourcesRegistration.cs" />
-    <Compile Include="EmbeddedResources\Files\IResourceLocator.cs" />
-    <Compile Include="EmbeddedResources\Files\IResourceFile.cs" />
-    <Compile Include="EmbeddedResources\Files\IResourceDirectory.cs" />
-    <Compile Include="EmbeddedResources\Files\IAssemblyResourceRegistration.cs" />
-    <Compile Include="EmbeddedResources\Routes\IEmbeddedResourceRouteRegistration.cs" />
+    <Compile Include="ResourceFiles\Bootstrap\ResourceFilesRegistration.cs" />
+    <Compile Include="ResourceFiles\Files\IResourceFileProviderRegisteration.cs" />
+    <Compile Include="ResourceFiles\Files\ResourceFileProviderFactory.cs" />
+    <Compile Include="ResourceFiles\Files\IResourceFileProviderFactory.cs" />
+    <Compile Include="ResourceFiles\Files\IResourceLocator.cs" />
+    <Compile Include="ResourceFiles\Files\IResourceFile.cs" />
+    <Compile Include="ResourceFiles\Files\IResourceDirectory.cs" />
+    <Compile Include="ResourceFiles\Files\IAssemblyResourceRegistration.cs" />
+    <Compile Include="ResourceFiles\Providers\FilteredEmbeddedFileProvider.cs" />
+    <Compile Include="ResourceFiles\Routes\IEmbeddedResourceRouteRegistration.cs" />
     <Compile Include="ErrorLogging\Bootstrap\ErrorLoggingDependencyRegistration.cs" />
     <Compile Include="ErrorLogging\Services\SimpleErrorLoggingService.cs" />
     <Compile Include="ErrorLogging\Services\IErrorLoggingService.cs" />

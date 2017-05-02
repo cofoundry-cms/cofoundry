@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Net.Http.Headers;
 
 namespace Cofoundry.Web
 {
@@ -20,8 +22,9 @@ namespace Cofoundry.Web
             // don't cache if we're logged into Cofoundry Admin
             if (state.UserContext.IsCofoundryUser())
             {
-                controller.Response.Cache.SetCacheability(System.Web.HttpCacheability.NoCache);
-                controller.Response.Cache.SetNoStore();
+                var headers = controller.Response.GetTypedHeaders();
+                headers.CacheControl.NoCache = true;
+                headers.CacheControl.NoStore = true;
             }
 
             return Task.FromResult(true);

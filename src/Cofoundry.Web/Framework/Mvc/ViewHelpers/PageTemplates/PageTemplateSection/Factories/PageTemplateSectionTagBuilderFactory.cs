@@ -1,9 +1,9 @@
 ﻿using Cofoundry.Domain;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Web.Mvc;
 
 namespace Cofoundry.Web
 {
@@ -31,7 +31,7 @@ namespace Cofoundry.Web
         }
 
         public IPageTemplateSectionTagBuilder Create(
-            HtmlHelper htmlHelper,
+            ViewContext viewContext,
             IEditablePageViewModel pageViewModel, 
             string sectionName
             )
@@ -40,7 +40,7 @@ namespace Cofoundry.Web
                 _moduleRenderer, 
                 _moduleDataModelTypeFactory,
                 _moduleTypeFileNameFormatter,
-                htmlHelper,
+                viewContext,
                 pageViewModel,
                 sectionName
                 );

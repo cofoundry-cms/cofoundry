@@ -1,4 +1,6 @@
 ﻿using Cofoundry.Domain;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,15 +16,17 @@ namespace Cofoundry.Web
     /// </summary>
     public class CofoundryPageHelper
     {
-        public CofoundryPageHelper()
+        public CofoundryPageHelper(ViewContext viewContext)
         {
+            var serviceProvider = viewContext.HttpContext.RequestServices;
+
             // DI because mvc framework doesn't support injection yet
-            Routing = IckyDependencyResolution.ResolveFromMvcContext<IContentRouteLibrary>();
-            Settings = IckyDependencyResolution.ResolveFromMvcContext<ISettingsViewHelper>();
-            CurrentUser = IckyDependencyResolution.ResolveFromMvcContext<ICurrentUserViewHelper>();
-            Js = IckyDependencyResolution.ResolveFromMvcContext<IJavascriptViewHelper>();
-            Sanitizer = IckyDependencyResolution.ResolveFromMvcContext<IHtmlSanitizerHelper>();
-            Html = IckyDependencyResolution.ResolveFromMvcContext<ICofoundryHtmlHelper>();
+            Routing = serviceProvider.GetRequiredService<IContentRouteLibrary>();
+            Settings = serviceProvider.GetRequiredService<ISettingsViewHelper>();
+            CurrentUser = serviceProvider.GetRequiredService<ICurrentUserViewHelper>();
+            Js = serviceProvider.GetRequiredService<IJavascriptViewHelper>();
+            Sanitizer = serviceProvider.GetRequiredService<IHtmlSanitizerHelper>();
+            Html = serviceProvider.GetRequiredService<ICofoundryHtmlHelper>();
         }
 
         /// <summary>

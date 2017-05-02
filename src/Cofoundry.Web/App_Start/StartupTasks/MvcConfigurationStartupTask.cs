@@ -1,10 +1,15 @@
-﻿using Cofoundry.Domain;
+﻿using Cofoundry.Core.ResourceFiles;
+using Cofoundry.Domain;
 using Cofoundry.Web.ModularMvc;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
+using Microsoft.Extensions.FileProviders;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.Extensions.Primitives;
+using Cofoundry.Core;
+using Cofoundry.Core.ResourceFiles;
 
 namespace Cofoundry.Web
 {
@@ -16,15 +21,15 @@ namespace Cofoundry.Web
         #region constructor
 
         private readonly IRouteInitializer _routeInitializer;
-        private readonly IEmbeddedResourceRouteInitializer _embeddedResourceRouteInitializer;
+        private readonly IEnumerable<IEmbeddedResourceRouteRegistration> _routeRegistrations;
 
         public MvcConfigurationStartupTask(
             IRouteInitializer routeInitializer,
-            IEmbeddedResourceRouteInitializer embeddedResourceRouteInitializer
+            IEnumerable<IEmbeddedResourceRouteRegistration> routeRegistrations
             )
         {
             _routeInitializer = routeInitializer;
-            _embeddedResourceRouteInitializer = embeddedResourceRouteInitializer;
+            _routeRegistrations = routeRegistrations;
         }
 
         #endregion
@@ -36,6 +41,7 @@ namespace Cofoundry.Web
 
         public void Run(IApplicationBuilder app)
         {
+            RegisterStaticFiles(app);
             app.UseMvc(GetRoutes);
 
             //ControllerBuilder.Current.DefaultNamespaces.Add(typeof(PagesController).Namespace);
@@ -45,6 +51,25 @@ namespace Cofoundry.Web
 
         #region helpers
 
+        private void RegisterStaticFiles(IApplicationBuilder app)
+        {
+            // perhaps use a StaticFileOptions factory?
+            app.UseStaticFiles(); // For the wwwroot folder
+
+            foreach (var routeRegistration in _routeRegistrations)
+            {
+                var assembly = routeRegistration.GetType().Assembly;
+                var fileProvider = new EmbeddedFileProvider(assembly);
+                foreach (var route in routeRegistration.GetEmbeddedResourcePaths())
+                {
+                    app.UseStaticFiles(new StaticFileOptions()
+                    {
+                        FileProvider = new FilteredEmbeddedFileProvider(fileProvider, route)
+                    });
+                }
+            }
+        }
+
         private static void RegisterModelBinders()
         {
             // TODO: Remove or relocate?
@@ -53,14 +78,8 @@ namespace Cofoundry.Web
 
         private void GetRoutes(IRouteBuilder routes)
         {
-            SetupStaticFileRouting(routes);
             RegisterRootFiles(routes);
             RegisterControllerRoutes(routes);
-        }
-
-        private void SetupStaticFileRouting(IRouteBuilder routes)
-        {
-            _embeddedResourceRouteInitializer.Initialize();
         }
 
         private static void RegisterRootFiles(IRouteBuilder routes)

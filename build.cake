@@ -129,4 +129,5 @@ Task("Default").IsDependentOn("PushNuGetPackage");
 // EXECUTION
 //////////////////////////////////////////////////////////////////////
 
-RunTarget(target);
+// Dont run anything yet
+//RunTarget(target);

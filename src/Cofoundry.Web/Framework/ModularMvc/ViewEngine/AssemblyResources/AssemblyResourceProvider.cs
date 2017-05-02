@@ -7,7 +7,7 @@ using System.Collections;
 using System.Web.Caching;
 using System.IO;
 using System.Web.Optimization;
-using Cofoundry.Core.EmbeddedResources;
+using Cofoundry.Core.ResourceFiles;
 using Cofoundry.Core;
 
 namespace Cofoundry.Web.ModularMvc

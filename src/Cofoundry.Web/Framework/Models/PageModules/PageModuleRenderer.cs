@@ -2,11 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Web.Mvc;
-using HtmlAgilityPack;
 using Cofoundry.Domain;
 using Cofoundry.Core.Web;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using HtmlAgilityPack;
 
 namespace Cofoundry.Web
 {
@@ -17,12 +16,15 @@ namespace Cofoundry.Web
     public class PageModuleRenderer : IPageModuleRenderer
     {
         private readonly IPageModuleTypeViewFileLocator _pageModuleTypeViewFileLocator;
+        private readonly IRazorViewRenderer _razorViewRenderer;
 
         public PageModuleRenderer(
-            IPageModuleTypeViewFileLocator pageModuleTypeViewFileLocator
+            IPageModuleTypeViewFileLocator pageModuleTypeViewFileLocator,
+            IRazorViewRenderer razorViewRenderer
             )
         {
             _pageModuleTypeViewFileLocator = pageModuleTypeViewFileLocator;
+            _razorViewRenderer = razorViewRenderer;
         }
 
         #region public methods
@@ -34,7 +36,7 @@ namespace Cofoundry.Web
         /// <param name="pageViewModel">The view model for the page being rendered</param>
         /// <param name="moduleViewModel">The view model for the module being rendered</param>
         /// <returns>The rednered module html</returns>
-        public string RenderModule(
+        public async Task<string> RenderModuleAsync(
             ViewContext viewContext, 
             IEditablePageViewModel pageViewModel, 
             IEntityVersionPageModuleRenderDetails moduleViewModel
@@ -43,8 +45,7 @@ namespace Cofoundry.Web
             var displayData = GetModuleDisplayData(pageViewModel, moduleViewModel);
             string viewPath = GetViewPath(moduleViewModel);
 
-            var viewRenderer = new RazorViewRenderer();
-            string html = viewRenderer.RenderPartialView(viewContext, viewPath, displayData);
+            string html = await _razorViewRenderer.RenderViewAsync(viewContext, viewPath, displayData);
 
             if (pageViewModel.IsPageEditMode)
             {

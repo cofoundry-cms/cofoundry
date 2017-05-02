@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Web;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Primitives;
+using Microsoft.AspNetCore.Http;
 
 namespace Cofoundry.Domain
 {
@@ -90,24 +91,23 @@ namespace Cofoundry.Domain
             return qs.OrderAndRender();
         }
 
-        public static IImageResizeSettings ParseFromQueryString(string queryString)
+        public static IImageResizeSettings ParseFromQueryString(IQueryCollection queryString)
         {
-            var qs = QueryHelpers.ParseQuery(queryString);
             var settings = new ImageResizeSettings();
 
-            settings.Width = IntParser.ParseOrDefault(GetQueryStringValue(qs, QS_WIDTH));
-            settings.Height = IntParser.ParseOrDefault(GetQueryStringValue(qs, QS_HEIGHT));
-            settings.Anchor = EnumParser.ParseOrDefault<ImageAnchorLocation>(GetQueryStringValue(qs, QS_ANCHOR), settings.Anchor);
-            settings.Mode = EnumParser.ParseOrDefault<ImageFitMode>(GetQueryStringValue(qs, QS_MODE), settings.Mode);
-            settings.Scale = EnumParser.ParseOrDefault<ImageScaleMode>(GetQueryStringValue(qs, QS_SCALE), settings.Scale);
-            settings.BackgroundColor = StringHelper.EmptyAsNull(GetQueryStringValue(qs, QS_BACKGROUND_COLOR));
+            settings.Width = IntParser.ParseOrDefault(GetQueryStringValue(queryString, QS_WIDTH));
+            settings.Height = IntParser.ParseOrDefault(GetQueryStringValue(queryString, QS_HEIGHT));
+            settings.Anchor = EnumParser.ParseOrDefault<ImageAnchorLocation>(GetQueryStringValue(queryString, QS_ANCHOR), settings.Anchor);
+            settings.Mode = EnumParser.ParseOrDefault<ImageFitMode>(GetQueryStringValue(queryString, QS_MODE), settings.Mode);
+            settings.Scale = EnumParser.ParseOrDefault<ImageScaleMode>(GetQueryStringValue(queryString, QS_SCALE), settings.Scale);
+            settings.BackgroundColor = StringHelper.EmptyAsNull(GetQueryStringValue(queryString, QS_BACKGROUND_COLOR));
 
             return settings;
         }
 
-        private static string GetQueryStringValue(Dictionary<string, StringValues> queryString, string key)
+        private static string GetQueryStringValue(IQueryCollection queryString, string key)
         {
-            return queryString.GetOrDefault(QS_WIDTH).FirstOrDefault();
+            return queryString[QS_WIDTH].FirstOrDefault();
         }
     }
 }

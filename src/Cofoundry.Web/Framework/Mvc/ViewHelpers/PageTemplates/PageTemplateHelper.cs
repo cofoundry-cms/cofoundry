@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,6 +25,7 @@ namespace Cofoundry.Web
         }
 
         public ViewContext ViewContext { get; private set; }
+
         public TModel Model { get; private set; }
 
         /// <summary>
@@ -33,8 +35,8 @@ namespace Cofoundry.Web
         /// <returns>PageTemplateSectionTagOutput to allow for method chaining.</returns>
         public IPageTemplateSectionTagBuilder Section(string sectionName)
         {
-            var factory = IckyDependencyResolution.ResolveFromMvcContext<IPageTemplateSectionTagBuilderFactory>();
-            var output = factory.Create(HtmlHelper, Model, sectionName);
+            var factory = ViewContext.HttpContext.RequestServices.GetRequiredService<IPageTemplateSectionTagBuilderFactory>();
+            var output = factory.Create(ViewContext, Model, sectionName);
 
             return output;
         }

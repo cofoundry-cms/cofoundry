@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Html;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -19,13 +20,13 @@ namespace Cofoundry.Web
         /// to remove potentially dangerous markup.
         /// </summary>
         /// <param name="s">String content to sanitize</param>
-        IHtmlString Sanitize(string s);
+        IHtmlContent Sanitize(string s);
 
         /// <summary>
         /// Sanitizes the specified string using the default IHtmlSanitizer
         /// to remove potentially dangerous markup.
         /// </summary>
         /// <param name="s">Html content to sanitize</param>
-        IHtmlString Sanitize(IHtmlString s);
+        IHtmlContent Sanitize(IHtmlContent s);
     }
 }

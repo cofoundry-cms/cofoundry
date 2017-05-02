@@ -1,8 +1,8 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Web.Mvc;
 
 namespace Cofoundry.Web
 {
@@ -15,7 +15,7 @@ namespace Cofoundry.Web
     public interface IPageTemplateSectionTagBuilderFactory
     {
         IPageTemplateSectionTagBuilder Create(
-            HtmlHelper htmlHelper,
+            ViewContext viewContext,
             IEditablePageViewModel pageViewModel,
             string sectionName
             );

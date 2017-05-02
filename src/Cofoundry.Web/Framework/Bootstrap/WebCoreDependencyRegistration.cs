@@ -36,9 +36,7 @@ namespace Cofoundry.Web
                 .RegisterType<ICustomEntityTemplateSectionTagBuilderFactory, CustomEntityTemplateSectionTagBuilderFactory>()
                 .RegisterType<IPageTemplateSectionTagBuilderFactory, PageTemplateSectionTagBuilderFactory>()
                 .RegisterType<IPageModuleRenderer, PageModuleRenderer>()
-                .RegisterType<IRedirectResponseHelper, RedirectResponseHelper>()
                 .RegisterType<IPathResolver, SitePathResolver>(RegistrationOptions.Override(RegistrationOverridePriority.Low))
-                .RegisterType<IWebApiStartupConfiguration, WebApiStartupConfiguration>()
                 ; 
         }
     }

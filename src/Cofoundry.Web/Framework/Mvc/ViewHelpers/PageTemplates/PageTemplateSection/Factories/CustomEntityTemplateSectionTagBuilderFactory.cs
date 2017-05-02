@@ -1,9 +1,9 @@
 ﻿using Cofoundry.Domain;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Web.Mvc;
 
 namespace Cofoundry.Web
 {
@@ -22,7 +22,8 @@ namespace Cofoundry.Web
         public CustomEntityTemplateSectionTagBuilderFactory(
             IPageModuleRenderer moduleRenderer,
             IPageModuleDataModelTypeFactory moduleDataModelTypeFactory,
-            IPageModuleTypeFileNameFormatter moduleTypeFileNameFormatter)
+            IPageModuleTypeFileNameFormatter moduleTypeFileNameFormatter
+            )
         {
             _moduleRenderer = moduleRenderer;
             _moduleDataModelTypeFactory = moduleDataModelTypeFactory;
@@ -30,13 +31,13 @@ namespace Cofoundry.Web
         }
 
         public ICustomEntityTemplateSectionTagBuilder<TModel> Create<TModel>(
-            HtmlHelper htmlHelper,
+            ViewContext viewContext,
             ICustomEntityDetailsPageViewModel<TModel> customEntityViewModel, 
             string sectionName
             )
             where TModel : ICustomEntityDetailsDisplayViewModel
         {
-            return new CustomEntityTemplateSectionTagBuilder<TModel>(_moduleRenderer, _moduleDataModelTypeFactory, _moduleTypeFileNameFormatter, htmlHelper, customEntityViewModel, sectionName);
+            return new CustomEntityTemplateSectionTagBuilder<TModel>(_moduleRenderer, _moduleDataModelTypeFactory, _moduleTypeFileNameFormatter, viewContext, customEntityViewModel, sectionName);
         }
     }
 }

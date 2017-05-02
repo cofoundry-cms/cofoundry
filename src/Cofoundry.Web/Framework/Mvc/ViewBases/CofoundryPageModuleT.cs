@@ -18,7 +18,7 @@ namespace Cofoundry.Web
             {
                 if (_cofoundryPageHelper == null && ViewContext != null)
                 {
-                    _cofoundryPageHelper = new CofoundryPageModuleHelper<TModel>(Model);
+                    _cofoundryPageHelper = new CofoundryPageModuleHelper<TModel>(ViewContext, Model);
                 }
 
                 return _cofoundryPageHelper;

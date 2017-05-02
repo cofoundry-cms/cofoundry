@@ -45,6 +45,8 @@ namespace Cofoundry.Web
         public static void AddCofoundry(this IServiceCollection services)
         {
             services.AddMvc(ConfigureMvc);
+
+            
         }
 
         private static void ConfigureMvc(MvcOptions options)

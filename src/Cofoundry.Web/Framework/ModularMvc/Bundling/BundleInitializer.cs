@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Web.Optimization;
 
 namespace Cofoundry.Web.ModularMvc
 {
@@ -30,15 +29,15 @@ namespace Cofoundry.Web.ModularMvc
         /// </summary>
         public void Initialize()
         {
-            foreach (var bundleRegisteration in _bundleRegistrations)
-            {
-                bundleRegisteration.RegisterBundles(BundleTable.Bundles);
-            }
+            //foreach (var bundleRegisteration in _bundleRegistrations)
+            //{
+            //    bundleRegisteration.RegisterBundles(BundleTable.Bundles);
+            //}
 
-            if (_optimizationSettings.ForceBundling)
-            {
-                BundleTable.EnableOptimizations = true;
-            }
+            //if (_optimizationSettings.ForceBundling)
+            //{
+            //    BundleTable.EnableOptimizations = true;
+            //}
         }
     }
 }

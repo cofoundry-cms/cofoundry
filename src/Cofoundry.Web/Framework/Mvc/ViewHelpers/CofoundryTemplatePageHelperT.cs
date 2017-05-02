@@ -21,7 +21,7 @@ namespace Cofoundry.Web
             ViewContext viewContext, 
             TModel model
             )
-            : base(model)
+            : base(viewContext, model)
         {
             Template = new PageTemplateHelper<TModel>(viewContext, model);
         }

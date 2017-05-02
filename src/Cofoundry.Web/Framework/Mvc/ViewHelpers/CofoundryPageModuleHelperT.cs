@@ -1,4 +1,5 @@
 ﻿using Cofoundry.Domain;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,8 +17,8 @@ namespace Cofoundry.Web
     public class CofoundryPageModuleHelper<TModel> 
         : CofoundryPageHelper<TModel> where TModel : IPageModuleDisplayModel
     {
-        public CofoundryPageModuleHelper(TModel model)
-            : base(model)
+        public CofoundryPageModuleHelper(ViewContext viewContext, TModel model)
+            : base(viewContext, model)
         {
             Module = new PageModuleHelper<TModel>();
         }

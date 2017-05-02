@@ -6,6 +6,10 @@ using System.Linq;
 using System.Threading.Tasks;
 using Cofoundry.Domain;
 using Cofoundry.Core.Web;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using System.ComponentModel;
+using System.IO;
+using System.Text.Encodings.Web;
 
 namespace Cofoundry.Web
 {
@@ -19,7 +23,7 @@ namespace Cofoundry.Web
 
         const string DEFAULT_TAG ="div";
         private readonly ICustomEntityDetailsPageViewModel<TModel> _customEntityViewModel;
-        private readonly HtmlHelper _htmlHelper;
+        private readonly ViewContext _viewContext;
         private readonly IPageModuleRenderer _moduleRenderer;
         private readonly IPageModuleDataModelTypeFactory _moduleDataModelTypeFactory;
         private readonly IPageModuleTypeFileNameFormatter _moduleTypeFileNameFormatter;
@@ -29,7 +33,7 @@ namespace Cofoundry.Web
             IPageModuleRenderer moduleRenderer,
             IPageModuleDataModelTypeFactory moduleDataModelTypeFactory,
             IPageModuleTypeFileNameFormatter moduleTypeFileNameFormatter,
-            HtmlHelper htmlHelper,
+            ViewContext viewContext,
             ICustomEntityDetailsPageViewModel<TModel> customEntityViewModel, 
             string sectionName)
         {
@@ -41,13 +45,14 @@ namespace Cofoundry.Web
             _moduleTypeFileNameFormatter = moduleTypeFileNameFormatter;
             _sectionName = sectionName;
             _customEntityViewModel = customEntityViewModel;
-            _htmlHelper = htmlHelper;
+            _viewContext = viewContext;
         }
 
         #endregion
 
         #region state properties
 
+        private string _output = null;
         private string _sectionName;
         private string _wrappingTagName = null;
         private bool _allowMultipleModules = false;
@@ -86,18 +91,7 @@ namespace Cofoundry.Web
             Condition.Requires(tagName).IsNotNullOrWhiteSpace();
 
             _wrappingTagName = tagName;
-
-            if (htmlAttributes != null)
-            {
-                var attributes = new Dictionary<string, string>();
-
-                foreach (var attr in HtmlHelper.AnonymousObjectToHtmlAttributes(htmlAttributes))
-                {
-                    attributes.Add(attr.Key, Convert.ToString(attr.Value));
-                }
-
-                _additonalHtmlAttributes = attributes;
-            }
+            _additonalHtmlAttributes = TemplateSectionTagBuilderHelper.ParseHtmlAttributesFromAnonymousObject(htmlAttributes);
 
             return this;
         }
@@ -176,9 +170,13 @@ namespace Cofoundry.Web
 
         #endregion
 
-        #region implementation
+        #region rendering
 
-        public string ToHtmlString()
+        /// <summary>
+        /// This method must be called at the end of the section definition to build and render the
+        /// section.
+        /// </summary>
+        public async Task InvokeAsync()
         {
             var section = _customEntityViewModel
                 .CustomEntity
@@ -187,32 +185,41 @@ namespace Cofoundry.Web
 
             if (section != null)
             {
-                return RenderSection(section);
+                _output = await RenderSection(section);
             }
-            else 
+            else
             {
-                var msg = "WARNING: The section '" + _sectionName + "' cannot be found in the database";
+                var msg = "WARNING: The custom entity section '" + _sectionName + "' cannot be found in the database";
 
                 Debug.Assert(section != null, msg);
                 if (_customEntityViewModel.CustomEntity.WorkFlowStatus != WorkFlowStatus.Published)
                 {
-                    return "<!-- " + msg + " -->";
+                    _output = "<!-- " + msg + " -->";
                 }
             }
-
-            return string.Empty;
         }
 
-        private string RenderSection(CustomEntityPageSectionRenderDetails pageSection)
+        public void WriteTo(TextWriter writer, HtmlEncoder encoder)
+        {
+            Debug.Assert(_output != null, $"Template section '{ _sectionName }' definition does not call { nameof(InvokeAsync)}().");
+
+            if (_output != null)
+            {
+                writer.Write(_output);
+            }
+        }
+
+        private async Task<string> RenderSection(CustomEntityPageSectionRenderDetails pageSection)
         {
             string modulesHtml = string.Empty;
 
             if (pageSection.Modules.Any())
             {
-                var controllerContext = _htmlHelper.ViewContext.Controller.ControllerContext;
-                var moduleHtmlParts = pageSection
-                            .Modules
-                            .Select(m => _moduleRenderer.RenderModule(controllerContext, _customEntityViewModel, m));
+                var renderingTasks = pageSection
+                        .Modules
+                        .Select(m => _moduleRenderer.RenderModuleAsync(_viewContext, _customEntityViewModel, m));
+
+                var moduleHtmlParts = await Task.WhenAll(renderingTasks);
 
                 if (!_allowMultipleModules)
                 {
@@ -232,11 +239,16 @@ namespace Cofoundry.Web
             }
 
             // If we're not in edit mode just return the modules.
-            if (!_customEntityViewModel.IsPageEditMode) // TODO: IsCustom entit mode
+            if (!_customEntityViewModel.IsPageEditMode) // TODO: IsCustom entity mode
             {
                 if (_wrappingTagName != null)
                 {
-                    return WrapInTag(modulesHtml);
+                    return TemplateSectionTagBuilderHelper.WrapInTag(
+                        modulesHtml,
+                        _wrappingTagName,
+                        _allowMultipleModules,
+                        _additonalHtmlAttributes
+                        );
                 }
 
                 return modulesHtml;
@@ -264,37 +276,14 @@ namespace Cofoundry.Web
                     attrs.Add("style", "min-height:" + _emptyContentMinHeight + "px");
                 }
             }
-
-            return WrapInTag(modulesHtml, attrs);
-        }
-
-        private string WrapInTag(string modulesHtml, Dictionary<string, string> additionalAttributes = null)
-        {
-            var html = new HtmlDocument();
-            html.LoadHtml(modulesHtml.Trim());
-
-            HtmlNode wrapper;
-
-            // No need to wrap if its a single modle with a single outer node.
-            if (!_allowMultipleModules && html.DocumentNode.ChildNodes.Count == 1 && _wrappingTagName == null)
-            {
-                wrapper = html.DocumentNode.ChildNodes.First();
-            }
-            else
-            {
-                var wrap = new HtmlDocument();
-                wrapper = wrap.CreateElement(_wrappingTagName ?? DEFAULT_TAG);
-                wrapper.InnerHtml = modulesHtml;
-            }
-
-            wrapper.MergeAttributes(_additonalHtmlAttributes);
-
-            if (additionalAttributes != null)
-            {
-                wrapper.MergeAttributes(additionalAttributes);
-            }
-
-            return wrapper.OuterHtml;
+            
+            return TemplateSectionTagBuilderHelper.WrapInTag(
+                modulesHtml,
+                _wrappingTagName,
+                _allowMultipleModules,
+                _additonalHtmlAttributes,
+                attrs
+                );
         }
 
         #endregion

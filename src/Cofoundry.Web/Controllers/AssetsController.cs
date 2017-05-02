@@ -7,6 +7,8 @@ using Cofoundry.Domain;
 using Cofoundry.Core.ErrorLogging;
 using Cofoundry.Core;
 using Microsoft.AspNetCore.Mvc;
+using Cofoundry.Core.Web;
+using Microsoft.AspNetCore.Http;
 
 namespace Cofoundry.Web
 {
@@ -18,18 +20,21 @@ namespace Cofoundry.Web
         private readonly IResizedImageAssetFileService _resizedImageAssetFileService;
         private readonly IErrorLoggingService _errorLoggingService;
         private readonly IImageAssetRouteLibrary _imageAssetRouteLibrary;
+        private readonly IMimeTypeService _mimeTypeService;
 
         public AssetsController(
             IQueryExecutor queryExecutor,
             IResizedImageAssetFileService resizedImageAssetFileService,
             IErrorLoggingService errorLoggingService,
-            IImageAssetRouteLibrary imageAssetRouteLibrary
+            IImageAssetRouteLibrary imageAssetRouteLibrary,
+            IMimeTypeService mimeTypeService
             )
         {
             _queryExecutor = queryExecutor;
             _resizedImageAssetFileService = resizedImageAssetFileService;
             _errorLoggingService = errorLoggingService;
             _imageAssetRouteLibrary = imageAssetRouteLibrary;
+            _mimeTypeService = mimeTypeService;
         }
 
         #endregion
@@ -43,8 +48,7 @@ namespace Cofoundry.Web
         //[OutputCache(Duration = 60 * 60 * 24 * 30, Location = OutputCacheLocation.Downstream)]
         public ActionResult Image(int assetId, string fileName, string extension, int? cropSizeId)
         {
-            var qs = Request.Url.Query;
-            var settings = ImageResizeSettings.ParseFromQueryString(qs);
+            var settings = ImageResizeSettings.ParseFromQueryString(Request.Query);
 
             var asset = _queryExecutor.GetById<ImageAssetRenderDetails>(assetId);
             if (asset == null)
@@ -67,7 +71,7 @@ namespace Cofoundry.Web
                 DateTime ifModifiedSince;
                 if (DateTime.TryParse(Request.Headers["If-Modified-Since"], out ifModifiedSince) && lastModified <= ifModifiedSince.ToUniversalTime())
                 {
-                    return new HttpStatusCodeResult(304, "Not Modified");
+                    return StatusCode(304, "Not Modified");
                 }
             }
 
@@ -85,14 +89,16 @@ namespace Cofoundry.Web
             }
 
             // Expire the image, so browsers always check with the server, but also send a last modified date so we can check for If-Modified-Since on the next request and return a 304 Not Modified.
-            Response.Cache.SetExpires(DateTime.UtcNow.AddMonths(-1));
-            Response.Cache.SetLastModified(lastModified);
+            var headers = Response.GetTypedHeaders();
+            headers.Expires = DateTime.UtcNow.AddMonths(-1);
+            headers.LastModified = lastModified;
+
             
-            var contentType = MimeMapping.GetMimeMapping(asset.Extension);
+            var contentType = _mimeTypeService.MapFromFileName(asset.Extension);
             return new FileStreamResult(stream, contentType);
         }
         
-        [OutputCache(Duration = 60 * 60, Location = OutputCacheLocation.Client)]
+        [ResponseCache(Duration = 60 * 60, Location = ResponseCacheLocation.Client)]
         public ActionResult File(int assetId, string fileName, string extension)
         {
             DocumentAssetFile file = null;

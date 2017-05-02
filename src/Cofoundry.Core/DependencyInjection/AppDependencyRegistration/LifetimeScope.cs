@@ -24,14 +24,8 @@ namespace Cofoundry.Core.DependencyInjection
 
         /// <summary>
         /// This scope applies to nested lifetimes. A component with per-lifetime scope will have at most a single 
-        /// instance per nested lifetime scope.
+        /// instance per nested lifetime scope. Equivalent to ServiceLifetime.Scoped in .net core.
         /// </summary>
         public static readonly InstanceScope PerLifetimeScope = new InstanceScope();
-
-        /// <summary>
-        /// A new instance will be created per web request and will be returned in the parent 
-        /// and all nested containers.
-        /// </summary>
-        public static readonly InstanceScope PerWebRequest = new InstanceScope();
     }
 }

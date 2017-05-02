@@ -1,4 +1,4 @@
-﻿using Cofoundry.Core.EmbeddedResources;
+﻿using Cofoundry.Core.ResourceFiles;
 using Cofoundry.Web.ModularMvc;
 using System;
 using System.Collections.Generic;

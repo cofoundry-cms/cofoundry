@@ -9,6 +9,19 @@ namespace Cofoundry.Web
 {
     public abstract class CofoundryPage : RazorPage
     {
-        public CofoundryPageHelper Cofoundry { get; set; }
+        private CofoundryPageHelper _cofoundryPageHelper = null;
+
+        public CofoundryPageHelper Cofoundry
+        {
+            get
+            {
+                if (_cofoundryPageHelper == null && ViewContext != null)
+                {
+                    _cofoundryPageHelper = new CofoundryPageHelper(ViewContext);
+                }
+
+                return _cofoundryPageHelper;
+            }
+        }
     }
 }

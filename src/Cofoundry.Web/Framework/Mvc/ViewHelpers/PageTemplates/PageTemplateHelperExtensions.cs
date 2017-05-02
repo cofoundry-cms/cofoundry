@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Extensions.DependencyInjection;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -18,8 +19,8 @@ namespace Cofoundry.Web
             this IPageTemplateHelper<ICustomEntityDetailsPageViewModel<TModel>> helper, string sectionName)
             where TModel : ICustomEntityDetailsDisplayViewModel
         {
-            var factory = IckyDependencyResolution.ResolveFromMvcContext<ICustomEntityTemplateSectionTagBuilderFactory>();
-            var output = factory.Create(helper.HtmlHelper, helper.Model, sectionName);
+            var factory = helper.ViewContext.HttpContext.RequestServices.GetRequiredService<ICustomEntityTemplateSectionTagBuilderFactory>();
+            var output = factory.Create(helper.ViewContext, helper.Model, sectionName);
 
             return output;
         }

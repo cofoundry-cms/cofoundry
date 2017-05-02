@@ -1,9 +1,8 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Web;
-using System.Web.Mvc;
 
 namespace Cofoundry.Web
 {
@@ -15,13 +14,10 @@ namespace Cofoundry.Web
     /// </summary>
     public interface INotFoundViewHelper
     {
-        [Obsolete("This api has been removed in favor of an async version. Please use GetViewAsync instead.")]
-        ActionResult GetView();
-
         /// <summary>
         /// Use this in your controllers to return a 404 result using the Cofoundry custom 404 page system. This 
         /// has the added benefit of checking for Rewrite Rules and automatically redirecting.
         /// </summary>
-        Task<ActionResult> GetViewAsync();
+        Task<ActionResult> GetViewAsync(Controller controller);
     }
 }

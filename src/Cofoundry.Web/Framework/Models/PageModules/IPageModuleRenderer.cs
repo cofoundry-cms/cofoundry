@@ -1,6 +1,7 @@
 ﻿using System;
 using Cofoundry.Domain;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using System.Threading.Tasks;
 
 namespace Cofoundry.Web
 {
@@ -17,7 +18,7 @@ namespace Cofoundry.Web
         /// <param name="pageViewModel">The view model for the page being rendered</param>
         /// <param name="moduleViewModel">The view model for the module being rendered</param>
         /// <returns>The rednered module html</returns>
-        string RenderModule(
+        Task<string> RenderModuleAsync(
             ViewContext controllerContext, 
             IEditablePageViewModel pageViewModel, 
             IEntityVersionPageModuleRenderDetails moduleViewModel

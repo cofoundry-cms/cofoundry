@@ -1,13 +1,10 @@
-﻿using Cofoundry.Core;
-using Cofoundry.Core.EmbeddedResources;
+﻿using Cofoundry.Core.ResourceFiles;
 using Cofoundry.Domain;
-using Cofoundry.Web.ModularMvc;
+using Microsoft.AspNetCore.Mvc.ViewEngines;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
-using System.Web.Hosting;
 
 namespace Cofoundry.Web
 {
@@ -26,10 +23,10 @@ namespace Cofoundry.Web
         #region constructor
 
         private readonly IResourceLocator _resourceLocator;
-        private readonly AssemblyResourceViewEngine _viewEngine;
+        private readonly IViewEngine _viewEngine;
 
         public PageTemplateViewFileLocator(
-            AssemblyResourceViewEngine viewEngine,
+            IViewEngine viewEngine,
             IResourceLocator resourceLocator
             )
         {

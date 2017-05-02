@@ -1,4 +1,4 @@
-﻿using Cofoundry.Core.EmbeddedResources;
+﻿using Cofoundry.Core.ResourceFiles;
 using System;
 using System.Collections.Generic;
 using System.Linq;

@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Web.Optimization;
 
 namespace Cofoundry.Web.ModularMvc
 {
@@ -12,6 +11,6 @@ namespace Cofoundry.Web.ModularMvc
     /// </summary>
     public interface IBundleRegistration
     {
-        void RegisterBundles(BundleCollection bundles);
+        //void RegisterBundles(BundleCollection bundles);
     }
 }

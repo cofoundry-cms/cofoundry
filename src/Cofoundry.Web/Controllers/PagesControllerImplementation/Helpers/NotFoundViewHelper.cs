@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
-using System.Web.Mvc;
 using Cofoundry.Domain.CQS;
 using Cofoundry.Domain;
 using System.Net;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
 
 namespace Cofoundry.Web
 {
@@ -34,19 +34,13 @@ namespace Cofoundry.Web
 
         #region public methods
 
-        [Obsolete("This api has been removed in favor of an async version. Please use GetViewAsync instead.")]
-        public ActionResult GetView()
-        {
-            throw new NotImplementedException("This api has been removed in favor of an async version. Please use GetViewAsync instead.");
-        }
-
         /// <summary>
         /// Use this in your controllers to return a 404 result using the Cofoundry custom 404 page system. This 
         /// has the added benefit of checking for Rewrite Rules and automatically redirecting.
         /// </summary>
-        public async Task<ActionResult> GetViewAsync()
+        public async Task<ActionResult> GetViewAsync(Controller controller)
         {
-            var path = HttpContext.Current.Request.Path;
+            var path = controller.Request.Path;
 
             var result = await GetRewriteResultAsync(path);
             if (result != null) return result;
@@ -54,13 +48,9 @@ namespace Cofoundry.Web
             var vmParams = new NotFoundPageViewModelBuilderParameters(path);
             var vm = await _pageViewModelBuilder.BuildNotFoundPageViewModelAsync(vmParams);
 
-            HttpContext.Current.Response.StatusCode = (int)HttpStatusCode.NotFound;
+            controller.Response.StatusCode = (int)HttpStatusCode.NotFound;
 
-            return new ViewResult()
-            {
-                ViewName = "NotFound",
-                ViewData = new ViewDataDictionary(vm)
-            };
+            return controller.View("NotFound", vm);
         }
 
         #endregion

@@ -1,5 +1,7 @@
 ﻿using Cofoundry.Domain;
+using Microsoft.AspNetCore.Html;
 using System;
+using System.Threading.Tasks;
 using System.Web;
 
 namespace Cofoundry.Web
@@ -7,7 +9,7 @@ namespace Cofoundry.Web
     /// <summary>
     /// Fluent builder for defining a page template custom entity section configuration using method chaining
     /// </summary>
-    public interface ICustomEntityTemplateSectionTagBuilder<TModel> : IHtmlString
+    public interface ICustomEntityTemplateSectionTagBuilder<TModel> : IHtmlContent
         where TModel : ICustomEntityDetailsDisplayViewModel
     {
         /// <summary>
@@ -67,5 +69,11 @@ namespace Cofoundry.Web
         /// <param name="htmlAttributes">Html attributes to apply to the wrapping tag.</param>
         /// <returns>ICustomEntityTemplateSectionTagBuilder for method chaining</returns>
         ICustomEntityTemplateSectionTagBuilder<TModel> WrapWithTag(string tagName, object htmlAttributes = null);
+
+        /// <summary>
+        /// This method must be called at the end of the section definition to build and render the
+        /// section.
+        /// </summary>
+        Task InvokeAsync();
     }
 }

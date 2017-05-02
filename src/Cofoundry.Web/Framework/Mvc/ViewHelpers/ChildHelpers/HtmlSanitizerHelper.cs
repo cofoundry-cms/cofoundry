@@ -1,4 +1,5 @@
 ﻿using Cofoundry.Core.Web;
+using Microsoft.AspNetCore.Html;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -27,7 +28,7 @@ namespace Cofoundry.Web
         /// XSS attacks
         /// </summary>
         /// <param name="source">Html source</param>
-        public IHtmlString Sanitize(string source)
+        public IHtmlContent Sanitize(string source)
         {
             return new HtmlString(_htmlSanitizer.Sanitize(source));
         }
@@ -37,7 +38,7 @@ namespace Cofoundry.Web
         /// XSS attacks
         /// </summary>
         /// <param name="source">Html source</param>
-        public IHtmlString Sanitize(IHtmlString source)
+        public IHtmlContent Sanitize(IHtmlContent source)
         {
             return new HtmlString(_htmlSanitizer.Sanitize(source));
         }

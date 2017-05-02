@@ -1,10 +1,10 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Web.Mvc;
 
 namespace Cofoundry.Web
 {
@@ -17,7 +17,7 @@ namespace Cofoundry.Web
     public interface ICustomEntityTemplateSectionTagBuilderFactory
     {
         ICustomEntityTemplateSectionTagBuilder<TModel> Create<TModel>(
-            HtmlHelper htmlHelper,
+            ViewContext viewContext,
             ICustomEntityDetailsPageViewModel<TModel> customEntityViewModel,
             string sectionName
             )

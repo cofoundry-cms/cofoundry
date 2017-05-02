@@ -2,11 +2,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
-using System.Web.Mvc;
 using Cofoundry.Domain.CQS;
 using Cofoundry.Domain;
 using Cofoundry.Domain.MailTemplates;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Cofoundry.Web.Identity
 {
@@ -50,7 +49,7 @@ namespace Cofoundry.Web.Identity
             Condition.Requires(vm).IsNotNull();
 
             var result = new AuthenticationResult();
-            result.ReturnUrl = controller.Request["ReturnUrl"];
+            result.ReturnUrl = controller.Request.Query["ReturnUrl"].FirstOrDefault();
             if (!controller.ModelState.IsValid) return result;
 
             var command = new LogUserInWithCredentialsCommand()

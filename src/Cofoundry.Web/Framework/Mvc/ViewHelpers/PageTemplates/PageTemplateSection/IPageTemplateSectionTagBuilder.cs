@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Html;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Cofoundry.Web
 {
@@ -67,5 +68,11 @@ namespace Cofoundry.Web
         /// <param name="htmlAttributes">Html attributes to apply to the wrapping tag.</param>
         /// <returns>IPageTemplateSectionTagBuilder for method chaining</returns>
         IPageTemplateSectionTagBuilder WrapWithTag(string tagName, object htmlAttributes = null);
+
+        /// <summary>
+        /// This method must be called at the end of the section definition to build and render the
+        /// section.
+        /// </summary>
+        Task InvokeAsync();
     }
 }

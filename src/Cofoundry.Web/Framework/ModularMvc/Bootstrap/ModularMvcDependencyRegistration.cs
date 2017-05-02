@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Cofoundry.Core.DependencyInjection;
-using Cofoundry.Core.EmbeddedResources;
+using Cofoundry.Core.ResourceFiles;
 
 namespace Cofoundry.Web.ModularMvc
 {

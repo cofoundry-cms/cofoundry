@@ -8,26 +8,12 @@ using Cofoundry.Core.Validation;
 namespace Cofoundry.Web.WebApi
 {
     /// <summary>
-    /// A simple data container for returning the result of a command from a 
-    /// rest api in a consistent and structured way.
-    /// </summary>
-    /// <summary>
     /// A simple container for wrapping data output via a rest api. Used
     /// to provide a consistent response from a rest api and to 
     /// </summary>
     /// <typeparam name="T">Type of the data being returned</typeparam>
-    public class SimpleCommandResponseData<T>
+    public class SimpleCommandResponseData<T> : SimpleCommandResponseData
     {
-        /// <summary>
-        /// True if the command executed successfully; otherwise false.
-        /// </summary>
-        public bool IsValid { get; set; }
-
-        /// <summary>
-        /// Collection of any validation errors discovered when executing the request
-        /// </summary>
-        public IEnumerable<ValidationError> Errors { get; set; }
-
         /// <summary>
         /// Any additional data to send back to the response.
         /// </summary>

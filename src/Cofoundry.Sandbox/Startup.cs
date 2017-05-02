@@ -1,10 +1,18 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using Cofoundry.Sanbox.TestModule;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyModel;
 using Microsoft.Extensions.Logging;
+using SandboxDependency;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
 
 namespace Cofoundry.Sandbox
 {
@@ -26,7 +34,8 @@ namespace Cofoundry.Sandbox
         public void ConfigureServices(IServiceCollection services)
         {
             // Add framework services.
-            services.AddMvc();
+            services
+                .AddCofoundry();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -54,5 +63,6 @@ namespace Cofoundry.Sandbox
                     template: "{controller=Home}/{action=Index}/{id?}");
             });
         }
+        
     }
 }

@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
-using System.Web.Mvc;
 using Cofoundry.Domain.CQS;
 using Cofoundry.Domain;
 using Cofoundry.Core.Mail;
 using Cofoundry.Domain.MailTemplates;
 using Cofoundry.Core;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Cofoundry.Web.Identity
 {

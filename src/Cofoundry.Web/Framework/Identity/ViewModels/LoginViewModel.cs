@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using System.Web;
-using System.Web.Mvc;
 
 namespace Cofoundry.Web.Identity
 {
@@ -18,7 +16,6 @@ namespace Cofoundry.Web.Identity
         [DataType(DataType.Password)]
         [Required(ErrorMessage = "Please provide your password")]
         [Display(Name = "Password")]
-        [AllowHtml]
         public string Password { get; set; }
 
         [Display(Name = "Remember me")]

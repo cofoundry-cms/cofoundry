@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.IO;
-using Cofoundry.Core.EmbeddedResources;
+using Cofoundry.Core.ResourceFiles;
 
 namespace Cofoundry.Core.Mail
 {
