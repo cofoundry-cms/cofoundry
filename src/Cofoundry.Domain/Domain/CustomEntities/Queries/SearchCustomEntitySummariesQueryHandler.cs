@@ -42,7 +42,7 @@ namespace Cofoundry.Domain
 
         public async Task<PagedQueryResult<CustomEntitySummary>> ExecuteAsync(SearchCustomEntitySummariesQuery query, IExecutionContext executionContext)
         {
-            var definition = _queryExecutor.GetById<CustomEntityDefinitionSummary>(query.CustomEntityDefinitionCode);
+            var definition = await _queryExecutor.GetByIdAsync<CustomEntityDefinitionSummary>(query.CustomEntityDefinitionCode);
             EntityNotFoundException.ThrowIfNull(definition, query.CustomEntityDefinitionCode);
 
             // Get Query

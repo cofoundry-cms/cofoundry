@@ -58,7 +58,7 @@ namespace Cofoundry.Web
 
         #region main page route
         
-        public async Task<ActionResult> Page(
+        public async Task<IActionResult> Page(
             string path, 
             string mode, 
             int? version = null,

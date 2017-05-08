@@ -53,7 +53,7 @@ namespace Cofoundry.Domain
             }
             else
             {
-                var allRules = _queryExecutor.GetAll<ICustomEntityRoutingRule>(executionContext);
+                var allRules = await _queryExecutor.GetAllAsync<ICustomEntityRoutingRule>(executionContext);
                 // I'm only anticipating a single rule to match at the moment, but eventually there might be multiple rules to match e.g. categories page
                 foreach (var pageRoute in pageRoutes)
                 {

@@ -54,7 +54,7 @@ namespace Cofoundry.Domain
 
             await ValidateIsPageUniqueAsync(command, page, executionContext);
 
-            MapPage(command, executionContext, page);
+            await MapPageAsync(command, executionContext, page);
             var isPublished = page.PageVersions.Any(v => v.WorkFlowStatusId == (int)WorkFlowStatus.Published);
 
             await _dbContext.SaveChangesAsync();
@@ -71,17 +71,17 @@ namespace Cofoundry.Domain
 
         #region helpers
 
-        private void MapPage(UpdatePageUrlCommand command, IExecutionContext executionContext, Page page)
+        private async Task MapPageAsync(UpdatePageUrlCommand command, IExecutionContext executionContext, Page page)
         {
             if (page.PageTypeId == (int)PageType.CustomEntityDetails)
             {
-                var rule = _queryExecutor.Execute(new GetCustomEntityRoutingRuleByRouteFormatQuery(command.CustomEntityRoutingRule), executionContext);
+                var rule = await _queryExecutor.ExecuteAsync(new GetCustomEntityRoutingRuleByRouteFormatQuery(command.CustomEntityRoutingRule), executionContext);
                 if (rule == null)
                 {
                     throw new PropertyValidationException("Routing rule not found", "CustomEntityRoutingRule", command.CustomEntityRoutingRule);
                 }
 
-                var customEntityDefinition = _queryExecutor.Execute(new GetByStringQuery<CustomEntityDefinitionSummary>() { Id = page.CustomEntityDefinitionCode }, executionContext);
+                var customEntityDefinition = await _queryExecutor.ExecuteAsync(new GetByStringQuery<CustomEntityDefinitionSummary>() { Id = page.CustomEntityDefinitionCode }, executionContext);
                 EntityNotFoundException.ThrowIfNull(customEntityDefinition, page.CustomEntityDefinitionCode);
 
                 if (customEntityDefinition.ForceUrlSlugUniqueness && !rule.RequiresUniqueUrlSlug)

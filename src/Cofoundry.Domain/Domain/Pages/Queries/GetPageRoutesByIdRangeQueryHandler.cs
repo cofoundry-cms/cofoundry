@@ -7,8 +7,7 @@ using Cofoundry.Domain.CQS;
 namespace Cofoundry.Domain
 {
     public class GetPageRoutesByIdRangeQueryHandler 
-        : IQueryHandler<GetByIdRangeQuery<PageRoute>, IDictionary<int, PageRoute>>
-        , IAsyncQueryHandler<GetByIdRangeQuery<PageRoute>, IDictionary<int, PageRoute>>
+        : IAsyncQueryHandler<GetByIdRangeQuery<PageRoute>, IDictionary<int, PageRoute>>
         , IPermissionRestrictedQueryHandler<GetByIdRangeQuery<PageRoute>, IDictionary<int, PageRoute>>
     {
         private readonly IQueryExecutor _queryExecutor;
@@ -18,16 +17,6 @@ namespace Cofoundry.Domain
             )
         {
             _queryExecutor = queryExecutor;
-        }
-
-        public IDictionary<int, PageRoute> Execute(GetByIdRangeQuery<PageRoute> query, IExecutionContext executionContext)
-        {
-            var result = _queryExecutor
-                .GetAll<PageRoute>(executionContext)
-                .Where(r => query.Ids.Contains(r.PageId))
-                .ToDictionary(r => r.PageId);
-
-            return result;
         }
 
         public async Task<IDictionary<int, PageRoute>> ExecuteAsync(GetByIdRangeQuery<PageRoute> query, IExecutionContext executionContext)

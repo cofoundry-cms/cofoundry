@@ -26,9 +26,9 @@ namespace Cofoundry.Web
             _contentSettings = contentSettings;
         }
 
-        public Task ExecuteAsync(Controller controller, PageActionRoutingState state)
+        public async Task ExecuteAsync(Controller controller, PageActionRoutingState state)
         {
-            state.UserContext = _userContextService.GetCurrentContext();
+            state.UserContext = await _userContextService.GetCurrentContextAsync();
 
             // Work out whether to view the page in live/draft/edit mode.
             // We use live by default (for logged out users) or for authenticated
@@ -53,8 +53,6 @@ namespace Cofoundry.Web
                 visualEditorMode = VisualEditorMode.Any;
             }
             state.VisualEditorMode = visualEditorMode;
-
-            return Task.FromResult(true);
         }
     }
 }

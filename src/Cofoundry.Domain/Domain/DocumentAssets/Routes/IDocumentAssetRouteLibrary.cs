@@ -18,7 +18,7 @@ namespace Cofoundry.Domain
         /// potential db query if the asset isn't cached.
         /// </summary>
         /// <param name="documentAssetId">Id of the document asset to get the url for</param>
-        string DocumentAsset(int? documentAssetId);
+        Task<string> DocumentAssetAsync(int? documentAssetId);
 
         /// <summary>
         /// Gets the url for a document asset

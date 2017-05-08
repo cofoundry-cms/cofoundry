@@ -10,8 +10,7 @@ namespace Cofoundry.Domain
     /// </summary>
     public interface IPageModuleTypeRepository
     {
-        IEnumerable<PageModuleTypeSummary> GetAllPageModuleTypeSummaries(IExecutionContext executionContext = null);
         Task<IEnumerable<PageModuleTypeSummary>> GetAllPageModuleTypeSummariesAsync(IExecutionContext executionContext = null);
-        PageModuleTypeSummary GetPageModuleTypeSummaryById(int id, IExecutionContext executionContext = null);
+        Task<PageModuleTypeSummary> GetPageModuleTypeSummaryByIdAsync(int id, IExecutionContext executionContext = null);
     }
 }

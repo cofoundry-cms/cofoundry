@@ -19,7 +19,7 @@ namespace Cofoundry.Domain
     /// remains in place for compatibility.
     /// </summary>
     public class SearchPagesQueryHandler 
-        : IQueryHandler<SearchPagesQuery, IEnumerable<PageSearchResult>>
+        : IAsyncQueryHandler<SearchPagesQuery, IEnumerable<PageSearchResult>>
         , IPermissionRestrictedQueryHandler<SearchPagesQuery, IEnumerable<PageSearchResult>>
     {
         #region constructor
@@ -48,9 +48,9 @@ namespace Cofoundry.Domain
         /// This has just been copied with slight modification from PagesController and
         /// needs to be refactored.
         /// </remarks>
-        public IEnumerable<PageSearchResult> Execute(SearchPagesQuery query, IExecutionContext executionContext)
+        public async Task<IEnumerable<PageSearchResult>> ExecuteAsync(SearchPagesQuery query, IExecutionContext executionContext)
         {
-            if (string.IsNullOrWhiteSpace(query.Text)) yield break;
+            if (string.IsNullOrWhiteSpace(query.Text)) return Enumerable.Empty<PageSearchResult>();
 
             var isAuthenticated = executionContext.UserContext.UserId.HasValue;
 
@@ -58,7 +58,7 @@ namespace Cofoundry.Domain
 
             // Find any page versions that match by title
             // TODO: Ignore small words like 'of' and 'the'
-            var titleMatchesPageVersions = _dbContext
+            var titleMatchesPageVersions = (await _dbContext
                 .Pages
                 .Where(p => !p.IsDeleted
                           && p.PageVersions.Any(pv => !pv.IsDeleted && isAuthenticated ? true : pv.WorkFlowStatusId == (int)WorkFlowStatus.Published)
@@ -69,7 +69,7 @@ namespace Cofoundry.Domain
                               .OrderByDescending(v => v.CreateDate)
                               .First(pv => !pv.IsDeleted && isAuthenticated ? true : pv.WorkFlowStatusId == (int)WorkFlowStatus.Published)
                     )
-                .ToList()
+                .ToListAsync())
                 .Where(v => v.Title.Contains(query.Text)
                         || v.Title.ToLower().Split(new char[] { ' ' }).Intersect(query.Text.ToLower().Split(new char[] { ' ' })).Any()
                     )
@@ -79,7 +79,7 @@ namespace Cofoundry.Domain
             // TODO: Search should split the search term and lookup individual words as well (and rank them less strongly)
 
             // Get a list of ALL the page modules for live pages - we'll search through these for any matches
-            var pageModules = _dbContext
+            var pageModules = await _dbContext
                 .PageVersionModules
                 .Include(m => m.PageModuleType)
                 .Where(m => !m.PageVersion.IsDeleted)
@@ -87,14 +87,14 @@ namespace Cofoundry.Domain
                 .Where(m => isAuthenticated ? true : m.PageVersion.WorkFlowStatusId == (int)WorkFlowStatus.Published)
                 .Where(m => !query.LocaleId.HasValue || m.PageVersion.Page.LocaleId == query.LocaleId)
                 .Where(m => m.PageVersion.Page.PageTypeId == (int)PageType.Generic)
-                .ToList();
+                .ToListAsync();
 
             // This will store a list of matches for each module
             var matches = new Dictionary<PageVersionModule, List<string>>();
 
             foreach (var pageModule in pageModules.Where(p => !string.IsNullOrEmpty(query.Text)))
             {
-                var dataProvider = _moduleDisplayDataFactory.MapDisplayModel(pageModule.PageModuleType.FileName, pageModule, WorkFlowStatusQuery.Published);
+                var dataProvider = await _moduleDisplayDataFactory.MapDisplayModelAsync(pageModule.PageModuleType.FileName, pageModule, WorkFlowStatusQuery.Published);
                 Type dataProviderType = dataProvider.GetType();
 
                 // If this module is searchable - ie there is content to search
@@ -163,7 +163,9 @@ namespace Cofoundry.Domain
             }
 
             var searchResults = new List<PageSearchResult>();
-            var pageroutes = _queryExecutor.GetAll<PageRoute>();
+            var pageroutes = await _queryExecutor.GetAllAsync<PageRoute>();
+
+            var results = new List<PageSearchResult>(pageVersionMatches.Count);
 
             foreach (var pageVersionMatch in pageVersionMatches
                    .OrderByDescending(m => titleMatchesPageVersions.Contains(m.Key))
@@ -179,9 +181,11 @@ namespace Cofoundry.Domain
                     result.Title = version.Title;
                     result.Url = route.FullPath;
 
-                    yield return result;
+                    results.Add(result);
                 }
             }
+
+            return results;
         }
 
         #region Permission

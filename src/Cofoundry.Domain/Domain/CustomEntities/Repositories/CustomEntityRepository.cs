@@ -33,19 +33,9 @@ namespace Cofoundry.Domain
 
         #region definitions
 
-        public IEnumerable<CustomEntityDefinitionMicroSummary> GetAllCustomEntityDefinitionMicroSummaries(IExecutionContext executionContext = null)
-        {
-            return _queryExecutor.GetAll<CustomEntityDefinitionMicroSummary>(executionContext);
-        }
-
         public Task<IEnumerable<CustomEntityDefinitionMicroSummary>> GetAllCustomEntityDefinitionMicroSummariesAsync(IExecutionContext executionContext = null)
         {
             return _queryExecutor.GetAllAsync<CustomEntityDefinitionMicroSummary>(executionContext);
-        }
-
-        public CustomEntityDefinitionMicroSummary GetCustomEntityDefinitionMicroSummaryById(string customEntityDefinitionCode, IExecutionContext executionContext = null)
-        {
-            return _queryExecutor.GetById<CustomEntityDefinitionMicroSummary>(customEntityDefinitionCode, executionContext);
         }
 
         public Task<CustomEntityDefinitionMicroSummary> GetCustomEntityDefinitionMicroSummaryByIdAsync(string customEntityDefinitionCode, IExecutionContext executionContext = null)
@@ -94,11 +84,6 @@ namespace Cofoundry.Domain
         }
 
         #endregion
-
-        public IEnumerable<ICustomEntityRoutingRule> GetAllCustomEntityRoutingRules(IExecutionContext executionContext = null)
-        {
-            return _queryExecutor.GetAll<ICustomEntityRoutingRule>(executionContext);
-        }
         
         public Task<IEnumerable<ICustomEntityRoutingRule>> GetAllCustomEntityRoutingRulesAsync(IExecutionContext executionContext = null)
         {
@@ -125,17 +110,12 @@ namespace Cofoundry.Domain
             return _queryExecutor.ExecuteAsync(query, executionContext);
         }
 
-        public Task<Dictionary<int, CustomEntityRenderSummary>> GetCustomEntityRenderSummariesByIdRangeAsync(GetCustomEntityRenderSummariesByIdRangeQuery query, IExecutionContext executionContext = null)
+        public Task<IDictionary<int, CustomEntityRenderSummary>> GetCustomEntityRenderSummariesByIdRangeAsync(GetCustomEntityRenderSummariesByIdRangeQuery query, IExecutionContext executionContext = null)
         {
             return _queryExecutor.ExecuteAsync(query, executionContext);
         }
-        
-        public IDictionary<int, CustomEntitySummary> GetCustomEntityRenderSummaryByIdRange(IEnumerable<int> ids, IExecutionContext executionContext = null)
-        {
-            return _queryExecutor.GetByIdRange<CustomEntitySummary>(ids, executionContext);
-        }
 
-        public Task<IDictionary<int, CustomEntitySummary>> GetCustomEntityRenderSummaryByIdRangeAsync(IEnumerable<int> ids, IExecutionContext executionContext = null)
+        public Task<IDictionary<int, CustomEntitySummary>> GetCustomEntitySummariesByIdRangeAsync(IEnumerable<int> ids, IExecutionContext executionContext = null)
         {
             return _queryExecutor.GetByIdRangeAsync<CustomEntitySummary>(ids, executionContext);
         }

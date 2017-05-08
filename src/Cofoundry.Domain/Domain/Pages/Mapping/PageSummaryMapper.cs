@@ -30,9 +30,9 @@ namespace Cofoundry.Domain
         /// <summary>
         /// Finishes off bulk mapping of tags and page routes in a PageSummary object
         /// </summary>
-        public void Map(IEnumerable<PageSummary> pages)
+        public async Task MapAsync(IEnumerable<PageSummary> pages)
         {
-            var routes = _queryExecutor.GetAll<PageRoute>();
+            var routes = await _queryExecutor.GetAllAsync<PageRoute>();
 
             var ids = pages
                 .Select(p => p.PageId)

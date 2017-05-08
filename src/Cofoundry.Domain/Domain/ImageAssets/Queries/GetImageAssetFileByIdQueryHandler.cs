@@ -11,7 +11,7 @@ using AutoMapper;
 namespace Cofoundry.Domain
 {
     public class GetImageAssetFileByIdQueryHandler 
-        : IQueryHandler<GetByIdQuery<ImageAssetFile>, ImageAssetFile>
+        : IAsyncQueryHandler<GetByIdQuery<ImageAssetFile>, ImageAssetFile>
         , IPermissionRestrictedQueryHandler<GetByIdQuery<ImageAssetFile>, ImageAssetFile>
     {
         #region constructor
@@ -32,9 +32,9 @@ namespace Cofoundry.Domain
 
         #region execution
 
-        public ImageAssetFile Execute(GetByIdQuery<ImageAssetFile> query, IExecutionContext executionContext)
+        public async Task<ImageAssetFile> ExecuteAsync(GetByIdQuery<ImageAssetFile> query, IExecutionContext executionContext)
         {
-            var dbResult = _queryExecutor.GetById<ImageAssetRenderDetails>(query.Id);
+            var dbResult = await _queryExecutor.GetByIdAsync<ImageAssetRenderDetails>(query.Id);
 
             if (dbResult == null) return null;
             var fileName = Path.ChangeExtension(query.Id.ToString(), dbResult.Extension);

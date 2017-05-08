@@ -27,10 +27,10 @@ namespace Cofoundry.Domain
         /// the id. Use the overload accepting an IPageRoute if possible to save a 
         /// potential db query if the route isn't cached.
         /// </summary>
-        public string Page(int? pageId)
+        public async Task<string> PageAsync(int? pageId)
         {
             if (!pageId.HasValue) return string.Empty;
-            var route = _queryExecutor.GetById<PageRoute>(pageId.Value);
+            var route = await _queryExecutor.GetByIdAsync<PageRoute>(pageId.Value);
             return Page(route);
         }
 

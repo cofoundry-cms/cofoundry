@@ -10,7 +10,7 @@ using Cofoundry.Domain.CQS;
 namespace Cofoundry.Domain
 {
     public class DoesPageHaveDraftVersionQueryHandler
-        : IQueryHandler<DoesPageHaveDraftVersionQuery, bool>
+        : IAsyncQueryHandler<DoesPageHaveDraftVersionQuery, bool>
         , IPermissionRestrictedQueryHandler<DoesPageHaveDraftVersionQuery, bool>
     {
         #region constructor
@@ -28,11 +28,11 @@ namespace Cofoundry.Domain
 
         #region execution
 
-        public bool Execute(DoesPageHaveDraftVersionQuery query, IExecutionContext executionContext)
+        public Task<bool> ExecuteAsync(DoesPageHaveDraftVersionQuery query, IExecutionContext executionContext)
         {
             var exists = _dbContext
                 .PageVersions
-                .Any(v => v.PageId == query.PageId && v.WorkFlowStatusId == (int)WorkFlowStatus.Draft && !v.IsDeleted);
+                .AnyAsync(v => v.PageId == query.PageId && v.WorkFlowStatusId == (int)WorkFlowStatus.Draft && !v.IsDeleted);
 
             return exists;
         }

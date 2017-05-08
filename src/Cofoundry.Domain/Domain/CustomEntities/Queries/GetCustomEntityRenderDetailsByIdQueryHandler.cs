@@ -51,7 +51,7 @@ namespace Cofoundry.Domain
             var dbModules = await QueryModules(entity).ToListAsync();
 
             var allModuleTypes = await _queryExecutor.GetAllAsync<PageModuleTypeSummary>(executionContext);
-            _entityVersionPageModuleMapper.MapSections(dbModules, entity.Sections, allModuleTypes, query.WorkFlowStatus);
+            await _entityVersionPageModuleMapper.MapSectionsAsync(dbModules, entity.Sections, allModuleTypes, query.WorkFlowStatus);
 
             var routingQuery = new GetPageRoutingInfoByCustomEntityIdQuery(dbResult.CustomEntityId);
             var routing = await _queryExecutor.ExecuteAsync(routingQuery, executionContext);

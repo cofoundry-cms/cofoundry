@@ -9,7 +9,7 @@ using Cofoundry.Domain.CQS;
 
 namespace Cofoundry.Domain
 {
-    public class GetCustomEntityRenderSummariesByIdRangeQuery : IQuery<Dictionary<int, CustomEntityRenderSummary>>
+    public class GetCustomEntityRenderSummariesByIdRangeQuery : IQuery<IDictionary<int, CustomEntityRenderSummary>>
     {
         public GetCustomEntityRenderSummariesByIdRangeQuery()
         {

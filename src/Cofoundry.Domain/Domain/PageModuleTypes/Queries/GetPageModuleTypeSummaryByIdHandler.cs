@@ -10,7 +10,7 @@ using AutoMapper.QueryableExtensions;
 namespace Cofoundry.Domain
 {
     public class GetPageModuleTypeSummaryByIdHandler 
-        : IQueryHandler<GetByIdQuery<PageModuleTypeSummary>, PageModuleTypeSummary>
+        : IAsyncQueryHandler<GetByIdQuery<PageModuleTypeSummary>, PageModuleTypeSummary>
         , IPermissionRestrictedQueryHandler<GetByIdQuery<PageModuleTypeSummary>, PageModuleTypeSummary>
     {
         #region constructor
@@ -26,11 +26,10 @@ namespace Cofoundry.Domain
 
         #endregion
 
-        public PageModuleTypeSummary Execute(GetByIdQuery<PageModuleTypeSummary> query, IExecutionContext executionContext)
+        public async Task<PageModuleTypeSummary> ExecuteAsync(GetByIdQuery<PageModuleTypeSummary> query, IExecutionContext executionContext)
         {
-            return _queryExecutor
-                .GetAll<PageModuleTypeSummary>()
-                .SingleOrDefault(t => t.PageModuleTypeId == query.Id);
+            var allModuleTypes = await _queryExecutor.GetAllAsync<PageModuleTypeSummary>();
+            return allModuleTypes.SingleOrDefault(t => t.PageModuleTypeId == query.Id);
         }
 
         #region Permission

@@ -27,20 +27,15 @@ namespace Cofoundry.Domain
         #endregion
 
         #region queries
-
-        public IEnumerable<PageModuleTypeSummary> GetAllPageModuleTypeSummaries(IExecutionContext executionContext = null)
-        {
-            return _queryExecutor.GetAll<PageModuleTypeSummary>(executionContext);
-        }
-
+        
         public Task<IEnumerable<PageModuleTypeSummary>> GetAllPageModuleTypeSummariesAsync(IExecutionContext executionContext = null)
         {
             return _queryExecutor.GetAllAsync<PageModuleTypeSummary>(executionContext);
         }
 
-        public PageModuleTypeSummary GetPageModuleTypeSummaryById(int id, IExecutionContext executionContext = null)
+        public Task<PageModuleTypeSummary> GetPageModuleTypeSummaryByIdAsync(int id, IExecutionContext executionContext = null)
         {
-            return _queryExecutor.GetById<PageModuleTypeSummary>(id, executionContext);
+            return _queryExecutor.GetByIdAsync<PageModuleTypeSummary>(id, executionContext);
         }
 
         public Task<PageModuleTypeDetails> GetPageModuleTypeDetailsByIdAsync(int id, IExecutionContext executionContext = null)

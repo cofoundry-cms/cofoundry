@@ -53,7 +53,7 @@ namespace Cofoundry.Domain
         /// Collection of mapped display models, wrapped in an output class that
         /// can be used to identify them.
         /// </returns>
-        public List<PageModuleDisplayModelMapperOutput> MapDisplayModel(
+        public async Task<List<PageModuleDisplayModelMapperOutput>> MapDisplayModelAsync(
             string typeName, 
             IEnumerable<IEntityVersionPageModule> versionModules, 
             WorkFlowStatusQuery workflowStatus
@@ -81,11 +81,11 @@ namespace Cofoundry.Domain
                 var moduleWorkflowStatus = TranslateWorkFlowStatusForModules(workflowStatus);
 
                 // We have to use a mapping class to do some custom mapping
-                var displayModels = (List<PageModuleDisplayModelMapperOutput>)_mapGenericMethod
+                var displayModels = (Task<List<PageModuleDisplayModelMapperOutput>>)_mapGenericMethod
                     .MakeGenericMethod(modelType)
                     .Invoke(this, new object[] { versionModules, moduleWorkflowStatus });
 
-                return displayModels;
+                return await displayModels;
             }
         }
 
@@ -101,13 +101,14 @@ namespace Cofoundry.Domain
         /// the same workflow status.
         /// </param>
         /// <returns>Mapped display model.</returns>
-        public IPageModuleDisplayModel MapDisplayModel(
+        public async Task<IPageModuleDisplayModel> MapDisplayModelAsync(
             string typeName,
             IEntityVersionPageModule versionModule, 
             WorkFlowStatusQuery workflowStatus
             )
         {
-            return MapDisplayModel(typeName, new IEntityVersionPageModule[] { versionModule }, workflowStatus)
+            var mapped = await MapDisplayModelAsync(typeName, new IEntityVersionPageModule[] { versionModule }, workflowStatus);
+            return mapped
                 .Select(m => m.DisplayModel)
                 .SingleOrDefault();
         }
@@ -148,7 +149,7 @@ namespace Cofoundry.Domain
             return workflowStatus;
         }
 
-        private List<PageModuleDisplayModelMapperOutput> MapGeneric<T>(IEnumerable<IEntityVersionPageModule> versionModules, WorkFlowStatusQuery workflowStatus) where T : IPageModuleDataModel
+        private async Task<List<PageModuleDisplayModelMapperOutput>> MapGeneric<T>(IEnumerable<IEntityVersionPageModule> versionModules, WorkFlowStatusQuery workflowStatus) where T : IPageModuleDataModel
         {
             var mapperType = typeof(IPageModuleDisplayModelMapper<T>);
             if (!_resolutionContext.IsRegistered(mapperType))
@@ -169,7 +170,9 @@ namespace Cofoundry.Domain
                 dataModels.Add(mapperModel);
             }
 
-            return mapper.Map(dataModels, workflowStatus).ToList();
+            var results = await mapper.MapAsync(dataModels, workflowStatus);
+
+            return results.ToList();
         }
 
         #endregion

@@ -46,34 +46,9 @@ namespace Cofoundry.Domain
         /// </summary>
         /// <param name="roleId">Database id of the role, or null to return the anonymous role.</param>
         /// <param name="executionContext">Optional execution context to use when executing the query. Useful if you need to temporarily elevate your permission level.</param>
-        public RoleDetails GetRoleDetailsById(int? roleId, IExecutionContext executionContext = null)
-        {
-            return _queryExecutor.Execute(new GetRoleDetailsByIdQuery(roleId), executionContext);
-        }
-
-        /// <summary>
-        /// Finds a role by it's database id, returning a RoleDetails object if it 
-        /// is found, otherwise null. If no role id is specified then the anonymous 
-        /// role is returned.
-        /// </summary>
-        /// <param name="roleId">Database id of the role, or null to return the anonymous role.</param>
-        /// <param name="executionContext">Optional execution context to use when executing the query. Useful if you need to temporarily elevate your permission level.</param>
         public Task<RoleDetails> GetRoleDetailsByIdAsync(int? roleId, IExecutionContext executionContext = null)
         {
             return _queryExecutor.ExecuteAsync(new GetRoleDetailsByIdQuery(roleId), executionContext);
-        }
-
-        /// <summary>
-        /// Find a role with the specified specialist role type code, returning
-        /// a RoleDetails object if one is found, otherwise null. Roles only
-        /// have a SpecialistRoleTypeCode if they have been generated from code
-        /// rather than the GUI. For GUI generated roles use GetRoleDetailsByIdQuery.
-        /// </summary>
-        /// <param name="specialistRoleTypeCode">The code to find a matching role with. Codes are 3 characters long (fixed length).</param>
-        /// <param name="executionContext">Optional execution context to use when executing the query. Useful if you need to temporarily elevate your permission level.</param>
-        public RoleDetails GetRoleDetailsBySpecialistRoleTypeCode(string specialistRoleTypeCode, IExecutionContext executionContext = null)
-        {
-            return _queryExecutor.Execute(new GetRoleDetailsBySpecialistRoleTypeCode(specialistRoleTypeCode), executionContext);
         }
 
         /// <summary>
@@ -96,9 +71,9 @@ namespace Cofoundry.Domain
         /// <param name="query">The parameters run the query with.</param>
         /// <param name="executionContext">Optional execution context to use when executing the query. Useful if you need to temporarily elevate your permission level.</param>
         /// <returns>True if the title is unique; otherwise false.</returns>
-        public bool IsRoleTitleUnique(IsRoleTitleUniqueQuery query, IExecutionContext executionContext = null)
+        public Task<bool> IsRoleTitleUniqueAsync(IsRoleTitleUniqueQuery query, IExecutionContext executionContext = null)
         {
-            return _queryExecutor.Execute(query, executionContext);
+            return _queryExecutor.ExecuteAsync(query, executionContext);
         }
 
         /// <summary>

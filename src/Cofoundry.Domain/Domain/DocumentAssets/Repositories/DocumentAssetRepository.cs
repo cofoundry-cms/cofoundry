@@ -36,24 +36,14 @@ namespace Cofoundry.Domain
             return _queryExecutor.GetByIdAsync<DocumentAssetDetails>(documentAssetId, executionContext);
         }
 
-        public DocumentAssetFile GetDocumentAssetFileByIdQuery(int id, IExecutionContext executionContext = null)
+        public Task<DocumentAssetFile> GetDocumentAssetFileByIdQueryAsync(int id, IExecutionContext executionContext = null)
         {
-            return _queryExecutor.GetById<DocumentAssetFile>(id, executionContext);
-        }
-
-        public DocumentAssetRenderDetails GetDocumentAssetRenderDetailsById(int imageAssetId, IExecutionContext executionContext = null)
-        {
-            return _queryExecutor.GetById<DocumentAssetRenderDetails>(imageAssetId, executionContext);
+            return _queryExecutor.GetByIdAsync<DocumentAssetFile>(id, executionContext);
         }
 
         public Task<DocumentAssetRenderDetails> GetDocumentAssetRenderDetailsByIdAsync(int imageAssetId, IExecutionContext executionContext = null)
         {
             return _queryExecutor.GetByIdAsync<DocumentAssetRenderDetails>(imageAssetId, executionContext);
-        }
-
-        public IDictionary<int, DocumentAssetRenderDetails> GetDocumentAssetRenderDetailsByIdRange(IEnumerable<int> imageAssetIds, IExecutionContext executionContext = null)
-        {
-            return _queryExecutor.GetByIdRange<DocumentAssetRenderDetails>(imageAssetIds, executionContext);
         }
 
         public Task<IDictionary<int, DocumentAssetRenderDetails>> GetDocumentAssetRenderDetailsByIdRangeAsync(IEnumerable<int> imageAssetIds, IExecutionContext executionContext = null)

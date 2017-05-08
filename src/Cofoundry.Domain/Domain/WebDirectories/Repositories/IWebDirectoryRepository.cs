@@ -15,23 +15,10 @@ namespace Cofoundry.Domain
         #region queries
 
         /// <summary>
-        /// Returns all web directories as WebDirectoryRoute objects. The results of this query are cached.
-        /// </summary>
-        /// <param name="executionContext">Optional execution context to use when executing the query. Useful if you need to temporarily elevate your permission level.</param>
-        IEnumerable<WebDirectoryRoute> GetAllWebDirectoryRoutes(IExecutionContext executionContext = null);
-
-        /// <summary>
         /// Returns all web directories as WebDirectoryRoute instances. The results of this query are cached.
         /// </summary>
         /// <param name="executionContext">Optional execution context to use when executing the query. Useful if you need to temporarily elevate your permission level.</param>
         Task<IEnumerable<WebDirectoryRoute>> GetAllWebDirectoryRoutesAsync(IExecutionContext executionContext = null);
-
-        /// <summary>
-        /// Returns a web directory with the specified id as a WebDirectoryRoute instance.
-        /// </summary>
-        /// <param name="webDirectoryId">WebDirectoryId of the directory to get.</param>
-        /// <param name="executionContext">Optional execution context to use when executing the query. Useful if you need to temporarily elevate your permission level.</param>
-        WebDirectoryRoute GetWebDirectoryRouteById(int webDirectoryId, IExecutionContext executionContext = null);
 
         /// <summary>
         /// Returns a web directory with the specified id as a WebDirectoryRoute instance.
@@ -45,21 +32,7 @@ namespace Cofoundry.Domain
         /// </summary>
         /// <param name="webDirectoryId">WebDirectoryId of the directory to get.</param>
         /// <param name="executionContext">Optional execution context to use when executing the query. Useful if you need to temporarily elevate your permission level.</param>
-        WebDirectoryNode GetWebDirectoryNodeById(int webDirectoryId, IExecutionContext executionContext = null);
-
-        /// <summary>
-        /// Returns a web directory with the specified id as a WebDirectoryNode instance.
-        /// </summary>
-        /// <param name="webDirectoryId">WebDirectoryId of the directory to get.</param>
-        /// <param name="executionContext">Optional execution context to use when executing the query. Useful if you need to temporarily elevate your permission level.</param>
         Task<WebDirectoryNode> GetWebDirectoryNodeByIdAsync(int webDirectoryId, IExecutionContext executionContext = null);
-
-        /// <summary>
-        /// Returns a complete tree of web directory nodes, starting
-        /// with the root webdirectory as a single node.
-        /// </summary>
-        /// <param name="executionContext">Optional execution context to use when executing the query. Useful if you need to temporarily elevate your permission level.</param>
-        WebDirectoryNode GetWebDirectoryTreeId(IExecutionContext executionContext = null);
 
         /// <summary>
         /// Returns a complete tree of web directory nodes, starting
@@ -75,7 +48,7 @@ namespace Cofoundry.Domain
         /// <param name="query">The parameters run the query with.</param>
         /// <param name="executionContext">Optional execution context to use when executing the query. Useful if you need to temporarily elevate your permission level.</param>
         /// <returns>True if the path is unique; otherwise false.</returns>
-        bool IsRoleTitleUnique(IsWebDirectoryPathUniqueQuery query, IExecutionContext executionContext = null);
+        Task<bool> IsRoleTitleUniqueAsync(IsWebDirectoryPathUniqueQuery query, IExecutionContext executionContext = null);
 
         #endregion
 

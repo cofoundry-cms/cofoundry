@@ -11,8 +11,7 @@ using Cofoundry.Core;
 namespace Cofoundry.Domain
 {
     public class GetPageVersionModuleRenderDetailsByIdQueryHandler
-        : IQueryHandler<GetPageVersionModuleRenderDetailsByIdQuery, PageVersionModuleRenderDetails>
-        , IAsyncQueryHandler<GetPageVersionModuleRenderDetailsByIdQuery, PageVersionModuleRenderDetails>
+        : IAsyncQueryHandler<GetPageVersionModuleRenderDetailsByIdQuery, PageVersionModuleRenderDetails>
         , IPermissionRestrictedQueryHandler<GetPageVersionModuleRenderDetailsByIdQuery, PageVersionModuleRenderDetails>
     {
         #region constructor
@@ -36,36 +35,6 @@ namespace Cofoundry.Domain
 
         #region execution
 
-        public PageVersionModuleRenderDetails Execute(GetPageVersionModuleRenderDetailsByIdQuery query, IExecutionContext executionContext)
-        {
-            var dbResult = QueryModule(query.PageVersionModuleId)
-                .Select(m => new {
-                    PageModule = m,
-                    ModuleTypeFileName = m.PageModuleType.FileName
-                })
-                .SingleOrDefault();
-
-            if (dbResult == null) return null; 
-            
-            var result = Map(dbResult.PageModule, dbResult.ModuleTypeFileName, query.WorkFlowStatus);
-                        
-            // Add any list context information.
-            var displayData = result.DisplayModel as IListablePageModuleDisplayModel;
-
-            if (displayData != null)
-            {
-                var modules = GetOrderedModuleIds(dbResult.PageModule).ToList();
-
-                displayData.ListContext = new ListablePageModuleRenderContext()
-                {
-                    Index = modules.IndexOf(result.PageVersionModuleId),
-                    NumModules = modules.Count
-                };
-            }
-
-            return result;
-        }
-
         public async Task<PageVersionModuleRenderDetails> ExecuteAsync(GetPageVersionModuleRenderDetailsByIdQuery query, IExecutionContext executionContext)
         {
             var dbResult = await QueryModule(query.PageVersionModuleId)
@@ -78,7 +47,7 @@ namespace Cofoundry.Domain
 
             if (dbResult == null) return null;
 
-            var result = Map(dbResult.PageModule, dbResult.ModuleTypeFileName, query.WorkFlowStatus);
+            var result = await MapAsync(dbResult.PageModule, dbResult.ModuleTypeFileName, query.WorkFlowStatus);
 
             // Add any list context information.
             var displayData = result.DisplayModel as IListablePageModuleDisplayModel;
@@ -111,15 +80,15 @@ namespace Cofoundry.Domain
                 .Select(m => m.PageVersionModuleId);
         }
 
-        private PageVersionModuleRenderDetails Map(PageVersionModule pageVersionModule, string moduleTypeFileName, WorkFlowStatusQuery workFlowStatus)
+        private async Task<PageVersionModuleRenderDetails> MapAsync(PageVersionModule pageVersionModule, string moduleTypeFileName, WorkFlowStatusQuery workFlowStatus)
         {
-            var moduleType = _queryExecutor.GetById<PageModuleTypeSummary>(pageVersionModule.PageModuleTypeId);
+            var moduleType = await _queryExecutor.GetByIdAsync<PageModuleTypeSummary>(pageVersionModule.PageModuleTypeId);
             EntityNotFoundException.ThrowIfNull(moduleType, pageVersionModule.PageModuleTypeId);
 
             var result = new PageVersionModuleRenderDetails();
             result.PageVersionModuleId = pageVersionModule.PageVersionModuleId;
             result.ModuleType = moduleType;
-            result.DisplayModel = _pageVersionModuleModelMapper.MapDisplayModel(moduleTypeFileName, pageVersionModule, workFlowStatus);
+            result.DisplayModel = await _pageVersionModuleModelMapper.MapDisplayModelAsync(moduleTypeFileName, pageVersionModule, workFlowStatus);
             
             return result;
         }

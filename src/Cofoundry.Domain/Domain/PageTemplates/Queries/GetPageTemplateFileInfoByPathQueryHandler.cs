@@ -90,7 +90,7 @@ namespace Cofoundry.Domain
                     if (parseCustomModelType)
                     {
                         // Check for model type on first line only
-                        SetCustomModelTypeFields(pageTemplateFileInfo, line, executionContext);
+                        await SetCustomModelTypeFieldsAsync(pageTemplateFileInfo, line, executionContext);
                         if (pageTemplateFileInfo.CustomEntityDefinition != null)
                         {
                             parseCustomModelType = false;
@@ -142,7 +142,7 @@ namespace Cofoundry.Domain
             return Regex.Replace(e.Value, REGEX_TRIM_WHITESPACE, string.Empty);
         }
 
-        private void SetCustomModelTypeFields(PageTemplateFileInfo pageTemplateFileInfo, string line, IExecutionContext ex)
+        private async Task SetCustomModelTypeFieldsAsync(PageTemplateFileInfo pageTemplateFileInfo, string line, IExecutionContext ex)
         {
             // This regex find models with generic parameters and captures the last generic type
             // This could be the custom entity display model type and may have a namespace prefix
@@ -159,7 +159,7 @@ namespace Cofoundry.Domain
                 var query = new GetCustomEntityDefinitionMicroSummaryByDisplayModelTypeQuery();
                 query.DisplayModelType = modelType;
 
-                pageTemplateFileInfo.CustomEntityDefinition = _queryExecutor.Execute(query, ex);
+                pageTemplateFileInfo.CustomEntityDefinition = await _queryExecutor.ExecuteAsync(query, ex);
                 EntityNotFoundException.ThrowIfNull(pageTemplateFileInfo.CustomEntityDefinition, modelType);
                 pageTemplateFileInfo.CustomEntityModelType = match.Groups[1].Value;
 

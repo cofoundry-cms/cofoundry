@@ -14,8 +14,7 @@ namespace Cofoundry.Domain
     /// data for all the content-editable sections.
     /// </summary>
     public class GetPageRenderDetailsByIdQueryHandler 
-        : IQueryHandler<GetPageRenderDetailsByIdQuery, PageRenderDetails>
-        , IAsyncQueryHandler<GetPageRenderDetailsByIdQuery, PageRenderDetails>
+        : IAsyncQueryHandler<GetPageRenderDetailsByIdQuery, PageRenderDetails>
         , IPermissionRestrictedQueryHandler<GetPageRenderDetailsByIdQuery, PageRenderDetails>
     {
         #region constructor
@@ -39,20 +38,6 @@ namespace Cofoundry.Domain
 
         #region public methods
 
-        public PageRenderDetails Execute(GetPageRenderDetailsByIdQuery query, IExecutionContext executionContext)
-        {
-            var dbPage = QueryPage(query).FirstOrDefault();
-            if (dbPage == null) return null;
-            var page = Mapper.Map<PageRenderDetails>(dbPage);
-            page.PageRoute = _queryExecutor.GetById<PageRoute>(page.PageId, executionContext);
-
-            var dbModules = QueryModules(page).ToList();
-            var allModuleTypes = _queryExecutor.GetAll<PageModuleTypeSummary>(executionContext);
-            _entityVersionPageModuleMapper.MapSections(dbModules, page.Sections, allModuleTypes, query.WorkFlowStatus);
-
-            return page;
-        }
-
         public async Task<PageRenderDetails> ExecuteAsync(GetPageRenderDetailsByIdQuery query, IExecutionContext executionContext)
         {
             var dbPage = await QueryPage(query).FirstOrDefaultAsync();
@@ -63,7 +48,7 @@ namespace Cofoundry.Domain
             var dbModules = await QueryModules(page).ToListAsync();
             var allModuleTypes = await _queryExecutor.GetAllAsync<PageModuleTypeSummary>(executionContext);
 
-            _entityVersionPageModuleMapper.MapSections(dbModules, page.Sections, allModuleTypes, query.WorkFlowStatus);
+            await _entityVersionPageModuleMapper.MapSectionsAsync(dbModules, page.Sections, allModuleTypes, query.WorkFlowStatus);
 
             return page;
         }

@@ -11,8 +11,7 @@ using Cofoundry.Core;
 namespace Cofoundry.Domain
 {
     public class IsCustomEntityPathUniqueQueryHandler 
-        : IQueryHandler<IsCustomEntityPathUniqueQuery, bool>
-        , IAsyncQueryHandler<IsCustomEntityPathUniqueQuery, bool>
+        : IAsyncQueryHandler<IsCustomEntityPathUniqueQuery, bool>
         , IPermissionRestrictedQueryHandler<IsCustomEntityPathUniqueQuery, bool>
     {
         #region constructor
@@ -38,22 +37,11 @@ namespace Cofoundry.Domain
 
         public async Task<bool> ExecuteAsync(IsCustomEntityPathUniqueQuery query, IExecutionContext executionContext)
         {
-            var definition = GetDefinition(query);
+            var definition = await GetDefinitionAsync(query);
             if (!definition.ForceUrlSlugUniqueness) return true;
 
             var dbQuery = Query(query);
             var exisits = await dbQuery.AnyAsync();
-
-            return !exisits;
-        }
-
-        public bool Execute(IsCustomEntityPathUniqueQuery query, IExecutionContext executionContext)
-        {
-            var definition = GetDefinition(query);
-            if (!definition.ForceUrlSlugUniqueness) return true;
-
-            var dbQuery = Query(query);
-            var exisits = dbQuery.Any();
 
             return !exisits;
         }
@@ -76,10 +64,11 @@ namespace Cofoundry.Domain
             return dbQuery;
         }
 
-        private CustomEntityDefinitionSummary GetDefinition(IsCustomEntityPathUniqueQuery query)
+        private async Task<CustomEntityDefinitionSummary> GetDefinitionAsync(IsCustomEntityPathUniqueQuery query)
         {
-            var definition = _queryExecutor.GetById<CustomEntityDefinitionSummary>(query.CustomEntityDefinitionCode);
+            var definition = await _queryExecutor.GetByIdAsync<CustomEntityDefinitionSummary>(query.CustomEntityDefinitionCode);
             EntityNotFoundException.ThrowIfNull(definition, query.CustomEntityDefinitionCode);
+
             return definition;
         }
 

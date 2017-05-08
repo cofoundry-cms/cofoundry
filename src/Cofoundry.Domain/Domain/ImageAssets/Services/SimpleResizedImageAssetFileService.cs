@@ -35,10 +35,10 @@ namespace Cofoundry.Domain
 
         #endregion
 
-        public Stream Get(IImageAssetRenderable asset, IImageResizeSettings inputSettings)
+        public Task<Stream> GetAsync(IImageAssetRenderable asset, IImageResizeSettings inputSettings)
         {
             // Resizing only supported via plugin
-            return GetFileStream(asset.ImageAssetId);
+            return GetFileStreamAsync(asset.ImageAssetId);
         }
 
         public void Clear(int imageAssetId)
@@ -48,9 +48,9 @@ namespace Cofoundry.Domain
 
         #region private methods
 
-        private Stream GetFileStream(int imageAssetId)
+        private async Task<Stream> GetFileStreamAsync(int imageAssetId)
         {
-            var result = _queryExecutor.GetById<ImageAssetFile>(imageAssetId);
+            var result = await _queryExecutor.GetByIdAsync<ImageAssetFile>(imageAssetId);
 
             if (result == null || result.ContentStream == null)
             {

@@ -11,8 +11,7 @@ namespace Cofoundry.Domain
     /// user. If the user is not logged in then null is returned.
     /// </summary>
     public class GetCurrentUserMicroSummaryQueryHandler 
-        : IQueryHandler<GetCurrentUserMicroSummaryQuery, UserMicroSummary>
-        , IAsyncQueryHandler<GetCurrentUserMicroSummaryQuery, UserMicroSummary>
+        : IAsyncQueryHandler<GetCurrentUserMicroSummaryQuery, UserMicroSummary>
         , IIgnorePermissionCheckHandler
     {
         private readonly IQueryExecutor _queryExecutor;
@@ -22,14 +21,6 @@ namespace Cofoundry.Domain
             )
         {
             _queryExecutor = queryExecutor;
-        }
-
-        public UserMicroSummary Execute(GetCurrentUserMicroSummaryQuery query, IExecutionContext executionContext)
-        {
-            if (!executionContext.UserContext.UserId.HasValue) return null;
-
-            var user = _queryExecutor.GetById<UserMicroSummary>(executionContext.UserContext.UserId.Value);
-            return user;
         }
 
         public Task<UserMicroSummary> ExecuteAsync(GetCurrentUserMicroSummaryQuery query, IExecutionContext executionContext)

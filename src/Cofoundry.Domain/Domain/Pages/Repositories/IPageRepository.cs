@@ -14,30 +14,20 @@ namespace Cofoundry.Domain
 
         #region page routes
 
-        IEnumerable<PageRoute> GetAllPageRoutes(IExecutionContext executionContext = null);
-
         Task<IEnumerable<PageRoute>> GetAllPageRoutesAsync(IExecutionContext executionContext = null);
-
-        PageRoute GetPageRouteById(int pageId, IExecutionContext executionContext = null);
 
         Task<PageRoute> GetPageRouteByIdAsync(int pageId, IExecutionContext executionContext = null);
 
-        IDictionary<int, PageRoute> GetPageRoutesByIdRange(IEnumerable<int> pageIds, IExecutionContext executionContext = null);
-
         Task<IDictionary<int, PageRoute>> GetPageRoutesByIdRangeAsync(IEnumerable<int> pageIds, IExecutionContext executionContext = null);
 
-        IEnumerable<PageRoute> GetPageRoutesByWebDirectoryId(int webDirectoryId, IExecutionContext executionContext = null);
+        Task<IEnumerable<PageRoute>> GetPageRoutesByWebDirectoryIdAsync(int webDirectoryId, IExecutionContext executionContext = null);
 
         Task<PageRoute> GetNotFoundPageRouteByPathAsync(GetNotFoundPageRouteByPathQuery query, IExecutionContext executionContext = null);
 
         #endregion
 
         #region PageRoutingInfo
-
-        IDictionary<int, IEnumerable<PageRoutingInfo>> GetPageRoutingInfoByCustomEntityIdRange(IEnumerable<int> customEntityIds, IExecutionContext executionContext = null);
-
-        IEnumerable<PageRoutingInfo> GetPageRoutingInfoByCustomEntityId(int customEntityId, IExecutionContext executionContext = null);
-
+        
         Task<IEnumerable<PageRoutingInfo>> GetPageRoutingInfoByCustomEntityIdAsync(int customEntityId, IExecutionContext executionContext = null);
 
         Task<IDictionary<int, IEnumerable<PageRoutingInfo>>> GetPageRoutingInfoByCustomEntityIdRangeAsync(IEnumerable<int> customEntityIds, IExecutionContext executionContext = null);
@@ -51,15 +41,7 @@ namespace Cofoundry.Domain
         #endregion
 
         #region PageRenderDetails
-
-        /// <summary>
-        /// Gets a page object that contains the data required to render a page, including template 
-        /// data for all the content-editable sections.
-        /// </summary>
-        /// <param name="query">Query parameters</param>
-        /// <param name="executionContext">Optional execution context to use when executing the query. Useful if you need to temporarily elevate your permission level.</param>
-        PageRenderDetails GetPageRenderDetails(GetPageRenderDetailsByIdQuery query, IExecutionContext executionContext = null);
-
+        
         /// <summary>
         /// Gets a page object that contains the data required to render a page, including template 
         /// data for all the content-editable sections.
@@ -67,15 +49,7 @@ namespace Cofoundry.Domain
         /// <param name="query">Query parameters</param>
         /// <param name="executionContext">Optional execution context to use when executing the query. Useful if you need to temporarily elevate your permission level.</param>
         Task<PageRenderDetails> GetPageRenderDetailsAsync(GetPageRenderDetailsByIdQuery query, IExecutionContext executionContext = null);
-
-        /// <summary>
-        /// Gets a range of pages by their PageIds as PageRenderDetails objects. A PageRenderDetails contains 
-        /// the data required to render a page, including template data for all the content-editable sections.
-        /// </summary>
-        /// <param name="query">Query parameters</param>
-        /// <param name="executionContext">Optional execution context to use when executing the query. Useful if you need to temporarily elevate your permission level.</param>
-        IDictionary<int, PageRenderDetails> GetPageRenderDetailsByIdRange(GetPageRenderDetailsByIdRangeQuery query, IExecutionContext executionContext = null);
-
+        
         /// <summary>
         /// Gets a range of pages by their PageIds as PageRenderDetails objects. A PageRenderDetails contains 
         /// the data required to render a page, including template data for all the content-editable sections.
@@ -87,17 +61,7 @@ namespace Cofoundry.Domain
         #endregion
 
         #region PageSectionDetails
-
-        /// <summary>
-        /// Gets a collection of the content managed sections and
-        /// modules for a specific version of a page. These are the 
-        /// modules that get rendered in the page template linked
-        /// to the page version.
-        /// </summary>
-        /// <param name="pageVersionId">Database id of the page version to get content data for.</param>
-        /// <param name="executionContext">Optional execution context to use when executing the query. Useful if you need to temporarily elevate your permission level.</param>
-        IEnumerable<PageSectionDetails> GetPageSectionDetailsByPageVersionId(int pageVersionId, IExecutionContext executionContext = null);
-
+        
         /// <summary>
         /// Gets a collection of the content managed sections and
         /// modules for a specific version of a page. These are the 
@@ -111,24 +75,13 @@ namespace Cofoundry.Domain
         #endregion
 
         #region PageVersionModuleRenderDetails
-
-        PageVersionModuleRenderDetails GetPageVersionModuleRenderDetailsById(GetPageVersionModuleRenderDetailsByIdQuery query, IExecutionContext executionContext = null);
-
+        
         Task<PageVersionModuleRenderDetails> GetPageVersionModuleRenderDetailsByIdAsync(GetPageVersionModuleRenderDetailsByIdQuery query, IExecutionContext executionContext = null);
 
         #endregion
 
         #region PageSummary (admin)
-
-        /// <summary>
-        /// Finds pages with the specified page ids and returns them as PageSummary 
-        /// objects. Note that this query does not account for WorkFlowStatus and so
-        /// pages will be returned irrecpective of whether they are published or not.
-        /// </summary>
-        /// <param name="pageIds">A collection of database ids of the pages to fetch.</param>
-        /// <param name="executionContext">Optional execution context to use when executing the query. Useful if you need to temporarily elevate your permission level.</param>
-        IDictionary<int, PageSummary> GetPageSummariesByPageId(IEnumerable<int> pageIds, IExecutionContext executionContext = null);
-
+        
         /// <summary>
         /// Finds pages with the specified page ids and returns them as PageSummary 
         /// objects. Note that this query does not account for WorkFlowStatus and so
@@ -137,9 +90,7 @@ namespace Cofoundry.Domain
         /// <param name="pageIds">A collection of database ids of the pages to fetch.</param>
         /// <param name="executionContext">Optional execution context to use when executing the query. Useful if you need to temporarily elevate your permission level.</param>
         Task<IDictionary<int, PageSummary>> GetPageSummariesByPageIdAsync(IEnumerable<int> pageIds, IExecutionContext executionContext = null);
-
-        PagedQueryResult<PageSummary> SearchPageSummaries(SearchPageSummariesQuery query, IExecutionContext executionContext = null);
-
+        
         Task<PagedQueryResult<PageSummary>> SearchPageSummariesAsync(SearchPageSummariesQuery query, IExecutionContext executionContext = null);
 
         #endregion
@@ -148,33 +99,25 @@ namespace Cofoundry.Domain
 
         Task<PageDetails> GetPageDetailsByIdAsync(int id, IExecutionContext executionContext = null);
 
-        PageDetails GetPageDetailsById(int id, IExecutionContext executionContext = null);
-
         #endregion
 
         #region PageVersionSummary (admin)
-
-        IEnumerable<PageVersionSummary> GetPageVersionSummariesByPageId(int pageId, IExecutionContext executionContext = null);
-
+        
         Task<IEnumerable<PageVersionSummary>> GetPageVersionSummariesByPageIdAsync(int pageId, IExecutionContext executionContext = null);
 
         #endregion
 
         #region page module types
-
-        IEnumerable<PageModuleTypeSummary> GetAllPageModuleTypeSummaries(IExecutionContext executionContext = null);
-
+        
         Task<IEnumerable<PageModuleTypeSummary>> GetAllPageModuleTypeSummariesAsync(IExecutionContext executionContext = null);
 
-        PageModuleTypeSummary GetPageModuleTypeSummaryById(int id, IExecutionContext executionContext = null);
+        Task<PageModuleTypeSummary> GetPageModuleTypeSummaryByIdAsync(int id, IExecutionContext executionContext = null);
 
         #endregion
 
         #region utility
 
-        bool DoesPageHaveDraftVersion(int pageId, IExecutionContext executionContext = null);
-
-        bool IsPagePathUnique(IsPagePathUniqueQuery query, IExecutionContext executionContext = null);
+        Task<bool> DoesPageHaveDraftVersionAsync(int pageId, IExecutionContext executionContext = null);
 
         Task<bool> IsPagePathUniqueAsync(IsPagePathUniqueQuery query, IExecutionContext executionContext = null);
 

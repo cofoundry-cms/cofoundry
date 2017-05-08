@@ -43,7 +43,7 @@ namespace Cofoundry.Domain
 
         #region public methods
 
-        public void MapSections<TModuleRenderDetails>(
+        public async Task MapSectionsAsync<TModuleRenderDetails>(
             IEnumerable<IEntityVersionPageModule> dbModules,
             IEnumerable<IEntitySectionRenderDetails<TModuleRenderDetails>> sections,
             IEnumerable<PageModuleTypeSummary> allModuleTypes,
@@ -51,7 +51,7 @@ namespace Cofoundry.Domain
             )
             where TModuleRenderDetails : IEntityVersionPageModuleRenderDetails, new()
         {
-            var mappedModules = ToModuleMappingData(dbModules, allModuleTypes, workflowStatus);
+            var mappedModules = await ToModuleMappingDataAsync(dbModules, allModuleTypes, workflowStatus);
 
             // Map Sections
 
@@ -92,14 +92,18 @@ namespace Cofoundry.Domain
 
         #region private methods
 
-        private List<MappedPageModule> ToModuleMappingData(IEnumerable<IEntityVersionPageModule> entityModules, IEnumerable<PageModuleTypeSummary> moduleTypes, WorkFlowStatusQuery workflowStatus)
+        private async Task<List<MappedPageModule>> ToModuleMappingDataAsync(
+            IEnumerable<IEntityVersionPageModule> entityModules, 
+            IEnumerable<PageModuleTypeSummary> moduleTypes, 
+            WorkFlowStatusQuery workflowStatus
+            )
         {
             var mappedModules = new List<MappedPageModule>();
 
             foreach (var group in entityModules.GroupBy(m => m.PageModuleTypeId))
             {
                 var moduleType = moduleTypes.SingleOrDefault(t => t.PageModuleTypeId == group.Key);
-                var mapperOutput = _pageVersionModuleModelMapper.MapDisplayModel(moduleType.FileName, group, workflowStatus);
+                var mapperOutput = await _pageVersionModuleModelMapper.MapDisplayModelAsync(moduleType.FileName, group, workflowStatus);
 
                 foreach (var module in group)
                 {

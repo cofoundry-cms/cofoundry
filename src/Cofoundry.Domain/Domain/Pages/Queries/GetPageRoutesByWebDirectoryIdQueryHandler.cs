@@ -10,7 +10,7 @@ using Cofoundry.Domain.CQS;
 namespace Cofoundry.Domain
 {
     public class GetPageRoutesByWebDirectoryIdQueryHandler 
-        : IQueryHandler<GetPageRoutesByWebDirectoryIdQuery, IEnumerable<PageRoute>>
+        : IAsyncQueryHandler<GetPageRoutesByWebDirectoryIdQuery, IEnumerable<PageRoute>>
         , IPermissionRestrictedQueryHandler<GetPageRoutesByWebDirectoryIdQuery, IEnumerable<PageRoute>>
     {
         private readonly IQueryExecutor _queryExecutor;
@@ -22,11 +22,10 @@ namespace Cofoundry.Domain
             _queryExecutor = queryExecutor;
         }
 
-        public IEnumerable<PageRoute> Execute(GetPageRoutesByWebDirectoryIdQuery query, IExecutionContext executionContext)
+        public async Task<IEnumerable<PageRoute>> ExecuteAsync(GetPageRoutesByWebDirectoryIdQuery query, IExecutionContext executionContext)
         {
-            var result = _queryExecutor
-                .GetAll<PageRoute>(executionContext)
-                .Where(p => p.WebDirectory.WebDirectoryId == query.WebDirectoryId);
+            var allRoutes = await _queryExecutor.GetAllAsync<PageRoute>(executionContext);
+            var result = allRoutes.Where(p => p.WebDirectory.WebDirectoryId == query.WebDirectoryId);
 
             return result;
         }

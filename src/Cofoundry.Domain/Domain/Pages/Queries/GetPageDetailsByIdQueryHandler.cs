@@ -14,8 +14,7 @@ using Cofoundry.Core;
 namespace Cofoundry.Domain
 {
     public class GetPageDetailsByIdQueryHandler 
-        : IQueryHandler<GetByIdQuery<PageDetails>, PageDetails>
-        , IAsyncQueryHandler<GetByIdQuery<PageDetails>, PageDetails>
+        : IAsyncQueryHandler<GetByIdQuery<PageDetails>, PageDetails>
         , IPermissionRestrictedQueryHandler<GetByIdQuery<PageDetails>, PageDetails>
     {
         #region constructor
@@ -36,20 +35,18 @@ namespace Cofoundry.Domain
 
         #region execution
 
-        public PageDetails Execute(GetByIdQuery<PageDetails> query, IExecutionContext executionContext)
-        {
-            var page = GetPageById(query.Id).FirstOrDefault();
-            var sections = _queryExecutor.Execute(GetSectionQuery(page));
-
-            return Map(query, page, sections);
-        }
 
         public async Task<PageDetails> ExecuteAsync(GetByIdQuery<PageDetails> query, IExecutionContext executionContext)
         {
-            var page = await GetPageById(query.Id).FirstOrDefaultAsync();
-            var sections = await _queryExecutor.ExecuteAsync(GetSectionQuery(page));
+            var dbPageVersion = await GetPageById(query.Id).FirstOrDefaultAsync();
+            if (dbPageVersion == null) return null;
 
-            return Map(query, page, sections);
+            var pageRoute = await _queryExecutor.GetByIdAsync<PageRoute>(query.Id);
+            EntityNotFoundException.ThrowIfNull(pageRoute, query.Id);
+
+            var sections = await _queryExecutor.ExecuteAsync(GetSectionQuery(dbPageVersion));
+
+            return Map(dbPageVersion, sections, pageRoute);
         }
 
         #endregion
@@ -64,20 +61,16 @@ namespace Cofoundry.Domain
         }
 
         private PageDetails Map(
-            GetByIdQuery<PageDetails> query, 
             PageVersion dbPageVersion,
-            IEnumerable<PageSectionDetails> sections
+            IEnumerable<PageSectionDetails> sections,
+            PageRoute pageRoute
             )
         {
-            if (dbPageVersion == null) return null;
-
             var page = Mapper.Map<PageDetails>(dbPageVersion.Page);
             Mapper.Map(dbPageVersion, page);
 
             // Custom Mapping
-            page.PageRoute = _queryExecutor.GetById<PageRoute>(query.Id);
-            EntityNotFoundException.ThrowIfNull(page, query.Id);
-
+            page.PageRoute = pageRoute;
             page.LatestVersion.Sections = sections;
 
             return page;

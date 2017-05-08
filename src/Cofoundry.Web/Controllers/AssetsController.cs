@@ -9,6 +9,7 @@ using Cofoundry.Core;
 using Microsoft.AspNetCore.Mvc;
 using Cofoundry.Core.Web;
 using Microsoft.AspNetCore.Http;
+using System.Threading.Tasks;
 
 namespace Cofoundry.Web
 {
@@ -46,11 +47,11 @@ namespace Cofoundry.Web
         }
 
         //[OutputCache(Duration = 60 * 60 * 24 * 30, Location = OutputCacheLocation.Downstream)]
-        public ActionResult Image(int assetId, string fileName, string extension, int? cropSizeId)
+        public async Task<ActionResult> Image(int assetId, string fileName, string extension, int? cropSizeId)
         {
             var settings = ImageResizeSettings.ParseFromQueryString(Request.Query);
 
-            var asset = _queryExecutor.GetById<ImageAssetRenderDetails>(assetId);
+            var asset = await _queryExecutor.GetByIdAsync<ImageAssetRenderDetails>(assetId);
             if (asset == null)
             {
                 return FileAssetNotFound("Image could not be found");
@@ -62,7 +63,7 @@ namespace Cofoundry.Web
                 return RedirectPermanent(url);
             }
 
-            DateTime lastModified = DateTime.SpecifyKind(asset.UpdateDate, DateTimeKind.Utc);
+            var lastModified = DateTime.SpecifyKind(asset.UpdateDate, DateTimeKind.Utc);
             // Round the ticks down (see http://stackoverflow.com/a/1005222/486434), because http headers are only accurate to seconds, so get rounded down
             lastModified = lastModified.AddTicks(-(lastModified.Ticks % TimeSpan.TicksPerSecond));
 
@@ -79,7 +80,7 @@ namespace Cofoundry.Web
 
             try
             {
-                stream = _resizedImageAssetFileService.Get(asset, settings);
+                stream = await _resizedImageAssetFileService.GetAsync(asset, settings);
             }
             catch (FileNotFoundException ex)
             {
@@ -99,13 +100,13 @@ namespace Cofoundry.Web
         }
         
         [ResponseCache(Duration = 60 * 60, Location = ResponseCacheLocation.Client)]
-        public ActionResult File(int assetId, string fileName, string extension)
+        public async Task<ActionResult> File(int assetId, string fileName, string extension)
         {
             DocumentAssetFile file = null;
 
             try
             {
-                file = _queryExecutor.GetById<DocumentAssetFile>(assetId);
+                file = await _queryExecutor.GetByIdAsync<DocumentAssetFile>(assetId);
             }
             catch (FileNotFoundException ex)
             {

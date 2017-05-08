@@ -37,9 +37,9 @@ namespace Cofoundry.Domain
         /// the id. Use the overload accepting an IPageRoute if possible to save a 
         /// potential db query if the route isn't cached.
         /// </summary>
-        public string Page(int? pageId)
+        public Task<string> PageAsync(int? pageId)
         {
-            return _pageRouteLibrary.Page(pageId);
+            return _pageRouteLibrary.PageAsync(pageId);
         }
 
         /// <summary>
@@ -69,9 +69,9 @@ namespace Cofoundry.Domain
         /// </summary>
         /// <param name="imageAssetId">Id of the image asset to get the url for</param>
         /// <param name="settings">Optional resizing settings for the image</param>
-        public string ImageAsset(int? imageAssetId, IImageResizeSettings settings = null)
+        public Task<string> ImageAssetAsync(int? imageAssetId, IImageResizeSettings settings = null)
         {
-            return _imageAssetRouteLibrary.ImageAsset(imageAssetId, settings);
+            return _imageAssetRouteLibrary.ImageAssetAsync(imageAssetId, settings);
         }
 
         /// <summary>
@@ -105,9 +105,9 @@ namespace Cofoundry.Domain
         /// potential db query if the asset isn't cached.
         /// </summary>
         /// <param name="documentAssetId">Id of the document asset to get the url for</param>
-        public string DocumentAsset(int? documentAssetId)
+        public Task<string> DocumentAssetAsync(int? documentAssetId)
         {
-            return _documentAssetRouteLibrary.DocumentAsset(documentAssetId);
+            return _documentAssetRouteLibrary.DocumentAssetAsync(documentAssetId);
         }
 
         /// <summary>

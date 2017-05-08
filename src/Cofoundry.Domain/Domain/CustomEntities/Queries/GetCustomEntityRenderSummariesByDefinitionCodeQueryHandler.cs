@@ -12,8 +12,7 @@ using AutoMapper;
 namespace Cofoundry.Domain
 {
     public class GetCustomEntityRenderSummariesByDefinitionCodeQueryHandler
-        : IQueryHandler<GetCustomEntityRenderSummariesByDefinitionCodeQuery, IEnumerable<CustomEntityRenderSummary>>
-        , IAsyncQueryHandler<GetCustomEntityRenderSummariesByDefinitionCodeQuery, IEnumerable<CustomEntityRenderSummary>>
+        : IAsyncQueryHandler<GetCustomEntityRenderSummariesByDefinitionCodeQuery, IEnumerable<CustomEntityRenderSummary>>
         , IPermissionRestrictedQueryHandler<GetCustomEntityRenderSummariesByDefinitionCodeQuery, IEnumerable<CustomEntityRenderSummary>>
     {
         #region constructor
@@ -41,14 +40,6 @@ namespace Cofoundry.Domain
         {
             var dbResults = await Query(query).ToListAsync();
             var results = await _customEntityRenderSummaryMapper.MapSummariesAsync(dbResults, executionContext);
-
-            return results;
-        }
-
-        public IEnumerable<CustomEntityRenderSummary> Execute(GetCustomEntityRenderSummariesByDefinitionCodeQuery query, IExecutionContext executionContext)
-        {
-            var dbResults = Query(query).ToList();
-            var results = _customEntityRenderSummaryMapper.MapSummaries(dbResults, executionContext);
 
             return results;
         }

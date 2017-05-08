@@ -10,7 +10,7 @@ using Cofoundry.Domain.CQS;
 namespace Cofoundry.Domain
 {
     public class GetCustomEntityDefinitionMicroSummaryByDisplayModelTypeQueryHandler 
-        : IQueryHandler<GetCustomEntityDefinitionMicroSummaryByDisplayModelTypeQuery, CustomEntityDefinitionMicroSummary>
+        : IAsyncQueryHandler<GetCustomEntityDefinitionMicroSummaryByDisplayModelTypeQuery, CustomEntityDefinitionMicroSummary>
         , IIgnorePermissionCheckHandler
     {
         #region constructor
@@ -26,7 +26,7 @@ namespace Cofoundry.Domain
 
         #endregion
 
-        public CustomEntityDefinitionMicroSummary Execute(GetCustomEntityDefinitionMicroSummaryByDisplayModelTypeQuery query, IExecutionContext executionContext)
+        public async Task<CustomEntityDefinitionMicroSummary> ExecuteAsync(GetCustomEntityDefinitionMicroSummaryByDisplayModelTypeQuery query, IExecutionContext executionContext)
         {
             var dataModelType = query.DisplayModelType
                 .GetInterfaces()
@@ -39,9 +39,9 @@ namespace Cofoundry.Domain
                 throw new ArgumentException("query.DisplayModelType is not of type ICustomEntityDisplayModel<>");
             }
 
-            var definition = _queryExecutor
-                .GetAll<CustomEntityDefinitionSummary>(executionContext)
-                .FirstOrDefault(d => d.DataModelType == dataModelType);
+            var allDefinitions = await _queryExecutor.GetAllAsync<CustomEntityDefinitionSummary>(executionContext);
+
+            var definition = allDefinitions.FirstOrDefault(d => d.DataModelType == dataModelType);
 
             var microSummary = Mapper.Map<CustomEntityDefinitionMicroSummary>(definition);
 

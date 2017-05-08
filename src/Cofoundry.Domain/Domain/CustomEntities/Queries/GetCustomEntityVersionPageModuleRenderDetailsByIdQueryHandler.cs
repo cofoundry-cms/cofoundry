@@ -95,7 +95,7 @@ namespace Cofoundry.Domain
             var result = new CustomEntityVersionPageModuleRenderDetails();
             result.CustomEntityVersionPageModuleId = versionModule.CustomEntityVersionPageModuleId;
             result.ModuleType = moduleType;
-            result.DisplayModel = _pageVersionModuleModelMapper.MapDisplayModel(moduleTypeFileName, versionModule, workflowStatus);
+            result.DisplayModel = await _pageVersionModuleModelMapper.MapDisplayModelAsync(moduleTypeFileName, versionModule, workflowStatus);
             
             return result;
         }

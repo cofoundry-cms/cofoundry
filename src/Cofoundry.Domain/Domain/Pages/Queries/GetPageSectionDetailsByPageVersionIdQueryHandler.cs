@@ -17,8 +17,7 @@ namespace Cofoundry.Domain
     /// to the page version.
     /// </summary>
     public class GetPageSectionDetailsByPageVersionIdQueryHandler 
-        : IQueryHandler<GetPageSectionDetailsByPageVersionIdQuery, IEnumerable<PageSectionDetails>>
-        , IAsyncQueryHandler<GetPageSectionDetailsByPageVersionIdQuery, IEnumerable<PageSectionDetails>>
+        : IAsyncQueryHandler<GetPageSectionDetailsByPageVersionIdQuery, IEnumerable<PageSectionDetails>>
         , IPermissionRestrictedQueryHandler<GetPageSectionDetailsByPageVersionIdQuery, IEnumerable<PageSectionDetails>>
     {
         #region constructor
@@ -42,17 +41,6 @@ namespace Cofoundry.Domain
         }
 
         #endregion
-
-        public IEnumerable<PageSectionDetails> Execute(GetPageSectionDetailsByPageVersionIdQuery query, IExecutionContext executionContext)
-        {
-            var sections = GetSections(query).ToList();
-            var dbModules = QueryModules(query).ToList();
-            var allModuleTypes = _queryExecutor.GetAll<PageModuleTypeSummary>(executionContext);
-
-            MapSections(sections, dbModules, allModuleTypes);
-
-            return sections;
-        }
 
         public async Task<IEnumerable<PageSectionDetails>> ExecuteAsync(GetPageSectionDetailsByPageVersionIdQuery query, IExecutionContext executionContext)
         {

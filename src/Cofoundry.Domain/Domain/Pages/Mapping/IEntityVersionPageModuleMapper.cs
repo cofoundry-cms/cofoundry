@@ -13,7 +13,7 @@ namespace Cofoundry.Domain
     /// </summary>
     public interface IEntityVersionPageModuleMapper
     {
-        void MapSections<TModuleRenderDetails>(
+        Task MapSectionsAsync<TModuleRenderDetails>(
             IEnumerable<IEntityVersionPageModule> dbModules, 
             IEnumerable<IEntitySectionRenderDetails<TModuleRenderDetails>> sections, 
             IEnumerable<PageModuleTypeSummary> allModuleTypes,

@@ -16,8 +16,7 @@ namespace Cofoundry.Domain
     /// other non-Cofoundry users. Does not send any email notifications.
     /// </summary>
     public class AddUserCommandHandler 
-        : ICommandHandler<AddUserCommand>
-        , IAsyncCommandHandler<AddUserCommand>
+        : IAsyncCommandHandler<AddUserCommand>
         , IPermissionRestrictedCommandHandler<AddUserCommand>
     {
         #region constructor
@@ -55,24 +54,6 @@ namespace Cofoundry.Domain
         #endregion
 
         #region execution
-
-        public void Execute(AddUserCommand command, IExecutionContext executionContext)
-        {
-            var userArea = _userAreaRepository.GetByCode(command.UserAreaCode);
-            var dbUserArea = QueryUserArea(userArea).SingleOrDefault();
-            dbUserArea = AddUserAreaIfNotExists(userArea, dbUserArea);
-
-            ValidateCommand(command, userArea);
-            var isUnique = _queryExecutor.Execute(GetUniqueQuery(command, userArea), executionContext);
-            ValidateIsUnique(isUnique, userArea);
-
-            var newRole = _userCommandPermissionsHelper.GetAndValidateNewRole(command.RoleId, command.UserAreaCode, executionContext);
-
-            var user = MapAndAddUser(command, executionContext, newRole, userArea, dbUserArea);
-            _dbContext.SaveChanges();
-
-            command.OutputUserId = user.UserId;
-        }
 
         public async Task ExecuteAsync(AddUserCommand command, IExecutionContext executionContext)
         {

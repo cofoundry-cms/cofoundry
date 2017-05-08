@@ -13,8 +13,7 @@ using Cofoundry.Core;
 namespace Cofoundry.Domain
 {
     public class CompleteUserPasswordResetCommandHandler 
-        : ICommandHandler<CompleteUserPasswordResetCommand>
-        , IAsyncCommandHandler<CompleteUserPasswordResetCommand>
+        : IAsyncCommandHandler<CompleteUserPasswordResetCommand>
         , IIgnorePermissionCheckHandler
     {
         private const int NUMHOURS_PASSWORD_RESET_VALID = 16;
@@ -51,26 +50,6 @@ namespace Cofoundry.Domain
         #endregion
 
         #region execution
-
-        public void Execute(CompleteUserPasswordResetCommand command, IExecutionContext executionContext)
-        {
-            var validationResult = _queryExecutor.Execute(CreateValidationQuery(command));
-            ValidatePasswordRequest(validationResult);
-
-            var request = QueryPasswordRequestIfToken(command).SingleOrDefault();
-            EntityNotFoundException.ThrowIfNull(request, command.UserPasswordResetRequestId);
-
-            UpdatePasswordAndSetComplete(request, command, executionContext);
-            SetMailTemplate(command, request.User);
-
-            using (var scope = _transactionScopeFactory.Create())
-            {
-                _dbContext.SaveChanges();
-                _mailService.Send(request.User.Email, request.User.GetFullName(), command.MailTemplate);
-
-                scope.Complete();
-            }
-        }
 
         public async Task ExecuteAsync(CompleteUserPasswordResetCommand command, IExecutionContext executionContext)
         {

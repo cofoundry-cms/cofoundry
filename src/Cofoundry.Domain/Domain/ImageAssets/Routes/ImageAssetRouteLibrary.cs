@@ -37,11 +37,11 @@ namespace Cofoundry.Domain
         /// </summary>
         /// <param name="imageAssetId">Id of the image asset to get the url for</param>
         /// <param name="settings">Optional resizing settings for the image</param>
-        public string ImageAsset(int? imageAssetId, IImageResizeSettings settings = null)
+        public async Task<string> ImageAssetAsync(int? imageAssetId, IImageResizeSettings settings = null)
         {
             if (!imageAssetId.HasValue) return string.Empty;
 
-            var asset = _queryExecutor.GetById<ImageAssetRenderDetails>(imageAssetId.Value);
+            var asset = await _queryExecutor.GetByIdAsync<ImageAssetRenderDetails>(imageAssetId.Value);
 
             return ImageAsset(asset, settings);
         }

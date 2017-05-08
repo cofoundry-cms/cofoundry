@@ -19,7 +19,7 @@ namespace Cofoundry.Domain
         /// </summary>
         /// <param name="imageAssetId">Id of the image asset to get the url for</param>
         /// <param name="settings">Optional resizing settings for the image</param>
-        string ImageAsset(int? imageAssetId, IImageResizeSettings settings = null);
+        Task<string> ImageAssetAsync(int? imageAssetId, IImageResizeSettings settings = null);
 
         /// <summary>
         /// Gets the url for an image asset, with optional resizing parameters

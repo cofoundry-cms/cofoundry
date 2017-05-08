@@ -13,8 +13,7 @@ using System.Text.RegularExpressions;
 namespace Cofoundry.Domain
 {
     public class GetActiveLocaleByIETFLanguageTagQueryHandler 
-        : IQueryHandler<GetActiveLocaleByIETFLanguageTagQuery, ActiveLocale>
-        , IAsyncQueryHandler<GetActiveLocaleByIETFLanguageTagQuery, ActiveLocale>
+        : IAsyncQueryHandler<GetActiveLocaleByIETFLanguageTagQuery, ActiveLocale>
         , IIgnorePermissionCheckHandler
     {
         private readonly IQueryExecutor _queryExecutor;
@@ -24,18 +23,6 @@ namespace Cofoundry.Domain
             )
         {
             _queryExecutor = queryExecutor;
-        }
-
-
-        public ActiveLocale Execute(GetActiveLocaleByIETFLanguageTagQuery query, IExecutionContext executionContext)
-        {
-            if (!IsTagValid(query.IETFLanguageTag)) return null;
-
-            var result = _queryExecutor
-                .GetAll<ActiveLocale>()
-                .SingleOrDefault(l => l.IETFLanguageTag.Equals(query.IETFLanguageTag, StringComparison.OrdinalIgnoreCase));
-
-            return result;
         }
 
         public async Task<ActiveLocale> ExecuteAsync(GetActiveLocaleByIETFLanguageTagQuery query, IExecutionContext executionContext)

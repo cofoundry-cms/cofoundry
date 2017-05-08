@@ -16,10 +16,8 @@ namespace Cofoundry.Domain
         #region queries
 
         Task<DocumentAssetDetails> GetDocumentAssetDetailsByIdAsync(int documentAssetId, IExecutionContext executionContext = null);
-        DocumentAssetFile GetDocumentAssetFileByIdQuery(int id, IExecutionContext executionContext = null);
-        DocumentAssetRenderDetails GetDocumentAssetRenderDetailsById(int imageAssetId, IExecutionContext executionContext = null);
+        Task<DocumentAssetFile> GetDocumentAssetFileByIdQueryAsync(int id, IExecutionContext executionContext = null);
         Task<DocumentAssetRenderDetails> GetDocumentAssetRenderDetailsByIdAsync(int imageAssetId, IExecutionContext executionContext = null);
-        IDictionary<int, DocumentAssetRenderDetails> GetDocumentAssetRenderDetailsByIdRange(IEnumerable<int> imageAssetIds, IExecutionContext executionContext = null);
         Task<IDictionary<int, DocumentAssetRenderDetails>> GetDocumentAssetRenderDetailsByIdRangeAsync(IEnumerable<int> imageAssetIds, IExecutionContext executionContext = null);
         Task<PagedQueryResult<DocumentAssetSummary>> SearchDocumentAssetSummariesAsync(SearchDocumentAssetSummariesQuery query, IExecutionContext executionContext = null);
 

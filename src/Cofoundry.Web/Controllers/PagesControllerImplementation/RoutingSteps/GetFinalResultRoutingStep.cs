@@ -71,13 +71,13 @@ namespace Cofoundry.Web
 
 
             // set cache
-            SetCache(vm, state);
+            await SetCacheAsync(vm, state);
 
             var result = controller.View(state.PageData.Template.FullPath, vm);
             return result;
         }
 
-        public void SetCache(IEditablePageViewModel vm, PageActionRoutingState state)
+        public async Task SetCacheAsync(IEditablePageViewModel vm, PageActionRoutingState state)
         {
             var siteViewerMode = state.VisualEditorMode;
             var workFlowStatusQuery = state.VisualEditorMode.ToWorkFlowStatusQuery();
@@ -114,7 +114,7 @@ namespace Cofoundry.Web
 
             if (!string.IsNullOrEmpty(state.PageRoutingInfo.PageRoute.CustomEntityDefinitionCode))
             {
-                pageResponseData.CustomEntityDefinition = _queryExecutor.GetById<CustomEntityDefinitionSummary>(state.PageRoutingInfo.PageRoute.CustomEntityDefinitionCode);
+                pageResponseData.CustomEntityDefinition = await _queryExecutor.GetByIdAsync<CustomEntityDefinitionSummary>(state.PageRoutingInfo.PageRoute.CustomEntityDefinitionCode);
             }
 
             if (state.InputParameters.IsEditingCustomEntity)

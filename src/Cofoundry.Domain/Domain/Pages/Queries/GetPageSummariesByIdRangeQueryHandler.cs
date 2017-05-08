@@ -16,8 +16,7 @@ namespace Cofoundry.Domain
     /// pages will be returned irrecpective of whether they aree published or not.
     /// </summary>
     public class GetPageSummariesByIdRangeQueryHandler
-        : IQueryHandler<GetPageSummariesByIdRangeQuery, IDictionary<int, PageSummary>>
-        , IAsyncQueryHandler<GetPageSummariesByIdRangeQuery, IDictionary<int, PageSummary>>
+        : IAsyncQueryHandler<GetPageSummariesByIdRangeQuery, IDictionary<int, PageSummary>>
         , IIgnorePermissionCheckHandler
     {
         #region constructor
@@ -40,18 +39,15 @@ namespace Cofoundry.Domain
 
         #region execution
 
-        public IDictionary<int, PageSummary> Execute(GetPageSummariesByIdRangeQuery query, IExecutionContext executionContext)
-        {
-            var result = CreateQuery(query).ToList();
-
-            return Map(result);
-        }
-
         public async Task<IDictionary<int, PageSummary>> ExecuteAsync(GetPageSummariesByIdRangeQuery query, IExecutionContext executionContext)
         {
             var result = await CreateQuery(query).ToListAsync();
 
-            return Map(result);
+            // Finish mapping children
+            await _pageSummaryMapper.MapAsync(result);
+            var dictionary = result.ToDictionary(d => d.PageId);
+
+            return dictionary;
         }
 
         #endregion
@@ -68,15 +64,6 @@ namespace Cofoundry.Domain
                 .ProjectTo<PageSummary>();
 
             return dbQuery;
-        }
-
-        private Dictionary<int, PageSummary> Map(List<PageSummary> result)
-        {
-            // Finish mapping children
-            _pageSummaryMapper.Map(result);
-            var dictionary = result.ToDictionary(d => d.PageId);
-
-            return dictionary;
         }
 
         #endregion

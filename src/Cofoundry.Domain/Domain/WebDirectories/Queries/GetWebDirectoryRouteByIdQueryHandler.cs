@@ -15,8 +15,7 @@ namespace Cofoundry.Domain
     /// Returns a web directory with the specified id as a WebDirectoryRoute instance.
     /// </summary>
     public class GetWebDirectoryRouteByIdQueryHandler 
-        : IQueryHandler<GetByIdQuery<WebDirectoryRoute>, WebDirectoryRoute>
-        , IAsyncQueryHandler<GetByIdQuery<WebDirectoryRoute>, WebDirectoryRoute>
+        : IAsyncQueryHandler<GetByIdQuery<WebDirectoryRoute>, WebDirectoryRoute>
         , IPermissionRestrictedQueryHandler<GetByIdQuery<WebDirectoryRoute>, WebDirectoryRoute>
     {
         #region constructor
@@ -33,16 +32,7 @@ namespace Cofoundry.Domain
         #endregion
 
         #region execution
-
-        public WebDirectoryRoute Execute(GetByIdQuery<WebDirectoryRoute> query, IExecutionContext executionContext)
-        {
-            var result = _queryExecutor
-                .GetAll<WebDirectoryRoute>()
-                .SingleOrDefault(l => l.WebDirectoryId == query.Id);
-
-            return result;
-        }
-
+        
         public async Task<WebDirectoryRoute> ExecuteAsync(GetByIdQuery<WebDirectoryRoute> query, IExecutionContext executionContext)
         {
             var result = (await _queryExecutor

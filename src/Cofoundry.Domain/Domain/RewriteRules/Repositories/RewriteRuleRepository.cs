@@ -36,26 +36,6 @@ namespace Cofoundry.Domain
             return _queryExecutor.GetAllAsync<RewriteRuleSummary>(executionContext);
         }
 
-        public IEnumerable<RewriteRuleSummary> GetAllRewriteRuleSummaries(IExecutionContext executionContext = null)
-        {
-            return _queryExecutor.GetAll<RewriteRuleSummary>(executionContext);
-        }
-
-        /// <summary>
-        /// Gets a rewrite rule that matches the specified path in the 
-        /// 'WriteFrom' property. If multiple matches are found, the most
-        /// recently added rule is returned. Non-file paths are matched with
-        /// and without the trailing slash.
-        /// </summary>
-        /// <param name="path">
-        /// Path to check for a rewrite rule. for non-file paths the trailing slash 
-        /// is optional. Also supports '*' wildcard matching at the end of the path.
-        /// </param>
-        public RewriteRuleSummary GetRewriteRuleByPath(string path, IExecutionContext executionContext = null)
-        {
-            return _queryExecutor.Execute(new GetRewriteRuleByPathQuery() { Path = path }, executionContext);
-        }
-
         /// <summary>
         /// Gets a rewrite rule that matches the specified path in the 
         /// 'WriteFrom' property. If multiple matches are found, the most

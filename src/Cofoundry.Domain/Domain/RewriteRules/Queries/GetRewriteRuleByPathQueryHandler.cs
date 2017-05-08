@@ -16,8 +16,7 @@ namespace Cofoundry.Domain
     /// set is cached in memory and quick to access.
     /// </summary>
     public class GetRewriteRuleByPathQueryHandler 
-        : IQueryHandler<GetRewriteRuleByPathQuery, RewriteRuleSummary>
-        , IAsyncQueryHandler<GetRewriteRuleByPathQuery, RewriteRuleSummary>
+        : IAsyncQueryHandler<GetRewriteRuleByPathQuery, RewriteRuleSummary>
         , IPermissionRestrictedQueryHandler<GetRewriteRuleByPathQuery, RewriteRuleSummary>
     {
         #region constructor
@@ -37,12 +36,6 @@ namespace Cofoundry.Domain
         #endregion
 
         #region execution
-
-        public RewriteRuleSummary Execute(GetRewriteRuleByPathQuery query, IExecutionContext executionContext)
-        {
-            var rules = _queryExecutor.GetAll<RewriteRuleSummary>();
-            return FindRule(query, rules);
-        }
 
         public async Task<RewriteRuleSummary> ExecuteAsync(GetRewriteRuleByPathQuery query, IExecutionContext executionContext)
         {

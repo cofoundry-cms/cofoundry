@@ -10,8 +10,7 @@ using Cofoundry.Core;
 namespace Cofoundry.Domain
 {
     public class GetPageRoutingInfoByCustomEntityIdRangeQueryHandler 
-        : IQueryHandler<GetPageRoutingInfoByCustomEntityIdRangeQuery, IDictionary<int, IEnumerable<PageRoutingInfo>>>
-        , IAsyncQueryHandler<GetPageRoutingInfoByCustomEntityIdRangeQuery, IDictionary<int, IEnumerable<PageRoutingInfo>>>
+        : IAsyncQueryHandler<GetPageRoutingInfoByCustomEntityIdRangeQuery, IDictionary<int, IEnumerable<PageRoutingInfo>>>
         , IPermissionRestrictedQueryHandler<GetPageRoutingInfoByCustomEntityIdRangeQuery, IDictionary<int, IEnumerable<PageRoutingInfo>>>
     {
         #region constructor
@@ -31,36 +30,6 @@ namespace Cofoundry.Domain
         #endregion
 
         #region execution
-
-        public IDictionary<int, IEnumerable<PageRoutingInfo>> Execute(GetPageRoutingInfoByCustomEntityIdRangeQuery query, IExecutionContext executionContext)
-        {
-            var idSets = IdSetQuery(query).ToList();
-
-            if (!idSets.Any())
-            {
-                return new Dictionary<int, IEnumerable<PageRoutingInfo>>();
-            }
-
-            var customEntityRoutesQueries = GetCustomEntityRoutingQuery(idSets);
-
-            var customEntityRoutes = new Dictionary<int, CustomEntityRoute>();
-            foreach (var customEntityRoutesQuery in customEntityRoutesQueries)
-            {
-                // Probably cached so should be quick
-                var routes = _queryExecutor.Execute(customEntityRoutesQuery, executionContext);
-                foreach (var route in routes)
-                {
-                    if (!customEntityRoutes.ContainsKey(route.CustomEntityId))
-                    {
-                        customEntityRoutes.Add(route.CustomEntityId, route);
-                    }
-                }
-            }
-
-            var pageRoutes = _queryExecutor.GetByIdRange<PageRoute>(idSets.Select(p => p.PageId), executionContext);
-
-            return Map(executionContext, idSets, customEntityRoutes, pageRoutes);
-        }
 
         public async Task<IDictionary<int, IEnumerable<PageRoutingInfo>>> ExecuteAsync(GetPageRoutingInfoByCustomEntityIdRangeQuery query, IExecutionContext executionContext)
         {
@@ -89,7 +58,7 @@ namespace Cofoundry.Domain
 
             var pageRoutes = await _queryExecutor.GetByIdRangeAsync<PageRoute>(idSets.Select(p => p.PageId), executionContext);
 
-            return Map(executionContext, idSets, customEntityRoutes, pageRoutes);
+            return await MapAsync(executionContext, idSets, customEntityRoutes, pageRoutes);
         }
 
         #endregion
@@ -123,9 +92,9 @@ namespace Cofoundry.Domain
                 });
         }
 
-        private IDictionary<int, IEnumerable<PageRoutingInfo>> Map(IExecutionContext executionContext, List<IdQueryResult> idSets, Dictionary<int, CustomEntityRoute> customEntityRoutes, IDictionary<int, PageRoute> pageRoutes)
+        private async Task<IDictionary<int, IEnumerable<PageRoutingInfo>>> MapAsync(IExecutionContext executionContext, List<IdQueryResult> idSets, Dictionary<int, CustomEntityRoute> customEntityRoutes, IDictionary<int, PageRoute> pageRoutes)
         {
-            var allRules = _queryExecutor.GetAll<ICustomEntityRoutingRule>(executionContext);
+            var allRules = await _queryExecutor.GetAllAsync<ICustomEntityRoutingRule>(executionContext);
 
             var result = new List<PageRoutingInfo>(idSets.Count);
 

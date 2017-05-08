@@ -13,6 +13,6 @@ namespace Cofoundry.Domain
     /// </summary>
     public interface IPageModuleDisplayModelMapper<TDataModel> where TDataModel : IPageModuleDataModel
     {
-        IEnumerable<PageModuleDisplayModelMapperOutput> Map(IEnumerable<PageModuleDisplayModelMapperInput<TDataModel>> inputs, WorkFlowStatusQuery workflowStatus);
+        Task<IEnumerable<PageModuleDisplayModelMapperOutput>> MapAsync(IEnumerable<PageModuleDisplayModelMapperInput<TDataModel>> inputs, WorkFlowStatusQuery workflowStatus);
     }
 }

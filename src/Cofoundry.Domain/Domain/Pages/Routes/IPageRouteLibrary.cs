@@ -17,7 +17,7 @@ namespace Cofoundry.Domain
         /// the id. Use the overload accepting an IPageRoute if possible to save a 
         /// potential db query if the route isn't cached.
         /// </summary>
-        string Page(int? pageId);
+        Task<string> PageAsync(int? pageId);
 
         /// <summary>
         /// Gets the full (relative) url of a page

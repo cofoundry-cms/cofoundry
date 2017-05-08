@@ -12,8 +12,7 @@ using System.IO;
 namespace Cofoundry.Domain
 {
     public class GetCurrentActiveLocaleQueryHandler 
-        : IQueryHandler<GetCurrentActiveLocaleQuery, ActiveLocale>
-        , IAsyncQueryHandler<GetCurrentActiveLocaleQuery, ActiveLocale>
+        : IAsyncQueryHandler<GetCurrentActiveLocaleQuery, ActiveLocale>
         , IIgnorePermissionCheckHandler
     {
         private readonly IQueryExecutor _queryExecutor;
@@ -26,14 +25,6 @@ namespace Cofoundry.Domain
         {
             _queryExecutor = queryExecutor;
             _cultureContextService = cultureContextService;
-        }
-
-
-        public ActiveLocale Execute(GetCurrentActiveLocaleQuery query, IExecutionContext executionContext)
-        {
-            var result = _queryExecutor.Execute(GetQuery());
-
-            return result;
         }
 
         public async Task<ActiveLocale> ExecuteAsync(GetCurrentActiveLocaleQuery query, IExecutionContext executionContext)

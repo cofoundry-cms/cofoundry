@@ -26,6 +26,6 @@ namespace Cofoundry.Domain
         /// or has been defined multiple times
         /// </summary>
         /// <param name="pageModuleTypeId">Id of the page module type in the database</param>
-        Type CreateByPageModuleTypeId(int pageModuleTypeId);
+        Task<Type> CreateByPageModuleTypeIdAsync(int pageModuleTypeId);
     }
 }

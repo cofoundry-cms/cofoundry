@@ -15,8 +15,7 @@ namespace Cofoundry.Domain
     /// the data required to render a page, including template data for all the content-editable sections.
     /// </summary>
     public class GetPageRenderDetailsByIdRangeQueryHandler
-        : IQueryHandler<GetPageRenderDetailsByIdRangeQuery, IDictionary<int, PageRenderDetails>>
-        , IAsyncQueryHandler<GetPageRenderDetailsByIdRangeQuery, IDictionary<int, PageRenderDetails>>
+        : IAsyncQueryHandler<GetPageRenderDetailsByIdRangeQuery, IDictionary<int, PageRenderDetails>>
         , IPermissionRestrictedQueryHandler<GetPageRenderDetailsByIdRangeQuery, IDictionary<int, PageRenderDetails>>
     {
         #region constructor
@@ -40,21 +39,6 @@ namespace Cofoundry.Domain
 
         #region public methods
 
-        public IDictionary<int, PageRenderDetails> Execute(GetPageRenderDetailsByIdRangeQuery query, IExecutionContext executionContext)
-        {
-            var dbPages = QueryPages(query).ToList();
-            var pages = Mapper.Map<List<PageRenderDetails>>(dbPages);
-
-            var pageRoutes = _queryExecutor.GetByIdRange<PageRoute>(GetAllPageIds(pages), executionContext);
-            MapPageRoutes(pages, pageRoutes);
-
-            var dbModules = QueryModules(pages).ToList();
-            var allModuleTypes = _queryExecutor.GetAll<PageModuleTypeSummary>(executionContext);
-            _entityVersionPageModuleMapper.MapSections(dbModules, pages.SelectMany(p => p.Sections), allModuleTypes, query.WorkFlowStatus);
-
-            return pages.ToDictionary(d => d.PageId);
-        }
-
         public async Task<IDictionary<int, PageRenderDetails>> ExecuteAsync(GetPageRenderDetailsByIdRangeQuery query, IExecutionContext executionContext)
         {
             var dbPages = await QueryPages(query).FirstOrDefaultAsync();
@@ -66,7 +50,7 @@ namespace Cofoundry.Domain
             var dbModules = await QueryModules(pages).ToListAsync();
             var allModuleTypes = await _queryExecutor.GetAllAsync<PageModuleTypeSummary>(executionContext);
 
-            _entityVersionPageModuleMapper.MapSections(dbModules, pages.SelectMany(p => p.Sections), allModuleTypes, query.WorkFlowStatus);
+            await _entityVersionPageModuleMapper.MapSectionsAsync(dbModules, pages.SelectMany(p => p.Sections), allModuleTypes, query.WorkFlowStatus);
 
             return pages.ToDictionary(d => d.PageId);
         }

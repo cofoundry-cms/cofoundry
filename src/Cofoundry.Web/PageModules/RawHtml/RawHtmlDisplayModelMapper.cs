@@ -3,20 +3,25 @@ using System.Collections.Generic;
 using System.Linq;
 using Cofoundry.Domain;
 using Microsoft.AspNetCore.Html;
+using System.Threading.Tasks;
 
 namespace Cofoundry.Web
 {
     public class RawHtmlDisplayModelMapper : IPageModuleDisplayModelMapper<RawHtmlDataModel>
     {
-        public IEnumerable<PageModuleDisplayModelMapperOutput> Map(IEnumerable<PageModuleDisplayModelMapperInput<RawHtmlDataModel>> inputs, WorkFlowStatusQuery workflowStatus)
+        public Task<IEnumerable<PageModuleDisplayModelMapperOutput>> MapAsync(IEnumerable<PageModuleDisplayModelMapperInput<RawHtmlDataModel>> inputs, WorkFlowStatusQuery workflowStatus)
         {
+            var results = new List<PageModuleDisplayModelMapperOutput>();
+
             foreach (var input in inputs)
             {
                 var output = new RawHtmlDisplayModel();
                 output.RawHtml = new HtmlString(input.DataModel.RawHtml);
 
-                yield return input.CreateOutput(output);
+                results.Add(input.CreateOutput(output));
             }
+
+            return Task.FromResult(results.AsEnumerable());
         }
     }
 }

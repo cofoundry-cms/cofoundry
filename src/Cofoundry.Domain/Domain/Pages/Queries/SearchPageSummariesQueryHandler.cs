@@ -10,8 +10,7 @@ using AutoMapper.QueryableExtensions;
 namespace Cofoundry.Domain
 {
     public class SearchPageSummariesQueryHandler 
-        : IQueryHandler<SearchPageSummariesQuery, PagedQueryResult<PageSummary>>
-        , IAsyncQueryHandler<SearchPageSummariesQuery, PagedQueryResult<PageSummary>>
+        : IAsyncQueryHandler<SearchPageSummariesQuery, PagedQueryResult<PageSummary>>
         , IPermissionRestrictedQueryHandler<SearchPageSummariesQuery, PagedQueryResult<PageSummary>>
     {
         #region constructor
@@ -34,22 +33,12 @@ namespace Cofoundry.Domain
 
         #region execution
 
-        public PagedQueryResult<PageSummary> Execute(SearchPageSummariesQuery query, IExecutionContext executionContext)
-        {
-            var result = CreateQuery(query).ToPagedResult(query);
-
-            // Finish mapping children
-            _pageSummaryMapper.Map(result.Items);
-
-            return result;
-        }
-
         public async Task<PagedQueryResult<PageSummary>> ExecuteAsync(SearchPageSummariesQuery query, IExecutionContext executionContext)
         {
             var result = await CreateQuery(query).ToPagedResultAsync(query);
 
             // Finish mapping children
-            _pageSummaryMapper.Map(result.Items);
+            await _pageSummaryMapper.MapAsync(result.Items);
 
             return result;
         }

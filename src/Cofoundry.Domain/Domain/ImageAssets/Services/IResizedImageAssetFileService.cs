@@ -8,7 +8,7 @@ namespace Cofoundry.Domain
 {
     public interface IResizedImageAssetFileService
     {
-        Stream Get(IImageAssetRenderable asset, IImageResizeSettings settings);
+        Task<Stream> GetAsync(IImageAssetRenderable asset, IImageResizeSettings settings);
         void Clear(int imageAssetId);
     }
 }

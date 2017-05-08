@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Cofoundry.Domain.CQS;
 using Cofoundry.Core;
+using System.Threading.Tasks;
 
 namespace Cofoundry.Domain
 {
@@ -65,9 +66,9 @@ namespace Cofoundry.Domain
         /// or has been defined multiple times
         /// </summary>
         /// <param name="pageModuleTypeId">Id of the page module type in the database</param>
-        public Type CreateByPageModuleTypeId(int pageModuleTypeId)
+        public async Task<Type> CreateByPageModuleTypeIdAsync(int pageModuleTypeId)
         {
-            var moduleType = _queryExecutor.GetById<PageModuleTypeSummary>(pageModuleTypeId);
+            var moduleType = await _queryExecutor.GetByIdAsync<PageModuleTypeSummary>(pageModuleTypeId);
             EntityNotFoundException.ThrowIfNull(moduleType, pageModuleTypeId);
 
             return CreateByPageModuleTypeFileName(moduleType.FileName);

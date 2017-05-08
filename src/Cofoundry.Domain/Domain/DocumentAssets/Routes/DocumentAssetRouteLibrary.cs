@@ -33,11 +33,11 @@ namespace Cofoundry.Domain
         /// potential db query if the asset isn't cached.
         /// </summary>
         /// <param name="documentAssetId">Id of the document asset to get the url for</param>
-        public string DocumentAsset(int? documentAssetId)
+        public async Task<string> DocumentAssetAsync(int? documentAssetId)
         {
             if (!documentAssetId.HasValue) return string.Empty;
 
-            var asset = _queryExecutor.GetById<DocumentAssetRenderDetails>(documentAssetId.Value);
+            var asset = await _queryExecutor.GetByIdAsync<DocumentAssetRenderDetails>(documentAssetId.Value);
 
             return DocumentAsset(asset);
         }

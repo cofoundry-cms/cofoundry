@@ -28,7 +28,7 @@ namespace Cofoundry.Web
 
         #endregion
 
-        public ActionResult RobotsTxt()
+        public async Task<ActionResult> RobotsTxt()
         {
             string robotsTxt = "Sitemap: " + _siteUriResolver.MakeAbsolute("/sitemap.xml") + "\r\n";
 
@@ -43,7 +43,7 @@ namespace Cofoundry.Web
             }
             else
             {
-                var settings = _queryExecutor.Get<SeoSettings>();
+                var settings = await _queryExecutor.GetAsync<SeoSettings>();
                 robotsTxt += settings.RobotsTxt;
 
                 if (string.IsNullOrEmpty(robotsTxt))

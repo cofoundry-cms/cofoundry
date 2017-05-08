@@ -16,13 +16,17 @@ namespace Cofoundry.Domain
         where TInput : IPageModuleDataModel 
         where TOutput :IPageModuleDisplayModel
     {
-        public IEnumerable<PageModuleDisplayModelMapperOutput> Map(IEnumerable<PageModuleDisplayModelMapperInput<TInput>> inputs, WorkFlowStatusQuery workflowStatus)
+        public Task<IEnumerable<PageModuleDisplayModelMapperOutput>> MapAsync(IEnumerable<PageModuleDisplayModelMapperInput<TInput>> inputs, WorkFlowStatusQuery workflowStatus)
         {
+            var results = new List<PageModuleDisplayModelMapperOutput>();
+
             foreach (var input in inputs)
             {
                 var output = Mapper.Map<TOutput>(input.DataModel);
-                yield return input.CreateOutput(output);
+                results.Add(input.CreateOutput(output));
             }
+
+            return Task.FromResult(results.AsEnumerable());
         }
     }
 }

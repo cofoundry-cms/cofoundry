@@ -48,7 +48,7 @@ namespace Cofoundry.Domain
         public async Task ExecuteAsync(AddPageCommand command, IExecutionContext executionContext)
         {
             // Custom Validation
-            ValidateIsPageUnique(command, executionContext);
+            await ValidateIsPageUniqueAsync(command, executionContext);
 
             var page = await MapPage(command, executionContext);
             _dbContext.Pages.Add(page);
@@ -132,8 +132,8 @@ namespace Cofoundry.Domain
 
             if (command.PageType == PageType.CustomEntityDetails)
             {
-                var definition = GetCustomEntityDefinition(pageTemplate.CustomEntityDefinitionCode, executionContext);
-                var rule = GetAndValidateRoutingRule(command, definition, executionContext);
+                var definition = await GetCustomEntityDefinitionAsync(pageTemplate.CustomEntityDefinitionCode, executionContext);
+                var rule = await GetAndValidateRoutingRuleAsync(command, definition, executionContext);
 
                 page.CustomEntityDefinitionCode = pageTemplate.CustomEntityDefinitionCode;
                 page.UrlPath = rule.RouteFormat;
@@ -159,9 +159,9 @@ namespace Cofoundry.Domain
             return page;
         }
 
-        private ICustomEntityRoutingRule GetAndValidateRoutingRule(AddPageCommand command, CustomEntityDefinitionSummary definition, IExecutionContext ex)
+        private async Task<ICustomEntityRoutingRule> GetAndValidateRoutingRuleAsync(AddPageCommand command, CustomEntityDefinitionSummary definition, IExecutionContext ex)
         {
-            var rules = _queryExecutor.Execute(new GetAllQuery<ICustomEntityRoutingRule>(), ex);
+            var rules = await _queryExecutor.ExecuteAsync(new GetAllQuery<ICustomEntityRoutingRule>(), ex);
             var rule = rules.SingleOrDefault(r => r.RouteFormat == command.CustomEntityRoutingRule);
 
             if (rule == null)
@@ -173,12 +173,13 @@ namespace Cofoundry.Domain
             {
                 throw new PropertyValidationException("Ths routing rule requires a unique url slug, but the selected custom entity does not enforce url slug uniqueness", "CustomEntityRoutingRule");
             }
+
             return rule;
         }
 
-        private CustomEntityDefinitionSummary GetCustomEntityDefinition(string customEntityDefinitionCode, IExecutionContext ex)
+        private async Task<CustomEntityDefinitionSummary> GetCustomEntityDefinitionAsync(string customEntityDefinitionCode, IExecutionContext ex)
         {
-            var definition = _queryExecutor.Execute(new GetByStringQuery<CustomEntityDefinitionSummary>() { Id = customEntityDefinitionCode }, ex);
+            var definition = await _queryExecutor.ExecuteAsync(new GetByStringQuery<CustomEntityDefinitionSummary>() { Id = customEntityDefinitionCode }, ex);
             if (definition == null)
             {
                 throw new PropertyValidationException("Custom entity defintion does not exists", "CustomEntityDefinitionCode", customEntityDefinitionCode);
@@ -209,13 +210,6 @@ namespace Cofoundry.Domain
         }
 
         #region uniqueness
-
-        private void ValidateIsPageUnique(AddPageCommand command, IExecutionContext ex)
-        {
-            var query = CreateUniquenessQuery(command);
-            var isUnique = _queryExecutor.Execute(query, ex);
-            ValidateIsUnique(command, isUnique);
-        }
 
         private async Task ValidateIsPageUniqueAsync(AddPageCommand command, IExecutionContext ex)
         {

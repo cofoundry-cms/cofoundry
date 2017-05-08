@@ -11,8 +11,7 @@ using AutoMapper;
 namespace Cofoundry.Domain
 {
     public class GetCustomEntityRenderSummariesByIdRangeQueryHandler
-        : IQueryHandler<GetCustomEntityRenderSummariesByIdRangeQuery, Dictionary<int, CustomEntityRenderSummary>>
-        , IAsyncQueryHandler<GetCustomEntityRenderSummariesByIdRangeQuery, Dictionary<int, CustomEntityRenderSummary>>
+        : IAsyncQueryHandler<GetCustomEntityRenderSummariesByIdRangeQuery, IDictionary<int, CustomEntityRenderSummary>>
         , IIgnorePermissionCheckHandler
     {
         #region constructor
@@ -39,16 +38,7 @@ namespace Cofoundry.Domain
 
         #region execution
 
-        public Dictionary<int, CustomEntityRenderSummary> Execute(GetCustomEntityRenderSummariesByIdRangeQuery query, IExecutionContext executionContext)
-        {
-            var dbResults = Query(query).ToList();
-            EnforcePermissions(dbResults, executionContext);
-            var results = _customEntityRenderSummaryMapper.MapSummaries(dbResults, executionContext);
-
-            return results.ToDictionary(r => r.CustomEntityId);
-        }
-
-        public async Task<Dictionary<int, CustomEntityRenderSummary>> ExecuteAsync(GetCustomEntityRenderSummariesByIdRangeQuery query, IExecutionContext executionContext)
+        public async Task<IDictionary<int, CustomEntityRenderSummary>> ExecuteAsync(GetCustomEntityRenderSummariesByIdRangeQuery query, IExecutionContext executionContext)
         {
             var dbResults = await Query(query).ToListAsync();
             EnforcePermissions(dbResults, executionContext);

@@ -13,8 +13,7 @@ using System.Data.Entity;
 namespace Cofoundry.Domain
 {
     public class SearchCustomEntityRenderSummariesQueryHandler
-        : IQueryHandler<SearchCustomEntityRenderSummariesQuery, PagedQueryResult<CustomEntityRenderSummary>>
-        , IAsyncQueryHandler<SearchCustomEntityRenderSummariesQuery, PagedQueryResult<CustomEntityRenderSummary>>
+        : IAsyncQueryHandler<SearchCustomEntityRenderSummariesQuery, PagedQueryResult<CustomEntityRenderSummary>>
         , IPermissionRestrictedQueryHandler<SearchCustomEntityRenderSummariesQuery, PagedQueryResult<CustomEntityRenderSummary>>
     {
         #region constructor
@@ -41,27 +40,18 @@ namespace Cofoundry.Domain
 
         #region execution
 
-        public PagedQueryResult<CustomEntityRenderSummary> Execute(SearchCustomEntityRenderSummariesQuery query, IExecutionContext executionContext)
-        {
-            var dbQuery = GetQuery(query);
-            var dbPagedResult = dbQuery.ToPagedResult(query);
-            var results = _customEntityRenderSummaryMapper.MapSummaries(dbPagedResult.Items, executionContext);
-
-            return dbPagedResult.ChangeType(results);
-        }
-
         public async Task<PagedQueryResult<CustomEntityRenderSummary>> ExecuteAsync(SearchCustomEntityRenderSummariesQuery query, IExecutionContext executionContext)
         {
-            var dbQuery = GetQuery(query);
+            var dbQuery = await GetQueryAsync(query);
             var dbPagedResult = await dbQuery.ToPagedResultAsync(query);
             var results = await _customEntityRenderSummaryMapper.MapSummariesAsync(dbPagedResult.Items, executionContext);
 
             return dbPagedResult.ChangeType(results);
         }
         
-        private IQueryable<CustomEntityVersion> GetQuery(SearchCustomEntityRenderSummariesQuery query)
+        private async Task<IQueryable<CustomEntityVersion>> GetQueryAsync(SearchCustomEntityRenderSummariesQuery query)
         {
-            var definition = _queryExecutor.GetById<CustomEntityDefinitionSummary>(query.CustomEntityDefinitionCode);
+            var definition = await _queryExecutor.GetByIdAsync<CustomEntityDefinitionSummary>(query.CustomEntityDefinitionCode);
             EntityNotFoundException.ThrowIfNull(definition, query.CustomEntityDefinitionCode);
 
             var dbQuery = _dbContext

@@ -27,26 +27,7 @@ namespace Cofoundry.Domain
         /// </summary>
         /// <param name="roleId">Database id of the role, or null to return the anonymous role.</param>
         /// <param name="executionContext">Optional execution context to use when executing the query. Useful if you need to temporarily elevate your permission level.</param>
-        RoleDetails GetRoleDetailsById(int? roleId, IExecutionContext executionContext = null);
-
-        /// <summary>
-        /// Finds a role by it's database id, returning a RoleDetails object if it 
-        /// is found, otherwise null. If no role id is specified then the anonymous 
-        /// role is returned.
-        /// </summary>
-        /// <param name="roleId">Database id of the role, or null to return the anonymous role.</param>
-        /// <param name="executionContext">Optional execution context to use when executing the query. Useful if you need to temporarily elevate your permission level.</param>
         Task<RoleDetails> GetRoleDetailsByIdAsync(int? roleId, IExecutionContext executionContext = null);
-
-        /// <summary>
-        /// Find a role with the specified specialist role type code, returning
-        /// a RoleDetails object if one is found, otherwise null. Roles only
-        /// have a SpecialistRoleTypeCode if they have been generated from code
-        /// rather than the GUI. For GUI generated roles use GetRoleDetailsByIdQuery.
-        /// </summary>
-        /// <param name="specialistRoleTypeCode">The code to find a matching role with. Codes are 3 characters long (fixed length).</param>
-        /// <param name="executionContext">Optional execution context to use when executing the query. Useful if you need to temporarily elevate your permission level.</param>
-        RoleDetails GetRoleDetailsBySpecialistRoleTypeCode(string specialistRoleTypeCode, IExecutionContext executionContext = null);
 
         /// <summary>
         /// Find a role with the specified specialist role type code, returning
@@ -65,7 +46,7 @@ namespace Cofoundry.Domain
         /// <param name="query">The parameters run the query with.</param>
         /// <param name="executionContext">Optional execution context to use when executing the query. Useful if you need to temporarily elevate your permission level.</param>
         /// <returns>True if the title is unique; otherwise false.</returns>
-        bool IsRoleTitleUnique(IsRoleTitleUniqueQuery query, IExecutionContext executionContext = null);
+        Task<bool> IsRoleTitleUniqueAsync(IsRoleTitleUniqueQuery query, IExecutionContext executionContext = null);
 
         /// <summary>
         /// Seaches roles based on simple filter criteria and returns a paged result. 

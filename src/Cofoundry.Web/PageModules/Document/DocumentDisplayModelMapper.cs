@@ -5,6 +5,7 @@ using System.Web;
 using Cofoundry.Core;
 using Cofoundry.Domain;
 using Cofoundry.Domain.CQS;
+using System.Threading.Tasks;
 
 namespace Cofoundry.Web
 {
@@ -26,9 +27,10 @@ namespace Cofoundry.Web
 
         #endregion
 
-        public IEnumerable<PageModuleDisplayModelMapperOutput> Map(IEnumerable<PageModuleDisplayModelMapperInput<DocumentDataModel>> inputs, WorkFlowStatusQuery workflowStatus)
+        public async Task<IEnumerable<PageModuleDisplayModelMapperOutput>> MapAsync(IEnumerable<PageModuleDisplayModelMapperInput<DocumentDataModel>> inputs, WorkFlowStatusQuery workflowStatus)
         {
-            var documents = _queryExecutor.GetByIdRange<DocumentAssetRenderDetails>(inputs.Select(i => i.DataModel.DocumentAssetId));
+            var documents = await _queryExecutor.GetByIdRangeAsync<DocumentAssetRenderDetails>(inputs.Select(i => i.DataModel.DocumentAssetId));
+            var results = new List<PageModuleDisplayModelMapperOutput>();
 
             foreach (var input in inputs)
             {
@@ -42,8 +44,10 @@ namespace Cofoundry.Web
                     output.Url = _documentAssetRouteLibrary.DocumentAsset(document);
                 }
 
-                yield return input.CreateOutput(output);
+                results.Add(input.CreateOutput(output));
             }
+
+            return results.AsEnumerable();
         }
     }
 }

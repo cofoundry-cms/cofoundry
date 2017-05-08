@@ -7,11 +7,12 @@ using Cofoundry.Domain.CQS;
 using Cofoundry.Domain.Data;
 using System.IO;
 using Cofoundry.Core;
+using System.Data.Entity;
 
 namespace Cofoundry.Domain
 {
     public class GetDocumentAssetFileByIdQueryHandler 
-        : IQueryHandler<GetByIdQuery<DocumentAssetFile>, DocumentAssetFile>
+        : IAsyncQueryHandler<GetByIdQuery<DocumentAssetFile>, DocumentAssetFile>
         , IPermissionRestrictedQueryHandler<GetByIdQuery<DocumentAssetFile>, DocumentAssetFile>
     {
         private readonly IFileStoreService _fileStoreService;
@@ -26,9 +27,9 @@ namespace Cofoundry.Domain
             _dbContext = dbContext;
         }
 
-        public DocumentAssetFile Execute(GetByIdQuery<DocumentAssetFile> query, IExecutionContext executionContext)
+        public async Task<DocumentAssetFile> ExecuteAsync(GetByIdQuery<DocumentAssetFile> query, IExecutionContext executionContext)
         {
-            var dbResult = _dbContext
+            var dbResult = await _dbContext
                 .DocumentAssets
                 .Where(f => f.DocumentAssetId == query.Id && !f.IsDeleted)
                 .Select(f => new {
@@ -36,7 +37,7 @@ namespace Cofoundry.Domain
                     ContentType = f.ContentType,
                     FileName = f.Title
                 })
-                .SingleOrDefault();
+                .SingleOrDefaultAsync();
 
             if (dbResult == null) return null;
             var fileName = Path.ChangeExtension(query.Id.ToString(), dbResult.Extension);

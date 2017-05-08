@@ -11,8 +11,7 @@ using Cofoundry.Core;
 namespace Cofoundry.Domain
 {
     public class GetAllPageRoutesQueryHandler 
-        : IQueryHandler<GetAllQuery<PageRoute>, IEnumerable<PageRoute>>
-        , IAsyncQueryHandler<GetAllQuery<PageRoute>, IEnumerable<PageRoute>>
+        : IAsyncQueryHandler<GetAllQuery<PageRoute>, IEnumerable<PageRoute>>
         , IPermissionRestrictedQueryHandler<GetAllQuery<PageRoute>, IEnumerable<PageRoute>>
     {
         #region constructor
@@ -35,14 +34,6 @@ namespace Cofoundry.Domain
         #endregion
         
         #region execution
-
-        public IEnumerable<PageRoute> Execute(GetAllQuery<PageRoute> query, IExecutionContext executionContext)
-        {
-            return _pageCache.GetOrAdd(() =>
-            {
-                return GetAllPageRoutes(query, executionContext);
-            });
-        }
 
         public async Task<IEnumerable<PageRoute>> ExecuteAsync(GetAllQuery<PageRoute> query, IExecutionContext executionContext)
         {
@@ -149,23 +140,12 @@ namespace Cofoundry.Domain
         {
             var dbPages = await QueryPages().ToListAsync();
             var dbPageVersions = await QueryPageVersions().ToListAsync();
-            var webDirectories = _queryExecutor.GetAll<WebDirectoryRoute>(executionContext).ToDictionary(d => d.WebDirectoryId);
+            var webDirectories = (await _queryExecutor.GetAllAsync<WebDirectoryRoute>(executionContext)).ToDictionary(d => d.WebDirectoryId);
             var templates = await GetPageTemplates().ToDictionaryAsync(t => t.PageTemplateId);
-            var routes = Map(dbPages, dbPageVersions, webDirectories, templates, executionContext);
+            var allLocales = await _queryExecutor.GetAllAsync<ActiveLocale>(executionContext);
 
-            return routes.ToArray();
-        }
+            var routes = Map(dbPages, dbPageVersions, webDirectories, templates, allLocales);
 
-        private PageRoute[] GetAllPageRoutes(GetAllQuery<PageRoute> query, IExecutionContext executionContext)
-        {
-            // Queries
-
-            var dbPages = QueryPages().ToList();
-            var dbPageVersions = QueryPageVersions().ToList();
-            var webDirectories = _queryExecutor.GetAll<WebDirectoryRoute>(executionContext).ToDictionary(d => d.WebDirectoryId);
-            var templates = GetPageTemplates().ToDictionary(t => t.PageTemplateId);
-
-            var routes = Map(dbPages, dbPageVersions, webDirectories, templates, executionContext);
             return routes.ToArray();
         }
 
@@ -174,7 +154,8 @@ namespace Cofoundry.Domain
             List<PageVersionQueryResult> dbPageVersions,
             Dictionary<int, WebDirectoryRoute> webDirectories,
             Dictionary<int, PageTemplateQueryResult> templates,
-            IExecutionContext executionContext)
+            IEnumerable<ActiveLocale> activeLocales
+            )
         {
 
             var routes = new List<PageRoute>();
@@ -195,7 +176,7 @@ namespace Cofoundry.Domain
                 string directoryPath = null;
                 if (dbPage.LocaleId.HasValue)
                 {
-                    pageRoute.Locale = _queryExecutor.GetById<ActiveLocale>(dbPage.LocaleId.Value, executionContext);
+                    pageRoute.Locale = activeLocales.FirstOrDefault(l => l.LocaleId == dbPage.LocaleId.Value);
                     EntityNotFoundException.ThrowIfNull(pageRoute.Locale, dbPage.LocaleId);
 
                     directoryPath = pageRoute

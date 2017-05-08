@@ -43,7 +43,7 @@ namespace Cofoundry.Domain
             // Re-map to code defined version
             if (template.CustomEntityDefinition != null)
             {
-                template.CustomEntityDefinition = _queryExecutor.GetById<CustomEntityDefinitionMicroSummary>(template.CustomEntityDefinition.CustomEntityDefinitionCode);
+                template.CustomEntityDefinition = await _queryExecutor.GetByIdAsync<CustomEntityDefinitionMicroSummary>(template.CustomEntityDefinition.CustomEntityDefinitionCode);
             }
             
             return template;

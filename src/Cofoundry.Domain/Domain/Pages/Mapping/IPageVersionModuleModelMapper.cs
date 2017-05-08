@@ -30,7 +30,7 @@ namespace Cofoundry.Domain
         /// Collection of mapped display models, wrapped in an output class that
         /// can be used to identify them.
         /// </returns>
-        List<PageModuleDisplayModelMapperOutput> MapDisplayModel(string typeName, IEnumerable<IEntityVersionPageModule> entityModules, WorkFlowStatusQuery workflowStatus);
+        Task<List<PageModuleDisplayModelMapperOutput>> MapDisplayModelAsync(string typeName, IEnumerable<IEntityVersionPageModule> entityModules, WorkFlowStatusQuery workflowStatus);
 
         /// <summary>
         /// Maps a single page module data model to a concrete
@@ -44,7 +44,7 @@ namespace Cofoundry.Domain
         /// the same workflow status.
         /// </param>
         /// <returns>Mapped display model.</returns>
-        IPageModuleDisplayModel MapDisplayModel(string typeName, IEntityVersionPageModule entityModules, WorkFlowStatusQuery workflowStatus);
+        Task<IPageModuleDisplayModel> MapDisplayModelAsync(string typeName, IEntityVersionPageModule entityModules, WorkFlowStatusQuery workflowStatus);
 
         /// <summary>
         /// Deserialized a module data model to a stongly typed model.
