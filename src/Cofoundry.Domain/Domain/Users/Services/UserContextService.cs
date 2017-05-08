@@ -41,12 +41,12 @@ namespace Cofoundry.Domain
         /// <summary>
         /// Get the connection context of the current user.
         /// </summary>
-        public IUserContext GetCurrentContext()
+        public async Task<IUserContext> GetCurrentContextAsync()
         {
             if (!_isUserContextCached)
             {
                 var userId = _userSessionService.GetCurrentUserId();
-                SetUserContext(userId);
+                await SetUserContextAsync(userId);
             }
 
             return _userContext;
@@ -68,21 +68,6 @@ namespace Cofoundry.Domain
         }
 
         /// <summary>
-        /// Use this to get a user context for the system user, useful
-        /// if you need to impersonate the user to perform an action with elevated 
-        /// privileges
-        /// </summary>
-        public IUserContext GetSystemUserContext()
-        {
-            // Grab the first super admin user.
-            var dbUser = QuerySystemUser().FirstOrDefault();
-            EntityNotFoundException.ThrowIfNull(dbUser, SpecialistRoleTypeCodes.SuperAdministrator);
-            var impersonatedUserContext = _userContextMapper.Map(dbUser);
-
-            return impersonatedUserContext;
-        }
-
-        /// <summary>
         /// Clears out the cached user context if one exists. The user 
         /// context is cached for the duration of the request so it needs clearing if
         /// it changes (i.e. logged in.out)
@@ -97,24 +82,24 @@ namespace Cofoundry.Domain
 
         #region helpers
 
-        private void SetUserContext(int? userId)
+        private async Task SetUserContextAsync(int? userId)
         {
             UserContext cx = null;
 
             if (userId.HasValue)
             {
                 // Raw query required here because using IQueryExecutor will cause a stack overflow
-                var dbResult = _dbContext
+                var dbResult = await _dbContext
                     .Users
                     .AsNoTracking()
                     .FilterById(userId.Value)
                     .FilterCanLogIn()
-                    .SingleOrDefault();
+                    .SingleOrDefaultAsync();
 
                 if (dbResult == null)
                 {
                     // User no longer valid
-                    _userSessionService.Abandon();
+                    await _userSessionService.AbandonAsync();
                     ClearCache();
                 }
                 else

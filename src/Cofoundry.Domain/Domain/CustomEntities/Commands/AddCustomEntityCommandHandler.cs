@@ -61,7 +61,7 @@ namespace Cofoundry.Domain
 
         public async Task ExecuteAsync(AddCustomEntityCommand command, IExecutionContext executionContext)
         {
-            var definition = _queryExecutor.GetById<CustomEntityDefinitionSummary>(command.CustomEntityDefinitionCode);
+            var definition = await _queryExecutor.GetByIdAsync<CustomEntityDefinitionSummary>(command.CustomEntityDefinitionCode);
             EntityNotFoundException.ThrowIfNull(definition, command.CustomEntityDefinitionCode);
             await _commandExecutor.ExecuteAsync(new EnsureCustomEntityDefinitionExistsCommand(definition.CustomEntityDefinitionCode));
 
@@ -169,13 +169,6 @@ namespace Cofoundry.Domain
             }
 
             return dbDefinition;
-        }
-
-        private CustomEntityDefinitionSummary GetCustomEntityDefinition(AddCustomEntityCommand command)
-        {
-            var definition = _queryExecutor.GetById<CustomEntityDefinitionSummary>(command.CustomEntityDefinitionCode);
-            EntityNotFoundException.ThrowIfNull(definition, command.CustomEntityDefinitionCode);
-            return definition;
         }
 
         private CustomEntity MapEntity(AddCustomEntityCommand command, CustomEntityDefinitionSummary definition, IExecutionContext executionContext)

@@ -37,17 +37,6 @@ namespace Cofoundry.Domain
 
         #region ICustomEntityRenderSummaryMapper Implementation
 
-        public IEnumerable<CustomEntityRenderSummary> MapSummaries(
-            ICollection<CustomEntityVersion> dbResults,
-            IExecutionContext executionContext)
-        {
-            var routingsQuery = GetPageRoutingQuery(dbResults);
-            var allRoutings = _queryExecutor.Execute(routingsQuery, executionContext);
-            var allLocales = _queryExecutor.GetAll<ActiveLocale>(executionContext);
-
-            return Map(dbResults, allRoutings, allLocales);
-        }
-
         public async Task<IEnumerable<CustomEntityRenderSummary>> MapSummariesAsync(
             ICollection<CustomEntityVersion> dbResults,
             IExecutionContext executionContext
@@ -58,23 +47,6 @@ namespace Cofoundry.Domain
             var allLocales = await _queryExecutor.GetAllAsync<ActiveLocale>(executionContext);
 
             return Map(dbResults, allRoutings, allLocales);
-        }
-
-        public CustomEntityRenderSummary MapSummary(
-            CustomEntityVersion dbResult,
-            IExecutionContext executionContext
-            )
-        {
-            var routingQuery = GetPageRoutingQuery(dbResult);
-            var routing = _queryExecutor.Execute(routingQuery, executionContext);
-
-            ActiveLocale locale = null;
-            if (dbResult.CustomEntity.LocaleId.HasValue)
-            {
-                locale = _queryExecutor.GetById<ActiveLocale>(dbResult.CustomEntity.LocaleId.Value, executionContext);
-            }
-
-            return MapSingle(dbResult, routing, locale);
         }
 
         public async Task<CustomEntityRenderSummary> MapSummaryAsync(

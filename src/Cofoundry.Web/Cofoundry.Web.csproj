@@ -66,6 +66,12 @@
     <Reference Include="Microsoft.AspNetCore.Antiforgery, Version=1.1.1.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.AspNetCore.Antiforgery.1.1.1\lib\net451\Microsoft.AspNetCore.Antiforgery.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.AspNetCore.Authentication, Version=1.1.1.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNetCore.Authentication.1.1.1\lib\net451\Microsoft.AspNetCore.Authentication.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNetCore.Authentication.Cookies, Version=1.1.1.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNetCore.Authentication.Cookies.1.1.1\lib\net451\Microsoft.AspNetCore.Authentication.Cookies.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.AspNetCore.Authorization, Version=1.1.1.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.AspNetCore.Authorization.1.1.1\lib\net451\Microsoft.AspNetCore.Authorization.dll</HintPath>
     </Reference>
@@ -161,6 +167,9 @@
     </Reference>
     <Reference Include="Microsoft.AspNetCore.Routing.Abstractions, Version=1.1.1.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.AspNetCore.Routing.Abstractions.1.1.1\lib\net451\Microsoft.AspNetCore.Routing.Abstractions.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNetCore.Session, Version=1.1.1.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNetCore.Session.1.1.1\lib\net451\Microsoft.AspNetCore.Session.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.AspNetCore.StaticFiles, Version=1.1.1.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.AspNetCore.StaticFiles.1.1.1\lib\net451\Microsoft.AspNetCore.StaticFiles.dll</HintPath>
@@ -388,13 +397,27 @@
     <Compile Include="..\SolutionInfo.cs">
       <Link>Properties\SolutionInfo.cs</Link>
     </Compile>
+    <Compile Include="App_Start\AssemblyPartsDiscovery\AssemblyDiscoveryProvider.cs" />
+    <Compile Include="App_Start\AssemblyPartsDiscovery\AssemblyDiscoveryRuleContext.cs" />
+    <Compile Include="App_Start\AssemblyPartsDiscovery\DiscoveredTypes\DiscoveredTypesProvider.cs" />
+    <Compile Include="App_Start\AssemblyPartsDiscovery\IAssemblyDiscoveryProvider.cs" />
+    <Compile Include="App_Start\AssemblyPartsDiscovery\IAssemblyDiscoveryRuleContext.cs" />
+    <Compile Include="App_Start\AssemblyPartsDiscovery\Rules\CofoundryAssemblyDiscoveryRule.cs" />
+    <Compile Include="App_Start\AssemblyPartsDiscovery\Rules\IAssemblyDiscoveryRule.cs" />
     <Compile Include="App_Start\Bootstrap\AppStartDependencyRegistration.cs" />
+    <Compile Include="App_Start\Bootstrap\PageTemplateViewLocationRegistration.cs" />
     <Compile Include="App_Start\CofoundryStartupExtensions.cs" />
+    <Compile Include="App_Start\MvcConfiguration\CofoundryMvcBuilderConfiguration.cs" />
+    <Compile Include="App_Start\MvcConfiguration\CofoundryMvcJsonOptionsConfiguration.cs" />
+    <Compile Include="App_Start\MvcConfiguration\CofoundryRazorViewEngineOptionsConfiguration.cs" />
+    <Compile Include="App_Start\MvcConfiguration\IMvcBuilderConfiguration.cs" />
+    <Compile Include="App_Start\MvcConfiguration\IMvcJsonOptionsConfiguration.cs" />
+    <Compile Include="App_Start\MvcConfiguration\IMvcOptionsConfiguration.cs" />
+    <Compile Include="App_Start\MvcConfiguration\IRazorViewEngineOptionsConfiguration.cs" />
     <Compile Include="App_Start\StartupTasks\BundlingInitializationStartupTask.cs" />
     <Compile Include="App_Start\StartupTasks\MvcConfigurationStartupTask.cs" />
     <Compile Include="App_Start\StartupTasks\MessageSubscriptionInitializerStartupTask.cs" />
     <Compile Include="App_Start\StartupTasks\AutoMapperConfigurationStartupTask.cs" />
-    <Compile Include="App_Start\StartupTasks\ViewEngineInitializationStartupTask.cs" />
     <Compile Include="App_Start\StartupTasks\AutoUpdateMiddlewareRegistrationStartupTask.cs" />
     <Compile Include="App_Start\StartupTasks\StartupTaskOrdering.cs" />
     <Compile Include="App_Start\StartupTasks\IStartupTask.cs" />
@@ -440,6 +463,7 @@
     <Compile Include="Controllers\PagesControllerImplementation\RoutingSteps\ValidateSpecificVersionRoutingRoutingStep.cs" />
     <Compile Include="Framework\AntiCSRF\AntiCSRFService.cs" />
     <Compile Include="Framework\AntiCSRF\IAntiCSRFService.cs" />
+    <Compile Include="Framework\Auth\CofoundryAuthenticationConstants.cs" />
     <Compile Include="Framework\Auth\UserSessionService.cs" />
     <Compile Include="Framework\Bootstrap\WebCoreDependencyRegistration.cs" />
     <Compile Include="Framework\Configuration\ContentSettings.cs" />
@@ -468,7 +492,6 @@
     <Compile Include="Framework\Models\PageModules\IPageModuleRenderer.cs" />
     <Compile Include="Framework\Models\PageModules\IPageModuleWithParentPageData.cs" />
     <Compile Include="Framework\Models\PageModules\PageModuleRenderer.cs" />
-    <Compile Include="Framework\Models\PageModules\PageModuleBootstrapper.cs" />
     <Compile Include="Framework\Models\Pages\IEditablePageViewModel.cs" />
     <Compile Include="Framework\Models\Pages\IPageRoutableViewModel.cs" />
     <Compile Include="Framework\Models\ViewModelBuilders\IPageViewModelMapper.cs" />
@@ -498,22 +521,9 @@
     <Compile Include="Framework\ModularMvc\Routes\IRouteInitializer.cs" />
     <Compile Include="Framework\ModularMvc\Routes\RouteInitializer.cs" />
     <Compile Include="Framework\ModularMvc\ViewEngine\AssemblyResourceProviderSettings.cs" />
-    <Compile Include="Framework\ModularMvc\ViewEngine\AssemblyResources\ResourceLocator\VirtualResourceDirectory.cs" />
-    <Compile Include="Framework\ModularMvc\ViewEngine\AssemblyResources\ResourceLocator\VirtualResourceFile.cs" />
-    <Compile Include="Framework\ModularMvc\ViewEngine\AssemblyResources\ResourceLocator\WebsiteResourceLocator.cs" />
-    <Compile Include="Framework\ModularMvc\ViewEngine\AssemblyResources\AssemblyResourcePhysicaFileRepository.cs" />
-    <Compile Include="Framework\ModularMvc\ViewEngine\AssemblyResources\AssemblyResourceProvider.cs" />
-    <Compile Include="Framework\ModularMvc\ViewEngine\AssemblyResources\AssemblyResourceVirtualDirectory.cs" />
-    <Compile Include="Framework\ModularMvc\ViewEngine\AssemblyResources\AssemblyResourceVirtualFile.cs" />
-    <Compile Include="Framework\ModularMvc\ViewEngine\AssemblyResources\AssemblyVirtualFileLocation.cs" />
-    <Compile Include="Framework\ModularMvc\ViewEngine\AssemblyResources\IAssemblyResourcePhysicaFileRepository.cs" />
-    <Compile Include="Framework\ModularMvc\ViewEngine\AssemblyResourceViewEngine.cs" />
-    <Compile Include="Framework\ModularMvc\ViewEngine\IAssemblyResourceViewEngineInitializer.cs" />
-    <Compile Include="Framework\ModularMvc\ViewEngine\AssemblyResourceViewEngineInitializer.cs" />
-    <Compile Include="Framework\ModularMvc\ViewEngine\ResourceFiles\WebsiteResourceFileProviderRegisteration.cs" />
-    <Compile Include="Framework\ModularMvc\ViewEngine\ViewLocations\DefaultViewLocationRegistration.cs" />
-    <Compile Include="Framework\ModularMvc\ViewEngine\ViewLocations\IViewLocationRegistration.cs" />
-    <Compile Include="Framework\ModularMvc\ViewEngine\ViewLocations\ViewLocations.cs" />
+    <Compile Include="Framework\ModularMvc\ViewEngine\EmptyActionContextFactory.cs" />
+    <Compile Include="Framework\ModularMvc\ViewEngine\IEmptyActionContextFactory.cs" />
+    <Compile Include="Framework\ModularMvc\ViewEngine\WebsiteResourceLocator.cs" />
     <Compile Include="Framework\Mvc\Bootstrap\MvcDependencyRegistration.cs" />
     <Compile Include="Framework\Mvc\ViewBases\CofoundryPageModuleT.cs" />
     <Compile Include="Framework\Mvc\ViewBases\CofoundryTemplatePageT.cs" />
@@ -570,7 +580,7 @@
     <Compile Include="Framework\WebApi\ResponseHelpers\SimpleCommandResponseData.cs" />
     <Compile Include="Framework\WebApi\ResponseHelpers\SimpleResponseData.cs" />
     <Compile Include="PageModules\Bootstrap\PageModulesAutoMapBootstrap.cs" />
-    <Compile Include="PageModules\Bootstrap\PageModuleViewLocationRegistration.cs" />
+    <Compile Include="App_Start\Bootstrap\PageModuleViewLocationRegistration.cs" />
     <Compile Include="PageModules\Document\DocumentDataModel.cs" />
     <Compile Include="PageModules\Document\DocumentDisplayModel.cs" />
     <Compile Include="PageModules\Document\DocumentDisplayModelMapper.cs" />

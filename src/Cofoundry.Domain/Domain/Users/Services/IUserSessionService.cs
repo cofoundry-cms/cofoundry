@@ -29,12 +29,12 @@ namespace Cofoundry.Domain
         /// True if the session should last indefinately; false if the 
         /// session should close after a timeout period.
         /// </param>
-        void SetCurrentUserId(int userId, bool rememberUser);
+        Task SetCurrentUserIdAsync(int userId, bool rememberUser);
 
         /// <summary>
         /// Abandons the current session and removes the users
         /// login cookie
         /// </summary>
-        void Abandon();
+        Task AbandonAsync();
     }
 }

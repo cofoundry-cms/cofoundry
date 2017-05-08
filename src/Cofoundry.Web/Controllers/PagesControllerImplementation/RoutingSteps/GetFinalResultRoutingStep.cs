@@ -73,12 +73,7 @@ namespace Cofoundry.Web
             // set cache
             SetCache(vm, state);
 
-            var result = new ViewResult()
-            {
-                ViewData = new ViewDataDictionary(vm),
-                ViewName = state.PageData.Template.FullPath
-            };
-
+            var result = controller.View(state.PageData.Template.FullPath, vm);
             return result;
         }
 

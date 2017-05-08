@@ -15,9 +15,23 @@ namespace Cofoundry.Core.Json
     /// </summary>
     public class JsonSerializerSettingsFactory : IJsonSerializerSettingsFactory
     {
+        /// <summary>
+        /// Creates a new JsonSerializerSettings instance .
+        /// </summary>
         public JsonSerializerSettings Create()
         {
             var settings = new JsonSerializerSettings();
+
+            return Configure(settings);
+        }
+
+        /// <summary>
+        /// Applies the json serializer settings to an existing settings instance.
+        /// </summary>
+        /// <param name="settings">An existing settings instance to apply updated settings to.</param>
+        public JsonSerializerSettings Configure(JsonSerializerSettings settings)
+        {
+            if (settings == null) throw new ArgumentNullException(nameof(settings));
 
             settings.Converters.Add(new StringEnumConverter());
             settings.Converters.Add(new HtmlStringJsonConverter());

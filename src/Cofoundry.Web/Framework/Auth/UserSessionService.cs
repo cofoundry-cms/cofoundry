@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 using Cofoundry.Core;
 using Cofoundry.Domain;
 using System.Security.Principal;
+using Microsoft.AspNetCore.Http;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Http.Authentication;
 
 namespace Cofoundry.Web
 {
@@ -20,6 +23,15 @@ namespace Cofoundry.Web
         /// cache value instead which will last for the lifetime of the request. 
         /// </summary>
         private int? userIdCache = null;
+        private readonly IHttpContextAccessor _httpContextAccessor;
+        private static readonly AuthenticationProperties _defaultAuthenticationProperties = new AuthenticationProperties() { IsPersistent = true };
+
+        public UserSessionService(
+            IHttpContextAccessor httpContextAccessor
+            )
+        {
+            _httpContextAccessor = httpContextAccessor;
+        }
 
         /// <summary>
         /// Gets the UserId of the user currently logged
@@ -34,9 +46,12 @@ namespace Cofoundry.Web
             // Use the cache if it has been set
             if (userIdCache.HasValue) return userIdCache;
 
-            if (HttpContext.Current == null || HttpContext.Current.User == null || !HttpContext.Current.User.Identity.IsAuthenticated) return null;
+            var user = _httpContextAccessor.HttpContext?.User;
+
+            if (user == null || !user.Identity.IsAuthenticated) return null;
+
             // Otherwise get it from the Identity
-            var userId = IntParser.ParseOrNull(HttpContext.Current.User.Identity.Name);
+            var userId = IntParser.ParseOrNull(user.Identity.Name);
             return userId;
         }
 
@@ -48,31 +63,29 @@ namespace Cofoundry.Web
         /// True if the session should last indefinately; false if the 
         /// session should close after a timeout period.
         /// </param>
-        public void SetCurrentUserId(int userId, bool rememberUser)
+        public Task SetCurrentUserIdAsync(int userId, bool rememberUser)
         {
             Condition.Requires(userId).IsGreaterThan(0);
             var stringId = Convert.ToString(userId);
-            FormsAuthentication.SetAuthCookie(stringId, rememberUser);
-            // Need to manually set the user here so it is available in the rest of the request
-            // http://stackoverflow.com/questions/7233939/mvc3-antiforgerytoken-issue
-            HttpContext.Current.User = new GenericPrincipal(new GenericIdentity(stringId), null);
+
+            var userPrincipal = new GenericPrincipal(new GenericIdentity(stringId), null);
             userIdCache = userId;
+
+            return _httpContextAccessor.HttpContext.Authentication.SignInAsync(CofoundryAuthenticationConstants.CookieAuthenticationScheme, userPrincipal, _defaultAuthenticationProperties);
         }
 
         /// <summary>
         /// Abandons the current session and removes the users
         /// login cookie
         /// </summary>
-        public void Abandon()
+        public Task AbandonAsync()
         {
-            if (HttpContext.Current == null || HttpContext.Current.User == null) return;
+            if (_httpContextAccessor.HttpContext?.User == null) return Task.CompletedTask;
 
             userIdCache = null;
-            FormsAuthentication.SignOut();
-            if (HttpContext.Current.Session != null)
-            {
-                HttpContext.Current.Session.Abandon();
-            }
+            _httpContextAccessor.HttpContext?.Session?.Clear();
+
+            return _httpContextAccessor.HttpContext.Authentication.SignOutAsync(CofoundryAuthenticationConstants.CookieAuthenticationScheme);
         }
     }
 }

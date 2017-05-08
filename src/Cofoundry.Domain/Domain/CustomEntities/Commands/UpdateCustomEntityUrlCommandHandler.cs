@@ -54,9 +54,9 @@ namespace Cofoundry.Domain
                 .Where(e => e.CustomEntityId == command.CustomEntityId)
                 .SingleOrDefaultAsync();
             EntityNotFoundException.ThrowIfNull(entity, command.CustomEntityId);
-            _permissionValidationService.EnforceCustomEntityPermission<CustomEntityUpdateUrlPermission>(entity.CustomEntityDefinitionCode);
+            await _permissionValidationService.EnforceCustomEntityPermissionAsync<CustomEntityUpdateUrlPermission>(entity.CustomEntityDefinitionCode);
 
-            var definition = _queryExecutor.GetById<CustomEntityDefinitionSummary>(entity.CustomEntityDefinitionCode);
+            var definition = await _queryExecutor.GetByIdAsync<CustomEntityDefinitionSummary>(entity.CustomEntityDefinitionCode);
             EntityNotFoundException.ThrowIfNull(definition, entity.CustomEntityDefinitionCode);
 
             await ValidateIsUnique(command, definition);

@@ -18,8 +18,7 @@ namespace Cofoundry.Domain.CQS
     /// </remarks>
     public class QueryExecutor : IQueryExecutor
     {
-        private static readonly MethodInfo _executeMethod = typeof(QueryExecutor).GetMethod("ExecuteQuery", BindingFlags.NonPublic | BindingFlags.Instance);
-        private static readonly MethodInfo _executeAsyncMethod = typeof(QueryExecutor).GetMethod("ExecuteQueryAsync", BindingFlags.NonPublic | BindingFlags.Instance);
+        private static readonly MethodInfo _executeAsyncMethod = typeof(QueryExecutor).GetMethod(nameof(ExecuteQueryAsync), BindingFlags.NonPublic | BindingFlags.Instance);
         
         #region constructor
 
@@ -42,62 +41,6 @@ namespace Cofoundry.Domain.CQS
         }
 
         #endregion
-        
-        /// <summary>
-        /// Handles the execution the specified query.
-        /// </summary>
-        /// <param name="query">Query to execute.</param>
-        public TResult Execute<TResult>(IQuery<TResult> query)
-        {
-            return Execute(query, null);
-        }
-
-        /// <summary>
-        /// Handles the execution the specified query.
-        /// </summary>
-        /// <param name="query">Query to execute.</param>
-        /// <param name="executionContext">
-        /// Optional custom execution context which can be used to impersonate/elevate permissions 
-        /// or change the execution date.
-        /// </param>
-        public TResult Execute<TResult>(IQuery<TResult> query, IExecutionContext executionContext)
-        {
-            TResult result;
-
-            if (query == null) return default(TResult);
-            try
-            {
-                result = (TResult)_executeMethod
-                    .MakeGenericMethod(query.GetType(), typeof(TResult))
-                    .Invoke(this, new object[] { query, executionContext });
-            }
-            catch (TargetInvocationException ex)
-            {
-                result = HandleException<TResult>(ex);
-            }
-
-            return result;
-        }
-
-        private TResult ExecuteQuery<TQuery, TResult>(TQuery query, IExecutionContext executionContext) where TQuery : IQuery<TResult>
-        {
-            if (query == null) return default(TResult);
-
-            var cx = CreateExecutionContext(executionContext);
-
-            var handler = _queryHandlerFactory.Create<TQuery, TResult>();
-
-            if (handler == null)
-            {
-                throw new MissingHandlerMappingException(typeof(TQuery));
-            }
-
-            _modelValidationService.Validate(query);
-            _executePermissionValidationService.Validate(query, handler, cx);
-            var result = handler.Execute(query, cx);
-
-            return result;
-        }
 
         #region async execution
 
@@ -141,7 +84,7 @@ namespace Cofoundry.Domain.CQS
         {
             if (query == null) return default(TResult);
 
-            var cx = CreateExecutionContext(executionContext);
+            var cx = await CreateExecutionContextAsync(executionContext);
 
             var handler = _queryHandlerFactory.CreateAsyncHandler<TQuery, TResult>();
             if (handler == null)
@@ -160,11 +103,11 @@ namespace Cofoundry.Domain.CQS
 
         #region helpers
 
-        private IExecutionContext CreateExecutionContext(IExecutionContext cx)
+        private async Task<IExecutionContext> CreateExecutionContextAsync(IExecutionContext cx)
         {
             if (cx == null)
             {
-                return _executionContextFactory.Create();
+                return await _executionContextFactory.CreateAsync();
             }
 
             if (cx.UserContext == null)

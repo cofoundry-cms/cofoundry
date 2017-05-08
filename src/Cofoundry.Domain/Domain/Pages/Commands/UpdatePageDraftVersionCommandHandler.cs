@@ -83,17 +83,6 @@ namespace Cofoundry.Domain
                 .Where(p => p.PageId == pageId && p.WorkFlowStatusId == (int)WorkFlowStatus.Draft && !p.IsDeleted);
         }
 
-        private PageVersion CreateDraftIfRequired(int pageId, PageVersion draft)
-        {
-            if (draft != null) return draft;
-
-            var command = new AddPageDraftVersionCommand();
-            command.PageId = pageId;
-            _commandExecutor.Execute(command);
-
-            return GetDraftVersion(pageId).SingleOrDefault();
-        }
-
         private async Task<PageVersion> CreateDraftIfRequiredAsync(int pageId, PageVersion draft)
         {
             if (draft != null) return draft;

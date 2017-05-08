@@ -56,7 +56,7 @@ namespace Cofoundry.Domain
                 .FirstOrDefaultAsync();
 
             EntityNotFoundException.ThrowIfNull(customEntity, command.CustomEntityId);
-            _permissionValidationService.EnforceCustomEntityPermission<CustomEntityUpdatePermission>(customEntity.CustomEntityDefinitionCode);
+            await _permissionValidationService.EnforceCustomEntityPermissionAsync<CustomEntityUpdatePermission>(customEntity.CustomEntityDefinitionCode);
 
             if (!command.Position.HasValue)
             {

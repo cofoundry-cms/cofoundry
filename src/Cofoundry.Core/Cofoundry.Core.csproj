@@ -62,6 +62,12 @@
       <HintPath>..\packages\Microsoft.AspNetCore.Razor.1.1.1\lib\net451\Microsoft.AspNetCore.Razor.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Microsoft.Extensions.DependencyInjection, Version=1.1.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Extensions.DependencyInjection.1.1.0\lib\netstandard1.1\Microsoft.Extensions.DependencyInjection.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Extensions.DependencyInjection.Abstractions, Version=1.1.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Extensions.DependencyInjection.Abstractions.1.1.0\lib\netstandard1.0\Microsoft.Extensions.DependencyInjection.Abstractions.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.Extensions.FileProviders.Abstractions, Version=1.1.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Extensions.FileProviders.Abstractions.1.1.0\lib\netstandard1.0\Microsoft.Extensions.FileProviders.Abstractions.dll</HintPath>
     </Reference>
@@ -256,7 +262,10 @@
     <Compile Include="Core\Parsers\EnumParser.cs" />
     <Compile Include="DependencyInjection\AppDependencyRegistration\RegistrationOverridePriority.cs" />
     <Compile Include="DependencyInjection\ContainerSpecificInterfaces\IContainerRegisterExtensions.cs" />
-    <Compile Include="ResourceFiles\Bootstrap\ResourceFilesRegistration.cs" />
+    <Compile Include="DependencyInjection\ContainerSpecificInterfaces\IDiscoveredTypesProvider.cs" />
+    <Compile Include="DependencyInjection\DefaultContainer\DefaultContainerBuilder.cs" />
+    <Compile Include="DependencyInjection\DefaultContainer\DefaultContainerRegister.cs" />
+    <Compile Include="ResourceFiles\Bootstrap\ResourceFilesDependencyRegistration.cs" />
     <Compile Include="ResourceFiles\Files\IResourceFileProviderRegisteration.cs" />
     <Compile Include="ResourceFiles\Files\ResourceFileProviderFactory.cs" />
     <Compile Include="ResourceFiles\Files\IResourceFileProviderFactory.cs" />
@@ -264,6 +273,7 @@
     <Compile Include="ResourceFiles\Files\IResourceFile.cs" />
     <Compile Include="ResourceFiles\Files\IResourceDirectory.cs" />
     <Compile Include="ResourceFiles\Files\IAssemblyResourceRegistration.cs" />
+    <Compile Include="ResourceFiles\Files\ResourceLocator\ResourceLocator.cs" />
     <Compile Include="ResourceFiles\Providers\FilteredEmbeddedFileProvider.cs" />
     <Compile Include="ResourceFiles\Routes\IEmbeddedResourceRouteRegistration.cs" />
     <Compile Include="ErrorLogging\Bootstrap\ErrorLoggingDependencyRegistration.cs" />

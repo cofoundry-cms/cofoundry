@@ -13,23 +13,24 @@ namespace Cofoundry.Core.Mail
         private readonly IResourceLocator _resourceLocator;
 
         public ViewFileReader(
-            IResourceLocator assemblyResourceLocator
+            IResourceLocator resourceLocator
             )
         {
-            _resourceLocator = assemblyResourceLocator;
+            _resourceLocator = resourceLocator;
         }
 
         public string Read(string viewPath)
         {
-            if (!_resourceLocator.FileExists(viewPath))
+            var file = _resourceLocator.GetFile(viewPath);
+
+            if (!file.Exists || file.IsDirectory)
             {
                 throw new InvalidOperationException(string.Format("Could not find template {0}", viewPath));
             }
 
-            var file = _resourceLocator.GetFile(viewPath);
             string template = null;
 
-            using (var stream = file.Open())
+            using (var stream = file.CreateReadStream())
             using (var reader = new StreamReader(stream, Encoding.UTF8))
             {
                 template = reader.ReadToEnd();

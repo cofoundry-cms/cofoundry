@@ -1,14 +1,10 @@
-﻿using Cofoundry.Sanbox.TestModule;
+﻿using Cofoundry.Web;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.DependencyModel;
 using Microsoft.Extensions.Logging;
-using SandboxDependency;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -35,6 +31,7 @@ namespace Cofoundry.Sandbox
         {
             // Add framework services.
             services
+                .AddMvc()
                 .AddCofoundry();
         }
 

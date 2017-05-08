@@ -16,8 +16,7 @@ namespace Cofoundry.Domain
     /// is found, otherwise null.
     /// </summary>
     public class GetUserMicroSummaryByIdQueryHandler 
-        : IQueryHandler<GetByIdQuery<UserMicroSummary>, UserMicroSummary>
-        , IAsyncQueryHandler<GetByIdQuery<UserMicroSummary>, UserMicroSummary>
+        : IAsyncQueryHandler<GetByIdQuery<UserMicroSummary>, UserMicroSummary>
         , IIgnorePermissionCheckHandler
     {
         #region constructor
@@ -37,14 +36,6 @@ namespace Cofoundry.Domain
         #endregion
 
         #region execution
-
-        public UserMicroSummary Execute(GetByIdQuery<UserMicroSummary> query, IExecutionContext executionContext)
-        {
-            var user = Query(query).SingleOrDefault();
-            ValidatePermission(query, executionContext, user);
-
-            return user;
-        }
 
         public async Task<UserMicroSummary> ExecuteAsync(GetByIdQuery<UserMicroSummary> query, IExecutionContext executionContext)
         {

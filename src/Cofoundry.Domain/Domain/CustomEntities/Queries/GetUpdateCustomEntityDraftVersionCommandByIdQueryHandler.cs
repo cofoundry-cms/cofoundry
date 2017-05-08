@@ -49,10 +49,10 @@ namespace Cofoundry.Domain
                 .SingleOrDefaultAsync();
 
             if (dbResult == null) return null;
-            _permissionValidationService.EnforceCustomEntityPermission<CustomEntityReadPermission>(dbResult.CustomEntity.CustomEntityDefinitionCode);
+            await _permissionValidationService.EnforceCustomEntityPermissionAsync<CustomEntityReadPermission>(dbResult.CustomEntity.CustomEntityDefinitionCode);
 
             var command = Mapper.Map<UpdateCustomEntityDraftVersionCommand>(dbResult);
-            var definition = _queryExecutor.GetById<CustomEntityDefinitionSummary>(command.CustomEntityDefinitionCode);
+            var definition = await _queryExecutor.GetByIdAsync<CustomEntityDefinitionSummary>(command.CustomEntityDefinitionCode);
             EntityNotFoundException.ThrowIfNull(definition, command.CustomEntityDefinitionCode);
             command.Model = (ICustomEntityVersionDataModel)_dbUnstructuredDataSerializer.Deserialize(dbResult.SerializedData, definition.DataModelType);
 

@@ -18,22 +18,6 @@ namespace Cofoundry.Domain.CQS
         /// Handles the execution the specified command.
         /// </summary>
         /// <param name="command">Command to execute.</param>
-        void Execute(ICommand command);
-
-        /// <summary>
-        /// Handles the execution the specified command.
-        /// </summary>
-        /// <param name="command">Command to execute.</param>
-        /// <param name="executionContext">
-        /// Optional custom execution context which can be used to impersonate/elevate permissions 
-        /// or change the execution date.
-        /// </param>
-        void Execute(ICommand command, IExecutionContext executionContext = null);
-
-        /// <summary>
-        /// Handles the execution the specified command.
-        /// </summary>
-        /// <param name="command">Command to execute.</param>
         Task ExecuteAsync(ICommand command);
 
         /// <summary>

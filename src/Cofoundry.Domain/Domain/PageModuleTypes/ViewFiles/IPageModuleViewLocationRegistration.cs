@@ -8,7 +8,7 @@ namespace Cofoundry.Domain
 {
     /// <summary>
     /// Register a location that contains PageModule views, so that they can be put in a non-standard
-    /// view location. Registers the location as an embedded resource path and a view location.
+    /// view location.
     /// </summary>
     public interface IPageModuleViewLocationRegistration
     {
@@ -20,6 +20,6 @@ namespace Cofoundry.Domain
         /// be located in the folder format '{Path}/{ModuleTypeName}/Templates/{ModuleTypeName}.cshtml' or
         /// '{Path}/Templates/{ModuleTypeName}.cshtml'
         /// </summary>
-        string[] GetPathPrefixes();
+        IEnumerable<string> GetPathPrefixes();
     }
 }

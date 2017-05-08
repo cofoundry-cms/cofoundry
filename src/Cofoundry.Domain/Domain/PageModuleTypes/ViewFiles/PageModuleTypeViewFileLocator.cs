@@ -1,5 +1,6 @@
 ﻿using Cofoundry.Core;
 using Cofoundry.Core.ResourceFiles;
+using Microsoft.Extensions.FileProviders;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -106,7 +107,7 @@ namespace Cofoundry.Domain
                 .SelectMany(r => r.GetPathPrefixes())
                 .Select(p => FormatViewFolder(p))
                 .Select(p => _resourceLocator.GetDirectory(p))
-                .Where(d => d != null)
+                .Where(d => d.Exists)
                 ;
 
             var templateFiles = new Dictionary<string, PageModuleTypeFileLocation>();
@@ -128,7 +129,7 @@ namespace Cofoundry.Domain
             return templateFiles;
         }
 
-        private void AddTemplateToDictionary(Dictionary<string, PageModuleTypeFileLocation> templateFiles, IResourceFile viewFile)
+        private void AddTemplateToDictionary(Dictionary<string, PageModuleTypeFileLocation> templateFiles, IFileInfo viewFile)
         {
             var templateLocation = CreateTemplateFile(viewFile);
             var key = FormatCacheKey(templateLocation.FileName);
@@ -141,30 +142,32 @@ namespace Cofoundry.Domain
             }
         }
 
-        private IEnumerable<IResourceFile> FilterChildDirectoryFiles(IResourceDirectory directory, string[] foldersToExclude)
+        private IEnumerable<IFileInfo> FilterChildDirectoryFiles(IDirectoryContents directory, string[] foldersToExclude)
         {
             return directory
-                .GetDirectories()
-                .Where(d => !foldersToExclude.Any(f => d.VirtualPath.EndsWith(f, StringComparison.OrdinalIgnoreCase)))
+                .Where(d => d.IsDirectory
+                    && !foldersToExclude.Any(f => d.PhysicalPath.EndsWith(f, StringComparison.OrdinalIgnoreCase))
+                    )
+                .Select(d => _resourceLocator.GetDirectory(d.PhysicalPath))
                 .SelectMany(f => FilterViewFiles(f));
         }
 
-        private IEnumerable<IResourceFile> FilterViewFiles(IResourceDirectory directory)
+        private IEnumerable<IFileInfo> FilterViewFiles(IDirectoryContents directory)
         {
             return directory
-                .GetFiles()
-                .Where(f => !Contains(f.VirtualPath, "_ViewStart")
+                .Where(f => !f.IsDirectory
+                    && !Contains(f.Name, "_ViewStart")
                     && f.Name.EndsWith(FILE_EXTENSION, StringComparison.OrdinalIgnoreCase));
         }
 
-        private PageModuleTypeFileLocation CreateTemplateFile(IResourceFile file)
+        private PageModuleTypeFileLocation CreateTemplateFile(IFileInfo file)
         {
             var templateFile = new PageModuleTypeFileLocation();
 
-            templateFile.Path = file.VirtualPath;
-            templateFile.FileName = Path.GetFileNameWithoutExtension(file.VirtualPath);
+            templateFile.Path = file.PhysicalPath;
+            templateFile.FileName = Path.GetFileNameWithoutExtension(file.Name);
 
-            var templatePath = Path.Combine(Path.GetDirectoryName(file.VirtualPath), TEMPLATES_FOLDER_NAME);
+            var templatePath = Path.Combine(Path.GetDirectoryName(file.PhysicalPath), TEMPLATES_FOLDER_NAME);
 
             var templateDirectory = _resourceLocator.GetDirectory(templatePath);
             if (templateDirectory != null)
@@ -173,8 +176,8 @@ namespace Cofoundry.Domain
                     .GroupBy(t => t.Name, (k, v) => v.FirstOrDefault()) // De-dup
                     .Select(t => new PageModuleTypeTemplateFileLocation()
                     {
-                        FileName = Path.GetFileNameWithoutExtension(t.VirtualPath),
-                        Path = t.VirtualPath
+                        FileName = Path.GetFileNameWithoutExtension(t.Name),
+                        Path = t.PhysicalPath
                     })
                     .ToDictionary(t => t.FileName);
             }

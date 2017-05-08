@@ -7,8 +7,7 @@ using Cofoundry.Domain.CQS;
 namespace Cofoundry.Domain
 {
     public class GetWebDirectoryTreeNodeByIdQueryHandler 
-        : IQueryHandler<GetByIdQuery<WebDirectoryNode>, WebDirectoryNode>
-        , IAsyncQueryHandler<GetByIdQuery<WebDirectoryNode>, WebDirectoryNode>
+        : IAsyncQueryHandler<GetByIdQuery<WebDirectoryNode>, WebDirectoryNode>
         , IPermissionRestrictedQueryHandler<GetByIdQuery<WebDirectoryNode>, WebDirectoryNode>
     {
         #region constructor
@@ -25,16 +24,6 @@ namespace Cofoundry.Domain
         #endregion
 
         #region execution
-
-        public WebDirectoryNode Execute(GetByIdQuery<WebDirectoryNode> query, IExecutionContext executionContext)
-        {
-            var tree = _queryExecutor.Execute(new GetWebDirectoryTreeQuery());
-            var result = tree
-                .Flatten()
-                .SingleOrDefault(n => n.WebDirectoryId == query.Id);
-
-            return result;
-        }
 
         public async Task<WebDirectoryNode> ExecuteAsync(GetByIdQuery<WebDirectoryNode> query, IExecutionContext executionContext)
         {

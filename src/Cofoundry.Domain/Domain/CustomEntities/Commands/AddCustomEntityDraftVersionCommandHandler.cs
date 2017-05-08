@@ -52,7 +52,7 @@ namespace Cofoundry.Domain
             var definitionCode = await QueryVersionAndGetDefinitionCode(command).FirstOrDefaultAsync();
             EntityNotFoundException.ThrowIfNull(definitionCode, command.CustomEntityId);
 
-            _permissionValidationService.EnforceCustomEntityPermission<CustomEntityUpdatePermission>(definitionCode);
+            await _permissionValidationService.EnforceCustomEntityPermissionAsync<CustomEntityUpdatePermission>(definitionCode);
 
             var newVersionId = await _entityFrameworkSqlExecutor
                 .ExecuteCommandWithOutputAsync<int?>("Cofoundry.CustomEntity_AddDraft",

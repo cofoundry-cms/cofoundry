@@ -72,32 +72,10 @@ namespace Cofoundry.Domain
         /// to query for.
         /// </param>
         /// <param name="executionContext">Optional execution context to use when executing the query. Useful if you need to temporarily elevate your permission level.</param>
-        public IEnumerable<CustomEntityRoute> GetCustomEntityRoutesByDefinitionCode(string customEntityDefinitionCode, IExecutionContext executionContext = null)
-        {
-            var query = new GetCustomEntityRoutesByDefinitionCodeQuery(customEntityDefinitionCode);
-            return _queryExecutor.Execute(query, executionContext);
-        }
-
-        /// <summary>
-        /// Gets CustomEntityRoute data for all custom entities of a 
-        /// specific type. These route objects are small and cached which
-        /// makes them good for quick lookups.
-        /// </summary>
-        /// <param name="customEntityDefinitionCode">
-        /// The code identifier for the custom entity type
-        /// to query for.
-        /// </param>
-        /// <param name="executionContext">Optional execution context to use when executing the query. Useful if you need to temporarily elevate your permission level.</param>
         public Task<IEnumerable<CustomEntityRoute>> GetCustomEntityRoutesByDefinitionCodeAsync(string customEntityDefinitionCode, IExecutionContext executionContext = null)
         {
             var query = new GetCustomEntityRoutesByDefinitionCodeQuery(customEntityDefinitionCode);
             return _queryExecutor.ExecuteAsync(query, executionContext);
-        }
-
-        public ICustomEntityRoutingRule GetCustomEntityRoutingRuleByRouteFormat(string routeFormat, IExecutionContext executionContext = null)
-        {
-            var query = new GetCustomEntityRoutingRuleByRouteFormatQuery(routeFormat);
-            return _queryExecutor.Execute(query, executionContext);
         }
 
         public Task<ICustomEntityRoutingRule> GetCustomEntityRoutingRuleByRouteFormatAsync(string routeFormat, IExecutionContext executionContext = null)
@@ -109,11 +87,6 @@ namespace Cofoundry.Domain
         #endregion
 
         #region CustomEntityRenderDetails
-
-        public CustomEntityRenderDetails GetCustomEntityRenderDetailsById(GetCustomEntityRenderDetailsByIdQuery query, IExecutionContext executionContext = null)
-        {
-            return _queryExecutor.Execute(query, executionContext);
-        }
 
         public Task<CustomEntityRenderDetails> GetCustomEntityRenderDetailsByIdAsync(GetCustomEntityRenderDetailsByIdQuery query, IExecutionContext executionContext = null)
         {
@@ -141,30 +114,15 @@ namespace Cofoundry.Domain
         {
             return _queryExecutor.GetByIdAsync<CustomEntityDetails>(id, executionContext);
         }
-        
-        public IEnumerable<CustomEntityRenderSummary> GetCustomEntityRenderSummariesByDefinitionCode(GetCustomEntityRenderSummariesByDefinitionCodeQuery query, IExecutionContext executionContext = null)
-        {
-            return _queryExecutor.Execute(query, executionContext);
-        }
 
         public Task<IEnumerable<CustomEntityRenderSummary>> GetCustomEntityRenderSummariesByDefinitionCodeAsync(GetCustomEntityRenderSummariesByDefinitionCodeQuery query, IExecutionContext executionContext = null)
         {
             return _queryExecutor.ExecuteAsync(query, executionContext);
         }
 
-        public CustomEntityRenderSummary GetCustomEntityRenderSummaryById(GetCustomEntityRenderSummaryByIdQuery query, IExecutionContext executionContext = null)
-        {
-            return _queryExecutor.Execute(query, executionContext);
-        }
-
         public Task<CustomEntityRenderSummary> GetCustomEntityRenderSummaryByIdAsync(GetCustomEntityRenderSummaryByIdQuery query, IExecutionContext executionContext = null)
         {
             return _queryExecutor.ExecuteAsync(query, executionContext);
-        }
-
-        public IDictionary<int, CustomEntityRenderSummary> GetCustomEntityRenderSummariesByIdRange(GetCustomEntityRenderSummariesByIdRangeQuery query, IExecutionContext executionContext = null)
-        {
-            return _queryExecutor.Execute(query, executionContext);
         }
 
         public Task<Dictionary<int, CustomEntityRenderSummary>> GetCustomEntityRenderSummariesByIdRangeAsync(GetCustomEntityRenderSummariesByIdRangeQuery query, IExecutionContext executionContext = null)
@@ -193,11 +151,6 @@ namespace Cofoundry.Domain
             return _queryExecutor.ExecuteAsync(query, executionContext);
         }
 
-        public bool IsCustomEntityPathUnique(IsCustomEntityPathUniqueQuery query, IExecutionContext executionContext = null)
-        {
-            return _queryExecutor.Execute(query);
-        }
-
         public Task<bool> IsCustomEntityPathUniqueAsync(IsCustomEntityPathUniqueQuery query, IExecutionContext executionContext = null)
         {
             return _queryExecutor.ExecuteAsync(query);
@@ -206,11 +159,6 @@ namespace Cofoundry.Domain
         public Task<PagedQueryResult<CustomEntitySummary>> SearchCustomEntitySummariesAsync(SearchCustomEntitySummariesQuery query, IExecutionContext executionContext = null)
         {
             return _queryExecutor.ExecuteAsync(query, executionContext);
-        }
-
-        public PagedQueryResult<CustomEntityRenderSummary> SearchCustomEntityRenderSummaries(SearchCustomEntityRenderSummariesQuery query, IExecutionContext executionContext = null)
-        {
-            return _queryExecutor.Execute(query, executionContext);
         }
 
         public Task<PagedQueryResult<CustomEntityRenderSummary>> SearchCustomEntityRenderSummariesAsync(SearchCustomEntityRenderSummariesQuery query, IExecutionContext executionContext = null)

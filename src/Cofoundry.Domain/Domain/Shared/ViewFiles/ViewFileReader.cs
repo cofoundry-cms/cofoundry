@@ -37,9 +37,9 @@ namespace Cofoundry.Domain
             if (!FileExists(path)) return result;
 
             var file = _resourceLocator.GetFile(path);
-            if (file == null) return null;
+            if (file == null || !file.Exists || file.IsDirectory) return null;
 
-            using (var stream = file.Open())
+            using (var stream = file.CreateReadStream())
             using (var reader = new StreamReader(stream))
             {
                 result = await reader.ReadToEndAsync();

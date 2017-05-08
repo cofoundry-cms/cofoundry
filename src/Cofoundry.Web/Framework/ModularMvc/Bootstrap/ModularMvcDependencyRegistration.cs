@@ -13,20 +13,12 @@ namespace Cofoundry.Web.ModularMvc
         public void Register(IContainerRegister container)
         {
             container
-                .RegisterAll<IViewLocationRegistration>()
                 .RegisterAll<IBundleRegistration>()
                 .RegisterAll<IRouteRegistration>()
-                
-                .RegisterInstance<VirtualPathProvider, AssemblyResourceProvider>()
-                .RegisterInstance<IAssemblyResourcePhysicaFileRepository, AssemblyResourcePhysicaFileRepository>()
-                
-                .RegisterInstance<RazorViewEngine, AssemblyResourceViewEngine>()
-
                 .RegisterType<IRouteInitializer, RouteInitializer>()
                 .RegisterType<IBundleInitializer, BundleInitializer>()
-                .RegisterType<IEmbeddedResourceRouteInitializer, EmbeddedResourceRouteInitializer>()
-                .RegisterType<IAssemblyResourceViewEngineInitializer, AssemblyResourceViewEngineInitializer>()
-                .RegisterType<IResourceLocator, WebsiteResourceLocator>()
+                .RegisterType<IResourceLocator, WebsiteResourceLocator>(RegistrationOptions.Override(RegistrationOverridePriority.Low))
+                .RegisterType<IEmptyActionContextFactory, EmptyActionContextFactory>()
                 ;
         }
     }

@@ -42,49 +42,15 @@ namespace Cofoundry.Domain
         /// if the user should only stay logged in for the duration of
         /// the session.
         /// </param>
-        public void LogAuthenticatedUserIn(int userId, bool rememberUser)
-        {
-            // Remove any existing login (user may be switching between login areas)
-            SignOut();
-
-            var command = new LogAuthenticatedUserInCommand() { UserId = userId };
-            _commandExecutor.Execute(command);
-
-            _userSessionService.SetCurrentUserId(userId, rememberUser);
-        }
-
-        /// <summary>
-        /// Logs a user into the application but performs no 
-        /// authentication. The user should have already passed 
-        /// authentication prior to calling this method.
-        /// </summary>
-        /// <param name="userId">The id of the user to log in.</param>
-        /// <param name="rememberUser">
-        /// True if the user should stay logged in perminantely; false
-        /// if the user should only stay logged in for the duration of
-        /// the session.
-        /// </param>
         public async Task LogAuthenticatedUserInAsync(int userId, bool rememberUser)
         {
             // Remove any existing login (user may be switching between login areas)
-            SignOut();
+            await SignOutAsync();
 
             var command = new LogAuthenticatedUserInCommand() { UserId = userId };
             await _commandExecutor.ExecuteAsync(command);
 
-            _userSessionService.SetCurrentUserId(userId, rememberUser);
-        }
-
-        /// <summary>
-        /// Logs a failed login attempt. A history of logins is used
-        /// to prevent brute force login attacks.
-        /// </summary>
-        /// <param name="userAreaCode">The code of the user area attempting to be logged into.</param>
-        /// <param name="username">The username attempting to be logged in with.</param>
-        public void LogFailedLoginAttempt(string userAreaCode, string username)
-        {
-            var command = new LogFailedLoginAttemptCommand(userAreaCode, username);
-            _commandExecutor.Execute(command);
+            await _userSessionService.SetCurrentUserIdAsync(userId, rememberUser);
         }
 
         /// <summary>
@@ -102,9 +68,9 @@ namespace Cofoundry.Domain
         /// <summary>
         /// Signs the user out of the application and ends the session.
         /// </summary>
-        public void SignOut()
+        public async Task SignOutAsync()
         {
-            _userSessionService.Abandon();
+            await _userSessionService.AbandonAsync();
             _userContextService.ClearCache();
         }
     }

@@ -20,7 +20,8 @@ namespace Cofoundry.Sandbox.Controllers
             IRazorViewEngine razorViewEngine,
             IHostingEnvironment hostingEnvironment,
             IEnumerable<IExampleClass> examples,
-            IExampleClass example
+            IExampleClass example,
+            IServiceProvider serviceProvider
             )
         {
             var options = viewOptions.Value;

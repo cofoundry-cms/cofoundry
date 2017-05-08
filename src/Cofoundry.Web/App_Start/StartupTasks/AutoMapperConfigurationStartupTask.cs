@@ -27,13 +27,13 @@ namespace Cofoundry.Web
 
         public void Run(IApplicationBuilder app)
         {
-            _autoMapBootstrapper.Configure(cfg =>
-            {
-                cfg
-                    .AddHtmlStringConverters()
-                    // TODO: What to do about this? Rip out automapper?
-                    .ConstructServicesUsing(IckyDependencyResolution.ResolveFromMvcContext);
-            });
+            //_autoMapBootstrapper.Configure(cfg =>
+            //{
+            //    cfg
+            //        .AddHtmlStringConverters()
+            //        // TODO: What to do about this? Rip out automapper?
+            //        .ConstructServicesUsing(IckyDependencyResolution.ResolveFromMvcContext);
+            //});
         }
     }
 }

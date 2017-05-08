@@ -21,8 +21,7 @@ namespace Cofoundry.Domain
     /// are thrown as ValidationExceptions.
     /// </summary>
     public class LogUserInWithCredentialsCommandHandler
-        : ICommandHandler<LogUserInWithCredentialsCommand>
-        , IAsyncCommandHandler<LogUserInWithCredentialsCommand>
+        : IAsyncCommandHandler<LogUserInWithCredentialsCommand>
         , IIgnorePermissionCheckHandler
     {
         #region constructor
@@ -43,26 +42,6 @@ namespace Cofoundry.Domain
         }
 
         #endregion
-
-        public void Execute(LogUserInWithCredentialsCommand command, IExecutionContext executionContext)
-        {
-            if (IsLoggedInAlready(command, executionContext)) return;
-
-            var hasExceededMaxLoginAttempts = _queryExecutor.Execute(GetMaxLoginAttemptsQuery(command));
-            ValidateMaxLoginAttemptsNotExceeded(hasExceededMaxLoginAttempts);
-
-            var user = _queryExecutor.Execute(GetAuthenticationQuery(command));
-
-            if (user == null)
-            {
-                _loginService.LogFailedLoginAttempt(command.UserAreaCode, command.Username);
-
-                ThrowInvalidCredentialsError(command);
-            }
-
-            ValidateLoginArea(command.UserAreaCode, user.UserAreaCode);
-            _loginService.LogAuthenticatedUserIn(user.UserId, command.RememberUser);
-        }
 
         public async Task ExecuteAsync(LogUserInWithCredentialsCommand command, IExecutionContext executionContext)
         {

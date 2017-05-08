@@ -45,7 +45,7 @@ namespace Cofoundry.Domain
                 .FirstOrDefaultAsync();
             if (definitionCode == null) return null;
 
-            _permissionValidationService.EnforceCustomEntityPermission<CustomEntityReadPermission>(definitionCode);
+            await _permissionValidationService.EnforceCustomEntityPermissionAsync<CustomEntityReadPermission>(definitionCode);
 
             var versions = await Query(query.CustomEntityId).ToListAsync();
             if (versions == null) return null;

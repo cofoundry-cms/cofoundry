@@ -24,27 +24,7 @@ namespace Cofoundry.Domain
         /// <param name="email">The email address to use to locate the user.</param>
         /// <param name="userAreaCode">This query must be run against a specific user area.</param>
         /// <param name="executionContext">Optional execution context to use when executing the query. Useful if you need to temporarily elevate your permission level.</param>
-        UserMicroSummary GetUserMicroSummaryByEmail(string email, string userAreaCode, IExecutionContext executionContext = null);
-
-        /// <summary>
-        /// Finds a user with a specific email address in a specific user area 
-        /// returning null if the user could not be found. Note that if the user
-        /// area does not support email addresses then the email field will be empty.
-        /// </summary>
-        /// <param name="email">The email address to use to locate the user.</param>
-        /// <param name="userAreaCode">This query must be run against a specific user area.</param>
-        /// <param name="executionContext">Optional execution context to use when executing the query. Useful if you need to temporarily elevate your permission level.</param>
         Task<UserMicroSummary> GetUserMicroSummaryByEmailAsync(string email, string userAreaCode, IExecutionContext executionContext = null);
-
-        /// <summary>
-        /// Finds a user with a specific username address in a specific user area 
-        /// returning null if the user could not be found. Note that depending on the
-        /// user area, the username may be a copy of the email address.
-        /// </summary>
-        /// <param name="username">The username to use to locate the user.</param>
-        /// <param name="userAreaCode">This query must be run against a specific user area.</param>
-        /// <param name="executionContext">Optional execution context to use when executing the query. Useful if you need to temporarily elevate your permission level.</param>
-        UserMicroSummary GetUserMicroSummaryByUsername(string username, string userAreaCode, IExecutionContext executionContext = null);
 
         /// <summary>
         /// Finds a user with a specific username address in a specific user area 
@@ -69,7 +49,7 @@ namespace Cofoundry.Domain
         /// is found, otherwise null.
         /// </summary>
         /// <param name="executionContext">Optional execution context to use when executing the query. Useful if you need to temporarily elevate your permission level.</param>
-        UserMicroSummary GetUserMicroSummaryById(int userId, IExecutionContext executionContext = null);
+        Task<UserMicroSummary> GetUserMicroSummaryById(int userId, IExecutionContext executionContext = null);
 
         #endregion
 
@@ -81,13 +61,6 @@ namespace Cofoundry.Domain
         /// </summary>
         /// <param name="executionContext">Optional execution context to use when executing the query. Useful if you need to temporarily elevate your permission level.</param>
         Task<UserMicroSummary> GetUserMicroSummaryByIdAsync(int userId, IExecutionContext executionContext = null);
-
-        /// <summary>
-        /// Gets a UserMicroSummary object representing the currently logged in 
-        /// user. If the user is not logged in then null is returned.
-        /// </summary>
-        /// <param name="executionContext">Optional execution context to use when executing the query. Useful if you need to temporarily elevate your permission level.</param>
-        UserMicroSummary GetCurrentUserMicroSummary(IExecutionContext executionContext = null);
 
         /// <summary>
         /// Gets a UserMicroSummary object representing the currently logged in 
@@ -117,15 +90,6 @@ namespace Cofoundry.Domain
         #endregion
 
         #region utility
-
-        /// <summary>
-        /// Determines if a username is unique within a specific UserArea.
-        /// Usernames only have to be unique per UserArea.
-        /// </summary>
-        /// <param name="query">The parameters run the query with.</param>
-        /// <param name="executionContext">Optional execution context to use when executing the query. Useful if you need to temporarily elevate your permission level.</param>
-        /// <returns>True if the username is unique; otherwise false.</returns>
-        bool IsUsernameUnique(IsUsernameUniqueQuery query, IExecutionContext executionContext = null);
 
         /// <summary>
         /// Determines if a username is unique within a specific UserArea.

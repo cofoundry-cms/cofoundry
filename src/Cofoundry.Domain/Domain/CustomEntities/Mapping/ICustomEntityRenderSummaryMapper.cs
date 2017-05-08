@@ -13,10 +13,8 @@ namespace Cofoundry.Domain
     /// </summary>
     public interface ICustomEntityRenderSummaryMapper
     {
-        CustomEntityRenderSummary MapSummary(CustomEntityVersion dbResult, IExecutionContext executionContext);
         Task<CustomEntityRenderSummary> MapSummaryAsync(CustomEntityVersion dbResult, IExecutionContext executionContext);
 
-        IEnumerable<CustomEntityRenderSummary> MapSummaries(ICollection<CustomEntityVersion> dbResults, IExecutionContext executionContext);
         Task<IEnumerable<CustomEntityRenderSummary>> MapSummariesAsync(ICollection<CustomEntityVersion> dbResults, IExecutionContext executionContext);
     }
 }

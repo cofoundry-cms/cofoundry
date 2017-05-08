@@ -10,8 +10,7 @@ using Cofoundry.Core;
 namespace Cofoundry.Domain
 {
     public class UpdateUnstructuredDataDependenciesCommandHandler 
-        : ICommandHandler<UpdateUnstructuredDataDependenciesCommand>
-        , IAsyncCommandHandler<UpdateUnstructuredDataDependenciesCommand>
+        : IAsyncCommandHandler<UpdateUnstructuredDataDependenciesCommand>
         , IPermissionRestrictedCommandHandler<UpdateUnstructuredDataDependenciesCommand>
     {
         #region constructor
@@ -51,20 +50,6 @@ namespace Cofoundry.Domain
 
             ApplyChanges(command, existingDependencies, relations);
             await _dbContext.SaveChangesAsync();
-        }
-
-        public void Execute(UpdateUnstructuredDataDependenciesCommand command, IExecutionContext executionContext)
-        {
-            var existingDependencies = QueryDepenencies(command).ToList();
-            var relations = GetDistinctRelations(command.Model);
-            var ensureEntityDefinitionExistsCommands = GetEntityCheckCommands(command, existingDependencies, relations);
-
-            foreach (var ensureEntityDefinitionExistsCommand in ensureEntityDefinitionExistsCommands)
-            {
-                _commandExecutor.Execute(ensureEntityDefinitionExistsCommand, executionContext);
-            }
-            ApplyChanges(command, existingDependencies, relations);
-            _dbContext.SaveChanges();
         }
 
         private IQueryable<UnstructuredDataDependency> QueryDepenencies(UpdateUnstructuredDataDependenciesCommand command)

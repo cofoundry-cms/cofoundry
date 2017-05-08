@@ -14,8 +14,7 @@ namespace Cofoundry.Domain
     /// </summary>
     /// <remarks>
     public class AddCofoundryUserCommandHandler
-        : ICommandHandler<AddCofoundryUserCommand>
-        , IAsyncCommandHandler<AddCofoundryUserCommand>
+        : IAsyncCommandHandler<AddCofoundryUserCommand>
         , IPermissionRestrictedCommandHandler<AddCofoundryUserCommand>
     {
         #region constructor
@@ -41,15 +40,6 @@ namespace Cofoundry.Domain
         #endregion
 
         #region execution
-
-        public void Execute(AddCofoundryUserCommand command, IExecutionContext executionContext)
-        {
-            var newUserCommand = MapCommand(command, executionContext);
-            _commandExecutor.Execute(newUserCommand, executionContext);
-
-            var emailTemplate = MapEmailTemplate(newUserCommand);
-            _mailService.Send(newUserCommand.Email, GetDisplayName(newUserCommand), emailTemplate);
-        }
 
         public async Task ExecuteAsync(AddCofoundryUserCommand command, IExecutionContext executionContext)
         {

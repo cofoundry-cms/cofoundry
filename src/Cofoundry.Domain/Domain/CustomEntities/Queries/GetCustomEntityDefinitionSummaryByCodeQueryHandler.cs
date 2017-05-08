@@ -9,8 +9,7 @@ using Cofoundry.Domain.CQS;
 namespace Cofoundry.Domain
 {
     public class GetCustomEntityDefinitionSummaryByCodeQueryHandler 
-        : IQueryHandler<GetByStringQuery<CustomEntityDefinitionSummary>, CustomEntityDefinitionSummary>
-        , IAsyncQueryHandler<GetByStringQuery<CustomEntityDefinitionSummary>, CustomEntityDefinitionSummary>
+        : IAsyncQueryHandler<GetByStringQuery<CustomEntityDefinitionSummary>, CustomEntityDefinitionSummary>
         , IIgnorePermissionCheckHandler
     {
         private readonly ICustomEntityDefinitionRepository _customEntityDefinitionRepository;
@@ -22,16 +21,10 @@ namespace Cofoundry.Domain
             _customEntityDefinitionRepository = customEntityDefinitionRepository;
         }
 
-        public CustomEntityDefinitionSummary Execute(GetByStringQuery<CustomEntityDefinitionSummary> query, IExecutionContext executionContext)
-        {
-            var definition = _customEntityDefinitionRepository.GetByCode(query.Id.ToUpperInvariant());
-
-            return Mapper.Map<CustomEntityDefinitionSummary>(definition);
-        }
-
         public async Task<CustomEntityDefinitionSummary> ExecuteAsync(GetByStringQuery<CustomEntityDefinitionSummary> query, IExecutionContext executionContext)
         {
-            var result = Execute(query, executionContext);
+            var definition = _customEntityDefinitionRepository.GetByCode(query.Id.ToUpperInvariant());
+            var result =  Mapper.Map<CustomEntityDefinitionSummary>(definition);
 
             return await Task.FromResult(result);
         }

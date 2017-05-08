@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Http;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -13,13 +14,21 @@ namespace Cofoundry.Web
     public class PageResponseDataCache : IPageResponseDataCache
     {
         const string CACHE_KEY = "Cofoundry.Web.PageResponseDataCache";
+        private readonly IHttpContextAccessor _httpContextAccessor;
+
+        public PageResponseDataCache(
+            IHttpContextAccessor httpContextAccessor
+            )
+        {
+            _httpContextAccessor = httpContextAccessor;
+        }
 
         /// <summary>
         /// Sets the cache value.
         /// </summary>
         public IPageResponseData Get()
         {
-            var cache = HttpContext.Current?.Items;
+            var cache = _httpContextAccessor.HttpContext?.Items;
             if (cache == null) return null;
 
             return cache[CACHE_KEY] as PageResponseData;
@@ -30,7 +39,7 @@ namespace Cofoundry.Web
         /// </summary>
         public void Set(IPageResponseData data)
         {
-            var cache = HttpContext.Current?.Items;
+            var cache = _httpContextAccessor.HttpContext?.Items;
 
             if (cache == null)
             {

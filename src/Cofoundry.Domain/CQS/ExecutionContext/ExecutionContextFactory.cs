@@ -29,9 +29,10 @@ namespace Cofoundry.Domain.CQS
         /// Creates an instance of IExecutionContext from the currently
         /// logged in user.
         /// </summary>
-        public IExecutionContext Create()
+        public async Task<IExecutionContext> CreateAsync()
         {
-            return Create(_userContextService.GetCurrentContext());
+            var userContext = await _userContextService.GetCurrentContextAsync();
+            return Create(userContext);
         }
 
         /// <summary>
@@ -57,17 +58,6 @@ namespace Cofoundry.Domain.CQS
             }
 
             return newContext;
-        }
-
-        /// <summary>
-        /// Creates an instance of IExecutionContext using the system account. Should 
-        /// be used sparingly for elevating permissions, typically for back-end processes.
-        /// </summary>
-        /// <param name="executionContextToCopy">Optional execution context to base the new context on</param>
-        public IExecutionContext CreateSystemUserExecutionContext(IExecutionContext executionContextToCopy = null)
-        {
-            var userContext = _userContextService.GetSystemUserContext();
-            return Create(userContext, executionContextToCopy);
         }
 
         /// <summary>

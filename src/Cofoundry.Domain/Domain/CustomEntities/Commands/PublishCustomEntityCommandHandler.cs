@@ -69,7 +69,7 @@ namespace Cofoundry.Domain
             var definition = _customEntityDefinitionRepository.GetByCode(draftVersion.CustomEntity.CustomEntityDefinitionCode);
             EntityNotFoundException.ThrowIfNull(definition, draftVersion.CustomEntity.CustomEntityDefinitionCode);
 
-            _permissionValidationService.EnforceCustomEntityPermission<CustomEntityPublishPermission>(definition.CustomEntityDefinitionCode);
+            await _permissionValidationService.EnforceCustomEntityPermissionAsync<CustomEntityPublishPermission>(definition.CustomEntityDefinitionCode);
             await ValidateTitle(draftVersion, definition);
 
             using (var scope = _transactionScopeFactory.Create())

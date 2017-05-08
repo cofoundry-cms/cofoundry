@@ -1,5 +1,4 @@
 ﻿using Cofoundry.Core.ResourceFiles;
-using Cofoundry.Domain;
 using Cofoundry.Web.ModularMvc;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
@@ -7,9 +6,8 @@ using Microsoft.Extensions.FileProviders;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.Extensions.Primitives;
 using Cofoundry.Core;
-using Cofoundry.Core.ResourceFiles;
+using Microsoft.Extensions.Options;
 
 namespace Cofoundry.Web
 {
@@ -22,14 +20,17 @@ namespace Cofoundry.Web
 
         private readonly IRouteInitializer _routeInitializer;
         private readonly IEnumerable<IEmbeddedResourceRouteRegistration> _routeRegistrations;
+        private readonly IOptions<CookieAuthenticationOptions> _cookieAuthenticationOptions;
 
         public MvcConfigurationStartupTask(
             IRouteInitializer routeInitializer,
-            IEnumerable<IEmbeddedResourceRouteRegistration> routeRegistrations
+            IEnumerable<IEmbeddedResourceRouteRegistration> routeRegistrations,
+            IOptions<CookieAuthenticationOptions> cookieAuthenticationOptions
             )
         {
             _routeInitializer = routeInitializer;
             _routeRegistrations = routeRegistrations;
+            _cookieAuthenticationOptions = cookieAuthenticationOptions;
         }
 
         #endregion
@@ -42,8 +43,12 @@ namespace Cofoundry.Web
         public void Run(IApplicationBuilder app)
         {
             RegisterStaticFiles(app);
-            app.UseMvc(GetRoutes);
 
+            var cookieOptions = _cookieAuthenticationOptions.Value;
+            cookieOptions.AuthenticationScheme = CofoundryAuthenticationConstants.CookieAuthenticationScheme;
+            app.UseCookieAuthentication(cookieOptions);
+
+            app.UseMvc(GetRoutes);
             //ControllerBuilder.Current.DefaultNamespaces.Add(typeof(PagesController).Namespace);
 
             RegisterModelBinders();

@@ -48,7 +48,7 @@ namespace Cofoundry.Domain
         public async Task<CustomEntityDetails> ExecuteAsync(GetByIdQuery<CustomEntityDetails> query, IExecutionContext executionContext)
         {
             var customEntityVersion = await Query(query.Id).FirstOrDefaultAsync();
-            _permissionValidationService.EnforceCustomEntityPermission<CustomEntityReadPermission>(customEntityVersion.CustomEntity.CustomEntityDefinitionCode);
+            await _permissionValidationService.EnforceCustomEntityPermissionAsync<CustomEntityReadPermission>(customEntityVersion.CustomEntity.CustomEntityDefinitionCode);
             
             return await Map(query, customEntityVersion, executionContext);
         }
@@ -77,7 +77,7 @@ namespace Cofoundry.Domain
             }
 
             // Custom Mapping
-            MapDataModel(query, dbVersion, entity.LatestVersion);
+            await MapDataModelAsync(query, dbVersion, entity.LatestVersion);
             
             await MapPages(dbVersion, entity, executionContext);
 
@@ -188,9 +188,9 @@ namespace Cofoundry.Domain
                 .ThenByDescending(g => g.CreateDate);
         }
 
-        private void MapDataModel(GetByIdQuery<CustomEntityDetails> query, CustomEntityVersion dbVersion, CustomEntityVersionDetails version)
+        private async Task MapDataModelAsync(GetByIdQuery<CustomEntityDetails> query, CustomEntityVersion dbVersion, CustomEntityVersionDetails version)
         {
-            var definition = _queryExecutor.GetById<CustomEntityDefinitionSummary>(dbVersion.CustomEntity.CustomEntityDefinitionCode);
+            var definition = await _queryExecutor.GetByIdAsync<CustomEntityDefinitionSummary>(dbVersion.CustomEntity.CustomEntityDefinitionCode);
             EntityNotFoundException.ThrowIfNull(definition, dbVersion.CustomEntity.CustomEntityDefinitionCode);
 
             version.Model = (ICustomEntityVersionDataModel)_dbUnstructuredDataSerializer.Deserialize(dbVersion.SerializedData, definition.DataModelType);

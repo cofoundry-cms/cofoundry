@@ -24,9 +24,7 @@ namespace Cofoundry.Domain.CQS
     /// </remarks>
     public class CommandExecutor : ICommandExecutor
     {
-        private static readonly MethodInfo _executeMethod = typeof(CommandExecutor).GetMethod("ExecuteCommand", BindingFlags.NonPublic | BindingFlags.Instance);
-        private static readonly MethodInfo _executeAsyncMethod = typeof(CommandExecutor).GetMethod("ExecuteCommandAsync", BindingFlags.NonPublic | BindingFlags.Instance);
-        private static readonly ConcurrentDictionary<Type, MethodInfo> _cachedMethods = new ConcurrentDictionary<Type, MethodInfo>();
+        private static readonly MethodInfo _executeAsyncMethod = typeof(CommandExecutor).GetMethod(nameof(ExecuteCommandAsync), BindingFlags.NonPublic | BindingFlags.Instance);
         private static readonly ConcurrentDictionary<Type, MethodInfo> _cachedAsyncMethods = new ConcurrentDictionary<Type, MethodInfo>();
 
         #region constructor
@@ -60,38 +58,6 @@ namespace Cofoundry.Domain.CQS
         #region public methods
 
         /// <summary>
-        /// Handles the execution the specified command.
-        /// </summary>
-        /// <param name="command">Command to execute.</param>
-        public void Execute(ICommand command)
-        {
-            Execute(command, null);
-        }
-
-        /// <summary>
-        /// Handles the execution the specified command.
-        /// </summary>
-        /// <param name="command">Command to execute.</param>
-        /// <param name="executionContext">
-        /// Optional custom execution context which can be used to impersonate/elevate permissions 
-        /// or change the execution date.
-        /// </param>
-        public void Execute(ICommand command, IExecutionContext executionContext = null)
-        {
-            if (command == null) return;
-            try
-            {
-                var commandType = command.GetType();
-                var genericExecuteMethod = _cachedMethods.GetOrAdd(commandType, t => { return CreateExecuteMethod(_executeMethod, t); });
-                genericExecuteMethod.Invoke(this, new object[] { command, executionContext });
-            }
-            catch (TargetInvocationException ex)
-            {
-                HandleException(ex);
-            }
-        }
-
-        /// <summary>
         /// Creates an generic version of the execute method, but does
         /// some type inheritance lookup to make sure we are creating a handler
         /// for the command that actually implements the ICommand interface. Used
@@ -121,33 +87,6 @@ namespace Cofoundry.Domain.CQS
             var msg = string.Format("Unexpected condition creating a generic CommandHandler for type '{0}'. Previous Type: '{1}'. IsAssignable: '{2}'", type, previousType, isAssignable);
             throw new InvalidOperationException(msg);
         }
-
-        private void ExecuteCommand<TCommand>(TCommand command, IExecutionContext executionContext) where TCommand : ICommand
-        {
-            if (command == null) return;
-
-            var cx = CreateExecutionContext(executionContext);
-            var handler = _commandHandlerFactory.Create<TCommand>();
-            if (handler == null)
-            {
-                throw new MissingHandlerMappingException(typeof(TCommand));
-            }
-
-            try
-            {
-                _modelValidationService.Validate(command);
-                _executePermissionValidationService.Validate(command, handler, cx);
-                handler.Execute(command, cx);
-            }
-            catch (Exception ex)
-            {
-                _commandLogService.LogFailed(command, cx, ex);
-                throw;
-            }
-
-            _commandLogService.Log(command, cx);
-        }
-
 
         #region async execute
 
@@ -187,7 +126,7 @@ namespace Cofoundry.Domain.CQS
         {
             if (command == null) return;
 
-            var cx = CreateExecutionContext(executionContext);
+            var cx = await CreateExecutionContextAsync(executionContext);
             var handler = _commandHandlerFactory.CreateAsyncHandler<TCommand>();
             if (handler == null)
             {
@@ -215,11 +154,11 @@ namespace Cofoundry.Domain.CQS
 
         #region helpers
 
-        private IExecutionContext CreateExecutionContext(IExecutionContext cx)
+        private async Task<IExecutionContext> CreateExecutionContextAsync(IExecutionContext cx)
         {
             if (cx == null)
             {
-                return _executionContextFactory.Create();
+                return await _executionContextFactory.CreateAsync();
             }
 
             if (cx.UserContext == null)

@@ -19,6 +19,7 @@ namespace Cofoundry.Domain.Bootstrap
                 .RegisterType<IPageModuleTypeFileNameFormatter, PageModuleTypeFileNameFormatter>()
                 .RegisterAll<IPageModuleDataModel>()
                 .RegisterAllGenericImplementations(typeof(IPageModuleDisplayModelMapper<>))
+                .RegisterAll<IPageModuleViewLocationRegistration>()
                 ; 
         }
     }

@@ -15,7 +15,7 @@ namespace Cofoundry.Domain
         /// Checks to see if the currently logged in user is in the super administrator role,
         /// if not, throws an exception.
         /// </summary>
-        void EnforceIsSuperAdminRole();
+        Task EnforceIsSuperAdminRoleAsync();
 
         /// <summary>
         /// Checks to see if the specified user context is in the super administrator role,
@@ -26,7 +26,7 @@ namespace Cofoundry.Domain
         /// <summary>
         /// Checks to see if the user if logged in and throws a NotPermittedException if not.
         /// </summary>
-        void EnforceIsLoggedIn();
+        Task EnforceIsLoggedInAsync();
 
         /// <summary>
         /// Checks to see if the specified user context is logged in and throws a NotPermittedException if not.
@@ -37,7 +37,7 @@ namespace Cofoundry.Domain
         /// Checks to see if the user has permission to the specified user area. Note that Cofoundry users
         /// have permissions to any user area
         /// </summary>
-        void EnforceHasPermissionToUserArea(string userAreaCode);
+        Task EnforceHasPermissionToUserAreaAsync(string userAreaCode);
 
         /// <summary>
         /// Checks to see if the specified user context has permission to the specified user area. Note that Cofoundry users
@@ -52,7 +52,7 @@ namespace Cofoundry.Domain
         /// </summary>
         /// <typeparam name="TPermission">Type of permission to check for if the id is not the currently logged in user</typeparam>
         /// <param name="userId">UserId to compare with the currently logged in user</param>
-        bool IsCurrentUserOrHasPermission<TPermission>(int userId) where TPermission : IPermissionApplication, new();
+        Task<bool> IsCurrentUserOrHasPermissionAsync<TPermission>(int userId) where TPermission : IPermissionApplication, new();
 
         /// <summary>
         /// Determintes if the specified user id belongs to the current user or if the
@@ -71,7 +71,7 @@ namespace Cofoundry.Domain
         /// </summary>
         /// <typeparam name="TPermission">Type of permission to check for if the id is not the currently logged in user</typeparam>
         /// <param name="userId">UserId to compare with the currently logged in user</param>
-        void EnforceCurrentUserOrHasPermission<TPermission>(int userId) where TPermission : IPermissionApplication, new();
+        Task EnforceCurrentUserOrHasPermissionAsync<TPermission>(int userId) where TPermission : IPermissionApplication, new();
 
         /// <summary>
         /// Determintes if the specified user id belongs to the current user or if the
@@ -83,28 +83,28 @@ namespace Cofoundry.Domain
         /// <param name="userId">UserId to compare with the currently logged in user</param>
         void EnforceCurrentUserOrHasPermission<TPermission>(int userId, IUserContext currentUserContext) where TPermission : IPermissionApplication, new();
 
-        bool HasPermission(IPermissionApplication permission);
+        Task<bool> HasPermissionAsync(IPermissionApplication permission);
         bool HasPermission(IPermissionApplication permission, IUserContext userContext);
 
-        bool HasPermission<TPermission>() where TPermission : IPermissionApplication, new();
+        Task<bool> HasPermissionAsync<TPermission>() where TPermission : IPermissionApplication, new();
         bool HasPermission<TPermission>(IUserContext userContext) where TPermission : IPermissionApplication, new();
 
-        bool HasPermission(IEnumerable<IPermissionApplication> permissions);
+        Task EnforcePermissionAsync(IEnumerable<IPermissionApplication> permissions);
         bool HasPermission(IEnumerable<IPermissionApplication> permissions, IUserContext userContext);
 
-        void EnforcePermission(IPermissionApplication permission);
+        Task EnforcePermissionAsync(IPermissionApplication permission);
         void EnforcePermission(IPermissionApplication permission, IUserContext userContext);
 
-        void EnforcePermission(IEnumerable<IPermissionApplication> permissions);
+        Task<bool> HasPermissionAsync(IEnumerable<IPermissionApplication> permissions);
         void EnforcePermission(IEnumerable<IPermissionApplication> permissions, IUserContext userContext);
 
-        bool HasCustomEntityPermission<TPermission>(string definitionCode) where TPermission : ICustomEntityPermissionTemplate, new();
+        Task<bool> HasCustomEntityPermissionAsync<TPermission>(string definitionCode) where TPermission : ICustomEntityPermissionTemplate, new();
         bool HasCustomEntityPermission<TPermission>(string definitionCode, IUserContext userContext) where TPermission : ICustomEntityPermissionTemplate, new();
 
-        void EnforceCustomEntityPermission<TPermission>(IEnumerable<string> definitionCodes) where TPermission : ICustomEntityPermissionTemplate, new();
+        Task EnforceCustomEntityPermissionAsync<TPermission>(IEnumerable<string> definitionCodes) where TPermission : ICustomEntityPermissionTemplate, new();
         void EnforceCustomEntityPermission<TPermission>(IEnumerable<string> definitionCodes, IUserContext userContext) where TPermission : ICustomEntityPermissionTemplate, new();
 
-        void EnforceCustomEntityPermission<TPermission>(string definitionCode) where TPermission : ICustomEntityPermissionTemplate, new();
+        Task EnforceCustomEntityPermissionAsync<TPermission>(string definitionCode) where TPermission : ICustomEntityPermissionTemplate, new();
         void EnforceCustomEntityPermission<TPermission>(string definitionCode, IUserContext userContext) where TPermission : ICustomEntityPermissionTemplate, new();
     }
 }

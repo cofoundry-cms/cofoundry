@@ -8,7 +8,11 @@ namespace Cofoundry.Web
         {
             container
                 .RegisterAll<IStartupTask>()
-                ;
+                .RegisterAll<IMvcJsonOptionsConfiguration>()
+                .RegisterAll<IMvcOptionsConfiguration>()
+                .RegisterAll<IRazorViewEngineOptionsConfiguration>()
+                .RegisterType<IMvcBuilderConfiguration, CofoundryMvcBuilderConfiguration>()
+            ;
         }
     }
 }

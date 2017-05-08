@@ -60,7 +60,7 @@ namespace Cofoundry.Domain
                 .Where(l => l.CustomEntityVersionPageModuleId == command.CustomEntityVersionPageModuleId)
                 .SingleOrDefaultAsync();
             EntityNotFoundException.ThrowIfNull(dbModule, command.CustomEntityVersionPageModuleId);
-            _permissionValidationService.EnforceCustomEntityPermission<CustomEntityUpdatePermission>(dbModule.CustomEntityVersion.CustomEntity.CustomEntityDefinitionCode);
+            await _permissionValidationService.EnforceCustomEntityPermissionAsync<CustomEntityUpdatePermission>(dbModule.CustomEntityVersion.CustomEntity.CustomEntityDefinitionCode);
 
             if (dbModule.CustomEntityVersion.WorkFlowStatusId != (int)WorkFlowStatus.Draft)
             {

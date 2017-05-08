@@ -52,7 +52,7 @@ namespace Cofoundry.Domain
 
             if (dbResult == null) return null;
 
-            var result = Map(dbResult.PageModule, dbResult.ModuleTypeFileName, dbResult.CustomEntityDefinitionCode, query.WorkFlowStatus);
+            var result = await MapAsync(dbResult.PageModule, dbResult.ModuleTypeFileName, dbResult.CustomEntityDefinitionCode, query.WorkFlowStatus);
 
             // Add any list context information.
             var displayData = result.DisplayModel as IListablePageModuleDisplayModel;
@@ -85,11 +85,11 @@ namespace Cofoundry.Domain
                 .Select(m => m.CustomEntityVersionPageModuleId);
         }
 
-        private CustomEntityVersionPageModuleRenderDetails Map(CustomEntityVersionPageModule versionModule, string moduleTypeFileName, string customEntityDefinitionCode, WorkFlowStatusQuery workflowStatus)
+        private async Task<CustomEntityVersionPageModuleRenderDetails> MapAsync(CustomEntityVersionPageModule versionModule, string moduleTypeFileName, string customEntityDefinitionCode, WorkFlowStatusQuery workflowStatus)
         {
-            _permissionValidationService.EnforceCustomEntityPermission<CustomEntityReadPermission>(customEntityDefinitionCode);
+            await _permissionValidationService.EnforceCustomEntityPermissionAsync<CustomEntityReadPermission>(customEntityDefinitionCode);
 
-            var moduleType = _queryExecutor.GetById<PageModuleTypeSummary>(versionModule.PageModuleTypeId);
+            var moduleType = await _queryExecutor.GetByIdAsync<PageModuleTypeSummary>(versionModule.PageModuleTypeId);
             EntityNotFoundException.ThrowIfNull(moduleType, versionModule.PageModuleTypeId);
 
             var result = new CustomEntityVersionPageModuleRenderDetails();

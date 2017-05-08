@@ -40,35 +40,9 @@ namespace Cofoundry.Domain
         /// <param name="email">The email address to use to locate the user.</param>
         /// <param name="userAreaCode">This query must be run against a specific user area.</param>
         /// <param name="executionContext">Optional execution context to use when executing the query. Useful if you need to temporarily elevate your permission level.</param>
-        public UserMicroSummary GetUserMicroSummaryByEmail(string email, string userAreaCode, IExecutionContext executionContext = null)
-        {
-            return _queryExecutor.Execute(new GetUserMicroSummaryByEmailQuery(email, userAreaCode), executionContext);
-        }
-
-        /// <summary>
-        /// Finds a user with a specific email address in a specific user area 
-        /// returning null if the user could not be found. Note that if the user
-        /// area does not support email addresses then the email field will be empty.
-        /// </summary>
-        /// <param name="email">The email address to use to locate the user.</param>
-        /// <param name="userAreaCode">This query must be run against a specific user area.</param>
-        /// <param name="executionContext">Optional execution context to use when executing the query. Useful if you need to temporarily elevate your permission level.</param>
         public Task<UserMicroSummary> GetUserMicroSummaryByEmailAsync(string email, string userAreaCode, IExecutionContext executionContext = null)
         {
             return _queryExecutor.ExecuteAsync(new GetUserMicroSummaryByEmailQuery(email, userAreaCode), executionContext);
-        }
-
-        /// <summary>
-        /// Finds a user with a specific username address in a specific user area 
-        /// returning null if the user could not be found. Note that depending on the
-        /// user area, the username may be a copy of the email address.
-        /// </summary>
-        /// <param name="username">The username to use to locate the user.</param>
-        /// <param name="userAreaCode">This query must be run against a specific user area.</param>
-        /// <param name="executionContext">Optional execution context to use when executing the query. Useful if you need to temporarily elevate your permission level.</param>
-        public UserMicroSummary GetUserMicroSummaryByUsername(string username, string userAreaCode, IExecutionContext executionContext = null)
-        {
-            return _queryExecutor.Execute(new GetUserMicroSummaryByUsernameQuery(username, userAreaCode), executionContext);
         }
 
         /// <summary>
@@ -95,16 +69,6 @@ namespace Cofoundry.Domain
             return _queryExecutor.GetByIdAsync<UserDetails>(userId, executionContext);
         }
 
-        /// <summary>
-        /// Finds a user by a database id returning a UserDetails object if it 
-        /// is found, otherwise null.
-        /// </summary>
-        /// <param name="executionContext">Optional execution context to use when executing the query. Useful if you need to temporarily elevate your permission level.</param>
-        public UserMicroSummary GetUserMicroSummaryById(int userId, IExecutionContext executionContext = null)
-        {
-            return _queryExecutor.GetById<UserMicroSummary>(userId, executionContext);
-        }
-
         #endregion
 
         #region get current user
@@ -117,16 +81,6 @@ namespace Cofoundry.Domain
         public Task<UserMicroSummary> GetUserMicroSummaryByIdAsync(int userId, IExecutionContext executionContext = null)
         {
             return _queryExecutor.GetByIdAsync<UserMicroSummary>(userId, executionContext);
-        }
-
-        /// <summary>
-        /// Gets a UserMicroSummary object representing the currently logged in 
-        /// user. If the user is not logged in then null is returned.
-        /// </summary>
-        /// <param name="executionContext">Optional execution context to use when executing the query. Useful if you need to temporarily elevate your permission level.</param>
-        public UserMicroSummary GetCurrentUserMicroSummary(IExecutionContext executionContext = null)
-        {
-            return _queryExecutor.Execute(new GetCurrentUserMicroSummaryQuery(), executionContext);
         }
 
         /// <summary>
@@ -149,6 +103,16 @@ namespace Cofoundry.Domain
             return _queryExecutor.ExecuteAsync(new GetCurrentUserAccountDetailsQuery(), executionContext);
         }
 
+        /// <summary>
+        /// Finds a user by a database id returning a UserDetails object if it 
+        /// is found, otherwise null.
+        /// </summary>
+        /// <param name="executionContext">Optional execution context to use when executing the query. Useful if you need to temporarily elevate your permission level.</param>
+        public Task<UserMicroSummary> GetUserMicroSummaryById(int userId, IExecutionContext executionContext = null)
+        {
+            return _queryExecutor.GetByIdAsync< UserMicroSummary>(userId, executionContext);
+        }
+
         #endregion
 
         #region searches
@@ -166,18 +130,6 @@ namespace Cofoundry.Domain
         #endregion
 
         #region utility
-
-        /// <summary>
-        /// Determines if a username is unique within a specific UserArea.
-        /// Usernames only have to be unique per UserArea.
-        /// </summary>
-        /// <param name="query">The parameters run the query with.</param>
-        /// <param name="executionContext">Optional execution context to use when executing the query. Useful if you need to temporarily elevate your permission level.</param>
-        /// <returns>True if the username is unique; otherwise false.</returns>
-        public bool IsUsernameUnique(IsUsernameUniqueQuery query, IExecutionContext executionContext = null)
-        {
-            return _queryExecutor.Execute(query, executionContext);
-        }
 
         /// <summary>
         /// Determines if a username is unique within a specific UserArea.

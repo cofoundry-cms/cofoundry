@@ -12,8 +12,7 @@ using AutoMapper;
 namespace Cofoundry.Domain
 {
     public class GetCustomEntityRenderDetailsByIdQueryHandler 
-        : IQueryHandler<GetCustomEntityRenderDetailsByIdQuery, CustomEntityRenderDetails>
-        , IAsyncQueryHandler<GetCustomEntityRenderDetailsByIdQuery, CustomEntityRenderDetails>
+        : IAsyncQueryHandler<GetCustomEntityRenderDetailsByIdQuery, CustomEntityRenderDetails>
         , IIgnorePermissionCheckHandler
     {
         #region constructor
@@ -43,33 +42,15 @@ namespace Cofoundry.Domain
 
         #region execution
 
-        public CustomEntityRenderDetails Execute(GetCustomEntityRenderDetailsByIdQuery query, IExecutionContext executionContext)
-        {
-            var dbResult = QueryCustomEntity(query).FirstOrDefault();
-            var entity = MapCustomEntity(dbResult);
-
-            entity.Sections = QuerySections(query).ToList();
-            var dbModules = QueryModules(entity).ToList();
-
-            var allModuleTypes = _queryExecutor.GetAll<PageModuleTypeSummary>(executionContext);
-            _entityVersionPageModuleMapper.MapSections(dbModules, entity.Sections, allModuleTypes, query.WorkFlowStatus);
-
-            var routingQuery = new GetPageRoutingInfoByCustomEntityIdQuery(dbResult.CustomEntityId);
-            var routing = _queryExecutor.Execute(routingQuery, executionContext);
-            entity.DetailsPageUrls = MapPageRoutings(routing, dbResult);
-
-            return entity;
-        }
-
         public async Task<CustomEntityRenderDetails> ExecuteAsync(GetCustomEntityRenderDetailsByIdQuery query, IExecutionContext executionContext)
         {
             var dbResult = await QueryCustomEntity(query).FirstOrDefaultAsync();
-            var entity = MapCustomEntity(dbResult);
+            var entity = await MapCustomEntityAsync(dbResult);
 
             entity.Sections = await QuerySections(query).ToListAsync();
             var dbModules = await QueryModules(entity).ToListAsync();
 
-            var allModuleTypes = _queryExecutor.GetAll<PageModuleTypeSummary>(executionContext);
+            var allModuleTypes = await _queryExecutor.GetAllAsync<PageModuleTypeSummary>(executionContext);
             _entityVersionPageModuleMapper.MapSections(dbModules, entity.Sections, allModuleTypes, query.WorkFlowStatus);
 
             var routingQuery = new GetPageRoutingInfoByCustomEntityIdQuery(dbResult.CustomEntityId);
@@ -96,9 +77,9 @@ namespace Cofoundry.Domain
                 .ProjectTo<CustomEntityPageSectionRenderDetails>();
         }
 
-        private CustomEntityRenderDetails MapCustomEntity(CustomEntityVersion dbResult)
+        private async Task<CustomEntityRenderDetails> MapCustomEntityAsync(CustomEntityVersion dbResult)
         {
-            _permissionValidationService.EnforceCustomEntityPermission<CustomEntityReadPermission>(dbResult.CustomEntity.CustomEntityDefinitionCode);
+            await _permissionValidationService.EnforceCustomEntityPermissionAsync<CustomEntityReadPermission>(dbResult.CustomEntity.CustomEntityDefinitionCode);
 
             var entity = Mapper.Map<CustomEntityRenderDetails>(dbResult);
             entity.Model = _customEntityDataModelMapper.Map(dbResult.CustomEntity.CustomEntityDefinitionCode, dbResult.SerializedData);

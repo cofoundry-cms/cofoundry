@@ -54,7 +54,7 @@ namespace Cofoundry.Domain
 
             if (draft != null)
             {
-                _permissionValidationService.EnforceCustomEntityPermission<CustomEntityUpdatePermission>(draft.CustomEntity.CustomEntityDefinitionCode);
+                await _permissionValidationService.EnforceCustomEntityPermissionAsync<CustomEntityUpdatePermission>(draft.CustomEntity.CustomEntityDefinitionCode);
 
                 var definitionCode = draft.CustomEntity.CustomEntityDefinitionCode;
                 var versionId = draft.CustomEntityVersionId;

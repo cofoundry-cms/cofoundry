@@ -50,7 +50,7 @@ namespace Cofoundry.Domain
                 .SingleOrDefaultAsync();
 
             if (dbResult == null) return null;
-            _permissionValidationService.EnforceCustomEntityPermission<CustomEntityReadPermission>(dbResult.CustomEntityDefinitionCode);
+            await _permissionValidationService.EnforceCustomEntityPermissionAsync<CustomEntityReadPermission>(dbResult.CustomEntityDefinitionCode);
 
             var result = Map(dbResult.Module, dbResult.ModuleTypeFileName);
             return result;

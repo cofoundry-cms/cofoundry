@@ -63,7 +63,7 @@ namespace Cofoundry.Domain
 
             if (dbResult != null)
             {
-                _permissionValidationService.EnforceCustomEntityPermission<CustomEntityUpdatePermission>(dbResult.CustomEntityDefinitionCode);
+                await _permissionValidationService.EnforceCustomEntityPermissionAsync<CustomEntityUpdatePermission>(dbResult.CustomEntityDefinitionCode);
 
                 if (dbResult.WorkFlowStatusId != (int)WorkFlowStatus.Draft)
                 {

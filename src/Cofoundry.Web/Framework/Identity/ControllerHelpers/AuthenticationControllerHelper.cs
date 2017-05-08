@@ -6,6 +6,7 @@ using Cofoundry.Domain.CQS;
 using Cofoundry.Domain;
 using Cofoundry.Domain.MailTemplates;
 using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
 
 namespace Cofoundry.Web.Identity
 {
@@ -42,7 +43,7 @@ namespace Cofoundry.Web.Identity
 
         #region Log in
 
-        public AuthenticationResult LogUserIn(Controller controller, ILoginViewModel vm, IUserAreaDefinition userAreaToLogInTo)
+        public async Task<AuthenticationResult> LogUserInAsync(Controller controller, ILoginViewModel vm, IUserAreaDefinition userAreaToLogInTo)
         {
             Condition.Requires(controller).IsNotNull();
             Condition.Requires(userAreaToLogInTo).IsNotNull();
@@ -60,12 +61,12 @@ namespace Cofoundry.Web.Identity
                 RememberUser = vm.RememberMe
             };
 
-            _controllerResponseHelper.ExecuteIfValid(controller, command);
+            await _controllerResponseHelper.ExecuteIfValidAsync(controller, command);
 
             if (controller.ModelState.IsValid)
             {
                 result.IsAuthenticated = true;
-                var currentContext = _userContextService.GetCurrentContext();
+                var currentContext = await _userContextService.GetCurrentContextAsync();
                 result.RequiresPasswordChange = currentContext.IsPasswordChangeRequired;
             }
 
@@ -77,9 +78,9 @@ namespace Cofoundry.Web.Identity
 
         #region log out
 
-        public void Logout()
+        public Task LogoutAsync()
         {
-            _loginService.SignOut();
+            return _loginService.SignOutAsync();
         }
 
         #endregion
@@ -99,7 +100,7 @@ namespace Cofoundry.Web.Identity
             _controllerResponseHelper.ExecuteIfValid(controller, command);
         }
 
-        public PasswordResetRequestAuthenticationResult IsPasswordRequestValid(Controller controller, string requestId, string token, IUserAreaDefinition userAreaToLogInTo)
+        public async Task<PasswordResetRequestAuthenticationResult> IsPasswordRequestValidAsync(Controller controller, string requestId, string token, IUserAreaDefinition userAreaToLogInTo)
         {
             var result = new PasswordResetRequestAuthenticationResult();
             result.ValidationErrorMessage = "Invalid password reset request";
@@ -124,7 +125,7 @@ namespace Cofoundry.Web.Identity
             query.Token = Uri.UnescapeDataString(token);
             query.UserAreaCode = userAreaToLogInTo.UserAreaCode;
 
-            result = _queryExecutor.Execute(query);
+            result = await _queryExecutor.ExecuteAsync(query);
 
             return result;
         }

@@ -11,8 +11,7 @@ using AutoMapper;
 namespace Cofoundry.Domain
 {
     public class GetCustomEntityRenderSummaryByIdQueryHandler 
-        : IQueryHandler<GetCustomEntityRenderSummaryByIdQuery, CustomEntityRenderSummary>
-        , IAsyncQueryHandler<GetCustomEntityRenderSummaryByIdQuery, CustomEntityRenderSummary>
+        : IAsyncQueryHandler<GetCustomEntityRenderSummaryByIdQuery, CustomEntityRenderSummary>
         , IIgnorePermissionCheckHandler
     {
         #region constructor
@@ -41,18 +40,10 @@ namespace Cofoundry.Domain
         {
             var dbResult = await Query(query).SingleOrDefaultAsync();
             if (dbResult == null) return null;
-            EnforcePermission(dbResult);
+
+            await _permissionValidationService.EnforceCustomEntityPermissionAsync<CustomEntityReadPermission>(dbResult.CustomEntity.CustomEntityDefinitionCode);
+
             var result = await _customEntityRenderSummaryMapper.MapSummaryAsync(dbResult, executionContext);
-
-            return result;
-        }
-
-        public CustomEntityRenderSummary Execute(GetCustomEntityRenderSummaryByIdQuery query, IExecutionContext executionContext)
-        {
-            var dbResult = Query(query).SingleOrDefault();
-            if (dbResult == null) return null;
-            EnforcePermission(dbResult);
-            var result = _customEntityRenderSummaryMapper.MapSummary(dbResult, executionContext);
 
             return result;
         }
@@ -71,11 +62,6 @@ namespace Cofoundry.Domain
                 .Include(e => e.CustomEntity);
 
             return dbQuery;
-        }
-
-        private void EnforcePermission(CustomEntityVersion dbResult)
-        {
-            _permissionValidationService.EnforceCustomEntityPermission<CustomEntityReadPermission>(dbResult.CustomEntity.CustomEntityDefinitionCode);
         }
 
         #endregion

@@ -29,8 +29,7 @@ namespace Cofoundry.Web
                 .RegisterPerRequestScope<IPageViewModelBuilder, PageViewModelBuilder>()
                 
                 .RegisterPerRequestScope<IApiResponseHelper, ApiResponseHelper>()
-
-                .RegisterAll<IPageModuleViewLocationRegistration>()
+                
                 .RegisterInstance<IAntiCSRFService, AntiCSRFService>()
 
                 .RegisterType<ICustomEntityTemplateSectionTagBuilderFactory, CustomEntityTemplateSectionTagBuilderFactory>()

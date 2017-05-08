@@ -15,6 +15,7 @@ namespace Cofoundry.Domain.Bootstrap
                 .RegisterType<PageTemplateSectionMapper, PageTemplateSectionMapper>()
                 .RegisterType<IPageTemplateCustomEntityTypeMapper, PageTemplateCustomEntityTypeMapper>()
                 .RegisterType<PageTemplateCustomEntityTypeValueResolver, PageTemplateCustomEntityTypeValueResolver>()
+                .RegisterAll<IPageTemplateViewLocationRegistration>()
                 ;
         }
     }

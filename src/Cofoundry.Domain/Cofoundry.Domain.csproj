@@ -103,6 +103,9 @@
     <Reference Include="Microsoft.Extensions.Configuration.Abstractions, Version=1.1.1.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Extensions.Configuration.Abstractions.1.1.1\lib\netstandard1.0\Microsoft.Extensions.Configuration.Abstractions.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.Extensions.DependencyInjection, Version=1.1.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Extensions.DependencyInjection.1.1.0\lib\netstandard1.1\Microsoft.Extensions.DependencyInjection.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.Extensions.DependencyInjection.Abstractions, Version=1.1.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Extensions.DependencyInjection.Abstractions.1.1.0\lib\netstandard1.0\Microsoft.Extensions.DependencyInjection.Abstractions.dll</HintPath>
     </Reference>
@@ -867,6 +870,7 @@
     <Compile Include="Domain\PageTemplates\Queries\GetPageTemplateFileInfoByPathQueryHandler.cs" />
     <Compile Include="Domain\PageTemplates\Queries\SearchPageTemplateSummariesQuery.cs" />
     <Compile Include="Domain\PageTemplates\Queries\SearchPageTemplateSummariesQueryHandler.cs" />
+    <Compile Include="Domain\PageTemplates\ViewFiles\IPageTemplateViewLocationRegistration.cs" />
     <Compile Include="Domain\RewriteRules\Bootstrap\RewriteRuleAutoMapProfile.cs" />
     <Compile Include="Domain\RewriteRules\Bootstrap\RewriteRuleDependencyRegistration.cs" />
     <Compile Include="Domain\RewriteRules\Bootstrap\RewriteRuleEntityDefinition.cs" />

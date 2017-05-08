@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Extensions.FileProviders;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -22,7 +23,7 @@ namespace Cofoundry.Core.ResourceFiles
         /// <summary>
         /// Gets a references to the file if it exists, otherwise returns null
         /// </summary>
-        IResourceFile GetFile(string virtualPath);
+        IFileInfo GetFile(string virtualPath);
 
         /// <summary>
         /// True if the directory exists; otherwise false.
@@ -32,7 +33,7 @@ namespace Cofoundry.Core.ResourceFiles
         /// <summary>
         /// Gets a reference to the directory at the specified path if it exists, otherwise returns null
         /// </summary>
-        IResourceDirectory GetDirectory(string virtualDir);
+        IDirectoryContents GetDirectory(string virtualDir);
 
         #endregion
     }

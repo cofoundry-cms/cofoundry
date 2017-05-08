@@ -14,7 +14,7 @@ namespace Cofoundry.Domain
         /// <summary>
         /// Get the connection context of the current user.
         /// </summary>
-        IUserContext GetCurrentContext();
+        Task<IUserContext> GetCurrentContextAsync();
 
         /// <summary>
         /// Use this to get a user context for the system user, useful
@@ -22,13 +22,6 @@ namespace Cofoundry.Domain
         /// privileges.
         /// </summary>
         Task<IUserContext> GetSystemUserContextAsync();
-
-        /// <summary>
-        /// Use this to get a user context for the system user, useful
-        /// if you need to impersonate the user to perform an action with elevated 
-        /// privileges.
-        /// </summary>
-        IUserContext GetSystemUserContext();
 
         /// <summary>
         /// Clears out the cached user context if one exists. Typically the user 
