@@ -537,6 +537,7 @@
     <Compile Include="Framework\Mvc\ViewHelpers\PageTemplates\PageTemplateSection\TemplateSectionTagBuilderHelper.cs" />
     <Compile Include="Framework\Mvc\ViewRenderer\IRazorViewRenderer.cs" />
     <Compile Include="Framework\Mvc\ViewRenderer\ViewNotFoundException.cs" />
+    <Compile Include="Framework\Resolvers\SitePathResolver.cs" />
     <Compile Include="Framework\WebApi\Configuration\WebApiStartupConfiguration.cs" />
     <Compile Include="Framework\Mvc\ControllerHelpers\ControllerResponseHelper.cs" />
     <Compile Include="Framework\Mvc\ControllerHelpers\IControllerResponseHelper.cs" />

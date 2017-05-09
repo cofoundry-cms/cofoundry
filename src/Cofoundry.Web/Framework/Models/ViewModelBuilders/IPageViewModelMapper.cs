@@ -23,7 +23,7 @@ namespace Cofoundry.Web
         /// </summary>
         /// <param name="viewModel">The view model to map data to.</param>
         /// <param name="mappingParameters">The data passed through to map to the view model.</param>
-        void MapPageViewModel(
+        Task MapPageViewModelAsync(
             IPageViewModel viewModel,
             PageViewModelBuilderParameters mappingParameters
             );
@@ -34,7 +34,7 @@ namespace Cofoundry.Web
         /// <param name="displayModelType">The type information of the display model to apply to the generic view model.</param>
         /// <param name="viewModel">The view model to map data to.</param>
         /// <param name="mappingParameters">The data passed through to map to the view model.</param>
-        void MapCustomEntityViewModel<TDisplayModel>(
+        Task MapCustomEntityViewModelAsync<TDisplayModel>(
             ICustomEntityDetailsPageViewModel<TDisplayModel> viewModel,
             CustomEntityDetailsPageViewModelBuilderParameters mappingParameters
             ) where TDisplayModel : ICustomEntityDetailsDisplayViewModel;
@@ -44,7 +44,7 @@ namespace Cofoundry.Web
         /// </summary>
         /// <param name="viewModel">The view model to map data to.</param>
         /// <param name="mappingParameters">The data passed through to map to the view model.</param>
-        void MapNotFoundPageViewModel(
+        Task MapNotFoundPageViewModelAsync(
             INotFoundPageViewModel viewModel,
             NotFoundPageViewModelBuilderParameters mappingParameters
             );

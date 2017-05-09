@@ -87,17 +87,17 @@ namespace Cofoundry.Web.Identity
 
         #region forgot password
 
-        public void SendPasswordResetNotification<TNotificationViewModel>(Controller controller, IForgotPasswordViewModel vm, TNotificationViewModel notificationTemplate, IUserAreaDefinition userArea) 
+        public Task SendPasswordResetNotificationAsync<TNotificationViewModel>(Controller controller, IForgotPasswordViewModel vm, TNotificationViewModel notificationTemplate, IUserAreaDefinition userArea) 
             where TNotificationViewModel : IResetPasswordTemplate
         {
-            if (!controller.ModelState.IsValid) return;
+            if (!controller.ModelState.IsValid) return Task.CompletedTask;
 
             var command = new ResetUserPasswordByUsernameCommand();
             command.Username = vm.Username;
             command.UserAreaCode = userArea.UserAreaCode;
             command.MailTemplate = notificationTemplate;
 
-            _controllerResponseHelper.ExecuteIfValid(controller, command);
+            return _controllerResponseHelper.ExecuteIfValidAsync(controller, command);
         }
 
         public async Task<PasswordResetRequestAuthenticationResult> IsPasswordRequestValidAsync(Controller controller, string requestId, string token, IUserAreaDefinition userAreaToLogInTo)
@@ -130,9 +130,9 @@ namespace Cofoundry.Web.Identity
             return result;
         }
 
-        public void CompletePasswordReset<TNotificationTemplate>(Controller controller, ICompletePasswordResetViewModel vm, TNotificationTemplate notificationTemplate, IUserAreaDefinition userAreaToLogInTo) where TNotificationTemplate : IPasswordChangedTemplate
+        public Task CompletePasswordResetAsync<TNotificationTemplate>(Controller controller, ICompletePasswordResetViewModel vm, TNotificationTemplate notificationTemplate, IUserAreaDefinition userAreaToLogInTo) where TNotificationTemplate : IPasswordChangedTemplate
         {
-            if (!controller.ModelState.IsValid) return;
+            if (!controller.ModelState.IsValid) return Task.CompletedTask;
             
             var command = new CompleteUserPasswordResetCommand();
 
@@ -140,7 +140,7 @@ namespace Cofoundry.Web.Identity
             if (!Guid.TryParse(vm.UserPasswordResetRequestId, out requestGuid))
             {
                 AddPasswordRequestInvalidError(controller);
-                return;
+                return Task.CompletedTask;
             }
 
             command.NewPassword = vm.NewPassword;
@@ -149,7 +149,7 @@ namespace Cofoundry.Web.Identity
             command.UserPasswordResetRequestId = requestGuid;
             command.UserAreaCode = userAreaToLogInTo.UserAreaCode;
 
-            _controllerResponseHelper.ExecuteIfValid(controller, command);
+            return _controllerResponseHelper.ExecuteIfValidAsync(controller, command);
         }
 
         private static void AddPasswordRequestInvalidError(Controller controller)

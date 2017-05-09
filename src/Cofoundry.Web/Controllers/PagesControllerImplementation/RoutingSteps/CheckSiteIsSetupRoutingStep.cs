@@ -27,9 +27,10 @@ namespace Cofoundry.Web
             _setupPageActionFactory = setupPageActionFactory;
         }
 
-        public Task ExecuteAsync(Controller controller, PageActionRoutingState state)
+        public async Task ExecuteAsync(Controller controller, PageActionRoutingState state)
         {
-            var internalSettings = _queryExecutor.Get<InternalSettings>();
+            var internalSettings = await _queryExecutor.GetAsync<InternalSettings>();
+
             if (!internalSettings.IsSetup)
             {
                 var setup = _setupPageActionFactory.GetSetupPageAction(controller);
@@ -39,8 +40,6 @@ namespace Cofoundry.Web
                 }
                 state.Result = setup;
             }
-
-            return Task.FromResult(true);
         }
     }
 }

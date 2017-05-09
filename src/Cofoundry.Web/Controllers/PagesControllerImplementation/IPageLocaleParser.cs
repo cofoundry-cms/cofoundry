@@ -16,6 +16,6 @@ namespace Cofoundry.Web
         /// it is an active locale, returning the ActiveLocale object if
         /// found.
         /// </summary>
-        ActiveLocale ParseLocale(string path);
+        Task<ActiveLocale> ParseLocaleAsync(string path);
     }
 }

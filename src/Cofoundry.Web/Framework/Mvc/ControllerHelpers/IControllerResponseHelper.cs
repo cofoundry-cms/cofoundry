@@ -9,7 +9,6 @@ namespace Cofoundry.Web
 {
     public interface IControllerResponseHelper
     {
-        void ExecuteIfValid<TCommand>(Controller controller, TCommand command) where TCommand : ICommand;
         Task ExecuteIfValidAsync<TCommand>(Controller controller, TCommand command) where TCommand : ICommand;
     }
 }

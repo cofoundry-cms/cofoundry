@@ -44,12 +44,12 @@ namespace Cofoundry.Web
         /// </summary>
         /// <param name="viewModel">The view model to map data to.</param>
         /// <param name="mappingParameters">The data passed through to map to the view model.</param>
-        public virtual void MapPageViewModel(
+        public virtual Task MapPageViewModelAsync(
             IPageViewModel viewModel,
             PageViewModelBuilderParameters mappingParameters
             )
         {
-            Map(viewModel, mappingParameters);
+            return MapAsync(viewModel, mappingParameters);
         }
 
         /// <summary>
@@ -58,12 +58,12 @@ namespace Cofoundry.Web
         /// <param name="displayModelType">The type information of the display model to apply to the generic view model.</param>
         /// <param name="viewModel">The view model to map data to.</param>
         /// <param name="mappingParameters">The data passed through to map to the view model.</param>
-        public virtual void MapCustomEntityViewModel<TDisplayModel>(
+        public virtual async Task MapCustomEntityViewModelAsync<TDisplayModel>(
             ICustomEntityDetailsPageViewModel<TDisplayModel> viewModel,
             CustomEntityDetailsPageViewModelBuilderParameters mappingParameters 
             ) where TDisplayModel : ICustomEntityDetailsDisplayViewModel
         {
-            Map(viewModel, mappingParameters);
+            await MapAsync(viewModel, mappingParameters);
 
             Condition.Requires(mappingParameters.CustomEntityModel).IsNotNull();
 
@@ -87,20 +87,22 @@ namespace Cofoundry.Web
         /// </summary>
         /// <param name="viewModel">The view model to map data to.</param>
         /// <param name="mappingParameters">The data passed through to map to the view model.</param>
-        public virtual void MapNotFoundPageViewModel(
+        public virtual Task MapNotFoundPageViewModelAsync(
             INotFoundPageViewModel viewModel,
             NotFoundPageViewModelBuilderParameters mappingParameters
             )
         {
             viewModel.PageTitle = "Page not found";
             viewModel.MetaDescription = "Sorry, that page could not be found";
+
+            return Task.CompletedTask;
         }
 
         #endregion
 
         #region helpers
 
-        private void Map<T>(
+        private async Task MapAsync<T>(
             T vm, 
             PageViewModelBuilderParameters mappingParameters
             )
@@ -110,16 +112,16 @@ namespace Cofoundry.Web
             Condition.Requires(mappingParameters.PageModel).IsNotNull();
 
             vm.Page = mappingParameters.PageModel;
-            vm.PageRoutingHelper = CreatePageRoutingHelper(mappingParameters);
+            vm.PageRoutingHelper = await CreatePageRoutingHelperAsync(mappingParameters);
             vm.IsPageEditMode = mappingParameters.VisualEditorMode == VisualEditorMode.Edit;
         }
 
-        private PageRoutingHelper CreatePageRoutingHelper(
+        private async Task<PageRoutingHelper> CreatePageRoutingHelperAsync(
             PageViewModelBuilderParameters mappingParameters
             )
         {
-            var allRoutes = _queryExecutor.GetAll<PageRoute>();
-            var allDirectories = _queryExecutor.GetAll<WebDirectoryRoute>();
+            var allRoutes = await _queryExecutor.GetAllAsync<PageRoute>();
+            var allDirectories = await _queryExecutor.GetAllAsync<WebDirectoryRoute>();
             var currentRoute = allRoutes.Single(p => p.PageId == mappingParameters.PageModel.PageId);
 
             var router = new PageRoutingHelper(

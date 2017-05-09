@@ -7,6 +7,7 @@ using Cofoundry.Core.Mail;
 using Cofoundry.Domain.MailTemplates;
 using Cofoundry.Core;
 using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
 
 namespace Cofoundry.Web.Identity
 {
@@ -43,9 +44,9 @@ namespace Cofoundry.Web.Identity
         
         #region change password
 
-        public void InitViewModel(IChangePasswordViewModel vm)
+        public async Task InitViewModelAsync(IChangePasswordViewModel vm)
         {
-            var cx = _userContextService.GetCurrentContext();
+            var cx = await _userContextService.GetCurrentContextAsync();
             vm.IsPasswordChangeRequired = cx.IsPasswordChangeRequired;
         }
 
@@ -56,10 +57,10 @@ namespace Cofoundry.Web.Identity
         /// <param name="controller">Controller instance</param>
         /// <param name="vm">The IChangePasswordTemplate containing the data entered by the user.</param>
         /// <param name="notificationTemplate">An IPasswordChangedNotificationTemplate to use when sending the notification</param>
-        public void ChangePassword<TNotificationTemplate>(Controller controller, IChangePasswordViewModel vm, TNotificationTemplate notificationTemplate) where TNotificationTemplate : IPasswordChangedTemplate
+        public async Task ChangePasswordAsync<TNotificationTemplate>(Controller controller, IChangePasswordViewModel vm, TNotificationTemplate notificationTemplate) where TNotificationTemplate : IPasswordChangedTemplate
         {
-            var user = _queryExecutor.Execute(new GetCurrentUserMicroSummaryQuery());
-            ChangePassword(controller, vm, user);
+            var user = await _queryExecutor.ExecuteAsync(new GetCurrentUserMicroSummaryQuery());
+            await ChangePasswordAsync(controller, vm, user);
 
             if (controller.ModelState.IsValid)
             {
@@ -79,10 +80,10 @@ namespace Cofoundry.Web.Identity
         /// </summary>
         /// <param name="controller">Controller instance</param>
         /// <param name="vm">The IChangePasswordTemplate containing the data entered by the user.</param>
-        public void ChangePassword(Controller controller, IChangePasswordViewModel vm)
+        public async Task ChangePasswordAsync(Controller controller, IChangePasswordViewModel vm)
         {
-            var user = _queryExecutor.Execute(new GetCurrentUserMicroSummaryQuery());
-            ChangePassword(controller, vm, user);
+            var user = await _queryExecutor.ExecuteAsync(new GetCurrentUserMicroSummaryQuery());
+            await ChangePasswordAsync(controller, vm, user);
         }
 
         /// <summary>
@@ -90,7 +91,7 @@ namespace Cofoundry.Web.Identity
         /// </summary>
         /// <param name="controller">Controller instance</param>
         /// <param name="vm">The IChangePasswordTemplate containing the data entered by the user.</param>
-        private void ChangePassword(Controller controller, IChangePasswordViewModel vm, UserMicroSummary user)
+        private async Task ChangePasswordAsync(Controller controller, IChangePasswordViewModel vm, UserMicroSummary user)
         {
             if (controller.ModelState.IsValid)
             {
@@ -102,7 +103,7 @@ namespace Cofoundry.Web.Identity
                 var command = new UpdateCurrentUserUserPasswordCommand();
                 command.NewPassword = vm.NewPassword;
                 command.OldPassword = vm.OldPassword;
-                _controllerResponseHelper.ExecuteIfValid(controller, command);
+                await _controllerResponseHelper.ExecuteIfValidAsync(controller, command);
             }
         }
 

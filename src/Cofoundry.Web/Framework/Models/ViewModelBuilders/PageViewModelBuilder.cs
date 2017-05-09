@@ -42,15 +42,15 @@ namespace Cofoundry.Web
         /// Creates and maps data to a view model for a generic page.
         /// </summary>
         /// <param name="mappingParameters">The data passed through to map to the view model.</param>
-        public virtual Task<IPageViewModel> BuildPageViewModelAsync(
+        public virtual async Task<IPageViewModel> BuildPageViewModelAsync(
             PageViewModelBuilderParameters mappingParameters
             )
         {
             var viewModel = _pageViewModelFactory.CreatePageViewModel();
 
-            _pageViewModelMapper.MapPageViewModel(viewModel, mappingParameters);
+            await _pageViewModelMapper.MapPageViewModelAsync(viewModel, mappingParameters);
 
-            return Task.FromResult(viewModel);
+            return viewModel;
         }
 
         /// <summary>
@@ -58,30 +58,30 @@ namespace Cofoundry.Web
         /// </summary>
         /// <param name="displayModelType">The type information of the display model to apply to the generic view model.</param>
         /// <param name="mappingParameters">The data passed through to map to the view model.</param>
-        public virtual Task<ICustomEntityDetailsPageViewModel<TDisplayModel>> BuildCustomEntityModelAsync<TDisplayModel>(
+        public virtual async Task<ICustomEntityDetailsPageViewModel<TDisplayModel>> BuildCustomEntityModelAsync<TDisplayModel>(
             CustomEntityDetailsPageViewModelBuilderParameters mappingParameters
             ) where TDisplayModel : ICustomEntityDetailsDisplayViewModel
         {
             var viewModel = _pageViewModelFactory.CreateCustomEntityDetailsPageViewModel<TDisplayModel>();
 
-            _pageViewModelMapper.MapCustomEntityViewModel(viewModel, mappingParameters);
+            await _pageViewModelMapper.MapCustomEntityViewModelAsync(viewModel, mappingParameters);
 
-            return Task.FromResult(viewModel);
+            return viewModel;
         }
 
         /// <summary>
         /// Creates and maps data to a view model for a 404 page.
         /// </summary>
         /// <param name="mappingParameters">The data passed through to map to the view model.</param>
-        public virtual Task<INotFoundPageViewModel> BuildNotFoundPageViewModelAsync(
+        public virtual async Task<INotFoundPageViewModel> BuildNotFoundPageViewModelAsync(
             NotFoundPageViewModelBuilderParameters mappingParameters
             )
         {
             var viewModel = _pageViewModelFactory.CreateNotFoundPageViewModel();
 
-            _pageViewModelMapper.MapNotFoundPageViewModel(viewModel, mappingParameters);
+            await _pageViewModelMapper.MapNotFoundPageViewModelAsync(viewModel, mappingParameters);
 
-            return Task.FromResult(viewModel);
+            return viewModel;
         }
 
         #endregion

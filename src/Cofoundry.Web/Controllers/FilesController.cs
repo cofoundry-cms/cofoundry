@@ -7,23 +7,28 @@ using Cofoundry.Domain.CQS;
 using Cofoundry.Domain;
 using Cofoundry.Core.Web;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Hosting;
+using System.IO;
 
 namespace Cofoundry.Web
 {
     public class FilesController : Controller
     {
+        #region constructor
+
         private readonly IQueryExecutor _queryExecutor;
         private readonly ISiteUrlResolver _siteUriResolver;
-
-        #region Constructors
-
+        private readonly IHostingEnvironment _hostingEnvironment;
+        
         public FilesController(
             IQueryExecutor queryExecutor,
-            ISiteUrlResolver siteUriResolver
+            ISiteUrlResolver siteUriResolver,
+            IHostingEnvironment hostingEnvironment
             )
         {
             _queryExecutor = queryExecutor;
             _siteUriResolver = siteUriResolver;
+            _hostingEnvironment = hostingEnvironment;
         }
 
         #endregion
@@ -31,15 +36,16 @@ namespace Cofoundry.Web
         public async Task<ActionResult> RobotsTxt()
         {
             string robotsTxt = "Sitemap: " + _siteUriResolver.MakeAbsolute("/sitemap.xml") + "\r\n";
+            var robotsFilePath = Path.Combine(_hostingEnvironment.WebRootPath, "robots.txt");
 
-            if (HttpContext.IsDebuggingEnabled && Request.Url.Host.ToLower() != "localhost")
+            if (_hostingEnvironment.IsDevelopment())
             {
                 // Disallow when we're on the server but in debug mode
                 robotsTxt += "User-agent: iisbot/1.0 (+http://www.iis.net/iisbot.html)\r\nAllow: /\r\nUser-agent: *\r\nDisallow: /";
             }
-            else if (System.IO.File.Exists(Server.MapPath("~/robots.txt")))
+            else if (System.IO.File.Exists(robotsFilePath))
             {
-                return File(Server.MapPath("~/robots.txt"), "text/plain");
+                return File(robotsFilePath, "text/plain");
             }
             else
             {
@@ -56,14 +62,16 @@ namespace Cofoundry.Web
             return Content(robotsTxt, "text/plain", Encoding.UTF8);
         }
 
-        public ActionResult HumansTxt()
+        public async Task<ActionResult> HumansTxt()
         {
-            if (System.IO.File.Exists(Server.MapPath("~/humans.txt")))
+            var humansFilePath = Path.Combine(_hostingEnvironment.WebRootPath, "humans.txt");
+
+            if (System.IO.File.Exists(humansFilePath))
             {
-                return File(Server.MapPath("~/humans.txt"), "text/plain");
+                return File(humansFilePath, "text/plain");
             }
 
-            var settings = _queryExecutor.Get<SeoSettings>();
+            var settings = await _queryExecutor.GetAsync<SeoSettings>();
 
             if (string.IsNullOrEmpty(settings.HumansTxt))
             {

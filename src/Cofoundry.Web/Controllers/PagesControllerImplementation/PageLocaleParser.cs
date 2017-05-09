@@ -27,7 +27,7 @@ namespace Cofoundry.Web
         /// it is an active locale, returning the ActiveLocale object if
         /// found.
         /// </summary>
-        public ActiveLocale ParseLocale(string path)
+        public async Task<ActiveLocale> ParseLocaleAsync(string path)
         {
             if (string.IsNullOrEmpty(path)) return null;
 
@@ -47,7 +47,7 @@ namespace Cofoundry.Web
             if (Regex.Match(localeStr, @"^[a-zA-Z]{2}(-[a-zA-Z]{2})?$", RegexOptions.IgnoreCase).Success)
             {
                 var query = new GetActiveLocaleByIETFLanguageTagQuery(localeStr);
-                locale = _queryExecutor.Execute(query);
+                locale = await _queryExecutor.ExecuteAsync(query);
             }
 
             return locale;

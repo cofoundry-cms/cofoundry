@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Cofoundry.Web.Identity
 {
@@ -27,11 +28,11 @@ namespace Cofoundry.Web.Identity
 
         #region delete user
 
-        public void DeleteUser(Controller controller, int userId)
+        public Task DeleteUserAsync(Controller controller, int userId)
         {
             var command = new DeleteUserCommand();
             command.UserId = userId;
-            _controllerResponseHelper.ExecuteIfValid(controller, command);
+            return _controllerResponseHelper.ExecuteIfValidAsync(controller, command);
         }
 
         #endregion

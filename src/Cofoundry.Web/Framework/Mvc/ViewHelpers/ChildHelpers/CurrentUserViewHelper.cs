@@ -29,26 +29,27 @@ namespace Cofoundry.Web
             _userContextServiceService = userContextServiceService;
             _queryExecutor = queryExecutor;
 
-            _userContext = new Lazy<IUserContext>(InitUserContext);
-            _user = new Lazy<UserMicroSummary>(InitUser);
-            _role = new Lazy<RoleDetails>(InitRole);
+            // TODO: Wpork out how this should instantiate
+            //_userContext = new Lazy<IUserContext>(InitUserContext);
+            //_user = new Lazy<UserMicroSummary>(InitUser);
+            //_role = new Lazy<RoleDetails>(InitRole);
         }
 
-        private IUserContext InitUserContext()
+        private Task<IUserContext> InitUserContextAsync()
         {
-            return _userContextServiceService.GetCurrentContext();
+            return _userContextServiceService.GetCurrentContextAsync();
         }
 
-        private UserMicroSummary InitUser()
+        private Task<UserMicroSummary> InitUserAsync()
         {
             if (!Context.UserId.HasValue) return null;
 
-            return _queryExecutor.GetById<UserMicroSummary>(Context.UserId.Value);
+            return _queryExecutor.GetByIdAsync<UserMicroSummary>(Context.UserId.Value);
         }
 
-        private RoleDetails InitRole()
+        private Task<RoleDetails> InitRoleAsync()
         {
-            return _queryExecutor.Execute(new GetRoleDetailsByIdQuery(Context.RoleId));
+            return _queryExecutor.ExecuteAsync(new GetRoleDetailsByIdQuery(Context.RoleId));
         }
 
         #endregion

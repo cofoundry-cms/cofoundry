@@ -13,7 +13,7 @@ namespace Cofoundry.Web
     {
         #region public methods
 
-        T Get<T>() where T : ICofoundrySettings;
+        Task<T> GetAsync<T>() where T : ICofoundrySettings;
 
         #endregion
     }

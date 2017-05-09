@@ -400,7 +400,6 @@
     <Compile Include="Web\Utilities\MimeMapping\IMimeTypeService.cs" />
     <Compile Include="Web\Utilities\MimeMapping\MimeMapping.cs" />
     <Compile Include="Web\Utilities\QueryStringBuilder\QueryStringBuilder.cs" />
-    <Compile Include="Web\Utilities\SitePathResolver.cs" />
     <Compile Include="Web\Utilities\UriResolvers\CompositeSiteUrlResolver.cs" />
     <Compile Include="Web\Utilities\UriResolvers\ISiteUrlResolver.cs" />
     <Compile Include="Web\Utilities\UriResolvers\RequestBasedSiteUrlResolver.cs" />

@@ -22,21 +22,6 @@ namespace Cofoundry.Web
             _commandExecutor = commandExecutor;
         }
 
-        public void ExecuteIfValid<TCommand>(Controller controller, TCommand command) where TCommand : ICommand
-        {
-            if (controller.ModelState.IsValid)
-            {
-                try
-                {
-                    _commandExecutor.Execute(command);
-                }
-                catch (ValidationException ex)
-                {
-                    AddValidationExceptionToModelState(controller, ex);
-                }
-            }
-        }
-
         public async Task ExecuteIfValidAsync<TCommand>(Controller controller, TCommand command) where TCommand : ICommand
         {
             if (controller.ModelState.IsValid)
