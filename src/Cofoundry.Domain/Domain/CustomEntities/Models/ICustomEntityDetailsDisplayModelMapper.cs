@@ -10,6 +10,6 @@ namespace Cofoundry.Domain
         where TDataModel : ICustomEntityVersionDataModel
         where TDisplayModel : ICustomEntityDisplayModel<TDataModel>
     {
-        TDisplayModel MapDetails(CustomEntityRenderDetails renderDetails, TDataModel dataModel);
+        Task<TDisplayModel> MapDetailsAsync(CustomEntityRenderDetails renderDetails, TDataModel dataModel);
     }
 }

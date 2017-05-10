@@ -12,10 +12,10 @@ namespace Cofoundry.Domain
         , IAsyncQueryHandler<GetCustomEntityRoutingRuleByRouteFormatQuery, ICustomEntityRoutingRule>
         , IIgnorePermissionCheckHandler
     {
-        private readonly ICustomEntityRoutingRule[] _customEntityRoutingRules;
+        private readonly IEnumerable<ICustomEntityRoutingRule> _customEntityRoutingRules;
 
         public GetCustomEntityRoutingRuleByRouteFormatQueryHandler(
-            ICustomEntityRoutingRule[] customEntityRoutingRules
+            IEnumerable<ICustomEntityRoutingRule> customEntityRoutingRules
             )
         {
             _customEntityRoutingRules = customEntityRoutingRules;

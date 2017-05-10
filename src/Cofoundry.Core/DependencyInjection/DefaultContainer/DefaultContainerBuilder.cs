@@ -40,6 +40,7 @@ namespace Cofoundry.Core.DependencyInjection
         public void Build()
         {
             CheckIsBuilt();
+            RegisterFramework();
 
             var containerRegister = new DefaultContainerRegister(_discoveredTypesProvider, _serviceCollection, this);
 
@@ -74,6 +75,12 @@ namespace Cofoundry.Core.DependencyInjection
                 throw new InvalidOperationException("The container has already been built.");
             }
             hasBuilt = true;
+        }
+
+        private void RegisterFramework()
+        {
+            _serviceCollection
+                .AddTransient<IResolutionContext, DefaultContainerResolutionContext>();
         }
 
         private void BuildOverrides()

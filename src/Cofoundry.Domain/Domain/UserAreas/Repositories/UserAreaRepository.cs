@@ -13,7 +13,7 @@ namespace Cofoundry.Domain
         private readonly Dictionary<string, IUserAreaDefinition> _userAreas;
 
         public UserAreaRepository(
-            IUserAreaDefinition[] userAreas
+            IEnumerable<IUserAreaDefinition> userAreas
             )
         {
             _userAreas = userAreas

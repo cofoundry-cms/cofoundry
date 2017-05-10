@@ -7,9 +7,9 @@ namespace Cofoundry.Domain.MailTemplates
 {
     public class TemplatePath
     {
-        public static string Root = "MailTemplates/AdminMailTemplates/";
+        public static string Root = "/MailTemplates/AdminMailTemplates/";
 
-        public static string ViewPath = "~/" + Root;
+        public static string ViewPath = "~" + Root;
 
         public static string LayoutPath = ViewPath + "Shared/Layouts/";
 

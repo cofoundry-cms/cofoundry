@@ -11,11 +11,11 @@ namespace Cofoundry.Domain
         : IQueryHandler<GetPermittedAdminModulesQuery, IEnumerable<AdminModule>>
         , IIgnorePermissionCheckHandler
     {
-        private readonly IAdminModuleRegistration[] _moduleRegistrations;
+        private readonly IEnumerable<IAdminModuleRegistration> _moduleRegistrations;
         private readonly IPermissionValidationService _permissionValidationService;
 
         public GetPermittedAdminModulesQueryHandler(
-            IAdminModuleRegistration[] moduleRegistrations,
+            IEnumerable<IAdminModuleRegistration> moduleRegistrations,
             IPermissionValidationService permissionValidationService
             )
         {

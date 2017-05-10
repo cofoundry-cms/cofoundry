@@ -10,10 +10,10 @@ namespace Cofoundry.Web.ModularMvc
     /// </summary>
     public class RouteInitializer : IRouteInitializer
     {
-        private readonly IRouteRegistration[] _routeRegistrations;
+        private readonly IEnumerable<IRouteRegistration> _routeRegistrations;
 
         public RouteInitializer(
-            IRouteRegistration[] routeRegistrations
+            IEnumerable<IRouteRegistration> routeRegistrations
             )
         {
             _routeRegistrations = routeRegistrations;

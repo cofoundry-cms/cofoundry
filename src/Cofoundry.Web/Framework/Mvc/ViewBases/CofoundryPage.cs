@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Cofoundry.Web
 {
-    public abstract class CofoundryPage : RazorPage
+    public abstract class CofoundryPage : RazorPage<dynamic>
     {
         private CofoundryPageHelper _cofoundryPageHelper = null;
 

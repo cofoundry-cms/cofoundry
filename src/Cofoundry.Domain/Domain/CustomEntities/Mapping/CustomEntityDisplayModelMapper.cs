@@ -11,6 +11,7 @@ namespace Cofoundry.Domain
     public class CustomEntityDisplayModelMapper : ICustomEntityDisplayModelMapper
     {
         private readonly IResolutionContext _resolutionContext;
+        private static readonly string mapDetailsMethodName = nameof(ICustomEntityDetailsDisplayModelMapper<ICustomEntityVersionDataModel, ICustomEntityDisplayModel<ICustomEntityVersionDataModel>>.MapDetailsAsync);
 
         public CustomEntityDisplayModelMapper(
             IResolutionContext resolutionContext
@@ -19,15 +20,15 @@ namespace Cofoundry.Domain
             _resolutionContext = resolutionContext;
         }
 
-        public TDisplayModel MapDetails<TDisplayModel>(CustomEntityRenderDetails dataModel)
+        public Task<TDisplayModel> MapDetailsAsync<TDisplayModel>(CustomEntityRenderDetails dataModel)
             where TDisplayModel : ICustomEntityDisplayModel
         {
             var mapperType = typeof(ICustomEntityDetailsDisplayModelMapper<,>).MakeGenericType(dataModel.Model.GetType(), typeof(TDisplayModel));
             var mapper = _resolutionContext.Resolve(mapperType);
 
-            var method = mapperType.GetMethod("MapDetails");
+            var method = mapperType.GetMethod(mapDetailsMethodName);
 
-            return (TDisplayModel)method.Invoke(mapper, new object[] { dataModel, dataModel.Model });
+            return (Task<TDisplayModel>)method.Invoke(mapper, new object[] { dataModel, dataModel.Model });
         }
     }
 }

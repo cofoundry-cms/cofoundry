@@ -22,7 +22,7 @@ namespace Cofoundry.Domain
         private readonly IQueryExecutor _queryExecutor;
         private readonly IPageCache _pageCache;
         private readonly IPageModuleTypeCache _moduleCache;
-        private readonly IPageModuleDataModel[] _allPageModuleDataModels;
+        private readonly IEnumerable<IPageModuleDataModel> _allPageModuleDataModels;
         private readonly IPageModuleTypeFileNameFormatter _moduleTypeFileNameFormatter;
 
         public RegisterPageModuleTypesCommandHandler(
@@ -30,7 +30,7 @@ namespace Cofoundry.Domain
             IQueryExecutor queryExecutor,
             IPageCache pageCache,
             IPageModuleTypeCache moduleCache,
-            IPageModuleDataModel[] allPageModuleDataModels,
+            IEnumerable<IPageModuleDataModel> allPageModuleDataModels,
             IPageModuleTypeFileNameFormatter moduleTypeFileNameFormatter
             )
         {

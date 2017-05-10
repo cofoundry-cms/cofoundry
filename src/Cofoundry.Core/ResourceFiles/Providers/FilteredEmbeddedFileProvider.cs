@@ -34,10 +34,12 @@ namespace Cofoundry.Core
         {
             Condition.Requires(assemblyProvider).IsNotNull();
             Condition.Requires(filterToPath).IsNotNullOrEmpty();
-            Condition.Requires(filterToPath).StartsWith("/", nameof(filterToPath) + " must start with a forward slash.");
-            Condition.Requires(filterToPath).IsLongerThan(1, nameof(filterToPath) + " cannot be the root directory.");
+
+            _restrictToPath = filterToPath.TrimStart('~');
+            Condition.Requires(_restrictToPath).StartsWith("/", nameof(filterToPath) + " must start with a forward slash.");
+            Condition.Requires(_restrictToPath).IsLongerThan(1, nameof(filterToPath) + " cannot be the root directory.");
+
             _assemblyProvider = assemblyProvider;
-            _restrictToPath = filterToPath;
         }
 
         public IDirectoryContents GetDirectoryContents(string subpath)

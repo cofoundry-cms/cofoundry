@@ -10,7 +10,7 @@ namespace Cofoundry.Domain
 {
     public interface ICustomEntityDisplayModelMapper
     {
-        TDisplayModel MapDetails<TDisplayModel>(CustomEntityRenderDetails dataModel)
+        Task<TDisplayModel> MapDetailsAsync<TDisplayModel>(CustomEntityRenderDetails dataModel)
             where TDisplayModel : ICustomEntityDisplayModel;
     }
 }

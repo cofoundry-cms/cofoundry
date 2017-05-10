@@ -14,11 +14,11 @@ namespace Cofoundry.Core.MessageAggregator
     public class MessageSubscriptionInitializer : IMessageSubscriptionInitializer
     {
         private readonly IMessageSubscriptionConfig _messageSubscriptionConfig;
-        private readonly IMessageSubscriptionRegistration[] _registrations;
+        private readonly IEnumerable<IMessageSubscriptionRegistration> _registrations;
 
         public MessageSubscriptionInitializer(
             IMessageSubscriptionConfig messageSubscriptionConfig,
-            IMessageSubscriptionRegistration[] registrations
+            IEnumerable<IMessageSubscriptionRegistration> registrations
             )
         {
             _messageSubscriptionConfig = messageSubscriptionConfig;

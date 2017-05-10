@@ -22,12 +22,12 @@ namespace Cofoundry.Domain
         #region constructor
 
         private readonly IResourceLocator _resourceLocator;
-        private readonly IPageModuleViewLocationRegistration[] _pageModuleViewLocationRegistrations;
+        private readonly IEnumerable<IPageModuleViewLocationRegistration> _pageModuleViewLocationRegistrations;
         private readonly IPageModuleTypeCache _pageModuleTypeCache;
 
         public PageModuleTypeViewFileLocator(
             IResourceLocator resourceLocator,
-            IPageModuleViewLocationRegistration[] pageModuleViewLocationRegistrations,
+            IEnumerable<IPageModuleViewLocationRegistration> pageModuleViewLocationRegistrations,
             IPageModuleTypeCache pageModuleTypeCache
             )
         {

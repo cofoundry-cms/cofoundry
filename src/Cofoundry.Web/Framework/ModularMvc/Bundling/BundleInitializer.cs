@@ -11,11 +11,11 @@ namespace Cofoundry.Web.ModularMvc
     /// </summary>
     public class BundleInitializer : IBundleInitializer
     {
-        private readonly IBundleRegistration[] _bundleRegistrations;
+        private readonly IEnumerable<IBundleRegistration> _bundleRegistrations;
         private readonly OptimizationSettings _optimizationSettings;
 
         public BundleInitializer(
-            IBundleRegistration[] bundleRegistrations,
+            IEnumerable<IBundleRegistration> bundleRegistrations,
             OptimizationSettings optimizationSettings
             )
         {

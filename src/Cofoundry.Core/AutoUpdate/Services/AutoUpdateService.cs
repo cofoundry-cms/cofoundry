@@ -19,7 +19,7 @@ namespace Cofoundry.Core.AutoUpdate
         private static readonly MethodInfo _runVersionedCommandMethod = typeof(AutoUpdateService).GetMethod("ExecuteGenericVersionedCommand", BindingFlags.NonPublic | BindingFlags.Instance);
         private static readonly MethodInfo _runAlwaysRunCommandMethod = typeof(AutoUpdateService).GetMethod("ExecuteGenericAlwaysRunCommand", BindingFlags.NonPublic | BindingFlags.Instance);
 
-        private readonly IUpdatePackageFactory[] _updatePackageFactories;
+        private readonly IEnumerable<IUpdatePackageFactory> _updatePackageFactories;
         private readonly IUpdateCommandHandlerFactory _commandHandlerFactory;
         private readonly IDatabase _db;
 
@@ -28,7 +28,7 @@ namespace Cofoundry.Core.AutoUpdate
         #region constructor
 
         public AutoUpdateService(
-            IUpdatePackageFactory[] updatePackageFactories,
+            IEnumerable<IUpdatePackageFactory> updatePackageFactories,
             IUpdateCommandHandlerFactory commandHandlerFactory,
             IDatabase db
             )

@@ -21,6 +21,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cofoundry.Sandbox", "Cofoun
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cofoundry.Sanbox.TestModule", "Cofoundry.Sanbox.TestModule\Cofoundry.Sanbox.TestModule.csproj", "{F8B2A917-FC01-4CFE-A6C9-DC8B3FA80B5C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cofoundry.BasicTestSite", "Cofoundry.BasicTestSite\Cofoundry.BasicTestSite.csproj", "{F659F7F9-153D-4000-A8B9-F45EFB40F511}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -51,6 +53,10 @@ Global
 		{F8B2A917-FC01-4CFE-A6C9-DC8B3FA80B5C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F8B2A917-FC01-4CFE-A6C9-DC8B3FA80B5C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F8B2A917-FC01-4CFE-A6C9-DC8B3FA80B5C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F659F7F9-153D-4000-A8B9-F45EFB40F511}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F659F7F9-153D-4000-A8B9-F45EFB40F511}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F659F7F9-153D-4000-A8B9-F45EFB40F511}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F659F7F9-153D-4000-A8B9-F45EFB40F511}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -62,5 +68,6 @@ Global
 		{2A937234-77BC-42D2-B8CA-97CC0962ACD5} = {4996A61A-00E1-4363-9BC7-1F877E4AD933}
 		{B867864A-DB89-4B99-8A73-ABA40FABDF7D} = {8FCDFF68-9BCF-499B-8E2D-7E08E824F40A}
 		{F8B2A917-FC01-4CFE-A6C9-DC8B3FA80B5C} = {8FCDFF68-9BCF-499B-8E2D-7E08E824F40A}
+		{F659F7F9-153D-4000-A8B9-F45EFB40F511} = {8FCDFF68-9BCF-499B-8E2D-7E08E824F40A}
 	EndGlobalSection
 EndGlobal

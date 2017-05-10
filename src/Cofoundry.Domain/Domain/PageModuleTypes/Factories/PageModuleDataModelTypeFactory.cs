@@ -14,12 +14,12 @@ namespace Cofoundry.Domain
     {
         #region constructor
 
-        private readonly IPageModuleDataModel[] _allPageModuleDataModels;
+        private readonly IEnumerable<IPageModuleDataModel> _allPageModuleDataModels;
         private readonly IQueryExecutor _queryExecutor;
         private readonly IPageModuleTypeFileNameFormatter _moduleTypeFileNameFormatter;
 
         public PageModuleDataModelTypeFactory(
-            IPageModuleDataModel[] allPageModuleDataModels,
+            IEnumerable<IPageModuleDataModel> allPageModuleDataModels,
             IQueryExecutor queryExecutor,
             IPageModuleTypeFileNameFormatter moduleTypeFileNameFormatter
             )

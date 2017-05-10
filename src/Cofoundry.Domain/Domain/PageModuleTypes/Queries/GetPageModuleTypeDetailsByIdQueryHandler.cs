@@ -20,13 +20,13 @@ namespace Cofoundry.Domain
 
         private readonly CofoundryDbContext _dbContext;
         private readonly IQueryExecutor _queryExecutor;
-        private readonly IPageModuleDataModel[] _allModuleDataModels;
+        private readonly IEnumerable<IPageModuleDataModel> _allModuleDataModels;
         private readonly DynamicDataModelSchemaMapper _dynamicDataModelTypeMapper;
 
         public GetPageModuleTypeDetailsByIdQueryHandler(
             CofoundryDbContext dbContext,
             IQueryExecutor queryExecutor,
-            IPageModuleDataModel[] allModuleDataModels,
+            IEnumerable<IPageModuleDataModel> allModuleDataModels,
             DynamicDataModelSchemaMapper dynamicDataModelTypeMapper
             )
         {

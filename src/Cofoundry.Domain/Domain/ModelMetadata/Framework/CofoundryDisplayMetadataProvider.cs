@@ -12,10 +12,10 @@ namespace Cofoundry.Domain
     {
         #region constructor
 
-        private readonly IModelMetadataDecorator[] _modelMetaDataDecorators;
+        private readonly IEnumerable<IModelMetadataDecorator> _modelMetaDataDecorators;
 
         public CofoundryDisplayMetadataProvider(
-            IModelMetadataDecorator[] modelMetaDataDecorators
+            IEnumerable<IModelMetadataDecorator> modelMetaDataDecorators
             )
         {
             _modelMetaDataDecorators = modelMetaDataDecorators;

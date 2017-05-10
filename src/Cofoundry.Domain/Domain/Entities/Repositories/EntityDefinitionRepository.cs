@@ -14,7 +14,7 @@ namespace Cofoundry.Domain
         private readonly Dictionary<string, IEntityDefinition> _entityDefinitions;
 
         public EntityDefinitionRepository(
-            IEntityDefinition[] customEntityDefinitions,
+            IEnumerable<IEntityDefinition> customEntityDefinitions,
             ICustomEntityDefinitionRepository customEntityDefinitionRepository
             )
         {
