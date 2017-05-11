@@ -5,20 +5,20 @@ import { SERVICE_BASE } from '../../constants/path.constants';
 
 @Injectable()
 export default class VimeoService {
-    private http: Http;
-    private serviceUrl = '//vimeo.com/api/v2/video/';
+	private http: Http;
+	private serviceUrl = '//vimeo.com/api/v2/video/';
 
-    constructor(http: Http) {
-        this.http = http;
-    }
+	constructor(http: Http) {
+		this.http = http;
+	}
 
-    getVideoInfo(id) {
-        return this.http
-            .get(`${this.serviceUrl}${id}.json`)
-            //.map(res => res.json())
-            .subscribe(
-                //res => res.data[0], 
-                //err => {}
-            );
-    }
+	getVideoInfo(id) {
+		return this.http
+			.get(`${this.serviceUrl}${id}.json`)
+			//.map(res => res.json())
+			.subscribe(
+				//res => res.data[0], 
+				//err => {}
+			);
+	}
 }

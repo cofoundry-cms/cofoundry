@@ -1,1 +1,1 @@
-export const SELECTOR_PREFIX = 'cms-';
+export const SELECTOR_PREFIX = 'cf-';

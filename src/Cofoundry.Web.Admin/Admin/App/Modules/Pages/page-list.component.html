@@ -1,1 +1,63 @@
-<h1>Page list</h1>
+<cf-page-header title="Pages"></cf-page-header>
+
+<cf-button-link class="main-cta"
+        title="Create"
+        href="new"></cf-button-link>
+
+<br />
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th style="width:60%;">Page</th>
+            <th>Status</th>
+            <th>Created</th>
+            <th cms-table-column-actions>Actions</th>
+        </tr>
+    </thead>
+    <tbody *ngIf="pages">
+        <tr *ngFor="let page of pages.items">
+            <td scope="row"><a href="/admin/pages#/{{ page.pageId }}">{{ page.fullPath }}</a> ({{page.title}})</td>
+            <td *ngIf="page.isPublished">
+                Published
+                <br />
+                <a href="{{ page.fullPath }}" ng-if="page.isPublished && page.hasDraft">(Pending Draft)</a>
+            </td>
+            <td *ngIf="!page.isPublished">
+                Draft
+            </td>
+            <td>{{page.auditData}}</td>
+            <td>
+                <a href="/admin/pages#/{{ page.pageId }}" class="btn-icon" title="Edit">
+                    <i class="fa fa-pencil-square-o"></i>
+                </a>
+                <a href="{{page.fullPath}}" class="btn-icon" title="Browse to page" target="_blank">
+                    <i class="fa fa-external-link"></i>
+                </a>
+                <a href=""
+                    *ngIf="!page.isPublished"
+                    (click)="publish(page.pageId)"
+                    class="btn-icon"
+                    title="Publish">
+                    <i class="fa fa-globe"></i>
+                </a>
+            </td>
+        </tr>
+    </tbody>
+</table>
+
+<br /><br />
+
+<h1>Templates</h1>
+<br />
+<table>
+    <thead>
+        <tr>
+            <th>Name</th>
+        </tr>
+    </thead>
+    <tbody *ngIf="pageTemplates">
+        <tr *ngFor="let template of pageTemplates.items">
+            <th>{{template.name}}</th>
+        </tr>
+    </tbody>
+</table>

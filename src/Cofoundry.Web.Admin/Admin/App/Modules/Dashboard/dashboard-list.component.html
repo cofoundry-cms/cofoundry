@@ -1,3 +1,5 @@
+<cf-page-header cfTitle="Dashboard"></cf-page-header>
+
 <!--HEADER-->
 <cms-dashboard-component title="Recent Pages"
                          entityname="page"
@@ -58,9 +60,27 @@
 
 </cms-dashboard-component>
 
-<button type="button" (click)="onModalOpen()">Open Modal</button>
+<ng-template #content let-c="close" let-d="dismiss">
+  <div class="modal-header">
+    <h4 class="modal-title">Modal title</h4>
+    <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <p>One fine body&hellip;</p>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" (click)="c('Close click')">Close</button>
+  </div>
+</ng-template>
+
+<button type="button" (click)="open(content)">Open Modal</button>
+
+<pre>{{closeResult}}</pre>
 
 <br clear="all">
+
 
 <!--
 <cms-form>

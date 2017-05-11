@@ -1,43 +1,47 @@
-import { NgModuleFactoryLoader, Injectable, Component, ComponentFactoryResolver, 
-    ViewContainerRef, ComponentFactory, ReflectiveInjector, ComponentRef } from '@angular/core';
+import { Type, ComponentRef, Injectable, Component, Input, AfterViewInit, ViewChild,
+	ComponentFactoryResolver, OnDestroy } from '@angular/core';
 import { ModalOptionsArgs } from '../index';
+import { ModalDirective } 	from '../../Components/Modals/modal.directive';
+import { IModalComponent } 	from '../../Components/Modals/modal.component';
 
 @Injectable()
 export default class ModalService {
-    viewContainerRef;
-    modals:ComponentRef<any>[] = [];
+	@ViewChild(ModalDirective) cfModal: ModalDirective;
 
-    constructor(
-        private componentResolver: ComponentFactoryResolver) {}
+	// modals: ComponentRef<any>[] = [];
 
-    public alert() {
+	constructor(
+		private _componentFactoryResolver: ComponentFactoryResolver) {}
 
-    }
+	public alert() {
 
-    public confirm() {
+	}
 
-    }
+	public confirm() {
 
-    public open(component, args?: ModalOptionsArgs) {
-        this.showModal(component, args);
-    }
+	}
 
-    public close() {
-        let modal = this.modals.pop();
-        modal.destroy();
-    }
+	public open(args?: ModalOptionsArgs) {
+		this.showModal(args);
+	}
 
-    private showModal(component, args?: ModalOptionsArgs) {
-        let factory = this.createComponentFactory(this.componentResolver, component);
-        console.log(factory);
+	public close() {
+		// let modal = this.modals.pop();
+		// modal.destroy();
+	}
 
-            //.then(factory => {
-                //const injector = ReflectiveInjector.fromResolvedProviders([], this.viewContainerRef.injector);
-                //this.modals.push(this.viewContainerRef.createComponent(factory, 0, injector, []));
-            //});
-    }
+	private showModal(args?: ModalOptionsArgs) {
+		let modal = new ModalItem(null, {});
+		let componentFactory = this._componentFactoryResolver.resolveComponentFactory(modal.component);
 
-    private createComponentFactory(resolver: ComponentFactoryResolver, component): ComponentFactory<any> {
-        return resolver.resolveComponentFactory(component);
-    }
+		let viewContainerRef = this.cfModal.viewContainerRef;
+		viewContainerRef.clear();
+
+		let componentRef = viewContainerRef.createComponent(componentFactory);
+		(<IModalComponent>componentRef.instance).data = modal.data;
+	}
+}
+
+export class ModalItem {
+	constructor(public component: Type<any>, public data: any) {}
 }

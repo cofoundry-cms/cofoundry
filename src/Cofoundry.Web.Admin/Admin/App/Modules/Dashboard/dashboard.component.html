@@ -5,4 +5,5 @@
         <a class="btn btn-small" href="{{listurl}}" *ngIf="listurl"><i class="icon-list"></i> All {{entitynameplural}}</a>
         <a class="btn btn-small" href="{{createurl}}" *ngIf="createurl"><i class="icon-plus"></i> New {{entityname}}</a>
     </div>
+    <button type="button" (click)="close()" >Close</button>
 </div>

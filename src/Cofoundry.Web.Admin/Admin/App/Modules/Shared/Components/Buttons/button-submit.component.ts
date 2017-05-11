@@ -2,14 +2,13 @@ import { Component } from '@angular/core';
 import { SELECTOR_PREFIX } from '../../constants/config.constants';
 
 @Component({
-    selector: SELECTOR_PREFIX + 'button-submit',
-    templateUrl: 'button-submit.component.html',
-    styleUrls: ['Buttons.component.scss'],
-    inputs: [
-        'text'
-    ]
+	selector: SELECTOR_PREFIX + 'button-submit',
+	templateUrl: 'button-submit.component.html',
+	inputs: [
+		'text'
+	]
 })
 
 export class ButtonSubmit {
-    text: string;
+	text: string;
 }

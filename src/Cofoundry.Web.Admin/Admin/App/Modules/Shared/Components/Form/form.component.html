@@ -1,8 +1,0 @@
-<form novalidate 
-      name="{{name}}"
-      class="form-horizontal"
-      [ngClass]="editMode ? 'form-edit-on' : 'form-edit-off'"
-      #mainForm="ngForm"
-      (ngSubmit)="onSubmit()">
-      <ng-content></ng-content>
-</form>

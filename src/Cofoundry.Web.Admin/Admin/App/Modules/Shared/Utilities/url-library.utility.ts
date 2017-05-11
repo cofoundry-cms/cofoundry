@@ -6,129 +6,128 @@ import * as _ from 'lodash';
 @Injectable()
 export class UrlLibrary {
 
-    constructor(private stringUtility : StringUtility) {
-        /* CRUD Routes */
-        this.addCrudRoutes('page', 'pages');
-        this.addCrudRoutes('pageTemplate', 'page-templates');
-        this.addCrudRoutes('role', 'roles');
-    };
+	constructor(private stringUtility : StringUtility) {
+		/* CRUD Routes */
+		this.addCrudRoutes('page', 'pages');
+		this.addCrudRoutes('pageTemplate', 'page-templates');
+		this.addCrudRoutes('role', 'roles');
+	};
 
-    /* General */
+	/* General */
 
-    makePath (module, pathParts, query) {
-        var path = URL_BASE_BASE + module + '#/';
+	makePath (module, pathParts, query) {
+		var path = URL_BASE_BASE + module + '#/';
 
-        if (_.isArray(pathParts)) {
-            path += pathParts.join('/');
-        } else if (pathParts != null) {
-            path += pathParts;
-        } 
+		if (_.isArray(pathParts)) {
+			path += pathParts.join('/');
+		} else if (pathParts != null) {
+			path += pathParts;
+		} 
 
-        if (query) {
-            path += '?' + this.stringUtility.toQueryString(query);
-        }
+		if (query) {
+			path += '?' + this.stringUtility.toQueryString(query);
+		}
 
-        return path;
-    }
+		return path;
+	}
 
-    /* Asset File Routes */
+	/* Asset File Routes */
 
-    getDocumentUrl(document) {
-        var url;
-        if (!document) return;
+	getDocumentUrl(document) {
+		var url;
+		if (!document) return;
 
-        url = '/assets/files/' + document.documentAssetId + '_' + document.fileName + '.' + document.fileExtension;
+		url = '/assets/files/' + document.documentAssetId + '_' + document.fileName + '.' + document.fileExtension;
 
-        return url;
-    }
+		return url;
+	}
 
-    getImageUrl(img, settings) {
-        var url;
-        if (!img) return;
+	getImageUrl(img, settings) {
+		var url;
+		if (!img) return;
 
-        url = '/assets/images/' + img.imageAssetId + '_' + img.fileName + '.' + img.extension;
-        setDefaultCrop(img, settings);
+		url = '/assets/images/' + img.imageAssetId + '_' + img.fileName + '.' + img.extension;
+		setDefaultCrop(img, settings);
 
-        if (settings) {
-            url = url + '?' + this.stringUtility.toQueryString(settings);
-        }
+		if (settings) {
+			url = url + '?' + this.stringUtility.toQueryString(settings);
+		}
 
-        return url;
+		return url;
 
-        /* Helpers */
+		/* Helpers */
 
-        function setDefaultCrop(asset, settings) {
-            
-            if (!settings) return;
+		function setDefaultCrop(asset, settings) {
+			if (!settings) return;
 
-            if (isDefinedAndChanged(settings.width, asset.width) || isDefinedAndChanged(settings.height, asset.height))
-            {
-                if (!settings.mode)
-                {
-                    settings.mode = 'Crop';
-                }
+			if (isDefinedAndChanged(settings.width, asset.width) || isDefinedAndChanged(settings.height, asset.height))
+			{
+				if (!settings.mode)
+				{
+					settings.mode = 'Crop';
+				}
 
-                if (asset.defaultAnchorLocation)
-                {
-                    settings.anchor = asset.defaultAnchorLocation;
-                }
-            }
-        }
+				if (asset.defaultAnchorLocation)
+				{
+					settings.anchor = asset.defaultAnchorLocation;
+				}
+			}
+		}
 
-        function isDefinedAndChanged(settingValue, imageValue) {
-            return settingValue > 0 && settingValue != imageValue;
-        }
-    }
+		function isDefinedAndChanged(settingValue, imageValue) {
+			return settingValue > 0 && settingValue != imageValue;
+		}
+	}
 
-    /* Login */
+	/* Login */
 
-    login() {
-        return URL_BASE_BASE + 'auth';
-    }
+	login() {
+		return URL_BASE_BASE + 'auth';
+	}
 
-    /* Custom Entities */
+	/* Custom Entities */
 
-    customEntityList(customEntityDefinition) {
-        return this.makePath(this.stringUtility.slugify(customEntityDefinition.name), null, null)
-    }
+	customEntityList(customEntityDefinition) {
+		return this.makePath(this.stringUtility.slugify(customEntityDefinition.name), null, null)
+	}
 
-    customEntityDetails(customEntityDefinition, id) {
-        return this.makePath(this.stringUtility.slugify(customEntityDefinition.name), id, null);
-    }
+	customEntityDetails(customEntityDefinition, id) {
+		return this.makePath(this.stringUtility.slugify(customEntityDefinition.name), id, null);
+	}
 
-    /* Users */
+	/* Users */
 
-    userDetails(userArea, id) {
-        return this.makePath(this.getGetAreaPath(userArea), id, null);
-    }
+	userDetails(userArea, id) {
+		return this.makePath(this.getGetAreaPath(userArea), id, null);
+	}
 
-    userList(userArea, query) {
-        return this.makePath(this.getGetAreaPath(userArea), null, query)
-    }
+	userList(userArea, query) {
+		return this.makePath(this.getGetAreaPath(userArea), null, query)
+	}
 
-    userNew(userArea, query) {
-        return this.makePath(this.getGetAreaPath(userArea), 'new', query)
-    }
-    
-    /* Private Helpers */
+	userNew(userArea, query) {
+		return this.makePath(this.getGetAreaPath(userArea), 'new', query)
+	}
 
-    getGetAreaPath(userArea) {
-        var userAreaName = userArea ? userArea.name : 'cms';
-        return this.stringUtility.slugify(userAreaName) + '-users';
-    }
+	/* Private Helpers */
 
-    addCrudRoutes(entity, modulePath) {
+	getGetAreaPath(userArea) {
+		var userAreaName = userArea ? userArea.name : 'cms';
+		return this.stringUtility.slugify(userAreaName) + '-users';
+	}
 
-        this[entity + 'List'] = (query) => {
-            return this.makePath(modulePath, null, query)
-        };
+	addCrudRoutes(entity, modulePath) {
 
-        this[entity + 'New'] = function (query) {
-            return this.makePath(modulePath, 'new', query);
-        };
+		this[entity + 'List'] = (query) => {
+			return this.makePath(modulePath, null, query)
+		};
 
-        this[entity + 'Details'] = function (id) {
-            return this.makePath(modulePath, id)
-        };
-    }
+		this[entity + 'New'] = function (query) {
+			return this.makePath(modulePath, 'new', query);
+		};
+
+		this[entity + 'Details'] = function (id) {
+			return this.makePath(modulePath, id)
+		};
+	}
 };

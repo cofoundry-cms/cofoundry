@@ -1,5 +1,6 @@
 export { default as CustomEntityService } from './Data/custom-entity.service';
 export { default as DocumentService } from './Data/document.service';
+export { default as DirectoryService } from './Data/directory.service';
 export { default as EntityVersionService } from './Data/entity-version.service';
 export { default as HttpClient } from './Data/http-client.service';
 export { default as ImageService } from './Data/image.service';

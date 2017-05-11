@@ -4,77 +4,92 @@ import { SERVICE_BASE } from '../shared/constants/path.constants';
 
 @Injectable()
 export class PageService {
-    pagesServiceBase = SERVICE_BASE + 'pages';
+	pagesServiceBase = SERVICE_BASE + 'pages';
 
-    constructor(private http: Http) {}
+	constructor(private http: Http) {}
 
-    /* QUERIES */
+	/* QUERIES */
 
-    getAll(query) {
-        let reqOptions: RequestOptionsArgs = {
-            search: query
-        };
+	getAll(query) {
+		let reqOptions: RequestOptionsArgs = {
+			search: query
+		};
 
-        return this.http
-            .get(this.pagesServiceBase, reqOptions);
-    }
+		return this.http
+			.get(this.pagesServiceBase, reqOptions);
+	}
 
-    getById(pageId) {
-        return this.http
-            .get(this.getIdRoute(pageId));
-    }
+	getById(pageId) {
+		return this.http
+			.get(this.getIdRoute(pageId));
+	}
 
-    getVersionsByPageId(pageId) {
-        return this.http
-            .get(this.getPageVerionsRoute(pageId));
-    }
+	getVersionsByPageId(pageId) {
+		return this.http
+			.get(this.getPageVerionsRoute(pageId));
+	}
 
-    /* COMMANDS */
+	getPageTypes = function () {
+		return [{
+			name: 'Generic',
+			value: 'Generic'
+		},
+		{
+			name: 'Custom Entity Details',
+			value: 'CustomEntityDetails'
+		},
+		{
+			name: 'Not Found',
+			value: 'NotFound'
+		}];
+	}
 
-    add(command) {
-        return this.http
-            .post(this.pagesServiceBase, command);
-    }
+	/* COMMANDS */
 
-    update(command) {
-        return this.http
-            .patch(this.getIdRoute(command.pageId), command);
-    }
+	add(command) {
+		return this.http
+			.post(this.pagesServiceBase, command);
+	}
 
-    updateUrl(command) {
-        return this.http
-            .put(this.getIdRoute(command.pageId) + '/url', command);
-    }
+	update(command) {
+		return this.http
+			.patch(this.getIdRoute(command.pageId), command);
+	}
 
-    updateDraft(command) {
-        return this.http
-            .patch(this.getPageVerionsRoute(command.pageId) + '/draft', command);
-    }
+	updateUrl(command) {
+		return this.http
+			.put(this.getIdRoute(command.pageId) + '/url', command);
+	}
 
-    removeDraft(id) {
-        return this.http
-            .delete(this.getPageVerionsRoute(id) + '/draft');
-    }
+	updateDraft(command) {
+		return this.http
+			.patch(this.getPageVerionsRoute(command.pageId) + '/draft', command);
+	}
 
-    remove(id) {
-        return this.http
-            .delete(this.getIdRoute(id));
-    }
+	removeDraft(id) {
+		return this.http
+			.delete(this.getPageVerionsRoute(id) + '/draft');
+	}
 
-    duplicate(command) {
-        return this.http
-            .post(this.getIdRoute(command.pageToDuplicateId) + '/duplicate', command);
-    }
+	remove(id) {
+		return this.http
+			.delete(this.getIdRoute(id));
+	}
 
-    /* PRIVATES */
+	duplicate(command) {
+		return this.http
+			.post(this.getIdRoute(command.pageToDuplicateId) + '/duplicate', command);
+	}
 
-    /* HELPERS */
+	/* PRIVATES */
 
-    getIdRoute(pageId) {
-        return this.pagesServiceBase + '/' + pageId;
-    }
+	/* HELPERS */
 
-    getPageVerionsRoute(pageId) {
-        return this.getIdRoute(pageId) + '/versions';
-    }
+	getIdRoute(pageId) {
+		return this.pagesServiceBase + '/' + pageId;
+	}
+
+	getPageVerionsRoute(pageId) {
+		return this.getIdRoute(pageId) + '/versions';
+	}
 }

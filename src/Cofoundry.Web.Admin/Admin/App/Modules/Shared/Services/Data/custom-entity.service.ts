@@ -5,47 +5,52 @@ import * as _ from 'lodash';
 
 @Injectable()
 export default class CustomEntityService {
-    private http: Http;
-    customEntityDefinitionServiceBase = SERVICE_BASE + 'custom-entity-definitions/';
-    customEntityServiceBase = SERVICE_BASE + 'custom-entities';
+	private http: Http;
+	customEntityDefinitionServiceBase = SERVICE_BASE + 'custom-entity-definitions/';
+	customEntityServiceBase = SERVICE_BASE + 'custom-entities';
 
-    constructor(http: Http) {
-        this.http = http;
-    }
+	constructor(http: Http) {
+		this.http = http;
+	}
 
-    /* QUERIES */
+	/* QUERIES */
 
-    getAll(customEntityDefinitionCode, query) {
-        return this.http
-            .get(this.customEntityDefinitionServiceBase + customEntityDefinitionCode + '/custom-entities', {
-                search: query
-            });
-    }
+	getAll(customEntityDefinitionCode, query) {
+		return this.http
+			.get(this.customEntityDefinitionServiceBase + customEntityDefinitionCode + '/custom-entities', {
+				search: query
+			});
+	}
 
-    getDefinition(customEntityDefinitionCode) {
-        return this.http
-            .get(this.customEntityDefinitionServiceBase + customEntityDefinitionCode);
-    }
+	getDefinition(customEntityDefinitionCode) {
+		return this.http
+			.get(this.customEntityDefinitionServiceBase + customEntityDefinitionCode);
+	}
 
-    getDefinitionsByIdRange(customEntityDefinitionCodes) {
-        return this.http
-            .get(this.customEntityDefinitionServiceBase)
-            .subscribe(filterByIdRange);
+	getDefinitionsByIdRange(customEntityDefinitionCodes) {
+		return this.http
+			.get(this.customEntityDefinitionServiceBase)
+			.subscribe(filterByIdRange);
 
-        function filterByIdRange(results) {
-            return _.filter(results, (result: any) => {
-                return _.includes(customEntityDefinitionCodes, result.customEntityDefinitionCode);
-            });
-        }
-    }
+		function filterByIdRange(results) {
+			return _.filter(results, (result: any) => {
+				return _.includes(customEntityDefinitionCodes, result.customEntityDefinitionCode);
+			});
+		}
+	}
 
-    getByIdRange(ids) {
-        let searchParams = new URLSearchParams();
-        searchParams.set('ids', ids);
+	getByIdRange(ids) {
+		let searchParams = new URLSearchParams();
+		searchParams.set('ids', ids);
 
-        return this.http
-            .get(this.customEntityServiceBase + '/', {
-                search: searchParams
-            });
-    }
+		return this.http
+			.get(this.customEntityServiceBase + '/', {
+				search: searchParams
+			});
+	}
+
+	getAllRoutingRules() {
+		return this.http
+			.get(SERVICE_BASE + 'custom-entity-routing-rules/');
+	}
 }

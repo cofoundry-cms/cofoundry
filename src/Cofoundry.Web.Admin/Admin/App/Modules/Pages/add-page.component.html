@@ -1,0 +1,113 @@
+<cf-page-header title="Create"
+		parent-title="Pages"></cf-page-header>
+
+<form #form="ngForm" (ngSubmit)="onSubmit(form.value, form.valid)">
+	<cf-page-actions>
+		<button type="submit" [disabled]="!form.valid">Submit</button>
+	</cf-page-actions>
+
+	<cf-page-body>
+
+		<!-- MAIN  -->
+
+		<cf-form-field-select
+			required
+			name="pageType"
+			label="Page type"
+			placeholder="Select a dropdown value"
+			[(ngModel)]="pageType">
+			<option *ngFor="let option of pageTypes" [value]="option.value">{{option.name}}</option>
+		</cf-form-field-select>
+
+		<cf-form-field-textbox
+			required
+			label="Title"
+			name="title"
+			placeholder="Title"
+			[(ngModel)]="title">
+		</cf-form-field-textbox>
+
+		<cf-form-field-select
+			required
+			name="pageTemplate"
+			label="Page template"
+			placeholder="Select a dropdown value"
+			[(ngModel)]="pageTemplate">
+			<option *ngFor="let option of pageTemplates" [value]="option.pageTemplateId">{{option.name}}</option>
+		</cf-form-field-select>
+
+		<!-- END MAIN  -->
+
+		<hr />
+
+		<!--PAGE URL-->
+
+		<cf-form-field-select-locale
+			name="localeId"
+			label="Market"
+			placeholder="Select a dropdown value"
+			[(ngModel)]="localeId">
+		</cf-form-field-select-locale>
+
+		<cf-form-field-select-directory
+			required
+			name="webDirectoryId"
+			label="Directory"
+			placeholder="Select a dropdown value"
+			[(ngModel)]="webDirectoryId">
+		</cf-form-field-select-directory>
+		
+		<cf-form-field-textbox
+			label="Page path"
+			name="pagePath"
+			placeholder="Page path"
+			[(ngModel)]="urlPath">
+		</cf-form-field-textbox>
+
+		<cf-form-field-select
+			required
+			name="routingRules"
+			label="Route format"
+			placeholder="Select a dropdown value"
+			[(ngModel)]="customEntityRoutingRule">
+			<option *ngFor="let option of routingRules" [value]="option.routeFormat">{{option.routeFormat}}</option>
+		</cf-form-field-select>
+
+		<!--END PAGE URL-->
+
+		<hr />
+
+		<!-- SEO -->
+
+		<!-- cms-form-field-text-area -->
+
+		<cf-form-field-textbox
+			label="OpenGraph title"
+			name="openGraphTitle"
+			placeholder="Title"
+			description="Optional. The title that shows up when sharing the page on social media"
+			[(ngModel)]="openGraphTitle">
+		</cf-form-field-textbox>
+
+		<cf-form-field-textbox
+			label="OpenGraph description"
+			name="openGraphDescription"
+			placeholder="Description"
+			description="Optional. The description that shows up when sharing the page on social media"
+			[(ngModel)]="openGraphDescription">
+		</cf-form-field-textbox>
+
+		<!-- cf-form-field-select-image -->
+		<!-- cms-form-field-checkbox -->
+
+		<!-- END SEO -->
+
+		<hr />
+
+		<!-- TEMPLATE CONTENT -->
+
+		<!-- END TEMPLATE CONTENT -->
+
+
+	</cf-page-body>
+</form>

@@ -20,8 +20,8 @@ namespace Cofoundry.Web.Admin
                     .Include(SharedRouteLibrary.Css.Bundle("lib/font-awesome/font-awesome.css"), urlTransform)
                     .Include(SharedRouteLibrary.Css.Bundle("lib/tinymce/skin.min.css"))
                     .Include(SharedRouteLibrary.Css.Bundle("lib/ui-select.css"))
-                    .Include(SharedRouteLibrary.Css.Bundle("lib/selectize.default.css"))
-                    .Include(SharedRouteLibrary.Css.Bundle("shared.css"), urlTransform);
+                    .Include(SharedRouteLibrary.Css.Bundle("lib/selectize.default.css"));
+                    //.Include(SharedRouteLibrary.Css.Bundle("shared.css"), urlTransform);
 
             // Add in 
             var cssOverridePath = GetAlternateResourcePath(SharedRouteLibrary.Css.Bundle("/"));

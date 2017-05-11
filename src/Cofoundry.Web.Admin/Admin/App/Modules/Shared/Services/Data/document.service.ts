@@ -4,36 +4,36 @@ import { SERVICE_BASE } from '../../constants/path.constants';
 
 @Injectable()
 export default class DocumentService {
-    private http: Http;
-    private documentsServiceBase = SERVICE_BASE + 'documents';
+	private http: Http;
+	private documentsServiceBase = SERVICE_BASE + 'documents';
 
-    constructor(http: Http) {
-        this.http = http;
-    }
+	constructor(http: Http) {
+		this.http = http;
+	}
 
-    getAll(query) {
-        return this.http
-            .get(this.documentsServiceBase, {
-                search: query
-            });
-    }
+	getAll(query) {
+		return this.http
+			.get(this.documentsServiceBase, {
+				search: query
+			});
+	}
 
 
-    getById(documentId) {
-        return this.http
-            .get(this.getIdRoute(documentId));
-    }
+	getById(documentId) {
+		return this.http
+			.get(this.getIdRoute(documentId));
+	}
 
-    getAllDocumentFileTypes() {
-        return this.http
-            .get(SERVICE_BASE + 'document-file-types');
-    }
+	getAllDocumentFileTypes() {
+		return this.http
+			.get(SERVICE_BASE + 'document-file-types');
+	}
 
-    private getIdRoute(documentId) {
-        return this.documentsServiceBase + '/' + documentId;
-    }
+	private getIdRoute(documentId) {
+		return this.documentsServiceBase + '/' + documentId;
+	}
 
-    private getBaseRoute() {
-        return this.documentsServiceBase;
-    }
+	private getBaseRoute() {
+		return this.documentsServiceBase;
+	}
 }

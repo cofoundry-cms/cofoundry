@@ -1,0 +1,8 @@
+<div>
+    <label *ngIf="label" [attr.for]="identifier">{{label}}</label>
+    <input type="text" [(ngModel)]="value" [placeholder]="placeholder" #name="ngModel" />
+    <cf-validation-summary
+        *ngIf="invalid | async"
+        [messages]="failures | async">
+    </cf-validation-summary>
+</div>

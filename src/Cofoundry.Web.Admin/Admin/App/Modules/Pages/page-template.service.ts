@@ -4,14 +4,14 @@ import { SERVICE_BASE } from '../shared/constants/path.constants';
 
 @Injectable()
 export class PageTemplateService {
-    pageTemplateServiceBase = SERVICE_BASE + 'page-templates';
+	pageTemplateServiceBase = SERVICE_BASE + 'page-templates';
 
-    constructor(private http: Http) {}
+	constructor(private http: Http) {}
 
-    /* QUERIES */
+	/* QUERIES */
 
-    getAll() {
-        return this.http
-            .get(this.pageTemplateServiceBase);
-    }
+	getAll() {
+		return this.http
+			.get(this.pageTemplateServiceBase);
+	}
 }

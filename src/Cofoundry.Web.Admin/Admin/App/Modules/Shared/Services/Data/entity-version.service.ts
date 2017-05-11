@@ -4,59 +4,59 @@ import { SERVICE_BASE } from '../../constants/path.constants';
 
 @Injectable()
 export default class EntityVersionService {
-    pageServiceBase = SERVICE_BASE + 'pages';
-    customEntityServiceBase = SERVICE_BASE + 'custom-entities';
+	pageServiceBase = SERVICE_BASE + 'pages';
+	customEntityServiceBase = SERVICE_BASE + 'custom-entities';
 
-    constructor(private http: Http) {}
+	constructor(private http: Http) {}
 
-    /* COMMANDS */
+	/* COMMANDS */
 
-    publish(isCustomEntity, entityId) {
-        return this.http
-            .patch(this.getVersionsRoute(isCustomEntity, entityId) + '/draft/publish', null);
-    }
+	publish(isCustomEntity, entityId) {
+		return this.http
+			.patch(this.getVersionsRoute(isCustomEntity, entityId) + '/draft/publish', null);
+	}
 
-    unpublish(isCustomEntity, entityId) {
-        return this.http
-            .patch(this.getVersionsRoute(isCustomEntity, entityId) + '/published/unpublish', null);
-    }
+	unpublish(isCustomEntity, entityId) {
+		return this.http
+			.patch(this.getVersionsRoute(isCustomEntity, entityId) + '/published/unpublish', null);
+	}
 
-    duplicateDraft(isCustomEntity, entityId, entityVersionId) {
-        let command;
+	duplicateDraft(isCustomEntity, entityId, entityVersionId) {
+		let command;
 
-        if (isCustomEntity) {
-            command = {
-                customEntityId: entityId,
-                copyFromCustomEntityVersionId: entityVersionId
-            };
-        } else {
-            command = {
-                pageId: entityId,
-                copyFromPageVersionId: entityVersionId
-            };
-        }
+		if (isCustomEntity) {
+			command = {
+				customEntityId: entityId,
+				copyFromCustomEntityVersionId: entityVersionId
+			};
+		} else {
+			command = {
+				pageId: entityId,
+				copyFromPageVersionId: entityVersionId
+			};
+		}
 
-        return this.http
-            .post(this.getVersionsRoute(isCustomEntity, entityId), command);
-    }
+		return this.http
+			.post(this.getVersionsRoute(isCustomEntity, entityId), command);
+	}
 
-    removeDraft(isCustomEntity, entityId) {
+	removeDraft(isCustomEntity, entityId) {
 
-        return this.http
-            .delete(this.getVersionsRoute(isCustomEntity, entityId) + '/draft');
-    }
-    
-    /* HELPERS */
+		return this.http
+			.delete(this.getVersionsRoute(isCustomEntity, entityId) + '/draft');
+	}
 
-    getVersionsRoute (isCustomEntity, entityId) {
-        return this.getIdRoute(isCustomEntity, entityId) + '/versions';
-    }
+	/* HELPERS */
 
-    getIdRoute(isCustomEntity, entityId) {
-        return this.getServiceBase(isCustomEntity) + '/' + entityId;
-    }
+	getVersionsRoute (isCustomEntity, entityId) {
+		return this.getIdRoute(isCustomEntity, entityId) + '/versions';
+	}
 
-    getServiceBase(isCustomEntity) {
-        return isCustomEntity ? this.customEntityServiceBase : this.pageServiceBase;
-    }
+	getIdRoute(isCustomEntity, entityId) {
+		return this.getServiceBase(isCustomEntity) + '/' + entityId;
+	}
+
+	getServiceBase(isCustomEntity) {
+		return isCustomEntity ? this.customEntityServiceBase : this.pageServiceBase;
+	}
 }

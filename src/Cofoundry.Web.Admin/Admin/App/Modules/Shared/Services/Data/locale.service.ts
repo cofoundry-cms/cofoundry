@@ -5,15 +5,15 @@ import { SERVICE_BASE } from '../../constants/path.constants';
 
 @Injectable()
 export default class LocaleService {
-    private http: Http;
-    private localeServiceBase = SERVICE_BASE + 'locales';
+	private http: Http;
+	private localeServiceBase = SERVICE_BASE + 'locales';
 
-    constructor(http: Http) {
-        this.http = http;
-    }
+	constructor(http: Http) {
+		this.http = http;
+	}
 
-    getAll() {
-        return this.http
-            .get(this.localeServiceBase);
-    }
+	getAll() {
+		return this.http
+			.get(this.localeServiceBase);
+	}
 }

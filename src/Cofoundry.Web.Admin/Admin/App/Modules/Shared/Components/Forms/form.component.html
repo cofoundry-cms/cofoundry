@@ -1,0 +1,9 @@
+<form #form="ngForm"
+      ng-transclude 
+      novalidate 
+      name="{{name}}"
+      class="form-horizontal" 
+      [ngClass]="editMode ? 'form-edit-on' : 'form-edit-off'"
+      (ngSubmit)="onSubmit(form.value, form.valid)">
+      <ng-content></ng-content>
+</form>

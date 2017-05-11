@@ -1,5 +1,5 @@
 describe('ButtonLink', () => {
-    it('always fails', () => {
-        expect(1).toBe(1);
-    });
+	it('always fails', () => {
+		expect(1).toBe(1);
+	});
 });

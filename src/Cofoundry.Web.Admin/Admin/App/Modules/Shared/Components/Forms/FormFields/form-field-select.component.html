@@ -1,0 +1,14 @@
+<div>
+    <label *ngIf="label" [attr.for]="identifier">{{label}}</label>
+    <select
+        [(ngModel)]="value"
+        [ngClass]="{invalid: (invalid | async)}"
+        [id]="identifier">
+        <option value="" disabled selected *ngIf="placeholder">{{placeholder}}</option>
+        <ng-content></ng-content>
+    </select>
+    <cf-validation-summary
+        *ngIf="invalid | async"
+        [messages]="failures | async">
+    </cf-validation-summary>
+</div>

@@ -262,7 +262,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Admin\App\Bundles\style.css" />
+    <EmbeddedResource Include="Admin\App\Bundles\styles.css" />
     <Content Include="Admin\Modules\Account\Js\Bootstrap\Module.js" />
     <Content Include="Admin\Modules\Account\Js\Bootstrap\Routing.js" />
     <Content Include="Admin\Modules\Account\Js\DataServices\AccountService.js" />
@@ -839,7 +839,7 @@
     <Compile Include="Admin\Api\Users\UserAreasApiController.cs" />
     <Compile Include="Admin\Api\Users\UsersApiController.cs" />
     <Compile Include="Admin\Api\WebDirectories\WebDirectoriesApiController.cs" />
-    <Compile Include="Admin\App\Bootstrap\AppRegistration.cs" />
+    <Compile Include="Admin\AppRegistration.cs" />
     <Compile Include="Admin\Modules\Account\Bootstrap\AccountModuleRegistration.cs" />
     <Compile Include="Admin\Modules\Account\Constants\AccountRouteLibrary.cs" />
     <Compile Include="Admin\Modules\Auth\Bootstrap\AuthBundleRegistration.cs" />

@@ -4,88 +4,91 @@ import { LoadState } from '../shared/components';
 import { SearchQuery } from '../shared/components/search/search-query.component';
 import { PageService } from './page.service';
 import { PageTemplateService } from './page-template.service';
-//import { EntityVersionModalDialogService } from '../shared/services/entity-version-modal-dialog.service';
+import { SELECTOR_PREFIX } from "../shared/constants/config.constants";
 
 @Component({
-  selector: 'cms-pages',
-  templateUrl: 'page-list.component.html',
-  providers: [PageService, PageTemplateService]
+	selector: `${SELECTOR_PREFIX}pages`,
+	templateUrl: 'page-list.component.html',
+	providers: [PageService, PageTemplateService]
 })
 export class PageListComponent implements OnInit {
-    isFilterVisible: boolean;
-    gridLoadState: LoadState;
-    globalLoadState: LoadState;
-    query: SearchQuery;
-    filter;
-    workFlowStatus;
-    pageTemplates;
-    result;
+	isFilterVisible: boolean;
+	gridLoadState: LoadState;
+	globalLoadState: LoadState;
+	query: SearchQuery;
+	filter;
+	workFlowStatus;
+	pageTemplates;
+	pages;
 
-    constructor(private pageService: PageService,
-                private pageTemplateService: PageTemplateService) {
-        this.gridLoadState = new LoadState(false);
-        this.globalLoadState = new LoadState(false);
-    }
+	constructor(private pageService: PageService,
+				private pageTemplateService: PageTemplateService) {
+		this.gridLoadState = new LoadState(true);
+		this.globalLoadState = new LoadState(true);
+	}
 
-    ngOnInit() {
-        this.loadFilterData();
+	ngOnInit() {
+		this.loadFilterData();
 
-        this.query = new SearchQuery({
-            onChanged: this.onQueryChanged
-        });
-        this.filter = this.query.getFilters();
+		this.query = new SearchQuery({
+			onChanged: this.onQueryChanged
+		});
+		this.filter = this.query.getFilters();
 
-        this.toggleFilter(false);
-        this.loadGrid();
-    }
+		this.toggleFilter(false);
+		this.loadGrid();
+	}
 
-    /* ACTIONS */
+	/* ACTIONS */
 
-    toggleFilter(show) {
-        this.isFilterVisible = _.isUndefined(show) ? !this.isFilterVisible : show;
-    }
+	create() {
+		document.location.href = '/admin/pages#/new';
+	}
 
-    publish(pageId) {
-        /*
-        this.entityVersionModalDialogService
-            .publish(pageId, this.globalLoadState.on)
-            .subscribe(() => { this.loadGrid })
-            .catch(this.globalLoadState.off);
-        */
-    }
+	toggleFilter(show) {
+		this.isFilterVisible = _.isUndefined(show) ? !this.isFilterVisible : show;
+	}
 
-    /* EVENTS */
+	publish(pageId) {
+		/*
+		this.entityVersionModalDialogService
+			.publish(pageId, this.globalLoadState.on)
+			.subscribe(() => { this.loadGrid })
+			.catch(this.globalLoadState.off);
+		*/
+	}
 
-    onQueryChanged() {
-        this.toggleFilter(false);
-        this.loadGrid();
-    }
+	/* EVENTS */
 
-    /* PRIVATE FUNCS */
+	onQueryChanged() {
+		this.toggleFilter(false);
+		this.loadGrid();
+	}
 
-    loadFilterData() {
-        this.workFlowStatus = [{
-            name: 'Draft'
-        }, {
-            name: 'Published'
-        }];
+	/* PRIVATE FUNCS */
 
-        this.pageTemplateService
-            .getAll()
-            .subscribe((pageTemplates) => {
-                this.pageTemplates = pageTemplates;
-            });
-    }
+	loadFilterData() {
+		this.workFlowStatus = [{
+			name: 'Draft'
+		}, {
+			name: 'Published'
+		}];
 
-    loadGrid() {
-        this.gridLoadState.on();
+		this.pageTemplateService
+			.getAll()
+			.subscribe((result) => {
+				this.pageTemplates = result.json().data;
+			});
+	}
 
-        return this.pageService
-            .getAll(this.query.getParameters())
-            .subscribe((result) => {
-                this.result = result;
-                this.gridLoadState.off();
-            });
-    }
+	loadGrid() {
+		this.gridLoadState.on();
 
+		return this.pageService
+			.getAll(this.query.getParameters())
+			.subscribe((result) => {
+				this.pages = result.json().data;;
+				this.gridLoadState.off();
+			});
+	}
 }

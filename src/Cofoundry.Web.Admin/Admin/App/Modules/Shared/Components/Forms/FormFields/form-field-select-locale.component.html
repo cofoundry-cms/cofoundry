@@ -1,0 +1,9 @@
+<div>
+    <label *ngIf="label" [attr.for]="identifier">{{label}}</label>
+    <input type="hidden"
+        [(ngModel)]="imageAssetId" />
+    <cf-validation-summary
+        *ngIf="invalid | async"
+        [messages]="failures | async">
+    </cf-validation-summary>
+</div>
