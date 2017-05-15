@@ -1,6 +1,6 @@
-<div>
-    <label *ngIf="label" [attr.for]="identifier">{{label}}</label>
-    <input type="text" [(ngModel)]="value" [placeholder]="placeholder" #name="ngModel" />
+<div class="form-group">
+    <label class="form-control-label" *ngIf="label" [attr.for]="identifier">{{label}}</label>
+    <input class="form-control" type="text" [(ngModel)]="value" [placeholder]="placeholder" #name="ngModel" />
     <cf-validation-summary
         *ngIf="invalid | async"
         [messages]="failures | async">

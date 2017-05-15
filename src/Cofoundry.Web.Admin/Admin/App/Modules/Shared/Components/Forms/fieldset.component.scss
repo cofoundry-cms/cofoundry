@@ -1,0 +1,6 @@
+@import "../../../../Styles/Bootstrap/bootstrap";
+
+:host {
+    @extend .card;
+    @extend .mb-3;
+}

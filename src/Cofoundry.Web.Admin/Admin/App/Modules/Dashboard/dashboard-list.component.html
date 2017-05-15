@@ -1,64 +1,52 @@
 <cf-page-header cfTitle="Dashboard"></cf-page-header>
 
 <!--HEADER-->
-<cms-dashboard-component title="Recent Pages"
-                         entityname="page"
-                         entitynameplural="pages"
-                         [listurl]="urlLibrary.pageList()"
-                         [createurl]="urlLibrary.pageNew()"
-                         [loader]="pagesLoadState"
-                         [numitems]="pages.length">
+<cf-page-row>
+    <cms-dashboard-component title="Recent Pages"
+                            entityname="page"
+                            entitynameplural="pages"
+                            [listurl]="urlLibrary.pageList()"
+                            [createurl]="urlLibrary.pageNew()"
+                            [loader]="pagesLoadState"
+                            [numitems]="pages.length">
 
-    <table class="table table-condensed">
-        <tbody>
-            <tr *ngFor="let page of pages">
-                <td>
-                    <a class="highlight" href="{{page.fullPath}}" title="{{title}}">{{page.fullPath}}</a>
-                </td>
-            </tr>
-        </tbody>
-    </table>
+        <ul class="list-group list-group-flush">
+            <li class="list-group-item" *ngFor="let page of pages">
+                <a class="highlight" href="{{page.fullPath}}" title="{{title}}">{{page.fullPath}}</a>
+            </li>
+        </ul>
+    </cms-dashboard-component>
 
-</cms-dashboard-component>
+    <cms-dashboard-component title="Draft Pages"
+                            entityname="draft"
+                            entitynameplural="drafts"
+                            [listurl]="urlLibrary.pageList({ workFlowStatus: 'Draft' })"
+                            [loader]="draftPagesLoadState"
+                            [numitems]="draftPages.length">
 
-<cms-dashboard-component title="Draft Pages"
-                         entityname="draft"
-                         entitynameplural="drafts"
-                         [listurl]="urlLibrary.pageList({ workFlowStatus: 'Draft' })"
-                         [loader]="draftPagesLoadState"
-                         [numitems]="draftPages.length">
+        <ul class="list-group list-group-flush">
+            <li  class="list-group-item" *ngFor="let draft of draftPages">
+                <a class="highlight" href="{{draft.fullPath}}" title="{{title}}">{{draft.fullPath}}</a>
+            </li>
+        </ul>
+    </cms-dashboard-component>
 
-    <table class="table table-condensed">
-        <tbody>
-            <tr *ngFor="let draft of draftPages">
-                <td>
-                    <a class="highlight" href="{{draft.fullPath}}" title="{{title}}">{{draft.fullPath}}</a>
-                </td>
-            </tr>
-        </tbody>
-    </table>
 
-</cms-dashboard-component>
+    <cms-dashboard-component title="Page Templates"
+                            entityname="page template"
+                            entitynameplural="page templates"
+                            [listurl]="urlLibrary.pageTemplateList()"
+                            [createurl]="urlLibrary.pageTemplateNew()"
+                            [loader]="pageTemplatesLoadState"
+                            [numitems]="pageTemplates.length">
 
-<cms-dashboard-component title="Page Templates"
-                         entityname="page template"
-                         entitynameplural="page templates"
-                         [listurl]="urlLibrary.pageTemplateList()"
-                         [createurl]="urlLibrary.pageTemplateNew()"
-                         [loader]="pageTemplatesLoadState"
-                         [numitems]="pageTemplates.length">
-
-    <table class="table table-condensed">
-        <tbody>
-            <tr *ngFor="let template of pageTemplates">
-                <td>
-                    <a class="highlight" href="{{urlLibrary.pageTemplateDetails(template.pageTemplateId)}}">{{template.name}}</a>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-
-</cms-dashboard-component>
+        <ul class="list-group list-group-flush">
+            <li class="list-group-item" *ngFor="let template of pageTemplates">
+                <a class="highlight" href="{{urlLibrary.pageTemplateDetails(template.pageTemplateId)}}">{{template.name}}</a>
+            </li>
+        </ul>
+    </cms-dashboard-component>
+</cf-page-row>
 
 <ng-template #content let-c="close" let-d="dismiss">
   <div class="modal-header">

@@ -45,7 +45,7 @@ module.exports = {
       {
         test: /\.scss$/,
         exclude: /node_modules/,
-        loaders: ExtractTextPlugin.extract([ 'raw-loader', 'sass-loader' ])
+        loaders: [ 'raw-loader', 'sass-loader' ]
       },
       // FONTS
       {

@@ -5,5 +5,7 @@
       class="form-horizontal" 
       [ngClass]="editMode ? 'form-edit-on' : 'form-edit-off'"
       (ngSubmit)="onSubmit(form.value, form.valid)">
-      <ng-content></ng-content>
+      <div class="row form-row">
+            <ng-content></ng-content>
+      </div>
 </form>
