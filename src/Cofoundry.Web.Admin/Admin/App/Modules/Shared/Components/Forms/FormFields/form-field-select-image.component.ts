@@ -1,4 +1,4 @@
-import { Component, Input, ViewChild, Optional, Inject } from '@angular/core';
+import { Component, Input, ViewChild, Optional, Inject, forwardRef } from '@angular/core';
 import { SELECTOR_PREFIX } from '../../../constants/config.constants';
 import {
 	NgModel,
@@ -12,7 +12,8 @@ import { ElementBase } from '../element-base';
 	selector: `${SELECTOR_PREFIX}form-field-select-image`,
 	templateUrl: 'form-field-select-image.component.html',
 	providers: [
-		{ provide: NG_VALUE_ACCESSOR, useExisting: FormFieldSelectImageComponent, multi: true }
+		{ provide: NG_VALUE_ACCESSOR, useExisting: FormFieldSelectImageComponent, multi: true },
+		{ provide: ElementBase, useExisting: forwardRef(() => FormFieldSelectImageComponent) }
 	]
 })
 export default class FormFieldSelectImageComponent extends ElementBase<string> {

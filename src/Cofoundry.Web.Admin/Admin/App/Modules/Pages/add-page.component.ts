@@ -1,8 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { PageService } from './page.service';
 import { PageTemplateService } from './page-template.service';
 import { CustomEntityService } from '../shared/services';
 import { SELECTOR_PREFIX } from '../shared/constants/config.constants';
+import { Form } from '../shared/components';
 
 @Component({
 	selector: `${SELECTOR_PREFIX}pages`,
@@ -10,6 +11,7 @@ import { SELECTOR_PREFIX } from '../shared/constants/config.constants';
 	providers: [PageService, PageTemplateService, CustomEntityService]
 })
 export class AddPageComponent implements OnInit {
+	@ViewChild(Form) form: Form;
 	pageTypes: any[];
 	pageTemplates: any[];
 	routingRules: any[];
@@ -33,9 +35,13 @@ export class AddPageComponent implements OnInit {
 			.subscribe(routingRules => {
 				this.routingRules = routingRules.json().data;
 			});
+
+		this.form.submit.subscribe(result => {
+			//console.log(result);
+		});
 	}
 
-	onSubmit(values, valid) {
-		console.log(values);
+	onSubmit(form) {
+		console.log(form.value);
 	}
 }

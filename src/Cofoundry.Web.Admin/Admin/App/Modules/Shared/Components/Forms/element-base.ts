@@ -1,5 +1,4 @@
-import { ViewChild } from '@angular/core';
-import { NgModel, NgForm } from '@angular/forms';
+import { NgModel } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { ValueAccessorBase } from './value-accessor';
 import {
@@ -11,15 +10,13 @@ import {
 } from './validate';
 
 export abstract class ElementBase<T> extends ValueAccessorBase<T> {
-	protected abstract model: NgModel;
-	@ViewChild('form') form;
+	public abstract model: NgModel;
+	private editMode: boolean = false;
 
-  	// we will ultimately get these arguments from @Inject on the derived class
 	constructor(private validators: ValidatorArray,
 		private asyncValidators: AsyncValidatorArray,
 	) {
 		super();
-		console.log(this.form);
 	}
 
 	protected validate(): Observable<ValidationResult> {
@@ -34,5 +31,9 @@ export abstract class ElementBase<T> extends ValueAccessorBase<T> {
 
 	protected get failures(): Observable<Array<string>> {
 		return this.validate().map(v => Object.keys(v).map(k => message(v, k)));
+	}
+
+	public set editmode(state: boolean) {
+		this.editMode = state;
 	}
 }

@@ -1,4 +1,4 @@
-import { Component, Input, ViewChild, Optional, OnInit, Inject } from '@angular/core';
+import { Component, Input, ViewChild, Optional, OnInit, Inject, forwardRef } from '@angular/core';
 import { SELECTOR_PREFIX } from '../../../constants/config.constants';
 import {
 	NgModel,
@@ -14,17 +14,15 @@ import { DirectoryService } from '../../../services';
 	templateUrl: 'form-field-select-directory.component.html',
 	providers: [
 		DirectoryService,
-		{ provide: NG_VALUE_ACCESSOR, useExisting: FormFieldSelectDirectoryComponent, multi: true }
+		{ provide: NG_VALUE_ACCESSOR, useExisting: FormFieldSelectDirectoryComponent, multi: true },
+		{ provide: ElementBase, useExisting: forwardRef(() => FormFieldSelectDirectoryComponent) }
 	]
 })
 export default class FormFieldSelectDirectoryComponent extends ElementBase<string> implements OnInit {
 	@Input() public label: string;
 	@Input() public placeholder: string;
-	directories: any[];
-
 	@ViewChild(NgModel) model: NgModel;
-
-	//public identifier = `form-select-${identifier++}`;
+	directories: any[];
 
 	constructor(
 		@Optional() @Inject(NG_VALIDATORS) validators: Array<any>,
@@ -42,5 +40,3 @@ export default class FormFieldSelectDirectoryComponent extends ElementBase<strin
 			});
 	}
 }
-
-//let identifier = 0;

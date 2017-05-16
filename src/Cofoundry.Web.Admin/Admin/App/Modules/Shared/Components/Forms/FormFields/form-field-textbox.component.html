@@ -1,6 +1,8 @@
 <div>
-    <label *ngIf="label" [attr.for]="identifier">{{label}}</label>
-    <input type="text" [(ngModel)]="value" [placeholder]="placeholder" #name="ngModel" />
+    <label *ngIf="label" [attr.for]="identifier">{{label}} (Editmode: {{editMode}})</label>
+    <input type="text" [(ngModel)]="value" [placeholder]="placeholder" />
+    <div *ngIf="!editMode">{{value}}</div>
+    <div *ngIf="!editMode && !value">None</div>
     <cf-validation-summary
         *ngIf="invalid | async"
         [messages]="failures | async">

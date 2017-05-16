@@ -1,7 +1,12 @@
 <div>
     <label *ngIf="label" [attr.for]="identifier">{{label}}</label>
-    <input type="hidden"
-        [(ngModel)]="imageAssetId" />
+    <select
+        [(ngModel)]="value"
+        [ngClass]="{invalid: (invalid | async)}"
+        [id]="identifier">
+        <option value="" disabled selected *ngIf="placeholder">{{placeholder}}</option>
+        <option *ngFor="let option of locales" [value]="option.localeId">{{option.name}} ({{option.ietfLanguageTag}})</option>
+    </select>
     <cf-validation-summary
         *ngIf="invalid | async"
         [messages]="failures | async">

@@ -61,6 +61,7 @@
     "rimraf": "^2.5.4",
     "sass-loader": "^6.0.3",
     "style-loader": "^0.13.1",
+    "to-string-loader": "^1.1.5",
     "tslint": "^3.15.1",
     "typescript": "~2.2.0",
     "webpack": "2.2.1",

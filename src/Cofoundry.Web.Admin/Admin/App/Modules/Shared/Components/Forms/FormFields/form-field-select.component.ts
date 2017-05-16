@@ -1,4 +1,4 @@
-import { Component, Input, ViewChild, Optional, Inject } from '@angular/core';
+import { Component, Input, ViewChild, Optional, Inject, forwardRef } from '@angular/core';
 import { SELECTOR_PREFIX } from '../../../constants/config.constants';
 import {
 	NgModel,
@@ -12,16 +12,15 @@ import { ElementBase } from '../element-base';
 	selector: `${SELECTOR_PREFIX}form-field-select`,
 	templateUrl: 'form-field-select.component.html',
 	providers: [
-		{ provide: NG_VALUE_ACCESSOR, useExisting: FormFieldSelectComponent, multi: true }
+		{ provide: NG_VALUE_ACCESSOR, useExisting: FormFieldSelectComponent, multi: true },
+		{ provide: ElementBase, useExisting: forwardRef(() => FormFieldSelectComponent) }
 	]
 })
 export default class FormFieldSelectComponent extends ElementBase<string> {
 	@Input() public label: string;
 	@Input() public placeholder: string;
-
 	@ViewChild(NgModel) model: NgModel;
-
-	//public identifier = `form-select-${identifier++}`;
+	identifier: string = 'test';
 
 	constructor(
 		@Optional() @Inject(NG_VALIDATORS) validators: Array<any>,
@@ -30,5 +29,3 @@ export default class FormFieldSelectComponent extends ElementBase<string> {
 		super(validators, asyncValidators);
 	}
 }
-
-//let identifier = 0;

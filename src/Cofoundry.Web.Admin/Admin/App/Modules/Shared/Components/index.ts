@@ -2,10 +2,13 @@ export { default as ModalContainerComponent } from './Modals/modal-container.com
 export { default as LoadState } from './load-state.component';
 
 // Buttons
+export { default as ButtonSubmit } from './Buttons/button-submit.component';
 export { default as ButtonLink } from './Buttons/button-link.component';
 export { default as Button } from './Buttons/button.component';
 
 // Form fields
+export { default as FormActionEditComponent } from './Forms/form-action-edit.component';
+export { default as FormActionSubmitComponent } from './Forms/form-action-submit.component';
 export { default as Form } from './Forms/form.component';
 export { default as ValidationSummaryComponent } from './Forms/validation-summary.component';
 export { default as FormDynamicFieldSetComponent } from './Forms/form-dynamic-fieldset.component';

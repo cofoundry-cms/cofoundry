@@ -1,9 +1,12 @@
-<cf-page-header title="Create"
-		parent-title="Pages"></cf-page-header>
+<cf-page-header 
+	title="Create"
+	parent-title="Pages"></cf-page-header>
 
-<form #form="ngForm" (ngSubmit)="onSubmit(form.value, form.valid)">
+<cf-form (cfSubmit)="onSubmit($event)">
+	
 	<cf-page-actions>
-		<button type="submit" [disabled]="!form.valid">Submit</button>
+		<cf-form-action-submit title="Submit"></cf-form-action-submit>
+		<cf-form-action-edit title="Edit"></cf-form-action-edit>
 	</cf-page-actions>
 
 	<cf-page-body>
@@ -108,6 +111,15 @@
 
 		<!-- END TEMPLATE CONTENT -->
 
+		<cf-form-dynamic-fieldset>
+			<cf-form-field-textbox
+				label="Test dynamic"
+				name="testDynamic"
+				placeholder="Test dynamic"
+				description=""
+				[(ngModel)]="testDynamic">
+			</cf-form-field-textbox>
+		</cf-form-dynamic-fieldset>
 
 	</cf-page-body>
-</form>
+</cf-form>

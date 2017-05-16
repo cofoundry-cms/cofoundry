@@ -5,10 +5,12 @@ import { SELECTOR_PREFIX } from '../../constants/config.constants';
 	selector: SELECTOR_PREFIX + 'button-submit',
 	templateUrl: 'button-submit.component.html',
 	inputs: [
-		'text'
+		'title',
+		'disabled'
 	]
 })
 
-export class ButtonSubmit {
-	text: string;
+export default class ButtonSubmit {
+	title: string;
+	disabled: boolean;
 }
