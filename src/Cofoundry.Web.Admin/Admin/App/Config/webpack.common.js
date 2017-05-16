@@ -3,11 +3,6 @@ var HtmlWebpackPlugin = require('html-webpack-plugin');
 var ExtractTextPlugin = require('extract-text-webpack-plugin');
 var helpers = require('./helpers');
 
-const extractSass = new ExtractTextPlugin({
-    filename: "[name].[contenthash].css",
-    disable: process.env.NODE_ENV === "development"
-});
-
 module.exports = {
   entry: {
     'polyfills': './polyfills.ts',
@@ -44,8 +39,13 @@ module.exports = {
       // SASS
       {
         test: /\.scss$/,
-        exclude: /node_modules/,
-        loaders: ExtractTextPlugin.extract([ 'raw-loader', 'sass-loader' ])
+        exclude: helpers.root('modules'),
+        loader: ExtractTextPlugin.extract({ fallbackLoader: 'style-loader', loader: 'css-loader!sass-loader?sourceMap' })
+      },
+      {
+        test: /\.scss$/,
+        include: helpers.root('modules'),
+        loader: 'raw-loader!sass-loader'
       },
       // FONTS
       {

@@ -1,0 +1,5 @@
+@import "../../../../Styles/Bootstrap/bootstrap";
+
+:host {
+    @extend .col-lg-10;
+}

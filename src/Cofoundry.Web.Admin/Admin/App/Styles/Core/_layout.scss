@@ -38,10 +38,12 @@ footer {
 .content {
     @include transition(width .3s, left .3s, padding .3s);
     @include clearfix;
-    position:absolute;
-    left:$nav-width-slim;
-    top:0;
-    z-index:1;
+    background:$color-lightgrey;
+    position: absolute;
+    left: $nav-width-slim;
+    top: 0;
+    z-index: 1;
+    width: calc(100% - #{$nav-width-slim});
 }
 
 .main-menu {
@@ -107,5 +109,6 @@ footer {
 @media screen and (min-width: 950px) {
     .content {
         left:$nav-width;
+        width:calc(100% - #{$nav-width});
     }
 }

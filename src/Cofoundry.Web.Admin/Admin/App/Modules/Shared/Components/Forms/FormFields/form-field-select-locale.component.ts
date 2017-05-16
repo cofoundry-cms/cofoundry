@@ -21,6 +21,7 @@ import { LocaleService } from '../../../services';
 export default class FormFieldSelectLocaleComponent extends ElementBase<string> implements OnInit {
 	@Input() public label: string;
 	@Input() public placeholder: string;
+	@Input() public description: string;
 	@ViewChild(NgModel) model: NgModel;
 	locales: any[];
 

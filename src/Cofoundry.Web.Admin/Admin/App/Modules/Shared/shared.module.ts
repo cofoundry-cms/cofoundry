@@ -17,6 +17,7 @@ import {
 	FormActionEditComponent,
 	FormActionSubmitComponent,
 	Form,
+	Fieldset,
 	ValidationSummaryComponent,
 	FormDynamicFieldSetComponent,
 	FormFieldTextboxComponent,
@@ -26,7 +27,9 @@ import {
 	ModalContainerComponent,
 	PageHeader,
 	PageActions,
-	PageBody, }  					from './components';
+	PageBody,
+	PageRow, }  					from './components';
+	
 
 // Services
 import {
@@ -54,6 +57,7 @@ import { StringUtility }            from './utilities/string.utility';
 		PageHeader,
 		PageActions,
 		PageBody,
+		PageRow,
 		ModalContainerComponent,
 		Button,
 		ButtonLink,
@@ -64,6 +68,7 @@ import { StringUtility }            from './utilities/string.utility';
 		FormFieldSelectLocaleComponent,
 		FormDynamicFieldSetComponent,
 		ValidationSummaryComponent,
+		Fieldset,
 		Form,
 		FormActionEditComponent,
 		FormActionSubmitComponent
@@ -73,6 +78,7 @@ import { StringUtility }            from './utilities/string.utility';
 		PageHeader,
 		PageActions,
 		PageBody,
+		PageRow,
 		ModalContainerComponent,
 		Button,
 		ButtonLink,
@@ -83,6 +89,7 @@ import { StringUtility }            from './utilities/string.utility';
 		FormFieldSelectLocaleComponent,
 		FormDynamicFieldSetComponent,
 		ValidationSummaryComponent,
+		Fieldset,
 		Form,
 		FormActionEditComponent,
 		FormActionSubmitComponent,

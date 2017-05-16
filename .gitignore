@@ -151,6 +151,7 @@ $RECYCLE.BIN/
 .DS_Store
 
 src/.vs
+.vscode
 
 # Cake Build
 /tools

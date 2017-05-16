@@ -14,7 +14,8 @@ import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 		'loader',
 		'numitems'
 	],
-	templateUrl: 'dashboard.component.html',
+	styleUrls: ['./dashboard.component.scss'],
+	templateUrl: 'dashboard.component.html'
 })
 export class DashboardComponent {
 	title: string;

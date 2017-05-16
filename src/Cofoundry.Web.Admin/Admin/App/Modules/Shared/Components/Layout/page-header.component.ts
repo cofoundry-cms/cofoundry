@@ -4,6 +4,7 @@ import './page-header.component.scss';
 
 @Component({
 	selector: SELECTOR_PREFIX + 'page-header',
+	styleUrls: ['./page-header.component.scss'],
 	templateUrl: 'page-header.component.html'
 })
 

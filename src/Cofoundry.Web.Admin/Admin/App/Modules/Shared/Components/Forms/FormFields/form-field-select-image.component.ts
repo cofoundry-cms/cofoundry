@@ -19,6 +19,7 @@ import { ElementBase } from '../element-base';
 export default class FormFieldSelectImageComponent extends ElementBase<string> {
 	@Input() public label: string;
 	@Input() public placeholder: string;
+	@Input() public description: string;
 
 	@ViewChild(NgModel) model: NgModel;
 
