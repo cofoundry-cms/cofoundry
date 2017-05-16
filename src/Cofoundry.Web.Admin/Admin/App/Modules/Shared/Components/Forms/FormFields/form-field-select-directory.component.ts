@@ -20,6 +20,7 @@ import { DirectoryService } from '../../../services';
 export default class FormFieldSelectDirectoryComponent extends ElementBase<string> implements OnInit {
 	@Input() public label: string;
 	@Input() public placeholder: string;
+	@Input() public description: string;
 	directories: any[];
 
 	@ViewChild(NgModel) model: NgModel;

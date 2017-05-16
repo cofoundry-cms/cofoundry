@@ -8,6 +8,7 @@
         <option value="" disabled selected *ngIf="placeholder">{{placeholder}}</option>
         <ng-content></ng-content>
     </select>
+    <small class="form-text text-muted" *ngIf="description">{{description}}</small>
     <cf-validation-summary
         *ngIf="invalid | async"
         [messages]="failures | async">

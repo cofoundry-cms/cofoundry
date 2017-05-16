@@ -18,6 +18,7 @@ import { ElementBase } from '../element-base';
 export default class FormFieldTextboxComponent extends ElementBase<string> {
 	@Input() public label: string;
 	@Input() public placeholder: string;
+	@Input() public description: string;
 
 	@ViewChild(NgModel) model: NgModel;
 

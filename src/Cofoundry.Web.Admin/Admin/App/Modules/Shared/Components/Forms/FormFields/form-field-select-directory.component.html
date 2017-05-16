@@ -8,6 +8,7 @@
         <option value="" disabled selected *ngIf="placeholder">{{placeholder}}</option>
         <option *ngFor="let option of directories" [value]="option.webDirectoryId">{{option.fullUrlPath}}</option>
     </select>
+    <small class="form-text text-muted" *ngIf="description">{{description}}</small>
     <cf-validation-summary
         *ngIf="invalid | async"
         [messages]="failures | async">
