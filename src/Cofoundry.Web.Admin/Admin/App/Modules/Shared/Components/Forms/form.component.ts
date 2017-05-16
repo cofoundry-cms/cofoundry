@@ -17,6 +17,9 @@ export default class Form implements AfterContentInit {
 	@ContentChildren(FormActionSubmitComponent, { descendants: true }) public submitComponent: QueryList<FormActionSubmitComponent>;
 	@ContentChildren(FormActionEditComponent, { descendants: true }) public editModeComponent: QueryList<FormActionEditComponent>;
 	@ViewChild(NgForm) public form: NgForm;
+	valid: boolean = false;
+	value: object = {};
+	editmode: boolean = false;
 
 	ngAfterContentInit() {
 		let models = this.models.toArray();
@@ -41,6 +44,8 @@ export default class Form implements AfterContentInit {
 		if (submitComponent.length > 0) {
 			submitComponent.first.disabled = true;
 			form.statusChanges.subscribe(status => {
+				this.valid = status === 'VALID';
+				this.value = this.form.value;
 				submitComponent.first.disabled = (status === 'INVALID');
 			});
 		}
@@ -49,6 +54,7 @@ export default class Form implements AfterContentInit {
 	listenToEditModeToggle(editModeComponent: QueryList<FormActionEditComponent>): void {
 		if (editModeComponent.length > 0) {
 			editModeComponent.first.editModeToggle.subscribe(editMode => {
+				this.editmode = editMode;
 				let elements = this.elements.toArray();
 				elements.forEach((el) => {
 					el.editmode = editMode;

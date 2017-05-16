@@ -2,7 +2,7 @@
 	title="Create"
 	parent-title="Pages"></cf-page-header>
 
-<cf-form (cfSubmit)="onSubmit($event)">
+<cf-form (cfSubmit)="onSubmit($event)" #form>
 	
 	<cf-page-actions>
 		<cf-form-action-submit title="Submit"></cf-form-action-submit>
@@ -101,7 +101,7 @@
 		<!-- END SEO -->
 
 		<!-- TEMPLATE CONTENT -->
-		<cf-fieldset legend="Template content">
+		<cf-fieldset legend="Template content" *ngIf="form.editmode">
 		</cf-fieldset>
 		<!-- END TEMPLATE CONTENT -->
 
