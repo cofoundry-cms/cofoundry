@@ -742,6 +742,8 @@
     <Compile Include="Domain\Pages\Mapping\EntityVersionPageModuleMapper.cs" />
     <Compile Include="Domain\Pages\Mapping\IPageModuleDisplayModelMapper.cs" />
     <Compile Include="Domain\Pages\Mapping\IPageVersionModuleModelMapper.cs" />
+    <Compile Include="Domain\Pages\Mapping\IPageMapper.cs" />
+    <Compile Include="Domain\Pages\Mapping\PageMapper.cs" />
     <Compile Include="Domain\Pages\Mapping\PageModuleDisplayModelMapperInput.cs" />
     <Compile Include="Domain\Pages\Mapping\PageModuleDisplayModelMapperOutput.cs" />
     <Compile Include="Domain\Pages\Mapping\PageSummaryMapper.cs" />
@@ -865,7 +867,8 @@
     <Compile Include="Domain\PageTemplates\Exceptions\PageTemplateRegistrationException.cs" />
     <Compile Include="Domain\PageTemplates\Mapping\IPageTemplateCustomEntityTypeMapper.cs" />
     <Compile Include="Domain\PageTemplates\Mapping\PageTemplateCustomEntityTypeMapper.cs" />
-    <Compile Include="Domain\PageTemplates\Mapping\PageTemplateCustomEntityTypeValueResolver.cs" />
+    <Compile Include="Domain\PageTemplates\Mapping\IPageTemplateMapper.cs" />
+    <Compile Include="Domain\PageTemplates\Mapping\PageTemplateMapper.cs" />
     <Compile Include="Domain\PageTemplates\Mapping\PageTemplateSectionMapper.cs" />
     <Compile Include="Domain\PageTemplates\Models\PageTemplateDetails.cs" />
     <Compile Include="Domain\PageTemplates\Models\PageTemplateFile.cs" />

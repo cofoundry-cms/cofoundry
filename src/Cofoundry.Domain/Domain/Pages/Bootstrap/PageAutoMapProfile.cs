@@ -41,20 +41,20 @@ namespace Cofoundry.Domain
             #region page versions
 
             CreateMap<PageVersion, PageRenderDetails>()
-                .ForMember(d => d.Template, o => o.MapFrom(s => s.PageTemplate))
+                .ForMember(d => d.Template, o => o.Ignore())
                 .ForMember(d => d.Sections, o => o.MapFrom(s => s.PageTemplate.PageTemplateSections))
                 .ForMember(d => d.WorkFlowStatus, o => o.MapFrom(s => (Cofoundry.Domain.WorkFlowStatus)s.WorkFlowStatusId))
                 ;
             
             CreateMap<PageVersion, PageVersionSummary>()
-                .ForMember(d => d.Template, o => o.MapFrom(s => s.PageTemplate))
+                .ForMember(d => d.Template, o => o.Ignore())
                 .ForMember(d => d.WorkFlowStatus, o => o.MapFrom(s => (Cofoundry.Domain.WorkFlowStatus)s.WorkFlowStatusId))
                 .ForMember(d => d.ShowInSiteMap, o => o.MapFrom(s => !s.ExcludeFromSitemap))
                 .ForMember(d => d.AuditData, o => o.MapFrom(s => s))
                 ;
 
             CreateMap<PageVersion, PageVersionDetails>()
-                .ForMember(d => d.Template, o => o.MapFrom(s => s.PageTemplate))
+                .ForMember(d => d.Template, o => o.Ignore())
                 .ForMember(d => d.WorkFlowStatus, o => o.MapFrom(s => (Cofoundry.Domain.WorkFlowStatus)s.WorkFlowStatusId))
                 .ForMember(d => d.ShowInSiteMap, o => o.MapFrom(s => !s.ExcludeFromSitemap))
                 .ForMember(d => d.AuditData, o => o.MapFrom(s => s))

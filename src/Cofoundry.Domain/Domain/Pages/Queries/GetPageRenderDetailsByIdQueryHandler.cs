@@ -21,16 +21,19 @@ namespace Cofoundry.Domain
 
         private readonly CofoundryDbContext _dbContext;
         private readonly IQueryExecutor _queryExecutor;
+        private readonly IPageMapper _pageMapper;
         private readonly IEntityVersionPageModuleMapper _entityVersionPageModuleMapper;
 
         public GetPageRenderDetailsByIdQueryHandler(
             CofoundryDbContext dbContext,
             IQueryExecutor queryExecutor,
+            IPageMapper pageMapper,
             IEntityVersionPageModuleMapper entityVersionPageModuleMapper
             )
         {
             _dbContext = dbContext;
             _queryExecutor = queryExecutor;
+            _pageMapper = pageMapper;
             _entityVersionPageModuleMapper = entityVersionPageModuleMapper;
         }
 
@@ -42,7 +45,8 @@ namespace Cofoundry.Domain
         {
             var dbPage = await QueryPage(query).FirstOrDefaultAsync();
             if (dbPage == null) return null;
-            var page = Mapper.Map<PageRenderDetails>(dbPage);
+            var page = _pageMapper.MapRenderDetails(dbPage);
+
             page.PageRoute = await _queryExecutor.GetByIdAsync<PageRoute>(page.PageId, executionContext);
 
             var dbModules = await QueryModules(page).ToListAsync();

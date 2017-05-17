@@ -18,14 +18,17 @@ namespace Cofoundry.Domain
 
         private readonly CofoundryDbContext _dbContext;
         private readonly IQueryExecutor _queryExecutor;
+        private readonly IPageTemplateMapper _pageTemplateMapper;
 
         public GetPageVersionSummariesByPageIdQueryHandler(
             CofoundryDbContext dbContext,
-            IQueryExecutor queryExecutor
+            IQueryExecutor queryExecutor,
+            IPageTemplateMapper pageTemplateMapper
             )
         {
             _dbContext = dbContext;
             _queryExecutor = queryExecutor;
+            _pageTemplateMapper = pageTemplateMapper;
         }
 
         #endregion
@@ -35,7 +38,7 @@ namespace Cofoundry.Domain
         public IEnumerable<PageVersionSummary> Execute(GetPageVersionSummariesByPageIdQuery query, IExecutionContext executionContext)
         {
             var dbVersions = Query(query.PageId).ToList();
-            var versions = Map(dbVersions);
+            var versions = Map(dbVersions).ToList();
 
             return versions;
         }
@@ -43,7 +46,7 @@ namespace Cofoundry.Domain
         public async Task<IEnumerable<PageVersionSummary>> ExecuteAsync(GetPageVersionSummariesByPageIdQuery query, IExecutionContext executionContext)
         {
             var dbVersions = await Query(query.PageId).ToListAsync();
-            var versions = Map(dbVersions);
+            var versions = Map(dbVersions).ToList();
 
             return versions;
         }
@@ -68,8 +71,13 @@ namespace Cofoundry.Domain
 
         private IEnumerable<PageVersionSummary> Map(List<PageVersion> dbVersions)
         {
-            var versions = Mapper.Map<IEnumerable<PageVersionSummary>>(dbVersions);
-            return versions;
+            foreach (var dbVersion in dbVersions)
+            {
+                var version = Mapper.Map<PageVersionSummary>(dbVersion);
+                version.Template = _pageTemplateMapper.MapMicroSummary(dbVersion.PageTemplate);
+
+                yield return version;
+            }
         }
 
         #endregion

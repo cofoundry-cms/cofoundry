@@ -13,10 +13,6 @@ namespace Cofoundry.Domain
         public PageTemplatesAutoMapProfile()
         {
             #region page Templates
-
-            CreateMap<PageTemplate, PageTemplateMicroSummary>()
-                .ForMember(d => d.CustomEntityModelType, o => o.ResolveUsing<PageTemplateCustomEntityTypeValueResolver, string>(s => s.CustomEntityModelType))
-                ;
             
             CreateMap<PageTemplate, PageTemplateSummary>()
                 .ForMember(d => d.PageType, o => o.MapFrom(s => (PageType)s.PageTypeId))

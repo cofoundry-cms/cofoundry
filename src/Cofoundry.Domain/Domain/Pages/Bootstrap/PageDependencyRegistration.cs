@@ -20,7 +20,8 @@ namespace Cofoundry.Domain.Bootstrap
                 .RegisterAll<ICustomEntityVersionDataModel>()
                 .RegisterType<IPageRepository, PageRepository>()
                 .RegisterType<IPageRouteLibrary, PageRouteLibrary>()
-                ; 
+                .RegisterType<IPageMapper, PageMapper>()
+                 ; 
         }
     }
 }

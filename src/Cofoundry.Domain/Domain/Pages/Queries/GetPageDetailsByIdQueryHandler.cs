@@ -21,14 +21,17 @@ namespace Cofoundry.Domain
 
         private readonly CofoundryDbContext _dbContext;
         private readonly IQueryExecutor _queryExecutor;
+        private readonly IPageTemplateMapper _pageTemplateMapper;
 
         public GetPageDetailsByIdQueryHandler(
             CofoundryDbContext dbContext,
-            IQueryExecutor queryExecutor
+            IQueryExecutor queryExecutor,
+            IPageTemplateMapper pageTemplateMapper
             )
         {
             _dbContext = dbContext;
             _queryExecutor = queryExecutor;
+            _pageTemplateMapper = pageTemplateMapper;
         }
 
         #endregion
@@ -71,6 +74,7 @@ namespace Cofoundry.Domain
 
             // Custom Mapping
             page.PageRoute = pageRoute;
+            page.LatestVersion.Template = _pageTemplateMapper.MapMicroSummary(dbPageVersion.PageTemplate);
             page.LatestVersion.Sections = sections;
 
             return page;

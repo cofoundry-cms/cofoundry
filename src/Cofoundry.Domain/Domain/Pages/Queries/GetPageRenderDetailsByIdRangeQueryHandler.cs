@@ -22,16 +22,19 @@ namespace Cofoundry.Domain
 
         private readonly CofoundryDbContext _dbContext;
         private readonly IQueryExecutor _queryExecutor;
+        private readonly IPageMapper _pageMapper;
         private readonly IEntityVersionPageModuleMapper _entityVersionPageModuleMapper;
 
         public GetPageRenderDetailsByIdRangeQueryHandler(
             CofoundryDbContext dbContext,
             IQueryExecutor queryExecutor,
+            IPageMapper pageMapper,
             IEntityVersionPageModuleMapper entityVersionPageModuleMapper
             )
         {
             _dbContext = dbContext;
             _queryExecutor = queryExecutor;
+            _pageMapper = pageMapper;
             _entityVersionPageModuleMapper = entityVersionPageModuleMapper;
         }
 
@@ -41,8 +44,11 @@ namespace Cofoundry.Domain
 
         public async Task<IDictionary<int, PageRenderDetails>> ExecuteAsync(GetPageRenderDetailsByIdRangeQuery query, IExecutionContext executionContext)
         {
-            var dbPages = await QueryPages(query).FirstOrDefaultAsync();
-            var pages = Mapper.Map<List<PageRenderDetails>>(dbPages);
+            var dbPages = await QueryPages(query).ToListAsync();
+            var pages = dbPages
+                .Select(_pageMapper.MapRenderDetails)
+                .ToList();
+                ;
 
             var pageRoutes = await _queryExecutor.GetByIdRangeAsync<PageRoute>(GetAllPageIds(pages), executionContext);
             MapPageRoutes(pages, pageRoutes);

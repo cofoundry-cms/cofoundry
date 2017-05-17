@@ -20,12 +20,15 @@ namespace Cofoundry.Domain
         #region constructor
 
         private readonly CofoundryDbContext _dbContext;
+        private readonly IPageTemplateMapper _pageTemplateMapper;
 
         public GetAllPageTemplateMicroSummariesQueryHandler(
-            CofoundryDbContext dbContext
+            CofoundryDbContext dbContext,
+            IPageTemplateMapper pageTemplateMapper
             )
         {
             _dbContext = dbContext;
+            _pageTemplateMapper = pageTemplateMapper;
         }
 
         #endregion
@@ -35,14 +38,16 @@ namespace Cofoundry.Domain
         public IEnumerable<PageTemplateMicroSummary> Execute(GetAllQuery<PageTemplateMicroSummary> query, IExecutionContext executionContext)
         {
             var dbResults = Query().ToList();
-            var results = Map(dbResults);
+            var results = Map(dbResults).ToList();
+
             return results;
         }
 
         public async Task<IEnumerable<PageTemplateMicroSummary>> ExecuteAsync(GetAllQuery<PageTemplateMicroSummary> query, IExecutionContext executionContext)
         {
             var dbResults = await Query().ToListAsync();
-            var results = Map(dbResults);
+            var results = Map(dbResults).ToList();
+
             return results;
         }
 
@@ -56,7 +61,10 @@ namespace Cofoundry.Domain
 
         private IEnumerable<PageTemplateMicroSummary> Map(List<PageTemplate> pageTemplates)
         {
-            return Mapper.Map<IEnumerable<PageTemplateMicroSummary>>(pageTemplates);
+            foreach (var pageTemplate in pageTemplates)
+            {
+                yield return _pageTemplateMapper.MapMicroSummary(pageTemplate);
+            }
         }
 
         #endregion
