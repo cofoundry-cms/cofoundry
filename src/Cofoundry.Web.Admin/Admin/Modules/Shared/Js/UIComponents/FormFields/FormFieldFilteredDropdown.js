@@ -23,7 +23,7 @@ function (
             initialItemFunction: '&cmsInitialItemFunction',
             optionName: '@cmsOptionName',
             optionValue: '@cmsOptionValue',
-            required: '@cmsRequired'
+            required: '=cmsRequired'
         }),
         require: _.union(baseFormFieldFactory.defaultConfig.require, ['?^^cmsFormDynamicFieldSet']),
         link: link,

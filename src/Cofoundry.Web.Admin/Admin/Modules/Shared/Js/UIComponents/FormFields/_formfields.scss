@@ -109,7 +109,7 @@ input[type="color"] {
     &:after {
         @include transition(color .3s);
         font-family: FontAwesome;
-        content: "\f013";
+        content: "\f0d7";
         font-size: 1.3em;
         border: none;
         top: 11px;
@@ -117,8 +117,12 @@ input[type="color"] {
     }
 
     &:hover:after {
-        color:$color-primary;
+        color: $color-primary;
     }
+}
+
+.filtered-dd--actions {
+    text-align:right;
 }
 
 .form-field-text-area {

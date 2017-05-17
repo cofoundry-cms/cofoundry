@@ -42,5 +42,23 @@ namespace Cofoundry.Web
         {
             return new HtmlString(_htmlSanitizer.Sanitize(source));
         }
+
+        /// <summary>
+        /// Takes a string and removes all HTML tags
+        /// </summary>
+        /// <param name="source">String content to sanitize</param>
+        public string StripHtml(string source)
+        {
+            return _htmlSanitizer.StripHtml(source);
+        }
+
+        /// <summary>
+        /// Takes a raw source and removes all HTML tags
+        /// </summary>
+        /// <param name="source">HtmlString content to sanitize</param>
+        public string StripHtml(HtmlString source)
+        {
+            return _htmlSanitizer.StripHtml(source);
+        }
     }
 }
