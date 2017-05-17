@@ -18,8 +18,8 @@ namespace Cofoundry.Domain
 
         /// <summary>
         /// Full virtual path to the view file including the filename. This will
-        /// be unique
+        /// be unique.
         /// </summary>
-        public string FullPath { get; set; }
+        public string VirtualPath { get; set; }
     }
 }

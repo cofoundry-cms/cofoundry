@@ -15,10 +15,10 @@ namespace Cofoundry.Domain
     /// </summary>
     public class PageTemplateCustomEntityTypeMapper : IPageTemplateCustomEntityTypeMapper
     {
-        private readonly ICustomEntityDisplayModel[] _customEntityDisplayModels;
+        private readonly IEnumerable<ICustomEntityDisplayModel> _customEntityDisplayModels;
 
         public PageTemplateCustomEntityTypeMapper(
-            ICustomEntityDisplayModel[] customEntityDisplayModels
+            IEnumerable<ICustomEntityDisplayModel> customEntityDisplayModels
             )
         {
             _customEntityDisplayModels = customEntityDisplayModels;

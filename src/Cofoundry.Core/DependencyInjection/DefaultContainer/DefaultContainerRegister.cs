@@ -82,7 +82,10 @@ namespace Cofoundry.Core.DependencyInjection
 
                 AddService(concreteType, concreteType, options);
 
-                foreach (var type in EnumerableHelper.Enumerate(types))
+                foreach (var type in EnumerableHelper
+                    .Enumerate(types)
+                    .Where(t => t != concreteType)
+                    )
                 {
                     AddServiceWithFactory(type, x => x.GetService<TConcrete>(), options);
                 }

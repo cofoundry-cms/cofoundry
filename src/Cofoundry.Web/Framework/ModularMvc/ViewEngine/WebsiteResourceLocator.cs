@@ -56,7 +56,7 @@ namespace Cofoundry.Web
                 if (directoryContents.Exists) return directoryContents;
             }
 
-            return directoryContents ?? new NotFoundDirectoryContents();
+            return new NotFoundDirectoryContents();
         }
 
         public IFileInfo GetFile(string virtualPath)
@@ -69,7 +69,7 @@ namespace Cofoundry.Web
                 if (file.Exists) return file;
             }
 
-            return file ?? new NotFoundFileInfo(virtualPath);
+            return new NotFoundFileInfo(virtualPath);
         }
     }
 }

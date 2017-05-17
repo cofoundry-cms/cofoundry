@@ -14,14 +14,14 @@ namespace Cofoundry.Domain
         private readonly Dictionary<string, ICustomEntityDefinition> _customEntityDefinitions;
 
         public CustomEntityDefinitionRepository(
-            ICustomEntityDefinition[] customEntityDefinitions
+            IEnumerable<ICustomEntityDefinition> customEntityDefinitions
             )
         {
             DetectDuplicates(customEntityDefinitions);
             _customEntityDefinitions = customEntityDefinitions.ToDictionary(k => k.CustomEntityDefinitionCode);
         }
 
-        private void DetectDuplicates(ICustomEntityDefinition[] definitions)
+        private void DetectDuplicates(IEnumerable<ICustomEntityDefinition> definitions)
         {
             var dulpicateCodes = definitions
                 .GroupBy(e => e.CustomEntityDefinitionCode)

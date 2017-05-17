@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,24 +14,24 @@ namespace Cofoundry.Core.DependencyInjection
     /// </summary>
     public class DefaultContainerBuilder : IContainerBuilder
     {
-        #region Privates
+        bool hasBuilt = false;
+
+        #region constructor
 
         private readonly Dictionary<Type, Action> RegistrationOverrides = new Dictionary<Type, Action>();
         private readonly IServiceCollection _serviceCollection;
         private readonly IDiscoveredTypesProvider _discoveredTypesProvider;
-        bool hasBuilt = false;
-
-        #endregion
-
-        #region constructor
+        private readonly IConfigurationRoot _configurationRoot;
 
         public DefaultContainerBuilder(
             IServiceCollection serviceCollection,
-            IDiscoveredTypesProvider discoveredTypesProvider
+            IDiscoveredTypesProvider discoveredTypesProvider,
+            IConfigurationRoot configurationRoot
             )
         {
             _serviceCollection = serviceCollection;
             _discoveredTypesProvider = discoveredTypesProvider;
+            _configurationRoot = configurationRoot;
         }
 
         #endregion
@@ -80,7 +81,18 @@ namespace Cofoundry.Core.DependencyInjection
         private void RegisterFramework()
         {
             _serviceCollection
-                .AddTransient<IResolutionContext, DefaultContainerResolutionContext>();
+                .AddTransient<IResolutionContext, DefaultContainerResolutionContext>()
+                .AddSingleton<IConfigurationRoot>(_configurationRoot)
+                .AddSingleton<IConfiguration>(_configurationRoot);
+
+            // Register all configuration settings
+            var settingsInitializer = new DefaultContainerConfigurationInitializer(
+                _serviceCollection,
+                _discoveredTypesProvider,
+                _configurationRoot
+                );
+
+            settingsInitializer.Initialize();
         }
 
         private void BuildOverrides()

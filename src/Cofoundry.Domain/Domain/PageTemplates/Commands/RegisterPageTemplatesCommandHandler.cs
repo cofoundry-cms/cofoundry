@@ -55,7 +55,8 @@ namespace Cofoundry.Domain
                 .ToDictionaryAsync(d => d.FileName);
 
             var fileTemplates = _pageTemplateViewFileLocator
-                .GetPageTemplateFiles();
+                .GetPageTemplateFiles()
+                .ToList();
 
             DetectDuplicateTemplates(fileTemplates);
 
@@ -76,8 +77,8 @@ namespace Cofoundry.Domain
         {
             foreach (var fileTemplate in fileTemplates)
             {
-                var fileTemplateDetails = await _queryExecutor.ExecuteAsync(new GetPageTemplateFileInfoByPathQuery(fileTemplate.FullPath), executionContext);
-                EntityNotFoundException.ThrowIfNull(fileTemplateDetails, fileTemplate.FullPath);
+                var fileTemplateDetails = await _queryExecutor.ExecuteAsync(new GetPageTemplateFileInfoByPathQuery(fileTemplate.VirtualPath), executionContext);
+                EntityNotFoundException.ThrowIfNull(fileTemplateDetails, fileTemplate.VirtualPath);
                 var dbPageTemplate = dbPageTemplates.GetOrDefault(fileTemplate.FileName);
 
                 // Run this first because it may commit changes
@@ -125,7 +126,7 @@ namespace Cofoundry.Domain
 
             if (!EnumerableHelper.IsNullOrEmpty(duplicateTemplateFiles))
             {
-                var moduleTypes = string.Join(", ", duplicateTemplateFiles.Select(f => f.FullPath));
+                var moduleTypes = string.Join(", ", duplicateTemplateFiles.Select(f => f.VirtualPath));
                 throw new PageTemplateRegistrationException(
                     $"Duplicate template '{ duplicateTemplateFiles.Key }' detected. Conflicting templates: { moduleTypes }");
             }
@@ -201,7 +202,7 @@ namespace Cofoundry.Domain
 
             dbPageTemplate.Name = TextFormatter.PascalCaseToSentence(fileTemplate.FileName);
             dbPageTemplate.Description = fileTemplateDetails.Description;
-            dbPageTemplate.FullPath = fileTemplate.FullPath;
+            dbPageTemplate.FullPath = fileTemplate.VirtualPath;
             dbPageTemplate.UpdateDate = executionContext.ExecutionDate;
 
             return dbPageTemplate;
@@ -222,7 +223,7 @@ namespace Cofoundry.Domain
 
             if (duplicateSectionName != null)
             {
-                throw new PageTemplateRegistrationException($"Dulpicate template section '{ duplicateSectionName.First().Name }' in template { fileTemplate.FullPath }");
+                throw new PageTemplateRegistrationException($"Dulpicate template section '{ duplicateSectionName.First().Name }' in template { fileTemplate.VirtualPath }");
             }
 
             // Deletions

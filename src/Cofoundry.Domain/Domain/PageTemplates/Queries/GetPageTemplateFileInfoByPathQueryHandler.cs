@@ -30,13 +30,13 @@ namespace Cofoundry.Domain
         private readonly IQueryExecutor _queryExecutor;
         private readonly IPageTemplateViewFileLocator _viewLocator;
         private readonly IViewFileReader _viewFileReader;
-        private readonly PageTemplateCustomEntityTypeMapper _pageTemplateCustomEntityTypeMapper;
+        private readonly IPageTemplateCustomEntityTypeMapper _pageTemplateCustomEntityTypeMapper;
 
         public GetPageTemplateFileInfoByPathQueryHandler(
             IPageTemplateViewFileLocator viewLocator,
             IQueryExecutor queryExecutor,
             IViewFileReader viewFileReader,
-            PageTemplateCustomEntityTypeMapper pageTemplateCustomEntityTypeMapper
+            IPageTemplateCustomEntityTypeMapper pageTemplateCustomEntityTypeMapper
             )
         {
             _queryExecutor = queryExecutor;

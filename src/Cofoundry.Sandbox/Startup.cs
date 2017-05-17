@@ -32,7 +32,10 @@ namespace Cofoundry.Sandbox
             // Add framework services.
             services
                 .AddMvc()
-                .AddCofoundry();
+                .AddCofoundry(Configuration);
+
+            services.Configure<PageLocaleParser>(Configuration.GetSection(""));
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

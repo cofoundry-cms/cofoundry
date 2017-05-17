@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Cofoundry.Core
+namespace Cofoundry.Core.ResourceFiles
 {
     /// <summary>
     /// A file provider that wraps an EmbeddedFileProvider and restricts

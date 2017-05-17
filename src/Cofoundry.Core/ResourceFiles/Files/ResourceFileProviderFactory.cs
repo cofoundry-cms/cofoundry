@@ -35,7 +35,7 @@ namespace Cofoundry.Core.ResourceFiles
             return assemblyResourceRegistrations
                 .Select(r => r.GetType().Assembly)
                 .Distinct()
-                .Select(a => new EmbeddedFileProvider(a));
+                .Select(a => new CofoundryEmbeddedFileProvider(a));
         }
 
         public IFileProvider Create()

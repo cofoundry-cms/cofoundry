@@ -103,35 +103,43 @@ namespace Cofoundry.Domain
 
         private Dictionary<string, PageModuleTypeFileLocation> GetModuleTypeFileLocations()
         {
-            var viewDirectories = _pageModuleViewLocationRegistrations
+            var viewDirectoryPaths = _pageModuleViewLocationRegistrations
                 .SelectMany(r => r.GetPathPrefixes())
                 .Select(p => FormatViewFolder(p))
-                .Select(p => _resourceLocator.GetDirectory(p))
-                .Where(d => d.Exists)
                 ;
-
+            
             var templateFiles = new Dictionary<string, PageModuleTypeFileLocation>();
             var foldersToExclude = new string[] { TEMPLATES_FOLDER_NAME, PARTIALS_FOLDER_NAME };
 
-            foreach (var directory in viewDirectories)
+            foreach (var directoryPath in viewDirectoryPaths)
             {
+                var directory = _resourceLocator.GetDirectory(directoryPath);
+                if (!directory.Exists) continue;
+
                 foreach (var viewFile in FilterViewFiles(directory))
                 {
-                    AddTemplateToDictionary(templateFiles, viewFile);
+                    AddTemplateToDictionary(templateFiles, directoryPath, viewFile);
                 }
 
-                foreach (var viewFile in FilterChildDirectoryFiles(directory, foldersToExclude))
+                foreach (var childDirectory in directory
+                    .Where(d => d.IsDirectory
+                        && !foldersToExclude.Any(f => d.Name.Equals(f, StringComparison.OrdinalIgnoreCase))))
                 {
-                    AddTemplateToDictionary(templateFiles, viewFile);
+                    var childDirectoryPath = FilePathHelper.CombineVirtualPath(directoryPath, childDirectory.Name);
+
+                    foreach (var viewFile in FilterChildDirectoryFiles(childDirectoryPath, directory, foldersToExclude))
+                    {
+                        AddTemplateToDictionary(templateFiles, childDirectoryPath, viewFile);
+                    }
                 }
             }
 
             return templateFiles;
         }
 
-        private void AddTemplateToDictionary(Dictionary<string, PageModuleTypeFileLocation> templateFiles, IFileInfo viewFile)
+        private void AddTemplateToDictionary(Dictionary<string, PageModuleTypeFileLocation> templateFiles, string directoryPath, IFileInfo viewFile)
         {
-            var templateLocation = CreateTemplateFile(viewFile);
+            var templateLocation = CreateTemplateFile(directoryPath, viewFile);
             var key = FormatCacheKey(templateLocation.FileName);
             bool isUnique = !templateFiles.ContainsKey(key);
             Debug.Assert(isUnique, $"Duplicate page module type template file '{ templateLocation.FileName }' at location '{ templateLocation.Path }'");
@@ -142,14 +150,14 @@ namespace Cofoundry.Domain
             }
         }
 
-        private IEnumerable<IFileInfo> FilterChildDirectoryFiles(IDirectoryContents directory, string[] foldersToExclude)
+        private IEnumerable<IFileInfo> FilterChildDirectoryFiles(string childDirectorPath, IDirectoryContents baseDirectory, string[] foldersToExclude)
         {
-            return directory
-                .Where(d => d.IsDirectory
-                    && !foldersToExclude.Any(f => d.PhysicalPath.EndsWith(f, StringComparison.OrdinalIgnoreCase))
-                    )
-                .Select(d => _resourceLocator.GetDirectory(d.PhysicalPath))
-                .SelectMany(f => FilterViewFiles(f));
+            var childDirectory = _resourceLocator.GetDirectory(childDirectorPath);
+
+            foreach (var file in FilterViewFiles(childDirectory))
+            {
+                yield return file;
+            }
         }
 
         private IEnumerable<IFileInfo> FilterViewFiles(IDirectoryContents directory)
@@ -157,17 +165,18 @@ namespace Cofoundry.Domain
             return directory
                 .Where(f => !f.IsDirectory
                     && !Contains(f.Name, "_ViewStart")
+                    && !Contains(f.Name, "_ViewImports")
                     && f.Name.EndsWith(FILE_EXTENSION, StringComparison.OrdinalIgnoreCase));
         }
 
-        private PageModuleTypeFileLocation CreateTemplateFile(IFileInfo file)
+        private PageModuleTypeFileLocation CreateTemplateFile(string directoryPath, IFileInfo file)
         {
             var templateFile = new PageModuleTypeFileLocation();
 
-            templateFile.Path = file.PhysicalPath;
+            templateFile.Path = FilePathHelper.CombineVirtualPath(directoryPath, file.Name);
             templateFile.FileName = Path.GetFileNameWithoutExtension(file.Name);
 
-            var templatePath = Path.Combine(Path.GetDirectoryName(file.PhysicalPath), TEMPLATES_FOLDER_NAME);
+            var templatePath = FilePathHelper.CombineVirtualPath(directoryPath, TEMPLATES_FOLDER_NAME);
 
             var templateDirectory = _resourceLocator.GetDirectory(templatePath);
             if (templateDirectory != null)
@@ -177,7 +186,7 @@ namespace Cofoundry.Domain
                     .Select(t => new PageModuleTypeTemplateFileLocation()
                     {
                         FileName = Path.GetFileNameWithoutExtension(t.Name),
-                        Path = t.PhysicalPath
+                        Path = FilePathHelper.CombineVirtualPath(templatePath, t.Name)
                     })
                     .ToDictionary(t => t.FileName);
             }

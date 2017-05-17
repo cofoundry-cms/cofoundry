@@ -6,14 +6,8 @@ using System.Threading.Tasks;
 
 namespace Cofoundry.Core.Configuration
 {
-    public class PluginConfigurationSettingsBase : INamespacedConfigurationSettings
+    [NamespacedConfigurationSetting("Cofoundry:Plugins")]
+    public abstract class PluginConfigurationSettingsBase : IConfigurationSettings
     {
-        public string Namespace
-        {
-            get
-            {
-                return "Cofoundry:Plugins";
-            }
-        }
     }
 }

@@ -1,4 +1,5 @@
-﻿using Cofoundry.Core.ResourceFiles;
+﻿using Cofoundry.Core;
+using Cofoundry.Core.ResourceFiles;
 using Cofoundry.Domain;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -19,6 +20,7 @@ namespace Cofoundry.Web
     /// </summary>
     public class PageTemplateViewFileLocator : IPageTemplateViewFileLocator
     {
+        private static char[] TEMPLATE_NAME_CHAR_TO_TRIM = new char[] { '_', '-' };
         const string VIEW_FILE_EXTENSION = ".cshtml";
 
         #region constructor
@@ -26,19 +28,19 @@ namespace Cofoundry.Web
         private readonly IResourceLocator _resourceLocator;
         private readonly IRazorViewEngine _razorViewEngine;
         private readonly IEmptyActionContextFactory _emptyActionContextFactory;
-        private readonly IEnumerable<IPageModuleViewLocationRegistration> _pageModuleViewLocationRegistration;
+        private readonly IEnumerable<IPageTemplateViewLocationRegistration> _pageTemplateViewLocationRegistrations;
 
         public PageTemplateViewFileLocator(
             IRazorViewEngine razorViewEngine,
             IResourceLocator resourceLocator,
             IEmptyActionContextFactory emptyActionContextFactory,
-            IEnumerable<IPageModuleViewLocationRegistration> pageModuleViewLocationRegistration
+            IEnumerable<IPageTemplateViewLocationRegistration> pageTemplateViewLocationRegistrations
             )
         {
             _razorViewEngine = razorViewEngine;
             _resourceLocator = resourceLocator;
             _emptyActionContextFactory = emptyActionContextFactory;
-            _pageModuleViewLocationRegistration = pageModuleViewLocationRegistration;
+            _pageTemplateViewLocationRegistrations = pageTemplateViewLocationRegistrations;
         }
 
         #endregion
@@ -95,20 +97,24 @@ namespace Cofoundry.Web
 
         private IEnumerable<PageTemplateFile> GetUnorderedPageTemplateFiles(string searchText)
         {
-            var templateDirecotryPaths = _pageModuleViewLocationRegistration.SelectMany(r => r.GetPathPrefixes());
+            var templateDirecotryPaths = _pageTemplateViewLocationRegistrations.SelectMany(r => r.GetPathPrefixes());
             var templateDirectories = templateDirecotryPaths
                 .Select(p => _resourceLocator.GetDirectory(p))
                 .Where(d => d.Exists);
 
-            foreach (var templateDirectory in templateDirectories)
-            foreach (var layoutFile in SearchDirectoryForPageTemplateFiles(templateDirectory, searchText))
+            foreach (var templateDirectoryPath in templateDirecotryPaths)
             {
-                yield return layoutFile;
+                foreach (var layoutFile in SearchDirectoryForPageTemplateFiles(templateDirectoryPath, searchText))
+                {
+                    yield return layoutFile;
+                }
             }
         }
 
-        private IEnumerable<PageTemplateFile> SearchDirectoryForPageTemplateFiles(IDirectoryContents directoryContents, string searchText)
+        private IEnumerable<PageTemplateFile> SearchDirectoryForPageTemplateFiles(string directoryPath, string searchText)
         {
+            var directoryContents = _resourceLocator.GetDirectory(directoryPath);
+
             foreach (var file in directoryContents.Where(f => !f.IsDirectory))
             {
                 // filename contains the search text and is located in a 'PageTemplates' folder, but not a 'partials' folder and has the extension .cshtml
@@ -116,31 +122,31 @@ namespace Cofoundry.Web
                     && !Contains(file.Name, "_ViewStart")
                     && file.Name.EndsWith(VIEW_FILE_EXTENSION, StringComparison.OrdinalIgnoreCase))
                 {
-                    yield return MapPageTemplateFile(file);
+                    yield return MapPageTemplateFile(directoryPath, file);
                 }
             }
-
-            foreach (var childDirectory in directoryContents
+            
+            foreach (var childDirectoryName in directoryContents
                 .Where(f => f.IsDirectory)
-                .Select(f => _resourceLocator.GetDirectory(f.PhysicalPath))
-                .Where(f => f.Exists)
+                .Select(f => f.Name)
                 )
             {
-                foreach (var file in SearchDirectoryForPageTemplateFiles(childDirectory, searchText))
+                var childDirectoryPath = FilePathHelper.CombineVirtualPath(directoryPath, childDirectoryName);
+                foreach (var file in SearchDirectoryForPageTemplateFiles(childDirectoryPath, searchText))
                 {
                     yield return file;
                 }
             }
         }
-
-        private PageTemplateFile MapPageTemplateFile(IFileInfo file)
+        
+        private PageTemplateFile MapPageTemplateFile(string virtualDirectoryPath, IFileInfo file)
         {
-            var fileName = Path.ChangeExtension(file.Name, null).TrimStart(new char[] { '_', '-' });
-
+            var fileName = Path.ChangeExtension(file.Name, null).TrimStart(TEMPLATE_NAME_CHAR_TO_TRIM);
+            var virtualPath = FilePathHelper.CombineVirtualPath(virtualDirectoryPath, file.Name);
             var templateFile = new PageTemplateFile()
             {
                 FileName = fileName,
-                FullPath = file.PhysicalPath
+                VirtualPath = virtualPath
             };
 
             return templateFile;

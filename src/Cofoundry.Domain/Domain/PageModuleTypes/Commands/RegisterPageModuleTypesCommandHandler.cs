@@ -123,7 +123,11 @@ namespace Cofoundry.Domain
                                 .PageModuleTemplates
                                 .Where(mt => !fileDetails.Templates.Any(t => t.FileName.Equals(mt.FileName, StringComparison.OrdinalIgnoreCase)))
                                 .ToList();
-            _dbContext.PageModuleTypeTemplates.RemoveRange(templatesToDelete);
+
+            if (templatesToDelete.Any())
+            {
+                _dbContext.PageModuleTypeTemplates.RemoveRange(templatesToDelete);
+            }
 
             foreach (var fileTemplate in fileDetails.Templates)
             {

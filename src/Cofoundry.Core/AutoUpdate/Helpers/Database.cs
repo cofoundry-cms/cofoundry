@@ -20,11 +20,10 @@ namespace Cofoundry.Core.AutoUpdate
         private static readonly object _lock = new object();
 
         public Database(
-            IConfigurationService configurationService
+            DatabaseSettings databaseSettings
             )
         {
-            var cs = configurationService.GetConnectionString(DbConstants.ConnectionStringName);
-            _sqlConnection = new SqlConnection(cs);
+            _sqlConnection = new SqlConnection(databaseSettings.ConnectionString);
         }
 
         public IDatabaseTransaction BeginTransaction()

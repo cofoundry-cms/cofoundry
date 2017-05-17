@@ -6,14 +6,8 @@ using System.Threading.Tasks;
 
 namespace Cofoundry.Core.Configuration
 {
-    public class CofoundryConfigurationSettingsBase : INamespacedConfigurationSettings
+    [NamespacedConfigurationSetting("Cofoundry")]
+    public class CofoundryConfigurationSettingsBase : IConfigurationSettings
     {
-        public string Namespace
-        {
-            get
-            {
-                return "Cofoundry";
-            }
-        }
     }
 }

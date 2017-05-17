@@ -16,8 +16,10 @@ namespace Cofoundry.Domain.Data
             Database.SetInitializer<CofoundryDbContext>(null);
         }
 
-        public CofoundryDbContext()
-            : base(DbConstants.ConnectionStringName)
+        public CofoundryDbContext(
+            DatabaseSettings databaseSettings
+            )
+            : base(databaseSettings.ConnectionString)
         {
             DbContextConfigurationHelper.SetDefaults(this);
         }

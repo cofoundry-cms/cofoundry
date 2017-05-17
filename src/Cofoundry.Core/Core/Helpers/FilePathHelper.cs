@@ -12,6 +12,15 @@ namespace Cofoundry.Core
     /// </summary>
     public static class FilePathHelper
     {
+        #region constants
+
+        private const char VIRTUAL_PATH_SEPARATOR = '/';
+        private const string VIRTUAL_PATH_SEPARATOR_AS_STRING = "/";
+
+        private static char[] ALL_PATH_SEPARATORS = new char[] { VIRTUAL_PATH_SEPARATOR, '\\' };
+
+        #endregion
+
         /// <summary>
         /// Cleans file names to remove illegal characters
         /// </summary>
@@ -42,6 +51,16 @@ namespace Cofoundry.Core
 
             if (string.IsNullOrWhiteSpace(newName)) return emptyReplacement;
             return newName;
+        }
+
+        public static string CombineVirtualPath(params string[] paths)
+        {
+            var trimmedPaths = paths
+                .Where(p => !string.IsNullOrEmpty(p))
+                .Select(p => p.Trim(VIRTUAL_PATH_SEPARATOR));
+
+            var result = VIRTUAL_PATH_SEPARATOR + string.Join(VIRTUAL_PATH_SEPARATOR_AS_STRING, trimmedPaths);
+            return result;
         }
     }
 }

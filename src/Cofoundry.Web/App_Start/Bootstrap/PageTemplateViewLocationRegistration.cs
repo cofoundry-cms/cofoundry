@@ -13,8 +13,8 @@ namespace Cofoundry.Web
     {
         public IEnumerable<string> GetPathPrefixes()
         {
-            yield return "Cofoundry/PageTemplates";
-            yield return "Views/PageTemplates";
+            yield return "/Cofoundry/PageTemplates";
+            yield return "/Views/PageTemplates";
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using Cofoundry.Core.DependencyInjection;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Session;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
@@ -17,7 +18,10 @@ namespace Cofoundry.Web
         /// </summary>
         /// <param name="application">Application configuration</param>
         /// <param name="configBuilder">Additional configuration options</param>
-        public static void UseCofoundry(this IApplicationBuilder application, Action<CofoundryStartupConfiguration> configBuilder = null)
+        public static void UseCofoundry(
+            this IApplicationBuilder application, 
+            Action<CofoundryStartupConfiguration> configBuilder = null
+            )
         {
             var configuration = new CofoundryStartupConfiguration();
             if (configBuilder != null) configBuilder(configuration);
@@ -47,12 +51,15 @@ namespace Cofoundry.Web
         /// Configures the dependency resolver for Cofoundry to use AutoFac and
         /// registers all the services, repositories and modules setup for auto-registration.
         /// </summary>
-        public static IMvcBuilder AddCofoundry(this IMvcBuilder mvcBuilder)
+        public static IMvcBuilder AddCofoundry(
+            this IMvcBuilder mvcBuilder,
+            IConfigurationRoot configurationRoot
+            )
         {
             DiscoverAdditionalApplicationParts(mvcBuilder);
 
             var typesProvider = new DiscoveredTypesProvider(mvcBuilder.PartManager);
-            var builder = new DefaultContainerBuilder(mvcBuilder.Services, typesProvider);
+            var builder = new DefaultContainerBuilder(mvcBuilder.Services, typesProvider, configurationRoot);
             builder.Build();
 
             RunAdditionalConfiguration(mvcBuilder);
