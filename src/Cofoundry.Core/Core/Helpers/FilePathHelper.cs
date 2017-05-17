@@ -53,6 +53,15 @@ namespace Cofoundry.Core
             return newName;
         }
 
+        /// <summary>
+        /// Combines a series of path parts into a single virtual path
+        /// in the format "/path1/path2/filename.txt". 
+        /// </summary>
+        /// <param name="paths">
+        /// The separate path parts to combine into a single
+        /// path. These may include leading or trailing path delmiters.
+        /// </param>
+        /// <returns>The fully combined path, which is always rooted witha forward slash.</returns>
         public static string CombineVirtualPath(params string[] paths)
         {
             var trimmedPaths = paths
