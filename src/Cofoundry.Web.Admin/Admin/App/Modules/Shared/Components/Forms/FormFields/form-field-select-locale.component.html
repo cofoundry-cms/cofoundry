@@ -1,12 +1,14 @@
-<div>
-    <label *ngIf="label" [attr.for]="identifier">{{label}}</label>
+<div class="form-group">
+    <label class="form-control-label" *ngIf="label" [attr.for]="identifier">{{label}}</label>
     <select
+        class="form-control"
         [(ngModel)]="value"
         [ngClass]="{invalid: (invalid | async)}"
         [id]="identifier">
         <option value="" disabled selected *ngIf="placeholder">{{placeholder}}</option>
         <option *ngFor="let option of locales" [value]="option.localeId">{{option.name}} ({{option.ietfLanguageTag}})</option>
     </select>
+    <small class="form-text text-muted" *ngIf="description">{{description}}</small>
     <cf-validation-summary
         *ngIf="invalid | async"
         [messages]="failures | async">

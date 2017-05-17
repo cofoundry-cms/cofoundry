@@ -1,7 +1,8 @@
-<div>
-    <label *ngIf="label" [attr.for]="identifier">{{label}}</label>
+<div class="form-group">
+    <label class="form-control-label" *ngIf="label" [attr.for]="identifier">{{label}}</label>
     <input type="hidden"
         [(ngModel)]="imageAssetId" />
+    <small class="form-text text-muted" *ngIf="description">{{description}}</small>
     <cf-validation-summary
         *ngIf="invalid | async"
         [messages]="failures | async">
