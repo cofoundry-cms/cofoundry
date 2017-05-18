@@ -12,7 +12,7 @@ namespace Cofoundry.Web
     /// </summary>
     /// <typeparam name="TViewModel">The module view model</typeparam>
     public interface IPageModuleHelper<TViewModel>
-        where TViewModel : IPageModuleDisplayModel
+       // where TViewModel : IPageModuleDisplayModel
     {
         /// <summary>
         /// Sets a custom display name for the page module. Usually the name is taken 

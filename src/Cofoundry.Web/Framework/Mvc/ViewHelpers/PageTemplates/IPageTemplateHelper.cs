@@ -10,7 +10,7 @@ using System.Web;
 namespace Cofoundry.Web
 {
     public interface IPageTemplateHelper<out TModel>
-        where TModel : IEditablePageViewModel
+        //where TModel : IEditablePageViewModel
     {
         ViewContext ViewContext { get; }
 

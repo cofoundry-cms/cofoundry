@@ -392,7 +392,6 @@
     <Content Include="Views\Shared\DisplayTemplates\Exception.cshtml" />
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\NotFound.cshtml" />
-    <Content Include="Views\Web.config" />
     <Content Include="Cofoundry.Web.nuspec">
       <SubType>Designer</SubType>
     </Content>
@@ -401,6 +400,8 @@
     <Content Include="Nuget\Content\Web.config.install.xdt">
       <SubType>Designer</SubType>
     </Content>
+    <Content Include="PageModules\_ViewImports.cshtml" />
+    <Content Include="Views\_ViewImports.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

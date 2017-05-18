@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace Cofoundry.Web
 {
     public abstract class CofoundryPageModule<TModel> 
-        : RazorPage<TModel> where TModel : IPageModuleDisplayModel
+        : RazorPage<TModel> //where TModel : IPageModuleDisplayModel
     {
         private CofoundryPageModuleHelper<TModel> _cofoundryPageHelper = null;
 

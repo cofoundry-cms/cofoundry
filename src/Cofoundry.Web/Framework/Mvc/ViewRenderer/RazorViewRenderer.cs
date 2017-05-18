@@ -75,9 +75,23 @@ namespace Cofoundry.Web
 
         private ViewEngineResult FindView(ViewContext viewContext, string viewName)
         {
-            var viewResult = _razorViewEngine.FindView(viewContext, viewName, false);
+            ViewEngineResult viewResult;
+            if (!string.IsNullOrEmpty(viewName) && IsApplicationRelativePath(viewName))
+            {
+                viewResult = _razorViewEngine.GetView(null, viewName, false);
+            }
+            else
+            {
+                viewResult = _razorViewEngine.FindView(viewContext, viewName, false);
+            }
+
             ValidateViewFound(viewName, viewResult);
             return viewResult;
+        }
+
+        private static bool IsApplicationRelativePath(string name)
+        {
+            return name[0] == '~' || name[0] == '/';
         }
 
         private async Task<string> RenderViewAsync(ViewContext viewContext, ViewEngineResult viewResult, object model)
@@ -96,7 +110,7 @@ namespace Cofoundry.Web
                     sw
                 );
 
-                await viewResult.View.RenderAsync(viewContext);
+                await viewResult.View.RenderAsync(componentViewContext);
 
                 return sw.ToString();
             }

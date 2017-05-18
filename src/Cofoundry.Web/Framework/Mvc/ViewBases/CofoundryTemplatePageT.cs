@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace Cofoundry.Web
 {
     public abstract class CofoundryTemplatePage<TModel> : RazorPage<TModel> 
-        where TModel : IEditablePageViewModel
+        //where TModel : IEditablePageViewModel
     {
         private CofoundryTemplatePageHelper<TModel> _cofoundryPageHelper = null;
 

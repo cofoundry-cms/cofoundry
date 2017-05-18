@@ -174,7 +174,7 @@ namespace Cofoundry.Web
         /// This method must be called at the end of the section definition to build and render the
         /// section.
         /// </summary>
-        public async Task InvokeAsync()
+        public async Task<IPageTemplateSectionTagBuilder> InvokeAsync()
         {
             var pageSection = _pageViewModel
                 .Page
@@ -195,6 +195,8 @@ namespace Cofoundry.Web
                     _output = "<!-- " + msg + " -->";
                 }
             }
+
+            return this;
         }
 
         public void WriteTo(TextWriter writer, HtmlEncoder encoder)

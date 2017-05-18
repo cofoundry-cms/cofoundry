@@ -15,7 +15,7 @@ namespace Cofoundry.Web
     /// poluting the global namespace.
     /// </summary>
     public class CofoundryPageModuleHelper<TModel> 
-        : CofoundryPageHelper<TModel> where TModel : IPageModuleDisplayModel
+        : CofoundryPageHelper<TModel> //where TModel : IPageModuleDisplayModel
     {
         public CofoundryPageModuleHelper(ViewContext viewContext, TModel model)
             : base(viewContext, model)

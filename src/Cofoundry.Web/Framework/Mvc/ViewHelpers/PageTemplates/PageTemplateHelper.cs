@@ -13,13 +13,17 @@ namespace Cofoundry.Web
     /// </summary>
     /// <typeparam name="TModel">ViewModel type</typeparam>
     public class PageTemplateHelper<TModel> : IPageTemplateHelper<TModel>
-            where TModel : IEditablePageViewModel
+            //where TModel : IEditablePageViewModel
     {
         public PageTemplateHelper(
             ViewContext viewContext,
             TModel model
             )
         {
+            if (!(model is IEditablePageViewModel))
+            {
+                throw new ArgumentException("Page templates must use a model that inherits from " + typeof(IEditablePageViewModel).Name);
+            }
             ViewContext = viewContext;
             Model = model;
         }
@@ -36,7 +40,7 @@ namespace Cofoundry.Web
         public IPageTemplateSectionTagBuilder Section(string sectionName)
         {
             var factory = ViewContext.HttpContext.RequestServices.GetRequiredService<IPageTemplateSectionTagBuilderFactory>();
-            var output = factory.Create(ViewContext, Model, sectionName);
+            var output = factory.Create(ViewContext, (IEditablePageViewModel)Model, sectionName);
 
             return output;
         }

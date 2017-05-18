@@ -74,6 +74,6 @@ namespace Cofoundry.Web
         /// This method must be called at the end of the section definition to build and render the
         /// section.
         /// </summary>
-        Task InvokeAsync();
+        Task<ICustomEntityTemplateSectionTagBuilder<TModel>> InvokeAsync();
     }
 }
