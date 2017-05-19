@@ -1,0 +1,113 @@
+﻿@{
+    Layout = null;
+
+    string title = null;
+    string description = null;
+
+    var metaDataModel = Model as IPageWithMetaDataViewModel;
+    if (metaDataModel != null)
+    {
+        description = metaDataModel.MetaDescription;
+        title = metaDataModel.PageTitle;
+    }
+    else
+    {
+        description = "Develop With Cofoundry";
+    }
+
+    title = StringHelper.FirstNonEmpty(title, "Develop With Cofoundry");
+    title += " | Basic Test Site";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>@title</title>
+
+    <meta name="description" content="@description" />
+
+    @RenderSection("Meta", required: false)
+    @if (IsSectionDefined("OpenGraph"))
+    {
+        @RenderSection("OpenGraph")
+    }
+
+    <link rel="stylesheet" href="~/Content/css/bootstrap.min.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/Content/css/style.css" />
+    <link rel="icon" href="@Cofoundry.Routing.ToAbsolute("/content/images/favicon.png")" type="image/png" />
+        
+</head>
+<body>
+
+    <nav class="navbar navbar-default navbar-fixed-top">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-6" aria-expanded="false">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+
+                <a href="/" class="logo">Example Inc.</a>
+            </div>
+
+            <div id="bs-example-navbar-collapse-6" aria-expanded="false" class="navbar-collapse collapse">
+                <ul class="navbar__menu">
+                    <li><a href="/products">Products</a></li>
+                    <li><a href="/about">About</a></li>
+                    <li><a href="/blog">Blog</a></li>
+                    <li><a href="/contact">Contact</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <main class="main">
+        @RenderBody()
+    </main>
+
+    <div class="container-fluid newsletter-signup">
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-6 col-sm-offset-3">
+                    <h2><span class="glyphicon glyphicon-envelope" aria-hidden="true"></span> Sign up to our newsletter</h2>
+                    <form id="newsletter" class="form-inline">
+                        <input class="form-control" type="email" name="email" placeholder="Email">
+                        <input class="btn btn-default" type="submit" value="Submit">
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="container-fluid footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-6">
+                    <span>Copyright © @DateTime.UtcNow.Year Example Inc. All Rights Reserved</span>
+                </div>
+                <div class="col-sm-6">
+                    <ul class="footer__links">
+                        <li><a href="#">Terms &amp; Conditions</a></li>
+                        <li><a href="#">Sitemap</a></li>
+                        <li><a href="#">Cookies</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="~/Content/js/bootstrap.min.js"></script>
+
+    @if (IsSectionDefined("FooterScripts"))
+    {
+        @RenderSection("FooterScripts")
+    }
+</body>
+</html>

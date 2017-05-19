@@ -1,0 +1,28 @@
+﻿@model PageListDisplayModel
+
+@*
+    Here we can use the Cofoundry helper to set the description that
+    gets displayed against the module in the administration interface.
+
+    This is optional and doesn't render anything into the template itself.
+*@
+@Cofoundry.Module.UseDescription("An orderable list of links to pages")
+
+@if (!EnumerableHelper.IsNullOrEmpty(Model.Pages))
+{
+<ul>
+    @foreach (var page in Model.Pages)
+    {
+        <li>
+            <a href="@Cofoundry.Routing.Page(page.PageRoute)">@page.Title</a>
+            @foreach (var pageSection in page.Sections)
+            {
+                <h3>@pageSection.Name (@pageSection.Modules.Count())</h3>
+            }
+            <p>
+                @page.MetaDescription
+            </p>
+        </li>
+    }
+</ul>
+}

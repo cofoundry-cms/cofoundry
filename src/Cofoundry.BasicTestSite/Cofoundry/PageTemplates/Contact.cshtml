@@ -1,0 +1,28 @@
+﻿@model IPageViewModel
+@using Cofoundry.Domain
+
+@Cofoundry.Template.UseDescription("Template for the contact page")
+
+<div class="hero-banner">
+    <img src="/content/images/hero-banner-bg.jpg">
+    <div class="hero-banner__overlay"></div>
+</div>
+
+<div class="container">
+    <div class="row content-block">
+        <div class="col-sm-12">
+            <h1>@Model.PageTitle</h1>
+            <p>
+                @(await Cofoundry
+                    .Template
+                    .Section("Introduction")
+                    .AllowModuleType<PlainTextDataModel>()
+                    .EmptyContentMinHeight(200)
+                    .InvokeAsync())
+            </p>
+
+            @await Component.InvokeAsync("ContactRequestForm")
+        </div>
+    </div>
+</div>
+    
