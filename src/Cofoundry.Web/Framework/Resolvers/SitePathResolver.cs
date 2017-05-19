@@ -27,7 +27,7 @@ namespace Cofoundry.Web
         {
             var root = _hostingEnvironment.ContentRootPath;
             if (string.IsNullOrWhiteSpace(path)) return root;
-            path = path.TrimStart('~');
+            path = path.TrimStart('~').TrimStart(new char[] { '/', '\\' });
 
             var combinedPath = Path.Combine(root, path);
 

@@ -12,9 +12,19 @@ namespace Cofoundry.Domain.Data
         }
 
         public int ImageAssetId { get; set; }
+
+        /// <summary>
+        /// Original filename without an extension.
+        /// </summary>
         public string FileName { get; set; }
+
+        /// <summary>
+        /// Original file extension without the leading dot.
+        /// </summary>
         public string Extension { get; set; }
+
         public int Width { get; set; }
+
         public int Height { get; set; }
 
         /// <summary>

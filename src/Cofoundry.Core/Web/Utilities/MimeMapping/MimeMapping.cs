@@ -267,7 +267,7 @@ namespace Cofoundry.Core.Web
                 AddMapping(".ocx", "application/octet-stream");
                 AddMapping(".oda", "application/oda");
                 AddMapping(".odc", "text/x-ms-odc");
-                AddMapping(".ods", "application/oleobject");
+                //AddMapping(".ods", "application/oleobject");
                 AddMapping(".one", "application/onenote");
                 AddMapping(".onea", "application/onenote");
                 AddMapping(".onetoc", "application/onenote");

@@ -95,7 +95,7 @@ namespace Cofoundry.Web
             headers.LastModified = lastModified;
 
             
-            var contentType = _mimeTypeService.MapFromFileName(asset.Extension);
+            var contentType = _mimeTypeService.MapFromFileName("." + asset.Extension);
             return new FileStreamResult(stream, contentType);
         }
         

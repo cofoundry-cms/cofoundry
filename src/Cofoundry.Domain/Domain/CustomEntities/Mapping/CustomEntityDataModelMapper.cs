@@ -10,12 +10,12 @@ namespace Cofoundry.Domain
 {
     public class CustomEntityDataModelMapper
     {
-        private readonly ICustomEntityDefinition[] _customEntityDefinitions;
+        private readonly IEnumerable<ICustomEntityDefinition> _customEntityDefinitions;
         private readonly IDbUnstructuredDataSerializer _dbUnstructuredDataSerializer;
 
         public CustomEntityDataModelMapper(
             IDbUnstructuredDataSerializer dbUnstructuredDataSerializer,
-            ICustomEntityDefinition[] customEntityDefinitions
+            IEnumerable<ICustomEntityDefinition> customEntityDefinitions
             )
         {
             _dbUnstructuredDataSerializer = dbUnstructuredDataSerializer;
