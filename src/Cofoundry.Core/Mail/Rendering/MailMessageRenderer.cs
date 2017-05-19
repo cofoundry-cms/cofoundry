@@ -6,6 +6,10 @@ using System.Threading.Tasks;
 
 namespace Cofoundry.Core.Mail
 {
+    /// <summary>
+    /// Renders the contents of a mail template to html/text strings in preparation for 
+    /// sending out as an email.
+    /// </summary>
     public class MailMessageRenderer : IMailMessageRenderer
     {
         private readonly IMailViewRenderer _viewRenderer;
@@ -17,17 +21,23 @@ namespace Cofoundry.Core.Mail
             _viewRenderer = viewRenderer;
         }
 
-        public MailMessage Render(IMailTemplate template, SerializeableMailAddress toAddress)
+        /// <summary>
+        ///  Renders the contents of a mail template and formats it into a MailMessage
+        ///  object that can be used to send out an email.
+        /// </summary>
+        /// <param name="template">The mail template that describes the data and template information for the email</param>
+        /// <param name="toAddress">The address to send the email to.</param>
+        /// <returns>Formatted MailMessage</returns>
+        public async Task<MailMessage> RenderAsync(IMailTemplate template, SerializeableMailAddress toAddress)
         {
-
             var message = new MailMessage();
 
             message.Subject = template.Subject;
             message.To = toAddress;
             FormatFromAddress(template, message);
 
-            message.TextBody = RenderView(template, "text");
-            message.HtmlBody = RenderView(template, "html");
+            message.TextBody = await RenderViewAsync(template, "text");
+            message.HtmlBody = await RenderViewAsync(template, "html");
 
             return message;
         }
@@ -40,14 +50,14 @@ namespace Cofoundry.Core.Mail
             }
         }
 
-        private string RenderView(IMailTemplate template, string type)
+        private async Task<string> RenderViewAsync(IMailTemplate template, string type)
         {
             var path = string.Format("{0}_{1}.cshtml", template.ViewFile, type);
             string view = null;
 
             try
             {
-                view = _viewRenderer.Render(path, template);
+                view = await _viewRenderer.RenderAsync(path, template);
             }
             catch (Exception ex)
             {

@@ -14,27 +14,12 @@ namespace Cofoundry.Core.Mail
         /// <summary>
         /// Sends an email to the specified email address
         /// </summary>
-        void Send(string toEmail, string displayName, IMailTemplate template);
-
-        /// <summary>
-        /// Sends an email to the specified email address
-        /// </summary>
         Task SendAsync(string toEmail, string toDisplayName, IMailTemplate template);
 
         /// <summary>
         /// Sends an email to the specified email address
         /// </summary>
-        void Send(string toEmail, IMailTemplate template);
-
-        /// <summary>
-        /// Sends an email to the specified email address
-        /// </summary>
         Task SendAsync(string toEmail, IMailTemplate template);
-
-        /// <summary>
-        /// Sends an email to the specified email address
-        /// </summary>
-        void Send(SerializeableMailAddress address, IMailTemplate template);
 
         /// <summary>
         /// Sends an email to the specified email address

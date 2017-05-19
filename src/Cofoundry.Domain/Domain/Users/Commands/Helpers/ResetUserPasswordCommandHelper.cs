@@ -54,35 +54,10 @@ namespace Cofoundry.Domain
 
         #region public methods
 
-        public void ValidateCommand(IResetUserPasswordCommand command, IExecutionContext executionContext)
-        {
-            var numResetAttempts = QueryNumberResetAttempts(executionContext).Count();
-            ValidateNumberOfResetAttempts(numResetAttempts);
-        }
-
         public async Task ValidateCommandAsync(IResetUserPasswordCommand command, IExecutionContext executionContext)
         {
             var numResetAttempts = await QueryNumberResetAttempts(executionContext).CountAsync();
             ValidateNumberOfResetAttempts(numResetAttempts);
-        }
-
-        public void ResetPassword(User user, IResetUserPasswordCommand command, IExecutionContext executionContext)
-        {
-            ValidateUserAccountExists(user);
-            ValidateUserArea(user.UserAreaCode);
-
-            var existingIncompleteRequests = QueryIncompleteRequests(user).ToList();
-            SetExistingRequestsComplete(existingIncompleteRequests);
-            var request = CreateRequest(executionContext, user);
-            SetMailTemplate(command, user, request);
-
-            using (var scope = _transactionScopeFactory.Create())
-            {
-                _dbContext.SaveChanges();
-                _mailService.Send(user.Email, user.GetFullName(), command.MailTemplate);
-
-                scope.Complete();
-            }
         }
 
         public async Task ResetPasswordAsync(User user, IResetUserPasswordCommand command, IExecutionContext executionContext)

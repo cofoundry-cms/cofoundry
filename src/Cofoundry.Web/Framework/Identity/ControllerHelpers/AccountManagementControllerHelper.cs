@@ -70,7 +70,7 @@ namespace Cofoundry.Web.Identity
                     notificationTemplate.FirstName = user.FirstName;
                     notificationTemplate.LastName = user.LastName;
 
-                    _mailService.Send(user.Email, user.GetFullName(), notificationTemplate);
+                    await _mailService.SendAsync(user.Email, user.GetFullName(), notificationTemplate);
                 }
             }
         }

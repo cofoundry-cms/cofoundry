@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Cofoundry.Core.Mail;
 
 namespace Cofoundry.Core.Mail
 {
@@ -35,32 +34,12 @@ namespace Cofoundry.Core.Mail
         /// <summary>
         /// Queues an email for sending to the specified email address
         /// </summary>
-        public void Send(string toEmail, string toDisplayName, IMailTemplate template)
+        public async Task SendAsync(string toEmail, string toDisplayName, IMailTemplate template)
         {
             var toAddress = new SerializeableMailAddress(toEmail, toDisplayName);
-            var message = _mailMessageRenderer.Render(template, toAddress);
+            var message = await _mailMessageRenderer.RenderAsync(template, toAddress);
 
-            _mailDispatchService.Dispatch(message);
-        }
-
-
-        /// <summary>
-        /// Queues an email for sending to the specified email address
-        /// </summary>
-        public Task SendAsync(string toEmail, string toDisplayName, IMailTemplate template)
-        {
-            var toAddress = new SerializeableMailAddress(toEmail, toDisplayName);
-            var message = _mailMessageRenderer.Render(template, toAddress);
-
-            return _mailDispatchService.DispatchAsync(message);
-        }
-
-        /// <summary>
-        /// Queues an email for sending to the specified email address
-        /// </summary>
-        public void Send(string toEmail, IMailTemplate template)
-        {
-            Send(toEmail, null, template);
+            await _mailDispatchService.DispatchAsync(message);
         }
 
         /// <summary>
@@ -69,14 +48,6 @@ namespace Cofoundry.Core.Mail
         public async Task SendAsync(string toEmail, IMailTemplate template)
         {
             await SendAsync(toEmail, null, template);
-        }
-
-        /// <summary>
-        /// Queues an email for sending to the specified email address
-        /// </summary>
-        public void Send(SerializeableMailAddress address, IMailTemplate template)
-        {
-            Send(address.Address, address.DisplayName, template);
         }
 
         /// <summary>

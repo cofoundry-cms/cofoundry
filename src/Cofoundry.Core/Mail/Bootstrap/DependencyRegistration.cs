@@ -17,13 +17,7 @@ namespace Cofoundry.Core.Mail
                 .RegisterType<IMailService, SimpleMailService>()
                 .RegisterType<IMailDispatchService, SmtpMailDispatchService>()
                 .RegisterType<IMailMessageRenderer, MailMessageRenderer>()
-                .RegisterType<IViewFileReader, ViewFileReader>()
-                //.RegisterType<ITemplateManager, VirtualPathTemplateManager>()
-                //.RegisterType<IActivator, RazorEngineActivator>()
-                //.RegisterType<IMailViewRenderer, RazorEngineViewRenderer>()
-                //.RegisterType<EmailTemplateBase>()
-                //.RegisterType<RazorEngineUrlHelper>()
-                //.RegisterGeneric(typeof(EmailTemplateBase<>), typeof(EmailTemplateBase<>))
+                .RegisterType<IMailViewRenderer, RazorMailViewRenderer>()
                 ; 
         }
     }

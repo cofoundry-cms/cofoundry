@@ -16,12 +16,8 @@ namespace Cofoundry.Domain
     {
         #region public methods
 
-        void ValidateCommand(IResetUserPasswordCommand command, IExecutionContext executionContext);
-
         Task ValidateCommandAsync(IResetUserPasswordCommand command, IExecutionContext executionContext);
-
-        void ResetPassword(User user, IResetUserPasswordCommand command, IExecutionContext executionContext);
-
+        
         Task ResetPasswordAsync(User user, IResetUserPasswordCommand command, IExecutionContext executionContext);
 
         #endregion

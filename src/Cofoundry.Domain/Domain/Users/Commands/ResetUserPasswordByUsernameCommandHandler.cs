@@ -9,8 +9,7 @@ using System.Data.Entity;
 namespace Cofoundry.Domain
 {
     public class ResetUserPasswordByUsernameCommandHandler 
-        : ICommandHandler<ResetUserPasswordByUsernameCommand>
-        , IAsyncCommandHandler<ResetUserPasswordByUsernameCommand>
+        : IAsyncCommandHandler<ResetUserPasswordByUsernameCommand>
         , IIgnorePermissionCheckHandler
     {
         #region construstor
@@ -30,14 +29,6 @@ namespace Cofoundry.Domain
         #endregion
 
         #region execution
-
-        public void Execute(ResetUserPasswordByUsernameCommand command, IExecutionContext executionContext)
-        {
-            _resetUserPasswordCommandHelper.ValidateCommand(command, executionContext);
-            var user = QueryUser(command, executionContext).SingleOrDefault();
-            if (user == null) return;
-            _resetUserPasswordCommandHelper.ResetPassword(user, command, executionContext);
-        }
 
         public async Task ExecuteAsync(ResetUserPasswordByUsernameCommand command, IExecutionContext executionContext)
         {
