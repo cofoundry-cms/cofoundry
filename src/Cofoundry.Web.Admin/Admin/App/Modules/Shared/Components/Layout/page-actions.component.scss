@@ -1,5 +1,19 @@
 @import "../../../../Styles/Bootstrap/bootstrap";
+@import "../../../../Styles/Config/settings";
 
 :host {
-    @extend .col-lg-2;
+    width: 200px;
+    padding: 0 15px;
+    position: fixed;
+    left: $nav-width-slim;
+
+    @media screen and (min-width: 950px) {
+        left: $nav-width;
+    }
+}
+
+:host /deep/ .btn {
+    width: 100%;
+    max-width: 200px;
+    margin-bottom: 10px;
 }

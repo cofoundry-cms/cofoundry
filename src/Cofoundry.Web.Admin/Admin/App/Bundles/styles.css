@@ -360,7 +360,7 @@ textarea {
 
 table {
   border-collapse: collapse;
-  background-color: transparent; }
+  background-color: white; }
 
 caption {
   padding-top: 0.75rem;
@@ -431,7 +431,7 @@ h1, h2, h3, h4, h5, h6,
   color: inherit; }
 
 h1, .h1 {
-  font-size: 2.5rem; }
+  font-size: 1.8rem; }
 
 h2, .h2 {
   font-size: 2rem; }
@@ -6034,7 +6034,7 @@ a.text-gray-dark:focus, a.text-gray-dark:hover {
       position: relative;
       background-color: #413851;
       border: none;
-      padding-top: 42px;
+      padding-top: 44px;
       z-index: 2;
       width: 80px;
       height: 80px;
@@ -6053,7 +6053,7 @@ a.text-gray-dark:focus, a.text-gray-dark:hover {
     .main-nav .category i {
       position: absolute;
       left: 50%;
-      top: 22px;
+      top: 20px;
       width: 21px;
       font-size: 1.75em;
       margin-left: -10px; }

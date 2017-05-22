@@ -3,7 +3,7 @@ import { SELECTOR_PREFIX } from '../../constants/config.constants';
 
 @Component({
 	selector: SELECTOR_PREFIX + 'form-action-edit',
-	template: `<input class="btn main-cta" type="button" value="{{title}}" (click)="onClick()" />`,
+	template: `<input class="btn btn-secondary main-cta" type="button" value="{{title}}" (click)="onClick()" />`,
 	inputs: [
 		'title',
 		'disabled'

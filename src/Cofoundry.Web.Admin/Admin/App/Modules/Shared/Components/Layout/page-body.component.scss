@@ -1,5 +1,6 @@
 @import "../../../../Styles/Bootstrap/bootstrap";
 
 :host {
-    @extend .col-lg-10;
+    width: calc(100% - 200px);
+    padding: 0 15px;
 }

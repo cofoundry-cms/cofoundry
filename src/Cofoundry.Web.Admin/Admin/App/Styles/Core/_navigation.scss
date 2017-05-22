@@ -59,23 +59,23 @@
 		.main-button {
             @include transition(all .3s);
             top: 80px;
-			position:relative;
+			position: relative;
 			background-color: $color-secondary;
-			border:none;
-			padding-top:42px;
-			z-index:2;
+			border: none;
+			padding-top: 44px;
+			z-index: 2;
 			width: 80px;
-            height:80px;
+            height: 80px;
 			text-align: center;
-            text-transform:uppercase;
-			color:#a3a3a3;
+            text-transform: uppercase;
+			color: #a3a3a3;
 			font-size: 90%;
 			line-height: 18px;
-            display:block;
-            font-size:80%;
-            text-decoration:none;
+            display: block;
+            font-size: 80%;
+            text-decoration: none;
             //border-bottom: 1px solid #686868;
-            border-left:4px solid $color-secondary;
+            border-left: 4px solid $color-secondary;
 
             i {
                 @include transition(opacity .3s);
@@ -84,12 +84,12 @@
 		}
 
 		i {
-			position:absolute;
-            left:50%;
-            top:22px;
-            width:21px;
-            font-size:1.75em;
-            margin-left:-10px;
+			position: absolute;
+            left: 50%;
+            top: 20px;
+            width: 21px;
+            font-size: 1.75em;
+            margin-left: -10px;
 		}
 
 		.sub-nav {
