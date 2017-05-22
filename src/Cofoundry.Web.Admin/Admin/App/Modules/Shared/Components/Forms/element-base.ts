@@ -20,6 +20,10 @@ export abstract class ElementBase<T> extends ValueAccessorBase<T> {
 	}
 
 	protected validate(): Observable<ValidationResult> {
+		if (!this.model) {
+			return Observable.of(null);
+		}
+
 		return validate
 			(this.validators, this.asyncValidators)
 			(this.model.control);

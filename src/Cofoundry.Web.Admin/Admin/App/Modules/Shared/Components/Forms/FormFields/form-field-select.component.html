@@ -1,6 +1,7 @@
 <div class="form-group">
     <label class="form-control-label" *ngIf="label" [attr.for]="identifier">{{label}}</label>
-    <select
+    <select 
+        *ngIf="editMode"
         class="form-control"
         [(ngModel)]="value"
         [ngClass]="{invalid: (invalid | async)}"
@@ -8,6 +9,8 @@
         <option value="" disabled selected *ngIf="placeholder">{{placeholder}}</option>
         <ng-content></ng-content>
     </select>
+    <div *ngIf="!editMode">{{value}}</div>
+    <div *ngIf="!editMode && !value">None</div>
     <small class="form-text text-muted" *ngIf="description">{{description}}</small>
     <cf-validation-summary
         *ngIf="invalid | async"

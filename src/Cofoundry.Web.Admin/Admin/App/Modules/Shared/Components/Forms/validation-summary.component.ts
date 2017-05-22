@@ -4,8 +4,10 @@ import { SELECTOR_PREFIX } from '../../constants/config.constants';
 @Component({
 	selector: `${SELECTOR_PREFIX}validation-summary`,
 	template: `
-		<div class="validation">
-			<div *ngFor="let message of messages">{{message}}</div>
+		<div class="alert alert-danger" role="alert">
+			<span  *ngFor="let message of messages">
+				{{message}}
+			</span>
 		</div>
 	`,
 	styles: [`

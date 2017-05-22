@@ -35,7 +35,7 @@ export const composeValidators =
 export const validate =
 	(validators: ValidatorArray, asyncValidators: AsyncValidatorArray) => {
 	return (control: AbstractControl) => {
-		if (!control.touched || control.pristine) {
+		if (!control.touched) {
 			return Observable.of(null);
 		}
 
