@@ -10,10 +10,8 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Cofoundry.Web.Admin
 {
-    [AdminAuthorize]
-    [ValidateApiAntiForgeryToken]
     [Route(RouteConstants.ApiRoutePrefix + "/account")]
-    public class AccountApiController : Controller
+    public class AccountApiController : BaseAdminApiController
     {
         #region private member variables
 

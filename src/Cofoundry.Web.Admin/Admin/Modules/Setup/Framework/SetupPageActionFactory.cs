@@ -1,14 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web.Mvc;
 using Cofoundry.Domain.CQS;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Cofoundry.Web.Admin
 {
     /// <summary>
-    /// The default implementation returns no site viewer. The real implementation is
-    /// in Cofoundry.Web.Admin.SiteViewerActionFactory
+    /// Returns the route to the Cofoundry setup screen in the
+    /// admin panel.
     /// </summary>
     public class SetupPageActionFactory : ISetupPageActionFactory
     {
@@ -23,7 +23,7 @@ namespace Cofoundry.Web.Admin
 
         public ActionResult GetSetupPageAction(Controller controller)
         {
-            return new RedirectResult(SetupRouteLibrary.Urls.Setup());
+            return controller.Redirect(SetupRouteLibrary.Urls.Setup());
         }
     }
 }

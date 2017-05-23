@@ -1,12 +1,12 @@
-﻿using System;
+﻿using Cofoundry.Core.ResourceFiles;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
-using Cofoundry.Core.EmbeddedResources;
 
 namespace Cofoundry.Web.Admin
 {
-    public class SharedEmbeddedResourcetRouteRegistration : IEmbeddedResourceRouteRegistration
+    public class SharedEmbeddedResourceRouteRegistration : IEmbeddedResourceRouteRegistration
     {
         const string ALTERNATIVE_ROUTE_PREFIX = "/Cofoundry";
 

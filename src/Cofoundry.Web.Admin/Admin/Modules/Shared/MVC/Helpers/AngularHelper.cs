@@ -4,10 +4,8 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
-using System.Web;
-using System.Web.Helpers;
-using System.Web.Optimization;
 using Cofoundry.Domain;
+using Microsoft.AspNetCore.Html;
 
 namespace Cofoundry.Web.Admin
 {
@@ -18,7 +16,7 @@ namespace Cofoundry.Web.Admin
         /// specified module and then bootstraps it.
         /// </summary>
         /// <param name="routeLibrary">Js routing library for the module to bootstrap,</param>
-        public static IHtmlString Bootstrap(ModuleJsRouteLibrary routeLibrary, ICurrentUserViewHelper currentUserHelper, object options = null)
+        public static IHtmlContent Bootstrap(ModuleJsRouteLibrary routeLibrary, ICurrentUserViewHelper currentUserHelper, object options = null)
         {
             var script = string.Concat(
                 RenderScript(SharedRouteLibrary.Js.Main),

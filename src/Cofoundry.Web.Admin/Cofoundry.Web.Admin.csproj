@@ -844,7 +844,7 @@
     <Content Include="Admin\Modules\Shared\MVC\Views\Layouts\_MinimalLayout.cshtml" />
     <Content Include="Admin\Modules\Shared\MVC\Views\Layouts\_SharedLayout.cshtml" />
     <Content Include="Admin\Modules\Shared\MVC\Views\NotFound.cshtml" />
-    <Content Include="Admin\Modules\Shared\MVC\Views\Partials\MainMenu.cshtml" />
+    <Content Include="Admin\Modules\Shared\MVC\Views\Components\MainMenu.cshtml" />
     <Content Include="Admin\Modules\Shared\Sass\Common\_heading.scss" />
     <Content Include="Admin\Modules\Shared\Sass\Common\_link.scss" />
     <Content Include="Admin\Modules\Shared\Sass\config\_colors.scss" />
@@ -901,6 +901,7 @@
     <Content Include="Admin\Modules\Setup\MVC\Views\_SetupLayout.cshtml" />
     <Content Include="Admin\Modules\Shared\Sass\Core\_setup.scss" />
     <Content Include="Admin\Modules\Shared\Sass\Core\_dashboard.scss" />
+    <Content Include="Admin\Modules\Shared\MVC\Views\_ViewImports.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -989,7 +990,7 @@
     <Compile Include="Admin\Modules\Shared\Constants\SharedCssRouteLibrary.cs" />
     <Compile Include="Admin\Modules\Shared\Constants\SharedJsRouteLibrary.cs" />
     <Compile Include="Admin\Modules\Shared\Constants\SharedRouteLibrary.cs" />
-    <Compile Include="Admin\Modules\Shared\MVC\Controllers\AdminMenuController.cs" />
+    <Compile Include="Admin\Modules\Shared\MVC\ViewComponents\AdminMenuViewComponent.cs" />
     <Compile Include="Admin\Modules\Shared\MVC\Helpers\AngularHelper.cs" />
     <Compile Include="Admin\Modules\Shared\MVC\Models\AdminMenuViewModel.cs" />
     <Compile Include="Admin\Modules\VisualEditor\Bootstrap\VisualEditorBundleRegistration.cs" />

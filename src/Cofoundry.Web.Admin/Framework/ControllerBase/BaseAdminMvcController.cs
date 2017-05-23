@@ -6,8 +6,8 @@ using System.Web;
 
 namespace Cofoundry.Web.Admin
 {
+    [Area(RouteConstants.AdminAreaName)]
     [AdminAuthorize]
-    [Route(RouteConstants.AdminAreaPrefix)]
     public class BaseAdminMvcController : Controller
     {
     }

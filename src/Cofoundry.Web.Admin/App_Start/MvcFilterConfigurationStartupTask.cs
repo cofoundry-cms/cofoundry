@@ -1,7 +1,6 @@
-﻿using Owin;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Web.Mvc;
+using Microsoft.AspNetCore.Builder;
 
 namespace Cofoundry.Web.Admin
 {
@@ -12,10 +11,10 @@ namespace Cofoundry.Web.Admin
             get { return (int)StartupTaskOrdering.Normal; }
         }
 
-        public void Run(IAppBuilder app)
+        public void Run(IApplicationBuilder app)
         {
-            var filters = GlobalFilters.Filters;
-            filters.Add(new VisualEditorContentFilterAttribute());
+            //var filters = GlobalFilters.Filters;
+            //filters.Add(new VisualEditorContentFilterAttribute());
         }
     }
 }

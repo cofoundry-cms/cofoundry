@@ -72,13 +72,13 @@ namespace Cofoundry.Web.Admin
         #region commands
 
         [HttpPost]
-        public async Task<IActionResult> Post([ModelBinder(typeof(PageVersionModuleDataModelCommandModelBinder))] AddPageVersionModuleCommand command)
+        public async Task<IActionResult> Post([ModelBinder(BinderType = typeof(PageVersionModuleDataModelCommandModelBinder))] AddPageVersionModuleCommand command)
         {
             return await _apiResponseHelper.RunCommandAsync(this, command);
         }
 
         [HttpPut(ID_ROUTE)]
-        public async Task<IActionResult> Put(int PageVersionModuleId, [ModelBinder(typeof(PageVersionModuleDataModelCommandModelBinder))] UpdatePageVersionModuleCommand command)
+        public async Task<IActionResult> Put(int PageVersionModuleId, [ModelBinder(BinderType = typeof(PageVersionModuleDataModelCommandModelBinder))] UpdatePageVersionModuleCommand command)
         {
             return await _apiResponseHelper.RunCommandAsync(this, command);
         }

@@ -1,7 +1,4 @@
-﻿@inherits Cofoundry.Web.CofoundryPage
-@using System.Web.Mvc.Html
-@using Cofoundry.Web.Admin
-
+﻿
 @{
     Layout = LayoutPaths.SharedLayout;
 }
@@ -27,7 +24,7 @@
 
 <main id="main">
 
-    @Html.Action("MainMenu", "AdminMenu")
+    @await Component.InvokeAsync("MainMenu")
 
     <div class="content">
 

@@ -1,31 +1,28 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.Mvc;
+﻿using Cofoundry.Core;
 using Cofoundry.Domain;
 using Cofoundry.Domain.CQS;
+using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Cofoundry.Web.Admin
 {
-    [RoutePrefix("AdminMenu")]
-    [Route("{action=MainMenu}")]
-    public class AdminMenuController : BaseAdminMvcController
+    public class AdminMenuViewComponent : ViewComponent
     {
         private readonly IQueryExecutor _queryExecutor;
 
-        public AdminMenuController(
+        public AdminMenuViewComponent(
             IQueryExecutor queryExecutor
             )
         {
             _queryExecutor = queryExecutor;
         }
 
-        [AllowAnonymous]
-        [ChildActionOnly]
-        public PartialViewResult MainMenu()
+        public async Task<IViewComponentResult> InvokeAsync()
         {
-            var menuItems = _queryExecutor.Execute(new GetPermittedAdminModulesQuery());
+            var menuItems = await _queryExecutor.ExecuteAsync(new GetPermittedAdminModulesQuery());
             var vm = new AdminMenuViewModel();
 
             vm.ManageSiteModules = menuItems
@@ -39,7 +36,7 @@ namespace Cofoundry.Web.Admin
             var selectedItem = menuItems
                 .Select(m => new {
                     Module = m,
-                    Link = m.GetMenuLinkByPath(Request.Url.LocalPath)
+                    Link = m.GetMenuLinkByPath(Request.Path)
                 })
                 .Where(m => m.Link != null)
                 .FirstOrDefault();
@@ -50,8 +47,9 @@ namespace Cofoundry.Web.Admin
                 vm.SelectedModule = selectedItem.Module;
             }
 
-            var viewPath = ViewPathFormatter.View("AdminMenu", "Partials/" + nameof(MainMenu));
-            return PartialView(vm);
+            var viewPath = ViewPathFormatter.View("Shared", "Components/MainMenu");
+
+            return View(viewPath, vm);
         }
     }
 }

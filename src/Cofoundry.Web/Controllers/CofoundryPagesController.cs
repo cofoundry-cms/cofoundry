@@ -11,7 +11,7 @@ namespace Cofoundry.Web
     /// Main controller for handling Cofoundry page routing, redirection and not found errors. This route
     /// is configured last so all other controller routes are scanned first before falling back to this. 
     /// </summary>
-    public class PagesController : Controller
+    public class CofoundryPagesController : Controller
     {
         private readonly ICultureContextService _cultureContextService;
         private readonly IPageLocaleParser _pageLocaleParser;
@@ -21,7 +21,7 @@ namespace Cofoundry.Web
 
         #region Constructor
 
-        public PagesController(
+        public CofoundryPagesController(
             ICultureContextService cultureContextService,
             IPageLocaleParser pageLocaleParser,
             IPageActionRoutingStepFactory pageActionRoutingStepFactory

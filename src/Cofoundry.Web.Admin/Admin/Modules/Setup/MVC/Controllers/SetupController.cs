@@ -2,15 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Web.Mvc;
 using Cofoundry.Domain;
 using Cofoundry.Domain.CQS;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Cofoundry.Web.Admin
 {
-    [RouteArea(RouteConstants.AdminAreaName, AreaPrefix = RouteConstants.AdminAreaPrefix)]
-    [RoutePrefix(SetupRouteLibrary.RoutePrefix)]
-    [Route("{action=index}")]
+    [Area(RouteConstants.AdminAreaName)]
+    [Route(RouteConstants.AdminAreaPrefix + "/" + SetupRouteLibrary.RoutePrefix)]
     public class SetupController : Controller
     {
         #region Constructor
@@ -31,17 +30,17 @@ namespace Cofoundry.Web.Admin
 
         #region routes
 
-        [HttpGet]
-        public ActionResult Index()
+        [Route("")]
+        public async Task<ActionResult> Index()
         {
-            var settings = _queryExecutor.Get<InternalSettings>();
+            var settings = await _queryExecutor.GetAsync<InternalSettings>();
             if (settings.IsSetup)
             {
                 return RedirectToDashboard();
             }
 
             // force sign-out - solves a rare case where you're re-initializing a db after being signed into a previous version.
-            _loginService.SignOut();
+            await _loginService.SignOutAsync();
 
             var viewPath = ViewPathFormatter.View("Setup", nameof(Index));
             return View(viewPath);

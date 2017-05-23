@@ -15,6 +15,6 @@ namespace Cofoundry.Web.ModularMvc
         /// <summary>
         /// Register routes with the mvc RouteCollection. 
         /// </summary>
-        void RegisterRoutes(IRouteBuilder routes);
+        void RegisterRoutes(IRouteBuilder routeBuilder);
     }
 }

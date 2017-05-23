@@ -443,9 +443,9 @@
     <Compile Include="App_Start\StartupTasks\JsonConverterConfigurationStartupTask.cs" />
     <Compile Include="App_Start\Middleware\AutoUpdateMiddleware.cs" />
     <Compile Include="App_Start\CofoundryStartupConfiguration.cs" />
-    <Compile Include="Controllers\AssetsController.cs" />
-    <Compile Include="Controllers\FilesController.cs" />
-    <Compile Include="Controllers\PagesController.cs" />
+    <Compile Include="Controllers\CofoundryAssetsController.cs" />
+    <Compile Include="Controllers\CofoundryFilesController.cs" />
+    <Compile Include="Controllers\CofoundryPagesController.cs" />
     <Compile Include="Controllers\PagesControllerImplementation\Bootstrap\PageControllerImplementationDependencyRegistration.cs" />
     <Compile Include="Controllers\PagesControllerImplementation\PageResponseDataCache\IPageResponseData.cs" />
     <Compile Include="Controllers\PagesControllerImplementation\PageResponseDataCache\PageResponseDataCache.cs" />

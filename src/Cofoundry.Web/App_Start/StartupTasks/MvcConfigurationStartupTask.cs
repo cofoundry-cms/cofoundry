@@ -116,8 +116,8 @@ namespace Cofoundry.Web
         private static void RegisterRootFiles(IRouteBuilder routes)
         {
             // General files
-            routes.MapRoute("RobotsTxt", "robots.txt", new { controller = "Files", action = "RobotsTxt" });
-            routes.MapRoute("HumansTxt", "humans.txt", new { controller = "Files", action = "HumansTxt" });
+            routes.MapRoute("RobotsTxt", "robots.txt", new { controller = "CofoundryFiles", action = "RobotsTxt" });
+            routes.MapRoute("HumansTxt", "humans.txt", new { controller = "CofoundryFiles", action = "HumansTxt" });
         }
 
         private void RegisterControllerRoutes(IRouteBuilder routes)
@@ -125,14 +125,14 @@ namespace Cofoundry.Web
             routes.MapRoute(
                 "Cofoundry_ImageAsset",
                 "assets/images/{assetId}_{fileName}.{extension}",
-                new { controller = "Assets", action = "Image" },
+                new { controller = "CofoundryAssets", action = "Image" },
                 new { assetId = @"\d+" });
 
             // File assets
             routes.MapRoute(
                 "Cofoundry_DocumentAsset",
                 "assets/files/{assetId}_{fileName}.{extension}",
-                new { controller = "Assets", action = "File" },
+                new { controller = "CofoundryAssets", action = "File" },
                 new { assetId = @"\d+" });
 
             RegisterInjectedRoutes(routes);
@@ -140,7 +140,7 @@ namespace Cofoundry.Web
             routes.MapRoute(
                 "Cofoundry_Page",
                 "{*path}",
-                new { controller = "Pages", action = "Page" });
+                new { controller = "CofoundryPages", action = "Page" });
         }
 
         private void RegisterInjectedRoutes(IRouteBuilder routes)

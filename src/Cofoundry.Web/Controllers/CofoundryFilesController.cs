@@ -12,7 +12,7 @@ using System.IO;
 
 namespace Cofoundry.Web
 {
-    public class FilesController : Controller
+    public class CofoundryFilesController : Controller
     {
         #region constructor
 
@@ -20,7 +20,7 @@ namespace Cofoundry.Web
         private readonly ISiteUrlResolver _siteUriResolver;
         private readonly IHostingEnvironment _hostingEnvironment;
         
-        public FilesController(
+        public CofoundryFilesController(
             IQueryExecutor queryExecutor,
             ISiteUrlResolver siteUriResolver,
             IHostingEnvironment hostingEnvironment

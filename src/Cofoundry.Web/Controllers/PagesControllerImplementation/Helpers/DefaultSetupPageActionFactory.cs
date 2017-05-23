@@ -5,8 +5,9 @@ using System;
 namespace Cofoundry.Web
 {
     /// <summary>
-    /// The default implementation returns no site viewer. The real implementation is
-    /// in Cofoundry.Web.Admin.SiteViewerActionFactory
+    /// The default implementation throws an exception because you cannot set
+    /// up the site without the admin plugin. The real implementation is
+    /// in Cofoundry.Web.Admin.SetupPageActionFactory.
     /// </summary>
     public class DefaultSetupPageActionFactory : ISetupPageActionFactory
     {

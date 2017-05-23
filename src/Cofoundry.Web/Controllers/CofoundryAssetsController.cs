@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace Cofoundry.Web
 {
-    public class AssetsController : Controller
+    public class CofoundryAssetsController : Controller
     {
         #region Constructors
 
@@ -23,7 +23,7 @@ namespace Cofoundry.Web
         private readonly IImageAssetRouteLibrary _imageAssetRouteLibrary;
         private readonly IMimeTypeService _mimeTypeService;
 
-        public AssetsController(
+        public CofoundryAssetsController(
             IQueryExecutor queryExecutor,
             IResizedImageAssetFileService resizedImageAssetFileService,
             IErrorLoggingService errorLoggingService,

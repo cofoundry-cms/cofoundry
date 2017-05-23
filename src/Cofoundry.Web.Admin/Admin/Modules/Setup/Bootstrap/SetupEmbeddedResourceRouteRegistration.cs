@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
-using Cofoundry.Core.EmbeddedResources;
+using Cofoundry.Core.ResourceFiles;
 
 namespace Cofoundry.Web.Admin
 {
