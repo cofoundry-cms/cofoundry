@@ -2,15 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Web.Http;
-using System.Web.OData;
+using Microsoft.AspNetCore.Mvc;
 using Cofoundry.Domain;
 using Cofoundry.Domain.CQS;
 using Cofoundry.Web.WebApi;
 
 namespace Cofoundry.Web.Admin
 {
-    [RoutePrefix(RouteConstants.ApiRoutePrefix + "/WebDirectories")]
+    [Route(RouteConstants.ApiRoutePrefix + "/WebDirectories")]
     public class WebDirectoriesApiController : BaseAdminApiController
     {
         #region private member variables
@@ -40,25 +39,22 @@ namespace Cofoundry.Web.Admin
         #region queries
 
         [HttpGet]
-        [Route]
-        public async Task<IHttpActionResult> Get()
+        public async Task<IActionResult> Get()
         {
             var results = await _queryExecutor.GetAllAsync<WebDirectoryRoute>();
             return _apiResponseHelper.SimpleQueryResponse(this, results);
         }
 
-        [HttpGet]
-        [Route("tree")]
-        public async Task<IHttpActionResult> GetTree()
+        [HttpGet("tree")]
+        public async Task<IActionResult> GetTree()
         {
             var query = new GetWebDirectoryTreeQuery();
             var results = await _queryExecutor.ExecuteAsync(query);
             return _apiResponseHelper.SimpleQueryResponse(this, results);
         }
         
-        [HttpGet]
-        [Route(ID_ROUTE)]
-        public async Task<IHttpActionResult> Get(int webDirectoryId)
+        [HttpGet(ID_ROUTE)]
+        public async Task<IActionResult> Get(int webDirectoryId)
         {
             var result = await _queryExecutor.GetByIdAsync<WebDirectoryNode>(webDirectoryId);
             return _apiResponseHelper.SimpleQueryResponse(this, result);
@@ -69,22 +65,19 @@ namespace Cofoundry.Web.Admin
         #region commands
 
         [HttpPost]
-        [Route()]
-        public async Task<IHttpActionResult> Post(AddWebDirectoryCommand command)
+        public async Task<IActionResult> Post([FromBody] AddWebDirectoryCommand command)
         {
             return await _apiResponseHelper.RunCommandAsync(this, command);
         }
 
-        [HttpPatch]
-        [Route(ID_ROUTE)]
-        public async Task<IHttpActionResult> Patch(int webDirectoryId, Delta<UpdateWebDirectoryCommand> delta)
+        [HttpPatch(ID_ROUTE)]
+        public async Task<IActionResult> Patch(int webDirectoryId, [FromBody] Delta<UpdateWebDirectoryCommand> delta)
         {
             return await _apiResponseHelper.RunCommandAsync(this, webDirectoryId, delta);
         }
 
-        [HttpDelete]
-        [Route(ID_ROUTE)]
-        public async Task<IHttpActionResult> Delete(int webDirectoryId)
+        [HttpDelete(ID_ROUTE)]
+        public async Task<IActionResult> Delete(int webDirectoryId)
         {
             var command = new DeleteWebDirectoryCommand();
             command.WebDirectoryId = webDirectoryId;

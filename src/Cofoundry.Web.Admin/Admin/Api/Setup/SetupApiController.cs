@@ -2,15 +2,15 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Web.Http;
+using Microsoft.AspNetCore.Mvc;
 using Cofoundry.Domain;
 using Cofoundry.Web.WebApi;
 
 namespace Cofoundry.Web.Admin
 {
-    [AdminApiRoutePrefix("setup")]
+    [AdminApiRoute("setup")]
     [ValidateApiAntiForgeryToken]
-    public class SetupApiController : ApiController
+    public class SetupApiController : Controller
     {
         #region private member variables
 
@@ -34,8 +34,7 @@ namespace Cofoundry.Web.Admin
         #region commands
 
         [HttpPost]
-        [Route]
-        public async Task<IHttpActionResult> Post(SetupCofoundryCommandDto dto)
+        public async Task<IActionResult> Post([FromBody] SetupCofoundryCommandDto dto)
         {
             var command = new SetupCofoundryCommand()
             {

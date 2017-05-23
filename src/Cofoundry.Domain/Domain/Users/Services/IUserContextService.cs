@@ -12,7 +12,8 @@ namespace Cofoundry.Domain
     public interface IUserContextService
     {
         /// <summary>
-        /// Get the connection context of the current user.
+        /// Get the connection context of the current user. By default the UserContext
+        /// is cached for the lifetime of the service (per request in web scenarios).
         /// </summary>
         Task<IUserContext> GetCurrentContextAsync();
 

@@ -2,15 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Web.Http;
-using System.Web.Http.ModelBinding;
+using Microsoft.AspNetCore.Mvc;
 using Cofoundry.Domain;
 using Cofoundry.Domain.CQS;
 using Cofoundry.Web.WebApi;
 
 namespace Cofoundry.Web.Admin
 {
-    [AdminApiRoutePrefix("custom-entities/{customEntityId:int}/versions")]
+    [AdminApiRoute("custom-entities/{customEntityId:int}/versions")]
     public class CustomEntityVersionsApiController : BaseAdminApiController
     {
         #region private member variables
@@ -41,8 +40,7 @@ namespace Cofoundry.Web.Admin
         #region queries
 
         [HttpGet]
-        [Route]
-        public async Task<IHttpActionResult> Get(int customEntityId)
+        public async Task<IActionResult> Get(int customEntityId)
         {
             var query = new GetCustomEntityVersionSummariesByCustomEntityIdQuery() { CustomEntityId = customEntityId };
 
@@ -55,39 +53,34 @@ namespace Cofoundry.Web.Admin
         #region commands
 
         [HttpPost]
-        [Route()]
-        public async Task<IHttpActionResult> Post(AddCustomEntityDraftVersionCommand command)
+        public async Task<IActionResult> Post([FromBody] AddCustomEntityDraftVersionCommand command)
         {
             return await _apiResponseHelper.RunCommandAsync(this, command);
         }
 
-        [HttpPut]
-        [Route("draft")]
-        public async Task<IHttpActionResult> PutDraft(int customEntityId, [ModelBinder(typeof(CustomEntityDataModelCommandModelBinder))] UpdateCustomEntityDraftVersionCommand command)
+        [HttpPut("draft")]
+        public async Task<IActionResult> PutDraft(int customEntityId, [ModelBinder(BinderType = typeof(CustomEntityDataModelCommandModelBinder))] UpdateCustomEntityDraftVersionCommand command)
         {
             return await _apiResponseHelper.RunCommandAsync(this, command);
         }
 
-        [HttpDelete]
-        [Route("draft")]
-        public async Task<IHttpActionResult> DeleteDraft(int customEntityId)
+        [HttpDelete("draft")]
+        public async Task<IActionResult> DeleteDraft(int customEntityId)
         {
             var command = new DeleteCustomEntityDraftVersionCommand() { CustomEntityId = customEntityId };
 
             return await _apiResponseHelper.RunCommandAsync(this, command);
         }
 
-        [HttpPatch]
-        [Route("draft/publish")]
-        public async Task<IHttpActionResult> Publish(int customEntityId)
+        [HttpPatch("draft/publish")]
+        public async Task<IActionResult> Publish(int customEntityId)
         {
             var command = new PublishCustomEntityCommand() { CustomEntityId = customEntityId };
             return await _apiResponseHelper.RunCommandAsync(this, command);
         }
 
-        [HttpPatch]
-        [Route("published/unpublish")]
-        public async Task<IHttpActionResult> UnPublish(int customEntityId)
+        [HttpPatch("published/unpublish")]
+        public async Task<IActionResult> UnPublish(int customEntityId)
         {
             var command = new UnPublishCustomEntityCommand() { CustomEntityId = customEntityId };
             return await _apiResponseHelper.RunCommandAsync(this, command);

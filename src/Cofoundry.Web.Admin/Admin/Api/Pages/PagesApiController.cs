@@ -2,9 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Web;
-using System.Web.Http;
-using System.Web.OData;
+using Microsoft.AspNetCore.Mvc;
 using Cofoundry.Domain;
 using Cofoundry.Domain.CQS;
 using Cofoundry.Web.WebApi;
@@ -12,7 +10,7 @@ using Cofoundry.Core;
 
 namespace Cofoundry.Web.Admin
 {
-    [AdminApiRoutePrefix("pages")]
+    [AdminApiRoute("pages")]
     public class PagesApiController : BaseAdminApiController
     {
         #region private member variables
@@ -41,10 +39,9 @@ namespace Cofoundry.Web.Admin
         #region queries
 
         [HttpGet]
-        [Route]
-        public async Task<IHttpActionResult> Get(
-            [FromUri] SearchPageSummariesQuery query,
-            [FromUri] GetPageSummariesByIdRangeQuery rangeQuery
+        public async Task<IActionResult> Get(
+            [FromQuery] SearchPageSummariesQuery query,
+            [FromQuery] GetPageSummariesByIdRangeQuery rangeQuery
             )
         {
             if (rangeQuery != null && rangeQuery.PageIds != null)
@@ -59,9 +56,8 @@ namespace Cofoundry.Web.Admin
             return _apiResponseHelper.SimpleQueryResponse(this, results);
         }
 
-        [HttpGet]
-        [Route(ID_ROUTE)]
-        public async Task<IHttpActionResult> Get(int pageId)
+        [HttpGet(ID_ROUTE)]
+        public async Task<IActionResult> Get(int pageId)
         {
             var result = await _queryExecutor.GetByIdAsync<PageDetails>(pageId);
             return _apiResponseHelper.SimpleQueryResponse(this, result);
@@ -73,29 +69,25 @@ namespace Cofoundry.Web.Admin
         #region commands
 
         [HttpPost]
-        [Route()]
-        public async Task<IHttpActionResult> Post(AddPageCommand command)
+        public async Task<IActionResult> Post([FromBody] AddPageCommand command)
         {
             return await _apiResponseHelper.RunCommandAsync(this, command);
         }
 
-        [HttpPatch]
-        [Route(ID_ROUTE)]
-        public async Task<IHttpActionResult> Patch(int pageId, Delta<UpdatePageCommand> delta)
+        [HttpPatch(ID_ROUTE)]
+        public async Task<IActionResult> Patch(int pageId, [FromBody] Delta<UpdatePageCommand> delta)
         {
             return await _apiResponseHelper.RunCommandAsync(this, pageId, delta);
         }
 
-        [HttpPut]
-        [Route(ID_ROUTE + "/url")]
-        public async Task<IHttpActionResult> PutPageUrl(int pageId, UpdatePageUrlCommand command)
+        [HttpPut(ID_ROUTE + "/url")]
+        public async Task<IActionResult> PutPageUrl(int pageId, [FromBody] UpdatePageUrlCommand command)
         {
             return await _apiResponseHelper.RunCommandAsync(this, command);
         }
 
-        [HttpDelete]
-        [Route(ID_ROUTE)]
-        public async Task<IHttpActionResult> Delete(int pageId)
+        [HttpDelete(ID_ROUTE)]
+        public async Task<IActionResult> Delete(int pageId)
         {
             var command = new DeletePageCommand();
             command.PageId = pageId;
@@ -103,9 +95,8 @@ namespace Cofoundry.Web.Admin
             return await _apiResponseHelper.RunCommandAsync(this, command);
         }
 
-        [HttpPost]
-        [Route(ID_ROUTE + "/duplicate")]
-        public async Task<IHttpActionResult> Post(DuplicatePageCommand command)
+        [HttpPost(ID_ROUTE + "/duplicate")]
+        public async Task<IActionResult> Post([FromBody] DuplicatePageCommand command)
         {
             return await _apiResponseHelper.RunCommandAsync(this, command);
         }

@@ -2,15 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Web.Http;
-using System.Web.OData;
+using Microsoft.AspNetCore.Mvc;
 using Cofoundry.Domain;
 using Cofoundry.Domain.CQS;
 using Cofoundry.Web.WebApi;
 
 namespace Cofoundry.Web.Admin
 {
-    [AdminApiRoutePrefix("pages/{pageId:int}/versions")]
+    [AdminApiRoute("pages/{pageId:int}/versions")]
     public class PageVersionsApiController : BaseAdminApiController
     {
         #region private member variables
@@ -41,8 +40,7 @@ namespace Cofoundry.Web.Admin
         #region queries
 
         [HttpGet]
-        [Route]
-        public async Task<IHttpActionResult> Get(int pageId)
+        public async Task<IActionResult> Get(int pageId)
         {
             var query = new GetPageVersionSummariesByPageIdQuery() { PageId = pageId };
 
@@ -55,15 +53,13 @@ namespace Cofoundry.Web.Admin
         #region commands
 
         [HttpPost]
-        [Route()]
-        public async Task<IHttpActionResult> Post(AddPageDraftVersionCommand command)
+        public async Task<IActionResult> Post([FromBody] AddPageDraftVersionCommand command)
         {
             return await _apiResponseHelper.RunCommandAsync(this, command);
         }
 
-        [HttpPatch]
-        [Route("draft")]
-        public async Task<IHttpActionResult> PatchDraft(int pageId, Delta<UpdatePageDraftVersionCommand> delta)
+        [HttpPatch("draft")]
+        public async Task<IActionResult> PatchDraft(int pageId, [FromBody] Delta<UpdatePageDraftVersionCommand> delta)
         {
             // Custom patching because we may need to create a draft version first
             var command = await _queryExecutor.GetByIdAsync<UpdatePageDraftVersionCommand>(pageId);
@@ -80,26 +76,23 @@ namespace Cofoundry.Web.Admin
             return await _apiResponseHelper.RunCommandAsync(this, command);
         }
 
-        [HttpDelete]
-        [Route("draft")]
-        public async Task<IHttpActionResult> DeleteDraft(int pageId)
+        [HttpDelete("draft")]
+        public async Task<IActionResult> DeleteDraft(int pageId)
         {
             var command = new DeletePageDraftVersionCommand() { PageId = pageId };
 
             return await _apiResponseHelper.RunCommandAsync(this, command);
         }
 
-        [HttpPatch]
-        [Route("draft/publish")]
-        public async Task<IHttpActionResult> Publish(int pageId)
+        [HttpPatch("draft/publish")]
+        public async Task<IActionResult> Publish(int pageId)
         {
             var command = new PublishPageCommand() { PageId = pageId };
             return await _apiResponseHelper.RunCommandAsync(this, command);
         }
 
-        [HttpPatch]
-        [Route("published/unpublish")]
-        public async Task<IHttpActionResult> UnPublish(int pageId)
+        [HttpPatch("published/unpublish")]
+        public async Task<IActionResult> UnPublish(int pageId)
         {
             var command = new UnPublishPageCommand() { PageId = pageId };
             return await _apiResponseHelper.RunCommandAsync(this, command);

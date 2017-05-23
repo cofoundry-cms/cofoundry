@@ -4,17 +4,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
-using System.Web.Http;
-using System.Web.Http.ModelBinding;
-using System.Web.OData;
 using Cofoundry.Domain;
 using Cofoundry.Domain.CQS;
 using Cofoundry.Web.WebApi;
 using Cofoundry.Core;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Cofoundry.Web.Admin
 {
-    [AdminApiRoutePrefix("custom-entities")]
+    [AdminApiRoute("custom-entities")]
     public class CustomEntitiesApiController : BaseAdminApiController
     {
         #region private member variables
@@ -44,8 +42,7 @@ namespace Cofoundry.Web.Admin
         #region queries
 
         [HttpGet]
-        [Route]
-        public async Task<IHttpActionResult> Get([FromUri] SearchCustomEntitySummariesQuery query, [FromUri] GetByIdRangeQuery<CustomEntitySummary> rangeQuery)
+        public async Task<IActionResult> Get([FromQuery] SearchCustomEntitySummariesQuery query, [FromQuery] GetByIdRangeQuery<CustomEntitySummary> rangeQuery)
         {
             if (rangeQuery != null && rangeQuery.Ids != null)
             {
@@ -59,9 +56,8 @@ namespace Cofoundry.Web.Admin
             return _apiResponseHelper.SimpleQueryResponse(this, results);
         }
 
-        [HttpGet]
-        [Route(ID_ROUTE)]
-        public async Task<IHttpActionResult> Get(int customEntityId)
+        [HttpGet(ID_ROUTE)]
+        public async Task<IActionResult> Get(int customEntityId)
         {
             var result = await _queryExecutor.GetByIdAsync<CustomEntityDetails>(customEntityId);
             return _apiResponseHelper.SimpleQueryResponse(this, result);
@@ -72,29 +68,25 @@ namespace Cofoundry.Web.Admin
         #region commands
 
         [HttpPost]
-        [Route()]
-        public async Task<IHttpActionResult> Post([ModelBinder(typeof(CustomEntityDataModelCommandModelBinder))] AddCustomEntityCommand command)
+        public async Task<IActionResult> Post([ModelBinder(BinderType = typeof(CustomEntityDataModelCommandModelBinder))] AddCustomEntityCommand command)
         {
             return await _apiResponseHelper.RunCommandAsync(this, command);
         }
 
-        [HttpPut]
-        [Route("ordering")]
-        public async Task<IHttpActionResult> PutOrdering(ReOrderCustomEntitiesCommand command)
+        [HttpPut("ordering")]
+        public async Task<IActionResult> PutOrdering([FromBody] ReOrderCustomEntitiesCommand command)
         {
             return await _apiResponseHelper.RunCommandAsync(this, command);
         }
 
-        [HttpPut]
-        [Route(ID_ROUTE + "/url")]
-        public async Task<IHttpActionResult> PutCustomEntityUrl(int customEntityId, UpdateCustomEntityUrlCommand command)
+        [HttpPut(ID_ROUTE + "/url")]
+        public async Task<IActionResult> PutCustomEntityUrl(int customEntityId, [FromBody] UpdateCustomEntityUrlCommand command)
         {
             return await _apiResponseHelper.RunCommandAsync(this, command);
         }
 
-        [HttpDelete]
-        [Route(ID_ROUTE)]
-        public async Task<IHttpActionResult> Delete(int customEntityId)
+        [HttpDelete(ID_ROUTE)]
+        public async Task<IActionResult> Delete(int customEntityId)
         {
             var command = new DeleteCustomEntityCommand();
             command.CustomEntityId = customEntityId;

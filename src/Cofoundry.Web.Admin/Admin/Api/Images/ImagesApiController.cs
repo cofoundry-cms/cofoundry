@@ -2,8 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Web.Http;
-using System.Web.OData;
+using Microsoft.AspNetCore.Mvc;
 using Cofoundry.Domain;
 using Cofoundry.Domain.CQS;
 using Cofoundry.Core;
@@ -11,7 +10,7 @@ using Cofoundry.Web.WebApi;
 
 namespace Cofoundry.Web.Admin
 {
-    [AdminApiRoutePrefix("images")]
+    [AdminApiRoute("images")]
     public class ImagesApiController : BaseAdminApiController
     {
         #region private member variables
@@ -41,8 +40,7 @@ namespace Cofoundry.Web.Admin
         #region queries
 
         [HttpGet]
-        [Route]
-        public async Task<IHttpActionResult> Get([FromUri] SearchImageAssetSummariesQuery query, [FromUri] GetByIdRangeQuery<ImageAssetRenderDetails> rangeQuery)
+        public async Task<IActionResult> Get([FromQuery] SearchImageAssetSummariesQuery query, [FromQuery] GetByIdRangeQuery<ImageAssetRenderDetails> rangeQuery)
         {
             if (rangeQuery != null && rangeQuery.Ids != null)
             {
@@ -56,9 +54,8 @@ namespace Cofoundry.Web.Admin
             return _apiResponseHelper.SimpleQueryResponse(this, results);
         }
 
-        [HttpGet]
-        [Route(ID_ROUTE)]
-        public async Task<IHttpActionResult> Get(int imageAssetId)
+        [HttpGet(ID_ROUTE)]
+        public async Task<IActionResult> Get(int imageAssetId)
         {
             var result = await _queryExecutor.GetByIdAsync<ImageAssetDetails>(imageAssetId);
             return _apiResponseHelper.SimpleQueryResponse(this, result);
@@ -69,29 +66,25 @@ namespace Cofoundry.Web.Admin
         #region commands
 
         [HttpPost]
-        [Route]
-        public async Task<IHttpActionResult> Post(AddImageAssetCommand command)
+        public async Task<IActionResult> Post([FromBody] AddImageAssetCommand command)
         {
             return await _apiResponseHelper.RunCommandAsync(this, command);
         }
 
-        [HttpPatch]
-        [Route(ID_ROUTE)]
-        public async Task<IHttpActionResult> Patch(int imageAssetId, Delta<UpdateImageAssetCommand> delta)
+        [HttpPatch(ID_ROUTE)]
+        public async Task<IActionResult> Patch(int imageAssetId, [FromBody] Delta<UpdateImageAssetCommand> delta)
         {
             return await _apiResponseHelper.RunCommandAsync(this, imageAssetId, delta);
         }
 
-        [HttpDelete]
-        [Route(ID_ROUTE)]
-        public async Task<IHttpActionResult> Delete(int imageAssetId)
+        [HttpDelete(ID_ROUTE)]
+        public async Task<IActionResult> Delete(int imageAssetId)
         {
             var command = new DeleteImageAssetCommand();
             command.ImageAssetId = imageAssetId;
 
             return await _apiResponseHelper.RunCommandAsync(this, command);
         }
-
 
         #endregion
 

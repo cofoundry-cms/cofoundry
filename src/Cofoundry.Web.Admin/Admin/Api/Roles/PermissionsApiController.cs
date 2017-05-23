@@ -3,14 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
-using System.Web.Http;
+using Microsoft.AspNetCore.Mvc;
 using Cofoundry.Domain;
 using Cofoundry.Domain.CQS;
 using Cofoundry.Web.WebApi;
 
 namespace Cofoundry.Web.Admin
 {
-    [AdminApiRoutePrefix("permissions")]
+    [AdminApiRoute("permissions")]
     public class PermissionsApiController : BaseAdminApiController
     {
         #region private member variables
@@ -38,8 +38,7 @@ namespace Cofoundry.Web.Admin
         #region queries
 
         [HttpGet]
-        [Route]
-        public async Task<IHttpActionResult> Get()
+        public async Task<IActionResult> Get()
         {
             var results = await _queryExecutor.GetAllAsync<IPermission>();
             return _apiResponseHelper.SimpleQueryResponse(this, results);

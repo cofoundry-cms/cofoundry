@@ -60,7 +60,7 @@ namespace Cofoundry.Domain
             }
 
             ValidateLoginArea(command.UserAreaCode, user.UserAreaCode);
-            await _loginService.LogAuthenticatedUserInAsync(user.UserId, true);
+            await _loginService.LogAuthenticatedUserInAsync(command.UserAreaCode, user.UserId, true);
         }
         
         private static bool IsLoggedInAlready(LogUserInWithCredentialsCommand command, IExecutionContext executionContext)

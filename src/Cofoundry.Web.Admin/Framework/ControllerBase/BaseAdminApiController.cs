@@ -1,14 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web.Http;
 using Cofoundry.Web.WebApi;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Cofoundry.Web.Admin
 {
-    [AdminApiAuthorize]
+    [AdminAuthorize]
     [ValidateApiAntiForgeryToken]
-    public class BaseAdminApiController : ApiController
+    public class BaseAdminApiController : Controller
     {
     }
 }

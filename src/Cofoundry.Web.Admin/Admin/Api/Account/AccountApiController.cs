@@ -3,19 +3,17 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Web;
-using System.Web.Http;
-using System.Web.OData;
 using Cofoundry.Domain;
 using Cofoundry.Domain.CQS;
 using Cofoundry.Web.WebApi;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Cofoundry.Web.Admin
 {
-    [AdminApiAuthorize]
+    [AdminAuthorize]
     [ValidateApiAntiForgeryToken]
-    [RoutePrefix(RouteConstants.ApiRoutePrefix + "/Account")]
-    public class AccountApiController : ApiController
+    [Route(RouteConstants.ApiRoutePrefix + "/account")]
+    public class AccountApiController : Controller
     {
         #region private member variables
 
@@ -45,8 +43,7 @@ namespace Cofoundry.Web.Admin
         #region queries
 
         [HttpGet]
-        [Route]
-        public async Task<IHttpActionResult> Get()
+        public async Task<IActionResult> Get()
         {
             var query = new GetCurrentUserAccountDetailsQuery();
 
@@ -58,18 +55,17 @@ namespace Cofoundry.Web.Admin
 
         #region commands
 
-        [Route]
         [HttpPatch]
-        public async Task<IHttpActionResult> Patch(Delta<UpdateCurrentUserAccountCommand> delta)
+        public async Task<IActionResult> Patch([FromBody] Delta<UpdateCurrentUserAccountCommand> delta)
         {
-            var userId = _userContextService.GetCurrentContext().UserId.Value;
+            var userContext = await _userContextService.GetCurrentContextAsync();
+            var userId = userContext.UserId.Value;
 
             return await _apiResponseHelper.RunCommandAsync(this, userId, delta);
         }
 
-        [HttpPut]
-        [Route("Password")]
-        public async Task<IHttpActionResult> PutPassword(UpdateCurrentUserUserPasswordCommandDto dto)
+        [HttpPut("Password")]
+        public async Task<IActionResult> PutPassword([FromBody] UpdateCurrentUserUserPasswordCommandDto dto)
         {
             var command = new UpdateCurrentUserUserPasswordCommand()
             {

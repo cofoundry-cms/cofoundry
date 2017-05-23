@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
-using System.Web.Http;
+using Microsoft.AspNetCore.Mvc;
 using System.Web.OData;
 using Cofoundry.Domain;
 using Cofoundry.Domain.CQS;
@@ -11,7 +11,7 @@ using Cofoundry.Web.WebApi;
 
 namespace Cofoundry.Web.Admin
 {
-    [AdminApiRoutePrefix("roles")]
+    [AdminApiRoute("roles")]
     public class RolesApiController : BaseAdminApiController
     {
         #region private member variables
@@ -41,8 +41,7 @@ namespace Cofoundry.Web.Admin
         #region queries
 
         [HttpGet]
-        [Route]
-        public async Task<IHttpActionResult> Get([FromUri] SearchRolesQuery query)
+        public async Task<IActionResult> Get([FromQuery] SearchRolesQuery query)
         {
             if (query == null) query = new SearchRolesQuery();
 
@@ -50,9 +49,8 @@ namespace Cofoundry.Web.Admin
             return _apiResponseHelper.SimpleQueryResponse(this, results);
         }
         
-        [HttpGet]
-        [Route(ID_ROUTE)]
-        public async Task<IHttpActionResult> Get(int roleId)
+        [HttpGet(ID_ROUTE)]
+        public async Task<IActionResult> Get(int roleId)
         {
             var result = await _queryExecutor.ExecuteAsync(new GetRoleDetailsByIdQuery(roleId));
             return _apiResponseHelper.SimpleQueryResponse(this, result);
@@ -63,22 +61,19 @@ namespace Cofoundry.Web.Admin
         #region commands
 
         [HttpPost]
-        [Route()]
-        public async Task<IHttpActionResult> Post(AddRoleCommand command)
+        public async Task<IActionResult> Post([FromBody] AddRoleCommand command)
         {
             return await _apiResponseHelper.RunCommandAsync(this, command);
         }
 
-        [HttpPatch]
-        [Route(ID_ROUTE)]
-        public async Task<IHttpActionResult> Patch(int roleId, Delta<UpdateRoleCommand> delta)
+        [HttpPatch(ID_ROUTE)]
+        public async Task<IActionResult> Patch(int roleId, [FromBody] Delta<UpdateRoleCommand> delta)
         {
             return await _apiResponseHelper.RunCommandAsync(this, roleId, delta);
         }
 
-        [HttpDelete]
-        [Route(ID_ROUTE)]
-        public async Task<IHttpActionResult> Delete(int roleId)
+        [HttpDelete(ID_ROUTE)]
+        public async Task<IActionResult> Delete(int roleId)
         {
             var command = new DeleteRoleCommand();
             command.RoleId = roleId;

@@ -3,8 +3,11 @@ using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web.Http.ModelBinding;
 using Cofoundry.Domain;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
+using System.Threading.Tasks;
+using System.IO;
+using System.Text;
 
 namespace Cofoundry.Web.Admin
 {
@@ -14,9 +17,20 @@ namespace Cofoundry.Web.Admin
     /// </summary>
     public class PageVersionModuleDataModelCommandModelBinder : IModelBinder
     {
-        public bool BindModel(System.Web.Http.Controllers.HttpActionContext actionContext, ModelBindingContext bindingContext)
+        private readonly IPageModuleDataModelTypeFactory _moduleDataModelTypeFactory;
+
+        public PageVersionModuleDataModelCommandModelBinder(
+            IPageModuleDataModelTypeFactory moduleDataModelTypeFactory
+            )
         {
-            var jsonString = actionContext.Request.Content.ReadAsStringAsync().Result;
+            _moduleDataModelTypeFactory = moduleDataModelTypeFactory;
+        }
+
+        public async Task BindModelAsync(ModelBindingContext bindingContext)
+        {
+            if (bindingContext == null) throw new ArgumentNullException(nameof(bindingContext));
+            var jsonString = await ReadBodyAsString(bindingContext);
+
             var json = JObject.Parse(jsonString);
             var pageModuleTypeIdProperty = json.GetValue("PageModuleTypeId", StringComparison.OrdinalIgnoreCase);
 
@@ -27,28 +41,30 @@ namespace Cofoundry.Web.Admin
             }
             else
             {
-                dataModelConverter = GetModuleDataTypeConverter(pageModuleTypeIdProperty.Value<int>());
+                dataModelConverter = await GetModuleDataTypeConverterAsync(pageModuleTypeIdProperty.Value<int>());
             }
             
             var result = JsonConvert.DeserializeObject(jsonString, bindingContext.ModelType, dataModelConverter);
-            bindingContext.Model = result;
-
-            return true;
+            bindingContext.Result = ModelBindingResult.Success(result);
         }
 
-        private JsonConverter GetModuleDataTypeConverter(int pageModuleTypeId)
+        private async Task<string> ReadBodyAsString(ModelBindingContext bindingContext)
         {
-            var moduleDataModelTypeFactory = Resolve<IPageModuleDataModelTypeFactory>();
-            var dataModelType = moduleDataModelTypeFactory.CreateByPageModuleTypeId(pageModuleTypeId);
+            string body;
+            using (var reader = new StreamReader(bindingContext.ActionContext.HttpContext.Request.Body, Encoding.UTF8))
+            {
+                body = await reader.ReadToEndAsync();
+            }
+
+            return body;
+        }
+
+        private async Task<JsonConverter> GetModuleDataTypeConverterAsync(int pageModuleTypeId)
+        {
+            var dataModelType = await _moduleDataModelTypeFactory.CreateByPageModuleTypeIdAsync(pageModuleTypeId);
             var converterType = typeof(PageModuleDataModelJsonConverter<>).MakeGenericType(dataModelType);
 
             return (JsonConverter)Activator.CreateInstance(converterType);
-        }
-
-        private T Resolve<T>()
-        {
-            // Use DependencyResolver because IModelBinder are singletons and don't allow injection in the request lifecycle
-            return IckyDependencyResolution.ResolveInWebApiContext<T>();
         }
     }
 }

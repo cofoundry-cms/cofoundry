@@ -2,14 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Web.Http;
+using Microsoft.AspNetCore.Mvc;
 using Cofoundry.Core.Caching;
 using Cofoundry.Web.WebApi;
 using Cofoundry.Core.Validation;
 
 namespace Cofoundry.Web.Admin
 {
-    [AdminApiRoutePrefix("cache")]
+    [AdminApiRoute("cache")]
     public class CacheApiController : BaseAdminApiController
     {
         #region private member variables
@@ -42,8 +42,7 @@ namespace Cofoundry.Web.Admin
         /// deployment
         /// </summary>
         [HttpDelete]
-        [Route]
-        public IHttpActionResult Delete()
+        public IActionResult Delete()
         {
             _objectCacheFactory.Clear();
 

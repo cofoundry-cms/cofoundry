@@ -3,14 +3,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using Cofoundry.Domain;
+using System.Threading.Tasks;
 
 namespace Cofoundry.Web.Admin
 {
     public static class SettingsViewHelperExtensions
     {
-        public static string GetApplicationName(this ISettingsViewHelper helper)
+        public static async Task<string> GetApplicationNameAsync(this ISettingsViewHelper helper)
         {
-            return helper.Get<GeneralSiteSettings>().ApplicationName;
+            var settings = await helper.GetAsync<GeneralSiteSettings>();
+            return settings.ApplicationName;
         }
     }
 }

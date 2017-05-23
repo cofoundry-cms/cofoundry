@@ -2,14 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Web.Http;
+using Microsoft.AspNetCore.Mvc;
 using Cofoundry.Domain;
 using Cofoundry.Domain.CQS;
 using Cofoundry.Web.WebApi;
 
 namespace Cofoundry.Web.Admin
 {
-    [AdminApiRoutePrefix("page-module-types")]
+    [AdminApiRoute("page-module-types")]
     public class PageModuleTypesApiController : BaseAdminApiController
     {
         #region private member variables
@@ -37,16 +37,14 @@ namespace Cofoundry.Web.Admin
         #region queries
 
         [HttpGet]
-        [Route]
-        public async Task<IHttpActionResult> Get()
+        public async Task<IActionResult> Get()
         {
             var results = await _queryExecutor.GetAllAsync<PageModuleTypeSummary>();
             return _apiResponseHelper.SimpleQueryResponse(this, results);
         }
 
-        [HttpGet]
-        [Route("{pageModuleTypeId:int}")]
-        public async Task<IHttpActionResult> Get(int pageModuleTypeId)
+        [HttpGet("{pageModuleTypeId:int}")]
+        public async Task<IActionResult> Get(int pageModuleTypeId)
         {
             var results = await _queryExecutor.GetByIdAsync<PageModuleTypeDetails>(pageModuleTypeId);
             return _apiResponseHelper.SimpleQueryResponse(this, results);

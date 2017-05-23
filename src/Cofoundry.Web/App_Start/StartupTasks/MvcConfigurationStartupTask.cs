@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Cofoundry.Core;
 using Microsoft.Extensions.Options;
+using Cofoundry.Domain;
 
 namespace Cofoundry.Web
 {
@@ -20,17 +21,17 @@ namespace Cofoundry.Web
 
         private readonly IRouteInitializer _routeInitializer;
         private readonly IEnumerable<IEmbeddedResourceRouteRegistration> _routeRegistrations;
-        private readonly IOptions<CookieAuthenticationOptions> _cookieAuthenticationOptions;
+        private readonly IUserAreaRepository _userAreaRepository;
 
         public MvcConfigurationStartupTask(
             IRouteInitializer routeInitializer,
             IEnumerable<IEmbeddedResourceRouteRegistration> routeRegistrations,
-            IOptions<CookieAuthenticationOptions> cookieAuthenticationOptions
+            IUserAreaRepository userAreaRepository
             )
         {
             _routeInitializer = routeInitializer;
             _routeRegistrations = routeRegistrations;
-            _cookieAuthenticationOptions = cookieAuthenticationOptions;
+            _userAreaRepository = userAreaRepository;
         }
 
         #endregion
@@ -44,12 +45,37 @@ namespace Cofoundry.Web
         {
             RegisterStaticFiles(app);
 
-            var cookieOptions = _cookieAuthenticationOptions.Value;
-            cookieOptions.AuthenticationScheme = CofoundryAuthenticationConstants.CookieAuthenticationScheme;
-            app.UseCookieAuthentication(cookieOptions);
+            foreach (var userAreaDefinition in _userAreaRepository.GetAll())
+            {
+                var cookieOptions = new CookieAuthenticationOptions();
+                cookieOptions.AuthenticationScheme = CofoundryAuthenticationConstants.FormatAuthenticationScheme(userAreaDefinition.UserAreaCode);
+
+                // Share the cookie name between user areas, because you should only be able to log into one at a time,
+                cookieOptions.CookieName = "CF_AUTH";
+
+                // NB: When adding multiple authentication middleware you should ensure that no middleware is configured to run automatically
+                // https://docs.microsoft.com/en-us/aspnet/core/security/authorization/limitingidentitybyscheme
+                //cookieOptions.AutomaticAuthenticate = false;
+
+                if (!string.IsNullOrWhiteSpace(userAreaDefinition.LoginPath))
+                {
+                    cookieOptions.LoginPath = userAreaDefinition.LoginPath;
+                }
+
+                if (!string.IsNullOrWhiteSpace(userAreaDefinition.LogoutPath))
+                {
+                    cookieOptions.LogoutPath = userAreaDefinition.LogoutPath;
+                }
+
+                if (!string.IsNullOrWhiteSpace(userAreaDefinition.AccessDeniedPath))
+                {
+                    cookieOptions.AccessDeniedPath = userAreaDefinition.AccessDeniedPath;
+                }
+
+                app.UseCookieAuthentication(cookieOptions);
+            }
 
             app.UseMvc(GetRoutes);
-            //ControllerBuilder.Current.DefaultNamespaces.Add(typeof(PagesController).Namespace);
 
             RegisterModelBinders();
         }

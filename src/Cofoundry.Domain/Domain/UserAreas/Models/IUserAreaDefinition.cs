@@ -44,5 +44,23 @@ namespace Cofoundry.Domain
         /// an email address so in this case the email address is allowed to be null. 
         /// </summary>
         bool UseEmailAsUsername { get; }
+
+        /// <summary>
+        /// The LoginPath property informs the middleware that it should change an outgoing
+        /// 401 Unauthorized status code into a 302 redirection onto the given login path.
+        /// The current url which generated the 401 is added to the LoginPath as a query
+        /// string parameter named by the ReturnUrlParameter. Once a request to the LoginPath
+        /// grants a new SignIn identity, the ReturnUrlParameter value is used to redirect
+        /// the browser back to the url which caused the original unauthorized status code.
+        /// </summary>
+        string LoginPath { get; }
+        
+        string LogoutPath { get; }
+
+        /// <summary>
+        /// Optional. In a website this property can be used to change an
+        /// outgoing 403 Forbidden status code into a 302 redirection onto the given path.
+        /// </summary>
+        string AccessDeniedPath { get; }
     }
 }

@@ -25,12 +25,15 @@ namespace Cofoundry.Web
         private int? userIdCache = null;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private static readonly AuthenticationProperties _defaultAuthenticationProperties = new AuthenticationProperties() { IsPersistent = true };
+        private readonly IUserAreaRepository _userAreaRepository;
 
         public UserSessionService(
-            IHttpContextAccessor httpContextAccessor
+            IHttpContextAccessor httpContextAccessor,
+            IUserAreaRepository userAreaRepository
             )
         {
             _httpContextAccessor = httpContextAccessor;
+            _userAreaRepository = userAreaRepository;
         }
 
         /// <summary>
@@ -63,7 +66,7 @@ namespace Cofoundry.Web
         /// True if the session should last indefinately; false if the 
         /// session should close after a timeout period.
         /// </param>
-        public Task SetCurrentUserIdAsync(int userId, bool rememberUser)
+        public Task SetCurrentUserIdAsync(string userAreaDefinitionCode, int userId, bool rememberUser)
         {
             Condition.Requires(userId).IsGreaterThan(0);
             var stringId = Convert.ToString(userId);
@@ -71,21 +74,27 @@ namespace Cofoundry.Web
             var userPrincipal = new GenericPrincipal(new GenericIdentity(stringId), null);
             userIdCache = userId;
 
-            return _httpContextAccessor.HttpContext.Authentication.SignInAsync(CofoundryAuthenticationConstants.CookieAuthenticationScheme, userPrincipal, _defaultAuthenticationProperties);
+            var scheme = CofoundryAuthenticationConstants.FormatAuthenticationScheme(userAreaDefinitionCode);
+            return _httpContextAccessor.HttpContext.Authentication.SignInAsync(scheme, userPrincipal, _defaultAuthenticationProperties);
         }
 
         /// <summary>
         /// Abandons the current session and removes the users
         /// login cookie
         /// </summary>
-        public Task AbandonAsync()
+        public async Task AbandonAsync()
         {
-            if (_httpContextAccessor.HttpContext?.User == null) return Task.CompletedTask;
+            if (_httpContextAccessor.HttpContext?.User == null) return;
 
             userIdCache = null;
             _httpContextAccessor.HttpContext?.Session?.Clear();
 
-            return _httpContextAccessor.HttpContext.Authentication.SignOutAsync(CofoundryAuthenticationConstants.CookieAuthenticationScheme);
+            foreach (var customEntityDefinition in _userAreaRepository.GetAll())
+            {
+                var scheme = CofoundryAuthenticationConstants.FormatAuthenticationScheme(customEntityDefinition.UserAreaCode);
+                await _httpContextAccessor.HttpContext.Authentication.SignOutAsync(scheme);
+            }
+
         }
     }
 }

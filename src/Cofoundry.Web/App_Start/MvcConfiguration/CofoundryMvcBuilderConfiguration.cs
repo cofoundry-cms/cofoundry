@@ -1,4 +1,5 @@
 ﻿using Cofoundry.Core;
+using Cofoundry.Domain;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.Extensions.DependencyInjection;
@@ -19,16 +20,19 @@ namespace Cofoundry.Web
         private readonly IEnumerable<IMvcJsonOptionsConfiguration> _mvcJsonOptionsConfigurations;
         private readonly IEnumerable<IMvcOptionsConfiguration> _mvcOptionsConfigurations;
         private readonly IEnumerable<IRazorViewEngineOptionsConfiguration> _razorViewEngineOptionsConfigurations;
+        private readonly IUserAreaRepository _userAreaRepository;
 
         public CofoundryMvcBuilderConfiguration(
             IEnumerable<IMvcJsonOptionsConfiguration> mvcJsonOptionsConfigurations,
             IEnumerable<IMvcOptionsConfiguration> mvcOptionsConfigurations,
-            IEnumerable<IRazorViewEngineOptionsConfiguration> razorViewEngineOptionsConfigurations
+            IEnumerable<IRazorViewEngineOptionsConfiguration> razorViewEngineOptionsConfigurations,
+            IUserAreaRepository userAreaRepository
             )
         {
             _mvcJsonOptionsConfigurations = mvcJsonOptionsConfigurations;
             _mvcOptionsConfigurations = mvcOptionsConfigurations;
             _razorViewEngineOptionsConfigurations = razorViewEngineOptionsConfigurations;
+            _userAreaRepository = userAreaRepository;
         }
 
         /// <summary>
@@ -38,6 +42,16 @@ namespace Cofoundry.Web
         /// <param name="mvcBuilder">IMvcBuilder to configure.</param>
         public void Configure(IMvcBuilder mvcBuilder)
         {
+            // TODO: make this configurable
+            mvcBuilder.Services.AddAuthorization(options =>
+            {
+                foreach (var _userAreaRepository in _userAreaRepository.GetAll())
+                {
+                    options.AddPolicy(CofoundryAuthenticationConstants.FormatPolicyName(_userAreaRepository.UserAreaCode),
+                        policy => policy.AddRequirements(new UserAreaAuthorizationRequirement(_userAreaRepository.UserAreaCode)));
+                }
+            });
+
             foreach (var config in EnumerableHelper
                 .Enumerate(_mvcJsonOptionsConfigurations)
                 .OrderByDescending(o => o is CofoundryMvcJsonOptionsConfiguration))

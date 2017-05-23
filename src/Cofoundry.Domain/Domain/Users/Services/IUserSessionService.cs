@@ -29,7 +29,7 @@ namespace Cofoundry.Domain
         /// True if the session should last indefinately; false if the 
         /// session should close after a timeout period.
         /// </param>
-        Task SetCurrentUserIdAsync(int userId, bool rememberUser);
+        Task SetCurrentUserIdAsync(string userAreaDefinitionCode, int userId, bool rememberUser);
 
         /// <summary>
         /// Abandons the current session and removes the users

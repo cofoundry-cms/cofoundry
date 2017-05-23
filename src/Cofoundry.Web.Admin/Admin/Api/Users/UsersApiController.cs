@@ -2,15 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Web.Http;
-using System.Web.OData;
+using Microsoft.AspNetCore.Mvc;
 using Cofoundry.Domain;
 using Cofoundry.Domain.CQS;
 using Cofoundry.Web.WebApi;
 
 namespace Cofoundry.Web.Admin
 {
-    [AdminApiRoutePrefix("users")]
+    [AdminApiRoute("users")]
     public class UsersApiController : BaseAdminApiController
     {
         #region private member variables
@@ -40,8 +39,7 @@ namespace Cofoundry.Web.Admin
         #region queries
 
         [HttpGet]
-        [Route]
-        public async Task<IHttpActionResult> Get([FromUri] SearchUserSummariesQuery query)
+        public async Task<IActionResult> Get([FromQuery] SearchUserSummariesQuery query)
         {
             if (query == null) query = new SearchUserSummariesQuery();
 
@@ -49,9 +47,8 @@ namespace Cofoundry.Web.Admin
             return _apiResponseHelper.SimpleQueryResponse(this, results);
         }
         
-        [HttpGet]
-        [Route(ID_ROUTE)]
-        public async Task<IHttpActionResult> Get(int userId)
+        [HttpGet(ID_ROUTE)]
+        public async Task<IActionResult> Get(int userId)
         {
             var result = await _queryExecutor.GetByIdAsync<UserDetails>(userId);
             return _apiResponseHelper.SimpleQueryResponse(this, result);
@@ -62,8 +59,7 @@ namespace Cofoundry.Web.Admin
         #region commands
 
         [HttpPost]
-        [Route()]
-        public async Task<IHttpActionResult> Post(AddUserCommand command)
+        public async Task<IActionResult> Post([FromBody] AddUserCommand command)
         {
             if (command.UserAreaCode == CofoundryAdminUserArea.AreaCode)
             {
@@ -83,16 +79,14 @@ namespace Cofoundry.Web.Admin
             }
         }
 
-        [HttpPatch]
-        [Route(ID_ROUTE)]
-        public async Task<IHttpActionResult> Patch(int userId, Delta<UpdateUserCommand> delta)
+        [HttpPatch(ID_ROUTE)]
+        public async Task<IActionResult> Patch(int userId, [FromBody] Delta<UpdateUserCommand> delta)
         {
             return await _apiResponseHelper.RunCommandAsync(this, userId, delta);
         }
 
-        [HttpDelete]
-        [Route(ID_ROUTE)]
-        public async Task<IHttpActionResult> Delete(int userId)
+        [HttpDelete(ID_ROUTE)]
+        public async Task<IActionResult> Delete(int userId)
         {
             var command = new DeleteUserCommand();
             command.UserId = userId;

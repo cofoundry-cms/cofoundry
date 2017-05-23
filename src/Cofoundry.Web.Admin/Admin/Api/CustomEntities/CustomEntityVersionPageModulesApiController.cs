@@ -2,8 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Web.Http;
-using System.Web.Http.ModelBinding;
+using Microsoft.AspNetCore.Mvc;
 using Cofoundry.Domain;
 using Cofoundry.Domain.CQS;
 using Cofoundry.Web.WebApi;
@@ -14,7 +13,7 @@ namespace Cofoundry.Web.Admin
     /// This api should match the PageVersionSectionModulesApiController endpoint signatures,
     /// since whatever we can do with a page module we can also do with a custom entity module.
     /// </summary>
-    [AdminApiRoutePrefix("custom-entity-version-page-modules")]
+    [AdminApiRoute("custom-entity-version-page-modules")]
     public class CustomEntityVersionPageModulesApiController : BaseAdminApiController
     {
         #region private member variables
@@ -48,7 +47,7 @@ namespace Cofoundry.Web.Admin
 
         [HttpGet]
         [Route(ID_ROUTE)]
-        public async Task<IHttpActionResult> Get(int customEntityVersionPageModuleId, CustomEntityVersionPageModulesActionDataType dataType = CustomEntityVersionPageModulesActionDataType.RenderDetails)
+        public async Task<IActionResult> Get(int customEntityVersionPageModuleId, CustomEntityVersionPageModulesActionDataType dataType = CustomEntityVersionPageModulesActionDataType.RenderDetails)
         {
             if (dataType == CustomEntityVersionPageModulesActionDataType.UpdateCommand)
             {
@@ -61,7 +60,7 @@ namespace Cofoundry.Web.Admin
             return _apiResponseHelper.SimpleQueryResponse(this, results);
         }
 
-        private async Task<IHttpActionResult> GetById<T>(int customEntityVersionPageModuleId)
+        private async Task<IActionResult> GetById<T>(int customEntityVersionPageModuleId)
         {
             var results = await _queryExecutor.GetByIdAsync<T>(customEntityVersionPageModuleId);
             return _apiResponseHelper.SimpleQueryResponse(this, results);
@@ -73,32 +72,28 @@ namespace Cofoundry.Web.Admin
         #region commands
 
         [HttpPost]
-        [Route()]
-        public async Task<IHttpActionResult> Post([ModelBinder(typeof(PageVersionModuleDataModelCommandModelBinder))] AddCustomEntityVersionPageModuleCommand command)
+        public async Task<IActionResult> Post([ModelBinder(BinderType = typeof(PageVersionModuleDataModelCommandModelBinder))] AddCustomEntityVersionPageModuleCommand command)
         {
             return await _apiResponseHelper.RunCommandAsync(this, command);
         }
 
-        [HttpPut]
-        [Route(ID_ROUTE)]
-        public async Task<IHttpActionResult> Put(int customEntityVersionPageModuleId, [ModelBinder(typeof(PageVersionModuleDataModelCommandModelBinder))] UpdateCustomEntityVersionPageModuleCommand command)
+        [HttpPut(ID_ROUTE)]
+        public async Task<IActionResult> Put(int customEntityVersionPageModuleId, [ModelBinder(BinderType = typeof(PageVersionModuleDataModelCommandModelBinder))] UpdateCustomEntityVersionPageModuleCommand command)
         {
             command.CustomEntityVersionPageModuleId = customEntityVersionPageModuleId;
             return await _apiResponseHelper.RunCommandAsync(this, command);
         }
 
-        [HttpDelete]
-        [Route(ID_ROUTE)]
-        public async Task<IHttpActionResult> Delete(int customEntityVersionPageModuleId)
+        [HttpDelete(ID_ROUTE)]
+        public async Task<IActionResult> Delete(int customEntityVersionPageModuleId)
         {
             var command = new DeleteCustomEntityVersionPageModuleCommand() { CustomEntityVersionPageModuleId = customEntityVersionPageModuleId };
 
             return await _apiResponseHelper.RunCommandAsync(this, command);
         }
 
-        [HttpPut]
-        [Route(ID_ROUTE + "/move-up")]
-        public async Task<IHttpActionResult> MoveUp(int customEntityVersionPageModuleId)
+        [HttpPut(ID_ROUTE + "/move-up")]
+        public async Task<IActionResult> MoveUp(int customEntityVersionPageModuleId)
         {
             var command = new MoveCustomEntityVersionPageModuleCommand();
             command.CustomEntityVersionPageModuleId = customEntityVersionPageModuleId;
@@ -107,9 +102,8 @@ namespace Cofoundry.Web.Admin
             return await _apiResponseHelper.RunCommandAsync(this, command);
         }
 
-        [HttpPut]
-        [Route(ID_ROUTE + "/move-down")]
-        public async Task<IHttpActionResult> MoveDown(int customEntityVersionPageModuleId)
+        [HttpPut(ID_ROUTE + "/move-down")]
+        public async Task<IActionResult> MoveDown(int customEntityVersionPageModuleId)
         {
             var command = new MoveCustomEntityVersionPageModuleCommand();
             command.CustomEntityVersionPageModuleId = customEntityVersionPageModuleId;

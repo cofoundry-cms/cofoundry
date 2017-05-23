@@ -2,16 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Web;
-using System.Web.Http;
-using System.Web.OData;
+using Microsoft.AspNetCore.Mvc;
 using Cofoundry.Domain;
 using Cofoundry.Domain.CQS;
 using Cofoundry.Web.WebApi;
 
 namespace Cofoundry.Web.Admin
 {
-    [AdminApiRoutePrefix("settings")]
+    [AdminApiRoute("settings")]
     public class SettingsApiController : BaseAdminApiController
     {
         #region private member variables
@@ -42,17 +40,15 @@ namespace Cofoundry.Web.Admin
 
         #region queries
 
-        [HttpGet]
-        [Route(GENERAL_SITE_SETTINGS_ROUTE)]
-        public async Task<IHttpActionResult> GetGeneralSiteSettings()
+        [HttpGet(GENERAL_SITE_SETTINGS_ROUTE)]
+        public async Task<IActionResult> GetGeneralSiteSettings()
         {
             var results = await _queryExecutor.GetAsync<GeneralSiteSettings>();
             return _apiResponseHelper.SimpleQueryResponse(this, results);
         }
 
-        [HttpGet]
-        [Route(SEO_SETTINGS_ROUTE)]
-        public async Task<IHttpActionResult> GetSeoSettings()
+        [HttpGet(SEO_SETTINGS_ROUTE)]
+        public async Task<IActionResult> GetSeoSettings()
         {
             var results = await _queryExecutor.GetAsync<SeoSettings>();
             return _apiResponseHelper.SimpleQueryResponse(this, results);
@@ -62,23 +58,20 @@ namespace Cofoundry.Web.Admin
 
         #region commands
 
-        [HttpPatch]
-        [Route(GENERAL_SITE_SETTINGS_ROUTE)]
-        public async Task<IHttpActionResult> PatchGeneralSiteSettings(Delta<UpdateGeneralSiteSettingsCommand> delta)
+        [HttpPatch(GENERAL_SITE_SETTINGS_ROUTE)]
+        public async Task<IActionResult> PatchGeneralSiteSettings([FromBody] Delta<UpdateGeneralSiteSettingsCommand> delta)
         {
             return await _apiResponseHelper.RunCommandAsync(this, delta);
         }
 
-        [HttpPatch]
-        [Route(SEO_SETTINGS_ROUTE)]
-        public async Task<IHttpActionResult> PatchSeoSettings(Delta<UpdateSeoSettingsCommand> delta)
+        [HttpPatch(SEO_SETTINGS_ROUTE)]
+        public async Task<IActionResult> PatchSeoSettings([FromBody] Delta<UpdateSeoSettingsCommand> delta)
         {
             return await _apiResponseHelper.RunCommandAsync(this, delta);
         }
 
-        [HttpPatch]
-        [Route(VISUAL_EDITOR_SETTINGS_ROUTE)]
-        public async Task<IHttpActionResult> PatchVisualEditorSettings(Delta<UpdateVisualEditorSettingsCommand> delta)
+        [HttpPatch(VISUAL_EDITOR_SETTINGS_ROUTE)]
+        public async Task<IActionResult> PatchVisualEditorSettings([FromBody] Delta<UpdateVisualEditorSettingsCommand> delta)
         {
             return await _apiResponseHelper.RunCommandAsync(this, delta);
         }

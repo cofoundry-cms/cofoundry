@@ -15,13 +15,14 @@ namespace Cofoundry.Domain
         /// authentication. The user should have already passed 
         /// authentication prior to calling this method.
         /// </summary>
+        /// <param name="userAreaCode">The code of the user area to log into.</param>
         /// <param name="userId">The id of the user to log in.</param>
         /// <param name="rememberUser">
         /// True if the user should stay logged in perminantely; false
         /// if the user should only stay logged in for the duration of
         /// the session.
         /// </param>
-        Task LogAuthenticatedUserInAsync(int userId, bool rememberUser);
+        Task LogAuthenticatedUserInAsync(string userAreaCode, int userId, bool rememberUser);
 
         /// <summary>
         /// Logs a failed login attempt. A history of logins is used
@@ -34,6 +35,7 @@ namespace Cofoundry.Domain
         /// <summary>
         /// Signs the user out of the application and ends the session.
         /// </summary>
+        /// <param name="userAreaCode">The code of the user area to log out of.</param>
         Task SignOutAsync();
     }
 }

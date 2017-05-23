@@ -2,14 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Web.Http;
+using Microsoft.AspNetCore.Mvc;
 using Cofoundry.Domain;
 using Cofoundry.Domain.CQS;
 using Cofoundry.Web.WebApi;
 
 namespace Cofoundry.Web.Admin
 {
-    [AdminApiRoutePrefix("document-file-types")]
+    [AdminApiRoute("document-file-types")]
     public class DocumentFileTypesApiController : BaseAdminApiController
     {
         #region private member variables
@@ -37,8 +37,7 @@ namespace Cofoundry.Web.Admin
         #region queries
 
         [HttpGet]
-        [Route]
-        public async Task<IHttpActionResult> Get()
+        public async Task<IActionResult> Get()
         {
             var results = await _queryExecutor.GetAllAsync<DocumentAssetFileType>();
             return _apiResponseHelper.SimpleQueryResponse(this, results);

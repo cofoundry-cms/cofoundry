@@ -2,16 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Web;
-using System.Web.Http;
-using System.Web.OData;
+using Microsoft.AspNetCore.Mvc;
 using Cofoundry.Domain;
 using Cofoundry.Domain.CQS;
 using Cofoundry.Web.WebApi;
 
 namespace Cofoundry.Web.Admin
 {
-    [AdminApiRoutePrefix("documents")]
+    [AdminApiRoute("documents")]
     public class DocumentsApiController : BaseAdminApiController
     {
         #region private member variables
@@ -41,8 +39,7 @@ namespace Cofoundry.Web.Admin
         #region queries
 
         [HttpGet]
-        [Route]
-        public async Task<IHttpActionResult> Get([FromUri] SearchDocumentAssetSummariesQuery query)
+        public async Task<IActionResult> Get([FromQuery] SearchDocumentAssetSummariesQuery query)
         {
             if (query == null) query = new SearchDocumentAssetSummariesQuery();
 
@@ -50,9 +47,8 @@ namespace Cofoundry.Web.Admin
             return _apiResponseHelper.SimpleQueryResponse(this, results);
         }
 
-        [HttpGet]
-        [Route(ID_ROUTE)]
-        public async Task<IHttpActionResult> Get(int documentAssetId)
+        [HttpGet(ID_ROUTE)]
+        public async Task<IActionResult> Get(int documentAssetId)
         {
             var result = await _queryExecutor.GetByIdAsync<DocumentAssetDetails>(documentAssetId);
             return _apiResponseHelper.SimpleQueryResponse(this, result);
@@ -63,22 +59,19 @@ namespace Cofoundry.Web.Admin
         #region commands
 
         [HttpPost]
-        [Route]
-        public async Task<IHttpActionResult> Post(AddDocumentAssetCommand command)
+        public async Task<IActionResult> Post([FromBody] AddDocumentAssetCommand command)
         {
             return await _apiResponseHelper.RunCommandAsync(this, command);
         }
 
-        [HttpPatch]
-        [Route(ID_ROUTE)]
-        public async Task<IHttpActionResult> Patch(int documentAssetId, Delta<UpdateDocumentAssetCommand> delta)
+        [HttpPatch(ID_ROUTE)]
+        public async Task<IActionResult> Patch(int documentAssetId, [FromBody] Delta<UpdateDocumentAssetCommand> delta)
         {
             return await _apiResponseHelper.RunCommandAsync(this, documentAssetId, delta);
         }
 
-        [HttpDelete]
-        [Route(ID_ROUTE)]
-        public async Task<IHttpActionResult> Delete(int documentAssetId)
+        [HttpDelete(ID_ROUTE)]
+        public async Task<IActionResult> Delete(int documentAssetId)
         {
             var command = new DeleteDocumentAssetCommand();
             command.DocumentAssetId = documentAssetId;

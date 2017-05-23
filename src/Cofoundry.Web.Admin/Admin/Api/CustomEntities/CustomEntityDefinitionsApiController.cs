@@ -4,15 +4,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
-using System.Web.Http;
-using System.Web.OData;
 using Cofoundry.Domain;
 using Cofoundry.Domain.CQS;
 using Cofoundry.Web.WebApi;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Cofoundry.Web.Admin
 {
-    [AdminApiRoutePrefix("custom-entity-definitions")]
+    [AdminApiRoute("custom-entity-definitions")]
     public class CustomEntityDefinitionsApiController : BaseAdminApiController
     {
         #region private member variables
@@ -42,24 +41,21 @@ namespace Cofoundry.Web.Admin
         #region queries
 
         [HttpGet]
-        [Route]
-        public async Task<IHttpActionResult> Get()
+        public async Task<IActionResult> Get()
         {
             var results = await _queryExecutor.GetAllAsync<CustomEntityDefinitionSummary>();
             return _apiResponseHelper.SimpleQueryResponse(this, results);
         }
 
-        [HttpGet]
-        [Route(ID_ROUTE)]
-        public async Task<IHttpActionResult> Get(string customEntityDefinitionCode)
+        [HttpGet(ID_ROUTE)]
+        public async Task<IActionResult> Get(string customEntityDefinitionCode)
         {
             var result = await _queryExecutor.GetByIdAsync<CustomEntityDefinitionSummary>(customEntityDefinitionCode);
             return _apiResponseHelper.SimpleQueryResponse(this, result);
         }
         
-        [HttpGet]
-        [Route(ID_ROUTE + "/routes")]
-        public async Task<IHttpActionResult> GetCustomEntityRoutes(string customEntityDefinitionCode)
+        [HttpGet(ID_ROUTE + "/routes")]
+        public async Task<IActionResult> GetCustomEntityRoutes(string customEntityDefinitionCode)
         {
             var query = new GetPageRoutesByCustomEntityDefinitionCodeQuery(customEntityDefinitionCode);
             var result = await _queryExecutor.ExecuteAsync(query);
@@ -67,18 +63,16 @@ namespace Cofoundry.Web.Admin
             return _apiResponseHelper.SimpleQueryResponse(this, result);
         }
 
-        [HttpGet]
-        [Route(ID_ROUTE + "/data-model-schema")]
-        public async Task<IHttpActionResult> GetDataModelSchema(string customEntityDefinitionCode)
+        [HttpGet(ID_ROUTE + "/data-model-schema")]
+        public async Task<IActionResult> GetDataModelSchema(string customEntityDefinitionCode)
         {
             var result = await _queryExecutor.GetByIdAsync<CustomEntityDataModelSchema>(customEntityDefinitionCode);
             return _apiResponseHelper.SimpleQueryResponse(this, result);
         }
 
         
-        [HttpGet]
-        [Route(ID_ROUTE + "/custom-entities")]
-        public async Task<IHttpActionResult> Get(string customEntityDefinitionCode, [FromUri] SearchCustomEntitySummariesQuery query)
+        [HttpGet(ID_ROUTE + "/custom-entities")]
+        public async Task<IActionResult> Get(string customEntityDefinitionCode, [FromQuery] SearchCustomEntitySummariesQuery query)
         {
             if (query == null) query = new SearchCustomEntitySummariesQuery();
             query.CustomEntityDefinitionCode = customEntityDefinitionCode;

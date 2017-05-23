@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
-using System.Web.Routing;
-using System.Web.Mvc;
 using Cofoundry.Web.ModularMvc;
 using Cofoundry.Domain;
-using Cofoundry.Core.EmbeddedResources;
+using Cofoundry.Core.ResourceFiles;
+using Microsoft.AspNetCore.Routing;
+using Microsoft.AspNetCore.Builder;
 
 namespace Cofoundry.Web.Admin
 {
@@ -40,21 +39,18 @@ namespace Cofoundry.Web.Admin
             }
         }
 
-        public void RegisterRoutes(RouteCollection routes)
+        public void RegisterRoutes(IRouteBuilder routes)
         {
             var controllerNamespace = new string[] { typeof(StandardModuleController).Namespace };
 
             foreach (var registration in _standardAdminModuleRegistrations)
             {
-                ModuleRouteLibrary routeLibrary = GetRouteLibrary(registration);
-
-                var jsRouteLibrary = new ModuleJsRouteLibrary(routeLibrary);
+                var routeLibrary = GetRouteLibrary(registration);
 
                 routes.MapRoute(
                     "Cofoundry Admin Module - " + registration.RoutePrefix,
                     RouteConstants.AdminAreaPrefix + "/" + registration.RoutePrefix,
-                    new { controller = "StandardModule", action = "Index", routeLibrary = routeLibrary, Area = RouteConstants.AdminAreaName },
-                    controllerNamespace
+                    new { controller = "StandardModule", action = "Index", routeLibrary = routeLibrary, Area = RouteConstants.AdminAreaName }
                     );
             }
         }

@@ -4,9 +4,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
-using System.Web.Http;
-using System.Web.Http.ModelBinding;
 using Cofoundry.Domain;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
+using System.Threading.Tasks;
+using System.IO;
+using System.Text;
 
 namespace Cofoundry.Web.Admin
 {
@@ -16,9 +18,20 @@ namespace Cofoundry.Web.Admin
     /// </summary>
     public class CustomEntityDataModelCommandModelBinder : IModelBinder
     {
-        public bool BindModel(System.Web.Http.Controllers.HttpActionContext actionContext, ModelBindingContext bindingContext)
+        private readonly ICustomEntityDefinitionRepository _customEntityDefinitionRepository;
+
+        public CustomEntityDataModelCommandModelBinder(
+            ICustomEntityDefinitionRepository customEntityDefinitionRepository
+            )
         {
-            var jsonString = actionContext.Request.Content.ReadAsStringAsync().Result;
+            _customEntityDefinitionRepository = customEntityDefinitionRepository;
+        }
+
+        public async Task BindModelAsync(ModelBindingContext bindingContext)
+        {
+            if (bindingContext == null) throw new ArgumentNullException(nameof(bindingContext));
+            var jsonString = await ReadBodyAsString(bindingContext);
+
             var json = JObject.Parse(jsonString);
             var customEntityDefinitionCodeProperty = json.GetValue("CustomEntityDefinitionCode", StringComparison.OrdinalIgnoreCase);
 
@@ -31,27 +44,29 @@ namespace Cofoundry.Web.Admin
             {
                 dataModelConverter = GetModuleDataTypeConverter(customEntityDefinitionCodeProperty.Value<string>());
             }
-            
-            var result = JsonConvert.DeserializeObject(jsonString, bindingContext.ModelType, dataModelConverter);
-            bindingContext.Model = result;
 
-            return true;
+            var result = JsonConvert.DeserializeObject(jsonString, bindingContext.ModelType, dataModelConverter);
+            bindingContext.Result = ModelBindingResult.Success(result);
+        }
+
+        private async Task<string> ReadBodyAsString(ModelBindingContext bindingContext)
+        {
+            string body;
+            using (var reader = new StreamReader(bindingContext.ActionContext.HttpContext.Request.Body, Encoding.UTF8))
+            {
+                body = await reader.ReadToEndAsync();
+            }
+
+            return body;
         }
 
         private JsonConverter GetModuleDataTypeConverter(string customEntityDefinitionCode)
         {
-            var definitions = Resolve<ICustomEntityDefinition[]>();
-            var definition = definitions.FirstOrDefault(d => d.CustomEntityDefinitionCode == customEntityDefinitionCode);
+            var definition = _customEntityDefinitionRepository.GetByCode(customEntityDefinitionCode);
             var dataModelType = definition.GetDataModelType();
             var converterType = typeof(CustomEntityVersionDataModelJsonConverter<>).MakeGenericType(dataModelType);
 
             return (JsonConverter)Activator.CreateInstance(converterType);
-        }
-
-        private T Resolve<T>()
-        {
-            // Use DependencyResolver because IModelBinder are singletons and don't allow injection in the request lifecycle
-            return IckyDependencyResolution.ResolveInWebApiContext<T>();
         }
     }
 }

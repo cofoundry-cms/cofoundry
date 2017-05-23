@@ -29,5 +29,20 @@ namespace Cofoundry.Domain
         {
             get { return true; }
         }
+
+        public string LoginPath
+        {
+            get { return "/admin/auth/login"; }
+        }
+
+        public string LogoutPath
+        {
+            get { return null; }
+        }
+
+        public string AccessDeniedPath
+        {
+            get { return null; }
+        }
     }
 }

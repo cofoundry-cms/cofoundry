@@ -134,17 +134,17 @@ namespace Cofoundry.Web.WebApi
         /// <typeparam name="TCommand">Type of the command to execute</typeparam>
         /// <param name="controller">The Controller instance using the helper</param>
         /// <param name="delta">The delta of the command to patch and execute</param>
-        //public async Task<IActionResult> RunCommandAsync<TCommand>(Controller controller, int id, Delta<TCommand> delta) where TCommand : class, ICommand
-        //{
-        //    var command = await _queryExecutor.GetByIdAsync<TCommand>(id);
+        public async Task<IActionResult> RunCommandAsync<TCommand>(Controller controller, int id, Delta<TCommand> delta) where TCommand : class, ICommand
+        {
+            var command = await _queryExecutor.GetByIdAsync<TCommand>(id);
 
-        //    if (delta != null)
-        //    {
-        //        delta.Patch(command);
-        //    }
+            if (delta != null)
+            {
+                delta.Patch(command);
+            }
 
-        //    return await RunCommandAsync(controller, command);
-        //}
+            return await RunCommandAsync(controller, command);
+        }
 
         /// <summary>
         /// Executes a command in a "Patch" style, allowing for a partial update of a resource. In
@@ -156,18 +156,17 @@ namespace Cofoundry.Web.WebApi
         /// <typeparam name="TCommand">Type of the command to execute</typeparam>
         /// <param name="controller">The Controller instance using the helper</param>
         /// <param name="delta">The delta of the command to patch and execute</param>
-        //public async Task<IActionResult> RunCommandAsync<TCommand>(Controller controller, Delta<TCommand> delta) where TCommand : class, ICommand
-        //{
-        //    var command = await _queryExecutor.GetAsync<TCommand>();
+        public async Task<IActionResult> RunCommandAsync<TCommand>(Controller controller, Delta<TCommand> delta) where TCommand : class, ICommand
+        {
+            var command = await _queryExecutor.GetAsync<TCommand>();
 
-        //    if (delta != null)
-        //    {
-        //        delta.Patch(command);
-        //    }
+            if (delta != null)
+            {
+                delta.Patch(command);
+            }
 
-
-        //    return await RunCommandAsync(controller, command);
-        //}
+            return await RunCommandAsync(controller, command);
+        }
 
         /// <summary>
         /// Executes a command and returns a formatted IHttpActionResult, handling any validation 

@@ -2,16 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Web;
-using System.Web.Http;
-using System.Web.OData;
+using Microsoft.AspNetCore.Mvc;
 using Cofoundry.Domain;
 using Cofoundry.Domain.CQS;
 using Cofoundry.Web.WebApi;
 
 namespace Cofoundry.Web.Admin
 {
-    [AdminApiRoutePrefix("page-templates")]
+    [AdminApiRoute("page-templates")]
     public class PageTemplatesApiController : BaseAdminApiController
     {
         #region private member variables
@@ -41,8 +39,7 @@ namespace Cofoundry.Web.Admin
         #region queries
 
         [HttpGet]
-        [Route]
-        public async Task<IHttpActionResult> Get([FromUri] SearchPageTemplateSummariesQuery query)
+        public async Task<IActionResult> Get([FromQuery] SearchPageTemplateSummariesQuery query)
         {
             if (query == null) query = new SearchPageTemplateSummariesQuery();
 
@@ -50,9 +47,8 @@ namespace Cofoundry.Web.Admin
             return _apiResponseHelper.SimpleQueryResponse(this, results);
         }
 
-        [HttpGet]
-        [Route(ID_ROUTE)]
-        public async Task<IHttpActionResult> Get(int id)
+        [HttpGet(ID_ROUTE)]
+        public async Task<IActionResult> Get(int id)
         {
             var result = await _queryExecutor.GetByIdAsync<PageTemplateDetails>(id);
             return _apiResponseHelper.SimpleQueryResponse(this, result);
