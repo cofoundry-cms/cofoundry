@@ -7,22 +7,21 @@ namespace Cofoundry.Web.Admin
 {
     public class SettingsRouteLibrary : ModuleRouteLibrary
     {
-        #region statics
-
         public const string RoutePrefix = "settings";
-
-        public static readonly SettingsRouteLibrary Urls = new SettingsRouteLibrary();
-
-        public static readonly ModuleJsRouteLibrary Js = new ModuleJsRouteLibrary(Urls);
-
-        #endregion
 
         #region constructor
 
-        public SettingsRouteLibrary()
-            : base(RoutePrefix, RouteConstants.InternalModuleResourcePathPrefix)
+        public SettingsRouteLibrary(
+            IStaticResourceFileProvider staticResourceFileProvider,
+            OptimizationSettings optimizationSettings
+            )
+            : base(
+                  RoutePrefix,
+                  RouteConstants.InternalModuleResourcePathPrefix,
+                  staticResourceFileProvider,
+                  optimizationSettings
+                  )
         {
-
         }
 
         #endregion
@@ -31,7 +30,7 @@ namespace Cofoundry.Web.Admin
 
         public string Details()
         {
-            return CreateAngularRoute();
+            return AngularRoute();
         }
 
         #endregion

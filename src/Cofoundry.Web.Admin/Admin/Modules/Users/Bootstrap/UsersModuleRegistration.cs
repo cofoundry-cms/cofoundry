@@ -31,7 +31,7 @@ namespace Cofoundry.Web.Admin
                     Description = "Manage users in the " + userArea.Name + " user area.",
                     MenuCategory = AdminModuleMenuCategory.Settings,
                     PrimaryOrdering = AdminModuleMenuPrimaryOrdering.Secondry,
-                    Url = routeLibrary.CreateAngularRoute()
+                    Url = routeLibrary.AngularRoute()
                 };
                 
                 if (userArea is CofoundryAdminUserArea)

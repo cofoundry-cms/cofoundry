@@ -1,6 +1,8 @@
 ﻿using Cofoundry.Core;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
 using System.Linq;
 
 namespace Cofoundry.Web.Admin
@@ -10,35 +12,53 @@ namespace Cofoundry.Web.Admin
     /// </summary>
     public class ModuleRouteLibrary
     {
+        private const string CONTENT_FOLDER = "Content";
+
         #region constructor
+
+        private readonly IStaticResourceFileProvider _staticResourceFileProvider;
+        private readonly OptimizationSettings _optimizationSettings;
 
         /// <summary>
         /// Constructor when you want to use the default resource path (i.e. your
-        /// module is located in /cofoundry/admin/modules/{modulename}
+        /// module is located in /cofoundry/admin/modules/{modulename}.
         /// </summary>
         /// <param name="routePrefix">
         /// The unique entity/folder name of your route to use when building 
-        /// urls e.g. products, users, honeybagders
+        /// urls e.g. products, users, honeybagders.
         /// </param>
-        public ModuleRouteLibrary(string routePrefix)
-            : this(routePrefix, RouteConstants.ModuleResourcePathPrefix)
+        public ModuleRouteLibrary(
+            string routePrefix, 
+            IStaticResourceFileProvider staticResourceFileProvider, 
+            OptimizationSettings optimizationSettings
+            )
+            : this(routePrefix, RouteConstants.ModuleResourcePathPrefix, staticResourceFileProvider, optimizationSettings)
         {
         }
 
         /// <summary>
         /// Constructor to use when you want to provide a custom resource path prefix, for
         /// when your module is located in a non-standard directory (or for all internal 
-        /// modules where you pass RouteConstants.InternalModuleResourcePathPrefix)
+        /// modules where you pass RouteConstants.InternalModuleResourcePathPrefix).
         /// </summary>
         /// <param name="routePrefix">
         /// The unique entity/folder name of your route to use when building 
-        /// urls e.g. products, users, honeybagders
+        /// urls e.g. products, users, honeybagders.
         /// </param>
         /// <param name="resourcePathPrefix">The path prefix to your module e.g. '/admin/modules/'</param>
-        public ModuleRouteLibrary(string routePrefix, string resourcePathPrefix)
+        public ModuleRouteLibrary(
+            string routePrefix, 
+            string resourcePathPrefix, 
+            IStaticResourceFileProvider staticResourceFileProvider, 
+            OptimizationSettings optimizationSettings
+            )
         {
+            _staticResourceFileProvider = staticResourceFileProvider;
+            _optimizationSettings = optimizationSettings;
+
             ModuleFolderName = TextFormatter.Pascalize(routePrefix);
             ResourcePrefix = resourcePathPrefix + ModuleFolderName.ToLowerInvariant() + "/";
+            StaticResourcePrefix = FilePathHelper.CombineVirtualPath(ResourcePrefix, CONTENT_FOLDER);
             UrlPrefix = RouteConstants.AdminAreaPrefix + "/" + routePrefix;
         }
 
@@ -62,6 +82,11 @@ namespace Cofoundry.Web.Admin
         public string ResourcePrefix { get; private set; }
 
         /// <summary>
+        /// Route for the static resource folder i.e. "admin/modules/entity/content"
+        /// </summary>
+        public string StaticResourcePrefix { get; private set; }
+
+        /// <summary>
         /// Prefix for constructing navigation urls i.e. "/admin/entity"
         /// </summary>
         public string UrlPrefix { get; private set; }
@@ -70,12 +95,35 @@ namespace Cofoundry.Web.Admin
 
         #region helpers
 
-        public string CreateAngularRoute(string path = null)
+        public string JsFile(string fileName)
+        {
+            fileName = Path.GetFileNameWithoutExtension(fileName);
+
+            // check for a minified resource first
+            if (!Debugger.IsAttached && !_optimizationSettings.ForceBundling)
+            {
+                var minPath = FilePathHelper.CombineVirtualPath(StaticResourcePrefix, "js", fileName + "_min.js");
+
+                if (_staticResourceFileProvider.GetFileInfo(minPath).Exists)
+                {
+                    return minPath;
+                }
+            }
+
+            return FilePathHelper.CombineVirtualPath(StaticResourcePrefix, "js", fileName + ".js");
+        }
+
+        public string CssFile(string fileName)
+        {
+            return FilePathHelper.CombineVirtualPath(StaticResourcePrefix, "css", fileName + ".css");
+        }
+
+        public string AngularRoute(string path = null)
         {
             return "/" + UrlPrefix + "#/" + path;
         }
 
-        public string CreateMvcRoute(string action = null, string qs = null)
+        public string MvcRoute(string action = null, string qs = null)
         {
             if (action == null) return "/" + UrlPrefix + qs;
 

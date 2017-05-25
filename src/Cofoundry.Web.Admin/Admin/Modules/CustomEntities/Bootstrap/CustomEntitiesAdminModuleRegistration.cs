@@ -31,7 +31,7 @@ namespace Cofoundry.Web.Admin
                     MenuCategory = AdminModuleMenuCategory.ManageSite,
                     PrimaryOrdering = AdminModuleMenuPrimaryOrdering.Tertiary,
                     Title = definition.NamePlural,
-                    Url = routeLibrary.CreateAngularRoute()
+                    Url = routeLibrary.AngularRoute()
                 };
 
                 yield return module;

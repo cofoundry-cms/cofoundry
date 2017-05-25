@@ -11,23 +11,26 @@ namespace Cofoundry.Web.Admin
 
         public const string RoutePrefix = "auth";
 
-        public static readonly AuthRouteLibrary Urls = new AuthRouteLibrary();
-
-        public static readonly AuthJSRouteLibrary Js = new AuthJSRouteLibrary(Urls);
-
-        public static readonly ModuleStaticContentRouteLibrary StaticContent = new ModuleStaticContentRouteLibrary(Urls);
-
-        public static readonly AuthCssRouteLibrary Css = new AuthCssRouteLibrary(StaticContent);
-
         public static readonly string LoginLayoutPath = ViewPathFormatter.View("Auth", "_LoginLayout");
 
         #endregion
 
         #region constructor
 
-        public AuthRouteLibrary()
-            : base(RoutePrefix, RouteConstants.InternalModuleResourcePathPrefix)
+        public AuthRouteLibrary(
+            IStaticResourceFileProvider staticResourceFileProvider,
+            OptimizationSettings optimizationSettings
+            )
+            : base(
+                  RoutePrefix, 
+                  RouteConstants.InternalModuleResourcePathPrefix, 
+                  staticResourceFileProvider, 
+                  optimizationSettings
+                  )
         {
+            LoginScriptPath = JsFile("login");
+            LoginScriptPath = JsFile("changepassword");
+            LoginScriptPath = JsFile("forgotpassword");
         }
 
         #endregion
@@ -38,33 +41,43 @@ namespace Cofoundry.Web.Admin
         {
             var qs = QueryStringBuilder.Create("ReturnUrl", returnUrl);
 
-            return CreateMvcRoute("login", qs);
+            return MvcRoute("login", qs);
         }
 
         public string LoginWithEmail(string email)
         {
             var qs = QueryStringBuilder.Create("email", email);
 
-            return CreateMvcRoute("login", qs);
+            return MvcRoute("login", qs);
         }
 
         public string ChangePassword(string returnUrl = null)
         {
             var qs = QueryStringBuilder.Create("ReturnUrl", returnUrl);
 
-            return CreateMvcRoute("change-password", qs);
+            return MvcRoute("change-password", qs);
         }
 
         public string ForgotPassword(string email = null)
         {
             var qs = QueryStringBuilder.Create("email", email);
-            return CreateMvcRoute("forgot-password", qs);
+            return MvcRoute("forgot-password", qs);
         }
 
         public string LogOut()
         {
-            return CreateMvcRoute("logout");
+            return MvcRoute("logout");
         }
+
+        #endregion
+
+        #region scripts
+
+        public string LoginScriptPath { get; private set; }
+
+        public string ChangePasswordScriptPath { get; private set; }
+
+        public string ForgotPasswordScriptPath { get; private set; }
 
         #endregion
     }

@@ -23,10 +23,17 @@ namespace Cofoundry.Web.Admin
 
         #region constructor
 
-        public VisualEditorRouteLibrary()
-            : base(RoutePrefix, RouteConstants.InternalModuleResourcePathPrefix)
+        public VisualEditorRouteLibrary(
+            IStaticResourceFileProvider staticResourceFileProvider,
+            OptimizationSettings optimizationSettings
+            )
+            : base(
+                  RoutePrefix,
+                  RouteConstants.InternalModuleResourcePathPrefix,
+                  staticResourceFileProvider,
+                  optimizationSettings
+                  )
         {
-
         }
 
         #endregion

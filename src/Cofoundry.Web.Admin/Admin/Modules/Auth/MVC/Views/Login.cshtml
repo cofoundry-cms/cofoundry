@@ -1,14 +1,15 @@
 ﻿@model Cofoundry.Web.Identity.LoginViewModel
 @inject IStaticFilePathFormatter staticFilePathFormatter
+@inject IAdminRouteLibrary adminRouteLibrary
 
 @{
     ViewBag.Title = "Login";
-    Layout = AuthRouteLibrary.LoginLayoutPath;
+    Layout = adminRouteLibrary.Auth.LoginLayoutPath;
 }
 
 @section FooterScripts
 {
-<script src="@staticFilePathFormatter.AppendVersion(AuthRouteLibrary.Js.Login)"></script>
+<script src="@staticFilePathFormatter.AppendVersion(adminRouteLibrary.Auth.LoginScriptPath)"></script>
 }
 
 <h1>Cofoundry</h1>
@@ -48,7 +49,7 @@
 
 <footer class="login-footer">
     <p class="login-footer-links">
-        <a id="forgotPasswordLink" href="@AuthRouteLibrary.Urls.ForgotPassword()">Forgotten your password?</a>
+        <a id="forgotPasswordLink" href="@adminRouteLibrary.Auth.ForgotPassword()">Forgotten your password?</a>
         <br />
         <a href="/">&lt; Back to @Cofoundry.Settings.GetApplicationName()</a>
     </p>

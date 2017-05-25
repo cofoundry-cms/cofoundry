@@ -8,14 +8,20 @@ namespace Cofoundry.Web.Admin
 {
     public class SharedEmbeddedResourceRouteRegistration : IEmbeddedResourceRouteRegistration
     {
+        private readonly IAdminRouteLibrary _adminRouteLibrary;
         const string ALTERNATIVE_ROUTE_PREFIX = "/Cofoundry";
+
+        public SharedEmbeddedResourceRouteRegistration(
+            IAdminRouteLibrary adminRouteLibrary
+            )
+        {
+            _adminRouteLibrary = adminRouteLibrary;
+        }
 
         public IEnumerable<string> GetEmbeddedResourcePaths()
         {
-            yield return SharedRouteLibrary.StaticContent.EmbeddedResourceRegistrationPath;
-            yield return SharedRouteLibrary.Js.JsFolderPath;
-            yield return ALTERNATIVE_ROUTE_PREFIX + SharedRouteLibrary.StaticContent.EmbeddedResourceRegistrationPath;
-            yield return ALTERNATIVE_ROUTE_PREFIX + SharedRouteLibrary.Js.JsFolderPath;
+            yield return _adminRouteLibrary.Shared.StaticResourcePrefix;
+            yield return ALTERNATIVE_ROUTE_PREFIX + _adminRouteLibrary.Shared.StaticResourcePrefix;
         }
     }
 }

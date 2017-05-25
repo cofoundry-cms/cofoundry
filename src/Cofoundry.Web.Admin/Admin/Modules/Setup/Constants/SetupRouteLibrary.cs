@@ -5,7 +5,7 @@ using System.Web;
 
 namespace Cofoundry.Web.Admin
 {
-    public class SetupRouteLibrary : ModuleRouteLibrary
+    public class SetupRouteLibrary : AngularModuleRouteLibrary
     {
         #region statics
 
@@ -21,8 +21,16 @@ namespace Cofoundry.Web.Admin
 
         #region constructor
 
-        public SetupRouteLibrary()
-            : base(RoutePrefix, RouteConstants.InternalModuleResourcePathPrefix)
+        public SetupRouteLibrary(
+            IStaticResourceFileProvider staticResourceFileProvider,
+            OptimizationSettings optimizationSettings
+            )
+            : base(
+                  RoutePrefix,
+                  RouteConstants.InternalModuleResourcePathPrefix,
+                  staticResourceFileProvider,
+                  optimizationSettings
+                  )
         {
         }
 
@@ -32,7 +40,7 @@ namespace Cofoundry.Web.Admin
 
         public string Setup()
         {
-            return CreateMvcRoute();
+            return MvcRoute();
         }
 
         #endregion

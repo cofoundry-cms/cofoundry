@@ -30,17 +30,17 @@ namespace Cofoundry.Web.Admin
 
         public string List()
         {
-            return CreateAngularRoute();
+            return AngularRoute();
         }
 
         public string New()
         {
-            return CreateAngularRoute("new");
+            return AngularRoute("new");
         }
 
         public string Details(int id)
         {
-            return CreateAngularRoute(id.ToString());
+            return AngularRoute(id.ToString());
         }
 
         #endregion

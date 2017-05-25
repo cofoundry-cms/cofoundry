@@ -9,30 +9,47 @@ using Microsoft.AspNetCore.Html;
 
 namespace Cofoundry.Web.Admin
 {
-    public static class AngularHelper
+    public class AngularHelper
     {
+        private readonly IAntiCSRFService _antiCSRFService;
+        private readonly IStaticFilePathFormatter _staticFilePathFormatter;
+        private readonly ICurrentUserViewHelper _currentUserHelper;
+        private readonly IAdminRouteLibrary _adminRouteLibrary;
+
+        public AngularHelper(
+            IAntiCSRFService antiCSRFService,
+            IStaticFilePathFormatter staticFilePathFormatter,
+            ICurrentUserViewHelper currentUserHelper,
+            IAdminRouteLibrary adminRouteLibrary
+            )
+        {
+            _antiCSRFService = antiCSRFService;
+            _staticFilePathFormatter = staticFilePathFormatter;
+            _currentUserHelper = currentUserHelper;
+            _adminRouteLibrary = adminRouteLibrary;
+        }
+
         /// <summary>
         /// Adds scripts/templates for the core angular framework and the
         /// specified module and then bootstraps it.
         /// </summary>
         /// <param name="routeLibrary">Js routing library for the module to bootstrap,</param>
-        public static IHtmlContent Bootstrap(ModuleJsRouteLibrary routeLibrary, ICurrentUserViewHelper currentUserHelper, object options = null)
+        public IHtmlContent Bootstrap(ModuleRouteLibrary routeLibrary, object options = null)
         {
             var script = string.Concat(
                 RenderScript(SharedRouteLibrary.Js.Main),
                 RenderScript(SharedRouteLibrary.Js.Templates),
                 RenderScript(routeLibrary.Main),
                 RenderScript(routeLibrary.Templates),
-                RenderBootstrapper(routeLibrary, currentUserHelper, options)
+                RenderBootstrapper(routeLibrary, options)
                 );
 
             return new HtmlString(script);
-
         }
 
         #region private helpers
 
-        private static string RenderBootstrapper(ModuleJsRouteLibrary routeLibrary, ICurrentUserViewHelper currentUserHelper, object options)
+        private string RenderBootstrapper(ModuleRouteLibrary routeLibrary, object options)
         {
             var args = string.Empty;
             if (Debugger.IsAttached)
@@ -43,24 +60,26 @@ namespace Cofoundry.Web.Admin
 
             // Might need to add more info at some point, but right now we just need roles.
             var currentUserInfo = new {
-                PermissionCodes = currentUserHelper.Role.Permissions.Select(p => p.GetUniqueCode())
+                PermissionCodes = _currentUserHelper.Role.Permissions.Select(p => p.GetUniqueCode())
             };
 
+            var csrfTopken = _antiCSRFService.GetToken();
+
             return @"<script>angular.element(document).ready(function() {
-                        angular.module('" + SharedRouteLibrary.Js.AngularModuleName + @"')
-                               .constant('csrfToken', '" + GetCsrfToken() + @"')"
+                        angular.module('" + _adminRouteLibrary.Shared.AngularModuleName + @"')
+                               .constant('csrfToken', '" + csrfTopken + @"')"
                                + GetConstant(routeLibrary, "options", options) // not sure why the current module is loaded into the shared module - seems like a mistake?
-                               + GetConstant(SharedRouteLibrary.Js, "currentUser", currentUserInfo) + @";
+                               + GetConstant(_adminRouteLibrary.Shared, "currentUser", currentUserInfo) + @";
                         angular.bootstrap(document, ['" + routeLibrary.AngularModuleName + "']" + args + @");
                     });</script>";
         }
 
-        private static string GetOptions(ModuleJsRouteLibrary routeLibrary, object options)
+        private static string GetOptions(ModuleRouteLibrary routeLibrary, object options)
         {
             return GetConstant(routeLibrary, "options", options);
         }
 
-        private static string GetConstant<TValue>(ModuleJsRouteLibrary routeLibrary, string name, TValue value)
+        private static string GetConstant<TValue>(ModuleRouteLibrary routeLibrary, string name, TValue value)
         {
             if (value != null)
             {
@@ -71,15 +90,9 @@ namespace Cofoundry.Web.Admin
             return string.Empty;
         }
 
-        private static string GetCsrfToken()
+        private string RenderScript(string path)
         {
-            var service = new AntiCSRFService();
-            return service.GetToken();
-        }
-
-        private static string RenderScript(string path)
-        {
-            return Scripts.Render(path).ToString();
+            return $"<script src='{_staticFilePathFormatter.AppendVersion(path)}'></script>";
         }
 
         #endregion

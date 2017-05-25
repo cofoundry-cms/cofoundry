@@ -5,7 +5,7 @@ using System.Web;
 
 namespace Cofoundry.Web.Admin
 {
-    public class ImagesModuleRouteLibrary : ModuleRouteLibrary
+    public class ImagesModuleRouteLibrary : AngularModuleRouteLibrary
     {
         #region statics
 
@@ -18,9 +18,17 @@ namespace Cofoundry.Web.Admin
         #endregion
 
         #region constructor
-
-        public ImagesModuleRouteLibrary()
-            : base(RoutePrefix, RouteConstants.InternalModuleResourcePathPrefix)
+        
+        public ImagesModuleRouteLibrary(
+            IStaticResourceFileProvider staticResourceFileProvider,
+            OptimizationSettings optimizationSettings
+            )
+            : base(
+                  RoutePrefix, 
+                  RouteConstants.InternalModuleResourcePathPrefix,
+                  staticResourceFileProvider,
+                  optimizationSettings
+                  )
         {
         }
 
@@ -30,17 +38,17 @@ namespace Cofoundry.Web.Admin
 
         public string List()
         {
-            return CreateAngularRoute();
+            return AngularRoute();
         }
 
         public string New()
         {
-            return CreateAngularRoute("new");
+            return AngularRoute("new");
         }
 
         public string Details(int id)
         {
-            return CreateAngularRoute(id.ToString());
+            return AngularRoute(id.ToString());
         }
 
         #endregion

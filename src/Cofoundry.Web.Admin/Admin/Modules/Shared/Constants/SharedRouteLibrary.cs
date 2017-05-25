@@ -5,29 +5,34 @@ using System.Web;
 
 namespace Cofoundry.Web.Admin
 {
-    public class SharedRouteLibrary : ModuleRouteLibrary
+    public class SharedRouteLibrary : AngularModuleRouteLibrary
     {
-        #region statics
+        #region constructor
 
         public const string RoutePrefix = "shared";
 
-        public static readonly SharedRouteLibrary Urls = new SharedRouteLibrary();
-
-        public static readonly SharedJsRouteLibrary Js = new SharedJsRouteLibrary(Urls);
-
-        public static readonly ModuleStaticContentRouteLibrary StaticContent = new ModuleStaticContentRouteLibrary(Urls);
-
-        public static readonly SharedCssRouteLibrary Css = new SharedCssRouteLibrary(StaticContent);
-
+        public SharedRouteLibrary(
+            IStaticResourceFileProvider staticResourceFileProvider,
+            OptimizationSettings optimizationSettings
+            )
+            : base(
+                  RoutePrefix,
+                  RouteConstants.InternalModuleResourcePathPrefix,
+                  staticResourceFileProvider,
+                  optimizationSettings
+                  )
+        {
+            Html5ShivScriptPath = JsFile("html5shiv");
+            MainCssPath = CssFile("shared");
+        }
 
         #endregion
 
-        #region constructor
+        #region Resources
 
-        public SharedRouteLibrary()
-            : base(RoutePrefix, RouteConstants.InternalModuleResourcePathPrefix)
-        {
-        }
+        public string Html5ShivScriptPath { get; private set; }
+
+        public string MainCssPath { get; private set; }
 
         #endregion
     }

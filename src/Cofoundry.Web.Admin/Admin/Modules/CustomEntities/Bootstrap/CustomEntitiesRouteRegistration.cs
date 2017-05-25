@@ -27,8 +27,6 @@ namespace Cofoundry.Web.Admin
             {
                 var routePrefix = SlugFormatter.ToSlug(definition.NamePlural);
                 var routeLibrary = new ModuleRouteLibrary(routePrefix);
-                var jsRouteLibrary = new ModuleJsRouteLibrary(routeLibrary);
-
 
                 routeBuilder.MapRoute(
                     "Custom Entity Admin Module - " + definition.NamePlural,

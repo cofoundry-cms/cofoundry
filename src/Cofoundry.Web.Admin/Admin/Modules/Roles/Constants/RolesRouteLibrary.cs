@@ -7,20 +7,20 @@ namespace Cofoundry.Web.Admin
 {
     public class RolesRouteLibrary : ModuleRouteLibrary
     {
-        #region statics
-
         public const string RoutePrefix = "roles";
-
-        public static readonly RolesRouteLibrary Urls = new RolesRouteLibrary();
-
-        public static readonly ModuleJsRouteLibrary Js = new ModuleJsRouteLibrary(Urls);
-
-        #endregion
 
         #region constructor
 
-        public RolesRouteLibrary()
-            : base(RoutePrefix, RouteConstants.InternalModuleResourcePathPrefix)
+        public RolesRouteLibrary(
+            IStaticResourceFileProvider staticResourceFileProvider,
+            OptimizationSettings optimizationSettings
+            )
+            : base(
+                  RoutePrefix,
+                  RouteConstants.InternalModuleResourcePathPrefix,
+                  staticResourceFileProvider,
+                  optimizationSettings
+                  )
         {
         }
 
@@ -30,17 +30,17 @@ namespace Cofoundry.Web.Admin
 
         public string List()
         {
-            return CreateAngularRoute();
+            return AngularRoute();
         }
 
         public string New()
         {
-            return CreateAngularRoute("new");
+            return AngularRoute("new");
         }
 
         public string Details(int id)
         {
-            return CreateAngularRoute(id.ToString());
+            return AngularRoute(id.ToString());
         }
 
         #endregion

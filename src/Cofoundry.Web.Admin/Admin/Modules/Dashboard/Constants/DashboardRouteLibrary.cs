@@ -5,22 +5,26 @@ using System.Web;
 
 namespace Cofoundry.Web.Admin
 {
-    public class DashboardRouteLibrary : ModuleRouteLibrary
+    public class DashboardRouteLibrary : AngularModuleRouteLibrary
     {
         #region statics
 
         public const string RoutePrefix = "dashboard";
 
-        public static readonly DashboardRouteLibrary Urls = new DashboardRouteLibrary();
-
-        public static readonly ModuleJsRouteLibrary Js = new ModuleJsRouteLibrary(Urls);
-
         #endregion
 
         #region constructor
 
-        public DashboardRouteLibrary()
-            : base(RoutePrefix, RouteConstants.InternalModuleResourcePathPrefix)
+        public DashboardRouteLibrary(
+            IStaticResourceFileProvider staticResourceFileProvider,
+            OptimizationSettings optimizationSettings
+            )
+            : base(
+                  RoutePrefix, 
+                  RouteConstants.InternalModuleResourcePathPrefix,
+                  staticResourceFileProvider,
+                  optimizationSettings
+                  )
         {
         }
 
@@ -30,7 +34,7 @@ namespace Cofoundry.Web.Admin
 
         public string Dashboard()
         {
-            return CreateAngularRoute();
+            return AngularRoute();
         }
 
         #endregion

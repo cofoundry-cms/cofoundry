@@ -5,22 +5,22 @@ using System.Web;
 
 namespace Cofoundry.Web.Admin
 {
-    public class PageTemplatesRouteLibrary : ModuleRouteLibrary
+    public class PageTemplatesRouteLibrary : AngularModuleRouteLibrary
     {
-        #region statics
-
         public const string RoutePrefix = "page-templates";
-
-        public static readonly PageTemplatesRouteLibrary Urls = new PageTemplatesRouteLibrary();
-
-        public static readonly ModuleJsRouteLibrary Js = new ModuleJsRouteLibrary(Urls);
-
-        #endregion
 
         #region constructor
 
-        public PageTemplatesRouteLibrary()
-            : base(RoutePrefix, RouteConstants.InternalModuleResourcePathPrefix)
+        public PageTemplatesRouteLibrary(
+            IStaticResourceFileProvider staticResourceFileProvider,
+            OptimizationSettings optimizationSettings
+            )
+            : base(
+                  RoutePrefix,
+                  RouteConstants.InternalModuleResourcePathPrefix,
+                  staticResourceFileProvider,
+                  optimizationSettings
+                  )
         {
         }
 
@@ -30,17 +30,17 @@ namespace Cofoundry.Web.Admin
 
         public string List()
         {
-            return CreateAngularRoute();
+            return AngularRoute();
         }
 
         public string New()
         {
-            return CreateAngularRoute("new");
+            return AngularRoute("new");
         }
 
         public string Details(int id)
         {
-            return CreateAngularRoute(id.ToString());
+            return AngularRoute(id.ToString());
         }
 
         #endregion

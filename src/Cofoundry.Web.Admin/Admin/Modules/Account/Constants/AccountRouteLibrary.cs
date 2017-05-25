@@ -5,22 +5,26 @@ using System.Web;
 
 namespace Cofoundry.Web.Admin
 {
-    public class AccountRouteLibrary : ModuleRouteLibrary
+    public class AccountRouteLibrary : AngularModuleRouteLibrary
     {
         #region statics
 
         public const string RoutePrefix = "account";
 
-        public static readonly AccountRouteLibrary Urls = new AccountRouteLibrary();
-
-        public static readonly ModuleJsRouteLibrary Js = new ModuleJsRouteLibrary(Urls);
-
         #endregion
 
         #region constructor
 
-        public AccountRouteLibrary()
-            : base(RoutePrefix, RouteConstants.InternalModuleResourcePathPrefix)
+        public AccountRouteLibrary(
+            IStaticResourceFileProvider staticResourceFileProvider,
+            OptimizationSettings optimizationSettings
+            )
+            : base(
+                  RoutePrefix, 
+                  RouteConstants.InternalModuleResourcePathPrefix,
+                  staticResourceFileProvider,
+                  optimizationSettings
+                  )
         {
         }
 
@@ -30,7 +34,7 @@ namespace Cofoundry.Web.Admin
 
         public string Details()
         {
-            return CreateAngularRoute();
+            return AngularRoute();
         }
 
         #endregion
