@@ -13,12 +13,11 @@ namespace Cofoundry.Web.ModularMvc
         public void Register(IContainerRegister container)
         {
             container
-                .RegisterAll<IBundleRegistration>()
                 .RegisterAll<IRouteRegistration>()
                 .RegisterType<IRouteInitializer, RouteInitializer>()
-                .RegisterType<IBundleInitializer, BundleInitializer>()
                 .RegisterType<IResourceLocator, WebsiteResourceLocator>(RegistrationOptions.Override(RegistrationOverridePriority.Low))
                 .RegisterType<IEmptyActionContextFactory, EmptyActionContextFactory>()
+                .RegisterInstance<IStaticResourceFileProvider, StaticResourceFileProvider>()
                 ;
         }
     }

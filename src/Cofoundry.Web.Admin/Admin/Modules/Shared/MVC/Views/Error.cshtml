@@ -6,7 +6,9 @@
     var baseException = Model.Exception.GetBaseException();
 }
 
-@if (Request.Url.Host.ToLower() == "localhost" || Request.RequestContext.HttpContext.IsDebuggingEnabled)
+@*TODO*@
+@*Request.Url.Host.ToLower() == "localhost" || Request.RequestContext.HttpContext.IsDebuggingEnabled*@
+@if (false)
 {
     <h1>Server error</h1>
     

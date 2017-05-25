@@ -20,17 +20,17 @@ namespace Cofoundry.Web
         #region constructor
 
         private readonly IRouteInitializer _routeInitializer;
-        private readonly IEnumerable<IEmbeddedResourceRouteRegistration> _routeRegistrations;
+        private readonly IStaticResourceFileProvider _staticResourceFileProvider;
         private readonly IUserAreaRepository _userAreaRepository;
 
         public MvcConfigurationStartupTask(
             IRouteInitializer routeInitializer,
-            IEnumerable<IEmbeddedResourceRouteRegistration> routeRegistrations,
+            IStaticResourceFileProvider staticResourceFileProvider,
             IUserAreaRepository userAreaRepository
             )
         {
             _routeInitializer = routeInitializer;
-            _routeRegistrations = routeRegistrations;
+            _staticResourceFileProvider = staticResourceFileProvider;
             _userAreaRepository = userAreaRepository;
         }
 
@@ -85,20 +85,11 @@ namespace Cofoundry.Web
         private void RegisterStaticFiles(IApplicationBuilder app)
         {
             // perhaps use a StaticFileOptions factory?
-            app.UseStaticFiles(); // For the wwwroot folder
-
-            foreach (var routeRegistration in _routeRegistrations)
+            // or expose all the providers with settings on the _staticResourceFileProvider
+            app.UseStaticFiles(new StaticFileOptions()
             {
-                var assembly = routeRegistration.GetType().Assembly;
-                var fileProvider = new EmbeddedFileProvider(assembly);
-                foreach (var route in routeRegistration.GetEmbeddedResourcePaths())
-                {
-                    app.UseStaticFiles(new StaticFileOptions()
-                    {
-                        FileProvider = new FilteredEmbeddedFileProvider(fileProvider, route)
-                    });
-                }
-            }
+                FileProvider = _staticResourceFileProvider
+            });
         }
 
         private static void RegisterModelBinders()

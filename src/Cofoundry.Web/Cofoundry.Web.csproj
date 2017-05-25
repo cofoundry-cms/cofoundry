@@ -433,7 +433,6 @@
     <Compile Include="App_Start\MvcConfiguration\IMvcJsonOptionsConfiguration.cs" />
     <Compile Include="App_Start\MvcConfiguration\IMvcOptionsConfiguration.cs" />
     <Compile Include="App_Start\MvcConfiguration\IRazorViewEngineOptionsConfiguration.cs" />
-    <Compile Include="App_Start\StartupTasks\BundlingInitializationStartupTask.cs" />
     <Compile Include="App_Start\StartupTasks\MvcConfigurationStartupTask.cs" />
     <Compile Include="App_Start\StartupTasks\MessageSubscriptionInitializerStartupTask.cs" />
     <Compile Include="App_Start\StartupTasks\AutoMapperConfigurationStartupTask.cs" />
@@ -536,9 +535,10 @@
     <Compile Include="Framework\Models\VisualEditor\VisualEditorPageViewModel.cs" />
     <Compile Include="Framework\Bootstrap\WebCoreAssemblyResourceRegistration.cs" />
     <Compile Include="Framework\ModularMvc\Bootstrap\ModularMvcDependencyRegistration.cs" />
-    <Compile Include="Framework\ModularMvc\Bundling\IBundleInitializer.cs" />
-    <Compile Include="Framework\ModularMvc\Bundling\BundleInitializer.cs" />
-    <Compile Include="Framework\ModularMvc\Bundling\IBundleRegistration.cs" />
+    <Compile Include="Framework\ModularMvc\ResourceProviders\IStaticResourceFileProvider.cs" />
+    <Compile Include="Framework\ModularMvc\ResourceProviders\StaticResourceFileProvider.cs" />
+    <Compile Include="Framework\Mvc\Optimization\StaticFilePathFormatter.cs" />
+    <Compile Include="Framework\Mvc\Optimization\IStaticFilePathFormatter.cs" />
     <Compile Include="Framework\ModularMvc\Routes\IRouteRegistration.cs" />
     <Compile Include="Framework\ModularMvc\Routes\IRouteInitializer.cs" />
     <Compile Include="Framework\ModularMvc\Routes\RouteInitializer.cs" />

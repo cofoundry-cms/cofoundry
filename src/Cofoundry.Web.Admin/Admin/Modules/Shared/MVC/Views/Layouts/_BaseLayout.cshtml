@@ -1,4 +1,6 @@
-﻿<!doctype html>
+﻿@inject IStaticFilePathFormatter staticFilePathFormatter
+
+<!doctype html>
 <html class="no-js" lang="en">
 <head>
 
@@ -13,12 +15,12 @@
 
     @RenderSection("Meta", required: false)
 
-    @Styles.Render(SharedRouteLibrary.Css.Main)
+    <link href="@staticFilePathFormatter.AppendVersion(SharedRouteLibrary.Css.Main)" rel="stylesheet">
 
     @RenderSection("Styles", required: false)
 
     <!--[if lt IE 9]>
-    @Scripts.Render(SharedRouteLibrary.Js.Html5Shiv)
+        <script src="@staticFilePathFormatter.AppendVersion(SharedRouteLibrary.Js.Html5Shiv)"></script>
     <![endif]-->
     @RenderSection("HeaderScripts", required: false)
 

@@ -373,6 +373,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Admin\Modules\Account\Content\js\account.js" />
+    <Content Include="Admin\Modules\Account\Content\js\account_min.js" />
+    <Content Include="Admin\Modules\Account\Content\js\account_templates.js" />
     <Content Include="Admin\Modules\Account\Js\Bootstrap\Module.js" />
     <Content Include="Admin\Modules\Account\Js\Bootstrap\Routing.js" />
     <Content Include="Admin\Modules\Account\Js\DataServices\AccountService.js" />
@@ -380,10 +383,18 @@
     <Content Include="Admin\Modules\Account\Js\Routes\AccountDetailsController.js" />
     <Content Include="Admin\Modules\Account\Js\Routes\ChangePassword.html" />
     <Content Include="Admin\Modules\Account\Js\Routes\ChangePasswordController.js" />
-    <Content Include="Admin\Modules\Auth\Content\css\login.css" />
+    <Content Include="Admin\Modules\Auth\Content\js\ChangePassword_min.js" />
+    <Content Include="Admin\Modules\Auth\Content\js\ChangePassword.js" />
+    <Content Include="Admin\Modules\Auth\Content\js\ForgotPassword_min.js" />
+    <Content Include="Admin\Modules\Auth\Content\js\ForgotPassword.js" />
+    <Content Include="Admin\Modules\Auth\Content\js\Login_min.js" />
+    <Content Include="Admin\Modules\Auth\Content\js\Login.js" />
     <Content Include="Admin\Modules\Auth\MVC\Views\ChangePassword.js" />
     <Content Include="Admin\Modules\Auth\MVC\Views\ForgotPassword.js" />
     <Content Include="Admin\Modules\Auth\MVC\Views\Login.js" />
+    <Content Include="Admin\Modules\CustomEntities\Content\js\customentities.js" />
+    <Content Include="Admin\Modules\CustomEntities\Content\js\customentities_min.js" />
+    <Content Include="Admin\Modules\CustomEntities\Content\js\customentities_templates.js" />
     <Content Include="Admin\Modules\CustomEntities\Js\Bootstrap\Module.js" />
     <Content Include="Admin\Modules\CustomEntities\Js\Bootstrap\Routing.js" />
     <Content Include="Admin\Modules\CustomEntities\Js\Routes\AddCustomEntity.html" />
@@ -396,6 +407,9 @@
     <Content Include="Admin\Modules\CustomEntities\Js\Routes\Modals\ChangeOrderingController.js" />
     <Content Include="Admin\Modules\CustomEntities\Js\Routes\Modals\ChangeUrl.html" />
     <Content Include="Admin\Modules\CustomEntities\Js\Routes\Modals\ChangeUrlController.js" />
+    <Content Include="Admin\Modules\Dashboard\Content\js\dashboard_templates.js" />
+    <Content Include="Admin\Modules\Dashboard\Content\js\dashboard_min.js" />
+    <Content Include="Admin\Modules\Dashboard\Content\js\dashboard.js" />
     <Content Include="Admin\Modules\Dashboard\Js\Bootstrap\Module.js" />
     <Content Include="Admin\Modules\Dashboard\Js\Bootstrap\Routing.js" />
     <Content Include="Admin\Modules\Dashboard\Js\DataServices\DashboardService.js" />
@@ -403,6 +417,9 @@
     <Content Include="Admin\Modules\Dashboard\Js\Routes\DashboardController.js" />
     <Content Include="Admin\Modules\Dashboard\Js\UIComponents\DashboardComponent.html" />
     <Content Include="Admin\Modules\Dashboard\Js\UIComponents\DashboardComponent.js" />
+    <Content Include="Admin\Modules\Directories\Content\js\directories.js" />
+    <Content Include="Admin\Modules\Directories\Content\js\directories_min.js" />
+    <Content Include="Admin\Modules\Directories\Content\js\directories_templates.js" />
     <Content Include="Admin\Modules\Directories\Js\Bootstrap\Module.js" />
     <Content Include="Admin\Modules\Directories\Js\Bootstrap\Routing.js" />
     <Content Include="Admin\Modules\Directories\Js\DataServices\DirectoryService.js" />
@@ -415,6 +432,9 @@
     <Content Include="Admin\Modules\Directories\Js\Routes\DirectoryListController.js" />
     <Content Include="Admin\Modules\Directories\Js\UIComponents\Directories\DirectoryGrid.html" />
     <Content Include="Admin\Modules\Directories\Js\UIComponents\Directories\DirectoryGrid.js" />
+    <Content Include="Admin\Modules\Documents\Content\js\documents.js" />
+    <Content Include="Admin\Modules\Documents\Content\js\documents_min.js" />
+    <Content Include="Admin\Modules\Documents\Content\js\documents_templates.js" />
     <Content Include="Admin\Modules\Documents\Js\Bootstrap\Module.js" />
     <Content Include="Admin\Modules\Documents\Js\Bootstrap\Routing.js" />
     <Content Include="Admin\Modules\Documents\Js\DataServices\DocumentService.js" />
@@ -424,6 +444,9 @@
     <Content Include="Admin\Modules\Documents\Js\Routes\DocumentDetailsController.js" />
     <Content Include="Admin\Modules\Documents\Js\Routes\DocumentList.html" />
     <Content Include="Admin\Modules\Documents\Js\Routes\DocumentListController.js" />
+    <Content Include="Admin\Modules\Images\Content\js\images.js" />
+    <Content Include="Admin\Modules\Images\Content\js\images_min.js" />
+    <Content Include="Admin\Modules\Images\Content\js\images_templates.js" />
     <Content Include="Admin\Modules\Images\Js\Bootstrap\Module.js" />
     <Content Include="Admin\Modules\Images\Js\Bootstrap\Routing.js" />
     <Content Include="Admin\Modules\Images\Js\DataServices\ImageService.js" />
@@ -433,6 +456,28 @@
     <Content Include="Admin\Modules\Images\Js\Routes\ImageDetailsController.js" />
     <Content Include="Admin\Modules\Images\Js\Routes\ImageList.html" />
     <Content Include="Admin\Modules\Images\Js\Routes\ImageListController.js" />
+    <Content Include="Admin\Modules\Pages\Content\js\pages.js" />
+    <Content Include="Admin\Modules\Pages\Content\js\pages_min.js" />
+    <Content Include="Admin\Modules\Pages\Content\js\pages_templates.js" />
+    <Content Include="Admin\Modules\PageTemplates\Content\js\pagetemplates.js" />
+    <Content Include="Admin\Modules\PageTemplates\Content\js\pagetemplates_min.js" />
+    <Content Include="Admin\Modules\PageTemplates\Content\js\pagetemplates_templates.js" />
+    <Content Include="Admin\Modules\Roles\Content\js\roles.js" />
+    <Content Include="Admin\Modules\Roles\Content\js\roles_min.js" />
+    <Content Include="Admin\Modules\Roles\Content\js\roles_templates.js" />
+    <Content Include="Admin\Modules\Settings\Content\js\settings.js" />
+    <Content Include="Admin\Modules\Settings\Content\js\settings_min.js" />
+    <Content Include="Admin\Modules\Settings\Content\js\settings_templates.js" />
+    <Content Include="Admin\Modules\Setup\Content\js\setup.js" />
+    <Content Include="Admin\Modules\Setup\Content\js\setup_min.js" />
+    <Content Include="Admin\Modules\Setup\Content\js\setup_templates.js" />
+    <Content Include="Admin\Modules\Shared\Content\css\main_min.css" />
+    <Content Include="Admin\Modules\Shared\Content\css\main.css" />
+    <Content Include="Admin\Modules\Shared\Content\js\shared.js" />
+    <Content Include="Admin\Modules\Shared\Content\js\shared_min.js" />
+    <Content Include="Admin\Modules\Shared\Content\js\shared_templates.js" />
+    <Content Include="Admin\Modules\Shared\Content\js\html5shiv_min.js" />
+    <Content Include="Admin\Modules\Shared\Content\js\html5shiv.js" />
     <Content Include="Admin\Modules\Shared\Js\DataServices\DirectoryService.js" />
     <Content Include="Admin\Modules\Shared\Js\UIComponents\CustomEntities\AddCustomEntityDialog.html" />
     <Content Include="Admin\Modules\Shared\Js\UIComponents\CustomEntities\AddCustomEntityDialog.js" />
@@ -554,6 +599,14 @@
     <Content Include="Admin\Modules\Shared\Js\UIComponents\Pages\FormFieldPageSelector.js" />
     <Content Include="Admin\Modules\Shared\Js\UIComponents\Directories\FormFieldDirectorySelector.html" />
     <Content Include="Admin\Modules\Shared\Js\UIComponents\Directories\FormFieldDirectorySelector.js" />
+    <Content Include="Admin\Modules\Users\Content\js\users.js" />
+    <Content Include="Admin\Modules\Users\Content\js\users_min.js" />
+    <Content Include="Admin\Modules\Users\Content\js\users_templates.js" />
+    <Content Include="Admin\Modules\VisualEditor\Content\js\contentpage.js" />
+    <Content Include="Admin\Modules\VisualEditor\Content\js\visualeditor.js" />
+    <Content Include="Admin\Modules\VisualEditor\Content\js\contentpage_min.js" />
+    <Content Include="Admin\Modules\VisualEditor\Content\js\visualeditor_min.js" />
+    <Content Include="Admin\Modules\VisualEditor\Content\js\visualeditor_templates.js" />
     <Content Include="Admin\Modules\VisualEditor\Content\svg-cache.html" />
     <Content Include="Admin\Modules\Shared\Content\videoplayer.swf" />
     <Content Include="Admin\Modules\Shared\Js\Bootstrap\Module.js" />
@@ -902,6 +955,7 @@
     <Content Include="Admin\Modules\Shared\Sass\Core\_setup.scss" />
     <Content Include="Admin\Modules\Shared\Sass\Core\_dashboard.scss" />
     <Content Include="Admin\Modules\Shared\MVC\Views\_ViewImports.cshtml" />
+    <Content Include="Admin\Modules\_ViewImports.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -1011,9 +1065,10 @@
     <Compile Include="App_Start\MvcFilterConfigurationStartupTask.cs" />
     <Compile Include="Framework\Bootstrap\CofoundryAdminAssemblyResourceRegistration.cs" />
     <Compile Include="Framework\Bootstrap\CofoundryAdminDependencyRegistration.cs" />
-    <Compile Include="Framework\Bundling\AngularTemplateBundle.cs" />
-    <Compile Include="Framework\Bundling\AngularTemplateBundleTransform.cs" />
-    <Compile Include="Framework\Bundling\BundlingExtensions.cs" />
+    <Compile Include="Framework\Bundling\AngularResourceRegistration.cs" />
+    <Compile Include="Framework\Bundling\Old\AngularTemplateBundle.cs" />
+    <Compile Include="Framework\Bundling\Old\AngularTemplateBundleTransform.cs" />
+    <Compile Include="Framework\Bundling\Old\BundlingExtensions.cs" />
     <Compile Include="Framework\Constants\AdminViewPaths.cs" />
     <Compile Include="Framework\Constants\AngularJsDirectoryLibrary.cs" />
     <Compile Include="Framework\Constants\LayoutPaths.cs" />

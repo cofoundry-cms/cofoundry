@@ -22,7 +22,7 @@ namespace Cofoundry.Web.Admin
             _moduleRouteLibrary = moduleRouteLibrary;
             AngularModuleIdentifier = TextFormatter.Camelize(moduleRouteLibrary.ModuleFolderName);
             AngularModuleName = "cms." + AngularModuleIdentifier;
-            JsFolderPath = _moduleRouteLibrary.ResourcePrefix + "js";
+            JsFolderPath = _moduleRouteLibrary.ResourcePrefix + "content/js";
             MvcViewFolderPath = _moduleRouteLibrary.ResourcePrefix + "mvc/views";
         }
 

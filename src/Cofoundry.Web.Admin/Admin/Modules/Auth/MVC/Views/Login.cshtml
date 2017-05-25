@@ -1,8 +1,5 @@
-﻿@inherits Cofoundry.Web.CofoundryPage<Cofoundry.Web.Identity.LoginViewModel>
-@using System.Web.Mvc.Html
-@using Cofoundry.Web.Admin
-@using System.Web.Mvc
-@using System.Web.Optimization
+﻿@model Cofoundry.Web.Identity.LoginViewModel
+@inject IStaticFilePathFormatter staticFilePathFormatter
 
 @{
     ViewBag.Title = "Login";
@@ -11,42 +8,42 @@
 
 @section FooterScripts
 {
-    @Scripts.Render(AuthRouteLibrary.Js.Login)
+<script src="@staticFilePathFormatter.AppendVersion(AuthRouteLibrary.Js.Login)"></script>
 }
 
 <h1>Cofoundry</h1>
 
 <div class="wrap">
-    @using (Html.BeginForm(null, null, FormMethod.Post, new { @class = "form-horizontal" }))
-    {
-        @Html.Hidden("ReturnUrl", Request["ReturnUrl"])
-    
+    <form method="post" class="form-horizontal">
+
+        <input name="ReturnUrl" type="hidden" value="@Request["ReturnUrl"]" />
+
         <fieldset>
             <div class="control-group">
-                @Html.LabelFor(m => m.EmailAddress, new { @class = "control-label" })
+                <label asp-for="EmailAddress" class="control-label"></label>
                 <div class="controls">
-                    @Html.TextBoxFor(m => m.EmailAddress, new { maxlength = 150, type = "email" })
-                    @Html.ValidationMessageFor(m => m.EmailAddress, null, new { @class = "help-block" })
+                    <input type="email" asp-for="EmailAddress" maxlength="150" />
+                    <span asp-validation-for="EmailAddress" class="help-block"></span>
                 </div>
             </div>
 
             <div class="control-group">
-                @Html.LabelFor(m => m.Password, new { @class = "control-label" })
+                <label asp-for="Password" class="control-label"></label>
                 <div class="controls">
-                    @Html.PasswordFor(m => m.Password)
-                    @Html.ValidationMessageFor(m => m.Password, null, new { @class = "help-block" })
+                    <input type="password" asp-for="Password" />
+                    <span asp-validation-for="Password" class="help-block"></span>
                 </div>
             </div>
 
-            <label class="checkbox" for="RememberMe")">
-                @Html.CheckBoxFor(m => m.RememberMe, new { @class = "check" }) Remember me
+            <label class="checkbox" for="RememberMe" )">
+                <input asp-for="RememberMe" class="check" />
             </label>
 
             <div class="actions">
                 <input type="submit" class="btn main-cta btn-primary" value="Login" />
             </div>
         </fieldset>
-    }
+    </form>
 </div>
 
 <footer class="login-footer">

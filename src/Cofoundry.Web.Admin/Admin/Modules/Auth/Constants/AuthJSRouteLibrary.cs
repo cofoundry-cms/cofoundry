@@ -24,7 +24,7 @@ namespace Cofoundry.Web.Admin
         {
             get
             {
-                return Bundle("login");
+                return Bundle("login.js");
             }
         }
 
@@ -32,7 +32,7 @@ namespace Cofoundry.Web.Admin
         {
             get
             {
-                return Bundle("forgotpassword");
+                return Bundle("forgotpassword.js");
             }
         }
 
@@ -40,7 +40,7 @@ namespace Cofoundry.Web.Admin
         {
             get
             {
-                return Bundle("changepassword");
+                return Bundle("changepassword.js");
             }
         }
 
