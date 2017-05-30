@@ -1,1 +1,174 @@
-﻿angular.module("cms.settings", ["ngRoute", "cms.shared"]).constant("_", window._).constant("settings.modulePath", "/admin/modules/settings/js/"); angular.module("cms.settings").config(["$routeProvider", "shared.routingUtilities", "settings.modulePath", function (n, t, i) { n.otherwise(t.mapOptions(i, "SettingsDetails")) }]); angular.module("cms.settings").controller("SettingsDetailsController", ["_", "$q", "shared.LoadState", "settings.settingsService", "settings.modulePath", function (n, t, i, r) { function h() { u.edit = c; u.save = l; u.cancel = a; u.clearCache = v; u.editMode = !1; u.globalLoadState = new i; u.saveLoadState = new i; u.formLoadState = new i(!0); e().then(s.bind(null, u.formLoadState)) } function c() { u.editMode = !0; u.mainForm.formStatus.clear() } function l() { y(u.saveLoadState); r.updateGeneralSiteSettings(u.generalSettingsCommand).then(r.updateSeoSettings.bind(null, u.seoSettingsCommand)).then(f.bind(null, "Changes were saved successfully")).finally(s.bind(null, u.saveLoadState)) } function a() { u.editMode = !1; o(); u.mainForm.formStatus.clear() } function v() { u.globalLoadState.on(); r.clearCache().then(f.bind(null, "Cache cleared")).finally(u.globalLoadState.off) } function f(n) { return e().then(u.mainForm.formStatus.success.bind(null, n)) } function e() { function n(n, t) { u[n] = t } var i = r.getGeneralSiteSettings().then(n.bind(null, "generalSettings")), f = r.getSeoSettings().then(n.bind(null, "seoSettings")); return t.all([i, f]).then(function () { o(); u.editMode = !1 }) } function o() { u.seoSettingsCommand = n.clone(u.seoSettings); u.generalSettingsCommand = n.clone(u.generalSettings) } function y(t) { u.globalLoadState.on(); t && n.isFunction(t.on) && t.on() } function s(t) { u.globalLoadState.off(); t && n.isFunction(t.off) && t.off() } var u = this; h() }]); angular.module("cms.settings").factory("settings.settingsService", ["$http", "shared.serviceBase", function (n, t) { var i = {}, r = t + "settings", u = r + "/generalsite", f = r + "/seo"; return i.getGeneralSiteSettings = function () { return n.get(u) }, i.getSeoSettings = function () { return n.get(f) }, i.updateGeneralSiteSettings = function (t) { return n.patch(u, t) }, i.updateSeoSettings = function (t) { return n.patch(f, t) }, i.clearCache = function () { return n.delete(t + "cache") }, i }])
+angular
+    .module('cms.settings', ['ngRoute', 'cms.shared'])
+    .constant('_', window._)
+    .constant('settings.modulePath', '/Admin/Modules/Settings/Js/');
+angular.module('cms.settings').config([
+    '$routeProvider',
+    'shared.routingUtilities',
+    'settings.modulePath',
+function (
+    $routeProvider,
+    routingUtilities,
+    modulePath) {
+
+    $routeProvider
+        .otherwise(routingUtilities.mapOptions(modulePath, 'SettingsDetails'));
+
+}]);
+angular.module('cms.settings').factory('settings.settingsService', [
+    '$http',
+    'shared.serviceBase',
+function (
+    $http,
+    serviceBase) {
+
+    var service = {},
+        settingsServiceBase = serviceBase + 'settings',
+        generalSettingsRoute = settingsServiceBase + '/generalsite',
+        seoSettingsRoute = settingsServiceBase + '/seo';
+
+    /* QUERIES */
+
+    service.getGeneralSiteSettings = function () {
+
+        return $http.get(generalSettingsRoute);
+    }
+
+    service.getSeoSettings = function () {
+
+        return $http.get(seoSettingsRoute);
+    }
+     
+    /* COMMANDS */
+
+    service.updateGeneralSiteSettings = function (command) {
+
+        return $http.patch(generalSettingsRoute, command);
+    }
+
+    service.updateSeoSettings = function (command) {
+
+        return $http.patch(seoSettingsRoute, command);
+    }
+
+    service.clearCache = function (command) {
+
+        return $http.delete(serviceBase + 'cache');
+    }
+
+    return service;
+}]);
+angular.module('cms.settings').controller('SettingsDetailsController', [
+    '_',
+    '$q',
+    'shared.LoadState',
+    'settings.settingsService',
+    'settings.modulePath',
+function (
+    _,
+    $q,
+    LoadState,
+    settingsService,
+    modulePath
+    ) {
+
+    var vm = this;
+
+    init();
+
+    /* INIT */
+
+    function init() {
+
+        // UI actions
+        vm.edit = edit;
+        vm.save = save;
+        vm.cancel = reset;
+        vm.clearCache = clearCache;
+
+        // Properties
+        vm.editMode = false;
+        vm.globalLoadState = new LoadState();
+        vm.saveLoadState = new LoadState();
+        vm.formLoadState = new LoadState(true);
+
+        // Init
+        initData()
+            .then(setLoadingOff.bind(null, vm.formLoadState));
+    }
+
+    /* UI ACTIONS */
+
+    function edit() {
+        vm.editMode = true;
+        vm.mainForm.formStatus.clear();
+    }
+
+    function save() {
+        setLoadingOn(vm.saveLoadState);
+
+        settingsService.updateGeneralSiteSettings(vm.generalSettingsCommand)
+            .then(settingsService.updateSeoSettings.bind(null, vm.seoSettingsCommand))
+            .then(onSuccess.bind(null, 'Changes were saved successfully'))
+            .finally(setLoadingOff.bind(null, vm.saveLoadState));
+    }
+
+    function reset() {
+        vm.editMode = false;
+        resetData();
+        vm.mainForm.formStatus.clear();
+    }
+
+    function clearCache() {
+        vm.globalLoadState.on();
+
+        settingsService.clearCache()
+            .then(onSuccess.bind(null, 'Cache cleared'))
+            .finally(vm.globalLoadState.off);
+    }
+
+    /* PRIVATE FUNCS */
+
+    function onSuccess(message) {
+        return initData()
+            .then(vm.mainForm.formStatus.success.bind(null, message));
+    }
+
+    function initData() {
+
+        var generalPromise = settingsService
+            .getGeneralSiteSettings()
+            .then(load.bind(null, 'generalSettings'));
+
+        var seoPromise = settingsService
+            .getSeoSettings()
+            .then(load.bind(null, 'seoSettings'));
+
+        return $q.all([
+            generalPromise,
+            seoPromise
+        ]).then(function () {
+            resetData();
+            vm.editMode = false;
+        });
+
+        function load(prop, result) {
+            vm[prop] = result;
+        }
+    }
+
+    function resetData() {
+        vm.seoSettingsCommand = _.clone(vm.seoSettings);
+        vm.generalSettingsCommand = _.clone(vm.generalSettings);
+    }
+
+    function setLoadingOn(loadState) {
+        vm.globalLoadState.on();
+        if (loadState && _.isFunction(loadState.on)) loadState.on();
+    }
+
+    function setLoadingOff(loadState) {
+        vm.globalLoadState.off();
+        if (loadState && _.isFunction(loadState.off)) loadState.off();
+    }
+}]);

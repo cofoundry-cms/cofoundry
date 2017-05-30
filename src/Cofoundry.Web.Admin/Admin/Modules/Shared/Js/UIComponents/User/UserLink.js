@@ -9,7 +9,7 @@ function (
     return {
         restrict: 'E',
         scope: { user: '=cmsUser' },
-        templateUrl: modulePath + 'UIComponents/User/userlink.html',
+        templateUrl: modulePath + 'UIComponents/User/UserLink.html',
         controller: controller,
         controllerAs: 'vm',
         bindToController: true

@@ -21,7 +21,7 @@ function (
     baseFormFieldFactory) {
 
     var config = {
-        templateUrl: modulePath + 'UIComponents/Youtube/FormFieldYoutubeId.html',
+        templateUrl: modulePath + 'UIComponents/YouTube/FormFieldYouTubeId.html',
         scope: _.extend(baseFormFieldFactory.defaultConfig.scope, {
             onVideoSelected: '&cmsOnVideoSelected'
         }),

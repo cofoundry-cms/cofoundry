@@ -90,7 +90,7 @@ Cofoundry.visualEditor = (function () {
             }
         },
 
-        bindGui() {
+        bindGui: function() {
             var toolbar_add_module = document.getElementById('cofoundry-sv__btn-add-module'),
                 toolbar_module = document.getElementById('cofoundry-sv__module-popover-container'),
                 wrap_ui_container = document.getElementsByTagName('body')[0];

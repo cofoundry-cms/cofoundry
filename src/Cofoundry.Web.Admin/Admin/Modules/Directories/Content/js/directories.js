@@ -1,1 +1,320 @@
-﻿angular.module("cms.directories", ["ngRoute", "cms.shared"]).constant("_", window._).constant("directories.modulePath", "/admin/modules/directories/js/"); angular.module("cms.directories").config(["$routeProvider", "shared.routingUtilities", "directories.modulePath", function (n, t, i) { t.registerCrudRoutes(n, i, "Directory") }]); angular.module("cms.directories").controller("AddDirectoryController", ["$location", "shared.stringUtilities", "shared.LoadState", "directories.directoryService", function (n, t, i, r) { function e() { l(); u.formLoadState = new i(!0); u.globalLoadState = new i; u.editMode = !1; u.save = o; u.cancel = c; u.onNameChanged = h; u.onDirectoriesLoaded = s } function o() { u.globalLoadState.on(); r.add(u.command).then(f, u.globalLoadState.off) } function s() { u.formLoadState.off() } function h() { u.command.urlPath = t.slugify(u.command.name) } function c() { f() } function f() { n.path("/") } function l() { u.command = {} } var u = this; e() }]); angular.module("cms.directories").controller("DirectoryDetailsController", ["$routeParams", "$q", "$location", "_", "shared.stringUtilities", "shared.LoadState", "shared.modalDialogService", "directories.directoryService", "directories.modulePath", function (n, t, i, r, u, f, e, o) { function v() { s.edit = y; s.save = p; s.cancel = w; s.deleteDirectory = b; s.onNameChanged = k; s.editMode = !1; s.globalLoadState = new f; s.saveLoadState = new f; s.formLoadState = new f(!0); c().then(h.bind(null, s.formLoadState)) } function y() { s.editMode = !0; s.mainForm.formStatus.clear() } function p() { a(s.saveLoadState); o.update(s.command).then(d.bind(null, "Changes were saved successfully")).finally(h.bind(null, s.saveLoadState)) } function w() { s.editMode = !1; s.command = l(s.webDirectory); s.mainForm.formStatus.clear() } function b() { function t() { return a(), o.remove(s.webDirectory.webDirectoryId).then(g).catch(h) } var n = { title: "Delete Directory", message: "Are you sure you want to delete this directory?", okButtonTitle: "Yes, delete it", onOk: t }; e.confirm(n) } function k() { s.hasChildContent || (s.command.urlPath = u.slugify(s.command.name)) } function d(n) { return c().then(s.mainForm.formStatus.success.bind(null, n)) } function c() { function i(n) { var i = n.findNodeById(t), r = n.flatten(t); s.webDirectory = i; s.parentDirectories = r; s.command = l(i); s.editMode = !1; s.hasChildContent = i.numPages || i.childWebDirectories.length } var t = n.id; return o.getTree().then(i) } function l(n) { return r.pick(n, "webDirectoryId", "name", "urlPath", "parentWebDirectoryId") } function g() { i.path("") } function a(n) { s.globalLoadState.on(); n && r.isFunction(n.on) && n.on() } function h(n) { s.globalLoadState.off(); n && r.isFunction(n.off) && n.off() } var s = this; v() }]); angular.module("cms.directories").controller("DirectoryListController", ["_", "shared.modalDialogService", "shared.LoadState", "shared.SearchQuery", "directories.directoryService", function (n, t, i, r, u) { function e() { f.gridLoadState = new i; o() } function o() { return f.gridLoadState.on(), u.getTree().then(function (n) { var t = n.flatten(); f.result = t.slice(1, t.length); f.gridLoadState.off() }) } var f = this; e() }]); angular.module("cms.directories").factory("directories.directoryService", ["$http", "_", "shared.serviceBase", "directories.DirectoryTree", function (n, t, i, r) { function e(n) { return f + "/" + n } var u = {}, f = i + "webdirectories"; return u.getAll = function () { return n.get(f) }, u.getTree = function () { return n.get(f + "/tree").then(function (n) { return n ? new r(n) : n }) }, u.getById = function (t) { return n.get(e(t)) }, u.add = function (t) { return n.post(f, t) }, u.update = function (t) { return n.patch(e(t.webDirectoryId), t) }, u.remove = function (t) { return n.delete(e(t)) }, u }]); angular.module("cms.directories").factory("directories.DirectoryTree", ["_", function (n) { function t(t) { var i = this; n.extend(i, t); i.flatten = function (t) { function u(i, r) { i.webDirectoryId != t && (r.push(i), n.each(i.childWebDirectories, function (n) { u(n, r) })) } var r = []; return u(i, r), r }; i.findNodeById = function (n) { function t(i) { var r; if (i) return i.forEach(function (i) { r || (r = i.webDirectoryId == n ? i : t(i.childWebDirectories)) }), r } return t([i]) } } return t }]); angular.module("cms.directories").directive("cmsDirectoryGrid", ["directories.modulePath", function (n) { function t() { function t(t) { for (var i = "", u = (n.startDepth || 0) + 1, r = u; r < t; r++)i += "— "; return i } var n = this; n.getPathDepthIndicator = t } return { restrict: "E", templateUrl: n + "uicomponents/directories/DirectoryGrid.html", scope: { webDirectories: "=cmsDirectories", startDepth: "=cmsStartDepth", redirect: "=cmsRedirect" }, replace: !1, controller: t, controllerAs: "vm", bindToController: !0 } }])
+angular
+    .module('cms.directories', ['ngRoute', 'cms.shared'])
+    .constant('_', window._)
+    .constant('directories.modulePath', '/Admin/Modules/Directories/Js/');
+angular.module('cms.directories').config([
+    '$routeProvider',
+    'shared.routingUtilities',
+    'directories.modulePath',
+function (
+    $routeProvider,
+    routingUtilities,
+    modulePath) {
+
+    routingUtilities.registerCrudRoutes($routeProvider, modulePath, 'Directory');
+}]);
+angular.module('cms.directories').factory('directories.directoryService', [
+    '$http',
+    '_',
+    'shared.serviceBase',
+    'directories.DirectoryTree',
+function (
+    $http,
+    _,
+    serviceBase,
+    DirectoryTree) {
+
+    var service = {},
+        directoryServiceBase = serviceBase + 'webdirectories';
+
+    /* QUERIES */
+
+    service.getAll = function () {
+        return $http.get(directoryServiceBase);
+    }
+
+    service.getTree = function () {
+        return $http.get(directoryServiceBase + '/tree').then(function (tree) {
+            return tree ? new DirectoryTree(tree) : tree;
+        });
+    }
+
+    service.getById = function (webDirectoryId) {
+
+        return $http.get(getIdRoute(webDirectoryId));
+    }
+
+    /* COMMANDS */
+
+    service.add = function (command) {
+
+        return $http.post(directoryServiceBase, command);
+    }
+
+    service.update = function (command) {
+
+        return $http.patch(getIdRoute(command.webDirectoryId), command);
+    }
+
+    service.remove = function (webDirectoryId) {
+
+        return $http.delete(getIdRoute(webDirectoryId));
+    }
+
+    /* PRIVATES */
+
+    function getIdRoute(webDirectoryId) {
+        return directoryServiceBase + '/' + webDirectoryId;
+    }
+
+    return service;
+}]);
+angular.module('cms.directories').controller('AddDirectoryController', [
+    '$location',
+    'shared.stringUtilities',
+    'shared.LoadState',
+    'directories.directoryService',
+function (
+    $location,
+    stringUtilities,
+    LoadState,
+    directoryService) {
+
+    var vm = this;
+
+    init();
+
+    /* INIT */
+
+    function init() {
+
+        initData();
+
+        vm.formLoadState = new LoadState(true);
+        vm.globalLoadState = new LoadState();
+        vm.editMode = false;
+
+        vm.save = save;
+        vm.cancel = cancel;
+        vm.onNameChanged = onNameChanged;
+        vm.onDirectoriesLoaded = onDirectoriesLoaded;
+    }
+
+    /* EVENTS */
+
+    function save() {
+        vm.globalLoadState.on();
+
+        directoryService
+            .add(vm.command)
+            .then(redirectToList, vm.globalLoadState.off);
+    }
+
+    /* PRIVATE FUNCS */
+
+    function onDirectoriesLoaded() {
+        vm.formLoadState.off();
+    }
+
+    function onNameChanged() {
+        vm.command.urlPath = stringUtilities.slugify(vm.command.name);
+    }
+
+    function cancel() {
+        redirectToList();
+    }
+
+    function redirectToList() {
+        $location.path('/');
+    }
+
+    function initData() {
+        vm.command = {};
+    }
+}]);
+angular.module('cms.directories').controller('DirectoryDetailsController', [
+    '$routeParams',
+    '$q',
+    '$location',
+    '_',
+    'shared.stringUtilities',
+    'shared.LoadState',
+    'shared.modalDialogService',
+    'directories.directoryService',
+    'directories.modulePath',
+function (
+    $routeParams,
+    $q,
+    $location,
+    _,
+    stringUtilities,
+    LoadState,
+    modalDialogService,
+    directoryService,
+    modulePath
+    ) {
+
+    var vm = this;
+
+    init();
+    
+    /* INIT */
+
+    function init() {
+
+        // UI actions
+        vm.edit = edit;
+        vm.save = save;
+        vm.cancel = reset;
+        vm.deleteDirectory = deleteDirectory;
+
+        // Events
+        vm.onNameChanged = onNameChanged;
+
+        // Properties
+        vm.editMode = false;
+        vm.globalLoadState = new LoadState();
+        vm.saveLoadState = new LoadState();
+        vm.formLoadState = new LoadState(true);
+
+        // Init
+        initData()
+            .then(setLoadingOff.bind(null, vm.formLoadState));
+    }
+
+    /* UI ACTIONS */
+
+    function edit() {
+        vm.editMode = true;
+        vm.mainForm.formStatus.clear();
+    }
+
+    function save() {
+        setLoadingOn(vm.saveLoadState);
+
+        directoryService.update(vm.command)
+            .then(onSuccess.bind(null, 'Changes were saved successfully'))
+            .finally(setLoadingOff.bind(null, vm.saveLoadState));
+    }
+
+    function reset() {
+        vm.editMode = false;
+        vm.command = mapUpdateCommand(vm.webDirectory);
+        vm.mainForm.formStatus.clear();
+    }
+
+    function deleteDirectory() {
+        var options = {
+            title: 'Delete Directory',
+            message: 'Are you sure you want to delete this directory?',
+            okButtonTitle: 'Yes, delete it',
+            onOk: onOk
+        };
+
+        modalDialogService.confirm(options);
+
+        function onOk() {
+            setLoadingOn();
+            return directoryService
+                .remove(vm.webDirectory.webDirectoryId)
+                .then(redirectToList)
+                .catch(setLoadingOff);
+        }
+    }
+
+    /* EVENTS */
+
+    function onNameChanged() {
+        if (!vm.hasChildContent) {
+            vm.command.urlPath = stringUtilities.slugify(vm.command.name);
+        }
+    }
+
+    /* PRIVATE FUNCS */
+
+    function onSuccess(message) {
+        return initData()
+            .then(vm.mainForm.formStatus.success.bind(null, message));
+    }
+
+    function initData() {
+        var webDirectoryId = $routeParams.id;
+
+        return directoryService.getTree()
+            .then(loadDirectory);
+
+        function loadDirectory(tree) {
+            var webDirectory = tree.findNodeById(webDirectoryId),
+                parentDirectories = tree.flatten(webDirectoryId);
+
+            vm.webDirectory = webDirectory;
+            vm.parentDirectories = parentDirectories;
+            vm.command = mapUpdateCommand(webDirectory);
+            vm.editMode = false;
+            vm.hasChildContent = webDirectory.numPages || webDirectory.childWebDirectories.length;
+        }
+    }
+
+    function mapUpdateCommand(webDirectory) {
+
+        return _.pick(webDirectory,
+            'webDirectoryId',
+            'name',
+            'urlPath',
+            'parentWebDirectoryId'
+            );
+    }
+
+    function redirectToList() {
+        $location.path('');
+    }
+
+    function setLoadingOn(loadState) {
+        vm.globalLoadState.on();
+        if (loadState && _.isFunction(loadState.on)) loadState.on();
+    }
+
+    function setLoadingOff(loadState) {
+        vm.globalLoadState.off();
+        if (loadState && _.isFunction(loadState.off)) loadState.off();
+    }
+}]);
+angular.module('cms.directories').controller('DirectoryListController', [
+    '_',
+    'shared.modalDialogService',
+    'shared.LoadState',
+    'shared.SearchQuery',
+    'directories.directoryService',
+function (
+    _,
+    modalDialogService,
+    LoadState,
+    SearchQuery,
+    directoryService) {
+
+    var vm = this;
+
+    init();
+
+    function init() {
+        
+        vm.gridLoadState = new LoadState();
+
+        loadGrid();
+    }
+    
+    /* PRIVATE FUNCS */
+    
+    function loadGrid() {
+        vm.gridLoadState.on();
+
+        return directoryService.getTree().then(function (tree) {
+            var result = tree.flatten();
+
+            // remove the root directory
+            vm.result = result.slice(1, result.length);
+            vm.gridLoadState.off();
+        });
+    }
+
+}]);

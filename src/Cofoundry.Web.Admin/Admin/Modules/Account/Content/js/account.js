@@ -1,1 +1,240 @@
-﻿angular.module("cms.account", ["ngRoute", "cms.shared"]).constant("_", window._).constant("account.modulePath", "/admin/modules/account/js/"); angular.module("cms.account").config(["$routeProvider", "shared.routingUtilities", "account.modulePath", function (n, t, i) { n.when("/change-password", t.mapOptions(i, "ChangePassword")).otherwise(t.mapOptions(i, "AccountDetails")) }]); angular.module("cms.account").controller("AccountDetailsController", ["shared.LoadState", "shared.modalDialogService", "account.accountService", "account.modulePath", function (n, t, i) { function s() { r.edit = h; r.save = c; r.cancel = l; r.editMode = !1; r.globalLoadState = new n; r.saveLoadState = new n; r.formLoadState = new n(!0); f().then(u.bind(null, r.formLoadState)) } function h() { r.editMode = !0; r.mainForm.formStatus.clear() } function c() { o(r.saveLoadState); i.update(r.command).then(a.bind(null, "Changes were saved successfully")).finally(u.bind(null, r.saveLoadState)) } function l() { r.editMode = !1; r.command = e(r.user); r.mainForm.formStatus.clear() } function a(n) { return f().then(r.mainForm.formStatus.success.bind(null, n)) } function f() { function n(n) { r.user = n; r.command = e(n); r.editMode = !1 } return i.getAccountDetails().then(n) } function e(n) { return _.pick(n, "firstName", "lastName", "email") } function o(n) { r.globalLoadState.on(); n && _.isFunction(n.on) && n.on() } function u(n) { r.globalLoadState.off(); n && _.isFunction(n.off) && n.off() } var r = this; s() }]); angular.module("cms.account").controller("ChangePasswordController", ["$location", "shared.LoadState", "shared.modalDialogService", "account.accountService", function (n, t, i, r) { function e() { u.save = o; u.cancel = s; u.doesPasswordMatch = h; u.globalLoadState = new t; u.formLoadState = new t(!0); c().then(u.formLoadState.off) } function o() { u.globalLoadState.on(); r.updatePassword(u.command).then(f).finally(u.globalLoadState.off) } function s() { f() } function h(n) { return u.command ? u.command.newPassword === n : !1 } function c() { function n(n) { u.user = n; u.command = {} } return r.getAccountDetails().then(n) } function f() { n.path("/") } var u = this; e() }]); angular.module("cms.account").factory("account.accountService", ["$http", "shared.serviceBase", function (n, t) { var i = {}, r = t + "account"; return i.getAccountDetails = function () { return n.get(r) }, i.update = function (t) { return n.patch(r, t) }, i.updatePassword = function (t) { return n.put(r + "/password", t) }, i }])
+angular
+    .module('cms.account', ['ngRoute', 'cms.shared'])
+    .constant('_', window._)
+    .constant('account.modulePath', '/Admin/Modules/Account/Js/');
+angular.module('cms.account').config([
+    '$routeProvider',
+    'shared.routingUtilities',
+    'account.modulePath',
+function (
+    $routeProvider,
+    routingUtilities,
+    modulePath) {
+
+    $routeProvider
+        .when('/change-password', routingUtilities.mapOptions(modulePath, 'ChangePassword'))
+        .otherwise(routingUtilities.mapOptions(modulePath, 'AccountDetails'));
+}]);
+angular.module('cms.account').factory('account.accountService', [
+    '$http',
+    'shared.serviceBase',
+function (
+    $http,
+    serviceBase) {
+
+    var service = {},
+        accountServiceBase = serviceBase + 'account';
+
+    /* QUERIES */
+        
+    service.getAccountDetails = function () {
+
+        return $http.get(accountServiceBase);
+    }
+
+    /* COMMANDS */
+
+    service.update = function (command) {
+
+        return $http.patch(accountServiceBase, command);
+    }
+
+    service.updatePassword = function (command) {
+
+        return $http.put(accountServiceBase + "/password", command);
+    }
+
+    return service;
+}]);
+angular.module('cms.account').controller('AccountDetailsController', [
+    'shared.LoadState',
+    'shared.modalDialogService',
+    'account.accountService',
+    'account.modulePath',
+function (
+    LoadState,
+    modalDialogService,
+    accountService,
+    modulePath
+    ) {
+
+    var vm = this;
+
+    init();
+
+    /* INIT */
+
+    function init() {
+
+        // UI actions
+        vm.edit = edit;
+        vm.save = save;
+        vm.cancel = reset;
+
+        // Properties
+        vm.editMode = false;
+        vm.globalLoadState = new LoadState();
+        vm.saveLoadState = new LoadState();
+        vm.formLoadState = new LoadState(true);
+
+        // Init
+        initData()
+            .then(setLoadingOff.bind(null, vm.formLoadState));
+    }
+
+    /* UI ACTIONS */
+
+    function edit() {
+        vm.editMode = true;
+        vm.mainForm.formStatus.clear();
+    }
+
+    function save() {
+        setLoadingOn(vm.saveLoadState);
+
+        accountService.update(vm.command)
+            .then(onSuccess.bind(null, 'Changes were saved successfully'))
+            .finally(setLoadingOff.bind(null, vm.saveLoadState));
+    }
+
+    function reset() {
+        vm.editMode = false;
+        vm.command = mapUpdateCommand(vm.user);
+        vm.mainForm.formStatus.clear();
+    }
+
+    function deleteUser() {
+        var options = {
+            title: 'Delete User',
+            message: 'Are you sure you want to delete this user?',
+            okButtonTitle: 'Yes, delete it',
+            onOk: onOk
+        };
+
+        modalDialogService.confirm(options);
+
+        function onOk() {
+            setLoadingOn();
+            return accountService
+                .remove(vm.user.userId)
+                .then(redirectToList)
+                .catch(setLoadingOff);
+        }
+    }
+
+    /* PRIVATE FUNCS */
+
+    function onSuccess(message) {
+        return initData()
+            .then(vm.mainForm.formStatus.success.bind(null, message));
+    }
+
+    function initData() {
+
+        return accountService
+            .getAccountDetails()
+            .then(load);
+
+        function load(user) {
+
+            vm.user = user;
+            vm.command = mapUpdateCommand(user);
+            vm.editMode = false;
+        }
+    }
+
+    function mapUpdateCommand(user) {
+
+        return _.pick(user,
+            'firstName',
+            'lastName',
+            'email'
+            );
+    }
+
+    function setLoadingOn(loadState) {
+        vm.globalLoadState.on();
+        if (loadState && _.isFunction(loadState.on)) loadState.on();
+    }
+
+    function setLoadingOff(loadState) {
+        vm.globalLoadState.off();
+        if (loadState && _.isFunction(loadState.off)) loadState.off();
+    }
+}]);
+angular.module('cms.account').controller('ChangePasswordController', [
+    '$location',
+    'shared.LoadState',
+    'shared.modalDialogService',
+    'account.accountService',
+function (
+    $location,
+    LoadState,
+    modalDialogService,
+    accountService
+    ) {
+
+    var vm = this;
+
+    init();
+
+    /* INIT */
+
+    function init() {
+
+        // UI actions
+        vm.save = save;
+        vm.cancel = cancel;
+
+        // helpers
+        vm.doesPasswordMatch = doesPasswordMatch;
+
+        // Properties
+        vm.globalLoadState = new LoadState();
+        vm.formLoadState = new LoadState(true);
+
+        // Init
+        initData()
+            .then(vm.formLoadState.off);
+    }
+
+    /* UI ACTIONS */
+    
+    function save() {
+        vm.globalLoadState.on();
+
+        accountService
+            .updatePassword(vm.command)
+            .then(redirectToDetails)
+            .finally(vm.globalLoadState.off);
+    }
+
+    function cancel() {
+        redirectToDetails();
+    }
+
+    /* PRIVATE FUNCS */
+
+    function doesPasswordMatch(value) {
+        if (!vm.command) return false;
+
+        return vm.command.newPassword === value;
+    }
+
+    function initData() {
+
+        return accountService
+            .getAccountDetails()
+            .then(load);
+
+        function load(user) {
+
+            vm.user = user;
+            vm.command = {};
+        }
+    }
+
+    function redirectToDetails() {
+        $location.path('/');
+    }
+}]);

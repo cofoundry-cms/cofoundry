@@ -1,1 +1,950 @@
-﻿angular.module("cms.visualEditor", ["cms.shared"]).constant("_", window._).constant("visualEditor.modulePath", "/admin/modules/visualeditor/js/"); angular.module("cms.visualEditor").controller("VisualEditorController", ["$window", "$scope", "_", "shared.LoadState", "shared.entityVersionModalDialogService", "shared.modalDialogService", "shared.localStorage", "visualEditor.pageModuleService", "visualEditor.modulePath", "shared.urlLibrary", "visualEditor.options", function (n, t, i, r, u, f, e, o, s, h, c) { function g() { var t = n.addEventListener ? "addEventListener" : "attachEvent", i = window[t], r = t === "attachEvent" ? "onmessage" : "message"; i(r, nt); l.globalLoadState = a; l.config = tt; l.publish = it; l.unpublish = rt; l.copyToDraft = ut; l.addSectionModule = ft; l.addModule = p; l.addModuleAbove = p; l.addModuleBelow = p; l.editModule = et; l.moveModuleUp = d; l.moveModuleDown = d; l.deleteModule = ot } function nt(n) { l[n.data.action].apply(this, n.data.args) } function tt() { y = { entityNameSingular: c.entityNameSingular, isCustomEntity: c.isCustomEntityRoute } } function it(n) { u.publish(n.entityId, b, y).then(st).catch(k) } function rt(n) { u.unpublish(n.entityId, b, y).then(w).catch(k) } function ut(n) { u.copyToDraft(n.entityId, n.versionId, n.hasDraftVersion, b, y).then(w).catch(k) } function ft(n) { function t() { a.off() } f.show({ templateUrl: s + "routes/modals/addmodule.html", controller: "AddModuleController", options: { insertMode: n.insertMode, pageTemplateSectionId: n.pageTemplateSectionId, adjacentVersionModuleId: n.versionModuleId, permittedModuleTypes: n.permittedModuleTypes, onClose: t, refreshContent: v, isCustomEntity: n.isCustomEntity } }) } function p(n) { function t() { a.off() } a.isLoading || (a.on(), f.show({ templateUrl: s + "routes/modals/addmodule.html", controller: "AddModuleController", options: { pageTemplateSectionId: n.pageTemplateSectionId, adjacentVersionModuleId: n.versionModuleId, permittedModuleTypes: n.permittedModuleTypes, insertMode: n.insertMode, refreshContent: v, isCustomEntity: n.isCustomEntity, onClose: t } })) } function et(n) { function t() { a.off() } a.isLoading || (a.on(), f.show({ templateUrl: s + "routes/modals/editmodule.html", controller: "EditModuleController", options: { versionModuleId: n.versionModuleId, pageModuleTypeId: n.pageModuleTypeId, isCustomEntity: n.isCustomEntity, refreshContent: v, onClose: t } })) } function d(n) { var t = n.isUp ? o.moveUp : o.moveDown; a.isLoading || (a.on(), t(n.isCustomEntity, n.versionModuleId).then(v).finally(a.off)) } function ot(n) { function r() { return o.remove(t, n.versionModuleId).then(v).finally(a.off) } function u() { a.off() } var t = n.isCustomEntity, i = { title: "Delete Module", message: "Are you sure you want to delete this module?", okButtonTitle: "Yes, delete it", onOk: r, onCancel: u }; a.isLoading || (a.on(), f.confirm(i)) } function v() { w() } function st() { var t = n.parent.location.href; t.indexOf("mode=edit") > -1 && (t = t.replace("mode=edit", "mode=preview")); n.parent.location = t } function w() { n.parent.location = n.parent.location } function b() { l.globalLoadState.on() } function k() { l.globalLoadState.off() } var l = this, ht = n.document, y, a = new r; g() }]); angular.module("cms.visualEditor").controller("AddModuleController", ["$scope", "$q", "_", "shared.LoadState", "visualEditor.pageModuleService", "visualEditor.options", "options", "close", function (n, t, i, r, u, f, e, o) { function l() { var t = e.anchorElement; n.command = { dataModel: {}, pageTemplateSectionId: e.pageTemplateSectionId, pageVersionId: f.pageVerisonId, adjacentVersionModuleId: e.adjacentVersionModuleId, insertMode: e.insertMode || "Last" }; n.submitLoadState = new r; n.formLoadState = new r(!0); n.save = v; n.close = h; n.selectModuleType = c; n.selectModuleTypeAndNext = p; n.isModuleTypeSelected = w; n.setStep = s; a() } function a() { function t(t) { n.title = e.sectionName; n.moduleTypes = e.permittedModuleTypes.length ? i.filter(t, function (n) { return i.contains(e.permittedModuleTypes, n.fileName) }) : t; n.moduleTypes.length === 1 ? (n.command.pageModuleTypeId = n.moduleTypes[0].pageModuleTypeId, s(2)) : n.allowStep1 = !0; n.formLoadState.off() } s(1); u.getAllModuleTypes().then(t) } function v() { n.submitLoadState.on(); u.add(e.isCustomEntity, n.command).then(e.refreshContent).then(h).finally(n.submitLoadState.off) } function h() { o(); e.onClose() } function s(t) { n.currentStep = t; t === 2 && y() } function y() { function t(t) { n.formDataSource = { modelMetaData: t, model: n.command.dataModel }; n.templates = t.templates; n.formLoadState.off() } n.formLoadState.on(); u.getModuleTypeSchema(n.command.pageModuleTypeId).then(t) } function c(t) { n.command.pageModuleTypeId = t && t.pageModuleTypeId } function p(n) { c(n); s(2) } function w(t) { return t && t.pageModuleTypeId === n.command.pageModuleTypeId } l() }]); angular.module("cms.visualEditor").controller("EditModuleController", ["$scope", "$q", "_", "shared.LoadState", "visualEditor.pageModuleService", "visualEditor.options", "options", "close", function (n, t, i, r, u, f, e, o) { function h() { var t = e.anchorElement; n.command = { dataModel: {} }; n.submitLoadState = new r; n.formLoadState = new r(!0); n.save = l; n.close = s; c() } function c() { function s(t) { n.templates = t.templates; i.modelMetaData = t } function h(t) { n.command = t; i.model = t.dataModel } function c() { n.formDataSource = i; n.formLoadState.off() } var i = {}, r, f, o; n.formLoadState.on(); r = u.getModuleTypeSchema(e.pageModuleTypeId).then(s); f = u.getPageVersionModuleById(e.isCustomEntity, e.versionModuleId).then(h); o = t.all([r, f]).then(c) } function l() { n.submitLoadState.on(); u.update(e.isCustomEntity, e.versionModuleId, n.command).then(e.refreshContent).then(s).finally(n.submitLoadState.off) } function s() { o(); e.onClose() } h() }]); angular.module("cms.visualEditor").directive("cmsPageSection", ["$window", "$timeout", "_", "shared.modalDialogService", "visualEditor.modulePath", function (n, t, i, r, u) { function f(n) { this.getSectionParams = function () { return i.pick(n, ["siteFrameEl", "refreshContent", "pageTemplateSectionId", "isMultiModule", "isCustomEntity", "permittedModuleTypes"]) } } function e(i) { function s() { i.isOver = !1; i.setIsOver = o; i.addModule = h; i.startScrollY = 0; i.currentScrollY = 0; i.$watch("sectionAnchorElement", c); i.$watch("isSectionOver", o); i.$watch("scrolled", a); i.$watch("resized", l) } function h() { function n() { i.isPopupActive = !1 } i.isPopupActive = !0; r.show({ templateUrl: u + "routes/modals/addmodule.html", controller: "AddModuleController", options: { anchorElement: i.sectionAnchorElement, pageTemplateSectionId: i.pageTemplateSectionId, onClose: n, refreshContent: v, isCustomEntity: i.isCustomEntity, permittedModuleTypes: i.permittedModuleTypes } }) } function o(n) { n ? (f && (t.cancel(f), f = null), i.isOver = !0, e(i.sectionAnchorElement, !0)) : f || (f = t(function () { i.isOver = !1; e(i.sectionAnchorElement, !1) }, 300)) } function c(t, r) { function u(n) { return n ? n.split(",") : [] } function f() { var u = i.siteFrameEl, e = t.offset(), f = u.offset(), s = u[0].contentDocument.documentElement, r = e.top + f.top - s.scrollTop + 2, o; r < f.top && (r = f.top); o = (n.innerWidth - u[0].clientWidth) / 2 + (e.left + t[0].offsetWidth); i.css = { top: r + "px", left: (o || 0) + "px" }; i.startScrollY = i.currentScrollY; i.startY = r } t && (i.pageTemplateSectionId = t.attr("data-cms-page-template-section-id"), i.sectionName = t.attr("data-cms-page-section-name"), i.isMultiModule = t.attr("data-cms-multi-module"), i.permittedModuleTypes = u(t.attr("data-cms-page-section-permitted-module-types")), i.isCustomEntity = t[0].hasAttribute("data-cms-custom-entity-section"), f()); e(r, !1) } function l() { i.isOver = !1; i.sectionAnchorElement = "" } function a(n) { i.currentScrollY = n || 0; var t = i.startY + (i.startScrollY - n); t < 0 && (t = 0); t && (i.css = { top: t + "px", left: i.css.left }) } function v() { return i.refreshContent({ pageTemplateSectionId: i.pageTemplateSectionId }) } function e(n, t) { n && n.toggleClass("cofoundry-sv__hover-section", t) } var f; s() } return { restrict: "E", templateUrl: u + "uicomponents/PageSection.html", controller: ["$scope", f], link: e, replace: !0 } }]); angular.module("cms.visualEditor").directive("cmsPageSectionModule", ["$window", "$timeout", "visualEditor.pageModuleService", "shared.modalDialogService", "shared.LoadState", "visualEditor.modulePath", "visualEditor.options", function (n, t, i, r, u, f) { function e(e, o, s, h) { function d() { e.isOver = !1; k(); e.setIsOver = b; e.addModule = y.bind(null, "Last"); e.editModule = nt; e.moveModuleUp = w.bind(null, !0); e.moveModuleDown = w.bind(null, !1); e.addModuleAbove = y.bind(null, "BeforeItem"); e.addModuleBelow = y.bind(null, "AfterItem"); e.deleteModule = g; e.globalLoadState = c; e.$watch("anchorElement", tt); e.$watch("isContainerOver", b); e.$watch("scrolled", it) } function w(n) { var t = n ? i.moveUp : i.moveDown; c.isLoading || (c.on(), t(l.isCustomEntity, e.versionModuleId).then(v).finally(c.off)) } function g() { function u() { return i.remove(n, e.versionModuleId).then(v).finally(c.off) } var f = e.anchorElement, n = l.isCustomEntity, t = { title: "Delete Module", message: "Are you sure you want to delete this module?", okButtonTitle: "Yes, delete it", onOk: u }; c.isLoading || (c.on(), r.confirm(t)) } function y(n) { function t() { e.isPopupActive = !1; c.off() } c.isLoading || (c.on(), e.isPopupActive = !0, r.show({ templateUrl: f + "routes/modals/addmodule.html", controller: "AddModuleController", options: { anchorElement: e.anchorElement, pageTemplateSectionId: e.pageTemplateSectionId, adjacentVersionModuleId: e.versionModuleId, insertMode: n, refreshContent: v, isCustomEntity: l.isCustomEntity, permittedModuleTypes: l.permittedModuleTypes, onClose: t } })) } function nt() { function n() { e.isPopupActive = !1; c.off() } c.isLoading || (c.on(), e.isPopupActive = !0, r.show({ templateUrl: f + "routes/modals/editmodule.html", controller: "EditModuleController", options: { anchorElement: e.anchorElement, versionModuleId: e.versionModuleId, pageModuleTypeId: e.pageModuleTypeId, isCustomEntity: l.isCustomEntity, refreshContent: v, onClose: n } })) } function b(n) { k(); n ? (a && (t.cancel(a), a = null), e.isOver = !0, p(e.anchorElement, !0)) : a || (a = t(function () { e.isOver = !1; p(e.anchorElement, !1) }, 300)) } function tt(i, r) { function u(i, r) { var u = l.siteFrameEl, o = i.offset(), e = u.offset(), s = u[0].contentDocument.documentElement, f = o.top + e.top - s.scrollTop + 2, h; f < e.top && (f = e.top); h = o.left - s.scrollLeft + (n.innerWidth - u[0].clientWidth) / 2 + 2; r.css = { top: f + "px", left: (h || 0) + "px" }; r.startScroll = u[0].contentWindow.scrollY; r.startY = f; t(function () { var n = document.getElementById("cofoundry-sv__module-popover"), t; n && (t = n.offsetHeight, windowHeight = window.innerHeight, n.offsetTop + t > windowHeight && (r.css.top = windowHeight - t + "px")) }, 1) } i && (e.versionModuleId = i.attr("data-cms-version-module-id"), e.pageModuleTypeId = i.attr("data-cms-page-module-type-id"), u(i, e)); p(r, !1) } function it(n) { var t = e.startY - n + e.startScroll; t && (e.css = { top: t + "px", left: e.css.left }) } function v() { return e.refreshContent({ pageTemplateSectionId: e.pageTemplateSectionId }) } function p(n, t) { n && n.toggleClass("cofoundry-sv__hover-module", t) } function k() { l = h[0].getSectionParams(); e.isMultiModule = l.isMultiModule; e.pageTemplateSectionId = l.pageTemplateSectionId } var a, l, c = new u; d() } return { scope: { anchorElement: "=", isContainerOver: "=", refreshContent: "=", scrolled: "=" }, templateUrl: f + "uicomponents/PageSectionModule.html", require: ["^cmsPageSection"], link: e } }]); angular.module("cms.visualEditor").directive("cmsSitePageFrame", ["$window", "$templateCache", "$compile", "$document", "$q", "$http", "visualEditor.options", function (n, t, i, r, u, f, e) { function h(n, t) { function i() { n.$apply(function () { var i = t[0].contentWindow, r = t[0].contentDocument; c(n, r, t); i.addEventListener("scroll", function () { n.scrolled = angular.element(this)[0].scrollY; n.$apply() }); i.addEventListener("resize", function () { n.resized = angular.element(this)[0].innerWidth }); o && o.resolve() }) } t.ready(i) } function c(n, t, i) { var r = new l(n, i); s(t, r); angular.element(t).find("html").addClass(e.isCustomEntityRoute ? "cofoundry-editmode__custom-entity" : "cofoundry-editmode__page") } function s(n, t) { function i(t, i, u) { var o = "data-cms-" + r + "-" + t, e, s, f; for (e = n.hasAttribute && n.hasAttribute(o) ? [n] : n.querySelectorAll("[" + o + "]"), s = e.length, f = 0; f < s; ++f)e[f].addEventListener("mouseenter", i.bind(null, angular.element(e[f]))), e[f].addEventListener("mouseleave", u) } var r = e.isCustomEntityRoute ? "custom-entity" : "page"; i("section", t.showSection, t.hideSection); i("section-module", t.showModule, t.hideModule) } function l(n, t) { function c(t) { return function (i) { n.$apply(t.bind(null, i)) } } function y(n) { return n.pageTemplateSectionId ? a('[data-cms-page-template-section-id="' + n.pageTemplateSectionId + '"]') : n.versionModuleId ? a('[data-cms-version-module-id="' + n.versionModuleId + '"]') : w() } function p() { return f.get(t[0].contentWindow.location.href) } function a(n) { var r = t[0].contentDocument.querySelector(n), i = r.cloneNode(!0), u = i.querySelector(".cofoundry-sv__hover-module"); return i.className += " cofoundry-sv__section-loading", u && (u.className = u.className.replace("cofoundry-sv__hover-module", "")), r.parentNode.replaceChild(i, r), p().then(function (r) { var f = b(r.data), u; e.isModuleOver = !1; e.isSectionOver = !1; u = f.querySelector(n); u && (i.parentNode.replaceChild(u, i), s(u, h)); k(t, "pageContentReloaded", {}) }) } function w() { return t[0].contentWindow.location.reload(), o = u.defer(), o.promise } function b(n) { var t = document.createElement("div"); return t.innerHTML = n, t } function k(n, t, i) { var r = n[0].contentWindow; r.CMS && r.CMS.events.trigger(t, i) } var h = this, e = n.$new(), v = i("<cms-page-section><\/cms-page-section>"), l; e.siteFrameEl = t; e.refreshContent = y; l = v(e); r.find("body").eq(0).append(l); h.showSection = c(function (n) { e.isSectionOver && n == e.sectionAnchorElement || (e.isSectionOver = !0, e.sectionAnchorElement = n) }); h.hideSection = c(function () { e.isSectionOver = !1 }); h.showModule = c(function (n) { e.isModuleOver && n == e.moduleAnchorElement || (e.isModuleOver = !0, e.moduleAnchorElement = n) }); h.hideModule = c(function () { e.isModuleOver = !1 }) } return { restrict: "A", link: h }; var o }]); angular.module("cms.visualEditor").factory("visualEditor.pageModuleService", ["$http", "shared.serviceBase", "visualEditor.options", function (n, t, i) { function u(n, t) { return f(n) + "/" + t } function f(n) { return n ? o : e } var r = {}, e = t + "page-version-section-modules", o = t + "custom-entity-version-page-modules"; return r.getAllModuleTypes = function () { return n.get(t + "page-module-types/") }, r.getPageVersionModuleById = function (t, i) { return n.get(u(t, i) + "?datatype=updatecommand") }, r.getSection = function (i) { return n.get(t + "page-templates/0/sections/" + i) }, r.getModuleTypeSchema = function (i) { return n.get(t + "page-module-types/" + i) }, r.add = function (t, r) { var u = t ? "customEntity" : "page"; return r[u + "VersionId"] = i.versionId, n.post(f(t), r) }, r.update = function (t, i, r) { return n.put(u(t, i), r) }, r.remove = function (t, i) { return n.delete(u(t, i)) }, r.moveUp = function (t, i) { return n.put(u(t, i) + "/move-up") }, r.moveDown = function (t, i) { return n.put(u(t, i) + "/move-down") }, r }])
+angular
+    .module('cms.visualEditor', ['cms.shared'])
+    .constant('_', window._)
+    .constant('visualEditor.modulePath', '/Admin/Modules/VisualEditor/Js/');
+/**
+ * Service for managing page modules, which can either be attached to a page or a custom entity. 
+ * Pass in the isCustomEntityRoute to switch between either route endpoint.
+ */
+angular.module('cms.visualEditor').factory('visualEditor.pageModuleService', [
+    '$http',
+    'shared.serviceBase',
+    'visualEditor.options',
+function (
+    $http,
+    serviceBase,
+    options) {
+
+    var service = {},
+        pageModulesServiceBase = serviceBase + 'page-version-section-modules',
+        customEntityModulesServiceBase = serviceBase + 'custom-entity-version-page-modules';
+
+    /* QUERIES */
+
+    service.getAllModuleTypes = function () {
+        return $http.get(serviceBase + 'page-module-types/');
+    }
+
+    service.getPageVersionModuleById = function (isCustomEntityRoute, pageVersionModuleId) {
+        return $http.get(getIdRoute(isCustomEntityRoute, pageVersionModuleId) + '?datatype=updatecommand');
+    }   
+
+    service.getSection = function (pageSectionId) {
+        return $http.get(serviceBase + 'page-templates/0/sections/' + pageSectionId);
+    }
+
+    service.getModuleTypeSchema = function (pageModuleTypeId) {
+        return $http.get(serviceBase + 'page-module-types/' + pageModuleTypeId);
+    }
+
+    /* COMMANDS */
+
+    service.add = function (isCustomEntityRoute, command) {
+        var entityName = isCustomEntityRoute ? 'customEntity' : 'page';
+        command[entityName + 'VersionId'] = options.versionId;
+
+        return $http.post(getServiceBase(isCustomEntityRoute), command);
+    }
+
+    service.update = function (isCustomEntityRoute, pageVersionModuleId, command) {
+        return $http.put(getIdRoute(isCustomEntityRoute, pageVersionModuleId), command);
+    }
+
+    service.remove = function (isCustomEntityRoute, pageVersionModuleId) {
+        return $http.delete(getIdRoute(isCustomEntityRoute, pageVersionModuleId));
+    }
+
+    service.moveUp = function (isCustomEntityRoute, pageVersionModuleId) {
+        return $http.put(getIdRoute(isCustomEntityRoute, pageVersionModuleId) + '/move-up');
+    }
+
+    service.moveDown = function (isCustomEntityRoute, pageVersionModuleId) {
+        return $http.put(getIdRoute(isCustomEntityRoute, pageVersionModuleId) + '/move-down');
+    }
+
+    /* HELPERS */
+
+    function getIdRoute(isCustomEntityRoute, pageVersionModuleId) {
+        return getServiceBase(isCustomEntityRoute) + '/' + pageVersionModuleId;
+    }
+
+    function getServiceBase(isCustomEntityRoute) {
+        return isCustomEntityRoute ? customEntityModulesServiceBase : pageModulesServiceBase;
+    }
+
+    return service;
+}]);
+angular.module('cms.visualEditor').directive('cmsPageSection', [
+    '$window',
+    '$timeout',
+    '_',
+    'shared.modalDialogService',
+    'visualEditor.modulePath',
+function (
+    $window,
+    $timeout,
+    _,
+    modalDialogService,
+    modulePath
+    ) {
+
+    return {
+        restrict: 'E',
+        templateUrl: modulePath + 'UIComponents/PageSection.html',
+        controller: ['$scope', Controller],
+        link: link,
+        replace: true
+    };
+
+    /* CONTROLLER */
+    function Controller($scope) {
+
+        this.getSectionParams = function () {
+
+            return _.pick($scope, [
+                'siteFrameEl',
+                'refreshContent',
+                'pageTemplateSectionId',
+                'isMultiModule',
+                'isCustomEntity',
+                'permittedModuleTypes'
+            ]);
+        }
+    };
+
+    /* LINK */
+    function link(scope, el, attrs) {
+        var overTimer;
+
+        init();
+
+        /* Init */
+        function init() {
+
+            scope.isOver = false;
+
+            scope.setIsOver = setIsOver;
+            scope.addModule = addModule;
+            scope.startScrollY = 0;
+            scope.currentScrollY = 0;
+
+            scope.$watch('sectionAnchorElement', onAnchorChanged);
+            scope.$watch('isSectionOver', setIsOver);
+            scope.$watch('scrolled', onScroll);
+            scope.$watch('resized', onResize);
+        }
+
+        /* UI Actions */
+        function addModule() {
+
+            scope.isPopupActive = true;
+            modalDialogService.show({
+                templateUrl: modulePath + 'Routes/Modals/AddModule.html',
+                controller: 'AddModuleController',
+                options: {
+                    anchorElement: scope.sectionAnchorElement,
+                    pageTemplateSectionId: scope.pageTemplateSectionId,
+                    onClose: onClose,
+                    refreshContent: refreshSection,
+                    isCustomEntity: scope.isCustomEntity,
+                    permittedModuleTypes: scope.permittedModuleTypes
+                }
+            });
+
+            function onClose() {
+                scope.isPopupActive = false;
+            }
+        }
+
+        function setIsOver(isOver) {
+            if (isOver) {
+                if (overTimer) {
+                    $timeout.cancel(overTimer);
+                    overTimer = null;
+                }
+                scope.isOver = true;
+                setAnchorOver(scope.sectionAnchorElement, true);
+
+            } else if (!overTimer) {
+
+                // a timeout is required to reduce flicker, any timeout value pushes
+                // the changes to the next digest cycle, but also i've made it longer
+                // than necessary to give a small delay on the hover out.
+                overTimer = $timeout(function () {
+                    scope.isOver = false;
+                    setAnchorOver(scope.sectionAnchorElement, false);
+                }, 300);
+            }
+        }
+
+        /* Events */
+        function onAnchorChanged(newAnchorElement, oldAnchorElement) {
+            if (newAnchorElement) {
+
+                scope.pageTemplateSectionId = newAnchorElement.attr('data-cms-page-template-section-id');
+                scope.sectionName = newAnchorElement.attr('data-cms-page-section-name');
+                scope.isMultiModule = newAnchorElement.attr('data-cms-multi-module');
+                scope.permittedModuleTypes = parseModuleTypes(newAnchorElement.attr('data-cms-page-section-permitted-module-types'));
+                scope.isCustomEntity = newAnchorElement[0].hasAttribute('data-cms-custom-entity-section');
+                setPosition();
+            }
+
+            // Remove over css if the overTimer was cancelled
+            setAnchorOver(oldAnchorElement, false)
+
+            function parseModuleTypes(moduleTypeValue) {
+                if (!moduleTypeValue) return [];
+
+                return moduleTypeValue.split(',');
+            }
+
+            function setPosition() {
+                var siteFrameEl = scope.siteFrameEl,
+                    elementOffset = newAnchorElement.offset(),
+                    siteFrameOffset = siteFrameEl.offset(),
+                    iframeDoc = siteFrameEl[0].contentDocument.documentElement;
+
+                var top = elementOffset.top + siteFrameOffset.top - iframeDoc.scrollTop + 2;
+
+                if (top < siteFrameOffset.top) {
+                    top = siteFrameOffset.top;
+                }
+
+                // popover hovers in the right hand corner of the element
+                var left = (($window.innerWidth - siteFrameEl[0].clientWidth) / 2) + (elementOffset.left + newAnchorElement[0].offsetWidth);
+
+                scope.css = {
+                    top: top + 'px',
+                    left: (left || 0) + 'px'
+                };
+
+                scope.startScrollY = scope.currentScrollY;
+                scope.startY = top;
+            }
+        }
+
+        function onResize(e) {
+            scope.isOver = false;
+            scope.sectionAnchorElement = '';
+        }
+
+        function onScroll(e) {
+            scope.currentScrollY = (e || 0);
+            var y = scope.startY + (scope.startScrollY - e);
+            if (y < 0) y = 0;
+            if (y) {
+                scope.css = {
+                    top: y + 'px',
+                    left: scope.css.left
+                }
+            }
+        }
+
+        /* Private Helpers */
+        function refreshSection() {
+
+            return scope.refreshContent({
+                pageTemplateSectionId: scope.pageTemplateSectionId
+            });
+        }
+
+        function setAnchorOver(anchorEl, isOver) {
+            if (anchorEl) anchorEl.toggleClass('cofoundry-sv__hover-section', isOver);
+        }
+    }
+
+}]);
+angular.module('cms.visualEditor').directive('cmsPageSectionModule', [
+    '$window',
+    '$timeout',
+    'visualEditor.pageModuleService',
+    'shared.modalDialogService',
+    'shared.LoadState',
+    'visualEditor.modulePath',
+    'visualEditor.options',
+function (
+    $window,
+    $timeout,
+    pageModuleService,
+    modalDialogService,
+    LoadState,
+    modulePath,
+    options
+    ) {
+
+    return {
+        scope: {
+            anchorElement: '=',
+            isContainerOver: '=',
+            refreshContent: '=',
+            scrolled: '='
+        },
+        templateUrl: modulePath + 'UIComponents/PageSectionModule.html',
+        require: ['^cmsPageSection'],
+        link: link
+    };
+
+    /* LINK */
+
+    function link(scope, el, attrs, controllers) {
+        var overTimer,
+            sectionParams,
+            globalLoadState = new LoadState();
+
+        init();
+
+        /* Init */
+
+        function init() {
+            scope.isOver = false;
+
+            updateSectionParams();
+
+            scope.setIsOver = setIsOver;
+            scope.addModule = addModule.bind(null, 'Last');
+            scope.editModule = editModule;
+            scope.moveModuleUp = moveModule.bind(null, true);
+            scope.moveModuleDown = moveModule.bind(null, false);
+            scope.addModuleAbove = addModule.bind(null, 'BeforeItem');
+            scope.addModuleBelow = addModule.bind(null, 'AfterItem');
+            scope.deleteModule = deleteModule;
+            scope.globalLoadState = globalLoadState;
+
+            scope.$watch('anchorElement', onAnchorChanged);
+            scope.$watch('isContainerOver', setIsOver);
+            scope.$watch('scrolled', onScroll);
+        }
+
+        /* UI Actions */
+
+        function moveModule(isUp) {
+            var fn = isUp ? pageModuleService.moveUp : pageModuleService.moveDown;
+
+            if (globalLoadState.isLoading) return;
+
+            globalLoadState.on();
+
+            fn(sectionParams.isCustomEntity, scope.versionModuleId)
+                .then(refreshSection)
+                .finally(globalLoadState.off);
+        }
+
+        function deleteModule() {
+            var anchorEl = scope.anchorElement,
+                isCustomEntity = sectionParams.isCustomEntity,
+                options = {
+                    title: 'Delete Module',
+                    message: 'Are you sure you want to delete this module?',
+                    okButtonTitle: 'Yes, delete it',
+                    onOk: onOk
+            };
+
+            if (globalLoadState.isLoading) return;
+            globalLoadState.on();
+
+            modalDialogService.confirm(options);
+
+            function onOk() {
+                return pageModuleService
+                    .remove(isCustomEntity, scope.versionModuleId)
+                    .then(refreshSection)
+                    .finally(globalLoadState.off);
+            }
+        }
+
+        function addModule(insertMode) {
+
+            if (globalLoadState.isLoading) return;
+            globalLoadState.on();
+
+            scope.isPopupActive = true;
+
+            modalDialogService.show({
+                templateUrl: modulePath + 'Routes/Modals/AddModule.html',
+                controller: 'AddModuleController',
+                options: {
+                    anchorElement: scope.anchorElement,
+                    pageTemplateSectionId: scope.pageTemplateSectionId,
+                    adjacentVersionModuleId: scope.versionModuleId,
+                    insertMode: insertMode,
+                    refreshContent: refreshSection,
+                    isCustomEntity: sectionParams.isCustomEntity,
+                    permittedModuleTypes: sectionParams.permittedModuleTypes,
+                    onClose: onClose
+                }
+            });
+
+            function onClose() {
+                scope.isPopupActive = false;
+                globalLoadState.off();
+            }
+        }
+
+        function editModule() {
+
+            if (globalLoadState.isLoading) return;
+            globalLoadState.on();
+            scope.isPopupActive = true;
+
+            modalDialogService.show({
+                templateUrl: modulePath + 'Routes/Modals/EditModule.html',
+                controller: 'EditModuleController',
+                options: {
+                    anchorElement: scope.anchorElement,
+                    versionModuleId: scope.versionModuleId,
+                    pageModuleTypeId: scope.pageModuleTypeId,
+                    isCustomEntity: sectionParams.isCustomEntity,
+                    refreshContent: refreshSection,
+                    onClose: onClose
+                }
+            });
+
+            function onClose() {
+                scope.isPopupActive = false;
+                globalLoadState.off();
+            }
+        }
+
+        function setIsOver(isOver) {
+
+            updateSectionParams();
+
+            if (isOver) {
+                if (overTimer) {
+                    $timeout.cancel(overTimer);
+                    overTimer = null;
+                }
+                scope.isOver = true;
+                setAnchorOver(scope.anchorElement, true);
+
+            } else if (!overTimer) {
+
+                // a timeout is required to reduce flicker, any timeout value pushes
+                // the changes to the next digest cycle, but also i've made it longer
+                // than necessary to give a small delay on the hover out.
+                overTimer = $timeout(function () {
+                    scope.isOver = false;
+                    setAnchorOver(scope.anchorElement, false);
+                }, 300);
+            }
+        }
+
+        /* Events */
+
+        function onAnchorChanged(newAnchorElement, oldAnchorElement) {
+
+            if (newAnchorElement) {
+
+                scope.versionModuleId = newAnchorElement.attr('data-cms-version-module-id');
+                scope.pageModuleTypeId = newAnchorElement.attr('data-cms-page-module-type-id');
+                setPosition(newAnchorElement, scope);
+            }
+
+            // Remove over css if the overTimer was cancelled
+            setAnchorOver(oldAnchorElement, false)
+
+            function setPosition(anchorElement, scope) {
+                var siteFrameEl = sectionParams.siteFrameEl,
+                    elementOffset = anchorElement.offset(),
+                    siteFrameOffset = siteFrameEl.offset(),
+                    iframeDoc = siteFrameEl[0].contentDocument.documentElement;
+
+                var top = elementOffset.top + siteFrameOffset.top - iframeDoc.scrollTop + 2;
+
+                if (top < siteFrameOffset.top) {
+                    top = siteFrameOffset.top;
+                }
+
+                // popover hovers in the left hand corner of the element
+                var left = (elementOffset.left - iframeDoc.scrollLeft) + (($window.innerWidth - siteFrameEl[0].clientWidth) / 2) + 2;
+
+                scope.css = {
+                    top: top + 'px',
+                    left: (left || 0) + 'px'
+                };
+
+                scope.startScroll = siteFrameEl[0].contentWindow.scrollY;
+                scope.startY = top;
+
+                // Wait for next digest cycle and check the position of the element
+                $timeout(function () {
+                    var popoverEl = document.getElementById('cofoundry-sv__module-popover'),
+                        popoverElHeight, popoverElHeight;
+
+                    // If moving quickly the element might have been removed
+                    if (!popoverEl) return;
+
+                    popoverElHeight = popoverEl.offsetHeight;
+                    windowHeight = window.innerHeight;
+
+                    // Move the module hover up a bit if it is off the screen
+                    if (popoverEl.offsetTop + popoverElHeight > windowHeight) {
+                        scope.css.top = windowHeight - popoverElHeight + 'px';
+                    }
+                }, 1);
+            }
+        }
+
+        function onScroll(e) {
+            var y = (scope.startY - e) + scope.startScroll;
+            if (y) {
+                scope.css = {
+                    top: y + 'px',
+                    left: scope.css.left
+                }
+            }
+        }
+
+        /* Private Helpers */
+
+        function refreshSection() {
+            return scope.refreshContent({
+                pageTemplateSectionId: scope.pageTemplateSectionId
+            });
+        }
+
+        function setAnchorOver(anchorEl, isOver) {
+            if (anchorEl) anchorEl.toggleClass('cofoundry-sv__hover-module', isOver);
+        }
+
+        function updateSectionParams() {
+            sectionParams = controllers[0].getSectionParams();
+            scope.isMultiModule = sectionParams.isMultiModule;
+            scope.pageTemplateSectionId = sectionParams.pageTemplateSectionId;
+        }
+    }
+}]);
+angular.module('cms.visualEditor').directive('cmsSitePageFrame', [
+    '$window',
+    '$templateCache',
+    '$compile',
+    '$document',
+    '$q',
+    '$http',
+    'visualEditor.options',
+function (
+    $window,
+    $templateCache,
+    $compile,
+    $document,
+    $q,
+    $http,
+    options) {
+
+    return {
+        restrict: 'A',
+        link: link
+    };
+
+    /* GLOBALS */
+    var pageLoadDeferred;
+
+
+    /* CONTROLLER */
+
+    function link(scope, el) {
+
+        el.ready(onFrameLoaded);
+
+        function onFrameLoaded() {
+            scope.$apply(function () {
+                var win = el[0].contentWindow;
+                var doc = el[0].contentDocument;
+
+                initEditableContent(scope, doc, el);
+
+                win.addEventListener('scroll', function (e) {
+                    scope.scrolled = angular.element(this)[0].scrollY;
+                    scope.$apply();
+                });
+
+                win.addEventListener('resize', function (e) {
+                    scope.resized = angular.element(this)[0].innerWidth;
+                });
+
+                if (pageLoadDeferred) {
+                    pageLoadDeferred.resolve();
+                }
+            });
+        }
+    }
+
+    /* HELPERS */
+
+    function initEditableContent(scope, doc, el) {
+        var popover = new PageSectionPopOver(scope, el);
+        addMouseEvents(doc, popover);
+
+        // Add class to iFrame doc. Used for admin UI 
+        angular.element(doc)
+            .find('html')
+            .addClass(options.isCustomEntityRoute ? 'cofoundry-editmode__custom-entity' : 'cofoundry-editmode__page');
+    }
+
+    /**
+     * This gets called when initializing the page mouse events, but is also used
+     * to rebind the mouse events when a section element is updated (since jqLite does
+     * not support event delegation)
+     */
+    function addMouseEvents(rootElement, popover) {
+        var entityType = options.isCustomEntityRoute ? 'custom-entity' : 'page';
+        addEventsForComponent('section', popover.showSection, popover.hideSection);
+        addEventsForComponent('section-module', popover.showModule, popover.hideModule);
+
+        function addEventsForComponent(componentName, showFn, hideFn) {
+            var selectorAttribute = 'data-cms-' + entityType + '-' + componentName,
+                elements, len, i;
+
+            if (rootElement.hasAttribute && rootElement.hasAttribute(selectorAttribute)) {
+                // we are passing the element directly to bind events
+                elements = [rootElement];
+            } else {
+                // we need to query the children to find elements to bind events to
+                elements = rootElement.querySelectorAll('[' + selectorAttribute + ']');
+            }
+
+            len = elements.length;
+            for (i = 0; i < len; ++i) {
+
+                elements[i].addEventListener('mouseenter', showFn.bind(null, angular.element(elements[i])));
+                elements[i].addEventListener('mouseleave', hideFn);
+            }
+        }
+    }
+
+    function PageSectionPopOver(scope, siteFrameEl) {
+        var me = this,
+            childScope = scope.$new(),
+            template = $compile('<cms-page-section></cms-page-section>'),
+            popover;
+
+        /* Create element */
+        childScope.siteFrameEl = siteFrameEl;
+        childScope.refreshContent = refreshContent;
+        popover = template(childScope);
+        $document.find('body').eq(0).append(popover);
+
+        /* Add show/hide functions */
+
+        me.showSection = wrapInApply(function (el) {
+            if (!childScope.isSectionOver || el != childScope.sectionAnchorElement) {
+                childScope.isSectionOver = true;
+                childScope.sectionAnchorElement = el;
+            }
+        });
+
+        me.hideSection = wrapInApply(function () {
+            childScope.isSectionOver = false;
+        });
+
+        me.showModule = wrapInApply(function (el) {
+            if (!childScope.isModuleOver || el != childScope.moduleAnchorElement) {
+                childScope.isModuleOver = true;
+                childScope.moduleAnchorElement = el;
+            }
+        });
+
+        me.hideModule = wrapInApply(function () {
+            childScope.isModuleOver = false;
+        });
+
+        function wrapInApply(fn) {
+            return function (el) {
+                scope.$apply(fn.bind(null, el));
+            };
+        }
+
+        /**
+         * Invoked when a section or module has been modified, we give the option to re-load various parts of
+         * the dom, all of which involve re-loading the entire document from the server.
+         */
+        function refreshContent(options) {
+            if (options.pageTemplateSectionId) {
+                return reloadElementBySelector('[data-cms-page-template-section-id="' + options.pageTemplateSectionId + '"]');
+            } else if (options.versionModuleId) {
+                return reloadElementBySelector('[data-cms-version-module-id="' + options.versionModuleId + '"]');
+            } else {
+                return reloadPage();
+            }
+        }
+
+        function getPageContent() {
+
+            return $http.get(siteFrameEl[0].contentWindow.location.href);
+        }
+
+        function reloadElementBySelector(selector) {
+            var oldSectionElement = siteFrameEl[0].contentDocument.querySelector(selector),
+                loadingNode = oldSectionElement.cloneNode(true),
+                hoveredModule = loadingNode.querySelector('.cofoundry-sv__hover-module');
+
+            // set loading, clone the node to remove event handlers
+            loadingNode.className += ' cofoundry-sv__section-loading';
+            if (hoveredModule) hoveredModule.className = hoveredModule.className.replace('cofoundry-sv__hover-module', '');
+            oldSectionElement.parentNode.replaceChild(loadingNode, oldSectionElement);
+
+            return getPageContent().then(function (content) {
+                var html = loadHtmlStringToElement(content.data);
+
+                // clear all hover states before we remove the element events
+                childScope.isModuleOver = false;
+                childScope.isSectionOver = false;
+
+                var newSectionElement = html.querySelector(selector);
+                if (newSectionElement) {
+
+                    loadingNode.parentNode.replaceChild(newSectionElement, loadingNode);
+                    addMouseEvents(newSectionElement, me);
+                }
+
+                triggerClientEvent(siteFrameEl, 'pageContentReloaded', {
+
+                });
+            });
+        }
+
+        function reloadPage() {
+            siteFrameEl[0].contentWindow.location.reload();
+
+            pageLoadDeferred = $q.defer();
+            return pageLoadDeferred.promise;
+        }
+
+        function loadHtmlStringToElement(htmlString) {
+            var d = document.createElement('div');
+            d.innerHTML = htmlString;
+
+            return d;
+        }
+
+        function triggerClientEvent(siteFrameEl, event, data) {
+            var win = siteFrameEl[0].contentWindow;
+            if (win.CMS) {
+                win.CMS.events.trigger(event, data);
+            }
+        }
+    }
+}]);
+angular.module('cms.visualEditor').controller('VisualEditorController', [
+    '$window',
+    '$scope',
+    '_',
+    'shared.LoadState',
+    'shared.entityVersionModalDialogService',
+    'shared.modalDialogService',
+    'shared.localStorage',
+    'visualEditor.pageModuleService',
+    'visualEditor.modulePath',
+    'shared.urlLibrary',
+    'visualEditor.options',
+function (
+    $window,
+    $scope,
+    _,
+    LoadState,
+    entityVersionModalDialogService,
+    modalDialogService,
+    localStorageService,
+    pageModuleService,
+    modulePath,
+    urlLibrary,
+    options
+    ) {
+
+    var vm = this,
+        document = $window.document,
+        entityDialogServiceConfig,
+        globalLoadState = new LoadState();
+
+    init();
+
+    /* INIT */
+
+    function init() {
+        // Create IE + others compatible event handler
+        var eventMethod = $window.addEventListener ? "addEventListener" : "attachEvent",
+            postMessageListener = window[eventMethod],
+            messageEvent = eventMethod === "attachEvent" ? "onmessage" : "message";
+
+        postMessageListener(messageEvent, handleMessage);
+
+        vm.globalLoadState = globalLoadState;
+        vm.config = config;
+        vm.publish = publish;
+        vm.unpublish = unpublish;
+        vm.copyToDraft = copyToDraft;
+        vm.addSectionModule = addSectionModule;
+        vm.addModule = addModule;
+        vm.addModuleAbove = addModule;
+        vm.addModuleBelow = addModule;
+        vm.editModule = editModule;
+        vm.moveModuleUp = moveModule;
+        vm.moveModuleDown = moveModule;
+        vm.deleteModule = deleteModule;
+    }
+
+    /* UI ACTIONS */
+
+    function handleMessage(e) {
+        vm[e.data.action].apply(this, e.data.args);
+    }
+
+    function config() {
+        entityDialogServiceConfig = {
+            entityNameSingular: options.entityNameSingular,
+            isCustomEntity: options.isCustomEntityRoute
+        };
+    }
+
+    function publish(args) {
+        entityVersionModalDialogService
+            .publish(args.entityId, setLoadingOn, entityDialogServiceConfig)
+            .then(preview)
+            .catch(setLoadingOff);
+    }
+
+    function unpublish(args) {
+        entityVersionModalDialogService
+            .unpublish(args.entityId, setLoadingOn, entityDialogServiceConfig)
+            .then(reload)
+            .catch(setLoadingOff);
+    }
+
+    function copyToDraft(args) {
+        entityVersionModalDialogService
+            .copyToDraft(args.entityId, args.versionId, args.hasDraftVersion, setLoadingOn, entityDialogServiceConfig)
+            .then(reload)
+            .catch(setLoadingOff);
+    }
+
+    function addSectionModule(args) {
+        modalDialogService.show({
+            templateUrl: modulePath + 'Routes/Modals/AddModule.html',
+            controller: 'AddModuleController',
+            options: {
+                insertMode: args.insertMode,
+                pageTemplateSectionId: args.pageTemplateSectionId,
+                adjacentVersionModuleId: args.versionModuleId,
+                permittedModuleTypes: args.permittedModuleTypes,
+                onClose: onClose,
+                refreshContent: refreshSection,
+                isCustomEntity: args.isCustomEntity,
+            }
+        });
+
+        function onClose() {
+            globalLoadState.off();
+        }
+    }
+
+    function addModule(args) {
+
+        if (globalLoadState.isLoading) return;
+        globalLoadState.on();
+
+        modalDialogService.show({
+            templateUrl: modulePath + 'Routes/Modals/AddModule.html',
+            controller: 'AddModuleController',
+            options: {
+                pageTemplateSectionId: args.pageTemplateSectionId,
+                adjacentVersionModuleId: args.versionModuleId,
+                permittedModuleTypes: args.permittedModuleTypes,
+                insertMode: args.insertMode,
+                refreshContent: refreshSection,
+                isCustomEntity: args.isCustomEntity,
+                onClose: onClose
+            }
+        });
+
+        function onClose() {
+            globalLoadState.off();
+        }
+    }
+
+    function editModule(args) {
+
+        if (globalLoadState.isLoading) return;
+        globalLoadState.on();
+
+        modalDialogService.show({
+            templateUrl: modulePath + 'Routes/Modals/EditModule.html',
+            controller: 'EditModuleController',
+            options: {
+                versionModuleId: args.versionModuleId,
+                pageModuleTypeId: args.pageModuleTypeId,
+                isCustomEntity: args.isCustomEntity,
+                refreshContent: refreshSection,
+                onClose: onClose
+            }
+        });
+
+        function onClose() {
+            globalLoadState.off();
+        }
+    }
+
+    function moveModule(args) {
+        var fn = args.isUp ? pageModuleService.moveUp : pageModuleService.moveDown;
+
+        if (globalLoadState.isLoading) return;
+
+        globalLoadState.on();
+
+        fn(args.isCustomEntity, args.versionModuleId)
+            .then(refreshSection)
+            .finally(globalLoadState.off);
+    }
+
+    function deleteModule(args) {
+        var isCustomEntity = args.isCustomEntity,
+            options = {
+                title: 'Delete Module',
+                message: 'Are you sure you want to delete this module?',
+                okButtonTitle: 'Yes, delete it',
+                onOk: onOk,
+                onCancel: onCancel
+            };
+
+        if (globalLoadState.isLoading) return;
+        globalLoadState.on();
+
+        modalDialogService.confirm(options);
+
+        function onOk() {
+            return pageModuleService
+                .remove(isCustomEntity, args.versionModuleId)
+                .then(refreshSection)
+                .finally(globalLoadState.off);
+        }
+
+        function onCancel() {
+            globalLoadState.off();
+        }
+    }
+
+    /* PRIVATE FUNCS */
+
+    function refreshSection() {
+        reload();
+    }
+
+    function preview() {
+        var location = $window.parent.location.href;
+        if (location.indexOf('mode=edit') > -1) {
+            location = location.replace('mode=edit', 'mode=preview')
+        }
+        $window.parent.location = location;
+    }
+
+    function reload() {
+        $window.parent.location = $window.parent.location;
+    }
+
+    function setLoadingOn(loadState) {
+        vm.globalLoadState.on();
+    }
+
+    function setLoadingOff(loadState) {
+        vm.globalLoadState.off();
+    }
+}]);

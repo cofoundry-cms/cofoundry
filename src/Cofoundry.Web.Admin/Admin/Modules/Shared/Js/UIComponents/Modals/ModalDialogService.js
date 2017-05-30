@@ -29,7 +29,7 @@ function (
         }
 
         ModalService.showModal({
-            templateUrl: modulePath + "UIComponents/Modals/alert.html",
+            templateUrl: modulePath + "UIComponents/Modals/Alert.html",
             controller: "AlertController",
             inputs: {
                 options: options
@@ -65,7 +65,7 @@ function (
             options = initOptions(optionsOrMessage);
 
         ModalService.showModal({
-            templateUrl: modulePath + "UIComponents/Modals/confirmdialog.html",
+            templateUrl: modulePath + "UIComponents/Modals/ConfirmDialog.html",
             controller: "ConfirmDialogController",
             inputs: {
                 options: options

@@ -17,7 +17,7 @@ function (
         scope: {
             model: '=cmsModel'
         },
-        templateUrl: modulePath + 'UIComponents/Youtube/YoutubeVideo.html',
+        templateUrl: modulePath + 'UIComponents/YouTube/YouTubeVideo.html',
         link: function (scope, el, attributes) {
 
             scope.replacementUrl = contentPath + 'img/assetreplacement/youtube-replacement.png';

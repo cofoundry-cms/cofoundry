@@ -14,7 +14,7 @@ function (
 
     return {
         restrict: 'E',
-        templateUrl: modulePath + 'uicomponents/PageSection.html',
+        templateUrl: modulePath + 'UIComponents/PageSection.html',
         controller: ['$scope', Controller],
         link: link,
         replace: true
@@ -63,7 +63,7 @@ function (
 
             scope.isPopupActive = true;
             modalDialogService.show({
-                templateUrl: modulePath + 'routes/modals/addmodule.html',
+                templateUrl: modulePath + 'Routes/Modals/AddModule.html',
                 controller: 'AddModuleController',
                 options: {
                     anchorElement: scope.sectionAnchorElement,

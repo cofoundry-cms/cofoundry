@@ -11,7 +11,7 @@ function RoutingUtilitites() {
         return {
             controller: controllerName + 'Controller',
             controllerAs: 'vm',
-            templateUrl: modulePath + 'routes/' + controllerName + '.html'
+            templateUrl: modulePath + 'Routes/' + controllerName + '.html'
         }
     },
 

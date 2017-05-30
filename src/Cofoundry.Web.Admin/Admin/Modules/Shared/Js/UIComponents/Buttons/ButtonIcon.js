@@ -5,7 +5,7 @@
     return {
         restrict: 'E',
         replace: false,
-        templateUrl: modulePath + 'UIComponents/Buttons/buttonIcon.html',
+        templateUrl: modulePath + 'UIComponents/Buttons/ButtonIcon.html',
         scope: {
             title: '@cmsTitle',
             icon: '@cmsIcon',

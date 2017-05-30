@@ -70,7 +70,7 @@
             },
             accountHTML: {
                 options: {
-                    banner: "angular.module('{cms.account}').run(['$templateCache',function(t){",
+                    banner: "angular.module('cms.account').run(['$templateCache',function(t){",
                     footer: "}]);",
                     process: function(src, filepath) {
                         var removeSpaces = src.replace(/[\t\n\r]/gm, "");
@@ -93,7 +93,7 @@
             },
             customEntitiesHTML: {
                 options: {
-                    banner: "angular.module('{cms.customEntities}').run(['$templateCache',function(t){",
+                    banner: "angular.module('cms.customEntities').run(['$templateCache',function(t){",
                     footer: "}]);",
                     process: function(src, filepath) {
                         var removeSpaces = src.replace(/[\t\n\r]/gm, "");
@@ -119,7 +119,7 @@
             },
             dashboardHTML: {
                 options: {
-                    banner: "angular.module('{cms.dashboard}').run(['$templateCache',function(t){",
+                    banner: "angular.module('cms.dashboard').run(['$templateCache',function(t){",
                     footer: "}]);",
                     process: function(src, filepath) {
                         var removeSpaces = src.replace(/[\t\n\r]/gm, "");
@@ -145,7 +145,7 @@
             },
             directoriesHTML: {
                 options: {
-                    banner: "angular.module('{cms.directories}').run(['$templateCache',function(t){",
+                    banner: "angular.module('cms.directories').run(['$templateCache',function(t){",
                     footer: "}]);",
                     process: function(src, filepath) {
                         var removeSpaces = src.replace(/[\t\n\r]/gm, "");
@@ -170,7 +170,7 @@
             },
             documentsHTML: {
                 options: {
-                    banner: "angular.module('{cms.documents}').run(['$templateCache',function(t){",
+                    banner: "angular.module('cms.documents').run(['$templateCache',function(t){",
                     footer: "}]);",
                     process: function(src, filepath) {
                         var removeSpaces = src.replace(/[\t\n\r]/gm, "");
@@ -194,7 +194,7 @@
             },
             imagesHTML: {
                 options: {
-                    banner: "angular.module('{cms.images}').run(['$templateCache',function(t){",
+                    banner: "angular.module('cms.images').run(['$templateCache',function(t){",
                     footer: "}]);",
                     process: function(src, filepath) {
                         var removeSpaces = src.replace(/[\t\n\r]/gm, "");
@@ -219,7 +219,7 @@
             },
             pagesHTML: {
                 options: {
-                    banner: "angular.module('{cms.pages}').run(['$templateCache',function(t){",
+                    banner: "angular.module('cms.pages').run(['$templateCache',function(t){",
                     footer: "}]);",
                     process: function(src, filepath) {
                         var removeSpaces = src.replace(/[\t\n\r]/gm, "");
@@ -245,7 +245,7 @@
             },
             pageTemplatesHTML: {
                 options: {
-                    banner: "angular.module('{cms.pageTemplates}').run(['$templateCache',function(t){",
+                    banner: "angular.module('cms.pageTemplates').run(['$templateCache',function(t){",
                     footer: "}]);",
                     process: function(src, filepath) {
                         var removeSpaces = src.replace(/[\t\n\r]/gm, "");
@@ -270,7 +270,7 @@
             },
             rolesHTML: {
                 options: {
-                    banner: "angular.module('{cms.roles}').run(['$templateCache',function(t){",
+                    banner: "angular.module('cms.roles').run(['$templateCache',function(t){",
                     footer: "}]);",
                     process: function(src, filepath) {
                         var removeSpaces = src.replace(/[\t\n\r]/gm, "");
@@ -295,7 +295,7 @@
             },
             settingsHTML: {
                 options: {
-                    banner: "angular.module('{cms.settings}').run(['$templateCache',function(t){",
+                    banner: "angular.module('cms.settings').run(['$templateCache',function(t){",
                     footer: "}]);",
                     process: function(src, filepath) {
                         var removeSpaces = src.replace(/[\t\n\r]/gm, "");
@@ -319,7 +319,7 @@
             },
             setupHTML: {
                 options: {
-                    banner: "angular.module('{cms.setup}').run(['$templateCache',function(t){",
+                    banner: "angular.module('cms.setup').run(['$templateCache',function(t){",
                     footer: "}]);",
                     process: function(src, filepath) {
                         var removeSpaces = src.replace(/[\t\n\r]/gm, "");
@@ -335,19 +335,25 @@
             },
             shared: {
                 src: [
+                    '../Admin/Modules/Shared/Js/lib/underscore.min.js',
+                    '../Admin/Modules/Shared/Js/lib/angular.min.js',
+                    '../Admin/Modules/Shared/Js/lib/angular-sanitize.min.js',
+                    '../Admin/Modules/Shared/Js/lib/AngularModules/TinyMce/tinymce.min.js',
+                    '../Admin/Modules/Shared/Js/lib/AngularModules/TinyMce/ui-tinymce.min.js',
+                    '../Admin/Modules/Shared/Js/lib/AngularModules/*.js',
                     '../Admin/Modules/Shared/Js/Bootstrap/*.js',
                     '../Admin/Modules/Shared/Js/DataServices/*.js',
+                    '../Admin/Modules/Shared/Js/Utilities/*.js',
                     '../Admin/Modules/Shared/Js/Filters/*.js',
                     '../Admin/Modules/Shared/Js/Framework/*.js',
                     '../Admin/Modules/Shared/Js/UIComponents/*.js',
                     '../Admin/Modules/Shared/Js/UIComponents/**/*.js',
-                    '../Admin/Modules/Shared/Js/Utilities/*.js',
                 ],
                 dest: '../Admin/Modules/Shared/Content/js/shared.js'
             },
             sharedHTML: {
                 options: {
-                    banner: "angular.module('{cms.shared}').run(['$templateCache',function(t){",
+                    banner: "angular.module('cms.shared').run(['$templateCache',function(t){",
                     footer: "}]);",
                     process: function(src, filepath) {
                         var removeSpaces = src.replace(/[\t\n\r]/gm, "");
@@ -372,7 +378,7 @@
             },
             usersHTML: {
                 options: {
-                    banner: "angular.module('{cms.users}').run(['$templateCache',function(t){",
+                    banner: "angular.module('cms.users').run(['$templateCache',function(t){",
                     footer: "}]);",
                     process: function(src, filepath) {
                         var removeSpaces = src.replace(/[\t\n\r]/gm, "");
@@ -397,7 +403,7 @@
             },
             visualEditorHTML: {
                 options: {
-                    banner: "angular.module('{cms.visualEditor}').run(['$templateCache',function(t){",
+                    banner: "angular.module('cms.visualEditor').run(['$templateCache',function(t){",
                     footer: "}]);",
                     process: function(src, filepath) {
                         var removeSpaces = src.replace(/[\t\n\r]/gm, "");

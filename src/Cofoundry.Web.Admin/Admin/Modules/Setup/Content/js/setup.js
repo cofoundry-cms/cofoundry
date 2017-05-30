@@ -1,1 +1,98 @@
-﻿angular.module("cms.setup", ["ngRoute", "cms.shared"]).constant("_", window._).constant("setup.modulePath", "/admin/modules/setup/js/"); angular.module("cms.setup").config(["$routeProvider", "shared.routingUtilities", "setup.modulePath", function (n, t, i) { n.otherwise(t.mapOptions(i, "SetupDetails")) }]); angular.module("cms.setup").controller("SetupDetailsController", ["_", "$q", "shared.LoadState", "shared.urlLibrary", "setup.setupService", "setup.modulePath", function (n, t, i, r, u) { function e() { f.save = o; f.doesPasswordMatch = s; f.urlLibrary = r; f.saveLoadState = new i; f.command = {} } function o() { function n() { f.isSetupComplete = !0 } f.saveLoadState.on(); u.run(f.command).then(n).finally(f.saveLoadState.off) } function s(n) { return f.command ? f.command.userPassword === n : !1 } var f = this; e() }]); angular.module("cms.setup").factory("setup.setupService", ["$http", "shared.serviceBase", function (n, t) { var i = {}, r = t + "setup"; return i.run = function (t) { return n.post(r, t) }, i }])
+angular
+    .module('cms.setup', ['ngRoute', 'cms.shared'])
+    .constant('_', window._)
+    .constant('setup.modulePath', '/Admin/Modules/Setup/Js/');
+angular.module('cms.setup').config([
+    '$routeProvider',
+    'shared.routingUtilities',
+    'setup.modulePath',
+function (
+    $routeProvider,
+    routingUtilities,
+    modulePath) {
+
+    $routeProvider
+        .otherwise(routingUtilities.mapOptions(modulePath, 'SetupDetails'));
+
+}]);
+angular.module('cms.setup').factory('setup.setupService', [
+    '$http',
+    'shared.serviceBase',
+function (
+    $http,
+    serviceBase) {
+
+    var service = {},
+        setupServiceBase = serviceBase + 'setup';
+
+    /* COMMANDS */
+
+    service.run = function (command) {
+
+        return $http.post(setupServiceBase, command);
+    }
+
+    return service;
+}]);
+
+angular.module('cms.setup').controller('SetupDetailsController', [
+    '_',
+    '$q',
+    'shared.LoadState',
+    'shared.urlLibrary',
+    'setup.setupService',
+    'setup.modulePath',
+function (
+    _,
+    $q,
+    LoadState,
+    urlLibrary,
+    settingsService,
+    modulePath
+    ) {
+
+    var vm = this;
+
+    init();
+
+    /* INIT */
+
+    function init() {
+
+        // UI actions
+        vm.save = save;
+
+        // helpers
+        vm.doesPasswordMatch = doesPasswordMatch;
+        vm.urlLibrary = urlLibrary;
+
+        // Properties
+        vm.saveLoadState = new LoadState();
+        vm.command = {};
+    }
+
+    /* UI ACTIONS */
+
+    function save() {
+
+        vm.saveLoadState.on();
+
+        settingsService.run(vm.command)
+            .then(onSuccess)
+            .finally(vm.saveLoadState.off);
+
+        function onSuccess() {
+            vm.isSetupComplete = true;
+        }
+
+    }
+    
+    /* PRIVATE FUNCS */
+
+    function doesPasswordMatch(value) {
+        if (!vm.command) return false;
+
+        return vm.command.userPassword === value;
+    }
+
+}]);

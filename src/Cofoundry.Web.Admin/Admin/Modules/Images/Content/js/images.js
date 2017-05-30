@@ -1,1 +1,290 @@
-﻿angular.module("cms.images", ["ngRoute", "cms.shared"]).constant("_", window._).constant("images.modulePath", "/admin/modules/images/js/"); angular.module("cms.images").config(["$routeProvider", "shared.routingUtilities", "images.modulePath", function (n, t, i) { t.registerCrudRoutes(n, i, "Image") }]); angular.module("cms.images").controller("AddImageController", ["$location", "_", "shared.focusService", "shared.stringUtilities", "shared.LoadState", "images.imageService", function (n, t, i, r, u, f) { function s() { l(); e.save = h; e.cancel = a; e.onFileChanged = c; e.editMode = !1; e.saveLoadState = new u } function h() { e.saveLoadState.on(); f.add(e.command).progress(e.saveLoadState.setProgress).then(o) } function c() { var n = e.command; n.file && n.file.name && (n.title = r.capitaliseFirstLetter(r.getFileNameWithoutExtension(n.file.name)), i.focusById("title")) } function l() { e.command = {} } function a() { o() } function o() { n.path("") } var e = this; s() }]); angular.module("cms.images").controller("ImageDetailsController", ["$routeParams", "$q", "$location", "_", "shared.LoadState", "shared.modalDialogService", "images.imageService", "images.modulePath", function (n, t, i, r, u, f, e) { function a() { o.edit = v; o.save = y; o.cancel = p; o.remove = w; o.editMode = !1; o.globalLoadState = new u; o.saveLoadState = new u; o.formLoadState = new u(!0); s(o.formLoadState) } function v() { o.editMode = !0; o.mainForm.formStatus.clear() } function y() { c(o.saveLoadState); e.update(o.command).then(b.bind(null, "Changes were saved successfully", o.saveLoadState)) } function p() { o.editMode = !1; o.previewImage = r.clone(o.image); o.command = h(o.image); o.mainForm.formStatus.clear() } function w() { function t() { return c(), e.remove(o.image.imageAssetId).then(k).catch(l) } var n = { title: "Delete Image", message: "Are you sure you want to delete this image?", okButtonTitle: "Yes, delete it", onOk: t }; f.confirm(n) } function b(n, t) { return s(t).then(o.mainForm.formStatus.success.bind(null, n)) } function s(t) { function i() { return e.getById(n.id).then(function (n) { o.image = n; o.previewImage = n; o.command = h(n); o.editMode = !1 }) } return i().then(l.bind(null, t)) } function h(n) { return r.pick(n, "imageAssetId", "title", "tags", "defaultAnchorLocation") } function k() { i.path("") } function c(n) { o.globalLoadState.on(); n && r.isFunction(n.on) && n.on() } function l(n) { o.globalLoadState.off(); n && r.isFunction(n.off) && n.off() } var o = this; a() }]); angular.module("cms.images").controller("ImageListController", ["_", "shared.LoadState", "shared.SearchQuery", "images.imageService", function (n, t, i, r) { function o() { u.gridLoadState = new t; u.query = new i({ onChanged: s }); u.filter = u.query.getFilters(); u.toggleFilter = f; f(!1); e() } function f(t) { u.isFilterVisible = n.isUndefined(t) ? !u.isFilterVisible : t } function s() { f(!1); e() } function e() { return u.gridLoadState.on(), r.getAll(u.query.getParameters()).then(function (n) { u.result = n; u.gridLoadState.off() }) } var u = this; o() }]); angular.module("cms.images").factory("images.imageService", ["$http", "$upload", "shared.imageService", function (n, t, i) { var r = _.extend({}, i); return r.remove = function (t) { return n.delete(r.getIdRoute(t)) }, r }])
+angular
+    .module('cms.images', ['ngRoute', 'cms.shared'])
+    .constant('_', window._)
+    .constant('images.modulePath', '/Admin/Modules/Images/Js/');
+angular.module('cms.images').config([
+    '$routeProvider',
+    'shared.routingUtilities',
+    'images.modulePath',
+function (
+    $routeProvider,
+    routingUtilities,
+    modulePath) {
+
+    routingUtilities.registerCrudRoutes($routeProvider, modulePath, 'Image');
+
+}]);
+angular.module('cms.images').factory('images.imageService', [
+        '$http',
+        '$upload',
+        'shared.imageService',
+    function (
+        $http,
+        $upload,
+        sharedImageService) {
+
+    var service = _.extend({}, sharedImageService);
+
+    /* COMMANDS */
+
+    service.remove = function (id) {
+
+        return $http.delete(service.getIdRoute(id));
+    }
+
+    return service;
+}]);
+angular.module('cms.images').controller('AddImageController', [
+            '$location',
+            '_',
+            'shared.focusService',
+            'shared.stringUtilities',
+            'shared.LoadState',
+            'images.imageService',
+        function (
+            $location,
+            _,
+            focusService,
+            stringUtilities,
+            LoadState,
+            imageService
+        ) {
+
+    var vm = this;
+
+    init();
+
+    /* INIT */
+
+    function init() {
+
+        initData();
+
+        vm.save = save;
+        vm.cancel = cancel;
+        vm.onFileChanged = onFileChanged;
+
+        vm.editMode = false;
+        vm.saveLoadState = new LoadState();
+    }
+
+    /* EVENTS */
+
+    function save() {
+        vm.saveLoadState.on();
+
+        imageService
+            .add(vm.command)
+            .progress(vm.saveLoadState.setProgress)
+            .then(redirectToList);
+    }
+
+    function onFileChanged() {
+        var command = vm.command;
+
+        if (command.file && command.file.name) {
+            command.title = stringUtilities.capitaliseFirstLetter(stringUtilities.getFileNameWithoutExtension(command.file.name));
+            focusService.focusById('title');
+        }
+    }
+
+    /* PRIVATE FUNCS */
+
+    function initData() {
+        vm.command = {};
+    }
+
+    function cancel() {
+        redirectToList();
+    }
+
+    function redirectToList() {
+        $location.path('');
+    }
+}]);
+angular.module('cms.images').controller('ImageDetailsController', [
+    '$routeParams',
+    '$q',
+    '$location',
+    '_',
+    'shared.LoadState',
+    'shared.modalDialogService',
+    'images.imageService',
+    'images.modulePath',
+function (
+    $routeParams,
+    $q,
+    $location,
+    _,
+    LoadState,
+    modalDialogService,
+    imageService,
+    modulePath
+    ) {
+
+    var vm = this;
+
+    init();
+    
+    /* INIT */
+
+    function init() {
+
+        // UI actions
+        vm.edit = edit;
+        vm.save = save;
+        vm.cancel = reset;
+        vm.remove = remove;
+        
+        // Properties
+        vm.editMode = false;
+        vm.globalLoadState = new LoadState();
+        vm.saveLoadState = new LoadState();
+        vm.formLoadState = new LoadState(true);
+
+        // Init
+        initData(vm.formLoadState);
+    }
+    
+    /* UI ACTIONS */
+
+    function edit() {
+        vm.editMode = true;
+        vm.mainForm.formStatus.clear();
+    }
+
+    function save() {
+        setLoadingOn(vm.saveLoadState);
+
+        imageService
+            .update(vm.command)
+            .then(onSuccess.bind(null, 'Changes were saved successfully', vm.saveLoadState));
+    }
+
+    function reset() {
+        vm.editMode = false;
+        vm.previewImage = _.clone(vm.image);
+        vm.command = mapCommand(vm.image);
+        vm.mainForm.formStatus.clear();
+    }
+    
+    function remove() {
+        var options = {
+            title: 'Delete Image',
+            message: 'Are you sure you want to delete this image?',
+            okButtonTitle: 'Yes, delete it',
+            onOk: onOk
+        };
+
+        modalDialogService.confirm(options);
+
+        function onOk() {
+            setLoadingOn();
+            return imageService
+                .remove(vm.image.imageAssetId)
+                .then(redirectToList)
+                .catch(setLoadingOff);
+        }
+    }
+    
+    /* PRIVATE FUNCS */
+
+    function onSuccess(message, loadStateToTurnOff) {
+        return initData(loadStateToTurnOff)
+            .then(vm.mainForm.formStatus.success.bind(null, message));
+    }
+
+    function initData(loadStateToTurnOff) {
+
+        return getImage()
+            .then(setLoadingOff.bind(null, loadStateToTurnOff));
+           
+        /* helpers */
+
+        function getImage() {
+            return imageService.getById($routeParams.id).then(function (image) {
+                vm.image = image;
+                vm.previewImage = image;
+                vm.command = mapCommand(image);
+                vm.editMode = false;
+            });
+        }
+    }
+
+    function mapCommand(image) {
+
+        return _.pick(image,
+                'imageAssetId',
+                'title',
+                'tags',
+                'defaultAnchorLocation');
+    }
+
+    function redirectToList() {
+        $location.path('');
+    }
+
+    function setLoadingOn(loadState) {
+        vm.globalLoadState.on();
+        if (loadState && _.isFunction(loadState.on)) loadState.on();
+    }
+
+    function setLoadingOff(loadState) {
+        vm.globalLoadState.off();
+        if (loadState && _.isFunction(loadState.off)) loadState.off();
+    }
+}]);
+angular.module('cms.images').controller('ImageListController', [
+    '_',
+    'shared.LoadState',
+    'shared.SearchQuery',
+    'images.imageService',
+function (
+    _,
+    LoadState,
+    SearchQuery,
+    imageService) {
+
+    /* START */
+
+    var vm = this;
+    init();
+    
+    /* INIT */
+    function init() {
+
+        vm.gridLoadState = new LoadState();
+        vm.query = new SearchQuery({
+            onChanged: onQueryChanged
+        });
+        vm.filter = vm.query.getFilters();
+        vm.toggleFilter = toggleFilter;
+
+        toggleFilter(false);
+        loadGrid();
+    }
+
+    /* ACTIONS */
+    
+    function toggleFilter(show) {
+        vm.isFilterVisible = _.isUndefined(show) ? !vm.isFilterVisible : show;
+    }
+
+    /* EVENTS */
+
+    function onQueryChanged() {
+        toggleFilter(false);
+        loadGrid();
+    }
+
+    /* HELPERS */
+
+    function loadGrid() {
+        vm.gridLoadState.on();
+
+        return imageService.getAll(vm.query.getParameters()).then(function (result) {
+            vm.result = result;
+            vm.gridLoadState.off();
+        });
+    }
+}]);

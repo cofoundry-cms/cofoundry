@@ -1,4 +1,4 @@
 ﻿angular
     .module('cms.customEntities', ['ngRoute', 'cms.shared'])
     .constant('_', window._)
-    .constant('customEntities.modulePath', '/admin/modules/customentities/js/');
+    .constant('customEntities.modulePath', '/Admin/Modules/CustomEntities/Js/');

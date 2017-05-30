@@ -10,7 +10,7 @@ function (
             result: '=cmsResult',
             query: '=cmsQuery'
         },
-        templateUrl: modulePath + 'UIComponents/Search/pager.html',
+        templateUrl: modulePath + 'UIComponents/Search/Pager.html',
         controller: angular.noop,
         controllerAs: 'vm',
         bindToController: true,

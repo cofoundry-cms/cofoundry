@@ -23,7 +23,7 @@ function (
             refreshContent: '=',
             scrolled: '='
         },
-        templateUrl: modulePath + 'uicomponents/PageSectionModule.html',
+        templateUrl: modulePath + 'UIComponents/PageSectionModule.html',
         require: ['^cmsPageSection'],
         link: link
     };
@@ -104,7 +104,7 @@ function (
             scope.isPopupActive = true;
 
             modalDialogService.show({
-                templateUrl: modulePath + 'routes/modals/addmodule.html',
+                templateUrl: modulePath + 'Routes/Modals/AddModule.html',
                 controller: 'AddModuleController',
                 options: {
                     anchorElement: scope.anchorElement,
@@ -131,7 +131,7 @@ function (
             scope.isPopupActive = true;
 
             modalDialogService.show({
-                templateUrl: modulePath + 'routes/modals/editmodule.html',
+                templateUrl: modulePath + 'Routes/Modals/EditModule.html',
                 controller: 'EditModuleController',
                 options: {
                     anchorElement: scope.anchorElement,

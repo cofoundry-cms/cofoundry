@@ -6,7 +6,7 @@ function (
     return {
         restrict: 'E',
         replace: true,
-        templateUrl: modulePath + 'UIComponents/Buttons/button.html',
+        templateUrl: modulePath + 'UIComponents/Buttons/Button.html',
         scope: {
             text: '@cmsText'
         }

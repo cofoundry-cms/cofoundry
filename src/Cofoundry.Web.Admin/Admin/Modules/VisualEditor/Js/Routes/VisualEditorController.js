@@ -92,7 +92,7 @@ function (
 
     function addSectionModule(args) {
         modalDialogService.show({
-            templateUrl: modulePath + 'routes/modals/addmodule.html',
+            templateUrl: modulePath + 'Routes/Modals/AddModule.html',
             controller: 'AddModuleController',
             options: {
                 insertMode: args.insertMode,
@@ -116,7 +116,7 @@ function (
         globalLoadState.on();
 
         modalDialogService.show({
-            templateUrl: modulePath + 'routes/modals/addmodule.html',
+            templateUrl: modulePath + 'Routes/Modals/AddModule.html',
             controller: 'AddModuleController',
             options: {
                 pageTemplateSectionId: args.pageTemplateSectionId,
@@ -140,7 +140,7 @@ function (
         globalLoadState.on();
 
         modalDialogService.show({
-            templateUrl: modulePath + 'routes/modals/editmodule.html',
+            templateUrl: modulePath + 'Routes/Modals/EditModule.html',
             controller: 'EditModuleController',
             options: {
                 versionModuleId: args.versionModuleId,

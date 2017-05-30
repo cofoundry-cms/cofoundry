@@ -8,7 +8,7 @@ function (
         restrict: 'E',
         scope: { tags: '=cmsTags' },
         require: '?^^cmsModalDialogContainer',
-        templateUrl: modulePath + 'UIComponents/Tags/taglist.html',
+        templateUrl: modulePath + 'UIComponents/Tags/TagList.html',
         link: link
     };
 

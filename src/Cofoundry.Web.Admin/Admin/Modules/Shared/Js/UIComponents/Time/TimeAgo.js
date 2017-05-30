@@ -3,7 +3,7 @@
     return {
         restrict: 'E',
         scope: { time: '=cmsTime' },
-        templateUrl: modulePath + 'UIComponents/Time/timeago.html',
+        templateUrl: modulePath + 'UIComponents/Time/TimeAgo.html',
         controller: ['$scope', TimeAgoController],
         controllerAs: 'vm'
     };

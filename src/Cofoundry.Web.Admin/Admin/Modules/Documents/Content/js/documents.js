@@ -1,1 +1,318 @@
-﻿angular.module("cms.documents", ["ngRoute", "cms.shared"]).constant("_", window._).constant("documents.modulePath", "/admin/modules/documents/js/"); angular.module("cms.documents").config(["$routeProvider", "shared.routingUtilities", "documents.modulePath", function (n, t, i) { t.registerCrudRoutes(n, i, "Document") }]); angular.module("cms.documents").controller("AddDocumentController", ["$location", "_", "shared.focusService", "shared.stringUtilities", "shared.LoadState", "documents.documentService", function (n, t, i, r, u, f) { function s() { l(); e.save = h; e.cancel = a; e.onFileChanged = c; e.editMode = !1; e.saveLoadState = new u } function h() { e.saveLoadState.on(); f.add(e.command).progress(e.saveLoadState.setProgress).then(o).finally(e.saveLoadState.off) } function c() { var n = e.command; n.file && n.file.name && (n.title = r.capitaliseFirstLetter(r.getFileNameWithoutExtension(n.file.name)), n.fileName = r.slugify(n.title), i.focusById("title")) } function l() { e.command = {} } function a() { o() } function o() { n.path("") } var e = this; s() }]); angular.module("cms.documents").controller("DocumentDetailsController", ["$routeParams", "$q", "$location", "_", "shared.LoadState", "shared.modalDialogService", "documents.documentService", "documents.modulePath", function (n, t, i, r, u, f, e) { function a() { o.edit = v; o.save = y; o.cancel = p; o.remove = w; o.editMode = !1; o.globalLoadState = new u; o.saveLoadState = new u; o.formLoadState = new u(!0); h(o.formLoadState) } function v() { o.editMode = !0; o.mainForm.formStatus.clear() } function y() { l(o.saveLoadState); e.update(o.command).then(b.bind(null, "Changes were saved successfully", o.saveLoadState)).finally(s.bind(null, o.saveLoadState)) } function p() { o.editMode = !1; o.previewDocument = r.clone(o.document); o.command = c(o.document); o.mainForm.formStatus.clear() } function w() { function t() { return l(), e.remove(o.document.documentAssetId).then(k).catch(s) } var n = { title: "Delete Document", message: "Are you sure you want to delete this document?", okButtonTitle: "Yes, delete it", onOk: t }; f.confirm(n) } function b(n, t) { return h(t).then(o.mainForm.formStatus.success.bind(null, n)) } function h(t) { function i() { return e.getById(n.id).then(function (n) { o.document = n; o.previewDocument = n; o.command = c(n); o.editMode = !1 }) } return i().then(s.bind(null, t)) } function c(n) { return r.pick(n, "documentAssetId", "title", "fileName", "description", "tags") } function k() { i.path("") } function l(n) { o.globalLoadState.on(); n && r.isFunction(n.on) && n.on() } function s(n) { o.globalLoadState.off(); n && r.isFunction(n.off) && n.off() } var o = this; a() }]); angular.module("cms.documents").controller("DocumentListController", ["_", "shared.LoadState", "shared.SearchQuery", "shared.urlLibrary", "documents.documentService", function (n, t, i, r, u) { function s() { f.gridLoadState = new t; f.query = new i({ onChanged: h }); f.filter = f.query.getFilters(); f.toggleFilter = e; f.getDocumentUrl = r.getDocumentUrl; e(!1); o() } function e(t) { f.isFilterVisible = n.isUndefined(t) ? !f.isFilterVisible : t } function h() { e(!1); o() } function o() { return f.gridLoadState.on(), u.getAll(f.query.getParameters()).then(function (n) { f.result = n; f.gridLoadState.off() }) } var f = this; s() }]); angular.module("cms.documents").factory("documents.documentService", ["$http", "$upload", "shared.documentService", function (n, t, i) { function u(n, i, r) { var u = _.omit(i, "file"); return t.upload({ url: n, data: u, file: i.file, method: r }) } var r = _.extend({}, i); return r.add = function (n) { return u(r.getBaseRoute(), n, "POST") }, r.update = function (n) { return u(r.getIdRoute(n.documentAssetId), n, "PATCH") }, r.remove = function (t) { return n.delete(r.getIdRoute(t)) }, r }])
+angular
+    .module('cms.documents', ['ngRoute', 'cms.shared'])
+    .constant('_', window._)
+    .constant('documents.modulePath', '/admin/modules/documents/js/');
+angular.module('cms.documents').config([
+    '$routeProvider',
+    'shared.routingUtilities',
+    'documents.modulePath',
+function (
+    $routeProvider,
+    routingUtilities,
+    modulePath) {
+
+    routingUtilities.registerCrudRoutes($routeProvider, modulePath, 'Document');
+
+}]);
+angular.module('cms.documents').factory('documents.documentService', [
+        '$http',
+        '$upload',
+        'shared.documentService',
+    function (
+        $http,
+        $upload,
+        sharedDocumentService) {
+
+    var service = _.extend({}, sharedDocumentService);
+        
+    /* COMMANDS */
+
+    service.add = function (command) {
+
+        return uploadFile(service.getBaseRoute(), command, 'POST');
+    }
+
+    service.update = function (command) {
+        return uploadFile(service.getIdRoute(command.documentAssetId), command, 'PATCH');
+    }
+
+    service.remove = function (id) {
+
+        return $http.delete(service.getIdRoute(id));
+    }
+
+    /* PRIVATES */
+
+    function uploadFile(path, command, method) {
+        var data = _.omit(command, 'file');
+
+        return $upload.upload({
+            url: path,
+            data: data,
+            file: command.file,
+            method: method
+        });
+    }
+
+    return service;
+}]);
+angular.module('cms.documents').controller('AddDocumentController', [
+            '$location',
+            '_',
+            'shared.focusService',
+            'shared.stringUtilities',
+            'shared.LoadState',
+            'documents.documentService',
+        function (
+            $location,
+            _,
+            focusService,
+            stringUtilities,
+            LoadState,
+            documentService
+        ) {
+
+    var vm = this;
+
+    init();
+
+    /* INIT */
+
+    function init() {
+
+        initData();
+
+        vm.save = save;
+        vm.cancel = cancel;
+        vm.onFileChanged = onFileChanged;
+
+        vm.editMode = false;
+        vm.saveLoadState = new LoadState();
+    }
+
+    /* EVENTS */
+
+    function save() {
+        vm.saveLoadState.on();
+
+        documentService
+            .add(vm.command)
+            .progress(vm.saveLoadState.setProgress)
+            .then(redirectToList)
+            .finally(vm.saveLoadState.off);
+    }
+
+    function onFileChanged() {
+        var command = vm.command;
+
+        if (command.file && command.file.name) {
+            command.title = stringUtilities.capitaliseFirstLetter(stringUtilities.getFileNameWithoutExtension(command.file.name));
+            command.fileName = stringUtilities.slugify(command.title);
+            focusService.focusById('title');
+        }
+    }
+
+    /* PRIVATE FUNCS */
+
+    function initData() {
+        vm.command = {};
+    }
+
+    function cancel() {
+        redirectToList();
+    }
+
+    function redirectToList() {
+        $location.path('');
+    }
+}]);
+angular.module('cms.documents').controller('DocumentDetailsController', [
+    '$routeParams',
+    '$q',
+    '$location',
+    '_',
+    'shared.LoadState',
+    'shared.modalDialogService',
+    'documents.documentService',
+    'documents.modulePath',
+function (
+    $routeParams,
+    $q, $location,
+    _,
+    LoadState,
+    modalDialogService,
+    documentService,
+    modulePath) {
+
+    var vm = this;
+
+    init();
+    
+    /* INIT */
+
+    function init() {
+
+        // UI actions
+        vm.edit = edit;
+        vm.save = save;
+        vm.cancel = reset;
+        vm.remove = remove;
+        
+        // Properties
+        vm.editMode = false;
+        vm.globalLoadState = new LoadState();
+        vm.saveLoadState = new LoadState();
+        vm.formLoadState = new LoadState(true);
+
+        // Init
+        initData(vm.formLoadState);
+    }
+    
+    /* UI ACTIONS */
+
+    function edit() {
+        vm.editMode = true;
+        vm.mainForm.formStatus.clear();
+    }
+
+    function save() {
+        setLoadingOn(vm.saveLoadState);
+
+        documentService
+            .update(vm.command)
+            .then(onSuccess.bind(null, 'Changes were saved successfully', vm.saveLoadState))
+        .finally(setLoadingOff.bind(null, vm.saveLoadState));
+    }
+
+    function reset() {
+        vm.editMode = false;
+        vm.previewDocument = _.clone(vm.document);
+        vm.command = mapCommand(vm.document);
+        vm.mainForm.formStatus.clear();
+    }
+    
+    function remove() {
+        var options = {
+            title: 'Delete Document',
+            message: 'Are you sure you want to delete this document?',
+            okButtonTitle: 'Yes, delete it',
+            onOk: onOk
+        };
+
+        modalDialogService.confirm(options);
+
+        function onOk() {
+            setLoadingOn();
+            return documentService
+                .remove(vm.document.documentAssetId)
+                .then(redirectToList)
+                .catch(setLoadingOff);
+        }
+    }
+    
+    /* PRIVATE FUNCS */
+
+    function onSuccess(message, loadStateToTurnOff) {
+        return initData(loadStateToTurnOff)
+            .then(vm.mainForm.formStatus.success.bind(null, message));
+    }
+
+    function initData(loadStateToTurnOff) {
+
+        return getDocument()
+            .then(setLoadingOff.bind(null, loadStateToTurnOff));
+           
+        /* helpers */
+
+        function getDocument() {
+            return documentService.getById($routeParams.id).then(function (document) {
+                vm.document = document;
+                vm.previewDocument = document;
+                vm.command = mapCommand(document);
+                vm.editMode = false;
+            });
+        }
+    }
+
+    function mapCommand(document) {
+
+        return _.pick(document,
+                'documentAssetId',
+                'title',
+                'fileName',
+                'description',
+                'tags');
+    }
+
+    function redirectToList() {
+        $location.path('');
+    }
+
+    function setLoadingOn(loadState) {
+        vm.globalLoadState.on();
+        if (loadState && _.isFunction(loadState.on)) loadState.on();
+    }
+
+    function setLoadingOff(loadState) {
+        vm.globalLoadState.off();
+        if (loadState && _.isFunction(loadState.off)) loadState.off();
+    }
+}]);
+angular.module('cms.documents').controller('DocumentListController', [
+    '_',
+    'shared.LoadState',
+    'shared.SearchQuery',
+    'shared.urlLibrary',
+    'documents.documentService',
+function (
+    _,
+    LoadState,
+    SearchQuery,
+    urlLibrary,
+    documentService) {
+
+    /* START */
+
+    var vm = this;
+    init();
+    
+    /* INIT */
+    function init() {
+
+        vm.gridLoadState = new LoadState();
+        vm.query = new SearchQuery({
+            onChanged: onQueryChanged
+        });
+        vm.filter = vm.query.getFilters();
+
+        vm.toggleFilter = toggleFilter;
+        vm.getDocumentUrl = urlLibrary.getDocumentUrl;
+
+        toggleFilter(false);
+        loadGrid();
+    }
+
+    /* ACTIONS */
+    
+    function toggleFilter(show) {
+        vm.isFilterVisible = _.isUndefined(show) ? !vm.isFilterVisible : show;
+    }
+
+    /* EVENTS */
+
+    function onQueryChanged() {
+        toggleFilter(false);
+        loadGrid();
+    }
+
+    /* HELPERS */
+
+    function loadGrid() {
+        vm.gridLoadState.on();
+
+        return documentService.getAll(vm.query.getParameters()).then(function (result) {
+            vm.result = result;
+            vm.gridLoadState.off();
+        });
+    }
+}]);

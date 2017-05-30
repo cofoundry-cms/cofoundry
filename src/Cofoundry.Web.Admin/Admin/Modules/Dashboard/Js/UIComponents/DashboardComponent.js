@@ -5,7 +5,7 @@ function (
 
     return {
         restrict: 'E',
-        templateUrl: modulePath + 'uicomponents/DashboardComponent.html',
+        templateUrl: modulePath + 'UIComponents/DashboardComponent.html',
         scope: {
             heading: '@cmsHeading',
             listUrl: '@cmsListUrl',

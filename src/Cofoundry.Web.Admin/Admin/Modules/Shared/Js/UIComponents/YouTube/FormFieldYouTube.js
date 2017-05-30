@@ -27,7 +27,7 @@ function (
     /* CONFIG */
 
     var config = {
-        templateUrl: modulePath + 'UIComponents/Youtube/FormFieldYoutube.html',
+        templateUrl: modulePath + 'UIComponents/YouTube/FormFieldYouTube.html',
         scope: _.extend(baseFormFieldFactory.defaultConfig.scope, {
             modelType: '@cmsModelType'
         }),
@@ -67,7 +67,7 @@ function (
         function showPicker() {
 
             modalDialogService.show({
-                templateUrl: modulePath + 'UIComponents/Youtube/YoutubePickerDialog.html',
+                templateUrl: modulePath + 'UIComponents/YouTube/YouTubePickerDialog.html',
                 controller: 'YoutubePickerDialogController',
                 options: {
                     currentVideo: _.clone(vm.model),

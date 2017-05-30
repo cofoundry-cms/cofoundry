@@ -61,7 +61,7 @@ function (
     /* PUBLIC FUNCS */
 
     function getPartialUrl(file) {
-        return modulePath + 'routes/partials/' + file + '.html';
+        return modulePath + 'Routes/Partials/' + file + '.html';
     }
 
     /* UI ACTIONS */
@@ -166,7 +166,7 @@ function (
     function duplicatePage() {
 
         modalDialogService.show({
-            templateUrl: modulePath + 'routes/modals/duplicatepage.html',
+            templateUrl: modulePath + 'Routes/Modals/DuplicatePage.html',
             controller: 'DuplicatePageController',
             options: {
                 page: vm.page

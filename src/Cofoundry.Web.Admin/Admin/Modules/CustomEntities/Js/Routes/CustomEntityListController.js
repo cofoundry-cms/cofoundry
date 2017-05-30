@@ -44,7 +44,7 @@ function (
     function changeOrdering() {
 
         modalDialogService.show({
-            templateUrl: modulePath + 'routes/modals/ChangeOrdering.html',
+            templateUrl: modulePath + 'Routes/Modals/ChangeOrdering.html',
             controller: 'ChangeOrderingController',
             options: {
                 localeId: vm.filter.localeId,

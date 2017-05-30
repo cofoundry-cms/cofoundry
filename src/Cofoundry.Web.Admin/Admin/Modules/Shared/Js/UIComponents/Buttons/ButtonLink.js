@@ -5,7 +5,7 @@
     return {
         restrict: 'E',
         replace: true,
-        templateUrl: modulePath + 'UIComponents/Buttons/buttonlink.html',
+        templateUrl: modulePath + 'UIComponents/Buttons/ButtonLink.html',
         scope: {
             text: '@cmsText',
             href: '@cmsHref'

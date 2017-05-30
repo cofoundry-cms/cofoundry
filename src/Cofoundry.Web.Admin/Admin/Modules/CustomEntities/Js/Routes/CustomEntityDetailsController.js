@@ -166,7 +166,7 @@ function (
     function changeUrl() {
 
         modalDialogService.show({
-            templateUrl: modulePath + 'routes/modals/changeurl.html',
+            templateUrl: modulePath + 'Routes/Modals/ChangeUrl.html',
             controller: 'ChangeUrlController',
             options: {
                 customEntity: vm.customEntity,
