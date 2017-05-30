@@ -8,6 +8,15 @@ namespace Cofoundry.Web.Admin
 {
     public class PageTemplatesModuleRegistration: IInternalAngularModuleRegistration
     {
+        private readonly IAdminRouteLibrary _adminRouteLibrary;
+
+        public PageTemplatesModuleRegistration(
+            IAdminRouteLibrary adminRouteLibrary
+            )
+        {
+            _adminRouteLibrary = adminRouteLibrary;
+        }
+
         public AdminModule GetModule()
         {
             var module = new AdminModule()
@@ -17,7 +26,7 @@ namespace Cofoundry.Web.Admin
                 Description = "Manage templates for content pages.",
                 MenuCategory = AdminModuleMenuCategory.Settings,
                 PrimaryOrdering = AdminModuleMenuPrimaryOrdering.Secondry,
-                Url = PageTemplatesRouteLibrary.Urls.List(),
+                Url = _adminRouteLibrary.PageTemplates.List(),
                 RestrictedToPermission = new PageTemplateAdminModulePermission()
             };
 

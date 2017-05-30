@@ -8,6 +8,15 @@ namespace Cofoundry.Web.Admin
 {
     public class SettingsModuleRegistration: IInternalAngularModuleRegistration
     {
+        private readonly IAdminRouteLibrary _adminRouteLibrary;
+
+        public SettingsModuleRegistration(
+            IAdminRouteLibrary adminRouteLibrary
+            )
+        {
+            _adminRouteLibrary = adminRouteLibrary;
+        }
+
         public AdminModule GetModule()
         {
             var module = new AdminModule()
@@ -17,7 +26,7 @@ namespace Cofoundry.Web.Admin
                 Description = "Manage site settings.",
                 MenuCategory = AdminModuleMenuCategory.Settings,
                 PrimaryOrdering = AdminModuleMenuPrimaryOrdering.Primary,
-                Url = SettingsRouteLibrary.Urls.Details(),
+                Url = _adminRouteLibrary.Settings.Details(),
                 RestrictedToPermission = new SettingsAdminModulePermission()
             };
 

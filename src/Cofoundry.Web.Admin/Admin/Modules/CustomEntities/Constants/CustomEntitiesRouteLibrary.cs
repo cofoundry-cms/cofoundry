@@ -17,16 +17,8 @@ namespace Cofoundry.Web.Admin
 
         #region constructor
 
-        public CustomEntitiesRouteLibrary(
-            IStaticResourceFileProvider staticResourceFileProvider,
-            OptimizationSettings optimizationSettings
-            )
-            : base(
-                  RoutePrefix, 
-                  RouteConstants.InternalModuleResourcePathPrefix,
-                  staticResourceFileProvider,
-                  optimizationSettings
-                  )
+        public CustomEntitiesRouteLibrary()
+            : base(RoutePrefix, RouteConstants.InternalModuleResourcePathPrefix)
         {
         }
 
@@ -34,24 +26,34 @@ namespace Cofoundry.Web.Admin
 
         #region routes
 
-        public string List(CustomEntityDefinitionSummary summary)
+        public string List(CustomEntityDefinitionSummary definition)
         {
-            if (summary == null) return string.Empty;
-            return "/" + RouteConstants.AdminAreaPrefix + "/" + SlugFormatter.ToSlug(summary.NamePlural) + "#/";
+            return GetCustomEntityRoute(definition?.NamePlural);
         }
 
-        public string New(CustomEntityDefinitionSummary summary)
+        public string List(ICustomEntityDefinition definition)
         {
-            if (summary == null) return string.Empty;
-            return List(summary) + "new";
+            return GetCustomEntityRoute(definition?.NamePlural);
         }
 
-        public string Details(CustomEntityDefinitionSummary summary, int id)
+        public string New(CustomEntityDefinitionSummary definition)
         {
-            if (summary == null) return string.Empty;
-            return List(summary) + id.ToString();
+            if (definition == null) return string.Empty;
+            return List(definition) + "new";
         }
-        
+
+        public string Details(CustomEntityDefinitionSummary definition, int id)
+        {
+            if (definition == null) return string.Empty;
+            return List(definition) + id.ToString();
+        }
+
+        private static string GetCustomEntityRoute(string namePlural, string route = null)
+        {
+            if (namePlural == null) return string.Empty;
+            return "/" + RouteConstants.AdminAreaPrefix + "/" + SlugFormatter.ToSlug(namePlural) + "#/" + route;
+        }
+
         #endregion
     }
 }

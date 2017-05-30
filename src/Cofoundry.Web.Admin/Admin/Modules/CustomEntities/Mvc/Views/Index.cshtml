@@ -1,5 +1,6 @@
 ﻿@model CustomEntityModuleOptions
-@inject AngularHelper angularHelper
+@using Cofoundry.Web.Admin
+@inject IAngularBootstrapper angularBootstrapper
 @inject IAdminRouteLibrary adminRouteLibrary
 
 @{
@@ -7,7 +8,7 @@
 }
 
 @section FooterScripts {
-    @angularHelper.Bootstrap(adminRouteLibrary.CustomEntities, Model)
+    @angularBootstrapper.Bootstrap(adminRouteLibrary.CustomEntities, Model)
 }
 
 <div ng-view=""></div>

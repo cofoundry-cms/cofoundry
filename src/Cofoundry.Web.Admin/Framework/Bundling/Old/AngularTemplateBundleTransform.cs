@@ -7,6 +7,8 @@ using System.Text.RegularExpressions;
 
 namespace Cofoundry.Web.Admin
 {
+    /// TODO: REMOVE
+    
     //public class AngularTemplateBundleTransform : IBundleTransform
     //{
     //    private readonly string _moduleName;

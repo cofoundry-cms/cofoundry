@@ -1,4 +1,5 @@
-﻿@inject IStaticFilePathFormatter staticFilePathFormatter
+﻿@inject IStaticResourceReferenceRenderer staticResourceReferenceRenderer
+@inject IAdminRouteLibrary adminRouteLibrary
 
 <!doctype html>
 <html class="no-js" lang="en">
@@ -15,12 +16,12 @@
 
     @RenderSection("Meta", required: false)
 
-    <link href="@staticFilePathFormatter.AppendVersion(SharedRouteLibrary.Css.Main)" rel="stylesheet">
+    @staticResourceReferenceRenderer.CssTag(adminRouteLibrary.Shared, "shared")
 
     @RenderSection("Styles", required: false)
 
     <!--[if lt IE 9]>
-        <script src="@staticFilePathFormatter.AppendVersion(SharedRouteLibrary.Js.Html5Shiv)"></script>
+        @staticResourceReferenceRenderer.ScriptTag(adminRouteLibrary.Shared, "html5shiv")
     <![endif]-->
     @RenderSection("HeaderScripts", required: false)
 

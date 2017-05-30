@@ -492,8 +492,8 @@
     <Compile Include="Framework\Identity\ControllerHelpers\AccountManagementControllerHelper.cs" />
     <Compile Include="Framework\Identity\ControllerHelpers\AuthenticationControllerHelper.cs" />
     <Compile Include="Framework\Identity\ControllerHelpers\UserManagementControllerHelper.cs" />
+    <Compile Include="Framework\Auth\UserAreaAuthorizationRequirementHandler.cs" />
     <Compile Include="Framework\Auth\UserAreaAuthorizationHandler.cs" />
-    <Compile Include="Framework\Auth\UserAreaAuthorizationRequirement.cs" />
     <Compile Include="Framework\Identity\Models\AuthenticationResult.cs" />
     <Compile Include="Framework\Identity\ViewModels\ChangePasswordViewModel.cs" />
     <Compile Include="Framework\Identity\ViewModels\CompletePasswordResetViewModel.cs" />

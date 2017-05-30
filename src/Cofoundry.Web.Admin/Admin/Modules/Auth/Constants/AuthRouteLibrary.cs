@@ -11,26 +11,15 @@ namespace Cofoundry.Web.Admin
 
         public const string RoutePrefix = "auth";
 
-        public static readonly string LoginLayoutPath = ViewPathFormatter.View("Auth", "_LoginLayout");
+        public readonly string LoginLayoutPath = ViewPathFormatter.View("Auth", "_LoginLayout");
 
         #endregion
 
         #region constructor
 
-        public AuthRouteLibrary(
-            IStaticResourceFileProvider staticResourceFileProvider,
-            OptimizationSettings optimizationSettings
-            )
-            : base(
-                  RoutePrefix, 
-                  RouteConstants.InternalModuleResourcePathPrefix, 
-                  staticResourceFileProvider, 
-                  optimizationSettings
-                  )
+        public AuthRouteLibrary()
+            : base(RoutePrefix, RouteConstants.InternalModuleResourcePathPrefix)
         {
-            LoginScriptPath = JsFile("login");
-            LoginScriptPath = JsFile("changepassword");
-            LoginScriptPath = JsFile("forgotpassword");
         }
 
         #endregion
@@ -68,16 +57,6 @@ namespace Cofoundry.Web.Admin
         {
             return MvcRoute("logout");
         }
-
-        #endregion
-
-        #region scripts
-
-        public string LoginScriptPath { get; private set; }
-
-        public string ChangePasswordScriptPath { get; private set; }
-
-        public string ForgotPasswordScriptPath { get; private set; }
 
         #endregion
     }

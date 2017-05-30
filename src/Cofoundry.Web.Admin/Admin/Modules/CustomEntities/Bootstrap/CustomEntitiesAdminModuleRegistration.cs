@@ -9,21 +9,22 @@ namespace Cofoundry.Web.Admin
 {
     public class CustomEntitiesAdminModuleRegistration : IAdminModuleRegistration
     {
-        private readonly ICustomEntityDefinition[] _customEntityModuleDefinition;
+        private readonly IEnumerable<ICustomEntityDefinition> _customEntityDefinitions;
+        private readonly IAdminRouteLibrary _adminRouteLibrary;
 
         public CustomEntitiesAdminModuleRegistration(
-            ICustomEntityDefinition[] customEntityModuleDefinition
+            IEnumerable<ICustomEntityDefinition> customEntityDefinitions,
+            IAdminRouteLibrary adminRouteLibrary
             )
         {
-            _customEntityModuleDefinition = customEntityModuleDefinition;
+            _customEntityDefinitions = customEntityDefinitions;
+            _adminRouteLibrary = adminRouteLibrary;
         }
 
         public IEnumerable<AdminModule> GetModules()
         {
-            foreach (var definition in _customEntityModuleDefinition)
+            foreach (var definition in _customEntityDefinitions)
             {
-                var routeLibrary = new ModuleRouteLibrary(SlugFormatter.ToSlug(definition.NamePlural));
-
                 var module = new AdminModule()
                 {
                     AdminModuleCode = definition.CustomEntityDefinitionCode,
@@ -31,7 +32,7 @@ namespace Cofoundry.Web.Admin
                     MenuCategory = AdminModuleMenuCategory.ManageSite,
                     PrimaryOrdering = AdminModuleMenuPrimaryOrdering.Tertiary,
                     Title = definition.NamePlural,
-                    Url = routeLibrary.AngularRoute()
+                    Url = _adminRouteLibrary.CustomEntities.List(definition)
                 };
 
                 yield return module;

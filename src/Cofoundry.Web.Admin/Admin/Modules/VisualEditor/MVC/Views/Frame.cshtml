@@ -1,9 +1,7 @@
-@inherits CofoundryPage<VisualEditorFrameModel>
-@using Cofoundry.Web
-@using System.Web.Mvc.Html
-@using Cofoundry.Domain
-@using Cofoundry.Web.Admin
-@using System.Web.Optimization
+@model VisualEditorFrameModel
+@inject IAngularBootstrapper angularBootstrapper
+@inject IStaticResourceReferenceRenderer staticResourceReferenceRenderer
+@inject IAdminRouteLibrary adminRouteLibrary
 
 @{
     object ngOptions = new
@@ -24,10 +22,10 @@
 <head>
     <meta name="viewport" content="width=device-width" />
     <title></title>
-    @Styles.Render(SharedRouteLibrary.Css.Main)
+    @staticResourceReferenceRenderer.CssTag(adminRouteLibrary.Shared, "site-viewer")
 </head>
 <body class="cofoundry-visual-editor-frame">
     <div ng-controller="VisualEditorController as vm"></div>
-    @AngularHelper.Bootstrap(VisualEditorRouteLibrary.Js, Cofoundry.CurrentUser, ngOptions)
+    @angularBootstrapper.Bootstrap(adminRouteLibrary.VisualEditor, ngOptions)
 </body>
 </html>

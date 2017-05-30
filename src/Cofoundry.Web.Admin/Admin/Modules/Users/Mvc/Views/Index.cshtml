@@ -1,11 +1,14 @@
 ﻿@model UsersModuleOptions
+@using Cofoundry.Web.Admin
+@inject IAngularBootstrapper angularBootstrapper
+@inject IAdminRouteLibrary adminRouteLibrary
 
 @{
     Layout = LayoutPaths.DefaultLayout;    
 }
 
 @section FooterScripts {
-    @AngularHelper.Bootstrap(UsersRouteLibrary.Js, Cofoundry.CurrentUser, Model)
+    @angularBootstrapper.Bootstrap(adminRouteLibrary.Users, Model)
 }
 
 <div ng-view=""></div>

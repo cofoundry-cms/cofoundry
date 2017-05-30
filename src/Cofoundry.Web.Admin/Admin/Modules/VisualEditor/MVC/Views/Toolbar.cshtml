@@ -1,9 +1,5 @@
-@inherits CofoundryPage<PageResponseData>
-@using Cofoundry.Web
-@using System.Web.Mvc.Html
-@using Cofoundry.Domain
-@using Cofoundry.Web.Admin
-@using System.Web.Optimization
+@model PageResponseData
+@inject IAdminRouteLibrary adminRouteLibrary
 
 @functions {
     bool IsEditTypeSwitchRequired(IPageResponseData model)
@@ -66,12 +62,12 @@
             (isCustomEntityRoute ? model.PageRoutingInfo.CustomEntityRoute.CustomEntityId : model.PageRoutingInfo.PageRoute.PageId).ToString(),
             model.HasDraftVersion.ToString());
 
-        backToAdminLink = DashboardRouteLibrary.Urls.Dashboard();
+        backToAdminLink = adminRouteLibrary.Dashboard.Dashboard();
         versions = new List<IVersionRoute>();
 
         if (isCustomEntityRoute)
         {
-            backToAdminLink = CustomEntitiesRouteLibrary.Urls.Details(model.CustomEntityDefinition, model.PageRoutingInfo.CustomEntityRoute.CustomEntityId);
+            backToAdminLink = adminRouteLibrary.CustomEntities.Details(model.CustomEntityDefinition, model.PageRoutingInfo.CustomEntityRoute.CustomEntityId);
             versions.AddRange(model.PageRoutingInfo.CustomEntityRoute.Versions);
         }
         else
@@ -100,7 +96,7 @@
             <div class="cofoundry-sv__mini-menu__content">
                 <ol class="cofoundry-sv__navmenu-list">
                     <li>
-                        <a href="@DashboardRouteLibrary.Urls.Dashboard()" class="cofoundry-sv__navmenu-list__item">
+                        <a href="@adminRouteLibrary.Dashboard.Dashboard()" class="cofoundry-sv__navmenu-list__item">
                             <span class="fa fa-chevron-left"></span>
                             Dashboard
                         </a>

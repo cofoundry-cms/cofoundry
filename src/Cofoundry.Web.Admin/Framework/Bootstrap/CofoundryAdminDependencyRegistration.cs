@@ -20,7 +20,9 @@ namespace Cofoundry.Web.Admin
                 .RegisterAll<IStandardAngularModuleRegistration>()
                 .RegisterType<StandardAngularModuleRegistrationBootstrapper>()
                 .RegisterType<ISetupPageActionFactory, SetupPageActionFactory>(options)
-                .RegisterInstance<IAdminRouteLibrary, AdminRouteLibrary>();
+                .RegisterInstance<IAdminRouteLibrary, AdminRouteLibrary>()
+                .RegisterType<IAngularBootstrapper, AngularBootstrapper>()
+                .RegisterType<IStaticResourceReferenceRenderer, StaticResourceReferenceRenderer>()
                 ;
         }
     }

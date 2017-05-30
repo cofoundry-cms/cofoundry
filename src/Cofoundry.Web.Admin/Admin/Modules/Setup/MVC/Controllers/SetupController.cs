@@ -16,14 +16,17 @@ namespace Cofoundry.Web.Admin
 
         private readonly IQueryExecutor _queryExecutor;
         private readonly ILoginService _loginService;
+        private readonly IAdminRouteLibrary _adminRouteLibrary;
 
         public SetupController(
             IQueryExecutor queryExecutor,
-            ILoginService loginService
+            ILoginService loginService,
+            IAdminRouteLibrary adminRouteLibrary
             )
         {
             _queryExecutor = queryExecutor;
             _loginService = loginService;
+            _adminRouteLibrary = adminRouteLibrary;
         }
 
         #endregion
@@ -52,7 +55,7 @@ namespace Cofoundry.Web.Admin
 
         private ActionResult RedirectToDashboard()
         {
-            return Redirect(DashboardRouteLibrary.Urls.Dashboard());
+            return Redirect(_adminRouteLibrary.Dashboard.Dashboard());
         }
 
         #endregion

@@ -7,9 +7,18 @@ namespace Cofoundry.Web.Admin
 {
     public class SetupEmbeddedResourceRouteRegistration : IEmbeddedResourceRouteRegistration
     {
+        private readonly IAdminRouteLibrary _adminRouteLibrary;
+
+        public SetupEmbeddedResourceRouteRegistration(
+            IAdminRouteLibrary adminRouteLibrary
+            )
+        {
+            _adminRouteLibrary = adminRouteLibrary;
+        }
+
         public IEnumerable<string> GetEmbeddedResourcePaths()
         {
-            yield return SetupRouteLibrary.Js.JsFolderPath;
+            yield return _adminRouteLibrary.Setup.StaticResourcePrefix;
         }
     }
 }

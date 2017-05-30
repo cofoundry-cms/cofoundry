@@ -5,19 +5,11 @@ using System.Web;
 
 namespace Cofoundry.Web.Admin
 {
-    public class DirectoriesRouteLibrary : ModuleRouteLibrary
+    public class DirectoriesRouteLibrary : AngularModuleRouteLibrary
     {
-        #region statics
+        #region constructor
 
         public const string RoutePrefix = "directories";
-
-        public static readonly DirectoriesRouteLibrary Urls = new DirectoriesRouteLibrary();
-
-        public static readonly ModuleJsRouteLibrary Js = new ModuleJsRouteLibrary(Urls);
-
-        #endregion
-
-        #region constructor
 
         public DirectoriesRouteLibrary()
             : base(RoutePrefix, RouteConstants.InternalModuleResourcePathPrefix)

@@ -10,20 +10,21 @@ namespace Cofoundry.Web.Admin
     public class UsersModuleRegistration : IAdminModuleRegistration
     {
         private readonly IUserAreaRepository _userAreaRepository;
+        private readonly IAdminRouteLibrary _adminRouteLibrary;
 
         public UsersModuleRegistration(
-            IUserAreaRepository userAreaRepository
+            IUserAreaRepository userAreaRepository,
+            IAdminRouteLibrary adminRouteLibrary
             )
         {
             _userAreaRepository = userAreaRepository;
+            _adminRouteLibrary = adminRouteLibrary;
         }
 
         public IEnumerable<AdminModule> GetModules()
         {
             foreach (var userArea in _userAreaRepository.GetAll())
             {
-                var routeLibrary = new ModuleRouteLibrary(SlugFormatter.ToSlug(userArea.Name) + "-users");
-
                 var module = new AdminModule()
                 {
                     AdminModuleCode = "COFUSR" + userArea.UserAreaCode,
@@ -31,7 +32,7 @@ namespace Cofoundry.Web.Admin
                     Description = "Manage users in the " + userArea.Name + " user area.",
                     MenuCategory = AdminModuleMenuCategory.Settings,
                     PrimaryOrdering = AdminModuleMenuPrimaryOrdering.Secondry,
-                    Url = routeLibrary.AngularRoute()
+                    Url = _adminRouteLibrary.Users.List(userArea)
                 };
                 
                 if (userArea is CofoundryAdminUserArea)

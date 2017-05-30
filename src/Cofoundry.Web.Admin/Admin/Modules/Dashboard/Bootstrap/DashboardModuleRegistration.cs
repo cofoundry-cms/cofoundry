@@ -9,6 +9,14 @@ namespace Cofoundry.Web.Admin
     public class DashboardModuleRegistration : IInternalAngularModuleRegistration
     {
         public const string ModuleCode = "COFDSH";
+        private readonly IAdminRouteLibrary _adminRouteLibrary;
+
+        public DashboardModuleRegistration(
+            IAdminRouteLibrary adminRouteLibrary
+            )
+        {
+            _adminRouteLibrary = adminRouteLibrary;
+        }
 
         public AdminModule GetModule()
         {
@@ -20,7 +28,7 @@ namespace Cofoundry.Web.Admin
                 MenuCategory = AdminModuleMenuCategory.ManageSite,
                 PrimaryOrdering = AdminModuleMenuPrimaryOrdering.Primary,
                 SecondaryOrdering = Int32.MaxValue,
-                Url = DashboardRouteLibrary.Urls.Dashboard(),
+                Url = _adminRouteLibrary.Dashboard.Dashboard(),
                 RestrictedToPermission = new DashboardAdminModulePermission()
             };
 

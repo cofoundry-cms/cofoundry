@@ -1,4 +1,5 @@
 ﻿using Cofoundry.Core;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -16,9 +17,6 @@ namespace Cofoundry.Web.Admin
 
         #region constructor
 
-        private readonly IStaticResourceFileProvider _staticResourceFileProvider;
-        private readonly OptimizationSettings _optimizationSettings;
-
         /// <summary>
         /// Constructor when you want to use the default resource path (i.e. your
         /// module is located in /cofoundry/admin/modules/{modulename}.
@@ -28,11 +26,9 @@ namespace Cofoundry.Web.Admin
         /// urls e.g. products, users, honeybagders.
         /// </param>
         public ModuleRouteLibrary(
-            string routePrefix, 
-            IStaticResourceFileProvider staticResourceFileProvider, 
-            OptimizationSettings optimizationSettings
+            string routePrefix
             )
-            : this(routePrefix, RouteConstants.ModuleResourcePathPrefix, staticResourceFileProvider, optimizationSettings)
+            : this(routePrefix, RouteConstants.ModuleResourcePathPrefix)
         {
         }
 
@@ -48,16 +44,11 @@ namespace Cofoundry.Web.Admin
         /// <param name="resourcePathPrefix">The path prefix to your module e.g. '/admin/modules/'</param>
         public ModuleRouteLibrary(
             string routePrefix, 
-            string resourcePathPrefix, 
-            IStaticResourceFileProvider staticResourceFileProvider, 
-            OptimizationSettings optimizationSettings
+            string resourcePathPrefix
             )
         {
-            _staticResourceFileProvider = staticResourceFileProvider;
-            _optimizationSettings = optimizationSettings;
-
             ModuleFolderName = TextFormatter.Pascalize(routePrefix);
-            ResourcePrefix = resourcePathPrefix + ModuleFolderName.ToLowerInvariant() + "/";
+            ResourcePrefix = resourcePathPrefix + ModuleFolderName + "/";
             StaticResourcePrefix = FilePathHelper.CombineVirtualPath(ResourcePrefix, CONTENT_FOLDER);
             UrlPrefix = RouteConstants.AdminAreaPrefix + "/" + routePrefix;
         }
@@ -97,19 +88,6 @@ namespace Cofoundry.Web.Admin
 
         public string JsFile(string fileName)
         {
-            fileName = Path.GetFileNameWithoutExtension(fileName);
-
-            // check for a minified resource first
-            if (!Debugger.IsAttached && !_optimizationSettings.ForceBundling)
-            {
-                var minPath = FilePathHelper.CombineVirtualPath(StaticResourcePrefix, "js", fileName + "_min.js");
-
-                if (_staticResourceFileProvider.GetFileInfo(minPath).Exists)
-                {
-                    return minPath;
-                }
-            }
-
             return FilePathHelper.CombineVirtualPath(StaticResourcePrefix, "js", fileName + ".js");
         }
 

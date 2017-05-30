@@ -7,10 +7,18 @@ namespace Cofoundry.Web.Admin
 {
     public class VisualEditorEmbeddedResourceRouteRegistration : IEmbeddedResourceRouteRegistration
     {
+        private readonly IAdminRouteLibrary _adminRouteLibrary;
+
+        public VisualEditorEmbeddedResourceRouteRegistration(
+            IAdminRouteLibrary adminRouteLibrary
+            )
+        {
+            _adminRouteLibrary = adminRouteLibrary;
+        }
+
         public IEnumerable<string> GetEmbeddedResourcePaths()
         {
-            yield return VisualEditorRouteLibrary.Js.JsFolderPath;
-            yield return VisualEditorRouteLibrary.StaticContent.EmbeddedResourceRegistrationPath;
+            yield return _adminRouteLibrary.VisualEditor.StaticResourcePrefix;
         }
     }
 }

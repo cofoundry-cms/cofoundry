@@ -14,14 +14,14 @@ namespace Cofoundry.Web.Admin
     /// register angular admin modules that follow a standard pattern. RegisterRoutes needs to be manually called at the 
     /// point at which we want to routes added to the routing table, otherwise the rest should happen automatically.
     /// </summary>
-    public class StandardAngularModuleRegistrationBootstrapper : IEmbeddedResourceRouteRegistration, IBundleRegistration, IAdminModuleRegistration, IRouteRegistration
+    public class StandardAngularModuleRegistrationBootstrapper : IEmbeddedResourceRouteRegistration, IAdminModuleRegistration, IRouteRegistration
     {
         #region constructor
 
-        private readonly IStandardAngularModuleRegistration[] _standardAdminModuleRegistrations;
+        private readonly IEnumerable<IStandardAngularModuleRegistration> _standardAdminModuleRegistrations;
 
         public StandardAngularModuleRegistrationBootstrapper(
-            IStandardAngularModuleRegistration[] standardAdminModuleRegistrations
+            IEnumerable<IStandardAngularModuleRegistration> standardAdminModuleRegistrations
             )
         {
             _standardAdminModuleRegistrations = standardAdminModuleRegistrations;
@@ -41,8 +41,6 @@ namespace Cofoundry.Web.Admin
 
         public void RegisterRoutes(IRouteBuilder routes)
         {
-            var controllerNamespace = new string[] { typeof(StandardModuleController).Namespace };
-
             foreach (var registration in _standardAdminModuleRegistrations)
             {
                 var routeLibrary = GetRouteLibrary(registration);
@@ -50,7 +48,9 @@ namespace Cofoundry.Web.Admin
                 routes.MapRoute(
                     "Cofoundry Admin Module - " + registration.RoutePrefix,
                     RouteConstants.AdminAreaPrefix + "/" + registration.RoutePrefix,
-                    new { controller = "StandardModule", action = "Index", routeLibrary = routeLibrary, Area = RouteConstants.AdminAreaName }
+                    new { controller = "StandardModule", action = "Index", Area = RouteConstants.AdminAreaName },
+                    null,
+                    new { RouteLibrary = routeLibrary }
                     );
             }
         }
@@ -59,27 +59,9 @@ namespace Cofoundry.Web.Admin
         {
             foreach (var registration in _standardAdminModuleRegistrations)
             {
-                var jsRouteLibrary = GetJsRouteLibrary(registration);
-                yield return jsRouteLibrary.JsFolderPath;
-            }
-        }
+                var routeLibrary = GetRouteLibrary(registration);
 
-        public void RegisterBundles(System.Web.Optimization.BundleCollection bundles)
-        {
-            foreach (var registration in _standardAdminModuleRegistrations)
-            {
-                var jsRouteLibrary = GetJsRouteLibrary(registration);
-
-                bundles.AddMainAngularScriptBundle(jsRouteLibrary,
-                    AngularJsDirectoryLibrary.Bootstrap,
-                    AngularJsDirectoryLibrary.Routes,
-                    AngularJsDirectoryLibrary.Filters,
-                    AngularJsDirectoryLibrary.DataServices,
-                    AngularJsDirectoryLibrary.UIComponents);
-
-                bundles.AddAngularTemplateBundle(jsRouteLibrary,
-                    AngularJsDirectoryLibrary.Routes,
-                    AngularJsDirectoryLibrary.UIComponents);
+                yield return routeLibrary.StaticResourcePrefix;
             }
         }
 
@@ -87,36 +69,34 @@ namespace Cofoundry.Web.Admin
 
         #region private helpers
 
-        private ModuleRouteLibrary GetRouteLibrary(IStandardAngularModuleRegistration registration)
+        private AngularModuleRouteLibrary GetRouteLibrary(IStandardAngularModuleRegistration registration)
         {
-            ModuleRouteLibrary routeLibrary;
+            AngularModuleRouteLibrary routeLibrary;
 
             if (registration is IInternalAngularModuleRegistration)
             {
                 // Internal modules are in a different folder format to prevent name clashes
-                routeLibrary = new ModuleRouteLibrary(registration.RoutePrefix, RouteConstants.InternalModuleResourcePathPrefix);
+                routeLibrary = new AngularModuleRouteLibrary(
+                    registration.RoutePrefix, 
+                    RouteConstants.InternalModuleResourcePathPrefix
+                    );
             }
             else if (registration is IPluginAngularModuleRegistration)
             {
                 // Internal modules are in a different folder format to prevent name clashes
-                routeLibrary = new ModuleRouteLibrary(registration.RoutePrefix, RouteConstants.PluginModuleResourcePathPrefix);
+                routeLibrary = new AngularModuleRouteLibrary(
+                    registration.RoutePrefix, 
+                    RouteConstants.PluginModuleResourcePathPrefix
+                    );
             }
             else
             {
-                routeLibrary = new ModuleRouteLibrary(registration.RoutePrefix);
+                routeLibrary = new AngularModuleRouteLibrary(registration.RoutePrefix);
             }
 
             return routeLibrary;
         }
-
-        private ModuleJsRouteLibrary GetJsRouteLibrary(IStandardAngularModuleRegistration registration)
-        {
-            var routeLibrary = GetRouteLibrary(registration);
-            var jsRouteLibrary = new ModuleJsRouteLibrary(routeLibrary);
-
-            return jsRouteLibrary;
-        }
-
+        
         #endregion
     }
 }

@@ -13,17 +13,20 @@ namespace Cofoundry.Web.Admin
     public class SetupPageActionFactory : ISetupPageActionFactory
     {
         private readonly IQueryExecutor _queryExecutor;
+        private readonly IAdminRouteLibrary _adminRouteLibrary;
 
         public SetupPageActionFactory(
-            IQueryExecutor queryExecutor
+            IQueryExecutor queryExecutor,
+            IAdminRouteLibrary adminRouteLibrary
             )
         {
             _queryExecutor = queryExecutor;
+            _adminRouteLibrary = adminRouteLibrary;
         }
 
         public ActionResult GetSetupPageAction(Controller controller)
         {
-            return controller.Redirect(SetupRouteLibrary.Urls.Setup());
+            return controller.Redirect(_adminRouteLibrary.Setup.Setup());
         }
     }
 }

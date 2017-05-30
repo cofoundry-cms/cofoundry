@@ -47,7 +47,7 @@ namespace Cofoundry.Web.Admin
                 vm.SelectedModule = selectedItem.Module;
             }
 
-            var viewPath = ViewPathFormatter.View("Shared", "Components/MainMenu");
+            var viewPath = ViewPathFormatter.View("Shared", "Components/AdminMenu");
 
             return View(viewPath, vm);
         }

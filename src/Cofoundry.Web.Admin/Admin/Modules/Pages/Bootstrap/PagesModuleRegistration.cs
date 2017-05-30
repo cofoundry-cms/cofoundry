@@ -8,6 +8,15 @@ namespace Cofoundry.Web.Admin
 {
     public class PagesModuleRegistration: IInternalAngularModuleRegistration
     {
+        private readonly IAdminRouteLibrary _adminRouteLibrary;
+
+        public PagesModuleRegistration(
+            IAdminRouteLibrary adminRouteLibrary
+            )
+        {
+            _adminRouteLibrary = adminRouteLibrary;
+        }
+
         public AdminModule GetModule()
         {
             var module = new AdminModule()
@@ -17,7 +26,7 @@ namespace Cofoundry.Web.Admin
                 Description = "Manage the pages in your site.",
                 MenuCategory = AdminModuleMenuCategory.ManageSite,
                 PrimaryOrdering = AdminModuleMenuPrimaryOrdering.Primary,
-                Url = PagesModuleRouteLibrary.Urls.List(),
+                Url = _adminRouteLibrary.Pages.List(),
                 RestrictedToPermission = new PageAdminModulePermission()
             };
 

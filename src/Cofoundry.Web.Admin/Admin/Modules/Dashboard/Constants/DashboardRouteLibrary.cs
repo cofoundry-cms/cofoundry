@@ -15,16 +15,8 @@ namespace Cofoundry.Web.Admin
 
         #region constructor
 
-        public DashboardRouteLibrary(
-            IStaticResourceFileProvider staticResourceFileProvider,
-            OptimizationSettings optimizationSettings
-            )
-            : base(
-                  RoutePrefix, 
-                  RouteConstants.InternalModuleResourcePathPrefix,
-                  staticResourceFileProvider,
-                  optimizationSettings
-                  )
+        public DashboardRouteLibrary()
+            : base(RoutePrefix, RouteConstants.InternalModuleResourcePathPrefix)
         {
         }
 

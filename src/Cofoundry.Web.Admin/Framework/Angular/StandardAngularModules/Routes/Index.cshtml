@@ -1,12 +1,12 @@
-﻿@inherits Cofoundry.Web.CofoundryPage<ModuleJsRouteLibrary>
+﻿@model AngularModuleRouteLibrary
 @using Cofoundry.Web.Admin
-
+@inject IAngularBootstrapper angularBootstrapper
 @{
     Layout = LayoutPaths.DefaultLayout;    
 }
 
 @section FooterScripts {
-    @AngularHelper.Bootstrap(Model, Cofoundry.CurrentUser)
+    @angularBootstrapper.Bootstrap(Model)
 }
 
 <div ng-view=""></div>

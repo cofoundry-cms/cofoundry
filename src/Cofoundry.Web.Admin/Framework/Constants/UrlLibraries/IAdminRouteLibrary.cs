@@ -7,6 +7,7 @@ namespace Cofoundry.Web.Admin
 {
     public interface IAdminRouteLibrary
     {
+        AccountRouteLibrary Account { get; }
         AuthRouteLibrary Auth { get; }
         CustomEntitiesRouteLibrary CustomEntities { get; }
         DashboardRouteLibrary Dashboard { get; }

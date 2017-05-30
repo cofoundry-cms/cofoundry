@@ -3,6 +3,7 @@ using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Primitives;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -54,12 +55,13 @@ namespace Cofoundry.Core.ResourceFiles
 
         public IFileInfo GetFileInfo(string subpath)
         {
-            if (string.IsNullOrEmpty(subpath) || !subpath.StartsWith(_restrictToPath))
+            if (string.IsNullOrEmpty(subpath) || !subpath.StartsWith(_restrictToPath, StringComparison.OrdinalIgnoreCase))
             {
                 return new NotFoundFileInfo(subpath);
             }
 
-            return _assemblyProvider.GetFileInfo(subpath);
+            var fileInfo = _assemblyProvider.GetFileInfo(subpath);
+            return fileInfo;
         }
 
         public IChangeToken Watch(string filter)

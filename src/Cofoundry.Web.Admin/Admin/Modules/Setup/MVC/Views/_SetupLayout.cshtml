@@ -1,9 +1,4 @@
-﻿@inherits System.Web.Mvc.WebViewPage
-@using System.Web.Mvc.Html
-@using Cofoundry.Web.Admin
-@using System.Web.Optimization
-
-@{
+﻿@{
     Layout = LayoutPaths.BaseLayout;
 }
 
@@ -14,7 +9,7 @@
 
 @section Styles
 {
-    @Styles.Render(AuthRouteLibrary.Css.Main)
+    @*@Styles.Render(AuthRouteLibrary.Css.Main)*@
     @RenderSection("Styles", required: false)
 }
 

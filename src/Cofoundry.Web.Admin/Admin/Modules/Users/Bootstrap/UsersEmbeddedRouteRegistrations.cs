@@ -5,11 +5,20 @@ using Cofoundry.Core.ResourceFiles;
 
 namespace Cofoundry.Web.Admin
 {
-    public class UsersResourceRouteRegistration : IEmbeddedResourceRouteRegistration
+    public class UsersEmbeddedRouteRegistrations : IEmbeddedResourceRouteRegistration
     {
+        private readonly IAdminRouteLibrary _adminRouteLibrary;
+
+        public UsersEmbeddedRouteRegistrations(
+            IAdminRouteLibrary adminRouteLibrary
+            )
+        {
+            _adminRouteLibrary = adminRouteLibrary;
+        }
+
         public IEnumerable<string> GetEmbeddedResourcePaths()
         {
-            yield return UsersRouteLibrary.Js.JsFolderPath;
+            yield return _adminRouteLibrary.Users.StaticResourcePrefix;
         }
     }
 }

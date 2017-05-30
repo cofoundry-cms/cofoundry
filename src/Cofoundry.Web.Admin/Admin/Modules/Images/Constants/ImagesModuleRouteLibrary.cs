@@ -7,28 +7,12 @@ namespace Cofoundry.Web.Admin
 {
     public class ImagesModuleRouteLibrary : AngularModuleRouteLibrary
     {
-        #region statics
-
         public const string RoutePrefix = "images";
-
-        public static readonly ImagesModuleRouteLibrary Urls = new ImagesModuleRouteLibrary();
-
-        public static readonly ModuleJsRouteLibrary Js = new ModuleJsRouteLibrary(Urls);
-
-        #endregion
 
         #region constructor
         
-        public ImagesModuleRouteLibrary(
-            IStaticResourceFileProvider staticResourceFileProvider,
-            OptimizationSettings optimizationSettings
-            )
-            : base(
-                  RoutePrefix, 
-                  RouteConstants.InternalModuleResourcePathPrefix,
-                  staticResourceFileProvider,
-                  optimizationSettings
-                  )
+        public ImagesModuleRouteLibrary()
+            : base(RoutePrefix, RouteConstants.InternalModuleResourcePathPrefix)
         {
         }
 

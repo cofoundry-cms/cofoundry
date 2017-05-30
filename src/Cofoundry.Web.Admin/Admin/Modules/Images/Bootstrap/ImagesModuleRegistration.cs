@@ -8,6 +8,15 @@ namespace Cofoundry.Web.Admin
 {
     public class ImagesModuleRegistration: IInternalAngularModuleRegistration
     {
+        private readonly IAdminRouteLibrary _adminRouteLibrary;
+
+        public ImagesModuleRegistration(
+            IAdminRouteLibrary adminRouteLibrary
+            )
+        {
+            _adminRouteLibrary = adminRouteLibrary;
+        }
+
         public AdminModule GetModule()
         {
             var module = new AdminModule()
@@ -17,7 +26,7 @@ namespace Cofoundry.Web.Admin
                 Description = "Manage the images in your site.",
                 MenuCategory = AdminModuleMenuCategory.ManageSite,
                 PrimaryOrdering = AdminModuleMenuPrimaryOrdering.Secondry,
-                Url = ImagesModuleRouteLibrary.Urls.List(),
+                Url = _adminRouteLibrary.Images.List(),
                 RestrictedToPermission = new ImageAssetAdminModulePermission()
             };
 

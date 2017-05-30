@@ -1,5 +1,5 @@
 ﻿@model Cofoundry.Web.Identity.LoginViewModel
-@inject IStaticFilePathFormatter staticFilePathFormatter
+@inject IStaticResourceReferenceRenderer staticResourceReferenceRenderer
 @inject IAdminRouteLibrary adminRouteLibrary
 
 @{
@@ -9,7 +9,7 @@
 
 @section FooterScripts
 {
-<script src="@staticFilePathFormatter.AppendVersion(adminRouteLibrary.Auth.LoginScriptPath)"></script>
+@staticResourceReferenceRenderer.ScriptTag(adminRouteLibrary.Auth, "Login")
 }
 
 <h1>Cofoundry</h1>
@@ -17,7 +17,7 @@
 <div class="wrap">
     <form method="post" class="form-horizontal">
 
-        <input name="ReturnUrl" type="hidden" value="@Request["ReturnUrl"]" />
+        <input name="ReturnUrl" id="ReturnUrl" type="hidden" value="@Context.Request.Query["ReturnUrl"]" />
 
         <fieldset>
             <div class="control-group">
@@ -36,8 +36,8 @@
                 </div>
             </div>
 
-            <label class="checkbox" for="RememberMe" )">
-                <input asp-for="RememberMe" class="check" />
+            <label class="checkbox" for="RememberMe">
+                <input asp-for="RememberMe" class="check" /> Remember me
             </label>
 
             <div class="actions">
@@ -51,6 +51,6 @@
     <p class="login-footer-links">
         <a id="forgotPasswordLink" href="@adminRouteLibrary.Auth.ForgotPassword()">Forgotten your password?</a>
         <br />
-        <a href="/">&lt; Back to @Cofoundry.Settings.GetApplicationName()</a>
+        <a href="/">&lt; Back to @await Cofoundry.Settings.GetApplicationNameAsync()</a>
     </p>
 </footer>

@@ -11,6 +11,8 @@ namespace Cofoundry.Web
     /// </summary>
     public interface ICurrentUserViewHelper
     {
+        Task EnsureInitializedAsync();
+
         /// <summary>
         /// Indicates whether the user is logged in
         /// </summary>

@@ -17,9 +17,8 @@ namespace Cofoundry.Web.Admin
             AngularModuleName = "cms." + AngularModuleIdentifier;
 
             var jsPrefix = moduleRouteLibrary.ModuleFolderName.ToLowerInvariant();
-            MainScriptPath = moduleRouteLibrary.JsFile(jsPrefix);
-            MainScriptPath = moduleRouteLibrary.JsFile(jsPrefix + "_templates");
-
+            MainScriptName = jsPrefix;
+            TemplateScriptName = jsPrefix + "_templates";
         }
             
         /// <summary>
@@ -36,11 +35,11 @@ namespace Cofoundry.Web.Admin
         /// <summary>
         /// Path to the angular module entry script.
         /// </summary>
-        public string MainScriptPath { get; private set; }
+        public string MainScriptName { get; private set; }
 
         /// <summary>
         /// Path to the angular template bundle.
         /// </summary>
-        public string TemplateScriptPath { get; private set; }
+        public string TemplateScriptName { get; private set; }
     }
 }

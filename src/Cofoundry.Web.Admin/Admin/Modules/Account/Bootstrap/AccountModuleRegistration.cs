@@ -8,6 +8,15 @@ namespace Cofoundry.Web.Admin
 {
     public class AccountModuleRegistration : IInternalAngularModuleRegistration
     {
+        private readonly IAdminRouteLibrary _adminRouteLibrary;
+
+        public AccountModuleRegistration(
+            IAdminRouteLibrary adminRouteLibrary
+            )
+        {
+            _adminRouteLibrary = adminRouteLibrary;
+        }
+
         public AdminModule GetModule()
         {
             var module = new AdminModule()
@@ -17,7 +26,7 @@ namespace Cofoundry.Web.Admin
                 Description = "Manage your user account.",
                 MenuCategory = AdminModuleMenuCategory.Settings,
                 PrimaryOrdering = AdminModuleMenuPrimaryOrdering.Last,
-                Url = AccountRouteLibrary.Urls.Details()
+                Url = _adminRouteLibrary.Account.Details()
             };
 
             return module;

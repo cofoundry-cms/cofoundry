@@ -389,9 +389,9 @@
     <Content Include="Admin\Modules\Auth\Content\js\ForgotPassword.js" />
     <Content Include="Admin\Modules\Auth\Content\js\Login_min.js" />
     <Content Include="Admin\Modules\Auth\Content\js\Login.js" />
-    <Content Include="Admin\Modules\Auth\MVC\Views\ChangePassword.js" />
-    <Content Include="Admin\Modules\Auth\MVC\Views\ForgotPassword.js" />
-    <Content Include="Admin\Modules\Auth\MVC\Views\Login.js" />
+    <Content Include="Admin\Modules\Auth\Mvc\Views\ChangePassword.js" />
+    <Content Include="Admin\Modules\Auth\Mvc\Views\ForgotPassword.js" />
+    <Content Include="Admin\Modules\Auth\Mvc\Views\Login.js" />
     <Content Include="Admin\Modules\CustomEntities\Content\js\customentities.js" />
     <Content Include="Admin\Modules\CustomEntities\Content\js\customentities_min.js" />
     <Content Include="Admin\Modules\CustomEntities\Content\js\customentities_templates.js" />
@@ -859,15 +859,15 @@
     <Content Include="packages.config">
       <SubType>Designer</SubType>
     </Content>
-    <Content Include="Admin\Modules\Auth\MVC\Views\ChangePassword.cshtml" />
-    <Content Include="Admin\Modules\Auth\MVC\Views\ForgotPassword.cshtml" />
-    <Content Include="Admin\Modules\Auth\MVC\Views\Login.cshtml" />
-    <Content Include="Admin\Modules\Auth\MVC\Views\ResetPassword.cshtml" />
-    <Content Include="Admin\Modules\Auth\MVC\Views\ResetPasswordComplete.cshtml" />
-    <Content Include="Admin\Modules\Auth\MVC\Views\ResetPasswordRequestInvalid.cshtml" />
-    <Content Include="Admin\Modules\Auth\MVC\Views\_LoginLayout.cshtml" />
+    <Content Include="Admin\Modules\Auth\Mvc\Views\ChangePassword.cshtml" />
+    <Content Include="Admin\Modules\Auth\Mvc\Views\ForgotPassword.cshtml" />
+    <Content Include="Admin\Modules\Auth\Mvc\Views\Login.cshtml" />
+    <Content Include="Admin\Modules\Auth\Mvc\Views\ResetPassword.cshtml" />
+    <Content Include="Admin\Modules\Auth\Mvc\Views\ResetPasswordComplete.cshtml" />
+    <Content Include="Admin\Modules\Auth\Mvc\Views\ResetPasswordRequestInvalid.cshtml" />
+    <Content Include="Admin\Modules\Auth\Mvc\Views\_LoginLayout.cshtml" />
     <Content Include="Admin\Modules\CustomEntities\Mvc\Views\Index.cshtml" />
-    <Content Include="Admin\Modules\Setup\MVC\Views\Index.cshtml" />
+    <Content Include="Admin\Modules\Setup\Mvc\Views\Index.cshtml" />
     <Content Include="Admin\Modules\Shared\config.rb" />
     <Content Include="Admin\Modules\Shared\Content\css\lib\font-awesome\fonts\fontawesome-webfont.eot" />
     <Content Include="Admin\Modules\Shared\Content\css\lib\font-awesome\fonts\fontawesome-webfont.ttf" />
@@ -890,14 +890,14 @@
     <Content Include="Admin\Modules\Shared\Js\UIComponents\Table\_table.scss" />
     <Content Include="Admin\Modules\Shared\Js\UIComponents\Tags\_tag.scss" />
     <Content Include="Admin\Modules\Shared\Js\UIComponents\Vimeo\_vimeo.scss" />
-    <Content Include="Admin\Modules\Shared\MVC\Views\Error.cshtml" />
-    <Content Include="Admin\Modules\Shared\MVC\Views\Forbidden.cshtml" />
-    <Content Include="Admin\Modules\Shared\MVC\Views\Layouts\_BaseLayout.cshtml" />
-    <Content Include="Admin\Modules\Shared\MVC\Views\Layouts\_DefaultLayout.cshtml" />
-    <Content Include="Admin\Modules\Shared\MVC\Views\Layouts\_MinimalLayout.cshtml" />
-    <Content Include="Admin\Modules\Shared\MVC\Views\Layouts\_SharedLayout.cshtml" />
-    <Content Include="Admin\Modules\Shared\MVC\Views\NotFound.cshtml" />
-    <Content Include="Admin\Modules\Shared\MVC\Views\Components\MainMenu.cshtml" />
+    <Content Include="Admin\Modules\Shared\Mvc\Views\Error.cshtml" />
+    <Content Include="Admin\Modules\Shared\Mvc\Views\Forbidden.cshtml" />
+    <Content Include="Admin\Modules\Shared\Mvc\Views\Layouts\_BaseLayout.cshtml" />
+    <Content Include="Admin\Modules\Shared\Mvc\Views\Layouts\_DefaultLayout.cshtml" />
+    <Content Include="Admin\Modules\Shared\Mvc\Views\Layouts\_MinimalLayout.cshtml" />
+    <Content Include="Admin\Modules\Shared\Mvc\Views\Layouts\_SharedLayout.cshtml" />
+    <Content Include="Admin\Modules\Shared\Mvc\Views\NotFound.cshtml" />
+    <Content Include="Admin\Modules\Shared\Mvc\Views\Components\AdminMenu.cshtml" />
     <Content Include="Admin\Modules\Shared\Sass\Common\_heading.scss" />
     <Content Include="Admin\Modules\Shared\Sass\Common\_link.scss" />
     <Content Include="Admin\Modules\Shared\Sass\config\_colors.scss" />
@@ -919,7 +919,7 @@
     <Content Include="Admin\Modules\VisualEditor\Sass\site-viewer.scss" />
     <Content Include="Admin\Modules\Users\Mvc\Views\Index.cshtml" />
     <Content Include="Build\package.json" />
-    <EmbeddedResource Include="Framework\StandardAngularModules\Routes\Index.cshtml" />
+    <EmbeddedResource Include="Framework\Angular\StandardAngularModules\Routes\Index.cshtml" />
     <Content Include="Cofoundry.Web.Admin.nuspec" />
     <Content Include="Nuget\Content\Web.config.install.xdt" />
     <Content Include="Nuget\Content\Web.config.uninstall.xdt" />
@@ -947,15 +947,17 @@
     <Content Include="Admin\Modules\VisualEditor\Sass\sassutils\_functions.scss" />
     <Content Include="Admin\Modules\VisualEditor\Sass\sassutils\_mixins.scss" />
     <Content Include="Admin\Modules\VisualEditor\Sass\sassutils\_vendor.scss" />
-    <Content Include="Admin\Modules\VisualEditor\MVC\Views\Frame.cshtml" />
+    <Content Include="Admin\Modules\VisualEditor\Mvc\Views\Frame.cshtml" />
     <Content Include="Admin\Modules\VisualEditor\Sass\blocks\_frame.scss" />
     <Content Include="Admin\Modules\VisualEditor\Sass\blocks\_page-ui.scss" />
-    <Content Include="Admin\Modules\VisualEditor\MVC\Views\Toolbar.cshtml" />
-    <Content Include="Admin\Modules\Setup\MVC\Views\_SetupLayout.cshtml" />
+    <Content Include="Admin\Modules\VisualEditor\Mvc\Views\Toolbar.cshtml" />
+    <Content Include="Admin\Modules\Setup\Mvc\Views\_SetupLayout.cshtml" />
     <Content Include="Admin\Modules\Shared\Sass\Core\_setup.scss" />
     <Content Include="Admin\Modules\Shared\Sass\Core\_dashboard.scss" />
-    <Content Include="Admin\Modules\Shared\MVC\Views\_ViewImports.cshtml" />
-    <Content Include="Admin\Modules\_ViewImports.cshtml" />
+    <Content Include="Admin\Modules\Shared\Mvc\Views\_ViewImports.cshtml" />
+    <Content Include="Admin\Modules\Auth\Mvc\Views\_ViewImports.cshtml" />
+    <Content Include="Admin\Modules\Setup\Mvc\Views\_ViewImports.cshtml" />
+    <Content Include="Admin\Modules\VisualEditor\Mvc\Views\_ViewImports.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -1007,7 +1009,7 @@
     <Compile Include="Admin\Modules\Account\Constants\AccountRouteLibrary.cs" />
     <Compile Include="Admin\Modules\Auth\Bootstrap\AuthEmbeddedResourceRouteRegistration.cs" />
     <Compile Include="Admin\Modules\Auth\Constants\AuthRouteLibrary.cs" />
-    <Compile Include="Admin\Modules\Auth\MVC\Controllers\AuthController.cs" />
+    <Compile Include="Admin\Modules\Auth\Mvc\Controllers\AuthController.cs" />
     <Compile Include="Admin\Modules\CustomEntities\Bootstrap\CustomEntitiesAdminModuleRegistration.cs" />
     <Compile Include="Admin\Modules\CustomEntities\Bootstrap\CustomEntitiesEmbeddedRouteRegistrations.cs" />
     <Compile Include="Admin\Modules\CustomEntities\Bootstrap\CustomEntitiesRouteRegistration.cs" />
@@ -1030,26 +1032,21 @@
     <Compile Include="Admin\Modules\Roles\Constants\RolesRouteLibrary.cs" />
     <Compile Include="Admin\Modules\Settings\Bootstrap\SettingsModuleRegistration.cs" />
     <Compile Include="Admin\Modules\Settings\Constants\SettingsRouteLibrary.cs" />
-    <Compile Include="Admin\Modules\Setup\Bootstrap\SetupBundleRegistration.cs" />
     <Compile Include="Admin\Modules\Setup\Bootstrap\SetupEmbeddedResourceRouteRegistration.cs" />
     <Compile Include="Admin\Modules\Setup\Constants\SetupRouteLibrary.cs" />
-    <Compile Include="Admin\Modules\Setup\MVC\Controllers\SetupController.cs" />
+    <Compile Include="Admin\Modules\Setup\Mvc\Controllers\SetupController.cs" />
     <Compile Include="Admin\Modules\Shared\Bootstrap\SharedBundleRegistration.cs" />
     <Compile Include="Admin\Modules\Shared\Bootstrap\SharedEmbeddedResourceRouteRegistration.cs" />
     <Compile Include="Admin\Modules\Shared\Bootstrap\SharedModuleViewLocationRegistration.cs" />
     <Compile Include="Admin\Modules\Shared\Constants\SharedRouteLibrary.cs" />
-    <Compile Include="Admin\Modules\Shared\MVC\ViewComponents\AdminMenuViewComponent.cs" />
-    <Compile Include="Admin\Modules\Shared\MVC\Helpers\AngularHelper.cs" />
-    <Compile Include="Admin\Modules\Shared\MVC\Models\AdminMenuViewModel.cs" />
+    <Compile Include="Admin\Modules\Shared\Mvc\ViewComponents\AdminMenuViewComponent.cs" />
+    <Compile Include="Admin\Modules\Shared\Mvc\Models\AdminMenuViewModel.cs" />
     <Compile Include="Admin\Modules\VisualEditor\Bootstrap\VisualEditorBundleRegistration.cs" />
     <Compile Include="Admin\Modules\VisualEditor\Bootstrap\VisualEditorEmbeddedResourceRouteRegistration.cs" />
-    <Compile Include="Admin\Modules\VisualEditor\Constants\VisualEditorCssRouteLibrary.cs" />
-    <Compile Include="Admin\Modules\VisualEditor\Constants\VisualEditorJsRouteLibrary.cs" />
     <Compile Include="Admin\Modules\VisualEditor\Constants\VisualEditorRouteLibrary.cs" />
-    <Compile Include="Admin\Modules\VisualEditor\MVC\ActionFilters\VisualEditorContentFilterAttribute.cs" />
-    <Compile Include="Admin\Modules\VisualEditor\MVC\ActionFilters\VisualEditorContentStream.cs" />
-    <Compile Include="Admin\Modules\VisualEditor\MVC\Controllers\VisualEditorController.cs" />
-    <Compile Include="Admin\Modules\Users\Bootstrap\UsersBundleRegistration.cs" />
+    <Compile Include="Admin\Modules\VisualEditor\Mvc\ActionFilters\VisualEditorContentFilterAttribute.cs" />
+    <Compile Include="Admin\Modules\VisualEditor\Mvc\ActionFilters\VisualEditorContentStream.cs" />
+    <Compile Include="Admin\Modules\VisualEditor\Mvc\Controllers\VisualEditorController.cs" />
     <Compile Include="Admin\Modules\Users\Bootstrap\UsersEmbeddedRouteRegistrations.cs" />
     <Compile Include="Admin\Modules\Users\Bootstrap\UsersModuleRegistration.cs" />
     <Compile Include="Admin\Modules\Users\Bootstrap\UsersRouteRegistration.cs" />
@@ -1057,12 +1054,11 @@
     <Compile Include="Admin\Modules\Users\Mvc\Controllers\UsersModuleController.cs" />
     <Compile Include="Admin\Modules\Users\Mvc\Models\UsersModuleOptions.cs" />
     <Compile Include="App_Start\MvcFilterConfigurationStartupTask.cs" />
+    <Compile Include="Framework\Angular\AngularBootstrapper.cs" />
+    <Compile Include="Framework\Angular\IAngularBootstrapper.cs" />
     <Compile Include="Framework\Bootstrap\CofoundryAdminAssemblyResourceRegistration.cs" />
     <Compile Include="Framework\Bootstrap\CofoundryAdminDependencyRegistration.cs" />
-    <Compile Include="Framework\Bundling\AngularResourceRegistration.cs" />
-    <Compile Include="Framework\Bundling\Old\AngularTemplateBundle.cs" />
     <Compile Include="Framework\Bundling\Old\AngularTemplateBundleTransform.cs" />
-    <Compile Include="Framework\Bundling\Old\BundlingExtensions.cs" />
     <Compile Include="Framework\Constants\AdminViewPaths.cs" />
     <Compile Include="Framework\Constants\LayoutPaths.cs" />
     <Compile Include="Framework\Constants\RouteConstants.cs" />
@@ -1076,11 +1072,13 @@
     <Compile Include="Framework\ControllerBase\BaseAdminMvcController.cs" />
     <Compile Include="Framework\Filters\AdminAuthorizeAttribute.cs" />
     <Compile Include="Framework\Helpers\SettingsViewHelperExtensions.cs" />
-    <Compile Include="Framework\StandardAngularModules\IPluginAngularModuleRegistration.cs" />
-    <Compile Include="Framework\StandardAngularModules\IInternalAngularModuleRegistration.cs" />
-    <Compile Include="Framework\StandardAngularModules\IStandardAngularModuleRegistration.cs" />
-    <Compile Include="Framework\StandardAngularModules\Routes\StandardModuleController.cs" />
-    <Compile Include="Framework\StandardAngularModules\StandardAngularModuleBootstrapper.cs" />
+    <Compile Include="Framework\Angular\StandardAngularModules\IPluginAngularModuleRegistration.cs" />
+    <Compile Include="Framework\Angular\StandardAngularModules\IInternalAngularModuleRegistration.cs" />
+    <Compile Include="Framework\Angular\StandardAngularModules\IStandardAngularModuleRegistration.cs" />
+    <Compile Include="Framework\Angular\StandardAngularModules\Routes\StandardModuleController.cs" />
+    <Compile Include="Framework\Angular\StandardAngularModules\StandardAngularModuleBootstrapper.cs" />
+    <Compile Include="Framework\UI\IStaticResourceReferenceRenderer.cs" />
+    <Compile Include="Framework\UI\StaticResourceReferenceRenderer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Admin\Modules\Setup\Framework\SetupPageActionFactory.cs" />
   </ItemGroup>
@@ -1131,7 +1129,7 @@
   </ProjectExtensions>
   <Target Name="BeforeBuild">
     <ItemGroup>
-      <EmbeddedResource Include="admin\modules\*\mvc\views\**\*.cshtml;admin\modules\*\mvc\views\**\*.js;admin\modules\*\js\**\*.*;admin\modules\*\content\**\*.*;" />
+      <EmbeddedResource Include="Admin\Modules\*\Mvc\Views\**\*.cshtml;Admin\Modules\*\Mvc\Views\**\*.js;Admin\Modules\*\Content\**\*.*;" />
     </ItemGroup>
   </Target>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

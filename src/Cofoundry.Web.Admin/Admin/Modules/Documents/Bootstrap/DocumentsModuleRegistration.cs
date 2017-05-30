@@ -8,6 +8,15 @@ namespace Cofoundry.Web.Admin
 {
     public class DocumentsModuleRegistration : IInternalAngularModuleRegistration
     {
+        private readonly IAdminRouteLibrary _adminRouteLibrary;
+
+        public DocumentsModuleRegistration(
+            IAdminRouteLibrary adminRouteLibrary
+            )
+        {
+            _adminRouteLibrary = adminRouteLibrary;
+        }
+
         public AdminModule GetModule()
         {
             var module = new AdminModule()
@@ -17,7 +26,7 @@ namespace Cofoundry.Web.Admin
                 Description = "Manage the documents in your site.",
                 MenuCategory = AdminModuleMenuCategory.ManageSite,
                 PrimaryOrdering = AdminModuleMenuPrimaryOrdering.Secondry,
-                Url = DocumentsModuleRouteLibrary.Urls.List(),
+                Url = _adminRouteLibrary.Documents.List(),
                 RestrictedToPermission = new DocumentAssetAdminModulePermission()
             };
 

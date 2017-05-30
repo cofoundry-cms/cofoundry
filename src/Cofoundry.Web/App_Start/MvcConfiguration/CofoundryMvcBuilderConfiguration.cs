@@ -1,5 +1,6 @@
 ﻿using Cofoundry.Core;
 using Cofoundry.Domain;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.Extensions.DependencyInjection;
@@ -43,6 +44,7 @@ namespace Cofoundry.Web
         public void Configure(IMvcBuilder mvcBuilder)
         {
             // TODO: make this configurable
+            mvcBuilder.Services.AddScoped<IAuthorizationHandler, UserAreaAuthorizationHandler>();
             mvcBuilder.Services.AddAuthorization(options =>
             {
                 foreach (var _userAreaRepository in _userAreaRepository.GetAll())

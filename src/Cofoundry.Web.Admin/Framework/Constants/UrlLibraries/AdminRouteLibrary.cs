@@ -9,6 +9,7 @@ namespace Cofoundry.Web.Admin
     {
         public AdminRouteLibrary()
         {
+            Account = new AccountRouteLibrary();
             Auth = new AuthRouteLibrary();
             CustomEntities = new CustomEntitiesRouteLibrary();
             Dashboard = new DashboardRouteLibrary();
@@ -25,6 +26,7 @@ namespace Cofoundry.Web.Admin
             VisualEditor = new VisualEditorRouteLibrary();
         }
 
+        public AccountRouteLibrary Account { get; private set; }
         public AuthRouteLibrary Auth { get; private set; }
         public CustomEntitiesRouteLibrary CustomEntities { get; private set; }
         public DashboardRouteLibrary Dashboard { get; private set; }

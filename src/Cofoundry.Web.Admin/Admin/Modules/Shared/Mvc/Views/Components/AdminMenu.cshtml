@@ -1,21 +1,16 @@
-﻿@inherits CofoundryPage<AdminMenuViewModel>
-@using System.Web.Mvc
-@using Cofoundry.Web
-@using Cofoundry.Web.Admin
-@using Cofoundry.Domain
-@using System.Linq
-
-@{
-    Layout = null;
+﻿@model AdminMenuViewModel
+@inject IAdminRouteLibrary adminRouteLibrary
+@{ 
+    await Cofoundry.CurrentUser.EnsureInitializedAsync();
 }
 @functions
 {
-    IHtmlString ActiveIfCategory(AdminModuleMenuCategory category, string additionalCls = null)
+    IHtmlContent ActiveIfCategory(AdminModuleMenuCategory category, string additionalCls = null)
     {
         return Cofoundry.Html.TextIf(Model.SelectedCategory == category, "selected");
     }
 
-    IHtmlString ActiveIfModule(AdminModule module)
+    IHtmlContent ActiveIfModule(AdminModule module)
     {
         return Cofoundry.Html.TextIf(module == Model.SelectedModule, "active");
     }
@@ -65,7 +60,7 @@
     @if (Cofoundry.CurrentUser.IsLoggedIn)
     {
         <div class="logout">
-            <a href="@AuthRouteLibrary.Urls.LogOut()">Logout</a>
+            <a href="@adminRouteLibrary.Auth.LogOut()">Logout</a>
         </div>
 
         <div class="view-site">

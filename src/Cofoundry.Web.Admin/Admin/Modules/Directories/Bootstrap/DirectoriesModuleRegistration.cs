@@ -8,6 +8,15 @@ namespace Cofoundry.Web.Admin
 {
     public class DirectoriesModuleRegistration: IInternalAngularModuleRegistration
     {
+        private readonly IAdminRouteLibrary _adminRouteLibrary;
+
+        public DirectoriesModuleRegistration(
+            IAdminRouteLibrary adminRouteLibrary
+            )
+        {
+            _adminRouteLibrary = adminRouteLibrary;
+        }
+
         public AdminModule GetModule()
         {
             var module = new AdminModule()
@@ -17,7 +26,7 @@ namespace Cofoundry.Web.Admin
                 Description = "Manage the directories in your site.",
                 MenuCategory = AdminModuleMenuCategory.ManageSite,
                 PrimaryOrdering = AdminModuleMenuPrimaryOrdering.Secondry,
-                Url = DirectoriesRouteLibrary.Urls.List(),
+                Url = _adminRouteLibrary.Directories.List(),
                 RestrictedToPermission = new WebDirectoryAdminModulePermission()
             };
 

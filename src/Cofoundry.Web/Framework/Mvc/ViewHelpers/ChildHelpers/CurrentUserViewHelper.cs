@@ -17,10 +17,11 @@ namespace Cofoundry.Web
         private readonly IUserContextService _userContextServiceService;
         private readonly IQueryExecutor _queryExecutor;
 
-        private Lazy<IUserContext> _userContext;
-        private Lazy<UserMicroSummary> _user;
-        private Lazy<RoleDetails> _role;
-         
+        private IUserContext _userContext = null;
+        private UserMicroSummary _user = null;
+        private RoleDetails _role = null;
+        private bool isInitialized = false;
+
         public CurrentUserViewHelper(
             IUserContextService userContextServiceService,
             IQueryExecutor queryExecutor
@@ -28,31 +29,19 @@ namespace Cofoundry.Web
         {
             _userContextServiceService = userContextServiceService;
             _queryExecutor = queryExecutor;
-
-            // TODO: Wpork out how this should instantiate
-            //_userContext = new Lazy<IUserContext>(InitUserContext);
-            //_user = new Lazy<UserMicroSummary>(InitUser);
-            //_role = new Lazy<RoleDetails>(InitRole);
-        }
-
-        private Task<IUserContext> InitUserContextAsync()
-        {
-            return _userContextServiceService.GetCurrentContextAsync();
-        }
-
-        private Task<UserMicroSummary> InitUserAsync()
-        {
-            if (!Context.UserId.HasValue) return null;
-
-            return _queryExecutor.GetByIdAsync<UserMicroSummary>(Context.UserId.Value);
-        }
-
-        private Task<RoleDetails> InitRoleAsync()
-        {
-            return _queryExecutor.ExecuteAsync(new GetRoleDetailsByIdQuery(Context.RoleId));
         }
 
         #endregion
+
+        public async Task EnsureInitializedAsync()
+        {
+            _userContext = await _userContextServiceService.GetCurrentContextAsync();
+            if (!_userContext.UserId.HasValue) return;
+
+            _user = await _queryExecutor.GetByIdAsync<UserMicroSummary>(_userContext.UserId.Value);
+            _role = await _queryExecutor.ExecuteAsync(new GetRoleDetailsByIdQuery(_userContext.RoleId));
+            isInitialized = true;
+        }
 
         /// <summary>
         /// Indicates whether the user is logged in
@@ -84,7 +73,11 @@ namespace Cofoundry.Web
         {
             get
             {
-                return _userContext.Value;
+                if (_userContext == null)
+                {
+                    throw new InvalidOperationException("You must call EnsureInitializedAsync() before accessing properties on the CurrentUserViewHelper.");
+                }
+                return _userContext;
             }
         }
 
@@ -95,7 +88,11 @@ namespace Cofoundry.Web
         {
             get
             {
-                return _user.Value;
+                if (!isInitialized)
+                {
+                    throw new InvalidOperationException("You must call EnsureInitializedAsync() before accessing properties on the CurrentUserViewHelper.");
+                }
+                return _user;
             }
         }
 
@@ -106,7 +103,11 @@ namespace Cofoundry.Web
         {
             get
             {
-                return _role.Value;
+                if (!isInitialized)
+                {
+                    throw new InvalidOperationException("You must call EnsureInitializedAsync() before accessing properties on the CurrentUserViewHelper.");
+                }
+                return _role;
             }
         }
     }

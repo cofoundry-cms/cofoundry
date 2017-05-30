@@ -12,10 +12,10 @@ namespace Cofoundry.Web.Admin
 {
     public class CustomEntitiesRouteRegistration : IRouteRegistration
     {
-        private readonly ICustomEntityDefinition[] _customEntityModuleDefinition;
+        private readonly IEnumerable<ICustomEntityDefinition> _customEntityModuleDefinition;
 
         public CustomEntitiesRouteRegistration(
-            ICustomEntityDefinition[] customEntityModuleDefinition
+            IEnumerable<ICustomEntityDefinition> customEntityModuleDefinition
             )
         {
             _customEntityModuleDefinition = customEntityModuleDefinition;
@@ -26,7 +26,6 @@ namespace Cofoundry.Web.Admin
             foreach (var definition in _customEntityModuleDefinition)
             {
                 var routePrefix = SlugFormatter.ToSlug(definition.NamePlural);
-                var routeLibrary = new ModuleRouteLibrary(routePrefix);
 
                 routeBuilder.MapRoute(
                     "Custom Entity Admin Module - " + definition.NamePlural,

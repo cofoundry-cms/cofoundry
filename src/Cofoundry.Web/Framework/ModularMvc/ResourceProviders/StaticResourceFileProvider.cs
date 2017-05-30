@@ -41,7 +41,7 @@ namespace Cofoundry.Web
             {
                 foreach (var embeddedResourceRouteRegistration in embeddedResourceRouteRegistrations)
                 {
-                    var assembly = embeddedResourceRouteRegistrations.GetType().Assembly;
+                    var assembly = embeddedResourceRouteRegistration.GetType().Assembly;
                     var fileProvider = new EmbeddedFileProvider(assembly);
                     foreach (var route in embeddedResourceRouteRegistration.GetEmbeddedResourcePaths())
                     {
@@ -62,7 +62,8 @@ namespace Cofoundry.Web
 
         public IFileInfo GetFileInfo(string subpath)
         {
-            return _compositeFileProvider.GetFileInfo(subpath);
+            var fileInfo = _compositeFileProvider.GetFileInfo(subpath);
+            return fileInfo;
         }
 
         public IChangeToken Watch(string filter)

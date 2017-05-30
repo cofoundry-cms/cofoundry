@@ -54,7 +54,8 @@ namespace Cofoundry.Core.ResourceFiles
 
         public IFileInfo GetFileInfo(string subpath)
         {
-            return _embeddedResourceProvider.GetFileInfo(subpath);
+            var file =  _embeddedResourceProvider.GetFileInfo(subpath);
+            return file;
         }
 
         public IChangeToken Watch(string filter)

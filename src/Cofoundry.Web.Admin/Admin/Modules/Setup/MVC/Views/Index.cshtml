@@ -1,9 +1,11 @@
-﻿@{
+﻿@inject IAdminRouteLibrary adminRouteLibrary
+@inject IAngularBootstrapper angularBootstrapper
+@{
     Layout = SetupRouteLibrary.SetupLayoutPath;    
 }
 
 @section FooterScripts {
-    @AngularHelper.Bootstrap(SetupRouteLibrary.Js, Cofoundry.CurrentUser)
+    @angularBootstrapper.Bootstrap(adminRouteLibrary.Setup, Cofoundry.CurrentUser)
 }
 
 <h1>Cofoundry</h1>

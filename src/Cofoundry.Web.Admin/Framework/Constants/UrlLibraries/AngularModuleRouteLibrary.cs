@@ -21,11 +21,9 @@ namespace Cofoundry.Web.Admin
         /// urls e.g. products, users, honeybagders.
         /// </param>
         public AngularModuleRouteLibrary(
-            string routePrefix,
-            IStaticResourceFileProvider staticResourceFileProvider,
-            OptimizationSettings optimizationSettings
+            string routePrefix
             )
-            : base(routePrefix, RouteConstants.ModuleResourcePathPrefix, staticResourceFileProvider, optimizationSettings)
+            : base(routePrefix, RouteConstants.ModuleResourcePathPrefix)
         {
             Angular = new AngularScriptRoutes(this);
         }
@@ -42,11 +40,9 @@ namespace Cofoundry.Web.Admin
         /// <param name="resourcePathPrefix">The path prefix to your module e.g. '/admin/modules/'</param>
         public AngularModuleRouteLibrary(
             string routePrefix, 
-            string resourcePathPrefix,
-            IStaticResourceFileProvider staticResourceFileProvider,
-            OptimizationSettings optimizationSettings
+            string resourcePathPrefix
             )
-            : base(routePrefix, resourcePathPrefix, staticResourceFileProvider, optimizationSettings)
+            : base(routePrefix, resourcePathPrefix)
         {
             Angular = new AngularScriptRoutes(this);
         }

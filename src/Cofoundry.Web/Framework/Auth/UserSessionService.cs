@@ -51,7 +51,7 @@ namespace Cofoundry.Web
 
             var user = _httpContextAccessor.HttpContext?.User;
 
-            if (user == null || !user.Identity.IsAuthenticated) return null;
+            //if (user == null || !user.Identity.IsAuthenticated) return null;
 
             // Otherwise get it from the Identity
             var userId = IntParser.ParseOrNull(user.Identity.Name);
@@ -87,7 +87,7 @@ namespace Cofoundry.Web
             if (_httpContextAccessor.HttpContext?.User == null) return;
 
             userIdCache = null;
-            _httpContextAccessor.HttpContext?.Session?.Clear();
+            //_httpContextAccessor.HttpContext?.Session?.Clear();
 
             foreach (var customEntityDefinition in _userAreaRepository.GetAll())
             {

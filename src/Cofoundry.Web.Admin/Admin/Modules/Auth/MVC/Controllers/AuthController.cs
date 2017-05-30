@@ -12,7 +12,7 @@ using Microsoft.AspNetCore.Mvc.Filters;
 namespace Cofoundry.Web.Admin
 {
     [Area(RouteConstants.AdminAreaName)]
-    [Route(RouteConstants.AdminAreaPrefix + "/" + AuthRouteLibrary.RoutePrefix + "/" + "[action=login]")]
+    [Route(RouteConstants.AdminAreaPrefix + "/" + AuthRouteLibrary.RoutePrefix)]
     public class AuthController : Controller
     {
         private static readonly string CONTROLLER_NAME = "Auth";
@@ -23,18 +23,21 @@ namespace Cofoundry.Web.Admin
         private readonly IUserContextService _userContextService;
         private readonly AuthenticationControllerHelper _authenticationHelper;
         private readonly AccountManagementControllerHelper _accountManagementControllerHelper;
+        private readonly IAdminRouteLibrary _adminRouteLibrary;
 
         public AuthController(
             IQueryExecutor queryExecutor,
             IUserContextService userContextService,
             AuthenticationControllerHelper authenticationHelper,
-            AccountManagementControllerHelper accountManagementControllerHelper
+            AccountManagementControllerHelper accountManagementControllerHelper,
+            IAdminRouteLibrary adminRouteLibrary
             )
         {
             _queryExecutor = queryExecutor;
             _authenticationHelper = authenticationHelper;
             _userContextService = userContextService;
             _accountManagementControllerHelper = accountManagementControllerHelper;
+            _adminRouteLibrary = adminRouteLibrary;
         }
 
         #endregion
@@ -46,7 +49,7 @@ namespace Cofoundry.Web.Admin
             var settings = await _queryExecutor.GetAsync<InternalSettings>();
             if (!settings.IsSetup)
             {
-                context.Result = Redirect(SetupRouteLibrary.Urls.Setup());
+                context.Result = Redirect(_adminRouteLibrary.Setup.Setup());
             }
             else
             {
@@ -61,9 +64,10 @@ namespace Cofoundry.Web.Admin
         [Route("~" + RouteConstants.AdminUrlRoot)]
         public ActionResult DefaultRedirect()
         {
-            return RedirectPermanent(AuthRouteLibrary.Urls.Login());
+            return RedirectPermanent(_adminRouteLibrary.Auth.Login());
         }
 
+        [Route("")]
         [Route("login")]
         public async Task<ActionResult> Login(string email)
         {
@@ -83,7 +87,7 @@ namespace Cofoundry.Web.Admin
 
             if (result.IsAuthenticated && result.RequiresPasswordChange)
             {
-                return Redirect(AuthRouteLibrary.Urls.ChangePassword(returnUrl));
+                return Redirect(_adminRouteLibrary.Auth.ChangePassword(returnUrl));
             }
             else if (result.IsAuthenticated && !string.IsNullOrEmpty(result.ReturnUrl))
             {
@@ -103,7 +107,7 @@ namespace Cofoundry.Web.Admin
         public async Task<ActionResult> Logout()
         {
             await _authenticationHelper.LogoutAsync();
-            return Redirect(AuthRouteLibrary.Urls.Login(Request.Query["ReturnUrl"].FirstOrDefault()));
+            return Redirect(_adminRouteLibrary.Auth.Login(Request.Query["ReturnUrl"].FirstOrDefault()));
         }
 
         [Route("forgot-password")]
@@ -152,7 +156,7 @@ namespace Cofoundry.Web.Admin
 
             await _authenticationHelper.CompletePasswordResetAsync(this, vm, new PasswordChangedTemplate(), new CofoundryAdminUserArea());
             
-            return Redirect(AuthRouteLibrary.Urls.Login());
+            return Redirect(_adminRouteLibrary.Auth.Login());
         }
 
 
