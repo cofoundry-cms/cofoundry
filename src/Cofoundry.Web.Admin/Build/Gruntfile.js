@@ -75,7 +75,8 @@
                     process: function(src, filepath) {
                         var removeSpaces = src.replace(/[\t\n\r]/gm, "");
                         var escapeQuotes = removeSpaces.replace(/'/g, "\\'");
-                        var formattedSrc = "t.put('" + filepath + "','" + escapeQuotes + "');";
+                        var splitPath = filepath.split('..');
+                        var formattedSrc = "t.put('" + splitPath[1] + "','" + escapeQuotes + "');";
                         return formattedSrc;
                     }
                 },
@@ -83,6 +84,18 @@
                     '../Admin/Modules/Account/Js/Routes/*.html',
                 ],
                 dest: '../Admin/Modules/Account/Content/js/account_templates.js'
+            },
+            authChangePassword: {
+                src: ['../Admin/Modules/Auth/MVC/Views/ChangePassword.js'],
+                dest: '../Admin/Modules/Auth/Content/js/ChangePassword.js'
+            },
+            authForgotPassword: {
+                src: ['../Admin/Modules/Auth/MVC/Views/ForgotPassword.js'],
+                dest: '../Admin/Modules/Auth/Content/js/ForgotPassword.js'
+            },
+            authLogin: {
+                src: ['../Admin/Modules/Auth/MVC/Views/Login.js'],
+                dest: '../Admin/Modules/Auth/Content/js/Login.js'
             },
             customEntities: {
                 src: [
@@ -98,7 +111,8 @@
                     process: function(src, filepath) {
                         var removeSpaces = src.replace(/[\t\n\r]/gm, "");
                         var escapeQuotes = removeSpaces.replace(/'/g, "\\'");
-                        var formattedSrc = "t.put('" + filepath + "','" + escapeQuotes + "');";
+                        var splitPath = filepath.split('..');
+                        var formattedSrc = "t.put('" + splitPath[1] + "','" + escapeQuotes + "');";
                         return formattedSrc;
                     }
                 },
@@ -124,7 +138,8 @@
                     process: function(src, filepath) {
                         var removeSpaces = src.replace(/[\t\n\r]/gm, "");
                         var escapeQuotes = removeSpaces.replace(/'/g, "\\'");
-                        var formattedSrc = "t.put('" + filepath + "','" + escapeQuotes + "');";
+                        var splitPath = filepath.split('..');
+                        var formattedSrc = "t.put('" + splitPath[1] + "','" + escapeQuotes + "');";
                         return formattedSrc;
                     }
                 },
@@ -150,7 +165,8 @@
                     process: function(src, filepath) {
                         var removeSpaces = src.replace(/[\t\n\r]/gm, "");
                         var escapeQuotes = removeSpaces.replace(/'/g, "\\'");
-                        var formattedSrc = "t.put('" + filepath + "','" + escapeQuotes + "');";
+                        var splitPath = filepath.split('..');
+                        var formattedSrc = "t.put('" + splitPath[1] + "','" + escapeQuotes + "');";
                         return formattedSrc;
                     }
                 },
@@ -175,7 +191,8 @@
                     process: function(src, filepath) {
                         var removeSpaces = src.replace(/[\t\n\r]/gm, "");
                         var escapeQuotes = removeSpaces.replace(/'/g, "\\'");
-                        var formattedSrc = "t.put('" + filepath + "','" + escapeQuotes + "');";
+                        var splitPath = filepath.split('..');
+                        var formattedSrc = "t.put('" + splitPath[1] + "','" + escapeQuotes + "');";
                         return formattedSrc;
                     }
                 },
@@ -199,7 +216,8 @@
                     process: function(src, filepath) {
                         var removeSpaces = src.replace(/[\t\n\r]/gm, "");
                         var escapeQuotes = removeSpaces.replace(/'/g, "\\'");
-                        var formattedSrc = "t.put('" + filepath + "','" + escapeQuotes + "');";
+                        var splitPath = filepath.split('..');
+                        var formattedSrc = "t.put('" + splitPath[1] + "','" + escapeQuotes + "');";
                         return formattedSrc;
                     }
                 },
@@ -224,7 +242,8 @@
                     process: function(src, filepath) {
                         var removeSpaces = src.replace(/[\t\n\r]/gm, "");
                         var escapeQuotes = removeSpaces.replace(/'/g, "\\'");
-                        var formattedSrc = "t.put('" + filepath + "','" + escapeQuotes + "');";
+                        var splitPath = filepath.split('..');
+                        var formattedSrc = "t.put('" + splitPath[1] + "','" + escapeQuotes + "');";
                         return formattedSrc;
                     }
                 },
@@ -250,7 +269,8 @@
                     process: function(src, filepath) {
                         var removeSpaces = src.replace(/[\t\n\r]/gm, "");
                         var escapeQuotes = removeSpaces.replace(/'/g, "\\'");
-                        var formattedSrc = "t.put('" + filepath + "','" + escapeQuotes + "');";
+                        var splitPath = filepath.split('..');
+                        var formattedSrc = "t.put('" + splitPath[1] + "','" + escapeQuotes + "');";
                         return formattedSrc;
                     }
                 },
@@ -275,7 +295,8 @@
                     process: function(src, filepath) {
                         var removeSpaces = src.replace(/[\t\n\r]/gm, "");
                         var escapeQuotes = removeSpaces.replace(/'/g, "\\'");
-                        var formattedSrc = "t.put('" + filepath + "','" + escapeQuotes + "');";
+                        var splitPath = filepath.split('..');
+                        var formattedSrc = "t.put('" + splitPath[1] + "','" + escapeQuotes + "');";
                         return formattedSrc;
                     }
                 },
@@ -300,7 +321,8 @@
                     process: function(src, filepath) {
                         var removeSpaces = src.replace(/[\t\n\r]/gm, "");
                         var escapeQuotes = removeSpaces.replace(/'/g, "\\'");
-                        var formattedSrc = "t.put('" + filepath + "','" + escapeQuotes + "');";
+                        var splitPath = filepath.split('..');
+                        var formattedSrc = "t.put('" + splitPath[1] + "','" + escapeQuotes + "');";
                         return formattedSrc;
                     }
                 },
@@ -324,7 +346,8 @@
                     process: function(src, filepath) {
                         var removeSpaces = src.replace(/[\t\n\r]/gm, "");
                         var escapeQuotes = removeSpaces.replace(/'/g, "\\'");
-                        var formattedSrc = "t.put('" + filepath + "','" + escapeQuotes + "');";
+                        var splitPath = filepath.split('..');
+                        var formattedSrc = "t.put('" + splitPath[1] + "','" + escapeQuotes + "');";
                         return formattedSrc;
                     }
                 },
@@ -358,7 +381,8 @@
                     process: function(src, filepath) {
                         var removeSpaces = src.replace(/[\t\n\r]/gm, "");
                         var escapeQuotes = removeSpaces.replace(/'/g, "\\'");
-                        var formattedSrc = "t.put('" + filepath + "','" + escapeQuotes + "');";
+                        var splitPath = filepath.split('..');
+                        var formattedSrc = "t.put('" + splitPath[1] + "','" + escapeQuotes + "');";
                         return formattedSrc;
                     }
                 },
@@ -383,7 +407,8 @@
                     process: function(src, filepath) {
                         var removeSpaces = src.replace(/[\t\n\r]/gm, "");
                         var escapeQuotes = removeSpaces.replace(/'/g, "\\'");
-                        var formattedSrc = "t.put('" + filepath + "','" + escapeQuotes + "');";
+                        var splitPath = filepath.split('..');
+                        var formattedSrc = "t.put('" + splitPath[1] + "','" + escapeQuotes + "');";
                         return formattedSrc;
                     }
                 },
@@ -408,7 +433,8 @@
                     process: function(src, filepath) {
                         var removeSpaces = src.replace(/[\t\n\r]/gm, "");
                         var escapeQuotes = removeSpaces.replace(/'/g, "\\'");
-                        var formattedSrc = "t.put('" + filepath + "','" + escapeQuotes + "');";
+                        var splitPath = filepath.split('..');
+                        var formattedSrc = "t.put('" + splitPath[1] + "','" + escapeQuotes + "');";
                         return formattedSrc;
                     }
                 },
@@ -433,6 +459,18 @@
             account: {
                 src: '../Admin/Modules/Account/Content/js/account.js',
                 dest: '../Admin/Modules/Account/Content/js/account_min.js'
+            },
+            authChangePassword: {
+                src: '../Admin/Modules/Auth/Content/js/ChangePassword.js',
+                dest: '../Admin/Modules/Auth/Content/js/ChangePassword_min.js'
+            },
+            authForgotPassword: {
+                src: '../Admin/Modules/Auth/Content/js/ForgotPassword.js',
+                dest: '../Admin/Modules/Auth/Content/js/ForgotPassword_min.js'
+            },
+            authLogin: {
+                src: '../Admin/Modules/Auth/Content/js/Login.js',
+                dest: '../Admin/Modules/Auth/Content/js/Login_min.js'
             },
             customEntities: {
                 src: '../Admin/Modules/CustomEntities/Content/js/customentities.js',
