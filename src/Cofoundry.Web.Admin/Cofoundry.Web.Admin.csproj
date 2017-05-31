@@ -1058,7 +1058,6 @@
     <Compile Include="Framework\Angular\IAngularBootstrapper.cs" />
     <Compile Include="Framework\Bootstrap\CofoundryAdminAssemblyResourceRegistration.cs" />
     <Compile Include="Framework\Bootstrap\CofoundryAdminDependencyRegistration.cs" />
-    <Compile Include="Framework\Bundling\Old\AngularTemplateBundleTransform.cs" />
     <Compile Include="Framework\Constants\AdminViewPaths.cs" />
     <Compile Include="Framework\Constants\LayoutPaths.cs" />
     <Compile Include="Framework\Constants\RouteConstants.cs" />

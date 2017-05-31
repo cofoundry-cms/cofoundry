@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Primitives;
 using System.Reflection;
+using System.IO;
 
 namespace Cofoundry.Core.ResourceFiles
 {
@@ -20,11 +21,30 @@ namespace Cofoundry.Core.ResourceFiles
     /// </summary>
     public class CofoundryEmbeddedFileProvider : IFileProvider
     {
-        private readonly EmbeddedFileProvider _embeddedResourceProvider;
+        private readonly EmbeddedFileProvider _embeddedFileProvider;
+        private readonly PhysicalFileProvider _physicalFileProvider = null;
 
-        public CofoundryEmbeddedFileProvider(Assembly assembly)
+        public CofoundryEmbeddedFileProvider(
+            Assembly assembly,
+            DebugSettings embeddedResourcesSetting,
+            IPathResolver pathResolver
+            )
         {
-            _embeddedResourceProvider = new EmbeddedFileProvider(assembly);
+            _embeddedFileProvider = new EmbeddedFileProvider(assembly);
+
+            if (embeddedResourcesSetting.BypassEmbeddedContent)
+            {
+                var basePath = embeddedResourcesSetting.EmbeddedContentPhysicalPathRootOverride;
+
+                if (string.IsNullOrEmpty(basePath))
+                {
+                    basePath = pathResolver.MapPath("/");
+                }
+
+                var path = Path.Combine(basePath, assembly.GetName().Name);
+
+                _physicalFileProvider = new PhysicalFileProvider(path);
+            }
         }
 
         public IDirectoryContents GetDirectoryContents(string subpath)
@@ -40,7 +60,7 @@ namespace Cofoundry.Core.ResourceFiles
                 .Replace("\\", ".")
                 .Trim(new char[] { '.' });
 
-            var allFiles = _embeddedResourceProvider
+            var allFiles = _embeddedFileProvider
                 .GetDirectoryContents(string.Empty)
                 .Where(f => f.Name.StartsWith(resourcePath, StringComparison.OrdinalIgnoreCase))
                 ;
@@ -54,13 +74,28 @@ namespace Cofoundry.Core.ResourceFiles
 
         public IFileInfo GetFileInfo(string subpath)
         {
-            var file =  _embeddedResourceProvider.GetFileInfo(subpath);
+            IFileInfo file = null;
+
+            if (_physicalFileProvider != null)
+            {
+                file = _physicalFileProvider.GetFileInfo(subpath);
+            }
+
+            if (file == null || !file.Exists)
+            {
+                file = _embeddedFileProvider.GetFileInfo(subpath);
+            }
+
             return file;
         }
 
         public IChangeToken Watch(string filter)
         {
-            return _embeddedResourceProvider.Watch(filter);
+            if (_physicalFileProvider != null)
+            {
+                return _physicalFileProvider.Watch(filter);
+            }
+            return _embeddedFileProvider.Watch(filter);
         }
     }
 }

@@ -486,7 +486,6 @@
     <Compile Include="Framework\Auth\UserSessionService.cs" />
     <Compile Include="Framework\Bootstrap\WebCoreDependencyRegistration.cs" />
     <Compile Include="Framework\Configuration\ContentSettings.cs" />
-    <Compile Include="Framework\Configuration\OptimizationSettings.cs" />
     <Compile Include="Framework\DependencyInjection\IContainerRegisterExtensions.cs" />
     <Compile Include="Framework\Identity\Bootstrap\IdentityDependencyRegistration.cs" />
     <Compile Include="Framework\Identity\ControllerHelpers\AccountManagementControllerHelper.cs" />
@@ -542,7 +541,6 @@
     <Compile Include="Framework\ModularMvc\Routes\IRouteRegistration.cs" />
     <Compile Include="Framework\ModularMvc\Routes\IRouteInitializer.cs" />
     <Compile Include="Framework\ModularMvc\Routes\RouteInitializer.cs" />
-    <Compile Include="Framework\ModularMvc\ViewEngine\AssemblyResourceProviderSettings.cs" />
     <Compile Include="Framework\ModularMvc\ViewEngine\EmptyActionContextFactory.cs" />
     <Compile Include="Framework\ModularMvc\ViewEngine\IEmptyActionContextFactory.cs" />
     <Compile Include="Framework\ModularMvc\ViewEngine\WebsiteResourceLocator.cs" />

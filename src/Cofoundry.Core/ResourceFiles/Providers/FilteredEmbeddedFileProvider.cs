@@ -16,7 +16,7 @@ namespace Cofoundry.Core.ResourceFiles
     /// </summary>
     public class FilteredEmbeddedFileProvider : IFileProvider
     {
-        private readonly EmbeddedFileProvider _assemblyProvider;
+        private readonly IFileProvider _assemblyProvider;
         private readonly string _restrictToPath;
 
         /// <summary>
@@ -29,7 +29,7 @@ namespace Cofoundry.Core.ResourceFiles
         /// embedded resources to serve.</param>
         /// <param name="filterToPath">The relative file path to restrict file access to e.g. '/parent/child/content'.</param>
         public FilteredEmbeddedFileProvider(
-            EmbeddedFileProvider assemblyProvider,
+            IFileProvider assemblyProvider,
             string filterToPath
             )
         {

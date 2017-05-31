@@ -17,7 +17,8 @@ namespace Cofoundry.Core.ResourceFiles
 
         public ResourceFileProviderFactory(
             IEnumerable<IAssemblyResourceRegistration> assemblyResourceRegistrations,
-            IEnumerable<IResourceFileProviderRegisteration> resourceFileProviderRegisterations
+            IEnumerable<IResourceFileProviderRegisteration> resourceFileProviderRegisterations,
+            IEmbeddedFileProviderFactory embeddedFileProviderFactory
             )
         {
             // Give preference to physical providers local to the project over embedded providers
@@ -26,16 +27,19 @@ namespace Cofoundry.Core.ResourceFiles
                 .OrderByDescending(r => r is PhysicalFileProvider)
                 .ThenByDescending(r => r is CompositeFileProvider)
                 .ToList()
-                .Union(CreateAssemblyProviders(assemblyResourceRegistrations))
+                .Union(CreateAssemblyProviders(assemblyResourceRegistrations, embeddedFileProviderFactory))
                 .ToArray();
         }
 
-        private static IEnumerable<IFileProvider> CreateAssemblyProviders(IEnumerable<IAssemblyResourceRegistration> assemblyResourceRegistrations)
+        private static IEnumerable<IFileProvider> CreateAssemblyProviders(
+            IEnumerable<IAssemblyResourceRegistration> assemblyResourceRegistrations,
+            IEmbeddedFileProviderFactory embeddedFileProviderFactory
+            )
         {
             return assemblyResourceRegistrations
                 .Select(r => r.GetType().Assembly)
                 .Distinct()
-                .Select(a => new CofoundryEmbeddedFileProvider(a));
+                .Select(a => embeddedFileProviderFactory.Create(a));
         }
 
         public IFileProvider Create()

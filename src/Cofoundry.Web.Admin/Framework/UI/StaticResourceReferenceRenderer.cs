@@ -13,17 +13,17 @@ namespace Cofoundry.Web.Admin
     {
         private readonly IStaticFilePathFormatter _staticFilePathFormatter;
         private readonly IStaticResourceFileProvider _staticResourceFileProvider;
-        private readonly OptimizationSettings _optimizationSettings;
+        private readonly DebugSettings _debugSettings;
 
         public StaticResourceReferenceRenderer(
             IStaticFilePathFormatter staticFilePathFormatter,
             IStaticResourceFileProvider staticResourceFileProvider,
-            OptimizationSettings optimizationSettings
+            DebugSettings debugSettings
             )
         {
             _staticFilePathFormatter = staticFilePathFormatter;
             _staticResourceFileProvider = staticResourceFileProvider;
-            _optimizationSettings = optimizationSettings;
+            _debugSettings = debugSettings;
         }
 
         public string JsPath(ModuleRouteLibrary moduleRouteLibrary, string fileName)
@@ -32,7 +32,7 @@ namespace Cofoundry.Web.Admin
             string virtualPath = null;
 
             // check for a minified resource first
-            if (!Debugger.IsAttached && !_optimizationSettings.ForceBundling)
+            if (!_debugSettings.UseUncompressedResources)
             {
                 var minPath = moduleRouteLibrary.JsFile(fileName + "_min");
 

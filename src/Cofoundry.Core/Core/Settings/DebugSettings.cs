@@ -1,14 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Cofoundry.Core.Configuration;
 
-namespace Cofoundry.Web.ModularMvc
+namespace Cofoundry.Core
 {
-    public class AssemblyResourceProviderSettings : CofoundryConfigurationSettingsBase
+    /// <summary>
+    /// Settings that give finer grained control over debugging Cofoundry features.
+    /// </summary>
+    public class DebugSettings : CofoundryConfigurationSettingsBase
     {
+        /// <summary>
+        /// By default Cofoundry will try and load minified css/js files, but
+        /// this can be overriden for debugging purposes and an uncompressed
+        /// version will try and be located first.
+        /// </summary>
+        public bool UseUncompressedResources { get; set; }
+
         /// <summary>
         /// Use this to bypass resources embedded in assemblies and instead load them straight from the 
         /// file system. This is intended to be used when debugging the Cofoundry project to avoid having to re-start 

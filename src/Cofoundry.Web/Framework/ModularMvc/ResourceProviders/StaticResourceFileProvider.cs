@@ -27,7 +27,8 @@ namespace Cofoundry.Web
 
         public StaticResourceFileProvider(
             IHostingEnvironment hostingEnvironment,
-            IEnumerable<IEmbeddedResourceRouteRegistration> embeddedResourceRouteRegistrations
+            IEnumerable<IEmbeddedResourceRouteRegistration> embeddedResourceRouteRegistrations,
+            IEmbeddedFileProviderFactory embeddedFileProviderFactory
             )
         {
             var allFileProviders = new List<IFileProvider>();
@@ -42,7 +43,7 @@ namespace Cofoundry.Web
                 foreach (var embeddedResourceRouteRegistration in embeddedResourceRouteRegistrations)
                 {
                     var assembly = embeddedResourceRouteRegistration.GetType().Assembly;
-                    var fileProvider = new EmbeddedFileProvider(assembly);
+                    var fileProvider = embeddedFileProviderFactory.Create(assembly);
                     foreach (var route in embeddedResourceRouteRegistration.GetEmbeddedResourcePaths())
                     {
                         allFileProviders.Add(new FilteredEmbeddedFileProvider(fileProvider, route));

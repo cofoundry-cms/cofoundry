@@ -438,9 +438,12 @@
     <Compile Include="ResourceFiles\Files\IAssemblyResourceRegistration.cs" />
     <Compile Include="ResourceFiles\Files\ResourceLocator\ResourceLocator.cs" />
     <Compile Include="ResourceFiles\Providers\CofoundryEmbeddedFileProvider.cs" />
+    <Compile Include="ResourceFiles\Providers\IEmbeddedFileProviderFactory.cs" />
+    <Compile Include="ResourceFiles\Providers\CofoundryEmbeddedFileProviderFactory.cs" />
     <Compile Include="ResourceFiles\Providers\EmbeddedFiles\AmendedFileNameResourceFileInfo.cs" />
     <Compile Include="ResourceFiles\Providers\EmbeddedFiles\EmbeddedDirectoryContents.cs" />
     <Compile Include="ResourceFiles\Providers\EmbeddedFiles\EmbeddedResourceDirectoryInfo.cs" />
+    <Compile Include="Core\Settings\DebugSettings.cs" />
     <Compile Include="ResourceFiles\Providers\FilteredEmbeddedFileProvider.cs" />
     <Compile Include="ResourceFiles\Routes\IEmbeddedResourceRouteRegistration.cs" />
     <Compile Include="ErrorLogging\Bootstrap\ErrorLoggingDependencyRegistration.cs" />
