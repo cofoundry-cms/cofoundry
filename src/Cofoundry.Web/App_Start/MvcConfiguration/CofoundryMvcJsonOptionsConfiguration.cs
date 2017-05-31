@@ -26,7 +26,6 @@ namespace Cofoundry.Web
         public void Configure(MvcJsonOptions options)
         {
             _jsonSerializerSettingsFactory.Configure(options.SerializerSettings);
-            //        o.SerializerSettings.ContractResolver = new DeltaContractResolver();
         }
     }
 }
