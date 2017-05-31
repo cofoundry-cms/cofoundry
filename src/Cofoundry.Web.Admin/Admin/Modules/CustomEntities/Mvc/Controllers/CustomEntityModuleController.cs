@@ -10,8 +10,10 @@ namespace Cofoundry.Web.Admin
     {
         private static readonly Dictionary<string, string> EmptyTerms = new Dictionary<string, string>();
 
-        public ActionResult Index(ICustomEntityDefinition definition)
+        public ActionResult Index()
         {
+            var definition = RouteData.DataTokens["Definition"] as ICustomEntityDefinition;
+
             var options = new CustomEntityModuleOptions()
             {
                 CustomEntityDefinitionCode = definition.CustomEntityDefinitionCode,

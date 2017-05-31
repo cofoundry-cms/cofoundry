@@ -30,7 +30,9 @@ namespace Cofoundry.Web.Admin
                 routeBuilder.MapRoute(
                     "Custom Entity Admin Module - " + definition.NamePlural,
                     RouteConstants.AdminAreaPrefix + "/" + routePrefix,
-                    new { controller = "CustomEntityModule", action = "Index", definition = definition, Area = RouteConstants.AdminAreaName }
+                    new { controller = "CustomEntityModule", action = "Index", Area = RouteConstants.AdminAreaName },
+                    null,
+                    new { Definition = definition }
                     );
             }
         }

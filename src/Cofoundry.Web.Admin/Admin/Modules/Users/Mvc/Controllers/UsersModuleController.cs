@@ -10,8 +10,9 @@ namespace Cofoundry.Web.Admin
     {
         private static readonly Dictionary<string, string> EmptyTerms = new Dictionary<string, string>();
 
-        public ActionResult Index(IUserAreaDefinition userArea)
+        public ActionResult Index()
         {
+            var userArea = RouteData.DataTokens["UserArea"] as IUserAreaDefinition;
             var options = new UsersModuleOptions()
             {
                 UserAreaCode = userArea.UserAreaCode,

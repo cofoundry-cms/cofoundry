@@ -30,7 +30,9 @@ namespace Cofoundry.Web.Admin
                 routeBuilder.MapRoute(
                     "Users Cofoundry Admin Module - " + userArea.Name,
                     RouteConstants.AdminAreaPrefix + "/" + routePrefix + "-users",
-                    new { controller = "UsersModule", action = "Index", userArea = userArea, Area = RouteConstants.AdminAreaName }
+                    new { controller = "UsersModule", action = "Index", Area = RouteConstants.AdminAreaName },
+                    null,
+                    new { UserArea = userArea }
                     );
             }
         }

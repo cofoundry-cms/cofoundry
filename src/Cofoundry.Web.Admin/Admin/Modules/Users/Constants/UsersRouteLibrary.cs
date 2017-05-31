@@ -7,7 +7,7 @@ using System.Web;
 
 namespace Cofoundry.Web.Admin
 {
-    public class UsersRouteLibrary : ModuleRouteLibrary
+    public class UsersRouteLibrary : AngularModuleRouteLibrary
     {
         public const string RoutePrefix = "users";
         
@@ -38,7 +38,7 @@ namespace Cofoundry.Web.Admin
         private static string GetUserAreaRoute(IUserAreaDefinition definition, string route = null)
         {
             if (definition == null) return string.Empty;
-            return "/" + RouteConstants.AdminAreaPrefix + "/" + SlugFormatter.ToSlug(definition.Name) + "#/" + route;
+            return "/" + RouteConstants.AdminAreaPrefix + "/" + SlugFormatter.ToSlug(definition.Name) + "-users#/" + route;
         }
 
         #endregion
