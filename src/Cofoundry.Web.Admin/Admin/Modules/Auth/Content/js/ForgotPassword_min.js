@@ -1,24 +1,2 @@
-﻿(function (document) {
-
-    document.addEventListener('DOMContentLoaded', function () {
-        var loginLink = document.getElementById('loginLink'),
-            emailInput = document.getElementById('Username'),
-            baseLoginLink = loginLink.getAttribute('href').split("?")[0];
-
-        if (emailInput) {
-            onEmailChange();
-
-            emailInput.addEventListener('change', onEmailChange);
-        }
-
-        function onEmailChange() {
-            var qs = '';
-
-            if (emailInput.value.length) {
-                qs = "?email=" + encodeURIComponent(emailInput.value);
-            }
-            loginLink.setAttribute('href', baseLoginLink + qs);
-        }
-    });
-
-})(document);
+/*! UberCMS 2017-05-31 */
+!function(a){a.addEventListener("DOMContentLoaded",function(){function b(){var a="";d.value.length&&(a="?email="+encodeURIComponent(d.value)),c.setAttribute("href",e+a)}var c=a.getElementById("loginLink"),d=a.getElementById("Username"),e=c.getAttribute("href").split("?")[0];d&&(b(),d.addEventListener("change",b))})}(document);

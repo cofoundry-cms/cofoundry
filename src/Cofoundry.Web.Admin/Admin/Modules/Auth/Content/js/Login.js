@@ -1,4 +1,4 @@
-﻿(function (document, window) {
+(function (document, window) {
 
     document.addEventListener('DOMContentLoaded', function () {
         var forgotPasswordLink = document.getElementById('forgotPasswordLink'),

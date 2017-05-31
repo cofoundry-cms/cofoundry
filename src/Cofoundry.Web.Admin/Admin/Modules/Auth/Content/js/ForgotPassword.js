@@ -1,4 +1,4 @@
-﻿(function (document) {
+(function (document) {
 
     document.addEventListener('DOMContentLoaded', function () {
         var loginLink = document.getElementById('loginLink'),
