@@ -291,7 +291,7 @@ namespace Cofoundry.Core.DependencyInjection
 
             if (scope == InstanceScope.Singleton)
             {
-                return ServiceLifetime.Transient;
+                return ServiceLifetime.Singleton;
             }
 
             throw new ArgumentException("InstanceScope '" + scope.GetType().FullName + "' not recognised");
