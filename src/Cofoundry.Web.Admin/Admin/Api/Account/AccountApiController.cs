@@ -54,7 +54,7 @@ namespace Cofoundry.Web.Admin
         #region commands
 
         [HttpPatch]
-        public async Task<IActionResult> Patch([FromBody] Delta<UpdateCurrentUserAccountCommand> delta)
+        public async Task<IActionResult> Patch([FromBody] IDelta<UpdateCurrentUserAccountCommand> delta)
         {
             var userContext = await _userContextService.GetCurrentContextAsync();
             var userId = userContext.UserId.Value;

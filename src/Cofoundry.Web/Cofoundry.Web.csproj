@@ -427,6 +427,7 @@
     <Compile Include="App_Start\Bootstrap\PageTemplateViewLocationRegistration.cs" />
     <Compile Include="App_Start\CofoundryStartupExtensions.cs" />
     <Compile Include="App_Start\MvcConfiguration\CofoundryMvcBuilderConfiguration.cs" />
+    <Compile Include="App_Start\MvcConfiguration\CofoundryMvcOptionsConfiguration.cs" />
     <Compile Include="App_Start\MvcConfiguration\CofoundryMvcJsonOptionsConfiguration.cs" />
     <Compile Include="App_Start\MvcConfiguration\CofoundryRazorViewEngineOptionsConfiguration.cs" />
     <Compile Include="App_Start\MvcConfiguration\IMvcBuilderConfiguration.cs" />
@@ -592,8 +593,10 @@
     <Compile Include="Framework\Mvc\ViewHelpers\ChildHelpers\SettingsViewHelper.cs" />
     <Compile Include="Framework\ModularMvc\ViewEngine\PageTemplateViewFileLocator.cs" />
     <Compile Include="Framework\Mvc\ViewRenderer\RazorViewRenderer.cs" />
-    <Compile Include="Framework\WebApi\Deltas\Delta.cs" />
-    <Compile Include="Framework\WebApi\Deltas\DeltaContractResolver.cs" />
+    <Compile Include="Framework\WebApi\Deltas\IDelta.cs" />
+    <Compile Include="Framework\WebApi\Deltas\JsonDelta.cs" />
+    <Compile Include="Framework\WebApi\Deltas\JsonDeltaModelBinderProvider.cs" />
+    <Compile Include="Framework\WebApi\Deltas\JsonDeltaModelBinder.cs" />
     <Compile Include="Framework\WebApi\Files\WebApiUploadedFile.cs" />
     <Compile Include="Framework\WebApi\Filters\ValidateApiAntiForgeryTokenAttribute.cs" />
     <Compile Include="Framework\WebApi\Formatters\MultipartFormDataFormatter.cs" />

@@ -11,7 +11,7 @@ namespace Cofoundry.Web.Bootstrap
         public void Register(IContainerRegister container)
         {
             container
-                .RegisterPerRequestScope<INotFoundViewHelper, NotFoundViewHelper>()
+                .RegisterType<INotFoundViewHelper, NotFoundViewHelper>()
                 .RegisterType<IPageLocaleParser, PageLocaleParser>()
                 .RegisterType<ISetupPageActionFactory, DefaultSetupPageActionFactory>()
                 .RegisterType<IPageActionRoutingStepFactory, PageActionRoutingStepFactory>()

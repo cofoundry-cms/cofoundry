@@ -59,19 +59,19 @@ namespace Cofoundry.Web.Admin
         #region commands
 
         [HttpPatch(GENERAL_SITE_SETTINGS_ROUTE)]
-        public async Task<IActionResult> PatchGeneralSiteSettings([FromBody] Delta<UpdateGeneralSiteSettingsCommand> delta)
+        public async Task<IActionResult> PatchGeneralSiteSettings([FromBody] IDelta<UpdateGeneralSiteSettingsCommand> delta)
         {
             return await _apiResponseHelper.RunCommandAsync(this, delta);
         }
 
         [HttpPatch(SEO_SETTINGS_ROUTE)]
-        public async Task<IActionResult> PatchSeoSettings([FromBody] Delta<UpdateSeoSettingsCommand> delta)
+        public async Task<IActionResult> PatchSeoSettings([FromBody] IDelta<UpdateSeoSettingsCommand> delta)
         {
             return await _apiResponseHelper.RunCommandAsync(this, delta);
         }
 
         [HttpPatch(VISUAL_EDITOR_SETTINGS_ROUTE)]
-        public async Task<IActionResult> PatchVisualEditorSettings([FromBody] Delta<UpdateVisualEditorSettingsCommand> delta)
+        public async Task<IActionResult> PatchVisualEditorSettings([FromBody] IDelta<UpdateVisualEditorSettingsCommand> delta)
         {
             return await _apiResponseHelper.RunCommandAsync(this, delta);
         }

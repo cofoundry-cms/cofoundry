@@ -71,7 +71,7 @@ namespace Cofoundry.Web.Admin
         }
 
         [HttpPatch(ID_ROUTE)]
-        public async Task<IActionResult> Patch(int webDirectoryId, [FromBody] Delta<UpdateWebDirectoryCommand> delta)
+        public async Task<IActionResult> Patch(int webDirectoryId, [FromBody] IDelta<UpdateWebDirectoryCommand> delta)
         {
             return await _apiResponseHelper.RunCommandAsync(this, webDirectoryId, delta);
         }
