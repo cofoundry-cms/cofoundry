@@ -72,7 +72,7 @@ namespace Cofoundry.Web.Admin
         }
 
         [HttpPatch(ID_ROUTE)]
-        public async Task<IActionResult> Patch(int imageAssetId, [FromBody] Delta<UpdateImageAssetCommand> delta)
+        public async Task<IActionResult> Patch(int imageAssetId, [FromBody] IDelta<UpdateImageAssetCommand> delta)
         {
             return await _apiResponseHelper.RunCommandAsync(this, imageAssetId, delta);
         }

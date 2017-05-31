@@ -14,21 +14,21 @@ namespace Cofoundry.Web
         public void Register(IContainerRegister container)
         {
             container
-                .RegisterPerRequestScope<IControllerResponseHelper, ControllerResponseHelper>()
+                .RegisterType<IControllerResponseHelper, ControllerResponseHelper>()
 
-                .RegisterPerRequestScope<ISettingsViewHelper, SettingsViewHelper>()
-                .RegisterPerRequestScope<ICurrentUserViewHelper, CurrentUserViewHelper>()
-                .RegisterPerRequestScope<IPageTemplateViewFileLocator, PageTemplateViewFileLocator>()
-                .RegisterPerRequestScope<IHtmlSanitizerHelper, HtmlSanitizerHelper>()
-                .RegisterPerRequestScope<IJavascriptViewHelper, JavascriptViewHelper>()
-                .RegisterPerRequestScope<ICofoundryHtmlHelper, CofoundryHtmlHelper>()
-                .RegisterPerRequestScope<IUserSessionService, UserSessionService>()
+                .RegisterType<ISettingsViewHelper, SettingsViewHelper>()
+                .RegisterType<ICurrentUserViewHelper, CurrentUserViewHelper>()
+                .RegisterType<IPageTemplateViewFileLocator, PageTemplateViewFileLocator>()
+                .RegisterType<IHtmlSanitizerHelper, HtmlSanitizerHelper>()
+                .RegisterType<IJavascriptViewHelper, JavascriptViewHelper>()
+                .RegisterType<ICofoundryHtmlHelper, CofoundryHtmlHelper>()
+                .RegisterType<IUserSessionService, UserSessionService>()
 
-                .RegisterPerRequestScope<IPageViewModelMapper, PageViewModelMapper>()
-                .RegisterPerRequestScope<IPageViewModelFactory, PageViewModelFactory>()
-                .RegisterPerRequestScope<IPageViewModelBuilder, PageViewModelBuilder>()
+                .RegisterType<IPageViewModelMapper, PageViewModelMapper>()
+                .RegisterType<IPageViewModelFactory, PageViewModelFactory>()
+                .RegisterType<IPageViewModelBuilder, PageViewModelBuilder>()
                 
-                .RegisterPerRequestScope<IApiResponseHelper, ApiResponseHelper>()
+                .RegisterType<IApiResponseHelper, ApiResponseHelper>()
                 
                 .RegisterInstance<IAntiCSRFService, AntiCSRFService>()
 
@@ -36,6 +36,8 @@ namespace Cofoundry.Web
                 .RegisterType<IPageTemplateSectionTagBuilderFactory, PageTemplateSectionTagBuilderFactory>()
                 .RegisterType<IPageModuleRenderer, PageModuleRenderer>()
                 .RegisterType<IPathResolver, SitePathResolver>(RegistrationOptions.Override(RegistrationOverridePriority.Low))
+
+                .RegisterType<JsonDeltaModelBinder>()
                 ; 
         }
     }

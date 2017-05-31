@@ -59,7 +59,7 @@ namespace Cofoundry.Web.Admin
         }
 
         [HttpPatch("draft")]
-        public async Task<IActionResult> PatchDraft(int pageId, [FromBody] Delta<UpdatePageDraftVersionCommand> delta)
+        public async Task<IActionResult> PatchDraft(int pageId, [FromBody] IDelta<UpdatePageDraftVersionCommand> delta)
         {
             // Custom patching because we may need to create a draft version first
             var command = await _queryExecutor.GetByIdAsync<UpdatePageDraftVersionCommand>(pageId);

@@ -75,7 +75,7 @@ namespace Cofoundry.Web.Admin
         }
 
         [HttpPatch(ID_ROUTE)]
-        public async Task<IActionResult> Patch(int pageId, [FromBody] Delta<UpdatePageCommand> delta)
+        public async Task<IActionResult> Patch(int pageId, [FromBody] IDelta<UpdatePageCommand> delta)
         {
             return await _apiResponseHelper.RunCommandAsync(this, pageId, delta);
         }

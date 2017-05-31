@@ -15,12 +15,5 @@ namespace Cofoundry.Web
             options.InstanceScope = InstanceScope.PerLifetimeScope;
             return container.RegisterType<T, T>(options);
         }
-
-        public static IContainerRegister RegisterPerRequestScope<TRegisterAs, TConcrete>(this IContainerRegister container) where TConcrete : TRegisterAs
-        {
-            var options = new RegistrationOptions();
-            options.InstanceScope = InstanceScope.PerLifetimeScope;
-            return container.RegisterType<TRegisterAs, TConcrete>(options);
-        }
     }
 }

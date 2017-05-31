@@ -35,7 +35,7 @@ namespace Cofoundry.Web.WebApi
         /// <typeparam name="TCommand">Type of the command to execute</typeparam>
         /// <param name="controller">The Controller instance using the helper</param>
         /// <param name="delta">The delta of the command to patch and execute</param>
-        Task<IActionResult> RunCommandAsync<TCommand>(Controller controller, Delta<TCommand> delta) where TCommand : class, ICommand;
+        Task<IActionResult> RunCommandAsync<TCommand>(Controller controller, IDelta<TCommand> delta) where TCommand : class, ICommand;
 
         /// <summary>
         /// Executes a command in a "Patch" style, allowing for a partial update of a resource. In
@@ -47,7 +47,7 @@ namespace Cofoundry.Web.WebApi
         /// <typeparam name="TCommand">Type of the command to execute</typeparam>
         /// <param name="controller">The Controller instance using the helper</param>
         /// <param name="delta">The delta of the command to patch and execute</param>
-        Task<IActionResult> RunCommandAsync<TCommand>(Controller controller, int id, Delta<TCommand> delta) where TCommand : class, ICommand;
+        Task<IActionResult> RunCommandAsync<TCommand>(Controller controller, int id, IDelta<TCommand> delta) where TCommand : class, ICommand;
 
         /// <summary>
         /// Executes an action and returns a formatted IHttpActionResult, handling any validation 

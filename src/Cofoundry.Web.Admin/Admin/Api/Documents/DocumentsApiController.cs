@@ -65,7 +65,7 @@ namespace Cofoundry.Web.Admin
         }
 
         [HttpPatch(ID_ROUTE)]
-        public async Task<IActionResult> Patch(int documentAssetId, [FromBody] Delta<UpdateDocumentAssetCommand> delta)
+        public async Task<IActionResult> Patch(int documentAssetId, [FromBody] IDelta<UpdateDocumentAssetCommand> delta)
         {
             return await _apiResponseHelper.RunCommandAsync(this, documentAssetId, delta);
         }
