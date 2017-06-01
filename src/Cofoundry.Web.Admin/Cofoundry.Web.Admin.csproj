@@ -423,7 +423,7 @@
     <Content Include="Admin\Modules\Directories\Js\Bootstrap\Module.js" />
     <Content Include="Admin\Modules\Directories\Js\Bootstrap\Routing.js" />
     <Content Include="Admin\Modules\Directories\Js\DataServices\DirectoryService.js" />
-    <Content Include="Admin\Modules\Directories\Js\DataServices\Models\DirectoryTree.js" />
+    <Content Include="Admin\Modules\Directories\Js\DataServices\DirectoryTree.js" />
     <Content Include="Admin\Modules\Directories\Js\Routes\AddDirectory.html" />
     <Content Include="Admin\Modules\Directories\Js\Routes\AddDirectoryController.js" />
     <Content Include="Admin\Modules\Directories\Js\Routes\DirectoryDetails.html" />
