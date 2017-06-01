@@ -59,7 +59,38 @@
             }
         },
 
+        cssUrlRewrite: {
+            fontAwesome: {
+                src: '../Admin/Modules/Shared/Content/css/third-party/font-awesome/font-awesome.css',
+                dest: '../Admin/Modules/Shared/Content/css/font-awesome.css',
+                options: {
+                    skipExternal: true,
+                    rewriteUrl: function(url, options, dataURI) {
+                        var splitUrl = url.split('..');
+                        return splitUrl[1];
+                    }
+                }
+            }
+        },
+
+        cssmin: {
+            target: {
+                src: '../Admin/Modules/Shared/Content/css/shared.css',
+                dest: '../Admin/Modules/Shared/Content/css/shared.min.css'
+            }
+        },
+
         concat: {
+            css: {
+                src: [
+                    '../Admin/Modules/Shared/Content/css/font-awesome.css',
+                    '../Admin/Modules/Shared/Content/css/third-party/tinymce/skin.min.css',
+                    '../Admin/Modules/Shared/Content/css/third-party/ui-select.css',
+                    '../Admin/Modules/Shared/Content/css/third-party/selectize.default.css',
+                    '../Admin/Modules/Shared/Content/css/modules.css',
+                ],
+                dest: '../Admin/Modules/Shared/Content/css/shared.css'
+            },
             account: {
                 src: [
                     '../Admin/Modules/Account/Js/Bootstrap/*.js',
@@ -449,7 +480,7 @@
                     '../Admin/Modules/VisualEditor/Js/ContentPage/*.js',
                 ],
                 dest: '../Admin/Modules/VisualEditor/Content/js/contentpage.js'
-            },
+            }
         },
 
         uglify: {
@@ -536,6 +567,9 @@
     grunt.loadNpmTasks('grunt-contrib-imagemin');
     grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-contrib-concat');
+    grunt.loadNpmTasks("grunt-css-url-rewrite");
+    grunt.loadNpmTasks('grunt-contrib-cssmin');
 
-    grunt.registerTask('default', ['compass:shared', 'concat', 'uglify']);
+
+    grunt.registerTask('default', ['compass:shared', 'cssUrlRewrite', 'concat', 'cssmin']);
 };
