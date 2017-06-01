@@ -571,5 +571,7 @@
     grunt.loadNpmTasks('grunt-contrib-cssmin');
 
 
-    grunt.registerTask('default', ['compass:shared', 'cssUrlRewrite', 'concat', 'cssmin']);
+    grunt.registerTask('default', ['compass:shared', 'cssUrlRewrite', 'concat', 'cssmin', 'uglify']);
+    grunt.registerTask('buildCSS', ['compass:shared', 'cssUrlRewrite', 'concat:css', 'cssmin']);
+    grunt.registerTask('buildJS', ['concat', 'uglify']);
 };
