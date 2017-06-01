@@ -35,6 +35,10 @@ namespace Cofoundry.BasicTestSite
         [Display(Name = "Images")]
         public int[] ThumbnailImageAssets{ get; set; }
 
+        [Display(Name = "Html")]
+        [Html]
+        public int TestHtml { get; set; }
+
         //[Page]
         //[Display(Name = "Page")]
         //public int? PageId { get; set; }
