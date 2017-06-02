@@ -20,6 +20,192 @@
                 ],
                 tasks: ['compass:visualEditor']
             },
+            account : {
+                files: [
+                    '../Admin/Modules/Account/Js/**/*.js'
+                ],
+                tasks: ['concat:account', 'uglify:account']
+            },
+            accountHTML : {
+                files: [
+                    '../Admin/Modules/Account/Js/**/*.html'
+                ],
+                tasks: ['concat:accountHTML']
+            },
+            authChangePassword : {
+                files: [
+                    '../Admin/Modules/Auth/MVC/Views/ChangePassword.js'
+                ],
+                tasks: ['concat:authChangePassword', 'uglify:authChangePassword']
+            },
+            authForgotPassword : {
+                files: [
+                    '../Admin/Modules/Auth/MVC/Views/ForgotPassword.js'
+                ],
+                tasks: ['concat:authForgotPassword', 'uglify:authForgotPassword']
+            },
+            authLogin : {
+                files: [
+                    '../Admin/Modules/Auth/MVC/Views/Login.js'
+                ],
+                tasks: ['concat:authLogin', 'uglify:authLogin']
+            },
+            customEntities : {
+                files: [
+                    '../Admin/Modules/CustomEntities/Js/**/*.js'
+                ],
+                tasks: ['concat:customEntities', 'uglify:customEntities']
+            },
+            customEntitiesHTML : {
+                files: [
+                    '../Admin/Modules/CustomEntities/Js/**/*.html'
+                ],
+                tasks: ['concat:customEntitiesHTML']
+            },
+            dashboard : {
+                files: [
+                    '../Admin/Modules/Dashboard/Js/**/*.js'
+                ],
+                tasks: ['concat:dashboard', 'uglify:dashboard']
+            },
+            dashboardHTML : {
+                files: [
+                    '../Admin/Modules/Dashboard/Js/**/*.html'
+                ],
+                tasks: ['concat:dashboardHTML']
+            },
+            directories : {
+                files: [
+                    '../Admin/Modules/Directories/Js/**/*.js'
+                ],
+                tasks: ['concat:directories', 'uglify:directories']
+            },
+            directoriesHTML : {
+                files: [
+                    '../Admin/Modules/Directories/Js/**/*.html'
+                ],
+                tasks: ['concat:directoriesHTML']
+            },
+            documents : {
+                files: [
+                    '../Admin/Modules/Documents/Js/**/*.js'
+                ],
+                tasks: ['concat:documents', 'uglify:documents']
+            },
+            documentsHTML : {
+                files: [
+                    '../Admin/Modules/Documents/Js/**/*.html'
+                ],
+                tasks: ['concat:documents']
+            },
+            images : {
+                files: [
+                    '../Admin/Modules/Images/Js/**/*.js'
+                ],
+                tasks: ['concat:images', 'uglify:images']
+            },
+            imagesHTML : {
+                files: [
+                    '../Admin/Modules/Images/Js/**/*.html'
+                ],
+                tasks: ['concat:imagesHTML']
+            },
+            pages : {
+                files: [
+                    '../Admin/Modules/Pages/Js/**/*.js'
+                ],
+                tasks: ['concat:pages', 'uglify:pages']
+            },
+            pagesHTML : {
+                files: [
+                    '../Admin/Modules/Pages/Js/**/*.html'
+                ],
+                tasks: ['concat:pagesHTML']
+            },
+            pageTemplates : {
+                files: [
+                    '../Admin/Modules/PageTemplates/Js/**/*.js'
+                ],
+                tasks: ['concat:pageTemplates', 'uglify:pageTemplates']
+            },
+            pageTemplatesHTML : {
+                files: [
+                    '../Admin/Modules/PageTemplates/Js/**/*.html'
+                ],
+                tasks: ['concat:pageTemplatesHTML']
+            },
+            roles : {
+                files: [
+                    '../Admin/Modules/Roles/Js/**/*.js'
+                ],
+                tasks: ['concat:roles', 'uglify:roles']
+            },
+            rolesHTML : {
+                files: [
+                    '../Admin/Modules/Roles/Js/**/*.html'
+                ],
+                tasks: ['concat:rolesHTML']
+            },
+            settings : {
+                files: [
+                    '../Admin/Modules/Settings/Js/**/*.js'
+                ],
+                tasks: ['concat:settings', 'uglify:settings']
+            },
+            settingsHTML : {
+                files: [
+                    '../Admin/Modules/Settings/Js/**/*.html'
+                ],
+                tasks: ['concat:settingsHTML']
+            },
+            setup : {
+                files: [
+                    '../Admin/Modules/Setup/Js/**/*.js'
+                ],
+                tasks: ['concat:setup', 'uglify:setup']
+            },
+            setupHTML : {
+                files: [
+                    '../Admin/Modules/Setup/Js/**/*.html'
+                ],
+                tasks: ['concat:setupHTML']
+            },
+            sharedJS : {
+                files: [
+                    '../Admin/Modules/Shared/Js/**/*.js'
+                ],
+                tasks: ['concat:shared', 'uglify:shared', 'concat:sharedAll']
+            },
+            sharedHTML : {
+                files: [
+                    '../Admin/Modules/Shared/Js/**/*.html'
+                ],
+                tasks: ['concat:sharedHTML']
+            },
+            users : {
+                files: [
+                    '../Admin/Modules/Users/Js/**/*.js'
+                ],
+                tasks: ['concat:users', 'uglify:users']
+            },
+            usersHTML : {
+                files: [
+                    '../Admin/Modules/Users/Js/**/*.html'
+                ],
+                tasks: ['concat:usersHTML']
+            },
+            visualEditor : {
+                files: [
+                    '../Admin/Modules/VisualEditor/Js/**/*.js'
+                ],
+                tasks: ['concat:visualEditor', 'concat:contentPage', 'uglify:visualEditor', 'uglify:contentPage']
+            },
+            visualEditorHTML : {
+                files: [
+                    '../Admin/Modules/VisualEditor/Js/**/*.html'
+                ],
+                tasks: ['concat:visualEditorHTML']
+            },
             options: {
                 spawn: false
             }
@@ -389,12 +575,6 @@
             },
             shared: {
                 src: [
-                    '../Admin/Modules/Shared/Js/lib/underscore.min.js',
-                    '../Admin/Modules/Shared/Js/lib/angular.min.js',
-                    '../Admin/Modules/Shared/Js/lib/angular-sanitize.min.js',
-                    '../Admin/Modules/Shared/Js/lib/AngularModules/TinyMce/tinymce.min.js',
-                    '../Admin/Modules/Shared/Js/lib/AngularModules/TinyMce/ui-tinymce.min.js',
-                    '../Admin/Modules/Shared/Js/lib/AngularModules/*.js',
                     '../Admin/Modules/Shared/Js/Bootstrap/*.js',
                     '../Admin/Modules/Shared/Js/DataServices/*.js',
                     '../Admin/Modules/Shared/Js/Utilities/*.js',
@@ -454,7 +634,6 @@
                     '../Admin/Modules/VisualEditor/Js/DataServices/*.js',
                     '../Admin/Modules/VisualEditor/Js/UIComponents/*.js',
                     '../Admin/Modules/VisualEditor/Js/Routes/*.js',
-                    '../Admin/Modules/VisualEditor/Js/Routes/**/*.js',
                 ],
                 dest: '../Admin/Modules/VisualEditor/Content/js/visualeditor.js'
             },
@@ -478,12 +657,23 @@
             },
             contentPage: {
                 src: [
-                    '../Admin/Modules/VisualEditor/Js/ContentPage/Index.js',
-                    '../Admin/Modules/VisualEditor/Js/ContentPage/GuiController.js',
-                    '../Admin/Modules/VisualEditor/Js/ContentPage/EventAggregator.js'
+                    '../Admin/Modules/VisualEditor/Js/ContentPage/*.js',
                 ],
                 dest: '../Admin/Modules/VisualEditor/Content/js/contentpage.js'
+            },
+            sharedAll: {
+                src: [
+                    '../Admin/Modules/Shared/Js/lib/underscore.min.js',
+                    '../Admin/Modules/Shared/Js/lib/angular.min.js',
+                    '../Admin/Modules/Shared/Js/lib/angular-sanitize.min.js',
+                    '../Admin/Modules/Shared/Js/lib/AngularModules/TinyMce/tinymce.min.js',
+                    '../Admin/Modules/Shared/Js/lib/AngularModules/TinyMce/ui-tinymce.min.js',
+                    '../Admin/Modules/Shared/Js/lib/AngularModules/*.js',
+                    '../Admin/Modules/Shared/Content/js/shared_min.js',
+                ],
+                dest: '../Admin/Modules/Shared/Content/js/shared_min.js'
             }
+            
         },
 
         uglify: {
@@ -573,8 +763,43 @@
     grunt.loadNpmTasks("grunt-css-url-rewrite");
     grunt.loadNpmTasks('grunt-contrib-cssmin');
 
-
-    grunt.registerTask('default', ['compass:shared', 'cssUrlRewrite', 'concat', 'cssmin', 'uglify']);
+    grunt.registerTask('default', ['compass:shared', 'cssUrlRewrite', 'bundleJS', 'cssmin']);
     grunt.registerTask('buildCSS', ['compass:shared', 'cssUrlRewrite', 'concat:css', 'cssmin']);
-    grunt.registerTask('buildJS', ['concat', 'uglify']);
+    grunt.registerTask('bundleJS', [
+        'concat:css',
+        'concat:account',
+        'concat:accountHTML',
+        'concat:authChangePassword',
+        'concat:authForgotPassword',
+        'concat:authLogin',
+        'concat:customEntities',
+        'concat:customEntitiesHTML',
+        'concat:dashboard',
+        'concat:dashboardHTML',
+        'concat:directories',
+        'concat:directoriesHTML',
+        'concat:documents',
+        'concat:documentsHTML',
+        'concat:images',
+        'concat:imagesHTML',
+        'concat:pages',
+        'concat:pagesHTML',
+        'concat:pageTemplates',
+        'concat:pageTemplatesHTML',
+        'concat:roles',
+        'concat:rolesHTML',
+        'concat:settings',
+        'concat:settingsHTML',
+        'concat:setup',
+        'concat:setupHTML',
+        'concat:shared',
+        'concat:sharedHTML',
+        'concat:users',
+        'concat:usersHTML',
+        'concat:visualEditor',
+        'concat:visualEditorHTML',
+        'concat:contentPage',
+        'uglify',
+        'concat:sharedAll'
+    ]);
 };
