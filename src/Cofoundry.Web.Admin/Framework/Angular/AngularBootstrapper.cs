@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using Cofoundry.Domain;
 using Microsoft.AspNetCore.Html;
+using System.Threading.Tasks;
 
 namespace Cofoundry.Web.Admin
 {
@@ -34,14 +35,16 @@ namespace Cofoundry.Web.Admin
         /// specified module and then bootstraps it.
         /// </summary>
         /// <param name="routeLibrary">Js routing library for the module to bootstrap,</param>
-        public IHtmlContent Bootstrap(AngularModuleRouteLibrary routeLibrary, object options = null)
+        public async Task<IHtmlContent> BootstrapAsync(AngularModuleRouteLibrary routeLibrary, object options = null)
         {
+            var bootstrapScript = await RenderBootstrapperAsync(routeLibrary, options);
+
             var script = string.Concat(
                 _staticResourceReferenceRenderer.ScriptTag(_adminRouteLibrary.Shared, _adminRouteLibrary.Shared.Angular.MainScriptName),
                 _staticResourceReferenceRenderer.ScriptTag(_adminRouteLibrary.Shared, _adminRouteLibrary.Shared.Angular.TemplateScriptName),
                 _staticResourceReferenceRenderer.ScriptTag(routeLibrary, routeLibrary.Angular.MainScriptName),
                 _staticResourceReferenceRenderer.ScriptTag(routeLibrary, routeLibrary.Angular.TemplateScriptName),
-                RenderBootstrapper(routeLibrary, options)
+                bootstrapScript
                 );
 
             return new HtmlString(script);
@@ -49,7 +52,7 @@ namespace Cofoundry.Web.Admin
 
         #region private helpers
 
-        private string RenderBootstrapper(AngularModuleRouteLibrary routeLibrary, object options)
+        private async Task<string> RenderBootstrapperAsync(AngularModuleRouteLibrary routeLibrary, object options)
         {
             var args = string.Empty;
             if (Debugger.IsAttached)
@@ -59,6 +62,7 @@ namespace Cofoundry.Web.Admin
             }
 
             // Might need to add more info at some point, but right now we just need roles.
+            await _currentUserHelper.EnsureInitializedAsync();
             var currentUserInfo = new {
                 PermissionCodes = _currentUserHelper.Role.Permissions.Select(p => p.GetUniqueCode())
             };

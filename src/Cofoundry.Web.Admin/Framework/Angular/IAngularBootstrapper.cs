@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using Cofoundry.Domain;
 using Microsoft.AspNetCore.Html;
+using System.Threading.Tasks;
 
 namespace Cofoundry.Web.Admin
 {
@@ -16,6 +17,6 @@ namespace Cofoundry.Web.Admin
         /// specified module and then bootstraps it.
         /// </summary>
         /// <param name="routeLibrary">Js routing library for the module to bootstrap,</param>
-        IHtmlContent Bootstrap(AngularModuleRouteLibrary routeLibrary, object options = null);
+        Task<IHtmlContent> BootstrapAsync(AngularModuleRouteLibrary routeLibrary, object options = null);
     }
 }

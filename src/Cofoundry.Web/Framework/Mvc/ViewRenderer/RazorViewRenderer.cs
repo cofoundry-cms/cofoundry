@@ -23,12 +23,15 @@ namespace Cofoundry.Web
         #region constructor
 
         private readonly IRazorViewEngine _razorViewEngine;
+        private ITempDataProvider _tempDataProvider;
 
         public RazorViewRenderer(
-            IRazorViewEngine razorViewEngine
+            IRazorViewEngine razorViewEngine,
+            ITempDataProvider tempDataProvider
             )
         {
             _razorViewEngine = razorViewEngine;
+            _tempDataProvider = tempDataProvider;
         }
 
         #endregion
@@ -67,13 +70,47 @@ namespace Cofoundry.Web
             ValidateViewFound(viewName, viewResult);
 
             return RenderViewAsync(viewContext, viewResult, model);
+        } 
+        
+        /// <summary>
+        /// Renders a view to a string using an existing ViewContext
+        /// </summary>
+        /// <param name="viewContext">An existing view context to copy data from when rendering the new view.</param>
+        /// <param name="viewName">The name of the view to locate. Supports view location and full paths.</param>
+        public Task<string> RenderViewAsync(
+            ActionContext actionContext,
+            string viewName
+            )
+        {
+            var viewResult = FindView(actionContext, viewName);
+            ValidateViewFound(viewName, viewResult);
+
+            return RenderViewAsync(actionContext, viewResult, null);
+        }
+
+        /// <summary>
+        /// Renders a view to a string using an existing ViewContext
+        /// </summary>
+        /// <param name="viewContext">An existing view context to copy data from when rendering the new view.</param>
+        /// <param name="viewName">The name of the view to locate. Supports view location and full paths.</param>
+        /// <param name="model">The data model to render the view with.</param>
+        public Task<string> RenderViewAsync(
+            ActionContext actionContext,
+            string viewName,
+            object model
+            )
+        {
+            var viewResult = FindView(actionContext, viewName);
+            ValidateViewFound(viewName, viewResult);
+
+            return RenderViewAsync(actionContext, viewResult, model);
         }
 
         #endregion
 
         #region helpers
 
-        private ViewEngineResult FindView(ViewContext viewContext, string viewName)
+        private ViewEngineResult FindView(ActionContext viewContext, string viewName)
         {
             ViewEngineResult viewResult;
             if (!string.IsNullOrEmpty(viewName) && IsApplicationRelativePath(viewName))
@@ -92,6 +129,30 @@ namespace Cofoundry.Web
         private static bool IsApplicationRelativePath(string name)
         {
             return name[0] == '~' || name[0] == '/';
+        }
+
+        private async Task<string> RenderViewAsync(ActionContext actionContext, ViewEngineResult viewResult, object model)
+        {
+            var viewDictionary = new ViewDataDictionary(new EmptyModelMetadataProvider(), new ModelStateDictionary())
+            {
+                Model = model
+            };
+
+            using (var sw = new StringWriter())
+            {
+                var componentViewContext = new ViewContext(
+                    actionContext,
+                    viewResult.View,
+                    viewDictionary,
+                    new TempDataDictionary(actionContext.HttpContext, _tempDataProvider),
+                    sw,
+                    new HtmlHelperOptions()
+                );
+
+                await viewResult.View.RenderAsync(componentViewContext);
+
+                return sw.ToString();
+            }
         }
 
         private async Task<string> RenderViewAsync(ViewContext viewContext, ViewEngineResult viewResult, object model)

@@ -8,7 +8,7 @@
 }
 
 @section FooterScripts {
-    @angularBootstrapper.Bootstrap(adminRouteLibrary.CustomEntities, Model)
+    @await angularBootstrapper.BootstrapAsync(adminRouteLibrary.CustomEntities, Model)
 }
 
 <div ng-view=""></div>

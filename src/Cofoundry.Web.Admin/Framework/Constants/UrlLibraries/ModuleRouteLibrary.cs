@@ -86,6 +86,11 @@ namespace Cofoundry.Web.Admin
 
         #region helpers
 
+        public string StaticResource(string fileName)
+        {
+            return FilePathHelper.CombineVirtualPath(StaticResourcePrefix, fileName);
+        }
+
         public string JsFile(string fileName)
         {
             return FilePathHelper.CombineVirtualPath(StaticResourcePrefix, "js", fileName + ".js");

@@ -9030,7 +9030,7 @@ function (
         vm.tinymceOptions = {
             toolbar: parseToolbarButtons(vm.toolbarsConfig, vm.toolbarCustomConfig),
             plugins: 'link image media fullscreen imagetools code',
-            content_css: "/admin/modules/shared/content/css/lib/tinymce/content.min.css",
+            content_css: "/admin/modules/shared/content/css/third-party/tinymce/content.min.css",
             menubar: false,
             min_height: 300,
             setup: function (editor) {

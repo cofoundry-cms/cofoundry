@@ -1,5 +1,6 @@
 ﻿using Cofoundry.Core.Json;
 using Cofoundry.Core.ResourceFiles;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -16,124 +17,87 @@ namespace Cofoundry.Web.Admin
     /// <remarks>
     /// Designed only for use with SiteViewerContentFilterAttribute. 
     /// </remarks>
-    internal class VisualEditorContentStream : MemoryStream
-    {
-        //#region constructor
+    //internal class VisualEditorContentStream : MemoryStream
+    //{
+    //    #region constructor
 
-        //const char TAB = '\t';
-        
-        //private readonly Stream _outputStream = null;
-        //private readonly IPageResponseData _pageResponseData;
-        //private readonly IResourceLocator _resourceLocator;
-        //private readonly IJsonSerializerSettingsFactory _jsonSerializerSettingsFactory;
-        //private readonly ControllerContext _context;
+    //    const char TAB = '\t';
 
-        //public VisualEditorContentStream(
-        //    Stream outputStream,
-        //    IPageResponseData pageResponseData,
-        //    IResourceLocator resourceLocator,
-        //    IJsonSerializerSettingsFactory jsonSerializerSettingsFactory,
-        //    ControllerContext context
-        //    )
-        //{
-        //    _outputStream = outputStream;
-        //    _pageResponseData = pageResponseData;
-        //    _resourceLocator = resourceLocator;
-        //    _jsonSerializerSettingsFactory = jsonSerializerSettingsFactory;
-        //    _context = context;
-        //}
+    //    private readonly Stream _outputStream = null;
+    //    private readonly IPageResponseData _pageResponseData;
+    //    private readonly IResourceLocator _resourceLocator;
+    //    private readonly IJsonSerializerSettingsFactory _jsonSerializerSettingsFactory;
+    //    private readonly ControllerContext _context;
 
-        //#endregion
+    //    public VisualEditorContentStream(
+    //        Stream outputStream,
+    //        IPageResponseData pageResponseData,
+    //        IResourceLocator resourceLocator,
+    //        IJsonSerializerSettingsFactory jsonSerializerSettingsFactory,
+    //        ControllerContext context
+    //        )
+    //    {
+    //        _outputStream = outputStream;
+    //        _pageResponseData = pageResponseData;
+    //        _resourceLocator = resourceLocator;
+    //        _jsonSerializerSettingsFactory = jsonSerializerSettingsFactory;
+    //        _context = context;
+    //    }
 
-        //#region implementation
+    //    #endregion
 
-        //public override void Close()
-        //{
-        //    var html = Encoding.UTF8.GetString(this.ToArray());
+    //    #region implementation
 
-        //    // Check for not XML
-        //    if (!html.StartsWith("<?xml"))
-        //    {
-        //        html = AddCofoundryDependencies(html);
-        //    }
+    //    public override void Close()
+    //    {
+    //        var html = Encoding.UTF8.GetString(this.ToArray());
 
-        //    // Write the string back to the response
-        //    byte[] rawResult = Encoding.UTF8.GetBytes(html);
-        //    _outputStream.Write(rawResult, 0, rawResult.Length);
+    //        // Check for not XML
+    //        if (!html.StartsWith("<?xml"))
+    //        {
+    //            html = AddCofoundryDependencies(html);
+    //        }
 
-        //    base.Close();
-        //    _outputStream.Close();
-        //}
+    //        // Write the string back to the response
+    //        byte[] rawResult = Encoding.UTF8.GetBytes(html);
+    //        _outputStream.Write(rawResult, 0, rawResult.Length);
 
-        //#endregion
+    //        base.Close();
+    //        _outputStream.Close();
+    //    }
 
-        //#region html modifiers
+    //    #endregion
 
-        //private string AddCofoundryDependencies(string html)
-        //{
-        //    const string HEAD_TAG_END = "</head>";
-        //    const string BODY_TAG_END = "</body>";
+    //    #region html modifiers
 
-        //    var insertHeadIndex = html.IndexOf(HEAD_TAG_END, StringComparison.OrdinalIgnoreCase) - 1;
 
-        //    if (insertHeadIndex > 0)
-        //    {
-        //        html = html.Substring(0, insertHeadIndex)
-        //            + Environment.NewLine + TAB
-        //            + Scripts.Render(VisualEditorRouteLibrary.Js.VisualEditor).ToString() + TAB
-        //            + Styles.Render(VisualEditorRouteLibrary.Css.VisualEditor).ToString()
-        //            + html.Substring(insertHeadIndex);
-        //    }
+    //    #endregion
 
-        //    var insertBodyIndex = html.IndexOf(BODY_TAG_END, StringComparison.OrdinalIgnoreCase) - 1;
+    //    #region helpers
 
-        //    if (insertBodyIndex > 0)
-        //    {
-        //        // When using IPageModuleWithParentPageData and referencing the parent page we get a
-        //        // Self referencing loop error. Rather than set this globally we ignore this specifically here
-        //        var settings = _jsonSerializerSettingsFactory.Create();
-        //        settings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
+    //    public string RenderRazorViewToString(string viewName, object model)
+    //    {
+    //        using (var sw = new StringWriter())
+    //        {
+    //            var viewResult = ViewEngines.Engines.FindPartialView(_context, viewName);
+    //            var viewContext = new ViewContext(_context, viewResult.View, new ViewDataDictionary { { "model", model } }, new TempDataDictionary { }, sw);
+    //            viewResult.View.Render(viewContext, sw);
+    //            viewResult.ViewEngine.ReleaseView(_context, viewResult.View);
+    //            return sw.GetStringBuilder().ToString();
+    //        }
+    //    }
 
-        //        var responseJson = JsonConvert.SerializeObject(_pageResponseData, settings);
+    //    public string RenderSvgToString()
+    //    {
+    //        var virtualFile = _resourceLocator.GetFile(VisualEditorRouteLibrary.StaticContent.Url("svg-cache.html"));
 
-        //        html = html.Substring(0, insertBodyIndex)
-        //            + Environment.NewLine + TAB
-        //            + string.Format("<script>var pageResponseData = {0}</script>", responseJson) + TAB
-        //            + RenderRazorViewToString(VisualEditorRouteLibrary.VisualEditorToolbarViewPath(), _pageResponseData)
-        //            + string.Format("<!-- SVG ICONS --><div style='{0}'>{1}</div><!-- END SVG ICONS -->", "display:none", RenderSvgToString())
-        //            + html.Substring(insertBodyIndex);
-        //    }
+    //        using (var stream = virtualFile.Open())
+    //        {
+    //            var reader = new StreamReader(stream);
+    //            return reader.ReadToEnd();
+    //        }
+    //    }
 
-        //    return html;
-        //}
-
-        //#endregion
-
-        //#region helpers
-
-        //public string RenderRazorViewToString(string viewName, object model)
-        //{
-        //    using (var sw = new StringWriter())
-        //    {
-        //        var viewResult = ViewEngines.Engines.FindPartialView(_context, viewName);
-        //        var viewContext = new ViewContext(_context, viewResult.View, new ViewDataDictionary { { "model", model } }, new TempDataDictionary { }, sw);
-        //        viewResult.View.Render(viewContext, sw);
-        //        viewResult.ViewEngine.ReleaseView(_context, viewResult.View);
-        //        return sw.GetStringBuilder().ToString();
-        //    }
-        //}
-
-        //public string RenderSvgToString()
-        //{
-        //    var virtualFile = _resourceLocator.GetFile(VisualEditorRouteLibrary.StaticContent.Url("svg-cache.html"));
-
-        //    using (var stream = virtualFile.Open())
-        //    {
-        //        var reader = new StreamReader(stream);
-        //        return reader.ReadToEnd();
-        //    }
-        //}
-
-        //#endregion
-    }
+    //    #endregion
+    //}
 }

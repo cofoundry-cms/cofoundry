@@ -23,8 +23,11 @@ namespace Cofoundry.Web
             if (state.UserContext.IsCofoundryUser())
             {
                 var headers = controller.Response.GetTypedHeaders();
-                headers.CacheControl.NoCache = true;
-                headers.CacheControl.NoStore = true;
+                headers.CacheControl = new CacheControlHeaderValue()
+                {
+                    NoCache = true,
+                    NoStore = true,
+                };
             }
 
             return Task.FromResult(true);

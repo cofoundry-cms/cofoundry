@@ -55,7 +55,7 @@ namespace Cofoundry.Web
 
                 // NB: When adding multiple authentication middleware you should ensure that no middleware is configured to run automatically
                 // https://docs.microsoft.com/en-us/aspnet/core/security/authorization/limitingidentitybyscheme
-                cookieOptions.AutomaticAuthenticate = false;
+                cookieOptions.AutomaticAuthenticate = true;
 
                 if (!string.IsNullOrWhiteSpace(userAreaDefinition.LoginPath))
                 {

@@ -22,10 +22,10 @@
 <head>
     <meta name="viewport" content="width=device-width" />
     <title></title>
-    @staticResourceReferenceRenderer.CssTag(adminRouteLibrary.Shared, "site-viewer")
+    @staticResourceReferenceRenderer.CssTag(adminRouteLibrary.Shared, "shared")
 </head>
 <body class="cofoundry-visual-editor-frame">
     <div ng-controller="VisualEditorController as vm"></div>
-    @angularBootstrapper.Bootstrap(adminRouteLibrary.VisualEditor, ngOptions)
+    @await angularBootstrapper.BootstrapAsync(adminRouteLibrary.VisualEditor, ngOptions)
 </body>
 </html>

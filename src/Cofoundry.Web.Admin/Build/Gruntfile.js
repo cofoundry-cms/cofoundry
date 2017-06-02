@@ -454,6 +454,7 @@
                     '../Admin/Modules/VisualEditor/Js/DataServices/*.js',
                     '../Admin/Modules/VisualEditor/Js/UIComponents/*.js',
                     '../Admin/Modules/VisualEditor/Js/Routes/*.js',
+                    '../Admin/Modules/VisualEditor/Js/Routes/**/*.js',
                 ],
                 dest: '../Admin/Modules/VisualEditor/Content/js/visualeditor.js'
             },
@@ -477,7 +478,9 @@
             },
             contentPage: {
                 src: [
-                    '../Admin/Modules/VisualEditor/Js/ContentPage/*.js',
+                    '../Admin/Modules/VisualEditor/Js/ContentPage/Index.js',
+                    '../Admin/Modules/VisualEditor/Js/ContentPage/GuiController.js',
+                    '../Admin/Modules/VisualEditor/Js/ContentPage/EventAggregator.js'
                 ],
                 dest: '../Admin/Modules/VisualEditor/Content/js/contentpage.js'
             }

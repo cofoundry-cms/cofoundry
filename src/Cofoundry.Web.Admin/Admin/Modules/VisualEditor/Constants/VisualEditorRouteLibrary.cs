@@ -5,7 +5,7 @@ using System.Web;
 
 namespace Cofoundry.Web.Admin
 {
-    public class VisualEditorRouteLibrary : ModuleRouteLibrary
+    public class VisualEditorRouteLibrary : AngularModuleRouteLibrary
     {
         public const string RoutePrefix = "visual-editor";
 
@@ -24,6 +24,7 @@ namespace Cofoundry.Web.Admin
         {
             return ResourcePrefix + "mvc/views/Toolbar.cshtml";
         }
+
 
         #endregion
     }

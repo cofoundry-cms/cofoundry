@@ -37,7 +37,7 @@ namespace Cofoundry.BasicTestSite
 
         [Display(Name = "Html")]
         [Html]
-        public int TestHtml { get; set; }
+        public string TestHtml { get; set; }
 
         //[Page]
         //[Display(Name = "Page")]
