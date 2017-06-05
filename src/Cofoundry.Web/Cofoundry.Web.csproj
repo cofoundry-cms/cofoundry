@@ -416,6 +416,7 @@
     <Compile Include="..\SolutionInfo.cs">
       <Link>Properties\SolutionInfo.cs</Link>
     </Compile>
+    <Compile Include="App_Start\AddCofoundryStartupExtension.cs" />
     <Compile Include="App_Start\AssemblyPartsDiscovery\AssemblyDiscoveryProvider.cs" />
     <Compile Include="App_Start\AssemblyPartsDiscovery\AssemblyDiscoveryRuleContext.cs" />
     <Compile Include="App_Start\AssemblyPartsDiscovery\DiscoveredTypes\DiscoveredTypesProvider.cs" />
@@ -425,7 +426,6 @@
     <Compile Include="App_Start\AssemblyPartsDiscovery\Rules\IAssemblyDiscoveryRule.cs" />
     <Compile Include="App_Start\Bootstrap\AppStartDependencyRegistration.cs" />
     <Compile Include="App_Start\Bootstrap\PageTemplateViewLocationRegistration.cs" />
-    <Compile Include="App_Start\CofoundryStartupExtensions.cs" />
     <Compile Include="App_Start\MvcConfiguration\CofoundryMvcBuilderConfiguration.cs" />
     <Compile Include="App_Start\MvcConfiguration\CofoundryMvcOptionsConfiguration.cs" />
     <Compile Include="App_Start\MvcConfiguration\CofoundryMvcJsonOptionsConfiguration.cs" />
@@ -443,6 +443,7 @@
     <Compile Include="App_Start\StartupTasks\JsonConverterConfigurationStartupTask.cs" />
     <Compile Include="App_Start\Middleware\AutoUpdateMiddleware.cs" />
     <Compile Include="App_Start\CofoundryStartupConfiguration.cs" />
+    <Compile Include="App_Start\UseCofoundryStartupExtension.cs" />
     <Compile Include="Controllers\CofoundryAssetsController.cs" />
     <Compile Include="Controllers\CofoundryFilesController.cs" />
     <Compile Include="Controllers\CofoundryPagesController.cs" />
