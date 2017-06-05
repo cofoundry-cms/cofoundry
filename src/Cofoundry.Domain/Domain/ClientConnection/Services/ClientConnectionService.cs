@@ -7,7 +7,8 @@ using System.Linq;
 namespace Cofoundry.Domain
 {
     /// <summary>
-    /// Service to get connection info about someone connecting to the site
+    /// Service for retreiving connection information about a client connected 
+    /// to the application e.g. IPAddress and the UserAgent string.
     /// </summary>
     public class ClientConnectionService : IClientConnectionService
     {
@@ -19,6 +20,11 @@ namespace Cofoundry.Domain
         {
             _httpContextAccessor = httpContextAccessor;
         }
+
+        /// <summary>
+        /// Gets an object that represents the current client
+        /// connected to the application in the current request.
+        /// </summary>
         public ClientConnectionInfo GetConnectionInfo()
         {
             var context = _httpContextAccessor.HttpContext;
