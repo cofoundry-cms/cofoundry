@@ -57,7 +57,7 @@ namespace Cofoundry.Domain
 
         public async Task<IDictionary<int, PageRenderDetails>> ExecuteAsync(GetPageRenderDetailsByIdRangeQuery query, IExecutionContext executionContext)
         {
-            var dbPages = await QueryPages(query).FirstOrDefaultAsync();
+            var dbPages = await QueryPages(query).ToListAsync();
             var pages = Mapper.Map<List<PageRenderDetails>>(dbPages);
 
             var pageRoutes = await _queryExecutor.GetByIdRangeAsync<PageRoute>(GetAllPageIds(pages), executionContext);
