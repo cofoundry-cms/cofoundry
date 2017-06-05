@@ -76,8 +76,6 @@ namespace Cofoundry.Web
             }
 
             app.UseMvc(GetRoutes);
-
-            RegisterModelBinders();
         }
 
         #region helpers
@@ -90,12 +88,6 @@ namespace Cofoundry.Web
             {
                 FileProvider = _staticResourceFileProvider
             });
-        }
-
-        private static void RegisterModelBinders()
-        {
-            // TODO: Remove or relocate?
-            //ModelBinders.Binders.Add(typeof(ImageAnchorLocation), new EnumBinder<ImageAnchorLocation>(null));
         }
 
         private void GetRoutes(IRouteBuilder routes)

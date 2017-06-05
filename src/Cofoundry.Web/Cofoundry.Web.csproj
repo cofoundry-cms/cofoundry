@@ -563,7 +563,6 @@
     <Compile Include="Framework\Mvc\ControllerHelpers\ControllerResponseHelper.cs" />
     <Compile Include="Framework\Mvc\ControllerHelpers\IControllerResponseHelper.cs" />
     <Compile Include="Framework\Mvc\Filters\ExceptionLogAttribute.cs" />
-    <Compile Include="Framework\Mvc\ModelBinders\EnumBinder.cs" />
     <Compile Include="Framework\Mvc\UIControls\Breadcrumbs\BreadCrumbsViewModel.cs" />
     <Compile Include="Framework\Mvc\UIControls\Breadcrumbs\BreadcrumbUIControlExtension.cs" />
     <Compile Include="Framework\Mvc\UIControls\Breadcrumbs\BreadCrumbViewModel.cs" />
