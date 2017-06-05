@@ -43,16 +43,7 @@ namespace Cofoundry.Web
         /// <param name="mvcBuilder">IMvcBuilder to configure.</param>
         public void Configure(IMvcBuilder mvcBuilder)
         {
-            // TODO: make this configurable
-            mvcBuilder.Services.AddScoped<IAuthorizationHandler, UserAreaAuthorizationHandler>();
-            mvcBuilder.Services.AddAuthorization(options =>
-            {
-                foreach (var _userAreaRepository in _userAreaRepository.GetAll())
-                {
-                    options.AddPolicy(CofoundryAuthenticationConstants.FormatPolicyName(_userAreaRepository.UserAreaCode),
-                        policy => policy.AddRequirements(new UserAreaAuthorizationRequirement(_userAreaRepository.UserAreaCode)));
-                }
-            });
+            ConfigureAuth(mvcBuilder);
 
             foreach (var config in EnumerableHelper
                 .Enumerate(_mvcJsonOptionsConfigurations)
@@ -72,6 +63,20 @@ namespace Cofoundry.Web
             {
                 mvcBuilder.Services.Configure<RazorViewEngineOptions>(o => config.Configure(o));
             }
+        }
+
+        private void ConfigureAuth(IMvcBuilder mvcBuilder)
+        {
+            // TODO: make this configurable
+            mvcBuilder.Services.AddScoped<IAuthorizationHandler, UserAreaAuthorizationHandler>();
+            mvcBuilder.Services.AddAuthorization(options =>
+            {
+                foreach (var _userAreaRepository in _userAreaRepository.GetAll())
+                {
+                    options.AddPolicy(CofoundryAuthenticationConstants.FormatPolicyName(_userAreaRepository.UserAreaCode),
+                        policy => policy.AddRequirements(new UserAreaAuthorizationRequirement(_userAreaRepository.UserAreaCode)));
+                }
+            });
         }
     }
 }
