@@ -174,7 +174,7 @@
                 files: [
                     '../Admin/Modules/Shared/Js/**/*.js'
                 ],
-                tasks: ['concat:shared', 'uglify:shared', 'concat:sharedAll']
+                tasks: ['concat:shared', 'uglify:shared', 'concat:sharedAll', 'concat:sharedAllMin']
             },
             sharedHTML : {
                 files: [
@@ -669,6 +669,18 @@
                     '../Admin/Modules/Shared/Js/lib/AngularModules/TinyMce/tinymce.min.js',
                     '../Admin/Modules/Shared/Js/lib/AngularModules/TinyMce/ui-tinymce.min.js',
                     '../Admin/Modules/Shared/Js/lib/AngularModules/*.js',
+                    '../Admin/Modules/Shared/Content/js/shared.js',
+                ],
+                dest: '../Admin/Modules/Shared/Content/js/shared.js'
+            },
+            sharedAllMin: {
+                src: [
+                    '../Admin/Modules/Shared/Js/lib/underscore.min.js',
+                    '../Admin/Modules/Shared/Js/lib/angular.min.js',
+                    '../Admin/Modules/Shared/Js/lib/angular-sanitize.min.js',
+                    '../Admin/Modules/Shared/Js/lib/AngularModules/TinyMce/tinymce.min.js',
+                    '../Admin/Modules/Shared/Js/lib/AngularModules/TinyMce/ui-tinymce.min.js',
+                    '../Admin/Modules/Shared/Js/lib/AngularModules/*.js',
                     '../Admin/Modules/Shared/Content/js/shared_min.js',
                 ],
                 dest: '../Admin/Modules/Shared/Content/js/shared_min.js'
@@ -800,6 +812,6 @@
         'concat:visualEditorHTML',
         'concat:contentPage',
         'uglify',
-        'concat:sharedAll'
+        'concat:sharedAllMin'
     ]);
 };

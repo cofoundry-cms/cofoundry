@@ -38,6 +38,7 @@ namespace Cofoundry.Web
                 .RegisterType<IPathResolver, SitePathResolver>(RegistrationOptions.Override(RegistrationOverridePriority.Low))
 
                 .RegisterType<JsonDeltaModelBinder>()
+                .RegisterType<IFormFileUploadedFileFactory, FormFileUploadedFileFactory>()
                 ; 
         }
     }

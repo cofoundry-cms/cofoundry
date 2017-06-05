@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Cofoundry.Domain;
 using Cofoundry.Domain.CQS;
 using Cofoundry.Web.WebApi;
+using Microsoft.AspNetCore.Http;
 
 namespace Cofoundry.Web.Admin
 {
@@ -18,6 +19,7 @@ namespace Cofoundry.Web.Admin
 
         private readonly IQueryExecutor _queryExecutor;
         private readonly IApiResponseHelper _apiResponseHelper;
+        private readonly IFormFileUploadedFileFactory _formFileUploadedFileFactory;
 
         #endregion
 
@@ -25,11 +27,13 @@ namespace Cofoundry.Web.Admin
 
         public DocumentsApiController(
             IQueryExecutor queryExecutor,
-            IApiResponseHelper apiResponseHelper
+            IApiResponseHelper apiResponseHelper,
+            IFormFileUploadedFileFactory formFileUploadedFileFactory
             )
         {
             _queryExecutor = queryExecutor;
             _apiResponseHelper = apiResponseHelper;
+            _formFileUploadedFileFactory = formFileUploadedFileFactory;
         }
 
         #endregion
@@ -59,15 +63,18 @@ namespace Cofoundry.Web.Admin
         #region commands
 
         [HttpPost]
-        public async Task<IActionResult> Post([FromBody] AddDocumentAssetCommand command)
+        public async Task<IActionResult> Post(AddDocumentAssetCommand command, IFormFile file)
         {
+            command.File = _formFileUploadedFileFactory.Create(file);
             return await _apiResponseHelper.RunCommandAsync(this, command);
         }
 
-        [HttpPatch(ID_ROUTE)]
-        public async Task<IActionResult> Patch(int documentAssetId, [FromBody] IDelta<UpdateDocumentAssetCommand> delta)
+        [HttpPut(ID_ROUTE)]
+        public async Task<IActionResult> Put(int documentAssetId, UpdateDocumentAssetCommand command, IFormFile file)
         {
-            return await _apiResponseHelper.RunCommandAsync(this, documentAssetId, delta);
+            command.File = _formFileUploadedFileFactory.Create(file);
+
+            return await _apiResponseHelper.RunCommandAsync(this, command);
         }
 
         [HttpDelete(ID_ROUTE)]

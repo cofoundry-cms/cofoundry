@@ -49,7 +49,7 @@ namespace Cofoundry.Domain
         {
             Image imageFile = null;
 
-            using (var inputSteam = await uploadedFile.GetFileStreamAsync())
+            using (var inputSteam = await uploadedFile.OpenReadStreamAsync())
             {
                 try
                 {

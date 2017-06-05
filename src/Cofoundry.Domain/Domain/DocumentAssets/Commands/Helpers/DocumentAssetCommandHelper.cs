@@ -34,7 +34,7 @@ namespace Cofoundry.Domain
 
         public async Task SaveFile(IUploadedFile uploadedFile, DocumentAsset documentAsset)
         {
-            using (var inputSteam = await uploadedFile.GetFileStreamAsync())
+            using (var inputSteam = await uploadedFile.OpenReadStreamAsync())
             {
                 bool isNew = documentAsset.DocumentAssetId < 1;
 

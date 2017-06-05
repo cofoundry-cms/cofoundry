@@ -34,7 +34,7 @@ namespace Cofoundry.Domain
 
         public long FileLength { get; private set; }
 
-        public Task<System.IO.Stream> GetFileStreamAsync()
+        public Task<System.IO.Stream> OpenReadStreamAsync()
         {
             return Task.FromResult(_stream);
         }

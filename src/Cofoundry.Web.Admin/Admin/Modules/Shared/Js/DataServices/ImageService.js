@@ -20,7 +20,7 @@ function (
 
     service.update = function (command) {
 
-        return uploadFile(service.getIdRoute(command.imageAssetId), command, 'PATCH');
+        return uploadFile(service.getIdRoute(command.imageAssetId), command, 'PUT');
     }
 
     service.getAll = function (query) {

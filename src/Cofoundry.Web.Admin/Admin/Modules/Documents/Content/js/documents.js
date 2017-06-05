@@ -33,11 +33,11 @@ angular.module('cms.documents').factory('documents.documentService', [
     }
 
     service.update = function (command) {
-        return uploadFile(service.getIdRoute(command.documentAssetId), command, 'PATCH');
+        return uploadFile(service.getIdRoute(command.documentAssetId), command, 'PUT');
     }
 
     service.remove = function (id) {
-
+        
         return $http.delete(service.getIdRoute(id));
     }
 

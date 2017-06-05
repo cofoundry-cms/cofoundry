@@ -596,7 +596,9 @@
     <Compile Include="Framework\WebApi\Deltas\JsonDelta.cs" />
     <Compile Include="Framework\WebApi\Deltas\JsonDeltaModelBinderProvider.cs" />
     <Compile Include="Framework\WebApi\Deltas\JsonDeltaModelBinder.cs" />
-    <Compile Include="Framework\WebApi\Files\WebApiUploadedFile.cs" />
+    <Compile Include="Framework\WebApi\Files\FormFileUploadedFile.cs" />
+    <Compile Include="Framework\WebApi\Files\IFormFileUploadedFileFactory.cs" />
+    <Compile Include="Framework\WebApi\Files\FormFileUploadedFileFactory.cs" />
     <Compile Include="Framework\WebApi\Filters\ValidateApiAntiForgeryTokenAttribute.cs" />
     <Compile Include="Framework\WebApi\Formatters\MultipartFormDataFormatter.cs" />
     <Compile Include="Framework\WebApi\ResponseHelpers\ApiResponseHelper.cs" />
