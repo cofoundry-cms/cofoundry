@@ -6,8 +6,15 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Include="wwwroot\Content\Humans.txt" />
+    <Content Include="wwwroot\Content\Robots - Copy.txt" />
+    <Content Include="wwwroot\Content\Robots.txt" />
+    <Content Include="wwwroot\Humans.txt" />
+    <Content Include="wwwroot\Robots.txt" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Folder Include="Controllers\" />
-    <Folder Include="wwwroot\" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="5.2.0" />

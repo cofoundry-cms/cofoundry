@@ -12,6 +12,11 @@ namespace Cofoundry.Core
     public class DebugSettings : CofoundryConfigurationSettingsBase
     {
         /// <summary>
+        /// Disabled any robits.txt file and instead serves up a file that disallows 
+        /// </summary>
+        public bool DisableRobotsTxt { get; set; }
+
+        /// <summary>
         /// By default Cofoundry will try and load minified css/js files, but
         /// this can be overriden for debugging purposes and an uncompressed
         /// version will try and be located first.
