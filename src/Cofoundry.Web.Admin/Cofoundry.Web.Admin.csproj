@@ -1077,7 +1077,6 @@
     <Compile Include="Admin\Modules\Shared\Constants\SharedRouteLibrary.cs" />
     <Compile Include="Admin\Modules\Shared\Mvc\ViewComponents\AdminMenuViewComponent.cs" />
     <Compile Include="Admin\Modules\Shared\Mvc\Models\AdminMenuViewModel.cs" />
-    <Compile Include="Admin\Modules\VisualEditor\Bootstrap\VisualEditorBundleRegistration.cs" />
     <Compile Include="Admin\Modules\VisualEditor\Bootstrap\VisualEditorDependencyRegistration.cs" />
     <Compile Include="Admin\Modules\VisualEditor\Bootstrap\VisualEditorEmbeddedResourceRouteRegistration.cs" />
     <Compile Include="Admin\Modules\VisualEditor\Bootstrap\VisualEditorMvcOptionsRegistration.cs" />
