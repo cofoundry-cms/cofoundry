@@ -115,11 +115,11 @@ namespace Cofoundry.Core.DependencyInjection
         /// <summary>
         /// Registers a type with a factory that is used to construct the type when it is resolved.
         /// </summary>
-        /// <typeparam name="TConcrete">The concrete trype tp be registered</typeparam>
+        /// <typeparam name="TToRegister">The type tp be registered</typeparam>
         /// <typeparam name="TFactory">The IInjectionFactory that should be used to construct the type.</typeparam>
         /// <param name="options">Optional options argument.</param>
         /// <returns>The IContainerRegister instance for method chaining.</returns>
-        IContainerRegister RegisterFactory<TConcrete, TFactory>(RegistrationOptions options = null) where TFactory : IInjectionFactory<TConcrete>;
+        IContainerRegister RegisterFactory<TToRegister, TFactory>(RegistrationOptions options = null) where TFactory : IInjectionFactory<TToRegister>;
 
         /// <summary>
         /// Registers a type with a factory that is used to construct the type when it is resolved.

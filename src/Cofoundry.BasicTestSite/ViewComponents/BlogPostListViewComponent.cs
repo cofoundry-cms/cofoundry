@@ -1,6 +1,8 @@
 ﻿using Cofoundry.Core;
 using Cofoundry.Domain;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,7 +17,8 @@ namespace Cofoundry.BasicTestSite
 
         public BlogPostListViewComponent(
             ICustomEntityRepository customEntityRepository,
-            IImageAssetRepository imageAssetRepository
+            IImageAssetRepository imageAssetRepository,
+            IOptions<StaticFileOptions> staticFileOptions
             )
         {
             _customEntityRepository = customEntityRepository;

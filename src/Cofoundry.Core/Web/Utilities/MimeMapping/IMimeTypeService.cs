@@ -13,9 +13,9 @@ namespace Cofoundry.Core.Web
     {
         /// <summary>
         /// Finds a mime type that matches the file extension in a file name. Equivalent to 
-        /// the old MimeMapping.GetMimeMapping method from .NET 4.x
+        /// the old MimeMapping.GetMimeMapping method from .NET 4.x.
         /// </summary>
-        /// <param name="fileName">File name with file extension (path optional)</param>
+        /// <param name="fileName">File name with file extension (path optional).</param>
         string MapFromFileName(string fileName);
     }
 }

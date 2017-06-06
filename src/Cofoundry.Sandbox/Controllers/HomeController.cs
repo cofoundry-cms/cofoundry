@@ -9,6 +9,8 @@ using Microsoft.Extensions.Options;
 using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.AspNetCore.StaticFiles;
+using Microsoft.AspNetCore.Builder;
 
 namespace Cofoundry.Sandbox.Controllers
 {
@@ -21,10 +23,12 @@ namespace Cofoundry.Sandbox.Controllers
             IHostingEnvironment hostingEnvironment,
             IEnumerable<IExampleClass> examples,
             IExampleClass example,
-            IServiceProvider serviceProvider
+            IServiceProvider serviceProvider,
+            //IContentTypeProvider contentTypeProvider,
+            IOptions<StaticFileOptions> staticFileOptions
             )
         {
-            var options = viewOptions.Value;
+            var options = staticFileOptions.Value;
             IViewEngine viewEngine = viewOptions.Value.ViewEngines.FirstOrDefault();
             var razorOptions = razorEngineOptions.Value;
         }

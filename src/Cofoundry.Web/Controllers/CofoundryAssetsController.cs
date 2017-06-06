@@ -93,7 +93,6 @@ namespace Cofoundry.Web
             var headers = Response.GetTypedHeaders();
             headers.Expires = DateTime.UtcNow.AddMonths(-1);
             headers.LastModified = lastModified;
-
             
             var contentType = _mimeTypeService.MapFromFileName("." + asset.Extension);
             return new FileStreamResult(stream, contentType);

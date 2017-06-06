@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Cofoundry.Core.DependencyInjection;
 using Cofoundry.Core.Configuration;
+using Microsoft.AspNetCore.StaticFiles;
 
 namespace Cofoundry.Core.Web.Bootstrap
 {
@@ -20,6 +21,9 @@ namespace Cofoundry.Core.Web.Bootstrap
                 .RegisterType<IHtmlSanitizer, HtmlSanitizer>()
                 .RegisterType<IDefaultHtmlSanitizationRuleSetFactory, DefaultHtmlSanitizationRuleSetFactory>()
                 .RegisterType<IMimeTypeService, MimeTypeService>()
+                .RegisterType<IContentTypeProviderFactory, ContentTypeProviderFactory>()
+                .RegisterFactory<IContentTypeProvider, IContentTypeProviderFactory>(new RegistrationOptions() { InstanceScope = InstanceScope.Singleton })
+                .RegisterAll<IMimeTypeRegistration>()
                 ;
         }
     }

@@ -9,6 +9,7 @@ using System.Linq;
 using Cofoundry.Core;
 using Microsoft.Extensions.Options;
 using Cofoundry.Domain;
+using Microsoft.AspNetCore.StaticFiles;
 
 namespace Cofoundry.Web
 {
@@ -22,16 +23,19 @@ namespace Cofoundry.Web
         private readonly IRouteInitializer _routeInitializer;
         private readonly IStaticResourceFileProvider _staticResourceFileProvider;
         private readonly IUserAreaRepository _userAreaRepository;
+        private readonly IContentTypeProvider _contentTypeProvider;
 
         public MvcConfigurationStartupTask(
             IRouteInitializer routeInitializer,
             IStaticResourceFileProvider staticResourceFileProvider,
-            IUserAreaRepository userAreaRepository
+            IUserAreaRepository userAreaRepository,
+            IContentTypeProvider contentTypeProvider
             )
         {
             _routeInitializer = routeInitializer;
             _staticResourceFileProvider = staticResourceFileProvider;
             _userAreaRepository = userAreaRepository;
+            _contentTypeProvider = contentTypeProvider;
         }
 
         #endregion
@@ -86,7 +90,8 @@ namespace Cofoundry.Web
             // or expose all the providers with settings on the _staticResourceFileProvider
             app.UseStaticFiles(new StaticFileOptions()
             {
-                FileProvider = _staticResourceFileProvider
+                FileProvider = _staticResourceFileProvider,
+                ContentTypeProvider = _contentTypeProvider
             });
         }
 
