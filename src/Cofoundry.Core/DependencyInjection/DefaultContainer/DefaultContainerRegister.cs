@@ -197,9 +197,9 @@ namespace Cofoundry.Core.DependencyInjection
             return RegisterFactory<TConcrete, TFactory>(options);
         }
 
-        public IContainerRegister RegisterFactory<TConcrete, TFactory>(RegistrationOptions options = null) where TFactory : IInjectionFactory<TConcrete>
+        public IContainerRegister RegisterFactory<TToRegister, TFactory>(RegistrationOptions options = null) where TFactory : IInjectionFactory<TToRegister>
         {
-            return RegisterFactory<TConcrete, TConcrete, TFactory>(options);
+            return RegisterFactory<TToRegister, TToRegister, TFactory>(options);
         }
 
         public IContainerRegister RegisterFactory<TRegisterAs, TConcrete, TFactory>(RegistrationOptions options = null)
@@ -215,7 +215,7 @@ namespace Cofoundry.Core.DependencyInjection
                     AddService(factoryType, factoryType);
                 }
 
-                AddServiceWithFactory(typeof(TConcrete), c => c.GetRequiredService<TFactory>().Create());
+                AddServiceWithFactory(typeof(TConcrete), c => c.GetRequiredService<TFactory>().Create(), options);
             });
 
             Register<TRegisterAs>(fn, options);
