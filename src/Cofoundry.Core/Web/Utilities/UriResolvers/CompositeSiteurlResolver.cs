@@ -14,16 +14,15 @@ namespace Cofoundry.Core.Web
     public class CompositeSiteUrlResolver : ISiteUrlResolver
     {
         private readonly ConfigBasedSiteUrlResolver _configBasedSiteUrlResolver;
-        //private readonly RequestBasedSiteUrlResolver _requestBasedSiteUrlResolver;
+        private readonly RequestBasedSiteUrlResolver _requestBasedSiteUrlResolver;
 
         public CompositeSiteUrlResolver(
-            ConfigBasedSiteUrlResolver configBasedSiteUrlResolver
-            //,
-            //RequestBasedSiteUrlResolver requestBasedSiteUrlResolver
+            ConfigBasedSiteUrlResolver configBasedSiteUrlResolver,
+            RequestBasedSiteUrlResolver requestBasedSiteUrlResolver
             )
         {
             _configBasedSiteUrlResolver = configBasedSiteUrlResolver;
-            //_requestBasedSiteUrlResolver = requestBasedSiteUrlResolver;
+            _requestBasedSiteUrlResolver = requestBasedSiteUrlResolver;
         }
 
         /// <summary>
@@ -54,10 +53,10 @@ namespace Cofoundry.Core.Web
             {
                 return _configBasedSiteUrlResolver;
             }
-            //else if (_requestBasedSiteUrlResolver.CanResolve())
-            //{
-            //    return _requestBasedSiteUrlResolver;
-            //}
+            else if (_requestBasedSiteUrlResolver.CanResolve())
+            {
+                return _requestBasedSiteUrlResolver;
+            }
 
             // Default to the config error message if we're outside a request
             return _configBasedSiteUrlResolver;
