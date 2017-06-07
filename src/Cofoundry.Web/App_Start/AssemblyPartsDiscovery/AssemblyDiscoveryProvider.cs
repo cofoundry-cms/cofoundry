@@ -16,7 +16,7 @@ namespace Cofoundry.Web
     /// as candidates for features and DI type discovery. This is done to make features
     /// and DI types accessible from plugins.
     /// </summary>
-    public class AssemblyDiscoveryProvider
+    public class AssemblyDiscoveryProvider : IAssemblyDiscoveryProvider
     {
         /// <summary>
         /// Run the discovery routine using the provided ruleset.
