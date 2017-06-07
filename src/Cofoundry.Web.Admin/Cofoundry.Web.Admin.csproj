@@ -1104,6 +1104,7 @@
     <Compile Include="Framework\Constants\UrlLibraries\AdminRouteLibrary.cs" />
     <Compile Include="Framework\Constants\UrlLibraries\AngularModuleRouteLibrary.cs" />
     <Compile Include="Framework\Constants\UrlLibraries\ModuleRouteLibrary.cs" />
+    <Compile Include="Framework\ControllerBase\AdminRouteAttribute.cs" />
     <Compile Include="Framework\ControllerBase\AdminApiRouteAttribute.cs" />
     <Compile Include="Framework\ControllerBase\BaseAdminApiController.cs" />
     <Compile Include="Framework\ControllerBase\BaseAdminMvcController.cs" />

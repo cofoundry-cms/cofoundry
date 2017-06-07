@@ -12,7 +12,7 @@ using Microsoft.AspNetCore.Mvc.Filters;
 namespace Cofoundry.Web.Admin
 {
     [Area(RouteConstants.AdminAreaName)]
-    [Route(RouteConstants.AdminAreaPrefix + "/" + AuthRouteLibrary.RoutePrefix)]
+    [AdminRoute(AuthRouteLibrary.RoutePrefix)]
     public class AuthController : Controller
     {
         private static readonly string CONTROLLER_NAME = "Auth";

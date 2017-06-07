@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Cofoundry.Web.Admin
 {
     [Area(RouteConstants.AdminAreaName)]
-    [Route(RouteConstants.AdminAreaPrefix + "/" + SetupRouteLibrary.RoutePrefix)]
+    [AdminRoute(SetupRouteLibrary.RoutePrefix)]
     public class SetupController : Controller
     {
         #region Constructor
