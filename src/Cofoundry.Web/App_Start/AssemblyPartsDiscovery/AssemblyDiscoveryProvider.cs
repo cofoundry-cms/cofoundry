@@ -16,6 +16,10 @@ namespace Cofoundry.Web
     /// as candidates for features and DI type discovery. This is done to make features
     /// and DI types accessible from plugins.
     /// </summary>
+    /// <remarks>
+    /// A similar technique is used by the DefaultAssemblyPartDiscoveryProvider in asp.net
+    /// core framework, see https://github.com/aspnet/Mvc/blob/c47825944da54e8da781861d1f72b880befdbd87/src/Microsoft.AspNetCore.Mvc.Core/Internal/DefaultAssemblyPartDiscoveryProvider.cs
+    /// </remarks>
     public class AssemblyDiscoveryProvider : IAssemblyDiscoveryProvider
     {
         /// <summary>
