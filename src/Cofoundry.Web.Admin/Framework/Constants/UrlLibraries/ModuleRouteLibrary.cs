@@ -64,7 +64,7 @@ namespace Cofoundry.Web.Admin
         public string ModuleFolderName { get; private set; }
 
         /// <summary>
-        /// For constructing resource bundle urls i.e. "admin/modules/entity/"
+        /// For constructing resource paths i.e. "Admin/Modules/Entity/"
         /// </summary>
         /// <remarks>
         /// Note that resource paths have to mimic the directory structure
@@ -73,7 +73,7 @@ namespace Cofoundry.Web.Admin
         public string ResourcePrefix { get; private set; }
 
         /// <summary>
-        /// Route for the static resource folder i.e. "admin/modules/entity/content"
+        /// Route for the static resource folder i.e. "Admin/Modules/Entity/Content"
         /// </summary>
         public string StaticResourcePrefix { get; private set; }
 
