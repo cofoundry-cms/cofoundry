@@ -1085,7 +1085,6 @@
     <Compile Include="Admin\Modules\VisualEditor\Mvc\ActionFilters\VisualEditorActionResultFactory.cs" />
     <Compile Include="Admin\Modules\VisualEditor\Mvc\ActionFilters\VisualEditorActionResult.cs" />
     <Compile Include="Admin\Modules\VisualEditor\Mvc\ActionFilters\VisualEditorContentFilter.cs" />
-    <Compile Include="Admin\Modules\VisualEditor\Mvc\ActionFilters\VisualEditorContentStream.cs" />
     <Compile Include="Admin\Modules\VisualEditor\Mvc\Controllers\VisualEditorController.cs" />
     <Compile Include="Admin\Modules\Users\Bootstrap\UsersEmbeddedRouteRegistrations.cs" />
     <Compile Include="Admin\Modules\Users\Bootstrap\UsersModuleRegistration.cs" />
