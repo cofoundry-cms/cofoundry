@@ -66,17 +66,12 @@ namespace Cofoundry.Web.Admin
         private Task<IUserContext> GetCofoundryUserIfCanShowVisualEditorAsync(ResultExecutingContext filterContext)
         {
             var httpContext = filterContext.HttpContext;
-            var request = httpContext.Request;
-            var response = httpContext.Response;
 
             var path = httpContext.Request.Path;
-            var x = Regex.IsMatch(path, PAGE_PATH_REGEX, RegexOptions.IgnoreCase);
-            var y = _routesToExclude.Where(r => path.StartsWithSegments(r, StringComparison.OrdinalIgnoreCase));
-            var z = StringHelper.SplitAndTrim(response.ContentType, ';').Contains("text/html");
 
             var canShowSiteViewer =
                 // Is authenticated in some way
-                filterContext.HttpContext.User.Identities.Any()
+                httpContext.User.Identities.Any()
                 // We have an exsting filter to override
                 && filterContext.Result != null
                 // Is a get request
