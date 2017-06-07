@@ -21,14 +21,22 @@ namespace Cofoundry.Domain
             _cultureFactory = cultureFactory;
         }
 
+        /// <summary>
+        /// Gets the CultureInfo used by the current request.
+        /// </summary>
         public CultureInfo GetCurrent()
         {
-            return System.Threading.Thread.CurrentThread.CurrentCulture;
+            return CultureInfo.CurrentCulture;
         }
 
+        /// <summary>
+        /// Sets the current thread culture and UI culture.
+        /// </summary>
+        /// <param name="ietfLanguageTag">An IETF language tag to set the current thread culture to e.g. 'en-US' or 'es'.</param>
         public void SetCurrent(string ietfLanguageTag)
         {
             var culture = _cultureFactory.Create(ietfLanguageTag);
+
             System.Threading.Thread.CurrentThread.CurrentCulture = culture;
             System.Threading.Thread.CurrentThread.CurrentUICulture = culture;
         }

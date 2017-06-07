@@ -358,7 +358,6 @@
     <Compile Include="AutoMapper\Mapping\ConfigurationExtensions.cs" />
     <Compile Include="AutoMapper\Mapping\TypeConverters\HtmlStringToStringConverter.cs" />
     <Compile Include="AutoMapper\Mapping\TypeConverters\StringToHtmlStringConverter.cs" />
-    <Compile Include="AutoMapper\Mapping\Types\ProjectableHtmlString.cs" />
     <Compile Include="AutoUpdate\Bootstrap\AutoUpdateDependencyRegistration.cs" />
     <Compile Include="AutoUpdate\Commands\CreateDirectoriesUpdateCommand.cs" />
     <Compile Include="AutoUpdate\Commands\CreateDirectoriesUpdateCommandHandler.cs" />

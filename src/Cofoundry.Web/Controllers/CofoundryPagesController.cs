@@ -4,6 +4,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using Cofoundry.Domain;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Filters;
+using Cofoundry.Domain.CQS;
 
 namespace Cofoundry.Web
 {
@@ -13,51 +15,23 @@ namespace Cofoundry.Web
     /// </summary>
     public class CofoundryPagesController : Controller
     {
-        private readonly ICultureContextService _cultureContextService;
-        private readonly IPageLocaleParser _pageLocaleParser;
+        #region constructor
+
+        private readonly IQueryExecutor _queryExecutor;
         private readonly IPageActionRoutingStepFactory _pageActionRoutingStepFactory;
 
-        private ActiveLocale _locale;
-
-        #region Constructor
-
         public CofoundryPagesController(
-            ICultureContextService cultureContextService,
-            IPageLocaleParser pageLocaleParser,
+            IQueryExecutor queryExecutor,
             IPageActionRoutingStepFactory pageActionRoutingStepFactory
             )
         {
-            _cultureContextService = cultureContextService;
-            _pageLocaleParser = pageLocaleParser;
+            _queryExecutor = queryExecutor;
             _pageActionRoutingStepFactory = pageActionRoutingStepFactory;
             
         }
 
         #endregion
 
-        #region controller lifecycle 
-
-        //protected override void Initialize(System.Web.Routing.RequestContext requestContext)
-        //{
-        //    base.Initialize(requestContext);
-
-        //    // Do some pre-init before the page action executes, to find the locale
-        //    if ((string)requestContext.RouteData.Values["action"] == "Page")
-        //    {
-        //        string path = (string)requestContext.RouteData.Values["path"];
-
-        //        _locale = _pageLocaleParser.ParseLocale(path);
-        //        if (_locale != null)
-        //        {
-        //            _cultureContextService.SetCurrent(_locale.IETFLanguageTag);
-        //        }
-        //    }
-        //}
-
-        #endregion
-
-        #region main page route
-        
         public async Task<IActionResult> Page(
             string path, 
             string mode, 
@@ -67,7 +41,7 @@ namespace Cofoundry.Web
         {
             // Init state
             var state = new PageActionRoutingState();
-            state.Locale = _locale;
+            state.Locale = await _queryExecutor.ExecuteAsync(new GetCurrentActiveLocaleQuery());
             state.InputParameters = new PageActionInputParameters()
             {
                 Path = path,
@@ -90,7 +64,5 @@ namespace Cofoundry.Web
             // We should never get here!
             throw new InvalidOperationException("Unknown Page Routing State");
         }
-        
-        #endregion
     }
 }
