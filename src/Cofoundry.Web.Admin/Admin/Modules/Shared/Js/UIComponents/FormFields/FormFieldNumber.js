@@ -15,6 +15,7 @@ function (
             'max',
             'step',
             'disabled',
+            'placeholder',
             'cmsMatch'
         ]
     };

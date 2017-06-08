@@ -857,6 +857,8 @@
     <Compile Include="Domain\Shared\Bootstrap\SharedAutoMapProfile.cs" />
     <Compile Include="Domain\Shared\Bootstrap\SharedDependencyRegistration.cs" />
     <Compile Include="Domain\Shared\DataAnnotations\ColorAttribute.cs" />
+    <Compile Include="Domain\Shared\DataAnnotations\PlaceholderAttribute.cs" />
+    <Compile Include="Domain\Shared\DataAnnotations\NumberAttribute.cs" />
     <Compile Include="Domain\Shared\DataAnnotations\DateAttribute.cs" />
     <Compile Include="Domain\Shared\DataAnnotations\EntityDependencyAttribute.cs" />
     <Compile Include="Domain\Shared\DataAnnotations\EntityDependencyCollectionAttribute.cs" />

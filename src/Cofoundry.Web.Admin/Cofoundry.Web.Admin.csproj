@@ -321,6 +321,7 @@
     <Content Include="Admin\Modules\Images\Js\Routes\ImageList.html" />
     <Content Include="Admin\Modules\Images\Js\Routes\ImageListController.js" />
     <Content Include="Admin\Modules\Shared\Js\DataServices\DirectoryService.js" />
+    <Content Include="Admin\Modules\Shared\Js\Framework\LocationProviderConfig.js" />
     <Content Include="Admin\Modules\Shared\Js\UIComponents\CustomEntities\AddCustomEntityDialog.html" />
     <Content Include="Admin\Modules\Shared\Js\UIComponents\CustomEntities\AddCustomEntityDialog.js" />
     <Content Include="Admin\Modules\Shared\Js\UIComponents\Form\FormSectionActions.js" />

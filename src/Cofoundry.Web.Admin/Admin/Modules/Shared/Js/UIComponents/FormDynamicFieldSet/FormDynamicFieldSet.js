@@ -116,6 +116,8 @@ function (
                 'min': mapHtmlAttributeWithValue,
                 'max': mapHtmlAttributeWithValue,
                 'pattern': mapHtmlAttributeWithValue,
+                'step': mapHtmlAttributeWithValue,
+                'placeholder': mapHtmlAttributeWithValue,
                 'match': mapDataSourceAttribute,
                 'model': mapDataSourceAttribute,
                 'required': mapHtmlAttributeWithoutValue
