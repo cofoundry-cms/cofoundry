@@ -1112,6 +1112,8 @@
     <Compile Include="Domain\ModelMetadata\Attributes\NotDangerousFileExtensionAttribute.cs" />
     <Compile Include="Domain\ModelMetadata\Attributes\NotDangerousMimeTypeAttribute.cs" />
     <Compile Include="Domain\ModelMetadata\Attributes\SearchableAttribute.cs" />
+    <Compile Include="Domain\ModelMetadata\Attributes\PlaceholderAttribute.cs" />
+    <Compile Include="Domain\ModelMetadata\Attributes\NumberAttribute.cs" />
     <Compile Include="Domain\Shared\Exceptions\UnexpectedSqlStoredProcedureResultException.cs" />
     <Compile Include="Domain\Shared\Helpers\EntityAuditHelper.cs" />
     <Compile Include="Domain\Shared\Helpers\EntityOrderableHelper.cs" />
