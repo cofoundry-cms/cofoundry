@@ -144,7 +144,7 @@ namespace Cofoundry.Core.DependencyInjection
 
         public IContainerRegister RegisterAllGenericImplementations(Type typeDef)
         {
-            if (!typeDef.IsGenericTypeDefinition)
+            if (!typeDef.GetTypeInfo().IsGenericTypeDefinition)
             {
                 throw new ArgumentException("TGeneric should be generic");
             }
@@ -152,7 +152,7 @@ namespace Cofoundry.Core.DependencyInjection
             var handlerRegistrations =
                 from implementation in GetDiscoveredConcreteTypes()
                 let services =
-                    from iface in implementation.GetInterfaces()
+                    from iface in implementation.GetInterfaces().Select(t => t.GetTypeInfo())
                     where iface.IsGenericType
                     where iface.GetGenericTypeDefinition() == typeDef
                     select iface
@@ -210,7 +210,7 @@ namespace Cofoundry.Core.DependencyInjection
             {
                 var factoryType = typeof(TFactory);
                 // If the factory is a concrete type, we should make sure it is registered
-                if (!factoryType.IsInterface)
+                if (!factoryType.GetTypeInfo().IsInterface)
                 {
                     AddService(factoryType, factoryType);
                 }

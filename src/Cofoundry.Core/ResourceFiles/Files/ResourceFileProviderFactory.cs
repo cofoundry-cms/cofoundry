@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -37,7 +38,7 @@ namespace Cofoundry.Core.ResourceFiles
             )
         {
             return assemblyResourceRegistrations
-                .Select(r => r.GetType().Assembly)
+                .Select(r => r.GetType().GetTypeInfo().Assembly)
                 .Distinct()
                 .Select(a => embeddedFileProviderFactory.Create(a));
         }

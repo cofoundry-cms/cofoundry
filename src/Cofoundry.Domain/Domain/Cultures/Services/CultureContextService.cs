@@ -37,8 +37,8 @@ namespace Cofoundry.Domain
         {
             var culture = _cultureFactory.Create(ietfLanguageTag);
 
-            System.Threading.Thread.CurrentThread.CurrentCulture = culture;
-            System.Threading.Thread.CurrentThread.CurrentUICulture = culture;
+            CultureInfo.CurrentCulture = culture;
+            CultureInfo.CurrentUICulture = culture;
         }
     }
 }

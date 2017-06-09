@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -14,6 +15,7 @@ namespace Cofoundry.Domain
             var dataModelType = definition
                 .GetType()
                 .GetInterfaces()
+                .Select(t => t.GetTypeInfo())
                 .Where(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(ICustomEntityDefinition<>))
                 .Select(i => i.GetGenericArguments().Single())
                 .SingleOrDefault();

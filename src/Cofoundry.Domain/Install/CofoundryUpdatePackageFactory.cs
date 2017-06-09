@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using Cofoundry.Core.AutoUpdate;
 using Cofoundry.Core;
+using System.Reflection;
 
 namespace Cofoundry.Domain.Installation
 {
@@ -21,7 +22,7 @@ namespace Cofoundry.Domain.Installation
             var dbCommandFactory = new DbUpdateCommandFactory();
 
             var commands = new List<IVersionedUpdateCommand>();
-            commands.AddRange(dbCommandFactory.Create(GetType().Assembly, moduleVersion));
+            commands.AddRange(dbCommandFactory.Create(GetType().GetTypeInfo().Assembly, moduleVersion));
             commands.AddRange(GetAdditionalCommands(moduleVersion));
 
             package.VersionedCommands = commands;

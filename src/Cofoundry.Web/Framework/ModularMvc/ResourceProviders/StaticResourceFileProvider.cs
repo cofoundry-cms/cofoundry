@@ -7,6 +7,7 @@ using Microsoft.Extensions.Primitives;
 using Cofoundry.Core;
 using Cofoundry.Core.ResourceFiles;
 using Microsoft.AspNetCore.Hosting;
+using System.Reflection;
 
 namespace Cofoundry.Web
 {
@@ -42,7 +43,7 @@ namespace Cofoundry.Web
             {
                 foreach (var embeddedResourceRouteRegistration in embeddedResourceRouteRegistrations)
                 {
-                    var assembly = embeddedResourceRouteRegistration.GetType().Assembly;
+                    var assembly = embeddedResourceRouteRegistration.GetType().GetTypeInfo().Assembly;
                     var fileProvider = embeddedFileProviderFactory.Create(assembly);
                     foreach (var route in embeddedResourceRouteRegistration.GetEmbeddedResourcePaths())
                     {

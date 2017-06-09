@@ -28,6 +28,7 @@ namespace Cofoundry.Domain
         {
             var dataModelType = query.DisplayModelType
                 .GetInterfaces()
+                .Select(t => t.GetTypeInfo())
                 .Where(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(ICustomEntityDisplayModel<>))
                 .Select(i => i.GetGenericArguments().Single())
                 .SingleOrDefault();

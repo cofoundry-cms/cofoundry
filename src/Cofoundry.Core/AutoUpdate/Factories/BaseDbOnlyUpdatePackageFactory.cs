@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -33,7 +34,7 @@ namespace Cofoundry.Core.AutoUpdate
             var package = new UpdatePackage();
             var dbCommandFactory = new DbUpdateCommandFactory();
 
-            package.VersionedCommands = dbCommandFactory.Create(GetType().Assembly, moduleVersion, ScriptPath);
+            package.VersionedCommands = dbCommandFactory.Create(GetType().GetTypeInfo().Assembly, moduleVersion, ScriptPath);
             package.ModuleIdentifier = ModuleIdentifier;
             package.DependentModules = DependentModules;
 

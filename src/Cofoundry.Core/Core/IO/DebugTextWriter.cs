@@ -23,7 +23,10 @@ namespace Cofoundry.Core.IO
 
         public override Encoding Encoding
         {
-            get { return System.Text.Encoding.Default; }
+            get
+            {
+                return Encoding.GetEncoding(0); // default
+            }
         }
     }
 }
