@@ -1,5 +1,4 @@
-﻿using Conditions;
-using Microsoft.AspNetCore.Mvc.ModelBinding.Metadata;
+﻿using Microsoft.AspNetCore.Mvc.ModelBinding.Metadata;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -43,8 +42,8 @@ namespace Cofoundry.Domain
         
         public IEnumerable<EntityDependency> GetRelations(object model, PropertyInfo propertyInfo)
         {
-            Condition.Requires(model).IsNotNull();
-            Condition.Requires(propertyInfo).IsNotNull();
+            if (model == null) throw new ArgumentNullException(nameof(model));
+            if (propertyInfo == null) throw new ArgumentNullException(nameof(propertyInfo));
 
             var ids = propertyInfo.GetValue(model) as int[];
 

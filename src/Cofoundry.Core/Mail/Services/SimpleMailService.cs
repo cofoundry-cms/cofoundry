@@ -1,5 +1,4 @@
-﻿using Conditions;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -55,7 +54,7 @@ namespace Cofoundry.Core.Mail
         /// </summary>
         public async Task SendAsync(SerializeableMailAddress address, IMailTemplate template)
         {
-            Condition.Requires(address).IsNotNull();
+            if (address == null) throw new ArgumentNullException(nameof(address));
 
             await SendAsync(address.Address, address.DisplayName, template);
         }

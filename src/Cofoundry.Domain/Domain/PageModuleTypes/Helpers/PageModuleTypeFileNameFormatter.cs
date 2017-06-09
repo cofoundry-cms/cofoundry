@@ -1,5 +1,4 @@
-﻿using Conditions;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -24,7 +23,7 @@ namespace Cofoundry.Domain
         /// <param name="dataModelType">Data model type to get the formatted name for</param>
         public string FormatFromDataModelName(string dataModelName)
         {
-            Condition.Requires(dataModelName).IsNotNull();
+            if (dataModelName == null) throw new ArgumentNullException(nameof(dataModelName));
             var fileName = dataModelName;
 
             if (dataModelName.EndsWith(DATAMODEL_SUFFIX, StringComparison.OrdinalIgnoreCase))
@@ -44,7 +43,7 @@ namespace Cofoundry.Domain
         /// <param name="dataModelName">Type name without namespace of the module data model</param>
         public string FormatFromDataModelType(Type dataModelType)
         {
-            Condition.Requires(dataModelType).IsNotNull();
+            if (dataModelType == null) throw new ArgumentNullException(nameof(dataModelType));
 
             return FormatFromDataModelName(dataModelType.Name);
         }

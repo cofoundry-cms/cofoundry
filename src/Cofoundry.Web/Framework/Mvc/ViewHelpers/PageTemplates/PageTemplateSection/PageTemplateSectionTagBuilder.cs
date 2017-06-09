@@ -1,15 +1,13 @@
-﻿using Conditions;
-using HtmlAgilityPack;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Cofoundry.Domain;
-using Cofoundry.Core.Web;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.IO;
 using System.Text.Encodings.Web;
+using Cofoundry.Core;
 
 namespace Cofoundry.Web
 {
@@ -34,8 +32,9 @@ namespace Cofoundry.Web
             IEditablePageViewModel pageViewModel, 
             string sectionName)
         {
-            Condition.Requires(sectionName).IsNotNullOrWhiteSpace();
-            Condition.Requires(pageViewModel).IsNotNull();
+            if (sectionName == null) throw new ArgumentNullException(nameof(sectionName));
+            if (string.IsNullOrWhiteSpace(sectionName)) throw new ArgumentEmptyException(nameof(sectionName));
+            if (pageViewModel == null) throw new ArgumentNullException(nameof(pageViewModel));
 
             _moduleRenderer = moduleRenderer;
             _moduleDataModelTypeFactory = moduleDataModelTypeFactory;
@@ -85,7 +84,8 @@ namespace Cofoundry.Web
         /// <returns>IPageTemplateSectionTagBuilder for method chaining</returns>
         public IPageTemplateSectionTagBuilder WrapWithTag(string tagName, object htmlAttributes = null)
         {
-            Condition.Requires(tagName).IsNotNullOrWhiteSpace();
+            if (tagName == null) throw new ArgumentNullException(nameof(tagName));
+            if (string.IsNullOrWhiteSpace(tagName)) throw new ArgumentEmptyException(nameof(tagName));
 
             _wrappingTagName = tagName;
             _additonalHtmlAttributes = TemplateSectionTagBuilderHelper.ParseHtmlAttributesFromAnonymousObject(htmlAttributes);

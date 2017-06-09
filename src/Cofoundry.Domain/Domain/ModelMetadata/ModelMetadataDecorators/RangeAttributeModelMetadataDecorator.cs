@@ -1,5 +1,4 @@
-﻿using Conditions;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -19,8 +18,12 @@ namespace Cofoundry.Web
 
         public void Decorate(object attribute, DisplayMetadata modelMetaData)
         {
-            Condition.Requires(attribute).IsNotNull();
-            Condition.Requires(attribute).IsOfType(typeof(RangeAttribute));
+            if (attribute == null) throw new ArgumentNullException(nameof(attribute));
+
+            if (!(attribute is RangeAttribute))
+            {
+                throw new ArgumentException("Attribute type is not RangeAttribute", nameof(attribute));
+            }
 
             var rangeLengthttribtue = (RangeAttribute)attribute;
 

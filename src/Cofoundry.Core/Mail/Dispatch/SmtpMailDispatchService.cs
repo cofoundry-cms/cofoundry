@@ -1,5 +1,4 @@
-﻿using Conditions;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -83,7 +82,7 @@ namespace Cofoundry.Core.Mail
 
         private void SendMessage(MailMessage message, SmtpMailClient mailClient)
         {
-            Condition.Requires(mailClient).IsNotNull();
+            if (mailClient == null) throw new ArgumentNullException(nameof(mailClient));
 
             var messageToSend = FormatMessage(message);
 
@@ -92,7 +91,7 @@ namespace Cofoundry.Core.Mail
 
         private async Task SendMessageAsync(MailMessage message, SmtpMailClient mailClient)
         {
-            Condition.Requires(mailClient).IsNotNull();
+            if (mailClient == null) throw new ArgumentNullException(nameof(mailClient));
 
             var messageToSend = FormatMessage(message);
 
@@ -109,7 +108,7 @@ namespace Cofoundry.Core.Mail
 
         private System.Net.Mail.MailMessage FormatMessage(MailMessage message)
         {
-            Condition.Requires(message).IsNotNull();
+            if (message == null) throw new ArgumentNullException(nameof(message));
 
             var messageToSend = new System.Net.Mail.MailMessage();
 

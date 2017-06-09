@@ -2,7 +2,6 @@
 using Cofoundry.Core;
 using Cofoundry.Domain.CQS;
 using Cofoundry.Domain.Data;
-using Conditions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -77,7 +76,9 @@ namespace Cofoundry.Domain
 
         private static GetPageRoutingInfoByCustomEntityIdQuery GetPageRoutingQuery(CustomEntityVersion dbResult)
         {
-            Condition.Requires(dbResult.CustomEntity).IsNotNull();
+            if (dbResult == null) throw new ArgumentNullException(nameof(dbResult));
+            if (dbResult.CustomEntity == null) throw new ArgumentNullException(nameof(dbResult.CustomEntity));
+
             return new GetPageRoutingInfoByCustomEntityIdQuery(dbResult.CustomEntityId);
         }
 

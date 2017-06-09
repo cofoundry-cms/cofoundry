@@ -1,5 +1,4 @@
-﻿using Conditions;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -25,9 +24,11 @@ namespace Cofoundry.Core.MessageAggregator
 
         public async Task DeliverAsync(IResolutionContext resolutionContext, object message)
         {
-            Condition.Requires(message)
-                .IsNotNull()
-                .IsOfType(typeof(TMessageSubscribedTo));
+            if (message == null) throw new ArgumentNullException(nameof(message));
+            if (!(message is TMessageSubscribedTo))
+            {
+                throw new ArgumentException($"{ nameof(message) } must be of type '{typeof(TMessageSubscribedTo).FullName}'");
+            }
 
             var handler = resolutionContext.Resolve<TMessageHandler>();
             await handler.HandleAsync((TMessageSubscribedTo)message);

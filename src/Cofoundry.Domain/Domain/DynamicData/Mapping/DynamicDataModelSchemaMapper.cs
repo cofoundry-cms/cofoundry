@@ -1,5 +1,4 @@
-﻿using Conditions;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -21,8 +20,8 @@ namespace Cofoundry.Domain
 
         public void Map(IDynamicDataModelSchema details, Type modelType)
         {
-            Condition.Requires(details).IsNotNull();
-            Condition.Requires(modelType).IsNotNull();
+            if (details == null) throw new ArgumentNullException(nameof(details));
+            if (modelType == null) throw new ArgumentNullException(nameof(modelType));
 
             var dataModelMetaData = _modelMetadataProvider.GetMetadataForType(modelType);
 

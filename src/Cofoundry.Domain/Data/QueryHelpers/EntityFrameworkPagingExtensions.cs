@@ -1,5 +1,4 @@
-﻿using Conditions;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -15,7 +14,7 @@ namespace Cofoundry.Domain.Data
         /// </summary>
         public static async Task<PagedQueryResult<T>> ToPagedResultAsync<T>(this IQueryable<T> source, IPageableQuery query)
         {
-            Condition.Requires(source).IsNotNull();
+            if (source == null) throw new ArgumentNullException(nameof(source));
 
             var result = new PagedQueryResult<T>();
             result.TotalItems = await source.CountAsync();

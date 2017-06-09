@@ -1,5 +1,4 @@
-﻿using Conditions;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -20,16 +19,15 @@ namespace Cofoundry.Core
         /// <returns>A random decimal value.</returns>
         public static decimal NextDecimal(this Random rnd, decimal? minValue = null, decimal? maxValue = null)
         {
-            Condition
-                .Ensures(rnd, "rnd")
-                .IsNotNull();
+            if (rnd == null) throw new ArgumentNullException(nameof(rnd));
 
             var max = Convert.ToInt32(Math.Floor(maxValue ?? minValue ?? 0));
             var min = Convert.ToInt32(Math.Ceiling(minValue ?? 1));
 
-            Condition
-                .Ensures(max, "max")
-                .IsGreaterOrEqual(min);
+            if (min > max)
+            {
+                throw new ArgumentException($"{nameof(minValue)} cannot be greater than {nameof(maxValue)}", nameof(minValue));
+            }
 
             var i = rnd.Next(min, max);
             var exp = rnd.NextDouble();

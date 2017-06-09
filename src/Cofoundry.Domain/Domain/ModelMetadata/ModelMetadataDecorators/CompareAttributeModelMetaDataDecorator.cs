@@ -1,5 +1,4 @@
-﻿using Conditions;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -19,20 +18,17 @@ namespace Cofoundry.Web
 
         public void Decorate(object attribute, DisplayMetadata modelMetaData)
         {
-            Condition.Requires(attribute).IsNotNull();
-            string otherProperty;
-            ValidationAttribute valAttribute;
+            if (attribute == null) throw new ArgumentNullException(nameof(attribute));
 
-            if (attribute is CompareAttribute)
+            if (!(attribute is CompareAttribute))
             {
-                var compareAttribtue = (CompareAttribute)attribute;
-                otherProperty = compareAttribtue.OtherProperty;
-                valAttribute = compareAttribtue;
+                throw new ArgumentException("Attribute type is not CompareAttribute", nameof(attribute));
             }
-            else
-            {
-                throw new ArgumentException("attribute type is not a CompareAttribute", "attribute");
-            }
+
+
+            var compareAttribtue = (CompareAttribute)attribute;
+            var otherProperty = compareAttribtue.OtherProperty;
+            var valAttribute = compareAttribtue;
 
             modelMetaData.AddAdditionalValueWithValidationMessage("Match", otherProperty, valAttribute);
         }

@@ -1,5 +1,4 @@
-﻿using Conditions;
-using Microsoft.Extensions.FileProviders;
+﻿using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Primitives;
 using System;
 using System.Collections.Generic;
@@ -33,12 +32,21 @@ namespace Cofoundry.Core.ResourceFiles
             string filterToPath
             )
         {
-            Condition.Requires(assemblyProvider).IsNotNull();
-            Condition.Requires(filterToPath).IsNotNullOrEmpty();
-
+            if (assemblyProvider == null) throw new ArgumentNullException(nameof(assemblyProvider));
+            if (filterToPath == null) throw new ArgumentNullException(nameof(filterToPath));
+            if (string.IsNullOrWhiteSpace(filterToPath)) throw new ArgumentEmptyException(nameof(filterToPath));
+         
             _restrictToPath = filterToPath.TrimStart('~');
-            Condition.Requires(_restrictToPath).StartsWith("/", nameof(filterToPath) + " must start with a forward slash.");
-            Condition.Requires(_restrictToPath).IsLongerThan(1, nameof(filterToPath) + " cannot be the root directory.");
+
+            if (!_restrictToPath.StartsWith("/"))
+            {
+                throw new ArgumentException(nameof(filterToPath) + " must start with a forward slash.");
+            }
+
+            if (_restrictToPath.Length <= 1)
+            {
+                throw new ArgumentException(nameof(filterToPath) + " cannot be the root directory.");
+            }
 
             _assemblyProvider = assemblyProvider;
         }

@@ -1,5 +1,4 @@
-﻿using Conditions;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -23,7 +22,7 @@ namespace Cofoundry.Core
         /// <returns>Returns the number of elements removed.</returns>
         public static int RemoveAll<T>(this ICollection<T> collection, Predicate<T> predicate = null)
         {
-            Condition.Requires(collection).IsNotNull();
+            if (collection == null) throw new ArgumentNullException(nameof(collection));
 
             int count = 0;
 

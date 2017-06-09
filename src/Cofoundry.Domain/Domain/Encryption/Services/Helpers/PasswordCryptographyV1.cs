@@ -1,5 +1,4 @@
-﻿using Conditions;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography;
@@ -21,8 +20,10 @@ namespace Cofoundry.Domain
 
         public bool Verify(string password, string hash)
         {
-            Condition.Requires(hash).IsNotNullOrWhiteSpace();
-            Condition.Requires(password).IsNotNullOrEmpty();
+            if (hash == null) throw new ArgumentNullException(nameof(hash));
+            if (string.IsNullOrWhiteSpace(hash)) throw new ArgumentEmptyException(nameof(hash));
+            if (password == null) throw new ArgumentNullException(nameof(password));
+            if (string.IsNullOrEmpty(password)) throw new ArgumentEmptyException(nameof(password));
 
             // First 16 characters of the hash are the base64 encoded salt
             // BUT salt isn't always 16 characters long because the old method allowed for negative 
@@ -44,7 +45,8 @@ namespace Cofoundry.Domain
 
         public string CreateHash(string password)
         {
-            Condition.Requires(password).IsNotNullOrEmpty();
+            if (password == null) throw new ArgumentNullException(nameof(password));
+            if (string.IsNullOrWhiteSpace(password)) throw new ArgumentEmptyException(nameof(password));
 
             var salt = GenerateSalt();
             return CreateHash(password, salt);

@@ -1,5 +1,4 @@
-﻿using Conditions;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -18,8 +17,12 @@ namespace Cofoundry.Web
 
         public void Decorate(object attribute, DisplayMetadata modelMetaData)
         {
-            Condition.Requires(attribute).IsNotNull();
-            Condition.Requires(attribute).IsOfType(typeof(MinLengthAttribute));
+            if (attribute == null) throw new ArgumentNullException(nameof(attribute));
+
+            if (!(attribute is MinLengthAttribute))
+            {
+                throw new ArgumentException("Attribute type is not MinLengthAttribute", nameof(attribute));
+            }
 
             var minLengthttribtue = (MinLengthAttribute)attribute;
 

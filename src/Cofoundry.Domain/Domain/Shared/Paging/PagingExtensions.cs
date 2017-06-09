@@ -1,5 +1,4 @@
-﻿using Conditions;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -32,7 +31,7 @@ namespace Cofoundry.Domain
         /// </summary>
         public static PagedQueryResult<T> ToPagedResult<T>(this IQueryable<T> source, IPageableQuery query)
         {
-            Condition.Requires(source).IsNotNull();
+            if (source == null) throw new ArgumentNullException(nameof(source));
 
             var result = new PagedQueryResult<T>();
             result.TotalItems = source.Count();

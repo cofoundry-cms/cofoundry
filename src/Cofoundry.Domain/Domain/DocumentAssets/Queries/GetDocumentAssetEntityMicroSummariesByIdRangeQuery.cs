@@ -1,5 +1,4 @@
-﻿using Conditions;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -18,7 +17,7 @@ namespace Cofoundry.Domain
             IEnumerable<int> ids
             )
         {
-            Condition.Requires(ids).IsNotNull();
+            if (ids == null) throw new ArgumentNullException(nameof(ids));
 
             DocumentAssetIds = ids.ToArray();
         }

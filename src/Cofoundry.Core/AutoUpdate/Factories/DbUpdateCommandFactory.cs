@@ -1,5 +1,4 @@
-﻿using Conditions;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -25,7 +24,8 @@ namespace Cofoundry.Core.AutoUpdate
         /// <returns>Collecton of IUpdateCommands that represents all the required db updates</returns>
         public IEnumerable<IVersionedUpdateCommand> Create(Assembly assembly, ModuleVersion currentVersion, string scriptPath = "Install.Db.")
         {
-            Condition.Requires(assembly).IsNotNull();
+            if (assembly == null) throw new ArgumentNullException(nameof(assembly));
+
             var scriptFiles = GetScripts(assembly, scriptPath);
             var commands = new List<UpdateDbCommand>();
             int maxVersionNumber = 0;

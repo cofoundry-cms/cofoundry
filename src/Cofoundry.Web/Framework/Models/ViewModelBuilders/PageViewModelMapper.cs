@@ -5,7 +5,6 @@ using System.Reflection;
 using System.Threading.Tasks;
 using Cofoundry.Domain.CQS;
 using Cofoundry.Domain;
-using Conditions;
 
 namespace Cofoundry.Web
 {
@@ -65,7 +64,7 @@ namespace Cofoundry.Web
         {
             await MapAsync(viewModel, mappingParameters);
 
-            Condition.Requires(mappingParameters.CustomEntityModel).IsNotNull();
+            if (mappingParameters.CustomEntityModel == null) throw new ArgumentNullException(nameof(mappingParameters.CustomEntityModel));
 
             var customEntityRenderDetails = mappingParameters.CustomEntityModel;
 
@@ -108,8 +107,8 @@ namespace Cofoundry.Web
             )
             where T : IEditablePageViewModel, IPageRoutableViewModel
         {
-            Condition.Requires(mappingParameters).IsNotNull();
-            Condition.Requires(mappingParameters.PageModel).IsNotNull();
+            if (mappingParameters == null) throw new ArgumentNullException(nameof(mappingParameters));
+            if (mappingParameters.PageModel == null) throw new ArgumentNullException(nameof(mappingParameters.PageModel));
 
             vm.Page = mappingParameters.PageModel;
             vm.PageRoutingHelper = await CreatePageRoutingHelperAsync(mappingParameters);

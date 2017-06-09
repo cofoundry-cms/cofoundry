@@ -1,13 +1,9 @@
-﻿using Conditions;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Cofoundry.Domain.Data;
-using Cofoundry.Core;
-using Cofoundry.Domain.CQS;
 
 namespace Cofoundry.Domain
 {

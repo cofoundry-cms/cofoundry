@@ -27,7 +27,7 @@
 using System;
 using System.Text;
 using System.Security.Cryptography;
-using Conditions;
+using Cofoundry.Core;
 
 namespace Defuse
 {
@@ -101,7 +101,9 @@ namespace Defuse
 
         public static string CreateHash(string password)
         {
-            Condition.Requires(password).IsNotNullOrEmpty();
+            if (password == null) throw new ArgumentNullException(nameof(password));
+            if (string.IsNullOrEmpty(password)) throw new ArgumentEmptyException(nameof(password));
+
             var salt = GenerateSalt();
 
             var saltBytes = Convert.FromBase64String(salt);
@@ -112,10 +114,15 @@ namespace Defuse
 
         public static bool VerifyPassword(string password, string hash)
         {
-            Condition.Requires(hash)
-                .IsNotNullOrWhiteSpace()
-                .IsLongerThan(SALT_BASE64_LENGTH);
-            Condition.Requires(password).IsNotNullOrEmpty();
+            if (hash == null) throw new ArgumentNullException(nameof(hash));
+            if (string.IsNullOrWhiteSpace(hash)) throw new ArgumentEmptyException(nameof(hash));
+            if (password == null) throw new ArgumentNullException(nameof(password));
+            if (string.IsNullOrEmpty(password)) throw new ArgumentEmptyException(nameof(password));
+
+            if (hash.Length <= SALT_BASE64_LENGTH)
+            {
+                throw new ArgumentException($"The length of {nameof(hash)} cannot be shorter than the salt length.", nameof(hash));
+            }
 
             string salt = hash.Substring(0, SALT_BASE64_LENGTH);
             string hashWithoutSalt = hash.Substring(SALT_BASE64_LENGTH);

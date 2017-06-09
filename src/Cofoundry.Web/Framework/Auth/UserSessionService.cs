@@ -1,5 +1,4 @@
-﻿using Conditions;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -68,7 +67,9 @@ namespace Cofoundry.Web
         /// </param>
         public Task SetCurrentUserIdAsync(string userAreaDefinitionCode, int userId, bool rememberUser)
         {
-            Condition.Requires(userId).IsGreaterThan(0);
+            if (userAreaDefinitionCode == null) throw new ArgumentNullException(nameof(userAreaDefinitionCode));
+            if (userId < 1) throw new ArgumentOutOfRangeException(nameof(userId));
+
             var stringId = Convert.ToString(userId);
 
             var userPrincipal = new GenericPrincipal(new GenericIdentity(stringId), null);

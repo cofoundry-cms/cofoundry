@@ -1,8 +1,7 @@
-﻿using Conditions;
+﻿using Cofoundry.Core;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 
 namespace Cofoundry.Web.Admin
 {
@@ -18,8 +17,10 @@ namespace Cofoundry.Web.Admin
 
         public static string View(string controllerName, string viewName)
         {
-            Condition.Requires(controllerName).IsNotNullOrWhiteSpace();
-            Condition.Requires(viewName).IsNotNullOrWhiteSpace();
+            if (controllerName == null) throw new ArgumentNullException(nameof(controllerName));
+            if (string.IsNullOrWhiteSpace(controllerName)) throw new ArgumentEmptyException(nameof(controllerName));
+            if (viewName == null) throw new ArgumentNullException(nameof(viewName));
+            if (string.IsNullOrWhiteSpace(viewName)) throw new ArgumentEmptyException(nameof(viewName));
 
             return string.Format(VIEW_FORMAT, controllerName, viewName);
         }

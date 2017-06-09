@@ -1,5 +1,4 @@
-﻿using Conditions;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -34,8 +33,8 @@ namespace Cofoundry.Domain
         /// <param name="displayModel">The fully mapped display model</param>
         public PageModuleDisplayModelMapperOutput CreateOutput(IPageModuleDisplayModel displayModel)
         {
-            Condition.Requires(displayModel, "displayModel").IsNotNull();
-            Condition.Requires(VersionModuleId, "VersionModuleId").IsGreaterThan(0);
+            if (displayModel == null) throw new ArgumentNullException(nameof(displayModel));
+            if (VersionModuleId < 1) throw new ArgumentOutOfRangeException(nameof(VersionModuleId));
 
             return new PageModuleDisplayModelMapperOutput()
             {

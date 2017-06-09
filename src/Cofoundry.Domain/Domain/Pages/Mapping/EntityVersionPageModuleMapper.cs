@@ -6,7 +6,6 @@ using System.Text;
 using System.Threading.Tasks;
 using Cofoundry.Domain.Data;
 using Cofoundry.Domain.CQS;
-using Conditions;
 
 namespace Cofoundry.Domain
 {
@@ -73,8 +72,8 @@ namespace Cofoundry.Domain
         /// <param name="moduleType">The module type associated with the module in which to look for the template.</param>
         public PageModuleTypeTemplateSummary GetCustomTemplate(IEntityVersionPageModule pageModule, PageModuleTypeSummary moduleType)
         {
-            Condition.Requires(pageModule, nameof(pageModule)).IsNotNull();
-            Condition.Requires(pageModule, nameof(moduleType)).IsNotNull();
+            if (pageModule == null) throw new ArgumentNullException(nameof(pageModule));
+            if (moduleType == null) throw new ArgumentNullException(nameof(moduleType));
 
             if (!pageModule.PageModuleTypeTemplateId.HasValue) return null;
 

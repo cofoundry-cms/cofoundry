@@ -1,5 +1,4 @@
-﻿using Conditions;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using Cofoundry.Domain.CQS;
@@ -45,9 +44,9 @@ namespace Cofoundry.Web.Identity
 
         public async Task<AuthenticationResult> LogUserInAsync(Controller controller, ILoginViewModel vm, IUserAreaDefinition userAreaToLogInTo)
         {
-            Condition.Requires(controller).IsNotNull();
-            Condition.Requires(userAreaToLogInTo).IsNotNull();
-            Condition.Requires(vm).IsNotNull();
+            if (controller == null) throw new ArgumentNullException(nameof(controller));
+            if (userAreaToLogInTo == null) throw new ArgumentNullException(nameof(userAreaToLogInTo));
+            if (vm == null) throw new ArgumentNullException(nameof(vm));
 
             var result = new AuthenticationResult();
             result.ReturnUrl = controller.Request.Query["ReturnUrl"].FirstOrDefault();

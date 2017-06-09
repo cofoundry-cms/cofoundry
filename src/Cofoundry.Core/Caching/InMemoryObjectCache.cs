@@ -1,5 +1,4 @@
-﻿using Conditions;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Caching;
@@ -25,7 +24,7 @@ namespace Cofoundry.Core.Caching
         /// <param name="cacheNamespace">Unique cache namespace to organise all cache items under.</param>
         public InMemoryObjectCache(MemoryCache cache, string cacheNamespace)
         {
-            Condition.Requires(cache).IsNotNull();
+            if (cache == null) throw new ArgumentNullException(nameof(cache));
 
             _cache = cache;
             _cacheNamespace = cacheNamespace ?? string.Empty;

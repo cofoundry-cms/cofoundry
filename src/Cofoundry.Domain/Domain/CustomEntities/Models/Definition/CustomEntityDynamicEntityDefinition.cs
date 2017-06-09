@@ -1,5 +1,4 @@
-﻿using Conditions;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -20,7 +19,7 @@ namespace Cofoundry.Domain
 
         public CustomEntityDynamicEntityDefinition(ICustomEntityDefinition customEntityDefinition)
         {
-            Condition.Requires(customEntityDefinition).IsNotNull();
+            if (customEntityDefinition == null) throw new ArgumentNullException(nameof(customEntityDefinition));
 
             EntityDefinitionCode = customEntityDefinition.CustomEntityDefinitionCode;
             Name = customEntityDefinition.Name;

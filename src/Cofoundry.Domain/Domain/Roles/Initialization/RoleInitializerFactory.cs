@@ -4,7 +4,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Cofoundry.Core.DependencyInjection;
-using Conditions;
 
 namespace Cofoundry.Domain
 {
@@ -31,7 +30,7 @@ namespace Cofoundry.Domain
         /// <returns>IRoleInitializer if one has been implemented; otherwise null</returns>
         public IRoleInitializer Create(IRoleDefinition roleDefinition)
         {
-            Condition.Requires(roleDefinition).IsNotNull();
+            if (roleDefinition == null) throw new ArgumentNullException(nameof(roleDefinition));
 
             // Never add permission to the super admin role
             if (roleDefinition is SuperAdminRole) return null;

@@ -1,5 +1,4 @@
-﻿using Conditions;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -54,7 +53,8 @@ namespace Cofoundry.Core.Web
         /// <returns>QueryStringBuilder instance for method chaining.</returns>
         public QueryStringBuilder Add(string key, string value)
         {
-            Condition.Requires(key, "key").IsNotNullOrWhiteSpace();
+            if (key == null) throw new ArgumentNullException(nameof(key));
+            if (string.IsNullOrWhiteSpace(key)) throw new ArgumentEmptyException(nameof(key));
 
             if (!string.IsNullOrWhiteSpace(value))
             {

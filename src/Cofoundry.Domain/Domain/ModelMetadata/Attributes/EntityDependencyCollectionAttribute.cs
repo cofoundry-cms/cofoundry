@@ -1,5 +1,4 @@
-﻿using Conditions;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Reflection;
 
@@ -17,9 +16,11 @@ namespace Cofoundry.Domain
 
         public EntityDependencyCollectionAttribute(string entityDefinitionCode)
         {
-            Condition.Requires(entityDefinitionCode)
-                .IsNotNull()
-                .HasLength(6);
+            if (entityDefinitionCode == null) throw new ArgumentNullException(nameof(entityDefinitionCode));
+            if (entityDefinitionCode.Length != 6)
+            {
+                throw new ArgumentException(nameof(entityDefinitionCode) + " must be 6 characters in length.", nameof(entityDefinitionCode));
+            }
 
             EntityDefinitionCode = entityDefinitionCode;
         }
@@ -30,8 +31,8 @@ namespace Cofoundry.Domain
 
         public IEnumerable<EntityDependency> GetRelations(object model, PropertyInfo propertyInfo)
         {
-            Condition.Requires(model).IsNotNull();
-            Condition.Requires(propertyInfo).IsNotNull();
+            if (model == null) throw new ArgumentNullException(nameof(model));
+            if (propertyInfo == null) throw new ArgumentNullException(nameof(propertyInfo));
 
             var ids = propertyInfo.GetValue(model) as int[];
 

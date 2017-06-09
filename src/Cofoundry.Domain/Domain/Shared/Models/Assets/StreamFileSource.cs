@@ -1,4 +1,4 @@
-﻿using Conditions;
+﻿using Cofoundry.Core;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -17,10 +17,14 @@ namespace Cofoundry.Domain
 
         public StreamFileSource(string fileName, string mimeType, long fileLength, Stream stream)
         {
-            Condition.Requires(fileName).IsNotNullOrWhiteSpace();
-            Condition.Requires(mimeType).IsNotNullOrWhiteSpace();
-            Condition.Requires(fileLength).IsGreaterThan(0);
-            Condition.Requires(stream).IsNotNull();
+            if (fileName == null) throw new ArgumentNullException(nameof(fileName));
+            if (string.IsNullOrWhiteSpace(fileName)) throw new ArgumentEmptyException(nameof(fileName));
+
+            if (mimeType == null) throw new ArgumentNullException(nameof(mimeType));
+            if (string.IsNullOrWhiteSpace(mimeType)) throw new ArgumentEmptyException(nameof(mimeType));
+
+            if (fileLength < 1) throw new ArgumentOutOfRangeException(nameof(fileLength));
+            if (stream == null) throw new ArgumentNullException(nameof(stream));
 
             FileName = fileName;
             MimeType = mimeType;

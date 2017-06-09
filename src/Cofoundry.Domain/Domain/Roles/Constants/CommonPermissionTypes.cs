@@ -1,4 +1,4 @@
-﻿using Conditions;
+﻿using Cofoundry.Core;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,7 +26,9 @@ namespace Cofoundry.Domain
         /// <param name="entityNamePlural">The plural name of the entity, used in the description e.g. "Create new pages"</param>
         public static PermissionType Create(string entityNamePlural)
         {
-            Condition.Requires(entityNamePlural).IsNotNullOrWhiteSpace();
+            if (entityNamePlural == null) throw new ArgumentNullException(nameof(entityNamePlural));
+            if (string.IsNullOrWhiteSpace(entityNamePlural)) throw new ArgumentEmptyException(nameof(entityNamePlural));
+
             return new PermissionType(CreatePermissionCode, "Create", "Create new " + entityNamePlural.ToLower());
         }
         /// <summary>
@@ -36,7 +38,9 @@ namespace Cofoundry.Domain
         /// <param name="entityNamePlural">The plural name of the entity, used in the description e.g. "Access pages"</param>
         public static PermissionType Read(string entityNamePlural)
         {
-            Condition.Requires(entityNamePlural).IsNotNullOrWhiteSpace();
+            if (entityNamePlural == null) throw new ArgumentNullException(nameof(entityNamePlural));
+            if (string.IsNullOrWhiteSpace(entityNamePlural)) throw new ArgumentEmptyException(nameof(entityNamePlural));
+
             return new PermissionType(ReadPermissionCode, "Read", "Access " + entityNamePlural.ToLower());
         }
 
@@ -46,7 +50,9 @@ namespace Cofoundry.Domain
         /// <param name="entityNamePlural">The plural name of the entity, used in the description e.g. "View the pages module in the admin panel"</param>
         public static PermissionType AdminModule(string entityNamePlural)
         {
-            Condition.Requires(entityNamePlural).IsNotNullOrWhiteSpace();
+            if (entityNamePlural == null) throw new ArgumentNullException(nameof(entityNamePlural));
+            if (string.IsNullOrWhiteSpace(entityNamePlural)) throw new ArgumentEmptyException(nameof(entityNamePlural));
+
             return new PermissionType(AdminModulePermissionCode, "Admin Module", "View the " + entityNamePlural.ToLower() + " module in the admin panel");
         }
 
@@ -56,7 +62,9 @@ namespace Cofoundry.Domain
         /// <param name="entityNamePlural">The plural name of the entity, used in the description e.g. "Update new pages"</param>
         public static PermissionType Update(string entityNamePlural)
         {
-            Condition.Requires(entityNamePlural).IsNotNullOrWhiteSpace();
+            if (entityNamePlural == null) throw new ArgumentNullException(nameof(entityNamePlural));
+            if (string.IsNullOrWhiteSpace(entityNamePlural)) throw new ArgumentEmptyException(nameof(entityNamePlural));
+
             return new PermissionType(UpdatePermissionCode, "Update", "Update " + entityNamePlural.ToLower());
         }
 
@@ -66,7 +74,9 @@ namespace Cofoundry.Domain
         /// <param name="entityNamePlural">The plural name of the entity, used in the description e.g. "Delete pages"</param>
         public static PermissionType Delete(string entityNamePlural)
         {
-            Condition.Requires(entityNamePlural).IsNotNullOrWhiteSpace();
+            if (entityNamePlural == null) throw new ArgumentNullException(nameof(entityNamePlural));
+            if (string.IsNullOrWhiteSpace(entityNamePlural)) throw new ArgumentEmptyException(nameof(entityNamePlural));
+
             return new PermissionType(DeletePermissionCode, "Delete", "Delete " + entityNamePlural.ToLower());
         }
 
@@ -77,7 +87,9 @@ namespace Cofoundry.Domain
         /// <param name="entityNamePlural">The plural name of the entity, used in the description e.g. "Add, update or delete pages"</param>
         public static PermissionType Write(string entityNamePlural)
         {
-            Condition.Requires(entityNamePlural).IsNotNullOrWhiteSpace();
+            if (entityNamePlural == null) throw new ArgumentNullException(nameof(entityNamePlural));
+            if (string.IsNullOrWhiteSpace(entityNamePlural)) throw new ArgumentEmptyException(nameof(entityNamePlural));
+
             return new PermissionType(WritePermissionCode, "Write", "Add, update or delete " + entityNamePlural.ToLower());
         }
     }

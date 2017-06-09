@@ -1,5 +1,4 @@
-﻿using Conditions;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -38,7 +37,8 @@ namespace Cofoundry.Domain
         /// <param name="executionContext">The execution context that captures the state of the command being executed.</param>
         public void UpdateTags<TEntityTag>(ICollection<TEntityTag> existingTagCollection, IEnumerable<string> updatedTags, IExecutionContext executionContext) where TEntityTag : class, IEntityTag, new()
         {
-            Condition.Requires(existingTagCollection).IsNotNull();
+            if (existingTagCollection == null) throw new ArgumentNullException(nameof(existingTagCollection));
+
             updatedTags = CleanTags(updatedTags ?? Enumerable.Empty<string>());
 
             var entitySet = _dbContext.Set<TEntityTag>();

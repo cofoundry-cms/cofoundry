@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Conditions;
 
 namespace Cofoundry.Domain.CQS
 {
@@ -43,7 +42,7 @@ namespace Cofoundry.Domain.CQS
         /// <param name="executionContextToCopy">Optional execution context to base the new context on</param>
         public IExecutionContext Create(IUserContext userContext, IExecutionContext executionContextToCopy = null)
         {
-            Condition.Requires(userContext).IsNotNull();
+            if (userContext == null) throw new ArgumentNullException(nameof(userContext));
 
             var newContext = new ExecutionContext();
             newContext.UserContext = userContext;

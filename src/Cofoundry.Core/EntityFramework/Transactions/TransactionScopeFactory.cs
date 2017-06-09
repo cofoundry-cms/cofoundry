@@ -1,5 +1,4 @@
-﻿using Conditions;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
@@ -63,7 +62,7 @@ namespace Cofoundry.Core.EntityFramework
         /// <param name="scope">The primary transaction scope to deallocate.</param>
         internal void DeregisterTransaction(TransactionScope scope)
         {
-            Condition.Requires(scope).IsNotNull();
+            if (scope == null) throw new ArgumentNullException(nameof(scope));
 
             if (_primaryTransactionScope == null) return;
 

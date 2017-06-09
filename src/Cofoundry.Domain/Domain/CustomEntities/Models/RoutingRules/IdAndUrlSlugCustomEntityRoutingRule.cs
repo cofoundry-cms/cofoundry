@@ -1,5 +1,4 @@
-﻿using Conditions;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -34,8 +33,9 @@ namespace Cofoundry.Domain
 
         public bool MatchesRule(string url, PageRoute pageRoute)
         {
-            Condition.Requires(url).IsNotNullOrWhiteSpace();
-            Condition.Requires(pageRoute).IsNotNull();
+            if (url == null) throw new ArgumentNullException(nameof(url));
+            if (string.IsNullOrWhiteSpace(url)) throw new ArgumentEmptyException(nameof(url));
+            if (pageRoute == null) throw new ArgumentNullException(nameof(pageRoute));
 
             var routingPart = GetRoutingPart(url, pageRoute);
             if (string.IsNullOrEmpty(routingPart)) return false;
@@ -47,9 +47,14 @@ namespace Cofoundry.Domain
 
         public IQuery<CustomEntityRoute> ExtractRoutingQuery(string url, PageRoute pageRoute)
         {
-            Condition.Requires(url).IsNotNullOrWhiteSpace();
-            Condition.Requires(pageRoute).IsNotNull();
-            Condition.Requires(MatchesRule(url, pageRoute)).IsTrue();
+            if (url == null) throw new ArgumentNullException(nameof(url));
+            if (string.IsNullOrWhiteSpace(url)) throw new ArgumentEmptyException(nameof(url));
+            if (pageRoute == null) throw new ArgumentNullException(nameof(pageRoute));
+
+            if (!MatchesRule(url, pageRoute))
+            {
+                throw new ArgumentException(nameof(url) + $" does not match the specified page route. {nameof(ExtractRoutingQuery)} can only be called after a successful page route match.");
+            }
 
             var routingPart = GetRoutingPart(url, pageRoute);
 
@@ -69,8 +74,8 @@ namespace Cofoundry.Domain
 
         public string MakeUrl(PageRoute pageRoute, CustomEntityRoute entityRoute)
         {
-            Condition.Requires(pageRoute).IsNotNull();
-            Condition.Requires(entityRoute).IsNotNull();
+            if (pageRoute == null) throw new ArgumentNullException(nameof(pageRoute));
+            if (entityRoute == null) throw new ArgumentNullException(nameof(entityRoute));
 
             return pageRoute.FullPath
                 .Replace("{Id}", entityRoute.CustomEntityId.ToString())
