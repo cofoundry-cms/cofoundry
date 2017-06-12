@@ -43,7 +43,7 @@ namespace Cofoundry.Web
 
             if (cache == null)
             {
-                throw new ApplicationException("Cannot set the cache outside of a request.");
+                throw new InvalidOperationException("Cannot set the cache outside of a request.");
             }
 
             cache[CACHE_KEY] = data;

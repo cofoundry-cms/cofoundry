@@ -100,7 +100,7 @@ namespace Cofoundry.Web
                         siteViewerMode = VisualEditorMode.Live;
                         break;
                     default:
-                        throw new ApplicationException("WorkFlowStatus." + version.WorkFlowStatus + " is not valid for VisualEditorMode.Any");
+                        throw new InvalidOperationException("WorkFlowStatus." + version.WorkFlowStatus + " is not valid for VisualEditorMode.Any");
                 }
             }
 

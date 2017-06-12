@@ -50,7 +50,7 @@ namespace Cofoundry.Domain
             var settings = await _queryExecutor.GetAsync<InternalSettings>();
             if (settings.IsSetup)
             {
-                throw new ApplicationException("Site is already set up.");
+                throw new InvalidOperationException("Site is already set up.");
             }
 
             using (var scope = _transactionScopeFactory.Create())

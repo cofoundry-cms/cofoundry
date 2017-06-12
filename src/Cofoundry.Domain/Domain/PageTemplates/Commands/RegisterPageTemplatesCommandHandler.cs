@@ -178,7 +178,7 @@ namespace Cofoundry.Domain
                 && await IsTemplateInUse(dbPageTemplate))
             {
                 var msg = "Cannot change the custom entity type associated with a page template once it is in use";
-                throw new ApplicationException(msg);
+                throw new Exception(msg);
             }
 
             if (fileTemplateDetails.CustomEntityDefinition == null)

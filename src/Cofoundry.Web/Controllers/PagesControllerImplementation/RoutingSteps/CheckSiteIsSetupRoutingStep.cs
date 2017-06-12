@@ -36,7 +36,7 @@ namespace Cofoundry.Web
                 var setup = _setupPageActionFactory.GetSetupPageAction(controller);
                 if (setup == null)
                 {
-                    throw new ApplicationException("ISetupPageActionFactory returned no action.");
+                    throw new Exception("ISetupPageActionFactory returned no action.");
                 }
                 state.Result = setup;
             }

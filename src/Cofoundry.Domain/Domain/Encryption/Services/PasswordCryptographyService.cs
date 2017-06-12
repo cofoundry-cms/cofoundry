@@ -29,7 +29,7 @@ namespace Cofoundry.Domain
                 case PasswordEncryptionVersion.V2:
                     return Defuse.PasswordCryptographyV2.VerifyPassword(password, hash);
                 default:
-                    throw new ApplicationException("PasswordEncryptionVersion not recognised: " + version.ToString());
+                    throw new NotSupportedException("PasswordEncryptionVersion not recognised: " + version.ToString());
             }
         }
 

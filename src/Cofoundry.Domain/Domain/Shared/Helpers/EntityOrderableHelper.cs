@@ -36,7 +36,7 @@ namespace Cofoundry.Domain
                     entityToAdd.Ordering = (entities.Max(e => (int?)e.Ordering) ?? 0) + 1;
                     return;
                 default:
-                    throw new ApplicationException("OrderedItemInsertMode not recognised");
+                    throw new NotSupportedException("OrderedItemInsertMode not recognised");
             }
             
             int i = 1;

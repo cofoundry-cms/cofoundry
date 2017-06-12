@@ -36,7 +36,7 @@ namespace Cofoundry.Domain
 
             if (dulpicateCodes.Any())
             {
-                throw new ApplicationException("Duplicate IPermission.CustomEntityDefinitionCode: " + dulpicateCodes.First().Key);
+                throw new Exception("Duplicate IPermission.CustomEntityDefinitionCode: " + dulpicateCodes.First().Key);
             }
         }
 

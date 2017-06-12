@@ -55,7 +55,7 @@ namespace Cofoundry.Domain
 
             if (view == null)
             {
-                throw new ApplicationException("View file not found: " + query.FullPath);
+                throw new FileNotFoundException("View file not found: " + query.FullPath);
             }
 
             var pageTemplateFileInfo = await ParseViewFile(view, true, executionContext);

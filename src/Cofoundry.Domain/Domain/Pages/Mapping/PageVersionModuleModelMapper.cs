@@ -156,7 +156,7 @@ namespace Cofoundry.Domain
             {
                 string msg = @"{0} does not implement IPageModuleDisplayModel and no custom mapper could be found. You must create 
                                a class that implements IPageModuleDisplayModelMapper<{0}> if you are using a custom display model. Full type name: {1}";
-                throw new ApplicationException(string.Format(msg, typeof(T).Name, typeof(T).FullName));
+                throw new Exception(string.Format(msg, typeof(T).Name, typeof(T).FullName));
             }
 
             var mapper = (IPageModuleDisplayModelMapper<T>)_resolutionContext.Resolve(typeof(IPageModuleDisplayModelMapper<T>));

@@ -27,7 +27,7 @@ namespace Cofoundry.Domain
 
             if (duplicateRule != null)
             {
-                throw new ApplicationException("Multiple handlers cannot exist using the same RouteFormat. Duplicate: " + duplicateRule.Key);
+                throw new Exception("Multiple handlers cannot exist using the same RouteFormat. Duplicate: " + duplicateRule.Key);
             }
 
             return _customEntityRoutingRules;

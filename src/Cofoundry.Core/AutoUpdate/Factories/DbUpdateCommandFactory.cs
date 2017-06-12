@@ -89,7 +89,7 @@ namespace Cofoundry.Core.AutoUpdate
 
             if (!startIndex.HasValue)
             {
-                throw new ApplicationException("Invalid script path. Does not contain a DbScriptType in the path name");
+                throw new ArgumentException("Invalid script path. Does not contain a DbScriptType in the path name", nameof(path));
             }
             var fileName = path.Substring(startIndex.Value);
 
@@ -114,7 +114,7 @@ namespace Cofoundry.Core.AutoUpdate
             if (scriptFile.Contains(".Triggers.")) return DbScriptType.Triggers;
             if (scriptFile.Contains(".Finalize.")) return DbScriptType.Finalize;
 
-            throw new ApplicationException("Script type not recognised and will not be run: " + scriptFile);
+            throw new NotSupportedException("Script type not recognised and will not be run: " + scriptFile);
         }
 
         /// <remarks>

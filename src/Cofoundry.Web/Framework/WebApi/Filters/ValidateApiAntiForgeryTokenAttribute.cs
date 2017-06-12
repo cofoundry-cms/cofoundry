@@ -34,7 +34,7 @@ namespace Cofoundry.Web.WebApi
             //    if (string.IsNullOrWhiteSpace(token))
             //    {
             //        var result = new BadRequestResult();
-            //        throw new ApplicationException($"The CSRF token is missing. Please add the {TOKEN_HEADER} header with a valid token.");
+            //        throw new Exception($"The CSRF token is missing. Please add the {TOKEN_HEADER} header with a valid token.");
             //    }
 
             //    var service = IckyDependencyResolution.ResolveInWebApiContext<IAntiCSRFService>();

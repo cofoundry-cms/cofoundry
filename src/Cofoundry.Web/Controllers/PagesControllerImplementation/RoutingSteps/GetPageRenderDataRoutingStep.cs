@@ -45,7 +45,7 @@ namespace Cofoundry.Web
             // if no data is found there was an issue with creating a draft earlier on.
             if (state.PageData == null && state.VisualEditorMode == VisualEditorMode.Edit)
             {
-                throw new ApplicationException("Draft version missing for page id " + query.PageId);
+                throw new Exception("Draft version missing for page id " + query.PageId);
             }
 
             // If we can't find any page data, then return a 404

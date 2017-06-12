@@ -22,7 +22,7 @@ namespace Cofoundry.Web
 
         public ActionResult GetSetupPageAction(Controller controller)
         {
-            throw new ApplicationException("Cofoundry has not been setup. Admin panel is not installed so installation must be done manually.");
+            throw new Exception("Cofoundry has not been setup. Admin panel is not installed so installation must be done manually.");
         }
     }
 }

@@ -77,7 +77,7 @@ namespace Cofoundry.Web.Admin
     //        }
     //        catch (ArgumentException ex)
     //        {
-    //            throw new ApplicationException("Error adding bundle path '" + path + "'.", ex);
+    //            throw new Exception("Error adding bundle path '" + path + "'.", ex);
     //        }
     //    }
 
