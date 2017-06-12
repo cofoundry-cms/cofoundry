@@ -15,14 +15,14 @@ namespace Cofoundry.Core.Caching
         #region constructor
 
         private string _cacheNamespace;
-        private MemoryCache _cache;
+        private ClearableMemoryCache _cache;
 
         /// <summary>
         /// Creates a new instance of an InMemoryObjectCache object.
         /// </summary>
         /// <param name="cache">The parent MemoryCache instance to use.</param>
         /// <param name="cacheNamespace">Unique cache namespace to organise all cache items under.</param>
-        public InMemoryObjectCache(MemoryCache cache, string cacheNamespace)
+        public InMemoryObjectCache(ClearableMemoryCache cache, string cacheNamespace)
         {
             if (cache == null) throw new ArgumentNullException(nameof(cache));
 
@@ -43,9 +43,9 @@ namespace Cofoundry.Core.Caching
         /// <returns>The value of the cached object if it exists; otherwise null.</returns>
         public T Get<T>(string key)
         {
-            var o = _cache.Get(CreateCacheKey(key));
-            if (o == null) return default(T);
-            return (T)o;
+            var fullKey = CreateCacheKey(key);
+            var entry = _cache.Get<T>(fullKey);
+            return entry;
         }
 
         /// <summary>
@@ -59,12 +59,8 @@ namespace Cofoundry.Core.Caching
         /// <returns>The value of the cache entry if it exists; otherwise the result of the getter function.</returns>
         public T GetOrAdd<T>(string key, Func<T> getter, DateTimeOffset? expiry = null)
         {
-            var item = Get<T>(key);
-            if (item == null)
-            {
-                item = getter();
-                Put(key, item, expiry);
-            }
+            var fullKey = CreateCacheKey(key);
+            var item = _cache.GetOrAdd<T>(fullKey, getter, expiry);
 
             return item;
         }
@@ -78,41 +74,12 @@ namespace Cofoundry.Core.Caching
         /// <param name="getter">An async function that returns an entry to insert into the cache if it is empty</param>
         /// <param name="expiry">An optional absolute expiry time of the cache entry.</param>
         /// <returns>The value of the cache entry if it exists; otherwise the result of the getter function.</returns>
-        public async Task<T> GetOrAddAsync<T>(string key, Func<Task<T>> getter, DateTimeOffset? expiry = null)
+        public Task<T> GetOrAddAsync<T>(string key, Func<Task<T>> getter, DateTimeOffset? expiry = null)
         {
-            var item = Get<T>(key);
-            if (item == null)
-            {
-                item = await getter();
-                Put(key, item, expiry);
-            }
+            var fullKey = CreateCacheKey(key);
+            var item = _cache.GetOrAddAsync<T>(fullKey, getter, expiry);
 
             return item;
-        }
-
-        /// <summary>
-        /// Adds or updates the cache entry with the specified key.
-        /// </summary>
-        /// <param name="key">Unique key of the cache entry</param>
-        /// <param name="item">object to add/update to the cache</param>
-        /// <param name="expiry">An optional absolute expiry time of the cache entry.</param>
-        public void Put<T>(string key, T item, DateTimeOffset? expiry = null)
-        {
-            if (item == null)
-            {
-                Clear(key);
-                return;
-            }
-            CacheItemPolicy policy = null;
-
-            if (expiry.HasValue)
-            {
-                policy = new CacheItemPolicy();
-                policy.AbsoluteExpiration = expiry.Value;
-
-            }
-
-            _cache.Set(CreateCacheKey(key), item, policy);
         }
 
         /// <summary>
@@ -122,23 +89,13 @@ namespace Cofoundry.Core.Caching
         /// <param name="key">Unique key of the cache entry to update</param>
         public void Clear(string key = null)
         {
-            string[] keys;
-
-            if (key == null)
+            if (string.IsNullOrWhiteSpace(key))
             {
-                keys = _cache
-                    .Where(i => i.Key.StartsWith(_cacheNamespace + ":"))
-                    .Select(i => i.Key)
-                    .ToArray();
+                _cache.ClearAll(CreateCacheKey(string.Empty));
             }
             else
             {
-                keys = new string[] { CreateCacheKey(key) };
-            }
-
-            foreach (var k in keys)
-            {
-                _cache.Remove(k);
+                _cache.ClearEntry(CreateCacheKey(key));
             }
         }
 

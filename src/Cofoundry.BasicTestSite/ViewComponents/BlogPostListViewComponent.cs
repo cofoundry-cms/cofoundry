@@ -17,8 +17,7 @@ namespace Cofoundry.BasicTestSite
 
         public BlogPostListViewComponent(
             ICustomEntityRepository customEntityRepository,
-            IImageAssetRepository imageAssetRepository,
-            IOptions<StaticFileOptions> staticFileOptions
+            IImageAssetRepository imageAssetRepository
             )
         {
             _customEntityRepository = customEntityRepository;

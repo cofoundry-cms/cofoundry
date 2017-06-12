@@ -49,14 +49,6 @@ namespace Cofoundry.Core.Caching
         Task<T> GetOrAddAsync<T>(string key, Func<Task<T>> getter, DateTimeOffset? expiry = null);
 
         /// <summary>
-        /// Adds or updates the cache entry with the specified key.
-        /// </summary>
-        /// <param name="key">Unique key of the cache entry</param>
-        /// <param name="item">object to add/update to the cache</param>
-        /// <param name="expiry">An optional absolute expiry time of the cache entry.</param>
-        void Put<T>(string key, T item, DateTimeOffset? expiry = null);
-
-        /// <summary>
         /// Clears the specified cache entry. If the key parameter is not provided, all
         /// entries in the cache namespace are removed.
         /// </summary>

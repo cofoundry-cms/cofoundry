@@ -398,6 +398,7 @@
     <Compile Include="BackgroundTasks\Framework\IAsyncRecurringBackgroundTask.cs" />
     <Compile Include="BackgroundTasks\Framework\IRecurringBackgroundTask.cs" />
     <Compile Include="Caching\Bootstrap\CachingDependencyRegistration.cs" />
+    <Compile Include="Caching\ClearableMemoryCache.cs" />
     <Compile Include="Caching\InMemoryObjectCache.cs" />
     <Compile Include="Caching\InMemoryObjectCacheFactory.cs" />
     <Compile Include="Caching\IObjectCache.cs" />

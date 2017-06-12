@@ -1,7 +1,8 @@
-﻿using System;
+﻿using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Options;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.Caching;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -14,7 +15,7 @@ namespace Cofoundry.Core.Caching
     {
         #region constructor
 
-        private MemoryCache _cache;
+        private readonly ClearableMemoryCache _memoryCache;
 
         /// <summary>
         /// Creates a new InMemoryObjectCacheFactory instance
@@ -23,16 +24,11 @@ namespace Cofoundry.Core.Caching
         /// The name of the MemoryCache configuration to use. If the cacheName is null the Default 
         /// MemoryCache instance is used (recommended).
         /// </param>
-        public InMemoryObjectCacheFactory(string cacheName = null)
+        public InMemoryObjectCacheFactory(
+            IOptions<MemoryCacheOptions> optionsAccessor
+            )
         {
-            if (cacheName == null)
-            {
-                _cache = MemoryCache.Default;
-            }
-            else
-            {
-                _cache = new MemoryCache(cacheName);
-            }
+            _memoryCache = new ClearableMemoryCache(optionsAccessor);
         }
 
         #endregion
@@ -46,7 +42,7 @@ namespace Cofoundry.Core.Caching
         /// <returns>IObjectCache instance</returns>
         public IObjectCache Get(string cacheNamespace)
         {
-            return new InMemoryObjectCache(_cache, cacheNamespace);
+            return new InMemoryObjectCache(_memoryCache, cacheNamespace);
         }
 
         /// <summary>
@@ -54,10 +50,7 @@ namespace Cofoundry.Core.Caching
         /// </summary>
         public void Clear()
         {
-            foreach (var k in _cache)
-            {
-                _cache.Remove(k.Key);
-            }
+            _memoryCache.ClearAll();
         }
 
         #endregion
