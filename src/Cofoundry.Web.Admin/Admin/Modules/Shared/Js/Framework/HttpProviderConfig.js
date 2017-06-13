@@ -1,9 +1,17 @@
 ﻿/**
 * Configured CSRF tokens for $http requests
 */
-angular.module('cms.shared').config(['$httpProvider', 'csrfToken', function ($httpProvider, csrfToken) {
+angular.module('cms.shared').config([
+    '$httpProvider',
+    'csrfToken',
+    'csrfHeaderName',
+    function (
+        $httpProvider,
+        csrfToken,
+        csrfHeaderName
+    ) {
+
     var headers = $httpProvider.defaults.headers,
-        csrfHeader = 'X-XSRF-Token',
         csrfableVerbs = [
             'put',
             'post',
@@ -15,7 +23,7 @@ angular.module('cms.shared').config(['$httpProvider', 'csrfToken', function ($ht
 
     csrfableVerbs.forEach(function (verb) {
         headers[verb] = headers[verb] || {};
-        headers[verb][csrfHeader] = csrfToken;
+        headers[verb][csrfHeaderName] = csrfToken;
     });
 
 }]);

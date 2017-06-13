@@ -7,24 +7,29 @@ using System.Text;
 using Cofoundry.Domain;
 using Microsoft.AspNetCore.Html;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Antiforgery;
+using Microsoft.AspNetCore.Http;
 
 namespace Cofoundry.Web.Admin
 {
     public class AngularBootstrapper : IAngularBootstrapper
     {
-        private readonly IAntiCSRFService _antiCSRFService;
+        private readonly IAntiforgery _antiforgery;
+        private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IStaticResourceReferenceRenderer _staticResourceReferenceRenderer;
         private readonly ICurrentUserViewHelper _currentUserHelper;
         private readonly IAdminRouteLibrary _adminRouteLibrary;
 
         public AngularBootstrapper(
-            IAntiCSRFService antiCSRFService,
+            IAntiforgery antiforgery,
+            IHttpContextAccessor httpContextAccessor,
             IStaticResourceReferenceRenderer staticResourceReferenceRenderer,
             ICurrentUserViewHelper currentUserHelper,
             IAdminRouteLibrary adminRouteLibrary
             )
         {
-            _antiCSRFService = antiCSRFService;
+            _antiforgery = antiforgery;
+            _httpContextAccessor = httpContextAccessor;
             _staticResourceReferenceRenderer = staticResourceReferenceRenderer;
             _currentUserHelper = currentUserHelper;
             _adminRouteLibrary = adminRouteLibrary;
@@ -67,11 +72,12 @@ namespace Cofoundry.Web.Admin
                 PermissionCodes = _currentUserHelper.Role.Permissions.Select(p => p.GetUniqueCode())
             };
 
-            var csrfTopken = _antiCSRFService.GetToken();
+            var tokens = _antiforgery.GetAndStoreTokens(_httpContextAccessor.HttpContext);
 
             return @"<script>angular.element(document).ready(function() {
                         angular.module('" + _adminRouteLibrary.Shared.Angular.AngularModuleName + @"')
-                               .constant('csrfToken', '" + csrfTopken + @"')"
+                               .constant('csrfToken', '" + tokens.RequestToken + @"')
+                               .constant('csrfHeaderName', '" + tokens.HeaderName + @"')"
                                + GetConstant(routeLibrary, "options", options) // not sure why the current module is loaded into the shared module - seems like a mistake?
                                + GetConstant(_adminRouteLibrary.Shared, "currentUser", currentUserInfo) + @";
                         angular.bootstrap(document, ['" + routeLibrary.Angular.AngularModuleName + "']" + args + @");

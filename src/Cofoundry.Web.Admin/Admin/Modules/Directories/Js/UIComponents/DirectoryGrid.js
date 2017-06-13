@@ -5,7 +5,7 @@ function (
 
     return {
         restrict: 'E',
-        templateUrl: modulePath + 'UIComponents/Directories/DirectoryGrid.html',
+        templateUrl: modulePath + 'UIComponents/DirectoryGrid.html',
         scope: {
             webDirectories: '=cmsDirectories',
             startDepth: '=cmsStartDepth',

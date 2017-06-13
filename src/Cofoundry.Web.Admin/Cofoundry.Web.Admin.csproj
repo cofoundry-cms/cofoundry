@@ -426,8 +426,8 @@
     <Content Include="Admin\Modules\Directories\Js\Routes\DirectoryDetailsController.js" />
     <Content Include="Admin\Modules\Directories\Js\Routes\DirectoryList.html" />
     <Content Include="Admin\Modules\Directories\Js\Routes\DirectoryListController.js" />
-    <Content Include="Admin\Modules\Directories\Js\UIComponents\Directories\DirectoryGrid.html" />
-    <Content Include="Admin\Modules\Directories\Js\UIComponents\Directories\DirectoryGrid.js" />
+    <Content Include="Admin\Modules\Directories\Js\UIComponents\DirectoryGrid.html" />
+    <Content Include="Admin\Modules\Directories\Js\UIComponents\DirectoryGrid.js" />
     <Content Include="Admin\Modules\Documents\Content\js\documents.js" />
     <Content Include="Admin\Modules\Documents\Content\js\documents_min.js" />
     <Content Include="Admin\Modules\Documents\Content\js\documents_templates.js" />

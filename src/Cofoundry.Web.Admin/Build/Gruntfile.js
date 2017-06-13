@@ -388,7 +388,7 @@
                     }
                 },
                 src: [
-                    '../Admin/Modules/Directories/Js/UIComponents/Directories/*.html',
+                    '../Admin/Modules/Directories/Js/UIComponents/*.html',
                     '../Admin/Modules/Directories/Js/Routes/*.html'
                 ],
                 dest: '../Admin/Modules/Directories/Content/js/directories_templates.js'

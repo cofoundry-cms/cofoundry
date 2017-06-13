@@ -477,8 +477,6 @@
     <Compile Include="Controllers\PagesControllerImplementation\RoutingSteps\ValidateDraftVersionRoutingStep.cs" />
     <Compile Include="Controllers\PagesControllerImplementation\RoutingSteps\ValidateEntityEditModeRoutingStep.cs" />
     <Compile Include="Controllers\PagesControllerImplementation\RoutingSteps\ValidateSpecificVersionRoutingRoutingStep.cs" />
-    <Compile Include="Framework\AntiCSRF\AntiCSRFService.cs" />
-    <Compile Include="Framework\AntiCSRF\IAntiCSRFService.cs" />
     <Compile Include="Framework\Auth\AuthorizeUserAreaAttribute.cs" />
     <Compile Include="Framework\Auth\CofoundryAuthenticationConstants.cs" />
     <Compile Include="Framework\Auth\UserSessionService.cs" />
@@ -595,7 +593,6 @@
     <Compile Include="Framework\WebApi\Files\FormFileUploadedFile.cs" />
     <Compile Include="Framework\WebApi\Files\IFormFileUploadedFileFactory.cs" />
     <Compile Include="Framework\WebApi\Files\FormFileUploadedFileFactory.cs" />
-    <Compile Include="Framework\WebApi\Filters\ValidateApiAntiForgeryTokenAttribute.cs" />
     <Compile Include="Framework\WebApi\ResponseHelpers\ApiResponseHelper.cs" />
     <Compile Include="Framework\WebApi\ResponseHelpers\IApiResponseHelper.cs" />
     <Compile Include="Framework\WebApi\ResponseHelpers\SimpleCommandResponseData.cs" />
