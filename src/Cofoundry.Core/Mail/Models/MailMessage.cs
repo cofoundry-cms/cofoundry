@@ -8,9 +8,9 @@ namespace Cofoundry.Core.Mail
 {
     public class MailMessage
     {
-        public SerializeableMailAddress To { get; set; }
+        public MailAddress To { get; set; }
 
-        public SerializeableMailAddress From { get; set; }
+        public MailAddress From { get; set; }
 
         public string Subject { get; set; }
 

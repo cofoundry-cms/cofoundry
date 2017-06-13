@@ -1306,6 +1306,7 @@
     <None Include="MailTemplates\AdminMailTemplates\Users\PasswordChanged_Text.cshtml" />
     <None Include="MailTemplates\AdminMailTemplates\Users\ResetPassword_Html.cshtml" />
     <None Include="MailTemplates\AdminMailTemplates\Users\ResetPassword_Text.cshtml" />
+    <Content Include="MailTemplates\AdminMailTemplates\Users\_ViewImports.cshtml" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

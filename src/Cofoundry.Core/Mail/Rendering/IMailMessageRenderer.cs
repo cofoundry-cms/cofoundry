@@ -19,6 +19,6 @@ namespace Cofoundry.Core.Mail
         /// <param name="template">The mail template that describes the data and template information for the email</param>
         /// <param name="toAddress">The address to send the email to.</param>
         /// <returns>Formatted MailMessage</returns>
-        Task<MailMessage> RenderAsync(IMailTemplate template, SerializeableMailAddress toAddress);
+        Task<MailMessage> RenderAsync(IMailTemplate template, MailAddress toAddress);
     }
 }

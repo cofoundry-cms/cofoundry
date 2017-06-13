@@ -4,8 +4,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Cofoundry.Core.DependencyInjection;
-using Cofoundry.Core.Configuration;
-//using RazorEngine.Templating;
 
 namespace Cofoundry.Core.Mail
 {
@@ -15,9 +13,9 @@ namespace Cofoundry.Core.Mail
         {
             container
                 .RegisterType<IMailService, SimpleMailService>()
-                .RegisterType<IMailDispatchService, SmtpMailDispatchService>()
                 .RegisterType<IMailMessageRenderer, MailMessageRenderer>()
                 .RegisterType<IMailViewRenderer, RazorMailViewRenderer>()
+                .RegisterType<IMailDispatchService, DebugMailDispatchService>()
                 ; 
         }
     }

@@ -1,123 +1,112 @@
-﻿using System;
+﻿using Cofoundry.Core;
+using Cofoundry.Core.Mail;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Net.Mail;
 using System.Net.Mime;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Cofoundry.Core.Mail
+namespace Cofoundry.Plugins.SystemNetMail
 {
     /// <summary>
-    /// Service for sending email via an SMTP server
+    /// Mail dispatch session that uses System.Net.Mail to
+    /// dispatch email.
     /// </summary>
-    public class SmtpMailDispatchService:  IMailDispatchService
+    public class SmtpMailDispatchSession : IMailDispatchSession
     {
-        #region constructor
-
+        private readonly Queue<System.Net.Mail.MailMessage> _mailQueue = new Queue<System.Net.Mail.MailMessage>();
+        private readonly Lazy<System.Net.Mail.SmtpClient> _mailClient;
         private readonly MailSettings _mailSettings;
-        private readonly SmtpMailSettings _smtpMailSettings;
         private readonly IPathResolver _pathResolver;
-        
-        public SmtpMailDispatchService(
-            IPathResolver pathResolver,
+
+        private bool isDisposing = false;
+
+        public SmtpMailDispatchSession(
             MailSettings mailSettings,
-            SmtpMailSettings smtpMailSettings
+            IPathResolver pathResolver
             )
         {
             _mailSettings = mailSettings;
-            _smtpMailSettings = smtpMailSettings;
             _pathResolver = pathResolver;
+            _mailClient = new Lazy<System.Net.Mail.SmtpClient>(CreateSmtpMailClient);
         }
 
-        #endregion
-
-        #region public methods
-
-        public void Dispatch(MailMessage message, IMailClient mailClient = null)
+        public void Add(MailMessage mailMessage)
         {
-            if (_mailSettings.SendMode == MailSendMode.DoNotSend) return;
-
-            if (mailClient != null)
-            {
-                ValidateMailClient(mailClient);
-                SendMessage(message, (SmtpMailClient)mailClient);
-            }
-            else
-            {
-                using (var smtpClient = CreateSmtpMailClient())
-                {
-                    SendMessage(message, smtpClient);
-                }
-            }
+            var messageToSend = FormatMessage(mailMessage);
+            _mailQueue.Enqueue(messageToSend);
         }
-        
-        public async Task DispatchAsync(MailMessage message, IMailClient mailClient = null)
-        {
-            if (_mailSettings.SendMode == MailSendMode.DoNotSend) return;
 
-            if (mailClient != null)
+        public void Flush()
+        {
+            while (_mailQueue.Count > 0)
             {
-                ValidateMailClient(mailClient);
-                await SendMessageAsync(message, (SmtpMailClient)mailClient);
-            }
-            else
-            {
-                using (var smtpClient = CreateSmtpMailClient())
+                var mailItem = _mailQueue.Dequeue();
+                if (mailItem != null && _mailSettings.SendMode != MailSendMode.DoNotSend)
                 {
-                    await SendMessageAsync(message, smtpClient);
+                    _mailClient.Value.Send(mailItem);
                 }
             }
         }
 
-        public IMailClient CreateMailClient()
+        public async Task FlushAsync()
         {
-            return CreateSmtpMailClient();
+            while (_mailQueue.Count > 0)
+            {
+                var mailItem = _mailQueue.Dequeue();
+                if (mailItem != null && _mailSettings.SendMode != MailSendMode.DoNotSend)
+                {
+                    await _mailClient.Value?.SendMailAsync(mailItem);
+                }
+            }
         }
 
-        #endregion
+        public void Dispose()
+        {
+            isDisposing = true;
+            if (_mailClient.IsValueCreated)
+            {
+                _mailClient.Value?.Dispose();
+            }
+        }
 
         #region private methods
-
-        private void SendMessage(MailMessage message, SmtpMailClient mailClient)
+        
+        private System.Net.Mail.SmtpClient CreateSmtpMailClient()
         {
-            if (mailClient == null) throw new ArgumentNullException(nameof(mailClient));
+            if (isDisposing) return null;
 
-            var messageToSend = FormatMessage(message);
+            var client = new System.Net.Mail.SmtpClient();
 
-            mailClient.Send(messageToSend);
-        }
-
-        private async Task SendMessageAsync(MailMessage message, SmtpMailClient mailClient)
-        {
-            if (mailClient == null) throw new ArgumentNullException(nameof(mailClient));
-
-            var messageToSend = FormatMessage(message);
-
-            await mailClient.SendAsync(messageToSend);
-        }
-
-        private void ValidateMailClient(IMailClient mailClient)
-        {
-            if (!(mailClient is SmtpMailClient))
+            if (String.IsNullOrEmpty(client.Host))
             {
-                throw new ArgumentException("SmtpMailDispatchService requires an IMailClient of type SmtpClient");
+                client.Host = "localhost";
             }
-        }
 
+            if (_mailSettings.SendMode == MailSendMode.LocalDrop)
+            {
+                client.EnableSsl = false;
+                client.DeliveryMethod = System.Net.Mail.SmtpDeliveryMethod.SpecifiedPickupDirectory;
+                client.PickupDirectoryLocation = GetDebugDropPath();
+            }
+
+            return client;
+        }
+        
         private System.Net.Mail.MailMessage FormatMessage(MailMessage message)
         {
             if (message == null) throw new ArgumentNullException(nameof(message));
 
             var messageToSend = new System.Net.Mail.MailMessage();
 
-            MailAddress toAddress = GetMailToAddress(message);
+            System.Net.Mail.MailAddress toAddress = GetMailToAddress(message);
             messageToSend.To.Add(toAddress);
             messageToSend.Subject = message.Subject;
             if (message.From != null)
             {
-                messageToSend.From = message.From.ToMailAddress();
+                messageToSend.From = new System.Net.Mail.MailAddress(message.From.Address, message.From.DisplayName);
             }
             else
             {
@@ -128,9 +117,9 @@ namespace Cofoundry.Core.Mail
             return messageToSend;
         }
 
-        private MailAddress GetMailToAddress(MailMessage message)
+        private System.Net.Mail.MailAddress GetMailToAddress(MailMessage message)
         {
-            MailAddress toAddress;
+            System.Net.Mail.MailAddress toAddress;
             if (_mailSettings.SendMode == MailSendMode.SendToDebugAddress)
             {
                 if (string.IsNullOrEmpty(_mailSettings.DebugEmailAddress))
@@ -141,28 +130,9 @@ namespace Cofoundry.Core.Mail
             }
             else
             {
-                toAddress = message.To.ToMailAddress();
+                toAddress = new System.Net.Mail.MailAddress(message.To.Address, message.To.DisplayName);
             }
             return toAddress;
-        }
-
-        private SmtpMailClient CreateSmtpMailClient()
-        {
-            var client = new SmtpClient();
-
-            if (String.IsNullOrEmpty(client.Host))
-            {
-                client.Host = "localhost";
-            }
-
-            if (_mailSettings.SendMode == MailSendMode.LocalDrop)
-            {
-                client.EnableSsl = false;
-                client.DeliveryMethod = SmtpDeliveryMethod.SpecifiedPickupDirectory;
-                client.PickupDirectoryLocation = GetDebugDropPath();
-            }
-
-            return new SmtpMailClient(client);
         }
 
         private void SetMessageBody(System.Net.Mail.MailMessage message, string bodyHtml, string bodyText)
@@ -195,7 +165,7 @@ namespace Cofoundry.Core.Mail
 
         private void AddAlternateView(System.Net.Mail.MailMessage message, string content, string mediaType)
         {
-            message.AlternateViews.Add(AlternateView.CreateAlternateViewFromString(content, Encoding.UTF8, mediaType));
+            message.AlternateViews.Add(System.Net.Mail.AlternateView.CreateAlternateViewFromString(content, Encoding.UTF8, mediaType));
         }
 
         private System.Net.Mail.MailAddress CreateMailAddress(string email, string displayName)
@@ -222,12 +192,12 @@ namespace Cofoundry.Core.Mail
 
         private string GetDebugDropPath()
         {
-            if (string.IsNullOrEmpty(_smtpMailSettings.DebugMailDropDirectory))
+            if (string.IsNullOrEmpty(_mailSettings.MailDropDirectory))
             {
-                throw new Exception("Cofoundry:SmtpMail:DebugMailDropDirectory configuration has been requested and is not set.");
+                throw new Exception("Cofoundry:Mail:MailDropDirectory configuration has been requested and is not set.");
             }
 
-            var debugMailDropDirectory = _pathResolver.MapPath(_smtpMailSettings.DebugMailDropDirectory);
+            var debugMailDropDirectory = _pathResolver.MapPath(_mailSettings.MailDropDirectory);
             if (!Directory.Exists(debugMailDropDirectory))
             {
                 Directory.CreateDirectory(debugMailDropDirectory);

@@ -35,7 +35,7 @@ namespace Cofoundry.Core.Mail
         /// </summary>
         public async Task SendAsync(string toEmail, string toDisplayName, IMailTemplate template)
         {
-            var toAddress = new SerializeableMailAddress(toEmail, toDisplayName);
+            var toAddress = new MailAddress(toEmail, toDisplayName);
             var message = await _mailMessageRenderer.RenderAsync(template, toAddress);
 
             await _mailDispatchService.DispatchAsync(message);
@@ -52,7 +52,7 @@ namespace Cofoundry.Core.Mail
         /// <summary>
         /// Queues an email for sending to the specified email address
         /// </summary>
-        public async Task SendAsync(SerializeableMailAddress address, IMailTemplate template)
+        public async Task SendAsync(MailAddress address, IMailTemplate template)
         {
             if (address == null) throw new ArgumentNullException(nameof(address));
 

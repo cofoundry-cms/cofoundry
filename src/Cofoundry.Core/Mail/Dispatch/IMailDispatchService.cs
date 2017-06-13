@@ -7,29 +7,27 @@ using System.Threading.Tasks;
 namespace Cofoundry.Core.Mail
 {
     /// <summary>
-    /// Service for sending emails. This service is the lower level of dispatch, i.e. sending via 
-    /// SMTP or sendgrid.
+    /// Service for sending emails. This service is the lower level of 
+    /// dispatch, i.e. sending via SMTP or sendgrid.
     /// </summary>
     public interface IMailDispatchService
     {
         /// <summary>
-        /// Sends a mail message, optionally using the specified mail client.
+        /// Sends a mail message.
         /// </summary>
         /// <param name="message">The MailMessage to send</param>
-        /// <param name="mailClient">Optional IMailClient to use to send the message.</param>
-        void Dispatch(MailMessage message, IMailClient mailClient = null);
+        void Dispatch(MailMessage message);
 
         /// <summary>
-        /// Sends a mail message, optionally using the specified mail client.
+        /// Sends a mail message.
         /// </summary>
         /// <param name="message">The MailMessage to send</param>
-        /// <param name="mailClient">Optional IMailClient to use to send the message.</param>
-        Task DispatchAsync(MailMessage message, IMailClient mailClient = null);
+        Task DispatchAsync(MailMessage message);
 
         /// <summary>
-        /// Creates a new mail client which can be used to send batches of email.
+        /// Creates a new mail session that can be used to send batches of mail.
         /// </summary>
-        /// <returns>New instance of an IMailClient</returns>
-        IMailClient CreateMailClient();
+        /// <returns>New instance of an IMailDispatchSession</returns>
+        IMailDispatchSession CreateSession();
     }
 }

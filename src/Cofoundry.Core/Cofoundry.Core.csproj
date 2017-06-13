@@ -432,6 +432,9 @@
     <Compile Include="DependencyInjection\DefaultContainer\DefaultContainerRegister.cs" />
     <Compile Include="DependencyInjection\DefaultContainer\DefaultContainerChildResolutionContext.cs" />
     <Compile Include="DependencyInjection\DefaultContainer\DefaultContainerResolutionContext.cs" />
+    <Compile Include="Mail\Dispatch\IMailDispatchSession.cs" />
+    <Compile Include="Mail\Dispatch\DebugMailDispatchService.cs" />
+    <Compile Include="Mail\Dispatch\DebugMailDispatchSession.cs" />
     <Compile Include="ResourceFiles\Bootstrap\ResourceFilesDependencyRegistration.cs" />
     <Compile Include="ResourceFiles\Files\IResourceFileProviderRegisteration.cs" />
     <Compile Include="ResourceFiles\Files\ResourceFileProviderFactory.cs" />
@@ -469,7 +472,7 @@
     <Compile Include="Json\HtmlStringJsonConverter.cs" />
     <Compile Include="Json\JsonSerializerSettingsFactory.cs" />
     <Compile Include="Json\IJsonSerializerSettingsFactory.cs" />
-    <Compile Include="Mail\Bootstrap\DependencyRegistration.cs" />
+    <Compile Include="Mail\Bootstrap\MailDependencyRegistration.cs" />
     <Compile Include="Mail\Dispatch\MailSettings.cs" />
     <Compile Include="Mail\Exceptions\TemplateRenderException.cs" />
     <Compile Include="Mail\Rendering\IMailViewRenderer.cs" />
@@ -481,13 +484,9 @@
     <Compile Include="Mail\Models\IMailTemplate.cs" />
     <Compile Include="Mail\Models\IMailTemplateWithCustomFromAddress.cs" />
     <Compile Include="Mail\Models\MailMessage.cs" />
-    <Compile Include="Mail\Models\SerializeableMailAddress.cs" />
-    <Compile Include="Mail\Dispatch\IMailClient.cs" />
+    <Compile Include="Mail\Models\MailAddress.cs" />
     <Compile Include="Mail\Dispatch\IMailDispatchService.cs" />
     <Compile Include="Mail\Models\MailSendMode.cs" />
-    <Compile Include="Mail\Dispatch\SmtpMailClient.cs" />
-    <Compile Include="Mail\Dispatch\SmtpMailDispatchService.cs" />
-    <Compile Include="Mail\Dispatch\SmtpMailSettings.cs" />
     <Compile Include="Mail\Services\IMailService.cs" />
     <Compile Include="MessageAggregator\Bootstrap\MessageAggregatorDependencyRegistration.cs" />
     <Compile Include="MessageAggregator\Implementation\MessageAggregator.cs" />

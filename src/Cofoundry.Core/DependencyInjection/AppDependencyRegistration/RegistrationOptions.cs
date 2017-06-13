@@ -33,7 +33,7 @@ namespace Cofoundry.Core.DependencyInjection
         public int RegistrationOverridePriority { get; set; }
 
         /// <summary>
-        /// A quick way of creatinf a new options set which sets the
+        /// A quick way of creating a new options set which sets the
         /// ReplaceExisting property to true
         /// </summary>
         /// <param name="overridePriority">Optionally specify an override priority</param>

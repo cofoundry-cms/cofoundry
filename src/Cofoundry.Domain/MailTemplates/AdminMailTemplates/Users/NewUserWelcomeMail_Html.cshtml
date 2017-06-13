@@ -1,6 +1,5 @@
-﻿@inherits EmailTemplateBase<NewUserWelcomeMailTemplate>
+﻿@model NewUserWelcomeMailTemplate
 @using Cofoundry.Domain.MailTemplates
-@using Cofoundry.Core.Mail
 
 @{
     Layout = TemplatePath.DefaultLayoutPath_Html;
@@ -13,7 +12,7 @@
     Your temporary password is: @Model.TemporaryPassword 
 </p>
 <p>
-    Login <a href="@Url.ToAbsolute(UrlLibrary.Login)">here</a>
+    Login <a href="@Cofoundry.Routing.ToAbsolute(UrlLibrary.Login)">here</a>
 </p>
 
 <p>

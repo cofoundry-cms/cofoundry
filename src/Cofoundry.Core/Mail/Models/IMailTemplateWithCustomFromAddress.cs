@@ -14,6 +14,6 @@ namespace Cofoundry.Core.Mail
         /// <summary>
         /// A custom email address to send the email from, which will override the default.
         /// </summary>
-        SerializeableMailAddress From { get; }
+        MailAddress From { get; }
     }
 }

@@ -23,6 +23,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cofoundry.Sanbox.TestModule
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cofoundry.BasicTestSite", "Cofoundry.BasicTestSite\Cofoundry.BasicTestSite.csproj", "{F659F7F9-153D-4000-A8B9-F45EFB40F511}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "plugins", "plugins", "{22FE4195-4C00-444A-9873-1435F4F11A81}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cofoundry.Plugins.SystemNetMail", "Cofoundry.Plugins.SystemNetMail\Cofoundry.Plugins.SystemNetMail.csproj", "{221A3B8E-3142-41FD-B42E-6AFB139889A7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -57,6 +61,10 @@ Global
 		{F659F7F9-153D-4000-A8B9-F45EFB40F511}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F659F7F9-153D-4000-A8B9-F45EFB40F511}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F659F7F9-153D-4000-A8B9-F45EFB40F511}.Release|Any CPU.Build.0 = Release|Any CPU
+		{221A3B8E-3142-41FD-B42E-6AFB139889A7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{221A3B8E-3142-41FD-B42E-6AFB139889A7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{221A3B8E-3142-41FD-B42E-6AFB139889A7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{221A3B8E-3142-41FD-B42E-6AFB139889A7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -69,5 +77,6 @@ Global
 		{B867864A-DB89-4B99-8A73-ABA40FABDF7D} = {8FCDFF68-9BCF-499B-8E2D-7E08E824F40A}
 		{F8B2A917-FC01-4CFE-A6C9-DC8B3FA80B5C} = {8FCDFF68-9BCF-499B-8E2D-7E08E824F40A}
 		{F659F7F9-153D-4000-A8B9-F45EFB40F511} = {8FCDFF68-9BCF-499B-8E2D-7E08E824F40A}
+		{221A3B8E-3142-41FD-B42E-6AFB139889A7} = {22FE4195-4C00-444A-9873-1435F4F11A81}
 	EndGlobalSection
 EndGlobal

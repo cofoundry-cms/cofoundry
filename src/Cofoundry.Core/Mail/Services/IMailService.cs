@@ -24,6 +24,6 @@ namespace Cofoundry.Core.Mail
         /// <summary>
         /// Sends an email to the specified email address
         /// </summary>
-        Task SendAsync(SerializeableMailAddress address, IMailTemplate template);
+        Task SendAsync(MailAddress address, IMailTemplate template);
     }
 }

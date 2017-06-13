@@ -14,6 +14,11 @@ namespace Cofoundry.Core.Mail
     /// </summary>
     public class MailSettings : CofoundryConfigurationSettingsBase
     {
+        public MailSettings()
+        {
+            MailDropDirectory = "~/App_Data/Emails";
+        }
+
         /// <summary>
         /// Indicates whether emails should be sent and how. The default 
         /// value is LocalDrop, so you should set this to Send in production
@@ -37,5 +42,11 @@ namespace Cofoundry.Core.Mail
         /// Optionally the name to display with the default From Address
         /// </summary>
         public string DefaultFromAddressDisplayName { get; set; }
+
+        /// <summary>
+        /// The path to the folder to save mail to when using SendMode.LocalDrop. Defaults 
+        /// to ~/App_Data/Emails
+        /// </summary>
+        public string MailDropDirectory { get; set; }
     }
 }
