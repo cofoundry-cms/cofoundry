@@ -1,10 +1,10 @@
-﻿using Cofoundry.Core.Web;
-using HtmlAgilityPack;
+﻿using AngleSharp.Dom;
+using AngleSharp.Parser.Html;
+using Cofoundry.Core.Web;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
-using System.Web;
 
 namespace Cofoundry.Web
 {
@@ -41,28 +41,26 @@ namespace Cofoundry.Web
         {
             const string DEFAULT_TAG ="div";
 
-            var html = new HtmlDocument();
-            html.LoadHtml(modulesHtml.Trim());
+            var parser = new HtmlParser();
+            var document = parser.Parse(modulesHtml.Trim());
 
-            HtmlNode wrapper;
-
+            IElement wrapper;
             // No need to wrap if its a single module with a single outer node.
-            if (!allowMultipleModules && html.DocumentNode.ChildNodes.Count == 1 && wrappingTagName == null)
+            if (!allowMultipleModules && document.Body.Children.Length == 1 && wrappingTagName == null)
             {
-                wrapper = html.DocumentNode.ChildNodes.First();
+                wrapper = document.Body.Children.First();
             }
             else
             {
-                var wrap = new HtmlDocument();
-                wrapper = wrap.CreateElement(wrappingTagName ?? DEFAULT_TAG);
-                wrapper.InnerHtml = modulesHtml;
+                wrapper = document.CreateElement(wrappingTagName ?? DEFAULT_TAG);
+                AngleSharpHelper.WrapChildren(document.Body, wrapper);
             }
 
-            wrapper.MergeAttributes(additonalHtmlAttributes);
+            AngleSharpHelper.MergeAttributes(wrapper, additonalHtmlAttributes);
 
             if (editorAttributes != null)
             {
-                wrapper.MergeAttributes(editorAttributes);
+                AngleSharpHelper.MergeAttributes(wrapper, editorAttributes);
             }
 
             return wrapper.OuterHtml;

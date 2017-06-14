@@ -5,7 +5,8 @@ using System.Threading.Tasks;
 using Cofoundry.Domain;
 using Cofoundry.Core.Web;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using HtmlAgilityPack;
+using AngleSharp.Parser.Html;
+using AngleSharp.Dom;
 
 namespace Cofoundry.Web
 {
@@ -124,27 +125,26 @@ namespace Cofoundry.Web
                 attrs.Add("data-cms-page-module-title", moduleViewModel.ModuleType.Name.ToString());
             }
 
-            var editModuleHtml = new HtmlDocument();
-            editModuleHtml.LoadHtml(moduleHtml.Trim());
+            var parser = new HtmlParser();
+            var document = parser.Parse(moduleHtml.Trim());
 
-            var nodes = editModuleHtml.DocumentNode.ChildNodes;
+            var elements = document.Body.Children;
 
-            if (nodes.Count == 1)
+            if (elements.Length == 1)
             {
-                var node = nodes.Single();
+                var element = elements.Single();
 
-                if (node.NodeType == HtmlNodeType.Element)
+                if (element.NodeType == NodeType.Element)
                 {
-                    return node 
-                        .MergeAttributes(attrs)
-                        .OuterHtml;
+                    AngleSharpHelper.MergeAttributes(element, attrs);
+
+                    return element.OuterHtml;
                 }
             }
 
-            var wrap = new HtmlDocument();
-            var wrapper = wrap.CreateElement("div");
-            wrapper.InnerHtml = moduleHtml;
-            wrapper.MergeAttributes(attrs);
+            var wrapper = document.CreateElement("div");
+            AngleSharpHelper.WrapChildren(document.Body, wrapper);
+            AngleSharpHelper.MergeAttributes(wrapper, attrs);
 
             return wrapper.OuterHtml;
         }

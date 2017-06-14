@@ -9,31 +9,31 @@ namespace Cofoundry.Core.Web
     /// A set of configuration rules for html sanitization used
     /// by the IHtmlSanitizer.
     /// </summary>
-    public class HtmlSanitizationRuleSet : IHtmlSanitizationRuleSet
+    public interface IHtmlSanitizationRuleSet
     {
         /// <summary>
         /// Collection html tags to permit e.g. "a" and "div".
         /// </summary>
-        public IEnumerable<string> PermittedTags { get; set; }
+        IEnumerable<string> PermittedTags { get; }
 
         /// <summary>
         /// Collection of html tag permit to allow e.g. "title" and "alt".
         /// </summary>
-        public IEnumerable<string> PermittedAttributes { get; set; }
+        IEnumerable<string> PermittedAttributes { get; }
 
         /// <summary>
         /// Collection of http schemas to permit e.g. "http", "https" and "mailto".
         /// </summary>
-        public IEnumerable<string> PermittedSchemes { get; set; }
+        IEnumerable<string> PermittedSchemes { get; }
 
         /// <summary>
         /// Collection html tags that are permitted to have uri properties e.g. "src", "href".
         /// </summary>
-        public IEnumerable<string> PermittedUriAttributes { get; set; }
+        IEnumerable<string> PermittedUriAttributes { get; }
 
         /// <summary>
         /// Collection of style properties to permit e.g. "font" and "margin".
         /// </summary>
-        public IEnumerable<string> PermittedCssProperties { get; set; }
+        IEnumerable<string> PermittedCssProperties { get; }
     }
 }

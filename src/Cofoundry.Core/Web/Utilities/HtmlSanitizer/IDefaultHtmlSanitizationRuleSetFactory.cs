@@ -9,6 +9,6 @@ namespace Cofoundry.Core.Web
     /// </summary>
     public interface IDefaultHtmlSanitizationRuleSetFactory
     {
-        HtmlSanitizationRuleSet Create();
+        IHtmlSanitizationRuleSet Create();
     }
 }
