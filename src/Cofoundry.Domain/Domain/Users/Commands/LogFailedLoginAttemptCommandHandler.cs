@@ -7,6 +7,7 @@ using Cofoundry.Domain.CQS;
 using Cofoundry.Core.EntityFramework;
 using System.Data.SqlClient;
 using Cofoundry.Core;
+using Cofoundry.Domain.Data;
 
 namespace Cofoundry.Domain
 {
@@ -17,14 +18,17 @@ namespace Cofoundry.Domain
     {
         #region constructor
 
+        private readonly CofoundryDbContext _dbContext;
         private readonly IEntityFrameworkSqlExecutor _sqlExecutor;
         private readonly IClientConnectionService _clientConnectionService;
 
         public LogFailedLoginAttemptCommandHandler(
+            CofoundryDbContext dbContext,
             IEntityFrameworkSqlExecutor sqlExecutor,
             IClientConnectionService clientConnectionService
             )
         {
+            _dbContext = dbContext;
             _sqlExecutor = sqlExecutor;
             _clientConnectionService = clientConnectionService;
         }
@@ -34,7 +38,8 @@ namespace Cofoundry.Domain
         {
             var connectionInfo = _clientConnectionService.GetConnectionInfo();
 
-            _sqlExecutor.ExecuteCommand("Cofoundry.FailedAuthticationAttempt_Add",
+            _sqlExecutor.ExecuteCommand(_dbContext,
+                "Cofoundry.FailedAuthticationAttempt_Add",
                 new SqlParameter("UserAreaCode", command.UserAreaCode),
                 new SqlParameter("Username", TextFormatter.Limit(command.Username, 150)),
                 new SqlParameter("IPAddress", connectionInfo.IPAddress),
@@ -46,7 +51,8 @@ namespace Cofoundry.Domain
         {
             var connectionInfo = _clientConnectionService.GetConnectionInfo();
 
-            await _sqlExecutor.ExecuteCommandAsync("Cofoundry.FailedAuthticationAttempt_Add",
+            await _sqlExecutor.ExecuteCommandAsync(_dbContext,
+                "Cofoundry.FailedAuthticationAttempt_Add",
                 new SqlParameter("UserAreaCode", command.UserAreaCode),
                 new SqlParameter("Username", TextFormatter.Limit(command.Username, 150)),
                 new SqlParameter("IPAddress", connectionInfo.IPAddress),

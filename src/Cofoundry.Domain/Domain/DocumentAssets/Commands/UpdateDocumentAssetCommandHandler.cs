@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Cofoundry.Domain.Data;
 using Cofoundry.Domain.CQS;
-using System.Data.Entity;
+using Microsoft.EntityFrameworkCore;
 using Cofoundry.Core;
 using Cofoundry.Core.EntityFramework;
 
@@ -49,7 +49,7 @@ namespace Cofoundry.Domain
             var documentAsset = await _dbContext
                 .DocumentAssets
                 .Include(a => a.DocumentAssetTags)
-                .Include(a => a.DocumentAssetTags.Select(pt => pt.Tag))
+                .ThenInclude(a => a.Tag)
                 .FilterById(command.DocumentAssetId)
                 .SingleOrDefaultAsync();
 
@@ -59,7 +59,7 @@ namespace Cofoundry.Domain
             _entityTagHelper.UpdateTags(documentAsset.DocumentAssetTags, command.Tags, executionContext);
             _entityAuditHelper.SetUpdated(documentAsset, executionContext);
 
-            using (var scope = _transactionScopeFactory.Create())
+            using (var scope = _transactionScopeFactory.Create(_dbContext))
             {
                 if (hasNewFile)
                 {

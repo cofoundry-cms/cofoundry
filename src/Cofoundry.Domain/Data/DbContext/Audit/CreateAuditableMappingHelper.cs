@@ -1,6 +1,7 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using System;
 using System.Collections.Generic;
-using System.Data.Entity.ModelConfiguration;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -9,12 +10,13 @@ namespace Cofoundry.Domain.Data
 {
     public static class CreateAuditableMappingHelper
     {
-        public static void Map<T>(EntityTypeConfiguration<T> entity) where T : class, ICreateAuditable
+        public static void Map<T>(EntityTypeBuilder<T> builder) where T : class, ICreateAuditable
         {
             // Relationships
-            entity.HasRequired(t => t.Creator)
+            builder.HasOne(s => s.Creator)
                 .WithMany()
-                .HasForeignKey(d => d.CreatorId);
+                .HasForeignKey(d => d.CreatorId)
+                .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

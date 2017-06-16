@@ -1,33 +1,34 @@
+using System;
 using Cofoundry.Core;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Data.Entity.ModelConfiguration;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Microsoft.EntityFrameworkCore;
 
 namespace Cofoundry.Domain.Data
 {
-    public class ImageAssetMap : EntityTypeConfiguration<ImageAsset>
+    public class ImageAssetMap : IEntityTypeConfiguration<ImageAsset>
     {
-        public ImageAssetMap()
+        public void Create(EntityTypeBuilder<ImageAsset> builder)
         {
-            ToTable("ImageAsset", DbConstants.CofoundrySchema);
+            builder.ToTable("ImageAsset", DbConstants.CofoundrySchema);
 
             // Properties
-            Property(t => t.FileName)
+            builder.Property(s => s.FileName)
                 .IsRequired()
                 .HasMaxLength(128);
 
-            Property(t => t.FileDescription)
+            builder.Property(s => s.FileDescription)
                 .IsRequired()
                 .HasMaxLength(512);
 
-            Property(t => t.Extension)
+            builder.Property(s => s.Extension)
                 .IsRequired()
                 .HasMaxLength(5);
 
             // Table & Column Mappings
-            Property(t => t.DefaultAnchorLocation).HasColumnName("ImageCropAnchorLocationId");
+            builder.Property(s => s.DefaultAnchorLocation).HasColumnName("ImageCropAnchorLocationId");
 
 
-            UpdateAuditableMappingHelper.Map(this);
+            UpdateAuditableMappingHelper.Map(builder);
         }
     }
 }

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Data.Entity;
+using Microsoft.EntityFrameworkCore;
 using Cofoundry.Domain.Data;
 using Cofoundry.Domain.CQS;
 using Cofoundry.Core.Validation;
@@ -90,7 +90,8 @@ namespace Cofoundry.Domain
         {
             return _dbContext
                 .Roles
-                .Include(r => r.Permissions)
+                .Include(r => r.RolePermissions)
+                .ThenInclude(p => p.Permission)
                 .FilterById(command.RoleId);
         }
 
@@ -98,24 +99,24 @@ namespace Cofoundry.Domain
         {
             // Deletions
             var permissionsToRemove = role
-                .Permissions
+                .RolePermissions
                 .Where(p => !command.Permissions.Any(cp => 
-                            cp.PermissionCode == p.PermissionCode 
-                            && (string.IsNullOrWhiteSpace(p.EntityDefinitionCode) || cp.EntityDefinitionCode == p.EntityDefinitionCode)
+                            cp.PermissionCode == p.Permission.PermissionCode 
+                            && (string.IsNullOrWhiteSpace(p.Permission.EntityDefinitionCode) || cp.EntityDefinitionCode == p.Permission.EntityDefinitionCode)
                             ))
                 .ToList();
 
             foreach (var permissionToRemove in permissionsToRemove)
             {
-                role.Permissions.Remove(permissionToRemove);
+                role.RolePermissions.Remove(permissionToRemove);
             }
 
             // Additions
             var permissionsToAdd = command
                 .Permissions
-                .Where(p => !role.Permissions.Any(cp => 
-                            cp.PermissionCode == p.PermissionCode 
-                            && (string.IsNullOrWhiteSpace(p.EntityDefinitionCode) || cp.EntityDefinitionCode == p.EntityDefinitionCode)));
+                .Where(p => !role.RolePermissions.Any(cp => 
+                            cp.Permission.PermissionCode == p.PermissionCode 
+                            && (string.IsNullOrWhiteSpace(p.EntityDefinitionCode) || cp.Permission.EntityDefinitionCode == p.EntityDefinitionCode)));
             
             if (permissionsToAdd.Any())
             {
@@ -154,7 +155,9 @@ namespace Cofoundry.Domain
                         }
                     }
 
-                    role.Permissions.Add(dbPermission);
+                    var rolePermission = new RolePermission();
+                    rolePermission.Permission = dbPermission;
+                    role.RolePermissions.Add(rolePermission);
                 }
             }
         }

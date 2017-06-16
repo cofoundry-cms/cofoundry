@@ -1,27 +1,30 @@
 using Cofoundry.Core;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Data.Entity.ModelConfiguration;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using System;
 
 namespace Cofoundry.Domain.Data
 {
-    public class UserPasswordResetRequestMap : EntityTypeConfiguration<UserPasswordResetRequest>
+    public class UserPasswordResetRequestMap : IEntityTypeConfiguration<UserPasswordResetRequest>
     {
-        public UserPasswordResetRequestMap()
+        public void Create(EntityTypeBuilder<UserPasswordResetRequest> builder)
         {
-            ToTable("UserPasswordResetRequest", DbConstants.CofoundrySchema);
+            builder.ToTable("UserPasswordResetRequest", DbConstants.CofoundrySchema);
 
-            Property(t => t.Token)
-                .IsUnicode(false)
-                .IsMaxLength();
+            builder.Property(s => s.Token)
+                .IsVarCharMaxType();
 
-            Property(t => t.IPAddress)
+            builder.Property(s => s.IPAddress)
                 .IsUnicode(false)
                 .HasMaxLength(45);
 
             // Relationships
-            HasRequired(s => s.User)
+
+            builder.HasOne(s => s.User)
                 .WithMany()
-                .HasForeignKey(d => d.UserId);
+                .HasForeignKey(d => d.UserId)
+                .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

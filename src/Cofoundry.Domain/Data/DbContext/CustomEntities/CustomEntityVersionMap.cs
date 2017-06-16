@@ -1,27 +1,35 @@
+using System;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Data.Entity.ModelConfiguration;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Microsoft.EntityFrameworkCore.Metadata;
+using Cofoundry.Core;
+using Microsoft.EntityFrameworkCore;
 
 namespace Cofoundry.Domain.Data
 {
-    public class CustomEntityVersionMap : EntityTypeConfiguration<CustomEntityVersion>
+    public class CustomEntityVersionMap : IEntityTypeConfiguration<CustomEntityVersion>
     {
-        public CustomEntityVersionMap()
+        public void Create(EntityTypeBuilder<CustomEntityVersion> builder)
         {
+            builder.ToTable("CustomEntityVersion", DbConstants.CofoundrySchema);
+
             // Properties
-            Property(t => t.SerializedData)
+
+            builder.Property(s => s.SerializedData)
                 .IsRequired();
 
-            Property(t => t.Title)
+            builder.Property(s => s.Title)
                 .HasMaxLength(200)
                 .IsRequired();
 
             // Relationships
 
-            HasRequired(t => t.CustomEntity)
-                .WithMany(t => t.CustomEntityVersions)
-                .HasForeignKey(d => d.CustomEntityId);
+            builder.HasOne(s => s.CustomEntity)
+                .WithMany(s => s.CustomEntityVersions)
+                .HasForeignKey(d => d.CustomEntityId)
+                .OnDelete(DeleteBehavior.Restrict);
 
-            CreateAuditableMappingHelper.Map(this);
+            CreateAuditableMappingHelper.Map(builder);
         }
     }
 }

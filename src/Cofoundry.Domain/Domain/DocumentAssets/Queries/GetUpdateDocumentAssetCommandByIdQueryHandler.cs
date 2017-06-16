@@ -7,7 +7,7 @@ using Cofoundry.Domain.Data;
 using Cofoundry.Domain.CQS;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
-using System.Data.Entity;
+using Microsoft.EntityFrameworkCore;
 
 namespace Cofoundry.Domain
 {
@@ -34,7 +34,8 @@ namespace Cofoundry.Domain
         {
             var dbResult = await _dbContext
                 .DocumentAssets
-                .Include(a => a.DocumentAssetTags.Select(t => t.Tag))
+                .Include(a => a.DocumentAssetTags)
+                .ThenInclude(a => a.Tag)
                 .AsNoTracking()
                 .FilterById(query.Id)
                 .SingleOrDefaultAsync();

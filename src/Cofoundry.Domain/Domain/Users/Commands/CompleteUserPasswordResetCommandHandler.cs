@@ -5,7 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Cofoundry.Domain.Data;
 using Cofoundry.Domain.CQS;
-using System.Data.Entity;
+using Microsoft.EntityFrameworkCore;
 using Cofoundry.Core.EntityFramework;
 using Cofoundry.Core.Mail;
 using Cofoundry.Core;
@@ -62,7 +62,7 @@ namespace Cofoundry.Domain
             UpdatePasswordAndSetComplete(request, command, executionContext);
             SetMailTemplate(command, request.User);
 
-            using (var scope = _transactionScopeFactory.Create())
+            using (var scope = _transactionScopeFactory.Create(_dbContext))
             {
                 await _dbContext.SaveChangesAsync();
                 await _mailService.SendAsync(request.User.Email, request.User.GetFullName(), command.MailTemplate);

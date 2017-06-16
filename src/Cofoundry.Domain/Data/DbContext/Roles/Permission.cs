@@ -35,7 +35,7 @@ namespace Cofoundry.Domain.Data
         /// <summary>
         /// A permission can be assigned to many roles.
         /// </summary>
-        public virtual ICollection<Role> Roles { get; set; }
+        public virtual ICollection<RolePermission> RolePermissions { get; set; }
 
         /// <summary>
         /// Creates a unique code that represents this permission by combining the

@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Cofoundry.Domain.CQS;
 using Cofoundry.Domain.Data;
-using System.Data.Entity;
+using Microsoft.EntityFrameworkCore;
 using Cofoundry.Core.MessageAggregator;
 using Cofoundry.Core.EntityFramework;
 using System.Data.SqlClient;

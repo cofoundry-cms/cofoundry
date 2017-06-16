@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Data.Entity;
+using Microsoft.EntityFrameworkCore;
 using Cofoundry.Domain.Data;
 using Cofoundry.Core;
 using System.Collections.ObjectModel;
@@ -105,7 +105,8 @@ namespace Cofoundry.Domain
                     .Roles
                     .AsNoTracking()
                     .Include(r => r.UserArea)
-                    .Include(r => r.Permissions)
+                    .Include(r => r.RolePermissions)
+                    .ThenInclude(p => p.Permission)
                     .Where(r => r.SpecialistRoleTypeCode == SpecialistRoleTypeCodes.Anonymous);
 
         }
@@ -116,7 +117,8 @@ namespace Cofoundry.Domain
                     .Roles
                     .AsNoTracking()
                     .Include(r => r.UserArea)
-                    .Include(r => r.Permissions)
+                    .Include(r => r.RolePermissions)
+                    .ThenInclude(p => p.Permission)
                     .Where(r => r.RoleId == roleId);
         }
 

@@ -1,35 +1,36 @@
 using Cofoundry.Core;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Data.Entity.ModelConfiguration;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using System;
 
 namespace Cofoundry.Domain.Data
 {
-    public class DocumentAssetMap : EntityTypeConfiguration<DocumentAsset>
+    public class DocumentAssetMap : IEntityTypeConfiguration<DocumentAsset>
     {
-        public DocumentAssetMap()
+        public void Create(EntityTypeBuilder<DocumentAsset> builder)
         {
-            ToTable("DocumentAsset", DbConstants.CofoundrySchema);
+            builder.ToTable("DocumentAsset", DbConstants.CofoundrySchema);
 
             // Properties
-            Property(t => t.FileName)
+            builder.Property(s => s.FileName)
                 .IsRequired()
                 .HasMaxLength(100);
 
-            Property(t => t.Title)
+            builder.Property(s => s.Title)
                 .IsRequired()
                 .HasMaxLength(100);
 
-            Property(t => t.Description)
+            builder.Property(s => s.Description)
                 .IsRequired();
 
-            Property(t => t.FileExtension)
+            builder.Property(s => s.FileExtension)
                 .IsRequired()
                 .HasMaxLength(5);
 
-            Property(t => t.ContentType)
+            builder.Property(s => s.ContentType)
                 .HasMaxLength(100);
 
-            UpdateAuditableMappingHelper.Map(this);
+            UpdateAuditableMappingHelper.Map(builder);
         }
     }
 }

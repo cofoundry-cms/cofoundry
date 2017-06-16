@@ -1,30 +1,46 @@
-using Cofoundry.Core;
 using System;
-using System.Data.Entity;
-using System.Data.Entity.Infrastructure;
-using System.Data.Entity.ModelConfiguration.Conventions;
 using System.Diagnostics;
+using Microsoft.EntityFrameworkCore;
+using Cofoundry.Core;
+using Microsoft.Extensions.Logging;
+using Microsoft.EntityFrameworkCore.Infrastructure;
 
 namespace Cofoundry.Domain.Data
 {
     public partial class CofoundryDbContext : DbContext
     {
-        #region constructor
+        private readonly ILoggerFactory _loggerFactory;
 
-        static CofoundryDbContext()
+        public CofoundryDbContext(ILoggerFactory loggerFactory)
         {
-            Database.SetInitializer<CofoundryDbContext>(null);
+            _loggerFactory = loggerFactory;
         }
 
-        public CofoundryDbContext(
-            DatabaseSettings databaseSettings
-            )
-            : base(databaseSettings.ConnectionString)
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            DbContextConfigurationHelper.SetDefaults(this);
+            //dbContext.Configuration.LazyLoadingEnabled = false;
+            //dbContext.Database.Log = (s) => System.Diagnostics.Debug.Write(s);
+            //var serviceProvider = Database.GetInfrastructure<IServiceProvider>();
+            //var loggerFactory = serviceProvider.GetService<ILoggerFactory>();
+            optionsBuilder.UseLoggerFactory(_loggerFactory);
+            optionsBuilder.ConfigureWarnings(warnings => 
+                warnings
+                    .Log(RelationalEventId.QueryClientEvaluationWarning)
+                    .Log(RelationalEventId.OpeningConnection)
+            );
+
+            optionsBuilder.UseSqlServer("Server=.\\sqlexpress;Database=Cofoundry.BasicTestSite;Integrated Security=True;MultipleActiveResultSets=True;");
         }
 
-        #endregion
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder
+                .UseDefaultConfig(DbConstants.CofoundrySchema)
+                .MapCofoundryContent()
+                .Map(new SettingMap())
+                .Map(new RewriteRuleMap())
+                ;
+        }
 
         #region properties
 
@@ -55,6 +71,7 @@ namespace Cofoundry.Domain.Data
         public DbSet<Permission> Permissions { get; set; }
         public DbSet<RewriteRule> RewriteRules { get; set; }
         public DbSet<Role> Roles { get; set; }
+        public DbSet<RolePermission> RolePermissions { get; set; }
         public DbSet<Setting> Settings { get; set; }
         public DbSet<Tag> Tags { get; set; }
         public DbSet<User> Users { get; set; }
@@ -63,20 +80,6 @@ namespace Cofoundry.Domain.Data
         public DbSet<UnstructuredDataDependency> UnstructuredDataDependencies { get; set; }
         public DbSet<WebDirectory> WebDirectories { get; set; }
         public DbSet<WebDirectoryLocale> WebDirectoryLocales { get; set; }
-
-        #endregion
-        
-        #region mapping
-
-        protected override void OnModelCreating(DbModelBuilder modelBuilder)
-        {
-            modelBuilder
-                .UseDefaultConfig(DbConstants.CofoundrySchema)
-                .MapCofoundryContent()
-                .Map(new SettingMap())
-                .Map(new RewriteRuleMap())
-                ;
-        }
 
         #endregion
     }

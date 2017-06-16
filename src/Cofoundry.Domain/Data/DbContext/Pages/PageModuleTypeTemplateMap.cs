@@ -1,28 +1,37 @@
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Data.Entity.ModelConfiguration;
+
+using System;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore;
+using Cofoundry.Core;
 
 namespace Cofoundry.Domain.Data
 {
-    public class ModuleTemplateMap : EntityTypeConfiguration<PageModuleTypeTemplate>
+    public class ModuleTemplateMap : IEntityTypeConfiguration<PageModuleTypeTemplate>
     {
-        public ModuleTemplateMap()
+        public void Create(EntityTypeBuilder<PageModuleTypeTemplate> builder)
         {
+            builder.ToTable("PageModuleTypeTemplate", DbConstants.CofoundrySchema);
+
             // Properties
-            Property(t => t.Name)
+
+            builder.Property(s => s.Name)
                 .IsRequired()
                 .HasMaxLength(50);
 
-            Property(t => t.FileName)
+            builder.Property(s => s.FileName)
                 .IsRequired()
                 .HasMaxLength(50);
 
-            Property(t => t.Description)
-                .IsMaxLength();
+            builder.Property(s => s.Description)
+                .IsNVarCharMaxType();
 
             // Relationships
-            HasRequired(t => t.PageModuleType)
-                .WithMany(t => t.PageModuleTemplates)
-                .HasForeignKey(d => d.PageModuleTypeId);
+
+            builder.HasOne(s => s.PageModuleType)
+                .WithMany(s => s.PageModuleTemplates)
+                .HasForeignKey(d => d.PageModuleTypeId)
+                .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

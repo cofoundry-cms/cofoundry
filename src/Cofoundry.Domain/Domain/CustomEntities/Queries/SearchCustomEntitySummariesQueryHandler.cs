@@ -9,6 +9,7 @@ using Cofoundry.Domain.CQS;
 using Cofoundry.Core;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
+using Microsoft.EntityFrameworkCore;
 
 namespace Cofoundry.Domain
 {

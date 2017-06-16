@@ -1,13 +1,9 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
-using System.Data;
-using System.Data.Entity;
-using System.Data.Entity.Infrastructure;
-using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Xml.Linq;
 
 namespace Cofoundry.Core.EntityFramework
 {
@@ -27,6 +23,6 @@ namespace Cofoundry.Core.EntityFramework
         /// implements IDisposable and should be wrapped in a using statement.
         /// </summary>
         /// <returns>ITransactionScope, which is IDisposable and must be disposed.</returns>
-        ITransactionScope Create();
+        ITransactionScope Create(DbContext dbContext);
     }
 }

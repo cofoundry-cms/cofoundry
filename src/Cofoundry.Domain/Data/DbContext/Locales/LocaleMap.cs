@@ -1,32 +1,36 @@
 using Cofoundry.Core;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Data.Entity.ModelConfiguration;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using System;
 
 namespace Cofoundry.Domain.Data
 {
-    public class LocaleMap : EntityTypeConfiguration<Locale>
+    public class LocaleMap : IEntityTypeConfiguration<Locale>
     {
-        public LocaleMap()
+        public void Create(EntityTypeBuilder<Locale> builder)
         {
-            ToTable("Locale", DbConstants.CofoundrySchema);
+            builder.ToTable("Locale", DbConstants.CofoundrySchema);
 
             // Primary Key
-            HasKey(t => t.LocaleId);
+            builder.HasKey(s => s.LocaleId);
 
             // Properties
-            Property(t => t.IETFLanguageTag)
+
+            builder.Property(s => s.IETFLanguageTag)
                 .IsRequired()
                 .HasMaxLength(16);
 
-            Property(t => t.LocaleName)
+            builder.Property(s => s.LocaleName)
                 .IsRequired()
                 .HasMaxLength(64);
-            
-            // Relationships
-            HasOptional(t => t.ParentLocale)
-                .WithMany(t => t.ChildLocales)
-                .HasForeignKey(d => d.ParentLocaleId);
 
+            // Relationships
+
+            builder.HasOne(s => s.ParentLocale)
+                .WithMany(s => s.ChildLocales)
+                .HasForeignKey(d => d.ParentLocaleId)
+                .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

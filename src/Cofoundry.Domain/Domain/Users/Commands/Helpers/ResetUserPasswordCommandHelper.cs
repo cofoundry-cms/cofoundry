@@ -7,7 +7,7 @@ using Cofoundry.Domain.Data;
 using Cofoundry.Domain.CQS;
 using Cofoundry.Core.EntityFramework;
 using Cofoundry.Core.Validation;
-using System.Data.Entity;
+using Microsoft.EntityFrameworkCore;
 using Cofoundry.Core.Mail;
 
 namespace Cofoundry.Domain
@@ -70,7 +70,7 @@ namespace Cofoundry.Domain
             var request = CreateRequest(executionContext, user);
             SetMailTemplate(command, user, request);
 
-            using (var scope = _transactionScopeFactory.Create())
+            using (var scope = _transactionScopeFactory.Create(_dbContext))
             {
                 await _dbContext.SaveChangesAsync();
                 await _mailService.SendAsync(user.Email, user.GetFullName(), command.MailTemplate);

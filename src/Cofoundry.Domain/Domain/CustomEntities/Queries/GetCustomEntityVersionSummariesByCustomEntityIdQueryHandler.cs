@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using AutoMapper.QueryableExtensions;
-using System.Data.Entity;
+using Microsoft.EntityFrameworkCore;
 using Cofoundry.Domain.CQS;
 using Cofoundry.Domain.Data;
 

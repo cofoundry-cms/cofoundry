@@ -1,21 +1,26 @@
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Data.Entity.ModelConfiguration;
+using System;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Cofoundry.Core;
+using Microsoft.EntityFrameworkCore;
 
 namespace Cofoundry.Domain.Data
 {
-    public class PageModuleTypeMap : EntityTypeConfiguration<PageModuleType>
+    public class PageModuleTypeMap : IEntityTypeConfiguration<PageModuleType>
     {
-        public PageModuleTypeMap()
+        public void Create(EntityTypeBuilder<PageModuleType> builder)
         {
+            builder.ToTable("PageModuleType", DbConstants.CofoundrySchema);
+
             // Properties
-            Property(t => t.Name)
+
+            builder.Property(s => s.Name)
                 .IsRequired()
                 .HasMaxLength(50);
 
-            Property(t => t.Description)
-                .IsMaxLength();
+            builder.Property(s => s.Description)
+                .IsNVarCharMaxType();
 
-            Property(t => t.FileName)
+            builder.Property(s => s.FileName)
                 .IsRequired()
                 .HasMaxLength(50);
         }

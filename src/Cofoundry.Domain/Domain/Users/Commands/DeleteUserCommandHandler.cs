@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Data.Entity;
+using Microsoft.EntityFrameworkCore;
 using Cofoundry.Domain.Data;
 using Cofoundry.Domain.CQS;
 using Cofoundry.Core;

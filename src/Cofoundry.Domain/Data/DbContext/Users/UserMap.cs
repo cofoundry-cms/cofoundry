@@ -1,54 +1,57 @@
 using Cofoundry.Core;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Data.Entity.ModelConfiguration;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using System;
 
 namespace Cofoundry.Domain.Data
 {
-    public class UserMap : EntityTypeConfiguration<User>
+    public class UserMap : IEntityTypeConfiguration<User>
     {
-        public UserMap()
+        public void Create(EntityTypeBuilder<User> builder)
         {
-            ToTable("User", DbConstants.CofoundrySchema);
+            builder.ToTable("User", DbConstants.CofoundrySchema);
 
-            Property(t => t.FirstName)
+            builder.Property(s => s.FirstName)
                 .IsRequired()
                 .HasMaxLength(32);
 
-            Property(t => t.LastName)
+            builder.Property(s => s.LastName)
                 .IsRequired()
                 .HasMaxLength(32);
 
-            Property(t => t.Email)
+            builder.Property(s => s.Email)
                 .HasMaxLength(150);
 
-            Property(t => t.Username)
+            builder.Property(s => s.Username)
                 .IsRequired()
                 .HasMaxLength(150);
 
-            Property(t => t.Password)
-                .IsMaxLength();
+            builder.Property(s => s.Password)
+                .IsNVarCharMaxType();
 
-            Property(t => t.UserAreaCode)
+            builder.Property(s => s.UserAreaCode)
                 .IsRequired()
-                .HasMaxLength(3)
-                .IsFixedLength()
-                .IsUnicode(false);
+                .IsCharType(3);
 
             // Relationships
-            HasRequired(t => t.Role)
+
+            builder.HasOne(s => s.Role)
                 .WithMany()
-                .HasForeignKey(d => d.RoleId);
+                .HasForeignKey(d => d.RoleId)
+                .OnDelete(DeleteBehavior.Restrict);
 
             #region create auditable (ish)
-
-            // Relationships
-            HasOptional(t => t.Creator)
+            
+            builder.HasOne(s => s.Creator)
                 .WithMany()
-                .HasForeignKey(d => d.CreatorId);
+                .HasForeignKey(d => d.CreatorId)
+                .OnDelete(DeleteBehavior.Restrict);
 
-            HasRequired(s => s.UserArea)
+            builder.HasOne(s => s.UserArea)
                 .WithMany(d => d.Users)
-                .HasForeignKey(d => d.UserAreaCode);
+                .HasForeignKey(d => d.UserAreaCode)
+                .OnDelete(DeleteBehavior.Restrict);
 
             #endregion
         }

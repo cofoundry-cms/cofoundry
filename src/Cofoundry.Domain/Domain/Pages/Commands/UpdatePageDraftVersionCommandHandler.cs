@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Cofoundry.Domain.Data;
 using Cofoundry.Domain.CQS;
-using System.Data.Entity;
+using Microsoft.EntityFrameworkCore;
 using Cofoundry.Core.MessageAggregator;
 using Cofoundry.Core.EntityFramework;
 using Cofoundry.Core;
@@ -50,7 +50,7 @@ namespace Cofoundry.Domain
         {
             var draft = await GetDraftVersion(command.PageId).SingleOrDefaultAsync();
 
-            using (var scope = _transactionScopeFactory.Create())
+            using (var scope = _transactionScopeFactory.Create(_dbContext))
             {
                 draft = await CreateDraftIfRequiredAsync(command.PageId, draft);
                 UpdateDraft(command, draft);

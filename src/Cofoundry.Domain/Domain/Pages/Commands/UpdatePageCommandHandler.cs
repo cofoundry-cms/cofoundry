@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Cofoundry.Domain.Data;
 using Cofoundry.Domain.CQS;
-using System.Data.Entity;
+using Microsoft.EntityFrameworkCore;
 using Cofoundry.Core.Validation;
 using Cofoundry.Core.MessageAggregator;
 using Cofoundry.Core;
@@ -73,7 +73,7 @@ namespace Cofoundry.Domain
                 .Pages
                 .Include(p => p.PageVersions)
                 .Include(p => p.PageTags)
-                .Include(p => p.PageTags.Select(pt => pt.Tag))
+                .ThenInclude(a => a.Tag)
                 .Where(p => p.PageId == id && !p.IsDeleted);
         }
 

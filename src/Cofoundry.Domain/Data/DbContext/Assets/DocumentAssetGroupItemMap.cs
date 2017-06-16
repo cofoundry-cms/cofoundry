@@ -1,34 +1,41 @@
+using System;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Cofoundry.Core;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Data.Entity.ModelConfiguration;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace Cofoundry.Domain.Data
 {
-    public class DocumentAssetGroupItemMap : EntityTypeConfiguration<DocumentAssetGroupItem>
+    public class DocumentAssetGroupItemMap : IEntityTypeConfiguration<DocumentAssetGroupItem>
     {
-        public DocumentAssetGroupItemMap()
+        public void Create(EntityTypeBuilder<DocumentAssetGroupItem> builder)
         {
-            ToTable("DocumentAssetGroupItem", DbConstants.CofoundrySchema);
+            builder.ToTable("DocumentAssetGroupItem", DbConstants.CofoundrySchema);
 
             // Primary Key
-            HasKey(t => new { t.DocumentAssetId, t.DocumentAssetGroupId });
+            builder.HasKey(s =>new { s.DocumentAssetId, s.DocumentAssetGroupId });
 
             // Properties
-            Property(t => t.DocumentAssetId)
-                .HasDatabaseGeneratedOption(DatabaseGeneratedOption.None);
+            builder
+                .Property(s => s.DocumentAssetId)
+                .ValueGeneratedNever();
 
-            Property(t => t.DocumentAssetGroupId)
-                .HasDatabaseGeneratedOption(DatabaseGeneratedOption.None);
+            builder
+                .Property(s => s.DocumentAssetGroupId)
+                .ValueGeneratedNever();
 
             // Relationships
-            HasRequired(t => t.DocumentAssetGroup)
-                .WithMany(t => t.DocumentAssetGroupItems)
-                .HasForeignKey(d => d.DocumentAssetGroupId);
-            HasRequired(t => t.DocumentAsset)
-                .WithMany(t => t.DocumentAssetGroupItems)
-                .HasForeignKey(d => d.DocumentAssetId);
+            builder.HasOne(s => s.DocumentAssetGroup)
+                .WithMany(s => s.DocumentAssetGroupItems)
+                .HasForeignKey(d => d.DocumentAssetGroupId)
+                .OnDelete(DeleteBehavior.Restrict);
 
-            CreateAuditableMappingHelper.Map(this);
+            builder.HasOne(s => s.DocumentAsset)
+                .WithMany(s => s.DocumentAssetGroupItems)
+                .HasForeignKey(d => d.DocumentAssetId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            CreateAuditableMappingHelper.Map(builder);
         }
     }
 }

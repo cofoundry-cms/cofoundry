@@ -1,42 +1,44 @@
 using Cofoundry.Core;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Data.Entity.ModelConfiguration;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using System;
 
 namespace Cofoundry.Domain.Data
 {
-    public class RoleMap : EntityTypeConfiguration<Role>
+    public class RoleMap : IEntityTypeConfiguration<Role>
     {
-        public RoleMap()
+        public void Create(EntityTypeBuilder<Role> builder)
         {
-            ToTable("Role", DbConstants.CofoundrySchema);
+            builder.ToTable("Role", DbConstants.CofoundrySchema);
 
-            Property(t => t.Title)
+            builder.Property(s => s.Title)
                 .IsRequired()
                 .HasMaxLength(50);
 
-            Property(t => t.SpecialistRoleTypeCode)
-                .HasMaxLength(3)
-                .IsFixedLength()
-                .IsUnicode(false);
+            builder.Property(s => s.SpecialistRoleTypeCode)
+                .IsCharType(3);
 
-            Property(t => t.UserAreaCode)
-                .HasMaxLength(3)
-                .IsFixedLength()
-                .IsUnicode(false);
+            builder.Property(s => s.UserAreaCode)
+                .IsCharType(3);
 
             // Relationships
-            HasMany(m => m.Permissions)
-                .WithMany(m => m.Roles)
-                .Map(m =>
-                {
-                    m.ToTable("RolePermission");
-                    m.MapLeftKey("RoleId");
-                    m.MapRightKey("PermissionId");
-                });
 
-            HasRequired(s => s.UserArea)
+            // Many to many not supported yet in EF Core
+            //builder.HasMany(m => m.Permissions)
+            //    .WithMany(m => m.Roles)
+            //    .Map(m =>
+            //    {
+            //        m.builder.ToTable("RolePermission");
+            //        m.MapLeftKey("RoleId");
+            //        m.MapRightKey("PermissionId");
+            //    })
+            //    .OnDelete(DeleteBehavior.Restrict);
+
+            builder.HasOne(s => s.UserArea)
                 .WithMany()
-                .HasForeignKey(d => d.UserAreaCode);
+                .HasForeignKey(d => d.UserAreaCode)
+                .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

@@ -1,34 +1,40 @@
 using Cofoundry.Core;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Data.Entity.ModelConfiguration;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using System;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace Cofoundry.Domain.Data
 {
-    public class ImageAssetGroupItemMap : EntityTypeConfiguration<ImageAssetGroupItem>
+    public class ImageAssetGroupItemMap : IEntityTypeConfiguration<ImageAssetGroupItem>
     {
-        public ImageAssetGroupItemMap()
+        public void Create(EntityTypeBuilder<ImageAssetGroupItem> builder)
         {
-            ToTable("ImageAssetGroupItem", DbConstants.CofoundrySchema);
+            builder.ToTable("ImageAssetGroupItem", DbConstants.CofoundrySchema);
 
             // Primary Key
-            HasKey(t => new { t.ImageAssetId, t.ImageAssetGroupId });
+            builder.HasKey(s =>new { s.ImageAssetId, s.ImageAssetGroupId });
 
             // Properties
-            Property(t => t.ImageAssetId)
-                .HasDatabaseGeneratedOption(DatabaseGeneratedOption.None);
+            builder.Property(s => s.ImageAssetId)
+                .ValueGeneratedNever();
 
-            Property(t => t.ImageAssetGroupId)
-                .HasDatabaseGeneratedOption(DatabaseGeneratedOption.None);
+            builder.Property(s => s.ImageAssetGroupId)
+                .ValueGeneratedNever();
 
             // Relationships
-            HasRequired(t => t.ImageAssetGroup)
-                .WithMany(t => t.ImageAssetGroupItems)
-                .HasForeignKey(d => d.ImageAssetGroupId);
-            HasRequired(t => t.ImageAsset)
-                .WithMany(t => t.ImageAssetGroupItems)
-                .HasForeignKey(d => d.ImageAssetId);
+            builder.HasOne(s => s.ImageAssetGroup)
+                .WithMany(s => s.ImageAssetGroupItems)
+                .HasForeignKey(d => d.ImageAssetGroupId)
+                .OnDelete(DeleteBehavior.Restrict);
 
-            CreateAuditableMappingHelper.Map(this);
+            builder.HasOne(s => s.ImageAsset)
+                .WithMany(s => s.ImageAssetGroupItems)
+                .HasForeignKey(d => d.ImageAssetId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            CreateAuditableMappingHelper.Map(builder);
         }
     }
 }

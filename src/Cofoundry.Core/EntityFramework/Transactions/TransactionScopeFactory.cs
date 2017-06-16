@@ -1,6 +1,7 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Data.Entity;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -19,15 +20,7 @@ namespace Cofoundry.Core.EntityFramework
     /// </remarks>
     public class TransactionScopeFactory : ITransactionScopeFactory
     {
-        private readonly DbContext _dbContext;
-        private TransactionScope _primaryTransactionScope = null;
-
-        public TransactionScopeFactory(
-            DbContext dbContext
-            )
-        {
-            _dbContext = dbContext;
-        }
+        private Dictionary<DbContext, TransactionScope> _primaryTransactionScopes = new Dictionary<DbContext, TransactionScope>();
 
         /// <summary>
         /// Creates a new transaction scope. The scope can be nested inside another scope
@@ -36,20 +29,29 @@ namespace Cofoundry.Core.EntityFramework
         /// implements IDisposable and should be wrapped in a using statement.
         /// </summary>
         /// <returns>ITransactionScope, which is IDisposable and must be disposed.</returns>
-        public ITransactionScope Create()
+        public ITransactionScope Create(DbContext dbContext)
         {
             ITransactionScope scope;
+            var primaryScope = _primaryTransactionScopes.GetOrDefault(dbContext);
 
-            if (_primaryTransactionScope == null)
+            if (primaryScope == null)
             {
-                var transaction = _dbContext.Database.BeginTransaction();
-                _primaryTransactionScope = new TransactionScope(this, transaction);
-                scope = _primaryTransactionScope;
+                primaryScope = CreateScope(dbContext);
+                _primaryTransactionScopes.Add(dbContext, primaryScope);
+                scope = primaryScope;
             }
             else
             {
-                scope = new ChildTransactionScope(_primaryTransactionScope);
+                scope = new ChildTransactionScope(primaryScope);
             }
+
+            return scope;
+        }
+
+        private TransactionScope CreateScope(DbContext dbContext)
+        {
+            var transaction = dbContext.Database.BeginTransaction();
+            var scope = new TransactionScope(this, transaction);
 
             return scope;
         }
@@ -64,22 +66,23 @@ namespace Cofoundry.Core.EntityFramework
         {
             if (scope == null) throw new ArgumentNullException(nameof(scope));
 
-            if (_primaryTransactionScope == null) return;
+            var dbContextToRemoveScopeFor = _primaryTransactionScopes
+                .Where(s => s.Value == scope)
+                .Select(s => s.Key)
+                .SingleOrDefault();
 
-            if (_primaryTransactionScope != scope)
-            {
-                throw new InvalidOperationException("DeregisterTransaction can only be called with the currently active TransactionScope");
-            }
+            if (dbContextToRemoveScopeFor == null) return;
 
-            _primaryTransactionScope = null;
+            _primaryTransactionScopes.Remove(dbContextToRemoveScopeFor);
         }
 
         public void Dispose()
         {
-            if (_primaryTransactionScope != null)
+            foreach (var scope in _primaryTransactionScopes)
             {
-                _primaryTransactionScope.Dispose();
+                scope.Value.Dispose();
             }
+            _primaryTransactionScopes.Clear();
         }
     }
 }

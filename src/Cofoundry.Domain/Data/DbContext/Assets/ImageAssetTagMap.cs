@@ -1,35 +1,41 @@
 using Cofoundry.Core;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Data.Entity.ModelConfiguration;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using System;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace Cofoundry.Domain.Data
 {
-    public class ImageAssetTagMap : EntityTypeConfiguration<ImageAssetTag>
+    public class ImageAssetTagMap : IEntityTypeConfiguration<ImageAssetTag>
     {
-        public ImageAssetTagMap()
+        public void Create(EntityTypeBuilder<ImageAssetTag> builder)
         {
-            ToTable("ImageAssetTag", DbConstants.CofoundrySchema);
+            builder.ToTable("ImageAssetTag", DbConstants.CofoundrySchema);
 
             // Primary Key
-            HasKey(t => new { t.ImageAssetId, t.TagId });
+            builder.HasKey(s =>new { s.ImageAssetId, s.TagId });
 
             // Properties
-            Property(t => t.ImageAssetId)
-                .HasDatabaseGeneratedOption(DatabaseGeneratedOption.None);
+            builder.Property(s => s.ImageAssetId)
+                .ValueGeneratedNever();
 
-            Property(t => t.TagId)
-                .HasDatabaseGeneratedOption(DatabaseGeneratedOption.None);
+            builder.Property(s => s.TagId)
+                .ValueGeneratedNever();
 
 
             // Relationships
-            HasRequired(t => t.ImageAsset)
-                .WithMany(t => t.ImageAssetTags)
-                .HasForeignKey(d => d.ImageAssetId);
-            HasRequired(t => t.Tag)
-                .WithMany()
-                .HasForeignKey(d => d.TagId);
+            builder.HasOne(s => s.ImageAsset)
+                .WithMany(s => s.ImageAssetTags)
+                .HasForeignKey(d => d.ImageAssetId)
+                .OnDelete(DeleteBehavior.Restrict);
 
-            CreateAuditableMappingHelper.Map(this);
+            builder.HasOne(s => s.Tag)
+                .WithMany()
+                .HasForeignKey(d => d.TagId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            CreateAuditableMappingHelper.Map(builder);
         }
     }
 }

@@ -1,23 +1,32 @@
+using System;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Data.Entity.ModelConfiguration;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Microsoft.EntityFrameworkCore.Metadata;
+using Cofoundry.Core;
+using Microsoft.EntityFrameworkCore;
 
 namespace Cofoundry.Domain.Data
 {
-    public class PageGroupMap : EntityTypeConfiguration<PageGroup>
+    public class PageGroupMap : IEntityTypeConfiguration<PageGroup>
     {
-        public PageGroupMap()
+        public void Create(EntityTypeBuilder<PageGroup> builder)
         {
+            builder.ToTable("PageGroup", DbConstants.CofoundrySchema);
+
             // Properties
-            Property(t => t.GroupName)
+
+            builder.Property(s => s.GroupName)
                 .IsRequired()
                 .HasMaxLength(64);
-            
-            // Relationships
-            HasOptional(t => t.ParentPageGroup)
-                .WithMany(t => t.ChildPageGroups)
-                .HasForeignKey(d => d.ParentGroupId);
 
-            CreateAuditableMappingHelper.Map(this);
+            // Relationships
+
+            builder.HasOne(s => s.ParentPageGroup)
+                .WithMany(s => s.ChildPageGroups)
+                .HasForeignKey(d => d.ParentGroupId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            CreateAuditableMappingHelper.Map(builder);
         }
     }
 }

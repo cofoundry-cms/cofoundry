@@ -1,26 +1,29 @@
 using Cofoundry.Core;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Data.Entity.ModelConfiguration;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using System;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace Cofoundry.Domain.Data
 {
-    public class DocumentAssetGroupMap : EntityTypeConfiguration<DocumentAssetGroup>
+    public class DocumentAssetGroupMap : IEntityTypeConfiguration<DocumentAssetGroup>
     {
-        public DocumentAssetGroupMap()
+        public void Create(EntityTypeBuilder<DocumentAssetGroup> builder)
         {
-            ToTable("DocumentAssetGroup", DbConstants.CofoundrySchema);
+            builder.ToTable("DocumentAssetGroup", DbConstants.CofoundrySchema);
 
             // Properties
-            Property(t => t.GroupName)
+            builder.Property(s => s.GroupName)
                 .IsRequired()
                 .HasMaxLength(64);
 
             // Relationships
-            HasOptional(t => t.ParentDocumentAssetGroup)
-                .WithMany(t => t.ChildDocumentAssetGroups)
-                .HasForeignKey(d => d.ParentDocumentAssetGroupId);
+            builder.HasOne(s => s.ParentDocumentAssetGroup)
+                .WithMany(s => s.ChildDocumentAssetGroups)
+                .HasForeignKey(d => d.ParentDocumentAssetGroupId)
+                .OnDelete(DeleteBehavior.Restrict);
 
-            CreateAuditableMappingHelper.Map(this);
+            CreateAuditableMappingHelper.Map(builder);
         }
     }
 }

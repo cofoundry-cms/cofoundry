@@ -2,9 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Data.Entity;
+
 using Cofoundry.Core;
 using Cofoundry.Domain.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace Cofoundry.Domain
 {

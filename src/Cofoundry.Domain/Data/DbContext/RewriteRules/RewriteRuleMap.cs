@@ -1,21 +1,26 @@
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Data.Entity.ModelConfiguration;
+using System;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Microsoft.EntityFrameworkCore;
+using Cofoundry.Core;
 
 namespace Cofoundry.Domain.Data
 {
-    public class RewriteRuleMap : EntityTypeConfiguration<RewriteRule>
+    public class RewriteRuleMap : IEntityTypeConfiguration<RewriteRule>
     {
-        public RewriteRuleMap()
+        public void Create(EntityTypeBuilder<RewriteRule> builder)
         {
+            builder.ToTable("RewriteRule", DbConstants.CofoundrySchema);
+
             // Properties
-            Property(t => t.WriteFrom)
+            builder.Property(s => s.WriteFrom)
                 .IsRequired()
                 .HasMaxLength(2000);
-            Property(t => t.WriteTo)
+
+            builder.Property(s => s.WriteTo)
                 .IsRequired()
                 .HasMaxLength(2000);
-            
-            CreateAuditableMappingHelper.Map(this);
+
+            CreateAuditableMappingHelper.Map(builder);
         }
     }
 }

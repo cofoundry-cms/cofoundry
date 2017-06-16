@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Cofoundry.Domain.Data;
-using System.Data.Entity;
+using Microsoft.EntityFrameworkCore;
 
 namespace Cofoundry.Domain
 {

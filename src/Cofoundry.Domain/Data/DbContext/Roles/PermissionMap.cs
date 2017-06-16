@@ -1,20 +1,21 @@
 using Cofoundry.Core;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Data.Entity.ModelConfiguration;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using System;
 
 namespace Cofoundry.Domain.Data
 {
-    public class PermissionMap : EntityTypeConfiguration<Permission>
+    public class PermissionMap : IEntityTypeConfiguration<Permission>
     {
-        public PermissionMap()
+        public void Create(EntityTypeBuilder<Permission> builder)
         {
-            ToTable("Permission", DbConstants.CofoundrySchema);
+            builder.ToTable("Permission", DbConstants.CofoundrySchema);
 
-            Property(t => t.PermissionCode)
+            builder.Property(s => s.PermissionCode)
                 .IsRequired()
                 .HasMaxLength(6);
 
-            Property(t => t.EntityDefinitionCode)
+            builder.Property(s => s.EntityDefinitionCode)
                 .HasMaxLength(6);
         }
     }

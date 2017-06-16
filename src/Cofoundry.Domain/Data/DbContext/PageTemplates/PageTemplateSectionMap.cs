@@ -1,22 +1,28 @@
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Data.Entity.ModelConfiguration;
+using System;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Microsoft.EntityFrameworkCore.Metadata;
+using Cofoundry.Core;
+using Microsoft.EntityFrameworkCore;
 
 namespace Cofoundry.Domain.Data
 {
-    public class PageTemplateSectionMap : EntityTypeConfiguration<PageTemplateSection>
+    public class PageTemplateSectionMap : IEntityTypeConfiguration<PageTemplateSection>
     {
-        public PageTemplateSectionMap()
+        public void Create(EntityTypeBuilder<PageTemplateSection> builder)
         {
+            builder.ToTable("PageTemplateSection", DbConstants.CofoundrySchema);
+
             // Properties
-            Property(t => t.Name)
+            builder.Property(s => s.Name)
                 .IsRequired()
                 .HasMaxLength(50);
 
             // Relationships
 
-            HasRequired(t => t.PageTemplate)
-                .WithMany(t => t.PageTemplateSections)
-                .HasForeignKey(d => d.PageTemplateId);
+            builder.HasOne(s => s.PageTemplate)
+                .WithMany(s => s.PageTemplateSections)
+                .HasForeignKey(d => d.PageTemplateId)
+                .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

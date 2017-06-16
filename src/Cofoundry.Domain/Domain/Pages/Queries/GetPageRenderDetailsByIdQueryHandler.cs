@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Cofoundry.Domain.Data;
 using Cofoundry.Domain.CQS;
-using System.Data.Entity;
+using Microsoft.EntityFrameworkCore;
 using AutoMapper;
 
 namespace Cofoundry.Domain
@@ -68,7 +68,7 @@ namespace Cofoundry.Domain
                 .AsNoTracking()
                 .Include(v => v.Page)
                 .Include(v => v.PageTemplate)
-                .Include(v => v.PageTemplate.PageTemplateSections)
+                .ThenInclude(t => t.PageTemplateSections)
                 .Where(v => v.PageId == query.PageId && !v.IsDeleted);
 
             switch (query.WorkFlowStatus)

@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Cofoundry.Domain.Data;
 using Cofoundry.Domain.CQS;
-using System.Data.Entity;
+using Microsoft.EntityFrameworkCore;
 using Cofoundry.Core.EntityFramework;
 using System.Data.SqlClient;
 using Cofoundry.Core.MessageAggregator;
@@ -47,7 +47,8 @@ namespace Cofoundry.Domain
         public void Execute(AddPageDraftVersionCommand command, IExecutionContext executionContext)
         {
             var newVersionId = _entityFrameworkSqlExecutor
-                .ExecuteCommandWithOutput<int?>("Cofoundry.Page_AddDraft",
+                .ExecuteCommandWithOutput<int?>(_dbContext,
+                "Cofoundry.Page_AddDraft",
                 "PageVersionId",
                  new SqlParameter("PageId", command.PageId),
                  new SqlParameter("CopyFromPageVersionId", command.CopyFromPageVersionId),
@@ -69,7 +70,8 @@ namespace Cofoundry.Domain
         public async Task ExecuteAsync(AddPageDraftVersionCommand command, IExecutionContext executionContext)
         {
             var newVersionId = await _entityFrameworkSqlExecutor
-                .ExecuteCommandWithOutputAsync<int?>("Cofoundry.Page_AddDraft",
+                .ExecuteCommandWithOutputAsync<int?>(_dbContext,
+                "Cofoundry.Page_AddDraft",
                 "PageVersionId",
                  new SqlParameter("PageId", command.PageId),
                  new SqlParameter("CopyFromPageVersionId", command.CopyFromPageVersionId),

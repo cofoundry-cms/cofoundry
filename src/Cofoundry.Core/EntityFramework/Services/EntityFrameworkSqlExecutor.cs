@@ -1,8 +1,10 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Internal;
+using Microsoft.EntityFrameworkCore.Storage;
+using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Data.Entity;
-using System.Data.Entity.Infrastructure;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
@@ -18,15 +20,12 @@ namespace Cofoundry.Core.EntityFramework
     {
         #region constructor
 
-        private readonly DbContext _dbContext;
         private readonly ISqlParameterFactory _sqlParameterFactory;
 
         public EntityFrameworkSqlExecutor(
-            DbContext dbContext,
             ISqlParameterFactory sqlParameterFactory
             )
         {
-            _dbContext = dbContext;
             _sqlParameterFactory = sqlParameterFactory;
         }
 
@@ -37,44 +36,55 @@ namespace Cofoundry.Core.EntityFramework
         /// <summary>
         /// Executes a stored procedure returning the results as an array forcing query execution.
         /// </summary>
+        /// <param name="dbContext">EF DbContext to run the command against.</param>
         /// <param name="spName">Name of the stored procedure to run</param>
         /// <param name="sqlParams">Collection of SqlParameters to pass to the command</param>
         /// <returns>
         /// An array of the results of the query.
         /// </returns>
-        public T[] ExecuteQuery<T>(string spName, params SqlParameter[] sqlParams)
+        public T[] ExecuteQuery<T>(DbContext dbContext, string spName, params SqlParameter[] sqlParams)
+            where T : class
         {
-            var results = CreateQuery<T>(spName, sqlParams).ToArray();
+            var results = CreateQuery<T>(dbContext, spName, sqlParams).ToArray();
             return results;
         }
 
         /// <summary>
         /// Executes a stored procedure returning the results as an array forcing query execution.
         /// </summary>
+        /// <param name="dbContext">EF DbContext to run the command against.</param>
         /// <param name="spName">Name of the stored procedure to run</param>
         /// <param name="sqlParams">Collection of SqlParameters to pass to the command</param>
         /// <returns>
         /// An array of the results of the query.
         /// </returns>
-        public async Task<T[]> ExecuteQueryAsync<T>(string spName, params SqlParameter[] sqlParams)
+        public async Task<T[]> ExecuteQueryAsync<T>(DbContext dbContext, string spName, params SqlParameter[] sqlParams)
+            where T : class
         {
-            var results = await CreateQuery<T>(spName, sqlParams).ToArrayAsync();
+            var results = await CreateQuery<T>(dbContext, spName, sqlParams).ToArrayAsync();
             return results;
         }
 
-        private DbRawSqlQuery<T> CreateQuery<T>(string spName, params SqlParameter[] sqlParams)
+        private IQueryable<T> CreateQuery<T>(DbContext dbContext, string spName, params SqlParameter[] sqlParams)
+            where T : class
         {
             if (sqlParams.Any())
             {
                 var cmd = FormatSqlCommand(spName, sqlParams);
 
-                var results = _dbContext.Database.SqlQuery<T>(cmd, sqlParams);
+                // Here we used to use SqlQuery() in EF6 but it isn't supported
+                // until raw sql access is added to EF we'll have to be restricted 
+                // to entities only.
+                // see https://github.com/aspnet/EntityFramework/issues/1862
+
+                //var results = _dbContext.Database.SqlQuery<T>(cmd, sqlParams);
+                var results = dbContext.Set<T>().FromSql(cmd, sqlParams);
 
                 return results;
             }
             else
             {
-                return _dbContext.Database.SqlQuery<T>(spName);
+                return dbContext.Set<T>().FromSql(spName);
             }
         }
 
@@ -85,31 +95,83 @@ namespace Cofoundry.Core.EntityFramework
         /// <summary>
         /// Executes a stored procedure returning a single result and forcing query execution.
         /// </summary>
+        /// <param name="dbContext">EF DbContext to run the command against.</param>
         /// <param name="spName">Name of the stored procedure to run</param>
         /// <param name="sqlParams">Collection of SqlParameters to pass to the command</param>
         /// <returns>
         /// The result of the query. Throws an exception if more than one result is returned.
         /// </returns>
-        public T ExecuteScalar<T>(string spName, params SqlParameter[] sqlParams)
+        public T ExecuteScalar<T>(DbContext dbContext, string spName, params SqlParameter[] sqlParams)
         {
-            var results = CreateQuery<T>(spName, sqlParams).SingleOrDefault();
-            return results;
+            // This is also not supported in EF7 yet. So we've copied from the EF
+            // source code. This will need updating when EF updates to 2.0.
+            var databaseFacade = dbContext.Database;
+            var concurrencyDetector = databaseFacade.GetService<IConcurrencyDetector>();
+            var sql = FormatSqlCommand(spName, sqlParams);
+
+            using (concurrencyDetector.EnterCriticalSection())
+            {
+                var rawSqlCommand = databaseFacade
+                    .GetService<IRawSqlCommandBuilder>()
+                    .Build(sql, sqlParams);
+
+                var result =  rawSqlCommand
+                    .RelationalCommand
+                    .ExecuteScalar(
+                        databaseFacade.GetService<IRelationalConnection>(),
+                        rawSqlCommand.ParameterValues);
+
+                var typedResult = ParseScalarResult<T>(result);
+
+                return typedResult;
+            }
         }
 
         /// <summary>
         /// Executes a stored procedure returning a single result and forcing query execution.
         /// </summary>
+        /// <param name="dbContext">EF DbContext to run the command against.</param>
         /// <param name="spName">Name of the stored procedure to run</param>
         /// <param name="sqlParams">Collection of SqlParameters to pass to the command</param>
         /// <returns>
         /// The result of the query. Throws an exception if more than one result is returned.
         /// </returns>
-        public async Task<T> ExecuteScalarAsync<T>(string spName, params SqlParameter[] sqlParams)
+        public async Task<T> ExecuteScalarAsync<T>(DbContext dbContext, string spName, params SqlParameter[] sqlParams)
         {
-            var results = await CreateQuery<T>(spName, sqlParams).SingleOrDefaultAsync();
-            return results;
+            var databaseFacade = dbContext.Database;
+            var concurrencyDetector = databaseFacade.GetService<IConcurrencyDetector>();
+            var sql = FormatSqlCommand(spName, sqlParams);
+
+            using (concurrencyDetector.EnterCriticalSection())
+            {
+                var rawSqlCommand = databaseFacade
+                    .GetService<IRawSqlCommandBuilder>()
+                    .Build(sql, sqlParams);
+
+                var result = await rawSqlCommand
+                    .RelationalCommand
+                    .ExecuteScalarAsync(
+                        databaseFacade.GetService<IRelationalConnection>(),
+                        rawSqlCommand.ParameterValues);
+
+                var typedResult = ParseScalarResult<T>(result);
+
+                return typedResult;
+            }
         }
 
+        private T ParseScalarResult<T>(object result)
+        {
+            if (result == DBNull.Value) return default(T);
+
+            // If this is a non-null value nullable type, return the converted base type
+            var nullableType = Nullable.GetUnderlyingType(typeof(T));
+            if (nullableType != null)
+            {
+                return (T)Convert.ChangeType(result, nullableType);
+            }
+            return (T)Convert.ChangeType(result, typeof(T));
+        }
 
         #endregion
 
@@ -119,25 +181,26 @@ namespace Cofoundry.Core.EntityFramework
         /// Executes a stored procedure or function returning either the number of rows affected or 
         /// optionally returning the value of the first output parameter passed in the parameters collection.
         /// </summary>
+        /// <param name="dbContext">EF DbContext to run the command against.</param>
         /// <param name="spName">Name of the stored procedure to run</param>
         /// <param name="sqlParams">Collection of SqlParameters to pass to the command</param>
         /// <returns>
         /// Either the number of rows affected or optionally returning the value of the 
         /// first output parameter passed int he parameters collection.
         /// </returns>
-        public object ExecuteCommand(string spName, params SqlParameter[] sqlParams)
+        public object ExecuteCommand(DbContext dbContext, string spName, params SqlParameter[] sqlParams)
         {
             if (sqlParams.Any())
             {
                 var cmd = FormatSqlCommand(spName, sqlParams);
                 FormatSqlParameters(sqlParams);
 
-                int rowsAffected = _dbContext.Database.ExecuteSqlCommand(cmd, sqlParams);
+                int rowsAffected = dbContext.Database.ExecuteSqlCommand(cmd, sqlParams);
                 return GetOutputParamValue(sqlParams) ?? rowsAffected;
             }
             else
             {
-                return _dbContext.Database.ExecuteSqlCommand(spName);
+                return dbContext.Database.ExecuteSqlCommand(spName);
             }
         }
 
@@ -145,25 +208,26 @@ namespace Cofoundry.Core.EntityFramework
         /// Executes a stored procedure or function returning either the number of rows affected or 
         /// optionally returning the value of the first output parameter passed in the parameters collection.
         /// </summary>
+        /// <param name="dbContext">EF DbContext to run the command against.</param>
         /// <param name="spName">Name of the stored procedure to run</param>
         /// <param name="sqlParams">Collection of SqlParameters to pass to the command</param>
         /// <returns>
         /// Either the number of rows affected or optionally returning the value of the 
         /// first output parameter passed in the parameters collection.
         /// </returns>
-        public async Task<object> ExecuteCommandAsync(string spName, params SqlParameter[] sqlParams)
+        public async Task<object> ExecuteCommandAsync(DbContext dbContext, string spName, params SqlParameter[] sqlParams)
         {
             if (sqlParams.Any())
             {
                 var cmd = FormatSqlCommand(spName, sqlParams);
                 FormatSqlParameters(sqlParams);
 
-                int rowsAffected = await _dbContext.Database.ExecuteSqlCommandAsync(cmd, sqlParams);
+                int rowsAffected = await dbContext.Database.ExecuteSqlCommandAsync(cmd, parameters: sqlParams);
                 return GetOutputParamValue(sqlParams) ?? rowsAffected;
             }
             else
             {
-                return await _dbContext.Database.ExecuteSqlCommandAsync(spName);
+                return await dbContext.Database.ExecuteSqlCommandAsync(spName);
             }
         }
 
@@ -189,18 +253,19 @@ namespace Cofoundry.Core.EntityFramework
         /// as the output parameter type.
         /// </summary>
         /// <typeparam name="T">Type of the returned output parameter.</typeparam>
+        /// <param name="dbContext">EF DbContext to run the command against.</param>
         /// <param name="spName">Name of the stored procedure to run</param>
         /// <param name="outputParameterName">Name to use when creating the output parameter</param>
         /// <param name="sqlParams">Collection of SqlParameters to pass to the command</param>
         /// <returns>
         /// The value of the first output parameter in the executed query.
         /// </returns>
-        public T ExecuteCommandWithOutput<T>(string spName, string outputParameterName, params SqlParameter[] sqlParams)
+        public T ExecuteCommandWithOutput<T>(DbContext dbContext, string spName, string outputParameterName, params SqlParameter[] sqlParams)
         {
             var outputParam = CreateOutputParameter<T>(outputParameterName);
             var modifiedParams = MergeParameters(sqlParams, outputParam);
 
-            ExecuteCommand(spName, modifiedParams);
+            ExecuteCommand(dbContext, spName, modifiedParams);
 
             return ParseOutputParameter<T>(outputParam);
         }
@@ -213,18 +278,19 @@ namespace Cofoundry.Core.EntityFramework
         /// as the output parameter type.
         /// </summary>
         /// <typeparam name="T">Type of the returned output parameter.</typeparam>
+        /// <param name="dbContext">EF DbContext to run the command against.</param>
         /// <param name="spName">Name of the stored procedure to run</param>
         /// <param name="outputParameterName">Name to use when creating the output parameter</param>
         /// <param name="sqlParams">Collection of SqlParameters to pass to the command</param>
         /// <returns>
         /// The value of the first output parameter in the executed query.
         /// </returns>
-        public async Task<T> ExecuteCommandWithOutputAsync<T>(string spName, string outputParameterName, params SqlParameter[] sqlParams)
+        public async Task<T> ExecuteCommandWithOutputAsync<T>(DbContext dbContext, string spName, string outputParameterName, params SqlParameter[] sqlParams)
         {
             var outputParam = CreateOutputParameter<T>(outputParameterName);
             var modifiedParams = MergeParameters(sqlParams, outputParam);
 
-            await ExecuteCommandAsync(spName, modifiedParams);
+            await ExecuteCommandAsync(dbContext, spName, modifiedParams);
 
             return ParseOutputParameter<T>(outputParam);
         }

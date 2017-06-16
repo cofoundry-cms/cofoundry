@@ -3,7 +3,7 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Data.Entity;
+using Microsoft.EntityFrameworkCore;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Reflection;

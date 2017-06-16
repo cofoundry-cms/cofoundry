@@ -1,22 +1,25 @@
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Data.Entity.ModelConfiguration;
+using System;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Cofoundry.Core;
+using Microsoft.EntityFrameworkCore;
 
 namespace Cofoundry.Domain.Data
 {
-    public class EntityDefinitionMap : EntityTypeConfiguration<EntityDefinition>
+    public class EntityDefinitionMap : IEntityTypeConfiguration<EntityDefinition>
     {
-        public EntityDefinitionMap()
+        public void Create(EntityTypeBuilder<EntityDefinition> builder)
         {
-            HasKey(t => t.EntityDefinitionCode);
+            builder.ToTable("EntityDefinition", DbConstants.CofoundrySchema);
+
+            builder.HasKey(s => s.EntityDefinitionCode);
 
             // Properties
 
-            Property(t => t.EntityDefinitionCode)
-                .HasMaxLength(6)
-                .IsFixedLength()
-                .IsUnicode(false);
+            builder.Property(s => s.EntityDefinitionCode)
+                .IsRequired()
+                .IsCharType(6);
 
-            Property(t => t.Name)
+            builder.Property(s => s.Name)
                 .HasMaxLength(50)
                 .IsRequired();
         }

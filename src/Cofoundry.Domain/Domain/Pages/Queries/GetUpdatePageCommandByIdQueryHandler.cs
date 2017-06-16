@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Cofoundry.Domain.Data;
 using Cofoundry.Domain.CQS;
 using AutoMapper.QueryableExtensions;
-using System.Data.Entity;
+using Microsoft.EntityFrameworkCore;
 using AutoMapper;
 using Cofoundry.Core;
 
@@ -36,7 +36,8 @@ namespace Cofoundry.Domain
             var dbResult = await _dbContext
                 .Pages
                 .AsNoTracking()
-                .Include(p => p.PageTags.Select(t => t.Tag))
+                .Include(p => p.PageTags)
+                .ThenInclude(t => t.Tag)
                 .Where(v => v.PageId == query.Id && !v.IsDeleted)
                 .SingleOrDefaultAsync();
 

@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Cofoundry.Domain.Data;
 using Cofoundry.Domain.CQS;
-using System.Data.Entity;
+using Microsoft.EntityFrameworkCore;
 using Cofoundry.Core.EntityFramework;
 using Cofoundry.Core;
 
@@ -52,7 +52,7 @@ namespace Cofoundry.Domain
             _entityTagHelper.UpdateTags(documentAsset.DocumentAssetTags, command.Tags, executionContext);
             _entityAuditHelper.SetCreated(documentAsset, executionContext);
 
-            using (var scope = _transactionScopeFactory.Create())
+            using (var scope = _transactionScopeFactory.Create(_dbContext))
             {
                 _dbContext.DocumentAssets.Add(documentAsset);
 

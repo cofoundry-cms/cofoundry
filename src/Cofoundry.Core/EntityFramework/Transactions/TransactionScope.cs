@@ -1,6 +1,6 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore.Storage;
+using System;
 using System.Collections.Generic;
-using System.Data.Entity;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -13,13 +13,13 @@ namespace Cofoundry.Core.EntityFramework
     /// </summary>
     public class TransactionScope : ITransactionScope, IDisposable
     {
-        private readonly DbContextTransaction _dbContextTransaction;
+        private readonly IDbContextTransaction _dbContextTransaction;
         private readonly TransactionScopeFactory _transactionScopeFactory;
         private TransactionState _transactionState = TransactionState.Open;
 
         public TransactionScope(
             TransactionScopeFactory transactionScopeFactory,
-            DbContextTransaction dbContextTransaction
+            IDbContextTransaction dbContextTransaction
             )
         {
             _dbContextTransaction = dbContextTransaction;
@@ -76,11 +76,9 @@ namespace Cofoundry.Core.EntityFramework
         {
             if (_dbContextTransaction != null)
             {
-                if (_transactionScopeFactory != null)
-                {
-                    // De-register this scope as the primary transaction so others can be created
-                    _transactionScopeFactory.DeregisterTransaction(this);
-                }
+                // De-register this scope as the primary transaction so others can be created
+                _transactionScopeFactory?.DeregisterTransaction(this);
+
                 // Dispose of the EF transaction which should tidy itself up.
                 _dbContextTransaction.Dispose();
             }

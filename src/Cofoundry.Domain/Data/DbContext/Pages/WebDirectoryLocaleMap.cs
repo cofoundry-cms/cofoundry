@@ -1,29 +1,39 @@
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Data.Entity.ModelConfiguration;
+using System;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Microsoft.EntityFrameworkCore.Metadata;
+using Cofoundry.Core;
+using Microsoft.EntityFrameworkCore;
 
 namespace Cofoundry.Domain.Data
 {
-    public class WebDirectoryLocaleMap : EntityTypeConfiguration<WebDirectoryLocale>
+    public class WebDirectoryLocaleMap : IEntityTypeConfiguration<WebDirectoryLocale>
     {
-        public WebDirectoryLocaleMap()
+        public void Create(EntityTypeBuilder<WebDirectoryLocale> builder)
         {
+            builder.ToTable("WebDirectoryLocale", DbConstants.CofoundrySchema);
+
             // Primary Key
-            HasKey(t => t.WebDirectoryLocaleId);
+
+            builder.HasKey(s => s.WebDirectoryLocaleId);
 
             // Properties
-            Property(t => t.UrlPath)
+            builder.Property(s => s.UrlPath)
                 .IsRequired()
                 .HasMaxLength(64);
 
             // Relationships
-            HasRequired(t => t.Locale)
-                .WithMany()
-                .HasForeignKey(d => d.LocaleId);
-            HasRequired(t => t.WebDirectory)
-                .WithMany(t => t.WebDirectoryLocales)
-                .HasForeignKey(d => d.WebDirectoryId);
 
-            CreateAuditableMappingHelper.Map(this);
+            builder.HasOne(s => s.Locale)
+                .WithMany()
+                .HasForeignKey(d => d.LocaleId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            builder.HasOne(s => s.WebDirectory)
+                .WithMany(s => s.WebDirectoryLocales)
+                .HasForeignKey(d => d.WebDirectoryId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            CreateAuditableMappingHelper.Map(builder);
         }
     }
 }

@@ -1,32 +1,41 @@
+using System;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Data.Entity.ModelConfiguration;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore;
+using Cofoundry.Core;
 
 namespace Cofoundry.Domain.Data
 {
-    public class CustomEntityMap : EntityTypeConfiguration<CustomEntity>
+    public class CustomEntityMap : IEntityTypeConfiguration<CustomEntity>
     {
-        public CustomEntityMap()
+        public void Create(EntityTypeBuilder<CustomEntity> builder)
         {
-            // Properties
-            Property(t => t.CustomEntityDefinitionCode)
-                .HasMaxLength(6)
-                .IsFixedLength()
-                .IsUnicode(false);
+            builder.ToTable("CustomEntity", DbConstants.CofoundrySchema);
 
-            Property(t => t.UrlSlug)
+            // Properties
+
+            builder.Property(s => s.CustomEntityDefinitionCode)
+                .IsRequired()
+                .IsCharType(6);
+
+            builder.Property(s => s.UrlSlug)
                 .HasMaxLength(200)
                 .IsRequired();
 
             // Relationships
-            HasRequired(t => t.CustomEntityDefinition)
-                .WithMany()
-                .HasForeignKey(d => d.CustomEntityDefinitionCode);
 
-            HasOptional(t => t.Locale)
+            builder.HasOne(s => s.CustomEntityDefinition)
                 .WithMany()
-                .HasForeignKey(d => d.LocaleId);
+                .HasForeignKey(d => d.CustomEntityDefinitionCode)
+                .OnDelete(DeleteBehavior.Restrict);
 
-            CreateAuditableMappingHelper.Map(this);
+            builder.HasOne(s => s.Locale)
+                .WithMany()
+                .HasForeignKey(d => d.LocaleId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            CreateAuditableMappingHelper.Map(builder);
         }
     }
 }

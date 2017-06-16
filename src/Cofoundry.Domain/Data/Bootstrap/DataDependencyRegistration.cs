@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Cofoundry.Core.DependencyInjection;
 using Cofoundry.Core.Configuration;
-using System.Data.Entity;
+using Microsoft.EntityFrameworkCore;
 
 namespace Cofoundry.Domain.Data
 {

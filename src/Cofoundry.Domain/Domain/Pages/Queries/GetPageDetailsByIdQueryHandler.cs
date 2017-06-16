@@ -7,7 +7,7 @@ using Cofoundry.Domain.Data;
 using Cofoundry.Domain.CQS;
 using AutoMapper.QueryableExtensions;
 using Cofoundry.Core.DependencyInjection;
-using System.Data.Entity;
+using Microsoft.EntityFrameworkCore;
 using AutoMapper;
 using Cofoundry.Core;
 
@@ -87,9 +87,10 @@ namespace Cofoundry.Domain
                 .Include(v => v.Creator)
                 .Include(v => v.PageTemplate)
                 .Include(v => v.Page)
-                .Include(v => v.Page.Creator)
-                .Include(v => v.Page.PageTags)
-                .Include(v => v.Page.PageTags.Select(t => t.Tag))
+                .ThenInclude(p => p.Creator)
+                .Include(v => v.Page)
+                .ThenInclude(p => p.PageTags)
+                .ThenInclude(t => t.Tag)
                 .Include(v => v.OpenGraphImageAsset)
                 .AsNoTracking()
                 .Where(v => v.PageId == id && !v.IsDeleted && !v.Page.IsDeleted)

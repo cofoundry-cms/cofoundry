@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Cofoundry.Domain.Data;
 using Cofoundry.Domain.CQS;
 using AutoMapper.QueryableExtensions;
-using System.Data.Entity;
+using Microsoft.EntityFrameworkCore;
 using AutoMapper;
 
 namespace Cofoundry.Domain
@@ -92,10 +92,10 @@ namespace Cofoundry.Domain
             return _dbContext
                 .CustomEntityVersions
                 .AsNoTracking()
-                .FilterByCustomEntityId(query.CustomEntityId)
-                .FilterByWorkFlowStatusQuery(query.WorkFlowStatus, query.CustomEntityVersionId)
                 .Include(e => e.CustomEntity)
-                .Include(e => e.CustomEntity.Locale);
+                .ThenInclude(e => e.Locale)
+                .FilterByCustomEntityId(query.CustomEntityId)
+                .FilterByWorkFlowStatusQuery(query.WorkFlowStatus, query.CustomEntityVersionId);
         }
 
         private IEnumerable<string> MapPageRoutings(

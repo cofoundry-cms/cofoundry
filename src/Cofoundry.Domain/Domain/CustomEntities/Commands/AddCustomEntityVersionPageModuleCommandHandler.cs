@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Cofoundry.Domain.CQS;
 using Cofoundry.Domain.Data;
-using System.Data.Entity;
+using Microsoft.EntityFrameworkCore;
 using Cofoundry.Core.MessageAggregator;
 using Cofoundry.Core.EntityFramework;
 using Cofoundry.Core;
@@ -97,7 +97,7 @@ namespace Cofoundry.Domain
 
             _dbContext.CustomEntityVersionPageModules.Add(newModule);
 
-            using (var scope = _transactionScopeFactory.Create())
+            using (var scope = _transactionScopeFactory.Create(_dbContext))
             {
                 await _dbContext.SaveChangesAsync();
 

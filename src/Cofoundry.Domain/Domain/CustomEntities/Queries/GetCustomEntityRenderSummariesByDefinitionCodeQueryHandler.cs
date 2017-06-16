@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Cofoundry.Domain.Data;
 using Cofoundry.Domain.CQS;
 using AutoMapper.QueryableExtensions;
-using System.Data.Entity;
+using Microsoft.EntityFrameworkCore;
 using AutoMapper;
 
 namespace Cofoundry.Domain
@@ -53,9 +53,9 @@ namespace Cofoundry.Domain
             var dbQuery = _dbContext
                 .CustomEntityVersions
                 .AsNoTracking()
+                .Include(e => e.CustomEntity)
                 .FilterByCustomEntityDefinitionCode(query.CustomEntityDefinitionCode)
-                .FilterByWorkFlowStatusQuery(query.WorkFlowStatus)
-                .Include(e => e.CustomEntity);
+                .FilterByWorkFlowStatusQuery(query.WorkFlowStatus);
 
             return dbQuery;
         }

@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Cofoundry.Domain.CQS;
 using Cofoundry.Domain.Data;
-using System.Data.Entity;
+using Microsoft.EntityFrameworkCore;
 using Cofoundry.Core.MessageAggregator;
 using Cofoundry.Core.EntityFramework;
 using Cofoundry.Core;
@@ -56,7 +56,7 @@ namespace Cofoundry.Domain
                 .Include(m => m.PageModuleTypeTemplate)
                 .Include(m => m.PageModuleType)
                 .Include(m => m.CustomEntityVersion)
-                .Include(m => m.CustomEntityVersion.CustomEntity)
+                .ThenInclude(v => v.CustomEntity)
                 .Where(l => l.CustomEntityVersionPageModuleId == command.CustomEntityVersionPageModuleId)
                 .SingleOrDefaultAsync();
             EntityNotFoundException.ThrowIfNull(dbModule, command.CustomEntityVersionPageModuleId);
@@ -67,7 +67,7 @@ namespace Cofoundry.Domain
                 throw new NotPermittedException("Page modules cannot be updated unless the entity is in draft status");
             }
 
-            using (var scope = _transactionScopeFactory.Create())
+            using (var scope = _transactionScopeFactory.Create(_dbContext))
             {
                 await _pageModuleCommandHelper.UpdateModelAsync(command, dbModule);
                 await _dbContext.SaveChangesAsync();

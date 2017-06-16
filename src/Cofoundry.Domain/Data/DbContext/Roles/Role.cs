@@ -9,11 +9,6 @@ namespace Cofoundry.Domain.Data
     /// </summary>
     public partial class Role
     {
-        public Role()
-        {
-            Permissions = new List<Permission>();
-        }
-
         /// <summary>
         /// Database id of the role.
         /// </summary>
@@ -47,6 +42,6 @@ namespace Cofoundry.Domain.Data
         /// Collection of permissions that describe the actions this role is 
         /// permitted to perform.
         /// </summary>
-        public virtual ICollection<Permission> Permissions { get; set; }
+        public virtual ICollection<RolePermission> RolePermissions { get; set; }
     }
 }

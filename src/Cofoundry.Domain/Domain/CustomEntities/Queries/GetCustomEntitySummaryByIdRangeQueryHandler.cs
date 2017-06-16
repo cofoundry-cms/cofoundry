@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Cofoundry.Domain.Data;
 using Cofoundry.Domain.CQS;
 using AutoMapper.QueryableExtensions;
-using System.Data.Entity;
+using Microsoft.EntityFrameworkCore;
 using AutoMapper;
 
 namespace Cofoundry.Domain
@@ -66,7 +66,7 @@ namespace Cofoundry.Domain
                 .CustomEntityVersions
                 .AsNoTracking()
                 .Include(e => e.CustomEntity)
-                .Include(e => e.CustomEntity.Locale)
+                .ThenInclude(e => e.Locale)
                 .Where(v => ids.Contains(v.CustomEntityId))
                 .Where(v => v.WorkFlowStatusId == (int)WorkFlowStatus.Draft || v.WorkFlowStatusId == (int)WorkFlowStatus.Published)
                 .GroupBy(e => e.CustomEntityId, (key, g) => g.OrderByDescending(v => v.WorkFlowStatusId == (int)WorkFlowStatus.Draft).FirstOrDefault())

@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Cofoundry.Domain.Data;
 using Cofoundry.Domain.CQS;
-using System.Data.Entity;
+using Microsoft.EntityFrameworkCore;
 using Cofoundry.Core.MessageAggregator;
 using Cofoundry.Core;
 using Cofoundry.Core.Validation;
@@ -59,7 +59,7 @@ namespace Cofoundry.Domain
             var draft = await GetDraftVersionAsync(command);
 
 
-            using (var scope = _transactionScopeFactory.Create())
+            using (var scope = _transactionScopeFactory.Create(_dbContext))
             {
                 draft = await CreateDraftIfRequiredAsync(command, draft);
                 await ValidateTitle(command, draft, definition);
@@ -87,7 +87,7 @@ namespace Cofoundry.Domain
 
             if (command.Publish)
             {
-                using (var scope = _transactionScopeFactory.Create())
+                using (var scope = _transactionScopeFactory.Create(_dbContext))
                 {
                     await _commandExecutor.ExecuteAsync(new PublishCustomEntityCommand(draft.CustomEntityId));
                     scope.Complete();

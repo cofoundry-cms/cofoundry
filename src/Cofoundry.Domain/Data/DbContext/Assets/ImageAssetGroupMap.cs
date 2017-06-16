@@ -1,29 +1,32 @@
 using Cofoundry.Core;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Data.Entity.ModelConfiguration;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using System;
 
 namespace Cofoundry.Domain.Data
 {
-    public class ImageAssetGroupMap : EntityTypeConfiguration<ImageAssetGroup>
+    public class ImageAssetGroupMap : IEntityTypeConfiguration<ImageAssetGroup>
     {
-        public ImageAssetGroupMap()
+        public void Create(EntityTypeBuilder<ImageAssetGroup> builder)
         {
-            ToTable("ImageAssetGroup", DbConstants.CofoundrySchema);
+            builder.ToTable("ImageAssetGroup", DbConstants.CofoundrySchema);
 
             // Primary Key
-            HasKey(t => t.ImageAssetGroupId);
+            builder.HasKey(s => s.ImageAssetGroupId);
 
             // Properties
-            Property(t => t.GroupName)
+            builder.Property(s => s.GroupName)
                 .IsRequired()
                 .HasMaxLength(64);
 
             // Relationships
-            HasOptional(t => t.ParentImageAssetGroup)
-                .WithMany(t => t.ChildImageAssetGroups)
-                .HasForeignKey(d => d.ParentImageAssetGroupId);
+            builder.HasOne(s => s.ParentImageAssetGroup)
+                .WithMany(s => s.ChildImageAssetGroups)
+                .HasForeignKey(d => d.ParentImageAssetGroupId)
+                .OnDelete(DeleteBehavior.Restrict);
 
-            CreateAuditableMappingHelper.Map(this);
+            CreateAuditableMappingHelper.Map(builder);
         }
     }
 }

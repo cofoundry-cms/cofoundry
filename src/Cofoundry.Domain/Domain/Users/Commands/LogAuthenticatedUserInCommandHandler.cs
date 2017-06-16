@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Data.SqlClient;
-using System.Data.Entity;
+using Microsoft.EntityFrameworkCore;
 using Cofoundry.Domain.Data;
 using Cofoundry.Domain.CQS;
 using Cofoundry.Core.EntityFramework;
@@ -44,7 +44,8 @@ namespace Cofoundry.Domain
             SetLoggedIn(user, executionContext);
             _dbContext.SaveChanges();
 
-            _sqlExecutor.ExecuteCommand("Cofoundry.UserLoginLog_Add",
+            _sqlExecutor.ExecuteCommand(_dbContext,
+                "Cofoundry.UserLoginLog_Add",
                 new SqlParameter("UserId", user.UserId),
                 new SqlParameter("IPAddress", connectionInfo.IPAddress),
                 new SqlParameter("DateTimeNow", executionContext.ExecutionDate)
@@ -60,7 +61,8 @@ namespace Cofoundry.Domain
             SetLoggedIn(user, executionContext);
             await _dbContext.SaveChangesAsync();
 
-            await _sqlExecutor.ExecuteCommandAsync("Cofoundry.UserLoginLog_Add",
+            await _sqlExecutor.ExecuteCommandAsync(_dbContext,
+                "Cofoundry.UserLoginLog_Add",
                 new SqlParameter("UserId", user.UserId),
                 new SqlParameter("IPAddress", connectionInfo.IPAddress),
                 new SqlParameter("DateTimeNow", executionContext.ExecutionDate)

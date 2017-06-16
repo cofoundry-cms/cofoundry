@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Cofoundry.Domain.Data;
 using Cofoundry.Domain.CQS;
-using System.Data.Entity;
+using Microsoft.EntityFrameworkCore;
 using AutoMapper;
 using Cofoundry.Core;
 
@@ -176,10 +176,11 @@ namespace Cofoundry.Domain
         {
             return _dbContext
                 .CustomEntityVersions
-                .Include(v => v.CustomEntity)
                 .Include(v => v.CustomEntityVersionPageModules)
-                .Include(v => v.CustomEntity.Creator)
-                .Include(v => v.CustomEntity.Locale)
+                .Include(v => v.CustomEntity)
+                .ThenInclude(e => e.Creator)
+                .Include(v => v.CustomEntity)
+                .ThenInclude(e => e.Locale)
                 .Include(v => v.Creator)
                 .AsNoTracking()
                 .Where(v => v.CustomEntityId == id && (v.CustomEntity.LocaleId == null || v.CustomEntity.Locale.IsActive))

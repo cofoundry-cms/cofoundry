@@ -65,7 +65,8 @@ namespace Cofoundry.Domain
             }
 
             await _entityFrameworkSqlExecutor
-                .ExecuteCommandAsync("Cofoundry.UnstructuredDataDependency_Delete",
+                .ExecuteCommandAsync(_dbContext,
+                    "Cofoundry.UnstructuredDataDependency_Delete",
                     new SqlParameter("EntityDefinitionCode", command.RootEntityDefinitionCode),
                     new SqlParameter("EntityId", command.RootEntityId)
                     );

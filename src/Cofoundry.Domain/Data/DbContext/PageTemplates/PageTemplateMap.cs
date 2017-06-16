@@ -1,34 +1,45 @@
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Data.Entity.ModelConfiguration;
+using System;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Microsoft.EntityFrameworkCore.Metadata;
+using Cofoundry.Core;
+using Microsoft.EntityFrameworkCore;
 
 namespace Cofoundry.Domain.Data
 {
-    public class PageTemplateMap : EntityTypeConfiguration<PageTemplate>
+    public class PageTemplateMap : IEntityTypeConfiguration<PageTemplate>
     {
-        public PageTemplateMap()
+        public void Create(EntityTypeBuilder<PageTemplate> builder)
         {
+            builder.ToTable("PageTemplate", DbConstants.CofoundrySchema);
+
             // Properties
-            Property(t => t.FileName)
+
+            builder.Property(s => s.FileName)
                 .HasMaxLength(100)
                 .IsRequired();
-            Property(t => t.Name)
+
+            builder.Property(s => s.Name)
                 .HasMaxLength(100)
                 .IsRequired();
-            Property(t => t.FullPath)
+
+            builder.Property(s => s.FullPath)
                 .HasMaxLength(400)
                 .IsRequired();
-            Property(t => t.CustomEntityDefinitionCode)
+
+            builder.Property(s => s.CustomEntityDefinitionCode)
                 .HasMaxLength(6);
-            Property(t => t.CustomEntityModelType)
+
+            builder.Property(s => s.CustomEntityModelType)
                 .HasMaxLength(100);
 
-            Property(t => t.Description)
-                .IsMaxLength();
+            builder.Property(s => s.Description)
+                .IsNVarCharMaxType();
 
             // Relationships
-            HasOptional(t => t.CustomEntityDefinition)
+            builder.HasOne(s => s.CustomEntityDefinition)
                 .WithMany()
-                .HasForeignKey(d => d.CustomEntityDefinitionCode);
+                .HasForeignKey(d => d.CustomEntityDefinitionCode)
+                .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

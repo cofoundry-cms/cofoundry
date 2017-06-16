@@ -88,7 +88,7 @@ namespace Cofoundry.Domain
                         await _dbContext.SaveChangesAsync();
                     }
 
-                    using (var scope = _transactionScopeFactory.Create())
+                    using (var scope = _transactionScopeFactory.Create(_dbContext))
                     {
                         var fileName = Path.ChangeExtension(imageAsset.ImageAssetId.ToString(), imageAsset.Extension);
 

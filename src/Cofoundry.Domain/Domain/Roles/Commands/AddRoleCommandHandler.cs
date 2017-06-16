@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Data.Entity;
+using Microsoft.EntityFrameworkCore;
 using Cofoundry.Domain.Data;
 using Cofoundry.Domain.CQS;
 using Cofoundry.Core.Validation;
@@ -78,7 +78,9 @@ namespace Cofoundry.Domain
 
             foreach (var permission in EnumerableHelper.Enumerate(permissions))
             {
-                role.Permissions.Add(permission);
+                var rolePermission = new RolePermission();
+                rolePermission.Permission = permission;
+                role.RolePermissions.Add(rolePermission);
             }
             
             _dbContext.Roles.Add(role);

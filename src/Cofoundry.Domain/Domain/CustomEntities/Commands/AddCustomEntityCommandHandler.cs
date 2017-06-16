@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Cofoundry.Domain.Data;
 using Cofoundry.Core;
 using Cofoundry.Domain.CQS;
-using System.Data.Entity;
+using Microsoft.EntityFrameworkCore;
 using Cofoundry.Core.Validation;
 using Cofoundry.Core.MessageAggregator;
 using Cofoundry.Core.EntityFramework;
@@ -72,7 +72,7 @@ namespace Cofoundry.Domain
             var entity = MapEntity(command, definition, executionContext);
             _dbContext.CustomEntities.Add(entity);
 
-            using (var scope = _transactionScopeFactory.Create())
+            using (var scope = _transactionScopeFactory.Create(_dbContext))
             {
                 await _dbContext.SaveChangesAsync();
 

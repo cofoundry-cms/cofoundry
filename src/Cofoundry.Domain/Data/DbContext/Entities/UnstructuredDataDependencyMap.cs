@@ -1,37 +1,42 @@
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Data.Entity.ModelConfiguration;
+using System;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore;
+using Cofoundry.Core;
 
 namespace Cofoundry.Domain.Data
 {
-    public class UnstructuredDataDependencyMap : EntityTypeConfiguration<UnstructuredDataDependency>
+    public class UnstructuredDataDependencyMap : IEntityTypeConfiguration<UnstructuredDataDependency>
     {
-        public UnstructuredDataDependencyMap()
+        public void Create(EntityTypeBuilder<UnstructuredDataDependency> builder)
         {
-            HasKey(t => new { t.RootEntityDefinitionCode, t.RootEntityId, t.RelatedEntityDefinitionCode, t.RelatedEntityId });
+            builder.ToTable("UnstructuredDataDependency", DbConstants.CofoundrySchema);
+
+            builder.HasKey(s => new { s.RootEntityDefinitionCode, s.RootEntityId, s.RelatedEntityDefinitionCode, s.RelatedEntityId });
 
             // Properties
 
-            Property(t => t.RootEntityDefinitionCode)
+            builder.Property(s => s.RootEntityDefinitionCode)
                 .HasMaxLength(6)
                 .IsRequired();
 
-            Property(t => t.RelatedEntityDefinitionCode)
+            builder.Property(s => s.RelatedEntityDefinitionCode)
                 .HasMaxLength(6)
                 .IsRequired();
 
             // Relations
 
-            HasRequired(t => t.RootEntityDefinition)
+            builder.HasOne(s => s.RootEntityDefinition)
                 .WithMany()
-                .HasForeignKey(d => d.RootEntityDefinitionCode);
+                .HasForeignKey(d => d.RootEntityDefinitionCode)
+                .OnDelete(DeleteBehavior.Restrict);
 
             // Relations
 
-            HasRequired(t => t.RelatedEntityDefinition)
+            builder.HasOne(s => s.RelatedEntityDefinition)
                 .WithMany()
-                .HasForeignKey(d => d.RelatedEntityDefinitionCode);
-
-
+                .HasForeignKey(d => d.RelatedEntityDefinitionCode)
+                .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Cofoundry.Domain.Data;
 using Cofoundry.Domain.CQS;
-using System.Data.Entity;
+using Microsoft.EntityFrameworkCore;
 using Cofoundry.Core.MessageAggregator;
 using Cofoundry.Core;
 using Cofoundry.Core.Validation;
@@ -72,7 +72,7 @@ namespace Cofoundry.Domain
             await _permissionValidationService.EnforceCustomEntityPermissionAsync<CustomEntityPublishPermission>(definition.CustomEntityDefinitionCode);
             await ValidateTitle(draftVersion, definition);
 
-            using (var scope = _transactionScopeFactory.Create())
+            using (var scope = _transactionScopeFactory.Create(_dbContext))
             {
                 // Find the published one and make it approved
                 if (publishedVersion != null)

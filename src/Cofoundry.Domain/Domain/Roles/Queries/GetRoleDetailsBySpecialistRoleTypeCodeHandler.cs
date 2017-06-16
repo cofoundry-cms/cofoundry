@@ -6,7 +6,7 @@ using Cofoundry.Domain.CQS;
 using Cofoundry.Domain.Data;
 using System.Collections.ObjectModel;
 using Cofoundry.Core;
-using System.Data.Entity;
+using Microsoft.EntityFrameworkCore;
 
 namespace Cofoundry.Domain
 {

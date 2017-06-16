@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Cofoundry.Domain.Data;
 using Cofoundry.Domain.CQS;
-using System.Data.Entity;
+using Microsoft.EntityFrameworkCore;
 using Cofoundry.Core.EntityFramework;
 using Cofoundry.Core;
 using Cofoundry.Core.Caching;
@@ -53,7 +53,7 @@ namespace Cofoundry.Domain
                 throw new InvalidOperationException("Site is already set up.");
             }
 
-            using (var scope = _transactionScopeFactory.Create())
+            using (var scope = _transactionScopeFactory.Create(_dbContext))
             {
                 var userId = await CreateAdminUser(command);
                 var impersonatedUserContext = await GetImpersonatedUserContext(executionContext, userId);

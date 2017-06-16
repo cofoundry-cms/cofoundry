@@ -1,30 +1,36 @@
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Data.Entity.ModelConfiguration;
+using System;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore;
+using Cofoundry.Core;
 
 namespace Cofoundry.Domain.Data
 {
-    public class WebDirectoryMap : EntityTypeConfiguration<WebDirectory>
+    public class WebDirectoryMap : IEntityTypeConfiguration<WebDirectory>
     {
-        public WebDirectoryMap()
+        public void Create(EntityTypeBuilder<WebDirectory> builder)
         {
+            builder.ToTable("WebDirectory", DbConstants.CofoundrySchema);
+
             // Primary Key
-            HasKey(t => t.WebDirectoryId);
+            builder.HasKey(s => s.WebDirectoryId);
 
             // Properties
-            Property(t => t.Name)
+            builder.Property(s => s.Name)
                 .IsRequired()
                 .HasMaxLength(64);
 
-            Property(t => t.UrlPath)
+            builder.Property(s => s.UrlPath)
                 .IsRequired()
                 .HasMaxLength(64);
 
             // Relationships
-            HasOptional(t => t.ParentWebDirectory)
-                .WithMany(t => t.ChildWebDirectories)
-                .HasForeignKey(d => d.ParentWebDirectoryId);
+            builder.HasOne(s => s.ParentWebDirectory)
+                .WithMany(s => s.ChildWebDirectories)
+                .HasForeignKey(d => d.ParentWebDirectoryId)
+                .OnDelete(DeleteBehavior.Restrict);
 
-            CreateAuditableMappingHelper.Map(this);
+            CreateAuditableMappingHelper.Map(builder);
         }
     }
 }

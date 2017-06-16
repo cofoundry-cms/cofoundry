@@ -1,25 +1,32 @@
+using System;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Data.Entity.ModelConfiguration;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata;
+using Cofoundry.Core;
 
 namespace Cofoundry.Domain.Data
 {
-    public class CustomEntityDefinitionMap : EntityTypeConfiguration<CustomEntityDefinition>
+    public class CustomEntityDefinitionMap : IEntityTypeConfiguration<CustomEntityDefinition>
     {
-        public CustomEntityDefinitionMap()
+        public void Create(EntityTypeBuilder<CustomEntityDefinition> builder)
         {
-            HasKey(t => t.CustomEntityDefinitionCode);
+            builder.ToTable("CustomEntityDefinition", DbConstants.CofoundrySchema);
+
+            builder.HasKey(s => s.CustomEntityDefinitionCode);
 
             // Properties
 
-            Property(t => t.CustomEntityDefinitionCode)
-                .HasMaxLength(6)
-                .IsFixedLength()
-                .IsUnicode(false);
+            builder.Property(s => s.CustomEntityDefinitionCode)
+                .IsRequired()
+                .IsCharType(6);
 
             // Relations
 
-            HasRequired(t => t.EntityDefinition)
-                .WithOptional();
+            builder.HasOne(s => s.EntityDefinition)
+                .WithOne()
+                .HasForeignKey<CustomEntityDefinition>(s => s.CustomEntityDefinitionCode)
+                .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

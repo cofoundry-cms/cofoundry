@@ -1,33 +1,42 @@
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Data.Entity.ModelConfiguration;
+
+using System;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore;
+using Cofoundry.Core;
 
 namespace Cofoundry.Domain.Data
 {
-    public class PageGroupItemMap : EntityTypeConfiguration<PageGroupItem>
+    public class PageGroupItemMap : IEntityTypeConfiguration<PageGroupItem>
     {
-        public PageGroupItemMap()
+        public void Create(EntityTypeBuilder<PageGroupItem> builder)
         {
+            builder.ToTable("PageGroupItem", DbConstants.CofoundrySchema);
+
             // Primary Key
-            HasKey(t => new { t.PageId, t.PageGroupId });
+            builder.HasKey(s => new { s.PageId, s.PageGroupId });
 
             // Properties
-            Property(t => t.PageId)
-                .HasDatabaseGeneratedOption(DatabaseGeneratedOption.None);
 
-            Property(t => t.PageGroupId)
-                .HasDatabaseGeneratedOption(DatabaseGeneratedOption.None);
+            builder.Property(s => s.PageId)
+                .ValueGeneratedNever();
 
-            // Table & Column Mappings
-
+            builder.Property(s => s.PageGroupId)
+                .ValueGeneratedNever();
+            
             // Relationships
-            HasRequired(t => t.PageGroup)
-                .WithMany(t => t.PageGroupItems)
-                .HasForeignKey(d => d.PageGroupId);
-            HasRequired(t => t.Page)
-                .WithMany(t => t.PageGroupItems)
-                .HasForeignKey(d => d.PageId);
 
-            CreateAuditableMappingHelper.Map(this);
+            builder.HasOne(s => s.PageGroup)
+                .WithMany(s => s.PageGroupItems)
+                .HasForeignKey(d => d.PageGroupId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            builder.HasOne(s => s.Page)
+                .WithMany(s => s.PageGroupItems)
+                .HasForeignKey(d => d.PageId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            CreateAuditableMappingHelper.Map(builder);
         }
     }
 }

@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.Entity;
+using Microsoft.EntityFrameworkCore;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
@@ -44,7 +44,8 @@ namespace Cofoundry.Domain
         {
             var connectionInfo = _clientConnectionService.GetConnectionInfo();
 
-            var isValid = _sqlExecutor.ExecuteScalar<int>("Cofoundry.FailedAuthticationAttempt_IsAttemptValid",
+            var isValid = _sqlExecutor.ExecuteScalar<int>(_dbContext,
+                "Cofoundry.FailedAuthticationAttempt_IsAttemptValid",
                 new SqlParameter("UserAreaCode", query.UserAreaCode),
                 new SqlParameter("Username", query.Username.Trim()),
                 new SqlParameter("IPAddress", connectionInfo.IPAddress),
@@ -62,7 +63,8 @@ namespace Cofoundry.Domain
         {
             var connectionInfo = _clientConnectionService.GetConnectionInfo();
 
-            var isValid = await _sqlExecutor.ExecuteScalarAsync<int>("Cofoundry.FailedAuthticationAttempt_IsAttemptValid",
+            var isValid = await _sqlExecutor.ExecuteScalarAsync<int>(_dbContext,
+                "Cofoundry.FailedAuthticationAttempt_IsAttemptValid",
                 new SqlParameter("UserAreaCode", query.UserAreaCode),
                 new SqlParameter("Username", query.Username.Trim()),
                 new SqlParameter("IPAddress", connectionInfo.IPAddress),

@@ -5,7 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Cofoundry.Domain.Data;
 using Cofoundry.Domain.CQS;
-using System.Data.Entity;
+using Microsoft.EntityFrameworkCore;
 using Cofoundry.Core;
 using Cofoundry.Core.EntityFramework;
 
@@ -55,7 +55,7 @@ namespace Cofoundry.Domain
 
                 webDirectory.IsActive = false;
 
-                using (var scope = _transactionScopeFactory.Create())
+                using (var scope = _transactionScopeFactory.Create(_dbContext))
                 {
                     await _commandExecutor.ExecuteAsync(new DeleteUnstructuredDataDependenciesCommand(WebDirectoryEntityDefinition.DefinitionCode, webDirectory.WebDirectoryId));
 

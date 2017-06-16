@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Cofoundry.Domain.CQS;
 using Cofoundry.Domain.Data;
-using System.Data.Entity;
+using Microsoft.EntityFrameworkCore;
 using Cofoundry.Core.MessageAggregator;
 using Cofoundry.Core.EntityFramework;
 using System.Data.SqlClient;
@@ -60,7 +60,9 @@ namespace Cofoundry.Domain
             }
 
             var updatedIdString = await _sqlExecutor
-                .ExecuteCommandWithOutputAsync<string>("Cofoundry.CustomEntity_ReOrder", "UpdatedIds",
+                .ExecuteCommandWithOutputAsync<string>(_dbContext, 
+                    "Cofoundry.CustomEntity_ReOrder", 
+                    "UpdatedIds",
                     new SqlParameter("CustomEntityDefinitionCode", command.CustomEntityDefinitionCode),
                     new SqlParameter("CustomEntityIds", string.Join(",", command.OrderedCustomEntityIds)),
                     CreateNullableIntParameter("LocaleId", command.LocaleId)

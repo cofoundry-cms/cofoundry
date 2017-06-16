@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Cofoundry.Domain.Data;
 using Cofoundry.Domain.CQS;
-using System.Data.Entity;
+using Microsoft.EntityFrameworkCore;
 using AutoMapper;
 using Cofoundry.Core;
 
@@ -79,7 +79,7 @@ namespace Cofoundry.Domain
                 .FilterByWorkFlowStatusQuery(query.WorkFlowStatus)
                 .Include(v => v.Page)
                 .Include(v => v.PageTemplate)
-                .Include(v => v.PageTemplate.PageTemplateSections);
+                .ThenInclude(t => t.PageTemplateSections);
 
             return dbQuery;
         }

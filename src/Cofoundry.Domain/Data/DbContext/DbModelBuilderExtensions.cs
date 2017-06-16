@@ -1,9 +1,7 @@
 ﻿using Cofoundry.Core;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
-using System.Data.Entity;
-using System.Data.Entity.ModelConfiguration;
-using System.Data.Entity.ModelConfiguration.Conventions;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -22,7 +20,7 @@ namespace Cofoundry.Domain.Data
         /// and makes "app" the default schema.
         /// </summary>
         /// <returns>DbModelBuilder for method chaining</returns>
-        public static DbModelBuilder UseDefaultConfig(this DbModelBuilder modelBuilder)
+        public static ModelBuilder UseDefaultConfig(this ModelBuilder modelBuilder)
         {
             return modelBuilder.UseDefaultConfig(DbConstants.DefaultAppSchema);
         }
@@ -33,9 +31,9 @@ namespace Cofoundry.Domain.Data
         /// </summary>
         /// <param name="schema">Name of the schema to use by default.</param>
         /// <returns>DbModelBuilder for method chaining</returns>
-        public static DbModelBuilder UseDefaultConfig(this DbModelBuilder modelBuilder, string schema)
+        public static ModelBuilder UseDefaultConfig(this ModelBuilder modelBuilder, string schema)
         {
-            modelBuilder.Conventions.Remove<PluralizingTableNameConvention>();
+            //modelBuilder.Conventions.Remove<PluralizingTableNameConvention>();
             modelBuilder.HasDefaultSchema(schema);
 
             return modelBuilder;
@@ -46,9 +44,9 @@ namespace Cofoundry.Domain.Data
         /// also allows for method chaining
         /// </summary>
         /// <returns>DbModelBuilder for method chaining</returns>
-        public static DbModelBuilder Map<TEntityType>(this DbModelBuilder modelBuilder, EntityTypeConfiguration<TEntityType> entityTypeConfiguration) where TEntityType : class
+        public static ModelBuilder Map<TEntityType>(this ModelBuilder modelBuilder, IEntityTypeConfiguration<TEntityType> entityTypeConfiguration) where TEntityType : class
         {
-            modelBuilder.Configurations.Add<TEntityType>(entityTypeConfiguration);
+            modelBuilder.Entity<TEntityType>(entityTypeConfiguration.Create);
 
             return modelBuilder;
         }
@@ -59,7 +57,7 @@ namespace Cofoundry.Domain.Data
         /// Maps Cofoundry ImageAsset classes to the DbModelBuilder. Requires Cofoundry Users and Tags to be mapped.
         /// </summary>
         /// <returns>DbModelBuilder for method chaining</returns>
-        public static DbModelBuilder MapCofoundryImageAssets(this DbModelBuilder modelBuilder)
+        public static ModelBuilder MapCofoundryImageAssets(this ModelBuilder modelBuilder)
         {
             modelBuilder
                 .Map(new ImageAssetMap())
@@ -74,7 +72,7 @@ namespace Cofoundry.Domain.Data
         /// Maps Cofoundry DocumentAsset classes to the DbModelBuilder. Requires Cofoundry Users and Tags to be mapped.
         /// </summary>
         /// <returns>DbModelBuilder for method chaining</returns>
-        public static DbModelBuilder MapCofoundryDocumentAssets(this DbModelBuilder modelBuilder)
+        public static ModelBuilder MapCofoundryDocumentAssets(this ModelBuilder modelBuilder)
         {
             modelBuilder
                 .Map(new DocumentAssetMap())
@@ -89,13 +87,14 @@ namespace Cofoundry.Domain.Data
         /// Maps Cofoundry Users classes to the DbModelBuilder
         /// </summary>
         /// <returns>DbModelBuilder for method chaining</returns>
-        public static DbModelBuilder MapCofoundryUsers(this DbModelBuilder modelBuilder)
+        public static ModelBuilder MapCofoundryUsers(this ModelBuilder modelBuilder)
         {
             modelBuilder
                 .Map(new UserMap())
                 .Map(new UserAreaMap())
                 .Map(new RoleMap())
                 .Map(new PermissionMap())
+                .Map(new RolePermissionMap())
                 .Map(new UserPasswordResetRequestMap());
 
             return modelBuilder;
@@ -105,7 +104,7 @@ namespace Cofoundry.Domain.Data
         /// Maps Cofoundry Users classes to the DbModelBuilder
         /// </summary>
         /// <returns>DbModelBuilder for method chaining</returns>
-        public static DbModelBuilder MapCofoundryTags(this DbModelBuilder modelBuilder)
+        public static ModelBuilder MapCofoundryTags(this ModelBuilder modelBuilder)
         {
             modelBuilder.Map(new TagMap());
 
@@ -116,7 +115,7 @@ namespace Cofoundry.Domain.Data
         /// Maps Cofoundry locales classes to the DbModelBuilder
         /// </summary>
         /// <returns>DbModelBuilder for method chaining</returns>
-        public static DbModelBuilder MapCofoundryLocales(this DbModelBuilder modelBuilder)
+        public static ModelBuilder MapCofoundryLocales(this ModelBuilder modelBuilder)
         {
             modelBuilder.Map(new LocaleMap());
 
@@ -128,7 +127,7 @@ namespace Cofoundry.Domain.Data
         /// to the DbModelBuilder.
         /// </summary>
         /// <returns>DbModelBuilder for method chaining</returns>
-        public static DbModelBuilder MapCofoundryContent(this DbModelBuilder modelBuilder)
+        public static ModelBuilder MapCofoundryContent(this ModelBuilder modelBuilder)
         {
             modelBuilder
                 .MapCofoundryLocales()

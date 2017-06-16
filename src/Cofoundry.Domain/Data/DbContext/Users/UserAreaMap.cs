@@ -1,23 +1,23 @@
 using Cofoundry.Core;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Data.Entity.ModelConfiguration;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using System;
 
 namespace Cofoundry.Domain.Data
 {
-    public class UserAreaMap : EntityTypeConfiguration<UserArea>
+    public class UserAreaMap : IEntityTypeConfiguration<UserArea>
     {
-        public UserAreaMap()
+        public void Create(EntityTypeBuilder<UserArea> builder)
         {
-            ToTable("UserArea", DbConstants.CofoundrySchema);
+            builder.ToTable("UserArea", DbConstants.CofoundrySchema);
 
-            HasKey(t => t.UserAreaCode);
+            builder.HasKey(s => s.UserAreaCode);
 
-            Property(t => t.UserAreaCode)
-                .HasMaxLength(3)
-                .IsFixedLength()
-                .IsUnicode(false);
+            builder.Property(s => s.UserAreaCode)
+                .IsRequired()
+                .IsCharType(3);
 
-            Property(t => t.Name)
+            builder.Property(s => s.Name)
                 .IsRequired()
                 .HasMaxLength(20);
         }

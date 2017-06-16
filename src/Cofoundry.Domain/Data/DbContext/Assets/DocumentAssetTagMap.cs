@@ -1,34 +1,40 @@
 using Cofoundry.Core;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Data.Entity.ModelConfiguration;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using System;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace Cofoundry.Domain.Data
 {
-    public class DocumentAssetTagMap : EntityTypeConfiguration<DocumentAssetTag>
+    public class DocumentAssetTagMap : IEntityTypeConfiguration<DocumentAssetTag>
     {
-        public DocumentAssetTagMap()
+        public void Create(EntityTypeBuilder<DocumentAssetTag> builder)
         {
-            ToTable("DocumentAssetTag", DbConstants.CofoundrySchema);
+            builder.ToTable("DocumentAssetTag", DbConstants.CofoundrySchema);
 
             // Primary Key
-            HasKey(t => new { t.DocumentAssetId, t.TagId });
+            builder.HasKey(s =>new { s.DocumentAssetId, s.TagId });
 
             // Properties
-            Property(t => t.DocumentAssetId)
-                .HasDatabaseGeneratedOption(DatabaseGeneratedOption.None);
+            builder.Property(s => s.DocumentAssetId)
+                .ValueGeneratedNever();
 
-            Property(t => t.TagId)
-                .HasDatabaseGeneratedOption(DatabaseGeneratedOption.None);
+            builder.Property(s => s.TagId)
+                .ValueGeneratedNever();
 
             // Relationships
-            HasRequired(t => t.DocumentAsset)
-                .WithMany(t => t.DocumentAssetTags)
-                .HasForeignKey(d => d.DocumentAssetId);
-            HasRequired(t => t.Tag)
+            builder.HasOne(s => s.DocumentAsset)
+                .WithMany(s => s.DocumentAssetTags)
+                .HasForeignKey(d => d.DocumentAssetId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            builder.HasOne(s => s.Tag)
                 .WithMany()
-                .HasForeignKey(d => d.TagId); 
-            
-            CreateAuditableMappingHelper.Map(this);
+                .HasForeignKey(d => d.TagId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            CreateAuditableMappingHelper.Map(builder);
         }
     }
 }

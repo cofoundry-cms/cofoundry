@@ -1,17 +1,19 @@
 using Cofoundry.Core;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Data.Entity.ModelConfiguration;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using System;
 
 namespace Cofoundry.Domain.Data
 {
-    public class TagMap : EntityTypeConfiguration<Tag>
+    public class TagMap : IEntityTypeConfiguration<Tag>
     {
-        public TagMap()
+        public void Create(EntityTypeBuilder<Tag> builder)
         {
-            ToTable("Tag", DbConstants.CofoundrySchema);
+            builder.ToTable("Tag", DbConstants.CofoundrySchema);
 
             // Properties
-            Property(t => t.TagText)
+
+            builder.Property(s => s.TagText)
                 .IsRequired()
                 .HasMaxLength(32);
         }

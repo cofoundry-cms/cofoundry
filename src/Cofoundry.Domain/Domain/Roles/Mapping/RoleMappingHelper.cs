@@ -32,9 +32,9 @@ namespace Cofoundry.Domain
             }
             else
             {
-                var permissions = new List<IPermission>(dbRole.Permissions.Count);
+                var permissions = new List<IPermission>(dbRole.RolePermissions.Count);
 
-                foreach (var dbPermission in dbRole.Permissions)
+                foreach (var dbPermission in dbRole.RolePermissions.Select(rp => rp.Permission))
                 {
                     var permission = _permissionRepository.GetByCode(dbPermission.PermissionCode, dbPermission.EntityDefinitionCode);
                     if (permission != null)

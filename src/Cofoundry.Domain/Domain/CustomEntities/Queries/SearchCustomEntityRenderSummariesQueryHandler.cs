@@ -8,7 +8,7 @@ using AutoMapper.QueryableExtensions;
 using Cofoundry.Core;
 using Cofoundry.Domain.CQS;
 using Cofoundry.Domain.Data;
-using System.Data.Entity;
+using Microsoft.EntityFrameworkCore;
 
 namespace Cofoundry.Domain
 {
@@ -57,9 +57,9 @@ namespace Cofoundry.Domain
             var dbQuery = _dbContext
                 .CustomEntityVersions
                 .AsNoTracking()
+                .Include(e => e.CustomEntity)
                 .Where(e => e.CustomEntity.CustomEntityDefinitionCode == query.CustomEntityDefinitionCode)
-                .FilterByWorkFlowStatusQuery(query.WorkFlowStatus)
-                .Include(e => e.CustomEntity);
+                .FilterByWorkFlowStatusQuery(query.WorkFlowStatus);
 
             // Filter by locale 
             if (query.LocaleId > 0)

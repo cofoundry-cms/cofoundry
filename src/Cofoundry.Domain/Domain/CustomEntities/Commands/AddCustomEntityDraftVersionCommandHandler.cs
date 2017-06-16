@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Cofoundry.Domain.Data;
 using Cofoundry.Domain.CQS;
-using System.Data.Entity;
+using Microsoft.EntityFrameworkCore;
 using Cofoundry.Core.EntityFramework;
 using System.Data.SqlClient;
 using Cofoundry.Core.MessageAggregator;
@@ -55,7 +55,8 @@ namespace Cofoundry.Domain
             await _permissionValidationService.EnforceCustomEntityPermissionAsync<CustomEntityUpdatePermission>(definitionCode);
 
             var newVersionId = await _entityFrameworkSqlExecutor
-                .ExecuteCommandWithOutputAsync<int?>("Cofoundry.CustomEntity_AddDraft",
+                .ExecuteCommandWithOutputAsync<int?>(_dbContext,
+                "Cofoundry.CustomEntity_AddDraft",
                 "CustomEntityVersionId",
                  new SqlParameter("CustomEntityId", command.CustomEntityId),
                  new SqlParameter("CopyFromCustomEntityVersionId", command.CopyFromCustomEntityVersionId),

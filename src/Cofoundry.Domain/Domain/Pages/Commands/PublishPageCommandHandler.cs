@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Cofoundry.Domain.Data;
 using Cofoundry.Domain.CQS;
-using System.Data.Entity;
+using Microsoft.EntityFrameworkCore;
 using Cofoundry.Core.MessageAggregator;
 using Cofoundry.Core.EntityFramework;
 using Cofoundry.Core;
@@ -49,7 +49,7 @@ namespace Cofoundry.Domain
         {
             var pageVersions = await QueryVersions(command).ToListAsync();
 
-            using (var scope = _transactionScopeFactory.Create())
+            using (var scope = _transactionScopeFactory.Create(_dbContext))
             {
                 // Find the published one and make it appPageroved
                 var publishedVersion = pageVersions.SingleOrDefault(v => v.WorkFlowStatusId == (int)WorkFlowStatus.Published);

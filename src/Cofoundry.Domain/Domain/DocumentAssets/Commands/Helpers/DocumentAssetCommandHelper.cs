@@ -50,7 +50,7 @@ namespace Cofoundry.Domain
 
                 var fileName = Path.ChangeExtension(documentAsset.DocumentAssetId.ToString(), documentAsset.FileExtension);
 
-                using (var scope = _transactionScopeFactory.Create())
+                using (var scope = _transactionScopeFactory.Create(_dbContext))
                 {
                     // Save the raw file directly
                     CreateFile(isNew, fileName, inputSteam);

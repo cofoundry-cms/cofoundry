@@ -1,31 +1,46 @@
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Data.Entity.ModelConfiguration;
+using Cofoundry.Core;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using System;
 
 namespace Cofoundry.Domain.Data
 {
-    public class PageVersionModuleMap : EntityTypeConfiguration<PageVersionModule>
+    public class PageVersionModuleMap : IEntityTypeConfiguration<PageVersionModule>
     {
-        public PageVersionModuleMap()
+        public void Create(EntityTypeBuilder<PageVersionModule> builder)
         {
+            builder.ToTable("PageVersionModule", DbConstants.CofoundrySchema);
+
             // Properties
-            Property(t => t.SerializedData)
-                .IsRequired();
+
+            builder.Property(s => s.SerializedData)
+                .IsRequired()
+                .IsNVarCharMaxType();
 
             // Relationships
-            HasRequired(t => t.PageTemplateSection)
-                .WithMany(t => t.PageVersionModules)
-                .HasForeignKey(d => d.PageTemplateSectionId);
-            HasRequired(t => t.PageModuleType)
-                .WithMany(t => t.PageVersionModules)
-                .HasForeignKey(d => d.PageModuleTypeId);
-            HasRequired(t => t.PageVersion)
-                .WithMany(t => t.PageVersionModules)
-                .HasForeignKey(d => d.PageVersionId);
-            HasOptional(t => t.PageModuleTypeTemplate)
-                .WithMany()
-                .HasForeignKey(t => t.PageModuleTypeTemplateId);
 
-            CreateAuditableMappingHelper.Map(this);
+            builder.HasOne(s => s.PageTemplateSection)
+                .WithMany(s => s.PageVersionModules)
+                .HasForeignKey(d => d.PageTemplateSectionId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            builder.HasOne(s => s.PageModuleType)
+                .WithMany(s => s.PageVersionModules)
+                .HasForeignKey(d => d.PageModuleTypeId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            builder.HasOne(s => s.PageVersion)
+                .WithMany(s => s.PageVersionModules)
+                .HasForeignKey(d => d.PageVersionId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            builder.HasOne(s => s.PageModuleTypeTemplate)
+                .WithMany()
+                .HasForeignKey(s => s.PageModuleTypeTemplateId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            CreateAuditableMappingHelper.Map(builder);
         }
     }
 }

@@ -8,7 +8,7 @@ using Cofoundry.Domain.Data;
 using Cofoundry.Domain.CQS;
 using Cofoundry.Core;
 using System.Web;
-using System.Data.Entity;
+using Microsoft.EntityFrameworkCore;
 using Cofoundry.Core.Web;
 using Microsoft.AspNetCore.Html;
 

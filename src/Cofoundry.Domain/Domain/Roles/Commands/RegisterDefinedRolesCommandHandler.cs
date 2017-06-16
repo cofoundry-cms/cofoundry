@@ -5,7 +5,7 @@ using Cofoundry.Domain.Data;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Data.Entity;
+using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -59,7 +59,8 @@ namespace Cofoundry.Domain
 
             var existingRoles = await _dbContext
                 .Roles
-                .Include(r => r.Permissions)
+                .Include(r => r.RolePermissions)
+                .ThenInclude(p => p.Permission)
                 .ToListAsync();
 
             var rolesWithSpecialistCodes = existingRoles
@@ -115,13 +116,13 @@ namespace Cofoundry.Domain
             if (command.UpdateExistingRoles)
             {
                 var permissionsToRemove = dbRole
-                    .Permissions
-                    .Where(p => !permissionsToInclude.Any(i => i.GetUniqueCode() == p.GetUniqueCode()))
+                    .RolePermissions
+                    .Where(p => !permissionsToInclude.Any(i => i.GetUniqueCode() == p.Permission.GetUniqueCode()))
                     .ToList();
 
                 foreach (var permissonToRemove in permissionsToRemove)
                 {
-                    dbRole.Permissions.Remove(permissonToRemove);
+                    dbRole.RolePermissions.Remove(permissonToRemove);
                 }
             }
 
@@ -131,14 +132,14 @@ namespace Cofoundry.Domain
             // add new permissions
             IEnumerable<IPermission> permissionsToAdd;
 
-            if (dbRole.Permissions.Count == 0)
+            if (dbRole.RolePermissions.Count == 0)
             {
                 permissionsToAdd = permissionsToInclude;
             }
             else
             {
                 permissionsToAdd = permissionsToInclude
-                    .Where(i => !dbRole.Permissions.Any(p => p.GetUniqueCode() == i.GetUniqueCode()));
+                    .Where(i => !dbRole.RolePermissions.Any(p => p.Permission.GetUniqueCode() == i.GetUniqueCode()));
             }
 
             foreach (var permissionToAdd in permissionsToAdd)
@@ -165,7 +166,9 @@ namespace Cofoundry.Domain
                     _dbContext.Permissions.Add(dbPermission);
                 }
 
-                 dbRole.Permissions.Add(dbPermission);
+                var rolePermission = new RolePermission();
+                rolePermission.Permission = dbPermission;
+                dbRole.RolePermissions.Add(rolePermission);
             }
         }
 

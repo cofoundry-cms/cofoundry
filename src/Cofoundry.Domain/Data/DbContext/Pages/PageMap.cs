@@ -1,33 +1,44 @@
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Data.Entity.ModelConfiguration;
+using System;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Microsoft.EntityFrameworkCore.Metadata;
+using Cofoundry.Core;
+using Microsoft.EntityFrameworkCore;
 
 namespace Cofoundry.Domain.Data
 {
-    public class PageMap : EntityTypeConfiguration<Page>
+    public class PageMap : IEntityTypeConfiguration<Page>
     {
-        public PageMap()
+        public void Create(EntityTypeBuilder<Page> builder)
         {
+            builder.ToTable("Page", DbConstants.CofoundrySchema);
+
             // Properties
-            Property(t => t.UrlPath)
+
+            builder.Property(s => s.UrlPath)
                 .IsRequired()
                 .HasMaxLength(70);
-            Property(t => t.CustomEntityDefinitionCode)
+
+            builder.Property(s => s.CustomEntityDefinitionCode)
                 .HasMaxLength(6);
 
             // Relationships
-            HasOptional(t => t.Locale)
+
+            builder.HasOne(s => s.Locale)
                 .WithMany()
-                .HasForeignKey(d => d.LocaleId);
+                .HasForeignKey(d => d.LocaleId)
+                .OnDelete(DeleteBehavior.Restrict);
 
-            HasOptional(t => t.CustomEntityDefinition)
+            builder.HasOne(s => s.CustomEntityDefinition)
                 .WithMany()
-                .HasForeignKey(d => d.CustomEntityDefinitionCode);
+                .HasForeignKey(d => d.CustomEntityDefinitionCode)
+                .OnDelete(DeleteBehavior.Restrict);
 
-            HasRequired(t => t.WebDirectory)
-                .WithMany(t => t.Pages)
-                .HasForeignKey(d => d.WebDirectoryId);
+            builder.HasOne(s => s.WebDirectory)
+                .WithMany(s => s.Pages)
+                .HasForeignKey(d => d.WebDirectoryId)
+                .OnDelete(DeleteBehavior.Restrict);
 
-            CreateAuditableMappingHelper.Map(this);
+            CreateAuditableMappingHelper.Map(builder);
         }
     }
 }

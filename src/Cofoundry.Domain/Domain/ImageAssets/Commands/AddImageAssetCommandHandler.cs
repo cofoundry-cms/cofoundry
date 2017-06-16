@@ -51,7 +51,7 @@ namespace Cofoundry.Domain
             _entityTagHelper.UpdateTags(imageAsset.ImageAssetTags, command.Tags, executionContext);
             _entityAuditHelper.SetCreated(imageAsset, executionContext);
 
-            using (var scope = _transactionScopeFactory.Create())
+            using (var scope = _transactionScopeFactory.Create(_dbContext))
             {
                 // if adding, save this up front
                 _dbContext.ImageAssets.Add(imageAsset);

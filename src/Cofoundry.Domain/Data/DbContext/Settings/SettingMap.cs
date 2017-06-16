@@ -1,19 +1,25 @@
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Data.Entity.ModelConfiguration;
+using System;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Microsoft.EntityFrameworkCore;
+using Cofoundry.Core;
 
 namespace Cofoundry.Domain.Data
 {
-    public class SettingMap : EntityTypeConfiguration<Setting>
+    public class SettingMap : IEntityTypeConfiguration<Setting>
     {
-        public SettingMap()
+        public void Create(EntityTypeBuilder<Setting> builder)
         {
+            builder.ToTable("Setting", DbConstants.CofoundrySchema);
+
             // Properties
-            Property(t => t.SettingKey)
+
+            builder.Property(s => s.SettingKey)
                 .IsRequired()
                 .HasMaxLength(32);
 
-            Property(t => t.SettingValue)
-                .IsRequired();
+            builder.Property(s => s.SettingValue)
+                .IsRequired()
+                .IsNVarCharMaxType();
         }
     }
 }
