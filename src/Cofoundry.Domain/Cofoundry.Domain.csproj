@@ -718,7 +718,7 @@
     <Compile Include="Domain\ImageAssets\Caches\ImageAssetCache.cs" />
     <Compile Include="Domain\ImageAssets\Models\Resizing\ImageResizeSettings.cs" />
     <Compile Include="Domain\ImageAssets\Models\Resizing\IImageResizeSettings.cs" />
-    <Compile Include="Domain\ImageAssets\Models\Resizing\ImageCropAnchor.cs" />
+    <Compile Include="Domain\ImageAssets\Models\Resizing\ImageAnchorLocation.cs" />
     <Compile Include="Domain\ImageAssets\Models\Resizing\ImageFitMode.cs" />
     <Compile Include="Domain\ImageAssets\Models\Resizing\ImageScaleMode.cs" />
     <Compile Include="Domain\ImageAssets\Routes\IImageAssetRouteLibrary.cs" />
