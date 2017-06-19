@@ -13,6 +13,11 @@ namespace Cofoundry.Domain.Data
     /// </summary>
     public partial class Permission
     {
+        public Permission()
+        {
+            RolePermissions = new List<RolePermission>();
+        }
+
         /// <summary>
         /// Database id of the permission
         /// </summary>

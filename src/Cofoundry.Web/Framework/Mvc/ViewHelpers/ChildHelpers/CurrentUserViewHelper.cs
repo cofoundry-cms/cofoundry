@@ -36,10 +36,13 @@ namespace Cofoundry.Web
         public async Task EnsureInitializedAsync()
         {
             _userContext = await _userContextServiceService.GetCurrentContextAsync();
-            if (!_userContext.UserId.HasValue) return;
-
-            _user = await _queryExecutor.GetByIdAsync<UserMicroSummary>(_userContext.UserId.Value);
             _role = await _queryExecutor.ExecuteAsync(new GetRoleDetailsByIdQuery(_userContext.RoleId));
+
+            if (_userContext.UserId.HasValue)
+            {
+                _user = await _queryExecutor.GetByIdAsync<UserMicroSummary>(_userContext.UserId.Value);
+            }
+
             isInitialized = true;
         }
 

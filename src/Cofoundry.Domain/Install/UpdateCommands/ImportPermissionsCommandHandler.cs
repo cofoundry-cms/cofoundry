@@ -14,11 +14,11 @@ namespace Cofoundry.Domain.Installation
     /// </summary>
     public class ImportPermissionsCommandHandler : IAsyncVersionedUpdateCommandHandler<ImportPermissionsCommand>
     {
-        private readonly Database _db;
+        private readonly IDatabase _db;
         private readonly IPermissionRepository _permissionRepository;
 
         public ImportPermissionsCommandHandler(
-            Database db,
+            IDatabase db,
             IPermissionRepository permissionRepository
             )
         {
