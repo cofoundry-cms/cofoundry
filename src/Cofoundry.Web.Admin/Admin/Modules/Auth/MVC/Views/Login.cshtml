@@ -15,10 +15,11 @@
 <h1>Cofoundry</h1>
 
 <div class="wrap">
-    <form method="post" class="form-horizontal">
+    <form method="post" class="form-horizontal" action="@adminRouteLibrary.Auth.Login()">
 
         <input name="ReturnUrl" id="ReturnUrl" type="hidden" value="@Context.Request.Query["ReturnUrl"]" />
-
+        @Html.AntiForgeryToken() 
+        
         <fieldset>
             <div class="control-group">
                 <label asp-for="EmailAddress" class="control-label"></label>

@@ -61,13 +61,12 @@ namespace Cofoundry.Web.Admin
 
         #region routes
 
-        [Route("~" + RouteConstants.AdminUrlRoot)]
-        public ActionResult DefaultRedirect()
+        [Route("")]
+        public ActionResult Index(string email)
         {
-            return RedirectPermanent(_adminRouteLibrary.Auth.Login());
+            return RedirectToActionPermanent(nameof(Login), new { email = email });
         }
 
-        [Route("")]
         [Route("login")]
         public async Task<ActionResult> Login(string email)
         {
