@@ -12,8 +12,7 @@ using AutoMapper;
 namespace Cofoundry.Domain
 {
     public class GetCustomEntitySummaryByIdRangeQueryHandler 
-        : IQueryHandler<GetByIdRangeQuery<CustomEntitySummary>, IDictionary<int, CustomEntitySummary>>
-        , IAsyncQueryHandler<GetByIdRangeQuery<CustomEntitySummary>, IDictionary<int, CustomEntitySummary>>
+        : IAsyncQueryHandler<GetByIdRangeQuery<CustomEntitySummary>, IDictionary<int, CustomEntitySummary>>
         , IIgnorePermissionCheckHandler
     {
         #region constructor
@@ -40,17 +39,10 @@ namespace Cofoundry.Domain
 
         #region execution
 
-        public IDictionary<int, CustomEntitySummary> Execute(GetByIdRangeQuery<CustomEntitySummary> query, IExecutionContext executionContext)
-        {
-            var dbResults = Query(query.Ids).ToList();
-            var results = Map(dbResults, query.Ids, executionContext);
-
-            return results;
-        }
 
         public async Task<IDictionary<int, CustomEntitySummary>> ExecuteAsync(GetByIdRangeQuery<CustomEntitySummary> query, IExecutionContext executionContext)
         {
-            var dbResults = await Query(query.Ids).ToListAsync();
+            var dbResults = await QueryAsync(query.Ids);
             var results = Map(dbResults, query.Ids, executionContext);
 
             return results;
@@ -60,19 +52,24 @@ namespace Cofoundry.Domain
 
         #region private helpers
 
-        private IQueryable<CustomEntitySummaryQueryModel> Query(int[] ids)
+        private async Task<List<CustomEntitySummaryQueryModel>> QueryAsync(int[] ids)
         {
-            var dbQuery = _dbContext
+            var dbResults = await _dbContext
                 .CustomEntityVersions
                 .AsNoTracking()
+                .Include(e => e.Creator)
                 .Include(e => e.CustomEntity)
                 .ThenInclude(e => e.Locale)
+                .Include(e => e.CustomEntity)
+                .ThenInclude(e => e.Creator)
                 .Where(v => ids.Contains(v.CustomEntityId))
                 .Where(v => v.WorkFlowStatusId == (int)WorkFlowStatus.Draft || v.WorkFlowStatusId == (int)WorkFlowStatus.Published)
                 .GroupBy(e => e.CustomEntityId, (key, g) => g.OrderByDescending(v => v.WorkFlowStatusId == (int)WorkFlowStatus.Draft).FirstOrDefault())
-                .ProjectTo<CustomEntitySummaryQueryModel>();
+                .ToListAsync();
 
-            return dbQuery;
+            var mapperResults = Mapper.Map<List<CustomEntitySummaryQueryModel>>(dbResults);
+
+            return mapperResults;
         }
 
         private Dictionary<int, CustomEntitySummary> Map(List<CustomEntitySummaryQueryModel> dbResults, int[] ids, IExecutionContext executionContext)

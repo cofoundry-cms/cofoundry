@@ -46,12 +46,9 @@ namespace Cofoundry.Domain
             var definition = await _queryExecutor.GetByIdAsync<CustomEntityDefinitionSummary>(query.CustomEntityDefinitionCode);
             EntityNotFoundException.ThrowIfNull(definition, query.CustomEntityDefinitionCode);
 
-            // Get Query
-            var dbQuery = GetQuery(query, definition);
-
-            // Execute Query
-            var dbPagedResult = dbQuery.ToPagedResult(query);
-
+            // Get Main Query
+            var dbPagedResult = await GetQueryAsync(query, definition);
+            
             var routingsQuery = new GetPageRoutingInfoByCustomEntityIdRangeQuery(dbPagedResult.Items.Select(e => e.CustomEntityId));
             var routings = await _queryExecutor.ExecuteAsync(routingsQuery);
             var allLocales = (await _queryExecutor.GetAllAsync<ActiveLocale>()).ToDictionary(l => l.LocaleId);
@@ -90,14 +87,22 @@ namespace Cofoundry.Domain
             return dbPagedResult.ChangeType(entities);
         }
 
-        private IQueryable<CustomEntitySummaryQueryModel> GetQuery(SearchCustomEntitySummariesQuery query, CustomEntityDefinitionSummary definition)
+        private async Task<PagedQueryResult<CustomEntitySummaryQueryModel>> GetQueryAsync(SearchCustomEntitySummariesQuery query, CustomEntityDefinitionSummary definition)
         {
-            var dbQuery = _dbContext
+            var dbQuery = (await _dbContext
                 .CustomEntityVersions
                 .AsNoTracking()
+                .Include(v => v.Creator)
+                .Include(v => v.CustomEntity)
+                .ThenInclude(c => c.Creator)
+                .Include(v => v.CustomEntity)
+                .ThenInclude(c => c.Locale)
                 .Where(e => e.CustomEntity.CustomEntityDefinitionCode == query.CustomEntityDefinitionCode)
                 .Where(v => v.WorkFlowStatusId == (int)WorkFlowStatus.Draft || v.WorkFlowStatusId == (int)WorkFlowStatus.Published)
-                .GroupBy(e => e.CustomEntityId, (key, g) => g.OrderByDescending(v => v.WorkFlowStatusId == (int)WorkFlowStatus.Draft).FirstOrDefault());
+                .GroupBy(e => e.CustomEntityId, (key, g) => g.OrderByDescending(v => v.WorkFlowStatusId == (int)WorkFlowStatus.Draft).FirstOrDefault())
+                // TODO: EF Core: To make this work we must execute the full query before sorting & paging
+                .ToListAsync())
+                .AsQueryable();
 
             // Filter by locale 
             if (query.LocaleId > 0)
@@ -119,7 +124,8 @@ namespace Cofoundry.Domain
             else if (definition.Ordering != CustomEntityOrdering.None)
             {
                 dbQuery = dbQuery
-                    .OrderBy(e => e.CustomEntity.Locale.IETFLanguageTag)
+                    .OrderBy(e => e.CustomEntity.Locale != null ? e.CustomEntity.Locale.IETFLanguageTag : string.Empty)
+                    //.OrderBy(e => e.CustomEntity.Locale.IETFLanguageTag)
                     .ThenBy(e => !e.CustomEntity.Ordering.HasValue)
                     .ThenBy(e => e.CustomEntity.Ordering)
                     .ThenBy(e => e.Title);
@@ -127,11 +133,17 @@ namespace Cofoundry.Domain
             else
             {
                 dbQuery = dbQuery
-                    .OrderBy(e => e.CustomEntity.Locale.IETFLanguageTag)
+                    // TODO: EF Core: Put this sorting back in when EF core supports it
+                    //.OrderBy(e => e.CustomEntity.Locale.IETFLanguageTag)
+                    .OrderBy(e => e.CustomEntity.Locale != null ? e.CustomEntity.Locale.IETFLanguageTag : string.Empty)
                     .ThenBy(e => e.Title);
             }
 
-            return dbQuery.ProjectTo<CustomEntitySummaryQueryModel>();
+            var projected = dbQuery.ProjectTo<CustomEntitySummaryQueryModel>();
+            // TODO: could be async when EF core supports it
+            var dbPagedResult = projected.ToPagedResult(query); 
+
+            return dbPagedResult;
         }
 
         #endregion
