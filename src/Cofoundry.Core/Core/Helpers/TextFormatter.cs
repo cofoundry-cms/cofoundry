@@ -67,31 +67,6 @@ namespace Cofoundry.Core
         }
 
         /// <summary>
-        /// Removes diacritics (accents) from a string.
-        /// </summary>
-        /// <param name="s">The string from which to remove diacratics.</param>
-        /// <returns></returns>
-        /// <see cref="http://stackoverflow.com/questions/249087/how-do-i-remove-diacritics-accents-from-a-string-in-net"/>
-        /// <seealso cref="http://blogs.msdn.com/b/michkap/archive/2007/05/14/2629747.aspx"/>
-        public static string RemoveDiacritics(string s)
-        {
-            if (s == null) return string.Empty;
-            string stFormD = s.Normalize(NormalizationForm.FormD);
-            StringBuilder sb = new StringBuilder();
-
-            for (int ich = 0; ich < stFormD.Length; ich++)
-            {
-                var uc = CharUnicodeInfo.GetUnicodeCategory(stFormD[ich]);
-                if (uc != UnicodeCategory.NonSpacingMark)
-                {
-                    sb.Append(stFormD[ich]);
-                }
-            }
-
-            return (sb.ToString().Normalize(NormalizationForm.FormC));
-        }
-
-        /// <summary>
         /// Substring with elipses but OK if shorter.
         /// </summary>
         public static string Limit(string s, int charCount)
