@@ -128,7 +128,7 @@ namespace Cofoundry.Domain
                     .Trim()
                     .TrimStart(new char[] { '&', '-', ')' })
                     .TrimEnd(new char[] { '&', '-', '(' }))
-                .Select(TextFormatter.ToTitleCase)
+                .Select(TextFormatter.FirstLetterToUpperCase)
                 .Where(t => !string.IsNullOrWhiteSpace(t))
                 .ToList();
 

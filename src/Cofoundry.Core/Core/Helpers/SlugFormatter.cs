@@ -33,12 +33,12 @@ namespace Cofoundry.Core
 
 
         /// <summary>
-        /// Removes diacritics (accents) from a string
+        /// Removes diacritics (accents) from a string.
         /// </summary>
         /// <remarks>
-        /// The solution isn't perfect but it doesn't matter for slug generation
-        /// because non-alphanumeric characters will be removed anyway. Taken from
-        /// https://stackoverflow.com/a/2086575.
+        /// The solution isn't perfect (e.g. it struggles with ß « » and …) but it 
+        /// doesn't matter for slug generation because non-alphanumeric characters 
+        /// will be removed anyway. Taken from https://stackoverflow.com/a/2086575.
         /// </remarks>
         /// <param name="s">The string from which to remove diacratics.</param>>
         private static string RemoveDiacritics(string s)

@@ -26,6 +26,7 @@ namespace Cofoundry.Core
         /// <remarks>
         /// Used in place of Humanizer to avoid a dependency.
         /// </remarks>
+        /// <param name="s">String instance to format.</param>
         public static string PascalCaseToSentence(string s)
         {
             if (s == null) return string.Empty;
@@ -41,6 +42,7 @@ namespace Cofoundry.Core
         /// humanizer (https://github.com/Humanizr/Humanizer), but is adapted to remove 
         /// whitespace and dashes.
         /// </remarks>
+        /// <param name="s">String instance to format.</param>
         public static string Pascalize(string s)
         {
             if (s == null) return s;
@@ -56,6 +58,7 @@ namespace Cofoundry.Core
         /// humanizer (https://github.com/Humanizr/Humanizer), but is adapted to remove 
         /// whitespace and dashes.
         /// </remarks>
+        /// <param name="s">String instance to format.</param>
         public static string Camelize(string s)
         {
             if (s == null) return s;
@@ -69,6 +72,7 @@ namespace Cofoundry.Core
         /// <summary>
         /// Substring with elipses but OK if shorter.
         /// </summary>
+        /// <param name="s">String instance to format.</param>
         public static string Limit(string s, int charCount)
         {
             if (s == null) return string.Empty;
@@ -79,6 +83,7 @@ namespace Cofoundry.Core
         /// <summary>
         /// Substring with elipses but OK if shorter, will take 3 characters off character count if necessary
         /// </summary>
+        /// <param name="s">String instance to format.</param>
         public static string LimitWithElipses(string s, int characterCount)
         {
             if (s == null) return string.Empty;
@@ -91,6 +96,7 @@ namespace Cofoundry.Core
         /// Substring with elipses but OK if shorter, will take 3 characters off character count if necessary
         /// tries to land on a space.
         /// </summary>
+        /// <param name="s">String instance to format.</param>
         public static string LimitWithElipsesOnWordBoundary(string s, int characterCount)
         {
             if (s == null) return string.Empty;
@@ -112,22 +118,19 @@ namespace Cofoundry.Core
             }
         }
 
-
         /// <summary>
-        /// Trims and formats the string in title casing using the current thread culture.
+        /// Converts the first letter in the string to upper case. If the string is null
+        /// then null is returned.
         /// </summary>
-        /// <param name="s">String to format</param>
-        /// <returns>String formatted in title case.</returns>
-        public static string ToTitleCase(string s)
+        /// <param name="s">String instance to format.</param>
+        public static string FirstLetterToUpperCase(string s)
         {
-            if (s == null) return string.Empty;
-            // Need to lower case first if string is all caps.
-            if (StringHelper.IsUpperCase(s))
-            {
-                s = s.ToLower();
-            }
-            var text = System.Threading.Thread.CurrentThread.CurrentCulture.TextInfo.ToTitleCase(s.Trim());
-            return text;
+            if (string.IsNullOrEmpty(s)) return s;
+
+            char[] a = s.ToCharArray();
+            a[0] = char.ToUpper(a[0]);
+
+            return new string(a);
         }
     }
 }
