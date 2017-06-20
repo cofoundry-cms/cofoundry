@@ -36,7 +36,6 @@ namespace Cofoundry.Domain
 
         public async Task<PagedQueryResult<RoleMicroSummary>> ExecuteAsync(SearchRolesQuery query, IExecutionContext executionContext)
         {
-            CheckRolePermission(query, executionContext);
             var result = await CreateQuery(query).ToPagedResultAsync(query);
 
             return result;
@@ -75,19 +74,15 @@ namespace Cofoundry.Domain
             else
             {
                 dbQuery = dbQuery
-                    .OrderBy(r => r.UserArea.Name)
+                    .OrderBy(r => r.UserAreaCode)
+                    // TODO: EF Core: Replaced this to fix ef core query translation issue
+                    //.OrderBy(r => r.UserArea.Name)
                     .ThenBy(r => r.Title);
             }
 
             return dbQuery
                 .ProjectTo<RoleMicroSummary>();
         }
-
-        private void CheckRolePermission(SearchRolesQuery query, IExecutionContext executionContext)
-        {
-
-        }
-
 
         #endregion
 

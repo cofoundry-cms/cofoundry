@@ -20,8 +20,10 @@ namespace Cofoundry.Domain
         public string Generate(int passwordLength)
         {
             Byte[] randomBytes = new Byte[passwordLength];
-            RNGCryptoServiceProvider rng = new RNGCryptoServiceProvider();
-            rng.GetBytes(randomBytes);
+            using (var generator = RandomNumberGenerator.Create())
+            {
+                generator.GetBytes(randomBytes);
+            }
             char[] chars = new char[passwordLength];
             int allowedCharCount = ALLOWED_CHARACTERS.Length;
 

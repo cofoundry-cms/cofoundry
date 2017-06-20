@@ -55,8 +55,10 @@ namespace Cofoundry.Domain
         private int GenerateSalt()
         {
             Byte[] _saltBytes = new Byte[4];
-            RNGCryptoServiceProvider rng = new RNGCryptoServiceProvider();
-            rng.GetBytes(_saltBytes);
+            using (var generator = RandomNumberGenerator.Create())
+            {
+                generator.GetBytes(_saltBytes);
+            }
 
             return ((((int)_saltBytes[0]) << 24) + (((int)_saltBytes[1]) << 16) +
                 (((int)_saltBytes[2]) << 8) + ((int)_saltBytes[3]));

@@ -76,9 +76,9 @@ namespace Defuse
             byte[] salt = new byte[SALT_BYTES];
             try
             {
-                using (RNGCryptoServiceProvider csprng = new RNGCryptoServiceProvider())
+                using (var generator = RandomNumberGenerator.Create())
                 {
-                    csprng.GetBytes(salt);
+                    generator.GetBytes(salt);
                 }
             }
             catch (CryptographicException ex)
