@@ -686,6 +686,8 @@
     <Compile Include="Domain\DocumentAssets\Routes\DocumentAssetRouteLibrary.cs" />
     <Compile Include="Domain\DynamicData\Bootstrap\DynamicDataDependencyRegistration.cs" />
     <Compile Include="Domain\DynamicData\Mapping\DynamicDataModelSchemaMapper.cs" />
+    <Compile Include="Domain\ImageAssets\Services\IImageAssetFileService.cs" />
+    <Compile Include="Domain\ImageAssets\Services\NotImplementedImageAssetFileService.cs" />
     <Compile Include="Domain\ModelMetadata\Bootstrap\ModelMetadataDependencyRegistration.cs" />
     <Compile Include="Domain\ModelMetadata\Framework\CofoundryDisplayMetadataProvider.cs" />
     <Compile Include="Domain\ModelMetadata\Framework\IModelMetadataDecorator.cs" />
@@ -744,7 +746,6 @@
     <Compile Include="Domain\ImageAssets\Commands\AddImageAssetCommandHandler.cs" />
     <Compile Include="Domain\ImageAssets\Commands\DeleteImageAssetCommand.cs" />
     <Compile Include="Domain\ImageAssets\Commands\DeleteImageAssetCommandHandler.cs" />
-    <Compile Include="Domain\ImageAssets\Commands\Helpers\ImageAssetCommandHelper.cs" />
     <Compile Include="Domain\ImageAssets\Commands\UpdateImageAssetCommand.cs" />
     <Compile Include="Domain\ImageAssets\Commands\UpdateImageAssetCommandHandler.cs" />
     <Compile Include="Domain\ImageAssets\Constants\ImageAssetConstants.cs" />

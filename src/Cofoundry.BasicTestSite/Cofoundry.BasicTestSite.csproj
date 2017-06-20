@@ -138,6 +138,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Cofoundry.Core\Cofoundry.Core.csproj" />
     <ProjectReference Include="..\Cofoundry.Domain\Cofoundry.Domain.csproj" />
+    <ProjectReference Include="..\Cofoundry.Plugins.ImageFiles.SystemDotDrawing\Cofoundry.Plugins.ImageFiles.SystemDotDrawing.csproj" />
     <ProjectReference Include="..\Cofoundry.Web.Admin\Cofoundry.Web.Admin.csproj" />
     <ProjectReference Include="..\Cofoundry.Web\Cofoundry.Web.csproj" />
   </ItemGroup>

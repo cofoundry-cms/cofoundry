@@ -19,21 +19,21 @@ namespace Cofoundry.Domain
         private readonly CofoundryDbContext _dbContext;
         private readonly EntityAuditHelper _entityAuditHelper;
         private readonly EntityTagHelper _entityTagHelper;
-        private readonly ImageAssetCommandHelper _imageAssetCommandHelper;
+        private readonly IImageAssetFileService _imageAssetFileService;
         private readonly ITransactionScopeFactory _transactionScopeFactory;
 
         public AddImageAssetCommandHandler(
             CofoundryDbContext dbContext,
             EntityAuditHelper entityAuditHelper,
             EntityTagHelper entityTagHelper,
-            ImageAssetCommandHelper imageAssetCommandHelper,
+            IImageAssetFileService imageAssetFileService,
             ITransactionScopeFactory transactionScopeFactory
             )
         {
             _dbContext = dbContext;
             _entityAuditHelper = entityAuditHelper;
             _entityTagHelper = entityTagHelper;
-            _imageAssetCommandHelper = imageAssetCommandHelper;
+            _imageAssetFileService = imageAssetFileService;
             _transactionScopeFactory = transactionScopeFactory;
         }
 
@@ -56,7 +56,7 @@ namespace Cofoundry.Domain
                 // if adding, save this up front
                 _dbContext.ImageAssets.Add(imageAsset);
 
-                await _imageAssetCommandHelper.SaveFile(command.File, imageAsset);
+                await _imageAssetFileService.SaveAsync(command.File, imageAsset, nameof(command.File));
 
                 command.OutputImageAssetId = imageAsset.ImageAssetId;
                 scope.Complete();

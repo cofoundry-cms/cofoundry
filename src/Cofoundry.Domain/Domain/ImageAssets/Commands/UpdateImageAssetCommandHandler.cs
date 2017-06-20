@@ -20,7 +20,7 @@ namespace Cofoundry.Domain
         private readonly CofoundryDbContext _dbContext;
         private readonly EntityAuditHelper _entityAuditHelper;
         private readonly EntityTagHelper _entityTagHelper;
-        private readonly ImageAssetCommandHelper _imageAssetCommandHelper;
+        private readonly IImageAssetFileService _imageAssetFileService;
         private readonly IImageAssetCache _imageAssetCache;
         private readonly IResizedImageAssetFileService _imageAssetFileCache;
         private readonly ITransactionScopeFactory _transactionScopeFactory;
@@ -29,7 +29,7 @@ namespace Cofoundry.Domain
             CofoundryDbContext dbContext,
             EntityAuditHelper entityAuditHelper,
             EntityTagHelper entityTagHelper,
-            ImageAssetCommandHelper imageAssetCommandHelper,
+            IImageAssetFileService imageAssetFileService,
             IImageAssetCache imageAssetCache,
             IResizedImageAssetFileService imageAssetFileCache,
             ITransactionScopeFactory transactionScopeFactory
@@ -38,7 +38,7 @@ namespace Cofoundry.Domain
             _dbContext = dbContext;
             _entityAuditHelper = entityAuditHelper;
             _entityTagHelper = entityTagHelper;
-            _imageAssetCommandHelper = imageAssetCommandHelper;
+            _imageAssetFileService = imageAssetFileService;
             _imageAssetCache = imageAssetCache;
             _imageAssetFileCache = imageAssetFileCache;
             _transactionScopeFactory = transactionScopeFactory;
@@ -69,7 +69,7 @@ namespace Cofoundry.Domain
             {
                 if (hasNewFile)
                 {
-                    await _imageAssetCommandHelper.SaveFile(command.File, imageAsset);
+                    await _imageAssetFileService.SaveAsync(command.File, imageAsset, nameof(command.File));
                 }
 
                 await _dbContext.SaveChangesAsync();

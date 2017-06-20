@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26228.9
+VisualStudioVersion = 15.0.26430.13
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cofoundry.Core", "Cofoundry.Core\Cofoundry.Core.csproj", "{B06A84C3-005B-4FFA-9C9A-81A96B59E1D4}"
 EndProject
@@ -26,6 +26,8 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "plugins", "plugins", "{22FE4195-4C00-444A-9873-1435F4F11A81}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cofoundry.Plugins.SystemNetMail", "Cofoundry.Plugins.SystemNetMail\Cofoundry.Plugins.SystemNetMail.csproj", "{221A3B8E-3142-41FD-B42E-6AFB139889A7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cofoundry.Plugins.ImageFiles.SystemDotDrawing", "Cofoundry.Plugins.ImageFiles.SystemDotDrawing\Cofoundry.Plugins.ImageFiles.SystemDotDrawing.csproj", "{EE7A73BF-2A23-46D1-8F2B-3EF17091044D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -65,6 +67,10 @@ Global
 		{221A3B8E-3142-41FD-B42E-6AFB139889A7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{221A3B8E-3142-41FD-B42E-6AFB139889A7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{221A3B8E-3142-41FD-B42E-6AFB139889A7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EE7A73BF-2A23-46D1-8F2B-3EF17091044D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EE7A73BF-2A23-46D1-8F2B-3EF17091044D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EE7A73BF-2A23-46D1-8F2B-3EF17091044D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EE7A73BF-2A23-46D1-8F2B-3EF17091044D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -78,5 +84,6 @@ Global
 		{F8B2A917-FC01-4CFE-A6C9-DC8B3FA80B5C} = {8FCDFF68-9BCF-499B-8E2D-7E08E824F40A}
 		{F659F7F9-153D-4000-A8B9-F45EFB40F511} = {8FCDFF68-9BCF-499B-8E2D-7E08E824F40A}
 		{221A3B8E-3142-41FD-B42E-6AFB139889A7} = {22FE4195-4C00-444A-9873-1435F4F11A81}
+		{EE7A73BF-2A23-46D1-8F2B-3EF17091044D} = {22FE4195-4C00-444A-9873-1435F4F11A81}
 	EndGlobalSection
 EndGlobal

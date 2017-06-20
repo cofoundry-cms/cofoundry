@@ -1,4 +1,8 @@
-﻿using System;
+﻿using Cofoundry.Core.EntityFramework;
+using Cofoundry.Core.Validation;
+using Cofoundry.Domain;
+using Cofoundry.Domain.Data;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
@@ -6,16 +10,11 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Web;
-using Cofoundry.Domain.Data;
-using Cofoundry.Core.EntityFramework;
-using Cofoundry.Core.Validation;
 
-namespace Cofoundry.Domain
+namespace Cofoundry.Plugins.ImageFiles.SystemDotDrawing
 {
-    public class ImageAssetCommandHelper
+    public class SystemDrawingImageAssetFileService : IImageAssetFileService
     {
-        /// TODO: Could extract this and take advantage of image resizer here to safely validate the image.
         private const string ASSET_FILE_CONTAINER_NAME = "Images";
 
         private static readonly Dictionary<ImageFormat, string[]> _permittedImageFileExtensionMap = new Dictionary<ImageFormat, string[]>() {
@@ -30,7 +29,7 @@ namespace Cofoundry.Domain
         private readonly IFileStoreService _fileStoreService;
         private readonly ITransactionScopeFactory _transactionScopeFactory;
 
-        public ImageAssetCommandHelper(
+        public SystemDrawingImageAssetFileService(
             CofoundryDbContext dbContext,
             IFileStoreService fileStoreService,
             ITransactionScopeFactory transactionScopeFactory
@@ -43,9 +42,7 @@ namespace Cofoundry.Domain
 
         #endregion
 
-        #region public methods
-
-        public async Task SaveFile(IUploadedFile uploadedFile, ImageAsset imageAsset)
+        public async Task SaveAsync(IUploadedFile uploadedFile, ImageAsset imageAsset, string propertyName)
         {
             Image imageFile = null;
 
@@ -64,7 +61,7 @@ namespace Cofoundry.Domain
                     if ((!string.IsNullOrEmpty(ext) && !ImageAssetConstants.PermittedImageTypes.ContainsKey(ext))
                         || (!string.IsNullOrEmpty(uploadedFile.MimeType) && !ImageAssetConstants.PermittedImageTypes.ContainsValue(uploadedFile.MimeType)))
                     {
-                        throw new PropertyValidationException("The file is not a supported image type.", "File");
+                        throw new PropertyValidationException("The file is not a supported image type.", propertyName);
                     }
 
                     throw;
@@ -127,7 +124,5 @@ namespace Cofoundry.Domain
                 _fileStoreService.CreateOrReplace(ASSET_FILE_CONTAINER_NAME, fileName, outputStream);
             }
         }
-
-        #endregion
     }
 }
