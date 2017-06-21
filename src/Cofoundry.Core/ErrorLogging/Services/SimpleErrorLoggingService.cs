@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Extensions.Logging;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -13,9 +14,18 @@ namespace Cofoundry.Core.ErrorLogging
     /// </summary>
     public class SimpleErrorLoggingService : IErrorLoggingService
     {
+        private readonly ILogger<SimpleErrorLoggingService> _logger;
+
+        public SimpleErrorLoggingService(
+            ILogger<SimpleErrorLoggingService> logger
+            )
+        {
+            _logger = logger;
+        }
+
         public void Log(Exception ex)
         {
-            Trace.TraceError(ex.Message);
+            _logger.LogError(0, ex, ex.Message);
         }
     }
 }

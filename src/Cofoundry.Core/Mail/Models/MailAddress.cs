@@ -9,7 +9,6 @@ namespace Cofoundry.Core.Mail
     /// <summary>
     /// .Net core compatible version of System.Net.Mail.MailAddress
     /// </summary>
-    [Serializable]
     public class MailAddress
     {
         #region constructors

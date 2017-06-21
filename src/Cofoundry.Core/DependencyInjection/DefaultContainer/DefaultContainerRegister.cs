@@ -132,11 +132,11 @@ namespace Cofoundry.Core.DependencyInjection
             var typeToRegister = typeof(TToRegister);
 
             var concreteTypes = GetDiscoveredConcreteTypes()
-                .Where(t => typeToRegister.IsAssignableFrom(t) && t != typeToRegister);
+                .Where(t => typeToRegister.GetTypeInfo().IsAssignableFrom(t) && t.AsType() != typeToRegister);
 
             foreach (var concreteType in concreteTypes)
             {
-                AddService(typeToRegister, concreteType);
+                AddService(typeToRegister, concreteType.AsType());
             }
 
             return this;
@@ -161,7 +161,7 @@ namespace Cofoundry.Core.DependencyInjection
 
             foreach (var handler in handlerRegistrations)
             {
-                AddService(handler.service, handler.implementation);
+                AddService(handler.service.AsType(), handler.implementation.AsType());
             }
 
             return this;
@@ -174,6 +174,7 @@ namespace Cofoundry.Core.DependencyInjection
             )
         {
             var typesToRegister = GetDiscoveredConcreteTypes()
+                .Select(t => t.AsType())
                 .Where(t => typeToRegisterImplementationsOf.IsAssignableFrom(t)
                     && t != typeToRegisterImplementationsOf
                 );

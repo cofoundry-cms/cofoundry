@@ -12,7 +12,6 @@ namespace Cofoundry.Web.WebApi
     /// potential JSON hijacking vulnerability.
     /// </summary>
     /// <typeparam name="T">Type of the data being returned</typeparam>
-    [Serializable]
     public class SimpleResponseData<T>
     {
         /// <summary>

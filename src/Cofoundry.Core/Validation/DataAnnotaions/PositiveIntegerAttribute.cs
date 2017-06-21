@@ -16,8 +16,7 @@ namespace Cofoundry.Core.Validation
         public PositiveIntegerAttribute() :
             base(1, Int32.MaxValue)
         {
-            ErrorMessageResourceType = typeof(Resources.DataAnnotationErrorMessages);
-            ErrorMessageResourceName = ErrorMessageResourceName = "PositiveIntegerValidationMessage";
+            ErrorMessage = "The {0} field must be a positive integer value.";
         }
     }
 }

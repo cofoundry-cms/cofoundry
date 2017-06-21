@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Cofoundry.Domain;
+using System.Reflection;
 
 namespace Cofoundry.Web.Admin
 {

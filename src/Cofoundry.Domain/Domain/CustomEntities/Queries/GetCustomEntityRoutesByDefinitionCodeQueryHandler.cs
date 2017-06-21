@@ -8,6 +8,7 @@ using Cofoundry.Domain.CQS;
 using Microsoft.EntityFrameworkCore;
 using AutoMapper;
 using Cofoundry.Core;
+using System.Reflection;
 
 namespace Cofoundry.Domain
 {
@@ -78,6 +79,7 @@ namespace Cofoundry.Domain
 
             var routingDataProperties = definition
                 .GetDataModelType()
+                .GetTypeInfo()
                 .GetProperties()
                 .Where(prop => prop.IsDefined(typeof(CustomEntityRouteDataAttribute), false));
 

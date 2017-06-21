@@ -14,15 +14,12 @@ namespace Cofoundry.Domain
         #region constructor
 
         private readonly IUserAreaRepository _userAreaRepository;
-        private readonly IMapper _mapper;
 
         public GetAllUserAreaMicroSummariesQueryHandler(
-            IUserAreaRepository userAreaRepository,
-            IMapper mapper
+            IUserAreaRepository userAreaRepository
             )
         {
             _userAreaRepository = userAreaRepository;
-            _mapper = mapper;
         }
 
         #endregion
@@ -32,7 +29,12 @@ namespace Cofoundry.Domain
         public Task<IEnumerable<UserAreaMicroSummary>> ExecuteAsync(GetAllQuery<UserAreaMicroSummary> query, IExecutionContext executionContext)
         {
             var areas = _userAreaRepository.GetAll().OrderBy(u => u.Name);
-            var results = Mapper.Map<IEnumerable<UserAreaMicroSummary>>(areas);
+            var results = areas
+                .Select(a => new UserAreaMicroSummary()
+                {
+                    Name = a.Name,
+                    UserAreaCode = a.UserAreaCode
+                });
 
             return Task.FromResult(results);
         }

@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -39,7 +40,7 @@ namespace Cofoundry.Domain.Data
         {
             if (String.IsNullOrEmpty(serialized))
             {
-                if (type.IsValueType) return Activator.CreateInstance(type);
+                if (type.GetTypeInfo().IsValueType) return Activator.CreateInstance(type);
                 return null;
             }
 

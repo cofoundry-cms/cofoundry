@@ -67,11 +67,12 @@ namespace Cofoundry.Domain.CQS
         private MethodInfo CreateExecuteMethod(MethodInfo executeMethod, Type type, Type previousType = null)
         {
             var isAssignable = typeof(ICommand).IsAssignableFrom(type);
+            var typeInfo = type.GetTypeInfo();
 
-            if (isAssignable && type.BaseType != null && !type.BaseType.IsAbstract)
+            if (isAssignable && typeInfo.BaseType != null && !typeInfo.BaseType.GetTypeInfo().IsAbstract)
             {
                 // If its valid, but the base type is too then search the basetype
-                return CreateExecuteMethod(executeMethod, type.BaseType, type);
+                return CreateExecuteMethod(executeMethod, typeInfo.BaseType, type);
             }
             else if (isAssignable)
             {

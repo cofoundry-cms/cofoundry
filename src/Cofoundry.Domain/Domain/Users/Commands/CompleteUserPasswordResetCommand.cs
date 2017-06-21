@@ -3,11 +3,10 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Xml.Serialization;
 using Newtonsoft.Json;
 using Cofoundry.Domain.CQS;
-using Cofoundry.Core.Validation;
 using Cofoundry.Domain.MailTemplates;
+using System.Runtime.Serialization;
 
 namespace Cofoundry.Domain
 {
@@ -25,7 +24,7 @@ namespace Cofoundry.Domain
         [Required]
         [StringLength(300, MinimumLength = 8)]
         [DataType(DataType.Password)]
-        [XmlIgnore]
+        [IgnoreDataMember]
         [JsonIgnore]
         public string NewPassword { get; set; }
 

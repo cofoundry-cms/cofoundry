@@ -4,9 +4,9 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
-using System.Web;
 
 namespace Cofoundry.Core.Json
 {
@@ -14,7 +14,7 @@ namespace Cofoundry.Core.Json
     {
         public override bool CanConvert(Type objectType)
         {
-            return typeof(HtmlString).IsAssignableFrom(objectType);
+            return typeof(HtmlString).GetTypeInfo().IsAssignableFrom(objectType);
         }
 
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)

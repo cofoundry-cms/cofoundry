@@ -33,7 +33,6 @@ namespace Cofoundry.BasicTestSite
             services
                 .AddMvc()
                 .AddCofoundry(Configuration);
-
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

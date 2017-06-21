@@ -52,12 +52,6 @@
     <Compile Include="SmtpMailDispatchSession.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Cofoundry.Core\Cofoundry.Core.csproj">
-      <Project>{b06a84c3-005b-4ffa-9c9a-81a96b59e1d4}</Project>
-      <Name>Cofoundry.Core</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <None Include="app.config" />
     <None Include="packages.config" />
   </ItemGroup>

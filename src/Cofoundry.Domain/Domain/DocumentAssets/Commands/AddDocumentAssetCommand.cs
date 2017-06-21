@@ -5,16 +5,16 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Xml.Serialization;
 using Cofoundry.Core.Validation;
 using Cofoundry.Domain.CQS;
+using System.Runtime.Serialization;
 
 namespace Cofoundry.Domain
 {
     public class AddDocumentAssetCommand : ICommand, ILoggableCommand, IValidatableObject
     {
         [Required]
-        [XmlIgnore]
+        [IgnoreDataMember]
         [JsonIgnore]
         [ValidateObject]
         public IUploadedFile File { get; set; }

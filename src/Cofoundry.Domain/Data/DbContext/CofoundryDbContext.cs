@@ -10,26 +10,25 @@ namespace Cofoundry.Domain.Data
     public partial class CofoundryDbContext : DbContext
     {
         private readonly ILoggerFactory _loggerFactory;
+        private readonly DatabaseSettings _databaseSettings;
 
-        public CofoundryDbContext(ILoggerFactory loggerFactory)
+        public CofoundryDbContext(
+            ILoggerFactory loggerFactory,
+            DatabaseSettings databaseSettings
+            )
         {
             _loggerFactory = loggerFactory;
+            _databaseSettings = databaseSettings;
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            //dbContext.Configuration.LazyLoadingEnabled = false;
-            //dbContext.Database.Log = (s) => System.Diagnostics.Debug.Write(s);
-            //var serviceProvider = Database.GetInfrastructure<IServiceProvider>();
-            //var loggerFactory = serviceProvider.GetService<ILoggerFactory>();
             optionsBuilder.UseLoggerFactory(_loggerFactory);
             optionsBuilder.ConfigureWarnings(warnings => 
-                warnings
-                    .Log(RelationalEventId.QueryClientEvaluationWarning)
-                    .Log(RelationalEventId.OpeningConnection)
+                warnings.Log(RelationalEventId.QueryClientEvaluationWarning)
             );
 
-            optionsBuilder.UseSqlServer("Server=.\\sqlexpress;Database=Cofoundry.BasicTestSite;Integrated Security=True;MultipleActiveResultSets=True;");
+            optionsBuilder.UseSqlServer(_databaseSettings.ConnectionString);
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

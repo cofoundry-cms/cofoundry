@@ -47,7 +47,7 @@ namespace Cofoundry.Core.DependencyInjection
                 var settingName = GetSettingsSectionName(settingType);
                 var section = _configurationRoot.GetSection(settingName);
 
-                var genericMethod = _registerOptionsWithServiceMethod.MakeGenericMethod(settingType);
+                var genericMethod = _registerOptionsWithServiceMethod.MakeGenericMethod(settingType.AsType());
                 genericMethod.Invoke(this, new object[] { section });
             }
         }
@@ -57,7 +57,7 @@ namespace Cofoundry.Core.DependencyInjection
             _serviceCollection.Configure<TOptions>(section);
         }
 
-        private string GetSettingsSectionName(Type settingsType)
+        private string GetSettingsSectionName(TypeInfo settingsType)
         {
             const string SETTINGS_SUFFIX = "Settings";
 
@@ -82,7 +82,7 @@ namespace Cofoundry.Core.DependencyInjection
             return name;
         }
 
-        private IEnumerable<Type> GetAllSettingsTypes()
+        private IEnumerable<TypeInfo> GetAllSettingsTypes()
         {
             var dependencyRegistrationType = typeof(IConfigurationSettings);
 
@@ -92,7 +92,7 @@ namespace Cofoundry.Core.DependencyInjection
                     && t.IsPublic
                     && !t.IsAbstract
                     && !t.ContainsGenericParameters
-                    && dependencyRegistrationType.IsAssignableFrom(t)
+                    && dependencyRegistrationType.IsAssignableFrom(t.AsType())
                     );
 
             return settingsTypes;

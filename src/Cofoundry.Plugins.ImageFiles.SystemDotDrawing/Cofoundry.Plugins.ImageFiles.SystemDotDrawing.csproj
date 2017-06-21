@@ -133,16 +133,6 @@
     <Compile Include="SystemDrawingImageAssetFileService.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Cofoundry.Core\Cofoundry.Core.csproj">
-      <Project>{b06a84c3-005b-4ffa-9c9a-81a96b59e1d4}</Project>
-      <Name>Cofoundry.Core</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Cofoundry.Domain\Cofoundry.Domain.csproj">
-      <Project>{64809192-86de-490a-8dad-5f1550499a86}</Project>
-      <Name>Cofoundry.Domain</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <None Include="app.config" />
     <None Include="packages.config" />
   </ItemGroup>

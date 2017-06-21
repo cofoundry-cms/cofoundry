@@ -8,6 +8,7 @@ using Cofoundry.Domain.CQS;
 using Cofoundry.Core.Validation;
 using Cofoundry.Core;
 using Microsoft.AspNetCore.Mvc;
+using System.Reflection;
 
 namespace Cofoundry.Web.WebApi
 {
@@ -279,8 +280,10 @@ namespace Cofoundry.Web.WebApi
 
         private object GetCommandOutputValue<TCommand>(TCommand command) where TCommand : ICommand
         {
-            var property = typeof(TCommand).GetProperties()
-                .SingleOrDefault(p => Attribute.IsDefined(p, typeof(OutputValueAttribute)));
+            var property = typeof(TCommand)
+                .GetTypeInfo()
+                .GetProperties()
+                .SingleOrDefault(p => p.IsDefined(typeof(OutputValueAttribute)));
 
             if (property == null) return null;
 

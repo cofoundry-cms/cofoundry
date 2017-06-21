@@ -13,16 +13,13 @@ namespace Cofoundry.Core
     /// </summary>
     public class FileSystemPathResolver : IPathResolver
     {
-        private static readonly string basePath = Path.GetDirectoryName(new Uri((Assembly.GetExecutingAssembly().CodeBase)).LocalPath);
-
         public string MapPath(string path)
         {
+            var basePath = AppContext.BaseDirectory;
+
             if (string.IsNullOrWhiteSpace(path)) return basePath;
 
-            if (path.StartsWith("~/"))
-            {
-                path = path.Substring(2);
-            }
+            path = path.TrimStart(new char[] { '~', '/' });
 
             return Path.Combine(basePath, path);
         }

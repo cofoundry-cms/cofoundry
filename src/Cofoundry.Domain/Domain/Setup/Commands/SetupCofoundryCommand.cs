@@ -4,8 +4,8 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 using Cofoundry.Domain.CQS;
-using System.Xml.Serialization;
 using Newtonsoft.Json;
+using System.Runtime.Serialization;
 
 namespace Cofoundry.Domain
 {
@@ -30,7 +30,7 @@ namespace Cofoundry.Domain
 
         [Required]
         [StringLength(300, MinimumLength = 8)]
-        [XmlIgnore]
+        [IgnoreDataMember]
         [JsonIgnore]
         public string UserPassword { get; set; }
     }

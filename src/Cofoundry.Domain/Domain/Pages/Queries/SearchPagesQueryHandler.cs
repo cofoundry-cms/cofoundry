@@ -6,11 +6,10 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Cofoundry.Domain.Data;
 using Cofoundry.Domain.CQS;
-using Cofoundry.Core;
-using System.Web;
 using Microsoft.EntityFrameworkCore;
 using Cofoundry.Core.Web;
 using Microsoft.AspNetCore.Html;
+using System.Reflection;
 
 namespace Cofoundry.Domain
 {
@@ -95,19 +94,21 @@ namespace Cofoundry.Domain
             foreach (var pageModule in pageModules.Where(p => !string.IsNullOrEmpty(query.Text)))
             {
                 var dataProvider = await _moduleDisplayDataFactory.MapDisplayModelAsync(pageModule.PageModuleType.FileName, pageModule, WorkFlowStatusQuery.Published);
-                Type dataProviderType = dataProvider.GetType();
+                var dataProviderType = dataProvider.GetType().GetTypeInfo();
 
                 // If this module is searchable - ie there is content to search
                 // TODO: Module Searching
                 //if (dataProvider is ISearchable)
                 //{
-                    var props = dataProviderType.GetProperties().Where(prop => Attribute.IsDefined(prop, typeof(SearchableAttribute)));
+                    var props = dataProviderType
+                    .GetProperties()
+                    .Where(prop => prop.IsDefined(typeof(SearchableAttribute), true));
 
                     foreach (var prop in props)
                     {
                         string str = _htmlSanitizer.StripHtml(((string)prop.GetValue(dataProvider, null)));
 
-                        if (str.IndexOf(query.Text ?? "", StringComparison.InvariantCultureIgnoreCase) > -1)
+                        if (str.IndexOf(query.Text ?? "", StringComparison.OrdinalIgnoreCase) > -1)
                         {
                             if (!matches.ContainsKey(pageModule)) matches[pageModule] = new List<string>();
 

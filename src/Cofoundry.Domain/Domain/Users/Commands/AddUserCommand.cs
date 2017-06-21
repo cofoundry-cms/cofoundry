@@ -3,9 +3,9 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using System.Xml.Serialization;
 using Cofoundry.Domain.CQS;
 using Cofoundry.Core.Validation;
+using System.Runtime.Serialization;
 
 namespace Cofoundry.Domain
 {
@@ -40,7 +40,7 @@ namespace Cofoundry.Domain
         /// </summary>
         [StringLength(300, MinimumLength = 8)]
         [DataType(DataType.Password)]
-        [XmlIgnore]
+        [IgnoreDataMember]
         [JsonIgnore]
         public string Password { get; set; }
 

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Globalization;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -25,7 +26,7 @@ namespace Cofoundry.Core.Validation
 
         protected override ValidationResult IsValid(object value, ValidationContext validationContext)
         {
-            var property = validationContext.ObjectType.GetProperty(OtherProperty);
+            var property = validationContext.ObjectType.GetTypeInfo().GetProperty(OtherProperty);
             if (property == null)
             {
                 throw new ArgumentException(OtherProperty + " is not a property of " + validationContext.ObjectType.FullName);

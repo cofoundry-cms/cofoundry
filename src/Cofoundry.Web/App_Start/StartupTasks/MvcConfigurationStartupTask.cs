@@ -1,13 +1,10 @@
-﻿using Cofoundry.Core.ResourceFiles;
-using Cofoundry.Web.ModularMvc;
+﻿using Cofoundry.Web.ModularMvc;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
-using Microsoft.Extensions.FileProviders;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using Cofoundry.Core;
-using Microsoft.Extensions.Options;
 using Cofoundry.Domain;
 using Microsoft.AspNetCore.StaticFiles;
 

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -22,10 +23,14 @@ namespace Cofoundry.Domain.CQS
         protected override ValidationResult IsValid(object value, ValidationContext validationContext)
         {
             if (value == null) return ValidationResult.Success;
-            var t = value.GetType();
-            var newVal = Convert.ChangeType(value, t);
-            var val = Activator.CreateInstance(t);
-            if (t.IsValueType && value.Equals(val)) return ValidationResult.Success;
+
+            var type = value.GetType();
+            var newValue = Convert.ChangeType(value, type);
+
+            if (type.GetTypeInfo().IsValueType && value.Equals(Activator.CreateInstance(type)))
+            {
+                return ValidationResult.Success;
+            }
 
             return new ValidationResult(base.ErrorMessage);
         }

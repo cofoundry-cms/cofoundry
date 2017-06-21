@@ -21,6 +21,11 @@ namespace Cofoundry.Core.IO
             System.Diagnostics.Debug.Write(value);
         }
 
+        public override void Write(char value)
+        {
+            System.Diagnostics.Debug.Write(value);
+        }
+
         public override Encoding Encoding
         {
             get

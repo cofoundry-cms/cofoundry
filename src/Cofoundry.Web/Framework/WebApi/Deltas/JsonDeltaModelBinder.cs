@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc.ModelBinding;
 using System.Threading.Tasks;
 using System.IO;
 using System.Text;
+using System.Reflection;
 
 namespace Cofoundry.Web
 {
@@ -20,7 +21,11 @@ namespace Cofoundry.Web
             if (bindingContext == null) throw new ArgumentNullException(nameof(bindingContext));
             var jsonString = await ReadBodyAsString(bindingContext);
 
-            var genericArguments = bindingContext.ModelType.GetGenericArguments();
+            var genericArguments = bindingContext
+                .ModelType
+                .GetTypeInfo()
+                .GetGenericArguments();
+
             if (genericArguments.Count() != 1)
             {
                 throw new InvalidOperationException($"JsonDeltaModelBinder can only act on a type of IDelta<TModel>. Incorrect number of generic arguments found on type '{ bindingContext.ModelType.FullName }' ({ genericArguments.Count() })");

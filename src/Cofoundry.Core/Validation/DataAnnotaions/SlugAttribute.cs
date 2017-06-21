@@ -17,8 +17,7 @@ namespace Cofoundry.Core.Validation
         public SlugAttribute() :
             base("^[a-zA-Z0-9-]+$")
         {
-            ErrorMessageResourceType = typeof(Resources.DataAnnotationErrorMessages);
-            ErrorMessageResourceName = ErrorMessageResourceName = "SlugValidationMessage";
+            ErrorMessage = "Slugs can only use letters, numbers and hyphens.";
         }
     }
 }

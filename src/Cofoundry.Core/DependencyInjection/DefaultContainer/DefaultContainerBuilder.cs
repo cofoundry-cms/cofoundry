@@ -3,6 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -113,7 +114,7 @@ namespace Cofoundry.Core.DependencyInjection
                     && t.IsPublic
                     && !t.IsAbstract
                     && !t.ContainsGenericParameters
-                    && dependencyRegistrationType.IsAssignableFrom(t)
+                    && dependencyRegistrationType.IsAssignableFrom(t.AsType())
                     );
 
             foreach (var registrationType in registrationTypes)
@@ -123,7 +124,7 @@ namespace Cofoundry.Core.DependencyInjection
                     throw new InvalidOperationException(registrationType.Name + " does not have a public parameterless constructor. Types that implement IDependencyRegistration do not support constructor injection.");
                 }
 
-                yield return (IDependencyRegistration)Activator.CreateInstance(registrationType);
+                yield return (IDependencyRegistration)Activator.CreateInstance(registrationType.AsType());
             }
         }
 

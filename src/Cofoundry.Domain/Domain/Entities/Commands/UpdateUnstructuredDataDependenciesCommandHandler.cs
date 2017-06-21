@@ -6,6 +6,7 @@ using Cofoundry.Domain.Data;
 using Cofoundry.Domain.CQS;
 using Microsoft.EntityFrameworkCore;
 using Cofoundry.Core;
+using System.Reflection;
 
 namespace Cofoundry.Domain
 {
@@ -92,9 +93,16 @@ namespace Cofoundry.Domain
 
         private IEnumerable<EntityDependency> GetRelations(object model)
         {
-            var relationProperties = model.GetType()
+            var relationProperties = model
+                .GetType()
+                .GetTypeInfo()
                 .GetProperties()
-                .Select(p => new { Property = p, Attribute = p.GetCustomAttributes(typeof(IEntityRelationAttribute), false).FirstOrDefault() })
+                .Select(p => new {
+                    Property = p,
+                    Attribute = p.GetCustomAttributes(false)
+                        .Where(a => a is IEntityRelationAttribute)
+                        .FirstOrDefault()
+                })
                 .Where(p => p.Attribute != null);
 
             foreach (var relationProperty in relationProperties)

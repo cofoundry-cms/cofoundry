@@ -14,7 +14,7 @@
         </div>
         <div class="blog-teaser__text">
             <h2>@blogPost.Title</h2>
-            <span><span class="glyphicon glyphicon-calendar"></span> @blogPost.PostDate.ToLongDateString()</span>
+            <span><span class="glyphicon glyphicon-calendar"></span> @blogPost.PostDate.ToString("dd MMM yyyy")</span>
             <p>@blogPost.ShortDescription</p>
             <a href="@blogPost.FullPath" class="btn btn-default">Read post</a>
         </div>

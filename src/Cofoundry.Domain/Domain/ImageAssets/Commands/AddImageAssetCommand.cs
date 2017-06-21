@@ -4,16 +4,16 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Xml.Serialization;
 using Cofoundry.Core.Validation;
 using Cofoundry.Domain.CQS;
+using System.Runtime.Serialization;
 
 namespace Cofoundry.Domain
 {
     public class AddImageAssetCommand : ICommand, ILoggableCommand
     {
         [Required]
-        [XmlIgnore]
+        [IgnoreDataMember]
         [JsonIgnore]
         [ValidateObject]
         public IUploadedFile File { get; set; }

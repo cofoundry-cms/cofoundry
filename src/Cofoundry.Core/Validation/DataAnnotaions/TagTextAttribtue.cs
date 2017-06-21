@@ -18,8 +18,7 @@ namespace Cofoundry.Core.Validation
         public TagTextAttribtue()
             : base(@"^[&\w\s'()-]+$")
         {
-            ErrorMessageResourceType = typeof(Resources.DataAnnotationErrorMessages);
-            ErrorMessageResourceName = ErrorMessageResourceName = "InvalidCharacters";
+            ErrorMessage = "The {0} field contains invalid characters.";
         }
     }
 }

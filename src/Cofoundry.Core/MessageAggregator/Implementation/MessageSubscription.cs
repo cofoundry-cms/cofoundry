@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Cofoundry.Core.DependencyInjection;
+using System.Reflection;
 
 namespace Cofoundry.Core.MessageAggregator
 {
@@ -19,7 +20,7 @@ namespace Cofoundry.Core.MessageAggregator
     {
         public bool CanDeliver<TMessage>()
         {
-            return typeof(TMessageSubscribedTo).IsAssignableFrom(typeof(TMessage));
+            return typeof(TMessageSubscribedTo).GetTypeInfo().IsAssignableFrom(typeof(TMessage));
         }
 
         public async Task DeliverAsync(IResolutionContext resolutionContext, object message)
