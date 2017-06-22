@@ -31,7 +31,15 @@
   </ItemGroup>
   
   <ItemGroup>
-    <EmbeddedResource Include="Admin\Modules\*\Mvc\Views\**\*.cshtml;Admin\Modules\*\Mvc\Views\**\*.js;Admin\Modules\*\Content\**\*.*;" />
+    <EmbeddedResource Include="Admin\Modules\*\MVC\Views\**\*.cshtml;Admin\Modules\*\MVC\Views\**\*.js;Admin\Modules\*\Content\**\*.*;" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <None Remove="Framework\Angular\StandardAngularModules\Routes\Index.cshtml" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <EmbeddedResource Include="Framework\Angular\StandardAngularModules\Routes\Index.cshtml" />
   </ItemGroup>
   
 </Project>
