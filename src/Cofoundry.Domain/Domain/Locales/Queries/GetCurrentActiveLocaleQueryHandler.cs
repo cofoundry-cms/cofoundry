@@ -29,15 +29,14 @@ namespace Cofoundry.Domain
 
         public async Task<ActiveLocale> ExecuteAsync(GetCurrentActiveLocaleQuery query, IExecutionContext executionContext)
         {
-            var result = await _queryExecutor.ExecuteAsync(GetQuery());
+            var tag = _cultureContextService.GetCurrent()?.Name;
+
+            if (string.IsNullOrWhiteSpace(tag)) return null;
+
+            var byTagQuery = new GetActiveLocaleByIETFLanguageTagQuery(tag);
+            var result = await _queryExecutor.ExecuteAsync(byTagQuery);
 
             return result;
-        }
-
-        private GetActiveLocaleByIETFLanguageTagQuery GetQuery()
-        {
-            var tag = _cultureContextService.GetCurrent().Name;
-            return new GetActiveLocaleByIETFLanguageTagQuery(tag);
         }
     }
 }

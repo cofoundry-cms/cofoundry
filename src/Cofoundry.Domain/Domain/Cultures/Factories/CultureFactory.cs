@@ -14,6 +14,11 @@ namespace Cofoundry.Domain
     {
         public CultureInfo Create(string languageTag)
         {
+            if (string.IsNullOrEmpty(languageTag))
+            {
+                throw new ArgumentException("Cannot create a culture with an empty language tag.", languageTag);
+            }
+
             return new CultureInfo(languageTag);
         }
     }

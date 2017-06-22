@@ -35,10 +35,18 @@ namespace Cofoundry.Domain
         /// <param name="ietfLanguageTag">An IETF language tag to set the current thread culture to e.g. 'en-US' or 'es'.</param>
         public void SetCurrent(string ietfLanguageTag)
         {
+            if (string.IsNullOrEmpty(ietfLanguageTag))
+            {
+                throw new ArgumentException("Cannot set the current culture to empty.", ietfLanguageTag);
+            }
+
             var culture = _cultureFactory.Create(ietfLanguageTag);
 
-            CultureInfo.CurrentCulture = culture;
-            CultureInfo.CurrentUICulture = culture;
+            if (culture != null)
+            {
+                CultureInfo.CurrentCulture = culture;
+                CultureInfo.CurrentUICulture = culture;
+            }
         }
     }
 }
