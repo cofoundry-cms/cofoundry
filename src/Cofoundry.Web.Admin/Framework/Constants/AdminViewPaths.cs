@@ -13,7 +13,7 @@ namespace Cofoundry.Web.Admin
     /// </summary>
     internal static class ViewPathFormatter
     {
-        private const string VIEW_FORMAT = "~" + RouteConstants.InternalModuleResourcePathPrefix + "{0}/Mvc/Views/{1}.cshtml";
+        private const string VIEW_FORMAT = "~" + RouteConstants.InternalModuleResourcePathPrefix + "{0}/MVC/Views/{1}.cshtml";
 
         public static string View(string controllerName, string viewName)
         {

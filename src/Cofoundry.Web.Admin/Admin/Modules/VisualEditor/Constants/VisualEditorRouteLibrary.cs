@@ -21,7 +21,7 @@ namespace Cofoundry.Web.Admin
 
         public string VisualEditorToolbarViewPath()
         {
-            return ResourcePrefix + "mvc/views/Toolbar.cshtml";
+            return ResourcePrefix + "MVC/Views/Toolbar.cshtml";
         }
 
 

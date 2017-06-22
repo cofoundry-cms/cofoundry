@@ -9,7 +9,7 @@ namespace Cofoundry.Web.Admin
     /// </summary>
     public static class LayoutPaths
     {
-        private const string LAYOUT_BASE = "~/Admin/Modules/Shared/Mvc/Views/Layouts/";
+        private const string LAYOUT_BASE = "~/Admin/Modules/Shared/MVC/Views/Layouts/";
 
         /// <summary>
         /// The base layout shared amoung other layout files, not to be used directly.
