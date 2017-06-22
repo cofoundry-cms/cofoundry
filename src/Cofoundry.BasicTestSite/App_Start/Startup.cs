@@ -20,6 +20,7 @@ namespace Cofoundry.BasicTestSite
                 .SetBasePath(env.ContentRootPath)
                 .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
                 .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
+                .AddJsonFile("appsettings.local.json", optional: true)
                 .AddEnvironmentVariables();
             Configuration = builder.Build();
         }
