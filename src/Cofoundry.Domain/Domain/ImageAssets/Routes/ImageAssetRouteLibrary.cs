@@ -107,7 +107,7 @@ namespace Cofoundry.Domain
 
             if (isDefinedAndChanged(settings.Width, asset.Width) || isDefinedAndChanged(settings.Height, asset.Height))
             {
-                if (settings.Mode == ImageFitMode.None)
+                if (settings.Mode == ImageFitMode.Default)
                 {
                     settings.Mode = ImageFitMode.Crop;
                 }

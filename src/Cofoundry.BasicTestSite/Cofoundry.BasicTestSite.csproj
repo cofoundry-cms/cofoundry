@@ -11,6 +11,7 @@
     <PackageReference Include="AngleSharp" Version="0.9.9" />
     <PackageReference Include="AutoMapper" Version="6.1.0" />
     <PackageReference Include="HtmlSanitizer" Version="3.4.156" />
+    <PackageReference Include="ImageSharp" Version="1.0.0-alpha9-00148" />
 
     <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.0.0" />
     <PackageReference Include="Microsoft.AspNetCore" Version="1.1.2" />
@@ -36,6 +37,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Cofoundry.Core\Cofoundry.Core.csproj" />
     <ProjectReference Include="..\Cofoundry.Domain\Cofoundry.Domain.csproj" />
+    <ProjectReference Include="..\Cofoundry.Plugins.Imaging.ImageSharp\Cofoundry.Plugins.ImageResizing.ImageSharp.csproj" />
     <ProjectReference Include="..\Cofoundry.Web.Admin\Cofoundry.Web.Admin.csproj" />
     <ProjectReference Include="..\Cofoundry.Web\Cofoundry.Web.csproj" />
   </ItemGroup>

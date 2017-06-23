@@ -136,5 +136,15 @@
     <None Include="app.config" />
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Cofoundry.Core\Cofoundry.Core.csproj">
+      <Project>{22e7bfd5-c829-4793-83c6-445944d605f4}</Project>
+      <Name>Cofoundry.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Cofoundry.Domain\Cofoundry.Domain.csproj">
+      <Project>{7f758f8d-d973-4db5-84d6-b8a5c795a1cb}</Project>
+      <Name>Cofoundry.Domain</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

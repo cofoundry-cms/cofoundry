@@ -83,7 +83,7 @@ namespace Cofoundry.Domain
             if (Anchor != DEFAULT_ANCHOR_LOCATION) qs.Add(QS_ANCHOR, Anchor.ToString());
             if (Width > 0) qs.Add(QS_WIDTH, Width.ToString());
             if (Height > 0) qs.Add(QS_HEIGHT, Height.ToString());
-            if (Mode != ImageFitMode.None) qs.Add(QS_MODE, Mode.ToString().ToLower());
+            if (Mode != ImageFitMode.Default) qs.Add(QS_MODE, Mode.ToString().ToLower());
             if (Scale != ImageScaleMode.DownscaleOnly) qs.Add(QS_SCALE, Scale.ToString().ToLower());
             if (!string.IsNullOrWhiteSpace(BackgroundColor)) qs.Add(QS_BACKGROUND_COLOR, BackgroundColor.ToLower());
 
@@ -106,7 +106,7 @@ namespace Cofoundry.Domain
 
         private static string GetQueryStringValue(IQueryCollection queryString, string key)
         {
-            return queryString[QS_WIDTH].FirstOrDefault();
+            return queryString[key].FirstOrDefault();
         }
     }
 }

@@ -1,0 +1,16 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard1.6</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="ImageSharp" Version="1.0.0-alpha9-00148" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Cofoundry.Core\Cofoundry.Core.csproj" />
+    <ProjectReference Include="..\Cofoundry.Domain\Cofoundry.Domain.csproj" />
+  </ItemGroup>
+
+</Project>
