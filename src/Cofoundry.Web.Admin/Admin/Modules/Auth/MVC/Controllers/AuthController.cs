@@ -94,7 +94,7 @@ namespace Cofoundry.Web.Admin
             {
                 return Redirect(_adminRouteLibrary.Auth.ChangePassword(returnUrl));
             }
-            else if (result.IsAuthenticated && !string.IsNullOrEmpty(result.ReturnUrl))
+            else if (result.IsAuthenticated && !string.IsNullOrEmpty(result.ReturnUrl) && Url.IsLocalUrl(returnUrl))
             {
                 return Redirect(result.ReturnUrl);
             }
@@ -187,7 +187,7 @@ namespace Cofoundry.Web.Admin
 
             if (ModelState.IsValid)
             {
-                if (!string.IsNullOrEmpty(returnUrl))
+                if (!string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))
                 {
                     return Redirect(returnUrl);
                 }

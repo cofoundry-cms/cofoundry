@@ -92,8 +92,9 @@ namespace Cofoundry.Domain
         {
             return new GetUserLoginInfoIfAuthenticatedQuery()
             {
+                UserAreaCode = command.UserAreaCode,
                 Username = command.Username,
-                Password = command.Password
+                Password = command.Password,
             };
         }
 
