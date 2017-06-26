@@ -80,7 +80,7 @@ namespace Cofoundry.Web.Admin
             {
                 return Redirect(AuthRouteLibrary.Urls.ChangePassword(returnUrl));
             }
-            else if (result.IsAuthenticated && !string.IsNullOrEmpty(result.ReturnUrl))
+            else if (result.IsAuthenticated && !string.IsNullOrEmpty(result.ReturnUrl) && Url.IsLocalUrl(returnUrl))
             {
                 return Redirect(result.ReturnUrl);
             }
@@ -124,9 +124,6 @@ namespace Cofoundry.Web.Admin
         [Route("reset-password")]
         public ActionResult ResetPassword(string i, string t)
         {
-            var user = _userContextService.GetCurrentContext();
-            if (user.IsCofoundryUser()) return GetLoggedInDefaultRedirectAction();
-
             var request = _authenticationHelper.IsPasswordRequestValid(this, i, t, new CofoundryAdminUserArea());
 
             if (!request.IsValid) return View("ResetPasswordRequestInvalid", request);
@@ -175,7 +172,7 @@ namespace Cofoundry.Web.Admin
 
             if (ModelState.IsValid)
             {
-                if (!string.IsNullOrEmpty(returnUrl))
+                if (!string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))
                 {
                     return Redirect(returnUrl);
                 }
