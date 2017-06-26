@@ -39,7 +39,10 @@ namespace Cofoundry.Web.ModularMvc
             foreach (var route in routeRegistration.GetEmbeddedResourcePaths())
             {
                 var formattedRoute = route.Trim('/') + "/{*pathInfo}";
-                RouteTable.Routes.Add(new Route(formattedRoute, handler));
+                
+                // We need to supply a controller name to prevent it being picked up when asp.net generates routes for controllers
+                var defaults = new RouteValueDictionary(new { controller = "DUMMMYVALUE" });
+                RouteTable.Routes.Add(new Route(formattedRoute, defaults, handler));
             }
         }
     }
