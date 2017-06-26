@@ -8,7 +8,7 @@ namespace Cofoundry.Domain
 {
     public class PasswordCryptographyResult
     {
-        public PasswordEncryptionVersion EncryptionVersion { get; set; }
+        public int HashVersion { get; set; }
 
         public string Hash { get; set; }
     }

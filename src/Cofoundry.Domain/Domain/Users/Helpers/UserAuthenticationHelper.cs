@@ -39,7 +39,7 @@ namespace Cofoundry.Domain
                 throw new InvalidOperationException("Cannot authenticate via password because the specified account does not have a password set.");
             }
 
-            bool result = _cryptographyService.Verify(password, user.Password, (PasswordEncryptionVersion)user.PasswordEncryptionVersion.Value);
+            bool result = _cryptographyService.Verify(password, user.Password, user.PasswordEncryptionVersion.Value);
 
             return result;
         }
