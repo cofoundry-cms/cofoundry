@@ -35,6 +35,12 @@
   </ItemGroup>
   
   <ItemGroup>
+    <Compile Remove="Build\node_modules\**" />
+    <EmbeddedResource Remove="Build\node_modules\**" />
+    <None Remove="Build\node_modules\**" />
+  </ItemGroup>
+  
+  <ItemGroup>
     <None Remove="Framework\Angular\StandardAngularModules\Routes\Index.cshtml" />
   </ItemGroup>
   

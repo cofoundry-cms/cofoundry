@@ -6,16 +6,19 @@ angular.module('cms.shared').directive('cmsFormFieldHtml', [
     '$sce',
     '_',
     'shared.internalModulePath', 
+    'shared.contentPath',
     'shared.stringUtilities',
     'shared.modalDialogService',
-    'baseFormFieldFactory', 
+    'baseFormFieldFactory',
 function (
     $sce,
     _,
     modulePath, 
+    contentPath,
     stringUtilities,
     modalDialogService,
-    baseFormFieldFactory) {
+    baseFormFieldFactory
+) {
 
     var config = {
         templateUrl: modulePath + 'UIComponents/FormFields/FormFieldHtml.html',
@@ -42,7 +45,7 @@ function (
         vm.tinymceOptions = {
             toolbar: parseToolbarButtons(vm.toolbarsConfig, vm.toolbarCustomConfig),
             plugins: 'link image media fullscreen imagetools code',
-            content_css: "/admin/modules/shared/content/css/third-party/tinymce/content.min.css",
+            content_css: contentPath + "css/third-party/tinymce/content.min.css",
             menubar: false,
             min_height: 300,
             setup: function (editor) {

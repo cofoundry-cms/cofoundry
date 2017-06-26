@@ -84,6 +84,16 @@ namespace Cofoundry.Core.ResourceFiles
             if (file == null || !file.Exists)
             {
                 file = _embeddedFileProvider.GetFileInfo(subpath);
+
+                if (!file.Exists)
+                {
+                    // To support some file paths we need to fix it by removing dashes in the directory
+                    // which aren't translated well by the underlying provider.
+                    var fileName = Path.GetFileName(subpath);
+                    var directory = subpath.Remove(subpath.Length - fileName.Length);
+                    var fixedName = directory.Replace("-", "_") + fileName;
+                    file = _embeddedFileProvider.GetFileInfo(fixedName);
+                }
             }
 
             return file;
