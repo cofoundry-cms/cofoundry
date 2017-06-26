@@ -1,42 +1,54 @@
 ﻿/*
- AngularJS v1.5.5
- (c) 2010-2016 Google, Inc. http://angularjs.org
+ AngularJS v1.6.4
+ (c) 2010-2017 Google, Inc. http://angularjs.org
  License: MIT
 */
-(function (C, d) {
-    'use strict'; function z(r, h, g) {
+(function (J, d) {
+    'use strict'; function A(d) { k && d.get("$route") } function B(t, u, g) {
         return {
-            restrict: "ECA", terminal: !0, priority: 400, transclude: "element", link: function (a, c, b, f, y) {
-                function k() { n && (g.cancel(n), n = null); l && (l.$destroy(), l = null); m && (n = g.leave(m), n.then(function () { n = null }), m = null) } function x() {
-                    var b = r.current && r.current.locals; if (d.isDefined(b && b.$template)) {
-                        var b = a.$new(), f = r.current; m = y(b, function (b) { g.enter(b, null, m || c).then(function () { !d.isDefined(t) || t && !a.$eval(t) || h() }); k() }); l = f.scope = b; l.$emit("$viewContentLoaded");
-                        l.$eval(u)
-                    } else k()
-                } var l, m, n, t = b.autoscroll, u = b.onload || ""; a.$on("$routeChangeSuccess", x); x()
+            restrict: "ECA", terminal: !0, priority: 400, transclude: "element", link: function (a, f, b, c, m) {
+                function v() { l && (g.cancel(l), l = null); n && (n.$destroy(), n = null); p && (l = g.leave(p), l.done(function (a) { !1 !== a && (l = null) }), p = null) } function E() {
+                    var b = t.current && t.current.locals; if (d.isDefined(b && b.$template)) {
+                        var b = a.$new(), c = t.current; p = m(b, function (b) {
+                            g.enter(b, null, p || f).done(function (b) { !1 === b || !d.isDefined(w) || w && !a.$eval(w) || u() });
+                            v()
+                        }); n = c.scope = b; n.$emit("$viewContentLoaded"); n.$eval(k)
+                    } else v()
+                } var n, p, l, w = b.autoscroll, k = b.onload || ""; a.$on("$routeChangeSuccess", E); E()
             }
         }
-    } function A(d, h, g) { return { restrict: "ECA", priority: -400, link: function (a, c) { var b = g.current, f = b.locals; c.html(f.$template); var y = d(c.contents()); if (b.controller) { f.$scope = a; var k = h(b.controller, f); b.controllerAs && (a[b.controllerAs] = k); c.data("$ngControllerController", k); c.children().data("$ngControllerController", k) } a[b.resolveAs || "$resolve"] = f; y(a) } } } var w = d.module("ngRoute", ["ng"]).provider("$route", function () {
-        function r(a,
-        c) { return d.extend(Object.create(a), c) } function h(a, d) { var b = d.caseInsensitiveMatch, f = { originalPath: a, regexp: a }, g = f.keys = []; a = a.replace(/([().])/g, "\\$1").replace(/(\/)?:(\w+)(\*\?|[\?\*])?/g, function (a, d, b, c) { a = "?" === c || "*?" === c ? "?" : null; c = "*" === c || "*?" === c ? "*" : null; g.push({ name: b, optional: !!a }); d = d || ""; return "" + (a ? "" : d) + "(?:" + (a ? d : "") + (c && "(.+?)" || "([^/]+)") + (a || "") + ")" + (a || "") }).replace(/([\/$\*])/g, "\\$1"); f.regexp = new RegExp("^" + a + "$", b ? "i" : ""); return f } var g = {}; this.when = function (a, c) {
-            var b =
-            d.copy(c); d.isUndefined(b.reloadOnSearch) && (b.reloadOnSearch = !0); d.isUndefined(b.caseInsensitiveMatch) && (b.caseInsensitiveMatch = this.caseInsensitiveMatch); g[a] = d.extend(b, a && h(a, b)); if (a) { var f = "/" == a[a.length - 1] ? a.substr(0, a.length - 1) : a + "/"; g[f] = d.extend({ redirectTo: a }, h(f, b)) } return this
-        }; this.caseInsensitiveMatch = !1; this.otherwise = function (a) { "string" === typeof a && (a = { redirectTo: a }); this.when(null, a); return this }; this.$get = ["$rootScope", "$location", "$routeParams", "$q", "$injector", "$templateRequest",
-        "$sce", function (a, c, b, f, h, k, x) {
-            function l(b) { var e = s.current; (w = (p = n()) && e && p.$$route === e.$$route && d.equals(p.pathParams, e.pathParams) && !p.reloadOnSearch && !u) || !e && !p || a.$broadcast("$routeChangeStart", p, e).defaultPrevented && b && b.preventDefault() } function m() {
-                var v = s.current, e = p; if (w) v.params = e.params, d.copy(v.params, b), a.$broadcast("$routeUpdate", v); else if (e || v) u = !1, (s.current = e) && e.redirectTo && (d.isString(e.redirectTo) ? c.path(t(e.redirectTo, e.params)).search(e.params).replace() : c.url(e.redirectTo(e.pathParams,
-                c.path(), c.search())).replace()), f.when(e).then(function () { if (e) { var a = d.extend({}, e.resolve), b, c; d.forEach(a, function (b, e) { a[e] = d.isString(b) ? h.get(b) : h.invoke(b, null, null, e) }); d.isDefined(b = e.template) ? d.isFunction(b) && (b = b(e.params)) : d.isDefined(c = e.templateUrl) && (d.isFunction(c) && (c = c(e.params)), d.isDefined(c) && (e.loadedTemplateUrl = x.valueOf(c), b = k(c))); d.isDefined(b) && (a.$template = b); return f.all(a) } }).then(function (c) {
-                    e == s.current && (e && (e.locals = c, d.copy(e.params, b)), a.$broadcast("$routeChangeSuccess",
-                    e, v))
-                }, function (b) { e == s.current && a.$broadcast("$routeChangeError", e, v, b) })
-            } function n() { var a, b; d.forEach(g, function (f, g) { var q; if (q = !b) { var h = c.path(); q = f.keys; var l = {}; if (f.regexp) if (h = f.regexp.exec(h)) { for (var k = 1, n = h.length; k < n; ++k) { var m = q[k - 1], p = h[k]; m && p && (l[m.name] = p) } q = l } else q = null; else q = null; q = a = q } q && (b = r(f, { params: d.extend({}, c.search(), a), pathParams: a }), b.$$route = f) }); return b || g[null] && r(g[null], { params: {}, pathParams: {} }) } function t(a, b) {
-                var c = []; d.forEach((a || "").split(":"), function (a,
-                d) { if (0 === d) c.push(a); else { var f = a.match(/(\w+)(?:[?*])?(.*)/), g = f[1]; c.push(b[g]); c.push(f[2] || ""); delete b[g] } }); return c.join("")
-            } var u = !1, p, w, s = {
-                routes: g, reload: function () { u = !0; var b = { defaultPrevented: !1, preventDefault: function () { this.defaultPrevented = !0; u = !1 } }; a.$evalAsync(function () { l(b); b.defaultPrevented || m() }) }, updateParams: function (a) {
-                    if (this.current && this.current.$$route) a = d.extend({}, this.current.params, a), c.path(t(this.current.$$route.originalPath, a)), c.search(a); else throw B("norout");
+    } function C(d, k, g) { return { restrict: "ECA", priority: -400, link: function (a, f) { var b = g.current, c = b.locals; f.html(c.$template); var m = d(f.contents()); if (b.controller) { c.$scope = a; var v = k(b.controller, c); b.controllerAs && (a[b.controllerAs] = v); f.data("$ngControllerController", v); f.children().data("$ngControllerController", v) } a[b.resolveAs || "$resolve"] = c; m(a) } } } var x,
+    y, F, G, z = d.module("ngRoute", []).info({ angularVersion: "1.6.4" }).provider("$route", function () {
+        function t(a, f) { return d.extend(Object.create(a), f) } function u(a, d) {
+            var b = d.caseInsensitiveMatch, c = { originalPath: a, regexp: a }, g = c.keys = []; a = a.replace(/([().])/g, "\\$1").replace(/(\/)?:(\w+)(\*\?|[?*])?/g, function (a, b, d, c) { a = "?" === c || "*?" === c ? "?" : null; c = "*" === c || "*?" === c ? "*" : null; g.push({ name: d, optional: !!a }); b = b || ""; return "" + (a ? "" : b) + "(?:" + (a ? b : "") + (c && "(.+?)" || "([^/]+)") + (a || "") + ")" + (a || "") }).replace(/([/$*])/g,
+            "\\$1"); c.regexp = new RegExp("^" + a + "$", b ? "i" : ""); return c
+        } x = d.isArray; y = d.isObject; F = d.isDefined; G = d.noop; var g = {}; this.when = function (a, f) {
+            var b; b = void 0; if (x(f)) { b = b || []; for (var c = 0, m = f.length; c < m; c++) b[c] = f[c] } else if (y(f)) for (c in b = b || {}, f) if ("$" !== c.charAt(0) || "$" !== c.charAt(1)) b[c] = f[c]; b = b || f; d.isUndefined(b.reloadOnSearch) && (b.reloadOnSearch = !0); d.isUndefined(b.caseInsensitiveMatch) && (b.caseInsensitiveMatch = this.caseInsensitiveMatch); g[a] = d.extend(b, a && u(a, b)); a && (c = "/" === a[a.length - 1] ? a.substr(0,
+            a.length - 1) : a + "/", g[c] = d.extend({ redirectTo: a }, u(c, b))); return this
+        }; this.caseInsensitiveMatch = !1; this.otherwise = function (a) { "string" === typeof a && (a = { redirectTo: a }); this.when(null, a); return this }; k = !0; this.eagerInstantiationEnabled = function (a) { return F(a) ? (k = a, this) : k }; this.$get = ["$rootScope", "$location", "$routeParams", "$q", "$injector", "$templateRequest", "$sce", "$browser", function (a, f, b, c, m, k, u, n) {
+            function p(e) {
+                var h = q.current; (y = (s = C()) && h && s.$$route === h.$$route && d.equals(s.pathParams, h.pathParams) &&
+                !s.reloadOnSearch && !D) || !h && !s || a.$broadcast("$routeChangeStart", s, h).defaultPrevented && e && e.preventDefault()
+            } function l() {
+                var e = q.current, h = s; if (y) e.params = h.params, d.copy(e.params, b), a.$broadcast("$routeUpdate", e); else if (h || e) {
+                    D = !1; q.current = h; var H = c.resolve(h); n.$$incOutstandingRequestCount(); H.then(w).then(z).then(function (c) { return c && H.then(A).then(function (c) { h === q.current && (h && (h.locals = c, d.copy(h.params, b)), a.$broadcast("$routeChangeSuccess", h, e)) }) }).catch(function (b) {
+                        h === q.current && a.$broadcast("$routeChangeError",
+                        h, e, b)
+                    }).finally(function () { n.$$completeOutstandingRequest(G) })
                 }
-            }; a.$on("$locationChangeStart", l); a.$on("$locationChangeSuccess", m); return s
+            } function w(e) { var a = { route: e, hasRedirection: !1 }; if (e) if (e.redirectTo) if (d.isString(e.redirectTo)) a.path = x(e.redirectTo, e.params), a.search = e.params, a.hasRedirection = !0; else { var b = f.path(), g = f.search(); e = e.redirectTo(e.pathParams, b, g); d.isDefined(e) && (a.url = e, a.hasRedirection = !0) } else if (e.resolveRedirectTo) return c.resolve(m.invoke(e.resolveRedirectTo)).then(function (e) { d.isDefined(e) && (a.url = e, a.hasRedirection = !0); return a }); return a }
+            function z(a) { var b = !0; if (a.route !== q.current) b = !1; else if (a.hasRedirection) { var d = f.url(), c = a.url; c ? f.url(c).replace() : c = f.path(a.path).search(a.search).replace().url(); c !== d && (b = !1) } return b } function A(a) { if (a) { var b = d.extend({}, a.resolve); d.forEach(b, function (a, e) { b[e] = d.isString(a) ? m.get(a) : m.invoke(a, null, null, e) }); a = B(a); d.isDefined(a) && (b.$template = a); return c.all(b) } } function B(a) {
+                var b, c; d.isDefined(b = a.template) ? d.isFunction(b) && (b = b(a.params)) : d.isDefined(c = a.templateUrl) && (d.isFunction(c) &&
+                (c = c(a.params)), d.isDefined(c) && (a.loadedTemplateUrl = u.valueOf(c), b = k(c))); return b
+            } function C() { var a, b; d.forEach(g, function (c, g) { var r; if (r = !b) { var k = f.path(); r = c.keys; var m = {}; if (c.regexp) if (k = c.regexp.exec(k)) { for (var l = 1, n = k.length; l < n; ++l) { var p = r[l - 1], q = k[l]; p && q && (m[p.name] = q) } r = m } else r = null; else r = null; r = a = r } r && (b = t(c, { params: d.extend({}, f.search(), a), pathParams: a }), b.$$route = c) }); return b || g[null] && t(g[null], { params: {}, pathParams: {} }) } function x(a, b) {
+                var c = []; d.forEach((a || "").split(":"),
+                function (a, d) { if (0 === d) c.push(a); else { var e = a.match(/(\w+)(?:[?*])?(.*)/), f = e[1]; c.push(b[f]); c.push(e[2] || ""); delete b[f] } }); return c.join("")
+            } var D = !1, s, y, q = {
+                routes: g, reload: function () { D = !0; var b = { defaultPrevented: !1, preventDefault: function () { this.defaultPrevented = !0; D = !1 } }; a.$evalAsync(function () { p(b); b.defaultPrevented || l() }) }, updateParams: function (a) {
+                    if (this.current && this.current.$$route) a = d.extend({}, this.current.params, a), f.path(x(this.current.$$route.originalPath, a)), f.search(a); else throw I("norout");
+                }
+            }; a.$on("$locationChangeStart", p); a.$on("$locationChangeSuccess", l); return q
         }]
-    }), B = d.$$minErr("ngRoute"); w.provider("$routeParams", function () { this.$get = function () { return {} } }); w.directive("ngView", z); w.directive("ngView", A); z.$inject = ["$route", "$anchorScroll", "$animate"]; A.$inject = ["$compile", "$controller", "$route"]
+    }).run(A), I = d.$$minErr("ngRoute"), k; A.$inject = ["$injector"]; z.provider("$routeParams", function () { this.$get = function () { return {} } }); z.directive("ngView", B); z.directive("ngView", C); B.$inject = ["$route", "$anchorScroll", "$animate"]; C.$inject = ["$compile", "$controller", "$route"]
 })(window, window.angular);
 //# sourceMappingURL=angular-route.min.js.map
