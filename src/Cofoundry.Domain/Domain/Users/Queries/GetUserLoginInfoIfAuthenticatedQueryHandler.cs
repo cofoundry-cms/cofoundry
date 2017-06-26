@@ -64,6 +64,7 @@ namespace Cofoundry.Domain
             return _dbContext
                 .Users
                 .AsNoTracking()
+                .FilterByUserArea(query.UserAreaCode)
                 .FilterCanLogIn()
                 .Where(u => u.Username == query.Username);
         }
