@@ -65,7 +65,10 @@ Task("Restore-NuGet-Packages")
     .IsDependentOn("Patch-Assembly-Version")
     .Does(() =>
 {
-    DotNetCoreRestore("./src/Cofoundry.sln");
+    foreach (var projectToBuild in projectsToBuild)
+    {
+        DotNetCoreRestore(projectToBuild);
+    }
 });
 
 Task("Build")
