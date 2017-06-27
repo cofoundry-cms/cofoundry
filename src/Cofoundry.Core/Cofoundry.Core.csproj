@@ -2,8 +2,18 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard1.6</TargetFramework>
+
+    <PackageId>Cofoundry.Core</PackageId>
+    <Description>Cofoundry Core components and interfaces</Description>
+    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+    <Copyright>Copyright © Cofoundry.org</Copyright>
+    <PackageTags>Cofoundry Core</PackageTags>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <DocumentationFile>bin\Release\netstandard1.6\Cofoundry.Core.xml</DocumentationFile>
+  </PropertyGroup>
+  
   <ItemGroup>
     <PackageReference Include="AngleSharp" Version="0.9.9" />
     <PackageReference Include="AutoMapper" Version="6.1.0" />

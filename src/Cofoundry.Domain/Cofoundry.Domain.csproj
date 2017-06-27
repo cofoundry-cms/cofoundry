@@ -2,6 +2,19 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard1.6</TargetFramework>
+
+    <PackageId>Cofoundry.Domain</PackageId>
+    <Description>
+      Contains the domain and data access layer for Cofoundry. You can reference this
+      project directly if you're not interested in the web stack (e.g. a console app
+      or background service)
+    </Description>
+    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+    <PackageTags>Cofoundry Domain</PackageTags>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <DocumentationFile>bin\Release\netstandard1.6\Cofoundry.Domain.xml</DocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>

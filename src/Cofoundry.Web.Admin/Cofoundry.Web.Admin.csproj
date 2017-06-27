@@ -2,6 +2,17 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard1.6</TargetFramework>
+
+    <PackageId>Cofoundry.Web.Admin</PackageId>
+    <Description>
+      Adds the Cofoundry admin panel to a website.
+    </Description>
+    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+    <PackageTags>Cofoundry Web Admin CMS</PackageTags>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <DocumentationFile>bin\Release\netstandard1.6\Cofoundry.Web.Admin.xml</DocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>

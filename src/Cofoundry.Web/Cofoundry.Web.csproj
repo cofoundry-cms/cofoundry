@@ -2,6 +2,18 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard1.6</TargetFramework>
+
+    <PackageId>Cofoundry.Web</PackageId>
+    <Description>
+      Adds Cofoundry features to a website, including access to content, pages and media, but excluding
+      any content administration. To add content administration use the Cofoundry.Admin package.
+    </Description>
+    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+    <PackageTags>Cofoundry Web CMS</PackageTags>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <DocumentationFile>bin\Release\netstandard1.6\Cofoundry.Web.xml</DocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>
