@@ -8,6 +8,7 @@ using Cofoundry.Domain.CQS;
 using System.Data.Entity;
 using Cofoundry.Core.Validation;
 using Cofoundry.Core.MessageAggregator;
+using Cofoundry.Core;
 
 namespace Cofoundry.Domain
 {
@@ -70,61 +71,13 @@ namespace Cofoundry.Domain
 
         #region helpers
 
-        private Locale GetLocale(int? localeId)
-        {
-            if (!localeId.HasValue) return null;
-
-            var locale = _dbContext
-                .Locales
-                .SingleOrDefault(l => l.LocaleId == localeId);
-
-            if (locale == null)
-            {
-                throw new PropertyValidationException("The selected locale does not exist.", "LocaleId");
-            }
-            if (!locale.IsActive)
-            {
-                throw new PropertyValidationException("The selected locale is not active and cannot be used.", "LocaleId");
-            }
-
-            return locale;
-        }
-
-        private WebDirectory GetWebDirectory(int webDirectoryId)
-        {
-            var webDirectory = _dbContext
-                .WebDirectories
-                .Include(w => w.ParentWebDirectory)
-                .SingleOrDefault(w => w.WebDirectoryId == webDirectoryId);
-
-            if (webDirectory == null)
-            {
-                throw new PropertyValidationException("The selected web directory does not exist.", "WebDirectoryId");
-            }
-            CheckWebDirectoryIsActive(webDirectory);
-
-            return webDirectory;
-        }
-
-        private void CheckWebDirectoryIsActive(WebDirectory webDirectory)
-        {
-            if (!webDirectory.IsActive)
-            {
-                throw new PropertyValidationException("The selected web directory is not active and cannot be used.", "WebDirectoryId");
-            }
-            if (webDirectory.ParentWebDirectoryId.HasValue)
-            {
-                CheckWebDirectoryIsActive(webDirectory.ParentWebDirectory);
-            }
-        }
-
         private async Task<Page> MapPage(AddPageCommand command, IExecutionContext executionContext)
         {
             // Create Page
             var page = new Page();
             page.PageTypeId = (int)command.PageType;
             page.Locale = GetLocale(command.LocaleId);
-            page.WebDirectory = GetWebDirectory(command.WebDirectoryId);
+            page.WebDirectory = await GetWebDirectoryAsync(command.WebDirectoryId);
             _entityAuditHelper.SetCreated(page, executionContext);
             _entityTagHelper.UpdateTags(page.PageTags, command.Tags, executionContext);
 
@@ -157,6 +110,59 @@ namespace Cofoundry.Domain
             page.PageVersions.Add(pageVersion);
 
             return page;
+        }
+
+        private Locale GetLocale(int? localeId)
+        {
+            if (!localeId.HasValue) return null;
+
+            var locale = _dbContext
+                .Locales
+                .SingleOrDefault(l => l.LocaleId == localeId);
+
+            if (locale == null)
+            {
+                throw new PropertyValidationException("The selected locale does not exist.", "LocaleId");
+            }
+            if (!locale.IsActive)
+            {
+                throw new PropertyValidationException("The selected locale is not active and cannot be used.", "LocaleId");
+            }
+
+            return locale;
+        }
+
+        private async Task<WebDirectory> GetWebDirectoryAsync(int webDirectoryId)
+        {
+            var webDirectories = await _dbContext
+                .WebDirectories
+                .ToDictionaryAsync(w => w.WebDirectoryId);
+
+            var webDirectory = webDirectories.GetOrDefault(webDirectoryId);
+
+            if (webDirectory == null)
+            {
+                throw new PropertyValidationException("The selected web directory does not exist.", "WebDirectoryId");
+            }
+
+            CheckWebDirectoryIsActive(webDirectory, webDirectories);
+
+            return webDirectory;
+        }
+
+        private void CheckWebDirectoryIsActive(WebDirectory webDirectory, Dictionary<int, WebDirectory> allWebDirectories)
+        {
+            if (!webDirectory.IsActive)
+            {
+                throw new PropertyValidationException("The selected web directory is not active and cannot be used.", "WebDirectoryId");
+            }
+
+            if (webDirectory.ParentWebDirectoryId.HasValue)
+            {
+                var parentDirectory = allWebDirectories.GetOrDefault(webDirectory.ParentWebDirectoryId.Value);
+                EntityNotFoundException.ThrowIfNull(parentDirectory, webDirectory.ParentWebDirectoryId);
+                CheckWebDirectoryIsActive(webDirectory.ParentWebDirectory, allWebDirectories);
+            }
         }
 
         private ICustomEntityRoutingRule GetAndValidateRoutingRule(AddPageCommand command, CustomEntityDefinitionSummary definition, IExecutionContext ex)
