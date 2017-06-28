@@ -8,6 +8,7 @@ using Cofoundry.Domain.CQS;
 using Microsoft.EntityFrameworkCore;
 using Cofoundry.Core.Validation;
 using Cofoundry.Core.MessageAggregator;
+using Cofoundry.Core;
 
 namespace Cofoundry.Domain
 {
@@ -90,31 +91,36 @@ namespace Cofoundry.Domain
             return locale;
         }
 
-        private WebDirectory GetWebDirectory(int webDirectoryId)
+        private async Task<WebDirectory> GetWebDirectoryAsync(int webDirectoryId)
         {
-            var webDirectory = _dbContext
+            var webDirectories = await _dbContext
                 .WebDirectories
-                .Include(w => w.ParentWebDirectory)
-                .SingleOrDefault(w => w.WebDirectoryId == webDirectoryId);
+                .ToDictionaryAsync(w => w.WebDirectoryId);
+
+            var webDirectory = webDirectories.GetOrDefault(webDirectoryId);
 
             if (webDirectory == null)
             {
                 throw new PropertyValidationException("The selected web directory does not exist.", "WebDirectoryId");
             }
-            CheckWebDirectoryIsActive(webDirectory);
+
+            CheckWebDirectoryIsActive(webDirectory, webDirectories);
 
             return webDirectory;
         }
 
-        private void CheckWebDirectoryIsActive(WebDirectory webDirectory)
+        private void CheckWebDirectoryIsActive(WebDirectory webDirectory, Dictionary<int, WebDirectory> allWebDirectories)
         {
             if (!webDirectory.IsActive)
             {
                 throw new PropertyValidationException("The selected web directory is not active and cannot be used.", "WebDirectoryId");
             }
+
             if (webDirectory.ParentWebDirectoryId.HasValue)
             {
-                CheckWebDirectoryIsActive(webDirectory.ParentWebDirectory);
+                var parentDirectory = allWebDirectories.GetOrDefault(webDirectory.ParentWebDirectoryId.Value);
+                EntityNotFoundException.ThrowIfNull(parentDirectory, webDirectory.ParentWebDirectoryId);
+                CheckWebDirectoryIsActive(webDirectory.ParentWebDirectory, allWebDirectories);
             }
         }
 
@@ -124,7 +130,7 @@ namespace Cofoundry.Domain
             var page = new Page();
             page.PageTypeId = (int)command.PageType;
             page.Locale = GetLocale(command.LocaleId);
-            page.WebDirectory = GetWebDirectory(command.WebDirectoryId);
+            page.WebDirectory = await  GetWebDirectoryAsync(command.WebDirectoryId);
             _entityAuditHelper.SetCreated(page, executionContext);
             _entityTagHelper.UpdateTags(page.PageTags, command.Tags, executionContext);
 
