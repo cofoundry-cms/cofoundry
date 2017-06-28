@@ -66,7 +66,7 @@
                               ng-if="vm.command.pageType !== 'CustomEntityDetails'">
 
                 <cms-form-section-actions>
-                    <cms-button cms-text="Save Draft & Edit Content"
+                    <cms-button cms-text="{{::vm.saveAndEditButtonText}}"
                                 cms-loading="vm.saveLoadState.isLoading"
                                 ng-disabled="vm.mainForm.$invalid"
                                 ng-click="vm.saveAndEdit(pageRoute)"></cms-button>

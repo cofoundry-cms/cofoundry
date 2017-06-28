@@ -50,10 +50,11 @@ function (
         vm.editMode = false;
         vm.options = moduleOptions;
         vm.saveButtonText = moduleOptions.autoPublish ? 'Save' : 'Save & Publish';
+        vm.saveAndEditButtonText = moduleOptions.autoPublish ? 'Save & Edit Content' : 'Save Draft & Edit Content';
 
         vm.save = save.bind(null, false, redirectToDetails);
         vm.saveAndPublish = save.bind(null, true, redirectToDetails);
-        vm.saveAndEdit = save.bind(null, true, redirectToVisualEditor);
+        vm.saveAndEdit = save.bind(null, false, redirectToVisualEditor);
         vm.cancel = cancel;
         vm.onNameChanged = onNameChanged;
 

@@ -16,38 +16,9 @@
 
     <div class="row content-block">
         <div class="col-sm-12">
+            <h2>Sorry, there has been an error</h2>
 
-            @if (Request.RequestContext.HttpContext.IsDebuggingEnabled)
-            {
-                <h2>@Html.Raw(HtmlFormatter.ConvertToBasicHtml(baseException.Message))</h2>
-
-                <p>To replace the default error page, simply add a custom Error.cshml into Views/Shared/</p>
-
-                <dl>
-                    <dt>Action name</dt>
-                    <dd>@Model.ActionName</dd>
-
-                    <dt>Controller name</dt>
-                    <dd>@Model.ControllerName</dd>
-
-                    <dt>Target site</dt>
-                    <dd>@baseException.TargetSite</dd>
-
-                    <dt>Source</dt>
-                    <dd>@baseException.Source</dd>
-
-                    <dt>Stack trace</dt>
-                    <dd>
-                        @Html.Raw(baseException.StackTrace.Split(new string[] { "\r\n", "\n" }, StringSplitOptions.None).Aggregate((a, b) => a + "<br/>" + b))
-                    </dd>
-                </dl>
-            }
-            else
-            {
-                <h2>Sorry, there has been an error</h2>
-
-                <p>Please press back and try again. If the error persists then then please contact us.</p>
-            }
+            <p>Please press back and try again. If the error persists then then please contact us.</p>
         </div>
     </div>
 </div>
