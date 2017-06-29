@@ -23,8 +23,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cofoundry.Sandbox", "Cofoun
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cofoundry.BasicTestSite", "Cofoundry.BasicTestSite\Cofoundry.BasicTestSite.csproj", "{F18AD5CE-1929-47D8-9028-C1CE0B77E1B1}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cofoundry.Plugins.ImageResizing.ImageSharp", "Cofoundry.Plugins.Imaging.ImageSharp\Cofoundry.Plugins.ImageResizing.ImageSharp.csproj", "{D2294D19-19CD-4643-9E78-98F531599A9B}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -55,10 +53,6 @@ Global
 		{F18AD5CE-1929-47D8-9028-C1CE0B77E1B1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F18AD5CE-1929-47D8-9028-C1CE0B77E1B1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F18AD5CE-1929-47D8-9028-C1CE0B77E1B1}.Release|Any CPU.Build.0 = Release|Any CPU
-		{D2294D19-19CD-4643-9E78-98F531599A9B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{D2294D19-19CD-4643-9E78-98F531599A9B}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{D2294D19-19CD-4643-9E78-98F531599A9B}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{D2294D19-19CD-4643-9E78-98F531599A9B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -70,6 +64,5 @@ Global
 		{C168F1B9-A30D-429A-B8A1-E77991167E0D} = {4996A61A-00E1-4363-9BC7-1F877E4AD933}
 		{37F70F40-0917-4844-AE40-3E958724F532} = {8FCDFF68-9BCF-499B-8E2D-7E08E824F40A}
 		{F18AD5CE-1929-47D8-9028-C1CE0B77E1B1} = {8FCDFF68-9BCF-499B-8E2D-7E08E824F40A}
-		{D2294D19-19CD-4643-9E78-98F531599A9B} = {22FE4195-4C00-444A-9873-1435F4F11A81}
 	EndGlobalSection
 EndGlobal

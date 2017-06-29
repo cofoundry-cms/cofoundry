@@ -42,24 +42,26 @@ namespace Cofoundry.Domain
 
         public async Task<PagedQueryResult<CustomEntityRenderSummary>> ExecuteAsync(SearchCustomEntityRenderSummariesQuery query, IExecutionContext executionContext)
         {
-            var dbQuery = await GetQueryAsync(query);
-            var dbPagedResult = await dbQuery.ToPagedResultAsync(query);
+            var dbPagedResult = await GetQueryAsync(query);
             var results = await _customEntityRenderSummaryMapper.MapSummariesAsync(dbPagedResult.Items, executionContext);
 
             return dbPagedResult.ChangeType(results);
         }
-        
-        private async Task<IQueryable<CustomEntityVersion>> GetQueryAsync(SearchCustomEntityRenderSummariesQuery query)
+
+        private async Task<PagedQueryResult<CustomEntityVersion>> GetQueryAsync(SearchCustomEntityRenderSummariesQuery query)
         {
             var definition = await _queryExecutor.GetByIdAsync<CustomEntityDefinitionSummary>(query.CustomEntityDefinitionCode);
             EntityNotFoundException.ThrowIfNull(definition, query.CustomEntityDefinitionCode);
 
-            var dbQuery = _dbContext
+            var dbQuery = (await _dbContext
                 .CustomEntityVersions
                 .AsNoTracking()
                 .Include(e => e.CustomEntity)
                 .Where(e => e.CustomEntity.CustomEntityDefinitionCode == query.CustomEntityDefinitionCode)
-                .FilterByWorkFlowStatusQuery(query.WorkFlowStatus);
+                .FilterByWorkFlowStatusQuery(query.WorkFlowStatus)
+                // TODO: EF Core: To make this work we must execute the full query before sorting & paging
+                .ToListAsync())
+                .AsQueryable();
 
             // Filter by locale 
             if (query.LocaleId > 0)
@@ -98,9 +100,11 @@ namespace Cofoundry.Domain
                     break;
             }
 
-            return dbQuery;
+            // TODO: could be async when EF core supports it
+            var dbPagedResult = dbQuery.ToPagedResult(query);
+            return dbPagedResult;
         }
-        
+
         #endregion
 
         #region Permission

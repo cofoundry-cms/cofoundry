@@ -15,6 +15,7 @@
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
     <DocumentationFile>bin\Release\netstandard1.6\Cofoundry.Domain.xml</DocumentationFile>
+    <NoWarn>1701;1702;1705;1591</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>
@@ -40,7 +41,7 @@
   </ItemGroup>
   
   <ItemGroup>
-      <EmbeddedResource Include="MailTemplates\AdminMailTemplates\**\*.cshtml;MailTemplates\AdminMailTemplates\*\content\**\*.*;" />
+    <EmbeddedResource Include="MailTemplates\AdminMailTemplates\**\*.cshtml;MailTemplates\AdminMailTemplates\*\content\**\*.*;" />
     <EmbeddedResource Include="Install\**\*.sql" />
   </ItemGroup>
 	
