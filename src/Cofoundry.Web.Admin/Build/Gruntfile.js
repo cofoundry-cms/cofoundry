@@ -318,6 +318,7 @@
                 src: [
                     '../Admin/Modules/CustomEntities/Js/Bootstrap/*.js',
                     '../Admin/Modules/CustomEntities/Js/Routes/*.js',
+                    '../Admin/Modules/CustomEntities/Js/Routes/**/*.js',
                 ],
                 dest: '../Admin/Modules/CustomEntities/Content/js/customentities.js'
             },
@@ -335,7 +336,7 @@
                 },
                 src: [
                     '../Admin/Modules/CustomEntities/Js/Routes/*.html',
-                    '../Admin/Modules/CustomEntities/Js/Routes/Modals/*.html',
+                    '../Admin/Modules/CustomEntities/Js/Routes/**/*.html',
                 ],
                 dest: '../Admin/Modules/CustomEntities/Content/js/customentities_templates.js'
             },
