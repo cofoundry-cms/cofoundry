@@ -18,7 +18,7 @@ begin
 	-- can't do any modifications here because we dont want to affect the natural ordering
 	insert into @AllOrderedIds (CustomEntityId) 
 	select i.number
-	from  (select number from cor.IntListToTbl(@CustomEntityIds)) i
+	from  (select number from Cofoundry.IntListToTbl(@CustomEntityIds)) i
 			
 	-- Create entity ordering
 	declare @OrderedEntities table

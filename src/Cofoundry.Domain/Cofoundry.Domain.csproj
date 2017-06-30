@@ -1104,6 +1104,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Install\Db\Schema\00003.sql" />
   </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Install\Db\Schema\00004.sql" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="BeforeBuild">
     <ItemGroup>
