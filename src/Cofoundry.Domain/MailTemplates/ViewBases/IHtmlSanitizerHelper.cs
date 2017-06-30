@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Cofoundry.Web
+namespace Cofoundry.Domain
 {
     /// <summary>
     /// Helper for sanitizing html before it output to the page. You'd typically

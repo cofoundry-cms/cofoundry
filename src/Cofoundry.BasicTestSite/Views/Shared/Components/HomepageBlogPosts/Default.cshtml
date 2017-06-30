@@ -6,17 +6,11 @@
 
 @foreach (var blogPost in Model.Items)
 {
-    <article class="blog-teaser">
-        <div class="blog-teaser__image">
-            <a href="@blogPost.FullPath">
-                <img src="@Cofoundry.Routing.ImageAsset(blogPost.ThumbnailImageAsset, 400, 300)">
-            </a>
-        </div>
-        <div class="blog-teaser__text">
-            <h2>@blogPost.Title</h2>
-            <span><span class="glyphicon glyphicon-calendar"></span> @blogPost.PostDate.ToString("dd MMM yyyy")</span>
+    <article class="col-sm-4">
+        <div class="blog-cards__card">
+            <h3>@blogPost.Title</h3>
             <p>@blogPost.ShortDescription</p>
-            <a href="@blogPost.FullPath" class="btn btn-default">Read post</a>
+            <a href="@blogPost.FullPath" class="btn btn-default">Read more</a>
         </div>
     </article>
 }

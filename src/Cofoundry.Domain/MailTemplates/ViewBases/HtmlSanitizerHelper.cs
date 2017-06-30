@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Cofoundry.Web
+namespace Cofoundry.Domain
 {
     /// <summary>
     /// An HTML cleanup utility to remove potentially dangerous user input.
