@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,23 +21,29 @@ namespace Cofoundry.Core.DependencyInjection
         private readonly IDiscoveredTypesProvider _discoveredTypesProvider;
         private readonly IServiceCollection _serviceCollection;
         private readonly DefaultContainerBuilder _containerBuilder;
+        private readonly ContainerConfigurationHelper _containerConfigurationHelper;
 
         public DefaultContainerRegister(
             IDiscoveredTypesProvider discoveredTypesProvider,
             IServiceCollection serviceCollection,
-            DefaultContainerBuilder containerBuilder
+            DefaultContainerBuilder containerBuilder,
+            IConfigurationRoot configurationRoot
             )
         {
             if (discoveredTypesProvider == null) throw new ArgumentNullException(nameof(discoveredTypesProvider));
             if (serviceCollection == null) throw new ArgumentNullException(nameof(serviceCollection));
             if (containerBuilder == null) throw new ArgumentNullException(nameof(containerBuilder));
+            if (configurationRoot == null) throw new ArgumentNullException(nameof(configurationRoot));
 
             _discoveredTypesProvider = discoveredTypesProvider;
             _serviceCollection = serviceCollection;
             _containerBuilder = containerBuilder;
+            _containerConfigurationHelper = new ContainerConfigurationHelper(configurationRoot);
         }
 
         #region IContainerRegister implementation
+
+        public IContainerConfigurationHelper Configuration { get => _containerConfigurationHelper; }
 
         public IContainerRegister RegisterInstance<TRegisterAs>(TRegisterAs instance, RegistrationOptions options = null)
         {

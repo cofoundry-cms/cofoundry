@@ -12,7 +12,7 @@ namespace Cofoundry.Web
     public static class AddCofoundryStartupExtension
     {
         /// <summary>
-        /// Configures the dependency resolver for Cofoundry to use AutoFac and
+        /// Configures the dependency resolver for Cofoundry and
         /// registers all the services, repositories and modules setup for auto-registration.
         /// </summary>
         public static IMvcBuilder AddCofoundry(

@@ -44,7 +44,12 @@ namespace Cofoundry.Core.DependencyInjection
             CheckIsBuilt();
             RegisterFramework();
 
-            var containerRegister = new DefaultContainerRegister(_discoveredTypesProvider, _serviceCollection, this);
+            var containerRegister = new DefaultContainerRegister(
+                _discoveredTypesProvider, 
+                _serviceCollection, 
+                this,
+                _configurationRoot
+                );
 
             var registrations = GetAllRegistrations();
             foreach (var registration in registrations)

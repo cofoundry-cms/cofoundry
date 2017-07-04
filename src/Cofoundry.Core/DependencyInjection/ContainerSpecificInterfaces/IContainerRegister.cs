@@ -14,6 +14,11 @@ namespace Cofoundry.Core.DependencyInjection
     public interface IContainerRegister
     {
         /// <summary>
+        /// Basic access to application configuration settings.
+        /// </summary>
+        IContainerConfigurationHelper Configuration { get; }
+
+        /// <summary>
         /// Registers a service instance.
         /// </summary>
         /// <typeparam name="TRegisterAs">Type to register the service as</typeparam>
