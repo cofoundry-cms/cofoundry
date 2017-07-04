@@ -46,7 +46,7 @@ namespace Cofoundry.Core.Configuration
 
             if (!EnumerableHelper.IsNullOrEmpty(errors))
             {
-                throw new InvalidConfigurationException(typeof(TSettings).Name, errors);
+                throw new InvalidConfigurationException(typeof(TSettings), errors);
             }
 
             return settings;
