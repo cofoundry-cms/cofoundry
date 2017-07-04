@@ -40,7 +40,7 @@ namespace Cofoundry.Domain
             var fileName = Path.ChangeExtension(query.Id.ToString(), dbResult.Extension);
 
             var result = Mapper.Map<ImageAssetFile>(dbResult);
-            result.ContentStream = _fileStoreService.Get(ImageAssetConstants.FileContainerName, fileName);
+            result.ContentStream = await _fileStoreService.GetAsync(ImageAssetConstants.FileContainerName, fileName);
 
             if (result.ContentStream == null)
             {

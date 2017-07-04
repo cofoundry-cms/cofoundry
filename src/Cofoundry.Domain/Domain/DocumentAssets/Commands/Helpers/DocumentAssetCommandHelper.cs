@@ -53,7 +53,7 @@ namespace Cofoundry.Domain
                 using (var scope = _transactionScopeFactory.Create(_dbContext))
                 {
                     // Save the raw file directly
-                    CreateFile(isNew, fileName, inputSteam);
+                    await CreateFileAsync(isNew, fileName, inputSteam);
 
                     if (!isNew)
                     {
@@ -85,15 +85,15 @@ namespace Cofoundry.Domain
 
         #region private helpers
 
-        private void CreateFile(bool isNew, string fileName, Stream outputStream)
+        private Task CreateFileAsync(bool isNew, string fileName, Stream outputStream)
         {
             if (isNew)
             {
-                _fileStoreService.Create(DocumentAssetConstants.FileContainerName, fileName, outputStream);
+                return _fileStoreService.CreateAsync(DocumentAssetConstants.FileContainerName, fileName, outputStream);
             }
             else
             {
-                _fileStoreService.CreateOrReplace(DocumentAssetConstants.FileContainerName, fileName, outputStream);
+                return _fileStoreService.CreateOrReplaceAsync(DocumentAssetConstants.FileContainerName, fileName, outputStream);
             }
         }
 

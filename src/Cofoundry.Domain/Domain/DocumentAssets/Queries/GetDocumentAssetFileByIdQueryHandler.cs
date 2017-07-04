@@ -45,7 +45,7 @@ namespace Cofoundry.Domain
             var result = new DocumentAssetFile();
             result.DocumentAssetId = query.Id;
             result.ContentType = dbResult.ContentType;
-            result.ContentStream = _fileStoreService.Get(DocumentAssetConstants.FileContainerName, fileName);
+            result.ContentStream = await _fileStoreService.GetAsync(DocumentAssetConstants.FileContainerName, fileName);
             result.FileName = FilePathHelper.CleanFileName(Path.ChangeExtension(dbResult.FileName, dbResult.Extension), fileName);
 
             if (result.ContentStream == null)
