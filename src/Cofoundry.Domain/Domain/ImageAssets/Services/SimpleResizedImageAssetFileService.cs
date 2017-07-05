@@ -41,9 +41,10 @@ namespace Cofoundry.Domain
             return GetFileStreamAsync(asset.ImageAssetId);
         }
 
-        public void Clear(int imageAssetId)
+        public Task ClearAsync(int imageAssetId)
         {
             // nothing to clear
+            return Task.CompletedTask;
         }
 
         #region private methods

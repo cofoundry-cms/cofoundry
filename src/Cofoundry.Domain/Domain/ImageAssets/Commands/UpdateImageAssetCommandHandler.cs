@@ -79,7 +79,7 @@ namespace Cofoundry.Domain
 
             if (hasNewFile)
             {
-                _imageAssetFileCache.Clear(imageAsset.ImageAssetId);
+                await _imageAssetFileCache.ClearAsync(imageAsset.ImageAssetId);
             }
             _imageAssetCache.Clear(imageAsset.ImageAssetId);
         }
