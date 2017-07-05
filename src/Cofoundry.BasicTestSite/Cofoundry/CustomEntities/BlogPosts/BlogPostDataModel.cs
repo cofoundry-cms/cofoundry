@@ -36,7 +36,7 @@ namespace Cofoundry.BasicTestSite
         public int[] ThumbnailImageAssets{ get; set; }
 
         [Display(Name = "Html")]
-        [Html]
+        [Html(HtmlToolbarPreset.BasicFormatting, HtmlToolbarPreset.Headings, HtmlToolbarPreset.Media, HtmlToolbarPreset.Source)]
         public string TestHtml { get; set; }
 
         //[Page]
