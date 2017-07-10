@@ -67,9 +67,12 @@ namespace Cofoundry.Domain.Data
         public Task<Stream> GetAsync(string containerName, string fileName)
         {
             var path = Path.Combine(_fileRoot.Value, containerName, fileName);
-            if (!File.Exists(path)) return null;
+            Stream fileStream = null;
 
-            Stream fileStream = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+            if (File.Exists(path))
+            {
+                fileStream = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+            }
 
             return Task.FromResult(fileStream);
         }

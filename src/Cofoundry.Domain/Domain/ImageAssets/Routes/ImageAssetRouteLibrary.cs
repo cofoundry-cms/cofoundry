@@ -1,5 +1,4 @@
 ﻿using Cofoundry.Core;
-using Cofoundry.Core.ErrorLogging;
 using Cofoundry.Domain.CQS;
 using System;
 using System.Collections.Generic;

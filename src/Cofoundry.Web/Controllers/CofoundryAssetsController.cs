@@ -4,12 +4,12 @@ using System.Linq;
 using System.IO;
 using Cofoundry.Domain.CQS;
 using Cofoundry.Domain;
-using Cofoundry.Core.ErrorLogging;
 using Cofoundry.Core;
 using Microsoft.AspNetCore.Mvc;
 using Cofoundry.Core.Web;
 using Microsoft.AspNetCore.Http;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 
 namespace Cofoundry.Web
 {
@@ -19,23 +19,23 @@ namespace Cofoundry.Web
 
         private readonly IQueryExecutor _queryExecutor;
         private readonly IResizedImageAssetFileService _resizedImageAssetFileService;
-        private readonly IErrorLoggingService _errorLoggingService;
         private readonly IImageAssetRouteLibrary _imageAssetRouteLibrary;
         private readonly IMimeTypeService _mimeTypeService;
+        private readonly ILogger<CofoundryAssetsController> _logger;
 
         public CofoundryAssetsController(
             IQueryExecutor queryExecutor,
             IResizedImageAssetFileService resizedImageAssetFileService,
-            IErrorLoggingService errorLoggingService,
             IImageAssetRouteLibrary imageAssetRouteLibrary,
-            IMimeTypeService mimeTypeService
+            IMimeTypeService mimeTypeService,
+            ILogger<CofoundryAssetsController> logger
             )
         {
             _queryExecutor = queryExecutor;
             _resizedImageAssetFileService = resizedImageAssetFileService;
-            _errorLoggingService = errorLoggingService;
             _imageAssetRouteLibrary = imageAssetRouteLibrary;
             _mimeTypeService = mimeTypeService;
+            _logger = logger;
         }
 
         #endregion
@@ -85,7 +85,7 @@ namespace Cofoundry.Web
             catch (FileNotFoundException ex)
             {
                 // If the file exists but the file has gone missing, log and return a 404
-                _errorLoggingService.Log(ex);
+                _logger.LogError(0, ex, "Image Asset exists, but has no file: {0}", assetId);
                 return FileAssetNotFound("File not found");
             }
 
@@ -110,7 +110,7 @@ namespace Cofoundry.Web
             catch (FileNotFoundException ex)
             {
                 // If the file exists but the file has gone missing, log and return a 404
-                _errorLoggingService.Log(ex);
+                _logger.LogError(0, ex, "Document Asset exists, but has no file: {0}", assetId);
             }
 
             if (file == null)

@@ -61,6 +61,7 @@ namespace Cofoundry.Domain
         /// </summary>
         /// <typeparam name="TPermission">Type of permission to check for if the id is not the currently logged in user</typeparam>
         /// <param name="userId">UserId to compare with the currently logged in user</param>
+        /// <param name="currentUserContext">An IUserContext representing the currently logged in user.</param>
         bool IsCurrentUserOrHasPermission<TPermission>(int userId, IUserContext currentUserContext) where TPermission : IPermissionApplication, new();
 
         /// <summary>
@@ -81,6 +82,7 @@ namespace Cofoundry.Domain
         /// </summary>
         /// <typeparam name="TPermission">Type of permission to check for if the id is not the currently logged in user</typeparam>
         /// <param name="userId">UserId to compare with the currently logged in user</param>
+        /// <param name="currentUserContext">An IUserContext representing the currently logged in user.</param>
         void EnforceCurrentUserOrHasPermission<TPermission>(int userId, IUserContext currentUserContext) where TPermission : IPermissionApplication, new();
 
         Task<bool> HasPermissionAsync(IPermissionApplication permission);
