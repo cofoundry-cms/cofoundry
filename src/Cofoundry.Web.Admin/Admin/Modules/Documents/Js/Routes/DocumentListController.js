@@ -3,12 +3,14 @@
     'shared.LoadState',
     'shared.SearchQuery',
     'shared.urlLibrary',
+    'shared.permissionValidationService',
     'documents.documentService',
 function (
     _,
     LoadState,
     SearchQuery,
     urlLibrary,
+    permissionValidationService,
     documentService) {
 
     /* START */
@@ -27,6 +29,8 @@ function (
 
         vm.toggleFilter = toggleFilter;
         vm.getDocumentUrl = urlLibrary.getDocumentUrl;
+
+        vm.permissions = permissionValidationService;
 
         toggleFilter(false);
         loadGrid();

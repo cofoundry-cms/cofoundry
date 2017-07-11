@@ -49,11 +49,13 @@ function (
 angular.module('cms.account').controller('AccountDetailsController', [
     'shared.LoadState',
     'shared.modalDialogService',
+    'shared.permissionValidationService',
     'account.accountService',
     'account.modulePath',
 function (
     LoadState,
     modalDialogService,
+    permissionValidationService,
     accountService,
     modulePath
     ) {
@@ -76,6 +78,8 @@ function (
         vm.globalLoadState = new LoadState();
         vm.saveLoadState = new LoadState();
         vm.formLoadState = new LoadState(true);
+
+        vm.permissions = permissionValidationService;
 
         // Init
         initData()

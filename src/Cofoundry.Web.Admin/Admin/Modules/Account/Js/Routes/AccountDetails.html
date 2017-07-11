@@ -9,12 +9,14 @@
     <cms-page-actions ng-show="!vm.editMode">
 
         <cms-button class="main-cta"
+                    ng-if="vm.permissions.canUpdate('COFCUR')"
                     cms-text="Edit"
                     ng-click="vm.edit()"
                     ng-show="!vm.editMode"
                     ng-disabled="vm.globalLoadState.isLoading"></cms-button>
 
         <cms-button-link cms-text="Change Password"
+                         ng-if="vm.permissions.canUpdate('COFCUR')"
                          href="#/change-password"></cms-button-link>
 
 
