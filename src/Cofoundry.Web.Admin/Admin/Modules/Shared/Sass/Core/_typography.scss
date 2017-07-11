@@ -1,8 +1,9 @@
 // This is where we set up the basic and global tyopography rules. 
 
 html {
-    font-family:$fontstack-default;
-    font-size:80%;
+    font-family: $fontstack-default;
+    font-size: 80%;
+    line-height: 1.5em;
 }
 
 h2 {

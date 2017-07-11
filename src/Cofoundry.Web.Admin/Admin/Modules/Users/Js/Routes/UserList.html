@@ -57,7 +57,8 @@
                 </tr>
                 <tr ng-repeat="user in vm.result.items">
                     <td>
-                        <cms-user-link cms-user="::user"></cms-user-link>
+                        <a href="{{::vm.urlLibrary.userDetails(user.userArea, user.userId)}}">{{::user.username}}</a><br>
+                        <span ng-if="user.firstName || user.lastName">{{::user.firstName}} {{::user.lastName}}</span>
                     </td>
                     <td>
                         <a href="{{::vm.urlLibrary.roleDetails(user.role.roleId)}}">{{::user.role.title}}</a>
