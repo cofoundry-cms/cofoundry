@@ -141,9 +141,11 @@ namespace Cofoundry.Core.DependencyInjection
             var concreteTypes = GetDiscoveredConcreteTypes()
                 .Where(t => typeToRegister.GetTypeInfo().IsAssignableFrom(t) && t.AsType() != typeToRegister);
 
-            foreach (var concreteType in concreteTypes)
+            foreach (var concreteTypeInfo in concreteTypes)
             {
-                AddService(typeToRegister, concreteType.AsType());
+                var concreteType = concreteTypeInfo.AsType();
+                AddService(concreteType, concreteType);
+                AddServiceWithFactory(typeToRegister, c => c.GetRequiredService(concreteType));
             }
 
             return this;

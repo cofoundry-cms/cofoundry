@@ -108,7 +108,7 @@ namespace Cofoundry.Domain
 
             foreach (var permissionToRemove in permissionsToRemove)
             {
-                role.RolePermissions.Remove(permissionToRemove);
+                _dbContext.RolePermissions.Remove(permissionToRemove);
             }
 
             // Additions
