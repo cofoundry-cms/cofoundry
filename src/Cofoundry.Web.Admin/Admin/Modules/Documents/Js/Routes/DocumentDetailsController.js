@@ -5,6 +5,7 @@
     '_',
     'shared.LoadState',
     'shared.modalDialogService',
+    'shared.permissionValidationService',
     'documents.documentService',
     'documents.modulePath',
 function (
@@ -13,6 +14,7 @@ function (
     _,
     LoadState,
     modalDialogService,
+    permissionValidationService,
     documentService,
     modulePath) {
 
@@ -35,6 +37,8 @@ function (
         vm.globalLoadState = new LoadState();
         vm.saveLoadState = new LoadState();
         vm.formLoadState = new LoadState(true);
+
+        vm.permissions = permissionValidationService;
 
         // Init
         initData(vm.formLoadState);

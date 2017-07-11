@@ -29,6 +29,7 @@
                cms-query="vm.query"></cms-pager>
 
     <cms-button-link class="main-cta" 
+                     ng-if="vm.permissions.canCreate('COFDOC')"
                      cms-text="Upload Document"
                      cms-icon="plus"
                      cms-href="#/new"></cms-button-link>
@@ -67,7 +68,7 @@
                         <cms-table-cell-updated-audit-data cms-audit-data="::document.auditData"></cms-table-cell-updated-audit-data>
                     </td>
                     <td cms-table-column-actions>
-                        <a href="#/{{document.documentAssetId}}" class="btn-icon" title="Edit">
+                        <a ng-if="vm.permissions.canUpdate('COFDOC')" href="#/{{document.documentAssetId}}" class="btn-icon" title="Edit">
                             <i class="fa fa-pencil-square-o"></i>
                         </a>
                     </td>

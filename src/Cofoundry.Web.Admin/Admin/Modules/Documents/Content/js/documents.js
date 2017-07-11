@@ -133,6 +133,7 @@ angular.module('cms.documents').controller('DocumentDetailsController', [
     '_',
     'shared.LoadState',
     'shared.modalDialogService',
+    'shared.permissionValidationService',
     'documents.documentService',
     'documents.modulePath',
 function (
@@ -141,6 +142,7 @@ function (
     _,
     LoadState,
     modalDialogService,
+    permissionValidationService,
     documentService,
     modulePath) {
 
@@ -163,6 +165,8 @@ function (
         vm.globalLoadState = new LoadState();
         vm.saveLoadState = new LoadState();
         vm.formLoadState = new LoadState(true);
+
+        vm.permissions = permissionValidationService;
 
         // Init
         initData(vm.formLoadState);
@@ -263,12 +267,14 @@ angular.module('cms.documents').controller('DocumentListController', [
     'shared.LoadState',
     'shared.SearchQuery',
     'shared.urlLibrary',
+    'shared.permissionValidationService',
     'documents.documentService',
 function (
     _,
     LoadState,
     SearchQuery,
     urlLibrary,
+    permissionValidationService,
     documentService) {
 
     /* START */
@@ -287,6 +293,8 @@ function (
 
         vm.toggleFilter = toggleFilter;
         vm.getDocumentUrl = urlLibrary.getDocumentUrl;
+
+        vm.permissions = permissionValidationService;
 
         toggleFilter(false);
         loadGrid();
