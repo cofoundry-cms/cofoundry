@@ -47,9 +47,6 @@ function (
     /* QUERIES */
 
     service.getAll = function (query) {
-        query = _.defaults(query, {
-            userAreaCode: COFOUNDRY_USER_AREA_CODE
-        });
 
         return $http.get(roleServiceBase, {
             params: query
