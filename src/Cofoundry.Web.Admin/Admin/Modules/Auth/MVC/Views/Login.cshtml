@@ -31,6 +31,7 @@
 
             <div class="control-group">
                 <label asp-for="Password" class="control-label"></label>
+                <a id="forgotPasswordLink" class="login-alt-cta" href="@adminRouteLibrary.Auth.ForgotPassword()">Forgotten your password?</a>
                 <div class="controls">
                     <input type="password" asp-for="Password" />
                     <span asp-validation-for="Password" class="help-block"></span>
@@ -47,11 +48,4 @@
         </fieldset>
     </form>
 </div>
-
-<footer class="login-footer">
-    <p class="login-footer-links">
-        <a id="forgotPasswordLink" href="@adminRouteLibrary.Auth.ForgotPassword()">Forgotten your password?</a>
-        <br />
-        <a href="/">&lt; Back to @await Cofoundry.Settings.GetApplicationNameAsync()</a>
-    </p>
-</footer>
+<a href="/">&lt; Back to @await Cofoundry.Settings.GetApplicationNameAsync()</a>
