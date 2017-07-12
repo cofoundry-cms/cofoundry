@@ -1,3 +1,4 @@
-﻿<a ng-if="vm.user" 
+﻿<a ng-if="vm.user && vm.permissions.canRead('COFUSR')"
    cms-auto-target-blank
    href="{{vm.urlLibrary.userDetails(vm.user.userArea, vm.user.userId)}}">{{vm.user.firstName}} {{vm.user.lastName}}</a>
+<span ng-if="!vm.permissions.canRead('COFUSR')">{{vm.user.firstName}} {{vm.user.lastName}}</span>
