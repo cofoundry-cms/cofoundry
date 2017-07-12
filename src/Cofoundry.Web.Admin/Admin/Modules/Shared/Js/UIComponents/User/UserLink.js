@@ -1,9 +1,11 @@
 ﻿angular.module('cms.shared').directive('cmsUserLink', [
     'shared.internalModulePath',
     'shared.urlLibrary',
+    'shared.permissionValidationService',
 function (
     modulePath,
-    urlLibrary
+    urlLibrary,
+    permissionValidationService
     ) {
 
     return {
@@ -19,5 +21,6 @@ function (
         var vm = this;
 
         vm.urlLibrary = urlLibrary;
+        vm.permissions = permissionValidationService;
     }
 }]);
