@@ -186,6 +186,7 @@ angular.module('cms.users').controller('UserDetailsController', [
     '$q',
     'shared.LoadState',
     'shared.modalDialogService',
+    'shared.permissionValidationService',
     'users.userService',
     'users.roleService',
     'users.modulePath',
@@ -196,6 +197,7 @@ function (
     $q,
     LoadState,
     modalDialogService,
+    permissionValidationService,
     userService,
     roleService,
     modulePath,
@@ -222,6 +224,8 @@ function (
         vm.saveLoadState = new LoadState();
         vm.formLoadState = new LoadState(true);
         vm.userArea = options;
+
+        vm.permissions = permissionValidationService;
 
         // Init
         $q.all([loadRoles(), loadUser()])
@@ -347,6 +351,7 @@ angular.module('cms.users').controller('UserListController', [
     'shared.LoadState',
     'shared.SearchQuery',
     'shared.urlLibrary',
+    'shared.permissionValidationService',
     'users.userService',
     'users.options',
 function (
@@ -354,6 +359,7 @@ function (
     LoadState,
     SearchQuery,
     urlLibrary,
+    permissionValidationService,
     userService,
     options) {
 
@@ -371,6 +377,8 @@ function (
         });
         vm.filter = vm.query.getFilters();
         vm.toggleFilter = toggleFilter;
+
+        vm.permissions = permissionValidationService;
 
         toggleFilter(false);
 

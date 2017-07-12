@@ -4,6 +4,7 @@
     'shared.LoadState',
     'shared.SearchQuery',
     'shared.pageService',
+    'shared.permissionValidationService',
     'pages.pageTemplateService',
 function (
     _,
@@ -11,6 +12,7 @@ function (
     LoadState,
     SearchQuery,
     pageService,
+    permissionValidationService,
     pageTemplateService) {
 
     var vm = this;
@@ -31,6 +33,8 @@ function (
 
         toggleFilter(false);
         vm.publish = publish;
+
+        vm.permissions = permissionValidationService;
 
         loadGrid();
     }

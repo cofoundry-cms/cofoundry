@@ -9,6 +9,7 @@
     <!-- Default toolbar -->
     <cms-page-actions ng-show="!vm.editMode">
         <cms-button cms-text="Edit"
+                    ng-if="vm.permissions.canUpdate('COFPGE')"
                     ng-click="vm.edit()"
                     ng-show="!vm.editMode"
                     ng-disabled="vm.globalLoadState.isLoading" class="main-cta"></cms-button>
@@ -20,22 +21,25 @@
         <cms-button cms-text="Publish"
                     ng-click="vm.publish()"
                     ng-disabled="vm.editMode || vm.globalLoadState.isLoading"
-                    ng-if="vm.page.pageRoute.hasDraft"></cms-button>
+                    ng-if="vm.page.pageRoute.hasDraft && vm.permissions.hasPermission('COFPGEPAGPUB')"></cms-button>
 
         <cms-button cms-text="Unpublish"
                     ng-click="vm.unpublish()"
                     ng-disabled="vm.editMode || vm.globalLoadState.isLoading"
-                    ng-if="vm.page.pageRoute.isPublished"></cms-button>
+                    ng-if="vm.page.pageRoute.isPublished && vm.permissions.hasPermission('COFPGEPAGPUB')"></cms-button>
 
         <cms-button cms-text="Change Url"
+                    ng-if="vm.permissions.hasPermission('COFPGEUPDURL')"
                     ng-click="vm.changeUrl()"
                     ng-disabled="vm.editMode || vm.globalLoadState.isLoading"></cms-button>
 
         <cms-button cms-text="Duplicate"
+                    ng-if="vm.permissions.canCreate('COFPGE')"
                     ng-click="vm.duplicatePage()"
                     ng-disabled="vm.editMode || vm.globalLoadState.isLoading"></cms-button>
 
         <cms-button cms-text="Delete"
+                    ng-if="vm.permissions.canDelete('COFPGE')"
                     ng-click="vm.deletePage()"
                     ng-disabled="vm.editMode || vm.globalLoadState.isLoading"></cms-button>
     </cms-page-actions>
@@ -131,6 +135,7 @@
 
             <cms-form-section-actions>
                 <cms-button-link cms-text="Manage in Visual Editor"
+                    ng-if="vm.permissions.canUpdate('COFPGE')"
                     cms-icon="eye-open"
                     ng-show="!vm.editMode"
                     cms-href="{{vm.urlLibrary.pageVisualEditor(vm.page.pageRoute, true)}}"></cms-button-link>

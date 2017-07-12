@@ -247,6 +247,7 @@ angular.module('cms.directories').controller('DirectoryDetailsController', [
     'shared.stringUtilities',
     'shared.LoadState',
     'shared.modalDialogService',
+    'shared.permissionValidationService',
     'directories.directoryService',
     'directories.modulePath',
 function (
@@ -257,6 +258,7 @@ function (
     stringUtilities,
     LoadState,
     modalDialogService,
+    permissionValidationService,
     directoryService,
     modulePath
     ) {
@@ -283,6 +285,8 @@ function (
         vm.globalLoadState = new LoadState();
         vm.saveLoadState = new LoadState();
         vm.formLoadState = new LoadState(true);
+
+        vm.permissions = permissionValidationService;
 
         // Init
         initData()
@@ -391,12 +395,14 @@ angular.module('cms.directories').controller('DirectoryListController', [
     'shared.modalDialogService',
     'shared.LoadState',
     'shared.SearchQuery',
+    'shared.permissionValidationService',
     'directories.directoryService',
 function (
     _,
     modalDialogService,
     LoadState,
     SearchQuery,
+    permissionValidationService,
     directoryService) {
 
     var vm = this;
@@ -406,6 +412,7 @@ function (
     function init() {
         
         vm.gridLoadState = new LoadState();
+        vm.permissions = permissionValidationService;
 
         loadGrid();
     }

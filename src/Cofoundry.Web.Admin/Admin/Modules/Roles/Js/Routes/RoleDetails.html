@@ -10,12 +10,14 @@
     <cms-page-actions ng-show="!vm.editMode">
 
         <cms-button class="main-cta"
+                    ng-if="vm.permissions.canUpdate('COFROL')"
                     cms-text="Edit"
                     ng-click="vm.edit()"
                     ng-show="!vm.editMode && !vm.role.isSuperAdministrator"
                     ng-disabled="vm.globalLoadState.isLoading"></cms-button>
 
         <cms-button cms-text="Delete"
+                    ng-if="vm.permissions.canDelete('COFROL')"
                     ng-click="vm.deleteRole()"
                     ng-disabled="vm.editMode || vm.globalLoadState.isLoading"
                     ng-show="!vm.role.specialistRoleTypeCode"></cms-button>

@@ -109,6 +109,7 @@ angular.module('cms.images').controller('ImageDetailsController', [
     '_',
     'shared.LoadState',
     'shared.modalDialogService',
+    'shared.permissionValidationService',
     'images.imageService',
     'images.modulePath',
 function (
@@ -118,6 +119,7 @@ function (
     _,
     LoadState,
     modalDialogService,
+    permissionValidationService,
     imageService,
     modulePath
     ) {
@@ -141,6 +143,8 @@ function (
         vm.globalLoadState = new LoadState();
         vm.saveLoadState = new LoadState();
         vm.formLoadState = new LoadState(true);
+
+        vm.permissions = permissionValidationService;
 
         // Init
         initData(vm.formLoadState);
@@ -238,11 +242,13 @@ angular.module('cms.images').controller('ImageListController', [
     '_',
     'shared.LoadState',
     'shared.SearchQuery',
+    'shared.permissionValidationService',
     'images.imageService',
 function (
     _,
     LoadState,
     SearchQuery,
+    permissionValidationService,
     imageService) {
 
     /* START */
@@ -259,6 +265,8 @@ function (
         });
         vm.filter = vm.query.getFilters();
         vm.toggleFilter = toggleFilter;
+
+        vm.permissions = permissionValidationService;
 
         toggleFilter(false);
         loadGrid();

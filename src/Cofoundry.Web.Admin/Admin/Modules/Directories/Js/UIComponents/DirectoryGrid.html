@@ -12,7 +12,7 @@
             <tr ng-repeat="webDirectory in ::vm.webDirectories">
                 <td>
                     <span>{{::vm.getPathDepthIndicator(webDirectory.depth)}}</span>
-                    <a ng-href="#/{{::webDirectory.webDirectoryId}}">{{::webDirectory.name }}</a> ({{::webDirectory.fullUrlPath}})
+                    <span><a ng-href="#/{{::webDirectory.webDirectoryId}}">{{::webDirectory.name }}</a> ({{::webDirectory.fullUrlPath}})</span>
                     <span>{{::vm.getPathDepthIndicator(webDirectory.depth)}}</span>
                 </td>
                 <td>
@@ -22,10 +22,10 @@
                     <cms-table-cell-created-audit-data cms-audit-data="::webDirectory.auditData"></cms-table-cell-created-audit-data>
                 </td>
                 <td cms-table-column-actions>
-                    <a href="#/{{::webDirectory.webDirectoryId}}" class="btn-icon" title="Edit" ng-if="!vm.redirect">
+                    <a ng-if="vm.permissions.canUpdate('COFDIR')" href="#/{{::webDirectory.webDirectoryId}}" class="btn-icon" title="Edit" ng-if="!vm.redirect">
                         <i class="fa fa-pencil-square-o"></i>
                     </a>
-                    <a href="#/{{::webDirectory.webDirectoryId}}" class="btn-icon" title="Edit" ng-if="vm.redirect">
+                    <a ng-if="vm.permissions.canUpdate('COFDIR')" href="#/{{::webDirectory.webDirectoryId}}" class="btn-icon" title="Edit" ng-if="vm.redirect">
                         <i class="fa fa-external-link"></i>
                     </a>
                 </td>

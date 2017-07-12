@@ -2,12 +2,14 @@
     '_',
     '$q',
     'shared.LoadState',
+    'shared.permissionValidationService',
     'settings.settingsService',
     'settings.modulePath',
 function (
     _,
     $q,
     LoadState,
+    permissionValidationService,
     settingsService,
     modulePath
     ) {
@@ -31,6 +33,8 @@ function (
         vm.globalLoadState = new LoadState();
         vm.saveLoadState = new LoadState();
         vm.formLoadState = new LoadState(true);
+
+        vm.permissions = permissionValidationService;
 
         // Init
         initData()

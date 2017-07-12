@@ -8,6 +8,7 @@
     'shared.entityVersionModalDialogService',
     'shared.urlLibrary',
     'shared.pageService',
+    'shared.permissionValidationService',
     'pages.modulePath',
 function (
     $routeParams,
@@ -19,6 +20,7 @@ function (
     entityVersionModalDialogService,
     urlLibrary,
     pageService,
+    permissionValidationService,
     modulePath
     ) {
 
@@ -53,6 +55,8 @@ function (
         vm.saveAndPublishLoadState = new LoadState();
         vm.formLoadState = new LoadState(true);
         vm.urlLibrary = urlLibrary;
+
+        vm.permissions = permissionValidationService;
 
         // Init
         initData(vm.formLoadState);

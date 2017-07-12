@@ -10,11 +10,13 @@
     <cms-page-actions ng-show="!vm.editMode && vm.webDirectory.depth !== 0">
 
         <cms-button class="main-cta"
+                    ng-if="vm.permissions.canUpdate('COFDIR')"
                     cms-text="Edit"
                     ng-click="vm.edit()"
                     ng-disabled="vm.globalLoadState.isLoading"></cms-button>
         
         <cms-button cms-text="Delete"
+                    ng-if="vm.permissions.canDelete('COFDIR')"
                     ng-click="vm.deleteDirectory()"
                     ng-disabled="vm.globalLoadState.isLoading"></cms-button>
 

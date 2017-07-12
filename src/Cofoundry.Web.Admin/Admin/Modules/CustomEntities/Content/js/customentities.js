@@ -165,6 +165,7 @@ angular.module('cms.customEntities').controller('CustomEntityDetailsController',
     'shared.entityVersionModalDialogService',
     'shared.customEntityService',
     'shared.urlLibrary',
+    'shared.permissionValidationService',
     'customEntities.modulePath',
     'customEntities.options',
 function (
@@ -177,6 +178,7 @@ function (
     entityVersionModalDialogService,
     customEntityService,
     urlLibrary,
+    permissionValidationService,
     modulePath,
     moduleOptions
     ) {
@@ -217,6 +219,8 @@ function (
         vm.urlLibrary = urlLibrary;
         vm.saveButtonText = moduleOptions.autoPublish ? 'Save' : 'Save & Publish';
         vm.canChangeUrl = !moduleOptions.autoGenerateUrlSlug || moduleOptions.hasLocale;
+
+        vm.permissions = permissionValidationService;
 
         // Init
         initData(vm.formLoadState);
@@ -425,6 +429,7 @@ angular.module('cms.customEntities').controller('CustomEntityListController', [
     'shared.SearchQuery',
     'shared.modalDialogService',
     'shared.customEntityService',
+    'shared.permissionValidationService',
     'customEntities.modulePath',
     'customEntities.options',
 function (
@@ -433,6 +438,7 @@ function (
     SearchQuery,
     modalDialogService,
     customEntityService,
+    permissionValidationService,
     modulePath,
     options) {
 
@@ -450,6 +456,8 @@ function (
         vm.filter = vm.query.getFilters();
         vm.toggleFilter = toggleFilter;
         vm.changeOrdering = changeOrdering;
+
+        vm.permissions = permissionValidationService;
 
         toggleFilter(false);
 

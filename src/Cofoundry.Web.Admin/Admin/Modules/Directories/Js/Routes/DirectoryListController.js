@@ -3,12 +3,14 @@
     'shared.modalDialogService',
     'shared.LoadState',
     'shared.SearchQuery',
+    'shared.permissionValidationService',
     'directories.directoryService',
 function (
     _,
     modalDialogService,
     LoadState,
     SearchQuery,
+    permissionValidationService,
     directoryService) {
 
     var vm = this;
@@ -18,6 +20,7 @@ function (
     function init() {
         
         vm.gridLoadState = new LoadState();
+        vm.permissions = permissionValidationService;
 
         loadGrid();
     }

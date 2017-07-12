@@ -242,6 +242,7 @@ angular.module('cms.pages').controller('PageDetailsController', [
     'shared.entityVersionModalDialogService',
     'shared.urlLibrary',
     'shared.pageService',
+    'shared.permissionValidationService',
     'pages.modulePath',
 function (
     $routeParams,
@@ -253,6 +254,7 @@ function (
     entityVersionModalDialogService,
     urlLibrary,
     pageService,
+    permissionValidationService,
     modulePath
     ) {
 
@@ -287,6 +289,8 @@ function (
         vm.saveAndPublishLoadState = new LoadState();
         vm.formLoadState = new LoadState(true);
         vm.urlLibrary = urlLibrary;
+
+        vm.permissions = permissionValidationService;
 
         // Init
         initData(vm.formLoadState);
@@ -501,6 +505,7 @@ angular.module('cms.pages').controller('PageListController', [
     'shared.LoadState',
     'shared.SearchQuery',
     'shared.pageService',
+    'shared.permissionValidationService',
     'pages.pageTemplateService',
 function (
     _,
@@ -508,6 +513,7 @@ function (
     LoadState,
     SearchQuery,
     pageService,
+    permissionValidationService,
     pageTemplateService) {
 
     var vm = this;
@@ -528,6 +534,8 @@ function (
 
         toggleFilter(false);
         vm.publish = publish;
+
+        vm.permissions = permissionValidationService;
 
         loadGrid();
     }

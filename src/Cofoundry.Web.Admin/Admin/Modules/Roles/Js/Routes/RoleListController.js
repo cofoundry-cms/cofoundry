@@ -3,12 +3,14 @@
     'shared.LoadState',
     'shared.SearchQuery',
     'shared.urlLibrary',
+    'shared.permissionValidationService',
     'roles.roleService',
 function (
     _,
     LoadState,
     SearchQuery,
     urlLibrary,
+    permissionValidationService,
     rolesService) {
 
     var vm = this;
@@ -24,6 +26,8 @@ function (
         });
         vm.filter = vm.query.getFilters();
         vm.toggleFilter = toggleFilter;
+
+        vm.permissions = permissionValidationService;
 
         toggleFilter(false);
 

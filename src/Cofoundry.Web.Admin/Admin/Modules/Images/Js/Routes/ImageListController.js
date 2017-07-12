@@ -2,11 +2,13 @@
     '_',
     'shared.LoadState',
     'shared.SearchQuery',
+    'shared.permissionValidationService',
     'images.imageService',
 function (
     _,
     LoadState,
     SearchQuery,
+    permissionValidationService,
     imageService) {
 
     /* START */
@@ -23,6 +25,8 @@ function (
         });
         vm.filter = vm.query.getFilters();
         vm.toggleFilter = toggleFilter;
+
+        vm.permissions = permissionValidationService;
 
         toggleFilter(false);
         loadGrid();
