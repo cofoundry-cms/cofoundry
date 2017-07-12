@@ -8,6 +8,7 @@
     'shared.entityVersionModalDialogService',
     'shared.customEntityService',
     'shared.urlLibrary',
+    'shared.permissionValidationService',
     'customEntities.modulePath',
     'customEntities.options',
 function (
@@ -20,6 +21,7 @@ function (
     entityVersionModalDialogService,
     customEntityService,
     urlLibrary,
+    permissionValidationService,
     modulePath,
     moduleOptions
     ) {
@@ -60,6 +62,8 @@ function (
         vm.urlLibrary = urlLibrary;
         vm.saveButtonText = moduleOptions.autoPublish ? 'Save' : 'Save & Publish';
         vm.canChangeUrl = !moduleOptions.autoGenerateUrlSlug || moduleOptions.hasLocale;
+
+        vm.permissions = permissionValidationService;
 
         // Init
         initData(vm.formLoadState);

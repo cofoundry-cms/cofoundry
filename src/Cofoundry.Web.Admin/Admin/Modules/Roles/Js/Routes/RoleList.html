@@ -24,6 +24,7 @@
 <cms-page-actions>
 
     <cms-button-link class="main-cta"
+                     ng-if="vm.permissions.canCreate('COFROL')"
                      cms-text="Create"
                      cms-icon="plus"
                      cms-href="#/new"></cms-button-link>
@@ -56,7 +57,7 @@
                         <a href="#/{{::role.roleId}}">{{::role.title}}</a>
                     </td>
                     <td cms-table-column-actions>
-                        <a href="#/{{::role.roleId}}" class="btn-icon" title="Edit">
+                        <a ng-if="vm.permissions.canUpdate('COFROL')" href="#/{{::role.roleId}}" class="btn-icon" title="Edit">
                             <i class="fa fa-pencil-square-o"></i>
                         </a>
                     </td>

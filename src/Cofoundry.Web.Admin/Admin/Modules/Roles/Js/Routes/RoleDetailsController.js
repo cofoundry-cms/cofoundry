@@ -4,6 +4,7 @@
     '$q',
     'shared.LoadState',
     'shared.modalDialogService',
+    'shared.permissionValidationService',
     'roles.roleService',
     'roles.permissionService',
     'roles.modulePath',
@@ -13,6 +14,7 @@ function (
     $q,
     LoadState,
     modalDialogService,
+    permissionValidationService,
     roleService,
     permissionService,
     modulePath
@@ -37,6 +39,8 @@ function (
         vm.globalLoadState = new LoadState();
         vm.saveLoadState = new LoadState();
         vm.formLoadState = new LoadState(true);
+
+        vm.permissions = permissionValidationService;
 
         // Init
         initData().then(setLoadingOff.bind(null, vm.formLoadState));
@@ -101,8 +105,6 @@ function (
             vm.role = role;
             vm.command = mapUpdateCommand(role);
             vm.editMode = false;
-
-            console.log(role);
         }
     }
 

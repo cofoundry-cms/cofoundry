@@ -383,6 +383,7 @@ angular.module('cms.roles').controller('RoleDetailsController', [
     '$q',
     'shared.LoadState',
     'shared.modalDialogService',
+    'shared.permissionValidationService',
     'roles.roleService',
     'roles.permissionService',
     'roles.modulePath',
@@ -392,6 +393,7 @@ function (
     $q,
     LoadState,
     modalDialogService,
+    permissionValidationService,
     roleService,
     permissionService,
     modulePath
@@ -416,6 +418,8 @@ function (
         vm.globalLoadState = new LoadState();
         vm.saveLoadState = new LoadState();
         vm.formLoadState = new LoadState(true);
+
+        vm.permissions = permissionValidationService;
 
         // Init
         initData().then(setLoadingOff.bind(null, vm.formLoadState));
@@ -480,8 +484,6 @@ function (
             vm.role = role;
             vm.command = mapUpdateCommand(role);
             vm.editMode = false;
-
-            console.log(role);
         }
     }
 
@@ -526,12 +528,14 @@ angular.module('cms.roles').controller('RoleListController', [
     'shared.LoadState',
     'shared.SearchQuery',
     'shared.urlLibrary',
+    'shared.permissionValidationService',
     'roles.roleService',
 function (
     _,
     LoadState,
     SearchQuery,
     urlLibrary,
+    permissionValidationService,
     rolesService) {
 
     var vm = this;
@@ -547,6 +551,8 @@ function (
         });
         vm.filter = vm.query.getFilters();
         vm.toggleFilter = toggleFilter;
+
+        vm.permissions = permissionValidationService;
 
         toggleFilter(false);
 

@@ -4,6 +4,7 @@
     'shared.SearchQuery',
     'shared.modalDialogService',
     'shared.customEntityService',
+    'shared.permissionValidationService',
     'customEntities.modulePath',
     'customEntities.options',
 function (
@@ -12,6 +13,7 @@ function (
     SearchQuery,
     modalDialogService,
     customEntityService,
+    permissionValidationService,
     modulePath,
     options) {
 
@@ -29,6 +31,8 @@ function (
         vm.filter = vm.query.getFilters();
         vm.toggleFilter = toggleFilter;
         vm.changeOrdering = changeOrdering;
+
+        vm.permissions = permissionValidationService;
 
         toggleFilter(false);
 
