@@ -30,7 +30,8 @@ function (
         vm.toggleFilter = toggleFilter;
         vm.getDocumentUrl = urlLibrary.getDocumentUrl;
 
-        vm.permissions = permissionValidationService;
+        vm.canCreate = permissionValidationService.canCreate('COFDOC');
+        vm.canUpdate = permissionValidationService.canUpdate('COFDOC');
 
         toggleFilter(false);
         loadGrid();

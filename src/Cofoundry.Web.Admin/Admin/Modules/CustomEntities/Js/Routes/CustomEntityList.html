@@ -26,13 +26,13 @@
 <!--ACTIONS-->
 <cms-page-actions>
     <cms-button-link class="main-cta"
-                     ng-if="vm.permissions.hasPermission(vm.options.customEntityDefinitionCode + 'COMCRT')"
+                     ng-if="::vm.canCreate"
                      cms-text="Create"
                      cms-icon="plus"
                      cms-href="#/new"></cms-button-link>
 
     <cms-button cms-text="Change Ordering"
-                ng-if="vm.permissions.hasPermission(vm.options.customEntityDefinitionCode + 'COMUPD')"
+                ng-if="::vm.canUpdate"
                 ng-click="vm.changeOrdering()"
                 ng-hide="vm.options.ordering === 'None'"></cms-button>
 
@@ -80,10 +80,17 @@
                         <cms-table-cell-created-audit-data cms-audit-data="::entity.auditData"></cms-table-cell-created-audit-data>
                     </td>
                     <td cms-table-column-actions>
-                        <a ng-if="vm.permissions.hasPermission(vm.options.customEntityDefinitionCode + 'COMUPD')" href="#/{{::entity.customEntityId}}" class="btn-icon" title="Edit">
+                        <a href="#/{{::entity.customEntityId}}"
+                           class="btn-icon"
+                           title="Edit"
+                           ng-if="::vm.canUpdate">
                             <i class="fa fa-pencil-square-o"></i>
                         </a>
-                        <a ng-if="::entity.fullPath" href="{{::entity.fullPath}}" class="btn-icon" title="View" target="_blank">
+                        <a href="{{::entity.fullPath}}"
+                           class="btn-icon"
+                           title="View"
+                           target="_blank"
+                           ng-if="::entity.fullPath">
                             <i class="fa fa-external-link"></i>
                         </a>
                     </td>

@@ -20,7 +20,7 @@ function (
     function init() {
         
         vm.gridLoadState = new LoadState();
-        vm.permissions = permissionValidationService;
+        vm.canCreate = permissionValidationService.canCreate('COFDIR');
 
         loadGrid();
     }

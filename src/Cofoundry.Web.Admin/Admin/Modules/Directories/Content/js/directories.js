@@ -136,8 +136,10 @@ function (
     }
 }]);
 angular.module('cms.directories').directive('cmsDirectoryGrid', [
+    'shared.permissionValidationService',
     'directories.modulePath',
 function (
+    permissionValidationService,
     modulePath) {
 
     return {
@@ -160,6 +162,7 @@ function (
         var vm = this;
 
         vm.getPathDepthIndicator = getPathDepthIndicator;
+        vm.canUpdate = permissionValidationService.canUpdate('COFDIR');
 
         /* View Helpers */
 
@@ -286,7 +289,8 @@ function (
         vm.saveLoadState = new LoadState();
         vm.formLoadState = new LoadState(true);
 
-        vm.permissions = permissionValidationService;
+        vm.canUpdate = permissionValidationService.canUpdate('COFDIR');
+        vm.canDelete = permissionValidationService.canDelete('COFDIR');
 
         // Init
         initData()
@@ -412,7 +416,7 @@ function (
     function init() {
         
         vm.gridLoadState = new LoadState();
-        vm.permissions = permissionValidationService;
+        vm.canCreate = permissionValidationService.canCreate('COFDIR');
 
         loadGrid();
     }

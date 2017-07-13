@@ -3,59 +3,59 @@
 
 <cms-form cms-name="mainForm"
           cms-edit-mode="vm.editMode"
-          ng-submit="vm.save()"
-          cms-loading="vm.formLoadState.isLoading">
+          cms-loading="vm.formLoadState.isLoading"
+          ng-submit="vm.save()">
 
     <!-- Default toolbar -->
     <cms-page-actions ng-show="!vm.editMode">
 
-        <cms-button cms-text="Edit"
-                    ng-if="vm.permissions.hasPermission(vm.options.customEntityDefinitionCode + 'COMUPD')"
-                    class="main-cta"
+        <cms-button class="main-cta"
+                    cms-text="Edit"
                     ng-click="vm.edit()"
-                    ng-disabled="vm.globalLoadState.isLoading"></cms-button>
+                    ng-disabled="vm.globalLoadState.isLoading"
+                    ng-if="::vm.canUpdate"></cms-button>
 
         <cms-button-link cms-text="Browse to page"
                          cms-icon="eye-open"
-                         ng-if="vm.customEntity.fullPath"
-                         cms-href="{{vm.customEntity.fullPath}}"></cms-button-link>
+                         cms-href="{{vm.customEntity.fullPath}}"
+                         ng-if="vm.customEntity.fullPath"></cms-button-link>
 
         <cms-button cms-text="Publish"
                     ng-click="vm.publish()"
                     ng-disabled="vm.globalLoadState.isLoading"
-                    ng-if="!vm.options.autoPublish && vm.customEntity.hasDraft && vm.permissions.hasPermission(vm.options.customEntityDefinitionCode + 'CMEPUB')"></cms-button>
+                    ng-if="!vm.options.autoPublish && vm.customEntity.hasDraft && vm.canPublish"></cms-button>
 
         <cms-button cms-text="Unpublish"
                     ng-click="vm.unpublish()"
                     ng-disabled="vm.globalLoadState.isLoading"
-                    ng-if="!vm.options.autoPublish && vm.customEntity.isPublished && vm.permissions.hasPermission(vm.options.customEntityDefinitionCode + 'CMEPUB')"></cms-button>
+                    ng-if="!vm.options.autoPublish && vm.customEntity.isPublished && vm.canPublish"></cms-button>
 
         <cms-button cms-text="Change Url"
                     ng-click="vm.changeUrl()"
-                    ng-if="::vm.canChangeUrl && vm.permissions.hasPermission(vm.options.customEntityDefinitionCode + 'UPDURL')"
-                    ng-disabled="vm.globalLoadState.isLoading"></cms-button>
+                    ng-disabled="vm.globalLoadState.isLoading"
+                    ng-if="::(vm.canChangeUrl && vm.canUpdateUrl"></cms-button>
 
         <cms-button cms-text="Delete"
-                    ng-if="vm.permissions.hasPermission(vm.options.customEntityDefinitionCode + 'COMDEL')"
                     ng-click="vm.deleteCustomEntity()"
-                    ng-disabled="vm.globalLoadState.isLoading"></cms-button>
+                    ng-disabled="vm.globalLoadState.isLoading"
+                    ng-if="::vm.canDelete"></cms-button>
 
     </cms-page-actions>
 
     <!-- Edit mode toolbar -->
     <cms-page-actions ng-show="vm.editMode">
 
-        <cms-button-submit cms-text="Save Draft"
+        <cms-button-submit class="main-cta"
+                           cms-text="Save Draft"
                            cms-loading="vm.saveLoadState.isLoading"
-                           class="main-cta"
-                           ng-if="::!vm.options.autoPublish"
-                           ng-disabled="vm.mainForm.$invalid || vm.globalLoadState.isLoading"></cms-button-submit>
+                           ng-disabled="vm.mainForm.$invalid || vm.globalLoadState.isLoading"
+                           ng-if="::!vm.options.autoPublish"></cms-button-submit>
 
         <cms-button cms-text="{{::vm.saveButtonText}}"
-                    ng-if="vm.permissions.hasPermission(vm.options.customEntityDefinitionCode + 'CMEPUB')"
                     cms-loading="vm.saveAndPublishLoadState.isLoading"
+                    ng-click="vm.saveAndPublish()"
                     ng-disabled="vm.mainForm.$invalid || vm.globalLoadState.isLoading"
-                    ng-click="vm.saveAndPublish()"></cms-button>
+                    ng-if="::vm.canPublish"></cms-button>
 
         <cms-button cms-text="Cancel"
                     ng-click="vm.cancel()"
@@ -70,10 +70,10 @@
         <!--Main-->
         <cms-form-section cms-title="Main">
 
-            <cms-form-field-text cms-title="{{::vm.options.terms['title']}}"
-                                 cms-model="vm.updateCommand.title"
-                                 required
-                                 maxlength="200"></cms-form-field-text>
+            <cms-form-field-text required
+                                 maxlength="200"
+                                 cms-title="{{::vm.options.terms['title']}}"
+                                 cms-model="vm.updateCommand.title"></cms-form-field-text>
 
             <cms-form-field-readonly cms-title="Market"
                                      cms-model="vm.customEntity.locale.ietfLanguageTag"
@@ -83,10 +83,10 @@
                 <a ng-href="{{vm.customEntity.fullPath}}">{{vm.customEntity.fullPath}}</a>
             </cms-form-field-container>
 
-            <cms-form-field-checkbox cms-title="Is Published"
+            <cms-form-field-checkbox disabled
+                                     cms-title="Is Published"
                                      cms-model="vm.customEntity.isPublished"
-                                     ng-if="!vm.options.autoPublish || !vm.customEntity.isPublished"
-                                     disabled></cms-form-field-checkbox>
+                                     ng-if="!vm.options.autoPublish || !vm.customEntity.isPublished"></cms-form-field-checkbox>
 
         </cms-form-section>
 
@@ -106,7 +106,7 @@
             <cms-form-section cms-title="Template: {{page.pageRoute.title}}">
                 <cms-form-section-actions>
                     <cms-button-link cms-text="Manage in Visual Editor"
-                                     ng-if="vm.permissions.hasPermission(vm.options.customEntityDefinitionCode + 'COMUPD')"
+                                     ng-if="::vm.canUpdate"
                                      cms-icon="eye-open"
                                      ng-show="!vm.editMode"
                                      cms-href="{{vm.urlLibrary.customEntityVisualEditor(page, true)}}"></cms-button-link>
@@ -184,12 +184,19 @@
                                 </td>
                                 <td cms-table-column-actions ng-switch="version.workFlowStatus" ng-show="!vm.editMode">
                                     <div ng-switch-when="Draft">
-                                        <span ng-if="vm.versions.length > 1 && vm.permissions.hasPermission(vm.options.customEntityDefinitionCode + 'COMDEL')">
-                                            <a href="" ng-click="vm.loading || vm.discardDraft()" class="btn-icon" title="Discard">
+                                        <span ng-if="vm.versions.length > 1 && vm.canUpdate">
+                                            <a href=""
+                                               class="btn-icon"
+                                               title="Discard"
+                                               ng-click="vm.loading || vm.discardDraft()">
                                                 <i class="fa fa-trash-o"></i>
                                             </a>
                                         </span>
-                                        <a href="" ng-if="vm.permissions.hasPermission(vm.options.customEntityDefinitionCode + 'CMEPUB')" ng-click="vm.loading || vm.publish(vm.customEntity.customEntityId)" class="btn-icon" title="Publish">
+                                        <a href=""
+                                           class="btn-icon"
+                                           title="Publish"
+                                           ng-if="::vm.canPublish"
+                                           ng-click="vm.loading || vm.publish(vm.customEntity.customEntityId)">
                                             <i class="fa fa-cloud-upload"></i>
                                         </a>
                                         <a href="{{::vm.customEntity.fullPath}}?mode=draft"
@@ -199,22 +206,32 @@
                                         </a>
                                     </div>
                                     <div ng-switch-when="Published">
-                                        <a href="" ng-if="vm.permissions.hasPermission(vm.options.customEntityDefinitionCode + 'CMEPUB')" ng-click="vm.loading || vm.unpublish()" class="btn-icon" title="Un-publish">
+                                        <a href=""
+                                           class="btn-icon"
+                                           title="Un-publish"
+                                           ng-if="::vm.canPublish"
+                                           ng-click="vm.loading || vm.unpublish()">
                                             <i class="fa fa-cloud-download"></i>
                                         </a>
                                         <a href="{{::vm.customEntity.fullPath}}?mode=live"
-                                           ng-if="::vm.customEntity.fullPath"
-                                           class="btn-icon" title="Open">
+                                           class="btn-icon"
+                                           title="Open"
+                                           ng-if="::vm.customEntity.fullPath">
                                             <i class="fa fa-external-link"></i>
                                         </a>
                                     </div>
                                     <div ng-switch-default>
-                                        <a href="" ng-if="vm.permissions.hasPermission(vm.options.customEntityDefinitionCode + 'COMCRT')" ng-click="vm.loading || vm.copyToDraft(version)" class="btn-icon" title="Copy to draft">
+                                        <a href=""
+                                           class="btn-icon"
+                                           title="Copy to draft"
+                                           ng-if="::vm.canUpdate"
+                                           ng-click="vm.loading || vm.copyToDraft(version)">
                                             <i class="fa fa-files-o"></i>
                                         </a>
                                         <a href="{{vm.customEntity.fullPath}}?version={{version.customEntityVersionId}}"
-                                           ng-if="::vm.customEntity.fullPath"
-                                           class="btn-icon" title="Open">
+                                           class="btn-icon"
+                                           title="Open"
+                                           ng-if="::vm.customEntity.fullPath">
                                             <i class="fa fa-external-link"></i>
                                         </a>
                                     </div>

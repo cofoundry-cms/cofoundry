@@ -56,7 +56,11 @@ function (
         vm.formLoadState = new LoadState(true);
         vm.urlLibrary = urlLibrary;
 
-        vm.permissions = permissionValidationService;
+        vm.canCreate = permissionValidationService.canCreate('COFPGE');
+        vm.canUpdate = permissionValidationService.canUpdate('COFPGE');
+        vm.canDelete = permissionValidationService.canDelete('COFPGE');
+        vm.canPublishPage = permissionValidationService.hasPermission('COFPGEPAGPUB');
+        vm.canUpdatePageUrl =  permissionValidationService.hasPermission('COFPGEUPDURL');
 
         // Init
         initData(vm.formLoadState);

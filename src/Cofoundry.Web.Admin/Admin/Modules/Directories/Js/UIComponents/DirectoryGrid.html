@@ -27,10 +27,16 @@
                     <cms-table-cell-created-audit-data cms-audit-data="::webDirectory.auditData"></cms-table-cell-created-audit-data>
                 </td>
                 <td cms-table-column-actions>
-                    <a ng-if="vm.permissions.canUpdate('COFDIR')" href="#/{{::webDirectory.webDirectoryId}}" class="btn-icon" title="Edit" ng-if="!vm.redirect">
+                    <a href="#/{{::webDirectory.webDirectoryId}}"
+                       class="btn-icon"
+                       title="Edit"
+                       ng-if="!vm.redirect && vm.canUpdate">
                         <i class="fa fa-pencil-square-o"></i>
                     </a>
-                    <a ng-if="vm.permissions.canUpdate('COFDIR')" href="#/{{::webDirectory.webDirectoryId}}" class="btn-icon" title="Edit" ng-if="vm.redirect">
+                    <a href="#/{{::webDirectory.webDirectoryId}}"
+                       class="btn-icon"
+                       title="Edit"
+                       ng-if="vm.redirect && vm.canUpdate">
                         <i class="fa fa-external-link"></i>
                     </a>
                 </td>

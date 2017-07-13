@@ -34,7 +34,8 @@ function (
         toggleFilter(false);
         vm.publish = publish;
 
-        vm.permissions = permissionValidationService;
+        vm.canCreate = permissionValidationService.canCreate('COFPGE');
+        vm.canUpdate = permissionValidationService.canUpdate('COFPGE');
 
         loadGrid();
     }

@@ -26,7 +26,8 @@ function (
         vm.filter = vm.query.getFilters();
         vm.toggleFilter = toggleFilter;
 
-        vm.permissions = permissionValidationService;
+        vm.canCreate = permissionValidationService.canCreate('COFIMG');
+        vm.canUpdate = permissionValidationService.canUpdate('COFIMG');
 
         toggleFilter(false);
         loadGrid();

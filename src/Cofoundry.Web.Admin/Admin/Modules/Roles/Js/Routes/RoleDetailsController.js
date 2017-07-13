@@ -40,7 +40,8 @@ function (
         vm.saveLoadState = new LoadState();
         vm.formLoadState = new LoadState(true);
 
-        vm.permissions = permissionValidationService;
+        vm.canUpdate = permissionValidationService.canUpdate('COFROL');
+        vm.canDelete = permissionValidationService.canDelete('COFROL');
 
         // Init
         initData().then(setLoadingOff.bind(null, vm.formLoadState));

@@ -45,7 +45,8 @@ function (
         vm.saveLoadState = new LoadState();
         vm.formLoadState = new LoadState(true);
 
-        vm.permissions = permissionValidationService;
+        vm.canUpdate = permissionValidationService.canUpdate('COFDIR');
+        vm.canDelete = permissionValidationService.canDelete('COFDIR');
 
         // Init
         initData()

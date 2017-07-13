@@ -4,10 +4,10 @@
 <cms-page-actions>
 
     <cms-button-link class="main-cta"
-                     ng-if="vm.permissions.canCreate('COFDIR')"
                      cms-text="Create"
                      cms-icon="plus"
-                     cms-href="#/new"></cms-button-link>
+                     cms-href="#/new"
+                     ng-if="::vm.canCreate"></cms-button-link>
 
     <!--RESULTS-->
     <cms-pager cms-result="vm.result"

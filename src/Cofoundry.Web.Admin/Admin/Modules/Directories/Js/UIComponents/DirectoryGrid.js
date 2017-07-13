@@ -1,6 +1,8 @@
 ﻿angular.module('cms.directories').directive('cmsDirectoryGrid', [
+    'shared.permissionValidationService',
     'directories.modulePath',
 function (
+    permissionValidationService,
     modulePath) {
 
     return {
@@ -23,6 +25,7 @@ function (
         var vm = this;
 
         vm.getPathDepthIndicator = getPathDepthIndicator;
+        vm.canUpdate = permissionValidationService.canUpdate('COFDIR');
 
         /* View Helpers */
 

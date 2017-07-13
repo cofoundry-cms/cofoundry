@@ -27,7 +27,8 @@ function (
         vm.filter = vm.query.getFilters();
         vm.toggleFilter = toggleFilter;
 
-        vm.permissions = permissionValidationService;
+        vm.canCreate = permissionValidationService.canCreate('COFROL');
+        vm.canUpdate = permissionValidationService.canUpdate('COFROL');
 
         toggleFilter(false);
 

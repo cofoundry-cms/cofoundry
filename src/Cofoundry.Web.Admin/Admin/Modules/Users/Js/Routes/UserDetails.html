@@ -10,13 +10,13 @@
     <cms-page-actions ng-show="!vm.editMode">
 
         <cms-button cms-text="Edit"
-                    ng-if="vm.permissions.canUpdate('COFUSR')"
+                    ng-if="::vm.canUpdate"
                     ng-click="vm.edit()"
                     ng-show="!vm.editMode"
                     ng-disabled="vm.globalLoadState.isLoading"></cms-button>
 
         <cms-button cms-text="Delete"
-                    ng-if="vm.permissions.canDelete('COFUSR')"
+                    ng-if="::vm.canDelete"
                     ng-click="vm.deleteUser()"
                     ng-disabled="vm.editMode || vm.globalLoadState.isLoading"></cms-button>
 

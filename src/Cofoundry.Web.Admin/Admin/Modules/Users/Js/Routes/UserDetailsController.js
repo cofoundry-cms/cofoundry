@@ -43,7 +43,9 @@ function (
         vm.formLoadState = new LoadState(true);
         vm.userArea = options;
 
-        vm.permissions = permissionValidationService;
+        vm.userAreaCode = options.userAreaCode + 'USR';
+        vm.canUpdate = permissionValidationService.canUpdate(vm.userAreaCode);
+        vm.canDelete = permissionValidationService.canDelete(vm.userAreaCode);
 
         // Init
         $q.all([loadRoles(), loadUser()])
@@ -93,7 +95,6 @@ function (
     }
 
     /* PRIVATE FUNCS */
-
     function onSuccess(message) {
         return loadUser()
             .then(initForm)

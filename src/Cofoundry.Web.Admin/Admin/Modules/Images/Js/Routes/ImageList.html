@@ -31,10 +31,10 @@
                cms-query="vm.query"></cms-pager>
 
     <cms-button-link class="main-cta"
-                     ng-if="vm.permissions.canCreate('COFIMG')"
                      cms-text="Upload Image"
                      cms-icon="plus"
-                     cms-href="#/new"></cms-button-link>
+                     cms-href="#/new"
+                     ng-if="::vm.canCreate"></cms-button-link>
 
 </cms-page-actions>
 
@@ -76,7 +76,10 @@
                         <cms-table-cell-updated-audit-data cms-audit-data="image.auditData"></cms-table-cell-updated-audit-data>
                     </td>
                     <td cms-table-column-actions>
-                        <a ng-if="vm.permissions.canUpdate('COFIMG')" href="#/{{image.imageAssetId}}" class="btn-icon" title="Edit">
+                        <a href="#/{{image.imageAssetId}}"
+                           class="btn-icon"
+                           title="Edit"
+                           ng-if="::vm.canUpdate">
                             <i class="fa fa-pencil-square-o"></i>
                         </a>
                     </td>

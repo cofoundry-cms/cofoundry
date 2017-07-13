@@ -27,7 +27,7 @@
 <cms-page-actions>
 
     <cms-button-link class="main-cta"
-                     ng-if="vm.permissions.canCreate('COFUSR')"
+                     ng-if="::vm.canCreate"
                      cms-text="Create"
                      cms-icon="plus"
                      cms-href="{{::vm.urlLibrary.userNew(vm.userArea)}}"></cms-button-link>
@@ -62,8 +62,8 @@
                         <span ng-if="user.firstName || user.lastName">{{::user.firstName}} {{::user.lastName}}</span>
                     </td>
                     <td>
-                        <a href="{{::vm.urlLibrary.roleDetails(user.role.roleId)}}" ng-if="vm.permissions.canRead('COFROL')">{{::user.role.title}}</a>
-                        <span ng-if="!vm.permissions.canRead('COFROL')">{{::user.role.title}}</span>
+                        <a href="{{::vm.urlLibrary.roleDetails(user.role.roleId)}}" ng-if="::vm.canRead">{{::user.role.title}}</a>
+                        <span ng-if="!vm.canRead">{{::user.role.title}}</span>
                     </td>
                     <td>
                         <span ng-if="::!user.lastLoginDate">Never</span>
@@ -73,7 +73,10 @@
                         <cms-table-cell-created-audit-data cms-audit-data="::user.auditData"></cms-table-cell-created-audit-data>
                     </td>
                     <td cms-table-column-actions>
-                        <a ng-if="vm.permissions.canUpdate('COFUSR')" href="{{::vm.urlLibrary.userDetails(user.userArea, user.userId)}}" class="btn-icon" title="Edit">
+                        <a href="{{::vm.urlLibrary.userDetails(user.userArea, user.userId)}}"
+                           class="btn-icon"
+                           title="Edit"
+                           ng-if="::vm.canUpdate">
                             <i class="fa fa-pencil-square-o"></i>
                         </a>
                     </td>

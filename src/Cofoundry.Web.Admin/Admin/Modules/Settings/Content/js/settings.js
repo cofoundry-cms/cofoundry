@@ -94,7 +94,7 @@ function (
         vm.saveLoadState = new LoadState();
         vm.formLoadState = new LoadState(true);
 
-        vm.permissions = permissionValidationService;
+        vm.canUpdateSettings = permissionValidationService.hasPermission('COFSETGENUPD');
 
         // Init
         initData()
