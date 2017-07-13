@@ -21,6 +21,6 @@ function (
         var vm = this;
 
         vm.urlLibrary = urlLibrary;
-        vm.permissions = permissionValidationService;
+        vm.canRead = permissionValidationService.canRead('COFUSR');
     }
 }]);

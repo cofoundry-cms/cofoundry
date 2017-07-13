@@ -105,7 +105,8 @@
             <cms-table-actions>
                 <a href="" class="btn-icon" title="Upload"
                    cms-icon="plus-circle"
-                   ng-click="onUpload()">
+                   ng-click="onUpload()"
+                   ng-if="::vm.canCreate">
                     <i class="fa fa-plus-circle"></i>
                 </a>
             </cms-table-actions>

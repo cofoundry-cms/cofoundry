@@ -5,6 +5,7 @@
     'shared.SearchQuery',
     'shared.modalDialogService',
     'shared.internalModulePath',
+    'shared.permissionValidationService',
     'options',
     'close',
 function (
@@ -14,6 +15,7 @@ function (
     SearchQuery,
     modalDialogService,
     modulePath,
+    permissionValidationService,
     options,
     close) {
     
@@ -46,6 +48,8 @@ function (
         vm.isSelected = isSelected;
         vm.customEntityDefinition = options.customEntityDefinition;
         vm.multiMode = vm.selectedIds ? true : false;
+
+        vm.canCreate = getPermission('COMCRT');
 
         toggleFilter(false);
         loadGrid();
@@ -132,6 +136,10 @@ function (
     }
 
     /* PUBLIC HELPERS */
+
+    function getPermission(code) {
+        return permissionValidationService.hasPermission(options.customEntityDefinitionCode + code);
+    }
 
     function isSelected(entity) {
         if (vm.selectedIds && entity && vm.selectedIds.indexOf(entity.customEntityId) > -1) return true;

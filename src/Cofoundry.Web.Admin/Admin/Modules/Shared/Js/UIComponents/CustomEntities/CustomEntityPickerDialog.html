@@ -78,7 +78,8 @@
             <cms-table-actions>
                 <a href="" class="btn-icon" title="Add"
                    cms-icon="plus-circle"
-                   ng-click="onCreate()">
+                   ng-click="onCreate()"
+                   ng-if="::vm.canCreate">
                     <i class="fa fa-plus-circle"></i>
                 </a>
             </cms-table-actions>

@@ -1805,6 +1805,7 @@ angular.module('cms.shared').controller('CustomEntityPickerDialogController', [
     'shared.SearchQuery',
     'shared.modalDialogService',
     'shared.internalModulePath',
+    'shared.permissionValidationService',
     'options',
     'close',
 function (
@@ -1814,6 +1815,7 @@ function (
     SearchQuery,
     modalDialogService,
     modulePath,
+    permissionValidationService,
     options,
     close) {
     
@@ -1846,6 +1848,8 @@ function (
         vm.isSelected = isSelected;
         vm.customEntityDefinition = options.customEntityDefinition;
         vm.multiMode = vm.selectedIds ? true : false;
+
+        vm.canCreate = getPermission('COMCRT');
 
         toggleFilter(false);
         loadGrid();
@@ -1932,6 +1936,10 @@ function (
     }
 
     /* PUBLIC HELPERS */
+
+    function getPermission(code) {
+        return permissionValidationService.hasPermission(options.customEntityDefinitionCode + code);
+    }
 
     function isSelected(entity) {
         if (vm.selectedIds && entity && vm.selectedIds.indexOf(entity.customEntityId) > -1) return true;
@@ -2065,6 +2073,10 @@ function (
         }
 
         /* HELPERS */
+
+        function getPermission(code) {
+            return permissionValidationService.hasPermission(options.customEntityDefinitionCode + code);
+        }
 
         function getFilter() {
             var filter = {},
@@ -2317,12 +2329,14 @@ angular.module('cms.shared').directive('cmsFormFieldCustomEntitySelector', [
     'shared.customEntityService',
     'shared.directiveUtilities',
     'shared.modalDialogService',
+    'shared.permissionValidationService',
 function (
     _,
     modulePath,
     customEntityService,
     directiveUtilities,
-    modalDialogService
+    modalDialogService,
+    permissionValidationService
     ) {
 
     return {
@@ -2367,6 +2381,11 @@ function (
 
         function setCustomEntityDefinition(customEntityDefinition) {
             vm.customEntityDefinition = customEntityDefinition;
+            vm.canCreate = getPermission('COMCRT');
+        }
+
+        function getPermission(code) {
+            return permissionValidationService.hasPermission(vm.customEntityDefinition.customEntityDefinitionCode + code);
         }
 
         vm.create = function () {
@@ -4860,6 +4879,7 @@ angular.module('cms.shared').controller('ImageAssetPickerDialogController', [
     'shared.SearchQuery',
     'shared.modalDialogService',
     'shared.internalModulePath',
+    'shared.permissionValidationService',
     'options',
     'close',
 function (
@@ -4869,6 +4889,7 @@ function (
     SearchQuery,
     modalDialogService,
     modulePath,
+    permissionValidationService,
     options,
     close) {
     
@@ -4901,6 +4922,8 @@ function (
         vm.isSelected = isSelected;
         vm.multiMode = vm.selectedIds ? true : false;
         vm.okText = vm.multiMode ? 'Ok' : 'Select';
+
+        vm.canCreate = permissionValidationService.canCreate('COFIMG');
 
         toggleFilter(false);
         loadGrid();
@@ -6713,7 +6736,7 @@ function (
         var vm = this;
 
         vm.urlLibrary = urlLibrary;
-        vm.permissions = permissionValidationService;
+        vm.canRead = permissionValidationService.canRead('COFUSR');
     }
 }]);
 /**

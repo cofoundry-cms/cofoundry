@@ -225,8 +225,9 @@ function (
         vm.formLoadState = new LoadState(true);
         vm.userArea = options;
 
-        vm.permissions = permissionValidationService;
         vm.userAreaCode = options.userAreaCode + 'USR';
+        vm.canUpdate = permissionValidationService.canUpdate(vm.userAreaCode);
+        vm.canDelete = permissionValidationService.canDelete(vm.userAreaCode);
 
         // Init
         $q.all([loadRoles(), loadUser()])
@@ -378,8 +379,10 @@ function (
         vm.filter = vm.query.getFilters();
         vm.toggleFilter = toggleFilter;
 
-        vm.permissions = permissionValidationService;
         vm.userAreaCode = options.userAreaCode + 'USR';
+        vm.canRead = permissionValidationService.canRead(vm.userAreaCode);
+        vm.canUpdate = permissionValidationService.canUpdate(vm.userAreaCode);
+        vm.canUpdate = permissionValidationService.canCreate(vm.userAreaCode);
 
         toggleFilter(false);
 

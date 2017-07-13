@@ -39,17 +39,21 @@ namespace Cofoundry.BasicTestSite
         [Html(HtmlToolbarPreset.BasicFormatting, HtmlToolbarPreset.Headings, HtmlToolbarPreset.Media, HtmlToolbarPreset.Source)]
         public string TestHtml { get; set; }
 
-        //[Page]
-        //[Display(Name = "Page")]
-        //public int? PageId { get; set; }
+        [Document]
+        [Display(Name = "Document")]
+        public int TestDocumentId{ get; set; }
 
-        //[WebDirectory]
-        //[Display(Name = "Web Directory")]
-        //public int WebDirectoryId { get; set; }
+        [Page]
+        [Display(Name = "Page")]
+        public int? PageId { get; set; }
 
-        //[PageCollection]
-        //[Display(Name = "Page Collection Test")]
-        //public int[] PageIds { get; set; }
+        [WebDirectory]
+        [Display(Name = "Web Directory")]
+        public int WebDirectoryId { get; set; }
+
+        [PageCollection]
+        [Display(Name = "Page Collection Test")]
+        public int[] PageIds { get; set; }
 
     }
 }

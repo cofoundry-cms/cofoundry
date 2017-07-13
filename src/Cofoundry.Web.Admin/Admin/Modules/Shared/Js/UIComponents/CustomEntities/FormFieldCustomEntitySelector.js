@@ -4,12 +4,14 @@
     'shared.customEntityService',
     'shared.directiveUtilities',
     'shared.modalDialogService',
+    'shared.permissionValidationService',
 function (
     _,
     modulePath,
     customEntityService,
     directiveUtilities,
-    modalDialogService
+    modalDialogService,
+    permissionValidationService
     ) {
 
     return {
@@ -54,6 +56,11 @@ function (
 
         function setCustomEntityDefinition(customEntityDefinition) {
             vm.customEntityDefinition = customEntityDefinition;
+            vm.canCreate = getPermission('COMCRT');
+        }
+
+        function getPermission(code) {
+            return permissionValidationService.hasPermission(vm.customEntityDefinition.customEntityDefinitionCode + code);
         }
 
         vm.create = function () {
