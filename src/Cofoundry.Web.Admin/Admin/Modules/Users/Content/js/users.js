@@ -226,6 +226,7 @@ function (
         vm.userArea = options;
 
         vm.permissions = permissionValidationService;
+        vm.userAreaCode = options.userAreaCode + 'USR';
 
         // Init
         $q.all([loadRoles(), loadUser()])
@@ -275,7 +276,6 @@ function (
     }
 
     /* PRIVATE FUNCS */
-
     function onSuccess(message) {
         return loadUser()
             .then(initForm)
@@ -379,6 +379,7 @@ function (
         vm.toggleFilter = toggleFilter;
 
         vm.permissions = permissionValidationService;
+        vm.userAreaCode = options.userAreaCode + 'USR';
 
         toggleFilter(false);
 

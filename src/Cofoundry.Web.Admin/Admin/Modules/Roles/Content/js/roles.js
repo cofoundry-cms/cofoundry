@@ -419,7 +419,8 @@ function (
         vm.saveLoadState = new LoadState();
         vm.formLoadState = new LoadState(true);
 
-        vm.permissions = permissionValidationService;
+        vm.canUpdate = permissionValidationService.canUpdate('COFROL');
+        vm.canDelete = permissionValidationService.canDelete('COFROL');
 
         // Init
         initData().then(setLoadingOff.bind(null, vm.formLoadState));
@@ -552,7 +553,8 @@ function (
         vm.filter = vm.query.getFilters();
         vm.toggleFilter = toggleFilter;
 
-        vm.permissions = permissionValidationService;
+        vm.canCreate = permissionValidationService.canCreate('COFROL');
+        vm.canUpdate = permissionValidationService.canUpdate('COFROL');
 
         toggleFilter(false);
 

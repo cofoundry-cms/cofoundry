@@ -45,10 +45,10 @@
 <cms-page-actions>
 
     <cms-button-link class="main-cta" 
-                     ng-if="vm.permissions.canCreate('COFPGE')"
                      cms-text="Create"
                      cms-icon="plus"
-                     cms-href="#/new"></cms-button-link>
+                     cms-href="#/new"
+                     ng-if="::vm.canCreate"></cms-button-link>
 
     <!--RESULTS-->
     <cms-pager cms-result="vm.result"
@@ -100,7 +100,10 @@
                          cms-href="#/{{ page.pageId }}"
                          cms-title="Edit"></cms-button-icon>-->
 
-                        <a ng-if="vm.permissions.canUpdate('COFPGE')" href="#/{{ page.pageId }}" class="btn-icon" title="Edit">
+                        <a href="#/{{ page.pageId }}"
+                           class="btn-icon"
+                           title="Edit"
+                           ng-if="::vm.canUpdate">
                             <i class="fa fa-pencil-square-o"></i>
                         </a>
                         <a href="{{page.fullPath}}" class="btn-icon" title="Browse to page" target="_blank">

@@ -33,6 +33,8 @@ function (
         vm.changeOrdering = changeOrdering;
 
         vm.permissions = permissionValidationService;
+        vm.canUpdate = getPermission('COMUPD');
+        vm.canCreate = getPermission('COMCRT');
 
         toggleFilter(false);
 
@@ -65,6 +67,10 @@ function (
     }
 
     /* PRIVATE FUNCS */
+
+    function getPermission(code) {
+        return permissionValidationService.hasPermission(options.customEntityDefinitionCode + code);
+    }
     
     function loadGrid() {
         vm.gridLoadState.on();

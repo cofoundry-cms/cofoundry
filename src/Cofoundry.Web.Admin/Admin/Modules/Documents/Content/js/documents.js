@@ -166,7 +166,8 @@ function (
         vm.saveLoadState = new LoadState();
         vm.formLoadState = new LoadState(true);
 
-        vm.permissions = permissionValidationService;
+        vm.canUpdate = permissionValidationService.canUpdate('COFDOC');
+        vm.canDelete = permissionValidationService.canDelete('COFDOC');
 
         // Init
         initData(vm.formLoadState);
@@ -294,7 +295,8 @@ function (
         vm.toggleFilter = toggleFilter;
         vm.getDocumentUrl = urlLibrary.getDocumentUrl;
 
-        vm.permissions = permissionValidationService;
+        vm.canCreate = permissionValidationService.canCreate('COFDOC');
+        vm.canUpdate = permissionValidationService.canUpdate('COFDOC');
 
         toggleFilter(false);
         loadGrid();

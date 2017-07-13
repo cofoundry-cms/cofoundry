@@ -10,16 +10,16 @@
     <cms-page-actions ng-show="!vm.editMode">
 
         <cms-button cms-text="Edit"
-                    ng-if="vm.permissions.canUpdate('COFIMG')"
                     class="main-cta"
                     ng-click="vm.edit()"
                     ng-show="!vm.editMode"
-                    ng-disabled="vm.globalLoadState.isLoading"></cms-button>
+                    ng-disabled="vm.globalLoadState.isLoading"
+                    ng-if="::vm.canUpdate"></cms-button>
 
         <cms-button cms-text="Delete"
-                    ng-if="vm.permissions.canDelete('COFIMG')"
                     ng-click="vm.remove()"
-                    ng-disabled="vm.editMode || vm.globalLoadState.isLoading"></cms-button>
+                    ng-disabled="vm.editMode || vm.globalLoadState.isLoading"
+                    ng-if="::vm.canDelete"></cms-button>
 
     </cms-page-actions>
 

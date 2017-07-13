@@ -220,7 +220,10 @@ function (
         vm.saveButtonText = moduleOptions.autoPublish ? 'Save' : 'Save & Publish';
         vm.canChangeUrl = !moduleOptions.autoGenerateUrlSlug || moduleOptions.hasLocale;
 
-        vm.permissions = permissionValidationService;
+        vm.canPublish = getPermission('CMEPUB');
+        vm.canUpdateUrl = getPermission('UPDURL');
+        vm.canDelete = getPermission('COMDEL');
+        vm.canUpdate = getPermission('CMEPUB');
 
         // Init
         initData(vm.formLoadState);
@@ -337,6 +340,10 @@ function (
     }
 
     /* PRIVATE FUNCS */
+
+    function getPermission(code) {
+        return permissionValidationService.hasPermission(moduleOptions.customEntityDefinitionCode + code);
+    }
 
     function onSuccess(message, loadStateToTurnOff) {
         return initData(loadStateToTurnOff)
@@ -458,6 +465,8 @@ function (
         vm.changeOrdering = changeOrdering;
 
         vm.permissions = permissionValidationService;
+        vm.canUpdate = getPermission('COMUPD');
+        vm.canCreate = getPermission('COMCRT');
 
         toggleFilter(false);
 
@@ -490,6 +499,10 @@ function (
     }
 
     /* PRIVATE FUNCS */
+
+    function getPermission(code) {
+        return permissionValidationService.hasPermission(options.customEntityDefinitionCode + code);
+    }
     
     function loadGrid() {
         vm.gridLoadState.on();

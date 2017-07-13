@@ -40,7 +40,8 @@ function (
         vm.saveLoadState = new LoadState();
         vm.formLoadState = new LoadState(true);
 
-        vm.permissions = permissionValidationService;
+        vm.canDelete = permissionValidationService.canDelete('COFIMG');
+        vm.canUpdate = permissionValidationService.canUpdate('COFIMG');
 
         // Init
         initData(vm.formLoadState);

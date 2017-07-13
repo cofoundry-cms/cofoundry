@@ -8,14 +8,14 @@
     <!-- Default toolbar -->
     <cms-page-actions ng-show="!vm.editMode">
         <cms-button class="main-cta"
-                    ng-if="vm.permissions.hasPermission('COFSETGENUPD')"
                     cms-text="Edit"
+                    ng-if="::vm.canUpdateSettings"
                     ng-click="vm.edit()"
                     ng-show="!vm.editMode"
                     ng-disabled="vm.globalLoadState.isLoading"></cms-button>
 
         <cms-button cms-text="Clear Cache"
-                    ng-if="vm.permissions.hasPermission('COFSETGENUPD')"
+                    ng-if="::vm.canUpdateSettings"
                     ng-click="vm.clearCache()"
                     ng-show="!vm.editMode"
                     ng-disabled="vm.globalLoadState.isLoading"></cms-button>
