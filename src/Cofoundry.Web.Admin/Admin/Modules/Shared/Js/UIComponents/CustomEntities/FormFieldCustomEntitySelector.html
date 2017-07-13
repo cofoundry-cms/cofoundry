@@ -11,7 +11,8 @@
     <cms-button-icon cms-icon="plus-circle"
                      cms-title="Add"
                      class="btn-add" 
-                     ng-click="vm.create()">
+                     ng-click="vm.create()"
+                     ng-if="::vm.canCreate">
     </cms-button-icon>
 
 </cms-form-field-filtered-dropdown>

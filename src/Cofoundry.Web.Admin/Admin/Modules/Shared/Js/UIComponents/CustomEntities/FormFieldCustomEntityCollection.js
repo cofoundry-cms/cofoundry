@@ -113,6 +113,10 @@ function (
 
         /* HELPERS */
 
+        function getPermission(code) {
+            return permissionValidationService.hasPermission(options.customEntityDefinitionCode + code);
+        }
+
         function getFilter() {
             var filter = {},
                 localeId;

@@ -5,6 +5,7 @@
     'shared.SearchQuery',
     'shared.modalDialogService',
     'shared.internalModulePath',
+    'shared.permissionValidationService',
     'options',
     'close',
 function (
@@ -14,6 +15,7 @@ function (
     SearchQuery,
     modalDialogService,
     modulePath,
+    permissionValidationService,
     options,
     close) {
     
@@ -46,6 +48,8 @@ function (
         vm.isSelected = isSelected;
         vm.multiMode = vm.selectedIds ? true : false;
         vm.okText = vm.multiMode ? 'Ok' : 'Select';
+
+        vm.canCreate = permissionValidationService.canCreate('COFIMG');
 
         toggleFilter(false);
         loadGrid();
