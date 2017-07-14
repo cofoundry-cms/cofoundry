@@ -7,11 +7,11 @@ namespace Cofoundry.Web
         public void Register(IContainerRegister container)
         {
             container
-                .RegisterAll<IStartupTask>()
+                .RegisterAll<IStartupServiceConfigurationTask>()
+                .RegisterAll<IStartupConfigurationTask>()
                 .RegisterAll<IMvcJsonOptionsConfiguration>()
                 .RegisterAll<IMvcOptionsConfiguration>()
                 .RegisterAll<IRazorViewEngineOptionsConfiguration>()
-                .RegisterType<IMvcBuilderConfiguration, CofoundryMvcBuilderConfiguration>()
             ;
         }
     }

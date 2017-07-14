@@ -65,8 +65,11 @@ namespace Cofoundry.Web
             var serviceProvider = mvcBuilder.Services.BuildServiceProvider();
             using (var serviceScope = serviceProvider.CreateScope())
             {
-                var mvcBuilderConfiguration = serviceScope.ServiceProvider.GetRequiredService<IMvcBuilderConfiguration>();
-                mvcBuilderConfiguration.Configure(mvcBuilder);
+                var mvcBuilderConfigurations = serviceScope.ServiceProvider.GetRequiredService<IEnumerable<IStartupServiceConfigurationTask>>();
+                foreach (var mvcBuilderConfiguration in mvcBuilderConfigurations)
+                {
+                    mvcBuilderConfiguration.ConfigureServices(mvcBuilder);
+                }
             }
         }
     }

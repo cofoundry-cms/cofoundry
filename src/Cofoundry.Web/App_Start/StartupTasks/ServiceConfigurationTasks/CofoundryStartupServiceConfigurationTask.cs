@@ -16,14 +16,14 @@ namespace Cofoundry.Web
     /// Extends the IMvcBuilder configuration to allow for modular configuration
     /// of Mvc services
     /// </summary>
-    public class CofoundryMvcBuilderConfiguration : IMvcBuilderConfiguration
+    public class CofoundryStartupServiceConfigurationTask : IStartupServiceConfigurationTask
     {
         private readonly IEnumerable<IMvcJsonOptionsConfiguration> _mvcJsonOptionsConfigurations;
         private readonly IEnumerable<IMvcOptionsConfiguration> _mvcOptionsConfigurations;
         private readonly IEnumerable<IRazorViewEngineOptionsConfiguration> _razorViewEngineOptionsConfigurations;
         private readonly IUserAreaRepository _userAreaRepository;
 
-        public CofoundryMvcBuilderConfiguration(
+        public CofoundryStartupServiceConfigurationTask(
             IEnumerable<IMvcJsonOptionsConfiguration> mvcJsonOptionsConfigurations,
             IEnumerable<IMvcOptionsConfiguration> mvcOptionsConfigurations,
             IEnumerable<IRazorViewEngineOptionsConfiguration> razorViewEngineOptionsConfigurations,
@@ -41,7 +41,7 @@ namespace Cofoundry.Web
         /// configuration pipeline.
         /// </summary>
         /// <param name="mvcBuilder">IMvcBuilder to configure.</param>
-        public void Configure(IMvcBuilder mvcBuilder)
+        public void ConfigureServices(IMvcBuilder mvcBuilder)
         {
             ConfigureAuth(mvcBuilder);
 
@@ -71,10 +71,12 @@ namespace Cofoundry.Web
             mvcBuilder.Services.AddScoped<IAuthorizationHandler, UserAreaAuthorizationHandler>();
             mvcBuilder.Services.AddAuthorization(options =>
             {
-                foreach (var _userAreaRepository in _userAreaRepository.GetAll())
+                foreach (var userAreaDefinition in _userAreaRepository.GetAll())
                 {
-                    options.AddPolicy(CofoundryAuthenticationConstants.FormatPolicyName(_userAreaRepository.UserAreaCode),
-                        policy => policy.AddRequirements(new UserAreaAuthorizationRequirement(_userAreaRepository.UserAreaCode)));
+                    options.AddPolicy(CofoundryAuthenticationConstants.FormatPolicyName(userAreaDefinition.UserAreaCode),
+                        policy => policy
+                            .AddRequirements(new UserAreaAuthorizationRequirement(userAreaDefinition.UserAreaCode))
+                            .AddAuthenticationSchemes(CofoundryAuthenticationConstants.FormatAuthenticationScheme(userAreaDefinition.UserAreaCode)));
                 }
             });
         }

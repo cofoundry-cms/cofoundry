@@ -10,11 +10,11 @@ namespace Cofoundry.Web
     /// Adds any bootstrappable message subscriptions to the registered IMessageAggregator
     /// instance.
     /// </summary>
-    public class MessageSubscriptionInitializerStartupTask : IStartupTask
+    public class MessageAggregatorStartupConfigurationTask : IStartupConfigurationTask
     {
         private readonly IMessageSubscriptionInitializer _messageSubscriptionInitializer;
 
-        public MessageSubscriptionInitializerStartupTask(
+        public MessageAggregatorStartupConfigurationTask(
             IMessageSubscriptionInitializer messageSubscriptionInitializer
             )
         {
@@ -26,7 +26,7 @@ namespace Cofoundry.Web
             get { return (int)StartupTaskOrdering.Normal; }
         }
 
-        public void Run(IApplicationBuilder app)
+        public void Configure(IApplicationBuilder app)
         {
             _messageSubscriptionInitializer.Initialize();
         }

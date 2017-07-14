@@ -9,7 +9,7 @@ namespace Cofoundry.Web
     /// Represents a task that runs in the Cofoundry startup and 
     /// initialization pipeline.
     /// </summary>
-    public interface IStartupTask
+    public interface IStartupConfigurationTask
     {
         /// <summary>
         /// An integer representing the ordering (lower values first). Can use custom 
@@ -18,8 +18,8 @@ namespace Cofoundry.Web
         int Ordering { get; }
 
         /// <summary>
-        /// Executes the startup task
+        /// Executes the configuration task
         /// </summary>
-        void Run(IApplicationBuilder app);
+        void Configure(IApplicationBuilder app);
     }
 }

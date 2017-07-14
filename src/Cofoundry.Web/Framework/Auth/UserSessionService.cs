@@ -6,7 +6,6 @@ using Cofoundry.Core;
 using Cofoundry.Domain;
 using System.Security.Principal;
 using Microsoft.AspNetCore.Http;
-using System.Security.Claims;
 using Microsoft.AspNetCore.Http.Authentication;
 
 namespace Cofoundry.Web

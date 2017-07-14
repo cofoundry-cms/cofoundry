@@ -47,4 +47,8 @@
     <EmbeddedResource Include="**\*.cshtml;**\*.html;**\*.png;**\*.jpg;**\*.svg;**\*.ico;**\*.swf;**\*.gif;**\*.css;**\*.js;**\*.woff;**\*.eot;**\*.ttf;" />
   </ItemGroup>
   
+  <ItemGroup>
+    <Folder Include="App_Start\ServiceConfiguration\" />
+  </ItemGroup>
+  
 </Project>

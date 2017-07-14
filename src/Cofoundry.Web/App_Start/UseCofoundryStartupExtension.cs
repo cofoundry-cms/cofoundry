@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using Cofoundry.Core;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
@@ -25,12 +26,11 @@ namespace Cofoundry.Web
 
             using (var childContext = application.ApplicationServices.CreateScope())
             {
-                // Use the fullname secondry ordering here to get predicatable task ordering
-                IEnumerable<IStartupTask> startupTasks = childContext
+                var startupTasks = childContext
                     .ServiceProvider
-                    .GetServices<IStartupTask>()
-                    .OrderBy(i => i.Ordering)
-                    .ThenBy(i => i.GetType().FullName);
+                    .GetServices<IStartupConfigurationTask>();
+
+                startupTasks = SortTasksByDependency(startupTasks);
 
                 if (configuration.StartupTaskFilter != null)
                 {
@@ -39,9 +39,67 @@ namespace Cofoundry.Web
 
                 foreach (var startupTask in startupTasks)
                 {
-                    startupTask.Run(application);
+                    startupTask.Configure(application);
                 }
             }
+        }
+
+        private class StartupTaskLookupItem
+        {
+            public StartupTaskLookupItem(IStartupConfigurationTask startupTask)
+            {
+                StartupTask = startupTask;
+            }
+            public IStartupConfigurationTask StartupTask { get; set; }
+
+            public List<IStartupConfigurationTask> Dependencies { get; set; } = new List<IStartupConfigurationTask>();
+        }
+
+        private static IEnumerable<IStartupConfigurationTask> SortTasksByDependency(IEnumerable<IStartupConfigurationTask> startupTasks)
+        {
+            // Set up a lookup of task
+            var startupTaskLookup = startupTasks.ToDictionary(k => k.GetType(), v => new StartupTaskLookupItem(v));
+
+            foreach (var startupTask in startupTasks
+                .Where(t => t is IRunAfterStartupConfigurationTask)
+                .Cast<IRunAfterStartupConfigurationTask>())
+            {
+                var startupTaskLookupItem = startupTaskLookup[startupTask.GetType()];
+
+                foreach (var runAfterTaskType in startupTask.RunAfter)
+                {
+                    var dependentTask = startupTaskLookup[runAfterTaskType].StartupTask;
+                    startupTaskLookupItem.Dependencies.Add(dependentTask);
+                }
+            }
+
+            foreach (var startupTask in startupTasks
+                .Where(t => t is IRunBeforeStartupConfigurationTask)
+                .Cast<IRunBeforeStartupConfigurationTask>())
+            {
+                foreach (var runBeforeTaskType in startupTask.RunBefore)
+                {
+                    startupTaskLookup[runBeforeTaskType].Dependencies.Add(startupTask);
+                }
+            }
+
+            // Pre-sort by numerical task ordering
+            // The fullname secondry ordering is used to get predicatable task ordering
+            IEnumerable<IStartupConfigurationTask> orderedTasks = startupTasks
+                .OrderBy(t => t.Ordering)
+                .ThenBy(t => t.GetType().FullName);
+
+            try
+            {
+                // Then do a Topological Sort based on task dependencies
+                orderedTasks = TopologicalSorter.Sort(orderedTasks, t => startupTaskLookup[t.GetType()].Dependencies, true);
+            }
+            catch (CyclicDependencyException ex)
+            {
+                throw new CyclicDependencyException("A cyclic dependency has been detected between multiple IStartupConfigurationTask classes. Check your startup tasks to ensure they do not depend on each other. For more details see the inner exception message.", ex);
+            }
+
+            return orderedTasks;
         }
     }
 }
