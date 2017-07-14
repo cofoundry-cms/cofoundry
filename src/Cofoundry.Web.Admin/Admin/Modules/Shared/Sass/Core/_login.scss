@@ -11,21 +11,33 @@
         @include border-radius(3px);
         padding: 20px;
         background: #fff;
+        margin-bottom: 10px;
     }
 
     h1 {
         @include retina-sprite(logo-full);
         margin-bottom: 20px;
-        text-indent:-2000px;
-        overflow:hidden;
+        text-indent: -2000px;
+        overflow: hidden;
+    }
+
+    .control-group {
+        position: relative;
+        margin-bottom: 10px;
     }
 
     label {
-        font-weight:$fontweight-bold;
-        text-transform:uppercase;
-        font-size:100%;
-        padding:10px 0;
-        display:block;
+        font-weight: $fontweight-bold;
+        text-transform: uppercase;
+        font-size: 100%;
+        padding: 10px 0;
+        display: block;
+    }
+
+    .login-alt-cta {
+        position: absolute;
+        right: 0;
+        top: 10px;
     }
 
     .checkbox {
@@ -33,31 +45,21 @@
     }
 
     .actions {
-        margin-top:15px;
-        float:right;
+        margin-top: 15px;
+        float: right;
 
         .btn {
-            width:100%;
+            width: 100%;
         }
     }
 
     .field-validation-error {
         @include border-radius(2px);
-        padding:5px;
-        border:1px solid $color-warning;
-        background-color:#ffcc99;
-        width:100%;
-        margin-top:5px;
-        display:block;
-    }
-}
-
-.login-footer {
-    text-align:center;
-    padding:20px;
-
-    a {
-        color:#000;
-        display:block;
+        padding: 5px;
+        border: 1px solid $color-warning;
+        background-color: #ffcc99;
+        width: 100%;
+        margin-top: 5px;
+        display: block;
     }
 }

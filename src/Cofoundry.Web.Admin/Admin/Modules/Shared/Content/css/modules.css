@@ -314,8 +314,9 @@ footer a {
   border-radius: 3px;
   padding: 20px;
   background: #fff;
+  margin-bottom: 10px;
 }
-/* line 16, ../../Sass/Core/_login.scss */
+/* line 17, ../../Sass/Core/_login.scss */
 .login-container h1 {
   display: inline-block;
   vertical-align: middle;
@@ -332,7 +333,7 @@ footer a {
   overflow: hidden;
 }
 @media (-webkit-min-device-pixel-ratio: 1.5), (min--moz-device-pixel-ratio: 1.5), (-o-min-device-pixel-ratio: 3 / 2), (min-device-pixel-ratio: 1.5), (min-resolution: 144dppx) {
-  /* line 16, ../../Sass/Core/_login.scss */
+  /* line 17, ../../Sass/Core/_login.scss */
   .login-container h1 {
     background-image: url('/Admin/Modules/Shared/Content/css/img/icons/retina.png');
     background-position: 0 -201px;
@@ -342,7 +343,12 @@ footer a {
     background-size: 250px auto;
   }
 }
-/* line 23, ../../Sass/Core/_login.scss */
+/* line 24, ../../Sass/Core/_login.scss */
+.login-container .control-group {
+  position: relative;
+  margin-bottom: 10px;
+}
+/* line 29, ../../Sass/Core/_login.scss */
 .login-container label {
   font-weight: 700;
   text-transform: uppercase;
@@ -350,20 +356,26 @@ footer a {
   padding: 10px 0;
   display: block;
 }
-/* line 31, ../../Sass/Core/_login.scss */
+/* line 37, ../../Sass/Core/_login.scss */
+.login-container .login-alt-cta {
+  position: absolute;
+  right: 0;
+  top: 10px;
+}
+/* line 43, ../../Sass/Core/_login.scss */
 .login-container .checkbox {
   float: left;
 }
-/* line 35, ../../Sass/Core/_login.scss */
+/* line 47, ../../Sass/Core/_login.scss */
 .login-container .actions {
   margin-top: 15px;
   float: right;
 }
-/* line 39, ../../Sass/Core/_login.scss */
+/* line 51, ../../Sass/Core/_login.scss */
 .login-container .actions .btn {
   width: 100%;
 }
-/* line 44, ../../Sass/Core/_login.scss */
+/* line 56, ../../Sass/Core/_login.scss */
 .login-container .field-validation-error {
   -moz-border-radius: 2px;
   -webkit-border-radius: 2px;
@@ -373,17 +385,6 @@ footer a {
   background-color: #ffcc99;
   width: 100%;
   margin-top: 5px;
-  display: block;
-}
-
-/* line 55, ../../Sass/Core/_login.scss */
-.login-footer {
-  text-align: center;
-  padding: 20px;
-}
-/* line 59, ../../Sass/Core/_login.scss */
-.login-footer a {
-  color: #000;
   display: block;
 }
 
