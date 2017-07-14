@@ -12,11 +12,11 @@ namespace Cofoundry.Web
     /// <summary>
     /// Configures the default JsonSerializerSettings for Json.Net
     /// </summary>
-    public class JsonConverterConfigurationStartupTask : IStartupTask
+    public class JsonConverterStartupConfigurationTask : IStartupConfigurationTask
     {
         private readonly IJsonSerializerSettingsFactory _jsonSerializerSettingsFactory;
 
-        public JsonConverterConfigurationStartupTask(
+        public JsonConverterStartupConfigurationTask(
             IJsonSerializerSettingsFactory jsonSerializerSettingsFactory
             )
         {
@@ -31,7 +31,7 @@ namespace Cofoundry.Web
             get { return (int)StartupTaskOrdering.Early; }
         }
 
-        public void Run(IApplicationBuilder app)
+        public void Configure(IApplicationBuilder app)
         {
             JsonConvert.DefaultSettings = _jsonSerializerSettingsFactory.Create;
         }

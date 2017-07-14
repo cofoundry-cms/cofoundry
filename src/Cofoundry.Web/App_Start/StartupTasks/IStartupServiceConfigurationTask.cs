@@ -9,18 +9,17 @@ namespace Cofoundry.Web
 {
     /// <summary>
     /// Extends the IMvcBuilder configuration to allow for modular
-    /// configuration of applications. It's best not to override this
-    /// unless you really need to, rather implement one of the single-purpose
-    /// configuration extensibility interfaces such as IMvcOptionsConfiguration,
-    /// IMvcJsonOptionsConfiguration, or IRazorViewEngineOptionsConfiguration
+    /// configuration of applications. Implementations are run in series
+    /// without any specific ordering, but all are run after AddMvc has been
+    /// invoked.
     /// </summary>
-    public interface IMvcBuilderConfiguration
+    public interface IStartupServiceConfigurationTask
     {
         /// <summary>
         /// Configures Mvc services. Runs after AddMvc in the service
         /// configuration pipeline.
         /// </summary>
         /// <param name="mvcBuilder">IMvcBuilder to configure.</param>
-        void Configure(IMvcBuilder mvcBuilder);
+        void ConfigureServices(IMvcBuilder mvcBuilder);
     }
 }

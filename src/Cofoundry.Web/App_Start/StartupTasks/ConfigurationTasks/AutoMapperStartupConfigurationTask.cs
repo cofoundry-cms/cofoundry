@@ -9,11 +9,11 @@ namespace Cofoundry.Web
     /// <summary>
     /// Sets up AutoMapper to use DI and adds some basic converters
     /// </summary>
-    public class AutoMapperConfigurationStartupTask : IStartupTask
+    public class AutoMapperStartupConfigurationTask : IStartupConfigurationTask
     {
         private readonly IAutoMapBootstrapper _autoMapBootstrapper;
 
-        public AutoMapperConfigurationStartupTask(
+        public AutoMapperStartupConfigurationTask(
             IAutoMapBootstrapper autoMapBootstrapper
             )
         {
@@ -25,7 +25,7 @@ namespace Cofoundry.Web
             get { return (int)StartupTaskOrdering.Normal; }
         }
 
-        public void Run(IApplicationBuilder app)
+        public void Configure(IApplicationBuilder app)
         {
             _autoMapBootstrapper.Configure(cfg =>
             {

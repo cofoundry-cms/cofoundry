@@ -9,14 +9,14 @@ namespace Cofoundry.Web
     /// A simple task to add the AutoUpdateMiddleware to the owin pipeline
     /// so it runs first.
     /// </summary>
-    public class AutoUpdateMiddlewareRegistrationStartupTask : IStartupTask
+    public class AutoUpdateMiddlewareStartupConfigurationTask : IStartupConfigurationTask
     {
         public int Ordering
         {
             get { return (int)StartupTaskOrdering.Early; }
         }
 
-        public void Run(IApplicationBuilder app)
+        public void Configure(IApplicationBuilder app)
         {
             app.UseMiddleware<AutoUpdateMiddleware>();
         }

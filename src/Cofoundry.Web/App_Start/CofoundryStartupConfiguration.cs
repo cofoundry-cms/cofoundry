@@ -12,7 +12,7 @@ namespace Cofoundry.Web
         /// <summary>
         /// A function that can be used to alter the startup task pipeline.
         /// </summary>
-        public Func<IEnumerable<IStartupTask>, IEnumerable<IStartupTask>> StartupTaskFilter { get; private set; }
+        public Func<IEnumerable<IStartupConfigurationTask>, IEnumerable<IStartupConfigurationTask>> StartupTaskFilter { get; private set; }
 
         /// <summary>
         /// Use this to remove/append/wrap or re-order the startup task collection as
@@ -20,7 +20,7 @@ namespace Cofoundry.Web
         /// </summary>
         /// <param name="startupTaskFilter">A function that returns a collection of startup tasks to run.</param>
         /// <returns></returns>
-        public CofoundryStartupConfiguration FilterStartupTasks(Func<IEnumerable<IStartupTask>, IEnumerable<IStartupTask>> startupTaskFilter)
+        public CofoundryStartupConfiguration FilterStartupTasks(Func<IEnumerable<IStartupConfigurationTask>, IEnumerable<IStartupConfigurationTask>> startupTaskFilter)
         {
             StartupTaskFilter = startupTaskFilter;
 
