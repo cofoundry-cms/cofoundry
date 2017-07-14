@@ -12,8 +12,8 @@
             <tr ng-repeat="webDirectory in ::vm.webDirectories">
                 <td>
                     <span>{{::vm.getPathDepthIndicator(webDirectory.depth)}}</span>
-                    <a ng-href="#/{{::webDirectory.webDirectoryId}}">{{::webDirectory.name }}</a> ({{::webDirectory.fullUrlPath}})
-                    <span>{{::vm.getPathDepthIndicator(webDirectory.depth)}}</span>
+                    <a ng-href="#/{{::webDirectory.webDirectoryId}}">{{::webDirectory.name }}</a><br>
+                    <span class="invisible">{{::vm.getPathDepthIndicator(webDirectory.depth)}}</span> {{::webDirectory.fullUrlPath}}
                 </td>
                 <td>
                     <a ng-href="pages#/?webDirectoryId={{::webDirectory.webDirectoryId}}">{{::webDirectory.numPages}}</a>

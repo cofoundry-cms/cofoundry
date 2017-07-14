@@ -75,7 +75,8 @@
                 </tr>
                 <tr ng-repeat="page in vm.result.items">
                     <td>
-                        <a href="#/{{ page.pageId }}">{{ page.fullPath }}</a> ({{page.title}})
+                        <a href="#/{{ page.pageId }}">{{ page.fullPath }}</a><br>
+                        <span>{{page.title}}</span>
                     </td>
                     <!--<td>
                     <span ng-if="page.locale">{{ page.locale.name }} ({{ page.locale.ietfLanguageTag}})</span>

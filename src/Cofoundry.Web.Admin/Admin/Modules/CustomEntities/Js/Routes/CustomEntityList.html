@@ -64,13 +64,11 @@
                         <span ng-if="::entity.locale">{{ ::entity.locale.name }} ({{ ::entity.locale.ietfLanguageTag}})</span>
                     </td>
                     <td>
-                        <a href="#/{{::entity.customEntityId}}">{{::entity.title}}</a> 
-                        <span ng-if="entity.fullPath">
-                            ({{::entity.fullPath}})
-                        </span>
+                        <a href="#/{{::entity.customEntityId}}">{{::entity.title}}</a><br>
+                        <span ng-if="entity.fullPath">{{::entity.fullPath}}</span>
                     </td>
                     <td ng-if="::entity.isPublished">
-                        Published
+                        Published<br>
                         <a href="{{ ::entity.fullPath }}" ng-if="::entity.isPublished && entity.hasDraft">(Pending Draft)</a>
                     </td>
                     <td ng-if="::!entity.isPublished">
