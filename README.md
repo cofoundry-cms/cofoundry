@@ -22,6 +22,3 @@ Find out more at [Cofoundry.org](https://www.cofoundry.org/) or head to the [doc
 - [Feedback & Community](https://github.com/cofoundry-cms/cofoundry/wiki/Feedback-&-Community)
 - [Full Documentation](https://github.com/cofoundry-cms/cofoundry/wiki)
  
-
-
-
