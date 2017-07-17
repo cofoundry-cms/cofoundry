@@ -1401,108 +1401,31 @@ input[type="color"] {
 }
 /* line 242, ../../Js/UIComponents/Layout/_layout.scss */
 .page-body fieldset.show-helpers .help-inline {
-  -moz-border-radius: 3px;
-  -webkit-border-radius: 3px;
-  border-radius: 3px;
   -moz-transition: all 0.2s;
   -o-transition: all 0.2s;
   -webkit-transition: all 0.2s;
   transition: all 0.2s;
-  margin: 5px 25px;
-  border: 1px solid #413851;
-  border-color: #413851;
   background-color: #fff;
   color: #413851;
   font-style: italic;
   display: block;
-  float: left;
-  padding: 10px 20px;
+  padding: 0 20px 15px;
   position: relative;
   z-index: 2;
-  top: -25px;
 }
-/* line 258, ../../Js/UIComponents/Layout/_layout.scss */
-.page-body fieldset.show-helpers .help-inline:before {
-  -moz-transition: all 0.3s;
-  -o-transition: all 0.3s;
-  -webkit-transition: all 0.3s;
-  transition: all 0.3s;
-  content: '';
-  position: absolute;
-  left: 12px;
-  top: -12px;
-  border-left: 6px solid transparent;
-  border-right: 6px solid transparent;
-  border-top: 6px solid transparent;
-  border-bottom: 6px solid #413851;
-}
-/* line 270, ../../Js/UIComponents/Layout/_layout.scss */
-.page-body fieldset.show-helpers .help-inline:after {
-  -moz-transition: all 0.3s;
-  -o-transition: all 0.3s;
-  -webkit-transition: all 0.3s;
-  transition: all 0.3s;
-  content: '';
-  position: absolute;
-  left: 13px;
-  top: -10px;
-  border-left: 5px solid transparent;
-  border-right: 5px solid transparent;
-  border-top: 5px solid transparent;
-  border-bottom: 5px solid #fff;
-}
-/* line 282, ../../Js/UIComponents/Layout/_layout.scss */
+/* line 252, ../../Js/UIComponents/Layout/_layout.scss */
 .page-body fieldset.show-helpers .help-inline small {
   font-size: 95%;
   line-height: 105%;
 }
 @media screen and (min-width: 1200px) {
-  /* line 289, ../../Js/UIComponents/Layout/_layout.scss */
-  .page-body fieldset.show-helpers .control-group-area {
-    width: 72%;
-  }
-  /* line 293, ../../Js/UIComponents/Layout/_layout.scss */
+  /* line 259, ../../Js/UIComponents/Layout/_layout.scss */
   .page-body fieldset.show-helpers .help-inline {
     margin: 0;
-    width: 25%;
-    padding: 10px;
-    top: 23px;
-    left: -20px;
-    float: right;
-    margin-bottom: 10px;
-  }
-  /* line 302, ../../Js/UIComponents/Layout/_layout.scss */
-  .page-body fieldset.show-helpers .help-inline:before {
-    -moz-transition: all 0.3s;
-    -o-transition: all 0.3s;
-    -webkit-transition: all 0.3s;
-    transition: all 0.3s;
-    content: '';
-    position: absolute;
-    left: -12px;
-    top: 10px;
-    border-left: 6px solid transparent;
-    border-right: 6px solid #413851;
-    border-top: 6px solid transparent;
-    border-bottom: 6px solid transparent;
-  }
-  /* line 314, ../../Js/UIComponents/Layout/_layout.scss */
-  .page-body fieldset.show-helpers .help-inline:after {
-    -moz-transition: all 0.3s;
-    -o-transition: all 0.3s;
-    -webkit-transition: all 0.3s;
-    transition: all 0.3s;
-    content: '';
-    position: absolute;
-    left: -10px;
-    top: 11px;
-    border-left: 5px solid transparent;
-    border-right: 5px solid #fff;
-    border-top: 5px solid transparent;
-    border-bottom: 5px solid transparent;
+    top: -20px;
   }
 }
-/* line 331, ../../Js/UIComponents/Layout/_layout.scss */
+/* line 268, ../../Js/UIComponents/Layout/_layout.scss */
 .page-body .control-group {
   overflow: hidden;
   *zoom: 1;
@@ -1511,45 +1434,27 @@ input[type="color"] {
   position: relative;
   z-index: 1;
 }
-/* line 338, ../../Js/UIComponents/Layout/_layout.scss */
-.page-body .control-group:before {
-  content: '';
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  background: #fff;
-  border-left: 1px solid #dddddd;
-  border-right: 1px solid #dddddd;
-  z-index: 1;
-  right: 28%;
-  left: 0;
-}
-/* line 352, ../../Js/UIComponents/Layout/_layout.scss */
-.page-body .control-group:last-of-type:before {
-  margin-bottom: 10px;
-}
-/* line 357, ../../Js/UIComponents/Layout/_layout.scss */
+/* line 275, ../../Js/UIComponents/Layout/_layout.scss */
 .page-body .control-group:hover {
   z-index: 9999;
 }
-/* line 361, ../../Js/UIComponents/Layout/_layout.scss */
+/* line 279, ../../Js/UIComponents/Layout/_layout.scss */
 .page-body .control-group .control-group-area {
   overflow: hidden;
   *zoom: 1;
   overflow: visible;
   position: relative;
   z-index: 2;
-  float: left;
   width: 100%;
   height: 100%;
   background: #fff;
   padding: 0 20px 30px;
 }
-/* line 372, ../../Js/UIComponents/Layout/_layout.scss */
+/* line 289, ../../Js/UIComponents/Layout/_layout.scss */
 .page-body .control-group .control-group-area .table-wrap {
   border-top: 0px solid #d2d2d2;
 }
-/* line 376, ../../Js/UIComponents/Layout/_layout.scss */
+/* line 293, ../../Js/UIComponents/Layout/_layout.scss */
 .page-body .control-group .control-group-area label {
   display: block;
   font-size: 100%;
@@ -1557,7 +1462,7 @@ input[type="color"] {
   text-transform: uppercase;
   padding-bottom: 10px;
 }
-/* line 386, ../../Js/UIComponents/Layout/_layout.scss */
+/* line 303, ../../Js/UIComponents/Layout/_layout.scss */
 .page-body .control-group .control-group-area.editmode label:after {
   position: absolute;
   right: 28px;
@@ -1566,59 +1471,59 @@ input[type="color"] {
   content: '\f00c';
   color: #339900;
 }
-/* line 399, ../../Js/UIComponents/Layout/_layout.scss */
+/* line 316, ../../Js/UIComponents/Layout/_layout.scss */
 .page-body .control-group .control-group-area.required.editmode label:after {
   content: '\f069';
   color: #ff6600;
 }
-/* line 408, ../../Js/UIComponents/Layout/_layout.scss */
+/* line 325, ../../Js/UIComponents/Layout/_layout.scss */
 .page-body .control-group .control-group-area.invalid.editmode label:after {
   content: '\f069';
   color: #ff0000;
 }
-/* line 415, ../../Js/UIComponents/Layout/_layout.scss */
+/* line 332, ../../Js/UIComponents/Layout/_layout.scss */
 .page-body .control-group .control-group-area .controls {
   position: relative;
 }
-/* line 418, ../../Js/UIComponents/Layout/_layout.scss */
+/* line 335, ../../Js/UIComponents/Layout/_layout.scss */
 .page-body .control-group .control-group-area .controls .btn {
   display: inline-block;
 }
 @media screen and (min-width: 1200px) {
-  /* line 426, ../../Js/UIComponents/Layout/_layout.scss */
+  /* line 343, ../../Js/UIComponents/Layout/_layout.scss */
   .page-body.form {
     margin-left: 185px;
   }
 }
 
-/* line 432, ../../Js/UIComponents/Layout/_layout.scss */
+/* line 349, ../../Js/UIComponents/Layout/_layout.scss */
 .on-drag-hover {
   border-top: 2px solid #4af386;
   border-bottom: 2px solid #4af386;
 }
 
-/* line 437, ../../Js/UIComponents/Layout/_layout.scss */
+/* line 354, ../../Js/UIComponents/Layout/_layout.scss */
 [draggable] {
   cursor: move;
 }
 
-/* line 441, ../../Js/UIComponents/Layout/_layout.scss */
+/* line 358, ../../Js/UIComponents/Layout/_layout.scss */
 .dropdown-menu {
   background: #fff;
   left: 0;
 }
 
-/* line 446, ../../Js/UIComponents/Layout/_layout.scss */
+/* line 363, ../../Js/UIComponents/Layout/_layout.scss */
 .fa {
   font-size: 1.4em;
 }
-/* line 449, ../../Js/UIComponents/Layout/_layout.scss */
+/* line 366, ../../Js/UIComponents/Layout/_layout.scss */
 .fa.alert {
   color: #ff6600;
   margin-right: 5px;
 }
 
-/* line 455, ../../Js/UIComponents/Layout/_layout.scss */
+/* line 372, ../../Js/UIComponents/Layout/_layout.scss */
 .fa-picture-o, .btn-icon .fa-picture-o {
   font-size: 3em;
   color: #dddddd;
