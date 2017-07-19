@@ -15,7 +15,7 @@ namespace Cofoundry.Domain
     /// Marks a user as deleted in the database (soft delete).
     /// </summary>
     public class DeleteUserCommandHandler 
-        : ICommandHandler<DeleteUserCommand>, IAsyncCommandHandler<DeleteUserCommand>
+        : IAsyncCommandHandler<DeleteUserCommand>
         , IPermissionRestrictedCommandHandler<DeleteUserCommand>
     {
         private readonly CofoundryDbContext _dbContext;
@@ -31,15 +31,6 @@ namespace Cofoundry.Domain
             _dbContext = dbContext;
             _userCommandPermissionsHelper = userCommandPermissionsHelper;
             _permissionValidationService = permissionValidationService;
-        }
-
-        public void Execute(DeleteUserCommand command, IExecutionContext executionContext)
-        {
-            var user = QueryUser(command.UserId).SingleOrDefault();
-            var executorRole = _userCommandPermissionsHelper.GetExecutorRole(executionContext);
-            ValidateCustomPermissions(user, executionContext, executorRole);
-            MarkRecordDeleted(user, executionContext);
-            _dbContext.SaveChanges();
         }
 
         public async Task ExecuteAsync(DeleteUserCommand command, IExecutionContext executionContext)

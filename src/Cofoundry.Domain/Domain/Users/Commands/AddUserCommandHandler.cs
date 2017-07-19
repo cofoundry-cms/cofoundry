@@ -65,7 +65,7 @@ namespace Cofoundry.Domain
             var isUnique = await _queryExecutor.ExecuteAsync(GetUniqueQuery(command, userArea), executionContext);
             ValidateIsUnique(isUnique, userArea);
 
-            var newRole = _userCommandPermissionsHelper.GetAndValidateNewRole(command.RoleId, command.UserAreaCode, executionContext);
+            var newRole = await _userCommandPermissionsHelper.GetAndValidateNewRoleAsync(command.RoleId, null, command.UserAreaCode, executionContext);
 
             var user = MapAndAddUser(command, executionContext, newRole, userArea, dbUserArea);
             await _dbContext.SaveChangesAsync();

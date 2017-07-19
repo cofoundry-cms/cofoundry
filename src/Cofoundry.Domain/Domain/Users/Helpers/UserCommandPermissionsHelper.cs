@@ -33,33 +33,18 @@ namespace Cofoundry.Domain
 
         #region public methods
 
-        public Role GetAndValidateNewRole(int roleId, string userAreaCode, IExecutionContext executionContext)
-        {
-            var executorRole = GetExecutorRole(executionContext);
-
-            var newRole = QueryRole(roleId).SingleOrDefault();
-            EntityNotFoundException.ThrowIfNull(newRole, roleId);
-            ValidateRole(userAreaCode, newRole, executorRole);
-
-            return newRole;
-        }
-
-        public async Task<Role> GetAndValidateNewRoleAsync(int roleId, string userAreaCode, IExecutionContext executionContext)
+        public async Task<Role> GetAndValidateNewRoleAsync(int newRoleId, int? oldRoleId, string userAreaCode, IExecutionContext executionContext)
         {
             var executorRole = await GetExecutorRoleAsync(executionContext);
 
-            var newRole = await QueryRole(roleId).SingleOrDefaultAsync();
-            EntityNotFoundException.ThrowIfNull(newRole, roleId);
+            var newRole = await QueryRole(newRoleId).SingleOrDefaultAsync();
+            
+            EntityNotFoundException.ThrowIfNull(newRole, newRoleId);
             ValidateRole(userAreaCode, newRole, executorRole);
 
+            await ValidateDeAssignmentAsync(oldRoleId, newRole, executorRole);
+
             return newRole;
-        }
-
-        public RoleDetails GetExecutorRole(IExecutionContext executionContext)
-        {
-            var executorRole = _internalRoleRepository.GetById(executionContext.UserContext.RoleId);
-
-            return executorRole;
         }
 
         public async Task<RoleDetails> GetExecutorRoleAsync(IExecutionContext executionContext)
@@ -97,6 +82,20 @@ namespace Cofoundry.Domain
             if (newUserRole.SpecialistRoleTypeCode == SpecialistRoleTypeCodes.SuperAdministrator && !executorRole.IsSuperAdministrator)
             {
                 throw new NotPermittedException("Only Super Administrator users can assign the Super Administrator role");
+            }
+        }
+
+        private async Task ValidateDeAssignmentAsync(int? oldRoleId, Role newUserRole, RoleDetails executorRole)
+        {
+            if (oldRoleId.HasValue
+                && !executorRole.IsSuperAdministrator
+                && newUserRole.SpecialistRoleTypeCode != SpecialistRoleTypeCodes.SuperAdministrator)
+            {
+                var oldRole = await QueryRole(oldRoleId.Value).SingleOrDefaultAsync();
+                if (oldRole.SpecialistRoleTypeCode == SpecialistRoleTypeCodes.SuperAdministrator)
+                {
+                    throw new NotPermittedException("Only Super Administrator users can de-assign the Super Administrator role");
+                }
             }
         }
 
