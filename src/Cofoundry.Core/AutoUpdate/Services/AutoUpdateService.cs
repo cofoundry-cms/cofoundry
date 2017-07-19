@@ -22,7 +22,7 @@ namespace Cofoundry.Core.AutoUpdate
         private readonly IEnumerable<IUpdatePackageFactory> _updatePackageFactories;
         private readonly IUpdateCommandHandlerFactory _commandHandlerFactory;
         private readonly IDatabase _db;
-
+        private readonly IUpdatePackageOrderer _updatePackageOrderer;
         #endregion
 
         #region constructor
@@ -30,12 +30,14 @@ namespace Cofoundry.Core.AutoUpdate
         public AutoUpdateService(
             IEnumerable<IUpdatePackageFactory> updatePackageFactories,
             IUpdateCommandHandlerFactory commandHandlerFactory,
-            IDatabase db
+            IDatabase db,
+            IUpdatePackageOrderer updatePackageOrderer
             )
         {
             _updatePackageFactories = updatePackageFactories;
             _commandHandlerFactory = commandHandlerFactory;
             _db = db;
+            _updatePackageOrderer = updatePackageOrderer;
         }
 
         #endregion
@@ -56,13 +58,11 @@ namespace Cofoundry.Core.AutoUpdate
         {
             var previouslyAppliedVersions = GetUpdateVersionHistory();
 
-            // Make sure Cofoundry packages are installed first, even if someone has forgotten to mark it as a dependency
-            var packages = _updatePackageFactories
+            var filteredPackages = _updatePackageFactories
                 .SelectMany(f => f.Create(previouslyAppliedVersions))
-                .Where(p => !EnumerableHelper.IsNullOrEmpty(p.VersionedCommands) || !EnumerableHelper.IsNullOrEmpty(p.AlwaysUpdateCommands))
-                .OrderByDescending(p => p.ModuleIdentifier == CofoundryModuleInfo.ModuleIdentifier)
-                .ThenBy(p => p)
                 .ToList();
+
+            var packages = _updatePackageOrderer.Order(filteredPackages);
 
             if (packages.Any() && IsLocked())
             {
