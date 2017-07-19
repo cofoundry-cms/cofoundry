@@ -19,6 +19,7 @@ namespace Cofoundry.Core.AutoUpdate
                 .RegisterAllGenericImplementations(typeof(IAsyncAlwaysRunUpdateCommandHandler<>))
                 .RegisterType<IUpdateCommandHandlerFactory, UpdateCommandHandlerFactory>()
                 .RegisterType<IAutoUpdateService, AutoUpdateService>()
+                .RegisterType<IUpdatePackageOrderer, UpdatePackageOrderer>()
                 .RegisterAll<IUpdatePackageFactory>()
                 ;
         }
