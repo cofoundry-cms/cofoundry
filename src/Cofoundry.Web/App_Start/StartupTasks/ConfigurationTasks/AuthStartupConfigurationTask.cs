@@ -1,12 +1,8 @@
-﻿using Cofoundry.Web.ModularMvc;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Routing;
+﻿using Microsoft.AspNetCore.Builder;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Cofoundry.Core;
 using Cofoundry.Domain;
-using Microsoft.AspNetCore.StaticFiles;
 
 namespace Cofoundry.Web
 {

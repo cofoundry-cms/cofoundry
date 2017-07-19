@@ -34,7 +34,7 @@ Cofoundry.visualEditor = (function () {
     THEREFORE THIS FILE SHOULD CONTAIN NO THIRD PARTY DEPENDENCIES
     TO MINIMIZE ANY RISKS OF CONFLICTS
 
-    ALL ADMIN UNPUTS ARE PROXIED VIA AN IFRAME TO ENSURE THE ANGULAR WORLD IS
+    ALL ADMIN INPUTS ARE PROXIED VIA AN IFRAME TO ENSURE THE ANGULAR WORLD IS
     CONTAINED AWAY FROM THE SITE TEMPLATES
     
     */
@@ -87,7 +87,7 @@ Cofoundry.visualEditor = (function () {
             // Internal refs
             __TOOLBAR = toolbar;
 
-            if (visualEditorMode === 'Draft' || visualEditorMode === 'Edit') {
+            if ((visualEditorMode === 'Draft' || visualEditorMode === 'Edit') && _internal.model.hasEntityPublishPermission) {
                 // Insert publish button
                 _toolBar.addButton({
                     icon: 'fa-cloud-upload',
@@ -96,7 +96,7 @@ Cofoundry.visualEditor = (function () {
                     classNames: 'publish popup',
                     click: _internal.publish
                 });
-            } else if (visualEditorMode === 'Live') {
+            } else if (visualEditorMode === 'Live' && _internal.model.hasEntityPublishPermission) {
                 // Insert unpublish button
                 _toolBar.addButton({
                     icon: 'fa-cloud-download',
@@ -105,7 +105,7 @@ Cofoundry.visualEditor = (function () {
                     classNames: 'publish popup',
                     click: _internal.unpublish
                 });
-            } else if (visualEditorMode === 'SpecificVersion') {
+            } else if (visualEditorMode === 'SpecificVersion' && _internal.model.hasEntityUpdatePermission) {
                 // Insert copy to draft button
                 _toolBar.addButton({
                     icon: 'fa-files-o',
@@ -582,11 +582,19 @@ Cofoundry.visualEditor = (function () {
 
         copyToDraft: function (e) {
             e.preventDefault();
+            var dialogOptions;
+            if (_internal.model.isCustomEntityRoute) {
+                dialogOptions = {
+                    entityNameSingular: _internal.model.customEntityDefinition.nameSingular,
+                    isCustomEntity: true
+                }
+            }
             __IFRAME.contentWindow.postMessage({
                 action: 'copyToDraft', args: [{
-                    entityId: _internal.model.page.page.pageId,
-                    versionId: _internal.model.page.page.versionId,
-                    hasDraftVersion: false
+                    entityId: _internal.model.isCustomEntityRoute ? _internal.model.page.customEntity.customEntityId : _internal.model.page.page.pageId,
+                    versionId: _internal.model.version.versionId,
+                    hasDraftVersion: _internal.model.hasDraftVersion,
+                    dialogOptions: dialogOptions
                 }]
             }, document.location.origin);
             __IFRAME.style.display = 'block';
@@ -619,7 +627,7 @@ Cofoundry.visualEditor = (function () {
 
     window.onload = function () {
         // pageResponseData object is a serialized object inserted into the page
-        _internal.model = pageResponseData;
+        _internal.model = Cofoundry.PageResponseData;
 
         if (_internal.model != null) {
             _internal.bindIframe();

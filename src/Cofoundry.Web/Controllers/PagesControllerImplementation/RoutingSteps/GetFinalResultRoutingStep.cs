@@ -21,16 +21,19 @@ namespace Cofoundry.Web
         private readonly IQueryExecutor _queryExecutor;
         private readonly IPageViewModelBuilder _pageViewModelBuilder;
         private readonly IPageResponseDataCache _pageRenderDataCache;
+        private readonly IPermissionValidationService _permissionValidationService;
 
         public GetFinalResultRoutingStep(
             IQueryExecutor queryExecutor,
             IPageViewModelBuilder pageViewModelBuilder,
-            IPageResponseDataCache pageRenderDataCache
+            IPageResponseDataCache pageRenderDataCache,
+            IPermissionValidationService permissionValidationService
             )
         {
             _queryExecutor = queryExecutor;
             _pageViewModelBuilder = pageViewModelBuilder;
             _pageRenderDataCache = pageRenderDataCache;
+            _permissionValidationService = permissionValidationService;
         }
 
         public async Task ExecuteAsync(Controller controller, PageActionRoutingState state)
@@ -111,10 +114,22 @@ namespace Cofoundry.Web
             pageResponseData.HasDraftVersion = state.PageRoutingInfo.GetVersionRoute(state.InputParameters.IsEditingCustomEntity, WorkFlowStatusQuery.Draft, null) != null;
             pageResponseData.Version = state.PageRoutingInfo.GetVersionRoute(state.InputParameters.IsEditingCustomEntity, workFlowStatusQuery, state.InputParameters.VersionId);
             pageResponseData.IsCustomEntityRoute = pageResponseData.Version is CustomEntityVersionRoute;
-
-            if (!string.IsNullOrEmpty(state.PageRoutingInfo.PageRoute.CustomEntityDefinitionCode))
+            
+            var customEntityDefinitionCode = state.PageRoutingInfo.PageRoute.CustomEntityDefinitionCode;
+            if (!string.IsNullOrEmpty(customEntityDefinitionCode))
             {
-                pageResponseData.CustomEntityDefinition = await _queryExecutor.GetByIdAsync<CustomEntityDefinitionSummary>(state.PageRoutingInfo.PageRoute.CustomEntityDefinitionCode);
+                pageResponseData.CustomEntityDefinition = await _queryExecutor.GetByIdAsync<CustomEntityDefinitionSummary>(customEntityDefinitionCode);
+            }
+
+            if (pageResponseData.IsCustomEntityRoute)
+            {
+                pageResponseData.HasEntityUpdatePermission = _permissionValidationService.HasCustomEntityPermission<CustomEntityUpdatePermission>(customEntityDefinitionCode, state.UserContext);
+                pageResponseData.HasEntityPublishPermission = _permissionValidationService.HasCustomEntityPermission<CustomEntityPublishPermission>(customEntityDefinitionCode, state.UserContext);
+            }
+            else
+            {
+                pageResponseData.HasEntityUpdatePermission = _permissionValidationService.HasPermission<PageUpdatePermission>(state.UserContext);
+                pageResponseData.HasEntityPublishPermission = _permissionValidationService.HasPermission<PagePublishPermission>(state.UserContext);
             }
 
             if (state.InputParameters.IsEditingCustomEntity)

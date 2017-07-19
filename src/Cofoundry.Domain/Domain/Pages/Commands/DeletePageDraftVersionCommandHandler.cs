@@ -77,7 +77,7 @@ namespace Cofoundry.Domain
 
         public IEnumerable<IPermissionApplication> GetPermissions(DeletePageDraftVersionCommand command)
         {
-            yield return new PageDeletePermission();
+            yield return new PageUpdatePermission();
         }
 
         #endregion

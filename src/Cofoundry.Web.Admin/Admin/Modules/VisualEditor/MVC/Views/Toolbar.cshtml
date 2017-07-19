@@ -1,5 +1,6 @@
 @model IPageResponseData
 @inject IAdminRouteLibrary adminRouteLibrary
+@inject IPermissionValidationService permissionValidationService
 
 @functions {
     bool IsEditTypeSwitchRequired(IPageResponseData pageResponseData)
@@ -15,16 +16,18 @@
             && pageResponseData.PageVersion.HasCustomEntityModuleSections
             && !pageResponseData.PageVersion.HasPageModuleSections;
     }
-
-    bool CanEditPage(IPageResponseData pageResponseData)
-    {
-        return pageResponseData.PageVersion.HasCustomEntityModuleSections || pageResponseData.PageVersion.HasPageModuleSections;
-    }
 }
 
 @{
     var pageResponseData = Model;
     var isStaticPage = pageResponseData == null;
+    await Cofoundry.CurrentUser.EnsureInitializedAsync();
+    var userContext = Cofoundry.CurrentUser.Context;
+    var hasPageEditPermission = permissionValidationService.HasPermission<PageUpdatePermission>(userContext);
+    var hasPagePublishPermission = permissionValidationService.HasPermission<PagePublishPermission>(userContext);
+    var hasCustomEntityEditPermission = false;
+    var hasCustomEntityPublishPermission = false;
+    var canEditDraft = false;
 
     int currentVersion = 0;
     int versionCount = 0;
@@ -43,15 +46,25 @@
         isEditing = pageResponseData.VisualEditorMode == VisualEditorMode.Edit;
         isViewingSpecificVersion = pageResponseData.VisualEditorMode == VisualEditorMode.SpecificVersion;
         isCustomEntityRoute = pageResponseData.IsCustomEntityRoute;
-        entityNameSingular = isCustomEntityRoute ? pageResponseData.CustomEntityDefinition.Name : "Page";
-        isEditTypeSwitchRequired = IsEditTypeSwitchRequired(pageResponseData);
-        isCustomEntityEditOnly = IsCustomEntityEditOnly(pageResponseData);
 
+        var customEntityDefinitionCode = pageResponseData.PageRoutingInfo.PageRoute.CustomEntityDefinitionCode;
+        if (!string.IsNullOrEmpty(customEntityDefinitionCode))
+        {
+            hasCustomEntityEditPermission = permissionValidationService.HasCustomEntityPermission<CustomEntityUpdatePermission>(customEntityDefinitionCode, userContext);
+            hasCustomEntityPublishPermission = permissionValidationService.HasCustomEntityPermission<CustomEntityPublishPermission>(customEntityDefinitionCode, userContext);
+        }
+
+        entityNameSingular = isCustomEntityRoute ? pageResponseData.CustomEntityDefinition.Name : "Page";
+        isEditTypeSwitchRequired = IsEditTypeSwitchRequired(pageResponseData) && hasCustomEntityEditPermission && hasPageEditPermission;
+        isCustomEntityEditOnly = IsCustomEntityEditOnly(pageResponseData) && hasCustomEntityEditPermission;
+        canEditDraft = (pageResponseData.PageVersion.HasCustomEntityModuleSections || pageResponseData.PageVersion.HasPageModuleSections)
+            && (hasPageEditPermission || hasCustomEntityEditPermission);
         // If we are on a page with custom entities, it makes more sense to refer to the page as a template
         if (isEditTypeSwitchRequired && !isCustomEntityRoute)
         {
             entityNameSingular = "Template";
         }
+
 
         iFrameParams = string.Format("?isInEditMode={0}&pageId={1}&versionId={2}&isCustomEntityRoute={3}&entityNameSingular={4}&entityId={5}&hasDraftVersion={6}",
             isEditing.ToString(),
@@ -95,37 +108,53 @@
         <div class="cofoundry-sv__mini-menu cofoundry-sv__mini-menu--align-left">
             <div class="cofoundry-sv__mini-menu__content">
                 <ol class="cofoundry-sv__navmenu-list">
+@if (permissionValidationService.HasPermission<DashboardAdminModulePermission>(userContext))
+{
                     <li>
                         <a href="@adminRouteLibrary.Dashboard.Dashboard()" class="cofoundry-sv__navmenu-list__item">
                             <span class="fa fa-chevron-left"></span>
                             Dashboard
                         </a>
                     </li>
+}
+
+@if (permissionValidationService.HasPermission<PageAdminModulePermission>(userContext))
+{
                     <li>
                         <a href="@adminRouteLibrary.Pages.List()" class="cofoundry-sv__navmenu-list__item">
                             <span class="fa fa-chevron-left"></span>
                             Pages
                         </a>
                     </li>
+}
+@if (permissionValidationService.HasPermission<WebDirectoryAdminModulePermission>(userContext))
+{
                     <li>
                         <a href="@adminRouteLibrary.Directories.List()" class="cofoundry-sv__navmenu-list__item">
                             <span class="fa fa-chevron-left"></span>
                             Directories
                         </a>
                     </li>
+}
+@if (permissionValidationService.HasPermission<ImageAssetAdminModulePermission>(userContext))
+{
                     <li>
                         <a href="@adminRouteLibrary.Images.List()" class="cofoundry-sv__navmenu-list__item">
                             <span class="fa fa-chevron-left"></span>
                             Images
                         </a>
                     </li>
+}
+@if (permissionValidationService.HasPermission<SettingsAdminModulePermission>(userContext))
+{
                     <li>
                         <a href="@adminRouteLibrary.Settings.Details()" class="cofoundry-sv__navmenu-list__item">
                             <span class="fa fa-chevron-left"></span>
                             Settings
                         </a>
                     </li>
-                    @if (!isStaticPage && CanEditPage(pageResponseData) && !isViewingSpecificVersion && isCustomEntityRoute)
+}
+                    @if (!isStaticPage && canEditDraft && !isViewingSpecificVersion && isCustomEntityRoute)
                     {
                         <li class="cofoundry-sv__navmenu-list__divider">
                             <a href="@backToAdminLink" class="cofoundry-sv__navmenu-list__item">
@@ -210,7 +239,7 @@
                 </span>
             </a>
 
-            if (CanEditPage(pageResponseData))
+            if (canEditDraft)
             {
                 if (isEditTypeSwitchRequired)
                 {
@@ -220,7 +249,8 @@
                                 @*<svg class="icon" viewBox="0 0 80 80">
                                     <use xlink:href="#editentity" x="0" y="0" />
                                 </svg>*@
-                                Edit<br />@pageResponseData.CustomEntityDefinition.Name
+                                Edit<br />
+                                @pageResponseData.CustomEntityDefinition.Name
                             </span>
                         </a>
                         <a href="?mode=edit&edittype=page" class="cofoundry-sv__mode__button @Cofoundry.Html.TextIf(!isCustomEntityRoute && isEditing, "active")">
@@ -228,14 +258,15 @@
                                 @*<svg class="icon" viewBox="0 0 80 80">
                                     <use xlink:href="#edittemplate" x="0" y="0" />
                                 </svg>*@
-                                Edit<br />@(isEditTypeSwitchRequired ? "template" : "draft")
+                                Edit<br />
+                                template
                             </span>
                         </a>
                     </span>
                 }
                 else
                 {
-                    <a href="?mode=edit&edittype=@(isCustomEntityEditOnly ? "entity":"page")" class="cofoundry-sv__mode__button @Cofoundry.Html.TextIf(isEditing, "active")">
+                    <a href="?mode=edit&edittype=@(isCustomEntityRoute ? "entity":"page")" class="cofoundry-sv__mode__button @Cofoundry.Html.TextIf(isEditing, "active")">
                         <span>
                             @*<svg class="icon" viewBox="0 0 80 80">
                                 <use xlink:href="#edittemplate" x="0" y="0" />

@@ -813,7 +813,7 @@ function (
     function copyToDraft(args) {
         entityVersionModalDialogService
             .copyToDraft(args.entityId, args.versionId, args.hasDraftVersion, setLoadingOn, entityDialogServiceConfig)
-            .then(reload)
+            .then(reloadWithoutVersion)
             .catch(setLoadingOff);
     }
 
@@ -931,13 +931,20 @@ function (
     function preview() {
         var location = $window.parent.location.href;
         if (location.indexOf('mode=edit') > -1) {
-            location = location.replace('mode=edit', 'mode=preview')
+            location = location.replace('mode=edit', 'mode=preview');
         }
         $window.parent.location = location;
     }
 
     function reload() {
         $window.parent.location = $window.parent.location;
+    }
+
+    function reloadWithoutVersion() {
+        var location = $window.parent.location.href;
+        // remove the version query parameter
+        location = location.replace(/(.+\?(?:.+&|))(version=\d+&?)(.*)/i, '$1$3');
+        $window.parent.location = location
     }
 
     function setLoadingOn(loadState) {

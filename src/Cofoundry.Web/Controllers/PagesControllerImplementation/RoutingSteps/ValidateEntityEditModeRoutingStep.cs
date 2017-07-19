@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Cofoundry.Domain;
+using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,6 +15,15 @@ namespace Cofoundry.Web
     /// </summary>
     public class ValidateEntityEditModeRoutingStep : IValidateEntityEditModeRoutingStep
     {
+        private readonly IPermissionValidationService _permissionValidationService;
+
+        public ValidateEntityEditModeRoutingStep(
+            IPermissionValidationService permissionValidationService
+            )
+        {
+            _permissionValidationService = permissionValidationService;
+        }
+
         public Task ExecuteAsync(Controller controller, PageActionRoutingState state)
         {
             var completedTask = Task.FromResult(true);
@@ -21,7 +31,9 @@ namespace Cofoundry.Web
             var pageRoutingInfo = state.PageRoutingInfo;
             if (pageRoutingInfo == null) return completedTask;
 
-            if (pageRoutingInfo.CustomEntityRoute == null && state.InputParameters.IsEditingCustomEntity)
+            if (state.InputParameters.IsEditingCustomEntity &&
+                (pageRoutingInfo.CustomEntityRoute == null || !_permissionValidationService.HasCustomEntityPermission<CustomEntityUpdatePermission>(pageRoutingInfo.CustomEntityRoute.CustomEntityDefinitionCode, state.UserContext))
+                )
             {
                 state.InputParameters.IsEditingCustomEntity = false;
             }

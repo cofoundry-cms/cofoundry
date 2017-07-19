@@ -14,6 +14,11 @@ namespace Cofoundry.Domain
     public class CustomEntityRoute
     {
         /// <summary>
+        /// Unique 6 letter code representing the type of custom entity.
+        /// </summary>
+        public string CustomEntityDefinitionCode { get; set; }
+
+        /// <summary>
         /// Database id of the custom entity.
         /// </summary>
         public int CustomEntityId { get; set; }

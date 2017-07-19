@@ -33,7 +33,7 @@ function (
         vm.userAreaCode = options.userAreaCode + 'USR';
         vm.canRead = permissionValidationService.canRead(vm.userAreaCode);
         vm.canUpdate = permissionValidationService.canUpdate(vm.userAreaCode);
-        vm.canUpdate = permissionValidationService.canCreate(vm.userAreaCode);
+        vm.canCreate = permissionValidationService.canCreate(vm.userAreaCode);
 
         toggleFilter(false);
 

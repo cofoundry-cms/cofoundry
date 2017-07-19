@@ -30,7 +30,7 @@ namespace Cofoundry.Web
                 };
             }
 
-            return Task.FromResult(true);
+            return Task.CompletedTask;
         }
     }
 }

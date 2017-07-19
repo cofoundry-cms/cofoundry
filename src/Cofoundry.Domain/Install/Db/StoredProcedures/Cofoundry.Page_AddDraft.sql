@@ -19,9 +19,22 @@ begin
 		select top 1 @CopyFromPageVersionId = PageVersionId 
 		from Cofoundry.PageVersion v
 		inner join Cofoundry.[Page] p on p.PageId = v.PageId
-		where p.PageId = @PageId and p.IsDeleted = 0 and (WorkFlowStatusId = @PublishedWorkFlowStatus or WorkFlowStatusId = @DraftWorkFlowStatus)
-		order by case when WorkFlowStatusId = @PublishedWorkFlowStatus then 0 else 1 end
+		where p.PageId = @PageId and p.IsDeleted = 0 and WorkFlowStatusId in (@DraftWorkFlowStatus, @PublishedWorkFlowStatus, @ApprovedWorkFlowStatus)
+		order by 
+			-- fall back to a deleted version if nothing else if found
+			v.IsDeleted,
+			-- then prefer published and draft over approved
+			case 
+				when WorkFlowStatusId = @PublishedWorkFlowStatus then 0 
+				when WorkFlowStatusId = @DraftWorkFlowStatus then 1 
+				else 2
+			end,
+			-- finally order by latest for status that allow duplicates
+			v.CreateDate desc
 	end
+	
+	-- if no draft to copy from, make an empty new version
+	if (@CopyFromPageVersionId is null) throw 50000, 'Cofoundry.Page_AddDraft: No drafts available to copy from', 1;
 
 	-- Copy version
 	insert into Cofoundry.PageVersion (

@@ -97,6 +97,9 @@ namespace Cofoundry.Domain
         Task EnforcePermissionAsync(IPermissionApplication permission);
         void EnforcePermission(IPermissionApplication permission, IUserContext userContext);
 
+        Task EnforcePermissionAsync<TPermission>() where TPermission : IPermissionApplication, new();
+        void EnforcePermission<TPermission>(IUserContext userContext) where TPermission : IPermissionApplication, new();
+
         Task<bool> HasPermissionAsync(IEnumerable<IPermissionApplication> permissions);
         void EnforcePermission(IEnumerable<IPermissionApplication> permissions, IUserContext userContext);
 

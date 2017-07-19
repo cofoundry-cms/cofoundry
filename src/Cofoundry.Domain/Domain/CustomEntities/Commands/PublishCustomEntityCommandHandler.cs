@@ -105,12 +105,15 @@ namespace Cofoundry.Domain
         private async Task UpdateUrlSlugIfRequired(CustomEntityVersion dbVersion, ICustomEntityDefinition definition)
         {
             if (!definition.AutoGenerateUrlSlug) return;
+            var slug = SlugFormatter.ToSlug(dbVersion.Title);
+
+            if (slug == dbVersion.CustomEntity.UrlSlug) return;
 
             var urlCommand = new UpdateCustomEntityUrlCommand()
             {
                 CustomEntityId = dbVersion.CustomEntityId,
                 LocaleId = dbVersion.CustomEntity.LocaleId,
-                UrlSlug = SlugFormatter.ToSlug(dbVersion.Title)
+                UrlSlug = slug
             };
 
             await _commandExecutor.ExecuteAsync(urlCommand);

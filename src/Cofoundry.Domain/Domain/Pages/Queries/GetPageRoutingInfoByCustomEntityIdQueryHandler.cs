@@ -32,16 +32,6 @@ namespace Cofoundry.Domain
             return result[query.CustomEntityId].OrderBy(e => e.PageRoute.UrlPath.Length);
         }
 
-        private PageRoutingInfo ToRoutingInfo(PageRoute pageRoute, CustomEntityRoute customEntityRoute, ICustomEntityRoutingRule rule = null)
-        {
-            return new PageRoutingInfo()
-            {
-                PageRoute = pageRoute,
-                CustomEntityRoute = customEntityRoute,
-                CustomEntityRouteRule = rule
-            };
-        }
-
         #region Permission
 
         public IEnumerable<IPermissionApplication> GetPermissions(GetPageRoutingInfoByCustomEntityIdQuery query)

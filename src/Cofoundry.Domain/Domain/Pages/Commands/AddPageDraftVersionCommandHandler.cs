@@ -84,7 +84,7 @@ namespace Cofoundry.Domain
                 throw new UnexpectedSqlStoredProcedureResultException("Cofoundry.Page_AddDraft", "No PageId was returned.");
             }
 
-            _pageCache.Clear(newVersionId.Value);
+            _pageCache.Clear(command.PageId);
 
             // Set Ouput
             command.OutputPageVersionId = newVersionId.Value;

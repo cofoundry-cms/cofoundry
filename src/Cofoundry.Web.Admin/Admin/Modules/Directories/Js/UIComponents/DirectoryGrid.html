@@ -12,13 +12,8 @@
             <tr ng-repeat="webDirectory in ::vm.webDirectories">
                 <td>
                     <span>{{::vm.getPathDepthIndicator(webDirectory.depth)}}</span>
-<<<<<<< HEAD
                     <a ng-href="#/{{::webDirectory.webDirectoryId}}">{{::webDirectory.name }}</a><br>
                     <span class="invisible">{{::vm.getPathDepthIndicator(webDirectory.depth)}}</span> {{::webDirectory.fullUrlPath}}
-=======
-                    <span><a ng-href="#/{{::webDirectory.webDirectoryId}}">{{::webDirectory.name }}</a> ({{::webDirectory.fullUrlPath}})</span>
-                    <span>{{::vm.getPathDepthIndicator(webDirectory.depth)}}</span>
->>>>>>> Added the permission ui validation to pages, settings, users, roles, images, directories, and custom entities
                 </td>
                 <td>
                     <a ng-href="pages#/?webDirectoryId={{::webDirectory.webDirectoryId}}">{{::webDirectory.numPages}}</a>

@@ -245,6 +245,21 @@ namespace Cofoundry.Domain
             }
         }
 
+        public async Task EnforcePermissionAsync<TPermission>() where TPermission : IPermissionApplication, new()
+        {
+            var userContext = await _userContextService.GetCurrentContextAsync();
+            EnforcePermission<TPermission>(userContext);
+        }
+
+        public void EnforcePermission<TPermission>(IUserContext userContext) where TPermission : IPermissionApplication, new()
+        {
+            var permission = new TPermission();
+            if (!HasPermission(permission, userContext))
+            {
+                throw new PermissionValidationFailedException(permission, userContext);
+            }
+        }
+
         public async Task EnforcePermissionAsync(IEnumerable<IPermissionApplication> permissions)
         {
             var userContext = await _userContextService.GetCurrentContextAsync();

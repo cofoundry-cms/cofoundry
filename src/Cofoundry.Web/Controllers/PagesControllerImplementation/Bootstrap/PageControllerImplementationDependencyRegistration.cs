@@ -19,12 +19,14 @@ namespace Cofoundry.Web.Bootstrap
                 .RegisterType<IInitStateRoutingStep, InitStateRoutingStep>()
                 .RegisterType<ITryFindPageRoutingInfoRoutingStep, TryFindPageRoutingInfoRoutingStep>()
                 .RegisterType<IValidateEntityEditModeRoutingStep, ValidateEntityEditModeRoutingStep>()
+                .RegisterType<IValidateEditPermissionsRoutingStep, ValidateEditPermissionsRoutingStep>()
                 .RegisterType<IValidateDraftVersionRoutingStep, ValidateDraftVersionRoutingStep>()
                 .RegisterType<IValidateSpecificVersionRoutingRoutingStep, ValidateSpecificVersionRoutingRoutingStep>()
                 .RegisterType<IGetNotFoundRouteRoutingStep, GetNotFoundRouteRoutingStep>()
                 .RegisterType<IGetPageRenderDataRoutingStep, GetPageRenderDataRoutingStep>()
                 .RegisterType<ISetCachePolicyRoutingStep, SetCachePolicyRoutingStep>()
                 .RegisterType<IGetFinalResultRoutingStep, GetFinalResultRoutingStep>()
+
                 .RegisterType<IPageResponseDataCache, PageResponseDataCache>()
                 ;
         }

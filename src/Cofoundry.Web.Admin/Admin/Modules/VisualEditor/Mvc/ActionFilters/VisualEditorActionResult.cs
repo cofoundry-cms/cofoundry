@@ -121,7 +121,7 @@ namespace Cofoundry.Web.Admin
 
                 html = html.Substring(0, insertBodyIndex)
                     + Environment.NewLine + TAB
-                    + string.Format("<script>var pageResponseData = {0}</script>", responseJson) + TAB
+                    + "<script>var Cofoundry = { 'PageResponseData': " + responseJson + " }</script>" + TAB
                     + toolbarHtml
                     + string.Format("<!-- SVG ICONS --><div style='{0}'>{1}</div><!-- END SVG ICONS -->", "display:none", svgIcons)
                     + html.Substring(insertBodyIndex);

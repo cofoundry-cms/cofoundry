@@ -40,17 +40,16 @@ namespace Cofoundry.Web
 
         public bool IsCustomEntityRoute { get; set; }
 
-        //public bool IsEditTypeSwitchRequired()
-        //{
-        //    return PageRoutingInfo.CustomEntityRoute != null
-        //        && PageVersion.HasCustomEntityModuleSections
-        //        && PageVersion.HasPageModuleSections;
-        //}
+        /// <summary>
+        /// Has permission to update the page or custom entity requested
+        /// to be edited.
+        /// </summary>
+        public bool HasEntityUpdatePermission { get; set; }
 
-        //public bool CanEditPage()
-        //{
-        //    return PageVersion.HasCustomEntityModuleSections
-        //        || PageVersion.HasPageModuleSections;
-        //}
+        /// <summary>
+        /// Has permission to publish the page or custom entity requested
+        /// to be edited.
+        /// </summary>
+        public bool HasEntityPublishPermission { get; set; }
     }
 }

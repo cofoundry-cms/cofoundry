@@ -816,6 +816,7 @@
         'concat:visualEditorHTML',
         'concat:contentPage',
         'uglify',
+        'concat:sharedAll',
         'concat:sharedAllMin'
     ]);
 };
