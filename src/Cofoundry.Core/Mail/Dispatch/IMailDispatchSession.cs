@@ -25,11 +25,6 @@ namespace Cofoundry.Core.Mail
         /// <summary>
         /// Dispatches any mail in the queue.
         /// </summary>
-        void Flush();
-
-        /// <summary>
-        /// Dispatches any mail in the queue.
-        /// </summary>
         Task FlushAsync();
     }
 }

@@ -48,24 +48,6 @@ namespace Cofoundry.Core.Mail
         /// <summary>
         /// Dispatches any mail in the queue.
         /// </summary>
-        public void Flush()
-        {
-            while (_mailQueue.Count > 0)
-            {
-                var mailItem = _mailQueue.Dequeue();
-                if (mailItem != null && _mailSettings.SendMode != MailSendMode.DoNotSend)
-                {
-                    using (var writer = CreateFileStream())
-                    {
-                        writer.Write(mailItem);
-                    }
-                }
-            }
-        }
-
-        /// <summary>
-        /// Dispatches any mail in the queue.
-        /// </summary>
         public async Task FlushAsync()
         {
             while (_mailQueue.Count > 0)

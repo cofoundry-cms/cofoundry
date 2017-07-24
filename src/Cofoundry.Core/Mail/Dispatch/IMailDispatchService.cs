@@ -16,12 +16,6 @@ namespace Cofoundry.Core.Mail
         /// Sends a mail message.
         /// </summary>
         /// <param name="message">The MailMessage to send</param>
-        void Dispatch(MailMessage message);
-
-        /// <summary>
-        /// Sends a mail message.
-        /// </summary>
-        /// <param name="message">The MailMessage to send</param>
         Task DispatchAsync(MailMessage message);
 
         /// <summary>
