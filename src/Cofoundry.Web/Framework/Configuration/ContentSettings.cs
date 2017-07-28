@@ -8,7 +8,7 @@ namespace Cofoundry.Web
     /// <summary>
     /// Settings for managed content (e.g. pages/files/custom entities)
     /// </summary>
-    public class ContentSettings : IConfigurationSettings
+    public class ContentSettings : CofoundryConfigurationSettingsBase
     {
         /// <summary>
         /// A developer setting which can be used to view unpublished versions of content 

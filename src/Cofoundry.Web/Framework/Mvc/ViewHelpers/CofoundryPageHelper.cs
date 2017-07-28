@@ -22,6 +22,7 @@ namespace Cofoundry.Web
 
             // DI because mvc framework doesn't support injection yet
             Routing = serviceProvider.GetRequiredService<IContentRouteLibrary>();
+            StaticFiles = serviceProvider.GetRequiredService<IStaticFileViewHelper>();
             Settings = serviceProvider.GetRequiredService<ISettingsViewHelper>();
             CurrentUser = serviceProvider.GetRequiredService<ICurrentUserViewHelper>();
             Js = serviceProvider.GetRequiredService<IJavascriptViewHelper>();
@@ -33,6 +34,11 @@ namespace Cofoundry.Web
         /// Helpers for generating links to Cofoundry content
         /// </summary>
         public IContentRouteLibrary Routing { get; private set; }
+
+        /// <summary>
+        /// Helper for resolving urls to static files.
+        /// </summary>
+        public IStaticFileViewHelper StaticFiles { get; set; }
 
         /// <summary>
         /// Helper for accessing configuration settings from a view

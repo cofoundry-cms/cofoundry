@@ -12,6 +12,7 @@ namespace Cofoundry.Web
             container
                 .RegisterType<IRazorViewRenderer, RazorViewRenderer>()
                 .RegisterType<IStaticFilePathFormatter, StaticFilePathFormatter>()
+                .RegisterType<IStaticFileViewHelper, StaticFileViewHelper>()
                 ;
         }
     }

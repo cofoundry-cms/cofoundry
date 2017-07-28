@@ -11,6 +11,7 @@ namespace Cofoundry.Domain.CQS
     /// </summary>
     /// <typeparam name="TQuery">Type of IQuery object to execute</typeparam>
     /// <typeparam name="TResult">The type of the result to be returned from the query</typeparam>
+    [Obsolete("Sync query execution no longer supported.")]
     public interface IQueryHandler<TQuery, TResult> where TQuery : IQuery<TResult>
     {
         /// <summary>

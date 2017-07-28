@@ -16,14 +16,17 @@ namespace Cofoundry.Web
 
         private readonly IStaticResourceFileProvider _staticResourceFileProvider;
         private readonly IContentTypeProvider _contentTypeProvider;
+        private readonly IStaticFileOptionsConfiguration _staticFileOptionsConfiguration;
 
         public StaticFileStartupConfigurationTask(
             IStaticResourceFileProvider staticResourceFileProvider,
-            IContentTypeProvider contentTypeProvider
+            IContentTypeProvider contentTypeProvider,
+            IStaticFileOptionsConfiguration staticFileOptionsConfiguration
             )
         {
             _staticResourceFileProvider = staticResourceFileProvider;
             _contentTypeProvider = contentTypeProvider;
+            _staticFileOptionsConfiguration = staticFileOptionsConfiguration;
         }
 
         #endregion
@@ -40,13 +43,15 @@ namespace Cofoundry.Web
 
         private void RegisterStaticFiles(IApplicationBuilder app)
         {
-            // perhaps use a StaticFileOptions factory?
-            // or expose all the providers with settings on the _staticResourceFileProvider
-            app.UseStaticFiles(new StaticFileOptions()
+            var options = new StaticFileOptions()
             {
                 FileProvider = _staticResourceFileProvider,
-                ContentTypeProvider = _contentTypeProvider
-            });
+                ContentTypeProvider = _contentTypeProvider,
+            };
+
+            _staticFileOptionsConfiguration.Configure(options);
+
+            app.UseStaticFiles(options);
         }
     }
 }

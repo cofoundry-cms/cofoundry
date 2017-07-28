@@ -19,10 +19,6 @@ namespace Cofoundry.Web
     {
         private readonly IFileProvider _compositeFileProvider;
 
-        /// <summary>
-        /// Eventually we should add static resource setting here to allow each provider
-        /// to have things like caching options.
-        /// </summary>
         private readonly IReadOnlyList<IFileProvider> _fileProviders;
 
         public StaticResourceFileProvider(
