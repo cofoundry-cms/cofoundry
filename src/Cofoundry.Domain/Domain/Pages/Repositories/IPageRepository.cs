@@ -48,7 +48,7 @@ namespace Cofoundry.Domain
         /// </summary>
         /// <param name="query">Query parameters</param>
         /// <param name="executionContext">Optional execution context to use when executing the query. Useful if you need to temporarily elevate your permission level.</param>
-        Task<PageRenderDetails> GetPageRenderDetailsAsync(GetPageRenderDetailsByIdQuery query, IExecutionContext executionContext = null);
+        Task<PageRenderDetails> GetPageRenderDetailsByIdAsync(GetPageRenderDetailsByIdQuery query, IExecutionContext executionContext = null);
         
         /// <summary>
         /// Gets a range of pages by their PageIds as PageRenderDetails objects. A PageRenderDetails contains 
