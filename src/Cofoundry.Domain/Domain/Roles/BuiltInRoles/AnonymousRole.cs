@@ -16,11 +16,11 @@ namespace Cofoundry.Domain
         /// <summary>
         /// Constant value for the anonymous role code
         /// </summary>
-        public const string RoleCode = "ANO";
+        public const string AnonymousRoleCode = "ANO";
 
         public string Title { get { return "Anonymous"; } }
 
-        public string SpecialistRoleTypeCode { get { return RoleCode; } }
+        public string RoleCode { get { return AnonymousRoleCode; } }
 
         public string UserAreaCode { get { return CofoundryAdminUserArea.AreaCode; } }
     }

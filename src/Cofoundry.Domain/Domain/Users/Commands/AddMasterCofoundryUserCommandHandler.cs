@@ -51,15 +51,15 @@ namespace Cofoundry.Domain
             if (await _dbContext
                 .Users
                 .FilterCanLogIn()
-                .AnyAsync(u => u.Role.SpecialistRoleTypeCode == SpecialistRoleTypeCodes.SuperAdministrator))
+                .AnyAsync(u => u.Role.RoleCode == SuperAdminRole.SuperAdminRoleCode))
             {
                 throw new ValidationException("Cannot create a master user when master users already exist in the database.");
             }
 
             var role = await _dbContext
                 .Roles
-                .SingleOrDefaultAsync(r => r.SpecialistRoleTypeCode == SpecialistRoleTypeCodes.SuperAdministrator);
-            EntityNotFoundException.ThrowIfNull(role, SpecialistRoleTypeCodes.SuperAdministrator);
+                .SingleOrDefaultAsync(r => r.RoleCode == SuperAdminRole.SuperAdminRoleCode);
+            EntityNotFoundException.ThrowIfNull(role, SuperAdminRole.SuperAdminRoleCode);
 
             var userArea = await _dbContext
                 .UserAreas

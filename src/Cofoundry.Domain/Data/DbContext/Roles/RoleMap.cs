@@ -16,7 +16,7 @@ namespace Cofoundry.Domain.Data
                 .IsRequired()
                 .HasMaxLength(50);
 
-            builder.Property(s => s.SpecialistRoleTypeCode)
+            builder.Property(s => s.RoleCode)
                 .IsCharType(3);
 
             builder.Property(s => s.UserAreaCode)

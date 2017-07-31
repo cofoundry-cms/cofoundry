@@ -79,9 +79,9 @@ namespace Cofoundry.Domain
             {
                 throw new NotPermittedException("You cannot delete your own user account via this api.");
             }
-
+            
             // Only super admins can delete super admin
-            if (user.Role.SpecialistRoleTypeCode == SpecialistRoleTypeCodes.SuperAdministrator && !executorRole.IsSuperAdministrator)
+            if (user.Role.RoleCode == SuperAdminRole.SuperAdminRoleCode && !executorRole.IsSuperAdministrator)
             {
                 throw new NotPermittedException("Only Super Administrator users can delete other users with the Super Administrator role");
             }

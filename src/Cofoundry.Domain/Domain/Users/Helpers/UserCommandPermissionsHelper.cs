@@ -61,7 +61,7 @@ namespace Cofoundry.Domain
         private void ValidateRole(string userAreaCode, Role newUserRole, RoleDetails executorRole)
         {
             // Anonymous role is not assignable to users, it's used when there is no user.
-            if (newUserRole.SpecialistRoleTypeCode == SpecialistRoleTypeCodes.Anonymous)
+            if (newUserRole.RoleCode == AnonymousRole.AnonymousRoleCode)
             {
                 throw new NotPermittedException("Cannot assign the anonymous role.");
             }
@@ -79,7 +79,7 @@ namespace Cofoundry.Domain
             }
 
             // Only super admins can assign the super admin role
-            if (newUserRole.SpecialistRoleTypeCode == SpecialistRoleTypeCodes.SuperAdministrator && !executorRole.IsSuperAdministrator)
+            if (newUserRole.RoleCode == SuperAdminRole.SuperAdminRoleCode && !executorRole.IsSuperAdministrator)
             {
                 throw new NotPermittedException("Only Super Administrator users can assign the Super Administrator role");
             }
@@ -89,10 +89,10 @@ namespace Cofoundry.Domain
         {
             if (oldRoleId.HasValue
                 && !executorRole.IsSuperAdministrator
-                && newUserRole.SpecialistRoleTypeCode != SpecialistRoleTypeCodes.SuperAdministrator)
+                && newUserRole.RoleCode != SuperAdminRole.SuperAdminRoleCode)
             {
                 var oldRole = await QueryRole(oldRoleId.Value).SingleOrDefaultAsync();
-                if (oldRole.SpecialistRoleTypeCode == SpecialistRoleTypeCodes.SuperAdministrator)
+                if (oldRole.RoleCode == SuperAdminRole.SuperAdminRoleCode)
                 {
                     throw new NotPermittedException("Only Super Administrator users can de-assign the Super Administrator role");
                 }

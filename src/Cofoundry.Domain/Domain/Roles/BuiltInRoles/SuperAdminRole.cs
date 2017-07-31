@@ -16,11 +16,11 @@ namespace Cofoundry.Domain
         /// <summary>
         /// Constant value for the Super Administrator role code
         /// </summary>
-        public const string RoleCode = "SUP";
+        public const string SuperAdminRoleCode = "SUP";
 
         public string Title { get { return "Super Administrator"; } }
 
-        public string SpecialistRoleTypeCode { get { return RoleCode; } }
+        public string RoleCode { get { return SuperAdminRoleCode; } }
 
         public string UserAreaCode { get { return CofoundryAdminUserArea.AreaCode; } }
     }

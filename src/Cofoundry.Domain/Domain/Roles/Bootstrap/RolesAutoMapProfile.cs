@@ -14,8 +14,8 @@ namespace Cofoundry.Domain
         {
             CreateMap<Role, RoleDetails>()
                 .ForMember(d => d.Permissions, o => o.Ignore())
-                .ForMember(d => d.IsAnonymousRole, o => o.MapFrom(s => s.SpecialistRoleTypeCode == SpecialistRoleTypeCodes.Anonymous))
-                .ForMember(d => d.IsSuperAdministrator, o => o.MapFrom(s => s.SpecialistRoleTypeCode == SpecialistRoleTypeCodes.SuperAdministrator))
+                .ForMember(d => d.IsAnonymousRole, o => o.MapFrom(s => s.RoleCode == AnonymousRole.AnonymousRoleCode))
+                .ForMember(d => d.IsSuperAdministrator, o => o.MapFrom(s => s.RoleCode == SuperAdminRole.SuperAdminRoleCode))
                 ;
 
             CreateMap<Role, RoleMicroSummary>();

@@ -64,10 +64,10 @@ namespace Cofoundry.Domain
                 .ToListAsync();
 
             var rolesWithSpecialistCodes = existingRoles
-                .Where(r => !string.IsNullOrEmpty(r.SpecialistRoleTypeCode))
-                .ToDictionary(r => r.SpecialistRoleTypeCode.ToUpperInvariant());
+                .Where(r => !string.IsNullOrEmpty(r.RoleCode))
+                .ToDictionary(r => r.RoleCode.ToUpperInvariant());
 
-            var requiresUpdate = command.UpdateExistingRoles || _roleDefinitions.Any(d => !rolesWithSpecialistCodes.ContainsKey(d.SpecialistRoleTypeCode.ToUpperInvariant()));
+            var requiresUpdate = command.UpdateExistingRoles || _roleDefinitions.Any(d => !rolesWithSpecialistCodes.ContainsKey(d.RoleCode.ToUpperInvariant()));
             if (!requiresUpdate) return;
 
             var allDbPermissions = await _dbContext
@@ -79,7 +79,7 @@ namespace Cofoundry.Domain
             
             foreach (var roleDefinition in _roleDefinitions)
             {
-                var dbRole = rolesWithSpecialistCodes.GetOrDefault(roleDefinition.SpecialistRoleTypeCode.ToUpperInvariant());
+                var dbRole = rolesWithSpecialistCodes.GetOrDefault(roleDefinition.RoleCode.ToUpperInvariant());
 
                 if (dbRole == null)
                 {
@@ -202,13 +202,13 @@ namespace Cofoundry.Domain
         private void DetectDuplicateRoles()
         {
             var duplicateDefinition = _roleDefinitions
-                    .GroupBy(d => d.SpecialistRoleTypeCode)
+                    .GroupBy(d => d.RoleCode)
                     .Where(d => d.Count() > 1)
                     .FirstOrDefault();
 
             if (duplicateDefinition != null)
             {
-                throw new InvalidOperationException($"Duplicate role definitions encountered. { duplicateDefinition.Count() } roles defined with the code '{ duplicateDefinition.First().SpecialistRoleTypeCode}'");
+                throw new InvalidOperationException($"Duplicate role definitions encountered. { duplicateDefinition.Count() } roles defined with the code '{ duplicateDefinition.First().RoleCode}'");
             }
         }
 
@@ -217,7 +217,7 @@ namespace Cofoundry.Domain
             var dbRole = new Role();
             dbRole.Title = roleDefinition.Title.Trim();
             dbRole.UserAreaCode = roleDefinition.UserAreaCode;
-            dbRole.SpecialistRoleTypeCode = roleDefinition.SpecialistRoleTypeCode;
+            dbRole.RoleCode = roleDefinition.RoleCode;
 
             _dbContext.Roles.Add(dbRole);
             return dbRole;
@@ -230,14 +230,14 @@ namespace Cofoundry.Domain
                 throw new PropertyValidationException("Role title cannot be empty", nameof(IRoleDefinition.Title));
             }
 
-            if (string.IsNullOrWhiteSpace(roleDefinition.SpecialistRoleTypeCode))
+            if (string.IsNullOrWhiteSpace(roleDefinition.RoleCode))
             {
-                throw new PropertyValidationException("Role SpecialistRoleTypeCode cannot be empty", nameof(IRoleDefinition.SpecialistRoleTypeCode));
+                throw new PropertyValidationException("Role RoleCode cannot be empty", nameof(IRoleDefinition.RoleCode));
             }
 
-            if (roleDefinition.SpecialistRoleTypeCode.Length != 3)
+            if (roleDefinition.RoleCode.Length != 3)
             {
-                throw new PropertyValidationException("Role SpecialistRoleTypeCode must be 3 characters in length", nameof(IRoleDefinition.SpecialistRoleTypeCode));
+                throw new PropertyValidationException("Role RoleCode must be 3 characters in length", nameof(IRoleDefinition.RoleCode));
             }
             if (existingRoles
                     .Any(r =>

@@ -8,11 +8,11 @@ namespace Cofoundry.Domain
 {
     public class TestRole : IRoleDefinition
     {
-        public const string RoleCode = "TST";
+        public const string TestRoleCode = "TST";
 
         public string Title { get { return "Test"; } }
 
-        public string SpecialistRoleTypeCode { get { return RoleCode; } }
+        public string RoleCode { get { return TestRoleCode; } }
 
         public string UserAreaCode { get { return CofoundryAdminUserArea.AreaCode; } }
     }

@@ -21,11 +21,11 @@ namespace Cofoundry.Domain
         string Title { get; }
 
         /// <summary>
-        /// The specialist role type code is a unique three letter code that
-        /// can be used to reference the role programatically. The code must be unique
-        /// and convention is to use upper case, although code matching is case insensitive.
+        /// The role code is a unique three letter code that can be used to reference the 
+        /// role programatically. The code must be unique and convention is to use upper 
+        /// case, although code matching is case insensitive.
         /// </summary>
-        string SpecialistRoleTypeCode { get; }
+        string RoleCode { get; }
 
         /// <summary>
         /// A role must be assigned to a user area e.g. CofoundryAdminUserArea.

@@ -17,8 +17,7 @@ namespace Cofoundry.Domain
     /// rather than the GUI. For GUI generated roles use GetRoleDetailsByIdQuery.
     /// </summary>
     public class GetRoleDetailsBySpecialistRoleTypeCodeHandler
-        : IQueryHandler<GetRoleDetailsBySpecialistRoleTypeCode, RoleDetails>
-        , IAsyncQueryHandler<GetRoleDetailsBySpecialistRoleTypeCode, RoleDetails>
+        : IAsyncQueryHandler<GetRoleDetailsBySpecialistRoleTypeCode, RoleDetails>
         , IPermissionRestrictedQueryHandler<GetRoleDetailsBySpecialistRoleTypeCode, RoleDetails>
     {
         #region constructor
@@ -42,28 +41,12 @@ namespace Cofoundry.Domain
 
         #region execution
 
-        public RoleDetails Execute(GetRoleDetailsBySpecialistRoleTypeCode query, IExecutionContext executionContext)
-        {
-            var roleCodeLookup = _roleCache.GetOrAddSpecialistRoleTypeCodeLookup(() =>
-            {
-                var roleCodes = QueryRoleCodes()
-                    .ToDictionary(r => r.SpecialistRoleTypeCode, r => r.RoleId);
-
-                return new ReadOnlyDictionary<string, int>(roleCodes);
-            });
-
-            var id = roleCodeLookup.GetOrDefault(query.SpecialistRoleTypeCode);
-            if (id <= 0) return null;
-
-            return _internalRoleRepository.GetById(id);
-        }
-
         public async Task<RoleDetails> ExecuteAsync(GetRoleDetailsBySpecialistRoleTypeCode query, IExecutionContext executionContext)
         {
             var roleCodeLookup = await _roleCache.GetOrAddSpecialistRoleTypeCodeLookupAsync(async () =>
             {
                 var roleCodes = await QueryRoleCodes()
-                    .ToDictionaryAsync(r => r.SpecialistRoleTypeCode, r => r.RoleId);
+                    .ToDictionaryAsync(r => r.RoleCode, r => r.RoleId);
 
                 return new ReadOnlyDictionary<string, int>(roleCodes);
             });
@@ -79,7 +62,7 @@ namespace Cofoundry.Domain
             return _dbContext
                     .Roles
                     .AsNoTracking()
-                    .Where(r => r.SpecialistRoleTypeCode != null);
+                    .Where(r => r.RoleCode != null);
         }
 
         #endregion

@@ -56,12 +56,12 @@ namespace Cofoundry.Domain
 
         private void ValidateCanDelete(Role role, DeleteRoleCommand command)
         {
-            if (role.SpecialistRoleTypeCode == SpecialistRoleTypeCodes.Anonymous)
+            if (role.RoleCode == AnonymousRole.AnonymousRoleCode)
             {
                 throw new ValidationException("The anonymous role cannot be deleted.");
             }
 
-            if (role.SpecialistRoleTypeCode == SpecialistRoleTypeCodes.SuperAdministrator)
+            if (role.RoleCode == SuperAdminRole.SuperAdminRoleCode)
             {
                 throw new ValidationException("The super administrator role cannot be deleted.");
             }

@@ -65,7 +65,7 @@ namespace Cofoundry.Domain
 
             // Grab the first super admin user.
             var dbUser = await QuerySystemUser().FirstOrDefaultAsync();
-            EntityNotFoundException.ThrowIfNull(dbUser, SpecialistRoleTypeCodes.SuperAdministrator);
+            EntityNotFoundException.ThrowIfNull(dbUser, SuperAdminRole.SuperAdminRoleCode);
             var impersonatedUserContext = _userContextMapper.Map(dbUser);
 
             return impersonatedUserContext;
