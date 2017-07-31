@@ -13,20 +13,29 @@ namespace Cofoundry.Domain.Data
         }
 
         public int PageId { get; set; }
-        public int WebDirectoryId { get; set; }
-        public Nullable<int> LocaleId { get; set; }
+
+        public int PageDirectoryId { get; set; }
+
+        public int? LocaleId { get; set; }
+
         public string UrlPath { get; set; }
+
         public int PageTypeId { get; set; }
+
         public bool IsDeleted { get; set; }
 
         public string CustomEntityDefinitionCode { get; set; }
 
         public virtual Locale Locale { get; set; }
-        public virtual WebDirectory WebDirectory { get; set; }
+
+        public virtual PageDirectory PageDirectory { get; set; }
+
         public virtual CustomEntityDefinition CustomEntityDefinition { get; set; }
 
         public virtual ICollection<PageGroupItem> PageGroupItems { get; set; }
+
         public virtual ICollection<PageTag> PageTags { get; set; }
+
         public virtual ICollection<PageVersion> PageVersions { get; set; }
 
         #region ICreateAuditable

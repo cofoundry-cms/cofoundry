@@ -21,7 +21,7 @@ namespace Cofoundry.Domain
 
         /// <summary>
         /// Sets a priority over which rules should be run in case more than one is used in the
-        /// same web directory. Custom integer values can be used but use RoutingRulePriority whenever possible
+        /// same page directory. Custom integer values can be used but use RoutingRulePriority whenever possible
         /// to avoid hardcoding to a specific value.
         /// </summary>
         int Priority { get; }

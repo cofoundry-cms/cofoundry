@@ -70,7 +70,7 @@ function (
 
     function reset() {
         vm.editMode = false;
-        vm.command = mapUpdateCommand(vm.webDirectory);
+        vm.command = mapUpdateCommand(vm.pageDirectory);
         vm.mainForm.formStatus.clear();
     }
 
@@ -87,7 +87,7 @@ function (
         function onOk() {
             setLoadingOn();
             return directoryService
-                .remove(vm.webDirectory.webDirectoryId)
+                .remove(vm.pageDirectory.pageDirectoryId)
                 .then(redirectToList)
                 .catch(setLoadingOff);
         }
@@ -109,30 +109,30 @@ function (
     }
 
     function initData() {
-        var webDirectoryId = $routeParams.id;
+        var pageDirectoryId = $routeParams.id;
 
         return directoryService.getTree()
             .then(loadDirectory);
 
         function loadDirectory(tree) {
-            var webDirectory = tree.findNodeById(webDirectoryId),
-                parentDirectories = tree.flatten(webDirectoryId);
+            var pageDirectory = tree.findNodeById(pageDirectoryId),
+                parentDirectories = tree.flatten(pageDirectoryId);
 
-            vm.webDirectory = webDirectory;
+            vm.pageDirectory = pageDirectory;
             vm.parentDirectories = parentDirectories;
-            vm.command = mapUpdateCommand(webDirectory);
+            vm.command = mapUpdateCommand(pageDirectory);
             vm.editMode = false;
-            vm.hasChildContent = webDirectory.numPages || webDirectory.childWebDirectories.length;
+            vm.hasChildContent = pageDirectory.numPages || pageDirectory.childPageDirectories.length;
         }
     }
 
-    function mapUpdateCommand(webDirectory) {
+    function mapUpdateCommand(pageDirectory) {
 
-        return _.pick(webDirectory,
-            'webDirectoryId',
+        return _.pick(pageDirectory,
+            'pageDirectoryId',
             'name',
             'urlPath',
-            'parentWebDirectoryId'
+            'parentPageDirectoryId'
             );
     }
 

@@ -33,9 +33,9 @@ namespace Cofoundry.Domain.Data
                 .HasForeignKey(d => d.CustomEntityDefinitionCode)
                 .OnDelete(DeleteBehavior.Restrict);
 
-            builder.HasOne(s => s.WebDirectory)
+            builder.HasOne(s => s.PageDirectory)
                 .WithMany(s => s.Pages)
-                .HasForeignKey(d => d.WebDirectoryId)
+                .HasForeignKey(d => d.PageDirectoryId)
                 .OnDelete(DeleteBehavior.Restrict);
 
             CreateAuditableMappingHelper.Map(builder);

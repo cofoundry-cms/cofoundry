@@ -18,7 +18,7 @@ namespace Cofoundry.Domain
         public int? LocaleId { get; set; }
 
         [Display(Name = "Directory")]
-        public int? WebDirectoryId { get; set; }
+        public int? PageDirectoryId { get; set; }
 
         [Display(Name = "Templates")]
         public int? PageTemplateId { get; set; }

@@ -14,9 +14,6 @@ function (
     var mapOptions = routingUtilities.mapOptions.bind(null, modulePath);
 
     $routeProvider
-        .when('/directories', mapOptions('WebDirectoryList'))
-        .when('/directories/new', mapOptions('AddWebDirectory'))
-        .when('/directories/:id', mapOptions('WebDirectoryDetails'))
         .when('/new', mapOptions('AddPage'))
         .when('/:id', mapOptions('PageDetails'))
         .otherwise(mapOptions('PageList'));
@@ -49,7 +46,7 @@ function (
     serviceBase) {
 
     var service = {},
-        directoryServiceBase = serviceBase + 'webdirectories';
+        directoryServiceBase = serviceBase + 'page-directories';
 
     /* QUERIES */
 
@@ -113,7 +110,7 @@ function (
 
     var vm = this,
         loadLocalesDeferred = $q.defer(),
-        loadWebDirectoryDeferred = $q.defer();
+        loadPageDirectoryDeferred = $q.defer();
 
     init();
 
@@ -134,7 +131,7 @@ function (
         vm.formLoadState = new LoadState(true);
 
         vm.onLocalesLoaded = loadLocalesDeferred.resolve;
-        vm.onWebDirectoriesLoaded = loadWebDirectoryDeferred.resolve;
+        vm.onPageDirectoriesLoaded = loadPageDirectoryDeferred.resolve;
 
         initData();
     }
@@ -215,7 +212,7 @@ function (
         vm.formLoadState
             .offWhen(
                 loadLocalesDeferred,
-                loadWebDirectoryDeferred,
+                loadPageDirectoryDeferred,
                 loadTemplatesDeferred,
                 loadRoutingRulesDeferred
                 )
@@ -610,7 +607,7 @@ function (
     close) {
 
     var loadLocalesDeferred = $q.defer(),
-        loadWebDirectoryDeferred = $q.defer();
+        loadPageDirectoryDeferred = $q.defer();
 
     init();
     
@@ -626,8 +623,8 @@ function (
         $scope.save = save;
         $scope.close = close;
         $scope.localesLoaded = loadLocalesDeferred.resolve;
-        $scope.webDirectoriesLoaded = loadWebDirectoryDeferred.resolve;
-        $scope.formLoadState.offWhen(loadLocalesDeferred, loadWebDirectoryDeferred, loadRoutingRules());
+        $scope.pageDirectoriesLoaded = loadPageDirectoryDeferred.resolve;
+        $scope.formLoadState.offWhen(loadLocalesDeferred, loadPageDirectoryDeferred, loadRoutingRules());
     }
 
     function initData() {
@@ -640,7 +637,7 @@ function (
         $scope.command = {
             pageId: page.pageId,
             localeId: pageRoute.locale ? pageRoute.locale.localeId : undefined,
-            webDirectoryId: pageRoute.webDirectory.webDirectoryId
+            pageDirectoryId: pageRoute.pageDirectory.pageDirectoryId
         };
 
         if ($scope.isCustomEntityRoute) {
@@ -698,7 +695,7 @@ function (
     close) {
 
     var loadLocalesDeferred = $q.defer(),
-        loadWebDirectoryDeferred = $q.defer();
+        loadPageDirectoryDeferred = $q.defer();
 
     init();
     
@@ -714,8 +711,8 @@ function (
         $scope.save = save;
         $scope.close = close;
         $scope.localesLoaded = loadLocalesDeferred.resolve;
-        $scope.webDirectoriesLoaded = loadWebDirectoryDeferred.resolve;
-        $scope.formLoadState.offWhen(loadLocalesDeferred, loadWebDirectoryDeferred, loadRoutingRules());
+        $scope.pageDirectoriesLoaded = loadPageDirectoryDeferred.resolve;
+        $scope.formLoadState.offWhen(loadLocalesDeferred, loadPageDirectoryDeferred, loadRoutingRules());
     }
 
     /* EVENTS */
@@ -730,7 +727,7 @@ function (
         $scope.command = {
             pageToDuplicateId: page.pageId,
             localeId: pageRoute.locale ? pageRoute.locale.localeId : undefined,
-            webDirectoryId: pageRoute.webDirectory.webDirectoryId,
+            pageDirectoryId: pageRoute.pageDirectory.pageDirectoryId,
             title: 'Copy of ' + page.latestVersion.title
         }
         if ($scope.isCustomEntityRoute) {

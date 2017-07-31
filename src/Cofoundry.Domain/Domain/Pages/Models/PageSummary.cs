@@ -19,7 +19,7 @@ namespace Cofoundry.Domain
         public int PageId { get; set; }
         
         /// <summary>
-        /// The path of the page within the webdirectory.
+        /// The path of the page within the directory.
         /// </summary>
         public string UrlPath { get; set; }
 

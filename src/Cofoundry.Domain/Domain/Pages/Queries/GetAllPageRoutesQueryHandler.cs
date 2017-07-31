@@ -53,7 +53,7 @@ namespace Cofoundry.Domain
         {
             public PageRoute RoutingInfo { get; set; }
             public int? LocaleId { get; set; }
-            public int WebDirectoryId { get; set; }
+            public int PageDirectoryId { get; set; }
         }
 
         private class PageVersionQueryResult
@@ -114,7 +114,7 @@ namespace Cofoundry.Domain
                         CustomEntityDefinitionCode = p.CustomEntityDefinitionCode
                     },
                     LocaleId = p.LocaleId,
-                    WebDirectoryId = p.WebDirectoryId
+                    PageDirectoryId = p.PageDirectoryId
                 });
 
             return dbPages;
@@ -140,11 +140,11 @@ namespace Cofoundry.Domain
         {
             var dbPages = await QueryPages().ToListAsync();
             var dbPageVersions = await QueryPageVersions().ToListAsync();
-            var webDirectories = (await _queryExecutor.GetAllAsync<WebDirectoryRoute>(executionContext)).ToDictionary(d => d.WebDirectoryId);
+            var pageDirectories = (await _queryExecutor.GetAllAsync<PageDirectoryRoute>(executionContext)).ToDictionary(d => d.PageDirectoryId);
             var templates = await GetPageTemplates().ToDictionaryAsync(t => t.PageTemplateId);
             var allLocales = await _queryExecutor.GetAllAsync<ActiveLocale>(executionContext);
 
-            var routes = Map(dbPages, dbPageVersions, webDirectories, templates, allLocales);
+            var routes = Map(dbPages, dbPageVersions, pageDirectories, templates, allLocales);
 
             return routes.ToArray();
         }
@@ -152,7 +152,7 @@ namespace Cofoundry.Domain
         private List<PageRoute> Map(
             List<PageQueryResult> dbPages,
             List<PageVersionQueryResult> dbPageVersions,
-            Dictionary<int, WebDirectoryRoute> webDirectories,
+            Dictionary<int, PageDirectoryRoute> pageDirectories,
             Dictionary<int, PageTemplateQueryResult> templates,
             IEnumerable<ActiveLocale> activeLocales
             )
@@ -164,9 +164,9 @@ namespace Cofoundry.Domain
             {
                 var pageRoute = dbPage.RoutingInfo;
 
-                // Web directory will be null if it is inactive or has an inactive parent.
-                pageRoute.WebDirectory = webDirectories.GetOrDefault(dbPage.WebDirectoryId);
-                if (pageRoute.WebDirectory == null) continue;
+                // Page directory will be null if it is inactive or has an inactive parent.
+                pageRoute.PageDirectory = pageDirectories.GetOrDefault(dbPage.PageDirectoryId);
+                if (pageRoute.PageDirectory == null) continue;
 
                 // Configure Version Info
                 SetPageVersions(pageRoute, dbPageVersions, templates);
@@ -180,7 +180,7 @@ namespace Cofoundry.Domain
                     EntityNotFoundException.ThrowIfNull(pageRoute.Locale, dbPage.LocaleId);
 
                     directoryPath = pageRoute
-                        .WebDirectory
+                        .PageDirectory
                         .LocaleVariations
                         .Where(v => v.LocaleId == pageRoute.Locale.LocaleId)
                         .Select(v => v.FullUrlPath)
@@ -189,7 +189,7 @@ namespace Cofoundry.Domain
 
                 if (directoryPath == null)
                 {
-                    directoryPath = pageRoute.WebDirectory.FullUrlPath;
+                    directoryPath = pageRoute.PageDirectory.FullUrlPath;
                 }
 
                 // Set Full Path

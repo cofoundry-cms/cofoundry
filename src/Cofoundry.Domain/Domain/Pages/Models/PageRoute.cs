@@ -22,10 +22,10 @@ namespace Cofoundry.Domain
         /// <summary>
         /// The directory this page is in.
         /// </summary>
-        public WebDirectoryRoute WebDirectory { get; set; }
+        public PageDirectoryRoute PageDirectory { get; set; }
 
         /// <summary>
-        /// The path of the page within the webdirectory.
+        /// The path of the page within the directory.
         /// </summary>
         public string UrlPath { get; set; }
 
@@ -79,14 +79,14 @@ namespace Cofoundry.Domain
         /// </summary>
         public bool IsInDirectory(string directoryPath)
         {
-            if (WebDirectory == null) return false;
+            if (PageDirectory == null) return false;
 
             if (Locale == null)
             {
-                return WebDirectory.MatchesPath(directoryPath);
+                return PageDirectory.MatchesPath(directoryPath);
             }
 
-            return WebDirectory.MatchesPath(directoryPath, Locale.LocaleId);
+            return PageDirectory.MatchesPath(directoryPath, Locale.LocaleId);
         }
         
         /// <summary>

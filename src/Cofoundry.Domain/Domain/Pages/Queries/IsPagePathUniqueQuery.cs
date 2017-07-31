@@ -11,7 +11,7 @@ namespace Cofoundry.Domain
     {
         public int? PageId { get; set; }
         public string UrlPath { get; set; }
-        public int WebDirectoryId { get; set; }
+        public int PageDirectoryId { get; set; }
         public int? LocaleId { get; set; }
     }
 }

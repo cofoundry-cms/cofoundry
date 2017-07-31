@@ -34,16 +34,16 @@ namespace Cofoundry.Web.Admin
             return AngularRoute(id.ToString());
         }
 
-        public string WebDirectoryList()
+        public string PageDirectoryList()
         {
-            return CreateWebDirectoryRoute();
+            return CreatePageDirectoryRoute();
         }
 
         #endregion
 
         #region helpers
 
-        private string CreateWebDirectoryRoute(string path = null)
+        private string CreatePageDirectoryRoute(string path = null)
         {
             return "/" + UrlPrefix + "#/directories/" + path;
         }

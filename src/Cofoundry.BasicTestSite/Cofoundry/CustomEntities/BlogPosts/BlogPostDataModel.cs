@@ -47,9 +47,9 @@ namespace Cofoundry.BasicTestSite
         [Display(Name = "Page")]
         public int? PageId { get; set; }
 
-        [WebDirectory]
-        [Display(Name = "Web Directory")]
-        public int WebDirectoryId { get; set; }
+        [PageDirectory]
+        [Display(Name = "Page Directory")]
+        public int PageDirectoryId { get; set; }
 
         [PageCollection]
         [Display(Name = "Page Collection Test")]

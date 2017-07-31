@@ -53,7 +53,7 @@ namespace Cofoundry.Domain
             var dbQuery = _dbContext
                 .Pages
                 .AsNoTracking()
-                .Where(p => !p.IsDeleted && p.WebDirectory.IsActive);
+                .Where(p => !p.IsDeleted && p.PageDirectory.IsActive);
 
 
             // Filter by tags
@@ -95,9 +95,9 @@ namespace Cofoundry.Domain
             }
 
             // Filter by directory
-            if (query.WebDirectoryId > 0)
+            if (query.PageDirectoryId > 0)
             {
-                dbQuery = dbQuery.Where(p => p.WebDirectoryId == query.WebDirectoryId);
+                dbQuery = dbQuery.Where(p => p.PageDirectoryId == query.PageDirectoryId);
             }
 
             // Filter by layout

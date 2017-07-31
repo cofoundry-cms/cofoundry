@@ -48,9 +48,9 @@ namespace Cofoundry.Domain
             return _queryExecutor.GetByIdRangeAsync<PageRoute>(pageIds, executionContext);
         }
 
-        public Task<IEnumerable<PageRoute>> GetPageRoutesByWebDirectoryIdAsync(int webDirectoryId, IExecutionContext executionContext = null)
+        public Task<IEnumerable<PageRoute>> GetPageRoutesByPageDirectoryIdAsync(int pageDirectoryId, IExecutionContext executionContext = null)
         {
-            return _queryExecutor.ExecuteAsync(new GetPageRoutesByWebDirectoryIdQuery(webDirectoryId), executionContext);
+            return _queryExecutor.ExecuteAsync(new GetPageRoutesByPageDirectoryIdQuery(pageDirectoryId), executionContext);
         }
 
         public Task<PageRoute> GetNotFoundPageRouteByPathAsync(GetNotFoundPageRouteByPathQuery query, IExecutionContext executionContext = null)

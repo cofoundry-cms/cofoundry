@@ -59,7 +59,7 @@ namespace Cofoundry.Domain
             var dbQuery = _dbContext
                 .Pages
                 .AsNoTracking()
-                .Where(p => !p.IsDeleted && p.WebDirectory.IsActive)
+                .Where(p => !p.IsDeleted && p.PageDirectory.IsActive)
                 .Where(p => query.PageIds.Contains(p.PageId))
                 .ProjectTo<PageSummary>();
 

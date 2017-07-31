@@ -48,7 +48,7 @@ namespace Cofoundry.Domain
                 .Pages
                 .FilterById(command.PageId)
                 .Include(p => p.Locale)
-                .Include(p => p.WebDirectory)
+                .Include(p => p.PageDirectory)
                 .SingleOrDefaultAsync();
             EntityNotFoundException.ThrowIfNull(page, command.PageId);
 
@@ -96,7 +96,7 @@ namespace Cofoundry.Domain
                 page.UrlPath = command.UrlPath;
             }
 
-            page.WebDirectoryId = command.WebDirectoryId;
+            page.PageDirectoryId = command.PageDirectoryId;
             page.LocaleId = command.LocaleId;
         }
 
@@ -114,7 +114,7 @@ namespace Cofoundry.Domain
             query.LocaleId = command.LocaleId;
 
             query.UrlPath = GetUrlPath(command, page);
-            query.WebDirectoryId = command.WebDirectoryId;
+            query.PageDirectoryId = command.PageDirectoryId;
 
             return query;
         }

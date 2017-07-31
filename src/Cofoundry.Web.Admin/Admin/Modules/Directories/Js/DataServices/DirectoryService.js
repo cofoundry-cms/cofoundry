@@ -10,7 +10,7 @@ function (
     DirectoryTree) {
 
     var service = {},
-        directoryServiceBase = serviceBase + 'webdirectories';
+        directoryServiceBase = serviceBase + 'page-directories';
 
     /* QUERIES */
 
@@ -24,9 +24,9 @@ function (
         });
     }
 
-    service.getById = function (webDirectoryId) {
+    service.getById = function (pageDirectoryId) {
 
-        return $http.get(getIdRoute(webDirectoryId));
+        return $http.get(getIdRoute(pageDirectoryId));
     }
 
     /* COMMANDS */
@@ -38,18 +38,18 @@ function (
 
     service.update = function (command) {
 
-        return $http.patch(getIdRoute(command.webDirectoryId), command);
+        return $http.patch(getIdRoute(command.pageDirectoryId), command);
     }
 
-    service.remove = function (webDirectoryId) {
+    service.remove = function (pageDirectoryId) {
 
-        return $http.delete(getIdRoute(webDirectoryId));
+        return $http.delete(getIdRoute(pageDirectoryId));
     }
 
     /* PRIVATES */
 
-    function getIdRoute(webDirectoryId) {
-        return directoryServiceBase + '/' + webDirectoryId;
+    function getIdRoute(pageDirectoryId) {
+        return directoryServiceBase + '/' + pageDirectoryId;
     }
 
     return service;

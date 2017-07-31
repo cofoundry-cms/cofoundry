@@ -87,7 +87,7 @@ namespace Cofoundry.Web
 //                    new BreadcrumbViewModel { Title = version.Title, Href = string.Empty }
 //                };
 
-//            var currentDirectory = pageRouting.CurrentPageRoute.WebDirectory;
+//            var currentDirectory = pageRouting.CurrentPageRoute.PageDirectory;
 
 //            if (pageRouting.CurrentPageRoute.IsDirectoryDefaultPage())
 //            {
@@ -97,7 +97,7 @@ namespace Cofoundry.Web
 //            while (currentDirectory != null)
 //            {
 //                var parentDirectory = GetParentDirectory(pageRouting, currentDirectory);
-//                var title = parentDirectory.ParentWebDirectoryId.HasValue ? currentDirectory.Name : "Home";
+//                var title = parentDirectory.ParentPageDirectoryId.HasValue ? currentDirectory.Name : "Home";
 //                crumbs.Insert(0, new BreadcrumbViewModel { Title = title, Href = currentDirectory.FullUrlPath });
 
 //                currentDirectory = parentDirectory;
@@ -106,9 +106,9 @@ namespace Cofoundry.Web
 //            return new BreadcrumbsViewModel { Breadcrumbs = crumbs };
 //        }
 
-//        private static WebDirectoryRoute GetParentDirectory(PageRoutingHelper pageRouting, WebDirectoryRoute currentDirectory)
+//        private static PageDirectoryRoute GetParentDirectory(PageRoutingHelper pageRouting, PageDirectoryRoute currentDirectory)
 //        {
-//            return pageRouting.WebDirectoryRoutes.SingleOrDefault(d => d.WebDirectoryId == currentDirectory.ParentWebDirectoryId);
+//            return pageRouting.PageDirectoryRoutes.SingleOrDefault(d => d.PageDirectoryId == currentDirectory.ParentWebDirectoryId);
 //        }
 
 //        #endregion

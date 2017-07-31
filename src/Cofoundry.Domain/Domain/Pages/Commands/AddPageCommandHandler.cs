@@ -91,36 +91,36 @@ namespace Cofoundry.Domain
             return locale;
         }
 
-        private async Task<WebDirectory> GetWebDirectoryAsync(int webDirectoryId)
+        private async Task<PageDirectory> GetPageDirectoryAsync(int pageDirectoryId)
         {
-            var webDirectories = await _dbContext
-                .WebDirectories
-                .ToDictionaryAsync(w => w.WebDirectoryId);
+            var pageDirectories = await _dbContext
+                .PageDirectories
+                .ToDictionaryAsync(w => w.PageDirectoryId);
 
-            var webDirectory = webDirectories.GetOrDefault(webDirectoryId);
+            var pageDirectory = pageDirectories.GetOrDefault(pageDirectoryId);
 
-            if (webDirectory == null)
+            if (pageDirectory == null)
             {
-                throw new PropertyValidationException("The selected web directory does not exist.", "WebDirectoryId");
+                throw new PropertyValidationException("The selected page directory does not exist.", nameof(pageDirectory.PageDirectoryId));
             }
 
-            CheckWebDirectoryIsActive(webDirectory, webDirectories);
+            CheckPageDirectoryIsActive(pageDirectory, pageDirectories);
 
-            return webDirectory;
+            return pageDirectory;
         }
 
-        private void CheckWebDirectoryIsActive(WebDirectory webDirectory, Dictionary<int, WebDirectory> allWebDirectories)
+        private void CheckPageDirectoryIsActive(PageDirectory pageDirectory, Dictionary<int, PageDirectory> allPageDirectories)
         {
-            if (!webDirectory.IsActive)
+            if (!pageDirectory.IsActive)
             {
-                throw new PropertyValidationException("The selected web directory is not active and cannot be used.", "WebDirectoryId");
+                throw new PropertyValidationException("The selected page directory is not active and cannot be used.", nameof(pageDirectory.PageDirectoryId));
             }
 
-            if (webDirectory.ParentWebDirectoryId.HasValue)
+            if (pageDirectory.ParentPageDirectoryId.HasValue)
             {
-                var parentDirectory = allWebDirectories.GetOrDefault(webDirectory.ParentWebDirectoryId.Value);
-                EntityNotFoundException.ThrowIfNull(parentDirectory, webDirectory.ParentWebDirectoryId);
-                CheckWebDirectoryIsActive(webDirectory.ParentWebDirectory, allWebDirectories);
+                var parentDirectory = allPageDirectories.GetOrDefault(pageDirectory.ParentPageDirectoryId.Value);
+                EntityNotFoundException.ThrowIfNull(parentDirectory, pageDirectory.ParentPageDirectoryId);
+                CheckPageDirectoryIsActive(pageDirectory.ParentPageDirectory, allPageDirectories);
             }
         }
 
@@ -130,7 +130,7 @@ namespace Cofoundry.Domain
             var page = new Page();
             page.PageTypeId = (int)command.PageType;
             page.Locale = GetLocale(command.LocaleId);
-            page.WebDirectory = await  GetWebDirectoryAsync(command.WebDirectoryId);
+            page.PageDirectory = await  GetPageDirectoryAsync(command.PageDirectoryId);
             _entityAuditHelper.SetCreated(page, executionContext);
             _entityTagHelper.UpdateTags(page.PageTags, command.Tags, executionContext);
 
@@ -188,7 +188,7 @@ namespace Cofoundry.Domain
             var definition = await _queryExecutor.ExecuteAsync(new GetByStringQuery<CustomEntityDefinitionSummary>() { Id = customEntityDefinitionCode }, ex);
             if (definition == null)
             {
-                throw new PropertyValidationException("Custom entity defintion does not exists", "CustomEntityDefinitionCode", customEntityDefinitionCode);
+                throw new PropertyValidationException("Custom entity defintion does not exists", nameof(definition.CustomEntityDefinitionCode), customEntityDefinitionCode);
             }
             return definition;
         }
@@ -201,14 +201,14 @@ namespace Cofoundry.Domain
 
             if (template == null)
             {
-                throw new PropertyValidationException("Template not found", "PageTemplateId");
+                throw new PropertyValidationException("Template not found", nameof(command.PageTemplateId));
             }
 
             if (command.PageType == PageType.CustomEntityDetails)
             {
                 if (!template.IsCustomEntityTemplate())
                 {
-                    throw new PropertyValidationException("Template does not support custom entities", "PageTemplateId");
+                    throw new PropertyValidationException("Template does not support custom entities", nameof(command.PageTemplateId));
                 }
             }
 
@@ -228,7 +228,7 @@ namespace Cofoundry.Domain
         {
             var query = new IsPagePathUniqueQuery();
             query.LocaleId = command.LocaleId;
-            query.WebDirectoryId = command.WebDirectoryId;
+            query.PageDirectoryId = command.PageDirectoryId;
 
             if (command.PageType == PageType.CustomEntityDetails)
             {
@@ -246,7 +246,7 @@ namespace Cofoundry.Domain
         {
             if (!isUnique)
             {
-                var message = string.Format("A page already exists with the path '{0}' in that directory", command.UrlPath);
+                var message = $"A page already exists with the path '{command.UrlPath}' in that directory";
                 throw new UniqueConstraintViolationException(message, "UrlPath", command.UrlPath);
             }
         }

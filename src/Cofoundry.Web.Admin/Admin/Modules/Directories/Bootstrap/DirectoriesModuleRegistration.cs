@@ -26,7 +26,7 @@ namespace Cofoundry.Web.Admin
                 MenuCategory = AdminModuleMenuCategory.ManageSite,
                 PrimaryOrdering = AdminModuleMenuPrimaryOrdering.Secondry,
                 Url = _adminRouteLibrary.Directories.List(),
-                RestrictedToPermission = new WebDirectoryAdminModulePermission()
+                RestrictedToPermission = new PageDirectoryAdminModulePermission()
             };
 
             return module;

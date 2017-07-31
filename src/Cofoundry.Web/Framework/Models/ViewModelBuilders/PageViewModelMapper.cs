@@ -120,7 +120,7 @@ namespace Cofoundry.Web
             )
         {
             var allRoutes = await _queryExecutor.GetAllAsync<PageRoute>();
-            var allDirectories = await _queryExecutor.GetAllAsync<WebDirectoryRoute>();
+            var allDirectories = await _queryExecutor.GetAllAsync<PageDirectoryRoute>();
             var currentRoute = allRoutes.Single(p => p.PageId == mappingParameters.PageModel.PageId);
 
             var router = new PageRoutingHelper(

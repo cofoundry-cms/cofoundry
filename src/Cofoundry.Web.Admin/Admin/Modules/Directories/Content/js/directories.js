@@ -25,7 +25,7 @@ function (
     DirectoryTree) {
 
     var service = {},
-        directoryServiceBase = serviceBase + 'webdirectories';
+        directoryServiceBase = serviceBase + 'page-directories';
 
     /* QUERIES */
 
@@ -39,9 +39,9 @@ function (
         });
     }
 
-    service.getById = function (webDirectoryId) {
+    service.getById = function (pageDirectoryId) {
 
-        return $http.get(getIdRoute(webDirectoryId));
+        return $http.get(getIdRoute(pageDirectoryId));
     }
 
     /* COMMANDS */
@@ -53,18 +53,18 @@ function (
 
     service.update = function (command) {
 
-        return $http.patch(getIdRoute(command.webDirectoryId), command);
+        return $http.patch(getIdRoute(command.pageDirectoryId), command);
     }
 
-    service.remove = function (webDirectoryId) {
+    service.remove = function (pageDirectoryId) {
 
-        return $http.delete(getIdRoute(webDirectoryId));
+        return $http.delete(getIdRoute(pageDirectoryId));
     }
 
     /* PRIVATES */
 
-    function getIdRoute(webDirectoryId) {
-        return directoryServiceBase + '/' + webDirectoryId;
+    function getIdRoute(pageDirectoryId) {
+        return directoryServiceBase + '/' + pageDirectoryId;
     }
 
     return service;
@@ -91,7 +91,7 @@ function (
          * Flattens the node tree into a single array of nodes, optionally
          * excluding the directory with the specified id.
          */
-        me.flatten = function (webDirectoryIdToExclude) {
+        me.flatten = function (pageDirectoryIdToExclude) {
             var allNodes = [];
 
             flattenNode(me, allNodes)
@@ -99,10 +99,10 @@ function (
             return allNodes;
 
             function flattenNode(node, allNodes) {
-                if (node.webDirectoryId == webDirectoryIdToExclude) return;
+                if (node.pageDirectoryId == pageDirectoryIdToExclude) return;
                 allNodes.push(node);
 
-                _.each(node.childWebDirectories, function (node) {
+                _.each(node.childPageDirectories, function (node) {
                     flattenNode(node, allNodes);
                 });
             }
@@ -111,7 +111,7 @@ function (
         /**
          * Finds a directory node, searching through child nodes recursively.
          */
-        me.findNodeById = function (webDirectoryIdToFind) {
+        me.findNodeById = function (pageDirectoryIdToFind) {
             return findDirectory([me]);
 
             function findDirectory(directories) {
@@ -122,10 +122,10 @@ function (
                 directories.forEach(function (directory) {
                     if (result) return;
 
-                    if (directory.webDirectoryId == webDirectoryIdToFind) {
+                    if (directory.pageDirectoryId == pageDirectoryIdToFind) {
                         result = directory;
                     } else {
-                        result = findDirectory(directory.childWebDirectories);
+                        result = findDirectory(directory.childPageDirectories);
                     }
 
                 });
@@ -146,7 +146,7 @@ function (
         restrict: 'E',
         templateUrl: modulePath + 'UIComponents/DirectoryGrid.html',
         scope: {
-            webDirectories: '=cmsDirectories',
+            pageDirectories: '=cmsDirectories',
             startDepth: '=cmsStartDepth',
             redirect: '=cmsRedirect'
         },
@@ -314,7 +314,7 @@ function (
 
     function reset() {
         vm.editMode = false;
-        vm.command = mapUpdateCommand(vm.webDirectory);
+        vm.command = mapUpdateCommand(vm.pageDirectory);
         vm.mainForm.formStatus.clear();
     }
 
@@ -331,7 +331,7 @@ function (
         function onOk() {
             setLoadingOn();
             return directoryService
-                .remove(vm.webDirectory.webDirectoryId)
+                .remove(vm.pageDirectory.pageDirectoryId)
                 .then(redirectToList)
                 .catch(setLoadingOff);
         }
@@ -353,30 +353,30 @@ function (
     }
 
     function initData() {
-        var webDirectoryId = $routeParams.id;
+        var pageDirectoryId = $routeParams.id;
 
         return directoryService.getTree()
             .then(loadDirectory);
 
         function loadDirectory(tree) {
-            var webDirectory = tree.findNodeById(webDirectoryId),
-                parentDirectories = tree.flatten(webDirectoryId);
+            var pageDirectory = tree.findNodeById(pageDirectoryId),
+                parentDirectories = tree.flatten(pageDirectoryId);
 
-            vm.webDirectory = webDirectory;
+            vm.pageDirectory = pageDirectory;
             vm.parentDirectories = parentDirectories;
-            vm.command = mapUpdateCommand(webDirectory);
+            vm.command = mapUpdateCommand(pageDirectory);
             vm.editMode = false;
-            vm.hasChildContent = webDirectory.numPages || webDirectory.childWebDirectories.length;
+            vm.hasChildContent = pageDirectory.numPages || pageDirectory.childPageDirectories.length;
         }
     }
 
-    function mapUpdateCommand(webDirectory) {
+    function mapUpdateCommand(pageDirectory) {
 
-        return _.pick(webDirectory,
-            'webDirectoryId',
+        return _.pick(pageDirectory,
+            'pageDirectoryId',
             'name',
             'urlPath',
-            'parentWebDirectoryId'
+            'parentPageDirectoryId'
             );
     }
 

@@ -8,7 +8,7 @@ function (
     serviceBase) {
 
     var service = {},
-        directoryServiceBase = serviceBase + 'webdirectories';
+        directoryServiceBase = serviceBase + 'page-directories';
 
     /* QUERIES */
 

@@ -8,7 +8,7 @@ namespace Cofoundry.Domain
 {
     /// <summary>
     /// Message published when properties that affect the
-    /// url of a page has changed (e.g. WebDirectoryId, UrlSlug, 
+    /// url of a page has changed (e.g. PageDirectoryId, UrlSlug, 
     /// LocaleId etc)
     /// </summary>
     public class PageUrlChangedMessage : IPageContentUpdatedMessage

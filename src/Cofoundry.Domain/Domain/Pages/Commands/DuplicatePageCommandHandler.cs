@@ -92,7 +92,7 @@ namespace Cofoundry.Domain
             addPageCommand.LocaleId = command.LocaleId;
             addPageCommand.UrlPath = command.UrlPath;
             addPageCommand.CustomEntityRoutingRule = command.CustomEntityRoutingRule;
-            addPageCommand.WebDirectoryId = command.WebDirectoryId;
+            addPageCommand.PageDirectoryId = command.PageDirectoryId;
 
             addPageCommand.Tags = toDup.Tags.ToArray();
 

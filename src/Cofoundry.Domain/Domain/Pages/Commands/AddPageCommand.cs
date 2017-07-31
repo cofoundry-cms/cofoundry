@@ -16,10 +16,10 @@ namespace Cofoundry.Domain
         [Slug]
         public string UrlPath { get; set; }
         
-        [Display(Name = "Web directory")]
-        [Required(ErrorMessage = "Please choose a web directory")]
+        [Display(Name = "Directory")]
+        [Required(ErrorMessage = "Please choose a directory")]
         [PositiveInteger]
-        public int WebDirectoryId { get; set; }
+        public int PageDirectoryId { get; set; }
         
         [Display(Name = "Market")]
         [PositiveInteger]

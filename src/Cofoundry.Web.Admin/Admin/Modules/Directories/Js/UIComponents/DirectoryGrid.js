@@ -9,7 +9,7 @@ function (
         restrict: 'E',
         templateUrl: modulePath + 'UIComponents/DirectoryGrid.html',
         scope: {
-            webDirectories: '=cmsDirectories',
+            pageDirectories: '=cmsDirectories',
             startDepth: '=cmsStartDepth',
             redirect: '=cmsRedirect'
         },

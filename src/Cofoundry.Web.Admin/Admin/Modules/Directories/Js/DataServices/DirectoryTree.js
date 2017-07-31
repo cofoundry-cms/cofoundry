@@ -20,7 +20,7 @@ function (
          * Flattens the node tree into a single array of nodes, optionally
          * excluding the directory with the specified id.
          */
-        me.flatten = function (webDirectoryIdToExclude) {
+        me.flatten = function (pageDirectoryIdToExclude) {
             var allNodes = [];
 
             flattenNode(me, allNodes)
@@ -28,10 +28,10 @@ function (
             return allNodes;
 
             function flattenNode(node, allNodes) {
-                if (node.webDirectoryId == webDirectoryIdToExclude) return;
+                if (node.pageDirectoryId == pageDirectoryIdToExclude) return;
                 allNodes.push(node);
 
-                _.each(node.childWebDirectories, function (node) {
+                _.each(node.childPageDirectories, function (node) {
                     flattenNode(node, allNodes);
                 });
             }
@@ -40,7 +40,7 @@ function (
         /**
          * Finds a directory node, searching through child nodes recursively.
          */
-        me.findNodeById = function (webDirectoryIdToFind) {
+        me.findNodeById = function (pageDirectoryIdToFind) {
             return findDirectory([me]);
 
             function findDirectory(directories) {
@@ -51,10 +51,10 @@ function (
                 directories.forEach(function (directory) {
                     if (result) return;
 
-                    if (directory.webDirectoryId == webDirectoryIdToFind) {
+                    if (directory.pageDirectoryId == pageDirectoryIdToFind) {
                         result = directory;
                     } else {
-                        result = findDirectory(directory.childWebDirectories);
+                        result = findDirectory(directory.childPageDirectories);
                     }
 
                 });

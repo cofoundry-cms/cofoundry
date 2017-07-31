@@ -24,7 +24,7 @@ function (
 
     var vm = this,
         loadLocalesDeferred = $q.defer(),
-        loadWebDirectoryDeferred = $q.defer();
+        loadPageDirectoryDeferred = $q.defer();
 
     init();
 
@@ -45,7 +45,7 @@ function (
         vm.formLoadState = new LoadState(true);
 
         vm.onLocalesLoaded = loadLocalesDeferred.resolve;
-        vm.onWebDirectoriesLoaded = loadWebDirectoryDeferred.resolve;
+        vm.onPageDirectoriesLoaded = loadPageDirectoryDeferred.resolve;
 
         initData();
     }
@@ -126,7 +126,7 @@ function (
         vm.formLoadState
             .offWhen(
                 loadLocalesDeferred,
-                loadWebDirectoryDeferred,
+                loadPageDirectoryDeferred,
                 loadTemplatesDeferred,
                 loadRoutingRulesDeferred
                 )

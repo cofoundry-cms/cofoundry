@@ -47,8 +47,8 @@ function (
     function Controller() {
         var vm = this;
 
-        directoryService.getAll().then(function (webDirectories) {
-            vm.webDirectories = webDirectories;
+        directoryService.getAll().then(function (pageDirectories) {
+            vm.pageDirectories = pageDirectories;
 
             if (vm.onLoaded) vm.onLoaded();
         });

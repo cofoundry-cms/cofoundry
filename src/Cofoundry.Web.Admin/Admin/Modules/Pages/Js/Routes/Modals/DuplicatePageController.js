@@ -18,7 +18,7 @@ function (
     close) {
 
     var loadLocalesDeferred = $q.defer(),
-        loadWebDirectoryDeferred = $q.defer();
+        loadPageDirectoryDeferred = $q.defer();
 
     init();
     
@@ -34,8 +34,8 @@ function (
         $scope.save = save;
         $scope.close = close;
         $scope.localesLoaded = loadLocalesDeferred.resolve;
-        $scope.webDirectoriesLoaded = loadWebDirectoryDeferred.resolve;
-        $scope.formLoadState.offWhen(loadLocalesDeferred, loadWebDirectoryDeferred, loadRoutingRules());
+        $scope.pageDirectoriesLoaded = loadPageDirectoryDeferred.resolve;
+        $scope.formLoadState.offWhen(loadLocalesDeferred, loadPageDirectoryDeferred, loadRoutingRules());
     }
 
     /* EVENTS */
@@ -50,7 +50,7 @@ function (
         $scope.command = {
             pageToDuplicateId: page.pageId,
             localeId: pageRoute.locale ? pageRoute.locale.localeId : undefined,
-            webDirectoryId: pageRoute.webDirectory.webDirectoryId,
+            pageDirectoryId: pageRoute.pageDirectory.pageDirectoryId,
             title: 'Copy of ' + page.latestVersion.title
         }
         if ($scope.isCustomEntityRoute) {

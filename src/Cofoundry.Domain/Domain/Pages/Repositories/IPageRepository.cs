@@ -20,7 +20,7 @@ namespace Cofoundry.Domain
 
         Task<IDictionary<int, PageRoute>> GetPageRoutesByIdRangeAsync(IEnumerable<int> pageIds, IExecutionContext executionContext = null);
 
-        Task<IEnumerable<PageRoute>> GetPageRoutesByWebDirectoryIdAsync(int webDirectoryId, IExecutionContext executionContext = null);
+        Task<IEnumerable<PageRoute>> GetPageRoutesByPageDirectoryIdAsync(int pageDirectoryId, IExecutionContext executionContext = null);
 
         Task<PageRoute> GetNotFoundPageRouteByPathAsync(GetNotFoundPageRouteByPathQuery query, IExecutionContext executionContext = null);
 

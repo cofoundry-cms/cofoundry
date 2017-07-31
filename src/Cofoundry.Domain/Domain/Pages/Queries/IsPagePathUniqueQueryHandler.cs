@@ -10,8 +10,7 @@ using Cofoundry.Domain.CQS;
 namespace Cofoundry.Domain
 {
     public class IsPagePathUniqueQueryHandler 
-        : IQueryHandler<IsPagePathUniqueQuery, bool>
-        , IAsyncQueryHandler<IsPagePathUniqueQuery, bool>
+        : IAsyncQueryHandler<IsPagePathUniqueQuery, bool>
         , IPermissionRestrictedQueryHandler<IsPagePathUniqueQuery, bool>
     {
         #region constructor
@@ -28,12 +27,6 @@ namespace Cofoundry.Domain
         #endregion
 
         #region execution
-
-        public bool Execute(IsPagePathUniqueQuery query, IExecutionContext executionContext)
-        {
-            var exists = Exists(query).Any();
-            return !exists;
-        }
 
         public async Task<bool> ExecuteAsync(IsPagePathUniqueQuery query, IExecutionContext executionContext)
         {
@@ -54,7 +47,7 @@ namespace Cofoundry.Domain
                     && !d.IsDeleted
                     && d.UrlPath == query.UrlPath
                     && d.LocaleId == query.LocaleId
-                    && d.WebDirectoryId == query.WebDirectoryId
+                    && d.PageDirectoryId == query.PageDirectoryId
                     );
         }
 

@@ -127,7 +127,7 @@
                         </a>
                     </li>
 }
-@if (permissionValidationService.HasPermission<WebDirectoryAdminModulePermission>(userContext))
+@if (permissionValidationService.HasPermission<PageDirectoryAdminModulePermission>(userContext))
 {
                     <li>
                         <a href="@adminRouteLibrary.Directories.List()" class="cofoundry-sv__navmenu-list__item">

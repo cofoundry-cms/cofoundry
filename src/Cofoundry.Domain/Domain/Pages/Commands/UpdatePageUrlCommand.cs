@@ -13,9 +13,9 @@ namespace Cofoundry.Domain
         [Required]
         public int PageId { get; set; }
 
-        [Required(ErrorMessage = "Please choose a web directory")]
+        [Required(ErrorMessage = "Please choose a directory")]
         [PositiveInteger]
-        public int WebDirectoryId { get; set; }
+        public int PageDirectoryId { get; set; }
 
         [PositiveInteger]
         public int? LocaleId { get; set; }
