@@ -13,11 +13,9 @@ namespace Cofoundry.Domain.Data
             builder.ToTable("User", DbConstants.CofoundrySchema);
 
             builder.Property(s => s.FirstName)
-                .IsRequired()
                 .HasMaxLength(32);
 
             builder.Property(s => s.LastName)
-                .IsRequired()
                 .HasMaxLength(32);
 
             builder.Property(s => s.Email)

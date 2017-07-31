@@ -135,9 +135,9 @@ namespace Cofoundry.Domain
         private User MapAndAddUser(AddUserCommand command, IExecutionContext executionContext, Role role, IUserAreaDefinition userArea, UserArea dbUserArea)
         {
             var user = new User();
-            user.FirstName = command.FirstName.Trim();
-            user.LastName = command.LastName.Trim();
-            user.Email = command.Email;
+            user.FirstName = command.FirstName?.Trim();
+            user.LastName = command.LastName?.Trim();
+            user.Email = command.Email?.Trim();
             user.RequirePasswordChange = command.RequirePasswordChange;
             user.LastPasswordChangeDate = executionContext.ExecutionDate;
             user.CreateDate = executionContext.ExecutionDate;
@@ -155,11 +155,11 @@ namespace Cofoundry.Domain
 
             if (userArea.UseEmailAsUsername)
             {
-                user.Username = command.Email;
+                user.Username = command.Email?.Trim();
             }
             else
             {
-                user.Username = command.Username.Trim();
+                user.Username = command.Username?.Trim();
             }
 
             _dbContext.Users.Add(user);
@@ -188,11 +188,11 @@ namespace Cofoundry.Domain
 
             if (userArea.UseEmailAsUsername)
             {
-                query.Username = command.Email;
+                query.Username = command.Email?.Trim();
             }
             else
             {
-                query.Username = command.Username.Trim();
+                query.Username = command.Username?.Trim();
             }
             query.UserAreaCode = command.UserAreaCode;
 

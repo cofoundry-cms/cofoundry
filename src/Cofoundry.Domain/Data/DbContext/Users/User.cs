@@ -16,12 +16,12 @@ namespace Cofoundry.Domain.Data
         public int UserId { get; set; }
 
         /// <summary>
-        /// The first name is required.
+        /// The first name is not required.
         /// </summary>
         public string FirstName { get; set; }
 
         /// <summary>
-        /// The last name is required.
+        /// The last name is not required.
         /// </summary>
         public string LastName { get; set; }
 
@@ -113,6 +113,12 @@ namespace Cofoundry.Domain.Data
         /// cases used to elevate privileges
         /// </summary>
         public bool IsSystemAccount { get; set; }
+
+        /// <summary>
+        /// A flag to indicate if the users email address has been confirmed via a 
+        /// sign-up notification.
+        /// </summary>
+        public bool IsEmailConfirmed { get; set; }
 
         #region ICreateAuditable
 

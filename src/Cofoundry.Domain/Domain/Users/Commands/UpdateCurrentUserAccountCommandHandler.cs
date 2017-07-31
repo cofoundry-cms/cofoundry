@@ -65,11 +65,13 @@ namespace Cofoundry.Domain
         private async Task UpdateEmail(UpdateCurrentUserAccountCommand command, int userId, User user)
         {
             var userArea = _userAreaRepository.GetByCode(user.UserAreaCode);
-            if (userArea.UseEmailAsUsername && user.Username != command.Email)
+            var newEmail = command.Email?.Trim();
+
+            if (userArea.UseEmailAsUsername && user.Username != newEmail)
             {
                 var uniqueQuery = new IsUsernameUniqueQuery()
                 {
-                    Username = command.Email,
+                    Username = newEmail,
                     UserId = userId,
                     UserAreaCode = CofoundryAdminUserArea.AreaCode
                 };
@@ -79,10 +81,10 @@ namespace Cofoundry.Domain
                     throw new PropertyValidationException("This email is already registered", "Email");
                 }
 
-                user.Username = command.Email;
+                user.Username = newEmail;
             }
 
-            user.Email = command.Email;
+            user.Email = newEmail;
         }
 
         #endregion

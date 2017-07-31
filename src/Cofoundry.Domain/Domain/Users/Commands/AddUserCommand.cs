@@ -21,16 +21,14 @@ namespace Cofoundry.Domain
     public sealed class AddUserCommand : ICommand, ILoggableCommand
     {
         /// <summary>
-        /// The first name is required.
+        /// The first name is not required.
         /// </summary>
-        [Required]
         [StringLength(32)]
         public string FirstName { get; set; }
 
         /// <summary>
-        /// The last name is required.
+        /// The last name is not required.
         /// </summary>
-        [Required]
         [StringLength(32)]
         public string LastName { get; set; }
 

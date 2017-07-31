@@ -77,9 +77,9 @@ namespace Cofoundry.Domain
 
         private static void Map(UpdateUserCommand command, User user, IUserAreaDefinition userArea)
         {
-            user.FirstName = command.FirstName;
-            user.LastName = command.LastName;
-            user.Email = command.Email;
+            user.FirstName = command.FirstName?.Trim();
+            user.LastName = command.LastName?.Trim();
+            user.Email = command.Email?.Trim();
 
             if (userArea.UseEmailAsUsername)
             {
@@ -87,7 +87,7 @@ namespace Cofoundry.Domain
             }
             else
             {
-                user.Username = command.Username.Trim();
+                user.Username = command.Username?.Trim();
             }
 
             user.RequirePasswordChange = command.RequirePasswordChange;
@@ -118,7 +118,7 @@ namespace Cofoundry.Domain
 
             if (userArea.UseEmailAsUsername)
             {
-                query.Username = command.Email;
+                query.Username = command.Email?.Trim();
             }
             else
             {
