@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Cofoundry.Domain;
 
-namespace Cofoundry.Web
+namespace Cofoundry.Domain
 {
     /// <summary>
     /// Don't implement this directly, use the generic version
