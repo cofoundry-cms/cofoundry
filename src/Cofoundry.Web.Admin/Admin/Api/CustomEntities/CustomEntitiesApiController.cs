@@ -5,7 +5,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using Cofoundry.Domain;
 using Cofoundry.Domain.CQS;
-using Cofoundry.Web.WebApi;
 using Cofoundry.Core;
 using Microsoft.AspNetCore.Mvc;
 

@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Cofoundry.Domain;
 using Cofoundry.Domain.CQS;
-using Cofoundry.Web.WebApi;
 using Cofoundry.Core;
 
 namespace Cofoundry.Web.Admin
