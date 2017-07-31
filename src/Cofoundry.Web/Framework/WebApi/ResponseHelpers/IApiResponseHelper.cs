@@ -6,7 +6,7 @@ using Cofoundry.Core.Validation;
 using Cofoundry.Domain.CQS;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Cofoundry.Web.WebApi
+namespace Cofoundry.Web
 {
     /// <summary>
     /// Use this helper in a Web Api controller to make executing queries and command

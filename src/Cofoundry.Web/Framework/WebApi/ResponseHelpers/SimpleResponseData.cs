@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Cofoundry.Web.WebApi
+namespace Cofoundry.Web
 {
     /// <summary>
     /// A simple container for wrapping data output via a rest api. Used

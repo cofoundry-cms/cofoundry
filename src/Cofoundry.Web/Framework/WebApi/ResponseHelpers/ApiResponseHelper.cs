@@ -10,7 +10,7 @@ using Cofoundry.Core;
 using Microsoft.AspNetCore.Mvc;
 using System.Reflection;
 
-namespace Cofoundry.Web.WebApi
+namespace Cofoundry.Web
 {
     /// <summary>
     /// Use this helper in a Web Api controller to make executing queries and command

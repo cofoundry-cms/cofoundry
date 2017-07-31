@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using Cofoundry.Core.DependencyInjection;
-using Cofoundry.Web.WebApi;
 using Cofoundry.Domain;
 using Cofoundry.Core.Web;
 using Cofoundry.Core;
