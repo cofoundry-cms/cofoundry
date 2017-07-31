@@ -80,7 +80,7 @@ namespace Cofoundry.Domain
 
             var hashResult = _passwordCryptographyService.CreateHash(command.NewPassword);
             user.Password = hashResult.Hash;
-            user.PasswordEncryptionVersion = hashResult.HashVersion;
+            user.PasswordHashVersion = hashResult.HashVersion;
         }
 
         private IQueryable<User> QueryUser(UpdateCurrentUserUserPasswordCommand command, IExecutionContext executionContext)

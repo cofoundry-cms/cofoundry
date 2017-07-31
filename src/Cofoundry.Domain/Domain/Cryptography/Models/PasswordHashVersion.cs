@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Cofoundry.Domain
 {
-    public enum PasswordEncryptionVersion
+    public enum PasswordHashVersion
     {
         /// <summary>
         /// Original version (SHA1, 4 byte salt)

@@ -67,3 +67,8 @@ exec sp_rename 'Cofoundry.FK_Page_WebDirectory', 'FK_Page_PageDirectory', 'objec
 go
 
 update Cofoundry.EntityDefinition set [Name] = 'Page Directory' where EntityDefinitionCode = 'COFDIR'
+go
+
+-- Correct PasswordHash terminology
+exec sp_rename 'Cofoundry.[User].PasswordEncryptionVersion' , 'PasswordHashVersion', 'column'
+go

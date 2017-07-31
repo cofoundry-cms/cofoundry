@@ -90,7 +90,7 @@ namespace Cofoundry.Domain
 
             var hashResult = _passwordCryptographyService.CreateHash(command.Password);
             user.Password = hashResult.Hash;
-            user.PasswordEncryptionVersion = hashResult.HashVersion;
+            user.PasswordHashVersion = hashResult.HashVersion;
 
             user.UserArea = userArea;
             EntityNotFoundException.ThrowIfNull(user.UserArea, CofoundryAdminUserArea.AreaCode);

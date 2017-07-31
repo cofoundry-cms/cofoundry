@@ -23,10 +23,10 @@ namespace Cofoundry.Domain
         {
             switch (hashVersion)
             {
-                case (int)PasswordEncryptionVersion.V1:
+                case (int)PasswordHashVersion.V1:
                     var service = new PasswordCryptographyV1();
                     return service.Verify(password, hash);
-                case (int)PasswordEncryptionVersion.V2:
+                case (int)PasswordHashVersion.V2:
                     return Defuse.PasswordCryptographyV2.VerifyPassword(password, hash);
                 default:
                     throw new NotSupportedException("PasswordEncryptionVersion not recognised: " + hashVersion.ToString());
@@ -41,7 +41,7 @@ namespace Cofoundry.Domain
         {
             var result = new PasswordCryptographyResult();
             result.Hash = Defuse.PasswordCryptographyV2.CreateHash(password);
-            result.HashVersion = (int)PasswordEncryptionVersion.V2;
+            result.HashVersion = (int)PasswordHashVersion.V2;
 
             return result;
         }

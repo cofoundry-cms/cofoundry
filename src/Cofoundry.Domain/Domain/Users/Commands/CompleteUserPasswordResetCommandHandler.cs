@@ -84,7 +84,7 @@ namespace Cofoundry.Domain
 
             var hashResult = _passwordCryptographyService.CreateHash(command.NewPassword);
             user.Password = hashResult.Hash;
-            user.PasswordEncryptionVersion = hashResult.HashVersion;
+            user.PasswordHashVersion = hashResult.HashVersion;
             request.IsComplete = true;
         }
 

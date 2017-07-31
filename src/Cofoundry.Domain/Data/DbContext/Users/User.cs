@@ -43,12 +43,12 @@ namespace Cofoundry.Domain.Data
         public string Password { get; set; }
 
         /// <summary>
-        /// Cofoundry supports upgradable password encryption and this integer value
-        /// maps to the PasswordEncryptionVersion enum to tell us which encryption 
-        /// type to use. An integer outside of the PasswordEncryptionVersion enum range
-        /// can be used to set up a completed custom encryption provider.
+        /// Cofoundry supports upgradable password hashing and this integer value
+        /// maps to the PasswordHashVersion enum to tell us which hash function
+        /// type to use. An integer outside of the PasswordHashVersion enum range
+        /// can be used to set up a completed custom hash provider.
         /// </summary>
-        public int? PasswordEncryptionVersion { get; set; }
+        public int? PasswordHashVersion { get; set; }
 
         /// <summary>
         /// Used for soft deletes so we can maintain old relations and

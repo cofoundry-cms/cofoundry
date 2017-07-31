@@ -150,7 +150,7 @@ namespace Cofoundry.Domain
 
                 var hashResult = _passwordCryptographyService.CreateHash(password);
                 user.Password = hashResult.Hash;
-                user.PasswordEncryptionVersion = hashResult.HashVersion;
+                user.PasswordHashVersion = hashResult.HashVersion;
             }
 
             if (userArea.UseEmailAsUsername)
