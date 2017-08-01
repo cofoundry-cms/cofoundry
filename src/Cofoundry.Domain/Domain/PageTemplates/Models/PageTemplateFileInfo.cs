@@ -21,7 +21,7 @@ namespace Cofoundry.Domain
 
         /// <summary>
         /// If the template file is for a custom entity details page the
-        /// view model will be CustomEntityDetailsPageViewModel&lt;TDataModel&gt;
+        /// view model will be CustomEntityPageViewModel&lt;TDataModel&gt;
         /// and TDataModel will be extracted and placed into this property.
         /// </summary>
         public string CustomEntityModelType { get; set; }

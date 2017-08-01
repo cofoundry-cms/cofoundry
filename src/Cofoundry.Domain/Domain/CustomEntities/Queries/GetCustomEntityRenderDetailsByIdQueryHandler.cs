@@ -11,7 +11,7 @@ using AutoMapper;
 
 namespace Cofoundry.Domain
 {
-    public class GetCustomEntityRenderDetailsByIdQueryHandler 
+    public class GetCustomEntityRenderDetailsByIdQueryHandler
         : IAsyncQueryHandler<GetCustomEntityRenderDetailsByIdQuery, CustomEntityRenderDetails>
         , IIgnorePermissionCheckHandler
     {

@@ -15,11 +15,11 @@ namespace Cofoundry.Domain
 
     /// <summary>
     /// Use this to register a display view model for a custom entity. You must use this generic
-    /// version so that we can link the model back to a ICustomEntityVersionDataModel
+    /// version so that we can link the model back to a ICustomEntityDataModel
     /// </summary>
-    /// <typeparam name="TDataModel">ICustomEntityVersionDataModel type</typeparam>
+    /// <typeparam name="TDataModel">ICustomEntityDataModel type</typeparam>
     public interface ICustomEntityDisplayModel<TDataModel> : ICustomEntityDisplayModel 
-        where TDataModel : ICustomEntityVersionDataModel
+        where TDataModel : ICustomEntityDataModel
     {
     }
 }

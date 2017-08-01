@@ -19,9 +19,9 @@ namespace Cofoundry.Domain
                 .RegisterAll<ICustomEntityRoutingRule>()
                 .RegisterAll<ICustomEntityDefinition>()
                 .RegisterAll<ICustomEntityDisplayModel>()
-                .RegisterAllGenericImplementations(typeof(ICustomEntityDetailsDisplayModelMapper<,>))
+                .RegisterAllGenericImplementations(typeof(ICustomEntityDisplayModelMapper<,>))
                 .RegisterInstance<ICustomEntityDefinitionRepository, CustomEntityDefinitionRepository>()
-                .RegisterType<ICustomEntityRenderSummaryMapper, CustomEntityMapper>()
+                .RegisterType<ICustomEntityRenderSummaryMapper, CustomEntityRenderSummaryMapper>()
                 ;
         }
     }

@@ -58,7 +58,7 @@ namespace Cofoundry.Web
                     break;
                 case PageType.CustomEntityDetails:
                     var model = await GetCustomEntityModel(state);
-                    var customEntityParams = new CustomEntityDetailsPageViewModelBuilderParameters(state.PageData, state.VisualEditorMode, model);
+                    var customEntityParams = new CustomEntityPageViewModelBuilderParameters(state.PageData, state.VisualEditorMode, model);
 
                     vm = await BuildCustomEntityViewModelAsync(state.PageData.Template.CustomEntityModelType, customEntityParams);
                     break;
@@ -162,7 +162,7 @@ namespace Cofoundry.Web
 
         private async Task<IEditablePageViewModel> BuildCustomEntityViewModelAsync(
             Type displayModelType,
-            CustomEntityDetailsPageViewModelBuilderParameters mappingParameters
+            CustomEntityPageViewModelBuilderParameters mappingParameters
             )
         {
             var task = (Task<IEditablePageViewModel>)_methodInfo_GenericBuildCustomEntityModelAsync
@@ -173,10 +173,10 @@ namespace Cofoundry.Web
         }
 
         private async Task<IEditablePageViewModel> GenericBuildCustomEntityModelAsync<TDisplayModel>(
-            CustomEntityDetailsPageViewModelBuilderParameters mappingParameters
-            ) where TDisplayModel : ICustomEntityDetailsDisplayViewModel
+            CustomEntityPageViewModelBuilderParameters mappingParameters
+            ) where TDisplayModel : ICustomEntityPageDisplayModel
         {
-            var result = await _pageViewModelBuilder.BuildCustomEntityModelAsync<TDisplayModel>(mappingParameters);
+            var result = await _pageViewModelBuilder.BuildCustomEntityPageViewModelAsync<TDisplayModel>(mappingParameters);
             return result;
         }
     }

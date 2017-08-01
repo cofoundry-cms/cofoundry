@@ -6,7 +6,7 @@ using System.Linq;
 namespace Cofoundry.Web
 {
     /// <summary>
-    /// Parameters for mapping an ICustomEntityDetailsPageViewModel using an
+    /// Parameters for mapping an ICustomEntityPageViewModel using an
     /// IPageViewModelBuilder implementation.
     /// </summary>
     /// <remarks>
@@ -14,16 +14,16 @@ namespace Cofoundry.Web
     /// this parameter class helps future proof the design in case we 
     /// want to add more parameters in the future.
     /// </remarks>
-    public class CustomEntityDetailsPageViewModelBuilderParameters : PageViewModelBuilderParameters
+    public class CustomEntityPageViewModelBuilderParameters : PageViewModelBuilderParameters
     {
         /// <summary>
-        /// Parameters for mapping an ICustomEntityDetailsPageViewModel using an
+        /// Parameters for mapping an ICustomEntityPageViewModel using an
         /// IPageViewModelMapper implementation.
         /// </summary>
         /// <param name="pageModel">The page data to include in the view model.</param>
         /// <param name="visualEditorMode">The view mode requested by the visual editor or a default value.</param>
         /// <param name="customEntityModel">he custom entity model data to use in the mapping.</param>
-        public CustomEntityDetailsPageViewModelBuilderParameters(
+        public CustomEntityPageViewModelBuilderParameters(
                PageRenderDetails page,
                VisualEditorMode visualEditorMode,
                CustomEntityRenderDetails customEntityModel

@@ -17,7 +17,7 @@ namespace Cofoundry.Domain
 
         [Required]
         [ValidateObject]
-        public ICustomEntityVersionDataModel Model { get; set; }
+        public ICustomEntityDataModel Model { get; set; }
 
         public int? LocaleId { get; set; }
 

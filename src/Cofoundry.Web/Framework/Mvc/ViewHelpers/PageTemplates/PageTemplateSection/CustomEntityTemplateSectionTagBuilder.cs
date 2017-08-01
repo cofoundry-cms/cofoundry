@@ -15,12 +15,12 @@ namespace Cofoundry.Web
     /// Fluent builder for defining a page template custom entity section configuration using method chaining
     /// </summary>
     public class CustomEntityTemplateSectionTagBuilder<TModel> : ICustomEntityTemplateSectionTagBuilder<TModel>
-        where TModel : ICustomEntityDetailsDisplayViewModel 
+        where TModel : ICustomEntityPageDisplayModel 
     {
         #region constructor
 
         const string DEFAULT_TAG ="div";
-        private readonly ICustomEntityDetailsPageViewModel<TModel> _customEntityViewModel;
+        private readonly ICustomEntityPageViewModel<TModel> _customEntityViewModel;
         private readonly ViewContext _viewContext;
         private readonly IPageModuleRenderer _moduleRenderer;
         private readonly IPageModuleDataModelTypeFactory _moduleDataModelTypeFactory;
@@ -32,7 +32,7 @@ namespace Cofoundry.Web
             IPageModuleDataModelTypeFactory moduleDataModelTypeFactory,
             IPageModuleTypeFileNameFormatter moduleTypeFileNameFormatter,
             ViewContext viewContext,
-            ICustomEntityDetailsPageViewModel<TModel> customEntityViewModel, 
+            ICustomEntityPageViewModel<TModel> customEntityViewModel, 
             string sectionName)
         {
             if (sectionName == null) throw new ArgumentNullException(nameof(sectionName));

@@ -21,13 +21,13 @@ namespace Cofoundry.Web
         }
 
         /// <summary>
-        /// Creates a new view model for a custom entity details page.
+        /// Creates a new view model for a custom entity page.
         /// </summary>
         /// <typeparam name="TDisplayModel">The type of custom entity display model.</typeparam>
-        public virtual ICustomEntityDetailsPageViewModel<TDisplayModel> CreateCustomEntityDetailsPageViewModel<TDisplayModel>()
-            where TDisplayModel : ICustomEntityDetailsDisplayViewModel
+        public virtual ICustomEntityPageViewModel<TDisplayModel> CreateCustomEntityPageViewModel<TDisplayModel>()
+            where TDisplayModel : ICustomEntityPageDisplayModel
         {
-            return new CustomEntityDetailsPageViewModel<TDisplayModel>();
+            return new CustomEntityPageViewModel<TDisplayModel>();
         }
 
         /// <summary>

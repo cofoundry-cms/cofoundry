@@ -10,15 +10,15 @@ namespace Cofoundry.Web
     public static class PageTemplateHelperExtensions
     {
         /// <summary>
-        /// Indictes where to render a section in a custom entity details page template. 
+        /// Indictes where to render a section in a custom entity page template. 
         /// </summary>
         /// <typeparam name="TModel">Custom entity display model type.</typeparam>
         /// <param name="helper">IPageTemplateHelper to extend.</param>
         /// <param name="sectionName">The name of the section. This must be unique in a page template.</param>
         /// <returns>ICustomEntityTemplateSectionTagBuilder to allow for method chaining.</returns>
         public static ICustomEntityTemplateSectionTagBuilder<TModel> CustomEntitySection<TModel>(
-            this IPageTemplateHelper<ICustomEntityDetailsPageViewModel<TModel>> helper, string sectionName)
-            where TModel : ICustomEntityDetailsDisplayViewModel
+            this IPageTemplateHelper<ICustomEntityPageViewModel<TModel>> helper, string sectionName)
+            where TModel : ICustomEntityPageDisplayModel
         {
             var factory = helper.ViewContext.HttpContext.RequestServices.GetRequiredService<ICustomEntityTemplateSectionTagBuilderFactory>();
             var output = factory.Create(helper.ViewContext, helper.Model, sectionName);

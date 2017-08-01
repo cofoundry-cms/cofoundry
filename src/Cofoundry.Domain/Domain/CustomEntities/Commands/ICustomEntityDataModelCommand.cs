@@ -8,7 +8,7 @@ namespace Cofoundry.Domain
     /// </summary>
     public interface ICustomEntityDataModelCommand
     {
-        ICustomEntityVersionDataModel Model { get; set; }
+        ICustomEntityDataModel Model { get; set; }
         string CustomEntityDefinitionCode { get; set; }
     }
 }

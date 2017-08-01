@@ -52,15 +52,15 @@ namespace Cofoundry.Web
         }
 
         /// <summary>
-        /// Maps data to an empty view model for a custom entity details page.
+        /// Maps data to an empty view model for a custom entity page.
         /// </summary>
         /// <param name="displayModelType">The type information of the display model to apply to the generic view model.</param>
         /// <param name="viewModel">The view model to map data to.</param>
         /// <param name="mappingParameters">The data passed through to map to the view model.</param>
         public virtual async Task MapCustomEntityViewModelAsync<TDisplayModel>(
-            ICustomEntityDetailsPageViewModel<TDisplayModel> viewModel,
-            CustomEntityDetailsPageViewModelBuilderParameters mappingParameters 
-            ) where TDisplayModel : ICustomEntityDetailsDisplayViewModel
+            ICustomEntityPageViewModel<TDisplayModel> viewModel,
+            CustomEntityPageViewModelBuilderParameters mappingParameters 
+            ) where TDisplayModel : ICustomEntityPageDisplayModel
         {
             await MapAsync(viewModel, mappingParameters);
 
@@ -76,7 +76,7 @@ namespace Cofoundry.Web
             customModel.Title = customEntityRenderDetails.Title;
             customModel.UrlSlug = customEntityRenderDetails.UrlSlug;
             customModel.WorkFlowStatus = customEntityRenderDetails.WorkFlowStatus;
-            customModel.Model = await _customEntityDisplayModelMapper.MapDetailsAsync<TDisplayModel>(customEntityRenderDetails);
+            customModel.Model = await _customEntityDisplayModelMapper.MapDisplayModelAsync<TDisplayModel>(customEntityRenderDetails);
 
             viewModel.CustomEntity = customModel;
         }

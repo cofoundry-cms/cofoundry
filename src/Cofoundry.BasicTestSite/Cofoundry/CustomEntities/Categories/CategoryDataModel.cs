@@ -10,7 +10,7 @@ namespace Cofoundry.BasicTestSite
     /// This defines the custom data that gets stored with each
     /// category.
     /// </summary>
-    public class CategoryDataModel : ICustomEntityVersionDataModel
+    public class CategoryDataModel : ICustomEntityDataModel
     {
         [MaxLength(500)]
         [Display(Description = "A short description that appears as a tooltip when hovering over the category.")]

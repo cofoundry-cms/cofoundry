@@ -8,7 +8,7 @@ namespace Cofoundry.BasicTestSite
 {
     public class ExamplePageViewModelFactory : IPageViewModelFactory
     {
-        public ICustomEntityDetailsPageViewModel<TDisplayModel> CreateCustomEntityDetailsPageViewModel<TDisplayModel>() where TDisplayModel : ICustomEntityDetailsDisplayViewModel
+        public ICustomEntityPageViewModel<TDisplayModel> CreateCustomEntityPageViewModel<TDisplayModel>() where TDisplayModel : ICustomEntityPageDisplayModel
         {
             return new ExampleCustomEntityPageViewModel<TDisplayModel>();
         }

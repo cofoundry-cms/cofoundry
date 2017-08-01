@@ -6,8 +6,8 @@ using Cofoundry.Domain;
 
 namespace Cofoundry.BasicTestSite
 {
-    public class ExampleCustomEntityPageViewModel<TModel> : CustomEntityDetailsPageViewModel<TModel>
-        where TModel : ICustomEntityDetailsDisplayViewModel
+    public class ExampleCustomEntityPageViewModel<TModel> : CustomEntityPageViewModel<TModel>
+        where TModel : ICustomEntityPageDisplayModel
     {
         public string TestMessage { get; set; }
     }

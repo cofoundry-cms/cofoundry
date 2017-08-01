@@ -22,14 +22,14 @@ namespace Cofoundry.Domain
             _customEntityDefinitions = customEntityDefinitions;
         }
 
-        public ICustomEntityVersionDataModel Map(string customEntityDefinitionCode, string serializedData)
+        public ICustomEntityDataModel Map(string customEntityDefinitionCode, string serializedData)
         {
             var definition = _customEntityDefinitions.SingleOrDefault(d => d.CustomEntityDefinitionCode == customEntityDefinitionCode);
             EntityNotFoundException.ThrowIfNull(definition, customEntityDefinitionCode);
 
             var dataModelType = definition.GetDataModelType();
 
-            return (ICustomEntityVersionDataModel)_dbUnstructuredDataSerializer.Deserialize(serializedData, dataModelType);
+            return (ICustomEntityDataModel)_dbUnstructuredDataSerializer.Deserialize(serializedData, dataModelType);
         }
     }
 }

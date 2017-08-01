@@ -16,7 +16,7 @@ namespace Cofoundry.Web.Admin
     {
         public override bool CanConvert(Type objectType)
         {
-            return typeof(ICustomEntityVersionDataModel).IsAssignableFrom(objectType);
+            return typeof(ICustomEntityDataModel).IsAssignableFrom(objectType);
         }
 
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)

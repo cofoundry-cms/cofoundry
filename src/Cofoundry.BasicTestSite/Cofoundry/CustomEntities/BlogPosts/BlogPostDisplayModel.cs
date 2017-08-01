@@ -7,12 +7,12 @@ using System.Linq;
 namespace Cofoundry.BasicTestSite
 {
     /// <summary>
-    /// An ICustomEntityDetailsDisplayViewModel implementation is required if
+    /// An ICustomEntityPageDisplayModel implementation is required if
     /// you want to use a page template to dynamically render a details view
     /// of a custom entity. This provides us with a strongly typed model to use
     /// in the template.
     /// </summary>
-    public class BlogPostDetailsDisplayModel : ICustomEntityDetailsDisplayViewModel<BlogPostDataModel>
+    public class BlogPostDisplayModel : ICustomEntityPageDisplayModel<BlogPostDataModel>
     {
         public string PageTitle { get; set; }
 

@@ -5,8 +5,14 @@ using System.Linq;
 
 namespace Cofoundry.Web
 {
-    public class CustomEntityDetailsPageViewModel<TModel> : ICustomEntityDetailsPageViewModel<TModel>
-        where TModel : ICustomEntityDetailsDisplayViewModel
+    /// <summary>
+    /// A page view model class for a custom entity page that includes detailed custom
+    /// entity data. This is the default ICustomEntityPageViewModel implementation, but you
+    /// can override this implementation with your own by implementing a custom IPageViewModelFactory.
+    /// </summary>
+    /// <typeparam name="TDisplayModel">The type of view model used to represent the custom entity data model when formatted for display.</typeparam>
+    public class CustomEntityPageViewModel<TDisplayModel> : ICustomEntityPageViewModel<TDisplayModel>
+        where TDisplayModel : ICustomEntityPageDisplayModel
     {
         public string PageTitle
         {
@@ -36,9 +42,13 @@ namespace Cofoundry.Web
             }
         }
 
+        /// <summary>
+        /// Data about the page this custom entity instance is hosted in. For custom
+        /// entity pages the page entity forms a template for each custom entity
+        /// </summary>
         public PageRenderDetails Page { get; set; }
 
-        public CustomEntityRenderDetailsViewModel<TModel> CustomEntity { get; set; }
+        public CustomEntityRenderDetailsViewModel<TDisplayModel> CustomEntity { get; set; }
 
         public bool IsPageEditMode { get; set; }
 

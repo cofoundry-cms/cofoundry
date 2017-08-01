@@ -35,9 +35,9 @@ namespace Cofoundry.Web
         /// <param name="viewModel">The view model to map data to.</param>
         /// <param name="mappingParameters">The data passed through to map to the view model.</param>
         Task MapCustomEntityViewModelAsync<TDisplayModel>(
-            ICustomEntityDetailsPageViewModel<TDisplayModel> viewModel,
-            CustomEntityDetailsPageViewModelBuilderParameters mappingParameters
-            ) where TDisplayModel : ICustomEntityDetailsDisplayViewModel;
+            ICustomEntityPageViewModel<TDisplayModel> viewModel,
+            CustomEntityPageViewModelBuilderParameters mappingParameters
+            ) where TDisplayModel : ICustomEntityPageDisplayModel;
 
         /// <summary>
         /// Maps data to an empty view model for a 404 page.

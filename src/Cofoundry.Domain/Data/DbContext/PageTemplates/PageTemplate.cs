@@ -64,7 +64,7 @@ namespace Cofoundry.Domain.Data
         /// <summary>
         /// If this template is of type PageType.CustomEntityDetails, this will
         /// be the type of the custom entity model used in the template e.g.
-        /// if the template model is CustomEntityDetailsPageViewModel&lt;BlogPostDetailsDisplayModel&gt;
+        /// if the template model is CustomEntityPageViewModel&lt;BlogPostDetailsDisplayModel&gt;
         /// this property would be BlogPostDetailsDisplayModel.
         /// </summary>
         public string CustomEntityModelType { get; set; }

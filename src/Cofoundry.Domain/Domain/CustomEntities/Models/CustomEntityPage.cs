@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Cofoundry.Domain
 {
-    public class CustomEntityDetailsPage
+    public class CustomEntityPage
     {
         public PageRoute PageRoute { get; set; }
 

@@ -86,7 +86,7 @@ namespace Cofoundry.Domain
 
         private async Task MapPages(CustomEntityVersion dbVersion, CustomEntityDetails entity, IExecutionContext executionContext)
         {
-            var pages = new List<CustomEntityDetailsPage>();
+            var pages = new List<CustomEntityPage>();
             entity.LatestVersion.Pages = pages;
 
             var routingsQuery = new GetPageRoutingInfoByCustomEntityIdQuery(dbVersion.CustomEntityId);
@@ -120,7 +120,7 @@ namespace Cofoundry.Domain
 
             foreach (var routing in routings)
             {
-                var page = new CustomEntityDetailsPage();
+                var page = new CustomEntityPage();
                 pages.Add(page);
                 page.FullPath = routing.CustomEntityRouteRule.MakeUrl(routing.PageRoute, routing.CustomEntityRoute);
                 page.PageRoute = routing.PageRoute;
@@ -194,7 +194,7 @@ namespace Cofoundry.Domain
             var definition = await _queryExecutor.GetByIdAsync<CustomEntityDefinitionSummary>(dbVersion.CustomEntity.CustomEntityDefinitionCode);
             EntityNotFoundException.ThrowIfNull(definition, dbVersion.CustomEntity.CustomEntityDefinitionCode);
 
-            version.Model = (ICustomEntityVersionDataModel)_dbUnstructuredDataSerializer.Deserialize(dbVersion.SerializedData, definition.DataModelType);
+            version.Model = (ICustomEntityDataModel)_dbUnstructuredDataSerializer.Deserialize(dbVersion.SerializedData, definition.DataModelType);
         }
 
         #endregion

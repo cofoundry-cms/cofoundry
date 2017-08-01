@@ -9,7 +9,7 @@ namespace Cofoundry.Web
     /// Fluent builder for defining a page template custom entity section configuration using method chaining
     /// </summary>
     public interface ICustomEntityTemplateSectionTagBuilder<TModel> : IHtmlContent
-        where TModel : ICustomEntityDetailsDisplayViewModel
+        where TModel : ICustomEntityPageDisplayModel
     {
         /// <summary>
         /// Permits the page module associated with the specified data model type

@@ -39,7 +39,7 @@ namespace Cofoundry.Domain
         /// </summary>
         public ActiveLocale Locale { get; set; }
 
-        public ICustomEntityVersionDataModel Model { get; set; }
+        public ICustomEntityDataModel Model { get; set; }
 
         public UpdateAuditData AuditData { get; set; }
     }

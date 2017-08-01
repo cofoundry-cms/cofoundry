@@ -37,9 +37,9 @@ namespace Cofoundry.BasicTestSite
             return viewModel;
         }
 
-        public async Task<ICustomEntityDetailsPageViewModel<TDisplayModel>> BuildCustomEntityModelAsync<TDisplayModel>(
-           CustomEntityDetailsPageViewModelBuilderParameters mappingParameters
-           ) where TDisplayModel : ICustomEntityDetailsDisplayViewModel
+        public async Task<ICustomEntityPageViewModel<TDisplayModel>> BuildCustomEntityPageViewModelAsync<TDisplayModel>(
+           CustomEntityPageViewModelBuilderParameters mappingParameters
+           ) where TDisplayModel : ICustomEntityPageDisplayModel
         {
             // Create the custom view model instance
             var viewModel = new ExampleCustomEntityPageViewModel<TDisplayModel>();
@@ -64,8 +64,8 @@ namespace Cofoundry.BasicTestSite
             return viewModel;
         }
 
-        private Task ExampleCustomMappingAsync<TDisplayModel>(ICustomEntityDetailsPageViewModel<TDisplayModel> model)
-            where TDisplayModel : ICustomEntityDetailsDisplayViewModel
+        private Task ExampleCustomMappingAsync<TDisplayModel>(ICustomEntityPageViewModel<TDisplayModel> model)
+            where TDisplayModel : ICustomEntityPageDisplayModel
         {
             return Task.CompletedTask;
         }

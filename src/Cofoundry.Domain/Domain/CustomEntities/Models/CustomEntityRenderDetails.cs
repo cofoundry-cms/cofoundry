@@ -28,7 +28,7 @@ namespace Cofoundry.Domain
 
         public WorkFlowStatus WorkFlowStatus { get; set; }
 
-        public ICustomEntityVersionDataModel Model { get; set; }
+        public ICustomEntityDataModel Model { get; set; }
 
         public DateTime CreateDate { get; set; }
 

@@ -77,7 +77,7 @@ namespace Cofoundry.Domain
                     entity.FullPath = detailsRouting.CustomEntityRouteRule.MakeUrl(detailsRouting.PageRoute, detailsRouting.CustomEntityRoute);
                 }
 
-                entity.Model = (ICustomEntityVersionDataModel)_dbUnstructuredDataSerializer.Deserialize(dbVersion.SerializedData, definition.DataModelType);
+                entity.Model = (ICustomEntityDataModel)_dbUnstructuredDataSerializer.Deserialize(dbVersion.SerializedData, definition.DataModelType);
 
                 entity.AuditData.UpdateDate = dbVersion.VersionAuditData.CreateDate;
                 entity.AuditData.Updater = dbVersion.VersionAuditData.Creator;

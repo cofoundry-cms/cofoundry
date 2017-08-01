@@ -54,7 +54,7 @@ namespace Cofoundry.Domain
             var command = Mapper.Map<UpdateCustomEntityDraftVersionCommand>(dbResult);
             var definition = await _queryExecutor.GetByIdAsync<CustomEntityDefinitionSummary>(command.CustomEntityDefinitionCode);
             EntityNotFoundException.ThrowIfNull(definition, command.CustomEntityDefinitionCode);
-            command.Model = (ICustomEntityVersionDataModel)_dbUnstructuredDataSerializer.Deserialize(dbResult.SerializedData, definition.DataModelType);
+            command.Model = (ICustomEntityDataModel)_dbUnstructuredDataSerializer.Deserialize(dbResult.SerializedData, definition.DataModelType);
 
             return command;
         }

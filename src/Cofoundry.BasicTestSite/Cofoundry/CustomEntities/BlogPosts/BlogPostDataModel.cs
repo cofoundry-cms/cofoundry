@@ -11,7 +11,7 @@ namespace Cofoundry.BasicTestSite
     /// is stored in an unstructured format (json) so simple data types are 
     /// best. For associations, you just need to store the key of the relation.
     /// </summary>
-    public class BlogPostDataModel : ICustomEntityVersionDataModel
+    public class BlogPostDataModel : ICustomEntityDataModel
     {
         [MaxLength(1000)]
         [Required]

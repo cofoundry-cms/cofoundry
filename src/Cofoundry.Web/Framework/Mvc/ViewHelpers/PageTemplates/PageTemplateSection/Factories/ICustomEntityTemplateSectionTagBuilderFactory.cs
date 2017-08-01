@@ -19,10 +19,10 @@ namespace Cofoundry.Web
     {
         ICustomEntityTemplateSectionTagBuilder<TModel> Create<TModel>(
             ViewContext viewContext,
-            ICustomEntityDetailsPageViewModel<TModel> customEntityViewModel,
+            ICustomEntityPageViewModel<TModel> customEntityViewModel,
             string sectionName
             )
-            where TModel : ICustomEntityDetailsDisplayViewModel
+            where TModel : ICustomEntityPageDisplayModel
             ;
     }
 }

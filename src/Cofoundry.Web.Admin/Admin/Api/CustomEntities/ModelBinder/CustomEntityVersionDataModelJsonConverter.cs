@@ -7,11 +7,11 @@ using System.Reflection;
 
 namespace Cofoundry.Web.Admin
 {
-    public class CustomEntityVersionDataModelJsonConverter<T> : JsonConverter where T : ICustomEntityVersionDataModel
+    public class CustomEntityVersionDataModelJsonConverter<T> : JsonConverter where T : ICustomEntityDataModel
     {
         public override bool CanConvert(Type objectType)
         {
-            return typeof(ICustomEntityVersionDataModel).IsAssignableFrom(objectType);
+            return typeof(ICustomEntityDataModel).IsAssignableFrom(objectType);
         }
 
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)

@@ -8,8 +8,8 @@ namespace Cofoundry.Domain
 {
     public class CustomEntityVersionDetails : CustomEntityVersionSummary
     {
-        public ICustomEntityVersionDataModel Model { get; set; }
+        public ICustomEntityDataModel Model { get; set; }
 
-        public IEnumerable<CustomEntityDetailsPage> Pages { get; set; }
+        public IEnumerable<CustomEntityPage> Pages { get; set; }
     }
 }

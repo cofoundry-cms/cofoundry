@@ -33,9 +33,9 @@ namespace Cofoundry.Web
         /// </summary>
         /// <param name="displayModelType">The type information of the display model to apply to the generic view model.</param>
         /// <param name="mappingParameters">The data passed through to map to the view model.</param>
-        Task<ICustomEntityDetailsPageViewModel<TDisplayModel>> BuildCustomEntityModelAsync<TDisplayModel>(
-            CustomEntityDetailsPageViewModelBuilderParameters mappingParameters
-            ) where TDisplayModel : ICustomEntityDetailsDisplayViewModel;
+        Task<ICustomEntityPageViewModel<TDisplayModel>> BuildCustomEntityPageViewModelAsync<TDisplayModel>(
+            CustomEntityPageViewModelBuilderParameters mappingParameters
+            ) where TDisplayModel : ICustomEntityPageDisplayModel;
 
         /// <summary>
         /// Creates and maps data to a view model for a 404 page.

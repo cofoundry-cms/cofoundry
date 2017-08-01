@@ -14,21 +14,21 @@ namespace Cofoundry.BasicTestSite
     /// a little verbose but this allows us to use a strongly typed model in the view
     /// and provides us with a lot of flexibility when mapping from unstructured data
     /// </summary>
-    public class BlogPostDetailsDetailsDisplayModelMapper
-        : ICustomEntityDetailsDisplayModelMapper<BlogPostDataModel, BlogPostDetailsDisplayModel>
+    public class BlogPostDetailsDisplayModelMapper
+        : ICustomEntityDisplayModelMapper<BlogPostDataModel, BlogPostDisplayModel>
     {
         private readonly ICustomEntityRepository _customEntityRepository;
 
-        public BlogPostDetailsDetailsDisplayModelMapper(
+        public BlogPostDetailsDisplayModelMapper(
             ICustomEntityRepository customEntityRepository
             )
         {
             _customEntityRepository = customEntityRepository;
         }
 
-        public async Task<BlogPostDetailsDisplayModel> MapDetailsAsync(CustomEntityRenderDetails renderDetails, BlogPostDataModel dataModel)
+        public async Task<BlogPostDisplayModel> MapDisplayModelAsync(CustomEntityRenderDetails renderDetails, BlogPostDataModel dataModel)
         {
-            var vm = new BlogPostDetailsDisplayModel();
+            var vm = new BlogPostDisplayModel();
 
             vm.MetaDescription = dataModel.ShortDescription;
             vm.PageTitle = renderDetails.Title;

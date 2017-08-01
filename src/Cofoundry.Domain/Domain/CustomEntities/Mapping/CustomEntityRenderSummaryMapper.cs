@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Cofoundry.Domain
 {
-    public class CustomEntityMapper : ICustomEntityRenderSummaryMapper
+    public class CustomEntityRenderSummaryMapper : ICustomEntityRenderSummaryMapper
     {
         #region constructor
 
@@ -19,7 +19,7 @@ namespace Cofoundry.Domain
         private readonly IQueryExecutor _queryExecutor;
         private readonly ICustomEntityDefinitionRepository _customEntityDefinitionRepository;
 
-        public CustomEntityMapper(
+        public CustomEntityRenderSummaryMapper(
             CofoundryDbContext dbContext,
             IQueryExecutor queryExecutor,
             CustomEntityDataModelMapper customEntityDataModelMapper,
