@@ -120,7 +120,7 @@ namespace Cofoundry.Domain
             return _queryExecutor.GetByIdRangeAsync<CustomEntitySummary>(ids, executionContext);
         }
 
-        public Task<CustomEntityVersionPageModuleRenderDetails> GetCustomEntityVersionPageModuleRenderDetailsByIdAsync(GetCustomEntityVersionPageModuleRenderDetailsByIdQuery query, IExecutionContext executionContext = null)
+        public Task<CustomEntityVersionPageBlockRenderDetails> GetCustomEntityVersionPageBlockRenderDetailsByIdAsync(GetCustomEntityVersionPageBlockRenderDetailsByIdQuery query, IExecutionContext executionContext = null)
         {
             return _queryExecutor.ExecuteAsync(query, executionContext);
         }
@@ -169,11 +169,11 @@ namespace Cofoundry.Domain
             return command.OutputCustomEntityVersionId;
         }
 
-        public async Task<int> AddCustomEntityVersionPageModuleAsync(AddCustomEntityVersionPageModuleCommand command, IExecutionContext executionContext = null)
+        public async Task<int> AddCustomEntityVersionPageBlockAsync(AddCustomEntityVersionPageBlockCommand command, IExecutionContext executionContext = null)
         {
             await _commandExecutor.ExecuteAsync(command, executionContext);
 
-            return command.OutputCustomEntityVersionId;
+            return command.OutputCustomEntityVersionPageBlockId;
         }
 
         public Task DeleteCustomEntityAsync(int customEntityId, IExecutionContext executionContext = null)
@@ -188,9 +188,9 @@ namespace Cofoundry.Domain
             return _commandExecutor.ExecuteAsync(command, executionContext);
         }
 
-        public Task DeleteCustomEntityVersionPageModuleAsync(int customEntityVersionPageModuleId, IExecutionContext executionContext = null)
+        public Task DeleteCustomEntityVersionPageBlockAsync(int customEntityVersionPageBlockId, IExecutionContext executionContext = null)
         {
-            var command = new DeleteCustomEntityVersionPageModuleCommand() { CustomEntityVersionPageModuleId = customEntityVersionPageModuleId };
+            var command = new DeleteCustomEntityVersionPageBlockCommand() { CustomEntityVersionPageBlockId = customEntityVersionPageBlockId };
             return _commandExecutor.ExecuteAsync(command, executionContext);
         }
 
@@ -200,7 +200,7 @@ namespace Cofoundry.Domain
             return _commandExecutor.ExecuteAsync(command, executionContext);
         }
 
-        public Task MoveCustomEntityVersionPageModuleAsync(MoveCustomEntityVersionPageModuleCommand command, IExecutionContext executionContext = null)
+        public Task MoveCustomEntityVersionPageBlockAsync(MoveCustomEntityVersionPageBlockCommand command, IExecutionContext executionContext = null)
         {
             return _commandExecutor.ExecuteAsync(command, executionContext);
         }
@@ -237,7 +237,7 @@ namespace Cofoundry.Domain
             return _commandExecutor.ExecuteAsync(command, executionContext);
         }
 
-        public Task UpdateCustomEntityVersionPageModuleAsync(UpdateCustomEntityVersionPageModuleCommand command, IExecutionContext executionContext = null)
+        public Task UpdateCustomEntityVersionPageBlockAsync(UpdateCustomEntityVersionPageBlockCommand command, IExecutionContext executionContext = null)
         {
             return _commandExecutor.ExecuteAsync(command, executionContext);
         }

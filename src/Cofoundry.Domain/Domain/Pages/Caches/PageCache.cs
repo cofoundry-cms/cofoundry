@@ -14,8 +14,7 @@ namespace Cofoundry.Domain
     public class PageCache : IPageCache
     {
         #region constructor
-
-        private const string MODULETYPESUMMARY_CACHEKEY = "ModuleTypeSummaries";
+        
         private const string PAGEROUTES_CACHEKEY = "PageRoutes";
         private const string CACHEKEY = "COF_Pages";
 

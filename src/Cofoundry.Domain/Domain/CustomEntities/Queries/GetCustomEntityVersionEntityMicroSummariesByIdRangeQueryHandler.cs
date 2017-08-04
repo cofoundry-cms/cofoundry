@@ -11,8 +11,7 @@ using AutoMapper;
 namespace Cofoundry.Domain
 {
     public class GetCustomEntityVersionEntityMicroSummariesByIdRangeQueryHandler 
-        : IQueryHandler<GetCustomEntityVersionEntityMicroSummariesByIdRangeQuery, IDictionary<int, RootEntityMicroSummary>>
-        , IAsyncQueryHandler<GetCustomEntityVersionEntityMicroSummariesByIdRangeQuery, IDictionary<int, RootEntityMicroSummary>>
+        : IAsyncQueryHandler<GetCustomEntityVersionEntityMicroSummariesByIdRangeQuery, IDictionary<int, RootEntityMicroSummary>>
         , IIgnorePermissionCheckHandler
     {
         #region constructor
@@ -36,14 +35,6 @@ namespace Cofoundry.Domain
         public async Task<IDictionary<int, RootEntityMicroSummary>> ExecuteAsync(GetCustomEntityVersionEntityMicroSummariesByIdRangeQuery query, IExecutionContext executionContext)
         {
             var results = await Query(query).ToDictionaryAsync(e => e.ChildEntityId, e => (RootEntityMicroSummary)e);
-            EnforcePermissions(results, executionContext);
-
-            return results;
-        }
-
-        public IDictionary<int, RootEntityMicroSummary> Execute(GetCustomEntityVersionEntityMicroSummariesByIdRangeQuery query, IExecutionContext executionContext)
-        {
-            var results = Query(query).ToDictionary(e => e.ChildEntityId, e => (RootEntityMicroSummary)e);
             EnforcePermissions(results, executionContext);
 
             return results;

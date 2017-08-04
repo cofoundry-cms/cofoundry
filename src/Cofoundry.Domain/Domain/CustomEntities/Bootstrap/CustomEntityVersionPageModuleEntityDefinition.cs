@@ -7,17 +7,17 @@ using Cofoundry.Domain.CQS;
 
 namespace Cofoundry.Domain
 {
-    public class CustomEntityVersionPageModuleEntityDefinition : IDependableEntityDefinition
+    public class CustomEntityVersionPageBlockEntityDefinition : IDependableEntityDefinition
     {
-        public static string DefinitionCode = "COFCEM";
+        public static string DefinitionCode = "COFCEB";
 
         public string EntityDefinitionCode { get { return DefinitionCode; } }
 
-        public string Name { get { return "Custom Entity Version Page Module"; } }
+        public string Name { get { return "Custom Entity Version Page Block"; } }
 
         public IQuery<IDictionary<int, RootEntityMicroSummary>> CreateGetEntityMicroSummariesByIdRangeQuery(IEnumerable<int> ids)
         {
-            return new GetCustomEntityVersionPageModuleEntityMicroSummariesByIdRangeQuery(ids);
+            return new GetCustomEntityVersionPageBlockEntityMicroSummariesByIdRangeQuery(ids);
         }
     }
 }

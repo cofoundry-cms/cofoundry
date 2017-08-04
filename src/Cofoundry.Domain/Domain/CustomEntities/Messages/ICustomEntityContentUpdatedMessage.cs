@@ -8,7 +8,7 @@ namespace Cofoundry.Domain
 {
     /// <summary>
     /// Indicates that the content of a custom entity has changed, e.g. any content elements like
-    /// modules or data model properties that for example might require a change to a search index.
+    /// page blocks or data model properties that for example might require a change to a search index.
     /// </summary>
     public interface ICustomEntityContentUpdatedMessage
     {

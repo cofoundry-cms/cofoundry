@@ -18,8 +18,8 @@ namespace Cofoundry.Domain
     {
         #region constructor
 
-        const string PLACEHOLDER_FUNC = "Cofoundry.Template.Section";
-        const string CUSTOM_ENTITY_PLACEHOLDER_FUNC = "Cofoundry.Template.CustomEntitySection";
+        const string REGION_FUNC = "Cofoundry.Template.Region";
+        const string CUSTOM_ENTITY_REGION_FUNC = "Cofoundry.Template.CustomEntityRegion";
         const string TEMPLATE_DESCRIPTION_FUNC = "Cofoundry.Template.UseDescription";
 
         const string PARTIAL_FUNC = "Html.Partial";
@@ -65,12 +65,8 @@ namespace Cofoundry.Domain
 
         /// <summary>
         /// Here we run through each line of the view file and try and work out 
-        /// what the sections are and extract a few other bits of imformation.
+        /// what the regions are and extract a few other bits of imformation.
         /// </summary>
-        /// <remarks>
-        /// Hopefully asp.net 5 will make it easier for us to compile and execute a view file
-        /// which will give us a more robust route for extracting this data.
-        /// </remarks>
         private async Task<PageTemplateFileInfo> ParseViewFile(string viewFile, bool isRootFile, IExecutionContext executionContext)
         {
             viewFile = PrepareViewFileForParsing(viewFile);
@@ -78,7 +74,7 @@ namespace Cofoundry.Domain
             var pageTemplateFileInfo = new PageTemplateFileInfo();
             pageTemplateFileInfo.PageType = PageType.Generic;
 
-            var sections = new List<PageTemplateFileSection>();
+            var regions = new List<PageTemplateFileRegion>();
 
             using (var sr = new StringReader(viewFile))
             {
@@ -97,23 +93,23 @@ namespace Cofoundry.Domain
                         }
                     }
 
-                    if (line.Contains(PLACEHOLDER_FUNC))
+                    if (line.Contains(REGION_FUNC))
                     {
-                        var sectionName = ParseFunctionParameter(line, PLACEHOLDER_FUNC);
-                        sections.Add(new PageTemplateFileSection() { Name = sectionName });
+                        var regionName = ParseFunctionParameter(line, REGION_FUNC);
+                        regions.Add(new PageTemplateFileRegion() { Name = regionName });
                     }
-                    else if (line.Contains(CUSTOM_ENTITY_PLACEHOLDER_FUNC))
+                    else if (line.Contains(CUSTOM_ENTITY_REGION_FUNC))
                     {
-                        var sectionName = ParseFunctionParameter(line, CUSTOM_ENTITY_PLACEHOLDER_FUNC);
-                        sections.Add(new PageTemplateFileSection() { Name = sectionName, IsCustomEntitySection = true });
+                        var regionName = ParseFunctionParameter(line, CUSTOM_ENTITY_REGION_FUNC);
+                        regions.Add(new PageTemplateFileRegion() { Name = regionName, IsCustomEntityRegion = true });
                     }
                     else if (line.Contains(PARTIAL_FUNC))
                     {
-                        sections.AddRange(await ParsePartialView(line, PARTIAL_FUNC, executionContext));
+                        regions.AddRange(await ParsePartialView(line, PARTIAL_FUNC, executionContext));
                     }
                     else if (line.Contains(RENDER_PARTIAL_FUNC))
                     {
-                        sections.AddRange(await ParsePartialView(line, RENDER_PARTIAL_FUNC, executionContext));
+                        regions.AddRange(await ParsePartialView(line, RENDER_PARTIAL_FUNC, executionContext));
                     }
                     else if (line.Contains(TEMPLATE_DESCRIPTION_FUNC))
                     {
@@ -122,13 +118,13 @@ namespace Cofoundry.Domain
                 }
             }
 
-            pageTemplateFileInfo.Sections = sections.ToArray();
+            pageTemplateFileInfo.Regions = regions.ToArray();
 
             return pageTemplateFileInfo;
         }
 
         /// <summary>
-        /// Removes whitespace when using section definitions in 
+        /// Removes whitespace when using region definitions in 
         /// a fluent manner across multiple code lines.
         /// </summary>
         private string PrepareViewFileForParsing(string viewFile)
@@ -167,17 +163,17 @@ namespace Cofoundry.Domain
             }
         }
 
-        private async Task<IEnumerable<PageTemplateFileSection>> ParsePartialView(string textLine, string partialFuncName, IExecutionContext executionContext)
+        private async Task<IEnumerable<PageTemplateFileRegion>> ParsePartialView(string textLine, string partialFuncName, IExecutionContext executionContext)
         {
             var partialName = ParseFunctionParameter(textLine, partialFuncName);
             var partialPath = _viewLocator.ResolvePageTemplatePartialViewPath(partialName);
 
             Debug.Assert(!string.IsNullOrEmpty(partialPath), "Partial View file not found: " + partialName);
 
-            if (string.IsNullOrEmpty(partialPath)) return Enumerable.Empty<PageTemplateFileSection>();
+            if (string.IsNullOrEmpty(partialPath)) return Enumerable.Empty<PageTemplateFileRegion>();
             var partialFile = await _viewFileReader.ReadViewFileAsync(partialPath);
 
-            return (await ParseViewFile(partialFile, false, executionContext)).Sections;
+            return (await ParseViewFile(partialFile, false, executionContext)).Regions;
         }
         
         private string ParseFunctionParameter(string textLine, string functionName)

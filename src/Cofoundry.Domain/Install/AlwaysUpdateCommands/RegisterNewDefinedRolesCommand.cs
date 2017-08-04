@@ -17,7 +17,7 @@ namespace Cofoundry.Domain.Installation
         {
             get
             {
-                return "Register New Roles Defined in Code";
+                return "Register new roles defined in code";
             }
         }
     }

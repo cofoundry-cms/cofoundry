@@ -1,0 +1,96 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using Cofoundry.Domain.Data;
+using Cofoundry.Domain.CQS;
+using Microsoft.EntityFrameworkCore;
+using Cofoundry.Core.MessageAggregator;
+using Cofoundry.Core.EntityFramework;
+using Cofoundry.Core;
+
+namespace Cofoundry.Domain
+{
+    public class DeleteCustomEntityVersionPageBlockCommandHandler
+        : IAsyncCommandHandler<DeleteCustomEntityVersionPageBlockCommand>
+        , IIgnorePermissionCheckHandler
+    {
+        #region constructor
+
+        private readonly CofoundryDbContext _dbContext;
+        private readonly ICustomEntityCache _customEntityCache;
+        private readonly ICommandExecutor _commandExecutor;
+        private readonly IMessageAggregator _messageAggregator;
+        private readonly IPermissionValidationService _permissionValidationService;
+        private readonly ITransactionScopeFactory _transactionScopeFactory;
+
+        public DeleteCustomEntityVersionPageBlockCommandHandler(
+            CofoundryDbContext dbContext,
+            ICustomEntityCache customEntityCache,
+            ICommandExecutor commandExecutor,
+            IMessageAggregator messageAggregator,
+            ICustomEntityDefinitionRepository customEntityDefinitionRepository,
+            IPermissionValidationService permissionValidationService,
+            ITransactionScopeFactory transactionScopeFactory
+            )
+        {
+            _dbContext = dbContext;
+            _customEntityCache = customEntityCache;
+            _commandExecutor = commandExecutor;
+            _messageAggregator = messageAggregator;
+            _permissionValidationService = permissionValidationService;
+            _transactionScopeFactory = transactionScopeFactory;
+        }
+
+        #endregion
+
+        #region execution
+
+        public async Task ExecuteAsync(DeleteCustomEntityVersionPageBlockCommand command, IExecutionContext executionContext)
+        {
+            var dbResult = await _dbContext
+                .CustomEntityVersionPageBlocks
+                .Where(m => m.CustomEntityVersionPageBlockId == command.CustomEntityVersionPageBlockId)
+                .Select(m => new
+                {
+                    Block = m,
+                    CustomEntityId = m.CustomEntityVersion.CustomEntityId,
+                    CustomEntityDefinitionCode = m.CustomEntityVersion.CustomEntity.CustomEntityDefinitionCode,
+                    WorkFlowStatusId = m.CustomEntityVersion.WorkFlowStatusId
+                })
+                .SingleOrDefaultAsync();
+
+            if (dbResult != null)
+            {
+                await _permissionValidationService.EnforceCustomEntityPermissionAsync<CustomEntityUpdatePermission>(dbResult.CustomEntityDefinitionCode);
+
+                if (dbResult.WorkFlowStatusId != (int)WorkFlowStatus.Draft)
+                {
+                    throw new NotPermittedException("Page blocks cannot be deleted unless the entity is in draft status");
+                }
+
+                var customEntityVersionBlockId = dbResult.Block.CustomEntityVersionPageBlockId;
+
+                using (var scope = _transactionScopeFactory.Create(_dbContext))
+                {
+                    await _commandExecutor.ExecuteAsync(new DeleteUnstructuredDataDependenciesCommand(CustomEntityVersionPageBlockEntityDefinition.DefinitionCode, dbResult.Block.CustomEntityVersionPageBlockId));
+
+                    _dbContext.CustomEntityVersionPageBlocks.Remove(dbResult.Block);
+                    await _dbContext.SaveChangesAsync();
+                    scope.Complete();
+                }
+                _customEntityCache.Clear(dbResult.CustomEntityDefinitionCode, dbResult.CustomEntityId);
+
+                await _messageAggregator.PublishAsync(new CustomEntityVersionBlockDeletedMessage()
+                {
+                    CustomEntityId = dbResult.CustomEntityId,
+                    CustomEntityDefinitionCode = dbResult.CustomEntityDefinitionCode,
+                    CustomEntityVersionId = customEntityVersionBlockId
+                });
+            }
+        }
+
+        #endregion
+    }
+}

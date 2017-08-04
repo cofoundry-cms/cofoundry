@@ -43,10 +43,6 @@ namespace Cofoundry.Domain
             });
         }
 
-        #endregion
-
-        #region private
-
         #region private query classes
 
         private class PageQueryResult
@@ -70,8 +66,8 @@ namespace Cofoundry.Domain
         private class PageTemplateQueryResult
         {
             public int PageTemplateId { get; set; }
-            public bool HasPageModuleSections { get; set; }
-            public bool HasCustomEntityModuleSections { get; set; }
+            public bool HasPageRegions { get; set; }
+            public bool HasCustomEntityRegions { get; set; }
         }
 
         #endregion
@@ -127,8 +123,8 @@ namespace Cofoundry.Domain
                 .Select(t => new PageTemplateQueryResult()
                 {
                     PageTemplateId = t.PageTemplateId,
-                    HasPageModuleSections = t.PageTemplateSections.Any(s => !s.IsCustomEntitySection),
-                    HasCustomEntityModuleSections = t.PageTemplateSections.Any(s => s.IsCustomEntitySection)
+                    HasPageRegions = t.PageTemplateRegions.Any(s => !s.IsCustomEntityRegion),
+                    HasCustomEntityRegions = t.PageTemplateRegions.Any(s => s.IsCustomEntityRegion)
                 });
 
             return dbTemplates;
@@ -242,8 +238,8 @@ namespace Cofoundry.Domain
             if (template != null)
             {
                 versionRouting.PageTemplateId = version.PageTemplateId;
-                versionRouting.HasCustomEntityModuleSections = template.HasCustomEntityModuleSections;
-                versionRouting.HasPageModuleSections = template.HasPageModuleSections;
+                versionRouting.HasCustomEntityRegions = template.HasCustomEntityRegions;
+                versionRouting.HasPageRegions = template.HasPageRegions;
             }
 
             return versionRouting;

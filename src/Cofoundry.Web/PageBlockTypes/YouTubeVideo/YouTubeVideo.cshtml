@@ -1,0 +1,12 @@
+﻿@model YoutubeVideoDataModel
+
+@{
+    Cofoundry.BlockType.UseDescription("Embed a YouTube video");
+}
+
+@if (Model != null)
+{
+    <h2 class="yt-video-title">@Model.Title</h2>
+    <iframe width="640" height="390" src="//www.youtube.com/embed/@Model.VideoId" frameborder="0" class="cofoundry-module cofoundry-youtube-video"></iframe>
+    <p class="yt-video-description">@Cofoundry.Sanitizer.Sanitize(HtmlFormatter.ConvertToBasicHtml(Model.Description, BasicHtmlFormatOption.LinksToNewWindow))</p>
+}

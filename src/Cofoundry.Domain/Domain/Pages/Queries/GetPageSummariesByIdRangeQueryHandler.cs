@@ -50,10 +50,6 @@ namespace Cofoundry.Domain
             return dictionary;
         }
 
-        #endregion
-
-        #region helpers
-
         private IQueryable<PageSummary> CreateQuery(GetPageSummariesByIdRangeQuery query)
         {
             var dbQuery = _dbContext

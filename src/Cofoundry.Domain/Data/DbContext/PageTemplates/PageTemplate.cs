@@ -13,7 +13,7 @@ namespace Cofoundry.Domain.Data
 
         public PageTemplate()
         {
-            PageTemplateSections = new List<PageTemplateSection>();
+            PageTemplateRegions = new List<PageTemplateRegion>();
             PageVersions = new List<PageVersion>();
         }
 
@@ -101,12 +101,12 @@ namespace Cofoundry.Domain.Data
         #region collections
 
         /// <summary>
-        /// Each template can have zero or more sections which are defined in the 
+        /// Each template can have zero or more regions which are defined in the 
         /// template file using the CofoundryTemplate helper, 
-        /// e.g. @Cofoundry.Template.Section("MySectionName"). These sections represent
-        /// areas where page modules can be placed (i.e. insert content).
+        /// e.g. @Cofoundry.Template.Region("MyRegionName"). These regions represent
+        /// areas where page blocks can be placed (i.e. insert content).
         /// </summary>
-        public virtual ICollection<PageTemplateSection> PageTemplateSections { get; set; }
+        public virtual ICollection<PageTemplateRegion> PageTemplateRegions { get; set; }
 
         /// <summary>
         /// Each page template can be attached to a page via a page version. This is so that 

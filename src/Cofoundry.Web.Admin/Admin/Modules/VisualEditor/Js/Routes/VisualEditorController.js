@@ -6,7 +6,7 @@
     'shared.entityVersionModalDialogService',
     'shared.modalDialogService',
     'shared.localStorage',
-    'visualEditor.pageModuleService',
+    'visualEditor.pageBlockService',
     'visualEditor.modulePath',
     'shared.urlLibrary',
     'visualEditor.options',
@@ -18,7 +18,7 @@ function (
     entityVersionModalDialogService,
     modalDialogService,
     localStorageService,
-    pageModuleService,
+    pageBlockService,
     modulePath,
     urlLibrary,
     options
@@ -46,14 +46,14 @@ function (
         vm.publish = publish;
         vm.unpublish = unpublish;
         vm.copyToDraft = copyToDraft;
-        vm.addSectionModule = addSectionModule;
-        vm.addModule = addModule;
-        vm.addModuleAbove = addModule;
-        vm.addModuleBelow = addModule;
-        vm.editModule = editModule;
-        vm.moveModuleUp = moveModule;
-        vm.moveModuleDown = moveModule;
-        vm.deleteModule = deleteModule;
+        vm.addRegionBlock = addRegionBlock;
+        vm.addBlock = addBlock;
+        vm.addBlockAbove = addBlock;
+        vm.addBlockBelow = addBlock;
+        vm.editBlock = editBlock;
+        vm.moveBlockUp = moveBlock;
+        vm.moveBlockDown = moveBlock;
+        vm.deleteBlock = deleteBlock;
     }
 
     /* UI ACTIONS */
@@ -90,18 +90,19 @@ function (
             .catch(setLoadingOff);
     }
 
-    function addSectionModule(args) {
+    function addRegionBlock(args) {
         modalDialogService.show({
-            templateUrl: modulePath + 'Routes/Modals/AddModule.html',
-            controller: 'AddModuleController',
+            templateUrl: modulePath + 'Routes/Modals/AddBlock.html',
+            controller: 'AddBlockController',
             options: {
                 insertMode: args.insertMode,
-                pageTemplateSectionId: args.pageTemplateSectionId,
-                adjacentVersionModuleId: args.versionModuleId,
-                permittedModuleTypes: args.permittedModuleTypes,
+                pageTemplateRegionId: args.pageTemplateRegionId,
+                adjacentVersionBlockId: args.versionBlockId,
+                permittedBlockTypes: args.permittedBlockTypes,
                 onClose: onClose,
-                refreshContent: refreshSection,
+                refreshContent: refreshRegion,
                 isCustomEntity: args.isCustomEntity,
+                regionName: args.regionName
             }
         });
 
@@ -110,20 +111,20 @@ function (
         }
     }
 
-    function addModule(args) {
+    function addBlock(args) {
 
         if (globalLoadState.isLoading) return;
         globalLoadState.on();
 
         modalDialogService.show({
-            templateUrl: modulePath + 'Routes/Modals/AddModule.html',
-            controller: 'AddModuleController',
+            templateUrl: modulePath + 'Routes/Modals/AddBlock.html',
+            controller: 'AddBlockController',
             options: {
-                pageTemplateSectionId: args.pageTemplateSectionId,
-                adjacentVersionModuleId: args.versionModuleId,
-                permittedModuleTypes: args.permittedModuleTypes,
+                pageTemplateRegionId: args.pageTemplateRegionId,
+                adjacentVersionBlockId: args.versionBlockId,
+                permittedBlockTypes: args.permittedBlockTypes,
                 insertMode: args.insertMode,
-                refreshContent: refreshSection,
+                refreshContent: refreshRegion,
                 isCustomEntity: args.isCustomEntity,
                 onClose: onClose
             }
@@ -134,19 +135,19 @@ function (
         }
     }
 
-    function editModule(args) {
+    function editBlock(args) {
 
         if (globalLoadState.isLoading) return;
         globalLoadState.on();
 
         modalDialogService.show({
-            templateUrl: modulePath + 'Routes/Modals/EditModule.html',
-            controller: 'EditModuleController',
+            templateUrl: modulePath + 'Routes/Modals/EditBlock.html',
+            controller: 'EditBlockController',
             options: {
-                versionModuleId: args.versionModuleId,
-                pageModuleTypeId: args.pageModuleTypeId,
+                versionBlockId: args.versionBlockId,
+                pageBlockTypeId: args.pageBlockTypeId,
                 isCustomEntity: args.isCustomEntity,
-                refreshContent: refreshSection,
+                refreshContent: refreshRegion,
                 onClose: onClose
             }
         });
@@ -156,23 +157,23 @@ function (
         }
     }
 
-    function moveModule(args) {
-        var fn = args.isUp ? pageModuleService.moveUp : pageModuleService.moveDown;
+    function moveBlock(args) {
+        var fn = args.isUp ? pageBlockService.moveUp : pageBlockService.moveDown;
 
         if (globalLoadState.isLoading) return;
 
         globalLoadState.on();
 
-        fn(args.isCustomEntity, args.versionModuleId)
-            .then(refreshSection)
+        fn(args.isCustomEntity, args.versionBlockId)
+            .then(refreshRegion)
             .finally(globalLoadState.off);
     }
 
-    function deleteModule(args) {
+    function deleteBlock(args) {
         var isCustomEntity = args.isCustomEntity,
             options = {
-                title: 'Delete Module',
-                message: 'Are you sure you want to delete this module?',
+                title: 'Delete Block',
+                message: 'Are you sure you want to delete this content block?',
                 okButtonTitle: 'Yes, delete it',
                 onOk: onOk,
                 onCancel: onCancel
@@ -184,9 +185,9 @@ function (
         modalDialogService.confirm(options);
 
         function onOk() {
-            return pageModuleService
-                .remove(isCustomEntity, args.versionModuleId)
-                .then(refreshSection)
+            return pageBlockService
+                .remove(isCustomEntity, args.versionBlockId)
+                .then(refreshRegion)
                 .finally(globalLoadState.off);
         }
 
@@ -197,7 +198,7 @@ function (
 
     /* PRIVATE FUNCS */
 
-    function refreshSection() {
+    function refreshRegion() {
         reload();
     }
 

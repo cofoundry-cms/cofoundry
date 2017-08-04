@@ -61,7 +61,7 @@ namespace Cofoundry.Domain
 
         Task<IDictionary<int, CustomEntitySummary>> GetCustomEntitySummariesByIdRangeAsync(IEnumerable<int> ids, IExecutionContext executionContext = null);
 
-        Task<CustomEntityVersionPageModuleRenderDetails> GetCustomEntityVersionPageModuleRenderDetailsByIdAsync(GetCustomEntityVersionPageModuleRenderDetailsByIdQuery query, IExecutionContext executionContext = null);
+        Task<CustomEntityVersionPageBlockRenderDetails> GetCustomEntityVersionPageBlockRenderDetailsByIdAsync(GetCustomEntityVersionPageBlockRenderDetailsByIdQuery query, IExecutionContext executionContext = null);
 
         Task<IEnumerable<CustomEntityVersionSummary>> GetCustomEntityVersionSummariesByCustomEntityIdAsync(int id, IExecutionContext executionContext = null);
 
@@ -84,17 +84,17 @@ namespace Cofoundry.Domain
         /// </summary>
         Task<int> AddCustomEntityDraftVersionAsync(AddCustomEntityDraftVersionCommand command, IExecutionContext executionContext = null);
 
-        Task<int> AddCustomEntityVersionPageModuleAsync(AddCustomEntityVersionPageModuleCommand command, IExecutionContext executionContext = null);
+        Task<int> AddCustomEntityVersionPageBlockAsync(AddCustomEntityVersionPageBlockCommand command, IExecutionContext executionContext = null);
 
         Task DeleteCustomEntityAsync(int customEntityId, IExecutionContext executionContext = null);
 
         Task DeleteCustomEntityDraftVersionAsync(int customEntityId, IExecutionContext executionContext = null);
 
-        Task DeleteCustomEntityVersionPageModuleAsync(int customEntityVersionPageModuleId, IExecutionContext executionContext = null);
+        Task DeleteCustomEntityVersionPageBlockAsync(int customEntityVersionPageBlockId, IExecutionContext executionContext = null);
 
         Task EnsureCustomEntityDefinitionExistsAsync(string customEntityDefinitionCode, IExecutionContext executionContext = null);
 
-        Task MoveCustomEntityVersionPageModuleAsync(MoveCustomEntityVersionPageModuleCommand command, IExecutionContext executionContext = null);
+        Task MoveCustomEntityVersionPageBlockAsync(MoveCustomEntityVersionPageBlockCommand command, IExecutionContext executionContext = null);
 
         Task PublishCustomEntityAsync(int customEntityId, IExecutionContext executionContext = null);
 
@@ -108,7 +108,7 @@ namespace Cofoundry.Domain
 
         Task UpdateCustomEntityUrlAsync(UpdateCustomEntityUrlCommand command, IExecutionContext executionContext = null);
 
-        Task UpdateCustomEntityVersionPageModuleAsync(UpdateCustomEntityVersionPageModuleCommand command, IExecutionContext executionContext = null);
+        Task UpdateCustomEntityVersionPageBlockAsync(UpdateCustomEntityVersionPageBlockCommand command, IExecutionContext executionContext = null);
 
         #endregion
     }

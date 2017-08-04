@@ -1,44 +1,44 @@
-/* #### Use a minimum height for sections so that they can be hovered over when there are no modules in them #### */
-.cofoundry-sv__section, .cofoundry-sv__module-empty {
+/* #### Use a minimum height for region so that they can be hovered over when there are no blocks in them #### */
+.cofoundry-sv__region, .cofoundry-sv__block-empty {
     min-height: 30px;
 }
 /* for Internet Explorer */
 /*\*/
-* html .cofoundry-sv__section {
+* html .cofoundry-sv__region {
     height: 30px;
     opacity: 1;
 }
 
-.cofoundry-editmode__custom-entity .cofoundry__sv-section[data-cms-page-section] {
+.cofoundry-editmode__custom-entity .cofoundry__sv-region[data-cms-page-region] {
     cursor: not-allowed;
     opacity: .5;
 }
 
-.cofoundry-editmode__page .cofoundry__sv-section[data-cms-custom-entity-section] {
+.cofoundry-editmode__page .cofoundry__sv-region[data-cms-custom-entity-region] {
     cursor: not-allowed;
     opacity: .5;
 }
 
-/* Editable Section/Module Hover */
-.cofoundry-sv__hover-module { 
+/* Editable Region/Block Hover */
+.cofoundry-sv__hover-block { 
     box-shadow: 0px 0px 2px $color-primary!important;
 }
-.cofoundry-sv__hover-module.mask { 
+.cofoundry-sv__hover-block.mask { 
     //box-shadow: 0px 0px 1px 1px rgba(0,0,0,.5)!important; 
 }
 
-.cofoundry-sv__hover-section { 
+.cofoundry-sv__hover-region {
     //outline: 1px solid $color-primary-dark!important;
-    box-shadow: 0px 0px 1px $color-primary-dark!important;
+    box-shadow: 0px 0px 1px $color-primary-dark !important;
 }
 
-/* Used when the html for a section is being replaced */
-.cofoundry-sv__section-loading {
+/* Used when the html for a region is being replaced */
+.cofoundry-sv__region-loading {
     opacity: 0.5;
 }
 
 /* #### Hovering #### */
-#cofoundry-sv__module-popover-container {
+#cofoundry-sv__block-popover-container {
     font-family:$fontstack-default;
     font-size:85%;
     position: absolute;
@@ -47,8 +47,8 @@
     -moz-border-radius: 4px;
 }
 
-/* #### Section hovering #### */
-.cofoundry-sv__btn-add-module {
+/* #### Region hovering #### */
+.cofoundry-sv__btn-add-block {
     @include transform(translateY(-50%) translateX(-50%));
     @include border-radius(50%);
     z-index: 999999998;
@@ -90,29 +90,29 @@
         }
     }
 
-    &.cofoundry-sv__btn-add-module--empty {
+    &.cofoundry-sv__btn-add-block--empty {
 
     }
 }
 
-.cofoundry-sv__ui-wrap--section {
-    display:block!important;
+.cofoundry-sv__ui-wrap--region {
+    display: block !important;
     pointer-events: none;
-    position:absolute;
-    border:1px dashed $color-primary;
-    min-height:30px;
-    z-index:999999996;
+    position: absolute;
+    border: 1px dashed $color-primary;
+    min-height: 30px;
+    z-index: 999999996;
 
     .cofoundry-sv__ui-wrap-name {
         z-index: 1;
         transform: translateY(-100%);
         background: $color-primary;
         color: $color-secondary;
-        top:0px;
+        top: 0px;
     }
 }
 
-.cofoundry-sv__ui-wrap--module {
+.cofoundry-sv__ui-wrap--block {
     display:block!important;
     pointer-events: none;
     position:absolute;
@@ -147,12 +147,12 @@
 }
 
 
-/* #### Module hovering #### */
-#cofoundry-sv__module-popover-container {
+/* #### Block hovering #### */
+#cofoundry-sv__block-popover-container {
     z-index:999999998;
     display:none;
 
-    .cofoundry-sv__module-popover--main-actions {
+    .cofoundry-sv__block-popover--main-actions {
         border: 1px solid $color-secondary;
         background:#fff;
         display: block;
@@ -218,7 +218,7 @@
         filter: alpha(opacity=40);
     }
 
-    .cofoundry-sv__module-popover--adv-actions {
+    .cofoundry-sv__block-popover--adv-actions {
         display:none;
 
         ul {
@@ -242,7 +242,7 @@
         }
     }
 
-    .cofoundry-sv__section-name {
+    .cofoundry-sv__region-name {
         background-color:$color-secondary;
         color:#fff;
         display:block;
@@ -258,7 +258,7 @@
             //color:#fff;
         }
 
-        .cofoundry-sv__module-popover--adv-actions {
+        .cofoundry-sv__block-popover--adv-actions {
             display:block;
         }
     }

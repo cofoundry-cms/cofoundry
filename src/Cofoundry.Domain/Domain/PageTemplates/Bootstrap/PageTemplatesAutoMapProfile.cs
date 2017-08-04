@@ -20,8 +20,8 @@ namespace Cofoundry.Domain
                     .PageVersions
                     .GroupBy(p => p.PageId)
                     .Count()))
-                .ForMember(d => d.NumSections, o => o.MapFrom(s => s
-                    .PageTemplateSections
+                .ForMember(d => d.NumRegions, o => o.MapFrom(s => s
+                    .PageTemplateRegions
                     .Count()))
                 ;
 
@@ -31,10 +31,10 @@ namespace Cofoundry.Domain
                     .GroupBy(p => p.PageId)
                     .Count()))
                 .ForMember(d => d.PageType, o => o.MapFrom(s => (PageType)s.PageTypeId))
-                .ForMember(d => d.Sections, o => o.MapFrom(s => s.PageTemplateSections))
+                .ForMember(d => d.Regions, o => o.MapFrom(s => s.PageTemplateRegions))
                 ;
 
-            CreateMap<PageTemplateSection, PageTemplateSectionDetails>();
+            CreateMap<PageTemplateRegion, PageTemplateRegionDetails>();
             
             #endregion
         }

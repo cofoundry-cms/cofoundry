@@ -1,0 +1,112 @@
+﻿<cms-modal-dialog-container cms-modal-size="large">
+
+    <cms-modal-dialog-header>
+        Add Content Block to {{::title}}
+    </cms-modal-dialog-header>
+
+    <cms-form cms-name="step1Form"
+              cms-loading="formLoadState.isLoading"
+              ng-submit="setStep(2)"
+              ng-if="currentStep === 1">
+
+        <cms-page-actions>
+
+            <cms-button-submit cms-text="Next"
+                               ng-disabled="!command.pageBlockTypeId || submitLoadState.isLoading"></cms-button-submit>
+
+            <cms-button cms-text="Cancel" ng-click="close()"></cms-button>
+
+        </cms-page-actions>
+
+        <cms-page-body>
+
+            <cms-form-section cms-title="Select a block type">
+
+                <cms-form-status></cms-form-status>
+
+                <div class="control-group">
+                    <div class="control-group-area">
+                        <cms-table-container>
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Block Type</th>
+                                        <th>Description</th>
+                                        <th>&nbsp;</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="blockType in blockTypes"
+                                        ng-class="(isBlockTypeSelected(blockType)) ? 'selected' : 'selectable'"
+                                        ng-click="selectBlockType(blockType)"
+                                        ng-dblclick="selectBlockTypeAndNext(blockType)">
+                                        <td>{{blockType.name}}</td>
+                                        <td>{{blockType.description}}</td>
+                                        <td cms-table-column-actions>
+                                            <cms-button-icon cms-title="Select"
+                                                             cms-icon="square-o"
+                                                             ng-click="selectBlockType(blockType)"
+                                                             ng-if="!isBlockTypeSelected(blockType)">
+                                            </cms-button-icon>
+                                            <cms-button-icon cms-title="Selected"
+                                                             cms-icon="check-square-o"
+                                                             ng-click="selectBlockType(blockType)"
+                                                             ng-if="isBlockTypeSelected(blockType)">
+                                            </cms-button-icon>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </cms-table-container>
+                    </div>
+
+                </div>
+            </cms-form-section>
+
+        </cms-page-body>
+
+    </cms-form>
+
+    <cms-form cms-name="step2Form"
+              cms-loading="formLoadState.isLoading"
+              ng-submit="save()"
+              ng-if="currentStep === 2">
+
+        <cms-page-actions>
+
+            <cms-button cms-text="Previous" ng-click="setStep(1)"
+                        ng-if="allowStep1"
+                        ng-disabled="formLoadState.isLoading"></cms-button>
+
+            <cms-button-submit cms-text="Save"
+                               cms-loading="submitLoadState.isLoading"
+                               ng-disabled="step2Form.$invalid || formLoadState.isLoading"></cms-button-submit>
+
+            <cms-button cms-text="Cancel" ng-click="close()"></cms-button>
+
+        </cms-page-actions>
+
+        <cms-page-body>
+
+            <cms-form-section cms-title="Settings">
+
+                <cms-form-status></cms-form-status>
+
+                <cms-form-dynamic-field-set cms-data-source="formDataSource">
+
+                </cms-form-dynamic-field-set>
+
+                <cms-form-field-dropdown cms-title="Display Template"
+                                         cms-model="command.pageBlockTypeTemplateId"
+                                         cms-options="templates"
+                                         cms-option-name="name"
+                                         cms-option-value="pageBlockTypeTemplateId"
+                                         cms-default-item-text="Default"
+                                         ng-if="templates.length"></cms-form-field-dropdown>
+            </cms-form-section>
+
+        </cms-page-body>
+
+    </cms-form>
+
+</cms-modal-dialog-container>

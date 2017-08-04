@@ -43,9 +43,9 @@ namespace Cofoundry.Domain
         public PageType PageType { get; set; }
 
         /// <summary>
-        /// The total number of sections defined in this template
+        /// The total number of regions defined in this template
         /// </summary>
-        public int NumSections { get; set; }
+        public int NumRegions { get; set; }
 
         /// <summary>
         /// The number of pages that use this template

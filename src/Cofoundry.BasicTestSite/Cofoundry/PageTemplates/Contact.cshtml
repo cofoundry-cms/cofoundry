@@ -15,8 +15,8 @@
             <p>
                 @(await Cofoundry
                     .Template
-                    .Section("Introduction")
-                    .AllowModuleType<PlainTextDataModel>()
+                    .Region("Introduction")
+                    .AllowBlockType<PlainTextDataModel>()
                     .EmptyContentMinHeight(200)
                     .InvokeAsync())
             </p>

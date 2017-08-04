@@ -1,0 +1,17 @@
+﻿@model ImageDisplayModel
+
+@{
+    Cofoundry.BlockType.UseDescription("Displays a single image asset");
+    Layout = null;
+}
+
+@if (string.IsNullOrEmpty(Model.LinkPath))
+{
+    <img src="@Model.Source" alt="@Model.AltText" />
+}
+else
+{
+    <a href="@Model.LinkPath" target="@Model.LinkTarget">
+        <img src="@Model.Source" alt="@Model.AltText" />
+    </a>
+}

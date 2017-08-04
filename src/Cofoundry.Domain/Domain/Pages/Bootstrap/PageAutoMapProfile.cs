@@ -42,7 +42,7 @@ namespace Cofoundry.Domain
 
             CreateMap<PageVersion, PageRenderDetails>()
                 .ForMember(d => d.Template, o => o.Ignore())
-                .ForMember(d => d.Sections, o => o.MapFrom(s => s.PageTemplate.PageTemplateSections))
+                .ForMember(d => d.Regions, o => o.MapFrom(s => s.PageTemplate.PageTemplateRegions))
                 .ForMember(d => d.WorkFlowStatus, o => o.MapFrom(s => (Cofoundry.Domain.WorkFlowStatus)s.WorkFlowStatusId))
                 ;
             
@@ -83,15 +83,15 @@ namespace Cofoundry.Domain
 
             #endregion
 
-            #region modules
+            #region blocks
 
-            CreateMap<PageVersionModule, UpdatePageVersionModuleCommand>();
+            CreateMap<PageVersionBlock, UpdatePageVersionBlockCommand>();
 
             #endregion
 
             #region templates
 
-            CreateMap<PageTemplateSection, PageSectionRenderDetails>()
+            CreateMap<PageTemplateRegion, PageRegionRenderDetails>()
                 ;
 
             #endregion

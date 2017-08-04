@@ -9,8 +9,8 @@ begin
 	declare @DefinitionCode char(6) = 'COFCEV'
 
 	-- Dependencies
-    delete Cofoundry.CustomEntityVersionPageModule
-	from Cofoundry.CustomEntityVersionPageModule e
+    delete Cofoundry.CustomEntityVersionPageBlock
+	from Cofoundry.CustomEntityVersionPageBlock e
 	inner join deleted d on e.CustomEntityVersionId = d.CustomEntityVersionId
 	
 	-- At some point we could allow cascading of deletions, but for now

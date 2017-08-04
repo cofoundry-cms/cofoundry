@@ -9,7 +9,7 @@ namespace Cofoundry.Domain
     public class CustomEntityDefinitionSummary
     {
         /// <summary>
-        /// Unique 6 letter code representing the module (use uppercase)
+        /// Unique 6 letter code representing the entity (use uppercase)
         /// </summary>
         public string CustomEntityDefinitionCode { get; set; }
 

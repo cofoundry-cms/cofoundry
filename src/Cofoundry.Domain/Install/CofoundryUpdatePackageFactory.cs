@@ -34,7 +34,7 @@ namespace Cofoundry.Domain.Installation
         private IEnumerable<IAlwaysRunUpdateCommand> GetAlwaysUpdateCommand()
         {
             yield return new RegisterNewDefinedRolesCommand();
-            yield return new RegisterPageTemplatesAndModuleTypesCommand();
+            yield return new RegisterPageTemplatesAndPageBlockTypesCommand();
         }
 
         private IEnumerable<IVersionedUpdateCommand> GetAdditionalCommands(ModuleVersion moduleVersion)

@@ -1,0 +1,40 @@
+﻿@model VimeoVideoDataModel
+
+@{
+    Cofoundry.BlockType.UseDescription("Embed a Vimeo video");
+    Layout = null;
+}
+
+<script type="text/javascript">
+    // Keep vimeo iframe embeds at 16:9
+    /*
+    function sizeVideos() {
+        $(".vimeo-video iframe").each(function (i) {
+            $(this).css("height", Math.round(this.clientWidth / (16 / 9)) + "px");
+        });
+    }
+    */
+
+    //
+    /*
+    $(document).ready(function () {
+
+        sizeVideos();
+        $(window).resize(function () {
+            sizeVideos();
+        });
+    });
+    */
+</script>
+
+@if (Model != null)
+{
+    <div class="vimeo-video">
+        <h2>@Model.Video.Title</h2>
+        <iframe src="//player.vimeo.com/video/@Model.Video.Id" frameborder="0" class="cofoundry-module cofoundry-vimeo-video" style="width: 100%;"></iframe>
+        @if (!String.IsNullOrEmpty(Model.Video.Description))
+        { 
+            <p>@Cofoundry.Sanitizer.Sanitize(HtmlFormatter.ConvertToBasicHtml(Model.Video.Description, BasicHtmlFormatOption.LinksToNewWindow))</p>
+        }
+    </div>
+}

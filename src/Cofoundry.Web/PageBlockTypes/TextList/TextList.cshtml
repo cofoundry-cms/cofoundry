@@ -1,0 +1,28 @@
+﻿@model TextListDisplayModel
+
+@{ 
+    Cofoundry.BlockType.UseDescription("A list of text items");
+}
+
+@if (!string.IsNullOrEmpty(Model.Title))
+{
+    <h3>@Model.Title</h3>
+}
+@if (Model.IsNumbered)
+{
+    <ol>
+    @foreach (var Line in Model.TextListItems)
+    {
+        <li>@Line</li>
+    }
+    </ol>
+}
+else
+{
+    <ul>
+    @foreach (var Line in Model.TextListItems)
+    {
+        <li>@Line</li>
+    }
+    </ul>
+}

@@ -13,11 +13,11 @@ namespace Cofoundry.Domain
     public class PageTemplateFileInfo
     {
         /// <summary>
-        /// Information about each of the sections found by parsing the 
-        /// file. Partial files are also scanned as part fo the process 
-        /// so sections can be included in these too.
+        /// Information about each of the regions found by parsing the 
+        /// file. Partial files are also scanned as part of the process 
+        /// so regions can be included in these too.
         /// </summary>
-        public PageTemplateFileSection[] Sections { get; set; }
+        public PageTemplateFileRegion[] Regions { get; set; }
 
         /// <summary>
         /// If the template file is for a custom entity details page the

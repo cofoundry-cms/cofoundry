@@ -1,0 +1,43 @@
+﻿<cms-modal-dialog-container cms-modal-size="large">
+
+    <cms-modal-dialog-header>
+        Edit Content Block
+    </cms-modal-dialog-header>
+
+    <cms-form cms-name="editForm"
+              cms-loading="formLoadState.isLoading"
+              ng-submit="save()">
+
+        <cms-page-actions>
+
+            <cms-button-submit cms-text="Save"
+                               cms-loading="submitLoadState.isLoading"
+                               ng-disabled="editForm.$invalid || formLoadState.isLoading"></cms-button-submit>
+
+            <cms-button cms-text="Cancel" ng-click="close()"></cms-button>
+        </cms-page-actions>
+
+        <cms-page-body>
+
+            <cms-form-section cms-title="Settings">
+
+                <cms-form-status></cms-form-status>
+
+                <cms-form-dynamic-field-set cms-data-source="formDataSource">
+
+                </cms-form-dynamic-field-set>
+
+                <cms-form-field-dropdown cms-title="Display Template"
+                                         cms-model="command.pageBlockTypeTemplateId"
+                                         cms-options="templates"
+                                         cms-option-name="name"
+                                         cms-option-value="pageBlockTypeTemplateId"
+                                         cms-default-item-text="Default"
+                                         ng-if="templates.length"></cms-form-field-dropdown>
+            </cms-form-section>
+
+        </cms-page-body>
+
+    </cms-form>
+
+</cms-modal-dialog-container>

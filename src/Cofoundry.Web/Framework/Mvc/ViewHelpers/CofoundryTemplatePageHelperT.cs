@@ -28,7 +28,7 @@ namespace Cofoundry.Web
 
         /// <summary>
         /// Contains helper functionality relating to the page template
-        /// such as section definitions.
+        /// such as region definitions.
         /// </summary>
         public IPageTemplateHelper<TModel> Template { get; set; }
     }

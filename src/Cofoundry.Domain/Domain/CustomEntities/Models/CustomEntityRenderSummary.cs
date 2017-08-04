@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace Cofoundry.Domain
 {
     /// <summary>
-    /// A version of the renderable entity without module data. Useful
+    /// A version of the renderable entity without page block data. Useful
     /// for internal mapping.
     /// </summary>
     public class CustomEntityRenderSummary : ICustomEntityRoutable
@@ -38,6 +38,6 @@ namespace Cofoundry.Domain
         /// single page on a site to be associated with a custom entitiy 
         /// details, but it's technically possible to have many.
         /// </summary>
-        public IEnumerable<string> DetailsPageUrls { get; set; }
+        public IEnumerable<string> PageUrls { get; set; }
     }
 }

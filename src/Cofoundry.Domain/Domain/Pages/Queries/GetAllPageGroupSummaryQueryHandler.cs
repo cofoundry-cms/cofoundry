@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore;
 namespace Cofoundry.Domain
 {
     public class GetAllPageGroupSummaryQueryHandler 
-        : IQueryHandler<GetAllQuery<PageGroupSummary>, IEnumerable<PageGroupSummary>>
+        : IAsyncQueryHandler<GetAllQuery<PageGroupSummary>, IEnumerable<PageGroupSummary>>
         , IPermissionRestrictedQueryHandler<GetAllQuery<PageGroupSummary>, IEnumerable<PageGroupSummary>>
     {
         private readonly CofoundryDbContext _dbContext;
@@ -23,15 +23,15 @@ namespace Cofoundry.Domain
             _dbContext = dbContext;
         }
 
-        public IEnumerable<PageGroupSummary> Execute(GetAllQuery<PageGroupSummary> query, IExecutionContext executionContext)
+        public async Task<IEnumerable<PageGroupSummary>> ExecuteAsync(GetAllQuery<PageGroupSummary> query, IExecutionContext executionContext)
         {
-            var results = _dbContext
+            var results = await _dbContext
                           .PageGroups
                           .AsNoTracking()
                           .Where(g => !g.IsDeleted)
                           .OrderBy(m => m.GroupName)
                           .ProjectTo<PageGroupSummary>()
-                          .ToList();
+                          .ToListAsync();
 
             return results;
         }

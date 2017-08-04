@@ -6,7 +6,7 @@ using System.Text;
 namespace Cofoundry.Domain
 {
     /// <summary>
-    /// This attribute can be applied to string properties on a module data provider to show that they can be searched for text for use with site search
+    /// This attribute can be applied to string properties on a dynamic data provider to show that they can be searched for text for use with site search
     /// </summary>
     /// <remarks>
     /// Copied from Data project but not really implemented yet, still need to be worked on.

@@ -21,7 +21,7 @@ namespace Cofoundry.Domain
         public bool IsPublished { get; set; }
 
         /// <summary>
-        /// Indicates whether there is a draft version of this module available.
+        /// Indicates whether there is a draft version of this entity available.
         /// </summary>
         public bool HasDraft { get; set; }
 

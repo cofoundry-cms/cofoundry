@@ -61,10 +61,6 @@ namespace Cofoundry.Domain
             return await MapAsync(executionContext, idSets, customEntityRoutes, pageRoutes);
         }
 
-        #endregion
-
-        #region private helpers
-
         private class IdQueryResult
         {
             public int PageId { get; set; }

@@ -1,8 +1,0 @@
-﻿@model HorizontalLineDataModel
-@using Cofoundry.Web
-
-@{
-    Cofoundry.Module.UseDescription("A horizontal line indicating a thematic break in content");
-    Layout = null;
-}
-<div class="hr"@Html.Raw(Model.PercentageWidth.HasValue ? string.Format(" style=\"width: {0}%\"", Model.PercentageWidth) : "")><hr /></div>

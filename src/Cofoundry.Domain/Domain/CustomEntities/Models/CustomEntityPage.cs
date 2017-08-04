@@ -15,6 +15,6 @@ namespace Cofoundry.Domain
         /// </summary>
         public string FullPath { get; set; }
 
-        public IEnumerable<CustomEntityPageSectionDetails> Sections { get; set; }
+        public IEnumerable<CustomEntityPageRegionDetails> Regions { get; set; }
     }
 }

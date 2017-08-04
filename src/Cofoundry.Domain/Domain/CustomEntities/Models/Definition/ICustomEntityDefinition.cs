@@ -13,7 +13,7 @@ namespace Cofoundry.Domain
     public interface ICustomEntityDefinition
     {
         /// <summary>
-        /// Unique 6 letter code representing the module (use uppercase)
+        /// Unique 6 letter code representing the entity (use uppercase)
         /// </summary>
         string CustomEntityDefinitionCode { get; }
 

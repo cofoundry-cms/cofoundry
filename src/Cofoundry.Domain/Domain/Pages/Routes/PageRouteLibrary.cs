@@ -63,13 +63,13 @@ namespace Cofoundry.Domain
         /// </summary>
         public string Page(ICustomEntityRoutable customEntity)
         {
-            if (customEntity == null || EnumerableHelper.IsNullOrEmpty(customEntity.DetailsPageUrls)) return string.Empty;
+            if (customEntity == null || EnumerableHelper.IsNullOrEmpty(customEntity.PageUrls)) return string.Empty;
 
             // Multiple details routes are technically possible, but
             // shouldn't really happen and if they are then it's reasonable
             // to expect someone to construct the routes manually themselves.
             var route = customEntity
-                .DetailsPageUrls
+                .PageUrls
                 .OrderBy(r => r.Length)
                 .FirstOrDefault();
             

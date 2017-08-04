@@ -3,10 +3,10 @@ angular
     .constant('_', window._)
     .constant('visualEditor.modulePath', '/Admin/Modules/VisualEditor/Js/');
 /**
- * Service for managing page modules, which can either be attached to a page or a custom entity. 
+ * Service for managing page block, which can either be attached to a page or a custom entity.
  * Pass in the isCustomEntityRoute to switch between either route endpoint.
  */
-angular.module('cms.visualEditor').factory('visualEditor.pageModuleService', [
+angular.module('cms.visualEditor').factory('visualEditor.pageBlockService', [
     '$http',
     'shared.serviceBase',
     'visualEditor.options',
@@ -16,25 +16,25 @@ function (
     options) {
 
     var service = {},
-        pageModulesServiceBase = serviceBase + 'page-version-section-modules',
-        customEntityModulesServiceBase = serviceBase + 'custom-entity-version-page-modules';
+        pageBlocksServiceBase = serviceBase + 'page-version-region-blocks',
+        customEntityBlocksServiceBase = serviceBase + 'custom-entity-version-page-blocks';
 
     /* QUERIES */
 
-    service.getAllModuleTypes = function () {
-        return $http.get(serviceBase + 'page-module-types/');
+    service.getAllBlockTypes = function () {
+        return $http.get(serviceBase + 'page-block-types/');
     }
 
-    service.getPageVersionModuleById = function (isCustomEntityRoute, pageVersionModuleId) {
-        return $http.get(getIdRoute(isCustomEntityRoute, pageVersionModuleId) + '?datatype=updatecommand');
+    service.getPageVersionBlockById = function (isCustomEntityRoute, pageVersionBlockId) {
+        return $http.get(getIdRoute(isCustomEntityRoute, pageVersionBlockId) + '?datatype=updatecommand');
     }   
 
-    service.getSection = function (pageSectionId) {
-        return $http.get(serviceBase + 'page-templates/0/sections/' + pageSectionId);
+    service.getRegion = function (pageRegionId) {
+        return $http.get(serviceBase + 'page-templates/0/regions/' + pageRegionId);
     }
 
-    service.getModuleTypeSchema = function (pageModuleTypeId) {
-        return $http.get(serviceBase + 'page-module-types/' + pageModuleTypeId);
+    service.getBlockTypeSchema = function (pageBlockTypeId) {
+        return $http.get(serviceBase + 'page-block-types/' + pageBlockTypeId);
     }
 
     /* COMMANDS */
@@ -46,35 +46,35 @@ function (
         return $http.post(getServiceBase(isCustomEntityRoute), command);
     }
 
-    service.update = function (isCustomEntityRoute, pageVersionModuleId, command) {
-        return $http.put(getIdRoute(isCustomEntityRoute, pageVersionModuleId), command);
+    service.update = function (isCustomEntityRoute, pageVersionBlockId, command) {
+        return $http.put(getIdRoute(isCustomEntityRoute, pageVersionBlockId), command);
     }
 
-    service.remove = function (isCustomEntityRoute, pageVersionModuleId) {
-        return $http.delete(getIdRoute(isCustomEntityRoute, pageVersionModuleId));
+    service.remove = function (isCustomEntityRoute, pageVersionBlockId) {
+        return $http.delete(getIdRoute(isCustomEntityRoute, pageVersionBlockId));
     }
 
-    service.moveUp = function (isCustomEntityRoute, pageVersionModuleId) {
-        return $http.put(getIdRoute(isCustomEntityRoute, pageVersionModuleId) + '/move-up');
+    service.moveUp = function (isCustomEntityRoute, pageVersionBlockId) {
+        return $http.put(getIdRoute(isCustomEntityRoute, pageVersionBlockId) + '/move-up');
     }
 
-    service.moveDown = function (isCustomEntityRoute, pageVersionModuleId) {
-        return $http.put(getIdRoute(isCustomEntityRoute, pageVersionModuleId) + '/move-down');
+    service.moveDown = function (isCustomEntityRoute, pageVersionBlockId) {
+        return $http.put(getIdRoute(isCustomEntityRoute, pageVersionBlockId) + '/move-down');
     }
 
     /* HELPERS */
 
-    function getIdRoute(isCustomEntityRoute, pageVersionModuleId) {
-        return getServiceBase(isCustomEntityRoute) + '/' + pageVersionModuleId;
+    function getIdRoute(isCustomEntityRoute, pageVersionBlockId) {
+        return getServiceBase(isCustomEntityRoute) + '/' + pageVersionBlockId;
     }
 
     function getServiceBase(isCustomEntityRoute) {
-        return isCustomEntityRoute ? customEntityModulesServiceBase : pageModulesServiceBase;
+        return isCustomEntityRoute ? customEntityBlocksServiceBase : pageBlocksServiceBase;
     }
 
     return service;
 }]);
-angular.module('cms.visualEditor').directive('cmsPageSection', [
+angular.module('cms.visualEditor').directive('cmsPageRegion', [
     '$window',
     '$timeout',
     '_',
@@ -90,7 +90,7 @@ function (
 
     return {
         restrict: 'E',
-        templateUrl: modulePath + 'UIComponents/PageSection.html',
+        templateUrl: modulePath + 'UIComponents/PageRegion.html',
         controller: ['$scope', Controller],
         link: link,
         replace: true
@@ -99,15 +99,15 @@ function (
     /* CONTROLLER */
     function Controller($scope) {
 
-        this.getSectionParams = function () {
+        this.getRegionParams = function () {
 
             return _.pick($scope, [
                 'siteFrameEl',
                 'refreshContent',
-                'pageTemplateSectionId',
-                'isMultiModule',
+                'pageTemplateRegionId',
+                'isMultiBlock',
                 'isCustomEntity',
-                'permittedModuleTypes'
+                'permittedBlockTypes'
             ]);
         }
     };
@@ -124,30 +124,30 @@ function (
             scope.isOver = false;
 
             scope.setIsOver = setIsOver;
-            scope.addModule = addModule;
+            scope.addBlock = addBlock;
             scope.startScrollY = 0;
             scope.currentScrollY = 0;
 
-            scope.$watch('sectionAnchorElement', onAnchorChanged);
-            scope.$watch('isSectionOver', setIsOver);
+            scope.$watch('regionAnchorElement', onAnchorChanged);
+            scope.$watch('isRegionOver', setIsOver);
             scope.$watch('scrolled', onScroll);
             scope.$watch('resized', onResize);
         }
 
         /* UI Actions */
-        function addModule() {
+        function addBlock() {
 
             scope.isPopupActive = true;
             modalDialogService.show({
-                templateUrl: modulePath + 'Routes/Modals/AddModule.html',
-                controller: 'AddModuleController',
+                templateUrl: modulePath + 'Routes/Modals/AddBlock.html',
+                controller: 'AddBlockController',
                 options: {
-                    anchorElement: scope.sectionAnchorElement,
-                    pageTemplateSectionId: scope.pageTemplateSectionId,
+                    anchorElement: scope.regionAnchorElement,
+                    pageTemplateRegionId: scope.pageTemplateRegionId,
                     onClose: onClose,
-                    refreshContent: refreshSection,
+                    refreshContent: refreshRegion,
                     isCustomEntity: scope.isCustomEntity,
-                    permittedModuleTypes: scope.permittedModuleTypes
+                    permittedBlockTypes: scope.permittedBlockTypes
                 }
             });
 
@@ -163,7 +163,7 @@ function (
                     overTimer = null;
                 }
                 scope.isOver = true;
-                setAnchorOver(scope.sectionAnchorElement, true);
+                setAnchorOver(scope.regionAnchorElement, true);
 
             } else if (!overTimer) {
 
@@ -172,7 +172,7 @@ function (
                 // than necessary to give a small delay on the hover out.
                 overTimer = $timeout(function () {
                     scope.isOver = false;
-                    setAnchorOver(scope.sectionAnchorElement, false);
+                    setAnchorOver(scope.regionAnchorElement, false);
                 }, 300);
             }
         }
@@ -181,21 +181,21 @@ function (
         function onAnchorChanged(newAnchorElement, oldAnchorElement) {
             if (newAnchorElement) {
 
-                scope.pageTemplateSectionId = newAnchorElement.attr('data-cms-page-template-section-id');
-                scope.sectionName = newAnchorElement.attr('data-cms-page-section-name');
-                scope.isMultiModule = newAnchorElement.attr('data-cms-multi-module');
-                scope.permittedModuleTypes = parseModuleTypes(newAnchorElement.attr('data-cms-page-section-permitted-module-types'));
-                scope.isCustomEntity = newAnchorElement[0].hasAttribute('data-cms-custom-entity-section');
+                scope.pageTemplateRegionId = newAnchorElement.attr('data-cms-page-template-region-id');
+                scope.regionName = newAnchorElement.attr('data-cms-page-region-name');
+                scope.isMultiBlock = newAnchorElement.attr('data-cms-multi-block');
+                scope.permittedBlockTypes = parseBlockTypes(newAnchorElement.attr('data-cms-page-region-permitted-block-types'));
+                scope.isCustomEntity = newAnchorElement[0].hasAttribute('data-cms-custom-entity-region');
                 setPosition();
             }
 
             // Remove over css if the overTimer was cancelled
             setAnchorOver(oldAnchorElement, false)
 
-            function parseModuleTypes(moduleTypeValue) {
-                if (!moduleTypeValue) return [];
+            function parseBlockTypes(blockTypeValue) {
+                if (!blockTypeValue) return [];
 
-                return moduleTypeValue.split(',');
+                return blockTypeValue.split(',');
             }
 
             function setPosition() {
@@ -225,7 +225,7 @@ function (
 
         function onResize(e) {
             scope.isOver = false;
-            scope.sectionAnchorElement = '';
+            scope.regionAnchorElement = '';
         }
 
         function onScroll(e) {
@@ -241,23 +241,23 @@ function (
         }
 
         /* Private Helpers */
-        function refreshSection() {
+        function refreshRegion() {
 
             return scope.refreshContent({
-                pageTemplateSectionId: scope.pageTemplateSectionId
+                pageTemplateRegionId: scope.pageTemplateRegionId
             });
         }
 
         function setAnchorOver(anchorEl, isOver) {
-            if (anchorEl) anchorEl.toggleClass('cofoundry-sv__hover-section', isOver);
+            if (anchorEl) anchorEl.toggleClass('cofoundry-sv__hover-region', isOver);
         }
     }
 
 }]);
-angular.module('cms.visualEditor').directive('cmsPageSectionModule', [
+angular.module('cms.visualEditor').directive('cmsPageRegionBlock', [
     '$window',
     '$timeout',
-    'visualEditor.pageModuleService',
+    'visualEditor.pageBlockService',
     'shared.modalDialogService',
     'shared.LoadState',
     'visualEditor.modulePath',
@@ -265,7 +265,7 @@ angular.module('cms.visualEditor').directive('cmsPageSectionModule', [
 function (
     $window,
     $timeout,
-    pageModuleService,
+    pageBlockService,
     modalDialogService,
     LoadState,
     modulePath,
@@ -279,8 +279,8 @@ function (
             refreshContent: '=',
             scrolled: '='
         },
-        templateUrl: modulePath + 'UIComponents/PageSectionModule.html',
-        require: ['^cmsPageSection'],
+        templateUrl: modulePath + 'UIComponents/PageRegionBlock.html',
+        require: ['^cmsPageRegion'],
         link: link
     };
 
@@ -288,7 +288,7 @@ function (
 
     function link(scope, el, attrs, controllers) {
         var overTimer,
-            sectionParams,
+            regionParams,
             globalLoadState = new LoadState();
 
         init();
@@ -298,16 +298,16 @@ function (
         function init() {
             scope.isOver = false;
 
-            updateSectionParams();
+            updateRegionParams();
 
             scope.setIsOver = setIsOver;
-            scope.addModule = addModule.bind(null, 'Last');
-            scope.editModule = editModule;
-            scope.moveModuleUp = moveModule.bind(null, true);
-            scope.moveModuleDown = moveModule.bind(null, false);
-            scope.addModuleAbove = addModule.bind(null, 'BeforeItem');
-            scope.addModuleBelow = addModule.bind(null, 'AfterItem');
-            scope.deleteModule = deleteModule;
+            scope.addBlock = addBlock.bind(null, 'Last');
+            scope.editBlock = editBlock;
+            scope.moveBlockUp = moveBlock.bind(null, true);
+            scope.moveBlockDown = moveBlock.bind(null, false);
+            scope.addBlockAbove = addBlock.bind(null, 'BeforeItem');
+            scope.addBlockBelow = addBlock.bind(null, 'AfterItem');
+            scope.deleteBlock = deleteBlock;
             scope.globalLoadState = globalLoadState;
 
             scope.$watch('anchorElement', onAnchorChanged);
@@ -317,24 +317,24 @@ function (
 
         /* UI Actions */
 
-        function moveModule(isUp) {
-            var fn = isUp ? pageModuleService.moveUp : pageModuleService.moveDown;
+        function moveBlock(isUp) {
+            var fn = isUp ? pageBlockService.moveUp : pageBlockService.moveDown;
 
             if (globalLoadState.isLoading) return;
 
             globalLoadState.on();
 
-            fn(sectionParams.isCustomEntity, scope.versionModuleId)
-                .then(refreshSection)
+            fn(regionParams.isCustomEntity, scope.versionBlockId)
+                .then(refreshRegion)
                 .finally(globalLoadState.off);
         }
 
-        function deleteModule() {
+        function deleteBlock() {
             var anchorEl = scope.anchorElement,
-                isCustomEntity = sectionParams.isCustomEntity,
+                isCustomEntity = regionParams.isCustomEntity,
                 options = {
-                    title: 'Delete Module',
-                    message: 'Are you sure you want to delete this module?',
+                    title: 'Delete Content Block',
+                    message: 'Are you sure you want to delete this content block?',
                     okButtonTitle: 'Yes, delete it',
                     onOk: onOk
             };
@@ -345,14 +345,14 @@ function (
             modalDialogService.confirm(options);
 
             function onOk() {
-                return pageModuleService
-                    .remove(isCustomEntity, scope.versionModuleId)
-                    .then(refreshSection)
+                return pageBlockService
+                    .remove(isCustomEntity, scope.versionBlockId)
+                    .then(refreshRegion)
                     .finally(globalLoadState.off);
             }
         }
 
-        function addModule(insertMode) {
+        function addBlock(insertMode) {
 
             if (globalLoadState.isLoading) return;
             globalLoadState.on();
@@ -360,16 +360,16 @@ function (
             scope.isPopupActive = true;
 
             modalDialogService.show({
-                templateUrl: modulePath + 'Routes/Modals/AddModule.html',
-                controller: 'AddModuleController',
+                templateUrl: modulePath + 'Routes/Modals/AddBlock.html',
+                controller: 'AddBlockController',
                 options: {
                     anchorElement: scope.anchorElement,
-                    pageTemplateSectionId: scope.pageTemplateSectionId,
-                    adjacentVersionModuleId: scope.versionModuleId,
+                    pageTemplateRegionId: scope.pageTemplateRegionId,
+                    adjacentVersionBlockId: scope.versionBlockId,
                     insertMode: insertMode,
-                    refreshContent: refreshSection,
-                    isCustomEntity: sectionParams.isCustomEntity,
-                    permittedModuleTypes: sectionParams.permittedModuleTypes,
+                    refreshContent: refreshRegion,
+                    isCustomEntity: regionParams.isCustomEntity,
+                    permittedBlockTypes: regionParams.permittedBlockTypes,
                     onClose: onClose
                 }
             });
@@ -380,21 +380,21 @@ function (
             }
         }
 
-        function editModule() {
+        function editBlock() {
 
             if (globalLoadState.isLoading) return;
             globalLoadState.on();
             scope.isPopupActive = true;
 
             modalDialogService.show({
-                templateUrl: modulePath + 'Routes/Modals/EditModule.html',
-                controller: 'EditModuleController',
+                templateUrl: modulePath + 'Routes/Modals/EditBlock.html',
+                controller: 'EditBlockController',
                 options: {
                     anchorElement: scope.anchorElement,
-                    versionModuleId: scope.versionModuleId,
-                    pageModuleTypeId: scope.pageModuleTypeId,
-                    isCustomEntity: sectionParams.isCustomEntity,
-                    refreshContent: refreshSection,
+                    versionBlockId: scope.versionBlockId,
+                    pageBlockTypeId: scope.pageBlockTypeId,
+                    isCustomEntity: regionParams.isCustomEntity,
+                    refreshContent: refreshRegion,
                     onClose: onClose
                 }
             });
@@ -407,7 +407,7 @@ function (
 
         function setIsOver(isOver) {
 
-            updateSectionParams();
+            updateRegionParams();
 
             if (isOver) {
                 if (overTimer) {
@@ -435,8 +435,8 @@ function (
 
             if (newAnchorElement) {
 
-                scope.versionModuleId = newAnchorElement.attr('data-cms-version-module-id');
-                scope.pageModuleTypeId = newAnchorElement.attr('data-cms-page-module-type-id');
+                scope.versionBlockId = newAnchorElement.attr('data-cms-version-block-id');
+                scope.pageBlockTypeId = newAnchorElement.attr('data-cms-page-block-type-id');
                 setPosition(newAnchorElement, scope);
             }
 
@@ -444,7 +444,7 @@ function (
             setAnchorOver(oldAnchorElement, false)
 
             function setPosition(anchorElement, scope) {
-                var siteFrameEl = sectionParams.siteFrameEl,
+                var siteFrameEl = regionParams.siteFrameEl,
                     elementOffset = anchorElement.offset(),
                     siteFrameOffset = siteFrameEl.offset(),
                     iframeDoc = siteFrameEl[0].contentDocument.documentElement;
@@ -468,7 +468,7 @@ function (
 
                 // Wait for next digest cycle and check the position of the element
                 $timeout(function () {
-                    var popoverEl = document.getElementById('cofoundry-sv__module-popover'),
+                    var popoverEl = document.getElementById('cofoundry-sv__block-popover'),
                         popoverElHeight, popoverElHeight;
 
                     // If moving quickly the element might have been removed
@@ -477,7 +477,7 @@ function (
                     popoverElHeight = popoverEl.offsetHeight;
                     windowHeight = window.innerHeight;
 
-                    // Move the module hover up a bit if it is off the screen
+                    // Move the block hover up a bit if it is off the screen
                     if (popoverEl.offsetTop + popoverElHeight > windowHeight) {
                         scope.css.top = windowHeight - popoverElHeight + 'px';
                     }
@@ -497,20 +497,20 @@ function (
 
         /* Private Helpers */
 
-        function refreshSection() {
+        function refreshRegion() {
             return scope.refreshContent({
-                pageTemplateSectionId: scope.pageTemplateSectionId
+                pageTemplateRegionId: scope.pageTemplateRegionId
             });
         }
 
         function setAnchorOver(anchorEl, isOver) {
-            if (anchorEl) anchorEl.toggleClass('cofoundry-sv__hover-module', isOver);
+            if (anchorEl) anchorEl.toggleClass('cofoundry-sv__hover-block', isOver);
         }
 
-        function updateSectionParams() {
-            sectionParams = controllers[0].getSectionParams();
-            scope.isMultiModule = sectionParams.isMultiModule;
-            scope.pageTemplateSectionId = sectionParams.pageTemplateSectionId;
+        function updateRegionParams() {
+            regionParams = controllers[0].getRegionParams();
+            scope.isMultiBlock = regionParams.isMultiBlock;
+            scope.pageTemplateRegionId = regionParams.pageTemplateRegionId;
         }
     }
 }]);
@@ -572,7 +572,7 @@ function (
     /* HELPERS */
 
     function initEditableContent(scope, doc, el) {
-        var popover = new PageSectionPopOver(scope, el);
+        var popover = new PageRegionPopOver(scope, el);
         addMouseEvents(doc, popover);
 
         // Add class to iFrame doc. Used for admin UI 
@@ -583,13 +583,13 @@ function (
 
     /**
      * This gets called when initializing the page mouse events, but is also used
-     * to rebind the mouse events when a section element is updated (since jqLite does
+     * to rebind the mouse events when a region element is updated (since jqLite does
      * not support event delegation)
      */
     function addMouseEvents(rootElement, popover) {
         var entityType = options.isCustomEntityRoute ? 'custom-entity' : 'page';
-        addEventsForComponent('section', popover.showSection, popover.hideSection);
-        addEventsForComponent('section-module', popover.showModule, popover.hideModule);
+        addEventsForComponent('region', popover.showRegion, popover.hideRegion);
+        addEventsForComponent('region-block', popover.showBlock, popover.hideBlock);
 
         function addEventsForComponent(componentName, showFn, hideFn) {
             var selectorAttribute = 'data-cms-' + entityType + '-' + componentName,
@@ -612,10 +612,10 @@ function (
         }
     }
 
-    function PageSectionPopOver(scope, siteFrameEl) {
+    function PageRegionPopOver(scope, siteFrameEl) {
         var me = this,
             childScope = scope.$new(),
-            template = $compile('<cms-page-section></cms-page-section>'),
+            template = $compile('<cms-page-region></cms-page-region>'),
             popover;
 
         /* Create element */
@@ -626,26 +626,26 @@ function (
 
         /* Add show/hide functions */
 
-        me.showSection = wrapInApply(function (el) {
-            if (!childScope.isSectionOver || el != childScope.sectionAnchorElement) {
-                childScope.isSectionOver = true;
-                childScope.sectionAnchorElement = el;
+        me.showRegion = wrapInApply(function (el) {
+            if (!childScope.isRegionOver || el != childScope.regionAnchorElement) {
+                childScope.isRegionOver = true;
+                childScope.regionAnchorElement = el;
             }
         });
 
-        me.hideSection = wrapInApply(function () {
-            childScope.isSectionOver = false;
+        me.hideRegion = wrapInApply(function () {
+            childScope.isRegionOver = false;
         });
 
-        me.showModule = wrapInApply(function (el) {
-            if (!childScope.isModuleOver || el != childScope.moduleAnchorElement) {
-                childScope.isModuleOver = true;
-                childScope.moduleAnchorElement = el;
+        me.showBlock = wrapInApply(function (el) {
+            if (!childScope.isBlockOver || el != childScope.blockAnchorElement) {
+                childScope.isBlockOver = true;
+                childScope.blockAnchorElement = el;
             }
         });
 
-        me.hideModule = wrapInApply(function () {
-            childScope.isModuleOver = false;
+        me.hideBlock = wrapInApply(function () {
+            childScope.isBlockOver = false;
         });
 
         function wrapInApply(fn) {
@@ -655,14 +655,14 @@ function (
         }
 
         /**
-         * Invoked when a section or module has been modified, we give the option to re-load various parts of
+         * Invoked when a region or block has been modified, we give the option to re-load various parts of
          * the dom, all of which involve re-loading the entire document from the server.
          */
         function refreshContent(options) {
-            if (options.pageTemplateSectionId) {
-                return reloadElementBySelector('[data-cms-page-template-section-id="' + options.pageTemplateSectionId + '"]');
-            } else if (options.versionModuleId) {
-                return reloadElementBySelector('[data-cms-version-module-id="' + options.versionModuleId + '"]');
+            if (options.pageTemplateRegionId) {
+                return reloadElementBySelector('[data-cms-page-template-region-id="' + options.pageTemplateRegionId + '"]');
+            } else if (options.versionBlockId) {
+                return reloadElementBySelector('[data-cms-version-block-id="' + options.versionBlockId + '"]');
             } else {
                 return reloadPage();
             }
@@ -674,27 +674,27 @@ function (
         }
 
         function reloadElementBySelector(selector) {
-            var oldSectionElement = siteFrameEl[0].contentDocument.querySelector(selector),
-                loadingNode = oldSectionElement.cloneNode(true),
-                hoveredModule = loadingNode.querySelector('.cofoundry-sv__hover-module');
+            var oldRegionElement = siteFrameEl[0].contentDocument.querySelector(selector),
+                loadingNode = oldRegionElement.cloneNode(true),
+                hoveredBlock = loadingNode.querySelector('.cofoundry-sv__hover-block');
 
             // set loading, clone the node to remove event handlers
-            loadingNode.className += ' cofoundry-sv__section-loading';
-            if (hoveredModule) hoveredModule.className = hoveredModule.className.replace('cofoundry-sv__hover-module', '');
-            oldSectionElement.parentNode.replaceChild(loadingNode, oldSectionElement);
+            loadingNode.className += ' cofoundry-sv__region-loading';
+            if (hoveredBlock) hoveredBlock.className = hoveredBlock.className.replace('cofoundry-sv__hover-block', '');
+            oldRegionElement.parentNode.replaceChild(loadingNode, oldRegionElement);
 
             return getPageContent().then(function (content) {
                 var html = loadHtmlStringToElement(content.data);
 
                 // clear all hover states before we remove the element events
-                childScope.isModuleOver = false;
-                childScope.isSectionOver = false;
+                childScope.isBlockOver = false;
+                childScope.isRegionOver = false;
 
-                var newSectionElement = html.querySelector(selector);
-                if (newSectionElement) {
+                var newRegionElement = html.querySelector(selector);
+                if (newRegionElement) {
 
-                    loadingNode.parentNode.replaceChild(newSectionElement, loadingNode);
-                    addMouseEvents(newSectionElement, me);
+                    loadingNode.parentNode.replaceChild(newRegionElement, loadingNode);
+                    addMouseEvents(newRegionElement, me);
                 }
 
                 triggerClientEvent(siteFrameEl, 'pageContentReloaded', {
@@ -733,7 +733,7 @@ angular.module('cms.visualEditor').controller('VisualEditorController', [
     'shared.entityVersionModalDialogService',
     'shared.modalDialogService',
     'shared.localStorage',
-    'visualEditor.pageModuleService',
+    'visualEditor.pageBlockService',
     'visualEditor.modulePath',
     'shared.urlLibrary',
     'visualEditor.options',
@@ -745,7 +745,7 @@ function (
     entityVersionModalDialogService,
     modalDialogService,
     localStorageService,
-    pageModuleService,
+    pageBlockService,
     modulePath,
     urlLibrary,
     options
@@ -773,14 +773,14 @@ function (
         vm.publish = publish;
         vm.unpublish = unpublish;
         vm.copyToDraft = copyToDraft;
-        vm.addSectionModule = addSectionModule;
-        vm.addModule = addModule;
-        vm.addModuleAbove = addModule;
-        vm.addModuleBelow = addModule;
-        vm.editModule = editModule;
-        vm.moveModuleUp = moveModule;
-        vm.moveModuleDown = moveModule;
-        vm.deleteModule = deleteModule;
+        vm.addRegionBlock = addRegionBlock;
+        vm.addBlock = addBlock;
+        vm.addBlockAbove = addBlock;
+        vm.addBlockBelow = addBlock;
+        vm.editBlock = editBlock;
+        vm.moveBlockUp = moveBlock;
+        vm.moveBlockDown = moveBlock;
+        vm.deleteBlock = deleteBlock;
     }
 
     /* UI ACTIONS */
@@ -817,18 +817,19 @@ function (
             .catch(setLoadingOff);
     }
 
-    function addSectionModule(args) {
+    function addRegionBlock(args) {
         modalDialogService.show({
-            templateUrl: modulePath + 'Routes/Modals/AddModule.html',
-            controller: 'AddModuleController',
+            templateUrl: modulePath + 'Routes/Modals/AddBlock.html',
+            controller: 'AddBlockController',
             options: {
                 insertMode: args.insertMode,
-                pageTemplateSectionId: args.pageTemplateSectionId,
-                adjacentVersionModuleId: args.versionModuleId,
-                permittedModuleTypes: args.permittedModuleTypes,
+                pageTemplateRegionId: args.pageTemplateRegionId,
+                adjacentVersionBlockId: args.versionBlockId,
+                permittedBlockTypes: args.permittedBlockTypes,
                 onClose: onClose,
-                refreshContent: refreshSection,
+                refreshContent: refreshRegion,
                 isCustomEntity: args.isCustomEntity,
+                regionName: args.regionName
             }
         });
 
@@ -837,20 +838,20 @@ function (
         }
     }
 
-    function addModule(args) {
+    function addBlock(args) {
 
         if (globalLoadState.isLoading) return;
         globalLoadState.on();
 
         modalDialogService.show({
-            templateUrl: modulePath + 'Routes/Modals/AddModule.html',
-            controller: 'AddModuleController',
+            templateUrl: modulePath + 'Routes/Modals/AddBlock.html',
+            controller: 'AddBlockController',
             options: {
-                pageTemplateSectionId: args.pageTemplateSectionId,
-                adjacentVersionModuleId: args.versionModuleId,
-                permittedModuleTypes: args.permittedModuleTypes,
+                pageTemplateRegionId: args.pageTemplateRegionId,
+                adjacentVersionBlockId: args.versionBlockId,
+                permittedBlockTypes: args.permittedBlockTypes,
                 insertMode: args.insertMode,
-                refreshContent: refreshSection,
+                refreshContent: refreshRegion,
                 isCustomEntity: args.isCustomEntity,
                 onClose: onClose
             }
@@ -861,19 +862,19 @@ function (
         }
     }
 
-    function editModule(args) {
+    function editBlock(args) {
 
         if (globalLoadState.isLoading) return;
         globalLoadState.on();
 
         modalDialogService.show({
-            templateUrl: modulePath + 'Routes/Modals/EditModule.html',
-            controller: 'EditModuleController',
+            templateUrl: modulePath + 'Routes/Modals/EditBlock.html',
+            controller: 'EditBlockController',
             options: {
-                versionModuleId: args.versionModuleId,
-                pageModuleTypeId: args.pageModuleTypeId,
+                versionBlockId: args.versionBlockId,
+                pageBlockTypeId: args.pageBlockTypeId,
                 isCustomEntity: args.isCustomEntity,
-                refreshContent: refreshSection,
+                refreshContent: refreshRegion,
                 onClose: onClose
             }
         });
@@ -883,23 +884,23 @@ function (
         }
     }
 
-    function moveModule(args) {
-        var fn = args.isUp ? pageModuleService.moveUp : pageModuleService.moveDown;
+    function moveBlock(args) {
+        var fn = args.isUp ? pageBlockService.moveUp : pageBlockService.moveDown;
 
         if (globalLoadState.isLoading) return;
 
         globalLoadState.on();
 
-        fn(args.isCustomEntity, args.versionModuleId)
-            .then(refreshSection)
+        fn(args.isCustomEntity, args.versionBlockId)
+            .then(refreshRegion)
             .finally(globalLoadState.off);
     }
 
-    function deleteModule(args) {
+    function deleteBlock(args) {
         var isCustomEntity = args.isCustomEntity,
             options = {
-                title: 'Delete Module',
-                message: 'Are you sure you want to delete this module?',
+                title: 'Delete Block',
+                message: 'Are you sure you want to delete this content block?',
                 okButtonTitle: 'Yes, delete it',
                 onOk: onOk,
                 onCancel: onCancel
@@ -911,9 +912,9 @@ function (
         modalDialogService.confirm(options);
 
         function onOk() {
-            return pageModuleService
-                .remove(isCustomEntity, args.versionModuleId)
-                .then(refreshSection)
+            return pageBlockService
+                .remove(isCustomEntity, args.versionBlockId)
+                .then(refreshRegion)
                 .finally(globalLoadState.off);
         }
 
@@ -924,7 +925,7 @@ function (
 
     /* PRIVATE FUNCS */
 
-    function refreshSection() {
+    function refreshRegion() {
         reload();
     }
 
@@ -955,12 +956,12 @@ function (
         vm.globalLoadState.off();
     }
 }]);
-angular.module('cms.visualEditor').controller('AddModuleController', [
+angular.module('cms.visualEditor').controller('AddBlockController', [
     '$scope',
     '$q',
     '_',
     'shared.LoadState',
-    'visualEditor.pageModuleService',
+    'visualEditor.pageBlockService',
     'visualEditor.options',
     'options',
     'close',
@@ -969,7 +970,7 @@ function (
     $q,
     _,
     LoadState,
-    pageModuleService,
+    pageBlockService,
     visualEditorOptions,
     options,
     close) {
@@ -983,9 +984,9 @@ function (
 
         $scope.command = { 
             dataModel: {},
-            pageTemplateSectionId: options.pageTemplateSectionId,
+            pageTemplateRegionId: options.pageTemplateRegionId,
             pageVersionId: visualEditorOptions.pageVerisonId,
-            adjacentVersionModuleId: options.adjacentVersionModuleId,
+            adjacentVersionBlockId: options.adjacentVersionBlockId,
             insertMode: options.insertMode || 'Last'
         };
 
@@ -994,9 +995,9 @@ function (
 
         $scope.save = save;
         $scope.close = onClose;
-        $scope.selectModuleType = selectModuleType;
-        $scope.selectModuleTypeAndNext = selectModuleTypeAndNext;
-        $scope.isModuleTypeSelected = isModuleTypeSelected;
+        $scope.selectBlockType = selectBlockType;
+        $scope.selectBlockTypeAndNext = selectBlockTypeAndNext;
+        $scope.isBlockTypeSelected = isBlockTypeSelected;
         $scope.setStep = setStep;
 
         initData();
@@ -1007,26 +1008,25 @@ function (
     function initData() {
         setStep(1);
 
-        pageModuleService
-            .getAllModuleTypes()
+        pageBlockService
+            .getAllBlockTypes()
             .then(onLoaded);
 
-        function onLoaded(allModuleTypes) {;
+        function onLoaded(allBlockTypes) {
+            $scope.title = options.regionName;
 
-            $scope.title = options.sectionName;
-
-            if (options.permittedModuleTypes.length) {
-                // Filter the permitted modules list to those specified
-                $scope.moduleTypes = _.filter(allModuleTypes, function (moduleType) {
-                    return _.contains(options.permittedModuleTypes, moduleType.fileName);
+            if (options.permittedBlockTypes.length) {
+                // Filter the permitted blocks list to those specified
+                $scope.blockTypes = _.filter(allBlockTypes, function (blockType) {
+                    return _.contains(options.permittedBlockTypes, blockType.fileName);
                 });
             } else {
-                // Empty means 'all' module types
-                $scope.moduleTypes = allModuleTypes;
+                // Empty means 'all' block types
+                $scope.blockTypes = allBlockTypes;
             }
 
-            if ($scope.moduleTypes.length === 1) {
-                $scope.command.pageModuleTypeId = $scope.moduleTypes[0].pageModuleTypeId;
+            if ($scope.blockTypes.length === 1) {
+                $scope.command.pageBlockTypeId = $scope.blockTypes[0].pageBlockTypeId;
                 setStep(2);
             } else {
                 $scope.allowStep1 = true;
@@ -1040,7 +1040,7 @@ function (
 
         $scope.submitLoadState.on();
 
-        pageModuleService
+        pageBlockService
             .add(options.isCustomEntity, $scope.command)
             .then(options.refreshContent)
             .then(onClose)
@@ -1063,8 +1063,8 @@ function (
     function loadStep2() {
         $scope.formLoadState.on();
 
-        pageModuleService
-            .getModuleTypeSchema($scope.command.pageModuleTypeId)
+        pageBlockService
+            .getBlockTypeSchema($scope.command.pageBlockTypeId)
             .then(onLoaded);
 
         function onLoaded(modelMetaData) {
@@ -1080,28 +1080,28 @@ function (
         }
     }
 
-    function selectModuleType(moduleType) {
-        $scope.command.pageModuleTypeId = moduleType && moduleType.pageModuleTypeId;
+    function selectBlockType(blockType) {
+        $scope.command.pageBlockTypeId = blockType && blockType.pageBlockTypeId;
     }
 
-    function selectModuleTypeAndNext(moduleType) {
-        selectModuleType(moduleType);
+    function selectBlockTypeAndNext(blockType) {
+        selectBlockType(blockType);
         setStep(2);
     }
 
     /* PUBLIC HELPERS */
 
-    function isModuleTypeSelected(moduleType) {
-        return moduleType && moduleType.pageModuleTypeId === $scope.command.pageModuleTypeId;
+    function isBlockTypeSelected(blockType) {
+        return blockType && blockType.pageBlockTypeId === $scope.command.pageBlockTypeId;
     }
 
 }]);
-angular.module('cms.visualEditor').controller('EditModuleController', [
+angular.module('cms.visualEditor').controller('EditBlockController', [
     '$scope',
     '$q',
     '_',
     'shared.LoadState',
-    'visualEditor.pageModuleService',
+    'visualEditor.pageBlockService',
     'visualEditor.options',
     'options',
     'close',
@@ -1110,7 +1110,7 @@ function (
     $q,
     _,
     LoadState,
-    pageModuleService,
+    pageBlockService,
     visualEditorOptions,
     options,
     close) {
@@ -1139,19 +1139,19 @@ function (
 
     function initData() {
         var formDataSource = {},
-            moduleTypeSchemaDeferred, moduleDataDeferred;
+            blockTypeSchemaDeferred, blockDataDeferred;
 
         $scope.formLoadState.on();
 
-        moduleTypeSchemaDeferred = pageModuleService
-            .getModuleTypeSchema(options.pageModuleTypeId)
+        blockTypeSchemaDeferred = pageBlockService
+            .getBlockTypeSchema(options.pageBlockTypeId)
             .then(onMetaDataLoaded);
 
-        moduleDataDeferred = pageModuleService
-            .getPageVersionModuleById(options.isCustomEntity, options.versionModuleId)
+        blockDataDeferred = pageBlockService
+            .getPageVersionBlockById(options.isCustomEntity, options.versionBlockId)
             .then(onModelLoaded);
 
-        var q = $q.all([moduleTypeSchemaDeferred, moduleDataDeferred]).then(onLoadComplete);
+        var q = $q.all([blockTypeSchemaDeferred, blockDataDeferred]).then(onLoadComplete);
 
         function onMetaDataLoaded(modelMetaData) {
             $scope.templates = modelMetaData.templates;
@@ -1174,8 +1174,8 @@ function (
 
         $scope.submitLoadState.on();
 
-        pageModuleService
-            .update(options.isCustomEntity, options.versionModuleId, $scope.command)
+        pageBlockService
+            .update(options.isCustomEntity, options.versionBlockId, $scope.command)
             .then(options.refreshContent)
             .then(onClose)
             .finally($scope.submitLoadState.off);

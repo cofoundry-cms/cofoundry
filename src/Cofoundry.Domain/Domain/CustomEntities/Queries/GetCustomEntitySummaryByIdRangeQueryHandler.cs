@@ -39,7 +39,6 @@ namespace Cofoundry.Domain
 
         #region execution
 
-
         public async Task<IDictionary<int, CustomEntitySummary>> ExecuteAsync(GetByIdRangeQuery<CustomEntitySummary> query, IExecutionContext executionContext)
         {
             var dbResults = await QueryAsync(query.Ids);

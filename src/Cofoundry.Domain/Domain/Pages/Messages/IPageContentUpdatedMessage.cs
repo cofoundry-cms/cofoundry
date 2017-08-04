@@ -8,7 +8,7 @@ namespace Cofoundry.Domain
 {
     /// <summary>
     /// Indicates that the content of a page has changed, e.g. any content elements like
-    /// modules or other page properties
+    /// blocks or other page properties
     /// </summary>
     public interface IPageContentUpdatedMessage
     {

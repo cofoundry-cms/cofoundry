@@ -1,7 +1,0 @@
-﻿@model RawHtmlDisplayModel
-@using Cofoundry.Web
-
-@{
-    Cofoundry.Module.UseDescription("Html text with full html editing");
-}
-@Cofoundry.Sanitizer.Sanitize(Model.RawHtml)

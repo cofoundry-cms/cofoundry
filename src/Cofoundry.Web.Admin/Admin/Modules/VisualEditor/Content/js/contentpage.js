@@ -43,8 +43,8 @@ Cofoundry.visualEditor = (function () {
     var __IFRAME,
         __TOOLBAR,
         __TOOLBAR_BUTTONS,
-        __TOOLBAR_SECTION,
-        __TOOLBAR_MODULE
+        __TOOLBAR_REGION,
+        __TOOLBAR_BLOCK
         ;
 
     var _internal = {
@@ -118,20 +118,20 @@ Cofoundry.visualEditor = (function () {
         },
 
         bindGui: function() {
-            var toolbar_add_module = document.getElementById('cofoundry-sv__btn-add-module'),
-                toolbar_module = document.getElementById('cofoundry-sv__module-popover-container'),
+            var toolbar_add_block = document.getElementById('cofoundry-sv__btn-add-block'),
+                toolbar_block = document.getElementById('cofoundry-sv__block-popover-container'),
                 wrap_ui_container = document.getElementsByTagName('body')[0];
                 wrap_ui_template = document.getElementById('cofoundry-sv__ui-wrap'),
                 current_ui_elements = [],
                 timer = null,
                 scope = {
                     buttons: {},
-                    sectionY: -1
+                    regionY: -1
                 }
             ;
 
             // Internal refs
-            __TOOLBAR_MODULE = toolbar_module;
+            __TOOLBAR_BLOCK = toolbar_block;
 
             // Add class to doc. Used for admin UI 
             document.getElementsByTagName('html')[0]
@@ -155,7 +155,7 @@ Cofoundry.visualEditor = (function () {
                 }
 
                 function onScroll(e) {
-                    onSectionGuiChange(e);
+                    onRegionGuiChange(e);
                 }
             }
 
@@ -166,8 +166,8 @@ Cofoundry.visualEditor = (function () {
 
             function addUI(rootElement, popover) {
                 var entityType = _internal.model.isCustomEntityRoute ? 'custom-entity' : 'page';
-                addForComponent('section', onSectionMouseEnter, onSectionMouseLeave, onSectionMouseMove);
-                addForComponent('section-module', onModuleMouseEnter, onModuleMouseLeave);
+                addForComponent('region', onRegionMouseEnter, onRegionMouseLeave, onRegionMouseMove);
+                addForComponent('region-block', onBlockMouseEnter, onBlockMouseLeave);
 
                 function addForComponent(componentName, onMouseEnterFn, onMouseLeaveFn, onMouseMoveFn) {
                     var selectorAttribute = 'data-cms-' + entityType + '-' + componentName,
@@ -187,18 +187,18 @@ Cofoundry.visualEditor = (function () {
                             el_data = getElementData(el, componentName)
                         ;
 
-                        // If name is null then discard as its an empty placeholder module
+                        // If name is null then discard as its an empty placeholder block
                         if (!el_data.name) {
                             continue;
                         }
 
-                        // Check to see if the section allows for multiple modules
-                        if (!el_data.isModule) {
-                            // Section
-                            multiMode = Boolean(el.getAttribute('data-cms-multi-module'));
+                        // Check to see if the region allows for multiple blocks
+                        if (!el_data.isBlock) {
+                            // Region
+                            multiMode = Boolean(el.getAttribute('data-cms-multi-block'));
                         } else {
-                            // Module
-                            multiMode = Boolean(el.parentNode.getAttribute('data-cms-multi-module'));
+                            // Block
+                            multiMode = Boolean(el.parentNode.getAttribute('data-cms-multi-block'));
                         }
 
                         // Store index so we can create unique element ID
@@ -208,13 +208,13 @@ Cofoundry.visualEditor = (function () {
                         var ui_wrap = createWrapElement(el_data);
                         wrap_ui_container.appendChild(ui_wrap);
 
-                        // Create a plus icon for adding new modules
+                        // Create a plus icon for adding new blocks
                         if (multiMode || (!multiMode && !el_data.hasContent)) {
-                            var ui_wrap_add_module = createAddModuleIcon(el_data);
-                            wrap_ui_container.appendChild(ui_wrap_add_module);
+                            var ui_wrap_add_block = createAddBlockIcon(el_data);
+                            wrap_ui_container.appendChild(ui_wrap_add_block);
                         }
 
-                        // Add event handlers to sections/modules
+                        // Add event handlers to regions/blocks
                         el.addEventListener('mouseenter', onMouseEnterFn);
                         el.addEventListener('mouseleave', onMouseLeaveFn);
                         if (onMouseMoveFn) {
@@ -223,7 +223,7 @@ Cofoundry.visualEditor = (function () {
 
                         current_ui_elements.push({
                             el: el,
-                            ui_elements: [ui_wrap, ui_wrap_add_module],
+                            ui_elements: [ui_wrap, ui_wrap_add_block],
                             remove: removeUIElement,
                             events: {
                                 'mouseenter': onMouseEnterFn,
@@ -237,8 +237,8 @@ Cofoundry.visualEditor = (function () {
 
             function getElementData(el, componentName) {
                 var data = {},
-                    isModule = componentName === "section-module",
-                    rootEl = isModule ? el.parentNode : el;
+                    isBlock = componentName === "region-block",
+                    rootEl = isBlock ? el.parentNode : el;
                     ;
 
                 if (!el.offsetWidth) {
@@ -246,8 +246,8 @@ Cofoundry.visualEditor = (function () {
                 }
 
                 var os = offset(el);
-                data.idName = (data.isModule ? 'module' : 'section') + '_ui_wrap';
-                data.isModule = isModule;
+                data.idName = (data.isBlock ? 'block' : 'region') + '_ui_wrap';
+                data.isBlock = isBlock;
                 data.y = os.top;
                 data.x = os.left;
                 data.width = el.offsetWidth;
@@ -255,13 +255,13 @@ Cofoundry.visualEditor = (function () {
                 data.el = el;
                 data.hasContent = el.innerHTML.length > 0;
                 data.html = el.innerHTML;
-                data.name = el.getAttribute(isModule ? 'data-cms-page-module-title' : 'data-cms-page-section-name');
-                data.sectionName = rootEl.getAttribute('data-cms-page-section-name');
-                data.className = isModule ? 'cofoundry-sv__ui-wrap--module' : 'cofoundry-sv__ui-wrap--section';
+                data.name = el.getAttribute(isBlock ? 'data-cms-page-block-title' : 'data-cms-page-region-name');
+                data.regionName = rootEl.getAttribute('data-cms-page-region-name');
+                data.className = isBlock ? 'cofoundry-sv__ui-wrap--block' : 'cofoundry-sv__ui-wrap--region';
 
                 // Store data from attributes
-                parseModuleAttributes(el, data);
-                parseSectionAttributes(rootEl, data);
+                parseBlockAttributes(el, data);
+                parseRegionAttributes(rootEl, data);
 
                 return data;
             }
@@ -278,19 +278,20 @@ Cofoundry.visualEditor = (function () {
                 return ui_wrap;
             }
 
-            function createAddModuleIcon(data) {
-                var ui_wrap_add_module = toolbar_add_module.cloneNode(true);
-                if (!data.isModule && !data.hasContent) {
-                    ui_wrap_add_module.className += ' cofoundry-sv__btn-add-module--empty';
-                    ui_wrap_add_module.style.top = data.y + (data.height/2) + 'px';
+            function createAddBlockIcon(data) {
+                var ui_wrap_add_block = toolbar_add_block.cloneNode(true);
+                if (!data.isBlock && !data.hasContent) {
+                    ui_wrap_add_block.className += ' cofoundry-sv__btn-add-block--empty';
+                    ui_wrap_add_block.style.top = data.y + (data.height/2) + 'px';
                 } else {
-                    ui_wrap_add_module.style.top = (data.isModule ? (data.y + data.height) : data.y) + 'px';
+                    ui_wrap_add_block.style.top = (data.isBlock ? (data.y + data.height) : data.y) + 'px';
                 }
-                ui_wrap_add_module.style.left = data.x + (data.width / 2) + 'px';
-                ui_wrap_add_module.style.display = 'block';
-                ui_wrap_add_module.title = 'Add module to ' + data.sectionName;
-                ui_wrap_add_module.addEventListener('click', function () { onAddSectionModule(data); });
-                return ui_wrap_add_module;
+                ui_wrap_add_block.style.left = data.x + (data.width / 2) + 'px';
+                ui_wrap_add_block.style.display = 'block';
+                ui_wrap_add_block.title = 'Add content block to ' + data.regionName;
+                ui_wrap_add_block.addEventListener('click', function () { onAddRegionBlock(data); });
+
+                return ui_wrap_add_block;
             }
 
             function removeUI() {
@@ -318,101 +319,102 @@ Cofoundry.visualEditor = (function () {
 
             function addButtonEvents() {
                 // Buttons
-                var moveupModuleButton = __TOOLBAR_MODULE.querySelectorAll('#cofoundry-sv__btn-module-moveup')[0],
-                    movedownModuleButton = __TOOLBAR_MODULE.querySelectorAll('#cofoundry-sv__btn-module-movedown')[0],
-                    editModuleButton = __TOOLBAR_MODULE.querySelectorAll('#cofoundry-sv__btn-module-edit')[0],
-                    addModuleButton = __TOOLBAR_MODULE.querySelectorAll('#cofoundry-sv__btn-module-add')[0],
-                    deleteModuleButton = __TOOLBAR_MODULE.querySelectorAll('#cofoundry-sv__btn-module-delete')[0],
-                    addaboveModuleButton = __TOOLBAR_MODULE.querySelectorAll('#cofoundry-sv__btn-module-addabove')[0],
-                    addbelowModuleButton = __TOOLBAR_MODULE.querySelectorAll('#cofoundry-sv__btn-module-addbelow')[0];
+                var moveupBlockButton = __TOOLBAR_BLOCK.querySelectorAll('#cofoundry-sv__btn-block-moveup')[0],
+                    movedownBlockButton = __TOOLBAR_BLOCK.querySelectorAll('#cofoundry-sv__btn-block-movedown')[0],
+                    editBlockButton = __TOOLBAR_BLOCK.querySelectorAll('#cofoundry-sv__btn-block-edit')[0],
+                    addBlockButton = __TOOLBAR_BLOCK.querySelectorAll('#cofoundry-sv__btn-block-add')[0],
+                    deleteBlockButton = __TOOLBAR_BLOCK.querySelectorAll('#cofoundry-sv__btn-block-delete')[0],
+                    addaboveBlockButton = __TOOLBAR_BLOCK.querySelectorAll('#cofoundry-sv__btn-block-addabove')[0],
+                    addbelowBlockButton = __TOOLBAR_BLOCK.querySelectorAll('#cofoundry-sv__btn-block-addbelow')[0];
 
                 // Bind click events
-                bindEventHandler(moveupModuleButton, 'moveModuleUp', onMoveupModule);
-                bindEventHandler(movedownModuleButton, 'moveModuleDown', onMovedownModule);
-                bindEventHandler(editModuleButton, 'editModule', onEditModule);
-                bindEventHandler(addModuleButton, 'addModule', onAddModule);
-                bindEventHandler(addaboveModuleButton, 'addModuleAbove', onAddaboveModule);
-                bindEventHandler(addbelowModuleButton, 'addModuleBelow', onAddbelowModule);
-                bindEventHandler(deleteModuleButton, 'deleteModule', onDeleteModule);
+                bindEventHandler(moveupBlockButton, 'moveBlockUp', onMoveupBlock);
+                bindEventHandler(movedownBlockButton, 'moveBlockDown', onMovedownBlock);
+                bindEventHandler(editBlockButton, 'editBlock', onEditBlock);
+                bindEventHandler(addBlockButton, 'addBlock', onAddBlock);
+                bindEventHandler(addaboveBlockButton, 'addBlockAbove', onAddaboveBlock);
+                bindEventHandler(addbelowBlockButton, 'addBlockBelow', onAddbelowBlock);
+                bindEventHandler(deleteBlockButton, 'deleteBlock', onDeleteBlock);
             }
 
             // Handlers
-            function onAddSectionModule(data) {
+            function onAddRegionBlock(data) {
                 var insertMode = 'First';
-                if (data.isModule) {
+                if (data.isBlock) {
                     insertMode = 'AfterItem';
                 }
 
-                buttonHandler('addSectionModule', {
+                buttonHandler('addRegionBlock', {
                     insertMode: insertMode,
-                    pageTemplateSectionId: data.pageTemplateSectionId,
-                    permittedModuleTypes: data.permittedModuleTypes,
-                    versionModuleId: data.versionModuleId,
-                    pageModuleTypeId: data.pageModuleTypeId,
-                    isCustomEntity: _internal.model.isCustomEntityRoute
+                    pageTemplateRegionId: data.pageTemplateRegionId,
+                    permittedBlockTypes: data.permittedBlockTypes,
+                    versionBlockId: data.versionBlockId,
+                    pageBlockTypeId: data.pageBlockTypeId,
+                    isCustomEntity: _internal.model.isCustomEntityRoute,
+                    regionName: data.regionName
                 });
             }
 
-            function onMoveupModule() {
-                buttonHandler('moveModuleUp', {
-                    versionModuleId: scope.versionModuleId,
+            function onMoveupBlock() {
+                buttonHandler('moveBlockUp', {
+                    versionBlockId: scope.versionBlockId,
                     isCustomEntity: _internal.model.isCustomEntityRoute,
                     isUp: true
                 });
             }
 
-            function onMovedownModule() {
-                buttonHandler('moveModuleDown', {
-                    versionModuleId: scope.versionModuleId,
+            function onMovedownBlock() {
+                buttonHandler('moveBlockDown', {
+                    versionBlockId: scope.versionBlockId,
                     isCustomEntity: _internal.model.isCustomEntityRoute,
                     isUp: false
                 });
             }
 
-            function onEditModule() {
-                buttonHandler('editModule', {
-                    versionModuleId: scope.versionModuleId,
-                    pageModuleTypeId: scope.pageModuleTypeId,
+            function onEditBlock() {
+                buttonHandler('editBlock', {
+                    versionBlockId: scope.versionBlockId,
+                    pageBlockTypeId: scope.pageBlockTypeId,
                     isCustomEntity: _internal.model.isCustomEntityRoute
                 });
             }
 
-            function onAddModule() {
-                buttonHandler('addModule', {
+            function onAddBlock() {
+                buttonHandler('addBlock', {
                     insertMode: 'Last',
-                    pageTemplateSectionId: scope.pageTemplateSectionId,
-                    permittedModuleTypes: scope.permittedModuleTypes,
-                    versionModuleId: scope.versionModuleId,
-                    pageModuleTypeId: scope.pageModuleTypeId,
+                    pageTemplateRegionId: scope.pageTemplateRegionId,
+                    permittedBlockTypes: scope.permittedBlockTypes,
+                    versionBlockId: scope.versionBlockId,
+                    pageBlockTypeId: scope.pageBlockTypeId,
                     isCustomEntity: _internal.model.isCustomEntityRoute
                 });
             }
 
-            function onAddaboveModule() {
-                buttonHandler('addModuleAbove', {
+            function onAddaboveBlock() {
+                buttonHandler('addBlockAbove', {
                     insertMode: 'BeforeItem',
-                    pageTemplateSectionId: scope.pageTemplateSectionId,
-                    permittedModuleTypes: scope.permittedModuleTypes,
-                    versionModuleId: scope.versionModuleId,
-                    pageModuleTypeId: scope.pageModuleTypeId,
+                    pageTemplateRegionId: scope.pageTemplateRegionId,
+                    permittedBlockTypes: scope.permittedBlockTypes,
+                    versionBlockId: scope.versionBlockId,
+                    pageBlockTypeId: scope.pageBlockTypeId,
                     isCustomEntity: _internal.model.isCustomEntityRoute
                 });
             }
 
-            function onAddbelowModule() {
-                buttonHandler('addModuleBelow', {
+            function onAddbelowBlock() {
+                buttonHandler('addBlockBelow', {
                     insertMode: 'AfterItem',
-                    pageTemplateSectionId: scope.pageTemplateSectionId,
-                    permittedModuleTypes: scope.permittedModuleTypes,
-                    versionModuleId: scope.versionModuleId,
-                    pageModuleTypeId: scope.pageModuleTypeId,
+                    pageTemplateRegionId: scope.pageTemplateRegionId,
+                    permittedBlockTypes: scope.permittedBlockTypes,
+                    versionBlockId: scope.versionBlockId,
+                    pageBlockTypeId: scope.pageBlockTypeId,
                     isCustomEntity: _internal.model.isCustomEntityRoute
                 });
             }
 
-            function onDeleteModule() {
-                buttonHandler('deleteModule', {
-                    versionModuleId: scope.versionModuleId,
+            function onDeleteBlock() {
+                buttonHandler('deleteBlock', {
+                    versionBlockId: scope.versionBlockId,
                     isCustomEntity: _internal.model.isCustomEntityRoute
                 });
             }
@@ -431,67 +433,67 @@ Cofoundry.visualEditor = (function () {
                 __IFRAME.style.display = 'block';
             }
 
-            function onSectionMouseEnter(e) {
-                onSectionGuiChange(e, e.target);
+            function onRegionMouseEnter(e) {
+                onRegionGuiChange(e, e.target);
             }
 
-            function onSectionMouseLeave() {
+            function onRegionMouseLeave() {
                 //onGuiEnd();
             }
 
-            function onSectionMouseMove(e) {
-                onSectionGuiChange(e);
+            function onRegionMouseMove(e) {
+                onRegionGuiChange(e);
             }
 
-            function onModuleMouseEnter(e) {
-                onModuleGuiChange(e.target);
+            function onBlockMouseEnter(e) {
+                onBlockGuiChange(e.target);
             }
 
-            function onModuleMouseLeave() {
+            function onBlockMouseLeave() {
                 //onGuiEnd();
             }
 
-            function parseSectionAttributes(el, store) {
+            function parseRegionAttributes(el, store) {
                 store.currentElement = el;
-                store.pageTemplateSectionId = el.getAttribute('data-cms-page-template-section-id');
-                store.permittedModuleTypes = parseModuleTypes(el.getAttribute('data-cms-page-section-permitted-module-types'));
-                store.sectionName = el.getAttribute('data-cms-page-section-name');
-                store.isMultiModule = el.getAttribute('data-cms-multi-module');
-                store.isCustomEntity = el.hasAttribute('data-cms-custom-entity-section');
+                store.pageTemplateRegionId = el.getAttribute('data-cms-page-template-region-id');
+                store.permittedBlockTypes = parseBlockTypes(el.getAttribute('data-cms-page-region-permitted-block-types'));
+                store.regionName = el.getAttribute('data-cms-page-region-name');
+                store.isMultiBlock = el.getAttribute('data-cms-multi-block');
+                store.isCustomEntity = el.hasAttribute('data-cms-custom-entity-region');
             }
 
-            function parseModuleAttributes(el, store) {
-                store.currentModuleElement = el;
-                store.versionModuleId = el.getAttribute('data-cms-version-module-id');
-                store.pageModuleTypeId = el.getAttribute('data-cms-page-module-type-id');
+            function parseBlockAttributes(el, store) {
+                store.currentBlockElement = el;
+                store.versionBlockId = el.getAttribute('data-cms-version-block-id');
+                store.pageBlockTypeId = el.getAttribute('data-cms-page-block-type-id');
             }
 
-            function parseModuleTypes(moduleTypeValue) {
-                if (!moduleTypeValue) return [];
+            function parseBlockTypes(blockTypeValue) {
+                if (!blockTypeValue) return [];
 
-                return moduleTypeValue.split(',');
+                return blockTypeValue.split(',');
             }
 
-            function onSectionGuiChange(e, el) {
+            function onRegionGuiChange(e, el) {
                 if (el) {
-                    parseSectionAttributes(el, scope);
-                    showHideButton('addSectionModule', scope.isMultiModule);
+                    parseRegionAttributes(el, scope);
+                    showHideButton('addRegionBlock', scope.isMultiBlock);
                 }
             }
 
-            function onModuleGuiChange(el) {
+            function onBlockGuiChange(el) {
                 var css = {};
 
                 if (el) {
-                    parseModuleAttributes(el, scope);
+                    parseBlockAttributes(el, scope);
 
-                    showHideButton('addModule', !scope.versionModuleId);
-                    showHideButton('editModule', scope.versionModuleId);
-                    showHideButton('deleteModule', scope.versionModuleId);
-                    showHideButton('moveModuleUp', scope.isMultiModule);
-                    showHideButton('moveModuleDown', scope.isMultiModule);
-                    showHideButton('addModuleAbove', scope.isMultiModule);
-                    showHideButton('addModuleBelow', scope.isMultiModule);
+                    showHideButton('addBlock', !scope.versionBlockId);
+                    showHideButton('editBlock', scope.versionBlockId);
+                    showHideButton('deleteBlock', scope.versionBlockId);
+                    showHideButton('moveBlockUp', scope.isMultiBlock);
+                    showHideButton('moveBlockDown', scope.isMultiBlock);
+                    showHideButton('addBlockAbove', scope.isMultiBlock);
+                    showHideButton('addBlockBelow', scope.isMultiBlock);
                 }
 
                 setUIPosition();
@@ -509,14 +511,14 @@ Cofoundry.visualEditor = (function () {
                     scope.startScroll = scope.currentScrollY;
                     scope.startY = top;
 
-                    __TOOLBAR_MODULE.style.display = 'block';
-                    __TOOLBAR_MODULE.style.top = css.top;
-                    __TOOLBAR_MODULE.style.left = css.left;
+                    __TOOLBAR_BLOCK.style.display = 'block';
+                    __TOOLBAR_BLOCK.style.top = css.top;
+                    __TOOLBAR_BLOCK.style.left = css.left;
                 }
             }
 
             function onGuiEnd() {
-                __TOOLBAR_MODULE.style.display = 'none';
+                __TOOLBAR_BLOCK.style.display = 'none';
             }
 
             function showHideButton(action, condition) {
@@ -540,7 +542,7 @@ Cofoundry.visualEditor = (function () {
 
             function onResize(e) {
                 scope.isOver = false;
-                scope.sectionAnchorElement = '';
+                scope.regionAnchorElement = '';
             }
 
             function onScroll(e) {

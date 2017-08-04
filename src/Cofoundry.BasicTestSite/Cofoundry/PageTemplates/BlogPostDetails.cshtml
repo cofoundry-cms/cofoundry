@@ -14,10 +14,10 @@
         </div>
     </div>
 
-    @(await Cofoundry.Template.CustomEntitySection("Body")
-        .AllowMultipleModules()
-        .AllowModuleType<ContentSectionDataModel>()
-        .AllowModuleType<ContentSplitSectionDataModel>()
+    @(await Cofoundry.Template.CustomEntityRegion("Body")
+        .AllowMultipleBlocks()
+        .AllowBlockType<ContentSectionDataModel>()
+        .AllowBlockType<ContentSplitSectionDataModel>()
         .EmptyContentMinHeight(500)
         .WrapWithTag("div", new{@class = "col-sm-8"})
         .InvokeAsync())
@@ -35,8 +35,8 @@
                 </ul>
             }
 
-            @(await Cofoundry.Template.Section("Page Templates")
-                .AllowMultipleModules()
+            @(await Cofoundry.Template.Region("Page Templates")
+                .AllowMultipleBlocks()
                 .EmptyContentMinHeight(500)
                 .InvokeAsync())
 

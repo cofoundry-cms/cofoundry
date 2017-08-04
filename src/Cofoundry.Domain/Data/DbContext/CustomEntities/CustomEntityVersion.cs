@@ -7,7 +7,7 @@ namespace Cofoundry.Domain.Data
     {
         public CustomEntityVersion()
         {
-            CustomEntityVersionPageModules = new List<CustomEntityVersionPageModule>();
+            CustomEntityVersionPageBlocks = new List<CustomEntityVersionPageBlock>();
         }
 
         public int CustomEntityVersionId { get; set; }
@@ -22,7 +22,7 @@ namespace Cofoundry.Domain.Data
 
         public virtual CustomEntity CustomEntity { get; set; }
 
-        public virtual ICollection<CustomEntityVersionPageModule> CustomEntityVersionPageModules { get; set; }
+        public virtual ICollection<CustomEntityVersionPageBlock> CustomEntityVersionPageBlocks { get; set; }
 
         #region ICreateAuditable
 

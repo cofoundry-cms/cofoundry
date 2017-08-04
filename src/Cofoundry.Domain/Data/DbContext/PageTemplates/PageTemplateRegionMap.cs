@@ -1,0 +1,28 @@
+using System;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Microsoft.EntityFrameworkCore.Metadata;
+using Cofoundry.Core;
+using Microsoft.EntityFrameworkCore;
+
+namespace Cofoundry.Domain.Data
+{
+    public class PageTemplateRegionMap : IEntityTypeConfiguration<PageTemplateRegion>
+    {
+        public void Create(EntityTypeBuilder<PageTemplateRegion> builder)
+        {
+            builder.ToTable("PageTemplateRegion", DbConstants.CofoundrySchema);
+
+            // Properties
+            builder.Property(s => s.Name)
+                .IsRequired()
+                .HasMaxLength(50);
+
+            // Relationships
+
+            builder.HasOne(s => s.PageTemplate)
+                .WithMany(s => s.PageTemplateRegions)
+                .HasForeignKey(d => d.PageTemplateId)
+                .OnDelete(DeleteBehavior.Restrict);
+        }
+    }
+}

@@ -46,10 +46,6 @@ namespace Cofoundry.Domain
             return !exisits;
         }
 
-        #endregion
-
-        #region private helpers
-
         private IQueryable<CustomEntity> Query(IsCustomEntityPathUniqueQuery query)
         {
             var dbQuery = _dbContext

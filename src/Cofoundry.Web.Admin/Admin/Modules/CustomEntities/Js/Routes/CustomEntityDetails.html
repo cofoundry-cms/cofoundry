@@ -112,34 +112,34 @@
                                      cms-href="{{vm.urlLibrary.customEntityVisualEditor(page, true)}}"></cms-button-link>
                 </cms-form-section-actions>
 
-                <div class="form-section-message" ng-if="!page.sections.length">
+                <div class="form-section-message" ng-if="!page.regions.length">
                     <p>This template has no managed content</p>
                 </div>
 
-                <div ng-if="page.sections.length > 0 && vm.editMode">
+                <div ng-if="page.regions.length > 0 && vm.editMode">
                     <p>Page content is edited in the visual editor.</p>
                 </div>
 
 
                 <cms-form-field-container>
 
-                    <cms-table-container ng-if="page.sections.length > 0">
+                    <cms-table-container ng-if="page.regions.length > 0">
 
                         <table>
-                            <tbody ng-repeat="section in page.sections">
+                            <tbody ng-repeat="region in page.regions">
                                 <tr>
                                     <th colspan="2">
-                                        <cms-table-group-heading>Section: {{section.name}}</cms-table-group-heading>
+                                        <cms-table-group-heading>Region: {{region.name}}</cms-table-group-heading>
                                     </th>
                                 </tr>
 
-                                <tr ng-if="!section.modules.length">
+                                <tr ng-if="!region.blocks.length">
                                     <td colspan="2">No content</td>
                                 </tr>
 
-                                <tr ng-repeat="module in section.modules">
-                                    <td>{{module.moduleType.name}}</td>
-                                    <!--<td>{{module.moduleType.description}}</td>-->
+                                <tr ng-repeat="block in region.blocks">
+                                    <td>{{block.blockType.name}}</td>
+                                    <!--<td>{{block.blockType.description}}</td>-->
                                     <td class="row-type" style="width:30px; text-align:center;">
                                         <!--TODO: Action-->
                                     </td>

@@ -13,8 +13,7 @@ using System.Diagnostics;
 namespace Cofoundry.Domain
 {
     public class GetAllPageTemplateMicroSummariesQueryHandler 
-        : IQueryHandler<GetAllQuery<PageTemplateMicroSummary>, IEnumerable<PageTemplateMicroSummary>>
-        , IAsyncQueryHandler<GetAllQuery<PageTemplateMicroSummary>, IEnumerable<PageTemplateMicroSummary>>
+        : IAsyncQueryHandler<GetAllQuery<PageTemplateMicroSummary>, IEnumerable<PageTemplateMicroSummary>>
         , IPermissionRestrictedQueryHandler<GetAllQuery<PageTemplateMicroSummary>, IEnumerable<PageTemplateMicroSummary>>
     {
         #region constructor
@@ -34,15 +33,7 @@ namespace Cofoundry.Domain
         #endregion
 
         #region execution
-
-        public IEnumerable<PageTemplateMicroSummary> Execute(GetAllQuery<PageTemplateMicroSummary> query, IExecutionContext executionContext)
-        {
-            var dbResults = Query().ToList();
-            var results = Map(dbResults).ToList();
-
-            return results;
-        }
-
+        
         public async Task<IEnumerable<PageTemplateMicroSummary>> ExecuteAsync(GetAllQuery<PageTemplateMicroSummary> query, IExecutionContext executionContext)
         {
             var dbResults = await Query().ToListAsync();

@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace Cofoundry.Web
 {
     /// <summary>
-    /// UI helper for Page Template functionality such as defining sections.
+    /// UI helper for Page Template functionality such as defining region.
     /// </summary>
     /// <typeparam name="TModel">ViewModel type</typeparam>
     public class PageTemplateHelper<TModel> : IPageTemplateHelper<TModel>
@@ -33,14 +33,14 @@ namespace Cofoundry.Web
         public TModel Model { get; private set; }
 
         /// <summary>
-        /// Indictes where to render a template section in the page template. 
+        /// Indictes where to render a region in the page template. 
         /// </summary>
-        /// <param name="sectionName">The name of the page template section. This must be unique in a page template.</param>
-        /// <returns>PageTemplateSectionTagOutput to allow for method chaining.</returns>
-        public IPageTemplateSectionTagBuilder Section(string sectionName)
+        /// <param name="regionName">The name of the page template region. This must be unique in a page template.</param>
+        /// <returns>IPageTemplateRegionTagBuilder to allow for method chaining.</returns>
+        public IPageTemplateRegionTagBuilder Region(string regionName)
         {
-            var factory = ViewContext.HttpContext.RequestServices.GetRequiredService<IPageTemplateSectionTagBuilderFactory>();
-            var output = factory.Create(ViewContext, (IEditablePageViewModel)Model, sectionName);
+            var factory = ViewContext.HttpContext.RequestServices.GetRequiredService<IPageTemplateRegionTagBuilderFactory>();
+            var output = factory.Create(ViewContext, (IEditablePageViewModel)Model, regionName);
 
             return output;
         }

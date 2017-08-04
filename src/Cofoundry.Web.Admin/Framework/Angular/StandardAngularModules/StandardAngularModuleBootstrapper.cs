@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Cofoundry.Web.ModularMvc;
 using Cofoundry.Domain;
 using Cofoundry.Core.ResourceFiles;
 using Microsoft.AspNetCore.Routing;

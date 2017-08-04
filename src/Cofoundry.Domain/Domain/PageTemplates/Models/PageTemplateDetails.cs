@@ -9,7 +9,7 @@ namespace Cofoundry.Domain
     /// <summary>
     /// A Page Template represents a physical view template file and is used
     /// by a Page to render out content. This details view contains extra information
-    /// about the sections.
+    /// about the regions.
     /// </summary>
     public class PageTemplateDetails
     {
@@ -69,12 +69,12 @@ namespace Cofoundry.Domain
         public PageType PageType { get; set; }
 
         /// <summary>
-        /// Each template can have zero or more sections which are defined in the 
+        /// Each template can have zero or more regions which are defined in the 
         /// template file using the CofoundryTemplate helper, 
-        /// e.g. @Cofoundry.Template.Section("MySectionName"). These sections represent
-        /// areas where page modules can be placed (i.e. insert content).
+        /// e.g. @Cofoundry.Template.Region("MyRegionName"). These regions represent
+        /// areas where page blocks can be placed (i.e. insert content).
         /// </summary>
-        public IEnumerable<PageTemplateSectionDetails> Sections { get; set; }
+        public IEnumerable<PageTemplateRegionDetails> Regions { get; set; }
 
         /// <summary>
         /// Indicates if the template has been archived and is no longer available 

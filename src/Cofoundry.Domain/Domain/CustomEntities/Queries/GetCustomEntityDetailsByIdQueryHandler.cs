@@ -20,24 +20,24 @@ namespace Cofoundry.Domain
         private readonly CofoundryDbContext _dbContext;
         private readonly IQueryExecutor _queryExecutor;
         private readonly IDbUnstructuredDataSerializer _dbUnstructuredDataSerializer;
-        private readonly IPageVersionModuleModelMapper _pageVersionModuleModelMapper;
-        private readonly IEntityVersionPageModuleMapper _entityVersionPageModuleMapper;
+        private readonly IPageVersionBlockModelMapper _pageVersionBlockModelMapper;
+        private readonly IEntityVersionPageBlockMapper _entityVersionPageBlockMapper;
         private readonly IPermissionValidationService _permissionValidationService;
 
         public GetCustomEntityDetailsByIdQueryHandler(
             CofoundryDbContext dbContext,
             IQueryExecutor queryExecutor,
             IDbUnstructuredDataSerializer dbUnstructuredDataSerializer,
-            IPageVersionModuleModelMapper pageVersionModuleModelMapper,
-            IEntityVersionPageModuleMapper entityVersionPageModuleMapper,
+            IPageVersionBlockModelMapper pageVersionBlockModelMapper,
+            IEntityVersionPageBlockMapper entityVersionPageBlockMapper,
             IPermissionValidationService permissionValidationService
             )
         {
             _dbContext = dbContext;
             _queryExecutor = queryExecutor;
             _dbUnstructuredDataSerializer = dbUnstructuredDataSerializer;
-            _pageVersionModuleModelMapper = pageVersionModuleModelMapper;
-            _entityVersionPageModuleMapper = entityVersionPageModuleMapper;
+            _pageVersionBlockModelMapper = pageVersionBlockModelMapper;
+            _entityVersionPageBlockMapper = entityVersionPageBlockMapper;
             _permissionValidationService = permissionValidationService;
         }
 
@@ -53,14 +53,11 @@ namespace Cofoundry.Domain
             return await Map(query, customEntityVersion, executionContext);
         }
 
-        #endregion
-
-        #region helpers
-
         private async Task<CustomEntityDetails> Map(
             GetByIdQuery<CustomEntityDetails> query, 
             CustomEntityVersion dbVersion,
-            IExecutionContext executionContext)
+            IExecutionContext executionContext
+            )
         {
             if (dbVersion == null) return null;
 
@@ -103,20 +100,20 @@ namespace Cofoundry.Domain
                     PageId = r.PageRoute.PageId,
                     VersionRoute = r.PageRoute.Versions.GetVersionRouting(WorkFlowStatusQuery.Latest)
                 })
-                .Where(r => r.VersionRoute != null && r.VersionRoute.HasCustomEntityModuleSections)
+                .Where(r => r.VersionRoute != null && r.VersionRoute.HasCustomEntityRegions)
                 .ToDictionary(k => k.PageId, v => v.VersionRoute.PageTemplateId);
 
             var allTemplateIds = pageTemplateIds
                 .Select(r => r.Value)
                 .ToArray();
 
-            var allTemplateSections = await _dbContext
-                .PageTemplateSections
+            var allTemplateRegions = await _dbContext
+                .PageTemplateRegions
                 .AsNoTracking()
-                .Where(s => allTemplateIds.Contains(s.PageTemplateId) && s.IsCustomEntitySection)
+                .Where(s => allTemplateIds.Contains(s.PageTemplateId) && s.IsCustomEntityRegion)
                 .ToListAsync();
 
-            var allModuleTypes = await _queryExecutor.GetAllAsync<PageModuleTypeSummary>(executionContext);
+            var allPageBlockTypes = await _queryExecutor.GetAllAsync<PageBlockTypeSummary>(executionContext);
 
             foreach (var routing in routings)
             {
@@ -125,28 +122,28 @@ namespace Cofoundry.Domain
                 page.FullPath = routing.CustomEntityRouteRule.MakeUrl(routing.PageRoute, routing.CustomEntityRoute);
                 page.PageRoute = routing.PageRoute;
 
-                // Map Sections
+                // Map Regions
 
                 var templateId = pageTemplateIds.GetOrDefault(routing.PageRoute.PageId);
-                page.Sections = allTemplateSections
+                page.Regions = allTemplateRegions
                     .Where(s => s.PageTemplateId == templateId)
                     .OrderBy(s => s.UpdateDate)
-                    .Select(s => new CustomEntityPageSectionDetails()
+                    .Select(s => new CustomEntityPageRegionDetails()
                     {
                         Name = s.Name,
-                        PageTemplateSectionId = s.PageTemplateSectionId
+                        PageTemplateRegionId = s.PageTemplateRegionId
                     })
                     .ToList();
 
-                // Map Modules
+                // Map Blocks
 
-                foreach (var section in page.Sections)
+                foreach (var region in page.Regions)
                 {
-                    section.Modules = dbVersion
-                        .CustomEntityVersionPageModules
-                        .Where(m => m.PageTemplateSectionId == section.PageTemplateSectionId)
+                    region.Blocks = dbVersion
+                        .CustomEntityVersionPageBlocks
+                        .Where(m => m.PageTemplateRegionId == region.PageTemplateRegionId)
                         .OrderBy(m => m.Ordering)
-                        .Select(m => MapModule(m, allModuleTypes))
+                        .Select(m => MapBlock(m, allPageBlockTypes))
                         .ToArray();
                 }
             }
@@ -159,24 +156,24 @@ namespace Cofoundry.Domain
                 .First();
         }
 
-        private CustomEntityVersionPageModuleDetails MapModule(CustomEntityVersionPageModule dbModule, IEnumerable<PageModuleTypeSummary> allModuleTypes)
+        private CustomEntityVersionPageBlockDetails MapBlock(CustomEntityVersionPageBlock dbBlock, IEnumerable<PageBlockTypeSummary> allPageBlockTypes)
         {
-            var moduleType = allModuleTypes.SingleOrDefault(t => t.PageModuleTypeId == dbModule.PageModuleTypeId);
+            var blockType = allPageBlockTypes.SingleOrDefault(t => t.PageBlockTypeId == dbBlock.PageBlockTypeId);
 
-            var module = new CustomEntityVersionPageModuleDetails();
-            module.ModuleType = moduleType;
-            module.DataModel = _pageVersionModuleModelMapper.MapDataModel(moduleType.FileName, dbModule);
-            module.CustomEntityVersionPageModuleId = dbModule.CustomEntityVersionPageModuleId;
-            module.Template = _entityVersionPageModuleMapper.GetCustomTemplate(dbModule, moduleType);
+            var block = new CustomEntityVersionPageBlockDetails();
+            block.BlockType = blockType;
+            block.DataModel = _pageVersionBlockModelMapper.MapDataModel(blockType.FileName, dbBlock);
+            block.CustomEntityVersionPageBlockId = dbBlock.CustomEntityVersionPageBlockId;
+            block.Template = _entityVersionPageBlockMapper.GetCustomTemplate(dbBlock, blockType);
 
-            return module;
+            return block;
         }
 
         private IQueryable<CustomEntityVersion> Query(int id)
         {
             return _dbContext
                 .CustomEntityVersions
-                .Include(v => v.CustomEntityVersionPageModules)
+                .Include(v => v.CustomEntityVersionPageBlocks)
                 .Include(v => v.CustomEntity)
                 .ThenInclude(e => e.Creator)
                 .Include(v => v.CustomEntity)

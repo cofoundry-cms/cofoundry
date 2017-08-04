@@ -1,0 +1,15 @@
+﻿@model SingleLineTextDisplayModel
+
+@{
+    Cofoundry.BlockType.UseDescription("Wraps the text in an H1 heading tag");
+}
+<h1>
+    @if (Model == null)
+    {
+        @:<!-- No text data --->
+    }
+    else
+    {
+        @:@Model.Text
+    }
+</h1>

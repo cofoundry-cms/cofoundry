@@ -101,7 +101,7 @@ namespace Cofoundry.Domain
                     EntityNotFoundException.ThrowIfNull(entity.Locale, dbResult.CustomEntity.LocaleId.Value);
                 }
 
-                entity.DetailsPageUrls = MapPageRoutings(allRoutings.GetOrDefault(dbResult.CustomEntityId), dbResult);
+                entity.PageUrls = MapPageRoutings(allRoutings.GetOrDefault(dbResult.CustomEntityId), dbResult);
                 entity.Model = _customEntityDataModelMapper.Map(dbResult.CustomEntity.CustomEntityDefinitionCode, dbResult.SerializedData);
 
                 results.Add(entity);
@@ -119,7 +119,7 @@ namespace Cofoundry.Domain
             var entity = Mapper.Map<CustomEntityRenderSummary>(dbResult);
             entity.Locale = locale;
             entity.Model = _customEntityDataModelMapper.Map(dbResult.CustomEntity.CustomEntityDefinitionCode, dbResult.SerializedData);
-            entity.DetailsPageUrls = MapPageRoutings(allRoutings, dbResult);
+            entity.PageUrls = MapPageRoutings(allRoutings, dbResult);
 
             return entity;
         }

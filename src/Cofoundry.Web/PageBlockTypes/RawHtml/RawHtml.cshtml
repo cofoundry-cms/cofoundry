@@ -1,0 +1,6 @@
+﻿@model RawHtmlDisplayModel
+
+@{
+    Cofoundry.BlockType.UseDescription("Html text with full html editing");
+}
+@Cofoundry.Sanitizer.Sanitize(Model.RawHtml)

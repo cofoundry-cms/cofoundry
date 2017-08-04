@@ -50,6 +50,11 @@
   font-size: 1.5rem;
 }
 
+/* line 1, ../../../Shared/Sass/Common/_helpers.scss */
+.invisible {
+  opacity: 0;
+}
+
 /* line 1, ../../../Shared/Sass/Common/_link.scss */
 .inline-link {
   color: red;
@@ -59,52 +64,52 @@
 /* See https://gist.github.com/taupecat/4090271 */
 /* Cross browser Opacity */
 /* Non-inheriting cross browser opacity with white bg color */
-/* #### Use a minimum height for sections so that they can be hovered over when there are no modules in them #### */
+/* #### Use a minimum height for region so that they can be hovered over when there are no blocks in them #### */
 /* line 2, ../../Sass/blocks/_page-ui.scss */
-.cofoundry-sv__section, .cofoundry-sv__module-empty {
+.cofoundry-sv__region, .cofoundry-sv__block-empty {
   min-height: 30px;
 }
 
 /* for Internet Explorer */
 /*\*/
 /* line 7, ../../Sass/blocks/_page-ui.scss */
-* html .cofoundry-sv__section {
+* html .cofoundry-sv__region {
   height: 30px;
   opacity: 1;
 }
 
 /* line 12, ../../Sass/blocks/_page-ui.scss */
-.cofoundry-editmode__custom-entity .cofoundry__sv-section[data-cms-page-section] {
+.cofoundry-editmode__custom-entity .cofoundry__sv-region[data-cms-page-region] {
   cursor: not-allowed;
   opacity: .5;
 }
 
 /* line 17, ../../Sass/blocks/_page-ui.scss */
-.cofoundry-editmode__page .cofoundry__sv-section[data-cms-custom-entity-section] {
+.cofoundry-editmode__page .cofoundry__sv-region[data-cms-custom-entity-region] {
   cursor: not-allowed;
   opacity: .5;
 }
 
-/* Editable Section/Module Hover */
+/* Editable Region/Block Hover */
 /* line 23, ../../Sass/blocks/_page-ui.scss */
-.cofoundry-sv__hover-module {
+.cofoundry-sv__hover-block {
   box-shadow: 0px 0px 2px #4af386 !important;
 }
 
 /* line 30, ../../Sass/blocks/_page-ui.scss */
-.cofoundry-sv__hover-section {
+.cofoundry-sv__hover-region {
   box-shadow: 0px 0px 1px #003399 !important;
 }
 
-/* Used when the html for a section is being replaced */
+/* Used when the html for a region is being replaced */
 /* line 36, ../../Sass/blocks/_page-ui.scss */
-.cofoundry-sv__section-loading {
+.cofoundry-sv__region-loading {
   opacity: 0.5;
 }
 
 /* #### Hovering #### */
 /* line 41, ../../Sass/blocks/_page-ui.scss */
-#cofoundry-sv__module-popover-container {
+#cofoundry-sv__block-popover-container {
   font-family: Tahoma, Geneva, sans-serif;
   font-size: 85%;
   position: absolute;
@@ -113,9 +118,9 @@
   -moz-border-radius: 4px;
 }
 
-/* #### Section hovering #### */
+/* #### Region hovering #### */
 /* line 51, ../../Sass/blocks/_page-ui.scss */
-.cofoundry-sv__btn-add-module {
+.cofoundry-sv__btn-add-block {
   -moz-transform: translateY(-50%) translateX(-50%);
   -ms-transform: translateY(-50%) translateX(-50%);
   -webkit-transform: translateY(-50%) translateX(-50%);
@@ -137,7 +142,7 @@
   top: 1px;
 }
 /* line 67, ../../Sass/blocks/_page-ui.scss */
-.cofoundry-sv__btn-add-module:after {
+.cofoundry-sv__btn-add-block:after {
   content: '';
   position: absolute;
   height: 2px;
@@ -147,7 +152,7 @@
   left: 3px;
 }
 /* line 77, ../../Sass/blocks/_page-ui.scss */
-.cofoundry-sv__btn-add-module:before {
+.cofoundry-sv__btn-add-block:before {
   content: '';
   position: absolute;
   height: 8px;
@@ -157,12 +162,12 @@
   left: 6px;
 }
 /* line 88, ../../Sass/blocks/_page-ui.scss */
-.cofoundry-sv__btn-add-module:hover:after, .cofoundry-sv__btn-add-module:hover:before {
+.cofoundry-sv__btn-add-block:hover:after, .cofoundry-sv__btn-add-block:hover:before {
   background: #413851;
 }
 
 /* line 98, ../../Sass/blocks/_page-ui.scss */
-.cofoundry-sv__ui-wrap--section {
+.cofoundry-sv__ui-wrap--region {
   display: block !important;
   pointer-events: none;
   position: absolute;
@@ -171,7 +176,7 @@
   z-index: 999999996;
 }
 /* line 106, ../../Sass/blocks/_page-ui.scss */
-.cofoundry-sv__ui-wrap--section .cofoundry-sv__ui-wrap-name {
+.cofoundry-sv__ui-wrap--region .cofoundry-sv__ui-wrap-name {
   z-index: 1;
   transform: translateY(-100%);
   background: #4af386;
@@ -180,7 +185,7 @@
 }
 
 /* line 115, ../../Sass/blocks/_page-ui.scss */
-.cofoundry-sv__ui-wrap--module {
+.cofoundry-sv__ui-wrap--block {
   display: block !important;
   pointer-events: none;
   position: absolute;
@@ -190,7 +195,7 @@
   z-index: 999999997;
 }
 /* line 124, ../../Sass/blocks/_page-ui.scss */
-.cofoundry-sv__ui-wrap--module .cofoundry-sv__ui-wrap-name {
+.cofoundry-sv__ui-wrap--block .cofoundry-sv__ui-wrap-name {
   z-index: 1;
   font-family: Tahoma, Geneva, sans-serif;
   line-height: 12px;
@@ -215,14 +220,14 @@
   top: -1px;
 }
 
-/* #### Module hovering #### */
+/* #### Block hovering #### */
 /* line 151, ../../Sass/blocks/_page-ui.scss */
-#cofoundry-sv__module-popover-container {
+#cofoundry-sv__block-popover-container {
   z-index: 999999998;
   display: none;
 }
 /* line 155, ../../Sass/blocks/_page-ui.scss */
-#cofoundry-sv__module-popover-container .cofoundry-sv__module-popover--main-actions {
+#cofoundry-sv__block-popover-container .cofoundry-sv__block-popover--main-actions {
   border: 1px solid #413851;
   background: #fff;
   display: block;
@@ -231,11 +236,11 @@
   list-style: none;
 }
 /* line 163, ../../Sass/blocks/_page-ui.scss */
-#cofoundry-sv__module-popover-container .cofoundry-sv__module-popover--main-actions > li {
+#cofoundry-sv__block-popover-container .cofoundry-sv__block-popover--main-actions > li {
   display: inline-block;
 }
 /* line 169, ../../Sass/blocks/_page-ui.scss */
-#cofoundry-sv__module-popover-container li button {
+#cofoundry-sv__block-popover-container li button {
   padding: 5px;
   text-transform: uppercase;
   font-size: 10px;
@@ -244,11 +249,11 @@
   background-color: transparent;
 }
 /* line 177, ../../Sass/blocks/_page-ui.scss */
-#cofoundry-sv__module-popover-container li button:hover {
+#cofoundry-sv__block-popover-container li button:hover {
   background-color: #ebebeb;
 }
 /* line 182, ../../Sass/blocks/_page-ui.scss */
-#cofoundry-sv__module-popover-container li a {
+#cofoundry-sv__block-popover-container li a {
   -moz-transition: all 0.3s;
   -o-transition: all 0.3s;
   -webkit-transition: all 0.3s;
@@ -263,17 +268,17 @@
   font-size: 1.1em;
 }
 /* line 193, ../../Sass/blocks/_page-ui.scss */
-#cofoundry-sv__module-popover-container li a:hover {
+#cofoundry-sv__block-popover-container li a:hover {
   color: #4af386;
 }
 /* line 199, ../../Sass/blocks/_page-ui.scss */
-#cofoundry-sv__module-popover-container li.advanced > button {
+#cofoundry-sv__block-popover-container li.advanced > button {
   display: block;
   width: 30px;
   text-align: center;
 }
 /* line 212, ../../Sass/blocks/_page-ui.scss */
-#cofoundry-sv__module-popover-container .disabled a {
+#cofoundry-sv__block-popover-container .disabled a {
   cursor: default;
   opacity: 0.4;
   -khtml-opacity: 0.4;
@@ -282,11 +287,11 @@
   filter: alpha(opacity=40);
 }
 /* line 221, ../../Sass/blocks/_page-ui.scss */
-#cofoundry-sv__module-popover-container .cofoundry-sv__module-popover--adv-actions {
+#cofoundry-sv__block-popover-container .cofoundry-sv__block-popover--adv-actions {
   display: none;
 }
 /* line 224, ../../Sass/blocks/_page-ui.scss */
-#cofoundry-sv__module-popover-container .cofoundry-sv__module-popover--adv-actions ul {
+#cofoundry-sv__block-popover-container .cofoundry-sv__block-popover--adv-actions ul {
   background-color: #fff;
   position: absolute;
   border: 1px solid #413851;
@@ -296,17 +301,17 @@
   left: 0;
 }
 /* line 234, ../../Sass/blocks/_page-ui.scss */
-#cofoundry-sv__module-popover-container .cofoundry-sv__module-popover--adv-actions li {
+#cofoundry-sv__block-popover-container .cofoundry-sv__block-popover--adv-actions li {
   width: 100%;
 }
 /* line 238, ../../Sass/blocks/_page-ui.scss */
-#cofoundry-sv__module-popover-container .cofoundry-sv__module-popover--adv-actions button {
+#cofoundry-sv__block-popover-container .cofoundry-sv__block-popover--adv-actions button {
   text-align: left;
   text-decoration: none;
   padding: 5px 9px;
 }
 /* line 245, ../../Sass/blocks/_page-ui.scss */
-#cofoundry-sv__module-popover-container .cofoundry-sv__section-name {
+#cofoundry-sv__block-popover-container .cofoundry-sv__region-name {
   background-color: #413851;
   color: #fff;
   display: block;
@@ -315,7 +320,7 @@
   font-size: 11px;
 }
 /* line 261, ../../Sass/blocks/_page-ui.scss */
-#cofoundry-sv__module-popover-container .advanced:hover .cofoundry-sv__module-popover--adv-actions {
+#cofoundry-sv__block-popover-container .advanced:hover .cofoundry-sv__block-popover--adv-actions {
   display: block;
 }
 

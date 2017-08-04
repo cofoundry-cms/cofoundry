@@ -26,7 +26,7 @@ namespace Cofoundry.Web
 
         public TDisplayModel Model { get; set; }
 
-        public IEnumerable<CustomEntityPageSectionRenderDetails> Sections { get; set; }
+        public IEnumerable<CustomEntityPageRegionRenderDetails> Regions { get; set; }
 
         public WorkFlowStatus WorkFlowStatus { get; set; }
     }

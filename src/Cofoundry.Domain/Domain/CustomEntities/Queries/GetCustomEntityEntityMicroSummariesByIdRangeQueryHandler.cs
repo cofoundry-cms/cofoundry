@@ -10,8 +10,7 @@ using Microsoft.EntityFrameworkCore;
 namespace Cofoundry.Domain
 {
     public class GetCustomEntityEntityMicroSummariesByIdRangeQueryHandler
-        : IQueryHandler<GetCustomEntityEntityMicroSummariesByIdRangeQuery, IDictionary<int, RootEntityMicroSummary>>
-        , IAsyncQueryHandler<GetCustomEntityEntityMicroSummariesByIdRangeQuery, IDictionary<int, RootEntityMicroSummary>>
+        : IAsyncQueryHandler<GetCustomEntityEntityMicroSummariesByIdRangeQuery, IDictionary<int, RootEntityMicroSummary>>
         , IIgnorePermissionCheckHandler
     {
         #region constructor
@@ -39,18 +38,6 @@ namespace Cofoundry.Domain
 
             return results;
         }
-
-        public IDictionary<int, RootEntityMicroSummary> Execute(GetCustomEntityEntityMicroSummariesByIdRangeQuery query, IExecutionContext executionContext)
-        {
-            var results = Query(query).ToDictionary(e => e.RootEntityId);
-            EnforcePermissions(results, executionContext);
-
-            return results;
-        }
-
-        #endregion
-
-        #region private helpers
 
         private IQueryable<RootEntityMicroSummary> Query(GetCustomEntityEntityMicroSummariesByIdRangeQuery query)
         {

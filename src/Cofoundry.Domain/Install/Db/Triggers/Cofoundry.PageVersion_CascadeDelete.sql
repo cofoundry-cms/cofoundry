@@ -13,8 +13,8 @@ begin
 	from Cofoundry.UnstructuredDataDependency e
 	inner join deleted d on e.RootEntityId = d.PageVersionId and RootEntityDefinitionCode = @DefinitionCode
 
-    delete Cofoundry.PageVersionModule
-	from Cofoundry.PageVersionModule e
+    delete Cofoundry.PageVersionBlock
+	from Cofoundry.PageVersionBlock e
 	inner join deleted d on e.PageVersionId = d.PageVersionId
 	
 	-- Main Table

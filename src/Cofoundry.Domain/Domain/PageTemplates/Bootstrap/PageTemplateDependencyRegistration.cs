@@ -12,7 +12,6 @@ namespace Cofoundry.Domain.Bootstrap
         public void Register(IContainerRegister container)
         {
             container
-                .RegisterType<PageTemplateSectionMapper, PageTemplateSectionMapper>()
                 .RegisterType<IPageTemplateCustomEntityTypeMapper, PageTemplateCustomEntityTypeMapper>()
                 .RegisterType<IPageTemplateMapper, PageTemplateMapper>()
 

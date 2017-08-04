@@ -53,10 +53,6 @@ namespace Cofoundry.Domain
             return versions;
         }
 
-        #endregion
-
-        #region helpers
-
         private IQueryable<CustomEntityVersionSummary> Query(int id)
         {
             return _dbContext

@@ -13,8 +13,8 @@ using Cofoundry.Core;
 namespace Cofoundry.Domain
 {
     public class GetUpdatePageCommandByIdQueryHandler 
-                : IAsyncQueryHandler<GetByIdQuery<UpdatePageCommand>, UpdatePageCommand>
-                , IPermissionRestrictedQueryHandler<GetByIdQuery<UpdatePageCommand>, UpdatePageCommand>
+        : IAsyncQueryHandler<GetByIdQuery<UpdatePageCommand>, UpdatePageCommand>
+        , IPermissionRestrictedQueryHandler<GetByIdQuery<UpdatePageCommand>, UpdatePageCommand>
     {
         #region constructor
 

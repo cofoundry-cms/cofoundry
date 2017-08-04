@@ -11,25 +11,25 @@ namespace Cofoundry.Domain
         const string PATH_DELIMITER = "/";
 
         /// <summary>
-        /// Standardises a page path ensuring it 
+        /// Standardizes a page path ensuring it 
         /// - starts with a slash
         /// - doesn't end with a trailing slash
         /// </summary>
-        /// <param name="path">Path to standadise</param>
-        public string StandardisePath(string path)
+        /// <param name="path">Path to standardize.</param>
+        public string StandardizePath(string path)
         {
-            return StandardisePathWithoutLocale(path, null);
+            return StandardizePathWithoutLocale(path, null);
         }
 
         /// <summary>
-        /// Standardises a page path ensuring it 
+        /// Standardizes a page path ensuring it 
         /// - starts with a slash
         /// - doesn't end with a trailing slash
-        /// - (optionally) does not contain the locale.
+        /// - (optionally) does not contain the locale
         /// </summary>
-        /// <param name="path">Path to standadise</param>
+        /// <param name="path">Path to standardize.</param>
         /// <param name="currentLocale">Locale of the path to remove if present.</param>
-        public string StandardisePathWithoutLocale(string path, ActiveLocale currentLocale)
+        public string StandardizePathWithoutLocale(string path, ActiveLocale currentLocale)
         {
             if (string.IsNullOrWhiteSpace(path))
             {

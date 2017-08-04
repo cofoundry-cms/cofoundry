@@ -6,15 +6,15 @@
     bool IsEditTypeSwitchRequired(IPageResponseData pageResponseData)
     {
         return pageResponseData.PageRoutingInfo.CustomEntityRoute != null
-            && pageResponseData.PageVersion.HasCustomEntityModuleSections
-            && pageResponseData.PageVersion.HasPageModuleSections;
+            && pageResponseData.PageVersion.HasCustomEntityRegions
+            && pageResponseData.PageVersion.HasPageRegions;
     }
 
     bool IsCustomEntityEditOnly(IPageResponseData pageResponseData)
     {
         return pageResponseData.PageRoutingInfo.CustomEntityRoute != null
-            && pageResponseData.PageVersion.HasCustomEntityModuleSections
-            && !pageResponseData.PageVersion.HasPageModuleSections;
+            && pageResponseData.PageVersion.HasCustomEntityRegions
+            && !pageResponseData.PageVersion.HasPageRegions;
     }
 }
 
@@ -57,7 +57,7 @@
         entityNameSingular = isCustomEntityRoute ? pageResponseData.CustomEntityDefinition.Name : "Page";
         isEditTypeSwitchRequired = IsEditTypeSwitchRequired(pageResponseData) && hasCustomEntityEditPermission && hasPageEditPermission;
         isCustomEntityEditOnly = IsCustomEntityEditOnly(pageResponseData) && hasCustomEntityEditPermission;
-        canEditDraft = (pageResponseData.PageVersion.HasCustomEntityModuleSections || pageResponseData.PageVersion.HasPageModuleSections)
+        canEditDraft = (pageResponseData.PageVersion.HasCustomEntityRegions || pageResponseData.PageVersion.HasPageRegions)
             && (hasPageEditPermission || hasCustomEntityEditPermission);
         // If we are on a page with custom entities, it makes more sense to refer to the page as a template
         if (isEditTypeSwitchRequired && !isCustomEntityRoute)
@@ -294,63 +294,63 @@
 
 @if (!isStaticPage && isEditing)
 {
-<!-- SECTION TOOLBAR UI -->
+<!-- REGION TOOLBAR UI -->
 <button
-    id="cofoundry-sv__btn-add-module"
-    class="cofoundry-sv__btn-add-module"
+    id="cofoundry-sv__btn-add-block"
+    class="cofoundry-sv__btn-add-block"
     type="button"
     style="display:none;">
 </button>
 
-<!-- END SECTION TOOLBAR UI -->
+<!-- END REGION TOOLBAR UI -->
 
-<!-- MODULE TOOLBAR UI -->
-<div id="cofoundry-sv__module-popover-container">
-    <ul class="cofoundry-sv__module-popover--main-actions">
+<!-- BLOCK TOOLBAR UI -->
+<div id="cofoundry-sv__block-popover-container">
+    <ul class="cofoundry-sv__block-popover--main-actions">
         <li class="edit">
-            <button id="cofoundry-sv__btn-module-edit"
+            <button id="cofoundry-sv__btn-block-edit"
                     type="button"
-                    title="Edit this module">
+                    title="Edit this block">
                 <i class="fa fa-edit"></i> Edit
             </button>
         </li>
         <li class="advanced">
             <button type="button">...</button>
-            <div class="cofoundry-sv__module-popover--adv-actions">
+            <div class="cofoundry-sv__block-popover--adv-actions">
                 
                 <ul>
                     <li class="up">
-                        <button id="cofoundry-sv__btn-module-moveup"
+                        <button id="cofoundry-sv__btn-block-moveup"
                                 type="button"
-                                title="Move this module up">
+                                title="Move this content block up">
                             <i class="fa fa-chevron-up"></i> Move up
                         </button>
                     </li>
                     <li class="down">
-                        <button id="cofoundry-sv__btn-module-movedown"
+                        <button id="cofoundry-sv__btn-block-movedown"
                                 type="button"
-                                title="Move this module down">
+                                title="Move this content block down">
                             <i class="fa fa-chevron-down"></i> Move down
                         </button>
                     </li>
                     <li class="addAbove">
-                        <button id="cofoundry-sv__btn-module-addabove"
+                        <button id="cofoundry-sv__btn-block-addabove"
                                 type="button"
-                                title="Add a new module above">
+                                title="Add a new content block above">
                             <i class="fa fa-chevron-circle-up"></i> Add above
                         </button>
                     </li>
                     <li class="addBelow">
-                        <button id="cofoundry-sv__btn-module-addbelow"
+                        <button id="cofoundry-sv__btn-block-addbelow"
                                 type="button"
-                                title="Add a new module below">
+                                title="Add a new content block below">
                             <i class="fa fa-chevron-circle-down"></i> Add below
                         </button>
                     </li>
                     <li class="delete">
-                        <button id="cofoundry-sv__btn-module-delete"
+                        <button id="cofoundry-sv__btn-block-delete"
                                 type="button"
-                                title="Delete this module">
+                                title="Delete this content block">
                             <i class="fa fa-trash-o"></i> Delete
                         </button>
                     </li>
@@ -359,7 +359,7 @@
         </li>
     </ul>
 </div>
-<!-- END MODULE TOOLBAR UI -->
+<!-- END BLOCK TOOLBAR UI -->
 
 <div id="cofoundry-sv__ui-wrap" style="display:none;">
     <div class="cofoundry-sv__ui-wrap-name">Placeholder</div>

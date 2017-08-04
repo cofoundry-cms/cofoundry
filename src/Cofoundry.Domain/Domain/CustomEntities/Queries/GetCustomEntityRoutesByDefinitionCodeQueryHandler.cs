@@ -18,8 +18,7 @@ namespace Cofoundry.Domain
     /// makes them good for quick lookups.
     /// </summary>
     public class GetCustomEntityRoutesByDefinitionCodeQueryHandler 
-        : IQueryHandler<GetCustomEntityRoutesByDefinitionCodeQuery, IEnumerable<CustomEntityRoute>>
-        , IAsyncQueryHandler<GetCustomEntityRoutesByDefinitionCodeQuery, IEnumerable<CustomEntityRoute>>
+        : IAsyncQueryHandler<GetCustomEntityRoutesByDefinitionCodeQuery, IEnumerable<CustomEntityRoute>>
         , IIgnorePermissionCheckHandler
     {
         #region constructor
@@ -50,15 +49,6 @@ namespace Cofoundry.Domain
             {
                 var dbRoutes = await GetDbQuery(query).ToListAsync();
                 return MapRoutes(query, dbRoutes);;
-            });
-        }
-
-        public IEnumerable<CustomEntityRoute> Execute(GetCustomEntityRoutesByDefinitionCodeQuery query, IExecutionContext executionContext)
-        {
-            return _customEntityCache.GetOrAdd(query.CustomEntityDefinitionCode, () =>
-            {
-                var dbRoutes = GetDbQuery(query).ToList();
-                return MapRoutes(query, dbRoutes);
             });
         }
 

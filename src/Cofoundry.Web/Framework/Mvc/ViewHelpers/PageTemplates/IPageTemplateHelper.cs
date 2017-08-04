@@ -16,11 +16,11 @@ namespace Cofoundry.Web
         TModel Model { get; }
 
         /// <summary>
-        /// Indictes where to render a template section in the page template. 
+        /// Indictes where to render a region in the page template. 
         /// </summary>
-        /// <param name="sectionName">The name of the page template section. This must be unique in a page template.</param>
-        /// <returns>PageTemplateSectionTagOutput to allow for method chaining.</returns>
-        IPageTemplateSectionTagBuilder Section(string sectionName);
+        /// <param name="regionName">The name of the page template region. This must be unique in a page template.</param>
+        /// <returns>IPageTemplateRegionTagBuilder to allow for method chaining.</returns>
+        IPageTemplateRegionTagBuilder Region(string regionName);
 
         /// <summary>
         /// Sets the description assigned to the template in the

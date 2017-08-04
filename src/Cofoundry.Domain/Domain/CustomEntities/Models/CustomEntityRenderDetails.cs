@@ -32,7 +32,7 @@ namespace Cofoundry.Domain
 
         public DateTime CreateDate { get; set; }
 
-        public IEnumerable<CustomEntityPageSectionRenderDetails> Sections { get; set; }
+        public IEnumerable<CustomEntityPageRegionRenderDetails> Regions { get; set; }
 
         /// <summary>
         /// If this custom entity has page routes asspciated with it
@@ -40,6 +40,6 @@ namespace Cofoundry.Domain
         /// single page on a site to be associated with a custom entitiy 
         /// details, but it's technically possible to have many.
         /// </summary>
-        public IEnumerable<string> DetailsPageUrls { get; set; }
+        public IEnumerable<string> PageUrls { get; set; }
     }
 }

@@ -1,2 +1,2 @@
-/*! UberCMS 2017-07-19 */
+/*! UberCMS 2017-08-03 */
 !function(a,b){a.addEventListener("DOMContentLoaded",function(){function c(){var a="";f.value.length&&(a="?email="+encodeURIComponent(f.value)),e.setAttribute("href",g+a)}function d(){var c=a.getElementById("ReturnUrl"),d=b.location.hash;c.value&&d&&(c.value=c.value+d)}var e=a.getElementById("forgotPasswordLink"),f=a.getElementById("EmailAddress"),g=e.getAttribute("href");c(),d(),f.addEventListener("change",c)})}(document,window);

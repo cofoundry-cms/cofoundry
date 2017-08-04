@@ -10,8 +10,7 @@ using AutoMapper;
 namespace Cofoundry.Domain
 {
     public class GetPageVersionSummariesByPageIdQueryHandler
-        : IQueryHandler<GetPageVersionSummariesByPageIdQuery, IEnumerable<PageVersionSummary>>
-        , IAsyncQueryHandler<GetPageVersionSummariesByPageIdQuery, IEnumerable<PageVersionSummary>>
+        : IAsyncQueryHandler<GetPageVersionSummariesByPageIdQuery, IEnumerable<PageVersionSummary>>
         , IPermissionRestrictedQueryHandler<GetPageVersionSummariesByPageIdQuery, IEnumerable<PageVersionSummary>>
     {
         #region constructor
@@ -34,15 +33,7 @@ namespace Cofoundry.Domain
         #endregion
 
         #region execution
-
-        public IEnumerable<PageVersionSummary> Execute(GetPageVersionSummariesByPageIdQuery query, IExecutionContext executionContext)
-        {
-            var dbVersions = Query(query.PageId).ToList();
-            var versions = Map(dbVersions).ToList();
-
-            return versions;
-        }
-
+        
         public async Task<IEnumerable<PageVersionSummary>> ExecuteAsync(GetPageVersionSummariesByPageIdQuery query, IExecutionContext executionContext)
         {
             var dbVersions = await Query(query.PageId).ToListAsync();
@@ -50,10 +41,6 @@ namespace Cofoundry.Domain
 
             return versions;
         }
-
-        #endregion
-
-        #region helpers
 
         private IQueryable<PageVersion> Query(int id)
         {

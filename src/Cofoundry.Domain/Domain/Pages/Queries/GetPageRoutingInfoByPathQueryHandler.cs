@@ -14,6 +14,8 @@ namespace Cofoundry.Domain
         : IAsyncQueryHandler<GetPageRoutingInfoByPathQuery, PageRoutingInfo>
         , IPermissionRestrictedQueryHandler<GetPageRoutingInfoByPathQuery, PageRoutingInfo>
     {
+        #region constructor
+
         private readonly IQueryExecutor _queryExecutor;
         private readonly IPagePathHelper _pathHelper;
 
@@ -26,12 +28,16 @@ namespace Cofoundry.Domain
             _pathHelper = pathHelper;
         }
 
+        #endregion
+
+        #region execution
+
         public async Task<PageRoutingInfo> ExecuteAsync(GetPageRoutingInfoByPathQuery query, IExecutionContext executionContext)
         {
             // Deal with malformed query
             if (!string.IsNullOrWhiteSpace(query.Path) && !Uri.IsWellFormedUriString(query.Path, UriKind.Relative)) return null;
 
-            var path = _pathHelper.StandardisePath(query.Path);
+            var path = _pathHelper.StandardizePath(query.Path);
             var allRoutes = await _queryExecutor.GetAllAsync<PageRoute>(executionContext);
 
             // Rather than starts with, do a regex replacement here with the path
@@ -102,7 +108,9 @@ namespace Cofoundry.Domain
                 CustomEntityRouteRule = rule
             };
         }
-        
+
+        #endregion
+
         #region Permission
 
         public IEnumerable<IPermissionApplication> GetPermissions(GetPageRoutingInfoByPathQuery query)

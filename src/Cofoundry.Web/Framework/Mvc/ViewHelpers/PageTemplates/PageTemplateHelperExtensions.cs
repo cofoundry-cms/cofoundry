@@ -10,18 +10,18 @@ namespace Cofoundry.Web
     public static class PageTemplateHelperExtensions
     {
         /// <summary>
-        /// Indictes where to render a section in a custom entity page template. 
+        /// Indictes where to render a region in a custom entity page template. 
         /// </summary>
         /// <typeparam name="TModel">Custom entity display model type.</typeparam>
         /// <param name="helper">IPageTemplateHelper to extend.</param>
-        /// <param name="sectionName">The name of the section. This must be unique in a page template.</param>
-        /// <returns>ICustomEntityTemplateSectionTagBuilder to allow for method chaining.</returns>
-        public static ICustomEntityTemplateSectionTagBuilder<TModel> CustomEntitySection<TModel>(
-            this IPageTemplateHelper<ICustomEntityPageViewModel<TModel>> helper, string sectionName)
+        /// <param name="regionName">The name of the region. This must be unique in a page template.</param>
+        /// <returns>ICustomEntityTemplateRegionTagBuilder to allow for method chaining.</returns>
+        public static ICustomEntityTemplateRegionTagBuilder<TModel> CustomEntityRegion<TModel>(
+            this IPageTemplateHelper<ICustomEntityPageViewModel<TModel>> helper, string regionName)
             where TModel : ICustomEntityPageDisplayModel
         {
-            var factory = helper.ViewContext.HttpContext.RequestServices.GetRequiredService<ICustomEntityTemplateSectionTagBuilderFactory>();
-            var output = factory.Create(helper.ViewContext, helper.Model, sectionName);
+            var factory = helper.ViewContext.HttpContext.RequestServices.GetRequiredService<ICustomEntityTemplateRegionTagBuilderFactory>();
+            var output = factory.Create(helper.ViewContext, helper.Model, regionName);
 
             return output;
         }

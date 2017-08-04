@@ -9,36 +9,32 @@ using Cofoundry.Domain.CQS;
 namespace Cofoundry.Domain
 {
     public class GetCustomEntityDefinitionMicroSummaryByIdQueryHandler 
-        : IQueryHandler<GetByStringQuery<CustomEntityDefinitionMicroSummary>, CustomEntityDefinitionMicroSummary>
-        , IAsyncQueryHandler<GetByStringQuery<CustomEntityDefinitionMicroSummary>, CustomEntityDefinitionMicroSummary>
+        : IAsyncQueryHandler<GetByStringQuery<CustomEntityDefinitionMicroSummary>, CustomEntityDefinitionMicroSummary>
         , IIgnorePermissionCheckHandler
     {
         #region constructor 
 
-        private readonly IEnumerable<ICustomEntityDefinition> _customEntityModuleRegistrations;
+        private readonly IEnumerable<ICustomEntityDefinition> _customEntityRegistrations;
 
         public GetCustomEntityDefinitionMicroSummaryByIdQueryHandler(
-            IEnumerable<ICustomEntityDefinition> customEntityModuleRegistrations
+            IEnumerable<ICustomEntityDefinition> customEntityRegistrations
             )
         {
-            _customEntityModuleRegistrations = customEntityModuleRegistrations;
+            _customEntityRegistrations = customEntityRegistrations;
         }
+
+        public IEnumerable<ICustomEntityDefinition> CustomEntityRegistrations => _customEntityRegistrations;
 
         #endregion
 
         #region execution
 
-        public CustomEntityDefinitionMicroSummary Execute(GetByStringQuery<CustomEntityDefinitionMicroSummary> query, IExecutionContext executionContext)
+        public Task<CustomEntityDefinitionMicroSummary> ExecuteAsync(GetByStringQuery<CustomEntityDefinitionMicroSummary> query, IExecutionContext executionContext)
         {
-            var definition = _customEntityModuleRegistrations.SingleOrDefault(d => d.CustomEntityDefinitionCode == query.Id);
-            return Mapper.Map<CustomEntityDefinitionMicroSummary>(definition);
-        }
+            var definition = _customEntityRegistrations.SingleOrDefault(d => d.CustomEntityDefinitionCode == query.Id);
+            var result = Mapper.Map<CustomEntityDefinitionMicroSummary>(definition);
 
-        public async Task<CustomEntityDefinitionMicroSummary> ExecuteAsync(GetByStringQuery<CustomEntityDefinitionMicroSummary> query, IExecutionContext executionContext)
-        {
-            var result = Execute(query, executionContext);
-
-            return await Task.FromResult(result);
+            return Task.FromResult(result);
         }
 
         #endregion

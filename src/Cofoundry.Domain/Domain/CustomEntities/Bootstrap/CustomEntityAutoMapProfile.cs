@@ -39,7 +39,7 @@ namespace Cofoundry.Domain
                 .ForMember(d => d.Ordering, o => o.MapFrom(s => s.CustomEntity.Ordering))
                 ;
             
-            CreateMap<PageTemplateSection, CustomEntityPageSectionRenderDetails>();
+            CreateMap<PageTemplateRegion, CustomEntityPageRegionRenderDetails>();
             
             CreateMap<CustomEntityVersion, CustomEntitySummaryQueryModel>()
                 .ForMember(d => d.AuditData, o => o.MapFrom(s => s.CustomEntity))
@@ -96,7 +96,7 @@ namespace Cofoundry.Domain
                 .ForMember(d => d.CustomEntityDefinitionCode, o => o.MapFrom(s => s.CustomEntity.CustomEntityDefinitionCode))
                 ;
 
-            CreateMap<CustomEntityVersionPageModule, UpdateCustomEntityVersionPageModuleCommand>()
+            CreateMap<CustomEntityVersionPageBlock, UpdateCustomEntityVersionPageBlockCommand>()
                 ;
             
             #endregion

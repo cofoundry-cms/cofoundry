@@ -88,7 +88,7 @@ namespace Cofoundry.Domain
 
         /// <summary>
         /// Gets a page object that contains the data required to render a page, including template 
-        /// data for all the content-editable sections.
+        /// data for all the content-editable regions.
         /// </summary>
         /// <param name="query">Query parameters</param>
         /// <param name="executionContext">Optional execution context to use when executing the query. Useful if you need to temporarily elevate your permission level.</param>
@@ -99,7 +99,7 @@ namespace Cofoundry.Domain
 
         /// <summary>
         /// Gets a range of pages by their PageIds as PageRenderDetails objects. A PageRenderDetails contains 
-        /// the data required to render a page, including template data for all the content-editable sections.
+        /// the data required to render a page, including template data for all the content-editable regions.
         /// </summary>
         /// <param name="query">Query parameters</param>
         /// <param name="executionContext">Optional execution context to use when executing the query. Useful if you need to temporarily elevate your permission level.</param>
@@ -110,27 +110,27 @@ namespace Cofoundry.Domain
 
         #endregion
 
-        #region PageSectionDetails
+        #region PageRegionDetails
 
         /// <summary>
-        /// Gets a collection of the content managed sections and
-        /// modules for a specific version of a page. These are the 
-        /// modules that get rendered in the page template linked
+        /// Gets a collection of the content managed regions and
+        /// blocks for a specific version of a page. These are the 
+        /// content blocks that get rendered in the page template linked
         /// to the page version.
         /// </summary>
         /// <param name="pageVersionId">Database id of the page version to get content data for.</param>
         /// <param name="executionContext">Optional execution context to use when executing the query. Useful if you need to temporarily elevate your permission level.</param>
-        public Task<IEnumerable<PageSectionDetails>> GetPageSectionDetailsByPageVersionIdAsync(int pageVersionId, IExecutionContext executionContext = null)
+        public Task<IEnumerable<PageRegionDetails>> GetPageRegionDetailsByPageVersionIdAsync(int pageVersionId, IExecutionContext executionContext = null)
         {
-            var query = new GetPageSectionDetailsByPageVersionIdQuery(pageVersionId);
+            var query = new GetPageRegionDetailsByPageVersionIdQuery(pageVersionId);
             return _queryExecutor.ExecuteAsync(query, executionContext);
         }
 
         #endregion
 
-        #region PageVersionModuleRenderDetails
+        #region PageVersionBlockRenderDetails
 
-        public Task<PageVersionModuleRenderDetails> GetPageVersionModuleRenderDetailsByIdAsync(GetPageVersionModuleRenderDetailsByIdQuery query, IExecutionContext executionContext = null)
+        public Task<PageVersionBlockRenderDetails> GetPageVersionBlockRenderDetailsByIdAsync(GetPageVersionBlockRenderDetailsByIdQuery query, IExecutionContext executionContext = null)
         {
             return _queryExecutor.ExecuteAsync(query, executionContext);
         }
@@ -176,16 +176,16 @@ namespace Cofoundry.Domain
 
         #endregion
 
-        #region page module types
+        #region page block types
 
-        public Task<IEnumerable<PageModuleTypeSummary>> GetAllPageModuleTypeSummariesAsync(IExecutionContext executionContext = null)
+        public Task<IEnumerable<PageBlockTypeSummary>> GetAllPageBlockTypeSummariesAsync(IExecutionContext executionContext = null)
         {
-            return _queryExecutor.GetAllAsync<PageModuleTypeSummary>(executionContext);
+            return _queryExecutor.GetAllAsync<PageBlockTypeSummary>(executionContext);
         }
 
-        public Task<PageModuleTypeSummary> GetPageModuleTypeSummaryByIdAsync(int id, IExecutionContext executionContext = null)
+        public Task<PageBlockTypeSummary> GetPageBlockTypeSummaryByIdAsync(int id, IExecutionContext executionContext = null)
         {
-            return _queryExecutor.GetByIdAsync<PageModuleTypeSummary>(id, executionContext);
+            return _queryExecutor.GetByIdAsync<PageBlockTypeSummary>(id, executionContext);
         }
 
         #endregion
@@ -222,11 +222,11 @@ namespace Cofoundry.Domain
             return command.OutputPageVersionId;
         }
 
-        public async Task<int> AddPageVersionModuleAsync(AddPageVersionModuleCommand command, IExecutionContext executionContext = null)
+        public async Task<int> AddPageVersionBlockAsync(AddPageVersionBlockCommand command, IExecutionContext executionContext = null)
         {
             await _commandExecutor.ExecuteAsync(command, executionContext);
 
-            return command.OutputPageModuleId;
+            return command.OutputPageBlockId;
         }
 
         public Task DeletePageAsync(int pageId, IExecutionContext executionContext = null)
@@ -241,9 +241,9 @@ namespace Cofoundry.Domain
             return _commandExecutor.ExecuteAsync(command, executionContext);
         }
 
-        public Task DeletePageVersionModuleAsync(int pageVersionModuleId, IExecutionContext executionContext = null)
+        public Task DeletePageVersionBlockAsync(int pageVersionBlockId, IExecutionContext executionContext = null)
         {
-            var command = new DeletePageVersionModuleCommand() { PageVersionModuleId = pageVersionModuleId };
+            var command = new DeletePageVersionBlockCommand() { PageVersionBlockId = pageVersionBlockId };
             return _commandExecutor.ExecuteAsync(command, executionContext);
         }
 
@@ -252,7 +252,7 @@ namespace Cofoundry.Domain
             return _commandExecutor.ExecuteAsync(command, executionContext);
         }
 
-        public Task MovePageVersionModuleAsync(MovePageVersionModuleCommand command, IExecutionContext executionContext = null)
+        public Task MovePageVersionBlockAsync(MovePageVersionBlockCommand command, IExecutionContext executionContext = null)
         {
             return _commandExecutor.ExecuteAsync(command, executionContext);
         }
@@ -284,7 +284,7 @@ namespace Cofoundry.Domain
             return _commandExecutor.ExecuteAsync(command, executionContext);
         }
 
-        public Task UpdatePageVersionModuleAsync(UpdatePageVersionModuleCommand command, IExecutionContext executionContext = null)
+        public Task UpdatePageVersionBlockAsync(UpdatePageVersionBlockCommand command, IExecutionContext executionContext = null)
         {
             return _commandExecutor.ExecuteAsync(command, executionContext);
         }

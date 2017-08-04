@@ -18,7 +18,7 @@ namespace Cofoundry.BasicTestSite
         public const string DefinitionCode = "SIMBLP";
 
         /// <summary>
-        /// Unique 6 letter code representing the module (the convention is to use uppercase)
+        /// Unique 6 letter code representing the entity (the convention is to use uppercase)
         /// </summary>
         public string CustomEntityDefinitionCode
         {

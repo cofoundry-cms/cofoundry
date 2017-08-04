@@ -13,8 +13,7 @@ using Cofoundry.Core.MessageAggregator;
 namespace Cofoundry.Domain
 {
     public class AddPageDraftVersionCommandHandler 
-        : ICommandHandler<AddPageDraftVersionCommand>
-        , IAsyncCommandHandler<AddPageDraftVersionCommand>
+        : IAsyncCommandHandler<AddPageDraftVersionCommand>
         , IPermissionRestrictedCommandHandler<AddPageDraftVersionCommand>
     {
         #region constructor
@@ -43,29 +42,6 @@ namespace Cofoundry.Domain
         #endregion
 
         #region execution
-
-        public void Execute(AddPageDraftVersionCommand command, IExecutionContext executionContext)
-        {
-            var newVersionId = _entityFrameworkSqlExecutor
-                .ExecuteCommandWithOutput<int?>(_dbContext,
-                "Cofoundry.Page_AddDraft",
-                "PageVersionId",
-                 new SqlParameter("PageId", command.PageId),
-                 new SqlParameter("CopyFromPageVersionId", command.CopyFromPageVersionId),
-                 new SqlParameter("CreateDate", executionContext.ExecutionDate),
-                 new SqlParameter("CreatorId", executionContext.UserContext.UserId)
-                 );
-
-            if (!newVersionId.HasValue)
-            {
-                throw new UnexpectedSqlStoredProcedureResultException("Cofoundry.Page_AddDraft", "No PageId was returned.");
-            }
-
-            _pageCache.Clear(newVersionId.Value);
-
-            // Set Ouput
-            command.OutputPageVersionId = newVersionId.Value;
-        }
 
         public async Task ExecuteAsync(AddPageDraftVersionCommand command, IExecutionContext executionContext)
         {

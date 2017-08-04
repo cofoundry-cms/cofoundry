@@ -109,7 +109,7 @@ namespace Cofoundry.Web.Admin
             {
                 var pageResponseData = _pageResponseDataCache.Get();
 
-                // When using IPageModuleWithParentPageData and referencing the parent page we get a
+                // When using IPageBlockWithParentPageData and referencing the parent page we get a
                 // Self referencing loop error. Rather than set this globally we ignore this specifically here
                 var settings = _jsonSerializerSettingsFactory.Create();
                 settings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;

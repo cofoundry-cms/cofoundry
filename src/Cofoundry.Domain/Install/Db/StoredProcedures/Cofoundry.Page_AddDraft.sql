@@ -9,7 +9,7 @@ create procedure Cofoundry.Page_AddDraft
 	as
 begin
 	
-	declare @PageVersionModuleEntityDefinitionCode char(6) = 'COFPGM';
+	declare @PageVersionBlockEntityDefinitionCode char(6) = 'COFPGB';
 	declare @PublishedWorkFlowStatus int = 4;
 	declare @ApprovedWorkFlowStatus int = 5;
 	declare @DraftWorkFlowStatus int = 1;
@@ -72,26 +72,26 @@ begin
 
 	set @PageVersionId = SCOPE_IDENTITY()
 	
-	-- Copy Modules
+	-- Copy Blocks
 	-- Technique take from http://sqlmag.com/t-sql/copying-data-dependencies
-	declare @ModulesToCopy table
+	declare @BlocksToCopy table
 	(
-		SourcePageVersionModuleId int,
-		DestinationPageVersionModuleId int
+		SourcePageVersionBlockId int,
+		DestinationPageVersionBlockId int
 	)
 
-	merge into Cofoundry.PageVersionModule as destination
+	merge into Cofoundry.PageVersionBlock as destination
 	using (select 
-			PageVersionModuleId,
-			PageTemplateSectionId,
-			PageModuleTypeId,
+			PageVersionBlockId,
+			PageTemplateRegionId,
+			PageBlockTypeId,
 			SerializedData,
 			Ordering,
 			CreateDate,
 			CreatorId,
 			UpdateDate,
-			PageModuleTypeTemplateId
-		from Cofoundry.PageVersionModule
+			PageBlockTypeTemplateId
+		from Cofoundry.PageVersionBlock
 		where PageVersionId = @CopyFromPageVersionId
 		) as src
 		on 1 = 2
@@ -99,31 +99,31 @@ begin
 		insert 
 		 (
 			PageVersionId,
-			PageTemplateSectionId,
-			PageModuleTypeId,
+			PageTemplateRegionId,
+			PageBlockTypeId,
 			SerializedData,
 			Ordering,
 			CreateDate,
 			CreatorId,
 			UpdateDate,
-			PageModuleTypeTemplateId
+			PageBlockTypeTemplateId
 		)
 		values
 		(
 			@PageVersionId,
-			PageTemplateSectionId,
-			PageModuleTypeId,
+			PageTemplateRegionId,
+			PageBlockTypeId,
 			SerializedData,
 			Ordering,
 			CreateDate,
 			CreatorId,
 			UpdateDate,
-			PageModuleTypeTemplateId
+			PageBlockTypeTemplateId
 		) 
-	output src.PageVersionModuleId, inserted.PageVersionModuleId
-	into @ModulesToCopy (SourcePageVersionModuleId, DestinationPageVersionModuleId);
+	output src.PageVersionBlockId, inserted.PageVersionBlockId
+	into @BlocksToCopy (SourcePageVersionBlockId, DestinationPageVersionBlockId);
 
-	-- Copy Custom Entity Page Module Dependencies
+	-- Copy Custom Entity Page Block Dependencies
 	insert into Cofoundry.UnstructuredDataDependency (
 		RootEntityDefinitionCode,
 		RootEntityId,
@@ -133,11 +133,11 @@ begin
 	)
 	select 
 		RootEntityDefinitionCode,
-		s.DestinationPageVersionModuleId,
+		s.DestinationPageVersionBlockId,
 		RelatedEntityDefinitionCode,
 		RelatedEntityId,
 		RelatedEntityCascadeActionId
-	from @ModulesToCopy s
-	inner join Cofoundry.UnstructuredDataDependency d on d.RootEntityId = s.SourcePageVersionModuleId and RootEntityDefinitionCode = @PageVersionModuleEntityDefinitionCode
+	from @BlocksToCopy s
+	inner join Cofoundry.UnstructuredDataDependency d on d.RootEntityId = s.SourcePageVersionBlockId and RootEntityDefinitionCode = @PageVersionBlockEntityDefinitionCode
 	
 end

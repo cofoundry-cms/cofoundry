@@ -51,7 +51,7 @@ namespace Cofoundry.Domain
         {
             var dbPageTemplates = await _dbContext
                 .PageTemplates
-                .Include(t => t.PageTemplateSections)
+                .Include(t => t.PageTemplateRegions)
                 .ToDictionaryAsync(d => d.FileName);
 
             var fileTemplates = _pageTemplateViewFileLocator
@@ -86,11 +86,11 @@ namespace Cofoundry.Domain
 
                 dbPageTemplate = await UpdateTemplate(executionContext, dbPageTemplate, fileTemplate, fileTemplateDetails);
 
-                // No need to update archived template sections
+                // No need to update archived template regions
                 if (dbPageTemplate.IsArchived) continue;
 
-                // Update Sections
-                UpdateSections(fileTemplate, fileTemplateDetails, dbPageTemplate, executionContext);
+                // Update Regions
+                UpdateRegions(fileTemplate, fileTemplateDetails, dbPageTemplate, executionContext);
             }
         }
 
@@ -126,9 +126,9 @@ namespace Cofoundry.Domain
 
             if (!EnumerableHelper.IsNullOrEmpty(duplicateTemplateFiles))
             {
-                var moduleTypes = string.Join(", ", duplicateTemplateFiles.Select(f => f.VirtualPath));
+                var templateList = string.Join(", ", duplicateTemplateFiles.Select(f => f.VirtualPath));
                 throw new PageTemplateRegistrationException(
-                    $"Duplicate template '{ duplicateTemplateFiles.Key }' detected. Conflicting templates: { moduleTypes }");
+                    $"Duplicate template '{ duplicateTemplateFiles.Key }' detected. Conflicting templates: { templateList }");
             }
         }
 
@@ -208,61 +208,61 @@ namespace Cofoundry.Domain
             return dbPageTemplate;
         }
 
-        private void UpdateSections(
+        private void UpdateRegions(
             PageTemplateFile fileTemplate, 
             PageTemplateFileInfo fileTemplateDetails, 
             PageTemplate dbPageTemplate,
             IExecutionContext executionContext
             )
         {
-            // De-dup section names
-            var duplicateSectionName = fileTemplateDetails
-                .Sections
+            // De-dup region names
+            var duplicateRegionName = fileTemplateDetails
+                .Regions
                 .GroupBy(s => s.Name.ToLowerInvariant())
                 .FirstOrDefault(g => g.Count() > 1);
 
-            if (duplicateSectionName != null)
+            if (duplicateRegionName != null)
             {
-                throw new PageTemplateRegistrationException($"Dulpicate template section '{ duplicateSectionName.First().Name }' in template { fileTemplate.VirtualPath }");
+                throw new PageTemplateRegistrationException($"Dulpicate template region '{ duplicateRegionName.First().Name }' in template { fileTemplate.VirtualPath }");
             }
 
             // Deletions
-            var sectionsToDelete = dbPageTemplate
-                .PageTemplateSections
-                .Where(ts => !fileTemplateDetails.Sections.Any(fs => ts.Name.Equals(fs.Name, StringComparison.OrdinalIgnoreCase)))
+            var regionsToDelete = dbPageTemplate
+                .PageTemplateRegions
+                .Where(ts => !fileTemplateDetails.Regions.Any(fs => ts.Name.Equals(fs.Name, StringComparison.OrdinalIgnoreCase)))
                 .ToList();
 
-            foreach (var sectionToDelete in sectionsToDelete)
+            foreach (var regionToDelete in regionsToDelete)
             {
-                _dbContext.PageTemplateSections.Remove(sectionToDelete);
+                _dbContext.PageTemplateRegions.Remove(regionToDelete);
             }
 
             // Updates/Additions
-            foreach (var fileSection in fileTemplateDetails.Sections)
+            foreach (var fileRegion in fileTemplateDetails.Regions)
             {
                 var existing = dbPageTemplate
-                    .PageTemplateSections
-                    .FirstOrDefault(s => s.Name.Equals(fileSection.Name, StringComparison.OrdinalIgnoreCase));
+                    .PageTemplateRegions
+                    .FirstOrDefault(s => s.Name.Equals(fileRegion.Name, StringComparison.OrdinalIgnoreCase));
 
                 if (existing == null)
                 {
-                    existing = new PageTemplateSection();
+                    existing = new PageTemplateRegion();
                     existing.PageTemplate = dbPageTemplate;
                     existing.CreateDate = executionContext.ExecutionDate;
-                    _dbContext.PageTemplateSections.Add(existing);
+                    _dbContext.PageTemplateRegions.Add(existing);
                 }
 
                 // casing might have changed
-                if (existing.Name != fileSection.Name)
+                if (existing.Name != fileRegion.Name)
                 {
-                    existing.Name = fileSection.Name;
+                    existing.Name = fileRegion.Name;
                     existing.UpdateDate = executionContext.ExecutionDate;
                 }
 
-                // this will detach section data but there's no migrating that...
-                if (existing.IsCustomEntitySection != fileSection.IsCustomEntitySection)
+                // this will detach region data but there's no migrating that...
+                if (existing.IsCustomEntityRegion != fileRegion.IsCustomEntityRegion)
                 {
-                    existing.IsCustomEntitySection = fileSection.IsCustomEntitySection;
+                    existing.IsCustomEntityRegion = fileRegion.IsCustomEntityRegion;
                     existing.UpdateDate = executionContext.ExecutionDate;
                 }
             }

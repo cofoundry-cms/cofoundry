@@ -1,0 +1,7 @@
+﻿@model RichTextWithMediaDisplayModel
+
+@{
+    Cofoundry.BlockType.UseDescription("Text entry with simple formatting and image/video media functionality");
+}
+ 
+@Cofoundry.Sanitizer.Sanitize(Model.RawHtml)

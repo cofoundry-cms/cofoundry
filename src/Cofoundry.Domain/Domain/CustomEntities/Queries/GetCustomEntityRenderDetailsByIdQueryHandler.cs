@@ -19,21 +19,21 @@ namespace Cofoundry.Domain
 
         private readonly CofoundryDbContext _dbContext;
         private readonly CustomEntityDataModelMapper _customEntityDataModelMapper;
-        private readonly IEntityVersionPageModuleMapper _entityVersionPageModuleMapper;
+        private readonly IEntityVersionPageBlockMapper _entityVersionPageBlockMapper;
         private readonly IPermissionValidationService _permissionValidationService;
         private readonly IQueryExecutor _queryExecutor;
 
         public GetCustomEntityRenderDetailsByIdQueryHandler(
             CofoundryDbContext dbContext,
             CustomEntityDataModelMapper customEntityDataModelMapper,
-            IEntityVersionPageModuleMapper entityVersionPageModuleMapper,
+            IEntityVersionPageBlockMapper entityVersionPageBlockMapper,
             IPermissionValidationService permissionValidationService,
             IQueryExecutor queryExecutor
             )
         {
             _dbContext = dbContext;
             _customEntityDataModelMapper = customEntityDataModelMapper;
-            _entityVersionPageModuleMapper = entityVersionPageModuleMapper;
+            _entityVersionPageBlockMapper = entityVersionPageBlockMapper;
             _permissionValidationService = permissionValidationService;
             _queryExecutor = queryExecutor;
         }
@@ -47,34 +47,34 @@ namespace Cofoundry.Domain
             var dbResult = await QueryCustomEntity(query).FirstOrDefaultAsync();
             var entity = await MapCustomEntityAsync(dbResult);
 
-            entity.Sections = await QuerySections(query).ToListAsync();
-            var dbModules = await QueryModules(entity).ToListAsync();
+            entity.Regions = await QueryRegions(query).ToListAsync();
+            var dbPageBlocks = await QueryPageBlocks(entity).ToListAsync();
 
-            var allModuleTypes = await _queryExecutor.GetAllAsync<PageModuleTypeSummary>(executionContext);
-            await _entityVersionPageModuleMapper.MapSectionsAsync(dbModules, entity.Sections, allModuleTypes, query.WorkFlowStatus);
+            var allBlockTypes = await _queryExecutor.GetAllAsync<PageBlockTypeSummary>(executionContext);
+            await _entityVersionPageBlockMapper.MapRegionsAsync(dbPageBlocks, entity.Regions, allBlockTypes, query.WorkFlowStatus);
 
             var routingQuery = new GetPageRoutingInfoByCustomEntityIdQuery(dbResult.CustomEntityId);
             var routing = await _queryExecutor.ExecuteAsync(routingQuery, executionContext);
-            entity.DetailsPageUrls = MapPageRoutings(routing, dbResult);
+            entity.PageUrls = MapPageRoutings(routing, dbResult);
 
             return entity;
         }
 
-        private IQueryable<CustomEntityVersionPageModule> QueryModules(CustomEntityRenderDetails entity)
+        private IQueryable<CustomEntityVersionPageBlock> QueryPageBlocks(CustomEntityRenderDetails entity)
         {
             return _dbContext
-                .CustomEntityVersionPageModules
+                .CustomEntityVersionPageBlocks
                 .AsNoTracking()
                 .Where(m => m.CustomEntityVersionId == entity.CustomEntityVersionId);
         }
 
-        private IQueryable<CustomEntityPageSectionRenderDetails> QuerySections(GetCustomEntityRenderDetailsByIdQuery query)
+        private IQueryable<CustomEntityPageRegionRenderDetails> QueryRegions(GetCustomEntityRenderDetailsByIdQuery query)
         {
             return _dbContext
-                .PageTemplateSections
+                .PageTemplateRegions
                 .AsNoTracking()
                 .Where(s => s.PageTemplateId == query.PageTemplateId)
-                .ProjectTo<CustomEntityPageSectionRenderDetails>();
+                .ProjectTo<CustomEntityPageRegionRenderDetails>();
         }
 
         private async Task<CustomEntityRenderDetails> MapCustomEntityAsync(CustomEntityVersion dbResult)

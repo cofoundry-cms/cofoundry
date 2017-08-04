@@ -12,7 +12,7 @@ namespace Cofoundry.Domain
 {
     /// <summary>
     /// Gets a range of pages by their PageIds as PageRenderDetails objects. A PageRenderDetails contains 
-    /// the data required to render a page, including template data for all the content-editable sections.
+    /// the data required to render a page, including template data for all the content-editable regions.
     /// </summary>
     public class GetPageRenderDetailsByIdRangeQueryHandler
         : IAsyncQueryHandler<GetPageRenderDetailsByIdRangeQuery, IDictionary<int, PageRenderDetails>>
@@ -23,24 +23,24 @@ namespace Cofoundry.Domain
         private readonly CofoundryDbContext _dbContext;
         private readonly IQueryExecutor _queryExecutor;
         private readonly IPageMapper _pageMapper;
-        private readonly IEntityVersionPageModuleMapper _entityVersionPageModuleMapper;
+        private readonly IEntityVersionPageBlockMapper _entityVersionPageBlockMapper;
 
         public GetPageRenderDetailsByIdRangeQueryHandler(
             CofoundryDbContext dbContext,
             IQueryExecutor queryExecutor,
             IPageMapper pageMapper,
-            IEntityVersionPageModuleMapper entityVersionPageModuleMapper
+            IEntityVersionPageBlockMapper entityVersionPageBlockMapper
             )
         {
             _dbContext = dbContext;
             _queryExecutor = queryExecutor;
             _pageMapper = pageMapper;
-            _entityVersionPageModuleMapper = entityVersionPageModuleMapper;
+            _entityVersionPageBlockMapper = entityVersionPageBlockMapper;
         }
 
         #endregion
 
-        #region public methods
+        #region execution
 
         public async Task<IDictionary<int, PageRenderDetails>> ExecuteAsync(GetPageRenderDetailsByIdRangeQuery query, IExecutionContext executionContext)
         {
@@ -53,18 +53,14 @@ namespace Cofoundry.Domain
             var pageRoutes = await _queryExecutor.GetByIdRangeAsync<PageRoute>(GetAllPageIds(pages), executionContext);
             MapPageRoutes(pages, pageRoutes);
 
-            var dbModules = await QueryModules(pages).ToListAsync();
-            var allModuleTypes = await _queryExecutor.GetAllAsync<PageModuleTypeSummary>(executionContext);
+            var dbPageBlocks = await QueryPageBlocks(pages).ToListAsync();
+            var allBlockTypes = await _queryExecutor.GetAllAsync<PageBlockTypeSummary>(executionContext);
 
-            await _entityVersionPageModuleMapper.MapSectionsAsync(dbModules, pages.SelectMany(p => p.Sections), allModuleTypes, query.WorkFlowStatus);
+            await _entityVersionPageBlockMapper.MapRegionsAsync(dbPageBlocks, pages.SelectMany(p => p.Regions), allBlockTypes, query.WorkFlowStatus);
 
             return pages.ToDictionary(d => d.PageId);
         }
-
-        #endregion
-
-        #region private helpers
-
+        
         private IQueryable<PageVersion> QueryPages(GetPageRenderDetailsByIdRangeQuery query)
         {
             if (query.WorkFlowStatus == WorkFlowStatusQuery.SpecificVersion)
@@ -75,21 +71,21 @@ namespace Cofoundry.Domain
             IQueryable<PageVersion> dbQuery = _dbContext
                 .PageVersions
                 .AsNoTracking()
-                .Where(v => query.PageIds.Contains(v.PageId) && !v.IsDeleted)
-                .FilterByWorkFlowStatusQuery(query.WorkFlowStatus)
                 .Include(v => v.Page)
                 .Include(v => v.PageTemplate)
-                .ThenInclude(t => t.PageTemplateSections);
+                .ThenInclude(t => t.PageTemplateRegions)
+                .Where(v => query.PageIds.Contains(v.PageId) && !v.IsDeleted)
+                .FilterByWorkFlowStatusQuery(query.WorkFlowStatus);
 
             return dbQuery;
         }
 
-        private IQueryable<PageVersionModule> QueryModules(List<PageRenderDetails> pages)
+        private IQueryable<PageVersionBlock> QueryPageBlocks(List<PageRenderDetails> pages)
         {
             var versionIds = pages.Select(p => p.PageVersionId);
 
             return _dbContext
-                .PageVersionModules
+                .PageVersionBlocks
                 .AsNoTracking()
                 .Where(m => versionIds.Contains(m.PageVersionId));
         }

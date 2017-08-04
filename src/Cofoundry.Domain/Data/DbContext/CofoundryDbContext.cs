@@ -46,7 +46,7 @@ namespace Cofoundry.Domain.Data
         public DbSet<CustomEntityDefinition> CustomEntityDefinitions { get; set; }
         public DbSet<CustomEntity> CustomEntities { get; set; }
         public DbSet<CustomEntityVersion> CustomEntityVersions { get; set; }
-        public DbSet<CustomEntityVersionPageModule> CustomEntityVersionPageModules { get; set; }
+        public DbSet<CustomEntityVersionPageBlock> CustomEntityVersionPageBlocks { get; set; }
         public DbSet<EntityDefinition> EntityDefinitions { get; set; }
         public DbSet<DocumentAssetGroupItem> DocumentAssetGroupItems { get; set; }
         public DbSet<DocumentAssetGroup> DocumentAssetGroups { get; set; }
@@ -57,16 +57,16 @@ namespace Cofoundry.Domain.Data
         public DbSet<ImageAsset> ImageAssets { get; set; }
         public DbSet<ImageAssetTag> ImageAssetTags { get; set; }
         public DbSet<PageTemplate> PageTemplates { get; set; }
-        public DbSet<PageTemplateSection> PageTemplateSections { get; set; }
+        public DbSet<PageTemplateRegion> PageTemplateRegions { get; set; }
         public DbSet<Locale> Locales { get; set; }
         public DbSet<Page> Pages { get; set; }
         public DbSet<PageDirectory> PageDirectories { get; set; }
         public DbSet<PageDirectoryLocale> PageDirectoryLocales { get; set; }
-        public DbSet<PageModuleTypeTemplate> PageModuleTypeTemplates { get; set; }
-        public DbSet<PageModuleType> PageModuleTypes { get; set; }
+        public DbSet<PageBlockTypeTemplate> PageBlockTypeTemplates { get; set; }
+        public DbSet<PageBlockType> PageBlockTypes { get; set; }
         public DbSet<PageGroupItem> PageGroupItems { get; set; }
         public DbSet<PageGroup> PageGroups { get; set; }
-        public DbSet<PageVersionModule> PageVersionModules { get; set; }
+        public DbSet<PageVersionBlock> PageVersionBlocks { get; set; }
         public DbSet<PageTag> PageTags { get; set; }
         public DbSet<PageVersion> PageVersions { get; set; }
         public DbSet<Permission> Permissions { get; set; }

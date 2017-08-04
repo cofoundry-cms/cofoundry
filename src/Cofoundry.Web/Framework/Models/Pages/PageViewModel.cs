@@ -20,7 +20,7 @@ namespace Cofoundry.Web
             }
             set
             {
-                SetPagePropertyNullCheck("PageTitle");
+                SetPagePropertyNullCheck(nameof(PageTitle));
                 Page.Title = value;
             }
         }
@@ -34,7 +34,7 @@ namespace Cofoundry.Web
             }
             set
             {
-                SetPagePropertyNullCheck("MetaDescription");
+                SetPagePropertyNullCheck(nameof(MetaDescription));
                 Page.MetaDescription = value;
             } 
         }

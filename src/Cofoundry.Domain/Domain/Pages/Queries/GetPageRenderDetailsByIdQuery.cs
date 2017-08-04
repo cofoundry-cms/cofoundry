@@ -9,7 +9,7 @@ namespace Cofoundry.Domain
 {
     /// <summary>
     /// Gets a page object that contains the data required to render a page, including template 
-    /// data for all the content-editable sections.
+    /// data for all the content-editable regions.
     /// </summary>
     public class GetPageRenderDetailsByIdQuery : IQuery<PageRenderDetails>, IValidatableObject
     {

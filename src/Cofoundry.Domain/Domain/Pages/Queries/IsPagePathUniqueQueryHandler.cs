@@ -34,10 +34,6 @@ namespace Cofoundry.Domain
             return !exists;
         }
 
-        #endregion
-
-        #region helpers
-
         private IQueryable<Page> Exists(IsPagePathUniqueQuery query)
         {
             return _dbContext

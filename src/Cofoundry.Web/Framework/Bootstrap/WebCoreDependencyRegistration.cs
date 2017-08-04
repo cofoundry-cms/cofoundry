@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using Cofoundry.Core.DependencyInjection;
 using Cofoundry.Domain;
-using Cofoundry.Core.Web;
 using Cofoundry.Core;
+using Cofoundry.Core.ResourceFiles;
 
 namespace Cofoundry.Web
 {
@@ -29,13 +29,19 @@ namespace Cofoundry.Web
                 
                 .RegisterType<IApiResponseHelper, ApiResponseHelper>()
 
-                .RegisterType<ICustomEntityTemplateSectionTagBuilderFactory, CustomEntityTemplateSectionTagBuilderFactory>()
-                .RegisterType<IPageTemplateSectionTagBuilderFactory, PageTemplateSectionTagBuilderFactory>()
-                .RegisterType<IPageModuleRenderer, PageModuleRenderer>()
+                .RegisterType<ICustomEntityTemplateRegionTagBuilderFactory, CustomEntityTemplateRegionTagBuilderFactory>()
+                .RegisterType<IPageTemplateRegionTagBuilderFactory, PageTemplateRegionTagBuilderFactory>()
+                .RegisterType<IPageBlockRenderer, PageBlockRenderer>()
                 .RegisterType<IPathResolver, SitePathResolver>(RegistrationOptions.Override(RegistrationOverridePriority.Low))
 
                 .RegisterType<JsonDeltaModelBinder>()
                 .RegisterType<IFormFileUploadedFileFactory, FormFileUploadedFileFactory>()
+
+                .RegisterAll<IRouteRegistration>()
+                .RegisterType<IRouteInitializer, RouteInitializer>()
+                .RegisterType<IResourceLocator, WebsiteResourceLocator>(RegistrationOptions.Override(RegistrationOverridePriority.Low))
+                .RegisterType<IEmptyActionContextFactory, EmptyActionContextFactory>()
+                .RegisterInstance<IStaticResourceFileProvider, StaticResourceFileProvider>()
                 ; 
         }
     }

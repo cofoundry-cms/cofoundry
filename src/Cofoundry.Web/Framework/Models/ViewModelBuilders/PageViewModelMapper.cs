@@ -72,7 +72,7 @@ namespace Cofoundry.Web
             customModel.CustomEntityId = customEntityRenderDetails.CustomEntityId;
             customModel.CustomEntityVersionId = customEntityRenderDetails.CustomEntityVersionId;
             customModel.Locale = customEntityRenderDetails.Locale;
-            customModel.Sections = customEntityRenderDetails.Sections;
+            customModel.Regions = customEntityRenderDetails.Regions;
             customModel.Title = customEntityRenderDetails.Title;
             customModel.UrlSlug = customEntityRenderDetails.UrlSlug;
             customModel.WorkFlowStatus = customEntityRenderDetails.WorkFlowStatus;

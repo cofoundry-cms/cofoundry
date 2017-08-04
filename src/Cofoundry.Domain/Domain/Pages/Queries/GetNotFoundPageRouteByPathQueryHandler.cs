@@ -13,6 +13,8 @@ namespace Cofoundry.Domain
         : IAsyncQueryHandler<GetNotFoundPageRouteByPathQuery, PageRoute>
         , IPermissionRestrictedQueryHandler<GetNotFoundPageRouteByPathQuery, PageRoute>
     {
+        #region constructor
+
         private readonly IQueryExecutor _queryExecutor;
         private readonly IPagePathHelper _pathHelper;
 
@@ -25,11 +27,15 @@ namespace Cofoundry.Domain
             _pathHelper = pathHelper;
         }
 
+        #endregion
+
+        #region execution
+
         public async Task<PageRoute> ExecuteAsync(GetNotFoundPageRouteByPathQuery query, IExecutionContext executionContext)
         {
             if (!string.IsNullOrWhiteSpace(query.Path) && !Uri.IsWellFormedUriString(query.Path, UriKind.Relative)) return null;
 
-            var path = _pathHelper.StandardisePath(query.Path);
+            var path = _pathHelper.StandardizePath(query.Path);
 
             var allRoutes = (await _queryExecutor
                 .GetAllAsync<PageRoute>())
@@ -75,7 +81,9 @@ namespace Cofoundry.Domain
             var localeIdToCheck = locale == null ? (int?)null : locale.LocaleId;
             return localeId == localeIdToCheck;
         }
-        
+
+        #endregion
+
         #region Permission
 
         public IEnumerable<IPermissionApplication> GetPermissions(GetNotFoundPageRouteByPathQuery query)

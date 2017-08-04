@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc.ModelBinding.Metadata;
 namespace Cofoundry.Domain
 {
     /// <summary>
-    /// This can be used to decorate image properties in module data providers to give properties about the image for filtering when browsing.
+    /// This can be used to decorate image properties in dynamic data providers to give properties about the image for filtering when browsing.
     /// I.e. you can specify dimensions and tags for filtering the list of images.
     /// </summary>
     [AttributeUsage(AttributeTargets.Property)]

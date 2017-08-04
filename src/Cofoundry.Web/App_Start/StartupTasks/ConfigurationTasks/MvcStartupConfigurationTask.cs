@@ -1,5 +1,4 @@
-﻿using Cofoundry.Web.ModularMvc;
-using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
 using System;
 using System.Collections.Generic;

@@ -44,9 +44,9 @@
 
         </cms-form-section>
 
-        <!--SECTIONS-->
+        <!--REGIONS-->
 
-        <cms-form-section cms-title="Sections">
+        <cms-form-section cms-title="Regions">
 
             <div class="control-group">
                 <div class="control-group-area">
@@ -59,14 +59,14 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr ng-if="!vm.pageTemplate.sections.length">
+                                <tr ng-if="!vm.pageTemplate.regions.length">
                                     <td colspan="100" class="empty">None.</td>
                                 </tr>
-                                <tr ng-repeat="section in vm.pageTemplate.sections">
-                                    <td>{{::section.name}}</td>
+                                <tr ng-repeat="region in vm.pageTemplate.regions">
+                                    <td>{{::region.name}}</td>
                                     <td ng-if="vm.pageTemplate.customEntityDefinition">
-                                        <span ng-if="::section.isCustomEntitySection">{{::vm.pageTemplate.customEntityDefinition.name}}</span>
-                                        <span ng-if="::!section.isCustomEntitySection">Page</span>
+                                        <span ng-if="::region.isCustomEntityRegion">{{::vm.pageTemplate.customEntityDefinition.name}}</span>
+                                        <span ng-if="::!region.isCustomEntityRegion">Page</span>
                                     </td>
                                 </tr>
                             </tbody>

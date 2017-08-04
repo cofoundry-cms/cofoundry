@@ -14,16 +14,16 @@
             <h1>
                 @(await Cofoundry
                     .Template
-                    .Section("Introduction Title")
-                    .AllowModuleType<PlainTextDataModel>()
+                    .Region("Introduction Title")
+                    .AllowBlockType<PlainTextDataModel>()
                     .InvokeAsync())
             </h1>
 
             @(await Cofoundry
                 .Template
-                .Section("Introduction")
-                .AllowModuleType<RichTextWithMediaDataModel>()
-                .AllowModuleType<PageListDataModel>()
+                .Region("Introduction")
+                .AllowBlockType<RichTextWithMediaDataModel>()
+                .AllowBlockType<PageListDataModel>()
                 .EmptyContentMinHeight(200)
                 .InvokeAsync())
         </div>

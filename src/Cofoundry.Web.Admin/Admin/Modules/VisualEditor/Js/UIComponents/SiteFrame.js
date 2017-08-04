@@ -56,7 +56,7 @@ function (
     /* HELPERS */
 
     function initEditableContent(scope, doc, el) {
-        var popover = new PageSectionPopOver(scope, el);
+        var popover = new PageRegionPopOver(scope, el);
         addMouseEvents(doc, popover);
 
         // Add class to iFrame doc. Used for admin UI 
@@ -67,13 +67,13 @@ function (
 
     /**
      * This gets called when initializing the page mouse events, but is also used
-     * to rebind the mouse events when a section element is updated (since jqLite does
+     * to rebind the mouse events when a region element is updated (since jqLite does
      * not support event delegation)
      */
     function addMouseEvents(rootElement, popover) {
         var entityType = options.isCustomEntityRoute ? 'custom-entity' : 'page';
-        addEventsForComponent('section', popover.showSection, popover.hideSection);
-        addEventsForComponent('section-module', popover.showModule, popover.hideModule);
+        addEventsForComponent('region', popover.showRegion, popover.hideRegion);
+        addEventsForComponent('region-block', popover.showBlock, popover.hideBlock);
 
         function addEventsForComponent(componentName, showFn, hideFn) {
             var selectorAttribute = 'data-cms-' + entityType + '-' + componentName,
@@ -96,10 +96,10 @@ function (
         }
     }
 
-    function PageSectionPopOver(scope, siteFrameEl) {
+    function PageRegionPopOver(scope, siteFrameEl) {
         var me = this,
             childScope = scope.$new(),
-            template = $compile('<cms-page-section></cms-page-section>'),
+            template = $compile('<cms-page-region></cms-page-region>'),
             popover;
 
         /* Create element */
@@ -110,26 +110,26 @@ function (
 
         /* Add show/hide functions */
 
-        me.showSection = wrapInApply(function (el) {
-            if (!childScope.isSectionOver || el != childScope.sectionAnchorElement) {
-                childScope.isSectionOver = true;
-                childScope.sectionAnchorElement = el;
+        me.showRegion = wrapInApply(function (el) {
+            if (!childScope.isRegionOver || el != childScope.regionAnchorElement) {
+                childScope.isRegionOver = true;
+                childScope.regionAnchorElement = el;
             }
         });
 
-        me.hideSection = wrapInApply(function () {
-            childScope.isSectionOver = false;
+        me.hideRegion = wrapInApply(function () {
+            childScope.isRegionOver = false;
         });
 
-        me.showModule = wrapInApply(function (el) {
-            if (!childScope.isModuleOver || el != childScope.moduleAnchorElement) {
-                childScope.isModuleOver = true;
-                childScope.moduleAnchorElement = el;
+        me.showBlock = wrapInApply(function (el) {
+            if (!childScope.isBlockOver || el != childScope.blockAnchorElement) {
+                childScope.isBlockOver = true;
+                childScope.blockAnchorElement = el;
             }
         });
 
-        me.hideModule = wrapInApply(function () {
-            childScope.isModuleOver = false;
+        me.hideBlock = wrapInApply(function () {
+            childScope.isBlockOver = false;
         });
 
         function wrapInApply(fn) {
@@ -139,14 +139,14 @@ function (
         }
 
         /**
-         * Invoked when a section or module has been modified, we give the option to re-load various parts of
+         * Invoked when a region or block has been modified, we give the option to re-load various parts of
          * the dom, all of which involve re-loading the entire document from the server.
          */
         function refreshContent(options) {
-            if (options.pageTemplateSectionId) {
-                return reloadElementBySelector('[data-cms-page-template-section-id="' + options.pageTemplateSectionId + '"]');
-            } else if (options.versionModuleId) {
-                return reloadElementBySelector('[data-cms-version-module-id="' + options.versionModuleId + '"]');
+            if (options.pageTemplateRegionId) {
+                return reloadElementBySelector('[data-cms-page-template-region-id="' + options.pageTemplateRegionId + '"]');
+            } else if (options.versionBlockId) {
+                return reloadElementBySelector('[data-cms-version-block-id="' + options.versionBlockId + '"]');
             } else {
                 return reloadPage();
             }
@@ -158,27 +158,27 @@ function (
         }
 
         function reloadElementBySelector(selector) {
-            var oldSectionElement = siteFrameEl[0].contentDocument.querySelector(selector),
-                loadingNode = oldSectionElement.cloneNode(true),
-                hoveredModule = loadingNode.querySelector('.cofoundry-sv__hover-module');
+            var oldRegionElement = siteFrameEl[0].contentDocument.querySelector(selector),
+                loadingNode = oldRegionElement.cloneNode(true),
+                hoveredBlock = loadingNode.querySelector('.cofoundry-sv__hover-block');
 
             // set loading, clone the node to remove event handlers
-            loadingNode.className += ' cofoundry-sv__section-loading';
-            if (hoveredModule) hoveredModule.className = hoveredModule.className.replace('cofoundry-sv__hover-module', '');
-            oldSectionElement.parentNode.replaceChild(loadingNode, oldSectionElement);
+            loadingNode.className += ' cofoundry-sv__region-loading';
+            if (hoveredBlock) hoveredBlock.className = hoveredBlock.className.replace('cofoundry-sv__hover-block', '');
+            oldRegionElement.parentNode.replaceChild(loadingNode, oldRegionElement);
 
             return getPageContent().then(function (content) {
                 var html = loadHtmlStringToElement(content.data);
 
                 // clear all hover states before we remove the element events
-                childScope.isModuleOver = false;
-                childScope.isSectionOver = false;
+                childScope.isBlockOver = false;
+                childScope.isRegionOver = false;
 
-                var newSectionElement = html.querySelector(selector);
-                if (newSectionElement) {
+                var newRegionElement = html.querySelector(selector);
+                if (newRegionElement) {
 
-                    loadingNode.parentNode.replaceChild(newSectionElement, loadingNode);
-                    addMouseEvents(newSectionElement, me);
+                    loadingNode.parentNode.replaceChild(newRegionElement, loadingNode);
+                    addMouseEvents(newRegionElement, me);
                 }
 
                 triggerClientEvent(siteFrameEl, 'pageContentReloaded', {

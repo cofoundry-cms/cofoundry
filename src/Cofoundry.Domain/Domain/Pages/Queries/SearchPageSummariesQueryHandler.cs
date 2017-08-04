@@ -44,17 +44,12 @@ namespace Cofoundry.Domain
             return result;
         }
 
-        #endregion
-
-        #region helpers
-
         private IQueryable<PageSummary> CreateQuery(SearchPageSummariesQuery query)
         {
             var dbQuery = _dbContext
                 .Pages
                 .AsNoTracking()
                 .Where(p => !p.IsDeleted && p.PageDirectory.IsActive);
-
 
             // Filter by tags
             if (!string.IsNullOrEmpty(query.Tags))

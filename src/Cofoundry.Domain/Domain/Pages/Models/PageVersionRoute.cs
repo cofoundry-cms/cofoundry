@@ -35,15 +35,15 @@ namespace Cofoundry.Domain
 
         /// <summary>
         /// True if the template implemented by this version has customizable
-        /// sections for page data defined; otherwise false.
+        /// regions for page data defined; otherwise false.
         /// </summary>
-        public bool HasPageModuleSections { get; set; }
+        public bool HasPageRegions { get; set; }
 
         /// <summary>
         /// True if the template implemented by this version has customizable
-        /// sections for custom entity data defined; otherwise false.
+        /// regions for custom entity data defined; otherwise false.
         /// </summary>
-        public bool HasCustomEntityModuleSections { get; set; }
+        public bool HasCustomEntityRegions { get; set; }
 
         /// <summary>
         /// The workflow state of this version e.g. draft/published.

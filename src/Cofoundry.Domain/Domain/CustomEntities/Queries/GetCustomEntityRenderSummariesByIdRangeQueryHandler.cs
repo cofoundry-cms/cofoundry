@@ -47,10 +47,6 @@ namespace Cofoundry.Domain
             return results.ToDictionary(r => r.CustomEntityId);
         }
 
-        #endregion
-
-        #region private helpers
-
         private IQueryable<CustomEntityVersion> Query(GetCustomEntityRenderSummariesByIdRangeQuery query)
         {
             var dbQuery = _dbContext

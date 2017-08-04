@@ -25,19 +25,19 @@ namespace Cofoundry.Domain
 
         private readonly CofoundryDbContext _dbContext;
         private readonly IQueryExecutor _queryExecutor;
-        private readonly IPageVersionModuleModelMapper _moduleDisplayDataFactory;
+        private readonly IPageVersionBlockModelMapper _blockDisplayDataFactory;
         private readonly IHtmlSanitizer _htmlSanitizer;
 
         public SearchPagesQueryHandler(
             CofoundryDbContext dbContext,
             IQueryExecutor queryExecutor,
-            IPageVersionModuleModelMapper moduleDisplayDataFactory,
+            IPageVersionBlockModelMapper blockDisplayDataFactory,
             IHtmlSanitizer htmlSanitizer
             )
         {
             _dbContext = dbContext;
             _queryExecutor = queryExecutor;
-            _moduleDisplayDataFactory = moduleDisplayDataFactory;
+            _blockDisplayDataFactory = blockDisplayDataFactory;
             _htmlSanitizer = htmlSanitizer;
         }
 
@@ -53,7 +53,7 @@ namespace Cofoundry.Domain
 
             var isAuthenticated = executionContext.UserContext.UserId.HasValue;
 
-            // TODO: Search results should look at page titles as well as module content
+            // TODO: Search results should look at page titles as well as content blocks
 
             // Find any page versions that match by title
             // TODO: Ignore small words like 'of' and 'the'
@@ -77,10 +77,10 @@ namespace Cofoundry.Domain
 
             // TODO: Search should split the search term and lookup individual words as well (and rank them less strongly)
 
-            // Get a list of ALL the page modules for live pages - we'll search through these for any matches
-            var pageModules = await _dbContext
-                .PageVersionModules
-                .Include(m => m.PageModuleType)
+            // Get a list of ALL the page blocks for live pages - we'll search through these for any matches
+            var pageBlocks = await _dbContext
+                .PageVersionBlocks
+                .Include(m => m.PageBlockType)
                 .Where(m => !m.PageVersion.IsDeleted)
                 .Where(m => !m.PageVersion.Page.IsDeleted)
                 .Where(m => isAuthenticated ? true : m.PageVersion.WorkFlowStatusId == (int)WorkFlowStatus.Published)
@@ -88,19 +88,19 @@ namespace Cofoundry.Domain
                 .Where(m => m.PageVersion.Page.PageTypeId == (int)PageType.Generic)
                 .ToListAsync();
 
-            // This will store a list of matches for each module
-            var matches = new Dictionary<PageVersionModule, List<string>>();
+            // This will store a list of matches for each block
+            var matches = new Dictionary<PageVersionBlock, List<string>>();
 
-            foreach (var pageModule in pageModules.Where(p => !string.IsNullOrEmpty(query.Text)))
+            foreach (var pageBlock in pageBlocks.Where(p => !string.IsNullOrEmpty(query.Text)))
             {
-                var dataProvider = await _moduleDisplayDataFactory.MapDisplayModelAsync(pageModule.PageModuleType.FileName, pageModule, WorkFlowStatusQuery.Published);
+                var dataProvider = await _blockDisplayDataFactory.MapDisplayModelAsync(pageBlock.PageBlockType.FileName, pageBlock, WorkFlowStatusQuery.Published);
                 var dataProviderType = dataProvider.GetType().GetTypeInfo();
 
-                // If this module is searchable - ie there is content to search
-                // TODO: Module Searching
+                // If this block is searchable - ie there is content to search
+                // TODO: Block Searching
                 //if (dataProvider is ISearchable)
                 //{
-                    var props = dataProviderType
+                var props = dataProviderType
                     .GetProperties()
                     .Where(prop => prop.IsDefined(typeof(SearchableAttribute), true));
 
@@ -110,7 +110,7 @@ namespace Cofoundry.Domain
 
                         if (str.IndexOf(query.Text ?? "", StringComparison.OrdinalIgnoreCase) > -1)
                         {
-                            if (!matches.ContainsKey(pageModule)) matches[pageModule] = new List<string>();
+                            if (!matches.ContainsKey(pageBlock)) matches[pageBlock] = new List<string>();
 
                             int index = str.ToLower().IndexOf(query.Text.ToLower());
 
@@ -139,7 +139,7 @@ namespace Cofoundry.Domain
                             // Highlight the search term
                             matchStr = Regex.Replace(matchStr, query.Text, @"<b>$0</b>", RegexOptions.IgnoreCase);
 
-                            matches[pageModule].Add(matchStr);
+                            matches[pageBlock].Add(matchStr);
                         }
                     }
                 //}

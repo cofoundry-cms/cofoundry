@@ -1,0 +1,7 @@
+﻿@model RichTextDisplayModel
+
+@{
+    Cofoundry.BlockType.UseDescription("Text entry with simple formatting like headings and lists");
+}
+
+@Cofoundry.Sanitizer.Sanitize(Model.RawHtml)

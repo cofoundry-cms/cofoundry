@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Cofoundry.Web.ModularMvc;
 using Cofoundry.Domain;
 using Cofoundry.Core;
 using Microsoft.AspNetCore.Routing;

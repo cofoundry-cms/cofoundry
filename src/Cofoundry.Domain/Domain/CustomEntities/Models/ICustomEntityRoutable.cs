@@ -15,9 +15,9 @@ namespace Cofoundry.Domain
         /// <summary>
         /// If this custom entity has page routes asspciated with it
         /// they will be included here. Typically you'd only expect a
-        /// single page on a site to be associated with a custom entitiy 
-        /// details, but it's technically possible to have many.
+        /// single page on a site to be associated with a custom entitiy, 
+        /// but it's technically possible to have many.
         /// </summary>
-        IEnumerable<string> DetailsPageUrls { get; set; }
+        IEnumerable<string> PageUrls { get; set; }
     }
 }

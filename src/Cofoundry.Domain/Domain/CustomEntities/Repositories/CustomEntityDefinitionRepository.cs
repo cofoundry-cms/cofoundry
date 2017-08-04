@@ -29,7 +29,7 @@ namespace Cofoundry.Domain
 
             if (dulpicateCodes.Any())
             {
-                throw new Exception("Duplicate ICustomEntityModuleDefinition.CustomEntityDefinitionCode: " + dulpicateCodes.First().Key);
+                throw new Exception("Duplicate ICustomEntityDefinition.CustomEntityDefinitionCode: " + dulpicateCodes.First().Key);
             }
 
             var dulpicateNames = definitions
@@ -38,7 +38,7 @@ namespace Cofoundry.Domain
 
             if (dulpicateNames.Any())
             {
-                throw new Exception("Duplicate ICustomEntityModuleDefinition.Name: " + dulpicateCodes.First().Key);
+                throw new Exception("Duplicate ICustomEntityDefinition.Name: " + dulpicateCodes.First().Key);
             }
         }
 

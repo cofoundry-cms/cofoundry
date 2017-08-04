@@ -5,13 +5,12 @@ using System.Threading.Tasks;
 using Cofoundry.Domain.Data;
 using Cofoundry.Domain.CQS;
 using Microsoft.EntityFrameworkCore;
-using AutoMapper;
 
 namespace Cofoundry.Domain
 {
     /// <summary>
     /// Gets a page object that contains the data required to render a page, including template 
-    /// data for all the content-editable sections.
+    /// data for all the content-editable regions.
     /// </summary>
     public class GetPageRenderDetailsByIdQueryHandler 
         : IAsyncQueryHandler<GetPageRenderDetailsByIdQuery, PageRenderDetails>
@@ -22,24 +21,24 @@ namespace Cofoundry.Domain
         private readonly CofoundryDbContext _dbContext;
         private readonly IQueryExecutor _queryExecutor;
         private readonly IPageMapper _pageMapper;
-        private readonly IEntityVersionPageModuleMapper _entityVersionPageModuleMapper;
+        private readonly IEntityVersionPageBlockMapper _entityVersionPageBlockMapper;
 
         public GetPageRenderDetailsByIdQueryHandler(
             CofoundryDbContext dbContext,
             IQueryExecutor queryExecutor,
             IPageMapper pageMapper,
-            IEntityVersionPageModuleMapper entityVersionPageModuleMapper
+            IEntityVersionPageBlockMapper entityVersionPageBlockMapper
             )
         {
             _dbContext = dbContext;
             _queryExecutor = queryExecutor;
             _pageMapper = pageMapper;
-            _entityVersionPageModuleMapper = entityVersionPageModuleMapper;
+            _entityVersionPageBlockMapper = entityVersionPageBlockMapper;
         }
 
         #endregion
 
-        #region public methods
+        #region execution
 
         public async Task<PageRenderDetails> ExecuteAsync(GetPageRenderDetailsByIdQuery query, IExecutionContext executionContext)
         {
@@ -49,17 +48,13 @@ namespace Cofoundry.Domain
 
             page.PageRoute = await _queryExecutor.GetByIdAsync<PageRoute>(page.PageId, executionContext);
 
-            var dbModules = await QueryModules(page).ToListAsync();
-            var allModuleTypes = await _queryExecutor.GetAllAsync<PageModuleTypeSummary>(executionContext);
+            var dbPageBlocks = await QueryPageBlocks(page).ToListAsync();
+            var allBlockTypes = await _queryExecutor.GetAllAsync<PageBlockTypeSummary>(executionContext);
 
-            await _entityVersionPageModuleMapper.MapSectionsAsync(dbModules, page.Sections, allModuleTypes, query.WorkFlowStatus);
+            await _entityVersionPageBlockMapper.MapRegionsAsync(dbPageBlocks, page.Regions, allBlockTypes, query.WorkFlowStatus);
 
             return page;
         }
-
-        #endregion
-
-        #region private helpers
 
         private IQueryable<PageVersion> QueryPage(GetPageRenderDetailsByIdQuery query)
         {
@@ -68,7 +63,7 @@ namespace Cofoundry.Domain
                 .AsNoTracking()
                 .Include(v => v.Page)
                 .Include(v => v.PageTemplate)
-                .ThenInclude(t => t.PageTemplateSections)
+                .ThenInclude(t => t.PageTemplateRegions)
                 .Where(v => v.PageId == query.PageId && !v.IsDeleted);
 
             switch (query.WorkFlowStatus)
@@ -97,10 +92,10 @@ namespace Cofoundry.Domain
             return dbQuery;
         }
 
-        private IQueryable<PageVersionModule> QueryModules(PageRenderDetails page)
+        private IQueryable<PageVersionBlock> QueryPageBlocks(PageRenderDetails page)
         {
             return _dbContext
-                .PageVersionModules
+                .PageVersionBlocks
                 .AsNoTracking()
                 .Where(m => m.PageVersionId == page.PageVersionId);
         }

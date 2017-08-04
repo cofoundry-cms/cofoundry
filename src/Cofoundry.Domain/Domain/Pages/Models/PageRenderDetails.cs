@@ -8,7 +8,7 @@ namespace Cofoundry.Domain
 {
     /// <summary>
     /// Page data required to render a page, including template data for all the content-editable
-    /// sections. This object is specific to a particular version which may not always be the 
+    /// regions. This object is specific to a particular version which may not always be the 
     /// latest (depending on the query).
     /// </summary>
     public class PageRenderDetails
@@ -29,6 +29,6 @@ namespace Cofoundry.Domain
         public PageRoute PageRoute { get; set; }
 
         public PageTemplateMicroSummary Template { get; set; }
-        public IEnumerable<PageSectionRenderDetails> Sections { get; set; }
+        public IEnumerable<PageRegionRenderDetails> Regions { get; set; }
     }
 }

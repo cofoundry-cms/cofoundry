@@ -69,7 +69,7 @@ namespace Cofoundry.BasicTestSite
                 blogPost.Title = customEntity.Title;
                 blogPost.ShortDescription = model.ShortDescription;
                 blogPost.ThumbnailImageAsset = images.GetOrDefault(model.ThumbnailImageAssetId);
-                blogPost.FullPath = customEntity.DetailsPageUrls.FirstOrDefault();
+                blogPost.FullPath = customEntity.PageUrls.FirstOrDefault();
                 blogPost.PostDate = customEntity.CreateDate;
 
                 blogPosts.Add(blogPost);

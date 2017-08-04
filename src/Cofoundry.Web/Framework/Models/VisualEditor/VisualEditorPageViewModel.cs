@@ -29,15 +29,15 @@ namespace Cofoundry.Web
             return PageRoutingInfo != null
                 && PageVersion != null
                 && PageRoutingInfo.CustomEntityRoute != null
-                && PageVersion.HasCustomEntityModuleSections
-                && PageVersion.HasPageModuleSections;
+                && PageVersion.HasCustomEntityRegions
+                && PageVersion.HasPageRegions;
         }
 
         public bool CanEditPage()
         {
             return PageVersion != null
-                && (PageVersion.HasCustomEntityModuleSections
-                || PageVersion.HasPageModuleSections);
+                && (PageVersion.HasCustomEntityRegions
+                || PageVersion.HasPageRegions);
         }
     }
 }

@@ -13,7 +13,7 @@ namespace Cofoundry.Web.Admin
 {
     /// <summary>
     /// A custom model binder for commands like AddCustomEntityCommand which is required to
-    /// resolve the child PageModuleDataModel
+    /// resolve the child PageBlockTypeDataModel
     /// </summary>
     public class CustomEntityDataModelCommandModelBinder : IModelBinder
     {
@@ -41,7 +41,7 @@ namespace Cofoundry.Web.Admin
             }
             else
             {
-                dataModelConverter = GetModuleDataTypeConverter(customEntityDefinitionCodeProperty.Value<string>());
+                dataModelConverter = GetDataTypeConverter(customEntityDefinitionCodeProperty.Value<string>());
             }
 
             var result = JsonConvert.DeserializeObject(jsonString, bindingContext.ModelType, dataModelConverter);
@@ -59,7 +59,7 @@ namespace Cofoundry.Web.Admin
             return body;
         }
 
-        private JsonConverter GetModuleDataTypeConverter(string customEntityDefinitionCode)
+        private JsonConverter GetDataTypeConverter(string customEntityDefinitionCode)
         {
             var definition = _customEntityDefinitionRepository.GetByCode(customEntityDefinitionCode);
             var dataModelType = definition.GetDataModelType();

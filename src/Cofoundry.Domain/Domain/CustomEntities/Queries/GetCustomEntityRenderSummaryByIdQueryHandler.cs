@@ -48,10 +48,6 @@ namespace Cofoundry.Domain
             return result;
         }
 
-        #endregion
-
-        #region private helpers
-
         private IQueryable<CustomEntityVersion> Query(GetCustomEntityRenderSummaryByIdQuery query)
         {
             var dbQuery = _dbContext

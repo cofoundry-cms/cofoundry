@@ -1,0 +1,18 @@
+﻿@model PlainTextDataModel
+
+@{
+    Cofoundry.BlockType.UseDescription("Multiple lines of simple text");
+    Layout = null;
+    
+}
+
+@if (Model == null)
+{
+    @:<!-- No text data --->
+}
+else
+{
+    <span>
+        @Cofoundry.Sanitizer.Sanitize(HtmlFormatter.ConvertToBasicHtml(Model.PlainText))
+    </span>
+}

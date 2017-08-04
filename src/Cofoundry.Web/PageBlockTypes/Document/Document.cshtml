@@ -1,0 +1,10 @@
+﻿@model DocumentDisplayModel
+
+@{
+    Cofoundry.BlockType.UseDescription("A link to download a document asset");
+    Layout = null;
+}
+
+<a href="@Model.Url">
+    @Model.Title
+</a>

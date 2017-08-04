@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Cofoundry.Web.ModularMvc;
 using Cofoundry.Domain;
 using Cofoundry.Core;
 using Microsoft.AspNetCore.Routing;
@@ -12,18 +11,18 @@ namespace Cofoundry.Web.Admin
 {
     public class CustomEntitiesRouteRegistration : IRouteRegistration
     {
-        private readonly IEnumerable<ICustomEntityDefinition> _customEntityModuleDefinition;
+        private readonly IEnumerable<ICustomEntityDefinition> _customEntityDefinition;
 
         public CustomEntitiesRouteRegistration(
-            IEnumerable<ICustomEntityDefinition> customEntityModuleDefinition
+            IEnumerable<ICustomEntityDefinition> customEntityDefinition
             )
         {
-            _customEntityModuleDefinition = customEntityModuleDefinition;
+            _customEntityDefinition = customEntityDefinition;
         }
 
         public void RegisterRoutes(IRouteBuilder routeBuilder)
         {
-            foreach (var definition in _customEntityModuleDefinition)
+            foreach (var definition in _customEntityDefinition)
             {
                 var routePrefix = SlugFormatter.ToSlug(definition.NamePlural);
 

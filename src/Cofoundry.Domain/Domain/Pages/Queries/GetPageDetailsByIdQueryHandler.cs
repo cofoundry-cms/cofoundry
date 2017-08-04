@@ -37,8 +37,7 @@ namespace Cofoundry.Domain
         #endregion
 
         #region execution
-
-
+        
         public async Task<PageDetails> ExecuteAsync(GetByIdQuery<PageDetails> query, IExecutionContext executionContext)
         {
             var dbPageVersion = await GetPageById(query.Id).FirstOrDefaultAsync();
@@ -47,25 +46,21 @@ namespace Cofoundry.Domain
             var pageRoute = await _queryExecutor.GetByIdAsync<PageRoute>(query.Id);
             EntityNotFoundException.ThrowIfNull(pageRoute, query.Id);
 
-            var sections = await _queryExecutor.ExecuteAsync(GetSectionQuery(dbPageVersion));
+            var regions = await _queryExecutor.ExecuteAsync(GetRegionsQuery(dbPageVersion));
 
-            return Map(dbPageVersion, sections, pageRoute);
+            return Map(dbPageVersion, regions, pageRoute);
         }
 
-        #endregion
-
-        #region helpers
-
-        private GetPageSectionDetailsByPageVersionIdQuery GetSectionQuery(PageVersion page)
+        private GetPageRegionDetailsByPageVersionIdQuery GetRegionsQuery(PageVersion page)
         {
-            var sectionQuery = new GetPageSectionDetailsByPageVersionIdQuery(page.PageVersionId);
+            var regionsQuery = new GetPageRegionDetailsByPageVersionIdQuery(page.PageVersionId);
 
-            return sectionQuery;
+            return regionsQuery;
         }
 
         private PageDetails Map(
             PageVersion dbPageVersion,
-            IEnumerable<PageSectionDetails> sections,
+            IEnumerable<PageRegionDetails> regions,
             PageRoute pageRoute
             )
         {
@@ -75,7 +70,7 @@ namespace Cofoundry.Domain
             // Custom Mapping
             page.PageRoute = pageRoute;
             page.LatestVersion.Template = _pageTemplateMapper.MapMicroSummary(dbPageVersion.PageTemplate);
-            page.LatestVersion.Sections = sections;
+            page.LatestVersion.Regions = regions;
 
             return page;
         }
