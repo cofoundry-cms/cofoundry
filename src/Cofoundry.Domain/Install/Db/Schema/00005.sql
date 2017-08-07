@@ -192,3 +192,45 @@ update Cofoundry.UnstructuredDataDependency set RelatedEntityDefinitionCode = 'C
 delete Cofoundry.EntityDefinition where EntityDefinitionCode = 'COFCEM'
 
 go
+
+/*  Add missing unique indexes, mistakenly created as non-unique */
+
+-- remove duplicates
+with pageTemplateDuplicates as (
+  select 
+	[FileName], 
+	IsArchived, 
+    row_number() over (partition by [FileName], IsArchived order by UpdateDate) as [RowNumber]
+  from Cofoundry.PageTemplate
+)
+delete pageTemplateDuplicates where [RowNumber] > 1;
+
+
+with pageModuleDuplicates as (
+  select 
+	[FileName], 
+	IsArchived, 
+    row_number() over (partition by  [FileName], IsArchived order by UpdateDate) as [RowNumber]
+  from Cofoundry.PageModuleType
+)
+delete pageModuleDuplicates where [RowNumber] > 1;
+
+go
+
+-- recreate indexes
+
+drop index UIX_PageTemplate_FullPath on Cofoundry.PageTemplate
+drop index UIX_PageTemplate_Name on Cofoundry.PageTemplate
+drop index UIX_PageTemplateRegion_Name on Cofoundry.PageTemplateRegion
+drop index UIX_PageBlockType_Name on Cofoundry.PageBlockType
+drop index UIX_User_IsSystemAccount on Cofoundry.[User]
+
+go
+
+create unique index UIX_PageTemplate_FullPath on Cofoundry.PageTemplate ([FullPath]) where IsArchived = 0
+create unique index UIX_PageTemplate_Name on Cofoundry.PageTemplate ([Name]) where IsArchived = 0
+create unique index UIX_PageTemplateRegion_Name on Cofoundry.PageTemplateRegion (PageTemplateId, [Name])
+create unique index UIX_PageBlockType_Name on Cofoundry.PageBlockType ([Name]) where IsArchived = 0
+create unique index UIX_User_IsSystemAccount on Cofoundry.[User] (IsSystemAccount) where IsSystemAccount = 1
+
+go

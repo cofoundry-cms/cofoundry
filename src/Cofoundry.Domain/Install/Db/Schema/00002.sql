@@ -28,8 +28,8 @@ alter table Cofoundry.PageTemplate alter column IsArchived bit not null
 alter table Cofoundry.PageTemplate alter column UpdateDate datetime2(4) not null
 alter table Cofoundry.PageTemplate alter column [Description] nvarchar(max) null
 
-create index UIX_PageTemplate_FullPath on Cofoundry.PageTemplate ([FullPath]) where IsArchived = 0
-create index UIX_PageTemplate_Name on Cofoundry.PageTemplate ([Name]) where IsArchived = 0
+create unique index UIX_PageTemplate_FullPath on Cofoundry.PageTemplate ([FullPath]) where IsArchived = 0
+create unique index UIX_PageTemplate_Name on Cofoundry.PageTemplate ([Name]) where IsArchived = 0
 
 -- Page Template Section Soft Deletes
 drop index UIX_PageTemplateSection_Name on Cofoundry.PageTemplateSection
@@ -39,7 +39,7 @@ alter table Cofoundry.PageTemplateSection drop column CreatorId
 alter table Cofoundry.PageTemplateSection add UpdateDate datetime2(4) null
 alter table Cofoundry.PageTemplateSection alter column [Name] nvarchar(50) not null
 
-create index UIX_PageTemplateSection_Name on Cofoundry.PageTemplateSection (PageTemplateId, [Name])
+create unique index UIX_PageTemplateSection_Name on Cofoundry.PageTemplateSection (PageTemplateId, [Name])
 
 go
 
@@ -80,7 +80,7 @@ go
 alter table Cofoundry.PageModuleType alter column IsArchived bit not null
 alter table Cofoundry.PageModuleType alter column UpdateDate datetime2(4) not null
 
-create index UIX_PageModuleType_Name on Cofoundry.PageModuleType ([Name]) where IsArchived = 0
+create unique index UIX_PageModuleType_Name on Cofoundry.PageModuleType ([Name]) where IsArchived = 0
 go
 
 -- Add system level user to allow for data imports before the application has been created
@@ -99,7 +99,7 @@ insert into Cofoundry.[User] (FirstName, LastName, [Username], [Password], Creat
 values ('System', 'User', 'System', NEWID(), GetUtcDate(), 0, GetUtcDate(), 0, @RoleId, 'COF', 1)
 go
 -- Make sure that only 1 system account can be created
-create index UIX_User_IsSystemAccount on Cofoundry.[User] (IsSystemAccount) where IsSystemAccount = 1
+create unique index UIX_User_IsSystemAccount on Cofoundry.[User] (IsSystemAccount) where IsSystemAccount = 1
 go
 
 -- Add the root directory if it doesn't exist

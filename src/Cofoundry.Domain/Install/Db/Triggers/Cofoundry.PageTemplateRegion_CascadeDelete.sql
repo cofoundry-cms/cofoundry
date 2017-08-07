@@ -7,8 +7,8 @@ begin
 	if not exists (select * from deleted) return
 	
 	-- Dependencies
-    delete Cofoundry.PageVersionRegion
-	from Cofoundry.PageVersionRegion e
+    delete Cofoundry.PageVersionBlock
+	from Cofoundry.PageVersionBlock e
 	inner join deleted d on e.PageTemplateRegionId = d.PageTemplateRegionId
 
     delete Cofoundry.CustomEntityVersionPageBlock

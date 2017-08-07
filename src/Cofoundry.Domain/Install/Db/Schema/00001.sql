@@ -481,7 +481,7 @@ create table Cofoundry.PageGroupItem (
 create table Cofoundry.PageModuleType (
 
 	PageModuleTypeId int identity(1,1) not null,
-	Name nvarchar(32) not null,
+	[Name] nvarchar(32) not null,
 	[Description] nvarchar(max) not null,
 	[FileName] nvarchar(32) not null,
 	IsCustom bit not null constraint DF_PageModuleType_IsCustom  default (0),
@@ -490,7 +490,7 @@ create table Cofoundry.PageModuleType (
 	constraint PK_PageModuleType primary key (PageModuleTypeId)
 )
 
-create unique index UIX_PageModuleType_Name on Cofoundry.PageModuleType(Name)
+create unique index UIX_PageModuleType_Name on Cofoundry.PageModuleType([Name])
 
 
 /****** Cofoundry.PageModuleTypeTemplate ******/
@@ -499,7 +499,7 @@ create table Cofoundry.PageModuleTypeTemplate (
 
 	PageModuleTypeTemplateId int identity(1,1) not null,
 	PageModuleTypeId int not null,
-	Name nvarchar(32) not null,
+	[Name] nvarchar(32) not null,
 	[FileName] nvarchar(32) not null,
 	CreateDate datetime2(4) not null,
 	CreatorId int not null,
@@ -549,7 +549,7 @@ create table Cofoundry.PageTemplate (
 )
 
 create unique index UIX_PageTemplate_FullPath on Cofoundry.PageTemplate (FullPath)
-create unique index UIX_PageTemplate_Name on Cofoundry.PageTemplate (Name)
+create unique index UIX_PageTemplate_Name on Cofoundry.PageTemplate ([Name])
 
 
 /****** Cofoundry.PageTemplateSection ******/
