@@ -49,10 +49,11 @@ namespace Cofoundry.Domain
 
         public async Task ExecuteAsync(RegisterPageTemplatesCommand command, IExecutionContext executionContext)
         {
-            var dbPageTemplates = await _dbContext
+            var dbPageTemplates = (await _dbContext
                 .PageTemplates
                 .Include(t => t.PageTemplateSections)
-                .ToDictionaryAsync(d => d.FileName);
+                .ToListAsync())
+                .ToLookup(d => d.FileName);
 
             var fileTemplates = _pageTemplateViewFileLocator
                 .GetPageTemplateFiles();
@@ -70,7 +71,7 @@ namespace Cofoundry.Domain
 
         private async Task UpdateTemplates(
             IExecutionContext executionContext, 
-            Dictionary<string, PageTemplate> dbPageTemplates, 
+            ILookup<string, PageTemplate> dbPageTemplates, 
             IEnumerable<PageTemplateFile> fileTemplates
             )
         {
@@ -78,7 +79,10 @@ namespace Cofoundry.Domain
             {
                 var fileTemplateDetails = await _queryExecutor.ExecuteAsync(new GetPageTemplateFileInfoByPathQuery(fileTemplate.FullPath), executionContext);
                 EntityNotFoundException.ThrowIfNull(fileTemplateDetails, fileTemplate.FullPath);
-                var dbPageTemplate = dbPageTemplates.GetOrDefault(fileTemplate.FileName);
+                var dbPageTemplate = EnumerableHelper.Enumerate(dbPageTemplates[fileTemplate.FileName])
+                    .OrderBy(t => t.IsArchived)
+                    .ThenByDescending(t => t.UpdateDate)
+                    .FirstOrDefault();
 
                 // Run this first because it may commit changes
                 await EnsureCustomEntityDefinitionExists(fileTemplateDetails, dbPageTemplate);
@@ -94,22 +98,24 @@ namespace Cofoundry.Domain
         }
 
         private async Task DeleteTemplates(
-            IExecutionContext executionContext, 
-            Dictionary<string, PageTemplate> dbPageTemplates, 
+            IExecutionContext executionContext,
+            ILookup<string, PageTemplate> dbPageTemplates,
             IEnumerable<PageTemplateFile> fileTemplates
             )
         {
             foreach (var removedDbTemplate in dbPageTemplates
-                .Where(t => !fileTemplates.Any(ft => ft.FileName == t.Key) && !t.Value.IsArchived)
-                .Select(t => t.Value))
+                .Where(t => !fileTemplates.Any(ft => ft.FileName == t.Key))
+                .SelectMany(t => t))
             {
-                if (await IsTemplateInUse(removedDbTemplate))
+                var isInUse = await IsTemplateInUse(removedDbTemplate);
+
+                if (isInUse & !removedDbTemplate.IsArchived)
                 {
                     // In use, so leave it as soft deleted/archived
                     removedDbTemplate.IsArchived = true;
                     removedDbTemplate.UpdateDate = executionContext.ExecutionDate;
                 }
-                else
+                else if (!isInUse)
                 {
                     _dbContext.PageTemplates.Remove(removedDbTemplate);
                 }
