@@ -206,14 +206,14 @@ with pageTemplateDuplicates as (
 delete pageTemplateDuplicates where [RowNumber] > 1;
 
 
-with pageModuleDuplicates as (
+with pageBlockDuplicates as (
   select 
 	[FileName], 
 	IsArchived, 
     row_number() over (partition by  [FileName], IsArchived order by UpdateDate) as [RowNumber]
-  from Cofoundry.PageModuleType
+  from Cofoundry.PageBlockType
 )
-delete pageModuleDuplicates where [RowNumber] > 1;
+delete pageBlockDuplicates where [RowNumber] > 1;
 
 go
 
