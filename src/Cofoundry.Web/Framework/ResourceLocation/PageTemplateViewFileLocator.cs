@@ -115,6 +115,7 @@ namespace Cofoundry.Web
                 // filename contains the search text and is located in a 'PageTemplates' folder, but not a 'partials' folder and has the extension .cshtml
                 if (Contains(file.Name, searchText)
                     && !Contains(file.Name, "_ViewStart")
+                    && !Contains(file.Name, "_ViewImports")
                     && file.Name.EndsWith(VIEW_FILE_EXTENSION, StringComparison.OrdinalIgnoreCase))
                 {
                     yield return MapPageTemplateFile(directoryPath, file);

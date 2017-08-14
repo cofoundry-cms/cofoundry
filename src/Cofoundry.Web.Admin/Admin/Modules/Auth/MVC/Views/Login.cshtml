@@ -24,28 +24,28 @@
             <div class="control-group">
                 <label asp-for="EmailAddress" class="control-label"></label>
                 <div class="controls">
-                    <input type="email" asp-for="EmailAddress" maxlength="150" />
+                    <input type="email" asp-for="EmailAddress" maxlength="150" tabindex="1" />
                     <span asp-validation-for="EmailAddress" class="help-block"></span>
                 </div>
             </div>
 
             <div class="control-group">
                 <label asp-for="Password" class="control-label"></label>
-                <a id="forgotPasswordLink" class="login-alt-cta" href="@adminRouteLibrary.Auth.ForgotPassword()">Forgotten your password?</a>
+                <a id="forgotPasswordLink" class="login-alt-cta" href="@adminRouteLibrary.Auth.ForgotPassword()" tabindex="5">Forgotten your password?</a>
                 <div class="controls">
-                    <input type="password" asp-for="Password" />
+                    <input type="password" asp-for="Password" tabindex="2" />
                     <span asp-validation-for="Password" class="help-block"></span>
                 </div>
             </div>
 
             <label class="checkbox" for="RememberMe">
-                <input asp-for="RememberMe" class="check" /> Remember me
+                <input asp-for="RememberMe" class="check" tabindex="3" /> Remember me
             </label>
 
             <div class="actions">
-                <input type="submit" class="btn main-cta btn-primary" value="Login" />
+                <input type="submit" class="btn main-cta btn-primary" value="Login" tabindex="4" />
             </div>
         </fieldset>
     </form>
 </div>
-<a href="/">&lt; Back to @await Cofoundry.Settings.GetApplicationNameAsync()</a>
+<a href="/" tabindex="6">&lt; Back to @await Cofoundry.Settings.GetApplicationNameAsync()</a>
