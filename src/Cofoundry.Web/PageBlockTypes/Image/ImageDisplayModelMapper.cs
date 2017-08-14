@@ -28,8 +28,9 @@ namespace Cofoundry.Web
 
         public async Task<IEnumerable<PageBlockTypeDisplayModelMapperOutput>> MapAsync(IEnumerable<PageBlockTypeDisplayModelMapperInput<ImageDataModel>> inputs, WorkFlowStatusQuery workflowStatus)
         {
-            var images = await _queryExecutor.GetByIdRangeAsync<ImageAssetRenderDetails>(inputs.Select(i => i.DataModel.ImageId));
-            var results = new List<PageBlockTypeDisplayModelMapperOutput>();
+            var imageAssetIds = inputs.Select(i => i.DataModel.ImageId).ToArray();
+            var images = await _queryExecutor.GetByIdRangeAsync<ImageAssetRenderDetails>(imageAssetIds);
+            var results = new List<PageBlockTypeDisplayModelMapperOutput>(imageAssetIds.Length);
 
             foreach (var input in inputs)
             {
@@ -47,7 +48,7 @@ namespace Cofoundry.Web
                 results.Add(input.CreateOutput(output));
             }
 
-            return results.AsEnumerable();
+            return results;
         }
     }
 }

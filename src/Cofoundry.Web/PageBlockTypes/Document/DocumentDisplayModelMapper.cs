@@ -46,7 +46,7 @@ namespace Cofoundry.Web
                 results.Add(input.CreateOutput(output));
             }
 
-            return results.AsEnumerable();
+            return results;
         }
     }
 }
