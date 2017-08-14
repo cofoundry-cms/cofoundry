@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Cofoundry.BasicTestSite
 {
-    public class ContentSplitSectionDisplayModelMapper : IPageBlockDisplayModelMapper<ContentSplitSectionDataModel>
+    public class ContentSplitSectionDisplayModelMapper : IPageBlockTypeDisplayModelMapper<ContentSplitSectionDataModel>
     {
         private readonly IImageAssetRepository _imageAssetRepository;
 
@@ -19,8 +19,8 @@ namespace Cofoundry.BasicTestSite
             _imageAssetRepository = imageAssetRepository;
         }
 
-        public async Task<IEnumerable<PageBlockDisplayModelMapperOutput>> MapAsync(
-            IEnumerable<PageBlockDisplayModelMapperInput<ContentSplitSectionDataModel>> inputs, 
+        public async Task<IEnumerable<PageBlockTypeDisplayModelMapperOutput>> MapAsync(
+            IEnumerable<PageBlockTypeDisplayModelMapperInput<ContentSplitSectionDataModel>> inputs, 
             WorkFlowStatusQuery workflowStatus
             )
         {
@@ -30,7 +30,7 @@ namespace Cofoundry.BasicTestSite
 
             var imageAssets = await _imageAssetRepository.GetImageAssetRenderDetailsByIdRangeAsync(imageAssetIds);
 
-            var results = new List<PageBlockDisplayModelMapperOutput>();
+            var results = new List<PageBlockTypeDisplayModelMapperOutput>();
 
             foreach (var input in inputs)
             {

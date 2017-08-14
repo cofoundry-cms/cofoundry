@@ -7,14 +7,14 @@ using System.Threading.Tasks;
 
 namespace Cofoundry.Web
 {
-    public class SingleLineTextDisplayModelMapper : IPageBlockDisplayModelMapper<SingleLineTextDataModel>
+    public class SingleLineTextDisplayModelMapper : IPageBlockTypeDisplayModelMapper<SingleLineTextDataModel>
     {
-        public Task<IEnumerable<PageBlockDisplayModelMapperOutput>> MapAsync(IEnumerable<PageBlockDisplayModelMapperInput<SingleLineTextDataModel>> inputs, WorkFlowStatusQuery workflowStatus)
+        public Task<IEnumerable<PageBlockTypeDisplayModelMapperOutput>> MapAsync(IEnumerable<PageBlockTypeDisplayModelMapperInput<SingleLineTextDataModel>> inputs, WorkFlowStatusQuery workflowStatus)
         {
             return Task.FromResult(Map(inputs));
         }
 
-        private IEnumerable<PageBlockDisplayModelMapperOutput> Map(IEnumerable<PageBlockDisplayModelMapperInput<SingleLineTextDataModel>> inputs)
+        private IEnumerable<PageBlockTypeDisplayModelMapperOutput> Map(IEnumerable<PageBlockTypeDisplayModelMapperInput<SingleLineTextDataModel>> inputs)
         {
             foreach (var input in inputs)
             {

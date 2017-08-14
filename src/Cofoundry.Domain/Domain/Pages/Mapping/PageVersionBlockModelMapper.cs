@@ -53,7 +53,7 @@ namespace Cofoundry.Domain
         /// Collection of mapped display models, wrapped in an output class that
         /// can be used to identify them.
         /// </returns>
-        public async Task<List<PageBlockDisplayModelMapperOutput>> MapDisplayModelAsync(
+        public async Task<List<PageBlockTypeDisplayModelMapperOutput>> MapDisplayModelAsync(
             string typeName, 
             IEnumerable<IEntityVersionPageBlock> pageBlocks, 
             WorkFlowStatusQuery workflowStatus
@@ -65,10 +65,10 @@ namespace Cofoundry.Domain
             if (typeof(IPageBlockTypeDisplayModel).IsAssignableFrom(modelType))
             {
                 // We can serialize directly to the display model
-                var displayModels = new List<PageBlockDisplayModelMapperOutput>();
+                var displayModels = new List<PageBlockTypeDisplayModelMapperOutput>();
                 foreach (var pageBlock in pageBlocks)
                 {
-                    var mapperModel = new PageBlockDisplayModelMapperOutput();
+                    var mapperModel = new PageBlockTypeDisplayModelMapperOutput();
                     mapperModel.DisplayModel = (IPageBlockTypeDisplayModel)_dbUnstructuredDataSerializer.Deserialize(pageBlock.SerializedData, modelType);
                     mapperModel.VersionBlockId = pageBlock.GetVersionBlockId();
                     displayModels.Add(mapperModel);
@@ -81,7 +81,7 @@ namespace Cofoundry.Domain
                 var blockWorkflowStatus = TranslateWorkFlowStatusForBlocks(workflowStatus);
 
                 // We have to use a mapping class to do some custom mapping
-                var displayModels = (Task<List<PageBlockDisplayModelMapperOutput>>)_mapGenericMethod
+                var displayModels = (Task<List<PageBlockTypeDisplayModelMapperOutput>>)_mapGenericMethod
                     .MakeGenericMethod(modelType)
                     .Invoke(this, new object[] { pageBlocks, blockWorkflowStatus });
 
@@ -149,12 +149,12 @@ namespace Cofoundry.Domain
             return workflowStatus;
         }
 
-        private async Task<List<PageBlockDisplayModelMapperOutput>> MapGeneric<T>(
+        private async Task<List<PageBlockTypeDisplayModelMapperOutput>> MapGeneric<T>(
             IEnumerable<IEntityVersionPageBlock> pageBlocks, 
             WorkFlowStatusQuery workflowStatus
             ) where T : IPageBlockTypeDataModel
         {
-            var mapperType = typeof(IPageBlockDisplayModelMapper<T>);
+            var mapperType = typeof(IPageBlockTypeDisplayModelMapper<T>);
             if (!_resolutionContext.IsRegistered(mapperType))
             {
                 string msg = @"{0} does not implement IPageBlockDisplayModel and no custom mapper could be found. You must create 
@@ -162,12 +162,12 @@ namespace Cofoundry.Domain
                 throw new Exception(string.Format(msg, typeof(T).Name, typeof(T).FullName));
             }
 
-            var mapper = (IPageBlockDisplayModelMapper<T>)_resolutionContext.Resolve(typeof(IPageBlockDisplayModelMapper<T>));
-            var dataModels = new List<PageBlockDisplayModelMapperInput<T>>();
+            var mapper = (IPageBlockTypeDisplayModelMapper<T>)_resolutionContext.Resolve(typeof(IPageBlockTypeDisplayModelMapper<T>));
+            var dataModels = new List<PageBlockTypeDisplayModelMapperInput<T>>();
 
             foreach (var pageBlock in pageBlocks)
             {
-                var mapperModel = new PageBlockDisplayModelMapperInput<T>();
+                var mapperModel = new PageBlockTypeDisplayModelMapperInput<T>();
                 mapperModel.DataModel = (T)_dbUnstructuredDataSerializer.Deserialize(pageBlock.SerializedData, typeof(T));
                 mapperModel.VersionBlockId = pageBlock.GetVersionBlockId();
                 dataModels.Add(mapperModel);

@@ -2,14 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using Cofoundry.Domain;
-using AutoMapper;
 using Cofoundry.Domain.CQS;
 using Cofoundry.Core;
 using System.Threading.Tasks;
 
 namespace Cofoundry.Web
 {
-    public class ImageDisplayModelMapper : IPageBlockDisplayModelMapper<ImageDataModel>
+    public class ImageDisplayModelMapper : IPageBlockTypeDisplayModelMapper<ImageDataModel>
     {
         #region Constructor
 
@@ -27,14 +26,19 @@ namespace Cofoundry.Web
 
         #endregion
 
-        public async Task<IEnumerable<PageBlockDisplayModelMapperOutput>> MapAsync(IEnumerable<PageBlockDisplayModelMapperInput<ImageDataModel>> inputs, WorkFlowStatusQuery workflowStatus)
+        public async Task<IEnumerable<PageBlockTypeDisplayModelMapperOutput>> MapAsync(IEnumerable<PageBlockTypeDisplayModelMapperInput<ImageDataModel>> inputs, WorkFlowStatusQuery workflowStatus)
         {
             var images = await _queryExecutor.GetByIdRangeAsync<ImageAssetRenderDetails>(inputs.Select(i => i.DataModel.ImageId));
-            var results = new List<PageBlockDisplayModelMapperOutput>();
+            var results = new List<PageBlockTypeDisplayModelMapperOutput>();
 
             foreach (var input in inputs)
             {
-                var output = Mapper.Map<ImageDisplayModel>(input.DataModel);
+                var output = new ImageDisplayModel()
+                {
+                    AltText = input.DataModel.AltText,
+                    LinkPath = input.DataModel.LinkPath,
+                    LinkTarget = input.DataModel.LinkTarget
+                };
 
                 var image = images.GetOrDefault(input.DataModel.ImageId);
                 output.Source = _imageAssetRouteLibrary.ImageAsset(image);

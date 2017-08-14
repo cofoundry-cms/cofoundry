@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Cofoundry.Web
 {
-    public class DocumentDisplayModelMapper : IPageBlockDisplayModelMapper<DocumentDataModel>
+    public class DocumentDisplayModelMapper : IPageBlockTypeDisplayModelMapper<DocumentDataModel>
     {
         #region Constructor
 
@@ -26,10 +26,10 @@ namespace Cofoundry.Web
 
         #endregion
 
-        public async Task<IEnumerable<PageBlockDisplayModelMapperOutput>> MapAsync(IEnumerable<PageBlockDisplayModelMapperInput<DocumentDataModel>> inputs, WorkFlowStatusQuery workflowStatus)
+        public async Task<IEnumerable<PageBlockTypeDisplayModelMapperOutput>> MapAsync(IEnumerable<PageBlockTypeDisplayModelMapperInput<DocumentDataModel>> inputs, WorkFlowStatusQuery workflowStatus)
         {
             var documents = await _queryExecutor.GetByIdRangeAsync<DocumentAssetRenderDetails>(inputs.Select(i => i.DataModel.DocumentAssetId));
-            var results = new List<PageBlockDisplayModelMapperOutput>();
+            var results = new List<PageBlockTypeDisplayModelMapperOutput>();
 
             foreach (var input in inputs)
             {

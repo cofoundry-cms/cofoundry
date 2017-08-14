@@ -12,7 +12,6 @@
     <PackageReference Include="AutoMapper" Version="6.1.0" />
     <PackageReference Include="Hangfire" Version="1.6.14" />
     <PackageReference Include="HtmlSanitizer" Version="3.4.156" />
-    <PackageReference Include="ImageSharp" Version="1.0.0-alpha9-00148" />
 
     <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.0.0" />
     <PackageReference Include="Microsoft.AspNetCore" Version="1.1.2" />

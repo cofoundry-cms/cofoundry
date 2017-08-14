@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Cofoundry.BasicTestSite
 {
-    public class ContentSectionDisplayModelMapper : IPageBlockDisplayModelMapper<ContentSectionDataModel>
+    public class ContentSectionDisplayModelMapper : IPageBlockTypeDisplayModelMapper<ContentSectionDataModel>
     {
         /// <summary>
         /// A IPageModuleDisplayModelMapper class handles the mapping from
@@ -19,12 +19,12 @@ namespace Cofoundry.BasicTestSite
         /// map it. Mapping is done in batch to improve performance when 
         /// the same block type is used multiple times on a page.
         /// </summary>
-        public Task<IEnumerable<PageBlockDisplayModelMapperOutput>> MapAsync(
-            IEnumerable<PageBlockDisplayModelMapperInput<ContentSectionDataModel>> inputs, 
+        public Task<IEnumerable<PageBlockTypeDisplayModelMapperOutput>> MapAsync(
+            IEnumerable<PageBlockTypeDisplayModelMapperInput<ContentSectionDataModel>> inputs, 
             WorkFlowStatusQuery workflowStatus
             )
         {
-            var results = new List<PageBlockDisplayModelMapperOutput>();
+            var results = new List<PageBlockTypeDisplayModelMapperOutput>();
 
             foreach (var input in inputs)
             {

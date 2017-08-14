@@ -8,10 +8,10 @@ namespace Cofoundry.Domain
 {
     /// <summary>
     /// A wrapper object that contains information that can be used to map
-    /// an IPageBlockDataModel to an instance of IPageBlockDisplayModel.
+    /// an IPageBlockTypeDataModel to an instance of IPageBlockTypeDisplayModel.
     /// </summary>
     /// <typeparam name="TDataModel">The data model type being mapped.</typeparam>
-    public class PageBlockDisplayModelMapperInput<TDataModel> where TDataModel : IPageBlockTypeDataModel
+    public class PageBlockTypeDisplayModelMapperInput<TDataModel> where TDataModel : IPageBlockTypeDataModel
     {
         /// <summary>
         /// The id of the versioned entity to which this block belongs
@@ -31,12 +31,12 @@ namespace Cofoundry.Domain
         /// the display model has been mapped.
         /// </summary>
         /// <param name="displayModel">The fully mapped display model.</param>
-        public PageBlockDisplayModelMapperOutput CreateOutput(IPageBlockTypeDisplayModel displayModel)
+        public PageBlockTypeDisplayModelMapperOutput CreateOutput(IPageBlockTypeDisplayModel displayModel)
         {
             if (displayModel == null) throw new ArgumentNullException(nameof(displayModel));
             if (VersionBlockId < 1) throw new ArgumentOutOfRangeException(nameof(VersionBlockId));
 
-            return new PageBlockDisplayModelMapperOutput()
+            return new PageBlockTypeDisplayModelMapperOutput()
             {
                 DisplayModel = displayModel,
                 VersionBlockId = VersionBlockId

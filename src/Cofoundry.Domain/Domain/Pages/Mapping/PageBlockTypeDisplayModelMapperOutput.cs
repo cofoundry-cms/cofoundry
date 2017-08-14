@@ -11,7 +11,7 @@ namespace Cofoundry.Domain
     /// and an identifier that is used to put it back into 
     /// a collection after mapping.
     /// </summary>
-    public class PageBlockDisplayModelMapperOutput
+    public class PageBlockTypeDisplayModelMapperOutput
     {
         /// <summary>
         /// The id of the versioned entity to which this block belongs

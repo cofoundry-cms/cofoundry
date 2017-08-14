@@ -7,11 +7,11 @@ using System.Threading.Tasks;
 
 namespace Cofoundry.Web
 {
-    public class RichTextWithMediaDisplayModelMapper : IPageBlockDisplayModelMapper<RichTextWithMediaDataModel>
+    public class RichTextWithMediaDisplayModelMapper : IPageBlockTypeDisplayModelMapper<RichTextWithMediaDataModel>
     {
-        public Task<IEnumerable<PageBlockDisplayModelMapperOutput>> MapAsync(IEnumerable<PageBlockDisplayModelMapperInput<RichTextWithMediaDataModel>> inputs, WorkFlowStatusQuery workflowStatus)
+        public Task<IEnumerable<PageBlockTypeDisplayModelMapperOutput>> MapAsync(IEnumerable<PageBlockTypeDisplayModelMapperInput<RichTextWithMediaDataModel>> inputs, WorkFlowStatusQuery workflowStatus)
         {
-            var results = new List<PageBlockDisplayModelMapperOutput>();
+            var results = new List<PageBlockTypeDisplayModelMapperOutput>();
 
             foreach (var input in inputs)
             {

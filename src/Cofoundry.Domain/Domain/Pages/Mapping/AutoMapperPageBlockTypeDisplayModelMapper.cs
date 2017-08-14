@@ -8,17 +8,17 @@ using System.Threading.Tasks;
 namespace Cofoundry.Domain
 {
     /// <summary>
-    /// A simple IPageBlockDisplayModelMapper that maps TInput to TOutput using AutoMapper
+    /// A simple IPageBlockTypeDisplayModelMapper that maps TInput to TOutput using AutoMapper
     /// </summary>
     /// <typeparam name="TInput">DataModel type to map from</typeparam>
     /// <typeparam name="TOutput">DisplayModel type to map to</typeparam>
-    public class AutoMapperPageBlockDisplayModelMapper<TInput, TOutput> : IPageBlockDisplayModelMapper<TInput> 
+    public class AutoMapperPageBlockTypeDisplayModelMapper<TInput, TOutput> : IPageBlockTypeDisplayModelMapper<TInput> 
         where TInput : IPageBlockTypeDataModel 
         where TOutput :IPageBlockTypeDisplayModel
     {
-        public Task<IEnumerable<PageBlockDisplayModelMapperOutput>> MapAsync(IEnumerable<PageBlockDisplayModelMapperInput<TInput>> inputs, WorkFlowStatusQuery workflowStatus)
+        public Task<IEnumerable<PageBlockTypeDisplayModelMapperOutput>> MapAsync(IEnumerable<PageBlockTypeDisplayModelMapperInput<TInput>> inputs, WorkFlowStatusQuery workflowStatus)
         {
-            var results = new List<PageBlockDisplayModelMapperOutput>();
+            var results = new List<PageBlockTypeDisplayModelMapperOutput>();
 
             foreach (var input in inputs)
             {

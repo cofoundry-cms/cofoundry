@@ -105,3 +105,6 @@ src/Cofoundry.Web.Admin/Admin/App/
 /artifacts
 
 appsettings.local.json
+
+
+bower_components/
