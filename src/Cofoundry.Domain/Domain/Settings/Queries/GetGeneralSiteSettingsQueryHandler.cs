@@ -8,8 +8,7 @@ using Cofoundry.Core.AutoUpdate;
 namespace Cofoundry.Domain
 {
     public class GetGeneralSiteSettingsQueryHandler 
-        : IQueryHandler<GetQuery<GeneralSiteSettings>, GeneralSiteSettings>
-        , IAsyncQueryHandler<GetQuery<GeneralSiteSettings>, GeneralSiteSettings>
+        : IAsyncQueryHandler<GetQuery<GeneralSiteSettings>, GeneralSiteSettings>
         , IIgnorePermissionCheckHandler
     {
         #region constructor
@@ -32,12 +31,6 @@ namespace Cofoundry.Domain
         #endregion
 
         #region execution
-
-        public GeneralSiteSettings Execute(GetQuery<GeneralSiteSettings> query, IExecutionContext executionContext)
-        {
-            var allSettings = _internalSettingsRepository.GetAllSettings();
-            return MapSettings(allSettings);
-        }
 
         public async Task<GeneralSiteSettings> ExecuteAsync(GetQuery<GeneralSiteSettings> query, IExecutionContext executionContext)
         {

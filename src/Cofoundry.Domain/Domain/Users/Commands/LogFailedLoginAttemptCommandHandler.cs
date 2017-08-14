@@ -12,8 +12,7 @@ using Cofoundry.Domain.Data;
 namespace Cofoundry.Domain
 {
     public class LogFailedLoginAttemptCommandHandler
-        : ICommandHandler<LogFailedLoginAttemptCommand>
-        , IAsyncCommandHandler<LogFailedLoginAttemptCommand>
+        : IAsyncCommandHandler<LogFailedLoginAttemptCommand>
         , IIgnorePermissionCheckHandler
     {
         #region constructor
@@ -33,19 +32,6 @@ namespace Cofoundry.Domain
             _clientConnectionService = clientConnectionService;
         }
         #endregion
-
-        public void Execute(LogFailedLoginAttemptCommand command, IExecutionContext executionContext)
-        {
-            var connectionInfo = _clientConnectionService.GetConnectionInfo();
-
-            _sqlExecutor.ExecuteCommand(_dbContext,
-                "Cofoundry.FailedAuthticationAttempt_Add",
-                new SqlParameter("UserAreaCode", command.UserAreaCode),
-                new SqlParameter("Username", TextFormatter.Limit(command.Username, 150)),
-                new SqlParameter("IPAddress", connectionInfo.IPAddress),
-                new SqlParameter("DateTimeNow", executionContext.ExecutionDate)
-                );
-        }
 
         public async Task ExecuteAsync(LogFailedLoginAttemptCommand command, IExecutionContext executionContext)
         {

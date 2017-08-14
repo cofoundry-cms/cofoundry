@@ -17,8 +17,7 @@ namespace Cofoundry.Domain
     /// user area, the username may be a copy of the email address.
     /// </summary>
     public class GetUserMicroSummaryByUsernameQueryHandler
-        : IQueryHandler<GetUserMicroSummaryByUsernameQuery, UserMicroSummary>
-        , IAsyncQueryHandler<GetUserMicroSummaryByUsernameQuery, UserMicroSummary>
+        : IAsyncQueryHandler<GetUserMicroSummaryByUsernameQuery, UserMicroSummary>
         , IPermissionRestrictedQueryHandler<GetUserMicroSummaryByUsernameQuery, UserMicroSummary>
     {
         #region constructor
@@ -35,15 +34,6 @@ namespace Cofoundry.Domain
         #endregion
 
         #region execution
-
-        public UserMicroSummary Execute(GetUserMicroSummaryByUsernameQuery query, IExecutionContext executionContext)
-        {
-            if (string.IsNullOrWhiteSpace(query.Username)) return null;
-
-            var user = Query(query).SingleOrDefault();
-
-            return user;
-        }
 
         public Task<UserMicroSummary> ExecuteAsync(GetUserMicroSummaryByUsernameQuery query, IExecutionContext executionContext)
         {

@@ -12,8 +12,7 @@ using Cofoundry.Core;
 namespace Cofoundry.Domain
 {
     public class LogAuthenticatedUserInCommandHandler 
-        : ICommandHandler<LogAuthenticatedUserInCommand>
-        , IAsyncCommandHandler<LogAuthenticatedUserInCommand>
+        : IAsyncCommandHandler<LogAuthenticatedUserInCommand>
         , IIgnorePermissionCheckHandler
     {
         #region constructor
@@ -34,23 +33,6 @@ namespace Cofoundry.Domain
         }
 
         #endregion
-
-        public void Execute(LogAuthenticatedUserInCommand command, IExecutionContext executionContext)
-        {
-            var user = Query(command.UserId).SingleOrDefault();
-            EntityNotFoundException.ThrowIfNull(user, command.UserId);
-
-            var connectionInfo = _clientConnectionService.GetConnectionInfo();
-            SetLoggedIn(user, executionContext);
-            _dbContext.SaveChanges();
-
-            _sqlExecutor.ExecuteCommand(_dbContext,
-                "Cofoundry.UserLoginLog_Add",
-                new SqlParameter("UserId", user.UserId),
-                new SqlParameter("IPAddress", connectionInfo.IPAddress),
-                new SqlParameter("DateTimeNow", executionContext.ExecutionDate)
-                );
-        }
 
         public async Task ExecuteAsync(LogAuthenticatedUserInCommand command, IExecutionContext executionContext)
         {

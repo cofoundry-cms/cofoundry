@@ -22,14 +22,6 @@ namespace Cofoundry.Domain.CQS
         }
 
         /// <summary>
-        /// Creates a new ICommandHandler instance with the specified type signature.
-        /// </summary>
-        public ICommandHandler<T> Create<T>() where T : ICommand
-        {
-            return _resolutionContext.Resolve<ICommandHandler<T>>();
-        }
-
-        /// <summary>
         /// Creates a new IAsyncCommandHandler instance with the specified type signature.
         /// </summary>
         public IAsyncCommandHandler<T> CreateAsyncHandler<T>() where T : ICommand

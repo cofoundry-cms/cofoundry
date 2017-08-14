@@ -7,8 +7,7 @@ using Cofoundry.Domain.CQS;
 namespace Cofoundry.Domain
 {
     public class GetRoleDetailsByIdQueryHandler 
-        : IQueryHandler<GetRoleDetailsByIdQuery, RoleDetails>
-        , IAsyncQueryHandler<GetRoleDetailsByIdQuery, RoleDetails>
+        : IAsyncQueryHandler<GetRoleDetailsByIdQuery, RoleDetails>
         , IPermissionRestrictedQueryHandler<GetRoleDetailsByIdQuery, RoleDetails>
     {
         #region constructor
@@ -25,11 +24,6 @@ namespace Cofoundry.Domain
         #endregion
 
         #region execution
-
-        public RoleDetails Execute(GetRoleDetailsByIdQuery query, IExecutionContext executionContext)
-        {
-            return _internalRoleRepository.GetById(query.RoleId);
-        }
 
         public Task<RoleDetails> ExecuteAsync(GetRoleDetailsByIdQuery query, IExecutionContext executionContext)
         {

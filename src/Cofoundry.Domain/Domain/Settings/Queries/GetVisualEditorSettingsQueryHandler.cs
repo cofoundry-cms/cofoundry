@@ -10,8 +10,7 @@ using Cofoundry.Core;
 namespace Cofoundry.Domain
 {
     public class GetVisualEditorSettingsQueryHandler
-        : IQueryHandler<GetQuery<VisualEditorSettings>, VisualEditorSettings>
-        , IAsyncQueryHandler<GetQuery<VisualEditorSettings>, VisualEditorSettings>
+        : IAsyncQueryHandler<GetQuery<VisualEditorSettings>, VisualEditorSettings>
         , IIgnorePermissionCheckHandler
     {
         #region constructor
@@ -31,12 +30,6 @@ namespace Cofoundry.Domain
         #endregion
 
         #region execution
-
-        public VisualEditorSettings Execute(GetQuery<VisualEditorSettings> query, IExecutionContext executionContext)
-        {
-            var allSettings = _internalSettingsRepository.GetAllSettings();
-            return MapSettings(allSettings);
-        }
 
         public async Task<VisualEditorSettings> ExecuteAsync(GetQuery<VisualEditorSettings> query, IExecutionContext executionContext)
         {

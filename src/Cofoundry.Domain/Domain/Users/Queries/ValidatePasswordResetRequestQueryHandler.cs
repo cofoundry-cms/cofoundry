@@ -10,8 +10,7 @@ using Cofoundry.Domain.CQS;
 namespace Cofoundry.Domain
 {
     public class ValidatePasswordResetRequestQueryHandler
-        : IQueryHandler<ValidatePasswordResetRequestQuery, PasswordResetRequestAuthenticationResult>
-        , IAsyncQueryHandler<ValidatePasswordResetRequestQuery, PasswordResetRequestAuthenticationResult>
+        : IAsyncQueryHandler<ValidatePasswordResetRequestQuery, PasswordResetRequestAuthenticationResult>
         , IIgnorePermissionCheckHandler
     {
         #region constructor
@@ -34,14 +33,6 @@ namespace Cofoundry.Domain
         #endregion
 
         #region execution
-
-        public PasswordResetRequestAuthenticationResult Execute(ValidatePasswordResetRequestQuery query, IExecutionContext executionContext)
-        {
-            var request = GetRequest(query).SingleOrDefault();
-            var result = ValidatePasswordRequest(request, query, executionContext);
-
-            return result;
-        }
 
         public async Task<PasswordResetRequestAuthenticationResult> ExecuteAsync(ValidatePasswordResetRequestQuery query, IExecutionContext executionContext)
         {

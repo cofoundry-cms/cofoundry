@@ -12,8 +12,7 @@ using Cofoundry.Core.EntityFramework;
 namespace Cofoundry.Domain
 {
     public class HasExceededMaxLoginAttemptsQueryHandler 
-        : IQueryHandler<HasExceededMaxLoginAttemptsQuery, bool>
-        , IAsyncQueryHandler<HasExceededMaxLoginAttemptsQuery, bool>
+        : IAsyncQueryHandler<HasExceededMaxLoginAttemptsQuery, bool>
         , IIgnorePermissionCheckHandler
     {
         #region constructor
@@ -39,25 +38,6 @@ namespace Cofoundry.Domain
         #endregion
 
         #region execution
-
-        public bool Execute(HasExceededMaxLoginAttemptsQuery query, IExecutionContext executionContext)
-        {
-            var connectionInfo = _clientConnectionService.GetConnectionInfo();
-
-            var isValid = _sqlExecutor.ExecuteScalar<int>(_dbContext,
-                "Cofoundry.FailedAuthticationAttempt_IsAttemptValid",
-                new SqlParameter("UserAreaCode", query.UserAreaCode),
-                new SqlParameter("Username", query.Username.Trim()),
-                new SqlParameter("IPAddress", connectionInfo.IPAddress),
-                new SqlParameter("DateTimeNow", executionContext.ExecutionDate),
-                new SqlParameter("MaxIPAttempts", _authenticationSettings.MaxIPAttempts),
-                new SqlParameter("MaxUsernameAttempts", _authenticationSettings.MaxUsernameAttempts),
-                new SqlParameter("MaxIPAttemptsBoundaryInMinutes", _authenticationSettings.MaxIPAttemptsBoundaryInMinutes),
-                new SqlParameter("MaxUsernameAttemptsBoundaryInMinutes", _authenticationSettings.MaxUsernameAttemptsBoundaryInMinutes)
-                );
-
-            return isValid != 1;
-        }
 
         public async Task<bool> ExecuteAsync(HasExceededMaxLoginAttemptsQuery query, IExecutionContext executionContext)
         {

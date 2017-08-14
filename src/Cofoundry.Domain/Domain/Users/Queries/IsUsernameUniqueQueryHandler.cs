@@ -14,8 +14,7 @@ namespace Cofoundry.Domain
     /// Usernames only have to be unique per UserArea.
     /// </summary>
     public class IsUsernameUniqueQueryHandler 
-        : IQueryHandler<IsUsernameUniqueQuery, bool>
-        , IAsyncQueryHandler<IsUsernameUniqueQuery, bool>
+        : IAsyncQueryHandler<IsUsernameUniqueQuery, bool>
         , IPermissionRestrictedQueryHandler<IsUsernameUniqueQuery, bool>
     {
         #region constructor
@@ -33,21 +32,11 @@ namespace Cofoundry.Domain
 
         #region execution
 
-        public bool Execute(IsUsernameUniqueQuery query, IExecutionContext executionContext)
-        {
-            var exists = Exists(query).Any();
-            return !exists;
-        }
-
         public async Task<bool> ExecuteAsync(IsUsernameUniqueQuery query, IExecutionContext executionContext)
         {
             var exists = await Exists(query).AnyAsync();
             return !exists;
         }
-
-        #endregion
-
-        #region helpers
 
         private IQueryable<User> Exists(IsUsernameUniqueQuery query)
         {

@@ -17,8 +17,7 @@ namespace Cofoundry.Domain
     /// area does not support email addresses then the email field will be empty.
     /// </summary>
     public class GetUserMicroSummaryByEmailQueryHandler 
-        : IQueryHandler<GetUserMicroSummaryByEmailQuery, UserMicroSummary>
-        , IAsyncQueryHandler<GetUserMicroSummaryByEmailQuery, UserMicroSummary>
+        : IAsyncQueryHandler<GetUserMicroSummaryByEmailQuery, UserMicroSummary>
         , IPermissionRestrictedQueryHandler<GetUserMicroSummaryByEmailQuery, UserMicroSummary>
     {
         #region constructor
@@ -35,15 +34,6 @@ namespace Cofoundry.Domain
         #endregion
 
         #region execution
-
-        public UserMicroSummary Execute(GetUserMicroSummaryByEmailQuery query, IExecutionContext executionContext)
-        {
-            if (string.IsNullOrWhiteSpace(query.Email)) return null;
-
-            var user = Query(query).SingleOrDefault();
-
-            return user;
-        }
 
         public Task<UserMicroSummary> ExecuteAsync(GetUserMicroSummaryByEmailQuery query, IExecutionContext executionContext)
         {

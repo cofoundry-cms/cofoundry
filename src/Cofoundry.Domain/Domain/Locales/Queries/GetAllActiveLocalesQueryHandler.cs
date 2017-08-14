@@ -11,8 +11,7 @@ using AutoMapper.QueryableExtensions;
 namespace Cofoundry.Domain
 {
     public class GetAllActiveLocalesQueryHandler 
-        : IQueryHandler<GetAllQuery<ActiveLocale>, IEnumerable<ActiveLocale>>
-        , IAsyncQueryHandler<GetAllQuery<ActiveLocale>, IEnumerable<ActiveLocale>>
+        : IAsyncQueryHandler<GetAllQuery<ActiveLocale>, IEnumerable<ActiveLocale>>
         , IIgnorePermissionCheckHandler
     {
         #region constructor
@@ -32,16 +31,6 @@ namespace Cofoundry.Domain
         #endregion
 
         #region execution
-
-        public IEnumerable<ActiveLocale> Execute(GetAllQuery<ActiveLocale> query, IExecutionContext executionContext)
-        {
-            var results = _cache.GetOrAdd(() =>
-            {
-                return GetAllLocales().ToArray();
-            });
-
-            return results;
-        }
 
         public async Task<IEnumerable<ActiveLocale>> ExecuteAsync(GetAllQuery<ActiveLocale> query, IExecutionContext executionContext)
         {

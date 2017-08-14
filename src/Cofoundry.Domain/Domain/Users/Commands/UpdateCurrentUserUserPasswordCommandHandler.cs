@@ -15,8 +15,7 @@ namespace Cofoundry.Domain
     /// OldPassword field to authenticate the request.
     /// </summary>
     public class UpdateCurrentUserUserPasswordCommandHandler 
-        : ICommandHandler<UpdateCurrentUserUserPasswordCommand>
-        , IAsyncCommandHandler<UpdateCurrentUserUserPasswordCommand>
+        : IAsyncCommandHandler<UpdateCurrentUserUserPasswordCommand>
         , IPermissionRestrictedCommandHandler<UpdateCurrentUserUserPasswordCommand>
     {
         #region constructor

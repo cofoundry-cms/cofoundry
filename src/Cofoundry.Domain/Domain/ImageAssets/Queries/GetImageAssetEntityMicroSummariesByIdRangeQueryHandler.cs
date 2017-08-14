@@ -10,8 +10,7 @@ using Microsoft.EntityFrameworkCore;
 namespace Cofoundry.Domain
 {
     public class GetImageAssetEntityMicroSummariesByIdRangeQueryHandler
-        : IQueryHandler<GetImageAssetEntityMicroSummariesByIdRangeQuery, IDictionary<int, RootEntityMicroSummary>>
-        , IAsyncQueryHandler<GetImageAssetEntityMicroSummariesByIdRangeQuery, IDictionary<int, RootEntityMicroSummary>>
+        : IAsyncQueryHandler<GetImageAssetEntityMicroSummariesByIdRangeQuery, IDictionary<int, RootEntityMicroSummary>>
         , IPermissionRestrictedQueryHandler<GetImageAssetEntityMicroSummariesByIdRangeQuery, IDictionary<int, RootEntityMicroSummary>>
     {
         #region constructor
@@ -38,17 +37,6 @@ namespace Cofoundry.Domain
 
             return results;
         }
-
-        public IDictionary<int, RootEntityMicroSummary> Execute(GetImageAssetEntityMicroSummariesByIdRangeQuery query, IExecutionContext executionContext)
-        {
-            var results = Query(query).ToDictionary(e => e.RootEntityId);
-
-            return results;
-        }
-
-        #endregion
-
-        #region private helpers
 
         private IQueryable<RootEntityMicroSummary> Query(GetImageAssetEntityMicroSummariesByIdRangeQuery query)
         {

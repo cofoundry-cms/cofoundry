@@ -22,14 +22,6 @@ namespace Cofoundry.Domain.CQS
         }
 
         /// <summary>
-        /// Creates a new IQueryHandler instance with the specified type signature.
-        /// </summary>
-        public IQueryHandler<TQuery, TResult> Create<TQuery, TResult>() where TQuery : IQuery<TResult>
-        {
-            return _resolutionContext.Resolve<IQueryHandler<TQuery, TResult>>();
-        }
-
-        /// <summary>
         /// Creates a new IAsyncQueryHandler instance with the specified type signature.
         /// </summary>
         public IAsyncQueryHandler<TQuery, TResult> CreateAsyncHandler<TQuery, TResult>() where TQuery : IQuery<TResult>

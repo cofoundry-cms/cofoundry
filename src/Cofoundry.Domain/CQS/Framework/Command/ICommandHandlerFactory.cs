@@ -13,11 +13,6 @@ namespace Cofoundry.Domain.CQS
     public interface ICommandHandlerFactory
     {
         /// <summary>
-        /// Creates a new ICommandHandler instance with the specified type signature.
-        /// </summary>
-        ICommandHandler<T> Create<T>() where T : ICommand;
-
-        /// <summary>
         /// Creates a new IAsyncCommandHandler instance with the specified type signature.
         /// </summary>
         IAsyncCommandHandler<T> CreateAsyncHandler<T>() where T : ICommand;

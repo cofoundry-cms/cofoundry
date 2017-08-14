@@ -12,8 +12,7 @@ using Microsoft.EntityFrameworkCore;
 namespace Cofoundry.Domain
 {
     public class GetDocumentAssetRenderDetailsByIdQueryHandler 
-        : IQueryHandler<GetByIdQuery<DocumentAssetRenderDetails>, DocumentAssetRenderDetails>
-        , IAsyncQueryHandler<GetByIdQuery<DocumentAssetRenderDetails>, DocumentAssetRenderDetails>
+        : IAsyncQueryHandler<GetByIdQuery<DocumentAssetRenderDetails>, DocumentAssetRenderDetails>
         , IPermissionRestrictedQueryHandler<GetByIdQuery<DocumentAssetRenderDetails>, DocumentAssetRenderDetails>
     {
         #region constructor
@@ -30,14 +29,6 @@ namespace Cofoundry.Domain
         #endregion
 
         #region execution
-
-        public DocumentAssetRenderDetails Execute(GetByIdQuery<DocumentAssetRenderDetails> query, IExecutionContext executionContext)
-        {
-            var result = Query(query)
-                .SingleOrDefault();
-
-            return result;
-        }
 
         public async Task<DocumentAssetRenderDetails> ExecuteAsync(GetByIdQuery<DocumentAssetRenderDetails> query, IExecutionContext executionContext)
         {

@@ -38,33 +38,7 @@ namespace Cofoundry.Domain
             CheckAdditionalPermissionHandlers(commandHandler, executionContext, _permissionValidationService);
         }
 
-        public void Validate<TCommand>(TCommand command, ICommandHandler<TCommand> commandHandler, IExecutionContext executionContext) where TCommand : ICommand
-        {
-            ValidateCommmandImplementation<TCommand>(commandHandler);
-
-            if (commandHandler is IPermissionRestrictedCommandHandler<TCommand>)
-            {
-                var permissions = ((IPermissionRestrictedCommandHandler<TCommand>)commandHandler).GetPermissions(command);
-                _permissionValidationService.EnforcePermission(permissions, executionContext.UserContext);
-            }
-
-            CheckAdditionalPermissionHandlers(commandHandler, executionContext, _permissionValidationService);
-        }
-
         public void Validate<TQuery, TResult>(TQuery query, IAsyncQueryHandler<TQuery, TResult> queryHandler, IExecutionContext executionContext) where TQuery : IQuery<TResult>
-        {
-            ValidateQueryImplementation<TQuery, TResult>(queryHandler);
-
-            if (queryHandler is IPermissionRestrictedQueryHandler<TQuery, TResult>)
-            {
-                var permissions = ((IPermissionRestrictedQueryHandler<TQuery, TResult>)queryHandler).GetPermissions(query);
-                _permissionValidationService.EnforcePermission(permissions, executionContext.UserContext);
-            }
-
-            CheckAdditionalPermissionHandlers(queryHandler, executionContext, _permissionValidationService);
-        }
-
-        public void Validate<TQuery, TResult>(TQuery query, IQueryHandler<TQuery, TResult> queryHandler, IExecutionContext executionContext) where TQuery : IQuery<TResult>
         {
             ValidateQueryImplementation<TQuery, TResult>(queryHandler);
 

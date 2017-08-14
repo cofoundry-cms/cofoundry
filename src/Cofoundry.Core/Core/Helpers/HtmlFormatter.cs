@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Globalization;
 using Microsoft.AspNetCore.Html;
 
 namespace Cofoundry.Core
@@ -13,7 +12,7 @@ namespace Cofoundry.Core
         /// <summary>
         /// Converts line breaks from a textarea to html br tags
         /// </summary>
-        public static string ConvertLineBreaksToBrTags(this string stIn)
+        public static string ConvertLineBreaksToBrTags(string stIn)
         {
             return stIn
                    .Split(new string[] { "\r\n", "\n" }, StringSplitOptions.None)
@@ -95,7 +94,7 @@ namespace Cofoundry.Core
         /// Determins if the string contains html tags.
         /// </summary>
         /// <see cref="http://stackoverflow.com/a/204664"/>
-        public static bool ContainsHtml(this string source)
+        public static bool ContainsHtml(string source)
         {
             var tagRegex = new Regex(@"<[^>]+>");
             return tagRegex.IsMatch(source);

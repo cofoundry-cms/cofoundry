@@ -10,8 +10,7 @@ using Cofoundry.Core;
 namespace Cofoundry.Domain
 {
     public class GetSeoSettingsQueryHandler 
-        : IQueryHandler<GetQuery<SeoSettings>, SeoSettings>
-        , IAsyncQueryHandler<GetQuery<SeoSettings>, SeoSettings>
+        : IAsyncQueryHandler<GetQuery<SeoSettings>, SeoSettings>
         , IIgnorePermissionCheckHandler
     {
         #region constructor
@@ -32,21 +31,11 @@ namespace Cofoundry.Domain
 
         #region execution
 
-        public SeoSettings Execute(GetQuery<SeoSettings> query, IExecutionContext executionContext)
-        {
-            var allSettings = _internalSettingsRepository.GetAllSettings();
-            return MapSettings(allSettings);
-        }
-
         public async Task<SeoSettings> ExecuteAsync(GetQuery<SeoSettings> query, IExecutionContext executionContext)
         {
             var allSettings = await _internalSettingsRepository.GetAllSettingsAsync();
             return MapSettings(allSettings);
         }
-
-        #endregion
-
-        #region helpers
 
         private SeoSettings MapSettings(Dictionary<string, string> allSettings)
         {

@@ -6,14 +6,12 @@ using System.Threading.Tasks;
 using Cofoundry.Domain.CQS;
 using Cofoundry.Domain.Data;
 using AutoMapper.QueryableExtensions;
-using Cofoundry.Core;
 using Microsoft.EntityFrameworkCore;
 
 namespace Cofoundry.Domain
 {
     public class GetImageAssetRenderDetailsByIdRangeQueryHandler 
-        : IQueryHandler<GetByIdRangeQuery<ImageAssetRenderDetails>, IDictionary<int, ImageAssetRenderDetails>>
-        , IAsyncQueryHandler<GetByIdRangeQuery<ImageAssetRenderDetails>, IDictionary<int, ImageAssetRenderDetails>>
+        : IAsyncQueryHandler<GetByIdRangeQuery<ImageAssetRenderDetails>, IDictionary<int, ImageAssetRenderDetails>>
         , IPermissionRestrictedQueryHandler<GetByIdRangeQuery<ImageAssetRenderDetails>, IDictionary<int, ImageAssetRenderDetails>>
     {
         #region constructor
@@ -34,20 +32,6 @@ namespace Cofoundry.Domain
 
         #region execution
 
-        public IDictionary<int, ImageAssetRenderDetails> Execute(GetByIdRangeQuery<ImageAssetRenderDetails> query, IExecutionContext executionContext)
-        {
-            var cachedResults = QueryCache(query.Ids);
-            var missingResultsQuery = QueryDb(cachedResults);
-            List<ImageAssetRenderDetails> missingResults = null;
-
-            if (missingResultsQuery != null)
-            {
-                missingResults = missingResultsQuery.ToList();
-            }
-
-            return AddResultsToCacheAndReturnResult(cachedResults, missingResults);
-        }
-
         public async Task<IDictionary<int, ImageAssetRenderDetails>> ExecuteAsync(GetByIdRangeQuery<ImageAssetRenderDetails> query, IExecutionContext executionContext)
         {
             var cachedResults = QueryCache(query.Ids);
@@ -61,8 +45,6 @@ namespace Cofoundry.Domain
             return AddResultsToCacheAndReturnResult(cachedResults, missingResults);
         }
 
-        #endregion
-
         #region private query classes
 
         private class ImageCacheResult
@@ -73,8 +55,6 @@ namespace Cofoundry.Domain
         }
 
         #endregion
-
-        #region private methods
 
         private List<ImageCacheResult> QueryCache(int[] ids)
         {

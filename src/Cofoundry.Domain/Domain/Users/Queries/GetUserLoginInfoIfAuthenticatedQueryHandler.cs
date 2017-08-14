@@ -14,8 +14,7 @@ namespace Cofoundry.Domain
     /// pass an authentication check
     /// </summary>
     public class GetUserLoginInfoIfAuthenticatedQueryHandler 
-        : IQueryHandler<GetUserLoginInfoIfAuthenticatedQuery, UserLoginInfo>
-        , IAsyncQueryHandler<GetUserLoginInfoIfAuthenticatedQuery, UserLoginInfo>
+        : IAsyncQueryHandler<GetUserLoginInfoIfAuthenticatedQuery, UserLoginInfo>
         , IIgnorePermissionCheckHandler
     {
         private readonly UserAuthenticationHelper _userAuthenticationHelper;
@@ -28,15 +27,6 @@ namespace Cofoundry.Domain
         {
             _userAuthenticationHelper = userAuthenticationHelper;
             _dbContext = dbContext;
-        }
-
-        public UserLoginInfo Execute(GetUserLoginInfoIfAuthenticatedQuery query, IExecutionContext executionContext)
-        {
-            if (string.IsNullOrWhiteSpace(query.Username) || string.IsNullOrWhiteSpace(query.Password)) return null;
-
-            var user = Query(query).FirstOrDefault();
-
-            return MapResult(query, user);
         }
 
         public async Task<UserLoginInfo> ExecuteAsync(GetUserLoginInfoIfAuthenticatedQuery query, IExecutionContext executionContext)

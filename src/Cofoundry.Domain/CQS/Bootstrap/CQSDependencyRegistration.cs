@@ -13,11 +13,9 @@ namespace Cofoundry.Domain.CQS
         {
             container
                 .RegisterType<ICommandExecutor, CommandExecutor>()
-                .RegisterAllGenericImplementations(typeof(ICommandHandler<>))
                 .RegisterAllGenericImplementations(typeof(IAsyncCommandHandler<>))
                 .RegisterType<ICommandHandlerFactory, CommandHandlerFactory>()
                 .RegisterType<IQueryExecutor, QueryExecutor>()
-                .RegisterAllGenericImplementations(typeof(IQueryHandler<,>))
                 .RegisterAllGenericImplementations(typeof(IAsyncQueryHandler<,>))
                 .RegisterType<IQueryHandlerFactory, QueryHandlerFactory>()
                 .RegisterType<ICommandLogService, DebugCommandLogService>()

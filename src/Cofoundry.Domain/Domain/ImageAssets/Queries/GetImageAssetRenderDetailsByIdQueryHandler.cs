@@ -12,8 +12,7 @@ using Microsoft.EntityFrameworkCore;
 namespace Cofoundry.Domain
 {
     public class GetImageAssetRenderDetailsByIdQueryHandler 
-        : IQueryHandler<GetByIdQuery<ImageAssetRenderDetails>, ImageAssetRenderDetails>
-        , IAsyncQueryHandler<GetByIdQuery<ImageAssetRenderDetails>, ImageAssetRenderDetails>
+        : IAsyncQueryHandler<GetByIdQuery<ImageAssetRenderDetails>, ImageAssetRenderDetails>
         , IPermissionRestrictedQueryHandler<GetByIdQuery<ImageAssetRenderDetails>, ImageAssetRenderDetails>
     {
         #region constructor
@@ -34,17 +33,6 @@ namespace Cofoundry.Domain
 
         #region execution
 
-        public ImageAssetRenderDetails Execute(GetByIdQuery<ImageAssetRenderDetails> query, IExecutionContext executionContext)
-        {
-            var asset = _imageAssetCache.GetOrAdd(query.Id, () =>
-            {
-                var result = Query(query.Id).SingleOrDefault();
-                return result;
-            });
-
-            return asset;
-        }
-
         public async Task<ImageAssetRenderDetails> ExecuteAsync(GetByIdQuery<ImageAssetRenderDetails> query, IExecutionContext executionContext)
         {
             var asset = await _imageAssetCache.GetOrAddAsync(query.Id, () =>
@@ -55,10 +43,6 @@ namespace Cofoundry.Domain
 
             return asset;
         }
-
-        #endregion
-
-        #region private methods
 
         private IQueryable<ImageAssetRenderDetails> Query(int id)
         {
