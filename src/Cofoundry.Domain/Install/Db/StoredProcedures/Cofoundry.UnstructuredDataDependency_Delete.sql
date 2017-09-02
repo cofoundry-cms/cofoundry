@@ -6,6 +6,8 @@ create procedure Cofoundry.UnstructuredDataDependency_Delete
 	as
 begin	
 	
+	set nocount on;
+	
 	declare @RelatedEntityCascadeActionId_None int = 1
 
 	-- Delete any relations that allow cascades

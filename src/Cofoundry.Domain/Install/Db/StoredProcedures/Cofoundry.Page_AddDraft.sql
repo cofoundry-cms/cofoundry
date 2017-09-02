@@ -9,6 +9,8 @@ create procedure Cofoundry.Page_AddDraft
 	as
 begin
 	
+	set nocount on;
+	
 	declare @PageVersionBlockEntityDefinitionCode char(6) = 'COFPGB';
 	declare @PublishedWorkFlowStatus int = 4;
 	declare @ApprovedWorkFlowStatus int = 5;

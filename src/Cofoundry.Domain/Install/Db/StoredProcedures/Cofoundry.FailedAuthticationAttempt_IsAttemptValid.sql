@@ -11,6 +11,9 @@ create procedure Cofoundry.FailedAuthticationAttempt_IsAttemptValid
 		)
 	as
 begin
+	
+	set nocount on;
+
 	declare @IPAttemptsAfter datetime = dateadd(minute, -@MaxIPAttemptsBoundaryInMinutes, @DateTimeNow)
 	declare @UsernameAttemptsAfter datetime = dateadd(minute, -@MaxUsernameAttemptsBoundaryInMinutes, @DateTimeNow)
 	declare @output int

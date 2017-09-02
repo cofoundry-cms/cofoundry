@@ -6,5 +6,8 @@ create procedure Cofoundry.UserLoginLog_Add
 		)
 	as
 begin
+	
+	set nocount on;
+
 	insert into Cofoundry.UserLoginLog (UserId, IPAddress, LoginDate) values (@UserId, @IPAddress, @DateTimeNow)
 end

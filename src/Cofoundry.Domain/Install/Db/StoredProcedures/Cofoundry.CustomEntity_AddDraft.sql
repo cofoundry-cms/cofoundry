@@ -9,6 +9,8 @@ create procedure Cofoundry.CustomEntity_AddDraft
 	as
 begin
 	
+	set nocount on;
+	
 	declare @CustomEntityVersionEntityDefinitionCode char(6) = 'COFCEV';
 	declare @CustomEntityPageBlockEntityDefinitionCode char(6) = 'COFCEB';
 	declare @PublishedWorkFlowStatus int = 4;

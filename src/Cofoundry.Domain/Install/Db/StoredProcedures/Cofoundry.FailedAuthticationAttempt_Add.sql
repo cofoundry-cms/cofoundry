@@ -7,5 +7,8 @@ create procedure Cofoundry.FailedAuthticationAttempt_Add
 		)
 	as
 begin
+	
+	set nocount on;
+
 	insert into Cofoundry.FailedAuthenticationAttempt (UserAreaCode, Username, IPAddress, AttemptDate) values (@UserAreaCode, @Username, @IPAddress, @DateTimeNow)
 end
