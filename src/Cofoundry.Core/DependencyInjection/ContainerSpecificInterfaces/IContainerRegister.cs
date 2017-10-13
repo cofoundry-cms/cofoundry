@@ -77,14 +77,14 @@ namespace Cofoundry.Core.DependencyInjection
         /// <typeparam name="TRegisterAs">Type to register the service as</typeparam>
         /// <typeparam name="TConcrete">Concrete type to register.</typeparam>
         /// <returns>The IContainerRegister instance for method chaining.</returns>
-        IContainerRegister RegisterTypeInCollection<TRegisterAs, TConcrete>() where TConcrete : TRegisterAs;
+        IContainerRegister RegisterTypeInCollection<TRegisterAs, TConcrete>(RegistrationOptions options = null) where TConcrete : TRegisterAs;
 
         /// <summary>
         /// Registers all services that implement TToRegister as a registered collection of services.
         /// </summary>
         /// <typeparam name="TToRegister">Type to scan for implementations</typeparam>
         /// <returns>The IContainerRegister instance for method chaining.</returns>
-        IContainerRegister RegisterAll<TToRegister>();
+        IContainerRegister RegisterAll<TToRegister>(RegistrationOptions options = null);
 
         /// <summary>
         /// Registers all services that implement typeToRegisterImplementationsOf as their
@@ -107,7 +107,7 @@ namespace Cofoundry.Core.DependencyInjection
         /// </summary>
         /// <typeparam name="TGeneric">Generic interface to scan for implementations</typeparam>
         /// <returns>The IContainerRegister instance for method chaining.</returns>
-        IContainerRegister RegisterAllGenericImplementations(Type typeDef);
+        IContainerRegister RegisterAllGenericImplementations(Type typeDef, RegistrationOptions options = null);
 
         /// <summary>
         /// Registers an open generic type
@@ -136,6 +136,6 @@ namespace Cofoundry.Core.DependencyInjection
         /// <returns>The IContainerRegister instance for method chaining.</returns>
         IContainerRegister RegisterFactory<TRegisterAs, TConcrete, TFactory>(RegistrationOptions options = null)
             where TFactory : IInjectionFactory<TConcrete>
-            where TRegisterAs : TConcrete;
+            where TConcrete : TRegisterAs;
     }
 }

@@ -49,5 +49,32 @@ namespace Cofoundry.Core.DependencyInjection
 
             return options;
         }
+
+        /// <summary>
+        /// A quick way of creating a new options set which sets the
+        /// InstanceScope property to InstanceScope.Singleton
+        /// </summary>
+        public static RegistrationOptions SingletonScope()
+        {
+            return new RegistrationOptions() { InstanceScope = InstanceScope.Singleton };
+        }
+
+        /// <summary>
+        /// A quick way of creating a new options set which sets the
+        /// InstanceScope property to InstanceScope.Transient
+        /// </summary>
+        public static RegistrationOptions TransientScope()
+        {
+            return new RegistrationOptions() { InstanceScope = InstanceScope.Transient };
+        }
+
+        /// <summary>
+        /// A quick way of creating a new options set which sets the
+        /// InstanceScope property to InstanceScope.PerLifetimeScope
+        /// </summary>
+        public static RegistrationOptions PerLifetimeScope()
+        {
+            return new RegistrationOptions() { InstanceScope = InstanceScope.PerLifetimeScope };
+        }
     }
 }

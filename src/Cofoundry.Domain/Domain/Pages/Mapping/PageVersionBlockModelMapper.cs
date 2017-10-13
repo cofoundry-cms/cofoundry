@@ -19,17 +19,17 @@ namespace Cofoundry.Domain
 
         #region constructor
 
-        private readonly IResolutionContext _resolutionContext;
+        private readonly IServiceProvider _serviceProvider;
         private readonly IDbUnstructuredDataSerializer _dbUnstructuredDataSerializer;
         private readonly IPageBlockTypeDataModelTypeFactory _pageBlockDataModelTypeFactory;
 
         public PageVersionBlockModelMapper(
-            IResolutionContext resolutionContext,
+            IServiceProvider serviceProvider,
             IDbUnstructuredDataSerializer dbUnstructuredDataSerializer,
             IPageBlockTypeDataModelTypeFactory pageBlockDataModelTypeFactory
             )
         {
-            _resolutionContext = resolutionContext;
+            _serviceProvider = serviceProvider;
             _dbUnstructuredDataSerializer = dbUnstructuredDataSerializer;
             _pageBlockDataModelTypeFactory = pageBlockDataModelTypeFactory;
         }
@@ -155,14 +155,14 @@ namespace Cofoundry.Domain
             ) where T : IPageBlockTypeDataModel
         {
             var mapperType = typeof(IPageBlockTypeDisplayModelMapper<T>);
-            if (!_resolutionContext.IsRegistered(mapperType))
+            var mapper = (IPageBlockTypeDisplayModelMapper<T>)_serviceProvider.GetService(mapperType);
+            if (mapper == null)
             {
                 string msg = @"{0} does not implement IPageBlockDisplayModel and no custom mapper could be found. You must create 
                                a class that implements IPageBlockDisplayModelMapper<{0}> if you are using a custom display model. Full type name: {1}";
                 throw new Exception(string.Format(msg, typeof(T).Name, typeof(T).FullName));
             }
 
-            var mapper = (IPageBlockTypeDisplayModelMapper<T>)_resolutionContext.Resolve(typeof(IPageBlockTypeDisplayModelMapper<T>));
             var dataModels = new List<PageBlockTypeDisplayModelMapperInput<T>>();
 
             foreach (var pageBlock in pageBlocks)

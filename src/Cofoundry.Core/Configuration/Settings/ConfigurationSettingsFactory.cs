@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Cofoundry.Core.DependencyInjection;
 using Cofoundry.Core.Validation;
 using Microsoft.Extensions.Options;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Cofoundry.Core.Configuration
 {
@@ -17,15 +18,15 @@ namespace Cofoundry.Core.Configuration
     {
         #region constructor
 
-        private readonly IResolutionContext _resolutionContext;
+        private readonly IServiceProvider _serviceProvider;
         private readonly IModelValidationService _modelValidationService;
 
         public ConfigurationSettingsFactory(
-            IResolutionContext resolutionContext,
+            IServiceProvider serviceProvider,
             IModelValidationService modelValidationService
             )
         {
-            _resolutionContext = resolutionContext;
+            _serviceProvider = serviceProvider;
             _modelValidationService = modelValidationService;
         }
 
@@ -39,7 +40,7 @@ namespace Cofoundry.Core.Configuration
         /// </summary>
         public TSettings Create()
         {
-            var settingsOptions = _resolutionContext.Resolve<IOptions<TSettings>>();
+            var settingsOptions = _serviceProvider.GetRequiredService<IOptions<TSettings>>();
             var settings = settingsOptions.Value;
 
             var errors = _modelValidationService.GetErrors(settings);

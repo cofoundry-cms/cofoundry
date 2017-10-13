@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Cofoundry.Core.DependencyInjection;
 using System.Reflection;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Cofoundry.Core.MessageAggregator
 {
@@ -23,7 +24,7 @@ namespace Cofoundry.Core.MessageAggregator
             return typeof(TMessageSubscribedTo).GetTypeInfo().IsAssignableFrom(typeof(TMessage));
         }
 
-        public async Task DeliverAsync(IResolutionContext resolutionContext, object message)
+        public async Task DeliverAsync(IServiceProvider serviceProvider, object message)
         {
             if (message == null) throw new ArgumentNullException(nameof(message));
             if (!(message is TMessageSubscribedTo))
@@ -31,7 +32,7 @@ namespace Cofoundry.Core.MessageAggregator
                 throw new ArgumentException($"{ nameof(message) } must be of type '{typeof(TMessageSubscribedTo).FullName}'");
             }
 
-            var handler = resolutionContext.Resolve<TMessageHandler>();
+            var handler = serviceProvider.GetRequiredService<TMessageHandler>();
             await handler.HandleAsync((TMessageSubscribedTo)message);
         }
     }

@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.StaticFiles;
+﻿using Cofoundry.Core.DependencyInjection;
+using Microsoft.AspNetCore.StaticFiles;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,26 +15,32 @@ namespace Cofoundry.Core.Web
     /// </summary>
     public class ContentTypeProviderFactory : IContentTypeProviderFactory
     { 
-        private readonly IEnumerable<IMimeTypeRegistration> _mimeTypeRegistrations;
+        private readonly IServiceProvider _serviceProvider;
 
         public ContentTypeProviderFactory(
-            IEnumerable<IMimeTypeRegistration> mimeTypeRegistrations
+            IServiceProvider serviceProvider
             )
         {
-            _mimeTypeRegistrations = mimeTypeRegistrations;
+            _serviceProvider = serviceProvider;
         }
 
         public IContentTypeProvider Create()
         {
-            var provider = new FileExtensionContentTypeProvider();
-            var context = new MimeTypeRegistrationContext(provider);
-
-            foreach (var mimeTypeRegistration in _mimeTypeRegistrations)
+            // IContentTypeProvider/Factory is registered singleton, so create a scope here
+            using (var scope = _serviceProvider.CreateScope())
             {
-                mimeTypeRegistration.Register(context);
-            }
+                var mimeTypeRegistrations = scope.ServiceProvider.GetRequiredService<IEnumerable<IMimeTypeRegistration>>();
 
-            return provider;
+                var provider = new FileExtensionContentTypeProvider();
+                var context = new MimeTypeRegistrationContext(provider);
+
+                foreach (var mimeTypeRegistration in mimeTypeRegistrations)
+                {
+                    mimeTypeRegistration.Register(context);
+                }
+
+                return provider;
+            }
         }
     }
 }

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Cofoundry.Core.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Cofoundry.Domain.CQS
 {
@@ -12,13 +13,13 @@ namespace Cofoundry.Domain.CQS
     /// </summary>
     public class CommandHandlerFactory : ICommandHandlerFactory
     {
-        private readonly IResolutionContext _resolutionContext;
+        private readonly IServiceProvider _serviceProvider;
 
         public CommandHandlerFactory(
-            IResolutionContext resolutionContext
+            IServiceProvider serviceProvider
             )
         {
-            _resolutionContext = resolutionContext;
+            _serviceProvider = serviceProvider;
         }
 
         /// <summary>
@@ -26,7 +27,7 @@ namespace Cofoundry.Domain.CQS
         /// </summary>
         public IAsyncCommandHandler<T> CreateAsyncHandler<T>() where T : ICommand
         {
-            return _resolutionContext.Resolve<IAsyncCommandHandler<T>>();
+            return _serviceProvider.GetRequiredService<IAsyncCommandHandler<T>>();
         }
     }
 }

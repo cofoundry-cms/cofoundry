@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Cofoundry.Core.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Cofoundry.Core.AutoUpdate
 {
@@ -12,36 +13,40 @@ namespace Cofoundry.Core.AutoUpdate
     /// </summary>
     public class UpdateCommandHandlerFactory : IUpdateCommandHandlerFactory
     {
-        private readonly IResolutionContext _resolutionContext;
+        private readonly IServiceProvider _serviceProvider;
 
         public UpdateCommandHandlerFactory(
-            IResolutionContext resolutionContext
+            IServiceProvider serviceProvider
             )
         {
-            _resolutionContext = resolutionContext;
+            _serviceProvider = serviceProvider;
         }
 
         public IVersionedUpdateCommandHandler<TCommand> CreateVersionedCommand<TCommand>() where TCommand : IVersionedUpdateCommand
         {
-            if (_resolutionContext.IsRegistered<IAsyncVersionedUpdateCommandHandler<TCommand>>())
+            var asyncCommand = _serviceProvider.GetService<IAsyncVersionedUpdateCommandHandler<TCommand>>();
+
+            if (asyncCommand != null)
             {
-                return _resolutionContext.Resolve<IAsyncVersionedUpdateCommandHandler<TCommand>>();
+                return asyncCommand;
             }
             else
             {
-                return _resolutionContext.Resolve<ISyncVersionedUpdateCommandHandler<TCommand>>();
+                return _serviceProvider.GetRequiredService<ISyncVersionedUpdateCommandHandler<TCommand>>();
             }
         }
 
         public IAlwaysRunUpdateCommandHandler<TCommand> CreateAlwaysRunCommand<TCommand>() where TCommand : IAlwaysRunUpdateCommand
         {
-            if (_resolutionContext.IsRegistered<IAsyncAlwaysRunUpdateCommandHandler<TCommand>>())
+            var asyncCommand = _serviceProvider.GetService<IAsyncAlwaysRunUpdateCommandHandler<TCommand>>();
+
+            if (asyncCommand != null)
             {
-                return _resolutionContext.Resolve<IAsyncAlwaysRunUpdateCommandHandler<TCommand>>();
+                return asyncCommand;
             }
             else
             {
-                return _resolutionContext.Resolve<ISyncAlwaysRunUpdateCommandHandler<TCommand>>();
+                return _serviceProvider.GetRequiredService<ISyncAlwaysRunUpdateCommandHandler<TCommand>>();
             }
         }
     }

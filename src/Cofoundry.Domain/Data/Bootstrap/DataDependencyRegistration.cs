@@ -12,10 +12,8 @@ namespace Cofoundry.Domain.Data
     {
         public void Register(IContainerRegister container)
         {
-            var perRequestOptions = new RegistrationOptions() { InstanceScope = InstanceScope.PerLifetimeScope };
-
             container
-                .RegisterType<CofoundryDbContext>(new Type[] { typeof(CofoundryDbContext), typeof(DbContext) }, perRequestOptions)
+                .RegisterType<CofoundryDbContext>(new Type[] { typeof(CofoundryDbContext), typeof(DbContext) })
                 .RegisterType<IFileStoreService, FileSystemFileStoreService>()
                 .RegisterType<IDbUnstructuredDataSerializer, DbUnstructuredDataSerializer>();
                 ;

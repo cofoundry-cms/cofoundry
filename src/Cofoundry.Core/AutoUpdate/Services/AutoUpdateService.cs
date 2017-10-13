@@ -31,7 +31,8 @@ namespace Cofoundry.Core.AutoUpdate
             IEnumerable<IUpdatePackageFactory> updatePackageFactories,
             IUpdateCommandHandlerFactory commandHandlerFactory,
             IDatabase db,
-            IUpdatePackageOrderer updatePackageOrderer
+            IUpdatePackageOrderer updatePackageOrderer,
+            IServiceProvider serviceProvider
             )
         {
             _updatePackageFactories = updatePackageFactories;

@@ -17,13 +17,13 @@ namespace Cofoundry.Web
         /// </summary>
         public static IMvcBuilder AddCofoundry(
             this IMvcBuilder mvcBuilder,
-            IConfigurationRoot configurationRoot
+            IConfiguration configuration
             )
         {
             DiscoverAdditionalApplicationParts(mvcBuilder);
 
             var typesProvider = new DiscoveredTypesProvider(mvcBuilder.PartManager);
-            var builder = new DefaultContainerBuilder(mvcBuilder.Services, typesProvider, configurationRoot);
+            var builder = new DefaultContainerBuilder(mvcBuilder.Services, typesProvider, configuration);
             builder.Build();
 
             RunAdditionalConfiguration(mvcBuilder);

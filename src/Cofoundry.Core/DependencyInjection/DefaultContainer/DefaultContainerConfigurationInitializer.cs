@@ -23,17 +23,17 @@ namespace Cofoundry.Core.DependencyInjection
 
         private readonly IServiceCollection _serviceCollection;
         private readonly IDiscoveredTypesProvider _discoveredTypesProvider;
-        private readonly IConfigurationRoot _configurationRoot;
+        private readonly IConfiguration _configuration;
 
         public DefaultContainerConfigurationInitializer(
             IServiceCollection serviceCollection,
             IDiscoveredTypesProvider discoveredTypesProvider,
-            IConfigurationRoot configurationRoot
+            IConfiguration configuration
             )
         {
             _serviceCollection = serviceCollection;
             _discoveredTypesProvider = discoveredTypesProvider;
-            _configurationRoot = configurationRoot;
+            _configuration = configuration;
         }
 
         #endregion
@@ -45,7 +45,7 @@ namespace Cofoundry.Core.DependencyInjection
             foreach (var settingType in settingsTypes)
             {
                 var settingName = GetSettingsSectionName(settingType);
-                var section = _configurationRoot.GetSection(settingName);
+                var section = _configuration.GetSection(settingName);
 
                 var genericMethod = _registerOptionsWithServiceMethod.MakeGenericMethod(settingType.AsType());
                 genericMethod.Invoke(this, new object[] { section });

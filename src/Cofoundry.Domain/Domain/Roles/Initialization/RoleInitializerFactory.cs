@@ -13,13 +13,13 @@ namespace Cofoundry.Domain
     /// </summary>
     public class RoleInitializerFactory : IRoleInitializerFactory
     {
-        private readonly IResolutionContext _resolutionContext;
+        private readonly IServiceProvider _serviceProvider;
 
         public RoleInitializerFactory(
-            IResolutionContext resolutionContext
+            IServiceProvider serviceProvider
             )
         {
-            _resolutionContext = resolutionContext;
+            _serviceProvider = serviceProvider;
         }
 
         /// <summary>
@@ -35,10 +35,11 @@ namespace Cofoundry.Domain
             // Never add permission to the super admin role
             if (roleDefinition is SuperAdminRole) return null;
 
-            var type = typeof(IRoleInitializer<>).MakeGenericType(roleDefinition.GetType());
-            if (_resolutionContext.IsRegistered(type))
+            var roleInitializerType = typeof(IRoleInitializer<>).MakeGenericType(roleDefinition.GetType());
+            var roleInitializer = _serviceProvider.GetService(roleInitializerType);
+            if (roleInitializer != null)
             {
-                return (IRoleInitializer)_resolutionContext.Resolve(type);
+                return (IRoleInitializer)roleInitializer;
             }
             else if (roleDefinition is AnonymousRole)
             {

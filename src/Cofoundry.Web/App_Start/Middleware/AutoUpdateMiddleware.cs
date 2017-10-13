@@ -23,18 +23,15 @@ namespace Cofoundry.Web
         private static object _updateStatusLock = new object();
 
         private readonly RequestDelegate _next;
-        private readonly IAutoUpdateService _autoUpdateService;
 
         public AutoUpdateMiddleware(
-            RequestDelegate next,
-            IAutoUpdateService autoUpdateService
+            RequestDelegate next
             ) 
         {
             _next = next;
-            _autoUpdateService = autoUpdateService;
         }
 
-        public async Task Invoke(HttpContext cx)
+        public async Task Invoke(HttpContext cx, IAutoUpdateService autoUpdateService)
         {
             bool runUpdate = false;
 
@@ -53,7 +50,7 @@ namespace Cofoundry.Web
                 {
                     try
                     {
-                        await _autoUpdateService.UpdateAsync();
+                        await autoUpdateService.UpdateAsync();
                         _updateStatus = UpdateStatus.Complete;
                     }
                     catch (Exception ex)

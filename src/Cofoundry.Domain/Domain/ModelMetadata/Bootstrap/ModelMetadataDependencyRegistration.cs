@@ -14,7 +14,7 @@ namespace Cofoundry.Domain
         {
             container
                 .RegisterInstance<CofoundryDisplayMetadataProvider>()
-                .RegisterAll<IModelMetadataDecorator>()
+                .RegisterAll<IModelMetadataDecorator>(RegistrationOptions.SingletonScope())
                 ;
         }
     }

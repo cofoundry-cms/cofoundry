@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Cofoundry.Domain;
+using Microsoft.AspNetCore.Authentication.Cookies;
 
 namespace Cofoundry.Web
 {
@@ -28,38 +29,40 @@ namespace Cofoundry.Web
 
         public void Configure(IApplicationBuilder app)
         {
-            foreach (var userAreaDefinition in _userAreaRepository.GetAll())
-            {
-                var cookieOptions = new CookieAuthenticationOptions();
-                cookieOptions.AuthenticationScheme = CofoundryAuthenticationConstants.FormatAuthenticationScheme(userAreaDefinition.UserAreaCode);
+            app.UseAuthentication();
 
-                // Share the cookie name between user areas, because you should only be able to log into one at a time,
-                cookieOptions.CookieName = "CF_AUTH";
+            //foreach (var userAreaDefinition in _userAreaRepository.GetAll())
+            //{
+            //    var cookieOptions = new CookieAuthenticationOptions();
+            //    cookieOptions.AuthenticationScheme = CofoundryAuthenticationConstants.FormatAuthenticationScheme(userAreaDefinition.UserAreaCode);
 
-                // NB: When adding multiple authentication middleware you should ensure that no middleware is configured to run automatically
-                // https://docs.microsoft.com/en-us/aspnet/core/security/authorization/limitingidentitybyscheme
-                // The problem with this is that we can't auth without applying an auth filter, which 
-                // is imptractical
-                cookieOptions.AutomaticAuthenticate = true;
-                //cookieOptions.AutomaticChallenge = false;
+            //    // Share the cookie name between user areas, because you should only be able to log into one at a time,
+            //    cookieOptions.CookieName = "CF_AUTH";
 
-                if (!string.IsNullOrWhiteSpace(userAreaDefinition.LoginPath))
-                {
-                    cookieOptions.LoginPath = userAreaDefinition.LoginPath;
-                }
+            //    // NB: When adding multiple authentication middleware you should ensure that no middleware is configured to run automatically
+            //    // https://docs.microsoft.com/en-us/aspnet/core/security/authorization/limitingidentitybyscheme
+            //    // The problem with this is that we can't auth without applying an auth filter, which 
+            //    // is imptractical
+            //    cookieOptions.AutomaticAuthenticate = true;
+            //    //cookieOptions.AutomaticChallenge = false;
 
-                if (!string.IsNullOrWhiteSpace(userAreaDefinition.LogoutPath))
-                {
-                    cookieOptions.LogoutPath = userAreaDefinition.LogoutPath;
-                }
+            //    if (!string.IsNullOrWhiteSpace(userAreaDefinition.LoginPath))
+            //    {
+            //        cookieOptions.LoginPath = userAreaDefinition.LoginPath;
+            //    }
 
-                if (!string.IsNullOrWhiteSpace(userAreaDefinition.AccessDeniedPath))
-                {
-                    cookieOptions.AccessDeniedPath = userAreaDefinition.AccessDeniedPath;
-                }
+            //    if (!string.IsNullOrWhiteSpace(userAreaDefinition.LogoutPath))
+            //    {
+            //        cookieOptions.LogoutPath = userAreaDefinition.LogoutPath;
+            //    }
 
-                app.UseCookieAuthentication(cookieOptions);
-            }
+            //    if (!string.IsNullOrWhiteSpace(userAreaDefinition.AccessDeniedPath))
+            //    {
+            //        cookieOptions.AccessDeniedPath = userAreaDefinition.AccessDeniedPath;
+            //    }
+
+            //    app.UseCookieAuthentication(cookieOptions);
+            //}
         }
     }
 }

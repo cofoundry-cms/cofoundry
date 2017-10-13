@@ -11,13 +11,15 @@ namespace Cofoundry.Domain
     {
         public void Register(IContainerRegister container)
         {
+            var singletonOptions = RegistrationOptions.SingletonScope();
+
             container
                 .RegisterType<ICustomEntityDisplayModelMapper, CustomEntityDisplayModelMapper>()
                 .RegisterType<CustomEntityDataModelMapper>()
                 .RegisterType<ICustomEntityCache, CustomEntityCache>()
                 .RegisterType<ICustomEntityRepository, CustomEntityRepository>()
-                .RegisterAll<ICustomEntityRoutingRule>()
-                .RegisterAll<ICustomEntityDefinition>()
+                .RegisterAll<ICustomEntityRoutingRule>(singletonOptions)
+                .RegisterAll<ICustomEntityDefinition>(singletonOptions)
                 .RegisterAll<ICustomEntityDisplayModel>()
                 .RegisterAllGenericImplementations(typeof(ICustomEntityDisplayModelMapper<,>))
                 .RegisterInstance<ICustomEntityDefinitionRepository, CustomEntityDefinitionRepository>()

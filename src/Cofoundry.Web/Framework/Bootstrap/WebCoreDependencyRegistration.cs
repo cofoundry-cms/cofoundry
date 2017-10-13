@@ -12,6 +12,9 @@ namespace Cofoundry.Web
     {
         public void Register(IContainerRegister container)
         {
+            var singletonRegistrationOptions = RegistrationOptions.SingletonScope();
+            var lowPriorityOverrideRegistrationOptions = RegistrationOptions.Override(RegistrationOverridePriority.Low);
+
             container
                 .RegisterType<IControllerResponseHelper, ControllerResponseHelper>()
 
@@ -32,16 +35,16 @@ namespace Cofoundry.Web
                 .RegisterType<ICustomEntityTemplateRegionTagBuilderFactory, CustomEntityTemplateRegionTagBuilderFactory>()
                 .RegisterType<IPageTemplateRegionTagBuilderFactory, PageTemplateRegionTagBuilderFactory>()
                 .RegisterType<IPageBlockRenderer, PageBlockRenderer>()
-                .RegisterType<IPathResolver, SitePathResolver>(RegistrationOptions.Override(RegistrationOverridePriority.Low))
+                .RegisterType<IPathResolver, SitePathResolver>(lowPriorityOverrideRegistrationOptions)
 
                 .RegisterType<JsonDeltaModelBinder>()
                 .RegisterType<IFormFileUploadedFileFactory, FormFileUploadedFileFactory>()
 
                 .RegisterAll<IRouteRegistration>()
                 .RegisterType<IRouteInitializer, RouteInitializer>()
-                .RegisterType<IResourceLocator, WebsiteResourceLocator>(RegistrationOptions.Override(RegistrationOverridePriority.Low))
+                .RegisterType<IResourceLocator, WebsiteResourceLocator>(lowPriorityOverrideRegistrationOptions)
                 .RegisterType<IEmptyActionContextFactory, EmptyActionContextFactory>()
-                .RegisterInstance<IStaticResourceFileProvider, StaticResourceFileProvider>()
+                .RegisterFactory<IStaticResourceFileProvider, StaticResourceFileProvider, StaticResourceFileProviderFactory>(singletonRegistrationOptions)
                 ; 
         }
     }

@@ -19,37 +19,15 @@ namespace Cofoundry.Web
     {
         private readonly IFileProvider _compositeFileProvider;
 
-        private readonly IReadOnlyList<IFileProvider> _fileProviders;
+        private readonly IReadOnlyList<IFileProvider> _allFileProviders;
 
         public StaticResourceFileProvider(
-            IHostingEnvironment hostingEnvironment,
-            IEnumerable<IEmbeddedResourceRouteRegistration> embeddedResourceRouteRegistrations,
-            IEmbeddedFileProviderFactory embeddedFileProviderFactory
+            IFileProvider compositeFileProvider,
+            IReadOnlyList<IFileProvider> allFileProviders
             )
         {
-            var allFileProviders = new List<IFileProvider>();
-            allFileProviders.Add(hostingEnvironment.WebRootFileProvider);
-
-            if (EnumerableHelper.IsNullOrEmpty(embeddedResourceRouteRegistrations))
-            {
-                _compositeFileProvider = hostingEnvironment.WebRootFileProvider;
-            }
-            else
-            {
-                foreach (var embeddedResourceRouteRegistration in embeddedResourceRouteRegistrations)
-                {
-                    var assembly = embeddedResourceRouteRegistration.GetType().GetTypeInfo().Assembly;
-                    var fileProvider = embeddedFileProviderFactory.Create(assembly);
-                    foreach (var route in embeddedResourceRouteRegistration.GetEmbeddedResourcePaths())
-                    {
-                        allFileProviders.Add(new FilteredEmbeddedFileProvider(fileProvider, route));
-                    }
-                }
-
-                _compositeFileProvider = new CompositeFileProvider(allFileProviders);
-            }
-
-            _fileProviders = allFileProviders;
+            _compositeFileProvider = compositeFileProvider;
+            _allFileProviders = allFileProviders;
         }
 
         public IDirectoryContents GetDirectoryContents(string subpath)

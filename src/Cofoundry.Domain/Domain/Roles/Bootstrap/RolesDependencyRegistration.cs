@@ -12,17 +12,19 @@ namespace Cofoundry.Domain
     {
         public void Register(IContainerRegister container)
         {
+            var singletonOptions = RegistrationOptions.SingletonScope();
+
             container
                 .RegisterType<IPermissionValidationService, PermissionValidationService>()
                 .RegisterType<IExecutePermissionValidationService, ExecutePermissionValidationService>()
                 .RegisterType<IRoleCache, RoleCache>()
                 .RegisterType<IRoleRepository, RoleRepository>()
-                .RegisterAll<IPermission>()
+                .RegisterType<IInternalRoleRepository, InternalRoleRepository>()
+                .RegisterType<RoleMappingHelper>()
+                .RegisterAll<IPermission>(singletonOptions)
                 .RegisterInstance<IPermissionRepository, PermissionRepository>()
-                .RegisterInstance<IInternalRoleRepository, InternalRoleRepository>()
-                .RegisterInstance<RoleMappingHelper>()
 
-                .RegisterAll<IRoleDefinition>()
+                .RegisterAll<IRoleDefinition>(singletonOptions)
                 .RegisterAllGenericImplementations(typeof(IRoleInitializer<>))
                 .RegisterType<IRoleInitializerFactory, RoleInitializerFactory>()
                 ;

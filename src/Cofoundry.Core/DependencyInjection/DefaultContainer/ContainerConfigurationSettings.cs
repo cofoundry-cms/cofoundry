@@ -11,11 +11,11 @@ namespace Cofoundry.Core.DependencyInjection
     /// </summary>
     public class ContainerConfigurationHelper : IContainerConfigurationHelper
     {
-        private readonly IConfigurationRoot _configurationRoot;
+        private readonly IConfiguration _configuration;
 
-        public ContainerConfigurationHelper(IConfigurationRoot configurationRoot)
+        public ContainerConfigurationHelper(IConfiguration configuration)
         {
-            _configurationRoot = configurationRoot;
+            _configuration = configuration;
         }
 
         /// <summary>
@@ -26,7 +26,7 @@ namespace Cofoundry.Core.DependencyInjection
         /// <returns>The type to convert the value to.</returns>
         public T GetValue<T>(string key)
         {
-            return _configurationRoot.GetValue<T>(key);
+            return _configuration.GetValue<T>(key);
         }
 
         /// <summary>
@@ -38,7 +38,7 @@ namespace Cofoundry.Core.DependencyInjection
         /// <returns>The type to convert the value to.</returns>
         public T GetValue<T>(string key, T defaultValue)
         {
-            return _configurationRoot.GetValue<T>(key, defaultValue);
+            return _configuration.GetValue<T>(key, defaultValue);
         }
     }
 }

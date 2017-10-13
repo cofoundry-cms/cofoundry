@@ -27,18 +27,18 @@ namespace Cofoundry.Core.DependencyInjection
             IDiscoveredTypesProvider discoveredTypesProvider,
             IServiceCollection serviceCollection,
             DefaultContainerBuilder containerBuilder,
-            IConfigurationRoot configurationRoot
+            IConfiguration configuration
             )
         {
             if (discoveredTypesProvider == null) throw new ArgumentNullException(nameof(discoveredTypesProvider));
             if (serviceCollection == null) throw new ArgumentNullException(nameof(serviceCollection));
             if (containerBuilder == null) throw new ArgumentNullException(nameof(containerBuilder));
-            if (configurationRoot == null) throw new ArgumentNullException(nameof(configurationRoot));
+            if (configuration == null) throw new ArgumentNullException(nameof(configuration));
 
             _discoveredTypesProvider = discoveredTypesProvider;
             _serviceCollection = serviceCollection;
             _containerBuilder = containerBuilder;
-            _containerConfigurationHelper = new ContainerConfigurationHelper(configurationRoot);
+            _containerConfigurationHelper = new ContainerConfigurationHelper(configuration);
         }
 
         #region IContainerRegister implementation
@@ -127,14 +127,14 @@ namespace Cofoundry.Core.DependencyInjection
             return this;
         }
 
-        public IContainerRegister RegisterTypeInCollection<TRegisterAs, TConcrete>() where TConcrete : TRegisterAs
+        public IContainerRegister RegisterTypeInCollection<TRegisterAs, TConcrete>(RegistrationOptions options = null) where TConcrete : TRegisterAs
         {
-            AddService(typeof(TRegisterAs), typeof(TConcrete));
+            AddService(typeof(TRegisterAs), typeof(TConcrete), options);
 
             return this;
         }
 
-        public IContainerRegister RegisterAll<TToRegister>()
+        public IContainerRegister RegisterAll<TToRegister>(RegistrationOptions options = null)
         {
             var typeToRegister = typeof(TToRegister);
 
@@ -144,14 +144,14 @@ namespace Cofoundry.Core.DependencyInjection
             foreach (var concreteTypeInfo in concreteTypes)
             {
                 var concreteType = concreteTypeInfo.AsType();
-                AddService(concreteType, concreteType);
-                AddServiceWithFactory(typeToRegister, c => c.GetRequiredService(concreteType));
+                AddService(concreteType, concreteType, options);
+                AddServiceWithFactory(typeToRegister, c => c.GetRequiredService(concreteType), options);
             }
 
             return this;
         }
 
-        public IContainerRegister RegisterAllGenericImplementations(Type typeDef)
+        public IContainerRegister RegisterAllGenericImplementations(Type typeDef, RegistrationOptions options = null)
         {
             if (!typeDef.GetTypeInfo().IsGenericTypeDefinition)
             {
@@ -170,7 +170,7 @@ namespace Cofoundry.Core.DependencyInjection
 
             foreach (var handler in handlerRegistrations)
             {
-                AddService(handler.service.AsType(), handler.implementation.AsType());
+                AddService(handler.service.AsType(), handler.implementation.AsType(), options);
             }
 
             return this;
@@ -214,7 +214,7 @@ namespace Cofoundry.Core.DependencyInjection
 
         public IContainerRegister RegisterFactory<TRegisterAs, TConcrete, TFactory>(RegistrationOptions options = null)
             where TFactory : IInjectionFactory<TConcrete>
-            where TRegisterAs : TConcrete
+            where TConcrete : TRegisterAs
         {
             var fn = new Action(() =>
             {
@@ -222,10 +222,11 @@ namespace Cofoundry.Core.DependencyInjection
                 // If the factory is a concrete type, we should make sure it is registered
                 if (!factoryType.GetTypeInfo().IsInterface)
                 {
-                    AddService(factoryType, factoryType);
+                    // Note that the factory is registered with the same options
+                    AddService(factoryType, factoryType, options);
                 }
 
-                AddServiceWithFactory(typeof(TConcrete), c => c.GetRequiredService<TFactory>().Create(), options);
+                AddServiceWithFactory(typeof(TRegisterAs), c => c.GetRequiredService<TFactory>().Create(), options);
             });
 
             Register<TRegisterAs>(fn, options);

@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Cofoundry.Core;
 using Microsoft.Extensions.Logging;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 
 namespace Cofoundry.Domain.Data
 {

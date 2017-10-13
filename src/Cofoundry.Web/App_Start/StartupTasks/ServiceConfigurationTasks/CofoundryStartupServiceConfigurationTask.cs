@@ -67,6 +67,12 @@ namespace Cofoundry.Web
 
         private void ConfigureAuth(IMvcBuilder mvcBuilder)
         {
+            var services = mvcBuilder.Services;
+
+            //services
+            //    .AddAuthentication()
+            //    .AddCookie("", o => o.)
+
             // TODO: make this configurable
             mvcBuilder.Services.AddScoped<IAuthorizationHandler, UserAreaAuthorizationHandler>();
             mvcBuilder.Services.AddAuthorization(options =>

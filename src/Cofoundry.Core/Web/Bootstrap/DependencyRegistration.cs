@@ -21,7 +21,7 @@ namespace Cofoundry.Core.Web.Bootstrap
                 .RegisterType<IHtmlSanitizer, HtmlSanitizer>()
                 .RegisterType<IDefaultHtmlSanitizationRuleSetFactory, DefaultHtmlSanitizationRuleSetFactory>()
                 .RegisterType<IMimeTypeService, MimeTypeService>()
-                .RegisterType<IContentTypeProviderFactory, ContentTypeProviderFactory>()
+                .RegisterInstance<IContentTypeProviderFactory, ContentTypeProviderFactory>()
                 .RegisterFactory<IContentTypeProvider, IContentTypeProviderFactory>(new RegistrationOptions() { InstanceScope = InstanceScope.Singleton })
                 .RegisterAll<IMimeTypeRegistration>()
                 ;

@@ -22,12 +22,12 @@ namespace Cofoundry.Core.DependencyInjection
         private readonly Dictionary<Type, Action> RegistrationOverrides = new Dictionary<Type, Action>();
         private readonly IServiceCollection _serviceCollection;
         private readonly IDiscoveredTypesProvider _discoveredTypesProvider;
-        private readonly IConfigurationRoot _configurationRoot;
+        private readonly IConfiguration _configurationRoot;
 
         public DefaultContainerBuilder(
             IServiceCollection serviceCollection,
             IDiscoveredTypesProvider discoveredTypesProvider,
-            IConfigurationRoot configurationRoot
+            IConfiguration configurationRoot
             )
         {
             _serviceCollection = serviceCollection;
@@ -86,11 +86,6 @@ namespace Cofoundry.Core.DependencyInjection
 
         private void RegisterFramework()
         {
-            _serviceCollection
-                .AddTransient<IResolutionContext, DefaultContainerResolutionContext>()
-                .AddSingleton<IConfigurationRoot>(_configurationRoot)
-                .AddSingleton<IConfiguration>(_configurationRoot);
-
             // Register all configuration settings
             var settingsInitializer = new DefaultContainerConfigurationInitializer(
                 _serviceCollection,

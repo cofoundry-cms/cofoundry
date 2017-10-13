@@ -13,15 +13,15 @@ namespace Cofoundry.Core.MessageAggregator
     public class MessageAggregator : IMessageAggregator
     {
         private readonly IMessageAggregatorState _state;
-        private readonly IResolutionContext _resolutionContext;
+        private readonly IServiceProvider _serviceProvider;
 
         public MessageAggregator(
             IMessageAggregatorState state,
-            IResolutionContext resolutionContext
+            IServiceProvider serviceProvider
             )
         {
             _state = state;
-            _resolutionContext = resolutionContext;
+            _serviceProvider = serviceProvider;
         }
 
         /// <summary>
@@ -36,7 +36,7 @@ namespace Cofoundry.Core.MessageAggregator
 
             foreach (var subscription in subs)
             {
-                await subscription.DeliverAsync(_resolutionContext, message);
+                await subscription.DeliverAsync(_serviceProvider, message);
             }
         }
 
@@ -61,7 +61,7 @@ namespace Cofoundry.Core.MessageAggregator
                 {
                     foreach (var message in messages)
                     {
-                        await subscription.DeliverAsync(_resolutionContext, message);
+                        await subscription.DeliverAsync(_serviceProvider, message);
                     }
                 }
             }

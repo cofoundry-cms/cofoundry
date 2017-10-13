@@ -11,6 +11,6 @@ namespace Cofoundry.Core.MessageAggregator
     {
         bool CanDeliver<TMessage>();
 
-        Task DeliverAsync(IResolutionContext resolutionContext, object message);
+        Task DeliverAsync(IServiceProvider serviceProvider, object message);
     }
 }
