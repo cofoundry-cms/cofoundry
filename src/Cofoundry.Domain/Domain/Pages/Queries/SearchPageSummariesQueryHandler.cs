@@ -18,16 +18,17 @@ namespace Cofoundry.Domain
 
         private readonly CofoundryDbContext _dbContext;
         private readonly IQueryExecutor _queryExecutor;
-        private readonly PageSummaryMapper _pageSummaryMapper;
+        private readonly IPageSummaryMapper _pageSummaryMapper;
 
         public SearchPageSummariesQueryHandler(
             CofoundryDbContext dbContext,
-            IQueryExecutor queryExecutor
+            IQueryExecutor queryExecutor,
+            IPageSummaryMapper pageSummaryMapper
             )
         {
             _dbContext = dbContext;
             _queryExecutor = queryExecutor;
-            _pageSummaryMapper = new PageSummaryMapper(_dbContext, _queryExecutor);
+            _pageSummaryMapper = pageSummaryMapper;
         }
 
         #endregion
@@ -36,19 +37,20 @@ namespace Cofoundry.Domain
 
         public async Task<PagedQueryResult<PageSummary>> ExecuteAsync(SearchPageSummariesQuery query, IExecutionContext executionContext)
         {
-            var result = await CreateQuery(query).ToPagedResultAsync(query);
+            var dbPagedResult = await CreateQuery(query).ToPagedResultAsync(query);
 
             // Finish mapping children
-            await _pageSummaryMapper.MapAsync(result.Items);
+            var mappedResults = await _pageSummaryMapper.MapAsync(dbPagedResult.Items);
 
-            return result;
+            return dbPagedResult.ChangeType(mappedResults);
         }
 
-        private IQueryable<PageSummary> CreateQuery(SearchPageSummariesQuery query)
+        private IQueryable<Page> CreateQuery(SearchPageSummariesQuery query)
         {
             var dbQuery = _dbContext
                 .Pages
                 .AsNoTracking()
+                .Include(p => p.Creator)
                 .Where(p => !p.IsDeleted && p.PageDirectory.IsActive);
 
             // Filter by tags
@@ -61,9 +63,9 @@ namespace Cofoundry.Domain
                     string localTag = tag;
 
                     dbQuery = dbQuery.Where(p => p.PageTags
-                                                  .Select(t => t.Tag.TagText)
-                                                  .Contains(localTag)
-                                           );
+                        .Select(t => t.Tag.TagText)
+                        .Contains(localTag)
+                        );
                 }
             }
 
@@ -110,9 +112,8 @@ namespace Cofoundry.Domain
             {
                 dbQuery = dbQuery.Where(p => p.PageGroupItems.Any(i => i.PageGroupId == query.PageGroupId));
             }
-            return dbQuery
-                .OrderByDescending(p => p.CreateDate)
-                .ProjectTo<PageSummary>();
+
+            return dbQuery.OrderByDescending(p => p.CreateDate);
         }
 
 

@@ -52,16 +52,16 @@ namespace Cofoundry.Domain
         }
 
         /// <summary>
-        /// Find a role with the specified specialist role type code, returning
+        /// Find a role with the specified role code, returning
         /// a RoleDetails object if one is found, otherwise null. Roles only
-        /// have a SpecialistRoleTypeCode if they have been generated from code
+        /// have a RoleCode if they have been generated from code
         /// rather than the GUI. For GUI generated roles use GetRoleDetailsByIdQuery.
         /// </summary>
-        /// <param name="specialistRoleTypeCode">The code to find a matching role with. Codes are 3 characters long (fixed length).</param>
+        /// <param name="roleCode">The code to find a matching role with. Codes are 3 characters long (fixed length).</param>
         /// <param name="executionContext">Optional execution context to use when executing the query. Useful if you need to temporarily elevate your permission level.</param>
-        public Task<RoleDetails> GetRoleDetailsBySpecialistRoleTypeCodeAsync(string specialistRoleTypeCode, IExecutionContext executionContext = null)
+        public Task<RoleDetails> GetRoleDetailsByRoleCodeAsync(string roleCode, IExecutionContext executionContext = null)
         {
-            return _queryExecutor.ExecuteAsync(new GetRoleDetailsBySpecialistRoleTypeCode(specialistRoleTypeCode), executionContext);
+            return _queryExecutor.ExecuteAsync(new GetRoleDetailsByRoleCodeQuery(roleCode), executionContext);
         }
 
         /// <summary>

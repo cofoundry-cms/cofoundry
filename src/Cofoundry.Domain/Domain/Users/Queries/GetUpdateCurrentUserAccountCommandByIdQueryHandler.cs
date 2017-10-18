@@ -35,7 +35,12 @@ namespace Cofoundry.Domain
                 .AsNoTracking()
                 .FilterCanLogIn()
                 .FilterById(executionContext.UserContext.UserId.Value)
-                .ProjectTo<UpdateCurrentUserAccountCommand>()
+                .Select(u => new UpdateCurrentUserAccountCommand()
+                {
+                    Email = u.Email,
+                    FirstName = u.FirstName,
+                    LastName = u.LastName
+                })
                 .SingleOrDefaultAsync();
 
             return user;

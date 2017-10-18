@@ -26,12 +26,17 @@ namespace Cofoundry.Domain
         public async Task<IEnumerable<PageGroupMicroSummary>> ExecuteAsync(GetAllQuery<PageGroupMicroSummary> query, IExecutionContext executionContext)
         {
             var results = await _dbContext
-                          .PageGroups
-                          .AsNoTracking()
-                          .Where(g => !g.IsDeleted)
-                          .OrderBy(m => m.GroupName)
-                          .ProjectTo<PageGroupMicroSummary>()
-                          .ToListAsync();
+                .PageGroups
+                .AsNoTracking()
+                .Where(g => !g.IsDeleted)
+                .OrderBy(m => m.GroupName)
+                .Select(g => new PageGroupMicroSummary()
+                {
+                    Name = g.GroupName,
+                    PageGroupId = g.PageGroupId,
+                    ParentGroupId = g.ParentGroupId
+                })
+                .ToListAsync();
 
             return results;
         }

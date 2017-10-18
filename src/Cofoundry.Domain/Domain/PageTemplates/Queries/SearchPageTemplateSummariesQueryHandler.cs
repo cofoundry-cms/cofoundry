@@ -6,6 +6,7 @@ using Cofoundry.Domain.CQS;
 using Cofoundry.Domain.Data;
 using AutoMapper.QueryableExtensions;
 using Microsoft.EntityFrameworkCore;
+using Cofoundry.Domain.QueryModels;
 
 namespace Cofoundry.Domain
 {
@@ -17,14 +18,17 @@ namespace Cofoundry.Domain
 
         private readonly CofoundryDbContext _dbContext;
         private readonly IQueryExecutor _queryExecutor;
+        private readonly IPageTemplateSummaryMapper _pageTemplateSummaryMapper;
 
         public SearchPageTemplateSummariesQueryHandler(
             CofoundryDbContext dbContext,
-            IQueryExecutor queryExecutor
+            IQueryExecutor queryExecutor,
+            IPageTemplateSummaryMapper pageTemplateSummaryMapper
             )
         {
             _dbContext = dbContext;
             _queryExecutor = queryExecutor;
+            _pageTemplateSummaryMapper = pageTemplateSummaryMapper;
         }
 
         #endregion
@@ -33,16 +37,20 @@ namespace Cofoundry.Domain
         
         public async Task<PagedQueryResult<PageTemplateSummary>> ExecuteAsync(SearchPageTemplateSummariesQuery query, IExecutionContext executionContext)
         {
-            var result = await CreateQuery(query).ToPagedResultAsync(query);
-            
-            return result;
+            var dbPagedResult = await CreateQuery(query).ToPagedResultAsync(query);
+
+            var mappedResults = dbPagedResult
+                .Items
+                .Select(_pageTemplateSummaryMapper.Map);
+
+            return dbPagedResult.ChangeType(mappedResults);
         }
 
         #endregion
 
         #region helpers
 
-        private IQueryable<PageTemplateSummary> CreateQuery(SearchPageTemplateSummariesQuery query)
+        private IQueryable<PageTemplateSummaryQueryModel> CreateQuery(SearchPageTemplateSummariesQuery query)
         {
             var dbQuery = _dbContext
                 .PageTemplates
@@ -57,7 +65,16 @@ namespace Cofoundry.Domain
 
             return dbQuery
                 .OrderBy(p => p.FileName)
-                .ProjectTo<PageTemplateSummary>();
+                .Select(t => new PageTemplateSummaryQueryModel()
+                {
+                    PageTemplate = t,
+                    NumPages = t.PageVersions
+                        .GroupBy(p => p.PageId)
+                        .Count(),
+                    NumRegions = t
+                        .PageTemplateRegions
+                        .Count()
+                });
         }
 
 

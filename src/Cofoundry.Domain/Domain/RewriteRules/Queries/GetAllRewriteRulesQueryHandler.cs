@@ -22,14 +22,17 @@ namespace Cofoundry.Domain
 
         private readonly CofoundryDbContext _dbContext;
         private readonly IRewriteRuleCache _cache;
+        private readonly IRewriteRuleSummaryMapper _rewriteRuleSummaryMapper;
 
         public GetAllRewriteRulesQueryHandler(
             CofoundryDbContext dbContext,
-            IRewriteRuleCache cache
+            IRewriteRuleCache cache,
+            IRewriteRuleSummaryMapper rewriteRuleSummaryMapper
             )
         {
             _dbContext = dbContext;
             _cache = cache;
+            _rewriteRuleSummaryMapper = rewriteRuleSummaryMapper;
         }
 
         #endregion
@@ -38,21 +41,25 @@ namespace Cofoundry.Domain
 
         public async Task<IEnumerable<RewriteRuleSummary>> ExecuteAsync(GetAllQuery<RewriteRuleSummary> query, IExecutionContext executionContext)
         {
-            var rules = await _cache.GetOrAddAsync(() =>
+            var rules = await _cache.GetOrAddAsync(async () =>
             {
-                return Query().ToArrayAsync();
+                var dbResult = await Query().ToListAsync();
+                var mapped = dbResult
+                    .Select(_rewriteRuleSummaryMapper.Map)
+                    .ToArray();
+
+                return mapped;
             });
 
             return rules;
         }
 
-        private IQueryable<RewriteRuleSummary> Query()
+        private IQueryable<RewriteRule> Query()
         {
             return _dbContext
                     .RewriteRules
                     .AsNoTracking()
-                    .OrderByDescending(r => r.CreateDate)
-                    .ProjectTo<RewriteRuleSummary>();
+                    .OrderByDescending(r => r.CreateDate);
         }
 
         #endregion

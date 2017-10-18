@@ -95,6 +95,7 @@ namespace Cofoundry.Domain
                 // Raw query required here because using IQueryExecutor will cause a stack overflow
                 var dbResult = await _dbContext
                     .Users
+                    .Include(u => u.Role)
                     .AsNoTracking()
                     .FilterById(userId.Value)
                     .FilterCanLogIn()
@@ -125,6 +126,7 @@ namespace Cofoundry.Domain
         {
             var query = _dbContext
                 .Users
+                .Include(u => u.Role)
                 .FilterByUserArea(CofoundryAdminUserArea.AreaCode)
                 .FilterActive()
                 .Where(u => u.IsSystemAccount);

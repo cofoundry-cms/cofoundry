@@ -20,14 +20,17 @@ namespace Cofoundry.Domain
 
         private readonly CofoundryDbContext _dbContext;
         private readonly IQueryExecutor _queryExecutor;
+        private readonly IRoleMicroSummaryMapper _roleMicroSummaryMapper;
 
         public SearchRolesQueryHandler(
             CofoundryDbContext dbContext,
-            IQueryExecutor queryExecutor
+            IQueryExecutor queryExecutor,
+            IRoleMicroSummaryMapper roleMicroSummaryMapper
             )
         {
             _dbContext = dbContext;
             _queryExecutor = queryExecutor;
+            _roleMicroSummaryMapper = roleMicroSummaryMapper;
         }
 
         #endregion
@@ -36,16 +39,20 @@ namespace Cofoundry.Domain
 
         public async Task<PagedQueryResult<RoleMicroSummary>> ExecuteAsync(SearchRolesQuery query, IExecutionContext executionContext)
         {
-            var result = await CreateQuery(query).ToPagedResultAsync(query);
+            var dbPagedResult = await CreateQuery(query).ToPagedResultAsync(query);
 
-            return result;
+            var mappedResults = dbPagedResult
+                .Items
+                .Select(_roleMicroSummaryMapper.Map);
+
+            return dbPagedResult.ChangeType(mappedResults);
         }
 
         #endregion
 
         #region helpers
 
-        private IQueryable<RoleMicroSummary> CreateQuery(SearchRolesQuery query)
+        private IQueryable<Role> CreateQuery(SearchRolesQuery query)
         {
             var dbQuery = _dbContext
                 .Roles
@@ -80,8 +87,7 @@ namespace Cofoundry.Domain
                     .ThenBy(r => r.Title);
             }
 
-            return dbQuery
-                .ProjectTo<RoleMicroSummary>();
+            return dbQuery;
         }
 
         #endregion

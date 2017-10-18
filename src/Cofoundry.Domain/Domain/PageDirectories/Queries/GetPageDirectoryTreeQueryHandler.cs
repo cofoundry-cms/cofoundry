@@ -7,6 +7,7 @@ using Cofoundry.Domain.CQS;
 using Microsoft.EntityFrameworkCore;
 using AutoMapper.QueryableExtensions;
 using Cofoundry.Core;
+using Cofoundry.Domain.QueryModels;
 
 namespace Cofoundry.Domain
 {
@@ -21,12 +22,15 @@ namespace Cofoundry.Domain
         #region constructor
 
         private readonly CofoundryDbContext _dbContext;
+        private readonly IPageDirectoryTreeMapper _pageDirectoryTreeMapper;
 
         public GetPageDirectoryTreeQueryHandler(
-            CofoundryDbContext dbContext
+            CofoundryDbContext dbContext,
+            IPageDirectoryTreeMapper pageDirectoryTreeMapper
             )
         {
             _dbContext = dbContext;
+            _pageDirectoryTreeMapper = pageDirectoryTreeMapper;
         }
 
         #endregion
@@ -35,53 +39,27 @@ namespace Cofoundry.Domain
         
         public async Task<PageDirectoryNode> ExecuteAsync(GetPageDirectoryTreeQuery query, IExecutionContext executionContext)
         {
-            var allPageDirectories = await Query().ToListAsync();
-            return Map(allPageDirectories);
+            var dbResults = await Query().ToListAsync();
+            var result = _pageDirectoryTreeMapper.Map(dbResults);
+
+            return result;
         }
 
-        #endregion
-
-        #region helpers
-
-        private IQueryable<PageDirectoryNode> Query()
+        private IQueryable<PageDirectoryTreeNodeQueryModel> Query()
         {
             var allPageDirectories = _dbContext
                    .PageDirectories
                    .AsNoTracking()
                    .Include(w => w.Creator)
                    .Where(w => w.IsActive)
-                   .ProjectTo<PageDirectoryNode>();
+                   .Select(d => new PageDirectoryTreeNodeQueryModel()
+                    {
+                       Creator = d.Creator,
+                       PageDirectory = d,
+                       NumPages = d.Pages.Count(p => !p.IsDeleted)
+                   });
 
             return allPageDirectories;
-        }
-
-        private PageDirectoryNode Map(List<PageDirectoryNode> allPageDirectories)
-        {
-            if (allPageDirectories == null) return null;
-
-            // Build the urls
-            var root = allPageDirectories.SingleOrDefault(r => !r.ParentPageDirectoryId.HasValue);
-            EntityNotFoundException.ThrowIfNull(root, "ROOT");
-            SetChildRoutes(root, allPageDirectories);
-            root.FullUrlPath = "/";
-
-            return root;
-        }
-
-        private void SetChildRoutes(PageDirectoryNode parent, List<PageDirectoryNode> allRoutes)
-        {
-            var childNodes = new List<PageDirectoryNode>();
-            foreach (var routingInfo in allRoutes.Where(r => r.ParentPageDirectoryId == parent.PageDirectoryId))
-            {
-                routingInfo.FullUrlPath = string.Join("/", parent.FullUrlPath, routingInfo.UrlPath);
-                routingInfo.Depth = parent.Depth + 1;
-                routingInfo.ParentPageDirectory = parent;
-                childNodes.Add(routingInfo);
-
-                SetChildRoutes(routingInfo, allRoutes);
-            }
-
-            parent.ChildPageDirectories = childNodes;
         }
 
         #endregion

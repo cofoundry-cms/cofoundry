@@ -14,32 +14,38 @@ namespace Cofoundry.Domain
     /// <summary>
     /// Common mapping functionality for PageSummaries
     /// </summary>
-    internal class PageSummaryMapper
+    public class PageSummaryMapper : IPageSummaryMapper
     {
         private readonly CofoundryDbContext _dbContext;
         private readonly IQueryExecutor _queryExecutor;
+        private readonly IAuditDataMapper _auditDataMapper;
+        private readonly ICustomEntityDefinitionRepository _customEntityDefinitionRepository;
 
         public PageSummaryMapper(
             CofoundryDbContext dbContext,
-            IQueryExecutor queryExecutor
+            IQueryExecutor queryExecutor,
+            IAuditDataMapper auditDataMapper,
+            ICustomEntityDefinitionRepository customEntityDefinitionRepository
             )
         {
             _dbContext = dbContext;
             _queryExecutor = queryExecutor;
+            _auditDataMapper = auditDataMapper;
+            _customEntityDefinitionRepository = customEntityDefinitionRepository;
         }
 
         /// <summary>
         /// Finishes off bulk mapping of tags and page routes in a PageSummary object
         /// </summary>
-        public async Task MapAsync(IEnumerable<PageSummary> pages)
+        public async Task<List<PageSummary>> MapAsync(ICollection<Page> dbPages)
         {
             var routes = await _queryExecutor.GetAllAsync<PageRoute>();
 
-            var ids = pages
+            var ids = dbPages
                 .Select(p => p.PageId)
                 .ToArray();
 
-            var pageTags = _dbContext
+            var pageTags = await _dbContext
                 .PageTags
                 .AsNoTracking()
                 .Where(p => ids.Contains(p.PageId))
@@ -48,20 +54,44 @@ namespace Cofoundry.Domain
                     PageId = t.PageId,
                     Tag = t.Tag.TagText
                 })
-                .ToList();
+                .ToListAsync();
 
-            foreach (var page in pages)
+            var pages = new List<PageSummary>(ids.Length);
+
+            foreach (var dbPage in dbPages)
             {
-                var pageRoute = routes.SingleOrDefault(r => r.PageId == page.PageId);
-                EntityNotFoundException.ThrowIfNull(pageRoute, page.PageId);
+                var pageRoute = routes.SingleOrDefault(r => r.PageId == dbPage.PageId);
+                EntityNotFoundException.ThrowIfNull(pageRoute, dbPage.PageId);
 
-                Mapper.Map(pageRoute, page);
+                var page = new PageSummary()
+                {
+                    FullPath = pageRoute.FullPath,
+                    HasDraft = pageRoute.HasDraft,
+                    IsPublished = pageRoute.IsPublished,
+                    Locale = pageRoute.Locale,
+                    PageId = pageRoute.PageId,
+                    PageType = pageRoute.PageType,
+                    Title = pageRoute.Title,
+                    UrlPath = pageRoute.UrlPath
+                };
+
+                page.AuditData = _auditDataMapper.MapCreateAuditData(dbPage);
+
+                if (!string.IsNullOrWhiteSpace(dbPage.CustomEntityDefinitionCode))
+                {
+                    var customEntityDefinition = _customEntityDefinitionRepository.GetByCode(dbPage.CustomEntityDefinitionCode);
+                    page.CustomEntityName = customEntityDefinition.Name;
+                }
 
                 page.Tags = pageTags
                     .Where(t => t.PageId == page.PageId)
                     .Select(t => t.Tag)
                     .ToArray();
+
+                pages.Add(page);
             }
+
+            return pages;
         }
     }
 }

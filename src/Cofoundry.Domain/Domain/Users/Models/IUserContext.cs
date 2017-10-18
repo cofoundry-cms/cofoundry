@@ -32,6 +32,12 @@ namespace Cofoundry.Domain
         int? RoleId { get; set; }
 
         /// <summary>
+        /// Optional role code for the role this user belongs to. The role code indicates that the role
+        /// is a code-first role.
+        /// </summary>
+        string RoleCode { get; set; }
+
+        /// <summary>
         /// Indicated if the user belongs to the Cofoundry user area.
         /// </summary>
         bool IsCofoundryUser();

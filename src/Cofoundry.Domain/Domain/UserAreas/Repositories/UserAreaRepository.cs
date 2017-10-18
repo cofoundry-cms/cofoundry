@@ -24,9 +24,10 @@ namespace Cofoundry.Domain
         #endregion
 
         /// <summary>
-        /// Gets a registered user area by it's code, thowing an exception if
-        /// the area does not exist.
+        /// Gets a user area definition using the unique code. Throws an exception
+        /// if the user area is not registered.
         /// </summary>
+        /// <param name="code">Uniquely identifying user area code.</param>
         public IUserAreaDefinition GetByCode(string code)
         {
             var area = _userAreas.GetOrDefault(code);
@@ -39,7 +40,9 @@ namespace Cofoundry.Domain
             return area;
         }
 
-
+        /// <summary>
+        /// Returns all user areas defitions registered in the system.
+        /// </summary>
         public IEnumerable<IUserAreaDefinition> GetAll()
         {
             return _userAreas.Select(a => a.Value);

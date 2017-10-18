@@ -24,17 +24,6 @@ namespace Cofoundry.Domain
                     .PageTemplateRegions
                     .Count()))
                 ;
-
-            CreateMap<PageTemplate, PageTemplateDetails>()
-                .ForMember(d => d.NumPages, o => o.MapFrom(s => s
-                    .PageVersions
-                    .GroupBy(p => p.PageId)
-                    .Count()))
-                .ForMember(d => d.PageType, o => o.MapFrom(s => (PageType)s.PageTypeId))
-                .ForMember(d => d.Regions, o => o.MapFrom(s => s.PageTemplateRegions))
-                ;
-
-            CreateMap<PageTemplateRegion, PageTemplateRegionDetails>();
             
             #endregion
         }

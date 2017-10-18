@@ -69,20 +69,6 @@ namespace Cofoundry.Domain
 
             #endregion
 
-            #region page groups
-
-            CreateMap<PageGroup, PageGroupMicroSummary>()
-                .ForMember(d => d.Name, o => o.MapFrom(s => s.GroupName))
-                ;
-
-            CreateMap<PageGroup, PageGroupSummary>()
-                .ForMember(d => d.Name, o => o.MapFrom(s => s.GroupName))
-                .ForMember(d => d.AuditData, o => o.MapFrom(s => s))
-                .ForMember(d => d.NumPages, o => o.MapFrom(s => s.PageGroupItems.Count()))
-                ;
-
-            #endregion
-
             #region blocks
 
             CreateMap<PageVersionBlock, UpdatePageVersionBlockCommand>();

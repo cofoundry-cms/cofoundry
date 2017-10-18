@@ -4,7 +4,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using Cofoundry.Domain.CQS;
 using Cofoundry.Domain.Data;
-using AutoMapper.QueryableExtensions;
 using Microsoft.EntityFrameworkCore;
 
 namespace Cofoundry.Domain
@@ -20,14 +19,17 @@ namespace Cofoundry.Domain
 
         private readonly CofoundryDbContext _dbContext;
         private readonly IQueryExecutor _queryExecutor;
+        private readonly IUserSummaryMapper _userSummaryMapper;
 
         public SearchUserSummariesQueryHandler(
             CofoundryDbContext dbContext,
-            IQueryExecutor queryExecutor
+            IQueryExecutor queryExecutor,
+            IUserSummaryMapper userSummaryMapper
             )
         {
             _dbContext = dbContext;
             _queryExecutor = queryExecutor;
+            _userSummaryMapper = userSummaryMapper;
         }
 
         #endregion
@@ -36,12 +38,15 @@ namespace Cofoundry.Domain
 
         public async Task<PagedQueryResult<UserSummary>> ExecuteAsync(SearchUserSummariesQuery query, IExecutionContext executionContext)
         {
-            var result = await CreateQuery(query).ToPagedResultAsync(query);
+            var dbPagedResult = await CreateQuery(query).ToPagedResultAsync(query);
+            var mappedResult = dbPagedResult
+                .Items
+                .Select(_userSummaryMapper.Map);
 
-            return result;
+            return dbPagedResult.ChangeType(mappedResult);
         }
 
-        private IQueryable<UserSummary> CreateQuery(SearchUserSummariesQuery query)
+        private IQueryable<User> CreateQuery(SearchUserSummariesQuery query)
         {
             var dbQuery = _dbContext
                 .Users
@@ -76,7 +81,7 @@ namespace Cofoundry.Domain
                 dbQuery = dbQuery.OrderBy(u => u.LastName);
             }
 
-            return dbQuery.ProjectTo<UserSummary>();
+            return dbQuery;
         }
 
         #endregion

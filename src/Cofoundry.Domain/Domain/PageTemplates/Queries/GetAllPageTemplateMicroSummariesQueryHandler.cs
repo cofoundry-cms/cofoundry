@@ -19,11 +19,11 @@ namespace Cofoundry.Domain
         #region constructor
 
         private readonly CofoundryDbContext _dbContext;
-        private readonly IPageTemplateMapper _pageTemplateMapper;
+        private readonly IPageTemplateMicroSummaryMapper _pageTemplateMapper;
 
         public GetAllPageTemplateMicroSummariesQueryHandler(
             CofoundryDbContext dbContext,
-            IPageTemplateMapper pageTemplateMapper
+            IPageTemplateMicroSummaryMapper pageTemplateMapper
             )
         {
             _dbContext = dbContext;
@@ -54,7 +54,7 @@ namespace Cofoundry.Domain
         {
             foreach (var pageTemplate in pageTemplates)
             {
-                yield return _pageTemplateMapper.MapMicroSummary(pageTemplate);
+                yield return _pageTemplateMapper.Map(pageTemplate);
             }
         }
 

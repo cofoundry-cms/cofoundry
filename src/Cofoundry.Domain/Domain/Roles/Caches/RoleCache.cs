@@ -37,17 +37,7 @@ namespace Cofoundry.Domain
         /// because roles are cached by id rather than by code.
         /// </summary>
         /// <param name="getter">Function to invoke if the lookup isn't in the cache</param>
-        public ReadOnlyDictionary<string, int> GetOrAddSpecialistRoleTypeCodeLookup(Func<ReadOnlyDictionary<string, int>> getter)
-        {
-            return _cache.GetOrAdd(ROLE_CODE_LOOKUP_CACHEKEY, getter);
-        }
-
-        /// <summary>
-        /// Gets a dictionary used to lookup role ids from role codes. This is used
-        /// because roles are cached by id rather than by code.
-        /// </summary>
-        /// <param name="getter">Function to invoke if the lookup isn't in the cache</param>
-        public Task<ReadOnlyDictionary<string, int>> GetOrAddSpecialistRoleTypeCodeLookupAsync(Func<Task<ReadOnlyDictionary<string, int>>> getter)
+        public Task<ReadOnlyDictionary<string, int>> GetOrAddRoleCodeLookupAsync(Func<Task<ReadOnlyDictionary<string, int>>> getter)
         {
             return _cache.GetOrAddAsync(ROLE_CODE_LOOKUP_CACHEKEY, getter);
         }

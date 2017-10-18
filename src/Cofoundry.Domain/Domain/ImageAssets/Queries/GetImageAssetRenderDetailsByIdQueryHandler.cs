@@ -19,14 +19,17 @@ namespace Cofoundry.Domain
 
         private readonly CofoundryDbContext _dbContext;
         private readonly IImageAssetCache _imageAssetCache;
+        private readonly IImageAssetRenderDetailsMapper _imageAssetRenderDetailsMapper;
 
         public GetImageAssetRenderDetailsByIdQueryHandler(
             CofoundryDbContext dbContext,
-            IImageAssetCache imageAssetCache
+            IImageAssetCache imageAssetCache,
+            IImageAssetRenderDetailsMapper imageAssetRenderDetailsMapper
             )
         {
             _dbContext = dbContext;
             _imageAssetCache = imageAssetCache;
+            _imageAssetRenderDetailsMapper = imageAssetRenderDetailsMapper;
         }
 
         #endregion
@@ -35,22 +38,22 @@ namespace Cofoundry.Domain
 
         public async Task<ImageAssetRenderDetails> ExecuteAsync(GetByIdQuery<ImageAssetRenderDetails> query, IExecutionContext executionContext)
         {
-            var asset = await _imageAssetCache.GetOrAddAsync(query.Id, () =>
+            var asset = await _imageAssetCache.GetOrAddAsync(query.Id, async () =>
             {
-                var result = Query(query.Id).SingleOrDefaultAsync();
+                var dbResult = await Query(query.Id).SingleOrDefaultAsync();
+                var result = _imageAssetRenderDetailsMapper.Map(dbResult);
                 return result;
             });
 
             return asset;
         }
 
-        private IQueryable<ImageAssetRenderDetails> Query(int id)
+        private IQueryable<ImageAsset> Query(int id)
         {
             return _dbContext
                 .ImageAssets
                 .AsNoTracking()
-                .FilterById(id)
-                .ProjectTo<ImageAssetRenderDetails>();
+                .FilterById(id);
         }
 
         #endregion

@@ -17,12 +17,15 @@ namespace Cofoundry.Domain
         #region constructor
 
         private readonly CofoundryDbContext _dbContext;
+        private readonly IDocumentAssetSummaryMapper _documentAssetSummaryMapper;
 
         public SearchDocumentAssetSummariesQueryHandler(
-            CofoundryDbContext dbContext
+            CofoundryDbContext dbContext,
+            IDocumentAssetSummaryMapper documentAssetSummaryMapper
             )
         {
             _dbContext = dbContext;
+            _documentAssetSummaryMapper = documentAssetSummaryMapper;
         }
 
         #endregion
@@ -34,13 +37,15 @@ namespace Cofoundry.Domain
             var dbQuery = _dbContext
                 .DocumentAssets
                 .AsNoTracking()
+                .Include(a => a.DocumentAssetTags)
+                .ThenInclude(a => a.Select(t => t.Tag))
                 .Where(i => !i.IsDeleted);
 
             // Filter by tags
             if (!string.IsNullOrEmpty(query.Tags))
             {
-                
                 var tags = TagParser.Split(query.Tags).ToList();
+
                 foreach (string tag in tags)
                 {
                     // See http://stackoverflow.com/a/7288269/486434 for why this is copied into a new variable
@@ -66,12 +71,15 @@ namespace Cofoundry.Domain
                 dbQuery = dbQuery.Where(p => p.FileExtension == formattedExtension);
             }
 
-            var results = await dbQuery
+            var dbPagesResults = await dbQuery
                 .OrderByDescending(p => p.CreateDate)
-                .ProjectTo<DocumentAssetSummary>()
                 .ToPagedResultAsync(query);
 
-            return results;
+            var mappedResults = dbPagesResults
+                .Items
+                .Select(_documentAssetSummaryMapper.Map);
+
+            return dbPagesResults.ChangeType(mappedResults);
         }
 
         #endregion

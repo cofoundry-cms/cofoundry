@@ -40,18 +40,6 @@ namespace Cofoundry.Domain
                 ;
             
             CreateMap<PageTemplateRegion, CustomEntityPageRegionRenderDetails>();
-            
-            CreateMap<CustomEntityVersion, CustomEntitySummaryQueryModel>()
-                .ForMember(d => d.AuditData, o => o.MapFrom(s => s.CustomEntity))
-                .ForMember(d => d.VersionAuditData, o => o.MapFrom(s => s))
-                .ForMember(d => d.UrlSlug, o => o.MapFrom(s => s.CustomEntity.UrlSlug))
-                .ForMember(d => d.LocaleId, o => o.MapFrom(s => s.CustomEntity.LocaleId))
-                .ForMember(d => d.Ordering, o => o.MapFrom(s => s.CustomEntity.Ordering))
-                .ForMember(d => d.CustomEntityDefinitionCode, o => o.MapFrom(s => s.CustomEntity.CustomEntityDefinitionCode))
-                .ForMember(d => d.HasDraft, o => o.MapFrom(s => s.WorkFlowStatusId == (int)WorkFlowStatus.Draft))
-                .ForMember(d => d.IsPublished, o => o.MapFrom(s => s.WorkFlowStatusId == (int)WorkFlowStatus.Published || s.CustomEntity.CustomEntityVersions.Any(v => v.WorkFlowStatusId == (int)WorkFlowStatus.Published)))
-                ;
-            CreateMap<CustomEntitySummaryQueryModel, CustomEntitySummary>();
 
             CreateMap<CustomEntityVersion, CustomEntityVersionSummary>()
                 .ForMember(d => d.WorkFlowStatus, o => o.MapFrom(s => (Cofoundry.Domain.WorkFlowStatus)s.WorkFlowStatusId))

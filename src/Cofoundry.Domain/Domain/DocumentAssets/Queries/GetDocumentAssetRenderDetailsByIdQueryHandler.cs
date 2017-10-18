@@ -18,12 +18,15 @@ namespace Cofoundry.Domain
         #region constructor
 
         private readonly CofoundryDbContext _dbContext;
+        private readonly IDocumentAssetRenderDetailsMapper _documentAssetRenderDetailsMapper;
 
         public GetDocumentAssetRenderDetailsByIdQueryHandler(
-            CofoundryDbContext dbContext
+            CofoundryDbContext dbContext,
+            IDocumentAssetRenderDetailsMapper documentAssetRenderDetailsMapper
             )
         {
             _dbContext = dbContext;
+            _documentAssetRenderDetailsMapper = documentAssetRenderDetailsMapper;
         }
 
         #endregion
@@ -32,19 +35,18 @@ namespace Cofoundry.Domain
 
         public async Task<DocumentAssetRenderDetails> ExecuteAsync(GetByIdQuery<DocumentAssetRenderDetails> query, IExecutionContext executionContext)
         {
-            var result = await Query(query)
-                .SingleOrDefaultAsync();
+            var dbResult = await Query(query).SingleOrDefaultAsync();
+            var mappedResult = _documentAssetRenderDetailsMapper.Map(dbResult);
 
-            return result;
+            return mappedResult;
         }
 
-        private IQueryable<DocumentAssetRenderDetails> Query(GetByIdQuery<DocumentAssetRenderDetails> query)
+        private IQueryable<DocumentAsset> Query(GetByIdQuery<DocumentAssetRenderDetails> query)
         {
             return _dbContext
                 .DocumentAssets
                 .AsNoTracking()
-                .FilterById(query.Id)
-                .ProjectTo<DocumentAssetRenderDetails>();
+                .FilterById(query.Id);
         }
 
         #endregion

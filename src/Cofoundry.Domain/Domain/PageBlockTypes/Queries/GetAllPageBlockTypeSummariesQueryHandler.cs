@@ -18,14 +18,17 @@ namespace Cofoundry.Domain
 
         private readonly CofoundryDbContext _dbContext;
         private readonly IPageBlockTypeCache _pageBlockTypeCache;
+        private readonly IPageBlockTypeSummaryMapper _pageBlockTypeSummaryMapper;
 
         public GetAllPageBlockTypeSummariesQueryHandler(
             CofoundryDbContext dbContext,
-            IPageBlockTypeCache pageBlockTypeCache
+            IPageBlockTypeCache pageBlockTypeCache,
+            IPageBlockTypeSummaryMapper pageBlockTypeSummaryMapper
             )
         {
             _dbContext = dbContext;
             _pageBlockTypeCache = pageBlockTypeCache;
+            _pageBlockTypeSummaryMapper = pageBlockTypeSummaryMapper;
         }
 
         #endregion
@@ -34,21 +37,24 @@ namespace Cofoundry.Domain
         
         public async Task<IEnumerable<PageBlockTypeSummary>> ExecuteAsync(GetAllQuery<PageBlockTypeSummary> query, IExecutionContext executionContext)
         {
-            return await _pageBlockTypeCache.GetOrAddAsync(() =>
+            return await _pageBlockTypeCache.GetOrAddAsync(async () =>
             {
-                var results = Query().ToArrayAsync();
+                var dbResults = await Query().ToListAsync();
+                var results = dbResults
+                    .Select(_pageBlockTypeSummaryMapper.Map)
+                    .ToArray();
 
                 return results;
             });
         }
 
-        private IQueryable<PageBlockTypeSummary> Query()
+        private IQueryable<PageBlockType> Query()
         {
             var results = _dbContext
                 .PageBlockTypes
                 .AsNoTracking()
-                .OrderBy(m => m.Name)
-                .ProjectTo<PageBlockTypeSummary>();
+                .Include(t => t.PageBlockTemplates)
+                .OrderBy(m => m.Name);
 
             return results;
         }

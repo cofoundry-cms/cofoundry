@@ -19,16 +19,19 @@ namespace Cofoundry.Domain
         private readonly CofoundryDbContext _dbContext;
         private readonly IQueryExecutor _queryExecutor;
         private readonly IPermissionValidationService _permissionValidationService;
+        private readonly ICustomEntityVersionSummaryMapper _customEntityVersionSummaryMapper;
 
         public GetCustomEntityVersionSummariesByCustomEntityIdQueryHandler(
             CofoundryDbContext dbContext,
             IQueryExecutor queryExecutor,
-            IPermissionValidationService permissionValidationService
+            IPermissionValidationService permissionValidationService,
+            ICustomEntityVersionSummaryMapper customEntityVersionSummaryMapper
             )
         {
             _dbContext = dbContext;
             _queryExecutor = queryExecutor;
             _permissionValidationService = permissionValidationService;
+            _customEntityVersionSummaryMapper = customEntityVersionSummaryMapper;
         }
 
         #endregion
@@ -47,22 +50,24 @@ namespace Cofoundry.Domain
 
             await _permissionValidationService.EnforceCustomEntityPermissionAsync<CustomEntityReadPermission>(definitionCode);
 
-            var versions = await Query(query.CustomEntityId).ToListAsync();
-            if (versions == null) return null;
-
+            var versions = (await Query(query.CustomEntityId)
+                .ToListAsync())
+                .Select(_customEntityVersionSummaryMapper.Map)
+                .ToList();
+            
             return versions;
         }
 
-        private IQueryable<CustomEntityVersionSummary> Query(int id)
+        private IQueryable<CustomEntityVersion> Query(int id)
         {
             return _dbContext
                 .CustomEntityVersions
                 .AsNoTracking()
+                .Include(e => e.Creator)
                 .Where(v => v.CustomEntityId == id)
                 .OrderByDescending(v => v.WorkFlowStatusId == (int)WorkFlowStatus.Draft)
                 .ThenByDescending(v => v.WorkFlowStatusId == (int)WorkFlowStatus.Published)
-                .ThenByDescending(v => v.CreateDate)
-                .ProjectTo<CustomEntityVersionSummary>();
+                .ThenByDescending(v => v.CreateDate);
         }
 
         #endregion

@@ -17,15 +17,15 @@ namespace Cofoundry.Domain
         #region constructor
 
         private readonly CofoundryDbContext _dbContext;
-        private readonly IImageAssetCache _imageAssetCache;
+        private readonly IDocumentAssetRenderDetailsMapper _documentAssetRenderDetailsMapper;
 
         public GetDocumentAssetRenderDetailsByIdRangeQueryHandler(
             CofoundryDbContext dbContext,
-            IImageAssetCache imageAssetCache
+            IDocumentAssetRenderDetailsMapper documentAssetRenderDetailsMapper
             )
         {
             _dbContext = dbContext;
-            _imageAssetCache = imageAssetCache;
+            _documentAssetRenderDetailsMapper = documentAssetRenderDetailsMapper;
         }
 
         #endregion
@@ -34,16 +34,21 @@ namespace Cofoundry.Domain
 
         public async Task<IDictionary<int, DocumentAssetRenderDetails>> ExecuteAsync(GetByIdRangeQuery<DocumentAssetRenderDetails> query, IExecutionContext executionContext)
         {
-            return await QueryDb(query).ToDictionaryAsync(d => d.DocumentAssetId);
+            var dbResults = await QueryDb(query).ToListAsync();
+
+            var mappedResults = dbResults
+                .Select(_documentAssetRenderDetailsMapper.Map)
+                .ToDictionary(d => d.DocumentAssetId);
+
+            return mappedResults;
         }
 
-        private IQueryable<DocumentAssetRenderDetails> QueryDb(GetByIdRangeQuery<DocumentAssetRenderDetails> query)
+        private IQueryable<DocumentAsset> QueryDb(GetByIdRangeQuery<DocumentAssetRenderDetails> query)
         {
             return _dbContext
                 .DocumentAssets
                 .AsNoTracking()
-                .FilterByIds(query.Ids)
-                .ProjectTo<DocumentAssetRenderDetails>();
+                .FilterByIds(query.Ids);
         }
 
         #endregion

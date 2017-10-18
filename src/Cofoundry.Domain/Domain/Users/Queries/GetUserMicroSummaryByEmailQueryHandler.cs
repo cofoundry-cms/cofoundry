@@ -23,32 +23,37 @@ namespace Cofoundry.Domain
         #region constructor
 
         private readonly CofoundryDbContext _dbContext;
+        private readonly IUserMicroSummaryMapper _userMicroSummaryMapper;
 
         public GetUserMicroSummaryByEmailQueryHandler(
-            CofoundryDbContext dbContext
+            CofoundryDbContext dbContext,
+            IUserMicroSummaryMapper userMicroSummaryMapper
             )
         {
             _dbContext = dbContext;
+            _userMicroSummaryMapper = userMicroSummaryMapper;
         }
 
         #endregion
 
         #region execution
 
-        public Task<UserMicroSummary> ExecuteAsync(GetUserMicroSummaryByEmailQuery query, IExecutionContext executionContext)
+        public async Task<UserMicroSummary> ExecuteAsync(GetUserMicroSummaryByEmailQuery query, IExecutionContext executionContext)
         {
             if (string.IsNullOrWhiteSpace(query.Email)) return null;
 
-            return Query(query).SingleOrDefaultAsync();
+            var dbResult = await Query(query).SingleOrDefaultAsync();
+            var user = _userMicroSummaryMapper.Map(dbResult);
+
+            return user;
         }
 
-        private IQueryable<UserMicroSummary> Query(GetUserMicroSummaryByEmailQuery query)
+        private IQueryable<User> Query(GetUserMicroSummaryByEmailQuery query)
         {
             return _dbContext
                 .Users
                 .AsNoTracking()
-                .Where(u => u.Email == query.Email && u.UserAreaCode == query.UserAreaCode)
-                .ProjectTo<UserMicroSummary>();
+                .Where(u => u.Email == query.Email && u.UserAreaCode == query.UserAreaCode);
         }
 
         #endregion

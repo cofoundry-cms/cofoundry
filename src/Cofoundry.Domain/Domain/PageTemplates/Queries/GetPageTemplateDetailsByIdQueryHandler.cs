@@ -6,6 +6,7 @@ using Cofoundry.Domain.Data;
 using Cofoundry.Domain.CQS;
 using AutoMapper.QueryableExtensions;
 using Microsoft.EntityFrameworkCore;
+using Cofoundry.Domain.QueryModels;
 
 namespace Cofoundry.Domain
 {
@@ -17,35 +18,44 @@ namespace Cofoundry.Domain
 
         private readonly CofoundryDbContext _dbContext;
         private readonly IQueryExecutor _queryExecutor;
+        private readonly IPageTemplateDetailsMapper _pageTemplateDetailsMapper;
 
         public GetPageTemplateDetailsByIdQueryHandler(
             CofoundryDbContext dbContext,
-            IQueryExecutor queryExecutor
+            IQueryExecutor queryExecutor,
+            IPageTemplateDetailsMapper pageTemplateDetailsMapper
             )
         {
             _queryExecutor = queryExecutor;
             _dbContext = dbContext;
+            _pageTemplateDetailsMapper = pageTemplateDetailsMapper;
         }
 
         #endregion
 
         public async Task<PageTemplateDetails> ExecuteAsync(GetByIdQuery<PageTemplateDetails> query, IExecutionContext executionContext)
         {
-            var template = await _dbContext
+            var queryModel = new PageTemplateDetailsQueryModel();
+
+            queryModel.PageTemplate = await _dbContext
                 .PageTemplates
                 .AsNoTracking()
+                .Include(t => t.PageTemplateRegions)
                 .Where(l => l.PageTemplateId == query.Id)
-                .ProjectTo<PageTemplateDetails>()
                 .SingleOrDefaultAsync();
 
-            if (template == null) return null;
+            if (queryModel.PageTemplate == null) return null;
 
-            // Re-map to code defined version
-            if (template.CustomEntityDefinition != null)
-            {
-                template.CustomEntityDefinition = await _queryExecutor.GetByIdAsync<CustomEntityDefinitionMicroSummary>(template.CustomEntityDefinition.CustomEntityDefinitionCode);
-            }
-            
+            queryModel.CustomEntityDefinition = await _queryExecutor.GetByIdAsync<CustomEntityDefinitionMicroSummary>(queryModel.PageTemplate.CustomEntityDefinitionCode);
+            queryModel.NumPages = await _dbContext
+                .PageVersions
+                .AsNoTracking()
+                .Where(v => v.PageTemplateId == query.Id && !v.Page.IsDeleted && !v.IsDeleted)
+                .GroupBy(v => v.PageId)
+                .CountAsync();
+
+            var template = _pageTemplateDetailsMapper.Map(queryModel);
+
             return template;
         }
 

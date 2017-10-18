@@ -22,12 +22,12 @@ namespace Cofoundry.Domain
 
         private readonly IRoleCache _roleCache;
         private readonly CofoundryDbContext _dbContext;
-        private readonly RoleMappingHelper _roleMappingHelper;
+        private readonly IRoleDetailsMapper _roleMappingHelper;
 
         public InternalRoleRepository(
             IRoleCache roleCache,
             CofoundryDbContext dbContext,
-            RoleMappingHelper roleMappingHelper
+            IRoleDetailsMapper roleMappingHelper
             )
         {
             _roleCache = roleCache;
@@ -46,7 +46,7 @@ namespace Cofoundry.Domain
             var cachedRole = _roleCache.GetOrAdd(roleId.Value, () =>
             {
                 var dbRole = QueryRoleById(roleId.Value).FirstOrDefault();
-                var role = _roleMappingHelper.MapDetails(dbRole);
+                var role = _roleMappingHelper.Map(dbRole);
 
                 return role;
             });
@@ -62,12 +62,12 @@ namespace Cofoundry.Domain
             var cachedRole = await _roleCache.GetOrAddAsync(roleId.Value, async () =>
             {
                 var dbRole = await QueryRoleById(roleId.Value).FirstOrDefaultAsync();
-                var result = _roleMappingHelper.MapDetails(dbRole);
+                var result = _roleMappingHelper.Map(dbRole);
 
                 return result;
             });
 
-            if (cachedRole == null) return GetAnonymousRole();
+            if (cachedRole == null) return await GetAnonymousRoleAsync();
             return cachedRole;
         }
 
@@ -81,7 +81,7 @@ namespace Cofoundry.Domain
             {
                 var dbRole = QueryAnonymousRole().FirstOrDefault();
                 EntityNotFoundException.ThrowIfNull(dbRole, AnonymousRole.AnonymousRoleCode);
-                var role = _roleMappingHelper.MapDetails(dbRole);
+                var role = _roleMappingHelper.Map(dbRole);
 
                 return role;
             });
@@ -93,7 +93,7 @@ namespace Cofoundry.Domain
             {
                 var dbRole = await QueryAnonymousRole().FirstOrDefaultAsync();
                 EntityNotFoundException.ThrowIfNull(dbRole, AnonymousRole.AnonymousRoleCode);
-                var role = _roleMappingHelper.MapDetails(dbRole);
+                var role = _roleMappingHelper.Map(dbRole);
 
                 return role;
             });

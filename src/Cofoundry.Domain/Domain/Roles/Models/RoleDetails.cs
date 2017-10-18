@@ -39,7 +39,7 @@ namespace Cofoundry.Domain
         /// and convention is to use upper case, although code matching is case insensitive.
         /// This is only used by roles defined in code using IRoleDefinition.
         /// </summary>
-        public string SpecialistRoleTypeCode { get; set; }
+        public string RoleCode { get; set; }
 
         /// <summary>
         /// Collection of permissions that describe the actions this role is 

@@ -17,12 +17,15 @@ namespace Cofoundry.Domain
         #region constructor
 
         private readonly CofoundryDbContext _dbContext;
+        private readonly IImageAssetSummaryMapper _imageAssetSummaryMapper;
 
         public SearchImageAssetSummariesQueryHandler(
-            CofoundryDbContext dbContext
+            CofoundryDbContext dbContext,
+            IImageAssetSummaryMapper imageAssetSummaryMapper
             )
         {
             _dbContext = dbContext;
+            _imageAssetSummaryMapper = imageAssetSummaryMapper;
         }
 
         #endregion
@@ -71,12 +74,16 @@ namespace Cofoundry.Domain
                 dbQuery = dbQuery.Where(p => p.Width >= query.MinWidth);
             }
 
-            var results = await dbQuery
+            var dbPagedResults = await dbQuery
                 .OrderByDescending(p => p.CreateDate)
-                .ProjectTo<ImageAssetSummary>()
                 .ToPagedResultAsync(query);
 
-            return results;
+            var mappedResults = dbPagedResults
+                .Items
+                .Select(_imageAssetSummaryMapper.Map)
+                .ToList();
+
+            return dbPagedResults.ChangeType(mappedResults);
         }
 
         #endregion

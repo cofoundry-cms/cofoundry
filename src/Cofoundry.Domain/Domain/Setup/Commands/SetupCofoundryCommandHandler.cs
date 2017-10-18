@@ -76,6 +76,7 @@ namespace Cofoundry.Domain
         {
             var dbUser = await _dbContext
                 .Users
+                .Include(u => u.Role)
                 .FilterByUserArea(CofoundryAdminUserArea.AreaCode)
                 .FilterById(userId)
                 .SingleOrDefaultAsync();

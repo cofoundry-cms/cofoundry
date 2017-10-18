@@ -17,6 +17,9 @@ namespace Cofoundry.Domain.Bootstrap
                 .RegisterType<IImageAssetRouteLibrary, ImageAssetRouteLibrary>()
                 .RegisterType<IImageAssetRepository, ImageAssetRepository>()
                 .RegisterType<IImageAssetFileService, NotImplementedImageAssetFileService>()
+                .RegisterType<IImageAssetSummaryMapper, ImageAssetSummaryMapper>()
+                .RegisterType<IImageAssetDetailsMapper, ImageAssetDetailsMapper>()
+                .RegisterType<IImageAssetRenderDetailsMapper, ImageAssetRenderDetailsMapper>()
                 ;
         }
     }

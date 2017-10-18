@@ -23,16 +23,17 @@ namespace Cofoundry.Domain
 
         private readonly CofoundryDbContext _dbContext;
         private readonly IQueryExecutor _queryExecutor;
-        private readonly PageSummaryMapper _pageSummaryMapper;
+        private readonly IPageSummaryMapper _pageSummaryMapper;
 
         public GetPageSummariesByIdRangeQueryHandler(
             CofoundryDbContext dbContext,
-            IQueryExecutor queryExecutor
+            IQueryExecutor queryExecutor,
+            IPageSummaryMapper pageSummaryMapper
             )
         {
             _dbContext = dbContext;
             _queryExecutor = queryExecutor;
-            _pageSummaryMapper = new PageSummaryMapper(_dbContext, _queryExecutor);
+            _pageSummaryMapper = pageSummaryMapper;
         }
 
         #endregion
@@ -41,23 +42,23 @@ namespace Cofoundry.Domain
 
         public async Task<IDictionary<int, PageSummary>> ExecuteAsync(GetPageSummariesByIdRangeQuery query, IExecutionContext executionContext)
         {
-            var result = await CreateQuery(query).ToListAsync();
+            var dbResult = await CreateQuery(query).ToListAsync();
 
             // Finish mapping children
-            await _pageSummaryMapper.MapAsync(result);
-            var dictionary = result.ToDictionary(d => d.PageId);
+            var mappedResult = await _pageSummaryMapper.MapAsync(dbResult);
+            var dictionary = mappedResult.ToDictionary(d => d.PageId);
 
             return dictionary;
         }
 
-        private IQueryable<PageSummary> CreateQuery(GetPageSummariesByIdRangeQuery query)
+        private IQueryable<Page> CreateQuery(GetPageSummariesByIdRangeQuery query)
         {
             var dbQuery = _dbContext
                 .Pages
                 .AsNoTracking()
+                .Include(p => p.Creator)
                 .Where(p => !p.IsDeleted && p.PageDirectory.IsActive)
-                .Where(p => query.PageIds.Contains(p.PageId))
-                .ProjectTo<PageSummary>();
+                .Where(p => query.PageIds.Contains(p.PageId));
 
             return dbQuery;
         }

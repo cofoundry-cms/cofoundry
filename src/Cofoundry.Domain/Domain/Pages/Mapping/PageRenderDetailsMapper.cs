@@ -9,12 +9,12 @@ using System.Threading.Tasks;
 
 namespace Cofoundry.Domain
 {
-    public class PageMapper : IPageMapper
+    public class PageRenderDetailsMapper : IPageRenderDetailsMapper
     {
-        private readonly IPageTemplateMapper _pageTemplateMapper;
+        private readonly IPageTemplateMicroSummaryMapper _pageTemplateMapper;
 
-        public PageMapper(
-            IPageTemplateMapper pageTemplateMapper
+        public PageRenderDetailsMapper(
+            IPageTemplateMicroSummaryMapper pageTemplateMapper
             )
         {
             _pageTemplateMapper = pageTemplateMapper;
@@ -27,12 +27,12 @@ namespace Cofoundry.Domain
         /// This isn't a very fully featured map function and will likey
         /// be reworked later on.
         /// </remarks>
-        public PageRenderDetails MapRenderDetails(
+        public PageRenderDetails Map(
             PageVersion dbPageVersion
             )
         {
             var page = Mapper.Map<PageRenderDetails>(dbPageVersion);
-            page.Template = _pageTemplateMapper.MapMicroSummary(dbPageVersion.PageTemplate);
+            page.Template = _pageTemplateMapper.Map(dbPageVersion.PageTemplate);
 
             return page;
         }

@@ -14,6 +14,8 @@ namespace Cofoundry.Domain.Bootstrap
             container
                 .RegisterType<IPageDirectoryCache, PageDirectoryCache>()
                 .RegisterType<IPageDirectoryRepository, PageDirectoryRepository>()
+                .RegisterType<IPageDirectoryRouteMapper, PageDirectoryRouteMapper>()
+                .RegisterType<IPageDirectoryTreeMapper, PageDirectoryTreeMapper>()
                 ;
         }
     }

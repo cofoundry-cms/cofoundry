@@ -18,12 +18,15 @@ namespace Cofoundry.Domain
         #region constructor
 
         private readonly CofoundryDbContext _dbContext;
+        private readonly IImageAssetDetailsMapper _imageAssetDetailsMapper;
 
         public GetImageAssetDetailsByIdQueryHandler(
-            CofoundryDbContext dbContext
+            CofoundryDbContext dbContext,
+            IImageAssetDetailsMapper imageAssetDetailsMapper
             )
         {
             _dbContext = dbContext;
+            _imageAssetDetailsMapper = imageAssetDetailsMapper;
         }
 
         #endregion
@@ -32,12 +35,13 @@ namespace Cofoundry.Domain
 
         public async Task<ImageAssetDetails> ExecuteAsync(GetByIdQuery<ImageAssetDetails> query, IExecutionContext executionContext)
         {
-            var result = await _dbContext
+            var dbResult = await _dbContext
                 .ImageAssets
                 .AsNoTracking()
                 .FilterById(query.Id)
-                .ProjectTo<ImageAssetDetails>()
                 .SingleOrDefaultAsync();
+
+            var result = _imageAssetDetailsMapper.Map(dbResult);
 
             return result;
         }

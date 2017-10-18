@@ -34,7 +34,16 @@ namespace Cofoundry.Domain
                 .PageVersions
                 .AsNoTracking()
                 .Where(p => p.PageId == query.Id && p.WorkFlowStatusId == (int)WorkFlowStatus.Draft && !p.IsDeleted)
-                .ProjectTo<UpdatePageDraftVersionCommand>()
+                .Select(v => new UpdatePageDraftVersionCommand
+                {
+                    MetaDescription = v.MetaDescription,
+                    OpenGraphDescription = v.OpenGraphDescription,
+                    OpenGraphImageId = v.OpenGraphImageId,
+                    OpenGraphTitle = v.OpenGraphTitle,
+                    PageId = v.PageId,
+                    ShowInSiteMap = !v.ExcludeFromSitemap,
+                    Title = v.Title
+                })
                 .SingleOrDefaultAsync();
 
             return command;

@@ -21,19 +21,19 @@ namespace Cofoundry.Domain
 
         private readonly CofoundryDbContext _dbContext;
         private readonly IQueryExecutor _queryExecutor;
-        private readonly IDbUnstructuredDataSerializer _dbUnstructuredDataSerializer;
+        private readonly ICustomEntitySummaryMapper _customEntitySummaryMapper;
         private readonly ICustomEntityDefinitionRepository _customEntityDefinitionRepository;
 
         public SearchCustomEntitySummariesQueryHandler(
             CofoundryDbContext dbContext,
             IQueryExecutor queryExecutor,
-            IDbUnstructuredDataSerializer dbUnstructuredDataSerializer,
+            ICustomEntitySummaryMapper customEntitySummaryMapper,
             ICustomEntityDefinitionRepository customEntityDefinitionRepository
             )
         {
             _dbContext = dbContext;
             _queryExecutor = queryExecutor;
-            _dbUnstructuredDataSerializer = dbUnstructuredDataSerializer;
+            _customEntitySummaryMapper = customEntitySummaryMapper;
             _customEntityDefinitionRepository = customEntityDefinitionRepository;
         }
 
@@ -47,47 +47,13 @@ namespace Cofoundry.Domain
             EntityNotFoundException.ThrowIfNull(definition, query.CustomEntityDefinitionCode);
 
             // Get Main Query
-            var dbPagedResult = await GetQueryAsync(query, definition);
-            
-            var routingsQuery = new GetPageRoutingInfoByCustomEntityIdRangeQuery(dbPagedResult.Items.Select(e => e.CustomEntityId));
-            var routings = await _queryExecutor.ExecuteAsync(routingsQuery);
-            var allLocales = (await _queryExecutor.GetAllAsync<ActiveLocale>()).ToDictionary(l => l.LocaleId);
+            var dbPagedResult = await RunQueryAsync(query, definition);
+            var mappedResult = await _customEntitySummaryMapper.MapAsync(dbPagedResult.Items, executionContext);
 
-            // Map Items
-            var entities = new List<CustomEntitySummary>(dbPagedResult.Items.Length);
-            foreach (var dbVersion in dbPagedResult.Items)
-            {
-                PageRoutingInfo detailsRouting = null;
-
-                if (routings.ContainsKey(dbVersion.CustomEntityId))
-                {
-                    detailsRouting = routings[dbVersion.CustomEntityId].FirstOrDefault(r => r.CustomEntityRouteRule != null);
-                }
-
-                var entity = Mapper.Map<CustomEntitySummary>(dbVersion);
-
-                if (dbVersion.LocaleId.HasValue)
-                {
-                    entity.Locale = allLocales.GetOrDefault(dbVersion.LocaleId.Value);
-                    EntityNotFoundException.ThrowIfNull(entity.Locale, dbVersion.LocaleId.Value);
-                }
-
-                if (detailsRouting != null)
-                {
-                    entity.FullPath = detailsRouting.CustomEntityRouteRule.MakeUrl(detailsRouting.PageRoute, detailsRouting.CustomEntityRoute);
-                }
-
-                entity.Model = (ICustomEntityDataModel)_dbUnstructuredDataSerializer.Deserialize(dbVersion.SerializedData, definition.DataModelType);
-
-                entity.AuditData.UpdateDate = dbVersion.VersionAuditData.CreateDate;
-                entity.AuditData.Updater = dbVersion.VersionAuditData.Creator;
-                entities.Add(entity);
-            }
-
-            return dbPagedResult.ChangeType(entities);
+            return dbPagedResult.ChangeType(mappedResult);
         }
 
-        private async Task<PagedQueryResult<CustomEntitySummaryQueryModel>> GetQueryAsync(SearchCustomEntitySummariesQuery query, CustomEntityDefinitionSummary definition)
+        private async Task<PagedQueryResult<CustomEntityVersion>> RunQueryAsync(SearchCustomEntitySummariesQuery query, CustomEntityDefinitionSummary definition)
         {
             var dbQuery = (await _dbContext
                 .CustomEntityVersions
@@ -139,9 +105,8 @@ namespace Cofoundry.Domain
                     .ThenBy(e => e.Title);
             }
 
-            var projected = dbQuery.ProjectTo<CustomEntitySummaryQueryModel>();
             // TODO: could be async when EF core supports it
-            var dbPagedResult = projected.ToPagedResult(query); 
+            var dbPagedResult = dbQuery.ToPagedResult(query);
 
             return dbPagedResult;
         }

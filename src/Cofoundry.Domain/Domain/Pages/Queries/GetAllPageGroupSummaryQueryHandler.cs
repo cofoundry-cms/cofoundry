@@ -7,6 +7,7 @@ using Cofoundry.Domain.CQS;
 using Cofoundry.Domain.Data;
 using AutoMapper.QueryableExtensions;
 using Microsoft.EntityFrameworkCore;
+using Cofoundry.Domain.QueryModels;
 
 namespace Cofoundry.Domain
 {
@@ -15,23 +16,37 @@ namespace Cofoundry.Domain
         , IPermissionRestrictedQueryHandler<GetAllQuery<PageGroupSummary>, IEnumerable<PageGroupSummary>>
     {
         private readonly CofoundryDbContext _dbContext;
+        private readonly IPageGroupSummaryMapper _pageGroupSummaryMapper;
 
         public GetAllPageGroupSummaryQueryHandler(
-            CofoundryDbContext dbContext
+            CofoundryDbContext dbContext,
+            IPageGroupSummaryMapper pageGroupSummaryMapper
             )
         {
             _dbContext = dbContext;
+            _pageGroupSummaryMapper = pageGroupSummaryMapper;
         }
 
         public async Task<IEnumerable<PageGroupSummary>> ExecuteAsync(GetAllQuery<PageGroupSummary> query, IExecutionContext executionContext)
         {
-            var results = await _dbContext
-                          .PageGroups
-                          .AsNoTracking()
-                          .Where(g => !g.IsDeleted)
-                          .OrderBy(m => m.GroupName)
-                          .ProjectTo<PageGroupSummary>()
-                          .ToListAsync();
+            var dbResults = await _dbContext
+                .PageGroups
+                .AsNoTracking()
+                .Where(g => !g.IsDeleted)
+                .OrderBy(m => m.GroupName)
+                .Select(g => new PageGroupSummaryQueryModel()
+                {
+                    PageGroup = g,
+                    Creator = g.Creator,
+                    NumPages = g
+                        .PageGroupItems
+                        .Count()
+                })
+                .ToListAsync();
+
+            var results = dbResults
+                .Select(_pageGroupSummaryMapper.Map)
+                .ToList();
 
             return results;
         }

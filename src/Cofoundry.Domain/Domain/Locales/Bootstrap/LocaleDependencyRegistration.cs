@@ -13,6 +13,7 @@ namespace Cofoundry.Domain.Bootstrap
         {
             container
                 .RegisterType<ILocaleCache, LocaleCache>()
+                .RegisterType<IActiveLocaleMapper, ActiveLocaleMapper>()
                 ;
         }
     }

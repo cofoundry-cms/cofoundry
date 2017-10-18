@@ -1,0 +1,70 @@
+﻿using Cofoundry.Core;
+using Cofoundry.Domain.Data;
+using System;
+using System.Collections.Generic;
+using System.Text;
+
+namespace Cofoundry.Domain
+{
+    /// <summary>
+    /// Simple mapper for mapping to UserAccountDetails objects.
+    /// </summary>
+    public class UserAccountDetailsMapper : IUserAccountDetailsMapper
+    {
+        private readonly IUserAreaRepository _userAreaRepository;
+        private readonly IUserMicroSummaryMapper _userMicroSummaryMapper;
+
+        public UserAccountDetailsMapper(
+            IUserAreaRepository userAreaRepository,
+            IUserMicroSummaryMapper userMicroSummaryMapper
+            )
+        {
+            _userAreaRepository = userAreaRepository;
+            _userMicroSummaryMapper = userMicroSummaryMapper;
+        }
+
+        /// <summary>
+        /// Maps an EF user record from the db into a UserAccountDetails object. If the
+        /// db record is null then null is returned.
+        /// </summary>
+        /// <param name="dbUser">User record from the database.</param>
+        public UserAccountDetails Map(User dbUser)
+        {
+            if (dbUser == null) return null;
+
+            var user = new UserAccountDetails()
+            {
+                Email = dbUser.Email,
+                FirstName = dbUser.FirstName,
+                LastName = dbUser.LastName,
+                UserId = dbUser.UserId,
+                Username = dbUser.Username,
+                LastLoginDate = dbUser.LastLoginDate,
+                LastPasswordChangeDate = dbUser.LastPasswordChangeDate,
+                PreviousLoginDate = dbUser.PreviousLoginDate,
+                RequirePasswordChange = dbUser.RequirePasswordChange
+            };
+
+            user.AuditData = new CreateAuditData()
+            {
+                CreateDate = dbUser.CreateDate
+            };
+
+            if (dbUser.Creator != null)
+            {
+                user.AuditData.Creator = _userMicroSummaryMapper.Map(dbUser.Creator);
+            }
+
+            var userArea = _userAreaRepository.GetByCode(dbUser.UserAreaCode);
+            EntityNotFoundException.ThrowIfNull(userArea, dbUser.UserAreaCode);
+
+            user.UserArea = new UserAreaMicroSummary()
+            {
+                UserAreaCode = dbUser.UserAreaCode,
+                Name = userArea.Name
+            };
+
+            return user;
+        }
+    }
+}

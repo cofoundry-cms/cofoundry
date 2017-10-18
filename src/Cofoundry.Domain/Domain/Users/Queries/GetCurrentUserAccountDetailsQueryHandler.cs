@@ -18,24 +18,30 @@ namespace Cofoundry.Domain
         , IIgnorePermissionCheckHandler
     {
         private readonly CofoundryDbContext _dbContext;
+        private readonly IUserAccountDetailsMapper _userAccountDetailsMapper;
 
         public GetCurrentUserAccountDetailsQueryHandler(
-            CofoundryDbContext dbContext
+            CofoundryDbContext dbContext,
+            IUserAccountDetailsMapper userAccountDetailsMapper
             )
         {
             _dbContext = dbContext;
+            _userAccountDetailsMapper = userAccountDetailsMapper;
         }
 
-        public Task<UserAccountDetails> ExecuteAsync(GetCurrentUserAccountDetailsQuery query, IExecutionContext executionContext)
+        public async Task<UserAccountDetails> ExecuteAsync(GetCurrentUserAccountDetailsQuery query, IExecutionContext executionContext)
         {
             if (!executionContext.UserContext.UserId.HasValue) return null;
 
-            var user = _dbContext
+            var dbResult = await _dbContext
                 .Users
+                .AsNoTracking()
+                .Include(u => u.Creator)
                 .FilterById(executionContext.UserContext.UserId.Value)
                 .FilterCanLogIn()
-                .ProjectTo<UserAccountDetails>()
                 .SingleOrDefaultAsync();
+
+            var user = _userAccountDetailsMapper.Map(dbResult);
 
             return user;
         }

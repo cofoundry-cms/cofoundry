@@ -8,8 +8,8 @@ using System.Threading.Tasks;
 
 namespace Cofoundry.Domain
 {
-    public interface IPageMapper
+    public interface IPageRenderDetailsMapper
     {
-        PageRenderDetails MapRenderDetails(PageVersion dbPageVersion);
+        PageRenderDetails Map(PageVersion dbPageVersion);
     }
 }

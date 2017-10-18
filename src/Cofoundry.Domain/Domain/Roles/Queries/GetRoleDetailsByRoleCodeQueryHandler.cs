@@ -11,14 +11,14 @@ using Microsoft.EntityFrameworkCore;
 namespace Cofoundry.Domain
 {
     /// <summary>
-    /// Find a role with the specified specialist role type code, returning
+    /// Find a role with the specified role code, returning
     /// a RoleDetails object if one is found, otherwise null. Roles only
-    /// have a SpecialistRoleTypeCode if they have been generated from code
+    /// have a RoleCode if they have been generated from code
     /// rather than the GUI. For GUI generated roles use GetRoleDetailsByIdQuery.
     /// </summary>
-    public class GetRoleDetailsBySpecialistRoleTypeCodeHandler
-        : IAsyncQueryHandler<GetRoleDetailsBySpecialistRoleTypeCode, RoleDetails>
-        , IPermissionRestrictedQueryHandler<GetRoleDetailsBySpecialistRoleTypeCode, RoleDetails>
+    public class GetRoleDetailsByRoleCodeQueryHandler
+        : IAsyncQueryHandler<GetRoleDetailsByRoleCodeQuery, RoleDetails>
+        , IPermissionRestrictedQueryHandler<GetRoleDetailsByRoleCodeQuery, RoleDetails>
     {
         #region constructor
 
@@ -26,7 +26,7 @@ namespace Cofoundry.Domain
         private readonly IInternalRoleRepository _internalRoleRepository;
         private readonly IRoleCache _roleCache;
 
-        public GetRoleDetailsBySpecialistRoleTypeCodeHandler(
+        public GetRoleDetailsByRoleCodeQueryHandler(
             CofoundryDbContext dbContext,
             IInternalRoleRepository internalRoleRepository,
             IRoleCache roleCache
@@ -41,9 +41,9 @@ namespace Cofoundry.Domain
 
         #region execution
 
-        public async Task<RoleDetails> ExecuteAsync(GetRoleDetailsBySpecialistRoleTypeCode query, IExecutionContext executionContext)
+        public async Task<RoleDetails> ExecuteAsync(GetRoleDetailsByRoleCodeQuery query, IExecutionContext executionContext)
         {
-            var roleCodeLookup = await _roleCache.GetOrAddSpecialistRoleTypeCodeLookupAsync(async () =>
+            var roleCodeLookup = await _roleCache.GetOrAddRoleCodeLookupAsync(async () =>
             {
                 var roleCodes = await QueryRoleCodes()
                     .ToDictionaryAsync(r => r.RoleCode, r => r.RoleId);
@@ -51,7 +51,7 @@ namespace Cofoundry.Domain
                 return new ReadOnlyDictionary<string, int>(roleCodes);
             });
 
-            var id = roleCodeLookup.GetOrDefault(query.SpecialistRoleTypeCode);
+            var id = roleCodeLookup.GetOrDefault(query.RoleCode);
             if (id <= 0) return null;
 
             return await _internalRoleRepository.GetByIdAsync(id);
@@ -69,7 +69,7 @@ namespace Cofoundry.Domain
 
         #region permissions
 
-        public IEnumerable<IPermissionApplication> GetPermissions(GetRoleDetailsBySpecialistRoleTypeCode command)
+        public IEnumerable<IPermissionApplication> GetPermissions(GetRoleDetailsByRoleCodeQuery command)
         {
             yield return new RoleReadPermission();
         }

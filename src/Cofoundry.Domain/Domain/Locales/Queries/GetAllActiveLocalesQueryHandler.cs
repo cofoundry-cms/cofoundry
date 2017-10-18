@@ -18,14 +18,17 @@ namespace Cofoundry.Domain
 
         private readonly CofoundryDbContext _dbContext;
         private readonly ILocaleCache _cache;
+        private readonly IActiveLocaleMapper _activeLocaleMapper;
 
         public GetAllActiveLocalesQueryHandler(
             CofoundryDbContext dbContext,
-            ILocaleCache cache
+            ILocaleCache cache,
+            IActiveLocaleMapper activeLocaleMapper
             )
         {
             _dbContext = dbContext;
             _cache = cache;
+            _activeLocaleMapper = activeLocaleMapper;
         }
 
         #endregion
@@ -36,7 +39,12 @@ namespace Cofoundry.Domain
         {
             var results = await _cache.GetOrAddAsync(new Func<Task<ActiveLocale[]>>(async () =>
             {
-                return await GetAllLocales().ToArrayAsync();
+                var dbResults = await GetAllLocales().ToListAsync();
+                var mappedResults = dbResults
+                    .Select(_activeLocaleMapper.Map)
+                    .ToArray();
+
+                return mappedResults;
             }));
 
             return results;
@@ -46,14 +54,13 @@ namespace Cofoundry.Domain
 
         #region helpers
 
-        private IQueryable<ActiveLocale> GetAllLocales()
+        private IQueryable<Locale> GetAllLocales()
         {
             return _dbContext
                     .Locales
                     .AsNoTracking()
                     .Where(l => l.IsActive)
-                    .OrderBy(l => l.LocaleName)
-                    .ProjectTo<ActiveLocale>();
+                    .OrderBy(l => l.LocaleName);
         }
 
         #endregion

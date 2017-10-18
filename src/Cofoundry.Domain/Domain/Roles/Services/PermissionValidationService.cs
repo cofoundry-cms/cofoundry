@@ -51,8 +51,7 @@ namespace Cofoundry.Domain
 
             if (userContext != null && userContext.UserArea is CofoundryAdminUserArea)
             {
-                var role = _internalRoleRepository.GetById(userContext.RoleId);
-                isSuperAdmin = role != null && role.IsSuperAdministrator;
+                isSuperAdmin = userContext.RoleCode == SuperAdminRole.SuperAdminRoleCode;
             }
 
             if (!isSuperAdmin)

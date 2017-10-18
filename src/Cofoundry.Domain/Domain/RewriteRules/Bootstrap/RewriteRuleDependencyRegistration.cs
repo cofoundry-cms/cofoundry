@@ -14,6 +14,7 @@ namespace Cofoundry.Domain.Bootstrap
             container
                 .RegisterType<IRewriteRuleRepository, RewriteRuleRepository>()
                 .RegisterType<IRewriteRuleCache, RewriteRuleCache>()
+                .RegisterType<IRewriteRuleSummaryMapper, RewriteRuleSummaryMapper>()
                 ;
         }
     }

@@ -20,7 +20,8 @@ namespace Cofoundry.Domain
                 .RegisterType<IRoleCache, RoleCache>()
                 .RegisterType<IRoleRepository, RoleRepository>()
                 .RegisterType<IInternalRoleRepository, InternalRoleRepository>()
-                .RegisterType<RoleMappingHelper>()
+                .RegisterType<IRoleDetailsMapper, RoleDetailsMapper>()
+                .RegisterType<IRoleMicroSummaryMapper, RoleMicroSummaryMapper>()
                 .RegisterAll<IPermission>(singletonOptions)
                 .RegisterInstance<IPermissionRepository, PermissionRepository>()
 

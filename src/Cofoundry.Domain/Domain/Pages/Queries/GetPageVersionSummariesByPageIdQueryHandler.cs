@@ -17,12 +17,12 @@ namespace Cofoundry.Domain
 
         private readonly CofoundryDbContext _dbContext;
         private readonly IQueryExecutor _queryExecutor;
-        private readonly IPageTemplateMapper _pageTemplateMapper;
+        private readonly IPageTemplateMicroSummaryMapper _pageTemplateMapper;
 
         public GetPageVersionSummariesByPageIdQueryHandler(
             CofoundryDbContext dbContext,
             IQueryExecutor queryExecutor,
-            IPageTemplateMapper pageTemplateMapper
+            IPageTemplateMicroSummaryMapper pageTemplateMapper
             )
         {
             _dbContext = dbContext;
@@ -61,7 +61,7 @@ namespace Cofoundry.Domain
             foreach (var dbVersion in dbVersions)
             {
                 var version = Mapper.Map<PageVersionSummary>(dbVersion);
-                version.Template = _pageTemplateMapper.MapMicroSummary(dbVersion.PageTemplate);
+                version.Template = _pageTemplateMapper.Map(dbVersion.PageTemplate);
 
                 yield return version;
             }

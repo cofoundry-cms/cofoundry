@@ -1,12 +1,10 @@
-﻿using AutoMapper;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Cofoundry.Domain.Data;
 using Cofoundry.Domain.CQS;
-using AutoMapper.QueryableExtensions;
 using Microsoft.EntityFrameworkCore;
 
 namespace Cofoundry.Domain
@@ -23,14 +21,17 @@ namespace Cofoundry.Domain
         
         private readonly CofoundryDbContext _dbContext;
         private readonly IPermissionValidationService _permissionValidationService;
+        private readonly IUserMicroSummaryMapper _userMicroSummaryMapper;
 
         public GetUserMicroSummaryByIdQueryHandler(
             CofoundryDbContext dbContext,
-            IPermissionValidationService permissionValidationService
+            IPermissionValidationService permissionValidationService,
+            IUserMicroSummaryMapper userMicroSummaryMapper
             )
         {
             _dbContext = dbContext;
             _permissionValidationService = permissionValidationService;
+            _userMicroSummaryMapper = userMicroSummaryMapper;
         }
 
         #endregion
@@ -39,19 +40,20 @@ namespace Cofoundry.Domain
 
         public async Task<UserMicroSummary> ExecuteAsync(GetByIdQuery<UserMicroSummary> query, IExecutionContext executionContext)
         {
-            var user = await Query(query).SingleOrDefaultAsync();
+            var dbResult = await Query(query).SingleOrDefaultAsync();
+            var user = _userMicroSummaryMapper.Map(dbResult);
+
             ValidatePermission(query, executionContext, user);
 
             return user;
         }
 
-        private IQueryable<UserMicroSummary> Query(GetByIdQuery<UserMicroSummary> query)
+        private IQueryable<User> Query(GetByIdQuery<UserMicroSummary> query)
         {
             return _dbContext
                 .Users
                 .AsNoTracking()
-                .Where(u => u.UserId == query.Id)
-                .ProjectTo<UserMicroSummary>();
+                .Where(u => u.UserId == query.Id);
         }
 
         private void ValidatePermission(GetByIdQuery<UserMicroSummary> query, IExecutionContext executionContext, UserMicroSummary user)

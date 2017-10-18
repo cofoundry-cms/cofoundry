@@ -7,19 +7,29 @@ using System.Threading.Tasks;
 
 namespace Cofoundry.Domain
 {
-    public class PageTemplateMapper : IPageTemplateMapper
+    /// <summary>
+    /// Simple mapper for mapping to PageTemplateMicroSummary objects.
+    /// </summary>
+    public class PageTemplateMicroSummaryMapper : IPageTemplateMicroSummaryMapper
     {
         private readonly IPageTemplateCustomEntityTypeMapper _pageTemplateCustomEntityTypeMapper;
 
-        public PageTemplateMapper(
+        public PageTemplateMicroSummaryMapper(
             IPageTemplateCustomEntityTypeMapper pageTemplateCustomEntityTypeMapper
             )
         {
             _pageTemplateCustomEntityTypeMapper = pageTemplateCustomEntityTypeMapper;
         }
 
-        public PageTemplateMicroSummary MapMicroSummary(PageTemplate dbPageTemplate)
+        /// <summary>
+        /// Maps an EF PageTemplate record from the db into an PageTemplateMicroSummary 
+        /// object. If the db record is null then null is returned.
+        /// </summary>
+        /// <param name="dbPageTemplate">PageTemplate record from the database.</param>
+        public PageTemplateMicroSummary Map(PageTemplate dbPageTemplate)
         {
+            if (dbPageTemplate == null) return null;
+
             var pageTemplate = new PageTemplateMicroSummary();
             pageTemplate.CustomEntityDefinitionCode = dbPageTemplate.CustomEntityDefinitionCode;
             pageTemplate.FullPath = dbPageTemplate.FullPath;

@@ -74,7 +74,11 @@ namespace Cofoundry.Domain
                 .PageTemplateRegions
                 .AsNoTracking()
                 .Where(s => s.PageTemplateId == query.PageTemplateId)
-                .ProjectTo<CustomEntityPageRegionRenderDetails>();
+                .Select(s => new CustomEntityPageRegionRenderDetails()
+                {
+                    PageTemplateRegionId = s.PageTemplateRegionId,
+                    Name = s.Name
+                });
         }
 
         private async Task<CustomEntityRenderDetails> MapCustomEntityAsync(CustomEntityVersion dbResult)

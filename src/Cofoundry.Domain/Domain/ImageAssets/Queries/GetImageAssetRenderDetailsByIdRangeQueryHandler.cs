@@ -18,14 +18,17 @@ namespace Cofoundry.Domain
 
         private readonly CofoundryDbContext _dbContext;
         private readonly IImageAssetCache _imageAssetCache;
+        private readonly IImageAssetRenderDetailsMapper _imageAssetRenderDetailsMapper;
 
         public GetImageAssetRenderDetailsByIdRangeQueryHandler(
             CofoundryDbContext dbContext,
-            IImageAssetCache imageAssetCache
+            IImageAssetCache imageAssetCache,
+            IImageAssetRenderDetailsMapper imageAssetRenderDetailsMapper
             )
         {
             _dbContext = dbContext;
             _imageAssetCache = imageAssetCache;
+            _imageAssetRenderDetailsMapper = imageAssetRenderDetailsMapper;
         }
 
         #endregion
@@ -40,8 +43,12 @@ namespace Cofoundry.Domain
 
             if (missingResultsQuery != null)
             {
-                missingResults = await missingResultsQuery.ToListAsync();
+                var dbMissingResults = await missingResultsQuery.ToListAsync();
+                missingResults = dbMissingResults
+                    .Select(_imageAssetRenderDetailsMapper.Map)
+                    .ToList();
             }
+
             return AddResultsToCacheAndReturnResult(cachedResults, missingResults);
         }
 
@@ -71,7 +78,7 @@ namespace Cofoundry.Domain
             return results;
         }
 
-        private IQueryable<ImageAssetRenderDetails> QueryDb(List<ImageCacheResult> cacheResults)
+        private IQueryable<ImageAsset> QueryDb(List<ImageCacheResult> cacheResults)
         {
             var missingIds = cacheResults
                 .Where(r => r.Model == null)
@@ -83,8 +90,7 @@ namespace Cofoundry.Domain
             return _dbContext
                 .ImageAssets
                 .AsNoTracking()
-                .FilterByIds(missingIds)
-                .ProjectTo<ImageAssetRenderDetails>();
+                .FilterByIds(missingIds);
         }
 
         private IDictionary<int, ImageAssetRenderDetails> AddResultsToCacheAndReturnResult(List<ImageCacheResult> results, List<ImageAssetRenderDetails> missingResults)
