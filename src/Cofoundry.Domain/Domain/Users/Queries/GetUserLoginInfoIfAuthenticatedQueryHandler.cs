@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -42,7 +41,13 @@ namespace Cofoundry.Domain
         {
             if (_userAuthenticationHelper.IsPasswordCorrect(user, query.Password))
             {
-                var result = Mapper.Map<UserLoginInfo>(user);
+                var result = new UserLoginInfo()
+                {
+                    RequirePasswordChange = user.RequirePasswordChange,
+                    UserAreaCode = user.UserAreaCode,
+                    UserId = user.UserId
+                };
+
                 return result;
             }
 

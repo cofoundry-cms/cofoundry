@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 using Cofoundry.Domain.Data;
 using Cofoundry.Domain.CQS;
 using Microsoft.EntityFrameworkCore;
-using AutoMapper;
 
 namespace Cofoundry.Domain
 {
@@ -17,13 +16,13 @@ namespace Cofoundry.Domain
         #region constructor
 
         private readonly CofoundryDbContext _dbContext;
-        private readonly CustomEntityDataModelMapper _customEntityDataModelMapper;
+        private readonly ICustomEntityDataModelMapper _customEntityDataModelMapper;
         private readonly ICustomEntityRenderSummaryMapper _customEntityRenderSummaryMapper;
         private readonly IPermissionValidationService _permissionValidationService;
 
         public GetCustomEntityRenderSummariesByIdRangeQueryHandler(
             CofoundryDbContext dbContext,
-            CustomEntityDataModelMapper customEntityDataModelMapper,
+            ICustomEntityDataModelMapper customEntityDataModelMapper,
             ICustomEntityRenderSummaryMapper customEntityRenderSummaryMapper,
             IPermissionValidationService permissionValidationService
             )
@@ -42,7 +41,7 @@ namespace Cofoundry.Domain
         {
             var dbResults = await Query(query).ToListAsync();
             EnforcePermissions(dbResults, executionContext);
-            var results = await _customEntityRenderSummaryMapper.MapSummariesAsync(dbResults, executionContext);
+            var results = await _customEntityRenderSummaryMapper.MapAsync(dbResults, executionContext);
 
             return results.ToDictionary(r => r.CustomEntityId);
         }

@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -15,15 +14,16 @@ namespace Cofoundry.Domain
         #region constructor 
 
         private readonly IEnumerable<ICustomEntityDefinition> _customEntityRegistrations;
+        private readonly ICustomEntityDefinitionMicroSummaryMapper _customEntityDefinitionMicroSummaryMapper;
 
         public GetCustomEntityDefinitionMicroSummaryByIdQueryHandler(
-            IEnumerable<ICustomEntityDefinition> customEntityRegistrations
+            IEnumerable<ICustomEntityDefinition> customEntityRegistrations,
+            ICustomEntityDefinitionMicroSummaryMapper customEntityDefinitionMicroSummaryMapper
             )
         {
             _customEntityRegistrations = customEntityRegistrations;
+            _customEntityDefinitionMicroSummaryMapper = customEntityDefinitionMicroSummaryMapper;
         }
-
-        public IEnumerable<ICustomEntityDefinition> CustomEntityRegistrations => _customEntityRegistrations;
 
         #endregion
 
@@ -32,7 +32,7 @@ namespace Cofoundry.Domain
         public Task<CustomEntityDefinitionMicroSummary> ExecuteAsync(GetByStringQuery<CustomEntityDefinitionMicroSummary> query, IExecutionContext executionContext)
         {
             var definition = _customEntityRegistrations.SingleOrDefault(d => d.CustomEntityDefinitionCode == query.Id);
-            var result = Mapper.Map<CustomEntityDefinitionMicroSummary>(definition);
+            var result = _customEntityDefinitionMicroSummaryMapper.Map(definition);
 
             return Task.FromResult(result);
         }

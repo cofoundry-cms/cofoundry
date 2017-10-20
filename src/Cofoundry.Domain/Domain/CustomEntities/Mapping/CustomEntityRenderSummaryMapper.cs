@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using Cofoundry.Core;
+﻿using Cofoundry.Core;
 using Cofoundry.Domain.CQS;
 using Cofoundry.Domain.Data;
 using System;
@@ -10,19 +9,22 @@ using System.Threading.Tasks;
 
 namespace Cofoundry.Domain
 {
+    /// <summary>
+    /// Simple mapper for mapping to CustomEntityRenderSummary objects.
+    /// </summary>
     public class CustomEntityRenderSummaryMapper : ICustomEntityRenderSummaryMapper
     {
         #region constructor
 
         private readonly CofoundryDbContext _dbContext;
-        private readonly CustomEntityDataModelMapper _customEntityDataModelMapper;
+        private readonly ICustomEntityDataModelMapper _customEntityDataModelMapper;
         private readonly IQueryExecutor _queryExecutor;
         private readonly ICustomEntityDefinitionRepository _customEntityDefinitionRepository;
 
         public CustomEntityRenderSummaryMapper(
             CofoundryDbContext dbContext,
             IQueryExecutor queryExecutor,
-            CustomEntityDataModelMapper customEntityDataModelMapper,
+            ICustomEntityDataModelMapper customEntityDataModelMapper,
             ICustomEntityDefinitionRepository customEntityDefinitionRepository
             )
         {
@@ -36,7 +38,13 @@ namespace Cofoundry.Domain
 
         #region ICustomEntityRenderSummaryMapper Implementation
 
-        public async Task<IEnumerable<CustomEntityRenderSummary>> MapSummariesAsync(
+        /// <summary>
+        /// Maps a collection of EF CustomEntityVersion record from the db into CustomEntityRenderSummary 
+        /// objects.
+        /// </summary>
+        /// <param name="dbResults">CustomEntityVersion records from the database.</param>
+        /// <param name="executionContext">Context to run any sub queries under.</param>
+        public async Task<IEnumerable<CustomEntityRenderSummary>> MapAsync(
             ICollection<CustomEntityVersion> dbResults,
             IExecutionContext executionContext
             )
@@ -48,11 +56,19 @@ namespace Cofoundry.Domain
             return Map(dbResults, allRoutings, allLocales);
         }
 
-        public async Task<CustomEntityRenderSummary> MapSummaryAsync(
+        /// <summary>
+        /// Maps an EF CustomEntityVersion record from the db into a CustomEntityRenderSummary 
+        /// object. If the db record is null then null is returned.
+        /// </summary>
+        /// <param name="dbResult">CustomEntityVersion record from the database.</param>
+        /// <param name="executionContext">Context to run any sub queries under.</param>
+        public async Task<CustomEntityRenderSummary> MapAsync(
             CustomEntityVersion dbResult,
             IExecutionContext executionContext
             )
         {
+            if (dbResult == null) return null;
+
             var routingQuery = GetPageRoutingQuery(dbResult);
             var routing = await _queryExecutor.ExecuteAsync(routingQuery, executionContext);
 
@@ -93,7 +109,7 @@ namespace Cofoundry.Domain
 
             foreach (var dbResult in dbResults)
             {
-                var entity = Mapper.Map<CustomEntityRenderSummary>(dbResult);
+                var entity = MapCore(dbResult);
 
                 if (dbResult.CustomEntity.LocaleId.HasValue)
                 {
@@ -102,7 +118,6 @@ namespace Cofoundry.Domain
                 }
 
                 entity.PageUrls = MapPageRoutings(allRoutings.GetOrDefault(dbResult.CustomEntityId), dbResult);
-                entity.Model = _customEntityDataModelMapper.Map(dbResult.CustomEntity.CustomEntityDefinitionCode, dbResult.SerializedData);
 
                 results.Add(entity);
             }
@@ -116,10 +131,28 @@ namespace Cofoundry.Domain
             ActiveLocale locale
             )
         {
-            var entity = Mapper.Map<CustomEntityRenderSummary>(dbResult);
+            var entity = MapCore(dbResult);
             entity.Locale = locale;
-            entity.Model = _customEntityDataModelMapper.Map(dbResult.CustomEntity.CustomEntityDefinitionCode, dbResult.SerializedData);
             entity.PageUrls = MapPageRoutings(allRoutings, dbResult);
+
+            return entity;
+        }
+
+        private CustomEntityRenderSummary MapCore(CustomEntityVersion dbResult)
+        {
+            var entity = new CustomEntityRenderSummary()
+            {
+                CreateDate = dbResult.CreateDate,
+                CustomEntityDefinitionCode = dbResult.CustomEntity.CustomEntityDefinitionCode,
+                CustomEntityId = dbResult.CustomEntityId,
+                CustomEntityVersionId = dbResult.CustomEntityVersionId,
+                Ordering = dbResult.CustomEntity.Ordering,
+                Title = dbResult.Title,
+                UrlSlug = dbResult.CustomEntity.UrlSlug,
+                WorkFlowStatus = (WorkFlowStatus)dbResult.WorkFlowStatusId
+            };
+
+            entity.Model = _customEntityDataModelMapper.Map(dbResult.CustomEntity.CustomEntityDefinitionCode, dbResult.SerializedData);
 
             return entity;
         }

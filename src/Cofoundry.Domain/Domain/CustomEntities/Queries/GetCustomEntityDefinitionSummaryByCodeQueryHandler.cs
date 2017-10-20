@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -13,18 +12,21 @@ namespace Cofoundry.Domain
         , IIgnorePermissionCheckHandler
     {
         private readonly ICustomEntityDefinitionRepository _customEntityDefinitionRepository;
+        private readonly ICustomEntityDefinitionSummaryMapper _customEntityDefinitionSummaryMapper;
 
         public GetCustomEntityDefinitionSummaryByCodeQueryHandler(
-            ICustomEntityDefinitionRepository customEntityDefinitionRepository
+            ICustomEntityDefinitionRepository customEntityDefinitionRepository,
+            ICustomEntityDefinitionSummaryMapper customEntityDefinitionSummaryMapper
             )
         {
             _customEntityDefinitionRepository = customEntityDefinitionRepository;
+            _customEntityDefinitionSummaryMapper = customEntityDefinitionSummaryMapper;
         }
 
         public async Task<CustomEntityDefinitionSummary> ExecuteAsync(GetByStringQuery<CustomEntityDefinitionSummary> query, IExecutionContext executionContext)
         {
             var definition = _customEntityDefinitionRepository.GetByCode(query.Id.ToUpperInvariant());
-            var result =  Mapper.Map<CustomEntityDefinitionSummary>(definition);
+            var result = _customEntityDefinitionSummaryMapper.Map(definition);
 
             return await Task.FromResult(result);
         }

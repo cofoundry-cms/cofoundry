@@ -5,8 +5,6 @@ using System.Text;
 using System.Threading.Tasks;
 using Cofoundry.Domain.Data;
 using Cofoundry.Domain.CQS;
-using AutoMapper;
-using Cofoundry.Core;
 
 namespace Cofoundry.Domain
 {
@@ -18,20 +16,17 @@ namespace Cofoundry.Domain
 
         private readonly CofoundryDbContext _dbContext;
         private readonly IQueryExecutor _queryExecutor;
-        private readonly IEnumerable<IPageBlockTypeDataModel> _allPageBlockTypeDataModels;
-        private readonly DynamicDataModelSchemaMapper _dynamicDataModelTypeMapper;
+        private readonly IPageBlockTypeDetailsMapper _pageBlockTypeDetailsMapper;
 
         public GetPageBlockTypeDetailsByIdQueryHandler(
             CofoundryDbContext dbContext,
             IQueryExecutor queryExecutor,
-            IEnumerable<IPageBlockTypeDataModel> allPageBlockTypeDataModels,
-            DynamicDataModelSchemaMapper dynamicDataModelTypeMapper
+            IPageBlockTypeDetailsMapper pageBlockTypeDetailsMapper
             )
         {
             _queryExecutor = queryExecutor;
             _dbContext = dbContext;
-            _allPageBlockTypeDataModels = allPageBlockTypeDataModels;
-            _dynamicDataModelTypeMapper = dynamicDataModelTypeMapper;
+            _pageBlockTypeDetailsMapper = pageBlockTypeDetailsMapper;
         }
 
         #endregion
@@ -40,40 +35,22 @@ namespace Cofoundry.Domain
 
         public async Task<PageBlockTypeDetails> ExecuteAsync(GetByIdQuery<PageBlockTypeDetails> query, IExecutionContext executionContext)
         {
-            var result = await GetPageBlockTypeById(query.Id);
-            if (result == null) return null;
+            var blockTypeSummary = await GetPageBlockTypeById(query.Id);
+            if (blockTypeSummary == null) return null;
 
-            var dataModelType = GetPageBlockDataModelType(result);
-
-            _dynamicDataModelTypeMapper.Map(result, dataModelType);
+            var result = _pageBlockTypeDetailsMapper.Map(blockTypeSummary);
 
             return result;
         }
 
-        private async Task<PageBlockTypeDetails> GetPageBlockTypeById(int id)
+        private async Task<PageBlockTypeSummary> GetPageBlockTypeById(int id)
         {
             var allBlockTypes = await _queryExecutor.GetAllAsync<PageBlockTypeSummary>();
 
             var blockTypeTypeSummary = allBlockTypes
                 .SingleOrDefault(t => t.PageBlockTypeId == id);
 
-            return Mapper.Map<PageBlockTypeDetails>(blockTypeTypeSummary);
-        }
-
-        private Type GetPageBlockDataModelType(PageBlockTypeDetails blockTypeDetails)
-        {
-            var dataModelName = blockTypeDetails.FileName + "DataModel";
-
-            var dataModel = _allPageBlockTypeDataModels
-                .Select(m => m.GetType())
-                .Where(m => m.Name == dataModelName)
-                .SingleOrDefault();
-
-            var blockType = Mapper.Map<PageBlockTypeDetails>(blockTypeDetails);
-
-            EntityNotFoundException.ThrowIfNull(dataModel, dataModelName);
-
-            return dataModel;
+            return blockTypeTypeSummary;
         }
 
         #endregion

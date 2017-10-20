@@ -23,6 +23,8 @@ namespace Cofoundry.Domain.Bootstrap
                 .RegisterType<IPageRenderDetailsMapper, PageRenderDetailsMapper>()
                 .RegisterType<IPageGroupSummaryMapper, PageGroupSummaryMapper>()
                 .RegisterType<IPageSummaryMapper, PageSummaryMapper>()
+                .RegisterType<IOpenGraphDataMapper, OpenGraphDataMapper>()
+                .RegisterType<IPageVersionSummaryMapper, PageVersionSummaryMapper>()
                  ; 
         }
     }

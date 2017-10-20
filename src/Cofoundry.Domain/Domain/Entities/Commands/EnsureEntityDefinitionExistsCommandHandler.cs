@@ -6,9 +6,6 @@ using System.Threading.Tasks;
 using Cofoundry.Domain.Data;
 using Cofoundry.Domain.CQS;
 using Microsoft.EntityFrameworkCore;
-using Cofoundry.Core.Validation;
-using AutoMapper;
-using Cofoundry.Core.MessageAggregator;
 
 namespace Cofoundry.Domain
 {

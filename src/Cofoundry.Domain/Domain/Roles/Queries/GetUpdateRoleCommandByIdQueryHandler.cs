@@ -3,10 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
 using Cofoundry.Domain.CQS;
-using Cofoundry.Domain.Data;
-using AutoMapper;
 
 namespace Cofoundry.Domain
 {
@@ -32,7 +29,20 @@ namespace Cofoundry.Domain
         public async Task<UpdateRoleCommand> ExecuteAsync(GetByIdQuery<UpdateRoleCommand> query, IExecutionContext executionContext)
         {
             var role = await _internalRoleRepository.GetByIdAsync(query.Id);
-            var command = Mapper.Map<UpdateRoleCommand>(role);
+            var command = new UpdateRoleCommand()
+            {
+                RoleId = role.RoleId,
+                Title = role.Title
+            };
+
+            command.Permissions = role
+                .Permissions
+                .Select(p => new PermissionCommandData()
+                {
+                    EntityDefinitionCode = p.GetUniqueCode(),
+                    PermissionCode = p is IEntityPermission ? ((IEntityPermission)p).EntityDefinition.EntityDefinitionCode : null
+                })
+                .ToArray();
 
             return command;
         }

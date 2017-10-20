@@ -20,7 +20,7 @@ namespace Cofoundry.Domain
 
         private readonly CofoundryDbContext _dbContext;
         private readonly IQueryExecutor _queryExecutor;
-        private readonly IPageRenderDetailsMapper _pageMapper;
+        private readonly IPageRenderDetailsMapper _pageRenderDetailsMapper;
         private readonly IEntityVersionPageBlockMapper _entityVersionPageBlockMapper;
 
         public GetPageRenderDetailsByIdQueryHandler(
@@ -32,7 +32,7 @@ namespace Cofoundry.Domain
         {
             _dbContext = dbContext;
             _queryExecutor = queryExecutor;
-            _pageMapper = pageMapper;
+            _pageRenderDetailsMapper = pageMapper;
             _entityVersionPageBlockMapper = entityVersionPageBlockMapper;
         }
 
@@ -44,9 +44,9 @@ namespace Cofoundry.Domain
         {
             var dbPage = await QueryPage(query).FirstOrDefaultAsync();
             if (dbPage == null) return null;
-            var page = _pageMapper.Map(dbPage);
+            var page = _pageRenderDetailsMapper.Map(dbPage);
 
-            page.PageRoute = await _queryExecutor.GetByIdAsync<PageRoute>(page.PageId, executionContext);
+            page.PageRoute = await _queryExecutor.GetByIdAsync<PageRoute>(dbPage.PageId, executionContext);
 
             var dbPageBlocks = await QueryPageBlocks(page).ToListAsync();
             var allBlockTypes = await _queryExecutor.GetAllAsync<PageBlockTypeSummary>(executionContext);
@@ -62,6 +62,7 @@ namespace Cofoundry.Domain
                 .PageVersions
                 .AsNoTracking()
                 .Include(v => v.Page)
+                .Include(v => v.OpenGraphImageAsset)
                 .Include(v => v.PageTemplate)
                 .ThenInclude(t => t.PageTemplateRegions)
                 .Where(v => v.PageId == query.PageId && !v.IsDeleted);

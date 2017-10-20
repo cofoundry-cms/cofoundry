@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -15,12 +14,15 @@ namespace Cofoundry.Domain
         #region constructor
 
         private readonly IQueryExecutor _queryExecutor;
+        private readonly ICustomEntityDefinitionMicroSummaryMapper _customEntityDefinitionMicroSummaryMapper;
 
         public GetCustomEntityDefinitionMicroSummaryByDisplayModelTypeQueryHandler(
-            IQueryExecutor queryExecutor
+            IQueryExecutor queryExecutor,
+            ICustomEntityDefinitionMicroSummaryMapper customEntityDefinitionMicroSummaryMapper
             )
         {
             _queryExecutor = queryExecutor;
+            _customEntityDefinitionMicroSummaryMapper = customEntityDefinitionMicroSummaryMapper;
         }
 
         #endregion
@@ -43,7 +45,7 @@ namespace Cofoundry.Domain
 
             var definition = allDefinitions.FirstOrDefault(d => d.DataModelType == dataModelType);
 
-            var microSummary = Mapper.Map<CustomEntityDefinitionMicroSummary>(definition);
+            var microSummary = _customEntityDefinitionMicroSummaryMapper.Map(definition);
 
             return microSummary;
         }

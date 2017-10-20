@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 using Cofoundry.Domain.Data;
 using Cofoundry.Domain.CQS;
 using Microsoft.EntityFrameworkCore;
-using AutoMapper;
 using Cofoundry.Core;
 
 namespace Cofoundry.Domain
@@ -23,6 +22,7 @@ namespace Cofoundry.Domain
         private readonly IPageVersionBlockModelMapper _pageVersionBlockModelMapper;
         private readonly IEntityVersionPageBlockMapper _entityVersionPageBlockMapper;
         private readonly IPermissionValidationService _permissionValidationService;
+        private readonly IAuditDataMapper _auditDataMapper;
 
         public GetCustomEntityDetailsByIdQueryHandler(
             CofoundryDbContext dbContext,
@@ -30,7 +30,8 @@ namespace Cofoundry.Domain
             IDbUnstructuredDataSerializer dbUnstructuredDataSerializer,
             IPageVersionBlockModelMapper pageVersionBlockModelMapper,
             IEntityVersionPageBlockMapper entityVersionPageBlockMapper,
-            IPermissionValidationService permissionValidationService
+            IPermissionValidationService permissionValidationService,
+            IAuditDataMapper auditDataMapper
             )
         {
             _dbContext = dbContext;
@@ -39,6 +40,7 @@ namespace Cofoundry.Domain
             _pageVersionBlockModelMapper = pageVersionBlockModelMapper;
             _entityVersionPageBlockMapper = entityVersionPageBlockMapper;
             _permissionValidationService = permissionValidationService;
+            _auditDataMapper = auditDataMapper;
         }
 
         #endregion
@@ -61,10 +63,7 @@ namespace Cofoundry.Domain
         {
             if (dbVersion == null) return null;
 
-            var entity = Mapper.Map<CustomEntityDetails>(dbVersion.CustomEntity);
-            entity.LatestVersion = Mapper.Map<CustomEntityVersionDetails>(dbVersion);
-            entity.HasDraft = entity.LatestVersion.WorkFlowStatus == WorkFlowStatus.Draft;
-            entity.IsPublished = entity.LatestVersion.WorkFlowStatus == WorkFlowStatus.Published;
+            var entity = MapInitialData(dbVersion);
 
             if (!entity.IsPublished)
             {
@@ -73,10 +72,39 @@ namespace Cofoundry.Domain
                     .AnyAsync(v => v.CustomEntityId == query.Id && v.WorkFlowStatusId == (int)WorkFlowStatus.Published);
             }
 
+            if (dbVersion.CustomEntity.LocaleId.HasValue)
+            {
+                entity.Locale = await _queryExecutor.GetByIdAsync<ActiveLocale>(dbVersion.CustomEntity.LocaleId.Value, executionContext);
+            }
+
             // Custom Mapping
             await MapDataModelAsync(query, dbVersion, entity.LatestVersion);
-            
+
             await MapPages(dbVersion, entity, executionContext);
+
+            return entity;
+        }
+
+        private CustomEntityDetails MapInitialData(CustomEntityVersion dbVersion)
+        {
+            var entity = new CustomEntityDetails()
+            {
+                CustomEntityId = dbVersion.CustomEntity.CustomEntityId,
+                UrlSlug = dbVersion.CustomEntity.UrlSlug                
+            };
+
+            entity.AuditData = _auditDataMapper.MapCreateAuditData(dbVersion.CustomEntity);
+
+            entity.LatestVersion = new CustomEntityVersionDetails()
+            {
+                CustomEntityVersionId = dbVersion.CustomEntityVersionId,
+                Title = dbVersion.Title,
+                WorkFlowStatus = (WorkFlowStatus)dbVersion.WorkFlowStatusId
+            };
+
+            entity.LatestVersion.AuditData = _auditDataMapper.MapCreateAuditData(dbVersion);
+            entity.HasDraft = entity.LatestVersion.WorkFlowStatus == WorkFlowStatus.Draft;
+            entity.IsPublished = entity.LatestVersion.WorkFlowStatus == WorkFlowStatus.Published;
 
             return entity;
         }
@@ -176,8 +204,6 @@ namespace Cofoundry.Domain
                 .Include(v => v.CustomEntityVersionPageBlocks)
                 .Include(v => v.CustomEntity)
                 .ThenInclude(e => e.Creator)
-                .Include(v => v.CustomEntity)
-                .ThenInclude(e => e.Locale)
                 .Include(v => v.Creator)
                 .AsNoTracking()
                 .Where(v => v.CustomEntityId == id && (v.CustomEntity.LocaleId == null || v.CustomEntity.Locale.IsActive))

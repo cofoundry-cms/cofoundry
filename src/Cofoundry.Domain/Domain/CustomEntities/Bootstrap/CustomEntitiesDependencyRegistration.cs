@@ -15,7 +15,7 @@ namespace Cofoundry.Domain
 
             container
                 .RegisterType<ICustomEntityDisplayModelMapper, CustomEntityDisplayModelMapper>()
-                .RegisterType<CustomEntityDataModelMapper>()
+                .RegisterType<ICustomEntityDataModelMapper, CustomEntityDataModelMapper>()
                 .RegisterType<ICustomEntityCache, CustomEntityCache>()
                 .RegisterType<ICustomEntityRepository, CustomEntityRepository>()
                 .RegisterAll<ICustomEntityRoutingRule>(singletonOptions)
@@ -25,6 +25,9 @@ namespace Cofoundry.Domain
                 .RegisterInstance<ICustomEntityDefinitionRepository, CustomEntityDefinitionRepository>()
                 .RegisterType<ICustomEntityRenderSummaryMapper, CustomEntityRenderSummaryMapper>()
                 .RegisterType<ICustomEntitySummaryMapper, CustomEntitySummaryMapper>()
+                .RegisterType<ICustomEntityDefinitionMicroSummaryMapper, CustomEntityDefinitionMicroSummaryMapper>()
+                .RegisterType<ICustomEntityDefinitionSummaryMapper, CustomEntityDefinitionSummaryMapper>()
+                .RegisterType<ICustomEntityRouteMapper, CustomEntityRouteMapper>()
                 ;
         }
     }

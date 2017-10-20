@@ -5,9 +5,6 @@ using System.Threading.Tasks;
 using Cofoundry.Domain.Data;
 using Cofoundry.Domain.CQS;
 using Microsoft.EntityFrameworkCore;
-using AutoMapper.QueryableExtensions;
-using Cofoundry.Core;
-using AutoMapper;
 
 namespace Cofoundry.Domain
 {

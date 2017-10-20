@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace Cofoundry.Domain
 {
-    public class DynamicDataModelSchemaMapper
+    public class DynamicDataModelSchemaMapper : IDynamicDataModelSchemaMapper
     {
         private readonly IModelMetadataProvider _modelMetadataProvider;
 

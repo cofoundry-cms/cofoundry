@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 using Cofoundry.Domain.Data;
 using Cofoundry.Domain.CQS;
 using Microsoft.EntityFrameworkCore;
-using AutoMapper;
 using Cofoundry.Core;
 using System.Reflection;
 
@@ -25,20 +24,23 @@ namespace Cofoundry.Domain
 
         private readonly CofoundryDbContext _dbContext;
         private readonly ICustomEntityCache _customEntityCache;
-        private readonly CustomEntityDataModelMapper _customEntityDataModelMapper;
+        private readonly ICustomEntityRouteMapper _customEntityRouteMapper;
         private readonly ICustomEntityDefinitionRepository _customEntityDefinitionRepository;
+        private readonly IQueryExecutor _queryExecutor;
 
         public GetCustomEntityRoutesByDefinitionCodeQueryHandler(
             CofoundryDbContext dbContext,
             ICustomEntityCache customEntityCache,
-            CustomEntityDataModelMapper customEntityDataModelMapper,
-            ICustomEntityDefinitionRepository customEntityDefinitionRepository
+            ICustomEntityRouteMapper customEntityRouteMapper,
+            ICustomEntityDefinitionRepository customEntityDefinitionRepository,
+            IQueryExecutor queryExecutor
             )
         {
             _dbContext = dbContext;
             _customEntityCache = customEntityCache;
+            _customEntityRouteMapper = customEntityRouteMapper;
             _customEntityDefinitionRepository = customEntityDefinitionRepository;
-            _customEntityDataModelMapper = customEntityDataModelMapper;
+            _queryExecutor = queryExecutor;
         }
 
         #endregion
@@ -48,7 +50,10 @@ namespace Cofoundry.Domain
             return await _customEntityCache.GetOrAddAsync(query.CustomEntityDefinitionCode, async () =>
             {
                 var dbRoutes = await GetDbQuery(query).ToListAsync();
-                return MapRoutes(query, dbRoutes);;
+                var allLocales = (await _queryExecutor.GetAllAsync<ActiveLocale>())
+                    .ToDictionary(l => l.LocaleId);
+
+                return MapRoutes(query, dbRoutes, allLocales);;
             });
         }
 
@@ -62,7 +67,11 @@ namespace Cofoundry.Domain
                     .Where(e => e.CustomEntityDefinitionCode == query.CustomEntityDefinitionCode && (e.LocaleId == null || e.Locale.IsActive));
         }
 
-        private CustomEntityRoute[] MapRoutes(GetCustomEntityRoutesByDefinitionCodeQuery query, List<CustomEntity> dbRoutes)
+        private CustomEntityRoute[] MapRoutes(
+            GetCustomEntityRoutesByDefinitionCodeQuery query, 
+            List<CustomEntity> dbRoutes,
+            Dictionary<int, ActiveLocale> allLocales
+            )
         {
             var definition = _customEntityDefinitionRepository.GetByCode(query.CustomEntityDefinitionCode);
             EntityNotFoundException.ThrowIfNull(definition, query.CustomEntityDefinitionCode);
@@ -72,34 +81,28 @@ namespace Cofoundry.Domain
                 .GetTypeInfo()
                 .GetProperties()
                 .Where(prop => prop.IsDefined(typeof(CustomEntityRouteDataAttribute), false));
+            
+            var routes = dbRoutes
+                .Select(r => MapRoute(r, routingDataProperties, allLocales))
+                .ToArray();
 
-            var routes = new List<CustomEntityRoute>(dbRoutes.Count);
+            return routes;
+        }
 
-            foreach (var dbRoute in dbRoutes)
+        public CustomEntityRoute MapRoute(
+            CustomEntity dbCustomEntity,
+            IEnumerable<PropertyInfo> routingDataProperties,
+            Dictionary<int, ActiveLocale> allLocales
+            )
+        {
+            ActiveLocale locale = null;
+
+            if (dbCustomEntity.LocaleId.HasValue)
             {
-                var route = Mapper.Map<CustomEntityRoute>(dbRoute);
-                var versions = new List<CustomEntityVersionRoute>();
-                route.Versions = versions;
-                routes.Add(route);
-
-                foreach (var dbVersion in dbRoute.CustomEntityVersions)
-                {
-                    var version = Mapper.Map<CustomEntityVersionRoute>(dbVersion);
-                    versions.Add(version);
-
-                    if (routingDataProperties.Any())
-                    {
-                        // Parse additional routing data properties
-                        var model = _customEntityDataModelMapper.Map(query.CustomEntityDefinitionCode, dbVersion.SerializedData);
-                        foreach (var routingDataProperty in routingDataProperties)
-                        {
-                            version.AdditionalRoutingData.Add(routingDataProperty.Name, Convert.ToString(routingDataProperty.GetValue(model)));
-                        }
-                    }
-                }
+                locale = allLocales.GetOrDefault(dbCustomEntity.LocaleId.Value);
             }
 
-            return routes.ToArray();
+            return _customEntityRouteMapper.Map(dbCustomEntity, locale, routingDataProperties);
         }
     }
 }

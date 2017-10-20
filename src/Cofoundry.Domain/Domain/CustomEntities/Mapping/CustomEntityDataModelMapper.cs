@@ -8,7 +8,7 @@ using Cofoundry.Core;
 
 namespace Cofoundry.Domain
 {
-    public class CustomEntityDataModelMapper
+    public class CustomEntityDataModelMapper : ICustomEntityDataModelMapper
     {
         private readonly IEnumerable<ICustomEntityDefinition> _customEntityDefinitions;
         private readonly IDbUnstructuredDataSerializer _dbUnstructuredDataSerializer;

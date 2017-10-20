@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 using Cofoundry.Domain.Data;
 using Cofoundry.Domain.CQS;
 using Microsoft.EntityFrameworkCore;
-using AutoMapper;
 
 namespace Cofoundry.Domain
 {
@@ -58,7 +57,13 @@ namespace Cofoundry.Domain
 
         private UpdateCustomEntityVersionPageBlockCommand Map(CustomEntityVersionPageBlock dbPageBlock, string pageBlockTypeFileName)
         {
-            var result = Mapper.Map<UpdateCustomEntityVersionPageBlockCommand>(dbPageBlock);
+            var result = new UpdateCustomEntityVersionPageBlockCommand()
+            {
+                CustomEntityVersionPageBlockId = dbPageBlock.CustomEntityVersionPageBlockId,
+                PageBlockTypeId = dbPageBlock.PageBlockTypeId,
+                PageBlockTypeTemplateId = dbPageBlock.PageBlockTypeTemplateId
+            };
+                
             result.DataModel = _pageVersionBlockModelMapper.MapDataModel(pageBlockTypeFileName, dbPageBlock);
 
             return result;

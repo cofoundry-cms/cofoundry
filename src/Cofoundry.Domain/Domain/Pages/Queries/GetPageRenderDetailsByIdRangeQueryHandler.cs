@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using Cofoundry.Domain.Data;
 using Cofoundry.Domain.CQS;
 using Microsoft.EntityFrameworkCore;
-using AutoMapper;
 using Cofoundry.Core;
 
 namespace Cofoundry.Domain
@@ -72,6 +71,7 @@ namespace Cofoundry.Domain
                 .PageVersions
                 .AsNoTracking()
                 .Include(v => v.Page)
+                .Include(v => v.OpenGraphImageAsset)
                 .Include(v => v.PageTemplate)
                 .ThenInclude(t => t.PageTemplateRegions)
                 .Where(v => query.PageIds.Contains(v.PageId) && !v.IsDeleted)

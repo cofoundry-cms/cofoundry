@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using Cofoundry.Domain.Data;
 using Cofoundry.Domain.CQS;
 using Microsoft.EntityFrameworkCore;
-using AutoMapper;
 
 namespace Cofoundry.Domain
 {
@@ -17,17 +16,17 @@ namespace Cofoundry.Domain
 
         private readonly CofoundryDbContext _dbContext;
         private readonly IQueryExecutor _queryExecutor;
-        private readonly IPageTemplateMicroSummaryMapper _pageTemplateMapper;
+        private readonly IPageVersionSummaryMapper _pageVersionSummaryMapper;
 
         public GetPageVersionSummariesByPageIdQueryHandler(
             CofoundryDbContext dbContext,
             IQueryExecutor queryExecutor,
-            IPageTemplateMicroSummaryMapper pageTemplateMapper
+            IPageVersionSummaryMapper pageVersionSummaryMapper
             )
         {
             _dbContext = dbContext;
             _queryExecutor = queryExecutor;
-            _pageTemplateMapper = pageTemplateMapper;
+            _pageVersionSummaryMapper = pageVersionSummaryMapper;
         }
 
         #endregion
@@ -37,7 +36,9 @@ namespace Cofoundry.Domain
         public async Task<IEnumerable<PageVersionSummary>> ExecuteAsync(GetPageVersionSummariesByPageIdQuery query, IExecutionContext executionContext)
         {
             var dbVersions = await Query(query.PageId).ToListAsync();
-            var versions = Map(dbVersions).ToList();
+            var versions = dbVersions
+                .Select(_pageVersionSummaryMapper.Map)
+                .ToList();
 
             return versions;
         }
@@ -54,17 +55,6 @@ namespace Cofoundry.Domain
                 .OrderByDescending(v => v.WorkFlowStatusId == (int)WorkFlowStatus.Draft)
                 .ThenByDescending(v => v.WorkFlowStatusId == (int)WorkFlowStatus.Published)
                 .ThenByDescending(v => v.CreateDate);
-        }
-
-        private IEnumerable<PageVersionSummary> Map(List<PageVersion> dbVersions)
-        {
-            foreach (var dbVersion in dbVersions)
-            {
-                var version = Mapper.Map<PageVersionSummary>(dbVersion);
-                version.Template = _pageTemplateMapper.Map(dbVersion.PageTemplate);
-
-                yield return version;
-            }
         }
 
         #endregion

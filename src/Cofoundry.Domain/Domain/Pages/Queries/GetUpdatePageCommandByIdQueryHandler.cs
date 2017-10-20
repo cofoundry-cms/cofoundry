@@ -5,9 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Cofoundry.Domain.Data;
 using Cofoundry.Domain.CQS;
-using AutoMapper.QueryableExtensions;
 using Microsoft.EntityFrameworkCore;
-using AutoMapper;
 using Cofoundry.Core;
 
 namespace Cofoundry.Domain
@@ -43,7 +41,16 @@ namespace Cofoundry.Domain
 
             EntityNotFoundException.ThrowIfNull(dbResult, query.Id);
 
-            var command = Mapper.Map<UpdatePageCommand>(dbResult);
+            var command = new UpdatePageCommand()
+            {
+                PageId = dbResult.PageId,
+                Tags = dbResult
+                    .PageTags
+                    .Select(t => t.Tag.TagText)
+                    .OrderBy(t => t)
+                    .ToArray()
+            };
+
             return command;
         }
 

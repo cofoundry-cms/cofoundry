@@ -5,8 +5,6 @@ using System.Text;
 using System.Threading.Tasks;
 using Cofoundry.Domain.Data;
 using Cofoundry.Domain.CQS;
-using AutoMapper;
-using AutoMapper.QueryableExtensions;
 using Microsoft.EntityFrameworkCore;
 
 namespace Cofoundry.Domain
@@ -40,7 +38,19 @@ namespace Cofoundry.Domain
                 .FilterById(query.Id)
                 .SingleOrDefaultAsync();
 
-            var result = Mapper.Map<UpdateDocumentAssetCommand>(dbResult);
+            var result = new UpdateDocumentAssetCommand()
+            {
+                Description = dbResult.Description,
+                DocumentAssetId = dbResult.DocumentAssetId,
+                Title = dbResult.Title
+            };
+
+            result.Tags = dbResult
+                    .DocumentAssetTags
+                    .Select(t => t.Tag.TagText)
+                    .OrderBy(t => t)
+                    .ToArray();
+
             return result;
         }
 

@@ -5,9 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Cofoundry.Domain.Data;
 using Cofoundry.Domain.CQS;
-using AutoMapper.QueryableExtensions;
 using Microsoft.EntityFrameworkCore;
-using AutoMapper;
 
 namespace Cofoundry.Domain
 {
@@ -39,7 +37,7 @@ namespace Cofoundry.Domain
         public async Task<IEnumerable<CustomEntityRenderSummary>> ExecuteAsync(GetCustomEntityRenderSummariesByDefinitionCodeQuery query, IExecutionContext executionContext)
         {
             var dbResults = await Query(query).ToListAsync();
-            var results = await _customEntityRenderSummaryMapper.MapSummariesAsync(dbResults, executionContext);
+            var results = await _customEntityRenderSummaryMapper.MapAsync(dbResults, executionContext);
 
             return results;
         }

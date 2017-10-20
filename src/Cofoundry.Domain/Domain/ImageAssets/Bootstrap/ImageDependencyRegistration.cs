@@ -20,6 +20,7 @@ namespace Cofoundry.Domain.Bootstrap
                 .RegisterType<IImageAssetSummaryMapper, ImageAssetSummaryMapper>()
                 .RegisterType<IImageAssetDetailsMapper, ImageAssetDetailsMapper>()
                 .RegisterType<IImageAssetRenderDetailsMapper, ImageAssetRenderDetailsMapper>()
+                .RegisterType<IImageAssetFileMapper, ImageAssetFileMapper>()
                 ;
         }
     }

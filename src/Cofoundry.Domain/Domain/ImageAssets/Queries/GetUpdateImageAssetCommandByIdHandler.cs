@@ -5,8 +5,6 @@ using System.Text;
 using System.Threading.Tasks;
 using Cofoundry.Domain.Data;
 using Cofoundry.Domain.CQS;
-using AutoMapper;
-using AutoMapper.QueryableExtensions;
 using Microsoft.EntityFrameworkCore;
 
 namespace Cofoundry.Domain
@@ -40,7 +38,19 @@ namespace Cofoundry.Domain
                 .FilterById(query.Id)
                 .SingleOrDefaultAsync();
 
-            var result = Mapper.Map<UpdateImageAssetCommand>(dbResult);
+            var result = new UpdateImageAssetCommand()
+            {
+                ImageAssetId = dbResult.ImageAssetId,
+                DefaultAnchorLocation = dbResult.DefaultAnchorLocation,
+                Title = dbResult.FileDescription
+            };
+
+            result.Tags = dbResult
+                    .ImageAssetTags
+                    .Select(t => t.Tag.TagText)
+                    .OrderBy(t => t)
+                    .ToArray();
+
             return result;
         }
 

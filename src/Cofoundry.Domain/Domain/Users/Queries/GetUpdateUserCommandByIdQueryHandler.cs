@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -14,17 +13,14 @@ namespace Cofoundry.Domain
         , ILoggedInPermissionCheckHandler
     {
         private readonly CofoundryDbContext _dbContext;
-        private readonly IMapper _mapper;
         private readonly IPermissionValidationService _permissionValidationService;
 
         public GetUpdateUserCommandByIdQueryHandler(
             CofoundryDbContext dbContext,
-            IMapper mapper,
             IPermissionValidationService permissionValidationService
             )
         {
             _dbContext = dbContext;
-            _mapper = mapper;
             _permissionValidationService = permissionValidationService;
         }
 
@@ -48,7 +44,17 @@ namespace Cofoundry.Domain
                 _permissionValidationService.EnforceCurrentUserOrHasPermission<NonCofoundryUserReadPermission>(query.Id, executionContext.UserContext);
             }
 
-            var user = _mapper.Map<UpdateUserCommand>(dbUser);
+            var user = new UpdateUserCommand()
+            {
+                Email = dbUser.Email,
+                FirstName = dbUser.FirstName,
+                IsEmailConfirmed = dbUser.IsEmailConfirmed,
+                LastName = dbUser.LastName,
+                RequirePasswordChange = dbUser.RequirePasswordChange,
+                RoleId = dbUser.RoleId,
+                UserId = dbUser.RoleId,
+                Username = dbUser.Username
+            };
 
             return user;
         }

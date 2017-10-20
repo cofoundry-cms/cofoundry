@@ -22,7 +22,7 @@ namespace Cofoundry.Domain
         /// Maps an EF user record from the db into a UserMicroSummary object. If the
         /// db record is null then null is returned.
         /// </summary>
-        /// <param name="dbUser">User record from the database</param>
+        /// <param name="dbUser">User record from the database.</param>
         public UserMicroSummary Map(User dbUser)
         {
             if (dbUser == null) return null;

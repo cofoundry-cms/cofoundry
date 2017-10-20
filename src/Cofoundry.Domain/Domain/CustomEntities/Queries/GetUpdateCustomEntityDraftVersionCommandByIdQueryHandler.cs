@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 using Cofoundry.Domain.Data;
 using Cofoundry.Domain.CQS;
 using Microsoft.EntityFrameworkCore;
-using AutoMapper;
 using Cofoundry.Core;
 
 namespace Cofoundry.Domain
@@ -51,7 +50,13 @@ namespace Cofoundry.Domain
             if (dbResult == null) return null;
             await _permissionValidationService.EnforceCustomEntityPermissionAsync<CustomEntityReadPermission>(dbResult.CustomEntity.CustomEntityDefinitionCode);
 
-            var command = Mapper.Map<UpdateCustomEntityDraftVersionCommand>(dbResult);
+            var command = new UpdateCustomEntityDraftVersionCommand()
+            {
+                CustomEntityDefinitionCode = dbResult.CustomEntity.CustomEntityDefinitionCode,
+                CustomEntityId = dbResult.CustomEntityId,
+                Title = dbResult.Title
+            };
+
             var definition = await _queryExecutor.GetByIdAsync<CustomEntityDefinitionSummary>(command.CustomEntityDefinitionCode);
             EntityNotFoundException.ThrowIfNull(definition, command.CustomEntityDefinitionCode);
             command.Model = (ICustomEntityDataModel)_dbUnstructuredDataSerializer.Deserialize(dbResult.SerializedData, definition.DataModelType);

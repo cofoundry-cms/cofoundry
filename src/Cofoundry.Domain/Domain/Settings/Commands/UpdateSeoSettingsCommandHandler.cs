@@ -41,7 +41,6 @@ namespace Cofoundry.Domain
 
             _settingCommandHelper.SetSettingProperty(command, c => c.GoogleAnalyticsUAId, allSettings, executionContext);
             _settingCommandHelper.SetSettingProperty(command, c => c.HumansTxt, allSettings, executionContext);
-            _settingCommandHelper.SetSettingProperty(command, c => c.MetaKeywords, allSettings, executionContext);
             _settingCommandHelper.SetSettingProperty(command, c => c.RobotsTxt, allSettings, executionContext);
             _settingCommandHelper.SetSettingProperty(command, c => c.BingWebmasterToolsApiKey, allSettings, executionContext);
 

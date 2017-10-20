@@ -1,13 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Cofoundry.Domain.Data;
 using Cofoundry.Domain.CQS;
-using AutoMapper.QueryableExtensions;
-using System.IO;
 
 namespace Cofoundry.Domain
 {

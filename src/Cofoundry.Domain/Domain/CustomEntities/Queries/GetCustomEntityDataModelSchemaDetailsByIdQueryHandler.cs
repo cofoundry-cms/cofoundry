@@ -15,13 +15,13 @@ namespace Cofoundry.Domain
 
         private readonly CofoundryDbContext _dbContext;
         private readonly IQueryExecutor _queryExecutor;
-        private readonly DynamicDataModelSchemaMapper _dynamicDataModelTypeMapper;
+        private readonly IDynamicDataModelSchemaMapper _dynamicDataModelTypeMapper;
         private readonly ICustomEntityDefinitionRepository _customEntityDefinitionRepository;
 
         public GetCustomEntityDataModelSchemaDetailsByIdQueryHandler(
             CofoundryDbContext dbContext,
             IQueryExecutor queryExecutor,
-            DynamicDataModelSchemaMapper dynamicDataModelTypeMapper,
+            IDynamicDataModelSchemaMapper dynamicDataModelTypeMapper,
             ICustomEntityDefinitionRepository customEntityDefinitionRepository
             )
         {

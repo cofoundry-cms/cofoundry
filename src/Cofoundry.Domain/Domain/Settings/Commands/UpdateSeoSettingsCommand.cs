@@ -15,9 +15,6 @@ namespace Cofoundry.Domain
         [MaxLength(50)]
         public string GoogleAnalyticsUAId { get; set; }
 
-        [MaxLength(160)]
-        public string MetaKeywords { get; set; }
-
         public string RobotsTxt { get; set; }
 
         public string HumansTxt { get; set; }

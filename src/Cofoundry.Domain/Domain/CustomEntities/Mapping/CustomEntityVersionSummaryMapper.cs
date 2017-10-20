@@ -23,7 +23,7 @@ namespace Cofoundry.Domain
         /// Maps an EF CustomEntityVersion record from the db into a CustomEntityVersionSummary 
         /// object. If the db record is null then null is returned.
         /// </summary>
-        /// <param name="dbVersion">CustomEntityVersion record from the database</param>
+        /// <param name="dbVersion">CustomEntityVersion record from the database.</param>
         public CustomEntityVersionSummary Map(CustomEntityVersion dbVersion)
         {
             if (dbVersion == null) return null;

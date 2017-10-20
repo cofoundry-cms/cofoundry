@@ -5,10 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Cofoundry.Domain.Data;
 using Cofoundry.Domain.CQS;
-using AutoMapper.QueryableExtensions;
-using Cofoundry.Core.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
-using AutoMapper;
 using Cofoundry.Core;
 
 namespace Cofoundry.Domain
@@ -22,16 +19,22 @@ namespace Cofoundry.Domain
         private readonly CofoundryDbContext _dbContext;
         private readonly IQueryExecutor _queryExecutor;
         private readonly IPageTemplateMicroSummaryMapper _pageTemplateMapper;
+        private readonly IAuditDataMapper _auditDataMapper;
+        private readonly IOpenGraphDataMapper _openGraphDataMapper;
 
         public GetPageDetailsByIdQueryHandler(
             CofoundryDbContext dbContext,
             IQueryExecutor queryExecutor,
-            IPageTemplateMicroSummaryMapper pageTemplateMapper
+            IPageTemplateMicroSummaryMapper pageTemplateMapper,
+            IAuditDataMapper auditDataMapper,
+            IOpenGraphDataMapper openGraphDataMapper
             )
         {
             _dbContext = dbContext;
             _queryExecutor = queryExecutor;
             _pageTemplateMapper = pageTemplateMapper;
+            _auditDataMapper = auditDataMapper;
+            _openGraphDataMapper = openGraphDataMapper;
         }
 
         #endregion
@@ -64,11 +67,27 @@ namespace Cofoundry.Domain
             PageRoute pageRoute
             )
         {
-            var page = Mapper.Map<PageDetails>(dbPageVersion.Page);
-            Mapper.Map(dbPageVersion, page);
-
-            // Custom Mapping
+            var page = new PageDetails();
+            page.PageId = dbPageVersion.PageId;
             page.PageRoute = pageRoute;
+            page.AuditData = _auditDataMapper.MapCreateAuditData(dbPageVersion.Page);
+            page.Tags = dbPageVersion
+                .Page
+                .PageTags
+                .Select(t => t.Tag.TagText)
+                .OrderBy(t => t)
+                .ToList();
+
+            page.LatestVersion = new PageVersionDetails()
+            {
+                MetaDescription = dbPageVersion.MetaDescription,
+                PageVersionId = dbPageVersion.PageVersionId,
+                ShowInSiteMap = !dbPageVersion.ExcludeFromSitemap,
+                Title = dbPageVersion.Title,
+                WorkFlowStatus = (WorkFlowStatus)dbPageVersion.WorkFlowStatusId
+            };
+
+            page.LatestVersion.OpenGraph = _openGraphDataMapper.Map(dbPageVersion);
             page.LatestVersion.Template = _pageTemplateMapper.Map(dbPageVersion.PageTemplate);
             page.LatestVersion.Regions = regions;
 

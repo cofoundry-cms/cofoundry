@@ -18,6 +18,7 @@ namespace Cofoundry.Domain.Bootstrap
                 .RegisterType<IPageBlockTypeViewFileLocator, PageBlockTypeViewFileLocator>()
                 .RegisterType<IPageBlockTypeFileNameFormatter, PageBlockTypeFileNameFormatter>()
                 .RegisterType<IPageBlockTypeSummaryMapper, PageBlockTypeSummaryMapper>()
+                .RegisterType<IPageBlockTypeDetailsMapper, PageBlockTypeDetailsMapper>()
                 .RegisterAll<IPageBlockTypeDataModel>()
                 .RegisterAllGenericImplementations(typeof(IPageBlockTypeDisplayModelMapper<>))
                 .RegisterAll<IPageBlockTypeViewLocationRegistration>()

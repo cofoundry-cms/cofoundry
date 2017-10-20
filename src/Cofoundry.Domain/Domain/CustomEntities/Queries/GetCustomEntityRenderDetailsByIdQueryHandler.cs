@@ -5,9 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Cofoundry.Domain.Data;
 using Cofoundry.Domain.CQS;
-using AutoMapper.QueryableExtensions;
 using Microsoft.EntityFrameworkCore;
-using AutoMapper;
 
 namespace Cofoundry.Domain
 {
@@ -18,14 +16,14 @@ namespace Cofoundry.Domain
         #region constructor
 
         private readonly CofoundryDbContext _dbContext;
-        private readonly CustomEntityDataModelMapper _customEntityDataModelMapper;
+        private readonly ICustomEntityDataModelMapper _customEntityDataModelMapper;
         private readonly IEntityVersionPageBlockMapper _entityVersionPageBlockMapper;
         private readonly IPermissionValidationService _permissionValidationService;
         private readonly IQueryExecutor _queryExecutor;
 
         public GetCustomEntityRenderDetailsByIdQueryHandler(
             CofoundryDbContext dbContext,
-            CustomEntityDataModelMapper customEntityDataModelMapper,
+            ICustomEntityDataModelMapper customEntityDataModelMapper,
             IEntityVersionPageBlockMapper entityVersionPageBlockMapper,
             IPermissionValidationService permissionValidationService,
             IQueryExecutor queryExecutor
@@ -46,6 +44,11 @@ namespace Cofoundry.Domain
         {
             var dbResult = await QueryCustomEntity(query).FirstOrDefaultAsync();
             var entity = await MapCustomEntityAsync(dbResult);
+
+            if (dbResult.CustomEntity.LocaleId.HasValue)
+            {
+                entity.Locale = await _queryExecutor.GetByIdAsync<ActiveLocale>(dbResult.CustomEntity.LocaleId.Value, executionContext);
+            }
 
             entity.Regions = await QueryRegions(query).ToListAsync();
             var dbPageBlocks = await QueryPageBlocks(entity).ToListAsync();
@@ -85,9 +88,20 @@ namespace Cofoundry.Domain
         {
             await _permissionValidationService.EnforceCustomEntityPermissionAsync<CustomEntityReadPermission>(dbResult.CustomEntity.CustomEntityDefinitionCode);
 
-            var entity = Mapper.Map<CustomEntityRenderDetails>(dbResult);
-            entity.Model = _customEntityDataModelMapper.Map(dbResult.CustomEntity.CustomEntityDefinitionCode, dbResult.SerializedData);
+            var entity = new CustomEntityRenderDetails()
+            {
+                CreateDate = dbResult.CreateDate,
+                CustomEntityDefinitionCode = dbResult.CustomEntity.CustomEntityDefinitionCode,
+                CustomEntityId = dbResult.CustomEntityId,
+                CustomEntityVersionId = dbResult.CustomEntityVersionId,
+                Ordering = dbResult.CustomEntity.Ordering,
+                Title = dbResult.Title,
+                UrlSlug = dbResult.CustomEntity.UrlSlug,
+                WorkFlowStatus = (WorkFlowStatus)dbResult.WorkFlowStatusId
+            };
 
+            entity.Model = _customEntityDataModelMapper.Map(dbResult.CustomEntity.CustomEntityDefinitionCode, dbResult.SerializedData);
+            
             return entity;
         }
 
@@ -97,7 +111,6 @@ namespace Cofoundry.Domain
                 .CustomEntityVersions
                 .AsNoTracking()
                 .Include(e => e.CustomEntity)
-                .ThenInclude(e => e.Locale)
                 .FilterByCustomEntityId(query.CustomEntityId)
                 .FilterByWorkFlowStatusQuery(query.WorkFlowStatus, query.CustomEntityVersionId);
         }

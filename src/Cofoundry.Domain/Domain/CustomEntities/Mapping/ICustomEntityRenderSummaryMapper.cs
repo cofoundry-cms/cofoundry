@@ -13,8 +13,20 @@ namespace Cofoundry.Domain
     /// </summary>
     public interface ICustomEntityRenderSummaryMapper
     {
-        Task<CustomEntityRenderSummary> MapSummaryAsync(CustomEntityVersion dbResult, IExecutionContext executionContext);
+        /// <summary>
+        /// Maps a collection of EF CustomEntityVersion record from the db into CustomEntityRenderSummary 
+        /// objects.
+        /// </summary>
+        /// <param name="dbResults">CustomEntityVersion records from the database.</param>
+        /// <param name="executionContext">Context to run any sub queries under.</param>
+        Task<CustomEntityRenderSummary> MapAsync(CustomEntityVersion dbResult, IExecutionContext executionContext);
 
-        Task<IEnumerable<CustomEntityRenderSummary>> MapSummariesAsync(ICollection<CustomEntityVersion> dbResults, IExecutionContext executionContext);
+        /// <summary>
+        /// Maps an EF CustomEntityVersion record from the db into a CustomEntityRenderSummary 
+        /// object. If the db record is null then null is returned.
+        /// </summary>
+        /// <param name="dbResult">CustomEntityVersion record from the database.</param>
+        /// <param name="executionContext">Context to run any sub queries under.</param>
+        Task<IEnumerable<CustomEntityRenderSummary>> MapAsync(ICollection<CustomEntityVersion> dbResults, IExecutionContext executionContext);
     }
 }

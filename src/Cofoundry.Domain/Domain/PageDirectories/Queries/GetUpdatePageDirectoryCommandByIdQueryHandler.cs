@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using Cofoundry.Domain.Data;
 using Cofoundry.Domain.CQS;
 using Microsoft.EntityFrameworkCore;
-using AutoMapper;
 using Cofoundry.Core;
 
 namespace Cofoundry.Domain
@@ -39,7 +38,19 @@ namespace Cofoundry.Domain
 
             EntityNotFoundException.ThrowIfNull(dbResult, query.Id);
 
-            var command = Mapper.Map<UpdatePageDirectoryCommand>(dbResult);
+            if (!dbResult.ParentPageDirectoryId.HasValue)
+            {
+                throw new NotPermittedException("The root directory cannot be updated.");
+            }
+
+            var command = new UpdatePageDirectoryCommand()
+            {
+                Name = dbResult.Name,
+                PageDirectoryId = dbResult.PageDirectoryId,
+                ParentPageDirectoryId = dbResult.ParentPageDirectoryId.Value,
+                UrlPath = dbResult.UrlPath
+            };
+
             return command;
         }
 

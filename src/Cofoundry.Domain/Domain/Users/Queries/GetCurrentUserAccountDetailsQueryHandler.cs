@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using AutoMapper.QueryableExtensions;
 using Cofoundry.Domain.Data;
 using Cofoundry.Domain.CQS;
 

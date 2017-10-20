@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 using Cofoundry.Domain.Data;
 using Cofoundry.Domain.CQS;
 using Microsoft.EntityFrameworkCore;
-using AutoMapper;
 
 namespace Cofoundry.Domain
 {
@@ -43,7 +42,7 @@ namespace Cofoundry.Domain
 
             await _permissionValidationService.EnforceCustomEntityPermissionAsync<CustomEntityReadPermission>(dbResult.CustomEntity.CustomEntityDefinitionCode);
 
-            var result = await _customEntityRenderSummaryMapper.MapSummaryAsync(dbResult, executionContext);
+            var result = await _customEntityRenderSummaryMapper.MapAsync(dbResult, executionContext);
 
             return result;
         }

@@ -2,9 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using System.ComponentModel.DataAnnotations;
-using AutoMapper;
-using AutoMapper.QueryableExtensions;
 using Cofoundry.Core;
 using Cofoundry.Domain.CQS;
 using Cofoundry.Domain.Data;
@@ -43,7 +40,7 @@ namespace Cofoundry.Domain
         public async Task<PagedQueryResult<CustomEntityRenderSummary>> ExecuteAsync(SearchCustomEntityRenderSummariesQuery query, IExecutionContext executionContext)
         {
             var dbPagedResult = await GetQueryAsync(query);
-            var results = await _customEntityRenderSummaryMapper.MapSummariesAsync(dbPagedResult.Items, executionContext);
+            var results = await _customEntityRenderSummaryMapper.MapAsync(dbPagedResult.Items, executionContext);
 
             return dbPagedResult.ChangeType(results);
         }
