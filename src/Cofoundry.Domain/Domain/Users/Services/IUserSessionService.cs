@@ -22,19 +22,32 @@ namespace Cofoundry.Domain
         int? GetCurrentUserId();
 
         /// <summary>
-        /// Assigns the specified UserId to the current session.
+        /// Gets the UserId of the currently logged in user for a specific UserArea,
+        /// regardless of the ambient authentication scheme. Useful in multi-userarea
+        /// scenarios where you need to ignore the ambient user and check for permissions 
+        /// against a specific user area.
+        /// </summary>
+        /// <param name="userAreaCode">The unique identifying code fo the user area to check for.</param>
+        Task<int?> GetUserIdByUserAreaCodeAsync(string userAreaCode);
+
+        /// <summary>
+        /// Logs the specified UserId into the current session.
         /// </summary>
         /// <param name="userId">UserId belonging to the owner of the current session.</param>
         /// <param name="rememberUser">
         /// True if the session should last indefinately; false if the 
         /// session should close after a timeout period.
         /// </param>
-        Task SetCurrentUserIdAsync(string userAreaDefinitionCode, int userId, bool rememberUser);
+        Task LogUserInAsync(string userAreaDefinitionCode, int userId, bool rememberUser);
 
         /// <summary>
-        /// Abandons the current session and removes the users
-        /// login cookie
+        /// Logs the user out of the specified user area.
         /// </summary>
-        Task AbandonAsync();
+        Task LogUserOutAsync(string userAreaDefinitionCode);
+
+        /// <summary>
+        /// Logs the user out of all user areas.
+        /// </summary>
+        Task LogUserOutOfAllUserAreasAsync();
     }
 }

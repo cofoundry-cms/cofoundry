@@ -69,10 +69,8 @@ namespace Cofoundry.Web.Admin
             var path = httpContext.Request.Path;
 
             var canShowSiteViewer =
-                // Is authenticated in some way
-                httpContext.User.Identities.Any()
                 // We have an exsting filter to override
-                && filterContext.Result != null
+                filterContext.Result != null
                 // Is a get request
                 && httpContext.Request.Method == "GET"
                 // Isn't an ajax request
@@ -90,7 +88,8 @@ namespace Cofoundry.Web.Admin
 
         private async Task<IUserContext> GetCofoundryUserAsync()
         {
-            var userContext = await _userContextService.GetCurrentContextAsync();
+            // The ambient auth scheme may not be for CofoundryAdmin so make sure we get 
+            var userContext = await _userContextService.GetCurrentContextByUserAreaAsync(CofoundryAdminUserArea.AreaCode);
 
             if (userContext.IsCofoundryUser())
             {

@@ -8,15 +8,18 @@ using Cofoundry.Web.Identity;
 using Cofoundry.Domain.MailTemplates;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authentication;
 
 namespace Cofoundry.Web.Admin
 {
     [Area(RouteConstants.AdminAreaName)]
     [AdminRoute(AuthRouteLibrary.RoutePrefix)]
+    [AdminAuthorize]
     public class AuthController : Controller
     {
         private static readonly string CONTROLLER_NAME = "Auth";
-
+        private static IUserAreaDefinition USER_AREA = new CofoundryAdminUserArea();
         #region Constructors
 
         private readonly IQueryExecutor _queryExecutor;
@@ -61,18 +64,21 @@ namespace Cofoundry.Web.Admin
 
         #region routes
 
+        [AllowAnonymous]
         [Route("~" + RouteConstants.AdminUrlRoot)]
         public ActionResult DefaultRedirect()
         {
             return RedirectPermanent(_adminRouteLibrary.Auth.Login());
         }
 
+        [AllowAnonymous]
         [Route("")]
         public ActionResult Index(string email)
         {
             return RedirectToActionPermanent(nameof(Login), new { email = email });
         }
 
+        [AllowAnonymous]
         [Route("login")]
         public async Task<ActionResult> Login(string email)
         {
@@ -85,10 +91,12 @@ namespace Cofoundry.Web.Admin
             return View(viewPath, vm);
         }
 
+        [AdminAuthorize]
+        [AllowAnonymous]
         [HttpPost("login")]
         public async Task<ActionResult> Login(string returnUrl, LoginViewModel command)
         {
-            var result = await _authenticationHelper.LogUserInAsync(this, command, new CofoundryAdminUserArea());
+            var result = await _authenticationHelper.LogUserInAsync(this, command, USER_AREA);
 
             if (result.IsAuthenticated && result.RequiresPasswordChange)
             {
@@ -111,10 +119,11 @@ namespace Cofoundry.Web.Admin
         [Route("logout")]
         public async Task<ActionResult> Logout()
         {
-            await _authenticationHelper.LogoutAsync();
+            await _authenticationHelper.LogoutAsync(USER_AREA);
             return Redirect(_adminRouteLibrary.Auth.Login(Request.Query["ReturnUrl"].FirstOrDefault()));
         }
 
+        [AllowAnonymous]
         [Route("forgot-password")]
         public async Task<ActionResult> ForgotPassword(string email)
         {
@@ -125,6 +134,7 @@ namespace Cofoundry.Web.Admin
             return View(viewPath, new ForgotPasswordViewModel { Username = email });
         }
 
+        [AllowAnonymous]
         [HttpPost("forgot-password")]
         public async Task<ViewResult> ForgotPassword(ForgotPasswordViewModel command)
         {
@@ -135,13 +145,14 @@ namespace Cofoundry.Web.Admin
             return View(viewPath, command);
         }
 
+        [AllowAnonymous]
         [Route("reset-password")]
         public async Task<ActionResult> ResetPassword(string i, string t)
         {
             var user = await _userContextService.GetCurrentContextAsync();
             if (user.IsCofoundryUser()) return await GetLoggedInDefaultRedirectActionAsync();
 
-            var request = await _authenticationHelper.IsPasswordRequestValidAsync(this, i, t, new CofoundryAdminUserArea());
+            var request = await _authenticationHelper.IsPasswordRequestValidAsync(this, i, t, USER_AREA);
 
             if (!request.IsValid) return View("ResetPasswordRequestInvalid", request);
 
@@ -153,19 +164,18 @@ namespace Cofoundry.Web.Admin
             return View(viewPath, vm);
         }
 
+        [AllowAnonymous]
         [HttpPost("reset-password")]
         public async Task<ActionResult> ResetPassword(CompletePasswordResetViewModel vm)
         {
             var user = await _userContextService.GetCurrentContextAsync();
             if (user.IsCofoundryUser()) return await GetLoggedInDefaultRedirectActionAsync();
 
-            await _authenticationHelper.CompletePasswordResetAsync(this, vm, new PasswordChangedTemplate(), new CofoundryAdminUserArea());
+            await _authenticationHelper.CompletePasswordResetAsync(this, vm, new PasswordChangedTemplate(), USER_AREA);
             
             return Redirect(_adminRouteLibrary.Auth.Login());
         }
-
-
-        [AdminAuthorize]
+                
         [Route("change-password")]
         public async Task<ActionResult> ChangePassword(string returnUrl)
         {
@@ -175,8 +185,7 @@ namespace Cofoundry.Web.Admin
             var viewPath = ViewPathFormatter.View(CONTROLLER_NAME, nameof(ChangePassword));
             return View(viewPath, new ChangePasswordViewModel());
         }
-
-        [AdminAuthorize]
+        
         [HttpPost("change-password")]
         public async Task<ActionResult> ChangePassword(string returnUrl, ChangePasswordViewModel vm)
         {

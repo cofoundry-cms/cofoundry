@@ -36,6 +36,11 @@ namespace Cofoundry.Domain
         /// Signs the user out of the application and ends the session.
         /// </summary>
         /// <param name="userAreaCode">The code of the user area to log out of.</param>
-        Task SignOutAsync();
+        Task SignOutAsync(string userAreaCode);
+
+        /// <summary>
+        /// Signs the user out of all user areas and ends the session.
+        /// </summary>
+        Task SignOutAllUserAreasAsync();
     }
 }

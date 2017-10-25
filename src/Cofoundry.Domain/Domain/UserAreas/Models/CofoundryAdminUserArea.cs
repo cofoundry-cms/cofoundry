@@ -6,43 +6,29 @@ using System.Threading.Tasks;
 
 namespace Cofoundry.Domain
 {
+    /// <summary>
+    /// Defines the Cofoundry admin panel user area.
+    /// </summary>
     public class CofoundryAdminUserArea : IUserAreaDefinition
     {
+        /// <summary>
+        /// Constant containing the Cofoundry admin area UserAreaCode.
+        /// </summary>
         public static string AreaCode = "COF";
 
-        public string UserAreaCode
-        {
-            get { return AreaCode; }
-        }
+        public string UserAreaCode { get; } = AreaCode;
 
-        public string Name
-        {
-            get { return "Cofoundry"; }
-        }
+        public string Name { get; } = "Cofoundry";
 
-        public bool AllowPasswordLogin
-        {
-            get { return true; }
-        }
+        public bool AllowPasswordLogin { get; } = true;
 
-        public bool UseEmailAsUsername
-        {
-            get { return true; }
-        }
+        public bool UseEmailAsUsername { get; } = true;
 
-        public string LoginPath
-        {
-            get { return "/admin/auth/login"; }
-        }
+        public string LoginPath { get; } = "/admin/auth/login";
 
-        public string LogoutPath
-        {
-            get { return null; }
-        }
-
-        public string AccessDeniedPath
-        {
-            get { return null; }
-        }
+        /// <summary>
+        /// Although this is set to false, it is the fall-back schema if no default schema is set.
+        /// </summary>
+        public bool IsDefaultAuthSchema { get; } = false;
     }
 }

@@ -36,6 +36,8 @@ namespace Cofoundry.Domain
             var dbQuery = _dbContext
                 .ImageAssets
                 .AsNoTracking()
+                .Include(i => i.Creator)
+                .Include(i => i.Updater)
                 .Where(i => !i.IsDeleted);
 
             // Filter by tags

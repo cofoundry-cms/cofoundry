@@ -39,7 +39,18 @@ namespace Cofoundry.Domain
 
         public async Task<IDictionary<int, CustomEntityRenderSummary>> ExecuteAsync(GetCustomEntityRenderSummariesByIdRangeQuery query, IExecutionContext executionContext)
         {
-            var dbResults = await Query(query).ToListAsync();
+            var dbProjectedResult = await Query(query)
+                .Select(v => new {
+                    Version = v,
+                    CustomEntity = v.CustomEntity,
+                    Locale = v.CustomEntity.Locale
+                })
+                .ToListAsync();
+
+            var dbResults = dbProjectedResult
+                .Select(r => r.Version)
+                .ToList();
+
             EnforcePermissions(dbResults, executionContext);
             var results = await _customEntityRenderSummaryMapper.MapAsync(dbResults, executionContext);
 

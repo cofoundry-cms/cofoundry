@@ -4,9 +4,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using Cofoundry.Core;
 using Cofoundry.Domain;
-using System.Security.Principal;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Http.Authentication;
+using Microsoft.AspNetCore.Authentication;
+using System.Security.Claims;
 
 namespace Cofoundry.Web
 {
@@ -17,10 +17,13 @@ namespace Cofoundry.Web
     public class UserSessionService : IUserSessionService
     {
         /// <summary>
-        /// SetAuthCookie doesn't update the HttpContext.Current.User.Identity so we set this
-        /// cache value instead which will last for the lifetime of the request. 
+        /// SignInUSer doesn't always update the HttpContext.Current.User so we set this
+        /// cache value instead which will last for the lifetime of the request. This is only used
+        /// when signing in and isn't otherwise cached.
         /// </summary>
         private int? userIdCache = null;
+        private string cachedUserIdArea = null;
+
         private readonly IHttpContextAccessor _httpContextAccessor;
         private static readonly AuthenticationProperties _defaultAuthenticationProperties = new AuthenticationProperties() { IsPersistent = true };
         private readonly IUserAreaRepository _userAreaRepository;
@@ -35,66 +38,122 @@ namespace Cofoundry.Web
         }
 
         /// <summary>
-        /// Gets the UserId of the user currently logged
-        /// in to this session
+        /// Gets the UserId of the user authenticated for the
+        /// current request under the ambient authentication scheme.
         /// </summary>
         /// <returns>
-        /// UserId of the user currently logged
-        /// in to this session
+        /// Integer UserId or null if the user is not logged in for the ambient
+        /// authentication scheme.
         /// </returns>
         public int? GetCurrentUserId()
         {
-            // Use the cache if it has been set
             if (userIdCache.HasValue) return userIdCache;
 
             var user = _httpContextAccessor.HttpContext?.User;
+            var userIdClaim = user.FindFirst(ClaimTypes.NameIdentifier);
 
-            //if (user == null || !user.Identity.IsAuthenticated) return null;
+            if (userIdClaim == null) return null;
 
             // Otherwise get it from the Identity
-            var userId = IntParser.ParseOrNull(user.Identity.Name);
+            var userId = IntParser.ParseOrNull(userIdClaim.Value);
             return userId;
         }
 
         /// <summary>
-        /// Assigns the specified UserId to the current session.
+        /// Gets the UserId of the currently logged in user for a specific UserArea,
+        /// regardless of the ambient authentication scheme. Useful in multi-userarea
+        /// scenarios where you need to ignore the ambient user and check for permissions 
+        /// against a specific user area.
         /// </summary>
+        /// <param name="userAreaCode">The unique identifying code fo the user area to check for.</param>
+        public async Task<int?> GetUserIdByUserAreaCodeAsync(string userAreaCode)
+        {
+            if (userAreaCode == null)
+            {
+                throw new ArgumentNullException(nameof(userAreaCode));
+            }
+
+            if (cachedUserIdArea == userAreaCode && userIdCache.HasValue) return userIdCache.Value;
+
+            var scheme = CofoundryAuthenticationConstants.FormatAuthenticationScheme(userAreaCode);
+            var result = await _httpContextAccessor.HttpContext.AuthenticateAsync(scheme);
+            if (!result.Succeeded) return null;
+
+            var userIdClaim = result.Principal.FindFirst(ClaimTypes.NameIdentifier);
+            if (userIdClaim == null) return null;
+
+            var userId = IntParser.ParseOrNull(userIdClaim.Value);
+            return userId;
+        }
+
+        /// <summary>
+        /// Logs the specified UserId into the current session.
+        /// </summary>
+        /// <param name="userAreaCode">Unique code of the user area to log the user into (required).</param>
         /// <param name="userId">UserId belonging to the owner of the current session.</param>
         /// <param name="rememberUser">
         /// True if the session should last indefinately; false if the 
         /// session should close after a timeout period.
         /// </param>
-        public Task SetCurrentUserIdAsync(string userAreaDefinitionCode, int userId, bool rememberUser)
+        public Task LogUserInAsync(string userAreaCode, int userId, bool rememberUser)
         {
-            if (userAreaDefinitionCode == null) throw new ArgumentNullException(nameof(userAreaDefinitionCode));
+            if (userAreaCode == null) throw new ArgumentNullException(nameof(userAreaCode));
             if (userId < 1) throw new ArgumentOutOfRangeException(nameof(userId));
 
             var stringId = Convert.ToString(userId);
+            var scheme = CofoundryAuthenticationConstants.FormatAuthenticationScheme(userAreaCode);
 
-            var userPrincipal = new GenericPrincipal(new GenericIdentity(stringId), null);
+            var claims = new[] {
+                new Claim(ClaimTypes.NameIdentifier, stringId),
+            };
+
+            var claimsIdentity = new ClaimsIdentity(claims, scheme);
+            var userPrincipal = new ClaimsPrincipal(claimsIdentity);
+
             userIdCache = userId;
+            cachedUserIdArea = userAreaCode;
 
-            var scheme = CofoundryAuthenticationConstants.FormatAuthenticationScheme(userAreaDefinitionCode);
-            return _httpContextAccessor.HttpContext.Authentication.SignInAsync(scheme, userPrincipal, _defaultAuthenticationProperties);
+            return _httpContextAccessor.HttpContext.SignInAsync(scheme, userPrincipal, _defaultAuthenticationProperties);
         }
 
         /// <summary>
-        /// Abandons the current session and removes the users
-        /// login cookie
+        /// Logs the user out of the specified user area.
         /// </summary>
-        public async Task AbandonAsync()
+        /// <param name="userAreaCode">Unique code of the user area to log the user into (required).</param>
+        public async Task LogUserOutAsync(string userAreaCode)
         {
-            if (_httpContextAccessor.HttpContext?.User == null) return;
+            if (userAreaCode == null)
+            {
+                throw new ArgumentNullException(nameof(userAreaCode));
+            }
 
-            userIdCache = null;
-            //_httpContextAccessor.HttpContext?.Session?.Clear();
+            if (cachedUserIdArea == userAreaCode)
+            {
+                ClearCache();
+            }
+
+            var scheme = CofoundryAuthenticationConstants.FormatAuthenticationScheme(userAreaCode);
+            await _httpContextAccessor.HttpContext.SignOutAsync(scheme);
+        }
+
+        /// <summary>
+        /// Logs the user out of all user areas.
+        /// </summary>
+        public async Task LogUserOutOfAllUserAreasAsync()
+        {
+            ClearCache();
 
             foreach (var customEntityDefinition in _userAreaRepository.GetAll())
             {
                 var scheme = CofoundryAuthenticationConstants.FormatAuthenticationScheme(customEntityDefinition.UserAreaCode);
-                await _httpContextAccessor.HttpContext.Authentication.SignOutAsync(scheme);
+                await _httpContextAccessor.HttpContext.SignOutAsync(scheme);
             }
+        }
 
+        private void ClearCache()
+        {
+            userIdCache = null;
+            cachedUserIdArea = null;
         }
     }
 }

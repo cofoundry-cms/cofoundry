@@ -77,9 +77,11 @@ namespace Cofoundry.Web.Identity
 
         #region log out
 
-        public Task LogoutAsync()
+        public Task LogoutAsync(IUserAreaDefinition userAreaToLogInTo)
         {
-            return _loginService.SignOutAsync();
+            if (userAreaToLogInTo == null) throw new ArgumentNullException(nameof(userAreaToLogInTo));
+
+            return _loginService.SignOutAsync(userAreaToLogInTo.UserAreaCode);
         }
 
         #endregion

@@ -109,6 +109,12 @@ namespace Cofoundry.Web.Admin
             {
                 var pageResponseData = _pageResponseDataCache.Get();
 
+                if (pageResponseData == null)
+                {
+                    // Response data should always be set
+                    throw new InvalidOperationException("IPageResponseDataCache.Get() returned no result.");
+                }
+
                 // When using IPageBlockWithParentPageData and referencing the parent page we get a
                 // Self referencing loop error. Rather than set this globally we ignore this specifically here
                 var settings = _jsonSerializerSettingsFactory.Create();

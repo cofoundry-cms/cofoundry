@@ -46,7 +46,7 @@ namespace Cofoundry.Domain
         bool UseEmailAsUsername { get; }
 
         /// <summary>
-        /// The LoginPath property informs the middleware that it should change an outgoing
+        /// The LoginPath property informs the handler that it should change an outgoing
         /// 401 Unauthorized status code into a 302 redirection onto the given login path.
         /// The current url which generated the 401 is added to the LoginPath as a query
         /// string parameter named by the ReturnUrlParameter. Once a request to the LoginPath
@@ -54,13 +54,12 @@ namespace Cofoundry.Domain
         /// the browser back to the url which caused the original unauthorized status code.
         /// </summary>
         string LoginPath { get; }
-        
-        string LogoutPath { get; }
 
         /// <summary>
-        /// Optional. In a website this property can be used to change an
-        /// outgoing 403 Forbidden status code into a 302 redirection onto the given path.
+        /// Cofoundry creates an auth schema for each user area. Use this property to set this
+        /// user area as the default auth schema, which means the HttpContext.User will be set
+        /// to this identity.
         /// </summary>
-        string AccessDeniedPath { get; }
+        bool IsDefaultAuthSchema { get;  }
     }
 }

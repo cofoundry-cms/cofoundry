@@ -43,7 +43,7 @@ namespace Cofoundry.Web.Admin
             }
 
             // force sign-out - solves a rare case where you're re-initializing a db after being signed into a previous version.
-            await _loginService.SignOutAsync();
+            await _loginService.SignOutAllUserAreasAsync();
 
             var viewPath = ViewPathFormatter.View("Setup", nameof(Index));
             return View(viewPath);

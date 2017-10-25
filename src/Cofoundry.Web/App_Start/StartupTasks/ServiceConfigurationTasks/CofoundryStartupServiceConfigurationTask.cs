@@ -1,5 +1,6 @@
 ﻿using Cofoundry.Core;
 using Cofoundry.Domain;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Razor;
@@ -68,23 +69,38 @@ namespace Cofoundry.Web
         private void ConfigureAuth(IMvcBuilder mvcBuilder)
         {
             var services = mvcBuilder.Services;
+            var allUserAreas = _userAreaRepository.GetAll();
 
-            //services
-            //    .AddAuthentication()
-            //    .AddCookie("", o => o.)
+            // Set default schema as specified in config, falling back to CofoundryAdminUserArea
+            // Since any additional areas are configured by the implementor there shouldn't be multiple
+            // unless the developer has misconfigured their areas.
+            var defaultSchemaCode = allUserAreas
+                .OrderByDescending(u => u.IsDefaultAuthSchema)
+                .ThenByDescending(u => u is CofoundryAdminUserArea)
+                .ThenBy(u => u.Name)
+                .Select(u => u.UserAreaCode)
+                .First();
 
-            // TODO: make this configurable
-            mvcBuilder.Services.AddScoped<IAuthorizationHandler, UserAreaAuthorizationHandler>();
-            mvcBuilder.Services.AddAuthorization(options =>
+            var defaultScheme = CofoundryAuthenticationConstants.FormatAuthenticationScheme(defaultSchemaCode);
+
+            var authBuilder = mvcBuilder.Services.AddAuthentication(defaultScheme);
+
+            foreach (var userAreaDefinition in allUserAreas)
             {
-                foreach (var userAreaDefinition in _userAreaRepository.GetAll())
-                {
-                    options.AddPolicy(CofoundryAuthenticationConstants.FormatPolicyName(userAreaDefinition.UserAreaCode),
-                        policy => policy
-                            .AddRequirements(new UserAreaAuthorizationRequirement(userAreaDefinition.UserAreaCode))
-                            .AddAuthenticationSchemes(CofoundryAuthenticationConstants.FormatAuthenticationScheme(userAreaDefinition.UserAreaCode)));
-                }
-            });
+                var scheme = CofoundryAuthenticationConstants.FormatAuthenticationScheme(userAreaDefinition.UserAreaCode);
+
+                authBuilder
+                    .AddCookie(scheme, cookieOptions =>
+                    {
+                        cookieOptions.Cookie.Name = "CF_AUTH_" + userAreaDefinition.UserAreaCode;
+                        cookieOptions.Cookie.HttpOnly = true;
+
+                        if (!string.IsNullOrWhiteSpace(userAreaDefinition.LoginPath))
+                        {
+                            cookieOptions.LoginPath = userAreaDefinition.LoginPath;
+                        }
+                    });
+            }
         }
     }
 }

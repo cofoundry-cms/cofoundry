@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Cofoundry.Core;
 using Cofoundry.Domain.Data;
 using Microsoft.EntityFrameworkCore;
+using System.Collections.Concurrent;
 
 namespace Cofoundry.Domain
 {
@@ -14,8 +15,13 @@ namespace Cofoundry.Domain
     /// </summary>
     public class UserContextService : IUserContextService
     {
-        private bool _isUserContextCached = false;
-        private UserContext _userContext = null;
+        /// <summary>
+        /// Unless logging in or out, the user context is bound to the lifetime
+        /// of the request/service, therefore we cache it because it is regularly
+        /// accessed from many different places.
+        /// </summary>
+        private IUserContext _currentUserContext = null;
+        private Dictionary<string, IUserContext> _alternativeUserContextCache = new Dictionary<string, IUserContext>();
 
         #region constructor
 
@@ -26,8 +32,7 @@ namespace Cofoundry.Domain
         public UserContextService(
             CofoundryDbContext dbContext,
             IUserSessionService userSessionService,
-            UserContextMapper userContextMapper,
-            IClientConnectionService browsingSessionService
+            UserContextMapper userContextMapper
             )
         {
             _dbContext = dbContext;
@@ -44,19 +49,58 @@ namespace Cofoundry.Domain
         /// </summary>
         public async Task<IUserContext> GetCurrentContextAsync()
         {
-            if (!_isUserContextCached)
+            if (_currentUserContext == null)
             {
                 var userId = _userSessionService.GetCurrentUserId();
                 await SetUserContextAsync(userId);
             }
 
-            return _userContext;
+            return _currentUserContext;
+        }
+
+        /// <summary>
+        /// Get the connection context of the current user for a specific 
+        /// user area. This can be useful in multi-userarea sites where the ambient
+        /// context may not be the context you need.
+        /// </summary>
+        /// <remarks>
+        /// In Cofoundry we use this to get the user context of a logged in Cofoundry
+        /// user for the site viewer, irrespective of the ambient user context, which 
+        /// potentially could be (for example) a members area.
+        /// </remarks>
+        public async Task<IUserContext> GetCurrentContextByUserAreaAsync(string userAreaCode)
+        {
+            var userContext = _alternativeUserContextCache.GetOrDefault(userAreaCode);
+            if (userContext != null) return userContext;
+
+            userContext = await GetCurrentContextAsync();
+
+            // if the current context is valid, return that
+            if (userContext != null && userContext.UserId.HasValue && userContext.UserArea?.UserAreaCode == userAreaCode)
+            {
+                return userContext;
+            }
+
+            // otherwise, try and get a specific user context:
+            var userId = await _userSessionService.GetUserIdByUserAreaCodeAsync(userAreaCode);
+            userContext = await GetUserContextByIdAsync(userId);
+
+            if (!userContext.UserId.HasValue)
+            {
+                // User no longer valid, clear out invalid login
+                await _userSessionService.LogUserOutAsync(userAreaCode);
+                ClearCache();
+            }
+
+            _alternativeUserContextCache.Add(userAreaCode, userContext);
+
+            return userContext;
         }
 
         /// <summary>
         /// Use this to get a user context for the system user, useful
         /// if you need to impersonate the user to perform an action with elevated 
-        /// privileges
+        /// privileges.
         /// </summary>
         public async Task<IUserContext> GetSystemUserContextAsync()
         {
@@ -74,12 +118,11 @@ namespace Cofoundry.Domain
         /// <summary>
         /// Clears out the cached user context if one exists. The user 
         /// context is cached for the duration of the request so it needs clearing if
-        /// it changes (i.e. logged in.out)
+        /// it changes (i.e. logged in or out).
         /// </summary>
         public void ClearCache()
         {
-            _isUserContextCached = false;
-            _userContext = null;
+            _currentUserContext = null;
         }
 
         #endregion
@@ -88,38 +131,43 @@ namespace Cofoundry.Domain
 
         private async Task SetUserContextAsync(int? userId)
         {
-            UserContext cx = null;
+            var cx = await GetUserContextByIdAsync(userId);
 
-            if (userId.HasValue)
+            if (userId.HasValue && !cx.UserId.HasValue)
             {
-                // Raw query required here because using IQueryExecutor will cause a stack overflow
-                var dbResult = await _dbContext
-                    .Users
-                    .Include(u => u.Role)
-                    .AsNoTracking()
-                    .FilterById(userId.Value)
-                    .FilterCanLogIn()
-                    .SingleOrDefaultAsync();
-
-                if (dbResult == null)
-                {
-                    // User no longer valid
-                    await _userSessionService.AbandonAsync();
-                    ClearCache();
-                }
-                else
-                {
-                    cx = _userContextMapper.Map(dbResult);
-                }
+                // User no longer valid, clear out all logins to be safe
+                await _userSessionService.LogUserOutOfAllUserAreasAsync();
+                ClearCache();
             }
 
-            if (cx == null)
+            _currentUserContext = cx;
+        }
+
+        private async Task<UserContext> GetUserContextByIdAsync(int? userId)
+        {
+            if (!userId.HasValue) return new UserContext();
+
+            UserContext cx = null;
+
+            // Raw query required here because using IQueryExecutor will cause a stack overflow
+            var dbResult = await _dbContext
+                .Users
+                .Include(u => u.Role)
+                .AsNoTracking()
+                .FilterById(userId.Value)
+                .FilterCanLogIn()
+                .SingleOrDefaultAsync();
+
+            if (dbResult != null)
+            {
+                cx = _userContextMapper.Map(dbResult);
+            }
+            else
             {
                 cx = new UserContext();
             }
 
-            _userContext = cx;
-            _isUserContextCached = true;
+            return cx;
         }
 
         private IQueryable<User> QuerySystemUser()

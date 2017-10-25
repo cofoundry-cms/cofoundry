@@ -10,12 +10,11 @@ namespace Cofoundry.Web
     public static class UseCofoundryStartupExtension
     {
         /// <summary>
-        /// Registers Cofoundry into the Owin pipeline and runs all the registered
-        /// Cofoundry StartupTasks. You must install and register a Cofoundry DI Integration 
-        /// nuget package before calling this method (e.g. app.UseCofoundryAutoFacIntegration())
+        /// Registers Cofoundry into the application pipeline and runs all the registered
+        /// Cofoundry StartupTasks.
         /// </summary>
-        /// <param name="application">Application configuration</param>
-        /// <param name="configBuilder">Additional configuration options</param>
+        /// <param name="application">Application configuration.</param>
+        /// <param name="configBuilder">Additional configuration options.</param>
         public static void UseCofoundry(
             this IApplicationBuilder application,
             Action<CofoundryStartupConfiguration> configBuilder = null
