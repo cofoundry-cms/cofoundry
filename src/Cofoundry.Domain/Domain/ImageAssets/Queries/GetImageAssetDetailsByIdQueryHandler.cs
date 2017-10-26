@@ -36,6 +36,8 @@ namespace Cofoundry.Domain
             var dbResult = await _dbContext
                 .ImageAssets
                 .AsNoTracking()
+                .Include(i => i.Creator)
+                .Include(i => i.Updater)
                 .FilterById(query.Id)
                 .SingleOrDefaultAsync();
 

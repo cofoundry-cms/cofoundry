@@ -18,6 +18,7 @@ namespace Cofoundry.Domain
                 .RegisterType<IUserContextService, UserContextService>()
                 .RegisterType<ILoginService, LoginService>()
                 .RegisterType<IUserMicroSummaryMapper, UserMicroSummaryMapper>()
+                .RegisterType<IUserSummaryMapper, UserSummaryMapper>()
                 .RegisterType<IUserAccountDetailsMapper, UserAccountDetailsMapper>()
                 .RegisterType<IUserDetailsMapper, UserDetailsMapper>()
                 .RegisterAll<IUserAreaDefinition>()

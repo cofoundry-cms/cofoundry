@@ -6,6 +6,7 @@ using Cofoundry.Domain.CQS;
 using Cofoundry.Domain.Data;
 using Microsoft.EntityFrameworkCore;
 using Cofoundry.Domain.QueryModels;
+using Cofoundry.Core;
 
 namespace Cofoundry.Domain
 {
@@ -37,12 +38,58 @@ namespace Cofoundry.Domain
         public async Task<PagedQueryResult<PageTemplateSummary>> ExecuteAsync(SearchPageTemplateSummariesQuery query, IExecutionContext executionContext)
         {
             var dbPagedResult = await CreateQuery(query).ToPagedResultAsync(query);
+            var allPageTemplateIds = dbPagedResult
+                .Items
+                .Select(p => p.PageTemplate.PageTemplateId)
+                .ToList();
+
+            var templatePageCounts = await GetPageCounts(allPageTemplateIds);
+            Dictionary<int, int> pageRegionCounts = await GetTemplateRegionCounts();
+
+            foreach (var dbPagedResultItem in dbPagedResult.Items)
+            {
+                dbPagedResultItem.NumPages = templatePageCounts.GetOrDefault(dbPagedResultItem.PageTemplate.PageTemplateId);
+                dbPagedResultItem.NumRegions = pageRegionCounts.GetOrDefault(dbPagedResultItem.PageTemplate.PageTemplateId);
+            }
 
             var mappedResults = dbPagedResult
                 .Items
                 .Select(_pageTemplateSummaryMapper.Map);
 
             return dbPagedResult.ChangeType(mappedResults);
+        }
+
+        private async Task<Dictionary<int, int>> GetTemplateRegionCounts()
+        {
+            return (await _dbContext
+                    .PageTemplateRegions
+                    .AsNoTracking()
+                    .Select(r => new { r.PageTemplateId, r.PageTemplateRegionId })
+                    .ToListAsync())
+                    .GroupBy(r => r.PageTemplateId)
+                    .Select(g => new
+                    {
+                        PageTemplateId = g.Key,
+                        NumRegions = g.Count()
+                    })
+                    .ToDictionary(r => r.PageTemplateId, r => r.NumRegions);
+        }
+
+        private async Task<Dictionary<int, int>> GetPageCounts(List<int> allPageTemplateIds)
+        {
+            return (await _dbContext
+                    .PageVersions
+                    .AsNoTracking()
+                    .Where(v => allPageTemplateIds.Contains(v.PageTemplateId))
+                    .Select(v => new { v.PageId, v.PageTemplateId })
+                    .ToListAsync())
+                    .GroupBy(v => v.PageTemplateId)
+                    .Select(v => new
+                    {
+                        PageTemplateId = v.Key,
+                        NumPages = v.Count()
+                    })
+                    .ToDictionary(v => v.PageTemplateId, v => v.NumPages);
         }
 
         #endregion
@@ -67,12 +114,12 @@ namespace Cofoundry.Domain
                 .Select(t => new PageTemplateSummaryQueryModel()
                 {
                     PageTemplate = t,
-                    NumPages = t.PageVersions
-                        .GroupBy(p => p.PageId)
-                        .Count(),
-                    NumRegions = t
-                        .PageTemplateRegions
-                        .Count()
+                    //NumPages = t.PageVersions
+                    //    .GroupBy(p => p.PageId)
+                    //    .Count(),
+                    //NumRegions = t
+                    //    .PageTemplateRegions
+                    //    .Count()
                 });
         }
 

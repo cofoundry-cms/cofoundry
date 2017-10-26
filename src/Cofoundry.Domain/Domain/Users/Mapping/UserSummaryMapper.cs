@@ -37,7 +37,7 @@ namespace Cofoundry.Domain
 
             if (dbUser.Role == null)
             {
-                throw new ArgumentException("dbUser.Role must be included in the query to map to use the UserDetailsMapper");
+                throw new ArgumentException("dbUser.Role must be included in the query to map to use the UserSummaryMapper");
             }
 
             var user = new UserSummary()

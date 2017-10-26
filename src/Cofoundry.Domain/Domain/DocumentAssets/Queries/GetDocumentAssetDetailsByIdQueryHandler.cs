@@ -36,8 +36,10 @@ namespace Cofoundry.Domain
             var dbResult = await _dbContext
                 .DocumentAssets
                 .AsNoTracking()
+                .Include(a => a.Creator)
+                .Include(a => a.Updater)
                 .Include(a => a.DocumentAssetTags)
-                .ThenInclude(a => a.Select(t => t.Tag))
+                .ThenInclude(a => a.Tag)
                 .FilterById(query.Id)
                 .SingleOrDefaultAsync();
 

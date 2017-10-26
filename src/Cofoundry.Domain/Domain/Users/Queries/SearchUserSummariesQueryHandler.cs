@@ -51,6 +51,8 @@ namespace Cofoundry.Domain
             var dbQuery = _dbContext
                 .Users
                 .AsNoTracking()
+                .Include(u => u.Role)
+                .Include(u => u.Creator)
                 .FilterCanLogIn()
                 .Where(p => p.UserAreaCode == query.UserAreaCode);
 
