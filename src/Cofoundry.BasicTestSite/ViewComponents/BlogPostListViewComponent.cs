@@ -36,7 +36,7 @@ namespace Cofoundry.BasicTestSite
             query.CustomEntityDefinitionCode = BlogPostCustomEntityDefinition.DefinitionCode;
             query.PageNumber = webQuery.PageNumber;
             query.PageSize = 30;
-            query.WorkFlowStatus = WorkFlowStatusQuery.Published;
+            query.PublishStatus = PublishStatusQuery.Published;
 
             // TODO: Filtering by Category (webQuery.CategoryId)
             // Searching/filtering custom entities is not implemented yet, but it

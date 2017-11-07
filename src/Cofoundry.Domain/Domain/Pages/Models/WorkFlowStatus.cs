@@ -14,13 +14,6 @@ namespace Cofoundry.Domain
     {
         None = 0,
         Draft = 1,
-        // These two dont seem to be used
-        //Waitingapproval = 2,
-        //Rejected = 3,
         Published = 4,
-        /// <summary>
-        /// Approved seems to also mean 'Previously Published'
-        /// </summary>
-        Approved = 5
     }
 }

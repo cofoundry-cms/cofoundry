@@ -205,9 +205,8 @@ namespace Cofoundry.Domain
             return _commandExecutor.ExecuteAsync(command, executionContext);
         }
 
-        public Task PublishCustomEntityAsync(int customEntityId, IExecutionContext executionContext = null)
+        public Task PublishCustomEntityAsync(PublishCustomEntityCommand command, IExecutionContext executionContext = null)
         {
-            var command = new PublishCustomEntityCommand() { CustomEntityId = customEntityId };
             return _commandExecutor.ExecuteAsync(command, executionContext);
         }
 

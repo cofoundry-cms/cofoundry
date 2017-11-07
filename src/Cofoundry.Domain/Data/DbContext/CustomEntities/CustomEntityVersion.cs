@@ -8,6 +8,7 @@ namespace Cofoundry.Domain.Data
         public CustomEntityVersion()
         {
             CustomEntityVersionPageBlocks = new List<CustomEntityVersionPageBlock>();
+            CustomEntityPublishStatusQueries = new List<CustomEntityPublishStatusQuery>();
         }
 
         public int CustomEntityVersionId { get; set; }
@@ -23,6 +24,8 @@ namespace Cofoundry.Domain.Data
         public virtual CustomEntity CustomEntity { get; set; }
 
         public virtual ICollection<CustomEntityVersionPageBlock> CustomEntityVersionPageBlocks { get; set; }
+
+        public virtual ICollection<CustomEntityPublishStatusQuery> CustomEntityPublishStatusQueries { get; internal set; }
 
         #region ICreateAuditable
 

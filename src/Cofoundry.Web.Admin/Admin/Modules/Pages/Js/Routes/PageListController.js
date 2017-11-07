@@ -64,8 +64,8 @@ function (
     /* PRIVATE FUNCS */
 
     function loadFilterData() {
-        vm.workFlowStatus = [{
-            name: 'Draft'
+        vm.publishStatus = [{
+            name: 'Unpublished'
         }, {
             name: 'Published'
         }];

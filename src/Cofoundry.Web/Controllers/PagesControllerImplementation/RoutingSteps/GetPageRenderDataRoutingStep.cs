@@ -36,8 +36,15 @@ namespace Cofoundry.Web
             // If we're editing a custom entity, then get the latest version
             if (!state.InputParameters.IsEditingCustomEntity)
             {
-                query.WorkFlowStatus = state.VisualEditorMode.ToWorkFlowStatusQuery();
-                query.PageVersionId = state.InputParameters.VersionId;
+                if (state.InputParameters.VersionId.HasValue)
+                {
+                    query.PublishStatus = PublishStatusQuery.SpecificVersion;
+                    query.PageVersionId = state.InputParameters.VersionId;
+                }
+                else
+                {
+                    query.PublishStatus = state.VisualEditorMode.ToPublishStatusQuery();
+                }
             }
 
             state.PageData = await _queryExecutor.ExecuteAsync(query);

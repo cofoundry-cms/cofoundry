@@ -44,7 +44,9 @@ namespace Cofoundry.Domain
                 CustomEntityDefinitionCode = dbCustomEntity.CustomEntityDefinitionCode,
                 CustomEntityId = dbCustomEntity.CustomEntityId,
                 UrlSlug = dbCustomEntity.UrlSlug,
-                Locale = locale
+                Locale = locale,
+                PublishDate = dbCustomEntity.PublishDate,
+                PublishStatus = dbCustomEntity.PublishStatusCode == PublishStatusCode.Published ? PublishStatus.Published : PublishStatus.Unpublished
             };
 
             var versions = new List<CustomEntityVersionRoute>();

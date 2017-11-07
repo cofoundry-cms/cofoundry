@@ -13,7 +13,6 @@ begin
 	
 	declare @PageVersionBlockEntityDefinitionCode char(6) = 'COFPGB';
 	declare @PublishedWorkFlowStatus int = 4;
-	declare @ApprovedWorkFlowStatus int = 5;
 	declare @DraftWorkFlowStatus int = 1;
 
 	if (@CopyFromPageVersionId is null)
@@ -21,7 +20,7 @@ begin
 		select top 1 @CopyFromPageVersionId = PageVersionId 
 		from Cofoundry.PageVersion v
 		inner join Cofoundry.[Page] p on p.PageId = v.PageId
-		where p.PageId = @PageId and p.IsDeleted = 0 and WorkFlowStatusId in (@DraftWorkFlowStatus, @PublishedWorkFlowStatus, @ApprovedWorkFlowStatus)
+		where p.PageId = @PageId and p.IsDeleted = 0 and WorkFlowStatusId in (@DraftWorkFlowStatus, @PublishedWorkFlowStatus)
 		order by 
 			-- fall back to a deleted version if nothing else if found
 			v.IsDeleted,
@@ -142,4 +141,5 @@ begin
 	from @BlocksToCopy s
 	inner join Cofoundry.UnstructuredDataDependency d on d.RootEntityId = s.SourcePageVersionBlockId and RootEntityDefinitionCode = @PageVersionBlockEntityDefinitionCode
 	
+	exec Cofoundry.PagePublishStatusQuery_Update @PageId = @PageId;
 end

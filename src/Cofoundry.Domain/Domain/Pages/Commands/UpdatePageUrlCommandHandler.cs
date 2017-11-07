@@ -46,7 +46,8 @@ namespace Cofoundry.Domain
         {
             var page = await _dbContext
                 .Pages
-                .FilterById(command.PageId)
+                .FilterActive()
+                .FilterByPageId(command.PageId)
                 .Include(p => p.Locale)
                 .Include(p => p.PageDirectory)
                 .SingleOrDefaultAsync();
@@ -55,7 +56,7 @@ namespace Cofoundry.Domain
             await ValidateIsPageUniqueAsync(command, page, executionContext);
 
             await MapPageAsync(command, executionContext, page);
-            var isPublished = page.PageVersions.Any(v => v.WorkFlowStatusId == (int)WorkFlowStatus.Published);
+            var isPublished = page.PublishStatusCode == PublishStatusCode.Published;
 
             await _dbContext.SaveChangesAsync();
             _pageCache.Clear(command.PageId);

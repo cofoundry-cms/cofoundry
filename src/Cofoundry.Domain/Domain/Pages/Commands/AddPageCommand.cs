@@ -47,6 +47,8 @@ namespace Cofoundry.Domain
 
         public bool Publish { get; set; }
 
+        public DateTime? PublishDate { get; set; }
+
         [Required]
         public PageType PageType { get; set; }
 

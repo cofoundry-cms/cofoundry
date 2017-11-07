@@ -29,7 +29,8 @@ namespace Cofoundry.Domain
         private readonly ICustomEntityDefinitionRepository _customEntityDefinitionRepository;
         private readonly IPermissionValidationService _permissionValidationService;
         private readonly ITransactionScopeFactory _transactionScopeFactory;
-        
+        private readonly ICustomEntityStoredProcedures _customEntityStoredProcedures;
+
         public AddCustomEntityCommandHandler(
             IQueryExecutor queryExecutor,
             ICommandExecutor commandExecutor,
@@ -40,7 +41,8 @@ namespace Cofoundry.Domain
             IMessageAggregator messageAggregator,
             ICustomEntityDefinitionRepository customEntityDefinitionRepository,
             IPermissionValidationService permissionValidationService,
-            ITransactionScopeFactory transactionScopeFactory
+            ITransactionScopeFactory transactionScopeFactory,
+            ICustomEntityStoredProcedures customEntityStoredProcedures
             )
         {
             _queryExecutor = queryExecutor;
@@ -53,6 +55,7 @@ namespace Cofoundry.Domain
             _customEntityDefinitionRepository = customEntityDefinitionRepository;
             _permissionValidationService = permissionValidationService;
             _transactionScopeFactory = transactionScopeFactory;
+            _customEntityStoredProcedures = customEntityStoredProcedures;
         }
 
         #endregion
@@ -82,6 +85,8 @@ namespace Cofoundry.Domain
                     command.Model); 
                 
                 await _commandExecutor.ExecuteAsync(dependencyCommand);
+                await _customEntityStoredProcedures.UpdatePublishStatusQueryLookupAsync(entity.CustomEntityId);
+
                 scope.Complete();
             }
 
@@ -184,7 +189,19 @@ namespace Cofoundry.Domain
             var version = new CustomEntityVersion();
             version.Title = command.Title.Trim();
             version.SerializedData = _dbUnstructuredDataSerializer.Serialize(command.Model);
-            version.WorkFlowStatusId = command.Publish ? (int)WorkFlowStatus.Published : (int)WorkFlowStatus.Draft;
+
+            if (command.Publish)
+            {
+                entity.PublishStatusCode = PublishStatusCode.Published;
+                entity.PublishDate = command.PublishDate ?? executionContext.ExecutionDate;
+                version.WorkFlowStatusId = (int)WorkFlowStatus.Published;
+            }
+            else
+            {
+                entity.PublishStatusCode = PublishStatusCode.Unpublished;
+                entity.PublishDate = command.PublishDate;
+                version.WorkFlowStatusId = (int)WorkFlowStatus.Draft;
+            }
             
             _entityAuditHelper.SetCreated(version, executionContext);
             entity.CustomEntityVersions.Add(version);

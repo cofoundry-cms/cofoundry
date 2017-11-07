@@ -39,26 +39,25 @@ namespace Cofoundry.Domain
 
         public async Task<PagedQueryResult<CustomEntityRenderSummary>> ExecuteAsync(SearchCustomEntityRenderSummariesQuery query, IExecutionContext executionContext)
         {
-            var dbPagedResult = await GetQueryAsync(query);
+            var dbPagedResult = await GetQueryAsync(query, executionContext);
             var results = await _customEntityRenderSummaryMapper.MapAsync(dbPagedResult.Items, executionContext);
 
             return dbPagedResult.ChangeType(results);
         }
 
-        private async Task<PagedQueryResult<CustomEntityVersion>> GetQueryAsync(SearchCustomEntityRenderSummariesQuery query)
+        private async Task<PagedQueryResult<CustomEntityVersion>> GetQueryAsync(SearchCustomEntityRenderSummariesQuery query, IExecutionContext executionContext)
         {
             var definition = await _queryExecutor.GetByIdAsync<CustomEntityDefinitionSummary>(query.CustomEntityDefinitionCode);
             EntityNotFoundException.ThrowIfNull(definition, query.CustomEntityDefinitionCode);
 
-            var dbQuery = (await _dbContext
-                .CustomEntityVersions
+            var dbQuery = _dbContext
+                .CustomEntityPublishStatusQueries
                 .AsNoTracking()
-                .Include(e => e.CustomEntity)
-                .Where(e => e.CustomEntity.CustomEntityDefinitionCode == query.CustomEntityDefinitionCode)
-                .FilterByWorkFlowStatusQuery(query.WorkFlowStatus)
-                // TODO: EF Core: To make this work we must execute the full query before sorting & paging
-                .ToListAsync())
-                .AsQueryable();
+                .Include(e => e.CustomEntityVersion)
+                .ThenInclude(e => e.CustomEntity)
+                .FilterByCustomEntityDefinitionCode(query.CustomEntityDefinitionCode)
+                .FilterByActive()
+                .FilterByStatus(query.PublishStatus, executionContext.ExecutionDate);
 
             // Filter by locale 
             if (query.LocaleId > 0)
@@ -89,7 +88,7 @@ namespace Cofoundry.Domain
                     break;
                 case CustomEntityQuerySortType.Title:
                     dbQuery = dbQuery
-                        .OrderByWithSortDirection(e => e.Title, query.SortDirection);
+                        .OrderByWithSortDirection(e => e.CustomEntityVersion.Title, query.SortDirection);
                     break;
                 case CustomEntityQuerySortType.CreateDate:
                     dbQuery = dbQuery
@@ -97,9 +96,13 @@ namespace Cofoundry.Domain
                     break;
             }
 
-            // TODO: could be async when EF core supports it
-            var dbPagedResult = dbQuery.ToPagedResult(query);
-            return dbPagedResult;
+            var dbPagedResult = await dbQuery.ToPagedResultAsync(query);
+            // EF doesnt support includes after select so need to run this post execution
+            var results = dbPagedResult
+                .Items
+                .Select(p => p.CustomEntityVersion);
+
+            return dbPagedResult.ChangeType(results);
         }
 
         #endregion

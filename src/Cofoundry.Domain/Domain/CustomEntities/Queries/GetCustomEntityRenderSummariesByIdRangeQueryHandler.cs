@@ -39,17 +39,7 @@ namespace Cofoundry.Domain
 
         public async Task<IDictionary<int, CustomEntityRenderSummary>> ExecuteAsync(GetCustomEntityRenderSummariesByIdRangeQuery query, IExecutionContext executionContext)
         {
-            var dbProjectedResult = await Query(query)
-                .Select(v => new {
-                    Version = v,
-                    CustomEntity = v.CustomEntity,
-                    Locale = v.CustomEntity.Locale
-                })
-                .ToListAsync();
-
-            var dbResults = dbProjectedResult
-                .Select(r => r.Version)
-                .ToList();
+            var dbResults = await QueryAsync(query, executionContext);
 
             EnforcePermissions(dbResults, executionContext);
             var results = await _customEntityRenderSummaryMapper.MapAsync(dbResults, executionContext);
@@ -57,17 +47,26 @@ namespace Cofoundry.Domain
             return results.ToDictionary(r => r.CustomEntityId);
         }
 
-        private IQueryable<CustomEntityVersion> Query(GetCustomEntityRenderSummariesByIdRangeQuery query)
+        private async Task<List<CustomEntityVersion>> QueryAsync(GetCustomEntityRenderSummariesByIdRangeQuery query, IExecutionContext executionContext)
         {
-            var dbQuery = _dbContext
-                .CustomEntityVersions
-                .AsNoTracking()
-                .Include(e => e.CustomEntity)
-                .ThenInclude(e => e.Locale)
-                .Where(v => query.CustomEntityIds.Contains(v.CustomEntityId))
-                .FilterByWorkFlowStatusQuery(query.WorkFlowStatus);
+            if (query.PublishStatus == PublishStatusQuery.SpecificVersion)
+            {
+                throw new InvalidOperationException("PublishStatusQuery.SpecificVersion not supported in GetCustomEntityRenderSummariesByDefinitionCodeQuery");
+            }
 
-            return dbQuery;
+            var dbQuery = await _dbContext
+                .CustomEntityPublishStatusQueries
+                .AsNoTracking()
+                .Include(e => e.CustomEntityVersion)
+                .ThenInclude(e => e.CustomEntity)
+                .FilterByActive()
+                .FilterByStatus(query.PublishStatus, executionContext.ExecutionDate)
+                .Where(v => query.CustomEntityIds.Contains(v.CustomEntityId))
+                .ToListAsync();
+
+            return dbQuery
+                .Select(v => v.CustomEntityVersion)
+                .ToList();
         }
 
         private void EnforcePermissions(List<CustomEntityVersion> dbResults, IExecutionContext executionContext)

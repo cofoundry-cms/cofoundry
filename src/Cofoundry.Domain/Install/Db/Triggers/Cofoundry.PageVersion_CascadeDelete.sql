@@ -16,6 +16,10 @@ begin
     delete Cofoundry.PageVersionBlock
 	from Cofoundry.PageVersionBlock e
 	inner join deleted d on e.PageVersionId = d.PageVersionId
+
+    delete Cofoundry.PagePublishStatusQuery
+	from Cofoundry.PagePublishStatusQuery e
+	inner join deleted d on e.PageVersionId = d.PageVersionId
 	
 	-- Main Table
     delete Cofoundry.PageVersion

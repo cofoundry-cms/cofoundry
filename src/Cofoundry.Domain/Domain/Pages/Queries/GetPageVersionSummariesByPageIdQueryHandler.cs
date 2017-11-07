@@ -51,7 +51,8 @@ namespace Cofoundry.Domain
                 .Include(v => v.Creator)
                 .Include(v => v.PageTemplate)
                 .Include(v => v.OpenGraphImageAsset)
-                .Where(v => v.PageId == id && !v.IsDeleted)
+                .FilterActive()
+                .FilterByPageId(id)
                 .OrderByDescending(v => v.WorkFlowStatusId == (int)WorkFlowStatus.Draft)
                 .ThenByDescending(v => v.WorkFlowStatusId == (int)WorkFlowStatus.Published)
                 .ThenByDescending(v => v.CreateDate);

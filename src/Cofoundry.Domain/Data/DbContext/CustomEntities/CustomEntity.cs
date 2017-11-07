@@ -8,6 +8,7 @@ namespace Cofoundry.Domain.Data
         public CustomEntity()
         {
             CustomEntityVersions = new List<CustomEntityVersion>();
+            CustomEntityPublishStatusQueries = new List<CustomEntityPublishStatusQuery>();
         }
 
         /// <summary>
@@ -23,11 +24,23 @@ namespace Cofoundry.Domain.Data
 
         public int? Ordering { get; set; }
 
+        /// <summary>
+        /// D = draft, P = Published
+        /// </summary>
+        public string PublishStatusCode { get; set; }
+
+        /// <summary>
+        /// Should be set if the status is Published.
+        /// </summary>
+        public DateTime? PublishDate { get; set; }
+
         public virtual CustomEntityDefinition CustomEntityDefinition { get; set; }
 
         public virtual Locale Locale { get; set; }
 
         public virtual ICollection<CustomEntityVersion> CustomEntityVersions { get; set; }
+
+        public virtual ICollection<CustomEntityPublishStatusQuery> CustomEntityPublishStatusQueries { get; internal set; }
 
         #region ICreateAuditable
 

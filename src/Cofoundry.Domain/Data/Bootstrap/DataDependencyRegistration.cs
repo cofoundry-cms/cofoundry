@@ -15,7 +15,9 @@ namespace Cofoundry.Domain.Data
             container
                 .RegisterType<CofoundryDbContext>(new Type[] { typeof(CofoundryDbContext), typeof(DbContext) })
                 .RegisterType<IFileStoreService, FileSystemFileStoreService>()
-                .RegisterType<IDbUnstructuredDataSerializer, DbUnstructuredDataSerializer>();
+                .RegisterType<IDbUnstructuredDataSerializer, DbUnstructuredDataSerializer>()
+                .RegisterType<ICustomEntityStoredProcedures, CustomEntityStoredProcedures>()
+                .RegisterType<IPageStoredProcedures, PageStoredProcedures>()
                 ;
         }
     }

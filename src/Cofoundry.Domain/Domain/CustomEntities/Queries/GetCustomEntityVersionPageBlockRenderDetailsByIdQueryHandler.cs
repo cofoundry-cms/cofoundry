@@ -52,7 +52,7 @@ namespace Cofoundry.Domain
 
             if (dbResult == null) return null;
 
-            var result = await MapAsync(dbResult.PageBlock, dbResult.BlockTypeFileName, dbResult.CustomEntityDefinitionCode, query.WorkFlowStatus);
+            var result = await MapAsync(dbResult.PageBlock, dbResult.BlockTypeFileName, dbResult.CustomEntityDefinitionCode, query.PublishStatus);
 
             // Add any list context information.
 
@@ -84,7 +84,7 @@ namespace Cofoundry.Domain
             CustomEntityVersionPageBlock versionBlock, 
             string blockTypeFileName, 
             string customEntityDefinitionCode, 
-            WorkFlowStatusQuery workflowStatus
+            PublishStatusQuery publishStatus
             )
         {
             await _permissionValidationService.EnforceCustomEntityPermissionAsync<CustomEntityReadPermission>(customEntityDefinitionCode);
@@ -95,7 +95,7 @@ namespace Cofoundry.Domain
             var result = new CustomEntityVersionPageBlockRenderDetails();
             result.CustomEntityVersionPageBlockId = versionBlock.CustomEntityVersionPageBlockId;
             result.BlockType = blockType;
-            result.DisplayModel = await _pageVersionBlockModelMapper.MapDisplayModelAsync(blockTypeFileName, versionBlock, workflowStatus);
+            result.DisplayModel = await _pageVersionBlockModelMapper.MapDisplayModelAsync(blockTypeFileName, versionBlock, publishStatus);
             
             return result;
         }

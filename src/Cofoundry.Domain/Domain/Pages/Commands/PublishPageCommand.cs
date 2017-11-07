@@ -15,13 +15,16 @@ namespace Cofoundry.Domain
         {
         }
 
-        public PublishPageCommand(int pageId)
+        public PublishPageCommand(int pageId, DateTime? publishDate = null)
         {
             PageId = pageId;
+            PublishDate = publishDate;
         }
         
         [PositiveInteger]
         [Required]
         public int PageId { get; set; }
+
+        public DateTime? PublishDate { get; set; }
     }
 }

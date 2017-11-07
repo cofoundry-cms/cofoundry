@@ -107,7 +107,8 @@ namespace Cofoundry.Domain
                 .ThenInclude(t => t.Tag)
                 .Include(v => v.OpenGraphImageAsset)
                 .AsNoTracking()
-                .Where(v => v.PageId == id && !v.IsDeleted && !v.Page.IsDeleted)
+                .FilterActive()
+                .FilterByPageId(id)
                 .OrderByDescending(g => g.WorkFlowStatusId == (int)WorkFlowStatus.Draft)
                 .ThenByDescending(g => g.WorkFlowStatusId == (int)WorkFlowStatus.Published)
                 .ThenByDescending(g => g.CreateDate);

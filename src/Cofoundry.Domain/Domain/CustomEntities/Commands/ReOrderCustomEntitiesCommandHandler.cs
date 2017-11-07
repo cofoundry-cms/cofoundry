@@ -5,10 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Cofoundry.Domain.CQS;
 using Cofoundry.Domain.Data;
-using Microsoft.EntityFrameworkCore;
 using Cofoundry.Core.MessageAggregator;
-using Cofoundry.Core.EntityFramework;
-using System.Data.SqlClient;
 using Cofoundry.Core;
 using System.ComponentModel.DataAnnotations;
 
@@ -20,22 +17,19 @@ namespace Cofoundry.Domain
     {
         #region constructor
 
-        private readonly CofoundryDbContext _dbContext;
-        private readonly IEntityFrameworkSqlExecutor _sqlExecutor;
+        private readonly ICustomEntityStoredProcedures _customEntityStoredProcedures;
         private readonly ICustomEntityCache _customEntityCache;
         private readonly IMessageAggregator _messageAggregator;
         private readonly ICustomEntityDefinitionRepository _customEntityDefinitionRepository;
 
         public ReOrderCustomEntitiesCommandHandler(
-            CofoundryDbContext dbContext,
-            IEntityFrameworkSqlExecutor sqlExecutor,
+            ICustomEntityStoredProcedures customEntityStoredProcedures,
             ICustomEntityCache customEntityCache,
             IMessageAggregator messageAggregator,
             ICustomEntityDefinitionRepository customEntityDefinitionRepository
             )
         {
-            _dbContext = dbContext;
-            _sqlExecutor = sqlExecutor;
+            _customEntityStoredProcedures = customEntityStoredProcedures;
             _customEntityCache = customEntityCache;
             _messageAggregator = messageAggregator;
             _customEntityDefinitionRepository = customEntityDefinitionRepository;
@@ -59,16 +53,11 @@ namespace Cofoundry.Domain
                 throw new ValidationException("Cannot order by locale because this custom entity type is not permitted to have a locale (" + definition.GetType().FullName + ")");
             }
 
-            var updatedIdString = await _sqlExecutor
-                .ExecuteCommandWithOutputAsync<string>(_dbContext, 
-                    "Cofoundry.CustomEntity_ReOrder", 
-                    "UpdatedIds",
-                    new SqlParameter("CustomEntityDefinitionCode", command.CustomEntityDefinitionCode),
-                    new SqlParameter("CustomEntityIds", string.Join(",", command.OrderedCustomEntityIds)),
-                    CreateNullableIntParameter("LocaleId", command.LocaleId)
-                    );
-
-            var affectedIds = IntParser.ParseFromDelimitedString(updatedIdString);
+            var affectedIds = await _customEntityStoredProcedures.ReOrderAsync(
+                command.CustomEntityDefinitionCode,
+                command.OrderedCustomEntityIds,
+                command.LocaleId
+                );
 
             foreach (var affectedId in affectedIds)
             {
@@ -81,17 +70,6 @@ namespace Cofoundry.Domain
             });
 
             await _messageAggregator.PublishBatchAsync(messages);
-        }
-
-        private SqlParameter CreateNullableIntParameter(string name, int? value)
-        {
-            var parameter =  new SqlParameter("LocaleId", System.Data.SqlDbType.Int);
-            if (value.HasValue)
-            {
-                parameter.Value = value.Value;
-            }
-
-            return parameter;
         }
 
         #endregion

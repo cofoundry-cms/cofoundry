@@ -27,6 +27,7 @@ namespace Cofoundry.Domain
         private readonly IPermissionValidationService _permissionValidationService;
         private readonly ICustomEntityDefinitionRepository _customEntityDefinitionRepository;
         private readonly ITransactionScopeFactory _transactionScopeFactory;
+        private readonly ICustomEntityStoredProcedures _customEntityStoredProcedures;
 
         public PublishCustomEntityCommandHandler(
             CofoundryDbContext dbContext,
@@ -36,7 +37,8 @@ namespace Cofoundry.Domain
             IMessageAggregator messageAggregator,
             IPermissionValidationService permissionValidationService,
             ICustomEntityDefinitionRepository customEntityDefinitionRepository,
-            ITransactionScopeFactory transactionScopeFactory
+            ITransactionScopeFactory transactionScopeFactory,
+            ICustomEntityStoredProcedures customEntityStoredProcedures
             )
         {
             _dbContext = dbContext;
@@ -47,6 +49,7 @@ namespace Cofoundry.Domain
             _permissionValidationService = permissionValidationService;
             _customEntityDefinitionRepository = customEntityDefinitionRepository;
             _transactionScopeFactory = transactionScopeFactory;
+            _customEntityStoredProcedures = customEntityStoredProcedures;
         }
 
         #endregion
@@ -55,50 +58,67 @@ namespace Cofoundry.Domain
 
         public async Task ExecuteAsync(PublishCustomEntityCommand command, IExecutionContext executionContext)
         {
-            var versions = await _dbContext
+            // Prefer draft, but update published entity if no draft (only one draft permitted)
+            var version = await _dbContext
                 .CustomEntityVersions
                 .Include(v => v.CustomEntity)
-                .Where(p => p.CustomEntityId == command.CustomEntityId
-                    && (p.WorkFlowStatusId == (int)WorkFlowStatus.Draft || p.WorkFlowStatusId == (int)WorkFlowStatus.Published))
-                .ToListAsync();
+                .Where(v => v.CustomEntityId == command.CustomEntityId && (v.WorkFlowStatusId == (int)WorkFlowStatus.Draft || v.WorkFlowStatusId == (int)WorkFlowStatus.Published))
+                .OrderByDescending(v => v.WorkFlowStatusId == (int)WorkFlowStatus.Draft)
+                .ThenByDescending(v => v.CreateDate)
+                .FirstOrDefaultAsync();
+            
+            EntityNotFoundException.ThrowIfNull(version, command.CustomEntityId);
 
-            var publishedVersion = versions.SingleOrDefault(v => v.WorkFlowStatusId == (int)WorkFlowStatus.Published);
-            var draftVersion = versions.SingleOrDefault(v => v.WorkFlowStatusId == (int)WorkFlowStatus.Draft);
-            EntityNotFoundException.ThrowIfNull(draftVersion, "Draft:" + command.CustomEntityId);
-
-            var definition = _customEntityDefinitionRepository.GetByCode(draftVersion.CustomEntity.CustomEntityDefinitionCode);
-            EntityNotFoundException.ThrowIfNull(definition, draftVersion.CustomEntity.CustomEntityDefinitionCode);
+            var definition = _customEntityDefinitionRepository.GetByCode(version.CustomEntity.CustomEntityDefinitionCode);
+            EntityNotFoundException.ThrowIfNull(definition, version.CustomEntity.CustomEntityDefinitionCode);
 
             await _permissionValidationService.EnforceCustomEntityPermissionAsync<CustomEntityPublishPermission>(definition.CustomEntityDefinitionCode);
-            await ValidateTitle(draftVersion, definition);
 
-            using (var scope = _transactionScopeFactory.Create(_dbContext))
+            UpdatePublishDate(command, executionContext, version);
+
+            if (version.WorkFlowStatusId == (int)WorkFlowStatus.Published)
             {
-                // Find the published one and make it approved
-                if (publishedVersion != null)
-                {
-                    publishedVersion.WorkFlowStatusId = (int)WorkFlowStatus.Approved;
-                    await _dbContext.SaveChangesAsync();
-                }
-
-                await UpdateUrlSlugIfRequired(draftVersion, definition);
-
-                // Find the draft page and make it published
-                draftVersion.WorkFlowStatusId = (int)WorkFlowStatus.Published;
+                // only thing we can do with a published version is update the date
                 await _dbContext.SaveChangesAsync();
+            }
+            else
+            {
+                await ValidateTitle(version, definition);
 
-                scope.Complete();
+                using (var scope = _transactionScopeFactory.Create(_dbContext))
+                {
+                    await UpdateUrlSlugIfRequired(version, definition);
+                    version.WorkFlowStatusId = (int)WorkFlowStatus.Published;
+                    version.CustomEntity.PublishStatusCode = PublishStatusCode.Published;
+
+                    await _dbContext.SaveChangesAsync();
+                    await _customEntityStoredProcedures.UpdatePublishStatusQueryLookupAsync(command.CustomEntityId);
+
+                    scope.Complete();
+                }
             }
 
-            _customEntityCache.Clear(draftVersion.CustomEntity.CustomEntityDefinitionCode, command.CustomEntityId);
+            _customEntityCache.Clear(version.CustomEntity.CustomEntityDefinitionCode, command.CustomEntityId);
 
             await _messageAggregator.PublishAsync(new CustomEntityPublishedMessage()
             {
                 CustomEntityId = command.CustomEntityId,
-                CustomEntityDefinitionCode = draftVersion.CustomEntity.CustomEntityDefinitionCode
+                CustomEntityDefinitionCode = version.CustomEntity.CustomEntityDefinitionCode
             });
         }
-                
+
+        private static void UpdatePublishDate(PublishCustomEntityCommand command, IExecutionContext executionContext, CustomEntityVersion draftVersion)
+        {
+            if (command.PublishDate.HasValue)
+            {
+                draftVersion.CustomEntity.PublishDate = command.PublishDate;
+            }
+            else if (!draftVersion.CustomEntity.PublishDate.HasValue)
+            {
+                draftVersion.CustomEntity.PublishDate = executionContext.ExecutionDate;
+            }
+        }
+
         /// <summary>
         /// If the url slug is autogenerated, we need to update it only when the custom entity is published.
         /// </summary>

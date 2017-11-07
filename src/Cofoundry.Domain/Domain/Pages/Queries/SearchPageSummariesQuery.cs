@@ -12,7 +12,7 @@ namespace Cofoundry.Domain
         public string Tags { get; set; }
 
         [Display(Name = "Status")]
-        public WorkFlowStatus? WorkFlowStatus { get; set; }
+        public PublishStatus? PublishStatus { get; set; }
 
         [Display(Name = "Market")]
         public int? LocaleId { get; set; }

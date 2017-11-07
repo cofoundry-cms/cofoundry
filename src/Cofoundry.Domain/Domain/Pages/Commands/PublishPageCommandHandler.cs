@@ -18,52 +18,63 @@ namespace Cofoundry.Domain
     {
         private readonly IQueryExecutor _queryExecutor;
         private readonly CofoundryDbContext _dbContext;
-        private readonly EntityAuditHelper _entityAuditHelper;
-        private readonly EntityTagHelper _entityTagHelper;
         private readonly IPageCache _pageCache;
         private readonly IMessageAggregator _messageAggregator;
         private readonly ITransactionScopeFactory _transactionScopeFactory;
+        private readonly IPageStoredProcedures _pageStoredProcedures;
 
         public PublishPageCommandHandler(
             IQueryExecutor queryExecutor,
             CofoundryDbContext dbContext,
-            EntityAuditHelper entityAuditHelper,
-            EntityTagHelper entityTagHelper,
             IPageCache pageCache,
             IMessageAggregator messageAggregator,
-            ITransactionScopeFactory transactionScopeFactory
+            ITransactionScopeFactory transactionScopeFactory,
+            IPageStoredProcedures pageStoredProcedures
             )
         {
             _queryExecutor = queryExecutor;
             _dbContext = dbContext;
-            _entityAuditHelper = entityAuditHelper;
-            _entityTagHelper = entityTagHelper;
             _pageCache = pageCache;
             _messageAggregator = messageAggregator;
             _transactionScopeFactory = transactionScopeFactory;
+            _pageStoredProcedures = pageStoredProcedures;
         }
 
         #region execution
 
         public async Task ExecuteAsync(PublishPageCommand command, IExecutionContext executionContext)
         {
-            var pageVersions = await QueryVersions(command).ToListAsync();
+            var version =await _dbContext
+                .PageVersions
+                .Include(p => p.Page)
+                .Where(v => v.PageId == command.PageId
+                    && !v.IsDeleted
+                    && !v.Page.IsDeleted
+                    && (v.WorkFlowStatusId == (int)WorkFlowStatus.Draft || v.WorkFlowStatusId == (int)WorkFlowStatus.Published))
+                .OrderByDescending(v => v.WorkFlowStatusId == (int)WorkFlowStatus.Draft)
+                .ThenByDescending(v => v.CreateDate)
+                .FirstOrDefaultAsync();
 
-            using (var scope = _transactionScopeFactory.Create(_dbContext))
+            EntityNotFoundException.ThrowIfNull(version, command.PageId);
+
+            UpdatePublishDate(command, executionContext, version);
+
+            if (version.WorkFlowStatusId == (int)WorkFlowStatus.Published)
             {
-                // Find the published one and make it appPageroved
-                var publishedVersion = pageVersions.SingleOrDefault(v => v.WorkFlowStatusId == (int)WorkFlowStatus.Published);
-                if (publishedVersion != null)
-                {
-                    publishedVersion.WorkFlowStatusId = (int)WorkFlowStatus.Approved;
-                    await _dbContext.SaveChangesAsync();
-                }
-
-                // Find the draft page and make it published
-                SetDraftVersionPublished(command, pageVersions);
+                // only thing we can do with a published version is update the date
                 await _dbContext.SaveChangesAsync();
+            }
+            else
+            {
+                version.WorkFlowStatusId = (int)WorkFlowStatus.Published;
+                version.Page.PublishStatusCode = PublishStatusCode.Published;
 
-                scope.Complete();
+                using (var scope = _transactionScopeFactory.Create(_dbContext))
+                {
+                    await _dbContext.SaveChangesAsync();
+                    await _pageStoredProcedures.UpdatePublishStatusQueryLookupAsync(command.PageId);
+                    scope.Complete();
+                }
             }
 
             _pageCache.Clear();
@@ -74,26 +85,18 @@ namespace Cofoundry.Domain
             });
         }
 
-        #endregion
-
-        #region helpers
-
-        private IQueryable<PageVersion> QueryVersions(PublishPageCommand command)
+        private static void UpdatePublishDate(PublishPageCommand command, IExecutionContext executionContext, PageVersion draftVersion)
         {
-            return _dbContext
-                .PageVersions
-                .Where(p => p.PageId == command.PageId
-                    && !p.IsDeleted
-                    && !p.Page.IsDeleted
-                    && (p.WorkFlowStatusId == (int)WorkFlowStatus.Draft || p.WorkFlowStatusId == (int)WorkFlowStatus.Published));
+            if (command.PublishDate.HasValue)
+            {
+                draftVersion.Page.PublishDate = command.PublishDate;
+            }
+            else if (!draftVersion.Page.PublishDate.HasValue)
+            {
+                draftVersion.Page.PublishDate = executionContext.ExecutionDate;
+            }
         }
 
-        private void SetDraftVersionPublished(PublishPageCommand command, List<PageVersion> pageVersions)
-        {
-            var draftVersion = pageVersions.SingleOrDefault(v => v.WorkFlowStatusId == (int)WorkFlowStatus.Draft);
-            EntityNotFoundException.ThrowIfNull(draftVersion, "Draft:" + command.PageId);
-            draftVersion.WorkFlowStatusId = (int)WorkFlowStatus.Published;
-        }
 
         #endregion
 

@@ -27,7 +27,7 @@ namespace Cofoundry.BasicTestSite
             var query = new SearchCustomEntityRenderSummariesQuery();
             query.CustomEntityDefinitionCode = BlogPostCustomEntityDefinition.DefinitionCode;
             query.PageSize = 3;
-            query.WorkFlowStatus = WorkFlowStatusQuery.Published;
+            query.PublishStatus = PublishStatusQuery.Published;
 
             var entities = await _customEntityRepository.SearchCustomEntityRenderSummariesAsync(query);
             var viewModel = await MapBlogPostsAsync(entities);

@@ -32,7 +32,9 @@ namespace Cofoundry.Domain
             var command = await _dbContext
                 .PageVersions
                 .AsNoTracking()
-                .Where(p => p.PageId == query.Id && p.WorkFlowStatusId == (int)WorkFlowStatus.Draft && !p.IsDeleted)
+                .FilterActive()
+                .FilterByPageId(query.Id)
+                .Where(p => p.WorkFlowStatusId == (int)WorkFlowStatus.Draft)
                 .Select(v => new UpdatePageDraftVersionCommand
                 {
                     MetaDescription = v.MetaDescription,

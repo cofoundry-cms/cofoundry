@@ -19,10 +19,12 @@ namespace Cofoundry.Domain
         public ICustomEntityRoutingRule CustomEntityRouteRule { get; set; }
 
         /// <summary>
-        /// Gets an IVersionRoute that matches the specified workFlowStatusQuery and version number.
+        /// Gets an IVersionRoute that matches the specified publishStatusQuery and version number.
         /// </summary>
         /// <param name="preferCustomEntity">Look for the CustomEntityRouting if its available.</param>
-        public IVersionRoute GetVersionRoute(bool preferCustomEntity, WorkFlowStatusQuery workFlowStatusQuery, int? versionId)
+        /// <param name="publishStatusQuery">Specifies how to query for the version e.g. prefer publishes or draft version.</param>
+        /// <param name="versionId">Id of a specifc version to look for if using PublishStatusQuery.SpecificVersion.</param>
+        public IVersionRoute GetVersionRoute(bool preferCustomEntity, PublishStatusQuery publishStatusQuery, int? versionId)
         {
             IEnumerable<IVersionRoute> versions = null;
 
@@ -37,7 +39,7 @@ namespace Cofoundry.Domain
 
             if (versions != null)
             {
-                return versions.GetVersionRouting(workFlowStatusQuery, versionId);
+                return versions.GetVersionRouting(publishStatusQuery, versionId);
             }
 
             return null;

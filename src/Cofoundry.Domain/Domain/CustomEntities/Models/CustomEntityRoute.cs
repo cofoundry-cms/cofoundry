@@ -36,8 +36,37 @@ namespace Cofoundry.Domain
         public string UrlSlug { get; set; }
 
         /// <summary>
+        /// Indicates if the custom entity is marked as published or not, which allows the 
+        /// custom entity to be shown on the live site if the PublishDate has passed.
+        /// </summary>
+        public PublishStatus PublishStatus { get; set; }
+
+        /// <summary>
+        /// The date after which the custom entity can be shown on the live site.
+        /// </summary>
+        public DateTime? PublishDate { get; set; }
+
+        /// <summary>
         /// Routing information particular to specific versions.
         /// </summary>
         public IEnumerable<CustomEntityVersionRoute> Versions { get; set; }
+
+        #region public method
+
+        /// <summary>
+        /// Determines if the custom entity is published at this moment in time,
+        /// checking the published status, the publish date and checking
+        /// to make sure there is a published version.
+        /// </summary>
+        public bool IsPublished()
+        {
+            var isPublished = PublishStatus == PublishStatus.Published
+                && PublishDate <= DateTime.UtcNow
+                && Versions.Any(v => v.WorkFlowStatus == WorkFlowStatus.Published);
+
+            return isPublished;
+        }
+
+        #endregion
     }
 }

@@ -14,7 +14,6 @@ begin
 	declare @CustomEntityVersionEntityDefinitionCode char(6) = 'COFCEV';
 	declare @CustomEntityPageBlockEntityDefinitionCode char(6) = 'COFCEB';
 	declare @PublishedWorkFlowStatus int = 4;
-	declare @ApprovedWorkFlowStatus int = 5;
 	declare @DraftWorkFlowStatus int = 1;
 
 	if (@CopyFromCustomEntityVersionId is null)
@@ -123,4 +122,5 @@ begin
 	from @BlocksToCopy s
 	inner join Cofoundry.UnstructuredDataDependency d on d.RootEntityId = s.SourceCustomEntityVersionPageBlockId and RootEntityDefinitionCode = @CustomEntityPageBlockEntityDefinitionCode
 	
+	exec Cofoundry.CustomEntityPublishStatusQuery_Update @CustomEntityId = @CustomEntityId;
 end

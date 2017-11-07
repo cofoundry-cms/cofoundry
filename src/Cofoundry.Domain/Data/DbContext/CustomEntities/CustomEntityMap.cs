@@ -23,6 +23,10 @@ namespace Cofoundry.Domain.Data
                 .HasMaxLength(200)
                 .IsRequired();
 
+            builder.Property(s => s.PublishStatusCode)
+                .HasMaxLength(1)
+                .IsUnicode(false);
+
             // Relationships
 
             builder.HasOne(s => s.CustomEntityDefinition)

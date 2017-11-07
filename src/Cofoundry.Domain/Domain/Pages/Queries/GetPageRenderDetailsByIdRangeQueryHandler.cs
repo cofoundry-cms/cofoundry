@@ -43,7 +43,7 @@ namespace Cofoundry.Domain
 
         public async Task<IDictionary<int, PageRenderDetails>> ExecuteAsync(GetPageRenderDetailsByIdRangeQuery query, IExecutionContext executionContext)
         {
-            var dbPages = await QueryPages(query).ToListAsync();
+            var dbPages = await QueryPages(query, executionContext).ToListAsync();
             var pages = dbPages
                 .Select(_pageMapper.Map)
                 .ToList();
@@ -55,27 +55,29 @@ namespace Cofoundry.Domain
             var dbPageBlocks = await QueryPageBlocks(pages).ToListAsync();
             var allBlockTypes = await _queryExecutor.GetAllAsync<PageBlockTypeSummary>(executionContext);
 
-            await _entityVersionPageBlockMapper.MapRegionsAsync(dbPageBlocks, pages.SelectMany(p => p.Regions), allBlockTypes, query.WorkFlowStatus);
+            await _entityVersionPageBlockMapper.MapRegionsAsync(dbPageBlocks, pages.SelectMany(p => p.Regions), allBlockTypes, query.PublishStatus);
 
             return pages.ToDictionary(d => d.PageId);
         }
         
-        private IQueryable<PageVersion> QueryPages(GetPageRenderDetailsByIdRangeQuery query)
+        private IQueryable<PageVersion> QueryPages(GetPageRenderDetailsByIdRangeQuery query, IExecutionContext executionContext)
         {
-            if (query.WorkFlowStatus == WorkFlowStatusQuery.SpecificVersion)
+            if (query.PublishStatus == PublishStatusQuery.SpecificVersion)
             {
-                throw new InvalidOperationException("WorkFlowStatusQuery.SpecificVersion not supported in GetPageRenderDetailsByIdRangeQuery");
+                throw new InvalidOperationException("PublishStatusQuery.SpecificVersion not supported in GetPageRenderDetailsByIdRangeQuery");
             }
 
-            IQueryable<PageVersion> dbQuery = _dbContext
-                .PageVersions
+            var dbQuery = _dbContext
+                .PagePublishStatusQueries
                 .AsNoTracking()
+                .FilterActive()
+                .FilterByStatus(query.PublishStatus, executionContext.ExecutionDate)
+                .Where(v => query.PageIds.Contains(v.PageId))
+                .Select(p => p.PageVersion)
                 .Include(v => v.Page)
                 .Include(v => v.OpenGraphImageAsset)
                 .Include(v => v.PageTemplate)
-                .ThenInclude(t => t.PageTemplateRegions)
-                .Where(v => query.PageIds.Contains(v.PageId) && !v.IsDeleted)
-                .FilterByWorkFlowStatusQuery(query.WorkFlowStatus);
+                .ThenInclude(t => t.PageTemplateRegions);
 
             return dbQuery;
         }

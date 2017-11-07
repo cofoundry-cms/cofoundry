@@ -64,8 +64,6 @@ namespace Cofoundry.Domain
                 .AsNoTracking()
                 .Where(v => v.PageId == command.PageToDuplicateId && !v.IsDeleted)
                 .OrderByDescending(v => v.WorkFlowStatusId == (int)WorkFlowStatus.Published)
-                .ThenByDescending(v => v.WorkFlowStatusId == (int)WorkFlowStatus.Approved)
-                .ThenByDescending(v => v.WorkFlowStatusId == (int)WorkFlowStatus.Draft)
                 .ThenByDescending(v => v.CreateDate)
                 .Select(v => new PageQuery
                 {

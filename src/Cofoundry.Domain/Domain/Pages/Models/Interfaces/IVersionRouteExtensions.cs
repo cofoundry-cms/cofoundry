@@ -20,43 +20,45 @@ namespace Cofoundry.Domain
         /// <summary>
         /// Gets version routing info for the specified WorkFlowStatus query
         /// </summary>
-        public static T GetVersionRouting<T>(this IEnumerable<T> versions, WorkFlowStatusQuery status, int? versionId = null)
+        public static T GetVersionRouting<T>(this IEnumerable<T> versions, PublishStatusQuery status, int? versionId = null)
             where T : IVersionRoute
         {
             T result;
 
             switch (status)
             {
-                case WorkFlowStatusQuery.Draft:
+                case PublishStatusQuery.Draft:
                     result = versions
                         .SingleOrDefault(v => v.WorkFlowStatus == WorkFlowStatus.Draft);
                     break;
-                case WorkFlowStatusQuery.Published:
+                case PublishStatusQuery.Published:
                     result = versions
-                        .SingleOrDefault(v => v.WorkFlowStatus == WorkFlowStatus.Published);
+                        .Where(v => v.WorkFlowStatus == WorkFlowStatus.Published)
+                        .OrderByDescending(v => v.CreateDate)
+                        .FirstOrDefault();
                     break;
-                case WorkFlowStatusQuery.Latest:
+                case PublishStatusQuery.Latest:
                     result = versions
                         .Where(v => v.WorkFlowStatus == WorkFlowStatus.Draft || v.WorkFlowStatus == WorkFlowStatus.Published)
                         .OrderByDescending(v => v.WorkFlowStatus == WorkFlowStatus.Draft)
                         .FirstOrDefault();
                     break;
-                case WorkFlowStatusQuery.PreferPublished:
+                case PublishStatusQuery.PreferPublished:
                     result = versions
                         .Where(v => v.WorkFlowStatus == WorkFlowStatus.Draft || v.WorkFlowStatus == WorkFlowStatus.Published)
                         .OrderByDescending(v => v.WorkFlowStatus == WorkFlowStatus.Published)
                         .FirstOrDefault();
                     break;
-                case WorkFlowStatusQuery.SpecificVersion:
+                case PublishStatusQuery.SpecificVersion:
                     if (!versionId.HasValue)
                     {
-                        throw new InvalidOperationException("WorkFlowStatusQuery.SpecificVersion requires a specific VersionId");
+                        throw new InvalidOperationException("PublishStatusQuery.SpecificVersion requires a specific VersionId");
                     }
                     result = versions
                         .SingleOrDefault(v => v.VersionId == versionId);
                     break;
                 default:
-                    throw new InvalidOperationException("Unrecognised WorkFlowStatusQuery: "  + status);
+                    throw new InvalidOperationException("Unrecognised PublishStatusQuery: " + status);
             }
 
             return result;

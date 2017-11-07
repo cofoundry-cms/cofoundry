@@ -44,28 +44,26 @@ namespace Cofoundry.Domain
             EntityNotFoundException.ThrowIfNull(definition, query.CustomEntityDefinitionCode);
 
             // Get Main Query
-            var dbPagedResult = await RunQueryAsync(query, definition);
+            var dbPagedResult = await RunQueryAsync(query, definition, executionContext);
             var mappedResult = await _customEntitySummaryMapper.MapAsync(dbPagedResult.Items, executionContext);
 
             return dbPagedResult.ChangeType(mappedResult);
         }
 
-        private async Task<PagedQueryResult<CustomEntityVersion>> RunQueryAsync(SearchCustomEntitySummariesQuery query, CustomEntityDefinitionSummary definition)
+        private Task<PagedQueryResult<CustomEntityPublishStatusQuery>> RunQueryAsync(SearchCustomEntitySummariesQuery query, CustomEntityDefinitionSummary definition, IExecutionContext executionContext)
         {
-            var dbQuery = (await _dbContext
-                .CustomEntityVersions
+            var dbQuery = _dbContext
+                .CustomEntityPublishStatusQueries
                 .AsNoTracking()
-                .Include(v => v.Creator)
+                .Include(v => v.CustomEntityVersion)
+                .ThenInclude(v => v.Creator)
                 .Include(v => v.CustomEntity)
                 .ThenInclude(c => c.Creator)
                 .Include(v => v.CustomEntity)
                 .ThenInclude(c => c.Locale)
-                .Where(e => e.CustomEntity.CustomEntityDefinitionCode == query.CustomEntityDefinitionCode)
-                .Where(v => v.WorkFlowStatusId == (int)WorkFlowStatus.Draft || v.WorkFlowStatusId == (int)WorkFlowStatus.Published)
-                .GroupBy(e => e.CustomEntityId, (key, g) => g.OrderByDescending(v => v.WorkFlowStatusId == (int)WorkFlowStatus.Draft).FirstOrDefault())
-                // TODO: EF Core: To make this work we must execute the full query before sorting & paging
-                .ToListAsync())
-                .AsQueryable();
+                .FilterByActive()
+                .FilterByStatus(PublishStatusQuery.Latest, executionContext.ExecutionDate)
+                .FilterByCustomEntityDefinitionCode(query.CustomEntityDefinitionCode);
 
             // Filter by locale 
             if (query.LocaleId > 0)
@@ -80,30 +78,26 @@ namespace Cofoundry.Domain
             if (!string.IsNullOrWhiteSpace(query.Text))
             {
                 dbQuery = dbQuery
-                    .Where(e => e.Title.Contains(query.Text) || e.SerializedData.Contains(query.Text))
-                    .OrderByDescending(e => e.Title == query.Text)
-                    .ThenByDescending(e => e.Title.Contains(query.Text));
+                    .Where(e => e.CustomEntityVersion.Title.Contains(query.Text) || e.CustomEntityVersion.SerializedData.Contains(query.Text))
+                    .OrderByDescending(e => e.CustomEntityVersion.Title == query.Text)
+                    .ThenByDescending(e => e.CustomEntityVersion.Title.Contains(query.Text));
             }
             else if (definition.Ordering != CustomEntityOrdering.None)
             {
                 dbQuery = dbQuery
-                    .OrderBy(e => e.CustomEntity.Locale != null ? e.CustomEntity.Locale.IETFLanguageTag : string.Empty)
-                    //.OrderBy(e => e.CustomEntity.Locale.IETFLanguageTag)
+                    .OrderBy(e => e.CustomEntity.Locale.IETFLanguageTag)
                     .ThenBy(e => !e.CustomEntity.Ordering.HasValue)
                     .ThenBy(e => e.CustomEntity.Ordering)
-                    .ThenBy(e => e.Title);
+                    .ThenBy(e => e.CustomEntityVersion.Title);
             }
             else
             {
                 dbQuery = dbQuery
-                    // TODO: EF Core: Put this sorting back in when EF core supports it
-                    //.OrderBy(e => e.CustomEntity.Locale.IETFLanguageTag)
-                    .OrderBy(e => e.CustomEntity.Locale != null ? e.CustomEntity.Locale.IETFLanguageTag : string.Empty)
-                    .ThenBy(e => e.Title);
+                    .OrderBy(e => e.CustomEntity.Locale.IETFLanguageTag)
+                    .ThenBy(e => e.CustomEntityVersion.Title);
             }
-
-            // TODO: could be async when EF core supports it
-            var dbPagedResult = dbQuery.ToPagedResult(query);
+            
+            var dbPagedResult = dbQuery.ToPagedResultAsync(query);
 
             return dbPagedResult;
         }

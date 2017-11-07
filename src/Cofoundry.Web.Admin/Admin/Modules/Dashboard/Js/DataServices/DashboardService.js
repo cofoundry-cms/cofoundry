@@ -12,7 +12,7 @@
 
     service.getDraftPages = function () {
         return $http.get(serviceBase + 'pages', getParams({
-            workFlowStatus: 'Draft'
+            publishStatus: 'Draft'
         }));
     }
 

@@ -44,10 +44,10 @@ namespace Cofoundry.Domain
         /// </summary>
         /// <param name="typeName">The block type name e.g. 'PlainText', 'RawHtml'.</param>
         /// <param name="pageBlocks">The version data to get the serialized model from.</param>
-        /// <param name="workflowStatus">
-        /// The workflow status of the parent page or custom entity 
+        /// <param name="publishStatus">
+        /// The publish status of the parent page or custom entity 
         /// being mapped. This is provided so dependent entities can use
-        /// the same workflow status.
+        /// the same publish status.
         /// </param>
         /// <returns>
         /// Collection of mapped display models, wrapped in an output class that
@@ -56,7 +56,7 @@ namespace Cofoundry.Domain
         public async Task<List<PageBlockTypeDisplayModelMapperOutput>> MapDisplayModelAsync(
             string typeName, 
             IEnumerable<IEntityVersionPageBlock> pageBlocks, 
-            WorkFlowStatusQuery workflowStatus
+            PublishStatusQuery publishStatus
             )
         {
             // Find the data-provider class for this block type
@@ -78,7 +78,7 @@ namespace Cofoundry.Domain
             }
             else
             {
-                var blockWorkflowStatus = TranslateWorkFlowStatusForBlocks(workflowStatus);
+                var blockWorkflowStatus = TranslateWorkFlowStatusForBlocks(publishStatus);
 
                 // We have to use a mapping class to do some custom mapping
                 var displayModels = (Task<List<PageBlockTypeDisplayModelMapperOutput>>)_mapGenericMethod
@@ -95,19 +95,19 @@ namespace Cofoundry.Domain
         /// </summary>
         /// <param name="typeName">The block type name e.g. 'PlainText', 'RawHtml'.</param>
         /// <param name="pageBlock">The version data to get the serialized model from.</param>
-        /// <param name="workflowStatus">
-        /// The workflow status of the parent page or custom entity 
+        /// <param name="publishStatus">
+        /// The publish status of the parent page or custom entity 
         /// being mapped. This is provided so dependent entities can use
-        /// the same workflow status.
+        /// the same publish status.
         /// </param>
         /// <returns>Mapped display model.</returns>
         public async Task<IPageBlockTypeDisplayModel> MapDisplayModelAsync(
             string typeName,
             IEntityVersionPageBlock pageBlock, 
-            WorkFlowStatusQuery workflowStatus
+            PublishStatusQuery publishStatus
             )
         {
-            var mapped = await MapDisplayModelAsync(typeName, new IEntityVersionPageBlock[] { pageBlock }, workflowStatus);
+            var mapped = await MapDisplayModelAsync(typeName, new IEntityVersionPageBlock[] { pageBlock }, publishStatus);
             return mapped
                 .Select(m => m.DisplayModel)
                 .SingleOrDefault();
@@ -139,11 +139,11 @@ namespace Cofoundry.Domain
         /// The same applies if we're loading a specific version.
         /// </summary>
         /// <param name="workflowStatus">The original workflow status of the parent entity.</param>
-        private WorkFlowStatusQuery TranslateWorkFlowStatusForBlocks(WorkFlowStatusQuery workflowStatus)
+        private PublishStatusQuery TranslateWorkFlowStatusForBlocks(PublishStatusQuery workflowStatus)
         {
-            if (workflowStatus == WorkFlowStatusQuery.Draft || workflowStatus == WorkFlowStatusQuery.SpecificVersion)
+            if (workflowStatus == PublishStatusQuery.Draft || workflowStatus == PublishStatusQuery.SpecificVersion)
             {
-                workflowStatus = WorkFlowStatusQuery.Latest;
+                workflowStatus = PublishStatusQuery.Latest;
             }
 
             return workflowStatus;
@@ -151,7 +151,7 @@ namespace Cofoundry.Domain
 
         private async Task<List<PageBlockTypeDisplayModelMapperOutput>> MapGeneric<T>(
             IEnumerable<IEntityVersionPageBlock> pageBlocks, 
-            WorkFlowStatusQuery workflowStatus
+            PublishStatusQuery workflowStatus
             ) where T : IPageBlockTypeDataModel
         {
             var mapperType = typeof(IPageBlockTypeDisplayModelMapper<T>);

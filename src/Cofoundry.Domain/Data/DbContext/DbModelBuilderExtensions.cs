@@ -144,6 +144,7 @@ namespace Cofoundry.Domain.Data
                 .Map(new PageGroupMap())
                 .Map(new PageVersionBlockMap())
                 .Map(new PageMap())
+                .Map(new PagePublishStatusQueryMap())
                 .Map(new PageTagMap())
                 .Map(new PageVersionMap())
                 .Map(new PageDirectoryMap())
@@ -152,6 +153,7 @@ namespace Cofoundry.Domain.Data
                 .Map(new UnstructuredDataDependencyMap())
                 .Map(new CustomEntityDefinitionMap())
                 .Map(new CustomEntityMap())
+                .Map(new CustomEntityPublishStatusQueryMap())
                 .Map(new CustomEntityVersionMap());
 
             return modelBuilder;

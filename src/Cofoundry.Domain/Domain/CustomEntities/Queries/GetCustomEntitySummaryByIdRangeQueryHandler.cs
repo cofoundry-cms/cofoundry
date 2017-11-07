@@ -39,7 +39,7 @@ namespace Cofoundry.Domain
 
         public async Task<IDictionary<int, CustomEntitySummary>> ExecuteAsync(GetByIdRangeQuery<CustomEntitySummary> query, IExecutionContext executionContext)
         {
-            var dbResults = await QueryAsync(query.Ids);
+            var dbResults = await QueryAsync(query.Ids, executionContext);
 
             // Validation permissions
             var definitionCodes = dbResults.Select(r => r.CustomEntity.CustomEntityDefinitionCode);
@@ -54,21 +54,20 @@ namespace Cofoundry.Domain
 
         #region private helpers
 
-        private async Task<List<CustomEntityVersion>> QueryAsync(int[] ids)
+        private async Task<List<CustomEntityPublishStatusQuery>> QueryAsync(int[] ids, IExecutionContext executionContext)
         {
             var dbResults = await _dbContext
-                .CustomEntityVersions
+                .CustomEntityPublishStatusQueries
                 .AsNoTracking()
-                .Include(e => e.Creator)
+                .Include(e => e.CustomEntityVersion)
+                .ThenInclude(e => e.Creator)
                 .Include(e => e.CustomEntity)
                 .ThenInclude(e => e.Locale)
                 .Include(e => e.CustomEntity)
-                .ThenInclude(e => e.CustomEntityVersions)
-                .Include(e => e.CustomEntity)
                 .ThenInclude(e => e.Creator)
                 .Where(v => ids.Contains(v.CustomEntityId))
-                .Where(v => v.WorkFlowStatusId == (int)WorkFlowStatus.Draft || v.WorkFlowStatusId == (int)WorkFlowStatus.Published)
-                .GroupBy(e => e.CustomEntityId, (key, g) => g.OrderByDescending(v => v.WorkFlowStatusId == (int)WorkFlowStatus.Draft).FirstOrDefault())
+                .FilterByActive()
+                .FilterByStatus(PublishStatusQuery.Latest, executionContext.ExecutionDate)
                 .ToListAsync();
             
             return dbResults;

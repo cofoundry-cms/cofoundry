@@ -23,6 +23,7 @@ namespace Cofoundry.Domain
         private readonly IMessageAggregator _messageAggregator;
         private readonly IPermissionValidationService _permissionValidationService;
         private readonly ITransactionScopeFactory _transactionScopeFactory;
+        private readonly ICustomEntityStoredProcedures _customEntityStoredProcedures;
 
         public DeleteCustomEntityCommandHandler(
             CofoundryDbContext dbContext,
@@ -31,7 +32,8 @@ namespace Cofoundry.Domain
             ICommandExecutor commandExecutor,
             IMessageAggregator messageAggregator,
             IPermissionValidationService permissionValidationService,
-            ITransactionScopeFactory transactionScopeFactory
+            ITransactionScopeFactory transactionScopeFactory,
+            ICustomEntityStoredProcedures customEntityStoredProcedures
             )
         {
             _dbContext = dbContext;
@@ -41,6 +43,7 @@ namespace Cofoundry.Domain
             _messageAggregator = messageAggregator;
             _permissionValidationService = permissionValidationService;
             _transactionScopeFactory = transactionScopeFactory;
+            _customEntityStoredProcedures = customEntityStoredProcedures;
         }
 
         #endregion
@@ -63,6 +66,8 @@ namespace Cofoundry.Domain
 
                     _dbContext.CustomEntities.Remove(customEntity);
                     await _dbContext.SaveChangesAsync();
+                    await _customEntityStoredProcedures.UpdatePublishStatusQueryLookupAsync(command.CustomEntityId);
+
                     scope.Complete();
                 }
                 _customEntityCache.Clear(customEntity.CustomEntityDefinitionCode, command.CustomEntityId);

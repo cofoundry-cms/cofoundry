@@ -65,8 +65,10 @@ namespace Cofoundry.Domain
                 var page = new PageSummary()
                 {
                     FullPath = pageRoute.FullPath,
-                    HasDraft = pageRoute.HasDraft,
-                    IsPublished = pageRoute.IsPublished,
+                    HasDraftVersion = pageRoute.HasDraftVersion,
+                    HasPublishedVersion = pageRoute.HasPublishedVersion,
+                    PublishDate = pageRoute.PublishDate,
+                    PublishStatus = pageRoute.PublishStatus,
                     Locale = pageRoute.Locale,
                     PageId = pageRoute.PageId,
                     PageType = pageRoute.PageType,

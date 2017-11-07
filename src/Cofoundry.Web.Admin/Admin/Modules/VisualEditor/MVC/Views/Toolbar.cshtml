@@ -39,6 +39,8 @@
     string entityNameSingular = string.Empty;
     string backToAdminLink = string.Empty;
     var versions = new List<IVersionRoute>();
+    IVersionRoute liveVersion = null;
+
     string iFrameParams = string.Empty;
 
     if (!isStaticPage)
@@ -76,7 +78,6 @@
             pageResponseData.HasDraftVersion.ToString());
 
         backToAdminLink = adminRouteLibrary.Dashboard.Dashboard();
-        versions = new List<IVersionRoute>();
 
         if (isCustomEntityRoute)
         {
@@ -88,7 +89,13 @@
             versions.AddRange(pageResponseData.PageRoutingInfo.PageRoute.Versions);
         }
 
-        versions = versions.OrderByDescending(v => v.WorkFlowStatus).ToList();
+        versions = versions
+            .OrderByDescending(v => v.WorkFlowStatus)
+            .ThenByDescending(v => v.CreateDate)
+            .ToList();
+
+        liveVersion = versions.FirstOrDefault(v => v.WorkFlowStatus == WorkFlowStatus.Published);
+
     }
 }
 
@@ -183,10 +190,15 @@
                         {
                             versionCount++;
                             var link = "?version=" + version.VersionId;
-                            if (version.WorkFlowStatus == WorkFlowStatus.Draft || version.WorkFlowStatus == WorkFlowStatus.Published)
+                            if (version.WorkFlowStatus == WorkFlowStatus.Draft)
                             {
-                                link = "?mode=" + (version.WorkFlowStatus == WorkFlowStatus.Published ? "live" : "preview");
+                                link = "?mode=preview";
                             }
+                            else if (version == liveVersion)
+                            {
+                                link = "?mode=live";
+                            }
+
                             link += "&edittype=" + (isCustomEntityRoute ? "entity" : "page");
 
                             bool isActive = false;
@@ -221,7 +233,7 @@
             else
             {
                 <button class="cofoundry-sv__mini-menu__toggle">
-                    <span class="cofoundry-sv__page-details__name">@Context.Request.Path.Value.Length</span>
+                    <span class="cofoundry-sv__page-details__name">@Context.Request.Path.Value</span>
                     <span class="cofoundry-sv__page-details__url">Static page</span>
                 </button>
             }

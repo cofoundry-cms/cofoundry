@@ -6,8 +6,6 @@ using System.Threading.Tasks;
 using Cofoundry.Domain.Data;
 using Cofoundry.Domain.CQS;
 using Microsoft.EntityFrameworkCore;
-using Cofoundry.Core.EntityFramework;
-using System.Data.SqlClient;
 using Cofoundry.Core.MessageAggregator;
 using Cofoundry.Core;
 
@@ -20,27 +18,24 @@ namespace Cofoundry.Domain
         #region constructor
 
         private readonly CofoundryDbContext _dbContext;
-        private readonly EntityAuditHelper _entityAuditHelper;
         private readonly ICustomEntityCache _customEntityCache;
         private readonly IMessageAggregator _messageAggregator;
         private readonly IPermissionValidationService _permissionValidationService;
-        private readonly IEntityFrameworkSqlExecutor _entityFrameworkSqlExecutor;
+        private readonly ICustomEntityStoredProcedures _customEntityStoredProcedures;
 
         public AddCustomEntityDraftVersionCommandHandler(
             CofoundryDbContext dbContext,
-            EntityAuditHelper entityAuditHelper,
             ICustomEntityCache customEntityCache,
             IMessageAggregator messageAggregator,
             IPermissionValidationService permissionValidationService,
-            IEntityFrameworkSqlExecutor entityFrameworkSqlExecutor
+            ICustomEntityStoredProcedures customEntityStoredProcedures
             )
         {
             _dbContext = dbContext;
-            _entityAuditHelper = entityAuditHelper;
             _customEntityCache = customEntityCache;
             _messageAggregator = messageAggregator;
             _permissionValidationService = permissionValidationService;
-            _entityFrameworkSqlExecutor = entityFrameworkSqlExecutor;
+            _customEntityStoredProcedures = customEntityStoredProcedures;
         }
 
         #endregion
@@ -52,30 +47,22 @@ namespace Cofoundry.Domain
             var definitionCode = await QueryVersionAndGetDefinitionCode(command).FirstOrDefaultAsync();
             EntityNotFoundException.ThrowIfNull(definitionCode, command.CustomEntityId);
 
-            await _permissionValidationService.EnforceCustomEntityPermissionAsync<CustomEntityUpdatePermission>(definitionCode);
+            _permissionValidationService.EnforceIsLoggedIn(executionContext.UserContext);
+            _permissionValidationService.EnforceCustomEntityPermission<CustomEntityUpdatePermission>(definitionCode, executionContext.UserContext);
 
-            var newVersionId = await _entityFrameworkSqlExecutor
-                .ExecuteCommandWithOutputAsync<int?>(_dbContext,
-                "Cofoundry.CustomEntity_AddDraft",
-                "CustomEntityVersionId",
-                 new SqlParameter("CustomEntityId", command.CustomEntityId),
-                 new SqlParameter("CopyFromCustomEntityVersionId", command.CopyFromCustomEntityVersionId),
-                 new SqlParameter("CreateDate", executionContext.ExecutionDate),
-                 new SqlParameter("CreatorId", executionContext.UserContext.UserId)
-                 );
+            var newVersionId = await _customEntityStoredProcedures.AddDraftAsync(
+                command.CustomEntityId,
+                command.CopyFromCustomEntityVersionId,
+                executionContext.ExecutionDate,
+                executionContext.UserContext.UserId.Value);
 
-            if (!newVersionId.HasValue)
-            {
-                throw new UnexpectedSqlStoredProcedureResultException("Cofoundry.CustomEntity_AddDraft", "No CustomEntityVersionId was returned.");
-            }
-
-            command.OutputCustomEntityVersionId = newVersionId.Value;
+            command.OutputCustomEntityVersionId = newVersionId;
             _customEntityCache.Clear(definitionCode, command.CustomEntityId);
 
             await _messageAggregator.PublishAsync(new CustomEntityDraftVersionAddedMessage()
             {
                 CustomEntityId = command.CustomEntityId,
-                CustomEntityVersionId = newVersionId.Value,
+                CustomEntityVersionId = newVersionId,
                 CustomEntityDefinitionCode = definitionCode
             });
         }
@@ -86,6 +73,7 @@ namespace Cofoundry.Domain
 
         private IQueryable<string> QueryVersionAndGetDefinitionCode(AddCustomEntityDraftVersionCommand command)
         {
+            // Query goes via the version to ensure one exists, even though we don't need to return it
             var dbQuery = _dbContext
                 .CustomEntityVersions
                 .AsNoTracking()
@@ -98,8 +86,8 @@ namespace Cofoundry.Domain
             else
             {
                 dbQuery = dbQuery
-                    .Where(v => v.WorkFlowStatusId == (int)WorkFlowStatus.Published || v.WorkFlowStatusId == (int)WorkFlowStatus.Approved)
-                    .OrderByDescending(v => v.WorkFlowStatusId == (int)WorkFlowStatus.Published);
+                    .Where(v => v.WorkFlowStatusId == (int)WorkFlowStatus.Published)
+                    .OrderByDescending(v => v.CreateDate);
             }
 
             return dbQuery

@@ -42,7 +42,9 @@ namespace Cofoundry.Domain
 
         public async Task<CustomEntityRenderDetails> ExecuteAsync(GetCustomEntityRenderDetailsByIdQuery query, IExecutionContext executionContext)
         {
-            var dbResult = await QueryCustomEntity(query).FirstOrDefaultAsync();
+            var dbResult = await QueryCustomEntityAsync(query, executionContext);
+            if (dbResult == null) return null;
+
             var entity = await MapCustomEntityAsync(dbResult);
 
             if (dbResult.CustomEntity.LocaleId.HasValue)
@@ -54,7 +56,7 @@ namespace Cofoundry.Domain
             var dbPageBlocks = await QueryPageBlocks(entity).ToListAsync();
 
             var allBlockTypes = await _queryExecutor.GetAllAsync<PageBlockTypeSummary>(executionContext);
-            await _entityVersionPageBlockMapper.MapRegionsAsync(dbPageBlocks, entity.Regions, allBlockTypes, query.WorkFlowStatus);
+            await _entityVersionPageBlockMapper.MapRegionsAsync(dbPageBlocks, entity.Regions, allBlockTypes, query.PublishStatus);
 
             var routingQuery = new GetPageRoutingInfoByCustomEntityIdQuery(dbResult.CustomEntityId);
             var routing = await _queryExecutor.ExecuteAsync(routingQuery, executionContext);
@@ -105,14 +107,42 @@ namespace Cofoundry.Domain
             return entity;
         }
 
-        private IQueryable<CustomEntityVersion> QueryCustomEntity(GetCustomEntityRenderDetailsByIdQuery query)
+        private async Task<CustomEntityVersion> QueryCustomEntityAsync(GetCustomEntityRenderDetailsByIdQuery query, IExecutionContext executionContext)
         {
-            return _dbContext
-                .CustomEntityVersions
-                .AsNoTracking()
-                .Include(e => e.CustomEntity)
-                .FilterByCustomEntityId(query.CustomEntityId)
-                .FilterByWorkFlowStatusQuery(query.WorkFlowStatus, query.CustomEntityVersionId);
+            CustomEntityVersion result;
+
+            if (query.PublishStatus == PublishStatusQuery.SpecificVersion)
+            {
+                if (!query.CustomEntityVersionId.HasValue)
+                {
+                    throw new Exception("A CustomEntityVersionId must be included in the query to use PublishStatusQuery.SpecificVersion");
+                }
+
+                result = await _dbContext
+                    .CustomEntityVersions
+                    .AsNoTracking()
+                    .Include(e => e.CustomEntity)
+                    .FilterByActive()
+                    .FilterByCustomEntityId(query.CustomEntityId)
+                    .FilterByCustomEntityVersionId(query.CustomEntityVersionId.Value)
+                    .SingleOrDefaultAsync();
+            }
+            else
+            {
+                var dbResult = await _dbContext
+                    .CustomEntityPublishStatusQueries
+                    .AsNoTracking()
+                    .Include(e => e.CustomEntityVersion)
+                    .ThenInclude(e => e.CustomEntity)
+                    .FilterByActive()
+                    .FilterByCustomEntityId(query.CustomEntityId)
+                    .FilterByStatus(query.PublishStatus, executionContext.ExecutionDate)
+                    .SingleOrDefaultAsync();
+
+                result = dbResult?.CustomEntityVersion;
+            }
+
+            return result;
         }
 
         private IEnumerable<string> MapPageRoutings(

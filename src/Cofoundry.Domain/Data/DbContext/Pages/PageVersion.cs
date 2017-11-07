@@ -9,6 +9,7 @@ namespace Cofoundry.Domain.Data
         {
             PageVersionBlocks = new List<PageVersionBlock>();
             ChildPageVersions = new List<PageVersion>();
+            PagePublishStatusQueries = new List<PagePublishStatusQuery>();
         }
 
         public int PageVersionId { get; set; }
@@ -23,13 +24,15 @@ namespace Cofoundry.Domain.Data
         public string OpenGraphTitle { get; set; }
         public string OpenGraphDescription { get; set; }
         public int? OpenGraphImageId { get; set; }
-        public virtual ImageAsset OpenGraphImageAsset { get; set; }
-        public virtual PageTemplate PageTemplate { get; set; }
-        public virtual ICollection<PageVersionBlock> PageVersionBlocks { get; set; }
-        public virtual Page Page { get; set; }
-        public virtual ICollection<PageVersion> ChildPageVersions { get; set; }
-        public virtual PageVersion BasedOnPageVersion { get; set; }
-        
+
+        public ImageAsset OpenGraphImageAsset { get; set; }
+        public PageTemplate PageTemplate { get; set; }
+        public ICollection<PageVersionBlock> PageVersionBlocks { get; set; }
+        public Page Page { get; set; }
+        public ICollection<PageVersion> ChildPageVersions { get; set; }
+        public PageVersion BasedOnPageVersion { get; set; }
+        public ICollection<PagePublishStatusQuery> PagePublishStatusQueries { get; set; }
+
         #region ICreateAuditable
 
         public System.DateTime CreateDate { get; set; }

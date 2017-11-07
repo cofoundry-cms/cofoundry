@@ -20,12 +20,12 @@ namespace Cofoundry.Domain
         /// </summary>
         /// <param name="pageId">PageId of the page to get.</param>
         /// <param name="workFlowStatus">Used to determine which version of the page to include data for.</param>
-        public GetPageRenderDetailsByIdQuery(int pageId, WorkFlowStatusQuery? workFlowStatus = null)
+        public GetPageRenderDetailsByIdQuery(int pageId, PublishStatusQuery? workFlowStatus = null)
         {
             PageId = pageId;
             if (workFlowStatus.HasValue)
             {
-                WorkFlowStatus = workFlowStatus.Value;
+                PublishStatus = workFlowStatus.Value;
             }
         }
 
@@ -41,23 +41,23 @@ namespace Cofoundry.Domain
         /// defaults to Latest, meaning that a draft page will be returned ahead of a
         /// published version of the page.
         /// </summary>
-        public WorkFlowStatusQuery WorkFlowStatus { get; set; }
+        public PublishStatusQuery PublishStatus { get; set; }
 
         /// <summary>
         /// Optional id of a specific page version to get. Can only be provided
-        /// if WorkFlowStatusQuery is set to WorkFlowStatusQuery.SpecificVersion.
+        /// if PublishStatusQuery is set to PublishStatusQuery.SpecificVersion.
         /// </summary>
         public int? PageVersionId { get; set; }
 
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
-            if (WorkFlowStatus == WorkFlowStatusQuery.SpecificVersion && (!PageVersionId.HasValue || PageVersionId < 1))
+            if (PublishStatus == PublishStatusQuery.SpecificVersion && (!PageVersionId.HasValue || PageVersionId < 1))
             {
-                yield return new ValidationResult("Value cannot be null if WorkFlowStatusQuery.SpecificVersion is specified", new string[] { nameof(PageVersionId) });
+                yield return new ValidationResult("Value cannot be null if PublishStatusQuery.SpecificVersion is specified", new string[] { nameof(PageVersionId) });
             }
-            else if (WorkFlowStatus != WorkFlowStatusQuery.SpecificVersion && PageVersionId.HasValue)
+            else if (PublishStatus != PublishStatusQuery.SpecificVersion && PageVersionId.HasValue)
             {
-                yield return new ValidationResult("Value should be null if WorkFlowStatusQuery.SpecificVersion is not specified", new string[] { nameof(PageVersionId) });
+                yield return new ValidationResult("Value should be null if PublishStatusQuery.SpecificVersion is not specified", new string[] { nameof(PageVersionId) });
             }
         }
     }

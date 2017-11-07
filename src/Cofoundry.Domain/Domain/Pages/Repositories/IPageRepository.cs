@@ -143,7 +143,7 @@ namespace Cofoundry.Domain
 
         Task MovePageVersionBlockAsync(MovePageVersionBlockCommand command, IExecutionContext executionContext = null);
 
-        Task PublishPageCommandAsync(int pageId, IExecutionContext executionContext = null);
+        Task PublishPageCommandAsync(PublishPageCommand command, IExecutionContext executionContext = null);
 
         Task UnPublishPageCommandAsync(int pageId, IExecutionContext executionContext = null);
 

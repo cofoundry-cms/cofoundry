@@ -32,7 +32,9 @@ namespace Cofoundry.Domain
         {
             var exists = _dbContext
                 .PageVersions
-                .AnyAsync(v => v.PageId == query.PageId && v.WorkFlowStatusId == (int)WorkFlowStatus.Draft && !v.IsDeleted);
+                .FilterActive()
+                .FilterByPageId(query.PageId)
+                .AnyAsync(v => v.WorkFlowStatusId == (int)WorkFlowStatus.Draft);
 
             return exists;
         }

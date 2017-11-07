@@ -35,6 +35,8 @@ namespace Cofoundry.Domain
 
         public bool Publish { get; set; }
 
+        public DateTime? PublishDate { get; set; }
+
         #region Ouput
 
         [OutputValue]

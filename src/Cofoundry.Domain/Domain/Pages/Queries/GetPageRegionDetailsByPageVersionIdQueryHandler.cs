@@ -50,12 +50,12 @@ namespace Cofoundry.Domain
             var dbPageBlocks = await QueryPageBlocks(query).ToListAsync();
             var allBlockTypes = await _queryExecutor.GetAllAsync<PageBlockTypeSummary>(executionContext);
 
-            MapRegionss(regions, dbPageBlocks, allBlockTypes);
+            MapRegions(regions, dbPageBlocks, allBlockTypes);
 
             return regions;
         }
 
-        private void MapRegionss(
+        private void MapRegions(
             List<PageRegionDetails> regions, 
             List<PageVersionBlock> dbPageBlocks, 
             IEnumerable<PageBlockTypeSummary> allBlockTypes
@@ -98,7 +98,8 @@ namespace Cofoundry.Domain
             var dbQuery = _dbContext
                 .PageVersions
                 .AsNoTracking()
-                .Where(v => v.PageVersionId == query.PageVersionId && !v.IsDeleted)
+                .FilterActive()
+                .FilterByPageVersionId(query.PageVersionId)
                 .SelectMany(v => v.PageTemplate.PageTemplateRegions)
                 .Where(s => !s.IsCustomEntityRegion)
                 .OrderBy(s => s.UpdateDate)

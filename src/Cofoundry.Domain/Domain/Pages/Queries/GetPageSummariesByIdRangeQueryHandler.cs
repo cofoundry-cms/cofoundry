@@ -55,7 +55,7 @@ namespace Cofoundry.Domain
                 .Pages
                 .AsNoTracking()
                 .Include(p => p.Creator)
-                .Where(p => !p.IsDeleted && p.PageDirectory.IsActive)
+                .FilterActive()
                 .Where(p => query.PageIds.Contains(p.PageId));
 
             return dbQuery;

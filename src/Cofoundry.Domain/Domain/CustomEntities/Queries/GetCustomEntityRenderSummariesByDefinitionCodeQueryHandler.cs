@@ -36,22 +36,34 @@ namespace Cofoundry.Domain
 
         public async Task<IEnumerable<CustomEntityRenderSummary>> ExecuteAsync(GetCustomEntityRenderSummariesByDefinitionCodeQuery query, IExecutionContext executionContext)
         {
-            var dbResults = await Query(query).ToListAsync();
+            var dbResults = await QueryAsync(query, executionContext);
             var results = await _customEntityRenderSummaryMapper.MapAsync(dbResults, executionContext);
 
             return results;
         }
 
-        private IQueryable<CustomEntityVersion> Query(GetCustomEntityRenderSummariesByDefinitionCodeQuery query)
+        private async Task<List<CustomEntityVersion>> QueryAsync(GetCustomEntityRenderSummariesByDefinitionCodeQuery query, IExecutionContext executionContext)
         {
-            var dbQuery = _dbContext
-                .CustomEntityVersions
-                .AsNoTracking()
-                .Include(e => e.CustomEntity)
-                .FilterByCustomEntityDefinitionCode(query.CustomEntityDefinitionCode)
-                .FilterByWorkFlowStatusQuery(query.WorkFlowStatus);
+            if (query.PublishStatus == PublishStatusQuery.SpecificVersion)
+            {
+                throw new InvalidOperationException("PublishStatusQuery.SpecificVersion not supported in GetCustomEntityRenderSummariesByDefinitionCodeQuery");
+            }
 
-            return dbQuery;
+            var dbResults = await _dbContext
+                .CustomEntityPublishStatusQueries
+                .AsNoTracking()
+                .Include(e => e.CustomEntityVersion)
+                .ThenInclude(e => e.CustomEntity)
+                .FilterByActive()
+                .FilterByCustomEntityDefinitionCode(query.CustomEntityDefinitionCode)
+                .FilterByStatus(query.PublishStatus, executionContext.ExecutionDate)
+                .ToListAsync();
+
+            // EF doesn't allow includes after selects, so re-filter the results.
+
+            return dbResults
+                .Select(e => e.CustomEntityVersion)
+                .ToList();
         }
         
         #endregion

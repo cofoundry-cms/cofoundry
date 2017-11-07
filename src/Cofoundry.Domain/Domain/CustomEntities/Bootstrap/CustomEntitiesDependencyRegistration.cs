@@ -25,6 +25,7 @@ namespace Cofoundry.Domain
                 .RegisterInstance<ICustomEntityDefinitionRepository, CustomEntityDefinitionRepository>()
                 .RegisterType<ICustomEntityRenderSummaryMapper, CustomEntityRenderSummaryMapper>()
                 .RegisterType<ICustomEntitySummaryMapper, CustomEntitySummaryMapper>()
+                .RegisterType<ICustomEntityVersionSummaryMapper, CustomEntityVersionSummaryMapper>()
                 .RegisterType<ICustomEntityDefinitionMicroSummaryMapper, CustomEntityDefinitionMicroSummaryMapper>()
                 .RegisterType<ICustomEntityDefinitionSummaryMapper, CustomEntityDefinitionSummaryMapper>()
                 .RegisterType<ICustomEntityRouteMapper, CustomEntityRouteMapper>()

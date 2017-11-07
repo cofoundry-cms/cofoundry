@@ -22,13 +22,15 @@ namespace Cofoundry.Domain
         private readonly ICommandExecutor _commandExecutor;
         private readonly IMessageAggregator _messageAggregator;
         private readonly ITransactionScopeFactory _transactionScopeFactory;
+        private readonly IPageStoredProcedures _pageStoredProcedures;
 
         public DeletePageDraftVersionCommandHandler(
             CofoundryDbContext dbContext,
             IPageCache pageCache,
             ICommandExecutor commandExecutor,
             IMessageAggregator messageAggregator,
-            ITransactionScopeFactory transactionScopeFactory
+            ITransactionScopeFactory transactionScopeFactory,
+            IPageStoredProcedures pageStoredProcedures
             )
         {
             _dbContext = dbContext;
@@ -36,6 +38,7 @@ namespace Cofoundry.Domain
             _commandExecutor = commandExecutor;
             _messageAggregator = messageAggregator;
             _transactionScopeFactory = transactionScopeFactory;
+            _pageStoredProcedures = pageStoredProcedures;
         }
 
         #endregion
@@ -57,8 +60,9 @@ namespace Cofoundry.Domain
                 using (var scope = _transactionScopeFactory.Create(_dbContext))
                 {
                     await _commandExecutor.ExecuteAsync(new DeleteUnstructuredDataDependenciesCommand(PageVersionEntityDefinition.DefinitionCode, draft.PageVersionId));
-
                     await _dbContext.SaveChangesAsync();
+                    await _pageStoredProcedures.UpdatePublishStatusQueryLookupAsync(command.PageId);
+                    
                     scope.Complete();
                 }
                 _pageCache.Clear(command.PageId);

@@ -12,6 +12,9 @@ namespace Cofoundry.Domain
     /// </summary>
     public class PageRoute : IPageRoute
     {
+        /// <summary>
+        /// Database identifier for the page.
+        /// </summary>
         public int PageId { get; set; }
         
         /// <summary>
@@ -41,15 +44,25 @@ namespace Cofoundry.Domain
         public string Title { get; set; }
 
         /// <summary>
-        /// Indicates if ther page has at least one published version and is currently
-        /// viewable in the live site.
+        /// Indicates if the page is marked as published or not, which allows the page
+        /// to be shown on the live site if the PublishDate has passed.
         /// </summary>
-        public bool IsPublished { get; set; }
+        public PublishStatus PublishStatus { get; set; }
+
+        /// <summary>
+        /// The date after which the page can be shown on the live site.
+        /// </summary>
+        public DateTime? PublishDate { get; set; }
 
         /// <summary>
         /// Indicates whether there is a draft version of this page available.
         /// </summary>
-        public bool HasDraft { get; set; }
+        public bool HasDraftVersion { get; set; }
+
+        /// <summary>
+        /// Indicates whether there is a published version of this page available.
+        /// </summary>
+        public bool HasPublishedVersion { get; set; }
 
         /// <summary>
         /// Routing information particular to specific versions.
@@ -95,6 +108,20 @@ namespace Cofoundry.Domain
         public bool IsDirectoryDefaultPage(int? localeId = null)
         {
             return string.IsNullOrWhiteSpace(UrlPath);
+        }
+
+        /// <summary>
+        /// Determines if the page is published at this moment in time,
+        /// checking the published status, the publish date and checking
+        /// to make sure there is a published version.
+        /// </summary>
+        public bool IsPublished()
+        {
+            var isPublished = PublishStatus == PublishStatus.Published
+                && HasPublishedVersion
+                && PublishDate <= DateTime.UtcNow;
+
+            return isPublished;
         }
 
         #endregion

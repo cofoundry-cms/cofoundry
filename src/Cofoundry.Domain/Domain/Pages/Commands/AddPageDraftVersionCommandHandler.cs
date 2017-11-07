@@ -18,25 +18,19 @@ namespace Cofoundry.Domain
     {
         #region constructor
 
-        private readonly CofoundryDbContext _dbContext;
-        private readonly EntityAuditHelper _entityAuditHelper;
         private readonly IPageCache _pageCache;
         private readonly IMessageAggregator _messageAggregator;
-        private readonly IEntityFrameworkSqlExecutor _entityFrameworkSqlExecutor;
+        private readonly IPageStoredProcedures _pageStoredProcedures;
 
         public AddPageDraftVersionCommandHandler(
-            CofoundryDbContext dbContext,
-            EntityAuditHelper entityAuditHelper,
             IPageCache pageCache,
             IMessageAggregator messageAggregator,
-            IEntityFrameworkSqlExecutor entityFrameworkSqlExecutor
+            IPageStoredProcedures pageStoredProcedures
             )
         {
-            _dbContext = dbContext;
-            _entityAuditHelper = entityAuditHelper;
             _pageCache = pageCache;
             _messageAggregator = messageAggregator;
-            _entityFrameworkSqlExecutor = entityFrameworkSqlExecutor;
+            _pageStoredProcedures = pageStoredProcedures;
         }
 
         #endregion
@@ -45,30 +39,21 @@ namespace Cofoundry.Domain
 
         public async Task ExecuteAsync(AddPageDraftVersionCommand command, IExecutionContext executionContext)
         {
-            var newVersionId = await _entityFrameworkSqlExecutor
-                .ExecuteCommandWithOutputAsync<int?>(_dbContext,
-                "Cofoundry.Page_AddDraft",
-                "PageVersionId",
-                 new SqlParameter("PageId", command.PageId),
-                 new SqlParameter("CopyFromPageVersionId", command.CopyFromPageVersionId),
-                 new SqlParameter("CreateDate", executionContext.ExecutionDate),
-                 new SqlParameter("CreatorId", executionContext.UserContext.UserId)
-                 );
-
-            if (!newVersionId.HasValue)
-            {
-                throw new UnexpectedSqlStoredProcedureResultException("Cofoundry.Page_AddDraft", "No PageId was returned.");
-            }
+            var newVersionId = await _pageStoredProcedures.AddDraftAsync(
+                command.PageId,
+                command.CopyFromPageVersionId,
+                executionContext.ExecutionDate,
+                executionContext.UserContext.UserId.Value);
 
             _pageCache.Clear(command.PageId);
 
             // Set Ouput
-            command.OutputPageVersionId = newVersionId.Value;
+            command.OutputPageVersionId = newVersionId;
 
             await _messageAggregator.PublishAsync(new PageDraftVersionAddedMessage()
             {
                 PageId = command.PageId,
-                PageVersionId = newVersionId.Value
+                PageVersionId = newVersionId
             });
         }
 

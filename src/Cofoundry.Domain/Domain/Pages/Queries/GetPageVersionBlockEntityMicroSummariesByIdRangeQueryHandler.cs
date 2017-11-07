@@ -53,7 +53,7 @@ namespace Cofoundry.Domain
                     RootEntityTitle = m.PageVersion.Title,
                     EntityDefinitionCode = definition.EntityDefinitionCode,
                     EntityDefinitionName = definition.Name,
-                    IsPreviousVersion = m.PageVersion.WorkFlowStatusId != (int)WorkFlowStatus.Published || m.PageVersion.WorkFlowStatusId != (int)WorkFlowStatus.Draft
+                    IsPreviousVersion = !m.PageVersion.PagePublishStatusQueries.Any()
                 });
 
             return dbQuery;

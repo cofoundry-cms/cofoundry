@@ -14,6 +14,10 @@ begin
 	from Cofoundry.CustomEntityVersion e
 	inner join deleted d on e.CustomEntityId = d.CustomEntityId
 
+    delete Cofoundry.CustomEntityPublishStatusQuery
+	from Cofoundry.CustomEntityPublishStatusQuery e
+	inner join deleted d on e.CustomEntityId = d.CustomEntityId
+
 	-- Delete any relations that allow cascades
 	delete from Cofoundry.UnstructuredDataDependency
 	from Cofoundry.UnstructuredDataDependency e

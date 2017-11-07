@@ -50,7 +50,7 @@ namespace Cofoundry.Web.Admin
                 return await GetById<UpdatePageVersionBlockCommand>(pageVersionBlockId);
             }
             
-            var query = new GetPageVersionBlockRenderDetailsByIdQuery() { PageVersionBlockId = pageVersionBlockId, WorkFlowStatus = WorkFlowStatusQuery.Latest };
+            var query = new GetPageVersionBlockRenderDetailsByIdQuery() { PageVersionBlockId = pageVersionBlockId, PublishStatus = PublishStatusQuery.Latest };
             var results = await _queryExecutor.ExecuteAsync(query);
             
             return _apiResponseHelper.SimpleQueryResponse(this, results);

@@ -50,7 +50,7 @@ namespace Cofoundry.Domain
                 .Pages
                 .AsNoTracking()
                 .Include(p => p.Creator)
-                .Where(p => !p.IsDeleted && p.PageDirectory.IsActive);
+                .FilterActive();
 
             // Filter by tags
             if (!string.IsNullOrEmpty(query.Tags))
@@ -69,19 +69,13 @@ namespace Cofoundry.Domain
             }
 
             // Filter by workflow status (only draft and published are applicable
-            if (query.WorkFlowStatus == WorkFlowStatus.Draft)
+            if (query.PublishStatus == PublishStatus.Published)
             {
-                dbQuery = dbQuery.Where(p => p.PageVersions
-                                                .OrderByDescending(v => v.CreateDate)
-                                                .Where(v => !v.IsDeleted)
-                                                .Take(1)
-                                                .Any(v => v.WorkFlowStatusId == (int)WorkFlowStatus.Draft));
-            } else if (query.WorkFlowStatus == WorkFlowStatus.Published)
+                dbQuery = dbQuery.Where(p => p.PublishStatusCode == PublishStatusCode.Published);
+            } else if (query.PublishStatus == PublishStatus.Unpublished)
             {
                 // A page might be published, but also have a draft as the latest version
-                dbQuery = dbQuery.Where(p => p.PageVersions
-                                                .Where(v => !v.IsDeleted)
-                                                .Any(v => v.WorkFlowStatusId == (int)WorkFlowStatus.Published));
+                dbQuery = dbQuery.Where(p => p.PublishStatusCode == PublishStatusCode.Unpublished);
             }
 
             // Filter by locale 

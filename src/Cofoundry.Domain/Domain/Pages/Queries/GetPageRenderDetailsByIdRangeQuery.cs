@@ -20,17 +20,17 @@ namespace Cofoundry.Domain
         /// </summary>
         /// <param name="pageIds">PageIds of the pages to get.</param>
         /// <param name="workFlowStatus">Used to determine which version of the page to include data for.</param>
-        public GetPageRenderDetailsByIdRangeQuery(IEnumerable<int> pageIds, WorkFlowStatusQuery? workFlowStatus = null)
+        public GetPageRenderDetailsByIdRangeQuery(IEnumerable<int> pageIds, PublishStatusQuery? workFlowStatus = null)
         {
             PageIds = pageIds?.ToArray();
             if (workFlowStatus.HasValue)
             {
-                WorkFlowStatus = workFlowStatus.Value;
+                PublishStatus = workFlowStatus.Value;
             }
         }
 
         public int[] PageIds { get; set; }
 
-        public WorkFlowStatusQuery WorkFlowStatus { get; set; }
+        public PublishStatusQuery PublishStatus { get; set; }
     }
 }

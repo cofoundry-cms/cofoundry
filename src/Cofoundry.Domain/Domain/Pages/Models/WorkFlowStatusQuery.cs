@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 namespace Cofoundry.Domain
 {
     /// <summary>
-    /// This enumeration represents a query for a page in a particular status
+    /// This enumeration represents a query for a versioned entity in a particular status.
     /// </summary>
-    public enum WorkFlowStatusQuery
+    public enum PublishStatusQuery : short
     {
         /// <summary>
         /// The latest available version, returning the latest draft if one is available
@@ -18,23 +18,24 @@ namespace Cofoundry.Domain
         Latest = 0,
 
         /// <summary>
-        /// Return only the draft version or null if one does not exist
+        /// Return only the draft version or null if one does not exist.
         /// </summary>
         Draft = 1,
 
         /// <summary>
-        /// Return only the published version or null if one does not exist
+        /// Return only the published version or null if one does not exist. For this status
+        /// the publish date is checked to ensure that the page is published.
         /// </summary>
-        Published = 4,
-
-        /// <summary>
-        /// Used in combination with a PageVersionId to return a specific version
-        /// </summary>
-        SpecificVersion = 20,
+        Published = 2,
 
         /// <summary>
         /// Returns the published version if one is available, otherwise returning a draft version.
         /// </summary>
-        PreferPublished = 21
+        PreferPublished = 3,
+
+        /// <summary>
+        /// Used in combination with a version identifier to return a specific version.
+        /// </summary>
+        SpecificVersion = 20
     }
 }

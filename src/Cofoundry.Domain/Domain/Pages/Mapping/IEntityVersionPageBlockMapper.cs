@@ -17,7 +17,7 @@ namespace Cofoundry.Domain
             IEnumerable<IEntityVersionPageBlock> dbBlocks, 
             IEnumerable<IEntityRegionRenderDetails<TBlockRenderDetails>> regions, 
             IEnumerable<PageBlockTypeSummary> allBlockTypes,
-            WorkFlowStatusQuery workflowStatus
+            PublishStatusQuery workflowStatus
             )
             where TBlockRenderDetails : IEntityVersionPageBlockRenderDetails, new();
 

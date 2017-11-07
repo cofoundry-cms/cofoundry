@@ -36,7 +36,8 @@ namespace Cofoundry.Domain
                 .AsNoTracking()
                 .Include(p => p.PageTags)
                 .ThenInclude(t => t.Tag)
-                .Where(v => v.PageId == query.Id && !v.IsDeleted)
+                .FilterActive()
+                .FilterByPageId(query.Id)
                 .SingleOrDefaultAsync();
 
             EntityNotFoundException.ThrowIfNull(dbResult, query.Id);

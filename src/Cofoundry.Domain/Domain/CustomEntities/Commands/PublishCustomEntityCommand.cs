@@ -15,13 +15,19 @@ namespace Cofoundry.Domain
         {
         }
 
-        public PublishCustomEntityCommand(int customEntityId)
+        public PublishCustomEntityCommand(int customEntityId, DateTime? publishDate = null)
         {
             CustomEntityId = customEntityId;
+            PublishDate = publishDate;
         }
 
         [PositiveInteger]
         [Required]
         public int CustomEntityId { get; set; }
+
+        /// <summary>
+        /// Set a value to alter the publish date, otherwise the existing or current date is used.
+        /// </summary>
+        public DateTime? PublishDate { get; set; }
     }
 }

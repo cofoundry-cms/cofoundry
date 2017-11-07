@@ -105,33 +105,31 @@ namespace Cofoundry.Web.Admin
 
             var insertBodyIndex = html.IndexOf(BODY_TAG_END, StringComparison.OrdinalIgnoreCase) - 1;
 
-            if (insertBodyIndex > 0)
+            // Early return if no data available
+            if (insertBodyIndex < 0) return html;
+
+            // Response data can be null if this is a 404 page
+            string responseJson = "null";
+
+            var pageResponseData = _pageResponseDataCache.Get();
+            if (pageResponseData != null)
             {
-                var pageResponseData = _pageResponseDataCache.Get();
-
-                if (pageResponseData == null)
-                {
-                    // Response data should always be set
-                    throw new InvalidOperationException("IPageResponseDataCache.Get() returned no result.");
-                }
-
                 // When using IPageBlockWithParentPageData and referencing the parent page we get a
                 // Self referencing loop error. Rather than set this globally we ignore this specifically here
                 var settings = _jsonSerializerSettingsFactory.Create();
                 settings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
-
-                var responseJson = JsonConvert.SerializeObject(pageResponseData, settings);
-
-                var toolbarHtml = await _razorViewRenderer.RenderViewAsync(context, _adminRouteLibrary.VisualEditor.VisualEditorToolbarViewPath(), pageResponseData);
-                var svgIcons = await RenderSvgIconsToStringAsync();
-
-                html = html.Substring(0, insertBodyIndex)
-                    + Environment.NewLine + TAB
-                    + "<script>var Cofoundry = { 'PageResponseData': " + responseJson + " }</script>" + TAB
-                    + toolbarHtml
-                    + string.Format("<!-- SVG ICONS --><div style='{0}'>{1}</div><!-- END SVG ICONS -->", "display:none", svgIcons)
-                    + html.Substring(insertBodyIndex);
+                responseJson = JsonConvert.SerializeObject(pageResponseData, settings);
             }
+
+            var toolbarHtml = await _razorViewRenderer.RenderViewAsync(context, _adminRouteLibrary.VisualEditor.VisualEditorToolbarViewPath(), pageResponseData);
+            var svgIcons = await RenderSvgIconsToStringAsync();
+
+            html = html.Substring(0, insertBodyIndex)
+                + Environment.NewLine + TAB
+                + "<script>var Cofoundry = { 'PageResponseData': " + responseJson + " }</script>" + TAB
+                + toolbarHtml
+                + string.Format("<!-- SVG ICONS --><div style='{0}'>{1}</div><!-- END SVG ICONS -->", "display:none", svgIcons)
+                + html.Substring(insertBodyIndex);
 
             return html;
         }

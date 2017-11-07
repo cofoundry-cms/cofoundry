@@ -40,11 +40,9 @@ namespace Cofoundry.Domain
             var path = _pathHelper.StandardizePath(query.Path);
             var allRoutes = await _queryExecutor.GetAllAsync<PageRoute>(executionContext);
 
-            // Rather than starts with, do a regex replacement here with the path
-            // E.g. /styuff/{slug} is not matching /styff/winterlude
             var pageRoutes = allRoutes
                 .Where(r => r.FullPath.Equals(path) || (r.PageType == PageType.CustomEntityDetails && IsCustomRoutingMatch(path, r.FullPath)))
-                .Where(r => query.IncludeUnpublished || r.IsPublished)
+                .Where(r => query.IncludeUnpublished || r.IsPublished())
                 .Where(r => r.Locale == null || MatchesLocale(r.Locale, query.LocaleId))
                 .OrderByDescending(r => r.FullPath.Equals(path))
                 .ThenByDescending(r => MatchesLocale(r.Locale, query.LocaleId))
@@ -74,7 +72,7 @@ namespace Cofoundry.Domain
                     {
                         var customEntityRouteQuery = rule.ExtractRoutingQuery(query.Path, pageRoute);
                         var customEntityRoute = await _queryExecutor.ExecuteAsync(customEntityRouteQuery, executionContext);
-                        if (customEntityRoute != null && (query.IncludeUnpublished  || customEntityRoute.Versions.HasPublishedVersion()))
+                        if (customEntityRoute != null && (query.IncludeUnpublished  || customEntityRoute.IsPublished()))
                         {
                             return ToRoutingInfo(pageRoute, customEntityRoute, rule);
                         }

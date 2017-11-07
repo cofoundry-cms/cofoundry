@@ -48,6 +48,7 @@ namespace Cofoundry.Domain.Data
         public DbSet<CustomEntity> CustomEntities { get; set; }
         public DbSet<CustomEntityVersion> CustomEntityVersions { get; set; }
         public DbSet<CustomEntityVersionPageBlock> CustomEntityVersionPageBlocks { get; set; }
+        public DbSet<CustomEntityPublishStatusQuery> CustomEntityPublishStatusQueries { get; set; }
         public DbSet<EntityDefinition> EntityDefinitions { get; set; }
         public DbSet<DocumentAssetGroupItem> DocumentAssetGroupItems { get; set; }
         public DbSet<DocumentAssetGroup> DocumentAssetGroups { get; set; }
@@ -67,9 +68,10 @@ namespace Cofoundry.Domain.Data
         public DbSet<PageBlockType> PageBlockTypes { get; set; }
         public DbSet<PageGroupItem> PageGroupItems { get; set; }
         public DbSet<PageGroup> PageGroups { get; set; }
-        public DbSet<PageVersionBlock> PageVersionBlocks { get; set; }
         public DbSet<PageTag> PageTags { get; set; }
         public DbSet<PageVersion> PageVersions { get; set; }
+        public DbSet<PageVersionBlock> PageVersionBlocks { get; set; }
+        public DbSet<PagePublishStatusQuery> PagePublishStatusQueries { get; set; }
         public DbSet<Permission> Permissions { get; set; }
         public DbSet<RewriteRule> RewriteRules { get; set; }
         public DbSet<Role> Roles { get; set; }

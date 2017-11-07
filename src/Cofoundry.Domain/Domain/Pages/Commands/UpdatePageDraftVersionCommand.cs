@@ -39,6 +39,14 @@ namespace Cofoundry.Domain
         [PositiveInteger]
         public int? OpenGraphImageId { get; set; }
 
+        /// <summary>
+        /// If set to true, the version will be published after it has been updated.
+        /// </summary>
         public bool Publish { get; set; }
+
+        /// <summary>
+        /// Set a value to alter the publish date, otherwise the existing or current date is used.
+        /// </summary>
+        public DateTime? PublishDate { get; set; }
     }
 }

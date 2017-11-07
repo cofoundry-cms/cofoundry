@@ -18,12 +18,12 @@ namespace Cofoundry.Domain
         /// </summary>
         /// <param name="customEntityId">CustomEntityId of the custom entity to get.</param>
         /// <param name="workFlowStatus">Used to determine which version of the page to include data for.</param>
-        public GetCustomEntityRenderDetailsByIdQuery(int customEntityId, WorkFlowStatusQuery? workFlowStatus = null)
+        public GetCustomEntityRenderDetailsByIdQuery(int customEntityId, PublishStatusQuery? workFlowStatus = null)
         {
             CustomEntityId = customEntityId;
             if (workFlowStatus.HasValue)
             {
-                WorkFlowStatus = workFlowStatus.Value;
+                PublishStatus = workFlowStatus.Value;
             }
         }
 
@@ -31,7 +31,7 @@ namespace Cofoundry.Domain
         [PositiveInteger]
         public int CustomEntityId { get; set; }
 
-        public WorkFlowStatusQuery WorkFlowStatus { get; set; }
+        public PublishStatusQuery PublishStatus { get; set; }
 
         public int? CustomEntityVersionId { get; set; }
 
@@ -41,13 +41,13 @@ namespace Cofoundry.Domain
 
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
-            if (WorkFlowStatus == WorkFlowStatusQuery.SpecificVersion && (!CustomEntityVersionId.HasValue || CustomEntityVersionId < 1))
+            if (PublishStatus == PublishStatusQuery.SpecificVersion && (!CustomEntityVersionId.HasValue || CustomEntityVersionId < 1))
             {
-                yield return new ValidationResult("Value cannot be null if WorkFlowStatusQuery.SpecificVersion is specified", new string[] { "CustomEntityVersionId" });
+                yield return new ValidationResult("Value cannot be null if PublishStatusQuery.SpecificVersion is specified", new string[] { "CustomEntityVersionId" });
             }
-            else if (WorkFlowStatus != WorkFlowStatusQuery.SpecificVersion && CustomEntityVersionId.HasValue)
+            else if (PublishStatus != PublishStatusQuery.SpecificVersion && CustomEntityVersionId.HasValue)
             {
-                yield return new ValidationResult("Value should be null if WorkFlowStatusQuery.SpecificVersion is not specified", new string[] { "CustomEntityVersionId" });
+                yield return new ValidationResult("Value should be null if PublishStatusQuery.SpecificVersion is not specified", new string[] { "CustomEntityVersionId" });
             }
         }
 

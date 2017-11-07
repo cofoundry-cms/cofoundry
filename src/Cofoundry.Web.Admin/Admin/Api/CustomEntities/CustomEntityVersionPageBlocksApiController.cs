@@ -53,7 +53,7 @@ namespace Cofoundry.Web.Admin
                 return await GetById<UpdateCustomEntityVersionPageBlockCommand>(customEntityVersionPageBlockId);
             }
 
-            var query = new GetCustomEntityVersionPageBlockRenderDetailsByIdQuery() { CustomEntityVersionPageBlockId = customEntityVersionPageBlockId, WorkFlowStatus = WorkFlowStatusQuery.Latest };
+            var query = new GetCustomEntityVersionPageBlockRenderDetailsByIdQuery() { CustomEntityVersionPageBlockId = customEntityVersionPageBlockId, PublishStatus = PublishStatusQuery.Latest };
             var results = await _queryExecutor.ExecuteAsync(query);
 
             return _apiResponseHelper.SimpleQueryResponse(this, results);

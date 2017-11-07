@@ -42,7 +42,7 @@ namespace Cofoundry.Domain
 
         public async Task<PageRenderDetails> ExecuteAsync(GetPageRenderDetailsByIdQuery query, IExecutionContext executionContext)
         {
-            var dbPage = await QueryPage(query).FirstOrDefaultAsync();
+            var dbPage = await QueryPageAsync(query, executionContext);
             if (dbPage == null) return null;
             var page = _pageRenderDetailsMapper.Map(dbPage);
 
@@ -51,46 +51,55 @@ namespace Cofoundry.Domain
             var dbPageBlocks = await QueryPageBlocks(page).ToListAsync();
             var allBlockTypes = await _queryExecutor.GetAllAsync<PageBlockTypeSummary>(executionContext);
 
-            await _entityVersionPageBlockMapper.MapRegionsAsync(dbPageBlocks, page.Regions, allBlockTypes, query.WorkFlowStatus);
+            await _entityVersionPageBlockMapper.MapRegionsAsync(dbPageBlocks, page.Regions, allBlockTypes, query.PublishStatus);
 
             return page;
         }
 
-        private IQueryable<PageVersion> QueryPage(GetPageRenderDetailsByIdQuery query)
+        private async Task<PageVersion> QueryPageAsync(GetPageRenderDetailsByIdQuery query, IExecutionContext executionContext)
         {
-            IQueryable<PageVersion> dbQuery = _dbContext
-                .PageVersions
-                .AsNoTracking()
-                .Include(v => v.Page)
-                .Include(v => v.OpenGraphImageAsset)
-                .Include(v => v.PageTemplate)
-                .ThenInclude(t => t.PageTemplateRegions)
-                .Where(v => v.PageId == query.PageId && !v.IsDeleted);
+            PageVersion result;
 
-            switch (query.WorkFlowStatus)
+            if (query.PublishStatus == PublishStatusQuery.SpecificVersion)
             {
-                case WorkFlowStatusQuery.Draft:
-                    dbQuery = dbQuery.Where(v => v.WorkFlowStatusId == (int)WorkFlowStatus.Draft);
-                    break;
-                case WorkFlowStatusQuery.Published:
-                    dbQuery = dbQuery.Where(v => v.WorkFlowStatusId == (int)WorkFlowStatus.Published);
-                    break;
-                case WorkFlowStatusQuery.Latest:
-                    dbQuery = dbQuery.Where(v => v.WorkFlowStatusId == (int)WorkFlowStatus.Draft || v.WorkFlowStatusId == (int)WorkFlowStatus.Published);
-                    dbQuery = dbQuery.OrderByDescending(v => v.WorkFlowStatusId == (int)WorkFlowStatus.Draft);
-                    break;
-                case WorkFlowStatusQuery.PreferPublished:
-                    dbQuery = dbQuery.Where(v => v.WorkFlowStatusId == (int)WorkFlowStatus.Draft || v.WorkFlowStatusId == (int)WorkFlowStatus.Published);
-                    dbQuery = dbQuery.OrderByDescending(v => v.WorkFlowStatusId == (int)WorkFlowStatus.Published);
-                    break;
-                case WorkFlowStatusQuery.SpecificVersion:
-                    dbQuery = dbQuery.Where(v => v.PageVersionId == query.PageVersionId);
-                    break;
-                default:
-                    throw new ArgumentException("Unknown WorkFlowStatusQuery: " + query.WorkFlowStatus);
+                if (!query.PageVersionId.HasValue)
+                {
+                    throw new Exception("A PageVersionId must be included in the query to use PublishStatusQuery.SpecificVersion");
+                }
+
+                result = await _dbContext
+                    .PageVersions
+                    .AsNoTracking()
+                    .Include(v => v.Page)
+                    .Include(v => v.OpenGraphImageAsset)
+                    .Include(v => v.PageTemplate)
+                    .ThenInclude(t => t.PageTemplateRegions)
+                    .FilterActive()
+                    .FilterByPageId(query.PageId)
+                    .FilterByPageVersionId(query.PageVersionId.Value)
+                    .FirstOrDefaultAsync();
+            }
+            else
+            {
+                var queryResult = await _dbContext
+                    .PagePublishStatusQueries
+                    .AsNoTracking()
+                    .Include(q => q.PageVersion)
+                    .ThenInclude(v => v.Page)
+                    .Include(q => q.PageVersion)
+                    .ThenInclude(v => v.OpenGraphImageAsset)
+                    .Include(q => q.PageVersion)
+                    .ThenInclude(v => v.PageTemplate)
+                    .ThenInclude(t => t.PageTemplateRegions)
+                    .FilterActive()
+                    .FilterByStatus(query.PublishStatus, executionContext.ExecutionDate)
+                    .FilterByPageId(query.PageId)
+                    .FirstOrDefaultAsync();
+
+                result = queryResult?.PageVersion;
             }
 
-            return dbQuery;
+            return result;
         }
 
         private IQueryable<PageVersionBlock> QueryPageBlocks(PageRenderDetails page)

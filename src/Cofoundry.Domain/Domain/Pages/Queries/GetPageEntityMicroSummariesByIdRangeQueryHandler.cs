@@ -32,20 +32,22 @@ namespace Cofoundry.Domain
 
         public async Task<IDictionary<int, RootEntityMicroSummary>> ExecuteAsync(GetPageEntityMicroSummariesByIdRangeQuery query, IExecutionContext executionContext)
         {
-            var results = await Query(query).ToDictionaryAsync(e => e.RootEntityId);
+            var results = await Query(query, executionContext).ToDictionaryAsync(e => e.RootEntityId);
 
             return results;
         }
 
-        private IQueryable<RootEntityMicroSummary> Query(GetPageEntityMicroSummariesByIdRangeQuery query)
+        private IQueryable<RootEntityMicroSummary> Query(GetPageEntityMicroSummariesByIdRangeQuery query, IExecutionContext executionContext)
         {
             var definition = _entityDefinitionRepository.GetByCode(PageEntityDefinition.DefinitionCode);
 
             var dbQuery = _dbContext
-                .PageVersions
+                .PagePublishStatusQueries
                 .AsNoTracking()
-                .FilterByWorkFlowStatusQuery(WorkFlowStatusQuery.Latest)
-                .Where(v => query.PageIds.Contains(v.PageId))
+                .FilterActive()
+                .FilterByStatus(PublishStatusQuery.Latest, executionContext.ExecutionDate)
+                .Where(q => query.PageIds.Contains(q.PageId))
+                .Select(q => q.PageVersion)
                 .Select(v => new RootEntityMicroSummary()
                 {
                     RootEntityId = v.PageId,

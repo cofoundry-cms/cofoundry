@@ -8,6 +8,7 @@ using Cofoundry.Domain.CQS;
 using Microsoft.EntityFrameworkCore;
 using Cofoundry.Core.MessageAggregator;
 using Cofoundry.Core;
+using Cofoundry.Core.EntityFramework;
 
 namespace Cofoundry.Domain
 {
@@ -23,6 +24,8 @@ namespace Cofoundry.Domain
         private readonly EntityTagHelper _entityTagHelper;
         private readonly IPageCache _pageCache;
         private readonly IMessageAggregator _messageAggregator;
+        private readonly ITransactionScopeFactory _transactionScopeFactory;
+        private readonly IPageStoredProcedures _pageStoredProcedures;
 
         public UnPublishPageCommandHandler(
             IQueryExecutor queryExecutor,
@@ -30,7 +33,9 @@ namespace Cofoundry.Domain
             EntityAuditHelper entityAuditHelper,
             EntityTagHelper entityTagHelper,
             IPageCache pageCache,
-            IMessageAggregator messageAggregator
+            IMessageAggregator messageAggregator,
+            ITransactionScopeFactory transactionScopeFactory,
+            IPageStoredProcedures pageStoredProcedures
             )
         {
             _queryExecutor = queryExecutor;
@@ -39,6 +44,8 @@ namespace Cofoundry.Domain
             _entityTagHelper = entityTagHelper;
             _pageCache = pageCache;
             _messageAggregator = messageAggregator;
+            _pageStoredProcedures = pageStoredProcedures;
+            _transactionScopeFactory = transactionScopeFactory;
         }
 
         #endregion
@@ -47,29 +54,29 @@ namespace Cofoundry.Domain
 
         public async Task ExecuteAsync(UnPublishPageCommand command, IExecutionContext executionContext)
         {
-            var pageVersions = await _dbContext
-                .PageVersions
-                .Where(p => p.PageId == command.PageId 
-                    && !p.IsDeleted 
-                    && !p.Page.IsDeleted 
-                    && (p.WorkFlowStatusId == (int)WorkFlowStatus.Published || p.WorkFlowStatusId == (int)WorkFlowStatus.Draft))
-                .ToListAsync();
+            var page = await _dbContext
+                .Pages
+                .FilterActive()
+                .FilterByPageId(command.PageId)
+                .SingleOrDefaultAsync();
 
-            var publishedVersion = pageVersions.SingleOrDefault(p => p.WorkFlowStatusId == (int)WorkFlowStatus.Published);
-            EntityNotFoundException.ThrowIfNull(publishedVersion, command.PageId);
+            EntityNotFoundException.ThrowIfNull(page, command.PageId);
 
-            if (pageVersions.Any(p => p.WorkFlowStatusId == (int)WorkFlowStatus.Draft))
+            if (page.PublishStatusCode == PublishStatusCode.Unpublished)
             {
-                // If there's already a draft, change to approved.
-                publishedVersion.WorkFlowStatusId = (int)WorkFlowStatus.Approved;
-            }
-            else
-            {
-                // Else set it to draft
-                publishedVersion.WorkFlowStatusId = (int)WorkFlowStatus.Draft;
+                // No action
+                return;
             }
 
-            await _dbContext.SaveChangesAsync();
+            page.PublishStatusCode = PublishStatusCode.Unpublished;
+
+            using (var scope = _transactionScopeFactory.Create(_dbContext))
+            {
+                await _dbContext.SaveChangesAsync();
+                await _pageStoredProcedures.UpdatePublishStatusQueryLookupAsync(command.PageId);
+                scope.Complete();
+            }
+
             _pageCache.Clear();
 
             await _messageAggregator.PublishAsync(new PageUnPublishedMessage()

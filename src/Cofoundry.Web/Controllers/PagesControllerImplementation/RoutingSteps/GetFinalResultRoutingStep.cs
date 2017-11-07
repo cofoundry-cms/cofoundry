@@ -83,7 +83,7 @@ namespace Cofoundry.Web
         public async Task SetCacheAsync(IEditablePageViewModel vm, PageActionRoutingState state)
         {
             var siteViewerMode = state.VisualEditorMode;
-            var workFlowStatusQuery = state.VisualEditorMode.ToWorkFlowStatusQuery();
+            var publishStatusQuery = state.VisualEditorMode.ToPublishStatusQuery();
             var pageVersions = state.PageRoutingInfo.PageRoute.Versions;
 
             // Force a viewer mode
@@ -91,7 +91,7 @@ namespace Cofoundry.Web
             {
                 var version = state.PageRoutingInfo.GetVersionRoute(
                     state.InputParameters.IsEditingCustomEntity,
-                    state.VisualEditorMode.ToWorkFlowStatusQuery(),
+                    state.VisualEditorMode.ToPublishStatusQuery(),
                     state.InputParameters.VersionId);
 
                 switch (version.WorkFlowStatus)
@@ -111,8 +111,8 @@ namespace Cofoundry.Web
             pageResponseData.Page = vm;
             pageResponseData.VisualEditorMode = siteViewerMode;
             pageResponseData.PageRoutingInfo = state.PageRoutingInfo;
-            pageResponseData.HasDraftVersion = state.PageRoutingInfo.GetVersionRoute(state.InputParameters.IsEditingCustomEntity, WorkFlowStatusQuery.Draft, null) != null;
-            pageResponseData.Version = state.PageRoutingInfo.GetVersionRoute(state.InputParameters.IsEditingCustomEntity, workFlowStatusQuery, state.InputParameters.VersionId);
+            pageResponseData.HasDraftVersion = state.PageRoutingInfo.GetVersionRoute(state.InputParameters.IsEditingCustomEntity, PublishStatusQuery.Draft, null) != null;
+            pageResponseData.Version = state.PageRoutingInfo.GetVersionRoute(state.InputParameters.IsEditingCustomEntity, publishStatusQuery, state.InputParameters.VersionId);
             pageResponseData.IsCustomEntityRoute = pageResponseData.Version is CustomEntityVersionRoute;
             
             var customEntityDefinitionCode = state.PageRoutingInfo.PageRoute.CustomEntityDefinitionCode;
@@ -134,11 +134,11 @@ namespace Cofoundry.Web
 
             if (state.InputParameters.IsEditingCustomEntity)
             {
-                pageResponseData.PageVersion = pageVersions.GetVersionRouting(WorkFlowStatusQuery.Latest);
+                pageResponseData.PageVersion = pageVersions.GetVersionRouting(PublishStatusQuery.Latest);
             }
             else
             {
-                pageResponseData.PageVersion = pageVersions.GetVersionRouting(workFlowStatusQuery, state.InputParameters.VersionId);
+                pageResponseData.PageVersion = pageVersions.GetVersionRouting(publishStatusQuery, state.InputParameters.VersionId);
             }
 
             _pageRenderDataCache.Set(pageResponseData);
@@ -153,8 +153,15 @@ namespace Cofoundry.Web
             // If we're editing the custom entity, we need to get the version we're editing, otherwise just get latest
             if (state.InputParameters.IsEditingCustomEntity)
             {
-                query.WorkFlowStatus = state.VisualEditorMode.ToWorkFlowStatusQuery();
-                query.CustomEntityVersionId = state.InputParameters.VersionId;
+                if (state.InputParameters.VersionId.HasValue)
+                {
+                    query.CustomEntityVersionId = state.InputParameters.VersionId;
+                    query.PublishStatus = PublishStatusQuery.SpecificVersion;
+                }
+                else
+                {
+                    query.PublishStatus = state.VisualEditorMode.ToPublishStatusQuery();
+                }
             }
             var model = await _queryExecutor.ExecuteAsync(query);
             return model;

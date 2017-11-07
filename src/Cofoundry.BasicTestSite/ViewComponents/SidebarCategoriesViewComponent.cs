@@ -25,7 +25,7 @@ namespace Cofoundry.BasicTestSite
             query.CustomEntityDefinitionCode = CategoryCustomEntityDefinition.DefinitionCode;
             query.PageSize = 20;
             query.SortBy = CustomEntityQuerySortType.Title;
-            query.WorkFlowStatus = WorkFlowStatusQuery.Published;
+            query.PublishStatus = PublishStatusQuery.Published;
 
             var entities = await _customEntityRepository.SearchCustomEntityRenderSummariesAsync(query);
             var viewModel = MapCategories(entities);

@@ -11,6 +11,6 @@ namespace Cofoundry.Domain
     {
         public int PageVersionBlockId { get; set; }
 
-        public WorkFlowStatusQuery WorkFlowStatus { get; set; }
+        public PublishStatusQuery PublishStatus { get; set; }
     }
 }

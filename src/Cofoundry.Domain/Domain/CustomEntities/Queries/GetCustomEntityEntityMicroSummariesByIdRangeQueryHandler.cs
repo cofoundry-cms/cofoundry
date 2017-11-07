@@ -33,24 +33,24 @@ namespace Cofoundry.Domain
 
         public async Task<IDictionary<int, RootEntityMicroSummary>> ExecuteAsync(GetCustomEntityEntityMicroSummariesByIdRangeQuery query, IExecutionContext executionContext)
         {
-            var results = await Query(query).ToDictionaryAsync(e => e.RootEntityId);
+            var results = await Query(query, executionContext).ToDictionaryAsync(e => e.RootEntityId);
             EnforcePermissions(results, executionContext);
 
             return results;
         }
 
-        private IQueryable<RootEntityMicroSummary> Query(GetCustomEntityEntityMicroSummariesByIdRangeQuery query)
+        private IQueryable<RootEntityMicroSummary> Query(GetCustomEntityEntityMicroSummariesByIdRangeQuery query, IExecutionContext executionContext)
         {
             var dbQuery = _dbContext
-                .CustomEntityVersions
+                .CustomEntityPublishStatusQueries
                 .AsNoTracking()
-                .FilterByActiveLocales()
-                .FilterByWorkFlowStatusQuery(WorkFlowStatusQuery.Latest)
+                .FilterByActive()
+                .FilterByStatus(PublishStatusQuery.Latest, executionContext.ExecutionDate)
                 .Where(v => query.CustomEntityIds.Contains(v.CustomEntityId))
                 .Select(v => new RootEntityMicroSummary()
                 {
                     RootEntityId = v.CustomEntityId,
-                    RootEntityTitle = v.Title,
+                    RootEntityTitle = v.CustomEntityVersion.Title,
                     EntityDefinitionName = v.CustomEntity.CustomEntityDefinition.EntityDefinition.Name,
                     EntityDefinitionCode = v.CustomEntity.CustomEntityDefinition.CustomEntityDefinitionCode
                 });

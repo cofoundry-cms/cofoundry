@@ -126,7 +126,7 @@ namespace Cofoundry.Domain
                 .Select(r => new
                 {
                     PageId = r.PageRoute.PageId,
-                    VersionRoute = r.PageRoute.Versions.GetVersionRouting(WorkFlowStatusQuery.Latest)
+                    VersionRoute = r.PageRoute.Versions.GetVersionRouting(PublishStatusQuery.Latest)
                 })
                 .Where(r => r.VersionRoute != null && r.VersionRoute.HasCustomEntityRegions)
                 .ToDictionary(k => k.PageId, v => v.VersionRoute.PageTemplateId);

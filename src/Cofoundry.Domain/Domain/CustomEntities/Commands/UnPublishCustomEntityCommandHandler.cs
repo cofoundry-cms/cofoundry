@@ -8,6 +8,7 @@ using Cofoundry.Domain.CQS;
 using Microsoft.EntityFrameworkCore;
 using Cofoundry.Core.MessageAggregator;
 using Cofoundry.Core;
+using Cofoundry.Core.EntityFramework;
 
 namespace Cofoundry.Domain
 {
@@ -21,18 +22,24 @@ namespace Cofoundry.Domain
         private readonly ICustomEntityCache _customEntityCache;
         private readonly IMessageAggregator _messageAggregator;
         private readonly IPermissionValidationService _permissionValidationService;
+        private readonly ITransactionScopeFactory _transactionScopeFactory;
+        private readonly ICustomEntityStoredProcedures _customEntityStoredProcedures;
 
         public UnPublishCustomEntityCommandHandler(
             CofoundryDbContext dbContext,
             ICustomEntityCache customEntityCache,
             IMessageAggregator messageAggregator,
-            IPermissionValidationService permissionValidationService
+            IPermissionValidationService permissionValidationService,
+            ITransactionScopeFactory transactionScopeFactory,
+            ICustomEntityStoredProcedures customEntityStoredProcedures
             )
         {
             _dbContext = dbContext;
             _customEntityCache = customEntityCache;
             _messageAggregator = messageAggregator;
             _permissionValidationService = permissionValidationService;
+            _transactionScopeFactory = transactionScopeFactory;
+            _customEntityStoredProcedures = customEntityStoredProcedures;
         }
 
         #endregion
@@ -41,35 +48,35 @@ namespace Cofoundry.Domain
 
         public async Task ExecuteAsync(UnPublishCustomEntityCommand command, IExecutionContext executionContext)
         {
-            var versions = await _dbContext
-                .CustomEntityVersions
-                .Include(v => v.CustomEntity)
-                .Where(p => p.CustomEntityId == command.CustomEntityId
-                    && (p.WorkFlowStatusId == (int)WorkFlowStatus.Published || p.WorkFlowStatusId == (int)WorkFlowStatus.Draft))
-                .ToListAsync();
+            var customEntity = await _dbContext
+                .CustomEntities
+                .Where(p => p.CustomEntityId == command.CustomEntityId)
+                .SingleOrDefaultAsync();
+            EntityNotFoundException.ThrowIfNull(customEntity, command.CustomEntityId);
+            _permissionValidationService.EnforceCustomEntityPermission<CustomEntityPublishPermission>(customEntity.CustomEntityDefinitionCode, executionContext.UserContext);
 
-            var publishedVersion = versions.SingleOrDefault(p => p.WorkFlowStatusId == (int)WorkFlowStatus.Published);
-            EntityNotFoundException.ThrowIfNull(publishedVersion, command.CustomEntityId);
-            await _permissionValidationService.EnforceCustomEntityPermissionAsync<CustomEntityPublishPermission>(publishedVersion.CustomEntity.CustomEntityDefinitionCode);
-
-            if (versions.Any(p => p.WorkFlowStatusId == (int)WorkFlowStatus.Draft))
+            if (customEntity.PublishStatusCode == PublishStatusCode.Unpublished)
             {
-                // If there's already a draft, change to approved.
-                publishedVersion.WorkFlowStatusId = (int)WorkFlowStatus.Approved;
-            }
-            else
-            {
-                // Else set it to draft
-                publishedVersion.WorkFlowStatusId = (int)WorkFlowStatus.Draft;
+                // No action
+                return;
             }
 
-            await _dbContext.SaveChangesAsync();
-            _customEntityCache.Clear(publishedVersion.CustomEntity.CustomEntityDefinitionCode, command.CustomEntityId);
+            customEntity.PublishStatusCode = PublishStatusCode.Unpublished;
+
+            using (var scope = _transactionScopeFactory.Create(_dbContext))
+            {
+                await _dbContext.SaveChangesAsync();
+                await _customEntityStoredProcedures.UpdatePublishStatusQueryLookupAsync(command.CustomEntityId);
+
+                scope.Complete();
+            }
+
+            _customEntityCache.Clear(customEntity.CustomEntityDefinitionCode, command.CustomEntityId);
 
             await _messageAggregator.PublishAsync(new CustomEntityUnPublishedMessage()
             {
                 CustomEntityId = command.CustomEntityId,
-                CustomEntityDefinitionCode = publishedVersion.CustomEntity.CustomEntityDefinitionCode
+                CustomEntityDefinitionCode = customEntity.CustomEntityDefinitionCode
             });
         }
 

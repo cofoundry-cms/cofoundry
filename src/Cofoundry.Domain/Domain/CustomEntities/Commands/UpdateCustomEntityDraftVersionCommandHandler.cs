@@ -58,7 +58,6 @@ namespace Cofoundry.Domain
             var definition = _customEntityDefinitionRepository.GetByCode(command.CustomEntityDefinitionCode);
             var draft = await GetDraftVersionAsync(command);
 
-
             using (var scope = _transactionScopeFactory.Create(_dbContext))
             {
                 draft = await CreateDraftIfRequiredAsync(command, draft);
@@ -89,7 +88,7 @@ namespace Cofoundry.Domain
             {
                 using (var scope = _transactionScopeFactory.Create(_dbContext))
                 {
-                    await _commandExecutor.ExecuteAsync(new PublishCustomEntityCommand(draft.CustomEntityId));
+                    await _commandExecutor.ExecuteAsync(new PublishCustomEntityCommand(draft.CustomEntityId, command.PublishDate));
                     scope.Complete();
                 }
             }

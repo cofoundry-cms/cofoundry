@@ -24,6 +24,7 @@ namespace Cofoundry.Domain
         private readonly IPageCache _pageCache;
         private readonly IMessageAggregator _messageAggregator;
         private readonly ITransactionScopeFactory _transactionScopeFactory;
+        private readonly IPageStoredProcedures _pageStoredProcedures;
 
         public UpdatePageDraftVersionCommandHandler(
             IQueryExecutor queryExecutor,
@@ -31,7 +32,8 @@ namespace Cofoundry.Domain
             CofoundryDbContext dbContext,
             IPageCache pageCache,
             IMessageAggregator messageAggregator,
-            ITransactionScopeFactory transactionScopeFactory
+            ITransactionScopeFactory transactionScopeFactory,
+            IPageStoredProcedures pageStoredProcedures
             )
         {
             _queryExecutor = queryExecutor;
@@ -40,6 +42,7 @@ namespace Cofoundry.Domain
             _pageCache = pageCache;
             _messageAggregator = messageAggregator;
             _transactionScopeFactory = transactionScopeFactory;
+            _pageStoredProcedures = pageStoredProcedures;
         }
 
         #endregion
@@ -56,6 +59,7 @@ namespace Cofoundry.Domain
                 UpdateDraft(command, draft);
 
                 await _dbContext.SaveChangesAsync();
+                await _pageStoredProcedures.UpdatePublishStatusQueryLookupAsync(command.PageId);
                 scope.Complete();
             }
             _pageCache.Clear(command.PageId);
@@ -68,7 +72,7 @@ namespace Cofoundry.Domain
 
             if (command.Publish)
             {
-                await _commandExecutor.ExecuteAsync(new PublishPageCommand(draft.PageId));
+                await _commandExecutor.ExecuteAsync(new PublishPageCommand(draft.PageId, command.PublishDate));
             }
         }
 

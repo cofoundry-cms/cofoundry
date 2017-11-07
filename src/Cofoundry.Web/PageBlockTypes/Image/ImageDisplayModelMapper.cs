@@ -26,7 +26,10 @@ namespace Cofoundry.Web
 
         #endregion
 
-        public async Task<IEnumerable<PageBlockTypeDisplayModelMapperOutput>> MapAsync(IEnumerable<PageBlockTypeDisplayModelMapperInput<ImageDataModel>> inputs, WorkFlowStatusQuery workflowStatus)
+        public async Task<IEnumerable<PageBlockTypeDisplayModelMapperOutput>> MapAsync(
+            IEnumerable<PageBlockTypeDisplayModelMapperInput<ImageDataModel>> inputs, 
+            PublishStatusQuery publishStatus
+            )
         {
             var imageAssetIds = inputs.Select(i => i.DataModel.ImageId).ToArray();
             var images = await _queryExecutor.GetByIdRangeAsync<ImageAssetRenderDetails>(imageAssetIds);

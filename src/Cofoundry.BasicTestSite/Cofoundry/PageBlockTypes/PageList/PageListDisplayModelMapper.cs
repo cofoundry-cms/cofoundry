@@ -29,7 +29,7 @@ namespace Cofoundry.BasicTestSite
 
         public async Task<IEnumerable<PageBlockTypeDisplayModelMapperOutput>> MapAsync(
             IEnumerable<PageBlockTypeDisplayModelMapperInput<PageListDataModel>> inputs,
-            WorkFlowStatusQuery workflowStatus
+            PublishStatusQuery publishStatus
             )
         {
             var allPageIds = inputs

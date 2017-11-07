@@ -24,7 +24,7 @@ namespace Cofoundry.Web
             {
                 var versionRoute = state.PageRoutingInfo.GetVersionRoute(
                     state.InputParameters.IsEditingCustomEntity,
-                    state.VisualEditorMode.ToWorkFlowStatusQuery(),
+                    state.VisualEditorMode.ToPublishStatusQuery(),
                     state.InputParameters.VersionId);
 
                 // If this isn't an old version of a page, set the VisualEditorMode accordingly.

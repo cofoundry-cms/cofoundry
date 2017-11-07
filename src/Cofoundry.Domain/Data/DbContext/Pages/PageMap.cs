@@ -19,7 +19,12 @@ namespace Cofoundry.Domain.Data
                 .HasMaxLength(70);
 
             builder.Property(s => s.CustomEntityDefinitionCode)
-                .HasMaxLength(6);
+                .HasMaxLength(6)
+                .IsUnicode(false);
+
+            builder.Property(s => s.PublishStatusCode)
+                .HasMaxLength(1)
+                .IsUnicode(false);
 
             // Relationships
 

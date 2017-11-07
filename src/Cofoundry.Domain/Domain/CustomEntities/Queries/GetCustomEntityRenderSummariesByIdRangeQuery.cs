@@ -16,18 +16,18 @@ namespace Cofoundry.Domain
 
         public GetCustomEntityRenderSummariesByIdRangeQuery(
             IEnumerable<int> customEntityIds,
-            WorkFlowStatusQuery workflowStatus = WorkFlowStatusQuery.Latest
+            PublishStatusQuery workflowStatus = PublishStatusQuery.Latest
             )
         {
             if (customEntityIds == null) throw new ArgumentNullException(nameof(customEntityIds));
 
             CustomEntityIds = customEntityIds.ToArray();
-            WorkFlowStatus = workflowStatus;
+            PublishStatus = workflowStatus;
         }
 
         [Required]
         public int[] CustomEntityIds { get; set; }
 
-        public WorkFlowStatusQuery WorkFlowStatus { get; set; }
+        public PublishStatusQuery PublishStatus { get; set; }
     }
 }

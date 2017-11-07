@@ -21,29 +21,29 @@ namespace Cofoundry.Domain
         /// </summary>
         /// <param name="typeName">The block type name e.g. 'PlainText', 'RawHtml'.</param>
         /// <param name="entityBlocks">The version data to get the serialized model from.</param>
-        /// <param name="workflowStatus">
-        /// The workflow status of the parent page or custom entity 
+        /// <param name="publishStatus">
+        /// The publish status of the parent page or custom entity 
         /// being mapped. This is provided so dependent entities can use
-        /// the same workflow status.
+        /// the same publish status.
         /// </param>
         /// <returns>
         /// Collection of mapped display models, wrapped in an output class that
         /// can be used to identify them.
         /// </returns>
-        Task<List<PageBlockTypeDisplayModelMapperOutput>> MapDisplayModelAsync(string typeName, IEnumerable<IEntityVersionPageBlock> entityBlocks, WorkFlowStatusQuery workflowStatus);
+        Task<List<PageBlockTypeDisplayModelMapperOutput>> MapDisplayModelAsync(string typeName, IEnumerable<IEntityVersionPageBlock> entityBlocks, PublishStatusQuery publishStatus);
 
         /// <summary>
         /// Maps a single page block data model to a concrete display model.
         /// </summary>
         /// <param name="typeName">The block type name e.g. 'PlainText', 'RawHtml'.</param>
         /// <param name="entityBlock">The version data to get the serialized model from.</param>
-        /// <param name="workflowStatus">
-        /// The workflow status of the parent page or custom entity 
+        /// <param name="publishStatus">
+        /// The publish status of the parent page or custom entity 
         /// being mapped. This is provided so dependent entities can use
-        /// the same workflow status.
+        /// the same publish status.
         /// </param>
         /// <returns>Mapped display model.</returns>
-        Task<IPageBlockTypeDisplayModel> MapDisplayModelAsync(string typeName, IEntityVersionPageBlock entityBlock, WorkFlowStatusQuery workflowStatus);
+        Task<IPageBlockTypeDisplayModel> MapDisplayModelAsync(string typeName, IEntityVersionPageBlock entityBlock, PublishStatusQuery publishStatus);
 
         /// <summary>
         /// Deserialized a block data model to a stongly typed model.

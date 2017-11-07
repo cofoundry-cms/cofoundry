@@ -52,7 +52,7 @@ namespace Cofoundry.Domain
             var customEntity = await _dbContext
                 .CustomEntities
                 .AsNoTracking()
-                .FilterById(command.CustomEntityId)
+                .FilterByCustomEntityId(command.CustomEntityId)
                 .FirstOrDefaultAsync();
 
             EntityNotFoundException.ThrowIfNull(customEntity, command.CustomEntityId);

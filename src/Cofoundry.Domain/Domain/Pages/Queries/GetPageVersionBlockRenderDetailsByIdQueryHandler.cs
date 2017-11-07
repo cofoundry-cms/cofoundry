@@ -47,7 +47,7 @@ namespace Cofoundry.Domain
 
             if (dbResult == null) return null;
 
-            var result = await MapAsync(dbResult.PageBlock, dbResult.BlockTypeFileName, query.WorkFlowStatus);
+            var result = await MapAsync(dbResult.PageBlock, dbResult.BlockTypeFileName, query.PublishStatus);
 
             // Add any list context information.
             var displayData = result.DisplayModel as IListablePageBlockTypeDisplayModel;
@@ -79,7 +79,7 @@ namespace Cofoundry.Domain
         private async Task<PageVersionBlockRenderDetails> MapAsync(
             PageVersionBlock pageVersionBlock, 
             string blockTypeFileName, 
-            WorkFlowStatusQuery workFlowStatus
+            PublishStatusQuery publishStatus
             )
         {
             var blockType = await _queryExecutor.GetByIdAsync<PageBlockTypeSummary>(pageVersionBlock.PageBlockTypeId);
@@ -88,7 +88,7 @@ namespace Cofoundry.Domain
             var result = new PageVersionBlockRenderDetails();
             result.PageVersionBlockId = pageVersionBlock.PageVersionBlockId;
             result.BlockType = blockType;
-            result.DisplayModel = await _pageVersionBlockModelMapper.MapDisplayModelAsync(blockTypeFileName, pageVersionBlock, workFlowStatus);
+            result.DisplayModel = await _pageVersionBlockModelMapper.MapDisplayModelAsync(blockTypeFileName, pageVersionBlock, publishStatus);
             
             return result;
         }

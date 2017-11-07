@@ -52,7 +52,7 @@ namespace Cofoundry.Domain
                     RootEntityTitle = m.CustomEntityVersion.Title,
                     EntityDefinitionCode = m.CustomEntityVersion.CustomEntity.CustomEntityDefinition.EntityDefinition.EntityDefinitionCode,
                     EntityDefinitionName = m.CustomEntityVersion.CustomEntity.CustomEntityDefinition.EntityDefinition.Name,
-                    IsPreviousVersion = m.CustomEntityVersion.WorkFlowStatusId != (int)WorkFlowStatus.Published || m.CustomEntityVersion.WorkFlowStatusId != (int)WorkFlowStatus.Draft
+                    IsPreviousVersion = !m.CustomEntityVersion.CustomEntityPublishStatusQueries.Any()
                 });
 
             return dbQuery;

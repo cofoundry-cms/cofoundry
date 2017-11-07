@@ -107,7 +107,9 @@ namespace Cofoundry.Domain
                         PageId = p.PageId,
                         UrlPath = p.UrlPath,
                         PageType = (PageType)p.PageTypeId,
-                        CustomEntityDefinitionCode = p.CustomEntityDefinitionCode
+                        CustomEntityDefinitionCode = p.CustomEntityDefinitionCode,
+                        PublishDate = p.PublishDate,
+                        PublishStatus = p.PublishStatusCode == PublishStatusCode.Published ? PublishStatus.Published : PublishStatus.Unpublished
                     },
                     LocaleId = p.LocaleId,
                     PageDirectoryId = p.PageDirectoryId
@@ -153,7 +155,6 @@ namespace Cofoundry.Domain
             IEnumerable<ActiveLocale> activeLocales
             )
         {
-
             var routes = new List<PageRoute>();
 
             foreach (var dbPage in dbPages)
@@ -213,17 +214,17 @@ namespace Cofoundry.Domain
             // There should always be a latest version - but technically it is possible that one doesn't exist.
             if (latestVersion != null)
             {
-                routingInfo.IsPublished = (WorkFlowStatus)latestVersion.WorkFlowStatusId == WorkFlowStatus.Published;
                 routingInfo.Title = latestVersion.Title;
                 routingInfo.ShowInSiteMap = !latestVersion.ExcludeFromSitemap;
             }
             else
             {
                 // Invalid route, remove the versions collection
-                routingInfo.Versions = new PageVersionRoute[0];
+                routingInfo.Versions = Array.Empty<PageVersionRoute>();
             }
 
-            routingInfo.HasDraft = routingInfo.Versions.Any(v => v.WorkFlowStatus == WorkFlowStatus.Draft);
+            routingInfo.HasDraftVersion = routingInfo.Versions.Any(v => v.WorkFlowStatus == WorkFlowStatus.Draft);
+            routingInfo.HasPublishedVersion = routingInfo.Versions.Any(v => v.WorkFlowStatus == WorkFlowStatus.Published);
         }
 
         private PageVersionRoute MapVersion(PageRoute routingInfo, PageVersionQueryResult version, Dictionary<int, PageTemplateQueryResult> templates)

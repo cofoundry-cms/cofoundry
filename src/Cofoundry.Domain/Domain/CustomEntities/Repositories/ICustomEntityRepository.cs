@@ -96,7 +96,7 @@ namespace Cofoundry.Domain
 
         Task MoveCustomEntityVersionPageBlockAsync(MoveCustomEntityVersionPageBlockCommand command, IExecutionContext executionContext = null);
 
-        Task PublishCustomEntityAsync(int customEntityId, IExecutionContext executionContext = null);
+        Task PublishCustomEntityAsync(PublishCustomEntityCommand command, IExecutionContext executionContext = null);
 
         Task ReOrderCustomEntitiesAsync(ReOrderCustomEntitiesCommand command, IExecutionContext executionContext = null);
 

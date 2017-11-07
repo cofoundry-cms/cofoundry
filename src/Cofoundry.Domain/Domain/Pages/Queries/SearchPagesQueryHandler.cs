@@ -93,7 +93,7 @@ namespace Cofoundry.Domain
 
             foreach (var pageBlock in pageBlocks.Where(p => !string.IsNullOrEmpty(query.Text)))
             {
-                var dataProvider = await _blockDisplayDataFactory.MapDisplayModelAsync(pageBlock.PageBlockType.FileName, pageBlock, WorkFlowStatusQuery.Published);
+                var dataProvider = await _blockDisplayDataFactory.MapDisplayModelAsync(pageBlock.PageBlockType.FileName, pageBlock, PublishStatusQuery.Published);
                 var dataProviderType = dataProvider.GetType().GetTypeInfo();
 
                 // If this block is searchable - ie there is content to search

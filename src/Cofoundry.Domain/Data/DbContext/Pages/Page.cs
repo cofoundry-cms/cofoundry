@@ -10,6 +10,7 @@ namespace Cofoundry.Domain.Data
             PageGroupItems = new List<PageGroupItem>();
             PageTags = new List<PageTag>();
             PageVersions = new List<PageVersion>();
+            PagePublishStatusQueries = new List<PagePublishStatusQuery>();
         }
 
         public int PageId { get; set; }
@@ -26,6 +27,16 @@ namespace Cofoundry.Domain.Data
 
         public string CustomEntityDefinitionCode { get; set; }
 
+        /// <summary>
+        /// D = draft, P = Published
+        /// </summary>
+        public string PublishStatusCode { get; set; }
+
+        /// <summary>
+        /// Should be set if the status is Published.
+        /// </summary>
+        public DateTime? PublishDate { get; set; }
+
         public virtual Locale Locale { get; set; }
 
         public virtual PageDirectory PageDirectory { get; set; }
@@ -37,6 +48,8 @@ namespace Cofoundry.Domain.Data
         public virtual ICollection<PageTag> PageTags { get; set; }
 
         public virtual ICollection<PageVersion> PageVersions { get; set; }
+
+        public virtual ICollection<PagePublishStatusQuery> PagePublishStatusQueries { get; set; }
 
         #region ICreateAuditable
 

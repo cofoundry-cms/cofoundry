@@ -13,6 +13,10 @@ begin
 	from Cofoundry.CustomEntityVersionPageBlock e
 	inner join deleted d on e.CustomEntityVersionId = d.CustomEntityVersionId
 	
+    delete Cofoundry.CustomEntityPublishStatusQuery
+	from Cofoundry.CustomEntityPublishStatusQuery e
+	inner join deleted d on e.CustomEntityVersionId = d.CustomEntityVersionId
+
 	-- At some point we could allow cascading of deletions, but for now
 	-- we just delete any related entities
 	delete from Cofoundry.UnstructuredDataDependency

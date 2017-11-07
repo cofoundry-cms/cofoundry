@@ -73,7 +73,7 @@ namespace Cofoundry.Domain
             return _dbContext
                 .Pages
                 .AsNoTracking()
-                .Where(p => !p.IsDeleted)
+                .FilterActive()
                 .Join(_dbContext.CustomEntities, p => new { p.CustomEntityDefinitionCode, p.LocaleId }, e => new { e.CustomEntityDefinitionCode, e.LocaleId }, (p, e) => new
                 {
                     CustomEntity = e,

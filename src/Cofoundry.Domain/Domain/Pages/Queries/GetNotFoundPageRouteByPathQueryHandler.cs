@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Cofoundry.Domain.Data;
 using Cofoundry.Domain.CQS;
 
 namespace Cofoundry.Domain
@@ -39,7 +37,7 @@ namespace Cofoundry.Domain
 
             var allRoutes = (await _queryExecutor
                 .GetAllAsync<PageRoute>())
-                .Where(r => r.IsPublished || query.IncludeUnpublished)
+                .Where(r => r.IsPublished() || query.IncludeUnpublished)
                 .Where(r => r.PageType == PageType.NotFound);
 
             var paths = path

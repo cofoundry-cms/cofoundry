@@ -36,10 +36,10 @@ namespace Cofoundry.Web
 
             // If there's no draft version and we're in edit mode for 'Pages' then
             // create one and re-run the query
-            var workflowStatus = state.VisualEditorMode.ToWorkFlowStatusQuery();
+            var workflowStatus = state.VisualEditorMode.ToPublishStatusQuery();
             if (!state.InputParameters.IsEditingCustomEntity
-                && workflowStatus != WorkFlowStatusQuery.Published
-                && workflowStatus != WorkFlowStatusQuery.SpecificVersion
+                && workflowStatus != PublishStatusQuery.Published
+                && workflowStatus != PublishStatusQuery.SpecificVersion
                 && state.UserContext.IsCofoundryUser())
             {
                 var versionRouting = pageRoutingInfo.PageRoute.Versions.GetVersionRouting(workflowStatus);
@@ -61,8 +61,8 @@ namespace Cofoundry.Web
                     state.Result = new RedirectResult(correctUrl, true);
                 }
                 else if (state.InputParameters.IsEditingCustomEntity
-                    && workflowStatus != WorkFlowStatusQuery.Published
-                    && workflowStatus != WorkFlowStatusQuery.SpecificVersion
+                    && workflowStatus != PublishStatusQuery.Published
+                    && workflowStatus != PublishStatusQuery.SpecificVersion
                     && state.UserContext.IsCofoundryUser())
                 {
                     var versionRouting = pageRoutingInfo.CustomEntityRoute.Versions.GetVersionRouting(workflowStatus);

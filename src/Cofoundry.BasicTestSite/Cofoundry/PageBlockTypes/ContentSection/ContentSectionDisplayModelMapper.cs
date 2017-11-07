@@ -21,7 +21,7 @@ namespace Cofoundry.BasicTestSite
         /// </summary>
         public Task<IEnumerable<PageBlockTypeDisplayModelMapperOutput>> MapAsync(
             IEnumerable<PageBlockTypeDisplayModelMapperInput<ContentSectionDataModel>> inputs, 
-            WorkFlowStatusQuery workflowStatus
+            PublishStatusQuery publishStatus
             )
         {
             var results = new List<PageBlockTypeDisplayModelMapperOutput>();

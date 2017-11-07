@@ -21,7 +21,7 @@ namespace Cofoundry.BasicTestSite
 
         public async Task<IEnumerable<PageBlockTypeDisplayModelMapperOutput>> MapAsync(
             IEnumerable<PageBlockTypeDisplayModelMapperInput<ContentSplitSectionDataModel>> inputs, 
-            WorkFlowStatusQuery workflowStatus
+            PublishStatusQuery publishStatus
             )
         {
             var imageAssetIds = inputs

@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using Cofoundry.Core.Validation;
 using Cofoundry.Core.MessageAggregator;
 using Cofoundry.Core;
+using Cofoundry.Core.EntityFramework;
 
 namespace Cofoundry.Domain
 {
@@ -24,6 +25,8 @@ namespace Cofoundry.Domain
         private readonly EntityTagHelper _entityTagHelper;
         private readonly IPageCache _pageCache;
         private readonly IMessageAggregator _messageAggregator;
+        private readonly IPageStoredProcedures _pageStoredProcedures;
+        private readonly ITransactionScopeFactory _transactionScopeFactory;
         
         public AddPageCommandHandler(
             CofoundryDbContext dbContext,
@@ -31,7 +34,9 @@ namespace Cofoundry.Domain
             EntityAuditHelper entityAuditHelper,
             EntityTagHelper entityTagHelper,
             IPageCache pageCache,
-            IMessageAggregator messageAggregator
+            IMessageAggregator messageAggregator,
+            IPageStoredProcedures pageStoredProcedures,
+            ITransactionScopeFactory transactionScopeFactory
             )
         {
             _dbContext = dbContext;
@@ -40,6 +45,8 @@ namespace Cofoundry.Domain
             _entityTagHelper = entityTagHelper;
             _pageCache = pageCache;
             _messageAggregator = messageAggregator;
+            _pageStoredProcedures = pageStoredProcedures;
+            _transactionScopeFactory = transactionScopeFactory;
         }
 
         #endregion
@@ -53,7 +60,14 @@ namespace Cofoundry.Domain
 
             var page = await MapPage(command, executionContext);
             _dbContext.Pages.Add(page);
-            await _dbContext.SaveChangesAsync();
+
+            using (var scope = _transactionScopeFactory.Create(_dbContext))
+            {
+                await _dbContext.SaveChangesAsync();
+                await _pageStoredProcedures.UpdatePublishStatusQueryLookupAsync(page.PageId);
+
+                scope.Complete();
+            }
 
             _pageCache.ClearRoutes();
 
@@ -131,6 +145,7 @@ namespace Cofoundry.Domain
             page.PageTypeId = (int)command.PageType;
             page.Locale = GetLocale(command.LocaleId);
             page.PageDirectory = await  GetPageDirectoryAsync(command.PageDirectoryId);
+
             _entityAuditHelper.SetCreated(page, executionContext);
             _entityTagHelper.UpdateTags(page.PageTags, command.Tags, executionContext);
 
@@ -148,17 +163,28 @@ namespace Cofoundry.Domain
             {
                 page.UrlPath = command.UrlPath;
             }
-
+            
             var pageVersion = new PageVersion();
             pageVersion.Title = command.Title;
             pageVersion.ExcludeFromSitemap = !command.ShowInSiteMap;
             pageVersion.MetaDescription = command.MetaDescription ?? string.Empty;
-            pageVersion.WorkFlowStatusId = command.Publish ? (int)WorkFlowStatus.Published : (int)WorkFlowStatus.Draft;
             pageVersion.OpenGraphTitle = command.OpenGraphTitle;
             pageVersion.OpenGraphDescription = command.OpenGraphDescription;
             pageVersion.OpenGraphImageId = command.OpenGraphImageId;
             pageVersion.PageTemplate = pageTemplate;
 
+            if (command.Publish)
+            {
+                page.PublishStatusCode = PublishStatusCode.Published;
+                page.PublishDate = command.PublishDate ?? executionContext.ExecutionDate;
+                pageVersion.WorkFlowStatusId = (int)WorkFlowStatus.Published;
+            }
+            else
+            {
+                page.PublishStatusCode = PublishStatusCode.Unpublished;
+                page.PublishDate = command.PublishDate;
+                pageVersion.WorkFlowStatusId = (int)WorkFlowStatus.Draft;
+            }
             _entityAuditHelper.SetCreated(pageVersion, executionContext);
             page.PageVersions.Add(pageVersion);
 

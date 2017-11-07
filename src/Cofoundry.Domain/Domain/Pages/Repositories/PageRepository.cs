@@ -257,9 +257,8 @@ namespace Cofoundry.Domain
             return _commandExecutor.ExecuteAsync(command, executionContext);
         }
 
-        public Task PublishPageCommandAsync(int pageId, IExecutionContext executionContext = null)
+        public Task PublishPageCommandAsync(PublishPageCommand command, IExecutionContext executionContext = null)
         {
-            var command = new PublishPageCommand(pageId);
             return _commandExecutor.ExecuteAsync(command, executionContext);
         }
 

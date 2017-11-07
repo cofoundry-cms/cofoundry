@@ -82,7 +82,7 @@ namespace Cofoundry.Web
         }
 
         /// <summary>
-        ///Maps data to an empty view model for a 404 page.
+        /// Maps data to an empty view model for a 404 page.
         /// </summary>
         /// <param name="viewModel">The view model to map data to.</param>
         /// <param name="mappingParameters">The data passed through to map to the view model.</param>
