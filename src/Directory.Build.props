@@ -7,7 +7,7 @@
     <RepositoryUrl>https://github.com/cofoundry-cms/cofoundry/</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <PackageVersion>$(NuGetVersion)</PackageVersion>
-    <Version>$(AssemblyVersion)</Version>
+    <Version>0.2.0-beta0050</Version>
     <FileVersion>$(FileVersion)</FileVersion>
     <InformationalVersion>$(InformationalVersion)</InformationalVersion>
     <Copyright>$(Copyright)</Copyright>

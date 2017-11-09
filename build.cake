@@ -50,7 +50,7 @@ Task("Patch-Assembly-Version")
 
     Information("Building version {0} of Cofoundry.", versionInfo.InformationalVersion);
 
-    isPrerelease = !string.IsNullOrEmpty(versionInfo.PreReleaseNumber);
+    isPrerelease = versionInfo.PreReleaseNumber.HasValue;
 
     // Patch the version number so it's picked up when dependent projects are references
     // as nuget dependencies. Can't find a better way to do this.
