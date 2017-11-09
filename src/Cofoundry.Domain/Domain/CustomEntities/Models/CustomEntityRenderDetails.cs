@@ -26,7 +26,23 @@ namespace Cofoundry.Domain
 
         public string UrlSlug { get; set; }
 
+        /// <summary>
+        /// WorkFlowStatus of the version that this instance represents. The version
+        /// may not always be the latest version and is dependent on the query that
+        /// was used to load this instance, typically using a PublishStatusQuery value.
+        /// </summary>
         public WorkFlowStatus WorkFlowStatus { get; set; }
+
+        /// <summary>
+        /// Indicates if the page is marked as published or not, which allows the page
+        /// to be shown on the live site if the PublishDate has passed.
+        /// </summary>
+        public PublishStatus PublishStatus { get; set; }
+
+        /// <summary>
+        /// The date after which the page can be shown on the live site.
+        /// </summary>
+        public DateTime? PublishDate { get; set; }
 
         public ICustomEntityDataModel Model { get; set; }
 

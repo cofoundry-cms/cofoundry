@@ -23,6 +23,12 @@ namespace Cofoundry.Domain
 
         public string Title { get; set; }
         public string MetaDescription { get; set; }
+
+        /// <summary>
+        /// WorkFlowStatus of the version that this instance represents. The version
+        /// may not always be the latest version and is dependent on the query that
+        /// was used to load this instance, typically using a PublishStatusQuery value.
+        /// </summary>
         public WorkFlowStatus WorkFlowStatus { get; set; }
 
         public OpenGraphData OpenGraph { get; set; }

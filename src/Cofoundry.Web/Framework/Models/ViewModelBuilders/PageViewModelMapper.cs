@@ -76,6 +76,11 @@ namespace Cofoundry.Web
             customModel.Title = customEntityRenderDetails.Title;
             customModel.UrlSlug = customEntityRenderDetails.UrlSlug;
             customModel.WorkFlowStatus = customEntityRenderDetails.WorkFlowStatus;
+            customModel.PublishDate = customEntityRenderDetails.PublishDate;
+            customModel.PublishStatus = customEntityRenderDetails.PublishStatus;
+            customModel.CreateDate = customEntityRenderDetails.CreateDate;
+            customModel.PageUrls = customEntityRenderDetails.PageUrls;
+
             customModel.Model = await _customEntityDisplayModelMapper.MapDisplayModelAsync<TDisplayModel>(customEntityRenderDetails);
 
             viewModel.CustomEntity = customModel;

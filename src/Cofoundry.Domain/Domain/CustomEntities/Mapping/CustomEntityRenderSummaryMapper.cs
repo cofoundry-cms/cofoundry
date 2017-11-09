@@ -149,9 +149,11 @@ namespace Cofoundry.Domain
                 Ordering = dbResult.CustomEntity.Ordering,
                 Title = dbResult.Title,
                 UrlSlug = dbResult.CustomEntity.UrlSlug,
-                WorkFlowStatus = (WorkFlowStatus)dbResult.WorkFlowStatusId
+                WorkFlowStatus = (WorkFlowStatus)dbResult.WorkFlowStatusId,
+                PublishDate = dbResult.CustomEntity.PublishDate
             };
 
+            entity.PublishStatus = PublishStatusMapper.FromCode(dbResult.CustomEntity.PublishStatusCode);
             entity.Model = _customEntityDataModelMapper.Map(dbResult.CustomEntity.CustomEntityDefinitionCode, dbResult.SerializedData);
 
             return entity;
