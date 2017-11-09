@@ -25,11 +25,50 @@ namespace Cofoundry.Domain
         }
 
         /// <summary>
-        /// Maps an EF PageVersion record from the db into an PageVersionSummary 
-        /// object.
+        /// Maps a collection EF PageVersion records for a single page into 
+        /// a collection of PageVersionSummary objects.
         /// </summary>
-        /// <param name="dbPageVersion">PageVersion record from the database.</param>
-        public PageVersionSummary Map(PageVersion dbPageVersion)
+        /// <param name="pageId">Id of the page that these versions belong to.</param>
+        /// <param name="dbVersions">PageVersion records from the database to map.</param>
+        public List<PageVersionSummary> MapVersions(int pageId, ICollection<PageVersion> dbVersions)
+        {
+            if (dbVersions == null) throw new ArgumentNullException(nameof(dbVersions));
+            if (pageId <= 0) throw new ArgumentOutOfRangeException(nameof(pageId));
+
+            var orderedVersions = dbVersions
+                .Select(MapVersion)
+                .OrderByDescending(v => v.WorkFlowStatus == WorkFlowStatus.Draft)
+                .ThenByDescending(v => v.AuditData.CreateDate)
+                .ToList();
+
+            bool hasLatestPublishVersioned = false;
+            var results = new List<PageVersionSummary>(dbVersions.Count);
+
+            foreach (var dbVersion in dbVersions
+                .OrderByDescending(v => v.WorkFlowStatusId == (int)WorkFlowStatus.Draft)
+                .ThenByDescending(v => v.CreateDate))
+            {
+                if (dbVersion.PageId != pageId)
+                {
+                    var msg = $"Invalid PageId. PageVersionSummaryMapper.MapVersions is designed to map versions for a single custom entity only. Excepted PageId {pageId} got {dbVersion.PageId}";
+                    throw new Exception(msg);
+                }
+
+                var result = MapVersion(dbVersion);
+                if (!hasLatestPublishVersioned && result.WorkFlowStatus == WorkFlowStatus.Published)
+                {
+                    result.IsLatestPublishedVersion = true;
+                    hasLatestPublishVersioned = true;
+                }
+
+                results.Add(result);
+            }
+
+            return results;
+
+        }
+
+        private PageVersionSummary MapVersion(PageVersion dbPageVersion)
         {
             var result = new PageVersionSummary()
             {

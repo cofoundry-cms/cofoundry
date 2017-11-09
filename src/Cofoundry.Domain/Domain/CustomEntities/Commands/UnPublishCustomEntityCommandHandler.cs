@@ -61,7 +61,17 @@ namespace Cofoundry.Domain
                 return;
             }
 
+            var version = await _dbContext
+               .CustomEntityVersions
+               .Include(v => v.CustomEntity)
+               .Where(v => v.CustomEntityId == command.CustomEntityId && (v.WorkFlowStatusId == (int)WorkFlowStatus.Draft || v.WorkFlowStatusId == (int)WorkFlowStatus.Published))
+               .OrderByDescending(v => v.WorkFlowStatusId == (int)WorkFlowStatus.Draft)
+               .ThenByDescending(v => v.CreateDate)
+               .FirstOrDefaultAsync();
+            EntityNotFoundException.ThrowIfNull(version, command.CustomEntityId);
+
             customEntity.PublishStatusCode = PublishStatusCode.Unpublished;
+            version.WorkFlowStatusId = (int)WorkFlowStatus.Draft;
 
             using (var scope = _transactionScopeFactory.Create(_dbContext))
             {

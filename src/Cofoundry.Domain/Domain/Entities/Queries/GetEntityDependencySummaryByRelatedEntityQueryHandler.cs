@@ -40,13 +40,17 @@ namespace Cofoundry.Domain
         public async Task<IEnumerable<EntityDependencySummary>> ExecuteAsync(GetEntityDependencySummaryByRelatedEntityQuery query, IExecutionContext executionContext)
         {
             // Where there are duplicates, prioritise relationships that cannot be deleted
-            var dbDependencyGroups = await _dbContext
+            var dbDependencyPreResult = await _dbContext
                 .UnstructuredDataDependencies
                 .AsNoTracking()
                 .Where(r => r.RelatedEntityDefinitionCode == query.EntityDefinitionCode && r.RelatedEntityId == query.EntityId)
+                .ToListAsync();
+
+            // Query is split because EF core cannot translate groupings yet
+            var dbDependencyGroups = dbDependencyPreResult
                 .GroupBy(r => new { r.RootEntityDefinitionCode, r.RootEntityId }, (d, e) => e.OrderByDescending(x => x.RelatedEntityCascadeActionId == (int)RelatedEntityCascadeAction.None).FirstOrDefault())
                 .GroupBy(r => r.RootEntityDefinitionCode)
-                .ToListAsync();
+                .ToList();
 
             var allRelatedEntities = new List<EntityDependencySummary>();
 

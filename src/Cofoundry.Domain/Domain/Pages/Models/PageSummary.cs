@@ -29,6 +29,11 @@ namespace Cofoundry.Domain
         public string FullPath { get; set; }
 
         /// <summary>
+        /// True if the page is published and the publish date has passed.
+        /// </summary>
+        public bool IsPublished { get; set; }
+
+        /// <summary>
         /// Indicates if the page is marked as published or not, which allows the page
         /// to be shown on the live site if the PublishDate has passed.
         /// </summary>

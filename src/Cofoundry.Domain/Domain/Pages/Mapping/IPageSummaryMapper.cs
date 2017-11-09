@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Cofoundry.Domain.Data;
+using Cofoundry.Domain.CQS;
 
 namespace Cofoundry.Domain
 {
@@ -15,6 +16,6 @@ namespace Cofoundry.Domain
         /// <summary>
         /// Finishes off bulk mapping of tags and page routes in a PageSummary object
         /// </summary>
-        Task<List<PageSummary>> MapAsync(ICollection<Page> dbPages);
+        Task<List<PageSummary>> MapAsync(ICollection<Page> dbPages, IExecutionContext executionContext);
     }
 }

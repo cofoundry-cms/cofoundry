@@ -66,6 +66,7 @@
                     <!--<th>Market</th>-->
                     <!--<th>Tags</th>-->
                     <th>Status</th>
+                    <th>Published</th>
                     <th>Created</th>
                     <th cms-table-column-actions>Actions</th>
                 </tr>
@@ -85,13 +86,16 @@
                     <!--<td>
                     <cms-tag-list cms-tags="page.tags"></cms-tag-list>
                 </td>-->
-                    <td ng-if="page.isPublished">
-                        Published
+                    <td>
+                        <span ng-if="page.isPublished">Published</span>
+                        <span ng-if="!page.isPublished && page.publishStatus == 'Published'">Scheduled</span>
+                        <span ng-if="page.publishStatus == 'Unpublished' && !page.hasDraftVersion">Unpublished</span>
                         <br />
-                        <a href="{{ page.fullPath }}" ng-if="page.isPublished && page.hasDraft">(Pending Draft)</a>
+                        <a href="{{ page.fullPath }}" ng-if="page.hasDraftVersion">(Pending Draft)</a>
                     </td>
-                    <td ng-if="!page.isPublished">
-                        Draft
+                    <td>
+                        <span ng-if="page.publishDate"
+                              title="{{page.publishDate | date:'fullDate'}} at {{page.publishDate | date:'HH:mm:ss'}}">{{page.publishDate | date : 'mediumDate' }} {{page.publishDate | date : 'HH:mm' }}</span>
                     </td>
                     <td class="lowPriority">
                         <cms-table-cell-created-audit-data cms-audit-data="page.auditData"></cms-table-cell-created-audit-data>

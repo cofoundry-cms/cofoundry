@@ -13,7 +13,14 @@ namespace Cofoundry.Domain
         public string Title { get; set; }
                 
         public WorkFlowStatus WorkFlowStatus { get; set; }
-        
+
+        /// <summary>
+        /// A page can have many published versions, this flag indicates if
+        /// it is the latest published version which displays on the live site
+        /// when the page itself is published.
+        /// </summary>
+        public bool IsLatestPublishedVersion { get; set; }
+
         public CreateAuditData AuditData { get; set; }
     }
 }

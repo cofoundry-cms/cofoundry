@@ -109,7 +109,7 @@ namespace Cofoundry.Domain
                         PageType = (PageType)p.PageTypeId,
                         CustomEntityDefinitionCode = p.CustomEntityDefinitionCode,
                         PublishDate = p.PublishDate,
-                        PublishStatus = p.PublishStatusCode == PublishStatusCode.Published ? PublishStatus.Published : PublishStatus.Unpublished
+                        PublishStatus = PublishStatusMapper.FromCode(p.PublishStatusCode)
                     },
                     LocaleId = p.LocaleId,
                     PageDirectoryId = p.PageDirectoryId

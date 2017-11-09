@@ -374,6 +374,7 @@ function (
             vm.customEntity = customEntity;
             vm.versions = versions;
             vm.updateCommand = mapUpdateCommand(customEntity);
+            vm.isMarkedPublished = vm.customEntity.publishStatus == 'Published';
 
             if (vm.customEntity.locale) {
                 vm.additionalParameters = {

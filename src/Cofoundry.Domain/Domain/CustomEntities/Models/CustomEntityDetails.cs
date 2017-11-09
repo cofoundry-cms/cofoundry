@@ -15,10 +15,20 @@ namespace Cofoundry.Domain
         public string UrlSlug { get; set; }
 
         /// <summary>
-        /// Indicates if ther page has at least one published version and is currently
-        /// viewable in the live site.
+        /// True if the page is published and the publish date has passed.
         /// </summary>
         public bool IsPublished { get; set; }
+
+        /// <summary>
+        /// Indicates if the page is marked as published or not, which allows the page
+        /// to be shown on the live site if the PublishDate has passed.
+        /// </summary>
+        public PublishStatus PublishStatus { get; set; }
+
+        /// <summary>
+        /// The date after which the page can be shown on the live site.
+        /// </summary>
+        public DateTime? PublishDate { get; set; }
 
         /// <summary>
         /// Indicates whether there is a draft version of this entity available.

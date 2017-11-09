@@ -69,7 +69,7 @@ namespace Cofoundry.Domain.Data
         {
             return _entityFrameworkSqlExecutor
                 .ExecuteCommandAsync(_dbContext,
-                "Cofoundry.Cofoundry.PagePublishStatusQuery_Update",
+                "Cofoundry.PagePublishStatusQuery_Update",
                  new SqlParameter("PageId", pageId)
                  );
         }

@@ -39,7 +39,7 @@ namespace Cofoundry.Domain
             var dbPagedResult = await CreateQuery(query).ToPagedResultAsync(query);
 
             // Finish mapping children
-            var mappedResults = await _pageSummaryMapper.MapAsync(dbPagedResult.Items);
+            var mappedResults = await _pageSummaryMapper.MapAsync(dbPagedResult.Items, executionContext);
 
             return dbPagedResult.ChangeType(mappedResults);
         }

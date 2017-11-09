@@ -49,10 +49,8 @@ namespace Cofoundry.Domain
 
             await _permissionValidationService.EnforceCustomEntityPermissionAsync<CustomEntityReadPermission>(definitionCode);
 
-            var versions = (await Query(query.CustomEntityId)
-                .ToListAsync())
-                .Select(_customEntityVersionSummaryMapper.Map)
-                .ToList();
+            var dbVersions = await Query(query.CustomEntityId).ToListAsync();
+            var versions = _customEntityVersionSummaryMapper.MapVersions(query.CustomEntityId, dbVersions);
             
             return versions;
         }
@@ -63,9 +61,9 @@ namespace Cofoundry.Domain
                 .CustomEntityVersions
                 .AsNoTracking()
                 .Include(e => e.Creator)
-                .Where(v => v.CustomEntityId == id)
+                .FilterByActive()
+                .FilterByCustomEntityId(id)
                 .OrderByDescending(v => v.WorkFlowStatusId == (int)WorkFlowStatus.Draft)
-                .ThenByDescending(v => v.WorkFlowStatusId == (int)WorkFlowStatus.Published)
                 .ThenByDescending(v => v.CreateDate);
         }
 

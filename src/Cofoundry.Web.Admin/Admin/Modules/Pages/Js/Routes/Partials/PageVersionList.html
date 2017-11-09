@@ -20,8 +20,8 @@
                 <td class="lowPriority">
                     <cms-table-cell-created-audit-data cms-audit-data="version.auditData"></cms-table-cell-created-audit-data>
                 </td>
-                <td cms-table-column-actions ng-switch="version.workFlowStatus" ng-show="!vm.editMode">
-                    <div ng-switch-when="Draft">
+                <td cms-table-column-actions ng-show="!vm.editMode">
+                    <div ng-if="version.workFlowStatus == 'Draft'">
                         <span ng-if="vm.versions.length > 1 && vm.canUpdate">
                             <a href=""
                                class="btn-icon"
@@ -44,11 +44,11 @@
                             <i class="fa fa-external-link"></i>
                         </a>
                     </div>
-                    <div ng-switch-when="Published">
+                    <div ng-if="version.isLatestPublishedVersion">
                         <a href=""
                            class="btn-icon"
                            title="Un-publish"
-                           ng-if="vm.canPublishPage"
+                           ng-if="vm.isMarkedPublished && vm.canPublishPage"
                            ng-click="vm.loading || vm.unpublish()">
                             <i class="fa fa-cloud-download"></i>
                         </a>
@@ -59,7 +59,7 @@
                             <i class="fa fa-external-link"></i>
                         </a>
                     </div>
-                    <div ng-switch-default>
+                    <div ng-if="!version.isLatestPublishedVersion && version.workFlowStatus == 'Published'">
                         <a href=""
                            class="btn-icon"
                            title="Copy to draft"

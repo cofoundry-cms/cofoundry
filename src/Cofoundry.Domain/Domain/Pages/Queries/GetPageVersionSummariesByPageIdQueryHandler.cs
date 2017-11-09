@@ -36,9 +36,7 @@ namespace Cofoundry.Domain
         public async Task<IEnumerable<PageVersionSummary>> ExecuteAsync(GetPageVersionSummariesByPageIdQuery query, IExecutionContext executionContext)
         {
             var dbVersions = await Query(query.PageId).ToListAsync();
-            var versions = dbVersions
-                .Select(_pageVersionSummaryMapper.Map)
-                .ToList();
+            var versions = _pageVersionSummaryMapper.MapVersions(query.PageId, dbVersions);
 
             return versions;
         }

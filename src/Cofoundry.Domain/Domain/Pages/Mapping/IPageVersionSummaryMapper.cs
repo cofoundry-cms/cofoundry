@@ -12,10 +12,11 @@ namespace Cofoundry.Domain
     public interface IPageVersionSummaryMapper
     {
         /// <summary>
-        /// Maps an EF PageVersion record from the db into an PageVersionSummary 
-        /// object.
+        /// Maps a collection EF PageVersion records for a single page into 
+        /// a collection of PageVersionSummary objects.
         /// </summary>
-        /// <param name="dbPageVersion">PageVersion record from the database.</param>
-        PageVersionSummary Map(PageVersion dbPageVersion);
+        /// <param name="pageId">Id of the page that these versions belong to.</param>
+        /// <param name="dbVersions">PageVersion records from the database to map.</param>
+        List<PageVersionSummary> MapVersions(int pageId, ICollection<PageVersion> dbVersions);
     }
 }

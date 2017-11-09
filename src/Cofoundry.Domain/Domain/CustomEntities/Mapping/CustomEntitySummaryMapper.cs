@@ -30,10 +30,10 @@ namespace Cofoundry.Domain
         }
 
         /// <summary>
-        /// Maps a collection of EF CustomEntityVersion records from the db into a CustomEntitySummary 
+        /// Maps a collection of EF CustomEntityVersion records from the db into CustomEntitySummary 
         /// objects.
         /// </summary>
-        /// <param name="dbVersions">Collection of vewrsions to map.</param>
+        /// <param name="dbStatusQueries">Collection of versions to map.</param>
         public async Task<List<CustomEntitySummary>> MapAsync(ICollection<CustomEntityPublishStatusQuery> dbStatusQueries, IExecutionContext executionContext)
         {
             var entities = new List<CustomEntitySummary>(dbStatusQueries.Count);
@@ -57,13 +57,14 @@ namespace Cofoundry.Domain
                     CustomEntityDefinitionCode = dbStatusQuery.CustomEntity.CustomEntityDefinitionCode,
                     CustomEntityId = dbStatusQuery.CustomEntityId,
                     HasDraft = dbStatusQuery.CustomEntityVersion.WorkFlowStatusId == (int)WorkFlowStatus.Draft,
-                    // TODO: Work out publish properties
-                    IsPublished = dbStatusQuery.CustomEntity.PublishStatusCode == PublishStatusCode.Published,
+                    PublishStatus = PublishStatusMapper.FromCode(dbStatusQuery.CustomEntity.PublishStatusCode),
+                    PublishDate = dbStatusQuery.CustomEntity.PublishDate,
                     Ordering = dbStatusQuery.CustomEntity.Ordering,
                     Title = dbStatusQuery.CustomEntityVersion.Title,
                     UrlSlug = dbStatusQuery.CustomEntity.UrlSlug
                 };
 
+                entity.IsPublished = entity.PublishStatus == PublishStatus.Published && entity.PublishDate <= executionContext.ExecutionDate;
                 _auditDataMapper.MapUpdateAuditDataUpdaterData(entity.AuditData, dbStatusQuery.CustomEntityVersion);
 
 

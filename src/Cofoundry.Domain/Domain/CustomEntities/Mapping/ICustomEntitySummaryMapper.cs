@@ -15,7 +15,7 @@ namespace Cofoundry.Domain
     public interface ICustomEntitySummaryMapper
     {
         /// <summary>
-        /// Maps a collection of EF CustomEntityVersion records from the db into a CustomEntitySummary 
+        /// Maps a collection of EF CustomEntityVersion records from the db into CustomEntitySummary 
         /// objects.
         /// </summary>
         /// <param name="dbStatusQueries">Collection of versions to map.</param>

@@ -221,6 +221,7 @@ function (
                 vm.updatePageCommand = mapUpdatePageCommand(page);
                 vm.updateDraftCommand = mapUpdateDraftCommand(page);
                 vm.editMode = false;
+                vm.isMarkedPublished = vm.page.pageRoute.publishStatus == 'Published';
             });
         }
 

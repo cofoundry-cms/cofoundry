@@ -36,9 +36,9 @@ namespace Cofoundry.Domain
         /// <summary>
         /// Finishes off bulk mapping of tags and page routes in a PageSummary object
         /// </summary>
-        public async Task<List<PageSummary>> MapAsync(ICollection<Page> dbPages)
+        public async Task<List<PageSummary>> MapAsync(ICollection<Page> dbPages, IExecutionContext executionContext)
         {
-            var routes = await _queryExecutor.GetAllAsync<PageRoute>();
+            var routes = await _queryExecutor.GetAllAsync<PageRoute>(executionContext);
 
             var ids = dbPages
                 .Select(p => p.PageId)
@@ -76,6 +76,7 @@ namespace Cofoundry.Domain
                     UrlPath = pageRoute.UrlPath
                 };
 
+                page.IsPublished = page.PublishStatus == PublishStatus.Published && page.PublishDate <= executionContext.ExecutionDate;
                 page.AuditData = _auditDataMapper.MapCreateAuditData(dbPage);
 
                 if (!string.IsNullOrWhiteSpace(dbPage.CustomEntityDefinitionCode))

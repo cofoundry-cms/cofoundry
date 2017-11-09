@@ -452,6 +452,7 @@ function (
                 vm.updatePageCommand = mapUpdatePageCommand(page);
                 vm.updateDraftCommand = mapUpdateDraftCommand(page);
                 vm.editMode = false;
+                vm.isMarkedPublished = vm.page.pageRoute.publishStatus == 'Published';
             });
         }
 
@@ -566,8 +567,8 @@ function (
     /* PRIVATE FUNCS */
 
     function loadFilterData() {
-        vm.workFlowStatus = [{
-            name: 'Draft'
+        vm.publishStatus = [{
+            name: 'Unpublished'
         }, {
             name: 'Published'
         }];

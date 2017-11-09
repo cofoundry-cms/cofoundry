@@ -63,9 +63,10 @@ namespace Cofoundry.Domain
         {
             if (dbVersion == null) return null;
 
-            var entity = MapInitialData(dbVersion);
+            var entity = MapInitialData(dbVersion, executionContext);
 
-            if (!entity.IsPublished)
+            // Re-map IsPublished checking to see if there is a published version in the history
+            if (entity.IsPublished && entity.LatestVersion.WorkFlowStatus != WorkFlowStatus.Published)
             {
                 entity.IsPublished = await _dbContext
                     .CustomEntityVersions
@@ -85,14 +86,17 @@ namespace Cofoundry.Domain
             return entity;
         }
 
-        private CustomEntityDetails MapInitialData(CustomEntityVersion dbVersion)
+        private CustomEntityDetails MapInitialData(CustomEntityVersion dbVersion, IExecutionContext executionContext)
         {
             var entity = new CustomEntityDetails()
             {
                 CustomEntityId = dbVersion.CustomEntity.CustomEntityId,
-                UrlSlug = dbVersion.CustomEntity.UrlSlug                
+                UrlSlug = dbVersion.CustomEntity.UrlSlug,             
+                PublishStatus = PublishStatusMapper.FromCode(dbVersion.CustomEntity.PublishStatusCode),
+                PublishDate = dbVersion.CustomEntity.PublishDate,
             };
 
+            entity.IsPublished = entity.PublishStatus == PublishStatus.Published && entity.PublishDate <= executionContext.ExecutionDate;
             entity.AuditData = _auditDataMapper.MapCreateAuditData(dbVersion.CustomEntity);
 
             entity.LatestVersion = new CustomEntityVersionDetails()
@@ -104,7 +108,6 @@ namespace Cofoundry.Domain
 
             entity.LatestVersion.AuditData = _auditDataMapper.MapCreateAuditData(dbVersion);
             entity.HasDraft = entity.LatestVersion.WorkFlowStatus == WorkFlowStatus.Draft;
-            entity.IsPublished = entity.LatestVersion.WorkFlowStatus == WorkFlowStatus.Published;
 
             return entity;
         }

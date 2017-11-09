@@ -6,10 +6,18 @@ using System.Threading.Tasks;
 
 namespace Cofoundry.Domain
 {
-    public class CustomEntityVersionDetails : CustomEntityVersionSummary
+    public class CustomEntityVersionDetails
     {
+        public int CustomEntityVersionId { get; set; }
+
+        public string Title { get; set; }
+
+        public WorkFlowStatus WorkFlowStatus { get; set; }
+
         public ICustomEntityDataModel Model { get; set; }
 
         public IEnumerable<CustomEntityPage> Pages { get; set; }
+
+        public CreateAuditData AuditData { get; set; }
     }
 }

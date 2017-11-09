@@ -21,7 +21,14 @@ namespace Cofoundry.Domain
         /// that gets presented to search engine robots.
         /// </summary>
         public bool ShowInSiteMap { get; set; }
-        
+
+        /// <summary>
+        /// A page can have many published versions, this flag indicates if
+        /// it is the latest published version which displays on the live site
+        /// when the page itself is published.
+        /// </summary>
+        public bool IsLatestPublishedVersion { get; set; }
+
         public WorkFlowStatus WorkFlowStatus { get; set; }
 
         public PageTemplateMicroSummary Template { get; set; }

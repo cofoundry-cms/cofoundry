@@ -52,7 +52,8 @@
                 <tr>
                     <th ng-if="vm.options.hasLocale">Market</th>
                     <th>{{::vm.options.terms['title']}}</th>
-                    <th>Status</th>
+                    <th ng-if="::!vm.options.autoPublish">Status</th>
+                    <th ng-if="::!vm.options.autoPublish">Published</th>
                     <th class="lowPriority">Created</th>
                     <th cms-table-column-actions>Actions</th>
                 </tr>
@@ -69,12 +70,16 @@
                         <a href="#/{{::entity.customEntityId}}">{{::entity.title}}</a><br>
                         <span ng-if="entity.fullPath">{{::entity.fullPath}}</span>
                     </td>
-                    <td ng-if="::entity.isPublished">
-                        Published<br>
-                        <a href="{{ ::entity.fullPath }}" ng-if="::entity.isPublished && entity.hasDraft">(Pending Draft)</a>
+                    <td ng-if="::!vm.options.autoPublish">
+                        <span ng-if="entity.isPublished">Published</span>
+                        <span ng-if="!entity.isPublished && entity.publishStatus == 'Published'">Scheduled</span>
+                        <span ng-if="entity.publishStatus == 'Unpublished' && !entity.hasDraft">Unpublished</span>
+                        <br />
+                        <a href="{{ entity.fullPath }}" ng-if="entity.hasDraft">(Pending Draft)</a>
                     </td>
-                    <td ng-if="::!entity.isPublished">
-                        Draft
+                    <td ng-if="::!vm.options.autoPublish">
+                        <span ng-if="::entity.publishDate"
+                              title="{{entity.publishDate | date:'fullDate'}} at {{entity.publishDate | date:'HH:mm:ss'}}">{{entity.publishDate | date : 'mediumDate' }}{{entity.publishDate | date : 'HH:mm' }}</span>
                     </td>
                     <td class="lowPriority">
                         <cms-table-cell-created-audit-data cms-audit-data="::entity.auditData"></cms-table-cell-created-audit-data>

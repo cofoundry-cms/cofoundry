@@ -21,12 +21,12 @@
         <cms-button cms-text="Publish"
                     ng-click="vm.publish()"
                     ng-disabled="vm.editMode || vm.globalLoadState.isLoading"
-                    ng-if="vm.page.pageRoute.hasDraft && vm.canPublishPage"></cms-button>
+                    ng-if="(!vm.isMarkedPublished || vm.page.pageRoute.hasDraft) && vm.canPublishPage"></cms-button>
 
         <cms-button cms-text="Unpublish"
                     ng-click="vm.unpublish()"
                     ng-disabled="vm.editMode || vm.globalLoadState.isLoading"
-                    ng-if="vm.page.pageRoute.isPublished && vm.canPublishPage"></cms-button>
+                    ng-if="vm.isMarkedPublished && vm.canPublishPage"></cms-button>
 
         <cms-button cms-text="Change Url"
                     ng-if="::vm.vm.canUpdatePageUrl"
@@ -87,9 +87,13 @@
                 <a ng-href="{{vm.page.pageRoute.fullPath}}">{{vm.page.pageRoute.fullPath}}</a>
             </cms-form-field-container>
 
-            <cms-form-field-checkbox cms-title="Is Published"
-                                     cms-model="vm.page.pageRoute.isPublished"
-                                     disabled></cms-form-field-checkbox>
+            <cms-form-field-readonly cms-title="Published Status"
+                                     cms-model="vm.page.pageRoute.publishStatus"></cms-form-field-readonly>
+
+            <cms-form-field-container cms-title="Publish Date">
+                <span ng-if="vm.page.pageRoute.publishDate">{{vm.page.pageRoute.publishDate | date:'fullDate'}} at {{vm.page.pageRoute.publishDate | date:'HH:mm:ss'}}</span>
+                <span ng-if="!vm.page.pageRoute.publishDate">Not set</span>
+            </cms-form-field-container>
 
             <cms-form-field-tags cms-title="CMS Tags"
                                  cms-model="vm.updatePageCommand.tags"></cms-form-field-tags>
