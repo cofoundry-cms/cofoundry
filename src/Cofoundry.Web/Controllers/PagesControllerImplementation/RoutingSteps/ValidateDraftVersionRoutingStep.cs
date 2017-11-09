@@ -40,12 +40,13 @@ namespace Cofoundry.Web
             if (!state.InputParameters.IsEditingCustomEntity
                 && workflowStatus != PublishStatusQuery.Published
                 && workflowStatus != PublishStatusQuery.SpecificVersion
-                && state.UserContext.IsCofoundryUser())
+                && state.IsCofoundryAdminUser)
             {
                 var versionRouting = pageRoutingInfo.PageRoute.Versions.GetVersionRouting(workflowStatus);
                 if (versionRouting == null)
                 {
-                    await _commandExecutor.ExecuteAsync(new AddPageDraftVersionCommand() { PageId = pageRoutingInfo.PageRoute.PageId });
+                    var command = new AddPageDraftVersionCommand() { PageId = pageRoutingInfo.PageRoute.PageId };
+                    await _commandExecutor.ExecuteAsync(command, state.CofoundryAdminExecutionContext);
                     var pageQuery = GetPageRoutingInfoQuery(state);
                     pageRoutingInfo = await _queryExecutor.ExecuteAsync(pageQuery);
                 }
@@ -63,13 +64,14 @@ namespace Cofoundry.Web
                 else if (state.InputParameters.IsEditingCustomEntity
                     && workflowStatus != PublishStatusQuery.Published
                     && workflowStatus != PublishStatusQuery.SpecificVersion
-                    && state.UserContext.IsCofoundryUser())
+                    && state.IsCofoundryAdminUser)
                 {
                     var versionRouting = pageRoutingInfo.CustomEntityRoute.Versions.GetVersionRouting(workflowStatus);
                     if (versionRouting == null)
                     {
                         // if no draft version for route, add one.
-                        await _commandExecutor.ExecuteAsync(new AddCustomEntityDraftVersionCommand() { CustomEntityId = pageRoutingInfo.CustomEntityRoute.CustomEntityId });
+                        var addDraftVersionCommand = new AddCustomEntityDraftVersionCommand() { CustomEntityId = pageRoutingInfo.CustomEntityRoute.CustomEntityId };
+                        await _commandExecutor.ExecuteAsync(addDraftVersionCommand, state.CofoundryAdminExecutionContext);
                         var pageQuery = GetPageRoutingInfoQuery(state);
                         pageRoutingInfo = await _queryExecutor.ExecuteAsync(pageQuery);
                     }

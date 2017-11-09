@@ -20,7 +20,7 @@ namespace Cofoundry.Web
         {
             // TODO: Come up with a better caching policy, but for now
             // don't cache if we're logged into Cofoundry Admin
-            if (state.UserContext.IsCofoundryUser())
+            if (state.IsCofoundryAdminUser)
             {
                 var headers = controller.Response.GetTypedHeaders();
                 headers.CacheControl = new CacheControlHeaderValue()

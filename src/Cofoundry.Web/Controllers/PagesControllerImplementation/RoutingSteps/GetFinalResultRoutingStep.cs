@@ -121,15 +121,18 @@ namespace Cofoundry.Web
                 pageResponseData.CustomEntityDefinition = await _queryExecutor.GetByIdAsync<CustomEntityDefinitionSummary>(customEntityDefinitionCode);
             }
 
-            if (pageResponseData.IsCustomEntityRoute)
+            if (state.IsCofoundryAdminUser)
             {
-                pageResponseData.HasEntityUpdatePermission = _permissionValidationService.HasCustomEntityPermission<CustomEntityUpdatePermission>(customEntityDefinitionCode, state.UserContext);
-                pageResponseData.HasEntityPublishPermission = _permissionValidationService.HasCustomEntityPermission<CustomEntityPublishPermission>(customEntityDefinitionCode, state.UserContext);
-            }
-            else
-            {
-                pageResponseData.HasEntityUpdatePermission = _permissionValidationService.HasPermission<PageUpdatePermission>(state.UserContext);
-                pageResponseData.HasEntityPublishPermission = _permissionValidationService.HasPermission<PagePublishPermission>(state.UserContext);
+                if (pageResponseData.IsCustomEntityRoute)
+                {
+                    pageResponseData.HasEntityUpdatePermission = _permissionValidationService.HasCustomEntityPermission<CustomEntityUpdatePermission>(customEntityDefinitionCode, state.CofoundryAdminUserContext);
+                    pageResponseData.HasEntityPublishPermission = _permissionValidationService.HasCustomEntityPermission<CustomEntityPublishPermission>(customEntityDefinitionCode, state.CofoundryAdminUserContext);
+                }
+                else
+                {
+                    pageResponseData.HasEntityUpdatePermission = _permissionValidationService.HasPermission<PageUpdatePermission>(state.CofoundryAdminUserContext);
+                    pageResponseData.HasEntityPublishPermission = _permissionValidationService.HasPermission<PagePublishPermission>(state.CofoundryAdminUserContext);
+                }
             }
 
             if (state.InputParameters.IsEditingCustomEntity)

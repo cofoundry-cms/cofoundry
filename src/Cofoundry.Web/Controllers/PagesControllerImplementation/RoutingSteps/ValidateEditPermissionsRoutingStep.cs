@@ -31,8 +31,6 @@ namespace Cofoundry.Web
 
         public Task ExecuteAsync(Controller controller, PageActionRoutingState state)
         {
-            if (state.UserContext == null) throw new ArgumentNullException(nameof(state.UserContext));
-
             var pageRoutingInfo = state.PageRoutingInfo;
             if (pageRoutingInfo == null || state.VisualEditorMode != VisualEditorMode.Edit) return Task.CompletedTask;
             
@@ -40,12 +38,12 @@ namespace Cofoundry.Web
                 && state.InputParameters.IsEditingCustomEntity
                 )
             {
-                _permissionValidationService.EnforceCustomEntityPermission<CustomEntityUpdatePermission>(pageRoutingInfo.CustomEntityRoute.CustomEntityDefinitionCode, state.UserContext);
+                _permissionValidationService.EnforceCustomEntityPermission<CustomEntityUpdatePermission>(pageRoutingInfo.CustomEntityRoute.CustomEntityDefinitionCode, state.CofoundryAdminUserContext);
             }
 
             if (!state.InputParameters.IsEditingCustomEntity)
             {
-                _permissionValidationService.EnforcePermission<PageUpdatePermission>(state.UserContext);
+                _permissionValidationService.EnforcePermission<PageUpdatePermission>(state.CofoundryAdminUserContext);
             }
 
             return Task.CompletedTask;

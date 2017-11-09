@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Cofoundry.Domain;
 using Microsoft.AspNetCore.Mvc;
+using Cofoundry.Domain.CQS;
 
 namespace Cofoundry.Web
 {
@@ -16,25 +17,48 @@ namespace Cofoundry.Web
     {
         private readonly IUserContextService _userContextService;
         private readonly ContentSettings _contentSettings;
+        private readonly IExecutionContextFactory _executionContextFactory;
 
         public InitStateRoutingStep(
             IUserContextService userContextService,
-            ContentSettings contentSettings
+            ContentSettings contentSettings,
+            IExecutionContextFactory executionContextFactory
             )
         {
             _userContextService = userContextService;
             _contentSettings = contentSettings;
+            _executionContextFactory = executionContextFactory;
         }
 
         public async Task ExecuteAsync(Controller controller, PageActionRoutingState state)
         {
-            state.UserContext = await _userContextService.GetCurrentContextAsync();
+            // The ambient auth schema might not be the cofoundry admin scheme
+            // So we will attempt to find the cofoundry user to execute the contoller with
+            // falling back to the user authenticated with the ambient scheme
+            state.AmbientUserContext = await _userContextService.GetCurrentContextAsync();
+            IUserContext cofoundryUserContext = null;
+
+            if (state.AmbientUserContext.IsCofoundryUser())
+            {
+                cofoundryUserContext = state.AmbientUserContext;
+            }
+            else
+            {
+                cofoundryUserContext = await _userContextService.GetCurrentContextByUserAreaAsync(CofoundryAdminUserArea.AreaCode);
+            }
+
+            if (cofoundryUserContext.IsCofoundryUser())
+            {
+                state.IsCofoundryAdminUser = true;
+                state.CofoundryAdminUserContext = cofoundryUserContext;
+                state.CofoundryAdminExecutionContext = _executionContextFactory.Create(state.CofoundryAdminUserContext);
+            }
 
             // Work out whether to view the page in live/draft/edit mode.
             // We use live by default (for logged out users) or for authenticated
             // users we can show draft too.
             var visualEditorMode = VisualEditorMode.Live;
-            if (state.UserContext.IsCofoundryUser())
+            if (state.IsCofoundryAdminUser)
             {
                 if (state.InputParameters.VersionId.HasValue)
                 {

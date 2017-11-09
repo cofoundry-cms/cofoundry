@@ -26,19 +26,19 @@ namespace Cofoundry.Web
 
         public Task ExecuteAsync(Controller controller, PageActionRoutingState state)
         {
-            var completedTask = Task.FromResult(true);
-
             var pageRoutingInfo = state.PageRoutingInfo;
-            if (pageRoutingInfo == null) return completedTask;
+            if (pageRoutingInfo == null) return Task.CompletedTask;
 
             if (state.InputParameters.IsEditingCustomEntity &&
-                (pageRoutingInfo.CustomEntityRoute == null || !_permissionValidationService.HasCustomEntityPermission<CustomEntityUpdatePermission>(pageRoutingInfo.CustomEntityRoute.CustomEntityDefinitionCode, state.UserContext))
+                (pageRoutingInfo.CustomEntityRoute == null 
+                || !state.IsCofoundryAdminUser
+                || !_permissionValidationService.HasCustomEntityPermission<CustomEntityUpdatePermission>(pageRoutingInfo.CustomEntityRoute.CustomEntityDefinitionCode, state.CofoundryAdminUserContext))
                 )
             {
                 state.InputParameters.IsEditingCustomEntity = false;
             }
 
-            return completedTask;
+            return Task.CompletedTask;
         }
     }
 }

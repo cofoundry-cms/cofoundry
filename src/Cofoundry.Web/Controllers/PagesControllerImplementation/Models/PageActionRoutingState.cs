@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Cofoundry.Domain;
 using Microsoft.AspNetCore.Mvc;
+using Cofoundry.Domain.CQS;
 
 namespace Cofoundry.Web
 {
@@ -24,9 +25,28 @@ namespace Cofoundry.Web
         public PageActionInputParameters InputParameters { get; set; }
 
         /// <summary>
-        /// The current user context for the request.
+        /// True if the currently logged in user is authenticated
+        /// under the Cofoundry admin schema.
         /// </summary>
-        public IUserContext UserContext { get; set; }
+        public bool IsCofoundryAdminUser { get; set; }
+
+        /// <summary>
+        /// The current user context for the request using the ambient
+        /// auth schema. The default schema is the Cofoundry
+        /// admin user area, but this could be changed.
+        /// </summary>
+        public IUserContext AmbientUserContext { get; set; }
+
+        /// <summary>
+        /// User context representing the logged in Cofoundry admin user, or
+        /// null if the user is not logged into the admin auth schema.
+        /// </summary>
+        public IUserContext CofoundryAdminUserContext { get; set; }
+
+        /// <summary>
+        /// An execution context wrapping the CofoundryUserContext.
+        /// </summary>
+        public IExecutionContext CofoundryAdminExecutionContext { get; set; }
 
         /// <summary>
         /// The requested visual editor mode.
