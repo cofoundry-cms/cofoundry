@@ -118,12 +118,6 @@ namespace Cofoundry.Domain
                 }
                 else if (!isInUse)
                 {
-                    // These get deleted in the cascade trigger, but EF Core has issues with deleting the main 
-                    // entity while these are attached
-                    foreach (var region in removedDbTemplate.PageTemplateRegions)
-                    {
-                        _dbContext.Entry(region).State = EntityState.Detached;
-                    }
                     _dbContext.PageTemplates.Remove(removedDbTemplate);
                 }
             }

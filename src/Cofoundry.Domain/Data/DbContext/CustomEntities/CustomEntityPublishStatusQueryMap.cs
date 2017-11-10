@@ -17,13 +17,11 @@ namespace Cofoundry.Domain.Data
 
             builder.HasOne(s => s.CustomEntity)
                 .WithMany(s => s.CustomEntityPublishStatusQueries)
-                .HasForeignKey(d => d.CustomEntityId)
-                .OnDelete(DeleteBehavior.Restrict);
+                .HasForeignKey(d => d.CustomEntityId);
 
             builder.HasOne(s => s.CustomEntityVersion)
                 .WithMany(s => s.CustomEntityPublishStatusQueries)
-                .HasForeignKey(d => d.CustomEntityVersionId)
-                .OnDelete(DeleteBehavior.Restrict);
+                .HasForeignKey(d => d.CustomEntityVersionId);
         }
     }
 }

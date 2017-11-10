@@ -36,20 +36,17 @@ namespace Cofoundry.Domain.Data
 
             builder.HasOne(s => s.Role)
                 .WithMany()
-                .HasForeignKey(d => d.RoleId)
-                .OnDelete(DeleteBehavior.Restrict);
+                .HasForeignKey(d => d.RoleId);
 
             #region create auditable (ish)
             
             builder.HasOne(s => s.Creator)
                 .WithMany()
-                .HasForeignKey(d => d.CreatorId)
-                .OnDelete(DeleteBehavior.Restrict);
+                .HasForeignKey(d => d.CreatorId);
 
             builder.HasOne(s => s.UserArea)
                 .WithMany(d => d.Users)
-                .HasForeignKey(d => d.UserAreaCode)
-                .OnDelete(DeleteBehavior.Restrict);
+                .HasForeignKey(d => d.UserAreaCode);
 
             #endregion
         }

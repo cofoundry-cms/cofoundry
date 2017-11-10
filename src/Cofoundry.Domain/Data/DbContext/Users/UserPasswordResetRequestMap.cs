@@ -23,8 +23,7 @@ namespace Cofoundry.Domain.Data
 
             builder.HasOne(s => s.User)
                 .WithMany()
-                .HasForeignKey(d => d.UserId)
-                .OnDelete(DeleteBehavior.Restrict);
+                .HasForeignKey(d => d.UserId);
         }
     }
 }

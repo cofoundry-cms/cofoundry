@@ -29,23 +29,19 @@ namespace Cofoundry.Domain.Data
 
             builder.HasOne(s => s.OpenGraphImageAsset)
                 .WithMany()
-                .HasForeignKey(d => d.OpenGraphImageId)
-                .OnDelete(DeleteBehavior.Restrict);
+                .HasForeignKey(d => d.OpenGraphImageId);
 
             builder.HasOne(s => s.PageTemplate)
                 .WithMany(s => s.PageVersions)
-                .HasForeignKey(d => d.PageTemplateId)
-                .OnDelete(DeleteBehavior.Restrict);
+                .HasForeignKey(d => d.PageTemplateId);
 
             builder.HasOne(s => s.Page)
                 .WithMany(s => s.PageVersions)
-                .HasForeignKey(d => d.PageId)
-                .OnDelete(DeleteBehavior.Restrict);
+                .HasForeignKey(d => d.PageId);
 
             builder.HasOne(s => s.BasedOnPageVersion)
                 .WithMany(s => s.ChildPageVersions)
-                .HasForeignKey(d => d.BasedOnPageVersionId)
-                .OnDelete(DeleteBehavior.Restrict);
+                .HasForeignKey(d => d.BasedOnPageVersionId);
 
             CreateAuditableMappingHelper.Map(builder);
         }

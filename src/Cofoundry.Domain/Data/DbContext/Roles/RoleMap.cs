@@ -32,13 +32,11 @@ namespace Cofoundry.Domain.Data
             //        m.builder.ToTable("RolePermission");
             //        m.MapLeftKey("RoleId");
             //        m.MapRightKey("PermissionId");
-            //    })
-            //    .OnDelete(DeleteBehavior.Restrict);
+            //    });
 
             builder.HasOne(s => s.UserArea)
                 .WithMany()
-                .HasForeignKey(d => d.UserAreaCode)
-                .OnDelete(DeleteBehavior.Restrict);
+                .HasForeignKey(d => d.UserAreaCode);
         }
     }
 }

@@ -22,23 +22,19 @@ namespace Cofoundry.Domain.Data
 
             builder.HasOne(s => s.CustomEntityVersion)
                 .WithMany(d => d.CustomEntityVersionPageBlocks)
-                .HasForeignKey(s => s.CustomEntityVersionId)
-                .OnDelete(DeleteBehavior.Restrict);
+                .HasForeignKey(s => s.CustomEntityVersionId);
 
             builder.HasOne(s => s.PageBlockType)
                 .WithMany(d => d.CustomEntityVersionPageBlocks)
-                .HasForeignKey(s => s.PageBlockTypeId)
-                .OnDelete(DeleteBehavior.Restrict);
+                .HasForeignKey(s => s.PageBlockTypeId);
 
             builder.HasOne(s => s.PageTemplateRegion)
                 .WithMany()
-                .HasForeignKey(s => s.PageTemplateRegionId)
-                .OnDelete(DeleteBehavior.Restrict);
+                .HasForeignKey(s => s.PageTemplateRegionId);
 
             builder.HasOne(s => s.PageBlockTypeTemplate)
                 .WithMany()
-                .HasForeignKey(s => s.PageBlockTypeTemplateId)
-                .OnDelete(DeleteBehavior.Restrict);
+                .HasForeignKey(s => s.PageBlockTypeTemplateId);
         }
     }
 }

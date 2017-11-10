@@ -26,8 +26,7 @@ namespace Cofoundry.Domain.Data
 
             builder.HasOne(s => s.CustomEntity)
                 .WithMany(s => s.CustomEntityVersions)
-                .HasForeignKey(d => d.CustomEntityId)
-                .OnDelete(DeleteBehavior.Restrict);
+                .HasForeignKey(d => d.CustomEntityId);
 
             CreateAuditableMappingHelper.Map(builder);
         }

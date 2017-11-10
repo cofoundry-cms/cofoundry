@@ -38,8 +38,7 @@ namespace Cofoundry.Domain.Data
             // Relationships
             builder.HasOne(s => s.CustomEntityDefinition)
                 .WithMany()
-                .HasForeignKey(d => d.CustomEntityDefinitionCode)
-                .OnDelete(DeleteBehavior.Restrict);
+                .HasForeignKey(d => d.CustomEntityDefinitionCode);
         }
     }
 }

@@ -27,8 +27,7 @@ namespace Cofoundry.Domain.Data
             // Relationships
             builder.HasOne(s => s.ParentPageDirectory)
                 .WithMany(s => s.ChildPageDirectories)
-                .HasForeignKey(d => d.ParentPageDirectoryId)
-                .OnDelete(DeleteBehavior.Restrict);
+                .HasForeignKey(d => d.ParentPageDirectoryId);
 
             CreateAuditableMappingHelper.Map(builder);
         }

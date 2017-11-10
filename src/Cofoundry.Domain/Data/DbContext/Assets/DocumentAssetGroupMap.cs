@@ -20,8 +20,7 @@ namespace Cofoundry.Domain.Data
             // Relationships
             builder.HasOne(s => s.ParentDocumentAssetGroup)
                 .WithMany(s => s.ChildDocumentAssetGroups)
-                .HasForeignKey(d => d.ParentDocumentAssetGroupId)
-                .OnDelete(DeleteBehavior.Restrict);
+                .HasForeignKey(d => d.ParentDocumentAssetGroupId);
 
             CreateAuditableMappingHelper.Map(builder);
         }

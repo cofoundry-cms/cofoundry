@@ -26,13 +26,11 @@ namespace Cofoundry.Domain.Data
 
             builder.HasOne(s => s.Role)
                 .WithMany(d => d.RolePermissions)
-                .HasForeignKey(s => s.RoleId)
-                .OnDelete(DeleteBehavior.Restrict);
+                .HasForeignKey(s => s.RoleId);
 
             builder.HasOne(s => s.Permission)
                 .WithMany(d => d.RolePermissions)
-                .HasForeignKey(s => s.PermissionId)
-                .OnDelete(DeleteBehavior.Restrict);
+                .HasForeignKey(s => s.PermissionId);
         }
     }
 }

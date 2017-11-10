@@ -26,8 +26,7 @@ namespace Cofoundry.Domain.Data
             // Relationships
             builder.HasOne(s => s.DocumentAsset)
                 .WithMany(s => s.DocumentAssetTags)
-                .HasForeignKey(d => d.DocumentAssetId)
-                .OnDelete(DeleteBehavior.Restrict);
+                .HasForeignKey(d => d.DocumentAssetId);
 
             builder.HasOne(s => s.Tag)
                 .WithMany()

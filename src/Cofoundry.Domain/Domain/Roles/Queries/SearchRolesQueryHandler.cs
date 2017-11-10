@@ -80,9 +80,7 @@ namespace Cofoundry.Domain
             else
             {
                 dbQuery = dbQuery
-                    .OrderBy(r => r.UserAreaCode)
-                    // TODO: EF Core: Replaced this to fix ef core query translation issue
-                    //.OrderBy(r => r.UserArea.Name)
+                    .OrderBy(r => r.UserArea.Name)
                     .ThenBy(r => r.Title);
             }
 

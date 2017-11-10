@@ -17,13 +17,11 @@ namespace Cofoundry.Domain.Data
 
             builder.HasOne(s => s.Page)
                 .WithMany(s => s.PagePublishStatusQueries)
-                .HasForeignKey(d => d.PageId)
-                .OnDelete(DeleteBehavior.Restrict);
+                .HasForeignKey(d => d.PageId);
 
             builder.HasOne(s => s.PageVersion)
                 .WithMany(s => s.PagePublishStatusQueries)
-                .HasForeignKey(d => d.PageVersionId)
-                .OnDelete(DeleteBehavior.Restrict);
+                .HasForeignKey(d => d.PageVersionId);
         }
     }
 }

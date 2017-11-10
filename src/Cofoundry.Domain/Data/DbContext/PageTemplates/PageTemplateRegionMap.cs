@@ -21,8 +21,7 @@ namespace Cofoundry.Domain.Data
 
             builder.HasOne(s => s.PageTemplate)
                 .WithMany(s => s.PageTemplateRegions)
-                .HasForeignKey(d => d.PageTemplateId)
-                .OnDelete(DeleteBehavior.Restrict);
+                .HasForeignKey(d => d.PageTemplateId);
         }
     }
 }

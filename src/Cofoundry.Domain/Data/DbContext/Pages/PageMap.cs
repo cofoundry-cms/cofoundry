@@ -30,18 +30,15 @@ namespace Cofoundry.Domain.Data
 
             builder.HasOne(s => s.Locale)
                 .WithMany()
-                .HasForeignKey(d => d.LocaleId)
-                .OnDelete(DeleteBehavior.Restrict);
+                .HasForeignKey(d => d.LocaleId);
 
             builder.HasOne(s => s.CustomEntityDefinition)
                 .WithMany()
-                .HasForeignKey(d => d.CustomEntityDefinitionCode)
-                .OnDelete(DeleteBehavior.Restrict);
+                .HasForeignKey(d => d.CustomEntityDefinitionCode);
 
             builder.HasOne(s => s.PageDirectory)
                 .WithMany(s => s.Pages)
-                .HasForeignKey(d => d.PageDirectoryId)
-                .OnDelete(DeleteBehavior.Restrict);
+                .HasForeignKey(d => d.PageDirectoryId);
 
             CreateAuditableMappingHelper.Map(builder);
         }

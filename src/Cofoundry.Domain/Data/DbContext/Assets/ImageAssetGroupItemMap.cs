@@ -26,13 +26,11 @@ namespace Cofoundry.Domain.Data
             // Relationships
             builder.HasOne(s => s.ImageAssetGroup)
                 .WithMany(s => s.ImageAssetGroupItems)
-                .HasForeignKey(d => d.ImageAssetGroupId)
-                .OnDelete(DeleteBehavior.Restrict);
+                .HasForeignKey(d => d.ImageAssetGroupId);
 
             builder.HasOne(s => s.ImageAsset)
                 .WithMany(s => s.ImageAssetGroupItems)
-                .HasForeignKey(d => d.ImageAssetId)
-                .OnDelete(DeleteBehavior.Restrict);
+                .HasForeignKey(d => d.ImageAssetId);
 
             CreateAuditableMappingHelper.Map(builder);
         }

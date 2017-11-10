@@ -28,13 +28,11 @@ namespace Cofoundry.Domain.Data
 
             builder.HasOne(s => s.Page)
                 .WithMany(s => s.PageTags)
-                .HasForeignKey(d => d.PageId)
-                .OnDelete(DeleteBehavior.Restrict);
+                .HasForeignKey(d => d.PageId);
 
             builder.HasOne(s => s.Tag)
                 .WithMany()
-                .HasForeignKey(d => d.TagId)
-                .OnDelete(DeleteBehavior.Restrict);
+                .HasForeignKey(d => d.TagId);
 
             CreateAuditableMappingHelper.Map(builder);
         }

@@ -30,8 +30,7 @@ namespace Cofoundry.Domain.Data
 
             builder.HasOne(s => s.PageBlockType)
                 .WithMany(s => s.PageBlockTemplates)
-                .HasForeignKey(d => d.PageBlockTypeId)
-                .OnDelete(DeleteBehavior.Restrict);
+                .HasForeignKey(d => d.PageBlockTypeId);
         }
     }
 }

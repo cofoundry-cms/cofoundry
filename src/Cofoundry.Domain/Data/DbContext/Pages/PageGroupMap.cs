@@ -23,8 +23,7 @@ namespace Cofoundry.Domain.Data
 
             builder.HasOne(s => s.ParentPageGroup)
                 .WithMany(s => s.ChildPageGroups)
-                .HasForeignKey(d => d.ParentGroupId)
-                .OnDelete(DeleteBehavior.Restrict);
+                .HasForeignKey(d => d.ParentGroupId);
 
             CreateAuditableMappingHelper.Map(builder);
         }

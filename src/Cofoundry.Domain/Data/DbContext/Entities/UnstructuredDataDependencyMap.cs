@@ -28,15 +28,13 @@ namespace Cofoundry.Domain.Data
 
             builder.HasOne(s => s.RootEntityDefinition)
                 .WithMany()
-                .HasForeignKey(d => d.RootEntityDefinitionCode)
-                .OnDelete(DeleteBehavior.Restrict);
+                .HasForeignKey(d => d.RootEntityDefinitionCode);
 
             // Relations
 
             builder.HasOne(s => s.RelatedEntityDefinition)
                 .WithMany()
-                .HasForeignKey(d => d.RelatedEntityDefinitionCode)
-                .OnDelete(DeleteBehavior.Restrict);
+                .HasForeignKey(d => d.RelatedEntityDefinitionCode);
         }
     }
 }

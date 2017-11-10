@@ -29,8 +29,7 @@ namespace Cofoundry.Domain.Data
 
             builder.HasOne(s => s.ParentLocale)
                 .WithMany(s => s.ChildLocales)
-                .HasForeignKey(d => d.ParentLocaleId)
-                .OnDelete(DeleteBehavior.Restrict);
+                .HasForeignKey(d => d.ParentLocaleId);
         }
     }
 }

@@ -31,13 +31,11 @@ namespace Cofoundry.Domain.Data
 
             builder.HasOne(s => s.CustomEntityDefinition)
                 .WithMany()
-                .HasForeignKey(d => d.CustomEntityDefinitionCode)
-                .OnDelete(DeleteBehavior.Restrict);
+                .HasForeignKey(d => d.CustomEntityDefinitionCode);
 
             builder.HasOne(s => s.Locale)
                 .WithMany()
-                .HasForeignKey(d => d.LocaleId)
-                .OnDelete(DeleteBehavior.Restrict);
+                .HasForeignKey(d => d.LocaleId);
 
             CreateAuditableMappingHelper.Map(builder);
         }
