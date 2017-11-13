@@ -36,13 +36,13 @@ namespace Cofoundry.Web
 
             // If there's no draft version and we're in edit mode for 'Pages' then
             // create one and re-run the query
-            var workflowStatus = state.VisualEditorMode.ToPublishStatusQuery();
+            var publishStatus = state.VisualEditorMode.ToPublishStatusQuery();
             if (!state.InputParameters.IsEditingCustomEntity
-                && workflowStatus != PublishStatusQuery.Published
-                && workflowStatus != PublishStatusQuery.SpecificVersion
+                && publishStatus != PublishStatusQuery.Published
+                && publishStatus != PublishStatusQuery.SpecificVersion
                 && state.IsCofoundryAdminUser)
             {
-                var versionRouting = pageRoutingInfo.PageRoute.Versions.GetVersionRouting(workflowStatus);
+                var versionRouting = pageRoutingInfo.PageRoute.Versions.GetVersionRouting(publishStatus);
                 if (versionRouting == null)
                 {
                     var command = new AddPageDraftVersionCommand() { PageId = pageRoutingInfo.PageRoute.PageId };
@@ -62,11 +62,11 @@ namespace Cofoundry.Web
                     state.Result = new RedirectResult(correctUrl, true);
                 }
                 else if (state.InputParameters.IsEditingCustomEntity
-                    && workflowStatus != PublishStatusQuery.Published
-                    && workflowStatus != PublishStatusQuery.SpecificVersion
+                    && publishStatus != PublishStatusQuery.Published
+                    && publishStatus != PublishStatusQuery.SpecificVersion
                     && state.IsCofoundryAdminUser)
                 {
-                    var versionRouting = pageRoutingInfo.CustomEntityRoute.Versions.GetVersionRouting(workflowStatus);
+                    var versionRouting = pageRoutingInfo.CustomEntityRoute.Versions.GetVersionRouting(publishStatus);
                     if (versionRouting == null)
                     {
                         // if no draft version for route, add one.

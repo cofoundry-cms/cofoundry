@@ -171,10 +171,39 @@ create table Cofoundry.CustomEntityPublishStatusQuery (
 
 go
 
-insert into Cofoundry.PublishStatusQuery (PublishStatusQueryId, [Name]) values (0, 'Latest') 
-insert into Cofoundry.PublishStatusQuery (PublishStatusQueryId, [Name]) values (1, 'Draft') 
-insert into Cofoundry.PublishStatusQuery (PublishStatusQueryId, [Name]) values (2, 'Published') 
+insert into Cofoundry.PublishStatusQuery (PublishStatusQueryId, [Name]) values (0, 'Published') 
+insert into Cofoundry.PublishStatusQuery (PublishStatusQueryId, [Name]) values (1, 'Latest') 
+insert into Cofoundry.PublishStatusQuery (PublishStatusQueryId, [Name]) values (2, 'Draft') 
 insert into Cofoundry.PublishStatusQuery (PublishStatusQueryId, [Name]) values (3, 'PreferPublished') 
+
+
+-- PublishStatusQuery.Published
+;with CTE_LatestPublishedPageVersions as
+(
+	select v.PageId, v.PageVersionId,
+		row_number() over (partition by v.PageId order by v.CreateDate desc) as RowNumber
+	from Cofoundry.PageVersion v
+	inner join Cofoundry.[Page] p on p.PageId = v.PageId
+	where WorkFlowStatusId = 4 and p.PublishStatusCode = 'P' and v.IsDeleted = 0 and p.IsDeleted = 0
+)
+insert into Cofoundry.PagePublishStatusQuery (PageId, PublishStatusQueryId, PageVersionId)
+select PageId, 0, PageVersionId
+from CTE_LatestPublishedPageVersions
+where RowNumber = 1
+
+;with CTE_LatestPublishedCustomEntityVersions as
+(
+	select v.CustomEntityId, v.CustomEntityVersionId,
+		row_number() over (partition by v.CustomEntityId order by v.CreateDate desc) as RowNumber
+	from Cofoundry.CustomEntityVersion v
+	inner join Cofoundry.CustomEntity e on e.CustomEntityId = v.CustomEntityId and e.PublishStatusCode = 'P'
+	where WorkFlowStatusId = 4
+)
+insert into Cofoundry.CustomEntityPublishStatusQuery (CustomEntityId, PublishStatusQueryId, CustomEntityVersionId)
+select CustomEntityId, 0, CustomEntityVersionId
+from CTE_LatestPublishedCustomEntityVersions
+where RowNumber = 1
+
 
 -- PublishStatusQuery.Latest
 ;with CTE_LatestPageVersions as
@@ -186,7 +215,7 @@ insert into Cofoundry.PublishStatusQuery (PublishStatusQueryId, [Name]) values (
 	where v.IsDeleted = 0 and p.IsDeleted = 0
 )
 insert into Cofoundry.PagePublishStatusQuery (PageId, PublishStatusQueryId, PageVersionId)
-select PageId, 0, PageVersionId
+select PageId, 1, PageVersionId
 from CTE_LatestPageVersions
 where RowNumber = 1
 
@@ -197,7 +226,7 @@ where RowNumber = 1
    from Cofoundry.CustomEntityVersion
 )
 insert into Cofoundry.CustomEntityPublishStatusQuery (CustomEntityId, PublishStatusQueryId, CustomEntityVersionId)
-select CustomEntityId, 0, CustomEntityVersionId
+select CustomEntityId, 1, CustomEntityVersionId
 from CTE_LatestCustomEntityVersions
 where RowNumber = 1
 
@@ -212,7 +241,7 @@ where RowNumber = 1
 	where WorkFlowStatusId = 1 and v.IsDeleted = 0 and p.IsDeleted = 0
 )
 insert into Cofoundry.PagePublishStatusQuery (PageId, PublishStatusQueryId, PageVersionId)
-select PageId, 1, PageVersionId
+select PageId, 2, PageVersionId
 from CTE_LatestDraftPageVersions
 where RowNumber = 1
 
@@ -224,36 +253,8 @@ where RowNumber = 1
    where WorkFlowStatusId = 1
 )
 insert into Cofoundry.CustomEntityPublishStatusQuery (CustomEntityId, PublishStatusQueryId, CustomEntityVersionId)
-select CustomEntityId, 1, CustomEntityVersionId
-from CTE_LatestDraftCustomEntityVersions
-where RowNumber = 1
-
-
--- PublishStatusQuery.Published
-;with CTE_LatestPublishedPageVersions as
-(
-	select v.PageId, v.PageVersionId,
-		row_number() over (partition by v.PageId order by v.CreateDate desc) as RowNumber
-	from Cofoundry.PageVersion v
-	inner join Cofoundry.[Page] p on p.PageId = v.PageId
-	where WorkFlowStatusId = 4 and p.PublishStatusCode = 'P' and v.IsDeleted = 0 and p.IsDeleted = 0
-)
-insert into Cofoundry.PagePublishStatusQuery (PageId, PublishStatusQueryId, PageVersionId)
-select PageId, 2, PageVersionId
-from CTE_LatestPublishedPageVersions
-where RowNumber = 1
-
-;with CTE_LatestPublishedCustomEntityVersions as
-(
-	select v.CustomEntityId, v.CustomEntityVersionId,
-		row_number() over (partition by v.CustomEntityId order by v.CreateDate desc) as RowNumber
-	from Cofoundry.CustomEntityVersion v
-	inner join Cofoundry.CustomEntity e on e.CustomEntityId = v.CustomEntityId and e.PublishStatusCode = 'P'
-	where WorkFlowStatusId = 4
-)
-insert into Cofoundry.CustomEntityPublishStatusQuery (CustomEntityId, PublishStatusQueryId, CustomEntityVersionId)
 select CustomEntityId, 2, CustomEntityVersionId
-from CTE_LatestPublishedCustomEntityVersions
+from CTE_LatestDraftCustomEntityVersions
 where RowNumber = 1
 
 

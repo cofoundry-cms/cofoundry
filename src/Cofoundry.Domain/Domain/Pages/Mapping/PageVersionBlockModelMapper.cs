@@ -78,7 +78,7 @@ namespace Cofoundry.Domain
             }
             else
             {
-                var blockWorkflowStatus = TranslateWorkFlowStatusForBlocks(publishStatus);
+                var blockWorkflowStatus = TranslatePublishStatusForBlocks(publishStatus);
 
                 // We have to use a mapping class to do some custom mapping
                 var displayModels = (Task<List<PageBlockTypeDisplayModelMapperOutput>>)_mapGenericMethod
@@ -138,20 +138,20 @@ namespace Cofoundry.Domain
         /// dependencies should have a draft version, so we re-write it to Latest.
         /// The same applies if we're loading a specific version.
         /// </summary>
-        /// <param name="workflowStatus">The original workflow status of the parent entity.</param>
-        private PublishStatusQuery TranslateWorkFlowStatusForBlocks(PublishStatusQuery workflowStatus)
+        /// <param name="publishStatus">The original publish status of the parent entity.</param>
+        private PublishStatusQuery TranslatePublishStatusForBlocks(PublishStatusQuery publishStatus)
         {
-            if (workflowStatus == PublishStatusQuery.Draft || workflowStatus == PublishStatusQuery.SpecificVersion)
+            if (publishStatus == PublishStatusQuery.Draft || publishStatus == PublishStatusQuery.SpecificVersion)
             {
-                workflowStatus = PublishStatusQuery.Latest;
+                publishStatus = PublishStatusQuery.Latest;
             }
 
-            return workflowStatus;
+            return publishStatus;
         }
 
         private async Task<List<PageBlockTypeDisplayModelMapperOutput>> MapGeneric<T>(
             IEnumerable<IEntityVersionPageBlock> pageBlocks, 
-            PublishStatusQuery workflowStatus
+            PublishStatusQuery publishStatus
             ) where T : IPageBlockTypeDataModel
         {
             var mapperType = typeof(IPageBlockTypeDisplayModelMapper<T>);
@@ -173,7 +173,7 @@ namespace Cofoundry.Domain
                 dataModels.Add(mapperModel);
             }
 
-            var results = await mapper.MapAsync(dataModels, workflowStatus);
+            var results = await mapper.MapAsync(dataModels, publishStatus);
 
             return results.ToList();
         }

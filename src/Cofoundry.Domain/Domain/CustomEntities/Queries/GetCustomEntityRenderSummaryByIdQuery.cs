@@ -13,7 +13,7 @@ namespace Cofoundry.Domain
     {
         public GetCustomEntityRenderSummaryByIdQuery() { }
 
-        public GetCustomEntityRenderSummaryByIdQuery(int customEntityId, PublishStatusQuery workFlowStatus = PublishStatusQuery.Latest)
+        public GetCustomEntityRenderSummaryByIdQuery(int customEntityId, PublishStatusQuery workFlowStatus = PublishStatusQuery.Published)
         {
             CustomEntityId = customEntityId;
             PublishStatus = workFlowStatus;

@@ -6,58 +6,6 @@ create procedure Cofoundry.PagePublishStatusQuery_Update
 begin
 	
 	set nocount on;
-	
-	-- PublishStatusQuery.Latest
-
-	with CTE_LatestPageVersions as
-	(
-		select v.PageId, v.PageVersionId,
-				row_number() over (partition by v.PageId order by v.WorkFlowStatusId, v.CreateDate desc) as RowNumber
-		from Cofoundry.PageVersion v
-		inner join Cofoundry.[Page] p on p.PageId = v.PageId
-		where v.PageId = @PageId and v.IsDeleted = 0 and p.IsDeleted = 0
-	)
-	merge into Cofoundry.PagePublishStatusQuery as t
-	using (
-			select PageId, PageVersionId
-			from CTE_LatestPageVersions
-			where RowNumber = 1
-			) as s
-		on t.PageId = s.PageId
-		and t.PublishStatusQueryId = 0
-		when matched then
-			update set PageVersionId = s.PageVersionId
-		when not matched by target then 
-			insert (PageId, PublishStatusQueryId, PageVersionId)
-			values(PageId, 0, PageVersionId)
-		when not matched by source and t.PublishStatusQueryId = 0 and t.PageId = @PageId then
-			delete;
-
-	-- PublishStatusQuery.Draft
-
-	with CTE_LatestDraftPageVersions as
-	(
-	   select v.PageId, v.PageVersionId,
-			 row_number() over (partition by v.PageId order by v.CreateDate desc) as RowNumber
-	   from Cofoundry.PageVersion v
-	   inner join Cofoundry.[Page] p on p.PageId = v.PageId
-	   where v.PageId = @PageId and WorkFlowStatusId = 1 and v.IsDeleted = 0 and p.IsDeleted = 0
-	)
-	merge into Cofoundry.PagePublishStatusQuery as t
-	using (
-			select PageId, PageVersionId 
-			from CTE_LatestDraftPageVersions
-			where RowNumber = 1
-			) as s
-		on t.PageId = s.PageId
-		and t.PublishStatusQueryId = 1
-		when matched then
-			update set PageVersionId = s.PageVersionId
-		when not matched by target then 
-			insert (PageId, PublishStatusQueryId, PageVersionId)
-			values(PageId, 1, PageVersionId)
-		when not matched by source and t.PublishStatusQueryId = 1 and t.PageId = @PageId then
-			delete;
 			
 	-- PublishStatusQuery.Published
 
@@ -77,12 +25,64 @@ begin
 			where RowNumber = 1
 			) as s
 		on t.PageId = s.PageId
-		and t.PublishStatusQueryId = 2
+		and t.PublishStatusQueryId = 0
 		when matched then
 			update set PageVersionId = s.PageVersionId
 		when not matched by target then 
 			insert (PageId, PublishStatusQueryId, PageVersionId)
 			values(PageId, 2, PageVersionId)
+		when not matched by source and t.PublishStatusQueryId = 0 and t.PageId = @PageId then
+			delete;
+	
+	-- PublishStatusQuery.Latest
+
+	with CTE_LatestPageVersions as
+	(
+		select v.PageId, v.PageVersionId,
+				row_number() over (partition by v.PageId order by v.WorkFlowStatusId, v.CreateDate desc) as RowNumber
+		from Cofoundry.PageVersion v
+		inner join Cofoundry.[Page] p on p.PageId = v.PageId
+		where v.PageId = @PageId and v.IsDeleted = 0 and p.IsDeleted = 0
+	)
+	merge into Cofoundry.PagePublishStatusQuery as t
+	using (
+			select PageId, PageVersionId
+			from CTE_LatestPageVersions
+			where RowNumber = 1
+			) as s
+		on t.PageId = s.PageId
+		and t.PublishStatusQueryId = 1
+		when matched then
+			update set PageVersionId = s.PageVersionId
+		when not matched by target then 
+			insert (PageId, PublishStatusQueryId, PageVersionId)
+			values(PageId, 0, PageVersionId)
+		when not matched by source and t.PublishStatusQueryId = 1 and t.PageId = @PageId then
+			delete;
+
+	-- PublishStatusQuery.Draft
+
+	with CTE_LatestDraftPageVersions as
+	(
+	   select v.PageId, v.PageVersionId,
+			 row_number() over (partition by v.PageId order by v.CreateDate desc) as RowNumber
+	   from Cofoundry.PageVersion v
+	   inner join Cofoundry.[Page] p on p.PageId = v.PageId
+	   where v.PageId = @PageId and WorkFlowStatusId = 1 and v.IsDeleted = 0 and p.IsDeleted = 0
+	)
+	merge into Cofoundry.PagePublishStatusQuery as t
+	using (
+			select PageId, PageVersionId 
+			from CTE_LatestDraftPageVersions
+			where RowNumber = 1
+			) as s
+		on t.PageId = s.PageId
+		and t.PublishStatusQueryId = 2
+		when matched then
+			update set PageVersionId = s.PageVersionId
+		when not matched by target then 
+			insert (PageId, PublishStatusQueryId, PageVersionId)
+			values(PageId, 1, PageVersionId)
 		when not matched by source and t.PublishStatusQueryId = 2 and t.PageId = @PageId then
 			delete;
 	

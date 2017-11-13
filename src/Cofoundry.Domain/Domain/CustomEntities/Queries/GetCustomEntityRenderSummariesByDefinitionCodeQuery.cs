@@ -16,7 +16,7 @@ namespace Cofoundry.Domain
 
         public GetCustomEntityRenderSummariesByDefinitionCodeQuery(
             string customEntityDefinitionCode,
-            PublishStatusQuery workflowStatus = PublishStatusQuery.Latest
+            PublishStatusQuery workflowStatus = PublishStatusQuery.Published
             )
         {
             CustomEntityDefinitionCode = customEntityDefinitionCode;

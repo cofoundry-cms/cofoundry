@@ -12,21 +12,21 @@ namespace Cofoundry.Domain
     public enum PublishStatusQuery : short
     {
         /// <summary>
+        /// Return only the published version or null if one does not exist. For this status
+        /// the publish date is checked to ensure that the page is published.
+        /// </summary>
+        Published = 0,
+
+        /// <summary>
         /// The latest available version, returning the latest draft if one is available
         /// and falling back to the published version.
         /// </summary>
-        Latest = 0,
+        Latest = 1,
 
         /// <summary>
         /// Return only the draft version or null if one does not exist.
         /// </summary>
-        Draft = 1,
-
-        /// <summary>
-        /// Return only the published version or null if one does not exist. For this status
-        /// the publish date is checked to ensure that the page is published.
-        /// </summary>
-        Published = 2,
+        Draft = 2,
 
         /// <summary>
         /// Returns the published version if one is available, otherwise returning a draft version.

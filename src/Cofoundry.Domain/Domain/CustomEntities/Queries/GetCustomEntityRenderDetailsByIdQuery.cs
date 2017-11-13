@@ -17,13 +17,13 @@ namespace Cofoundry.Domain
         /// Initializes the query with the specified parameters.
         /// </summary>
         /// <param name="customEntityId">CustomEntityId of the custom entity to get.</param>
-        /// <param name="workFlowStatus">Used to determine which version of the page to include data for.</param>
-        public GetCustomEntityRenderDetailsByIdQuery(int customEntityId, PublishStatusQuery? workFlowStatus = null)
+        /// <param name="publishStatus">Used to determine which version of the page to include data for.</param>
+        public GetCustomEntityRenderDetailsByIdQuery(int customEntityId, PublishStatusQuery? publishStatus = null)
         {
             CustomEntityId = customEntityId;
-            if (workFlowStatus.HasValue)
+            if (publishStatus.HasValue)
             {
-                PublishStatus = workFlowStatus.Value;
+                PublishStatus = publishStatus.Value;
             }
         }
 

@@ -11,26 +11,26 @@ namespace Cofoundry.Domain.Data
         /// <summary>
         /// Filters the results by the publish status query type.
         /// </summary>
-        /// <param name="statusQuery">Query status to filter by. If the value is PublishStatusQuery.Published then additional filtering by publish date will be applied.</param>
+        /// <param name="publishStatusQuery">Query status to filter by. If the value is PublishStatusQuery.Published then additional filtering by publish date will be applied.</param>
         /// <param name="executionDate">UTC execution date of the query. This is used to compare the publish date.</param>
-        public static IQueryable<PagePublishStatusQuery> FilterByStatus(this IQueryable<PagePublishStatusQuery> source, PublishStatusQuery statusQuery, DateTime executionDate)
+        public static IQueryable<PagePublishStatusQuery> FilterByStatus(this IQueryable<PagePublishStatusQuery> source, PublishStatusQuery publishStatusQuery, DateTime executionDate)
         {
-            if (statusQuery == PublishStatusQuery.SpecificVersion)
+            if (publishStatusQuery == PublishStatusQuery.SpecificVersion)
             {
                 throw new Exception("Cannot filter by PublishStatusQuery.SpecificVersion using the FilterByStatus extension method.");
             }
 
             IQueryable<PagePublishStatusQuery> filtered;
 
-            if (statusQuery == PublishStatusQuery.Published)
+            if (publishStatusQuery == PublishStatusQuery.Published)
             {
                 filtered = source
-                    .Where(p => p.PublishStatusQueryId == (short)statusQuery && p.Page.PublishDate <= executionDate);
+                    .Where(p => p.PublishStatusQueryId == (short)publishStatusQuery && p.Page.PublishDate <= executionDate);
             }
             else
             {
                 filtered = source
-                    .Where(p => p.PublishStatusQueryId == (short)statusQuery);
+                    .Where(p => p.PublishStatusQueryId == (short)publishStatusQuery);
             }
 
             return filtered;

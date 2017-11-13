@@ -16,7 +16,7 @@ namespace Cofoundry.Domain
 
         public GetCustomEntityRenderSummariesByIdRangeQuery(
             IEnumerable<int> customEntityIds,
-            PublishStatusQuery workflowStatus = PublishStatusQuery.Latest
+            PublishStatusQuery workflowStatus = PublishStatusQuery.Published
             )
         {
             if (customEntityIds == null) throw new ArgumentNullException(nameof(customEntityIds));
