@@ -30,7 +30,7 @@ begin
 			update set CustomEntityVersionId = s.CustomEntityVersionId
 		when not matched by target then 
 			insert (CustomEntityId, PublishStatusQueryId, CustomEntityVersionId)
-			values(CustomEntityId, 2, CustomEntityVersionId)
+			values(CustomEntityId, 0, CustomEntityVersionId)
 		when not matched by source and t.PublishStatusQueryId = 0 and t.CustomEntityId = @CustomEntityId then
 			delete;
 	
@@ -55,7 +55,7 @@ begin
 			update set CustomEntityVersionId = s.CustomEntityVersionId
 		when not matched by target then 
 			insert (CustomEntityId, PublishStatusQueryId, CustomEntityVersionId)
-			values(CustomEntityId, 0, CustomEntityVersionId)
+			values(CustomEntityId, 1, CustomEntityVersionId)
 		when not matched by source and t.PublishStatusQueryId = 1 and t.CustomEntityId = @CustomEntityId then
 			delete;
 
@@ -80,7 +80,7 @@ begin
 			update set CustomEntityVersionId = s.CustomEntityVersionId
 		when not matched by target then 
 			insert (CustomEntityId, PublishStatusQueryId, CustomEntityVersionId)
-			values(CustomEntityId, 1, CustomEntityVersionId)
+			values(CustomEntityId, 2, CustomEntityVersionId)
 		when not matched by source and t.PublishStatusQueryId = 2 and t.CustomEntityId = @CustomEntityId then
 			delete;
 	

@@ -102,9 +102,9 @@ namespace Cofoundry.Web.Admin
             {
                 return Redirect(_adminRouteLibrary.Auth.ChangePassword(returnUrl));
             }
-            else if (result.IsAuthenticated && !string.IsNullOrEmpty(result.ReturnUrl) && Url.IsLocalUrl(returnUrl))
+            else if (result.IsAuthenticated && !string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))
             {
-                return Redirect(result.ReturnUrl);
+                return Redirect(returnUrl);
             }
             else if (result.IsAuthenticated)
             {

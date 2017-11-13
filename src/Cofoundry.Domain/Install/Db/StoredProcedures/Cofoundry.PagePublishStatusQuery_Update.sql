@@ -30,7 +30,7 @@ begin
 			update set PageVersionId = s.PageVersionId
 		when not matched by target then 
 			insert (PageId, PublishStatusQueryId, PageVersionId)
-			values(PageId, 2, PageVersionId)
+			values(PageId, 0, PageVersionId)
 		when not matched by source and t.PublishStatusQueryId = 0 and t.PageId = @PageId then
 			delete;
 	
@@ -56,7 +56,7 @@ begin
 			update set PageVersionId = s.PageVersionId
 		when not matched by target then 
 			insert (PageId, PublishStatusQueryId, PageVersionId)
-			values(PageId, 0, PageVersionId)
+			values(PageId, 1, PageVersionId)
 		when not matched by source and t.PublishStatusQueryId = 1 and t.PageId = @PageId then
 			delete;
 
@@ -82,7 +82,7 @@ begin
 			update set PageVersionId = s.PageVersionId
 		when not matched by target then 
 			insert (PageId, PublishStatusQueryId, PageVersionId)
-			values(PageId, 1, PageVersionId)
+			values(PageId, 2, PageVersionId)
 		when not matched by source and t.PublishStatusQueryId = 2 and t.PageId = @PageId then
 			delete;
 	

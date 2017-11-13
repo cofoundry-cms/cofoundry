@@ -7397,7 +7397,8 @@ function (
             var html = '';
 
             el.empty();
-            if (dataSource) {
+
+            if (dataSource && dataSource.modelMetaData.dataModelProperties.length) {
                 dataSource.modelMetaData.dataModelProperties.forEach(function (modelProperty) {
                     var fieldName = mapDirectiveName(modelProperty);
 
