@@ -94,6 +94,13 @@ namespace Cofoundry.Domain
                     dbQuery = dbQuery
                         .OrderByDescendingWithSortDirection(e => e.CustomEntity.CreateDate, query.SortDirection);
                     break;
+                case CustomEntityQuerySortType.PublishDate:
+                    dbQuery = dbQuery
+                        .OrderByDescendingWithSortDirection(e => e.CustomEntity.PublishDate.HasValue, query.SortDirection)
+                        .ThenByDescendingWithSortDirection(e => e.CustomEntity.PublishDate, query.SortDirection)
+                        .ThenByDescendingWithSortDirection(e => e.CustomEntity.CreateDate, query.SortDirection)
+                        ;
+                    break;
             }
 
             var dbPagedResult = await dbQuery.ToPagedResultAsync(query);

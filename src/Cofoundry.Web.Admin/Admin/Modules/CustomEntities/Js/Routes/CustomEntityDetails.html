@@ -87,7 +87,8 @@
                                      cms-model="vm.customEntity.publishStatus"
                                      ng-if="!vm.options.autoPublish"></cms-form-field-readonly>
 
-            <cms-form-field-container cms-title="Publish Date">
+            <cms-form-field-container cms-title="Publish Date" 
+                                      ng-if="!vm.options.autoPublish">
                 <span ng-if="vm.customEntity.publishDate">{{vm.customEntity.publishDate | date:'fullDate'}} at {{vm.customEntity.publishDate | date:'HH:mm:ss'}}</span>
                 <span ng-if="!vm.customEntity.publishDate">Not set</span>
             </cms-form-field-container>

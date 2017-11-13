@@ -73,13 +73,13 @@
                     <td ng-if="::!vm.options.autoPublish">
                         <span ng-if="entity.isPublished">Published</span>
                         <span ng-if="!entity.isPublished && entity.publishStatus == 'Published'">Scheduled</span>
-                        <span ng-if="entity.publishStatus == 'Unpublished' && !entity.hasDraft">Unpublished</span>
+                        <span ng-if="entity.publishStatus == 'Unpublished'">Unpublished</span>
                         <br />
                         <a href="{{ entity.fullPath }}" ng-if="entity.hasDraft">(Pending Draft)</a>
                     </td>
                     <td ng-if="::!vm.options.autoPublish">
                         <span ng-if="::entity.publishDate"
-                              title="{{entity.publishDate | date:'fullDate'}} at {{entity.publishDate | date:'HH:mm:ss'}}">{{entity.publishDate | date : 'mediumDate' }}{{entity.publishDate | date : 'HH:mm' }}</span>
+                              title="{{entity.publishDate | date:'fullDate'}} at {{entity.publishDate | date:'HH:mm:ss'}}">{{entity.publishDate | date : 'mediumDate' }} {{entity.publishDate | date : 'HH:mm' }}</span>
                     </td>
                     <td class="lowPriority">
                         <cms-table-cell-created-audit-data cms-audit-data="::entity.auditData"></cms-table-cell-created-audit-data>

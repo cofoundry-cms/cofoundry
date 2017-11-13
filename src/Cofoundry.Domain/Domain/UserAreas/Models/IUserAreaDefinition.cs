@@ -57,8 +57,8 @@ namespace Cofoundry.Domain
 
         /// <summary>
         /// Cofoundry creates an auth schema for each user area. Use this property to set this
-        /// user area as the default auth schema, which means the HttpContext.User will be set
-        /// to this identity.
+        /// user area as the default auth schema, which means the HttpContext.User property will 
+        /// be set to this identity.
         /// </summary>
         bool IsDefaultAuthSchema { get;  }
     }

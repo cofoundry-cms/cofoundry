@@ -89,7 +89,7 @@
                     <td>
                         <span ng-if="page.isPublished">Published</span>
                         <span ng-if="!page.isPublished && page.publishStatus == 'Published'">Scheduled</span>
-                        <span ng-if="page.publishStatus == 'Unpublished' && !page.hasDraftVersion">Unpublished</span>
+                        <span ng-if="page.publishStatus == 'Unpublished'">Unpublished</span>
                         <br />
                         <a href="{{ page.fullPath }}" ng-if="page.hasDraftVersion">(Pending Draft)</a>
                     </td>

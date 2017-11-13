@@ -29,10 +29,12 @@ namespace Cofoundry.Domain
         /// <summary>
         /// Orders by the create date (newest first)
         /// </summary>
-        CreateDate
+        CreateDate,
 
-        // PublishDate Not yet implemented
-        // PublishDate,
+        /// <summary>
+        /// Orders by the publish date (latest first), then by create date (for entities not published)
+        /// </summary>
+        PublishDate,
 
         // Full -text query Not yet implemented
         /// <summary>
