@@ -78,7 +78,7 @@ namespace Cofoundry.Domain
             }
             else
             {
-                var blockWorkflowStatus = TranslatePublishStatusForBlocks(publishStatus);
+                var blockWorkflowStatus = publishStatus.ToRelatedEntityQueryStatus();
 
                 // We have to use a mapping class to do some custom mapping
                 var displayModels = (Task<List<PageBlockTypeDisplayModelMapperOutput>>)_mapGenericMethod
@@ -130,25 +130,7 @@ namespace Cofoundry.Domain
         #endregion
 
         #region privates
-
-        /// <summary>
-        /// When working with child entities, the WorkFlowStatus we apply to
-        /// them is not neccessarily the status used to query the parent. If we are 
-        /// loading a page using the Draft status, then we cannot expect that all 
-        /// dependencies should have a draft version, so we re-write it to Latest.
-        /// The same applies if we're loading a specific version.
-        /// </summary>
-        /// <param name="publishStatus">The original publish status of the parent entity.</param>
-        private PublishStatusQuery TranslatePublishStatusForBlocks(PublishStatusQuery publishStatus)
-        {
-            if (publishStatus == PublishStatusQuery.Draft || publishStatus == PublishStatusQuery.SpecificVersion)
-            {
-                publishStatus = PublishStatusQuery.Latest;
-            }
-
-            return publishStatus;
-        }
-
+        
         private async Task<List<PageBlockTypeDisplayModelMapperOutput>> MapGeneric<T>(
             IEnumerable<IEntityVersionPageBlock> pageBlocks, 
             PublishStatusQuery publishStatus

@@ -46,11 +46,11 @@ namespace Cofoundry.Domain
             IEnumerable<IEntityVersionPageBlock> dbBlock,
             IEnumerable<IEntityRegionRenderDetails<TBlockRenderDetails>> regions,
             IEnumerable<PageBlockTypeSummary> allBlockTypes,
-            PublishStatusQuery workflowStatus
+            PublishStatusQuery publishStatus
             )
             where TBlockRenderDetails : IEntityVersionPageBlockRenderDetails, new()
         {
-            var mappedBlocks = await ToBlockMappingDataAsync(dbBlock, allBlockTypes, workflowStatus);
+            var mappedBlocks = await ToBlockMappingDataAsync(dbBlock, allBlockTypes, publishStatus);
 
             // Map Regions
 

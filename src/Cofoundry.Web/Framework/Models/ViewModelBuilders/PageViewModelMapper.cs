@@ -67,6 +67,7 @@ namespace Cofoundry.Web
             if (mappingParameters.CustomEntityModel == null) throw new ArgumentNullException(nameof(mappingParameters.CustomEntityModel));
 
             var customEntityRenderDetails = mappingParameters.CustomEntityModel;
+            var publishStatusQuery = mappingParameters.VisualEditorMode.ToPublishStatusQuery();
 
             var customModel = new CustomEntityRenderDetailsViewModel<TDisplayModel>();
             customModel.CustomEntityId = customEntityRenderDetails.CustomEntityId;
@@ -81,7 +82,7 @@ namespace Cofoundry.Web
             customModel.CreateDate = customEntityRenderDetails.CreateDate;
             customModel.PageUrls = customEntityRenderDetails.PageUrls;
 
-            customModel.Model = await _customEntityDisplayModelMapper.MapDisplayModelAsync<TDisplayModel>(customEntityRenderDetails);
+            customModel.Model = await _customEntityDisplayModelMapper.MapDisplayModelAsync<TDisplayModel>(customEntityRenderDetails, publishStatusQuery);
 
             viewModel.CustomEntity = customModel;
         }

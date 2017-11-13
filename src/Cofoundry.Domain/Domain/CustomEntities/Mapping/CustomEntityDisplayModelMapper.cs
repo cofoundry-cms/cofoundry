@@ -3,12 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Cofoundry.Core.DependencyInjection;
-using System.Reflection;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Cofoundry.Domain
 {
+    /// <summary>
+    /// Mapper for mapping typed display models for custom entities.
+    /// </summary>
     public class CustomEntityDisplayModelMapper : ICustomEntityDisplayModelMapper
     {
         private readonly IServiceProvider _serviceProvider;
@@ -21,15 +22,30 @@ namespace Cofoundry.Domain
             _serviceProvider = serviceProvider;
         }
 
-        public Task<TDisplayModel> MapDisplayModelAsync<TDisplayModel>(CustomEntityRenderDetails dataModel)
+        /// <summary>
+        /// Maps custom entity render data into a specific custom entity
+        /// display model type, which can be used to render out view data.
+        /// </summary>
+        /// <typeparam name="TDisplayModel">Display model type to map to.</typeparam>
+        /// <param name="renderDetails">The custom entity model to map, including the raw data model.</param>
+        /// <param name="publishStatusQuery">
+        /// The query type that should be used to query dependent entities. E.g. if the custom
+        /// entity was queried with the Published status query, then any dependent entities should
+        /// also be queried as Published.
+        /// </param>
+        /// <returns>Mapped display model instance.</returns>
+        public Task<TDisplayModel> MapDisplayModelAsync<TDisplayModel>(
+            CustomEntityRenderDetails renderDetails,
+            PublishStatusQuery publishStatusQuery
+            )
             where TDisplayModel : ICustomEntityDisplayModel
         {
-            var mapperType = typeof(ICustomEntityDisplayModelMapper<,>).MakeGenericType(dataModel.Model.GetType(), typeof(TDisplayModel));
+            var mapperType = typeof(ICustomEntityDisplayModelMapper<,>).MakeGenericType(renderDetails.Model.GetType(), typeof(TDisplayModel));
             var mapper = _serviceProvider.GetRequiredService(mapperType);
 
             var method = mapperType.GetMethod(mapDisplayModelMethodName);
 
-            return (Task<TDisplayModel>)method.Invoke(mapper, new object[] { dataModel, dataModel.Model });
+            return (Task<TDisplayModel>)method.Invoke(mapper, new object[] { renderDetails, renderDetails.Model, publishStatusQuery });
         }
     }
 }
