@@ -1,6 +1,5 @@
 using Cofoundry.Core;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
 
@@ -8,7 +7,7 @@ namespace Cofoundry.Domain.Data
 {
     public class UserPasswordResetRequestMap : IEntityTypeConfiguration<UserPasswordResetRequest>
     {
-        public void Create(EntityTypeBuilder<UserPasswordResetRequest> builder)
+        public void Configure(EntityTypeBuilder<UserPasswordResetRequest> builder)
         {
             builder.ToTable("UserPasswordResetRequest", DbConstants.CofoundrySchema);
 

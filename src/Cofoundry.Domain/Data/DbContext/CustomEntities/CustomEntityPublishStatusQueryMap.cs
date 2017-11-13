@@ -7,7 +7,7 @@ namespace Cofoundry.Domain.Data
 {
     public class CustomEntityPublishStatusQueryMap : IEntityTypeConfiguration<CustomEntityPublishStatusQuery>
     {
-        public void Create(EntityTypeBuilder<CustomEntityPublishStatusQuery> builder)
+        public void Configure(EntityTypeBuilder<CustomEntityPublishStatusQuery> builder)
         {
             builder.ToTable("CustomEntityPublishStatusQuery", DbConstants.CofoundrySchema);
 

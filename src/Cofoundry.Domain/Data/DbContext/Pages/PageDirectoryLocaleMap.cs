@@ -8,7 +8,7 @@ namespace Cofoundry.Domain.Data
 {
     public class PageDirectoryLocaleMap : IEntityTypeConfiguration<PageDirectoryLocale>
     {
-        public void Create(EntityTypeBuilder<PageDirectoryLocale> builder)
+        public void Configure(EntityTypeBuilder<PageDirectoryLocale> builder)
         {
             builder.ToTable("PageDirectoryLocale", DbConstants.CofoundrySchema);
 

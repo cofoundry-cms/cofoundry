@@ -9,7 +9,7 @@ namespace Cofoundry.Domain.Data
 {
     public class CustomEntityVersionMap : IEntityTypeConfiguration<CustomEntityVersion>
     {
-        public void Create(EntityTypeBuilder<CustomEntityVersion> builder)
+        public void Configure(EntityTypeBuilder<CustomEntityVersion> builder)
         {
             builder.ToTable("CustomEntityVersion", DbConstants.CofoundrySchema);
 

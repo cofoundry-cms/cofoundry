@@ -8,7 +8,7 @@ namespace Cofoundry.Domain.Data
 {
     public class PageDirectoryMap : IEntityTypeConfiguration<PageDirectory>
     {
-        public void Create(EntityTypeBuilder<PageDirectory> builder)
+        public void Configure(EntityTypeBuilder<PageDirectory> builder)
         {
             builder.ToTable("PageDirectory", DbConstants.CofoundrySchema);
 

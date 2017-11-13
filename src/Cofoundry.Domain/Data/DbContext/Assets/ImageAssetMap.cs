@@ -7,7 +7,7 @@ namespace Cofoundry.Domain.Data
 {
     public class ImageAssetMap : IEntityTypeConfiguration<ImageAsset>
     {
-        public void Create(EntityTypeBuilder<ImageAsset> builder)
+        public void Configure(EntityTypeBuilder<ImageAsset> builder)
         {
             builder.ToTable("ImageAsset", DbConstants.CofoundrySchema);
 

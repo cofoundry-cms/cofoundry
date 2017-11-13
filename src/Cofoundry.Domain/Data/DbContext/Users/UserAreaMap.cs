@@ -7,7 +7,7 @@ namespace Cofoundry.Domain.Data
 {
     public class UserAreaMap : IEntityTypeConfiguration<UserArea>
     {
-        public void Create(EntityTypeBuilder<UserArea> builder)
+        public void Configure(EntityTypeBuilder<UserArea> builder)
         {
             builder.ToTable("UserArea", DbConstants.CofoundrySchema);
 

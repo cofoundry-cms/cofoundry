@@ -7,7 +7,7 @@ namespace Cofoundry.Domain.Data
 {
     public class RewriteRuleMap : IEntityTypeConfiguration<RewriteRule>
     {
-        public void Create(EntityTypeBuilder<RewriteRule> builder)
+        public void Configure(EntityTypeBuilder<RewriteRule> builder)
         {
             builder.ToTable("RewriteRule", DbConstants.CofoundrySchema);
 

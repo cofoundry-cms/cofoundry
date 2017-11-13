@@ -8,7 +8,7 @@ namespace Cofoundry.Domain.Data
 {
     public class DocumentAssetGroupItemMap : IEntityTypeConfiguration<DocumentAssetGroupItem>
     {
-        public void Create(EntityTypeBuilder<DocumentAssetGroupItem> builder)
+        public void Configure(EntityTypeBuilder<DocumentAssetGroupItem> builder)
         {
             builder.ToTable("DocumentAssetGroupItem", DbConstants.CofoundrySchema);
 

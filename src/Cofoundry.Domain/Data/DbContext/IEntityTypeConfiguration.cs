@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Cofoundry.Domain.Data
 {
-    public interface IEntityTypeConfiguration<TEntity>
+    public interface xIEntityTypeConfiguration<TEntity>
         where TEntity : class
     {
         void Create(EntityTypeBuilder<TEntity> builder);

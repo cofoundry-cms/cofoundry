@@ -1,6 +1,5 @@
 using Cofoundry.Core;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
 
@@ -8,7 +7,7 @@ namespace Cofoundry.Domain.Data
 {
     public class RoleMap : IEntityTypeConfiguration<Role>
     {
-        public void Create(EntityTypeBuilder<Role> builder)
+        public void Configure(EntityTypeBuilder<Role> builder)
         {
             builder.ToTable("Role", DbConstants.CofoundrySchema);
 

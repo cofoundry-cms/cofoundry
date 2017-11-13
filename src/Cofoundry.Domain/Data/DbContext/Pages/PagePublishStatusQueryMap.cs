@@ -7,7 +7,7 @@ namespace Cofoundry.Domain.Data
 {
     public class PagePublishStatusQueryMap : IEntityTypeConfiguration<PagePublishStatusQuery>
     {
-        public void Create(EntityTypeBuilder<PagePublishStatusQuery> builder)
+        public void Configure(EntityTypeBuilder<PagePublishStatusQuery> builder)
         {
             builder.ToTable("PagePublishStatusQuery", DbConstants.CofoundrySchema);
 

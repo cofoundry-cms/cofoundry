@@ -7,7 +7,7 @@ namespace Cofoundry.Domain.Data
 {
     public class PageBlockTypeMap : IEntityTypeConfiguration<PageBlockType>
     {
-        public void Create(EntityTypeBuilder<PageBlockType> builder)
+        public void Configure(EntityTypeBuilder<PageBlockType> builder)
         {
             builder.ToTable("PageBlockType", DbConstants.CofoundrySchema);
 

@@ -8,7 +8,7 @@ namespace Cofoundry.Domain.Data
 {
     public class LocaleMap : IEntityTypeConfiguration<Locale>
     {
-        public void Create(EntityTypeBuilder<Locale> builder)
+        public void Configure(EntityTypeBuilder<Locale> builder)
         {
             builder.ToTable("Locale", DbConstants.CofoundrySchema);
 

@@ -9,7 +9,7 @@ namespace Cofoundry.Domain.Data
 {
     public class ImageAssetTagMap : IEntityTypeConfiguration<ImageAssetTag>
     {
-        public void Create(EntityTypeBuilder<ImageAssetTag> builder)
+        public void Configure(EntityTypeBuilder<ImageAssetTag> builder)
         {
             builder.ToTable("ImageAssetTag", DbConstants.CofoundrySchema);
 

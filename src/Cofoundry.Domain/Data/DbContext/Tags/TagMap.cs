@@ -7,7 +7,7 @@ namespace Cofoundry.Domain.Data
 {
     public class TagMap : IEntityTypeConfiguration<Tag>
     {
-        public void Create(EntityTypeBuilder<Tag> builder)
+        public void Configure(EntityTypeBuilder<Tag> builder)
         {
             builder.ToTable("Tag", DbConstants.CofoundrySchema);
 

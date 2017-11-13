@@ -1,6 +1,5 @@
 using Cofoundry.Core;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
 
@@ -8,7 +7,7 @@ namespace Cofoundry.Domain.Data
 {
     public class PageVersionBlockMap : IEntityTypeConfiguration<PageVersionBlock>
     {
-        public void Create(EntityTypeBuilder<PageVersionBlock> builder)
+        public void Configure(EntityTypeBuilder<PageVersionBlock> builder)
         {
             builder.ToTable("PageVersionBlock", DbConstants.CofoundrySchema);
 

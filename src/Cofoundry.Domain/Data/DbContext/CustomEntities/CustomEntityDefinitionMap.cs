@@ -1,15 +1,13 @@
 using System;
-using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata;
 using Cofoundry.Core;
 
 namespace Cofoundry.Domain.Data
 {
     public class CustomEntityDefinitionMap : IEntityTypeConfiguration<CustomEntityDefinition>
     {
-        public void Create(EntityTypeBuilder<CustomEntityDefinition> builder)
+        public void Configure(EntityTypeBuilder<CustomEntityDefinition> builder)
         {
             builder.ToTable("CustomEntityDefinition", DbConstants.CofoundrySchema);
 

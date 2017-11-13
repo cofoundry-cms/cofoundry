@@ -1,6 +1,5 @@
 using Cofoundry.Core;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
 
@@ -8,7 +7,7 @@ namespace Cofoundry.Domain.Data
 {
     public class UserMap : IEntityTypeConfiguration<User>
     {
-        public void Create(EntityTypeBuilder<User> builder)
+        public void Configure(EntityTypeBuilder<User> builder)
         {
             builder.ToTable("User", DbConstants.CofoundrySchema);
 

@@ -37,8 +37,8 @@ namespace Cofoundry.Domain.Data
             modelBuilder
                 .UseDefaultConfig(DbConstants.CofoundrySchema)
                 .MapCofoundryContent()
-                .Map(new SettingMap())
-                .Map(new RewriteRuleMap())
+                .ApplyConfiguration(new SettingMap())
+                .ApplyConfiguration(new RewriteRuleMap())
                 ;
         }
 

@@ -8,7 +8,7 @@ namespace Cofoundry.Domain.Data
 {
     public class CustomEntityVersionPageBlockMap : IEntityTypeConfiguration<CustomEntityVersionPageBlock>
     {
-        public void Create(EntityTypeBuilder<CustomEntityVersionPageBlock> builder)
+        public void Configure(EntityTypeBuilder<CustomEntityVersionPageBlock> builder)
         {
             builder.ToTable("CustomEntityVersionPageBlock", DbConstants.CofoundrySchema);
 

@@ -1,6 +1,5 @@
 using System;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Microsoft.EntityFrameworkCore.Metadata;
 using Cofoundry.Core;
 using Microsoft.EntityFrameworkCore;
 
@@ -8,7 +7,7 @@ namespace Cofoundry.Domain.Data
 {
     public class PageTagMap : IEntityTypeConfiguration<PageTag>
     {
-        public void Create(EntityTypeBuilder<PageTag> builder)
+        public void Configure(EntityTypeBuilder<PageTag> builder)
         {
             builder.ToTable("PageTag", DbConstants.CofoundrySchema);
 

@@ -7,7 +7,7 @@ namespace Cofoundry.Domain.Data
 {
     public class DocumentAssetMap : IEntityTypeConfiguration<DocumentAsset>
     {
-        public void Create(EntityTypeBuilder<DocumentAsset> builder)
+        public void Configure(EntityTypeBuilder<DocumentAsset> builder)
         {
             builder.ToTable("DocumentAsset", DbConstants.CofoundrySchema);
 

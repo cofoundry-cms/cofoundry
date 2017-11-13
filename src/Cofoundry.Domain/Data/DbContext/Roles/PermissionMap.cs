@@ -7,7 +7,7 @@ namespace Cofoundry.Domain.Data
 {
     public class PermissionMap : IEntityTypeConfiguration<Permission>
     {
-        public void Create(EntityTypeBuilder<Permission> builder)
+        public void Configure(EntityTypeBuilder<Permission> builder)
         {
             builder.ToTable("Permission", DbConstants.CofoundrySchema);
 

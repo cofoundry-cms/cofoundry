@@ -7,7 +7,7 @@ namespace Cofoundry.Domain.Data
 {
     public class EntityDefinitionMap : IEntityTypeConfiguration<EntityDefinition>
     {
-        public void Create(EntityTypeBuilder<EntityDefinition> builder)
+        public void Configure(EntityTypeBuilder<EntityDefinition> builder)
         {
             builder.ToTable("EntityDefinition", DbConstants.CofoundrySchema);
 

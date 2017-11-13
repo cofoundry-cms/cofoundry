@@ -8,7 +8,7 @@ namespace Cofoundry.Domain.Data
 {
     public class UnstructuredDataDependencyMap : IEntityTypeConfiguration<UnstructuredDataDependency>
     {
-        public void Create(EntityTypeBuilder<UnstructuredDataDependency> builder)
+        public void Configure(EntityTypeBuilder<UnstructuredDataDependency> builder)
         {
             builder.ToTable("UnstructuredDataDependency", DbConstants.CofoundrySchema);
 

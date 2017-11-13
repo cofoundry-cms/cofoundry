@@ -1,6 +1,5 @@
 using Cofoundry.Core;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
 
@@ -8,7 +7,7 @@ namespace Cofoundry.Domain.Data
 {
     public class RolePermissionMap : IEntityTypeConfiguration<RolePermission>
     {
-        public void Create(EntityTypeBuilder<RolePermission> builder)
+        public void Configure(EntityTypeBuilder<RolePermission> builder)
         {
             builder.ToTable("RolePermission", DbConstants.CofoundrySchema);
 

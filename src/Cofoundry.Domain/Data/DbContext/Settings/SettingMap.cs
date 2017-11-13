@@ -7,7 +7,7 @@ namespace Cofoundry.Domain.Data
 {
     public class SettingMap : IEntityTypeConfiguration<Setting>
     {
-        public void Create(EntityTypeBuilder<Setting> builder)
+        public void Configure(EntityTypeBuilder<Setting> builder)
         {
             builder.ToTable("Setting", DbConstants.CofoundrySchema);
 

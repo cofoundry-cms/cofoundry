@@ -9,7 +9,7 @@ namespace Cofoundry.Domain.Data
 {
     public class ImageAssetGroupItemMap : IEntityTypeConfiguration<ImageAssetGroupItem>
     {
-        public void Create(EntityTypeBuilder<ImageAssetGroupItem> builder)
+        public void Configure(EntityTypeBuilder<ImageAssetGroupItem> builder)
         {
             builder.ToTable("ImageAssetGroupItem", DbConstants.CofoundrySchema);
 

@@ -9,7 +9,7 @@ namespace Cofoundry.Domain.Data
 {
     public class DocumentAssetTagMap : IEntityTypeConfiguration<DocumentAssetTag>
     {
-        public void Create(EntityTypeBuilder<DocumentAssetTag> builder)
+        public void Configure(EntityTypeBuilder<DocumentAssetTag> builder)
         {
             builder.ToTable("DocumentAssetTag", DbConstants.CofoundrySchema);
 

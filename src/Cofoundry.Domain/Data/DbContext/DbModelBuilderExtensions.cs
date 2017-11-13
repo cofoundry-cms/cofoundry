@@ -39,18 +39,6 @@ namespace Cofoundry.Domain.Data
             return modelBuilder;
         }
 
-        /// <summary>
-        /// Shortcut to modelBuilder.Configurations.Add&lt;TEntityType&gt;() which
-        /// also allows for method chaining
-        /// </summary>
-        /// <returns>DbModelBuilder for method chaining</returns>
-        public static ModelBuilder Map<TEntityType>(this ModelBuilder modelBuilder, IEntityTypeConfiguration<TEntityType> entityTypeConfiguration) where TEntityType : class
-        {
-            modelBuilder.Entity<TEntityType>(entityTypeConfiguration.Create);
-
-            return modelBuilder;
-        }
-
         #region common Cofoundry object mapping
 
         /// <summary>
@@ -60,10 +48,10 @@ namespace Cofoundry.Domain.Data
         public static ModelBuilder MapCofoundryImageAssets(this ModelBuilder modelBuilder)
         {
             modelBuilder
-                .Map(new ImageAssetMap())
-                .Map(new ImageAssetGroupMap())
-                .Map(new ImageAssetGroupItemMap())
-                .Map(new ImageAssetTagMap());
+                .ApplyConfiguration(new ImageAssetMap())
+                .ApplyConfiguration(new ImageAssetGroupMap())
+                .ApplyConfiguration(new ImageAssetGroupItemMap())
+                .ApplyConfiguration(new ImageAssetTagMap());
 
             return modelBuilder;
         }
@@ -75,10 +63,10 @@ namespace Cofoundry.Domain.Data
         public static ModelBuilder MapCofoundryDocumentAssets(this ModelBuilder modelBuilder)
         {
             modelBuilder
-                .Map(new DocumentAssetMap())
-                .Map(new DocumentAssetGroupMap())
-                .Map(new DocumentAssetGroupItemMap())
-                .Map(new DocumentAssetTagMap());
+                .ApplyConfiguration(new DocumentAssetMap())
+                .ApplyConfiguration(new DocumentAssetGroupMap())
+                .ApplyConfiguration(new DocumentAssetGroupItemMap())
+                .ApplyConfiguration(new DocumentAssetTagMap());
 
             return modelBuilder;
         }
@@ -90,12 +78,12 @@ namespace Cofoundry.Domain.Data
         public static ModelBuilder MapCofoundryUsers(this ModelBuilder modelBuilder)
         {
             modelBuilder
-                .Map(new UserMap())
-                .Map(new UserAreaMap())
-                .Map(new RoleMap())
-                .Map(new PermissionMap())
-                .Map(new RolePermissionMap())
-                .Map(new UserPasswordResetRequestMap());
+                .ApplyConfiguration(new UserMap())
+                .ApplyConfiguration(new UserAreaMap())
+                .ApplyConfiguration(new RoleMap())
+                .ApplyConfiguration(new PermissionMap())
+                .ApplyConfiguration(new RolePermissionMap())
+                .ApplyConfiguration(new UserPasswordResetRequestMap());
 
             return modelBuilder;
         }
@@ -106,7 +94,7 @@ namespace Cofoundry.Domain.Data
         /// <returns>DbModelBuilder for method chaining</returns>
         public static ModelBuilder MapCofoundryTags(this ModelBuilder modelBuilder)
         {
-            modelBuilder.Map(new TagMap());
+            modelBuilder.ApplyConfiguration(new TagMap());
 
             return modelBuilder;
         }
@@ -117,7 +105,7 @@ namespace Cofoundry.Domain.Data
         /// <returns>DbModelBuilder for method chaining</returns>
         public static ModelBuilder MapCofoundryLocales(this ModelBuilder modelBuilder)
         {
-            modelBuilder.Map(new LocaleMap());
+            modelBuilder.ApplyConfiguration(new LocaleMap());
 
             return modelBuilder;
         }
@@ -135,26 +123,26 @@ namespace Cofoundry.Domain.Data
                 .MapCofoundryTags()
                 .MapCofoundryImageAssets()
                 .MapCofoundryDocumentAssets()
-                .Map(new CustomEntityVersionPageBlockMap())
-                .Map(new PageTemplateMap())
-                .Map(new PageTemplateRegionMap())
-                .Map(new PageBlockTypeTemplateMap())
-                .Map(new PageBlockTypeMap())
-                .Map(new PageGroupItemMap())
-                .Map(new PageGroupMap())
-                .Map(new PageVersionBlockMap())
-                .Map(new PageMap())
-                .Map(new PagePublishStatusQueryMap())
-                .Map(new PageTagMap())
-                .Map(new PageVersionMap())
-                .Map(new PageDirectoryMap())
-                .Map(new PageDirectoryLocaleMap())
-                .Map(new EntityDefinitionMap())
-                .Map(new UnstructuredDataDependencyMap())
-                .Map(new CustomEntityDefinitionMap())
-                .Map(new CustomEntityMap())
-                .Map(new CustomEntityPublishStatusQueryMap())
-                .Map(new CustomEntityVersionMap());
+                .ApplyConfiguration(new CustomEntityVersionPageBlockMap())
+                .ApplyConfiguration(new PageTemplateMap())
+                .ApplyConfiguration(new PageTemplateRegionMap())
+                .ApplyConfiguration(new PageBlockTypeTemplateMap())
+                .ApplyConfiguration(new PageBlockTypeMap())
+                .ApplyConfiguration(new PageGroupItemMap())
+                .ApplyConfiguration(new PageGroupMap())
+                .ApplyConfiguration(new PageVersionBlockMap())
+                .ApplyConfiguration(new PageMap())
+                .ApplyConfiguration(new PagePublishStatusQueryMap())
+                .ApplyConfiguration(new PageTagMap())
+                .ApplyConfiguration(new PageVersionMap())
+                .ApplyConfiguration(new PageDirectoryMap())
+                .ApplyConfiguration(new PageDirectoryLocaleMap())
+                .ApplyConfiguration(new EntityDefinitionMap())
+                .ApplyConfiguration(new UnstructuredDataDependencyMap())
+                .ApplyConfiguration(new CustomEntityDefinitionMap())
+                .ApplyConfiguration(new CustomEntityMap())
+                .ApplyConfiguration(new CustomEntityPublishStatusQueryMap())
+                .ApplyConfiguration(new CustomEntityVersionMap());
 
             return modelBuilder;
         }
