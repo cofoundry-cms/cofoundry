@@ -279,6 +279,7 @@ Cofoundry.visualEditor = (function () {
             }
 
             function createAddBlockIcon(data) {
+                console.log('data ', data);
                 var ui_wrap_add_block = toolbar_add_block.cloneNode(true);
                 if (!data.isBlock && !data.hasContent) {
                     ui_wrap_add_block.className += ' cofoundry-sv__btn-add-block--empty';
@@ -290,7 +291,7 @@ Cofoundry.visualEditor = (function () {
                 ui_wrap_add_block.style.display = 'block';
                 ui_wrap_add_block.title = 'Add content block to ' + data.regionName;
                 ui_wrap_add_block.addEventListener('click', function () { onAddRegionBlock(data); });
-
+                console.log('title', ui_wrap_add_block.title);
                 return ui_wrap_add_block;
             }
 

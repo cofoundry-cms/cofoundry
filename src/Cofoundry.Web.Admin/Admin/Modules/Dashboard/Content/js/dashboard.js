@@ -29,7 +29,7 @@ angular.module('cms.dashboard').factory('dashboard.dashboardService', ['$http', 
 
     service.getDraftPages = function () {
         return $http.get(serviceBase + 'pages', getParams({
-            publishStatus: 'Unpublished'
+            publishStatus: 'Draft'
         }));
     }
 
