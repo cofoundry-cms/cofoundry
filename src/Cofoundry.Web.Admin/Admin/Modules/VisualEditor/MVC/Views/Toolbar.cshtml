@@ -21,10 +21,8 @@
 @{
     var pageResponseData = Model;
     var isStaticPage = pageResponseData == null;
-    await Cofoundry.CurrentUser.EnsureInitializedAsync();
-    var userContext = Cofoundry.CurrentUser.Context;
-    var hasPageEditPermission = permissionValidationService.HasPermission<PageUpdatePermission>(userContext);
-    var hasPagePublishPermission = permissionValidationService.HasPermission<PagePublishPermission>(userContext);
+    var hasPageEditPermission = permissionValidationService.HasPermission<PageUpdatePermission>(pageResponseData.CofoundryAdminUserContext);
+    var hasPagePublishPermission = permissionValidationService.HasPermission<PagePublishPermission>(pageResponseData.CofoundryAdminUserContext);
     var hasCustomEntityEditPermission = false;
     var hasCustomEntityPublishPermission = false;
     var canEditDraft = false;
@@ -47,13 +45,13 @@
     {
         isEditing = pageResponseData.VisualEditorMode == VisualEditorMode.Edit;
         isViewingSpecificVersion = pageResponseData.VisualEditorMode == VisualEditorMode.SpecificVersion;
-        isCustomEntityRoute = pageResponseData.IsCustomEntityRoute;
+        isCustomEntityRoute = pageResponseData.Version is CustomEntityVersionRoute;
 
         var customEntityDefinitionCode = pageResponseData.PageRoutingInfo.PageRoute.CustomEntityDefinitionCode;
         if (!string.IsNullOrEmpty(customEntityDefinitionCode))
         {
-            hasCustomEntityEditPermission = permissionValidationService.HasCustomEntityPermission<CustomEntityUpdatePermission>(customEntityDefinitionCode, userContext);
-            hasCustomEntityPublishPermission = permissionValidationService.HasCustomEntityPermission<CustomEntityPublishPermission>(customEntityDefinitionCode, userContext);
+            hasCustomEntityEditPermission = permissionValidationService.HasCustomEntityPermission<CustomEntityUpdatePermission>(customEntityDefinitionCode, pageResponseData.CofoundryAdminUserContext);
+            hasCustomEntityPublishPermission = permissionValidationService.HasCustomEntityPermission<CustomEntityPublishPermission>(customEntityDefinitionCode, pageResponseData.CofoundryAdminUserContext);
         }
 
         entityNameSingular = isCustomEntityRoute ? pageResponseData.CustomEntityDefinition.Name : "Page";
@@ -115,7 +113,7 @@
         <div class="cofoundry-sv__mini-menu cofoundry-sv__mini-menu--align-left">
             <div class="cofoundry-sv__mini-menu__content">
                 <ol class="cofoundry-sv__navmenu-list">
-@if (permissionValidationService.HasPermission<DashboardAdminModulePermission>(userContext))
+@if (permissionValidationService.HasPermission<DashboardAdminModulePermission>(pageResponseData.CofoundryAdminUserContext))
 {
                     <li>
                         <a href="@adminRouteLibrary.Dashboard.Dashboard()" class="cofoundry-sv__navmenu-list__item">
@@ -125,7 +123,7 @@
                     </li>
 }
 
-@if (permissionValidationService.HasPermission<PageAdminModulePermission>(userContext))
+@if (permissionValidationService.HasPermission<PageAdminModulePermission>(pageResponseData.CofoundryAdminUserContext))
 {
                     <li>
                         <a href="@adminRouteLibrary.Pages.List()" class="cofoundry-sv__navmenu-list__item">
@@ -134,7 +132,7 @@
                         </a>
                     </li>
 }
-@if (permissionValidationService.HasPermission<PageDirectoryAdminModulePermission>(userContext))
+@if (permissionValidationService.HasPermission<PageDirectoryAdminModulePermission>(pageResponseData.CofoundryAdminUserContext))
 {
                     <li>
                         <a href="@adminRouteLibrary.Directories.List()" class="cofoundry-sv__navmenu-list__item">
@@ -143,7 +141,7 @@
                         </a>
                     </li>
 }
-@if (permissionValidationService.HasPermission<ImageAssetAdminModulePermission>(userContext))
+@if (permissionValidationService.HasPermission<ImageAssetAdminModulePermission>(pageResponseData.CofoundryAdminUserContext))
 {
                     <li>
                         <a href="@adminRouteLibrary.Images.List()" class="cofoundry-sv__navmenu-list__item">
@@ -152,7 +150,7 @@
                         </a>
                     </li>
 }
-@if (permissionValidationService.HasPermission<SettingsAdminModulePermission>(userContext))
+@if (permissionValidationService.HasPermission<SettingsAdminModulePermission>(pageResponseData.CofoundryAdminUserContext))
 {
                     <li>
                         <a href="@adminRouteLibrary.Settings.Details()" class="cofoundry-sv__navmenu-list__item">

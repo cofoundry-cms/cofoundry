@@ -16,17 +16,23 @@ namespace Cofoundry.Web
     public class PageResponseData : IPageResponseData
     {
         /// <summary>
-        /// The main view model sent to the template for rendering
+        /// The main view model sent to the template for rendering.
         /// </summary>
         public IEditablePageViewModel Page { get; set; }
 
         /// <summary>
-        /// The current VisualEditorMode
+        /// The current VisualEditorMode.
         /// </summary>
         public VisualEditorMode VisualEditorMode { get; set; }
 
+        /// <summary>
+        /// The PageRoute for the page being displayed.
+        /// </summary>
         public PageRoutingInfo PageRoutingInfo { get; set; }
 
+        /// <summary>
+        /// The PageVersionRoute for the specific version of the page being displayed.
+        /// </summary>
         public PageVersionRoute PageVersion { get; set; }
 
         /// <summary>
@@ -36,20 +42,17 @@ namespace Cofoundry.Web
 
         public CustomEntityDefinitionSummary CustomEntityDefinition { get; set; }
 
+        /// <summary>
+        /// True if the page has a draft version available.
+        /// </summary>
         public bool HasDraftVersion { get; set; }
 
-        public bool IsCustomEntityRoute { get; set; }
-
         /// <summary>
-        /// Has permission to update the page or custom entity requested
-        /// to be edited.
+        /// User context representing the logged in Cofoundry admin user, or
+        /// null if the user is not logged into the admin auth schema. This differs
+        /// from the ambient user context because the default schema may not be
+        /// the Cofoundry admin auth schema.
         /// </summary>
-        public bool HasEntityUpdatePermission { get; set; }
-
-        /// <summary>
-        /// Has permission to publish the page or custom entity requested
-        /// to be edited.
-        /// </summary>
-        public bool HasEntityPublishPermission { get; set; }
+        public IUserContext CofoundryAdminUserContext { get; set; }
     }
 }

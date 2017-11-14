@@ -25,8 +25,14 @@ namespace Cofoundry.Web
         /// </summary>
         VisualEditorMode VisualEditorMode { get; set; }
 
+        /// <summary>
+        /// The PageRoute for the page being displayed.
+        /// </summary>
         PageRoutingInfo PageRoutingInfo { get; set; }
 
+        /// <summary>
+        /// The PageVersionRoute for the specific version of the page being displayed.
+        /// </summary>
         PageVersionRoute PageVersion { get; set; }
 
         /// <summary>
@@ -36,8 +42,17 @@ namespace Cofoundry.Web
 
         CustomEntityDefinitionSummary CustomEntityDefinition { get; set; }
 
+        /// <summary>
+        /// True if the page has a draft version available.
+        /// </summary>
         bool HasDraftVersion { get; set; }
 
-        bool IsCustomEntityRoute { get; set; }
+        /// <summary>
+        /// User context representing the logged in Cofoundry admin user, or
+        /// null if the user is not logged into the admin auth schema. This differs
+        /// from the ambient user context because the default schema may not be
+        /// the Cofoundry admin auth schema.
+        /// </summary>
+        IUserContext CofoundryAdminUserContext { get; set; }
     }
 }

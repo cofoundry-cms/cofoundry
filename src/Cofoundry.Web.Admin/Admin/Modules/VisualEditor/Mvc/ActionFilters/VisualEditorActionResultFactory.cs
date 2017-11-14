@@ -19,6 +19,7 @@ namespace Cofoundry.Web.Admin
         private readonly IJsonSerializerSettingsFactory _jsonSerializerSettingsFactory;
         private readonly IRazorViewRenderer _razorViewRenderer;
         private readonly IResourceLocator _resourceLocator;
+        private readonly IPermissionValidationService _permissionValidationService;
 
         public VisualEditorActionResultFactory(
             IStaticResourceReferenceRenderer staticResourceReferenceRenderer,
@@ -26,7 +27,8 @@ namespace Cofoundry.Web.Admin
             IPageResponseDataCache pageResponseDataCache,
             IJsonSerializerSettingsFactory jsonSerializerSettingsFactory,
             IRazorViewRenderer razorViewRenderer,
-            IResourceLocator resourceLocator
+            IResourceLocator resourceLocator,
+            IPermissionValidationService permissionValidationService
             )
         {
             _staticResourceReferenceRenderer = staticResourceReferenceRenderer;
@@ -35,6 +37,7 @@ namespace Cofoundry.Web.Admin
             _jsonSerializerSettingsFactory = jsonSerializerSettingsFactory;
             _resourceLocator = resourceLocator;
             _razorViewRenderer = razorViewRenderer;
+            _permissionValidationService = permissionValidationService;
         }
 
         public IActionResult Create(IActionResult wrappedActionResult)
@@ -46,7 +49,8 @@ namespace Cofoundry.Web.Admin
                 _jsonSerializerSettingsFactory,
                 _pageResponseDataCache,
                 _razorViewRenderer,
-                _resourceLocator
+                _resourceLocator,
+                _permissionValidationService
                 );
         }
     }

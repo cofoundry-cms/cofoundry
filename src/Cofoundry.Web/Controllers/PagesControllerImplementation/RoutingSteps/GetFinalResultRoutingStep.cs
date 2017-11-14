@@ -113,26 +113,12 @@ namespace Cofoundry.Web
             pageResponseData.PageRoutingInfo = state.PageRoutingInfo;
             pageResponseData.HasDraftVersion = state.PageRoutingInfo.GetVersionRoute(state.InputParameters.IsEditingCustomEntity, PublishStatusQuery.Draft, null) != null;
             pageResponseData.Version = state.PageRoutingInfo.GetVersionRoute(state.InputParameters.IsEditingCustomEntity, publishStatusQuery, state.InputParameters.VersionId);
-            pageResponseData.IsCustomEntityRoute = pageResponseData.Version is CustomEntityVersionRoute;
-            
+            pageResponseData.CofoundryAdminUserContext = state.CofoundryAdminUserContext;
+
             var customEntityDefinitionCode = state.PageRoutingInfo.PageRoute.CustomEntityDefinitionCode;
             if (!string.IsNullOrEmpty(customEntityDefinitionCode))
             {
                 pageResponseData.CustomEntityDefinition = await _queryExecutor.GetByIdAsync<CustomEntityDefinitionSummary>(customEntityDefinitionCode);
-            }
-
-            if (state.IsCofoundryAdminUser)
-            {
-                if (pageResponseData.IsCustomEntityRoute)
-                {
-                    pageResponseData.HasEntityUpdatePermission = _permissionValidationService.HasCustomEntityPermission<CustomEntityUpdatePermission>(customEntityDefinitionCode, state.CofoundryAdminUserContext);
-                    pageResponseData.HasEntityPublishPermission = _permissionValidationService.HasCustomEntityPermission<CustomEntityPublishPermission>(customEntityDefinitionCode, state.CofoundryAdminUserContext);
-                }
-                else
-                {
-                    pageResponseData.HasEntityUpdatePermission = _permissionValidationService.HasPermission<PageUpdatePermission>(state.CofoundryAdminUserContext);
-                    pageResponseData.HasEntityPublishPermission = _permissionValidationService.HasPermission<PagePublishPermission>(state.CofoundryAdminUserContext);
-                }
             }
 
             if (state.InputParameters.IsEditingCustomEntity)

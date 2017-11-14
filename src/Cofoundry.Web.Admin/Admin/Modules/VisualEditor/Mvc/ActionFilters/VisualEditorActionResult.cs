@@ -9,6 +9,7 @@ using Cofoundry.Core.Json;
 using Newtonsoft.Json;
 using Cofoundry.Core.ResourceFiles;
 using Cofoundry.Core;
+using Cofoundry.Domain;
 
 namespace Cofoundry.Web.Admin
 {
@@ -22,6 +23,7 @@ namespace Cofoundry.Web.Admin
         private readonly IPageResponseDataCache _pageResponseDataCache;
         private readonly IRazorViewRenderer _razorViewRenderer;
         private readonly IResourceLocator _resourceLocator;
+        private readonly IPermissionValidationService _permissionValidationService;
 
         public VisualEditorActionResult(
             IActionResult wrappedActionResult,
@@ -30,7 +32,8 @@ namespace Cofoundry.Web.Admin
             IJsonSerializerSettingsFactory jsonSerializerSettingsFactory,
             IPageResponseDataCache pageResponseDataCache,
             IRazorViewRenderer razorViewRenderer,
-            IResourceLocator resourceLocator
+            IResourceLocator resourceLocator,
+            IPermissionValidationService permissionValidationService
             )
         {
             _wrappedActionResult = wrappedActionResult;
@@ -40,6 +43,7 @@ namespace Cofoundry.Web.Admin
             _pageResponseDataCache = pageResponseDataCache;
             _razorViewRenderer = razorViewRenderer;
             _resourceLocator = resourceLocator;
+            _permissionValidationService = permissionValidationService;
         }
 
         public async Task ExecuteResultAsync(ActionContext context)
@@ -114,11 +118,7 @@ namespace Cofoundry.Web.Admin
             var pageResponseData = _pageResponseDataCache.Get();
             if (pageResponseData != null)
             {
-                // When using IPageBlockWithParentPageData and referencing the parent page we get a
-                // Self referencing loop error. Rather than set this globally we ignore this specifically here
-                var settings = _jsonSerializerSettingsFactory.Create();
-                settings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
-                responseJson = JsonConvert.SerializeObject(pageResponseData, settings);
+                responseJson = CreateResponseJson(pageResponseData);
             }
 
             var toolbarHtml = await _razorViewRenderer.RenderViewAsync(context, _adminRouteLibrary.VisualEditor.VisualEditorToolbarViewPath(), pageResponseData);
@@ -132,6 +132,58 @@ namespace Cofoundry.Web.Admin
                 + html.Substring(insertBodyIndex);
 
             return html;
+        }
+
+        /// <summary>
+        /// Here we modify the page response data to include only what we need and
+        /// serialize it into a json object.
+        /// </summary>
+        private string CreateResponseJson(IPageResponseData pageResponseData)
+        {
+            string responseJson;
+
+            // When using IPageBlockWithParentPageData and referencing the parent page we get a
+            // Self referencing loop error. Rather than set this globally we ignore this specifically here
+            var settings = _jsonSerializerSettingsFactory.Create();
+            settings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
+
+            bool isCustomEntityRoute = pageResponseData.Version is CustomEntityVersionRoute;
+            bool hasEntityUpdatePermission = false;
+            bool hasEntityPublishPermission = false;
+
+            if (isCustomEntityRoute)
+            {
+                hasEntityUpdatePermission = _permissionValidationService.HasCustomEntityPermission<CustomEntityUpdatePermission>(
+                    pageResponseData.CustomEntityDefinition.CustomEntityDefinitionCode,
+                    pageResponseData.CofoundryAdminUserContext
+                    );
+                hasEntityPublishPermission = _permissionValidationService.HasCustomEntityPermission<CustomEntityPublishPermission>(
+                    pageResponseData.CustomEntityDefinition.CustomEntityDefinitionCode,
+                    pageResponseData.CofoundryAdminUserContext
+                    );
+            }
+            else
+            {
+                hasEntityUpdatePermission = _permissionValidationService.HasPermission<PageUpdatePermission>(pageResponseData.CofoundryAdminUserContext);
+                hasEntityPublishPermission = _permissionValidationService.HasPermission<PagePublishPermission>(pageResponseData.CofoundryAdminUserContext);
+            }
+
+            var responseObject = new
+            {
+                Page = pageResponseData.Page,
+                PageRoutingInfo = pageResponseData.PageRoutingInfo,
+                PageVersion = pageResponseData.PageVersion,
+                IsCustomEntityRoute = isCustomEntityRoute,
+                HasDraftVersion = pageResponseData.HasDraftVersion,
+                Version = pageResponseData.Version,
+                VisualEditorMode = pageResponseData.VisualEditorMode,
+                CustomEntityDefinition = pageResponseData.CustomEntityDefinition,
+                HasEntityUpdatePermission = hasEntityUpdatePermission,
+                HasEntityPublishPermission = hasEntityPublishPermission
+            };
+
+            responseJson = JsonConvert.SerializeObject(responseObject, settings);
+            return responseJson;
         }
 
         private async Task<string> RenderSvgIconsToStringAsync()
