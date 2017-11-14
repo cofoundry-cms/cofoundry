@@ -72,7 +72,7 @@ namespace Cofoundry.Web
                 DateTime ifModifiedSince;
                 if (DateTime.TryParse(Request.Headers["If-Modified-Since"], out ifModifiedSince) && lastModified <= ifModifiedSince.ToUniversalTime())
                 {
-                    return StatusCode(304, "Not Modified");
+                    return StatusCode(304);
                 }
             }
 

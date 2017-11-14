@@ -73,6 +73,8 @@ namespace Cofoundry.Web.Admin
                 filterContext.Result != null
                 // Is a get request
                 && httpContext.Request.Method == "GET"
+                // Valid Result Type
+                && IsValidActionType(filterContext.Result)
                 // Isn't an ajax request
                 && httpContext.Request.Headers["X-Requested-With"] != "XMLHttpRequest"
                 // Is a page and not a static resource
@@ -84,6 +86,14 @@ namespace Cofoundry.Web.Admin
 
             // Last check is if authenticated as a cofoundry user (this is most expensive test so do it last)
             return GetCofoundryUserAsync();
+        }
+
+        private bool IsValidActionType(IActionResult actionResult)
+        {
+            if (actionResult is FileResult) return false;
+            if (actionResult is StatusCodeResult) return false;
+
+            return true;
         }
 
         private async Task<IUserContext> GetCofoundryUserAsync()
