@@ -20,6 +20,7 @@ namespace Cofoundry.Web
             IConfiguration configuration
             )
         {
+            AddAdditionalTypes(mvcBuilder);
             DiscoverAdditionalApplicationParts(mvcBuilder);
 
             var typesProvider = new DiscoveredTypesProvider(mvcBuilder.PartManager);
