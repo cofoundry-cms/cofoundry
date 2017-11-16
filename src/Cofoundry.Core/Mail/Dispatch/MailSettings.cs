@@ -17,6 +17,7 @@ namespace Cofoundry.Core.Mail
         public MailSettings()
         {
             MailDropDirectory = "~/App_Data/Emails";
+            DefaultFromAddress = "auto@cofoundry.org";
         }
 
         /// <summary>
