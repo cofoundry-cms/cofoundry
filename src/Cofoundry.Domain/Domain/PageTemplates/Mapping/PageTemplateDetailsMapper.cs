@@ -24,11 +24,6 @@ namespace Cofoundry.Domain
             var dbPageTemplate = queryModel?.PageTemplate;
             if (dbPageTemplate == null) return null;
 
-            if (queryModel.CustomEntityDefinition == null)
-            {
-                throw new ArgumentException("queryModel.CustomEntityDefinition not set.");
-            }
-
             var pageTemplate = new PageTemplateDetails()
             {
                 FullPath = dbPageTemplate.FullPath,

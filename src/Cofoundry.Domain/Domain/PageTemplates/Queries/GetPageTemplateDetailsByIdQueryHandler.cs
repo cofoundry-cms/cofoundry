@@ -45,7 +45,11 @@ namespace Cofoundry.Domain
 
             if (queryModel.PageTemplate == null) return null;
 
-            queryModel.CustomEntityDefinition = await _queryExecutor.GetByIdAsync<CustomEntityDefinitionMicroSummary>(queryModel.PageTemplate.CustomEntityDefinitionCode);
+            if (!string.IsNullOrEmpty(queryModel.PageTemplate.CustomEntityDefinitionCode))
+            {
+                queryModel.CustomEntityDefinition = await _queryExecutor.GetByIdAsync<CustomEntityDefinitionMicroSummary>(queryModel.PageTemplate.CustomEntityDefinitionCode);
+            }
+
             queryModel.NumPages = await _dbContext
                 .PageVersions
                 .AsNoTracking()

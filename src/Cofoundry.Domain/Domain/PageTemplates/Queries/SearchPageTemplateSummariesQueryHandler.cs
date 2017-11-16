@@ -81,13 +81,13 @@ namespace Cofoundry.Domain
                     .PageVersions
                     .AsNoTracking()
                     .Where(v => allPageTemplateIds.Contains(v.PageTemplateId))
-                    .Select(v => new { v.PageId, v.PageTemplateId })
+                    .Select(v => new { v.PageId, v.PageVersionId, v.PageTemplateId })
                     .ToListAsync())
                     .GroupBy(v => v.PageTemplateId)
                     .Select(v => new
                     {
                         PageTemplateId = v.Key,
-                        NumPages = v.Count()
+                        NumPages = v.GroupBy(p => p.PageId).Count()
                     })
                     .ToDictionary(v => v.PageTemplateId, v => v.NumPages);
         }
