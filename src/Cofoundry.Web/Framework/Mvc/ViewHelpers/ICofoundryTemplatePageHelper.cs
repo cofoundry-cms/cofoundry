@@ -1,5 +1,6 @@
 ﻿using Cofoundry.Domain;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,22 +15,14 @@ namespace Cofoundry.Web
     /// all cofoundry functionality under one helper to avoid 
     /// polluting the global namespace.
     /// </summary>
-    public class CofoundryTemplatePageHelper<TModel> 
-        : CofoundryPageHelper<TModel> //where TModel : IEditablePageViewModel
+    public interface ICofoundryTemplatePageHelper<TModel> 
+        : ICofoundryPageHelper<TModel> 
+        where TModel : IEditablePageViewModel
     {
-        public CofoundryTemplatePageHelper(
-            ViewContext viewContext, 
-            TModel model
-            )
-            : base(viewContext, model)
-        {
-            Template = new PageTemplateHelper<TModel>(viewContext, model);
-        }
-
         /// <summary>
         /// Contains helper functionality relating to the page template
         /// such as region definitions.
         /// </summary>
-        public IPageTemplateHelper<TModel> Template { get; set; }
+        IPageTemplateHelper<TModel> Template { get; }
     }
 }

@@ -17,14 +17,15 @@ namespace Cofoundry.Domain
     {
         #region constructor
 
-        const string REGION_FUNC = "Cofoundry.Template.Region";
-        const string CUSTOM_ENTITY_REGION_FUNC = "Cofoundry.Template.CustomEntityRegion";
-        const string TEMPLATE_DESCRIPTION_FUNC = "Cofoundry.Template.UseDescription";
+        const string FUNC_OPENER = "(\"";
+        const string REGION_FUNC = ".Template.Region";
+        const string CUSTOM_ENTITY_REGION_FUNC = ".Template.CustomEntityRegion";
+        const string TEMPLATE_DESCRIPTION_FUNC = ".Template.UseDescription";
 
         const string PARTIAL_FUNC = "Html.Partial";
         const string RENDER_PARTIAL_FUNC = "Html.RenderPartial";
 
-        const string REGEX_REMOVE_METHOD_WHITEPSPACE = @"(Cofoundry+\s*\.Template+\s*\.[A-Za-z]+)";
+        const string REGEX_REMOVE_METHOD_WHITEPSPACE = @"(\w+\s*\.Template+\s*\.[A-Za-z]*Region\()";
 
         private readonly IQueryExecutor _queryExecutor;
         private readonly IPageTemplateViewFileLocator _viewLocator;
@@ -92,12 +93,12 @@ namespace Cofoundry.Domain
                         }
                     }
 
-                    if (line.Contains(REGION_FUNC))
+                    if (line.Contains(REGION_FUNC + FUNC_OPENER))
                     {
                         var regionName = ParseFunctionParameter(line, REGION_FUNC);
                         regions.Add(new PageTemplateFileRegion() { Name = regionName });
                     }
-                    else if (line.Contains(CUSTOM_ENTITY_REGION_FUNC))
+                    else if (line.Contains(CUSTOM_ENTITY_REGION_FUNC + FUNC_OPENER))
                     {
                         var regionName = ParseFunctionParameter(line, CUSTOM_ENTITY_REGION_FUNC);
                         regions.Add(new PageTemplateFileRegion() { Name = regionName, IsCustomEntityRegion = true });
@@ -110,7 +111,7 @@ namespace Cofoundry.Domain
                     {
                         regions.AddRange(await ParsePartialView(line, RENDER_PARTIAL_FUNC, executionContext));
                     }
-                    else if (line.Contains(TEMPLATE_DESCRIPTION_FUNC))
+                    else if (line.Contains(TEMPLATE_DESCRIPTION_FUNC + FUNC_OPENER))
                     {
                         pageTemplateFileInfo.Description = ParseFunctionParameter(line, TEMPLATE_DESCRIPTION_FUNC);
                     }
@@ -177,7 +178,7 @@ namespace Cofoundry.Domain
         
         private string ParseFunctionParameter(string textLine, string functionName)
         {
-            var startFunc = functionName + "(\"";
+            var startFunc = functionName + FUNC_OPENER;
 
             int start = textLine.IndexOf(startFunc) + startFunc.Length;
             var parameterValue = textLine.Substring(start);

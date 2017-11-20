@@ -1,5 +1,7 @@
 ﻿@model AdminMenuViewModel
 @inject IAdminRouteLibrary adminRouteLibrary
+@inject ICofoundryPageHelper Cofoundry
+
 @{ 
     await Cofoundry.CurrentUser.EnsureInitializedAsync();
 }

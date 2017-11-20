@@ -13,7 +13,12 @@ namespace Cofoundry.Web
                 .RegisterType<IRazorViewRenderer, RazorViewRenderer>()
                 .RegisterType<IStaticFilePathFormatter, StaticFilePathFormatter>()
                 .RegisterType<IStaticFileViewHelper, StaticFileViewHelper>()
-                ;
+                .RegisterType<ICofoundryPageHelper, CofoundryPageHelper>()
+                .RegisterGeneric(typeof(ICofoundryPageHelper<>), typeof(CofoundryPageHelper<>))
+                .RegisterGeneric(typeof(ICofoundryTemplatePageHelper<>), typeof(CofoundryTemplatePageHelper<>))
+                .RegisterGeneric(typeof(ICofoundryPageBlockTypeHelper<>), typeof(CofoundryPageBlockTypeHelper<>))
+                .RegisterGeneric(typeof(IPageTemplateHelper<>), typeof(PageTemplateHelper<>))
+                ; 
         }
     }
 }

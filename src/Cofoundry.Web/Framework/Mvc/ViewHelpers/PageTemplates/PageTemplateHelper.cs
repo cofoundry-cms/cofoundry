@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
@@ -12,25 +13,31 @@ namespace Cofoundry.Web
     /// UI helper for Page Template functionality such as defining region.
     /// </summary>
     /// <typeparam name="TModel">ViewModel type</typeparam>
-    public class PageTemplateHelper<TModel> : IPageTemplateHelper<TModel>
-            //where TModel : IEditablePageViewModel
+    public class PageTemplateHelper<TModel>
+        : IPageTemplateHelper<TModel>, IViewContextAware
+        where TModel : IEditablePageViewModel
     {
-        public PageTemplateHelper(
-            ViewContext viewContext,
-            TModel model
-            )
-        {
-            if (!(model is IEditablePageViewModel))
-            {
-                throw new ArgumentException("Page templates must use a model that inherits from " + typeof(IEditablePageViewModel).Name);
-            }
-            ViewContext = viewContext;
-            Model = model;
-        }
-
         public ViewContext ViewContext { get; private set; }
 
         public TModel Model { get; private set; }
+
+        public void Contextualize(ViewContext viewContext)
+        {
+            ViewContext = viewContext;
+
+            if (viewContext.ViewData.Model is TModel model)
+            {
+                if (!(model is IEditablePageViewModel))
+                {
+                    throw new ArgumentException("Page templates must use a model that inherits from " + typeof(IEditablePageViewModel).Name);
+                }
+                Model = model;
+            }
+            else
+            {
+                throw new Exception("Model is not correct");
+            }
+        }
 
         /// <summary>
         /// Indictes where to render a region in the page template. 

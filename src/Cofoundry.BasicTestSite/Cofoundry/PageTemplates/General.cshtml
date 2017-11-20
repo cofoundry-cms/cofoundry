@@ -1,5 +1,5 @@
 ﻿@model IPageViewModel
-@using Cofoundry.Domain
+@inject ICofoundryTemplatePageHelper<IPageViewModel> Cofoundry
 
 @Cofoundry.Template.UseDescription("A template for simple pages with flexible block content")
 

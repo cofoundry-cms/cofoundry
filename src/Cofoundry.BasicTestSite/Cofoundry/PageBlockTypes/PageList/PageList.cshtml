@@ -1,4 +1,5 @@
 ﻿@model PageListDisplayModel
+@inject ICofoundryPageBlockTypeHelper<PageListDisplayModel> Cofoundry
 
 @*
     Here we can use the Cofoundry helper to set the description that
@@ -11,16 +12,16 @@
 @if (!EnumerableHelper.IsNullOrEmpty(Model.Pages))
 {
 <ul>
-    @foreach (var page in Model.Pages)
+    @foreach (var pageItem in Model.Pages)
     {
         <li>
-            <a href="@Cofoundry.Routing.Page(page.PageRoute)">@page.Title</a>
-            @foreach (var pageRegion in page.Regions)
+            <a href="@Cofoundry.Routing.Page(pageItem.PageRoute)">@pageItem.Title</a>
+            @foreach (var pageRegion in pageItem.Regions)
             {
                 <h3>@pageRegion.Name (@pageRegion.Blocks.Count())</h3>
             }
             <p>
-                @page.MetaDescription
+                @pageItem.MetaDescription
             </p>
         </li>
     }

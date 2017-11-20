@@ -1,7 +1,4 @@
-﻿@inherits CofoundryPage<ErrorPageViewModel>
-@using Cofoundry.Web
-
-@{
+﻿@{
     ViewBag.Title = "Error";
 }
 
@@ -12,14 +9,3 @@
 <p>
     Please press back and try again
 </p>
-
-@if (Cofoundry.CurrentUser.IsCofoundryUser || Request.Url.Host.ToLower() == "localhost" || Request.RequestContext.HttpContext.IsDebuggingEnabled)
-{
-    <p>You can customise this default not found view by creating a partial view at /Views/Shared/Error.cshtml, with a model of type Cofoundry.Web.ErrorPageViewModel.</p>
-    <p>Alternatively, if you create a Cofoundry page with a type of not found, that will get shown instead of this view.</p>
-
-    <h2>Error details</h2>
-
-    <p>@Model.Exception.Message</p>
-    <p>@Model.Exception.StackTrace</p>
-}

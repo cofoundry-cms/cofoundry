@@ -1,5 +1,5 @@
 ﻿@model NewUserWelcomeMailTemplate
-@using Cofoundry.Domain.MailTemplates
+@inject ICofoundryMailTemplatePageHelper Cofoundry
 
 @{
     Layout = TemplatePath.DefaultLayoutPath_Html;

@@ -15,10 +15,27 @@ namespace Cofoundry.Web
     /// poluting the global namespace.
     /// </summary>
     public class CofoundryPageBlockTypeHelper<TModel> 
-        : CofoundryPageHelper<TModel> //where TModel : IPageBlockTypeDisplayModel
+        : CofoundryPageHelper<TModel>, ICofoundryPageBlockTypeHelper<TModel>
+        where TModel : IPageBlockTypeDisplayModel
     {
-        public CofoundryPageBlockTypeHelper(ViewContext viewContext, TModel model)
-            : base(viewContext, model)
+        public CofoundryPageBlockTypeHelper(
+            IContentRouteLibrary contentRouteLibrary,
+            IStaticFileViewHelper staticFileViewHelper,
+            ISettingsViewHelper settings,
+            ICurrentUserViewHelper currentUser,
+            IJavascriptViewHelper js,
+            IHtmlSanitizerHelper sanitizer,
+            ICofoundryHtmlHelper html
+            )
+            : base(
+                contentRouteLibrary,
+                staticFileViewHelper,
+                settings,
+                currentUser,
+                js,
+                sanitizer,
+                html
+                )
         {
             BlockType = new PageBlockHelper<TModel>();
         }

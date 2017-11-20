@@ -1,6 +1,5 @@
-﻿using Cofoundry.Domain;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,16 +13,15 @@ namespace Cofoundry.Domain
     /// all cofoundry functionality under one helper to avoid poluting 
     /// the global namespace.
     /// </summary>
-    public class CofoundryMailTemplatePageHelper<T>
+    public class CofoundryMailTemplatePageHelper : ICofoundryMailTemplatePageHelper
     {
-        public CofoundryMailTemplatePageHelper(ViewContext viewContext, T model)
+        public CofoundryMailTemplatePageHelper(
+            IContentRouteLibrary contentRouteLibrary,
+            IHtmlSanitizerHelper htmlSanitizerHelper
+            )
         {
-            var serviceProvider = viewContext.HttpContext.RequestServices;
-
-            Routing = serviceProvider.GetRequiredService<IContentRouteLibrary>();
-            Sanitizer = serviceProvider.GetRequiredService<IHtmlSanitizerHelper>();
-
-            Model = model;
+            Routing = contentRouteLibrary;
+            Sanitizer = htmlSanitizerHelper;
         }
 
         /// <summary>
@@ -37,10 +35,5 @@ namespace Cofoundry.Domain
         /// vulnerable to XSS attacks.
         /// </summary>
         public IHtmlSanitizerHelper Sanitizer { get; private set; }
-
-        /// <summary>
-        /// The view model associated with the page this helper is contained in
-        /// </summary>
-        public T Model { get; private set; }
     }
 }

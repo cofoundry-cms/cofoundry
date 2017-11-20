@@ -1,6 +1,7 @@
 @model IPageResponseData
 @inject IAdminRouteLibrary adminRouteLibrary
 @inject IPermissionValidationService permissionValidationService
+@inject ICofoundryPageHelper<IPageResponseData> Cofoundry
 
 @functions {
     bool IsEditTypeSwitchRequired(IPageResponseData pageResponseData)
@@ -21,8 +22,8 @@
 @{
     var pageResponseData = Model;
     var isStaticPage = pageResponseData == null;
-    var hasPageEditPermission = permissionValidationService.HasPermission<PageUpdatePermission>(pageResponseData.CofoundryAdminUserContext);
-    var hasPagePublishPermission = permissionValidationService.HasPermission<PagePublishPermission>(pageResponseData.CofoundryAdminUserContext);
+    var hasPageEditPermission = false;
+    var hasPagePublishPermission = false;
     var hasCustomEntityEditPermission = false;
     var hasCustomEntityPublishPermission = false;
     var canEditDraft = false;
@@ -43,6 +44,8 @@
 
     if (!isStaticPage)
     {
+        hasPageEditPermission = permissionValidationService.HasPermission<PageUpdatePermission>(pageResponseData.CofoundryAdminUserContext);
+        hasPagePublishPermission = permissionValidationService.HasPermission<PagePublishPermission>(pageResponseData.CofoundryAdminUserContext);
         isEditing = pageResponseData.VisualEditorMode == VisualEditorMode.Edit;
         isViewingSpecificVersion = pageResponseData.VisualEditorMode == VisualEditorMode.SpecificVersion;
         isCustomEntityRoute = pageResponseData.Version is CustomEntityVersionRoute;
@@ -107,10 +110,12 @@
 
 <!-- PAGE TOOLBAR -->
 <div id="cofoundry-sv" class="cofoundry-sv active">
-    @*<button type="button" id="cofoundry-sv_button" class="cofoundry-sv__toggle"></button>*@
 
     <div class="cofoundry-sv__navmenu">
-        <div class="cofoundry-sv__mini-menu cofoundry-sv__mini-menu--align-left">
+        <div class="cofoundry-sv__mini-menu cofoundry-sv__mini-menu--align-left">            
+            @* No cofoundry user available on static pages at the moment, so disable these links for now*@
+            @if (!isStaticPage)
+            {
             <div class="cofoundry-sv__mini-menu__content">
                 <ol class="cofoundry-sv__navmenu-list">
 @if (permissionValidationService.HasPermission<DashboardAdminModulePermission>(pageResponseData.CofoundryAdminUserContext))
@@ -170,7 +175,7 @@
                     }
                 </ol>
             </div>
-
+            }
             <a href="/admin" type="button" class="cofoundry-sv__mini-menu__toggle">
                 <img class="cofoundry-sv__logo" src="~/Admin/Modules/VisualEditor/Content/img/logo-thumb.png" />
             </a>

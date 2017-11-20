@@ -1,5 +1,5 @@
 ﻿@model ExampleCustomEntityPageViewModel<BlogPostDisplayModel>
-@using Cofoundry.Domain
+@inject ICofoundryTemplatePageHelper<ExampleCustomEntityPageViewModel<BlogPostDisplayModel>> Cofoundry
 
 @{
     Cofoundry.Template.UseDescription("Template for the blog post details page");

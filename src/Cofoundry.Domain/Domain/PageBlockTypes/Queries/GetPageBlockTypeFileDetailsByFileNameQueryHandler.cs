@@ -110,6 +110,11 @@ namespace Cofoundry.Domain
                     {
                         fileDetails.Description = ParseFunctionParameter(line, TEMPLATE_DESCRIPTION_FUNC);
                     }
+
+                    if (fileDetails.Name != null && fileDetails.Description != null)
+                    {
+                        break;
+                    }
                 }
             }
 

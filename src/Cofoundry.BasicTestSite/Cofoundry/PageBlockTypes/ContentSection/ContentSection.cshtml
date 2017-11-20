@@ -1,4 +1,5 @@
 ﻿@model ContentSectionDisplayModel
+@inject ICofoundryPageBlockTypeHelper<ContentSectionDisplayModel> Cofoundry
 
 @*
     Here we can use the Cofoundry helper to set the description that
@@ -6,7 +7,7 @@
 
     This is optional and doesn't render anything into the template itself.
 *@
-@Cofoundry.BlockType.UseDescription("This is a content row with a heading")
+@Cofoundry.BlockType.UseDescription("This is a content row with a heading testest")
 
 <div class="row content-block">
     <div class="col-sm-12">

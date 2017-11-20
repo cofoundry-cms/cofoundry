@@ -1,5 +1,5 @@
 ﻿@model ExamplePageViewModel
-@using Cofoundry.Domain
+@inject ICofoundryTemplatePageHelper<ExamplePageViewModel> Cofoundry
 
 @Cofoundry.Template.UseDescription("This template shoud only be used for the homepage")
 
