@@ -1,7 +1,7 @@
 @model IPageResponseData
 @inject IAdminRouteLibrary adminRouteLibrary
 @inject IPermissionValidationService permissionValidationService
-@inject ICofoundryPageHelper<IPageResponseData> Cofoundry
+@inject ICofoundryHelper<IPageResponseData> Cofoundry
 
 @functions {
     bool IsEditTypeSwitchRequired(IPageResponseData pageResponseData)

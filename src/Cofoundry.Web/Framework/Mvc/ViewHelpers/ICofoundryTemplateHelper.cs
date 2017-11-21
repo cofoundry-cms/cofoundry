@@ -15,8 +15,8 @@ namespace Cofoundry.Web
     /// all cofoundry functionality under one helper to avoid 
     /// polluting the global namespace.
     /// </summary>
-    public interface ICofoundryTemplatePageHelper<TModel> 
-        : ICofoundryPageHelper<TModel> 
+    public interface ICofoundryTemplateHelper<TModel> 
+        : ICofoundryHelper<TModel> 
         where TModel : IEditablePageViewModel
     {
         /// <summary>

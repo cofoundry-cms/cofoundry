@@ -14,8 +14,8 @@ namespace Cofoundry.Web
     /// all cofoundry functionality under one helper to avoid 
     /// poluting the global namespace.
     /// </summary>
-    public interface ICofoundryPageBlockTypeHelper<TModel> 
-        : ICofoundryPageHelper<TModel> 
+    public interface ICofoundryBlockTypeHelper<TModel> 
+        : ICofoundryHelper<TModel> 
         where TModel : IPageBlockTypeDisplayModel
     {
         /// <summary>

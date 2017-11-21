@@ -1,5 +1,5 @@
 ﻿@model ExamplePageViewModel
-@inject ICofoundryTemplatePageHelper<ExamplePageViewModel> Cofoundry
+@inject ICofoundryTemplateHelper<ExamplePageViewModel> Cofoundry
 
 @Cofoundry.Template.UseDescription("This template shoud only be used for the homepage")
 
@@ -30,10 +30,10 @@
     </div>
 
     <div class="row blog-cards">
-        <div class="col-sm-12 ">
+        <div class="col-sm-12 " >
             <h2>From our blog</h2>
         </div>
-
+       
         @await Component.InvokeAsync("HomepageBlogPosts")
     </div>
 </div>

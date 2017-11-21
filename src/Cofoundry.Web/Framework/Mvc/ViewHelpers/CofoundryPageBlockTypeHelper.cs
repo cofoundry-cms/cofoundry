@@ -15,7 +15,7 @@ namespace Cofoundry.Web
     /// poluting the global namespace.
     /// </summary>
     public class CofoundryPageBlockTypeHelper<TModel> 
-        : CofoundryPageHelper<TModel>, ICofoundryPageBlockTypeHelper<TModel>
+        : CofoundryPageHelper<TModel>, ICofoundryBlockTypeHelper<TModel>
         where TModel : IPageBlockTypeDisplayModel
     {
         public CofoundryPageBlockTypeHelper(

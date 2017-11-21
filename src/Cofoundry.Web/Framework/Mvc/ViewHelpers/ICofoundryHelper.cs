@@ -1,6 +1,4 @@
 ﻿using Cofoundry.Domain;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,18 +7,13 @@ using System.Threading.Tasks;
 namespace Cofoundry.Web
 {
     /// <summary>
-    /// Main helper for Cofoundry functionality on pages with a 
+    /// Main helper for Cofoundry functionality on pages without a 
     /// model defined. Typically accessed via @Cofoundry, this keeps 
     /// all cofoundry functionality under one helper to avoid poluting 
     /// the global namespace.
     /// </summary>
-    public interface ICofoundryPageHelper<TModel>
+    public interface ICofoundryHelper
     {
-        /// <summary>
-        /// The view model associated with the page this helper is contained in
-        /// </summary>
-        TModel Model { get; }
-
         /// <summary>
         /// Helpers for generating links to Cofoundry content
         /// </summary>

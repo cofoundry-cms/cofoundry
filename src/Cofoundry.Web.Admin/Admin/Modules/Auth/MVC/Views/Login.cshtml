@@ -1,7 +1,7 @@
 ﻿@model Cofoundry.Web.Identity.LoginViewModel
 @inject IStaticResourceReferenceRenderer staticResourceReferenceRenderer
 @inject IAdminRouteLibrary adminRouteLibrary
-@inject ICofoundryPageHelper Cofoundry
+@inject ICofoundryHelper Cofoundry
 @{
     ViewBag.Title = "Login";
     Layout = adminRouteLibrary.Auth.LoginLayoutPath;

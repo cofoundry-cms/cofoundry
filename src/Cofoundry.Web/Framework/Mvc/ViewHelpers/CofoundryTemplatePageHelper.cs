@@ -16,7 +16,7 @@ namespace Cofoundry.Web
     /// polluting the global namespace.
     /// </summary>
     public class CofoundryTemplatePageHelper<TModel> 
-        : CofoundryPageHelper<TModel>, ICofoundryTemplatePageHelper<TModel> 
+        : CofoundryPageHelper<TModel>, ICofoundryTemplateHelper<TModel> 
         where TModel : IEditablePageViewModel
     {
         public CofoundryTemplatePageHelper(

@@ -14,7 +14,7 @@ namespace Cofoundry.Web
     /// all cofoundry functionality under one helper to avoid poluting 
     /// the global namespace.
     /// </summary>
-    public class CofoundryPageHelper<TModel> : ICofoundryPageHelper<TModel>, IViewContextAware
+    public class CofoundryPageHelper<TModel> : ICofoundryHelper<TModel>, IViewContextAware
     {
         public CofoundryPageHelper(
             IContentRouteLibrary contentRouteLibrary,
