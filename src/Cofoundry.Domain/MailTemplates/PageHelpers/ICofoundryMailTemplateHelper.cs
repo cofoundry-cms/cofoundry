@@ -11,7 +11,7 @@ namespace Cofoundry.Domain
     /// all cofoundry functionality under one helper to avoid poluting 
     /// the global namespace.
     /// </summary>
-    public interface ICofoundryMailTemplatePageHelper
+    public interface ICofoundryMailTemplateHelper
     {
         /// <summary>
         /// Helpers for generating links to Cofoundry content

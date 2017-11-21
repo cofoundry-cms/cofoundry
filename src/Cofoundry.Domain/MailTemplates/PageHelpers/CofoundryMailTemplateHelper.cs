@@ -13,9 +13,9 @@ namespace Cofoundry.Domain
     /// all cofoundry functionality under one helper to avoid poluting 
     /// the global namespace.
     /// </summary>
-    public class CofoundryMailTemplatePageHelper : ICofoundryMailTemplatePageHelper
+    public class CofoundryMailTemplateHelper : ICofoundryMailTemplateHelper
     {
-        public CofoundryMailTemplatePageHelper(
+        public CofoundryMailTemplateHelper(
             IContentRouteLibrary contentRouteLibrary,
             IHtmlSanitizerHelper htmlSanitizerHelper
             )
