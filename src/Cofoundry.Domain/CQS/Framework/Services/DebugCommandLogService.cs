@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Extensions.Logging;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -12,43 +13,43 @@ namespace Cofoundry.Domain.CQS
     /// </summary>
     public class DebugCommandLogService : ICommandLogService
     {
-        public void Log<TCommand>(TCommand command, IExecutionContext executionContext) where TCommand : ICommand
+        private readonly ILogger<DebugCommandLogService> _logger;
+
+        public DebugCommandLogService(
+            ILogger<DebugCommandLogService>  logger
+            )
         {
-            if (command is ILoggableCommand)
-            {
-                var msg = string.Format("{0} SUCCESS executing command {1}. User {2}",
-                executionContext.ExecutionDate,
-                typeof(TCommand).FullName,
-                executionContext.UserContext.UserId?.ToString()
-                );
-                Debug.WriteLine(msg);
-            }
+            _logger = logger;
         }
 
         public Task LogAsync<TCommand>(TCommand command, IExecutionContext executionContext) where TCommand : ICommand
         {
-            Log(command, executionContext);
-            return Task.FromResult(true);
-        }
-
-        public void LogFailed<TCommand>(TCommand command, IExecutionContext executionContext, Exception ex = null) where TCommand : ICommand
-        {
-            if (command is ILoggableCommand)
-            {
-                var msg = string.Format("{0} FAILED executing command {1}. User {2}, Exception '{3}'",
+            _logger.LogInformation(
+                "{ExecutionDate} SUCCESS executing command {CommandName}. User {UserId}",
                 executionContext.ExecutionDate,
                 typeof(TCommand).FullName,
-                executionContext.UserContext.UserId?.ToString(),
-                ex?.Message
+                executionContext.UserContext.UserId?.ToString()
                 );
-                Debug.WriteLine(msg);
-            }
+
+            return Task.CompletedTask;
         }
 
         public Task LogFailedAsync<TCommand>(TCommand command, IExecutionContext executionContext, Exception ex = null) where TCommand : ICommand
         {
-            LogFailed(command, executionContext);
-            return Task.FromResult(true);
+            if (command is ILoggableCommand)
+            {
+                // Exception should be picked up by and handled elsewhere, so just log information.
+
+                _logger.LogInformation(
+                    "{ExecutionDate} FAILED executing command {CommandName}. User {UserId}, Exception '{ExceptionMessage}'",
+                    executionContext.ExecutionDate,
+                    typeof(TCommand).FullName,
+                    executionContext.UserContext.UserId?.ToString(),
+                    ex?.Message
+                    );
+            }
+
+            return Task.CompletedTask;
         }
     }
 }

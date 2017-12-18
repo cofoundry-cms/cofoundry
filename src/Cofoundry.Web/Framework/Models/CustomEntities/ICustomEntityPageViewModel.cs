@@ -5,10 +5,10 @@ using System.Linq;
 
 namespace Cofoundry.Web
 {
-    public interface ICustomEntityPageViewModel<TModel> 
-        : IPageWithMetaDataViewModel, IEditablePageViewModel, IPageRoutableViewModel 
-        where TModel : ICustomEntityPageDisplayModel
+    public interface ICustomEntityPageViewModel<TDisplayModel>
+        : IPageWithMetaDataViewModel, IEditablePageViewModel, IPageRoutableViewModel
+        where TDisplayModel : ICustomEntityPageDisplayModel
     {
-        CustomEntityRenderDetailsViewModel<TModel> CustomEntity { get; set; }
+        CustomEntityRenderDetailsViewModel<TDisplayModel> CustomEntity { get; set; }
     }
 }

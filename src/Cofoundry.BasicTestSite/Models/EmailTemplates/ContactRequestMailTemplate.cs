@@ -7,21 +7,9 @@ namespace Cofoundry.BasicTestSite
 {
     public class ContactRequestMailTemplate : IMailTemplate
     {
-        public string ViewFile
-        {
-            get
-            {
-                return "~/Views/EmailTemplates/ContactRequest";
-            }
-        }
+        public string ViewFile => "~/Views/EmailTemplates/ContactRequest";
 
-        public string Subject
-        {
-            get
-            {
-                return "New Contact Request";
-            }
-        }
+        public string Subject => "New Contact Request";
 
         public ContactRequest Request { get; set; }
     }

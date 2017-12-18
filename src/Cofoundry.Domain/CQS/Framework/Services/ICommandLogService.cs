@@ -15,10 +15,8 @@ namespace Cofoundry.Domain.CQS
     /// </remarks>
     public interface ICommandLogService
     {
-        void Log<TCommand>(TCommand command, IExecutionContext executionContext) where TCommand : ICommand;
         Task LogAsync<TCommand>(TCommand command, IExecutionContext executionContext) where TCommand : ICommand;
 
-        void LogFailed<TCommand>(TCommand command, IExecutionContext executionContext, Exception ex = null) where TCommand : ICommand;
         Task LogFailedAsync<TCommand>(TCommand command, IExecutionContext executionContext, Exception ex = null) where TCommand : ICommand;
     }
 }

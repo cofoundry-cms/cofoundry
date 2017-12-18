@@ -80,7 +80,7 @@ namespace Cofoundry.Web
             var viewModel = _pageViewModelFactory.CreateNotFoundPageViewModel();
 
             await _pageViewModelMapper.MapNotFoundPageViewModelAsync(viewModel, mappingParameters);
-
+            
             return viewModel;
         }
 
