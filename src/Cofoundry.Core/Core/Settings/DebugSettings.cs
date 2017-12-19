@@ -12,7 +12,8 @@ namespace Cofoundry.Core
     public class DebugSettings : CofoundryConfigurationSettingsBase
     {
         /// <summary>
-        /// Disabled any robits.txt file and instead serves up a file that disallows 
+        /// Disables the dynamic robots.txt file and instead serves up a file that 
+        /// disallows all.
         /// </summary>
         public bool DisableRobotsTxt { get; set; }
 

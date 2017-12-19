@@ -17,11 +17,15 @@ namespace Cofoundry.Web
         /// </summary>
         public static IMvcBuilder AddCofoundry(
             this IMvcBuilder mvcBuilder,
-            IConfiguration configuration
+            IConfiguration configuration,
+            Action<AddCofoundryStartupConfiguration> configBuilder = null
             )
         {
+            var cofoundryConfig = new AddCofoundryStartupConfiguration();
+            configBuilder?.Invoke(cofoundryConfig);
+
             AddAdditionalTypes(mvcBuilder);
-            DiscoverAdditionalApplicationParts(mvcBuilder);
+            DiscoverAdditionalApplicationParts(mvcBuilder, cofoundryConfig);
 
             var typesProvider = new DiscoveredTypesProvider(mvcBuilder.PartManager);
             var builder = new DefaultContainerBuilder(mvcBuilder.Services, typesProvider, configuration);
@@ -39,14 +43,13 @@ namespace Cofoundry.Web
             mvcBuilder.Services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
         }
 
-        private static void DiscoverAdditionalApplicationParts(IMvcBuilder mvcBuilder)
+        private static void DiscoverAdditionalApplicationParts(IMvcBuilder mvcBuilder, AddCofoundryStartupConfiguration cofoundryConfig)
         {
             // We could configure AssemblyDiscoveryProvider through settings?
 
             var assemblyPartDiscoveryProvider = new AssemblyDiscoveryProvider();
-            var rules = new IAssemblyDiscoveryRule[] { new CofoundryAssemblyDiscoveryRule() };
 
-            var additionalAssemblies = assemblyPartDiscoveryProvider.DiscoverAssemblies(mvcBuilder, rules);
+            var additionalAssemblies = assemblyPartDiscoveryProvider.DiscoverAssemblies(mvcBuilder, cofoundryConfig.AssemblyDiscoveryRules);
 
             foreach (var additionalAssembly in additionalAssemblies)
             {

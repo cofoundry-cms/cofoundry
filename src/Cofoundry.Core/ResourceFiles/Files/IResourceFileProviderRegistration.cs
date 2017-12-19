@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Cofoundry.Core.ResourceFiles
 {
-    public interface IResourceFileProviderRegisteration
+    public interface IResourceFileProviderRegistration
     {
         IEnumerable<IFileProvider> GetFileProviders();
     }

@@ -17,10 +17,10 @@ namespace Cofoundry.Web
         /// <param name="configBuilder">Additional configuration options.</param>
         public static void UseCofoundry(
             this IApplicationBuilder application,
-            Action<CofoundryStartupConfiguration> configBuilder = null
+            Action<UseCofoundryStartupConfiguration> configBuilder = null
             )
         {
-            var configuration = new CofoundryStartupConfiguration();
+            var configuration = new UseCofoundryStartupConfiguration();
             if (configBuilder != null) configBuilder(configuration);
 
             using (var childContext = application.ApplicationServices.CreateScope())

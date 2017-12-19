@@ -8,13 +8,8 @@ namespace Cofoundry.Domain
 {
     public class PageReadPermission : IEntityPermission
     {
-        public PageReadPermission()
-        {
-            EntityDefinition = new PageEntityDefinition();
-            PermissionType = CommonPermissionTypes.Read("Pages");
-        }
+        public IEntityDefinition EntityDefinition => new PageEntityDefinition();
 
-        public IEntityDefinition EntityDefinition { get; private set; }
-        public PermissionType PermissionType { get; private set; }
+        public PermissionType PermissionType => CommonPermissionTypes.Read("Pages");
     }
 }

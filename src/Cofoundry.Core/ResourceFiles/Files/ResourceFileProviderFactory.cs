@@ -18,12 +18,12 @@ namespace Cofoundry.Core.ResourceFiles
 
         public ResourceFileProviderFactory(
             IEnumerable<IAssemblyResourceRegistration> assemblyResourceRegistrations,
-            IEnumerable<IResourceFileProviderRegisteration> resourceFileProviderRegisterations,
+            IEnumerable<IResourceFileProviderRegistration> resourceFileProviderRegistrations,
             IEmbeddedFileProviderFactory embeddedFileProviderFactory
             )
         {
             // Give preference to physical providers local to the project over embedded providers
-            _providers = resourceFileProviderRegisterations
+            _providers = resourceFileProviderRegistrations
                 .SelectMany(r => r.GetFileProviders())
                 .OrderByDescending(r => r is PhysicalFileProvider)
                 .ThenByDescending(r => r is CompositeFileProvider)
