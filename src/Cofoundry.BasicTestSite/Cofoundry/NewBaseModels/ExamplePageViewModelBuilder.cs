@@ -69,5 +69,16 @@ namespace Cofoundry.BasicTestSite
         {
             return Task.CompletedTask;
         }
+
+        public async Task<IErrorPageViewModel> BuildErrorPageViewModelAsync(ErrorPageViewModelBuilderParameters mappingParameters)
+        {
+            // This example show using the default behaviour without any customization
+            // You could alternatively inherit from PageViewModelBuilder and use the base implementation
+            var viewModel = _pageViewModelFactory.CreateErrorPageViewModel();
+
+            await _pageViewModelMapper.MapErrorPageViewModelAsync(viewModel, mappingParameters);
+
+            return viewModel;
+        }
     }
 }

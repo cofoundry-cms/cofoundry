@@ -44,5 +44,13 @@ namespace Cofoundry.Web
         Task<INotFoundPageViewModel> BuildNotFoundPageViewModelAsync(
             NotFoundPageViewModelBuilderParameters mappingParameters
             );
+
+        /// <summary>
+        /// Creates and maps data to a view model for a generic error page.
+        /// </summary>
+        /// <param name="mappingParameters">The data passed through to map to the view model.</param>
+        Task<IErrorPageViewModel> BuildErrorPageViewModelAsync(
+            ErrorPageViewModelBuilderParameters mappingParameters
+            );
     }
 }

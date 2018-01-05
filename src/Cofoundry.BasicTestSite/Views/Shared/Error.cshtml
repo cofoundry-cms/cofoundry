@@ -1,23 +1,21 @@
-﻿@model ErrorPageViewModel
+﻿@model IErrorPageViewModel
 
 @{
     var title = "A Custom Error Page";
     ViewBag.Title = title;
-    var baseException = Model.Exception.GetBaseException();
 }
 
 
 <div class="container">
     <div class="row content-block">
         <div class="col-sm-12">
-            <h1>@title</h1>
+            <h1>@Model.StatusCodeDescription</h1>
         </div>
     </div>
 
     <div class="row content-block">
         <div class="col-sm-12">
             <h2>Sorry, there has been an error</h2>
-
             <p>Please press back and try again. If the error persists then then please contact us.</p>
         </div>
     </div>

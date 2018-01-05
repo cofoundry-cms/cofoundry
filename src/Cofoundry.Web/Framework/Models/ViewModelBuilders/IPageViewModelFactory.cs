@@ -28,5 +28,10 @@ namespace Cofoundry.Web
         /// Creates a new view model for a 404 page.
         /// </summary>
         INotFoundPageViewModel CreateNotFoundPageViewModel();
+
+        /// <summary>
+        /// Creates a new view model for a generi error page.
+        /// </summary>
+        IErrorPageViewModel CreateErrorPageViewModel();
     }
 }

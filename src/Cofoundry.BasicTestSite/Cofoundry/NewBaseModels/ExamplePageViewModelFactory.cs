@@ -22,5 +22,10 @@ namespace Cofoundry.BasicTestSite
         {
             return new ExampleNotFoundPageViewModel();
         }
+
+        public IErrorPageViewModel CreateErrorPageViewModel()
+        {
+            return new ExampleErrorPageViewModel();
+        }
     }
 }

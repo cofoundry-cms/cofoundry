@@ -37,5 +37,13 @@ namespace Cofoundry.Web
         {
             return new NotFoundPageViewModel();
         }
+
+        /// <summary>
+        /// Creates a new view model for a generi error page.
+        /// </summary>
+        public IErrorPageViewModel CreateErrorPageViewModel()
+        {
+            return new ErrorPageViewModel();
+        }
     }
 }

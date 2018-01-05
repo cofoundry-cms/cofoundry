@@ -9,13 +9,20 @@ namespace Cofoundry.Core
     /// <summary>
     /// Settings that give finer grained control over debugging Cofoundry features.
     /// </summary>
-    public class DebugSettings : CofoundryConfigurationSettingsBase
+    public partial class DebugSettings : CofoundryConfigurationSettingsBase
     {
         /// <summary>
         /// Disables the dynamic robots.txt file and instead serves up a file that 
         /// disallows all.
         /// </summary>
         public bool DisableRobotsTxt { get; set; }
+
+        /// <summary>
+        /// Used to indicate whether the application should show the 
+        /// developer exception page with full exception details or not.
+        /// By default this is set to Cofoundry.Core.DeveloperExceptionPageMode.DevelopmentOnly.
+        /// </summary>
+        public DeveloperExceptionPageMode DeveloperExceptionPageMode { get; set; } = DeveloperExceptionPageMode.DevelopmentOnly;
 
         /// <summary>
         /// By default Cofoundry will try and load minified css/js files, but

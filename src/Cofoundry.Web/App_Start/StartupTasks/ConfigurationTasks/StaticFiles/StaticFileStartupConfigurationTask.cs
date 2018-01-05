@@ -9,6 +9,11 @@ using Microsoft.AspNetCore.StaticFiles;
 
 namespace Cofoundry.Web
 {
+    /// <summary>
+    /// Adds the asp.net static files middleware with a default configuration. You can 
+    /// customize this by overriding the default IStaticFileOptionsConfiguration 
+    /// implementation using DI.
+    /// </summary>
     public class StaticFileStartupConfigurationTask : IStartupConfigurationTask
     {
         #region constructor

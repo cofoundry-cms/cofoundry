@@ -5,22 +5,20 @@ using System.Threading.Tasks;
 
 namespace Cofoundry.Web
 {
-    public class ErrorPageViewModel : IPageWithMetaDataViewModel
+    public class ErrorPageViewModel : IErrorPageViewModel
     {
-        public ErrorPageViewModel(Exception exception, string controllerName, string actionName)
-        {
-            Exception = exception;
-            ControllerName = controllerName;
-            ActionName = actionName;
-        }
+        public int StatusCode { get; set; }
 
-        public Exception Exception { get; set; }
-
-        public string ControllerName { get; set; }
-
-        public string ActionName { get; set; }
+        public string StatusCodeDescription { get; set; }
 
         public string PageTitle { get; set; }
+
         public string MetaDescription { get; set; }
+        
+        public string PathBase { get; set; }
+
+        public string Path { get; set; }
+
+        public string QueryString { get; set; }
     }
 }

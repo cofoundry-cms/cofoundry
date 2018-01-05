@@ -7,7 +7,7 @@ using System.Linq;
 namespace Cofoundry.Web
 {
     /// <summary>
-    /// Misc setup configuration of the MVC framework.
+    /// Adds the ASP.Net MVC middleware to the pipeline and sets up Cofoundry routing.
     /// </summary>
     public class MvcStartupConfigurationTask : IStartupConfigurationTask
     {
@@ -66,6 +66,17 @@ namespace Cofoundry.Web
                 "assets/files/{assetId}_{fileName}.{extension}",
                 new { controller = "CofoundryAssets", action = "File" },
                 new { assetId = @"\d+" });
+
+            routes.MapRoute(
+                "Cofoundry_ErrorCode",
+                "cofoundryerror/errorcode/{statusCode}",
+                new { controller = "CofoundryError", action = "ErrorCode" },
+                new { statusCode = @"\d+" });
+
+            routes.MapRoute(
+                "Cofoundry_Exception",
+                "cofoundryerror/exception/",
+                new { controller = "CofoundryError", action = "Exception" });
 
             RegisterInjectedRoutes(routes);
 

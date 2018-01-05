@@ -7,6 +7,9 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 
 namespace Cofoundry.Web
 {
+    /// <summary>
+    /// Adds the asp.net auth middleware into the pipeline.
+    /// </summary>
     public class AuthStartupConfigurationTask : IStartupConfigurationTask
     {
         #region constructor

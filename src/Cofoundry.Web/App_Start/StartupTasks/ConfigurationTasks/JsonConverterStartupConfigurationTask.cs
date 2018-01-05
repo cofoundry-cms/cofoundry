@@ -10,7 +10,8 @@ using System.Linq;
 namespace Cofoundry.Web
 {
     /// <summary>
-    /// Configures the default JsonSerializerSettings for Json.Net
+    /// Configures the default JsonSerializerSettings for Json.Net using
+    /// the registered IJsonSerializerSettingsFactory.
     /// </summary>
     public class JsonConverterStartupConfigurationTask : IStartupConfigurationTask
     {

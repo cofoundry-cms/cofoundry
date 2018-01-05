@@ -80,7 +80,22 @@ namespace Cofoundry.Web
             var viewModel = _pageViewModelFactory.CreateNotFoundPageViewModel();
 
             await _pageViewModelMapper.MapNotFoundPageViewModelAsync(viewModel, mappingParameters);
-            
+
+            return viewModel;
+        }
+
+        /// <summary>
+        /// Creates and maps data to a view model for a generic error page.
+        /// </summary>
+        /// <param name="mappingParameters">The data passed through to map to the view model.</param>
+        public virtual async Task<IErrorPageViewModel> BuildErrorPageViewModelAsync(
+            ErrorPageViewModelBuilderParameters mappingParameters
+            )
+        {
+            var viewModel = _pageViewModelFactory.CreateNotFoundPageViewModel();
+
+            await _pageViewModelMapper.MapErrorPageViewModelAsync(viewModel, mappingParameters);
+
             return viewModel;
         }
 

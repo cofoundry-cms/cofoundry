@@ -1,11 +1,25 @@
-﻿@{
-    ViewBag.Title = "Error";
+﻿@model IErrorPageViewModel
+@{
+    ViewBag.Title = Model.PageTitle;
 }
 
-<h1>
-    Server error
-</h1>
+@if (Model.StatusCode == 404)
+{
+    <h1>
+        Page not found
+    </h1>
 
-<p>
-    Please press back and try again
-</p>
+    <p>
+        The page you're looking for could not be found.
+    </p>
+}
+else
+{
+    <h1>
+        @Model.PageTitle
+    </h1>
+
+    <p>
+        Sorry, an error has occured.
+    </p>
+}

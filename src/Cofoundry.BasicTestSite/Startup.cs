@@ -26,16 +26,8 @@ namespace Cofoundry.BasicTestSite
                 .AddCofoundry(Configuration);
         }
 
-        public void Configure(
-             IApplicationBuilder app,
-             IHostingEnvironment env
-             )
+        public void Configure(IApplicationBuilder app)
         {
-            if (env.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
-            }
-
             app.UseCofoundry();
         }
     }

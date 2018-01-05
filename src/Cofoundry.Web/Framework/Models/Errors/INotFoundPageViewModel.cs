@@ -5,7 +5,7 @@ using Cofoundry.Domain;
 
 namespace Cofoundry.Web
 {
-    public interface INotFoundPageViewModel : IPageWithMetaDataViewModel
+    public interface INotFoundPageViewModel : IErrorPageViewModel
     {
     }
 }
