@@ -4,6 +4,13 @@ using System.Linq;
 
 namespace Cofoundry.Web.Admin
 {
+
+
+    //    private string GetAlternateResourcePath(string path)
+    //    {
+    //        return path.Replace("~/", "~/Cofoundry/");
+    //    }
+
     //public class SharedBundleRegistration : IBundleRegistration
     //{
     //    public void RegisterBundles(BundleCollection bundles)
@@ -29,7 +36,7 @@ namespace Cofoundry.Web.Admin
     //        bundles.Add(cssBundle);
 
     //        // Scripts
-            
+
     //        bundles.Add(new ScriptBundle(SharedRouteLibrary.Js.Html5Shiv)
     //            .Include(SharedRouteLibrary.Js.Bundle("lib/html5shiv.js")));
 

@@ -16,6 +16,7 @@ namespace Cofoundry.Core.ResourceFiles
     public class FilteredEmbeddedFileProvider : IFileProvider
     {
         private readonly IFileProvider _assemblyProvider;
+        private readonly IFileProvider _overrideProvider;
         private readonly string _restrictToPath;
 
         /// <summary>
@@ -27,9 +28,15 @@ namespace Cofoundry.Core.ResourceFiles
         /// An EmbeddedFileProvider instance instantiated with the assembly containing the 
         /// embedded resources to serve.</param>
         /// <param name="filterToPath">The relative file path to restrict file access to e.g. '/parent/child/content'.</param>
+        /// <param name="overrideProvider">
+        /// A file provider that can contain files that override the assembly provider. Typically
+        /// this is a physical file provider for the website root so projects can override files embedded
+        /// in Cofoundry with their own versions.
+        /// </param>
         public FilteredEmbeddedFileProvider(
             IFileProvider assemblyProvider,
-            string filterToPath
+            string filterToPath,
+            IFileProvider overrideProvider = null
             )
         {
             if (assemblyProvider == null) throw new ArgumentNullException(nameof(assemblyProvider));
@@ -49,6 +56,7 @@ namespace Cofoundry.Core.ResourceFiles
             }
 
             _assemblyProvider = assemblyProvider;
+            _overrideProvider = overrideProvider;
         }
 
         public IDirectoryContents GetDirectoryContents(string subpath)
@@ -57,7 +65,7 @@ namespace Cofoundry.Core.ResourceFiles
             {
                 return NotFoundDirectoryContents.Singleton;
             }
-
+            
             return _assemblyProvider.GetDirectoryContents(subpath);
         }
 
@@ -66,6 +74,15 @@ namespace Cofoundry.Core.ResourceFiles
             if (string.IsNullOrEmpty(subpath) || !subpath.StartsWith(_restrictToPath, StringComparison.OrdinalIgnoreCase))
             {
                 return new NotFoundFileInfo(subpath);
+            }
+
+            if (_overrideProvider != null)
+            {
+                var overrideFile = _overrideProvider.GetFileInfo(subpath);
+                if (overrideFile != null && overrideFile.Exists)
+                {
+                    return overrideFile;
+                }
             }
 
             var fileInfo = _assemblyProvider.GetFileInfo(subpath);

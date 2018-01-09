@@ -40,24 +40,7 @@ namespace Cofoundry.Web.Admin
         /// <param name="fileName">The javascript filename without a .js extension.</param>
         public string JsPath(ModuleRouteLibrary moduleRouteLibrary, string fileName)
         {
-            fileName = Path.GetFileNameWithoutExtension(fileName);
-            string virtualPath = null;
-
-            // check for a minified resource first
-            if (!_debugSettings.UseUncompressedResources)
-            {
-                var minPath = moduleRouteLibrary.JsFile(fileName + "_min");
-
-                if (FileExists(minPath))
-                {
-                    virtualPath = minPath;
-                }
-            }
-
-            if (virtualPath == null)
-            {
-                virtualPath = moduleRouteLibrary.JsFile(fileName);
-            }
+            string virtualPath = JsPathWithoutVersion(moduleRouteLibrary, fileName);
 
             return _staticFilePathFormatter.AppendVersion(virtualPath);
         }
@@ -72,8 +55,7 @@ namespace Cofoundry.Web.Admin
         /// <param name="fileName">The stylesheet filename without a .css extension.</param>
         public string CssPath(ModuleRouteLibrary moduleRouteLibrary, string fileName)
         {
-            fileName = Path.GetFileNameWithoutExtension(fileName);
-            string virtualPath = moduleRouteLibrary.CssFile(fileName);
+            var virtualPath = CssPathWithoutVersion(moduleRouteLibrary, fileName);
 
             return _staticFilePathFormatter.AppendVersion(virtualPath);
         }
@@ -104,11 +86,12 @@ namespace Cofoundry.Web.Admin
         /// <param name="fileName">The javascript filename without a .js extension.</param>
         public HtmlString ScriptTagIfExists(ModuleRouteLibrary moduleRouteLibrary, string fileName)
         {
-            var jsPath = JsPath(moduleRouteLibrary, fileName);
+            var jsPath = JsPathWithoutVersion(moduleRouteLibrary, fileName);
 
             if (!FileExists(jsPath)) return HtmlString.Empty;
 
-            return FormatScriptTag(jsPath);
+            var jsPathWithVersion = _staticFilePathFormatter.AppendVersion(jsPath);
+            return FormatScriptTag(jsPathWithVersion);
         }
 
         /// <summary>
@@ -138,11 +121,12 @@ namespace Cofoundry.Web.Admin
         /// <param name="fileName">The javascript filename without a .js extension.</param>
         public HtmlString CssTagIfExists(ModuleRouteLibrary moduleRouteLibrary, string fileName)
         {
-            var cssPath = CssPath(moduleRouteLibrary, fileName);
+            var cssPath = CssPathWithoutVersion(moduleRouteLibrary, fileName);
 
             if (!FileExists(cssPath)) return HtmlString.Empty;
 
-            return FormatCssTag(cssPath);
+            var cssPathWithVersion = _staticFilePathFormatter.AppendVersion(cssPath);
+            return FormatCssTag(cssPathWithVersion);
         }
 
         private HtmlString FormatScriptTag(string jsPath)
@@ -153,6 +137,39 @@ namespace Cofoundry.Web.Admin
         private HtmlString FormatCssTag(string cssPath)
         {
             return new HtmlString($"<link href=\"{cssPath}\" rel=\"stylesheet\"></link>");
+        }
+
+
+        private string CssPathWithoutVersion(ModuleRouteLibrary moduleRouteLibrary, string fileName)
+        {
+            fileName = Path.GetFileNameWithoutExtension(fileName);
+            var virtualPath = moduleRouteLibrary.CssFile(fileName);
+
+            return virtualPath;
+        }
+
+        private string JsPathWithoutVersion(ModuleRouteLibrary moduleRouteLibrary, string fileName)
+        {
+            fileName = Path.GetFileNameWithoutExtension(fileName);
+            string virtualPath = null;
+
+            // check for a minified resource first
+            if (!_debugSettings.UseUncompressedResources)
+            {
+                var minPath = moduleRouteLibrary.JsFile(fileName + "_min");
+
+                if (FileExists(minPath))
+                {
+                    virtualPath = minPath;
+                }
+            }
+
+            if (virtualPath == null)
+            {
+                virtualPath = moduleRouteLibrary.JsFile(fileName);
+            }
+
+            return virtualPath;
         }
 
         private bool FileExists(string virtualPath)

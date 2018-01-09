@@ -19,6 +19,12 @@ namespace Cofoundry.Web.Admin
         SettingsRouteLibrary Settings { get; }
         SetupRouteLibrary Setup { get; }
         SharedRouteLibrary Shared { get; }
+
+        /// <summary>
+        /// Route library for the alternative module (client implementation)
+        /// module path.
+        /// </summary>
+        SharedAlternateRouteLibrary SharedAlternate { get; }
         UsersRouteLibrary Users { get; }
         VisualEditorRouteLibrary VisualEditor { get; }
     }

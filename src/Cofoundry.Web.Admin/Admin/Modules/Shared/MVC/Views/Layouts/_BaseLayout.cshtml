@@ -17,6 +17,7 @@
     @RenderSection("Meta", required: false)
 
     @staticResourceReferenceRenderer.CssTag(adminRouteLibrary.Shared, "shared")
+    @staticResourceReferenceRenderer.CssTagIfExists(adminRouteLibrary.SharedAlternate, "override")
 
     @RenderSection("Styles", required: false)
 

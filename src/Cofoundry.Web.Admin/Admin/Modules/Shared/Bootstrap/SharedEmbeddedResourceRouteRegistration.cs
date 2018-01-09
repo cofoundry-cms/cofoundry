@@ -20,7 +20,7 @@ namespace Cofoundry.Web.Admin
         public IEnumerable<string> GetEmbeddedResourcePaths()
         {
             yield return _adminRouteLibrary.Shared.StaticResourcePrefix;
-            yield return ALTERNATIVE_ROUTE_PREFIX + _adminRouteLibrary.Shared.StaticResourcePrefix;
+            yield return _adminRouteLibrary.SharedAlternate.StaticResourcePrefix;
         }
     }
 }
