@@ -14,7 +14,7 @@ namespace Cofoundry.Domain
     public interface ICustomEntityRoutingRule
     {
         /// <summary>
-        /// A string representation of the route format e.g.  "{id}/{slug}". Used as a display value
+        /// A string representation of the route format e.g.  "{Id}/{UrlSlug}". Used as a display value
         /// but also as the unique identifier for the rule, so it shouldn't clash with any other routing rule.
         /// </summary>
         string RouteFormat { get; }
@@ -40,7 +40,7 @@ namespace Cofoundry.Domain
 
         /// <summary>
         /// Returns a query that can be used to look up the CustomEntityRoute relating 
-        /// to the matched entity. Throw an exception if the MatchesRule returns false, so
+        /// to the matched entity. Throws an exception if the MatchesRule returns false, so
         /// check this before calling this method.
         /// </summary>
         /// <param name="url">The url to parse custom entity key data from</param>
@@ -49,7 +49,7 @@ namespace Cofoundry.Domain
         IQuery<CustomEntityRoute> ExtractRoutingQuery(string url, PageRoute pageRoute);
 
         /// <summary>
-        /// Transforms the routing specified routing information into a full url
+        /// Transforms the routing specified routing information into a full, relative url.
         /// </summary>
         /// <param name="pageRoute">The matched page route for the url</param>
         /// <param name="entityRoute">The matched custom entity route for the url</param>

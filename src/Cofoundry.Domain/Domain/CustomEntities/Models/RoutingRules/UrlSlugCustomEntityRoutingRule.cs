@@ -10,21 +10,38 @@ namespace Cofoundry.Domain
 {
     public class UrlSlugCustomEntityRoutingRule : ICustomEntityRoutingRule
     {
+        /// <summary>
+        /// A string representation of the route format e.g.  "{UrlSlug}". Used as a display value
+        /// but also as the unique identifier for the rule, so it shouldn't clash with any other routing rule.
+        /// </summary>
         public string RouteFormat
         {
             get { return "{UrlSlug}"; }
         }
 
+        /// <summary>
+        /// Sets a priority over which rules should be run in case more than one is used in the
+        /// same page directory. Custom integer values can be used but use RoutingRulePriority whenever possible
+        /// to avoid hardcoding to a specific value.
+        /// </summary>
         public int Priority
         {
             get { return (int)RoutingRulePriority.Normal; }
         }
 
+        /// <summary>
+        /// Indicates whether this rule can only be used with custom entities with a unique url slug.
+        /// </summary>
         public bool RequiresUniqueUrlSlug
         {
             get { return true; }
         }
 
+        /// <summary>
+        /// Indicates whether the specified url matches this routing rule.
+        /// </summary>
+        /// <param name="url">The url to test</param>
+        /// <param name="pageRoute">The page route already matched to this url.</param>
         public bool MatchesRule(string url, PageRoute pageRoute)
         {
             if (url == null) throw new ArgumentNullException(nameof(url));
@@ -38,6 +55,14 @@ namespace Cofoundry.Domain
             return isMatch;
         }
 
+        /// <summary>
+        /// Returns a query that can be used to look up the CustomEntityRoute relating 
+        /// to the matched entity. Throws an exception if the MatchesRule returns false, so
+        /// check this before calling this method.
+        /// </summary>
+        /// <param name="url">The url to parse custom entity key data from</param>
+        /// <param name="pageRoute">The page route matched to the url</param>
+        /// <returns>An IQuery object that can used to query for the CustomEntityRoute</returns>
         public IQuery<CustomEntityRoute> ExtractRoutingQuery(string url, PageRoute pageRoute)
         {
             if (url == null) throw new ArgumentNullException(nameof(url));
@@ -65,6 +90,12 @@ namespace Cofoundry.Domain
             return query;
         }
 
+        /// <summary>
+        /// Transforms the routing specified routing information into a full, relative url.
+        /// </summary>
+        /// <param name="pageRoute">The matched page route for the url</param>
+        /// <param name="entityRoute">The matched custom entity route for the url</param>
+        /// <returns>Full, relative url</returns>
         public string MakeUrl(PageRoute pageRoute, CustomEntityRoute entityRoute)
         {
             if (pageRoute == null) throw new ArgumentNullException(nameof(pageRoute));
