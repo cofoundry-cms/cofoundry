@@ -29,6 +29,9 @@ namespace Cofoundry.Domain
                 .RegisterType<ICustomEntityDefinitionMicroSummaryMapper, CustomEntityDefinitionMicroSummaryMapper>()
                 .RegisterType<ICustomEntityDefinitionSummaryMapper, CustomEntityDefinitionSummaryMapper>()
                 .RegisterType<ICustomEntityRouteMapper, CustomEntityRouteMapper>()
+                .RegisterType<ICustomEntityRouteDataBuilderFactory, CustomEntityRouteDataBuilderFactory>()
+                .RegisterAllGenericImplementations(typeof(ICustomEntityRouteDataBuilder<,>))
+
                 ;
         }
     }

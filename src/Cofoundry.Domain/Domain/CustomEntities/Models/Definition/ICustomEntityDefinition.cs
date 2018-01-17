@@ -65,7 +65,9 @@ namespace Cofoundry.Domain
     /// Implement this interface to define a custom entity type. The definition
     /// will automatically get picked up and added to the system.
     /// </summary>
-    public interface ICustomEntityDefinition<TDataModel> : ICustomEntityDefinition
+    public interface ICustomEntityDefinition<TDataModel> 
+        : ICustomEntityDefinition
+        where TDataModel : ICustomEntityDataModel
     {
 
     }

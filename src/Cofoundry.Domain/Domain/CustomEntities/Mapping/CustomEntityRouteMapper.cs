@@ -33,8 +33,7 @@ namespace Cofoundry.Domain
         /// <param name="routingDataProperties">Collection of data properties to map to the routing parameters collection.</param>
         public CustomEntityRoute Map(
             CustomEntity dbCustomEntity, 
-            ActiveLocale locale,
-            IEnumerable<PropertyInfo> routingDataProperties
+            ActiveLocale locale
             )
         {
             if (dbCustomEntity == null) throw new ArgumentNullException(nameof(dbCustomEntity));
@@ -62,16 +61,6 @@ namespace Cofoundry.Domain
                     WorkFlowStatus = (WorkFlowStatus)dbVersion.WorkFlowStatusId
                 };
                 versions.Add(version);
-
-                if (routingDataProperties.Any())
-                {
-                    // Parse additional routing data properties
-                    var model = _customEntityDataModelMapper.Map(dbCustomEntity.CustomEntityDefinitionCode, dbVersion.SerializedData);
-                    foreach (var routingDataProperty in routingDataProperties)
-                    {
-                        version.AdditionalRoutingData.Add(routingDataProperty.Name, Convert.ToString(routingDataProperty.GetValue(model)));
-                    }
-                }
             }
 
             return route;

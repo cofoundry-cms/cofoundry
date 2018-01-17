@@ -10,7 +10,9 @@ namespace Cofoundry.Domain
     /// Implement this interface to define custom terminology to use in the UI for a
     /// custom entity. Otherwise default terms will be used.
     /// </summary>
-    public interface ICustomisedTermCustomEntityDefinition<TDataModel> : ICustomisedTermCustomEntityDefinition, ICustomEntityDefinition<TDataModel>
+    public interface ICustomizedTermCustomEntityDefinition<TDataModel> 
+        : ICustomizedTermCustomEntityDefinition, ICustomEntityDefinition<TDataModel>
+        where TDataModel : ICustomEntityDataModel
     {
     }
 
@@ -18,7 +20,7 @@ namespace Cofoundry.Domain
     /// Implement this interface to define custom terminology to use in the UI for a
     /// custom entity. Otherwise default terms will be used.
     /// </summary>
-    public interface ICustomisedTermCustomEntityDefinition : ICustomEntityDefinition
+    public interface ICustomizedTermCustomEntityDefinition : ICustomEntityDefinition
     {
         /// <summary>
         /// A dictionary of any custom terminology to use when displaying the custom 

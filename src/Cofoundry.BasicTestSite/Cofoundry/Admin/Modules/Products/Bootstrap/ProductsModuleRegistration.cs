@@ -14,7 +14,7 @@ namespace Cofoundry.BasicTestSite
             var module = new AdminModule()
             {
                 AdminModuleCode = "BTPPRD",
-                Title = "Productss",
+                Title = "Products",
                 Description = "Testing module.",
                 MenuCategory = AdminModuleMenuCategory.ManageSite,
                 PrimaryOrdering = AdminModuleMenuPrimaryOrdering.Tertiary,

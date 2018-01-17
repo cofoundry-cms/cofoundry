@@ -35,10 +35,10 @@ namespace Cofoundry.Domain
         public static Dictionary<string, string> GetTerms<TDefition>(this TDefition definition)
             where TDefition : ICustomEntityDefinition
         {
-            var customEntityTermDefinition = definition as ICustomisedTermCustomEntityDefinition;
+            var customEntityTermDefinition = definition as ICustomizedTermCustomEntityDefinition;
             if (customEntityTermDefinition != null && customEntityTermDefinition.CustomTerms != null)
             {
-                var terms = ((ICustomisedTermCustomEntityDefinition)definition)
+                var terms = ((ICustomizedTermCustomEntityDefinition)definition)
                     .CustomTerms
                     .ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
 
