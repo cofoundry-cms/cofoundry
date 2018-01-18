@@ -28,7 +28,7 @@ namespace Cofoundry.Web
 
         public async Task<IEnumerable<PageBlockTypeDisplayModelMapperOutput>> MapAsync(
             IReadOnlyCollection<PageBlockTypeDisplayModelMapperInput<ImageDataModel>> inputCollection, 
-            PublishStatusQuery publishStatus
+            PublishStatusQuery publishStatusQuery
             )
         {
             var imageAssetIds = inputCollection.SelectDistinctModelValuesWithoutEmpty(i => i.ImageId);

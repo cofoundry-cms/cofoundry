@@ -133,7 +133,7 @@ namespace Cofoundry.Domain
         
         private async Task<List<PageBlockTypeDisplayModelMapperOutput>> MapGeneric<T>(
             IEnumerable<IEntityVersionPageBlock> pageBlocks, 
-            PublishStatusQuery publishStatus
+            PublishStatusQuery publishStatusQuery
             ) where T : IPageBlockTypeDataModel
         {
             var mapperType = typeof(IPageBlockTypeDisplayModelMapper<T>);
@@ -155,7 +155,7 @@ namespace Cofoundry.Domain
                 dataModels.Add(mapperModel);
             }
 
-            var results = await mapper.MapAsync(dataModels, publishStatus);
+            var results = await mapper.MapAsync(dataModels, publishStatusQuery);
 
             return results.ToList();
         }

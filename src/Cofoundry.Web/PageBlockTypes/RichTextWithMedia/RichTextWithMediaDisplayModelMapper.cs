@@ -11,7 +11,7 @@ namespace Cofoundry.Web
     {
         public Task<IEnumerable<PageBlockTypeDisplayModelMapperOutput>> MapAsync(
             IReadOnlyCollection<PageBlockTypeDisplayModelMapperInput<RichTextWithMediaDataModel>> inputCollection, 
-            PublishStatusQuery publishStatus
+            PublishStatusQuery publishStatusQuery
             )
         {
             var results = new List<PageBlockTypeDisplayModelMapperOutput>(inputCollection.Count);

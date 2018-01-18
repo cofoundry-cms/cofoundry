@@ -28,7 +28,7 @@ namespace Cofoundry.Web
 
         public async Task<IEnumerable<PageBlockTypeDisplayModelMapperOutput>> MapAsync(
             IReadOnlyCollection<PageBlockTypeDisplayModelMapperInput<DocumentDataModel>> inputs, 
-            PublishStatusQuery publishStatus
+            PublishStatusQuery publishStatusQuery
             )
         {
             var documents = await _queryExecutor.GetByIdRangeAsync<DocumentAssetRenderDetails>(inputs.Select(i => i.DataModel.DocumentAssetId));
