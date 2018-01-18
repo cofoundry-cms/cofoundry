@@ -20,13 +20,13 @@ namespace Cofoundry.BasicTestSite
         /// the same block type is used multiple times on a page.
         /// </summary>
         public Task<IEnumerable<PageBlockTypeDisplayModelMapperOutput>> MapAsync(
-            IEnumerable<PageBlockTypeDisplayModelMapperInput<ContentSectionDataModel>> inputs, 
+            IReadOnlyCollection<PageBlockTypeDisplayModelMapperInput<ContentSectionDataModel>> inputCollection, 
             PublishStatusQuery publishStatus
             )
         {
-            var results = new List<PageBlockTypeDisplayModelMapperOutput>();
+            var results = new List<PageBlockTypeDisplayModelMapperOutput>(inputCollection.Count);
 
-            foreach (var input in inputs)
+            foreach (var input in inputCollection)
             {
                 var output = new ContentSectionDisplayModel();
                 output.HtmlText = new HtmlString(input.DataModel.HtmlText);

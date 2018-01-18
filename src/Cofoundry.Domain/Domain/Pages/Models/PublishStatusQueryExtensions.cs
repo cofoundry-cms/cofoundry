@@ -10,10 +10,10 @@ namespace Cofoundry.Domain
     public static class PublishStatusQueryExtensions
     {
         /// <summary>
-        /// Turns the PublishStatusQuery used to query an entity intto a PublishStatusQuery
+        /// Turns the PublishStatusQuery used to query an entity into a PublishStatusQuery
         /// that can be used to query dependent entities. E.g. PublishStatusQuery.SpecificVersion
-        /// cannot be used to query a dependent entity and so PublishStatusQuery.Latest should be 
-        /// used instead .
+        /// cannot be used to query a dependent entity and so PublishStatusQuery.Latest is 
+        /// used instead.
         /// </summary>
         /// <remarks>
         /// When working with child entities, the PublishStatusQuery we apply to

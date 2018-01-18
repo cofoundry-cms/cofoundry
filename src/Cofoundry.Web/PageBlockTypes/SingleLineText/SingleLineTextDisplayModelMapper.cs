@@ -10,11 +10,11 @@ namespace Cofoundry.Web
     public class SingleLineTextDisplayModelMapper : IPageBlockTypeDisplayModelMapper<SingleLineTextDataModel>
     {
         public Task<IEnumerable<PageBlockTypeDisplayModelMapperOutput>> MapAsync(
-            IEnumerable<PageBlockTypeDisplayModelMapperInput<SingleLineTextDataModel>> inputs, 
+            IReadOnlyCollection<PageBlockTypeDisplayModelMapperInput<SingleLineTextDataModel>> inputCollection, 
             PublishStatusQuery publishStatus
             )
         {
-            return Task.FromResult(Map(inputs));
+            return Task.FromResult(Map(inputCollection));
         }
 
         private IEnumerable<PageBlockTypeDisplayModelMapperOutput> Map(IEnumerable<PageBlockTypeDisplayModelMapperInput<SingleLineTextDataModel>> inputs)

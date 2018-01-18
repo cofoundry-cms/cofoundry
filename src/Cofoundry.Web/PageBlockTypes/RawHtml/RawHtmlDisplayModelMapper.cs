@@ -10,13 +10,13 @@ namespace Cofoundry.Web
     public class RawHtmlDisplayModelMapper : IPageBlockTypeDisplayModelMapper<RawHtmlDataModel>
     {
         public Task<IEnumerable<PageBlockTypeDisplayModelMapperOutput>> MapAsync(
-            IEnumerable<PageBlockTypeDisplayModelMapperInput<RawHtmlDataModel>> inputs, 
+            IReadOnlyCollection<PageBlockTypeDisplayModelMapperInput<RawHtmlDataModel>> inputCollection, 
             PublishStatusQuery publishStatus
             )
         {
-            var results = new List<PageBlockTypeDisplayModelMapperOutput>();
+            var results = new List<PageBlockTypeDisplayModelMapperOutput>(inputCollection.Count);
 
-            foreach (var input in inputs)
+            foreach (var input in inputCollection)
             {
                 var output = new RawHtmlDisplayModel();
                 output.RawHtml = new HtmlString(input.DataModel.RawHtml);

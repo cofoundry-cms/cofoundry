@@ -27,12 +27,12 @@ namespace Cofoundry.Web
         #endregion
 
         public async Task<IEnumerable<PageBlockTypeDisplayModelMapperOutput>> MapAsync(
-            IEnumerable<PageBlockTypeDisplayModelMapperInput<DocumentDataModel>> inputs, 
+            IReadOnlyCollection<PageBlockTypeDisplayModelMapperInput<DocumentDataModel>> inputs, 
             PublishStatusQuery publishStatus
             )
         {
             var documents = await _queryExecutor.GetByIdRangeAsync<DocumentAssetRenderDetails>(inputs.Select(i => i.DataModel.DocumentAssetId));
-            var results = new List<PageBlockTypeDisplayModelMapperOutput>();
+            var results = new List<PageBlockTypeDisplayModelMapperOutput>(inputs.Count);
 
             foreach (var input in inputs)
             {

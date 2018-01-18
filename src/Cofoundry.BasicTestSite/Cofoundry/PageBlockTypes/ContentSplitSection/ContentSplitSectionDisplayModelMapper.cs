@@ -20,19 +20,16 @@ namespace Cofoundry.BasicTestSite
         }
 
         public async Task<IEnumerable<PageBlockTypeDisplayModelMapperOutput>> MapAsync(
-            IEnumerable<PageBlockTypeDisplayModelMapperInput<ContentSplitSectionDataModel>> inputs, 
+            IReadOnlyCollection<PageBlockTypeDisplayModelMapperInput<ContentSplitSectionDataModel>> inputCollection, 
             PublishStatusQuery publishStatus
             )
         {
-            var imageAssetIds = inputs
-                .Select(i => i.DataModel.ImageAssetId)
-                .Distinct();
-
+            var imageAssetIds = inputCollection.SelectDistinctModelValuesWithoutEmpty(i => i.ImageAssetId); ;
             var imageAssets = await _imageAssetRepository.GetImageAssetRenderDetailsByIdRangeAsync(imageAssetIds);
 
-            var results = new List<PageBlockTypeDisplayModelMapperOutput>();
+            var results = new List<PageBlockTypeDisplayModelMapperOutput>(inputCollection.Count);
 
-            foreach (var input in inputs)
+            foreach (var input in inputCollection)
             {
                 var output = new ContentSplitSectionDisplayModel();
                 output.HtmlText = new HtmlString(input.DataModel.HtmlText);

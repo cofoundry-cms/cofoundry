@@ -28,22 +28,19 @@ namespace Cofoundry.BasicTestSite
         }
 
         public async Task<IEnumerable<PageBlockTypeDisplayModelMapperOutput>> MapAsync(
-            IEnumerable<PageBlockTypeDisplayModelMapperInput<PageListDataModel>> inputs,
+            IReadOnlyCollection<PageBlockTypeDisplayModelMapperInput<PageListDataModel>> inputCollection,
             PublishStatusQuery publishStatus
             )
         {
-            var allPageIds = inputs
-                .SelectMany(d => d.DataModel.PageIds)
-                .Distinct()
-                .ToArray();
+            var allPageIds = inputCollection.SelectManyDistinctModelValues(d => d.PageIds);
 
             // Page routes are cached and so are the quickest way to get simple page information.
             // If we needed more data we could use a different but slower query to get it.
             var query = new GetPageRenderDetailsByIdRangeQuery(allPageIds);
             var allPageRoutes = await _pageRepository.GetPageRenderDetailsByIdRangeAsync(query);
 
-            var results = new List<PageBlockTypeDisplayModelMapperOutput>();
-            foreach (var input in inputs)
+            var results = new List<PageBlockTypeDisplayModelMapperOutput>(inputCollection.Count);
+            foreach (var input in inputCollection)
             {
                 var output = new PageListDisplayModel();
 
