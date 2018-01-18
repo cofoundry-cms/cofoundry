@@ -63,7 +63,7 @@ namespace Cofoundry.Core
         /// </summary>
         /// <param name="source">The dictionary to filter</param>
         /// <param name="keysToFilter">Keys to lookup values for</param>
-        public static IEnumerable<TValue> FilterByKeyRange<TKey, TValue>(this IDictionary<TKey, TValue> source, IEnumerable<TKey> keysToFilter)
+        public static IEnumerable<TValue> FilterByKeys<TKey, TValue>(this IDictionary<TKey, TValue> source, IEnumerable<TKey> keysToFilter)
         {
             // Basically does the same thing as ToFilteredAndOrderedCollection but the method name
             // doesn't indicate it so had to create another method
