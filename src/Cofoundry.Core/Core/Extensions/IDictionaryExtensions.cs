@@ -63,11 +63,11 @@ namespace Cofoundry.Core
         /// </summary>
         /// <param name="source">The dictionary to filter</param>
         /// <param name="keysToFilter">Keys to lookup values for</param>
-        public static IEnumerable<TValue> GetByKeyRange<TKey, TValue>(this IDictionary<TKey, TValue> source, IEnumerable<TKey> keysToFilter)
+        public static IEnumerable<TValue> FilterByKeyRange<TKey, TValue>(this IDictionary<TKey, TValue> source, IEnumerable<TKey> keysToFilter)
         {
             // Basically does the same thing as ToFilteredAndOrderedCollection but the method name
             // doesn't indicate it so had to create another method
-            return source.ToFilteredAndOrderedCollection(keysToFilter);
+            return source.FilterAndOrderByKeys(keysToFilter);
         }
 
         /// <summary>
@@ -76,7 +76,7 @@ namespace Cofoundry.Core
         /// </summary>
         /// <param name="source">The dictionary to filter</param>
         /// <param name="keysToFilter">Ordered keys to lookup values for</param>
-        public static IEnumerable<TValue> ToFilteredAndOrderedCollection<TKey, TValue>(this IDictionary<TKey, TValue> source, IEnumerable<TKey> orderedKeys)
+        public static IEnumerable<TValue> FilterAndOrderByKeys<TKey, TValue>(this IDictionary<TKey, TValue> source, IEnumerable<TKey> orderedKeys)
         {
             if (orderedKeys == null) yield break;
             TValue value;

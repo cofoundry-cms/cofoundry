@@ -47,7 +47,7 @@ namespace Cofoundry.BasicTestSite
                 var customEntities = await _customEntityRepository.GetCustomEntityRenderSummariesByIdRangeAsync(categoriesQuery);
 
                 vm.Categories = customEntities
-                    .ToFilteredAndOrderedCollection(dataModel.CategoryIds)
+                    .FilterAndOrderByKeys(dataModel.CategoryIds)
                     .Select(c => MapCategory(c))
                     .ToList();
             }

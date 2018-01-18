@@ -46,7 +46,7 @@ namespace Cofoundry.Web.Admin
             if (rangeQuery != null && rangeQuery.PageIds != null)
             {
                 var rangeResults = await _queryExecutor.ExecuteAsync(rangeQuery);
-                return _apiResponseHelper.SimpleQueryResponse(this, rangeResults.ToFilteredAndOrderedCollection(rangeQuery.PageIds));
+                return _apiResponseHelper.SimpleQueryResponse(this, rangeResults.FilterAndOrderByKeys(rangeQuery.PageIds));
             }
 
             if (query == null) query = new SearchPageSummariesQuery();
