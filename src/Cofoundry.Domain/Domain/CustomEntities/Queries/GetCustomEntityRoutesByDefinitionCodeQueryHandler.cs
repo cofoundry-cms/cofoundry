@@ -83,20 +83,20 @@ namespace Cofoundry.Domain
 
             var routes = dbEntities
                 .Select(r => MapRoute(r, allLocales))
-                .ToArray();
+                .ToList();
 
             // Map additional parameters
 
             await (Task)_mapAdditionalRouteDataAsyncMethod
-               .MakeGenericMethod(definition.GetType(), definition.GetDataModelType())
-               .Invoke(this, new object[] { definition, routes, dbEntities });
+                .MakeGenericMethod(definition.GetType(), definition.GetDataModelType())
+                .Invoke(this, new object[] { definition, routes, dbEntities });
 
-            return routes;
+            return routes.ToArray();
         }
 
         private async Task MapAdditionalRouteDataAsync<TCustomEntityDefinition, TDataModel>(
             TCustomEntityDefinition customEntityDefiniton,
-            CustomEntityRoute[] routes,
+            List<CustomEntityRoute> routes,
             List<CustomEntity> dbEntities
             )
             where TCustomEntityDefinition : ICustomEntityDefinition<TDataModel>
@@ -119,42 +119,42 @@ namespace Cofoundry.Domain
             var allBuilderParams = new List<CustomEntityRouteDataBuilderParameter<TDataModel>>();
 
             foreach (var route in routes)
-            foreach (var versionRoute in route.Versions)
-            {
-                var dbCustomEntityVersion = dbVersionIndex.GetOrDefault(versionRoute.VersionId);
-
-                if (dbCustomEntityVersion == null)
+                foreach (var versionRoute in route.Versions)
                 {
-                    throw new Exception($"Custom entity {customEntityDefiniton.CustomEntityDefinitionCode}:{route.CustomEntityId} should be in collection, but could not be found");
+                    var dbCustomEntityVersion = dbVersionIndex.GetOrDefault(versionRoute.VersionId);
+
+                    if (dbCustomEntityVersion == null)
+                    {
+                        throw new Exception($"Custom entity {customEntityDefiniton.CustomEntityDefinitionCode}:{route.CustomEntityId} should be in collection, but could not be found");
+                    }
+
+                    var dataModel = _customEntityDataModelMapper.Map(customEntityDefiniton.CustomEntityDefinitionCode, dbCustomEntityVersion.SerializedData);
+
+                    if (dataModel == null)
+                    {
+                        throw new Exception($"Data model should not be null.");
+                    }
+
+                    if (!(dataModel is TDataModel))
+                    {
+                        throw new Exception($"Data model is not of the expected type. Expected {typeof(TDataModel).FullName}, got {dataModel.GetType().FullName}");
+                    }
+
+                    var builderParam = new CustomEntityRouteDataBuilderParameter<TDataModel>(
+                        route,
+                        versionRoute,
+                        (TDataModel)dataModel
+                    );
+
+                    allBuilderParams.Add(builderParam);
+
+                    // Bind routing data properties 
+                    foreach (var routingDataProperty in routingDataProperties)
+                    {
+                        var value = Convert.ToString(routingDataProperty.GetValue(dataModel));
+                        builderParam.AdditionalRoutingData.Add(routingDataProperty.Name, value);
+                    }
                 }
-
-                var dataModel = _customEntityDataModelMapper.Map(customEntityDefiniton.CustomEntityDefinitionCode, dbCustomEntityVersion.SerializedData);
-
-                if (dataModel == null)
-                {
-                    throw new Exception($"Data model should not be null.");
-                }
-
-                if (!(dataModel is TDataModel))
-                {
-                    throw new Exception($"Data model is not of the expected type. Expected {typeof(TDataModel).FullName}, got {dataModel.GetType().FullName}");
-                }
-
-                var builderParam = new CustomEntityRouteDataBuilderParameter<TDataModel>(
-                    route,
-                    versionRoute,
-                    (TDataModel)dataModel
-                );
-
-                allBuilderParams.Add(builderParam);
-
-                // Bind routing data properties 
-                foreach (var routingDataProperty in routingDataProperties)
-                {
-                    var value = Convert.ToString(routingDataProperty.GetValue(routingDataProperty));
-                    builderParam.AdditionalRoutingData.Add(routingDataProperty.Name, value);
-                }
-            }
 
             // Run injected route builders
             foreach (var routeDataBuilder in routeDataBuilders)

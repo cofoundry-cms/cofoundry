@@ -15,7 +15,9 @@ namespace Cofoundry.Web
         }
 
         /// <summary>
-        /// A function that can be used to alter the startup task pipeline.
+        /// Add to or amend this collection to expand the assemblies used when
+        /// scanning for types and registering dependencies. Teh default ruleset is
+        /// defined in Cofoundry.Web.CofoundryAssemblyDiscoveryRule.
         /// </summary>
         public ICollection<IAssemblyDiscoveryRule> AssemblyDiscoveryRules { get; private set; }
     }
