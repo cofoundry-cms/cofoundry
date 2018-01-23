@@ -105,7 +105,8 @@ namespace Cofoundry.Core.DependencyInjection
         /// Registers all services that implement a generic interface. Each service
         /// is registered individually as a separate generic implementation of TGeneric
         /// </summary>
-        /// <typeparam name="TGeneric">Generic interface to scan for implementations</typeparam>
+        /// <param name="typeDef">Generic interface to scan for implementations.</param>
+        /// <param name="options">Optional options argument.</param>
         /// <returns>The IContainerRegister instance for method chaining.</returns>
         IContainerRegister RegisterAllGenericImplementations(Type typeDef, RegistrationOptions options = null);
 
@@ -114,8 +115,9 @@ namespace Cofoundry.Core.DependencyInjection
         /// </summary>
         /// <param name="registerAs">Type to register the service as e.g. typeof(IRepository&lt;&gt;)</param>
         /// <param name="typeToRegister">Concrete type to register e.g. typeof(Repository&lt;&gt;)</param>
+        /// <param name="options">Optional options argument.</param>
         /// <returns>The IContainerRegister instance for method chaining.</returns>
-        IContainerRegister RegisterGeneric(Type registerAs, Type typeToRegister);
+        IContainerRegister RegisterGeneric(Type registerAs, Type typeToRegister, RegistrationOptions options = null);
 
         /// <summary>
         /// Registers a type with a factory that is used to construct the type when it is resolved.

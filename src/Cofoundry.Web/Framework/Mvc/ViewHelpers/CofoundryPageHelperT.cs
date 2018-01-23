@@ -41,7 +41,7 @@ namespace Cofoundry.Web
             {
                 Model = model;
             }
-            else
+            else if (viewContext.ViewData.Model != null)
             {
                 throw new Exception($"The view model type '{viewContext.ViewData.Model?.GetType().Name }' does not match the generic type parameter '{typeof(TModel).Name}'");
             }

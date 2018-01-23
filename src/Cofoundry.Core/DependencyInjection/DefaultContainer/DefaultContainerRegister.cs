@@ -234,9 +234,9 @@ namespace Cofoundry.Core.DependencyInjection
             return this;
         }
 
-        public IContainerRegister RegisterGeneric(Type registerAs, Type typeToRegister)
+        public IContainerRegister RegisterGeneric(Type registerAs, Type typeToRegister, RegistrationOptions options = null)
         {
-            AddService(registerAs, typeToRegister);
+            AddService(registerAs, typeToRegister, options);
 
             return this;
         }

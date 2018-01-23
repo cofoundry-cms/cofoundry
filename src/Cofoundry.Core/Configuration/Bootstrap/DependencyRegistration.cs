@@ -11,9 +11,11 @@ namespace Cofoundry.Core.Configuration
     {
         public void Register(IContainerRegister container)
         {
+            var singleInstanceRegistrationOptions = RegistrationOptions.SingletonScope();
+
             container
-                .RegisterGeneric(typeof(IConfigurationSettingsFactory<>), typeof(ConfigurationSettingsFactory<>))
-                .RegisterAllWithFactory(typeof(IConfigurationSettings), typeof(IConfigurationSettingsFactory<>));
+                .RegisterGeneric(typeof(IConfigurationSettingsFactory<>), typeof(ConfigurationSettingsFactory<>), singleInstanceRegistrationOptions)
+                .RegisterAllWithFactory(typeof(IConfigurationSettings), typeof(IConfigurationSettingsFactory<>), singleInstanceRegistrationOptions);
         }
     }
 }
