@@ -144,6 +144,7 @@ namespace Cofoundry.Domain
         {
             var results = input
                 .Select(i => i.DataModel)
+                .Where(i => selector(i) != null)
                 .SelectMany(selector)
                 .Distinct();
 
