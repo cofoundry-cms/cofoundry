@@ -48,11 +48,12 @@ namespace Cofoundry.Core.DependencyInjection
         public IContainerRegister RegisterInstance<TRegisterAs>(TRegisterAs instance, RegistrationOptions options = null)
         {
             if (instance == null) throw new ArgumentNullException(nameof(instance));
+            var typeToRegister = typeof(TRegisterAs);
 
             var fn = new Action(() =>
             {
                 _serviceCollection
-                    .AddSingleton(typeof(TRegisterAs), instance)
+                    .AddSingleton(typeToRegister, instance)
                     ;
             });
 
@@ -170,7 +171,9 @@ namespace Cofoundry.Core.DependencyInjection
 
             foreach (var handler in handlerRegistrations)
             {
-                AddService(handler.service.AsType(), handler.implementation.AsType(), options);
+                var concreteType = handler.implementation.AsType();
+                AddService(concreteType, concreteType, options);
+                AddServiceWithFactory(handler.service.AsType(), c => c.GetRequiredService(concreteType), options);
             }
 
             return this;
