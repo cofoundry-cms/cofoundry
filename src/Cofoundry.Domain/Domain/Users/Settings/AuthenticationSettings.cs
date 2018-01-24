@@ -9,7 +9,7 @@ namespace Cofoundry.Domain
     /// <summary>
     /// Settings to do with authentication security features.
     /// </summary>
-    public class AuthenticationSettings : IConfigurationSettings
+    public class AuthenticationSettings : CofoundryConfigurationSettingsBase
     {
         public AuthenticationSettings()
         {
@@ -50,5 +50,13 @@ namespace Cofoundry.Domain
         /// username. The default value is 20 minutes.
         /// </summary>
         public int MaxUsernameAttemptsBoundaryInMinutes { get; set; }
+
+        /// <summary>
+        /// The text to use to namespace the auth cookie. The user area
+        /// code will be appended to this to make the cookiename, e.g.
+        /// "MyAppAuth_COF". By default the cookie namespace is created
+        /// using characters from the entry assembly name of your applicaiton.
+        /// </summary>
+        public string CookieNamespace { get; set; }
     }
 }

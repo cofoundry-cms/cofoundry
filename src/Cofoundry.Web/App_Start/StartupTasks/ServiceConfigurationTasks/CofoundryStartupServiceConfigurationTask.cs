@@ -2,6 +2,7 @@
 using Cofoundry.Domain;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.Extensions.DependencyInjection;
@@ -23,18 +24,24 @@ namespace Cofoundry.Web
         private readonly IEnumerable<IMvcOptionsConfiguration> _mvcOptionsConfigurations;
         private readonly IEnumerable<IRazorViewEngineOptionsConfiguration> _razorViewEngineOptionsConfigurations;
         private readonly IUserAreaRepository _userAreaRepository;
+        private readonly IHostingEnvironment _hostingEnvironment;
+        private readonly AuthenticationSettings _authenticationSettings;
 
         public CofoundryStartupServiceConfigurationTask(
             IEnumerable<IMvcJsonOptionsConfiguration> mvcJsonOptionsConfigurations,
             IEnumerable<IMvcOptionsConfiguration> mvcOptionsConfigurations,
             IEnumerable<IRazorViewEngineOptionsConfiguration> razorViewEngineOptionsConfigurations,
-            IUserAreaRepository userAreaRepository
+            IUserAreaRepository userAreaRepository,
+            IHostingEnvironment hostingEnvironment,
+            AuthenticationSettings authenticationSettings
             )
         {
             _mvcJsonOptionsConfigurations = mvcJsonOptionsConfigurations;
             _mvcOptionsConfigurations = mvcOptionsConfigurations;
             _razorViewEngineOptionsConfigurations = razorViewEngineOptionsConfigurations;
             _userAreaRepository = userAreaRepository;
+            _hostingEnvironment = hostingEnvironment;
+            _authenticationSettings = authenticationSettings;
         }
 
         /// <summary>
@@ -92,7 +99,7 @@ namespace Cofoundry.Web
                 authBuilder
                     .AddCookie(scheme, cookieOptions =>
                     {
-                        cookieOptions.Cookie.Name = "CF_AUTH_" + userAreaDefinition.UserAreaCode;
+                        cookieOptions.Cookie.Name = GetCookieNamespace() + userAreaDefinition.UserAreaCode;
                         cookieOptions.Cookie.HttpOnly = true;
 
                         if (!string.IsNullOrWhiteSpace(userAreaDefinition.LoginPath))
@@ -101,6 +108,26 @@ namespace Cofoundry.Web
                         }
                     });
             }
+        }
+
+        private string GetCookieNamespace()
+        {
+            if (!string.IsNullOrWhiteSpace(_authenticationSettings.CookieNamespace))
+            {
+                return _authenticationSettings.CookieNamespace;
+            }
+
+            // Try and build a short and somewhat unique name using the 
+            // application name, which should suffice for most scenarios. 
+
+            var appName = _hostingEnvironment.ApplicationName;
+
+            var reasonablyUniqueName = appName
+                .Take(3)
+                .Union(appName.Reverse())
+                .Take(6);
+
+            return "CFA_" + string.Concat(reasonablyUniqueName);
         }
     }
 }
