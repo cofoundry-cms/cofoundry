@@ -19,7 +19,7 @@ namespace Cofoundry.Core.DependencyInjection
 
         #region constructor
 
-        private readonly Dictionary<Type, Action> RegistrationOverrides = new Dictionary<Type, Action>();
+        private readonly Dictionary<Type, RegistrationOverride> RegistrationOverrides = new Dictionary<Type, RegistrationOverride>();
         private readonly IServiceCollection _serviceCollection;
         private readonly IDiscoveredTypesProvider _discoveredTypesProvider;
         private readonly IConfiguration _configurationRoot;
@@ -60,20 +60,46 @@ namespace Cofoundry.Core.DependencyInjection
             BuildOverrides();
         }
 
-        internal void QueueRegistration<TTo>(Action registration)
+        internal void QueueRegistration<TTo>(Action registration, int priority)
         {
             var typeToRegister = typeof(TTo);
             if (RegistrationOverrides.ContainsKey(typeToRegister))
             {
-                throw new ArgumentException("Type already registered as an override. Multiple overrides currently not supported: " + typeToRegister);
-            }
+                var existingOverride = RegistrationOverrides[typeToRegister];
 
-            RegistrationOverrides.Add(typeToRegister, registration);
+                // Don't allow the registrations with the same priority, but do 
+                // replace lower priority registrations
+                if (existingOverride.Priority == priority)
+                {
+                    var errorMessage = $"Type {typeToRegister.FullName} is already registered as an override with the specified prioerity value ({priority}). Multiple overrides with the same priority values are not supported.";
+                    throw new InvalidTypeRegistrationException(typeToRegister, errorMessage);
+                }
+                else if (existingOverride.Priority < priority)
+                {
+                    existingOverride.Registration = registration;
+                }
+            }
+            else
+            {
+                RegistrationOverrides.Add(typeToRegister, new RegistrationOverride(registration, priority));
+            }
         }
 
         #endregion
 
-        #region helpers
+        #region private helpers
+
+        private struct RegistrationOverride
+        {
+            public RegistrationOverride(Action registration, int priority)
+            {
+                Registration = registration;
+                Priority = priority;
+            }
+
+            public Action Registration;
+            public int Priority;
+        }
 
         private void CheckIsBuilt()
         {
@@ -100,7 +126,7 @@ namespace Cofoundry.Core.DependencyInjection
         {
             foreach (var registrationOverride in RegistrationOverrides)
             {
-                registrationOverride.Value();
+                registrationOverride.Value.Registration();
             }
         }
 

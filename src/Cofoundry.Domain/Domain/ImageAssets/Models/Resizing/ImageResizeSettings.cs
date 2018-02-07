@@ -53,7 +53,7 @@ namespace Cofoundry.Domain
         public int Height { get; set; }
 
         /// <summary>
-        /// Sets the fit mode for the image. max, min, pad, crop, carve, stretch
+        /// Sets the fit mode for the image e.g. max, pad, crop
         /// </summary>
         public ImageFitMode Mode { get; set; }
 

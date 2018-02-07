@@ -252,7 +252,7 @@ namespace Cofoundry.Core.DependencyInjection
         {
             if (options != null && options.ReplaceExisting)
             {
-                _containerBuilder.QueueRegistration<TTo>(register);
+                _containerBuilder.QueueRegistration<TTo>(register, options.RegistrationOverridePriority);
             }
             else
             {

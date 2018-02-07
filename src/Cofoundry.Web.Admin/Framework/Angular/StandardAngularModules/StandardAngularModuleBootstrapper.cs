@@ -82,7 +82,7 @@ namespace Cofoundry.Web.Admin
             }
             else if (registration is IPluginAngularModuleRegistration)
             {
-                // Internal modules are in a different folder format to prevent name clashes
+                // Plugin modules are in a different folder format to prevent name clashes
                 routeLibrary = new AngularModuleRouteLibrary(
                     registration.RoutePrefix, 
                     RouteConstants.PluginModuleResourcePathPrefix
