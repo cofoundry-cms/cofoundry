@@ -7,9 +7,14 @@ namespace Cofoundry.Domain.MailTemplates
 {
     public class EmbeddedResourcetRouteRegistration : IEmbeddedResourceRouteRegistration
     {
-        public IEnumerable<string> GetEmbeddedResourcePaths()
+        public IEnumerable<EmbeddedResourcePath> GetEmbeddedResourcePaths()
         {
-            yield return TemplatePath.Root + "shared/content";
+            var path = new EmbeddedResourcePath(
+                GetType().Assembly,
+                TemplatePath.Root + "shared/content"
+                );
+
+            yield return path;
         }
     }
 }

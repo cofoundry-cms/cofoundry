@@ -17,10 +17,18 @@ namespace Cofoundry.Web.Admin
             _adminRouteLibrary = adminRouteLibrary;
         }
 
-        public IEnumerable<string> GetEmbeddedResourcePaths()
+        public IEnumerable<EmbeddedResourcePath> GetEmbeddedResourcePaths()
         {
-            yield return _adminRouteLibrary.Shared.StaticResourcePrefix;
-            yield return _adminRouteLibrary.SharedAlternate.StaticResourcePrefix;
+            var assembly = GetType().Assembly;
+
+            yield return new EmbeddedResourcePath(
+                assembly,
+                _adminRouteLibrary.Shared.StaticResourcePrefix
+                );
+            yield return new EmbeddedResourcePath(
+                assembly,
+                _adminRouteLibrary.SharedAlternate.StaticResourcePrefix
+                );
         }
     }
 }

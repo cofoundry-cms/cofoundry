@@ -64,14 +64,19 @@ namespace Cofoundry.Web
         {
             var allFileProviders = new List<IFileProvider>();
             allFileProviders.Add(hostingEnvironment.WebRootFileProvider);
-            
-            foreach (var embeddedResourceRouteRegistration in EnumerableHelper.Enumerate(embeddedResourceRouteRegistrations))
+
+            var assemblyRoutes = EnumerableHelper
+                .Enumerate(embeddedResourceRouteRegistrations)
+                .SelectMany(r => r.GetEmbeddedResourcePaths())
+                .GroupBy(r => r.Assembly)
+                .ToList();
+
+            foreach (var assemblyRoute in assemblyRoutes)
             {
-                var assembly = embeddedResourceRouteRegistration.GetType().GetTypeInfo().Assembly;
-                var fileProvider = embeddedFileProviderFactory.Create(assembly);
-                foreach (var route in embeddedResourceRouteRegistration.GetEmbeddedResourcePaths())
+                var fileProvider = embeddedFileProviderFactory.Create(assemblyRoute.Key);
+                foreach (var route in assemblyRoute)
                 {
-                    allFileProviders.Add(new FilteredEmbeddedFileProvider(fileProvider, route, hostingEnvironment.ContentRootFileProvider));
+                    allFileProviders.Add(new FilteredEmbeddedFileProvider(fileProvider, route.Path, hostingEnvironment.ContentRootFileProvider));
                 }
             }
             

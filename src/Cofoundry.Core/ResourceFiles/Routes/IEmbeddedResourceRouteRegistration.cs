@@ -18,9 +18,9 @@ namespace Cofoundry.Core.ResourceFiles
     public interface IEmbeddedResourceRouteRegistration
     {
         /// <summary>
-        /// Returns path strings used to locate a folders which
+        /// Returns paths used to locate folders which
         /// contains embedded resources. E.g. '/parent/child/content'
         /// </summary>
-        IEnumerable<string> GetEmbeddedResourcePaths();
+        IEnumerable<EmbeddedResourcePath> GetEmbeddedResourcePaths();
     }
 }
