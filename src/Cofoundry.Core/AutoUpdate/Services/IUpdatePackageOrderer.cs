@@ -14,8 +14,8 @@ namespace Cofoundry.Core.AutoUpdate
         /// Orders a collection of UpdatePackage instances into the correct execution 
         /// order, making sure dependencies are taken into consideration.
         /// </summary>
-        /// <param name="packages">update packages to sort.</param>
-        /// <returns>Enumerable collection of update packages, sorted into the correct order.</returns>
-        IEnumerable<UpdatePackage> Order(IList<UpdatePackage> packages);
+        /// <param name="packages">Update packages to sort.</param>
+        /// <returns>Collection of update packages, sorted into the correct order.</returns>
+        ICollection<UpdatePackage> Order(ICollection<UpdatePackage> packages);
     }
 }

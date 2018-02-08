@@ -13,7 +13,7 @@ namespace Cofoundry.Core
     /// </remarks>
     public static class TopologicalSorter
     {
-        public static IEnumerable<T> Sort<T>(
+        public static ICollection<T> Sort<T>(
             IEnumerable<T> source,
             Func<T, IEnumerable<T>> dependencySelector,
             bool throwOnCyclicDependency

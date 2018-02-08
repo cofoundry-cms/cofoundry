@@ -20,6 +20,7 @@ namespace Cofoundry.Core.AutoUpdate
                 .RegisterType<IUpdateCommandHandlerFactory, UpdateCommandHandlerFactory>()
                 .RegisterType<IAutoUpdateService, AutoUpdateService>()
                 .RegisterType<IUpdatePackageOrderer, UpdatePackageOrderer>()
+                .RegisterType<IAutoUpdateDistributedLockManager, AutoUpdateDistributedLockManager>()
                 .RegisterAll<IUpdatePackageFactory>()
                 ;
         }

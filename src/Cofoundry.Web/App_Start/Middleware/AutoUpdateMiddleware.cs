@@ -3,6 +3,7 @@ using System.Net;
 using Cofoundry.Core.AutoUpdate;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Cofoundry.Web
 {
@@ -31,7 +32,7 @@ namespace Cofoundry.Web
             _next = next;
         }
 
-        public async Task Invoke(HttpContext cx, IAutoUpdateService autoUpdateService)
+        public async Task Invoke(HttpContext cx)
         {
             bool runUpdate = false;
 
@@ -50,8 +51,14 @@ namespace Cofoundry.Web
                 {
                     try
                     {
+                        var autoUpdateService = cx.RequestServices.GetService<IAutoUpdateService>();
                         await autoUpdateService.UpdateAsync();
                         _updateStatus = UpdateStatus.Complete;
+                    }
+                    catch (AutoUpdateProcessLockedException lockedException)
+                    {
+                        _updateStatus = UpdateStatus.NotStarted;
+                        await cx.Response.WriteAsync("The application is being updated and is currently locked. Please try again shortly.");
                     }
                     catch (Exception ex)
                     {
@@ -66,7 +73,7 @@ namespace Cofoundry.Web
                 cx.Response.StatusCode = (int)HttpStatusCode.ServiceUnavailable;
                 await cx.Response.WriteAsync("The application is being updated. Please try again shortly.");
             }
-            else
+            else if (_updateStatus == UpdateStatus.Complete)
             {
                 await _next.Invoke(cx);
             }

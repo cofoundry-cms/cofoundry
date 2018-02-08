@@ -10,7 +10,8 @@ using System.Threading.Tasks;
 namespace Cofoundry.Core.AutoUpdate
 {
     /// <summary>
-    /// Service to update applications and modules.
+    /// Service to update applications and modules. Typically this is
+    /// run at application startup.
     /// </summary>
     public class AutoUpdateService : IAutoUpdateService
     {
@@ -23,6 +24,9 @@ namespace Cofoundry.Core.AutoUpdate
         private readonly IUpdateCommandHandlerFactory _commandHandlerFactory;
         private readonly IDatabase _db;
         private readonly IUpdatePackageOrderer _updatePackageOrderer;
+        private readonly AutoUpdateSettings _autoUpdateSettings;
+        private readonly IAutoUpdateDistributedLockManager _autoUpdateDistributedLockManager;
+
         #endregion
 
         #region constructor
@@ -32,13 +36,17 @@ namespace Cofoundry.Core.AutoUpdate
             IUpdateCommandHandlerFactory commandHandlerFactory,
             IDatabase db,
             IUpdatePackageOrderer updatePackageOrderer,
-            IServiceProvider serviceProvider
+            IServiceProvider serviceProvider,
+            AutoUpdateSettings autoUpdateSettings,
+            IAutoUpdateDistributedLockManager autoUpdateDistributedLockManager
             )
         {
             _updatePackageFactories = updatePackageFactories;
             _commandHandlerFactory = commandHandlerFactory;
             _db = db;
             _updatePackageOrderer = updatePackageOrderer;
+            _autoUpdateSettings = autoUpdateSettings;
+            _autoUpdateDistributedLockManager = autoUpdateDistributedLockManager;
         }
 
         #endregion
@@ -65,35 +73,52 @@ namespace Cofoundry.Core.AutoUpdate
 
             var packages = _updatePackageOrderer.Order(filteredPackages);
 
-            if (packages.Any() && IsLocked())
+            if (!packages.Any()) return;
+
+            if (IsLocked())
             {
                 throw new DatabaseLockedException();
             }
 
-            foreach (var package in packages)
+            // Lock the process to prevent concurrent updates
+            var lockingId = Guid.NewGuid();
+            _autoUpdateDistributedLockManager.Lock(lockingId);
+
+            try
             {
-                // Versioned Commands
-                foreach (var command in EnumerableHelper.Enumerate(package.VersionedCommands))
+                foreach (var package in packages)
                 {
-                    try
-                    {
-                        await ExecuteCommandAsync(command);
-                    }
-                    catch (Exception ex)
-                    {
-                        LogUpdateError(package.ModuleIdentifier, command.Version, command.Description, ex);
-                        throw;
-                    }
-
-                    LogUpdateSuccess(package.ModuleIdentifier, command.Version, command.Description);
+                    await ExecutePackage(package);
                 }
+            }
+            finally
+            {
+                _autoUpdateDistributedLockManager.Unlock(lockingId);
+            }
+        }
 
-                // Always Run Commands
-                foreach (var command in EnumerableHelper.Enumerate(package.AlwaysUpdateCommands))
+        private async Task ExecutePackage(UpdatePackage package)
+        {
+            // Versioned Commands
+            foreach (var command in EnumerableHelper.Enumerate(package.VersionedCommands))
+            {
+                try
                 {
                     await ExecuteCommandAsync(command);
-                    // TODO: Run, remove if (packages.Any()..
                 }
+                catch (Exception ex)
+                {
+                    LogUpdateError(package.ModuleIdentifier, command.Version, command.Description, ex);
+                    throw;
+                }
+
+                LogUpdateSuccess(package.ModuleIdentifier, command.Version, command.Description);
+            }
+
+            // Always Run Commands
+            foreach (var command in EnumerableHelper.Enumerate(package.AlwaysUpdateCommands))
+            {
+                await ExecuteCommandAsync(command);
             }
         }
 
@@ -199,7 +224,7 @@ namespace Cofoundry.Core.AutoUpdate
 	                order by Module
                 end";
 
-            var moduleVersions = _db.Read(query, (r) =>
+            var moduleVersions = _db.Read(query, r =>
             {
                 var moduleVersion = new ModuleVersion();
                 moduleVersion.Module = (string)r["Module"];
@@ -216,11 +241,16 @@ namespace Cofoundry.Core.AutoUpdate
         #region locking
 
         /// <summary>
-        /// Runs a query to work out whether the database is locked for 
-        /// schema updates.
+        /// Works out whether the database is locked for 
+        /// schema updates. This is different to distributed locking which 
+        /// is intended to prevent multile update instances running.
         /// </summary>
         public bool IsLocked()
         {
+            // First check config
+            if (_autoUpdateSettings.IsDisabled) return true;
+
+            // else this option can also be set in the db
             var query = @"
                 if (exists (select * 
                                  from information_schema.tables 

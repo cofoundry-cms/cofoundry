@@ -18,7 +18,7 @@ namespace Cofoundry.Core.AutoUpdate
         /// </summary>
         /// <param name="packages">update packages to sort.</param>
         /// <returns>Enumerable collection of update packages, sorted into the correct order.</returns>
-        public IEnumerable<UpdatePackage> Order(IList<UpdatePackage> packages)
+        public ICollection<UpdatePackage> Order(ICollection<UpdatePackage> packages)
         {
             // Build a collection of dependency instances to use in sorting
             var dependentModuleLookup = packages
