@@ -21,30 +21,21 @@ namespace Cofoundry.Web.Admin
     public class VisualEditorContentFilter : IAsyncResultFilter
     {
         const string PAGE_PATH_REGEX = @"^(?!(.*[\.].*))";
-
-        /// <summary>
-        /// At some point it would be better to allow this to be more pluggable and
-        /// allow parts of the site to register that they shouldn't have a site viewer.
-        /// An opt-in approach would be even better if possble to avoid running this for every request.
-        /// </summary>
-        private static PathString[] _routesToExclude = new PathString[] {
-                new PathString(Cofoundry.Web.Admin.RouteConstants.AdminUrlRoot),
-                new PathString(Cofoundry.Web.Admin.RouteConstants.ApiUrlRoot),
-                new PathString("/api")
-            };
-
+        
         private readonly IVisualEditorActionResultFactory _visualEditorActionResultFactory;
         private readonly IUserContextService _userContextService;
+        private readonly IEnumerable<IVisualEditorRequestExclusionRule> _visualEditorRouteExclusionRules;
 
         public VisualEditorContentFilter(
             IVisualEditorActionResultFactory visualEditorActionResultFactory,
-            IUserContextService userContextService
+            IUserContextService userContextService,
+            IEnumerable<IVisualEditorRequestExclusionRule> visualEditorRouteExclusionRules
             )
         {
             _visualEditorActionResultFactory = visualEditorActionResultFactory;
             _userContextService = userContextService;
+            _visualEditorRouteExclusionRules = visualEditorRouteExclusionRules;
         }
-
 
         public async Task OnResultExecutionAsync(
             ResultExecutingContext context, 
@@ -71,8 +62,6 @@ namespace Cofoundry.Web.Admin
             var canShowSiteViewer =
                 // We have an exsting filter to override
                 filterContext.Result != null
-                // Is a get request
-                && httpContext.Request.Method == "GET"
                 // Valid Result Type
                 && IsValidActionType(filterContext.Result)
                 // Isn't an ajax request
@@ -80,7 +69,7 @@ namespace Cofoundry.Web.Admin
                 // Is a page and not a static resource
                 && Regex.IsMatch(path, PAGE_PATH_REGEX, RegexOptions.IgnoreCase)
                 // Isn't in the path blacklist
-                && !_routesToExclude.Any(r => path.StartsWithSegments(r, StringComparison.OrdinalIgnoreCase));
+                && !_visualEditorRouteExclusionRules.Any(r => r.ShouldExclude(httpContext.Request));
 
             if (!canShowSiteViewer) return Task.FromResult<IUserContext>(null);
 

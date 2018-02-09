@@ -25,9 +25,10 @@ namespace Cofoundry.Core.Web
 
             ruleSet.PermittedAttributes = Ganss.XSS.HtmlSanitizer.DefaultAllowedAttributes;
             ruleSet.PermittedCssProperties = Ganss.XSS.HtmlSanitizer.DefaultAllowedCssProperties;
-            ruleSet.PermittedSchemes= Ganss.XSS.HtmlSanitizer.DefaultAllowedSchemes;
+            ruleSet.PermittedSchemes = Ganss.XSS.HtmlSanitizer.DefaultAllowedSchemes;
             ruleSet.PermittedTags = Ganss.XSS.HtmlSanitizer.DefaultAllowedTags;
             ruleSet.PermittedUriAttributes = Ganss.XSS.HtmlSanitizer.DefaultUriAttributes;
+            ruleSet.PermittedCssProperties.Add("class");
 
             return ruleSet;
         }
