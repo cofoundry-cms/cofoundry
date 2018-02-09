@@ -21,7 +21,7 @@ begin
 		select top 1 @CopyFromCustomEntityVersionId = CustomEntityVersionId 
 		from Cofoundry.CustomEntityVersion
 		where CustomEntityId = @CustomEntityId and (WorkFlowStatusId = @PublishedWorkFlowStatus or WorkFlowStatusId = @DraftWorkFlowStatus)
-		order by case when WorkFlowStatusId = @PublishedWorkFlowStatus then 0 else 1 end
+		order by case when WorkFlowStatusId = @PublishedWorkFlowStatus then 0 else 1 end, createdate desc
 	end
 
 	-- Copy version
