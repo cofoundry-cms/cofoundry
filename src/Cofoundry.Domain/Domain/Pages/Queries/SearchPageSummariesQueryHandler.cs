@@ -36,22 +36,38 @@ namespace Cofoundry.Domain
 
         public async Task<PagedQueryResult<PageSummary>> ExecuteAsync(SearchPageSummariesQuery query, IExecutionContext executionContext)
         {
-            var dbPagedResult = await CreateQuery(query).ToPagedResultAsync(query);
+            var dbPagedResult = await CreateQuery(query, executionContext)
+                .ToPagedResultAsync(query);
+
+            // Have to refilter here because EF won't let us include related entieis after a .Select statement yet
+            var items = dbPagedResult
+                .Items
+                .Select(p => p.Page)
+                .ToList();
 
             // Finish mapping children
-            var mappedResults = await _pageSummaryMapper.MapAsync(dbPagedResult.Items, executionContext);
+            var mappedResults = await _pageSummaryMapper.MapAsync(items, executionContext);
 
             return dbPagedResult.ChangeType(mappedResults);
         }
 
-        private IQueryable<Page> CreateQuery(SearchPageSummariesQuery query)
+        private IQueryable<PagePublishStatusQuery> CreateQuery(SearchPageSummariesQuery query, IExecutionContext executionContext)
         {
             var dbQuery = _dbContext
-                .Pages
+                .PagePublishStatusQueries
                 .AsNoTracking()
-                .Include(p => p.Creator)
-                .FilterActive();
+                .Include(p => p.Page)
+                .Include(p => p.Page.Creator)
+                .FilterByStatus(PublishStatusQuery.Latest, executionContext.ExecutionDate)
+                .FilterActive()
+                ;
 
+            // Filter by layout
+            if (query.PageTemplateId > 0)
+            {
+                dbQuery = dbQuery.Where(v => v.PageVersion.PageTemplateId == query.PageTemplateId);
+            }
+            
             // Filter by tags
             if (!string.IsNullOrEmpty(query.Tags))
             {
@@ -61,7 +77,7 @@ namespace Cofoundry.Domain
                     // See http://stackoverflow.com/a/7288269/486434 for why this is copied into a new variable
                     string localTag = tag;
 
-                    dbQuery = dbQuery.Where(p => p.PageTags
+                    dbQuery = dbQuery.Where(p => p.Page.PageTags
                         .Select(t => t.Tag.TagText)
                         .Contains(localTag)
                         );
@@ -71,42 +87,32 @@ namespace Cofoundry.Domain
             // Filter by workflow status (only draft and published are applicable
             if (query.PublishStatus == PublishStatus.Published)
             {
-                dbQuery = dbQuery.Where(p => p.PublishStatusCode == PublishStatusCode.Published);
+                dbQuery = dbQuery.Where(p => p.Page.PublishStatusCode == PublishStatusCode.Published);
             } else if (query.PublishStatus == PublishStatus.Unpublished)
             {
                 // A page might be published, but also have a draft as the latest version
-                dbQuery = dbQuery.Where(p => p.PublishStatusCode == PublishStatusCode.Unpublished);
+                dbQuery = dbQuery.Where(p => p.Page.PublishStatusCode == PublishStatusCode.Unpublished);
             }
 
             // Filter by locale 
             if (query.LocaleId > 0)
             {
-                dbQuery = dbQuery.Where(p => p.LocaleId == query.LocaleId);
+                dbQuery = dbQuery.Where(p => p.Page.LocaleId == query.LocaleId);
             }
 
             // Filter by directory
             if (query.PageDirectoryId > 0)
             {
-                dbQuery = dbQuery.Where(p => p.PageDirectoryId == query.PageDirectoryId);
-            }
-
-            // Filter by layout
-            if (query.PageTemplateId > 0)
-            {
-                dbQuery = dbQuery.Where(p => p.PageVersions
-                                                .OrderByDescending(v => v.CreateDate)
-                                                .Where(v => !v.IsDeleted)
-                                                .Take(1)
-                                                .Any(v => v.PageTemplateId == query.PageTemplateId));
+                dbQuery = dbQuery.Where(p => p.Page.PageDirectoryId == query.PageDirectoryId);
             }
 
             // Filter by group
             if (query.PageGroupId > 0)
             {
-                dbQuery = dbQuery.Where(p => p.PageGroupItems.Any(i => i.PageGroupId == query.PageGroupId));
+                dbQuery = dbQuery.Where(p => p.Page.PageGroupItems.Any(i => i.PageGroupId == query.PageGroupId));
             }
 
-            return dbQuery.OrderByDescending(p => p.CreateDate);
+            return dbQuery.OrderByDescending(p => p.Page.CreateDate);
         }
 
 
