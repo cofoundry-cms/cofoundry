@@ -6,7 +6,7 @@ using Cofoundry.Core.Configuration;
 namespace Cofoundry.Web
 {
     /// <summary>
-    /// Settings for managed content (e.g. pages/files/custom entities)
+    /// Settings to apply when setting up the static file middleware.
     /// </summary>
     public class StaticFilesSettings : CofoundryConfigurationSettingsBase
     {

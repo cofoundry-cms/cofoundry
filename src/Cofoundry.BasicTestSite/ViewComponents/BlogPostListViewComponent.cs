@@ -26,7 +26,7 @@ namespace Cofoundry.BasicTestSite
 
         public async Task<IViewComponentResult> InvokeAsync()
         {
-            // TODO: YAH: no model binder access....
+            // TODO: no model binder access....
             // https://github.com/aspnet/Mvc/blob/master/src/Microsoft.AspNetCore.Mvc.Core/ModelBinding/Internal/ModelBindingHelper.cs
             //HttpContext.Request.
             var webQuery = new SearchBlogPostsQuery();

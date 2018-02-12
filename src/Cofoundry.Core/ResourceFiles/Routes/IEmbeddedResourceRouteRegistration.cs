@@ -11,7 +11,7 @@ namespace Cofoundry.Core.ResourceFiles
     /// exposed publically in a website e.g. images or css files.
     /// </summary>
     /// <remarks>
-    /// This is here principally to account for assemblies that may contain email 
+    /// This is in core principally to account for assemblies that may contain email 
     /// templates that may need to be included in a web app and a background process,
     /// whereby we don't want to include the full web stack in the background process.
     /// </remarks>
