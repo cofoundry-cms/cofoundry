@@ -48,7 +48,7 @@ Task("Patch-Assembly-Version")
 
     Information("Building version {0} of Cofoundry.", versionInfo.InformationalVersion);
 
-    isPrerelease = !string.IsNullOrEmpty(versionInfo.PreReleaseNumber);
+    isPrerelease = versionInfo.PreReleaseNumber.HasValue;
 
     var file = "./src/SolutionInfo.cs";
 	CreateAssemblyInfo(file, new AssemblyInfoSettings {
