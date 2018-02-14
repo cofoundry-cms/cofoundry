@@ -13,6 +13,6 @@ namespace Cofoundry.Domain
         [Required]
         public int PageId { get; set; }
 
-        public string[] Tags { get; set; }
+        public ICollection<string> Tags { get; set; }
     }
 }

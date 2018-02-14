@@ -67,7 +67,7 @@ namespace Cofoundry.Domain
         /// <summary>
         /// Routing information particular to specific versions.
         /// </summary>
-        public PageVersionRoute[] Versions { get; set; }
+        public ICollection<PageVersionRoute> Versions { get; set; }
 
         public PageType PageType { get; set; }
 

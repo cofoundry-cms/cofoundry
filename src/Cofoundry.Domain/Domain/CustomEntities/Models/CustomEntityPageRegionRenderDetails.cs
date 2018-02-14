@@ -15,6 +15,6 @@ namespace Cofoundry.Domain
 
         public string Name { get; set; }
 
-        public CustomEntityVersionPageBlockRenderDetails[] Blocks { get; set; }
+        public ICollection<CustomEntityVersionPageBlockRenderDetails> Blocks { get; set; }
     }
 }

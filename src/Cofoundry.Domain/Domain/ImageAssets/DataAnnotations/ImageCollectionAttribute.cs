@@ -4,6 +4,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using Cofoundry.Core;
 using Microsoft.AspNetCore.Mvc.ModelBinding.Metadata;
 
 namespace Cofoundry.Domain
@@ -42,14 +43,11 @@ namespace Cofoundry.Domain
             if (model == null) throw new ArgumentNullException(nameof(model));
             if (propertyInfo == null) throw new ArgumentNullException(nameof(propertyInfo));
 
-            var ids = propertyInfo.GetValue(model) as int[];
+            var ids = propertyInfo.GetValue(model) as ICollection<int>;
 
-            if (ids != null)
+            foreach (var id in EnumerableHelper.Enumerate(ids))
             {
-                foreach (var id in ids)
-                {
-                    yield return new EntityDependency(ImageAssetEntityDefinition.DefinitionCode, id, false);
-                }
+                yield return new EntityDependency(ImageAssetEntityDefinition.DefinitionCode, id, false);
             }
         }
 

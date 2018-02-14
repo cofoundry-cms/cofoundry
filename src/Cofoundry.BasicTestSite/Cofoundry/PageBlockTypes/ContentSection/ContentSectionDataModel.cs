@@ -32,6 +32,6 @@ namespace Cofoundry.BasicTestSite
             CategoryCustomEntityDefinition.DefinitionCode,
             BlogPostCustomEntityDefinition.DefinitionCode,
             IsOrderable = true)]
-        public CustomEntityIdentity[] Entities { get; set; }
+        public ICollection<CustomEntityIdentity> Entities { get; set; }
     }
 }

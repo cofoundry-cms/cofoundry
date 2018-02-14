@@ -18,16 +18,7 @@ namespace Cofoundry.Domain
         /// </summary>
         /// <param name="customEntityTypeCode">Definition code of the custom entity type to return routes for</param>
         /// <param name="getter">Function to invoke if the custom entities are not in the cache</param>
-        Task<CustomEntityRoute[]> GetOrAddAsync(string customEntityTypeCode, Func<Task<CustomEntityRoute[]>> getter);
-
-        /// <summary>
-        /// Gets a collection of custom entity routes for the specified
-        /// custom entity type. If the collection is already cached it 
-        /// is returned, otherwise the getter is invoked and the result is cached and returned
-        /// </summary>
-        /// <param name="customEntityTypeCode">Definition code of the custom entity type to return routes for</param>
-        /// <param name="getter">Function to invoke if the custom entities are not in the cache</param>
-        CustomEntityRoute[] GetOrAdd(string customEntityTypeCode, Func<CustomEntityRoute[]> getter);
+        Task<ICollection<CustomEntityRoute>> GetOrAddAsync(string customEntityTypeCode, Func<Task<ICollection<CustomEntityRoute>>> getter);
 
         /// <summary>
         /// Clears all items in the custom entity cache

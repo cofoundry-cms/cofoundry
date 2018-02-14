@@ -24,7 +24,7 @@ namespace Cofoundry.Domain
 
         public ImageAnchorLocation? DefaultAnchorLocation { get; set; }
 
-        public string[] Tags { get; set; }
+        public ICollection<string> Tags { get; set; }
 
         #region Output
 

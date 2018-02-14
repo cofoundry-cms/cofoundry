@@ -20,7 +20,7 @@ namespace Cofoundry.Core.AutoUpdate
         /// <summary>
         /// A collection of directory paths to create. Resolved using IPathResolver.
         /// </summary>
-        public string[] Directories { get; set; }
+        public ICollection<string> Directories { get; set; }
 
         /// <summary>
         /// Short description of the command being run, used for log record identification purposes.

@@ -26,7 +26,7 @@ namespace Cofoundry.Core.Validation
             }
         }
 
-        public string[] Properties { get; set; }
+        public ICollection<string> Properties { get; set; }
         public string Message { get; set; }
     }
 }

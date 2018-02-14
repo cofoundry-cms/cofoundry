@@ -28,7 +28,7 @@ namespace Cofoundry.Domain
         
         public string Description { get; set; }
 
-        public string[] Tags { get; set; }
+        public ICollection<string> Tags { get; set; }
 
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {

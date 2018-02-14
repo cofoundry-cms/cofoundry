@@ -39,7 +39,7 @@ namespace Cofoundry.Domain
         /// is returned, otherwise the getter is invoked and the result is cached and returned
         /// </summary>
         /// <param name="getter">Function to invoke if the rewrite rules are not in the cache</param>
-        public PageDirectoryRoute[] GetOrAdd(Func<PageDirectoryRoute[]> getter)
+        public ICollection<PageDirectoryRoute> GetOrAdd(Func<ICollection<PageDirectoryRoute>> getter)
         {
             return _cache.GetOrAdd(PAGEDIRECTORYROUTES_CACHEKEY, getter);
         }

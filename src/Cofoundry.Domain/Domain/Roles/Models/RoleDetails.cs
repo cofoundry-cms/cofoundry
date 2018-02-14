@@ -45,7 +45,7 @@ namespace Cofoundry.Domain
         /// Collection of permissions that describe the actions this role is 
         /// permitted to perform.
         /// </summary>
-        public IPermission[] Permissions { get; set; }
+        public ICollection<IPermission> Permissions { get; set; }
 
         /// <summary>
         /// A role must be assigned to a user area e.g. CofoundryAdminUserArea.

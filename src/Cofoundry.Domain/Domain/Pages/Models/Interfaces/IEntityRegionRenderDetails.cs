@@ -12,6 +12,6 @@ namespace Cofoundry.Domain
 
         string Name { get; set; }
 
-        TBlockRenderDetails[] Blocks { get; set; }
+        ICollection<TBlockRenderDetails> Blocks { get; set; }
     }
 }

@@ -17,7 +17,7 @@ namespace Cofoundry.Domain
         /// file. Partial files are also scanned as part of the process 
         /// so regions can be included in these too.
         /// </summary>
-        public PageTemplateFileRegion[] Regions { get; set; }
+        public ICollection<PageTemplateFileRegion> Regions { get; set; }
 
         /// <summary>
         /// If the template file is for a custom entity details page the

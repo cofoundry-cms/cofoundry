@@ -37,9 +37,9 @@ namespace Cofoundry.Domain
         public void Process(DisplayMetadata modelMetaData)
         {
             modelMetaData.AddAdditionalValueIfNotEmpty("Tags", Tags);
-            if (FileExtensions != null && FileExtensions.Length == 1)
+            if (FileExtensions != null && FileExtensions.Count == 1)
             {
-                modelMetaData.AddAdditionalValueIfNotEmpty("FileExtension", FileExtensions[0]);
+                modelMetaData.AddAdditionalValueIfNotEmpty("FileExtension", FileExtensions.First());
             }
             else if (FileExtensions != null)
             {
@@ -69,12 +69,12 @@ namespace Cofoundry.Domain
         /// <summary>
         /// Restrict the input to allow only documents with these file extensions
         /// </summary>
-        public string[] FileExtensions { get; set; }
+        public ICollection<string> FileExtensions { get; set; }
 
         /// <summary>
         /// Restrict the input to allow documents with only these tags
         /// </summary>
-        public string[] Tags { get; private set; }
+        public ICollection<string> Tags { get; private set; }
 
         #endregion
     }

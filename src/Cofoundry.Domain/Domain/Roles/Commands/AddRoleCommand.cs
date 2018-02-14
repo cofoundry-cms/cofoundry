@@ -33,7 +33,7 @@ namespace Cofoundry.Domain
         /// <summary>
         /// The permissions to add the role when it is created.
         /// </summary>
-        public PermissionCommandData[] Permissions { get; set; }
+        public ICollection<PermissionCommandData> Permissions { get; set; }
 
         #region Output
 

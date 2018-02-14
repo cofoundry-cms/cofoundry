@@ -18,7 +18,7 @@ namespace Cofoundry.Domain
         {
             if (!(value is string))
             {
-                throw new ArgumentException("NotDangerousMimeTypeValidationAttribute can only be applied to a string property", "value");
+                throw new ArgumentException("NotDangerousMimeTypeValidationAttribute can only be applied to a string property", nameof(value));
             }
 
             var mimeType = (string)value;

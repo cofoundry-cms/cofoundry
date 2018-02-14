@@ -15,6 +15,6 @@ namespace Cofoundry.Web
         /// <summary>
         /// Indicates the type of task that this task should run before.
         /// </summary>
-        Type[] RunBefore { get; }
+        ICollection<Type> RunBefore { get; }
     }
 }

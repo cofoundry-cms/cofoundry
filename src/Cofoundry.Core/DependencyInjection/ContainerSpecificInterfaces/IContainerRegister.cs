@@ -59,7 +59,7 @@ namespace Cofoundry.Core.DependencyInjection
         /// <param name="types">Types to register as.</param>
         /// <param name="options">Optional options argument.</param>
         /// <returns>The IContainerRegister instance for method chaining.</returns>
-        IContainerRegister RegisterType<TConcrete>(Type[] types, RegistrationOptions options = null);
+        IContainerRegister RegisterType<TConcrete>(ICollection<Type> types, RegistrationOptions options = null);
 
         /// <summary>
         /// Registers a service.

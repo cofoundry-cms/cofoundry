@@ -10,6 +10,6 @@ namespace Cofoundry.Domain
     {
         public string DataTemplateName { get; set; }
 
-        public DynamicDataModelSchemaProperty[] DataModelProperties { get; set; }
+        public ICollection<DynamicDataModelSchemaProperty> DataModelProperties { get; set; }
     }
 }

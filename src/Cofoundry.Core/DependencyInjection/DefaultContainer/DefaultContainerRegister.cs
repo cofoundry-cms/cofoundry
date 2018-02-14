@@ -82,7 +82,7 @@ namespace Cofoundry.Core.DependencyInjection
             return RegisterType<TConcrete, TConcrete>(options);
         }
 
-        public IContainerRegister RegisterType<TConcrete>(Type[] types, RegistrationOptions options = null)
+        public IContainerRegister RegisterType<TConcrete>(ICollection<Type> types, RegistrationOptions options = null)
         {
             var fn = new Action(() =>
             {

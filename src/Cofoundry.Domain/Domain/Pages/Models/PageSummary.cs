@@ -77,7 +77,7 @@ namespace Cofoundry.Domain
 
         #region properties unique to this class
 
-        public string[] Tags { get; set; }
+        public ICollection<string> Tags { get; set; }
 
         public CreateAuditData AuditData { get; set; }
 

@@ -14,11 +14,9 @@ namespace Cofoundry.Domain
     /// </summary>
     public class CompositePermissionApplication : IPermissionApplication
     {
-        private static readonly IPermission[] _emptyPermissions = new IPermission[0];
-
         public CompositePermissionApplication()
         {
-            Permissions = _emptyPermissions;
+            Permissions = Array.Empty<IPermission>();
         }
 
         public CompositePermissionApplication(params IPermission[] permissions)
@@ -30,7 +28,7 @@ namespace Cofoundry.Domain
         /// The collection of permissions to check. A user would need only one
         /// of these permissions to pass the evaluation of this application.
         /// </summary>
-        public IPermission[] Permissions { get; set; }
+        public ICollection<IPermission> Permissions { get; set; }
 
         public override string ToString()
         {

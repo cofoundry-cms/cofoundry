@@ -35,6 +35,6 @@ namespace Cofoundry.Domain
         /// You must include this otherwise all permissions will be 
         /// removed (unless of course you intend to remove all permissions).
         /// </summary>
-        public PermissionCommandData[] Permissions { get; set; }
+        public ICollection<PermissionCommandData> Permissions { get; set; }
     }
 }

@@ -37,7 +37,7 @@ namespace Cofoundry.Domain
         /// <summary>
         /// The toolbars to display. A default selection is used if this is not specified.
         /// </summary>
-        public HtmlToolbarPreset[] Toolbars { get; private set; }
+        public ICollection<HtmlToolbarPreset> Toolbars { get; private set; }
 
         /// <summary>
         /// https://www.tinymce.com/docs/advanced/editor-control-identifiers/#toolbarcontrols

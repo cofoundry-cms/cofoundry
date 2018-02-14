@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Cofoundry.Core;
+using System;
 using System.Collections.Generic;
 using System.Reflection;
 
@@ -34,14 +35,11 @@ namespace Cofoundry.Domain
             if (model == null) throw new ArgumentNullException(nameof(model));
             if (propertyInfo == null) throw new ArgumentNullException(nameof(propertyInfo));
 
-            var ids = propertyInfo.GetValue(model) as int[];
+            var ids = propertyInfo.GetValue(model) as ICollection<int>;
 
-            if (ids != null)
+            foreach (var id in EnumerableHelper.Enumerate(ids))
             {
-                foreach (var id in ids)
-                {
-                    yield return new EntityDependency(EntityDefinitionCode, id, false);
-                }
+                yield return new EntityDependency(EntityDefinitionCode, id, false);
             }
         }
 

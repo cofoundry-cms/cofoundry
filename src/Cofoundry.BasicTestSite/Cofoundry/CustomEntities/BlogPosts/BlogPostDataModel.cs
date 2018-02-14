@@ -25,7 +25,7 @@ namespace Cofoundry.BasicTestSite
 
         [Display(Name = "Categories", Description = "Drag and drop to customize the category ordering.")]
         [CustomEntityCollection(CategoryCustomEntityDefinition.DefinitionCode, IsOrderable = true)]
-        public int[] CategoryIds { get; set; }
+        public ICollection<int> CategoryIds { get; set; }
 
         [Display(Name = "Category", Description = "Test Single Category.")]
         [CustomEntity(CategoryCustomEntityDefinition.DefinitionCode)]
@@ -33,7 +33,7 @@ namespace Cofoundry.BasicTestSite
 
         [ImageCollection]
         [Display(Name = "Images")]
-        public int[] ThumbnailImageAssets{ get; set; }
+        public ICollection<int> ThumbnailImageAssets{ get; set; }
 
         [Display(Name = "Html")]
         [Html(HtmlToolbarPreset.BasicFormatting, HtmlToolbarPreset.Headings, HtmlToolbarPreset.Media, HtmlToolbarPreset.Source)]
@@ -53,7 +53,7 @@ namespace Cofoundry.BasicTestSite
 
         [PageCollection]
         [Display(Name = "Page Collection Test")]
-        public int[] PageIds { get; set; }
+        public ICollection<int> PageIds { get; set; }
 
     }
 }

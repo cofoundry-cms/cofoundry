@@ -4,6 +4,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using Cofoundry.Core;
 using Microsoft.AspNetCore.Mvc.ModelBinding.Metadata;
 
 namespace Cofoundry.Domain
@@ -34,7 +35,7 @@ namespace Cofoundry.Domain
         /// <summary>
         /// The code of the custom entity which is allowed to be attached to the collection.
         /// </summary>
-        public string[] CustomEntityDefinitionCodes { get; set; }
+        public ICollection<string> CustomEntityDefinitionCodes { get; set; }
 
         /// <summary>
         /// Can the collection be manually ordered by the user?
@@ -46,14 +47,11 @@ namespace Cofoundry.Domain
             if (model == null) throw new ArgumentNullException(nameof(model));
             if (propertyInfo == null) throw new ArgumentNullException(nameof(propertyInfo));
 
-            var ids = propertyInfo.GetValue(model) as CustomEntityIdentity[];
+            var ids = propertyInfo.GetValue(model) as ICollection<CustomEntityIdentity>;
 
-            if (ids != null)
+            foreach (var id in EnumerableHelper.Enumerate(ids))
             {
-                foreach (var id in ids)
-                {
-                    yield return new EntityDependency(id.CustomEntityDefinitionCode, id.CustomEntityId, false);
-                }
+                yield return new EntityDependency(id.CustomEntityDefinitionCode, id.CustomEntityId, false);
             }
         }
     }

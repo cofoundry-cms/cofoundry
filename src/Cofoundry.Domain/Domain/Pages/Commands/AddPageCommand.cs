@@ -36,7 +36,7 @@ namespace Cofoundry.Domain
         public string Title { get; set; }
 
         [Display(Name = "Tags", Description = "Separate each tag with a space: dog animal canine. Or to join 2 words together in one tag, use double quotes: \"golden retriever\". Used internally for searching for things.")]
-        public string[] Tags { get; set; }
+        public ICollection<string> Tags { get; set; }
 
         [Display(Name = "Meta description", Description = "Ideally 25-250 characters. The Google <a href=\"http://en.wikipedia.org/wiki/Search_engine_results_page\" target=\"_blank\">SERP</a> shows only the first 150 characters")]
         [StringLength(300)]

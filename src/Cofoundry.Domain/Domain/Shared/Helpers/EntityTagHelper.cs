@@ -121,6 +121,7 @@ namespace Cofoundry.Domain
             return tag;
         }
 
+
         private List<string> CleanTags(IEnumerable<string> tags)
         {
             var cleanedTags =  tags

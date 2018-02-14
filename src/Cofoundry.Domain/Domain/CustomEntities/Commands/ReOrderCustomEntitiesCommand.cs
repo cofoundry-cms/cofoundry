@@ -24,7 +24,7 @@ namespace Cofoundry.Domain
         /// Any entities not included in the collection are assumed to not require ordering and will have
         /// thier ordering set to null (and return in a natural ordering)
         /// </summary>
-        public int[] OrderedCustomEntityIds { get; set; }
+        public ICollection<int> OrderedCustomEntityIds { get; set; }
 
         /// <summary>
         /// Optional locale id if these custom entities are partitioned by locale

@@ -72,7 +72,7 @@ namespace Cofoundry.Domain
             });
         }
 
-        private async Task<CustomEntityRoute[]> MapRoutesAsync(
+        private async Task<ICollection<CustomEntityRoute>> MapRoutesAsync(
             GetCustomEntityRoutesByDefinitionCodeQuery query,
             List<CustomEntity> dbEntities,
             Dictionary<int, ActiveLocale> allLocales
@@ -91,7 +91,7 @@ namespace Cofoundry.Domain
                 .MakeGenericMethod(definition.GetType(), definition.GetDataModelType())
                 .Invoke(this, new object[] { definition, routes, dbEntities });
 
-            return routes.ToArray();
+            return routes;
         }
 
         private async Task MapAdditionalRouteDataAsync<TCustomEntityDefinition, TDataModel>(

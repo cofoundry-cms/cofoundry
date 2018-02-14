@@ -49,7 +49,7 @@ namespace Cofoundry.Domain.Data
         /// <returns>A collection of ids of custom entities that were updated i.e. some entities may not have needed their ordering changed.</returns>
         Task<ICollection<int>> ReOrderAsync(
            string customEntityDefinitionCode,
-           int[] orderedCustomEntityIds,
+           ICollection<int> orderedCustomEntityIds,
            int? localeId
            );
     }

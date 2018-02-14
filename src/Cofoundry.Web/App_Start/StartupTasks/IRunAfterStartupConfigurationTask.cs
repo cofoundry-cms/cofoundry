@@ -14,6 +14,6 @@ namespace Cofoundry.Web
         /// <summary>
         /// Indicates the type of task that this task should run after.
         /// </summary>
-        Type[] RunAfter { get; }
+        ICollection<Type> RunAfter { get; }
     }
 }
