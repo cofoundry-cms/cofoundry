@@ -8,7 +8,7 @@ using Cofoundry.Domain.CQS;
 namespace Cofoundry.Domain
 {
     public class GetAllCustomEntityDefinitionSummariesQueryHandler 
-        : IAsyncQueryHandler<GetAllQuery<CustomEntityDefinitionSummary>, IEnumerable<CustomEntityDefinitionSummary>>
+        : IAsyncQueryHandler<GetAllCustomEntityDefinitionSummariesQuery, ICollection<CustomEntityDefinitionSummary>>
         , IIgnorePermissionCheckHandler
     {
         #region constructor 
@@ -29,15 +29,14 @@ namespace Cofoundry.Domain
 
         #region execution
 
-        public Task<IEnumerable<CustomEntityDefinitionSummary>> ExecuteAsync(GetAllQuery<CustomEntityDefinitionSummary> query, IExecutionContext executionContext)
+        public Task<ICollection<CustomEntityDefinitionSummary>> ExecuteAsync(GetAllCustomEntityDefinitionSummariesQuery query, IExecutionContext executionContext)
         {
            var results = _customEntityDefinitionRepository
                 .GetAll()
                 .Select(_customEntityDefinitionSummaryMapper.Map)
-                .ToList()
-                .AsEnumerable();
+                .ToList();
 
-            return Task.FromResult(results);
+            return Task.FromResult<ICollection<CustomEntityDefinitionSummary>>(results);
         }
 
         #endregion

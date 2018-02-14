@@ -38,7 +38,7 @@ namespace Cofoundry.Domain
             if (!string.IsNullOrWhiteSpace(query.Path) && !Uri.IsWellFormedUriString(query.Path, UriKind.Relative)) return null;
 
             var path = _pathHelper.StandardizePath(query.Path);
-            var allRoutes = await _queryExecutor.GetAllAsync<PageRoute>(executionContext);
+            var allRoutes = await _queryExecutor.ExecuteAsync(new GetAllPageRoutesQuery(), executionContext);
 
             var pageRoutes = allRoutes
                 .Where(r => r.FullPath.Equals(path) || (r.PageType == PageType.CustomEntityDetails && IsCustomRoutingMatch(path, r.FullPath)))
@@ -57,7 +57,8 @@ namespace Cofoundry.Domain
             }
             else
             {
-                var allRules = await _queryExecutor.GetAllAsync<ICustomEntityRoutingRule>(executionContext);
+                var allRules = await _queryExecutor.ExecuteAsync(new GetAllCustomEntityRoutingRulesQuery(), executionContext);
+
                 // I'm only anticipating a single rule to match at the moment, but eventually there might be multiple rules to match e.g. categories page
                 foreach (var pageRoute in pageRoutes)
                 {

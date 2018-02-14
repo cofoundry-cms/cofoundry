@@ -7,15 +7,20 @@ using Cofoundry.Domain.CQS;
 
 namespace Cofoundry.Domain
 {
-    public class GetPageRoutingInfoByCustomEntityIdRangeQuery : GetByIdRangeQuery<IEnumerable<PageRoutingInfo>>
+    public class GetPageRoutingInfoByCustomEntityIdRangeQuery : IQuery<IDictionary<int, ICollection<PageRoutingInfo>>>
     {
-        public GetPageRoutingInfoByCustomEntityIdRangeQuery()
+        public GetPageRoutingInfoByCustomEntityIdRangeQuery() { }
+
+        public GetPageRoutingInfoByCustomEntityIdRangeQuery(IEnumerable<int> customEntityIds)
+            : this(customEntityIds?.ToList())
         {
         }
 
-        public GetPageRoutingInfoByCustomEntityIdRangeQuery(IEnumerable<int> ids)
+        public GetPageRoutingInfoByCustomEntityIdRangeQuery(IReadOnlyCollection<int> customEntityIds)
         {
-            Ids = ids.ToArray();
+            CustomEntityIds = customEntityIds;
         }
+
+        public IReadOnlyCollection<int> CustomEntityIds { get; set; }
     }
 }

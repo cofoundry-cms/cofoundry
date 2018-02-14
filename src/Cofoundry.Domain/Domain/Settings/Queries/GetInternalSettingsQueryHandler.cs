@@ -10,7 +10,7 @@ using Cofoundry.Core;
 namespace Cofoundry.Domain
 {
     public class GetInternalSettingsQueryHandler 
-        : IAsyncQueryHandler<GetQuery<InternalSettings>, InternalSettings>
+        : IAsyncQueryHandler<GetSettingsQuery<InternalSettings>, InternalSettings>
         , IIgnorePermissionCheckHandler
     {
         #region constructor
@@ -31,7 +31,7 @@ namespace Cofoundry.Domain
 
         #region execution
 
-        public async Task<InternalSettings> ExecuteAsync(GetQuery<InternalSettings> query, IExecutionContext executionContext)
+        public async Task<InternalSettings> ExecuteAsync(GetSettingsQuery<InternalSettings> query, IExecutionContext executionContext)
         {
             var allSettings = await _internalSettingsRepository.GetAllSettingsAsync();
             return MapSettings(allSettings);

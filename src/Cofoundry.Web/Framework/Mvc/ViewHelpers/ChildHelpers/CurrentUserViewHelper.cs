@@ -40,7 +40,8 @@ namespace Cofoundry.Web
 
             if (_userContext.UserId.HasValue)
             {
-                _user = await _queryExecutor.GetByIdAsync<UserMicroSummary>(_userContext.UserId.Value);
+                var query = new GetUserMicroSummaryByIdQuery(_userContext.UserId.Value);
+                _user = await _queryExecutor.ExecuteAsync(query);
             }
 
             isInitialized = true;

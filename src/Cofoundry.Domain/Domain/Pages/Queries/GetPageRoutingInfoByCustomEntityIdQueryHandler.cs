@@ -8,8 +8,8 @@ using Cofoundry.Domain.CQS;
 namespace Cofoundry.Domain
 {
     public class GetPageRoutingInfoByCustomEntityIdQueryHandler 
-        : IAsyncQueryHandler<GetPageRoutingInfoByCustomEntityIdQuery, IEnumerable<PageRoutingInfo>>
-        , IPermissionRestrictedQueryHandler<GetPageRoutingInfoByCustomEntityIdQuery, IEnumerable<PageRoutingInfo>>
+        : IAsyncQueryHandler<GetPageRoutingInfoByCustomEntityIdQuery, ICollection<PageRoutingInfo>>
+        , IPermissionRestrictedQueryHandler<GetPageRoutingInfoByCustomEntityIdQuery, ICollection<PageRoutingInfo>>
     {
         private readonly IQueryExecutor _queryExecutor;
 
@@ -20,13 +20,15 @@ namespace Cofoundry.Domain
             _queryExecutor = queryExecutor;
         }
 
-        public async Task<IEnumerable<PageRoutingInfo>> ExecuteAsync(GetPageRoutingInfoByCustomEntityIdQuery query, IExecutionContext executionContext)
+        public async Task<ICollection<PageRoutingInfo>> ExecuteAsync(GetPageRoutingInfoByCustomEntityIdQuery query, IExecutionContext executionContext)
         {
             var result = await _queryExecutor.ExecuteAsync(new GetPageRoutingInfoByCustomEntityIdRangeQuery(new int[] { query.CustomEntityId }), executionContext);
 
-            if (!result.ContainsKey(query.CustomEntityId)) return Enumerable.Empty<PageRoutingInfo>();
+            if (!result.ContainsKey(query.CustomEntityId)) return Array.Empty<PageRoutingInfo>();
 
-            return result[query.CustomEntityId].OrderBy(e => e.PageRoute.UrlPath.Length);
+            return result[query.CustomEntityId]
+                .OrderBy(e => e.PageRoute.UrlPath.Length)
+                .ToList();
         }
 
         #region Permission

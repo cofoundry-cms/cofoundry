@@ -13,8 +13,8 @@ namespace Cofoundry.Domain
     /// query are cached.
     /// </summary>
     public class GetAllPageDirectoryRoutesQueryHandler 
-        : IAsyncQueryHandler<GetAllQuery<PageDirectoryRoute>, IEnumerable<PageDirectoryRoute>>
-        , IPermissionRestrictedQueryHandler<GetAllQuery<PageDirectoryRoute>, IEnumerable<PageDirectoryRoute>>
+        : IAsyncQueryHandler<GetAllPageDirectoryRoutesQuery, ICollection<PageDirectoryRoute>>
+        , IPermissionRestrictedQueryHandler<GetAllPageDirectoryRoutesQuery, ICollection<PageDirectoryRoute>>
     {
         #region constructor
 
@@ -34,7 +34,7 @@ namespace Cofoundry.Domain
 
         #region execution
         
-        public async Task<IEnumerable<PageDirectoryRoute>> ExecuteAsync(GetAllQuery<PageDirectoryRoute> query, IExecutionContext executionContext)
+        public async Task<ICollection<PageDirectoryRoute>> ExecuteAsync(GetAllPageDirectoryRoutesQuery query, IExecutionContext executionContext)
         {
             var dbPageDirectories = await Query().ToListAsync();
             var activeWebRoutes = _pageDirectoryRouteMapper.Map(dbPageDirectories);
@@ -55,7 +55,7 @@ namespace Cofoundry.Domain
 
         #region permissions
 
-        public IEnumerable<IPermissionApplication> GetPermissions(GetAllQuery<PageDirectoryRoute> command)
+        public IEnumerable<IPermissionApplication> GetPermissions(GetAllPageDirectoryRoutesQuery command)
         {
             yield return new PageDirectoryReadPermission();
         }

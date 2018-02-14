@@ -18,7 +18,7 @@ namespace Cofoundry.Domain
         /// Returns all IPermission instances registered with Cofoundry.
         /// </summary>
         /// <param name="executionContext">Optional execution context to use when executing the query. Useful if you need to temporarily elevate your permission level.</param>
-        Task<IEnumerable<IPermission>> GetAllPermissionsAsync(IExecutionContext executionContext = null);
+        Task<ICollection<IPermission>> GetAllPermissionsAsync(IExecutionContext executionContext = null);
 
         /// <summary>
         /// Finds a role by it's database id, returning a RoleDetails object if it 

@@ -41,7 +41,7 @@ namespace Cofoundry.Domain
                 throw new ArgumentException("query.DisplayModelType is not of type ICustomEntityDisplayModel<>");
             }
 
-            var allDefinitions = await _queryExecutor.GetAllAsync<CustomEntityDefinitionSummary>(executionContext);
+            var allDefinitions = await _queryExecutor.ExecuteAsync(new GetAllCustomEntityDefinitionSummariesQuery(), executionContext);
 
             var definition = allDefinitions.FirstOrDefault(d => d.DataModelType == dataModelType);
 

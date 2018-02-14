@@ -53,7 +53,9 @@ namespace Cofoundry.Web.Admin
         [HttpGet(ID_ROUTE)]
         public async Task<IActionResult> Get(int documentAssetId)
         {
-            var result = await _queryExecutor.GetByIdAsync<DocumentAssetDetails>(documentAssetId);
+            var query = new GetDocumentAssetDetailsByIdQuery(documentAssetId);
+            var result = await _queryExecutor.ExecuteAsync(query);
+
             return _apiResponseHelper.SimpleQueryResponse(this, result);
         }
 

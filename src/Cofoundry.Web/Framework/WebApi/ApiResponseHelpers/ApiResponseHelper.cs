@@ -137,7 +137,8 @@ namespace Cofoundry.Web
         /// <param name="delta">The delta of the command to patch and execute</param>
         public async Task<IActionResult> RunCommandAsync<TCommand>(Controller controller, int id, IDelta<TCommand> delta) where TCommand : class, ICommand
         {
-            var command = await _queryExecutor.GetByIdAsync<TCommand>(id);
+            var query = new GetUpdateCommandByIdQuery<TCommand>(id);
+            var command = await _queryExecutor.ExecuteAsync(query);
 
             if (delta != null)
             {
@@ -159,7 +160,8 @@ namespace Cofoundry.Web
         /// <param name="delta">The delta of the command to patch and execute</param>
         public async Task<IActionResult> RunCommandAsync<TCommand>(Controller controller, IDelta<TCommand> delta) where TCommand : class, ICommand
         {
-            var command = await _queryExecutor.GetAsync<TCommand>();
+            var query = new GetUpdateCommandQuery<TCommand>();
+            var command = await _queryExecutor.ExecuteAsync(query);
 
             if (delta != null)
             {

@@ -8,7 +8,7 @@ using Cofoundry.Domain.CQS;
 namespace Cofoundry.Domain
 {
     public class GetAllCustomEntityRoutingRulesQueryHandler 
-        : IAsyncQueryHandler<GetAllQuery<ICustomEntityRoutingRule>, IEnumerable<ICustomEntityRoutingRule>>
+        : IAsyncQueryHandler<GetAllCustomEntityRoutingRulesQuery, ICollection<ICustomEntityRoutingRule>>
         , IIgnorePermissionCheckHandler
     {
         private readonly IEnumerable<ICustomEntityRoutingRule> _customEntityRoutingRules;
@@ -20,7 +20,7 @@ namespace Cofoundry.Domain
             _customEntityRoutingRules = customEntityRoutingRules;
         }
 
-        public Task<IEnumerable<ICustomEntityRoutingRule>> ExecuteAsync(GetAllQuery<ICustomEntityRoutingRule> query, IExecutionContext executionContext)
+        public Task<ICollection<ICustomEntityRoutingRule>> ExecuteAsync(GetAllCustomEntityRoutingRulesQuery query, IExecutionContext executionContext)
         {
             var duplicateRule = _customEntityRoutingRules
                 .GroupBy(r => r.RouteFormat)
@@ -31,7 +31,7 @@ namespace Cofoundry.Domain
                 throw new Exception("Multiple handlers cannot exist using the same RouteFormat. Duplicate: " + duplicateRule.Key);
             }
 
-            return Task.FromResult(_customEntityRoutingRules);
+            return Task.FromResult<ICollection<ICustomEntityRoutingRule>>(_customEntityRoutingRules.ToList());
         }
     }
 }

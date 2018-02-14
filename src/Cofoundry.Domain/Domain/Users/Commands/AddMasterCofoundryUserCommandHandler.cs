@@ -42,7 +42,8 @@ namespace Cofoundry.Domain
 
         public async Task ExecuteAsync(AddMasterCofoundryUserCommand command, IExecutionContext executionContext)
         {
-            var settings = await _queryExecutor.GetAsync<InternalSettings>();
+            var settings = await _queryExecutor.ExecuteAsync(new GetSettingsQuery<InternalSettings>());
+
             if (settings.IsSetup)
             {
                 throw new ValidationException("Site is already set up.");

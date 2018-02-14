@@ -66,7 +66,8 @@ namespace Cofoundry.Domain
         /// <param name="executionContext">Optional execution context to use when executing the query. Useful if you need to temporarily elevate your permission level.</param>
         public Task<UserDetails> GetUserDetailsByIdAsync(int userId, IExecutionContext executionContext = null)
         {
-            return _queryExecutor.GetByIdAsync<UserDetails>(userId, executionContext);
+            var query = new GetUserDetailsByIdQuery(userId);
+            return _queryExecutor.ExecuteAsync(query, executionContext);
         }
 
         #endregion
@@ -80,7 +81,8 @@ namespace Cofoundry.Domain
         /// <param name="executionContext">Optional execution context to use when executing the query. Useful if you need to temporarily elevate your permission level.</param>
         public Task<UserMicroSummary> GetUserMicroSummaryByIdAsync(int userId, IExecutionContext executionContext = null)
         {
-            return _queryExecutor.GetByIdAsync<UserMicroSummary>(userId, executionContext);
+            var query = new GetUserMicroSummaryByIdQuery(userId);
+            return _queryExecutor.ExecuteAsync(query, executionContext);
         }
 
         /// <summary>
@@ -101,16 +103,6 @@ namespace Cofoundry.Domain
         public Task<UserAccountDetails> GetCurrentUserAccountDetailsAsync(IExecutionContext executionContext = null)
         {
             return _queryExecutor.ExecuteAsync(new GetCurrentUserAccountDetailsQuery(), executionContext);
-        }
-
-        /// <summary>
-        /// Finds a user by a database id returning a UserDetails object if it 
-        /// is found, otherwise null.
-        /// </summary>
-        /// <param name="executionContext">Optional execution context to use when executing the query. Useful if you need to temporarily elevate your permission level.</param>
-        public Task<UserMicroSummary> GetUserMicroSummaryById(int userId, IExecutionContext executionContext = null)
-        {
-            return _queryExecutor.GetByIdAsync< UserMicroSummary>(userId, executionContext);
         }
 
         #endregion

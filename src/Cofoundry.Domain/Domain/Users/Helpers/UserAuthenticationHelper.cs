@@ -12,11 +12,11 @@ namespace Cofoundry.Domain
     public class UserAuthenticationHelper
     {
         private readonly IPasswordCryptographyService _cryptographyService;
-        private readonly IUserAreaRepository _userAreaRepository;
+        private readonly IUserAreaDefinitionRepository _userAreaRepository;
 
         public UserAuthenticationHelper(
             IPasswordCryptographyService cryptographyService,
-            IUserAreaRepository userAreaRepository
+            IUserAreaDefinitionRepository userAreaRepository
             )
         {
             _cryptographyService = cryptographyService;

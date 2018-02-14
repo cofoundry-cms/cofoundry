@@ -15,7 +15,7 @@ namespace Cofoundry.Domain
     {
         #region queries
 
-        Task<IEnumerable<RewriteRuleSummary>> GetAllRewriteRuleSummariesAsync(IExecutionContext executionContext = null);
+        Task<ICollection<RewriteRuleSummary>> GetAllRewriteRuleSummariesAsync(IExecutionContext executionContext = null);
 
         /// <summary>
         /// Gets a rewrite rule that matches the specified path in the 

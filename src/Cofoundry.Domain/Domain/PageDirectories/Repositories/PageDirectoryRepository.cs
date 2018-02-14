@@ -34,9 +34,10 @@ namespace Cofoundry.Domain
         /// Returns all page directories as PageDirectoryRoute instances. The results of this query are cached.
         /// </summary>
         /// <param name="executionContext">Optional execution context to use when executing the query. Useful if you need to temporarily elevate your permission level.</param>
-        public Task<IEnumerable<PageDirectoryRoute>> GetAllPageDirectoryRoutesAsync(IExecutionContext executionContext = null)
+        public Task<ICollection<PageDirectoryRoute>> GetAllPageDirectoryRoutesAsync(IExecutionContext executionContext = null)
         {
-            return _queryExecutor.GetAllAsync<PageDirectoryRoute>(executionContext);
+            var query = new GetAllPageDirectoryRoutesQuery();
+            return _queryExecutor.ExecuteAsync(query, executionContext);
         }
 
         /// <summary>
@@ -46,7 +47,8 @@ namespace Cofoundry.Domain
         /// <param name="executionContext">Optional execution context to use when executing the query. Useful if you need to temporarily elevate your permission level.</param>
         public Task<PageDirectoryRoute> GetPageDirectoryRouteByIdAsync(int pageDirectoryId, IExecutionContext executionContext = null)
         {
-            return _queryExecutor.GetByIdAsync<PageDirectoryRoute>(pageDirectoryId, executionContext);
+            var query = new GetPageDirectoryRouteByIdQuery(pageDirectoryId);
+            return _queryExecutor.ExecuteAsync(query, executionContext);
         }
 
         /// <summary>
@@ -56,7 +58,8 @@ namespace Cofoundry.Domain
         /// <param name="executionContext">Optional execution context to use when executing the query. Useful if you need to temporarily elevate your permission level.</param>
         public Task<PageDirectoryNode> GetPageDirectoryNodeByIdAsync(int pageDirectoryId, IExecutionContext executionContext = null)
         {
-            return _queryExecutor.GetByIdAsync<PageDirectoryNode>(pageDirectoryId, executionContext);
+            var query = new GetPageDirectoryNodeByIdQuery(pageDirectoryId);
+            return _queryExecutor.ExecuteAsync(query, executionContext);
         }
 
         /// <summary>

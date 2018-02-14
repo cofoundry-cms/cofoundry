@@ -8,7 +8,7 @@ using Cofoundry.Domain.CQS;
 namespace Cofoundry.Domain
 {
     public class GetActiveLocaleByIdQueryHandler 
-        : IAsyncQueryHandler<GetByIdQuery<ActiveLocale>, ActiveLocale>
+        : IAsyncQueryHandler<GetActiveLocaleByIdQuery, ActiveLocale>
         , IIgnorePermissionCheckHandler
     {
         private readonly IQueryExecutor _queryExecutor;
@@ -20,11 +20,10 @@ namespace Cofoundry.Domain
             _queryExecutor = queryExecutor;
         }
         
-        public async Task<ActiveLocale> ExecuteAsync(GetByIdQuery<ActiveLocale> query, IExecutionContext executionContext)
+        public async Task<ActiveLocale> ExecuteAsync(GetActiveLocaleByIdQuery query, IExecutionContext executionContext)
         {
-            var result = (await _queryExecutor
-                .GetAllAsync<ActiveLocale>())
-                .SingleOrDefault(l => l.LocaleId == query.Id);
+            var locales = await _queryExecutor.ExecuteAsync(new GetAllActiveLocalesQuery(), executionContext);
+            var result = locales.SingleOrDefault(l => l.LocaleId == query.LocaleId);
 
             return result;
         }

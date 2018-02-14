@@ -47,7 +47,12 @@ namespace Cofoundry.Domain
 
             if (dbResult == null) return null;
 
-            var result = await MapAsync(dbResult.PageBlock, dbResult.BlockTypeFileName, query.PublishStatus);
+            var result = await MapAsync(
+                dbResult.PageBlock, 
+                dbResult.BlockTypeFileName, 
+                query.PublishStatus,
+                executionContext
+                );
 
             // Add any list context information.
             var displayData = result.DisplayModel as IListablePageBlockTypeDisplayModel;
@@ -79,10 +84,12 @@ namespace Cofoundry.Domain
         private async Task<PageVersionBlockRenderDetails> MapAsync(
             PageVersionBlock pageVersionBlock, 
             string blockTypeFileName, 
-            PublishStatusQuery publishStatus
+            PublishStatusQuery publishStatus,
+            IExecutionContext executionContext
             )
         {
-            var blockType = await _queryExecutor.GetByIdAsync<PageBlockTypeSummary>(pageVersionBlock.PageBlockTypeId);
+            var blockTypeQuery = new GetPageBlockTypeSummaryByIdQuery(pageVersionBlock.PageBlockTypeId);
+            var blockType = await _queryExecutor.ExecuteAsync(blockTypeQuery, executionContext);
             EntityNotFoundException.ThrowIfNull(blockType, pageVersionBlock.PageBlockTypeId);
 
             var result = new PageVersionBlockRenderDetails();

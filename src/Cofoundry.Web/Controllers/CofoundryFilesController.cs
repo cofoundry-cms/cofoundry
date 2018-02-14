@@ -43,7 +43,7 @@ namespace Cofoundry.Web
             }
             else
             {
-                var settings = await _queryExecutor.GetAsync<SeoSettings>();
+                var settings = await _queryExecutor.ExecuteAsync(new GetSettingsQuery<SeoSettings>());
                 robotsTxt += settings.RobotsTxt;
 
                 if (string.IsNullOrEmpty(robotsTxt))
@@ -58,7 +58,7 @@ namespace Cofoundry.Web
 
         public async Task<ActionResult> HumansTxt()
         {
-            var settings = await _queryExecutor.GetAsync<SeoSettings>();
+            var settings = await _queryExecutor.ExecuteAsync(new GetSettingsQuery<SeoSettings>());
 
             if (string.IsNullOrEmpty(settings.HumansTxt))
             {

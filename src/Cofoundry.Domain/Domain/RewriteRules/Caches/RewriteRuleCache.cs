@@ -32,7 +32,7 @@ namespace Cofoundry.Domain
         /// is returned, otherwise the getter is invoked and the result is cached and returned
         /// </summary>
         /// <param name="getter">Function to invoke if the rewrite rules are not in the cache</param>
-        public RewriteRuleSummary[] GetOrAdd(Func<RewriteRuleSummary[]> getter)
+        public ICollection<RewriteRuleSummary> GetOrAdd(Func<ICollection<RewriteRuleSummary>> getter)
         {
             return _cache.GetOrAdd(REWRITERULESUMMARY_CACHEKEY, getter);
         }
@@ -42,7 +42,7 @@ namespace Cofoundry.Domain
         /// is returned, otherwise the getter is invoked and the result is cached and returned
         /// </summary>
         /// <param name="getter">Function to invoke if the rewrite rules are not in the cache</param>
-        public async Task<RewriteRuleSummary[]> GetOrAddAsync(Func<Task<RewriteRuleSummary[]>> getter)
+        public async Task<ICollection<RewriteRuleSummary>> GetOrAddAsync(Func<Task<ICollection<RewriteRuleSummary>>> getter)
         {
             return await _cache.GetOrAddAsync(REWRITERULESUMMARY_CACHEKEY, getter);
         }

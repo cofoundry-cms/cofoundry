@@ -82,7 +82,7 @@ namespace Cofoundry.Domain
                     throw new PropertyValidationException("Routing rule not found", "CustomEntityRoutingRule", command.CustomEntityRoutingRule);
                 }
 
-                var customEntityDefinition = await _queryExecutor.ExecuteAsync(new GetByStringQuery<CustomEntityDefinitionSummary>() { Id = page.CustomEntityDefinitionCode }, executionContext);
+                var customEntityDefinition = await _queryExecutor.ExecuteAsync(new GetCustomEntityDefinitionSummaryByCodeQuery(page.CustomEntityDefinitionCode), executionContext);
                 EntityNotFoundException.ThrowIfNull(customEntityDefinition, page.CustomEntityDefinitionCode);
 
                 if (customEntityDefinition.ForceUrlSlugUniqueness && !rule.RequiresUniqueUrlSlug)

@@ -17,13 +17,20 @@ namespace Cofoundry.Domain
         public GetPageEntityMicroSummariesByIdRangeQuery(
             IEnumerable<int> ids
             )
+            : this(ids?.ToList())
+        {
+        }
+
+        public GetPageEntityMicroSummariesByIdRangeQuery(
+            IReadOnlyCollection<int> ids
+            )
         {
             if (ids == null) throw new ArgumentNullException(nameof(ids));
 
-            PageIds = ids.ToArray();
+            PageIds = ids;
         }
 
         [Required]
-        public int[] PageIds { get; set; }
+        public IReadOnlyCollection<int> PageIds { get; set; }
     }
 }

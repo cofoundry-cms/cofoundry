@@ -26,15 +26,15 @@ namespace Cofoundry.Web
 
         private readonly IHttpContextAccessor _httpContextAccessor;
         private static readonly AuthenticationProperties _defaultAuthenticationProperties = new AuthenticationProperties() { IsPersistent = true };
-        private readonly IUserAreaRepository _userAreaRepository;
+        private readonly IUserAreaDefinitionRepository _userAreaDefinitionRepository;
 
         public UserSessionService(
             IHttpContextAccessor httpContextAccessor,
-            IUserAreaRepository userAreaRepository
+            IUserAreaDefinitionRepository userAreaDefinitionRepository
             )
         {
             _httpContextAccessor = httpContextAccessor;
-            _userAreaRepository = userAreaRepository;
+            _userAreaDefinitionRepository = userAreaDefinitionRepository;
         }
 
         /// <summary>
@@ -143,7 +143,7 @@ namespace Cofoundry.Web
         {
             ClearCache();
 
-            foreach (var customEntityDefinition in _userAreaRepository.GetAll())
+            foreach (var customEntityDefinition in _userAreaDefinitionRepository.GetAll())
             {
                 var scheme = CofoundryAuthenticationConstants.FormatAuthenticationScheme(customEntityDefinition.UserAreaCode);
                 await _httpContextAccessor.HttpContext.SignOutAsync(scheme);

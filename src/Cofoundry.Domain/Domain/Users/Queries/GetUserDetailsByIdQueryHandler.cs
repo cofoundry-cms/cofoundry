@@ -13,7 +13,7 @@ namespace Cofoundry.Domain
     /// is found, otherwise null.
     /// </summary>
     public class GetUserDetailsByIdQueryHandler 
-        : IAsyncQueryHandler<GetByIdQuery<UserDetails>, UserDetails>
+        : IAsyncQueryHandler<GetUserDetailsByIdQuery, UserDetails>
         , IIgnorePermissionCheckHandler
     {
         private readonly CofoundryDbContext _dbContext;
@@ -31,25 +31,25 @@ namespace Cofoundry.Domain
             _userDetailsMapper = userDetailsMapper;
         }
 
-        public async Task<UserDetails> ExecuteAsync(GetByIdQuery<UserDetails> query, IExecutionContext executionContext)
+        public async Task<UserDetails> ExecuteAsync(GetUserDetailsByIdQuery query, IExecutionContext executionContext)
         {
             var dbUser = await _dbContext
                 .Users
                 .AsNoTracking()
                 .Include(u => u.Creator)
                 .Include(u => u.Role)
-                .Where(u => u.UserId == query.Id)
+                .Where(u => u.UserId == query.UserId)
                 .SingleOrDefaultAsync();
 
             var user = _userDetailsMapper.Map(dbUser);
 
             if (user != null && user.UserArea.UserAreaCode == CofoundryAdminUserArea.AreaCode)
             {
-                _permissionValidationService.EnforceCurrentUserOrHasPermission<CofoundryUserReadPermission>(query.Id, executionContext.UserContext);
+                _permissionValidationService.EnforceCurrentUserOrHasPermission<CofoundryUserReadPermission>(query.UserId, executionContext.UserContext);
             }
             else if (user != null)
             {
-                _permissionValidationService.EnforceCurrentUserOrHasPermission<NonCofoundryUserReadPermission>(query.Id, executionContext.UserContext);
+                _permissionValidationService.EnforceCurrentUserOrHasPermission<NonCofoundryUserReadPermission>(query.UserId, executionContext.UserContext);
             }
 
             return user;

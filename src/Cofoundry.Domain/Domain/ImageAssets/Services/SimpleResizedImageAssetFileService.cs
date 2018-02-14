@@ -51,7 +51,8 @@ namespace Cofoundry.Domain
 
         private async Task<Stream> GetFileStreamAsync(int imageAssetId)
         {
-            var result = await _queryExecutor.GetByIdAsync<ImageAssetFile>(imageAssetId);
+            var getImageQuery = new GetImageAssetFileByIdQuery(imageAssetId);
+            var result = await _queryExecutor.ExecuteAsync(getImageQuery);
 
             if (result == null || result.ContentStream == null)
             {

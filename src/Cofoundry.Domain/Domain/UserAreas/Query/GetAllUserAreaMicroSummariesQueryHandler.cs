@@ -7,15 +7,15 @@ using Cofoundry.Domain.CQS;
 namespace Cofoundry.Domain
 {
     public class GetAllUserAreaMicroSummariesQueryHandler 
-        : IAsyncQueryHandler<GetAllQuery<UserAreaMicroSummary>, IEnumerable<UserAreaMicroSummary>>
+        : IAsyncQueryHandler<GetAllUserAreaMicroSummariesQuery, ICollection<UserAreaMicroSummary>>
         , ICofoundryUserPermissionCheckHandler
     {
         #region constructor
 
-        private readonly IUserAreaRepository _userAreaRepository;
+        private readonly IUserAreaDefinitionRepository _userAreaRepository;
 
         public GetAllUserAreaMicroSummariesQueryHandler(
-            IUserAreaRepository userAreaRepository
+            IUserAreaDefinitionRepository userAreaRepository
             )
         {
             _userAreaRepository = userAreaRepository;
@@ -25,7 +25,7 @@ namespace Cofoundry.Domain
 
         #region execution
 
-        public Task<IEnumerable<UserAreaMicroSummary>> ExecuteAsync(GetAllQuery<UserAreaMicroSummary> query, IExecutionContext executionContext)
+        public Task<ICollection<UserAreaMicroSummary>> ExecuteAsync(GetAllUserAreaMicroSummariesQuery query, IExecutionContext executionContext)
         {
             var areas = _userAreaRepository.GetAll().OrderBy(u => u.Name);
             var results = areas
@@ -33,9 +33,10 @@ namespace Cofoundry.Domain
                 {
                     Name = a.Name,
                     UserAreaCode = a.UserAreaCode
-                });
+                })
+                .ToList();
 
-            return Task.FromResult(results);
+            return Task.FromResult<ICollection<UserAreaMicroSummary>>(results);
         }
 
         #endregion

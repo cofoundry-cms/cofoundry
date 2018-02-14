@@ -38,14 +38,14 @@ namespace Cofoundry.Web.Admin
         [HttpGet]
         public async Task<IActionResult> Get()
         {
-            var results = await _queryExecutor.GetAllAsync<PageBlockTypeSummary>();
+            var results = await _queryExecutor.ExecuteAsync(new GetAllPageBlockTypeSummariesQuery());
             return _apiResponseHelper.SimpleQueryResponse(this, results);
         }
 
         [HttpGet("{pageBlockTypeId:int}")]
         public async Task<IActionResult> Get(int pageBlockTypeId)
         {
-            var results = await _queryExecutor.GetByIdAsync<PageBlockTypeDetails>(pageBlockTypeId);
+            var results = await _queryExecutor.ExecuteAsync(new GetPageBlockTypeDetailsByIdQuery(pageBlockTypeId));
             return _apiResponseHelper.SimpleQueryResponse(this, results);
         }
 

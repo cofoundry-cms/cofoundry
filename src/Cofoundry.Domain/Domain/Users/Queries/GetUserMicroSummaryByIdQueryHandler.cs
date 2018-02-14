@@ -14,7 +14,7 @@ namespace Cofoundry.Domain
     /// is found, otherwise null.
     /// </summary>
     public class GetUserMicroSummaryByIdQueryHandler 
-        : IAsyncQueryHandler<GetByIdQuery<UserMicroSummary>, UserMicroSummary>
+        : IAsyncQueryHandler<GetUserMicroSummaryByIdQuery, UserMicroSummary>
         , IIgnorePermissionCheckHandler
     {
         #region constructor
@@ -38,7 +38,7 @@ namespace Cofoundry.Domain
 
         #region execution
 
-        public async Task<UserMicroSummary> ExecuteAsync(GetByIdQuery<UserMicroSummary> query, IExecutionContext executionContext)
+        public async Task<UserMicroSummary> ExecuteAsync(GetUserMicroSummaryByIdQuery query, IExecutionContext executionContext)
         {
             var dbResult = await Query(query).SingleOrDefaultAsync();
             var user = _userMicroSummaryMapper.Map(dbResult);
@@ -48,25 +48,25 @@ namespace Cofoundry.Domain
             return user;
         }
 
-        private IQueryable<User> Query(GetByIdQuery<UserMicroSummary> query)
+        private IQueryable<User> Query(GetUserMicroSummaryByIdQuery query)
         {
             return _dbContext
                 .Users
                 .AsNoTracking()
-                .Where(u => u.UserId == query.Id);
+                .Where(u => u.UserId == query.UserId);
         }
 
-        private void ValidatePermission(GetByIdQuery<UserMicroSummary> query, IExecutionContext executionContext, UserMicroSummary user)
+        private void ValidatePermission(GetUserMicroSummaryByIdQuery query, IExecutionContext executionContext, UserMicroSummary user)
         {
             if (user == null) return;
 
             if (user.UserArea.UserAreaCode == CofoundryAdminUserArea.AreaCode)
             {
-                _permissionValidationService.EnforceCurrentUserOrHasPermission<CofoundryUserReadPermission>(query.Id, executionContext.UserContext);
+                _permissionValidationService.EnforceCurrentUserOrHasPermission<CofoundryUserReadPermission>(query.UserId, executionContext.UserContext);
             }
             else
             {
-                _permissionValidationService.EnforceCurrentUserOrHasPermission<NonCofoundryUserReadPermission>(query.Id, executionContext.UserContext);
+                _permissionValidationService.EnforceCurrentUserOrHasPermission<NonCofoundryUserReadPermission>(query.UserId, executionContext.UserContext);
             }
         }
 

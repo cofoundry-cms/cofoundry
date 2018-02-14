@@ -40,7 +40,7 @@ namespace Cofoundry.Web.Admin
         [HttpGet]
         public async Task<IActionResult> Get()
         {
-            var results = await _queryExecutor.GetAllAsync<ActiveLocale>();
+            var results = await _queryExecutor.ExecuteAsync(new GetAllActiveLocalesQuery());
             return _apiResponseHelper.SimpleQueryResponse(this, results);
         }
 

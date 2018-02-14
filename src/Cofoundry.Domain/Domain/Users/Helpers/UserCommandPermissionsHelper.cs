@@ -16,12 +16,12 @@ namespace Cofoundry.Domain
 
         private readonly CofoundryDbContext _dbContext;
         private readonly IInternalRoleRepository _internalRoleRepository;
-        private readonly IUserAreaRepository _userAreaRepository;
+        private readonly IUserAreaDefinitionRepository _userAreaRepository;
 
         public UserCommandPermissionsHelper(
             CofoundryDbContext dbContext,
             IInternalRoleRepository internalRoleRepository,
-            IUserAreaRepository userAreaRepository
+            IUserAreaDefinitionRepository userAreaRepository
             )
         {
             _dbContext = dbContext;

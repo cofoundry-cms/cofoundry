@@ -49,7 +49,7 @@ namespace Cofoundry.Web.Admin
 
         public override async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
         {
-            var settings = await _queryExecutor.GetAsync<InternalSettings>();
+            var settings = await _queryExecutor.ExecuteAsync(new GetSettingsQuery<InternalSettings>());
             if (!settings.IsSetup)
             {
                 context.Result = Redirect(_adminRouteLibrary.Setup.Setup());

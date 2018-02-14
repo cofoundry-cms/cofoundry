@@ -13,11 +13,11 @@ namespace Cofoundry.Domain
     public class RoleDetailsMapper : IRoleDetailsMapper
     {
         private readonly IPermissionRepository _permissionRepository;
-        private readonly IUserAreaRepository _userAreaRepository;
+        private readonly IUserAreaDefinitionRepository _userAreaRepository;
 
         public RoleDetailsMapper(
             IPermissionRepository permissionRepository,
-            IUserAreaRepository userAreaRepository
+            IUserAreaDefinitionRepository userAreaRepository
             )
         {
             _permissionRepository = permissionRepository;

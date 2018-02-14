@@ -11,7 +11,7 @@ namespace Cofoundry.Domain
         /// <summary>
         /// The items returned
         /// </summary>
-        public TResult[] Items { get; set; }
+        public ICollection<TResult> Items { get; set; }
 
         /// <summary>
         /// Total number of items in the result before paging was applied
@@ -42,8 +42,19 @@ namespace Cofoundry.Domain
         /// <returns>New instance of PagedQueryResult</returns>
         public PagedQueryResult<TResultTo> ChangeType<TResultTo>(IEnumerable<TResultTo> newItems)
         {
+            return ChangeType(newItems?.ToList());
+        }
+
+        /// <summary>
+        /// Change the type of the paged result to a different type. Useful if you have to re-map a result
+        /// </summary>
+        /// <typeparam name="TResultTo">Type to change the result to</typeparam>
+        /// <param name="newItems">The ordered items to add to the new result in place of the old</param>
+        /// <returns>New instance of PagedQueryResult</returns>
+        public PagedQueryResult<TResultTo> ChangeType<TResultTo>(ICollection<TResultTo> newItems)
+        {
             var newResult = new PagedQueryResult<TResultTo>();
-            newResult.Items = newItems.ToArray();
+            newResult.Items = newItems.ToList();
             newResult.PageCount = PageCount;
             newResult.PageNumber = PageNumber;
             newResult.PageSize = PageSize;

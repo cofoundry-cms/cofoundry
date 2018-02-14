@@ -11,8 +11,8 @@ using Cofoundry.Core;
 namespace Cofoundry.Domain
 {
     public class GetAllPageRoutesQueryHandler 
-        : IAsyncQueryHandler<GetAllQuery<PageRoute>, IEnumerable<PageRoute>>
-        , IPermissionRestrictedQueryHandler<GetAllQuery<PageRoute>, IEnumerable<PageRoute>>
+        : IAsyncQueryHandler<GetAllPageRoutesQuery, ICollection<PageRoute>>
+        , IPermissionRestrictedQueryHandler<GetAllPageRoutesQuery, ICollection<PageRoute>>
     {
         #region constructor
 
@@ -35,7 +35,7 @@ namespace Cofoundry.Domain
         
         #region execution
 
-        public async Task<IEnumerable<PageRoute>> ExecuteAsync(GetAllQuery<PageRoute> query, IExecutionContext executionContext)
+        public async Task<ICollection<PageRoute>> ExecuteAsync(GetAllPageRoutesQuery query, IExecutionContext executionContext)
         {
             return await _pageCache.GetOrAddAsync(() =>
             {
@@ -134,17 +134,18 @@ namespace Cofoundry.Domain
 
         #endregion
 
-        private async Task<PageRoute[]> GetAllPageRoutesAsync(GetAllQuery<PageRoute> query, IExecutionContext executionContext)
+        private async Task<ICollection<PageRoute>> GetAllPageRoutesAsync(GetAllPageRoutesQuery query, IExecutionContext executionContext)
         {
             var dbPages = await QueryPages().ToListAsync();
             var dbPageVersions = await QueryPageVersions().ToListAsync();
-            var pageDirectories = (await _queryExecutor.GetAllAsync<PageDirectoryRoute>(executionContext)).ToDictionary(d => d.PageDirectoryId);
+            var pageDirectories = await _queryExecutor.ExecuteAsync(new GetAllPageDirectoryRoutesQuery(), executionContext);
+            var pageDirectoryLookup = pageDirectories.ToDictionary(d => d.PageDirectoryId);
             var templates = await GetPageTemplates().ToDictionaryAsync(t => t.PageTemplateId);
-            var allLocales = await _queryExecutor.GetAllAsync<ActiveLocale>(executionContext);
+            var allLocales = await _queryExecutor.ExecuteAsync(new GetAllActiveLocalesQuery(), executionContext);
 
-            var routes = Map(dbPages, dbPageVersions, pageDirectories, templates, allLocales);
+            var routes = Map(dbPages, dbPageVersions, pageDirectoryLookup, templates, allLocales);
 
-            return routes.ToArray();
+            return routes;
         }
 
         private List<PageRoute> Map(
@@ -152,7 +153,7 @@ namespace Cofoundry.Domain
             List<PageVersionQueryResult> dbPageVersions,
             Dictionary<int, PageDirectoryRoute> pageDirectories,
             Dictionary<int, PageTemplateQueryResult> templates,
-            IEnumerable<ActiveLocale> activeLocales
+            ICollection<ActiveLocale> activeLocales
             )
         {
             var routes = new List<PageRoute>();
@@ -196,7 +197,11 @@ namespace Cofoundry.Domain
             return routes;
         }
 
-        private void SetPageVersions(PageRoute routingInfo, IEnumerable<PageVersionQueryResult> dbPageVersions, Dictionary<int, PageTemplateQueryResult> templates)
+        private void SetPageVersions(
+            PageRoute routingInfo,
+            ICollection<PageVersionQueryResult> dbPageVersions, 
+            Dictionary<int, PageTemplateQueryResult> templates
+            )
         {
             var versions = dbPageVersions
                 .Where(v => v.PageId == routingInfo.PageId)
@@ -227,7 +232,11 @@ namespace Cofoundry.Domain
             routingInfo.HasPublishedVersion = routingInfo.Versions.Any(v => v.WorkFlowStatus == WorkFlowStatus.Published);
         }
 
-        private PageVersionRoute MapVersion(PageRoute routingInfo, PageVersionQueryResult version, Dictionary<int, PageTemplateQueryResult> templates)
+        private PageVersionRoute MapVersion(
+            PageRoute routingInfo, 
+            PageVersionQueryResult version, 
+            Dictionary<int, PageTemplateQueryResult> templates
+            )
         {
             var versionRouting = new PageVersionRoute();
             versionRouting.WorkFlowStatus = (WorkFlowStatus)version.WorkFlowStatusId;
@@ -277,7 +286,7 @@ namespace Cofoundry.Domain
         
         #region Permission
 
-        public IEnumerable<IPermissionApplication> GetPermissions(GetAllQuery<PageRoute> query)
+        public IEnumerable<IPermissionApplication> GetPermissions(GetAllPageRoutesQuery query)
         {
             yield return new PageReadPermission();
         }

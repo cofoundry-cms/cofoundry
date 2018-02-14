@@ -38,7 +38,7 @@ namespace Cofoundry.Web.Admin
         [HttpGet]
         public async Task<IActionResult> Get()
         {
-            var results = await _queryExecutor.GetAllAsync<DocumentAssetFileType>();
+            var results = await _queryExecutor.ExecuteAsync(new GetAllDocumentAssetFileTypesQuery());
             return _apiResponseHelper.SimpleQueryResponse(this, results);
         }
 

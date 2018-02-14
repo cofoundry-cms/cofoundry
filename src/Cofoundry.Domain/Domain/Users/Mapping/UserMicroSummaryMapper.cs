@@ -11,9 +11,9 @@ namespace Cofoundry.Domain
     /// </summary>
     public class UserMicroSummaryMapper : IUserMicroSummaryMapper
     {
-        private readonly IUserAreaRepository _userAreaRepository;
+        private readonly IUserAreaDefinitionRepository _userAreaRepository;
 
-        public UserMicroSummaryMapper(IUserAreaRepository userAreaRepository)
+        public UserMicroSummaryMapper(IUserAreaDefinitionRepository userAreaRepository)
         {
             _userAreaRepository = userAreaRepository;
         }

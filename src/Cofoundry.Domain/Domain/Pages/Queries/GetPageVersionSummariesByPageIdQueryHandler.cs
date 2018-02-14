@@ -9,8 +9,8 @@ using Microsoft.EntityFrameworkCore;
 namespace Cofoundry.Domain
 {
     public class GetPageVersionSummariesByPageIdQueryHandler
-        : IAsyncQueryHandler<GetPageVersionSummariesByPageIdQuery, IEnumerable<PageVersionSummary>>
-        , IPermissionRestrictedQueryHandler<GetPageVersionSummariesByPageIdQuery, IEnumerable<PageVersionSummary>>
+        : IAsyncQueryHandler<GetPageVersionSummariesByPageIdQuery, ICollection<PageVersionSummary>>
+        , IPermissionRestrictedQueryHandler<GetPageVersionSummariesByPageIdQuery, ICollection<PageVersionSummary>>
     {
         #region constructor
 
@@ -33,7 +33,7 @@ namespace Cofoundry.Domain
 
         #region execution
         
-        public async Task<IEnumerable<PageVersionSummary>> ExecuteAsync(GetPageVersionSummariesByPageIdQuery query, IExecutionContext executionContext)
+        public async Task<ICollection<PageVersionSummary>> ExecuteAsync(GetPageVersionSummariesByPageIdQuery query, IExecutionContext executionContext)
         {
             var dbVersions = await Query(query.PageId).ToListAsync();
             var versions = _pageVersionSummaryMapper.MapVersions(query.PageId, dbVersions);

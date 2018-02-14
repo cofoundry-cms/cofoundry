@@ -11,7 +11,7 @@ using Cofoundry.Core;
 namespace Cofoundry.Domain
 {
     public class GetUpdateCustomEntityDraftVersionCommandByIdQueryHandler 
-        : IAsyncQueryHandler<GetByIdQuery<UpdateCustomEntityDraftVersionCommand>, UpdateCustomEntityDraftVersionCommand>
+        : IAsyncQueryHandler<GetUpdateCommandByIdQuery<UpdateCustomEntityDraftVersionCommand>, UpdateCustomEntityDraftVersionCommand>
         , IIgnorePermissionCheckHandler
     {
         #region constructor
@@ -38,7 +38,7 @@ namespace Cofoundry.Domain
 
         #region execution
 
-        public async Task<UpdateCustomEntityDraftVersionCommand> ExecuteAsync(GetByIdQuery<UpdateCustomEntityDraftVersionCommand> query, IExecutionContext executionContext)
+        public async Task<UpdateCustomEntityDraftVersionCommand> ExecuteAsync(GetUpdateCommandByIdQuery<UpdateCustomEntityDraftVersionCommand> query, IExecutionContext executionContext)
         {
             var dbResult = await _dbContext
                 .CustomEntityVersions
@@ -59,7 +59,8 @@ namespace Cofoundry.Domain
                 Title = dbResult.Title
             };
 
-            var definition = await _queryExecutor.GetByIdAsync<CustomEntityDefinitionSummary>(command.CustomEntityDefinitionCode);
+            var definitionQuery = new GetCustomEntityDefinitionSummaryByCodeQuery(command.CustomEntityDefinitionCode);
+            var definition = await _queryExecutor.ExecuteAsync(definitionQuery, executionContext);
             EntityNotFoundException.ThrowIfNull(definition, command.CustomEntityDefinitionCode);
             command.Model = (ICustomEntityDataModel)_dbUnstructuredDataSerializer.Deserialize(dbResult.SerializedData, definition.DataModelType);
 

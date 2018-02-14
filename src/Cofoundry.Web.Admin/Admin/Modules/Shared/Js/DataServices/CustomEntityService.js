@@ -45,7 +45,7 @@ function (
 
         return $http.get(customEntityServiceBase + '/', {
             params: {
-                'ids': ids
+                'customEntityIds': ids
             }
         });
     }

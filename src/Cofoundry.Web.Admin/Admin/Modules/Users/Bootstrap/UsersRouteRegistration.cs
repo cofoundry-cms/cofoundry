@@ -11,18 +11,18 @@ namespace Cofoundry.Web.Admin
 {
     public class UsersRouteRegistration : IRouteRegistration
     {
-        private readonly IUserAreaRepository _userAreaRepository;
+        private readonly IUserAreaDefinitionRepository _userAreaDefinitionRepository;
 
         public UsersRouteRegistration(
-            IUserAreaRepository userAreaRepository
+            IUserAreaDefinitionRepository userAreaDefinitionRepository
             )
         {
-            _userAreaRepository = userAreaRepository;
+            _userAreaDefinitionRepository = userAreaDefinitionRepository;
         }
 
         public void RegisterRoutes(IRouteBuilder routeBuilder)
         {
-            foreach (var userArea in _userAreaRepository.GetAll())
+            foreach (var userArea in _userAreaDefinitionRepository.GetAll())
             {
                 var routePrefix = SlugFormatter.ToSlug(userArea.Name);
 

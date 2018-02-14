@@ -16,7 +16,7 @@ namespace Cofoundry.Domain.Data
             return result;
         }
 
-        public static IQueryable<DocumentAsset> FilterByIds(this IQueryable<DocumentAsset> document, int[] ids)
+        public static IQueryable<DocumentAsset> FilterByIds(this IQueryable<DocumentAsset> document, IEnumerable<int> ids)
         {
             var result = document
                 .Where(i => ids.Contains(i.DocumentAssetId) && !i.IsDeleted);

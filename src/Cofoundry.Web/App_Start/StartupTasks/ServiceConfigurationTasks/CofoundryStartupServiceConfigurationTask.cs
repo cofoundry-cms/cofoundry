@@ -23,7 +23,7 @@ namespace Cofoundry.Web
         private readonly IEnumerable<IMvcJsonOptionsConfiguration> _mvcJsonOptionsConfigurations;
         private readonly IEnumerable<IMvcOptionsConfiguration> _mvcOptionsConfigurations;
         private readonly IEnumerable<IRazorViewEngineOptionsConfiguration> _razorViewEngineOptionsConfigurations;
-        private readonly IUserAreaRepository _userAreaRepository;
+        private readonly IUserAreaDefinitionRepository _userAreaDefinitionRepository;
         private readonly IHostingEnvironment _hostingEnvironment;
         private readonly AuthenticationSettings _authenticationSettings;
 
@@ -31,7 +31,7 @@ namespace Cofoundry.Web
             IEnumerable<IMvcJsonOptionsConfiguration> mvcJsonOptionsConfigurations,
             IEnumerable<IMvcOptionsConfiguration> mvcOptionsConfigurations,
             IEnumerable<IRazorViewEngineOptionsConfiguration> razorViewEngineOptionsConfigurations,
-            IUserAreaRepository userAreaRepository,
+            IUserAreaDefinitionRepository userAreaDefinitionRepository,
             IHostingEnvironment hostingEnvironment,
             AuthenticationSettings authenticationSettings
             )
@@ -39,7 +39,7 @@ namespace Cofoundry.Web
             _mvcJsonOptionsConfigurations = mvcJsonOptionsConfigurations;
             _mvcOptionsConfigurations = mvcOptionsConfigurations;
             _razorViewEngineOptionsConfigurations = razorViewEngineOptionsConfigurations;
-            _userAreaRepository = userAreaRepository;
+            _userAreaDefinitionRepository = userAreaDefinitionRepository;
             _hostingEnvironment = hostingEnvironment;
             _authenticationSettings = authenticationSettings;
         }
@@ -76,7 +76,7 @@ namespace Cofoundry.Web
         private void ConfigureAuth(IMvcBuilder mvcBuilder)
         {
             var services = mvcBuilder.Services;
-            var allUserAreas = _userAreaRepository.GetAll();
+            var allUserAreas = _userAreaDefinitionRepository.GetAll();
 
             // Set default schema as specified in config, falling back to CofoundryAdminUserArea
             // Since any additional areas are configured by the implementor there shouldn't be multiple

@@ -55,7 +55,8 @@ namespace Cofoundry.Domain
             EntityNotFoundException.ThrowIfNull(entity, command.CustomEntityId);
             await _permissionValidationService.EnforceCustomEntityPermissionAsync<CustomEntityUpdateUrlPermission>(entity.CustomEntityDefinitionCode);
 
-            var definition = await _queryExecutor.GetByIdAsync<CustomEntityDefinitionSummary>(entity.CustomEntityDefinitionCode);
+            var definitionQuery = new GetCustomEntityDefinitionSummaryByCodeQuery(entity.CustomEntityDefinitionCode);
+            var definition = await _queryExecutor.ExecuteAsync(definitionQuery, executionContext);
             EntityNotFoundException.ThrowIfNull(definition, entity.CustomEntityDefinitionCode);
 
             await ValidateIsUnique(command, definition);

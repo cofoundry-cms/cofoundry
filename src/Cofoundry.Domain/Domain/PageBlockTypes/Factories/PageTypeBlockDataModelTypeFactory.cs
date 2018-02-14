@@ -68,7 +68,8 @@ namespace Cofoundry.Domain
         /// <param name="pageBlockTypeId">Id of the page block type in the database</param>
         public async Task<Type> CreateByPageBlockTypeIdAsync(int pageBlockTypeId)
         {
-            var blockType = await _queryExecutor.GetByIdAsync<PageBlockTypeSummary>(pageBlockTypeId);
+            var query = new GetPageBlockTypeSummaryByIdQuery(pageBlockTypeId);
+            var blockType = await _queryExecutor.ExecuteAsync(query);
             EntityNotFoundException.ThrowIfNull(blockType, pageBlockTypeId);
 
             return CreateByPageBlockTypeFileName(blockType.FileName);

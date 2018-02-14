@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore;
 namespace Cofoundry.Domain
 {
     public class GetImageAssetRenderDetailsByIdQueryHandler 
-        : IAsyncQueryHandler<GetByIdQuery<ImageAssetRenderDetails>, ImageAssetRenderDetails>
-        , IPermissionRestrictedQueryHandler<GetByIdQuery<ImageAssetRenderDetails>, ImageAssetRenderDetails>
+        : IAsyncQueryHandler<GetImageAssetRenderDetailsByIdQuery, ImageAssetRenderDetails>
+        , IPermissionRestrictedQueryHandler<GetImageAssetRenderDetailsByIdQuery, ImageAssetRenderDetails>
     {
         #region constructor
 
@@ -34,11 +34,11 @@ namespace Cofoundry.Domain
 
         #region execution
 
-        public async Task<ImageAssetRenderDetails> ExecuteAsync(GetByIdQuery<ImageAssetRenderDetails> query, IExecutionContext executionContext)
+        public async Task<ImageAssetRenderDetails> ExecuteAsync(GetImageAssetRenderDetailsByIdQuery query, IExecutionContext executionContext)
         {
-            var asset = await _imageAssetCache.GetOrAddAsync(query.Id, async () =>
+            var asset = await _imageAssetCache.GetOrAddAsync(query.ImageAssetId, async () =>
             {
-                var dbResult = await Query(query.Id).SingleOrDefaultAsync();
+                var dbResult = await Query(query.ImageAssetId).SingleOrDefaultAsync();
                 var result = _imageAssetRenderDetailsMapper.Map(dbResult);
                 return result;
             });
@@ -58,7 +58,7 @@ namespace Cofoundry.Domain
 
         #region Permission
 
-        public IEnumerable<IPermissionApplication> GetPermissions(GetByIdQuery<ImageAssetRenderDetails> query)
+        public IEnumerable<IPermissionApplication> GetPermissions(GetImageAssetRenderDetailsByIdQuery query)
         {
             yield return new ImageAssetReadPermission();
         }

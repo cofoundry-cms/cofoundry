@@ -10,8 +10,8 @@ using System.IO;
 namespace Cofoundry.Domain
 {
     public class GetImageAssetFileByIdQueryHandler 
-        : IAsyncQueryHandler<GetByIdQuery<ImageAssetFile>, ImageAssetFile>
-        , IPermissionRestrictedQueryHandler<GetByIdQuery<ImageAssetFile>, ImageAssetFile>
+        : IAsyncQueryHandler<GetImageAssetFileByIdQuery, ImageAssetFile>
+        , IPermissionRestrictedQueryHandler<GetImageAssetFileByIdQuery, ImageAssetFile>
     {
         #region constructor
 
@@ -34,13 +34,14 @@ namespace Cofoundry.Domain
 
         #region execution
 
-        public async Task<ImageAssetFile> ExecuteAsync(GetByIdQuery<ImageAssetFile> query, IExecutionContext executionContext)
+        public async Task<ImageAssetFile> ExecuteAsync(GetImageAssetFileByIdQuery query, IExecutionContext executionContext)
         {
-            // Render details is potentially cached so we query for this rather than direcvtly with the db
-            var dbResult = await _queryExecutor.GetByIdAsync<ImageAssetRenderDetails>(query.Id);
+            // Render details is potentially cached so we query for this rather than directly with the db
+            var getImageQuery = new GetImageAssetRenderDetailsByIdQuery(query.ImageAssetId);
+            var dbResult = await _queryExecutor.ExecuteAsync(getImageQuery, executionContext);
 
             if (dbResult == null) return null;
-            var fileName = Path.ChangeExtension(query.Id.ToString(), dbResult.Extension);
+            var fileName = Path.ChangeExtension(query.ImageAssetId.ToString(), dbResult.Extension);
             var contentStream = await _fileStoreService.GetAsync(ImageAssetConstants.FileContainerName, fileName); ;
 
             if (contentStream == null)
@@ -57,7 +58,7 @@ namespace Cofoundry.Domain
 
         #region Permission
 
-        public IEnumerable<IPermissionApplication> GetPermissions(GetByIdQuery<ImageAssetFile> query)
+        public IEnumerable<IPermissionApplication> GetPermissions(GetImageAssetFileByIdQuery query)
         {
             yield return new ImageAssetReadPermission();
         }

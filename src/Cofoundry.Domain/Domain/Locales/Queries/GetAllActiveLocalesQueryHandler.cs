@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore;
 namespace Cofoundry.Domain
 {
     public class GetAllActiveLocalesQueryHandler 
-        : IAsyncQueryHandler<GetAllQuery<ActiveLocale>, IEnumerable<ActiveLocale>>
+        : IAsyncQueryHandler<GetAllActiveLocalesQuery, ICollection<ActiveLocale>>
         , IIgnorePermissionCheckHandler
     {
         #region constructor
@@ -34,14 +34,14 @@ namespace Cofoundry.Domain
 
         #region execution
 
-        public async Task<IEnumerable<ActiveLocale>> ExecuteAsync(GetAllQuery<ActiveLocale> query, IExecutionContext executionContext)
+        public async Task<ICollection<ActiveLocale>> ExecuteAsync(GetAllActiveLocalesQuery query, IExecutionContext executionContext)
         {
-            var results = await _cache.GetOrAddAsync(new Func<Task<ActiveLocale[]>>(async () =>
+            var results = await _cache.GetOrAddAsync(new Func<Task<ICollection<ActiveLocale>>>(async () =>
             {
                 var dbResults = await GetAllLocales().ToListAsync();
                 var mappedResults = dbResults
                     .Select(_activeLocaleMapper.Map)
-                    .ToArray();
+                    .ToList();
 
                 return mappedResults;
             }));

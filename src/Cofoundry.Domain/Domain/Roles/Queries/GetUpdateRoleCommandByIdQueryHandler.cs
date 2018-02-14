@@ -8,8 +8,8 @@ using Cofoundry.Domain.CQS;
 namespace Cofoundry.Domain
 {
     public class GetUpdateRoleCommandByIdQueryHandler 
-        : IAsyncQueryHandler<GetByIdQuery<UpdateRoleCommand>, UpdateRoleCommand>
-        , IPermissionRestrictedQueryHandler<GetByIdQuery<UpdateRoleCommand>, UpdateRoleCommand>
+        : IAsyncQueryHandler<GetUpdateCommandByIdQuery<UpdateRoleCommand>, UpdateRoleCommand>
+        , IPermissionRestrictedQueryHandler<GetUpdateCommandByIdQuery<UpdateRoleCommand>, UpdateRoleCommand>
     {
         #region constructor
 
@@ -26,7 +26,7 @@ namespace Cofoundry.Domain
 
         #region execution
 
-        public async Task<UpdateRoleCommand> ExecuteAsync(GetByIdQuery<UpdateRoleCommand> query, IExecutionContext executionContext)
+        public async Task<UpdateRoleCommand> ExecuteAsync(GetUpdateCommandByIdQuery<UpdateRoleCommand> query, IExecutionContext executionContext)
         {
             var role = await _internalRoleRepository.GetByIdAsync(query.Id);
             var command = new UpdateRoleCommand()
@@ -51,7 +51,7 @@ namespace Cofoundry.Domain
 
         #region permissions
 
-        public IEnumerable<IPermissionApplication> GetPermissions(GetByIdQuery<UpdateRoleCommand> command)
+        public IEnumerable<IPermissionApplication> GetPermissions(GetUpdateCommandByIdQuery<UpdateRoleCommand> command)
         {
             yield return new RoleReadPermission();
         }

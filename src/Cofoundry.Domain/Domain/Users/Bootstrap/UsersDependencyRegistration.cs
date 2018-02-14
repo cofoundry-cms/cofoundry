@@ -11,7 +11,7 @@ namespace Cofoundry.Domain
         public void Register(IContainerRegister container)
         {
             container
-                .RegisterType<IUserAreaRepository, UserAreaRepository>()
+                .RegisterType<IUserAreaDefinitionRepository, UserAreaDefinitionRepository>()
                 .RegisterType<IUserRepository, UserRepository>()
                 .RegisterType<UserContextMapper>()
                 .RegisterType<IResetUserPasswordCommandHelper, ResetUserPasswordCommandHelper>()

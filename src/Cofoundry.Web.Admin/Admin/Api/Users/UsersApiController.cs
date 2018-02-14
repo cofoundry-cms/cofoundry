@@ -49,7 +49,9 @@ namespace Cofoundry.Web.Admin
         [HttpGet(ID_ROUTE)]
         public async Task<IActionResult> Get(int userId)
         {
-            var result = await _queryExecutor.GetByIdAsync<UserDetails>(userId);
+            var query = new GetUserDetailsByIdQuery(userId);
+            var result = await _queryExecutor.ExecuteAsync(query);
+
             return _apiResponseHelper.SimpleQueryResponse(this, result);
         }
 

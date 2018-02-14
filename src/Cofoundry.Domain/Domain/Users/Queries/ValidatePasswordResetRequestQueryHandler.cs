@@ -16,12 +16,12 @@ namespace Cofoundry.Domain
         #region constructor
 
         private readonly CofoundryDbContext _dbContext;
-        private readonly IUserAreaRepository _userAreaRepository;
+        private readonly IUserAreaDefinitionRepository _userAreaRepository;
         private readonly AuthenticationSettings _authenticationSettings;
 
         public ValidatePasswordResetRequestQueryHandler(
             CofoundryDbContext dbContext,
-            IUserAreaRepository userAreaRepository,
+            IUserAreaDefinitionRepository userAreaRepository,
             AuthenticationSettings authenticationSettings
             )
         {

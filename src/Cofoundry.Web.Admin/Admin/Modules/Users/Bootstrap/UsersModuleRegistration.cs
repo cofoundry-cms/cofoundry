@@ -8,21 +8,21 @@ namespace Cofoundry.Web.Admin
 {
     public class UsersModuleRegistration : IAdminModuleRegistration
     {
-        private readonly IUserAreaRepository _userAreaRepository;
+        private readonly IUserAreaDefinitionRepository _userAreaDefinitionRepository;
         private readonly IAdminRouteLibrary _adminRouteLibrary;
 
         public UsersModuleRegistration(
-            IUserAreaRepository userAreaRepository,
+            IUserAreaDefinitionRepository userAreaDefinitionRepository,
             IAdminRouteLibrary adminRouteLibrary
             )
         {
-            _userAreaRepository = userAreaRepository;
+            _userAreaDefinitionRepository = userAreaDefinitionRepository;
             _adminRouteLibrary = adminRouteLibrary;
         }
 
         public IEnumerable<AdminModule> GetModules()
         {
-            foreach (var userArea in _userAreaRepository.GetAll())
+            foreach (var userArea in _userAreaDefinitionRepository.GetAll())
             {
                 var module = new AdminModule()
                 {

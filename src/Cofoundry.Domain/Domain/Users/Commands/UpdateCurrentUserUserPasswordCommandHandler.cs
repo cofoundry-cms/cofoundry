@@ -24,14 +24,14 @@ namespace Cofoundry.Domain
         private readonly IPasswordCryptographyService _passwordCryptographyService;
         private readonly UserAuthenticationHelper _userAuthenticationHelper;
         private readonly IPermissionValidationService _permissionValidationService;
-        private readonly IUserAreaRepository _userAreaRepository;
+        private readonly IUserAreaDefinitionRepository _userAreaRepository;
 
         public UpdateCurrentUserUserPasswordCommandHandler(
             CofoundryDbContext dbContext,
             IPasswordCryptographyService passwordCryptographyService,
             UserAuthenticationHelper userAuthenticationHelper,
             IPermissionValidationService permissionValidationService,
-            IUserAreaRepository userAreaRepository
+            IUserAreaDefinitionRepository userAreaRepository
             )
         {
             _dbContext = dbContext;

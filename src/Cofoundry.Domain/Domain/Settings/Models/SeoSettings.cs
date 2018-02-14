@@ -8,12 +8,8 @@ namespace Cofoundry.Domain
 {
     public class SeoSettings : ICofoundrySettings
     {
-        public string GoogleAnalyticsUAId { get; set; }
-
         public string RobotsTxt { get; set; }
 
         public string HumansTxt { get; set; }
-
-        public string BingWebmasterToolsApiKey { get; set; }
     }
 }

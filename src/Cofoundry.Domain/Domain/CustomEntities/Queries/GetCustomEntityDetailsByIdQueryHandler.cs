@@ -11,7 +11,7 @@ using Cofoundry.Core;
 namespace Cofoundry.Domain
 {
     public class GetCustomEntityDetailsByIdQueryHandler 
-        : IAsyncQueryHandler<GetByIdQuery<CustomEntityDetails>, CustomEntityDetails>
+        : IAsyncQueryHandler<GetCustomEntityDetailsByIdQuery, CustomEntityDetails>
         , IIgnorePermissionCheckHandler
     {
         #region constructor
@@ -47,16 +47,16 @@ namespace Cofoundry.Domain
 
         #region execution
 
-        public async Task<CustomEntityDetails> ExecuteAsync(GetByIdQuery<CustomEntityDetails> query, IExecutionContext executionContext)
+        public async Task<CustomEntityDetails> ExecuteAsync(GetCustomEntityDetailsByIdQuery query, IExecutionContext executionContext)
         {
-            var customEntityVersion = await Query(query.Id).FirstOrDefaultAsync();
+            var customEntityVersion = await Query(query.CustomEntityId).FirstOrDefaultAsync();
             await _permissionValidationService.EnforceCustomEntityPermissionAsync<CustomEntityReadPermission>(customEntityVersion.CustomEntity.CustomEntityDefinitionCode);
             
-            return await Map(query, customEntityVersion, executionContext);
+            return await MapAsync(query, customEntityVersion, executionContext);
         }
 
-        private async Task<CustomEntityDetails> Map(
-            GetByIdQuery<CustomEntityDetails> query, 
+        private async Task<CustomEntityDetails> MapAsync(
+            GetCustomEntityDetailsByIdQuery query, 
             CustomEntityVersion dbVersion,
             IExecutionContext executionContext
             )
@@ -70,16 +70,17 @@ namespace Cofoundry.Domain
             {
                 entity.IsPublished = await _dbContext
                     .CustomEntityVersions
-                    .AnyAsync(v => v.CustomEntityId == query.Id && v.WorkFlowStatusId == (int)WorkFlowStatus.Published);
+                    .AnyAsync(v => v.CustomEntityId == query.CustomEntityId && v.WorkFlowStatusId == (int)WorkFlowStatus.Published);
             }
 
             if (dbVersion.CustomEntity.LocaleId.HasValue)
             {
-                entity.Locale = await _queryExecutor.GetByIdAsync<ActiveLocale>(dbVersion.CustomEntity.LocaleId.Value, executionContext);
+                var getLocaleQuery = new GetActiveLocaleByIdQuery(dbVersion.CustomEntity.LocaleId.Value);
+                entity.Locale = await _queryExecutor.ExecuteAsync(getLocaleQuery, executionContext);
             }
 
             // Custom Mapping
-            await MapDataModelAsync(query, dbVersion, entity.LatestVersion);
+            await MapDataModelAsync(query, dbVersion, entity.LatestVersion, executionContext);
 
             await MapPages(dbVersion, entity, executionContext);
 
@@ -144,7 +145,7 @@ namespace Cofoundry.Domain
                 .Where(s => allTemplateIds.Contains(s.PageTemplateId) && s.IsCustomEntityRegion)
                 .ToListAsync();
 
-            var allPageBlockTypes = await _queryExecutor.GetAllAsync<PageBlockTypeSummary>(executionContext);
+            var allPageBlockTypes = await _queryExecutor.ExecuteAsync(new GetAllPageBlockTypeSummariesQuery(), executionContext);
 
             foreach (var routing in routings)
             {
@@ -215,9 +216,15 @@ namespace Cofoundry.Domain
                 .ThenByDescending(g => g.CreateDate);
         }
 
-        private async Task MapDataModelAsync(GetByIdQuery<CustomEntityDetails> query, CustomEntityVersion dbVersion, CustomEntityVersionDetails version)
+        private async Task MapDataModelAsync(
+            GetCustomEntityDetailsByIdQuery query, 
+            CustomEntityVersion dbVersion, 
+            CustomEntityVersionDetails version,
+            IExecutionContext executionContext
+            )
         {
-            var definition = await _queryExecutor.GetByIdAsync<CustomEntityDefinitionSummary>(dbVersion.CustomEntity.CustomEntityDefinitionCode);
+            var definitionQuery = new GetCustomEntityDefinitionSummaryByCodeQuery(dbVersion.CustomEntity.CustomEntityDefinitionCode);
+            var definition = await _queryExecutor.ExecuteAsync(definitionQuery, executionContext);
             EntityNotFoundException.ThrowIfNull(definition, dbVersion.CustomEntity.CustomEntityDefinitionCode);
 
             version.Model = (ICustomEntityDataModel)_dbUnstructuredDataSerializer.Deserialize(dbVersion.SerializedData, definition.DataModelType);

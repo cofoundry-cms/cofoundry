@@ -18,8 +18,8 @@ namespace Cofoundry.Domain
     /// remains in place for compatibility.
     /// </summary>
     public class SearchPagesQueryHandler 
-        : IAsyncQueryHandler<SearchPagesQuery, IEnumerable<PageSearchResult>>
-        , IPermissionRestrictedQueryHandler<SearchPagesQuery, IEnumerable<PageSearchResult>>
+        : IAsyncQueryHandler<SearchPagesQuery, ICollection<PageSearchResult>>
+        , IPermissionRestrictedQueryHandler<SearchPagesQuery, ICollection<PageSearchResult>>
     {
         #region constructor
 
@@ -47,9 +47,9 @@ namespace Cofoundry.Domain
         /// This has just been copied with slight modification from PagesController and
         /// needs to be refactored.
         /// </remarks>
-        public async Task<IEnumerable<PageSearchResult>> ExecuteAsync(SearchPagesQuery query, IExecutionContext executionContext)
+        public async Task<ICollection<PageSearchResult>> ExecuteAsync(SearchPagesQuery query, IExecutionContext executionContext)
         {
-            if (string.IsNullOrWhiteSpace(query.Text)) return Enumerable.Empty<PageSearchResult>();
+            if (string.IsNullOrWhiteSpace(query.Text)) return Array.Empty<PageSearchResult>();
 
             var isAuthenticated = executionContext.UserContext.UserId.HasValue;
 
@@ -164,7 +164,7 @@ namespace Cofoundry.Domain
             }
 
             var searchResults = new List<PageSearchResult>();
-            var pageroutes = await _queryExecutor.GetAllAsync<PageRoute>();
+            var pageroutes = await _queryExecutor.ExecuteAsync(new GetAllPageRoutesQuery(), executionContext);
 
             var results = new List<PageSearchResult>(pageVersionMatches.Count);
 

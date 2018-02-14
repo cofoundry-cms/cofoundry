@@ -40,14 +40,14 @@ namespace Cofoundry.Web.Admin
         [HttpGet]
         public async Task<IActionResult> Get()
         {
-            var results = await _queryExecutor.GetAllAsync<CustomEntityDefinitionSummary>();
+            var results = await _queryExecutor.ExecuteAsync(new GetAllCustomEntityDefinitionSummariesQuery());
             return _apiResponseHelper.SimpleQueryResponse(this, results);
         }
 
         [HttpGet(ID_ROUTE)]
         public async Task<IActionResult> Get(string customEntityDefinitionCode)
         {
-            var result = await _queryExecutor.GetByIdAsync<CustomEntityDefinitionSummary>(customEntityDefinitionCode);
+            var result = await _queryExecutor.ExecuteAsync(new GetCustomEntityDefinitionSummaryByCodeQuery(customEntityDefinitionCode));
             return _apiResponseHelper.SimpleQueryResponse(this, result);
         }
         
@@ -63,7 +63,7 @@ namespace Cofoundry.Web.Admin
         [HttpGet(ID_ROUTE + "/data-model-schema")]
         public async Task<IActionResult> GetDataModelSchema(string customEntityDefinitionCode)
         {
-            var result = await _queryExecutor.GetByIdAsync<CustomEntityDataModelSchema>(customEntityDefinitionCode);
+            var result = await _queryExecutor.ExecuteAsync(new GetCustomEntityDataModelSchemaDetailsByDefinitionCodeQuery(customEntityDefinitionCode));
             return _apiResponseHelper.SimpleQueryResponse(this, result);
         }
 

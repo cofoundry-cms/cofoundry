@@ -44,13 +44,6 @@ namespace Cofoundry.Domain
         /// <param name="executionContext">Optional execution context to use when executing the query. Useful if you need to temporarily elevate your permission level.</param>
         Task<UserDetails> GetUserDetailsByIdAsync(int userId, IExecutionContext executionContext = null);
 
-        /// <summary>
-        /// Finds a user by a database id returning a UserDetails object if it 
-        /// is found, otherwise null.
-        /// </summary>
-        /// <param name="executionContext">Optional execution context to use when executing the query. Useful if you need to temporarily elevate your permission level.</param>
-        Task<UserMicroSummary> GetUserMicroSummaryById(int userId, IExecutionContext executionContext = null);
-
         #endregion
 
         #region get current user

@@ -39,7 +39,7 @@ function (
 
         return $http.get(imagesServiceBase + '/', {
             params: {
-                'ids': ids
+                'imageAssetIds': ids
             }
         });
     }

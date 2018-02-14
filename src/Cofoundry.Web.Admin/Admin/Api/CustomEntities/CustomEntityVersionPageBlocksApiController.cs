@@ -50,18 +50,15 @@ namespace Cofoundry.Web.Admin
         {
             if (dataType == CustomEntityVersionPageBlocksActionDataType.UpdateCommand)
             {
-                return await GetById<UpdateCustomEntityVersionPageBlockCommand>(customEntityVersionPageBlockId);
+                var updateCommandQuery = new GetUpdateCommandByIdQuery<UpdateCustomEntityVersionPageBlockCommand>(customEntityVersionPageBlockId);
+                var updateCommandResult = await _queryExecutor.ExecuteAsync(updateCommandQuery);
+
+                return _apiResponseHelper.SimpleQueryResponse(this, updateCommandResult);
             }
 
             var query = new GetCustomEntityVersionPageBlockRenderDetailsByIdQuery() { CustomEntityVersionPageBlockId = customEntityVersionPageBlockId, PublishStatus = PublishStatusQuery.Latest };
             var results = await _queryExecutor.ExecuteAsync(query);
 
-            return _apiResponseHelper.SimpleQueryResponse(this, results);
-        }
-
-        private async Task<IActionResult> GetById<T>(int customEntityVersionPageBlockId)
-        {
-            var results = await _queryExecutor.GetByIdAsync<T>(customEntityVersionPageBlockId);
             return _apiResponseHelper.SimpleQueryResponse(this, results);
         }
         

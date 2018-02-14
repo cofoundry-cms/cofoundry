@@ -11,12 +11,12 @@ namespace Cofoundry.Domain
     /// </summary>
     public class UserDetailsMapper : IUserDetailsMapper
     {
-        private readonly IUserAreaRepository _userAreaRepository;
+        private readonly IUserAreaDefinitionRepository _userAreaRepository;
         private readonly IUserMicroSummaryMapper _userMicroSummaryMapper;
         private readonly IRoleMicroSummaryMapper _roleMicroSummaryMapper;
 
         public UserDetailsMapper(
-            IUserAreaRepository userAreaRepository,
+            IUserAreaDefinitionRepository userAreaRepository,
             IUserMicroSummaryMapper userMicroSummaryMapper,
             IRoleMicroSummaryMapper roleMicroSummaryMapper
             )

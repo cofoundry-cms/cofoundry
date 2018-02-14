@@ -28,7 +28,7 @@ namespace Cofoundry.Domain
         private readonly IMailService _mailService;
         private readonly UserCommandPermissionsHelper _userCommandPermissionsHelper;
         private readonly IPermissionValidationService _permissionValidationService;
-        private readonly IUserAreaRepository _userAreaRepository;
+        private readonly IUserAreaDefinitionRepository _userAreaRepository;
         
         public AddUserCommandHandler(
             CofoundryDbContext dbContext,
@@ -38,7 +38,7 @@ namespace Cofoundry.Domain
             IMailService mailService,
             UserCommandPermissionsHelper userCommandPermissionsHelper,
             IPermissionValidationService permissionValidationService,
-            IUserAreaRepository userAreaRepository
+            IUserAreaDefinitionRepository userAreaRepository
             )
         {
             _dbContext = dbContext;

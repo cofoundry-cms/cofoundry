@@ -102,7 +102,9 @@ namespace Cofoundry.Domain
                 if (definition == null)
                 {
                     // Load and cache definitions
-                    definition = await _queryExecutor.GetByIdAsync<CustomEntityDefinitionSummary>(dbStatusQuery.CustomEntity.CustomEntityDefinitionCode, executionContext);
+                    var definitionQuery = new GetCustomEntityDefinitionSummaryByCodeQuery(dbStatusQuery.CustomEntity.CustomEntityDefinitionCode);
+                    definition = await _queryExecutor.ExecuteAsync(definitionQuery, executionContext);
+
                     EntityNotFoundException.ThrowIfNull(definition, definition.CustomEntityDefinitionCode);
                     customEntityDefinitions.Add(dbStatusQuery.CustomEntity.CustomEntityDefinitionCode, definition);
                 }
@@ -123,9 +125,10 @@ namespace Cofoundry.Domain
             }
         }
 
-        private async System.Threading.Tasks.Task<Dictionary<int, ActiveLocale>> GetLocales()
+        private async Task<Dictionary<int, ActiveLocale>> GetLocales()
         {
-            return (await _queryExecutor.GetAllAsync<ActiveLocale>()).ToDictionary(l => l.LocaleId);
+            var locales = await _queryExecutor.ExecuteAsync(new GetAllActiveLocalesQuery());
+            return locales.ToDictionary(l => l.LocaleId);
         }
     }
 }

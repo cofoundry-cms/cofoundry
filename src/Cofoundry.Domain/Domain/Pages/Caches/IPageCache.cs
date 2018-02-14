@@ -16,14 +16,14 @@ namespace Cofoundry.Domain
         /// is returned, otherwise the getter is invoked and the result is cached and returned
         /// </summary>
         /// <param name="getter">Function to invoke if the page routes are not in the cache</param>
-        Task<PageRoute[]> GetOrAddAsync(Func<Task<PageRoute[]>> getter);
-        
+        Task<ICollection<PageRoute>> GetOrAddAsync(Func<Task<ICollection<PageRoute>>> getter);
+
         /// <summary>
         /// Gets a collection of page routes, if the collection is already cached it 
         /// is returned, otherwise the getter is invoked and the result is cached and returned
         /// </summary>
         /// <param name="getter">Function to invoke if the page routes are not in the cache</param>
-        PageRoute[] GetOrAdd(Func<PageRoute[]> getter);
+        ICollection<PageRoute> GetOrAdd(Func<ICollection<PageRoute>> getter);
 
         /// <summary>
         /// Clears all items in the page cache

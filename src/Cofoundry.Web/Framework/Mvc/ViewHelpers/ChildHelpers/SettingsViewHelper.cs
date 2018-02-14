@@ -25,9 +25,10 @@ namespace Cofoundry.Web
 
         #region public methods
 
-        public Task<T> GetAsync<T>() where T : ICofoundrySettings
+        public Task<TSettings> GetAsync<TSettings>() where TSettings : ICofoundrySettings
         {
-            return _queryExecutor.GetAsync<T>();
+            var query = new GetSettingsQuery<TSettings>();
+            return _queryExecutor.ExecuteAsync(query);
         }
 
         #endregion

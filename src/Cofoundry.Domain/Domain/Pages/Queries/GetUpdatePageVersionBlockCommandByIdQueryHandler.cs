@@ -9,8 +9,8 @@ using Microsoft.EntityFrameworkCore;
 namespace Cofoundry.Domain
 {
     public class GetUpdatePageVersionBlockCommandByIdQueryHandler
-        : IAsyncQueryHandler<GetByIdQuery<UpdatePageVersionBlockCommand>, UpdatePageVersionBlockCommand>
-        , IPermissionRestrictedQueryHandler<GetByIdQuery<UpdatePageVersionBlockCommand>, UpdatePageVersionBlockCommand>
+        : IAsyncQueryHandler<GetUpdateCommandByIdQuery<UpdatePageVersionBlockCommand>, UpdatePageVersionBlockCommand>
+        , IPermissionRestrictedQueryHandler<GetUpdateCommandByIdQuery<UpdatePageVersionBlockCommand>, UpdatePageVersionBlockCommand>
     {
         #region constructor
 
@@ -30,7 +30,7 @@ namespace Cofoundry.Domain
 
         #region execution
 
-        public async Task<UpdatePageVersionBlockCommand> ExecuteAsync(GetByIdQuery<UpdatePageVersionBlockCommand> query, IExecutionContext executionContext)
+        public async Task<UpdatePageVersionBlockCommand> ExecuteAsync(GetUpdateCommandByIdQuery<UpdatePageVersionBlockCommand> query, IExecutionContext executionContext)
         {
             var dbResult = await _dbContext
                 .PageVersionBlocks
@@ -67,7 +67,7 @@ namespace Cofoundry.Domain
 
         #region Permission
 
-        public IEnumerable<IPermissionApplication> GetPermissions(GetByIdQuery<UpdatePageVersionBlockCommand> query)
+        public IEnumerable<IPermissionApplication> GetPermissions(GetUpdateCommandByIdQuery<UpdatePageVersionBlockCommand> query)
         {
             yield return new PageReadPermission();
         }

@@ -10,8 +10,8 @@ using Cofoundry.Domain.CQS;
 namespace Cofoundry.Domain
 {
     public class GetPageRoutesByPageDirectoryIdQueryHandler 
-        : IAsyncQueryHandler<GetPageRoutesByPageDirectoryIdQuery, IEnumerable<PageRoute>>
-        , IPermissionRestrictedQueryHandler<GetPageRoutesByPageDirectoryIdQuery, IEnumerable<PageRoute>>
+        : IAsyncQueryHandler<GetPageRoutesByPageDirectoryIdQuery, ICollection<PageRoute>>
+        , IPermissionRestrictedQueryHandler<GetPageRoutesByPageDirectoryIdQuery, ICollection<PageRoute>>
     {
         private readonly IQueryExecutor _queryExecutor;
 
@@ -22,12 +22,12 @@ namespace Cofoundry.Domain
             _queryExecutor = queryExecutor;
         }
 
-        public async Task<IEnumerable<PageRoute>> ExecuteAsync(GetPageRoutesByPageDirectoryIdQuery query, IExecutionContext executionContext)
+        public async Task<ICollection<PageRoute>> ExecuteAsync(GetPageRoutesByPageDirectoryIdQuery query, IExecutionContext executionContext)
         {
-            var allRoutes = await _queryExecutor.GetAllAsync<PageRoute>(executionContext);
-            var result = allRoutes.Where(p => p.PageDirectory.PageDirectoryId == query.PageDirectoryId);
+            var allPageRoutes = await _queryExecutor.ExecuteAsync(new GetAllPageRoutesQuery(), executionContext);
+            var result = allPageRoutes.Where(p => p.PageDirectory.PageDirectoryId == query.PageDirectoryId);
 
-            return result;
+            return result.ToList();
         }
 
         #region Permission

@@ -10,8 +10,8 @@ using Cofoundry.Domain.CQS;
 namespace Cofoundry.Domain
 {
     public class GetPageRoutesByCustomEntityDefinitionCodeQueryHandler
-        : IAsyncQueryHandler<GetPageRoutesByCustomEntityDefinitionCodeQuery, IEnumerable<PageRoute>>
-        , IPermissionRestrictedQueryHandler<GetPageRoutesByCustomEntityDefinitionCodeQuery, IEnumerable<PageRoute>>
+        : IAsyncQueryHandler<GetPageRoutesByCustomEntityDefinitionCodeQuery, ICollection<PageRoute>>
+        , IPermissionRestrictedQueryHandler<GetPageRoutesByCustomEntityDefinitionCodeQuery, ICollection<PageRoute>>
     {
         private readonly IQueryExecutor _queryExecutor;
         private readonly ICustomEntityDefinitionRepository _customEntityDefinitionRepository;
@@ -25,10 +25,10 @@ namespace Cofoundry.Domain
             _customEntityDefinitionRepository = customEntityDefinitionRepository;
         }
 
-        public async Task<IEnumerable<PageRoute>> ExecuteAsync(GetPageRoutesByCustomEntityDefinitionCodeQuery query, IExecutionContext executionContext)
+        public async Task<ICollection<PageRoute>> ExecuteAsync(GetPageRoutesByCustomEntityDefinitionCodeQuery query, IExecutionContext executionContext)
         {
-            var allRoutes = await _queryExecutor.GetAllAsync<PageRoute>(executionContext);
-            var customEntityRoutes = allRoutes
+            var allPageRoutes = await _queryExecutor.ExecuteAsync(new GetAllPageRoutesQuery(), executionContext);
+            var customEntityRoutes = allPageRoutes
                 .Where(p => p.CustomEntityDefinitionCode == query.CustomEntityDefinitionCode)
                 .OrderBy(p => p.Locale != null)
                 .ThenBy(p => p.Title)

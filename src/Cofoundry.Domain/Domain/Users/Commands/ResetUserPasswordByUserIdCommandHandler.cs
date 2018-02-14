@@ -17,13 +17,13 @@ namespace Cofoundry.Domain
         private readonly CofoundryDbContext _dbContext;
         private readonly IResetUserPasswordCommandHelper _resetUserPasswordCommandHelper;
         private readonly IPermissionValidationService _permissionValidationService;
-        private readonly IUserAreaRepository _userAreaRepository;
+        private readonly IUserAreaDefinitionRepository _userAreaRepository;
         
         public ResetUserPasswordByUserIdCommandHandler(
             CofoundryDbContext dbContext,
             IResetUserPasswordCommandHelper resetUserPasswordCommandHelper,
             IPermissionValidationService permissionValidationService,
-            IUserAreaRepository userAreaRepository
+            IUserAreaDefinitionRepository userAreaRepository
             )
         {
             _dbContext = dbContext;

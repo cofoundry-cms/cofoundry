@@ -7,7 +7,7 @@ using Cofoundry.Domain.CQS;
 
 namespace Cofoundry.Domain
 {
-    public class GetPageRoutesByPageDirectoryIdQuery : IQuery<IEnumerable<PageRoute>>
+    public class GetPageRoutesByPageDirectoryIdQuery : IQuery<ICollection<PageRoute>>
     {
         public GetPageRoutesByPageDirectoryIdQuery() { }
 

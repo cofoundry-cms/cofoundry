@@ -33,22 +33,26 @@ namespace Cofoundry.Domain
 
         public Task<ImageAssetDetails> GetImageAssetDetailsByIdAsync(int imageAssetId, IExecutionContext executionContext = null)
         {
-            return _queryExecutor.GetByIdAsync<ImageAssetDetails>(imageAssetId, executionContext);
+            var query = new GetImageAssetDetailsByIdQuery(imageAssetId);
+            return _queryExecutor.ExecuteAsync(query, executionContext);
         }
 
-        public Task<ImageAssetFile> GetImageAssetFileByIdQueryAsync(int id, IExecutionContext executionContext = null)
+        public Task<ImageAssetFile> GetImageAssetFileByIdQueryAsync(int imageAssetId, IExecutionContext executionContext = null)
         {
-            return _queryExecutor.GetByIdAsync<ImageAssetFile>(id, executionContext);
+            var query = new GetImageAssetFileByIdQuery(imageAssetId);
+            return _queryExecutor.ExecuteAsync(query, executionContext);
         }
 
         public Task<ImageAssetRenderDetails> GetImageAssetRenderDetailsByIdAsync(int imageAssetId, IExecutionContext executionContext = null)
         {
-            return _queryExecutor.GetByIdAsync<ImageAssetRenderDetails>(imageAssetId, executionContext);
+            var query = new GetImageAssetRenderDetailsByIdQuery(imageAssetId);
+            return _queryExecutor.ExecuteAsync(query, executionContext);
         }
 
         public Task<IDictionary<int, ImageAssetRenderDetails>> GetImageAssetRenderDetailsByIdRangeAsync(IEnumerable<int> imageAssetIds, IExecutionContext executionContext = null)
         {
-            return _queryExecutor.GetByIdRangeAsync<ImageAssetRenderDetails>(imageAssetIds, executionContext);
+            var query = new GetImageAssetRenderDetailsByIdRangeQuery(imageAssetIds);
+            return _queryExecutor.ExecuteAsync(query, executionContext);
         }
 
         public Task<PagedQueryResult<ImageAssetSummary>> SearchImageAssetSummariesAsync(SearchImageAssetSummariesQuery query, IExecutionContext executionContext = null)

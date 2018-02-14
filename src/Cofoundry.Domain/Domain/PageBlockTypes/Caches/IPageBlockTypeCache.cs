@@ -17,14 +17,14 @@ namespace Cofoundry.Domain
         /// getter is invoked and the result is cached and returned
         /// </summary>
         /// <param name="getter">Function to invoke if the page block types aren't in the cache</param>
-        PageBlockTypeSummary[] GetOrAdd(Func<PageBlockTypeSummary[]> getter);
+        ICollection<PageBlockTypeSummary> GetOrAdd(Func<ICollection<PageBlockTypeSummary>> getter);
 
         /// <summary>
         /// Gets all page block types if they are already cached, otherwise the 
         /// getter is invoked and the result is cached and returned
         /// </summary>
         /// <param name="getter">Function to invoke if the page block types aren't in the cache</param>
-        Task<PageBlockTypeSummary[]> GetOrAddAsync(Func<Task<PageBlockTypeSummary[]>> getter);
+        Task<ICollection<PageBlockTypeSummary>> GetOrAddAsync(Func<Task<ICollection<PageBlockTypeSummary>>> getter);
 
         /// <summary>
         /// Gets all a collection of all PageBlockTypeFileLocation objects if they are already 

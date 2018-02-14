@@ -38,7 +38,7 @@ namespace Cofoundry.Domain
         /// </summary>
         public async Task<List<PageSummary>> MapAsync(ICollection<Page> dbPages, IExecutionContext executionContext)
         {
-            var routes = await _queryExecutor.GetAllAsync<PageRoute>(executionContext);
+            var routes = await _queryExecutor.ExecuteAsync(new GetAllPageRoutesQuery(), executionContext);
 
             var ids = dbPages
                 .Select(p => p.PageId)

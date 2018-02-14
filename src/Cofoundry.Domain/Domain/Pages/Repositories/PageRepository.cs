@@ -33,22 +33,25 @@ namespace Cofoundry.Domain
 
         #region page routes
 
-        public Task<IEnumerable<PageRoute>> GetAllPageRoutesAsync(IExecutionContext executionContext = null)
+        public Task<ICollection<PageRoute>> GetAllPageRoutesAsync(IExecutionContext executionContext = null)
         {
-            return _queryExecutor.GetAllAsync<PageRoute>(executionContext);
+            var query = new GetAllPageRoutesQuery();
+            return _queryExecutor.ExecuteAsync(query, executionContext);
         }
 
         public Task<PageRoute> GetPageRouteByIdAsync(int pageId, IExecutionContext executionContext = null)
         {
-            return _queryExecutor.GetByIdAsync<PageRoute>(pageId, executionContext);
+            var query = new GetPageRouteByIdQuery(pageId);
+            return _queryExecutor.ExecuteAsync(query, executionContext);
         }
 
         public Task<IDictionary<int, PageRoute>> GetPageRoutesByIdRangeAsync(IEnumerable<int> pageIds, IExecutionContext executionContext = null)
         {
-            return _queryExecutor.GetByIdRangeAsync<PageRoute>(pageIds, executionContext);
+            var query = new GetPageRoutesByIdRangeQuery(pageIds);
+            return _queryExecutor.ExecuteAsync(query, executionContext);
         }
 
-        public Task<IEnumerable<PageRoute>> GetPageRoutesByPageDirectoryIdAsync(int pageDirectoryId, IExecutionContext executionContext = null)
+        public Task<ICollection<PageRoute>> GetPageRoutesByPageDirectoryIdAsync(int pageDirectoryId, IExecutionContext executionContext = null)
         {
             return _queryExecutor.ExecuteAsync(new GetPageRoutesByPageDirectoryIdQuery(pageDirectoryId), executionContext);
         }
@@ -63,12 +66,12 @@ namespace Cofoundry.Domain
         #region PageRoutingInfo
 
 
-        public Task<IEnumerable<PageRoutingInfo>> GetPageRoutingInfoByCustomEntityIdAsync(int customEntityId, IExecutionContext executionContext = null)
+        public Task<ICollection<PageRoutingInfo>> GetPageRoutingInfoByCustomEntityIdAsync(int customEntityId, IExecutionContext executionContext = null)
         {
             return _queryExecutor.ExecuteAsync(new GetPageRoutingInfoByCustomEntityIdQuery(customEntityId), executionContext);
         }
 
-        public Task<IDictionary<int, IEnumerable<PageRoutingInfo>>> GetPageRoutingInfoByCustomEntityIdRangeAsync(IEnumerable<int> customEntityIds, IExecutionContext executionContext = null)
+        public Task<IDictionary<int, ICollection<PageRoutingInfo>>> GetPageRoutingInfoByCustomEntityIdRangeAsync(IEnumerable<int> customEntityIds, IExecutionContext executionContext = null)
         {
             return _queryExecutor.ExecuteAsync(new GetPageRoutingInfoByCustomEntityIdRangeQuery(customEntityIds), executionContext);
         }
@@ -120,7 +123,7 @@ namespace Cofoundry.Domain
         /// </summary>
         /// <param name="pageVersionId">Database id of the page version to get content data for.</param>
         /// <param name="executionContext">Optional execution context to use when executing the query. Useful if you need to temporarily elevate your permission level.</param>
-        public Task<IEnumerable<PageRegionDetails>> GetPageRegionDetailsByPageVersionIdAsync(int pageVersionId, IExecutionContext executionContext = null)
+        public Task<ICollection<PageRegionDetails>> GetPageRegionDetailsByPageVersionIdAsync(int pageVersionId, IExecutionContext executionContext = null)
         {
             var query = new GetPageRegionDetailsByPageVersionIdQuery(pageVersionId);
             return _queryExecutor.ExecuteAsync(query, executionContext);
@@ -160,32 +163,19 @@ namespace Cofoundry.Domain
 
         #region PageDetails (admin)
 
-        public Task<PageDetails> GetPageDetailsByIdAsync(int id, IExecutionContext executionContext = null)
+        public Task<PageDetails> GetPageDetailsByIdAsync(int pageId, IExecutionContext executionContext = null)
         {
-            return _queryExecutor.GetByIdAsync<PageDetails>(id, executionContext);
+            var query = new GetPageDetailsByIdQuery(pageId);
+            return _queryExecutor.ExecuteAsync(query, executionContext);
         }
 
         #endregion
 
         #region PageVersionSummary (admin)
 
-        public Task<IEnumerable<PageVersionSummary>> GetPageVersionSummariesByPageIdAsync(int pageId, IExecutionContext executionContext = null)
+        public Task<ICollection<PageVersionSummary>> GetPageVersionSummariesByPageIdAsync(int pageId, IExecutionContext executionContext = null)
         {
             return _queryExecutor.ExecuteAsync(new GetPageVersionSummariesByPageIdQuery(pageId), executionContext);
-        }
-
-        #endregion
-
-        #region page block types
-
-        public Task<IEnumerable<PageBlockTypeSummary>> GetAllPageBlockTypeSummariesAsync(IExecutionContext executionContext = null)
-        {
-            return _queryExecutor.GetAllAsync<PageBlockTypeSummary>(executionContext);
-        }
-
-        public Task<PageBlockTypeSummary> GetPageBlockTypeSummaryByIdAsync(int id, IExecutionContext executionContext = null)
-        {
-            return _queryExecutor.GetByIdAsync<PageBlockTypeSummary>(id, executionContext);
         }
 
         #endregion

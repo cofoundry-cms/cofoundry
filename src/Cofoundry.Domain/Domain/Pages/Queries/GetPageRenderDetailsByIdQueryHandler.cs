@@ -46,10 +46,11 @@ namespace Cofoundry.Domain
             if (dbPage == null) return null;
             var page = _pageRenderDetailsMapper.Map(dbPage);
 
-            page.PageRoute = await _queryExecutor.GetByIdAsync<PageRoute>(dbPage.PageId, executionContext);
+            var pageRouteQuery = new GetPageRouteByIdQuery(dbPage.PageId);
+            page.PageRoute = await _queryExecutor.ExecuteAsync(pageRouteQuery, executionContext);
 
             var dbPageBlocks = await QueryPageBlocks(page).ToListAsync();
-            var allBlockTypes = await _queryExecutor.GetAllAsync<PageBlockTypeSummary>(executionContext);
+            var allBlockTypes = await _queryExecutor.ExecuteAsync(new GetAllPageBlockTypeSummariesQuery(), executionContext);
 
             await _entityVersionPageBlockMapper.MapRegionsAsync(dbPageBlocks, page.Regions, allBlockTypes, query.PublishStatus);
 

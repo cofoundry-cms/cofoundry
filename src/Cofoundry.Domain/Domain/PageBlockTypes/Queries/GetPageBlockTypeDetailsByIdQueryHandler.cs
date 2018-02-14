@@ -9,8 +9,8 @@ using Cofoundry.Domain.CQS;
 namespace Cofoundry.Domain
 {
     public class GetPageBlockTypeDetailsByIdQueryHandler
-        : IAsyncQueryHandler<GetByIdQuery<PageBlockTypeDetails>, PageBlockTypeDetails>
-        , IPermissionRestrictedQueryHandler<GetByIdQuery<PageBlockTypeDetails>, PageBlockTypeDetails>
+        : IAsyncQueryHandler<GetPageBlockTypeDetailsByIdQuery, PageBlockTypeDetails>
+        , IPermissionRestrictedQueryHandler<GetPageBlockTypeDetailsByIdQuery, PageBlockTypeDetails>
     {
         #region constructor
 
@@ -33,9 +33,9 @@ namespace Cofoundry.Domain
 
         #region execution
 
-        public async Task<PageBlockTypeDetails> ExecuteAsync(GetByIdQuery<PageBlockTypeDetails> query, IExecutionContext executionContext)
+        public async Task<PageBlockTypeDetails> ExecuteAsync(GetPageBlockTypeDetailsByIdQuery query, IExecutionContext executionContext)
         {
-            var blockTypeSummary = await GetPageBlockTypeById(query.Id);
+            var blockTypeSummary = await GetPageBlockTypeById(query.PageBlockTypeId, executionContext);
             if (blockTypeSummary == null) return null;
 
             var result = _pageBlockTypeDetailsMapper.Map(blockTypeSummary);
@@ -43,9 +43,9 @@ namespace Cofoundry.Domain
             return result;
         }
 
-        private async Task<PageBlockTypeSummary> GetPageBlockTypeById(int id)
+        private async Task<PageBlockTypeSummary> GetPageBlockTypeById(int id, IExecutionContext executionContext)
         {
-            var allBlockTypes = await _queryExecutor.GetAllAsync<PageBlockTypeSummary>();
+            var allBlockTypes = await _queryExecutor.ExecuteAsync(new GetAllPageBlockTypeSummariesQuery(), executionContext);
 
             var blockTypeTypeSummary = allBlockTypes
                 .SingleOrDefault(t => t.PageBlockTypeId == id);
@@ -57,7 +57,7 @@ namespace Cofoundry.Domain
 
         #region Permission
 
-        public IEnumerable<IPermissionApplication> GetPermissions(GetByIdQuery<PageBlockTypeDetails> query)
+        public IEnumerable<IPermissionApplication> GetPermissions(GetPageBlockTypeDetailsByIdQuery query)
         {
             yield return new PageReadPermission();
         }

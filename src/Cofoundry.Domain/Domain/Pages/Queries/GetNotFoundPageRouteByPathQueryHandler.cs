@@ -35,8 +35,8 @@ namespace Cofoundry.Domain
 
             var path = _pathHelper.StandardizePath(query.Path);
 
-            var allRoutes = (await _queryExecutor
-                .GetAllAsync<PageRoute>())
+            var allRoutes = await _queryExecutor.ExecuteAsync(new GetAllPageRoutesQuery(), executionContext);
+            var allNotFoundRoutes = allRoutes
                 .Where(r => r.IsPublished() || query.IncludeUnpublished)
                 .Where(r => r.PageType == PageType.NotFound);
 
@@ -56,7 +56,7 @@ namespace Cofoundry.Domain
                 }
 
                 // Prefer the specified locale, but fall back to a non-specific locale page
-                notFoundRoute = allRoutes
+                notFoundRoute = allNotFoundRoutes
                     .Where(r => r.IsInDirectory(pathToTest) && r.Locale == null || MatchesLocale(r.Locale, query.LocaleId))
                     .OrderByDescending(r => MatchesLocale(r.Locale, query.LocaleId))
                     .FirstOrDefault();

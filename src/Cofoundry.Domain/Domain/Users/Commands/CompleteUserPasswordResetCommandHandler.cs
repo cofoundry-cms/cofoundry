@@ -24,7 +24,7 @@ namespace Cofoundry.Domain
         private readonly IQueryExecutor _queryExecutor;
         private readonly IPasswordCryptographyService _passwordCryptographyService;
         private readonly IResetUserPasswordCommandHelper _resetUserPasswordCommandHelper;
-        private readonly IUserAreaRepository _userAreaRepository;
+        private readonly IUserAreaDefinitionRepository _userAreaRepository;
         private readonly IMailService _mailService;
         private readonly ITransactionScopeFactory _transactionScopeFactory;
 
@@ -33,7 +33,7 @@ namespace Cofoundry.Domain
             IQueryExecutor queryExecutor,
             IPasswordCryptographyService passwordCryptographyService,
             IResetUserPasswordCommandHelper resetUserPasswordCommandHelper,
-            IUserAreaRepository userAreaRepository,
+            IUserAreaDefinitionRepository userAreaRepository,
             IMailService mailService,
             ITransactionScopeFactory transactionScopeFactory
             )

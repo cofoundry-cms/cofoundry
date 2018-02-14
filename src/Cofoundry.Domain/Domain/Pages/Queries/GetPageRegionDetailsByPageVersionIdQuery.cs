@@ -13,7 +13,7 @@ namespace Cofoundry.Domain
     /// content blocks that get rendered in the page template linked
     /// to the page version.
     /// </summary>
-    public class GetPageRegionDetailsByPageVersionIdQuery : IQuery<IEnumerable<PageRegionDetails>>
+    public class GetPageRegionDetailsByPageVersionIdQuery : IQuery<ICollection<PageRegionDetails>>
     {
         public GetPageRegionDetailsByPageVersionIdQuery() { }
 

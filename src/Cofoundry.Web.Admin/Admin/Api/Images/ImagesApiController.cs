@@ -43,12 +43,12 @@ namespace Cofoundry.Web.Admin
         #region queries
 
         [HttpGet]
-        public async Task<IActionResult> Get([FromQuery] SearchImageAssetSummariesQuery query, [FromQuery] GetByIdRangeQuery<ImageAssetRenderDetails> rangeQuery)
+        public async Task<IActionResult> Get([FromQuery] SearchImageAssetSummariesQuery query, [FromQuery] GetImageAssetRenderDetailsByIdRangeQuery rangeQuery)
         {
-            if (rangeQuery != null && rangeQuery.Ids != null)
+            if (rangeQuery != null && rangeQuery.ImageAssetIds != null)
             {
                 var rangeResults = await _queryExecutor.ExecuteAsync(rangeQuery);
-                return _apiResponseHelper.SimpleQueryResponse(this, rangeResults.FilterAndOrderByKeys(rangeQuery.Ids));
+                return _apiResponseHelper.SimpleQueryResponse(this, rangeResults.FilterAndOrderByKeys(rangeQuery.ImageAssetIds));
             }
 
             if (query == null) query = new SearchImageAssetSummariesQuery();
@@ -60,7 +60,9 @@ namespace Cofoundry.Web.Admin
         [HttpGet(ID_ROUTE)]
         public async Task<IActionResult> Get(int imageAssetId)
         {
-            var result = await _queryExecutor.GetByIdAsync<ImageAssetDetails>(imageAssetId);
+            var query = new GetImageAssetDetailsByIdQuery(imageAssetId);
+            var result = await _queryExecutor.ExecuteAsync(query);
+
             return _apiResponseHelper.SimpleQueryResponse(this, result);
         }
 

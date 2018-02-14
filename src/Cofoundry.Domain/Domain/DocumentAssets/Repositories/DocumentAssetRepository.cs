@@ -33,22 +33,26 @@ namespace Cofoundry.Domain
 
         public Task<DocumentAssetDetails> GetDocumentAssetDetailsByIdAsync(int documentAssetId, IExecutionContext executionContext = null)
         {
-            return _queryExecutor.GetByIdAsync<DocumentAssetDetails>(documentAssetId, executionContext);
+            var query = new GetDocumentAssetDetailsByIdQuery(documentAssetId);
+            return _queryExecutor.ExecuteAsync(query, executionContext);
         }
 
-        public Task<DocumentAssetFile> GetDocumentAssetFileByIdQueryAsync(int id, IExecutionContext executionContext = null)
+        public Task<DocumentAssetFile> GetDocumentAssetFileByIdQueryAsync(int documentAssetId, IExecutionContext executionContext = null)
         {
-            return _queryExecutor.GetByIdAsync<DocumentAssetFile>(id, executionContext);
+            var query = new GetDocumentAssetFileByIdQuery(documentAssetId);
+            return _queryExecutor.ExecuteAsync(query, executionContext);
         }
 
-        public Task<DocumentAssetRenderDetails> GetDocumentAssetRenderDetailsByIdAsync(int imageAssetId, IExecutionContext executionContext = null)
+        public Task<DocumentAssetRenderDetails> GetDocumentAssetRenderDetailsByIdAsync(int documentAssetId, IExecutionContext executionContext = null)
         {
-            return _queryExecutor.GetByIdAsync<DocumentAssetRenderDetails>(imageAssetId, executionContext);
+            var query = new GetDocumentAssetRenderDetailsByIdQuery(documentAssetId);
+            return _queryExecutor.ExecuteAsync(query, executionContext);
         }
 
-        public Task<IDictionary<int, DocumentAssetRenderDetails>> GetDocumentAssetRenderDetailsByIdRangeAsync(IEnumerable<int> imageAssetIds, IExecutionContext executionContext = null)
+        public Task<IDictionary<int, DocumentAssetRenderDetails>> GetDocumentAssetRenderDetailsByIdRangeAsync(IEnumerable<int> documentAssetIds, IExecutionContext executionContext = null)
         {
-            return _queryExecutor.GetByIdRangeAsync<DocumentAssetRenderDetails>(imageAssetIds, executionContext);
+            var query = new GetDocumentAssetRenderDetailsByIdRangeQuery(documentAssetIds);
+            return _queryExecutor.ExecuteAsync(query, executionContext);
         }
 
         public Task<PagedQueryResult<DocumentAssetSummary>> SearchDocumentAssetSummariesAsync(SearchDocumentAssetSummariesQuery query, IExecutionContext executionContext = null)

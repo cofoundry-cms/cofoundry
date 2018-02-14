@@ -18,7 +18,7 @@ namespace Cofoundry.Domain
         /// Returns all page directories as PageDirectoryRoute instances. The results of this query are cached.
         /// </summary>
         /// <param name="executionContext">Optional execution context to use when executing the query. Useful if you need to temporarily elevate your permission level.</param>
-        Task<IEnumerable<PageDirectoryRoute>> GetAllPageDirectoryRoutesAsync(IExecutionContext executionContext = null);
+        Task<ICollection<PageDirectoryRoute>> GetAllPageDirectoryRoutesAsync(IExecutionContext executionContext = null);
 
         /// <summary>
         /// Returns a page directory with the specified id as a PageDirectoryRoute instance.

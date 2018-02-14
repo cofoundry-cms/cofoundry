@@ -47,7 +47,8 @@ namespace Cofoundry.Domain
 
         public async Task ExecuteAsync(SetupCofoundryCommand command, IExecutionContext executionContext)
         {
-            var settings = await _queryExecutor.GetAsync<InternalSettings>();
+            var settings = await _queryExecutor.ExecuteAsync(new GetSettingsQuery<InternalSettings>());
+
             if (settings.IsSetup)
             {
                 throw new InvalidOperationException("Site is already set up.");
@@ -58,7 +59,7 @@ namespace Cofoundry.Domain
                 var userId = await CreateAdminUser(command);
                 var impersonatedUserContext = await GetImpersonatedUserContext(executionContext, userId);
 
-                var settingsCommand = await _queryExecutor.GetAsync<UpdateGeneralSiteSettingsCommand>();
+                var settingsCommand = await _queryExecutor.ExecuteAsync(new GetUpdateCommandQuery<UpdateGeneralSiteSettingsCommand>());
                 settingsCommand.ApplicationName = command.ApplicationName;
                 await _commandExecutor.ExecuteAsync(settingsCommand, impersonatedUserContext);
 

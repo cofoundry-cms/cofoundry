@@ -9,10 +9,10 @@ namespace Cofoundry.Domain
 {
     public class UserContextMapper
     {
-        private readonly IUserAreaRepository _userAreaRepository;
+        private readonly IUserAreaDefinitionRepository _userAreaRepository;
 
         public UserContextMapper(
-            IUserAreaRepository userAreaRepository
+            IUserAreaDefinitionRepository userAreaRepository
             )
         {
             _userAreaRepository = userAreaRepository;

@@ -11,8 +11,8 @@ using Cofoundry.Core;
 namespace Cofoundry.Domain
 {
     public class GetPageDetailsByIdQueryHandler 
-        : IAsyncQueryHandler<GetByIdQuery<PageDetails>, PageDetails>
-        , IPermissionRestrictedQueryHandler<GetByIdQuery<PageDetails>, PageDetails>
+        : IAsyncQueryHandler<GetPageDetailsByIdQuery, PageDetails>
+        , IPermissionRestrictedQueryHandler<GetPageDetailsByIdQuery, PageDetails>
     {
         #region constructor
 
@@ -41,13 +41,14 @@ namespace Cofoundry.Domain
 
         #region execution
         
-        public async Task<PageDetails> ExecuteAsync(GetByIdQuery<PageDetails> query, IExecutionContext executionContext)
+        public async Task<PageDetails> ExecuteAsync(GetPageDetailsByIdQuery query, IExecutionContext executionContext)
         {
-            var dbPageVersion = await GetPageById(query.Id).FirstOrDefaultAsync();
+            var dbPageVersion = await GetPageById(query.PageId).FirstOrDefaultAsync();
             if (dbPageVersion == null) return null;
 
-            var pageRoute = await _queryExecutor.GetByIdAsync<PageRoute>(query.Id);
-            EntityNotFoundException.ThrowIfNull(pageRoute, query.Id);
+            var pageRouteQuery = new GetPageRouteByIdQuery(query.PageId);
+            var pageRoute = await _queryExecutor.ExecuteAsync(pageRouteQuery, executionContext);
+            EntityNotFoundException.ThrowIfNull(pageRoute, query.PageId);
 
             var regions = await _queryExecutor.ExecuteAsync(GetRegionsQuery(dbPageVersion));
 
@@ -118,7 +119,7 @@ namespace Cofoundry.Domain
 
         #region Permission
 
-        public IEnumerable<IPermissionApplication> GetPermissions(GetByIdQuery<PageDetails> query)
+        public IEnumerable<IPermissionApplication> GetPermissions(GetPageDetailsByIdQuery query)
         {
             yield return new PageReadPermission();
         }

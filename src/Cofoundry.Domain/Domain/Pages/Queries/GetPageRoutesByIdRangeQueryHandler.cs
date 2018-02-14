@@ -7,8 +7,8 @@ using Cofoundry.Domain.CQS;
 namespace Cofoundry.Domain
 {
     public class GetPageRoutesByIdRangeQueryHandler 
-        : IAsyncQueryHandler<GetByIdRangeQuery<PageRoute>, IDictionary<int, PageRoute>>
-        , IPermissionRestrictedQueryHandler<GetByIdRangeQuery<PageRoute>, IDictionary<int, PageRoute>>
+        : IAsyncQueryHandler<GetPageRoutesByIdRangeQuery, IDictionary<int, PageRoute>>
+        , IPermissionRestrictedQueryHandler<GetPageRoutesByIdRangeQuery, IDictionary<int, PageRoute>>
     {
         private readonly IQueryExecutor _queryExecutor;
          
@@ -19,11 +19,11 @@ namespace Cofoundry.Domain
             _queryExecutor = queryExecutor;
         }
 
-        public async Task<IDictionary<int, PageRoute>> ExecuteAsync(GetByIdRangeQuery<PageRoute> query, IExecutionContext executionContext)
+        public async Task<IDictionary<int, PageRoute>> ExecuteAsync(GetPageRoutesByIdRangeQuery query, IExecutionContext executionContext)
         {
-            var result = (await _queryExecutor
-                .GetAllAsync<PageRoute>(executionContext))
-                .Where(r => query.Ids.Contains(r.PageId))
+            var allPageRoutes = await _queryExecutor.ExecuteAsync(new GetAllPageRoutesQuery(), executionContext);
+            var result = allPageRoutes
+                .Where(r => query.PageIds.Contains(r.PageId))
                 .ToDictionary(r => r.PageId);
 
             return result;
@@ -31,7 +31,7 @@ namespace Cofoundry.Domain
 
         #region Permission
 
-        public IEnumerable<IPermissionApplication> GetPermissions(GetByIdRangeQuery<PageRoute> query)
+        public IEnumerable<IPermissionApplication> GetPermissions(GetPageRoutesByIdRangeQuery query)
         {
             yield return new PageReadPermission();
         }

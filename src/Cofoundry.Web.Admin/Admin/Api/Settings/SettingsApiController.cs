@@ -42,14 +42,14 @@ namespace Cofoundry.Web.Admin
         [HttpGet(GENERAL_SITE_SETTINGS_ROUTE)]
         public async Task<IActionResult> GetGeneralSiteSettings()
         {
-            var results = await _queryExecutor.GetAsync<GeneralSiteSettings>();
+            var results = await _queryExecutor.ExecuteAsync(new GetSettingsQuery<GeneralSiteSettings>());
             return _apiResponseHelper.SimpleQueryResponse(this, results);
         }
 
         [HttpGet(SEO_SETTINGS_ROUTE)]
         public async Task<IActionResult> GetSeoSettings()
         {
-            var results = await _queryExecutor.GetAsync<SeoSettings>();
+            var results = await _queryExecutor.ExecuteAsync(new GetSettingsQuery<SeoSettings>());
             return _apiResponseHelper.SimpleQueryResponse(this, results);
         }
 

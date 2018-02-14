@@ -17,8 +17,8 @@ namespace Cofoundry.Domain
     /// to the page version.
     /// </summary>
     public class GetPageRegionDetailsByPageVersionIdQueryHandler 
-        : IAsyncQueryHandler<GetPageRegionDetailsByPageVersionIdQuery, IEnumerable<PageRegionDetails>>
-        , IPermissionRestrictedQueryHandler<GetPageRegionDetailsByPageVersionIdQuery, IEnumerable<PageRegionDetails>>
+        : IAsyncQueryHandler<GetPageRegionDetailsByPageVersionIdQuery, ICollection<PageRegionDetails>>
+        , IPermissionRestrictedQueryHandler<GetPageRegionDetailsByPageVersionIdQuery, ICollection<PageRegionDetails>>
     {
         #region constructor
 
@@ -44,11 +44,11 @@ namespace Cofoundry.Domain
 
         #region execution
 
-        public async Task<IEnumerable<PageRegionDetails>> ExecuteAsync(GetPageRegionDetailsByPageVersionIdQuery query, IExecutionContext executionContext)
+        public async Task<ICollection<PageRegionDetails>> ExecuteAsync(GetPageRegionDetailsByPageVersionIdQuery query, IExecutionContext executionContext)
         {
             var regions = await GetRegions(query).ToListAsync();
             var dbPageBlocks = await QueryPageBlocks(query).ToListAsync();
-            var allBlockTypes = await _queryExecutor.GetAllAsync<PageBlockTypeSummary>(executionContext);
+            var allBlockTypes = await _queryExecutor.ExecuteAsync(new GetAllPageBlockTypeSummariesQuery(), executionContext);
 
             MapRegions(regions, dbPageBlocks, allBlockTypes);
 

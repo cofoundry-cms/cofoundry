@@ -33,7 +33,7 @@ namespace Cofoundry.Domain
         /// getter is invoked and the result is cached and returned
         /// </summary>
         /// <param name="getter">Function to invoke if the locales aren't in the cache</param>
-        public ActiveLocale[] GetOrAdd(Func<ActiveLocale[]> getter)
+        public ICollection<ActiveLocale> GetOrAdd(Func<ICollection<ActiveLocale>> getter)
         {
             return _cache.GetOrAdd(ACTIVELOCALE_CACHEKEY, getter);
         }
@@ -43,7 +43,7 @@ namespace Cofoundry.Domain
         /// getter is invoked and the result is cached and returned
         /// </summary>
         /// <param name="getter">Function to invoke if the locales aren't in the cache</param>
-        public async Task<ActiveLocale[]> GetOrAddAsync(Func<Task<ActiveLocale[]>> getter)
+        public async Task<ICollection<ActiveLocale>> GetOrAddAsync(Func<Task<ICollection<ActiveLocale>>> getter)
         {
             return await _cache.GetOrAddAsync(ACTIVELOCALE_CACHEKEY, getter);
         }

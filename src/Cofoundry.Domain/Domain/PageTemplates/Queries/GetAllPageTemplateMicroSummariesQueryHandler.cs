@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore;
 namespace Cofoundry.Domain
 {
     public class GetAllPageTemplateMicroSummariesQueryHandler 
-        : IAsyncQueryHandler<GetAllQuery<PageTemplateMicroSummary>, IEnumerable<PageTemplateMicroSummary>>
-        , IPermissionRestrictedQueryHandler<GetAllQuery<PageTemplateMicroSummary>, IEnumerable<PageTemplateMicroSummary>>
+        : IAsyncQueryHandler<GetAllPageTemplateMicroSummariesQuery, ICollection<PageTemplateMicroSummary>>
+        , IPermissionRestrictedQueryHandler<GetAllPageTemplateMicroSummariesQuery, ICollection<PageTemplateMicroSummary>>
     {
         #region constructor
 
@@ -31,7 +31,7 @@ namespace Cofoundry.Domain
 
         #region execution
         
-        public async Task<IEnumerable<PageTemplateMicroSummary>> ExecuteAsync(GetAllQuery<PageTemplateMicroSummary> query, IExecutionContext executionContext)
+        public async Task<ICollection<PageTemplateMicroSummary>> ExecuteAsync(GetAllPageTemplateMicroSummariesQuery query, IExecutionContext executionContext)
         {
             var dbResults = await Query().ToListAsync();
             var results = Map(dbResults).ToList();
@@ -59,7 +59,7 @@ namespace Cofoundry.Domain
 
         #region Permission
 
-        public IEnumerable<IPermissionApplication> GetPermissions(GetAllQuery<PageTemplateMicroSummary> query)
+        public IEnumerable<IPermissionApplication> GetPermissions(GetAllPageTemplateMicroSummariesQuery query)
         {
             yield return new PageTemplateReadPermission();
         }

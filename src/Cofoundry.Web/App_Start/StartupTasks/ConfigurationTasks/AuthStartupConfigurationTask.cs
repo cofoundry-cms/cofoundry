@@ -14,13 +14,13 @@ namespace Cofoundry.Web
     {
         #region constructor
 
-        private readonly IUserAreaRepository _userAreaRepository;
+        private readonly IUserAreaDefinitionRepository _userAreaDefinitionRepository;
 
         public AuthStartupConfigurationTask(
-            IUserAreaRepository userAreaRepository
+            IUserAreaDefinitionRepository userAreaDefinitionRepository
             )
         {
-            _userAreaRepository = userAreaRepository;
+            _userAreaDefinitionRepository = userAreaDefinitionRepository;
         }
 
         #endregion

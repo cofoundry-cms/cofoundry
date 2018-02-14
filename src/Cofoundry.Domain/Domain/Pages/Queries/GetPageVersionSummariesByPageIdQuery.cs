@@ -7,7 +7,7 @@ using Cofoundry.Domain.CQS;
 
 namespace Cofoundry.Domain
 {
-    public class GetPageVersionSummariesByPageIdQuery : IQuery<IEnumerable<PageVersionSummary>>
+    public class GetPageVersionSummariesByPageIdQuery : IQuery<ICollection<PageVersionSummary>>
     {
         public GetPageVersionSummariesByPageIdQuery()
         {

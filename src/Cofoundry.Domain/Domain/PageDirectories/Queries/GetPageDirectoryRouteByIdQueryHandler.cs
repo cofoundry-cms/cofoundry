@@ -11,8 +11,8 @@ namespace Cofoundry.Domain
     /// Returns a page directory with the specified id as a PageDirectoryRoute instance.
     /// </summary>
     public class GetPageDirectoryRouteByIdQueryHandler 
-        : IAsyncQueryHandler<GetByIdQuery<PageDirectoryRoute>, PageDirectoryRoute>
-        , IPermissionRestrictedQueryHandler<GetByIdQuery<PageDirectoryRoute>, PageDirectoryRoute>
+        : IAsyncQueryHandler<GetPageDirectoryRouteByIdQuery, PageDirectoryRoute>
+        , IPermissionRestrictedQueryHandler<GetPageDirectoryRouteByIdQuery, PageDirectoryRoute>
     {
         #region constructor
 
@@ -29,11 +29,10 @@ namespace Cofoundry.Domain
 
         #region execution
         
-        public async Task<PageDirectoryRoute> ExecuteAsync(GetByIdQuery<PageDirectoryRoute> query, IExecutionContext executionContext)
+        public async Task<PageDirectoryRoute> ExecuteAsync(GetPageDirectoryRouteByIdQuery query, IExecutionContext executionContext)
         {
-            var result = (await _queryExecutor
-                .GetAllAsync<PageDirectoryRoute>())
-                .SingleOrDefault(l => l.PageDirectoryId == query.Id);
+            var allRoutes = await _queryExecutor.ExecuteAsync(new GetAllPageDirectoryRoutesQuery(), executionContext);
+            var result = allRoutes.SingleOrDefault(l => l.PageDirectoryId == query.PageDirectoryId);
 
             return result;
         }
@@ -42,7 +41,7 @@ namespace Cofoundry.Domain
 
         #region permissions
 
-        public IEnumerable<IPermissionApplication> GetPermissions(GetByIdQuery<PageDirectoryRoute> command)
+        public IEnumerable<IPermissionApplication> GetPermissions(GetPageDirectoryRouteByIdQuery command)
         {
             yield return new PageDirectoryReadPermission();
         }

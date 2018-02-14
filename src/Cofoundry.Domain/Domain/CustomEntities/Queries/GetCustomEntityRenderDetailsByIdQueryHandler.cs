@@ -49,13 +49,14 @@ namespace Cofoundry.Domain
 
             if (dbResult.CustomEntity.LocaleId.HasValue)
             {
-                entity.Locale = await _queryExecutor.GetByIdAsync<ActiveLocale>(dbResult.CustomEntity.LocaleId.Value, executionContext);
+                var getLocaleQuery = new GetActiveLocaleByIdQuery(dbResult.CustomEntity.LocaleId.Value);
+                entity.Locale = await _queryExecutor.ExecuteAsync(getLocaleQuery, executionContext);
             }
 
             entity.Regions = await QueryRegions(query).ToListAsync();
             var dbPageBlocks = await QueryPageBlocks(entity).ToListAsync();
 
-            var allBlockTypes = await _queryExecutor.GetAllAsync<PageBlockTypeSummary>(executionContext);
+            var allBlockTypes = await _queryExecutor.ExecuteAsync(new GetAllPageBlockTypeSummariesQuery(), executionContext);
             await _entityVersionPageBlockMapper.MapRegionsAsync(dbPageBlocks, entity.Regions, allBlockTypes, query.PublishStatus);
 
             var routingQuery = new GetPageRoutingInfoByCustomEntityIdQuery(dbResult.CustomEntityId);

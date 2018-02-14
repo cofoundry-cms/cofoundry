@@ -26,14 +26,14 @@ namespace Cofoundry.Domain
         private readonly CofoundryDbContext _dbContext;
         private readonly IPasswordCryptographyService _passwordCryptographyService;
         private readonly ISecurityTokenGenerationService _securityTokenGenerationService;
-        private readonly IUserAreaRepository _userAreaRepository;
+        private readonly IUserAreaDefinitionRepository _userAreaRepository;
         private readonly IMailService _mailService;
         private readonly ITransactionScopeFactory _transactionScopeFactory;
         private readonly IClientConnectionService _clientConnectionService;
 
         public ResetUserPasswordCommandHelper(
             CofoundryDbContext dbContext,
-            IUserAreaRepository userAreaRepository,
+            IUserAreaDefinitionRepository userAreaRepository,
             IPasswordCryptographyService passwordCryptographyService,
             ISecurityTokenGenerationService securityTokenGenerationService,
             IMailService mailService,

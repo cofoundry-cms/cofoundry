@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore;
 namespace Cofoundry.Domain
 {
     public class GetAllPageBlockTypeSummariesQueryHandler
-        : IAsyncQueryHandler<GetAllQuery<PageBlockTypeSummary>, IEnumerable<PageBlockTypeSummary>>
-        , IPermissionRestrictedQueryHandler<GetAllQuery<PageBlockTypeSummary>, IEnumerable<PageBlockTypeSummary>>
+        : IAsyncQueryHandler<GetAllPageBlockTypeSummariesQuery, ICollection<PageBlockTypeSummary>>
+        , IPermissionRestrictedQueryHandler<GetAllPageBlockTypeSummariesQuery, ICollection<PageBlockTypeSummary>>
     {
         #region constructor
 
@@ -34,14 +34,14 @@ namespace Cofoundry.Domain
 
         #region execution
         
-        public async Task<IEnumerable<PageBlockTypeSummary>> ExecuteAsync(GetAllQuery<PageBlockTypeSummary> query, IExecutionContext executionContext)
+        public async Task<ICollection<PageBlockTypeSummary>> ExecuteAsync(GetAllPageBlockTypeSummariesQuery query, IExecutionContext executionContext)
         {
             return await _pageBlockTypeCache.GetOrAddAsync(async () =>
             {
                 var dbResults = await Query().ToListAsync();
                 var results = dbResults
                     .Select(_pageBlockTypeSummaryMapper.Map)
-                    .ToArray();
+                    .ToList();
 
                 return results;
             });
@@ -62,7 +62,7 @@ namespace Cofoundry.Domain
 
         #region Permission
 
-        public IEnumerable<IPermissionApplication> GetPermissions(GetAllQuery<PageBlockTypeSummary> query)
+        public IEnumerable<IPermissionApplication> GetPermissions(GetAllPageBlockTypeSummariesQuery query)
         {
             yield return new PageReadPermission();
         }

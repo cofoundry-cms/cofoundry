@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore;
 namespace Cofoundry.Domain
 {
     public class GetDocumentAssetRenderDetailsByIdQueryHandler 
-        : IAsyncQueryHandler<GetByIdQuery<DocumentAssetRenderDetails>, DocumentAssetRenderDetails>
-        , IPermissionRestrictedQueryHandler<GetByIdQuery<DocumentAssetRenderDetails>, DocumentAssetRenderDetails>
+        : IAsyncQueryHandler<GetDocumentAssetRenderDetailsByIdQuery, DocumentAssetRenderDetails>
+        , IPermissionRestrictedQueryHandler<GetDocumentAssetRenderDetailsByIdQuery, DocumentAssetRenderDetails>
     {
         #region constructor
 
@@ -31,7 +31,7 @@ namespace Cofoundry.Domain
 
         #region execution
 
-        public async Task<DocumentAssetRenderDetails> ExecuteAsync(GetByIdQuery<DocumentAssetRenderDetails> query, IExecutionContext executionContext)
+        public async Task<DocumentAssetRenderDetails> ExecuteAsync(GetDocumentAssetRenderDetailsByIdQuery query, IExecutionContext executionContext)
         {
             var dbResult = await Query(query).SingleOrDefaultAsync();
             var mappedResult = _documentAssetRenderDetailsMapper.Map(dbResult);
@@ -39,19 +39,19 @@ namespace Cofoundry.Domain
             return mappedResult;
         }
 
-        private IQueryable<DocumentAsset> Query(GetByIdQuery<DocumentAssetRenderDetails> query)
+        private IQueryable<DocumentAsset> Query(GetDocumentAssetRenderDetailsByIdQuery query)
         {
             return _dbContext
                 .DocumentAssets
                 .AsNoTracking()
-                .FilterById(query.Id);
+                .FilterById(query.DocumentAssetId);
         }
 
         #endregion
 
         #region Permission
 
-        public IEnumerable<IPermissionApplication> GetPermissions(GetByIdQuery<DocumentAssetRenderDetails> query)
+        public IEnumerable<IPermissionApplication> GetPermissions(GetDocumentAssetRenderDetailsByIdQuery query)
         {
             yield return new DocumentAssetReadPermission();
         }

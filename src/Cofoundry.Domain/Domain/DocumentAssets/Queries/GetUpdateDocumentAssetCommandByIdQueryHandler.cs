@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore;
 namespace Cofoundry.Domain
 {
     public class GetUpdateDocumentAssetCommandByIdQueryHandler 
-        : IAsyncQueryHandler<GetByIdQuery<UpdateDocumentAssetCommand>, UpdateDocumentAssetCommand>
-        , IPermissionRestrictedQueryHandler<GetByIdQuery<UpdateDocumentAssetCommand>, UpdateDocumentAssetCommand>
+        : IAsyncQueryHandler<GetUpdateCommandByIdQuery<UpdateDocumentAssetCommand>, UpdateDocumentAssetCommand>
+        , IPermissionRestrictedQueryHandler<GetUpdateCommandByIdQuery<UpdateDocumentAssetCommand>, UpdateDocumentAssetCommand>
     {
         #region constructor
 
@@ -28,7 +28,7 @@ namespace Cofoundry.Domain
 
         #region execution
 
-        public async Task<UpdateDocumentAssetCommand> ExecuteAsync(GetByIdQuery<UpdateDocumentAssetCommand> query, IExecutionContext executionContext)
+        public async Task<UpdateDocumentAssetCommand> ExecuteAsync(GetUpdateCommandByIdQuery<UpdateDocumentAssetCommand> query, IExecutionContext executionContext)
         {
             var dbResult = await _dbContext
                 .DocumentAssets
@@ -58,7 +58,7 @@ namespace Cofoundry.Domain
 
         #region Permission
 
-        public IEnumerable<IPermissionApplication> GetPermissions(GetByIdQuery<UpdateDocumentAssetCommand> query)
+        public IEnumerable<IPermissionApplication> GetPermissions(GetUpdateCommandByIdQuery<UpdateDocumentAssetCommand> query)
         {
             yield return new DocumentAssetReadPermission();
         }

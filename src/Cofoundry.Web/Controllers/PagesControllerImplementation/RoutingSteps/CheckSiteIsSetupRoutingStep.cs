@@ -29,9 +29,9 @@ namespace Cofoundry.Web
 
         public async Task ExecuteAsync(Controller controller, PageActionRoutingState state)
         {
-            var internalSettings = await _queryExecutor.GetAsync<InternalSettings>();
+            var settings = await _queryExecutor.ExecuteAsync(new GetSettingsQuery<InternalSettings>());
 
-            if (!internalSettings.IsSetup)
+            if (!settings.IsSetup)
             {
                 var setup = _setupPageActionFactory.GetSetupPageAction(controller);
                 if (setup == null)

@@ -14,16 +14,19 @@ namespace Cofoundry.Domain
         {
         }
 
-        public GetPageVersionBlockEntityMicroSummariesByIdRangeQuery(
-            IEnumerable<int> ids
-            )
+        public GetPageVersionBlockEntityMicroSummariesByIdRangeQuery(IEnumerable<int> pageVersionBlockIds)
+            : this(pageVersionBlockIds?.ToList())
         {
-            if (ids == null) throw new ArgumentNullException(nameof(ids));
+        }
 
-            PageVersionBlockIds = ids.ToArray();
+        public GetPageVersionBlockEntityMicroSummariesByIdRangeQuery(IReadOnlyCollection<int> pageVersionBlockIds)
+        {
+            if (pageVersionBlockIds == null) throw new ArgumentNullException(nameof(pageVersionBlockIds));
+
+            PageVersionBlockIds = pageVersionBlockIds;
         }
 
         [Required]
-        public int[] PageVersionBlockIds { get; set; }
+        public IReadOnlyCollection<int> PageVersionBlockIds { get; set; }
     }
 }

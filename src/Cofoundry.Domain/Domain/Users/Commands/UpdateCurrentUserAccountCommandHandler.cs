@@ -22,13 +22,13 @@ namespace Cofoundry.Domain
         private readonly CofoundryDbContext _dbContext;
         private readonly IQueryExecutor _queryExecutor;
         private readonly IPermissionValidationService _permissionValidationService;
-        private readonly IUserAreaRepository _userAreaRepository;
+        private readonly IUserAreaDefinitionRepository _userAreaRepository;
 
         public UpdateCurrentUserAccountCommandHandler(
             IQueryExecutor queryExecutor,
             CofoundryDbContext dbContext,
             IPermissionValidationService permissionValidationService,
-            IUserAreaRepository userAreaRepository
+            IUserAreaDefinitionRepository userAreaRepository
             )
         {
             _queryExecutor = queryExecutor;

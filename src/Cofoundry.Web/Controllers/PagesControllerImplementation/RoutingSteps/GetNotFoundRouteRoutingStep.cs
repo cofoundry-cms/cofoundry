@@ -48,7 +48,7 @@ namespace Cofoundry.Web
 
         private async Task<ActionResult> GetRewriteResult(Controller controller)
         {
-            var query = new GetRewriteRuleByPathQuery() { Path = controller.Request.Path };
+            var query = new GetRewriteRuleSummaryByPathQuery() { Path = controller.Request.Path };
             var rewriteRule = await _queryExecutor.ExecuteAsync(query);
             if (rewriteRule != null)
             {

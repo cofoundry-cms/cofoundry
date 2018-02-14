@@ -7,8 +7,8 @@ using Cofoundry.Domain.CQS;
 namespace Cofoundry.Domain
 {
     public class GetPageRouteByIdQueryHandler 
-        : IAsyncQueryHandler<GetByIdQuery<PageRoute>, PageRoute>
-        , IPermissionRestrictedQueryHandler<GetByIdQuery<PageRoute>, PageRoute>
+        : IAsyncQueryHandler<GetPageRouteByIdQuery, PageRoute>
+        , IPermissionRestrictedQueryHandler<GetPageRouteByIdQuery, PageRoute>
     {
         private readonly IQueryExecutor _queryExecutor;
 
@@ -19,18 +19,17 @@ namespace Cofoundry.Domain
             _queryExecutor = queryExecutor;
         }
 
-        public async Task<PageRoute> ExecuteAsync(GetByIdQuery<PageRoute> query, IExecutionContext executionContext)
+        public async Task<PageRoute> ExecuteAsync(GetPageRouteByIdQuery query, IExecutionContext executionContext)
         {
-            var result = (await _queryExecutor
-                .GetAllAsync<PageRoute>(executionContext))
-                .SingleOrDefault(p => p.PageId == query.Id);
+            var allPageRoutes = await _queryExecutor.ExecuteAsync(new GetAllPageRoutesQuery(), executionContext);
+            var result = allPageRoutes.SingleOrDefault(p => p.PageId == query.PageId);
 
             return result;
         }
 
         #region Permission
 
-        public IEnumerable<IPermissionApplication> GetPermissions(GetByIdQuery<PageRoute> query)
+        public IEnumerable<IPermissionApplication> GetPermissions(GetPageRouteByIdQuery query)
         {
             yield return new PageReadPermission();
         }

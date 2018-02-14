@@ -6,15 +6,15 @@ using Cofoundry.Domain.CQS;
 
 namespace Cofoundry.Domain
 {
-    public class GetPageDirectoryTreeNodeByIdQueryHandler 
-        : IAsyncQueryHandler<GetByIdQuery<PageDirectoryNode>, PageDirectoryNode>
-        , IPermissionRestrictedQueryHandler<GetByIdQuery<PageDirectoryNode>, PageDirectoryNode>
+    public class GetPageDirectoryNodeByIdQueryHandler 
+        : IAsyncQueryHandler<GetPageDirectoryNodeByIdQuery, PageDirectoryNode>
+        , IPermissionRestrictedQueryHandler<GetPageDirectoryNodeByIdQuery, PageDirectoryNode>
     {
         #region constructor
 
         private readonly IQueryExecutor _queryExecutor;
 
-        public GetPageDirectoryTreeNodeByIdQueryHandler(
+        public GetPageDirectoryNodeByIdQueryHandler(
             IQueryExecutor queryExecutor
             )
         {
@@ -25,12 +25,12 @@ namespace Cofoundry.Domain
 
         #region execution
 
-        public async Task<PageDirectoryNode> ExecuteAsync(GetByIdQuery<PageDirectoryNode> query, IExecutionContext executionContext)
+        public async Task<PageDirectoryNode> ExecuteAsync(GetPageDirectoryNodeByIdQuery query, IExecutionContext executionContext)
         {
             var tree = await _queryExecutor.ExecuteAsync(new GetPageDirectoryTreeQuery());
             var result = tree
                 .Flatten()
-                .SingleOrDefault(n => n.PageDirectoryId == query.Id);
+                .SingleOrDefault(n => n.PageDirectoryId == query.PageDirectoryId);
 
             return result;
         }
@@ -39,7 +39,7 @@ namespace Cofoundry.Domain
 
         #region permissions
 
-        public IEnumerable<IPermissionApplication> GetPermissions(GetByIdQuery<PageDirectoryNode> command)
+        public IEnumerable<IPermissionApplication> GetPermissions(GetPageDirectoryNodeByIdQuery command)
         {
             yield return new PageDirectoryReadPermission();
         }

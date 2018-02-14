@@ -10,20 +10,21 @@ namespace Cofoundry.Domain
 {
     public class GetPageDirectoryEntityMicroSummariesByIdRangeQuery : IQuery<IDictionary<int, RootEntityMicroSummary>>
     {
-        public GetPageDirectoryEntityMicroSummariesByIdRangeQuery()
+        public GetPageDirectoryEntityMicroSummariesByIdRangeQuery() { }
+
+        public GetPageDirectoryEntityMicroSummariesByIdRangeQuery(IEnumerable<int> ids)
+            : this (ids.ToList())
         {
         }
 
-        public GetPageDirectoryEntityMicroSummariesByIdRangeQuery(
-            IEnumerable<int> ids
-            )
+        public GetPageDirectoryEntityMicroSummariesByIdRangeQuery(IReadOnlyCollection<int> ids)
         {
             if (ids == null) throw new ArgumentNullException(nameof(ids));
 
-            PageDirectoryIds = ids.ToArray();
+            PageDirectoryIds = ids;
         }
 
         [Required]
-        public int[] PageDirectoryIds { get; set; }
+        public IReadOnlyCollection<int> PageDirectoryIds { get; set; }
     }
 }

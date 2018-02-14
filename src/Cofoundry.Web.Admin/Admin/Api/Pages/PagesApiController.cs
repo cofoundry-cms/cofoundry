@@ -58,7 +58,9 @@ namespace Cofoundry.Web.Admin
         [HttpGet(ID_ROUTE)]
         public async Task<IActionResult> Get(int pageId)
         {
-            var result = await _queryExecutor.GetByIdAsync<PageDetails>(pageId);
+            var query = new GetPageDetailsByIdQuery(pageId);
+            var result = await _queryExecutor.ExecuteAsync(query);
+
             return _apiResponseHelper.SimpleQueryResponse(this, result);
         }
         

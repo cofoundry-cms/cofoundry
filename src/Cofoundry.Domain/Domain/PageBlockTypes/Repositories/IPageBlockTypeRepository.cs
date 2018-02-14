@@ -10,7 +10,7 @@ namespace Cofoundry.Domain
     /// </summary>
     public interface IPageBlockTypeRepository
     {
-        Task<IEnumerable<PageBlockTypeSummary>> GetAllPageBlockTypeSummariesAsync(IExecutionContext executionContext = null);
+        Task<ICollection<PageBlockTypeSummary>> GetAllPageBlockTypeSummariesAsync(IExecutionContext executionContext = null);
 
         Task<PageBlockTypeSummary> GetPageBlockTypeSummaryByIdAsync(int pageBlockTypeId, IExecutionContext executionContext = null);
 

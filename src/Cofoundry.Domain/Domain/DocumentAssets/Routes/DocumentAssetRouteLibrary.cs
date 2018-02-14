@@ -37,7 +37,8 @@ namespace Cofoundry.Domain
         {
             if (!documentAssetId.HasValue) return string.Empty;
 
-            var asset = await _queryExecutor.GetByIdAsync<DocumentAssetRenderDetails>(documentAssetId.Value);
+            var getAssetQuery = new GetDocumentAssetRenderDetailsByIdQuery(documentAssetId.Value);
+            var asset = await _queryExecutor.ExecuteAsync(getAssetQuery);
 
             return DocumentAsset(asset);
         }

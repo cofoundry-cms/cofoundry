@@ -36,7 +36,7 @@ namespace Cofoundry.Domain
         /// getter is invoked and the result is cached and returned
         /// </summary>
         /// <param name="getter">Function to invoke if the page block types aren't in the cache</param>
-        public PageBlockTypeSummary[] GetOrAdd(Func<PageBlockTypeSummary[]> getter)
+        public ICollection<PageBlockTypeSummary> GetOrAdd(Func<ICollection<PageBlockTypeSummary>> getter)
         {
             return _cache.GetOrAdd(SUMMARIES_CACHEKEY, getter);
         }
@@ -46,7 +46,7 @@ namespace Cofoundry.Domain
         /// getter is invoked and the result is cached and returned
         /// </summary>
         /// <param name="getter">Function to invoke if the page block types aren't in the cache</param>
-        public Task<PageBlockTypeSummary[]> GetOrAddAsync(Func<Task<PageBlockTypeSummary[]>> getter)
+        public Task<ICollection<PageBlockTypeSummary>> GetOrAddAsync(Func<Task<ICollection<PageBlockTypeSummary>>> getter)
         {
             return _cache.GetOrAddAsync(SUMMARIES_CACHEKEY, getter);
         }

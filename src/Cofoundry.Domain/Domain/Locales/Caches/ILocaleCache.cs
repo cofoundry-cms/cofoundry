@@ -16,13 +16,13 @@ namespace Cofoundry.Domain
         /// getter is invoked and the result is cached and returned
         /// </summary>
         /// <param name="getter">Function to invoke if the locales aren't in the cache</param>
-        ActiveLocale[] GetOrAdd(Func<ActiveLocale[]> getter);
+        ICollection<ActiveLocale> GetOrAdd(Func<ICollection<ActiveLocale>> getter);
 
         /// <summary>
         /// Gets all active locales if they are already cached, otherwise the 
         /// getter is invoked and the result is cached and returned
         /// </summary>
         /// <param name="getter">Function to invoke if the locales aren't in the cache</param>
-        Task<ActiveLocale[]> GetOrAddAsync(Func<Task<ActiveLocale[]>> getter);
+        Task<ICollection<ActiveLocale>> GetOrAddAsync(Func<Task<ICollection<ActiveLocale>>> getter);
     }
 }

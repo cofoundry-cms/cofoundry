@@ -10,8 +10,8 @@ using Cofoundry.Domain.QueryModels;
 namespace Cofoundry.Domain
 {
     public class GetPageTemplateDetailsByIdQueryHandler 
-        : IAsyncQueryHandler<GetByIdQuery<PageTemplateDetails>, PageTemplateDetails>
-        , IPermissionRestrictedQueryHandler<GetByIdQuery<PageTemplateDetails>, PageTemplateDetails>
+        : IAsyncQueryHandler<GetPageTemplateDetailsByIdQuery, PageTemplateDetails>
+        , IPermissionRestrictedQueryHandler<GetPageTemplateDetailsByIdQuery, PageTemplateDetails>
     {
         #region constructor
 
@@ -32,7 +32,7 @@ namespace Cofoundry.Domain
 
         #endregion
 
-        public async Task<PageTemplateDetails> ExecuteAsync(GetByIdQuery<PageTemplateDetails> query, IExecutionContext executionContext)
+        public async Task<PageTemplateDetails> ExecuteAsync(GetPageTemplateDetailsByIdQuery query, IExecutionContext executionContext)
         {
             var queryModel = new PageTemplateDetailsQueryModel();
 
@@ -40,20 +40,21 @@ namespace Cofoundry.Domain
                 .PageTemplates
                 .AsNoTracking()
                 .Include(t => t.PageTemplateRegions)
-                .Where(l => l.PageTemplateId == query.Id)
+                .Where(l => l.PageTemplateId == query.PageTemplateId)
                 .SingleOrDefaultAsync();
 
             if (queryModel.PageTemplate == null) return null;
 
             if (!string.IsNullOrEmpty(queryModel.PageTemplate.CustomEntityDefinitionCode))
             {
-                queryModel.CustomEntityDefinition = await _queryExecutor.GetByIdAsync<CustomEntityDefinitionMicroSummary>(queryModel.PageTemplate.CustomEntityDefinitionCode);
+                var definitionQuery = new GetCustomEntityDefinitionMicroSummaryByCodeQuery(queryModel.PageTemplate.CustomEntityDefinitionCode);
+                queryModel.CustomEntityDefinition = await _queryExecutor.ExecuteAsync(definitionQuery, executionContext);
             }
 
             queryModel.NumPages = await _dbContext
                 .PageVersions
                 .AsNoTracking()
-                .Where(v => v.PageTemplateId == query.Id && !v.Page.IsDeleted && !v.IsDeleted)
+                .Where(v => v.PageTemplateId == query.PageTemplateId && !v.Page.IsDeleted && !v.IsDeleted)
                 .GroupBy(v => v.PageId)
                 .CountAsync();
 
@@ -64,7 +65,7 @@ namespace Cofoundry.Domain
 
         #region Permission
 
-        public IEnumerable<IPermissionApplication> GetPermissions(GetByIdQuery<PageTemplateDetails> query)
+        public IEnumerable<IPermissionApplication> GetPermissions(GetPageTemplateDetailsByIdQuery query)
         {
             yield return new PageTemplateReadPermission();
         }

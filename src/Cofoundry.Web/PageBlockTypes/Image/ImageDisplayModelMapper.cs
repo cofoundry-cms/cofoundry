@@ -32,7 +32,9 @@ namespace Cofoundry.Web
             )
         {
             var imageAssetIds = inputCollection.SelectDistinctModelValuesWithoutEmpty(i => i.ImageId);
-            var images = await _queryExecutor.GetByIdRangeAsync<ImageAssetRenderDetails>(imageAssetIds);
+            var imagesQuery = new GetImageAssetRenderDetailsByIdRangeQuery(imageAssetIds);
+            var images = await _queryExecutor.ExecuteAsync(imagesQuery);
+
             var results = new List<PageBlockTypeDisplayModelMapperOutput>(inputCollection.Count);
 
             foreach (var input in inputCollection)

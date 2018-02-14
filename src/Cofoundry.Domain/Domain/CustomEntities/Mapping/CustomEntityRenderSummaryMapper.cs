@@ -51,7 +51,7 @@ namespace Cofoundry.Domain
         {
             var routingsQuery = GetPageRoutingQuery(dbResults);
             var allRoutings = await _queryExecutor.ExecuteAsync(routingsQuery, executionContext);
-            var allLocales = await _queryExecutor.GetAllAsync<ActiveLocale>(executionContext);
+            var allLocales = await _queryExecutor.ExecuteAsync(new GetAllActiveLocalesQuery(), executionContext);
 
             return Map(dbResults, allRoutings, allLocales);
         }
@@ -75,7 +75,8 @@ namespace Cofoundry.Domain
             ActiveLocale locale = null;
             if (dbResult.CustomEntity.LocaleId.HasValue)
             {
-                locale = await _queryExecutor.GetByIdAsync<ActiveLocale>(dbResult.CustomEntity.LocaleId.Value, executionContext);
+                var getLocaleQuery = new GetActiveLocaleByIdQuery(dbResult.CustomEntity.LocaleId.Value);
+                locale = await _queryExecutor.ExecuteAsync(getLocaleQuery, executionContext);
             }
 
             return MapSingle(dbResult, routing, locale);
@@ -100,8 +101,8 @@ namespace Cofoundry.Domain
 
         private IEnumerable<CustomEntityRenderSummary> Map(
             ICollection<CustomEntityVersion> dbResults,
-            IDictionary<int, IEnumerable<PageRoutingInfo>> allRoutings,
-            IEnumerable<ActiveLocale> allLocalesAsEnumerable
+            IDictionary<int, ICollection<PageRoutingInfo>> allRoutings,
+            ICollection<ActiveLocale> allLocalesAsEnumerable
             )
         {
             var results = new List<CustomEntityRenderSummary>(dbResults.Count);

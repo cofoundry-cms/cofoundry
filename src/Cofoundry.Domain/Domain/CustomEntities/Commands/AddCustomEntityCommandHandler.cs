@@ -64,8 +64,10 @@ namespace Cofoundry.Domain
 
         public async Task ExecuteAsync(AddCustomEntityCommand command, IExecutionContext executionContext)
         {
-            var definition = await _queryExecutor.GetByIdAsync<CustomEntityDefinitionSummary>(command.CustomEntityDefinitionCode);
+            var definitionQuery = new GetCustomEntityDefinitionSummaryByCodeQuery(command.CustomEntityDefinitionCode);
+            var definition = await _queryExecutor.ExecuteAsync(definitionQuery, executionContext);
             EntityNotFoundException.ThrowIfNull(definition, command.CustomEntityDefinitionCode);
+
             await _commandExecutor.ExecuteAsync(new EnsureCustomEntityDefinitionExistsCommand(definition.CustomEntityDefinitionCode));
 
             // Custom Validation

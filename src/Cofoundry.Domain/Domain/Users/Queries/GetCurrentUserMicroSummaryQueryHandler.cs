@@ -27,8 +27,9 @@ namespace Cofoundry.Domain
         {
             if (!executionContext.UserContext.UserId.HasValue) return null;
 
-            var user = _queryExecutor.GetByIdAsync<UserMicroSummary>(executionContext.UserContext.UserId.Value);
-            return user;
+            var userQuery = new GetUserMicroSummaryByIdQuery(executionContext.UserContext.UserId.Value);
+
+            return _queryExecutor.ExecuteAsync(userQuery, executionContext);
         }
     }
 }

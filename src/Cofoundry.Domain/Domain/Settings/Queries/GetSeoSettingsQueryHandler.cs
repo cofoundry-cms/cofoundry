@@ -10,7 +10,7 @@ using Cofoundry.Core;
 namespace Cofoundry.Domain
 {
     public class GetSeoSettingsQueryHandler 
-        : IAsyncQueryHandler<GetQuery<SeoSettings>, SeoSettings>
+        : IAsyncQueryHandler<GetSettingsQuery<SeoSettings>, SeoSettings>
         , IIgnorePermissionCheckHandler
     {
         #region constructor
@@ -31,7 +31,7 @@ namespace Cofoundry.Domain
 
         #region execution
 
-        public async Task<SeoSettings> ExecuteAsync(GetQuery<SeoSettings> query, IExecutionContext executionContext)
+        public async Task<SeoSettings> ExecuteAsync(GetSettingsQuery<SeoSettings> query, IExecutionContext executionContext)
         {
             var allSettings = await _internalSettingsRepository.GetAllSettingsAsync();
             return MapSettings(allSettings);
@@ -40,8 +40,7 @@ namespace Cofoundry.Domain
         private SeoSettings MapSettings(Dictionary<string, string> allSettings)
         {
             var settings = new SeoSettings();
-
-            _getSettingQueryHelper.SetSettingProperty(settings, s => s.GoogleAnalyticsUAId, allSettings);
+            
             _getSettingQueryHelper.SetSettingProperty(settings, s => s.HumansTxt, allSettings);
             _getSettingQueryHelper.SetSettingProperty(settings, s => s.RobotsTxt, allSettings);
 

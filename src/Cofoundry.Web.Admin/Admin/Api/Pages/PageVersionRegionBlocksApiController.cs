@@ -47,18 +47,15 @@ namespace Cofoundry.Web.Admin
         {
             if (dataType == PageVersionRegionBlocksActionDataType.UpdateCommand)
             {
-                return await GetById<UpdatePageVersionBlockCommand>(pageVersionBlockId);
+                var updateCommandQuery = new GetUpdateCommandByIdQuery<UpdatePageVersionBlockCommand>(pageVersionBlockId);
+                var updateCommandResult = await _queryExecutor.ExecuteAsync(updateCommandQuery);
+
+                return _apiResponseHelper.SimpleQueryResponse(this, updateCommandResult);
             }
             
             var query = new GetPageVersionBlockRenderDetailsByIdQuery() { PageVersionBlockId = pageVersionBlockId, PublishStatus = PublishStatusQuery.Latest };
             var results = await _queryExecutor.ExecuteAsync(query);
             
-            return _apiResponseHelper.SimpleQueryResponse(this, results);
-        }
-
-        private async Task<IActionResult> GetById<T>(int pageVersionBlockId)
-        {
-            var results = await _queryExecutor.GetByIdAsync<T>(pageVersionBlockId);
             return _apiResponseHelper.SimpleQueryResponse(this, results);
         }
 

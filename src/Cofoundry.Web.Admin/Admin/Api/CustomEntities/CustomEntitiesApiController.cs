@@ -39,12 +39,12 @@ namespace Cofoundry.Web.Admin
         #region queries
 
         [HttpGet]
-        public async Task<IActionResult> Get([FromQuery] SearchCustomEntitySummariesQuery query, [FromQuery] GetByIdRangeQuery<CustomEntitySummary> rangeQuery)
+        public async Task<IActionResult> Get([FromQuery] SearchCustomEntitySummariesQuery query, [FromQuery] GetCustomEntitySummariesByIdRangeQuery rangeQuery)
         {
-            if (rangeQuery != null && rangeQuery.Ids != null)
+            if (rangeQuery != null && rangeQuery.CustomEntityIds != null)
             {
                 var rangeResults = await _queryExecutor.ExecuteAsync(rangeQuery);
-                return _apiResponseHelper.SimpleQueryResponse(this, rangeResults.FilterAndOrderByKeys(rangeQuery.Ids));
+                return _apiResponseHelper.SimpleQueryResponse(this, rangeResults.FilterAndOrderByKeys(rangeQuery.CustomEntityIds));
             }
 
             if (query == null) query = new SearchCustomEntitySummariesQuery();
@@ -56,7 +56,9 @@ namespace Cofoundry.Web.Admin
         [HttpGet(ID_ROUTE)]
         public async Task<IActionResult> Get(int customEntityId)
         {
-            var result = await _queryExecutor.GetByIdAsync<CustomEntityDetails>(customEntityId);
+            var query = new GetCustomEntityDetailsByIdQuery(customEntityId);
+            var result = await _queryExecutor.ExecuteAsync(query);
+
             return _apiResponseHelper.SimpleQueryResponse(this, result);
         }
 

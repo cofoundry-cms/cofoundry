@@ -16,13 +16,20 @@ namespace Cofoundry.Domain
         public GetDocumentAssetEntityMicroSummariesByIdRangeQuery(
             IEnumerable<int> ids
             )
+            : this(ids?.ToList())
+        {
+        }
+
+        public GetDocumentAssetEntityMicroSummariesByIdRangeQuery(
+            IReadOnlyCollection<int> ids
+            )
         {
             if (ids == null) throw new ArgumentNullException(nameof(ids));
 
-            DocumentAssetIds = ids.ToArray();
+            DocumentAssetIds = ids;
         }
 
         [Required]
-        public int[] DocumentAssetIds { get; set; }
+        public IReadOnlyCollection<int> DocumentAssetIds { get; set; }
     }
 }

@@ -11,7 +11,7 @@ namespace Cofoundry.Domain
     /// Full-text page searching has not been looked at yet and this should not be used, but
     /// remains in place for compatibility.
     /// </summary>
-    public class SearchPagesQuery : IQuery<IEnumerable<PageSearchResult>>
+    public class SearchPagesQuery : IQuery<ICollection<PageSearchResult>>
     {
         public string Text { get; set; }
         public int? LocaleId { get; set; }

@@ -8,7 +8,7 @@ using Cofoundry.Domain.CQS;
 
 namespace Cofoundry.Domain
 {
-    public class GetPageRoutingInfoByCustomEntityIdQuery : IQuery<IEnumerable<PageRoutingInfo>>
+    public class GetPageRoutingInfoByCustomEntityIdQuery : IQuery<ICollection<PageRoutingInfo>>
     {
         public GetPageRoutingInfoByCustomEntityIdQuery()
         {

@@ -65,10 +65,10 @@ namespace Cofoundry.Domain
                     .Where(e => e.CustomEntityDefinitionCode == query.CustomEntityDefinitionCode && (e.LocaleId == null || e.Locale.IsActive))
                     .ToListAsync();
 
-                var allLocales = (await _queryExecutor.GetAllAsync<ActiveLocale>())
-                    .ToDictionary(l => l.LocaleId);
+                var allLocales = await _queryExecutor.ExecuteAsync(new GetAllActiveLocalesQuery(), executionContext);
+                var localesLookup = allLocales.ToDictionary(l => l.LocaleId);
 
-                return await MapRoutesAsync(query, dbRoutes, allLocales); ;
+                return await MapRoutesAsync(query, dbRoutes, localesLookup); ;
             });
         }
 

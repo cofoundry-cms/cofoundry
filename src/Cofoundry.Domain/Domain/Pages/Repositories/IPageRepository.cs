@@ -14,13 +14,13 @@ namespace Cofoundry.Domain
 
         #region page routes
 
-        Task<IEnumerable<PageRoute>> GetAllPageRoutesAsync(IExecutionContext executionContext = null);
+        Task<ICollection<PageRoute>> GetAllPageRoutesAsync(IExecutionContext executionContext = null);
 
         Task<PageRoute> GetPageRouteByIdAsync(int pageId, IExecutionContext executionContext = null);
 
         Task<IDictionary<int, PageRoute>> GetPageRoutesByIdRangeAsync(IEnumerable<int> pageIds, IExecutionContext executionContext = null);
 
-        Task<IEnumerable<PageRoute>> GetPageRoutesByPageDirectoryIdAsync(int pageDirectoryId, IExecutionContext executionContext = null);
+        Task<ICollection<PageRoute>> GetPageRoutesByPageDirectoryIdAsync(int pageDirectoryId, IExecutionContext executionContext = null);
 
         Task<PageRoute> GetNotFoundPageRouteByPathAsync(GetNotFoundPageRouteByPathQuery query, IExecutionContext executionContext = null);
 
@@ -28,9 +28,9 @@ namespace Cofoundry.Domain
 
         #region PageRoutingInfo
         
-        Task<IEnumerable<PageRoutingInfo>> GetPageRoutingInfoByCustomEntityIdAsync(int customEntityId, IExecutionContext executionContext = null);
+        Task<ICollection<PageRoutingInfo>> GetPageRoutingInfoByCustomEntityIdAsync(int customEntityId, IExecutionContext executionContext = null);
 
-        Task<IDictionary<int, IEnumerable<PageRoutingInfo>>> GetPageRoutingInfoByCustomEntityIdRangeAsync(IEnumerable<int> customEntityIds, IExecutionContext executionContext = null);
+        Task<IDictionary<int, ICollection<PageRoutingInfo>>> GetPageRoutingInfoByCustomEntityIdRangeAsync(IEnumerable<int> customEntityIds, IExecutionContext executionContext = null);
 
         /// <summary>
         /// Attempts to find a matching page route using the supplied path. The path
@@ -70,7 +70,7 @@ namespace Cofoundry.Domain
         /// </summary>
         /// <param name="pageVersionId">Database id of the page version to get content data for.</param>
         /// <param name="executionContext">Optional execution context to use when executing the query. Useful if you need to temporarily elevate your permission level.</param>
-        Task<IEnumerable<PageRegionDetails>> GetPageRegionDetailsByPageVersionIdAsync(int pageVersionId, IExecutionContext executionContext = null);
+        Task<ICollection<PageRegionDetails>> GetPageRegionDetailsByPageVersionIdAsync(int pageVersionId, IExecutionContext executionContext = null);
 
         #endregion
 
@@ -97,21 +97,13 @@ namespace Cofoundry.Domain
 
         #region PageDetails (admin)
 
-        Task<PageDetails> GetPageDetailsByIdAsync(int id, IExecutionContext executionContext = null);
+        Task<PageDetails> GetPageDetailsByIdAsync(int pageId, IExecutionContext executionContext = null);
 
         #endregion
 
         #region PageVersionSummary (admin)
         
-        Task<IEnumerable<PageVersionSummary>> GetPageVersionSummariesByPageIdAsync(int pageId, IExecutionContext executionContext = null);
-
-        #endregion
-
-        #region page block types
-        
-        Task<IEnumerable<PageBlockTypeSummary>> GetAllPageBlockTypeSummariesAsync(IExecutionContext executionContext = null);
-
-        Task<PageBlockTypeSummary> GetPageBlockTypeSummaryByIdAsync(int id, IExecutionContext executionContext = null);
+        Task<ICollection<PageVersionSummary>> GetPageVersionSummariesByPageIdAsync(int pageId, IExecutionContext executionContext = null);
 
         #endregion
 

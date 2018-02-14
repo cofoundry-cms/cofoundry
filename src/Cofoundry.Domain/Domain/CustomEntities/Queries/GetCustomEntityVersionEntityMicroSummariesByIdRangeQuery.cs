@@ -17,13 +17,20 @@ namespace Cofoundry.Domain
         public GetCustomEntityVersionEntityMicroSummariesByIdRangeQuery(
             IEnumerable<int> ids
             )
+            : this (ids.ToList())
+        {
+        }
+
+        public GetCustomEntityVersionEntityMicroSummariesByIdRangeQuery(
+            IReadOnlyCollection<int> ids
+            )
         {
             if (ids == null) throw new ArgumentNullException(nameof(ids));
 
-            CustomEntityVersionIds = ids.ToArray();
+            CustomEntityVersionIds = ids;
         }
 
         [Required]
-        public int[] CustomEntityVersionIds { get; set; }
+        public IReadOnlyCollection<int> CustomEntityVersionIds { get; set; }
     }
 }

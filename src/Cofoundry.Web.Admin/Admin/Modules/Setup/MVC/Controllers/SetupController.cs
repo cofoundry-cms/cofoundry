@@ -36,7 +36,7 @@ namespace Cofoundry.Web.Admin
         [Route("")]
         public async Task<ActionResult> Index()
         {
-            var settings = await _queryExecutor.GetAsync<InternalSettings>();
+            var settings = await _queryExecutor.ExecuteAsync(new GetSettingsQuery<InternalSettings>());
             if (settings.IsSetup)
             {
                 return RedirectToDashboard();

@@ -118,7 +118,8 @@ namespace Cofoundry.Web
             var customEntityDefinitionCode = state.PageRoutingInfo.PageRoute.CustomEntityDefinitionCode;
             if (!string.IsNullOrEmpty(customEntityDefinitionCode))
             {
-                pageResponseData.CustomEntityDefinition = await _queryExecutor.GetByIdAsync<CustomEntityDefinitionSummary>(customEntityDefinitionCode);
+                var definitionQuery = new GetCustomEntityDefinitionSummaryByCodeQuery(customEntityDefinitionCode);
+                pageResponseData.CustomEntityDefinition = await _queryExecutor.ExecuteAsync(definitionQuery);
             }
 
             if (state.InputParameters.IsEditingCustomEntity)

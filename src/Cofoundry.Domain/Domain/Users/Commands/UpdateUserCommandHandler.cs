@@ -19,14 +19,14 @@ namespace Cofoundry.Domain
         private readonly CofoundryDbContext _dbContext;
         private readonly IQueryExecutor _queryExecutor;
         private readonly UserCommandPermissionsHelper _userCommandPermissionsHelper;
-        private readonly IUserAreaRepository _userAreaRepository;
+        private readonly IUserAreaDefinitionRepository _userAreaRepository;
         private readonly IPermissionValidationService _permissionValidationService;
 
         public UpdateUserCommandHandler(
             IQueryExecutor queryExecutor,
             CofoundryDbContext dbContext,
             UserCommandPermissionsHelper userCommandPermissionsHelper,
-            IUserAreaRepository userAreaRepository,
+            IUserAreaDefinitionRepository userAreaRepository,
             IPermissionValidationService permissionValidationService
             )
         {

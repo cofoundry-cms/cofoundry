@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore;
 namespace Cofoundry.Domain
 {
     public class GetDocumentAssetRenderDetailsByIdRangeQueryHandler
-        : IAsyncQueryHandler<GetByIdRangeQuery<DocumentAssetRenderDetails>, IDictionary<int, DocumentAssetRenderDetails>>
-        , IPermissionRestrictedQueryHandler<GetByIdRangeQuery<DocumentAssetRenderDetails>, IDictionary<int, DocumentAssetRenderDetails>>
+        : IAsyncQueryHandler<GetDocumentAssetRenderDetailsByIdRangeQuery, IDictionary<int, DocumentAssetRenderDetails>>
+        , IPermissionRestrictedQueryHandler<GetDocumentAssetRenderDetailsByIdRangeQuery, IDictionary<int, DocumentAssetRenderDetails>>
     {
         #region constructor
 
@@ -31,7 +31,7 @@ namespace Cofoundry.Domain
 
         #region execution
 
-        public async Task<IDictionary<int, DocumentAssetRenderDetails>> ExecuteAsync(GetByIdRangeQuery<DocumentAssetRenderDetails> query, IExecutionContext executionContext)
+        public async Task<IDictionary<int, DocumentAssetRenderDetails>> ExecuteAsync(GetDocumentAssetRenderDetailsByIdRangeQuery query, IExecutionContext executionContext)
         {
             var dbResults = await QueryDb(query).ToListAsync();
 
@@ -42,19 +42,19 @@ namespace Cofoundry.Domain
             return mappedResults;
         }
 
-        private IQueryable<DocumentAsset> QueryDb(GetByIdRangeQuery<DocumentAssetRenderDetails> query)
+        private IQueryable<DocumentAsset> QueryDb(GetDocumentAssetRenderDetailsByIdRangeQuery query)
         {
             return _dbContext
                 .DocumentAssets
                 .AsNoTracking()
-                .FilterByIds(query.Ids);
+                .FilterByIds(query.DocumentAssetIds);
         }
 
         #endregion
 
         #region Permission
 
-        public IEnumerable<IPermissionApplication> GetPermissions(GetByIdRangeQuery<DocumentAssetRenderDetails> query)
+        public IEnumerable<IPermissionApplication> GetPermissions(GetDocumentAssetRenderDetailsByIdRangeQuery query)
         {
             yield return new DocumentAssetReadPermission();
         }

@@ -8,7 +8,7 @@ using Cofoundry.Domain.CQS;
 namespace Cofoundry.Domain
 {
     public class GetCustomEntityDefinitionSummaryByCodeQueryHandler 
-        : IAsyncQueryHandler<GetByStringQuery<CustomEntityDefinitionSummary>, CustomEntityDefinitionSummary>
+        : IAsyncQueryHandler<GetCustomEntityDefinitionSummaryByCodeQuery, CustomEntityDefinitionSummary>
         , IIgnorePermissionCheckHandler
     {
         private readonly ICustomEntityDefinitionRepository _customEntityDefinitionRepository;
@@ -23,12 +23,12 @@ namespace Cofoundry.Domain
             _customEntityDefinitionSummaryMapper = customEntityDefinitionSummaryMapper;
         }
 
-        public async Task<CustomEntityDefinitionSummary> ExecuteAsync(GetByStringQuery<CustomEntityDefinitionSummary> query, IExecutionContext executionContext)
+        public Task<CustomEntityDefinitionSummary> ExecuteAsync(GetCustomEntityDefinitionSummaryByCodeQuery query, IExecutionContext executionContext)
         {
-            var definition = _customEntityDefinitionRepository.GetByCode(query.Id.ToUpperInvariant());
+            var definition = _customEntityDefinitionRepository.GetByCode(query.CustomEntityDefinitionCode.ToUpperInvariant());
             var result = _customEntityDefinitionSummaryMapper.Map(definition);
 
-            return await Task.FromResult(result);
+            return Task.FromResult(result);
         }
     }
 }

@@ -16,7 +16,7 @@ namespace Cofoundry.Domain.Data
             return result;
         }
 
-        public static IQueryable<ImageAsset> FilterByIds(this IQueryable<ImageAsset> images, int[] ids)
+        public static IQueryable<ImageAsset> FilterByIds(this IQueryable<ImageAsset> images, IEnumerable<int> ids)
         {
             var result = images
                 .Where(i => ids.Contains(i.ImageAssetId) && !i.IsDeleted);

@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore;
 namespace Cofoundry.Domain
 {
     public class GetImageAssetRenderDetailsByIdRangeQueryHandler 
-        : IAsyncQueryHandler<GetByIdRangeQuery<ImageAssetRenderDetails>, IDictionary<int, ImageAssetRenderDetails>>
-        , IPermissionRestrictedQueryHandler<GetByIdRangeQuery<ImageAssetRenderDetails>, IDictionary<int, ImageAssetRenderDetails>>
+        : IAsyncQueryHandler<GetImageAssetRenderDetailsByIdRangeQuery, IDictionary<int, ImageAssetRenderDetails>>
+        , IPermissionRestrictedQueryHandler<GetImageAssetRenderDetailsByIdRangeQuery, IDictionary<int, ImageAssetRenderDetails>>
     {
         #region constructor
 
@@ -34,9 +34,9 @@ namespace Cofoundry.Domain
 
         #region execution
 
-        public async Task<IDictionary<int, ImageAssetRenderDetails>> ExecuteAsync(GetByIdRangeQuery<ImageAssetRenderDetails> query, IExecutionContext executionContext)
+        public async Task<IDictionary<int, ImageAssetRenderDetails>> ExecuteAsync(GetImageAssetRenderDetailsByIdRangeQuery query, IExecutionContext executionContext)
         {
-            var cachedResults = QueryCache(query.Ids);
+            var cachedResults = QueryCache(query.ImageAssetIds);
             var missingResultsQuery = QueryDb(cachedResults);
             List<ImageAssetRenderDetails> missingResults = null;
 
@@ -62,7 +62,7 @@ namespace Cofoundry.Domain
 
         #endregion
 
-        private List<ImageCacheResult> QueryCache(int[] ids)
+        private List<ImageCacheResult> QueryCache(IReadOnlyCollection<int> ids)
         {
             var results = new List<ImageCacheResult>();
 
@@ -120,7 +120,7 @@ namespace Cofoundry.Domain
 
         #region Permission
 
-        public IEnumerable<IPermissionApplication> GetPermissions(GetByIdRangeQuery<ImageAssetRenderDetails> query)
+        public IEnumerable<IPermissionApplication> GetPermissions(GetImageAssetRenderDetailsByIdRangeQuery query)
         {
             yield return new ImageAssetReadPermission();
         }

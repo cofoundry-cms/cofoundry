@@ -19,6 +19,6 @@ namespace Cofoundry.Domain
 
     public interface IPagedQueryResult<TResult> : IPagedQueryResult
     {
-        TResult[] Items { get; set; }
+        ICollection<TResult> Items { get; set; }
     }
 }

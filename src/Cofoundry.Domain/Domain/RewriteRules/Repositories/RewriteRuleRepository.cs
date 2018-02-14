@@ -31,9 +31,10 @@ namespace Cofoundry.Domain
 
         #region queries
 
-        public Task<IEnumerable<RewriteRuleSummary>> GetAllRewriteRuleSummariesAsync(IExecutionContext executionContext = null)
+        public Task<ICollection<RewriteRuleSummary>> GetAllRewriteRuleSummariesAsync(IExecutionContext executionContext = null)
         {
-            return _queryExecutor.GetAllAsync<RewriteRuleSummary>(executionContext);
+            var query = new GetAllRewriteRuleSummariesQuery();
+            return _queryExecutor.ExecuteAsync(query, executionContext);
         }
 
         /// <summary>
@@ -48,7 +49,7 @@ namespace Cofoundry.Domain
         /// </param>
         public Task<RewriteRuleSummary> GetRewriteRuleByPathAsync(string path, IExecutionContext executionContext = null)
         {
-            return _queryExecutor.ExecuteAsync(new GetRewriteRuleByPathQuery() { Path = path }, executionContext);
+            return _queryExecutor.ExecuteAsync(new GetRewriteRuleSummaryByPathQuery() { Path = path }, executionContext);
         }
 
         #endregion

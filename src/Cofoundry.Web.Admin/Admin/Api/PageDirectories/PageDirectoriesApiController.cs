@@ -40,7 +40,7 @@ namespace Cofoundry.Web.Admin
         [HttpGet]
         public async Task<IActionResult> Get()
         {
-            var results = await _queryExecutor.GetAllAsync<PageDirectoryRoute>();
+            var results = await _queryExecutor.ExecuteAsync(new GetAllPageDirectoryRoutesQuery());
             return _apiResponseHelper.SimpleQueryResponse(this, results);
         }
 
@@ -55,7 +55,7 @@ namespace Cofoundry.Web.Admin
         [HttpGet(ID_ROUTE)]
         public async Task<IActionResult> Get(int pageDirectoryId)
         {
-            var result = await _queryExecutor.GetByIdAsync<PageDirectoryNode>(pageDirectoryId);
+            var result = await _queryExecutor.ExecuteAsync(new GetPageDirectoryNodeByIdQuery(pageDirectoryId));
             return _apiResponseHelper.SimpleQueryResponse(this, result);
         }
 

@@ -40,7 +40,8 @@ namespace Cofoundry.Domain
         {
             if (!imageAssetId.HasValue) return string.Empty;
 
-            var asset = await _queryExecutor.GetByIdAsync<ImageAssetRenderDetails>(imageAssetId.Value);
+            var getImageQuery = new GetImageAssetRenderDetailsByIdQuery(imageAssetId.Value);
+            var asset = await _queryExecutor.ExecuteAsync(getImageQuery);
 
             return ImageAsset(asset, settings);
         }

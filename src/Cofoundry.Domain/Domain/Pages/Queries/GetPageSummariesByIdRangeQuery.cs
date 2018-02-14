@@ -20,13 +20,22 @@ namespace Cofoundry.Domain
         /// </summary>
         /// <param name="pageIds">A collection of database ids of the pages to fetch.</param>
         public GetPageSummariesByIdRangeQuery(IEnumerable<int> pageIds)
+            : this(pageIds?.ToList())
         {
-            PageIds = pageIds.ToArray();
+        }
+
+        /// <summary>
+        /// Initializes the query with parameters
+        /// </summary>
+        /// <param name="pageIds">A collection of database ids of the pages to fetch.</param>
+        public GetPageSummariesByIdRangeQuery(IReadOnlyCollection<int> pageIds)
+        {
+            PageIds = pageIds;
         }
 
         /// <summary>
         /// A collection of database ids of the pages to fetch.
         /// </summary>
-        public int[] PageIds { get; set; }
+        public IReadOnlyCollection<int> PageIds { get; set; }
     }
 }

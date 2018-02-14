@@ -51,7 +51,9 @@ namespace Cofoundry.Web
         {
             var settings = ImageResizeSettings.ParseFromQueryString(Request.Query);
 
-            var asset = await _queryExecutor.GetByIdAsync<ImageAssetRenderDetails>(assetId);
+            var getImageQuery = new GetImageAssetRenderDetailsByIdQuery(assetId);
+            var asset = await _queryExecutor.ExecuteAsync(getImageQuery);
+
             if (asset == null)
             {
                 return FileAssetNotFound("Image could not be found");
@@ -105,7 +107,8 @@ namespace Cofoundry.Web
 
             try
             {
-                file = await _queryExecutor.GetByIdAsync<DocumentAssetFile>(assetId);
+                var query = new GetDocumentAssetFileByIdQuery(assetId);
+                file = await _queryExecutor.ExecuteAsync(query);
             }
             catch (FileNotFoundException ex)
             {

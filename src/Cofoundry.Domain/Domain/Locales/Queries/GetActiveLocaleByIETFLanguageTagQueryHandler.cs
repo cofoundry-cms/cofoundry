@@ -25,9 +25,8 @@ namespace Cofoundry.Domain
         {
             if (!IsTagValid(query.IETFLanguageTag)) return null;
 
-            var result = (await _queryExecutor
-                .GetAllAsync<ActiveLocale>())
-                .SingleOrDefault(l => l.IETFLanguageTag.Equals(query.IETFLanguageTag, StringComparison.OrdinalIgnoreCase));
+            var locales = await _queryExecutor.ExecuteAsync(new GetAllActiveLocalesQuery(), executionContext);
+            var result = locales.SingleOrDefault(l => l.IETFLanguageTag.Equals(query.IETFLanguageTag, StringComparison.OrdinalIgnoreCase));
 
             return result;
         }

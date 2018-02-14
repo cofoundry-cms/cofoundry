@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore;
 namespace Cofoundry.Domain
 {
     public class GetDocumentAssetFileByIdQueryHandler 
-        : IAsyncQueryHandler<GetByIdQuery<DocumentAssetFile>, DocumentAssetFile>
-        , IPermissionRestrictedQueryHandler<GetByIdQuery<DocumentAssetFile>, DocumentAssetFile>
+        : IAsyncQueryHandler<GetDocumentAssetFileByIdQuery, DocumentAssetFile>
+        , IPermissionRestrictedQueryHandler<GetDocumentAssetFileByIdQuery, DocumentAssetFile>
     {
         private readonly IFileStoreService _fileStoreService;
         private readonly CofoundryDbContext _dbContext;
@@ -27,11 +27,11 @@ namespace Cofoundry.Domain
             _dbContext = dbContext;
         }
 
-        public async Task<DocumentAssetFile> ExecuteAsync(GetByIdQuery<DocumentAssetFile> query, IExecutionContext executionContext)
+        public async Task<DocumentAssetFile> ExecuteAsync(GetDocumentAssetFileByIdQuery query, IExecutionContext executionContext)
         {
             var dbResult = await _dbContext
                 .DocumentAssets
-                .Where(f => f.DocumentAssetId == query.Id && !f.IsDeleted)
+                .Where(f => f.DocumentAssetId == query.DocumentAssetId && !f.IsDeleted)
                 .Select(f => new {
                     Extension = f.FileExtension,
                     ContentType = f.ContentType,
@@ -40,10 +40,10 @@ namespace Cofoundry.Domain
                 .SingleOrDefaultAsync();
 
             if (dbResult == null) return null;
-            var fileName = Path.ChangeExtension(query.Id.ToString(), dbResult.Extension);
+            var fileName = Path.ChangeExtension(query.DocumentAssetId.ToString(), dbResult.Extension);
 
             var result = new DocumentAssetFile();
-            result.DocumentAssetId = query.Id;
+            result.DocumentAssetId = query.DocumentAssetId;
             result.ContentType = dbResult.ContentType;
             result.ContentStream = await _fileStoreService.GetAsync(DocumentAssetConstants.FileContainerName, fileName);
             result.FileName = FilePathHelper.CleanFileName(Path.ChangeExtension(dbResult.FileName, dbResult.Extension), fileName);
@@ -58,7 +58,7 @@ namespace Cofoundry.Domain
 
         #region Permission
 
-        public IEnumerable<IPermissionApplication> GetPermissions(GetByIdQuery<DocumentAssetFile> query)
+        public IEnumerable<IPermissionApplication> GetPermissions(GetDocumentAssetFileByIdQuery query)
         {
             yield return new DocumentAssetReadPermission();
         }

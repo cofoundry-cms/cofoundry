@@ -28,19 +28,22 @@ namespace Cofoundry.Domain
 
         #region queries
         
-        public Task<IEnumerable<PageBlockTypeSummary>> GetAllPageBlockTypeSummariesAsync(IExecutionContext executionContext = null)
+        public Task<ICollection<PageBlockTypeSummary>> GetAllPageBlockTypeSummariesAsync(IExecutionContext executionContext = null)
         {
-            return _queryExecutor.GetAllAsync<PageBlockTypeSummary>(executionContext);
+            var query = new GetAllPageBlockTypeSummariesQuery();
+            return _queryExecutor.ExecuteAsync(query, executionContext);
         }
 
         public Task<PageBlockTypeSummary> GetPageBlockTypeSummaryByIdAsync(int pageBlockTypeId, IExecutionContext executionContext = null)
         {
-            return _queryExecutor.GetByIdAsync<PageBlockTypeSummary>(pageBlockTypeId, executionContext);
+            var query = new GetPageBlockTypeSummaryByIdQuery(pageBlockTypeId);
+            return _queryExecutor.ExecuteAsync(query, executionContext);
         }
 
         public Task<PageBlockTypeDetails> GetPageBlockTypeDetailsByIdAsync(int pageBlockTypeId, IExecutionContext executionContext = null)
         {
-            return _queryExecutor.GetByIdAsync<PageBlockTypeDetails>(pageBlockTypeId, executionContext);
+            var query = new GetPageBlockTypeDetailsByIdQuery(pageBlockTypeId);
+            return _queryExecutor.ExecuteAsync(query, executionContext);
         }
 
         #endregion

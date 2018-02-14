@@ -15,9 +15,9 @@ namespace Cofoundry.Domain
 
         #region definitions
 
-        Task<IEnumerable<CustomEntityDefinitionMicroSummary>> GetAllCustomEntityDefinitionMicroSummariesAsync(IExecutionContext executionContext = null);
+        Task<ICollection<CustomEntityDefinitionMicroSummary>> GetAllCustomEntityDefinitionMicroSummariesAsync(IExecutionContext executionContext = null);
 
-        Task<CustomEntityDefinitionMicroSummary> GetCustomEntityDefinitionMicroSummaryByIdAsync(string customEntityDefinitionCode, IExecutionContext executionContext = null);
+        Task<CustomEntityDefinitionMicroSummary> GetCustomEntityDefinitionMicroSummaryByCodeAsync(string customEntityDefinitionCode, IExecutionContext executionContext = null);
 
         #endregion
 
@@ -47,7 +47,7 @@ namespace Cofoundry.Domain
 
         #endregion
 
-        Task<IEnumerable<ICustomEntityRoutingRule>> GetAllCustomEntityRoutingRulesAsync(IExecutionContext executionContext = null);
+        Task<ICollection<ICustomEntityRoutingRule>> GetAllCustomEntityRoutingRulesAsync(IExecutionContext executionContext = null);
 
         Task<CustomEntityDataModelSchema> GetCustomEntityDataModelSchemaDetailsByCodeAsync(string customEntityDefinitionCode, IExecutionContext executionContext = null);
 

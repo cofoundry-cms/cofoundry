@@ -11,8 +11,8 @@ namespace Cofoundry.Domain
     /// Returns all IPermission instances registered with Cofoundry.
     /// </summary>
     public class GetAllPermissionsQueryHandler 
-        : IAsyncQueryHandler<GetAllQuery<IPermission>, IEnumerable<IPermission>>
-        , IPermissionRestrictedQueryHandler<GetAllQuery<IPermission>, IEnumerable<IPermission>>
+        : IAsyncQueryHandler<GetAllPermissionsQuery, ICollection<IPermission>>
+        , IPermissionRestrictedQueryHandler<GetAllPermissionsQuery, ICollection<IPermission>>
     {
         #region constructor
 
@@ -29,14 +29,14 @@ namespace Cofoundry.Domain
 
         #region execution
 
-        public Task<IEnumerable<IPermission>> ExecuteAsync(GetAllQuery<IPermission> query, IExecutionContext executionContext)
+        public Task<ICollection<IPermission>> ExecuteAsync(GetAllPermissionsQuery query, IExecutionContext executionContext)
         {
             var permissions =_permissionRepository
                 .GetAll()
                 .OrderBy(p => GetPrimaryOrdering(p))
-                .AsEnumerable();
+                .ToList();
 
-            return Task.FromResult(permissions);
+            return Task.FromResult< ICollection<IPermission>>(permissions);
         }
 
         private string GetPrimaryOrdering(IPermission permission)
@@ -50,7 +50,7 @@ namespace Cofoundry.Domain
 
         #region permissions
 
-        public IEnumerable<IPermissionApplication> GetPermissions(GetAllQuery<IPermission> command)
+        public IEnumerable<IPermissionApplication> GetPermissions(GetAllPermissionsQuery command)
         {
             yield return new RoleReadPermission();
         }

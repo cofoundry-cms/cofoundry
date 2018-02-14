@@ -30,7 +30,10 @@ namespace Cofoundry.Domain
         public async Task<string> PageAsync(int? pageId)
         {
             if (!pageId.HasValue) return string.Empty;
-            var route = await _queryExecutor.GetByIdAsync<PageRoute>(pageId.Value);
+
+            var query = new GetPageRouteByIdQuery(pageId.Value);
+            var route = await _queryExecutor.ExecuteAsync(query);
+
             return Page(route);
         }
 

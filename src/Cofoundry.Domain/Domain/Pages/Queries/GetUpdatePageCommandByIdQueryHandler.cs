@@ -11,8 +11,8 @@ using Cofoundry.Core;
 namespace Cofoundry.Domain
 {
     public class GetUpdatePageCommandByIdQueryHandler 
-        : IAsyncQueryHandler<GetByIdQuery<UpdatePageCommand>, UpdatePageCommand>
-        , IPermissionRestrictedQueryHandler<GetByIdQuery<UpdatePageCommand>, UpdatePageCommand>
+        : IAsyncQueryHandler<GetUpdateCommandByIdQuery<UpdatePageCommand>, UpdatePageCommand>
+        , IPermissionRestrictedQueryHandler<GetUpdateCommandByIdQuery<UpdatePageCommand>, UpdatePageCommand>
     {
         #region constructor
 
@@ -29,7 +29,7 @@ namespace Cofoundry.Domain
 
         #region execution
 
-        public async Task<UpdatePageCommand> ExecuteAsync(GetByIdQuery<UpdatePageCommand> query, IExecutionContext executionContext)
+        public async Task<UpdatePageCommand> ExecuteAsync(GetUpdateCommandByIdQuery<UpdatePageCommand> query, IExecutionContext executionContext)
         {
             var dbResult = await _dbContext
                 .Pages
@@ -59,7 +59,7 @@ namespace Cofoundry.Domain
 
         #region Permission
 
-        public IEnumerable<IPermissionApplication> GetPermissions(GetByIdQuery<UpdatePageCommand> query)
+        public IEnumerable<IPermissionApplication> GetPermissions(GetUpdateCommandByIdQuery<UpdatePageCommand> query)
         {
             yield return new PageReadPermission();
         }

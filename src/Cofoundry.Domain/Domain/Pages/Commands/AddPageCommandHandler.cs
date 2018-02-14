@@ -193,7 +193,7 @@ namespace Cofoundry.Domain
 
         private async Task<ICustomEntityRoutingRule> GetAndValidateRoutingRuleAsync(AddPageCommand command, CustomEntityDefinitionSummary definition, IExecutionContext ex)
         {
-            var rules = await _queryExecutor.ExecuteAsync(new GetAllQuery<ICustomEntityRoutingRule>(), ex);
+            var rules = await _queryExecutor.ExecuteAsync(new GetAllCustomEntityRoutingRulesQuery(), ex);
             var rule = rules.SingleOrDefault(r => r.RouteFormat == command.CustomEntityRoutingRule);
 
             if (rule == null)
@@ -211,7 +211,7 @@ namespace Cofoundry.Domain
 
         private async Task<CustomEntityDefinitionSummary> GetCustomEntityDefinitionAsync(string customEntityDefinitionCode, IExecutionContext ex)
         {
-            var definition = await _queryExecutor.ExecuteAsync(new GetByStringQuery<CustomEntityDefinitionSummary>() { Id = customEntityDefinitionCode }, ex);
+            var definition = await _queryExecutor.ExecuteAsync(new GetCustomEntityDefinitionSummaryByCodeQuery(customEntityDefinitionCode), ex);
             if (definition == null)
             {
                 throw new PropertyValidationException("Custom entity defintion does not exists", nameof(definition.CustomEntityDefinitionCode), customEntityDefinitionCode);

@@ -33,14 +33,16 @@ namespace Cofoundry.Domain
 
         #region definitions
 
-        public Task<IEnumerable<CustomEntityDefinitionMicroSummary>> GetAllCustomEntityDefinitionMicroSummariesAsync(IExecutionContext executionContext = null)
+        public Task<ICollection<CustomEntityDefinitionMicroSummary>> GetAllCustomEntityDefinitionMicroSummariesAsync(IExecutionContext executionContext = null)
         {
-            return _queryExecutor.GetAllAsync<CustomEntityDefinitionMicroSummary>(executionContext);
+            var query = new GetAllCustomEntityDefinitionMicroSummariesQuery();
+            return _queryExecutor.ExecuteAsync(query, executionContext);
         }
 
-        public Task<CustomEntityDefinitionMicroSummary> GetCustomEntityDefinitionMicroSummaryByIdAsync(string customEntityDefinitionCode, IExecutionContext executionContext = null)
+        public Task<CustomEntityDefinitionMicroSummary> GetCustomEntityDefinitionMicroSummaryByCodeAsync(string customEntityDefinitionCode, IExecutionContext executionContext = null)
         {
-            return _queryExecutor.GetByIdAsync<CustomEntityDefinitionMicroSummary>(customEntityDefinitionCode, executionContext);
+            var query = new GetCustomEntityDefinitionMicroSummaryByCodeQuery(customEntityDefinitionCode);
+            return _queryExecutor.ExecuteAsync(query, executionContext);
         }
 
         #endregion
@@ -85,19 +87,22 @@ namespace Cofoundry.Domain
 
         #endregion
         
-        public Task<IEnumerable<ICustomEntityRoutingRule>> GetAllCustomEntityRoutingRulesAsync(IExecutionContext executionContext = null)
+        public Task<ICollection<ICustomEntityRoutingRule>> GetAllCustomEntityRoutingRulesAsync(IExecutionContext executionContext = null)
         {
-            return _queryExecutor.GetAllAsync<ICustomEntityRoutingRule>(executionContext);
+            var query = new GetAllCustomEntityRoutingRulesQuery();
+            return _queryExecutor.ExecuteAsync(query, executionContext);
         }
 
         public Task<CustomEntityDataModelSchema> GetCustomEntityDataModelSchemaDetailsByCodeAsync(string customEntityDefinitionCode, IExecutionContext executionContext = null)
         {
-            return _queryExecutor.GetByIdAsync<CustomEntityDataModelSchema>(customEntityDefinitionCode, executionContext);
+            var query = new GetCustomEntityDataModelSchemaDetailsByDefinitionCodeQuery(customEntityDefinitionCode);
+            return _queryExecutor.ExecuteAsync(query, executionContext);
         }
 
-        public Task<CustomEntityDetails> GetCustomEntityDetailsByIdAsync(int id, IExecutionContext executionContext = null)
+        public Task<CustomEntityDetails> GetCustomEntityDetailsByIdAsync(int customEntityId, IExecutionContext executionContext = null)
         {
-            return _queryExecutor.GetByIdAsync<CustomEntityDetails>(id, executionContext);
+            var query = new GetCustomEntityDetailsByIdQuery(customEntityId);
+            return _queryExecutor.ExecuteAsync(query, executionContext);
         }
 
         public Task<IEnumerable<CustomEntityRenderSummary>> GetCustomEntityRenderSummariesByDefinitionCodeAsync(GetCustomEntityRenderSummariesByDefinitionCodeQuery query, IExecutionContext executionContext = null)
@@ -117,7 +122,8 @@ namespace Cofoundry.Domain
 
         public Task<IDictionary<int, CustomEntitySummary>> GetCustomEntitySummariesByIdRangeAsync(IEnumerable<int> ids, IExecutionContext executionContext = null)
         {
-            return _queryExecutor.GetByIdRangeAsync<CustomEntitySummary>(ids, executionContext);
+            var query = new GetCustomEntitySummariesByIdRangeQuery(ids);
+            return _queryExecutor.ExecuteAsync(query, executionContext);
         }
 
         public Task<CustomEntityVersionPageBlockRenderDetails> GetCustomEntityVersionPageBlockRenderDetailsByIdAsync(GetCustomEntityVersionPageBlockRenderDetailsByIdQuery query, IExecutionContext executionContext = null)

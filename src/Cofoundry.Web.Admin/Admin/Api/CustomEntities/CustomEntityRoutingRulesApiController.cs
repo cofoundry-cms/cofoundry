@@ -38,7 +38,7 @@ namespace Cofoundry.Web.Admin
         [HttpGet]
         public async Task<IActionResult> Get()
         {
-            var results = await _queryExecutor.GetAllAsync<ICustomEntityRoutingRule>();
+            var results = await _queryExecutor.ExecuteAsync(new GetAllCustomEntityRoutingRulesQuery());
             return _apiResponseHelper.SimpleQueryResponse(this, results);
         }
 

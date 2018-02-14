@@ -82,7 +82,7 @@ namespace Cofoundry.Web
         /// </summary>
         private async Task<ActionResult> GetRewriteResultAsync(NotFoundPageViewModelBuilderParameters vmParameters)
         {
-            var query = new GetRewriteRuleByPathQuery() { Path = vmParameters.Path };
+            var query = new GetRewriteRuleSummaryByPathQuery() { Path = vmParameters.Path };
             var rewriteRule = await _queryExecutor.ExecuteAsync(query);
 
             if (rewriteRule != null)
