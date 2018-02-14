@@ -27,11 +27,13 @@ namespace Cofoundry.Web.Admin
 
             vm.ManageSiteModules = menuItems
                 .Where(m => m.MenuCategory == AdminModuleMenuCategory.ManageSite)
-                .SetStandardOrdering();
+                .SetStandardOrdering()
+                .ToList();
 
             vm.SettingsModules = menuItems
                 .Where(m => m.MenuCategory == AdminModuleMenuCategory.Settings)
-                .SetStandardOrdering();
+                .SetStandardOrdering()
+                .ToList();
 
             var selectedItem = menuItems
                 .Select(m => new {

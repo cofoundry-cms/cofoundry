@@ -35,6 +35,6 @@ namespace Cofoundry.Domain
         public PageRoute PageRoute { get; set; }
 
         public PageTemplateMicroSummary Template { get; set; }
-        public IEnumerable<PageRegionRenderDetails> Regions { get; set; }
+        public ICollection<PageRegionRenderDetails> Regions { get; set; }
     }
 }

@@ -26,7 +26,7 @@ namespace Cofoundry.Domain
         /// </summary>
         public ImageAnchorLocation? DefaultAnchorLocation { get; set; }
 
-        public IEnumerable<string> Tags { get; set; }
+        public ICollection<string> Tags { get; set; }
 
         public UpdateAuditData AuditData { get; set; }
     }

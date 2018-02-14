@@ -18,6 +18,6 @@ namespace Cofoundry.Core.MessageAggregator
         /// Method to invoke when a batch of messages of type TMessage are published
         /// </summary>
         /// <param name="message">Messages to handle</param>
-        Task HandleBatchAsync(IEnumerable<TMessage> message);
+        Task HandleBatchAsync(IReadOnlyCollection<TMessage> message);
     }
 }

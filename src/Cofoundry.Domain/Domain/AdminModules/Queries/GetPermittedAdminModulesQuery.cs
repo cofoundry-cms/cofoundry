@@ -7,8 +7,7 @@ using Cofoundry.Domain.CQS;
 
 namespace Cofoundry.Domain
 {
-    public class GetPermittedAdminModulesQuery : IQuery<IEnumerable<AdminModule>>
+    public class GetPermittedAdminModulesQuery : IQuery<ICollection<AdminModule>>
     {
-
     }
 }

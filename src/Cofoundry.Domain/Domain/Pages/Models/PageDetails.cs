@@ -20,7 +20,7 @@ namespace Cofoundry.Domain
         /// <summary>
         /// These tags are used in the admin panel for searching and categorizing.
         /// </summary>
-        public IEnumerable<string> Tags { get; set; }
+        public ICollection<string> Tags { get; set; }
 
         /// <summary>
         /// Data for the latest version of the page, which is not

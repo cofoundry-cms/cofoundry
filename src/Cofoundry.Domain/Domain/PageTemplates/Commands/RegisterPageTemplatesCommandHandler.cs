@@ -73,7 +73,7 @@ namespace Cofoundry.Domain
         private async Task UpdateTemplates(
             IExecutionContext executionContext,
             ILookup<string, PageTemplate> dbPageTemplates,
-            IEnumerable<PageTemplateFile> fileTemplates
+            ICollection<PageTemplateFile> fileTemplates
             )
         {
             foreach (var fileTemplate in fileTemplates)
@@ -101,7 +101,7 @@ namespace Cofoundry.Domain
         private async Task DeleteTemplates(
             IExecutionContext executionContext,
             ILookup<string, PageTemplate> dbPageTemplates,
-            IEnumerable<PageTemplateFile> fileTemplates
+            ICollection<PageTemplateFile> fileTemplates
             )
         {
             foreach (var removedDbTemplate in dbPageTemplates

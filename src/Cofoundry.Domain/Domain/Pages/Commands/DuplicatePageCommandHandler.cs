@@ -54,7 +54,7 @@ namespace Cofoundry.Domain
         {
             public int PageTypeId { get; set; }
             public PageVersion Version { get; set; }
-            public IEnumerable<string> Tags { get; set; }
+            public ICollection<string> Tags { get; set; }
         }
 
         private IQueryable<PageQuery> GetPageToDuplicate(DuplicatePageCommand command)
@@ -69,7 +69,11 @@ namespace Cofoundry.Domain
                 {
                     PageTypeId = v.Page.PageTypeId,
                     Version = v,
-                    Tags = v.Page.PageTags.Select(t => t.Tag.TagText)
+                    Tags = v
+                        .Page
+                        .PageTags
+                        .Select(t => t.Tag.TagText)
+                        .ToList()
                 });
         }
 

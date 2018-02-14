@@ -47,7 +47,7 @@ namespace Cofoundry.Core.MessageAggregator
         /// </summary>
         /// <typeparam name="TMessage">Message type. This should be a simple serializable object</typeparam>
         /// <param name="messages">Collection of messages to publish</param>
-        public async Task PublishBatchAsync<TMessage>(IEnumerable<TMessage> messages) where TMessage : class
+        public async Task PublishBatchAsync<TMessage>(IReadOnlyCollection<TMessage> messages) where TMessage : class
         {
             var subs = _state.GetSubscriptionsFor<TMessage>();
 

@@ -53,6 +53,6 @@ namespace Cofoundry.Domain
         /// single page on a site to be associated with a custom entitiy 
         /// details, but it's technically possible to have many.
         /// </summary>
-        public IEnumerable<string> PageUrls { get; set; }
+        public ICollection<string> PageUrls { get; set; }
     }
 }

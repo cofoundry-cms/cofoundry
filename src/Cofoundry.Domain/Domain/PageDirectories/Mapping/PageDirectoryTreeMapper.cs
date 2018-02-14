@@ -29,7 +29,7 @@ namespace Cofoundry.Domain
         /// object.
         /// </summary>
         /// <param name="dbPageDirectories">PageDirectoryTreeNodeQueryModel records from the database.</param>
-        public PageDirectoryNode Map(IEnumerable<PageDirectoryTreeNodeQueryModel> dbPageDirectories)
+        public PageDirectoryNode Map(IReadOnlyCollection<PageDirectoryTreeNodeQueryModel> dbPageDirectories)
         {
             var allPageDirectories = dbPageDirectories
                 .Select(MapInitial)

@@ -53,7 +53,7 @@ namespace Cofoundry.Domain
         /// structure. Supporting both might be confusing but the requirements need to be more fully 
         /// explored.
         /// </remarks>
-        public IEnumerable<PageDirectoryRouteLocale> LocaleVariations { get; set; }
+        public ICollection<PageDirectoryRouteLocale> LocaleVariations { get; set; }
 
         #region public methods
 

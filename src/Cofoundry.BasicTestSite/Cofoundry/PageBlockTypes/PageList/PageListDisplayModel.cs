@@ -17,6 +17,6 @@ namespace Cofoundry.BasicTestSite
     /// </summary>
     public class PageListDisplayModel : IPageBlockTypeDisplayModel
     {
-        public IEnumerable<PageRenderDetails> Pages { get; set; }
+        public ICollection<PageRenderDetails> Pages { get; set; }
     }
 }

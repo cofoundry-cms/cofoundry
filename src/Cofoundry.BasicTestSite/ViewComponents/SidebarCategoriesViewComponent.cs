@@ -33,7 +33,7 @@ namespace Cofoundry.BasicTestSite
             return View(viewModel);
         }
 
-        private IEnumerable<CategorySummary> MapCategories(PagedQueryResult<CustomEntityRenderSummary> customEntityResult)
+        private ICollection<CategorySummary> MapCategories(PagedQueryResult<CustomEntityRenderSummary> customEntityResult)
         {
             var categories = new List<CategorySummary>(customEntityResult.Items.Count());
 

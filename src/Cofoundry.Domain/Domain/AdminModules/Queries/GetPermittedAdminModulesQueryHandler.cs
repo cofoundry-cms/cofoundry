@@ -8,7 +8,7 @@ using Cofoundry.Domain.CQS;
 namespace Cofoundry.Domain
 {
     public class GetPermittedAdminModulesQueryHandler
-        : IAsyncQueryHandler<GetPermittedAdminModulesQuery, IEnumerable<AdminModule>>
+        : IAsyncQueryHandler<GetPermittedAdminModulesQuery, ICollection<AdminModule>>
         , IIgnorePermissionCheckHandler
     {
         private readonly IEnumerable<IAdminModuleRegistration> _moduleRegistrations;
@@ -23,13 +23,13 @@ namespace Cofoundry.Domain
             _permissionValidationService = permissionValidationService;
         }
 
-        public Task<IEnumerable<AdminModule>> ExecuteAsync(GetPermittedAdminModulesQuery query, IExecutionContext executionContext)
+        public Task<ICollection<AdminModule>> ExecuteAsync(GetPermittedAdminModulesQuery query, IExecutionContext executionContext)
         {
             var userContext = executionContext.UserContext;
 
             if (userContext == null || !userContext.IsCofoundryUser())
             {
-                return Task.FromResult(Enumerable.Empty<AdminModule>());
+                return Task.FromResult<ICollection<AdminModule>>(new AdminModule[0]);
             }
 
             var modules = _moduleRegistrations
@@ -38,7 +38,7 @@ namespace Cofoundry.Domain
                 .SetStandardOrdering()
                 .ToList();
 
-            return Task.FromResult(modules.AsEnumerable());
+            return Task.FromResult<ICollection<AdminModule>>(modules);
         }
     }
 }

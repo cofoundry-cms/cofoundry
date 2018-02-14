@@ -35,7 +35,7 @@ namespace Cofoundry.Domain
         /// to query for.
         /// </param>
         /// <param name="executionContext">Optional execution context to use when executing the query. Useful if you need to temporarily elevate your permission level.</param>
-        Task<IEnumerable<CustomEntityRoute>> GetCustomEntityRoutesByDefinitionCodeAsync(string customEntityDefinitionCode, IExecutionContext executionContext = null);
+        Task<ICollection<CustomEntityRoute>> GetCustomEntityRoutesByDefinitionCodeAsync(string customEntityDefinitionCode, IExecutionContext executionContext = null);
 
         Task<ICustomEntityRoutingRule> GetCustomEntityRoutingRuleByRouteFormatAsync(string routeFormat, IExecutionContext executionContext = null);
 
@@ -53,7 +53,7 @@ namespace Cofoundry.Domain
 
         Task<CustomEntityDetails> GetCustomEntityDetailsByIdAsync(int id, IExecutionContext executionContext = null);
 
-        Task<IEnumerable<CustomEntityRenderSummary>> GetCustomEntityRenderSummariesByDefinitionCodeAsync(GetCustomEntityRenderSummariesByDefinitionCodeQuery query, IExecutionContext executionContext = null);
+        Task<ICollection<CustomEntityRenderSummary>> GetCustomEntityRenderSummariesByDefinitionCodeAsync(GetCustomEntityRenderSummariesByDefinitionCodeQuery query, IExecutionContext executionContext = null);
 
         Task<CustomEntityRenderSummary> GetCustomEntityRenderSummaryByIdAsync(GetCustomEntityRenderSummaryByIdQuery query, IExecutionContext executionContext = null);
 
@@ -63,7 +63,7 @@ namespace Cofoundry.Domain
 
         Task<CustomEntityVersionPageBlockRenderDetails> GetCustomEntityVersionPageBlockRenderDetailsByIdAsync(GetCustomEntityVersionPageBlockRenderDetailsByIdQuery query, IExecutionContext executionContext = null);
 
-        Task<IEnumerable<CustomEntityVersionSummary>> GetCustomEntityVersionSummariesByCustomEntityIdAsync(int id, IExecutionContext executionContext = null);
+        Task<ICollection<CustomEntityVersionSummary>> GetCustomEntityVersionSummariesByCustomEntityIdAsync(int id, IExecutionContext executionContext = null);
 
         Task<bool> IsCustomEntityPathUniqueAsync(IsCustomEntityPathUniqueQuery query, IExecutionContext executionContext = null);
 

@@ -188,7 +188,7 @@ namespace Cofoundry.Domain
                 .First();
         }
 
-        private CustomEntityVersionPageBlockDetails MapBlock(CustomEntityVersionPageBlock dbBlock, IEnumerable<PageBlockTypeSummary> allPageBlockTypes)
+        private CustomEntityVersionPageBlockDetails MapBlock(CustomEntityVersionPageBlock dbBlock, ICollection<PageBlockTypeSummary> allPageBlockTypes)
         {
             var blockType = allPageBlockTypes.SingleOrDefault(t => t.PageBlockTypeId == dbBlock.PageBlockTypeId);
 

@@ -64,7 +64,7 @@ namespace Cofoundry.Domain
         /// to query for.
         /// </param>
         /// <param name="executionContext">Optional execution context to use when executing the query. Useful if you need to temporarily elevate your permission level.</param>
-        public Task<IEnumerable<CustomEntityRoute>> GetCustomEntityRoutesByDefinitionCodeAsync(string customEntityDefinitionCode, IExecutionContext executionContext = null)
+        public Task<ICollection<CustomEntityRoute>> GetCustomEntityRoutesByDefinitionCodeAsync(string customEntityDefinitionCode, IExecutionContext executionContext = null)
         {
             var query = new GetCustomEntityRoutesByDefinitionCodeQuery(customEntityDefinitionCode);
             return _queryExecutor.ExecuteAsync(query, executionContext);
@@ -105,7 +105,7 @@ namespace Cofoundry.Domain
             return _queryExecutor.ExecuteAsync(query, executionContext);
         }
 
-        public Task<IEnumerable<CustomEntityRenderSummary>> GetCustomEntityRenderSummariesByDefinitionCodeAsync(GetCustomEntityRenderSummariesByDefinitionCodeQuery query, IExecutionContext executionContext = null)
+        public Task<ICollection<CustomEntityRenderSummary>> GetCustomEntityRenderSummariesByDefinitionCodeAsync(GetCustomEntityRenderSummariesByDefinitionCodeQuery query, IExecutionContext executionContext = null)
         {
             return _queryExecutor.ExecuteAsync(query, executionContext);
         }
@@ -131,7 +131,7 @@ namespace Cofoundry.Domain
             return _queryExecutor.ExecuteAsync(query, executionContext);
         }
 
-        public Task<IEnumerable<CustomEntityVersionSummary>> GetCustomEntityVersionSummariesByCustomEntityIdAsync(int id, IExecutionContext executionContext = null)
+        public Task<ICollection<CustomEntityVersionSummary>> GetCustomEntityVersionSummariesByCustomEntityIdAsync(int id, IExecutionContext executionContext = null)
         {
             var query = new GetCustomEntityVersionSummariesByCustomEntityIdQuery() { CustomEntityId = id };
             return _queryExecutor.ExecuteAsync(query, executionContext);

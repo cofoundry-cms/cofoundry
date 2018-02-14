@@ -68,7 +68,7 @@ namespace Cofoundry.Domain
         /// <param name="property">The name of the property (key) to add to the collection.</param>
         /// <param name="value">The collection value to add to the collection.</param>
         /// <returns>ModelMetadata instance for method chaining</returns>
-        public static DisplayMetadata AddAdditionalValueIfNotEmpty<T>(this DisplayMetadata modelMetaData, string property, IEnumerable<T> value)
+        public static DisplayMetadata AddAdditionalValueIfNotEmpty<T>(this DisplayMetadata modelMetaData, string property, ICollection<T> value)
         {
             if (value != null && value.Any())
             {

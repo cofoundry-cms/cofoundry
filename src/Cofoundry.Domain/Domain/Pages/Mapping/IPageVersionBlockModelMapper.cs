@@ -30,7 +30,7 @@ namespace Cofoundry.Domain
         /// Collection of mapped display models, wrapped in an output class that
         /// can be used to identify them.
         /// </returns>
-        Task<List<PageBlockTypeDisplayModelMapperOutput>> MapDisplayModelAsync(string typeName, IEnumerable<IEntityVersionPageBlock> entityBlocks, PublishStatusQuery publishStatus);
+        Task<ICollection<PageBlockTypeDisplayModelMapperOutput>> MapDisplayModelAsync(string typeName, IEnumerable<IEntityVersionPageBlock> entityBlocks, PublishStatusQuery publishStatus);
 
         /// <summary>
         /// Maps a single page block data model to a concrete display model.

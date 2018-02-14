@@ -10,8 +10,8 @@ using Cofoundry.Core;
 namespace Cofoundry.Domain
 {
     public class GetEntityDependencySummaryByRelatedEntityHandler 
-        : IAsyncQueryHandler<GetEntityDependencySummaryByRelatedEntityQuery, IEnumerable<EntityDependencySummary>>
-        , IPermissionRestrictedQueryHandler<GetEntityDependencySummaryByRelatedEntityQuery, IEnumerable<EntityDependencySummary>>
+        : IAsyncQueryHandler<GetEntityDependencySummaryByRelatedEntityQuery, ICollection<EntityDependencySummary>>
+        , IPermissionRestrictedQueryHandler<GetEntityDependencySummaryByRelatedEntityQuery, ICollection<EntityDependencySummary>>
     {
         #region constructor
 
@@ -37,7 +37,7 @@ namespace Cofoundry.Domain
 
         #region execution
 
-        public async Task<IEnumerable<EntityDependencySummary>> ExecuteAsync(GetEntityDependencySummaryByRelatedEntityQuery query, IExecutionContext executionContext)
+        public async Task<ICollection<EntityDependencySummary>> ExecuteAsync(GetEntityDependencySummaryByRelatedEntityQuery query, IExecutionContext executionContext)
         {
             // Where there are duplicates, prioritise relationships that cannot be deleted
             var dbDependencyPreResult = await _dbContext

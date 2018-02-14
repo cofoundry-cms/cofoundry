@@ -148,12 +148,12 @@ namespace Cofoundry.Domain
             return result;
         }
 
-        private IEnumerable<string> MapPageRoutings(
-            IEnumerable<PageRoutingInfo> allRoutings,
+        private ICollection<string> MapPageRoutings(
+            ICollection<PageRoutingInfo> allRoutings,
             CustomEntityVersion dbResult
             )
         {
-            if (allRoutings == null) return Enumerable.Empty<string>();
+            if (allRoutings == null) return Array.Empty<string>();
 
             var urls = new List<string>(allRoutings.Count());
 

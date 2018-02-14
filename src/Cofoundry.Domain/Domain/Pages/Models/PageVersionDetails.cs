@@ -30,7 +30,7 @@ namespace Cofoundry.Domain
 
         public PageTemplateMicroSummary Template { get; set; }
 
-        public IEnumerable<PageRegionDetails> Regions { get; set; }
+        public ICollection<PageRegionDetails> Regions { get; set; }
 
         public CreateAuditData AuditData { get; set; }
     }

@@ -48,7 +48,9 @@ namespace Cofoundry.BasicTestSite
                 // Additionally if we are viewing the published version of the page
                 // then we make sure we only show published pages in the list.
 
-                output.Pages = allPageRoutes.FilterAndOrderByKeys(input.DataModel.PageIds);
+                output.Pages = allPageRoutes
+                    .FilterAndOrderByKeys(input.DataModel.PageIds)
+                    .ToList();
 
                 // The CreateOutput() method wraps the mapped display 
                 // model with it's identifier so we can identify later on

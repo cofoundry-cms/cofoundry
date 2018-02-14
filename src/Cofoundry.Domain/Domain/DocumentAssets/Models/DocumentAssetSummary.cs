@@ -18,7 +18,7 @@ namespace Cofoundry.Domain
 
         public long FileSizeInBytes { get; set; }
 
-        public IEnumerable<string> Tags { get; set; }
+        public ICollection<string> Tags { get; set; }
 
         public UpdateAuditData AuditData { get; set; }
     }

@@ -21,7 +21,7 @@ namespace Cofoundry.Domain
         [JsonIgnore]
         public PageDirectoryNode ParentPageDirectory { get; set; }
 
-        public IEnumerable<PageDirectoryNode> ChildPageDirectories { get; set; }
+        public ICollection<PageDirectoryNode> ChildPageDirectories { get; set; }
 
         /// <summary>
         /// The path of this directory (excluding parent directory path)

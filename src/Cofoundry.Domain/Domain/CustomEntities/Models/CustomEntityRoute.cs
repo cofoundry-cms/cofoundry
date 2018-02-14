@@ -49,7 +49,7 @@ namespace Cofoundry.Domain
         /// <summary>
         /// Routing information particular to specific versions.
         /// </summary>
-        public IEnumerable<CustomEntityVersionRoute> Versions { get; set; }
+        public ICollection<CustomEntityVersionRoute> Versions { get; set; }
 
         #region public method
 

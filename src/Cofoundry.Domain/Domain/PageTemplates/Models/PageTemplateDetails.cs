@@ -74,7 +74,7 @@ namespace Cofoundry.Domain
         /// e.g. @Cofoundry.Template.Region("MyRegionName"). These regions represent
         /// areas where page blocks can be placed (i.e. insert content).
         /// </summary>
-        public IEnumerable<PageTemplateRegionDetails> Regions { get; set; }
+        public ICollection<PageTemplateRegionDetails> Regions { get; set; }
 
         /// <summary>
         /// Indicates if the template has been archived and is no longer available 

@@ -15,7 +15,7 @@ namespace Cofoundry.Domain
         /// <summary>
         /// Information about any alternative template files 
         /// </summary>
-        public IEnumerable<PageBlockTypeTemplateFileDetails> Templates { get; set; }
+        public ICollection<PageBlockTypeTemplateFileDetails> Templates { get; set; }
 
         /// <summary>
         /// The display name for the block in the administration UI

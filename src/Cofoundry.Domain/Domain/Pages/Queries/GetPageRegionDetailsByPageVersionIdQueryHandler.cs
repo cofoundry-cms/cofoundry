@@ -57,8 +57,8 @@ namespace Cofoundry.Domain
 
         private void MapRegions(
             List<PageRegionDetails> regions, 
-            List<PageVersionBlock> dbPageBlocks, 
-            IEnumerable<PageBlockTypeSummary> allBlockTypes
+            List<PageVersionBlock> dbPageBlocks,
+            ICollection<PageBlockTypeSummary> allBlockTypes
             )
         {
             foreach (var region in regions)
@@ -80,7 +80,7 @@ namespace Cofoundry.Domain
                 .Where(m => m.PageVersionId == query.PageVersionId);
         }
 
-        private PageVersionBlockDetails MapPageBlock(PageVersionBlock dbBlock, IEnumerable<PageBlockTypeSummary> allBlockTypes)
+        private PageVersionBlockDetails MapPageBlock(PageVersionBlock dbBlock, ICollection<PageBlockTypeSummary> allBlockTypes)
         {
             var blockType = allBlockTypes.SingleOrDefault(t => t.PageBlockTypeId == dbBlock.PageBlockTypeId);
 

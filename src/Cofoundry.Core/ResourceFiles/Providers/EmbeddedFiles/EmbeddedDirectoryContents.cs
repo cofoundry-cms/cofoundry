@@ -20,7 +20,7 @@ namespace Cofoundry.Core.ResourceFiles
     /// </summary>
     public class EmbeddedDirectoryContents : IDirectoryContents
     {
-        private readonly IEnumerable<IFileInfo> _entries;
+        private readonly IReadOnlyCollection<IFileInfo> _entries;
 
         public EmbeddedDirectoryContents(string resourceDirectoryPath, IEnumerable<IFileInfo> allDirectoryFiles)
         {
@@ -42,7 +42,7 @@ namespace Cofoundry.Core.ResourceFiles
             return _entries.GetEnumerator();
         }
 
-        private IEnumerable<IFileInfo> ParseDirectories(string resourceDirectoryPath, IEnumerable<IFileInfo> allDirectoryFiles)
+        private IReadOnlyCollection<IFileInfo> ParseDirectories(string resourceDirectoryPath, IEnumerable<IFileInfo> allDirectoryFiles)
         {
             var directoryFiles = new List<IFileInfo>();
             var directories = new HashSet<string>(StringComparer.OrdinalIgnoreCase);

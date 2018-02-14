@@ -27,7 +27,7 @@ namespace Cofoundry.Domain
         {
             if (customEntityIds == null) throw new ArgumentNullException(nameof(customEntityIds));
 
-            CustomEntityIds = customEntityIds.ToList();
+            CustomEntityIds = customEntityIds;
         }
 
         [Required]

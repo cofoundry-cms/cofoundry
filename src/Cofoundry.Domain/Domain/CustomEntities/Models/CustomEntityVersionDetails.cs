@@ -16,7 +16,7 @@ namespace Cofoundry.Domain
 
         public ICustomEntityDataModel Model { get; set; }
 
-        public IEnumerable<CustomEntityPage> Pages { get; set; }
+        public ICollection<CustomEntityPage> Pages { get; set; }
 
         public CreateAuditData AuditData { get; set; }
     }

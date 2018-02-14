@@ -34,6 +34,6 @@ namespace Cofoundry.Web
         /// <summary>
         /// Collection of any validation errors discovered when executing the request
         /// </summary>
-        public IEnumerable<ValidationError> Errors { get; set; }
+        public ICollection<ValidationError> Errors { get; set; }
     }
 }

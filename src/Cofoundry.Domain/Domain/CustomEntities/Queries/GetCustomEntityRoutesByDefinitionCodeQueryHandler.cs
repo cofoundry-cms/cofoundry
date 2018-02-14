@@ -17,7 +17,7 @@ namespace Cofoundry.Domain
     /// makes them good for quick lookups.
     /// </summary>
     public class GetCustomEntityRoutesByDefinitionCodeQueryHandler
-        : IAsyncQueryHandler<GetCustomEntityRoutesByDefinitionCodeQuery, IEnumerable<CustomEntityRoute>>
+        : IAsyncQueryHandler<GetCustomEntityRoutesByDefinitionCodeQuery, ICollection<CustomEntityRoute>>
         , IIgnorePermissionCheckHandler
     {
         private static readonly MethodInfo _mapAdditionalRouteDataAsyncMethod = typeof(GetCustomEntityRoutesByDefinitionCodeQueryHandler).GetMethod(nameof(MapAdditionalRouteDataAsync), BindingFlags.NonPublic | BindingFlags.Instance);
@@ -53,7 +53,7 @@ namespace Cofoundry.Domain
 
         #endregion
 
-        public async Task<IEnumerable<CustomEntityRoute>> ExecuteAsync(GetCustomEntityRoutesByDefinitionCodeQuery query, IExecutionContext executionContext)
+        public async Task<ICollection<CustomEntityRoute>> ExecuteAsync(GetCustomEntityRoutesByDefinitionCodeQuery query, IExecutionContext executionContext)
         {
             return await _customEntityCache.GetOrAddAsync(query.CustomEntityDefinitionCode, async () =>
             {

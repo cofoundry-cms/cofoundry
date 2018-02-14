@@ -13,7 +13,7 @@ namespace Cofoundry.Domain.Installation
     /// </summary>
     public class CofoundryUpdatePackageFactory : IUpdatePackageFactory
     {
-        public IEnumerable<UpdatePackage> Create(IEnumerable<ModuleVersion> versionHistory)
+        public IEnumerable<UpdatePackage> Create(ICollection<ModuleVersion> versionHistory)
         {
             var moduleVersion = versionHistory.SingleOrDefault(m => m.Module == CofoundryModuleInfo.ModuleIdentifier);
 

@@ -67,7 +67,7 @@ namespace Cofoundry.Domain
             var messages = affectedIds.Select(i => new CustomEntityOrderingUpdatedMessage() {
                 CustomEntityDefinitionCode = command.CustomEntityDefinitionCode,
                 CustomEntityId = i
-            });
+            }).ToList();
 
             await _messageAggregator.PublishBatchAsync(messages);
         }

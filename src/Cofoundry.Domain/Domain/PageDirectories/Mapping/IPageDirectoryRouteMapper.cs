@@ -9,6 +9,6 @@ namespace Cofoundry.Domain
 {
     public interface IPageDirectoryRouteMapper
     {
-        List<PageDirectoryRoute> Map(IEnumerable<PageDirectory> dbPageDirectories);
+        ICollection<PageDirectoryRoute> Map(IReadOnlyCollection<PageDirectory> dbPageDirectories);
     }
 }

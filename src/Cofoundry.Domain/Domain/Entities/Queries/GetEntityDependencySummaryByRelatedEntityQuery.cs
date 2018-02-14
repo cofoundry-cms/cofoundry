@@ -8,7 +8,7 @@ using Cofoundry.Domain.CQS;
 
 namespace Cofoundry.Domain
 {
-    public class GetEntityDependencySummaryByRelatedEntityQuery : IQuery<IEnumerable<EntityDependencySummary>>
+    public class GetEntityDependencySummaryByRelatedEntityQuery : IQuery<ICollection<EntityDependencySummary>>
     {
         public GetEntityDependencySummaryByRelatedEntityQuery()
         {

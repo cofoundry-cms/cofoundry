@@ -29,6 +29,6 @@ namespace Cofoundry.Domain
         /// run on an entire set of custom entities for a specific type, so try
         /// to work with data in bulk.
         /// </param>
-        Task BuildAsync(IEnumerable<CustomEntityRouteDataBuilderParameter<TDataModel>> builderParameters);
+        Task BuildAsync(IReadOnlyCollection<CustomEntityRouteDataBuilderParameter<TDataModel>> builderParameters);
     }
 }

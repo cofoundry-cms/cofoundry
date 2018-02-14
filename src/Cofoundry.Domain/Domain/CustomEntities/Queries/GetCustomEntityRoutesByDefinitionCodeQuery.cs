@@ -13,7 +13,7 @@ namespace Cofoundry.Domain
     /// specific type. These route objects are small and cached which
     /// makes them good for quick lookups.
     /// </summary>
-    public class GetCustomEntityRoutesByDefinitionCodeQuery : IQuery<IEnumerable<CustomEntityRoute>>
+    public class GetCustomEntityRoutesByDefinitionCodeQuery : IQuery<ICollection<CustomEntityRoute>>
     {
         public GetCustomEntityRoutesByDefinitionCodeQuery() { }
 

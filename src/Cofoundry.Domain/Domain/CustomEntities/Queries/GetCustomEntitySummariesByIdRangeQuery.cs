@@ -18,11 +18,8 @@ namespace Cofoundry.Domain
             IEnumerable<int> customEntityIds,
             PublishStatusQuery publishStatusQuery = PublishStatusQuery.Published
             )
+            : this(customEntityIds?.ToList())
         {
-            if (customEntityIds == null) throw new ArgumentNullException(nameof(customEntityIds));
-
-            CustomEntityIds = customEntityIds.ToList();
-            PublishStatus = publishStatusQuery;
         }
 
         public GetCustomEntitySummariesByIdRangeQuery(

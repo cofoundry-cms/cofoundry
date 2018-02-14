@@ -16,6 +16,6 @@ namespace Cofoundry.Domain
 
         public string FileName { get; set; }
 
-        public IEnumerable<PageBlockTypeTemplateSummary> Templates { get; set; }
+        public ICollection<PageBlockTypeTemplateSummary> Templates { get; set; }
     }
 }

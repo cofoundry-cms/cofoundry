@@ -45,7 +45,7 @@ namespace Cofoundry.Domain
         public async Task MapRegionsAsync<TBlockRenderDetails>(
             IEnumerable<IEntityVersionPageBlock> dbBlock,
             IEnumerable<IEntityRegionRenderDetails<TBlockRenderDetails>> regions,
-            IEnumerable<PageBlockTypeSummary> allBlockTypes,
+            ICollection<PageBlockTypeSummary> allBlockTypes,
             PublishStatusQuery publishStatus
             )
             where TBlockRenderDetails : IEntityVersionPageBlockRenderDetails, new()
@@ -91,7 +91,7 @@ namespace Cofoundry.Domain
 
         #region private methods
 
-        private async Task<List<MappedPageBlock>> ToBlockMappingDataAsync(
+        private async Task<ICollection<MappedPageBlock>> ToBlockMappingDataAsync(
             IEnumerable<IEntityVersionPageBlock> entityBlocks, 
             IEnumerable<PageBlockTypeSummary> blockTypes, 
             PublishStatusQuery workflowStatus

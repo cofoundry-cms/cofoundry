@@ -53,7 +53,7 @@ namespace Cofoundry.Domain
         /// Collection of mapped display models, wrapped in an output class that
         /// can be used to identify them.
         /// </returns>
-        public async Task<List<PageBlockTypeDisplayModelMapperOutput>> MapDisplayModelAsync(
+        public async Task<ICollection<PageBlockTypeDisplayModelMapperOutput>> MapDisplayModelAsync(
             string typeName, 
             IEnumerable<IEntityVersionPageBlock> pageBlocks, 
             PublishStatusQuery publishStatus

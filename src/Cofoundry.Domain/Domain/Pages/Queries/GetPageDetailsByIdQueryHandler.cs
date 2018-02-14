@@ -64,7 +64,7 @@ namespace Cofoundry.Domain
 
         private PageDetails Map(
             PageVersion dbPageVersion,
-            IEnumerable<PageRegionDetails> regions,
+            ICollection<PageRegionDetails> regions,
             PageRoute pageRoute
             )
         {

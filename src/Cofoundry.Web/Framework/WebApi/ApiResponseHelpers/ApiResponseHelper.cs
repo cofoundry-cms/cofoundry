@@ -100,9 +100,9 @@ namespace Cofoundry.Web
             return controller.StatusCode(403, response);
         }
 
-        private IEnumerable<ValidationError> FormatValidationErrors(IEnumerable<ValidationError> validationErrors)
+        private ICollection<ValidationError> FormatValidationErrors(IEnumerable<ValidationError> validationErrors)
         {
-            if (validationErrors == null) return Enumerable.Empty<ValidationError>();
+            if (validationErrors == null) return Array.Empty<ValidationError>();
 
             // De-dup and order by prop name.
             return validationErrors
@@ -117,7 +117,8 @@ namespace Cofoundry.Web
                     return new { e.Message, propKey };
                 })
                 .OrderBy(g => g.Key.propKey)
-                .Select(g => g.FirstOrDefault());
+                .Select(g => g.FirstOrDefault())
+                .ToArray();
 
         }
 

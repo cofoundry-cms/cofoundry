@@ -41,7 +41,7 @@ namespace Cofoundry.Domain
         public async Task ExecuteAsync(UpdateUnstructuredDataDependenciesCommand command, IExecutionContext executionContext)
         {
             var existingDependencies = await QueryDepenencies(command).ToListAsync();
-            var relations = GetDistinctRelations(command.Model);
+            var relations = GetDistinctRelations(command.Model).ToList();
             var ensureEntityDefinitionExistsCommands = GetEntityCheckCommands(command, existingDependencies, relations);
 
             foreach (var ensureEntityDefinitionExistsCommand in ensureEntityDefinitionExistsCommands)
@@ -127,13 +127,11 @@ namespace Cofoundry.Domain
             return commands;
         }
 
-        private void ApplyChanges(UpdateUnstructuredDataDependenciesCommand command, List<UnstructuredDataDependency> existingDependencies, IEnumerable<EntityDependency> relations)
+        private void ApplyChanges(UpdateUnstructuredDataDependenciesCommand command, List<UnstructuredDataDependency> existingDependencies, ICollection<EntityDependency> relations)
         {
-            var relationsList = relations.ToList();
-
             foreach (var existingDependency in existingDependencies)
             {
-                var updatedRelation = relationsList.SingleOrDefault(r => r.EntityDefinitionCode == existingDependency.RelatedEntityDefinitionCode && r.EntityId == existingDependency.RelatedEntityId);
+                var updatedRelation = relations.SingleOrDefault(r => r.EntityDefinitionCode == existingDependency.RelatedEntityDefinitionCode && r.EntityId == existingDependency.RelatedEntityId);
 
                 if (updatedRelation == null)
                 {
@@ -143,10 +141,10 @@ namespace Cofoundry.Domain
                 {
                     existingDependency.RelatedEntityCascadeActionId = (int)updatedRelation.RelatedEntityCascadeAction;
                 }
-                relationsList.Remove(updatedRelation);
+                relations.Remove(updatedRelation);
             }
 
-            foreach (var newRelation in relationsList)
+            foreach (var newRelation in relations)
             {
                 _dbContext.UnstructuredDataDependencies.Add(new UnstructuredDataDependency()
                 {

@@ -34,7 +34,9 @@ namespace Cofoundry.Domain
         public async Task<ICollection<PageTemplateMicroSummary>> ExecuteAsync(GetAllPageTemplateMicroSummariesQuery query, IExecutionContext executionContext)
         {
             var dbResults = await Query().ToListAsync();
-            var results = Map(dbResults).ToList();
+            var results = dbResults
+                .Select(_pageTemplateMapper.Map)
+                .ToList();
 
             return results;
         }
@@ -45,14 +47,6 @@ namespace Cofoundry.Domain
                 .PageTemplates
                 .AsNoTracking()
                 .OrderBy(l => l.FileName);
-        }
-
-        private IEnumerable<PageTemplateMicroSummary> Map(List<PageTemplate> pageTemplates)
-        {
-            foreach (var pageTemplate in pageTemplates)
-            {
-                yield return _pageTemplateMapper.Map(pageTemplate);
-            }
         }
 
         #endregion

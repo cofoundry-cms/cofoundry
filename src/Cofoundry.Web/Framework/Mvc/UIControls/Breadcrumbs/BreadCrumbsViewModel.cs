@@ -9,6 +9,6 @@ namespace Cofoundry.Web
     /// </summary>
     public class BreadcrumbsViewModel
     {
-        public IEnumerable<BreadcrumbViewModel> Breadcrumbs { get; set; }
+        public ICollection<BreadcrumbViewModel> Breadcrumbs { get; set; }
     }
 }

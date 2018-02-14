@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore;
 namespace Cofoundry.Domain
 {
     public class GetCustomEntityRenderSummariesByDefinitionCodeQueryHandler
-        : IAsyncQueryHandler<GetCustomEntityRenderSummariesByDefinitionCodeQuery, IEnumerable<CustomEntityRenderSummary>>
-        , IPermissionRestrictedQueryHandler<GetCustomEntityRenderSummariesByDefinitionCodeQuery, IEnumerable<CustomEntityRenderSummary>>
+        : IAsyncQueryHandler<GetCustomEntityRenderSummariesByDefinitionCodeQuery, ICollection<CustomEntityRenderSummary>>
+        , IPermissionRestrictedQueryHandler<GetCustomEntityRenderSummariesByDefinitionCodeQuery, ICollection<CustomEntityRenderSummary>>
     {
         #region constructor
 
@@ -34,7 +34,7 @@ namespace Cofoundry.Domain
 
         #region execution
 
-        public async Task<IEnumerable<CustomEntityRenderSummary>> ExecuteAsync(GetCustomEntityRenderSummariesByDefinitionCodeQuery query, IExecutionContext executionContext)
+        public async Task<ICollection<CustomEntityRenderSummary>> ExecuteAsync(GetCustomEntityRenderSummariesByDefinitionCodeQuery query, IExecutionContext executionContext)
         {
             var dbResults = await QueryAsync(query, executionContext);
             var results = await _customEntityRenderSummaryMapper.MapAsync(dbResults, executionContext);

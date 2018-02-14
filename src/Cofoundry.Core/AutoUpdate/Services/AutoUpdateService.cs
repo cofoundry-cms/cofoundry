@@ -210,7 +210,7 @@ namespace Cofoundry.Core.AutoUpdate
         /// Gets a collections of module updates that have already been applied
         /// to the system.
         /// </summary>
-        private IEnumerable<ModuleVersion> GetUpdateVersionHistory()
+        private ICollection<ModuleVersion> GetUpdateVersionHistory()
         {
             var query = @"
                 if (exists (select * 
@@ -233,7 +233,7 @@ namespace Cofoundry.Core.AutoUpdate
                 return moduleVersion;
             });
 
-            return moduleVersions;
+            return moduleVersions.ToList();
         }
 
         #endregion

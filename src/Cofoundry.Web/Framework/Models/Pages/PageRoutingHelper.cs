@@ -8,8 +8,8 @@ namespace Cofoundry.Web
     public class PageRoutingHelper
     {
         public PageRoutingHelper(
-            IEnumerable<PageRoute> pageRoutes,
-            IEnumerable<PageDirectoryRoute> pageDirectoryRoutes,
+            ICollection<PageRoute> pageRoutes,
+            ICollection<PageDirectoryRoute> pageDirectoryRoutes,
             PageRoute currentPageRoute,
             VisualEditorMode visualEditorMode,
             int? currentPageVersionId
@@ -26,9 +26,9 @@ namespace Cofoundry.Web
 
         public PageRoute CurrentPageRoute { get; private set; }
 
-        public IEnumerable<PageRoute> PageRoutes { get; private set; }
+        public ICollection<PageRoute> PageRoutes { get; private set; }
 
-        public IEnumerable<PageDirectoryRoute> PageDirectoryRoutes { get; private set; }
+        public ICollection<PageDirectoryRoute> PageDirectoryRoutes { get; private set; }
 
         public int? CurrentPageVersionId { get; private set; }
     }

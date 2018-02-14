@@ -13,6 +13,6 @@ namespace Cofoundry.Core.AutoUpdate
     /// </summary>
     public interface IUpdatePackageFactory
     {
-        IEnumerable<UpdatePackage> Create(IEnumerable<ModuleVersion> versionHistory);
+        IEnumerable<UpdatePackage> Create(ICollection<ModuleVersion> versionHistory);
     }
 }

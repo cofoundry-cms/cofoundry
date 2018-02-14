@@ -19,6 +19,6 @@ namespace Cofoundry.Domain
         /// object.
         /// </summary>
         /// <param name="dbPageDirectories">PageDirectoryTreeNodeQueryModel records from the database.</param>
-        PageDirectoryNode Map(IEnumerable<PageDirectoryTreeNodeQueryModel> dbPageDirectories);
+        PageDirectoryNode Map(IReadOnlyCollection<PageDirectoryTreeNodeQueryModel> dbPageDirectories);
     }
 }

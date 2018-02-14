@@ -40,7 +40,7 @@ namespace Cofoundry.Domain
             return FindRule(query, rules);
         }
 
-        private RewriteRuleSummary FindRule(GetRewriteRuleSummaryByPathQuery query, IEnumerable<RewriteRuleSummary> rules)
+        private RewriteRuleSummary FindRule(GetRewriteRuleSummaryByPathQuery query, ICollection<RewriteRuleSummary> rules)
         {
             RewriteRuleSummary rule = null;
             var path = query.Path;

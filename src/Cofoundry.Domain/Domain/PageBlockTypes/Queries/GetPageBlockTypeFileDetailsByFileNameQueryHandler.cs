@@ -63,13 +63,13 @@ namespace Cofoundry.Domain
             return pageTemplateFileInfo;
         }
 
-        private async Task<IEnumerable<PageBlockTypeTemplateFileDetails>> MapChildTemplates(string blockTypeFileName)
+        private async Task<ICollection<PageBlockTypeTemplateFileDetails>> MapChildTemplates(string blockTypeFileName)
         {
             var templatePaths = _viewLocator.GetAllTemplatePathsByFileName(blockTypeFileName);
 
             if (EnumerableHelper.IsNullOrEmpty(templatePaths))
             {
-                return Enumerable.Empty<PageBlockTypeTemplateFileDetails>();
+                return Array.Empty<PageBlockTypeTemplateFileDetails>();
             }
 
             var templateFileDetails = new List<PageBlockTypeTemplateFileDetails>(templatePaths.Count());

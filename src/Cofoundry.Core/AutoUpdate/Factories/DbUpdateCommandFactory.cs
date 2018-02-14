@@ -22,12 +22,16 @@ namespace Cofoundry.Core.AutoUpdate
         /// <param name="currentVersion">The current version of the module</param>
         /// <param name="scriptPath">The folder path of the script files which defaults to 'Install.Db.' (which equates to 'Install/Db/')</param>
         /// <returns>Collecton of IUpdateCommands that represents all the required db updates</returns>
-        public IEnumerable<IVersionedUpdateCommand> Create(Assembly assembly, ModuleVersion currentVersion, string scriptPath = "Install.Db.")
+        public ICollection<IVersionedUpdateCommand> Create(
+            Assembly assembly, 
+            ModuleVersion currentVersion, 
+            string scriptPath = "Install.Db."
+            )
         {
             if (assembly == null) throw new ArgumentNullException(nameof(assembly));
 
             var scriptFiles = GetScripts(assembly, scriptPath);
-            var commands = new List<UpdateDbCommand>();
+            var commands = new List<IVersionedUpdateCommand>();
             int maxVersionNumber = 0;
 
             // Get schema scripts we need so we know the version number.
@@ -56,7 +60,7 @@ namespace Cofoundry.Core.AutoUpdate
                 }
             }
 
-            if (!commands.Any()) return Enumerable.Empty<IVersionedUpdateCommand>();
+            if (!commands.Any()) return Array.Empty<IVersionedUpdateCommand>();
 
             foreach (var scriptFile in scriptFiles.Where(s => !s.Contains(".Schema.")))
             {
@@ -96,12 +100,13 @@ namespace Cofoundry.Core.AutoUpdate
             return Path.GetFileNameWithoutExtension(fileName);
         }
 
-        private IEnumerable<string> GetScripts(Assembly assembly, string scriptPath)
+        private ICollection<string> GetScripts(Assembly assembly, string scriptPath)
         {
-            IEnumerable<string> scripts = assembly
+            var scripts = assembly
                 .GetManifestResourceNames()
                 .Where(f => f.Contains(scriptPath) && f.EndsWith(".sql"))
-                .OrderBy(f => f);
+                .OrderBy(f => f)
+                .ToList();
 
             return scripts;
         }

@@ -44,7 +44,7 @@ namespace Cofoundry.Domain
         /// </summary>
         /// <param name="dbResults">CustomEntityVersion records from the database.</param>
         /// <param name="executionContext">Context to run any sub queries under.</param>
-        public async Task<IEnumerable<CustomEntityRenderSummary>> MapAsync(
+        public async Task<ICollection<CustomEntityRenderSummary>> MapAsync(
             ICollection<CustomEntityVersion> dbResults,
             IExecutionContext executionContext
             )
@@ -99,7 +99,7 @@ namespace Cofoundry.Domain
             return new GetPageRoutingInfoByCustomEntityIdQuery(dbResult.CustomEntityId);
         }
 
-        private IEnumerable<CustomEntityRenderSummary> Map(
+        private ICollection<CustomEntityRenderSummary> Map(
             ICollection<CustomEntityVersion> dbResults,
             IDictionary<int, ICollection<PageRoutingInfo>> allRoutings,
             ICollection<ActiveLocale> allLocalesAsEnumerable
@@ -128,7 +128,7 @@ namespace Cofoundry.Domain
 
         private CustomEntityRenderSummary MapSingle(
             CustomEntityVersion dbResult,
-            IEnumerable<PageRoutingInfo> allRoutings,
+            ICollection<PageRoutingInfo> allRoutings,
             ActiveLocale locale
             )
         {
@@ -160,11 +160,11 @@ namespace Cofoundry.Domain
             return entity;
         }
 
-        private IEnumerable<string> MapPageRoutings(
-            IEnumerable<PageRoutingInfo> allRoutings, 
+        private ICollection<string> MapPageRoutings(
+            ICollection<PageRoutingInfo> allRoutings, 
             CustomEntityVersion dbResult)
         {
-            if (allRoutings == null) return Enumerable.Empty<string>();
+            if (allRoutings == null) return Array.Empty<string>();
 
             var urls = new List<string>(allRoutings.Count());
 

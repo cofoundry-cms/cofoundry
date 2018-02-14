@@ -14,9 +14,9 @@ namespace Cofoundry.Domain
     public interface IEntityVersionPageBlockMapper
     {
         Task MapRegionsAsync<TBlockRenderDetails>(
-            IEnumerable<IEntityVersionPageBlock> dbBlocks, 
-            IEnumerable<IEntityRegionRenderDetails<TBlockRenderDetails>> regions, 
-            IEnumerable<PageBlockTypeSummary> allBlockTypes,
+            IEnumerable<IEntityVersionPageBlock> dbBlocks,
+            IEnumerable<IEntityRegionRenderDetails<TBlockRenderDetails>> regions,
+            ICollection<PageBlockTypeSummary> allBlockTypes,
             PublishStatusQuery publishStatus
             )
             where TBlockRenderDetails : IEntityVersionPageBlockRenderDetails, new();

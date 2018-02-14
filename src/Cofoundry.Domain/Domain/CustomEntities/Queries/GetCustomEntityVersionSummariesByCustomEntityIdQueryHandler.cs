@@ -10,7 +10,7 @@ using Cofoundry.Domain.Data;
 namespace Cofoundry.Domain
 {
     public class GetCustomEntityVersionSummariesByCustomEntityIdQueryHandler 
-        : IAsyncQueryHandler<GetCustomEntityVersionSummariesByCustomEntityIdQuery, IEnumerable<CustomEntityVersionSummary>>
+        : IAsyncQueryHandler<GetCustomEntityVersionSummariesByCustomEntityIdQuery, ICollection<CustomEntityVersionSummary>>
         , IIgnorePermissionCheckHandler
     {
         #region constructor
@@ -37,7 +37,7 @@ namespace Cofoundry.Domain
 
         #region execution
 
-        public async Task<IEnumerable<CustomEntityVersionSummary>> ExecuteAsync(GetCustomEntityVersionSummariesByCustomEntityIdQuery query, IExecutionContext executionContext)
+        public async Task<ICollection<CustomEntityVersionSummary>> ExecuteAsync(GetCustomEntityVersionSummariesByCustomEntityIdQuery query, IExecutionContext executionContext)
         {
             var definitionCode = await _dbContext
                 .CustomEntities

@@ -8,7 +8,7 @@ using Cofoundry.Domain.CQS;
 
 namespace Cofoundry.Domain
 {
-    public class GetCustomEntityRenderSummariesByDefinitionCodeQuery : IQuery<IEnumerable<CustomEntityRenderSummary>>
+    public class GetCustomEntityRenderSummariesByDefinitionCodeQuery : IQuery<ICollection<CustomEntityRenderSummary>>
     {
         public GetCustomEntityRenderSummariesByDefinitionCodeQuery()
         {

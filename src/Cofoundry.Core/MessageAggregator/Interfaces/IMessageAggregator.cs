@@ -27,7 +27,7 @@ namespace Cofoundry.Core.MessageAggregator
         /// </summary>
         /// <typeparam name="TMessage">Message type. This should be a simple serializable object</typeparam>
         /// <param name="messages">Collection of messages to publish</param>
-        Task PublishBatchAsync<TMessage>(IEnumerable<TMessage> messages) where TMessage : class;
+        Task PublishBatchAsync<TMessage>(IReadOnlyCollection<TMessage> messages) where TMessage : class;
 
         /// <summary>
         /// Subscribes the specified handler to the spified message type. Message types

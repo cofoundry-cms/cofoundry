@@ -104,9 +104,9 @@ namespace Cofoundry.Core.Web
                 );
         }
 
-        private string Render(IEnumerable<Tuple<string, string>> itemsToRender)
+        private static string Render(IEnumerable<Tuple<string, string>> itemsToRender)
         {
-            if (!_values.Any())
+            if (!itemsToRender.Any())
             {
                 return string.Empty;
             }

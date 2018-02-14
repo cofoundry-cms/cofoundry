@@ -26,7 +26,7 @@ namespace Cofoundry.Web
 
         public TDisplayModel Model { get; set; }
 
-        public IEnumerable<CustomEntityPageRegionRenderDetails> Regions { get; set; }
+        public ICollection<CustomEntityPageRegionRenderDetails> Regions { get; set; }
 
         /// <summary>
         /// WorkFlowStatus of the version that this instance represents. The version
@@ -54,6 +54,6 @@ namespace Cofoundry.Web
         /// single page on a site to be associated with a custom entitiy 
         /// details, but it's technically possible to have many.
         /// </summary>
-        public IEnumerable<string> PageUrls { get; set; }
+        public ICollection<string> PageUrls { get; set; }
     }
 }

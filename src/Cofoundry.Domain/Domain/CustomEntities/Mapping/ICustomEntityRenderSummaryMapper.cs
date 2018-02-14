@@ -27,6 +27,6 @@ namespace Cofoundry.Domain
         /// </summary>
         /// <param name="dbResult">CustomEntityVersion record from the database.</param>
         /// <param name="executionContext">Context to run any sub queries under.</param>
-        Task<IEnumerable<CustomEntityRenderSummary>> MapAsync(ICollection<CustomEntityVersion> dbResults, IExecutionContext executionContext);
+        Task<ICollection<CustomEntityRenderSummary>> MapAsync(ICollection<CustomEntityVersion> dbResults, IExecutionContext executionContext);
     }
 }

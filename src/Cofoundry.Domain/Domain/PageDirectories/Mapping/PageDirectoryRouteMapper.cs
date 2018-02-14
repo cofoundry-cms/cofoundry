@@ -9,7 +9,7 @@ namespace Cofoundry.Domain
 {
     public class PageDirectoryRouteMapper : IPageDirectoryRouteMapper
     {
-        public List<PageDirectoryRoute> Map(IEnumerable<PageDirectory> dbPageDirectories)
+        public ICollection<PageDirectoryRoute> Map(IReadOnlyCollection<PageDirectory> dbPageDirectories)
         {
             const string ROOT_PATH = "/";
 
@@ -45,7 +45,7 @@ namespace Cofoundry.Domain
             return route;
         }
 
-        private IEnumerable<PageDirectoryRoute> SetChildRoutes(PageDirectoryRoute parent, IEnumerable<PageDirectory> allDbRoutes)
+        private IEnumerable<PageDirectoryRoute> SetChildRoutes(PageDirectoryRoute parent, IReadOnlyCollection<PageDirectory> allDbRoutes)
         {
             if (!parent.ParentPageDirectoryId.HasValue)
             {
