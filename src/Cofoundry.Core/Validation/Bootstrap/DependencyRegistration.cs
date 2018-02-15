@@ -12,7 +12,7 @@ namespace Cofoundry.Core.Validation
         public void Register(IContainerRegister container)
         {
             container
-                .RegisterInstance<IModelValidationService, ModelValidationService>()
+                .RegisterSingleton<IModelValidationService, ModelValidationService>()
                 ;
         }
     }

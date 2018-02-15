@@ -12,8 +12,8 @@ namespace Cofoundry.Domain.Bootstrap
         public void Register(IContainerRegister container)
         {
             container
-                .RegisterType<ICultureFactory, CultureFactory>()
-                .RegisterType<ICultureContextService, CultureContextService>()
+                .Register<ICultureFactory, CultureFactory>()
+                .Register<ICultureContextService, CultureContextService>()
                 ;
         }
     }

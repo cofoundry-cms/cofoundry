@@ -9,7 +9,7 @@ namespace Cofoundry.Web.Admin
     {
         public void Register(IContainerRegister container)
         {
-            container.RegisterType<IVisualEditorActionResultFactory, VisualEditorActionResultFactory>();
+            container.Register<IVisualEditorActionResultFactory, VisualEditorActionResultFactory>();
             container.RegisterAll<IVisualEditorRequestExclusionRule>();
         }
     }

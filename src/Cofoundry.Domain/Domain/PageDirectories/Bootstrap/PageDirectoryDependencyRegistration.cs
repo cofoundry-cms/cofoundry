@@ -12,10 +12,10 @@ namespace Cofoundry.Domain.Bootstrap
         public void Register(IContainerRegister container)
         {
             container
-                .RegisterType<IPageDirectoryCache, PageDirectoryCache>()
-                .RegisterType<IPageDirectoryRepository, PageDirectoryRepository>()
-                .RegisterType<IPageDirectoryRouteMapper, PageDirectoryRouteMapper>()
-                .RegisterType<IPageDirectoryTreeMapper, PageDirectoryTreeMapper>()
+                .Register<IPageDirectoryCache, PageDirectoryCache>()
+                .Register<IPageDirectoryRepository, PageDirectoryRepository>()
+                .Register<IPageDirectoryRouteMapper, PageDirectoryRouteMapper>()
+                .Register<IPageDirectoryTreeMapper, PageDirectoryTreeMapper>()
                 ;
         }
     }

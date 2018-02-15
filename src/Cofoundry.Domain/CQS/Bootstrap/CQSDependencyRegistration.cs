@@ -12,14 +12,14 @@ namespace Cofoundry.Domain.CQS
         public void Register(IContainerRegister container)
         {
             container
-                .RegisterType<ICommandExecutor, CommandExecutor>()
+                .Register<ICommandExecutor, CommandExecutor>()
                 .RegisterAllGenericImplementations(typeof(IAsyncCommandHandler<>))
-                .RegisterType<ICommandHandlerFactory, CommandHandlerFactory>()
-                .RegisterType<IQueryExecutor, QueryExecutor>()
+                .Register<ICommandHandlerFactory, CommandHandlerFactory>()
+                .Register<IQueryExecutor, QueryExecutor>()
                 .RegisterAllGenericImplementations(typeof(IAsyncQueryHandler<,>))
-                .RegisterType<IQueryHandlerFactory, QueryHandlerFactory>()
-                .RegisterType<ICommandLogService, DebugCommandLogService>()
-                .RegisterType<IExecutionContextFactory, ExecutionContextFactory>()
+                .Register<IQueryHandlerFactory, QueryHandlerFactory>()
+                .Register<ICommandLogService, DebugCommandLogService>()
+                .Register<IExecutionContextFactory, ExecutionContextFactory>()
                 ; 
         }
     }

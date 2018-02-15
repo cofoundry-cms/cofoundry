@@ -15,19 +15,19 @@ namespace Cofoundry.Domain
             var singletonOptions = RegistrationOptions.SingletonScope();
 
             container
-                .RegisterType<IPermissionValidationService, PermissionValidationService>()
-                .RegisterType<IExecutePermissionValidationService, ExecutePermissionValidationService>()
-                .RegisterType<IRoleCache, RoleCache>()
-                .RegisterType<IRoleRepository, RoleRepository>()
-                .RegisterType<IInternalRoleRepository, InternalRoleRepository>()
-                .RegisterType<IRoleDetailsMapper, RoleDetailsMapper>()
-                .RegisterType<IRoleMicroSummaryMapper, RoleMicroSummaryMapper>()
+                .Register<IPermissionValidationService, PermissionValidationService>()
+                .Register<IExecutePermissionValidationService, ExecutePermissionValidationService>()
+                .Register<IRoleCache, RoleCache>()
+                .Register<IRoleRepository, RoleRepository>()
+                .Register<IInternalRoleRepository, InternalRoleRepository>()
+                .Register<IRoleDetailsMapper, RoleDetailsMapper>()
+                .Register<IRoleMicroSummaryMapper, RoleMicroSummaryMapper>()
                 .RegisterAll<IPermission>(singletonOptions)
-                .RegisterInstance<IPermissionRepository, PermissionRepository>()
+                .RegisterSingleton<IPermissionRepository, PermissionRepository>()
 
                 .RegisterAll<IRoleDefinition>(singletonOptions)
                 .RegisterAllGenericImplementations(typeof(IRoleInitializer<>))
-                .RegisterType<IRoleInitializerFactory, RoleInitializerFactory>()
+                .Register<IRoleInitializerFactory, RoleInitializerFactory>()
                 ;
         }
     }

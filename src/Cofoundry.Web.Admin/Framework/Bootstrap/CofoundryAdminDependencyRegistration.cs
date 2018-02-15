@@ -17,11 +17,11 @@ namespace Cofoundry.Web.Admin
 
             container
                 .RegisterAll<IStandardAngularModuleRegistration>()
-                .RegisterType<StandardAngularModuleRegistrationBootstrapper>()
-                .RegisterType<ISetupPageActionFactory, SetupPageActionFactory>(options)
-                .RegisterInstance<IAdminRouteLibrary, AdminRouteLibrary>()
-                .RegisterType<IAngularBootstrapper, AngularBootstrapper>()
-                .RegisterType<IStaticResourceReferenceRenderer, StaticResourceReferenceRenderer>()
+                .Register<StandardAngularModuleRegistrationBootstrapper>()
+                .Register<ISetupPageActionFactory, SetupPageActionFactory>(options)
+                .RegisterSingleton<IAdminRouteLibrary, AdminRouteLibrary>()
+                .Register<IAngularBootstrapper, AngularBootstrapper>()
+                .Register<IStaticResourceReferenceRenderer, StaticResourceReferenceRenderer>()
                 ;
         }
     }

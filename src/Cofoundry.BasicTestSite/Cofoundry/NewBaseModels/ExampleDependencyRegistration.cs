@@ -13,8 +13,8 @@ public class ExampleDependencyRegistration : IDependencyRegistration
         var overrideOptions = RegistrationOptions.Override();
 
         container
-            .RegisterType<IPageViewModelFactory, ExamplePageViewModelFactory>(overrideOptions)
-            .RegisterType<IPageViewModelBuilder, ExamplePageViewModelBuilder>(overrideOptions)
+            .Register<IPageViewModelFactory, ExamplePageViewModelFactory>(overrideOptions)
+            .Register<IPageViewModelBuilder, ExamplePageViewModelBuilder>(overrideOptions)
             ;
     }
 }

@@ -15,14 +15,14 @@ namespace Cofoundry.Core.Web.Bootstrap
         public void Register(IContainerRegister container)
         {
             container
-                .RegisterType<RequestBasedSiteUrlResolver>()
-                .RegisterType<ConfigBasedSiteUrlResolver>()
-                .RegisterType<ISiteUrlResolver, CompositeSiteUrlResolver>()
-                .RegisterType<IHtmlSanitizer, HtmlSanitizer>()
-                .RegisterType<IDefaultHtmlSanitizationRuleSetFactory, DefaultHtmlSanitizationRuleSetFactory>()
-                .RegisterType<IMimeTypeService, MimeTypeService>()
-                .RegisterInstance<IContentTypeProviderFactory, ContentTypeProviderFactory>()
-                .RegisterFactory<IContentTypeProvider, IContentTypeProviderFactory>(new RegistrationOptions() { InstanceScope = InstanceScope.Singleton })
+                .Register<RequestBasedSiteUrlResolver>()
+                .Register<ConfigBasedSiteUrlResolver>()
+                .Register<ISiteUrlResolver, CompositeSiteUrlResolver>()
+                .Register<IHtmlSanitizer, HtmlSanitizer>()
+                .Register<IDefaultHtmlSanitizationRuleSetFactory, DefaultHtmlSanitizationRuleSetFactory>()
+                .Register<IMimeTypeService, MimeTypeService>()
+                .RegisterSingleton<IContentTypeProviderFactory, ContentTypeProviderFactory>()
+                .RegisterFactory<IContentTypeProvider, IContentTypeProviderFactory>(RegistrationOptions.SingletonScope())
                 .RegisterAll<IMimeTypeRegistration>()
                 ;
         }

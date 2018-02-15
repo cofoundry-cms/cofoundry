@@ -12,9 +12,9 @@ namespace Cofoundry.Web.Identity
         public void Register(IContainerRegister container)
         {
             container
-                .RegisterType<AccountManagementControllerHelper, AccountManagementControllerHelper>()
-                .RegisterType<AuthenticationControllerHelper, AuthenticationControllerHelper>()
-                .RegisterType<UserManagementControllerHelper, UserManagementControllerHelper>()
+                .Register<AccountManagementControllerHelper, AccountManagementControllerHelper>()
+                .Register<AuthenticationControllerHelper, AuthenticationControllerHelper>()
+                .Register<UserManagementControllerHelper, UserManagementControllerHelper>()
                 ;
 
         }

@@ -12,9 +12,9 @@ namespace Cofoundry.Domain.Bootstrap
         public void Register(IContainerRegister container)
         {
             container
-                .RegisterType<IRewriteRuleRepository, RewriteRuleRepository>()
-                .RegisterType<IRewriteRuleCache, RewriteRuleCache>()
-                .RegisterType<IRewriteRuleSummaryMapper, RewriteRuleSummaryMapper>()
+                .Register<IRewriteRuleRepository, RewriteRuleRepository>()
+                .Register<IRewriteRuleCache, RewriteRuleCache>()
+                .Register<IRewriteRuleSummaryMapper, RewriteRuleSummaryMapper>()
                 ;
         }
     }

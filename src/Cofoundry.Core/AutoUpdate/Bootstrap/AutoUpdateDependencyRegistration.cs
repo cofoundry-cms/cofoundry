@@ -12,15 +12,15 @@ namespace Cofoundry.Core.AutoUpdate
         public void Register(IContainerRegister container)
         {
             container
-                .RegisterType<IDatabase, Database>()
+                .Register<IDatabase, Database>(RegistrationOptions.Scoped())
                 .RegisterAllGenericImplementations(typeof(ISyncVersionedUpdateCommandHandler<>))
                 .RegisterAllGenericImplementations(typeof(IAsyncVersionedUpdateCommandHandler<>))
                 .RegisterAllGenericImplementations(typeof(ISyncAlwaysRunUpdateCommandHandler<>))
                 .RegisterAllGenericImplementations(typeof(IAsyncAlwaysRunUpdateCommandHandler<>))
-                .RegisterType<IUpdateCommandHandlerFactory, UpdateCommandHandlerFactory>()
-                .RegisterType<IAutoUpdateService, AutoUpdateService>()
-                .RegisterType<IUpdatePackageOrderer, UpdatePackageOrderer>()
-                .RegisterType<IAutoUpdateDistributedLockManager, AutoUpdateDistributedLockManager>()
+                .Register<IUpdateCommandHandlerFactory, UpdateCommandHandlerFactory>()
+                .Register<IAutoUpdateService, AutoUpdateService>()
+                .Register<IUpdatePackageOrderer, UpdatePackageOrderer>()
+                .Register<IAutoUpdateDistributedLockManager, AutoUpdateDistributedLockManager>()
                 .RegisterAll<IUpdatePackageFactory>()
                 ;
         }

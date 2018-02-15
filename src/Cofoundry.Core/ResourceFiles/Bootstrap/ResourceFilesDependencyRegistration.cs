@@ -14,8 +14,8 @@ namespace Cofoundry.Core.ResourceFiles
             container
                 .RegisterAll<IAssemblyResourceRegistration>()
                 .RegisterAll<IEmbeddedResourceRouteRegistration>()
-                .RegisterType<IResourceFileProviderFactory, ResourceFileProviderFactory>()
-                .RegisterType<IEmbeddedFileProviderFactory, CofoundryEmbeddedFileProviderFactory>()
+                .Register<IResourceFileProviderFactory, ResourceFileProviderFactory>()
+                .Register<IEmbeddedFileProviderFactory, CofoundryEmbeddedFileProviderFactory>()
                 ;
         }
     }

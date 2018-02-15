@@ -11,7 +11,7 @@ namespace Cofoundry.Core.Json
     {
         public void Register(IContainerRegister container)
         {
-            container.RegisterInstance<IJsonSerializerSettingsFactory, JsonSerializerSettingsFactory>();
+            container.RegisterSingleton<IJsonSerializerSettingsFactory, JsonSerializerSettingsFactory>();
         }
     }
 }

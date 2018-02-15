@@ -36,7 +36,6 @@ namespace Cofoundry.Core.AutoUpdate
             IUpdateCommandHandlerFactory commandHandlerFactory,
             IDatabase db,
             IUpdatePackageOrderer updatePackageOrderer,
-            IServiceProvider serviceProvider,
             AutoUpdateSettings autoUpdateSettings,
             IAutoUpdateDistributedLockManager autoUpdateDistributedLockManager
             )

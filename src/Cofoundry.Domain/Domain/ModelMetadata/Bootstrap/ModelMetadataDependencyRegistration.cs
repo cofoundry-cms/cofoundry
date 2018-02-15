@@ -13,7 +13,7 @@ namespace Cofoundry.Domain
         public void Register(IContainerRegister container)
         {
             container
-                .RegisterInstance<CofoundryDisplayMetadataProvider>()
+                .RegisterSingleton<CofoundryDisplayMetadataProvider>()
                 .RegisterAll<IModelMetadataDecorator>(RegistrationOptions.SingletonScope())
                 ;
         }

@@ -12,9 +12,9 @@ namespace Cofoundry.Domain
         public void Register(IContainerRegister container)
         {
             container
-                .RegisterType<IPasswordCryptographyService, PasswordCryptographyService>()
-                .RegisterType<ISecurityTokenGenerationService, SecurityTokenGenerationService>()
-                .RegisterType<IPasswordGenerationService, PasswordGenerationService>();
+                .Register<IPasswordCryptographyService, PasswordCryptographyService>()
+                .Register<ISecurityTokenGenerationService, SecurityTokenGenerationService>()
+                .Register<IPasswordGenerationService, PasswordGenerationService>();
         }
     }
 }

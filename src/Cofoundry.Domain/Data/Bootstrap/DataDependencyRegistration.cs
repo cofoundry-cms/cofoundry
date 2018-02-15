@@ -13,11 +13,11 @@ namespace Cofoundry.Domain.Data
         public void Register(IContainerRegister container)
         {
             container
-                .RegisterType<CofoundryDbContext>(new Type[] { typeof(CofoundryDbContext), typeof(DbContext) })
-                .RegisterType<IFileStoreService, FileSystemFileStoreService>()
-                .RegisterType<IDbUnstructuredDataSerializer, DbUnstructuredDataSerializer>()
-                .RegisterType<ICustomEntityStoredProcedures, CustomEntityStoredProcedures>()
-                .RegisterType<IPageStoredProcedures, PageStoredProcedures>()
+                .Register<CofoundryDbContext>(new Type[] { typeof(CofoundryDbContext), typeof(DbContext) }, RegistrationOptions.Scoped())
+                .Register<IFileStoreService, FileSystemFileStoreService>()
+                .Register<IDbUnstructuredDataSerializer, DbUnstructuredDataSerializer>()
+                .Register<ICustomEntityStoredProcedures, CustomEntityStoredProcedures>()
+                .Register<IPageStoredProcedures, PageStoredProcedures>()
                 ;
         }
     }

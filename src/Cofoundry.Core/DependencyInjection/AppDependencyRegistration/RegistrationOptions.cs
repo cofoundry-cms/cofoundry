@@ -10,7 +10,7 @@ namespace Cofoundry.Core.DependencyInjection
     {
         public RegistrationOptions()
         {
-            InstanceScope = InstanceScope.PerLifetimeScope;
+            Lifetime = InstanceLifetime.Transient;
         }
 
         /// <summary>
@@ -21,9 +21,9 @@ namespace Cofoundry.Core.DependencyInjection
         public bool ReplaceExisting { get; set; }
 
         /// <summary>
-        /// Use this to set a lifetime scope to the type. Defaults to PerLifetimeScope.
+        /// Use this to set a lifetime to the type. Defaults to Transient.
         /// </summary>
-        public InstanceScope InstanceScope { get; set; }
+        public InstanceLifetime Lifetime { get; set; }
 
         /// <summary>
         /// Use this value to set a priority level when ReplaceExisting is set to true. This
@@ -52,29 +52,29 @@ namespace Cofoundry.Core.DependencyInjection
 
         /// <summary>
         /// A quick way of creating a new options set which sets the
-        /// InstanceScope property to InstanceScope.Singleton
+        /// Lifetime property to InstanceLifetime.Singleton
         /// </summary>
         public static RegistrationOptions SingletonScope()
         {
-            return new RegistrationOptions() { InstanceScope = InstanceScope.Singleton };
+            return new RegistrationOptions() { Lifetime = InstanceLifetime.Singleton };
         }
 
         /// <summary>
         /// A quick way of creating a new options set which sets the
-        /// InstanceScope property to InstanceScope.Transient
+        /// Lifetime property to InstanceLifetime.Transient
         /// </summary>
         public static RegistrationOptions TransientScope()
         {
-            return new RegistrationOptions() { InstanceScope = InstanceScope.Transient };
+            return new RegistrationOptions() { Lifetime = InstanceLifetime.Transient };
         }
 
         /// <summary>
         /// A quick way of creating a new options set which sets the
-        /// InstanceScope property to InstanceScope.PerLifetimeScope
+        /// Lifetime property to InstanceLifetime.Scoped
         /// </summary>
-        public static RegistrationOptions PerLifetimeScope()
+        public static RegistrationOptions Scoped()
         {
-            return new RegistrationOptions() { InstanceScope = InstanceScope.PerLifetimeScope };
+            return new RegistrationOptions() { Lifetime = InstanceLifetime.Scoped };
         }
     }
 }

@@ -16,7 +16,7 @@ namespace Cofoundry.Core.DependencyInjection
     public class DefaultContainerRegister : IContainerRegister
     {
         private static readonly MethodInfo _registerFactoryMethod = typeof(DefaultContainerRegister).GetMethod(nameof(RegisterFactoryReflectionDelegate), BindingFlags.NonPublic | BindingFlags.Instance);
-        private static InstanceScope DEFAULT_INSTANCE_SCOPE = InstanceScope.PerLifetimeScope;
+        private static InstanceLifetime DEFAULT_LIFETIME = InstanceLifetime.Transient;
 
         private readonly IDiscoveredTypesProvider _discoveredTypesProvider;
         private readonly IServiceCollection _serviceCollection;
@@ -45,7 +45,7 @@ namespace Cofoundry.Core.DependencyInjection
 
         public IContainerConfigurationHelper Configuration { get => _containerConfigurationHelper; }
 
-        public IContainerRegister RegisterInstance<TRegisterAs>(TRegisterAs instance, RegistrationOptions options = null)
+        public IContainerRegister RegisterSingleton<TRegisterAs>(TRegisterAs instance, RegistrationOptions options = null)
         {
             if (instance == null) throw new ArgumentNullException(nameof(instance));
             var typeToRegister = typeof(TRegisterAs);
@@ -57,32 +57,29 @@ namespace Cofoundry.Core.DependencyInjection
                     ;
             });
 
-            Register<TRegisterAs>(fn, options);
+            RegisterWithContainer<TRegisterAs>(fn, options);
 
             return this;
         }
 
-        public IContainerRegister RegisterInstance<TRegisterAs>(RegistrationOptions options = null)
+        public IContainerRegister Register<TConcrete>(RegistrationOptions options = null)
         {
-            return RegisterInstance<TRegisterAs, TRegisterAs>(options);
+            return Register<TConcrete, TConcrete>(options);
         }
 
-        public IContainerRegister RegisterInstance<TRegisterAs, TConcrete>(RegistrationOptions options = null) where TConcrete : TRegisterAs
+        public IContainerRegister Register<TRegisterAs, TConcrete>(RegistrationOptions options = null) where TConcrete : TRegisterAs
         {
-            if (options == null)
+            var fn = new Action(() =>
             {
-                options = new RegistrationOptions();
-            }
-            options.InstanceScope = InstanceScope.Singleton;
-            return RegisterType<TRegisterAs, TConcrete>(options);
+                AddService(typeof(TRegisterAs), typeof(TConcrete), options);
+            });
+
+            RegisterWithContainer<TRegisterAs>(fn, options);
+
+            return this;
         }
 
-        public IContainerRegister RegisterType<TConcrete>(RegistrationOptions options = null)
-        {
-            return RegisterType<TConcrete, TConcrete>(options);
-        }
-
-        public IContainerRegister RegisterType<TConcrete>(ICollection<Type> types, RegistrationOptions options = null)
+        public IContainerRegister Register<TConcrete>(ICollection<Type> types, RegistrationOptions options = null)
         {
             var fn = new Action(() =>
             {
@@ -99,36 +96,12 @@ namespace Cofoundry.Core.DependencyInjection
                 }
             });
 
-            Register<TConcrete>(fn, options);
+            RegisterWithContainer<TConcrete>(fn, options);
 
             return this;
         }
 
-        private static IServiceCollection Add(
-            IServiceCollection collection,
-            Type serviceType,
-            Type implementationType,
-            ServiceLifetime lifetime
-            )
-        {
-            var descriptor = new ServiceDescriptor(serviceType, implementationType, lifetime);
-            collection.Add(descriptor);
-            return collection;
-        }
-
-        public IContainerRegister RegisterType<TRegisterAs, TConcrete>(RegistrationOptions options = null) where TConcrete : TRegisterAs
-        {
-            var fn = new Action(() =>
-            {
-                AddService(typeof(TRegisterAs), typeof(TConcrete), options);
-            });
-
-            Register<TRegisterAs>(fn, options);
-
-            return this;
-        }
-
-        public IContainerRegister RegisterTypeInCollection<TRegisterAs, TConcrete>(RegistrationOptions options = null) where TConcrete : TRegisterAs
+        public IContainerRegister RegisterInCollection<TRegisterAs, TConcrete>(RegistrationOptions options = null) where TConcrete : TRegisterAs
         {
             AddService(typeof(TRegisterAs), typeof(TConcrete), options);
 
@@ -156,7 +129,7 @@ namespace Cofoundry.Core.DependencyInjection
         {
             if (!typeDef.GetTypeInfo().IsGenericTypeDefinition)
             {
-                throw new ArgumentException("TGeneric should be generic");
+                throw new ArgumentException("Type should be generic", nameof(typeDef));
             }
 
             var handlerRegistrations =
@@ -232,7 +205,7 @@ namespace Cofoundry.Core.DependencyInjection
                 AddServiceWithFactory(typeof(TRegisterAs), c => c.GetRequiredService<TFactory>().Create(), options);
             });
 
-            Register<TRegisterAs>(fn, options);
+            RegisterWithContainer<TRegisterAs>(fn, options);
 
             return this;
         }
@@ -248,7 +221,7 @@ namespace Cofoundry.Core.DependencyInjection
 
         #region helpers
 
-        private void Register<TTo>(Action register, RegistrationOptions options = null)
+        private void RegisterWithContainer<TTo>(Action register, RegistrationOptions options = null)
         {
             if (options != null && options.ReplaceExisting)
             {
@@ -286,24 +259,24 @@ namespace Cofoundry.Core.DependencyInjection
 
         public ServiceLifetime ConvertToServiceLifetime(RegistrationOptions options)
         {
-            var scope = options?.InstanceScope ?? DEFAULT_INSTANCE_SCOPE;
+            var scope = options?.Lifetime ?? DEFAULT_LIFETIME;
 
             if (scope == null)
             {
-                scope = DEFAULT_INSTANCE_SCOPE;
+                scope = DEFAULT_LIFETIME;
             }
 
-            if (scope == InstanceScope.PerLifetimeScope)
+            if (scope == InstanceLifetime.Scoped)
             {
                 return ServiceLifetime.Scoped;
             }
 
-            if (scope == InstanceScope.Transient)
+            if (scope == InstanceLifetime.Transient)
             {
                 return ServiceLifetime.Transient;
             }
 
-            if (scope == InstanceScope.Singleton)
+            if (scope == InstanceLifetime.Singleton)
             {
                 return ServiceLifetime.Singleton;
             }

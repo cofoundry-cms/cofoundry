@@ -13,9 +13,9 @@ namespace Cofoundry.Core.EntityFramework
         public void Register(IContainerRegister container)
         {
             container
-                .RegisterType<IEntityFrameworkSqlExecutor, EntityFrameworkSqlExecutor>()
-                .RegisterType<ITransactionScopeFactory, TransactionScopeFactory>()
-                .RegisterType<ISqlParameterFactory, SqlParameterFactory>()
+                .Register<IEntityFrameworkSqlExecutor, EntityFrameworkSqlExecutor>()
+                .Register<ITransactionScopeFactory, TransactionScopeFactory>(RegistrationOptions.Scoped())
+                .Register<ISqlParameterFactory, SqlParameterFactory>()
                 ;
         }
     }

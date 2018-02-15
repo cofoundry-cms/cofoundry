@@ -19,56 +19,42 @@ namespace Cofoundry.Core.DependencyInjection
         IContainerConfigurationHelper Configuration { get; }
 
         /// <summary>
-        /// Registers a service instance.
+        /// Registers a service instance using InstanceLifetime.Singleton.
         /// </summary>
-        /// <typeparam name="TRegisterAs">Type to register the service as</typeparam>
-        /// <param name="instance">The instance to register</param>
+        /// <typeparam name="TRegisterAs">Type to register the service as.</typeparam>
+        /// <param name="instance">The instance to register.</param>
         /// <param name="options">Optional options argument.</param>
         /// <returns>The IContainerRegister instance for method chaining.</returns>
-        IContainerRegister RegisterInstance<TRegisterAs>(TRegisterAs instance, RegistrationOptions options = null);
+        IContainerRegister RegisterSingleton<TRegisterAs>(TRegisterAs instance, RegistrationOptions options = null);
 
         /// <summary>
-        /// Registers a service instance.
-        /// </summary>
-        /// <typeparam name="TRegisterAs">Type to register the service as</typeparam>
-        /// <param name="options">Optional options argument.</param>
-        /// <returns>The IContainerRegister instance for method chaining.</returns>
-        IContainerRegister RegisterInstance<TRegisterAs>(RegistrationOptions options = null);
-
-        /// <summary>
-        /// Registers a service instance.
-        /// </summary>
-        /// <typeparam name="TRegisterAs">Type to register the service as</typeparam>
-        /// <typeparam name="TConcrete">Concrete type to register.</typeparam>
-        /// <param name="options">Optional options argument.</param>
-        /// <returns>The IContainerRegister instance for method chaining.</returns>
-        IContainerRegister RegisterInstance<TRegisterAs, TConcrete>(RegistrationOptions options = null) where TConcrete : TRegisterAs;
-
-        /// <summary>
-        /// Registers a service as its concrete type only.
+        /// Registers a service as its concrete type only, using the default 
+        /// InstanceLifetime (Transient).
         /// </summary>
         /// <typeparam name="TConcrete">Type to register.</typeparam>
         /// <param name="options">Optional options argument.</param>
         /// <returns>The IContainerRegister instance for method chaining.</returns>
-        IContainerRegister RegisterType<TConcrete>(RegistrationOptions options = null);
+        IContainerRegister Register<TConcrete>(RegistrationOptions options = null);
 
         /// <summary>
-        /// Registers the type against itself and multiple interfaces or base classes specified in the types parameter.
+        /// Registers the type against itself and multiple interfaces or base classes 
+        /// specified in the types parameter. The type is registered using the default 
+        /// InstanceLifetime (Transient).
         /// </summary>
         /// <typeparam name="TConcrete">Type to register.</typeparam>
         /// <param name="types">Types to register as.</param>
         /// <param name="options">Optional options argument.</param>
         /// <returns>The IContainerRegister instance for method chaining.</returns>
-        IContainerRegister RegisterType<TConcrete>(ICollection<Type> types, RegistrationOptions options = null);
+        IContainerRegister Register<TConcrete>(ICollection<Type> types, RegistrationOptions options = null);
 
         /// <summary>
-        /// Registers a service.
+        /// Registers a service using the default InstanceLifetime (Transient).
         /// </summary>
         /// <typeparam name="TRegisterAs">Type to register the service as</typeparam>
         /// <typeparam name="TConcrete">Concrete type to register.</typeparam>
         /// <param name="options">Optional options argument.</param>
         /// <returns>The IContainerRegister instance for method chaining.</returns>
-        IContainerRegister RegisterType<TRegisterAs, TConcrete>(RegistrationOptions options = null) where TConcrete : TRegisterAs;
+        IContainerRegister Register<TRegisterAs, TConcrete>(RegistrationOptions options = null) where TConcrete : TRegisterAs;
 
         /// <summary>
         /// Registers a service as part of a collection of services, so that when an array of TRegisterAs
@@ -77,7 +63,7 @@ namespace Cofoundry.Core.DependencyInjection
         /// <typeparam name="TRegisterAs">Type to register the service as</typeparam>
         /// <typeparam name="TConcrete">Concrete type to register.</typeparam>
         /// <returns>The IContainerRegister instance for method chaining.</returns>
-        IContainerRegister RegisterTypeInCollection<TRegisterAs, TConcrete>(RegistrationOptions options = null) where TConcrete : TRegisterAs;
+        IContainerRegister RegisterInCollection<TRegisterAs, TConcrete>(RegistrationOptions options = null) where TConcrete : TRegisterAs;
 
         /// <summary>
         /// Registers all services that implement TToRegister as a registered collection of services.

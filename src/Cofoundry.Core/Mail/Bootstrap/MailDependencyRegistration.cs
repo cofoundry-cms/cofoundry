@@ -12,10 +12,10 @@ namespace Cofoundry.Core.Mail
         public void Register(IContainerRegister container)
         {
             container
-                .RegisterType<IMailService, SimpleMailService>()
-                .RegisterType<IMailMessageRenderer, MailMessageRenderer>()
-                .RegisterType<IMailViewRenderer, RazorMailViewRenderer>()
-                .RegisterType<IMailDispatchService, DebugMailDispatchService>()
+                .Register<IMailService, SimpleMailService>()
+                .Register<IMailMessageRenderer, MailMessageRenderer>()
+                .Register<IMailViewRenderer, RazorMailViewRenderer>()
+                .Register<IMailDispatchService, DebugMailDispatchService>()
                 ; 
         }
     }

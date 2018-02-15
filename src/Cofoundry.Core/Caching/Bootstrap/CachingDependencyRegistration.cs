@@ -13,7 +13,7 @@ namespace Cofoundry.Core.Caching
         public void Register(IContainerRegister container)
         {
             container
-                .RegisterInstance<IObjectCacheFactory, InMemoryObjectCacheFactory>()
+                .RegisterSingleton<IObjectCacheFactory, InMemoryObjectCacheFactory>()
                 ;
         }
     }

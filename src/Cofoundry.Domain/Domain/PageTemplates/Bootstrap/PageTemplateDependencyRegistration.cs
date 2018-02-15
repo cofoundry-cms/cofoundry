@@ -12,10 +12,10 @@ namespace Cofoundry.Domain.Bootstrap
         public void Register(IContainerRegister container)
         {
             container
-                .RegisterType<IPageTemplateCustomEntityTypeMapper, PageTemplateCustomEntityTypeMapper>()
-                .RegisterType<IPageTemplateMicroSummaryMapper, PageTemplateMicroSummaryMapper>()
-                .RegisterType<IPageTemplateSummaryMapper, PageTemplateSummaryMapper>()
-                .RegisterType<IPageTemplateDetailsMapper, PageTemplateDetailsMapper>()
+                .Register<IPageTemplateCustomEntityTypeMapper, PageTemplateCustomEntityTypeMapper>()
+                .Register<IPageTemplateMicroSummaryMapper, PageTemplateMicroSummaryMapper>()
+                .Register<IPageTemplateSummaryMapper, PageTemplateSummaryMapper>()
+                .Register<IPageTemplateDetailsMapper, PageTemplateDetailsMapper>()
                 
                 .RegisterAll<IPageTemplateViewLocationRegistration>()
                 ;

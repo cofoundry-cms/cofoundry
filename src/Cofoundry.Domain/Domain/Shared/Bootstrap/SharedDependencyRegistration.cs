@@ -15,12 +15,12 @@ namespace Cofoundry.Domain.Bootstrap
             var replacementRegistraionOptions = new RegistrationOptions() { ReplaceExisting = true };
 
             container
-                .RegisterType<EntityAuditHelper, EntityAuditHelper>()
-                .RegisterType<EntityTagHelper, EntityTagHelper>()
-                .RegisterType<EntityOrderableHelper, EntityOrderableHelper>()
-                .RegisterType<IContentRouteLibrary, ContentRouteLibrary>()
-                .RegisterType<IViewFileReader, ViewFileReader>()
-                .RegisterType<IAuditDataMapper, AuditDataMapper>()
+                .Register<EntityAuditHelper, EntityAuditHelper>()
+                .Register<EntityTagHelper, EntityTagHelper>()
+                .Register<EntityOrderableHelper, EntityOrderableHelper>()
+                .Register<IContentRouteLibrary, ContentRouteLibrary>()
+                .Register<IViewFileReader, ViewFileReader>()
+                .Register<IAuditDataMapper, AuditDataMapper>()
                 ;
         }
     }

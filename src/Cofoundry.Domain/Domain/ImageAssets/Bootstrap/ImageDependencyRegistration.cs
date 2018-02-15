@@ -12,15 +12,15 @@ namespace Cofoundry.Domain.Bootstrap
         public void Register(IContainerRegister container)
         {
             container
-                .RegisterType<IImageAssetCache, ImageAssetCache>()
-                .RegisterType<IResizedImageAssetFileService, SimpleResizedImageAssetFileService>()
-                .RegisterType<IImageAssetRouteLibrary, ImageAssetRouteLibrary>()
-                .RegisterType<IImageAssetRepository, ImageAssetRepository>()
-                .RegisterType<IImageAssetFileService, NotImplementedImageAssetFileService>()
-                .RegisterType<IImageAssetSummaryMapper, ImageAssetSummaryMapper>()
-                .RegisterType<IImageAssetDetailsMapper, ImageAssetDetailsMapper>()
-                .RegisterType<IImageAssetRenderDetailsMapper, ImageAssetRenderDetailsMapper>()
-                .RegisterType<IImageAssetFileMapper, ImageAssetFileMapper>()
+                .Register<IImageAssetCache, ImageAssetCache>()
+                .Register<IResizedImageAssetFileService, SimpleResizedImageAssetFileService>()
+                .Register<IImageAssetRouteLibrary, ImageAssetRouteLibrary>()
+                .Register<IImageAssetRepository, ImageAssetRepository>()
+                .Register<IImageAssetFileService, NotImplementedImageAssetFileService>()
+                .Register<IImageAssetSummaryMapper, ImageAssetSummaryMapper>()
+                .Register<IImageAssetDetailsMapper, ImageAssetDetailsMapper>()
+                .Register<IImageAssetRenderDetailsMapper, ImageAssetRenderDetailsMapper>()
+                .Register<IImageAssetFileMapper, ImageAssetFileMapper>()
                 ;
         }
     }

@@ -16,34 +16,34 @@ namespace Cofoundry.Web
             var lowPriorityOverrideRegistrationOptions = RegistrationOptions.Override(RegistrationOverridePriority.Low);
 
             container
-                .RegisterType<IControllerResponseHelper, ControllerResponseHelper>()
+                .Register<IControllerResponseHelper, ControllerResponseHelper>()
 
-                .RegisterType<ISettingsViewHelper, SettingsViewHelper>()
-                .RegisterType<ICurrentUserViewHelper, CurrentUserViewHelper>()
-                .RegisterType<IPageTemplateViewFileLocator, PageTemplateViewFileLocator>()
-                .RegisterType<IHtmlSanitizerHelper, HtmlSanitizerHelper>()
-                .RegisterType<IJavascriptViewHelper, JavascriptViewHelper>()
-                .RegisterType<ICofoundryHtmlHelper, CofoundryHtmlHelper>()
-                .RegisterType<IUserSessionService, UserSessionService>()
+                .Register<ISettingsViewHelper, SettingsViewHelper>()
+                .Register<ICurrentUserViewHelper, CurrentUserViewHelper>(RegistrationOptions.Scoped())
+                .Register<IPageTemplateViewFileLocator, PageTemplateViewFileLocator>()
+                .Register<IHtmlSanitizerHelper, HtmlSanitizerHelper>()
+                .Register<IJavascriptViewHelper, JavascriptViewHelper>()
+                .Register<ICofoundryHtmlHelper, CofoundryHtmlHelper>()
+                .Register<IUserSessionService, UserSessionService>(RegistrationOptions.Scoped())
 
-                .RegisterType<IPageViewModelMapper, PageViewModelMapper>()
-                .RegisterType<IPageViewModelFactory, PageViewModelFactory>()
-                .RegisterType<IPageViewModelBuilder, PageViewModelBuilder>()
+                .Register<IPageViewModelMapper, PageViewModelMapper>()
+                .Register<IPageViewModelFactory, PageViewModelFactory>()
+                .Register<IPageViewModelBuilder, PageViewModelBuilder>()
                 
-                .RegisterType<IApiResponseHelper, ApiResponseHelper>()
+                .Register<IApiResponseHelper, ApiResponseHelper>()
 
-                .RegisterType<ICustomEntityTemplateRegionTagBuilderFactory, CustomEntityTemplateRegionTagBuilderFactory>()
-                .RegisterType<IPageTemplateRegionTagBuilderFactory, PageTemplateRegionTagBuilderFactory>()
-                .RegisterType<IPageBlockRenderer, PageBlockRenderer>()
-                .RegisterType<IPathResolver, SitePathResolver>(lowPriorityOverrideRegistrationOptions)
+                .Register<ICustomEntityTemplateRegionTagBuilderFactory, CustomEntityTemplateRegionTagBuilderFactory>()
+                .Register<IPageTemplateRegionTagBuilderFactory, PageTemplateRegionTagBuilderFactory>()
+                .Register<IPageBlockRenderer, PageBlockRenderer>()
+                .Register<IPathResolver, SitePathResolver>(lowPriorityOverrideRegistrationOptions)
 
-                .RegisterType<JsonDeltaModelBinder>()
-                .RegisterType<IFormFileUploadedFileFactory, FormFileUploadedFileFactory>()
+                .Register<JsonDeltaModelBinder>()
+                .Register<IFormFileUploadedFileFactory, FormFileUploadedFileFactory>()
 
                 .RegisterAll<IRouteRegistration>()
-                .RegisterType<IRouteInitializer, RouteInitializer>()
-                .RegisterType<IResourceLocator, WebsiteResourceLocator>(lowPriorityOverrideRegistrationOptions)
-                .RegisterType<IEmptyActionContextFactory, EmptyActionContextFactory>()
+                .Register<IRouteInitializer, RouteInitializer>()
+                .Register<IResourceLocator, WebsiteResourceLocator>(lowPriorityOverrideRegistrationOptions)
+                .Register<IEmptyActionContextFactory, EmptyActionContextFactory>()
                 .RegisterFactory<IStaticResourceFileProvider, StaticResourceFileProvider, StaticResourceFileProviderFactory>(singletonRegistrationOptions)
                 ; 
         }

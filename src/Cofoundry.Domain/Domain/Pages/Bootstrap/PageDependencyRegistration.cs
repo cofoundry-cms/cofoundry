@@ -12,19 +12,19 @@ namespace Cofoundry.Domain.Bootstrap
         public void Register(IContainerRegister container)
         {
             container
-                .RegisterType<IPagePathHelper, PagePathHelper>()
-                .RegisterType<IPageVersionBlockModelMapper, PageVersionBlockModelMapper>()
-                .RegisterType<IPageCache, PageCache>()
-                .RegisterType<IEntityVersionPageBlockMapper, EntityVersionPageBlockMapper>()
-                .RegisterType<IPageBlockCommandHelper, PageBlockCommandHelper>()
+                .Register<IPagePathHelper, PagePathHelper>()
+                .Register<IPageVersionBlockModelMapper, PageVersionBlockModelMapper>()
+                .Register<IPageCache, PageCache>()
+                .Register<IEntityVersionPageBlockMapper, EntityVersionPageBlockMapper>()
+                .Register<IPageBlockCommandHelper, PageBlockCommandHelper>()
                 .RegisterAll<ICustomEntityDataModel>()
-                .RegisterType<IPageRepository, PageRepository>()
-                .RegisterType<IPageRouteLibrary, PageRouteLibrary>()
-                .RegisterType<IPageRenderDetailsMapper, PageRenderDetailsMapper>()
-                .RegisterType<IPageGroupSummaryMapper, PageGroupSummaryMapper>()
-                .RegisterType<IPageSummaryMapper, PageSummaryMapper>()
-                .RegisterType<IOpenGraphDataMapper, OpenGraphDataMapper>()
-                .RegisterType<IPageVersionSummaryMapper, PageVersionSummaryMapper>()
+                .Register<IPageRepository, PageRepository>()
+                .Register<IPageRouteLibrary, PageRouteLibrary>()
+                .Register<IPageRenderDetailsMapper, PageRenderDetailsMapper>()
+                .Register<IPageGroupSummaryMapper, PageGroupSummaryMapper>()
+                .Register<IPageSummaryMapper, PageSummaryMapper>()
+                .Register<IOpenGraphDataMapper, OpenGraphDataMapper>()
+                .Register<IPageVersionSummaryMapper, PageVersionSummaryMapper>()
                  ; 
         }
     }

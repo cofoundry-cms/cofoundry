@@ -9,7 +9,7 @@ namespace Cofoundry.Domain
     {
         public void Register(IContainerRegister container)
         {
-            container.RegisterType<ICofoundryMailTemplateHelper, CofoundryMailTemplateHelper>();
+            container.Register<ICofoundryMailTemplateHelper, CofoundryMailTemplateHelper>();
         }
     }
 }

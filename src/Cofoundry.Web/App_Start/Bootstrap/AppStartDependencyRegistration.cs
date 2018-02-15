@@ -12,7 +12,7 @@ namespace Cofoundry.Web
                 .RegisterAll<IMvcJsonOptionsConfiguration>()
                 .RegisterAll<IMvcOptionsConfiguration>()
                 .RegisterAll<IRazorViewEngineOptionsConfiguration>()
-                .RegisterType<IStaticFileOptionsConfiguration, DefaultStaticFileOptionsConfiguration>()
+                .Register<IStaticFileOptionsConfiguration, DefaultStaticFileOptionsConfiguration>()
             ;
         }
     }

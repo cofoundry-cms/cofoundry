@@ -12,7 +12,7 @@ namespace Cofoundry.Domain.Bootstrap
         public void Register(IContainerRegister container)
         {
             container
-                .RegisterType<IClientConnectionService, ClientConnectionService>();
+                .Register<IClientConnectionService, ClientConnectionService>();
         }
     }
 }

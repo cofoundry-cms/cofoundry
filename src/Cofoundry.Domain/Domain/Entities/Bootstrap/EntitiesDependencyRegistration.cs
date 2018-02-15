@@ -13,7 +13,7 @@ namespace Cofoundry.Domain.Bootstrap
         {
             container
                 .RegisterAll<IEntityDefinition>(RegistrationOptions.SingletonScope())
-                .RegisterInstance<IEntityDefinitionRepository, EntityDefinitionRepository>();
+                .RegisterSingleton<IEntityDefinitionRepository, EntityDefinitionRepository>();
         }
     }
 }

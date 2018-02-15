@@ -10,24 +10,24 @@ namespace Cofoundry.Web.Bootstrap
         public void Register(IContainerRegister container)
         {
             container
-                .RegisterType<INotFoundViewHelper, NotFoundViewHelper>()
-                .RegisterType<IPageLocaleParser, PageLocaleParser>()
-                .RegisterType<ISetupPageActionFactory, DefaultSetupPageActionFactory>()
-                .RegisterType<IPageActionRoutingStepFactory, PageActionRoutingStepFactory>()
+                .Register<INotFoundViewHelper, NotFoundViewHelper>()
+                .Register<IPageLocaleParser, PageLocaleParser>()
+                .Register<ISetupPageActionFactory, DefaultSetupPageActionFactory>()
+                .Register<IPageActionRoutingStepFactory, PageActionRoutingStepFactory>()
 
-                .RegisterType<ICheckSiteIsSetupRoutingStep, CheckSiteIsSetupRoutingStep>()
-                .RegisterType<IInitStateRoutingStep, InitStateRoutingStep>()
-                .RegisterType<ITryFindPageRoutingInfoRoutingStep, TryFindPageRoutingInfoRoutingStep>()
-                .RegisterType<IValidateEntityEditModeRoutingStep, ValidateEntityEditModeRoutingStep>()
-                .RegisterType<IValidateEditPermissionsRoutingStep, ValidateEditPermissionsRoutingStep>()
-                .RegisterType<IValidateDraftVersionRoutingStep, ValidateDraftVersionRoutingStep>()
-                .RegisterType<IValidateSpecificVersionRoutingRoutingStep, ValidateSpecificVersionRoutingRoutingStep>()
-                .RegisterType<IGetNotFoundRouteRoutingStep, GetNotFoundRouteRoutingStep>()
-                .RegisterType<IGetPageRenderDataRoutingStep, GetPageRenderDataRoutingStep>()
-                .RegisterType<ISetCachePolicyRoutingStep, SetCachePolicyRoutingStep>()
-                .RegisterType<IGetFinalResultRoutingStep, GetFinalResultRoutingStep>()
+                .Register<ICheckSiteIsSetupRoutingStep, CheckSiteIsSetupRoutingStep>()
+                .Register<IInitStateRoutingStep, InitStateRoutingStep>()
+                .Register<ITryFindPageRoutingInfoRoutingStep, TryFindPageRoutingInfoRoutingStep>()
+                .Register<IValidateEntityEditModeRoutingStep, ValidateEntityEditModeRoutingStep>()
+                .Register<IValidateEditPermissionsRoutingStep, ValidateEditPermissionsRoutingStep>()
+                .Register<IValidateDraftVersionRoutingStep, ValidateDraftVersionRoutingStep>()
+                .Register<IValidateSpecificVersionRoutingRoutingStep, ValidateSpecificVersionRoutingRoutingStep>()
+                .Register<IGetNotFoundRouteRoutingStep, GetNotFoundRouteRoutingStep>()
+                .Register<IGetPageRenderDataRoutingStep, GetPageRenderDataRoutingStep>()
+                .Register<ISetCachePolicyRoutingStep, SetCachePolicyRoutingStep>()
+                .Register<IGetFinalResultRoutingStep, GetFinalResultRoutingStep>()
 
-                .RegisterType<IPageResponseDataCache, PageResponseDataCache>()
+                .Register<IPageResponseDataCache, PageResponseDataCache>()
                 ;
         }
     }

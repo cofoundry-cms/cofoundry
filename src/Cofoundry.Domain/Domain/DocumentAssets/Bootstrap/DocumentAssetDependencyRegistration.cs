@@ -12,12 +12,12 @@ namespace Cofoundry.Domain.Bootstrap
         public void Register(IContainerRegister container)
         {
             container
-                .RegisterType<DocumentAssetCommandHelper>()
-                .RegisterType<IDocumentAssetRouteLibrary, DocumentAssetRouteLibrary>()
-                .RegisterType<IDocumentAssetRepository, DocumentAssetRepository>()
-                .RegisterType<IDocumentAssetSummaryMapper, DocumentAssetSummaryMapper>()
-                .RegisterType<IDocumentAssetDetailsMapper, DocumentAssetDetailsMapper>()
-                .RegisterType<IDocumentAssetRenderDetailsMapper, DocumentAssetRenderDetailsMapper>()
+                .Register<DocumentAssetCommandHelper>()
+                .Register<IDocumentAssetRouteLibrary, DocumentAssetRouteLibrary>()
+                .Register<IDocumentAssetRepository, DocumentAssetRepository>()
+                .Register<IDocumentAssetSummaryMapper, DocumentAssetSummaryMapper>()
+                .Register<IDocumentAssetDetailsMapper, DocumentAssetDetailsMapper>()
+                .Register<IDocumentAssetRenderDetailsMapper, DocumentAssetRenderDetailsMapper>()
                 ;
         }
     }

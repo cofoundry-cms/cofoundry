@@ -11,16 +11,16 @@ namespace Cofoundry.Domain
         public void Register(IContainerRegister container)
         {
             container
-                .RegisterType<IUserAreaDefinitionRepository, UserAreaDefinitionRepository>()
-                .RegisterType<IUserRepository, UserRepository>()
-                .RegisterType<UserContextMapper>()
-                .RegisterType<IResetUserPasswordCommandHelper, ResetUserPasswordCommandHelper>()
-                .RegisterType<IUserContextService, UserContextService>()
-                .RegisterType<ILoginService, LoginService>()
-                .RegisterType<IUserMicroSummaryMapper, UserMicroSummaryMapper>()
-                .RegisterType<IUserSummaryMapper, UserSummaryMapper>()
-                .RegisterType<IUserAccountDetailsMapper, UserAccountDetailsMapper>()
-                .RegisterType<IUserDetailsMapper, UserDetailsMapper>()
+                .Register<IUserAreaDefinitionRepository, UserAreaDefinitionRepository>()
+                .Register<IUserRepository, UserRepository>()
+                .Register<UserContextMapper>()
+                .Register<IResetUserPasswordCommandHelper, ResetUserPasswordCommandHelper>()
+                .Register<IUserContextService, UserContextService>(RegistrationOptions.Scoped())
+                .Register<ILoginService, LoginService>()
+                .Register<IUserMicroSummaryMapper, UserMicroSummaryMapper>()
+                .Register<IUserSummaryMapper, UserSummaryMapper>()
+                .Register<IUserAccountDetailsMapper, UserAccountDetailsMapper>()
+                .Register<IUserDetailsMapper, UserDetailsMapper>()
                 .RegisterAll<IUserAreaDefinition>()
                 ;
         }

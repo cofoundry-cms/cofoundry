@@ -10,10 +10,10 @@ namespace Cofoundry.Web
         public void Register(IContainerRegister container)
         {
             container
-                .RegisterType<IRazorViewRenderer, RazorViewRenderer>()
-                .RegisterType<IStaticFilePathFormatter, StaticFilePathFormatter>()
-                .RegisterType<IStaticFileViewHelper, StaticFileViewHelper>()
-                .RegisterType<ICofoundryHelper, CofoundryPageHelper>()
+                .Register<IRazorViewRenderer, RazorViewRenderer>()
+                .Register<IStaticFilePathFormatter, StaticFilePathFormatter>()
+                .Register<IStaticFileViewHelper, StaticFileViewHelper>()
+                .Register<ICofoundryHelper, CofoundryPageHelper>()
                 .RegisterGeneric(typeof(ICofoundryHelper<>), typeof(CofoundryPageHelper<>))
                 .RegisterGeneric(typeof(ICofoundryTemplateHelper<>), typeof(CofoundryTemplatePageHelper<>))
                 .RegisterGeneric(typeof(ICofoundryBlockTypeHelper<>), typeof(CofoundryPageBlockTypeHelper<>))

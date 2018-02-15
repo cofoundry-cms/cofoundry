@@ -12,10 +12,10 @@ namespace Cofoundry.Domain.Bootstrap
         public void Register(IContainerRegister container)
         {
             container
-                .RegisterType<ISettingCache, SettingCache>()
-                .RegisterType<SettingQueryHelper>()
-                .RegisterType<SettingCommandHelper>()
-                .RegisterType<IInternalSettingsRepository, InternalSettingsRepository>()
+                .Register<ISettingCache, SettingCache>()
+                .Register<SettingQueryHelper>()
+                .Register<SettingCommandHelper>()
+                .Register<IInternalSettingsRepository, InternalSettingsRepository>()
                 ;
         }
     }

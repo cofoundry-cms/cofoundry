@@ -12,10 +12,10 @@ namespace Cofoundry.Core.MessageAggregator
         public void Register(IContainerRegister container)
         {
             container
-                .RegisterInstance<IMessageAggregatorState>(new MessageAggregatorState())
-                .RegisterType<IMessageSubscriptionInitializer, MessageSubscriptionInitializer>()
-                .RegisterType<IMessageAggregator, MessageAggregator>()
-                .RegisterType<IMessageSubscriptionConfig, MessageSubscriptionConfig>()
+                .RegisterSingleton<IMessageAggregatorState>(new MessageAggregatorState())
+                .Register<IMessageSubscriptionInitializer, MessageSubscriptionInitializer>()
+                .Register<IMessageAggregator, MessageAggregator>()
+                .Register<IMessageSubscriptionConfig, MessageSubscriptionConfig>()
                 .RegisterAll<IMessageSubscriptionRegistration>()
                 .RegisterAllGenericImplementations(typeof(IMessageHandler<>))
                 ;

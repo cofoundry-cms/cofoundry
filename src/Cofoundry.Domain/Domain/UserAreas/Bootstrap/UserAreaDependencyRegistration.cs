@@ -12,8 +12,8 @@ namespace Cofoundry.Domain
         public void Register(IContainerRegister container)
         {
             container
-                .RegisterType<UserAuthenticationHelper, UserAuthenticationHelper>()
-                .RegisterType<UserCommandPermissionsHelper, UserCommandPermissionsHelper>();
+                .Register<UserAuthenticationHelper, UserAuthenticationHelper>()
+                .Register<UserCommandPermissionsHelper, UserCommandPermissionsHelper>();
         }
     }
 }
