@@ -53,6 +53,8 @@ namespace Cofoundry.Web
                 context.User = await _queryExecutor.ExecuteAsync(query);
                 context.IsLoggedIn = true;
             }
+
+            _context = context;
         }
     }
 }
