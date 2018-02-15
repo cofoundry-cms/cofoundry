@@ -94,6 +94,12 @@ namespace Cofoundry.Core.AutoUpdate
         private void EnsureDistributedLockInfrastructureExists()
         {
             _db.Execute(@"
+                if not exists (select schema_name from information_schema.schemata where schema_name = 'Cofoundry')
+                begin
+	                exec sp_executesql N'create schema Cofoundry'
+                end");
+
+            _db.Execute(@"
                 if (not exists (select * 
                     from information_schema.tables 
                     where table_schema = 'Cofoundry' 
