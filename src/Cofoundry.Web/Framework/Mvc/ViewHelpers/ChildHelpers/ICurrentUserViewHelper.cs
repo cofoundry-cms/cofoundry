@@ -11,32 +11,11 @@ namespace Cofoundry.Web
     /// </summary>
     public interface ICurrentUserViewHelper
     {
-        Task EnsureInitializedAsync();
-
         /// <summary>
-        /// Indicates whether the user is logged in
+        /// Returns information about the the currently logged in user. Once
+        /// the user data is loaded it is cached so you don't have to worry 
+        /// about calling this multiple times.
         /// </summary>
-        bool IsLoggedIn { get; }
-
-        /// <summary>
-        /// Indicates whether the user is logged in and is a user of the Cofoundry admin area. The user
-        /// table may be used by non-cofoundry users too so this differentiates them.
-        /// </summary>
-        bool IsCofoundryUser { get; }
-
-        /// <summary>
-        /// The context of the currently logged in user
-        /// </summary>
-        IUserContext Context { get; }
-
-        /// <summary>
-        /// Information about the currently logged in user.
-        /// </summary>
-        UserMicroSummary User { get; }
-
-        /// <summary>
-        /// Information about the currently logged in user.
-        /// </summary>
-        RoleDetails Role { get; }
+        Task<CurrentUserViewHelperContext> GetAsync();
     }
 }

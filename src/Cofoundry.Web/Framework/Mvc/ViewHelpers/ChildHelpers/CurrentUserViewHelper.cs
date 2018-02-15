@@ -14,13 +14,10 @@ namespace Cofoundry.Web
     {
         #region construction
 
+        private CurrentUserViewHelperContext _context = null;
+
         private readonly IUserContextService _userContextServiceService;
         private readonly IQueryExecutor _queryExecutor;
-
-        private IUserContext _userContext = null;
-        private UserMicroSummary _user = null;
-        private RoleDetails _role = null;
-        private bool isInitialized = false;
 
         public CurrentUserViewHelper(
             IUserContextService userContextServiceService,
@@ -33,85 +30,28 @@ namespace Cofoundry.Web
 
         #endregion
 
-        public async Task EnsureInitializedAsync()
+        public async Task<CurrentUserViewHelperContext> GetAsync()
         {
-            _userContext = await _userContextServiceService.GetCurrentContextAsync();
-            _role = await _queryExecutor.ExecuteAsync(new GetRoleDetailsByIdQuery(_userContext.RoleId));
-
-            if (_userContext.UserId.HasValue)
+            // since this only runs in views it shouldn't need to be threadsafe
+            if (_context == null)
             {
-                var query = new GetUserMicroSummaryByIdQuery(_userContext.UserId.Value);
-                _user = await _queryExecutor.ExecuteAsync(query);
+                await InitializeContextAsync();
             }
 
-            isInitialized = true;
+            return _context;
         }
 
-        /// <summary>
-        /// Indicates whether the user is logged in
-        /// </summary>
-        public bool IsLoggedIn
+        private async Task InitializeContextAsync()
         {
-            get
-            {
-                return Context.UserId.HasValue;
-            }
-        }
+            var context = new CurrentUserViewHelperContext();
+            var userContext = await _userContextServiceService.GetCurrentContextAsync();
+            context.Role = await _queryExecutor.ExecuteAsync(new GetRoleDetailsByIdQuery(userContext.RoleId));
 
-        /// <summary>
-        /// Indicates whether the user is logged in and is a user of the Cofoundry admin area. The user
-        /// table may be used by non-Cofoundry users too so this differentiates them.
-        /// </summary>
-        public bool IsCofoundryUser
-        {
-            get
+            if (userContext.UserId.HasValue)
             {
-                return Context.IsCofoundryUser();
-            }
-        }
-
-        /// <summary>
-        /// The context of the currently logged in user
-        /// </summary>
-        public IUserContext Context
-        {
-            get
-            {
-                if (_userContext == null)
-                {
-                    throw new InvalidOperationException("You must call EnsureInitializedAsync() before accessing properties on the CurrentUserViewHelper.");
-                }
-                return _userContext;
-            }
-        }
-
-        /// <summary>
-        /// Information about the currently logged in user.
-        /// </summary>
-        public UserMicroSummary User
-        {
-            get
-            {
-                if (!isInitialized)
-                {
-                    throw new InvalidOperationException("You must call EnsureInitializedAsync() before accessing properties on the CurrentUserViewHelper.");
-                }
-                return _user;
-            }
-        }
-
-        /// <summary>
-        /// Information about the currently logged in user.
-        /// </summary>
-        public RoleDetails Role
-        {
-            get
-            {
-                if (!isInitialized)
-                {
-                    throw new InvalidOperationException("You must call EnsureInitializedAsync() before accessing properties on the CurrentUserViewHelper.");
-                }
-                return _role;
+                var query = new GetUserMicroSummaryByIdQuery(userContext.UserId.Value);
+                context.User = await _queryExecutor.ExecuteAsync(query);
+                context.IsLoggedIn = true;
             }
         }
     }

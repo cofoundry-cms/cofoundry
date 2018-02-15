@@ -3,7 +3,7 @@
 @inject ICofoundryHelper Cofoundry
 
 @{ 
-    await Cofoundry.CurrentUser.EnsureInitializedAsync();
+    var currentUser = await Cofoundry.CurrentUser.GetAsync();
 }
 @functions
 {
@@ -59,7 +59,7 @@
         }
     </ol>
 
-    @if (Cofoundry.CurrentUser.IsLoggedIn)
+    @if (currentUser.IsLoggedIn)
     {
         <div class="logout">
             <a href="@adminRouteLibrary.Auth.LogOut()">Logout</a>

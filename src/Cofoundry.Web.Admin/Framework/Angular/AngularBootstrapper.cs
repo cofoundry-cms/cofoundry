@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Html;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Antiforgery;
 using Microsoft.AspNetCore.Http;
+using Cofoundry.Domain.CQS;
 
 namespace Cofoundry.Web.Admin
 {
@@ -17,22 +18,25 @@ namespace Cofoundry.Web.Admin
         private readonly IAntiforgery _antiforgery;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IStaticResourceReferenceRenderer _staticResourceReferenceRenderer;
-        private readonly ICurrentUserViewHelper _currentUserHelper;
         private readonly IAdminRouteLibrary _adminRouteLibrary;
+        private readonly IUserContextService _userContextService;
+        private readonly IQueryExecutor _queryExecutor;
 
         public AngularBootstrapper(
             IAntiforgery antiforgery,
             IHttpContextAccessor httpContextAccessor,
             IStaticResourceReferenceRenderer staticResourceReferenceRenderer,
-            ICurrentUserViewHelper currentUserHelper,
-            IAdminRouteLibrary adminRouteLibrary
+            IUserContextService userContextService,
+            IAdminRouteLibrary adminRouteLibrary,
+            IQueryExecutor queryExecutor
             )
         {
             _antiforgery = antiforgery;
             _httpContextAccessor = httpContextAccessor;
             _staticResourceReferenceRenderer = staticResourceReferenceRenderer;
-            _currentUserHelper = currentUserHelper;
+            _userContextService = userContextService;
             _adminRouteLibrary = adminRouteLibrary;
+            _queryExecutor = queryExecutor;
         }
 
         /// <summary>
@@ -69,9 +73,13 @@ namespace Cofoundry.Web.Admin
             }
 
             // Might need to add more info at some point, but right now we just need roles.
-            await _currentUserHelper.EnsureInitializedAsync();
+            var user = await _userContextService.GetCurrentContextByUserAreaAsync(CofoundryAdminUserArea.AreaCode);
+            var role = await _queryExecutor.ExecuteAsync(new GetRoleDetailsByIdQuery(user.RoleId));
             var currentUserInfo = new {
-                PermissionCodes = _currentUserHelper.Role.Permissions.Select(p => p.GetUniqueCode())
+                PermissionCodes = role
+                    .Permissions
+                    .Select(p => p.GetUniqueCode())
+                    .ToList()
             };
 
             var tokens = _antiforgery.GetAndStoreTokens(_httpContextAccessor.HttpContext);
