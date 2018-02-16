@@ -29,7 +29,7 @@
                     ng-if="vm.isMarkedPublished && vm.canPublishPage"></cms-button>
 
         <cms-button cms-text="Change Url"
-                    ng-if="::vm.vm.canUpdatePageUrl"
+                    ng-if="::vm.canUpdatePageUrl"
                     ng-click="vm.changeUrl()"
                     ng-disabled="vm.editMode || vm.globalLoadState.isLoading"></cms-button>
 

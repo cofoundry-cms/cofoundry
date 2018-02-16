@@ -185,7 +185,7 @@ function (
     function changeUrl() {
 
         modalDialogService.show({
-            templateUrl: modulePath + 'routes/modals/changepageurl.html',
+            templateUrl: modulePath + 'Routes/Modals/ChangePageUrl.html',
             controller: 'ChangePageUrlController',
             options: {
                 page: vm.page,
