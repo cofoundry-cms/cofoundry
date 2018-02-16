@@ -104,7 +104,7 @@ namespace Cofoundry.Domain
         /// <summary>
         /// Filters the image search to show items with tags that match this value
         /// </summary>
-        public ICollection<string> Tags { get; private set; }
+        public string[] Tags { get; private set; }
 
         #endregion
     }

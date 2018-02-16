@@ -35,7 +35,7 @@ namespace Cofoundry.Domain
         /// <summary>
         /// The code of the custom entity which is allowed to be attached to the collection.
         /// </summary>
-        public ICollection<string> CustomEntityDefinitionCodes { get; set; }
+        public string[] CustomEntityDefinitionCodes { get; set; }
 
         /// <summary>
         /// Can the collection be manually ordered by the user?
