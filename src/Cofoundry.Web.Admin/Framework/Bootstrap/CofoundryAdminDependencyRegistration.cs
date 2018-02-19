@@ -22,6 +22,7 @@ namespace Cofoundry.Web.Admin
                 .RegisterSingleton<IAdminRouteLibrary, AdminRouteLibrary>()
                 .Register<IAngularBootstrapper, AngularBootstrapper>()
                 .Register<IStaticResourceReferenceRenderer, StaticResourceReferenceRenderer>()
+                .Register<IDashboardContentProvider, DashboardContentProvider>()
                 ;
         }
     }

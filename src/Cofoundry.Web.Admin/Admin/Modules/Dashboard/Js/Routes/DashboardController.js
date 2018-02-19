@@ -2,10 +2,12 @@
     '_',
     'shared.modalDialogService',
     'shared.urlLibrary',
-function (
+    'dashboard.dashboardService',
+    function (
     _,
     modalDialogService,
-    urlLibrary
+    urlLibrary,
+    dashboardService
     ) {
 
     var vm = this;
@@ -14,6 +16,12 @@ function (
 
     function init() {
         vm.urlLibrary = urlLibrary;
+
+        dashboardService
+            .getContent()
+            .then(function (content) {
+                vm.content = content;
+            });
     }
 
 }]);

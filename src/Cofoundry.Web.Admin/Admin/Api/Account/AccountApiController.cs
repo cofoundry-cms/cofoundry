@@ -11,15 +11,11 @@ namespace Cofoundry.Web.Admin
     [Route(RouteConstants.ApiRoutePrefix + "/account")]
     public class AccountApiController : BaseAdminApiController
     {
-        #region private member variables
+        #region constructor
 
         private readonly IQueryExecutor _queryExecutor;
         private readonly IApiResponseHelper _apiResponseHelper;
         private readonly IUserContextService _userContextService;
-
-        #endregion
-
-        #region constructor
 
         public AccountApiController(
             IQueryExecutor queryExecutor,

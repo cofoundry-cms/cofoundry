@@ -17,6 +17,13 @@ namespace Cofoundry.Domain
         #region get by identifier
 
         /// <summary>
+        /// Finds a user by a database id returning a UserMicroSummary object if it 
+        /// is found, otherwise null.
+        /// </summary>
+        /// <param name="executionContext">Optional execution context to use when executing the query. Useful if you need to temporarily elevate your permission level.</param>
+        Task<UserMicroSummary> GetUserMicroSummaryByIdAsync(int userId, IExecutionContext executionContext = null);
+
+        /// <summary>
         /// Finds a user with a specific email address in a specific user area 
         /// returning null if the user could not be found. Note that if the user
         /// area does not support email addresses then the email field will be empty.
@@ -37,6 +44,13 @@ namespace Cofoundry.Domain
         Task<UserMicroSummary> GetUserMicroSummaryByUsernameAsync(string username, string userAreaCode, IExecutionContext executionContext = null);
 
         /// <summary>
+        /// Finds a user by a database id returning a UserSummary object if it 
+        /// is found, otherwise null.
+        /// </summary>
+        /// <param name="executionContext">Optional execution context to use when executing the query. Useful if you need to temporarily elevate your permission level.</param>
+        Task<UserSummary> GetUserSummaryByIdAsync(int userId, IExecutionContext executionContext = null);
+
+        /// <summary>
         /// Finds a user by a database id returning a UserDetails object if it 
         /// is found, otherwise null.
         /// </summary>
@@ -49,18 +63,25 @@ namespace Cofoundry.Domain
         #region get current user
 
         /// <summary>
-        /// Finds a user by a database id returning a UserDetails object if it 
-        /// is found, otherwise null.
-        /// </summary>
-        /// <param name="executionContext">Optional execution context to use when executing the query. Useful if you need to temporarily elevate your permission level.</param>
-        Task<UserMicroSummary> GetUserMicroSummaryByIdAsync(int userId, IExecutionContext executionContext = null);
-
-        /// <summary>
         /// Gets a UserMicroSummary object representing the currently logged in 
         /// user. If the user is not logged in then null is returned.
         /// </summary>
         /// <param name="executionContext">Optional execution context to use when executing the query. Useful if you need to temporarily elevate your permission level.</param>
         Task<UserMicroSummary> GetCurrentUserMicroSummaryAsync(IExecutionContext executionContext = null);
+
+        /// <summary>
+        /// Gets a UserSummary object representing the currently logged in 
+        /// user. If the user is not logged in then null is returned.
+        /// </summary>
+        /// <param name="executionContext">Optional execution context to use when executing the query. Useful if you need to temporarily elevate your permission level.</param>
+        Task<UserSummary> GetCurrentUserSummaryAsync(IExecutionContext executionContext = null);
+
+        /// <summary>
+        /// Gets a UserDetails object representing the currently logged in 
+        /// user. If the user is not logged in then null is returned.
+        /// </summary>
+        /// <param name="executionContext">Optional execution context to use when executing the query. Useful if you need to temporarily elevate your permission level.</param>
+        Task<UserDetails> GetCurrentUserDetailsAsync(IExecutionContext executionContext = null);
 
         /// <summary>
         /// Gets a UserAccountDetails object representing the currently logged in 

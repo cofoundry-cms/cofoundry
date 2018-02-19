@@ -31,6 +31,17 @@ namespace Cofoundry.Domain
         #region queries
 
         #region get by identifier
+        
+        /// <summary>
+        /// Finds a user by a database id returning a UserMicroSummary object if it 
+        /// is found, otherwise null.
+        /// </summary>
+        /// <param name="executionContext">Optional execution context to use when executing the query. Useful if you need to temporarily elevate your permission level.</param>
+        public Task<UserMicroSummary> GetUserMicroSummaryByIdAsync(int userId, IExecutionContext executionContext = null)
+        {
+            var query = new GetUserMicroSummaryByIdQuery(userId);
+            return _queryExecutor.ExecuteAsync(query, executionContext);
+        }
 
         /// <summary>
         /// Finds a user with a specific email address in a specific user area 
@@ -59,6 +70,17 @@ namespace Cofoundry.Domain
         }
 
         /// <summary>
+        /// Finds a user by a database id returning a UserSummary object if it 
+        /// is found, otherwise null.
+        /// </summary>
+        /// <param name="executionContext">Optional execution context to use when executing the query. Useful if you need to temporarily elevate your permission level.</param>
+        public Task<UserSummary> GetUserSummaryByIdAsync(int userId, IExecutionContext executionContext = null)
+        {
+            var query = new GetUserSummaryByIdQuery(userId);
+            return _queryExecutor.ExecuteAsync(query, executionContext);
+        }
+
+        /// <summary>
         /// Finds a user by a database id returning a UserDetails object if it 
         /// is found, otherwise null.
         /// </summary>
@@ -75,17 +97,6 @@ namespace Cofoundry.Domain
         #region get current user
 
         /// <summary>
-        /// Finds a user by a database id returning a UserDetails object if it 
-        /// is found, otherwise null.
-        /// </summary>
-        /// <param name="executionContext">Optional execution context to use when executing the query. Useful if you need to temporarily elevate your permission level.</param>
-        public Task<UserMicroSummary> GetUserMicroSummaryByIdAsync(int userId, IExecutionContext executionContext = null)
-        {
-            var query = new GetUserMicroSummaryByIdQuery(userId);
-            return _queryExecutor.ExecuteAsync(query, executionContext);
-        }
-
-        /// <summary>
         /// Gets a UserMicroSummary object representing the currently logged in 
         /// user. If the user is not logged in then null is returned.
         /// </summary>
@@ -93,6 +104,26 @@ namespace Cofoundry.Domain
         public Task<UserMicroSummary> GetCurrentUserMicroSummaryAsync(IExecutionContext executionContext = null)
         {
             return _queryExecutor.ExecuteAsync(new GetCurrentUserMicroSummaryQuery(), executionContext);
+        }
+
+        /// <summary>
+        /// Gets a UserSummary object representing the currently logged in 
+        /// user. If the user is not logged in then null is returned.
+        /// </summary>
+        /// <param name="executionContext">Optional execution context to use when executing the query. Useful if you need to temporarily elevate your permission level.</param>
+        public Task<UserSummary> GetCurrentUserSummaryAsync(IExecutionContext executionContext = null)
+        {
+            return _queryExecutor.ExecuteAsync(new GetCurrentUserSummaryQuery(), executionContext);
+        }
+
+        /// <summary>
+        /// Gets a UserDetails object representing the currently logged in 
+        /// user. If the user is not logged in then null is returned.
+        /// </summary>
+        /// <param name="executionContext">Optional execution context to use when executing the query. Useful if you need to temporarily elevate your permission level.</param>
+        public Task<UserDetails> GetCurrentUserDetailsAsync(IExecutionContext executionContext = null)
+        {
+            return _queryExecutor.ExecuteAsync(new GetCurrentUserDetailsQuery(), executionContext);
         }
 
         /// <summary>
