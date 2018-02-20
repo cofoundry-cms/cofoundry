@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.27130.2024
+VisualStudioVersion = 15.0.27130.2027
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{4996A61A-00E1-4363-9BC7-1F877E4AD933}"
 EndProject
@@ -18,8 +18,6 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cofoundry.Web", "Cofoundry.Web\Cofoundry.Web.csproj", "{EB7DB360-013B-4F22-BD81-7AA26ECF5120}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cofoundry.Web.Admin", "Cofoundry.Web.Admin\Cofoundry.Web.Admin.csproj", "{C168F1B9-A30D-429A-B8A1-E77991167E0D}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cofoundry.Sandbox", "Cofoundry.Sandbox\Cofoundry.Sandbox.csproj", "{37F70F40-0917-4844-AE40-3E958724F532}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cofoundry.BasicTestSite", "Cofoundry.BasicTestSite\Cofoundry.BasicTestSite.csproj", "{F18AD5CE-1929-47D8-9028-C1CE0B77E1B1}"
 EndProject
@@ -45,10 +43,6 @@ Global
 		{C168F1B9-A30D-429A-B8A1-E77991167E0D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C168F1B9-A30D-429A-B8A1-E77991167E0D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C168F1B9-A30D-429A-B8A1-E77991167E0D}.Release|Any CPU.Build.0 = Release|Any CPU
-		{37F70F40-0917-4844-AE40-3E958724F532}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{37F70F40-0917-4844-AE40-3E958724F532}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{37F70F40-0917-4844-AE40-3E958724F532}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{37F70F40-0917-4844-AE40-3E958724F532}.Release|Any CPU.Build.0 = Release|Any CPU
 		{F18AD5CE-1929-47D8-9028-C1CE0B77E1B1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{F18AD5CE-1929-47D8-9028-C1CE0B77E1B1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F18AD5CE-1929-47D8-9028-C1CE0B77E1B1}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -62,7 +56,6 @@ Global
 		{7F758F8D-D973-4DB5-84D6-B8A5C795A1CB} = {4996A61A-00E1-4363-9BC7-1F877E4AD933}
 		{EB7DB360-013B-4F22-BD81-7AA26ECF5120} = {4996A61A-00E1-4363-9BC7-1F877E4AD933}
 		{C168F1B9-A30D-429A-B8A1-E77991167E0D} = {4996A61A-00E1-4363-9BC7-1F877E4AD933}
-		{37F70F40-0917-4844-AE40-3E958724F532} = {8FCDFF68-9BCF-499B-8E2D-7E08E824F40A}
 		{F18AD5CE-1929-47D8-9028-C1CE0B77E1B1} = {8FCDFF68-9BCF-499B-8E2D-7E08E824F40A}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
