@@ -104,7 +104,7 @@ namespace Cofoundry.Domain
             // Username
             if (userArea.UseEmailAsUsername && !string.IsNullOrEmpty(command.Username))
             {
-                throw new PropertyValidationException("Usename field should be empty becuase the specified user area uses the email as the username.", "Password");
+                throw new PropertyValidationException("Username field should be empty becuase the specified user area uses the email as the username.", "Password");
             }
             else if (!userArea.UseEmailAsUsername && string.IsNullOrWhiteSpace(command.Username))
             {

@@ -6,7 +6,7 @@ namespace Cofoundry.Web.Identity
 {
     public interface ILoginViewModel
     {
-        string EmailAddress { get; set; }
+        string Username { get; set; }
 
         string Password { get; set; }
 

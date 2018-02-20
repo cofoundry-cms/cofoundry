@@ -4,7 +4,8 @@
 @inject IAdminRouteLibrary adminRouteLibrary
 
 @{
-    Layout = LayoutPaths.DefaultLayout;    
+    Layout = LayoutPaths.DefaultLayout;
+    ViewBag.Title = Model.Name;
 }
 
 @section FooterScripts {

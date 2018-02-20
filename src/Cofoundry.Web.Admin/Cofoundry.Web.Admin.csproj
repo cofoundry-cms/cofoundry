@@ -62,4 +62,8 @@
     <EmbeddedResource Include="Framework\Angular\StandardAngularModules\Routes\Index.cshtml" />
   </ItemGroup>
   
+  <ItemGroup>
+    <Folder Include="Admin\Modules\Auth\Content\js\" />
+  </ItemGroup>
+  
 </Project>

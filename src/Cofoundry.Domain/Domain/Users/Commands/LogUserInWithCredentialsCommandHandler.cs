@@ -50,13 +50,18 @@ namespace Cofoundry.Domain
             var hasExceededMaxLoginAttempts = await _queryExecutor.ExecuteAsync(GetMaxLoginAttemptsQuery(command));
             ValidateMaxLoginAttemptsNotExceeded(hasExceededMaxLoginAttempts);
 
-            var user = await _queryExecutor.ExecuteAsync(GetAuthenticationQuery(command));
+            var user = await GetUserLoginInfoAsync(command, executionContext);
 
             if (user == null)
             {
                 await _loginService.LogFailedLoginAttemptAsync(command.UserAreaCode, command.Username);
 
-                ThrowInvalidCredentialsError(command);
+                throw new InvalidCredentialsAuthenticationException(nameof(command.Password));
+            }
+
+            if (user.RequirePasswordChange)
+            {
+                throw new PasswordChangeRequiredException();
             }
 
             ValidateLoginArea(command.UserAreaCode, user.UserAreaCode);
@@ -84,23 +89,20 @@ namespace Cofoundry.Domain
         {
             if (hasAttemptsExceeded)
             {
-                throw new ValidationException("Too many failed login attempts have been detected, please try again later.");
+                throw new TooManyFailedAttemptsAuthenticationException();
             }
         }
 
-        private static GetUserLoginInfoIfAuthenticatedQuery GetAuthenticationQuery(LogUserInWithCredentialsCommand command)
+        private Task<UserLoginInfo> GetUserLoginInfoAsync(LogUserInWithCredentialsCommand command, IExecutionContext executionContext)
         {
-            return new GetUserLoginInfoIfAuthenticatedQuery()
+            var query = new GetUserLoginInfoIfAuthenticatedQuery()
             {
                 UserAreaCode = command.UserAreaCode,
                 Username = command.Username,
                 Password = command.Password,
             };
-        }
 
-        private static void ThrowInvalidCredentialsError(LogUserInWithCredentialsCommand command)
-        {
-            throw new PropertyValidationException("Invalid username or password", nameof(command.Password));
+            return _queryExecutor.ExecuteAsync(query);
         }
 
         private static void ValidateLoginArea(string userAreaToLogInto, string usersUserArea)

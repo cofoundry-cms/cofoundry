@@ -32,14 +32,7 @@ namespace Cofoundry.Web.Admin
 
             return MvcRoute("login", qs);
         }
-
-        public string LoginWithEmail(string email)
-        {
-            var qs = QueryStringBuilder.Create("email", email);
-
-            return MvcRoute("login", qs);
-        }
-
+        
         public string ChangePassword(string returnUrl = null)
         {
             var qs = QueryStringBuilder.Create("ReturnUrl", returnUrl);
@@ -47,10 +40,9 @@ namespace Cofoundry.Web.Admin
             return MvcRoute("change-password", qs);
         }
 
-        public string ForgotPassword(string email = null)
+        public string ForgotPassword()
         {
-            var qs = QueryStringBuilder.Create("email", email);
-            return MvcRoute("forgot-password", qs);
+            return MvcRoute("forgot-password");
         }
 
         public string LogOut()

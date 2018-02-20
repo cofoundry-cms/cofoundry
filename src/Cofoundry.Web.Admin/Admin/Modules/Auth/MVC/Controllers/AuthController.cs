@@ -20,6 +20,7 @@ namespace Cofoundry.Web.Admin
     {
         private static readonly string CONTROLLER_NAME = "Auth";
         private static IUserAreaDefinition USER_AREA = new CofoundryAdminUserArea();
+
         #region Constructors
 
         private readonly IQueryExecutor _queryExecutor;
@@ -73,20 +74,20 @@ namespace Cofoundry.Web.Admin
 
         [AllowAnonymous]
         [Route("")]
-        public ActionResult Index(string email)
+        public ActionResult Index()
         {
-            return RedirectToActionPermanent(nameof(Login), new { email = email });
+            return RedirectToActionPermanent(nameof(Login));
         }
 
         [AllowAnonymous]
         [Route("login")]
-        public async Task<ActionResult> Login(string email)
+        public async Task<ActionResult> Login()
         {
             var user = await _userContextService.GetCurrentContextAsync();
             if (user.IsCofoundryUser()) return await GetLoggedInDefaultRedirectActionAsync();
 
             var viewPath = ViewPathFormatter.View(CONTROLLER_NAME, nameof(Login));
-            var vm = new LoginViewModel { EmailAddress = email };
+            var vm = new LoginViewModel ();
 
             return View(viewPath, vm);
         }
@@ -98,7 +99,7 @@ namespace Cofoundry.Web.Admin
         {
             var result = await _authenticationHelper.LogUserInAsync(this, command, USER_AREA);
 
-            if (result.IsAuthenticated && result.RequiresPasswordChange)
+            if (result.RequiresPasswordChange)
             {
                 return Redirect(_adminRouteLibrary.Auth.ChangePassword(returnUrl));
             }
@@ -154,7 +155,11 @@ namespace Cofoundry.Web.Admin
 
             var request = await _authenticationHelper.IsPasswordRequestValidAsync(this, i, t, USER_AREA);
 
-            if (!request.IsValid) return View("ResetPasswordRequestInvalid", request);
+            if (!request.IsValid)
+            {
+                var invalidViewPath = ViewPathFormatter.View(CONTROLLER_NAME, nameof(ResetPassword) + "RequestInvalid");
+                return View(invalidViewPath, request);
+            }
 
             var vm = new CompletePasswordResetViewModel();
             vm.UserPasswordResetRequestId = i;
@@ -172,39 +177,56 @@ namespace Cofoundry.Web.Admin
             if (user.IsCofoundryUser()) return await GetLoggedInDefaultRedirectActionAsync();
 
             await _authenticationHelper.CompletePasswordResetAsync(this, vm, new PasswordChangedTemplate(), USER_AREA);
-            
-            return Redirect(_adminRouteLibrary.Auth.Login());
+
+            if (ModelState.IsValid)
+            {
+                var completeViewPath = ViewPathFormatter.View(CONTROLLER_NAME, nameof(ResetPassword) + "Complete");
+                return View(completeViewPath);
+            }
+
+            var viewPath = ViewPathFormatter.View(CONTROLLER_NAME, nameof(ResetPassword));
+            return View(viewPath, vm);
         }
                 
+        [AllowAnonymous]
         [Route("change-password")]
         public async Task<ActionResult> ChangePassword(string returnUrl)
         {
             var user = await _userContextService.GetCurrentContextAsync();
-            if (!user.IsPasswordChangeRequired) return await GetLoggedInDefaultRedirectActionAsync();
+            if (user.UserId.HasValue)
+            {
+                if (!user.IsPasswordChangeRequired)
+                {
+                    return await GetLoggedInDefaultRedirectActionAsync();
+                }
+
+                // The user shouldn't be logged in, but if so, log them out
+                await _authenticationHelper.LogoutAsync(USER_AREA);
+            }
 
             var viewPath = ViewPathFormatter.View(CONTROLLER_NAME, nameof(ChangePassword));
             return View(viewPath, new ChangePasswordViewModel());
         }
         
+        [AllowAnonymous]
         [HttpPost("change-password")]
         public async Task<ActionResult> ChangePassword(string returnUrl, ChangePasswordViewModel vm)
         {
             var user = await _userContextService.GetCurrentContextAsync();
-            if (!user.IsPasswordChangeRequired) return await GetLoggedInDefaultRedirectActionAsync();
-
-            await _accountManagementControllerHelper.ChangePasswordAsync(this, vm);
-
-            if (ModelState.IsValid)
+            if (user.UserId.HasValue)
             {
-                if (!string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))
-                {
-                    return Redirect(returnUrl);
-                }
-                else
+                if (!user.IsPasswordChangeRequired)
                 {
                     return await GetLoggedInDefaultRedirectActionAsync();
                 }
+
+                // The user shouldn't be logged in, but if so, log them out
+                await _authenticationHelper.LogoutAsync(USER_AREA);
             }
+
+            await _accountManagementControllerHelper.ChangePasswordAsync(this, vm, USER_AREA);
+
+            ViewBag.ReturnUrl = returnUrl;
 
             var viewPath = ViewPathFormatter.View(CONTROLLER_NAME, nameof(ChangePassword));
             return View(viewPath, vm);

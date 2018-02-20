@@ -59,24 +59,24 @@ namespace Cofoundry.Domain
         {
             if (request == null || request.Token != query.Token)
             {
-                throw new InvalidOperationException("Invalid password request - Id: " + query.UserPasswordResetRequestId + " Token: " + request.Token);
+                throw new InvalidPasswordResetRequestException(query, "Invalid password request - Id: " + query.UserPasswordResetRequestId + " Token: " + query.Token);
             }
 
             if (request.User.UserAreaCode != query.UserAreaCode)
             {
-                throw new InvalidOperationException("Request received through an invalid route");
+                throw new InvalidPasswordResetRequestException(query, "Request received through an invalid route (incorrect user area)");
             }
 
             if (request.User.IsDeleted || request.User.IsSystemAccount)
             {
-                throw new InvalidOperationException("User not permitted to change password");
+                throw new InvalidPasswordResetRequestException(query, "User not permitted to change password");
             }
 
             var userArea = _userAreaRepository.GetByCode(request.User.UserAreaCode);
 
             if (!userArea.AllowPasswordLogin)
             {
-                throw new InvalidOperationException("Cannot update the password to account in a user area that does not allow password logins.");
+                throw new InvalidPasswordResetRequestException(query, "Cannot update the password to account in a user area that does not allow password logins.");
             }
 
             var result = new PasswordResetRequestAuthenticationResult();

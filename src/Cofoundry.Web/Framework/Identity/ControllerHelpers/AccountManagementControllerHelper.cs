@@ -57,13 +57,29 @@ namespace Cofoundry.Web.Identity
         /// <param name="controller">Controller instance</param>
         /// <param name="vm">The IChangePasswordTemplate containing the data entered by the user.</param>
         /// <param name="notificationTemplate">An IPasswordChangedNotificationTemplate to use when sending the notification</param>
-        public async Task ChangePasswordAsync<TNotificationTemplate>(Controller controller, IChangePasswordViewModel vm, TNotificationTemplate notificationTemplate) where TNotificationTemplate : IPasswordChangedTemplate
+        public async Task ChangePasswordAsync<TNotificationTemplate>(
+            Controller controller,
+            IChangePasswordViewModel vm, 
+            IUserAreaDefinition userArea, 
+            TNotificationTemplate notificationTemplate
+            ) 
+            where TNotificationTemplate : IPasswordChangedTemplate
         {
-            var user = await _queryExecutor.ExecuteAsync(new GetCurrentUserMicroSummaryQuery());
-            await ChangePasswordAsync(controller, vm, user);
+            var userId = await ChangePasswordAsync(controller, vm, userArea);
 
             if (controller.ModelState.IsValid)
             {
+                if (!userId.HasValue)
+                {
+                    throw new Exception("UpdateUnauthenticatedUserPasswordCommand: OutputUserId not set");
+                }
+
+                var user = await _queryExecutor.ExecuteAsync(new GetUserMicroSummaryByIdQuery(userId.Value));
+                EntityNotFoundException.ThrowIfNull(user, userId.Value);
+
+                // In some configuratons, an email isn't always required, only a username
+                if (string.IsNullOrWhiteSpace(user.Email)) return;
+
                 // Send notification
                 if (notificationTemplate != null)
                 {
@@ -80,31 +96,31 @@ namespace Cofoundry.Web.Identity
         /// </summary>
         /// <param name="controller">Controller instance</param>
         /// <param name="vm">The IChangePasswordTemplate containing the data entered by the user.</param>
-        public async Task ChangePasswordAsync(Controller controller, IChangePasswordViewModel vm)
+        /// <param name="userArea">
+        /// The user area that the user belongs to. Usernames are only unique by user area 
+        /// so all user commands need to be run against a specific user area.
+        /// </param>
+        /// <returns>The user id of the updated user if the action was successful; otheriwse null.</returns>
+        public async Task<int?> ChangePasswordAsync(Controller controller, IChangePasswordViewModel vm, IUserAreaDefinition userArea)
         {
-            var user = await _queryExecutor.ExecuteAsync(new GetCurrentUserMicroSummaryQuery());
-            await ChangePasswordAsync(controller, vm, user);
-        }
+            if (controller == null) throw new ArgumentNullException(nameof(controller));
+            if (userArea == null) throw new ArgumentNullException(nameof(userArea));
+            if (vm == null) throw new ArgumentNullException(nameof(vm));
 
-        /// <summary>
-        /// Changes a users password, without sending them an email notification
-        /// </summary>
-        /// <param name="controller">Controller instance</param>
-        /// <param name="vm">The IChangePasswordTemplate containing the data entered by the user.</param>
-        private async Task ChangePasswordAsync(Controller controller, IChangePasswordViewModel vm, UserMicroSummary user)
-        {
             if (controller.ModelState.IsValid)
             {
-                if (user == null)
-                {
-                    throw new NotPermittedException("User not logged in");
-                }
-
-                var command = new UpdateCurrentUserUserPasswordCommand();
+                var command = new UpdateUnauthenticatedUserPasswordCommand();
+                command.UserAreaCode = userArea.UserAreaCode;
+                command.Username = vm.Username;
                 command.NewPassword = vm.NewPassword;
                 command.OldPassword = vm.OldPassword;
+
                 await _controllerResponseHelper.ExecuteIfValidAsync(controller, command);
+
+                return command.OutputUserId;
             }
+
+            return null;
         }
 
         #endregion

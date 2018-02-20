@@ -1,12 +1,13 @@
-﻿@model AngularModuleRouteLibrary
+﻿@model StandardAngularModuleViewModel
 @using Cofoundry.Web.Admin
 @inject IAngularBootstrapper angularBootstrapper
 @{
-    Layout = LayoutPaths.DefaultLayout;    
+    Layout = LayoutPaths.DefaultLayout;
+    ViewBag.Title = Model.Title;
 }
 
 @section FooterScripts {
-    @await angularBootstrapper.BootstrapAsync(Model)
+    @await angularBootstrapper.BootstrapAsync(Model.RouteLibrary)
 }
 
 <div ng-view=""></div>

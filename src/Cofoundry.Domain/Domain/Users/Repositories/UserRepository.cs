@@ -226,7 +226,7 @@ namespace Cofoundry.Domain
         /// OldPassword field to authenticate the request.
         /// </summary>
         /// <param name="executionContext">Optional execution context to use when executing the command. Useful if you need to temporarily elevate your permission level.</param>
-        public Task UpdateCurrentUserUserPasswordAsync(UpdateCurrentUserUserPasswordCommand command, IExecutionContext executionContext = null)
+        public Task UpdateCurrentUserUserPasswordAsync(UpdateCurrentUserPasswordCommand command, IExecutionContext executionContext = null)
         {
             return _commandExecutor.ExecuteAsync(command, executionContext);
         }

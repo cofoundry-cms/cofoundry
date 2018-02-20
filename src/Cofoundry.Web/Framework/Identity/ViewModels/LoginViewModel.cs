@@ -11,7 +11,7 @@ namespace Cofoundry.Web.Identity
         [Required]
         [EmailAddress(ErrorMessage = "Please use a valid email address")]
         [Display(Name = "Email")]
-        public string EmailAddress { get; set; }
+        public string Username { get; set; }
 
         [DataType(DataType.Password)]
         [Required(ErrorMessage = "Please provide your password")]

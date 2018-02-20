@@ -1,11 +1,24 @@
 ﻿@inject IStaticResourceReferenceRenderer staticResourceReferenceRenderer
 @inject IAdminRouteLibrary adminRouteLibrary
-
+@inject ICofoundryHelper Cofoundry
+@{
+    var appName = await Cofoundry.Settings.GetApplicationNameAsync();
+    var title = "Admin";
+    if (string.IsNullOrWhiteSpace(appName))
+    {
+        appName = "Cofoundry";
+    }
+    if (!string.IsNullOrWhiteSpace(ViewBag.Title))
+    {
+        title = ViewBag.Title;
+    }
+    title = title + " | " + appName + " Admin";
+}
 <!doctype html>
 <html class="no-js" lang="en">
 <head>
 
-    <title>@ViewBag.Title - Cofoundry</title>
+    <title>@title</title>
 
     <meta charset="utf-8">
     <meta name="robots" content="noindex, nofollow">

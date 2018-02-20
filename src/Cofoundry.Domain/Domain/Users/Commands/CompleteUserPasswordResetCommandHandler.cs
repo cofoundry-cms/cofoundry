@@ -22,29 +22,29 @@ namespace Cofoundry.Domain
 
         private readonly CofoundryDbContext _dbContext;
         private readonly IQueryExecutor _queryExecutor;
-        private readonly IPasswordCryptographyService _passwordCryptographyService;
         private readonly IResetUserPasswordCommandHelper _resetUserPasswordCommandHelper;
         private readonly IUserAreaDefinitionRepository _userAreaRepository;
         private readonly IMailService _mailService;
         private readonly ITransactionScopeFactory _transactionScopeFactory;
+        private readonly IPasswordUpdateCommandHelper _passwordUpdateCommandHelper;
 
         public CompleteUserPasswordResetCommandHandler(
             CofoundryDbContext dbContext,
             IQueryExecutor queryExecutor,
-            IPasswordCryptographyService passwordCryptographyService,
             IResetUserPasswordCommandHelper resetUserPasswordCommandHelper,
             IUserAreaDefinitionRepository userAreaRepository,
             IMailService mailService,
-            ITransactionScopeFactory transactionScopeFactory
+            ITransactionScopeFactory transactionScopeFactory,
+            IPasswordUpdateCommandHelper passwordUpdateCommandHelper
             )
         {
             _dbContext = dbContext;
             _queryExecutor = queryExecutor;
-            _passwordCryptographyService = passwordCryptographyService;
             _resetUserPasswordCommandHelper = resetUserPasswordCommandHelper;
             _userAreaRepository = userAreaRepository;
             _mailService = mailService;
             _transactionScopeFactory = transactionScopeFactory;
+            _passwordUpdateCommandHelper = passwordUpdateCommandHelper;
         }
 
         #endregion
@@ -77,14 +77,8 @@ namespace Cofoundry.Domain
 
         private void UpdatePasswordAndSetComplete(UserPasswordResetRequest request, CompleteUserPasswordResetCommand command, IExecutionContext executionContext)
         {
-            var user = request.User;
+            _passwordUpdateCommandHelper.UpdatePassword(command.NewPassword, request.User, executionContext);
 
-            user.RequirePasswordChange = false;
-            user.LastPasswordChangeDate = executionContext.ExecutionDate;
-
-            var hashResult = _passwordCryptographyService.CreateHash(command.NewPassword);
-            user.Password = hashResult.Hash;
-            user.PasswordHashVersion = hashResult.HashVersion;
             request.IsComplete = true;
         }
 

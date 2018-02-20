@@ -59,7 +59,7 @@ namespace Cofoundry.Web.Admin
         [HttpPut("Password")]
         public async Task<IActionResult> PutPassword([FromBody] UpdateCurrentUserUserPasswordCommandDto dto)
         {
-            var command = new UpdateCurrentUserUserPasswordCommand()
+            var command = new UpdateCurrentUserPasswordCommand()
             {
                 OldPassword = dto.OldPassword,
                 NewPassword = dto.NewPassword

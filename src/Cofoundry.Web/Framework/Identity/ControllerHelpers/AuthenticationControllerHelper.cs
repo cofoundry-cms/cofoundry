@@ -55,19 +55,24 @@ namespace Cofoundry.Web.Identity
             var command = new LogUserInWithCredentialsCommand()
             {
                 UserAreaCode = userAreaToLogInTo.UserAreaCode,
-                Username = vm.EmailAddress,
+                Username = vm.Username,
                 Password = vm.Password,
                 RememberUser = vm.RememberMe
             };
 
-            await _controllerResponseHelper.ExecuteIfValidAsync(controller, command);
-
-            if (controller.ModelState.IsValid)
+            try
             {
-                result.IsAuthenticated = true;
-                var currentContext = await _userContextService.GetCurrentContextAsync();
-                result.RequiresPasswordChange = currentContext.IsPasswordChangeRequired;
+                await _controllerResponseHelper.ExecuteIfValidAsync(controller, command);
             }
+            catch (PasswordChangeRequiredException ex)
+            {
+                result.RequiresPasswordChange = true;
+                // Add modelstate error as a precaution, because
+                // result.RequiresPasswordChange may not be handled by the caller
+                controller.ModelState.AddModelError(string.Empty, "Password change required.");
+            }
+
+            result.IsAuthenticated = controller.ModelState.IsValid;
 
             return result;
         }

@@ -5,27 +5,28 @@
 @{
     ViewBag.Title = "Login";
     Layout = adminRouteLibrary.Auth.LoginLayoutPath;
+    var returnUrl = Context.Request.Query["ReturnUrl"];
 }
 
 @section FooterScripts
 {
-@staticResourceReferenceRenderer.ScriptTag(adminRouteLibrary.Auth, "Login")
+@staticResourceReferenceRenderer.ScriptTag(adminRouteLibrary.Auth, "Shared")
 }
 
 <h1>Cofoundry</h1>
 
 <div class="wrap">
-    <form method="post" class="form-horizontal" action="@adminRouteLibrary.Auth.Login()">
+    <form method="post" class="form-horizontal" action="@adminRouteLibrary.Auth.Login()" id="MainForm">
 
-        <input name="ReturnUrl" id="ReturnUrl" type="hidden" value="@Context.Request.Query["ReturnUrl"]" />
+        <input name="returnUrl" id="ReturnUrl" type="hidden" value="@returnUrl" />
         @Html.AntiForgeryToken() 
         
         <fieldset>
             <div class="control-group">
-                <label asp-for="EmailAddress" class="control-label"></label>
+                <label asp-for="Username" class="control-label">Email</label>
                 <div class="controls">
-                    <input type="email" asp-for="EmailAddress" maxlength="150" tabindex="1" />
-                    <span asp-validation-for="EmailAddress" class="help-block"></span>
+                    <input type="email" asp-for="Username" maxlength="150" tabindex="1" />
+                    <span asp-validation-for="Username" class="help-block"></span>
                 </div>
             </div>
 

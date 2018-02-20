@@ -43,13 +43,14 @@ namespace Cofoundry.Web.Admin
             foreach (var registration in _standardAdminModuleRegistrations)
             {
                 var routeLibrary = GetRouteLibrary(registration);
+                var module = registration.GetModule();
 
                 routes.MapRoute(
                     "Cofoundry Admin Module - " + registration.RoutePrefix,
                     RouteConstants.AdminAreaPrefix + "/" + registration.RoutePrefix,
-                    new { controller = "StandardModule", action = "Index", Area = RouteConstants.AdminAreaName },
+                    new { controller = "StandardAngularModule", action = "Index", Area = RouteConstants.AdminAreaName },
                     null,
-                    new { RouteLibrary = routeLibrary }
+                    new { RouteLibrary = routeLibrary, ModuleTitle = module.Title }
                     );
             }
         }

@@ -32,23 +32,11 @@
                 ],
                 tasks: ['concat:accountHTML']
             },
-            authChangePassword : {
+            auth : {
                 files: [
-                    '../Admin/Modules/Auth/MVC/Views/ChangePassword.js'
+                    '../Admin/Modules/Auth/MVC/Views/Shared.js'
                 ],
-                tasks: ['concat:authChangePassword', 'uglify:authChangePassword']
-            },
-            authForgotPassword : {
-                files: [
-                    '../Admin/Modules/Auth/MVC/Views/ForgotPassword.js'
-                ],
-                tasks: ['concat:authForgotPassword', 'uglify:authForgotPassword']
-            },
-            authLogin : {
-                files: [
-                    '../Admin/Modules/Auth/MVC/Views/Login.js'
-                ],
-                tasks: ['concat:authLogin', 'uglify:authLogin']
+                tasks: ['concat:auth', 'uglify:auth']
             },
             customEntities : {
                 files: [
@@ -302,17 +290,9 @@
                 ],
                 dest: '../Admin/Modules/Account/Content/js/account_templates.js'
             },
-            authChangePassword: {
-                src: ['../Admin/Modules/Auth/MVC/Views/ChangePassword.js'],
-                dest: '../Admin/Modules/Auth/Content/js/ChangePassword.js'
-            },
-            authForgotPassword: {
-                src: ['../Admin/Modules/Auth/MVC/Views/ForgotPassword.js'],
-                dest: '../Admin/Modules/Auth/Content/js/ForgotPassword.js'
-            },
-            authLogin: {
-                src: ['../Admin/Modules/Auth/MVC/Views/Login.js'],
-                dest: '../Admin/Modules/Auth/Content/js/Login.js'
+            auth: {
+                src: ['../Admin/Modules/Auth/MVC/Views/Shared.js'],
+                dest: '../Admin/Modules/Auth/Content/js/Shared.js'
             },
             customEntities: {
                 src: [
@@ -700,17 +680,9 @@
                 src: '../Admin/Modules/Account/Content/js/account.js',
                 dest: '../Admin/Modules/Account/Content/js/account_min.js'
             },
-            authChangePassword: {
-                src: '../Admin/Modules/Auth/Content/js/ChangePassword.js',
-                dest: '../Admin/Modules/Auth/Content/js/ChangePassword_min.js'
-            },
-            authForgotPassword: {
-                src: '../Admin/Modules/Auth/Content/js/ForgotPassword.js',
-                dest: '../Admin/Modules/Auth/Content/js/ForgotPassword_min.js'
-            },
-            authLogin: {
-                src: '../Admin/Modules/Auth/Content/js/Login.js',
-                dest: '../Admin/Modules/Auth/Content/js/Login_min.js'
+            auth: {
+                src: '../Admin/Modules/Auth/Content/js/Shared.js',
+                dest: '../Admin/Modules/Auth/Content/js/Shared.js'
             },
             customEntities: {
                 src: '../Admin/Modules/CustomEntities/Content/js/customentities.js',
@@ -785,9 +757,7 @@
         'concat:css',
         'concat:account',
         'concat:accountHTML',
-        'concat:authChangePassword',
-        'concat:authForgotPassword',
-        'concat:authLogin',
+        'concat:auth',
         'concat:customEntities',
         'concat:customEntitiesHTML',
         'concat:dashboard',

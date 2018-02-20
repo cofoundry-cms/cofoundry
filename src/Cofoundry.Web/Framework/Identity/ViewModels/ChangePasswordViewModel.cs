@@ -7,6 +7,12 @@ namespace Cofoundry.Web.Identity
 {
     public class ChangePasswordViewModel : IChangePasswordViewModel
     {
+        [DataType(DataType.EmailAddress)]
+        [Required]
+        [EmailAddress(ErrorMessage = "Please use a valid email address")]
+        [Display(Name = "Email")]
+        public string Username { get; set; }
+
         [Required]
         [Display(Name = "Current password")]
         [DataType(DataType.Password)]

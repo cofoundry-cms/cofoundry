@@ -158,7 +158,7 @@ namespace Cofoundry.Domain
         /// Updates the password of the currently logged in user, using the
         /// OldPassword field to authenticate the request.
         /// </summary>
-        Task UpdateCurrentUserUserPasswordAsync(UpdateCurrentUserUserPasswordCommand command, IExecutionContext executionContext = null);
+        Task UpdateCurrentUserUserPasswordAsync(UpdateCurrentUserPasswordCommand command, IExecutionContext executionContext = null);
 
         #endregion
     }
