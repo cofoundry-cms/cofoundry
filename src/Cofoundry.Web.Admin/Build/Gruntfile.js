@@ -11,7 +11,7 @@
                     '../Admin/Modules/Shared/Sass/**/*.scss', 
                     '../Admin/Modules/Shared/Js/UIComponents/**/*.scss',
                 ],
-                tasks: ['compass:shared']
+                tasks: ['compass:shared', 'cssUrlRewrite', 'concat:css', 'cssmin']
             },
             siteViewer : {
                 files: [

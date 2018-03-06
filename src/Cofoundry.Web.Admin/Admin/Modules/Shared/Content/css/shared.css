@@ -3378,12 +3378,12 @@ a[disabled]:hover, button[disabled]:hover, input[disabled]:hover {
 .form-section-actions {
   position: absolute;
   right: 20px;
-  top: 20px;
+  top: 15px;
   z-index: 10;
 }
 /* line 26, ../../Js/UIComponents/Form/_form.scss */
 .form-section-actions .btn {
-  padding: 8px 10px;
+  padding: 6px 10px;
   font-size: 75%;
 }
 
@@ -3782,9 +3782,10 @@ input[type="color"] {
 }
 /* line 144, ../../Js/UIComponents/Layout/_layout.scss */
 .page-body.form fieldset legend {
-  margin-bottom: 20px;
+  /* Float because of FF issue with legend content affecting abs positioned 'manage content' button*/
+  float: left;
 }
-/* line 147, ../../Js/UIComponents/Layout/_layout.scss */
+/* line 148, ../../Js/UIComponents/Layout/_layout.scss */
 .page-body.form fieldset legend:before {
   -moz-transition: all 0.2s;
   -o-transition: all 0.2s;
@@ -3797,7 +3798,7 @@ input[type="color"] {
   left: 0;
   width: 100%;
 }
-/* line 157, ../../Js/UIComponents/Layout/_layout.scss */
+/* line 158, ../../Js/UIComponents/Layout/_layout.scss */
 .page-body.form fieldset:before {
   content: '';
   position: absolute;
@@ -3809,7 +3810,7 @@ input[type="color"] {
   height: 100%;
   min-height: 80px;
 }
-/* line 169, ../../Js/UIComponents/Layout/_layout.scss */
+/* line 170, ../../Js/UIComponents/Layout/_layout.scss */
 .page-body.form fieldset:after {
   -moz-transition: all 0.2s;
   -o-transition: all 0.2s;
@@ -3825,17 +3826,17 @@ input[type="color"] {
   z-index: 2;
   border-top: 3px solid #dddddd;
 }
-/* line 184, ../../Js/UIComponents/Layout/_layout.scss */
+/* line 185, ../../Js/UIComponents/Layout/_layout.scss */
 .page-body.with-header {
   margin-top: 70px;
 }
-/* line 188, ../../Js/UIComponents/Layout/_layout.scss */
+/* line 189, ../../Js/UIComponents/Layout/_layout.scss */
 .page-body fieldset {
   margin-bottom: 20px;
   position: relative;
   max-width: 800px;
 }
-/* line 193, ../../Js/UIComponents/Layout/_layout.scss */
+/* line 194, ../../Js/UIComponents/Layout/_layout.scss */
 .page-body fieldset legend {
   font-size: 150%;
   width: 100%;
@@ -3844,19 +3845,19 @@ input[type="color"] {
   position: relative;
   z-index: 10;
 }
-/* line 201, ../../Js/UIComponents/Layout/_layout.scss */
+/* line 202, ../../Js/UIComponents/Layout/_layout.scss */
 .page-body fieldset legend button {
   display: none;
   cursor: pointer;
   outline: none;
 }
-/* line 206, ../../Js/UIComponents/Layout/_layout.scss */
+/* line 207, ../../Js/UIComponents/Layout/_layout.scss */
 .page-body fieldset legend button i {
   font: normal normal normal 15px/1 FontAwesome;
   position: absolute;
   left: 0;
 }
-/* line 212, ../../Js/UIComponents/Layout/_layout.scss */
+/* line 213, ../../Js/UIComponents/Layout/_layout.scss */
 .page-body fieldset legend button.show {
   -moz-transition: color 0.3s;
   -o-transition: color 0.3s;
@@ -3871,22 +3872,22 @@ input[type="color"] {
   right: 15px;
   top: 15px;
   line-height: 17px;
-  width: 45px;
+  width: 50px;
   text-align: right;
 }
-/* line 226, ../../Js/UIComponents/Layout/_layout.scss */
+/* line 227, ../../Js/UIComponents/Layout/_layout.scss */
 .page-body fieldset legend button.show:hover {
   color: #2c263d;
 }
-/* line 230, ../../Js/UIComponents/Layout/_layout.scss */
+/* line 231, ../../Js/UIComponents/Layout/_layout.scss */
 .page-body fieldset legend button.show.active {
   color: #2c263d;
 }
-/* line 237, ../../Js/UIComponents/Layout/_layout.scss */
+/* line 238, ../../Js/UIComponents/Layout/_layout.scss */
 .page-body fieldset .help-inline {
   display: none;
 }
-/* line 242, ../../Js/UIComponents/Layout/_layout.scss */
+/* line 243, ../../Js/UIComponents/Layout/_layout.scss */
 .page-body fieldset.show-helpers .help-inline {
   -moz-transition: all 0.2s;
   -o-transition: all 0.2s;
@@ -3900,19 +3901,19 @@ input[type="color"] {
   position: relative;
   z-index: 2;
 }
-/* line 252, ../../Js/UIComponents/Layout/_layout.scss */
+/* line 253, ../../Js/UIComponents/Layout/_layout.scss */
 .page-body fieldset.show-helpers .help-inline small {
   font-size: 95%;
   line-height: 105%;
 }
 @media screen and (min-width: 1200px) {
-  /* line 259, ../../Js/UIComponents/Layout/_layout.scss */
+  /* line 260, ../../Js/UIComponents/Layout/_layout.scss */
   .page-body fieldset.show-helpers .help-inline {
     margin: 0;
     top: -20px;
   }
 }
-/* line 268, ../../Js/UIComponents/Layout/_layout.scss */
+/* line 269, ../../Js/UIComponents/Layout/_layout.scss */
 .page-body .control-group {
   overflow: hidden;
   *zoom: 1;
@@ -3921,11 +3922,11 @@ input[type="color"] {
   position: relative;
   z-index: 1;
 }
-/* line 275, ../../Js/UIComponents/Layout/_layout.scss */
+/* line 276, ../../Js/UIComponents/Layout/_layout.scss */
 .page-body .control-group:hover {
   z-index: 9999;
 }
-/* line 279, ../../Js/UIComponents/Layout/_layout.scss */
+/* line 280, ../../Js/UIComponents/Layout/_layout.scss */
 .page-body .control-group .control-group-area {
   overflow: hidden;
   *zoom: 1;
@@ -3937,11 +3938,11 @@ input[type="color"] {
   background: #fff;
   padding: 0 20px 30px;
 }
-/* line 289, ../../Js/UIComponents/Layout/_layout.scss */
+/* line 290, ../../Js/UIComponents/Layout/_layout.scss */
 .page-body .control-group .control-group-area .table-wrap {
   border-top: 0px solid #d2d2d2;
 }
-/* line 293, ../../Js/UIComponents/Layout/_layout.scss */
+/* line 294, ../../Js/UIComponents/Layout/_layout.scss */
 .page-body .control-group .control-group-area label {
   display: block;
   font-size: 100%;
@@ -3949,7 +3950,7 @@ input[type="color"] {
   text-transform: uppercase;
   padding-bottom: 10px;
 }
-/* line 303, ../../Js/UIComponents/Layout/_layout.scss */
+/* line 304, ../../Js/UIComponents/Layout/_layout.scss */
 .page-body .control-group .control-group-area.editmode label:after {
   position: absolute;
   right: 28px;
@@ -3958,59 +3959,59 @@ input[type="color"] {
   content: '\f00c';
   color: #339900;
 }
-/* line 316, ../../Js/UIComponents/Layout/_layout.scss */
+/* line 317, ../../Js/UIComponents/Layout/_layout.scss */
 .page-body .control-group .control-group-area.required.editmode label:after {
   content: '\f069';
   color: #ff6600;
 }
-/* line 325, ../../Js/UIComponents/Layout/_layout.scss */
+/* line 326, ../../Js/UIComponents/Layout/_layout.scss */
 .page-body .control-group .control-group-area.invalid.editmode label:after {
   content: '\f069';
   color: #ff0000;
 }
-/* line 332, ../../Js/UIComponents/Layout/_layout.scss */
+/* line 333, ../../Js/UIComponents/Layout/_layout.scss */
 .page-body .control-group .control-group-area .controls {
   position: relative;
 }
-/* line 335, ../../Js/UIComponents/Layout/_layout.scss */
+/* line 336, ../../Js/UIComponents/Layout/_layout.scss */
 .page-body .control-group .control-group-area .controls .btn {
   display: inline-block;
 }
 @media screen and (min-width: 1200px) {
-  /* line 343, ../../Js/UIComponents/Layout/_layout.scss */
+  /* line 344, ../../Js/UIComponents/Layout/_layout.scss */
   .page-body.form {
     margin-left: 185px;
   }
 }
 
-/* line 349, ../../Js/UIComponents/Layout/_layout.scss */
+/* line 350, ../../Js/UIComponents/Layout/_layout.scss */
 .on-drag-hover {
   border-top: 2px solid #4af386;
   border-bottom: 2px solid #4af386;
 }
 
-/* line 354, ../../Js/UIComponents/Layout/_layout.scss */
+/* line 355, ../../Js/UIComponents/Layout/_layout.scss */
 [draggable] {
   cursor: move;
 }
 
-/* line 358, ../../Js/UIComponents/Layout/_layout.scss */
+/* line 359, ../../Js/UIComponents/Layout/_layout.scss */
 .dropdown-menu {
   background: #fff;
   left: 0;
 }
 
-/* line 363, ../../Js/UIComponents/Layout/_layout.scss */
+/* line 364, ../../Js/UIComponents/Layout/_layout.scss */
 .fa {
   font-size: 1.4em;
 }
-/* line 366, ../../Js/UIComponents/Layout/_layout.scss */
+/* line 367, ../../Js/UIComponents/Layout/_layout.scss */
 .fa.alert {
   color: #ff6600;
   margin-right: 5px;
 }
 
-/* line 372, ../../Js/UIComponents/Layout/_layout.scss */
+/* line 373, ../../Js/UIComponents/Layout/_layout.scss */
 .fa-picture-o, .btn-icon .fa-picture-o {
   font-size: 3em;
   color: #dddddd;

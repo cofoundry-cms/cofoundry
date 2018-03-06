@@ -142,7 +142,8 @@
 
         fieldset {
             legend {
-                margin-bottom: 20px;
+                /* Float because of FF issue with legend content affecting abs positioned 'manage content' button*/ 
+                float: left;
 
                 &:before {
                     @include transition(all .2s);
@@ -220,7 +221,7 @@
                     right:15px;
                     top:15px;
                     line-height: 17px;
-                    width: 45px;
+                    width: 50px;
                     text-align: right;
 
                     &:hover {
