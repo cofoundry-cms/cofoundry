@@ -44,7 +44,7 @@ namespace Cofoundry.Domain
                 CustomEntityId = dbCustomEntity.CustomEntityId,
                 UrlSlug = dbCustomEntity.UrlSlug,
                 Locale = locale,
-                PublishDate = dbCustomEntity.PublishDate,
+                PublishDate = DbDateTimeMapper.AsUtc(dbCustomEntity.PublishDate),
                 PublishStatus = dbCustomEntity.PublishStatusCode == PublishStatusCode.Published ? PublishStatus.Published : PublishStatus.Unpublished
             };
 
@@ -55,7 +55,7 @@ namespace Cofoundry.Domain
             {
                 var version = new CustomEntityVersionRoute()
                 {
-                    CreateDate = dbVersion.CreateDate,
+                    CreateDate = DbDateTimeMapper.AsUtc(dbVersion.CreateDate),
                     Title = dbVersion.Title,
                     VersionId = dbVersion.CustomEntityVersionId,
                     WorkFlowStatus = (WorkFlowStatus)dbVersion.WorkFlowStatusId

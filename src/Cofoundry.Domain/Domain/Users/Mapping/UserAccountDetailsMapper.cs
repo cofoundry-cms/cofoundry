@@ -39,15 +39,15 @@ namespace Cofoundry.Domain
                 LastName = dbUser.LastName,
                 UserId = dbUser.UserId,
                 Username = dbUser.Username,
-                LastLoginDate = dbUser.LastLoginDate,
-                LastPasswordChangeDate = dbUser.LastPasswordChangeDate,
-                PreviousLoginDate = dbUser.PreviousLoginDate,
+                LastLoginDate = DbDateTimeMapper.AsUtc(dbUser.LastLoginDate),
+                LastPasswordChangeDate = DbDateTimeMapper.AsUtc(dbUser.LastPasswordChangeDate),
+                PreviousLoginDate = DbDateTimeMapper.AsUtc(dbUser.PreviousLoginDate),
                 RequirePasswordChange = dbUser.RequirePasswordChange
             };
 
             user.AuditData = new CreateAuditData()
             {
-                CreateDate = dbUser.CreateDate
+                CreateDate = DbDateTimeMapper.AsUtc(dbUser.CreateDate)
             };
 
             if (dbUser.Creator != null)

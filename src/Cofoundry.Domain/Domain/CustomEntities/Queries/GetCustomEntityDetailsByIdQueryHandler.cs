@@ -94,7 +94,7 @@ namespace Cofoundry.Domain
                 CustomEntityId = dbVersion.CustomEntity.CustomEntityId,
                 UrlSlug = dbVersion.CustomEntity.UrlSlug,             
                 PublishStatus = PublishStatusMapper.FromCode(dbVersion.CustomEntity.PublishStatusCode),
-                PublishDate = dbVersion.CustomEntity.PublishDate,
+                PublishDate = DbDateTimeMapper.AsUtc(dbVersion.CustomEntity.PublishDate),
             };
 
             entity.IsPublished = entity.PublishStatus == PublishStatus.Published && entity.PublishDate <= executionContext.ExecutionDate;

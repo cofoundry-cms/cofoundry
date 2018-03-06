@@ -58,7 +58,7 @@ namespace Cofoundry.Domain
                     CustomEntityId = dbStatusQuery.CustomEntityId,
                     HasDraft = dbStatusQuery.CustomEntityVersion.WorkFlowStatusId == (int)WorkFlowStatus.Draft,
                     PublishStatus = PublishStatusMapper.FromCode(dbStatusQuery.CustomEntity.PublishStatusCode),
-                    PublishDate = dbStatusQuery.CustomEntity.PublishDate,
+                    PublishDate = DbDateTimeMapper.AsUtc(dbStatusQuery.CustomEntity.PublishDate),
                     Ordering = dbStatusQuery.CustomEntity.Ordering,
                     Title = dbStatusQuery.CustomEntityVersion.Title,
                     UrlSlug = dbStatusQuery.CustomEntity.UrlSlug

@@ -241,7 +241,7 @@ namespace Cofoundry.Domain
             var versionRouting = new PageVersionRoute();
             versionRouting.WorkFlowStatus = (WorkFlowStatus)version.WorkFlowStatusId;
             versionRouting.Title = version.Title;
-            versionRouting.CreateDate = version.CreateDate;
+            versionRouting.CreateDate = DbDateTimeMapper.AsUtc(version.CreateDate);
             versionRouting.VersionId = version.PageVersionId;
 
             var template = templates.GetOrDefault(version.PageTemplateId);

@@ -30,12 +30,12 @@ namespace Cofoundry.Domain
                 IsArchived = dbPageTemplate.IsArchived,
                 Name = dbPageTemplate.Name,
                 PageTemplateId = dbPageTemplate.PageTemplateId,
-                CreateDate = dbPageTemplate.CreateDate,
+                CreateDate = DbDateTimeMapper.AsUtc(dbPageTemplate.CreateDate),
                 Description = dbPageTemplate.Description,
                 FileName = dbPageTemplate.FileName,
                 PageType = (PageType)dbPageTemplate.PageTypeId,
                 CustomEntityModelType = dbPageTemplate.CustomEntityModelType,
-                UpdateDate = dbPageTemplate.UpdateDate,
+                UpdateDate = DbDateTimeMapper.AsUtc(dbPageTemplate.UpdateDate),
                 NumPages = queryModel.NumPages,
                 CustomEntityDefinition = queryModel.CustomEntityDefinition
             };
@@ -53,12 +53,12 @@ namespace Cofoundry.Domain
         {
             return new PageTemplateRegionDetails()
             {
-                CreateDate = dbRegion.CreateDate,
+                CreateDate = DbDateTimeMapper.AsUtc(dbRegion.CreateDate),
                 IsCustomEntityRegion = dbRegion.IsCustomEntityRegion,
                 Name = dbRegion.Name,
                 PageTemplateId = dbRegion.PageTemplateId,
                 PageTemplateRegionId = dbRegion.PageTemplateRegionId,
-                UpdateDate = dbRegion.UpdateDate
+                UpdateDate = DbDateTimeMapper.AsUtc(dbRegion.UpdateDate)
             };
         }
     }

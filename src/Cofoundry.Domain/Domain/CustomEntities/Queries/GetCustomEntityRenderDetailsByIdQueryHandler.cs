@@ -93,7 +93,7 @@ namespace Cofoundry.Domain
 
             var entity = new CustomEntityRenderDetails()
             {
-                CreateDate = dbResult.CreateDate,
+                CreateDate = DbDateTimeMapper.AsUtc(dbResult.CreateDate),
                 CustomEntityDefinitionCode = dbResult.CustomEntity.CustomEntityDefinitionCode,
                 CustomEntityId = dbResult.CustomEntityId,
                 CustomEntityVersionId = dbResult.CustomEntityVersionId,
@@ -101,7 +101,7 @@ namespace Cofoundry.Domain
                 Title = dbResult.Title,
                 UrlSlug = dbResult.CustomEntity.UrlSlug,
                 WorkFlowStatus = (WorkFlowStatus)dbResult.WorkFlowStatusId,
-                PublishDate = dbResult.CustomEntity.PublishDate
+                PublishDate = DbDateTimeMapper.AsUtc(dbResult.CustomEntity.PublishDate)
             };
 
             entity.PublishStatus = PublishStatusMapper.FromCode(dbResult.CustomEntity.PublishStatusCode);

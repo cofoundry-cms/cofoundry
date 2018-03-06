@@ -29,7 +29,7 @@ namespace Cofoundry.Domain
             image.Width = dbImage.Width;
             image.Title = dbImage.FileDescription;
             image.DefaultAnchorLocation = dbImage.DefaultAnchorLocation;
-            image.UpdateDate = dbImage.UpdateDate;
+            image.UpdateDate = DbDateTimeMapper.AsUtc(dbImage.UpdateDate);
 
             return image;
         }

@@ -30,7 +30,7 @@ namespace Cofoundry.Domain
             ValidateUserProperty(model.Creator, nameof(model.Creator));
 
             var auditData = new CreateAuditData();
-            auditData.CreateDate = model.CreateDate;
+            auditData.CreateDate = DbDateTimeMapper.AsUtc(model.CreateDate);
             auditData.Creator = _userMicroSummaryMapper.Map(model.Creator);
 
             return auditData;
@@ -48,8 +48,8 @@ namespace Cofoundry.Domain
             ValidateUserProperty(model.Updater, nameof(model.Updater));
 
             var auditData = new UpdateAuditData();
-            auditData.CreateDate = model.CreateDate;
-            auditData.UpdateDate = model.UpdateDate;
+            auditData.CreateDate = DbDateTimeMapper.AsUtc(model.CreateDate);
+            auditData.UpdateDate = DbDateTimeMapper.AsUtc(model.UpdateDate);
             auditData.Creator = _userMicroSummaryMapper.Map(model.Creator);
             auditData.Updater = _userMicroSummaryMapper.Map(model.Updater);
 
@@ -68,7 +68,7 @@ namespace Cofoundry.Domain
             ValidateUserProperty(model.Creator, nameof(model.Creator));
 
             var auditData = new UpdateAuditData();
-            auditData.CreateDate = model.CreateDate;
+            auditData.CreateDate = DbDateTimeMapper.AsUtc(model.CreateDate);
             auditData.Creator = _userMicroSummaryMapper.Map(model.Creator);
 
             return auditData;
@@ -85,7 +85,7 @@ namespace Cofoundry.Domain
             if (model == null) throw new ArgumentNullException(nameof(model));
             ValidateUserProperty(model.Creator, nameof(model.Creator));
 
-            updateAuditDatra.UpdateDate = model.CreateDate;
+            updateAuditDatra.UpdateDate = DbDateTimeMapper.AsUtc(model.CreateDate);
             updateAuditDatra.Updater = _userMicroSummaryMapper.Map(model.Creator);
         }
 

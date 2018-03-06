@@ -47,12 +47,12 @@ namespace Cofoundry.Domain
                 LastName = dbUser.LastName,
                 UserId = dbUser.UserId,
                 Username = dbUser.Username,
-                LastLoginDate = dbUser.LastLoginDate
+                LastLoginDate = DbDateTimeMapper.AsUtc(dbUser.LastLoginDate)
             };
 
             user.AuditData = new CreateAuditData()
             {
-                CreateDate = dbUser.CreateDate
+                CreateDate = DbDateTimeMapper.AsUtc(dbUser.CreateDate)
             };
 
             if (dbUser.Creator != null)

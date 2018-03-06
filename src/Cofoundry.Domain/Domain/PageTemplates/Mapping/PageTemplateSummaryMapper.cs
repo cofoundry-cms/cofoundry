@@ -37,11 +37,11 @@ namespace Cofoundry.Domain
                 IsArchived = dbPageTemplate.IsArchived,
                 Name = dbPageTemplate.Name,
                 PageTemplateId = dbPageTemplate.PageTemplateId,
-                CreateDate = dbPageTemplate.CreateDate,
+                CreateDate = DbDateTimeMapper.AsUtc(dbPageTemplate.CreateDate),
                 Description = dbPageTemplate.Description,
                 FileName = dbPageTemplate.FileName,
                 PageType = (PageType)dbPageTemplate.PageTypeId,
-                UpdateDate = dbPageTemplate.UpdateDate,
+                UpdateDate = DbDateTimeMapper.AsUtc(dbPageTemplate.UpdateDate),
                 NumPages = queryModel.NumPages,
                 NumRegions = queryModel.NumRegions
             };
