@@ -16,7 +16,7 @@ namespace Cofoundry.Web
             return type == typeof(StringLengthAttribute);
         }
 
-        public void Decorate(object attribute, DisplayMetadata modelMetaData)
+        public void Decorate(object attribute, DisplayMetadataProviderContext context)
         {
             if (attribute == null) throw new ArgumentNullException(nameof(attribute));
 
@@ -27,6 +27,7 @@ namespace Cofoundry.Web
 
             var stringLengthttribtue = (StringLengthAttribute)attribute;
 
+            var modelMetaData = context.DisplayMetadata;
             modelMetaData.AddAdditionalValueWithValidationMessage("Maxlength", stringLengthttribtue.MaximumLength, stringLengthttribtue);
 
             if (stringLengthttribtue.MinimumLength > 0)

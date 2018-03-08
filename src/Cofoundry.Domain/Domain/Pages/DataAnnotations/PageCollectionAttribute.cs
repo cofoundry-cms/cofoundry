@@ -17,11 +17,11 @@ namespace Cofoundry.Domain
     [AttributeUsage(AttributeTargets.Property)]
     public class PageCollectionAttribute : Attribute, IMetadataAttribute, IEntityRelationAttribute
     {
-        public void Process(DisplayMetadata modelMetaData)
+        public void Process(DisplayMetadataProviderContext context)
         {
-            modelMetaData
-                .AddAdditionalValueIfNotEmpty("Orderable", IsOrderable);
+            var modelMetaData = context.DisplayMetadata;
 
+            modelMetaData.AddAdditionalValueIfNotEmpty("Orderable", IsOrderable);
             modelMetaData.TemplateHint = "PageCollection";
         }
 

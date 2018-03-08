@@ -22,8 +22,9 @@ namespace Cofoundry.Domain
             ErrorMessage = "{0} must be a hexadecimal colour value e.g. '#EFEFEF' or '#fff'";
         }
 
-        public void Process(DisplayMetadata modelMetaData)
+        public void Process(DisplayMetadataProviderContext context)
         {
+            var modelMetaData = context.DisplayMetadata;
             modelMetaData.TemplateHint = "Color";
         }
     }

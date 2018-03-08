@@ -4357,6 +4357,26 @@ angular.module('cms.shared').factory('shared.localeService', ['$http', 'shared.s
 
     return service;
 }]);
+angular.module('cms.shared').factory('shared.nestedDataModelSchemaService', [
+    '$http',
+    '_',
+    'shared.serviceBase',
+function (
+    $http,
+    _,
+    serviceBase
+    ) {
+
+    var service = {};
+
+    /* QUERIES */
+    
+    service.getByName = function (name) {
+        return $http.get(serviceBase + 'nested-data-model-schemas/' + name);
+    }
+    
+    return service;
+}]);
 angular.module('cms.shared').factory('shared.pageService', [
     '$http',
     'shared.serviceBase',
@@ -9717,6 +9737,167 @@ function (
 
     return service;
 }]);
+angular.module('cms.shared').controller('EditNestedDataModelDialogController', [
+    '$scope',
+    'shared.focusService',
+    'shared.stringUtilities',
+    'options',
+    'close',
+function (
+    $scope,
+    focusService,
+    stringUtilities,
+    options,
+    close) {
+    
+    var vm = $scope;
+    init();
+    
+    /* INIT */
+    function init() {
+        angular.extend($scope, options);
+
+        vm.save = onSave;
+        vm.onCancel = onCancel;
+        vm.close = onCancel;
+
+        vm.formDataSource = {
+            model: options.model || {},
+            modelMetaData: options.modelMetaData
+        }
+    }
+
+    /* EVENTS */
+
+    function onSave() {
+
+        if (options.onSave) options.onSave(vm.formDataSource.model);
+        close();
+    }
+
+    function onCancel() {
+        close();
+    }
+
+    /* PUBLIC HELPERS */
+
+    function initData() {
+        vm.command = {};
+    }
+
+    function cancel() {
+        close();
+    }
+}]);
+
+angular.module('cms.shared').directive('cmsFormFieldNestedDataModelCollection', [
+    '_',
+    'shared.internalModulePath',
+    'shared.LoadState',
+    'shared.nestedDataModelSchemaService',
+    'shared.modalDialogService',
+    'shared.arrayUtilities',
+    'baseFormFieldFactory',
+    function (
+        _,
+        modulePath,
+        LoadState,
+        nestedDataModelSchemaService,
+        modalDialogService,
+        arrayUtilities,
+        baseFormFieldFactory) {
+
+        /* VARS */
+
+        var baseConfig = baseFormFieldFactory.defaultConfig;
+
+        /* CONFIG */
+
+        var config = {
+            templateUrl: modulePath + 'UIComponents/NestedDataModels/FormFieldNestedDataModelCollection.html',
+            scope: _.extend(baseConfig.scope, {
+                minItems: '@cmsMinItems',
+                maxItems: '@cmsMaxItems',
+                orderable: '=cmsOrderable',
+                modelType: '@cmsModelType'
+            }),
+            passThroughAttributes: [
+                'required'
+            ],
+            link: link
+        };
+
+        return baseFormFieldFactory.create(config);
+
+        /* LINK */
+
+        function link(scope, el, attributes, controllers) {
+            var vm = scope.vm,
+                definitionPromise;
+
+            init();
+            return baseConfig.link(scope, el, attributes, controllers);
+
+            /* INIT */
+
+            function init() {
+
+                vm.add = add;
+                vm.edit = edit;
+                vm.remove = remove;
+                vm.onDrop = onDrop;
+
+                definitionPromise = nestedDataModelSchemaService
+                    .getByName(vm.modelType)
+                    .then(function (modelMetaData) {
+
+                    vm.modelMetaData = modelMetaData;
+                });
+            }
+
+            /* EVENTS */
+
+            function remove(nestedModel) {
+
+                arrayUtilities.removeObject(vm.model, nestedModel);
+            }
+
+            function edit(model) {
+
+                showEditDialog({
+                    model: model
+                });
+            }
+
+            function add() {
+
+                showEditDialog({
+                    onSave: onSave
+                });
+
+                function onSave(newEntity) {
+                    vm.model = vm.model || [];
+                    vm.model.push(newEntity);
+                }
+            }
+
+            function showEditDialog(options) {
+
+                options.modelMetaData = vm.modelMetaData;
+
+                modalDialogService.show({
+                    templateUrl: modulePath + 'UIComponents/NestedDataModels/EditNestedDataModelDialog.html',
+                    controller: 'EditNestedDataModelDialogController',
+                    options: options
+                });
+            }
+
+            function onDrop($index, droppedEntity) {
+
+                arrayUtilities.moveObject(vm.model, droppedEntity, $index);
+            }
+        }
+    }]);
 angular.module('cms.shared').directive('cmsFormFieldPageCollection', [
     '_',
     'shared.internalModulePath',

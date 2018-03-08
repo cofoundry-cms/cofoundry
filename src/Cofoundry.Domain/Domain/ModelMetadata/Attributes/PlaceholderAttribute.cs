@@ -25,9 +25,10 @@ namespace Cofoundry.Domain
         /// </summary>
         public string Placeholder { get; set; }
 
-        public void Process(DisplayMetadata modelMetaData)
+        public void Process(DisplayMetadataProviderContext context)
         {
-            modelMetaData
+            context
+                .DisplayMetadata
                 .AddAdditionalValueIfNotEmpty("Placeholder", Placeholder)
                 ;
         }

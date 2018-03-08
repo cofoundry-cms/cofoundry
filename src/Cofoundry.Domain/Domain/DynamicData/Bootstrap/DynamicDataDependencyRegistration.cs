@@ -12,7 +12,10 @@ namespace Cofoundry.Domain
         public void Register(IContainerRegister container)
         {
             container
-                .Register<IDynamicDataModelSchemaMapper, DynamicDataModelSchemaMapper>();
+                .RegisterSingleton<INestedDataModelTypeRepository, NestedDataModelTypeRepository>()
+                .Register<IDynamicDataModelSchemaMapper, DynamicDataModelSchemaMapper>()
+                .RegisterAll<INestedDataModel>()
+                ;
         }
     }
 }

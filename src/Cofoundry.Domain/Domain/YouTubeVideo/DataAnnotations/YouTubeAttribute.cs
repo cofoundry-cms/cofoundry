@@ -20,12 +20,11 @@ namespace Cofoundry.Domain
         public YouTubeAttribute()
             : base()
         {
-            
         }
 
-        public void Process(DisplayMetadata modelMetaData)
+        public void Process(DisplayMetadataProviderContext context)
         {
-            modelMetaData.TemplateHint = "YouTube";
+            context.DisplayMetadata.TemplateHint = "YouTube";
         }
     }
 }

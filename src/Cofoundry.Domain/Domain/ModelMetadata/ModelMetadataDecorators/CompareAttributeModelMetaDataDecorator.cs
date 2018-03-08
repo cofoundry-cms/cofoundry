@@ -16,7 +16,7 @@ namespace Cofoundry.Web
             return type == typeof(CompareAttribute);
         }
 
-        public void Decorate(object attribute, DisplayMetadata modelMetaData)
+        public void Decorate(object attribute, DisplayMetadataProviderContext context)
         {
             if (attribute == null) throw new ArgumentNullException(nameof(attribute));
 
@@ -30,6 +30,7 @@ namespace Cofoundry.Web
             var otherProperty = compareAttribtue.OtherProperty;
             var valAttribute = compareAttribtue;
 
+            var modelMetaData = context.DisplayMetadata;
             modelMetaData.AddAdditionalValueWithValidationMessage("Match", otherProperty, valAttribute);
         }
     }

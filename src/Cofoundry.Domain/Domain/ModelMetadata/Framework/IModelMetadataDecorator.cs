@@ -14,6 +14,6 @@ namespace Cofoundry.Domain
     public interface IModelMetadataDecorator
     {
         bool CanDecorateType(Type type);
-        void Decorate(object attribute, DisplayMetadata modelMetaData);
+        void Decorate(object attribute, DisplayMetadataProviderContext context);
     }
 }

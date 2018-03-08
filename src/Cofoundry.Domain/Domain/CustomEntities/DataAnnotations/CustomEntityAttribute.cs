@@ -21,10 +21,11 @@ namespace Cofoundry.Domain
             CustomEntityDefinitionCode = customEntityDefinitionCode;
         }
 
-        public void Process(DisplayMetadata modelMetaData)
+        public void Process(DisplayMetadataProviderContext context)
         {
-            modelMetaData.AddAdditionalValueIfNotEmpty("CustomEntityDefinitionCode", CustomEntityDefinitionCode);
+            var modelMetaData = context.DisplayMetadata;
 
+            modelMetaData.AddAdditionalValueIfNotEmpty("CustomEntityDefinitionCode", CustomEntityDefinitionCode);
             modelMetaData.TemplateHint = "CustomEntitySelector";
         }
 

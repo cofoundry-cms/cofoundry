@@ -1,0 +1,62 @@
+﻿<div class="control-group">
+    <cms-field>
+        <label class="control-label" for="{{vm.modelName}}">{{vm.title}}:</label>
+        <div class="controls">
+            <input type="hidden"
+                   id="{{vm.modelName}}"
+                   name="{{vm.modelName}}"
+                   ng-model="vm.model"
+                   ng-change="vm.onChange()" />
+
+            <cms-table-container>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Title</th>
+                            <th cms-table-column-actions
+                                ng-if="vm.formScope.editMode">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody> 
+                        <tr ng-if="!vm.model.length">
+                            <td colspan="100" class="empty">None</td>
+                        </tr>
+                        <tr ng-repeat="entity in vm.model track by $index"
+                            ui-draggable="vm.formScope.editMode && vm.orderable"
+                            data-drag="entity"
+                            data-drag-channel="nested-model-{{vm.modelName}}"
+                            ui-on-drop="vm.onDrop($index, $data)"
+                            data-drop-channel="nested-model-{{vm.modelName}}">
+                            <td>
+                                <strong>{{entity.title}}</strong>
+                            </td>
+                            <td cms-table-column-actions ng-if="vm.formScope.editMode">
+                                <cms-button-icon cms-title="Edit"
+                                                 cms-icon="pencil"
+                                                 ng-click="vm.edit(entity)">
+                                </cms-button-icon>
+                                <cms-button-icon cms-title="Remove"
+                                                 cms-icon="trash-o"
+                                                 ng-click="vm.remove(entity)">
+                                </cms-button-icon>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <cms-table-actions>
+                    <a href="" class="btn-icon" title="Add"
+                       cms-icon="plus-circle"
+                       ng-click="vm.add()"
+                       ng-if="vm.formScope.editMode && (!vm.maxItems || vm.model.length < vm.maxItems)"
+                       ng-disabled="vm.disabled">
+                        <i class="fa fa-plus-circle"></i>
+                    </a>
+                </cms-table-actions>
+            </cms-table-container>
+            <cms-form-field-validation-summary></cms-form-field-validation-summary>
+        </div>
+    </cms-field>
+    <p class="help-inline" ng-if="vm.description">
+        <small>{{vm.description}}</small>
+    </p>
+</div>

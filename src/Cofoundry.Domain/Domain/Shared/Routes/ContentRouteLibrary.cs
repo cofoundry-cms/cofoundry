@@ -95,6 +95,19 @@ namespace Cofoundry.Domain
             return _imageAssetRouteLibrary.ImageAsset(image, width, height);
         }
 
+        /// <summary>
+        /// Simple but less efficient way of getting an image url if you only know 
+        /// the id. Use the overload accepting an IImageAssetRenderable if possible to save a 
+        /// potential db query if the route isn't cached.
+        /// </summary>
+        /// <param name="imageAssetId">Id of the image asset to get the url for</param>
+        /// <param name="width">width to resize the image to</param>
+        /// <param name="height">height to resize the image to</param>
+        public Task<string> ImageAssetAsync(int? imageAssetId, int? width, int? height = null)
+        {
+            return _imageAssetRouteLibrary.ImageAssetAsync(imageAssetId, width, height);
+        }
+
         #endregion
 
         #region documents

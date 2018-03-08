@@ -4,14 +4,15 @@ namespace Cofoundry.Domain
 {
     /// <summary>
     /// Represents a Metadata attribute that can be parsed by 
-    /// a MetadataProvider
+    /// a MetadataProvider.
     /// </summary>
     public interface IMetadataAttribute
     {
         /// <summary>
-        /// Implement this to customize the model metadata, adding
-        /// any items to the AdditionalValues. 
+        /// Implement this to customize the model metadata, modifying
+        /// context.DisplayMetaData or adding extra data to the 
+        /// context.DisplayMetaData.AdditionalValues collection. 
         /// </summary>
-        void Process(DisplayMetadata modelMetaData);
+        void Process(DisplayMetadataProviderContext context);
     }
 }

@@ -12,15 +12,12 @@ namespace Cofoundry.Web.Admin
     [AdminApiRoute("pages")]
     public class PagesApiController : BaseAdminApiController
     {
-        #region private member variables
-
         private const string ID_ROUTE = "{pageId:int}";
+
+        #region constructor
 
         private readonly IQueryExecutor _queryExecutor;
         private readonly IApiResponseHelper _apiResponseHelper;
-        #endregion
-
-        #region constructor
 
         public PagesApiController(
             IQueryExecutor queryExecutor,
@@ -32,8 +29,6 @@ namespace Cofoundry.Web.Admin
         }
 
         #endregion
-
-        #region routes
 
         #region queries
 
@@ -101,8 +96,6 @@ namespace Cofoundry.Web.Admin
         {
             return await _apiResponseHelper.RunCommandAsync(this, command);
         }
-
-        #endregion
 
         #endregion
     }

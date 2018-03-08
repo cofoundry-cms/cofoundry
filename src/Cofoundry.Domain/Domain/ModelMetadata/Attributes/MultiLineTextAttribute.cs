@@ -14,8 +14,9 @@ namespace Cofoundry.Domain
     [AttributeUsage(AttributeTargets.Property)]
     public class MultiLineTextAttribute : Attribute, IMetadataAttribute
     {
-        public void Process(DisplayMetadata modelMetaData)
+        public void Process(DisplayMetadataProviderContext context)
         {
+            var modelMetaData = context.DisplayMetadata;
             modelMetaData.TemplateHint = DataType.MultilineText.ToString();
         }
     }

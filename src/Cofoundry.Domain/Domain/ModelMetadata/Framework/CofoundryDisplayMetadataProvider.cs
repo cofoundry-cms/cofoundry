@@ -38,7 +38,7 @@ namespace Cofoundry.Domain
             {
                 if (attribute is IMetadataAttribute)
                 {
-                    ((IMetadataAttribute)attribute).Process(modelMetadata);
+                    ((IMetadataAttribute)attribute).Process(context);
                 }
                 else
                 {
@@ -46,7 +46,7 @@ namespace Cofoundry.Domain
 
                     if (decorator != null)
                     {
-                        decorator.Decorate(attribute, modelMetadata);
+                        decorator.Decorate(attribute, context);
                     }
                 }
             }

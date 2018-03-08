@@ -23,9 +23,9 @@ namespace Cofoundry.Domain
             
         }
 
-        public void Process(DisplayMetadata modelMetaData)
+        public void Process(DisplayMetadataProviderContext context)
         {
-            modelMetaData.TemplateHint = "Vimeo";
+            context.DisplayMetadata.TemplateHint = "Vimeo";
         }
     }
 }

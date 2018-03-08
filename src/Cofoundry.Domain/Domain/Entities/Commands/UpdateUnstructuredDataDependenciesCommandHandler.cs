@@ -62,7 +62,7 @@ namespace Cofoundry.Domain
 
         private IEnumerable<EntityDependency> GetDistinctRelations(object model)
         {
-            var relations = GetRelations(model);
+            var relations = EntityRelationAttributeHelper.GetRelations(model);
 
             foreach (var relationGroup in relations.GroupBy(r => new { r.EntityDefinitionCode, r.EntityId }))
             {
@@ -86,30 +86,6 @@ namespace Cofoundry.Domain
                         //.OrderByDescending(r => r == RelatedEntityCascadeAction.WarnAndCascadeEntity)
                         .First();
 
-                    yield return relation;
-                }
-            }
-        }
-
-        private IEnumerable<EntityDependency> GetRelations(object model)
-        {
-            var relationProperties = model
-                .GetType()
-                .GetTypeInfo()
-                .GetProperties()
-                .Select(p => new {
-                    Property = p,
-                    Attribute = p.GetCustomAttributes(false)
-                        .Where(a => a is IEntityRelationAttribute)
-                        .FirstOrDefault()
-                })
-                .Where(p => p.Attribute != null);
-
-            foreach (var relationProperty in relationProperties)
-            {
-                var attribtue = (IEntityRelationAttribute)relationProperty.Attribute;
-                foreach (var relation in attribtue.GetRelations(model, relationProperty.Property))
-                {
                     yield return relation;
                 }
             }

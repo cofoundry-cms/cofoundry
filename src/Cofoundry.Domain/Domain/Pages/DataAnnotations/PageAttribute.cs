@@ -23,9 +23,9 @@ namespace Cofoundry.Domain
             ErrorMessage = "The {0} field is required";
         }
 
-        public void Process(DisplayMetadata modelMetaData)
+        public void Process(DisplayMetadataProviderContext context)
         {
-            modelMetaData.TemplateHint = "PageSelector";
+            context.DisplayMetadata.TemplateHint = "PageSelector";
         }
 
         public IEnumerable<EntityDependency> GetRelations(object model, PropertyInfo propertyInfo)

@@ -91,10 +91,54 @@ namespace Cofoundry.Core
                 .Where(s => s != string.Empty);
         }
 
+        /// <summary>
+        /// Determines if all characters in the specified string 
+        /// are upper case.
+        /// </summary>
+        /// <param name="s">string to compare.</param>
+        /// <returns>True if the entire string is upper case; otherwise false.</returns>
         public static bool IsUpperCase(string s)
         {
             if (s == null) return false;
             return !s.Any(c => !Char.IsUpper(c));
+        }
+
+        /// <summary>
+        /// Removes text if it appears at the end of a string. Case sensitive
+        /// by default.
+        /// </summary>
+        /// <param name="source">String to modify.</param>
+        /// <param name="suffix">The suffix to test for. Case sensitive.</param>
+        /// <returns>If the string ends with the suffix, the modified string is returned; otherwise the original string is returned.</returns>
+        public static string RemoveSuffix(string source, string suffix)
+        {
+            if (source == null) return source;
+
+            if (source.EndsWith(suffix))
+            {
+                return source.Remove(source.Length - suffix.Length);
+            }
+
+            return source;
+        }
+
+        /// <summary>
+        /// Removes text if it appears at the end of a string using the specified StringComparison options.
+        /// </summary>
+        /// <param name="source">String to modify.</param>
+        /// <param name="suffix">The suffix to test for.</param>
+        /// <param name="stringComparison">StringComparison options to use when testing for the suffix.</param>
+        /// <returns>If the string ends with the suffix, the modified string is returned; otherwise the original string is returned.</returns>
+        public static string RemoveSuffix(string source, string suffix, StringComparison stringComparison)
+        {
+            if (source == null) return source;
+
+            if (source.EndsWith(suffix, StringComparison.OrdinalIgnoreCase))
+            {
+                return source.Remove(source.Length - suffix.Length);
+            }
+
+            return source;
         }
     }
 }

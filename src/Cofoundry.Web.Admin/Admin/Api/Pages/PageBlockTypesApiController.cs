@@ -11,14 +11,10 @@ namespace Cofoundry.Web.Admin
     [AdminApiRoute("page-block-types")]
     public class PageBlockTypesApiController : BaseAdminApiController
     {
-        #region private member variables
-        
+        #region constructor 
+
         private readonly IQueryExecutor _queryExecutor;
         private readonly IApiResponseHelper _apiResponseHelper;
-
-        #endregion
-
-        #region constructor
 
         public PageBlockTypesApiController(
             IQueryExecutor queryExecutor,
@@ -30,8 +26,6 @@ namespace Cofoundry.Web.Admin
         }
 
         #endregion
-
-        #region routes
 
         #region queries
 
@@ -48,8 +42,6 @@ namespace Cofoundry.Web.Admin
             var results = await _queryExecutor.ExecuteAsync(new GetPageBlockTypeDetailsByIdQuery(pageBlockTypeId));
             return _apiResponseHelper.SimpleQueryResponse(this, results);
         }
-
-        #endregion
 
         #endregion
     }

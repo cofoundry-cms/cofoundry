@@ -15,7 +15,7 @@ namespace Cofoundry.Web
             return type == typeof(MinLengthAttribute);
         }
 
-        public void Decorate(object attribute, DisplayMetadata modelMetaData)
+        public void Decorate(object attribute, DisplayMetadataProviderContext context)
         {
             if (attribute == null) throw new ArgumentNullException(nameof(attribute));
 
@@ -26,6 +26,7 @@ namespace Cofoundry.Web
 
             var minLengthttribtue = (MinLengthAttribute)attribute;
 
+            var modelMetaData = context.DisplayMetadata;
             modelMetaData.AddAdditionalValueWithValidationMessage("Minlength", minLengthttribtue.Length, minLengthttribtue);
         }
     }

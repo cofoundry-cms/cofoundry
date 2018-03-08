@@ -23,8 +23,10 @@ namespace Cofoundry.Domain
             CustomEntityDefinitionCodes = customEntityDefinitionCode;
         }
 
-        public void Process(DisplayMetadata modelMetaData)
+        public void Process(DisplayMetadataProviderContext context)
         {
+            var modelMetaData = context.DisplayMetadata;
+
             modelMetaData
                 .AddAdditionalValueIfNotEmpty("CustomEntityDefinitionCodes", string.Join(",", CustomEntityDefinitionCodes))
                 .AddAdditionalValueIfNotEmpty("Orderable", IsOrderable);

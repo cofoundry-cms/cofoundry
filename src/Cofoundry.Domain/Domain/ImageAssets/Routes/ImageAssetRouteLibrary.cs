@@ -47,6 +47,27 @@ namespace Cofoundry.Domain
         }
 
         /// <summary>
+        /// Simple but less efficient way of getting an image url if you only know 
+        /// the id. Use the overload accepting an IImageAssetRenderable if possible to save a 
+        /// potential db query if the route isn't cached.
+        /// </summary>
+        /// <param name="imageAssetId">Id of the image asset to get the url for</param>
+        /// <param name="width">width to resize the image to</param>
+        /// <param name="height">height to resize the image to</param>
+        public async Task<string> ImageAssetAsync(int? imageAssetId, int? width, int? height = null)
+        {
+            if (!imageAssetId.HasValue) return string.Empty;
+
+            var getImageQuery = new GetImageAssetRenderDetailsByIdQuery(imageAssetId.Value);
+            var asset = await _queryExecutor.ExecuteAsync(getImageQuery);
+            if (asset == null) return string.Empty;
+
+            var settings = GetResizeSettings(asset, width, height);
+
+            return ImageAsset(asset.ImageAssetId, asset.FileName, asset.Extension, settings);
+        }
+
+        /// <summary>
         /// Gets the url for an image asset, with optional resizing parameters
         /// </summary>
         /// <param name="asset">asset to get the url for</param>
@@ -68,7 +89,13 @@ namespace Cofoundry.Domain
         public string ImageAsset(IImageAssetRenderable asset, int? width, int? height = null)
         {
             if (asset == null) return string.Empty;
+            var settings = GetResizeSettings(asset, width, height);
 
+            return ImageAsset(asset.ImageAssetId, asset.FileName, asset.Extension, settings);
+        }
+
+        private static ImageResizeSettings GetResizeSettings(IImageAssetRenderable asset, int? width, int? height)
+        {
             var settings = new ImageResizeSettings();
 
             if (width.HasValue)
@@ -83,7 +110,7 @@ namespace Cofoundry.Domain
 
             SetDefaultCrop(asset, settings);
 
-            return ImageAsset(asset.ImageAssetId, asset.FileName, asset.Extension, settings);
+            return settings;
         }
 
         #endregion

@@ -16,7 +16,7 @@ namespace Cofoundry.Web
             return type == typeof(RangeAttribute);
         }
 
-        public void Decorate(object attribute, DisplayMetadata modelMetaData)
+        public void Decorate(object attribute, DisplayMetadataProviderContext context)
         {
             if (attribute == null) throw new ArgumentNullException(nameof(attribute));
 
@@ -43,6 +43,8 @@ namespace Cofoundry.Web
 
             if (minAttribute != null)
             {
+                var modelMetaData = context.DisplayMetadata;
+
                 if (rangeLengthttribtue.Minimum != null)
                 {
                     modelMetaData.AddAdditionalValueWithValidationMessage(minAttribute, rangeLengthttribtue.Minimum, rangeLengthttribtue);

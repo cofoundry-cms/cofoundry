@@ -1,0 +1,12 @@
+﻿@model CarouselDataModel
+@inject ICofoundryBlockTypeHelper<CarouselDataModel> Cofoundry
+@{
+    Cofoundry.BlockType.UseDescription("The main heading for a page overlaying a background image.");
+}
+<h1>@Model.Title</h1>
+
+@foreach (var item in Model.Items)
+{
+    <h2>@item.Title</h2>
+    <img src="@await Cofoundry.Routing.ImageAssetAsync(item.ImageId, 1200, 400)" />
+}

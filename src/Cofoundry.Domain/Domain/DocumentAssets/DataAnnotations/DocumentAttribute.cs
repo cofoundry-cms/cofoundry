@@ -34,8 +34,10 @@ namespace Cofoundry.Domain
 
         #region interface implementation
 
-        public void Process(DisplayMetadata modelMetaData)
+        public void Process(DisplayMetadataProviderContext context)
         {
+            var modelMetaData = context.DisplayMetadata;
+
             modelMetaData.AddAdditionalValueIfNotEmpty("Tags", Tags);
             if (FileExtensions != null && FileExtensions.Length == 1)
             {

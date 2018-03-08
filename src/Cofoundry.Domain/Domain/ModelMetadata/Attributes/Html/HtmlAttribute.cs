@@ -26,9 +26,9 @@ namespace Cofoundry.Domain
             Toolbars = toolbars;
         }
 
-        public void Process(DisplayMetadata modelMetaData)
+        public void Process(DisplayMetadataProviderContext context)
         {
-            modelMetaData
+            context.DisplayMetadata
                 .AddAdditionalValueIfNotEmpty("Toolbars", Toolbars)
                 .AddAdditionalValueIfNotEmpty("CustomToolbar", CustomToolbar)
                 .TemplateHint = DataType.Html.ToString();

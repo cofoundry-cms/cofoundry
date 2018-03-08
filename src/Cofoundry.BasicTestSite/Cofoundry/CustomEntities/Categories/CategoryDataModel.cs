@@ -16,5 +16,8 @@ namespace Cofoundry.BasicTestSite
         [Display(Description = "A short description that appears as a tooltip when hovering over the category.")]
         [MultiLineText]
         public string ShortDescription { get; set; }
+
+        [NestedDataModelCollection(IsOrderable = true, MinItems = 1, MaxItems = 3)]
+        public ICollection<CarouselItemDataModel> Items { get; set; }
     }
 }

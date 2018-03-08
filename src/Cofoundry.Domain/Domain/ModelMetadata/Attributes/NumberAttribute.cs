@@ -23,11 +23,12 @@ namespace Cofoundry.Domain
         /// </summary>
         public string Step { get; set; }
 
-        public void Process(DisplayMetadata modelMetaData)
+        public void Process(DisplayMetadataProviderContext context)
         {
-            modelMetaData.TemplateHint = "Number";
 
-            modelMetaData
+            context.DisplayMetadata.TemplateHint = "Number";
+
+            context.DisplayMetadata
                 .AddAdditionalValueIfNotEmpty("Step", Step)
                 ;
         }
