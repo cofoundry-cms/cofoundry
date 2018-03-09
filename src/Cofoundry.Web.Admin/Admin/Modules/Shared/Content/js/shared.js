@@ -9760,7 +9760,7 @@ function (
         vm.save = onSave;
         vm.onCancel = onCancel;
         vm.close = onCancel;
-
+        vm.title = options.model ? 'Edit Item' : 'Add Item';
         vm.formDataSource = {
             model: options.model || {},
             modelMetaData: options.modelMetaData

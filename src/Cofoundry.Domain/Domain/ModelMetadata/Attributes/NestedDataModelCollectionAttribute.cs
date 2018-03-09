@@ -16,12 +16,14 @@ namespace Cofoundry.Domain
     public class NestedDataModelCollectionAttribute : Attribute, IMetadataAttribute, IEntityRelationAttribute
     {
         /// <summary>
-        /// The minimum number of items that need to be included in the collection.
+        /// The minimum number of items that need to be included in the collection. 0 indicates
+        /// no minimum.
         /// </summary>
         public int MinItems { get; set; }
 
         /// <summary>
-        /// The maximum number of items that can be included in the collection.
+        /// The maximum number of items that can be included in the collection. 0 indicates
+        /// no maximum.
         /// </summary>
         public int MaxItems { get; set; }
 
