@@ -59,7 +59,9 @@ function (
     /* UI ACTIONS */
 
     function handleMessage(e) {
-        vm[e.data.action].apply(this, e.data.args);
+        if (e.data.action && vm[e.data.action]) {
+            vm[e.data.action].apply(this, e.data.args);
+        }
     }
 
     function config() {

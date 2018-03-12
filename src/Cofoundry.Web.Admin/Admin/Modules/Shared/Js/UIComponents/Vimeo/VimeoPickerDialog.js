@@ -42,19 +42,24 @@ function (
 
     function onVideoSelected(model) {
 
+        console.log('1', model);
         if (model) {
             vm.model = {
-                id: model.id,
+                id: model.video_id,
                 title: model.title,
                 description: stringUtilities.stripTags(model.description),
                 width: model.width,
                 height: model.height,
                 uploadDate: model.upload_date,
                 duration: model.duration,
+                thumbnailUrl: model.thumbnail_url,
+                thumbnailWidth: model.thumbnail_width,
+                thumbnailHeight: model.thumbnail_height
             };
         } else {
             vm.model = null;
         }
+        console.log('2',model, vm.model);
     }
 
     function onCancel() {

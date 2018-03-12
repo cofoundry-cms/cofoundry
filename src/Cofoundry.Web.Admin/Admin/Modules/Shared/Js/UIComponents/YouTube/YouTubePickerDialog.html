@@ -6,40 +6,34 @@
 
     <cms-form cms-name="videoDetailsForm"
               cms-loading="loadState.isLoading">
+        
+        <cms-page-actions>
 
-        <cms-modal-dialog-body>
-            <cms-form-field-youtube-id cms-model="model.id"
-                                     cms-on-video-selected="onVideoSelected(model)"></cms-form-field-youtube-id>
-
-            <cms-form-field-container cms-title="Preview" class="form-field-youtube-preview">
-                <cms-youtube-video cms-model="model"></cms-youtube-video>
-            </cms-form-field-container>
-
-            <cms-form-field-text cms-title="Title"
-                                 cms-model="model.title"
-                                 cms-disabled="isEditingVideoId"
-                                 ng-if="!isModelId"></cms-form-field-text>
-
-            <cms-form-field-text-area cms-title="Description"
-                                      cms-model="model.description"
-                                      cms-disabled="isEditingVideoId"
-                                      ng-if="!isModelId"></cms-form-field-text-area>
-
-            <cms-form-field-readonly cms-title="Title"
-                                     cms-model="model.title"
-                                     ng-if="isModelId"></cms-form-field-readonly>
-
-            <cms-form-field-readonly cms-title="Description"
-                                     cms-model="model.description"
-                                     ng-if="isModelId"></cms-form-field-readonly>
-        </cms-modal-dialog-body>
-
-        <cms-modal-dialog-footer>
             <cms-button cms-text="Ok"
                         ng-click="onOk()"
                         ng-disabled="!model.id"></cms-button>
             <cms-button cms-text="Cancel" ng-click="onCancel()"></cms-button>
-        </cms-modal-dialog-footer>
+
+        </cms-page-actions>
+        <cms-page-body>
+            <cms-form-section cms-title="Video Settings">
+                <cms-form-field-youtube-id cms-model="model.id"
+                                           cms-on-video-selected="onVideoSelected(model)"></cms-form-field-youtube-id>
+
+                <cms-form-field-container cms-title="Preview" class="form-field-youtube-preview">
+                    <cms-youtube-video cms-model="model"></cms-youtube-video>
+                </cms-form-field-container>
+
+                <cms-form-field-text cms-title="Title"
+                                     cms-model="model.title"
+                                     cms-disabled="isEditingVideoId"
+                                     ng-if="!isModelId"></cms-form-field-text>
+
+                <cms-form-field-readonly cms-title="Title"
+                                         cms-model="model.title"
+                                         ng-if="isModelId"></cms-form-field-readonly>
+            </cms-form-section>
+        </cms-page-body>
 
     </cms-form>
 

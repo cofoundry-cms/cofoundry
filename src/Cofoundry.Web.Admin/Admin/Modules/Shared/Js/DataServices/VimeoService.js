@@ -7,17 +7,16 @@ function (
     ) {
 
     var service = {},
-        serviceUrl = '//vimeo.com/api/v2/video/';
+        serviceUrl = 'https://vimeo.com/api/oembed.json?url=https%3A%2F%2Fvimeo.com%2F';
 
     /* QUERIES */
 
     service.getVideoInfo = function (id) {
 
-        return wrapGetResponse(serviceUrl + id + '.json')
+        return wrapGetResponse(serviceUrl + id)
             .then(function (response) {
-
                 if (response && response.data) {
-                    return response.data[0];
+                    return response.data;
                 }
 
                 return;

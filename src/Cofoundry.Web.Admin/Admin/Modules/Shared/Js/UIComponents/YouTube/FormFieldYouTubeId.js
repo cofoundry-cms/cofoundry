@@ -9,14 +9,14 @@ angular.module('cms.shared').directive('cmsFormFieldYoutubeId', [
     '_',
     'shared.internalModulePath',
     'shared.LoadState',
-    'shared.youtubeService',
+    'shared.youTubeService',
     'shared.validationErrorService',
     'baseFormFieldFactory',
 function (
     _,
     modulePath,
     LoadState,
-    YouTubeService,
+    youTubeService,
     validationErrorService,
     baseFormFieldFactory) {
 
@@ -74,12 +74,13 @@ function (
                 cancelEditing();
             }  else {
 
-                vm.updateIdLoadState.on();
-                youTubeService
-                    .getVideoInfo(videoId)
-                    .then(onInfoLoaded)
-                    .catch(onFail)
-                    .finally(vm.updateIdLoadState.off);
+                //vm.updateIdLoadState.on();
+                //youTubeService
+                //    .getVideoInfo(videoId)
+                //    .then(onInfoLoaded) 
+                //    .catch(onFail)
+                //    .finally(vm.updateIdLoadState.off);
+                onInfoLoaded({})
             }
 
             function onFail(response) {
@@ -88,7 +89,7 @@ function (
 
             function onInfoLoaded(info) {
                 if (info) {
-                    vm.model = vm.idOrUrlInput = info.id;
+                    vm.model = vm.idOrUrlInput = videoId;
 
                     triggerOnVideoSelected(info);
                 } else {
@@ -126,12 +127,13 @@ function (
 
             if (!urlOrId) return;
 
-            if (/^\d+$/.test(urlOrId)) {
+            if (/^[^"&?\/ ]{11}$/.test(urlOrId)) {
                 return urlOrId;
             }
 
             matches = urlRegex.exec(urlOrId);
-            return matches && matches[5];
+
+            return matches && matches[1];
         }
     }
 }]);

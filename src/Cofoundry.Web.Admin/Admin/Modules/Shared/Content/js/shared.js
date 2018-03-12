@@ -4487,17 +4487,16 @@ function (
     ) {
 
     var service = {},
-        serviceUrl = '//vimeo.com/api/v2/video/';
+        serviceUrl = 'https://vimeo.com/api/oembed.json?url=https%3A%2F%2Fvimeo.com%2F';
 
     /* QUERIES */
 
     service.getVideoInfo = function (id) {
 
-        return wrapGetResponse(serviceUrl + id + '.json')
+        return wrapGetResponse(serviceUrl + id)
             .then(function (response) {
-
                 if (response && response.data) {
-                    return response.data[0];
+                    return response.data;
                 }
 
                 return;
@@ -4530,14 +4529,13 @@ function (
     ) {
 
     var service = {},
-        serviceKey = 'AIzaSyA1lW3d0K_SxwgQsYXGIXANhMwa013nZXg',
         serviceUrl = 'https://www.googleapis.com/youtube/v3/videos?id=';
 
     /* QUERIES */
 
     service.getVideoInfo = function (id) {
 
-        return wrapGetResponse(serviceUrl + id + '&part=contentDetails&key=' + serviceKey)
+        return wrapGetResponse(serviceUrl + id + '&part=contentDetails&key=')
             .then(function (response) {
 
                 if (response && response.data) {
@@ -11154,7 +11152,7 @@ function (
 
             function onInfoLoaded(info) {
                 if (info) {
-                    vm.model = vm.idOrUrlInput = info.id;
+                    vm.model = vm.idOrUrlInput = info.video_id;
 
                     triggerOnVideoSelected(info);
                 } else {
@@ -11245,19 +11243,24 @@ function (
 
     function onVideoSelected(model) {
 
+        console.log('1', model);
         if (model) {
             vm.model = {
-                id: model.id,
+                id: model.video_id,
                 title: model.title,
                 description: stringUtilities.stripTags(model.description),
                 width: model.width,
                 height: model.height,
                 uploadDate: model.upload_date,
                 duration: model.duration,
+                thumbnailUrl: model.thumbnail_url,
+                thumbnailWidth: model.thumbnail_width,
+                thumbnailHeight: model.thumbnail_height
             };
         } else {
             vm.model = null;
         }
+        console.log('2',model, vm.model);
     }
 
     function onCancel() {
@@ -11426,14 +11429,14 @@ angular.module('cms.shared').directive('cmsFormFieldYoutubeId', [
     '_',
     'shared.internalModulePath',
     'shared.LoadState',
-    'shared.youtubeService',
+    'shared.youTubeService',
     'shared.validationErrorService',
     'baseFormFieldFactory',
 function (
     _,
     modulePath,
     LoadState,
-    YouTubeService,
+    youTubeService,
     validationErrorService,
     baseFormFieldFactory) {
 
@@ -11491,12 +11494,13 @@ function (
                 cancelEditing();
             }  else {
 
-                vm.updateIdLoadState.on();
-                youTubeService
-                    .getVideoInfo(videoId)
-                    .then(onInfoLoaded)
-                    .catch(onFail)
-                    .finally(vm.updateIdLoadState.off);
+                //vm.updateIdLoadState.on();
+                //youTubeService
+                //    .getVideoInfo(videoId)
+                //    .then(onInfoLoaded) 
+                //    .catch(onFail)
+                //    .finally(vm.updateIdLoadState.off);
+                onInfoLoaded({})
             }
 
             function onFail(response) {
@@ -11505,7 +11509,7 @@ function (
 
             function onInfoLoaded(info) {
                 if (info) {
-                    vm.model = vm.idOrUrlInput = info.id;
+                    vm.model = vm.idOrUrlInput = videoId;
 
                     triggerOnVideoSelected(info);
                 } else {
@@ -11543,12 +11547,13 @@ function (
 
             if (!urlOrId) return;
 
-            if (/^\d+$/.test(urlOrId)) {
+            if (/^[^"&?\/ ]{11}$/.test(urlOrId)) {
                 return urlOrId;
             }
 
             matches = urlRegex.exec(urlOrId);
-            return matches && matches[5];
+
+            return matches && matches[1];
         }
     }
 }]);
@@ -11556,7 +11561,7 @@ angular.module('cms.shared').controller('YoutubePickerDialogController', [
     '$scope',
     'shared.LoadState',
     'shared.stringUtilities',
-    'shared.youtubeService',
+    'shared.youTubeService',
     'options',
     'close',
 function (
@@ -11598,13 +11603,13 @@ function (
 
         if (model) {
             vm.model = {
-                id: model.id,
                 title: model.title,
-                description: stringUtilities.stripTags(model.description),
                 width: model.width,
                 height: model.height,
                 uploadDate: model.upload_date,
-                duration: model.duration,
+                thumbnailUrl: model.thumbnailUrl,
+                thumbnailWidth: model.thumbnail_width,
+                thumbnailHeight: model.thumbnail_height
             };
         } else {
             vm.model = null;

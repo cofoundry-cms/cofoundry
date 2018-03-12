@@ -2,7 +2,7 @@
     '$scope',
     'shared.LoadState',
     'shared.stringUtilities',
-    'shared.youtubeService',
+    'shared.youTubeService',
     'options',
     'close',
 function (
@@ -44,13 +44,13 @@ function (
 
         if (model) {
             vm.model = {
-                id: model.id,
                 title: model.title,
-                description: stringUtilities.stripTags(model.description),
                 width: model.width,
                 height: model.height,
                 uploadDate: model.upload_date,
-                duration: model.duration,
+                thumbnailUrl: model.thumbnailUrl,
+                thumbnailWidth: model.thumbnail_width,
+                thumbnailHeight: model.thumbnail_height
             };
         } else {
             vm.model = null;

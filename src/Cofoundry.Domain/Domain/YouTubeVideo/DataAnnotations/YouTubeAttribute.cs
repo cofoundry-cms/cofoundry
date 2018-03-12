@@ -8,14 +8,14 @@ using Microsoft.AspNetCore.Mvc.ModelBinding.Metadata;
 namespace Cofoundry.Domain
 {
     /// <summary>
-    /// This can be used to decorate image properties in dynamic data providers to give properties about the image for filtering when browsing.
-    /// I.e. you can specify dimensions and tags for filtering the list of images.
+    /// This can be used to decorate a YouTubeVideo property and provide a UI Hint
+    /// to the admin interface to display a YouTube video picker.
     /// </summary>
     [AttributeUsage(AttributeTargets.Property)]
     public class YouTubeAttribute : Attribute, IMetadataAttribute
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="VimeoAttribute"/> class.
+        /// Initializes a new instance of the <see cref="YouTubeAttribute"/> class.
         /// </summary>
         public YouTubeAttribute()
             : base()
@@ -24,7 +24,9 @@ namespace Cofoundry.Domain
 
         public void Process(DisplayMetadataProviderContext context)
         {
-            context.DisplayMetadata.TemplateHint = "YouTube";
+            // NB: must use lowercase t because the directive needs to transform 
+            // to form-field-youtube with youtube as one word.
+            context.DisplayMetadata.TemplateHint = "Youtube";
         }
     }
 }

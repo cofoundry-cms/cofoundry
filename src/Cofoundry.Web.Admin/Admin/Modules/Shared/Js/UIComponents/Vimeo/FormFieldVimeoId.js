@@ -88,7 +88,7 @@ function (
 
             function onInfoLoaded(info) {
                 if (info) {
-                    vm.model = vm.idOrUrlInput = info.id;
+                    vm.model = vm.idOrUrlInput = info.video_id;
 
                     triggerOnVideoSelected(info);
                 } else {
