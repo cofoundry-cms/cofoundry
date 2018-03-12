@@ -20,7 +20,7 @@ function (
         templateUrl: modulePath + 'UIComponents/YouTube/YouTubeVideo.html',
         link: function (scope, el, attributes) {
 
-            scope.replacementUrl = contentPath + 'img/assetreplacement/youtube-replacement.png';
+            scope.replacementUrl = contentPath + 'img/AssetReplacement/youtube-replacement.png';
             scope.$watch('model', function (model) {
                 var id;
                 if (model) {

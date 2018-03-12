@@ -26,7 +26,7 @@ function (
                         mode: scope.cropMode
                     });
                 } else {
-                    scope.src = contentPath + 'img/assetreplacement/image-replacement.png';
+                    scope.src = contentPath + 'img/AssetReplacement/image-replacement.png';
                 }
             });
 

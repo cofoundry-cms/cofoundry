@@ -20,7 +20,7 @@ function (
         templateUrl: modulePath + 'UIComponents/Vimeo/VimeoVideo.html',
         link: function (scope, el, attributes) {
 
-            scope.replacementUrl = contentPath + 'img/assetreplacement/vimeo-replacement.png';
+            scope.replacementUrl = contentPath + 'img/AssetReplacement/vimeo-replacement.png';
             scope.$watch('model', function (model) {
                 var id;
                 if (model) {
