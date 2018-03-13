@@ -79,7 +79,7 @@ namespace Cofoundry.Domain
             var dbPageVersions = _dbContext
                 .PageVersions
                 .AsNoTracking()
-                .Where(v => !v.IsDeleted)
+                .FilterActive()
                 .Select(v => new PageVersionQueryResult()
                 {
                     PageId = v.PageId,
@@ -99,7 +99,7 @@ namespace Cofoundry.Domain
             var dbPages = _dbContext
                 .Pages
                 .AsNoTracking()
-                .Where(p => !p.IsDeleted)
+                .FilterActive()
                 .Select(p => new PageQueryResult()
                 {
                     RoutingInfo = new PageRoute()
@@ -122,6 +122,7 @@ namespace Cofoundry.Domain
         {
             var dbTemplates = _dbContext
                 .PageTemplates
+                .FilterActive()
                 .Select(t => new PageTemplateQueryResult()
                 {
                     PageTemplateId = t.PageTemplateId,

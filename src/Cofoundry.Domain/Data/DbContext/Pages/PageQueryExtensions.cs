@@ -10,7 +10,7 @@ namespace Cofoundry.Domain.Data
     {
         /// <summary>
         /// Fitlers the collection to only include pages with the 
-        /// specified page id that have not been deleted.
+        /// specified page id.
         /// </summary>
         /// <param name="pageId">PageId to filter by.</param>
         public static IQueryable<Page> FilterByPageId(this IQueryable<Page> pages, int pageId)
