@@ -10430,7 +10430,7 @@ angular.module('cms.shared').directive('cmsSearchFilter', ['shared.internalModul
 }]);
 angular.module('cms.shared').factory('shared.SearchQuery', ['$location', '_', function ($location, _) {
     var pagingDefaultConfig = {
-        pageSize: 20,
+        pageSize: 30,
         pageNumber: 1
     };
 
