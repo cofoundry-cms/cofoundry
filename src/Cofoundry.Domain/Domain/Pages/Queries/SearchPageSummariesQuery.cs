@@ -8,6 +8,8 @@ namespace Cofoundry.Domain
 {
     public class SearchPageSummariesQuery : SimplePageableQuery, IQuery<PagedQueryResult<PageSummary>>
     {
+        public string Text { get; set; }
+
         [Display(Name = "Tags")]
         public string Tags { get; set; }
 

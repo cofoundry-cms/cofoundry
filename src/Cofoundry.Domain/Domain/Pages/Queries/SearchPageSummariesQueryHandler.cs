@@ -84,6 +84,12 @@ namespace Cofoundry.Domain
                 }
             }
 
+            if (!string.IsNullOrWhiteSpace(query.Text))
+            {
+                var sluggedQuery = SlugFormatter.ToSlug(query.Text);
+                dbQuery = dbQuery.Where(p => p.Page.UrlPath.Contains(sluggedQuery));
+            }
+
             // Filter by workflow status (only draft and published are applicable
             if (query.PublishStatus == PublishStatus.Published)
             {
