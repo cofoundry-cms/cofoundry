@@ -13,9 +13,6 @@ namespace Cofoundry.BasicTestSite
         [Required]
         public string Title { get; set; }
 
-        [Page]
-        public int PageId { get; set; }
-
         [Required]
         [NestedDataModelCollection(IsOrderable = true, MaxItems = 3)]
         public ICollection<CarouselItemDataModel> Items { get; set; }
