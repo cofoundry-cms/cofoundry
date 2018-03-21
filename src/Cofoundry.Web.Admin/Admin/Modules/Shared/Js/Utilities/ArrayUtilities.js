@@ -40,5 +40,12 @@
         }
     }
 
+    service.remove = function (arr, index) {
+
+        if (index >= 0) {
+            return arr.splice(index, 1);
+        }
+    }
+    
     return service;
 });

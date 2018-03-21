@@ -71,18 +71,8 @@ function (
 
         function remove(customEntity) {
 
-            removeItemFromArray(vm.gridData, customEntity);
-            removeItemFromArray(vm.model, _.find(vm.model, function (value) {
-                return value[CUSTOM_ENTITY_ID_PROP] === customEntity[CUSTOM_ENTITY_ID_PROP];
-            }));
-
-            function removeItemFromArray(arr, item) {
-                var index = arr.indexOf(item);
-
-                if (index >= 0) {
-                    return arr.splice(index, 1);
-                }
-            }
+            arrayUtilities.removeObject(vm.gridData, customEntity);
+            arrayUtilities.removeObject(vm.model, customEntity, CUSTOM_ENTITY_ID_PROP);
         }
 
         function showPicker(definition) {

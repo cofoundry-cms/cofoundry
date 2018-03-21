@@ -1194,13 +1194,25 @@ function globStringToRegex(str) {
         return 'ondrag' in document.createElement('a');
     }
 
+    function determineEffectAllowed(e) {
+        if (e.originalEvent) {
+            e.dataTransfer = e.originalEvent.dataTransfer;
+        }
+
+        // Chrome doesn't set dropEffect, so we have to work it out ourselves
+        if (typeof e.dataTransfer !== 'undefined' && e.dataTransfer.dropEffect === 'none') {
+            if (e.dataTransfer.effectAllowed === 'copy' ||
+                e.dataTransfer.effectAllowed === 'move') {
+                e.dataTransfer.dropEffect = e.dataTransfer.effectAllowed;
+            } else if (e.dataTransfer.effectAllowed === 'copyMove' || e.dataTransfer.effectAllowed === 'copymove') {
+                e.dataTransfer.dropEffect = e.ctrlKey ? 'copy' : 'move';
+            }
+        }
+    }
+
     if (!isDnDsSupported()) {
         angular.module('ang-drag-drop', []);
         return;
-    }
-
-    if (window.jQuery && (-1 === window.jQuery.event.props.indexOf('dataTransfer'))) {
-        window.jQuery.event.props.push('dataTransfer');
     }
 
     var module = angular.module('ang-drag-drop', []);
@@ -1238,30 +1250,68 @@ function globStringToRegex(str) {
             }
 
             function dragendHandler(e) {
+                if (e.originalEvent) {
+                    e.dataTransfer = e.originalEvent.dataTransfer;
+                }
+
                 setTimeout(function () {
                     element.unbind('$destroy', dragendHandler);
                 }, 0);
                 var sendChannel = attrs.dragChannel || 'defaultchannel';
                 $rootScope.$broadcast('ANGULAR_DRAG_END', e, sendChannel);
+
+                determineEffectAllowed(e);
+
                 if (e.dataTransfer && e.dataTransfer.dropEffect !== 'none') {
                     if (attrs.onDropSuccess) {
                         var onDropSuccessFn = $parse(attrs.onDropSuccess);
                         scope.$evalAsync(function () {
                             onDropSuccessFn(scope, { $event: e });
                         });
-                    } else {
-                        if (attrs.onDropFailure) {
-                            var onDropFailureFn = $parse(attrs.onDropFailure);
-                            scope.$evalAsync(function () {
-                                onDropFailureFn(scope, { $event: e });
-                            });
-                        }
+                    }
+                } else if (e.dataTransfer && e.dataTransfer.dropEffect === 'none') {
+                    if (attrs.onDropFailure) {
+                        var onDropFailureFn = $parse(attrs.onDropFailure);
+                        scope.$evalAsync(function () {
+                            onDropFailureFn(scope, { $event: e });
+                        });
                     }
                 }
                 element.removeClass(draggingClass);
             }
 
+            function setDragElement(e, dragImageElementId) {
+                var dragImageElementFn;
+
+                if (e.originalEvent) {
+                    e.dataTransfer = e.originalEvent.dataTransfer;
+                }
+
+                dragImageElementFn = $parse(dragImageElementId);
+
+                scope.$apply(function () {
+                    var elementId = dragImageElementFn(scope, { $event: e }),
+                        dragElement;
+
+                    if (!(elementId && angular.isString(elementId))) {
+                        return;
+                    }
+
+                    dragElement = document.getElementById(elementId);
+
+                    if (!dragElement) {
+                        return;
+                    }
+
+                    e.dataTransfer.setDragImage(dragElement, 0, 0);
+                });
+            }
+
             function dragstartHandler(e) {
+                if (e.originalEvent) {
+                    e.dataTransfer = e.originalEvent.dataTransfer;
+                }
+
                 var isDragAllowed = !isDragHandleUsed || dragTarget.classList.contains(dragHandleClass);
 
                 if (isDragAllowed) {
@@ -1295,13 +1345,26 @@ function globStringToRegex(str) {
                                 }
                             }
                         });
+                    } else if (attrs.dragImageElementId) {
+                        setDragElement(e, attrs.dragImageElementId);
                     }
 
-                    var transferDataObject = { data: dragData, channel: sendChannel }
+                    var offset = { x: e.offsetX, y: e.offsetY };
+                    var transferDataObject = { data: dragData, channel: sendChannel, offset: offset };
                     var transferDataText = angular.toJson(transferDataObject);
 
                     e.dataTransfer.setData('text', transferDataText);
                     e.dataTransfer.effectAllowed = 'copyMove';
+
+
+                    if (attrs.onDragStart) {
+                        var onDragStartFn = $parse(attrs.onDragStart);
+                        scope.$evalAsync(function () {
+                            onDragStartFn(scope, {
+                                $event: e
+                            });
+                        });
+                    }
 
                     $rootScope.$broadcast('ANGULAR_DRAG_START', e, sendChannel, transferDataObject);
                 }
@@ -1322,6 +1385,26 @@ function globStringToRegex(str) {
             var dragHoverClass = attr.dragHoverClass || 'on-drag-hover';
             var customDragEnterEvent = $parse(attr.onDragEnter);
             var customDragLeaveEvent = $parse(attr.onDragLeave);
+
+            function calculateDropOffset(e) {
+                var offset = {
+                    x: e.offsetX,
+                    y: e.offsetY
+                };
+                var target = e.target;
+
+                while (target !== element[0]) {
+                    offset.x = offset.x + target.offsetLeft;
+                    offset.y = offset.y + target.offsetTop;
+
+                    target = target.offsetParent;
+                    if (!target) {
+                        return null;
+                    }
+                }
+
+                return offset;
+            }
 
             function onDragOver(e) {
                 if (e.preventDefault) {
@@ -1391,6 +1474,10 @@ function globStringToRegex(str) {
             }
 
             function onDrop(e) {
+                if (e.originalEvent) {
+                    e.dataTransfer = e.originalEvent.dataTransfer;
+                }
+
                 if (e.preventDefault) {
                     e.preventDefault(); // Necessary. Allows us to drop.
                 }
@@ -1401,19 +1488,18 @@ function globStringToRegex(str) {
                 var sendData = e.dataTransfer.getData('text');
                 sendData = angular.fromJson(sendData);
 
-                // Chrome doesn't set dropEffect, so we have to work it out ourselves
-                if (e.dataTransfer.dropEffect === 'none') {
-                    if (e.dataTransfer.effectAllowed === 'copy' ||
-                        e.dataTransfer.effectAllowed === 'move') {
-                        e.dataTransfer.dropEffect = e.dataTransfer.effectAllowed;
-                    } else if (e.dataTransfer.effectAllowed === 'copyMove') {
-                        e.dataTransfer.dropEffect = e.ctrlKey ? 'copy' : 'move';
-                    }
-                }
+                var dropOffset = calculateDropOffset(e);
+
+                var position = dropOffset ? {
+                    x: dropOffset.x - sendData.offset.x,
+                    y: dropOffset.y - sendData.offset.y
+                } : null;
+
+                determineEffectAllowed(e);
 
                 var uiOnDropFn = $parse(attr.uiOnDrop);
                 scope.$evalAsync(function () {
-                    uiOnDropFn(scope, { $data: sendData.data, $event: e, $channel: sendData.channel });
+                    uiOnDropFn(scope, { $data: sendData.data, $event: e, $channel: sendData.channel, $position: position });
                 });
                 element.removeClass(dragEnterClass);
                 dragging = 0;
@@ -1430,6 +1516,10 @@ function globStringToRegex(str) {
             }
 
             function preventNativeDnD(e) {
+                if (e.originalEvent) {
+                    e.dataTransfer = e.originalEvent.dataTransfer;
+                }
+
                 if (e.preventDefault) {
                     e.preventDefault();
                 }
@@ -1451,7 +1541,12 @@ function globStringToRegex(str) {
 
                 if (valid && attr.dropValidate) {
                     var validateFn = $parse(attr.dropValidate);
-                    valid = validateFn(scope, { $drop: { scope: scope, element: element }, $event: e, $data: transferDataObject.data, $channel: transferDataObject.channel });
+                    valid = validateFn(scope, {
+                        $drop: { scope: scope, element: element },
+                        $event: e,
+                        $data: transferDataObject.data,
+                        $channel: transferDataObject.channel
+                    });
                 }
 
                 if (valid) {
@@ -1473,7 +1568,7 @@ function globStringToRegex(str) {
             });
 
 
-            var deregisterDragEnd = $rootScope.$on('ANGULAR_DRAG_END', function (_, e, channel) {
+            var deregisterDragEnd = $rootScope.$on('ANGULAR_DRAG_END', function () {
                 element.unbind('dragover', onDragOver);
                 element.unbind('dragenter', onDragEnter);
                 element.unbind('dragleave', onDragLeave);
@@ -4605,6 +4700,13 @@ angular.module('cms.shared').factory('shared.arrayUtilities', function () {
         }
     }
 
+    service.remove = function (arr, index) {
+
+        if (index >= 0) {
+            return arr.splice(index, 1);
+        }
+    }
+    
     return service;
 });
 angular.module('cms.shared').factory('shared.directiveUtilities', function () {
@@ -6196,18 +6298,8 @@ function (
 
         function remove(customEntity) {
 
-            removeItemFromArray(vm.gridData, customEntity);
-            removeItemFromArray(vm.model, _.find(vm.model, function (value) {
-                return value[CUSTOM_ENTITY_ID_PROP] === customEntity[CUSTOM_ENTITY_ID_PROP];
-            }));
-
-            function removeItemFromArray(arr, item) {
-                var index = arr.indexOf(item);
-
-                if (index >= 0) {
-                    return arr.splice(index, 1);
-                }
-            }
+            arrayUtilities.removeObject(vm.gridData, customEntity);
+            arrayUtilities.removeObject(vm.model, customEntity, CUSTOM_ENTITY_ID_PROP);
         }
 
         function showPicker(definition) {
@@ -9794,7 +9886,9 @@ angular.module('cms.shared').directive('cmsFormFieldNestedDataModelCollection', 
     'shared.LoadState',
     'shared.nestedDataModelSchemaService',
     'shared.modalDialogService',
+    'shared.imageService',
     'shared.arrayUtilities',
+    'shared.stringUtilities',
     'baseFormFieldFactory',
     function (
         _,
@@ -9802,12 +9896,16 @@ angular.module('cms.shared').directive('cmsFormFieldNestedDataModelCollection', 
         LoadState,
         nestedDataModelSchemaService,
         modalDialogService,
+        imageService,
         arrayUtilities,
+        stringUtilities,
         baseFormFieldFactory) {
 
         /* VARS */
 
-        var baseConfig = baseFormFieldFactory.defaultConfig;
+        var PREVIEW_TITLE_FIELD_NAME = 'previewTitle',
+            PREVIEW_IMAGE_FIELD_NAME = 'previewImage',
+            baseConfig = baseFormFieldFactory.defaultConfig;
 
         /* CONFIG */
 
@@ -9816,8 +9914,8 @@ angular.module('cms.shared').directive('cmsFormFieldNestedDataModelCollection', 
             scope: _.extend(baseConfig.scope, {
                 minItems: '@cmsMinItems',
                 maxItems: '@cmsMaxItems',
-                orderable: '=cmsOrderable',
-                modelType: '@cmsModelType'
+                modelType: '@cmsModelType',
+                orderable: '=cmsOrderable'
             }),
             passThroughAttributes: [
                 'required'
@@ -9831,7 +9929,9 @@ angular.module('cms.shared').directive('cmsFormFieldNestedDataModelCollection', 
 
         function link(scope, el, attributes, controllers) {
             var vm = scope.vm,
-                definitionPromise;
+                definitionPromise,
+                dynamicFormFieldController = _.last(controllers),
+                lastDragToIndex;
 
             init();
             return baseConfig.link(scope, el, attributes, controllers);
@@ -9844,27 +9944,125 @@ angular.module('cms.shared').directive('cmsFormFieldNestedDataModelCollection', 
                 vm.edit = edit;
                 vm.remove = remove;
                 vm.onDrop = onDrop;
+                vm.onDropSuccess = onDropSuccess;
+                vm.getTitle = getTitle;
 
                 definitionPromise = nestedDataModelSchemaService
                     .getByName(vm.modelType)
                     .then(function (modelMetaData) {
+                        var gridFields = {};
 
-                    vm.modelMetaData = modelMetaData;
+                        setGridField(gridFields, modelMetaData.dataModelProperties, PREVIEW_TITLE_FIELD_NAME);
+                        setGridField(gridFields, modelMetaData.dataModelProperties, 'previewDescription');
+                        setGridField(gridFields, modelMetaData.dataModelProperties, PREVIEW_IMAGE_FIELD_NAME);
+                        vm.showTitleColumn = gridFields[PREVIEW_TITLE_FIELD_NAME] || !gridFields.hasFields;
+                        vm.gridFields = gridFields;
+                        vm.modelMetaData = modelMetaData;
+
+                        if (gridFields[PREVIEW_TITLE_FIELD_NAME]) {
+                            vm.gridTitleTerm = gridFields[PREVIEW_TITLE_FIELD_NAME].displayName;
+                        } else {
+                            vm.gridTitleTerm = "Title";
+                        }
+
+                        loadImageFields();
+                    });
+
+                function setGridField(gridFields, dataModelProperties, fieldName) {
+
+                    var field = _.find(dataModelProperties, function (property) {
+
+                        return property.additionalAttributes[fieldName];
+                    });
+
+                    if (field) {
+                        field.lowerName = stringUtilities.lowerCaseFirstLetter(field.name);
+                        gridFields[fieldName] = field;
+                        gridFields.hasFields = true;
+                    }
+                }
+            }
+
+            function updateImageField(itemToUpdate, index, isNew) {
+                var field = vm.gridFields[PREVIEW_IMAGE_FIELD_NAME];
+                if (!field) return;
+
+                var newImageId = itemToUpdate[field.lowerName];
+
+                if (!isNew) {
+                    var existingImage = vm.modelImages[index],
+                        existingId;
+
+                    if (existingImage) {
+                        existingId = existingImage['imageAssetId'];
+                    }
+
+                    if (newImageId == existingId) return;
+
+                    if (!newImageId) {
+                        vm.modelImages[index] = undefined;
+                        return;
+                    }
+                }
+
+                imageService
+                    .getById(newImageId)
+                    .then(loadImage);
+
+                function loadImage (image) {
+                    vm.modelImages[index] = image;
+                }
+            }
+
+            function loadImageFields() {
+                if (!vm.model || !vm.gridFields || !vm.gridFields[PREVIEW_IMAGE_FIELD_NAME]) return;
+
+                var field = vm.gridFields[PREVIEW_IMAGE_FIELD_NAME];
+
+                var allImageIds = _.chain(vm.model)
+                    .map(function (model) {
+                        return model[field.lowerName];
+                    })
+                    .filter(function (id) {
+                        return id;
+                    })
+                    .uniq()
+                    .value();
+
+                imageService.getByIdRange(allImageIds).then(function (images) {
+                    vm.modelImages = [];
+
+                    _.each(vm.model, function (item) {
+                        var id = item[field.lowerName],
+                            image;
+
+                        if (id) {
+                            image = _.find(images, { imageAssetId: id })
+                        }
+
+                        vm.modelImages.push(image);
+                    });
                 });
             }
 
             /* EVENTS */
 
-            function remove(nestedModel) {
+            function remove(nestedModel, $index) {
 
                 arrayUtilities.removeObject(vm.model, nestedModel);
+                arrayUtilities.remove(vm.modelImages, $index);
             }
 
-            function edit(model) {
+            function edit(model, $index) {
 
                 showEditDialog({
-                    model: model
+                    model: model,
+                    onSave: onSave
                 });
+
+                function onSave() {
+                    updateImageField(model, $index);
+                }
             }
 
             function add() {
@@ -9876,12 +10074,18 @@ angular.module('cms.shared').directive('cmsFormFieldNestedDataModelCollection', 
                 function onSave(newEntity) {
                     vm.model = vm.model || [];
                     vm.model.push(newEntity);
+
+                    updateImageField(newEntity, vm.model.length -1, true);
                 }
             }
 
             function showEditDialog(options) {
 
                 options.modelMetaData = vm.modelMetaData;
+
+                if (dynamicFormFieldController) {
+                    options.additionalParameters = dynamicFormFieldController.additionalParameters;
+                }
 
                 modalDialogService.show({
                     templateUrl: modulePath + 'UIComponents/NestedDataModels/EditNestedDataModelDialog.html',
@@ -9892,8 +10096,29 @@ angular.module('cms.shared').directive('cmsFormFieldNestedDataModelCollection', 
 
             function onDrop($index, droppedEntity) {
 
-                arrayUtilities.moveObject(vm.model, droppedEntity, $index);
+                // drag drop doesnt give us the to/from index data in the same event, and 
+                // we can't use property tracking here, so stuff the index in a variable
+                lastDragToIndex = $index;
             }
+
+            function onDropSuccess($index) {
+                arrayUtilities.move(vm.model, $index, lastDragToIndex);
+                arrayUtilities.move(vm.modelImages, $index, lastDragToIndex);
+            }
+
+            /* FORMATTERS */
+
+            function getTitle(entity, index) {
+                var field = vm.gridFields[PREVIEW_TITLE_FIELD_NAME];
+                if (field) {
+                    return entity[field.lowerName];
+                }
+
+                if (entity.title) return entity.title;
+
+                return 'Item ' + (index + 1);
+            }
+
         }
     }]);
 angular.module('cms.shared').directive('cmsFormFieldPageCollection', [

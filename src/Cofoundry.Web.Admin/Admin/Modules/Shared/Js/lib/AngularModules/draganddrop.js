@@ -9,13 +9,25 @@
         return 'ondrag' in document.createElement('a');
     }
 
+    function determineEffectAllowed(e) {
+        if (e.originalEvent) {
+            e.dataTransfer = e.originalEvent.dataTransfer;
+        }
+
+        // Chrome doesn't set dropEffect, so we have to work it out ourselves
+        if (typeof e.dataTransfer !== 'undefined' && e.dataTransfer.dropEffect === 'none') {
+            if (e.dataTransfer.effectAllowed === 'copy' ||
+                e.dataTransfer.effectAllowed === 'move') {
+                e.dataTransfer.dropEffect = e.dataTransfer.effectAllowed;
+            } else if (e.dataTransfer.effectAllowed === 'copyMove' || e.dataTransfer.effectAllowed === 'copymove') {
+                e.dataTransfer.dropEffect = e.ctrlKey ? 'copy' : 'move';
+            }
+        }
+    }
+
     if (!isDnDsSupported()) {
         angular.module('ang-drag-drop', []);
         return;
-    }
-
-    if (window.jQuery && (-1 === window.jQuery.event.props.indexOf('dataTransfer'))) {
-        window.jQuery.event.props.push('dataTransfer');
     }
 
     var module = angular.module('ang-drag-drop', []);
@@ -53,30 +65,68 @@
             }
 
             function dragendHandler(e) {
+                if (e.originalEvent) {
+                    e.dataTransfer = e.originalEvent.dataTransfer;
+                }
+
                 setTimeout(function () {
                     element.unbind('$destroy', dragendHandler);
                 }, 0);
                 var sendChannel = attrs.dragChannel || 'defaultchannel';
                 $rootScope.$broadcast('ANGULAR_DRAG_END', e, sendChannel);
+
+                determineEffectAllowed(e);
+
                 if (e.dataTransfer && e.dataTransfer.dropEffect !== 'none') {
                     if (attrs.onDropSuccess) {
                         var onDropSuccessFn = $parse(attrs.onDropSuccess);
                         scope.$evalAsync(function () {
                             onDropSuccessFn(scope, { $event: e });
                         });
-                    } else {
-                        if (attrs.onDropFailure) {
-                            var onDropFailureFn = $parse(attrs.onDropFailure);
-                            scope.$evalAsync(function () {
-                                onDropFailureFn(scope, { $event: e });
-                            });
-                        }
+                    }
+                } else if (e.dataTransfer && e.dataTransfer.dropEffect === 'none') {
+                    if (attrs.onDropFailure) {
+                        var onDropFailureFn = $parse(attrs.onDropFailure);
+                        scope.$evalAsync(function () {
+                            onDropFailureFn(scope, { $event: e });
+                        });
                     }
                 }
                 element.removeClass(draggingClass);
             }
 
+            function setDragElement(e, dragImageElementId) {
+                var dragImageElementFn;
+
+                if (e.originalEvent) {
+                    e.dataTransfer = e.originalEvent.dataTransfer;
+                }
+
+                dragImageElementFn = $parse(dragImageElementId);
+
+                scope.$apply(function () {
+                    var elementId = dragImageElementFn(scope, { $event: e }),
+                        dragElement;
+
+                    if (!(elementId && angular.isString(elementId))) {
+                        return;
+                    }
+
+                    dragElement = document.getElementById(elementId);
+
+                    if (!dragElement) {
+                        return;
+                    }
+
+                    e.dataTransfer.setDragImage(dragElement, 0, 0);
+                });
+            }
+
             function dragstartHandler(e) {
+                if (e.originalEvent) {
+                    e.dataTransfer = e.originalEvent.dataTransfer;
+                }
+
                 var isDragAllowed = !isDragHandleUsed || dragTarget.classList.contains(dragHandleClass);
 
                 if (isDragAllowed) {
@@ -110,13 +160,26 @@
                                 }
                             }
                         });
+                    } else if (attrs.dragImageElementId) {
+                        setDragElement(e, attrs.dragImageElementId);
                     }
 
-                    var transferDataObject = { data: dragData, channel: sendChannel }
+                    var offset = { x: e.offsetX, y: e.offsetY };
+                    var transferDataObject = { data: dragData, channel: sendChannel, offset: offset };
                     var transferDataText = angular.toJson(transferDataObject);
 
                     e.dataTransfer.setData('text', transferDataText);
                     e.dataTransfer.effectAllowed = 'copyMove';
+
+
+                    if (attrs.onDragStart) {
+                        var onDragStartFn = $parse(attrs.onDragStart);
+                        scope.$evalAsync(function () {
+                            onDragStartFn(scope, {
+                                $event: e
+                            });
+                        });
+                    }
 
                     $rootScope.$broadcast('ANGULAR_DRAG_START', e, sendChannel, transferDataObject);
                 }
@@ -137,6 +200,26 @@
             var dragHoverClass = attr.dragHoverClass || 'on-drag-hover';
             var customDragEnterEvent = $parse(attr.onDragEnter);
             var customDragLeaveEvent = $parse(attr.onDragLeave);
+
+            function calculateDropOffset(e) {
+                var offset = {
+                    x: e.offsetX,
+                    y: e.offsetY
+                };
+                var target = e.target;
+
+                while (target !== element[0]) {
+                    offset.x = offset.x + target.offsetLeft;
+                    offset.y = offset.y + target.offsetTop;
+
+                    target = target.offsetParent;
+                    if (!target) {
+                        return null;
+                    }
+                }
+
+                return offset;
+            }
 
             function onDragOver(e) {
                 if (e.preventDefault) {
@@ -206,6 +289,10 @@
             }
 
             function onDrop(e) {
+                if (e.originalEvent) {
+                    e.dataTransfer = e.originalEvent.dataTransfer;
+                }
+
                 if (e.preventDefault) {
                     e.preventDefault(); // Necessary. Allows us to drop.
                 }
@@ -216,19 +303,18 @@
                 var sendData = e.dataTransfer.getData('text');
                 sendData = angular.fromJson(sendData);
 
-                // Chrome doesn't set dropEffect, so we have to work it out ourselves
-                if (e.dataTransfer.dropEffect === 'none') {
-                    if (e.dataTransfer.effectAllowed === 'copy' ||
-                        e.dataTransfer.effectAllowed === 'move') {
-                        e.dataTransfer.dropEffect = e.dataTransfer.effectAllowed;
-                    } else if (e.dataTransfer.effectAllowed === 'copyMove') {
-                        e.dataTransfer.dropEffect = e.ctrlKey ? 'copy' : 'move';
-                    }
-                }
+                var dropOffset = calculateDropOffset(e);
+
+                var position = dropOffset ? {
+                    x: dropOffset.x - sendData.offset.x,
+                    y: dropOffset.y - sendData.offset.y
+                } : null;
+
+                determineEffectAllowed(e);
 
                 var uiOnDropFn = $parse(attr.uiOnDrop);
                 scope.$evalAsync(function () {
-                    uiOnDropFn(scope, { $data: sendData.data, $event: e, $channel: sendData.channel });
+                    uiOnDropFn(scope, { $data: sendData.data, $event: e, $channel: sendData.channel, $position: position });
                 });
                 element.removeClass(dragEnterClass);
                 dragging = 0;
@@ -245,6 +331,10 @@
             }
 
             function preventNativeDnD(e) {
+                if (e.originalEvent) {
+                    e.dataTransfer = e.originalEvent.dataTransfer;
+                }
+
                 if (e.preventDefault) {
                     e.preventDefault();
                 }
@@ -266,7 +356,12 @@
 
                 if (valid && attr.dropValidate) {
                     var validateFn = $parse(attr.dropValidate);
-                    valid = validateFn(scope, { $drop: { scope: scope, element: element }, $event: e, $data: transferDataObject.data, $channel: transferDataObject.channel });
+                    valid = validateFn(scope, {
+                        $drop: { scope: scope, element: element },
+                        $event: e,
+                        $data: transferDataObject.data,
+                        $channel: transferDataObject.channel
+                    });
                 }
 
                 if (valid) {
@@ -288,7 +383,7 @@
             });
 
 
-            var deregisterDragEnd = $rootScope.$on('ANGULAR_DRAG_END', function (_, e, channel) {
+            var deregisterDragEnd = $rootScope.$on('ANGULAR_DRAG_END', function () {
                 element.unbind('dragover', onDragOver);
                 element.unbind('dragenter', onDragEnter);
                 element.unbind('dragleave', onDragLeave);
