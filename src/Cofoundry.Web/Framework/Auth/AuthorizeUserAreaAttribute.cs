@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Authorization;
 
-namespace Cofoundry.Web.Admin
+namespace Cofoundry.Web
 {
     public class AuthorizeUserAreaAttribute : AuthorizeAttribute
     {

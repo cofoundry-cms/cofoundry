@@ -11,7 +11,9 @@ using System.Threading.Tasks;
 namespace Cofoundry.Domain
 {
     /// <summary>
-    /// Use this to decorate an collection of datamodel. Optional parameters indicate whether the collection is sortable.
+    /// Use this to decorate a collection of INestedDataModel objects, allowing them 
+    /// to be edited in the admin UI. Optional parameters indicate whether the collection 
+    /// is sortable.
     /// </summary>
     [AttributeUsage(AttributeTargets.Property)]
     public class NestedDataModelCollectionAttribute : ValidationAttribute, IMetadataAttribute, IEntityRelationAttribute
