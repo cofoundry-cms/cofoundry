@@ -208,7 +208,8 @@ namespace Cofoundry.Domain
 
             if (duplicateDefinition != null)
             {
-                throw new InvalidOperationException($"Duplicate role definitions encountered. { duplicateDefinition.Count() } roles defined with the code '{ duplicateDefinition.First().RoleCode}'");
+                var message = $"Duplicate role definitions encountered. { duplicateDefinition.Count() } roles defined with the code '{ duplicateDefinition.First().RoleCode}'";
+                throw new InvalidRoleDefinitionException(message, duplicateDefinition.FirstOrDefault(), _roleDefinitions);
             }
         }
 

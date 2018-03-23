@@ -22,7 +22,8 @@ namespace Cofoundry.Domain
 
             if (dataModelType == null)
             {
-                throw new InvalidOperationException(definition + " does not inherit from ICustomEntityDefinition<TDataModel>. Do not inherit from ICustomEntityDefinition directly, but instead use the generic version.");
+                var message = definition + " does not inherit from ICustomEntityDefinition<TDataModel>. Do not inherit from ICustomEntityDefinition directly, but instead use the generic version.";
+                throw new InvalidCustomEntityDefinitionException(message, definition);
             }
 
             return dataModelType;

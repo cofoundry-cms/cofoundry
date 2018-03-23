@@ -17,28 +17,52 @@ namespace Cofoundry.Domain
             IEnumerable<ICustomEntityDefinition> customEntityDefinitions
             )
         {
-            DetectDuplicates(customEntityDefinitions);
+            DetectInvalidDefinitions(customEntityDefinitions);
             _customEntityDefinitions = customEntityDefinitions.ToDictionary(k => k.CustomEntityDefinitionCode);
         }
 
-        private void DetectDuplicates(IEnumerable<ICustomEntityDefinition> definitions)
+        private void DetectInvalidDefinitions(IEnumerable<ICustomEntityDefinition> definitions)
         {
-            var dulpicateCodes = definitions
-                .GroupBy(e => e.CustomEntityDefinitionCode)
-                .Where(g => g.Count() > 1);
+            var nullName = definitions
+                .Where(d => string.IsNullOrWhiteSpace(d.CustomEntityDefinitionCode))
+                .FirstOrDefault();
 
-            if (dulpicateCodes.Any())
+            if (nullName != null)
             {
-                throw new Exception("Duplicate ICustomEntityDefinition.CustomEntityDefinitionCode: " + dulpicateCodes.First().Key);
+                var message = nullName.GetType().Name + " does not have a definition code specified.";
+                throw new InvalidCustomEntityDefinitionException(message, nullName, definitions);
             }
 
-            var dulpicateNames = definitions
-                .GroupBy(e => e.Name)
-                .Where(g => g.Count() > 1);
+            var dulpicateCode = definitions
+                .GroupBy(e => e.CustomEntityDefinitionCode)
+                .Where(g => g.Count() > 1)
+                .FirstOrDefault();
 
-            if (dulpicateNames.Any())
+            if (dulpicateCode != null)
             {
-                throw new Exception("Duplicate ICustomEntityDefinition.Name: " + dulpicateCodes.First().Key);
+                var message = "Duplicate ICustomEntityDefinition.CustomEntityDefinitionCode: " + dulpicateCode.Key;
+                throw new InvalidCustomEntityDefinitionException(message, dulpicateCode.First(), definitions);
+            }
+
+            var dulpicateName = definitions
+                .GroupBy(e => e.Name)
+                .Where(g => g.Count() > 1)
+                .FirstOrDefault();
+
+            if (dulpicateName != null)
+            {
+                var message = "Duplicate ICustomEntityDefinition.Name: " + dulpicateName.Key;
+                throw new InvalidCustomEntityDefinitionException(message, dulpicateName.First(), definitions);
+            }
+
+            var nameNot6Chars = definitions
+                .Where(d => d.CustomEntityDefinitionCode.Length != 6)
+                .FirstOrDefault();
+
+            if (nameNot6Chars != null)
+            {
+                var message = nameNot6Chars.GetType().Name + " has a definition code that is not 6 characters in length. All custom entity definition codes must be 6 characters.";
+                throw new InvalidCustomEntityDefinitionException(message, nameNot6Chars, definitions);
             }
         }
 
