@@ -83,7 +83,8 @@ function (
                     icon: 'image',
                     onclick: onEditorImageButtonClick.bind(null, editor)
                 });
-            }
+            },
+            browser_spellcheck: true
         };
     }
 
