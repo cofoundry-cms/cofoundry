@@ -14,7 +14,7 @@ namespace Cofoundry.BasicTestSite
         public string Title { get; set; }
 
         [Required]
-        [NestedDataModelCollection(IsOrderable = true, MaxItems = 3)]
+        [NestedDataModelCollection(IsOrderable = true, MinItems = 2, MaxItems = 3)]
         public ICollection<CarouselItemDataModel> Items { get; set; }
     }
 }

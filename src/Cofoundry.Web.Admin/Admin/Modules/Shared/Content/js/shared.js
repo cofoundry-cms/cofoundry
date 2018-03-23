@@ -10045,6 +10045,12 @@ angular.module('cms.shared').directive('cmsFormFieldNestedDataModelCollection', 
                 });
             }
 
+            function triggerModelChange() {
+                // Because the model is an array, angular can't track the changes
+                // which prevents validation from being updated
+                vm.model = vm.model.slice(0);
+            }
+
             /* EVENTS */
 
             function remove(nestedModel, $index) {
@@ -10062,6 +10068,7 @@ angular.module('cms.shared').directive('cmsFormFieldNestedDataModelCollection', 
 
                 function onSave() {
                     updateImageField(model, $index);
+                    triggerModelChange();
                 }
             }
 
@@ -10076,6 +10083,7 @@ angular.module('cms.shared').directive('cmsFormFieldNestedDataModelCollection', 
                     vm.model.push(newEntity);
 
                     updateImageField(newEntity, vm.model.length -1, true);
+                    triggerModelChange();
                 }
             }
 

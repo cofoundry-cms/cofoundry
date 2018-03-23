@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc.ModelBinding.Metadata;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -13,7 +14,7 @@ namespace Cofoundry.Domain
     /// Use this to decorate an collection of datamodel. Optional parameters indicate whether the collection is sortable.
     /// </summary>
     [AttributeUsage(AttributeTargets.Property)]
-    public class NestedDataModelCollectionAttribute : Attribute, IMetadataAttribute, IEntityRelationAttribute
+    public class NestedDataModelCollectionAttribute : ValidationAttribute, IMetadataAttribute, IEntityRelationAttribute
     {
         /// <summary>
         /// The minimum number of items that need to be included in the collection. 0 indicates
@@ -82,6 +83,23 @@ namespace Cofoundry.Domain
                 .SelectMany(EntityRelationAttributeHelper.GetRelations);
 
             return dependencies;
+        }
+
+        protected override ValidationResult IsValid(object value, ValidationContext validationContext)
+        {
+            var collection = value as IEnumerable<INestedDataModel>;
+
+            if (MinItems > 0 && EnumerableHelper.Enumerate(collection).Count() < MinItems)
+            {
+                return new ValidationResult(validationContext.MemberName + $" must have at least {MinItems} items.", new string[] { validationContext.MemberName });
+            }
+
+            if (MaxItems > 0 && EnumerableHelper.Enumerate(collection).Count() > MaxItems)
+            {
+                return new ValidationResult(validationContext.MemberName + $" cannot have more than {MaxItems} items.", new string[] { validationContext.MemberName });
+            }
+
+            return ValidationResult.Success;
         }
     }
 }
