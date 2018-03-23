@@ -46,6 +46,7 @@ namespace Cofoundry.Domain
             return _dbContext
                 .PageTemplates
                 .AsNoTracking()
+                .FilterActive()
                 .OrderBy(l => l.FileName);
         }
 

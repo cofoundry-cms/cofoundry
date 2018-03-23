@@ -101,7 +101,7 @@ namespace Cofoundry.Domain
             var dbQuery = _dbContext
                 .PageTemplates
                 .AsNoTracking()
-                .AsQueryable();
+                .FilterActive();
                         
             // Filter by group
             if (!string.IsNullOrWhiteSpace(query.Name))
