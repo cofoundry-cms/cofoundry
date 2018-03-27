@@ -6,7 +6,7 @@ angular.module('cms.shared').directive('cmsFormFieldHtml', [
     '$sce',
     '_',
     'shared.internalModulePath', 
-    'shared.contentPath',
+    'shared.internalContentPath',
     'shared.stringUtilities',
     'shared.modalDialogService',
     'baseFormFieldFactory',

@@ -4,7 +4,7 @@
 angular.module('cms.shared').directive('cmsImageUpload', [
             '_',
             'shared.internalModulePath',
-            'shared.contentPath',
+            'shared.internalContentPath',
             'shared.stringUtilities',
             'shared.urlLibrary',
         function (

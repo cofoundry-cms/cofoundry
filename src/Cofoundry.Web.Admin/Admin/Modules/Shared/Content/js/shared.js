@@ -4098,7 +4098,10 @@ angular
     .constant('shared.serviceBase', '/Admin/Api/')
     .constant('shared.pluginServiceBase', '/Admin/Api/Plugins/')
     .constant('shared.urlBaseBase', '/Admin/')
-    .constant('shared.contentPath', '/Admin/Modules/Shared/Content/');
+    .constant('shared.internalContentPath', '/Admin/Modules/Shared/Content/')
+    .constant('shared.contentPath', '/Cofoundry/Admin/Modules/Shared/Content/')
+    .constant('shared.pluginContentPath', '/Plugins/Admin/Modules/Shared/Content/')
+    ;
 
 angular.module('cms.shared').factory('shared.customEntityService', [
     '$http',
@@ -6767,7 +6770,7 @@ angular.module('cms.shared').directive('cmsDocumentUpload', [
 angular.module('cms.shared').directive('cmsFormFieldDocumentAsset', [
     '_',
     'shared.internalModulePath',
-    'shared.contentPath',
+    'shared.internalContentPath',
     'shared.modalDialogService',
     'shared.stringUtilities',
     'shared.documentService',
@@ -8134,7 +8137,7 @@ angular.module('cms.shared').directive('cmsFormFieldHtml', [
     '$sce',
     '_',
     'shared.internalModulePath', 
-    'shared.contentPath',
+    'shared.internalContentPath',
     'shared.stringUtilities',
     'shared.modalDialogService',
     'baseFormFieldFactory',
@@ -8551,7 +8554,7 @@ angular.module('cms.shared').directive('cmsFormFieldImageAnchorLocationSelector'
 angular.module('cms.shared').directive('cmsFormFieldImageAsset', [
             '_',
             'shared.internalModulePath',
-            'shared.contentPath',
+            'shared.internalContentPath',
             'shared.modalDialogService',
             'shared.stringUtilities',
             'shared.imageService',
@@ -8896,7 +8899,7 @@ angular.module('cms.shared').directive('cmsFormFieldImageUpload', [
 }]);
 angular.module('cms.shared').directive('cmsImageAsset', [
     'shared.internalModulePath',
-    'shared.contentPath',
+    'shared.internalContentPath',
     'shared.urlLibrary',
 function (
     modulePath,
@@ -9089,7 +9092,7 @@ function (
 angular.module('cms.shared').directive('cmsImageUpload', [
             '_',
             'shared.internalModulePath',
-            'shared.contentPath',
+            'shared.internalContentPath',
             'shared.stringUtilities',
             'shared.urlLibrary',
         function (
@@ -11156,7 +11159,7 @@ angular.module('cms.shared').directive('cmsModelAsDate', function () {
 angular.module('cms.shared').directive('cmsFormFieldYoutube', [
     '_',
     'shared.internalModulePath',
-    'shared.contentPath',
+    'shared.internalContentPath',
     'shared.modalDialogService',
     'shared.stringUtilities',
     'baseFormFieldFactory',
@@ -11472,7 +11475,7 @@ function (
 angular.module('cms.shared').directive('cmsYoutubeVideo', [
     '$sce',
     'shared.internalModulePath',
-    'shared.contentPath',
+    'shared.internalContentPath',
     'shared.urlLibrary',
 function (
     $sce,

@@ -6,7 +6,7 @@
 angular.module('cms.shared').directive('cmsFormFieldYoutube', [
     '_',
     'shared.internalModulePath',
-    'shared.contentPath',
+    'shared.internalContentPath',
     'shared.modalDialogService',
     'shared.stringUtilities',
     'baseFormFieldFactory',

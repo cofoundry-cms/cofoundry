@@ -1,6 +1,6 @@
 ﻿angular.module('cms.shared').directive('cmsImageAsset', [
     'shared.internalModulePath',
-    'shared.contentPath',
+    'shared.internalContentPath',
     'shared.urlLibrary',
 function (
     modulePath,

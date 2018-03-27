@@ -4,7 +4,7 @@
 angular.module('cms.shared').directive('cmsYoutubeVideo', [
     '$sce',
     'shared.internalModulePath',
-    'shared.contentPath',
+    'shared.internalContentPath',
     'shared.urlLibrary',
 function (
     $sce,

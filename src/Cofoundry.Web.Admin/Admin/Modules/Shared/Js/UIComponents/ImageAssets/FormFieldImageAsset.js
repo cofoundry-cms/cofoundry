@@ -5,7 +5,7 @@
 angular.module('cms.shared').directive('cmsFormFieldImageAsset', [
             '_',
             'shared.internalModulePath',
-            'shared.contentPath',
+            'shared.internalContentPath',
             'shared.modalDialogService',
             'shared.stringUtilities',
             'shared.imageService',
