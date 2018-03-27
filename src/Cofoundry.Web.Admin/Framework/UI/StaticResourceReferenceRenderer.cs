@@ -74,7 +74,7 @@ namespace Cofoundry.Web.Admin
 
             return FormatScriptTag(jsPath);
         }
-
+        
         /// <summary>
         /// Returns a script tag with an application relative path to a js file in the conventional 
         /// '[modulepath]/Content/js' directory if it exists, otherwise an empty HtmlString is returned. 
@@ -92,6 +92,24 @@ namespace Cofoundry.Web.Admin
 
             var jsPathWithVersion = _staticFilePathFormatter.AppendVersion(jsPath);
             return FormatScriptTag(jsPathWithVersion);
+        }
+
+        /// <summary>
+        /// Gets a collection of script tags for all the files in the js 
+        /// directory of the specified route library.
+        /// </summary>
+        /// <param name="moduleRouteLibrary">Route library containg the path to find js files in.</param>
+        public IEnumerable<HtmlString> ScriptTagsForDirectory(ModuleRouteLibrary moduleRouteLibrary)
+        {
+            var directoryScripts = _staticResourceFileProvider
+                .GetDirectoryContents(moduleRouteLibrary.JsDirectory())
+                .Select(f => ReduceResourceName(f.Name))
+                .Distinct();
+
+            var formattedScripts = directoryScripts
+                .Select(f => ScriptTag(moduleRouteLibrary, "js/" + f));
+
+            return formattedScripts;
         }
 
         /// <summary>
@@ -129,6 +147,24 @@ namespace Cofoundry.Web.Admin
             return FormatCssTag(cssPathWithVersion);
         }
 
+        /// <summary>
+        /// Gets a collection of css tags for all the files in the css 
+        /// directory of the specified route library.
+        /// </summary>
+        /// <param name="moduleRouteLibrary">Route library containg the path to find css files in.</param>
+        public IEnumerable<HtmlString> CssTagsForDirectory(ModuleRouteLibrary moduleRouteLibrary)
+        {
+            var directoryScripts = _staticResourceFileProvider
+                .GetDirectoryContents(moduleRouteLibrary.CssDirectory())
+                .Select(f => ReduceResourceName(f.Name))
+                .Distinct();
+
+            var formattedScripts = directoryScripts
+                .Select(f => CssTag(moduleRouteLibrary, "css/" + f));
+
+            return formattedScripts;
+        }
+
         private HtmlString FormatScriptTag(string jsPath)
         {
             return new HtmlString($"<script src=\"{jsPath}\"></script>");
@@ -139,6 +175,16 @@ namespace Cofoundry.Web.Admin
             return new HtmlString($"<link href=\"{cssPath}\" rel=\"stylesheet\"></link>");
         }
 
+        /// <summary>
+        /// Reduces a resource filename to remove the extension
+        /// and any minification suffix.
+        /// </summary>
+        private string ReduceResourceName(string fileName)
+        {
+            var name = Path.GetFileNameWithoutExtension(fileName);
+
+            return StringHelper.RemoveSuffix(name, "_min");
+        }
 
         private string CssPathWithoutVersion(ModuleRouteLibrary moduleRouteLibrary, string fileName)
         {

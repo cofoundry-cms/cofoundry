@@ -30,6 +30,10 @@
     @RenderSection("Meta", required: false)
 
     @staticResourceReferenceRenderer.CssTag(adminRouteLibrary.Shared, "shared")
+    @foreach (var tag in staticResourceReferenceRenderer.CssTagsForDirectory(adminRouteLibrary.SharedPlugin))
+    {
+        @tag
+    }
     @staticResourceReferenceRenderer.CssTagIfExists(adminRouteLibrary.SharedAlternate, "override")
 
     @RenderSection("Styles", required: false)

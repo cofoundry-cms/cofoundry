@@ -22,6 +22,7 @@ namespace Cofoundry.Web.Admin
             Setup = new SetupRouteLibrary();
             Shared = new SharedRouteLibrary();
             SharedAlternate = new SharedAlternateRouteLibrary();
+            SharedPlugin = new SharedPluginRouteLibrary();
             Users = new UsersRouteLibrary();
             VisualEditor = new VisualEditorRouteLibrary();
         }
@@ -40,6 +41,7 @@ namespace Cofoundry.Web.Admin
         public SetupRouteLibrary Setup { get; private set; }
         public SharedRouteLibrary Shared { get; private set; }
         public SharedAlternateRouteLibrary SharedAlternate { get; private set; }
+        public SharedPluginRouteLibrary SharedPlugin { get; private set; }
         public UsersRouteLibrary Users { get; private set; }
         public VisualEditorRouteLibrary VisualEditor { get; private set; }
     }

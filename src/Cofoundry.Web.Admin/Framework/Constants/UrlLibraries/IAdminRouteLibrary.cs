@@ -25,6 +25,12 @@ namespace Cofoundry.Web.Admin
         /// module path.
         /// </summary>
         SharedAlternateRouteLibrary SharedAlternate { get; }
+
+        /// <summary>
+        /// Route library for the plugin module shared code
+        /// module path.
+        /// </summary>
+        SharedPluginRouteLibrary SharedPlugin { get; }
         UsersRouteLibrary Users { get; }
         VisualEditorRouteLibrary VisualEditor { get; }
     }

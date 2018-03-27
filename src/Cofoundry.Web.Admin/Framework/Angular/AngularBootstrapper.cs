@@ -10,9 +10,14 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Antiforgery;
 using Microsoft.AspNetCore.Http;
 using Cofoundry.Domain.CQS;
+using System.IO;
+using Cofoundry.Core;
 
 namespace Cofoundry.Web.Admin
 {
+    /// <summary>
+    /// Used to write out script references to the angular admin UI for a standard implementation
+    /// </summary>
     public class AngularBootstrapper : IAngularBootstrapper
     {
         private readonly IAntiforgery _antiforgery;
@@ -48,20 +53,62 @@ namespace Cofoundry.Web.Admin
         {
             var bootstrapScript = await RenderBootstrapperAsync(routeLibrary, options);
 
-            var script = string.Concat(
-                _staticResourceReferenceRenderer.ScriptTag(_adminRouteLibrary.Shared, _adminRouteLibrary.Shared.Angular.MainScriptName),
-                _staticResourceReferenceRenderer.ScriptTag(_adminRouteLibrary.Shared, _adminRouteLibrary.Shared.Angular.TemplateScriptName),
-                _staticResourceReferenceRenderer.ScriptTagIfExists(_adminRouteLibrary.SharedAlternate, _adminRouteLibrary.SharedAlternate.Angular.MainScriptName),
-                _staticResourceReferenceRenderer.ScriptTagIfExists(_adminRouteLibrary.SharedAlternate, _adminRouteLibrary.SharedAlternate.Angular.TemplateScriptName),
-                _staticResourceReferenceRenderer.ScriptTag(routeLibrary, routeLibrary.Angular.MainScriptName),
-                _staticResourceReferenceRenderer.ScriptTag(routeLibrary, routeLibrary.Angular.TemplateScriptName),
-                bootstrapScript
-                );
+            var formattedPluginScripts = GetPluginScripts();
+
+            var scripts = new List<string>();
+            AddScript(scripts, _adminRouteLibrary.Shared, _adminRouteLibrary.Shared.Angular.MainScriptName);
+            AddScript(scripts, _adminRouteLibrary.Shared, _adminRouteLibrary.Shared.Angular.TemplateScriptName);
+            scripts.AddRange(formattedPluginScripts);
+            AddScript(scripts, _adminRouteLibrary.SharedAlternate, _adminRouteLibrary.SharedAlternate.Angular.MainScriptName, true);
+            AddScript(scripts, _adminRouteLibrary.SharedAlternate, _adminRouteLibrary.SharedAlternate.Angular.TemplateScriptName, true);
+            AddScript(scripts, routeLibrary, routeLibrary.Angular.MainScriptName);
+            AddScript(scripts, routeLibrary, routeLibrary.Angular.TemplateScriptName);
+            scripts.Add(bootstrapScript);
+
+            var script = string.Concat(scripts);
 
             return new HtmlString(script);
         }
 
         #region private helpers
+
+        private void AddScript(
+            List<string> scriptToAddTo, 
+            ModuleRouteLibrary moduleRouteLibrary, 
+            string fileName, 
+            bool checkIfResourceExists = false
+            )
+        {
+            HtmlString script;
+
+            if (checkIfResourceExists)
+            {
+                script = _staticResourceReferenceRenderer.ScriptTagIfExists(moduleRouteLibrary, fileName);
+            }
+            else
+            {
+                script = _staticResourceReferenceRenderer.ScriptTag(moduleRouteLibrary, fileName);
+            }
+            if (script != null)
+            {
+                scriptToAddTo.Add(script.ToString());
+            }
+        }
+
+        /// <summary>
+        /// To support multiple plugins, we have to scan for multiple files
+        /// in the plugin shared script directory.
+        /// </summary>
+        /// <returns></returns>
+        private IEnumerable<string> GetPluginScripts()
+        {
+            var formattedPluginScripts = _staticResourceReferenceRenderer
+                .ScriptTagsForDirectory(_adminRouteLibrary.SharedPlugin)
+                .Select(s => s.ToString())
+                ;
+
+            return formattedPluginScripts;
+        }
 
         private async Task<string> RenderBootstrapperAsync(AngularModuleRouteLibrary routeLibrary, object options)
         {

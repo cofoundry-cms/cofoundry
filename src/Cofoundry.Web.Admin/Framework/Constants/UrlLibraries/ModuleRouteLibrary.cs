@@ -91,9 +91,19 @@ namespace Cofoundry.Web.Admin
             return FilePathHelper.CombineVirtualPath(StaticResourcePrefix, fileName);
         }
 
+        public string JsDirectory()
+        {
+            return FilePathHelper.CombineVirtualPath(StaticResourcePrefix, "js");
+        }
+
         public string JsFile(string fileName)
         {
             return FilePathHelper.CombineVirtualPath(StaticResourcePrefix, "js", fileName + ".js");
+        }
+
+        public string CssDirectory()
+        {
+            return FilePathHelper.CombineVirtualPath(StaticResourcePrefix, "css");
         }
 
         public string CssFile(string fileName)
