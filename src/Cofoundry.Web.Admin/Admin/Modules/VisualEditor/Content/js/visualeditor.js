@@ -1015,7 +1015,6 @@ function (
             .then(onLoaded);
 
         function onLoaded(allBlockTypes) {;
-            console.log('onLoaded.options', options);
             $scope.title = options.regionName;
 
             if (options.permittedBlockTypes.length) {
