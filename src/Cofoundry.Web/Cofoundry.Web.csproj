@@ -9,6 +9,7 @@
       any content administration. To add content administration use the Cofoundry.Admin package.
     </Description>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+    <Copyright>Copyright © Cofoundry.org</Copyright>
     <PackageTags>Cofoundry Web CMS</PackageTags>
   </PropertyGroup>
 

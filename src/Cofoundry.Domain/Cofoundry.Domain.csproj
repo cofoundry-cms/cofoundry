@@ -10,6 +10,7 @@
       or background service)
     </Description>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+    <Copyright>Copyright © Cofoundry.org</Copyright>
     <PackageTags>Cofoundry Domain</PackageTags>
   </PropertyGroup>
 

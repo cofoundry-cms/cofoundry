@@ -8,6 +8,7 @@
       Adds the Cofoundry admin panel to a website.
     </Description>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+    <Copyright>Copyright © Cofoundry.org</Copyright>
     <PackageTags>Cofoundry Web Admin CMS</PackageTags>
   </PropertyGroup>
 
