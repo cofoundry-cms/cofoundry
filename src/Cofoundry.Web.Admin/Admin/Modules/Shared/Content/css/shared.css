@@ -3556,6 +3556,13 @@ input[type="color"] {
   }
 }
 
+/* Actions that nest below an input field (used in YouTube and vimeo plugins */
+/* line 147, ../../Js/UIComponents/FormFields/_formfields.scss */
+.form-field-input-actions {
+  margin-top: 10px;
+  text-align: right;
+}
+
 /* line 1, ../../Js/UIComponents/ImageAssets/_image-asset.scss */
 .image-asset {
   -moz-border-radius: 3px;
