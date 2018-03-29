@@ -7,9 +7,8 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Cofoundry.Web.Admin
 {
-    [Area(RouteConstants.AdminAreaName)]
     [AdminRoute(VisualEditorRouteLibrary.RoutePrefix)]
-    public class VisualEditorController : Controller
+    public class VisualEditorController : BaseAdminMvcController
     {
         #region routes
 
