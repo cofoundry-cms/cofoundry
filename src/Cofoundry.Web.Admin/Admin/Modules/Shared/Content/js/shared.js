@@ -4519,10 +4519,6 @@ function (
         {
             name: 'Custom Entity Details',
             value: 'CustomEntityDetails'
-        },
-        {
-            name: 'Not Found',
-            value: 'NotFound'
         }];
     }
 
