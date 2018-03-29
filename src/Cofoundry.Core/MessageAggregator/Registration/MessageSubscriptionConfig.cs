@@ -31,11 +31,13 @@ namespace Cofoundry.Core.MessageAggregator
         /// messages types
         /// </typeparam>
         /// <typeparam name="TMessageHandler">The handler to invoke when the message is published</typeparam>
-        public void Subscribe<TMessage, TMessageHandler>()
+        public IMessageSubscriptionConfig Subscribe<TMessage, TMessageHandler>()
             where TMessage : class
             where TMessageHandler : IMessageHandler<TMessage>
         {
             _messageAggregator.Subscribe<TMessage, TMessageHandler>();
+
+            return this;
         }
     }
 }
