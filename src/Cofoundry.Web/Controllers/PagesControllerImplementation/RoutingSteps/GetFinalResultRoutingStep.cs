@@ -153,6 +153,11 @@ namespace Cofoundry.Web
                     query.PublishStatus = state.VisualEditorMode.ToPublishStatusQuery();
                 }
             }
+            else if (state.IsCofoundryAdminUser)
+            {
+                query.PublishStatus = PublishStatusQuery.Latest;
+            }
+
             var model = await _queryExecutor.ExecuteAsync(query);
             return model;
         }

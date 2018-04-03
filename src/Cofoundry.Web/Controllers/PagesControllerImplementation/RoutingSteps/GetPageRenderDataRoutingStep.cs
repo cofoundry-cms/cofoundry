@@ -33,18 +33,19 @@ namespace Cofoundry.Web
             var query = new GetPageRenderDetailsByIdQuery();
             query.PageId = state.PageRoutingInfo.PageRoute.PageId;
 
-            // If we're editing a custom entity, then get the latest version
-            if (!state.InputParameters.IsEditingCustomEntity)
+            if (state.InputParameters.IsEditingCustomEntity)
             {
-                if (state.InputParameters.VersionId.HasValue)
-                {
-                    query.PublishStatus = PublishStatusQuery.SpecificVersion;
-                    query.PageVersionId = state.InputParameters.VersionId;
-                }
-                else
-                {
-                    query.PublishStatus = state.VisualEditorMode.ToPublishStatusQuery();
-                }
+                // If we're editing a custom entity, then get the latest version of the page
+                query.PublishStatus = PublishStatusQuery.Latest;
+            }
+            else if (state.InputParameters.VersionId.HasValue)
+            {
+                query.PublishStatus = PublishStatusQuery.SpecificVersion;
+                query.PageVersionId = state.InputParameters.VersionId;
+            }
+            else
+            {
+                query.PublishStatus = state.VisualEditorMode.ToPublishStatusQuery();
             }
 
             state.PageData = await _queryExecutor.ExecuteAsync(query);
