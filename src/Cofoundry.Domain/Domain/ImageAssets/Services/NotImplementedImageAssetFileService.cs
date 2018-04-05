@@ -17,7 +17,7 @@ namespace Cofoundry.Domain
     {
         public Task SaveAsync(IUploadedFile uploadedFile, ImageAsset imageAsset, string propertyName)
         {
-            throw new NotImplementedException("No image file plugin installed. To use image assets you need to reference an image asset plugin.");
+            throw new ImageAssetFileServiceNotImplementedException();
         }
     }
 }

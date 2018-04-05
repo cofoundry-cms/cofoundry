@@ -4,12 +4,14 @@
     '_',
     'shared.validationErrorService',
     'authenticationService',
+    'shared.errorService',
 function (
     $q,
     $rootScope,
     _,
     validationErrorService,
-    authenticationService) {
+    authenticationService,
+    errorService) {
 
     var service = {};
 
@@ -24,6 +26,8 @@ function (
     };
 
     service.responseError = function (response) {
+        var error;
+
         switch (response.status) {
             case 400:
                 /* Bad Request */
@@ -37,15 +41,21 @@ function (
                 break;
             case 403:
                 /* Forbidden (authenticated but not permitted to view resource */
-                var msg = 'This action is not authorized';
-               
-                /* Can't use the modal because it would create a circular reference */
-                alert(msg);
+                errorService.raise({
+                    title: 'Permission Denied',
+                    message: 'This action is not authorized'
+                });
                 break;
             default:
-                /* Allow get/404 responses through */
+                /* Allow get/404 responses through, otherwise raise an error. */
                 if (response.status != 404 || response.config.method !== 'GET') {
-                    throw new Error('Unexpected response: ' + response.status + ' (' + response.statusText + ')');
+                    error = {
+                        title: response.statusText,
+                        message: 'An unexpected server error has occured.',
+                        response: response
+                    };
+                    
+                    errorService.raise(error);
                 }
                 break;
         }

@@ -137,6 +137,10 @@
     line-height: 15px;
 }
 
+.modal--with-actions .modal-body {
+    bottom: 70px;
+}
+
 .modal-actions {
     position: absolute;
     bottom: 10px;
@@ -148,6 +152,15 @@
     text-align: right;
 
     .btn {
-        display:inline-block;
+        display: inline-block;
+    }
+}
+
+.developer-exception-content {
+    height: 100%;
+
+    iframe {
+        height: 100%;
+        width: 100%;
     }
 }

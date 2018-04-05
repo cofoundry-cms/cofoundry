@@ -1,0 +1,18 @@
+﻿<cms-modal-dialog-container cms-modal-size="large" class="modal--with-actions">
+
+    <cms-modal-dialog-header ng-if="::title">
+        {{::title}}
+    </cms-modal-dialog-header>
+
+    <cms-modal-dialog-body>
+        <div ng-if="messageHtml" 
+             ng-bind-html="messageHtml"
+             class="developer-exception-content"></div>
+    </cms-modal-dialog-body>
+
+    <cms-modal-dialog-actions>
+        <cms-button cms-text="OK"
+                    ng-click="close()"></cms-button>
+    </cms-modal-dialog-actions>
+
+</cms-modal-dialog-container>

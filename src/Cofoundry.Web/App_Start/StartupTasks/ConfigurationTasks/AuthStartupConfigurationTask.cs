@@ -12,19 +12,6 @@ namespace Cofoundry.Web
     /// </summary>
     public class AuthStartupConfigurationTask : IStartupConfigurationTask
     {
-        #region constructor
-
-        private readonly IUserAreaDefinitionRepository _userAreaDefinitionRepository;
-
-        public AuthStartupConfigurationTask(
-            IUserAreaDefinitionRepository userAreaDefinitionRepository
-            )
-        {
-            _userAreaDefinitionRepository = userAreaDefinitionRepository;
-        }
-
-        #endregion
-
         public int Ordering
         {
             get { return (int)StartupTaskOrdering.Early; }

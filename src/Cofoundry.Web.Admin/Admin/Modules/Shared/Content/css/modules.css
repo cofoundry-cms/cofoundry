@@ -1924,6 +1924,11 @@ form.loading > *, table.loading > *, div.loading > *, fieldset.loading > * {
 }
 
 /* line 140, ../../Js/UIComponents/Modals/_modals.scss */
+.modal--with-actions .modal-body {
+  bottom: 70px;
+}
+
+/* line 144, ../../Js/UIComponents/Modals/_modals.scss */
 .modal-actions {
   position: absolute;
   bottom: 10px;
@@ -1934,9 +1939,19 @@ form.loading > *, table.loading > *, div.loading > *, fieldset.loading > * {
   padding-right: 20px;
   text-align: right;
 }
-/* line 150, ../../Js/UIComponents/Modals/_modals.scss */
+/* line 154, ../../Js/UIComponents/Modals/_modals.scss */
 .modal-actions .btn {
   display: inline-block;
+}
+
+/* line 159, ../../Js/UIComponents/Modals/_modals.scss */
+.developer-exception-content {
+  height: 100%;
+}
+/* line 162, ../../Js/UIComponents/Modals/_modals.scss */
+.developer-exception-content iframe {
+  height: 100%;
+  width: 100%;
 }
 
 /* line 1, ../../Js/UIComponents/Search/_pager.scss */

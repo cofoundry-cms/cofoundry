@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Http;
 using Cofoundry.Domain.CQS;
 using System.IO;
 using Cofoundry.Core;
+using Microsoft.AspNetCore.Hosting;
 
 namespace Cofoundry.Web.Admin
 {
@@ -26,6 +27,8 @@ namespace Cofoundry.Web.Admin
         private readonly IAdminRouteLibrary _adminRouteLibrary;
         private readonly IUserContextService _userContextService;
         private readonly IQueryExecutor _queryExecutor;
+        private readonly IHostingEnvironment _hostingEnvironment;
+        private readonly DebugSettings _debugSettings;
 
         public AngularBootstrapper(
             IAntiforgery antiforgery,
@@ -33,7 +36,9 @@ namespace Cofoundry.Web.Admin
             IStaticResourceReferenceRenderer staticResourceReferenceRenderer,
             IUserContextService userContextService,
             IAdminRouteLibrary adminRouteLibrary,
-            IQueryExecutor queryExecutor
+            IQueryExecutor queryExecutor,
+            IHostingEnvironment hostingEnvironment,
+            DebugSettings debugSettings
             )
         {
             _antiforgery = antiforgery;
@@ -42,6 +47,8 @@ namespace Cofoundry.Web.Admin
             _userContextService = userContextService;
             _adminRouteLibrary = adminRouteLibrary;
             _queryExecutor = queryExecutor;
+            _hostingEnvironment = hostingEnvironment;
+            _debugSettings = debugSettings;
         }
 
         /// <summary>
@@ -54,6 +61,7 @@ namespace Cofoundry.Web.Admin
             var bootstrapScript = await RenderBootstrapperAsync(routeLibrary, options);
 
             var formattedPluginScripts = GetPluginScripts();
+            //if (_debugSettings.CanShowDeveloperExceptionPage(env))
 
             var scripts = new List<string>();
             AddScript(scripts, _adminRouteLibrary.Shared, _adminRouteLibrary.Shared.Angular.MainScriptName);
@@ -113,7 +121,7 @@ namespace Cofoundry.Web.Admin
         private async Task<string> RenderBootstrapperAsync(AngularModuleRouteLibrary routeLibrary, object options)
         {
             var args = string.Empty;
-            if (Debugger.IsAttached)
+            if (_hostingEnvironment.IsDevelopment())
             {
                 // use strict DI when in debug mode to throw up errors
                 args = ", { strictDi: true }"; 
@@ -130,11 +138,13 @@ namespace Cofoundry.Web.Admin
             };
 
             var tokens = _antiforgery.GetAndStoreTokens(_httpContextAccessor.HttpContext);
+            var canShowDeveloperException = _debugSettings.CanShowDeveloperExceptionPage(_hostingEnvironment);
 
             return @"<script>angular.element(document).ready(function() {
                         angular.module('" + _adminRouteLibrary.Shared.Angular.AngularModuleName + @"')
                                .constant('csrfToken', '" + tokens.RequestToken + @"')
                                .constant('csrfHeaderName', '" + tokens.HeaderName + @"')"
+                               + GetConstant(_adminRouteLibrary.Shared, "showDevException", canShowDeveloperException)
                                + GetConstant(routeLibrary, "options", options) // not sure why the current module is loaded into the shared module - seems like a mistake?
                                + GetConstant(_adminRouteLibrary.Shared, "currentUser", currentUserInfo) + @";
                         angular.bootstrap(document, ['" + routeLibrary.Angular.AngularModuleName + "']" + args + @");

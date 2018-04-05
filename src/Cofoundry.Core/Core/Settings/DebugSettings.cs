@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Cofoundry.Core.Configuration;
+using Microsoft.AspNetCore.Hosting;
 
 namespace Cofoundry.Core
 {
@@ -43,5 +44,17 @@ namespace Cofoundry.Core
         /// is specified. The assembly name is added to the path to make the folder root of the project with the resource in.
         /// </summary>
         public string EmbeddedContentPhysicalPathRootOverride { get; set; }
+
+        /// <summary>
+        /// USe to determine if we should show the developer exception page,
+        /// taking the current environment into consideration.
+        /// </summary>
+        /// <param name="env">The current hosting environment.</param>
+        /// <returns>True if we can show the developer exception page; otherwise false.</returns>
+        public bool CanShowDeveloperExceptionPage(IHostingEnvironment env)
+        {
+            return DeveloperExceptionPageMode == DeveloperExceptionPageMode.On
+                || (DeveloperExceptionPageMode == DeveloperExceptionPageMode.DevelopmentOnly && env.IsDevelopment());
+        }
     }
 }

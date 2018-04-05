@@ -30,8 +30,7 @@ namespace Cofoundry.Web
         {
             var env = app.ApplicationServices.GetService<IHostingEnvironment>();
 
-            if (_debugSettings.DeveloperExceptionPageMode == DeveloperExceptionPageMode.On
-                || (_debugSettings.DeveloperExceptionPageMode == DeveloperExceptionPageMode.DevelopmentOnly && env.IsDevelopment()))
+            if (_debugSettings.CanShowDeveloperExceptionPage(env))
             {
                 app.UseDeveloperExceptionPage();
                 app.UseDatabaseErrorPage();

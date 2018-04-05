@@ -5297,14 +5297,85 @@ angular.module('cms.shared').factory('authenticationService', ['$window', functi
 
     return service;
 }]);
-angular.module('cms.shared').factory('errorService', function () {
-    var service = {};
+/**
+ * The default error handler is initialized here
+ */
+angular.module('cms.shared').run([
+    'shared.errorService',
+    'shared.modalDialogService',
+    'shared.internalModulePath',
+    'shared.stringUtilities',
+    'shared.showDevException',
+function (
+    errorService,
+    modalDialogService,
+    modulePath,
+    stringUtilities,
+    showDevException
+) {
+    errorService.addHandler(onError);
+    
+    function onError(error) {
+        var response = error.response,
+            config = response ? response.config : null;
+
+        // here we try and show the full developer exception page if the request
+        // is local and we're permitted to show it.
+        if (showDevException
+            && config
+            && stringUtilities.startsWith(config.url, '/')
+            && stringUtilities.startsWith(response.headers('Content-Type') , 'text/html')
+            && stringUtilities.startsWith(response.data, '<!DOCTYPE html>')
+        ) {
+            onDeveloperException(error);
+        } else {
+            modalDialogService.alert(error);
+        }
+    }
+
+    function onDeveloperException(error) {
+
+        modalDialogService.show({
+            templateUrl: modulePath + "UIComponents/Modals/DeveloperException.html",
+            controller: "DeveloperExceptionController",
+            options: error
+        });
+    }
+}]);
+/**
+ * Using modal dialogs in some places can cause circular reference issues, so
+ * we proxy error messages through this shared service. This also allows multiple
+ * handlers to subscribe to the errors, although in practice this will typically
+ * just be the default handler provided in ErrorHandlerInitializer.
+ */
+angular.module('cms.shared').factory('shared.errorService', function () {
+    var service = {},
+        handlers = [];
 
     /* PUBLIC */
 
-    service.raise = function (errors) {
-        //alert('An unexpected error occured');
-        //TODO: Log
+    // { title: 'server', 'message': 'Help!', response }
+    service.raise = function (error) {
+        handlers.forEach(function (handler) {
+            handler(error);
+        });
+    }
+
+    /**
+    * Registers a handler for an error
+    */
+    service.addHandler = function (fn) {
+
+        handlers.push(fn);
+        return fn;
+    }
+
+    /**
+    * Unregisters a handler for an error. 
+    */
+    service.removeHandler = function (fn) {
+
+        developerExceptionHandlers = _.difference(developerExceptionHandlers, fn);
     }
 
     return service;
@@ -5360,12 +5431,14 @@ angular.module('cms.shared').factory('httpInterceptor', [
     '_',
     'shared.validationErrorService',
     'authenticationService',
+    'shared.errorService',
 function (
     $q,
     $rootScope,
     _,
     validationErrorService,
-    authenticationService) {
+    authenticationService,
+    errorService) {
 
     var service = {};
 
@@ -5380,6 +5453,8 @@ function (
     };
 
     service.responseError = function (response) {
+        var error;
+
         switch (response.status) {
             case 400:
                 /* Bad Request */
@@ -5393,15 +5468,21 @@ function (
                 break;
             case 403:
                 /* Forbidden (authenticated but not permitted to view resource */
-                var msg = 'This action is not authorized';
-               
-                /* Can't use the modal because it would create a circular reference */
-                alert(msg);
+                errorService.raise({
+                    title: 'Permission Denied',
+                    message: 'This action is not authorized'
+                });
                 break;
             default:
-                /* Allow get/404 responses through */
+                /* Allow get/404 responses through, otherwise raise an error. */
                 if (response.status != 404 || response.config.method !== 'GET') {
-                    throw new Error('Unexpected response: ' + response.status + ' (' + response.statusText + ')');
+                    error = {
+                        title: response.statusText,
+                        message: 'An unexpected server error has occured.',
+                        response: response
+                    };
+                    
+                    errorService.raise(error);
                 }
                 break;
         }
@@ -9571,6 +9652,31 @@ angular.module('cms.shared').controller('ConfirmDialogController', ['$scope', 'o
             close();
         }
     }
+
+}]);
+angular.module('cms.shared').controller('DeveloperExceptionController', [
+    '$scope',
+    '$sce',
+    'shared.internalContentPath',
+    'options',
+    'close',
+function (
+    $scope,
+    $sce,
+    internalContentPath,
+    options,
+    close) {
+
+    var html = options.response.data;
+
+    var iframe = document.createElement('iframe');
+    iframe.setAttribute('srcdoc', html);
+    iframe.setAttribute('src', internalContentPath + 'developer-exception-not-supported.html');
+    iframe.setAttribute('sandbox', 'allow-scripts');
+    $scope.messageHtml = $sce.trustAsHtml(iframe.outerHTML);
+
+    angular.extend($scope, options);
+    $scope.close = close;
 
 }]);
 angular.module('cms.shared').directive('cmsModalDialogActions', ['shared.internalModulePath', function (modulePath) {
