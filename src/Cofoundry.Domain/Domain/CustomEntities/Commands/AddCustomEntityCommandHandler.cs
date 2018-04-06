@@ -68,11 +68,11 @@ namespace Cofoundry.Domain
             var definition = await _queryExecutor.ExecuteAsync(definitionQuery, executionContext);
             EntityNotFoundException.ThrowIfNull(definition, command.CustomEntityDefinitionCode);
 
-            await _commandExecutor.ExecuteAsync(new EnsureCustomEntityDefinitionExistsCommand(definition.CustomEntityDefinitionCode));
+            await _commandExecutor.ExecuteAsync(new EnsureCustomEntityDefinitionExistsCommand(definition.CustomEntityDefinitionCode), executionContext);
 
             // Custom Validation
             ValidateCommand(command, definition);
-            await ValidateIsUniqueAsync(command, definition);
+            await ValidateIsUniqueAsync(command, definition, executionContext);
             
             var entity = MapEntity(command, definition, executionContext);
             _dbContext.CustomEntities.Add(entity);
@@ -86,7 +86,7 @@ namespace Cofoundry.Domain
                     entity.CustomEntityVersions.First().CustomEntityVersionId,
                     command.Model); 
                 
-                await _commandExecutor.ExecuteAsync(dependencyCommand);
+                await _commandExecutor.ExecuteAsync(dependencyCommand, executionContext);
                 await _customEntityStoredProcedures.UpdatePublishStatusQueryLookupAsync(entity.CustomEntityId);
 
                 scope.Complete();
@@ -150,37 +150,8 @@ namespace Cofoundry.Domain
                 .Where(d => d.CustomEntityDefinitionCode == command.CustomEntityDefinitionCode);
         }
 
-        private async Task<CustomEntityDefinition> GetAndValidateDbDefinitionAsync(AddCustomEntityCommand command, CustomEntityDefinitionSummary definition)
-        {
-            var dbDefinition = await QueryDbDefinition(command).SingleOrDefaultAsync();
-
-            // Registrastion is done via code, so if it doesnt exist in the db yet, lets add it
-            if (dbDefinition == null)
-            {
-                await _commandExecutor.ExecuteAsync(new EnsureEntityDefinitionExistsCommand(command.CustomEntityDefinitionCode));
-                dbDefinition = new CustomEntityDefinition()
-                {
-                    CustomEntityDefinitionCode = definition.CustomEntityDefinitionCode,
-                    ForceUrlSlugUniqueness = definition.ForceUrlSlugUniqueness,
-                    HasLocale = definition.HasLocale,
-                    IsOrderable = definition.Ordering != CustomEntityOrdering.None
-                };
-                _dbContext.CustomEntityDefinitions.Add(dbDefinition);
-            }
-            else
-            {
-                // update record
-                dbDefinition.ForceUrlSlugUniqueness = definition.ForceUrlSlugUniqueness;
-                dbDefinition.HasLocale = definition.HasLocale;
-                dbDefinition.IsOrderable = definition.Ordering != CustomEntityOrdering.None;
-            }
-
-            return dbDefinition;
-        }
-
         private CustomEntity MapEntity(AddCustomEntityCommand command, CustomEntityDefinitionSummary definition, IExecutionContext executionContext)
         {
-            // Create Page
             var entity = new CustomEntity();
             _entityAuditHelper.SetCreated(entity, executionContext);
 
@@ -213,12 +184,16 @@ namespace Cofoundry.Domain
 
         #region uniqueness
 
-        private async Task ValidateIsUniqueAsync(AddCustomEntityCommand command, CustomEntityDefinitionSummary definition)
+        private async Task ValidateIsUniqueAsync(
+            AddCustomEntityCommand command, 
+            CustomEntityDefinitionSummary definition,
+            IExecutionContext executionContext
+            )
         {
             if (!definition.ForceUrlSlugUniqueness) return;
 
             var query = GetUniquenessQuery(command, definition);
-            var isUnique = await _queryExecutor.ExecuteAsync(query);
+            var isUnique = await _queryExecutor.ExecuteAsync(query, executionContext);
             EnforceUniquenessResult(isUnique, command, definition);
         }
 

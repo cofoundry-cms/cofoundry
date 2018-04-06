@@ -18,7 +18,6 @@ namespace Cofoundry.Domain
 
         private readonly CofoundryDbContext _dbContext;
         private readonly ICustomEntityCache _customEntityCache;
-        private readonly IQueryExecutor _queryExecutor;
         private readonly ICommandExecutor _commandExecutor;
         private readonly IMessageAggregator _messageAggregator;
         private readonly IPermissionValidationService _permissionValidationService;
@@ -28,7 +27,6 @@ namespace Cofoundry.Domain
         public DeleteCustomEntityCommandHandler(
             CofoundryDbContext dbContext,
             ICustomEntityCache customEntityCache,
-            IQueryExecutor queryExecutor,
             ICommandExecutor commandExecutor,
             IMessageAggregator messageAggregator,
             IPermissionValidationService permissionValidationService,
@@ -38,7 +36,6 @@ namespace Cofoundry.Domain
         {
             _dbContext = dbContext;
             _customEntityCache = customEntityCache;
-            _queryExecutor = queryExecutor;
             _commandExecutor = commandExecutor;
             _messageAggregator = messageAggregator;
             _permissionValidationService = permissionValidationService;
@@ -62,7 +59,7 @@ namespace Cofoundry.Domain
 
                 using (var scope = _transactionScopeFactory.Create(_dbContext))
                 {
-                    await _commandExecutor.ExecuteAsync(new DeleteUnstructuredDataDependenciesCommand(customEntity.CustomEntityDefinitionCode, customEntity.CustomEntityId));
+                    await _commandExecutor.ExecuteAsync(new DeleteUnstructuredDataDependenciesCommand(customEntity.CustomEntityDefinitionCode, customEntity.CustomEntityId), executionContext);
 
                     _dbContext.CustomEntities.Remove(customEntity);
                     await _dbContext.SaveChangesAsync();
