@@ -8,6 +8,7 @@ using Cofoundry.Domain.CQS;
 using Microsoft.EntityFrameworkCore;
 using Cofoundry.Core;
 using Cofoundry.Core.EntityFramework;
+using Cofoundry.Core.MessageAggregator;
 
 namespace Cofoundry.Domain
 {
@@ -24,6 +25,7 @@ namespace Cofoundry.Domain
         private readonly IImageAssetCache _imageAssetCache;
         private readonly IResizedImageAssetFileService _imageAssetFileCache;
         private readonly ITransactionScopeFactory _transactionScopeFactory;
+        private readonly IMessageAggregator _messageAggregator;
 
         public UpdateImageAssetCommandHandler(
             CofoundryDbContext dbContext,
@@ -32,7 +34,8 @@ namespace Cofoundry.Domain
             IImageAssetFileService imageAssetFileService,
             IImageAssetCache imageAssetCache,
             IResizedImageAssetFileService imageAssetFileCache,
-            ITransactionScopeFactory transactionScopeFactory
+            ITransactionScopeFactory transactionScopeFactory,
+            IMessageAggregator messageAggregator
             )
         {
             _dbContext = dbContext;
@@ -42,12 +45,13 @@ namespace Cofoundry.Domain
             _imageAssetCache = imageAssetCache;
             _imageAssetFileCache = imageAssetFileCache;
             _transactionScopeFactory = transactionScopeFactory;
+            _messageAggregator = messageAggregator;
         }
 
         #endregion
 
         #region Execute
-        
+
         public async Task ExecuteAsync(UpdateImageAssetCommand command, IExecutionContext executionContext)
         {
             bool hasNewFile = command.File != null;
@@ -82,6 +86,12 @@ namespace Cofoundry.Domain
                 await _imageAssetFileCache.ClearAsync(imageAsset.ImageAssetId);
             }
             _imageAssetCache.Clear(imageAsset.ImageAssetId);
+
+            await _messageAggregator.PublishAsync(new ImageAssetUpdatedMessage()
+            {
+                ImageAssetId = imageAsset.ImageAssetId,
+                HasFileChanged = hasNewFile
+            });
         }
 
         #endregion

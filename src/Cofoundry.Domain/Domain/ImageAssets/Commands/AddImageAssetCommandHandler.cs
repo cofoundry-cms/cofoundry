@@ -7,6 +7,7 @@ using Cofoundry.Domain.Data;
 using Cofoundry.Domain.CQS;
 using Cofoundry.Core;
 using Cofoundry.Core.EntityFramework;
+using Cofoundry.Core.MessageAggregator;
 
 namespace Cofoundry.Domain
 {
@@ -21,13 +22,15 @@ namespace Cofoundry.Domain
         private readonly EntityTagHelper _entityTagHelper;
         private readonly IImageAssetFileService _imageAssetFileService;
         private readonly ITransactionScopeFactory _transactionScopeFactory;
+        private readonly IMessageAggregator _messageAggregator;
 
         public AddImageAssetCommandHandler(
             CofoundryDbContext dbContext,
             EntityAuditHelper entityAuditHelper,
             EntityTagHelper entityTagHelper,
             IImageAssetFileService imageAssetFileService,
-            ITransactionScopeFactory transactionScopeFactory
+            ITransactionScopeFactory transactionScopeFactory,
+            IMessageAggregator messageAggregator
             )
         {
             _dbContext = dbContext;
@@ -35,6 +38,7 @@ namespace Cofoundry.Domain
             _entityTagHelper = entityTagHelper;
             _imageAssetFileService = imageAssetFileService;
             _transactionScopeFactory = transactionScopeFactory;
+            _messageAggregator = messageAggregator;
         }
 
         #endregion
@@ -61,6 +65,11 @@ namespace Cofoundry.Domain
                 command.OutputImageAssetId = imageAsset.ImageAssetId;
                 scope.Complete();
             }
+
+            await _messageAggregator.PublishAsync(new ImageAssetAddedMessage()
+            {
+                ImageAssetId = imageAsset.ImageAssetId
+            });
         }
         
         #endregion

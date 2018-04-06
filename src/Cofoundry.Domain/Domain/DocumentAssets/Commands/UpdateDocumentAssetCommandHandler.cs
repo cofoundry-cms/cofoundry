@@ -8,6 +8,7 @@ using Cofoundry.Domain.CQS;
 using Microsoft.EntityFrameworkCore;
 using Cofoundry.Core;
 using Cofoundry.Core.EntityFramework;
+using Cofoundry.Core.MessageAggregator;
 
 namespace Cofoundry.Domain
 {
@@ -22,13 +23,15 @@ namespace Cofoundry.Domain
         private readonly EntityTagHelper _entityTagHelper;
         private readonly DocumentAssetCommandHelper _documentAssetCommandHelper;
         private readonly ITransactionScopeFactory _transactionScopeFactory;
+        private readonly IMessageAggregator _messageAggregator;
 
         public UpdateDocumentAssetCommandHandler(
             CofoundryDbContext dbContext,
             EntityAuditHelper entityAuditHelper,
             EntityTagHelper entityTagHelper,
             DocumentAssetCommandHelper documentAssetCommandHelper,
-            ITransactionScopeFactory transactionScopeFactory
+            ITransactionScopeFactory transactionScopeFactory,
+            IMessageAggregator messageAggregator
             )
         {
             _dbContext = dbContext;
@@ -36,6 +39,7 @@ namespace Cofoundry.Domain
             _entityTagHelper = entityTagHelper;
             _documentAssetCommandHelper = documentAssetCommandHelper;
             _transactionScopeFactory = transactionScopeFactory;
+            _messageAggregator = messageAggregator;
         }
 
         #endregion
@@ -70,6 +74,12 @@ namespace Cofoundry.Domain
 
                 scope.Complete();
             }
+
+            await _messageAggregator.PublishAsync(new DocumentAssetUpdatedMessage()
+            {
+                DocumentAssetId = documentAsset.DocumentAssetId,
+                HasFileChanged = hasNewFile
+            });
         }
 
         #endregion

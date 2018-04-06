@@ -7,6 +7,7 @@ using Cofoundry.Domain.Data;
 using Cofoundry.Domain.CQS;
 using Microsoft.EntityFrameworkCore;
 using Cofoundry.Core.EntityFramework;
+using Cofoundry.Core.MessageAggregator;
 
 namespace Cofoundry.Domain
 {
@@ -20,18 +21,21 @@ namespace Cofoundry.Domain
         private readonly IImageAssetCache _imageAssetCache;
         private readonly ICommandExecutor _commandExecutor;
         private readonly ITransactionScopeFactory _transactionScopeFactory;
+        private readonly IMessageAggregator _messageAggregator;
 
         public DeleteImageAssetCommandHandler(
             CofoundryDbContext dbContext,
             IImageAssetCache imageAssetCache,
             ICommandExecutor commandExecutor,
-            ITransactionScopeFactory transactionScopeFactory
+            ITransactionScopeFactory transactionScopeFactory,
+            IMessageAggregator messageAggregator
             )
         {
             _dbContext = dbContext;
             _imageAssetCache = imageAssetCache;
             _commandExecutor = commandExecutor;
             _transactionScopeFactory = transactionScopeFactory;
+            _messageAggregator = messageAggregator;
         }
 
         #endregion
@@ -55,7 +59,12 @@ namespace Cofoundry.Domain
                     await _dbContext.SaveChangesAsync();
                     scope.Complete();
                 }
-                _imageAssetCache.Clear(imageAsset.ImageAssetId);
+                _imageAssetCache.Clear(command.ImageAssetId);
+
+                await _messageAggregator.PublishAsync(new ImageAssetDeletedMessage()
+                {
+                    ImageAssetId = command.ImageAssetId
+                });
             }
         }
 

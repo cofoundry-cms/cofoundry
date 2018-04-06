@@ -7,6 +7,7 @@ using Cofoundry.Domain.Data;
 using Cofoundry.Domain.CQS;
 using Microsoft.EntityFrameworkCore;
 using Cofoundry.Core.EntityFramework;
+using Cofoundry.Core.MessageAggregator;
 
 namespace Cofoundry.Domain
 {
@@ -19,16 +20,19 @@ namespace Cofoundry.Domain
         private readonly CofoundryDbContext _dbContext;
         private readonly ICommandExecutor _commandExecutor;
         private readonly ITransactionScopeFactory _transactionScopeFactory;
+        private readonly IMessageAggregator _messageAggregator;
 
         public DeleteDocumentAssetCommandHandler(
             CofoundryDbContext dbContext,
             ICommandExecutor commandExecutor,
-            ITransactionScopeFactory transactionScopeFactory
+            ITransactionScopeFactory transactionScopeFactory,
+            IMessageAggregator messageAggregator
             )
         {
             _dbContext = dbContext;
             _commandExecutor = commandExecutor;
             _transactionScopeFactory = transactionScopeFactory;
+            _messageAggregator = messageAggregator;
         }
 
         #endregion
@@ -52,6 +56,11 @@ namespace Cofoundry.Domain
                     await _dbContext.SaveChangesAsync();
                     scope.Complete();
                 }
+
+                await _messageAggregator.PublishAsync(new DocumentAssetAddedMessage()
+                {
+                    DocumentAssetId = command.DocumentAssetId
+                });
             }
         }
 
