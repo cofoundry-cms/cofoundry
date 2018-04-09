@@ -41,6 +41,7 @@
     IVersionRoute liveVersion = null;
 
     string iFrameParams = string.Empty;
+    string rootUrlPath = Context.Request.Path;
 
     if (!isStaticPage)
     {
@@ -96,7 +97,6 @@
             .ToList();
 
         liveVersion = versions.FirstOrDefault(v => v.WorkFlowStatus == WorkFlowStatus.Published);
-
     }
 }
 
@@ -192,14 +192,14 @@
                         @foreach (var version in versions)
                         {
                             versionCount++;
-                            var link = "?version=" + version.VersionId;
+                            var link = string.Format("?version=" + version.VersionId, @rootUrlPath);
                             if (version.WorkFlowStatus == WorkFlowStatus.Draft)
                             {
-                                link = "?mode=preview";
+                                link = string.Format("{0}?mode=preview", @rootUrlPath);
                             }
                             else if (version == liveVersion)
                             {
-                                link = "?mode=live";
+                                link = string.Format("{0}?mode=live", @rootUrlPath);
                             }
 
                             link += "&edittype=" + (isCustomEntityRoute ? "entity" : "page");
@@ -245,7 +245,7 @@
     <div class="cofoundry-sv__mode">
         @if (!isStaticPage && !isViewingSpecificVersion)
         {
-            <a href="?mode=live" class="cofoundry-sv__mode__button @Cofoundry.Html.TextIf(pageResponseData.Version.WorkFlowStatus == WorkFlowStatus.Published, "active")">
+            <a href="@rootUrlPath?mode=live" class="cofoundry-sv__mode__button @Cofoundry.Html.TextIf(pageResponseData.Version.WorkFlowStatus == WorkFlowStatus.Published, "active")">
                 <span>
                     @*<svg class="icon" viewBox="0 0 80 80">
                         <use xlink:href="#currentlive" x="0" y="0" />
@@ -259,7 +259,7 @@
                 if (isEditTypeSwitchRequired)
                 {
                     <span class="cofoundry-sv__mode__button__group">
-                        <a href="?mode=edit&edittype=entity" class="cofoundry-sv__mode__button @Cofoundry.Html.TextIf(isCustomEntityRoute && isEditing, "active")">
+                        <a href="@rootUrlPath?mode=edit&edittype=entity" class="cofoundry-sv__mode__button @Cofoundry.Html.TextIf(isCustomEntityRoute && isEditing, "active")">
                             <span>
                                 @*<svg class="icon" viewBox="0 0 80 80">
                                     <use xlink:href="#editentity" x="0" y="0" />
@@ -268,7 +268,7 @@
                                 @pageResponseData.CustomEntityDefinition.Name
                             </span>
                         </a>
-                        <a href="?mode=edit&edittype=page" class="cofoundry-sv__mode__button @Cofoundry.Html.TextIf(!isCustomEntityRoute && isEditing, "active")">
+                        <a href="@rootUrlPath?mode=edit&edittype=page" class="cofoundry-sv__mode__button @Cofoundry.Html.TextIf(!isCustomEntityRoute && isEditing, "active")">
                             <span>
                                 @*<svg class="icon" viewBox="0 0 80 80">
                                     <use xlink:href="#edittemplate" x="0" y="0" />
@@ -281,7 +281,7 @@
                 }
                 else
                 {
-                    <a href="?mode=edit&edittype=@(isCustomEntityRoute ? "entity":"page")" class="cofoundry-sv__mode__button @Cofoundry.Html.TextIf(isEditing, "active")">
+                    <a href="@rootUrlPath?mode=edit&edittype=@(isCustomEntityRoute ? "entity":"page")" class="cofoundry-sv__mode__button @Cofoundry.Html.TextIf(isEditing, "active")">
                         <span>
                             @*<svg class="icon" viewBox="0 0 80 80">
                                 <use xlink:href="#edittemplate" x="0" y="0" />
@@ -290,7 +290,7 @@
                         </span>
                     </a>
                 }
-                <a href="?mode=preview" class="cofoundry-sv__mode__button @Cofoundry.Html.TextIf(!isEditing && pageResponseData.Version.WorkFlowStatus == WorkFlowStatus.Draft, "active")">
+                <a href="@rootUrlPath?mode=preview" class="cofoundry-sv__mode__button @Cofoundry.Html.TextIf(!isEditing && pageResponseData.Version.WorkFlowStatus == WorkFlowStatus.Draft, "active")">
                     <span>
                         @*<svg class="icon" viewBox="0 0 80 80">
                             <use xlink:href="#preview" x="0" y="0" />

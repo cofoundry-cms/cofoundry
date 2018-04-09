@@ -409,9 +409,8 @@ Cofoundry.visualEditor = (function () {
                 onRegionGuiChange(e, e.target);
             }
 
-            function onRegionMouseLeave() {
-                //onGuiEnd();
-            }
+            function onRegionMouseLeave() { }
+            function onBlockMouseLeave() { }
 
             function onRegionMouseMove(e) {
                 onRegionGuiChange(e);
@@ -419,10 +418,6 @@ Cofoundry.visualEditor = (function () {
 
             function onBlockMouseEnter(e) {
                 onBlockGuiChange(e.target);
-            }
-
-            function onBlockMouseLeave() {
-                //onGuiEnd();
             }
 
             function parseRegionAttributes(el, store) {
