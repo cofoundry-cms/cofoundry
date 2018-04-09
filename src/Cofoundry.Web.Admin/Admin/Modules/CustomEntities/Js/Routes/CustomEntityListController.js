@@ -1,19 +1,25 @@
 ﻿angular.module('cms.customEntities').controller('CustomEntityListController', [
+    '$q',
     '_',
     'shared.LoadState',
     'shared.SearchQuery',
     'shared.modalDialogService',
     'shared.customEntityService',
     'shared.permissionValidationService',
+    'shared.ModelPreviewFieldset',
+    'shared.ImagePreviewFieldCollection',
     'customEntities.modulePath',
     'customEntities.options',
 function (
+    $q,
     _,
     LoadState,
     SearchQuery,
     modalDialogService,
     customEntityService,
     permissionValidationService,
+    ModelPreviewFieldset,
+    ImagePreviewFieldCollection,
     modulePath,
     options) {
 
@@ -38,7 +44,7 @@ function (
 
         toggleFilter(false);
 
-        loadGrid();
+        reloadData();
     }
 
     /* ACTIONS */
@@ -54,16 +60,17 @@ function (
             controller: 'ChangeOrderingController',
             options: {
                 localeId: vm.filter.localeId,
-                onSave: loadGrid
+                onSave: reloadData
             }
         });
+        
     }
 
     /* EVENTS */
 
     function onQueryChanged() {
         toggleFilter(false);
-        loadGrid();
+        reloadData();
     }
 
     /* PRIVATE FUNCS */
@@ -71,14 +78,47 @@ function (
     function getPermission(code) {
         return permissionValidationService.hasPermission(options.customEntityDefinitionCode + code);
     }
-    
-    function loadGrid() {
-        vm.gridLoadState.on();
 
-        return customEntityService.getAll(vm.query.getParameters(), options.customEntityDefinitionCode).then(function (result) {
-            vm.result = result;
-            vm.gridLoadState.off();
-        });
+    function reloadData() {
+
+        var metaDataDef,
+            gridDef = loadGrid();
+
+        if (vm.previewFields) {
+            metaDataDef = $q.defer();
+            metaDataDef.resolve();
+        } else {
+            metaDataDef = getMetaData().then(loadMetaData);
+        }
+
+        return $q
+            .all([metaDataDef, gridDef])
+            .then(loadImages);
+
+        function loadGrid() {
+            vm.gridLoadState.on();
+
+            return customEntityService
+                .getAll(vm.query.getParameters(), options.customEntityDefinitionCode)
+                .then(function (result) {
+
+                    vm.result = result;
+                    vm.gridLoadState.off();
+                });
+        }
+
+        function getMetaData() {
+            return customEntityService.getDataModelSchema(options.customEntityDefinitionCode);
+        }
+
+        function loadMetaData(modelMetaData) {
+            vm.previewFields = new ModelPreviewFieldset(modelMetaData);
+        }
+
+        function loadImages() {
+            vm.gridImages = new ImagePreviewFieldCollection();
+            return vm.gridImages.load(vm.result.items, vm.previewFields);
+        }
     }
 
 }]);

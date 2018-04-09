@@ -5914,22 +5914,28 @@ function (
 }]);
 angular.module('cms.shared').controller('CustomEntityPickerDialogController', [
     '$scope',
+    '$q',
     'shared.LoadState',
     'shared.customEntityService',
     'shared.SearchQuery',
     'shared.modalDialogService',
     'shared.internalModulePath',
     'shared.permissionValidationService',
+    'shared.ModelPreviewFieldset',
+    'shared.ImagePreviewFieldCollection',
     'options',
     'close',
 function (
     $scope,
+    $q,
     LoadState,
     customEntityService,
     SearchQuery,
     modalDialogService,
     modulePath,
     permissionValidationService,
+    ModelPreviewFieldset,
+    ImagePreviewFieldCollection,
     options,
     close) {
     
@@ -5966,7 +5972,7 @@ function (
         vm.canCreate = getPermission('COMCRT');
 
         toggleFilter(false);
-        loadGrid();
+        reloadData();
     }
 
     /* ACTIONS */
@@ -5977,16 +5983,47 @@ function (
 
     function onQueryChanged() {
         toggleFilter(false);
-        loadGrid();
+        reloadData();
     }
 
-    function loadGrid() {
-        vm.gridLoadState.on();
+    function reloadData() {
 
-        return customEntityService.getAll(vm.query.getParameters(), options.customEntityDefinition.customEntityDefinitionCode).then(function (result) {
-            vm.result = result;
-            vm.gridLoadState.off();
-        });
+        var metaDataDef,
+            definitionCode = options.customEntityDefinition.customEntityDefinitionCode,
+            gridDef = loadGrid();
+
+        if (vm.previewFields) {
+            metaDataDef = $q.defer();
+            metaDataDef.resolve();
+        } else {
+            metaDataDef = getMetaData().then(loadMetaData);
+        }
+
+        return $q
+            .all([metaDataDef, gridDef])
+            .then(loadImages);
+
+        function loadGrid() {
+            vm.gridLoadState.on();
+
+            return customEntityService.getAll(vm.query.getParameters(), definitionCode).then(function (result) {
+                vm.result = result;
+                vm.gridLoadState.off();
+            });
+        }
+
+        function getMetaData() {
+            return customEntityService.getDataModelSchema(definitionCode);
+        }
+
+        function loadMetaData(modelMetaData) {
+            vm.previewFields = new ModelPreviewFieldset(modelMetaData);
+        }
+
+        function loadImages() {
+            vm.gridImages = new ImagePreviewFieldCollection();
+            return vm.gridImages.load(vm.result.items, vm.previewFields);
+        }
     }
     
     /* EVENTS */
@@ -6040,9 +6077,9 @@ function (
         });
 
         function onComplete(customEntityId) {
-            if (!vm.multiMode) {
+            if (vm.multiMode) {
                 onSelect({ customEntityId: customEntityId });
-                loadGrid();
+                reloadData();
             } else {
                 onSelectAndClose({ customEntityId: customEntityId });
             }
@@ -6052,7 +6089,7 @@ function (
     /* PUBLIC HELPERS */
 
     function getPermission(code) {
-        return permissionValidationService.hasPermission(options.customEntityDefinitionCode + code);
+        return permissionValidationService.hasPermission(options.customEntityDefinition.customEntityDefinitionCode + code);
     }
 
     function isSelected(entity) {
@@ -6080,6 +6117,8 @@ angular.module('cms.shared').directive('cmsFormFieldCustomEntityCollection', [
     'shared.customEntityService',
     'shared.modalDialogService',
     'shared.arrayUtilities',
+    'shared.ModelPreviewFieldset',
+    'shared.ImagePreviewFieldCollection',
     'baseFormFieldFactory',
 function (
     _,
@@ -6088,6 +6127,8 @@ function (
     customEntityService,
     modalDialogService,
     arrayUtilities,
+    ModelPreviewFieldset,
+    ImagePreviewFieldCollection,
     baseFormFieldFactory) {
 
     /* VARS */
@@ -6119,7 +6160,9 @@ function (
         var vm = scope.vm,
             isRequired = _.has(attributes, 'required'),
             definitionPromise,
-            dynamicFormFieldController = _.last(controllers);
+            metaDataPromise,
+            dynamicFormFieldController = _.last(controllers),
+            lastDragToIndex;
 
         init();
         return baseConfig.link(scope, el, attributes, controllers);
@@ -6133,20 +6176,26 @@ function (
             vm.showPicker = showPicker;
             vm.remove = remove;
             vm.onDrop = onDrop;
+            vm.onDropSuccess = onDropSuccess;
 
             definitionPromise = customEntityService.getDefinition(vm.customEntityDefinitionCode).then(function (customEntityDefinition) {
                 vm.customEntityDefinition = customEntityDefinition;
             });
+
+            metaDataPromise = customEntityService
+                .getDataModelSchema(vm.customEntityDefinitionCode)
+                .then(loadMetaData);
 
             scope.$watch("vm.model", setGridItems);
         }
 
         /* EVENTS */
 
-        function remove(customEntity) {
+        function remove(customEntity, $index) {
 
             arrayUtilities.removeObject(vm.gridData, customEntity);
             arrayUtilities.removeObject(vm.model, customEntity[CUSTOM_ENTITY_ID_PROP]);
+            vm.gridImages.remove($index);
         }
 
         function showPicker() {
@@ -6169,9 +6218,17 @@ function (
 
         function onDrop($index, droppedEntity) {
 
-            arrayUtilities.moveObject(vm.gridData, droppedEntity, $index, CUSTOM_ENTITY_ID_PROP);
+            // drag drop doesnt give us the to/from index data in the same event, and 
+            // we can't use property tracking here, so stuff the index in a variable
+            lastDragToIndex = $index;
+        }
 
-            // Update model with new orering
+        function onDropSuccess($index) {
+
+            arrayUtilities.move(vm.gridData, $index, lastDragToIndex);
+            vm.gridImages.move($index, lastDragToIndex);
+
+            // Update model with new ordering
             setModelFromGridData();
         }
 
@@ -6179,6 +6236,14 @@ function (
             if (!vm.orderable) {
                 vm.gridData = _.sortBy(vm.gridData, 'title');
                 setModelFromGridData();
+            }
+
+            // once sorted, load images
+            metaDataPromise.then(loadImages);
+
+            function loadImages() {
+                vm.gridImages = new ImagePreviewFieldCollection();
+                return vm.gridImages.load(vm.gridData, vm.previewFields);
             }
         }
 
@@ -6207,6 +6272,10 @@ function (
             }
 
             return filter;
+        }
+
+        function loadMetaData(modelMetaData) {
+            vm.previewFields = new ModelPreviewFieldset(modelMetaData);
         }
 
         /** 
@@ -9858,6 +9927,252 @@ function (
 
     return service;
 }]);
+/**
+ * Helper used for working with collections of dynamic model data that
+ * might use the [PReviewImage] data annotation to provide an image preview
+ * field. This helper extracts the ids, loads the data and provides methods
+ * for upading the dataset without havign to reload all the images.
+ */
+angular.module('cms.shared').factory('shared.ImagePreviewFieldCollection', [
+    '$q',
+    '_',
+    'shared.arrayUtilities',
+    'shared.imageService',
+    function (
+    $q,
+    _,
+    arrayUtilities,
+    imageService
+) {
+        return ImagePreviewFieldCollection;
+
+        function ImagePreviewFieldCollection() {
+            var me = this,
+                imagePropertyName,
+                PREVIEW_IMAGE_FIELD_NAME = 'previewImage';
+
+            /* Public Properties */
+
+            //me.images
+
+            /* Public Funcs */
+
+            me.load = function (dataset, fieldSet) {
+                if (!dataset
+                    || !dataset.length
+                    || !fieldSet
+                    || !fieldSet.fields[PREVIEW_IMAGE_FIELD_NAME]) return resolveNoData();
+
+                imagePropertyName = fieldSet.fields[PREVIEW_IMAGE_FIELD_NAME].lowerName;
+
+                var allImageIds = _.chain(dataset)
+                    .map(function (item) {
+                        return modelPropertyAccessor(item, imagePropertyName);
+                    })
+                    .filter(function (id) {
+                        return id;
+                    })
+                    .uniq()
+                    .value();
+
+                if (!allImageIds.length) return resolveNoData();
+
+                return imageService.getByIdRange(allImageIds).then(function (images) {
+                    me.images = [];
+
+                    _.each(dataset, function (item) {
+                        var id = modelPropertyAccessor(item, imagePropertyName),
+                            image;
+
+                        if (id) {
+                            image = _.find(images, { imageAssetId: id })
+                        }
+
+                        me.images.push(image);
+                    });
+                });
+
+                function resolveNoData() {
+                    var deferred = $q.defer();
+                    deferred.resolve();
+
+                    me.images = [];
+
+                    return deferred.promise;
+                }
+
+                function modelPropertyAccessor(item, propertyName) {
+
+                    // if the model is a child of the item e.g. custom entities
+                    if (item.model) return item.model[propertyName];
+
+                    return item[propertyName];
+                }
+            }
+
+            me.move = function (itemToMoveIndex, moveToIndex) {
+                arrayUtilities.move(me.images, itemToMoveIndex, moveToIndex);
+            }
+
+            me.add = function (itemToAdd, index) {
+                return updateImage(itemToAdd, index, true);
+            }
+
+            me.update = function (itemToUpdate, index) {
+                return updateImage(itemToUpdate, index);
+            }
+
+            me.remove = function (index) {
+                arrayUtilities.remove(me.images, index);
+            }
+
+            /* Private */
+
+            function updateImage(itemToUpdate, index, isNew) {
+
+                var newImageId = itemToUpdate[imagePropertyName];
+
+                if (!isNew) {
+                    var existingImage = me.images[index],
+                        existingId;
+
+                    if (existingImage) {
+                        existingId = existingImage['imageAssetId'];
+                    }
+
+                    if (newImageId == existingId) return;
+
+                    if (!newImageId) {
+                        me.images[index] = undefined;
+                        return;
+                    }
+                }
+
+                return imageService
+                    .getById(newImageId)
+                    .then(loadImage);
+
+                function loadImage(image) {
+                    me.images[index] = image;
+                }
+            }
+        }
+}]);
+angular.module('cms.shared').factory('shared.ModelPreviewFieldset', [
+    '$q',
+    '_',
+    'shared.stringUtilities',
+    'shared.imageService',
+function (
+    $q,
+    _,
+    stringUtilities,
+    imageService
+) {
+    return ModelPreviewFieldset;
+
+    function ModelPreviewFieldset(modelMetaData) {
+        var me = this,
+            PREVIEW_TITLE_FIELD_NAME = 'previewTitle',
+            PREVIEW_DESCRIPTION_FIELD_NAME = 'previewDescription',
+            PREVIEW_IMAGE_FIELD_NAME = 'previewImage';
+
+        /* Public Properties */
+
+        me.modelMetaData = modelMetaData;
+        me.fields = parseFields(modelMetaData);
+        me.showTitleColumn = canShowTitleColumn(me.fields);
+        me.titleTerm = getTitleTerm(me.fields);
+
+        /* Public Funcs */
+
+        me.on = function () {
+            me.isLoading = true;
+            if (me.progress === 100) {
+                me.progress = 0;
+            }
+        }
+
+        /* Private */
+
+        function parseFields(modelMetaData) {
+            var fields = {};
+
+            setGridField(PREVIEW_TITLE_FIELD_NAME);
+            setGridField(PREVIEW_DESCRIPTION_FIELD_NAME);
+            setGridField(PREVIEW_IMAGE_FIELD_NAME);
+
+            return fields;
+
+            function setGridField(fieldName) {
+
+                var field = _.find(modelMetaData.dataModelProperties, function (property) {
+
+                    return property.additionalAttributes[fieldName];
+                });
+
+                if (field) {
+                    field.lowerName = stringUtilities.lowerCaseFirstLetter(field.name);
+                    fields[fieldName] = field;
+                    fields.hasFields = true;
+                }
+            }
+        }
+
+        /**
+         * Title is shown when a [PreviewTitle] attribute is present 
+         * or if no other preview attributes are present.
+         */
+        function canShowTitleColumn(gridFields) {
+            return gridFields[PREVIEW_TITLE_FIELD_NAME] || !gridFields.hasFields;
+        }
+
+        /**
+         * The title field will default to "Title" but optionally
+         * a different field can be specified as the title using 
+         * the [PreviewTitle] attribute
+         */
+        function getTitleTerm(gridFields) {
+            if (gridFields[PREVIEW_TITLE_FIELD_NAME]) {
+                return gridFields[PREVIEW_TITLE_FIELD_NAME].displayName;
+            }
+
+            return "Title";
+        }
+
+        function loadImageFields() {
+            if (!vm.result || !vm.gridFields || !vm.gridFields[PREVIEW_IMAGE_FIELD_NAME]) return;
+
+            var field = vm.gridFields[PREVIEW_IMAGE_FIELD_NAME];
+
+            var allImageIds = _.chain(vm.result.items)
+                .map(function (item) {
+                    return item.model[field.lowerName];
+                })
+                .filter(function (id) {
+                    return id;
+                })
+                .uniq()
+                .value();
+
+            return imageService.getByIdRange(allImageIds).then(function (images) {
+                vm.modelImages = [];
+
+                _.each(vm.result.items, function (item) {
+                    var id = item.model[field.lowerName],
+                        image;
+
+                    if (id) {
+                        image = _.find(images, { imageAssetId: id })
+                    }
+
+                    vm.modelImages.push(image);
+                });
+            });
+        }
+
+    }
+}]);
 angular.module('cms.shared').controller('EditNestedDataModelDialogController', [
     '$scope',
     'shared.focusService',
@@ -9917,9 +10232,9 @@ angular.module('cms.shared').directive('cmsFormFieldNestedDataModelCollection', 
     'shared.LoadState',
     'shared.nestedDataModelSchemaService',
     'shared.modalDialogService',
-    'shared.imageService',
     'shared.arrayUtilities',
-    'shared.stringUtilities',
+    'shared.ModelPreviewFieldset',
+    'shared.ImagePreviewFieldCollection',
     'baseFormFieldFactory',
     function (
         _,
@@ -9927,16 +10242,14 @@ angular.module('cms.shared').directive('cmsFormFieldNestedDataModelCollection', 
         LoadState,
         nestedDataModelSchemaService,
         modalDialogService,
-        imageService,
         arrayUtilities,
-        stringUtilities,
+        ModelPreviewFieldset,
+        ImagePreviewFieldCollection,
         baseFormFieldFactory) {
 
         /* VARS */
 
-        var PREVIEW_TITLE_FIELD_NAME = 'previewTitle',
-            PREVIEW_IMAGE_FIELD_NAME = 'previewImage',
-            baseConfig = baseFormFieldFactory.defaultConfig;
+        var baseConfig = baseFormFieldFactory.defaultConfig;
 
         /* CONFIG */
 
@@ -9981,99 +10294,13 @@ angular.module('cms.shared').directive('cmsFormFieldNestedDataModelCollection', 
                 definitionPromise = nestedDataModelSchemaService
                     .getByName(vm.modelType)
                     .then(function (modelMetaData) {
-                        var gridFields = {};
-
-                        setGridField(gridFields, modelMetaData.dataModelProperties, PREVIEW_TITLE_FIELD_NAME);
-                        setGridField(gridFields, modelMetaData.dataModelProperties, 'previewDescription');
-                        setGridField(gridFields, modelMetaData.dataModelProperties, PREVIEW_IMAGE_FIELD_NAME);
-                        vm.showTitleColumn = gridFields[PREVIEW_TITLE_FIELD_NAME] || !gridFields.hasFields;
-                        vm.gridFields = gridFields;
+                        if (!vm.model) return;
                         vm.modelMetaData = modelMetaData;
-
-                        if (gridFields[PREVIEW_TITLE_FIELD_NAME]) {
-                            vm.gridTitleTerm = gridFields[PREVIEW_TITLE_FIELD_NAME].displayName;
-                        } else {
-                            vm.gridTitleTerm = "Title";
-                        }
-
-                        loadImageFields();
+                        vm.previewFields = new ModelPreviewFieldset(modelMetaData);
+                        vm.gridImages = new ImagePreviewFieldCollection();
+                        vm.gridImages.load(vm.model, vm.previewFields);
                     });
 
-                function setGridField(gridFields, dataModelProperties, fieldName) {
-
-                    var field = _.find(dataModelProperties, function (property) {
-
-                        return property.additionalAttributes[fieldName];
-                    });
-
-                    if (field) {
-                        field.lowerName = stringUtilities.lowerCaseFirstLetter(field.name);
-                        gridFields[fieldName] = field;
-                        gridFields.hasFields = true;
-                    }
-                }
-            }
-
-            function updateImageField(itemToUpdate, index, isNew) {
-                var field = vm.gridFields[PREVIEW_IMAGE_FIELD_NAME];
-                if (!field) return;
-
-                var newImageId = itemToUpdate[field.lowerName];
-
-                if (!isNew) {
-                    var existingImage = vm.modelImages[index],
-                        existingId;
-
-                    if (existingImage) {
-                        existingId = existingImage['imageAssetId'];
-                    }
-
-                    if (newImageId == existingId) return;
-
-                    if (!newImageId) {
-                        vm.modelImages[index] = undefined;
-                        return;
-                    }
-                }
-
-                imageService
-                    .getById(newImageId)
-                    .then(loadImage);
-
-                function loadImage (image) {
-                    vm.modelImages[index] = image;
-                }
-            }
-
-            function loadImageFields() {
-                if (!vm.model || !vm.gridFields || !vm.gridFields[PREVIEW_IMAGE_FIELD_NAME]) return;
-
-                var field = vm.gridFields[PREVIEW_IMAGE_FIELD_NAME];
-
-                var allImageIds = _.chain(vm.model)
-                    .map(function (model) {
-                        return model[field.lowerName];
-                    })
-                    .filter(function (id) {
-                        return id;
-                    })
-                    .uniq()
-                    .value();
-
-                imageService.getByIdRange(allImageIds).then(function (images) {
-                    vm.modelImages = [];
-
-                    _.each(vm.model, function (item) {
-                        var id = item[field.lowerName],
-                            image;
-
-                        if (id) {
-                            image = _.find(images, { imageAssetId: id })
-                        }
-
-                        vm.modelImages.push(image);
-                    });
-                });
             }
 
             function triggerModelChange() {
@@ -10087,7 +10314,7 @@ angular.module('cms.shared').directive('cmsFormFieldNestedDataModelCollection', 
             function remove(nestedModel, $index) {
 
                 arrayUtilities.removeObject(vm.model, nestedModel);
-                arrayUtilities.remove(vm.modelImages, $index);
+                vm.gridImages.remove($index);
             }
 
             function edit(model, $index) {
@@ -10098,7 +10325,7 @@ angular.module('cms.shared').directive('cmsFormFieldNestedDataModelCollection', 
                 });
 
                 function onSave() {
-                    updateImageField(model, $index);
+                    vm.gridImages.update(model, $index);
                     triggerModelChange();
                 }
             }
@@ -10113,7 +10340,7 @@ angular.module('cms.shared').directive('cmsFormFieldNestedDataModelCollection', 
                     vm.model = vm.model || [];
                     vm.model.push(newEntity);
 
-                    updateImageField(newEntity, vm.model.length -1, true);
+                    vm.gridImages.add(newEntity, vm.model.length - 1);
                     triggerModelChange();
                 }
             }
@@ -10142,13 +10369,13 @@ angular.module('cms.shared').directive('cmsFormFieldNestedDataModelCollection', 
 
             function onDropSuccess($index) {
                 arrayUtilities.move(vm.model, $index, lastDragToIndex);
-                arrayUtilities.move(vm.modelImages, $index, lastDragToIndex);
+                vm.gridImages.move($index, lastDragToIndex);
             }
 
             /* FORMATTERS */
 
             function getTitle(entity, index) {
-                var field = vm.gridFields[PREVIEW_TITLE_FIELD_NAME];
+                var field = vm.previewFields.fields[PREVIEW_TITLE_FIELD_NAME];
                 if (field) {
                     return entity[field.lowerName];
                 }

@@ -12,12 +12,15 @@ namespace Cofoundry.BasicTestSite
     /// </summary>
     public class CategoryDataModel : ICustomEntityDataModel
     {
+        [PreviewDescription]
         [MaxLength(500)]
         [Display(Description = "A short description that appears as a tooltip when hovering over the category.")]
         [MultiLineText]
         public string ShortDescription { get; set; }
 
-        [NestedDataModelCollection(IsOrderable = true, MinItems = 1, MaxItems = 3)]
-        public ICollection<CarouselItemDataModel> Items { get; set; }
+        [PreviewImage]
+        [Image(MinWidth = 460, MinHeight = 460)]
+        [Display(Name = "Thumbnail Image")]
+        public int? ThumbnailImageAssetId { get; set; }
     }
 }

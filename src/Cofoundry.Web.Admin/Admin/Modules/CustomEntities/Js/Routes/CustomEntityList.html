@@ -50,8 +50,10 @@
         <table>
             <thead>
                 <tr>
+                    <th ng-if="vm.previewFields.fields.previewImage"></th>
                     <th ng-if="vm.options.hasLocale">Market</th>
                     <th>{{::vm.options.terms['title']}}</th>
+                    <th ng-if="vm.previewFields.fields.previewDescription">{{vm.previewFields.fields.previewDescription.displayName}}</th>
                     <th ng-if="::!vm.options.autoPublish">Status</th>
                     <th ng-if="::!vm.options.autoPublish">Published</th>
                     <th class="lowPriority">Created</th>
@@ -63,6 +65,9 @@
                     <td colspan="100" class="empty">Sorry, no {{::vm.options.name.toLowerCase()}} could be found.</td>
                 </tr>
                 <tr ng-repeat="entity in vm.result.items">
+                    <td ng-if="vm.previewFields.fields.previewImage">
+                        <cms-table-cell-image cms-image="vm.gridImages.images[$index]"></cms-table-cell-image>
+                    </td>
                     <td ng-if="vm.options.hasLocale">
                         <span ng-if="::entity.locale">{{ ::entity.locale.name }} ({{ ::entity.locale.ietfLanguageTag}})</span>
                     </td>
@@ -70,6 +75,7 @@
                         <a href="#/{{::entity.customEntityId}}">{{::entity.title}}</a><br>
                         <span ng-if="entity.fullPath">{{::entity.fullPath}}</span>
                     </td>
+                    <td ng-if="vm.previewFields.fields.previewDescription">{{entity.model[vm.previewFields.fields.previewDescription.lowerName]}}</td>
                     <td ng-if="::!vm.options.autoPublish">
                         <span ng-if="entity.isPublished">Published</span>
                         <span ng-if="!entity.isPublished && entity.publishStatus == 'Published'">Scheduled</span>
@@ -79,7 +85,7 @@
                     </td>
                     <td ng-if="::!vm.options.autoPublish">
                         <span ng-if="::entity.publishDate"
-                              title="{{entity.publishDate | date:'fullDate'}} at {{entity.publishDate | date:'HH:mm:ss'}}">{{entity.publishDate | date : 'mediumDate' }} {{entity.publishDate | date : 'HH:mm' }}</span>
+                              title="{{entity.publishDate | date:'fullDate'}} at {{entity.publishDate | date:'HH:mm:ss'}}">{{entity.publishDate | date : 'mediumDate' }}{{entity.publishDate | date : 'HH:mm' }}</span>
                     </td>
                     <td class="lowPriority">
                         <cms-table-cell-created-audit-data cms-audit-data="::entity.auditData"></cms-table-cell-created-audit-data>

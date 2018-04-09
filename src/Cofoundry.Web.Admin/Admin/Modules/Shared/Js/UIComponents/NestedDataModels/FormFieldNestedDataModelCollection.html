@@ -12,9 +12,9 @@
                 <table>
                     <thead>
                         <tr>
-                            <th ng-if="vm.gridFields.previewImage"></th>
-                            <th ng-if="vm.showTitleColumn">{{vm.gridTitleTerm}}</th>
-                            <th ng-if="vm.gridFields.previewDescription">{{vm.gridFields.previewDescription.displayName}}</th>
+                            <th ng-if="vm.previewFields.fields.previewImage"></th>
+                            <th ng-if="vm.previewFields.showTitleColumn">{{vm.previewFields.titleTerm}}</th>
+                            <th ng-if="vm.previewFields.fields.previewDescription">{{vm.previewFields.fields.previewDescription.displayName}}</th>
                             <th cms-table-column-actions
                                 ng-if="vm.formScope.editMode">Actions</th>
                         </tr>
@@ -30,13 +30,13 @@
                             ui-on-drop="vm.onDrop($index, $data)"
                             on-drop-success="vm.onDropSuccess($index)"
                             data-drop-channel="nested-model-{{vm.modelName}}">
-                            <td ng-if="vm.gridFields.previewImage">
-                                <cms-table-cell-image cms-image="vm.modelImages[$index]"></cms-table-cell-image>
+                            <td ng-if="vm.previewFields.fields.previewImage">
+                                <cms-table-cell-image cms-image="vm.gridImages.images[$index]"></cms-table-cell-image>
                             </td>
-                            <td ng-if="vm.showTitleColumn">
+                            <td ng-if="vm.previewFields.showTitleColumn">
                                 <strong>{{vm.getTitle(entity, $index)}}</strong>
                             </td>
-                            <td ng-if="vm.gridFields.previewDescription">{{entity[vm.gridFields.previewDescription.lowerName]}}</td>
+                            <td ng-if="vm.previewFields.fields.previewDescription">{{entity[vm.previewFields.fields.previewDescription.lowerName]}}</td>
                             <td cms-table-column-actions ng-if="vm.formScope.editMode">
                                 <cms-button-icon cms-title="Edit"
                                                  cms-icon="pencil"

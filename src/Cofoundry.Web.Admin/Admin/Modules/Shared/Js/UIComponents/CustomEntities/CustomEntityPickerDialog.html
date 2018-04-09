@@ -35,8 +35,10 @@
             <table>
                 <thead>
                     <tr>
+                        <th ng-if="previewFields.fields.previewImage"></th>
                         <th>{{::customEntityDefinition.terms['title']}}</th>
-                        <th>Status</th>
+                        <th ng-if="previewFields.fields.previewDescription">{{previewFields.fields.previewDescription.displayName}}</th>
+                        <th ng-if="::!customEntityDefinition.autoPublish">Status</th>
                         <th>Created</th>
                         <th cms-table-column-actions>Actions</th>
                     </tr>
@@ -49,17 +51,22 @@
                         ng-class="(isSelected(entity)) ? 'selected' : 'selectable'"
                         ng-click="onSelect(entity)"
                         ng-dblclick="onSelectAndClose(entity)">
+                        <td ng-if="previewFields.fields.previewImage">
+                            <cms-table-cell-image cms-image="gridImages.images[$index]"></cms-table-cell-image>
+                        </td>
                         <td>
                             <strong>
                                 <cms-custom-entity-link cms-custom-entity-definition="::customEntityDefinition"
                                                         cms-custom-entity="::entity"></cms-custom-entity-link>
                             </strong>
                         </td>
-                        <td ng-if="::entity.isPublished">
-                            Published <span ng-if="::entity.isPublished && entity.hasDraft">(Pending Draft)</span>
-                        </td>
-                        <td ng-if="::!entity.isPublished">
-                            Draft
+                        <td ng-if="previewFields.fields.previewDescription">{{entity.model[previewFields.fields.previewDescription.lowerName]}}</td>
+                        <td ng-if="::!customEntityDefinition.autoPublish">
+                            <span ng-if="entity.isPublished">Published</span>
+                            <span ng-if="!entity.isPublished && entity.publishStatus == 'Published'">Scheduled</span>
+                            <span ng-if="entity.publishStatus == 'Unpublished'">Unpublished</span>
+                            <br />
+                            <span ng-if="entity.hasDraft">(Pending Draft)</span>
                         </td>
                         <td class="lowPriority">
                             <cms-table-cell-created-audit-data cms-audit-data="::entity.auditData"></cms-table-cell-created-audit-data>
@@ -79,7 +86,7 @@
                 <a href="" class="btn-icon" title="Add"
                    cms-icon="plus-circle"
                    ng-click="onCreate()"
-                   ng-if="::vm.canCreate">
+                   ng-if="::canCreate">
                     <i class="fa fa-plus-circle"></i>
                 </a>
             </cms-table-actions>
