@@ -245,8 +245,8 @@ Cofoundry.visualEditor = (function () {
                 ui_wrap.className = data.className;
                 ui_wrap.style.top = data.y + 'px';
                 ui_wrap.style.left = data.x + 'px';
-                ui_wrap.style.width = data.width + 'px';
-                ui_wrap.style.height = data.height + 'px';
+                ui_wrap.style.width = (data.width - 2) + 'px';
+                ui_wrap.style.height = (data.height - 2) + 'px';
                 ui_wrap.firstChild.nextSibling.innerHTML = data.name;
                 return ui_wrap;
             }
