@@ -5,6 +5,8 @@
     'shared.customEntityService',
     'shared.modalDialogService',
     'shared.arrayUtilities',
+    'shared.ModelPreviewFieldset',
+    'shared.ImagePreviewFieldCollection',
     'baseFormFieldFactory',
 function (
     _,
@@ -13,12 +15,16 @@ function (
     customEntityService,
     modalDialogService,
     arrayUtilities,
+    ModelPreviewFieldset,
+    ImagePreviewFieldCollection,
     baseFormFieldFactory) {
 
     /* VARS */
 
     var CUSTOM_ENTITY_ID_PROP = 'customEntityId',
         CUSTOM_ENTITY_DEFINITION_CODE_PROP = 'customEntityDefinitionCode',
+        PREVIEW_DESCRIPTION_FIELD_NAME = 'previewDescription',
+        PREVIEW_IMAGE_FIELD_NAME = 'previewImage'
         baseConfig = baseFormFieldFactory.defaultConfig;
 
     /* CONFIG */
@@ -45,7 +51,9 @@ function (
         var vm = scope.vm,
             isRequired = _.has(attributes, 'required'),
             definitionPromise,
-            dynamicFormFieldController = _.last(controllers);
+            metaDataPromise,
+            dynamicFormFieldController = _.last(controllers),
+            lastDragToIndex;
 
         init();
         return baseConfig.link(scope, el, attributes, controllers);
@@ -54,25 +62,42 @@ function (
 
         function init() {
 
+            var allDefinitionCodes = getDefinitionCodesAsArray();
+
             vm.gridLoadState = new LoadState();
 
             vm.showPicker = showPicker;
             vm.remove = remove;
             vm.onDrop = onDrop;
+            vm.onDropSuccess = onDropSuccess;
 
-            definitionPromise = customEntityService.getDefinitionsByIdRange(getDefinitionCodesAsArray()).then(function (customEntityDefinitions) {
-                vm.customEntityDefinitions = _.indexBy(customEntityDefinitions, 'customEntityDefinitionCode');
+            definitionPromise = customEntityService.getDefinitionsByIdRange(allDefinitionCodes).then(function (customEntityDefinitions) {
+                vm.customEntityDefinitions = {};
+
+                _.each(customEntityDefinitions, function (customEntityDefinition) {
+                    vm.customEntityDefinitions[customEntityDefinition.customEntityDefinitionCode] = customEntityDefinition;
+
+                    // If any are publishable, show the publish column
+                    if (!customEntityDefinition.autoPublish) {
+                        vm.showPublishColumn = true;
+                    }
+                });
             });
+
+            metaDataPromise = customEntityService
+                .getDataModelSchemasByCodeRange(allDefinitionCodes)
+                .then(loadMetaData);
 
             scope.$watch("vm.model", setGridItems);
         }
 
         /* EVENTS */
 
-        function remove(customEntity) {
+        function remove(customEntity, $index) {
 
             arrayUtilities.removeObject(vm.gridData, customEntity);
-            arrayUtilities.removeObject(vm.model, customEntity, CUSTOM_ENTITY_ID_PROP);
+            arrayUtilities.remove(vm.model, $index);
+            vm.gridImages.remove($index);
         }
 
         function showPicker(definition) {
@@ -128,9 +153,17 @@ function (
             }
         }
 
-        function onDrop($index, droppedEntity) {
+        function onDrop($index) {
 
-            arrayUtilities.moveObject(vm.gridData, droppedEntity, $index, CUSTOM_ENTITY_ID_PROP);
+            // drag drop doesnt give us the to/from index data in the same event, and 
+            // we can't use property tracking here, so stuff the index in a variable
+            lastDragToIndex = $index;
+        }
+
+        function onDropSuccess($index) {
+
+            arrayUtilities.move(vm.gridData, $index, lastDragToIndex);
+            vm.gridImages.move($index, lastDragToIndex);
 
             // Update model with new ordering
             setModelFromGridData();
@@ -140,6 +173,15 @@ function (
             if (!vm.orderable) {
                 vm.gridData = _.sortBy(vm.gridData, 'title');
                 setModelFromGridData();
+            }
+
+            // once sorted, load images
+            metaDataPromise.then(loadImages);
+
+            function loadImages() {
+                vm.gridImages = new ImagePreviewFieldCollection('customEntityDefinitionCode');
+
+                return vm.gridImages.load(vm.gridData, vm.previewFields);
             }
         }
 
@@ -171,6 +213,23 @@ function (
             }
 
             return filter;
+        }
+
+        function loadMetaData(modelMetaData) {
+            vm.previewFields = {};
+
+            _.each(modelMetaData, function (data) {
+                var previewData = new ModelPreviewFieldset(data);
+
+                if (previewData.fields[PREVIEW_DESCRIPTION_FIELD_NAME]) {
+                    vm.previewFields.showDescription = true;
+                }
+
+                if (previewData.fields[PREVIEW_IMAGE_FIELD_NAME]) {
+                    vm.previewFields.showImage = true;
+                }
+                vm.previewFields[data.customEntityDefinitionCode] = previewData;
+            });
         }
 
         /** 

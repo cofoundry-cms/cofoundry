@@ -13,7 +13,7 @@
                     <thead>
                         <tr>
                             <th ng-if="vm.previewFields.fields.previewImage"></th>
-                            <th ng-if="vm.previewFields.showTitleColumn">{{vm.previewFields.titleTerm}}</th>
+                            <th ng-if="vm.previewFields.showTitle">{{vm.previewFields.titleTerm}}</th>
                             <th ng-if="vm.previewFields.fields.previewDescription">{{vm.previewFields.fields.previewDescription.displayName}}</th>
                             <th cms-table-column-actions
                                 ng-if="vm.formScope.editMode">Actions</th>
@@ -33,7 +33,7 @@
                             <td ng-if="vm.previewFields.fields.previewImage">
                                 <cms-table-cell-image cms-image="vm.gridImages.images[$index]"></cms-table-cell-image>
                             </td>
-                            <td ng-if="vm.previewFields.showTitleColumn">
+                            <td ng-if="vm.previewFields.showTitle">
                                 <strong>{{vm.getTitle(entity, $index)}}</strong>
                             </td>
                             <td ng-if="vm.previewFields.fields.previewDescription">{{entity[vm.previewFields.fields.previewDescription.lowerName]}}</td>

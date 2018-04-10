@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Cofoundry.Core;
 using Cofoundry.Domain;
 using Cofoundry.Domain.CQS;
 using Microsoft.AspNetCore.Mvc;

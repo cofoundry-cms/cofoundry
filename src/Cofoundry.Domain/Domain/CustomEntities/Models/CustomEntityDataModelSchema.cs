@@ -14,6 +14,8 @@ namespace Cofoundry.Domain
     /// </summary>
     public class CustomEntityDataModelSchema : IDynamicDataModelSchema
     {
+        public string CustomEntityDefinitionCode { get; set; }
+
         public string DataTemplateName { get; set; }
 
         public ICollection<DynamicDataModelSchemaProperty> DataModelProperties { get; set; }

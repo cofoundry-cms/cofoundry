@@ -9,7 +9,8 @@ function (
     ) {
 
     var service = {},
-        customEntityServiceBase = serviceBase + 'custom-entities';
+        customEntityServiceBase = serviceBase + 'custom-entities',
+        schemaServiceBase = serviceBase + 'custom-entity-data-model-schemas';
 
     /* QUERIES */
 
@@ -25,6 +26,14 @@ function (
 
     service.getDataModelSchema = function (customEntityDefinitionCode) {
         return $http.get(getCustomEntityDefinitionServiceBase(customEntityDefinitionCode) + '/data-model-schema');
+    }
+
+    service.getDataModelSchemasByCodeRange = function (codes) {
+        return $http.get(schemaServiceBase, {
+            params: {
+                customEntityDefinitionCodes: codes
+            }
+        });
     }
 
     service.getPageRoutes = function (customEntityDefinitionCode) {

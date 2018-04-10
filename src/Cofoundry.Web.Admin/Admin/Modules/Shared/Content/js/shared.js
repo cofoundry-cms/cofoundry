@@ -4114,7 +4114,8 @@ function (
     ) {
 
     var service = {},
-        customEntityServiceBase = serviceBase + 'custom-entities';
+        customEntityServiceBase = serviceBase + 'custom-entities',
+        schemaServiceBase = serviceBase + 'custom-entity-data-model-schemas';
 
     /* QUERIES */
 
@@ -4130,6 +4131,14 @@ function (
 
     service.getDataModelSchema = function (customEntityDefinitionCode) {
         return $http.get(getCustomEntityDefinitionServiceBase(customEntityDefinitionCode) + '/data-model-schema');
+    }
+
+    service.getDataModelSchemasByCodeRange = function (codes) {
+        return $http.get(schemaServiceBase, {
+            params: {
+                customEntityDefinitionCodes: codes
+            }
+        });
     }
 
     service.getPageRoutes = function (customEntityDefinitionCode) {
@@ -6306,6 +6315,8 @@ angular.module('cms.shared').directive('cmsFormFieldCustomEntityMultiTypeCollect
     'shared.customEntityService',
     'shared.modalDialogService',
     'shared.arrayUtilities',
+    'shared.ModelPreviewFieldset',
+    'shared.ImagePreviewFieldCollection',
     'baseFormFieldFactory',
 function (
     _,
@@ -6314,12 +6325,16 @@ function (
     customEntityService,
     modalDialogService,
     arrayUtilities,
+    ModelPreviewFieldset,
+    ImagePreviewFieldCollection,
     baseFormFieldFactory) {
 
     /* VARS */
 
     var CUSTOM_ENTITY_ID_PROP = 'customEntityId',
         CUSTOM_ENTITY_DEFINITION_CODE_PROP = 'customEntityDefinitionCode',
+        PREVIEW_DESCRIPTION_FIELD_NAME = 'previewDescription',
+        PREVIEW_IMAGE_FIELD_NAME = 'previewImage'
         baseConfig = baseFormFieldFactory.defaultConfig;
 
     /* CONFIG */
@@ -6346,7 +6361,9 @@ function (
         var vm = scope.vm,
             isRequired = _.has(attributes, 'required'),
             definitionPromise,
-            dynamicFormFieldController = _.last(controllers);
+            metaDataPromise,
+            dynamicFormFieldController = _.last(controllers),
+            lastDragToIndex;
 
         init();
         return baseConfig.link(scope, el, attributes, controllers);
@@ -6355,25 +6372,42 @@ function (
 
         function init() {
 
+            var allDefinitionCodes = getDefinitionCodesAsArray();
+
             vm.gridLoadState = new LoadState();
 
             vm.showPicker = showPicker;
             vm.remove = remove;
             vm.onDrop = onDrop;
+            vm.onDropSuccess = onDropSuccess;
 
-            definitionPromise = customEntityService.getDefinitionsByIdRange(getDefinitionCodesAsArray()).then(function (customEntityDefinitions) {
-                vm.customEntityDefinitions = _.indexBy(customEntityDefinitions, 'customEntityDefinitionCode');
+            definitionPromise = customEntityService.getDefinitionsByIdRange(allDefinitionCodes).then(function (customEntityDefinitions) {
+                vm.customEntityDefinitions = {};
+
+                _.each(customEntityDefinitions, function (customEntityDefinition) {
+                    vm.customEntityDefinitions[customEntityDefinition.customEntityDefinitionCode] = customEntityDefinition;
+
+                    // If any are publishable, show the publish column
+                    if (!customEntityDefinition.autoPublish) {
+                        vm.showPublishColumn = true;
+                    }
+                });
             });
+
+            metaDataPromise = customEntityService
+                .getDataModelSchemasByCodeRange(allDefinitionCodes)
+                .then(loadMetaData);
 
             scope.$watch("vm.model", setGridItems);
         }
 
         /* EVENTS */
 
-        function remove(customEntity) {
+        function remove(customEntity, $index) {
 
             arrayUtilities.removeObject(vm.gridData, customEntity);
-            arrayUtilities.removeObject(vm.model, customEntity, CUSTOM_ENTITY_ID_PROP);
+            arrayUtilities.remove(vm.model, $index);
+            vm.gridImages.remove($index);
         }
 
         function showPicker(definition) {
@@ -6429,9 +6463,17 @@ function (
             }
         }
 
-        function onDrop($index, droppedEntity) {
+        function onDrop($index) {
 
-            arrayUtilities.moveObject(vm.gridData, droppedEntity, $index, CUSTOM_ENTITY_ID_PROP);
+            // drag drop doesnt give us the to/from index data in the same event, and 
+            // we can't use property tracking here, so stuff the index in a variable
+            lastDragToIndex = $index;
+        }
+
+        function onDropSuccess($index) {
+
+            arrayUtilities.move(vm.gridData, $index, lastDragToIndex);
+            vm.gridImages.move($index, lastDragToIndex);
 
             // Update model with new ordering
             setModelFromGridData();
@@ -6441,6 +6483,15 @@ function (
             if (!vm.orderable) {
                 vm.gridData = _.sortBy(vm.gridData, 'title');
                 setModelFromGridData();
+            }
+
+            // once sorted, load images
+            metaDataPromise.then(loadImages);
+
+            function loadImages() {
+                vm.gridImages = new ImagePreviewFieldCollection('customEntityDefinitionCode');
+
+                return vm.gridImages.load(vm.gridData, vm.previewFields);
             }
         }
 
@@ -6472,6 +6523,23 @@ function (
             }
 
             return filter;
+        }
+
+        function loadMetaData(modelMetaData) {
+            vm.previewFields = {};
+
+            _.each(modelMetaData, function (data) {
+                var previewData = new ModelPreviewFieldset(data);
+
+                if (previewData.fields[PREVIEW_DESCRIPTION_FIELD_NAME]) {
+                    vm.previewFields.showDescription = true;
+                }
+
+                if (previewData.fields[PREVIEW_IMAGE_FIELD_NAME]) {
+                    vm.previewFields.showImage = true;
+                }
+                vm.previewFields[data.customEntityDefinitionCode] = previewData;
+            });
         }
 
         /** 
@@ -9946,9 +10014,10 @@ angular.module('cms.shared').factory('shared.ImagePreviewFieldCollection', [
 ) {
         return ImagePreviewFieldCollection;
 
-        function ImagePreviewFieldCollection() {
+        function ImagePreviewFieldCollection(partitionByProperty) {
             var me = this,
                 imagePropertyName,
+                cachedFieldSet,
                 PREVIEW_IMAGE_FIELD_NAME = 'previewImage';
 
             /* Public Properties */
@@ -9960,17 +10029,16 @@ angular.module('cms.shared').factory('shared.ImagePreviewFieldCollection', [
             me.load = function (dataset, fieldSet) {
                 if (!dataset
                     || !dataset.length
-                    || !fieldSet
-                    || !fieldSet.fields[PREVIEW_IMAGE_FIELD_NAME]) return resolveNoData();
+                    || !fieldSet) return resolveNoData();
 
-                imagePropertyName = fieldSet.fields[PREVIEW_IMAGE_FIELD_NAME].lowerName;
+                cachedFieldSet = fieldSet;
 
                 var allImageIds = _.chain(dataset)
                     .map(function (item) {
-                        return modelPropertyAccessor(item, imagePropertyName);
+                        return modelPropertyAccessor(item, getImagePropertyName(item));
                     })
                     .filter(function (id) {
-                        return id;
+                        return !!id;
                     })
                     .uniq()
                     .value();
@@ -9981,7 +10049,7 @@ angular.module('cms.shared').factory('shared.ImagePreviewFieldCollection', [
                     me.images = [];
 
                     _.each(dataset, function (item) {
-                        var id = modelPropertyAccessor(item, imagePropertyName),
+                        var id = modelPropertyAccessor(item, getImagePropertyName(item)),
                             image;
 
                         if (id) {
@@ -10002,6 +10070,8 @@ angular.module('cms.shared').factory('shared.ImagePreviewFieldCollection', [
                 }
 
                 function modelPropertyAccessor(item, propertyName) {
+
+                    if (!propertyName) return undefined;
 
                     // if the model is a child of the item e.g. custom entities
                     if (item.model) return item.model[propertyName];
@@ -10028,9 +10098,32 @@ angular.module('cms.shared').factory('shared.ImagePreviewFieldCollection', [
 
             /* Private */
 
+            function getImagePropertyName(model) {
+                // In the case of multi-type grids we can partition fieldsets by a property
+                if (partitionByProperty) {
+                    var partitionId = model[partitionByProperty];
+                    var field = cachedFieldSet[partitionId].fields[PREVIEW_IMAGE_FIELD_NAME];
+
+                    if (!field) return undefined;
+
+                    return field.lowerName;
+                }
+
+                // cache the property name
+                if (!imagePropertyName && cachedFieldSet.fields[PREVIEW_IMAGE_FIELD_NAME]) {
+                    imagePropertyName = cachedFieldSet.fields[PREVIEW_IMAGE_FIELD_NAME].lowerName;
+                }
+
+                return imagePropertyName;
+            }
+
             function updateImage(itemToUpdate, index, isNew) {
 
-                var newImageId = itemToUpdate[imagePropertyName];
+                var propertyName = getImagePropertyName(itemToUpdate);
+
+                if (!propertyName) return;
+
+                var newImageId = itemToUpdate[propertyName];
 
                 if (!isNew) {
                     var existingImage = me.images[index],
@@ -10081,7 +10174,7 @@ function (
 
         me.modelMetaData = modelMetaData;
         me.fields = parseFields(modelMetaData);
-        me.showTitleColumn = canShowTitleColumn(me.fields);
+        me.showTitle = canShowTitleColumn(me.fields);
         me.titleTerm = getTitleTerm(me.fields);
 
         /* Public Funcs */

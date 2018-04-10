@@ -42,6 +42,7 @@ namespace Cofoundry.Domain
             if (definition == null) return null;
 
             var result = new CustomEntityDataModelSchema();
+            result.CustomEntityDefinitionCode = definition.CustomEntityDefinitionCode;
 
             _dynamicDataModelTypeMapper.Map(result, definition.DataModelType);
 
