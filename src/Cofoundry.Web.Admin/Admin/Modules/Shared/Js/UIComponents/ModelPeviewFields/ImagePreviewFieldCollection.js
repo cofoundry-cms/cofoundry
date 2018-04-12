@@ -30,11 +30,11 @@ angular.module('cms.shared').factory('shared.ImagePreviewFieldCollection', [
             /* Public Funcs */
 
             me.load = function (dataset, fieldSet) {
+                cachedFieldSet = fieldSet;
+
                 if (!dataset
                     || !dataset.length
                     || !fieldSet) return resolveNoData();
-
-                cachedFieldSet = fieldSet;
 
                 var allImageIds = _.chain(dataset)
                     .map(function (item) {

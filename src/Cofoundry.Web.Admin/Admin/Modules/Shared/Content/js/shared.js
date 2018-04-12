@@ -10027,11 +10027,11 @@ angular.module('cms.shared').factory('shared.ImagePreviewFieldCollection', [
             /* Public Funcs */
 
             me.load = function (dataset, fieldSet) {
+                cachedFieldSet = fieldSet;
+
                 if (!dataset
                     || !dataset.length
                     || !fieldSet) return resolveNoData();
-
-                cachedFieldSet = fieldSet;
 
                 var allImageIds = _.chain(dataset)
                     .map(function (item) {
@@ -10342,7 +10342,8 @@ angular.module('cms.shared').directive('cmsFormFieldNestedDataModelCollection', 
 
         /* VARS */
 
-        var baseConfig = baseFormFieldFactory.defaultConfig;
+        var baseConfig = baseFormFieldFactory.defaultConfig,
+            PREVIEW_TITLE_FIELD_NAME = 'previewTitle';
 
         /* CONFIG */
 
@@ -10387,10 +10388,10 @@ angular.module('cms.shared').directive('cmsFormFieldNestedDataModelCollection', 
                 definitionPromise = nestedDataModelSchemaService
                     .getByName(vm.modelType)
                     .then(function (modelMetaData) {
-                        if (!vm.model) return;
                         vm.modelMetaData = modelMetaData;
                         vm.previewFields = new ModelPreviewFieldset(modelMetaData);
                         vm.gridImages = new ImagePreviewFieldCollection();
+
                         vm.gridImages.load(vm.model, vm.previewFields);
                     });
 

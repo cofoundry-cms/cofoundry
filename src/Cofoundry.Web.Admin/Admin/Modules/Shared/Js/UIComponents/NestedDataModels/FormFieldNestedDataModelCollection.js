@@ -21,7 +21,8 @@
 
         /* VARS */
 
-        var baseConfig = baseFormFieldFactory.defaultConfig;
+        var baseConfig = baseFormFieldFactory.defaultConfig,
+            PREVIEW_TITLE_FIELD_NAME = 'previewTitle';
 
         /* CONFIG */
 
@@ -66,10 +67,10 @@
                 definitionPromise = nestedDataModelSchemaService
                     .getByName(vm.modelType)
                     .then(function (modelMetaData) {
-                        if (!vm.model) return;
                         vm.modelMetaData = modelMetaData;
                         vm.previewFields = new ModelPreviewFieldset(modelMetaData);
                         vm.gridImages = new ImagePreviewFieldCollection();
+
                         vm.gridImages.load(vm.model, vm.previewFields);
                     });
 
