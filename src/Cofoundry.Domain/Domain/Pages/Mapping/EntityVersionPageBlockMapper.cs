@@ -102,6 +102,10 @@ namespace Cofoundry.Domain
             foreach (var group in entityBlocks.GroupBy(m => m.PageBlockTypeId))
             {
                 var blockType = blockTypes.SingleOrDefault(t => t.PageBlockTypeId == group.Key);
+
+                // If missing e.g. archived, skip
+                if (blockType == null) continue;
+
                 var mapperOutput = await _pageVersionBlockModelMapper.MapDisplayModelAsync(blockType.FileName, group, workflowStatus);
 
                 foreach (var block in group)

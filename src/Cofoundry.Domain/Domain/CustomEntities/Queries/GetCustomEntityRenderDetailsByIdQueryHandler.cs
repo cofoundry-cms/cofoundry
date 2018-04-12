@@ -71,6 +71,7 @@ namespace Cofoundry.Domain
             return _dbContext
                 .CustomEntityVersionPageBlocks
                 .AsNoTracking()
+                .FilterActive()
                 .Where(m => m.CustomEntityVersionId == entity.CustomEntityVersionId);
         }
 

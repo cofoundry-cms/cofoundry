@@ -173,6 +173,8 @@ namespace Cofoundry.Domain
                 {
                     region.Blocks = dbVersion
                         .CustomEntityVersionPageBlocks
+                        .AsQueryable()
+                        .FilterActive()
                         .Where(m => m.PageTemplateRegionId == region.PageTemplateRegionId)
                         .OrderBy(m => m.Ordering)
                         .Select(m => MapBlock(m, allPageBlockTypes))

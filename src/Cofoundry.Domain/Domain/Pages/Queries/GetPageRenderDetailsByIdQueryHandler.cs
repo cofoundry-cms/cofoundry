@@ -107,6 +107,7 @@ namespace Cofoundry.Domain
         {
             return _dbContext
                 .PageVersionBlocks
+                .FilterActive()
                 .AsNoTracking()
                 .Where(m => m.PageVersionId == page.PageVersionId);
         }

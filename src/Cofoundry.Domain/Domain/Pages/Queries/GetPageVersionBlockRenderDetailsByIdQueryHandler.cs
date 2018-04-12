@@ -76,6 +76,7 @@ namespace Cofoundry.Domain
             return _dbContext
                 .PageVersionBlocks
                 .AsNoTracking()
+                .FilterActive()
                 .Where(m => m.PageVersionId == pageVersionBlock.PageVersionId && m.PageTemplateRegionId == pageVersionBlock.PageTemplateRegionId)
                 .OrderBy(m => m.Ordering)
                 .Select(m => m.PageVersionBlockId);
@@ -105,6 +106,7 @@ namespace Cofoundry.Domain
             return _dbContext
                 .PageVersionBlocks
                 .AsNoTracking()
+                .FilterActive()
                 .Where(m => m.PageVersionBlockId == pageVersionBlockId);
         }
 

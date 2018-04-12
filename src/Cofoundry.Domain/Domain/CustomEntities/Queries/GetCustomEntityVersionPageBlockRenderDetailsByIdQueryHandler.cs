@@ -81,7 +81,9 @@ namespace Cofoundry.Domain
             return _dbContext
                 .CustomEntityVersionPageBlocks
                 .AsNoTracking()
-                .Where(m => m.CustomEntityVersionId == versionBlock.CustomEntityVersionId && m.PageTemplateRegionId == versionBlock.PageTemplateRegionId)
+                .FilterActive()
+                .Where(m => m.CustomEntityVersionId == versionBlock.CustomEntityVersionId 
+                    && m.PageTemplateRegionId == versionBlock.PageTemplateRegionId)
                 .OrderBy(m => m.Ordering)
                 .Select(m => m.CustomEntityVersionPageBlockId);
         }
@@ -113,6 +115,7 @@ namespace Cofoundry.Domain
             return _dbContext
                 .CustomEntityVersionPageBlocks
                 .AsNoTracking()
+                .FilterActive()
                 .Where(m => m.CustomEntityVersionPageBlockId == customEntityVersionPageBlockId);
         }
 

@@ -45,6 +45,7 @@ namespace Cofoundry.Domain
             var dbQuery = _dbContext
                 .PageVersionBlocks
                 .AsNoTracking()
+                .FilterActive()
                 .Where(m => query.PageVersionBlockIds.Contains(m.PageVersionBlockId))
                 .Select(m => new ChildEntityMicroSummary()
                 {

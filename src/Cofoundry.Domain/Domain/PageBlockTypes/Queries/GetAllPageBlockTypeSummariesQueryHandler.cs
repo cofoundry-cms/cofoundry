@@ -53,6 +53,7 @@ namespace Cofoundry.Domain
                 .PageBlockTypes
                 .AsNoTracking()
                 .Include(t => t.PageBlockTemplates)
+                .FilterActive()
                 .OrderBy(m => m.Name);
 
             return results;

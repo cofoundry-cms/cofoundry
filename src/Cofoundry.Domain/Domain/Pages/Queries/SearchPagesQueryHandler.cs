@@ -81,6 +81,7 @@ namespace Cofoundry.Domain
             var pageBlocks = await _dbContext
                 .PageVersionBlocks
                 .Include(m => m.PageBlockType)
+                .FilterActive()
                 .Where(m => !m.PageVersion.IsDeleted)
                 .Where(m => !m.PageVersion.Page.IsDeleted)
                 .Where(m => isAuthenticated ? true : m.PageVersion.WorkFlowStatusId == (int)WorkFlowStatus.Published)
