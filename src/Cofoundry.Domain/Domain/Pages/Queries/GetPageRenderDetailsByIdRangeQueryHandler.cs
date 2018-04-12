@@ -43,7 +43,7 @@ namespace Cofoundry.Domain
 
         public async Task<IDictionary<int, PageRenderDetails>> ExecuteAsync(GetPageRenderDetailsByIdRangeQuery query, IExecutionContext executionContext)
         {
-            var dbPages = await QueryPages(query, executionContext).ToListAsync();
+            var dbPages = await GetPagesAsync(query, executionContext);
             var pages = dbPages
                 .Select(_pageMapper.Map)
                 .ToList();
@@ -61,26 +61,30 @@ namespace Cofoundry.Domain
             return pages.ToDictionary(d => d.PageId);
         }
         
-        private IQueryable<PageVersion> QueryPages(GetPageRenderDetailsByIdRangeQuery query, IExecutionContext executionContext)
+        private async Task<IEnumerable<PageVersion>> GetPagesAsync(GetPageRenderDetailsByIdRangeQuery query, IExecutionContext executionContext)
         {
             if (query.PublishStatus == PublishStatusQuery.SpecificVersion)
             {
                 throw new InvalidOperationException("PublishStatusQuery.SpecificVersion not supported in GetPageRenderDetailsByIdRangeQuery");
             }
 
-            var dbQuery = _dbContext
+            var dbResults = await _dbContext
                 .PagePublishStatusQueries
                 .AsNoTracking()
+                .Include(v => v.PageVersion)
+                .ThenInclude(v => v.Page)
+                .Include(v => v.PageVersion)
+                .ThenInclude(v => v.OpenGraphImageAsset)
+                .Include(v => v.PageVersion)
+                .ThenInclude(v => v.PageTemplate)
+                .ThenInclude(t => t.PageTemplateRegions)
                 .FilterActive()
                 .FilterByStatus(query.PublishStatus, executionContext.ExecutionDate)
                 .Where(v => query.PageIds.Contains(v.PageId))
-                .Select(p => p.PageVersion)
-                .Include(v => v.Page)
-                .Include(v => v.OpenGraphImageAsset)
-                .Include(v => v.PageTemplate)
-                .ThenInclude(t => t.PageTemplateRegions);
+                .ToListAsync();
 
-            return dbQuery;
+            return dbResults
+                .Select(r => r.PageVersion);
         }
 
         private IQueryable<PageVersionBlock> QueryPageBlocks(List<PageRenderDetails> pages)
