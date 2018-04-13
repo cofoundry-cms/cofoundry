@@ -208,6 +208,7 @@ namespace Cofoundry.Domain
             return _dbContext
                 .CustomEntityVersions
                 .Include(v => v.CustomEntityVersionPageBlocks)
+                .ThenInclude(e => e.PageBlockType)
                 .Include(v => v.CustomEntity)
                 .ThenInclude(e => e.Creator)
                 .Include(v => v.Creator)
