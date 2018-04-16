@@ -16,7 +16,6 @@ namespace Cofoundry.Domain
         #region constructor
 
         private readonly CofoundryDbContext _dbContext;
-        private readonly IQueryExecutor _queryExecutor;
         private readonly IPermissionValidationService _permissionValidationService;
         private readonly ICustomEntitySummaryMapper _customEntitySummaryMapper;
 
@@ -28,7 +27,6 @@ namespace Cofoundry.Domain
             )
         {
             _dbContext = dbContext;
-            _queryExecutor = queryExecutor;
             _permissionValidationService = permissionValidationService;
             _customEntitySummaryMapper = customEntitySummaryMapper;
         }

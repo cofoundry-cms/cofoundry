@@ -42,7 +42,7 @@ namespace Cofoundry.Domain
 
         public async Task ExecuteAsync(AddMasterCofoundryUserCommand command, IExecutionContext executionContext)
         {
-            var settings = await _queryExecutor.ExecuteAsync(new GetSettingsQuery<InternalSettings>());
+            var settings = await _queryExecutor.ExecuteAsync(new GetSettingsQuery<InternalSettings>(), executionContext);
 
             if (settings.IsSetup)
             {

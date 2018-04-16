@@ -25,18 +25,15 @@ namespace Cofoundry.Domain
         , IIgnorePermissionCheckHandler
     {
         #region constructor
-
-        private readonly ICommandExecutor _commandExecutor;
+        
         private readonly IQueryExecutor _queryExecutor;
         private readonly ILoginService _loginService;
 
         public LogUserInWithCredentialsCommandHandler(
-            ICommandExecutor commandExecutor,
             IQueryExecutor queryExecutor,
             ILoginService loginService
             )
         {
-            _commandExecutor = commandExecutor;
             _queryExecutor = queryExecutor;
             _loginService = loginService;
         }
@@ -47,7 +44,7 @@ namespace Cofoundry.Domain
         {
             if (IsLoggedInAlready(command, executionContext)) return;
 
-            var hasExceededMaxLoginAttempts = await _queryExecutor.ExecuteAsync(GetMaxLoginAttemptsQuery(command));
+            var hasExceededMaxLoginAttempts = await _queryExecutor.ExecuteAsync(GetMaxLoginAttemptsQuery(command), executionContext);
             ValidateMaxLoginAttemptsNotExceeded(hasExceededMaxLoginAttempts);
 
             var user = await GetUserLoginInfoAsync(command, executionContext);
@@ -102,7 +99,7 @@ namespace Cofoundry.Domain
                 Password = command.Password,
             };
 
-            return _queryExecutor.ExecuteAsync(query);
+            return _queryExecutor.ExecuteAsync(query, executionContext);
         }
 
         private static void ValidateLoginArea(string userAreaToLogInto, string usersUserArea)

@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 using Cofoundry.Domain.Data;
 using Cofoundry.Domain.CQS;
 using Microsoft.EntityFrameworkCore;
-using Cofoundry.Core.Validation;
 using Cofoundry.Core.MessageAggregator;
 using Cofoundry.Core;
 
@@ -17,8 +16,7 @@ namespace Cofoundry.Domain
         , IPermissionRestrictedCommandHandler<UpdatePageCommand>
     {
         #region constructor
-
-        private readonly IQueryExecutor _queryExecutor;
+        
         private readonly CofoundryDbContext _dbContext;
         private readonly EntityAuditHelper _entityAuditHelper;
         private readonly EntityTagHelper _entityTagHelper;
@@ -34,7 +32,6 @@ namespace Cofoundry.Domain
             IMessageAggregator messageAggregator
             )
         {
-            _queryExecutor = queryExecutor;
             _dbContext = dbContext;
             _entityAuditHelper = entityAuditHelper;
             _entityTagHelper = entityTagHelper;

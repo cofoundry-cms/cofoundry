@@ -53,13 +53,13 @@ namespace Cofoundry.Domain
                 .Where(e => e.CustomEntityId == command.CustomEntityId)
                 .SingleOrDefaultAsync();
             EntityNotFoundException.ThrowIfNull(entity, command.CustomEntityId);
-            await _permissionValidationService.EnforceCustomEntityPermissionAsync<CustomEntityUpdateUrlPermission>(entity.CustomEntityDefinitionCode);
+            _permissionValidationService.EnforceCustomEntityPermission<CustomEntityUpdateUrlPermission>(entity.CustomEntityDefinitionCode, executionContext.UserContext);
 
             var definitionQuery = new GetCustomEntityDefinitionSummaryByCodeQuery(entity.CustomEntityDefinitionCode);
             var definition = await _queryExecutor.ExecuteAsync(definitionQuery, executionContext);
             EntityNotFoundException.ThrowIfNull(definition, entity.CustomEntityDefinitionCode);
 
-            await ValidateIsUnique(command, definition);
+            await ValidateIsUniqueAsync(command, definition, executionContext);
 
             Map(command, entity, definition);
 
@@ -74,7 +74,11 @@ namespace Cofoundry.Domain
             });
         }
         
-        private async Task ValidateIsUnique(UpdateCustomEntityUrlCommand command, CustomEntityDefinitionSummary definition)
+        private async Task ValidateIsUniqueAsync(
+            UpdateCustomEntityUrlCommand command, 
+            CustomEntityDefinitionSummary definition,
+            IExecutionContext executionContext
+            )
         {
             if (!definition.ForceUrlSlugUniqueness) return;
 
@@ -84,7 +88,7 @@ namespace Cofoundry.Domain
             query.LocaleId = command.LocaleId;
             query.UrlSlug = command.UrlSlug;
 
-            var isUnique = await _queryExecutor.ExecuteAsync(query);
+            var isUnique = await _queryExecutor.ExecuteAsync(query, executionContext);
             if (!isUnique)
             {
                 var message = string.Format("A {0} already exists with the {2} '{1}'", 

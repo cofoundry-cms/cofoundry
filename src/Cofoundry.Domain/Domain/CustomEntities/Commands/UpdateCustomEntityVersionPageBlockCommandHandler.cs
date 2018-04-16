@@ -60,7 +60,7 @@ namespace Cofoundry.Domain
                 .Where(l => l.CustomEntityVersionPageBlockId == command.CustomEntityVersionPageBlockId)
                 .SingleOrDefaultAsync();
             EntityNotFoundException.ThrowIfNull(dbBlock, command.CustomEntityVersionPageBlockId);
-            await _permissionValidationService.EnforceCustomEntityPermissionAsync<CustomEntityUpdatePermission>(dbBlock.CustomEntityVersion.CustomEntity.CustomEntityDefinitionCode);
+            _permissionValidationService.EnforceCustomEntityPermission<CustomEntityUpdatePermission>(dbBlock.CustomEntityVersion.CustomEntity.CustomEntityDefinitionCode, executionContext.UserContext);
 
             if (dbBlock.CustomEntityVersion.WorkFlowStatusId != (int)WorkFlowStatus.Draft)
             {
@@ -77,7 +77,7 @@ namespace Cofoundry.Domain
                     dbBlock.CustomEntityVersionPageBlockId,
                     command.DataModel);
 
-                await _commandExecutor.ExecuteAsync(dependencyCommand);
+                await _commandExecutor.ExecuteAsync(dependencyCommand, executionContext);
 
                 scope.Complete();
             }

@@ -49,11 +49,11 @@ namespace Cofoundry.Domain
             var role = await QueryRole(command).SingleOrDefaultAsync();
             EntityNotFoundException.ThrowIfNull(role, command.RoleId);
 
-            var isUnique = await _queryExecutor.ExecuteAsync(GetUniqueQuery(command, role));
+            var isUnique = await _queryExecutor.ExecuteAsync(GetUniqueQuery(command, role), executionContext);
             ValidateIsUnique(isUnique);
 
             MapRole(command, role);
-            await MergePermissions(command, role);
+            await MergePermissionsAsync(command, role, executionContext);
             await _dbContext.SaveChangesAsync();
 
             _roleCache.Clear(role.RoleId);
@@ -95,7 +95,7 @@ namespace Cofoundry.Domain
                 .FilterById(command.RoleId);
         }
 
-        private async Task MergePermissions(UpdateRoleCommand command, Role role)
+        private async Task MergePermissionsAsync(UpdateRoleCommand command, Role role, IExecutionContext executionContext)
         {
             // Deletions
             var permissionsToRemove = role
@@ -150,7 +150,7 @@ namespace Cofoundry.Domain
                         if (codePermission is IEntityPermission)
                         {
                             var definitionCode = ((IEntityPermission)codePermission).EntityDefinition.EntityDefinitionCode;
-                            await _commandExecutor.ExecuteAsync(new EnsureEntityDefinitionExistsCommand(definitionCode));
+                            await _commandExecutor.ExecuteAsync(new EnsureEntityDefinitionExistsCommand(definitionCode), executionContext);
                             dbPermission.EntityDefinitionCode = definitionCode;
                         }
                     }

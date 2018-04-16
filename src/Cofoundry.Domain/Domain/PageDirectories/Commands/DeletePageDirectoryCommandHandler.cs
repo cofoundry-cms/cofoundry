@@ -56,7 +56,7 @@ namespace Cofoundry.Domain
 
                 using (var scope = _transactionScopeFactory.Create(_dbContext))
                 {
-                    await _commandExecutor.ExecuteAsync(new DeleteUnstructuredDataDependenciesCommand(PageDirectoryEntityDefinition.DefinitionCode, pageDirectory.PageDirectoryId));
+                    await _commandExecutor.ExecuteAsync(new DeleteUnstructuredDataDependenciesCommand(PageDirectoryEntityDefinition.DefinitionCode, pageDirectory.PageDirectoryId), executionContext);
 
                     await _dbContext.SaveChangesAsync();
                     scope.Complete();

@@ -90,7 +90,7 @@ namespace Cofoundry.Domain
                     // Lazy load locales, since they aren't always used
                     if (allLocales == null)
                     {
-                        allLocales = await GetLocales();
+                        allLocales = await GetLocalesAsync(executionContext);
                     }
 
                     entity.Locale = allLocales.GetOrDefault(localeId.Value);
@@ -125,9 +125,9 @@ namespace Cofoundry.Domain
             }
         }
 
-        private async Task<Dictionary<int, ActiveLocale>> GetLocales()
+        private async Task<Dictionary<int, ActiveLocale>> GetLocalesAsync(IExecutionContext executionContext)
         {
-            var locales = await _queryExecutor.ExecuteAsync(new GetAllActiveLocalesQuery());
+            var locales = await _queryExecutor.ExecuteAsync(new GetAllActiveLocalesQuery(), executionContext);
             return locales.ToDictionary(l => l.LocaleId);
         }
     }

@@ -60,8 +60,8 @@ namespace Cofoundry.Domain
 
             using (var scope = _transactionScopeFactory.Create(_dbContext))
             {
-                draft = await CreateDraftIfRequiredAsync(command, draft);
-                await ValidateTitle(command, draft, definition);
+                draft = await CreateDraftIfRequiredAsync(command, draft, executionContext);
+                await ValidateTitleAsync(command, draft, definition, executionContext);
                 UpdateDraft(command, draft);
 
                 await _dbContext.SaveChangesAsync();
@@ -71,7 +71,7 @@ namespace Cofoundry.Domain
                     draft.CustomEntityVersionId,
                     command.Model);
 
-                await _commandExecutor.ExecuteAsync(dependencyCommand);
+                await _commandExecutor.ExecuteAsync(dependencyCommand, executionContext);
 
                 scope.Complete();
             }
@@ -88,7 +88,7 @@ namespace Cofoundry.Domain
             {
                 using (var scope = _transactionScopeFactory.Create(_dbContext))
                 {
-                    await _commandExecutor.ExecuteAsync(new PublishCustomEntityCommand(draft.CustomEntityId, command.PublishDate));
+                    await _commandExecutor.ExecuteAsync(new PublishCustomEntityCommand(draft.CustomEntityId, command.PublishDate), executionContext);
                     scope.Complete();
                 }
             }
@@ -98,12 +98,17 @@ namespace Cofoundry.Domain
 
         #region helpers
 
-        private async Task ValidateTitle(UpdateCustomEntityDraftVersionCommand command, CustomEntityVersion dbVersion, ICustomEntityDefinition definition)
+        private async Task ValidateTitleAsync(
+            UpdateCustomEntityDraftVersionCommand command, 
+            CustomEntityVersion dbVersion, 
+            ICustomEntityDefinition definition,
+            IExecutionContext executionContext
+            )
         {
             if (!command.Publish || !definition.ForceUrlSlugUniqueness || SlugFormatter.ToSlug(dbVersion.Title) == dbVersion.CustomEntity.UrlSlug) return;
 
             var query = GetUniquenessQuery(command, definition, dbVersion);
-            var isUnique = await _queryExecutor.ExecuteAsync(query);
+            var isUnique = await _queryExecutor.ExecuteAsync(query, executionContext);
 
             if (!isUnique)
             {
@@ -137,13 +142,17 @@ namespace Cofoundry.Domain
                 .SingleOrDefaultAsync();
         }
 
-        private async Task<CustomEntityVersion> CreateDraftIfRequiredAsync(UpdateCustomEntityDraftVersionCommand command, CustomEntityVersion draft)
+        private async Task<CustomEntityVersion> CreateDraftIfRequiredAsync(
+            UpdateCustomEntityDraftVersionCommand command, 
+            CustomEntityVersion draft,
+            IExecutionContext executionContext
+            )
         {
             if (draft != null) return draft;
 
             var addDraftCommand = new AddCustomEntityDraftVersionCommand();
             addDraftCommand.CustomEntityId = command.CustomEntityId;
-            await _commandExecutor.ExecuteAsync(addDraftCommand);
+            await _commandExecutor.ExecuteAsync(addDraftCommand, executionContext);
 
             return await GetDraftVersionAsync(command);
         }

@@ -18,7 +18,6 @@ namespace Cofoundry.Domain
 
         private readonly ICommandExecutor _commandExecutor;
         private readonly CofoundryDbContext _dbContext;
-        private readonly EntityTagHelper _entityTagHelper;
 
         public DuplicatePageCommandHandler(
             ICommandExecutor commandExecutor,
@@ -28,7 +27,6 @@ namespace Cofoundry.Domain
         {
             _commandExecutor = commandExecutor;
             _dbContext = dbContext;
-            _entityTagHelper = entityTagHelper;
         }
 
         #endregion
@@ -40,7 +38,7 @@ namespace Cofoundry.Domain
             var toDup = await GetPageToDuplicate(command).FirstOrDefaultAsync();
             var addPageCommand = MapCommand(command, toDup);
 
-            await _commandExecutor.ExecuteAsync(addPageCommand);
+            await _commandExecutor.ExecuteAsync(addPageCommand, executionContext);
 
             // Set Ouput
             command.OutputPageId = addPageCommand.OutputPageId;

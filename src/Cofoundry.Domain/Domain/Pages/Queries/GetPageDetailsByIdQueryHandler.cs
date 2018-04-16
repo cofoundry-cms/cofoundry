@@ -50,7 +50,7 @@ namespace Cofoundry.Domain
             var pageRoute = await _queryExecutor.ExecuteAsync(pageRouteQuery, executionContext);
             EntityNotFoundException.ThrowIfNull(pageRoute, query.PageId);
 
-            var regions = await _queryExecutor.ExecuteAsync(GetRegionsQuery(dbPageVersion));
+            var regions = await _queryExecutor.ExecuteAsync(GetRegionsQuery(dbPageVersion), executionContext);
 
             return Map(dbPageVersion, regions, pageRoute);
         }

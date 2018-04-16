@@ -22,8 +22,6 @@ namespace Cofoundry.Domain
 
         private readonly CofoundryDbContext _dbContext;
         private readonly IQueryExecutor _queryExecutor;
-        private readonly IResetUserPasswordCommandHelper _resetUserPasswordCommandHelper;
-        private readonly IUserAreaDefinitionRepository _userAreaRepository;
         private readonly IMailService _mailService;
         private readonly ITransactionScopeFactory _transactionScopeFactory;
         private readonly IPasswordUpdateCommandHelper _passwordUpdateCommandHelper;
@@ -31,8 +29,6 @@ namespace Cofoundry.Domain
         public CompleteUserPasswordResetCommandHandler(
             CofoundryDbContext dbContext,
             IQueryExecutor queryExecutor,
-            IResetUserPasswordCommandHelper resetUserPasswordCommandHelper,
-            IUserAreaDefinitionRepository userAreaRepository,
             IMailService mailService,
             ITransactionScopeFactory transactionScopeFactory,
             IPasswordUpdateCommandHelper passwordUpdateCommandHelper
@@ -40,8 +36,6 @@ namespace Cofoundry.Domain
         {
             _dbContext = dbContext;
             _queryExecutor = queryExecutor;
-            _resetUserPasswordCommandHelper = resetUserPasswordCommandHelper;
-            _userAreaRepository = userAreaRepository;
             _mailService = mailService;
             _transactionScopeFactory = transactionScopeFactory;
             _passwordUpdateCommandHelper = passwordUpdateCommandHelper;
@@ -53,7 +47,7 @@ namespace Cofoundry.Domain
 
         public async Task ExecuteAsync(CompleteUserPasswordResetCommand command, IExecutionContext executionContext)
         {
-            var validationResult = await _queryExecutor.ExecuteAsync(CreateValidationQuery(command));
+            var validationResult = await _queryExecutor.ExecuteAsync(CreateValidationQuery(command), executionContext);
             ValidatePasswordRequest(validationResult);
 
             var request = await QueryPasswordRequestIfToken(command).SingleOrDefaultAsync();

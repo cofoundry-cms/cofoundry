@@ -47,7 +47,7 @@ namespace Cofoundry.Domain
             EntityNotFoundException.ThrowIfNull(pageDirectory, command.PageDirectoryId);
 
             // Custom Validation
-            await ValidateIsUnique(command);
+            await ValidateIsUniqueAsync(command, executionContext);
             await ValidateUrlPropertiesAllowedToChange(command, pageDirectory);
 
             pageDirectory.Name = command.Name;
@@ -93,14 +93,14 @@ namespace Cofoundry.Domain
                 .AnyAsync();
         }
 
-        private async Task ValidateIsUnique(UpdatePageDirectoryCommand command)
+        private async Task ValidateIsUniqueAsync(UpdatePageDirectoryCommand command, IExecutionContext executionContext)
         {
             var query = new IsPageDirectoryPathUniqueQuery();
             query.ParentPageDirectoryId = command.ParentPageDirectoryId;
             query.UrlPath = command.UrlPath;
             query.PageDirectoryId = command.PageDirectoryId;
 
-            var isUnique = await _queryExecutor.ExecuteAsync(query);
+            var isUnique = await _queryExecutor.ExecuteAsync(query, executionContext);
 
             if (!isUnique)
             {

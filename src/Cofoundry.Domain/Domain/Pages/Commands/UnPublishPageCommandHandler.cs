@@ -17,31 +17,22 @@ namespace Cofoundry.Domain
         , IPermissionRestrictedCommandHandler<UnPublishPageCommand>
     {
         #region constructor
-
-        private readonly IQueryExecutor _queryExecutor;
+        
         private readonly CofoundryDbContext _dbContext;
-        private readonly EntityAuditHelper _entityAuditHelper;
-        private readonly EntityTagHelper _entityTagHelper;
         private readonly IPageCache _pageCache;
         private readonly IMessageAggregator _messageAggregator;
         private readonly ITransactionScopeFactory _transactionScopeFactory;
         private readonly IPageStoredProcedures _pageStoredProcedures;
 
         public UnPublishPageCommandHandler(
-            IQueryExecutor queryExecutor,
             CofoundryDbContext dbContext,
-            EntityAuditHelper entityAuditHelper,
-            EntityTagHelper entityTagHelper,
             IPageCache pageCache,
             IMessageAggregator messageAggregator,
             ITransactionScopeFactory transactionScopeFactory,
             IPageStoredProcedures pageStoredProcedures
             )
         {
-            _queryExecutor = queryExecutor;
             _dbContext = dbContext;
-            _entityAuditHelper = entityAuditHelper;
-            _entityTagHelper = entityTagHelper;
             _pageCache = pageCache;
             _messageAggregator = messageAggregator;
             _pageStoredProcedures = pageStoredProcedures;

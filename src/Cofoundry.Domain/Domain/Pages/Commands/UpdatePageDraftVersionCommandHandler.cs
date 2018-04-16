@@ -17,8 +17,7 @@ namespace Cofoundry.Domain
         , IPermissionRestrictedCommandHandler<UpdatePageDraftVersionCommand>
     {
         #region constructor
-
-        private readonly IQueryExecutor _queryExecutor;
+        
         private readonly ICommandExecutor _commandExecutor;
         private readonly CofoundryDbContext _dbContext;
         private readonly IPageCache _pageCache;
@@ -36,7 +35,6 @@ namespace Cofoundry.Domain
             IPageStoredProcedures pageStoredProcedures
             )
         {
-            _queryExecutor = queryExecutor;
             _commandExecutor = commandExecutor;
             _dbContext = dbContext;
             _pageCache = pageCache;
@@ -72,7 +70,7 @@ namespace Cofoundry.Domain
 
             if (command.Publish)
             {
-                await _commandExecutor.ExecuteAsync(new PublishPageCommand(draft.PageId, command.PublishDate));
+                await _commandExecutor.ExecuteAsync(new PublishPageCommand(draft.PageId, command.PublishDate), executionContext);
             }
         }
 

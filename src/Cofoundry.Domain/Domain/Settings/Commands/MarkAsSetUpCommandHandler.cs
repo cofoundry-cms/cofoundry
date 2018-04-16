@@ -17,7 +17,6 @@ namespace Cofoundry.Domain
         #region constructor
 
         private readonly CofoundryDbContext _dbContext;
-        private readonly SettingCommandHelper _settingCommandHelper;
         private readonly ISettingCache _settingCache;
         private readonly IPermissionValidationService _permissionValidationService;
 
@@ -28,7 +27,6 @@ namespace Cofoundry.Domain
             IPermissionValidationService permissionValidationService
             )
         {
-            _settingCommandHelper = settingCommandHelper;
             _dbContext = dbContext;
             _settingCache = settingCache;
             _permissionValidationService = permissionValidationService;

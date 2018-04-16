@@ -58,7 +58,7 @@ namespace Cofoundry.Domain
                 })
                 .SingleOrDefaultAsync();
             EntityNotFoundException.ThrowIfNull(dbResult, command.CustomEntityVersionPageBlockId);
-            await _permissionValidationService.EnforceCustomEntityPermissionAsync<CustomEntityUpdatePermission>(dbResult.CustomEntityDefinitionCode);
+            _permissionValidationService.EnforceCustomEntityPermission<CustomEntityUpdatePermission>(dbResult.CustomEntityDefinitionCode, executionContext.UserContext);
 
             if (dbResult.WorkFlowStatusId != (int)WorkFlowStatus.Draft)
             {

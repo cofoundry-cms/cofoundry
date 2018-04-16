@@ -16,19 +16,16 @@ namespace Cofoundry.Domain
         #region constructor
 
         private readonly CofoundryDbContext _dbContext;
-        private readonly ICustomEntityDataModelMapper _customEntityDataModelMapper;
         private readonly ICustomEntityRenderSummaryMapper _customEntityRenderSummaryMapper;
         private readonly IPermissionValidationService _permissionValidationService;
 
         public GetCustomEntityRenderSummariesByIdRangeQueryHandler(
             CofoundryDbContext dbContext,
-            ICustomEntityDataModelMapper customEntityDataModelMapper,
             ICustomEntityRenderSummaryMapper customEntityRenderSummaryMapper,
             IPermissionValidationService permissionValidationService
             )
         {
             _dbContext = dbContext;
-            _customEntityDataModelMapper = customEntityDataModelMapper;
             _customEntityRenderSummaryMapper = customEntityRenderSummaryMapper;
             _permissionValidationService = permissionValidationService;
         }

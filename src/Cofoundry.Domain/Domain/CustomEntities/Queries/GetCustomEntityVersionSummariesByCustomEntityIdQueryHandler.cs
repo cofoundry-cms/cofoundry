@@ -16,7 +16,6 @@ namespace Cofoundry.Domain
         #region constructor
 
         private readonly CofoundryDbContext _dbContext;
-        private readonly IQueryExecutor _queryExecutor;
         private readonly IPermissionValidationService _permissionValidationService;
         private readonly ICustomEntityVersionSummaryMapper _customEntityVersionSummaryMapper;
 
@@ -28,7 +27,6 @@ namespace Cofoundry.Domain
             )
         {
             _dbContext = dbContext;
-            _queryExecutor = queryExecutor;
             _permissionValidationService = permissionValidationService;
             _customEntityVersionSummaryMapper = customEntityVersionSummaryMapper;
         }
@@ -47,7 +45,7 @@ namespace Cofoundry.Domain
                 .FirstOrDefaultAsync();
             if (definitionCode == null) return null;
 
-            await _permissionValidationService.EnforceCustomEntityPermissionAsync<CustomEntityReadPermission>(definitionCode);
+            _permissionValidationService.EnforceCustomEntityPermission<CustomEntityReadPermission>(definitionCode, executionContext.UserContext);
 
             var dbVersions = await Query(query.CustomEntityId).ToListAsync();
             var versions = _customEntityVersionSummaryMapper.MapVersions(query.CustomEntityId, dbVersions);

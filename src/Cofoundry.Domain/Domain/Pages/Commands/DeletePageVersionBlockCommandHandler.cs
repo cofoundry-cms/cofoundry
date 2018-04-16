@@ -66,7 +66,7 @@ namespace Cofoundry.Domain
                 var versionId = dbResult.Block.PageVersionId;
                 using (var scope = _transactionScopeFactory.Create(_dbContext))
                 {
-                    await _commandExecutor.ExecuteAsync(new DeleteUnstructuredDataDependenciesCommand(PageVersionBlockEntityDefinition.DefinitionCode, dbResult.Block.PageVersionBlockId));
+                    await _commandExecutor.ExecuteAsync(new DeleteUnstructuredDataDependenciesCommand(PageVersionBlockEntityDefinition.DefinitionCode, dbResult.Block.PageVersionBlockId), executionContext);
 
                     _dbContext.PageVersionBlocks.Remove(dbResult.Block);
                     await _dbContext.SaveChangesAsync();

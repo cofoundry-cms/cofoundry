@@ -62,7 +62,7 @@ namespace Cofoundry.Domain
                 EntityNotFoundException.ThrowIfNull(definition, dbDependencyGroup.Key);
                 getEntitiesQuery = definition.CreateGetEntityMicroSummariesByIdRangeQuery(dbDependencyGroup.Select(e => e.RootEntityId));
 
-                var entityMicroSummaries = await _queryExecutor.ExecuteAsync(getEntitiesQuery);
+                var entityMicroSummaries = await _queryExecutor.ExecuteAsync(getEntitiesQuery, executionContext);
 
                 foreach (var entityMicroSummary in entityMicroSummaries.OrderBy(e => e.Value.RootEntityTitle))
                 {

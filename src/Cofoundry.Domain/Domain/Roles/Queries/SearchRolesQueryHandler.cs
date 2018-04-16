@@ -18,7 +18,6 @@ namespace Cofoundry.Domain
         #region constructor
 
         private readonly CofoundryDbContext _dbContext;
-        private readonly IQueryExecutor _queryExecutor;
         private readonly IRoleMicroSummaryMapper _roleMicroSummaryMapper;
 
         public SearchRolesQueryHandler(
@@ -28,7 +27,6 @@ namespace Cofoundry.Domain
             )
         {
             _dbContext = dbContext;
-            _queryExecutor = queryExecutor;
             _roleMicroSummaryMapper = roleMicroSummaryMapper;
         }
 

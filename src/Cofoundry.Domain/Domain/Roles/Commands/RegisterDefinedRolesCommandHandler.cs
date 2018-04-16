@@ -74,7 +74,7 @@ namespace Cofoundry.Domain
                 .Permissions
                 .ToListAsync();
 
-            await EnsureUserAreaExistsAndValidatePermission(existingRoles, executionContext);
+            await EnsureUserAreaExistsAndValidatePermissionAsync(existingRoles, executionContext);
             var allPermissions = _permissionRepository.GetAll();
             
             foreach (var roleDefinition in _roleDefinitions)
@@ -85,11 +85,11 @@ namespace Cofoundry.Domain
                 {
                     ValidateRole(existingRoles, roleDefinition);
                     dbRole = MapAndAddRole(roleDefinition);
-                    await UpdatePermissions(dbRole, roleDefinition, command, allPermissions, allDbPermissions);
+                    await UpdatePermissionsAsync(dbRole, roleDefinition, command, allPermissions, allDbPermissions, executionContext);
                 }
                 else if (command.UpdateExistingRoles)
                 {
-                    await UpdatePermissions(dbRole, roleDefinition, command, allPermissions, allDbPermissions);
+                    await UpdatePermissionsAsync(dbRole, roleDefinition, command, allPermissions, allDbPermissions, executionContext);
                 }
             }
 
@@ -97,12 +97,13 @@ namespace Cofoundry.Domain
             _roleCache.Clear();
         }
 
-        private async Task UpdatePermissions(
+        private async Task UpdatePermissionsAsync(
             Role dbRole, 
             IRoleDefinition roleDefinition,
             RegisterDefinedRolesCommand command,
             IEnumerable<IPermission> allPermissions,
-            List<Permission> allDbPermissions
+            List<Permission> allDbPermissions,
+            IExecutionContext executionContext
             )
         {
             var roleInitializer = _roleInitializerFactory.Create(roleDefinition);
@@ -158,7 +159,7 @@ namespace Cofoundry.Domain
                     if (permissionToAdd is IEntityPermission)
                     {
                         var definitionCode = ((IEntityPermission)permissionToAdd).EntityDefinition.EntityDefinitionCode;
-                        await _commandExecutor.ExecuteAsync(new EnsureEntityDefinitionExistsCommand(definitionCode));
+                        await _commandExecutor.ExecuteAsync(new EnsureEntityDefinitionExistsCommand(definitionCode), executionContext);
                         dbPermission.EntityDefinitionCode = definitionCode;
                     }
 
@@ -250,7 +251,10 @@ namespace Cofoundry.Domain
             }
         }
 
-        private async Task EnsureUserAreaExistsAndValidatePermission(List<Role> existingRoles, IExecutionContext executionContext)
+        private async Task EnsureUserAreaExistsAndValidatePermissionAsync(
+            List<Role> existingRoles, 
+            IExecutionContext executionContext
+            )
         {
             var allUserAreaCodes = _roleDefinitions
                 .Select(a => a.UserAreaCode)
@@ -265,7 +269,7 @@ namespace Cofoundry.Domain
                 if (!existingRoles
                         .Any(r => r.UserAreaCode == userAreaCode))
                 {
-                    await _commandExecutor.ExecuteAsync(new EnsureUserAreaExistsCommand(userAreaCode));
+                    await _commandExecutor.ExecuteAsync(new EnsureUserAreaExistsCommand(userAreaCode), executionContext);
                 }
             }
         }

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -41,7 +40,7 @@ namespace Cofoundry.Domain
         public async Task ExecuteAsync(AddPageDirectoryCommand command, IExecutionContext executionContext)
         {
             // Custom Validation
-            await ValidateIsUnique(command);
+            await ValidateIsUniqueAsync(command, executionContext);
 
             var pageDirectory = new PageDirectory();
             pageDirectory.Name = command.Name;
@@ -58,13 +57,13 @@ namespace Cofoundry.Domain
             command.OutputPageDirectoryId = pageDirectory.PageDirectoryId;
         }
 
-        private async Task ValidateIsUnique(AddPageDirectoryCommand command)
+        private async Task ValidateIsUniqueAsync(AddPageDirectoryCommand command, IExecutionContext executionContext)
         {
             var query = new IsPageDirectoryPathUniqueQuery();
             query.ParentPageDirectoryId = command.ParentPageDirectoryId;
             query.UrlPath = command.UrlPath;
 
-            var isUnique = await _queryExecutor.ExecuteAsync(query);
+            var isUnique = await _queryExecutor.ExecuteAsync(query, executionContext);
 
             if (!isUnique)
             {

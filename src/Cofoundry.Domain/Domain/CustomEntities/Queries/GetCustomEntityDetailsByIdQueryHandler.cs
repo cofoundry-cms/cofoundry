@@ -50,7 +50,7 @@ namespace Cofoundry.Domain
         public async Task<CustomEntityDetails> ExecuteAsync(GetCustomEntityDetailsByIdQuery query, IExecutionContext executionContext)
         {
             var customEntityVersion = await Query(query.CustomEntityId).FirstOrDefaultAsync();
-            await _permissionValidationService.EnforceCustomEntityPermissionAsync<CustomEntityReadPermission>(customEntityVersion.CustomEntity.CustomEntityDefinitionCode);
+            _permissionValidationService.EnforceCustomEntityPermission<CustomEntityReadPermission>(customEntityVersion.CustomEntity.CustomEntityDefinitionCode, executionContext.UserContext);
             
             return await MapAsync(query, customEntityVersion, executionContext);
         }

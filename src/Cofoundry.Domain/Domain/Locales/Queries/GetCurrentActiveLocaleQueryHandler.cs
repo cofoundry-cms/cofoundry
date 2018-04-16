@@ -30,7 +30,7 @@ namespace Cofoundry.Domain
             if (string.IsNullOrWhiteSpace(tag)) return null;
 
             var byTagQuery = new GetActiveLocaleByIETFLanguageTagQuery(tag);
-            var result = await _queryExecutor.ExecuteAsync(byTagQuery);
+            var result = await _queryExecutor.ExecuteAsync(byTagQuery, executionContext);
 
             return result;
         }

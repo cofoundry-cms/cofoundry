@@ -191,9 +191,13 @@ namespace Cofoundry.Domain
             return page;
         }
 
-        private async Task<ICustomEntityRoutingRule> GetAndValidateRoutingRuleAsync(AddPageCommand command, CustomEntityDefinitionSummary definition, IExecutionContext ex)
+        private async Task<ICustomEntityRoutingRule> GetAndValidateRoutingRuleAsync(
+            AddPageCommand command, 
+            CustomEntityDefinitionSummary definition, 
+            IExecutionContext executionContext
+            )
         {
-            var rules = await _queryExecutor.ExecuteAsync(new GetAllCustomEntityRoutingRulesQuery(), ex);
+            var rules = await _queryExecutor.ExecuteAsync(new GetAllCustomEntityRoutingRulesQuery(), executionContext);
             var rule = rules.SingleOrDefault(r => r.RouteFormat == command.CustomEntityRoutingRule);
 
             if (rule == null)
@@ -209,9 +213,9 @@ namespace Cofoundry.Domain
             return rule;
         }
 
-        private async Task<CustomEntityDefinitionSummary> GetCustomEntityDefinitionAsync(string customEntityDefinitionCode, IExecutionContext ex)
+        private async Task<CustomEntityDefinitionSummary> GetCustomEntityDefinitionAsync(string customEntityDefinitionCode, IExecutionContext executionContext)
         {
-            var definition = await _queryExecutor.ExecuteAsync(new GetCustomEntityDefinitionSummaryByCodeQuery(customEntityDefinitionCode), ex);
+            var definition = await _queryExecutor.ExecuteAsync(new GetCustomEntityDefinitionSummaryByCodeQuery(customEntityDefinitionCode), executionContext);
             if (definition == null)
             {
                 throw new PropertyValidationException("Custom entity defintion does not exists", nameof(definition.CustomEntityDefinitionCode), customEntityDefinitionCode);
@@ -243,10 +247,10 @@ namespace Cofoundry.Domain
 
         #region uniqueness
 
-        private async Task ValidateIsPageUniqueAsync(AddPageCommand command, IExecutionContext ex)
+        private async Task ValidateIsPageUniqueAsync(AddPageCommand command, IExecutionContext executionContext)
         {
             var query = CreateUniquenessQuery(command);
-            var isUnique = await _queryExecutor.ExecuteAsync(query, ex);
+            var isUnique = await _queryExecutor.ExecuteAsync(query, executionContext);
             ValidateIsUnique(command, isUnique);
         }
 

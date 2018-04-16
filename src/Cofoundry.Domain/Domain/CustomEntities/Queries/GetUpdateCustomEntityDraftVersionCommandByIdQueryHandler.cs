@@ -50,7 +50,7 @@ namespace Cofoundry.Domain
                 .SingleOrDefaultAsync();
 
             if (dbResult == null) return null;
-            await _permissionValidationService.EnforceCustomEntityPermissionAsync<CustomEntityReadPermission>(dbResult.CustomEntity.CustomEntityDefinitionCode);
+            _permissionValidationService.EnforceCustomEntityPermission<CustomEntityReadPermission>(dbResult.CustomEntity.CustomEntityDefinitionCode, executionContext.UserContext);
 
             var command = new UpdateCustomEntityDraftVersionCommand()
             {

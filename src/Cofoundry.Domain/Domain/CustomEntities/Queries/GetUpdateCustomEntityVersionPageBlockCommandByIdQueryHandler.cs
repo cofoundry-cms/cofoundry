@@ -49,7 +49,7 @@ namespace Cofoundry.Domain
                 .SingleOrDefaultAsync();
 
             if (dbResult == null) return null;
-            await _permissionValidationService.EnforceCustomEntityPermissionAsync<CustomEntityReadPermission>(dbResult.CustomEntityDefinitionCode);
+            _permissionValidationService.EnforceCustomEntityPermission<CustomEntityReadPermission>(dbResult.CustomEntityDefinitionCode, executionContext.UserContext);
 
             var result = Map(dbResult.PageBlock, dbResult.PageBlockTypeFileName);
             return result;

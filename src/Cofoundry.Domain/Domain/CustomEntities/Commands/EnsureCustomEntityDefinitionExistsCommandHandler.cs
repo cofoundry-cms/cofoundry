@@ -46,7 +46,7 @@ namespace Cofoundry.Domain
 
             if (dbDefinition == null)
             {
-                await _commandExecutor.ExecuteAsync(new EnsureEntityDefinitionExistsCommand(command.CustomEntityDefinitionCode));
+                await _commandExecutor.ExecuteAsync(new EnsureEntityDefinitionExistsCommand(command.CustomEntityDefinitionCode), executionContext);
 
                 dbDefinition = new CustomEntityDefinition()
                 {

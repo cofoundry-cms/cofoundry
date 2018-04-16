@@ -73,7 +73,10 @@ namespace Cofoundry.Domain
             command.OutputUserId = userLoginInfo.UserId;
         }
 
-        private Task<UserLoginInfo> GetUserLoginInfoAsync(UpdateUnauthenticatedUserPasswordCommand command, IExecutionContext executionContext)
+        private Task<UserLoginInfo> GetUserLoginInfoAsync(
+            UpdateUnauthenticatedUserPasswordCommand command, 
+            IExecutionContext executionContext
+            )
         {
             var query = new GetUserLoginInfoIfAuthenticatedQuery()
             {
@@ -82,7 +85,7 @@ namespace Cofoundry.Domain
                 Password = command.OldPassword,
             };
 
-            return _queryExecutor.ExecuteAsync(query);
+            return _queryExecutor.ExecuteAsync(query, executionContext);
         }
 
         private static bool IsLoggedInAlready(UpdateUnauthenticatedUserPasswordCommand command, IExecutionContext executionContext)

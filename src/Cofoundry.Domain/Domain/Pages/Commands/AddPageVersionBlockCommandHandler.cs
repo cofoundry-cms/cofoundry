@@ -97,7 +97,7 @@ namespace Cofoundry.Domain
                     newBlock.PageVersionBlockId,
                     command.DataModel);
 
-                await _commandExecutor.ExecuteAsync(dependencyCommand);
+                await _commandExecutor.ExecuteAsync(dependencyCommand, executionContext);
                 scope.Complete();
             }
             _pageCache.Clear(pageVersion.PageId);

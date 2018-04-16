@@ -45,7 +45,7 @@ namespace Cofoundry.Domain
             var dbResult = await QueryCustomEntityAsync(query, executionContext);
             if (dbResult == null) return null;
 
-            var entity = await MapCustomEntityAsync(dbResult);
+            var entity = MapCustomEntity(dbResult, executionContext);
 
             if (dbResult.CustomEntity.LocaleId.HasValue)
             {
@@ -88,9 +88,9 @@ namespace Cofoundry.Domain
                 });
         }
 
-        private async Task<CustomEntityRenderDetails> MapCustomEntityAsync(CustomEntityVersion dbResult)
+        private CustomEntityRenderDetails MapCustomEntity(CustomEntityVersion dbResult, IExecutionContext executionContext)
         {
-            await _permissionValidationService.EnforceCustomEntityPermissionAsync<CustomEntityReadPermission>(dbResult.CustomEntity.CustomEntityDefinitionCode);
+            _permissionValidationService.EnforceCustomEntityPermission<CustomEntityReadPermission>(dbResult.CustomEntity.CustomEntityDefinitionCode, executionContext.UserContext);
 
             var entity = new CustomEntityRenderDetails()
             {

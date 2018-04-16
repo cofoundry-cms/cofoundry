@@ -96,7 +96,7 @@ namespace Cofoundry.Domain
             IExecutionContext executionContext
             )
         {
-            await _permissionValidationService.EnforceCustomEntityPermissionAsync<CustomEntityReadPermission>(customEntityDefinitionCode);
+            _permissionValidationService.EnforceCustomEntityPermission<CustomEntityReadPermission>(customEntityDefinitionCode, executionContext.UserContext);
 
             var blockTypeQuery = new GetPageBlockTypeSummaryByIdQuery(versionBlock.PageBlockTypeId);
             var blockType = await _queryExecutor.ExecuteAsync(blockTypeQuery, executionContext);

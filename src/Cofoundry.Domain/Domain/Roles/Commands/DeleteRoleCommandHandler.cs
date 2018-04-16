@@ -19,7 +19,6 @@ namespace Cofoundry.Domain
         #region constructor
 
         private readonly CofoundryDbContext _dbContext;
-        private readonly UserCommandPermissionsHelper _userCommandPermissionsHelper;
         private readonly IRoleCache _roleCache;
 
         public DeleteRoleCommandHandler(
@@ -29,7 +28,6 @@ namespace Cofoundry.Domain
             )
         {
             _dbContext = dbContext;
-            _userCommandPermissionsHelper = userCommandPermissionsHelper;
             _roleCache = roleCache;
         }
 

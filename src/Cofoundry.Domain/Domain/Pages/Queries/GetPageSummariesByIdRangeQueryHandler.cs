@@ -20,17 +20,14 @@ namespace Cofoundry.Domain
         #region constructor
 
         private readonly CofoundryDbContext _dbContext;
-        private readonly IQueryExecutor _queryExecutor;
         private readonly IPageSummaryMapper _pageSummaryMapper;
 
         public GetPageSummariesByIdRangeQueryHandler(
             CofoundryDbContext dbContext,
-            IQueryExecutor queryExecutor,
             IPageSummaryMapper pageSummaryMapper
             )
         {
             _dbContext = dbContext;
-            _queryExecutor = queryExecutor;
             _pageSummaryMapper = pageSummaryMapper;
         }
 

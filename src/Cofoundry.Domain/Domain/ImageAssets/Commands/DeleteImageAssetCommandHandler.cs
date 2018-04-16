@@ -54,7 +54,7 @@ namespace Cofoundry.Domain
                 imageAsset.IsDeleted = true;
                 using (var scope = _transactionScopeFactory.Create(_dbContext))
                 {
-                    await _commandExecutor.ExecuteAsync(new DeleteUnstructuredDataDependenciesCommand(ImageAssetEntityDefinition.DefinitionCode, imageAsset.ImageAssetId));
+                    await _commandExecutor.ExecuteAsync(new DeleteUnstructuredDataDependenciesCommand(ImageAssetEntityDefinition.DefinitionCode, imageAsset.ImageAssetId), executionContext);
 
                     await _dbContext.SaveChangesAsync();
                     scope.Complete();

@@ -52,7 +52,7 @@ namespace Cofoundry.Domain
             entityName = entityDefinition.Name;
 
             var query = new GetEntityDependencySummaryByRelatedEntityQuery(command.RootEntityDefinitionCode, command.RootEntityId);
-            var dependencies = await _queryExecutor.ExecuteAsync(query);
+            var dependencies = await _queryExecutor.ExecuteAsync(query, executionContext);
 
             var requiredDependency = dependencies.FirstOrDefault(d => !d.CanDelete);
             if (requiredDependency != null)

@@ -138,7 +138,11 @@ namespace Cofoundry.Domain
             return Regex.Replace(e.Value, REGEX_TRIM_WHITESPACE, string.Empty);
         }
 
-        private async Task SetCustomModelTypeFieldsAsync(PageTemplateFileInfo pageTemplateFileInfo, string line, IExecutionContext ex)
+        private async Task SetCustomModelTypeFieldsAsync(
+            PageTemplateFileInfo pageTemplateFileInfo, 
+            string line, 
+            IExecutionContext executionContext
+            )
         {
             // This regex find models with generic parameters and captures the last generic type
             // This could be the custom entity display model type and may have a namespace prefix
@@ -155,7 +159,7 @@ namespace Cofoundry.Domain
                 var query = new GetCustomEntityDefinitionMicroSummaryByDisplayModelTypeQuery();
                 query.DisplayModelType = modelType;
 
-                pageTemplateFileInfo.CustomEntityDefinition = await _queryExecutor.ExecuteAsync(query, ex);
+                pageTemplateFileInfo.CustomEntityDefinition = await _queryExecutor.ExecuteAsync(query, executionContext);
                 EntityNotFoundException.ThrowIfNull(pageTemplateFileInfo.CustomEntityDefinition, modelType);
                 pageTemplateFileInfo.CustomEntityModelType = match.Groups[1].Value;
 

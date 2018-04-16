@@ -48,11 +48,11 @@ namespace Cofoundry.Domain
         public async Task ExecuteAsync(AddRoleCommand command, IExecutionContext executionContext)
         {
             ValidatePermissions(command);
-            var isUnique = await _queryExecutor.ExecuteAsync(GetUniqueQuery(command));
+            var isUnique = await _queryExecutor.ExecuteAsync(GetUniqueQuery(command), executionContext);
             ValidateIsUnique(isUnique);
 
-            await EnsureUserAreaExists(command);
-            var permissions = await GetCommandPermissions(command);
+            await EnsureUserAreaExistsAsync(command, executionContext);
+            var permissions = await GetCommandPermissionsAsync(command, executionContext);
             var role = MapAndAddRole(command, executionContext, permissions);
             await _dbContext.SaveChangesAsync();
 
@@ -63,9 +63,9 @@ namespace Cofoundry.Domain
 
         #region helpers
 
-        private Task EnsureUserAreaExists(AddRoleCommand command)
+        private Task EnsureUserAreaExistsAsync(AddRoleCommand command, IExecutionContext executionContext)
         {
-            return _commandExecutor.ExecuteAsync(new EnsureUserAreaExistsCommand(command.UserAreaCode));
+            return _commandExecutor.ExecuteAsync(new EnsureUserAreaExistsCommand(command.UserAreaCode), executionContext);
         }
 
         private Role MapAndAddRole(AddRoleCommand command, IExecutionContext executionContext, List<Permission> permissions)
@@ -127,7 +127,7 @@ namespace Cofoundry.Domain
             };
         }
 
-        private async Task<List<Permission>> GetCommandPermissions(AddRoleCommand command)
+        private async Task<List<Permission>> GetCommandPermissionsAsync(AddRoleCommand command, IExecutionContext executionContext)
         {
             var permissions = new List<Permission>();
 
@@ -155,7 +155,7 @@ namespace Cofoundry.Domain
                         if (codePermission is IEntityPermission)
                         {
                             var definitionCode = ((IEntityPermission)codePermission).EntityDefinition.EntityDefinitionCode;
-                            await _commandExecutor.ExecuteAsync(new EnsureEntityDefinitionExistsCommand(definitionCode));
+                            await _commandExecutor.ExecuteAsync(new EnsureEntityDefinitionExistsCommand(definitionCode), executionContext);
                             dbPermission.EntityDefinitionCode = definitionCode;
                         }
                     }

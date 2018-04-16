@@ -27,7 +27,7 @@ namespace Cofoundry.Domain
 
         public async Task<PageDirectoryNode> ExecuteAsync(GetPageDirectoryNodeByIdQuery query, IExecutionContext executionContext)
         {
-            var tree = await _queryExecutor.ExecuteAsync(new GetPageDirectoryTreeQuery());
+            var tree = await _queryExecutor.ExecuteAsync(new GetPageDirectoryTreeQuery(), executionContext);
             var result = tree
                 .Flatten()
                 .SingleOrDefault(n => n.PageDirectoryId == query.PageDirectoryId);

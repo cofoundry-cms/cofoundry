@@ -86,7 +86,7 @@ namespace Cofoundry.Domain
                     .FirstOrDefault();
 
                 // Run this first because it may commit changes
-                await EnsureCustomEntityDefinitionExists(fileTemplateDetails, dbPageTemplate);
+                await EnsureCustomEntityDefinitionExistsAsync(fileTemplateDetails, dbPageTemplate, executionContext);
 
                 dbPageTemplate = await UpdateTemplate(executionContext, dbPageTemplate, fileTemplate, fileTemplateDetails);
 
@@ -142,9 +142,10 @@ namespace Cofoundry.Domain
         /// Checks that a custom entity definition exists if it is required by the tempate. This
         /// can cause a DbContext.SaveChanges to run.
         /// </summary>
-        private Task EnsureCustomEntityDefinitionExists(
+        private Task EnsureCustomEntityDefinitionExistsAsync(
             PageTemplateFileInfo fileTemplateDetails,
-            PageTemplate dbPageTemplate
+            PageTemplate dbPageTemplate,
+            IExecutionContext executionContext
             )
         {
             var definitionCode = fileTemplateDetails.CustomEntityDefinition?.CustomEntityDefinitionCode;
@@ -153,7 +154,7 @@ namespace Cofoundry.Domain
             if (!string.IsNullOrEmpty(definitionCode) && (dbPageTemplate == null || definitionCode != dbPageTemplate.CustomEntityDefinitionCode))
             {
                 var command = new EnsureCustomEntityDefinitionExistsCommand(fileTemplateDetails.CustomEntityDefinition.CustomEntityDefinitionCode);
-                return _commandExecutor.ExecuteAsync(command);
+                return _commandExecutor.ExecuteAsync(command, executionContext);
             }
 
             return Task.CompletedTask;

@@ -38,7 +38,7 @@ namespace Cofoundry.Domain
         public async Task<CustomEntityDataModelSchema> ExecuteAsync(GetCustomEntityDataModelSchemaDetailsByDefinitionCodeQuery query, IExecutionContext executionContext)
         {
             var definitionQuery = new GetCustomEntityDefinitionSummaryByCodeQuery(query.CustomEntityDefinitionCode);
-            var definition = await _queryExecutor.ExecuteAsync(definitionQuery);
+            var definition = await _queryExecutor.ExecuteAsync(definitionQuery, executionContext);
             if (definition == null) return null;
 
             var result = new CustomEntityDataModelSchema();

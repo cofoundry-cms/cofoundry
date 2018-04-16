@@ -40,7 +40,7 @@ namespace Cofoundry.Domain
             var dbResult = await QueryAsync(query, executionContext);
             if (dbResult == null) return null;
 
-            await _permissionValidationService.EnforceCustomEntityPermissionAsync<CustomEntityReadPermission>(dbResult.CustomEntity.CustomEntityDefinitionCode);
+            _permissionValidationService.EnforceCustomEntityPermission<CustomEntityReadPermission>(dbResult.CustomEntity.CustomEntityDefinitionCode, executionContext.UserContext);
 
             var result = await _customEntityRenderSummaryMapper.MapAsync(dbResult, executionContext);
 

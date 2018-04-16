@@ -22,7 +22,7 @@ namespace Cofoundry.Domain
 
         public async Task<UpdateSeoSettingsCommand> ExecuteAsync(GetUpdateCommandQuery<UpdateSeoSettingsCommand> query, IExecutionContext executionContext)
         {
-            var settings = await _queryExecutor.ExecuteAsync(new GetSettingsQuery<SeoSettings>());
+            var settings = await _queryExecutor.ExecuteAsync(new GetSettingsQuery<SeoSettings>(), executionContext);
 
             return new UpdateSeoSettingsCommand()
             {

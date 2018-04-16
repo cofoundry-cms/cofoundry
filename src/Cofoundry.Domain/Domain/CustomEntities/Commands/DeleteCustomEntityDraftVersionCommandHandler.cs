@@ -57,14 +57,14 @@ namespace Cofoundry.Domain
 
             if (draft != null)
             {
-                await _permissionValidationService.EnforceCustomEntityPermissionAsync<CustomEntityUpdatePermission>(draft.CustomEntity.CustomEntityDefinitionCode);
+                _permissionValidationService.EnforceCustomEntityPermission<CustomEntityUpdatePermission>(draft.CustomEntity.CustomEntityDefinitionCode, executionContext.UserContext);
 
                 var definitionCode = draft.CustomEntity.CustomEntityDefinitionCode;
                 var versionId = draft.CustomEntityVersionId;
 
                 using (var scope = _transactionScopeFactory.Create(_dbContext))
                 {
-                    await _commandExecutor.ExecuteAsync(new DeleteUnstructuredDataDependenciesCommand(CustomEntityVersionEntityDefinition.DefinitionCode, draft.CustomEntityVersionId));
+                    await _commandExecutor.ExecuteAsync(new DeleteUnstructuredDataDependenciesCommand(CustomEntityVersionEntityDefinition.DefinitionCode, draft.CustomEntityVersionId), executionContext);
 
                     _dbContext.CustomEntityVersions.Remove(draft);
                     await _dbContext.SaveChangesAsync();

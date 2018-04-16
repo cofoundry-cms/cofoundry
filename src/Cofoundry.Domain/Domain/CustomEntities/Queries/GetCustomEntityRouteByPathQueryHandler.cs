@@ -26,7 +26,7 @@ namespace Cofoundry.Domain
 
         public async Task<CustomEntityRoute> ExecuteAsync(GetCustomEntityRouteByPathQuery query, IExecutionContext executionContext)
         {
-            var routes = await _queryExecutor.ExecuteAsync(new GetCustomEntityRoutesByDefinitionCodeQuery(query.CustomEntityDefinitionCode));
+            var routes = await _queryExecutor.ExecuteAsync(new GetCustomEntityRoutesByDefinitionCodeQuery(query.CustomEntityDefinitionCode), executionContext);
 
             var filter = routes.Where(r => (r.Locale == null && !query.LocaleId.HasValue) || (r.Locale != null && r.Locale.LocaleId == query.LocaleId.Value));
 

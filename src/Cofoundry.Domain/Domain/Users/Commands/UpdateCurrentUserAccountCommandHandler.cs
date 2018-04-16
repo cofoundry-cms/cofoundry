@@ -54,7 +54,7 @@ namespace Cofoundry.Domain
 
             EntityNotFoundException.ThrowIfNull(user, userId);
 
-            await UpdateEmail(command, userId, user);
+            await UpdateEmailAsync(command, userId, user, executionContext);
 
             user.FirstName = command.FirstName.Trim();
             user.LastName = command.LastName.Trim();
@@ -62,7 +62,12 @@ namespace Cofoundry.Domain
             await _dbContext.SaveChangesAsync();
         }
 
-        private async Task UpdateEmail(UpdateCurrentUserAccountCommand command, int userId, User user)
+        private async Task UpdateEmailAsync(
+            UpdateCurrentUserAccountCommand command, 
+            int userId, 
+            User user,
+            IExecutionContext executionContext
+            )
         {
             var userArea = _userAreaRepository.GetByCode(user.UserAreaCode);
             var newEmail = command.Email?.Trim();
@@ -76,7 +81,7 @@ namespace Cofoundry.Domain
                     UserAreaCode = CofoundryAdminUserArea.AreaCode
                 };
 
-                if (!await _queryExecutor.ExecuteAsync(uniqueQuery))
+                if (!await _queryExecutor.ExecuteAsync(uniqueQuery, executionContext))
                 {
                     throw new PropertyValidationException("This email is already registered", "Email");
                 }

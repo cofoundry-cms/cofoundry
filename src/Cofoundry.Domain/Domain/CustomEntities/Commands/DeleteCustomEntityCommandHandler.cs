@@ -55,7 +55,7 @@ namespace Cofoundry.Domain
 
             if (customEntity != null)
             {
-                await _permissionValidationService.EnforceCustomEntityPermissionAsync<CustomEntityDeletePermission>(customEntity.CustomEntityDefinitionCode);
+                _permissionValidationService.EnforceCustomEntityPermission<CustomEntityDeletePermission>(customEntity.CustomEntityDefinitionCode, executionContext.UserContext);
 
                 using (var scope = _transactionScopeFactory.Create(_dbContext))
                 {

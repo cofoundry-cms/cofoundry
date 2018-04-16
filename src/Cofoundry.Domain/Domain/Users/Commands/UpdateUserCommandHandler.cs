@@ -55,7 +55,7 @@ namespace Cofoundry.Domain
             var userArea = _userAreaRepository.GetByCode(user.UserAreaCode);
             ValidatePermissions(userArea, executionContext);
             ValidateCommand(command, userArea);
-            await ValidateIsUnique(command, userArea);
+            await ValidateIsUniqueAsync(command, userArea, executionContext);
 
             // Role
             if (command.RoleId != user.RoleId)
@@ -108,7 +108,11 @@ namespace Cofoundry.Domain
             }
         }
 
-        private async Task ValidateIsUnique(UpdateUserCommand command, IUserAreaDefinition userArea)
+        private async Task ValidateIsUniqueAsync(
+            UpdateUserCommand command, 
+            IUserAreaDefinition userArea,
+            IExecutionContext executionContext
+            )
         {
             var query = new IsUsernameUniqueQuery()
             {
@@ -125,7 +129,7 @@ namespace Cofoundry.Domain
                 query.Username = command.Username.Trim();
             }
 
-            var isUnique = await _queryExecutor.ExecuteAsync(query);
+            var isUnique = await _queryExecutor.ExecuteAsync(query, executionContext);
 
             if (!isUnique)
             {
