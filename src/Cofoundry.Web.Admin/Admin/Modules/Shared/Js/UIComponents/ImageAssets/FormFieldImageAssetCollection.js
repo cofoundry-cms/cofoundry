@@ -119,7 +119,7 @@ function (
                 var value = attributes['cms' + filterName];
 
                 if (value) {
-                    filterName = stringUtilities.lowerCaseFirstLetter(filterName);
+                    filterName = stringUtilities.lowerCaseFirstWord(filterName);
                     filter[filterName] = parseInt(value);
                 }
             }

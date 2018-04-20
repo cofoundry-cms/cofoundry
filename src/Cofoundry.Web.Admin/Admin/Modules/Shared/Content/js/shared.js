@@ -4811,11 +4811,19 @@ angular.module('cms.shared').factory('shared.stringUtilities', function () {
     }
 
     /**
-     * Lowercases the first letter of a string.
+     * Lowercases the first word of a string (i.e. camelcase). For
+     * most strings this will just lowecase the first letter, but for
+     * some like "CTAUrl" this will lowercase all letters up to the 2nd
+     * word e.g. "ctaUrl".
      */
-    service.lowerCaseFirstLetter = function (s) {
+    service.lowerCaseFirstWord = function (s) {
         if (!s) return s;
-        return s.charAt(0).toLowerCase() + s.slice(1);
+
+        return s.replace(/^([A-Z]+)([a-z]?)(\w*)$/, function (match, p1, p2, p3) {
+            if (!p2 || p1.length < 2) return p1.toLowerCase() + p2 + p3;
+
+            return p1.toLowerCase().slice(0, p1.length - 1) + p1[p1.length - 1] + p2 + p3;
+        });
     }
 
     /**
@@ -7088,7 +7096,7 @@ function (
             return filter;
 
             function setAttribute(attributeName) {
-                var filterName = stringUtilities.lowerCaseFirstLetter(attributeName);
+                var filterName = stringUtilities.lowerCaseFirstWord(attributeName);
                 filter[filterName] = attributes[attributePrefix + attributeName];
             }
         }
@@ -7656,7 +7664,7 @@ function (
 
                     html += '<' + fieldName;
 
-                    html += attributeMapper.map('model', stringUtilities.lowerCaseFirstLetter(modelProperty.name));
+                    html += attributeMapper.map('model', stringUtilities.lowerCaseFirstWord(modelProperty.name));
                     html += attributeMapper.map('title', modelProperty.displayName);
                     html += attributeMapper.map('required', modelProperty.isRequired);
                     html += attributeMapper.map('description', modelProperty.description);
@@ -8429,7 +8437,7 @@ function (
         toolbarsConfig = toolbarsConfig || DEFAULT_CONFIG;
 
         toolbarsConfig.split(',').forEach(function (configItem) {
-            configItem = stringUtilities.lowerCaseFirstLetter(configItem.trim());
+            configItem = stringUtilities.lowerCaseFirstWord(configItem.trim());
 
             if (configItem === 'custom') {
 
@@ -8890,7 +8898,7 @@ angular.module('cms.shared').directive('cmsFormFieldImageAsset', [
                         var value = attributes[attributePrefix + filterName];
 
                         if (value) {
-                            filterName = stringUtilities.lowerCaseFirstLetter(filterName);
+                            filterName = stringUtilities.lowerCaseFirstWord(filterName);
                             filter[filterName] = isInt ? parseInt(value) : value;
                         }
                     }
@@ -9023,7 +9031,7 @@ function (
                 var value = attributes['cms' + filterName];
 
                 if (value) {
-                    filterName = stringUtilities.lowerCaseFirstLetter(filterName);
+                    filterName = stringUtilities.lowerCaseFirstWord(filterName);
                     filter[filterName] = parseInt(value);
                 }
             }
@@ -10205,7 +10213,7 @@ function (
                 });
 
                 if (field) {
-                    field.lowerName = stringUtilities.lowerCaseFirstLetter(field.name);
+                    field.lowerName = stringUtilities.lowerCaseFirstWord(field.name);
                     fields[fieldName] = field;
                     fields.hasFields = true;
                 }

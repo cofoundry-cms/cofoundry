@@ -142,7 +142,7 @@ function (
             return filter;
 
             function setAttribute(attributeName) {
-                var filterName = stringUtilities.lowerCaseFirstLetter(attributeName);
+                var filterName = stringUtilities.lowerCaseFirstWord(attributeName);
                 filter[filterName] = attributes[attributePrefix + attributeName];
             }
         }

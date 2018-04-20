@@ -25,11 +25,19 @@
     }
 
     /**
-     * Lowercases the first letter of a string.
+     * Lowercases the first word of a string (i.e. camelcase). For
+     * most strings this will just lowecase the first letter, but for
+     * some like "CTAUrl" this will lowercase all letters up to the 2nd
+     * word e.g. "ctaUrl".
      */
-    service.lowerCaseFirstLetter = function (s) {
+    service.lowerCaseFirstWord = function (s) {
         if (!s) return s;
-        return s.charAt(0).toLowerCase() + s.slice(1);
+
+        return s.replace(/^([A-Z]+)([a-z]?)(\w*)$/, function (match, p1, p2, p3) {
+            if (!p2 || p1.length < 2) return p1.toLowerCase() + p2 + p3;
+
+            return p1.toLowerCase().slice(0, p1.length - 1) + p1[p1.length - 1] + p2 + p3;
+        });
     }
 
     /**

@@ -160,7 +160,7 @@ angular.module('cms.shared').directive('cmsFormFieldImageAsset', [
                         var value = attributes[attributePrefix + filterName];
 
                         if (value) {
-                            filterName = stringUtilities.lowerCaseFirstLetter(filterName);
+                            filterName = stringUtilities.lowerCaseFirstWord(filterName);
                             filter[filterName] = isInt ? parseInt(value) : value;
                         }
                     }

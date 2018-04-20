@@ -52,7 +52,7 @@ function (
                 });
 
                 if (field) {
-                    field.lowerName = stringUtilities.lowerCaseFirstLetter(field.name);
+                    field.lowerName = stringUtilities.lowerCaseFirstWord(field.name);
                     fields[fieldName] = field;
                     fields.hasFields = true;
                 }

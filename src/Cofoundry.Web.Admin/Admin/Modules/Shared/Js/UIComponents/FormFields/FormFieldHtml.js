@@ -117,7 +117,7 @@ function (
         toolbarsConfig = toolbarsConfig || DEFAULT_CONFIG;
 
         toolbarsConfig.split(',').forEach(function (configItem) {
-            configItem = stringUtilities.lowerCaseFirstLetter(configItem.trim());
+            configItem = stringUtilities.lowerCaseFirstWord(configItem.trim());
 
             if (configItem === 'custom') {
 

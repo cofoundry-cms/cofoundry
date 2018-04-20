@@ -62,7 +62,7 @@ function (
 
                     html += '<' + fieldName;
 
-                    html += attributeMapper.map('model', stringUtilities.lowerCaseFirstLetter(modelProperty.name));
+                    html += attributeMapper.map('model', stringUtilities.lowerCaseFirstWord(modelProperty.name));
                     html += attributeMapper.map('title', modelProperty.displayName);
                     html += attributeMapper.map('required', modelProperty.isRequired);
                     html += attributeMapper.map('description', modelProperty.description);
