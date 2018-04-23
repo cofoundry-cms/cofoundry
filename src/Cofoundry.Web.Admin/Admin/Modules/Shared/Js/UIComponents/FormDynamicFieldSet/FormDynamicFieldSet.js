@@ -121,7 +121,9 @@ function (
                 'placeholder': mapHtmlAttributeWithValue,
                 'match': mapDataSourceAttribute,
                 'model': mapDataSourceAttribute,
-                'required': mapHtmlAttributeWithoutValue
+                'required': mapHtmlAttributeWithoutValue,
+                'rows': mapHtmlAttributeWithValue,
+                'cols': mapHtmlAttributeWithValue
             };
 
         /* public */

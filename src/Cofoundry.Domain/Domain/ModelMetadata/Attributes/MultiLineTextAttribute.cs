@@ -14,10 +14,24 @@ namespace Cofoundry.Domain
     [AttributeUsage(AttributeTargets.Property)]
     public class MultiLineTextAttribute : Attribute, IMetadataAttribute
     {
+        public MultiLineTextAttribute()
+        {
+            Rows = 4;
+        }
+
+        /// <summary>
+        /// The number of visible lines of text in the text editor.
+        /// Defaults to 4.
+        /// </summary>
+        public int Rows { get; set; }
+
         public void Process(DisplayMetadataProviderContext context)
         {
-            var modelMetaData = context.DisplayMetadata;
-            modelMetaData.TemplateHint = DataType.MultilineText.ToString();
+            var modelMetaData = context
+                .DisplayMetadata
+                .AddAdditionalValueIfNotEmpty("Rows", Rows)
+                .TemplateHint = DataType.MultilineText.ToString();
+
         }
     }
 }

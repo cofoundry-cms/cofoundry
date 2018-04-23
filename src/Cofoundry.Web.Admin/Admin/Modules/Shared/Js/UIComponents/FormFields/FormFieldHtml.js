@@ -25,7 +25,8 @@ function (
         passThroughAttributes: [
             'required',
             'maxlength',
-            'disabled'
+            'disabled',
+            'rows'
         ],
         getInputEl: getInputEl,
         scope: _.extend(baseFormFieldFactory.defaultConfig.scope, {
@@ -45,7 +46,7 @@ function (
         // call base
         baseFormFieldFactory.defaultConfig.link.apply(this, arguments);
 
-        vm.tinymceOptions = getTinyMceOptions(vm);
+        vm.tinymceOptions = getTinyMceOptions(vm, attributes);
 
         scope.$watch("vm.model", setEditorModel);
         scope.$watch("vm.editorModel", setCmsModel);
@@ -71,13 +72,19 @@ function (
 
     /* HELPERS */
 
-    function getTinyMceOptions(vm) {
+    function getTinyMceOptions(vm, attributes) {
+        var rows = 20;
+
+        if (attributes.rows) {
+            rows = parseInt(attributes.rows);
+        }
+
         return {
             toolbar: parseToolbarButtons(vm.toolbarsConfig, vm.toolbarCustomConfig),
             plugins: 'link image media fullscreen imagetools code',
             content_css: contentPath + "css/third-party/tinymce/content.min.css",
             menubar: false,
-            min_height: 300,
+            min_height: rows * 16,
             setup: function (editor) {
                 editor.addButton('cfimage', {
                     icon: 'image',

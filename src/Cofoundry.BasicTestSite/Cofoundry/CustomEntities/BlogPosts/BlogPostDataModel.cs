@@ -16,7 +16,7 @@ namespace Cofoundry.BasicTestSite
         [MaxLength(1000)]
         [Required]
         [Display(Description = "A description for display in search results and in the details page meta description.")]
-        [MultiLineText]
+        [MultiLineText(Rows = 10)]
         public string ShortDescription { get; set; }
 
         [Image(MinWidth = 460, MinHeight = 460)]

@@ -24,6 +24,7 @@ namespace Cofoundry.Domain
         public HtmlAttribute(params HtmlToolbarPreset[] toolbars)
         {
             Toolbars = toolbars;
+            Rows = 20;
         }
 
         public void Process(DisplayMetadataProviderContext context)
@@ -31,6 +32,7 @@ namespace Cofoundry.Domain
             context.DisplayMetadata
                 .AddAdditionalValueIfNotEmpty("Toolbars", Toolbars)
                 .AddAdditionalValueIfNotEmpty("CustomToolbar", CustomToolbar)
+                .AddAdditionalValueIfNotEmpty("Rows", Rows)
                 .TemplateHint = DataType.Html.ToString();
         }
 
@@ -43,5 +45,11 @@ namespace Cofoundry.Domain
         /// https://www.tinymce.com/docs/advanced/editor-control-identifiers/#toolbarcontrols
         /// </summary>
         public string CustomToolbar { get; set; }
+
+        /// <summary>
+        /// The number of visible lines of text in the text editor. Defaults
+        /// to 20.
+        /// </summary>
+        public int Rows { get; set; }
     }
 }
