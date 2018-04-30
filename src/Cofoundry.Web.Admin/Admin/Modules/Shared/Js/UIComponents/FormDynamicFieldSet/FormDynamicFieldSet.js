@@ -57,7 +57,7 @@ function (
             el.empty();
 
             if (dataSource && dataSource.modelMetaData.dataModelProperties.length) {
-                dataSource.modelMetaData.dataModelProperties.forEach(function (modelProperty) {
+                dataSource.modelMetaData.dataModelProperties.forEach(function (modelProperty, i) {
                     var fieldName = mapDirectiveName(modelProperty);
 
                     html += '<' + fieldName;
@@ -70,7 +70,7 @@ function (
                     if (modelProperty.additionalAttributes) {
 
                         _.each(modelProperty.additionalAttributes, function (value, key) {
-                            html += attributeMapper.map(key, value);
+                            html += attributeMapper.map(key, value, i);
                         });
                     }
 
@@ -110,6 +110,7 @@ function (
      */
     function AttributeMapper() {
 
+        // certain attributes require special treatment, such as native html attributes
         var ATTR_PREFIX = 'cms-',
             attributeMap = {
                 'maxlength': mapHtmlAttributeWithValue,
@@ -121,6 +122,7 @@ function (
                 'placeholder': mapHtmlAttributeWithValue,
                 'match': mapDataSourceAttribute,
                 'model': mapDataSourceAttribute,
+                'options': mapAttributeWithObjectValue,
                 'required': mapHtmlAttributeWithoutValue,
                 'rows': mapHtmlAttributeWithValue,
                 'cols': mapHtmlAttributeWithValue
@@ -128,7 +130,7 @@ function (
 
         /* public */
 
-        this.map = function (key, value) {
+        this.map = function (key, value, i) {
             var postfix = 'ValMsg',
                 attrMapFn = attributeMap[key],
                 attrToVal;
@@ -145,20 +147,40 @@ function (
                 attrMapFn = mapCmsAttribute;
             }
 
-            return attrMapFn ? attrMapFn(key, value) : '';
+            return attrMapFn ? attrMapFn(key, value, i) : '';
         }
 
         /* private */
 
+        /**
+         * Maps the attribute, binding the value to a property on the data model
+         */
         function mapDataSourceAttribute(key, value) {
             value = 'vm.dataSource.model[\'' + value + '\']';
             return mapCmsAttribute(key, value);
         }
 
+        /**
+         * Maps the attribute, binding the value to an object in the additional
+         * attributes collection on the model meta data.
+         */
+        function mapAttributeWithObjectValue(key, value, i) {
+
+            value = 'vm.dataSource.modelMetaData.dataModelProperties[' + i + '].additionalAttributes[\'' + key + '\']';
+            return mapCmsAttribute(key, value);
+        }
+
+        /**
+         * Maps a native html attribute (without the cms prefix)
+         */
         function mapHtmlAttributeWithValue(key, value) {
             return formatAttributeText(stringUtilities.toSnakeCase(key), value);
         }
 
+        /**
+         * Maps a native html attribute (without the cms prefix) which doesn't
+         * require a value.
+         */
         function mapHtmlAttributeWithoutValue(key, condition) {
             if (condition) {
                 return formatAttributeText(key.toLowerCase());

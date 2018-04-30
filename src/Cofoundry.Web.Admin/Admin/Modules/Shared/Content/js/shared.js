@@ -7659,7 +7659,7 @@ function (
             el.empty();
 
             if (dataSource && dataSource.modelMetaData.dataModelProperties.length) {
-                dataSource.modelMetaData.dataModelProperties.forEach(function (modelProperty) {
+                dataSource.modelMetaData.dataModelProperties.forEach(function (modelProperty, i) {
                     var fieldName = mapDirectiveName(modelProperty);
 
                     html += '<' + fieldName;
@@ -7672,7 +7672,7 @@ function (
                     if (modelProperty.additionalAttributes) {
 
                         _.each(modelProperty.additionalAttributes, function (value, key) {
-                            html += attributeMapper.map(key, value);
+                            html += attributeMapper.map(key, value, i);
                         });
                     }
 
@@ -7712,6 +7712,7 @@ function (
      */
     function AttributeMapper() {
 
+        // certain attributes require special treatment, such as native html attributes
         var ATTR_PREFIX = 'cms-',
             attributeMap = {
                 'maxlength': mapHtmlAttributeWithValue,
@@ -7723,6 +7724,7 @@ function (
                 'placeholder': mapHtmlAttributeWithValue,
                 'match': mapDataSourceAttribute,
                 'model': mapDataSourceAttribute,
+                'options': mapAttributeWithObjectValue,
                 'required': mapHtmlAttributeWithoutValue,
                 'rows': mapHtmlAttributeWithValue,
                 'cols': mapHtmlAttributeWithValue
@@ -7730,7 +7732,7 @@ function (
 
         /* public */
 
-        this.map = function (key, value) {
+        this.map = function (key, value, i) {
             var postfix = 'ValMsg',
                 attrMapFn = attributeMap[key],
                 attrToVal;
@@ -7747,20 +7749,40 @@ function (
                 attrMapFn = mapCmsAttribute;
             }
 
-            return attrMapFn ? attrMapFn(key, value) : '';
+            return attrMapFn ? attrMapFn(key, value, i) : '';
         }
 
         /* private */
 
+        /**
+         * Maps the attribute, binding the value to a property on the data model
+         */
         function mapDataSourceAttribute(key, value) {
             value = 'vm.dataSource.model[\'' + value + '\']';
             return mapCmsAttribute(key, value);
         }
 
+        /**
+         * Maps the attribute, binding the value to an object in the additional
+         * attributes collection on the model meta data.
+         */
+        function mapAttributeWithObjectValue(key, value, i) {
+
+            value = 'vm.dataSource.modelMetaData.dataModelProperties[' + i + '].additionalAttributes[\'' + key + '\']';
+            return mapCmsAttribute(key, value);
+        }
+
+        /**
+         * Maps a native html attribute (without the cms prefix)
+         */
         function mapHtmlAttributeWithValue(key, value) {
             return formatAttributeText(stringUtilities.toSnakeCase(key), value);
         }
 
+        /**
+         * Maps a native html attribute (without the cms prefix) which doesn't
+         * require a value.
+         */
         function mapHtmlAttributeWithoutValue(key, condition) {
             if (condition) {
                 return formatAttributeText(key.toLowerCase());
@@ -8034,6 +8056,144 @@ function (
 
     return baseFormFieldFactory.create(config);
 }]);
+angular.module('cms.shared').directive('cmsFormFieldCheckboxList', [
+    '_',
+    '$http',
+    'shared.internalModulePath',
+    'baseFormFieldFactory',
+function (
+    _,
+    $http,
+    modulePath,
+    baseFormFieldFactory) {
+
+    var config = {
+        templateUrl: modulePath + 'UIComponents/FormFields/FormFieldCheckboxList.html',
+        scope: _.extend(baseFormFieldFactory.defaultConfig.scope, {
+            options: '=cmsOptions',
+            optionValue: '@cmsOptionValue',
+            optionName: '@cmsOptionName',
+            optionsApi: '@cmsOptionsApi',
+            noValueText: '@cmsNoValueText',
+            required: '=cmsRequired',
+            disabled: '=cmsDisabled'
+        }),
+        passThroughAttributes: [
+            'placeholder',
+            'disabled',
+            'cmsMatch',
+            'required'
+        ],
+        link: link
+    };
+
+    return baseFormFieldFactory.create(config);
+
+    /* PRIVATE */
+
+    function link(scope, element, attrs, controllers) {
+        var vm = scope.vm;
+        init();
+
+        // call base
+        baseFormFieldFactory.defaultConfig.link.apply(this, arguments);
+
+        /* Init */
+
+        function init() {
+            vm.isRequiredAttributeDefined = angular.isDefined(attrs.required);
+            vm.onCheckChanged = updateModel;
+
+            if (vm.optionsApi) {
+                // options bound by api call
+                getOptions(vm.optionsApi);
+
+            } else {
+
+                // options provided as a model
+                var optionsWatch = scope.$watch('vm.options', function () {
+
+                    bindOptions(vm.options);
+                    updateDisplayValues();
+
+                    if (vm.options) {
+                        // remove watch
+                        optionsWatch();
+                    }
+                });
+            }
+
+            scope.$watch('vm.model', onModelChanged);
+        }
+
+        /* Events */
+
+        function onModelChanged() {
+            updateOptionSelectionFromModel();
+            updateDisplayValues();
+        }
+
+        /* Helpers */
+
+        function getOptions(apiPath) {
+            return $http.get(apiPath).then(loadOptions);
+
+            function loadOptions(options) {
+                bindOptions(options);
+                updateDisplayValues();
+            }
+        }
+
+        /**
+         * Copies over the option collection so the original
+         * is not modified with selcted properties.
+         */
+        function bindOptions(options) {
+            vm.listOptions = _.map(options, mapOption);
+
+            updateOptionSelectionFromModel();
+
+            function mapOption(option) {
+                return {
+                    text: option[vm.optionName],
+                    value: option[vm.optionValue]
+                };
+            }
+        }
+
+        /**
+         * Updates the selected values in the listOptions
+         * collection from the model,
+         */
+        function updateOptionSelectionFromModel() {
+            var isModelEmpty = !vm.model || !vm.model.length;
+            vm.displayValues = [];
+
+            _.each(vm.listOptions, function (option) {
+
+                option.selected = !isModelEmpty && !!_.find(vm.model, function (m) {
+                    return m === option.value;
+                });
+            });
+        }
+
+        function updateDisplayValues() {
+
+            vm.displayValues = _.chain(vm.listOptions)
+                .filter(function (o) { return o.selected })
+                .pluck('text')
+                .value();
+        }
+
+        function updateModel() {
+
+            vm.model = _.chain(vm.listOptions)
+                .filter(function (o) { return o.selected })
+                .pluck('value')
+                .value();
+        }
+    }
+}]);
 angular.module('cms.shared').directive('cmsFormFieldColor', [
     'shared.internalModulePath',
     'baseFormFieldFactory',
@@ -8107,10 +8267,12 @@ function (
 }]);
 angular.module('cms.shared').directive('cmsFormFieldDropdown', [
     '_',
+    '$http',
     'shared.internalModulePath',
     'baseFormFieldFactory',
 function (
     _,
+    $http,
     modulePath,
     baseFormFieldFactory) {
 
@@ -8120,6 +8282,7 @@ function (
             options: '=cmsOptions',
             optionValue: '@cmsOptionValue',
             optionName: '@cmsOptionName',
+            optionsApi: '@cmsOptionsApi',
             defaultItemText: '@cmsDefaultItemText',
             required: '=cmsRequired',
             disabled: '=cmsDisabled'
@@ -8149,26 +8312,54 @@ function (
         function init() {
             vm.isRequiredAttributeDefined = angular.isDefined(attrs.required);
 
-            var optionsWatch = scope.$watch('vm.options', function () {
-                bindDisplayValue();
+            if (vm.optionsApi) {
+                // options bound by api call
+                getOptions(vm.optionsApi);
 
-                if (vm.options) {
-                    // remove watch
-                    optionsWatch();
-                }
-            });
+            } else {
+
+                // options provided as a model
+                var optionsWatch = scope.$watch('vm.options', function () {
+
+                    // need to copy b/c of assignment issue with bound attributes
+                    vm.listOptions = vm.options;
+
+                    bindDisplayValue();
+
+                    if (vm.options) {
+                        // remove watch
+                        optionsWatch();
+                    }
+                });
+            }
 
             scope.$watch('vm.model', bindDisplayValue);
         }
 
         /* Helpers */
 
-        function bindDisplayValue() {
-             var selectedOption = _.find(vm.options, function (option) {
-                return option[vm.optionValue] == vm.model;
-             });
+        function getOptions(apiPath) {
+            return $http.get(apiPath).then(loadOptions);
 
-             vm.displayValue = selectedOption ? selectedOption[vm.optionName] : vm.defaultItemText;
+            function loadOptions(options) {
+                vm.listOptions = options;
+                bindDisplayValue();
+            }
+        }
+
+        function bindDisplayValue() {
+
+            var selectedOption = _.find(vm.listOptions, function (option) {
+                return option[vm.optionValue] == vm.model;
+            });
+
+            vm.displayValue = selectedOption ? selectedOption[vm.optionName] : vm.defaultItemText;
+
+            // if the options and model are bound, and the option does not appear in the 
+            // list, remove the value from the model.
+            if (!selectedOption && vm.model != undefined && vm.listOptions) {
+                vm.model = undefined;
+            }
         }
     }
 
@@ -8520,6 +8711,104 @@ function (
     };
 
     return baseFormFieldFactory.create(config);
+}]);
+angular.module('cms.shared').directive('cmsFormFieldRadioList', [
+    '_',
+    '$http',
+    'shared.internalModulePath',
+    'baseFormFieldFactory',
+function (
+    _,
+    $http,
+    modulePath,
+    baseFormFieldFactory) {
+
+    var config = {
+        templateUrl: modulePath + 'UIComponents/FormFields/FormFieldRadioList.html',
+        scope: _.extend(baseFormFieldFactory.defaultConfig.scope, {
+            options: '=cmsOptions',
+            optionValue: '@cmsOptionValue',
+            optionName: '@cmsOptionName',
+            optionsApi: '@cmsOptionsApi',
+            defaultItemText: '@cmsDefaultItemText',
+            required: '=cmsRequired',
+            disabled: '=cmsDisabled'
+        }),
+        passThroughAttributes: [
+            'placeholder',
+            'disabled',
+            'cmsMatch'
+        ],
+        link: link
+    };
+
+    return baseFormFieldFactory.create(config);
+
+    /* PRIVATE */
+
+    function link(scope, element, attrs, controllers) {
+        var vm = scope.vm;
+        init();
+
+        // call base
+        baseFormFieldFactory.defaultConfig.link.apply(this, arguments);
+
+        /* Init */
+
+        function init() {
+            vm.isRequiredAttributeDefined = angular.isDefined(attrs.required);
+
+            if (vm.optionsApi) {
+                // options bound by api call
+                getOptions(vm.optionsApi);
+
+            } else {
+
+                // options provided as a model
+                var optionsWatch = scope.$watch('vm.options', function () {
+
+                    // need to copy b/c of assignment issue with bound attributes
+                    vm.listOptions = vm.options;
+
+                    bindDisplayValue();
+
+                    if (vm.options) {
+                        // remove watch
+                        optionsWatch();
+                    }
+                });
+            }
+
+            scope.$watch('vm.model', bindDisplayValue);
+        }
+
+        /* Helpers */
+
+        function getOptions(apiPath) {
+            return $http.get(apiPath).then(loadOptions);
+
+            function loadOptions(options) {
+                vm.listOptions = options;
+                bindDisplayValue();
+            }
+        }
+
+        function bindDisplayValue() {
+
+            var selectedOption = _.find(vm.listOptions, function (option) {
+                return option[vm.optionValue] == vm.model;
+            });
+
+            vm.displayValue = selectedOption ? selectedOption[vm.optionName] : vm.defaultItemText;
+
+            // if the options and model are bound, and the option does not appear in the 
+            // list, remove the value from the model.
+            if (!selectedOption && vm.model != undefined && vm.listOptions) {
+                vm.model = undefined;
+            }
+        }
+    }
+
 }]);
 angular.module('cms.shared').directive('cmsFormFieldReadonly', [
     'shared.internalModulePath',

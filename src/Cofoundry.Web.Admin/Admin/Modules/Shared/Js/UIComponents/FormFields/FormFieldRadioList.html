@@ -1,0 +1,38 @@
+﻿<div class="control-group">
+    <cms-field>
+        <label class="control-label" for="{{vm.modelName}}">{{vm.title}}:</label>
+        <div class="controls">
+
+            <ul ng-show="vm.formScope.editMode" ng-if="vm.listOptions">
+                <li ng-if="!vm.isRequiredAttributeDefined && !vm.required">
+                    <input type="radio"
+                           id="{{vm.modelName + "-NA"}}"
+                           name="{{vm.modelName}}"
+                           ng-model="vm.model"
+                           ng-change="vm.onChange()"
+                           ng-disabled="vm.disabled" />
+
+                    <label for="{{vm.modelName + "-NA"}}">{{vm.defaultItemText || 'None'}}</label>
+                </li>
+                <li ng-repeat="option in vm.listOptions track by $index">
+                    <input type="radio"
+                           id="{{vm.modelName + $index}}"
+                           name="{{vm.modelName}}"
+                           ng-model="vm.model"
+                           ng-change="vm.onChange()"
+                           ng-required="vm.isRequiredAttributeDefined || vm.required"
+                           ng-disabled="vm.disabled"
+                           ng-value="option[vm.optionValue]" />
+
+                    <label for="{{vm.modelName + $index}}">{{option[vm.optionName]}}</label>
+                </li>
+            </ul>
+
+            <div ng-hide="vm.formScope.editMode" class="text-block-display-value">{{vm.displayValue || 'None'}}</div>
+            <cms-form-field-validation-summary></cms-form-field-validation-summary>
+        </div>
+    </cms-field>
+    <p class="help-inline" ng-if="vm.description">
+        <small>{{vm.description}}</small>
+    </p>
+</div>

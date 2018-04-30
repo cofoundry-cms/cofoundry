@@ -3,19 +3,18 @@
         <label class="control-label" for="{{vm.modelName}}">{{vm.title}}:</label>
         <div class="controls">
             <select id="{{vm.modelName}}"
-                    ng-if="vm.options"
+                    ng-if="vm.listOptions"
                     name="{{vm.modelName}}"
                     ng-show="vm.formScope.editMode"
                     ng-model="vm.model"
                     ng-change="vm.onChange()"
                     ng-required="vm.isRequiredAttributeDefined || vm.required"
                     ng-disabled="vm.disabled"
-                    ng-options="o[vm.optionValue] as o[vm.optionName] for o in vm.options">
+                    ng-options="o[vm.optionValue] as o[vm.optionName] for o in vm.listOptions">
                 <option ng-show="!vm.isRequiredAttributeDefined && !vm.required" value='' selected>{{vm.defaultItemText}}</option>
             </select>
 
-            <div ng-hide="vm.formScope.editMode" ng-if="vm.displayValue">{{vm.displayValue}}</div>
-            <div ng-hide="vm.formScope.editMode" ng-if="!vm.displayValue" class="text-block-display-value">None</div>
+            <div ng-hide="vm.formScope.editMode" class="text-block-display-value">{{vm.displayValue || 'None'}}</div>
             <cms-form-field-validation-summary></cms-form-field-validation-summary>
         </div>
     </cms-field>

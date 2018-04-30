@@ -908,7 +908,7 @@ a[disabled]:hover, button[disabled]:hover, input[disabled]:hover {
   padding: 0 20px 20px;
 }
 
-/* line 7, ../../Js/UIComponents/FormFields/_formfields.scss */
+/* line 2, ../../Js/UIComponents/FormFields/_formfields.scss */
 input[type="text"], input[type="email"], input[type="password"], input[type="number"], input[type="date"], input[type="url"], input[type="tel"], textarea, select {
   -moz-border-radius: 2px;
   -webkit-border-radius: 2px;
@@ -920,7 +920,7 @@ input[type="text"], input[type="email"], input[type="password"], input[type="num
   width: 100%;
 }
 
-/* line 21, ../../Js/UIComponents/FormFields/_formfields.scss */
+/* line 16, ../../Js/UIComponents/FormFields/_formfields.scss */
 input[type="color"] {
   -moz-border-radius: 2px;
   -webkit-border-radius: 2px;
@@ -931,13 +931,13 @@ input[type="color"] {
   height: 40px;
 }
 
-/* line 29, ../../Js/UIComponents/FormFields/_formfields.scss */
+/* line 24, ../../Js/UIComponents/FormFields/_formfields.scss */
 .text-block-display-value {
   padding: 1rem;
   background: #fafafa;
 }
 
-/* line 34, ../../Js/UIComponents/FormFields/_formfields.scss */
+/* line 29, ../../Js/UIComponents/FormFields/_formfields.scss */
 .color-box {
   -moz-border-radius: 3px;
   -webkit-border-radius: 3px;
@@ -949,25 +949,25 @@ input[type="color"] {
   padding-top: 13px;
   text-indent: 50px;
 }
-/* line 43, ../../Js/UIComponents/FormFields/_formfields.scss */
+/* line 38, ../../Js/UIComponents/FormFields/_formfields.scss */
 .color-box.edit {
   position: absolute;
   top: 0;
   z-index: -1;
 }
 
-/* line 51, ../../Js/UIComponents/FormFields/_formfields.scss */
+/* line 46, ../../Js/UIComponents/FormFields/_formfields.scss */
 .filtered-dd .btn-icon .fa {
   padding: 9px;
 }
-/* line 55, ../../Js/UIComponents/FormFields/_formfields.scss */
+/* line 50, ../../Js/UIComponents/FormFields/_formfields.scss */
 .filtered-dd .btn-remove {
   position: absolute;
   right: 25px;
   top: 0px;
   z-index: 2;
 }
-/* line 62, ../../Js/UIComponents/FormFields/_formfields.scss */
+/* line 57, ../../Js/UIComponents/FormFields/_formfields.scss */
 .filtered-dd .btn-add {
   position: absolute;
   right: 50px;
@@ -975,7 +975,7 @@ input[type="color"] {
   z-index: 2;
 }
 
-/* line 70, ../../Js/UIComponents/FormFields/_formfields.scss */
+/* line 65, ../../Js/UIComponents/FormFields/_formfields.scss */
 .form-validation-summary li {
   padding: 5px;
   margin-top: -1px;
@@ -987,47 +987,47 @@ input[type="color"] {
   position: relative;
 }
 
-/* line 81, ../../Js/UIComponents/FormFields/_formfields.scss */
+/* line 76, ../../Js/UIComponents/FormFields/_formfields.scss */
 .selectize-input, .selectize-control.single .selectize-input {
   -moz-box-shadow: none;
   -webkit-box-shadow: none;
   box-shadow: none;
 }
 
-/* line 85, ../../Js/UIComponents/FormFields/_formfields.scss */
+/* line 80, ../../Js/UIComponents/FormFields/_formfields.scss */
 .selectize-dropdown {
   position: relative !important;
   top: auto !important;
 }
 
-/* line 90, ../../Js/UIComponents/FormFields/_formfields.scss */
+/* line 85, ../../Js/UIComponents/FormFields/_formfields.scss */
 .selectize-control {
   width: 100% !important;
 }
 
-/* line 93, ../../Js/UIComponents/FormFields/_formfields.scss */
+/* line 88, ../../Js/UIComponents/FormFields/_formfields.scss */
 .selectize-control.single .selectize-input {
   background: none;
 }
 
-/* line 96, ../../Js/UIComponents/FormFields/_formfields.scss */
+/* line 91, ../../Js/UIComponents/FormFields/_formfields.scss */
 .ui-select-container[theme="selectize"].direction-up .ui-select-dropdown {
   box-shadow: none;
   margin-top: -4px;
 }
 
-/* line 100, ../../Js/UIComponents/FormFields/_formfields.scss */
+/* line 95, ../../Js/UIComponents/FormFields/_formfields.scss */
 .selectize-dropdown .active {
   background: #f5f5f6;
   color: #000;
 }
 
-/* line 104, ../../Js/UIComponents/FormFields/_formfields.scss */
+/* line 99, ../../Js/UIComponents/FormFields/_formfields.scss */
 .selectize-control.single .selectize-input, .selectize-dropdown.single {
   border-color: #d2d2d2;
 }
 
-/* line 109, ../../Js/UIComponents/FormFields/_formfields.scss */
+/* line 104, ../../Js/UIComponents/FormFields/_formfields.scss */
 .selectize-control.single .selectize-input:after {
   -moz-transition: color 0.3s;
   -o-transition: color 0.3s;
@@ -1040,21 +1040,21 @@ input[type="color"] {
   top: 11px;
   right: 23px;
 }
-/* line 119, ../../Js/UIComponents/FormFields/_formfields.scss */
+/* line 114, ../../Js/UIComponents/FormFields/_formfields.scss */
 .selectize-control.single .selectize-input:hover:after {
   color: #4af386;
 }
 
-/* line 124, ../../Js/UIComponents/FormFields/_formfields.scss */
+/* line 119, ../../Js/UIComponents/FormFields/_formfields.scss */
 .filtered-dd--actions {
   text-align: right;
 }
 
-/* line 128, ../../Js/UIComponents/FormFields/_formfields.scss */
+/* line 123, ../../Js/UIComponents/FormFields/_formfields.scss */
 .form-field-text-area {
   z-index: 10000 !important;
 }
-/* line 131, ../../Js/UIComponents/FormFields/_formfields.scss */
+/* line 126, ../../Js/UIComponents/FormFields/_formfields.scss */
 .form-field-text-area .mce-fullscreen {
   top: 70px;
   bottom: 0;
@@ -1063,14 +1063,14 @@ input[type="color"] {
   right: 0;
 }
 @media screen and (min-width: 950px) {
-  /* line 140, ../../Js/UIComponents/FormFields/_formfields.scss */
+  /* line 135, ../../Js/UIComponents/FormFields/_formfields.scss */
   .form-field-text-area .mce-fullscreen {
     left: 288px;
   }
 }
 
 /* Actions that nest below an input field (used in YouTube and vimeo plugins */
-/* line 147, ../../Js/UIComponents/FormFields/_formfields.scss */
+/* line 142, ../../Js/UIComponents/FormFields/_formfields.scss */
 .form-field-input-actions {
   margin-top: 10px;
   text-align: right;
@@ -1318,7 +1318,7 @@ input[type="color"] {
   left: 0;
   width: 100%;
 }
-/* line 158, ../../Js/UIComponents/Layout/_layout.scss */
+/* line 159, ../../Js/UIComponents/Layout/_layout.scss */
 .page-body.form fieldset:before {
   content: '';
   position: absolute;
@@ -1330,7 +1330,7 @@ input[type="color"] {
   height: 100%;
   min-height: 80px;
 }
-/* line 170, ../../Js/UIComponents/Layout/_layout.scss */
+/* line 171, ../../Js/UIComponents/Layout/_layout.scss */
 .page-body.form fieldset:after {
   -moz-transition: all 0.2s;
   -o-transition: all 0.2s;
@@ -1346,17 +1346,17 @@ input[type="color"] {
   z-index: 2;
   border-top: 3px solid #dddddd;
 }
-/* line 185, ../../Js/UIComponents/Layout/_layout.scss */
+/* line 186, ../../Js/UIComponents/Layout/_layout.scss */
 .page-body.with-header {
   margin-top: 70px;
 }
-/* line 189, ../../Js/UIComponents/Layout/_layout.scss */
+/* line 190, ../../Js/UIComponents/Layout/_layout.scss */
 .page-body fieldset {
   margin-bottom: 20px;
   position: relative;
   max-width: 800px;
 }
-/* line 194, ../../Js/UIComponents/Layout/_layout.scss */
+/* line 195, ../../Js/UIComponents/Layout/_layout.scss */
 .page-body fieldset legend {
   font-size: 150%;
   width: 100%;
@@ -1365,19 +1365,19 @@ input[type="color"] {
   position: relative;
   z-index: 10;
 }
-/* line 202, ../../Js/UIComponents/Layout/_layout.scss */
+/* line 203, ../../Js/UIComponents/Layout/_layout.scss */
 .page-body fieldset legend button {
   display: none;
   cursor: pointer;
   outline: none;
 }
-/* line 207, ../../Js/UIComponents/Layout/_layout.scss */
+/* line 208, ../../Js/UIComponents/Layout/_layout.scss */
 .page-body fieldset legend button i {
   font: normal normal normal 15px/1 FontAwesome;
   position: absolute;
   left: 0;
 }
-/* line 213, ../../Js/UIComponents/Layout/_layout.scss */
+/* line 214, ../../Js/UIComponents/Layout/_layout.scss */
 .page-body fieldset legend button.show {
   -moz-transition: color 0.3s;
   -o-transition: color 0.3s;
@@ -1395,19 +1395,19 @@ input[type="color"] {
   width: 50px;
   text-align: right;
 }
-/* line 227, ../../Js/UIComponents/Layout/_layout.scss */
+/* line 228, ../../Js/UIComponents/Layout/_layout.scss */
 .page-body fieldset legend button.show:hover {
   color: #2c263d;
 }
-/* line 231, ../../Js/UIComponents/Layout/_layout.scss */
+/* line 232, ../../Js/UIComponents/Layout/_layout.scss */
 .page-body fieldset legend button.show.active {
   color: #2c263d;
 }
-/* line 238, ../../Js/UIComponents/Layout/_layout.scss */
+/* line 239, ../../Js/UIComponents/Layout/_layout.scss */
 .page-body fieldset .help-inline {
   display: none;
 }
-/* line 243, ../../Js/UIComponents/Layout/_layout.scss */
+/* line 244, ../../Js/UIComponents/Layout/_layout.scss */
 .page-body fieldset.show-helpers .help-inline {
   -moz-transition: all 0.2s;
   -o-transition: all 0.2s;
@@ -1421,13 +1421,13 @@ input[type="color"] {
   position: relative;
   z-index: 2;
 }
-/* line 253, ../../Js/UIComponents/Layout/_layout.scss */
+/* line 254, ../../Js/UIComponents/Layout/_layout.scss */
 .page-body fieldset.show-helpers .help-inline small {
   font-size: 95%;
   line-height: 105%;
 }
 @media screen and (min-width: 1200px) {
-  /* line 260, ../../Js/UIComponents/Layout/_layout.scss */
+  /* line 261, ../../Js/UIComponents/Layout/_layout.scss */
   .page-body fieldset.show-helpers .help-inline {
     margin: 0;
     top: -20px;
@@ -1463,7 +1463,7 @@ input[type="color"] {
   border-top: 0px solid #d2d2d2;
 }
 /* line 294, ../../Js/UIComponents/Layout/_layout.scss */
-.page-body .control-group .control-group-area label {
+.page-body .control-group .control-group-area .control-label {
   display: block;
   font-size: 100%;
   font-weight: 700;
@@ -1471,7 +1471,7 @@ input[type="color"] {
   padding-bottom: 10px;
 }
 /* line 304, ../../Js/UIComponents/Layout/_layout.scss */
-.page-body .control-group .control-group-area.editmode label:after {
+.page-body .control-group .control-group-area.editmode .control-label:after {
   position: absolute;
   right: 28px;
   width: 15px;
@@ -1480,12 +1480,12 @@ input[type="color"] {
   color: #339900;
 }
 /* line 317, ../../Js/UIComponents/Layout/_layout.scss */
-.page-body .control-group .control-group-area.required.editmode label:after {
+.page-body .control-group .control-group-area.required.editmode .control-label:after {
   content: '\f069';
   color: #ff6600;
 }
 /* line 326, ../../Js/UIComponents/Layout/_layout.scss */
-.page-body .control-group .control-group-area.invalid.editmode label:after {
+.page-body .control-group .control-group-area.invalid.editmode .control-label:after {
   content: '\f069';
   color: #ff0000;
 }

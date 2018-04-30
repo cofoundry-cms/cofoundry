@@ -6,6 +6,28 @@ using System.Linq;
 
 namespace Cofoundry.BasicTestSite
 {
+    public class TestOptionSource : IListOptionSource
+    {
+        public ICollection<ListOption> Create()
+        {
+            var options = new List<ListOption>();
+            options.Add(new ListOption("Test1", 1));
+            options.Add(new ListOption("Test2", 2));
+            options.Add(new ListOption("Test3", 3));
+
+            return options;
+        }
+    }
+
+    public class TestApiOptionSource : IListOptionApiSource
+    {
+        public string Path => "/admin/api/test";
+
+        public string NameField => "Title";
+
+        public string ValueField => "Id";
+    }
+
     /// <summary>
     /// This defines the custom data that gets stored with each blog post. Data
     /// is stored in an unstructured format (json) so simple data types are 
@@ -23,6 +45,7 @@ namespace Cofoundry.BasicTestSite
         [Display(Name = "Thumbnail Image", Description = "Square image that displays against the blog in the listing page.")]
         public int ThumbnailImageAssetId { get; set; }
 
+        [Required]
         [Display(Name = "Categories", Description = "Drag and drop to customize the category ordering.")]
         [CustomEntityCollection(CategoryCustomEntityDefinition.DefinitionCode, IsOrderable = true)]
         public ICollection<int> CategoryIds { get; set; }
@@ -31,6 +54,35 @@ namespace Cofoundry.BasicTestSite
         [CustomEntity(CategoryCustomEntityDefinition.DefinitionCode)]
         public int CategoryId { get; set; }
 
+        [Required]
+        [CheckboxList(typeof(TestOptionSource), NoValueText = "None")]
+        public ICollection<int> TestCheckboxList1 { get; set; }
+
+        [CheckboxList(typeof(PublishStatus))]
+        public ICollection<PublishStatus> TestCheckboxList2 { get; set; }
+
+        [CheckboxList(typeof(TestApiOptionSource))]
+        public ICollection<int> TestCheckboxList3 { get; set; }
+
+        [RadioList(typeof(TestOptionSource), DefaultItemText ="OffNot")]
+        public int TestOption1 { get; set; }
+
+        [RadioList(typeof(PublishStatus))]
+        public PublishStatus TestOption2 { get; set; }
+
+        [RadioList(typeof(TestApiOptionSource))]
+        public int TestOption3 { get; set; }
+
+        [RadioList(typeof(TestOptionSource), DefaultItemText = "Off")]
+        public int? TestNullableOption1 { get; set; }
+
+        [RadioList(typeof(PublishStatus))]
+        public PublishStatus? TestNullableOption2 { get; set; }
+
+        [RadioList(typeof(TestApiOptionSource))]
+        public int? TestNullableOption3 { get; set; }
+
+        [Required]
         [ImageCollection]
         [Display(Name = "Images")]
         public ICollection<int> ThumbnailImageAssets{ get; set; }

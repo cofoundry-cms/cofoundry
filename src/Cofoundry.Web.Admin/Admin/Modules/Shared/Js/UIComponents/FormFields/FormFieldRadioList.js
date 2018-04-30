@@ -1,4 +1,4 @@
-﻿angular.module('cms.shared').directive('cmsFormFieldDropdown', [
+﻿angular.module('cms.shared').directive('cmsFormFieldRadioList', [
     '_',
     '$http',
     'shared.internalModulePath',
@@ -10,7 +10,7 @@ function (
     baseFormFieldFactory) {
 
     var config = {
-        templateUrl: modulePath + 'UIComponents/FormFields/FormFieldDropdown.html',
+        templateUrl: modulePath + 'UIComponents/FormFields/FormFieldRadioList.html',
         scope: _.extend(baseFormFieldFactory.defaultConfig.scope, {
             options: '=cmsOptions',
             optionValue: '@cmsOptionValue',
@@ -25,7 +25,6 @@ function (
             'disabled',
             'cmsMatch'
         ],
-        getInputEl: getInputEl,
         link: link
     };
 
@@ -94,10 +93,6 @@ function (
                 vm.model = undefined;
             }
         }
-    }
-
-    function getInputEl(rootEl) {
-        return rootEl.find('select');
     }
 
 }]);

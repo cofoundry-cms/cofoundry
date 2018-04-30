@@ -1,0 +1,34 @@
+﻿<div class="control-group">
+    <cms-field>
+        <label class="control-label" for="{{vm.modelName}}">{{vm.title}}:</label>
+        <div class="controls">
+
+            <input id="{{vm.modelName}}"
+                   name="{{vm.modelName}}"
+                   ng-model="vm.model"
+                   ng-change="vm.onChange()"
+                   ng-hide="true"/>
+
+            <ul ng-show="vm.formScope.editMode" ng-if="vm.listOptions">
+                <li ng-repeat="option in vm.listOptions track by $index">
+                    <input type="checkbox"
+                           id="{{vm.modelName + $index}}"
+                           ng-disabled="vm.disabled"
+                           ng-model="option.selected"
+                           ng-change="vm.onCheckChanged()"/>
+
+                    <label for="{{vm.modelName + $index}}">{{option.text}}</label>
+                </li>
+            </ul>
+
+            <ul ng-if="vm.model.length && !vm.formScope.editMode" class="text-block-display-value">
+                <li ng-repeat="displayValue in vm.displayValues">{{displayValue}}</li>
+            </ul>
+            <div ng-if="!vm.model.length && !vm.formScope.editMode" class="text-block-display-value">{{vm.noValueText}}</div>
+            <cms-form-field-validation-summary></cms-form-field-validation-summary>
+        </div>
+    </cms-field>
+    <p class="help-inline" ng-if="vm.description">
+        <small>{{vm.description}}</small>
+    </p>
+</div>
