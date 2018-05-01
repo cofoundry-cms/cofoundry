@@ -48,21 +48,26 @@
         <cms-form-section cms-title="Main">
 
             <cms-form-field-image-upload cms-title="File"
-                                            cms-model="vm.command.file"
-                                            cms-change="vm.onFileChanged()"
-                                            cms-asset="vm.previewImage"
-                                            cms-load-state="vm.saveLoadState"
-                                            required></cms-form-field-image-upload>
+                                         cms-model="vm.command.file"
+                                         cms-change="vm.onFileChanged()"
+                                         cms-asset="vm.previewImage"
+                                         cms-load-state="vm.saveLoadState"
+                                         required></cms-form-field-image-upload>
 
             <cms-form-field-text cms-title="Title"
-                                    cms-model="vm.command.title"
-                                    maxlength="120"
-                                    required></cms-form-field-text>
+                                 cms-model="vm.command.title"
+                                 maxlength="120"
+                                 required></cms-form-field-text>
 
-            <cms-form-field-tags cms-title="CMS Tags"
-                                    cms-model="vm.command.tags"></cms-form-field-tags>
+            <cms-form-field-readonly cms-title="Path"
+                                     cms-description="Full path to the image asset file."
+                                     cms-model="vm.previewUrl"></cms-form-field-readonly>
 
             <cms-form-field-image-anchor-location-selector cms-model="vm.command.defaultAnchorLocation"></cms-form-field-image-anchor-location-selector>
+
+            <cms-form-field-tags cms-title="CMS Tags"
+                                 cms-model="vm.command.tags"></cms-form-field-tags>
+
         </cms-form-section>
 
         <!--AUDIT DATA-->

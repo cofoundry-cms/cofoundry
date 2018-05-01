@@ -84,7 +84,7 @@
                 files: [
                     '../Admin/Modules/Documents/Js/**/*.html'
                 ],
-                tasks: ['concat:documents']
+                tasks: ['concat:documentsHTML']
             },
             images : {
                 files: [

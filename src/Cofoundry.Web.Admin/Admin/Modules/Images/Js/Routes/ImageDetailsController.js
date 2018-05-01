@@ -6,6 +6,7 @@
     'shared.LoadState',
     'shared.modalDialogService',
     'shared.permissionValidationService',
+    'shared.urlLibrary',
     'images.imageService',
     'images.modulePath',
 function (
@@ -16,6 +17,7 @@ function (
     LoadState,
     modalDialogService,
     permissionValidationService,
+    urlLibrary,
     imageService,
     modulePath
     ) {
@@ -66,6 +68,7 @@ function (
         vm.editMode = false;
         vm.previewImage = _.clone(vm.image);
         vm.command = mapCommand(vm.image);
+        vm.previewUrl = urlLibrary.getImageUrl(vm.previewImage);
         vm.mainForm.formStatus.clear();
     }
     
@@ -107,6 +110,7 @@ function (
                 vm.image = image;
                 vm.previewImage = image;
                 vm.command = mapCommand(image);
+                vm.previewUrl = urlLibrary.getImageUrl(vm.previewImage);
                 vm.editMode = false;
             });
         }

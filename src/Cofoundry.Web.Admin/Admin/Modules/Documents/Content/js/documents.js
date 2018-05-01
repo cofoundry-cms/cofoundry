@@ -134,6 +134,7 @@ angular.module('cms.documents').controller('DocumentDetailsController', [
     'shared.LoadState',
     'shared.modalDialogService',
     'shared.permissionValidationService',
+    'shared.urlLibrary',
     'documents.documentService',
     'documents.modulePath',
 function (
@@ -143,6 +144,7 @@ function (
     LoadState,
     modalDialogService,
     permissionValidationService,
+    urlLibrary,
     documentService,
     modulePath) {
 
@@ -193,6 +195,7 @@ function (
         vm.editMode = false;
         vm.previewDocument = _.clone(vm.document);
         vm.command = mapCommand(vm.document);
+        vm.previewUrl = urlLibrary.getDocumentUrl(vm.previewDocument);
         vm.mainForm.formStatus.clear();
     }
     
@@ -234,6 +237,7 @@ function (
                 vm.document = document;
                 vm.previewDocument = document;
                 vm.command = mapCommand(document);
+                vm.previewUrl = urlLibrary.getDocumentUrl(document);
                 vm.editMode = false;
             });
         }
