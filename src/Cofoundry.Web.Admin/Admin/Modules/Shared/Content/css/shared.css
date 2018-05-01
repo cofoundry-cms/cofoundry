@@ -3419,12 +3419,99 @@ input[type="color"] {
 }
 
 /* line 24, ../../Js/UIComponents/FormFields/_formfields.scss */
-.text-block-display-value {
+.checkbox-display-value, .text-block-display-value, .text-area-display-value {
   padding: 1rem;
   background: #fafafa;
 }
+/* line 28, ../../Js/UIComponents/FormFields/_formfields.scss */
+.checkbox-display-value ul, .text-block-display-value ul, .text-area-display-value ul {
+  list-style-type: disc;
+  margin-left: 1em;
+}
+/* line 33, ../../Js/UIComponents/FormFields/_formfields.scss */
+.checkbox-display-value li, .text-block-display-value li, .text-area-display-value li {
+  display: list-item;
+  margin-left: 1em;
+}
 
-/* line 29, ../../Js/UIComponents/FormFields/_formfields.scss */
+/* line 39, ../../Js/UIComponents/FormFields/_formfields.scss */
+.text-area-display-value {
+  white-space: pre;
+}
+
+/* line 43, ../../Js/UIComponents/FormFields/_formfields.scss */
+.text-block-display-value {
+  padding: 1rem;
+  background: #fafafa;
+  /* 
+      The css reset is really problematic here, we unfortunately need to 
+      re-enable basic styling to get proper display from html editor and
+      other rich text output.
+  */
+}
+/* line 51, ../../Js/UIComponents/FormFields/_formfields.scss */
+.text-block-display-value h1, .text-block-display-value h2, .text-block-display-value h3, .text-block-display-value h4, .text-block-display-value h5, .text-block-display-value h6 {
+  font-weight: 700;
+  margin: 0.8em 0;
+  padding: 0;
+}
+/* line 57, ../../Js/UIComponents/FormFields/_formfields.scss */
+.text-block-display-value h1 {
+  font-size: 2.2em;
+}
+/* line 61, ../../Js/UIComponents/FormFields/_formfields.scss */
+.text-block-display-value h2 {
+  font-size: 2.0em;
+}
+/* line 65, ../../Js/UIComponents/FormFields/_formfields.scss */
+.text-block-display-value h3 {
+  font-size: 1.8em;
+}
+/* line 69, ../../Js/UIComponents/FormFields/_formfields.scss */
+.text-block-display-value h4 {
+  font-size: 1.6em;
+}
+/* line 73, ../../Js/UIComponents/FormFields/_formfields.scss */
+.text-block-display-value h5 {
+  font-size: 1.4em;
+}
+/* line 77, ../../Js/UIComponents/FormFields/_formfields.scss */
+.text-block-display-value p {
+  margin: 0.8em 0;
+}
+/* line 81, ../../Js/UIComponents/FormFields/_formfields.scss */
+.text-block-display-value b, .text-block-display-value strong {
+  font-weight: 700;
+}
+/* line 85, ../../Js/UIComponents/FormFields/_formfields.scss */
+.text-block-display-value i, .text-block-display-value cite, .text-block-display-value em {
+  font-style: italic;
+}
+/* line 89, ../../Js/UIComponents/FormFields/_formfields.scss */
+.text-block-display-value ul, .text-block-display-value ol {
+  margin: 0.8em 0;
+}
+/* line 93, ../../Js/UIComponents/FormFields/_formfields.scss */
+.text-block-display-value ol {
+  list-style-type: decimal;
+}
+/* line 97, ../../Js/UIComponents/FormFields/_formfields.scss */
+.text-block-display-value ol ul, .text-block-display-value ul ol,
+.text-block-display-value ul ul, .text-block-display-value ol ol {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+/* line 103, ../../Js/UIComponents/FormFields/_formfields.scss */
+.text-block-display-value pre {
+  white-space: pre;
+  margin: 0.8em 0;
+}
+/* line 108, ../../Js/UIComponents/FormFields/_formfields.scss */
+.text-block-display-value code {
+  font-family: monospace;
+}
+
+/* line 113, ../../Js/UIComponents/FormFields/_formfields.scss */
 .color-box {
   -moz-border-radius: 3px;
   -webkit-border-radius: 3px;
@@ -3436,25 +3523,25 @@ input[type="color"] {
   padding-top: 13px;
   text-indent: 50px;
 }
-/* line 38, ../../Js/UIComponents/FormFields/_formfields.scss */
+/* line 122, ../../Js/UIComponents/FormFields/_formfields.scss */
 .color-box.edit {
   position: absolute;
   top: 0;
   z-index: -1;
 }
 
-/* line 46, ../../Js/UIComponents/FormFields/_formfields.scss */
+/* line 130, ../../Js/UIComponents/FormFields/_formfields.scss */
 .filtered-dd .btn-icon .fa {
   padding: 9px;
 }
-/* line 50, ../../Js/UIComponents/FormFields/_formfields.scss */
+/* line 134, ../../Js/UIComponents/FormFields/_formfields.scss */
 .filtered-dd .btn-remove {
   position: absolute;
   right: 25px;
   top: 0px;
   z-index: 2;
 }
-/* line 57, ../../Js/UIComponents/FormFields/_formfields.scss */
+/* line 141, ../../Js/UIComponents/FormFields/_formfields.scss */
 .filtered-dd .btn-add {
   position: absolute;
   right: 50px;
@@ -3462,7 +3549,7 @@ input[type="color"] {
   z-index: 2;
 }
 
-/* line 65, ../../Js/UIComponents/FormFields/_formfields.scss */
+/* line 149, ../../Js/UIComponents/FormFields/_formfields.scss */
 .form-validation-summary li {
   padding: 5px;
   margin-top: -1px;
@@ -3474,47 +3561,47 @@ input[type="color"] {
   position: relative;
 }
 
-/* line 76, ../../Js/UIComponents/FormFields/_formfields.scss */
+/* line 160, ../../Js/UIComponents/FormFields/_formfields.scss */
 .selectize-input, .selectize-control.single .selectize-input {
   -moz-box-shadow: none;
   -webkit-box-shadow: none;
   box-shadow: none;
 }
 
-/* line 80, ../../Js/UIComponents/FormFields/_formfields.scss */
+/* line 164, ../../Js/UIComponents/FormFields/_formfields.scss */
 .selectize-dropdown {
   position: relative !important;
   top: auto !important;
 }
 
-/* line 85, ../../Js/UIComponents/FormFields/_formfields.scss */
+/* line 169, ../../Js/UIComponents/FormFields/_formfields.scss */
 .selectize-control {
   width: 100% !important;
 }
 
-/* line 88, ../../Js/UIComponents/FormFields/_formfields.scss */
+/* line 172, ../../Js/UIComponents/FormFields/_formfields.scss */
 .selectize-control.single .selectize-input {
   background: none;
 }
 
-/* line 91, ../../Js/UIComponents/FormFields/_formfields.scss */
+/* line 175, ../../Js/UIComponents/FormFields/_formfields.scss */
 .ui-select-container[theme="selectize"].direction-up .ui-select-dropdown {
   box-shadow: none;
   margin-top: -4px;
 }
 
-/* line 95, ../../Js/UIComponents/FormFields/_formfields.scss */
+/* line 179, ../../Js/UIComponents/FormFields/_formfields.scss */
 .selectize-dropdown .active {
   background: #f5f5f6;
   color: #000;
 }
 
-/* line 99, ../../Js/UIComponents/FormFields/_formfields.scss */
+/* line 183, ../../Js/UIComponents/FormFields/_formfields.scss */
 .selectize-control.single .selectize-input, .selectize-dropdown.single {
   border-color: #d2d2d2;
 }
 
-/* line 104, ../../Js/UIComponents/FormFields/_formfields.scss */
+/* line 188, ../../Js/UIComponents/FormFields/_formfields.scss */
 .selectize-control.single .selectize-input:after {
   -moz-transition: color 0.3s;
   -o-transition: color 0.3s;
@@ -3527,21 +3614,21 @@ input[type="color"] {
   top: 11px;
   right: 23px;
 }
-/* line 114, ../../Js/UIComponents/FormFields/_formfields.scss */
+/* line 198, ../../Js/UIComponents/FormFields/_formfields.scss */
 .selectize-control.single .selectize-input:hover:after {
   color: #4af386;
 }
 
-/* line 119, ../../Js/UIComponents/FormFields/_formfields.scss */
+/* line 203, ../../Js/UIComponents/FormFields/_formfields.scss */
 .filtered-dd--actions {
   text-align: right;
 }
 
-/* line 123, ../../Js/UIComponents/FormFields/_formfields.scss */
+/* line 207, ../../Js/UIComponents/FormFields/_formfields.scss */
 .form-field-text-area {
   z-index: 10000 !important;
 }
-/* line 126, ../../Js/UIComponents/FormFields/_formfields.scss */
+/* line 210, ../../Js/UIComponents/FormFields/_formfields.scss */
 .form-field-text-area .mce-fullscreen {
   top: 70px;
   bottom: 0;
@@ -3550,14 +3637,14 @@ input[type="color"] {
   right: 0;
 }
 @media screen and (min-width: 950px) {
-  /* line 135, ../../Js/UIComponents/FormFields/_formfields.scss */
+  /* line 219, ../../Js/UIComponents/FormFields/_formfields.scss */
   .form-field-text-area .mce-fullscreen {
     left: 288px;
   }
 }
 
 /* Actions that nest below an input field (used in YouTube and vimeo plugins */
-/* line 142, ../../Js/UIComponents/FormFields/_formfields.scss */
+/* line 226, ../../Js/UIComponents/FormFields/_formfields.scss */
 .form-field-input-actions {
   margin-top: 10px;
   text-align: right;

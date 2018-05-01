@@ -9,7 +9,7 @@
                       id="{{vm.modelName}}"
                       name="{{vm.modelName}}" />
 
-            <div ng-hide="vm.formScope.editMode" ng-bind="vm.model" ng-if="vm.model" class="text-block-display-value"></div>
+            <div ng-hide="vm.formScope.editMode" ng-bind="vm.model" ng-if="vm.model" class="text-block-display-value text-area-display-value"></div>
             <div ng-hide="vm.formScope.editMode" ng-if="!vm.model" class="text-block-display-value">None</div>
             <cms-form-field-validation-summary></cms-form-field-validation-summary>
         </div>

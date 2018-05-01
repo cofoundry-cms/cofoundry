@@ -21,9 +21,11 @@
                 </li>
             </ul>
 
-            <ul ng-if="vm.model.length && !vm.formScope.editMode" class="text-block-display-value">
-                <li ng-repeat="displayValue in vm.displayValues">{{displayValue}}</li>
-            </ul>
+            <div ng-if="vm.model.length && !vm.formScope.editMode" class="checkbox-display-value">
+                <ul>
+                    <li ng-repeat="displayValue in vm.displayValues">{{displayValue}}</li>
+                </ul>
+            </div>
             <div ng-if="!vm.model.length && !vm.formScope.editMode" class="text-block-display-value">{{vm.noValueText}}</div>
             <cms-form-field-validation-summary></cms-form-field-validation-summary>
         </div>
