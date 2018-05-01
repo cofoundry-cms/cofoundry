@@ -3510,8 +3510,18 @@ input[type="color"] {
 .text-block-display-value code {
   font-family: monospace;
 }
+/* line 112, ../../Js/UIComponents/FormFields/_formfields.scss */
+.text-block-display-value sup {
+  vertical-align: super;
+  font-size: smaller;
+}
+/* line 117, ../../Js/UIComponents/FormFields/_formfields.scss */
+.text-block-display-value sub {
+  vertical-align: sub;
+  font-size: smaller;
+}
 
-/* line 113, ../../Js/UIComponents/FormFields/_formfields.scss */
+/* line 123, ../../Js/UIComponents/FormFields/_formfields.scss */
 .color-box {
   -moz-border-radius: 3px;
   -webkit-border-radius: 3px;
@@ -3523,25 +3533,25 @@ input[type="color"] {
   padding-top: 13px;
   text-indent: 50px;
 }
-/* line 122, ../../Js/UIComponents/FormFields/_formfields.scss */
+/* line 132, ../../Js/UIComponents/FormFields/_formfields.scss */
 .color-box.edit {
   position: absolute;
   top: 0;
   z-index: -1;
 }
 
-/* line 130, ../../Js/UIComponents/FormFields/_formfields.scss */
+/* line 140, ../../Js/UIComponents/FormFields/_formfields.scss */
 .filtered-dd .btn-icon .fa {
   padding: 9px;
 }
-/* line 134, ../../Js/UIComponents/FormFields/_formfields.scss */
+/* line 144, ../../Js/UIComponents/FormFields/_formfields.scss */
 .filtered-dd .btn-remove {
   position: absolute;
   right: 25px;
   top: 0px;
   z-index: 2;
 }
-/* line 141, ../../Js/UIComponents/FormFields/_formfields.scss */
+/* line 151, ../../Js/UIComponents/FormFields/_formfields.scss */
 .filtered-dd .btn-add {
   position: absolute;
   right: 50px;
@@ -3549,7 +3559,7 @@ input[type="color"] {
   z-index: 2;
 }
 
-/* line 149, ../../Js/UIComponents/FormFields/_formfields.scss */
+/* line 159, ../../Js/UIComponents/FormFields/_formfields.scss */
 .form-validation-summary li {
   padding: 5px;
   margin-top: -1px;
@@ -3561,47 +3571,47 @@ input[type="color"] {
   position: relative;
 }
 
-/* line 160, ../../Js/UIComponents/FormFields/_formfields.scss */
+/* line 170, ../../Js/UIComponents/FormFields/_formfields.scss */
 .selectize-input, .selectize-control.single .selectize-input {
   -moz-box-shadow: none;
   -webkit-box-shadow: none;
   box-shadow: none;
 }
 
-/* line 164, ../../Js/UIComponents/FormFields/_formfields.scss */
+/* line 174, ../../Js/UIComponents/FormFields/_formfields.scss */
 .selectize-dropdown {
   position: relative !important;
   top: auto !important;
 }
 
-/* line 169, ../../Js/UIComponents/FormFields/_formfields.scss */
+/* line 179, ../../Js/UIComponents/FormFields/_formfields.scss */
 .selectize-control {
   width: 100% !important;
 }
 
-/* line 172, ../../Js/UIComponents/FormFields/_formfields.scss */
+/* line 182, ../../Js/UIComponents/FormFields/_formfields.scss */
 .selectize-control.single .selectize-input {
   background: none;
 }
 
-/* line 175, ../../Js/UIComponents/FormFields/_formfields.scss */
+/* line 185, ../../Js/UIComponents/FormFields/_formfields.scss */
 .ui-select-container[theme="selectize"].direction-up .ui-select-dropdown {
   box-shadow: none;
   margin-top: -4px;
 }
 
-/* line 179, ../../Js/UIComponents/FormFields/_formfields.scss */
+/* line 189, ../../Js/UIComponents/FormFields/_formfields.scss */
 .selectize-dropdown .active {
   background: #f5f5f6;
   color: #000;
 }
 
-/* line 183, ../../Js/UIComponents/FormFields/_formfields.scss */
+/* line 193, ../../Js/UIComponents/FormFields/_formfields.scss */
 .selectize-control.single .selectize-input, .selectize-dropdown.single {
   border-color: #d2d2d2;
 }
 
-/* line 188, ../../Js/UIComponents/FormFields/_formfields.scss */
+/* line 198, ../../Js/UIComponents/FormFields/_formfields.scss */
 .selectize-control.single .selectize-input:after {
   -moz-transition: color 0.3s;
   -o-transition: color 0.3s;
@@ -3614,21 +3624,21 @@ input[type="color"] {
   top: 11px;
   right: 23px;
 }
-/* line 198, ../../Js/UIComponents/FormFields/_formfields.scss */
+/* line 208, ../../Js/UIComponents/FormFields/_formfields.scss */
 .selectize-control.single .selectize-input:hover:after {
   color: #4af386;
 }
 
-/* line 203, ../../Js/UIComponents/FormFields/_formfields.scss */
+/* line 213, ../../Js/UIComponents/FormFields/_formfields.scss */
 .filtered-dd--actions {
   text-align: right;
 }
 
-/* line 207, ../../Js/UIComponents/FormFields/_formfields.scss */
+/* line 217, ../../Js/UIComponents/FormFields/_formfields.scss */
 .form-field-text-area {
   z-index: 10000 !important;
 }
-/* line 210, ../../Js/UIComponents/FormFields/_formfields.scss */
+/* line 220, ../../Js/UIComponents/FormFields/_formfields.scss */
 .form-field-text-area .mce-fullscreen {
   top: 70px;
   bottom: 0;
@@ -3637,14 +3647,14 @@ input[type="color"] {
   right: 0;
 }
 @media screen and (min-width: 950px) {
-  /* line 219, ../../Js/UIComponents/FormFields/_formfields.scss */
+  /* line 229, ../../Js/UIComponents/FormFields/_formfields.scss */
   .form-field-text-area .mce-fullscreen {
     left: 288px;
   }
 }
 
 /* Actions that nest below an input field (used in YouTube and vimeo plugins */
-/* line 226, ../../Js/UIComponents/FormFields/_formfields.scss */
+/* line 236, ../../Js/UIComponents/FormFields/_formfields.scss */
 .form-field-input-actions {
   margin-top: 10px;
   text-align: right;

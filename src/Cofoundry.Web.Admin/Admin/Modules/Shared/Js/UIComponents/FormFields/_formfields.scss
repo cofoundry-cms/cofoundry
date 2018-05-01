@@ -108,6 +108,16 @@ input[type="color"] {
     code {
         font-family: monospace;
     }
+
+    sup {
+        vertical-align: super;
+        font-size: smaller;
+    }
+
+    sub {
+        vertical-align: sub;
+        font-size: smaller;
+    }
 }
 
 .color-box {
