@@ -3,7 +3,8 @@
         <label class="control-label" for="{{vm.modelName}}">{{vm.title}}:</label>
         <div class="controls">
             <div ng-show="vm.formScope.editMode">
-                <textarea ui-tinymce="vm.tinymceOptions"
+                <textarea ng-if="::vm.tinymceOptions"
+                          ui-tinymce="vm.tinymceOptions"
                           ng-show="vm.formScope.editMode"
                           ng-model="vm.editorModel"
                           ng-change="vm.onChange()"

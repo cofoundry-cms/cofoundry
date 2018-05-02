@@ -4,6 +4,8 @@
  */
 angular.module('cms.shared').directive('cmsFormFieldHtml', [
     '$sce',
+    '$q',
+    '$http',
     '_',
     'shared.internalModulePath', 
     'shared.internalContentPath',
@@ -12,6 +14,8 @@ angular.module('cms.shared').directive('cmsFormFieldHtml', [
     'baseFormFieldFactory',
 function (
     $sce,
+    $q,
+    $http,
     _,
     modulePath, 
     contentPath,
@@ -31,7 +35,9 @@ function (
         getInputEl: getInputEl,
         scope: _.extend(baseFormFieldFactory.defaultConfig.scope, {
             toolbarsConfig: '@cmsToolbars',
-            toolbarCustomConfig: '@cmsCustomToolbar'
+            toolbarCustomConfig: '@cmsCustomToolbar',
+            options: '=cmsOptions',
+            configPath: '@cmsConfigPath',
         }),
         link: link
     };
@@ -46,7 +52,9 @@ function (
         // call base
         baseFormFieldFactory.defaultConfig.link.apply(this, arguments);
 
-        vm.tinymceOptions = getTinyMceOptions(vm, attributes);
+        loadTinyMCEOptions(vm, attributes).then(function (tinymceOptions) {
+            vm.tinymceOptions = tinymceOptions;
+        });
 
         scope.$watch("vm.model", setEditorModel);
         scope.$watch("vm.editorModel", setCmsModel);
@@ -72,14 +80,15 @@ function (
 
     /* HELPERS */
 
-    function getTinyMceOptions(vm, attributes) {
-        var rows = 20;
+    function loadTinyMCEOptions(vm, attributes) {
+        var rows = 20,
+            def = $q.defer();
 
         if (attributes.rows) {
             rows = parseInt(attributes.rows);
         }
 
-        return {
+        var defaultOptions = {
             toolbar: parseToolbarButtons(vm.toolbarsConfig, vm.toolbarCustomConfig),
             plugins: 'link image media fullscreen imagetools code',
             content_css: contentPath + "css/third-party/tinymce/content.min.css",
@@ -93,6 +102,31 @@ function (
             },
             browser_spellcheck: true
         };
+
+        if (vm.configPath) {
+            $http.get(vm.configPath).then(bindFileOptions);
+
+        } else {
+            bindCodeOptionsAndResolve();
+        }
+
+        return def.promise;
+
+        function bindFileOptions(result) {
+            if (result && result.data) {
+                _.extend(defaultOptions, result.data);
+            }
+            bindCodeOptionsAndResolve();
+        }
+
+        function bindCodeOptionsAndResolve() {
+            // Always apply last
+            if (vm.options) {
+                _.extend(defaultOptions, vm.options);
+            }
+
+            def.resolve(defaultOptions);
+        }
     }
 
     function onEditorImageButtonClick(editor) {
@@ -119,7 +153,7 @@ function (
                 advancedFormatting: 'bullist numlist blockquote | alignleft aligncenter alignright alignjustify',
                 media: 'cfimage media',
                 source: 'code removeformat',
-            }, toolbar = '';
+            }, toolbars = [];
 
         toolbarsConfig = toolbarsConfig || DEFAULT_CONFIG;
 
@@ -127,21 +161,28 @@ function (
             configItem = stringUtilities.lowerCaseFirstWord(configItem.trim());
 
             if (configItem === 'custom') {
-
-                toolbar = _.union(toolbar, parseCustomConfig(toolbarCustomConfig));
+                toolbars = _.union(toolbars, parseCustomConfig(toolbarCustomConfig));
 
             } else if (buttonConfig[configItem]) {
-                toolbar = toolbar.concat((toolbar.length ? ' | ': '') + buttonConfig[configItem]);
+                toolbars.push(buttonConfig[configItem]);
             }
         });
 
-        return toolbar;
+        return toolbars.join(' | ');
 
         function parseCustomConfig(toolbarCustomConfig) {
             var customToolbars;
 
             if (toolbarCustomConfig) {
+
+                // old formatting allowed array parsing, but this is ambigous when mixed with other toolbars
+                // and so will be removed eventually.
+                if (!toolbarCustomConfig.startsWith("'") && !toolbarCustomConfig.startsWith("\"")) {
+                    // single toolbar
+                    return [toolbarCustomConfig];
+                }
                 try {
+                    // parse an array of toolbars, with each one surrounded by quotationmarks
                     customToolbars = JSON.parse('{"j":[' + toolbarCustomConfig.replace(/'/g, '"') + ']}').j;
                 }
                 catch (e) { }
