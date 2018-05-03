@@ -1,8 +1,8 @@
-﻿angular.module('cms.shared').directive('cmsFormFieldImageAssetCollection', [
+﻿angular.module('cms.shared').directive('cmsFormFieldDocumentAssetCollection', [
     '_',
     'shared.internalModulePath',
     'shared.LoadState',
-    'shared.imageService',
+    'shared.documentService',
     'shared.modalDialogService',
     'shared.arrayUtilities',
     'shared.stringUtilities',
@@ -11,7 +11,7 @@ function (
     _,
     modulePath,
     LoadState,
-    imageService,
+    documentService,
     modalDialogService,
     arrayUtilities,
     stringUtilities,
@@ -19,13 +19,13 @@ function (
 
     /* VARS */
 
-    var IMAGE_ASSET_ID_PROP = 'imageAssetId',
+    var DOCUMENT_ASSET_ID_PROP = 'documentAssetId',
         baseConfig = baseFormFieldFactory.defaultConfig;
 
     /* CONFIG */
 
     var config = {
-        templateUrl: modulePath + 'UIComponents/ImageAssets/FormFieldImageAssetCollection.html',
+        templateUrl: modulePath + 'UIComponents/DocumentAssets/FormFieldDocumentAssetCollection.html',
         passThroughAttributes: [
             'required'
         ],
@@ -58,10 +58,10 @@ function (
 
         /* EVENTS */
 
-        function remove(image) {
+        function remove(document) {
 
-            removeItemFromArray(vm.gridData, image);
-            removeItemFromArray(vm.model, image.imageAssetId);
+            removeItemFromArray(vm.gridData, document);
+            removeItemFromArray(vm.model, document[DOCUMENT_ASSET_ID_PROP]);
 
             function removeItemFromArray(arr, item) {
                 var index = arr.indexOf(item);
@@ -75,8 +75,8 @@ function (
         function showPicker() {
 
             modalDialogService.show({
-                templateUrl: modulePath + 'UIComponents/ImageAssets/ImageAssetPickerDialog.html',
-                controller: 'ImageAssetPickerDialogController',
+                templateUrl: modulePath + 'UIComponents/DocumentAssets/DocumentAssetPickerDialog.html',
+                controller: 'DocumentAssetPickerDialogController',
                 options: {
                     selectedIds: vm.model || [],
                     filter: getFilter(),
@@ -84,43 +84,39 @@ function (
                 }
             });
 
-            function onSelected(newImageArr) {
-                vm.model = newImageArr;
-                setGridItems(newImageArr);
+            function onSelected(newArr) {
+                vm.model = newArr;
+                setGridItems(newArr);
             }
         }
 
         function onDrop($index, droppedEntity) {
 
-            arrayUtilities.moveObject(vm.gridData, droppedEntity, $index, IMAGE_ASSET_ID_PROP);
+            arrayUtilities.moveObject(vm.gridData, droppedEntity, $index, DOCUMENT_ASSET_ID_PROP);
 
             // Update model with new orering
             setModelFromGridData();
         }
 
         function setModelFromGridData() {
-            vm.model = _.pluck(vm.gridData, IMAGE_ASSET_ID_PROP);
+            vm.model = _.pluck(vm.gridData, DOCUMENT_ASSET_ID_PROP);
         }
 
         /* HELPERS */
 
         function getFilter() {
-            var filter = {};
+            var filter = {},
+                attributePrefix = 'cms';
 
-            setAttribute('Width');
-            setAttribute('Height');
-            setAttribute('MinWidth');
-            setAttribute('MinHeight');
+            setAttribute('Tags');
+            setAttribute('FileExtension');
+            setAttribute('FileExtensions');
 
             return filter;
 
-            function setAttribute(filterName) {
-                var value = attributes['cms' + filterName];
-
-                if (value) {
-                    filterName = stringUtilities.lowerCaseFirstWord(filterName);
-                    filter[filterName] = parseInt(value);
-                }
+            function setAttribute(attributeName) {
+                var filterName = stringUtilities.lowerCaseFirstWord(attributeName);
+                filter[filterName] = attributes[attributePrefix + attributeName];
             }
         }
 
@@ -132,10 +128,10 @@ function (
             if (!ids || !ids.length) {
                 vm.gridData = [];
             }
-            else if (!vm.gridData || _.pluck(vm.gridData, IMAGE_ASSET_ID_PROP).join() != ids.join()) {
+            else if (!vm.gridData || _.pluck(vm.gridData, DOCUMENT_ASSET_ID_PROP).join() != ids.join()) {
 
                 vm.gridLoadState.on();
-                imageService.getByIdRange(ids).then(function (items) {
+                documentService.getByIdRange(ids).then(function (items) {
                     vm.gridData = items;
                     vm.gridLoadState.off();
                 });

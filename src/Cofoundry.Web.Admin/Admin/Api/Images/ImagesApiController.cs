@@ -43,7 +43,10 @@ namespace Cofoundry.Web.Admin
         #region queries
 
         [HttpGet]
-        public async Task<IActionResult> Get([FromQuery] SearchImageAssetSummariesQuery query, [FromQuery] GetImageAssetRenderDetailsByIdRangeQuery rangeQuery)
+        public async Task<IActionResult> Get(
+            [FromQuery] SearchImageAssetSummariesQuery query, 
+            [FromQuery] GetImageAssetRenderDetailsByIdRangeQuery rangeQuery
+            )
         {
             if (rangeQuery != null && rangeQuery.ImageAssetIds != null)
             {

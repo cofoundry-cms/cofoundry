@@ -4277,9 +4277,25 @@ function (
         return $http.get(service.getIdRoute(documentId));
     }
 
+    service.getByIdRange = function (ids) {
+
+        return $http.get(documentsServiceBase + '/', {
+            params: {
+                'documentAssetIds': ids
+            }
+        });
+    }
+
     service.getAllDocumentFileTypes = function () {
 
         return $http.get(serviceBase + 'document-file-types');
+    }
+
+    /* COMMANDS */
+
+    service.add = function (command) {
+
+        return service.uploadFile(service.getBaseRoute(), command, 'POST');
     }
 
     /* HELPERS */
@@ -4290,6 +4306,17 @@ function (
 
     service.getBaseRoute = function () {
         return documentsServiceBase;
+    }
+
+    service.uploadFile = function (path, command, method) {
+        var data = _.omit(command, 'file');
+
+        return $upload.upload({
+            url: path,
+            data: data,
+            file: command.file,
+            method: method
+        });
     }
 
     return service;
@@ -6741,21 +6768,27 @@ function (
     };
 }]);
 angular.module('cms.shared').controller('DocumentAssetPickerDialogController', [
-        '$scope',
-        'shared.LoadState',
-        'shared.documentService',
-        'shared.SearchQuery',
-        'shared.urlLibrary',
-        'options',
-        'close',
-    function (
-        $scope,
-        LoadState,
-        documentService,
-        SearchQuery,
-        urlLibrary,
-        options,
-        close) {
+    '$scope',
+    'shared.LoadState',
+    'shared.documentService',
+    'shared.SearchQuery',
+    'shared.modalDialogService',
+    'shared.internalModulePath',
+    'shared.permissionValidationService',
+    'shared.urlLibrary',
+    'options',
+    'close',
+function (
+    $scope,
+    LoadState,
+    documentService,
+    SearchQuery,
+    modalDialogService,
+    modulePath,
+    permissionValidationService,
+    urlLibrary,
+    options,
+    close) {
     
     var vm = $scope;
     init();
@@ -6768,7 +6801,8 @@ angular.module('cms.shared').controller('DocumentAssetPickerDialogController', [
         vm.onOk = onOk;
         vm.onCancel = onCancel;
         vm.onSelect = onSelect;
-        vm.selectedAsset = vm.currentAsset;
+        vm.onUpload = onUpload;
+        vm.selectedAsset = vm.currentAsset; // currentAsset is null in single mode
         vm.onSelectAndClose = onSelectAndClose;
         vm.close = onCancel;
 
@@ -6783,7 +6817,12 @@ angular.module('cms.shared').controller('DocumentAssetPickerDialogController', [
         vm.filter = vm.query.getFilters();
         vm.toggleFilter = toggleFilter;
 
-        vm.isDocumentSelected = isDocumentSelected;
+        vm.isSelected = isSelected;
+        vm.multiMode = vm.selectedIds ? true : false;
+        vm.okText = vm.multiMode ? 'Ok' : 'Select';
+
+        vm.canCreate = permissionValidationService.canCreate('COFDOC');
+
         vm.getDocumentUrl = urlLibrary.getDocumentUrl;
 
         toggleFilter(false);
@@ -6813,32 +6852,75 @@ angular.module('cms.shared').controller('DocumentAssetPickerDialogController', [
     /* EVENTS */
 
     function onCancel() {
-        vm.onSelected(vm.currentAsset);
+        if (!vm.multiMode) {
+            // in single-mode reset the currentAsset
+            vm.onSelected(vm.currentAsset);
+        }
         close();
     }
 
     function onSelect(document) {
-        if (!isDocumentSelected(document)) {
+        if (!vm.multiMode) {
             vm.selectedAsset = document;
+            return;
         }
+
+        addOrRemove(document);
     }
 
     function onSelectAndClose(document) {
-        vm.selectedAsset = document;
+        if (!vm.multiMode) {
+            vm.selectedAsset = document;
+            onOk();
+            return;
+        }
+
+        addOrRemove(document);
         onOk();
     }
 
     function onOk() {
-        vm.onSelected(vm.selectedAsset);
+        if (!vm.multiMode) {
+            vm.onSelected(vm.selectedAsset);
+        } else {
+            vm.onSelected(vm.selectedIds);
+        }
+
         close();
+    }
+
+    function onUpload() {
+        modalDialogService.show({
+            templateUrl: modulePath + 'UIComponents/DocumentAssets/UploadDocumentAssetDialog.html',
+            controller: 'UploadDocumentAssetDialogController',
+            options: {
+                filter: options.filter,
+                onUploadComplete: onUploadComplete
+            }
+        });
+
+        function onUploadComplete(documentAssetId) {
+            onSelectAndClose({ documentAssetId: documentAssetId });
+        }
     }
 
     /* PUBLIC HELPERS */
 
-    function isDocumentSelected(document) {
+    function isSelected(document) {
+        if (vm.selectedIds && document && vm.selectedIds.indexOf(document.documentAssetId) > -1) return true;
+
         if (!document || !vm.selectedAsset) return false;
 
         return document.documentAssetId === vm.selectedAsset.documentAssetId;
+    }
+
+    function addOrRemove(document) {
+        if (!isSelected(document)) {
+            vm.selectedIds.push(document.documentAssetId);
+        } else {
+            var index = vm.selectedIds.indexOf(document.documentAssetId);
+            vm.selectedIds.splice(index, 1);
+        }
     }
 }]);
 
@@ -7044,6 +7126,11 @@ function (
          */
         function setAssetById(assetId) {
 
+            // Remove the id if it is 0 or invalid to make sure required validation works
+            if (!assetId) {
+                vm.model = assetId = undefined;
+            }
+
             if (assetId && (!vm.previewAsset || vm.previewAsset.documentAssetId != assetId)) {
                 documentService.getById(assetId).then(function (asset) {
                     setAsset(asset);
@@ -7107,6 +7194,147 @@ function (
     }
 
 }]);
+angular.module('cms.shared').directive('cmsFormFieldDocumentAssetCollection', [
+    '_',
+    'shared.internalModulePath',
+    'shared.LoadState',
+    'shared.documentService',
+    'shared.modalDialogService',
+    'shared.arrayUtilities',
+    'shared.stringUtilities',
+    'baseFormFieldFactory',
+function (
+    _,
+    modulePath,
+    LoadState,
+    documentService,
+    modalDialogService,
+    arrayUtilities,
+    stringUtilities,
+    baseFormFieldFactory) {
+
+    /* VARS */
+
+    var DOCUMENT_ASSET_ID_PROP = 'documentAssetId',
+        baseConfig = baseFormFieldFactory.defaultConfig;
+
+    /* CONFIG */
+
+    var config = {
+        templateUrl: modulePath + 'UIComponents/DocumentAssets/FormFieldDocumentAssetCollection.html',
+        passThroughAttributes: [
+            'required'
+        ],
+        link: link
+    };
+
+    return baseFormFieldFactory.create(config);
+
+    /* LINK */
+
+    function link(scope, el, attributes, controllers) {
+        var vm = scope.vm,
+            isRequired = _.has(attributes, 'required');
+
+        init();
+        return baseConfig.link(scope, el, attributes, controllers);
+
+        /* INIT */
+
+        function init() {
+
+            vm.gridLoadState = new LoadState();
+
+            vm.showPicker = showPicker;
+            vm.remove = remove;
+            vm.onDrop = onDrop;
+
+            scope.$watch("vm.model", setGridItems);
+        }
+
+        /* EVENTS */
+
+        function remove(document) {
+
+            removeItemFromArray(vm.gridData, document);
+            removeItemFromArray(vm.model, document[DOCUMENT_ASSET_ID_PROP]);
+
+            function removeItemFromArray(arr, item) {
+                var index = arr.indexOf(item);
+
+                if (index >= 0) {
+                    return arr.splice(index, 1);
+                }
+            }
+        }
+
+        function showPicker() {
+
+            modalDialogService.show({
+                templateUrl: modulePath + 'UIComponents/DocumentAssets/DocumentAssetPickerDialog.html',
+                controller: 'DocumentAssetPickerDialogController',
+                options: {
+                    selectedIds: vm.model || [],
+                    filter: getFilter(),
+                    onSelected: onSelected
+                }
+            });
+
+            function onSelected(newArr) {
+                vm.model = newArr;
+                setGridItems(newArr);
+            }
+        }
+
+        function onDrop($index, droppedEntity) {
+
+            arrayUtilities.moveObject(vm.gridData, droppedEntity, $index, DOCUMENT_ASSET_ID_PROP);
+
+            // Update model with new orering
+            setModelFromGridData();
+        }
+
+        function setModelFromGridData() {
+            vm.model = _.pluck(vm.gridData, DOCUMENT_ASSET_ID_PROP);
+        }
+
+        /* HELPERS */
+
+        function getFilter() {
+            var filter = {},
+                attributePrefix = 'cms';
+
+            setAttribute('Tags');
+            setAttribute('FileExtension');
+            setAttribute('FileExtensions');
+
+            return filter;
+
+            function setAttribute(attributeName) {
+                var filterName = stringUtilities.lowerCaseFirstWord(attributeName);
+                filter[filterName] = attributes[attributePrefix + attributeName];
+            }
+        }
+
+        /** 
+         * Load the grid data if it is inconsistent with the Ids collection.
+         */
+        function setGridItems(ids) {
+
+            if (!ids || !ids.length) {
+                vm.gridData = [];
+            }
+            else if (!vm.gridData || _.pluck(vm.gridData, DOCUMENT_ASSET_ID_PROP).join() != ids.join()) {
+
+                vm.gridLoadState.on();
+                documentService.getByIdRange(ids).then(function (items) {
+                    vm.gridData = items;
+                    vm.gridLoadState.off();
+                });
+            }
+        }
+    }
+}]);
 angular.module('cms.shared').directive('cmsFormFieldDocumentTypeSelector', [
     '_',
     'shared.internalModulePath',
@@ -7121,14 +7349,13 @@ function (
         templateUrl: modulePath + 'UIComponents/DocumentAssets/FormFieldDocumentTypeSelector.html',
         scope: {
             model: '=cmsModel',
+            disabled: '=cmsDisabled',
             onLoaded: '&cmsOnLoaded'
         },
         controller: Controller,
         controllerAs: 'vm',
         bindToController: true
     };
-
-    /* COMPILE */
 
     /* CONTROLLER */
 
@@ -7173,6 +7400,89 @@ function (
         return rootEl.find('cms-document-upload');
     }
 }]);
+angular.module('cms.shared').controller('UploadDocumentAssetDialogController', [
+    '$scope',
+    'shared.LoadState',
+    'shared.documentService',
+    'shared.SearchQuery',
+    'shared.focusService',
+    'shared.stringUtilities',
+    'options',
+    'close',
+function (
+    $scope,
+    LoadState,
+    documentService,
+    SearchQuery,
+    focusService,
+    stringUtilities,
+    options,
+    close) {
+    
+    var vm = $scope;
+    init();
+    
+    /* INIT */
+    function init() {
+        angular.extend($scope, options);
+
+        initData();
+
+        vm.onUpload = onUpload;
+        vm.onCancel = onCancel;
+        vm.close = onCancel;
+        vm.filter = options.filter;
+        vm.onFileChanged = onFileChanged;
+        vm.hasFilterRestrictions = hasFilterRestrictions;
+
+        vm.saveLoadState = new LoadState();
+    }
+
+    /* EVENTS */
+    function onUpload() {
+        vm.saveLoadState.on();
+
+        documentService
+            .add(vm.command)
+            .progress(vm.saveLoadState.setProgress)
+            .then(uploadComplete);
+    }
+
+    function onFileChanged() {
+        var command = vm.command;
+
+        if (command.file && command.file.name) {
+            command.title = stringUtilities.capitaliseFirstLetter(stringUtilities.getFileNameWithoutExtension(command.file.name));
+            command.fileName = stringUtilities.slugify(command.title);
+            focusService.focusById('title');
+        }
+    }
+
+    function onCancel() {
+        close();
+    }
+
+    /* PUBLIC HELPERS */
+    function initData() {
+        vm.command = {};
+    }
+
+    function hasFilterRestrictions() {
+        return options.filter.fileExtension ||
+            options.filter.fileExtensions;
+    }
+
+    function cancel() {
+        close();
+    }
+
+    function uploadComplete(documentAssetId) {
+        options.onUploadComplete(documentAssetId);
+        close();
+    }
+
+}]);
+
 angular.module('cms.shared').controller('ImageAssetEditorDialogController', [
     '$scope',
     'shared.LoadState',
@@ -9179,6 +9489,11 @@ angular.module('cms.shared').directive('cmsFormFieldImageAsset', [
                  */
                 function setAssetById(assetId) {
 
+                    // Remove the id if it is 0 or invalid to make sure required validation works
+                    if (!assetId) {
+                        vm.model = assetId = undefined;
+                    }
+
                     if (assetId && (!vm.previewAsset || vm.previewAsset.imageAssetId != assetId)) {
                         imageService.getById(assetId).then(function (asset) {
                             if (asset) {
@@ -9330,7 +9645,6 @@ function (
                 controller: 'ImageAssetPickerDialogController',
                 options: {
                     selectedIds: vm.model || [],
-                    customEntityDefinition: vm.customEntityDefinition,
                     filter: getFilter(),
                     onSelected: onSelected
                 }
@@ -9509,6 +9823,7 @@ function (
 
         vm.filter = vm.query.getFilters();
         vm.toggleFilter = toggleFilter;
+
         vm.isSelected = isSelected;
         vm.multiMode = vm.selectedIds ? true : false;
         vm.okText = vm.multiMode ? 'Ok' : 'Select';

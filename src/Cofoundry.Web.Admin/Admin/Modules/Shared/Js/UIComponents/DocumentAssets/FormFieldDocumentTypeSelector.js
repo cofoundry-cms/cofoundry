@@ -12,14 +12,13 @@ function (
         templateUrl: modulePath + 'UIComponents/DocumentAssets/FormFieldDocumentTypeSelector.html',
         scope: {
             model: '=cmsModel',
+            disabled: '=cmsDisabled',
             onLoaded: '&cmsOnLoaded'
         },
         controller: Controller,
         controllerAs: 'vm',
         bindToController: true
     };
-
-    /* COMPILE */
 
     /* CONTROLLER */
 

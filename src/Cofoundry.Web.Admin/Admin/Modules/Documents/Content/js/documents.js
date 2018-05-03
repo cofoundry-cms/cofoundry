@@ -27,31 +27,13 @@ angular.module('cms.documents').factory('documents.documentService', [
         
     /* COMMANDS */
 
-    service.add = function (command) {
-
-        return uploadFile(service.getBaseRoute(), command, 'POST');
-    }
-
     service.update = function (command) {
-        return uploadFile(service.getIdRoute(command.documentAssetId), command, 'PUT');
+        return service.uploadFile(service.getIdRoute(command.documentAssetId), command, 'PUT');
     }
 
     service.remove = function (id) {
         
         return $http.delete(service.getIdRoute(id));
-    }
-
-    /* PRIVATES */
-
-    function uploadFile(path, command, method) {
-        var data = _.omit(command, 'file');
-
-        return $upload.upload({
-            url: path,
-            data: data,
-            file: command.file,
-            method: method
-        });
     }
 
     return service;

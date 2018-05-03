@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Cofoundry.Domain;
 using Cofoundry.Domain.CQS;
 using Microsoft.AspNetCore.Http;
+using Cofoundry.Core;
 
 namespace Cofoundry.Web.Admin
 {
@@ -42,8 +43,17 @@ namespace Cofoundry.Web.Admin
         #region queries
 
         [HttpGet]
-        public async Task<IActionResult> Get([FromQuery] SearchDocumentAssetSummariesQuery query)
+        public async Task<IActionResult> Get(
+            [FromQuery] SearchDocumentAssetSummariesQuery query, 
+            [FromQuery] GetDocumentAssetRenderDetailsByIdRangeQuery rangeQuery
+            )
         {
+            if (rangeQuery != null && rangeQuery.DocumentAssetIds != null)
+            {
+                var rangeResults = await _queryExecutor.ExecuteAsync(rangeQuery);
+                return _apiResponseHelper.SimpleQueryResponse(this, rangeResults.FilterAndOrderByKeys(rangeQuery.DocumentAssetIds));
+            }
+
             if (query == null) query = new SearchDocumentAssetSummariesQuery();
 
             var results = await _queryExecutor.ExecuteAsync(query);

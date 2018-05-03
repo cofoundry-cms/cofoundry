@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc.ModelBinding.Metadata;
 using System.Reflection;
+using System.ComponentModel.DataAnnotations;
 
 namespace Cofoundry.Domain
 {
@@ -12,7 +13,7 @@ namespace Cofoundry.Domain
     /// parameters allow you to restricts the file extensions permitted to be selected.
     /// </summary>
     [AttributeUsage(AttributeTargets.Property)]
-    public class DocumentAttribute : Attribute, IMetadataAttribute
+    public class DocumentAttribute : RegularExpressionAttribute, IMetadataAttribute
     {
         #region constructors
 
@@ -26,7 +27,9 @@ namespace Cofoundry.Domain
         /// </summary>
         /// <param name="tags">An array of tags for which to filter when browsing for this document</param>
         public DocumentAttribute(params string[] tags)
+            : base(@"^[1-9]\d*$")
         {
+            ErrorMessage = "The {0} field is required";
             Tags = tags ?? new string[0];
         }
 
@@ -38,15 +41,8 @@ namespace Cofoundry.Domain
         {
             var modelMetaData = context.DisplayMetadata;
 
-            modelMetaData.AddAdditionalValueIfNotEmpty("Tags", Tags);
-            if (FileExtensions != null && FileExtensions.Length == 1)
-            {
-                modelMetaData.AddAdditionalValueIfNotEmpty("FileExtension", FileExtensions.First());
-            }
-            else if (FileExtensions != null)
-            {
-                modelMetaData.AddAdditionalValueIfNotEmpty("FileExtensions", string.Join(", ", FileExtensions));
-            }
+            DocumentAttributeMetaDataHelper.AddFilterData(modelMetaData, FileExtensions, Tags);
+
             modelMetaData.TemplateHint = "DocumentAsset";
         }
 

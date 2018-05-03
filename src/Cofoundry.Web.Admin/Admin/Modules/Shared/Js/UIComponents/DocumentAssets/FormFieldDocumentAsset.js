@@ -90,6 +90,11 @@ function (
          */
         function setAssetById(assetId) {
 
+            // Remove the id if it is 0 or invalid to make sure required validation works
+            if (!assetId) {
+                vm.model = assetId = undefined;
+            }
+
             if (assetId && (!vm.previewAsset || vm.previewAsset.documentAssetId != assetId)) {
                 documentService.getById(assetId).then(function (asset) {
                     setAsset(asset);

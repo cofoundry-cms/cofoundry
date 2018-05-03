@@ -10,30 +10,34 @@
                    ng-model="vm.model"
                    ng-change="vm.onChange()" />
 
-            <div ng-if="vm.previewAsset">
-                <cms-document-asset cms-document="vm.previewAsset"></cms-document-asset>
-            </div>
-            <div ng-if="!vm.previewAsset">None</div>
+            <div>
 
-            <div ng-hide="!vm.formScope.editMode">
-                <cms-button-icon cms-href="/admin/documents#/{{vm.previewAsset.documentAssetId}}"
-                                 cms-external="true"
-                                 cms-title="Edit document"
-                                 cms-icon="external-link"
-                                 ng-disabled="vm.loadState.isLoading || vm.disabled"
-                                 ng-if="vm.previewAsset">
-                </cms-button-icon>
-                <cms-button-icon cms-title="{{vm.buttonText}}"
-                                 cms-icon="cog"
-                                 ng-click="vm.showPicker()"
-                                 ng-disabled="vm.loadState.isLoading || vm.disabled">
-                </cms-button-icon>
-                <cms-button-icon cms-title="Remove"
-                                 cms-icon="trash-o"
-                                 ng-if="vm.isRemovable"
-                                 ng-click="vm.remove()"
-                                 ng-disabled="vm.loadState.isLoading || vm.disabled">
-                </cms-button-icon>
+                <span ng-if="vm.previewAsset">
+                    <cms-document-asset cms-document="vm.previewAsset"></cms-document-asset>
+                </span>
+
+                <span ng-if="!vm.previewAsset">None</span>
+
+                <span ng-hide="!vm.formScope.editMode">
+                    <cms-button-icon cms-href="/admin/documents#/{{vm.previewAsset.documentAssetId}}"
+                                     cms-external="true"
+                                     cms-title="Edit document"
+                                     cms-icon="external-link"
+                                     ng-disabled="vm.loadState.isLoading || vm.disabled"
+                                     ng-if="vm.previewAsset">
+                    </cms-button-icon>
+                    <cms-button-icon cms-title="{{vm.buttonText}}"
+                                     cms-icon="cog"
+                                     ng-click="vm.showPicker()"
+                                     ng-disabled="vm.loadState.isLoading || vm.disabled">
+                    </cms-button-icon>
+                    <cms-button-icon cms-title="Remove"
+                                     cms-icon="trash-o"
+                                     ng-if="vm.isRemovable"
+                                     ng-click="vm.remove()"
+                                     ng-disabled="vm.loadState.isLoading || vm.disabled">
+                    </cms-button-icon>
+                </span>
             </div>
 
             <cms-form-field-validation-summary></cms-form-field-validation-summary>

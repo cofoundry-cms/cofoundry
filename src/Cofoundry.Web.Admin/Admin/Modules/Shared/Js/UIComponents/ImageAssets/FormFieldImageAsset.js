@@ -102,6 +102,11 @@ angular.module('cms.shared').directive('cmsFormFieldImageAsset', [
                  */
                 function setAssetById(assetId) {
 
+                    // Remove the id if it is 0 or invalid to make sure required validation works
+                    if (!assetId) {
+                        vm.model = assetId = undefined;
+                    }
+
                     if (assetId && (!vm.previewAsset || vm.previewAsset.imageAssetId != assetId)) {
                         imageService.getById(assetId).then(function (asset) {
                             if (asset) {
