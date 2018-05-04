@@ -13,6 +13,7 @@ namespace Cofoundry.Web
                 .RegisterAll<IMvcOptionsConfiguration>()
                 .RegisterAll<IRazorViewEngineOptionsConfiguration>()
                 .Register<IStaticFileOptionsConfiguration, DefaultStaticFileOptionsConfiguration>()
+                .Register<IAuthConfiguration, DefaultAuthConfiguration>()
             ;
         }
     }

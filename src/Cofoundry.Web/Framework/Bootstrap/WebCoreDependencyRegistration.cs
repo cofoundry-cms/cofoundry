@@ -25,6 +25,7 @@ namespace Cofoundry.Web
                 .Register<IJavascriptViewHelper, JavascriptViewHelper>()
                 .Register<ICofoundryHtmlHelper, CofoundryHtmlHelper>()
                 .Register<IUserSessionService, UserSessionService>(RegistrationOptions.Scoped())
+                .Register<IAuthCookieNamespaceProvider, AuthCookieNamespaceProvider>()
 
                 .Register<IPageViewModelMapper, PageViewModelMapper>()
                 .Register<IPageViewModelFactory, PageViewModelFactory>()

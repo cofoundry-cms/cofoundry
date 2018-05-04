@@ -23,25 +23,19 @@ namespace Cofoundry.Web
         private readonly IEnumerable<IMvcJsonOptionsConfiguration> _mvcJsonOptionsConfigurations;
         private readonly IEnumerable<IMvcOptionsConfiguration> _mvcOptionsConfigurations;
         private readonly IEnumerable<IRazorViewEngineOptionsConfiguration> _razorViewEngineOptionsConfigurations;
-        private readonly IUserAreaDefinitionRepository _userAreaDefinitionRepository;
-        private readonly IHostingEnvironment _hostingEnvironment;
-        private readonly AuthenticationSettings _authenticationSettings;
+        private readonly IAuthConfiguration _authConfiguration;
 
         public CofoundryStartupServiceConfigurationTask(
             IEnumerable<IMvcJsonOptionsConfiguration> mvcJsonOptionsConfigurations,
             IEnumerable<IMvcOptionsConfiguration> mvcOptionsConfigurations,
             IEnumerable<IRazorViewEngineOptionsConfiguration> razorViewEngineOptionsConfigurations,
-            IUserAreaDefinitionRepository userAreaDefinitionRepository,
-            IHostingEnvironment hostingEnvironment,
-            AuthenticationSettings authenticationSettings
+            IAuthConfiguration authConfiguration
             )
         {
             _mvcJsonOptionsConfigurations = mvcJsonOptionsConfigurations;
             _mvcOptionsConfigurations = mvcOptionsConfigurations;
             _razorViewEngineOptionsConfigurations = razorViewEngineOptionsConfigurations;
-            _userAreaDefinitionRepository = userAreaDefinitionRepository;
-            _hostingEnvironment = hostingEnvironment;
-            _authenticationSettings = authenticationSettings;
+            _authConfiguration = authConfiguration;
         }
 
         /// <summary>
@@ -51,7 +45,7 @@ namespace Cofoundry.Web
         /// <param name="mvcBuilder">IMvcBuilder to configure.</param>
         public void ConfigureServices(IMvcBuilder mvcBuilder)
         {
-            ConfigureAuth(mvcBuilder);
+            _authConfiguration.Configure(mvcBuilder);
 
             foreach (var config in EnumerableHelper
                 .Enumerate(_mvcJsonOptionsConfigurations)
@@ -71,63 +65,6 @@ namespace Cofoundry.Web
             {
                 mvcBuilder.Services.Configure<RazorViewEngineOptions>(o => config.Configure(o));
             }
-        }
-
-        private void ConfigureAuth(IMvcBuilder mvcBuilder)
-        {
-            var services = mvcBuilder.Services;
-            var allUserAreas = _userAreaDefinitionRepository.GetAll();
-
-            // Set default schema as specified in config, falling back to CofoundryAdminUserArea
-            // Since any additional areas are configured by the implementor there shouldn't be multiple
-            // unless the developer has misconfigured their areas.
-            var defaultSchemaCode = allUserAreas
-                .OrderByDescending(u => u.IsDefaultAuthSchema)
-                .ThenByDescending(u => u is CofoundryAdminUserArea)
-                .ThenBy(u => u.Name)
-                .Select(u => u.UserAreaCode)
-                .First();
-
-            var defaultScheme = CofoundryAuthenticationConstants.FormatAuthenticationScheme(defaultSchemaCode);
-
-            var authBuilder = mvcBuilder.Services.AddAuthentication(defaultScheme);
-
-            foreach (var userAreaDefinition in allUserAreas)
-            {
-                var scheme = CofoundryAuthenticationConstants.FormatAuthenticationScheme(userAreaDefinition.UserAreaCode);
-
-                authBuilder
-                    .AddCookie(scheme, cookieOptions =>
-                    {
-                        cookieOptions.Cookie.Name = GetCookieNamespace() + userAreaDefinition.UserAreaCode;
-                        cookieOptions.Cookie.HttpOnly = true;
-
-                        if (!string.IsNullOrWhiteSpace(userAreaDefinition.LoginPath))
-                        {
-                            cookieOptions.LoginPath = userAreaDefinition.LoginPath;
-                        }
-                    });
-            }
-        }
-
-        private string GetCookieNamespace()
-        {
-            if (!string.IsNullOrWhiteSpace(_authenticationSettings.CookieNamespace))
-            {
-                return _authenticationSettings.CookieNamespace;
-            }
-
-            // Try and build a short and somewhat unique name using the 
-            // application name, which should suffice for most scenarios. 
-
-            var appName = _hostingEnvironment.ApplicationName;
-
-            var reasonablyUniqueName = appName
-                .Take(3)
-                .Union(appName.Reverse())
-                .Take(6);
-
-            return "CFA_" + string.Concat(reasonablyUniqueName);
         }
     }
 }
