@@ -3436,7 +3436,7 @@ input[type="color"] {
 
 /* line 39, ../../Js/UIComponents/FormFields/_formfields.scss */
 .text-area-display-value {
-  white-space: pre;
+  white-space: pre-line;
 }
 
 /* line 43, ../../Js/UIComponents/FormFields/_formfields.scss */
