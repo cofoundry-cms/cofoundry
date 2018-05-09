@@ -111,7 +111,7 @@
             <cms-form-section cms-title="Template: {{page.pageRoute.title}}">
                 <cms-form-section-actions>
                     <cms-button-link cms-text="Manage in Visual Editor"
-                                     ng-if="::vm.canUpdate"
+                                     ng-if="::vm.canUpdate && page.regions.length"
                                      cms-icon="eye-open"
                                      ng-show="!vm.editMode"
                                      cms-href="{{vm.urlLibrary.customEntityVisualEditor(page, true)}}"></cms-button-link>

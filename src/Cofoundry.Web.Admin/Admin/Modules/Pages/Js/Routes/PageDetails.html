@@ -139,7 +139,7 @@
 
             <cms-form-section-actions>
                 <cms-button-link cms-text="Manage in Visual Editor"
-                    ng-if="::vm.canUpdate"
+                    ng-if="::vm.canUpdate && vm.page.latestVersion.regions.length"
                     cms-icon="eye-open"
                     ng-show="!vm.editMode"
                     cms-href="{{vm.urlLibrary.pageVisualEditor(vm.page.pageRoute, true)}}"></cms-button-link>
