@@ -31,7 +31,7 @@ namespace Cofoundry.Domain
         {
             var result = new OpenGraphData()
             {
-                Description = dbPageVersion.MetaDescription,
+                Description = dbPageVersion.OpenGraphDescription,
                 Title = dbPageVersion.OpenGraphTitle
             };
 
