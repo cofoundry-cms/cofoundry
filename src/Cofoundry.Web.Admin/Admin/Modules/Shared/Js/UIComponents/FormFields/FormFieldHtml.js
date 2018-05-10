@@ -150,7 +150,7 @@ function (
             buttonConfig = {
                 headings: 'formatselect',
                 basicFormatting: 'fullscreen undo redo | bold italic underline | link unlink',
-                advancedFormatting: 'bullist numlist blockquote | alignleft aligncenter alignright alignjustify',
+                advancedFormatting: 'bullist numlist blockquote | alignleft aligncenter alignright alignjustify | strikethrough superscript subscript',
                 media: 'cfimage media',
                 source: 'code removeformat',
             }, toolbars = [];

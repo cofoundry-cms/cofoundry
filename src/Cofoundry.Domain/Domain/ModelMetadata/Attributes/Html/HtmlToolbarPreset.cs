@@ -23,7 +23,7 @@ namespace Cofoundry.Domain
         BasicFormatting,
 
         /// <summary>
-        /// Toolbar items for alignment, blockquote & lists
+        /// Toolbar items for alignment, blockquote & lists, strikethrough and superscript/subscript.
         /// </summary>
         AdvancedFormatting,
 
