@@ -234,7 +234,7 @@ namespace Cofoundry.Web
                     blocksHtml = string.Join(string.Empty, blockHtmlParts);
                 }
             }
-            else if (!_allowMultipleBlocks)
+            else if (!_allowMultipleBlocks && _pageViewModel.IsPageEditMode)
             {
                 // If there are no blocks and this is a single block region
                 // add a placeholder element so we always have a menu
