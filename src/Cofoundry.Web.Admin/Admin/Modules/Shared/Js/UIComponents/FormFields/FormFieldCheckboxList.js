@@ -57,11 +57,6 @@ function (
 
                     bindOptions(vm.options);
                     updateDisplayValues();
-
-                    if (vm.options) {
-                        // remove watch
-                        optionsWatch();
-                    }
                 });
             }
 

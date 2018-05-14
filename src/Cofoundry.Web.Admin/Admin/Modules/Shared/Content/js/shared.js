@@ -8425,11 +8425,6 @@ function (
 
                     bindOptions(vm.options);
                     updateDisplayValues();
-
-                    if (vm.options) {
-                        // remove watch
-                        optionsWatch();
-                    }
                 });
             }
 
@@ -8635,11 +8630,6 @@ function (
                     vm.listOptions = vm.options;
 
                     bindDisplayValue();
-
-                    if (vm.options) {
-                        // remove watch
-                        optionsWatch();
-                    }
                 });
             }
 
@@ -9122,11 +9112,6 @@ function (
                     vm.listOptions = vm.options;
 
                     bindDisplayValue();
-
-                    if (vm.options) {
-                        // remove watch
-                        optionsWatch();
-                    }
                 });
             }
 
