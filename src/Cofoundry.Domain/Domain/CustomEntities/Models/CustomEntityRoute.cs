@@ -45,6 +45,12 @@ namespace Cofoundry.Domain
         /// The date after which the custom entity can be shown on the live site.
         /// </summary>
         public DateTime? PublishDate { get; set; }
+        
+        /// <summary>
+        /// Optional ordering value applied to the custom entity 
+        /// in relation to other custom entities with the same definition.
+        /// </summary>
+        public int? Ordering { get; set; }
 
         /// <summary>
         /// Routing information particular to specific versions.

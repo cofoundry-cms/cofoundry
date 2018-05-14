@@ -16,12 +16,27 @@ namespace Cofoundry.Domain.Data
         /// </summary>
         public int CustomEntityId { get; set; }
 
+        /// <summary>
+        /// Unique 6 letter code representing the type of custom entity.
+        /// </summary>
         public string CustomEntityDefinitionCode { get; set; }
 
+        /// <summary>
+        /// The unique string identifier slug which can
+        /// be used in the routing of the custom entity page.
+        /// </summary>
         public string UrlSlug { get; set; }
 
+        /// <summary>
+        /// Optional locale id assigned to the custom entity
+        /// if used in a localized site.
+        /// </summary>
         public int? LocaleId { get; set; }
 
+        /// <summary>
+        /// Optional ordering value applied to the custom entity 
+        /// in relation to other custom entities with the same definition.
+        /// </summary>
         public int? Ordering { get; set; }
 
         /// <summary>
@@ -34,8 +49,15 @@ namespace Cofoundry.Domain.Data
         /// </summary>
         public DateTime? PublishDate { get; set; }
 
+        /// <summary>
+        /// Definition representing the type of custom entity.
+        /// </summary>
         public virtual CustomEntityDefinition CustomEntityDefinition { get; set; }
 
+        /// <summary>
+        /// Optional locale assigned to the custom entity
+        /// if used in a localized site.
+        /// </summary>
         public virtual Locale Locale { get; set; }
 
         public virtual ICollection<CustomEntityVersion> CustomEntityVersions { get; set; }
