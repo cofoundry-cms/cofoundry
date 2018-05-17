@@ -146,6 +146,7 @@ namespace Cofoundry.Web.Admin
             // Self referencing loop error. Rather than set this globally we ignore this specifically here
             var settings = _jsonSerializerSettingsFactory.Create();
             settings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
+            settings.StringEscapeHandling = StringEscapeHandling.EscapeHtml;
 
             bool isCustomEntityRoute = pageResponseData.Version is CustomEntityVersionRoute;
             bool hasEntityUpdatePermission = false;
