@@ -157,17 +157,17 @@ namespace Cofoundry.Web
 
         private async Task<string> RenderViewAsync(ViewContext viewContext, ViewEngineResult viewResult, object model)
         {
-            var viewDictionary = new ViewDataDictionary(new EmptyModelMetadataProvider(), new ModelStateDictionary())
-            {
-                Model = model
-            };
+            var view = viewResult.View;
+
+            var viewData = new ViewDataDictionary<object>(viewContext.ViewData, model);
 
             using (var sw = new StringWriter())
+            using (view as IDisposable)
             {
                 var componentViewContext = new ViewContext(
                     viewContext,
-                    viewResult.View,
-                    viewDictionary,
+                    view,
+                    viewData,
                     sw
                 );
 
