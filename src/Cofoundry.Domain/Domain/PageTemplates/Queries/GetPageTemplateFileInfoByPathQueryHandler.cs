@@ -22,10 +22,8 @@ namespace Cofoundry.Domain
         const string CUSTOM_ENTITY_REGION_FUNC = ".Template.CustomEntityRegion";
         const string TEMPLATE_DESCRIPTION_FUNC = ".Template.UseDescription";
 
-        const string PARTIAL_FUNC = "Html.Partial";
-        const string RENDER_PARTIAL_FUNC = "Html.RenderPartial";
-
         const string REGEX_REMOVE_METHOD_WHITEPSPACE = @"(\w+\s*\.Template+\s*\.[A-Za-z]*Region\()";
+        const string PARTIAL_NAME_REGEX = "Html.(?:Render)?Partial(?:Async)?\\(\"([^\"]+)\"";
 
         private readonly IQueryExecutor _queryExecutor;
         private readonly IPageTemplateViewFileLocator _viewLocator;
@@ -103,17 +101,20 @@ namespace Cofoundry.Domain
                         var regionName = ParseFunctionParameter(line, CUSTOM_ENTITY_REGION_FUNC);
                         regions.Add(new PageTemplateFileRegion() { Name = regionName, IsCustomEntityRegion = true });
                     }
-                    else if (line.Contains(PARTIAL_FUNC))
-                    {
-                        regions.AddRange(await ParsePartialView(line, PARTIAL_FUNC, executionContext));
-                    }
-                    else if (line.Contains(RENDER_PARTIAL_FUNC))
-                    {
-                        regions.AddRange(await ParsePartialView(line, RENDER_PARTIAL_FUNC, executionContext));
-                    }
                     else if (line.Contains(TEMPLATE_DESCRIPTION_FUNC + FUNC_OPENER))
                     {
                         pageTemplateFileInfo.Description = ParseFunctionParameter(line, TEMPLATE_DESCRIPTION_FUNC);
+                    }
+                    else
+                    {
+                        var partialMatch = Regex.Match(line, PARTIAL_NAME_REGEX);
+
+                        if (partialMatch.Success)
+                        {
+                            var partialName = partialMatch.Groups[1].Value;
+                            var partialRegions = await ParsePartialView(partialName, executionContext);
+                            regions.AddRange(partialRegions);
+                        }
                     }
                 }
             }
@@ -167,9 +168,8 @@ namespace Cofoundry.Domain
             }
         }
 
-        private async Task<IEnumerable<PageTemplateFileRegion>> ParsePartialView(string textLine, string partialFuncName, IExecutionContext executionContext)
+        private async Task<IEnumerable<PageTemplateFileRegion>> ParsePartialView(string partialName, IExecutionContext executionContext)
         {
-            var partialName = ParseFunctionParameter(textLine, partialFuncName);
             var partialPath = _viewLocator.ResolvePageTemplatePartialViewPath(partialName);
 
             Debug.Assert(!string.IsNullOrEmpty(partialPath), "Partial View file not found: " + partialName);
