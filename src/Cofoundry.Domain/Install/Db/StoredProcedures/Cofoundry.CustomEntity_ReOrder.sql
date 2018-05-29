@@ -47,7 +47,7 @@ begin
 	select c.CustomEntityId
 	from Cofoundry.CustomEntity c
 	left outer join @OrderedEntities oe on c.CustomEntityId = oe.CustomEntityId
-	where @CustomEntityDefinitionCode = @CustomEntityDefinitionCode 
+	where CustomEntityDefinitionCode = @CustomEntityDefinitionCode 
 		  and oe.CustomEntityId is null
 		  and c.Ordering is not null
 		  and (@LocaleId is null or c.LocaleId = @LocaleId)
