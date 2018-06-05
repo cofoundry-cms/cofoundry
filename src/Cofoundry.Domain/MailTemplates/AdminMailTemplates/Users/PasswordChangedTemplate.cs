@@ -12,13 +12,20 @@ namespace Cofoundry.Domain.MailTemplates
     {
         public PasswordChangedTemplate()
         {
-            Subject = "Cofoundry: Password changed";
+            SubjectFormat = "{0}: Password changed";
             ViewFile = TemplatePath.ViewPath + "Users/PasswordChanged";
         }
 
         public string ViewFile { get; set; }
 
-        public string Subject { get; set; }
+        public string Subject
+        {
+            get { return string.Format(SubjectFormat, ApplicationName); }
+        }
+
+        public string SubjectFormat { get; set; }
+
+        public string ApplicationName { get; set; }
 
         public string FirstName { get; set; }
 

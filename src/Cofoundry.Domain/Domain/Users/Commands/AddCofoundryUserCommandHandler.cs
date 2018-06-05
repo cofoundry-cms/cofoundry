@@ -23,18 +23,21 @@ namespace Cofoundry.Domain
         private readonly IPasswordCryptographyService _passwordCryptographyService;
         private readonly IPasswordGenerationService _passwordGenerationService;
         private readonly IMailService _mailService;
+        private readonly IQueryExecutor _queryExecutor;
 
         public AddCofoundryUserCommandHandler(
             ICommandExecutor commandExecutor,
             IPasswordCryptographyService passwordCryptographyService,
             IPasswordGenerationService passwordGenerationService,
-            IMailService mailService
+            IMailService mailService,
+            IQueryExecutor queryExecutor
             )
         {
             _commandExecutor = commandExecutor;
             _passwordCryptographyService = passwordCryptographyService;
             _passwordGenerationService = passwordGenerationService;
             _mailService = mailService;
+            _queryExecutor = queryExecutor;
         }
 
         #endregion
@@ -46,7 +49,9 @@ namespace Cofoundry.Domain
             var newUserCommand = MapCommand(command, executionContext);
             await _commandExecutor.ExecuteAsync(newUserCommand, executionContext);
 
-            var emailTemplate = MapEmailTemplate(newUserCommand);
+            var siteSettingsQuery = new GetSettingsQuery<GeneralSiteSettings>();
+            var siteSettings = await _queryExecutor.ExecuteAsync(siteSettingsQuery);
+            var emailTemplate = MapEmailTemplate(newUserCommand, siteSettings);
             await _mailService.SendAsync(newUserCommand.Email, GetDisplayName(newUserCommand), emailTemplate);
         }
 
@@ -68,12 +73,13 @@ namespace Cofoundry.Domain
             return newUserCommand;
         }
 
-        private NewUserWelcomeMailTemplate MapEmailTemplate(AddUserCommand user)
+        private NewUserWelcomeMailTemplate MapEmailTemplate(AddUserCommand user, GeneralSiteSettings siteSettings)
         {
             var template = new NewUserWelcomeMailTemplate();
             template.FirstName = user.FirstName;
             template.LastName = user.LastName;
             template.TemporaryPassword = new HtmlString(user.Password);
+            template.ApplicationName = siteSettings.ApplicationName;
 
             return template;
         }

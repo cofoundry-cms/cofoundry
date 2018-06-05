@@ -140,6 +140,9 @@ namespace Cofoundry.Web.Admin
         public async Task<ViewResult> ForgotPassword(ForgotPasswordViewModel command)
         {
             var template = new ResetPasswordTemplate();
+            var settings = await _queryExecutor.ExecuteAsync(new GetSettingsQuery<GeneralSiteSettings>());
+            template.ApplicationName = settings.ApplicationName;
+
             await _authenticationHelper.SendPasswordResetNotificationAsync(this, command, template, new CofoundryAdminUserArea());
 
             var viewPath = ViewPathFormatter.View(CONTROLLER_NAME, nameof(ForgotPassword));
@@ -176,7 +179,11 @@ namespace Cofoundry.Web.Admin
             var user = await _userContextService.GetCurrentContextAsync();
             if (user.IsCofoundryUser()) return await GetLoggedInDefaultRedirectActionAsync();
 
-            await _authenticationHelper.CompletePasswordResetAsync(this, vm, new PasswordChangedTemplate(), USER_AREA);
+            var template = new PasswordChangedTemplate();
+            var settings = await _queryExecutor.ExecuteAsync(new GetSettingsQuery<GeneralSiteSettings>());
+            template.ApplicationName = settings.ApplicationName;
+
+            await _authenticationHelper.CompletePasswordResetAsync(this, vm, template, USER_AREA);
 
             if (ModelState.IsValid)
             {

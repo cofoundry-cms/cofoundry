@@ -8,20 +8,27 @@ namespace Cofoundry.Domain.MailTemplates
 {
     public class NewUserWelcomeMailTemplate : IMailTemplate
     {
-        public string ViewFile
+        public NewUserWelcomeMailTemplate()
         {
-            get { return TemplatePath.ViewPath + "Users/NewUserWelcomeMail"; }
+            ViewFile = TemplatePath.ViewPath + "Users/NewUserWelcomeMail";
+            SubjectFormat = "{0}: Your account has been created";
         }
+
+        public string ViewFile { get; set; }
 
         public string Subject
         {
-            get { return "Welcome to Cofoundry"; }
+            get { return string.Format(SubjectFormat, ApplicationName); }
         }
 
         #region custom properties
 
-        public string FirstName { get; set; }
+        public string SubjectFormat { get; set; }
 
+        public string ApplicationName { get; set; }
+
+        public string FirstName { get; set; }
+        
         public string LastName { get; set; }
 
         public HtmlString TemporaryPassword { get; set; }
