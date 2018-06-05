@@ -81,7 +81,7 @@
                         <span ng-if="!entity.isPublished && entity.publishStatus == 'Published'">Scheduled</span>
                         <span ng-if="entity.publishStatus == 'Unpublished'">Unpublished</span>
                         <br />
-                        <a href="{{ entity.fullPath }}" ng-if="entity.hasDraft">(Pending Draft)</a>
+                        <a href="{{ entity.fullPath }}" ng-if="entity.hasDraft && entity.fullPath">(Pending Draft)</a>
                     </td>
                     <td ng-if="::!vm.options.autoPublish">
                         <span ng-if="::entity.publishDate"
