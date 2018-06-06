@@ -10,8 +10,8 @@ using Microsoft.AspNetCore.Mvc.ModelBinding.Metadata;
 namespace Cofoundry.Domain
 {
     /// <summary>
-    /// Use this to decorate an integer array of AssetIds and indicate that it should be a collection 
-    /// of assets. The editor allows for sorting of linked assets and you can set filters for restricting image sizes.
+    /// Use this to decorate an integer array of ImageAssetIds and indicate that it should be a collection 
+    /// of image assets. The editor allows for sorting of linked image assets and you can set filters for restricting image sizes.
     /// </summary>
     [AttributeUsage(AttributeTargets.Property)]
     public class ImageCollectionAttribute : Attribute, IMetadataAttribute

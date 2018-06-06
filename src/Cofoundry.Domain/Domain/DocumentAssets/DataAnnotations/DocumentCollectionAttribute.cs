@@ -10,8 +10,8 @@ using Microsoft.AspNetCore.Mvc.ModelBinding.Metadata;
 namespace Cofoundry.Domain
 {
     /// <summary>
-    /// Use this to decorate an integer collection of AssetIds and indicate that it should be a collection 
-    /// of assets. The editor allows for sorting of linked assets and you can set filters for restricting file types.
+    /// Use this to decorate an integer collection of DocumentAssetIds and indicate that it should be a collection 
+    /// of document assets. The editor allows for sorting of linked document assets and you can set filters for restricting file types.
     /// </summary>
     [AttributeUsage(AttributeTargets.Property)]
     public class DocumentCollectionAttribute : Attribute, IMetadataAttribute
