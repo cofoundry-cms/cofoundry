@@ -9,13 +9,20 @@ namespace Cofoundry.Domain.MailTemplates
     {
         public ResetPasswordTemplate()
         {
-            Subject = "Cofoundry: Your new password";
+            SubjectFormat = "{0}: Password reset request";
             ViewFile = TemplatePath.ViewPath + "Users/ResetPassword";
         }
 
         public string ViewFile { get; set; }
 
-        public string Subject { get; set; }
+        public string Subject
+        {
+            get { return string.Format(SubjectFormat, ApplicationName); }
+        }
+
+        public string SubjectFormat { get; set; }
+
+        public string ApplicationName { get; set; }
 
         public string FirstName { get; set; }
 
