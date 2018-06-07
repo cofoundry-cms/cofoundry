@@ -87,7 +87,14 @@ function (
             .then(redirect);
 
         function redirect(customEntity) {
-            $window.location.href = urlLibrary.customEntityVisualEditor(customEntity, true);
+            var url = urlLibrary.customEntityVisualEditor(customEntity, true);
+
+            if (url) {
+                $window.location.href = url;
+            } else {
+                // url resolution failed
+                redirectToDetails(id);
+            }
         }
     }
 
