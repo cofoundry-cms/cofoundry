@@ -68,6 +68,12 @@ namespace Cofoundry.Web
                 new { assetId = @"\d+" });
 
             routes.MapRoute(
+                "Cofoundry_DocumentAsset_Download",
+                "assets/files/download/{assetId}_{fileName}.{extension}",
+                new { controller = "CofoundryAssets", action = "FileDownload" },
+                new { assetId = @"\d+" });
+
+            routes.MapRoute(
                 "Cofoundry_ErrorCode",
                 "cofoundryerror/errorcode/{statusCode}",
                 new { controller = "CofoundryError", action = "ErrorCode" },

@@ -10,6 +10,7 @@ using Cofoundry.Core.Web;
 using Microsoft.AspNetCore.Http;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
+using Microsoft.Net.Http.Headers;
 
 namespace Cofoundry.Web
 {
@@ -103,6 +104,37 @@ namespace Cofoundry.Web
         [ResponseCache(Duration = 60 * 60, Location = ResponseCacheLocation.Client)]
         public async Task<ActionResult> File(int assetId, string fileName, string extension)
         {
+            var file = await GetFile(assetId);
+
+            if (file == null)
+            {
+                return FileAssetNotFound("File not found");
+            }
+
+            // Set the filename header separately to force "inline" content 
+            // disposition even though a filename is specified.
+            var contentDisposition = new ContentDispositionHeaderValue("inline");
+            contentDisposition.SetHttpFileName(file.FileName);
+            Response.Headers[HeaderNames.ContentDisposition] = contentDisposition.ToString();
+
+            return File(file.ContentStream, file.ContentType);
+        }
+
+        [ResponseCache(Duration = 60 * 60, Location = ResponseCacheLocation.Client)]
+        public async Task<ActionResult> FileDownload(int assetId, string fileName, string extension)
+        {
+            var file = await GetFile(assetId);
+
+            if (file == null)
+            {
+                return FileAssetNotFound("File not found");
+            }
+
+            return File(file.ContentStream, file.ContentType, file.FileName);
+        }
+
+        private async Task<DocumentAssetFile> GetFile(int assetId)
+        {
             DocumentAssetFile file = null;
 
             try
@@ -116,12 +148,7 @@ namespace Cofoundry.Web
                 _logger.LogError(0, ex, "Document Asset exists, but has no file: {0}", assetId);
             }
 
-            if (file == null)
-            {
-                return FileAssetNotFound("File not found");
-            }
-
-            return File(file.ContentStream, file.ContentType, file.FileName);
+            return file;
         }
     }
 }

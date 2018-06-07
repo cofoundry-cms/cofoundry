@@ -15,5 +15,9 @@ namespace Cofoundry.Web
         [Required]
         [Document]
         public int DocumentAssetId { get; set; }
+
+        [Display(Description = "By default the document will display 'inline' in the browser, but you can change this behavior to instead force the browser to download the document.")]
+        [RadioList(typeof(DocumentDownloadMode))]
+        public DocumentDownloadMode DownloadMode { get; set; }
     }
 }

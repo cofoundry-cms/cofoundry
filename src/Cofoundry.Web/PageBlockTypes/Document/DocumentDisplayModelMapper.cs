@@ -46,7 +46,14 @@ namespace Cofoundry.Web
                 {
                     output.Description = document.Description;
                     output.Title = document.Title;
-                    output.Url = _documentAssetRouteLibrary.DocumentAsset(document);
+                    if (input.DataModel.DownloadMode == DocumentDownloadMode.ForceDownload)
+                    {
+                        output.Url = _documentAssetRouteLibrary.DocumentAssetDownload(document);
+                    }
+                    else
+                    {
+                        output.Url = _documentAssetRouteLibrary.DocumentAsset(document);
+                    }
                 }
 
                 results.Add(input.CreateOutput(output));

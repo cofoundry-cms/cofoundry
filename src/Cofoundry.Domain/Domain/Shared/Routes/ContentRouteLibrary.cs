@@ -115,7 +115,9 @@ namespace Cofoundry.Domain
         /// <summary>
         /// Simple but less efficient way of getting a document url if you only know 
         /// the id. Use the overload accepting an IDocumentAssetRenderable if possible to save a 
-        /// potential db query if the asset isn't cached.
+        /// potential db query if the asset isn't cached. This method generates a route
+        /// with a response that is set to display the docment in the browser using the 
+        /// "inline" content disposition.
         /// </summary>
         /// <param name="documentAssetId">Id of the document asset to get the url for</param>
         public Task<string> DocumentAssetAsync(int? documentAssetId)
@@ -124,12 +126,35 @@ namespace Cofoundry.Domain
         }
 
         /// <summary>
-        /// Gets the url for a document asset
+        /// Gets the url for a document asset that displays the docment in the 
+        /// browser using the "inline" content disposition.
         /// </summary>
         /// <param name="asset">asset to get the url for</param>
         public string DocumentAsset(IDocumentAssetRenderable asset)
         {
             return _documentAssetRouteLibrary.DocumentAsset(asset);
+        }
+
+        /// <summary>
+        /// Simple but less efficient way of getting a document url if you only know 
+        /// the id. Use the overload accepting an IDocumentAssetRenderable if possible to 
+        /// save a potential db query if the asset isn't cached. This method generates a route
+        /// with a response that is set to download using the "attachment" content disposition.
+        /// </summary>
+        /// <param name="documentAssetId">Id of the document asset to get the url for</param>
+        public Task<string> DocumentAssetDownloadAsync(int? documentAssetId)
+        {
+            return _documentAssetRouteLibrary.DocumentAssetDownloadAsync(documentAssetId);
+        }
+
+        /// <summary>
+        /// Gets the url for a document asset that is set to download using
+        /// the "attachment" content disposition.
+        /// </summary>
+        /// <param name="asset">asset to get the url for</param>
+        public string DocumentAssetDownload(IDocumentAssetRenderable asset)
+        {
+            return _documentAssetRouteLibrary.DocumentAssetDownload(asset);
         }
 
         #endregion

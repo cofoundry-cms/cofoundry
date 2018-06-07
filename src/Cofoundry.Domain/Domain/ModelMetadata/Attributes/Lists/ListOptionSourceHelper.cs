@@ -23,7 +23,7 @@ namespace Cofoundry.Domain
             {
                 options = Enum
                     .GetNames(optionSourceType)
-                    .Select(e => new ListOption(e, e))
+                    .Select(e => new ListOption(TextFormatter.PascalCaseToSentence(e), e))
                     .ToList();
             }
             else

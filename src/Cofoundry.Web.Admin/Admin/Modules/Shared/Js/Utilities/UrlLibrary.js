@@ -43,7 +43,7 @@ function (
         var url;
         if (!document) return;
 
-        url = '/assets/files/' + document.documentAssetId + '_' + document.fileName + '.' + document.fileExtension;
+        url = '/assets/files/download/' + document.documentAssetId + '_' + document.fileName + '.' + document.fileExtension;
 
         return url;
     }
