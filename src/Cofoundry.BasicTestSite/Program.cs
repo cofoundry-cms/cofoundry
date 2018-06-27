@@ -13,16 +13,15 @@ namespace Cofoundry.BasicTestSite
     {
         public static void Main(string[] args)
         {
-            BuildWebHost(args).Run();
+            CreateWebHostBuilder(args).Build().Run();
         }
 
-        public static IWebHost BuildWebHost(string[] args) => WebHost
+        public static IWebHostBuilder CreateWebHostBuilder(string[] args) => WebHost
             .CreateDefaultBuilder(args)
             .UseStartup<Startup>()
             .ConfigureAppConfiguration((hostContext, config) =>
             {
                 config.AddJsonFile("appsettings.local.json", optional: true);
-            })
-            .Build();
+            });
     }
 }

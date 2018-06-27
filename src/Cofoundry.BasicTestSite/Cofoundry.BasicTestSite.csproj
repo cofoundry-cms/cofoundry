@@ -1,13 +1,13 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp2.0</TargetFramework>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="AngleSharp" Version="0.9.9" />
-    <PackageReference Include="HtmlSanitizer" Version="4.0.181" />
-    
-    <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.0" />
+    <PackageReference Include="AngleSharp" Version="0.9.9.2" />
+    <PackageReference Include="HtmlSanitizer" Version="4.0.185" />
+
+    <PackageReference Include="Microsoft.AspNetCore.App" />
   </ItemGroup>
   
   <ItemGroup>
