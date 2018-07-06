@@ -18,7 +18,7 @@ namespace Cofoundry.Domain
         Headings,
 
         /// <summary>
-        /// Toolbar items for bold, italic, underline, links
+        /// Toolbar items for bold, italic, underline, links and clear formatting.
         /// </summary>
         BasicFormatting,
 

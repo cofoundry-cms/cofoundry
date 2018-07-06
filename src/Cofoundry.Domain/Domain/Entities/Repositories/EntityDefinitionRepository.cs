@@ -82,5 +82,10 @@ namespace Cofoundry.Domain
         {
             return _entityDefinitions.GetOrDefault(code);
         }
+
+        public IEnumerable<IEntityDefinition> GetAll()
+        {
+            return _entityDefinitions.Values;
+        }
     }
 }

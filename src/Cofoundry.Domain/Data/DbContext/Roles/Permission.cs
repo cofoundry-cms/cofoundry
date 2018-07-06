@@ -43,6 +43,11 @@ namespace Cofoundry.Domain.Data
         public virtual ICollection<RolePermission> RolePermissions { get; set; }
 
         /// <summary>
+        /// Optional entity definition this permission relates to.
+        /// </summary>
+        public virtual EntityDefinition EntityDefinition { get; set; }
+
+        /// <summary>
         /// Creates a unique code that represents this permission by combining the
         /// entity definition code and the permission code. This logic is replicated for
         /// IPermissions in IPermissionExtensions.GetUniqueCode

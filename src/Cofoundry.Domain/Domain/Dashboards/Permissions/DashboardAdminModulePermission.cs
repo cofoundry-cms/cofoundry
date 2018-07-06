@@ -8,6 +8,8 @@ namespace Cofoundry.Domain
 {
     public class DashboardAdminModulePermission : IPermission
     {
+        public const string PermissionTypeCode = "COFDSH";
+
         public DashboardAdminModulePermission()
         {
             PermissionType = new PermissionType("COFDSH", "Dashboard", "View the dashboard in the admin panel");

@@ -19,7 +19,11 @@ namespace Cofoundry.Domain
             return allPermissions
                 .FilterToWritePermissions()
                 .ExceptEntityPermissions<PageEntityDefinition>()
-                .Union(allPermissions.FilterToReadPermissions());
+                .Union(allPermissions.FilterToReadPermissions())
+                .Union(allPermissions
+                    .FilterToAdminModulePermissions()
+                    .ExceptEntityPermissions<PageEntityDefinition>())
+                ;
         }
     }
 

@@ -35,7 +35,7 @@ namespace Cofoundry.Domain.Data
 
             builder.HasOne(s => s.UserArea)
                 .WithMany()
-                .HasForeignKey(d => d.UserAreaCode);
+                .HasForeignKey(s => s.UserAreaCode);
         }
     }
 }

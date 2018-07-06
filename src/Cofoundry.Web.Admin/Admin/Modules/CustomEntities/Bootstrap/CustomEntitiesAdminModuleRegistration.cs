@@ -32,7 +32,8 @@ namespace Cofoundry.Web.Admin
                     MenuCategory = AdminModuleMenuCategory.ManageSite,
                     PrimaryOrdering = AdminModuleMenuPrimaryOrdering.Tertiary,
                     Title = definition.NamePlural,
-                    Url = _adminRouteLibrary.CustomEntities.List(definition)
+                    Url = _adminRouteLibrary.CustomEntities.List(definition),
+                    RestrictedToPermission = new CustomEntityAdminModulePermission(definition)
                 };
 
                 yield return module;

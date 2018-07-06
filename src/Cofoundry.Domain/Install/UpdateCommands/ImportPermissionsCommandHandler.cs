@@ -9,8 +9,8 @@ namespace Cofoundry.Domain.Installation
 {
     /// <summary>
     /// This import job is to add all the permissions defined in code in
-    /// a single batch job, reducing the burden of doing this individually 
-    /// as roles are created
+    /// a single batch job during first startup, reducing the burden of 
+    /// doing this individually as roles are created
     /// </summary>
     public class ImportPermissionsCommandHandler : IAsyncVersionedUpdateCommandHandler<ImportPermissionsCommand>
     {

@@ -17,6 +17,10 @@ namespace Cofoundry.Domain.Data
 
             builder.Property(s => s.EntityDefinitionCode)
                 .HasMaxLength(6);
+
+            builder.HasOne(s => s.EntityDefinition)
+                .WithMany(d => d.Permissions)
+                .HasForeignKey(s => s.EntityDefinitionCode);
         }
     }
 }

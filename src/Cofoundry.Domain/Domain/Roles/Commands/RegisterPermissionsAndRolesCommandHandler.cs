@@ -13,12 +13,12 @@ using System.Threading.Tasks;
 namespace Cofoundry.Domain
 {
     /// <summary>
-    /// Registers new roles defined in code via IRoleDefinition and initializes
+    /// Registers new roles and permissions defined in code and initializes
     /// permissions when an IRoleInitializer has been implemented.
     /// </summary>
-    public class RegisterDefinedRolesCommandHandler
-        : IAsyncCommandHandler<RegisterDefinedRolesCommand>
-        , IPermissionRestrictedCommandHandler<RegisterDefinedRolesCommand>
+    public class RegisterPermissionsAndRolesCommandHandler
+        : IAsyncCommandHandler<RegisterPermissionsAndRolesCommand>
+        , IPermissionRestrictedCommandHandler<RegisterPermissionsAndRolesCommand>
     {
         #region constructor
 
@@ -29,15 +29,17 @@ namespace Cofoundry.Domain
         private readonly IEnumerable<IRoleDefinition> _roleDefinitions;
         private readonly IRoleInitializerFactory _roleInitializerFactory;
         private readonly IPermissionRepository _permissionRepository;
+        private readonly IEntityDefinitionRepository _entityDefinitionRepository;
 
-        public RegisterDefinedRolesCommandHandler(
+        public RegisterPermissionsAndRolesCommandHandler(
             CofoundryDbContext dbContext,
             ICommandExecutor commandExecutor,
             IRoleCache roleCache,
             IPermissionValidationService permissionValidationService,
             IEnumerable<IRoleDefinition> roleDefinitions,
             IRoleInitializerFactory roleInitializerFactory,
-            IPermissionRepository permissionRepository
+            IPermissionRepository permissionRepository,
+            IEntityDefinitionRepository entityDefinitionRepository
             )
         {
             _dbContext = dbContext;
@@ -47,49 +49,77 @@ namespace Cofoundry.Domain
             _roleDefinitions = roleDefinitions;
             _roleInitializerFactory = roleInitializerFactory;
             _permissionRepository = permissionRepository;
+            _entityDefinitionRepository = entityDefinitionRepository;
         }
 
         #endregion
 
         #region execution
 
-        public async Task ExecuteAsync(RegisterDefinedRolesCommand command, IExecutionContext executionContext)
+        public async Task ExecuteAsync(RegisterPermissionsAndRolesCommand command, IExecutionContext executionContext)
         {
             DetectDuplicateRoles();
 
-            var existingRoles = await _dbContext
+            // ENTITY DEFINITIONS
+
+            var dbEntityDefinitions = await _dbContext
+                .EntityDefinitions
+                .ToDictionaryAsync(e => e.EntityDefinitionCode);
+
+            await EnsureAllEntityDefinitionsExistAsync(dbEntityDefinitions);
+
+            // PERMISSIONS
+
+            // permissions already registered in the database
+            var dbPermissions = await _dbContext
+                .Permissions
+                .ToDictionaryAsync(p => p.GetUniqueCode());
+
+            // code-based permission objects
+            var codePermissions = _permissionRepository.GetAll();
+
+            var newCodePermissions = codePermissions
+                .Where(p => !dbPermissions.ContainsKey(p.GetUniqueCode()))
+                .ToList();
+
+            // Add new permissions to db
+
+            AddNewPermissionsToDb(dbEntityDefinitions, dbPermissions, newCodePermissions);
+
+            // ROLES
+
+            var dbRoles = await _dbContext
                 .Roles
                 .Include(r => r.RolePermissions)
                 .ThenInclude(p => p.Permission)
                 .ToListAsync();
 
-            var rolesWithSpecialistCodes = existingRoles
+            var dbRolesWithCodes = dbRoles
                 .Where(r => !string.IsNullOrEmpty(r.RoleCode))
                 .ToDictionary(r => r.RoleCode.ToUpperInvariant());
 
-            var requiresUpdate = command.UpdateExistingRoles || _roleDefinitions.Any(d => !rolesWithSpecialistCodes.ContainsKey(d.RoleCode.ToUpperInvariant()));
-            if (!requiresUpdate) return;
+            await EnsureUserAreaExistsAndValidatePermissionAsync(dbRoles, executionContext);
 
-            var allDbPermissions = await _dbContext
-                .Permissions
-                .ToListAsync();
-
-            await EnsureUserAreaExistsAndValidatePermissionAsync(existingRoles, executionContext);
-            var allPermissions = _permissionRepository.GetAll();
-            
             foreach (var roleDefinition in _roleDefinitions)
             {
-                var dbRole = rolesWithSpecialistCodes.GetOrDefault(roleDefinition.RoleCode.ToUpperInvariant());
+                var dbRole = dbRolesWithCodes.GetOrDefault(roleDefinition.RoleCode.ToUpperInvariant());
 
                 if (dbRole == null)
                 {
-                    ValidateRole(existingRoles, roleDefinition);
+                    // New role
+                    ValidateRole(dbRoles, roleDefinition);
                     dbRole = MapAndAddRole(roleDefinition);
-                    await UpdatePermissionsAsync(dbRole, roleDefinition, command, allPermissions, allDbPermissions, executionContext);
+                    UpdatePermissions(dbRole, roleDefinition, codePermissions, dbPermissions, dbEntityDefinitions, false);
                 }
                 else if (command.UpdateExistingRoles)
                 {
-                    await UpdatePermissionsAsync(dbRole, roleDefinition, command, allPermissions, allDbPermissions, executionContext);
+                    // Existing role, to be updated to match initializer exactly
+                    UpdatePermissions(dbRole, roleDefinition, codePermissions, dbPermissions, dbEntityDefinitions, true);
+                }
+                else
+                {
+                    // Update for new permissions only
+                    UpdatePermissions(dbRole, roleDefinition, newCodePermissions, dbPermissions, dbEntityDefinitions, false);
                 }
             }
 
@@ -97,24 +127,91 @@ namespace Cofoundry.Domain
             _roleCache.Clear();
         }
 
-        private async Task UpdatePermissionsAsync(
+        private void AddNewPermissionsToDb(
+            Dictionary<string, EntityDefinition> dbEntityDefinitions, 
+            Dictionary<string, Permission> dbPermissions, 
+            List<IPermission> newCodePermissions
+            )
+        {
+            foreach (var permissionToAdd in newCodePermissions)
+            {
+                var uniquePermissionCode = permissionToAdd.GetUniqueCode();
+                // Create if not exists
+                var dbPermission = new Permission();
+                dbPermission.PermissionCode = permissionToAdd.PermissionType.Code;
+
+                if (permissionToAdd is IEntityPermission entityPermissionToAdd)
+                {
+                    dbPermission.EntityDefinition = dbEntityDefinitions.GetOrDefault(entityPermissionToAdd.EntityDefinition.EntityDefinitionCode);
+
+                    if (dbPermission.EntityDefinition == null)
+                    {
+                        throw new Exception($"Cannot add permission. Entity definition with the code {entityPermissionToAdd.EntityDefinition.EntityDefinitionCode} was expected but could not be found.");
+                    }
+                }
+
+                dbPermissions.Add(uniquePermissionCode, dbPermission);
+                _dbContext.Permissions.Add(dbPermission);
+            }
+        }
+
+        /// <summary>
+        /// Entity definitions db records are created on the fly so we need to make sure
+        /// any new ones exist before we add permissions to them.
+        /// 
+        /// Typically we'd use EnsureEntityDefinitionExistsCommand to create the entity
+        /// definition, but since this command also creates permissions we need to do this
+        /// manually.
+        /// </summary>
+        private async Task EnsureAllEntityDefinitionsExistAsync(
+            Dictionary<string, EntityDefinition> dbDefinitions
+            )
+        {
+            var codeDefinitions = _entityDefinitionRepository.GetAll();
+
+            var newEntityCodes = codeDefinitions
+                .Select(d => d.EntityDefinitionCode)
+                .Where(d => !dbDefinitions.ContainsKey(d));
+
+            if (!newEntityCodes.Any()) return;
+
+            foreach (var definitionCode in newEntityCodes)
+            {
+                // get the entity definition class
+                var entityDefinition = _entityDefinitionRepository.GetByCode(definitionCode);
+
+                // create a matching db record
+                var dbDefinition = new EntityDefinition()
+                {
+                    EntityDefinitionCode = entityDefinition.EntityDefinitionCode,
+                    Name = entityDefinition.Name
+                };
+
+                _dbContext.EntityDefinitions.Add(dbDefinition);
+                dbDefinitions.Add(dbDefinition.EntityDefinitionCode, dbDefinition);
+            }
+
+            await _dbContext.SaveChangesAsync();
+        }
+
+        private void UpdatePermissions(
             Role dbRole, 
             IRoleDefinition roleDefinition,
-            RegisterDefinedRolesCommand command,
-            IEnumerable<IPermission> allPermissions,
-            List<Permission> allDbPermissions,
-            IExecutionContext executionContext
+            IEnumerable<IPermission> codePermissions,
+            Dictionary<string, Permission> dbPermissions,
+            Dictionary<string, EntityDefinition> dbEntityDefinitions,
+            bool allowDeletions
             )
         {
             var roleInitializer = _roleInitializerFactory.Create(roleDefinition);
             if (roleInitializer == null) return;
 
             var permissionsToInclude = roleInitializer
-                .GetPermissions(allPermissions)
+                .GetPermissions(codePermissions)
                 .ToList();
 
             // Remove permissions
-            if (command.UpdateExistingRoles)
+            if (allowDeletions)
             {
                 var permissionsToRemove = dbRole
                     .RolePermissions
@@ -146,25 +243,11 @@ namespace Cofoundry.Domain
             foreach (var permissionToAdd in permissionsToAdd)
             {
                 var uniquePermissionCode = permissionToAdd.GetUniqueCode();
-                var dbPermission = allDbPermissions
-                    .Where(p => uniquePermissionCode == p.GetUniqueCode())
-                    .SingleOrDefault();
+                var dbPermission = dbPermissions.GetOrDefault(uniquePermissionCode);
 
-                // Create if not exists
                 if (dbPermission == null)
                 {
-                    dbPermission = new Permission();
-                    dbPermission.PermissionCode = permissionToAdd.PermissionType.Code;
-
-                    if (permissionToAdd is IEntityPermission)
-                    {
-                        var definitionCode = ((IEntityPermission)permissionToAdd).EntityDefinition.EntityDefinitionCode;
-                        await _commandExecutor.ExecuteAsync(new EnsureEntityDefinitionExistsCommand(definitionCode), executionContext);
-                        dbPermission.EntityDefinitionCode = definitionCode;
-                    }
-
-                    allDbPermissions.Add(dbPermission);
-                    _dbContext.Permissions.Add(dbPermission);
+                    throw new Exception("dbPermissions lookup does not contain the specified permission, but was expected: " + uniquePermissionCode);
                 }
 
                 var rolePermission = new RolePermission();
@@ -175,7 +258,7 @@ namespace Cofoundry.Domain
 
         /// <summary>
         /// Validation ensures that we don't have any entity permissions
-        /// that have elevated access without first beiung granted a read 
+        /// that have elevated access without first being granted a read 
         /// permission. E.g. having 'UpdatePage' permission without also
         /// having 'ReadPage' permission.
         /// </summary>
@@ -266,8 +349,7 @@ namespace Cofoundry.Domain
                 _permissionValidationService.EnforceHasPermissionToUserArea(userAreaCode, executionContext.UserContext);
 
                 // If the user area already exists on a role then we don't need to check it
-                if (!existingRoles
-                        .Any(r => r.UserAreaCode == userAreaCode))
+                if (!existingRoles.Any(r => r.UserAreaCode == userAreaCode))
                 {
                     await _commandExecutor.ExecuteAsync(new EnsureUserAreaExistsCommand(userAreaCode), executionContext);
                 }
@@ -278,7 +360,7 @@ namespace Cofoundry.Domain
 
         #region Permission
 
-        public IEnumerable<IPermissionApplication> GetPermissions(RegisterDefinedRolesCommand command)
+        public IEnumerable<IPermissionApplication> GetPermissions(RegisterPermissionsAndRolesCommand command)
         {
             yield return new RoleCreatePermission();
         }

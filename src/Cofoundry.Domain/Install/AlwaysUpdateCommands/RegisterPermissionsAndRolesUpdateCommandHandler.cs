@@ -9,15 +9,15 @@ using Cofoundry.Domain.CQS;
 namespace Cofoundry.Domain.Installation
 {
     /// <summary>
-    /// Runs the RegisterDefinedRolesCommand at startup, adding new roles
-    /// defined in code to the system, but leaving existing ones alone.
+    /// Runs the RegisterEntityDefinitionsCommand at startup, adding new entity
+    /// definitions defined in code to the system and initializing permissions.
     /// </summary>
-    public class RegisterNewDefinedRolesCommandHandler : IAsyncAlwaysRunUpdateCommandHandler<RegisterNewDefinedRolesCommand>
+    public class RegisterPermissionsAndRolesUpdateCommandHandler : IAsyncAlwaysRunUpdateCommandHandler<RegisterPermissionsAndRolesUpdateCommand>
     {
         private readonly ICommandExecutor _commandExecutor;
         private readonly IExecutionContextFactory _executionContextFactory;
 
-        public RegisterNewDefinedRolesCommandHandler(
+        public RegisterPermissionsAndRolesUpdateCommandHandler(
             ICommandExecutor commandExecutor,
             IExecutionContextFactory executionContextFactory
             )
@@ -26,11 +26,10 @@ namespace Cofoundry.Domain.Installation
             _executionContextFactory = executionContextFactory;
         }
 
-
-        public async Task ExecuteAsync(RegisterNewDefinedRolesCommand command)
+        public async Task ExecuteAsync(RegisterPermissionsAndRolesUpdateCommand command)
         {
             var cx = await _executionContextFactory.CreateSystemUserExecutionContextAsync();
-            await _commandExecutor.ExecuteAsync(new RegisterDefinedRolesCommand(), cx);
+            await _commandExecutor.ExecuteAsync(new RegisterPermissionsAndRolesCommand(), cx);
         }
     }
 }
