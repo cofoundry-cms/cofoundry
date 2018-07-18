@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Microsoft.AspNetCore.Localization;
 
 namespace Cofoundry.Web
 {
@@ -20,5 +21,15 @@ namespace Cofoundry.Web
         /// defined in Cofoundry.Web.CofoundryAssemblyDiscoveryRule.
         /// </summary>
         public ICollection<IAssemblyDiscoveryRule> AssemblyDiscoveryRules { get; private set; }
+
+        /// <summary>
+        /// The default request culture 
+        /// </summary>
+        public RequestCulture DefaultRequestCulture { get; set; } = new RequestCulture("en");
+
+        /// <summary>
+        /// Enable localization in Cofoundry
+        /// </summary>
+        public bool EnableLocalization { get; set; } = false;
     }
 }

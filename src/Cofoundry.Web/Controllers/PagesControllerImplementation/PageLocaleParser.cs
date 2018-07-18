@@ -29,28 +29,22 @@ namespace Cofoundry.Web
         /// </summary>
         public async Task<ActiveLocale> ParseLocaleAsync(string path)
         {
-            if (string.IsNullOrEmpty(path)) return null;
-
+            if (string.IsNullOrEmpty(path) || path.Split('/').Length <= 1)
+            {
+                return null;
+            }
+           
             ActiveLocale locale = null;
-            string localeStr;
-
-            if (path.Contains("/"))
-            {
-                localeStr = path.Split('/').First();
-            }
-            else
-            {
-                localeStr = path;
-            }
+            var localeStr = path.Split('/')[1];
 
             // Check the first part of the string matches the format for a locale
-            if (Regex.Match(localeStr, @"^[a-zA-Z]{2}(-[a-zA-Z]{2})?$", RegexOptions.IgnoreCase).Success)
+            if (!Regex.Match(localeStr, @"^[a-zA-Z]{2}(-[a-zA-Z]{2})?$", RegexOptions.IgnoreCase).Success)
             {
-                var query = new GetActiveLocaleByIETFLanguageTagQuery(localeStr);
-                locale = await _queryExecutor.ExecuteAsync(query);
+                return locale;
             }
 
-            return locale;
+            var query = new GetActiveLocaleByIETFLanguageTagQuery(localeStr);
+            return await _queryExecutor.ExecuteAsync(query);
         }
     }
 }
