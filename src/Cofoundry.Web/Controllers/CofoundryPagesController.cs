@@ -6,6 +6,9 @@ using Cofoundry.Domain;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Cofoundry.Domain.CQS;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Localization;
+using Microsoft.Extensions.Options;
 
 namespace Cofoundry.Web
 {
@@ -19,15 +22,16 @@ namespace Cofoundry.Web
 
         private readonly IQueryExecutor _queryExecutor;
         private readonly IPageActionRoutingStepFactory _pageActionRoutingStepFactory;
+        private readonly IOptions<RequestLocalizationOptions> _options;
 
         public CofoundryPagesController(
             IQueryExecutor queryExecutor,
-            IPageActionRoutingStepFactory pageActionRoutingStepFactory
-            )
+            IPageActionRoutingStepFactory pageActionRoutingStepFactory, 
+            IOptions<RequestLocalizationOptions> options)
         {
             _queryExecutor = queryExecutor;
             _pageActionRoutingStepFactory = pageActionRoutingStepFactory;
-            
+            _options = options;
         }
 
         #endregion
@@ -40,14 +44,17 @@ namespace Cofoundry.Web
             )
         {
             // Init state
-            var state = new PageActionRoutingState();
-            state.Locale = await _queryExecutor.ExecuteAsync(new GetCurrentActiveLocaleQuery());
-            state.InputParameters = new PageActionInputParameters()
+            var rqf = Request.HttpContext.Features.Get<IRequestCultureFeature>();
+            var state = new PageActionRoutingState
             {
-                Path = path,
-                VisualEditorMode = mode,
-                VersionId = version,
-                IsEditingCustomEntity = editType == "entity"
+                Locale = await _queryExecutor.ExecuteAsync(new GetActiveLocaleByIETFLanguageTagQuery(rqf.RequestCulture.Culture.Name)),
+                InputParameters = new PageActionInputParameters()
+                {
+                    Path = path,
+                    VisualEditorMode = mode,
+                    VersionId = version,
+                    IsEditingCustomEntity = editType == "entity"
+                }
             };
 
             // Run through the pipline in order
