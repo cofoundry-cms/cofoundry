@@ -44,5 +44,57 @@ namespace Cofoundry.Domain
 
             return null;
         }
+
+        /// <summary>
+        /// Determines if the page is published at this moment in time,
+        /// checking the page and custom entity (if available) published status, the publish date 
+        /// and checking to make sure there is a published version.
+        /// </summary>
+        public bool IsPublished()
+        {
+            if (PageRoute == null)
+            {
+                throw new InvalidOperationException($"Cannot call {nameof(IsPublished)} if the {nameof(PageRoute)} property is null.");
+            }
+
+            var isPublished = PageRoute.IsPublished();
+
+            if (isPublished && CustomEntityRoute != null)
+            {
+                isPublished = CustomEntityRoute.IsPublished();
+            }
+
+            return isPublished;
+        }
+
+        public PublishState GetPublishState()
+        {
+            var publishState = PageRoute.GetPublishState(); 
+
+            if (CustomEntityRoute != null)
+            {
+                var publishDate = publishState.PublishDate;
+                var publishStatus = PageRoute.PublishStatus;
+
+                if (CustomEntityRoute.PublishDate > publishDate)
+                {
+                    publishDate = CustomEntityRoute.PublishDate;
+                }
+
+                if (publishStatus == PublishStatus.Published 
+                    && CustomEntityRoute.PublishStatus == PublishStatus.Unpublished)
+                {
+                    publishStatus = PublishStatus.Unpublished; 
+                }
+
+                publishState = new PublishState(publishStatus, publishDate);
+                // TODO: YAH: 
+                // also, should any other entities conform to IPublishableEntity?
+                // That would probably mean a few changes for CustomEntitySummary for example.
+                // Also your doing this to make toolbar.cshtml work.
+            }
+
+            return publishState;
+        }
     }
 }

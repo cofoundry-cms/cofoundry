@@ -12,7 +12,7 @@ namespace Cofoundry.Domain
     /// to render content out to a live page, since the page may not be 
     /// published.
     /// </summary>
-    public class PageSummary : ICreateAudited, IPageRoute
+    public class PageSummary : ICreateAudited, IPageRoute, IPublishableEntity
     {
         #region properties shared with page route
 

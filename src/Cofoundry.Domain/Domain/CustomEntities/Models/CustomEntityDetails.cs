@@ -6,18 +6,13 @@ using System.Threading.Tasks;
 
 namespace Cofoundry.Domain
 {
-    public class CustomEntityDetails : ICreateAudited
+    public class CustomEntityDetails : IPublishableEntity, ICreateAudited
     {
         public int CustomEntityId { get; set; }
 
         public ActiveLocale Locale { get; set; }
 
         public string UrlSlug { get; set; }
-
-        /// <summary>
-        /// True if the page is published and the publish date has passed.
-        /// </summary>
-        public bool IsPublished { get; set; }
 
         /// <summary>
         /// Indicates if the page is marked as published or not, which allows the page
@@ -33,7 +28,12 @@ namespace Cofoundry.Domain
         /// <summary>
         /// Indicates whether there is a draft version of this entity available.
         /// </summary>
-        public bool HasDraft { get; set; }
+        public bool HasDraftVersion { get; set; }
+
+        /// <summary>
+        /// Indicates whether there is a published version of this entity available.
+        /// </summary>
+        public bool HasPublishedVersion { get; set; }
 
         /// <summary>
         /// The full path of the default details page. 

@@ -91,7 +91,8 @@
                         <span ng-if="!page.isPublished && page.publishStatus == 'Published'">Scheduled</span>
                         <span ng-if="page.publishStatus == 'Unpublished'">Unpublished</span>
                         <br />
-                        <a href="{{ page.fullPath }}" ng-if="page.hasDraftVersion">(Pending Draft)</a>
+                        <a href="{{ page.fullPath }}" ng-if="page.hasDraftVersion && page.pageType == 'Generic'">(Pending Draft)</a>
+                        <span ng-if="page.hasDraftVersion && page.pageType != 'Generic'">(Pending Draft)</span>
                     </td>
                     <td>
                         <span ng-if="page.publishDate"
@@ -111,7 +112,11 @@
                            ng-if="::vm.canUpdate">
                             <i class="fa fa-pencil-square-o"></i>
                         </a>
-                        <a href="{{page.fullPath}}" class="btn-icon" title="Browse to page" target="_blank">
+                        <a href="{{page.fullPath}}" 
+                           class="btn-icon" 
+                           title="Browse to page" 
+                           target="_blank"
+                           ng-if="::page.pageType == 'Generic'">
                             <i class="fa fa-external-link"></i>
                         </a>
                         <a href=""

@@ -33,7 +33,8 @@ namespace Cofoundry.Domain.Data
         public string PublishStatusCode { get; set; }
 
         /// <summary>
-        /// Should be set if the status is Published.
+        /// The publish date should always be set if the status 
+        /// is Published.
         /// </summary>
         public DateTime? PublishDate { get; set; }
 

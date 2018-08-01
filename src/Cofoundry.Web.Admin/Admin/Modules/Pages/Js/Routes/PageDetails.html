@@ -16,12 +16,13 @@
 
         <cms-button-link cms-text="Browse to page"
                          cms-icon="eye-open"
-                         cms-href="{{vm.page.pageRoute.fullPath}}"></cms-button-link>
+                         cms-href="{{vm.page.pageRoute.fullPath}}"
+                         ng-if="::vm.pageRoute == 'Generic'"></cms-button-link>
 
         <cms-button cms-text="Publish"
                     ng-click="vm.publish()"
                     ng-disabled="vm.editMode || vm.globalLoadState.isLoading"
-                    ng-if="(!vm.isMarkedPublished || vm.page.pageRoute.hasDraft) && vm.canPublishPage"></cms-button>
+                    ng-if="(!vm.isMarkedPublished || vm.page.pageRoute.hasDraftVersion) && vm.canPublishPage"></cms-button>
 
         <cms-button cms-text="Unpublish"
                     ng-click="vm.unpublish()"
@@ -84,11 +85,13 @@
                                      cms-model="vm.page.pageRoute.locale.ietfLanguageTag"></cms-form-field-readonly>
 
             <cms-form-field-container cms-title="Url">
-                <a ng-href="{{vm.page.pageRoute.fullPath}}">{{vm.page.pageRoute.fullPath}}</a>
+                <a ng-href="{{vm.page.pageRoute.fullPath}}"
+                   ng-if="::vm.pageRoute == 'Generic'">{{vm.page.pageRoute.fullPath}}</a>
+                <span ng-if="vm.pageRoute != 'Generic'">{{vm.page.pageRoute.fullPath}}</span>
             </cms-form-field-container>
 
             <cms-form-field-readonly cms-title="Published Status"
-                                     cms-model="vm.page.pageRoute.publishStatus"></cms-form-field-readonly>
+                                     cms-model="vm.publishStatusLabel"></cms-form-field-readonly>
 
             <cms-form-field-container cms-title="Publish Date">
                 <span ng-if="vm.page.pageRoute.publishDate">{{vm.page.pageRoute.publishDate | date:'fullDate'}} at {{vm.page.pageRoute.publishDate | date:'HH:mm:ss'}}</span>
@@ -139,10 +142,10 @@
 
             <cms-form-section-actions>
                 <cms-button-link cms-text="Manage in Visual Editor"
-                    ng-if="::vm.canUpdate && vm.page.latestVersion.regions.length"
+                    ng-if="::vm.canUpdate && vm.page.latestVersion.regions.length && vm.pageRoute == 'Generic'"
                     cms-icon="eye-open"
                     ng-show="!vm.editMode"
-                    cms-href="{{vm.urlLibrary.pageVisualEditor(vm.page.pageRoute, true)}}"></cms-button-link>
+                    cms-href="{{vm.urlLibrary.visualEditorForPage(vm.page.pageRoute, true)}}"></cms-button-link>
             </cms-form-section-actions>
 
             <div class="form-section-message" ng-if="!vm.page.latestVersion.regions.length">
@@ -182,7 +185,72 @@
         <!-- Page versions -->
         <cms-form-section cms-title="Versions">
             <cms-form-field-container>
-                <ng-include src="::vm.getPartialUrl('PageVersionList')"></ng-include>
+                <cms-table-container>
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Version</th>
+                            <th>Created</th>
+                            <th cms-table-column-actions ng-show="!vm.editMode">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="version in vm.versions">
+                            <td>
+                                {{::version.versionLabel}}
+                            </td>
+                            <td class="lowPriority">
+                                <cms-table-cell-created-audit-data cms-audit-data="version.auditData"></cms-table-cell-created-audit-data>
+                            </td>
+                            <td cms-table-column-actions ng-show="!vm.editMode">
+                                <span ng-if="version.workFlowStatus == 'Draft'">
+                                    <span ng-if="vm.versions.length > 1 && vm.canUpdate">
+                                        <a href=""
+                                           class="btn-icon"
+                                           title="Discard draft"
+                                           ng-click="vm.loading || vm.discardDraft()">
+                                            <i class="fa fa-trash-o"></i>
+                                        </a>
+                                    </span>
+                                    <a href=""
+                                       class="btn-icon"
+                                       title="Publish"
+                                       ng-if="vm.canPublishPage"
+                                       ng-click="vm.loading || vm.publish(vm.pageId)">
+                                        <i class="fa fa-cloud-upload"></i>
+                                    </a>
+                                </span>
+                                <span ng-if="version.isLatestPublishedVersion">
+                                    <a href=""
+                                       class="btn-icon"
+                                       title="Un-publish"
+                                       ng-if="vm.isMarkedPublished && vm.canPublishPage"
+                                       ng-click="vm.loading || vm.unpublish()">
+                                        <i class="fa fa-cloud-download"></i>
+                                    </a>
+                                </span>
+                                <span ng-if="!version.isLatestPublishedVersion && version.workFlowStatus == 'Published'">
+                                    <a href=""
+                                       class="btn-icon"
+                                       title="Copy to draft"
+                                       ng-if="vm.canUpdate"
+                                       ng-click="vm.loading || vm.copyToDraft(version)">
+                                        <i class="fa fa-files-o"></i>
+                                    </a>
+                                </span>
+                                <a href="{{version.browseUrl}}"
+                                   class="btn-icon"
+                                   target="_blank"
+                                   title="Browse to page: {{::version.versionLabel}}"
+                                   ng-if="::vm.pageRoute == 'Generic'">
+                                    <i class="fa fa-external-link"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                </cms-table-container>
             </cms-form-field-container>
         </cms-form-section>
 

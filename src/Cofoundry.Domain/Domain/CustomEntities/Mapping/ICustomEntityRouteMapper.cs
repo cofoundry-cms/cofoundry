@@ -1,6 +1,4 @@
-﻿using Cofoundry.Core;
-using Cofoundry.Domain.CQS;
-using Cofoundry.Domain.Data;
+﻿using Cofoundry.Domain.Data;
 using System;
 using System.Collections.Generic;
 using System.Linq;

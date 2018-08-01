@@ -82,7 +82,7 @@ function (
             .then(redirect);
 
         function redirect(page) {
-            $window.location.href = urlLibrary.pageVisualEditor(page.pageRoute, true);
+            $window.location.href = urlLibrary.visualEditorForPage(page.pageRoute, true);
         }
     }
 

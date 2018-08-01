@@ -49,9 +49,9 @@ namespace Cofoundry.Web
         public IExecutionContext CofoundryAdminExecutionContext { get; set; }
 
         /// <summary>
-        /// The requested visual editor mode.
+        /// The requested visual editor state
         /// </summary>
-        public VisualEditorMode VisualEditorMode { get; set; }
+        public VisualEditorState VisualEditorState { get; set; }
 
         /// <summary>
         /// A PageRoute if one is found during the pipeline process.

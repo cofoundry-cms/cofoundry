@@ -2,11 +2,12 @@
     '$http',
     '_',
     'shared.serviceBase',
+    'shared.publishableEntityMapper',
 function (
     $http,
     _,
-    serviceBase
-    ) {
+    serviceBase,
+    publishableEntityMapper) {
 
     var service = {},
         customEntityServiceBase = serviceBase + 'custom-entities',
@@ -61,7 +62,18 @@ function (
 
     service.getById = function (customEntityId) {
 
-        return $http.get(getIdRoute(customEntityId));
+        return $http
+            .get(getIdRoute(customEntityId))
+            .then(map);
+
+        function map(entity) {
+
+            if (entity) {
+                publishableEntityMapper.map(entity);
+            }
+
+            return entity;
+        }
     }
 
     service.getVersionsByCustomEntityId = function (customEntityId) {

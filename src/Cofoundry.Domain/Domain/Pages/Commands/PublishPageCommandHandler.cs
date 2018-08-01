@@ -12,6 +12,10 @@ using Cofoundry.Core;
 
 namespace Cofoundry.Domain
 {
+    /// <summary>
+    /// Publishes a page. If the page is already published and
+    /// a date is specified then the publish date will be updated.
+    /// </summary>
     public class PublishPageCommandHandler 
         : IAsyncCommandHandler<PublishPageCommand>
         , IPermissionRestrictedCommandHandler<PublishPageCommand>
@@ -47,19 +51,17 @@ namespace Cofoundry.Domain
             var version =await _dbContext
                 .PageVersions
                 .Include(p => p.Page)
-                .Where(v => v.PageId == command.PageId
-                    && !v.IsDeleted
-                    && !v.Page.IsDeleted
-                    && (v.WorkFlowStatusId == (int)WorkFlowStatus.Draft || v.WorkFlowStatusId == (int)WorkFlowStatus.Published))
-                .OrderByDescending(v => v.WorkFlowStatusId == (int)WorkFlowStatus.Draft)
-                .ThenByDescending(v => v.CreateDate)
+                .FilterActive()
+                .FilterByPageId(command.PageId)
+                .OrderByLatest()
                 .FirstOrDefaultAsync();
 
             EntityNotFoundException.ThrowIfNull(version, command.PageId);
 
             UpdatePublishDate(command, executionContext, version);
 
-            if (version.WorkFlowStatusId == (int)WorkFlowStatus.Published)
+            if (version.WorkFlowStatusId == (int)WorkFlowStatus.Published
+                && version.Page.PublishStatusCode == PublishStatusCode.Published)
             {
                 // only thing we can do with a published version is update the date
                 await _dbContext.SaveChangesAsync();

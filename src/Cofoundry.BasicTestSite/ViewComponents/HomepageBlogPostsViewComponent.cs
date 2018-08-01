@@ -1,5 +1,6 @@
 ﻿using Cofoundry.Core;
 using Cofoundry.Domain;
+using Cofoundry.Web;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -12,22 +13,27 @@ namespace Cofoundry.BasicTestSite
     {
         private readonly ICustomEntityRepository _customEntityRepository;
         private readonly IImageAssetRepository _imageAssetRepository;
+        private readonly IVisualEditorStateService _visualEditorStateService;
 
         public HomepageBlogPostsViewComponent(
             ICustomEntityRepository customEntityRepository,
-            IImageAssetRepository imageAssetRepository
+            IImageAssetRepository imageAssetRepository,
+            IVisualEditorStateService visualEditorStateService
             )
         {
             _customEntityRepository = customEntityRepository;
             _imageAssetRepository = imageAssetRepository;
+            _visualEditorStateService = visualEditorStateService;
         }
 
         public async Task<IViewComponentResult> InvokeAsync()
         {
+            var visualEditorState = await _visualEditorStateService.GetCurrentAsync();
+
             var query = new SearchCustomEntityRenderSummariesQuery();
             query.CustomEntityDefinitionCode = BlogPostCustomEntityDefinition.DefinitionCode;
+            query.PublishStatus = visualEditorState.GetAmbientEntityPublishStatusQuery();
             query.PageSize = 3;
-            query.PublishStatus = PublishStatusQuery.Published;
 
             var entities = await _customEntityRepository.SearchCustomEntityRenderSummariesAsync(query);
             var viewModel = await MapBlogPostsAsync(entities);

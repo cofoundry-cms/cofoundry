@@ -11,7 +11,7 @@ namespace Cofoundry.Domain
     /// page routing information. These route objects are cached 
     /// in order to make routing lookups speedy.
     /// </summary>
-    public class CustomEntityRoute
+    public class CustomEntityRoute : IPublishableEntity
     {
         /// <summary>
         /// Unique 6 letter code representing the type of custom entity.
@@ -45,7 +45,17 @@ namespace Cofoundry.Domain
         /// The date after which the custom entity can be shown on the live site.
         /// </summary>
         public DateTime? PublishDate { get; set; }
-        
+
+        /// <summary>
+        /// Indicates whether there is a draft version of this page available.
+        /// </summary>
+        public bool HasDraftVersion { get; set; }
+
+        /// <summary>
+        /// Indicates whether there is a published version of this page available.
+        /// </summary>
+        public bool HasPublishedVersion { get; set; }
+
         /// <summary>
         /// Optional ordering value applied to the custom entity 
         /// in relation to other custom entities with the same definition.
@@ -56,23 +66,5 @@ namespace Cofoundry.Domain
         /// Routing information particular to specific versions.
         /// </summary>
         public ICollection<CustomEntityVersionRoute> Versions { get; set; }
-
-        #region public method
-
-        /// <summary>
-        /// Determines if the custom entity is published at this moment in time,
-        /// checking the published status, the publish date and checking
-        /// to make sure there is a published version.
-        /// </summary>
-        public bool IsPublished()
-        {
-            var isPublished = PublishStatus == PublishStatus.Published
-                && PublishDate <= DateTime.UtcNow
-                && Versions.Any(v => v.WorkFlowStatus == WorkFlowStatus.Published);
-
-            return isPublished;
-        }
-
-        #endregion
     }
 }

@@ -45,9 +45,6 @@ function (
         vm.duplicatePage = duplicatePage;
         vm.changeUrl = changeUrl;
 
-        // Helper Functions
-        vm.getPartialUrl = getPartialUrl;
-
         // Properties
         vm.editMode = false;
         vm.globalLoadState = new LoadState();
@@ -64,12 +61,6 @@ function (
 
         // Init
         initData(vm.formLoadState);
-    }
-
-    /* PUBLIC FUNCS */
-
-    function getPartialUrl(file) {
-        return modulePath + 'Routes/Partials/' + file + '.html';
     }
 
     /* UI ACTIONS */
@@ -211,6 +202,7 @@ function (
 
         return $q
             .all([getPage(), getVersions()])
+            .then(mapVersions)
             .then(setLoadingOff.bind(null, loadStateToTurnOff));
            
         /* helpers */
@@ -222,13 +214,47 @@ function (
                 vm.updateDraftCommand = mapUpdateDraftCommand(page);
                 vm.editMode = false;
                 vm.isMarkedPublished = vm.page.pageRoute.publishStatus == 'Published';
+                vm.publishStatusLabel = getPublishStatusLabel(page.pageRoute);
+
+                return page;
             });
         }
 
         function getVersions() {
-            return pageService.getVersionsByPageId($routeParams.id).then(function (versions) {
-                vm.versions = versions;
+            return pageService.getVersionsByPageId($routeParams.id);
+        }
+
+        function mapVersions(results) {
+            var page = results[0],
+                versions = results[1],
+                isPublished = page.pageRoute.isPublished();
+
+            _.each(versions, function (version, index) {
+
+                version.versionLabel = getVersionLabel(version, index, versions, page.pageRoute);
+                version.browseUrl = vm.urlLibrary.visualEditorForVersion(page.pageRoute, version, false, isPublished);
             });
+
+            vm.versions = versions;
+        }
+
+        function getVersionLabel(version, index, versions, entityRoute) {
+
+            if (version.workFlowStatus == 'Draft') return version.workFlowStatus;
+
+            var versionNumber = 'V' + (versions.length - index);
+
+            if (!version.isLatestPublishedVersion) return versionNumber;
+
+            return versionNumber + ' (' + getPublishStatusLabel(entityRoute) + ')';
+        }
+
+        function getPublishStatusLabel(entityRoute) {
+            if (entityRoute.publishStatus == 'Published' && entityRoute.publishDate < Date.now()) {
+                return 'Pending Publish';
+            }
+
+            return entityRoute.publishStatus;
         }
     }
 

@@ -215,9 +215,10 @@ function (
             modelMetaData = results[2];
 
             vm.customEntity = customEntity;
-            vm.versions = versions;
+            vm.versions = mapVersions(customEntity, versions);
             vm.updateCommand = mapUpdateCommand(customEntity);
             vm.isMarkedPublished = vm.customEntity.publishStatus == 'Published';
+            vm.publishStatusLabel = getPublishStatusLabel(customEntity);
 
             if (vm.customEntity.locale) {
                 vm.additionalParameters = {
@@ -228,6 +229,38 @@ function (
             }
 
             vm.editMode = false;
+        }
+
+        function mapVersions(customEntity, versions) {
+            var page = customEntity.latestVersion.pages[0],
+                isPublished = customEntity.isPublished();
+
+            _.each(versions, function (version, index) {
+
+                version.versionLabel = getVersionLabel(version, index, versions, customEntity);
+                version.browseUrl = vm.urlLibrary.visualEditorForVersion(customEntity, version, true, isPublished);
+            });
+
+            return versions;
+        }
+
+        function getVersionLabel(version, index, versions, publishableEntity) {
+
+            if (version.workFlowStatus == 'Draft') return version.workFlowStatus;
+
+            var versionNumber = 'V' + (versions.length - index);
+
+            if (!version.isLatestPublishedVersion) return versionNumber;
+
+            return versionNumber + ' (' + getPublishStatusLabel(publishableEntity) + ')';
+        }
+
+        function getPublishStatusLabel(publishableEntity) {
+            if (publishableEntity.publishStatus == 'Published' && publishableEntity.publishDate < Date.now()) {
+                return 'Pending Publish';
+            }
+
+            return publishableEntity.publishStatus;
         }
 
         function getMetaData() {

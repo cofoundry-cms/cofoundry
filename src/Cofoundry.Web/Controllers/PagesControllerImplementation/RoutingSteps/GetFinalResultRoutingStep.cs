@@ -53,12 +53,12 @@ namespace Cofoundry.Web
                     controller.Response.StatusCode = (int)HttpStatusCode.NotFound;
                     // Not sure why we're not using a NotFoundViewModel here, but this is old
                     // and untested functionality. Content managable not found pages will need to be looked at at a later date
-                    var notFoundPageParams = new PageViewModelBuilderParameters(state.PageData, state.VisualEditorMode);
+                    var notFoundPageParams = new PageViewModelBuilderParameters(state.PageData, state.VisualEditorState.VisualEditorMode);
                     vm = await _pageViewModelBuilder.BuildPageViewModelAsync(notFoundPageParams);
                     break;
                 case PageType.CustomEntityDetails:
                     var model = await GetCustomEntityModel(state);
-                    var customEntityParams = new CustomEntityPageViewModelBuilderParameters(state.PageData, state.VisualEditorMode, model);
+                    var customEntityParams = new CustomEntityPageViewModelBuilderParameters(state.PageData, state.VisualEditorState.VisualEditorMode, model);
 
                     vm = await BuildCustomEntityViewModelAsync(state.PageData.Template.CustomEntityModelType, customEntityParams);
                     break;
@@ -67,7 +67,7 @@ namespace Cofoundry.Web
                 //    vm = _pageViewModelMapper.MapPage(page, siteViewerMode);
                 //    break;
                 default:
-                    var pageParams = new PageViewModelBuilderParameters(state.PageData, state.VisualEditorMode);
+                    var pageParams = new PageViewModelBuilderParameters(state.PageData, state.VisualEditorState.VisualEditorMode);
                     vm = await _pageViewModelBuilder.BuildPageViewModelAsync(pageParams);
                     break;
             }
@@ -82,25 +82,25 @@ namespace Cofoundry.Web
 
         public async Task SetCacheAsync(IEditablePageViewModel vm, PageActionRoutingState state)
         {
-            var siteViewerMode = state.VisualEditorMode;
-            var publishStatusQuery = state.VisualEditorMode.ToPublishStatusQuery();
+            var visualEditorMode = state.VisualEditorState.VisualEditorMode;
+            var publishStatusQuery = visualEditorMode.ToPublishStatusQuery();
             var pageVersions = state.PageRoutingInfo.PageRoute.Versions;
 
             // Force a viewer mode
-            if (siteViewerMode == VisualEditorMode.Any)
+            if (visualEditorMode == VisualEditorMode.Any)
             {
                 var version = state.PageRoutingInfo.GetVersionRoute(
                     state.InputParameters.IsEditingCustomEntity,
-                    state.VisualEditorMode.ToPublishStatusQuery(),
+                    publishStatusQuery,
                     state.InputParameters.VersionId);
 
                 switch (version.WorkFlowStatus)
                 {
                     case WorkFlowStatus.Draft:
-                        siteViewerMode = VisualEditorMode.Draft;
+                        visualEditorMode = VisualEditorMode.Preview;
                         break;
                     case WorkFlowStatus.Published:
-                        siteViewerMode = VisualEditorMode.Live;
+                        visualEditorMode = VisualEditorMode.Live;
                         break;
                     default:
                         throw new InvalidOperationException("WorkFlowStatus." + version.WorkFlowStatus + " is not valid for VisualEditorMode.Any");
@@ -109,7 +109,7 @@ namespace Cofoundry.Web
 
             var pageResponseData = new PageResponseData();
             pageResponseData.Page = vm;
-            pageResponseData.VisualEditorMode = siteViewerMode;
+            pageResponseData.VisualEditorMode = visualEditorMode;
             pageResponseData.PageRoutingInfo = state.PageRoutingInfo;
             pageResponseData.HasDraftVersion = state.PageRoutingInfo.GetVersionRoute(state.InputParameters.IsEditingCustomEntity, PublishStatusQuery.Draft, null) != null;
             pageResponseData.Version = state.PageRoutingInfo.GetVersionRoute(state.InputParameters.IsEditingCustomEntity, publishStatusQuery, state.InputParameters.VersionId);
@@ -150,7 +150,7 @@ namespace Cofoundry.Web
                 }
                 else
                 {
-                    query.PublishStatus = state.VisualEditorMode.ToPublishStatusQuery();
+                    query.PublishStatus = state.VisualEditorState.GetPublishStatusQuery();
                 }
             }
             else if (state.IsCofoundryAdminUser)

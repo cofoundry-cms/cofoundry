@@ -35,18 +35,10 @@ namespace Cofoundry.Domain
             if (dbVersions == null) throw new ArgumentNullException(nameof(dbVersions));
             if (pageId <= 0) throw new ArgumentOutOfRangeException(nameof(pageId));
 
-            var orderedVersions = dbVersions
-                .Select(MapVersion)
-                .OrderByDescending(v => v.WorkFlowStatus == WorkFlowStatus.Draft)
-                .ThenByDescending(v => v.AuditData.CreateDate)
-                .ToList();
-
             bool hasLatestPublishVersioned = false;
             var results = new List<PageVersionSummary>(dbVersions.Count);
 
-            foreach (var dbVersion in dbVersions
-                .OrderByDescending(v => v.WorkFlowStatusId == (int)WorkFlowStatus.Draft)
-                .ThenByDescending(v => v.CreateDate))
+            foreach (var dbVersion in dbVersions.OrderByLatest())
             {
                 if (dbVersion.PageId != pageId)
                 {

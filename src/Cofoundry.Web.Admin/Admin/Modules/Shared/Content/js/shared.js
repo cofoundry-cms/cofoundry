@@ -4107,11 +4107,12 @@ angular.module('cms.shared').factory('shared.customEntityService', [
     '$http',
     '_',
     'shared.serviceBase',
+    'shared.publishableEntityMapper',
 function (
     $http,
     _,
-    serviceBase
-    ) {
+    serviceBase,
+    publishableEntityMapper) {
 
     var service = {},
         customEntityServiceBase = serviceBase + 'custom-entities',
@@ -4166,7 +4167,18 @@ function (
 
     service.getById = function (customEntityId) {
 
-        return $http.get(getIdRoute(customEntityId));
+        return $http
+            .get(getIdRoute(customEntityId))
+            .then(map);
+
+        function map(entity) {
+
+            if (entity) {
+                publishableEntityMapper.map(entity);
+            }
+
+            return entity;
+        }
     }
 
     service.getVersionsByCustomEntityId = function (customEntityId) {
@@ -4514,9 +4526,11 @@ function (
 angular.module('cms.shared').factory('shared.pageService', [
     '$http',
     'shared.serviceBase',
+    'shared.publishableEntityMapper',
 function (
     $http,
-    serviceBase) {
+    serviceBase,
+    publishableEntityMapper) {
 
     var service = {},
         pagesServiceBase = serviceBase + 'pages';
@@ -4539,7 +4553,18 @@ function (
     
     service.getById = function (pageId) {
 
-        return $http.get(service.getIdRoute(pageId));
+        return $http
+            .get(service.getIdRoute(pageId))
+            .then(map);
+
+        function map(page) {
+
+            if (page) {
+                publishableEntityMapper.map(page.pageRoute);
+            }
+
+            return page;
+        }
     }
 
     service.getVersionsByPageId = function (pageId) {
@@ -4594,8 +4619,6 @@ function (
         return $http.post(service.getIdRoute(command.pageToDuplicateId) + '/duplicate', command);
     }
 
-    /* PRIVATES */
-
     /* HELPERS */
 
     service.getIdRoute = function (pageId) {
@@ -4604,6 +4627,32 @@ function (
 
     service.getPageVerionsRoute = function (pageId) {
         return service.getIdRoute(pageId) + '/versions';
+    }
+
+    return service;
+}]);
+angular.module('cms.shared').factory('shared.publishableEntityMapper', [
+'$http',
+'shared.serviceBase',
+function (
+    $http,
+    serviceBase) {
+
+    var service = {};
+
+    /* MAPPERS */
+
+    service.map = function (entity) {
+        entity.isPublished = isPublished.bind(null, isPublished);
+    }
+
+    /* PRIVATE */
+
+    function isPublished(entity) {
+
+        return entity.publishStatus == 'Published'
+            && entity.hasPublishedVersion
+            && new Date(entity.publishDate) < Date.now();
     }
 
     return service;
@@ -5037,7 +5086,7 @@ function (
 
     /* Pages */
 
-    service.pageVisualEditor = function (pageRoute, isEditMode) {
+    service.visualEditorForPage = function (pageRoute, isEditMode) {
         if (!pageRoute) return '';
 
         var path = pageRoute.fullPath;
@@ -5047,6 +5096,36 @@ function (
         }
 
         return path;
+    }
+
+    service.visualEditorForVersion = function (
+        pageRoute,
+        versionRoute,
+        isCustomEntityVersion,
+        isPublished
+    ) {
+        if (!pageRoute) return '';
+
+        var url = pageRoute.fullPath + "?";
+
+        // Some of the latest version states will have a default view e.g. preview 
+        // or live so check for these first before we defer to showing by version number
+        if (versionRoute.workFlowStatus == 'Draft') {
+            url += "mode=preview";
+        }
+        else if (versionRoute.isLatestPublishedVersion && isPublished) {
+            // Published, so show live view
+            url += "mode=live";
+        } else {
+            var versionIdProperty = (isCustomEntityVersion ? 'customEntity' : 'page') + 'VersionId';
+            url += "version=" + versionRoute[versionIdProperty];
+        }
+
+        if (isCustomEntityVersion) {
+            url += "&edittype=entity";
+        }
+
+        return url;
     }
 
     /* Custom Entities */

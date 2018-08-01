@@ -2,6 +2,7 @@
 @inject IAdminRouteLibrary adminRouteLibrary
 @inject IPermissionValidationService permissionValidationService
 @inject ICofoundryHelper Cofoundry
+@inject IPageRouteLibrary pageRouteLibrary
 
 @functions {
     bool IsEditTypeSwitchRequired(IPageResponseData pageResponseData)
@@ -28,8 +29,7 @@
     var hasCustomEntityPublishPermission = false;
     var canEditDraft = false;
 
-    int currentVersion = 0;
-    int versionCount = 0;
+    string currentVersion = string.Empty;
     bool isEditing = false;
     bool isViewingSpecificVersion = false;
     bool isCustomEntityRoute = false;
@@ -37,11 +37,11 @@
     bool isCustomEntityEditOnly = false;
     string entityNameSingular = string.Empty;
     string backToAdminLink = string.Empty;
-    var versions = new List<IVersionRoute>();
-    IVersionRoute liveVersion = null;
+    IEnumerable<IVersionRoute> versions = null;
 
     string iFrameParams = string.Empty;
     string rootUrlPath = Context.Request.Path;
+    PublishState? publishState = null;
 
     if (!isStaticPage)
     {
@@ -50,6 +50,7 @@
         isEditing = pageResponseData.VisualEditorMode == VisualEditorMode.Edit;
         isViewingSpecificVersion = pageResponseData.VisualEditorMode == VisualEditorMode.SpecificVersion;
         isCustomEntityRoute = pageResponseData.Version is CustomEntityVersionRoute;
+        publishState = pageResponseData.PageRoutingInfo.GetPublishState();
 
         var customEntityDefinitionCode = pageResponseData.PageRoutingInfo.PageRoute.CustomEntityDefinitionCode;
         if (!string.IsNullOrEmpty(customEntityDefinitionCode))
@@ -84,19 +85,12 @@
         if (isCustomEntityRoute)
         {
             backToAdminLink = adminRouteLibrary.CustomEntities.Details(pageResponseData.CustomEntityDefinition, pageResponseData.PageRoutingInfo.CustomEntityRoute.CustomEntityId);
-            versions.AddRange(pageResponseData.PageRoutingInfo.CustomEntityRoute.Versions);
+            versions = pageResponseData.PageRoutingInfo.CustomEntityRoute.Versions;
         }
         else
         {
-            versions.AddRange(pageResponseData.PageRoutingInfo.PageRoute.Versions);
+            versions = pageResponseData.PageRoutingInfo.PageRoute.Versions;
         }
-
-        versions = versions
-            .OrderByDescending(v => v.WorkFlowStatus)
-            .ThenByDescending(v => v.CreateDate)
-            .ToList();
-
-        liveVersion = versions.FirstOrDefault(v => v.WorkFlowStatus == WorkFlowStatus.Published);
     }
 }
 
@@ -186,35 +180,43 @@
         <div class="cofoundry-sv__mini-menu cofoundry-sv__mini-menu--flow">
             @if (!isStaticPage && versions.Any())
             {
+                int versionCount = versions.Count();
+
                 <div class="cofoundry-sv__mini-menu__content">
                     <h3>@entityNameSingular Versions</h3>
                     <ol class="cofoundry-sv__version-list">
                         @foreach (var version in versions)
                         {
-                            versionCount++;
-                            var link = string.Format("?version=" + version.VersionId, @rootUrlPath);
+                            var link = pageRouteLibrary.VisualEditor(pageResponseData.PageRoutingInfo, version);
+                            bool isActive = false;
+                            string versionText;
+
                             if (version.WorkFlowStatus == WorkFlowStatus.Draft)
                             {
-                                link = string.Format("{0}?mode=preview", @rootUrlPath);
+                                versionText = "Draft";
                             }
-                            else if (version == liveVersion)
+                            else
                             {
-                                link = string.Format("{0}?mode=live", @rootUrlPath);
+                                versionText = "V" + versionCount;
                             }
 
-                            link += "&edittype=" + (isCustomEntityRoute ? "entity" : "page");
+                            if (version.IsLatestPublishedVersion)
+                            {
+                                versionText += " (" + TextFormatter.PascalCaseToSentence(publishState.Value.Description.ToString()) + ")";
+                            }
 
-                            bool isActive = false;
                             if (version == pageResponseData.Version)
                             {
                                 isActive = true;
-                                currentVersion = versionCount;
+                                currentVersion = versionText;
                             }
+
+                            versionCount--;
 
                             <li>
                                 <a href="@link" class="cofoundry-sv__version-list__item @Cofoundry.Html.TextIf(isActive, "active")">
                                     <span class="@version.WorkFlowStatus.ToString().ToLower()"></span>
-                                    @("V" + versionCount), Created on @version.CreateDate
+                                    @versionText, Created on @version.CreateDate
                                 </a>
                             </li>
                         }
@@ -226,7 +228,7 @@
             {
                 <button type="button" class="cofoundry-sv__mini-menu__toggle">
                     <span class="cofoundry-sv__page-details__status @pageResponseData.Version.WorkFlowStatus.ToString().ToLower()"></span>
-                    <span class="cofoundry-sv__page-details__name">@("V" + currentVersion), @pageResponseData.Version.Title</span>
+                    <span class="cofoundry-sv__page-details__name">@currentVersion, @pageResponseData.Version.Title</span>
                     @if (Context.Request.Path.Value.Length > 1)
                     {
                         <span class="cofoundry-sv__page-details__url">@Context.Request.Path</span>
@@ -245,7 +247,9 @@
     <div class="cofoundry-sv__mode">
         @if (!isStaticPage && !isViewingSpecificVersion)
         {
-            <a href="@rootUrlPath?mode=live" class="cofoundry-sv__mode__button @Cofoundry.Html.TextIf(pageResponseData.Version.WorkFlowStatus == WorkFlowStatus.Published, "active")">
+            if (publishState.Value.Description == PublishStateDescription.Published)
+            {
+            <a href="@pageRouteLibrary.VisualEditor(pageResponseData.PageRoutingInfo, VisualEditorMode.Live, isCustomEntityRoute)" class="cofoundry-sv__mode__button @Cofoundry.Html.TextIf(pageResponseData.Version.WorkFlowStatus == WorkFlowStatus.Published, "active")">
                 <span>
                     @*<svg class="icon" viewBox="0 0 80 80">
                         <use xlink:href="#currentlive" x="0" y="0" />
@@ -253,13 +257,14 @@
                     Current<br />live
                 </span>
             </a>
+            }
 
             if (canEditDraft)
             {
                 if (isEditTypeSwitchRequired)
                 {
                     <span class="cofoundry-sv__mode__button__group">
-                        <a href="@rootUrlPath?mode=edit&edittype=entity" class="cofoundry-sv__mode__button @Cofoundry.Html.TextIf(isCustomEntityRoute && isEditing, "active")">
+                        <a href="@pageRouteLibrary.VisualEditor(pageResponseData.PageRoutingInfo, VisualEditorMode.Edit, true)" class="cofoundry-sv__mode__button @Cofoundry.Html.TextIf(isCustomEntityRoute && isEditing, "active")">
                             <span>
                                 @*<svg class="icon" viewBox="0 0 80 80">
                                     <use xlink:href="#editentity" x="0" y="0" />
@@ -268,7 +273,7 @@
                                 @pageResponseData.CustomEntityDefinition.Name
                             </span>
                         </a>
-                        <a href="@rootUrlPath?mode=edit&edittype=page" class="cofoundry-sv__mode__button @Cofoundry.Html.TextIf(!isCustomEntityRoute && isEditing, "active")">
+                        <a href="@pageRouteLibrary.VisualEditor(pageResponseData.PageRoutingInfo, VisualEditorMode.Edit, false)" class="cofoundry-sv__mode__button @Cofoundry.Html.TextIf(!isCustomEntityRoute && isEditing, "active")">
                             <span>
                                 @*<svg class="icon" viewBox="0 0 80 80">
                                     <use xlink:href="#edittemplate" x="0" y="0" />
@@ -281,7 +286,7 @@
                 }
                 else
                 {
-                    <a href="@rootUrlPath?mode=edit&edittype=@(isCustomEntityRoute ? "entity":"page")" class="cofoundry-sv__mode__button @Cofoundry.Html.TextIf(isEditing, "active")">
+                    <a href="@pageRouteLibrary.VisualEditor(pageResponseData.PageRoutingInfo, VisualEditorMode.Edit, isCustomEntityRoute)" class="cofoundry-sv__mode__button @Cofoundry.Html.TextIf(isEditing, "active")">
                         <span>
                             @*<svg class="icon" viewBox="0 0 80 80">
                                 <use xlink:href="#edittemplate" x="0" y="0" />
@@ -290,7 +295,9 @@
                         </span>
                     </a>
                 }
-                <a href="@rootUrlPath?mode=preview" class="cofoundry-sv__mode__button @Cofoundry.Html.TextIf(!isEditing && pageResponseData.Version.WorkFlowStatus == WorkFlowStatus.Draft, "active")">
+                @if (pageResponseData.HasDraftVersion)
+                {
+                <a href="@pageRouteLibrary.VisualEditor(pageResponseData.PageRoutingInfo, VisualEditorMode.Preview, isCustomEntityRoute)" class="cofoundry-sv__mode__button @Cofoundry.Html.TextIf(!isEditing && pageResponseData.Version.WorkFlowStatus == WorkFlowStatus.Draft, "active")">
                     <span>
                         @*<svg class="icon" viewBox="0 0 80 80">
                             <use xlink:href="#preview" x="0" y="0" />
@@ -298,6 +305,7 @@
                         Preview<br />draft
                     </span>
                 </a>
+                }
             }
         }
         <div class="cofoundry-sv__options">

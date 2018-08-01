@@ -65,12 +65,15 @@ namespace Cofoundry.Domain
 
             var entity = MapInitialData(dbVersion, executionContext);
 
-            // Re-map IsPublished checking to see if there is a published version in the history
-            if (entity.IsPublished && entity.LatestVersion.WorkFlowStatus != WorkFlowStatus.Published)
+            if (entity.LatestVersion.WorkFlowStatus == WorkFlowStatus.Published)
             {
-                entity.IsPublished = await _dbContext
-                    .CustomEntityVersions
-                    .AnyAsync(v => v.CustomEntityId == query.CustomEntityId && v.WorkFlowStatusId == (int)WorkFlowStatus.Published);
+                entity.HasPublishedVersion = true;
+            }
+            else
+            {
+                entity.HasPublishedVersion = await _dbContext
+                        .CustomEntityVersions
+                        .AnyAsync(v => v.CustomEntityId == query.CustomEntityId && v.WorkFlowStatusId == (int)WorkFlowStatus.Published);
             }
 
             if (dbVersion.CustomEntity.LocaleId.HasValue)
@@ -97,7 +100,6 @@ namespace Cofoundry.Domain
                 PublishDate = DbDateTimeMapper.AsUtc(dbVersion.CustomEntity.PublishDate),
             };
 
-            entity.IsPublished = entity.PublishStatus == PublishStatus.Published && entity.PublishDate <= executionContext.ExecutionDate;
             entity.AuditData = _auditDataMapper.MapCreateAuditData(dbVersion.CustomEntity);
 
             entity.LatestVersion = new CustomEntityVersionDetails()
@@ -108,7 +110,7 @@ namespace Cofoundry.Domain
             };
 
             entity.LatestVersion.AuditData = _auditDataMapper.MapCreateAuditData(dbVersion);
-            entity.HasDraft = entity.LatestVersion.WorkFlowStatus == WorkFlowStatus.Draft;
+            entity.HasDraftVersion = entity.LatestVersion.WorkFlowStatus == WorkFlowStatus.Draft;
 
             return entity;
         }
@@ -214,9 +216,7 @@ namespace Cofoundry.Domain
                 .Include(v => v.Creator)
                 .AsNoTracking()
                 .Where(v => v.CustomEntityId == id && (v.CustomEntity.LocaleId == null || v.CustomEntity.Locale.IsActive))
-                .OrderByDescending(g => g.WorkFlowStatusId == (int)WorkFlowStatus.Draft)
-                .ThenByDescending(g => g.WorkFlowStatusId == (int)WorkFlowStatus.Published)
-                .ThenByDescending(g => g.CreateDate);
+                .OrderByLatest();
         }
 
         private async Task MapDataModelAsync(

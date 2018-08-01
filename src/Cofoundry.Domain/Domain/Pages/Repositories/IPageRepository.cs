@@ -135,8 +135,22 @@ namespace Cofoundry.Domain
 
         Task MovePageVersionBlockAsync(MovePageVersionBlockCommand command, IExecutionContext executionContext = null);
 
+        /// <summary>
+        /// Publishes a page. If the page is already published and
+        /// a date is specified then the publish date will be updated.
+        /// </summary>
+        /// <param name="command">Publishing command to execute.</param>
+        /// <param name="executionContext">Optional execution context to use when executing the command. Useful if you need to temporarily elevate your permission level.</param>
         Task PublishPageCommandAsync(PublishPageCommand command, IExecutionContext executionContext = null);
 
+        /// <summary>
+        /// Sets the status of a page to un-published, but does not
+        /// remove the publish date, which is preserved so that it
+        /// can be used as a default when the user chooses to publish
+        /// again.
+        /// </summary>
+        /// <param name="pageId">The id of the page to set un-published.</param>
+        /// <param name="executionContext">Optional execution context to use when executing the command. Useful if you need to temporarily elevate your permission level.</param>
         Task UnPublishPageCommandAsync(int pageId, IExecutionContext executionContext = null);
 
         Task UpdatePageAsync(UpdatePageCommand command, IExecutionContext executionContext = null);

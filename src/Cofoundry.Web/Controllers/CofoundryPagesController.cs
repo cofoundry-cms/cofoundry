@@ -4,7 +4,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using Cofoundry.Domain;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Filters;
 using Cofoundry.Domain.CQS;
 
 namespace Cofoundry.Web
@@ -45,7 +44,6 @@ namespace Cofoundry.Web
             state.InputParameters = new PageActionInputParameters()
             {
                 Path = path,
-                VisualEditorMode = mode,
                 VersionId = version,
                 IsEditingCustomEntity = editType == "entity"
             };

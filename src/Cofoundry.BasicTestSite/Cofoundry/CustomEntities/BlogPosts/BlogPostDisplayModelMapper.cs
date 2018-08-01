@@ -43,7 +43,8 @@ namespace Cofoundry.BasicTestSite
             {
                 // We manually query and map relations which gives us maximum flexibility when mapping models
                 // Fortunately the framework provides tools to make this fairly simple
-                var categoriesQuery = new GetCustomEntityRenderSummariesByIdRangeQuery(dataModel.CategoryIds, publishStatusQuery);
+                var relatedEntityPublishStatusQuery = publishStatusQuery.ToRelatedEntityQueryStatus();
+                var categoriesQuery = new GetCustomEntityRenderSummariesByIdRangeQuery(dataModel.CategoryIds, relatedEntityPublishStatusQuery);
                 var customEntities = await _customEntityRepository.GetCustomEntityRenderSummariesByIdRangeAsync(categoriesQuery);
 
                 vm.Categories = customEntities

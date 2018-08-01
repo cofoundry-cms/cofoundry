@@ -31,18 +31,10 @@ namespace Cofoundry.Domain
             if (dbVersions == null) throw new ArgumentNullException(nameof(dbVersions));
             if (customEntityId <= 0) throw new ArgumentOutOfRangeException(nameof(customEntityId));
 
-            var orderedVersions = dbVersions
-                .Select(MapVersion)
-                .OrderByDescending(v => v.WorkFlowStatus == WorkFlowStatus.Draft)
-                .ThenByDescending(v => v.AuditData.CreateDate)
-                .ToList();
-
-            bool hasLatestPublishVersioned = false;
+            bool hasLatestPublishVersion = false;
             var results = new List<CustomEntityVersionSummary>(dbVersions.Count);
 
-            foreach (var dbVersion in dbVersions
-                .OrderByDescending(v => v.WorkFlowStatusId == (int)WorkFlowStatus.Draft)
-                .ThenByDescending(v => v.CreateDate))
+            foreach (var dbVersion in dbVersions.OrderByLatest())
             {
                 if (dbVersion.CustomEntityId != customEntityId)
                 {
@@ -51,10 +43,10 @@ namespace Cofoundry.Domain
                 }
 
                 var result = MapVersion(dbVersion);
-                if (!hasLatestPublishVersioned && result.WorkFlowStatus == WorkFlowStatus.Published)
+                if (!hasLatestPublishVersion && result.WorkFlowStatus == WorkFlowStatus.Published)
                 {
                     result.IsLatestPublishedVersion = true;
-                    hasLatestPublishVersioned = true;
+                    hasLatestPublishVersion = true;
                 }
 
                 results.Add(result);

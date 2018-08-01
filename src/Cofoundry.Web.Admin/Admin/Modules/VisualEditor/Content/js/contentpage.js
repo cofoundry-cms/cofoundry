@@ -81,13 +81,28 @@ Cofoundry.visualEditor = (function () {
 
         bindToolbar: function () {
             var toolbar = document.getElementById('cofoundry-sv'),
-                visualEditorMode = _internal.model.visualEditorMode
+                model = _internal.model,
+                visualEditorMode = model.visualEditorMode,
+                route = model.isCustomEntityRoute ? model.pageRoutingInfo.customEntityRoute : model.pageRoutingInfo.pageRoute
                 ;
 
             // Internal refs
             __TOOLBAR = toolbar;
 
-            if ((visualEditorMode === 'Draft' || visualEditorMode === 'Edit') && _internal.model.hasEntityPublishPermission) {
+            if (visualEditorMode === 'SpecificVersion' && model.hasEntityUpdatePermission) {
+                // Insert copy to draft button
+                _toolBar.addButton({
+                    icon: 'fa-files-o',
+                    title: 'Copy to<br />draft',
+                    type: 'primary',
+                    classNames: 'publish popup',
+                    click: _internal.copyToDraft
+                });
+            }
+
+            if (((visualEditorMode === 'Preview' || visualEditorMode === 'Edit')
+                || (route.publishStatus == 'Unpublished' && model.pageVersion.isLatestPublishedVersion && !model.hasDraftVersion))
+                && model.hasEntityPublishPermission) {
                 // Insert publish button
                 _toolBar.addButton({
                     icon: 'fa-cloud-upload',
@@ -96,7 +111,7 @@ Cofoundry.visualEditor = (function () {
                     classNames: 'publish popup',
                     click: _internal.publish
                 });
-            } else if (visualEditorMode === 'Live' && _internal.model.hasEntityPublishPermission) {
+            } else if (visualEditorMode === 'Live' && model.hasEntityPublishPermission) {
                 // Insert unpublish button
                 _toolBar.addButton({
                     icon: 'fa-cloud-download',
@@ -104,15 +119,6 @@ Cofoundry.visualEditor = (function () {
                     type: 'primary',
                     classNames: 'publish popup',
                     click: _internal.unpublish
-                });
-            } else if (visualEditorMode === 'SpecificVersion' && _internal.model.hasEntityUpdatePermission) {
-                // Insert copy to draft button
-                _toolBar.addButton({
-                    icon: 'fa-files-o',
-                    title: 'Copy to<br />draft',
-                    type: 'primary',
-                    classNames: 'publish popup',
-                    click: _internal.copyToDraft
                 });
             }
         },

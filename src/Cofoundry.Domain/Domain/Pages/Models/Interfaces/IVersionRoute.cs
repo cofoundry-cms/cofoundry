@@ -29,6 +29,13 @@ namespace Cofoundry.Domain
         string Title { get; set; }
 
         /// <summary>
+        /// A page can have many published versions, this flag indicates if
+        /// it is the latest published version which displays on the live site
+        /// when the page itself is published.
+        /// </summary>
+        bool IsLatestPublishedVersion { get; set; }
+
+        /// <summary>
         /// Date that the version was created.
         /// </summary>
         DateTime CreateDate { get; set; }

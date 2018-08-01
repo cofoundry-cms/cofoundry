@@ -76,7 +76,8 @@ namespace Cofoundry.Domain
 
             UpdatePublishDate(command, executionContext, version);
 
-            if (version.WorkFlowStatusId == (int)WorkFlowStatus.Published)
+            if (version.WorkFlowStatusId == (int)WorkFlowStatus.Published
+                && version.CustomEntity.PublishStatusCode == PublishStatusCode.Published)
             {
                 // only thing we can do with a published version is update the date
                 await _dbContext.SaveChangesAsync();

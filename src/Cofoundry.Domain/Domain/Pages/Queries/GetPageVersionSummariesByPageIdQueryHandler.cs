@@ -51,9 +51,7 @@ namespace Cofoundry.Domain
                 .Include(v => v.OpenGraphImageAsset)
                 .FilterActive()
                 .FilterByPageId(id)
-                .OrderByDescending(v => v.WorkFlowStatusId == (int)WorkFlowStatus.Draft)
-                .ThenByDescending(v => v.WorkFlowStatusId == (int)WorkFlowStatus.Published)
-                .ThenByDescending(v => v.CreateDate);
+                .OrderByLatest();
         }
 
         #endregion

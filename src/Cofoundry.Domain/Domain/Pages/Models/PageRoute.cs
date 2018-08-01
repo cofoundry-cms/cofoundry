@@ -10,7 +10,7 @@ namespace Cofoundry.Domain
     /// A small page object focused on providing routing data. A PageRoute returned from one of the
     /// standard Cofoundry queries is typically stored in a cache to make sure access is fast.
     /// </summary>
-    public class PageRoute : IPageRoute
+    public class PageRoute : IPageRoute, IPublishableEntity
     {
         /// <summary>
         /// Database identifier for the page.
@@ -108,20 +108,6 @@ namespace Cofoundry.Domain
         public bool IsDirectoryDefaultPage(int? localeId = null)
         {
             return string.IsNullOrWhiteSpace(UrlPath);
-        }
-
-        /// <summary>
-        /// Determines if the page is published at this moment in time,
-        /// checking the published status, the publish date and checking
-        /// to make sure there is a published version.
-        /// </summary>
-        public bool IsPublished()
-        {
-            var isPublished = PublishStatus == PublishStatus.Published
-                && HasPublishedVersion
-                && PublishDate <= DateTime.UtcNow;
-
-            return isPublished;
         }
 
         #endregion

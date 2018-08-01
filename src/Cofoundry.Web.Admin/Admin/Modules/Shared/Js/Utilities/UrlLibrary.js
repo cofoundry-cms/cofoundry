@@ -94,7 +94,7 @@ function (
 
     /* Pages */
 
-    service.pageVisualEditor = function (pageRoute, isEditMode) {
+    service.visualEditorForPage = function (pageRoute, isEditMode) {
         if (!pageRoute) return '';
 
         var path = pageRoute.fullPath;
@@ -104,6 +104,36 @@ function (
         }
 
         return path;
+    }
+
+    service.visualEditorForVersion = function (
+        pageRoute,
+        versionRoute,
+        isCustomEntityVersion,
+        isPublished
+    ) {
+        if (!pageRoute) return '';
+
+        var url = pageRoute.fullPath + "?";
+
+        // Some of the latest version states will have a default view e.g. preview 
+        // or live so check for these first before we defer to showing by version number
+        if (versionRoute.workFlowStatus == 'Draft') {
+            url += "mode=preview";
+        }
+        else if (versionRoute.isLatestPublishedVersion && isPublished) {
+            // Published, so show live view
+            url += "mode=live";
+        } else {
+            var versionIdProperty = (isCustomEntityVersion ? 'customEntity' : 'page') + 'VersionId';
+            url += "version=" + versionRoute[versionIdProperty];
+        }
+
+        if (isCustomEntityVersion) {
+            url += "&edittype=entity";
+        }
+
+        return url;
     }
 
     /* Custom Entities */

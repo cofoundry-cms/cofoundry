@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Cofoundry.Domain;
+using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,10 +14,22 @@ namespace Cofoundry.Web
     /// </summary>
     public class ValidateSpecificVersionRoutingRoutingStep : IValidateSpecificVersionRoutingRoutingStep
     {
-        public Task ExecuteAsync(Controller controller, PageActionRoutingState state)
+        private readonly INotFoundViewHelper _notFoundViewHelper;
+        private readonly IPageRouteLibrary _pageRouteLibrary;
+
+        public ValidateSpecificVersionRoutingRoutingStep(
+            INotFoundViewHelper notFoundViewHelper, 
+            IPageRouteLibrary pageRouteLibrary
+            )
+        {
+            _notFoundViewHelper = notFoundViewHelper;
+            _pageRouteLibrary = pageRouteLibrary;
+        }
+
+        public async Task ExecuteAsync(Controller controller, PageActionRoutingState state)
         {
             // Ensure that non-authenticated users can't access previous versions
-            if (state.VisualEditorMode != VisualEditorMode.SpecificVersion)
+            if (state.VisualEditorState.VisualEditorMode != VisualEditorMode.SpecificVersion)
             {
                 state.InputParameters.VersionId = null;
             }
@@ -24,30 +37,39 @@ namespace Cofoundry.Web
             {
                 var versionRoute = state.PageRoutingInfo.GetVersionRoute(
                     state.InputParameters.IsEditingCustomEntity,
-                    state.VisualEditorMode.ToPublishStatusQuery(),
+                    state.VisualEditorState.GetPublishStatusQuery(),
                     state.InputParameters.VersionId);
 
                 // If this isn't an old version of a page, set the VisualEditorMode accordingly.
                 if (versionRoute != null)
                 {
-                    switch (versionRoute.WorkFlowStatus)
+                    if (versionRoute.WorkFlowStatus == WorkFlowStatus.Draft)
                     {
-                        case Cofoundry.Domain.WorkFlowStatus.Draft:
-                            state.VisualEditorMode = VisualEditorMode.Draft;
-                            break;
-                        case Cofoundry.Domain.WorkFlowStatus.Published:
-                            state.VisualEditorMode = VisualEditorMode.Live;
-                            break;
+                        var url = _pageRouteLibrary.VisualEditor(
+                            state.PageRoutingInfo, 
+                            VisualEditorMode.Preview, 
+                            state.InputParameters.IsEditingCustomEntity
+                            );
+
+                        state.Result = controller.Redirect(url);
+                    }
+                    else if (versionRoute.IsLatestPublishedVersion && state.PageRoutingInfo.IsPublished())
+                    {
+                        var url = _pageRouteLibrary.VisualEditor(
+                            state.PageRoutingInfo,
+                            VisualEditorMode.Live,
+                            state.InputParameters.IsEditingCustomEntity
+                            );
+
+                        state.Result = controller.Redirect(url);
                     }
                 }
                 else
                 {
                     // Could not find a version, id must be invalid
-                    state.InputParameters.VersionId = null;
+                    state.Result = await _notFoundViewHelper.GetViewAsync(controller);
                 }
             }
-
-            return Task.CompletedTask;
         }
     }
 }

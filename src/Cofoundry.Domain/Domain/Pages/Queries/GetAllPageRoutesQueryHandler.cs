@@ -52,7 +52,7 @@ namespace Cofoundry.Domain
             public int PageDirectoryId { get; set; }
         }
 
-        private class PageVersionQueryResult
+        private class PageVersionQueryResult : IEntityVersion
         {
             public int PageId { get; set; }
             public int PageVersionId { get; set; }
@@ -108,7 +108,7 @@ namespace Cofoundry.Domain
                         UrlPath = p.UrlPath,
                         PageType = (PageType)p.PageTypeId,
                         CustomEntityDefinitionCode = p.CustomEntityDefinitionCode,
-                        PublishDate = p.PublishDate,
+                        PublishDate = DbDateTimeMapper.AsUtc(p.PublishDate),
                         PublishStatus = PublishStatusMapper.FromCode(p.PublishStatusCode)
                     },
                     LocaleId = p.LocaleId,
@@ -204,18 +204,26 @@ namespace Cofoundry.Domain
             Dictionary<int, PageTemplateQueryResult> templates
             )
         {
-            var versions = dbPageVersions
+            bool hasLatestPublishVersion = false;
+            routingInfo.Versions = new List<PageVersionRoute>(dbPageVersions.Count);
+
+            var orderedDbVersions = dbPageVersions
                 .Where(v => v.PageId == routingInfo.PageId)
-                .OrderByDescending(v => (WorkFlowStatus)v.WorkFlowStatusId == WorkFlowStatus.Published)
-                .ThenByDescending(v => (WorkFlowStatus)v.WorkFlowStatusId == WorkFlowStatus.Draft)
-                .ThenByDescending(v => v.CreateDate)
-                .ToList();
+                .OrderByLatest();
 
-            routingInfo.Versions = versions
-                .Select(v => MapVersion(routingInfo, v, templates))
-                .ToArray();
+            foreach (var dbVersion in orderedDbVersions)
+            {
+                var mappedVersion = MapVersion(routingInfo, dbVersion, templates);
+                if (!hasLatestPublishVersion && mappedVersion.WorkFlowStatus == WorkFlowStatus.Published)
+                {
+                    mappedVersion.IsLatestPublishedVersion = true;
+                    hasLatestPublishVersion = true;
+                }
 
-            var latestVersion = versions.FirstOrDefault();
+                routingInfo.Versions.Add(mappedVersion);
+            }
+
+            var latestVersion = orderedDbVersions.FirstOrDefault();
 
             // There should always be a latest version - but technically it is possible that one doesn't exist.
             if (latestVersion != null)

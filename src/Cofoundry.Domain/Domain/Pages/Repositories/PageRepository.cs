@@ -247,11 +247,25 @@ namespace Cofoundry.Domain
             return _commandExecutor.ExecuteAsync(command, executionContext);
         }
 
+        /// <summary>
+        /// Publishes a page. If the page is already published and
+        /// a date is specified then the publish date will be updated.
+        /// </summary>
+        /// <param name="command">Publishing command to execute.</param>
+        /// <param name="executionContext">Optional execution context to use when executing the command. Useful if you need to temporarily elevate your permission level.</param>
         public Task PublishPageCommandAsync(PublishPageCommand command, IExecutionContext executionContext = null)
         {
             return _commandExecutor.ExecuteAsync(command, executionContext);
         }
 
+        /// <summary>
+        /// Sets the status of a page to un-published, but does not
+        /// remove the publish date, which is preserved so that it
+        /// can be used as a default when the user chooses to publish
+        /// again.
+        /// </summary>
+        /// <param name="pageId">The id of the page to set un-published.</param>
+        /// <param name="executionContext">Optional execution context to use when executing the command. Useful if you need to temporarily elevate your permission level.</param>
         public Task UnPublishPageCommandAsync(int pageId, IExecutionContext executionContext = null)
         {
             var command = new UnPublishPageCommand() { PageId = pageId };

@@ -18,16 +18,19 @@ namespace Cofoundry.Web
         private readonly IUserContextService _userContextService;
         private readonly ContentSettings _contentSettings;
         private readonly IExecutionContextFactory _executionContextFactory;
+        private readonly IVisualEditorStateService _visualEditorStateService;
 
         public InitStateRoutingStep(
             IUserContextService userContextService,
             ContentSettings contentSettings,
-            IExecutionContextFactory executionContextFactory
+            IExecutionContextFactory executionContextFactory,
+            IVisualEditorStateService visualEditorStateService
             )
         {
             _userContextService = userContextService;
             _contentSettings = contentSettings;
             _executionContextFactory = executionContextFactory;
+            _visualEditorStateService = visualEditorStateService;
         }
 
         public async Task ExecuteAsync(Controller controller, PageActionRoutingState state)
@@ -54,29 +57,7 @@ namespace Cofoundry.Web
                 state.CofoundryAdminExecutionContext = _executionContextFactory.Create(state.CofoundryAdminUserContext);
             }
 
-            // Work out whether to view the page in live/draft/edit mode.
-            // We use live by default (for logged out users) or for authenticated
-            // users we can show draft too.
-            var visualEditorMode = VisualEditorMode.Live;
-            if (state.IsCofoundryAdminUser)
-            {
-                if (state.InputParameters.VersionId.HasValue)
-                {
-                    visualEditorMode = VisualEditorMode.SpecificVersion;
-                }
-                else if (!Enum.TryParse(state.InputParameters.VisualEditorMode, true, out visualEditorMode))
-                {
-                    visualEditorMode = VisualEditorMode.Any;
-                }
-            }
-            else if (_contentSettings.AlwaysShowUnpublishedData)
-            {
-                // We can optionally set the visual editor mode to any - ie show draft and published pages
-                // This is used in scenarios where devs are making modifications against a live db using a 
-                // local debug version of the site but aren't ready to publish the pages yet.
-                visualEditorMode = VisualEditorMode.Any;
-            }
-            state.VisualEditorMode = visualEditorMode;
+            state.VisualEditorState = await _visualEditorStateService.GetCurrentAsync();
         }
     }
 }

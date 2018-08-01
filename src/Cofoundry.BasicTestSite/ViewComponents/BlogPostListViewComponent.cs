@@ -1,8 +1,7 @@
 ﻿using Cofoundry.Core;
 using Cofoundry.Domain;
-using Microsoft.AspNetCore.Builder;
+using Cofoundry.Web;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,14 +13,20 @@ namespace Cofoundry.BasicTestSite
     {
         private readonly ICustomEntityRepository _customEntityRepository;
         private readonly IImageAssetRepository _imageAssetRepository;
+        private readonly IPageResponseDataCache _pageRenderDataCache;
+        private readonly IVisualEditorStateService _visualEditorStateService;
 
         public BlogPostListViewComponent(
             ICustomEntityRepository customEntityRepository,
-            IImageAssetRepository imageAssetRepository
+            IImageAssetRepository imageAssetRepository,
+            IPageResponseDataCache pageRenderDataCache,
+            IVisualEditorStateService visualEditorStateService
             )
         {
             _customEntityRepository = customEntityRepository;
             _imageAssetRepository = imageAssetRepository;
+            _pageRenderDataCache = pageRenderDataCache;
+            _visualEditorStateService = visualEditorStateService;
         }
 
         public async Task<IViewComponentResult> InvokeAsync()
@@ -36,7 +41,11 @@ namespace Cofoundry.BasicTestSite
             query.CustomEntityDefinitionCode = BlogPostCustomEntityDefinition.DefinitionCode;
             query.PageNumber = webQuery.PageNumber;
             query.PageSize = 30;
-            query.PublishStatus = PublishStatusQuery.Published;
+
+            // Publish status defaults to live, but we can use the current visual editor
+            // state to allow us to show draft blog posts when previewing a draft page.
+            var state = await _visualEditorStateService.GetCurrentAsync();
+            query.PublishStatus = state.GetAmbientEntityPublishStatusQuery();
 
             // TODO: Filtering by Category (webQuery.CategoryId)
             // Searching/filtering custom entities is not implemented yet, but it

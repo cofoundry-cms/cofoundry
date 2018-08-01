@@ -24,7 +24,6 @@ namespace Cofoundry.Web.Admin
             return ResourcePrefix + "MVC/Views/Toolbar.cshtml";
         }
 
-
         #endregion
     }
 }

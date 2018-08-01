@@ -1,9 +1,11 @@
 ﻿angular.module('cms.shared').factory('shared.pageService', [
     '$http',
     'shared.serviceBase',
+    'shared.publishableEntityMapper',
 function (
     $http,
-    serviceBase) {
+    serviceBase,
+    publishableEntityMapper) {
 
     var service = {},
         pagesServiceBase = serviceBase + 'pages';
@@ -26,7 +28,18 @@ function (
     
     service.getById = function (pageId) {
 
-        return $http.get(service.getIdRoute(pageId));
+        return $http
+            .get(service.getIdRoute(pageId))
+            .then(map);
+
+        function map(page) {
+
+            if (page) {
+                publishableEntityMapper.map(page.pageRoute);
+            }
+
+            return page;
+        }
     }
 
     service.getVersionsByPageId = function (pageId) {
@@ -80,8 +93,6 @@ function (
     service.duplicate = function (command) {
         return $http.post(service.getIdRoute(command.pageToDuplicateId) + '/duplicate', command);
     }
-
-    /* PRIVATES */
 
     /* HELPERS */
 

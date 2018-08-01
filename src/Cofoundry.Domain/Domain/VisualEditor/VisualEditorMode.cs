@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Cofoundry.Web
+namespace Cofoundry.Domain
 {
     /// <summary>
     /// The view modes of a page when logged into the admin panel.
@@ -27,7 +27,7 @@ namespace Cofoundry.Web
         /// <summary>
         /// Shows the page in it's draft state (read only)
         /// </summary>
-        Draft,
+        Preview,
 
         /// <summary>
         /// Shows the page in it's draft state and additionally allows
@@ -39,6 +39,5 @@ namespace Cofoundry.Web
         /// Shows a previously published version of a page.
         /// </summary>
         SpecificVersion,
-
     }
 }

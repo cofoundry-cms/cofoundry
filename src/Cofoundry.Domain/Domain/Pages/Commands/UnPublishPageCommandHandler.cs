@@ -12,6 +12,12 @@ using Cofoundry.Core.EntityFramework;
 
 namespace Cofoundry.Domain
 {
+    /// <summary>
+    /// Sets the status of a page to un-published, but does not
+    /// remove the publish date, which is preserved so that it
+    /// can be used as a default when the user chooses to publish
+    /// again.
+    /// </summary>
     public class UnPublishPageCommandHandler 
         : IAsyncCommandHandler<UnPublishPageCommand>
         , IPermissionRestrictedCommandHandler<UnPublishPageCommand>
@@ -62,12 +68,9 @@ namespace Cofoundry.Domain
             var version = await _dbContext
                 .PageVersions
                 .Include(p => p.Page)
-                .Where(v => v.PageId == command.PageId
-                    && !v.IsDeleted
-                    && !v.Page.IsDeleted
-                    && (v.WorkFlowStatusId == (int)WorkFlowStatus.Draft || v.WorkFlowStatusId == (int)WorkFlowStatus.Published))
-                .OrderByDescending(v => v.WorkFlowStatusId == (int)WorkFlowStatus.Draft)
-                .ThenByDescending(v => v.CreateDate)
+                .FilterActive()
+                .FilterByPageId(command.PageId)
+                .OrderByLatest()
                 .FirstOrDefaultAsync();
             EntityNotFoundException.ThrowIfNull(version, command.PageId);
 
