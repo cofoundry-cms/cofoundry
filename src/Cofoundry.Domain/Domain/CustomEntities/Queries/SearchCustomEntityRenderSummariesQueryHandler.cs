@@ -61,7 +61,7 @@ namespace Cofoundry.Domain
                 .FilterByStatus(query.PublishStatus, executionContext.ExecutionDate);
 
             // Filter by locale 
-            if (query.LocaleId > 0)
+            if (query.LocaleId > 0 && definition.HasLocale)
             {
                 dbQuery = dbQuery.Where(p => p.CustomEntity.LocaleId == query.LocaleId);
             }

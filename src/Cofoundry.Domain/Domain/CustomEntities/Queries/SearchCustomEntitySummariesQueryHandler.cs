@@ -51,7 +51,11 @@ namespace Cofoundry.Domain
             return dbPagedResult.ChangeType(mappedResult);
         }
 
-        private Task<PagedQueryResult<CustomEntityPublishStatusQuery>> RunQueryAsync(SearchCustomEntitySummariesQuery query, CustomEntityDefinitionSummary definition, IExecutionContext executionContext)
+        private Task<PagedQueryResult<CustomEntityPublishStatusQuery>> RunQueryAsync(
+            SearchCustomEntitySummariesQuery query, 
+            CustomEntityDefinitionSummary definition, 
+            IExecutionContext executionContext
+            )
         {
             var dbQuery = _dbContext
                 .CustomEntityPublishStatusQueries
@@ -67,7 +71,7 @@ namespace Cofoundry.Domain
                 .FilterByCustomEntityDefinitionCode(query.CustomEntityDefinitionCode);
 
             // Filter by locale 
-            if (query.LocaleId > 0)
+            if (query.LocaleId > 0 && definition.HasLocale)
             {
                 dbQuery = dbQuery.Where(p => p.CustomEntity.LocaleId == query.LocaleId);
             }
