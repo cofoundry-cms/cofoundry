@@ -13,10 +13,16 @@ namespace Cofoundry.Domain.Data
             PagePublishStatusQueries = new List<PagePublishStatusQuery>();
         }
 
+        /// <summary>
+        /// The database id of the page.
+        /// </summary>
         public int PageId { get; set; }
 
         public int PageDirectoryId { get; set; }
 
+        /// <summary>
+        /// Optional locale id of the page if used in a localized site.
+        /// </summary>
         public int? LocaleId { get; set; }
 
         public string UrlPath { get; set; }
@@ -38,6 +44,9 @@ namespace Cofoundry.Domain.Data
         /// </summary>
         public DateTime? PublishDate { get; set; }
 
+        /// <summary>
+        /// Optional locale of the page if used in a localized site.
+        /// </summary>
         public virtual Locale Locale { get; set; }
 
         public virtual PageDirectory PageDirectory { get; set; }

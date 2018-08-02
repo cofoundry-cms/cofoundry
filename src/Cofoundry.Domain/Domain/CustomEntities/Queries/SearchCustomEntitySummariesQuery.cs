@@ -7,12 +7,26 @@ using Cofoundry.Domain.CQS;
 
 namespace Cofoundry.Domain
 {
+    /// <summary>
+    /// A workflow non-specifc search of custom entities which returns basic
+    /// custom entity information with workflow status and model data for the
+    /// latest version. Designed to be used in the admin panel and not in a 
+    /// version-sensitive context sach as a public webpage.
+    /// </summary>
     public class SearchCustomEntitySummariesQuery : SimplePageableQuery, IQuery<PagedQueryResult<CustomEntitySummary>>
     {
+        /// <summary>
+        /// The six character code of the custom entity defintion to filter by. This
+        /// is required; searching across multiple definitions is not supported by
+        /// this query.
+        /// </summary>
         [Required]
         [MaxLength(6)]
         public string CustomEntityDefinitionCode { get; set; }
 
+        /// <summary>
+        /// Text to filter on.
+        /// </summary>
         public string Text { get; set; }
 
         /// <summary>

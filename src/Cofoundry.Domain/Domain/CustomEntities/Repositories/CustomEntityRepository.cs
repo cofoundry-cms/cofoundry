@@ -76,6 +76,12 @@ namespace Cofoundry.Domain
             return _queryExecutor.ExecuteAsync(query, executionContext);
         }
 
+        public Task<ICollection<ICustomEntityRoutingRule>> GetAllCustomEntityRoutingRulesAsync(IExecutionContext executionContext = null)
+        {
+            var query = new GetAllCustomEntityRoutingRulesQuery();
+            return _queryExecutor.ExecuteAsync(query, executionContext);
+        }
+
         #endregion
 
         #region CustomEntityRenderDetails
@@ -86,22 +92,11 @@ namespace Cofoundry.Domain
         }
 
         #endregion
-        
-        public Task<ICollection<ICustomEntityRoutingRule>> GetAllCustomEntityRoutingRulesAsync(IExecutionContext executionContext = null)
-        {
-            var query = new GetAllCustomEntityRoutingRulesQuery();
-            return _queryExecutor.ExecuteAsync(query, executionContext);
-        }
 
-        public Task<CustomEntityDataModelSchema> GetCustomEntityDataModelSchemaDetailsByCodeAsync(string customEntityDefinitionCode, IExecutionContext executionContext = null)
-        {
-            var query = new GetCustomEntityDataModelSchemaDetailsByDefinitionCodeQuery(customEntityDefinitionCode);
-            return _queryExecutor.ExecuteAsync(query, executionContext);
-        }
+        #region CustomEntityRenderSummary
 
-        public Task<CustomEntityDetails> GetCustomEntityDetailsByIdAsync(int customEntityId, IExecutionContext executionContext = null)
+        public Task<PagedQueryResult<CustomEntityRenderSummary>> SearchCustomEntityRenderSummariesAsync(SearchCustomEntityRenderSummariesQuery query, IExecutionContext executionContext = null)
         {
-            var query = new GetCustomEntityDetailsByIdQuery(customEntityId);
             return _queryExecutor.ExecuteAsync(query, executionContext);
         }
 
@@ -120,9 +115,52 @@ namespace Cofoundry.Domain
             return _queryExecutor.ExecuteAsync(query, executionContext);
         }
 
-        public Task<IDictionary<int, CustomEntitySummary>> GetCustomEntitySummariesByIdRangeAsync(IEnumerable<int> ids, IExecutionContext executionContext = null)
+        #endregion
+
+        #region CustomEntitySummary
+
+        /// <summary>
+        /// A workflow non-specifc search of custom entities which returns basic
+        /// custom entity information with workflow status and model data for the
+        /// latest version. Designed to be used in the admin panel and not in a 
+        /// version-sensitive context sach as a public webpage.
+        /// </summary>
+        /// <param name="query">Query parameters.</param>
+        /// <param name="executionContext">Optional execution context to use when executing the query. Useful if you need to temporarily elevate your permission level.</param>
+        public Task<PagedQueryResult<CustomEntitySummary>> SearchCustomEntitySummariesAsync(SearchCustomEntitySummariesQuery query, IExecutionContext executionContext = null)
         {
-            var query = new GetCustomEntitySummariesByIdRangeQuery(ids);
+            return _queryExecutor.ExecuteAsync(query, executionContext);
+        }
+
+        /// <summary>
+        /// An id range query for custom entities which returns basic
+        /// custom entity information with workflow status and model data for the
+        /// latest version. The query is not version-sensitive and is designed to be 
+        /// used in the admin panel and not in a version-sensitive context such as a 
+        /// public webpage.
+        /// </summary>
+        /// <param name="customEntityIds">
+        /// Collection of custom entity ids to find. Any ids unable to be
+        /// located will not be present in the result.
+        /// </param>
+        /// <param name="executionContext">Optional execution context to use when executing the query. Useful if you need to temporarily elevate your permission level.</param>
+        public Task<IDictionary<int, CustomEntitySummary>> GetCustomEntitySummariesByIdRangeAsync(IEnumerable<int> customEntityIds, IExecutionContext executionContext = null)
+        {
+            var query = new GetCustomEntitySummariesByIdRangeQuery(customEntityIds);
+            return _queryExecutor.ExecuteAsync(query, executionContext);
+        }
+
+        #endregion
+
+        public Task<CustomEntityDataModelSchema> GetCustomEntityDataModelSchemaDetailsByCodeAsync(string customEntityDefinitionCode, IExecutionContext executionContext = null)
+        {
+            var query = new GetCustomEntityDataModelSchemaDetailsByDefinitionCodeQuery(customEntityDefinitionCode);
+            return _queryExecutor.ExecuteAsync(query, executionContext);
+        }
+
+        public Task<CustomEntityDetails> GetCustomEntityDetailsByIdAsync(int customEntityId, IExecutionContext executionContext = null)
+        {
+            var query = new GetCustomEntityDetailsByIdQuery(customEntityId);
             return _queryExecutor.ExecuteAsync(query, executionContext);
         }
 
@@ -140,16 +178,6 @@ namespace Cofoundry.Domain
         public Task<bool> IsCustomEntityPathUniqueAsync(IsCustomEntityPathUniqueQuery query, IExecutionContext executionContext = null)
         {
             return _queryExecutor.ExecuteAsync(query);
-        }
-
-        public Task<PagedQueryResult<CustomEntitySummary>> SearchCustomEntitySummariesAsync(SearchCustomEntitySummariesQuery query, IExecutionContext executionContext = null)
-        {
-            return _queryExecutor.ExecuteAsync(query, executionContext);
-        }
-
-        public Task<PagedQueryResult<CustomEntityRenderSummary>> SearchCustomEntityRenderSummariesAsync(SearchCustomEntityRenderSummariesQuery query, IExecutionContext executionContext = null)
-        {
-            return _queryExecutor.ExecuteAsync(query, executionContext);
         }
 
         #endregion

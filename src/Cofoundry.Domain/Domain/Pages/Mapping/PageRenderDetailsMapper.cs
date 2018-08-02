@@ -38,7 +38,8 @@ namespace Cofoundry.Domain
                 PageId = dbPageVersion.PageId,
                 PageVersionId = dbPageVersion.PageVersionId,
                 Title = dbPageVersion.Title,
-                WorkFlowStatus = (WorkFlowStatus)dbPageVersion.WorkFlowStatusId
+                WorkFlowStatus = (WorkFlowStatus)dbPageVersion.WorkFlowStatusId,
+                CreateDate = dbPageVersion.CreateDate
             };
 
             page.OpenGraph = _openGraphDataMapper.Map(dbPageVersion);

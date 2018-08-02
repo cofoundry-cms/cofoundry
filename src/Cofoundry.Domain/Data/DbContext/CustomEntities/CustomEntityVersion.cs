@@ -17,6 +17,9 @@ namespace Cofoundry.Domain.Data
 
         public int WorkFlowStatusId { get; set; }
 
+        /// <summary>
+        /// The descriptive human-readable title of the custom entity.
+        /// </summary>
         public string Title { get; set; }
 
         public string SerializedData { get; set; }

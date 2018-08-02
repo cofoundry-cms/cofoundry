@@ -3,13 +3,38 @@ using System.Collections.Generic;
 
 namespace Cofoundry.Domain.Data
 {
+    /// <summary>
+    /// A block can optionally have display templates associated with it, 
+    /// which will give the user a choice about how the data is rendered out
+    /// e.g. 'Wide', 'Headline', 'Large', 'Reversed'. If no template is set then 
+    /// the default view is used for rendering.
+    /// </summary>
     public partial class PageBlockTypeTemplate
     {
+        /// <summary>
+        /// Database id of the block type template record.
+        /// </summary>
         public int PageBlockTypeTemplateId { get; set; }
+
+        /// <summary>
+        /// Database id of the block type record this template belongs to.
+        /// </summary>
         public int PageBlockTypeId { get; set; }
+
         public string Name { get; set; }
+
+        /// <summary>
+        /// An optional description used to help users pick a block
+        /// type template from a list of options.
+        /// </summary>
         public string Description { get; set; }
+
         public string FileName { get; set; }
+
+        /// <summary>
+        /// The block type this template belongs to. One block type can
+        /// 0 or more templates.
+        /// </summary>
         public virtual PageBlockType PageBlockType { get; set; }
         
         public DateTime CreateDate { get; set; }

@@ -80,6 +80,8 @@ namespace Cofoundry.Domain
         /// Attempts to find a matching page route using the supplied path. The path
         /// has to be an absolute match, i.e. the query does not try and find a fall-back similar route.
         /// </summary>
+        /// <param name="query">Query parameters</param>
+        /// <param name="executionContext">Optional execution context to use when executing the query. Useful if you need to temporarily elevate your permission level.</param>
         public Task<PageRoutingInfo> GetPageRoutingInfoByPathAsync(GetPageRoutingInfoByPathQuery query, IExecutionContext executionContext = null)
         {
             return _queryExecutor.ExecuteAsync(query, executionContext);

@@ -10,6 +10,12 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Cofoundry.Domain
 {
+    /// <summary>
+    /// A workflow non-specifc search of custom entities which returns basic
+    /// custom entity information with workflow status and model data for the
+    /// latest version. Designed to be used in the admin panel and not in a 
+    /// version-sensitive context sach as a public webpage.
+    /// </summary>
     public class SearchCustomEntitySummariesQueryHandler 
         : IAsyncQueryHandler<SearchCustomEntitySummariesQuery, PagedQueryResult<CustomEntitySummary>>
         , IPermissionRestrictedQueryHandler<SearchCustomEntitySummariesQuery, PagedQueryResult<CustomEntitySummary>>

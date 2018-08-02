@@ -22,8 +22,10 @@ namespace Cofoundry.Domain.Data
         public string CustomEntityDefinitionCode { get; set; }
 
         /// <summary>
-        /// The unique string identifier slug which can
-        /// be used in the routing of the custom entity page.
+        /// The string identifier slug which can
+        /// be used as a lookup identifier or in the routing 
+        /// of the custom entity page. Can be forced to be unique
+        /// by a setting on the custom entity definition.
         /// </summary>
         public string UrlSlug { get; set; }
 
