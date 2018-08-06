@@ -107,6 +107,7 @@ namespace Cofoundry.Domain
                 .ThenInclude(p => p.PageTags)
                 .ThenInclude(t => t.Tag)
                 .Include(v => v.OpenGraphImageAsset)
+                .ThenInclude(v => v.Creator)
                 .AsNoTracking()
                 .FilterActive()
                 .FilterByPageId(id)

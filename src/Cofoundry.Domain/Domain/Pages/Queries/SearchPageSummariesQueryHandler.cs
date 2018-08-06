@@ -9,6 +9,12 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Cofoundry.Domain
 {
+    /// <summary>
+    /// Search page data returning the PageSummary projection, which is primarily used
+    /// to display lists of page information in the admin panel. The query isn't version 
+    /// specific and should not be used to render content out to a live page because some of
+    /// the pages returned may be unpublished.
+    /// </summary>
     public class SearchPageSummariesQueryHandler 
         : IAsyncQueryHandler<SearchPageSummariesQuery, PagedQueryResult<PageSummary>>
         , IPermissionRestrictedQueryHandler<SearchPageSummariesQuery, PagedQueryResult<PageSummary>>
@@ -37,25 +43,17 @@ namespace Cofoundry.Domain
             var dbPagedResult = await CreateQuery(query, executionContext)
                 .ToPagedResultAsync(query);
 
-            // Have to refilter here because EF won't let us include related entieis after a .Select statement yet
-            var items = dbPagedResult
-                .Items
-                .Select(p => p.Page)
-                .ToList();
-
             // Finish mapping children
-            var mappedResults = await _pageSummaryMapper.MapAsync(items, executionContext);
+            var mappedResults = await _pageSummaryMapper.MapAsync(dbPagedResult.Items, executionContext);
 
             return dbPagedResult.ChangeType(mappedResults);
         }
 
-        private IQueryable<PagePublishStatusQuery> CreateQuery(SearchPageSummariesQuery query, IExecutionContext executionContext)
+        private IQueryable<Page> CreateQuery(SearchPageSummariesQuery query, IExecutionContext executionContext)
         {
             var dbQuery = _dbContext
                 .PagePublishStatusQueries
                 .AsNoTracking()
-                .Include(p => p.Page)
-                .Include(p => p.Page.Creator)
                 .FilterByStatus(PublishStatusQuery.Latest, executionContext.ExecutionDate)
                 .FilterActive()
                 ;
@@ -101,13 +99,13 @@ namespace Cofoundry.Domain
             // Filter by locale 
             if (query.LocaleId > 0)
             {
-                dbQuery = dbQuery.Where(p => p.Page.LocaleId == query.LocaleId);
+                dbQuery = dbQuery.FilterByLocaleId(query.LocaleId.Value);
             }
 
             // Filter by directory
             if (query.PageDirectoryId > 0)
             {
-                dbQuery = dbQuery.Where(p => p.Page.PageDirectoryId == query.PageDirectoryId);
+                dbQuery = dbQuery.FilterByDirectoryId(query.PageDirectoryId.Value);
             }
 
             // Filter by group
@@ -116,7 +114,11 @@ namespace Cofoundry.Domain
                 dbQuery = dbQuery.Where(p => p.Page.PageGroupItems.Any(i => i.PageGroupId == query.PageGroupId));
             }
 
-            return dbQuery.OrderByDescending(p => p.Page.CreateDate);
+            return dbQuery
+                .SortBy(query.SortBy, query.SortDirection)
+                .Select(p => p.Page)
+                .Include(p => p.Creator)
+                ;
         }
 
 

@@ -17,7 +17,7 @@ namespace Cofoundry.Domain
         /// Maps an EF PageVersion record from the db into an OpenGraphData 
         /// object.
         /// </summary>
-        /// <param name="dbPageVersion">PageVersion record from the database.</param>
+        /// <param name="dbPageVersion">PageVersion record from the database. Must include the OpenGraphImageAsset property.</param>
         OpenGraphData Map(PageVersion dbPageVersion);
     }
 }

@@ -89,6 +89,25 @@ namespace Cofoundry.Domain
 
         #endregion
 
+        #region PageRenderSummary
+
+        /// <summary>
+        /// Search page data returning the PageRenderSummary projection, which is
+        /// a lighter weight projection designed for rendering to a site when the 
+        /// templates, region and block data is not required. The result is 
+        /// version-sensitive and defaults to returning published versions only, but
+        /// this behavior can be controlled by the PublishStatus query property.
+        /// </summary>
+        /// <param name="query">Query parameters</param>
+        /// <param name="executionContext">Optional execution context to use when executing the query. Useful if you need to temporarily elevate your permission level.</param>
+        public Task<PagedQueryResult<PageSummary>> SearchPageRenderSummariesAsync(SearchPageSummariesQuery query, IExecutionContext executionContext = null)
+        {
+            // fill out other queries for this type.
+            return _queryExecutor.ExecuteAsync(query, executionContext);
+        }
+
+        #endregion
+
         #region PageRenderDetails
 
         /// <summary>
@@ -112,7 +131,7 @@ namespace Cofoundry.Domain
         {
             return _queryExecutor.ExecuteAsync(query, executionContext);
         }
-
+        
         #endregion
 
         #region PageRegionDetails

@@ -40,8 +40,23 @@ namespace Cofoundry.Domain
 
         #endregion
 
+        #region PageRenderSummary
+
+        /// <summary>
+        /// Search page data returning the PageRenderSummary projection, which is
+        /// a lighter weight projection designed for rendering to a site when the 
+        /// templates, region and block data is not required. The result is 
+        /// version-sensitive and defaults to returning published versions only, but
+        /// this behavior can be controlled by the PublishStatus query property.
+        /// </summary>
+        /// <param name="query">Query parameters</param>
+        /// <param name="executionContext">Optional execution context to use when executing the query. Useful if you need to temporarily elevate your permission level.</param>
+        Task<PagedQueryResult<PageSummary>> SearchPageRenderSummariesAsync(SearchPageSummariesQuery query, IExecutionContext executionContext = null);
+
+        #endregion
+
         #region PageRenderDetails
-        
+
         /// <summary>
         /// Gets a page object that contains the data required to render a page, including template 
         /// data for all the content-editable regions.
@@ -90,7 +105,15 @@ namespace Cofoundry.Domain
         /// <param name="pageIds">A collection of database ids of the pages to fetch.</param>
         /// <param name="executionContext">Optional execution context to use when executing the query. Useful if you need to temporarily elevate your permission level.</param>
         Task<IDictionary<int, PageSummary>> GetPageSummariesByPageIdAsync(IEnumerable<int> pageIds, IExecutionContext executionContext = null);
-        
+
+        /// <summary>
+        /// Search page data returning the PageSummary projection, which is primarily used
+        /// to display lists of page information in the admin panel. The query isn't version 
+        /// specific and should not be used to render content out to a live page because some of
+        /// the pages returned may be unpublished.
+        /// </summary>
+        /// <param name="query">Query parameters</param>
+        /// <param name="executionContext">Optional execution context to use when executing the query. Useful if you need to temporarily elevate your permission level.</param>
         Task<PagedQueryResult<PageSummary>> SearchPageSummariesAsync(SearchPageSummariesQuery query, IExecutionContext executionContext = null);
 
         #endregion

@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace Cofoundry.Domain
 {
+    /// <summary>
+    /// Represents a page model that includes data for buiding a url.
+    /// </summary>
     public interface IPageRoute
     {
         /// <summary>

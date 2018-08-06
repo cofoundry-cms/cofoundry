@@ -14,8 +14,9 @@ namespace Cofoundry.Domain
     /// </summary>
     public class PageSummary : ICreateAudited, IPageRoute, IPublishableEntity
     {
-        #region properties shared with page route
-
+        /// <summary>
+        /// Database id of the page record.
+        /// </summary>
         public int PageId { get; set; }
         
         /// <summary>
@@ -71,16 +72,20 @@ namespace Cofoundry.Domain
         /// </summary>
         public PageType PageType { get; set; }
 
+        /// <summary>
+        /// If this instance is PageType.CustomEntityDetails, this will contain
+        /// name of the custom entity definition.
+        /// </summary>
         public string CustomEntityName { get; set; }
 
-        #endregion
-
-        #region properties unique to this class
-
+        /// <summary>
+        /// Collection of tag names that this entity is tagged with.
+        /// </summary>
         public ICollection<string> Tags { get; set; }
 
+        /// <summary>
+        /// Simple audit data for entity creation.
+        /// </summary>
         public CreateAuditData AuditData { get; set; }
-
-        #endregion
     }
 }

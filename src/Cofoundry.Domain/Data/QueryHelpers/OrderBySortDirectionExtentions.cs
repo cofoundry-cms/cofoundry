@@ -26,7 +26,7 @@ namespace Cofoundry.Domain.Data
         /// <returns>An System.Linq.IOrderedQueryable`1 whose elements are sorted according to a key.</returns>
         public static IOrderedQueryable<TSource> OrderByWithSortDirection<TSource, TKey>(this IQueryable<TSource> source, Expression<Func<TSource, TKey>> keySelector, SortDirection sortDirection)
         {
-            if (sortDirection == SortDirection.Ascending)
+            if (sortDirection == SortDirection.Default)
             {
                 return source.OrderBy(keySelector);
             }
@@ -51,7 +51,7 @@ namespace Cofoundry.Domain.Data
         /// <returns>An System.Linq.IOrderedQueryable`1 whose elements are sorted according to a key.</returns>
         public static IOrderedQueryable<TSource> OrderByDescendingWithSortDirection<TSource, TKey>(this IQueryable<TSource> source, Expression<Func<TSource, TKey>> keySelector, SortDirection sortDirection)
         {
-            if (sortDirection == SortDirection.Ascending)
+            if (sortDirection == SortDirection.Default)
             {
                 return source.OrderByDescending(keySelector);
             }
@@ -76,7 +76,7 @@ namespace Cofoundry.Domain.Data
         /// <returns>An System.Linq.IOrderedQueryable`1 whose elements are sorted according to a key.</returns>
         public static IOrderedQueryable<TSource> ThenByWithSortDirection<TSource, TKey>(this IOrderedQueryable<TSource> source, Expression<Func<TSource, TKey>> keySelector, SortDirection sortDirection)
         {
-            if (sortDirection == SortDirection.Ascending)
+            if (sortDirection == SortDirection.Default)
             {
                 return source.ThenBy(keySelector);
             }
@@ -101,7 +101,7 @@ namespace Cofoundry.Domain.Data
         /// <returns>An System.Linq.IOrderedQueryable`1 whose elements are sorted according to a key.</returns>
         public static IOrderedQueryable<TSource> ThenByDescendingWithSortDirection<TSource, TKey>(this IOrderedQueryable<TSource> source, Expression<Func<TSource, TKey>> keySelector, SortDirection sortDirection)
         {
-            if (sortDirection == SortDirection.Ascending)
+            if (sortDirection == SortDirection.Default)
             {
                 return source.ThenByDescending(keySelector);
             }

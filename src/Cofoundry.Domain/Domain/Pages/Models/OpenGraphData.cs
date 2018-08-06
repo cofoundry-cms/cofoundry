@@ -10,6 +10,6 @@ namespace Cofoundry.Domain
     {
         public string Title { get; set; }
         public string Description { get; set; }
-        public ImageAssetSummary Image { get; set; }
+        public ImageAssetRenderDetails Image { get; set; }
     }
 }

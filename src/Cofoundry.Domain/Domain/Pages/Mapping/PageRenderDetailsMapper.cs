@@ -10,39 +10,73 @@ namespace Cofoundry.Domain
     public class PageRenderDetailsMapper : IPageRenderDetailsMapper
     {
         private readonly IPageTemplateMicroSummaryMapper _pageTemplateMapper;
+        private readonly IPageRenderSummaryMapper _pageRenderSummaryMapper;
         private readonly IOpenGraphDataMapper _openGraphDataMapper;
 
         public PageRenderDetailsMapper(
             IPageTemplateMicroSummaryMapper pageTemplateMapper,
-            IOpenGraphDataMapper openGraphDataMapper
+            IOpenGraphDataMapper openGraphDataMapper,
+            IPageRenderSummaryMapper pageRenderSummaryMapper
             )
         {
             _pageTemplateMapper = pageTemplateMapper;
             _openGraphDataMapper = openGraphDataMapper;
+            _pageRenderSummaryMapper = pageRenderSummaryMapper;
         }
 
         /// <summary>
-        /// Maps the basic properties on a PageRenderDetails.
+        /// Maps the main properties on a PageRenderDetails including
+        /// page regions, but does not map the page block data.
         /// </summary>
-        /// <remarks>
-        /// This isn't a very fully featured map function and will likey
-        /// be reworked later on.
-        /// </remarks>
+        /// <param name="dbPageVersion">
+        /// PageVersion record from the database. Must include the 
+        /// OpenGraphImageAsset, PageTemplate and PageTemplate.PageTemplateRegions
+        /// properties.
+        /// </param>
+        /// <param name="pageRoute">
+        /// The page route to map to the new object.
+        /// </param>
         public PageRenderDetails Map(
-            PageVersion dbPageVersion
+            PageVersion dbPageVersion,
+            PageRoute pageRoute
             )
         {
-            var page = new PageRenderDetails()
-            {
-                MetaDescription = dbPageVersion.MetaDescription,
-                PageId = dbPageVersion.PageId,
-                PageVersionId = dbPageVersion.PageVersionId,
-                Title = dbPageVersion.Title,
-                WorkFlowStatus = (WorkFlowStatus)dbPageVersion.WorkFlowStatusId,
-                CreateDate = dbPageVersion.CreateDate
-            };
+            if (dbPageVersion == null) throw new ArgumentNullException(nameof(dbPageVersion));
+            if (pageRoute == null) throw new ArgumentNullException(nameof(pageRoute));
 
-            page.OpenGraph = _openGraphDataMapper.Map(dbPageVersion);
+            var page = _pageRenderSummaryMapper.Map<PageRenderDetails>(dbPageVersion, pageRoute);
+
+            MapInternal(dbPageVersion, page);
+
+            return page;
+        }
+
+        /// <summary>
+        /// Maps the main properties on a PageRenderDetails including
+        /// page regions, but does not map the page block data.
+        /// </summary>
+        /// <param name="dbPageVersion">
+        /// PageVersion record from the database. Must include the 
+        /// OpenGraphImageAsset, PageTemplate and PageTemplate.PageTemplateRegions
+        /// properties.
+        /// </param>
+        /// <param name="pageRouteLookup">
+        /// Set of page routes to lookup the route property value.
+        /// </param>
+        public PageRenderDetails Map(PageVersion dbPageVersion, IDictionary<int, PageRoute> pageRouteLookup)
+        {
+            if (dbPageVersion == null) throw new ArgumentNullException(nameof(dbPageVersion));
+            if (pageRouteLookup == null) throw new ArgumentNullException(nameof(pageRouteLookup));
+            
+            var page = _pageRenderSummaryMapper.Map<PageRenderDetails>(dbPageVersion, pageRouteLookup);
+
+            MapInternal(dbPageVersion, page);
+
+            return page;
+        }
+
+        private void MapInternal(PageVersion dbPageVersion, PageRenderDetails page)
+        {
             page.Template = _pageTemplateMapper.Map(dbPageVersion.PageTemplate);
 
             page.Regions = dbPageVersion
@@ -55,8 +89,6 @@ namespace Cofoundry.Domain
                     // Blocks mapped elsewhere
                 })
                 .ToList();
-
-            return page;
         }
     }
 }
