@@ -15,11 +15,11 @@ namespace Cofoundry.BasicTestSite
 
     public class TestController : Controller
     {
-        private readonly IQueryExecutor _queryExecutor;
+        private readonly IPageRepository _pageRepository;
 
-        public TestController(IQueryExecutor queryExecutor)
+        public TestController(IPageRepository pageRepository)
         {
-            _queryExecutor = queryExecutor;
+            _pageRepository = pageRepository;
         }
 
         [Route("test/test")]
@@ -27,11 +27,13 @@ namespace Cofoundry.BasicTestSite
         {
             var query = new SearchPageRenderSummariesQuery();
 
-            var results = await _queryExecutor.ExecuteAsync(query);
+            var results = await _pageRepository.SearchPageRenderSummariesAsync(query);
 
-            query.SortBy = PageQuerySortType.CreateDate;
-            query.PageDirectoryId = 1;
-            var results2 = await _queryExecutor.ExecuteAsync(query);
+            var query2 = new GetPageRenderSummaryByIdQuery(7);
+            var results2 = await _pageRepository.GetPageRenderDetailsByIdAsync(query2);
+
+            var query3 = new GetPageRenderSummariesByIdRangeQuery(new int[] { 2, 5, 7 });
+            var results3 = await _pageRepository.GetPageRenderSummariesByIdRangeAsync(query3);
 
             return View(new TestViewModel());
         }

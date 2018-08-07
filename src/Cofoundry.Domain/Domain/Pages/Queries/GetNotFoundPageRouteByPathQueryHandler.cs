@@ -7,6 +7,10 @@ using Cofoundry.Domain.CQS;
 
 namespace Cofoundry.Domain
 {
+    /// <summary>
+    /// Attempts to find the most relevant 'Not Found' page route by searching
+    /// for a 'Not Found' page up the directory tree.
+    /// </summary>
     public class GetNotFoundPageRouteByPathQueryHandler 
         : IAsyncQueryHandler<GetNotFoundPageRouteByPathQuery, PageRoute>
         , IPermissionRestrictedQueryHandler<GetNotFoundPageRouteByPathQuery, PageRoute>

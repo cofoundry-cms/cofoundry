@@ -8,19 +8,29 @@ using Cofoundry.Core.Validation;
 namespace Cofoundry.Domain
 {
     /// <summary>
-    /// Gets a page object that contains the data required to render a page, including template 
-    /// data for all the content-editable regions.
+    /// Gets a page PageRenderSummary projection by id, which is
+    /// a lighter weight projection designed for rendering to a site when the 
+    /// templates, region and block data is not required. The result is 
+    /// version-sensitive and defaults to returning published versions only, but
+    /// this behavior can be controlled by the publishStatus query property.
     /// </summary>
-    public class GetPageRenderDetailsByIdQuery : IQuery<PageRenderDetails>, IValidatableObject
+    public class GetPageRenderSummaryByIdQuery : IQuery<PageRenderSummary>, IValidatableObject
     {
-        public GetPageRenderDetailsByIdQuery() { }
+        /// <summary>
+        /// Gets a page PageRenderSummary projection by id, which is
+        /// a lighter weight projection designed for rendering to a site when the 
+        /// templates, region and block data is not required. The result is 
+        /// version-sensitive and defaults to returning published versions only, but
+        /// this behavior can be controlled by the publishStatus query property.
+        /// </summary>
+        public GetPageRenderSummaryByIdQuery() { }
 
         /// <summary>
         /// Initializes the query with the specified parameters.
         /// </summary>
         /// <param name="pageId">PageId of the page to get.</param>
         /// <param name="publishStatus">Used to determine which version of the page to include data for.</param>
-        public GetPageRenderDetailsByIdQuery(int pageId, PublishStatusQuery? publishStatus = null)
+        public GetPageRenderSummaryByIdQuery(int pageId, PublishStatusQuery? publishStatus = null)
         {
             PageId = pageId;
             if (publishStatus.HasValue)
@@ -30,7 +40,7 @@ namespace Cofoundry.Domain
         }
 
         /// <summary>
-        /// PageId of the page to get.
+        /// Database id of the page to get.
         /// </summary>
         [PositiveInteger]
         [Required]

@@ -77,15 +77,13 @@
                     </td>
                     <td ng-if="vm.previewFields.fields.previewDescription">{{entity.model[vm.previewFields.fields.previewDescription.lowerName]}}</td>
                     <td ng-if="::!vm.options.autoPublish">
-                        <span ng-if="entity.isPublished">Published</span>
-                        <span ng-if="!entity.isPublished && entity.publishStatus == 'Published'">Scheduled</span>
-                        <span ng-if="entity.publishStatus == 'Unpublished'">Unpublished</span>
+                        <span>{{::entity.getPublishStatusLabel()}}</span>
                         <br />
-                        <a href="{{ entity.fullPath }}" ng-if="entity.hasDraft && entity.fullPath">(Pending Draft)</a>
+                        <span ng-if="::entity.hasDraftVersion">(Pending Draft)</span>
                     </td>
                     <td ng-if="::!vm.options.autoPublish">
                         <span ng-if="::entity.publishDate"
-                              title="{{entity.publishDate | date:'fullDate'}} at {{entity.publishDate | date:'HH:mm:ss'}}">{{entity.publishDate | date : 'mediumDate' }}{{entity.publishDate | date : 'HH:mm' }}</span>
+                              title="{{entity.publishDate | date:'fullDate'}} at {{entity.publishDate | date:'HH:mm:ss'}}">{{entity.publishDate | date : 'mediumDate' }} {{entity.publishDate | date : 'HH:mm' }}</span>
                     </td>
                     <td class="lowPriority">
                         <cms-table-cell-created-audit-data cms-audit-data="::entity.auditData"></cms-table-cell-created-audit-data>

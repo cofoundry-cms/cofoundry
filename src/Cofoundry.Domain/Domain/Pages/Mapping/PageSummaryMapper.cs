@@ -38,11 +38,11 @@ namespace Cofoundry.Domain
         /// </summary>
         public async Task<List<PageSummary>> MapAsync(ICollection<Page> dbPages, IExecutionContext executionContext)
         {
-            var routes = await _queryExecutor.ExecuteAsync(new GetAllPageRoutesQuery(), executionContext);
-
             var ids = dbPages
                 .Select(p => p.PageId)
                 .ToArray();
+
+            var routes = await _queryExecutor.ExecuteAsync(new GetPageRoutesByIdRangeQuery(ids), executionContext);
 
             var pageTags = await _dbContext
                 .PageTags
@@ -59,7 +59,7 @@ namespace Cofoundry.Domain
 
             foreach (var dbPage in dbPages)
             {
-                var pageRoute = routes.SingleOrDefault(r => r.PageId == dbPage.PageId);
+                var pageRoute = routes.GetOrDefault(dbPage.PageId);
                 EntityNotFoundException.ThrowIfNull(pageRoute, dbPage.PageId);
 
                 var page = new PageSummary()

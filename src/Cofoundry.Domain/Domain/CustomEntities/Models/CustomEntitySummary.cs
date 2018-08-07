@@ -12,7 +12,7 @@ namespace Cofoundry.Domain
     /// of workflow status and should not be used in a version-sensitive context 
     /// such as a public webpage. Used primarily in the admin panel.
     /// </summary>
-    public class CustomEntitySummary : IUpdateAudited, IPageRoute
+    public class CustomEntitySummary : IUpdateAudited, IPageRoute//, IPublishableEntity
     {
         /// <summary>
         /// The database id of the custom entity.
@@ -45,11 +45,6 @@ namespace Cofoundry.Domain
         public string FullPath { get; set; }
 
         /// <summary>
-        /// True if the page is published and the publish date has passed.
-        /// </summary>
-        public bool IsPublished { get; set; }
-
-        /// <summary>
         /// Indicates if the page is marked as published or not, which allows the page
         /// to be shown on the live site if the PublishDate has passed.
         /// </summary>
@@ -63,7 +58,12 @@ namespace Cofoundry.Domain
         /// <summary>
         /// Indicates whether there is a draft version of this entity available.
         /// </summary>
-        public bool HasDraft { get; set; }
+        public bool HasDraftVersion { get; set; }
+
+        /// <summary>
+        /// Indicates whether there is a published version of this entity available.
+        /// </summary>
+        public bool HasPublishedVersion { get; set; }
 
         /// <summary>
         /// A number representing any custom ordering applied to this custom 

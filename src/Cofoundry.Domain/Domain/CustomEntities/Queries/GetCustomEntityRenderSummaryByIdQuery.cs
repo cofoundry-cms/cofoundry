@@ -35,14 +35,7 @@ namespace Cofoundry.Domain
 
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
-            if (PublishStatus == PublishStatusQuery.SpecificVersion && (!CustomEntityVersionId.HasValue || CustomEntityVersionId < 1))
-            {
-                yield return new ValidationResult("Value cannot be null if PublishStatusQuery.SpecificVersion is specified", new string[] { "CustomEntityVersionId" });
-            }
-            else if (PublishStatus != PublishStatusQuery.SpecificVersion && CustomEntityVersionId.HasValue)
-            {
-                yield return new ValidationResult("Value should be null if PublishStatusQuery.SpecificVersion is not specified", new string[] { "CustomEntityVersionId" });
-            }
+            return PublishStatusQueryModelValidator.ValidateVersionId(PublishStatus, CustomEntityVersionId, nameof(CustomEntityVersionId));
         }
     }
 }

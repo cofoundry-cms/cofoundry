@@ -91,7 +91,6 @@ namespace Cofoundry.Domain
                 // TODO: YAH: 
                 // also, should any other entities conform to IPublishableEntity?
                 // That would probably mean a few changes for CustomEntitySummary for example.
-                // Also your doing this to make toolbar.cshtml work.
             }
 
             return publishState;

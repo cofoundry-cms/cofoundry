@@ -61,7 +61,7 @@
                     <thead>
                         <tr>
                             <th>{{::options.terms['title']}}</th>
-                            <th>Status</th>
+                            <th ng-if="::!options.autoPublish">Status</th>
                             <th cms-table-column-actions ng-if="isPartialOrdering">Actions</th>
                         </tr>
                     </thead>
@@ -81,12 +81,8 @@
                                                             cms-custom-entity="entity"></cms-custom-entity-link>
                                 </strong>
                             </td>
-                            <td ng-if="entity.isPublished">
-                                Published
-                                <span ng-if="entity.isPublished && entity.hasDraft">(Pending Draft)</span>
-                            </td>
-                            <td ng-if="!entity.isPublished">
-                                Draft
+                            <td ng-if="::!options.autoPublish">
+                                {{entity.getPublishStatusLabel()}}
                             </td>
                             <td cms-table-column-actions ng-if="isPartialOrdering">
                                 <cms-button-icon cms-title="Remove"

@@ -69,6 +69,10 @@ namespace Cofoundry.Domain
         /// </summary>
         public ICollection<PageVersionRoute> Versions { get; set; }
 
+        /// <summary>
+        /// Most pages are generic pages but they could have some sort of
+        /// special function e.g. NotFound, CustomEntityDetails.
+        /// </summary>
         public PageType PageType { get; set; }
 
         /// <summary>

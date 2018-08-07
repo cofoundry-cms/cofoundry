@@ -67,8 +67,6 @@ namespace Cofoundry.Domain
                 .Include(e => e.CustomEntityVersion)
                 .ThenInclude(e => e.Creator)
                 .Include(e => e.CustomEntity)
-                .ThenInclude(e => e.Locale)
-                .Include(e => e.CustomEntity)
                 .ThenInclude(e => e.Creator)
                 .Where(v => query.CustomEntityIds.Contains(v.CustomEntityId))
                 .FilterByActive()

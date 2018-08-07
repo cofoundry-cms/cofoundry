@@ -33,24 +33,59 @@ namespace Cofoundry.Domain
 
         #region page routes
 
+        /// <summary>
+        /// Returns a collection of page routing data for all pages. The 
+        /// PageRoute projection is a small page object focused on providing 
+        /// routing data only. Data returned from this query is cached by 
+        /// default as it's core to routing and often incorporated in more detailed
+        /// page projections.
+        /// </summary>
+        /// <param name="executionContext">Optional execution context to use when executing the query. Useful if you need to temporarily elevate your permission level.</param>
         public Task<ICollection<PageRoute>> GetAllPageRoutesAsync(IExecutionContext executionContext = null)
         {
             var query = new GetAllPageRoutesQuery();
             return _queryExecutor.ExecuteAsync(query, executionContext);
         }
 
+        /// <summary>
+        /// Returns page routing data for a single page. The 
+        /// PageRoute projection is a small page object focused on providing 
+        /// routing data only. Data returned from this query is cached by 
+        /// default as it's core to routing and often incorporated in more detailed
+        /// page projections.
+        /// </summary>
+        /// <param name="pageId">Database id of the page to fetch routing data for.</param>
+        /// <param name="executionContext">Optional execution context to use when executing the query. Useful if you need to temporarily elevate your permission level.</param>
         public Task<PageRoute> GetPageRouteByIdAsync(int pageId, IExecutionContext executionContext = null)
         {
             var query = new GetPageRouteByIdQuery(pageId);
             return _queryExecutor.ExecuteAsync(query, executionContext);
         }
 
+        /// <summary>
+        /// Returns page routing data for a set of pages by their database ids. The 
+        /// PageRoute projection is a small page object focused on providing 
+        /// routing data only. Data returned from this query is cached by 
+        /// default as it's core to routing and often incorporated in more detailed
+        /// page projections.
+        /// </summary>
+        /// <param name="pageIds">Database ids of the pages to fetch routing data for.</param>
+        /// <param name="executionContext">Optional execution context to use when executing the query. Useful if you need to temporarily elevate your permission level.</param>
         public Task<IDictionary<int, PageRoute>> GetPageRoutesByIdRangeAsync(IEnumerable<int> pageIds, IExecutionContext executionContext = null)
         {
             var query = new GetPageRoutesByIdRangeQuery(pageIds);
             return _queryExecutor.ExecuteAsync(query, executionContext);
         }
 
+        /// <summary>
+        /// Returns page routing data for pages that are nested immediately inside the specified 
+        /// directory. The PageRoute projection is a small page object focused on providing 
+        /// routing data only. Data returned from this query is cached by 
+        /// default as it's core to routing and often incorporated in more detailed
+        /// page projections.
+        /// </summary>
+        /// <param name="pageDirectoryId">The id of the directory to get child pages for.</param>
+        /// <param name="executionContext">Optional execution context to use when executing the query. Useful if you need to temporarily elevate your permission level.</param>
         public Task<ICollection<PageRoute>> GetPageRoutesByPageDirectoryIdAsync(int pageDirectoryId, IExecutionContext executionContext = null)
         {
             return _queryExecutor.ExecuteAsync(new GetPageRoutesByPageDirectoryIdQuery(pageDirectoryId), executionContext);
@@ -64,8 +99,7 @@ namespace Cofoundry.Domain
         #endregion
 
         #region PageRoutingInfo
-
-
+        
         public Task<ICollection<PageRoutingInfo>> GetPageRoutingInfoByCustomEntityIdAsync(int customEntityId, IExecutionContext executionContext = null)
         {
             return _queryExecutor.ExecuteAsync(new GetPageRoutingInfoByCustomEntityIdQuery(customEntityId), executionContext);
@@ -100,9 +134,36 @@ namespace Cofoundry.Domain
         /// </summary>
         /// <param name="query">Query parameters</param>
         /// <param name="executionContext">Optional execution context to use when executing the query. Useful if you need to temporarily elevate your permission level.</param>
-        public Task<PagedQueryResult<PageSummary>> SearchPageRenderSummariesAsync(SearchPageSummariesQuery query, IExecutionContext executionContext = null)
+        public Task<PagedQueryResult<PageRenderSummary>> SearchPageRenderSummariesAsync(SearchPageRenderSummariesQuery query, IExecutionContext executionContext = null)
         {
-            // fill out other queries for this type.
+            return _queryExecutor.ExecuteAsync(query, executionContext);
+        }
+
+        /// <summary>
+        /// Gets a page PageRenderSummary projection by id, which is
+        /// a lighter weight projection designed for rendering to a site when the 
+        /// templates, region and block data is not required. The result is 
+        /// version-sensitive and defaults to returning published versions only, but
+        /// this behavior can be controlled by the publishStatus query property.
+        /// </summary>
+        /// <param name="query">Query parameters</param>
+        /// <param name="executionContext">Optional execution context to use when executing the query. Useful if you need to temporarily elevate your permission level.</param>
+        public Task<PageRenderSummary> GetPageRenderDetailsByIdAsync(GetPageRenderSummaryByIdQuery query, IExecutionContext executionContext = null)
+        {
+            return _queryExecutor.ExecuteAsync(query, executionContext);
+        }
+
+        /// <summary>
+        /// Gets a range of pages by a set of id, projected as a PageRenderSummary, which is
+        /// a lighter weight projection designed for rendering to a site when the 
+        /// templates, region and block data is not required. The results are 
+        /// version-sensitive and defaults to returning published versions only, but
+        /// this behavior can be controlled by the publishStatus query property.
+        /// </summary>
+        /// <param name="query">Query parameters</param>
+        /// <param name="executionContext">Optional execution context to use when executing the query. Useful if you need to temporarily elevate your permission level.</param>
+        public Task<IDictionary<int, PageRenderSummary>> GetPageRenderSummariesByIdRangeAsync(GetPageRenderSummariesByIdRangeQuery query, IExecutionContext executionContext = null)
+        {
             return _queryExecutor.ExecuteAsync(query, executionContext);
         }
 
@@ -170,11 +231,19 @@ namespace Cofoundry.Domain
         /// </summary>
         /// <param name="pageIds">A collection of database ids of the pages to fetch.</param>
         /// <param name="executionContext">Optional execution context to use when executing the query. Useful if you need to temporarily elevate your permission level.</param>
-        public Task<IDictionary<int, PageSummary>> GetPageSummariesByPageIdAsync(IEnumerable<int> pageIds, IExecutionContext executionContext = null)
+        public Task<IDictionary<int, PageSummary>> GetPageSummariesByIdRangeAsync(IEnumerable<int> pageIds, IExecutionContext executionContext = null)
         {
             return _queryExecutor.ExecuteAsync(new GetPageSummariesByIdRangeQuery(pageIds), executionContext);
         }
 
+        /// <summary>
+        /// Search page data returning the PageSummary projection, which is primarily used
+        /// to display lists of page information in the admin panel. The query isn't version 
+        /// specific and should not be used to render content out to a live page because some of
+        /// the pages returned may be unpublished.
+        /// </summary>
+        /// <param name="query">Query parameters</param>
+        /// <param name="executionContext">Optional execution context to use when executing the query. Useful if you need to temporarily elevate your permission level.</param>
         public Task<PagedQueryResult<PageSummary>> SearchPageSummariesAsync(SearchPageSummariesQuery query, IExecutionContext executionContext = null)
         {
             return _queryExecutor.ExecuteAsync(query, executionContext);

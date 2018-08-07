@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Cofoundry.Domain.CQS;
-
+using Cofoundry.Core;
 namespace Cofoundry.Domain
 {
     public class GetPageRoutesByIdRangeQueryHandler 
@@ -21,9 +21,9 @@ namespace Cofoundry.Domain
 
         public async Task<IDictionary<int, PageRoute>> ExecuteAsync(GetPageRoutesByIdRangeQuery query, IExecutionContext executionContext)
         {
-            var allPageRoutes = await _queryExecutor.ExecuteAsync(new GetAllPageRoutesQuery(), executionContext);
+            var allPageRoutes = await _queryExecutor.ExecuteAsync(new GetPageRouteLookupQuery(), executionContext);
             var result = allPageRoutes
-                .Where(r => query.PageIds.Contains(r.PageId))
+                .FilterByKeys(query.PageIds)
                 .ToDictionary(r => r.PageId);
 
             return result;

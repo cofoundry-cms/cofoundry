@@ -51,16 +51,14 @@
                         ng-dblclick="onSelectAndClose(page)">
                         <td>
                             <strong>
-                                <a href="/admin/pages#/{{ page.pageId }}"
+                                <a href="/admin/pages#/{{::page.pageId }}"
                                    target="_blank"
-                                   title="{{page.title}}">{{ page.fullPath }}</a>
+                                   title="{{::page.title}}">{{::page.fullPath }}</a>
                             </strong>
                         </td>
-                        <td ng-if="::page.isPublished">
-                            Published <span ng-if="::page.isPublished && page.hasDraft">(Pending Draft)</span>
-                        </td>
-                        <td ng-if="::!page.isPublished">
-                            Draft
+                        <td>
+                            <span>{{::page.getPublishStatusLabel()}}</span>
+                            <span ng-if="::page.hasDraftVersion">(Pending Draft)</span>
                         </td>
                         <td class="lowPriority">
                             <cms-table-cell-created-audit-data cms-audit-data="::page.auditData"></cms-table-cell-created-audit-data>

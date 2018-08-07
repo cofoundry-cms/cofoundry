@@ -10,15 +10,18 @@ using System.Threading.Tasks;
 namespace Cofoundry.Domain
 {
     /// <summary>
-    /// Simple mapper for mapping to CustomEntityVersion objects.
+    /// Simple mapper for mapping to CustomEntitySummary objects.
     /// </summary>
     public interface ICustomEntitySummaryMapper
     {
         /// <summary>
-        /// Maps a collection of EF CustomEntityVersion records from the db into CustomEntitySummary 
-        /// objects.
+        /// Maps a collection of EF CustomEntityPublishStatusQuery records from the db 
+        /// into CustomEntitySummary objects. The records must include data for the the 
+        /// CustomEntity, CustomEntityVersion, CustomEntity.Creator and CustomEntityVersion.Creator 
+        /// properties.
         /// </summary>
-        /// <param name="dbStatusQueries">Collection of versions to map.</param>
+        /// <param name="dbCustomEntities">Collection of CustomEntityPublishStatusQuery records to map.</param>
+        /// <param name="executionContext">Execution context to pass down when executing child queries.</param>
         Task<List<CustomEntitySummary>> MapAsync(ICollection<CustomEntityPublishStatusQuery> dbStatusQueries, IExecutionContext executionContext);
     }
 }

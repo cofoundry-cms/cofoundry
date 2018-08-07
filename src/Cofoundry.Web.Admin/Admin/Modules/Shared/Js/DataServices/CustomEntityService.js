@@ -18,7 +18,13 @@ function (
     service.getAll = function (query, customEntityDefinitionCode) {
         return $http.get(getCustomEntityDefinitionServiceBase(customEntityDefinitionCode) + '/custom-entities', {
             params: query
-        });
+        }).then(map);
+
+        function map(pagedResult) {
+            _.each(pagedResult.items, publishableEntityMapper.map);
+
+            return pagedResult;
+        }
     }
 
     service.getDefinition = function (customEntityDefinitionCode) {
@@ -57,7 +63,13 @@ function (
             params: {
                 'customEntityIds': ids
             }
-        });
+        }).then(map);
+
+        function map(customEntitySummaries) {
+            _.each(customEntitySummaries, publishableEntityMapper.map);
+
+            return customEntitySummaries;
+        }
     }
 
     service.getById = function (customEntityId) {
@@ -133,7 +145,6 @@ function (
         }
         return customEntityDefinitionServiceBase + customEntityDefinitionCode;
     }
-
 
     return service;
 }]);

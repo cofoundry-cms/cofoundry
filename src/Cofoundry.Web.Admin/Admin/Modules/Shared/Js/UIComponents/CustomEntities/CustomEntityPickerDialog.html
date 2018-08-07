@@ -62,11 +62,9 @@
                         </td>
                         <td ng-if="previewFields.fields.previewDescription">{{entity.model[previewFields.fields.previewDescription.lowerName]}}</td>
                         <td ng-if="::!customEntityDefinition.autoPublish">
-                            <span ng-if="entity.isPublished">Published</span>
-                            <span ng-if="!entity.isPublished && entity.publishStatus == 'Published'">Scheduled</span>
-                            <span ng-if="entity.publishStatus == 'Unpublished'">Unpublished</span>
+                            <span>{{::entity.getPublishStatusLabel()}}</span>
                             <br />
-                            <span ng-if="entity.hasDraft">(Pending Draft)</span>
+                            <span ng-if="entity.hasDraftVersion">(Pending Draft)</span>
                         </td>
                         <td class="lowPriority">
                             <cms-table-cell-created-audit-data cms-audit-data="::entity.auditData"></cms-table-cell-created-audit-data>

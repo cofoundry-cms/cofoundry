@@ -56,7 +56,7 @@ namespace Cofoundry.Domain
                 }
             }
 
-            var pageRoutesQuery = new GetPageRoutesByIdRangeQuery(idSets.Select(p => p.PageId));
+            var pageRoutesQuery = new GetPageRoutesByIdRangeQuery(idSets.Select(p => p.PageId).Distinct());
             var pageRoutes = await _queryExecutor.ExecuteAsync(pageRoutesQuery, executionContext);
 
             return await MapAsync(executionContext, idSets, customEntityRoutes, pageRoutes);

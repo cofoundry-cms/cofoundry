@@ -32,7 +32,7 @@
                             ui-on-drop="vm.onDrop($index, $data)"
                             on-drop-success="vm.onDropSuccess($index)"
                             data-drop-channel="custom-entity-{{vm.modelName}}">
-                            <td ng-if="vm.previewFields.showImage">
+                            <td ng-if="::vm.previewFields.showImage">
                                 <cms-table-cell-image cms-image="vm.gridImages.images[$index]"></cms-table-cell-image>
                             </td>
                             <td>{{vm.customEntityDefinitions[entity.customEntityDefinitionCode].name}}</td>
@@ -42,13 +42,11 @@
                                                             cms-custom-entity="entity"></cms-custom-entity-link>
                                 </strong>
                             </td>
-                            <td ng-if="vm.previewFields.showDescription">{{entity.model[vm.previewFields[entity.customEntityDefinitionCode].fields.previewDescription.lowerName]}}</td>
+                            <td ng-if="::vm.previewFields.showDescription">{{entity.model[vm.previewFields[entity.customEntityDefinitionCode].fields.previewDescription.lowerName]}}</td>
                             <td ng-if="::vm.showPublishColumn">
-                                <span ng-if="entity.isPublished">Published</span>
-                                <span ng-if="!entity.isPublished && entity.publishStatus == 'Published'">Scheduled</span>
-                                <span ng-if="entity.publishStatus == 'Unpublished'">Unpublished</span>
+                                <span>{{entity.getPublishStatusLabel()}}</span>
                                 <br />
-                                <a href="{{ entity.fullPath }}" ng-if="entity.hasDraft">(Pending Draft)</a>
+                                <span ng-if="entity.hasDraftVersion">(Pending Draft)</span>
                             </td>
                             <td cms-table-column-actions ng-if="vm.formScope.editMode">
                                 <cms-button-icon cms-title="Remove"

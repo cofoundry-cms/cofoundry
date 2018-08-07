@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace Cofoundry.Core
 {
@@ -59,20 +60,22 @@ namespace Cofoundry.Core
         }
 
         /// <summary>
-        /// Returns items in the dictionary which has a key listed in the keysToFilter collection
+        /// Returns items in the dictionary which has a key listed in the keysToFilter 
+        /// collection. The method ensures no duplicates are returned even if they appear
+        /// in the keysToFilter collection.
         /// </summary>
         /// <param name="source">The dictionary to filter</param>
         /// <param name="keysToFilter">Keys to lookup values for</param>
         public static IEnumerable<TValue> FilterByKeys<TKey, TValue>(this IDictionary<TKey, TValue> source, IEnumerable<TKey> keysToFilter)
         {
-            // Basically does the same thing as ToFilteredAndOrderedCollection but the method name
-            // doesn't indicate it so had to create another method
-            return source.FilterAndOrderByKeys(keysToFilter);
+            return source.FilterAndOrderByKeys(keysToFilter.Distinct());
         }
 
         /// <summary>
         /// Returns items in the dictionary which has a key listed in the 
-        /// orderedKeys collection, in the order they appear in that collection
+        /// orderedKeys collection, in the order they appear in that collection.
+        /// Duplicates may be returned if the ordered keys collections contains 
+        /// them.
         /// </summary>
         /// <param name="source">The dictionary to filter</param>
         /// <param name="keysToFilter">Ordered keys to lookup values for</param>

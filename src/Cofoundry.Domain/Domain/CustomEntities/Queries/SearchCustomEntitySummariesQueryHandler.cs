@@ -70,8 +70,6 @@ namespace Cofoundry.Domain
                 .ThenInclude(v => v.Creator)
                 .Include(v => v.CustomEntity)
                 .ThenInclude(c => c.Creator)
-                .Include(v => v.CustomEntity)
-                .ThenInclude(c => c.Locale)
                 .FilterByActive()
                 .FilterByStatus(PublishStatusQuery.Latest, executionContext.ExecutionDate)
                 .FilterByCustomEntityDefinitionCode(query.CustomEntityDefinitionCode);

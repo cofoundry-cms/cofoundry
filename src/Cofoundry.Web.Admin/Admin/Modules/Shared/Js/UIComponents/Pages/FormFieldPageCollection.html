@@ -30,17 +30,14 @@
                             data-drop-channel="page-{{vm.modelName}}">
                             <td>
                                 <strong>
-                                    <a href="/admin/pages#/{{ page.pageId }}"
+                                    <a href="/admin/pages#/{{page.pageId }}"
                                        target="_blank"
-                                       title="{{page.title}}">{{ page.fullPath }}</a>
+                                       title="{{page.title}}">{{page.fullPath }}</a>
                                 </strong>
                             </td>
-                            <td ng-if="page.isPublished">
-                                Published
-                                <span ng-if="page.isPublished && page.hasDraft">(Pending Draft)</span>
-                            </td>
-                            <td ng-if="!page.isPublished">
-                                Draft
+                            <td>
+                                <span>{{page.getPublishStatusLabel()}}</span>
+                                <span ng-if="page.hasDraftVersion">(Pending Draft)</span>
                             </td>
                             <td cms-table-column-actions ng-if="vm.formScope.editMode">
                                 <cms-button-icon cms-title="Remove"

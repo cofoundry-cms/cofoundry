@@ -4123,7 +4123,13 @@ function (
     service.getAll = function (query, customEntityDefinitionCode) {
         return $http.get(getCustomEntityDefinitionServiceBase(customEntityDefinitionCode) + '/custom-entities', {
             params: query
-        });
+        }).then(map);
+
+        function map(pagedResult) {
+            _.each(pagedResult.items, publishableEntityMapper.map);
+
+            return pagedResult;
+        }
     }
 
     service.getDefinition = function (customEntityDefinitionCode) {
@@ -4162,7 +4168,13 @@ function (
             params: {
                 'customEntityIds': ids
             }
-        });
+        }).then(map);
+
+        function map(customEntitySummaries) {
+            _.each(customEntitySummaries, publishableEntityMapper.map);
+
+            return customEntitySummaries;
+        }
     }
 
     service.getById = function (customEntityId) {
@@ -4238,7 +4250,6 @@ function (
         }
         return customEntityDefinitionServiceBase + customEntityDefinitionCode;
     }
-
 
     return service;
 }]);
@@ -4524,10 +4535,12 @@ function (
     return service;
 }]);
 angular.module('cms.shared').factory('shared.pageService', [
+    '_',
     '$http',
     'shared.serviceBase',
     'shared.publishableEntityMapper',
 function (
+    _,
     $http,
     serviceBase,
     publishableEntityMapper) {
@@ -4540,7 +4553,13 @@ function (
     service.getAll = function (query) {
         return $http.get(pagesServiceBase, {
             params: query
-        });
+        }).then(map);
+
+        function map(pagedResult) {
+            _.map(pagedResult.items, publishableEntityMapper.map);
+
+            return pagedResult;
+        }
     }
 
     service.getByIdRange = function (pageIds) {
@@ -4548,7 +4567,13 @@ function (
             params: {
                 'pageIds': pageIds
             }
-        });
+        }).then(map);
+
+        function map(pageSummaries) {
+            _.map(pageSummaries, publishableEntityMapper.map);
+
+            return pageSummaries;
+        }
     }
     
     service.getById = function (pageId) {
@@ -4629,6 +4654,11 @@ function (
         return service.getIdRoute(pageId) + '/versions';
     }
 
+    function mapPageSummaries(page) {
+
+        return _.map(publishableEntityMapper.map);
+    }
+
     return service;
 }]);
 angular.module('cms.shared').factory('shared.publishableEntityMapper', [
@@ -4643,7 +4673,8 @@ function (
     /* MAPPERS */
 
     service.map = function (entity) {
-        entity.isPublished = isPublished.bind(null, isPublished);
+        entity.isPublished = isPublished.bind(null, entity);
+        entity.getPublishStatusLabel = getPublishStatusLabel.bind(null, entity);
     }
 
     /* PRIVATE */
@@ -4653,6 +4684,14 @@ function (
         return entity.publishStatus == 'Published'
             && entity.hasPublishedVersion
             && new Date(entity.publishDate) < Date.now();
+    }
+
+    function getPublishStatusLabel(entity) {
+        if (entity.publishStatus == 'Published' && entity.publishDate < Date.now()) {
+            return 'Pending Publish';
+        }
+
+        return entity.publishStatus;
     }
 
     return service;
