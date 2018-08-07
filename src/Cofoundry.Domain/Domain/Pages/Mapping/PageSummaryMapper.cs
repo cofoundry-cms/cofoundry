@@ -76,7 +76,6 @@ namespace Cofoundry.Domain
                     UrlPath = pageRoute.UrlPath
                 };
 
-                page.IsPublished = page.PublishStatus == PublishStatus.Published && page.PublishDate <= executionContext.ExecutionDate;
                 page.AuditData = _auditDataMapper.MapCreateAuditData(dbPage);
 
                 if (!string.IsNullOrWhiteSpace(dbPage.CustomEntityDefinitionCode))
