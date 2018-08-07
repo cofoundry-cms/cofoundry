@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 namespace Cofoundry.Domain
 {
     /// <summary>
-    /// Gets a page object that contains the data required to render a page, including template 
+    /// Gets a projection of a page that contains the data required to render a page, including template 
     /// data for all the content-editable regions.
     /// </summary>
     public class GetPageRenderDetailsByIdQueryHandler 

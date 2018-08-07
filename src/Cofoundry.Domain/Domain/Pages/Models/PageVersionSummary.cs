@@ -12,6 +12,9 @@ namespace Cofoundry.Domain
     /// </summary>
     public class PageVersionSummary : ICreateAudited
     {
+        /// <summary>
+        /// Database id of this page version.
+        /// </summary>
         public int PageVersionId { get; set; }
 
         public string Title { get; set; }
@@ -29,6 +32,9 @@ namespace Cofoundry.Domain
         /// </summary>
         public bool IsLatestPublishedVersion { get; set; }
 
+        /// <summary>
+        /// The workflow state of this version e.g. draft/published.
+        /// </summary>
         public WorkFlowStatus WorkFlowStatus { get; set; }
 
         public PageTemplateMicroSummary Template { get; set; }

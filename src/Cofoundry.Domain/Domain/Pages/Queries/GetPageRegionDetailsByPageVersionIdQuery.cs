@@ -8,15 +8,22 @@ using System.Threading.Tasks;
 namespace Cofoundry.Domain
 {
     /// <summary>
-    /// Gets a collection of the content managed regions and
-    /// blocks for a specific version of a page. These are the 
-    /// content blocks that get rendered in the page template linked
-    /// to the page version.
+    /// Returns a collection of the content managed regions and
+    /// blocks for a specific version of a page.
     /// </summary>
     public class GetPageRegionDetailsByPageVersionIdQuery : IQuery<ICollection<PageRegionDetails>>
     {
+        /// <summary>
+        /// Returns a collection of the content managed regions and
+        /// blocks for a specific version of a page.
+        /// </summary>
         public GetPageRegionDetailsByPageVersionIdQuery() { }
 
+        /// <summary>
+        /// Returns a collection of the content managed regions and
+        /// blocks for a specific version of a page.
+        /// </summary>
+        /// <param name="pageVersionId">Database id of the page version to get content data for.</param>
         public GetPageRegionDetailsByPageVersionIdQuery(int pageVersionId)
         {
             PageVersionId = pageVersionId;

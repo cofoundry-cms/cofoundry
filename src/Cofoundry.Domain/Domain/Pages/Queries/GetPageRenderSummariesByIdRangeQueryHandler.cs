@@ -10,7 +10,7 @@ using Cofoundry.Core;
 namespace Cofoundry.Domain
 {
     /// <summary>
-    /// Gets a range of pages by their PageIds as PageRenderDetails objects. A PageRenderDetails contains 
+    /// Gets a range of pages by their ids projected as PageRenderDetails models. A PageRenderDetails contains 
     /// the data required to render a page, including template data for all the content-editable regions.
     /// </summary>
     public class GetPageRenderSummariesByIdRangeQueryHandler

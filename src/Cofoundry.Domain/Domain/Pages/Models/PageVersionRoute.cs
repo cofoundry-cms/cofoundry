@@ -24,7 +24,8 @@ namespace Cofoundry.Domain
         public WorkFlowStatus WorkFlowStatus { get; set; }
 
         /// <summary>
-        /// Title of the page.
+        /// The display title of the page. Often used as the meta
+        /// title of the webpage, but it is not mandatory.
         /// </summary>
         public string Title { get; set; }
 

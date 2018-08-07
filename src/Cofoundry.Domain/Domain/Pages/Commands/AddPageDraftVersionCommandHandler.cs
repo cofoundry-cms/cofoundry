@@ -12,6 +12,11 @@ using Cofoundry.Core.MessageAggregator;
 
 namespace Cofoundry.Domain
 {
+    /// <summary>
+    /// Creates a new draft version of a page from the currently published version. If there
+    /// isn't a currently published version then an exception will be thrown. An exception is also 
+    /// thrown if there is already a draft version.
+    /// </summary>
     public class AddPageDraftVersionCommandHandler 
         : IAsyncCommandHandler<AddPageDraftVersionCommand>
         , IPermissionRestrictedCommandHandler<AddPageDraftVersionCommand>

@@ -9,6 +9,10 @@ using Cofoundry.Domain.CQS;
 
 namespace Cofoundry.Domain
 {
+    /// <summary>
+    /// Determines if a page path already exists. Page paths are made
+    /// up of a locale, directory and url slug; duplicates are not permitted.
+    /// </summary>
     public class IsPagePathUniqueQueryHandler 
         : IAsyncQueryHandler<IsPagePathUniqueQuery, bool>
         , IPermissionRestrictedQueryHandler<IsPagePathUniqueQuery, bool>

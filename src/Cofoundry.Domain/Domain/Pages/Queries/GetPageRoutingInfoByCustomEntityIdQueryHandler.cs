@@ -7,6 +7,11 @@ using Cofoundry.Domain.CQS;
 
 namespace Cofoundry.Domain
 {
+    /// <summary>
+    /// Finds routing information for a custom entitiy by it's id. Although
+    /// in a typical website you wouldn't have multiple details pages for a custom entity
+    /// type, it is supported and the query returns a collection of routes.
+    /// </summary>
     public class GetPageRoutingInfoByCustomEntityIdQueryHandler 
         : IAsyncQueryHandler<GetPageRoutingInfoByCustomEntityIdQuery, ICollection<PageRoutingInfo>>
         , IPermissionRestrictedQueryHandler<GetPageRoutingInfoByCustomEntityIdQuery, ICollection<PageRoutingInfo>>

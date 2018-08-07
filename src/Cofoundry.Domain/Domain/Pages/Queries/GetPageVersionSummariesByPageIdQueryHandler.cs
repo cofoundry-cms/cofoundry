@@ -8,6 +8,10 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Cofoundry.Domain
 {
+    /// <summary>
+    /// Returns all versions of a specific page, ordered historically with
+    /// the latest/draft version first.
+    /// </summary>
     public class GetPageVersionSummariesByPageIdQueryHandler
         : IAsyncQueryHandler<GetPageVersionSummariesByPageIdQuery, ICollection<PageVersionSummary>>
         , IPermissionRestrictedQueryHandler<GetPageVersionSummariesByPageIdQuery, ICollection<PageVersionSummary>>

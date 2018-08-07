@@ -36,7 +36,8 @@ namespace Cofoundry.Domain
 
         /// <summary>
         /// The descriptive human-readable title of page that is often 
-        /// used in the html page title meta tag.
+        /// used in the html page title meta tag. Does not have to be
+        /// unique.
         /// </summary>
         public string Title { get; set; }
 

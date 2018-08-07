@@ -206,28 +206,28 @@ namespace Cofoundry.Domain
         }
 
         private void SetPageVersions(
-            PageRoute routingInfo,
+            PageRoute pageRoute,
             ICollection<PageVersionQueryResult> dbPageVersions, 
             Dictionary<int, PageTemplateQueryResult> templates
             )
         {
             bool hasLatestPublishVersion = false;
-            routingInfo.Versions = new List<PageVersionRoute>(dbPageVersions.Count);
+            pageRoute.Versions = new List<PageVersionRoute>(dbPageVersions.Count);
 
             var orderedDbVersions = dbPageVersions
-                .Where(v => v.PageId == routingInfo.PageId)
+                .Where(v => v.PageId == pageRoute.PageId)
                 .OrderByLatest();
 
             foreach (var dbVersion in orderedDbVersions)
             {
-                var mappedVersion = MapVersion(routingInfo, dbVersion, templates);
+                var mappedVersion = MapVersion(pageRoute, dbVersion, templates);
                 if (!hasLatestPublishVersion && mappedVersion.WorkFlowStatus == WorkFlowStatus.Published)
                 {
                     mappedVersion.IsLatestPublishedVersion = true;
                     hasLatestPublishVersion = true;
                 }
 
-                routingInfo.Versions.Add(mappedVersion);
+                pageRoute.Versions.Add(mappedVersion);
             }
 
             var latestVersion = orderedDbVersions.FirstOrDefault();
@@ -235,17 +235,17 @@ namespace Cofoundry.Domain
             // There should always be a latest version - but technically it is possible that one doesn't exist.
             if (latestVersion != null)
             {
-                routingInfo.Title = latestVersion.Title;
-                routingInfo.ShowInSiteMap = !latestVersion.ExcludeFromSitemap;
+                pageRoute.Title = latestVersion.Title;
+                pageRoute.ShowInSiteMap = !latestVersion.ExcludeFromSitemap;
             }
             else
             {
                 // Invalid route, remove the versions collection
-                routingInfo.Versions = Array.Empty<PageVersionRoute>();
+                pageRoute.Versions = Array.Empty<PageVersionRoute>();
             }
 
-            routingInfo.HasDraftVersion = routingInfo.Versions.Any(v => v.WorkFlowStatus == WorkFlowStatus.Draft);
-            routingInfo.HasPublishedVersion = routingInfo.Versions.Any(v => v.WorkFlowStatus == WorkFlowStatus.Published);
+            pageRoute.HasDraftVersion = pageRoute.Versions.Any(v => v.WorkFlowStatus == WorkFlowStatus.Draft);
+            pageRoute.HasPublishedVersion = pageRoute.Versions.Any(v => v.WorkFlowStatus == WorkFlowStatus.Published);
         }
 
         private PageVersionRoute MapVersion(

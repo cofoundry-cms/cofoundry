@@ -8,7 +8,7 @@ using Cofoundry.Domain.CQS;
 namespace Cofoundry.Domain
 {
     /// <summary>
-    /// Represents a dynamic routing rule that can be used to work out which custom entity should eb 
+    /// Represents a dynamic routing rule that can be used to work out which custom entity should be 
     /// displayed in a custom entity details page.
     /// </summary>
     public interface ICustomEntityRoutingRule

@@ -8,15 +8,20 @@ using Cofoundry.Core.Validation;
 namespace Cofoundry.Domain
 {
     /// <summary>
-    /// Gets a page object that contains the data required to render a page, including template 
+    /// Gets a projection of a page that contains the data required to render a page, including template 
     /// data for all the content-editable regions.
     /// </summary>
     public class GetPageRenderDetailsByIdQuery : IQuery<PageRenderDetails>, IValidatableObject
     {
+        /// <summary>
+        /// Gets a projection of a page that contains the data required to render a page, including template 
+        /// data for all the content-editable regions.
+        /// </summary>
         public GetPageRenderDetailsByIdQuery() { }
 
         /// <summary>
-        /// Initializes the query with the specified parameters.
+        /// Gets a projection of a page that contains the data required to render a page, including template 
+        /// data for all the content-editable regions.
         /// </summary>
         /// <param name="pageId">PageId of the page to get.</param>
         /// <param name="publishStatus">Used to determine which version of the page to include data for.</param>

@@ -8,7 +8,7 @@ using Cofoundry.Core.Validation;
 namespace Cofoundry.Domain
 {
     /// <summary>
-    /// Gets a range of pages by their PageIds as PageRenderDetails objects. A PageRenderDetails contains 
+    /// Gets a range of pages by their ids projected as PageRenderDetails models. A PageRenderDetails contains 
     /// the data required to render a page, including template data for all the content-editable regions.
     /// </summary>
     public class GetPageRenderDetailsByIdRangeQuery : IQuery<IDictionary<int, PageRenderDetails>>
@@ -16,7 +16,8 @@ namespace Cofoundry.Domain
         public GetPageRenderDetailsByIdRangeQuery() { }
 
         /// <summary>
-        /// Initializes the query with the specified parameters.
+        /// Gets a range of pages by their ids projected as PageRenderDetails models. A PageRenderDetails contains 
+        /// the data required to render a page, including template data for all the content-editable regions.
         /// </summary>
         /// <param name="pageIds">PageIds of the pages to get.</param>
         /// <param name="publishStatus">Used to determine which version of the page to include data for.</param>
@@ -26,7 +27,8 @@ namespace Cofoundry.Domain
         }
 
         /// <summary>
-        /// Initializes the query with the specified parameters.
+        /// Gets a range of pages by their ids projected as PageRenderDetails models. A PageRenderDetails contains 
+        /// the data required to render a page, including template data for all the content-editable regions.
         /// </summary>
         /// <param name="pageIds">PageIds of the pages to get.</param>
         /// <param name="publishStatus">Used to determine which version of the page to include data for.</param>

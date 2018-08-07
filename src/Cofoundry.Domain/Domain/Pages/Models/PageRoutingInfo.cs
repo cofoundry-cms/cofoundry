@@ -7,15 +7,31 @@ using System.Threading.Tasks;
 namespace Cofoundry.Domain
 {
     /// <summary>
-    /// Encapsulates routing information from a traditional PageRoute as
-    /// well as a CustomEntityRoute if it is available.
+    /// Combines single-page routing information with custom entity page routing.
+    /// A collection of PageRoutingInfo therefore expresses a fuller page routing 
+    /// graph with custom entity nodes expanded. Note that custom entity routing
+    /// information is only included if the page is PageType.CustomEntityDetails.
     /// </summary>
     public class PageRoutingInfo
     {
+        /// <summary>
+        /// Routing info for the page part of the expanded route.
+        /// </summary>
         public PageRoute PageRoute { get; set; }
 
+        /// <summary>
+        /// If the page is PageType.CustomEntityDetails, then this
+        /// property will represent the routing information of a single custom 
+        /// entity.
+        /// </summary>
         public CustomEntityRoute CustomEntityRoute { get; set; }
 
+        /// <summary>
+        /// If the page is PageType.CustomEntityDetails, then this
+        /// property will the routing rule object that can be used to
+        /// construct the full page url when combined with the custom
+        /// entity routing data.
+        /// </summary>
         public ICustomEntityRoutingRule CustomEntityRouteRule { get; set; }
 
         /// <summary>
@@ -67,6 +83,12 @@ namespace Cofoundry.Domain
             return isPublished;
         }
 
+        /// <summary>
+        /// Gets the current publish state of the route at the current 
+        /// moment in time. In the case of custom entity routes, the publish
+        /// state from both the page and the custom entity is combined so that
+        /// the route can only be published if both entities are published.
+        /// </summary>
         public PublishState GetPublishState()
         {
             var publishState = PageRoute.GetPublishState(); 
@@ -88,9 +110,6 @@ namespace Cofoundry.Domain
                 }
 
                 publishState = new PublishState(publishStatus, publishDate);
-                // TODO: YAH: 
-                // also, should any other entities conform to IPublishableEntity?
-                // That would probably mean a few changes for CustomEntitySummary for example.
             }
 
             return publishState;

@@ -68,9 +68,24 @@ namespace Cofoundry.Domain
         #endregion
 
         #region PageRoutingInfo
-        
+
+        /// <summary>
+        /// Finds routing information for a custom entitiy by it's id. Although
+        /// in a typical website you wouldn't have multiple details pages for a custom entity
+        /// type, it is supported and the query returns a collection of routes.
+        /// </summary>
+        /// <param name="customEntityId">Database id of the custom entity to find routing data for.</param>
+        /// <param name="executionContext">Optional execution context to use when executing the query. Useful if you need to temporarily elevate your permission level.</param>
         Task<ICollection<PageRoutingInfo>> GetPageRoutingInfoByCustomEntityIdAsync(int customEntityId, IExecutionContext executionContext = null);
 
+        /// <summary>
+        /// Finds routing information for a set of custom entities by their ids. Although
+        /// in a typical website you wouldn't have multiple details pages for a custom entity
+        /// type, it is supported and so each custom entity id in the query returns a collection
+        /// of routes.
+        /// </summary>
+        /// <param name="customEntityIds">Database ids of the custom entities to find routing data for.</param>
+        /// <param name="executionContext">Optional execution context to use when executing the query. Useful if you need to temporarily elevate your permission level.</param>
         Task<IDictionary<int, ICollection<PageRoutingInfo>>> GetPageRoutingInfoByCustomEntityIdRangeAsync(IEnumerable<int> customEntityIds, IExecutionContext executionContext = null);
 
         /// <summary>
@@ -123,7 +138,7 @@ namespace Cofoundry.Domain
         #region PageRenderDetails
 
         /// <summary>
-        /// Gets a page object that contains the data required to render a page, including template 
+        /// Gets a projection of a page that contains the data required to render a page, including template 
         /// data for all the content-editable regions.
         /// </summary>
         /// <param name="query">Query parameters</param>
@@ -131,7 +146,7 @@ namespace Cofoundry.Domain
         Task<PageRenderDetails> GetPageRenderDetailsByIdAsync(GetPageRenderDetailsByIdQuery query, IExecutionContext executionContext = null);
         
         /// <summary>
-        /// Gets a range of pages by their PageIds as PageRenderDetails objects. A PageRenderDetails contains 
+        /// Gets a range of pages by their ids projected as PageRenderDetails models. A PageRenderDetails contains 
         /// the data required to render a page, including template data for all the content-editable regions.
         /// </summary>
         /// <param name="query">Query parameters</param>
@@ -141,12 +156,10 @@ namespace Cofoundry.Domain
         #endregion
 
         #region PageRegionDetails
-        
+
         /// <summary>
-        /// Gets a collection of the content managed regions and
-        /// blocks for a specific version of a page. These are the 
-        /// content blocks that get rendered in the page template linked
-        /// to the page version.
+        /// Returns a collection of the content managed regions and
+        /// blocks for a specific version of a page.
         /// </summary>
         /// <param name="pageVersionId">Database id of the page version to get content data for.</param>
         /// <param name="executionContext">Optional execution context to use when executing the query. Useful if you need to temporarily elevate your permission level.</param>
@@ -156,6 +169,13 @@ namespace Cofoundry.Domain
 
         #region PageVersionBlockRenderDetails
 
+        /// <summary>
+        /// Returns data for a specific block in a page version by it's id. Because
+        /// the mapped display model may contain other versioned entities, you can 
+        /// optionally pass down a PublishStatusQuery to use in the mapping process.
+        /// </summary>
+        /// <param name="query">Query parameters.</param>
+        /// <param name="executionContext">Optional execution context to use when executing the query. Useful if you need to temporarily elevate your permission level.</param>
         Task<PageVersionBlockRenderDetails> GetPageVersionBlockRenderDetailsByIdAsync(GetPageVersionBlockRenderDetailsByIdQuery query, IExecutionContext executionContext = null);
 
         #endregion
@@ -185,20 +205,46 @@ namespace Cofoundry.Domain
 
         #region PageDetails (admin)
 
+        /// <summary>
+        /// Returns detailed information on a page and it's latest version. This 
+        /// query is primarily used in the admin area because it is not version-specific
+        /// and the PageDetails projection includes audit data and other additional 
+        /// information that should normally be hidden from a customer facing app.
+        /// </summary>
+        /// <param name="pageId">Database id of the page to get.</param>
+        /// <param name="executionContext">Optional execution context to use when executing the query. Useful if you need to temporarily elevate your permission level.</param>
         Task<PageDetails> GetPageDetailsByIdAsync(int pageId, IExecutionContext executionContext = null);
 
         #endregion
 
         #region PageVersionSummary (admin)
-        
+
+        /// <summary>
+        /// Returns all versions of a specific page, ordered historically with
+        /// the latest/draft version first.
+        /// </summary>
+        /// <param name="pageId">Database id of the page to get versions for.</param>
+        /// <param name="executionContext">Optional execution context to use when executing the query. Useful if you need to temporarily elevate your permission level.</param>
         Task<ICollection<PageVersionSummary>> GetPageVersionSummariesByPageIdAsync(int pageId, IExecutionContext executionContext = null);
 
         #endregion
 
         #region utility
 
+        /// <summary>
+        /// Determines if a page has a draft version of not. A page can only have one draft
+        /// version at a time.
+        /// </summary>
+        /// <param name="pageId">Id of the page to check.</param>
+        /// <param name="executionContext">Optional execution context to use when executing the query. Useful if you need to temporarily elevate your permission level.</param>
         Task<bool> DoesPageHaveDraftVersionAsync(int pageId, IExecutionContext executionContext = null);
 
+        /// <summary>
+        /// Determines if a page path already exists. Page paths are made
+        /// up of a locale, directory and url slug; duplicates are not permitted.
+        /// </summary>
+        /// <param name="query">Query parameters.</param>
+        /// <param name="executionContext">Optional execution context to use when executing the query. Useful if you need to temporarily elevate your permission level.</param>
         Task<bool> IsPagePathUniqueAsync(IsPagePathUniqueQuery query, IExecutionContext executionContext = null);
 
         #endregion
@@ -209,6 +255,13 @@ namespace Cofoundry.Domain
 
         Task<int> AddPageAsync(AddPageCommand command, IExecutionContext executionContext = null);
 
+        /// <summary>
+        /// Creates a new draft version of a page from the currently published version. If there
+        /// isn't a currently published version then an exception will be thrown. An exception is also 
+        /// thrown if there is already a draft version.
+        /// </summary>
+        /// <param name="command">Command parameters.</param>
+        /// <param name="executionContext">Optional execution context to use when executing the command. Useful if you need to temporarily elevate your permission level.</param>
         Task<int> AddPageDraftVersionAsync(AddPageDraftVersionCommand command, IExecutionContext executionContext = null);
 
         Task<int> AddPageVersionBlockAsync(AddPageVersionBlockCommand command, IExecutionContext executionContext = null);

@@ -26,7 +26,7 @@ namespace Cofoundry.Domain
         public string Name { get; set; }
 
         /// <summary>
-        /// Collection of fully mapped blocks including display models.
+        /// Collection of fully mapped and ordered blocks including display models.
         /// </summary>
         public ICollection<PageVersionBlockRenderDetails> Blocks { get; set; }
     }
