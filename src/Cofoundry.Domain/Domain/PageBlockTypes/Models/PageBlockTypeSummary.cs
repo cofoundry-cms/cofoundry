@@ -22,7 +22,8 @@ namespace Cofoundry.Domain
 
         /// <summary>
         /// A human readable name that is displayed when selecting block types.
-        /// The name needs to be unique.
+        /// The name should ideally be unique but this is not enforced as long as
+        /// the filename is unique.
         /// </summary>
         public string Name { get; set; }
 

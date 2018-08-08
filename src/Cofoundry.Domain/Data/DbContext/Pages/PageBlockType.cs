@@ -25,8 +25,16 @@ namespace Cofoundry.Domain.Data
 
         /// <summary>
         /// A human readable name that is displayed when selecting block types.
-        /// The name needs to be unique.
+        /// The name should ideally be unique but this is not enforced as long as
+        /// the filename is unique.
         /// </summary>
+        /// <remarks>
+        /// Regarding uniqueness, an edge case might be if you wanted to have 
+        /// multiple blocks, each used in different templates but with the same 
+        /// name e.g. two blocks with file names 'HomepageContent' and 'AboutContent'
+        /// that were both named 'Content' because int he context of the templates there 
+        /// would be no conflict.
+        /// </remarks>
         public string Name { get; set; }
 
         /// <summary>

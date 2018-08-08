@@ -13,7 +13,9 @@ namespace Cofoundry.Domain
     public class PageBlockTypeTemplateFileDetails
     {
         /// <summary>
-        /// The name of the template view file without an extensions e.g. 'H1', 'ReversedContent'
+        /// The name of the template view file without an extensions 
+        /// e.g. 'H1', 'ReversedContent'. Must be unique to the block
+        /// type.
         /// </summary>
         public string FileName { get; set; }
 

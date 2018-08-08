@@ -76,7 +76,10 @@ namespace Cofoundry.Domain
                 bool isUpdated = false;
 
                 var fileDetails = await _queryExecutor.ExecuteAsync(new GetPageBlockTypeFileDetailsByFileNameQuery(fileName), executionContext);
+                ValidateTemplateFileNames(fileDetails);
+
                 var name = string.IsNullOrWhiteSpace(fileDetails.Name) ? TextFormatter.PascalCaseToSentence(fileName) : fileDetails.Name;
+
                 if (existingBlock == null)
                 {
                     existingBlock = new PageBlockType();
@@ -110,6 +113,26 @@ namespace Cofoundry.Domain
                 {
                     existingBlock.UpdateDate = executionContext.ExecutionDate;
                 }
+            }
+        }
+
+        private void ValidateTemplateFileNames(PageBlockTypeFileDetails fileDetails)
+        {
+            // It's quite difficult to create duplicate template files since they should
+            // all be in the same directory, but it is possible to spread between multiple 
+            // directories so we check to be sure.
+
+            var duplicates = fileDetails
+                .Templates
+                .GroupBy(t => t.FileName)
+                .Where(m => m.Count() > 1)
+                .FirstOrDefault();
+
+            if (!EnumerableHelper.IsNullOrEmpty(duplicates))
+            {
+                var duplicateNames = string.Join(", ", duplicates.Select(t => t.FileName));
+                throw new PageBlockTypeRegistrationException(
+                    $"Duplicate page block type templates '{ duplicates.Key }' detected. Conflicting template file names: { duplicateNames }");
             }
         }
 
