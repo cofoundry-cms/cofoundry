@@ -31,7 +31,7 @@ namespace Cofoundry.Core.BackgroundTasks
         /// </summary>
         /// <typeparam name="TTask">The type of task to execute</typeparam>
         /// <param name="hours">The number of hours to wait before executing the task again</param>
-        /// <param name="atMinute">The minute of the hour to execute the task (0-60)</param>
+        /// <param name="minute">The minute of the hour to execute the task (0-60)</param>
         /// <returns>Instance of IBackgroundTaskScheduler for method chaining</returns>
         IBackgroundTaskScheduler RegisterRecurringTask<TTask>(int hours = 0, int minute = 0) where TTask : IRecurringBackgroundTask;
 
@@ -65,7 +65,7 @@ namespace Cofoundry.Core.BackgroundTasks
         /// </summary>
         /// <typeparam name="TTask">The type of task to execute</typeparam>
         /// <param name="hours">The number of hours to wait before executing the task again</param>
-        /// <param name="atMinute">The minute of the hour to execute the task (0-60)</param>
+        /// <param name="minute">The minute of the hour to execute the task (0-60)</param>
         /// <returns>Instance of IBackgroundTaskScheduler for method chaining</returns>
         IBackgroundTaskScheduler RegisterAsyncRecurringTask<TTask>(int hours = 0, int minute = 0) where TTask : IAsyncRecurringBackgroundTask;
 

@@ -56,6 +56,10 @@ namespace Cofoundry.Web.Identity
         /// </summary>
         /// <param name="controller">Controller instance</param>
         /// <param name="vm">The IChangePasswordTemplate containing the data entered by the user.</param>
+        /// <param name="userArea">
+        /// The user area that the user belongs to. Usernames are only unique by user area 
+        /// so all user commands need to be run against a specific user area.
+        /// </param>
         /// <param name="notificationTemplate">An IPasswordChangedNotificationTemplate to use when sending the notification</param>
         public async Task ChangePasswordAsync<TNotificationTemplate>(
             Controller controller,

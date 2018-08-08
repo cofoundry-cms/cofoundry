@@ -76,7 +76,7 @@ namespace Cofoundry.Domain
                 bool isUpdated = false;
 
                 var fileDetails = await _queryExecutor.ExecuteAsync(new GetPageBlockTypeFileDetailsByFileNameQuery(fileName), executionContext);
-                ValidateTemplateFileNames(fileDetails);
+                DetectDuplicateTemplateFileNames(fileDetails);
 
                 var name = string.IsNullOrWhiteSpace(fileDetails.Name) ? TextFormatter.PascalCaseToSentence(fileName) : fileDetails.Name;
 
@@ -112,27 +112,30 @@ namespace Cofoundry.Domain
                 if (isUpdated)
                 {
                     existingBlock.UpdateDate = executionContext.ExecutionDate;
+                    ValidateBlockProperties(existingBlock);
                 }
             }
         }
 
-        private void ValidateTemplateFileNames(PageBlockTypeFileDetails fileDetails)
+        /// <summary>
+        /// Some properties of the block type are generated based on the class name or paths and these
+        /// should be validated to ensure that they do not exceed the database column sizes.
+        /// </summary>
+        private static void ValidateBlockProperties(PageBlockType dbPageBlockType)
         {
-            // It's quite difficult to create duplicate template files since they should
-            // all be in the same directory, but it is possible to spread between multiple 
-            // directories so we check to be sure.
-
-            var duplicates = fileDetails
-                .Templates
-                .GroupBy(t => t.FileName)
-                .Where(m => m.Count() > 1)
-                .FirstOrDefault();
-
-            if (!EnumerableHelper.IsNullOrEmpty(duplicates))
+            if (string.IsNullOrWhiteSpace(dbPageBlockType.Name))
             {
-                var duplicateNames = string.Join(", ", duplicates.Select(t => t.FileName));
-                throw new PageBlockTypeRegistrationException(
-                    $"Duplicate page block type templates '{ duplicates.Key }' detected. Conflicting template file names: { duplicateNames }");
+                throw new PageBlockTypeRegistrationException($"Page block type name cannot be null. FileName: {dbPageBlockType.FileName}");
+            }
+
+            if (dbPageBlockType.Name.Length > 50)
+            {
+                throw new PageBlockTypeRegistrationException($"Page block type name exceeds the maximum length of 50 characters: {dbPageBlockType.Name}");
+            }
+
+            if (dbPageBlockType.FileName.Length > 50)
+            {
+                throw new PageBlockTypeRegistrationException($"Page block type file nameexceeds the maximum length of 50 characters: {dbPageBlockType.FileName}");
             }
         }
 
@@ -168,8 +171,53 @@ namespace Cofoundry.Domain
                 existingTemplate.FileName = fileTemplate.FileName;
                 existingTemplate.Name = fileTemplate.Name;
                 existingTemplate.Description = fileTemplate.Description;
+
+                ValidateTemplateProperties(existingTemplate);
             }
         }
+
+        private void DetectDuplicateTemplateFileNames(PageBlockTypeFileDetails fileDetails)
+        {
+            // It's quite difficult to create duplicate template files since they should
+            // all be in the same directory, but it is possible to spread between multiple 
+            // directories so we check to be sure.
+
+            var duplicates = fileDetails
+                .Templates
+                .GroupBy(t => t.FileName)
+                .Where(m => m.Count() > 1)
+                .FirstOrDefault();
+
+            if (!EnumerableHelper.IsNullOrEmpty(duplicates))
+            {
+                var duplicateNames = string.Join(", ", duplicates.Select(t => t.FileName));
+                throw new PageBlockTypeRegistrationException(
+                    $"Duplicate page block type templates '{ duplicates.Key }' detected. Conflicting template file names: { duplicateNames }");
+            }
+        }
+
+        /// <summary>
+        /// Some properties of the template are generated based on the file name and these
+        /// should be validated to ensure that they do not exceed the database column sizes.
+        /// </summary>
+        private static void ValidateTemplateProperties(PageBlockTypeTemplate dbPageBlockTypeTemplate)
+        {
+            if (string.IsNullOrWhiteSpace(dbPageBlockTypeTemplate.Name))
+            {
+                throw new PageBlockTypeRegistrationException($"Page block type template name cannot be null. FileName: {dbPageBlockTypeTemplate.FileName}");
+            }
+
+            if (dbPageBlockTypeTemplate.Name.Length > 50)
+            {
+                throw new PageBlockTypeRegistrationException($"Page block type template name exceeds the maximum length of 50 characters: {dbPageBlockTypeTemplate.Name}");
+            }
+
+            if (dbPageBlockTypeTemplate.FileName.Length > 50)
+            {
+                throw new PageBlockTypeRegistrationException($"Page block type template file name exceeds the maximum length of 50 characters: {dbPageBlockTypeTemplate.FileName}");
+            }
+        }
+
 
         private async Task DeleteBlockTypes(
             IExecutionContext executionContext,

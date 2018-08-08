@@ -28,6 +28,7 @@ namespace Cofoundry.Domain
         /// </summary>
         PageBlockTypeSummary BlockType { get; set; }
 
+        /// <summary>
         /// Custom data associated with this block, mapped from
         /// the serialized database data into a display model.
         /// </summary>

@@ -61,6 +61,7 @@ namespace Cofoundry.Web
         /// </summary>
         /// <param name="controller">The Controller instance using the helper</param>
         /// <param name="validationErrors">Validation errors, if any, to be returned.</param>
+        /// <param name="returnData">Data to return in the data property of the response object.</param>
         public IActionResult SimpleCommandResponse<T>(Controller controller, IEnumerable<ValidationError> validationErrors, T returnData)
         {
             var response = new SimpleCommandResponseData<T>();
@@ -244,8 +245,8 @@ namespace Cofoundry.Web
         /// </summary>
         /// <typeparam name="TResult">Type of result returned from the function</typeparam>
         /// <param name="controller">The Controller instance using the helper</param>
-        /// <param name="function">The function to execute</param>
-        public async Task<IActionResult> RunWithResultAsync<TResult>(Controller controller, Func<Task<TResult>> task)
+        /// <param name="functionToExecute">The function to execute</param>
+        public async Task<IActionResult> RunWithResultAsync<TResult>(Controller controller, Func<Task<TResult>> functionToExecute)
         {
             var errors = new List<ValidationError>();
             TResult result = default(TResult);
@@ -254,7 +255,7 @@ namespace Cofoundry.Web
             {
                 try
                 {
-                    result = await task();
+                    result = await functionToExecute();
                 }
                 catch (ValidationException ex)
                 {

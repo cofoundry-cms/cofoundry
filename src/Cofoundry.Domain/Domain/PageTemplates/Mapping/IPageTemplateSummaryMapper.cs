@@ -17,7 +17,7 @@ namespace Cofoundry.Domain
         /// Maps an EF PageTemplate record from the db into an PageTemplateSummary 
         /// object. If the db record is null then null is returned.
         /// </summary>
-        /// <param name="dbPageTemplate">Query model with data from the database.</param>
+        /// <param name="queryModel">Query model with data from the database.</param>
         PageTemplateSummary Map(PageTemplateSummaryQueryModel queryModel);
     }
 }

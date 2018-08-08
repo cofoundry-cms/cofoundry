@@ -29,7 +29,7 @@ namespace Cofoundry.Domain
 
         /// <summary>
         /// A role must be assigned to a user area e.g. CofoundryAdminUserArea.
-        /// </summary
+        /// </summary>
         string UserAreaCode { get; }
     }
 }

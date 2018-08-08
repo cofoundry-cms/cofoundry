@@ -82,7 +82,7 @@ namespace Cofoundry.Core
         /// Parses a collection of integers from a delimited string using the default delimiter (comma). 
         /// Unparsable entires are removed.
         /// </summary>
-        /// <param name="str">String containing the list of integers</param>
+        /// <param name="list">String containing the list of integers</param>
         /// <returns>Collection of parsed integers (with unparsable entries removed)</returns>
         public static IEnumerable<int> ParseFromDelimitedString(string list)
         {

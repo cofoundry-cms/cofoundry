@@ -78,6 +78,7 @@ namespace Cofoundry.Domain.Data
 
         public DbSet<ImageAssetTag> ImageAssetTags { get; set; }
 
+        /// <summary>
         /// A Page Template represents a physical view template file and is used
         /// by a Page to render out content. 
         /// </summary>

@@ -83,7 +83,7 @@ namespace Cofoundry.Domain
         /// ValidationAttribute. Intended to be used as a shortcut for adding validation messages associated with 
         /// ValidationAttributes in an implementation of IMetadataAttribute
         /// </summary>
-        /// <param name="property">The name of the property (key) to add to the collection.</param>
+        /// <param name="key">The name of the property (key) to add to the collection.</param>
         /// <param name="value">The value to add to the collection.</param>
         /// <param name="attribute">The attribute from which the validation message will be extracted.</param>
         /// <returns>ModelMetadata instance for method chaining</returns>

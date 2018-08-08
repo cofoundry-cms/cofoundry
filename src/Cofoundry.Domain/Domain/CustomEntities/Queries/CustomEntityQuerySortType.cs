@@ -32,9 +32,6 @@ namespace Cofoundry.Domain
         PublishDate,
 
         // Full -text query Not yet implemented
-        /// <summary>
-        /// Sort by relevance to the 
-        /// </summary>
         //Relevance
     }
 }

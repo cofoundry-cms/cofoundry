@@ -212,7 +212,41 @@ namespace Cofoundry.Domain
             dbPageTemplate.FullPath = fileTemplate.VirtualPath;
             dbPageTemplate.UpdateDate = executionContext.ExecutionDate;
 
+            ValidateTemplateProperties(dbPageTemplate);
+
             return dbPageTemplate;
+        }
+
+        /// <summary>
+        /// Some properties of the template are generated based on the class name or file path and these
+        /// should be validated to ensure that they do not exceed the database column sizes.
+        /// </summary>
+        private static void ValidateTemplateProperties(PageTemplate dbPageTemplate)
+        {
+            if (string.IsNullOrWhiteSpace(dbPageTemplate.Name))
+            {
+                throw new PageTemplateRegistrationException($"Page template name cannot be null. FileName: {dbPageTemplate.FileName}");
+            }
+
+            if (dbPageTemplate.Name.Length > 100)
+            {
+                throw new PageTemplateRegistrationException($"Page template name exceeds the maximum length of 100 characters: {dbPageTemplate.Name}");
+            }
+
+            if (dbPageTemplate.FileName.Length > 100)
+            {
+                throw new PageTemplateRegistrationException($"Page template file name exceeds the maximum length of 100 characters: {dbPageTemplate.FileName}");
+            }
+
+            if (dbPageTemplate.FullPath.Length > 400)
+            {
+                throw new PageTemplateRegistrationException($"Page template path exceeds the maximum length of 400 characters: {dbPageTemplate.FullPath}");
+            }
+
+            if (dbPageTemplate.CustomEntityModelType?.Length > 400)
+            {
+                throw new PageTemplateRegistrationException($"The custom entity class name for page template {dbPageTemplate.FileName} exceeds the maximum length of 400 characters: {dbPageTemplate.CustomEntityModelType}");
+            }
         }
 
         private void UpdateRegions(

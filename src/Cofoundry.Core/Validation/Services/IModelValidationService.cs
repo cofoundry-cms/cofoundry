@@ -16,7 +16,7 @@ namespace Cofoundry.Core.Validation
         /// contains any invalid properties.
         /// </summary>
         /// <typeparam name="T">Type of the model to validate.</typeparam>
-        /// <param name="modelToValidate">The command to validate.</param>
+        /// <param name="commandToValidate">The command to validate.</param>
         void Validate<T>(T commandToValidate);
 
         /// <summary>

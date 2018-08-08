@@ -37,7 +37,7 @@ namespace Cofoundry.Domain
         /// <summary>
         /// Maps a CustomEntityDefinitionSummary into a CustomEntityDefinitionMicroSummary object.
         /// </summary>
-        /// <param name="codeDefinition">Instance to map.</param>
+        /// <param name="summary">Instance to map.</param>
         public CustomEntityDefinitionMicroSummary Map(CustomEntityDefinitionSummary summary)
         {
             if (summary == null) throw new ArgumentNullException(nameof(summary));

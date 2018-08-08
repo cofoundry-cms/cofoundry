@@ -72,7 +72,7 @@ namespace Cofoundry.Domain
         /// Clears the specified cache entry. If the key parameter is not provided, all
         /// entries in the cache namespace are removed.
         /// </summary>
-        /// <param name="key">Unique key of the cache entry to update</param>
+        /// <param name="imageAssetId">Id of the image asset to clear cache entries for.</param>
         public void Clear(int imageAssetId)
         {
             _cache.Clear(IMAGE_ASSET_RENDER_DETAILS_CACHEKEY + imageAssetId);

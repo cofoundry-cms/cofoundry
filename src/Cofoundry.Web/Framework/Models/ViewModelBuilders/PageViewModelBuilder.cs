@@ -54,9 +54,9 @@ namespace Cofoundry.Web
         }
 
         /// <summary>
-        /// Creates and maps data to a view model for a custom entity page.
+        /// Creates and maps data to a view model for a custom entity details page.
         /// </summary>
-        /// <param name="displayModelType">The type information of the display model to apply to the generic view model.</param>
+        /// <typeparam name="TDisplayModel">The type of display model to apply to the generic view model.</typeparam>
         /// <param name="mappingParameters">The data passed through to map to the view model.</param>
         public virtual async Task<ICustomEntityPageViewModel<TDisplayModel>> BuildCustomEntityPageViewModelAsync<TDisplayModel>(
             CustomEntityPageViewModelBuilderParameters mappingParameters

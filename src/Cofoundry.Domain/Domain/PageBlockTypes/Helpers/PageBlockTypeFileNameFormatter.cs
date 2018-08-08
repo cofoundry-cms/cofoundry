@@ -15,12 +15,26 @@ namespace Cofoundry.Domain
         const string DATAMODEL_SUFFIX = "DataModel";
 
         /// <summary>
+        /// Formats the clean block type file name from the data model
+        /// type name. E.g. for 'SingleLineTextDataModel' this returns
+        /// 'SingleLineText'. This should be fairly forgiving, e.g. if 
+        /// I pass in 'SingleLineText' I should receive 'SingleLineText' back. 
+        /// </summary>
+        /// <param name="dataModelType">Data model type to get the formatted name for</param>
+        public string FormatFromDataModelType(Type dataModelType)
+        {
+            if (dataModelType == null) throw new ArgumentNullException(nameof(dataModelType));
+
+            return FormatFromDataModelName(dataModelType.Name);
+        }
+
+        /// <summary>
         /// Formats the clean block type file name from the name of the
         /// specified data model type . E.g. for 'SingleLineTextDataModel' 
         /// this returns 'SingleLineText'. This should be fairly forgiving, e.g. if 
         /// the postfix isn't in the model name it should just pass back the model name.
         /// </summary>
-        /// <param name="dataModelType">Data model type to get the formatted name for</param>
+        /// <param name="dataModelName">Type name without namespace of the block data model</param>
         public string FormatFromDataModelName(string dataModelName)
         {
             if (dataModelName == null) throw new ArgumentNullException(nameof(dataModelName));
@@ -32,20 +46,6 @@ namespace Cofoundry.Domain
             }
 
             return fileName;
-        }
-
-        /// <summary>
-        /// Formats the clean block type file name from the data model
-        /// type name. E.g. for 'SingleLineTextDataModel' this returns
-        /// 'SingleLineText'. This should be fairly forgiving, e.g. if 
-        /// I pass in 'SingleLineText' I should receive 'SingleLineText' back. 
-        /// </summary>
-        /// <param name="dataModelName">Type name without namespace of the block data model</param>
-        public string FormatFromDataModelType(Type dataModelType)
-        {
-            if (dataModelType == null) throw new ArgumentNullException(nameof(dataModelType));
-
-            return FormatFromDataModelName(dataModelType.Name);
         }
     }
 }

@@ -30,7 +30,6 @@ namespace Cofoundry.Domain
         /// </summary>
         /// <param name="dbCustomEntity">CustomEntity record from the database.</param>
         /// <param name="locale">Locale to map to the object.</param>
-        /// <param name="routingDataProperties">Collection of data properties to map to the routing parameters collection.</param>
         public CustomEntityRoute Map(
             CustomEntity dbCustomEntity, 
             ActiveLocale locale

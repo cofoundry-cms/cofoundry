@@ -24,7 +24,7 @@ namespace Cofoundry.Domain
         /// Maps an EF ImageAsset record from the db into a ImageAssetDetails 
         /// object. If the db record is null then null is returned.
         /// </summary>
-        /// <param name="dImage">ImageAsset record from the database.</param>
+        /// <param name="dbImage">ImageAsset record from the database.</param>
         public ImageAssetDetails Map(ImageAsset dbImage)
         {
             if (dbImage == null) return null;

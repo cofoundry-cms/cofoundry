@@ -15,6 +15,7 @@ namespace Cofoundry.Web
         /// </summary>
         /// <param name="condition">Condition to check to see whtehr the class should be output or not.</param>
         /// <param name="cls">The class to apply if the condition is met.</param>
+        /// <param name="elseCls">Optional class to apply if the condition is not met.</param>
         /// <returns>HtmlString in the format 'class="{cls}"'.</returns>
         IHtmlContent ClassIf(bool condition, string cls, string elseCls = null);
 
