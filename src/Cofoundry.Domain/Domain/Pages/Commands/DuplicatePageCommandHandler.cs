@@ -7,6 +7,7 @@ using Cofoundry.Domain.Data;
 using Cofoundry.Domain.CQS;
 using Microsoft.EntityFrameworkCore;
 using Cofoundry.Core;
+using Cofoundry.Core.EntityFramework;
 
 namespace Cofoundry.Domain
 {
@@ -18,15 +19,20 @@ namespace Cofoundry.Domain
 
         private readonly ICommandExecutor _commandExecutor;
         private readonly CofoundryDbContext _dbContext;
+        private readonly IPageStoredProcedures _pageStoredProcedures;
+        private readonly ITransactionScopeFactory _transactionScopeFactory;
 
         public DuplicatePageCommandHandler(
             ICommandExecutor commandExecutor,
             CofoundryDbContext dbContext,
-            EntityTagHelper entityTagHelper
+            IPageStoredProcedures pageStoredProcedures,
+            ITransactionScopeFactory transactionScopeFactory
             )
         {
             _commandExecutor = commandExecutor;
             _dbContext = dbContext;
+            _pageStoredProcedures = pageStoredProcedures;
+            _transactionScopeFactory = transactionScopeFactory;
         }
 
         #endregion
@@ -35,10 +41,21 @@ namespace Cofoundry.Domain
 
         public async Task ExecuteAsync(DuplicatePageCommand command, IExecutionContext executionContext)
         {
-            var toDup = await GetPageToDuplicate(command).FirstOrDefaultAsync();
-            var addPageCommand = MapCommand(command, toDup);
+            var pageToDuplicate = await GetPageToDuplicate(command).FirstOrDefaultAsync();
+            var addPageCommand = MapCommand(command, pageToDuplicate);
 
-            await _commandExecutor.ExecuteAsync(addPageCommand, executionContext);
+            using (var scope = _transactionScopeFactory.Create(_dbContext))
+            {
+                await _commandExecutor.ExecuteAsync(addPageCommand, executionContext);
+
+                await _pageStoredProcedures.CopyBlocksToDraftAsync(
+                    addPageCommand.OutputPageId,
+                    pageToDuplicate.Version.PageVersionId,
+                    executionContext.ExecutionDate,
+                    executionContext.UserContext.UserId.Value);
+
+                scope.Complete();
+            }
 
             // Set Ouput
             command.OutputPageId = addPageCommand.OutputPageId;
@@ -60,9 +77,9 @@ namespace Cofoundry.Domain
             return _dbContext
                 .PageVersions
                 .AsNoTracking()
-                .Where(v => v.PageId == command.PageToDuplicateId && !v.IsDeleted)
-                .OrderByDescending(v => v.WorkFlowStatusId == (int)WorkFlowStatus.Published)
-                .ThenByDescending(v => v.CreateDate)
+                .FilterActive()
+                .FilterByPageId(command.PageToDuplicateId)
+                .OrderByLatest()
                 .Select(v => new PageQuery
                 {
                     PageTypeId = v.Page.PageTypeId,

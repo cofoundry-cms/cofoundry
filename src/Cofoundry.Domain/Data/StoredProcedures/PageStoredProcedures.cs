@@ -1,10 +1,6 @@
-﻿using Cofoundry.Core;
-using Cofoundry.Core.EntityFramework;
+﻿using Cofoundry.Core.EntityFramework;
 using System;
-using System.Collections.Generic;
 using System.Data.SqlClient;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Cofoundry.Domain.Data
@@ -58,6 +54,41 @@ namespace Cofoundry.Domain.Data
             }
 
             return newVersionId.Value;
+        }
+
+        /// <summary>
+        /// Copies all the blocks from one page version into the draft version of a 
+        /// page. The version to copy from does not have to belong to the target page, 
+        /// but must use the same page template. The page to copy to should already
+        /// have a draft version.
+        /// </summary>
+        /// <param name="copyToPageId">
+        /// Id of the page with a draft to copy the blocks to. The page should already
+        /// have a draft version; the procedure will throw an error if a draft version 
+        /// is not found.
+        /// </param>
+        /// <param name="copyFromPageVersionId">
+        /// Id of the page version to copy from. The version does not have to belong to
+        /// the same page, but must use the same page template otherwise an exception
+        /// will be thrown.
+        /// </param>        
+        /// <param name="createDate">Date to set as the create date for the new blocks.</param>
+        /// <param name="creatorId">Id of the user to set as the creator fo the new blocks.</param>
+        public Task CopyBlocksToDraftAsync(
+            int copyToPageId,
+            int copyFromPageVersionId,
+            DateTime createDate,
+            int creatorId
+            )
+        {
+            return _entityFrameworkSqlExecutor
+                .ExecuteCommandAsync(_dbContext,
+                "Cofoundry.Page_CopyBlocksToDraft",
+                 new SqlParameter("PageId", copyToPageId),
+                 new SqlParameter("CopyFromPageVersionId", copyFromPageVersionId),
+                 new SqlParameter("CreateDate", createDate),
+                 new SqlParameter("CreatorId", creatorId)
+                 );
         }
 
         /// <summary>

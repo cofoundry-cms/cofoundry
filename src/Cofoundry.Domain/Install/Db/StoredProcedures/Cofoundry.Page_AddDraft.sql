@@ -34,7 +34,7 @@ begin
 			v.CreateDate desc
 	end
 	
-	-- if no draft to copy from, make an empty new version
+	-- if no draft to copy from we cannot go any further
 	if (@CopyFromPageVersionId is null) throw 50000, 'Cofoundry.Page_AddDraft: No drafts available to copy from', 1;
 
 	-- Copy version
@@ -74,72 +74,13 @@ begin
 	set @PageVersionId = SCOPE_IDENTITY()
 	
 	-- Copy Blocks
-	-- Technique take from http://sqlmag.com/t-sql/copying-data-dependencies
-	declare @BlocksToCopy table
-	(
-		SourcePageVersionBlockId int,
-		DestinationPageVersionBlockId int
-	)
 
-	merge into Cofoundry.PageVersionBlock as destination
-	using (select 
-			PageVersionBlockId,
-			PageTemplateRegionId,
-			PageBlockTypeId,
-			SerializedData,
-			Ordering,
-			CreateDate,
-			CreatorId,
-			UpdateDate,
-			PageBlockTypeTemplateId
-		from Cofoundry.PageVersionBlock
-		where PageVersionId = @CopyFromPageVersionId
-		) as src
-		on 1 = 2
-	when not matched then 
-		insert 
-		 (
-			PageVersionId,
-			PageTemplateRegionId,
-			PageBlockTypeId,
-			SerializedData,
-			Ordering,
-			CreateDate,
-			CreatorId,
-			UpdateDate,
-			PageBlockTypeTemplateId
-		)
-		values
-		(
-			@PageVersionId,
-			PageTemplateRegionId,
-			PageBlockTypeId,
-			SerializedData,
-			Ordering,
-			CreateDate,
-			CreatorId,
-			UpdateDate,
-			PageBlockTypeTemplateId
-		) 
-	output src.PageVersionBlockId, inserted.PageVersionBlockId
-	into @BlocksToCopy (SourcePageVersionBlockId, DestinationPageVersionBlockId);
+	exec Cofoundry.Page_CopyBlocksToDraft 
+		@CopyToPageId = @PageId, 
+		@CopyFromPageVersionId = @CopyFromPageVersionId,
+		@CreateDate = @CreateDate,
+		@CreatorId = @CreatorId
 
-	-- Copy Custom Entity Page Block Dependencies
-	insert into Cofoundry.UnstructuredDataDependency (
-		RootEntityDefinitionCode,
-		RootEntityId,
-		RelatedEntityDefinitionCode,
-		RelatedEntityId,
-		RelatedEntityCascadeActionId
-	)
-	select 
-		RootEntityDefinitionCode,
-		s.DestinationPageVersionBlockId,
-		RelatedEntityDefinitionCode,
-		RelatedEntityId,
-		RelatedEntityCascadeActionId
-	from @BlocksToCopy s
-	inner join Cofoundry.UnstructuredDataDependency d on d.RootEntityId = s.SourcePageVersionBlockId and RootEntityDefinitionCode = @PageVersionBlockEntityDefinitionCode
-	
+	-- Update page publish status lookup table
 	exec Cofoundry.PagePublishStatusQuery_Update @PageId = @PageId;
 end

@@ -17,7 +17,7 @@
         <cms-button-link cms-text="Browse to page"
                          cms-icon="eye-open"
                          cms-href="{{vm.page.pageRoute.fullPath}}"
-                         ng-if="::vm.pageRoute == 'Generic'"></cms-button-link>
+                         ng-if="vm.page.pageRoute.pageType == 'Generic'"></cms-button-link>
 
         <cms-button cms-text="Publish"
                     ng-click="vm.publish()"
@@ -86,8 +86,8 @@
 
             <cms-form-field-container cms-title="Url">
                 <a ng-href="{{vm.page.pageRoute.fullPath}}"
-                   ng-if="::vm.pageRoute == 'Generic'">{{vm.page.pageRoute.fullPath}}</a>
-                <span ng-if="vm.pageRoute != 'Generic'">{{vm.page.pageRoute.fullPath}}</span>
+                   ng-if="vm.page.pageRoute.pageType == 'Generic'">{{vm.page.pageRoute.fullPath}}</a>
+                <span ng-if="vm.page.pageRoute.pageType != 'Generic'">{{vm.page.pageRoute.fullPath}}</span>
             </cms-form-field-container>
 
             <cms-form-field-readonly cms-title="Published Status"
@@ -142,7 +142,7 @@
 
             <cms-form-section-actions>
                 <cms-button-link cms-text="Manage in Visual Editor"
-                    ng-if="::vm.canUpdate && vm.page.latestVersion.regions.length && vm.pageRoute == 'Generic'"
+                    ng-if="vm.canUpdate && vm.page.latestVersion.regions.length && vm.page.pageRoute.pageType == 'Generic'"
                     cms-icon="eye-open"
                     ng-show="!vm.editMode"
                     cms-href="{{vm.urlLibrary.visualEditorForPage(vm.page.pageRoute, true)}}"></cms-button-link>
@@ -243,7 +243,7 @@
                                    class="btn-icon"
                                    target="_blank"
                                    title="Browse to page: {{::version.versionLabel}}"
-                                   ng-if="::vm.pageRoute == 'Generic'">
+                                   ng-if="vm.page.pageRoute.pageType == 'Generic'">
                                     <i class="fa fa-external-link"></i>
                                 </a>
                             </td>
