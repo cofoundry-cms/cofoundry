@@ -64,7 +64,7 @@ begin
 	where RootEntityDefinitionCode = @CustomEntityVersionEntityDefinitionCode and RootEntityId = @CopyFromCustomEntityVersionId
 	
 	-- Copy Blocks
-	-- Technique take from http://sqlmag.com/t-sql/copying-data-dependencies
+	-- Technique taken from http://sqlmag.com/t-sql/copying-data-dependencies
 	declare @BlocksToCopy table
 	(
 		SourceCustomEntityVersionPageBlockId int,
@@ -78,7 +78,8 @@ begin
 			PageBlockTypeId,
 			SerializedData,
 			Ordering,
-			PageBlockTypeTemplateId
+			PageBlockTypeTemplateId,
+			PageId
 		from Cofoundry.CustomEntityVersionPageBlock
 		where CustomEntityVersionId = @CopyFromCustomEntityVersionId
 		) as src
@@ -91,7 +92,8 @@ begin
 			PageBlockTypeId,
 			SerializedData,
 			Ordering,
-			PageBlockTypeTemplateId
+			PageBlockTypeTemplateId,
+			PageId
 		)
 		values
 		(
@@ -100,7 +102,8 @@ begin
 			PageBlockTypeId,
 			SerializedData,
 			Ordering,
-			PageBlockTypeTemplateId
+			PageBlockTypeTemplateId,
+			PageId
 		) 
 	output src.CustomEntityVersionPageBlockId, inserted.CustomEntityVersionPageBlockId
 	into @BlocksToCopy (SourceCustomEntityVersionPageBlockId, DestinationCustomEntityVersionPageBlockId);

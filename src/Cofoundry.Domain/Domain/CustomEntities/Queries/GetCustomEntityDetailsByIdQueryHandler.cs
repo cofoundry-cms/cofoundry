@@ -10,6 +10,12 @@ using Cofoundry.Core;
 
 namespace Cofoundry.Domain
 {
+    /// <summary>
+    /// Returns detailed information on a custom entity and it's latest version. This 
+    /// query is primarily used in the admin area because it is not version-specific
+    /// and the CustomEntityDetails projection includes audit data and other additional 
+    /// information that should normally be hidden from a customer facing app.
+    /// </summary>
     public class GetCustomEntityDetailsByIdQueryHandler 
         : IAsyncQueryHandler<GetCustomEntityDetailsByIdQuery, CustomEntityDetails>
         , IIgnorePermissionCheckHandler
@@ -177,7 +183,7 @@ namespace Cofoundry.Domain
                         .CustomEntityVersionPageBlocks
                         .AsQueryable()
                         .FilterActive()
-                        .Where(m => m.PageTemplateRegionId == region.PageTemplateRegionId)
+                        .Where(m => m.PageId == routing.PageRoute.PageId && m.PageTemplateRegionId == region.PageTemplateRegionId)
                         .OrderBy(m => m.Ordering)
                         .Select(m => MapBlock(m, allPageBlockTypes))
                         .ToArray();

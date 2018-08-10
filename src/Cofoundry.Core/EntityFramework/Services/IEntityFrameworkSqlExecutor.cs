@@ -43,7 +43,8 @@ namespace Cofoundry.Core.EntityFramework
         #region ExecuteScalar
 
         /// <summary>
-        /// Executes a stored procedure returning a single result and forcing query execution.
+        /// Executes a stored procedure returning a single result and forcing query 
+        /// execution. This does not run in a transaction.
         /// </summary>
         /// <param name="dbContext">EF DbContext to run the command against.</param>
         /// <param name="spName">Name of the stored procedure to run</param>
@@ -54,7 +55,8 @@ namespace Cofoundry.Core.EntityFramework
         T ExecuteScalar<T>(DbContext dbContext, string spName, params SqlParameter[] sqlParams);
 
         /// <summary>
-        /// Executes a stored procedure returning a single result and forcing query execution.
+        /// Executes a stored procedure returning a single result and forcing query 
+        /// execution. This does not run in a transaction.
         /// </summary>
         /// <param name="dbContext">EF DbContext to run the command against.</param>
         /// <param name="spName">Name of the stored procedure to run</param>
@@ -70,7 +72,8 @@ namespace Cofoundry.Core.EntityFramework
 
         /// <summary>
         /// Executes a stored procedure or function returning either the number of rows affected or 
-        /// optionally returning the value of the first output parameter passed in the parameters collection.
+        /// optionally returning the value of the first output parameter passed in the parameters 
+        /// collection. The command is executed in a transaction created via ITransactionFactory.
         /// </summary>
         /// <param name="dbContext">EF DbContext to run the command against.</param>
         /// <param name="spName">Name of the stored procedure to run</param>
@@ -83,7 +86,8 @@ namespace Cofoundry.Core.EntityFramework
 
         /// <summary>
         /// Executes a stored procedure or function returning either the number of rows affected or 
-        /// optionally returning the value of the first output parameter passed in the parameters collection.
+        /// optionally returning the value of the first output parameter passed in the parameters 
+        /// collection. The command is executed in a transaction created via ITransactionFactory.
         /// </summary>
         /// <param name="dbContext">EF DbContext to run the command against.</param>
         /// <param name="spName">Name of the stored procedure to run</param>
@@ -103,7 +107,8 @@ namespace Cofoundry.Core.EntityFramework
         /// output paramter. The output parameter is created for you so you do not need
         /// to specify it in the sqlParams collection. If more than one output parameter
         /// is specified only the first is returned. The generic type parameter is used
-        /// as the output parameter type.
+        /// as the output parameter type. The command is executed in a transaction created 
+        /// via ITransactionFactory.
         /// </summary>
         /// <typeparam name="T">Type of the returned output parameter.</typeparam>
         /// <param name="dbContext">EF DbContext to run the command against.</param>
@@ -120,7 +125,8 @@ namespace Cofoundry.Core.EntityFramework
         /// output paramter. The output parameter is created for you so you do not need
         /// to specify it in the sqlParams collection. If more than one output parameter
         /// is specified only the first is returned. The generic type parameter is used
-        /// as the output parameter type.
+        /// as the output parameter type. The command is executed in a transaction created 
+        /// via ITransactionFactory.
         /// </summary>
         /// <typeparam name="T">Type of the returned output parameter.</typeparam>
         /// <param name="dbContext">EF DbContext to run the command against.</param>

@@ -820,6 +820,7 @@ function (
     }
 
     function addRegionBlock(args) {
+
         modalDialogService.show({
             templateUrl: modulePath + 'Routes/Modals/AddBlock.html',
             controller: 'AddBlockController',
@@ -828,10 +829,11 @@ function (
                 pageTemplateRegionId: args.pageTemplateRegionId,
                 adjacentVersionBlockId: args.versionBlockId,
                 permittedBlockTypes: args.permittedBlockTypes,
-                onClose: onClose,
-                refreshContent: refreshRegion,
                 isCustomEntity: args.isCustomEntity,
-                regionName: args.regionName
+                regionName: args.regionName,
+                pageId: args.pageId,
+                onClose: onClose,
+                refreshContent: refreshRegion
             }
         });
 
@@ -855,6 +857,7 @@ function (
                 insertMode: args.insertMode,
                 refreshContent: refreshRegion,
                 isCustomEntity: args.isCustomEntity,
+                pageId: args.pageId,
                 onClose: onClose
             }
         });
@@ -1018,6 +1021,7 @@ function (
 
         $scope.command = { 
             dataModel: {},
+            pageId: options.pageId,
             pageTemplateRegionId: options.pageTemplateRegionId,
             pageVersionId: visualEditorOptions.pageVerisonId,
             adjacentVersionBlockId: options.adjacentVersionBlockId,
@@ -1157,9 +1161,10 @@ function (
         var anchorElement = options.anchorElement;
 
         $scope.command = { 
-            dataModel: {}
+            dataModel: {},
+            pageId: options.pageId
         };
-        
+
         $scope.submitLoadState = new LoadState();
         $scope.formLoadState = new LoadState(true);
 

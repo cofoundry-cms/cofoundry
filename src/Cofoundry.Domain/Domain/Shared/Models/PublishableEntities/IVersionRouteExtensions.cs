@@ -18,7 +18,7 @@ namespace Cofoundry.Domain
         }
 
         /// <summary>
-        /// Gets version routing info for the specified WorkFlowStatus query
+        /// Gets version routing info for the specified PublishStatus query
         /// </summary>
         public static T GetVersionRouting<T>(this IEnumerable<T> versions, PublishStatusQuery status, int? versionId = null)
             where T : IVersionRoute

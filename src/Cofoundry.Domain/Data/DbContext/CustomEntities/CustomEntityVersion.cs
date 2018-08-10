@@ -11,6 +11,10 @@ namespace Cofoundry.Domain.Data
             CustomEntityPublishStatusQueries = new List<CustomEntityPublishStatusQuery>();
         }
 
+        /// <summary>
+        /// Auto-incrementing primary key of the custom entity version
+        /// record in the database.
+        /// </summary>
         public int CustomEntityVersionId { get; set; }
 
         public int CustomEntityId { get; set; }
@@ -22,6 +26,11 @@ namespace Cofoundry.Domain.Data
         /// </summary>
         public string Title { get; set; }
 
+        /// <summary>
+        /// The custom entity data model serialized into string data by
+        /// IDbUnstructuredDataSerializer, which used JSON serlialization
+        /// by default.
+        /// </summary>
         public string SerializedData { get; set; }
 
         public virtual CustomEntity CustomEntity { get; set; }

@@ -66,13 +66,23 @@ namespace Cofoundry.Domain
 
             if (customEntityVersion.WorkFlowStatusId != (int)WorkFlowStatus.Draft)
             {
-                throw new NotPermittedException("Page blocks cannot be deleted unless the entity is in draft status");
+                throw new NotPermittedException("Page blocks cannot be added unless the entity is in draft status");
             }
+
+            var page = await _dbContext
+                .Pages
+                .FilterActive()
+                .FilterByPageId(command.PageId)
+                .SingleOrDefaultAsync();
+
+            EntityNotFoundException.ThrowIfNull(page, command.PageId);
 
             var templateRegion = await _dbContext
                 .PageTemplateRegions
                 .FirstOrDefaultAsync(l => l.PageTemplateRegionId == command.PageTemplateRegionId);
             EntityNotFoundException.ThrowIfNull(templateRegion, command.PageTemplateRegionId);
+
+            await ValidateTemplateUsedByPage(command, templateRegion);
 
             var customEntityVersionBlocks = customEntityVersion
                 .CustomEntityVersionPageBlocks
@@ -84,14 +94,19 @@ namespace Cofoundry.Domain
                 adjacentItem = customEntityVersionBlocks
                     .SingleOrDefault(m => m.CustomEntityVersionPageBlockId == command.AdjacentVersionBlockId);
                 EntityNotFoundException.ThrowIfNull(adjacentItem, command.AdjacentVersionBlockId);
+
+                if (adjacentItem.PageTemplateRegionId != command.PageTemplateRegionId)
+                {
+                    throw new Exception("Error adding custom entity page block: the block specified in AdjacentVersionBlockId is in a different region to the block being added.");
+                }
             }
 
             var newBlock = new CustomEntityVersionPageBlock();
             newBlock.PageTemplateRegion = templateRegion;
+            newBlock.Page = page;
+            newBlock.CustomEntityVersion = customEntityVersion;
 
             await _pageBlockCommandHelper.UpdateModelAsync(command, newBlock);
-
-            newBlock.CustomEntityVersion = customEntityVersion;
 
             _entityOrderableHelper.SetOrderingForInsert(customEntityVersionBlocks, newBlock, command.InsertMode, adjacentItem);
 
@@ -110,6 +125,7 @@ namespace Cofoundry.Domain
 
                 scope.Complete();
             }
+
             _customEntityCache.Clear(customEntityVersion.CustomEntity.CustomEntityDefinitionCode, customEntityVersion.CustomEntityId);
 
             command.OutputCustomEntityVersionPageBlockId = newBlock.CustomEntityVersionPageBlockId;
@@ -120,6 +136,20 @@ namespace Cofoundry.Domain
                 CustomEntityVersionPageBlockId = newBlock.CustomEntityVersionPageBlockId,
                 CustomEntityDefinitionCode = customEntityVersion.CustomEntity.CustomEntityDefinitionCode
             });
+        }
+
+        private async Task ValidateTemplateUsedByPage(AddCustomEntityVersionPageBlockCommand command, PageTemplateRegion templateRegion)
+        {
+            var isRegionInTemplate = await _dbContext
+                .PageVersions
+                .FilterActive()
+                .FilterByPageId(command.PageId)
+                .AnyAsync(p => p.PageTemplateId == templateRegion.PageTemplateId);
+
+            if (!isRegionInTemplate)
+            {
+                throw new Exception($"Error adding custom entity page block. The page template region {command.PageTemplateRegionId} does not belong to a template referenced by the page {command.PageId}");
+            }
         }
 
         #endregion

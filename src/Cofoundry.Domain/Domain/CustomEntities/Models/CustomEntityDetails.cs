@@ -6,8 +6,16 @@ using System.Threading.Tasks;
 
 namespace Cofoundry.Domain
 {
+    /// <summary>
+    /// Primarily used in the admin area, the CustomEntityDetails projection 
+    /// includes audit data and other additional information that should normally be 
+    /// hidden from a customer facing app.
+    /// </summary>
     public class CustomEntityDetails : IPublishableEntity, ICreateAudited
     {
+        /// <summary>
+        /// Database id of the custom entity record.
+        /// </summary>
         public int CustomEntityId { get; set; }
 
         public ActiveLocale Locale { get; set; }
@@ -40,8 +48,15 @@ namespace Cofoundry.Domain
         /// </summary>
         public string FullPath { get; set; }
 
+        /// <summary>
+        /// Data for the latest version of the custom entity, which is not
+        /// neccessarily published.
+        /// </summary>
         public CustomEntityVersionDetails LatestVersion { get; set; }
 
+        /// <summary>
+        /// Simple audit data for entity creation.
+        /// </summary>
         public CreateAuditData AuditData { get; set; }
     }
 }

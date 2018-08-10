@@ -14,7 +14,8 @@ namespace Cofoundry.Domain
     public class CustomEntityVersionPageBlockRenderDetails : IEntityVersionPageBlockRenderDetails
     {
         /// <summary>
-        /// Database id of the custom entity version block record.
+        /// Database id and auto-incrementing primary key of the 
+        /// custom entity version block record.
         /// </summary>
         public int CustomEntityVersionPageBlockId { get; set; }
         

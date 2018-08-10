@@ -9,7 +9,13 @@ namespace Cofoundry.Domain
 {
     public class EntityOrderableHelper
     {
-        public void SetOrderingForInsert<T>(IEnumerable<T> collection, T entityToAdd, OrderedItemInsertMode insertMode, T adjacentItem = null) where T : class, IEntityOrderable
+        public void SetOrderingForInsert<T>(
+            IEnumerable<T> collection, 
+            T entityToAdd, 
+            OrderedItemInsertMode insertMode, 
+            T adjacentItem = null
+            ) 
+            where T : class, IEntityOrderable
         {
             var entities = collection
                 .OrderBy(m => m.Ordering)

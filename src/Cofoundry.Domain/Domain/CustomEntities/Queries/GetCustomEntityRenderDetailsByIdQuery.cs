@@ -37,7 +37,7 @@ namespace Cofoundry.Domain
 
         [Required]
         [PositiveInteger]
-        public int PageTemplateId { get; set; }
+        public int PageId { get; set; }
 
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {

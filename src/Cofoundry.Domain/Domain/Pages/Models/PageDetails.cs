@@ -35,7 +35,7 @@ namespace Cofoundry.Domain
         public PageVersionDetails LatestVersion { get; set; }
 
         /// <summary>
-        /// Simple audit data for entity creation.
+        /// Simple audit data for page creation.
         /// </summary>
         public CreateAuditData AuditData { get; set; }
     }

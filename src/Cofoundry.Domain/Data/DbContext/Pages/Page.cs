@@ -21,7 +21,7 @@ namespace Cofoundry.Domain.Data
         }
 
         /// <summary>
-        /// The database id of the page.
+        /// The auto-incrementing database id of the page.
         /// </summary>
         public int PageId { get; set; }
 

@@ -40,7 +40,7 @@ namespace Cofoundry.Domain
         /// <param name="preferCustomEntity">Look for the CustomEntityRouting if its available.</param>
         /// <param name="publishStatusQuery">Specifies how to query for the version e.g. prefer publishes or draft version.</param>
         /// <param name="versionId">Id of a specifc version to look for if using PublishStatusQuery.SpecificVersion.</param>
-        public IVersionRoute GetVersionRoute(bool preferCustomEntity, PublishStatusQuery publishStatusQuery, int? versionId)
+        public IVersionRoute GetVersionRoute(bool preferCustomEntity, PublishStatusQuery publishStatusQuery, int? versionId = null)
         {
             IEnumerable<IVersionRoute> versions = null;
 

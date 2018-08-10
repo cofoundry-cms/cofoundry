@@ -21,12 +21,15 @@ namespace Cofoundry.Core.EntityFramework
         #region constructor
 
         private readonly ISqlParameterFactory _sqlParameterFactory;
+        private readonly ITransactionScopeFactory _transactionScopeFactory;
 
         public EntityFrameworkSqlExecutor(
-            ISqlParameterFactory sqlParameterFactory
+            ISqlParameterFactory sqlParameterFactory,
+            ITransactionScopeFactory transactionScopeFactory
             )
         {
             _sqlParameterFactory = sqlParameterFactory;
+            _transactionScopeFactory = transactionScopeFactory;
         }
 
         #endregion
@@ -76,6 +79,7 @@ namespace Cofoundry.Core.EntityFramework
                 // until raw sql access is added to EF we'll have to be restricted 
                 // to entities only.
                 // see https://github.com/aspnet/EntityFramework/issues/1862
+                // and https://github.com/aspnet/EntityFrameworkCore/issues/10753
 
                 //var results = _dbContext.Database.SqlQuery<T>(cmd, sqlParams);
                 var results = dbContext.Set<T>().FromSql(cmd, sqlParams);
@@ -93,7 +97,8 @@ namespace Cofoundry.Core.EntityFramework
         #region ExecuteScalar
 
         /// <summary>
-        /// Executes a stored procedure returning a single result and forcing query execution.
+        /// Executes a stored procedure returning a single result and forcing query 
+        /// execution. This does not run in a transaction.
         /// </summary>
         /// <param name="dbContext">EF DbContext to run the command against.</param>
         /// <param name="spName">Name of the stored procedure to run</param>
@@ -103,8 +108,8 @@ namespace Cofoundry.Core.EntityFramework
         /// </returns>
         public T ExecuteScalar<T>(DbContext dbContext, string spName, params SqlParameter[] sqlParams)
         {
-            // This is also not supported in EF7 yet. So we've copied from the EF
-            // source code. This will need updating when EF updates to 2.0.
+            // This is not supported in EF core yet. So we've copied from the EF
+            // source code. See https://github.com/aspnet/EntityFrameworkCore/issues/9882
             var databaseFacade = dbContext.Database;
             var concurrencyDetector = databaseFacade.GetService<IConcurrencyDetector>();
             var sql = FormatSqlCommand(spName, sqlParams);
@@ -128,7 +133,8 @@ namespace Cofoundry.Core.EntityFramework
         }
 
         /// <summary>
-        /// Executes a stored procedure returning a single result and forcing query execution.
+        /// Executes a stored procedure returning a single result and forcing query 
+        /// execution. This does not run in a transaction.
         /// </summary>
         /// <param name="dbContext">EF DbContext to run the command against.</param>
         /// <param name="spName">Name of the stored procedure to run</param>
@@ -179,7 +185,8 @@ namespace Cofoundry.Core.EntityFramework
 
         /// <summary>
         /// Executes a stored procedure or function returning either the number of rows affected or 
-        /// optionally returning the value of the first output parameter passed in the parameters collection.
+        /// optionally returning the value of the first output parameter passed in the parameters 
+        /// collection. The command is executed in a transaction created via ITransactionFactory.
         /// </summary>
         /// <param name="dbContext">EF DbContext to run the command against.</param>
         /// <param name="spName">Name of the stored procedure to run</param>
@@ -190,23 +197,44 @@ namespace Cofoundry.Core.EntityFramework
         /// </returns>
         public object ExecuteCommand(DbContext dbContext, string spName, params SqlParameter[] sqlParams)
         {
+            object result = null;
+
             if (sqlParams.Any())
             {
                 var cmd = FormatSqlCommand(spName, sqlParams);
                 FormatSqlParameters(sqlParams);
+                int rowsAffected = 0;
 
-                int rowsAffected = dbContext.Database.ExecuteSqlCommand(cmd, sqlParams);
-                return GetOutputParamValue(sqlParams) ?? rowsAffected;
+                dbContext.Database.CreateExecutionStrategy().Execute(() =>
+                {
+                    using (var scope = _transactionScopeFactory.Create(dbContext))
+                    {
+                        rowsAffected = dbContext.Database.ExecuteSqlCommand(cmd, sqlParams);
+                        scope.Complete();
+                    }
+                });
+
+                result = GetOutputParamValue(sqlParams) ?? rowsAffected;
             }
             else
             {
-                return dbContext.Database.ExecuteSqlCommand(spName);
+                dbContext.Database.CreateExecutionStrategy().Execute(() =>
+                {
+                    using (var scope = _transactionScopeFactory.Create(dbContext))
+                    {
+                        result = dbContext.Database.ExecuteSqlCommand(spName);
+                        scope.Complete();
+                    }
+                });
             }
+
+            return result;
         }
 
         /// <summary>
         /// Executes a stored procedure or function returning either the number of rows affected or 
-        /// optionally returning the value of the first output parameter passed in the parameters collection.
+        /// optionally returning the value of the first output parameter passed in the parameters 
+        /// collection. The command is executed in a transaction created via ITransactionFactory.
         /// </summary>
         /// <param name="dbContext">EF DbContext to run the command against.</param>
         /// <param name="spName">Name of the stored procedure to run</param>
@@ -217,18 +245,38 @@ namespace Cofoundry.Core.EntityFramework
         /// </returns>
         public async Task<object> ExecuteCommandAsync(DbContext dbContext, string spName, params SqlParameter[] sqlParams)
         {
+            object result = null;
+
             if (sqlParams.Any())
             {
                 var cmd = FormatSqlCommand(spName, sqlParams);
                 FormatSqlParameters(sqlParams);
+                int rowsAffected = 0;
 
-                int rowsAffected = await dbContext.Database.ExecuteSqlCommandAsync(cmd, parameters: sqlParams);
-                return GetOutputParamValue(sqlParams) ?? rowsAffected;
+                await dbContext.Database.CreateExecutionStrategy().Execute(async () =>
+                {
+                    using (var scope = _transactionScopeFactory.Create(dbContext))
+                    {
+                        rowsAffected = await dbContext.Database.ExecuteSqlCommandAsync(cmd, sqlParams);
+                        scope.Complete();
+                    }
+                });
+
+                result = GetOutputParamValue(sqlParams) ?? rowsAffected;
             }
             else
             {
-                return await dbContext.Database.ExecuteSqlCommandAsync(spName);
+                await dbContext.Database.CreateExecutionStrategy().ExecuteAsync(async () =>
+                {
+                    using (var scope = _transactionScopeFactory.Create(dbContext))
+                    {
+                        result = await dbContext.Database.ExecuteSqlCommandAsync(spName);
+                        scope.Complete();
+                    }
+                });
             }
+
+            return result;
         }
 
         private static object GetOutputParamValue(SqlParameter[] sqlParams)
@@ -250,7 +298,8 @@ namespace Cofoundry.Core.EntityFramework
         /// output paramter. The output parameter is created for you so you do not need
         /// to specify it in the sqlParams collection. If more than one output parameter
         /// is specified only the first is returned. The generic type parameter is used
-        /// as the output parameter type.
+        /// as the output parameter type. The command is executed in a transaction created 
+        /// via ITransactionFactory.
         /// </summary>
         /// <typeparam name="T">Type of the returned output parameter.</typeparam>
         /// <param name="dbContext">EF DbContext to run the command against.</param>
@@ -275,7 +324,8 @@ namespace Cofoundry.Core.EntityFramework
         /// output paramter. The output parameter is created for you so you do not need
         /// to specify it in the sqlParams collection. If more than one output parameter
         /// is specified only the first is returned. The generic type parameter is used
-        /// as the output parameter type.
+        /// as the output parameter type. The command is executed in a transaction created 
+        /// via ITransactionFactory.
         /// </summary>
         /// <typeparam name="T">Type of the returned output parameter.</typeparam>
         /// <param name="dbContext">EF DbContext to run the command against.</param>

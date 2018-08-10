@@ -17,6 +17,10 @@ namespace Cofoundry.Domain
 
         [Required]
         [PositiveInteger]
+        public int PageId { get; set; }
+
+        [Required]
+        [PositiveInteger]
         public int PageBlockTypeId { get; set; }
 
         [PositiveInteger]

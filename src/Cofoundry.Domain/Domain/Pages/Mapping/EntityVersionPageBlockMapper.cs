@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Cofoundry.Domain.Data;
 using Cofoundry.Domain.CQS;
+using Microsoft.Extensions.Logging;
 
 namespace Cofoundry.Domain
 {
@@ -18,13 +19,16 @@ namespace Cofoundry.Domain
         #region constructor
 
         private readonly IPageVersionBlockModelMapper _pageVersionBlockModelMapper;
+        private readonly ILogger<EntityVersionPageBlockMapper> _logger;
 
         public EntityVersionPageBlockMapper(
             IQueryExecutor queryExecutor,
-            IPageVersionBlockModelMapper pageVersionBlockModelMapper
+            IPageVersionBlockModelMapper pageVersionBlockModelMapper,
+            ILogger<EntityVersionPageBlockMapper> logger
             )
         {
             _pageVersionBlockModelMapper = pageVersionBlockModelMapper;
+            _logger = logger;
         }
 
         #endregion
@@ -81,7 +85,10 @@ namespace Cofoundry.Domain
                 .Templates
                 .FirstOrDefault(t => t.PageBlockTypeTemplateId == pageBlock.PageBlockTypeTemplateId);
 
-            Debug.Assert(template != null, string.Format("The block template with id {0} could not be found for {1} {2}", pageBlock.PageBlockTypeTemplateId, pageBlock.GetType().Name, pageBlock.GetVersionBlockId()));
+            if (template == null)
+            {
+                _logger.LogDebug("The block template with id {PageBlockTypeTemplateId} could not be found for {PageBlockType} {VersionBlockId}", pageBlock.PageBlockTypeTemplateId, pageBlock.GetType().Name, pageBlock.GetVersionBlockId());
+            }
 
             return template;
         }
@@ -140,9 +147,7 @@ namespace Cofoundry.Domain
                 block.Template = GetCustomTemplate(dbBlock.PageBlock, dbBlock.BlockType);
 
                 // Add any list context information.
-                var displayData = block.DisplayModel as IListablePageBlockTypeDisplayModel;
-
-                if (displayData != null)
+                if (block.DisplayModel is IListablePageBlockTypeDisplayModel displayData)
                 {
                     displayData.ListContext = new ListablePageBlockRenderContext()
                     {

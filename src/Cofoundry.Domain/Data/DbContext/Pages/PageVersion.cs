@@ -19,7 +19,8 @@ namespace Cofoundry.Domain.Data
         }
 
         /// <summary>
-        /// Primary key of the page version.
+        /// Auto-incrementing primary key of the page version record 
+        /// in the database.
         /// </summary>
         public int PageVersionId { get; set; }
 

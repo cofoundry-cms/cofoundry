@@ -25,9 +25,10 @@ function (
         var anchorElement = options.anchorElement;
 
         $scope.command = { 
-            dataModel: {}
+            dataModel: {},
+            pageId: options.pageId
         };
-        
+
         $scope.submitLoadState = new LoadState();
         $scope.formLoadState = new LoadState(true);
 

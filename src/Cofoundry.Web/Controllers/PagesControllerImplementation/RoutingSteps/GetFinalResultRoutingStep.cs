@@ -138,7 +138,7 @@ namespace Cofoundry.Web
         {
             var query = new GetCustomEntityRenderDetailsByIdQuery();
             query.CustomEntityId = state.PageRoutingInfo.CustomEntityRoute.CustomEntityId;
-            query.PageTemplateId = state.PageData.Template.PageTemplateId;
+            query.PageId = state.PageData.PageId;
 
             // If we're editing the custom entity, we need to get the version we're editing, otherwise just get latest
             if (state.InputParameters.IsEditingCustomEntity)
