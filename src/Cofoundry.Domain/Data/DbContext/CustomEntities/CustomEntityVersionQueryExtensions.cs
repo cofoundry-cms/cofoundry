@@ -48,7 +48,7 @@ namespace Cofoundry.Domain.Data
         /// <summary>
         /// Removes any custom entities from the query that are inactive (attached to an inactive locale).
         /// </summary>
-        public static IQueryable<CustomEntityVersion> FilterByActive(this IQueryable<CustomEntityVersion> customEntities)
+        public static IQueryable<CustomEntityVersion> FilterActive(this IQueryable<CustomEntityVersion> customEntities)
         {
             var result = customEntities
                 .Where(e => e.CustomEntity.LocaleId == null || e.CustomEntity.Locale.IsActive);

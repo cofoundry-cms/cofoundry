@@ -93,6 +93,12 @@ namespace Cofoundry.Web.Admin
             return await _apiResponseHelper.RunCommandAsync(this, command);
         }
 
+        [HttpPost(ID_ROUTE + "/duplicate")]
+        public async Task<IActionResult> Post([FromBody] DuplicateCustomEntityCommand command)
+        {
+            return await _apiResponseHelper.RunCommandAsync(this, command);
+        }
+
         #endregion
 
         #endregion

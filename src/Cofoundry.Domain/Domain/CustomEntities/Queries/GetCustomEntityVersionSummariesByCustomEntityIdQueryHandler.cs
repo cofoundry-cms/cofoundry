@@ -59,7 +59,7 @@ namespace Cofoundry.Domain
                 .CustomEntityVersions
                 .AsNoTracking()
                 .Include(e => e.Creator)
-                .FilterByActive()
+                .FilterActive()
                 .FilterByCustomEntityId(id)
                 .OrderByDescending(v => v.WorkFlowStatusId == (int)WorkFlowStatus.Draft)
                 .ThenByDescending(v => v.CreateDate);

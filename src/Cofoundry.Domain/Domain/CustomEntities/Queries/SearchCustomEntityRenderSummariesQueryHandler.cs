@@ -57,7 +57,7 @@ namespace Cofoundry.Domain
                 .Include(e => e.CustomEntityVersion)
                 .ThenInclude(e => e.CustomEntity)
                 .FilterByCustomEntityDefinitionCode(query.CustomEntityDefinitionCode)
-                .FilterByActive()
+                .FilterActive()
                 .FilterByStatus(query.PublishStatus, executionContext.ExecutionDate);
 
             // Filter by locale 

@@ -41,7 +41,7 @@ namespace Cofoundry.Domain
 
         public async Task ExecuteAsync(DuplicatePageCommand command, IExecutionContext executionContext)
         {
-            var pageToDuplicate = await GetPageToDuplicate(command).FirstOrDefaultAsync();
+            var pageToDuplicate = await GetPageToDuplicateAsync(command);
             var addPageCommand = MapCommand(command, pageToDuplicate);
 
             using (var scope = _transactionScopeFactory.Create(_dbContext))
@@ -72,7 +72,7 @@ namespace Cofoundry.Domain
             public ICollection<string> Tags { get; set; }
         }
 
-        private IQueryable<PageQuery> GetPageToDuplicate(DuplicatePageCommand command)
+        private Task<PageQuery> GetPageToDuplicateAsync(DuplicatePageCommand command)
         {
             return _dbContext
                 .PageVersions
@@ -89,7 +89,8 @@ namespace Cofoundry.Domain
                         .PageTags
                         .Select(t => t.Tag.TagText)
                         .ToList()
-                });
+                })
+                .FirstOrDefaultAsync();
         }
 
         private AddPageCommand MapCommand(DuplicatePageCommand command, PageQuery toDup)

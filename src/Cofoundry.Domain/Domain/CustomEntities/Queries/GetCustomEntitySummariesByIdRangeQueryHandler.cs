@@ -69,7 +69,7 @@ namespace Cofoundry.Domain
                 .Include(e => e.CustomEntity)
                 .ThenInclude(e => e.Creator)
                 .Where(v => query.CustomEntityIds.Contains(v.CustomEntityId))
-                .FilterByActive()
+                .FilterActive()
                 .FilterByStatus(PublishStatusQuery.Latest, executionContext.ExecutionDate)
                 .ToListAsync();
             

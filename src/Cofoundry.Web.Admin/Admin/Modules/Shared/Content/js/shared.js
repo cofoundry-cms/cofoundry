@@ -4232,6 +4232,9 @@ function (
         return $http.delete(getVerionsRoute(id) + '/draft');
     }
 
+    service.duplicate = function (command) {
+        return $http.post(getIdRoute(command.customEntityToDuplicateId) + '/duplicate', command);
+    }
 
     /* PRIVATES */
 

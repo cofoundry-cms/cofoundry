@@ -35,6 +35,11 @@
                     ng-disabled="vm.globalLoadState.isLoading"
                     ng-if="vm.canChangeUrl && vm.canUpdateUrl"></cms-button>
 
+        <cms-button cms-text="Duplicate"
+                    ng-if="::vm.canCreate"
+                    ng-click="vm.duplicate()"
+                    ng-disabled="vm.editMode || vm.globalLoadState.isLoading"></cms-button>
+
         <cms-button cms-text="Delete"
                     ng-click="vm.deleteCustomEntity()"
                     ng-disabled="vm.globalLoadState.isLoading"

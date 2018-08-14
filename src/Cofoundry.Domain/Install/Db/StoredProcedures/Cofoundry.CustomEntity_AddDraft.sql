@@ -64,66 +64,10 @@ begin
 	where RootEntityDefinitionCode = @CustomEntityVersionEntityDefinitionCode and RootEntityId = @CopyFromCustomEntityVersionId
 	
 	-- Copy Blocks
-	-- Technique taken from http://sqlmag.com/t-sql/copying-data-dependencies
-	declare @BlocksToCopy table
-	(
-		SourceCustomEntityVersionPageBlockId int,
-		DestinationCustomEntityVersionPageBlockId int
-	)
-
-	merge into Cofoundry.CustomEntityVersionPageBlock as destination
-	using (select 
-			CustomEntityVersionPageBlockId,
-			PageTemplateRegionId,
-			PageBlockTypeId,
-			SerializedData,
-			Ordering,
-			PageBlockTypeTemplateId,
-			PageId
-		from Cofoundry.CustomEntityVersionPageBlock
-		where CustomEntityVersionId = @CopyFromCustomEntityVersionId
-		) as src
-		on 1= 2
-	when not matched then 
-		insert 
-		 (
-			CustomEntityVersionId,
-			PageTemplateRegionId,
-			PageBlockTypeId,
-			SerializedData,
-			Ordering,
-			PageBlockTypeTemplateId,
-			PageId
-		)
-		values
-		(
-			@CustomEntityVersionId,
-			PageTemplateRegionId,
-			PageBlockTypeId,
-			SerializedData,
-			Ordering,
-			PageBlockTypeTemplateId,
-			PageId
-		) 
-	output src.CustomEntityVersionPageBlockId, inserted.CustomEntityVersionPageBlockId
-	into @BlocksToCopy (SourceCustomEntityVersionPageBlockId, DestinationCustomEntityVersionPageBlockId);
 	
-	-- Copy Custom Entity Page Block Dependencies
-	insert into Cofoundry.UnstructuredDataDependency (
-		RootEntityDefinitionCode,
-		RootEntityId,
-		RelatedEntityDefinitionCode,
-		RelatedEntityId,
-		RelatedEntityCascadeActionId
-	)
-	select 
-		RootEntityDefinitionCode,
-		s.DestinationCustomEntityVersionPageBlockId,
-		RelatedEntityDefinitionCode,
-		RelatedEntityId,
-		RelatedEntityCascadeActionId
-	from @BlocksToCopy s
-	inner join Cofoundry.UnstructuredDataDependency d on d.RootEntityId = s.SourceCustomEntityVersionPageBlockId and RootEntityDefinitionCode = @CustomEntityPageBlockEntityDefinitionCode
+	exec Cofoundry.CustomEntity_CopyBlocksToDraft 
+		@CopyToCustomEntityId = @CustomEntityId, 
+		@CopyFromCustomEntityVersionId = @CopyFromCustomEntityVersionId
 	
 	exec Cofoundry.CustomEntityPublishStatusQuery_Update @CustomEntityId = @CustomEntityId;
 end

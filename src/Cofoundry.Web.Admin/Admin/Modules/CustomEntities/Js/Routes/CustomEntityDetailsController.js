@@ -49,6 +49,7 @@ function (
         vm.unpublish = unpublish;
         vm.discardDraft = discardDraft;
         vm.copyToDraft = copyToDraft;
+        vm.duplicate = duplicate;
         vm.deleteCustomEntity = deleteCustomEntity;
         vm.changeUrl = changeUrl;
 
@@ -67,6 +68,7 @@ function (
         vm.canUpdateUrl = getPermission('UPDURL');
         vm.canDelete = getPermission('COMDEL');
         vm.canUpdate = getPermission('CMEPUB');
+        vm.canCreate = getPermission('COMCRT');
 
         // Init
         initData(vm.formLoadState);
@@ -149,6 +151,17 @@ function (
         function onOkSuccess() {
             onSuccess('Draft created successfully.')
         }
+    }
+
+    function duplicate() {
+
+        modalDialogService.show({
+            templateUrl: modulePath + 'Routes/Modals/DuplicateCustomEntity.html',
+            controller: 'DuplicateCustomEntityController',
+            options: {
+                customEntity: vm.customEntity
+            }
+        });
     }
 
     function deleteCustomEntity() {

@@ -2,6 +2,7 @@
     '$scope',
     '$q',
     '$location',
+    'shared.stringUtilities',
     'shared.LoadState',
     'shared.pageService',
     'pages.customEntityService',
@@ -11,6 +12,7 @@ function (
     $scope,
     $q,
     $location,
+    stringUtilities,
     LoadState,
     pageService,
     customEntityService,
@@ -33,6 +35,8 @@ function (
 
         $scope.save = save;
         $scope.close = close;
+        $scope.onTitleChanged = onTitleChanged;
+
         $scope.localesLoaded = loadLocalesDeferred.resolve;
         $scope.pageDirectoriesLoaded = loadPageDirectoryDeferred.resolve;
         $scope.formLoadState.offWhen(loadLocalesDeferred, loadPageDirectoryDeferred, loadRoutingRules());
@@ -56,7 +60,13 @@ function (
         if ($scope.isCustomEntityRoute) {
             $scope.command.customEntityRoutingRule = pageRoute.urlPath;
         } else {
-            $scope.command.urlPath = pageRoute.urlPath + '-copy';
+            onTitleChanged();
+        }
+    }
+
+    function onTitleChanged() {
+        if (!$scope.isCustomEntityRoute) {
+            $scope.command.urlPath = stringUtilities.slugify($scope.command.title);
         }
     }
 

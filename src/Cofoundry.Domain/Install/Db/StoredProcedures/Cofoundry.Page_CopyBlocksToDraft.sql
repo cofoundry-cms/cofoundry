@@ -11,7 +11,6 @@ begin
 	set nocount on;
 	
 	declare @PageVersionBlockEntityDefinitionCode char(6) = 'COFPGB';
-	declare @PublishedWorkFlowStatus int = 4;
 	declare @DraftWorkFlowStatus int = 1;
 	declare @CopyToPageVersionId int;
 	declare @ErrorMessage nvarchar(2048)
@@ -51,7 +50,7 @@ begin
 	
 	if (@SourceVersionTemplateId <> @TargetVersionTemplateId) 
 	begin
-		set @ErrorMessage = FORMATMESSAGE('Source version template does match target version template. Source PageVersionId: %i, Target PageVersionId: %i', @SourceVersionTemplateId, @TargetVersionTemplateId);
+		set @ErrorMessage = FORMATMESSAGE('Source version template does match target version template. Source PageVersionId: %i, Target PageVersionId: %i', @CopyFromPageVersionId, @CopyToPageVersionId);
 		throw 50000, @ErrorMessage, 1;
 	end
 

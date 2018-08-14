@@ -138,7 +138,7 @@ namespace Cofoundry.Domain
                     .CustomEntityVersions
                     .AsNoTracking()
                     .Include(e => e.CustomEntity)
-                    .FilterByActive()
+                    .FilterActive()
                     .FilterByCustomEntityId(query.CustomEntityId)
                     .FilterByCustomEntityVersionId(query.CustomEntityVersionId.Value)
                     .SingleOrDefaultAsync();
@@ -150,7 +150,7 @@ namespace Cofoundry.Domain
                     .AsNoTracking()
                     .Include(e => e.CustomEntityVersion)
                     .ThenInclude(e => e.CustomEntity)
-                    .FilterByActive()
+                    .FilterActive()
                     .FilterByCustomEntityId(query.CustomEntityId)
                     .FilterByStatus(query.PublishStatus, executionContext.ExecutionDate)
                     .SingleOrDefaultAsync();
