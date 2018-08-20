@@ -12,7 +12,6 @@ namespace Cofoundry.Core.AutoUpdate
         public void Register(IContainerRegister container)
         {
             container
-                .Register<IDatabase, Database>(RegistrationOptions.Scoped())
                 .RegisterAllGenericImplementations(typeof(ISyncVersionedUpdateCommandHandler<>))
                 .RegisterAllGenericImplementations(typeof(IAsyncVersionedUpdateCommandHandler<>))
                 .RegisterAllGenericImplementations(typeof(ISyncAlwaysRunUpdateCommandHandler<>))

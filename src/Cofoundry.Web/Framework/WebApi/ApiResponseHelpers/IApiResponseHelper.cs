@@ -19,7 +19,8 @@ namespace Cofoundry.Web
 
         /// <summary>
         /// Formats the result of a query. Results are wrapped inside an object with a data property
-        /// for consistency and prevent a vulnerability with return JSON arrays. 
+        /// for consistency and prevent a vulnerability with return JSON arrays. If the result is
+        /// null then a 404 response is returned.
         /// </summary>
         /// <typeparam name="T">Type of the result</typeparam>
         /// <param name="controller">The Controller instance using the helper</param>

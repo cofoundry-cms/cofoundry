@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Cofoundry.Core.Data;
 
 namespace Cofoundry.Domain
 {
@@ -30,6 +31,7 @@ namespace Cofoundry.Domain
         private readonly IRoleInitializerFactory _roleInitializerFactory;
         private readonly IPermissionRepository _permissionRepository;
         private readonly IEntityDefinitionRepository _entityDefinitionRepository;
+        private readonly ITransactionScopeManager _transactionScopeFactory;
 
         public RegisterPermissionsAndRolesCommandHandler(
             CofoundryDbContext dbContext,
@@ -39,7 +41,8 @@ namespace Cofoundry.Domain
             IEnumerable<IRoleDefinition> roleDefinitions,
             IRoleInitializerFactory roleInitializerFactory,
             IPermissionRepository permissionRepository,
-            IEntityDefinitionRepository entityDefinitionRepository
+            IEntityDefinitionRepository entityDefinitionRepository,
+            ITransactionScopeManager transactionScopeFactory
             )
         {
             _dbContext = dbContext;
@@ -50,6 +53,7 @@ namespace Cofoundry.Domain
             _roleInitializerFactory = roleInitializerFactory;
             _permissionRepository = permissionRepository;
             _entityDefinitionRepository = entityDefinitionRepository;
+            _transactionScopeFactory = transactionScopeFactory;
         }
 
         #endregion
@@ -124,7 +128,7 @@ namespace Cofoundry.Domain
             }
 
             await _dbContext.SaveChangesAsync();
-            _roleCache.Clear();
+            _transactionScopeFactory.QueueCompletionTask(_dbContext, _roleCache.Clear);
         }
 
         private void AddNewPermissionsToDb(

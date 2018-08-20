@@ -7,7 +7,7 @@ using Cofoundry.Domain.Data;
 using Cofoundry.Domain.CQS;
 using Microsoft.EntityFrameworkCore;
 using Cofoundry.Core.MessageAggregator;
-using Cofoundry.Core.EntityFramework;
+using Cofoundry.Core.Data;
 using Cofoundry.Core;
 
 namespace Cofoundry.Domain
@@ -22,7 +22,7 @@ namespace Cofoundry.Domain
         private readonly CofoundryDbContext _dbContext;
         private readonly IPageCache _pageCache;
         private readonly IMessageAggregator _messageAggregator;
-        private readonly ITransactionScopeFactory _transactionScopeFactory;
+        private readonly ITransactionScopeManager _transactionScopeFactory;
         private readonly IPageStoredProcedures _pageStoredProcedures;
 
         public UpdatePageDraftVersionCommandHandler(
@@ -31,7 +31,7 @@ namespace Cofoundry.Domain
             CofoundryDbContext dbContext,
             IPageCache pageCache,
             IMessageAggregator messageAggregator,
-            ITransactionScopeFactory transactionScopeFactory,
+            ITransactionScopeManager transactionScopeFactory,
             IPageStoredProcedures pageStoredProcedures
             )
         {
@@ -58,20 +58,27 @@ namespace Cofoundry.Domain
 
                 await _dbContext.SaveChangesAsync();
                 await _pageStoredProcedures.UpdatePublishStatusQueryLookupAsync(command.PageId);
-                scope.Complete();
-            }
-            _pageCache.Clear(command.PageId);
 
-            await _messageAggregator.PublishAsync(new PageDraftVersionUpdatedMessage()
+                scope.QueueCompletionTask(() => OnTransactionComplete(draft));
+
+                if (command.Publish)
+                {
+                    await _commandExecutor.ExecuteAsync(new PublishPageCommand(draft.PageId, command.PublishDate), executionContext);
+                }
+
+                await scope.CompleteAsync();
+            }
+        }
+
+        private Task OnTransactionComplete(PageVersion draft)
+        {
+            _pageCache.Clear(draft.PageId);
+
+            return _messageAggregator.PublishAsync(new PageDraftVersionUpdatedMessage()
             {
-                PageId = command.PageId,
+                PageId = draft.PageId,
                 PageVersionId = draft.PageVersionId
             });
-
-            if (command.Publish)
-            {
-                await _commandExecutor.ExecuteAsync(new PublishPageCommand(draft.PageId, command.PublishDate), executionContext);
-            }
         }
 
         #endregion

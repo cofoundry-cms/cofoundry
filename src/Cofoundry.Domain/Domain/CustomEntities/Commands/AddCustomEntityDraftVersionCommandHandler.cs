@@ -8,6 +8,7 @@ using Cofoundry.Domain.CQS;
 using Microsoft.EntityFrameworkCore;
 using Cofoundry.Core.MessageAggregator;
 using Cofoundry.Core;
+using Cofoundry.Core.Data;
 
 namespace Cofoundry.Domain
 {
@@ -22,13 +23,15 @@ namespace Cofoundry.Domain
         private readonly IMessageAggregator _messageAggregator;
         private readonly IPermissionValidationService _permissionValidationService;
         private readonly ICustomEntityStoredProcedures _customEntityStoredProcedures;
+        private readonly ITransactionScopeManager _transactionScopeFactory;
 
         public AddCustomEntityDraftVersionCommandHandler(
             CofoundryDbContext dbContext,
             ICustomEntityCache customEntityCache,
             IMessageAggregator messageAggregator,
             IPermissionValidationService permissionValidationService,
-            ICustomEntityStoredProcedures customEntityStoredProcedures
+            ICustomEntityStoredProcedures customEntityStoredProcedures,
+            ITransactionScopeManager transactionScopeFactory
             )
         {
             _dbContext = dbContext;
@@ -36,6 +39,7 @@ namespace Cofoundry.Domain
             _messageAggregator = messageAggregator;
             _permissionValidationService = permissionValidationService;
             _customEntityStoredProcedures = customEntityStoredProcedures;
+            _transactionScopeFactory = transactionScopeFactory;
         }
 
         #endregion
@@ -57,9 +61,19 @@ namespace Cofoundry.Domain
                 executionContext.UserContext.UserId.Value);
 
             command.OutputCustomEntityVersionId = newVersionId;
+
+            await _transactionScopeFactory.QueueCompletionTaskAsync(_dbContext, () => OnTransactionComplete(
+                command, 
+                definitionCode, 
+                newVersionId)
+                );
+        }
+
+        private Task OnTransactionComplete(AddCustomEntityDraftVersionCommand command, string definitionCode, int newVersionId)
+        {
             _customEntityCache.Clear(definitionCode, command.CustomEntityId);
 
-            await _messageAggregator.PublishAsync(new CustomEntityDraftVersionAddedMessage()
+            return _messageAggregator.PublishAsync(new CustomEntityDraftVersionAddedMessage()
             {
                 CustomEntityId = command.CustomEntityId,
                 CustomEntityVersionId = newVersionId,

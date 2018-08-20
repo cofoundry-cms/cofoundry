@@ -8,7 +8,7 @@ using Cofoundry.Domain.CQS;
 using Microsoft.EntityFrameworkCore;
 using Cofoundry.Core.MessageAggregator;
 using Cofoundry.Core;
-using Cofoundry.Core.EntityFramework;
+using Cofoundry.Core.Data;
 
 namespace Cofoundry.Domain
 {
@@ -22,7 +22,7 @@ namespace Cofoundry.Domain
         private readonly ICustomEntityCache _customEntityCache;
         private readonly IMessageAggregator _messageAggregator;
         private readonly IPermissionValidationService _permissionValidationService;
-        private readonly ITransactionScopeFactory _transactionScopeFactory;
+        private readonly ITransactionScopeManager _transactionScopeFactory;
         private readonly ICustomEntityStoredProcedures _customEntityStoredProcedures;
 
         public UnPublishCustomEntityCommandHandler(
@@ -30,7 +30,7 @@ namespace Cofoundry.Domain
             ICustomEntityCache customEntityCache,
             IMessageAggregator messageAggregator,
             IPermissionValidationService permissionValidationService,
-            ITransactionScopeFactory transactionScopeFactory,
+            ITransactionScopeManager transactionScopeFactory,
             ICustomEntityStoredProcedures customEntityStoredProcedures
             )
         {
@@ -78,15 +78,20 @@ namespace Cofoundry.Domain
                 await _dbContext.SaveChangesAsync();
                 await _customEntityStoredProcedures.UpdatePublishStatusQueryLookupAsync(command.CustomEntityId);
 
-                scope.Complete();
+                scope.QueueCompletionTask(() => OnTransactionComplete(customEntity));
+
+                await scope.CompleteAsync();
             }
+        }
 
-            _customEntityCache.Clear(customEntity.CustomEntityDefinitionCode, command.CustomEntityId);
+        private Task OnTransactionComplete(CustomEntity entity)
+        {
+            _customEntityCache.Clear(entity.CustomEntityDefinitionCode, entity.CustomEntityId);
 
-            await _messageAggregator.PublishAsync(new CustomEntityUnPublishedMessage()
+            return _messageAggregator.PublishAsync(new CustomEntityUnPublishedMessage()
             {
-                CustomEntityId = command.CustomEntityId,
-                CustomEntityDefinitionCode = customEntity.CustomEntityDefinitionCode
+                CustomEntityId = entity.CustomEntityId,
+                CustomEntityDefinitionCode = entity.CustomEntityDefinitionCode
             });
         }
 

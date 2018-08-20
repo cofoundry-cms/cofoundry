@@ -8,6 +8,7 @@ using Cofoundry.Domain.Data;
 using Cofoundry.Core.MessageAggregator;
 using Cofoundry.Core;
 using System.ComponentModel.DataAnnotations;
+using Cofoundry.Core.Data;
 
 namespace Cofoundry.Domain
 {
@@ -17,22 +18,28 @@ namespace Cofoundry.Domain
     {
         #region constructor
 
+        private readonly CofoundryDbContext _dbContext;
         private readonly ICustomEntityStoredProcedures _customEntityStoredProcedures;
         private readonly ICustomEntityCache _customEntityCache;
         private readonly IMessageAggregator _messageAggregator;
         private readonly ICustomEntityDefinitionRepository _customEntityDefinitionRepository;
+        private readonly ITransactionScopeManager _transactionScopeFactory;
 
         public ReOrderCustomEntitiesCommandHandler(
+            CofoundryDbContext dbContext,
             ICustomEntityStoredProcedures customEntityStoredProcedures,
             ICustomEntityCache customEntityCache,
             IMessageAggregator messageAggregator,
-            ICustomEntityDefinitionRepository customEntityDefinitionRepository
+            ICustomEntityDefinitionRepository customEntityDefinitionRepository,
+            ITransactionScopeManager transactionScopeFactory
             )
         {
+            _dbContext = dbContext;
             _customEntityStoredProcedures = customEntityStoredProcedures;
             _customEntityCache = customEntityCache;
             _messageAggregator = messageAggregator;
             _customEntityDefinitionRepository = customEntityDefinitionRepository;
+            _transactionScopeFactory = transactionScopeFactory;
         }
 
         #endregion
@@ -59,17 +66,23 @@ namespace Cofoundry.Domain
                 command.LocaleId
                 );
 
+            await _transactionScopeFactory.QueueCompletionTaskAsync(_dbContext, () => OnTransactionComplete(command, affectedIds));
+        }
+
+        private Task OnTransactionComplete(ReOrderCustomEntitiesCommand command, ICollection<int> affectedIds)
+        {
             foreach (var affectedId in affectedIds)
             {
                 _customEntityCache.Clear(command.CustomEntityDefinitionCode, affectedId);
             }
 
-            var messages = affectedIds.Select(i => new CustomEntityOrderingUpdatedMessage() {
+            var messages = affectedIds.Select(i => new CustomEntityOrderingUpdatedMessage()
+            {
                 CustomEntityDefinitionCode = command.CustomEntityDefinitionCode,
                 CustomEntityId = i
             }).ToList();
 
-            await _messageAggregator.PublishBatchAsync(messages);
+            return _messageAggregator.PublishBatchAsync(messages);
         }
 
         #endregion

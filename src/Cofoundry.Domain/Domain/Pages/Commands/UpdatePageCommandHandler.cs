@@ -8,6 +8,7 @@ using Cofoundry.Domain.CQS;
 using Microsoft.EntityFrameworkCore;
 using Cofoundry.Core.MessageAggregator;
 using Cofoundry.Core;
+using Cofoundry.Core.Data;
 
 namespace Cofoundry.Domain
 {
@@ -22,6 +23,7 @@ namespace Cofoundry.Domain
         private readonly EntityTagHelper _entityTagHelper;
         private readonly IPageCache _pageCache;
         private readonly IMessageAggregator _messageAggregator;
+        private readonly ITransactionScopeManager _transactionScopeFactory;
 
         public UpdatePageCommandHandler(
             IQueryExecutor queryExecutor,
@@ -29,7 +31,8 @@ namespace Cofoundry.Domain
             EntityAuditHelper entityAuditHelper,
             EntityTagHelper entityTagHelper,
             IPageCache pageCache,
-            IMessageAggregator messageAggregator
+            IMessageAggregator messageAggregator,
+            ITransactionScopeManager transactionScopeFactory
             )
         {
             _dbContext = dbContext;
@@ -37,6 +40,7 @@ namespace Cofoundry.Domain
             _entityTagHelper = entityTagHelper;
             _pageCache = pageCache;
             _messageAggregator = messageAggregator;
+            _transactionScopeFactory = transactionScopeFactory;
         }
 
         #endregion
@@ -50,11 +54,17 @@ namespace Cofoundry.Domain
 
             MapPage(command, executionContext, page);
             await _dbContext.SaveChangesAsync();
-            _pageCache.Clear(command.PageId);
 
-            await _messageAggregator.PublishAsync(new PageUpdatedMessage()
+            await _transactionScopeFactory.QueueCompletionTaskAsync(_dbContext, () => OnTransactionComplete(page));
+        }
+
+        private Task OnTransactionComplete(Page page)
+        {
+            _pageCache.Clear(page.PageId);
+
+            return _messageAggregator.PublishAsync(new PageUpdatedMessage()
             {
-                PageId = command.PageId,
+                PageId = page.PageId,
                 HasPublishedVersionChanged = page.PublishStatusCode == PublishStatusCode.Published
             });
         }

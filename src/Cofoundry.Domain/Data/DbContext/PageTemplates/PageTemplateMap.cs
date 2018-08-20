@@ -2,6 +2,7 @@ using System;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Cofoundry.Core;
 using Microsoft.EntityFrameworkCore;
+using Cofoundry.Core.EntityFramework;
 
 namespace Cofoundry.Domain.Data
 {

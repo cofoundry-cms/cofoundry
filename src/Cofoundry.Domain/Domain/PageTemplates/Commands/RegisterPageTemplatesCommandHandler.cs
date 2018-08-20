@@ -6,6 +6,7 @@ using Cofoundry.Domain.CQS;
 using Cofoundry.Domain.Data;
 using Microsoft.EntityFrameworkCore;
 using Cofoundry.Core;
+using Cofoundry.Core.Data;
 
 namespace Cofoundry.Domain
 {
@@ -29,13 +30,15 @@ namespace Cofoundry.Domain
         private readonly ICommandExecutor _commandExecutor;
         private readonly IPageCache _pageCache;
         private readonly IPageTemplateViewFileLocator _pageTemplateViewFileLocator;
+        private readonly ITransactionScopeManager _transactionScopeFactory;
 
         public RegisterPageTemplatesCommandHandler(
             CofoundryDbContext dbContext,
             IQueryExecutor queryExecutor,
             ICommandExecutor commandExecutor,
             IPageCache pageCache,
-            IPageTemplateViewFileLocator pageTemplateViewFileLocator
+            IPageTemplateViewFileLocator pageTemplateViewFileLocator,
+            ITransactionScopeManager transactionScopeFactory
             )
         {
             _dbContext = dbContext;
@@ -43,6 +46,7 @@ namespace Cofoundry.Domain
             _commandExecutor = commandExecutor;
             _pageCache = pageCache;
             _pageTemplateViewFileLocator = pageTemplateViewFileLocator;
+            _transactionScopeFactory = transactionScopeFactory;
         }
 
         #endregion
@@ -67,7 +71,7 @@ namespace Cofoundry.Domain
 
             // Save changes
             await _dbContext.SaveChangesAsync();
-            _pageCache.Clear();
+            _transactionScopeFactory.QueueCompletionTask(_dbContext, _pageCache.Clear);
         }
 
         private async Task UpdateTemplates(

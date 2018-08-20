@@ -1,35 +1,36 @@
 using System;
-using System.Diagnostics;
 using Microsoft.EntityFrameworkCore;
 using Cofoundry.Core;
-using Microsoft.Extensions.Logging;
-using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Diagnostics;
+using Cofoundry.Core.EntityFramework;
 
 namespace Cofoundry.Domain.Data
 {
+    /// <summary>
+    /// The main Cofoundry entity framework DbContext representing all the main 
+    /// entities in the Cofoundry database. Direct access to the DbContext is
+    /// discouraged, instead we advise you use the domain queries and commands
+    /// available in the Cofoundry data repositories, see
+    /// https://github.com/cofoundry-cms/cofoundry/wiki/Data-Access#repositories
+    /// </summary>
     public partial class CofoundryDbContext : DbContext
     {
-        private readonly ILoggerFactory _loggerFactory;
-        private readonly DatabaseSettings _databaseSettings;
+        private readonly ICofoundryDbContextInitializer _cofoundryDbContextInitializer;
 
         public CofoundryDbContext(
-            ILoggerFactory loggerFactory,
-            DatabaseSettings databaseSettings
+            ICofoundryDbContextInitializer cofoundryDbContextInitializer
             )
         {
-            _loggerFactory = loggerFactory;
-            _databaseSettings = databaseSettings;
+            _cofoundryDbContextInitializer = cofoundryDbContextInitializer;
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseLoggerFactory(_loggerFactory);
+            _cofoundryDbContextInitializer.Configure(this, optionsBuilder);
+
             optionsBuilder.ConfigureWarnings(warnings => 
                 warnings.Log(RelationalEventId.QueryClientEvaluationWarning)
             );
-
-            optionsBuilder.UseSqlServer(_databaseSettings.ConnectionString);
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

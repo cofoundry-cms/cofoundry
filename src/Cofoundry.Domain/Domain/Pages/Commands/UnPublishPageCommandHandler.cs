@@ -8,7 +8,7 @@ using Cofoundry.Domain.CQS;
 using Microsoft.EntityFrameworkCore;
 using Cofoundry.Core.MessageAggregator;
 using Cofoundry.Core;
-using Cofoundry.Core.EntityFramework;
+using Cofoundry.Core.Data;
 
 namespace Cofoundry.Domain
 {
@@ -27,14 +27,14 @@ namespace Cofoundry.Domain
         private readonly CofoundryDbContext _dbContext;
         private readonly IPageCache _pageCache;
         private readonly IMessageAggregator _messageAggregator;
-        private readonly ITransactionScopeFactory _transactionScopeFactory;
+        private readonly ITransactionScopeManager _transactionScopeFactory;
         private readonly IPageStoredProcedures _pageStoredProcedures;
 
         public UnPublishPageCommandHandler(
             CofoundryDbContext dbContext,
             IPageCache pageCache,
             IMessageAggregator messageAggregator,
-            ITransactionScopeFactory transactionScopeFactory,
+            ITransactionScopeManager transactionScopeFactory,
             IPageStoredProcedures pageStoredProcedures
             )
         {
@@ -81,12 +81,18 @@ namespace Cofoundry.Domain
             {
                 await _dbContext.SaveChangesAsync();
                 await _pageStoredProcedures.UpdatePublishStatusQueryLookupAsync(command.PageId);
-                scope.Complete();
-            }
 
+                scope.QueueCompletionTask(() => OnTransactionComplete(command));
+
+                await scope.CompleteAsync();
+            }
+        }
+
+        private Task OnTransactionComplete(UnPublishPageCommand command)
+        {
             _pageCache.Clear();
 
-            await _messageAggregator.PublishAsync(new PageUnPublishedMessage()
+            return _messageAggregator.PublishAsync(new PageUnPublishedMessage()
             {
                 PageId = command.PageId
             });

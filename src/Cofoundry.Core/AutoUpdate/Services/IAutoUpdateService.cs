@@ -23,12 +23,12 @@ namespace Cofoundry.Core.AutoUpdate
         /// Runs a query to work out whether the database is locked for 
         /// schema updates.
         /// </summary>
-        bool IsLocked();
+        Task<bool> IsLockedAsync();
 
         /// <summary>
         /// Sets a flag in the database to enable/disable database updates.
         /// </summary>
         /// <param name="isLocked">True to lock the database and prevent schema updates</param>
-        void SetLocked(bool isLocked);
+        Task SetLockedAsync(bool isLocked);
     }
 }

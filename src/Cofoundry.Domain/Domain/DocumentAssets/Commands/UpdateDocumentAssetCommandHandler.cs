@@ -7,7 +7,7 @@ using Cofoundry.Domain.Data;
 using Cofoundry.Domain.CQS;
 using Microsoft.EntityFrameworkCore;
 using Cofoundry.Core;
-using Cofoundry.Core.EntityFramework;
+using Cofoundry.Core.Data;
 using Cofoundry.Core.MessageAggregator;
 
 namespace Cofoundry.Domain
@@ -22,7 +22,7 @@ namespace Cofoundry.Domain
         private readonly EntityAuditHelper _entityAuditHelper;
         private readonly EntityTagHelper _entityTagHelper;
         private readonly DocumentAssetCommandHelper _documentAssetCommandHelper;
-        private readonly ITransactionScopeFactory _transactionScopeFactory;
+        private readonly ITransactionScopeManager _transactionScopeFactory;
         private readonly IMessageAggregator _messageAggregator;
 
         public UpdateDocumentAssetCommandHandler(
@@ -30,7 +30,7 @@ namespace Cofoundry.Domain
             EntityAuditHelper entityAuditHelper,
             EntityTagHelper entityTagHelper,
             DocumentAssetCommandHelper documentAssetCommandHelper,
-            ITransactionScopeFactory transactionScopeFactory,
+            ITransactionScopeManager transactionScopeFactory,
             IMessageAggregator messageAggregator
             )
         {
@@ -72,10 +72,15 @@ namespace Cofoundry.Domain
 
                 await _dbContext.SaveChangesAsync();
 
-                scope.Complete();
-            }
+                scope.QueueCompletionTask(() => OnTransactionComplete(documentAsset, hasNewFile));
 
-            await _messageAggregator.PublishAsync(new DocumentAssetUpdatedMessage()
+                await scope.CompleteAsync();
+            }
+        }
+
+        private Task OnTransactionComplete(DocumentAsset documentAsset, bool hasNewFile)
+        {
+            return _messageAggregator.PublishAsync(new DocumentAssetUpdatedMessage()
             {
                 DocumentAssetId = documentAsset.DocumentAssetId,
                 HasFileChanged = hasNewFile

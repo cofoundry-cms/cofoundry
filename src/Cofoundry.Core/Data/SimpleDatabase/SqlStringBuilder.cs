@@ -4,8 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Cofoundry.Core.AutoUpdate
+namespace Cofoundry.Core.Data.SimpleDatabase
 {
+    /// <summary>
+    /// Used to build up a block of MS SqlServer DML script.
+    /// </summary>
     internal class SqlStringBuilder
     {
         StringBuilder _sql = new StringBuilder();

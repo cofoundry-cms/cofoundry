@@ -7,7 +7,7 @@ using Cofoundry.Domain.Data;
 using Cofoundry.Domain.CQS;
 using Microsoft.EntityFrameworkCore;
 using Cofoundry.Core;
-using Cofoundry.Core.EntityFramework;
+using Cofoundry.Core.Data;
 
 namespace Cofoundry.Domain
 {
@@ -20,13 +20,13 @@ namespace Cofoundry.Domain
         private readonly ICommandExecutor _commandExecutor;
         private readonly CofoundryDbContext _dbContext;
         private readonly IPageStoredProcedures _pageStoredProcedures;
-        private readonly ITransactionScopeFactory _transactionScopeFactory;
+        private readonly ITransactionScopeManager _transactionScopeFactory;
 
         public DuplicatePageCommandHandler(
             ICommandExecutor commandExecutor,
             CofoundryDbContext dbContext,
             IPageStoredProcedures pageStoredProcedures,
-            ITransactionScopeFactory transactionScopeFactory
+            ITransactionScopeManager transactionScopeFactory
             )
         {
             _commandExecutor = commandExecutor;
@@ -54,7 +54,7 @@ namespace Cofoundry.Domain
                     executionContext.ExecutionDate,
                     executionContext.UserContext.UserId.Value);
 
-                scope.Complete();
+                await scope.CompleteAsync();
             }
 
             // Set Ouput

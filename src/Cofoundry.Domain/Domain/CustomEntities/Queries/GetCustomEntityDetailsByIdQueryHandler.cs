@@ -55,7 +55,9 @@ namespace Cofoundry.Domain
 
         public async Task<CustomEntityDetails> ExecuteAsync(GetCustomEntityDetailsByIdQuery query, IExecutionContext executionContext)
         {
-            var customEntityVersion = await Query(query.CustomEntityId).FirstOrDefaultAsync();
+            var customEntityVersion = await QueryAsync(query.CustomEntityId);
+            if (customEntityVersion == null) return null;
+
             _permissionValidationService.EnforceCustomEntityPermission<CustomEntityReadPermission>(customEntityVersion.CustomEntity.CustomEntityDefinitionCode, executionContext.UserContext);
             
             return await MapAsync(query, customEntityVersion, executionContext);
@@ -211,7 +213,7 @@ namespace Cofoundry.Domain
             return block;
         }
 
-        private IQueryable<CustomEntityVersion> Query(int id)
+        private Task<CustomEntityVersion> QueryAsync(int id)
         {
             return _dbContext
                 .CustomEntityVersions
@@ -222,7 +224,8 @@ namespace Cofoundry.Domain
                 .Include(v => v.Creator)
                 .AsNoTracking()
                 .Where(v => v.CustomEntityId == id && (v.CustomEntity.LocaleId == null || v.CustomEntity.Locale.IsActive))
-                .OrderByLatest();
+                .OrderByLatest()
+                .FirstOrDefaultAsync();
         }
 
         private async Task MapDataModelAsync(

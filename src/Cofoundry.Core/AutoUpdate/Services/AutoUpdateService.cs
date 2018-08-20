@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Cofoundry.Core.Data;
+using Cofoundry.Core.Data.SimpleDatabase;
+using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.IO;
@@ -22,7 +24,7 @@ namespace Cofoundry.Core.AutoUpdate
 
         private readonly IEnumerable<IUpdatePackageFactory> _updatePackageFactories;
         private readonly IUpdateCommandHandlerFactory _commandHandlerFactory;
-        private readonly IDatabase _db;
+        private readonly ICofoundryDatabase _db;
         private readonly IUpdatePackageOrderer _updatePackageOrderer;
         private readonly AutoUpdateSettings _autoUpdateSettings;
         private readonly IAutoUpdateDistributedLockManager _autoUpdateDistributedLockManager;
@@ -34,7 +36,7 @@ namespace Cofoundry.Core.AutoUpdate
         public AutoUpdateService(
             IEnumerable<IUpdatePackageFactory> updatePackageFactories,
             IUpdateCommandHandlerFactory commandHandlerFactory,
-            IDatabase db,
+            ICofoundryDatabase db,
             IUpdatePackageOrderer updatePackageOrderer,
             AutoUpdateSettings autoUpdateSettings,
             IAutoUpdateDistributedLockManager autoUpdateDistributedLockManager
@@ -64,7 +66,7 @@ namespace Cofoundry.Core.AutoUpdate
         /// </remarks>
         public async Task UpdateAsync()
         {
-            var previouslyAppliedVersions = GetUpdateVersionHistory();
+            var previouslyAppliedVersions = await GetUpdateVersionHistoryAsync();
 
             var filteredPackages = _updatePackageFactories
                 .SelectMany(f => f.Create(previouslyAppliedVersions))
@@ -74,14 +76,14 @@ namespace Cofoundry.Core.AutoUpdate
 
             if (!packages.Any()) return;
 
-            if (IsLocked())
+            if (await IsLockedAsync())
             {
                 throw new DatabaseLockedException();
             }
 
             // Lock the process to prevent concurrent updates
             var lockingId = Guid.NewGuid();
-            _autoUpdateDistributedLockManager.Lock(lockingId);
+            await _autoUpdateDistributedLockManager.LockAsync(lockingId);
 
             try
             {
@@ -92,7 +94,7 @@ namespace Cofoundry.Core.AutoUpdate
             }
             finally
             {
-                _autoUpdateDistributedLockManager.Unlock(lockingId);
+                await _autoUpdateDistributedLockManager.UnlockAsync(lockingId);
             }
         }
 
@@ -107,11 +109,11 @@ namespace Cofoundry.Core.AutoUpdate
                 }
                 catch (Exception ex)
                 {
-                    LogUpdateError(package.ModuleIdentifier, command.Version, command.Description, ex);
+                    await LogUpdateErrorAsync(package.ModuleIdentifier, command.Version, command.Description, ex);
                     throw;
                 }
 
-                LogUpdateSuccess(package.ModuleIdentifier, command.Version, command.Description);
+                await LogUpdateSuccessAsync(package.ModuleIdentifier, command.Version, command.Description);
             }
 
             // Always Run Commands
@@ -121,13 +123,13 @@ namespace Cofoundry.Core.AutoUpdate
             }
         }
 
-        private void LogUpdateSuccess(string module, int version, string description)
+        private Task LogUpdateSuccessAsync(string module, int version, string description)
         {
             var sql = @"
 	                insert into Cofoundry.ModuleUpdate (Module, [Version], [Description], ExecutionDate) 
 	                values (@Module, @Version, @Description, @ExecutionDate)";
 
-            _db.Execute(sql,
+            return _db.ExecuteAsync(sql,
                 new SqlParameter("Module", module),
                 new SqlParameter("Version", version),
                 new SqlParameter("Description", description),
@@ -135,7 +137,7 @@ namespace Cofoundry.Core.AutoUpdate
                 );
         }
 
-        private void LogUpdateError(string module, int version, string description, Exception ex)
+        private Task LogUpdateErrorAsync(string module, int version, string description, Exception ex)
         {
             try
             {
@@ -143,7 +145,7 @@ namespace Cofoundry.Core.AutoUpdate
                     insert into Cofoundry.ModuleUpdateError (Module, [Version], [Description], ExecutionDate, ExceptionMessage) 
 	                values (@Module, @Version, @Description, @ExecutionDate, @ExceptionMessage)";
 
-                _db.Execute(sql,
+                return _db.ExecuteAsync(sql,
                     new SqlParameter("Module", module),
                     new SqlParameter("Version", version),
                     new SqlParameter("Description", description),
@@ -209,7 +211,7 @@ namespace Cofoundry.Core.AutoUpdate
         /// Gets a collections of module updates that have already been applied
         /// to the system.
         /// </summary>
-        private ICollection<ModuleVersion> GetUpdateVersionHistory()
+        private async Task<ICollection<ModuleVersion>> GetUpdateVersionHistoryAsync()
         {
             var query = @"
                 if (exists (select * 
@@ -223,7 +225,7 @@ namespace Cofoundry.Core.AutoUpdate
 	                order by Module
                 end";
 
-            var moduleVersions = _db.Read(query, r =>
+            var moduleVersions = await _db.ReadAsync(query, r =>
             {
                 var moduleVersion = new ModuleVersion();
                 moduleVersion.Module = (string)r["Module"];
@@ -232,7 +234,7 @@ namespace Cofoundry.Core.AutoUpdate
                 return moduleVersion;
             });
 
-            return moduleVersions.ToList();
+            return moduleVersions;
         }
 
         #endregion
@@ -244,7 +246,7 @@ namespace Cofoundry.Core.AutoUpdate
         /// schema updates. This is different to distributed locking which 
         /// is intended to prevent multile update instances running.
         /// </summary>
-        public bool IsLocked()
+        public async Task<bool> IsLockedAsync()
         {
             // First check config
             if (_autoUpdateSettings.IsDisabled) return true;
@@ -259,7 +261,7 @@ namespace Cofoundry.Core.AutoUpdate
                     select IsLocked from Cofoundry.AutoUpdateLock;
                 end";
 
-            var isLocked = _db.Read(query, (r) =>
+            var isLocked = await _db.ReadAsync(query, (r) =>
             {
                 return (bool)r["IsLocked"];
             });
@@ -271,10 +273,10 @@ namespace Cofoundry.Core.AutoUpdate
         /// Sets a flag in the database to enable/disable database updates.
         /// </summary>
         /// <param name="isLocked">True to lock the database and prevent schema updates</param>
-        public void SetLocked(bool isLocked)
+        public Task SetLockedAsync(bool isLocked)
         {
             var cmd = "update Cofoundry.AutoUpdateLock set IsLocked = @IsLocked";
-            _db.Execute(cmd, new SqlParameter("@IsLocked", isLocked));
+            return _db.ExecuteAsync(cmd, new SqlParameter("@IsLocked", isLocked));
         }
 
         #endregion

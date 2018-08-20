@@ -6,6 +6,7 @@ using Cofoundry.Domain.CQS;
 using Cofoundry.Domain.Data;
 using Microsoft.EntityFrameworkCore;
 using Cofoundry.Core;
+using Cofoundry.Core.Data;
 
 namespace Cofoundry.Domain
 {
@@ -24,6 +25,7 @@ namespace Cofoundry.Domain
         private readonly IPageBlockTypeCache _blockCache;
         private readonly IEnumerable<IPageBlockTypeDataModel> _allPageBlockTypeDataModels;
         private readonly IPageBlockTypeFileNameFormatter _blockTypeFileNameFormatter;
+        private readonly ITransactionScopeManager _transactionScopeFactory;
 
         public RegisterPageBlockTypesCommandHandler(
             CofoundryDbContext dbContext,
@@ -31,7 +33,8 @@ namespace Cofoundry.Domain
             IPageCache pageCache,
             IPageBlockTypeCache blockCache,
             IEnumerable<IPageBlockTypeDataModel> allPageBlockTypeDataModels,
-            IPageBlockTypeFileNameFormatter blockTypeFileNameFormatter
+            IPageBlockTypeFileNameFormatter blockTypeFileNameFormatter,
+            ITransactionScopeManager transactionScopeFactory
             )
         {
             _dbContext = dbContext;
@@ -40,6 +43,7 @@ namespace Cofoundry.Domain
             _allPageBlockTypeDataModels = allPageBlockTypeDataModels;
             _blockCache = blockCache;
             _blockTypeFileNameFormatter = blockTypeFileNameFormatter;
+            _transactionScopeFactory = transactionScopeFactory;
         }
 
         public async Task ExecuteAsync(RegisterPageBlockTypesCommand command, IExecutionContext executionContext)
@@ -59,8 +63,9 @@ namespace Cofoundry.Domain
             await UpdateBlocksAsync(executionContext, dbPageBlockTypes, blockTypeDataModels);
 
             await _dbContext.SaveChangesAsync();
-            _pageCache.Clear();
-            _blockCache.Clear();
+
+            _transactionScopeFactory.QueueCompletionTask(_dbContext, _pageCache.Clear);
+            _transactionScopeFactory.QueueCompletionTask(_dbContext, _blockCache.Clear);
         }
 
         private async Task UpdateBlocksAsync(

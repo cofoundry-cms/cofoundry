@@ -3,43 +3,46 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Data.SqlClient;
-using System.Text.RegularExpressions;
+using Cofoundry.Core.Data;
+using Cofoundry.Core.Data.SimpleDatabase;
 
 namespace Cofoundry.Core.AutoUpdate
 {
-    public class UpdateDbCommandHandler : ISyncVersionedUpdateCommandHandler<UpdateDbCommand>
+    public class UpdateDbCommandHandler : IAsyncVersionedUpdateCommandHandler<UpdateDbCommand>
     {
-        private readonly IDatabase _database;
+        private readonly ICofoundryDatabase _db;
+        private readonly ITransactionScopeManager _transactionScopeManager;
 
         public UpdateDbCommandHandler(
-            IDatabase database
+            ICofoundryDatabase db,
+            ITransactionScopeManager transactionScopeManager
             )
         {
-            _database = database;
+            _db = db;
+            _transactionScopeManager = transactionScopeManager;
         }
 
-        public void Execute(UpdateDbCommand command)
+        public async Task ExecuteAsync(UpdateDbCommand command)
         {
-            using (var transaction = _database.BeginTransaction())
+            using (var transaction = _transactionScopeManager.Create(_db))
             {
-                RunPreScript(command);
+                await RunPreScriptAsync(command);
 
                 var sqlBatches = SqlHelper.SplitIntoBatches(command.Sql);
 
                 foreach (var sqlBatch in sqlBatches)
                 {
-                    _database.Execute(sqlBatch);
+                    await _db.ExecuteAsync(sqlBatch);
                 }
 
-                transaction.Commit();
+                await transaction.CompleteAsync();
             }
         }
 
         /// <summary>
         /// By convention we will delete out existing objects if they already exist and re-create them.
         /// </summary>
-        private void RunPreScript(UpdateDbCommand command)
+        private Task RunPreScriptAsync(UpdateDbCommand command)
         {
             var sql = new SqlStringBuilder();
 
@@ -65,8 +68,10 @@ namespace Cofoundry.Core.AutoUpdate
 
             if (!sql.IsEmpty())
             {
-                _database.Execute(sql.ToString());
+                return _db.ExecuteAsync(sql.ToString());
             }
+
+            return Task.CompletedTask;
         }
     }
 }

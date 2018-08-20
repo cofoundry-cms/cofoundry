@@ -7,7 +7,7 @@ using Cofoundry.Domain.Data;
 using Cofoundry.Domain.CQS;
 using Microsoft.EntityFrameworkCore;
 using Cofoundry.Core;
-using Cofoundry.Core.EntityFramework;
+using Cofoundry.Core.Data;
 
 namespace Cofoundry.Domain
 {
@@ -18,15 +18,14 @@ namespace Cofoundry.Domain
         private readonly ICommandExecutor _commandExecutor;
         private readonly CofoundryDbContext _dbContext;
         private readonly ICustomEntityStoredProcedures _customEntityStoredProcedures;
-        private readonly ITransactionScopeFactory _transactionScopeFactory;
+        private readonly ITransactionScopeManager _transactionScopeFactory;
         private readonly ICustomEntityDataModelMapper _customEntityDataModelMapper;
-        private readonly IPermissionValidationService _permissionValidationService;
 
         public DuplicateCustomEntityCommandHandler(
             ICommandExecutor commandExecutor,
             CofoundryDbContext dbContext,
             ICustomEntityStoredProcedures customEntityStoredProcedures,
-            ITransactionScopeFactory transactionScopeFactory,
+            ITransactionScopeManager transactionScopeFactory,
             ICustomEntityDataModelMapper customEntityDataModelMapper
             )
         {
@@ -44,17 +43,14 @@ namespace Cofoundry.Domain
 
             using (var scope = _transactionScopeFactory.Create(_dbContext))
             {
+                // Note: the underlying AddCustomEntityCommand will enforce permissions
                 await _commandExecutor.ExecuteAsync(addCustomEntityCommand, executionContext);
 
                 await _customEntityStoredProcedures.CopyBlocksToDraftAsync(
                     addCustomEntityCommand.OutputCustomEntityId,
                     customEntityToDuplicate.CustomEntityVersionId);
 
-                // TODO YAH: 
-
-                // 3) Message handlers for Add command will fire before the transaction is complete...
-                // what do we do about that?
-                scope.Complete();
+                await scope.CompleteAsync();
             }
 
             // Set Ouput

@@ -6,7 +6,7 @@ using System.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Cofoundry.Domain.Data;
 using Cofoundry.Domain.CQS;
-using Cofoundry.Core.EntityFramework;
+using Cofoundry.Core.Data;
 using Cofoundry.Core;
 using System.ComponentModel.DataAnnotations;
 using Cofoundry.Core.Validation;

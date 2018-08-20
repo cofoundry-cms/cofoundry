@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Cofoundry.Domain.Data;
 using Cofoundry.Domain.CQS;
 using Microsoft.EntityFrameworkCore;
-using Cofoundry.Core.EntityFramework;
+using Cofoundry.Core.Data;
 using Cofoundry.Core;
 using Cofoundry.Core.Caching;
 
@@ -20,7 +20,7 @@ namespace Cofoundry.Domain
         private readonly ICommandExecutor _commandExecutor;
         private readonly IQueryExecutor _queryExecutor;
         private readonly CofoundryDbContext _dbContext;
-        private readonly ITransactionScopeFactory _transactionScopeFactory;
+        private readonly ITransactionScopeManager _transactionScopeFactory;
         private readonly UserContextMapper _userContextMapper;
         private readonly IObjectCacheFactory _objectCacheFactory;
 
@@ -28,7 +28,7 @@ namespace Cofoundry.Domain
             ICommandExecutor commandExecutor,
             IQueryExecutor queryExecutor,
             CofoundryDbContext dbContext,
-            ITransactionScopeFactory transactionScopeFactory,
+            ITransactionScopeManager transactionScopeFactory,
             UserContextMapper userContextMapper,
             IObjectCacheFactory objectCacheFactory
             )
@@ -69,7 +69,7 @@ namespace Cofoundry.Domain
                 // Setup Complete
                 await _commandExecutor.ExecuteAsync(new MarkAsSetUpCommand(), impersonatedUserContext);
 
-                scope.Complete();
+                await scope.CompleteAsync();
             }
         }
 

@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Cofoundry.Core.Validation;
 using Cofoundry.Core.MessageAggregator;
 using Cofoundry.Core;
+using Cofoundry.Core.Data;
 
 namespace Cofoundry.Domain
 {
@@ -22,13 +23,15 @@ namespace Cofoundry.Domain
         private readonly EntityAuditHelper _entityAuditHelper;
         private readonly IPageCache _pageCache;
         private readonly IMessageAggregator _messageAggregator;
+        private readonly ITransactionScopeManager _transactionScopeFactory;
 
         public UpdatePageUrlCommandHandler(
             IQueryExecutor queryExecutor,
             CofoundryDbContext dbContext,
             EntityAuditHelper entityAuditHelper,
             IPageCache pageCache,
-            IMessageAggregator messageAggregator
+            IMessageAggregator messageAggregator,
+            ITransactionScopeManager transactionScopeFactory
             )
         {
             _queryExecutor = queryExecutor;
@@ -36,6 +39,7 @@ namespace Cofoundry.Domain
             _entityAuditHelper = entityAuditHelper;
             _pageCache = pageCache;
             _messageAggregator = messageAggregator;
+            _transactionScopeFactory = transactionScopeFactory;
         }
 
         #endregion
@@ -59,9 +63,15 @@ namespace Cofoundry.Domain
             var isPublished = page.PublishStatusCode == PublishStatusCode.Published;
 
             await _dbContext.SaveChangesAsync();
+
+            await _transactionScopeFactory.QueueCompletionTaskAsync(_dbContext, () => OnTransactionComplete(command, isPublished));
+        }
+
+        private Task OnTransactionComplete(UpdatePageUrlCommand command, bool isPublished)
+        {
             _pageCache.Clear(command.PageId);
 
-            await _messageAggregator.PublishAsync(new PageUrlChangedMessage()
+            return _messageAggregator.PublishAsync(new PageUrlChangedMessage()
             {
                 PageId = command.PageId,
                 HasPublishedVersionChanged = isPublished

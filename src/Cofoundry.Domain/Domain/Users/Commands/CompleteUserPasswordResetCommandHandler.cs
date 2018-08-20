@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Cofoundry.Domain.Data;
 using Cofoundry.Domain.CQS;
 using Microsoft.EntityFrameworkCore;
-using Cofoundry.Core.EntityFramework;
+using Cofoundry.Core.Data;
 using Cofoundry.Core.Mail;
 using Cofoundry.Core;
 
@@ -23,14 +23,14 @@ namespace Cofoundry.Domain
         private readonly CofoundryDbContext _dbContext;
         private readonly IQueryExecutor _queryExecutor;
         private readonly IMailService _mailService;
-        private readonly ITransactionScopeFactory _transactionScopeFactory;
+        private readonly ITransactionScopeManager _transactionScopeFactory;
         private readonly IPasswordUpdateCommandHelper _passwordUpdateCommandHelper;
 
         public CompleteUserPasswordResetCommandHandler(
             CofoundryDbContext dbContext,
             IQueryExecutor queryExecutor,
             IMailService mailService,
-            ITransactionScopeFactory transactionScopeFactory,
+            ITransactionScopeManager transactionScopeFactory,
             IPasswordUpdateCommandHelper passwordUpdateCommandHelper
             )
         {
@@ -61,7 +61,7 @@ namespace Cofoundry.Domain
                 await _dbContext.SaveChangesAsync();
                 await _mailService.SendAsync(request.User.Email, request.User.GetFullName(), command.MailTemplate);
 
-                scope.Complete();
+                await scope.CompleteAsync();
             }
         }
 

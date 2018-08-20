@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Cofoundry.Core.Configuration;
 using Cofoundry.Core.DependencyInjection;
 
 namespace Cofoundry.Core.EntityFramework
@@ -14,8 +13,8 @@ namespace Cofoundry.Core.EntityFramework
         {
             container
                 .Register<IEntityFrameworkSqlExecutor, EntityFrameworkSqlExecutor>()
-                .Register<ITransactionScopeFactory, TransactionScopeFactory>(RegistrationOptions.Scoped())
                 .Register<ISqlParameterFactory, SqlParameterFactory>()
+                .Register<ICofoundryDbContextInitializer, CofoundryDbContextInitializer>()
                 ;
         }
     }

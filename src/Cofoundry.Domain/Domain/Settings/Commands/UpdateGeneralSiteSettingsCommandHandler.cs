@@ -6,6 +6,7 @@ using Cofoundry.Domain.Data;
 using Cofoundry.Domain.CQS;
 using Microsoft.EntityFrameworkCore;
 using Cofoundry.Core.AutoUpdate;
+using Cofoundry.Core.Data;
 
 namespace Cofoundry.Domain
 {
@@ -19,18 +20,21 @@ namespace Cofoundry.Domain
         private readonly SettingCommandHelper _settingCommandHelper;
         private readonly ISettingCache _settingCache;
         private readonly IAutoUpdateService _autoUpdateService;
+        private readonly ITransactionScopeManager _transactionScopeFactory;
 
         public UpdateGeneralSiteSettingsCommandHandler(
             CofoundryDbContext dbContext,
             SettingCommandHelper settingCommandHelper,
             ISettingCache settingCache,
-            IAutoUpdateService autoUpdateService
+            IAutoUpdateService autoUpdateService,
+            ITransactionScopeManager transactionScopeFactory
             )
         {
             _settingCommandHelper = settingCommandHelper;
             _dbContext = dbContext;
             _settingCache = settingCache;
             _autoUpdateService = autoUpdateService;
+            _transactionScopeFactory = transactionScopeFactory;
         }
 
         #endregion
@@ -45,10 +49,15 @@ namespace Cofoundry.Domain
 
             _settingCommandHelper.SetSettingProperty(command, c => c.ApplicationName, allSettings, executionContext);
 
-            await _dbContext.SaveChangesAsync();
-            _autoUpdateService.SetLocked(!command.AllowAutomaticUpdates);
+            using (var scope = _transactionScopeFactory.Create(_dbContext))
+            {
+                await _dbContext.SaveChangesAsync();
+                await _autoUpdateService.SetLockedAsync(!command.AllowAutomaticUpdates);
 
-            _settingCache.Clear();
+                await scope.CompleteAsync();
+            }
+
+            _transactionScopeFactory.QueueCompletionTask(_dbContext, _settingCache.Clear);
         }
 
         #endregion

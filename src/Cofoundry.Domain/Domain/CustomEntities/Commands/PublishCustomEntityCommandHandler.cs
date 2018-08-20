@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using Cofoundry.Core.MessageAggregator;
 using Cofoundry.Core;
 using Cofoundry.Core.Validation;
-using Cofoundry.Core.EntityFramework;
+using Cofoundry.Core.Data;
 
 namespace Cofoundry.Domain
 {
@@ -26,7 +26,7 @@ namespace Cofoundry.Domain
         private readonly IMessageAggregator _messageAggregator;
         private readonly IPermissionValidationService _permissionValidationService;
         private readonly ICustomEntityDefinitionRepository _customEntityDefinitionRepository;
-        private readonly ITransactionScopeFactory _transactionScopeFactory;
+        private readonly ITransactionScopeManager _transactionScopeFactory;
         private readonly ICustomEntityStoredProcedures _customEntityStoredProcedures;
 
         public PublishCustomEntityCommandHandler(
@@ -37,7 +37,7 @@ namespace Cofoundry.Domain
             IMessageAggregator messageAggregator,
             IPermissionValidationService permissionValidationService,
             ICustomEntityDefinitionRepository customEntityDefinitionRepository,
-            ITransactionScopeFactory transactionScopeFactory,
+            ITransactionScopeManager transactionScopeFactory,
             ICustomEntityStoredProcedures customEntityStoredProcedures
             )
         {
@@ -66,7 +66,7 @@ namespace Cofoundry.Domain
                 .OrderByDescending(v => v.WorkFlowStatusId == (int)WorkFlowStatus.Draft)
                 .ThenByDescending(v => v.CreateDate)
                 .FirstOrDefaultAsync();
-            
+
             EntityNotFoundException.ThrowIfNull(version, command.CustomEntityId);
 
             var definition = _customEntityDefinitionRepository.GetByCode(version.CustomEntity.CustomEntityDefinitionCode);
@@ -81,6 +81,7 @@ namespace Cofoundry.Domain
             {
                 // only thing we can do with a published version is update the date
                 await _dbContext.SaveChangesAsync();
+                await _transactionScopeFactory.QueueCompletionTaskAsync(_dbContext, () => OnTransactionComplete(version));
             }
             else
             {
@@ -95,15 +96,20 @@ namespace Cofoundry.Domain
                     await _dbContext.SaveChangesAsync();
                     await _customEntityStoredProcedures.UpdatePublishStatusQueryLookupAsync(command.CustomEntityId);
 
-                    scope.Complete();
+                    scope.QueueCompletionTask(() => OnTransactionComplete(version));
+
+                    await scope.CompleteAsync();
                 }
             }
+        }
 
-            _customEntityCache.Clear(version.CustomEntity.CustomEntityDefinitionCode, command.CustomEntityId);
+        private Task OnTransactionComplete(CustomEntityVersion version)
+        {
+            _customEntityCache.Clear(version.CustomEntity.CustomEntityDefinitionCode, version.CustomEntityId);
 
-            await _messageAggregator.PublishAsync(new CustomEntityPublishedMessage()
+            return _messageAggregator.PublishAsync(new CustomEntityPublishedMessage()
             {
-                CustomEntityId = command.CustomEntityId,
+                CustomEntityId = version.CustomEntityId,
                 CustomEntityDefinitionCode = version.CustomEntity.CustomEntityDefinitionCode
             });
         }

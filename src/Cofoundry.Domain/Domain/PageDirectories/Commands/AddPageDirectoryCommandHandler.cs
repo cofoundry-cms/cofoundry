@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Cofoundry.Domain.Data;
 using Cofoundry.Core.Validation;
 using Cofoundry.Domain.CQS;
+using Cofoundry.Core.Data;
 
 namespace Cofoundry.Domain
 {
@@ -19,18 +20,21 @@ namespace Cofoundry.Domain
         private readonly CofoundryDbContext _dbContext;
         private readonly EntityAuditHelper _entityAuditHelper;
         private readonly IPageDirectoryCache _cache;
+        private readonly ITransactionScopeManager _transactionScopeFactory;
 
         public AddPageDirectoryCommandHandler(
             IQueryExecutor queryExecutor,
             CofoundryDbContext dbContext,
             EntityAuditHelper entityAuditHelper,
-            IPageDirectoryCache cache
+            IPageDirectoryCache cache,
+            ITransactionScopeManager transactionScopeFactory
             )
         {
             _dbContext = dbContext;
             _entityAuditHelper = entityAuditHelper;
             _queryExecutor = queryExecutor;
             _cache = cache;
+            _transactionScopeFactory = transactionScopeFactory;
         }
 
         #endregion
@@ -52,7 +56,7 @@ namespace Cofoundry.Domain
             _dbContext.PageDirectories.Add(pageDirectory);
             await _dbContext.SaveChangesAsync();
 
-            _cache.Clear();
+            _transactionScopeFactory.QueueCompletionTask(_dbContext, _cache.Clear);
 
             command.OutputPageDirectoryId = pageDirectory.PageDirectoryId;
         }

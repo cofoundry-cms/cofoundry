@@ -1,5 +1,5 @@
 ﻿using Cofoundry.Core;
-using Cofoundry.Core.EntityFramework;
+using Cofoundry.Core.Data;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;

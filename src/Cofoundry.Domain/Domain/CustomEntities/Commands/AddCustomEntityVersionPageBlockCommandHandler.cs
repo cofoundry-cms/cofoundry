@@ -7,7 +7,7 @@ using Cofoundry.Domain.CQS;
 using Cofoundry.Domain.Data;
 using Microsoft.EntityFrameworkCore;
 using Cofoundry.Core.MessageAggregator;
-using Cofoundry.Core.EntityFramework;
+using Cofoundry.Core.Data;
 using Cofoundry.Core;
 
 namespace Cofoundry.Domain
@@ -25,7 +25,7 @@ namespace Cofoundry.Domain
         private readonly IPageBlockCommandHelper _pageBlockCommandHelper;
         private readonly IMessageAggregator _messageAggregator;
         private readonly IPermissionValidationService _permissionValidationService;
-        private readonly ITransactionScopeFactory _transactionScopeFactory;
+        private readonly ITransactionScopeManager _transactionScopeFactory;
         
         public AddCustomEntityVersionPageBlockCommandHandler(
             CofoundryDbContext dbContext,
@@ -36,7 +36,7 @@ namespace Cofoundry.Domain
             IMessageAggregator messageAggregator,
             ICustomEntityDefinitionRepository customEntityDefinitionRepository,
             IPermissionValidationService permissionValidationService,
-            ITransactionScopeFactory transactionScopeFactory
+            ITransactionScopeManager transactionScopeFactory
             )
         {
             _dbContext = dbContext;
@@ -123,14 +123,19 @@ namespace Cofoundry.Domain
 
                 await _commandExecutor.ExecuteAsync(dependencyCommand, executionContext);
 
-                scope.Complete();
+                scope.QueueCompletionTask(() => OnTransactionComplete(customEntityVersion, newBlock));
+
+                await scope.CompleteAsync();
             }
 
+            command.OutputCustomEntityVersionPageBlockId = newBlock.CustomEntityVersionPageBlockId;
+        }
+
+        private Task OnTransactionComplete(CustomEntityVersion customEntityVersion, CustomEntityVersionPageBlock newBlock)
+        {
             _customEntityCache.Clear(customEntityVersion.CustomEntity.CustomEntityDefinitionCode, customEntityVersion.CustomEntityId);
 
-            command.OutputCustomEntityVersionPageBlockId = newBlock.CustomEntityVersionPageBlockId;
-
-            await _messageAggregator.PublishAsync(new CustomEntityVersionBlockAddedMessage()
+            return _messageAggregator.PublishAsync(new CustomEntityVersionBlockAddedMessage()
             {
                 CustomEntityId = customEntityVersion.CustomEntityId,
                 CustomEntityVersionPageBlockId = newBlock.CustomEntityVersionPageBlockId,

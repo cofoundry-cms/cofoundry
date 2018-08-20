@@ -33,7 +33,6 @@ namespace Cofoundry.Domain.Data
         /// <returns>DbModelBuilder for method chaining</returns>
         public static ModelBuilder UseDefaultConfig(this ModelBuilder modelBuilder, string schema)
         {
-            //modelBuilder.Conventions.Remove<PluralizingTableNameConvention>();
             modelBuilder.HasDefaultSchema(schema);
 
             return modelBuilder;

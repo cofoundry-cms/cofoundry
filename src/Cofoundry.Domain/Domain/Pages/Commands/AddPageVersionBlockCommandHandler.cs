@@ -7,7 +7,7 @@ using Cofoundry.Domain.CQS;
 using Cofoundry.Domain.Data;
 using Microsoft.EntityFrameworkCore;
 using Cofoundry.Core.MessageAggregator;
-using Cofoundry.Core.EntityFramework;
+using Cofoundry.Core.Data;
 using Cofoundry.Core;
 
 namespace Cofoundry.Domain
@@ -23,7 +23,7 @@ namespace Cofoundry.Domain
         private readonly IPageBlockCommandHelper _pageBlockCommandHelper;
         private readonly ICommandExecutor _commandExecutor;
         private readonly IMessageAggregator _messageAggregator;
-        private readonly ITransactionScopeFactory _transactionScopeFactory;
+        private readonly ITransactionScopeManager _transactionScopeFactory;
 
         public AddPageVersionBlockCommandHandler(
             CofoundryDbContext dbContext,
@@ -33,7 +33,7 @@ namespace Cofoundry.Domain
             IPageBlockCommandHelper pageBlockCommandHelper,
             ICommandExecutor commandExecutor,
             IMessageAggregator messageAggregator,
-            ITransactionScopeFactory transactionScopeFactory
+            ITransactionScopeManager transactionScopeFactory
             )
         {
             _dbContext = dbContext;
@@ -98,13 +98,20 @@ namespace Cofoundry.Domain
                     command.DataModel);
 
                 await _commandExecutor.ExecuteAsync(dependencyCommand, executionContext);
-                scope.Complete();
+
+                scope.QueueCompletionTask(() => OnTransactionComplete(pageVersion, newBlock));
+
+                await scope.CompleteAsync();
             }
-            _pageCache.Clear(pageVersion.PageId);
 
             command.OutputPageBlockId = newBlock.PageVersionBlockId;
+        }
 
-            await _messageAggregator.PublishAsync(new PageVersionBlockAddedMessage()
+        private Task OnTransactionComplete(PageVersion pageVersion, PageVersionBlock newBlock)
+        {
+            _pageCache.Clear(pageVersion.PageId);
+
+            return _messageAggregator.PublishAsync(new PageVersionBlockAddedMessage()
             {
                 PageId = pageVersion.PageId,
                 PageVersionBlockId = newBlock.PageVersionBlockId
