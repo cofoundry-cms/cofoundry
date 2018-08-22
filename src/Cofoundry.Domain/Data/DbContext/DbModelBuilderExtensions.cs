@@ -16,26 +16,31 @@ namespace Cofoundry.Domain.Data
     public static class DbModelBuilderExtensions
     {
         /// <summary>
-        /// Use the suggested config for your DbContext, which removes the PluralizingTableNameConvention
-        /// and makes "app" the default schema.
+        /// Use the suggested config for your DbContext, which currenly only 
+        /// makes "app" the default schema.
         /// </summary>
-        /// <returns>DbModelBuilder for method chaining</returns>
+        /// <returns>DbModelBuilder for method chaining.</returns>
+        [Obsolete("Replaced with HasAppSchema() because no other configuration takes place here.")]
         public static ModelBuilder UseDefaultConfig(this ModelBuilder modelBuilder)
         {
-            return modelBuilder.UseDefaultConfig(DbConstants.DefaultAppSchema);
+            return modelBuilder.HasAppSchema();
         }
 
         /// <summary>
-        /// Use the suggested config for your DbContext, which removes the PluralizingTableNameConvention
-        /// and makes "app" the default schema.
+        /// <para>
+        /// Makes the "app" schema as the default. "app" is the recommended
+        /// schema to use for any custom tables you add to the database, keeping
+        /// them separate from Cofoundry tables and any other tables created
+        /// by 3rd parties.
+        /// </para>
+        /// <para>
+        /// This schema can also be references with DbConstants.DefaultAppSchema
+        /// </para>
         /// </summary>
-        /// <param name="schema">Name of the schema to use by default.</param>
-        /// <returns>DbModelBuilder for method chaining</returns>
-        public static ModelBuilder UseDefaultConfig(this ModelBuilder modelBuilder, string schema)
+        /// <returns>DbModelBuilder for method chaining.</returns>
+        public static ModelBuilder HasAppSchema(this ModelBuilder modelBuilder)
         {
-            modelBuilder.HasDefaultSchema(schema);
-
-            return modelBuilder;
+            return modelBuilder.HasDefaultSchema(DbConstants.DefaultAppSchema);
         }
 
         #region common Cofoundry object mapping
@@ -43,7 +48,7 @@ namespace Cofoundry.Domain.Data
         /// <summary>
         /// Maps Cofoundry ImageAsset classes to the DbModelBuilder. Requires Cofoundry Users and Tags to be mapped.
         /// </summary>
-        /// <returns>DbModelBuilder for method chaining</returns>
+        /// <returns>DbModelBuilder for method chaining.</returns>
         public static ModelBuilder MapCofoundryImageAssets(this ModelBuilder modelBuilder)
         {
             modelBuilder

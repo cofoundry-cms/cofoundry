@@ -36,7 +36,7 @@ namespace Cofoundry.Domain.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder
-                .UseDefaultConfig(DbConstants.CofoundrySchema)
+                .HasDefaultSchema(DbConstants.CofoundrySchema)
                 .MapCofoundryContent()
                 .ApplyConfiguration(new SettingMap())
                 .ApplyConfiguration(new RewriteRuleMap())

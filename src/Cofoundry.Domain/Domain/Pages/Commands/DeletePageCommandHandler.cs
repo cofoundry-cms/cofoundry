@@ -15,8 +15,6 @@ namespace Cofoundry.Domain
         : IAsyncCommandHandler<DeletePageCommand>
         , IPermissionRestrictedCommandHandler<DeletePageCommand>
     {
-        #region constructor
-
         private readonly CofoundryDbContext _dbContext;
         private readonly IPageCache _pageCache;
         private readonly ICommandExecutor _commandExecutor;
@@ -40,16 +38,13 @@ namespace Cofoundry.Domain
             _transactionScopeFactory = transactionScopeFactory;
             _pageStoredProcedures = pageStoredProcedures;
         }
-
-        #endregion
-
-        #region execution
-
+        
         public async Task ExecuteAsync(DeletePageCommand command, IExecutionContext executionContext)
         {
             var page = await _dbContext
                 .Pages
-                .SingleOrDefaultAsync(p => p.PageId == command.PageId);
+                .FilterByPageId(command.PageId)
+                .SingleOrDefaultAsync();
 
             if (page != null)
             {
@@ -77,9 +72,7 @@ namespace Cofoundry.Domain
                 PageId = command.PageId
             });
         }
-
-        #endregion
-
+        
         #region Permission
 
         public IEnumerable<IPermissionApplication> GetPermissions(DeletePageCommand command)
