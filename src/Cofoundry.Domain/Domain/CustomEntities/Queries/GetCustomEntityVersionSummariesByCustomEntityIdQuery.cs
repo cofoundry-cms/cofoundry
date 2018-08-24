@@ -7,7 +7,9 @@ using Cofoundry.Domain.CQS;
 
 namespace Cofoundry.Domain
 {
-    public class GetCustomEntityVersionSummariesByCustomEntityIdQuery : IQuery<ICollection<CustomEntityVersionSummary>>
+    public class GetCustomEntityVersionSummariesByCustomEntityIdQuery 
+        : SimplePageableQuery
+        , IQuery<PagedQueryResult<CustomEntityVersionSummary>>
     {
         public int CustomEntityId { get; set; }
     }

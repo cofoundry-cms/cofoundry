@@ -114,6 +114,7 @@ namespace Cofoundry.Domain
             {
                 CustomEntityVersionId = dbVersion.CustomEntityVersionId,
                 Title = dbVersion.Title,
+                DisplayVersion = dbVersion.DisplayVersion,
                 WorkFlowStatus = (WorkFlowStatus)dbVersion.WorkFlowStatusId
             };
 

@@ -12,13 +12,14 @@ namespace Cofoundry.Domain
     public interface IPageableQuery
     {
         /// <summary>
-        /// 1-based number of the page to display (1 = first page)/
+        /// 1-based number of the page to display i.e. 1 = first page.
         /// </summary>
-        int PageNumber { get; }
+        int PageNumber { get; set; }
 
         /// <summary>
-        /// The number of items to display on a page
+        /// The number of items to display on a page. If this is set
+        /// to 0 or less then no paging is applied.
         /// </summary>
-        int PageSize { get; }
+        int PageSize { get; set; }
     }
 }

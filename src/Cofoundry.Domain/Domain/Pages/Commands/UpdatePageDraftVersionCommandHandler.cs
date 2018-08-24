@@ -89,7 +89,7 @@ namespace Cofoundry.Domain
         {
             return _dbContext
                 .PageVersions
-                .Where(p => p.PageId == pageId && p.WorkFlowStatusId == (int)WorkFlowStatus.Draft && !p.IsDeleted);
+                .Where(p => p.PageId == pageId && p.WorkFlowStatusId == (int)WorkFlowStatus.Draft);
         }
 
         private async Task<PageVersion> CreateDraftIfRequiredAsync(int pageId, PageVersion draft)

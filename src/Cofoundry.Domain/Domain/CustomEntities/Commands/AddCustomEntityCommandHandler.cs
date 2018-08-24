@@ -75,6 +75,9 @@ namespace Cofoundry.Domain
             await ValidateIsUniqueAsync(command, definition, executionContext);
 
             var entity = MapEntity(command, definition, executionContext);
+
+            await SetOrdering(entity, definition);
+
             _dbContext.CustomEntities.Add(entity);
 
             using (var scope = _transactionScopeFactory.Create(_dbContext))
@@ -158,6 +161,28 @@ namespace Cofoundry.Domain
                 .Where(d => d.CustomEntityDefinitionCode == command.CustomEntityDefinitionCode);
         }
 
+        private async Task SetOrdering(CustomEntity customEntity, CustomEntityDefinitionSummary definition)
+        {
+            if (definition.Ordering == CustomEntityOrdering.Full)
+            {
+                var maxOrdering = await _dbContext
+                    .CustomEntities
+                    .MaxAsync(e => e.Ordering);
+
+                if (maxOrdering.HasValue)
+                {
+                    // don't worry too much about race conditons here
+                    // if two entities are added at the same time it's no
+                    // big deal if the ordering is tied
+                    customEntity.Ordering = maxOrdering.Value + 1;
+                }
+                else
+                {
+                    customEntity.Ordering = 0;
+                }
+            }
+        }
+
         private CustomEntity MapEntity(AddCustomEntityCommand command, CustomEntityDefinitionSummary definition, IExecutionContext executionContext)
         {
             var entity = new CustomEntity();
@@ -170,6 +195,7 @@ namespace Cofoundry.Domain
             var version = new CustomEntityVersion();
             version.Title = command.Title.Trim();
             version.SerializedData = _dbUnstructuredDataSerializer.Serialize(command.Model);
+            version.DisplayVersion = 1;
 
             if (command.Publish)
             {

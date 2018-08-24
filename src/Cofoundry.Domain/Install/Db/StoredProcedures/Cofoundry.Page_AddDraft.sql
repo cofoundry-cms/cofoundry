@@ -14,59 +14,74 @@ begin
 	declare @PageVersionBlockEntityDefinitionCode char(6) = 'COFPGB';
 	declare @PublishedWorkFlowStatus int = 4;
 	declare @DraftWorkFlowStatus int = 1;
+	declare @MaxDisplayVersion int = 1;
+	declare @ErrorMessage nvarchar(2048);
 
 	if (@CopyFromPageVersionId is null)
 	begin
-		select top 1 @CopyFromPageVersionId = PageVersionId 
+		declare @LatestWorkFlowStatusId int
+
+		select top 1 
+			@CopyFromPageVersionId = PageVersionId,
+			@LatestWorkFlowStatusId = WorkFlowStatusId
 		from Cofoundry.PageVersion v
 		inner join Cofoundry.[Page] p on p.PageId = v.PageId
 		where p.PageId = @PageId and p.IsDeleted = 0 and WorkFlowStatusId in (@DraftWorkFlowStatus, @PublishedWorkFlowStatus)
 		order by 
-			-- fall back to a deleted version if nothing else if found
-			v.IsDeleted,
-			-- then prefer published and draft over approved
+			-- prefer published and draft over approved
 			case 
-				when WorkFlowStatusId = @PublishedWorkFlowStatus then 0 
-				when WorkFlowStatusId = @DraftWorkFlowStatus then 1 
+				when WorkFlowStatusId = @DraftWorkFlowStatus then 0 
+				when WorkFlowStatusId = @PublishedWorkFlowStatus then 1 
 				else 2
 			end,
 			-- finally order by latest for status that allow duplicates
 			v.CreateDate desc
+
+		if (@LatestWorkFlowStatusId is null) 
+		begin
+			set @ErrorMessage = FORMATMESSAGE('Page_AddDraft: Unable to locate a version to copy from for page, PageId: %i', @PageId);
+			throw 50000, @ErrorMessage, 1;
+		end 
+		
+		if (@LatestWorkFlowStatusId = @DraftWorkFlowStatus) 
+		begin
+			set @ErrorMessage = FORMATMESSAGE('Page_AddDraft: Page already has a draft version, PageId: %i', @PageId);
+			throw 50000, @ErrorMessage, 1;
+		end 
 	end
 	
-	-- if no draft to copy from we cannot go any further
-	if (@CopyFromPageVersionId is null) throw 50000, 'Cofoundry.Page_AddDraft: No drafts available to copy from', 1;
+	select @MaxDisplayVersion = max(DisplayVersion)
+	from Cofoundry.PageVersion
+	where PageId = @PageId
 
 	-- Copy version
 	insert into Cofoundry.PageVersion (
 		PageId,
 		PageTemplateId,
-		BasedOnPageVersionId,
 		Title,
 		MetaDescription,
 		WorkFlowStatusId,
-		IsDeleted,
 		CreateDate,
 		CreatorId,
 		ExcludeFromSitemap,
 		OpenGraphTitle,
 		OpenGraphDescription,
-		OpenGraphImageId
+		OpenGraphImageId,
+		DisplayVersion
 	) 
 	select
 		PageId,
 		PageTemplateId,
-		@CopyFromPageVersionId,
 		Title,
 		MetaDescription,
 		@DraftWorkFlowStatus,
-		IsDeleted,
 		@CreateDate,
 		@CreatorId,
 		ExcludeFromSitemap,
 		OpenGraphTitle,
 		OpenGraphDescription,
-		OpenGraphImageId
+		OpenGraphImageId,
+		@MaxDisplayVersion + 1
 		
 	from Cofoundry.PageVersion
 	where PageVersionId =  @CopyFromPageVersionId

@@ -15,14 +15,44 @@ begin
 	declare @CustomEntityPageBlockEntityDefinitionCode char(6) = 'COFCEB';
 	declare @PublishedWorkFlowStatus int = 4;
 	declare @DraftWorkFlowStatus int = 1;
+	declare @MaxDisplayVersion int = 1;
+	declare @ErrorMessage nvarchar(2048);
 
 	if (@CopyFromCustomEntityVersionId is null)
 	begin
-		select top 1 @CopyFromCustomEntityVersionId = CustomEntityVersionId 
+		declare @LatestWorkFlowStatusId int
+
+		select top 1 
+			@CopyFromCustomEntityVersionId = CustomEntityVersionId,
+			@LatestWorkFlowStatusId = WorkFlowStatusId
 		from Cofoundry.CustomEntityVersion
-		where CustomEntityId = @CustomEntityId and (WorkFlowStatusId = @PublishedWorkFlowStatus or WorkFlowStatusId = @DraftWorkFlowStatus)
-		order by case when WorkFlowStatusId = @PublishedWorkFlowStatus then 0 else 1 end, createdate desc
+		where CustomEntityId = @CustomEntityId and WorkFlowStatusId in (@DraftWorkFlowStatus, @PublishedWorkFlowStatus)
+		order by 
+			-- detect draft first
+			case 
+				when WorkFlowStatusId = @DraftWorkFlowStatus then 0 
+				when WorkFlowStatusId = @PublishedWorkFlowStatus then 1 
+				else 2
+			end,
+			-- finally order by latest for status that allow duplicates
+			CreateDate desc
+
+		if (@LatestWorkFlowStatusId is null) 
+		begin
+			set @ErrorMessage = FORMATMESSAGE('CustomEntity_AddDraft: Unable to locate a version to copy from for custom entity, CustomEntityId: %i', @CustomEntityId);
+			throw 50000, @ErrorMessage, 1;
+		end 
+		
+		if (@LatestWorkFlowStatusId = @DraftWorkFlowStatus) 
+		begin
+			set @ErrorMessage = FORMATMESSAGE('CustomEntity_AddDraft: Custom entity already has a draft version, CustomEntityId: %i', @CustomEntityId);
+			throw 50000, @ErrorMessage, 1;
+		end 
 	end
+	
+	select @MaxDisplayVersion = max(DisplayVersion)
+	from Cofoundry.CustomEntityVersion
+	where CustomEntityId = @CustomEntityId
 
 	-- Copy version
 	insert into Cofoundry.CustomEntityVersion (
@@ -31,7 +61,8 @@ begin
 		WorkFlowStatusId,
 		SerializedData,
 		CreateDate,
-		CreatorId
+		CreatorId,
+		DisplayVersion
 	) 
 	select
 		CustomEntityId,
@@ -39,7 +70,8 @@ begin
 		@DraftWorkFlowStatus,
 		SerializedData,
 		@CreateDate,
-		@CreatorId
+		@CreatorId,
+		@MaxDisplayVersion + 1
 		
 	from Cofoundry.CustomEntityVersion
 	where CustomEntityVersionId =  @CopyFromCustomEntityVersionId

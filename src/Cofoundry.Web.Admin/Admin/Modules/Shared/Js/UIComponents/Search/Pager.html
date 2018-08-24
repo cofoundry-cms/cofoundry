@@ -1,35 +1,36 @@
-﻿<div ng-if="vm.result && vm.result.pageCount > 1" class="pagination pagination-right">
-    <ul>
-        <!--<li ng-if="!vm.isFirstPage"><a href="" ng-click="vm.setPage(1)" title="First page" class="btn pager first">&laquo;</a></li>-->
-        <li ng-if="!vm.isFirstPage">
-            <a href="" ng-click="vm.setPage(vm.result.pageNumber - 1)" title="Previous page" class="btn pager previous">
-                <i class="fa fa-chevron-left"></i>
-            </a>
-        </li>
+﻿<div ng-if="vm.result && vm.result.pageCount > 1" class="pagination">
 
-        <!--<li ng-if="vm.isFirstPage" class="disabled"><a href="" title="First page" class="btn pager first">&laquo;</a></li>-->
-        <li ng-if="vm.isFirstPage" class="disabled">
-            <a href="" title="Previous page" class="btn pager previous">
-                <i class="fa fa-chevron-left"></i>
-            </a>
-        </li>
+    <button title="Previous page"
+            type="button"
+            class="btn pager previous"
+            ng-click="vm.setPage(vm.result.pageNumber - 1)"
+            ng-if="!vm.isFirstPage">
+        <i class="fa fa-chevron-left"></i>
+    </button>
 
-        <li class="info disabled">
-            <a>{{ vm.result.pageNumber }} of {{ vm.result.pageCount }}</a>
-        </li>
+    <button title="Previous page" 
+            type="button"
+            class="btn pager previous disabled"
+            ng-if="vm.isFirstPage"
+            disabled>
+        <i class="fa fa-chevron-left"></i>
+    </button>
 
-        <li ng-if="!vm.isLastPage"> 
-            <a href="" ng-click="vm.setPage(vm.result.pageNumber + 1)" title="Next page" class="btn pager next">
-                <i class="fa fa-chevron-right"></i>
-            </a>
-        </li>
-        <!--<li ng-if="!vm.isLastPage"><a href="" ng-click="vm.setPage(vm.result.pageCount)" title="Last page" class="btn pager last">&raquo;</a></li>-->
+    <div class="info disabled">{{ vm.result.pageNumber }} of {{ vm.result.pageCount }}</div>
 
-        <li ng-if="vm.isLastPage" class="disabled">
-            <a href="" title="Next page" class="btn pager next">
-                <i class="fa fa-chevron-right"></i>
-            </a>
-        </li>
-        <!--<li ng-if="vm.isLastPage" class="disabled"><a href="" title="Last page" class="btn pager last">&raquo;</a></li>-->
-    </ul>
+    <button title="Next page"
+            type="button"
+            class="btn pager next"
+            ng-click="vm.setPage(vm.result.pageNumber + 1)"
+            ng-if="!vm.isLastPage">
+        <i class="fa fa-chevron-right"></i>
+    </button>
+
+    <button title="Next page"
+            type="button"
+            class="btn pager next disabled"
+            ng-if="vm.isLastPage"
+            disabled>
+        <i class="fa fa-chevron-right"></i>
+    </button>
 </div>

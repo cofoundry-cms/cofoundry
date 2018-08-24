@@ -39,9 +39,11 @@ namespace Cofoundry.Web.Admin
         #region queries
 
         [HttpGet]
-        public async Task<IActionResult> Get(int pageId)
+        public async Task<IActionResult> Get(int pageId, GetPageVersionSummariesByPageIdQuery query)
         {
-            var query = new GetPageVersionSummariesByPageIdQuery() { PageId = pageId };
+            if (query == null) query = new GetPageVersionSummariesByPageIdQuery();
+            query.PageId = pageId;
+            ApiPagingHelper.SetDefaultBounds(query);
 
             var results = await _queryExecutor.ExecuteAsync(query);
             return _apiResponseHelper.SimpleQueryResponse(this, results);

@@ -12,6 +12,7 @@ namespace Cofoundry.BasicTestSite
         public void Register(IMessageSubscriptionConfig config)
         {
             config.Subscribe<ICustomEntityContentUpdatedMessage, BlogPostUpdatedMessageHandler>();
+            config.Subscribe<CustomEntityAddedMessage, BlogPostAddedMessageHandler>();
         }
     }
 }

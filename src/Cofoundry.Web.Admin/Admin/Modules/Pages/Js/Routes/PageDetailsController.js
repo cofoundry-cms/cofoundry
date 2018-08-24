@@ -4,6 +4,7 @@
     '$location',
     '_',
     'shared.LoadState',
+    'shared.SearchQuery',
     'shared.modalDialogService',
     'shared.entityVersionModalDialogService',
     'shared.urlLibrary',
@@ -16,6 +17,7 @@ function (
     $location,
     _,
     LoadState,
+    SearchQuery,
     modalDialogService,
     entityVersionModalDialogService,
     urlLibrary,
@@ -51,7 +53,17 @@ function (
         vm.saveLoadState = new LoadState();
         vm.saveAndPublishLoadState = new LoadState();
         vm.formLoadState = new LoadState(true);
+        vm.versionsLoadState = new LoadState();
+
         vm.urlLibrary = urlLibrary;
+
+        vm.versionsQuery = new SearchQuery({
+            onChanged: loadVersions,
+            useHistory: false,
+            defaultParams: {
+                pageSize: 6
+            }
+        });
 
         vm.canCreate = permissionValidationService.canCreate('COFPGE');
         vm.canUpdate = permissionValidationService.canUpdate('COFPGE');
@@ -130,10 +142,9 @@ function (
     }
 
     function copyToDraft(version) {
-        var hasDraftVersion = !!getDraftVersion();
 
         entityVersionModalDialogService
-            .copyToDraft(vm.page.pageId, version.pageVersionId, hasDraftVersion, setLoadingOn)
+            .copyToDraft(vm.page.pageId, version.pageVersionId, vm.page.pageRoute.hasDraftVersion, setLoadingOn)
             .then(onOkSuccess)
             .catch(setLoadingOff);
 
@@ -188,21 +199,18 @@ function (
     /* PRIVATE FUNCS */
     
     function onSuccess(message, loadStateToTurnOff) {
+
         return initData(loadStateToTurnOff)
             .then(vm.mainForm.formStatus.success.bind(null, message));
-    }
-
-    function getDraftVersion() {
-        return _.find(vm.versions, function (version) {
-            return version.workFlowStatus === 'Draft';
-        });
     }
 
     function initData(loadStateToTurnOff) {
 
         return $q
             .all([getPage(), getVersions()])
-            .then(mapVersions)
+            .then(function (results) {
+                mapVersions(results[1]);
+            })
             .then(setLoadingOff.bind(null, loadStateToTurnOff));
            
         /* helpers */
@@ -219,43 +227,51 @@ function (
                 return page;
             });
         }
+    }
 
-        function getVersions() {
-            return pageService.getVersionsByPageId($routeParams.id);
-        }
+    function loadVersions() {
+        vm.versionsLoadState.on();
 
-        function mapVersions(results) {
-            var page = results[0],
-                versions = results[1],
-                isPublished = page.pageRoute.isPublished();
+        return getVersions()
+            .then(mapVersions)
+            .then(setLoadingOff.bind(null, vm.versionsLoadState));
+    }
 
-            _.each(versions, function (version, index) {
+    function getVersions() {
 
-                version.versionLabel = getVersionLabel(version, index, versions, page.pageRoute);
-                version.browseUrl = vm.urlLibrary.visualEditorForVersion(page.pageRoute, version, false, isPublished);
-            });
+        return pageService.getVersionsByPageId($routeParams.id, vm.versionsQuery.getParameters());
+    }
 
-            vm.versions = versions;
-        }
+    function mapVersions(pagedVersions) {
+        var page = vm.page,
+            isPublished = page.pageRoute.isPublished();
 
-        function getVersionLabel(version, index, versions, entityRoute) {
+        _.each(pagedVersions.items, function (version) {
+
+            version.versionLabel = getVersionLabel(version, page.pageRoute);
+            version.browseUrl = vm.urlLibrary.visualEditorForVersion(page.pageRoute, version, false, isPublished);
+        });
+
+        vm.versions = pagedVersions;
+
+        function getVersionLabel(version, entityRoute) {
 
             if (version.workFlowStatus == 'Draft') return version.workFlowStatus;
 
-            var versionNumber = 'V' + (versions.length - index);
+            var versionNumber = 'V' + version.displayVersion;
 
             if (!version.isLatestPublishedVersion) return versionNumber;
 
             return versionNumber + ' (' + getPublishStatusLabel(entityRoute) + ')';
         }
+    }
 
-        function getPublishStatusLabel(entityRoute) {
-            if (entityRoute.publishStatus == 'Published' && entityRoute.publishDate < Date.now()) {
-                return 'Pending Publish';
-            }
-
-            return entityRoute.publishStatus;
+    function getPublishStatusLabel(entityRoute) {
+        if (entityRoute.publishStatus == 'Published' && entityRoute.publishDate < Date.now()) {
+            return 'Pending Publish';
         }
+
+        return entityRoute.publishStatus;
     }
 
     function mapUpdatePageCommand(page) {

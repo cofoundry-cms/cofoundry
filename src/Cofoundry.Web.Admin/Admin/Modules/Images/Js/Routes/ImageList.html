@@ -27,14 +27,15 @@
 
 <!-- Default toolbar -->
 <cms-page-actions ng-show="!vm.editMode">
-    <cms-pager cms-result="vm.result"
-               cms-query="vm.query"></cms-pager>
 
     <cms-button-link class="main-cta"
                      cms-text="Upload Image"
                      cms-icon="plus"
                      cms-href="#/new"
                      ng-if="::vm.canCreate"></cms-button-link>
+
+    <cms-pager cms-result="vm.result"
+               cms-query="vm.query"></cms-pager>
 
 </cms-page-actions>
 

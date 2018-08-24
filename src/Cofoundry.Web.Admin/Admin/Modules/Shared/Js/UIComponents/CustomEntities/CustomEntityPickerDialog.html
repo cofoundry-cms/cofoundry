@@ -6,10 +6,6 @@
 
     <cms-page-actions>
 
-        <!--RESULTS-->
-        <cms-pager cms-result="result"
-                   cms-query="query"></cms-pager>
-
         <cms-button class="main-cta" cms-text="Ok" ng-click="onOk()"></cms-button>
         <cms-button cms-text="Cancel" ng-click="onCancel()"></cms-button>
 
@@ -26,6 +22,9 @@
                                  cms-model="filter.text"></cms-form-field-text>
 
         </cms-search-filter>
+
+        <cms-pager cms-result="result"
+                   cms-query="query"></cms-pager>
 
     </cms-page-actions>
 

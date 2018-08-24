@@ -41,6 +41,7 @@ namespace Cofoundry.Web.Admin
         public async Task<IActionResult> Get([FromQuery] SearchUserSummariesQuery query)
         {
             if (query == null) query = new SearchUserSummariesQuery();
+            ApiPagingHelper.SetDefaultBounds(query);
 
             var results = await _queryExecutor.ExecuteAsync(query);
             return _apiResponseHelper.SimpleQueryResponse(this, results);

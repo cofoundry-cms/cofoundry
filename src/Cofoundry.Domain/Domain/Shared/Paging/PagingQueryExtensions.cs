@@ -6,13 +6,14 @@ using System.Threading.Tasks;
 
 namespace Cofoundry.Domain
 {
-    public static class PagingExtensions
+    public static class PagingQueryExtensions
     {
-        #region queries
-
         /// <summary>
-        /// Pages a query based on the parameters of the query.
+        /// Pages a query based on the parameters of the query. If the page size
+        /// is set to 0 or less then no paging is applied.
         /// </summary>
+        /// <param name="source">Queryable source to apply paging to</param>
+        /// <param name="query">The paging settings to apply to the source data.</param>
         public static IQueryable<T> Page<T>(this IQueryable<T> source, IPageableQuery query)
         {
             if (query == null || query.PageSize <= 0) return source;
@@ -41,8 +42,6 @@ namespace Cofoundry.Domain
             return result;
         }
 
-        #region helpers
-
         /// <remarks>
         /// Public so it can be referenced by ToPagedResultAsync in Cofoundry.Domain.Data
         /// </remarks>
@@ -61,9 +60,5 @@ namespace Cofoundry.Domain
                 result.PageNumber = 1;
             }
         }
-
-        #endregion
-
-        #endregion
     }
 }

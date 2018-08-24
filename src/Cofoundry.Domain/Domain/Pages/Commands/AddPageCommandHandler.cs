@@ -177,6 +177,7 @@ namespace Cofoundry.Domain
             pageVersion.OpenGraphDescription = command.OpenGraphDescription;
             pageVersion.OpenGraphImageId = command.OpenGraphImageId;
             pageVersion.PageTemplate = pageTemplate;
+            pageVersion.DisplayVersion = 1;
 
             if (command.Publish)
             {

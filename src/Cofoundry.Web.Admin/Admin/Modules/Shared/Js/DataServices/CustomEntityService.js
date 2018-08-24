@@ -88,9 +88,11 @@ function (
         }
     }
 
-    service.getVersionsByCustomEntityId = function (customEntityId) {
+    service.getVersionsByCustomEntityId = function (customEntityId, query) {
 
-        return $http.get(getVerionsRoute(customEntityId));
+        return $http.get(getVerionsRoute(customEntityId), {
+            params: query
+        });
     }
 
 

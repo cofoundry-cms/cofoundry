@@ -18,6 +18,15 @@ namespace Cofoundry.Domain
         public int PageVersionId { get; set; }
 
         /// <summary>
+        /// A display-friendly version number that indicates
+        /// it's position in the hisotry of all verions of a specific
+        /// page. E.g. the first version for a page is version 1 and 
+        /// the 2nd is version 2. The display version is unique per
+        /// page.
+        /// </summary>
+        public int DisplayVersion { get; set; }
+
+        /// <summary>
         /// The descriptive human-readable title of page that is often 
         /// used in the html page title meta tag. Does not have to be
         /// unique.

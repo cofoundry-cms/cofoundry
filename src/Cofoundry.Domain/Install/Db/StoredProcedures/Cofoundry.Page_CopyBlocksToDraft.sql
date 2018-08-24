@@ -22,12 +22,11 @@ begin
 		inner join Cofoundry.[Page] p on p.PageId = v.PageId
 		where p.PageId = @CopyToPageId 
 			and p.IsDeleted = 0 
-			and v.IsDeleted = 0
 			and WorkFlowStatusId =@DraftWorkFlowStatus
 	
 	if (@CopyToPageVersionId is null) 
 	begin
-		set @ErrorMessage = FORMATMESSAGE('Unable to locate draft version for target page, PageId: %i', @CopyToPageId);
+		set @ErrorMessage = FORMATMESSAGE('Page_CopyBlocksToDraft: Unable to locate draft version for target page, PageId: %i', @CopyToPageId);
 		throw 50000, @ErrorMessage, 1;
 	end
 
@@ -44,13 +43,13 @@ begin
 
 	if (@SourceVersionTemplateId is null) 
 	begin
-		set @ErrorMessage = FORMATMESSAGE('Source version does not exist, PageVersionId: %i', @CopyToPageId);
+		set @ErrorMessage = FORMATMESSAGE('Page_CopyBlocksToDraft: Source version does not exist, PageVersionId: %i', @CopyToPageId);
 		throw 50000, @ErrorMessage, 1;
 	end
 	
 	if (@SourceVersionTemplateId <> @TargetVersionTemplateId) 
 	begin
-		set @ErrorMessage = FORMATMESSAGE('Source version template does match target version template. Source PageVersionId: %i, Target PageVersionId: %i', @CopyFromPageVersionId, @CopyToPageVersionId);
+		set @ErrorMessage = FORMATMESSAGE('Page_CopyBlocksToDraft: Source version template does match target version template. Source PageVersionId: %i, Target PageVersionId: %i', @CopyFromPageVersionId, @CopyToPageVersionId);
 		throw 50000, @ErrorMessage, 1;
 	end
 

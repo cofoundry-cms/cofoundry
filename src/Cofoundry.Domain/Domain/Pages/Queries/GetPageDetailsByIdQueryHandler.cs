@@ -90,6 +90,7 @@ namespace Cofoundry.Domain
                 MetaDescription = dbPageVersion.MetaDescription,
                 PageVersionId = dbPageVersion.PageVersionId,
                 ShowInSiteMap = !dbPageVersion.ExcludeFromSitemap,
+                DisplayVersion = dbPageVersion.DisplayVersion,
                 Title = dbPageVersion.Title,
                 WorkFlowStatus = (WorkFlowStatus)dbPageVersion.WorkFlowStatusId
             };

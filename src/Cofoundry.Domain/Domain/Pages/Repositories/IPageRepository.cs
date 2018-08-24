@@ -220,12 +220,12 @@ namespace Cofoundry.Domain
         #region PageVersionSummary (admin)
 
         /// <summary>
-        /// Returns all versions of a specific page, ordered historically with
-        /// the latest/draft version first.
+        /// Returns a paged collection of versions of a specific page, ordered 
+        /// historically with the latest/draft version first.
         /// </summary>
-        /// <param name="pageId">Database id of the page to get versions for.</param>
+        /// <param name="query">Query parameters.</param>
         /// <param name="executionContext">Optional execution context to use when executing the query. Useful if you need to temporarily elevate your permission level.</param>
-        Task<ICollection<PageVersionSummary>> GetPageVersionSummariesByPageIdAsync(int pageId, IExecutionContext executionContext = null);
+        Task<PagedQueryResult<PageVersionSummary>> GetPageVersionSummariesByPageIdAsync(GetPageVersionSummariesByPageIdQuery query, IExecutionContext executionContext = null);
 
         #endregion
 

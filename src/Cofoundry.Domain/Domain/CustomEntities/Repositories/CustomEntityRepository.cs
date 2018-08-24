@@ -184,9 +184,8 @@ namespace Cofoundry.Domain
             return _queryExecutor.ExecuteAsync(query, executionContext);
         }
 
-        public Task<ICollection<CustomEntityVersionSummary>> GetCustomEntityVersionSummariesByCustomEntityIdAsync(int id, IExecutionContext executionContext = null)
+        public Task<PagedQueryResult<CustomEntityVersionSummary>> GetCustomEntityVersionSummariesByCustomEntityIdAsync(GetCustomEntityVersionSummariesByCustomEntityIdQuery query, IExecutionContext executionContext = null)
         {
-            var query = new GetCustomEntityVersionSummariesByCustomEntityIdQuery() { CustomEntityId = id };
             return _queryExecutor.ExecuteAsync(query, executionContext);
         }
 

@@ -185,7 +185,7 @@
         <!-- Page versions -->
         <cms-form-section cms-title="Versions">
             <cms-form-field-container>
-                <cms-table-container>
+                <cms-table-container cms-loading="vm.versionsLoadState.isLoading">
 
                 <table>
                     <thead>
@@ -196,7 +196,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr ng-repeat="version in vm.versions">
+                        <tr ng-repeat="version in vm.versions.items">
                             <td>
                                 {{::version.versionLabel}}
                             </td>
@@ -205,7 +205,7 @@
                             </td>
                             <td cms-table-column-actions ng-show="!vm.editMode">
                                 <span ng-if="version.workFlowStatus == 'Draft'">
-                                    <span ng-if="vm.versions.length > 1 && vm.canUpdate">
+                                    <span ng-if="vm.versions.items.length > 1 && vm.canUpdate">
                                         <a href=""
                                            class="btn-icon"
                                            title="Discard draft"
@@ -251,6 +251,10 @@
                     </tbody>
                 </table>
                 </cms-table-container>
+                
+                <cms-pager cms-result="vm.versions"
+                            cms-query="vm.versionsQuery"></cms-pager>
+
             </cms-form-field-container>
         </cms-form-section>
 

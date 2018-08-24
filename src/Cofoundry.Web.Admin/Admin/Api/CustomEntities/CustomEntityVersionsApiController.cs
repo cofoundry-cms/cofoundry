@@ -39,9 +39,12 @@ namespace Cofoundry.Web.Admin
         #region queries
 
         [HttpGet]
-        public async Task<IActionResult> Get(int customEntityId)
+        public async Task<IActionResult> Get(int customEntityId, GetCustomEntityVersionSummariesByCustomEntityIdQuery query)
         {
-            var query = new GetCustomEntityVersionSummariesByCustomEntityIdQuery() { CustomEntityId = customEntityId };
+            if (query == null) query = new GetCustomEntityVersionSummariesByCustomEntityIdQuery();
+
+            query.CustomEntityId = customEntityId;
+            ApiPagingHelper.SetDefaultBounds(query);
 
             var results = await _queryExecutor.ExecuteAsync(query);
             return _apiResponseHelper.SimpleQueryResponse(this, results);

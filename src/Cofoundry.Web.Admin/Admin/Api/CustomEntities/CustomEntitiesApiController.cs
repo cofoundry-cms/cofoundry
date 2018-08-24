@@ -48,6 +48,7 @@ namespace Cofoundry.Web.Admin
             }
 
             if (query == null) query = new SearchCustomEntitySummariesQuery();
+            ApiPagingHelper.SetDefaultBounds(query);
 
             var results = await _queryExecutor.ExecuteAsync(query);
             return _apiResponseHelper.SimpleQueryResponse(this, results);

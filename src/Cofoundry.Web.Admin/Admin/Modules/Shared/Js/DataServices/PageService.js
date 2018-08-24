@@ -56,9 +56,11 @@ function (
         }
     }
 
-    service.getVersionsByPageId = function (pageId) {
+    service.getVersionsByPageId = function (pageId, query) {
 
-        return $http.get(service.getPageVerionsRoute(pageId));
+        return $http.get(service.getPageVerionsRoute(pageId), {
+            params: query
+        });
     }
 
     service.getPageTypes = function () {

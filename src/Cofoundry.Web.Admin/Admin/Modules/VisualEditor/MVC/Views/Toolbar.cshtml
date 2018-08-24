@@ -185,7 +185,7 @@
                 <div class="cofoundry-sv__mini-menu__content">
                     <h3>@entityNameSingular Versions</h3>
                     <ol class="cofoundry-sv__version-list">
-                        @foreach (var version in versions)
+                        @foreach (var version in versions.Take(8))
                         {
                             var link = pageRouteLibrary.VisualEditor(pageResponseData.PageRoutingInfo, version);
                             bool isActive = false;

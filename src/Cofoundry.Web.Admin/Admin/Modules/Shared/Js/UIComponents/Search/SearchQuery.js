@@ -38,7 +38,7 @@
          * Updates the query parameters.
          */
         me.update = function (query) {
-            var newParams = _.defaults({}, query, pagingDefaultConfig, searchParams);
+            var newParams = _.defaults({}, query, defaultParams, searchParams);
             setParams(newParams);
         }
 

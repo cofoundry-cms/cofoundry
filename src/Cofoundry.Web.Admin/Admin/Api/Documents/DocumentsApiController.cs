@@ -55,6 +55,7 @@ namespace Cofoundry.Web.Admin
             }
 
             if (query == null) query = new SearchDocumentAssetSummariesQuery();
+            ApiPagingHelper.SetDefaultBounds(query);
 
             var results = await _queryExecutor.ExecuteAsync(query);
             return _apiResponseHelper.SimpleQueryResponse(this, results);

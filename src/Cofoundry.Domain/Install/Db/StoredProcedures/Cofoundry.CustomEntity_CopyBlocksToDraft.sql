@@ -23,7 +23,7 @@ begin
 	
 	if (@CopyToCustomEntityVersionId is null) 
 	begin
-		set @ErrorMessage = FORMATMESSAGE('Unable to locate draft version for target custom entity, CustomEntityId: %i', @CopyToCustomEntityId);
+		set @ErrorMessage = FORMATMESSAGE('CustomEntity_CopyBlocksToDraft: Unable to locate draft version for target custom entity, CustomEntityId: %i', @CopyToCustomEntityId);
 		throw 50000, @ErrorMessage, 1;
 	end
 
@@ -42,13 +42,13 @@ begin
 
 	if (@SourceVersionCustomEntityDefinitionCode is null) 
 	begin
-		set @ErrorMessage = FORMATMESSAGE('Source version does not exist, CustomEntityVersionId: %i', @CopyToCustomEntityVersionId);
+		set @ErrorMessage = FORMATMESSAGE('CustomEntity_CopyBlocksToDraft: Source version does not exist, CustomEntityVersionId: %i', @CopyToCustomEntityVersionId);
 		throw 50000, @ErrorMessage, 1;
 	end
 	
 	if (@SourceVersionCustomEntityDefinitionCode <> @TargetVersionCustomEntityDefinitionCode) 
 	begin
-		set @ErrorMessage = FORMATMESSAGE('Source version definition code does match target version definition code. Source CustomEntityVersionId: %i, Target CustomEntityVersionId: %i', @CopyFromCustomEntityVersionId, @CopyToCustomEntityVersionId);
+		set @ErrorMessage = FORMATMESSAGE('CustomEntity_CopyBlocksToDraft: Source version definition code does match target version definition code. Source CustomEntityVersionId: %i, Target CustomEntityVersionId: %i', @CopyFromCustomEntityVersionId, @CopyToCustomEntityVersionId);
 		throw 50000, @ErrorMessage, 1;
 	end
 

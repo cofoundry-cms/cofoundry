@@ -49,18 +49,18 @@ namespace Cofoundry.Domain
         {
             var draft = await _dbContext
                 .PageVersions
-                .SingleOrDefaultAsync(v => v.PageId == command.PageId 
-                                      && v.WorkFlowStatusId == (int)WorkFlowStatus.Draft 
-                                      && !v.IsDeleted);
+                .FilterByPageId(command.PageId)
+                .SingleOrDefaultAsync(v => v.WorkFlowStatusId == (int)WorkFlowStatus.Draft);
 
             if (draft != null)
             {
                 var versionId = draft.PageVersionId;
-                draft.IsDeleted = true;
+
+                _dbContext.PageVersions.Remove(draft);
 
                 using (var scope = _transactionScopeFactory.Create(_dbContext))
                 {
-                    await _commandExecutor.ExecuteAsync(new DeleteUnstructuredDataDependenciesCommand(PageVersionEntityDefinition.DefinitionCode, draft.PageVersionId), executionContext);
+                    await _commandExecutor.ExecuteAsync(new DeleteUnstructuredDataDependenciesCommand(PageVersionEntityDefinition.DefinitionCode, versionId), executionContext);
                     await _dbContext.SaveChangesAsync();
                     await _pageStoredProcedures.UpdatePublishStatusQueryLookupAsync(command.PageId);
 

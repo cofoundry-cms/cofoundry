@@ -4,6 +4,7 @@
     '$location',
     '_',
     'shared.LoadState',
+    'shared.SearchQuery',
     'shared.modalDialogService',
     'shared.entityVersionModalDialogService',
     'shared.customEntityService',
@@ -17,6 +18,7 @@ function (
     $location,
     _,
     LoadState,
+    SearchQuery,
     modalDialogService,
     entityVersionModalDialogService,
     customEntityService,
@@ -59,10 +61,19 @@ function (
         vm.saveLoadState = new LoadState();
         vm.saveAndPublishLoadState = new LoadState();
         vm.formLoadState = new LoadState(true);
+        vm.versionsLoadState = new LoadState();
         vm.options = moduleOptions;
         vm.urlLibrary = urlLibrary;
         vm.saveButtonText = moduleOptions.autoPublish ? 'Save' : 'Save & Publish';
         vm.canChangeUrl = !moduleOptions.autoGenerateUrlSlug || moduleOptions.hasLocale;
+
+        vm.versionsQuery = new SearchQuery({
+            onChanged: loadVersions,
+            useHistory: false,
+            defaultParams: {
+                pageSize: 6
+            }
+        });
 
         vm.canPublish = getPermission('CMEPUB');
         vm.canUpdateUrl = getPermission('UPDURL');
@@ -141,10 +152,9 @@ function (
     }
 
     function copyToDraft(version) {
-        var hasDraftVersion = !!getDraftVersion();
 
         entityVersionModalDialogService
-            .copyToDraft(vm.customEntity.customEntityId, version.customEntityVersionId, hasDraftVersion, setLoadingOn, entityDialogConfig)
+            .copyToDraft(vm.customEntity.customEntityId, version.customEntityVersionId, vm.customEntity.hasDraftVersion, setLoadingOn, entityDialogConfig)
             .then(onOkSuccess)
             .catch(setLoadingOff);
 
@@ -206,12 +216,6 @@ function (
             .then(vm.mainForm.formStatus.success.bind(null, message));
     }
 
-    function getDraftVersion() {
-        return _.find(vm.versions, function (version) {
-            return version.workFlowStatus === 'Draft';
-        });
-    }
-
     function initData(loadStateToTurnOff) {
 
         return $q
@@ -223,12 +227,12 @@ function (
 
         function onLoaded(results) {
             var customEntity = results[0],
-                versions = results[1];
+                pagedVersions = results[1];
 
             modelMetaData = results[2];
 
             vm.customEntity = customEntity;
-            vm.versions = mapVersions(customEntity, versions);
+            mapVersions(customEntity, pagedVersions);
             vm.updateCommand = mapUpdateCommand(customEntity);
             vm.isMarkedPublished = vm.customEntity.publishStatus == 'Published';
             vm.publishStatusLabel = getPublishStatusLabel(customEntity);
@@ -243,39 +247,7 @@ function (
 
             vm.editMode = false;
         }
-
-        function mapVersions(customEntity, versions) {
-            var page = customEntity.latestVersion.pages[0],
-                isPublished = customEntity.isPublished();
-
-            _.each(versions, function (version, index) {
-
-                version.versionLabel = getVersionLabel(version, index, versions, customEntity);
-                version.browseUrl = vm.urlLibrary.visualEditorForVersion(customEntity, version, true, isPublished);
-            });
-
-            return versions;
-        }
-
-        function getVersionLabel(version, index, versions, publishableEntity) {
-
-            if (version.workFlowStatus == 'Draft') return version.workFlowStatus;
-
-            var versionNumber = 'V' + (versions.length - index);
-
-            if (!version.isLatestPublishedVersion) return versionNumber;
-
-            return versionNumber + ' (' + getPublishStatusLabel(publishableEntity) + ')';
-        }
-
-        function getPublishStatusLabel(publishableEntity) {
-            if (publishableEntity.publishStatus == 'Published' && publishableEntity.publishDate < Date.now()) {
-                return 'Pending Publish';
-            }
-
-            return publishableEntity.publishStatus;
-        }
-
+        
         function getMetaData() {
             return customEntityService.getDataModelSchema(moduleOptions.customEntityDefinitionCode);
         }
@@ -283,12 +255,54 @@ function (
         function getCustomEntity() {
             return customEntityService.getById($routeParams.id);
         }
-
-        function getVersions() {
-            return customEntityService.getVersionsByCustomEntityId($routeParams.id);
-        }
     }
-    
+
+    function loadVersions() {
+        vm.versionsLoadState.on();
+
+        return getVersions()
+            .then(function (pagedVersions) {
+                mapVersions(vm.customEntity, pagedVersions);
+            })
+            .then(setLoadingOff.bind(null, vm.versionsLoadState));
+    }
+
+    function getVersions() {
+        return customEntityService.getVersionsByCustomEntityId($routeParams.id, vm.versionsQuery.getParameters());
+    }
+
+    function mapVersions(customEntity, pagedVersions) {
+        var page = customEntity.latestVersion.pages[0],
+            isPublished = customEntity.isPublished();
+
+        _.each(pagedVersions.items, function (version) {
+
+            version.versionLabel = getVersionLabel(version, customEntity);
+            version.browseUrl = vm.urlLibrary.visualEditorForVersion(customEntity, version, true, isPublished);
+        });
+
+        vm.versions = pagedVersions;
+    }
+
+    function getVersionLabel(version, publishableEntity) {
+
+        if (version.workFlowStatus == 'Draft') return version.workFlowStatus;
+
+        var versionNumber = 'V' + version.displayVersion;
+
+        if (!version.isLatestPublishedVersion) return versionNumber;
+
+        return versionNumber + ' (' + getPublishStatusLabel(publishableEntity) + ')';
+    }
+
+    function getPublishStatusLabel(publishableEntity) {
+        if (publishableEntity.publishStatus == 'Published' && publishableEntity.publishDate < Date.now()) {
+            return 'Pending Publish';
+        }
+
+        return publishableEntity.publishStatus;
+    }
+
     function mapUpdateCommand(customEntity) {
 
         var command = {

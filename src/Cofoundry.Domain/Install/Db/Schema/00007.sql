@@ -77,3 +77,50 @@ go
 alter table Cofoundry.CustomEntityVersionPageBlock alter column PageId int not null
 
 go
+
+/*
+	#67 Page/Entities version numbers to be stored in database
+*/
+
+
+delete from Cofoundry.PageVersion where IsDeleted = 1
+
+go
+-- drop BasedOnPageVersionId since it's not used at all
+alter table Cofoundry.PageVersion drop constraint FK_PageVersion_PageVersionOf
+alter table Cofoundry.PageVersion drop column BasedOnPageVersionId
+
+alter table Cofoundry.PageVersion add DisplayVersion int null
+alter table Cofoundry.CustomEntityVersion add DisplayVersion int null
+
+drop index UIX_PageVersion_DraftVersion on Cofoundry.PageVersion
+alter table Cofoundry.PageVersion drop column IsDeleted
+
+go
+
+with PageCTE as (
+select 
+	ROW_NUMBER() over (partition by PageId order by WorkFlowStatusId desc, CreateDate) as RowNum, 
+	DisplayVersion
+from Cofoundry.PageVersion 
+)
+update PageCTE set DisplayVersion = RowNum;
+
+with CustomEntityCTE as (
+select 
+	ROW_NUMBER() over (partition by CustomEntityId order by WorkFlowStatusId desc, CreateDate) as RowNum, 
+	DisplayVersion
+from Cofoundry.CustomEntityVersion 
+)
+update CustomEntityCTE set DisplayVersion = RowNum;
+
+go
+alter table Cofoundry.PageVersion alter column DisplayVersion int not null
+alter table Cofoundry.CustomEntityVersion alter column DisplayVersion int not null
+
+create unique index UIX_PageVersion_DraftVersion 
+	on Cofoundry.PageVersion (PageId) 
+	where WorkFlowStatusId = 1
+
+create unique index UIX_PageVersion_DisplayVersion on Cofoundry.PageVersion (PageId, DisplayVersion)
+create unique index UIX_CustomEntityVersion_DisplayVersion on Cofoundry.CustomEntityVersion (CustomEntityId, DisplayVersion)

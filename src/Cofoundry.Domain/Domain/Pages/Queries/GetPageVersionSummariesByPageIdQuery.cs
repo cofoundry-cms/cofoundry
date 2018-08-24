@@ -8,10 +8,12 @@ using Cofoundry.Domain.CQS;
 namespace Cofoundry.Domain
 {
     /// <summary>
-    /// Returns all versions of a specific page, ordered historically with
-    /// the latest/draft version first.
+    /// Returns a paged collection of versions of a specific page, ordered 
+    /// historically with the latest/draft version first.
     /// </summary>
-    public class GetPageVersionSummariesByPageIdQuery : IQuery<ICollection<PageVersionSummary>>
+    public class GetPageVersionSummariesByPageIdQuery 
+        : SimplePageableQuery
+        , IQuery<PagedQueryResult<PageVersionSummary>>
     {
         /// <summary>
         /// Returns all versions of a specific page, ordered historically with

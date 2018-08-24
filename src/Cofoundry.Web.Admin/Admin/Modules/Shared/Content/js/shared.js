@@ -4193,9 +4193,11 @@ function (
         }
     }
 
-    service.getVersionsByCustomEntityId = function (customEntityId) {
+    service.getVersionsByCustomEntityId = function (customEntityId, query) {
 
-        return $http.get(getVerionsRoute(customEntityId));
+        return $http.get(getVerionsRoute(customEntityId), {
+            params: query
+        });
     }
 
 
@@ -4595,9 +4597,11 @@ function (
         }
     }
 
-    service.getVersionsByPageId = function (pageId) {
+    service.getVersionsByPageId = function (pageId, query) {
 
-        return $http.get(service.getPageVerionsRoute(pageId));
+        return $http.get(service.getPageVerionsRoute(pageId), {
+            params: query
+        });
     }
 
     service.getPageTypes = function () {
@@ -11720,6 +11724,7 @@ function (
 
         /* Watches*/
         scope.$watch('vm.result', function (newResult) {
+
             if (!newResult) {
                 vm.isFirstPage = true;
                 vm.isLastPage = true;
@@ -11821,7 +11826,7 @@ angular.module('cms.shared').factory('shared.SearchQuery', ['$location', '_', fu
          * Updates the query parameters.
          */
         me.update = function (query) {
-            var newParams = _.defaults({}, query, pagingDefaultConfig, searchParams);
+            var newParams = _.defaults({}, query, defaultParams, searchParams);
             setParams(newParams);
         }
 

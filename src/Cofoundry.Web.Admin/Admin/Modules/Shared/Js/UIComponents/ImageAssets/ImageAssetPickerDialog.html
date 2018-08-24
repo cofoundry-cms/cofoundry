@@ -6,10 +6,6 @@
 
     <cms-page-actions>
 
-        <!--RESULTS-->
-        <cms-pager cms-result="result"
-                   cms-query="query"></cms-pager>
-
         <cms-button cms-text="{{okText}}" ng-click="onOk()" class="main-cta" ng-disabled="!multiMode && !selectedAsset"></cms-button>
         <cms-button cms-text="Cancel" ng-click="onCancel()"></cms-button>
 
@@ -47,6 +43,9 @@
                                    ng-hide="presetFilter.height"></cms-form-field-number>
 
         </cms-search-filter>
+
+        <cms-pager cms-result="result"
+                   cms-query="query"></cms-pager>
 
     </cms-page-actions>
 
