@@ -71,5 +71,102 @@ namespace Cofoundry.Domain.Data
 
             return result;
         }
+
+        /// <summary>
+        /// Applies the specified sorting to the query, taking into account
+        /// the any default sorting settings on the custom entity definition.
+        /// </summary>
+        /// <param name="dbQuery">Query to sort.</param>
+        /// <param name="customEntityDefinition">
+        /// The definition for the entity being sorted. This may contain default
+        /// sorting settings that will be applied if CustomEntityQuerySortType.Default
+        /// is specified.
+        /// </param>
+        /// <param name="sortType">The sort type to apply.</param>
+        /// <param name="optionalSortDirection">
+        /// An optional sort direction, falling back to the default
+        /// if not specified.
+        /// </param>
+        public static IOrderedQueryable<CustomEntityPublishStatusQuery> SortBy(
+            this IQueryable<CustomEntityPublishStatusQuery> dbQuery,
+            ICustomEntityDefinition customEntityDefinition,
+            CustomEntityQuerySortType sortType, 
+            SortDirection? optionalSortDirection = null
+            )
+        {
+            IOrderedQueryable<CustomEntityPublishStatusQuery> result;
+
+            var sortDirection = optionalSortDirection ?? SortDirection.Default;
+
+            if (sortType == CustomEntityQuerySortType.Default && customEntityDefinition is ISortedCustomEntityDefinition sortedDefinition)
+            {
+                sortType = sortedDefinition.DefaultSortType;
+                if (!optionalSortDirection.HasValue)
+                {
+                    sortDirection = sortedDefinition.DefaultSortDirection;
+                }
+            }
+
+            switch (sortType)
+            {
+                case CustomEntityQuerySortType.Default:
+                case CustomEntityQuerySortType.Natural:
+                    if (UseOrderableSort(customEntityDefinition))
+                    {
+                        result = SortByOrdering(dbQuery, sortDirection);
+                    }
+                    else
+                    {
+                        result = dbQuery
+                            .OrderByWithSortDirection(e => e.CustomEntityVersion.Title, sortDirection);
+                    }
+                    break;
+                case CustomEntityQuerySortType.Locale:
+
+                    if (UseOrderableSort(customEntityDefinition))
+                    {
+                        result = SortByOrdering(dbQuery, sortDirection);
+                    }
+                    else
+                    {
+                        result = dbQuery
+                            .OrderByWithSortDirection(e => e.CustomEntity.Locale.IETFLanguageTag, sortDirection)
+                            .ThenByWithSortDirection(e => e.CustomEntityVersion.Title, sortDirection);
+                    }
+                    break;
+                case CustomEntityQuerySortType.Title:
+                    result = dbQuery
+                        .OrderByWithSortDirection(e => e.CustomEntityVersion.Title, sortDirection);
+                    break;
+                case CustomEntityQuerySortType.CreateDate:
+                    result = dbQuery
+                        .OrderByDescendingWithSortDirection(e => e.CustomEntity.CreateDate, sortDirection);
+                    break;
+                case CustomEntityQuerySortType.PublishDate:
+                    result = dbQuery
+                        .OrderByDescendingWithSortDirection(e => e.CustomEntity.PublishDate ?? e.CustomEntityVersion.CreateDate, sortDirection)
+                        ;
+                    break;
+                default:
+                    throw new Exception($"{nameof(CustomEntityQuerySortType)} not recognised.");
+            }
+
+            return result;
+        }
+
+        private static IOrderedQueryable<CustomEntityPublishStatusQuery> SortByOrdering(IQueryable<CustomEntityPublishStatusQuery> dbQuery, SortDirection sortDirection)
+        {
+            return dbQuery
+                .OrderByWithSortDirection(e => e.CustomEntity.Locale.IETFLanguageTag, sortDirection)
+                .ThenByWithSortDirection(e => !e.CustomEntity.Ordering.HasValue, sortDirection)
+                .ThenByWithSortDirection(e => e.CustomEntity.Ordering, sortDirection)
+                .ThenByWithSortDirection(e => e.CustomEntityVersion.Title, sortDirection);
+        }
+
+        private static bool UseOrderableSort(ICustomEntityDefinition customEntityDefinition)
+        {
+            return customEntityDefinition is IOrderableCustomEntityDefinition orderableCustomEntityDefinition
+                        && orderableCustomEntityDefinition.Ordering != CustomEntityOrdering.None;
+        }
     }
 }

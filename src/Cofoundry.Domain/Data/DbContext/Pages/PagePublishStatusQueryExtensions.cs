@@ -88,7 +88,11 @@ namespace Cofoundry.Domain.Data
         /// <summary>
         /// Sorts the collection using the standard query sort parameters and rules.
         /// </summary>
-        public static IOrderedQueryable<PagePublishStatusQuery> SortBy(this IQueryable<PagePublishStatusQuery> source,PageQuerySortType pageQuerySortType, SortDirection sortDirection)
+        public static IOrderedQueryable<PagePublishStatusQuery> SortBy(
+            this IQueryable<PagePublishStatusQuery> source,
+            PageQuerySortType pageQuerySortType, 
+            SortDirection sortDirection
+            )
         {
             IOrderedQueryable<PagePublishStatusQuery> result;
 
@@ -99,15 +103,18 @@ namespace Cofoundry.Domain.Data
                     result = source
                         .OrderByWithSortDirection(e => e.PageVersion.Title, sortDirection);
                     break;
+                case PageQuerySortType.Locale:
+                    result = source
+                        .OrderByWithSortDirection(e => e.Page.Locale.IETFLanguageTag, sortDirection)
+                        .ThenByWithSortDirection(e => e.PageVersion.Title, sortDirection);
+                    break;
                 case PageQuerySortType.CreateDate:
                     result = source
                         .OrderByDescendingWithSortDirection(e => e.PageVersion.CreateDate, sortDirection);
                     break;
                 case PageQuerySortType.PublishDate:
                     result = source
-                        .OrderByDescendingWithSortDirection(e => e.Page.PublishDate.HasValue, sortDirection)
-                        .ThenByDescendingWithSortDirection(e => e.Page.PublishDate, sortDirection)
-                        .ThenByDescendingWithSortDirection(e => e.PageVersion.CreateDate, sortDirection)
+                        .OrderByDescendingWithSortDirection(e => e.Page.PublishDate ?? e.PageVersion.CreateDate, sortDirection)
                         ;
                     break;
                 default:

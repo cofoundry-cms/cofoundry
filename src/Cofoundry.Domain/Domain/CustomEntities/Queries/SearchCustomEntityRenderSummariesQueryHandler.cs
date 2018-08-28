@@ -16,19 +16,16 @@ namespace Cofoundry.Domain
         #region constructor
 
         private readonly CofoundryDbContext _dbContext;
-        private readonly IQueryExecutor _queryExecutor;
         private readonly ICustomEntityDefinitionRepository _customEntityDefinitionRepository;
         private readonly ICustomEntityRenderSummaryMapper _customEntityRenderSummaryMapper;
 
         public SearchCustomEntityRenderSummariesQueryHandler(
             CofoundryDbContext dbContext,
-            IQueryExecutor queryExecutor,
             ICustomEntityRenderSummaryMapper customEntityRenderSummaryMapper,
             ICustomEntityDefinitionRepository customEntityDefinitionRepository
             )
         {
             _dbContext = dbContext;
-            _queryExecutor = queryExecutor;
             _customEntityRenderSummaryMapper = customEntityRenderSummaryMapper;
             _customEntityDefinitionRepository = customEntityDefinitionRepository;
         }
@@ -47,15 +44,12 @@ namespace Cofoundry.Domain
 
         private async Task<PagedQueryResult<CustomEntityVersion>> GetQueryAsync(SearchCustomEntityRenderSummariesQuery query, IExecutionContext executionContext)
         {
-            var definitionQuery = new GetCustomEntityDefinitionSummaryByCodeQuery(query.CustomEntityDefinitionCode);
-            var definition = await _queryExecutor.ExecuteAsync(definitionQuery, executionContext);
+            var definition = _customEntityDefinitionRepository.GetByCode(query.CustomEntityDefinitionCode);
             EntityNotFoundException.ThrowIfNull(definition, query.CustomEntityDefinitionCode);
 
             var dbQuery = _dbContext
                 .CustomEntityPublishStatusQueries
                 .AsNoTracking()
-                .Include(e => e.CustomEntityVersion)
-                .ThenInclude(e => e.CustomEntity)
                 .FilterByCustomEntityDefinitionCode(query.CustomEntityDefinitionCode)
                 .FilterActive()
                 .FilterByStatus(query.PublishStatus, executionContext.ExecutionDate);
@@ -70,47 +64,13 @@ namespace Cofoundry.Domain
                 dbQuery = dbQuery.Where(p => !p.CustomEntity.LocaleId.HasValue);
             }
 
-            switch (query.SortBy)
-            {
-                case CustomEntityQuerySortType.Default:
-                case CustomEntityQuerySortType.Natural:
-                    if (definition.Ordering != CustomEntityOrdering.None)
-                    {
-                        dbQuery = dbQuery
-                            .OrderByWithSortDirection(e => !e.CustomEntity.Ordering.HasValue, query.SortDirection)
-                            .ThenByWithSortDirection(e => e.CustomEntity.Ordering, query.SortDirection)
-                            .ThenByDescendingWithSortDirection(e => e.CustomEntity.CreateDate, query.SortDirection);
-                    }
-                    else
-                    {
-                        dbQuery = dbQuery
-                            .OrderByDescendingWithSortDirection(e => e.CustomEntity.CreateDate, query.SortDirection);
-                    }
-                    break;
-                case CustomEntityQuerySortType.Title:
-                    dbQuery = dbQuery
-                        .OrderByWithSortDirection(e => e.CustomEntityVersion.Title, query.SortDirection);
-                    break;
-                case CustomEntityQuerySortType.CreateDate:
-                    dbQuery = dbQuery
-                        .OrderByDescendingWithSortDirection(e => e.CustomEntity.CreateDate, query.SortDirection);
-                    break;
-                case CustomEntityQuerySortType.PublishDate:
-                    dbQuery = dbQuery
-                        .OrderByDescendingWithSortDirection(e => e.CustomEntity.PublishDate.HasValue, query.SortDirection)
-                        .ThenByDescendingWithSortDirection(e => e.CustomEntity.PublishDate, query.SortDirection)
-                        .ThenByDescendingWithSortDirection(e => e.CustomEntity.CreateDate, query.SortDirection)
-                        ;
-                    break;
-            }
+            var dbPagedResult = await dbQuery
+                .SortBy(definition, query.SortBy, query.SortDirection)
+                .Select(p => p.CustomEntityVersion)
+                .Include(e => e.CustomEntity)
+                .ToPagedResultAsync(query);
 
-            var dbPagedResult = await dbQuery.ToPagedResultAsync(query);
-            // EF doesnt support includes after select so need to run this post execution
-            var results = dbPagedResult
-                .Items
-                .Select(p => p.CustomEntityVersion);
-
-            return dbPagedResult.ChangeType(results);
+            return dbPagedResult;
         }
 
         #endregion

@@ -15,7 +15,7 @@ namespace Cofoundry.Domain
         [Required]
         public string CustomEntityDefinitionCode { get; set; }
 
-        public SortDirection SortDirection { get; set; }
+        public SortDirection? SortDirection { get; set; }
 
         public CustomEntityQuerySortType SortBy { get; set; }
 

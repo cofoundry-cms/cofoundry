@@ -23,19 +23,16 @@ namespace Cofoundry.Domain
         #region constructor
 
         private readonly CofoundryDbContext _dbContext;
-        private readonly IQueryExecutor _queryExecutor;
         private readonly ICustomEntitySummaryMapper _customEntitySummaryMapper;
         private readonly ICustomEntityDefinitionRepository _customEntityDefinitionRepository;
 
         public SearchCustomEntitySummariesQueryHandler(
             CofoundryDbContext dbContext,
-            IQueryExecutor queryExecutor,
             ICustomEntitySummaryMapper customEntitySummaryMapper,
             ICustomEntityDefinitionRepository customEntityDefinitionRepository
             )
         {
             _dbContext = dbContext;
-            _queryExecutor = queryExecutor;
             _customEntitySummaryMapper = customEntitySummaryMapper;
             _customEntityDefinitionRepository = customEntityDefinitionRepository;
         }
@@ -46,8 +43,7 @@ namespace Cofoundry.Domain
 
         public async Task<PagedQueryResult<CustomEntitySummary>> ExecuteAsync(SearchCustomEntitySummariesQuery query, IExecutionContext executionContext)
         {
-            var definitionQuery = new GetCustomEntityDefinitionSummaryByCodeQuery(query.CustomEntityDefinitionCode);
-            var definition = await _queryExecutor.ExecuteAsync(definitionQuery, executionContext);
+            var definition = _customEntityDefinitionRepository.GetByCode(query.CustomEntityDefinitionCode);
             EntityNotFoundException.ThrowIfNull(definition, query.CustomEntityDefinitionCode);
 
             // Get Main Query
@@ -59,7 +55,7 @@ namespace Cofoundry.Domain
 
         private Task<PagedQueryResult<CustomEntityPublishStatusQuery>> RunQueryAsync(
             SearchCustomEntitySummariesQuery query, 
-            CustomEntityDefinitionSummary definition, 
+            ICustomEntityDefinition definition, 
             IExecutionContext executionContext
             )
         {
@@ -91,19 +87,10 @@ namespace Cofoundry.Domain
                     .OrderByDescending(e => e.CustomEntityVersion.Title == query.Text)
                     .ThenByDescending(e => e.CustomEntityVersion.Title.Contains(query.Text));
             }
-            else if (definition.Ordering != CustomEntityOrdering.None)
-            {
-                dbQuery = dbQuery
-                    .OrderBy(e => e.CustomEntity.Locale.IETFLanguageTag)
-                    .ThenBy(e => !e.CustomEntity.Ordering.HasValue)
-                    .ThenBy(e => e.CustomEntity.Ordering)
-                    .ThenBy(e => e.CustomEntityVersion.Title);
-            }
             else
             {
                 dbQuery = dbQuery
-                    .OrderBy(e => e.CustomEntity.Locale.IETFLanguageTag)
-                    .ThenBy(e => e.CustomEntityVersion.Title);
+                    .SortBy(definition, CustomEntityQuerySortType.Default);
             }
             
             var dbPagedResult = dbQuery.ToPagedResultAsync(query);

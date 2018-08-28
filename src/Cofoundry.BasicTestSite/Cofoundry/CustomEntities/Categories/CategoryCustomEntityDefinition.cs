@@ -9,7 +9,7 @@ namespace Cofoundry.BasicTestSite
     /// Each custom entity requires a definition class which provides settings
     /// describing the entity and how it should behave.
     /// </summary>
-    public class CategoryCustomEntityDefinition : IOrderableCustomEntityDefinition<CategoryDataModel>
+    public class CategoryCustomEntityDefinition : ICustomEntityDefinition<CategoryDataModel>
     {
         /// <summary>
         /// This constant is a convention that allows us to reference this definition code 

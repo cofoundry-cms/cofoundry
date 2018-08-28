@@ -10,16 +10,6 @@ namespace Cofoundry.Domain
     /// Implement this interface to define a custom entity type that can have it's list ordering set. 
     /// The definition will automatically get picked up and added to the system.
     /// </summary>
-    public interface IOrderableCustomEntityDefinition<TDataModel> 
-        : IOrderableCustomEntityDefinition, ICustomEntityDefinition<TDataModel>
-        where TDataModel : ICustomEntityDataModel
-    {
-    }
-
-    /// <summary>
-    /// Implement this interface to define a custom entity type that can have it's list ordering set. 
-    /// The definition will automatically get picked up and added to the system.
-    /// </summary>
     public interface IOrderableCustomEntityDefinition : ICustomEntityDefinition
     {
         /// <summary>
