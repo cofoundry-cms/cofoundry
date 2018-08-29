@@ -164,7 +164,7 @@ Cofoundry.visualEditor = (function () {
                     for (i = 0; i < len; ++i) {
                         var el = elements[i],
                             el_data = getElementData(el, componentName)
-                        ;
+                            ;
 
                         // If name is null then discard as its an empty placeholder block
                         if (!el_data.name) {
@@ -232,7 +232,7 @@ Cofoundry.visualEditor = (function () {
                 data.width = el.offsetWidth;
                 data.height = el.offsetHeight;
                 data.el = el;
-                data.hasContent = el.innerHTML.length > 0;
+                data.hasContent = isBlock ? el.innerHTML.length > 0 : !el.hasAttribute('data-cms-page-region-empty');
                 data.html = el.innerHTML;
                 data.name = el.getAttribute(isBlock ? 'data-cms-page-block-title' : 'data-cms-page-region-name');
                 data.regionName = rootEl.getAttribute('data-cms-page-region-name');

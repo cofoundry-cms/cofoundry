@@ -15,6 +15,7 @@
                 @(await Cofoundry
                     .Template
                     .Region("Introduction Title")
+                    .EmptyContentMinHeight(100)
                     .AllowBlockType<PlainTextDataModel>()
                     .InvokeAsync())
             </h1>
@@ -26,15 +27,16 @@
                 .AllowBlockType<PageListDataModel>()
                 .AllowBlockType< CarouselDataModel>()
                 .EmptyContentMinHeight(200)
+                .AllowMultipleBlocks()
                 .InvokeAsync())
         </div>
     </div>
 
     <div class="row blog-cards">
-        <div class="col-sm-12 " >
+        <div class="col-sm-12">
             <h2>From our blog</h2>
         </div>
-       
+
         @await Component.InvokeAsync("HomepageBlogPosts")
     </div>
 </div>

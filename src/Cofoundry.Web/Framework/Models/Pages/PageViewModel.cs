@@ -43,7 +43,7 @@ namespace Cofoundry.Web
         {
             if (Page == null)
             {
-                throw new NullReferenceException("Cannot set the " + property  + " property, the Page property has not been set.");
+                throw new NullReferenceException($"Cannot set the {property} property, the Page property has not been set.");
             }
         }
 
