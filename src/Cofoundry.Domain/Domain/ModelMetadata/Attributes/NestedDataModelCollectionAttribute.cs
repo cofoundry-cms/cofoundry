@@ -1,6 +1,7 @@
 ﻿using Cofoundry.Core;
 using Microsoft.AspNetCore.Mvc.ModelBinding.Metadata;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -51,26 +52,52 @@ namespace Cofoundry.Domain
 
         private string GetNestedModelTypeName(DisplayMetadataProviderContext context)
         {
+
             var propertyModelType = context.Key.ModelType;
 
-            if (!propertyModelType.IsGenericType)
+            if (!typeof(IEnumerable).IsAssignableFrom(propertyModelType))
             {
-                throw new Exception(GetBadTypeExceptionMessage());
+                throw GetIncorrectTypeException(context);
             }
 
-            var genericParameters = propertyModelType.GetGenericArguments();
-            if (genericParameters?.Length != 1 || !typeof(INestedDataModel).IsAssignableFrom(genericParameters.Single()))
+            Type singularType = null;
+            if (propertyModelType.IsGenericType)
             {
-                throw new Exception(GetBadTypeExceptionMessage());
+                var genericParameters = propertyModelType.GetGenericArguments();
+
+                if (genericParameters?.Length != 1)
+                {
+                    throw GetIncorrectTypeException(context);
+                }
+
+                singularType = genericParameters.Single();
+            }
+            else if (propertyModelType.IsArray)
+            {
+                singularType = propertyModelType.GetElementType();
             }
 
-            var nestedModelName = StringHelper.RemoveSuffix(genericParameters.Single().Name, "DataModel", StringComparison.OrdinalIgnoreCase);
+            if (singularType == null)
+            {
+                throw GetIncorrectTypeException(context);
+            }
+
+            if (!typeof(INestedDataModel).IsAssignableFrom(singularType))
+            {
+                throw GetIncorrectTypeException(context);
+            }
+
+            var nestedModelName = StringHelper.RemoveSuffix(singularType.Name, "DataModel", StringComparison.OrdinalIgnoreCase);
             return nestedModelName;
         }
 
-        private string GetBadTypeExceptionMessage()
+        private IncorrectCollectionMetaDataAttributePlacementException GetIncorrectTypeException(DisplayMetadataProviderContext context)
         {
-            return $"{typeof(NestedDataModelCollectionAttribute).Name} can only be placed on properties with a generic collection of models that inherit from {typeof(INestedDataModel).Name}";
+            var propertyName = context.Key.ContainerType.Name + "." + context.Key.Name;
+            var msg = $"{typeof(NestedDataModelCollectionAttribute).Name} can only be placed on properties with a generic collection of types that inherit from {typeof(INestedDataModel).Name}. Property name is {propertyName} and the type is {context.Key.ModelType}.";
+            var exception = new IncorrectCollectionMetaDataAttributePlacementException(this, context, new Type[] { typeof(INestedDataModel) }, msg);
+
+            return exception;
         }
 
         public IEnumerable<EntityDependency> GetRelations(object model, PropertyInfo propertyInfo)

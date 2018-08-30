@@ -14,11 +14,7 @@ namespace Cofoundry.Domain
     {
         public void Process(DisplayMetadataProviderContext context)
         {
-            if (context.Key.ModelType != typeof(int) && context.Key.ModelType != typeof(int?))
-            {
-                var msg = $"{typeof(PreviewImageAttribute).Name} can only be placed on properties with an int or int? type.";
-                throw new Exception(msg);
-            }
+            MetaDataAttributePlacementValidator.ValidatePropertyType(this, context, typeof(int), typeof(int?));
 
             context
                 .DisplayMetadata

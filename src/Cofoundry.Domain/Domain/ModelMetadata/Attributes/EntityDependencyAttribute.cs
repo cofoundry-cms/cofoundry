@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Reflection;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Metadata;
 
 namespace Cofoundry.Domain
 {
@@ -10,7 +11,7 @@ namespace Cofoundry.Domain
     /// detect and prevent entities used in required fields from being removed.
     /// </summary>
     [AttributeUsage(AttributeTargets.Property)]
-    public class EntityDependencyAttribute : Attribute, IEntityRelationAttribute
+    public class EntityDependencyAttribute : Attribute, IEntityRelationAttribute, IMetadataAttribute
     {
         #region constructors
 
@@ -41,6 +42,11 @@ namespace Cofoundry.Domain
             {
                 yield return new EntityDependency(EntityDefinitionCode, id.Value, isRequired);
             }
+        }
+
+        public void Process(DisplayMetadataProviderContext context)
+        {
+            MetaDataAttributePlacementValidator.ValidatePropertyType(this, context, typeof(int), typeof(int?));
         }
 
         #endregion
