@@ -91,7 +91,7 @@ namespace Cofoundry.Core
         {
             if (string.IsNullOrEmpty(s)) return new HtmlString(string.Empty);
             var html = ConvertLineBreaksToBrTags(s);
-            html = ConvertUrlsToLinks(s, formatOptions);
+            html = ConvertUrlsToLinks(html, formatOptions);
 
             return new HtmlString(html);
         }
