@@ -38,7 +38,7 @@ select @NumTemplatesInUseWithMultiplePages = count(*) from (
 	inner join Cofoundry.PageVersion pv on pv.PageTemplateId = r.PageTemplateId
 	inner join Cofoundry.PageTemplate pt on pt.PageTemplateId = pv.PageTemplateId
 	inner join Cofoundry.[Page] p on p.PageId = pv.PageId
-	where p.IsDeleted = 0 and pt.IsArchived = 0
+	where p.IsDeleted = 0 and pt.IsArchived = 0 and p.CustomEntityDefinitionCode is not null
 	group by pv.PageTemplateId, pv.PageId
 	) as PagesPerTemplate
 group by PageTemplateId
