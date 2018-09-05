@@ -5,11 +5,18 @@ using System.Text;
 namespace Cofoundry.Domain
 {
     /// <summary>
+    /// <para>
     /// Implement this interface on your custom entity definition class to 
     /// define a default sort type and sort direction. This apply to all
     /// queries where no sort type is specified and so is most useful for
     /// customizing the default ordering or items in the list view in the
     /// admin panel.
+    /// </para>
+    /// <para>
+    /// If the definition also implements IOrderableCustomEntityDefinition
+    /// then the sorting properties are used for secondary level sorting
+    /// which is useful when the ordering type is CustomEntityOrdering.Partial
+    /// </para>
     /// </summary>
     public interface ISortedCustomEntityDefinition : ICustomEntityDefinition
     {

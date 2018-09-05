@@ -17,8 +17,9 @@ namespace Cofoundry.Domain
         None,
 
         /// <summary>
-        /// Partial ordering where an ordering is specified for
-        /// a subset of entities and the rest take a natural ordering.
+        /// Partial ordering where an ordering is specified for a subset of 
+        /// entities and the rest take a natural ordering. Implement ISortedCustomEntityDefinition
+        /// to define the seondary level ordering of items that have not been ordered.
         /// </summary>
         /// <remarks>
         /// Partial ordering is actually the same as full ordering as far as the db is concerned,
