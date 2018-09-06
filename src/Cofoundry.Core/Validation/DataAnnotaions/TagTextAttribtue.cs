@@ -11,7 +11,7 @@ namespace Cofoundry.Core.Validation
     /// Validates a string field to contain text that you would typically only
     /// want to see in a 'tag' or 'keyword' field. It must only contain only 
     /// letters, numbers whitespace, apostrophes, ampsands and round brackets.
-    /// E.g. "Space & Exploration", "Jenny's Music", "Music (Pop)"
+    /// E.g. "Space &amp; Exploration", "Jenny's Music", "Music (Pop)"
     /// </summary>
     public class TagTextAttribtue : RegularExpressionAttribute
     {

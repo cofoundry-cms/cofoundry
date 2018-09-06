@@ -90,7 +90,7 @@ function (
 
             arrayUtilities.moveObject(vm.gridData, droppedEntity, $index, PAGE_ID_PROP);
 
-            // Update model with new orering
+            // Update model with new ordering
             setModelFromGridData();
         }
 

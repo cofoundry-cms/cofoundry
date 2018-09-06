@@ -6,31 +6,42 @@ using System.Threading.Tasks;
 using Cofoundry.Domain.Data;
 using Cofoundry.Domain.CQS;
 using Microsoft.EntityFrameworkCore;
-using Cofoundry.Core.EntityFramework;
+using Cofoundry.Core.Data;
 using System.Data.SqlClient;
 using Cofoundry.Core.MessageAggregator;
 
 namespace Cofoundry.Domain
 {
+    /// <summary>
+    /// Creates a new draft version of a page from the currently published version. If there
+    /// isn't a currently published version then an exception will be thrown. An exception is also 
+    /// thrown if there is already a draft version.
+    /// </summary>
     public class AddPageDraftVersionCommandHandler 
         : IAsyncCommandHandler<AddPageDraftVersionCommand>
         , IPermissionRestrictedCommandHandler<AddPageDraftVersionCommand>
     {
         #region constructor
 
+        private readonly CofoundryDbContext _dbContext;
         private readonly IPageCache _pageCache;
         private readonly IMessageAggregator _messageAggregator;
         private readonly IPageStoredProcedures _pageStoredProcedures;
+        private readonly ITransactionScopeManager _transactionScopeFactory;
 
         public AddPageDraftVersionCommandHandler(
+            CofoundryDbContext dbContext,
             IPageCache pageCache,
             IMessageAggregator messageAggregator,
-            IPageStoredProcedures pageStoredProcedures
+            IPageStoredProcedures pageStoredProcedures,
+            ITransactionScopeManager transactionScopeFactory
             )
         {
+            _dbContext = dbContext;
             _pageCache = pageCache;
             _messageAggregator = messageAggregator;
             _pageStoredProcedures = pageStoredProcedures;
+            _transactionScopeFactory = transactionScopeFactory;
         }
 
         #endregion
@@ -45,12 +56,17 @@ namespace Cofoundry.Domain
                 executionContext.ExecutionDate,
                 executionContext.UserContext.UserId.Value);
 
-            _pageCache.Clear(command.PageId);
+            await _transactionScopeFactory.QueueCompletionTaskAsync(_dbContext, () => OnTransactionComplete(command, newVersionId));
 
             // Set Ouput
             command.OutputPageVersionId = newVersionId;
+        }
 
-            await _messageAggregator.PublishAsync(new PageDraftVersionAddedMessage()
+        private Task OnTransactionComplete(AddPageDraftVersionCommand command, int newVersionId)
+        {
+            _pageCache.Clear(command.PageId);
+
+            return _messageAggregator.PublishAsync(new PageDraftVersionAddedMessage()
             {
                 PageId = command.PageId,
                 PageVersionId = newVersionId

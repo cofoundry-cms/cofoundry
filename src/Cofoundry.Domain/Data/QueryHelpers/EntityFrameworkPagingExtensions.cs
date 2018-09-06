@@ -19,7 +19,7 @@ namespace Cofoundry.Domain.Data
             var result = new PagedQueryResult<T>();
             result.TotalItems = await source.CountAsync();
             result.Items = await source.Page(query).ToArrayAsync();
-            PagingExtensions.MapPagingData<T>(query, result);
+            PagingQueryExtensions.MapPagingData<T>(query, result);
 
             return result;
         }

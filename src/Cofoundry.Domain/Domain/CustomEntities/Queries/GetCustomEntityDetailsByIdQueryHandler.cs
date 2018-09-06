@@ -10,6 +10,12 @@ using Cofoundry.Core;
 
 namespace Cofoundry.Domain
 {
+    /// <summary>
+    /// Returns detailed information on a custom entity and it's latest version. This 
+    /// query is primarily used in the admin area because it is not version-specific
+    /// and the CustomEntityDetails projection includes audit data and other additional 
+    /// information that should normally be hidden from a customer facing app.
+    /// </summary>
     public class GetCustomEntityDetailsByIdQueryHandler 
         : IAsyncQueryHandler<GetCustomEntityDetailsByIdQuery, CustomEntityDetails>
         , IIgnorePermissionCheckHandler
@@ -49,7 +55,9 @@ namespace Cofoundry.Domain
 
         public async Task<CustomEntityDetails> ExecuteAsync(GetCustomEntityDetailsByIdQuery query, IExecutionContext executionContext)
         {
-            var customEntityVersion = await Query(query.CustomEntityId).FirstOrDefaultAsync();
+            var customEntityVersion = await QueryAsync(query.CustomEntityId);
+            if (customEntityVersion == null) return null;
+
             _permissionValidationService.EnforceCustomEntityPermission<CustomEntityReadPermission>(customEntityVersion.CustomEntity.CustomEntityDefinitionCode, executionContext.UserContext);
             
             return await MapAsync(query, customEntityVersion, executionContext);
@@ -65,12 +73,15 @@ namespace Cofoundry.Domain
 
             var entity = MapInitialData(dbVersion, executionContext);
 
-            // Re-map IsPublished checking to see if there is a published version in the history
-            if (entity.IsPublished && entity.LatestVersion.WorkFlowStatus != WorkFlowStatus.Published)
+            if (entity.LatestVersion.WorkFlowStatus == WorkFlowStatus.Published)
             {
-                entity.IsPublished = await _dbContext
-                    .CustomEntityVersions
-                    .AnyAsync(v => v.CustomEntityId == query.CustomEntityId && v.WorkFlowStatusId == (int)WorkFlowStatus.Published);
+                entity.HasPublishedVersion = true;
+            }
+            else
+            {
+                entity.HasPublishedVersion = await _dbContext
+                        .CustomEntityVersions
+                        .AnyAsync(v => v.CustomEntityId == query.CustomEntityId && v.WorkFlowStatusId == (int)WorkFlowStatus.Published);
             }
 
             if (dbVersion.CustomEntity.LocaleId.HasValue)
@@ -97,18 +108,18 @@ namespace Cofoundry.Domain
                 PublishDate = DbDateTimeMapper.AsUtc(dbVersion.CustomEntity.PublishDate),
             };
 
-            entity.IsPublished = entity.PublishStatus == PublishStatus.Published && entity.PublishDate <= executionContext.ExecutionDate;
             entity.AuditData = _auditDataMapper.MapCreateAuditData(dbVersion.CustomEntity);
 
             entity.LatestVersion = new CustomEntityVersionDetails()
             {
                 CustomEntityVersionId = dbVersion.CustomEntityVersionId,
                 Title = dbVersion.Title,
+                DisplayVersion = dbVersion.DisplayVersion,
                 WorkFlowStatus = (WorkFlowStatus)dbVersion.WorkFlowStatusId
             };
 
             entity.LatestVersion.AuditData = _auditDataMapper.MapCreateAuditData(dbVersion);
-            entity.HasDraft = entity.LatestVersion.WorkFlowStatus == WorkFlowStatus.Draft;
+            entity.HasDraftVersion = entity.LatestVersion.WorkFlowStatus == WorkFlowStatus.Draft;
 
             return entity;
         }
@@ -175,7 +186,7 @@ namespace Cofoundry.Domain
                         .CustomEntityVersionPageBlocks
                         .AsQueryable()
                         .FilterActive()
-                        .Where(m => m.PageTemplateRegionId == region.PageTemplateRegionId)
+                        .Where(m => m.PageId == routing.PageRoute.PageId && m.PageTemplateRegionId == region.PageTemplateRegionId)
                         .OrderBy(m => m.Ordering)
                         .Select(m => MapBlock(m, allPageBlockTypes))
                         .ToArray();
@@ -203,7 +214,7 @@ namespace Cofoundry.Domain
             return block;
         }
 
-        private IQueryable<CustomEntityVersion> Query(int id)
+        private Task<CustomEntityVersion> QueryAsync(int id)
         {
             return _dbContext
                 .CustomEntityVersions
@@ -214,9 +225,8 @@ namespace Cofoundry.Domain
                 .Include(v => v.Creator)
                 .AsNoTracking()
                 .Where(v => v.CustomEntityId == id && (v.CustomEntity.LocaleId == null || v.CustomEntity.Locale.IsActive))
-                .OrderByDescending(g => g.WorkFlowStatusId == (int)WorkFlowStatus.Draft)
-                .ThenByDescending(g => g.WorkFlowStatusId == (int)WorkFlowStatus.Published)
-                .ThenByDescending(g => g.CreateDate);
+                .OrderByLatest()
+                .FirstOrDefaultAsync();
         }
 
         private async Task MapDataModelAsync(

@@ -42,7 +42,8 @@ namespace Cofoundry.Web
 
         /// <summary>
         /// Formats the result of a query. Results are wrapped inside an object with a data property
-        /// for consistency and prevent a vulnerability with return JSON arrays. 
+        /// for consistency and prevent a vulnerability with return JSON arrays. If the result is
+        /// null then a 404 response is returned.
         /// </summary>
         /// <typeparam name="T">Type of the result</typeparam>
         /// <param name="controller">The Controller instance using the helper</param>
@@ -50,7 +51,9 @@ namespace Cofoundry.Web
         public IActionResult SimpleQueryResponse<T>(Controller controller, T result)
         {
             var response = new SimpleResponseData<T>() { Data = result };
-            
+
+            if (result == null) return controller.NotFound(response);
+
             return controller.Ok(response);
         }
 
@@ -61,6 +64,7 @@ namespace Cofoundry.Web
         /// </summary>
         /// <param name="controller">The Controller instance using the helper</param>
         /// <param name="validationErrors">Validation errors, if any, to be returned.</param>
+        /// <param name="returnData">Data to return in the data property of the response object.</param>
         public IActionResult SimpleCommandResponse<T>(Controller controller, IEnumerable<ValidationError> validationErrors, T returnData)
         {
             var response = new SimpleCommandResponseData<T>();
@@ -244,8 +248,8 @@ namespace Cofoundry.Web
         /// </summary>
         /// <typeparam name="TResult">Type of result returned from the function</typeparam>
         /// <param name="controller">The Controller instance using the helper</param>
-        /// <param name="function">The function to execute</param>
-        public async Task<IActionResult> RunWithResultAsync<TResult>(Controller controller, Func<Task<TResult>> task)
+        /// <param name="functionToExecute">The function to execute</param>
+        public async Task<IActionResult> RunWithResultAsync<TResult>(Controller controller, Func<Task<TResult>> functionToExecute)
         {
             var errors = new List<ValidationError>();
             TResult result = default(TResult);
@@ -254,7 +258,7 @@ namespace Cofoundry.Web
             {
                 try
                 {
-                    result = await task();
+                    result = await functionToExecute();
                 }
                 catch (ValidationException ex)
                 {

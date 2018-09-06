@@ -120,22 +120,6 @@ namespace Cofoundry.Domain
             return _commandExecutor.ExecuteAsync(new DeleteRoleCommand(roleId), executionContext);
         }
 
-        /// <summary>
-        /// Registers new roles defined in code via IRoleDefinition and initializes
-        /// permissions when an IRoleInitializer has been implemented.
-        /// </summary>
-        /// <param name="updateExistingRoles">
-        /// By default we don't update roles once they
-        /// are in the system because we don't want to overwrite
-        /// changes made in the UI, but you can force the update
-        /// by running this command manually with this flag.
-        /// </param>
-        /// <param name="executionContext">Optional execution context to use when executing the query. Useful if you need to temporarily elevate your permission level.</param>
-        public Task RegisterDefinedRoles(bool updateExistingRoles, IExecutionContext executionContext = null)
-        {
-            return _commandExecutor.ExecuteAsync(new RegisterDefinedRolesCommand() { UpdateExistingRoles = updateExistingRoles }, executionContext);
-        }
-
         #endregion
     }
 }

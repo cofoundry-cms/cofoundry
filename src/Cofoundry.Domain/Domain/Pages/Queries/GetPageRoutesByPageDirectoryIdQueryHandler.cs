@@ -9,6 +9,13 @@ using Cofoundry.Domain.CQS;
 
 namespace Cofoundry.Domain
 {
+    /// <summary>
+    /// Returns page routing data for pages that are nested immediately inside the specified 
+    /// directory. The PageRoute projection is a small page object focused on providing 
+    /// routing data only. Data returned from this query is cached by 
+    /// default as it's core to routing and often incorporated in more detailed
+    /// page projections.
+    /// </summary>
     public class GetPageRoutesByPageDirectoryIdQueryHandler 
         : IAsyncQueryHandler<GetPageRoutesByPageDirectoryIdQuery, ICollection<PageRoute>>
         , IPermissionRestrictedQueryHandler<GetPageRoutesByPageDirectoryIdQuery, ICollection<PageRoute>>

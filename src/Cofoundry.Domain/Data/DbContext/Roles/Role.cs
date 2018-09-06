@@ -40,7 +40,7 @@ namespace Cofoundry.Domain.Data
 
         /// <summary>
         /// A role must be assigned to a user area e.g. CofoundryAdminUserArea.
-        /// </summary
+        /// </summary>
         public virtual UserArea UserArea { get; set; }
 
         /// <summary>

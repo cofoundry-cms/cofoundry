@@ -7,6 +7,7 @@ using Cofoundry.Domain.Data;
 using Microsoft.EntityFrameworkCore;
 using Cofoundry.Core.MessageAggregator;
 using Cofoundry.Core;
+using Cofoundry.Core.Data;
 
 namespace Cofoundry.Domain
 {
@@ -21,13 +22,15 @@ namespace Cofoundry.Domain
         private readonly EntityOrderableHelper _entityOrderableHelper;
         private readonly IPageCache _pageCache;
         private readonly IMessageAggregator _messageAggregator;
+        private readonly ITransactionScopeManager _transactionScopeFactory;
 
         public MovePageVersionBlockCommandHandler(
             CofoundryDbContext dbContext,
             EntityAuditHelper entityAuditHelper,
             EntityOrderableHelper entityOrderableHelper,
             IPageCache pageCache,
-            IMessageAggregator messageAggregator
+            IMessageAggregator messageAggregator,
+            ITransactionScopeManager transactionScopeFactory
             )
         {
             _dbContext = dbContext;
@@ -35,6 +38,7 @@ namespace Cofoundry.Domain
             _entityOrderableHelper = entityOrderableHelper;
             _pageCache = pageCache;
             _messageAggregator = messageAggregator;
+            _transactionScopeFactory = transactionScopeFactory;
         }
 
         #endregion
@@ -94,12 +98,18 @@ namespace Cofoundry.Domain
             blockToSwapWith.UpdateDate = executionContext.ExecutionDate;
 
             await _dbContext.SaveChangesAsync();
-            _pageCache.Clear(dbResult.PageId);
+            
+            await _transactionScopeFactory.QueueCompletionTaskAsync(_dbContext, () => OnTransactionComplete(dbResult.PageId, command.PageVersionBlockId));
+        }
 
-            await _messageAggregator.PublishAsync(new PageVersionBlockMovedMessage()
+        private Task OnTransactionComplete(int pageId, int pageVersionBlockId)
+        {
+            _pageCache.Clear(pageId);
+
+            return _messageAggregator.PublishAsync(new PageVersionBlockMovedMessage()
             {
-                PageId = dbResult.PageId,
-                PageVersionBlockId = command.PageVersionBlockId
+                PageId = pageId,
+                PageVersionBlockId = pageVersionBlockId
             });
         }
 

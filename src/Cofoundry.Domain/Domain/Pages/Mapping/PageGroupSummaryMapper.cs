@@ -23,7 +23,7 @@ namespace Cofoundry.Domain
         /// Maps an EF PageGroup record from the db into an PageGroupSummary 
         /// object. If the db record is null then null is returned.
         /// </summary>
-        /// <param name="dbPageGroup">Query model with data from the database.</param>
+        /// <param name="queryModel">Query model with data from the database.</param>
         public PageGroupSummary Map(PageGroupSummaryQueryModel queryModel)
         {
             var dbPageGroup = queryModel?.PageGroup;

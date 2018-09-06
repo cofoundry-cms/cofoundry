@@ -68,12 +68,6 @@ namespace Cofoundry.Web.Admin
         {
             return await _apiResponseHelper.RunCommandAsync(this, delta);
         }
-
-        [HttpPatch(VISUAL_EDITOR_SETTINGS_ROUTE)]
-        public async Task<IActionResult> PatchVisualEditorSettings([FromBody] IDelta<UpdateVisualEditorSettingsCommand> delta)
-        {
-            return await _apiResponseHelper.RunCommandAsync(this, delta);
-        }
         
         #endregion
 

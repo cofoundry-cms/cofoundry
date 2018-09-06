@@ -56,7 +56,7 @@ namespace Cofoundry.Domain
                 .AsNoTracking()
                 .Include(e => e.CustomEntityVersion)
                 .ThenInclude(e => e.CustomEntity)
-                .FilterByActive()
+                .FilterActive()
                 .FilterByStatus(query.PublishStatus, executionContext.ExecutionDate)
                 .Where(v => query.CustomEntityIds.Contains(v.CustomEntityId))
                 .ToListAsync();

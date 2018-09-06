@@ -81,7 +81,7 @@ namespace Cofoundry.Core.DependencyInjection
         /// <param name="typeToRegisterImplementationsOf">Type to scan for implementations</param>
         /// <param name="genericFactoryType">
         /// Open generic type of factory to use for construction. Should inherit
-        /// from IInjectionFactory<>
+        /// from IInjectionFactory&lt;&gt;
         /// </param>
         /// <param name="options">Optional options argument.</param>
         /// <returns>The IContainerRegister instance for method chaining.</returns>

@@ -6,18 +6,21 @@ using System.Threading.Tasks;
 
 namespace Cofoundry.Domain
 {
-    public class CustomEntityDetails : ICreateAudited
+    /// <summary>
+    /// Primarily used in the admin area, the CustomEntityDetails projection 
+    /// includes audit data and other additional information that should normally be 
+    /// hidden from a customer facing app.
+    /// </summary>
+    public class CustomEntityDetails : IPublishableEntity, ICreateAudited
     {
+        /// <summary>
+        /// Database id of the custom entity record.
+        /// </summary>
         public int CustomEntityId { get; set; }
 
         public ActiveLocale Locale { get; set; }
 
         public string UrlSlug { get; set; }
-
-        /// <summary>
-        /// True if the page is published and the publish date has passed.
-        /// </summary>
-        public bool IsPublished { get; set; }
 
         /// <summary>
         /// Indicates if the page is marked as published or not, which allows the page
@@ -33,15 +36,27 @@ namespace Cofoundry.Domain
         /// <summary>
         /// Indicates whether there is a draft version of this entity available.
         /// </summary>
-        public bool HasDraft { get; set; }
+        public bool HasDraftVersion { get; set; }
+
+        /// <summary>
+        /// Indicates whether there is a published version of this entity available.
+        /// </summary>
+        public bool HasPublishedVersion { get; set; }
 
         /// <summary>
         /// The full path of the default details page. 
         /// </summary>
         public string FullPath { get; set; }
 
+        /// <summary>
+        /// Data for the latest version of the custom entity, which is not
+        /// neccessarily published.
+        /// </summary>
         public CustomEntityVersionDetails LatestVersion { get; set; }
 
+        /// <summary>
+        /// Simple audit data for entity creation.
+        /// </summary>
         public CreateAuditData AuditData { get; set; }
     }
 }

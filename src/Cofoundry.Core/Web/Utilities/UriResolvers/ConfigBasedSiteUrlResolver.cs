@@ -37,7 +37,6 @@ namespace Cofoundry.Core.Web
         /// Maps a relative path to an absolute url e.g.
         /// /mypage.htm into http://www.mysite/mypage.htm
         /// </summary>
-        /// <param name="path">Path to resolve</param>
         /// <returns>The absolute path, or an empty string if the supplied path is null or empty.</returns>
         protected override string GetSiteRoot()
         {

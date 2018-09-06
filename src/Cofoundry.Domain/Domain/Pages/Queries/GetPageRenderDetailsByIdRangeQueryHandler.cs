@@ -10,7 +10,7 @@ using Cofoundry.Core;
 namespace Cofoundry.Domain
 {
     /// <summary>
-    /// Gets a range of pages by their PageIds as PageRenderDetails objects. A PageRenderDetails contains 
+    /// Gets a range of pages by their ids projected as PageRenderDetails models. A PageRenderDetails contains 
     /// the data required to render a page, including template data for all the content-editable regions.
     /// </summary>
     public class GetPageRenderDetailsByIdRangeQueryHandler
@@ -44,12 +44,13 @@ namespace Cofoundry.Domain
         public async Task<IDictionary<int, PageRenderDetails>> ExecuteAsync(GetPageRenderDetailsByIdRangeQuery query, IExecutionContext executionContext)
         {
             var dbPages = await GetPagesAsync(query, executionContext);
-            var pages = dbPages
-                .Select(_pageMapper.Map)
-                .ToList();
 
-            var pageRoutesQuery = new GetPageRoutesByIdRangeQuery(GetAllPageIds(pages));
+            var pageRoutesQuery = new GetPageRoutesByIdRangeQuery(GetAllPageIds(dbPages));
             var pageRoutes = await _queryExecutor.ExecuteAsync(pageRoutesQuery, executionContext);
+
+            var pages = dbPages
+                .Select(p => _pageMapper.Map(p, pageRoutes))
+                .ToList();
 
             MapPageRoutes(pages, pageRoutes);
 
@@ -98,7 +99,7 @@ namespace Cofoundry.Domain
                 .Where(m => versionIds.Contains(m.PageVersionId));
         }
 
-        private IEnumerable<int> GetAllPageIds(List<PageRenderDetails> pages)
+        private IEnumerable<int> GetAllPageIds(IEnumerable<PageVersion> pages)
         {
             return pages.Select(p => p.PageId);
         }

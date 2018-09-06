@@ -27,12 +27,15 @@ namespace Cofoundry.Domain
         /// scenarios where you need to ignore the ambient user and check for permissions 
         /// against a specific user area.
         /// </summary>
-        /// <param name="userAreaCode">The unique identifying code fo the user area to check for.</param>
+        /// <param name="userAreaCode">The unique identifying code of the user area to check for.</param>
         Task<int?> GetUserIdByUserAreaCodeAsync(string userAreaCode);
 
         /// <summary>
         /// Logs the specified UserId into the current session.
         /// </summary>
+        /// <param name="userAreaDefinitionCode">
+        /// Unique code of the user area to log the user into (required).
+        /// </param>
         /// <param name="userId">UserId belonging to the owner of the current session.</param>
         /// <param name="rememberUser">
         /// True if the session should last indefinately; false if the 
@@ -43,6 +46,7 @@ namespace Cofoundry.Domain
         /// <summary>
         /// Logs the user out of the specified user area.
         /// </summary>
+        /// <param name="userAreaCode">Unique code of the user area to log the user out of (required).</param>
         Task LogUserOutAsync(string userAreaDefinitionCode);
 
         /// <summary>

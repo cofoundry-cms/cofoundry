@@ -38,10 +38,6 @@ namespace Cofoundry.Domain.Data
                 .WithMany(s => s.PageVersions)
                 .HasForeignKey(d => d.PageId);
 
-            builder.HasOne(s => s.BasedOnPageVersion)
-                .WithMany(s => s.ChildPageVersions)
-                .HasForeignKey(d => d.BasedOnPageVersionId);
-
             CreateAuditableMappingHelper.Map(builder);
         }
     }

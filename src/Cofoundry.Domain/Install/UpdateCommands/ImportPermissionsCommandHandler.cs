@@ -4,30 +4,35 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Cofoundry.Core.AutoUpdate;
+using Cofoundry.Core.Data;
+using Cofoundry.Core.Data.SimpleDatabase;
 
 namespace Cofoundry.Domain.Installation
 {
     /// <summary>
     /// This import job is to add all the permissions defined in code in
-    /// a single batch job, reducing the burden of doing this individually 
-    /// as roles are created
+    /// a single batch job during first startup, reducing the burden of 
+    /// doing this individually as roles are created
     /// </summary>
     public class ImportPermissionsCommandHandler : IAsyncVersionedUpdateCommandHandler<ImportPermissionsCommand>
     {
-        private readonly IDatabase _db;
+        private readonly ICofoundryDatabase _db;
+        private readonly ITransactionScopeManager _transactionScopeManager;
         private readonly IPermissionRepository _permissionRepository;
 
         public ImportPermissionsCommandHandler(
-            IDatabase db,
-            IPermissionRepository permissionRepository
+            ICofoundryDatabase db,
+            IPermissionRepository permissionRepository,
+            ITransactionScopeManager transactionScopeManager
             )
         {
             _db = db;
             _permissionRepository = permissionRepository;
+            _transactionScopeManager = transactionScopeManager;
         }
 
 
-        public Task ExecuteAsync(ImportPermissionsCommand command)
+        public async Task ExecuteAsync(ImportPermissionsCommand command)
         {
             var sb = new StringBuilder();
 
@@ -50,9 +55,11 @@ namespace Cofoundry.Domain.Installation
             }
 
             var sql = sb.ToString();
-            _db.Execute(sql);
-
-            return Task.FromResult(true);
+            using (var scope = _transactionScopeManager.Create(_db))
+            {
+                await _db.ExecuteAsync(sql);
+                await scope.CompleteAsync();
+            }
         }
     }
 }

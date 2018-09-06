@@ -10,7 +10,6 @@ namespace Cofoundry.Web
     /// This helper exposes page block specific functionality in a page 
     /// block view file.
     /// </summary>
-    /// <typeparam name="TViewModel">The page block view model</typeparam>
     public interface IPageBlockHelper<TViewModel>
        // where TViewModel : IPageBlockTypeDisplayModel
     {

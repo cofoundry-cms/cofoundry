@@ -77,8 +77,8 @@
                 </tr>
                 <tr ng-repeat="page in vm.result.items">
                     <td>
-                        <a href="#/{{ page.pageId }}">{{ page.fullPath }}</a><br>
-                        <span>{{page.title}}</span>
+                        <a href="#/{{::page.pageId }}">{{::page.fullPath }}</a><br>
+                        <span>{{::page.title}}</span>
                     </td>
                     <!--<td>
                     <span ng-if="page.locale">{{ page.locale.name }} ({{ page.locale.ietfLanguageTag}})</span>
@@ -87,38 +87,41 @@
                     <cms-tag-list cms-tags="page.tags"></cms-tag-list>
                 </td>-->
                     <td>
-                        <span ng-if="page.isPublished">Published</span>
-                        <span ng-if="!page.isPublished && page.publishStatus == 'Published'">Scheduled</span>
-                        <span ng-if="page.publishStatus == 'Unpublished'">Unpublished</span>
+                        <span>{{::page.getPublishStatusLabel()}}</span>
                         <br />
-                        <a href="{{ page.fullPath }}" ng-if="page.hasDraftVersion">(Pending Draft)</a>
+                        <a href="{{::page.fullPath }}" ng-if="::page.hasDraftVersion && page.pageType == 'Generic'">(Pending Draft)</a>
+                        <span ng-if="::page.hasDraftVersion && page.pageType != 'Generic'">(Pending Draft)</span>
                     </td>
                     <td>
-                        <span ng-if="page.publishDate"
-                              title="{{page.publishDate | date:'fullDate'}} at {{page.publishDate | date:'HH:mm:ss'}}">{{page.publishDate | date : 'mediumDate' }} {{page.publishDate | date : 'HH:mm' }}</span>
+                        <span ng-if="::page.publishDate"
+                              title="{{::page.publishDate | date:'fullDate'}} at {{::page.publishDate | date:'HH:mm:ss'}}">{{::page.publishDate | date : 'mediumDate' }} {{::page.publishDate | date : 'HH:mm' }}</span>
                     </td>
                     <td class="lowPriority">
                         <cms-table-cell-created-audit-data cms-audit-data="page.auditData"></cms-table-cell-created-audit-data>
                     </td>
                     <td cms-table-column-actions>
                         <!--<cms-button-icon cms-icon="pencil"
-                         cms-href="#/{{ page.pageId }}"
+                         cms-href="#/{{::page.pageId }}"
                          cms-title="Edit"></cms-button-icon>-->
-
-                        <a href="#/{{ page.pageId }}"
+                        
+                        <a href=""
+                           ng-if="::!page.isPublished() || page.hasDraftVersion"
+                           ng-click="vm.publish(page.pageId)"
+                           ng-disabled="vm.globalLoadState.isLoading" class="btn-icon" title="Publish">
+                            <i class="fa fa-globe"></i>
+                        </a>
+                        <a href="#/{{::page.pageId }}"
                            class="btn-icon"
                            title="Edit"
                            ng-if="::vm.canUpdate">
                             <i class="fa fa-pencil-square-o"></i>
                         </a>
-                        <a href="{{page.fullPath}}" class="btn-icon" title="Browse to page" target="_blank">
+                        <a href="{{::page.fullPath}}" 
+                           class="btn-icon" 
+                           title="Browse to page" 
+                           target="_blank"
+                           ng-if="::page.pageType == 'Generic'">
                             <i class="fa fa-external-link"></i>
-                        </a>
-                        <a href=""
-                           ng-if="!page.isPublished"
-                           ng-click="vm.publish(page.pageId)"
-                           ng-disabled="vm.globalLoadState.isLoading" class="btn-icon" title="Publish">
-                            <i class="fa fa-globe"></i>
                         </a>
                     </td>
                 </tr>

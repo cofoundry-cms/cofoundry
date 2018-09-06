@@ -2,6 +2,7 @@ using System;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Cofoundry.Core;
 using Microsoft.EntityFrameworkCore;
+using Cofoundry.Core.EntityFramework;
 
 namespace Cofoundry.Domain.Data
 {
@@ -29,7 +30,7 @@ namespace Cofoundry.Domain.Data
                 .HasMaxLength(6);
 
             builder.Property(s => s.CustomEntityModelType)
-                .HasMaxLength(100);
+                .HasMaxLength(400);
 
             builder.Property(s => s.Description)
                 .IsNVarCharMaxType();

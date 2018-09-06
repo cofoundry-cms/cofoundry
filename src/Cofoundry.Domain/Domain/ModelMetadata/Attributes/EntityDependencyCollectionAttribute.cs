@@ -1,4 +1,5 @@
 ﻿using Cofoundry.Core;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Metadata;
 using System;
 using System.Collections.Generic;
 using System.Reflection;
@@ -6,12 +7,12 @@ using System.Reflection;
 namespace Cofoundry.Domain
 {
     /// <summary>
-    /// This can be used to decorate an integer id array property that links to a set of entities. The entity
+    /// This can be used to decorate an integer id collection property that links to a set of entities. The entity
     /// must have a definition that implements IDependableEntityDefinition.  Defining relations allow the system to
     /// detect and prevent entities used in required fields from being removed.
     /// </summary>
     [AttributeUsage(AttributeTargets.Property)]
-    public class EntityDependencyCollectionAttribute : Attribute, IEntityRelationAttribute
+    public class EntityDependencyCollectionAttribute : Attribute, IEntityRelationAttribute, IMetadataAttribute
     {
         #region constructors
 
@@ -41,6 +42,11 @@ namespace Cofoundry.Domain
             {
                 yield return new EntityDependency(EntityDefinitionCode, id, false);
             }
+        }
+
+        public void Process(DisplayMetadataProviderContext context)
+        {
+            MetaDataAttributePlacementValidator.ValidateCollectionPropertyType(this, context, typeof(int));
         }
 
         #endregion

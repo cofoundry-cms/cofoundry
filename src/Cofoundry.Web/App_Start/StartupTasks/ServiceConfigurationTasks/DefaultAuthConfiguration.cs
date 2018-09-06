@@ -53,6 +53,7 @@ namespace Cofoundry.Web
                     {
                         cookieOptions.Cookie.Name = cookieNamespace + userAreaDefinition.UserAreaCode;
                         cookieOptions.Cookie.HttpOnly = true;
+                        cookieOptions.Cookie.IsEssential = true;
 
                         if (!string.IsNullOrWhiteSpace(userAreaDefinition.LoginPath))
                         {

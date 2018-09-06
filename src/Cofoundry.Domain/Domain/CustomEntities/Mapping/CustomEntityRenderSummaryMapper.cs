@@ -42,7 +42,7 @@ namespace Cofoundry.Domain
         /// Maps a collection of EF CustomEntityVersion record from the db into CustomEntityRenderSummary 
         /// objects.
         /// </summary>
-        /// <param name="dbResults">CustomEntityVersion records from the database.</param>
+        /// <param name="dbResult">CustomEntityVersion records from the database.</param>
         /// <param name="executionContext">Context to run any sub queries under.</param>
         public async Task<ICollection<CustomEntityRenderSummary>> MapAsync(
             ICollection<CustomEntityVersion> dbResults,

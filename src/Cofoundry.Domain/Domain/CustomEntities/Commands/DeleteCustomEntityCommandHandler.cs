@@ -6,7 +6,7 @@ using Cofoundry.Domain.Data;
 using Cofoundry.Domain.CQS;
 using Microsoft.EntityFrameworkCore;
 using Cofoundry.Core.MessageAggregator;
-using Cofoundry.Core.EntityFramework;
+using Cofoundry.Core.Data;
 
 namespace Cofoundry.Domain
 {
@@ -21,7 +21,7 @@ namespace Cofoundry.Domain
         private readonly ICommandExecutor _commandExecutor;
         private readonly IMessageAggregator _messageAggregator;
         private readonly IPermissionValidationService _permissionValidationService;
-        private readonly ITransactionScopeFactory _transactionScopeFactory;
+        private readonly ITransactionScopeManager _transactionScopeFactory;
         private readonly ICustomEntityStoredProcedures _customEntityStoredProcedures;
 
         public DeleteCustomEntityCommandHandler(
@@ -30,7 +30,7 @@ namespace Cofoundry.Domain
             ICommandExecutor commandExecutor,
             IMessageAggregator messageAggregator,
             IPermissionValidationService permissionValidationService,
-            ITransactionScopeFactory transactionScopeFactory,
+            ITransactionScopeManager transactionScopeFactory,
             ICustomEntityStoredProcedures customEntityStoredProcedures
             )
         {
@@ -62,19 +62,27 @@ namespace Cofoundry.Domain
                     await _commandExecutor.ExecuteAsync(new DeleteUnstructuredDataDependenciesCommand(customEntity.CustomEntityDefinitionCode, customEntity.CustomEntityId), executionContext);
 
                     _dbContext.CustomEntities.Remove(customEntity);
+
                     await _dbContext.SaveChangesAsync();
+
                     await _customEntityStoredProcedures.UpdatePublishStatusQueryLookupAsync(command.CustomEntityId);
 
-                    scope.Complete();
-                }
-                _customEntityCache.Clear(customEntity.CustomEntityDefinitionCode, command.CustomEntityId);
+                    scope.QueueCompletionTask(() => OnTransactionComplete(command, customEntity));
 
-                await _messageAggregator.PublishAsync(new CustomEntityDeletedMessage()
-                {
-                    CustomEntityId = command.CustomEntityId,
-                    CustomEntityDefinitionCode = customEntity.CustomEntityDefinitionCode
-                });
+                    await scope.CompleteAsync();
+                }
             }
+        }
+
+        private Task OnTransactionComplete(DeleteCustomEntityCommand command, CustomEntity customEntity)
+        {
+            _customEntityCache.Clear(customEntity.CustomEntityDefinitionCode, command.CustomEntityId);
+
+            return _messageAggregator.PublishAsync(new CustomEntityDeletedMessage()
+            {
+                CustomEntityId = command.CustomEntityId,
+                CustomEntityDefinitionCode = customEntity.CustomEntityDefinitionCode
+            });
         }
 
         #endregion

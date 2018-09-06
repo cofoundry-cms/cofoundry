@@ -44,7 +44,7 @@ namespace Cofoundry.Domain
             var dbQuery = _dbContext
                 .CustomEntityPublishStatusQueries
                 .AsNoTracking()
-                .FilterByActive()
+                .FilterActive()
                 .FilterByStatus(PublishStatusQuery.Latest, executionContext.ExecutionDate)
                 .Where(v => query.CustomEntityIds.Contains(v.CustomEntityId))
                 .Select(v => new RootEntityMicroSummary()

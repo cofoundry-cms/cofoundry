@@ -6,6 +6,12 @@ using System.Threading.Tasks;
 
 namespace Cofoundry.Domain
 {
+    /// <summary>
+    /// This model is a projection of the data defined in a custom entity 
+    /// definition class. Much of the data is the same but the main difference
+    /// is that instead of using generics to identify the data model type, there
+    /// is instead a DataModelType property.
+    /// </summary>
     public class CustomEntityDefinitionSummary
     {
         /// <summary>

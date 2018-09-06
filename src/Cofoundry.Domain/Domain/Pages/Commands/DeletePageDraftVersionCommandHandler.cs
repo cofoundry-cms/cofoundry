@@ -7,7 +7,7 @@ using Cofoundry.Domain.Data;
 using Cofoundry.Domain.CQS;
 using Microsoft.EntityFrameworkCore;
 using Cofoundry.Core.MessageAggregator;
-using Cofoundry.Core.EntityFramework;
+using Cofoundry.Core.Data;
 
 namespace Cofoundry.Domain
 {
@@ -21,7 +21,7 @@ namespace Cofoundry.Domain
         private readonly IPageCache _pageCache;
         private readonly ICommandExecutor _commandExecutor;
         private readonly IMessageAggregator _messageAggregator;
-        private readonly ITransactionScopeFactory _transactionScopeFactory;
+        private readonly ITransactionScopeManager _transactionScopeFactory;
         private readonly IPageStoredProcedures _pageStoredProcedures;
 
         public DeletePageDraftVersionCommandHandler(
@@ -29,7 +29,7 @@ namespace Cofoundry.Domain
             IPageCache pageCache,
             ICommandExecutor commandExecutor,
             IMessageAggregator messageAggregator,
-            ITransactionScopeFactory transactionScopeFactory,
+            ITransactionScopeManager transactionScopeFactory,
             IPageStoredProcedures pageStoredProcedures
             )
         {
@@ -49,30 +49,37 @@ namespace Cofoundry.Domain
         {
             var draft = await _dbContext
                 .PageVersions
-                .SingleOrDefaultAsync(v => v.PageId == command.PageId 
-                                      && v.WorkFlowStatusId == (int)WorkFlowStatus.Draft 
-                                      && !v.IsDeleted);
+                .FilterByPageId(command.PageId)
+                .SingleOrDefaultAsync(v => v.WorkFlowStatusId == (int)WorkFlowStatus.Draft);
 
             if (draft != null)
             {
                 var versionId = draft.PageVersionId;
-                draft.IsDeleted = true;
+
+                _dbContext.PageVersions.Remove(draft);
+
                 using (var scope = _transactionScopeFactory.Create(_dbContext))
                 {
-                    await _commandExecutor.ExecuteAsync(new DeleteUnstructuredDataDependenciesCommand(PageVersionEntityDefinition.DefinitionCode, draft.PageVersionId), executionContext);
+                    await _commandExecutor.ExecuteAsync(new DeleteUnstructuredDataDependenciesCommand(PageVersionEntityDefinition.DefinitionCode, versionId), executionContext);
                     await _dbContext.SaveChangesAsync();
                     await _pageStoredProcedures.UpdatePublishStatusQueryLookupAsync(command.PageId);
-                    
-                    scope.Complete();
-                }
-                _pageCache.Clear(command.PageId);
 
-                await _messageAggregator.PublishAsync(new PageDraftVersionDeletedMessage()
-                {
-                    PageId = command.PageId,
-                    PageVersionId = versionId
-                });
+                    scope.QueueCompletionTask(() => OnTransactionComplete(command, versionId));
+
+                    await scope.CompleteAsync();
+                }
             }
+        }
+
+        private Task OnTransactionComplete(DeletePageDraftVersionCommand command, int versionId)
+        {
+            _pageCache.Clear(command.PageId);
+
+            return _messageAggregator.PublishAsync(new PageDraftVersionDeletedMessage()
+            {
+                PageId = command.PageId,
+                PageVersionId = versionId
+            });
         }
 
         #endregion

@@ -7,7 +7,7 @@ using Cofoundry.Domain.Data;
 using Cofoundry.Domain.CQS;
 using Microsoft.EntityFrameworkCore;
 using Cofoundry.Core.MessageAggregator;
-using Cofoundry.Core.EntityFramework;
+using Cofoundry.Core.Data;
 
 namespace Cofoundry.Domain
 {
@@ -15,13 +15,11 @@ namespace Cofoundry.Domain
         : IAsyncCommandHandler<DeletePageCommand>
         , IPermissionRestrictedCommandHandler<DeletePageCommand>
     {
-        #region constructor
-
         private readonly CofoundryDbContext _dbContext;
         private readonly IPageCache _pageCache;
         private readonly ICommandExecutor _commandExecutor;
         private readonly IMessageAggregator _messageAggregator;
-        private readonly ITransactionScopeFactory _transactionScopeFactory;
+        private readonly ITransactionScopeManager _transactionScopeFactory;
         private readonly IPageStoredProcedures _pageStoredProcedures;
 
         public DeletePageCommandHandler(
@@ -29,7 +27,7 @@ namespace Cofoundry.Domain
             IPageCache pageCache,
             ICommandExecutor commandExecutor,
             IMessageAggregator messageAggregator,
-            ITransactionScopeFactory transactionScopeFactory,
+            ITransactionScopeManager transactionScopeFactory,
             IPageStoredProcedures pageStoredProcedures
             )
         {
@@ -40,39 +38,41 @@ namespace Cofoundry.Domain
             _transactionScopeFactory = transactionScopeFactory;
             _pageStoredProcedures = pageStoredProcedures;
         }
-
-        #endregion
-
-        #region execution
-
+        
         public async Task ExecuteAsync(DeletePageCommand command, IExecutionContext executionContext)
         {
             var page = await _dbContext
                 .Pages
-                .SingleOrDefaultAsync(p => p.PageId == command.PageId);
+                .FilterByPageId(command.PageId)
+                .SingleOrDefaultAsync();
 
             if (page != null)
             {
                 page.IsDeleted = true;
+
                 using (var scope = _transactionScopeFactory.Create(_dbContext))
                 {
                     await _commandExecutor.ExecuteAsync(new DeleteUnstructuredDataDependenciesCommand(PageEntityDefinition.DefinitionCode, command.PageId), executionContext);
                     await _dbContext.SaveChangesAsync();
                     await _pageStoredProcedures.UpdatePublishStatusQueryLookupAsync(command.PageId);
 
-                    scope.Complete();
-                }
-                _pageCache.Clear(command.PageId);
+                    scope.QueueCompletionTask(() => OnTransactionComplete(command));
 
-                await _messageAggregator.PublishAsync(new PageDeletedMessage()
-                {
-                    PageId = command.PageId
-                });
+                    await scope.CompleteAsync();
+                }
             }
         }
 
-        #endregion
+        private Task OnTransactionComplete(DeletePageCommand command)
+        {
+            _pageCache.Clear(command.PageId);
 
+            return _messageAggregator.PublishAsync(new PageDeletedMessage()
+            {
+                PageId = command.PageId
+            });
+        }
+        
         #region Permission
 
         public IEnumerable<IPermissionApplication> GetPermissions(DeletePageCommand command)

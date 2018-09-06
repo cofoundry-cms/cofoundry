@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Cofoundry.Domain.Data;
 using Cofoundry.Domain.CQS;
 using Microsoft.EntityFrameworkCore;
+using Cofoundry.Core.Data;
 
 namespace Cofoundry.Domain
 {
@@ -19,17 +20,20 @@ namespace Cofoundry.Domain
         private readonly CofoundryDbContext _dbContext;
         private readonly ISettingCache _settingCache;
         private readonly IPermissionValidationService _permissionValidationService;
+        private readonly ITransactionScopeManager _transactionScopeFactory;
 
         public MarkAsSetUpCommandHandler(
             CofoundryDbContext dbContext,
             SettingCommandHelper settingCommandHelper,
             ISettingCache settingCache,
-            IPermissionValidationService permissionValidationService
+            IPermissionValidationService permissionValidationService,
+            ITransactionScopeManager transactionScopeFactory
             )
         {
             _dbContext = dbContext;
             _settingCache = settingCache;
             _permissionValidationService = permissionValidationService;
+            _transactionScopeFactory = transactionScopeFactory;
         }
 
         #endregion
@@ -56,7 +60,7 @@ namespace Cofoundry.Domain
             setting.SettingValue = "true";
 
             await _dbContext.SaveChangesAsync();
-            _settingCache.Clear();
+            _transactionScopeFactory.QueueCompletionTask(_dbContext, _settingCache.Clear);
         }
 
         #endregion

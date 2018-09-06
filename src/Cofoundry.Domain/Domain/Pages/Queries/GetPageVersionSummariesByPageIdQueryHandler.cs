@@ -8,9 +8,13 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Cofoundry.Domain
 {
+    /// <summary>
+    /// Returns a paged collection of versions of a specific page, ordered 
+    /// historically with the latest/draft version first.
+    /// </summary>
     public class GetPageVersionSummariesByPageIdQueryHandler
-        : IAsyncQueryHandler<GetPageVersionSummariesByPageIdQuery, ICollection<PageVersionSummary>>
-        , IPermissionRestrictedQueryHandler<GetPageVersionSummariesByPageIdQuery, ICollection<PageVersionSummary>>
+        : IAsyncQueryHandler<GetPageVersionSummariesByPageIdQuery, PagedQueryResult<PageVersionSummary>>
+        , IPermissionRestrictedQueryHandler<GetPageVersionSummariesByPageIdQuery, PagedQueryResult<PageVersionSummary>>
     {
         #region constructor
 
@@ -33,9 +37,9 @@ namespace Cofoundry.Domain
 
         #region execution
         
-        public async Task<ICollection<PageVersionSummary>> ExecuteAsync(GetPageVersionSummariesByPageIdQuery query, IExecutionContext executionContext)
+        public async Task<PagedQueryResult<PageVersionSummary>> ExecuteAsync(GetPageVersionSummariesByPageIdQuery query, IExecutionContext executionContext)
         {
-            var dbVersions = await Query(query.PageId).ToListAsync();
+            var dbVersions = await Query(query.PageId).ToPagedResultAsync(query);
             var versions = _pageVersionSummaryMapper.MapVersions(query.PageId, dbVersions);
 
             return versions;
@@ -51,9 +55,7 @@ namespace Cofoundry.Domain
                 .Include(v => v.OpenGraphImageAsset)
                 .FilterActive()
                 .FilterByPageId(id)
-                .OrderByDescending(v => v.WorkFlowStatusId == (int)WorkFlowStatus.Draft)
-                .ThenByDescending(v => v.WorkFlowStatusId == (int)WorkFlowStatus.Published)
-                .ThenByDescending(v => v.CreateDate);
+                .OrderByLatest();
         }
 
         #endregion

@@ -45,13 +45,13 @@ namespace Cofoundry.Web
             }
             else
             {
-                query.PublishStatus = state.VisualEditorMode.ToPublishStatusQuery();
+                query.PublishStatus = state.VisualEditorState.GetPublishStatusQuery();
             }
 
             state.PageData = await _queryExecutor.ExecuteAsync(query);
 
             // if no data is found there was an issue with creating a draft earlier on.
-            if (state.PageData == null && state.VisualEditorMode == VisualEditorMode.Edit)
+            if (state.PageData == null && state.VisualEditorState.VisualEditorMode == VisualEditorMode.Edit)
             {
                 throw new Exception("Draft version missing for page id " + query.PageId);
             }

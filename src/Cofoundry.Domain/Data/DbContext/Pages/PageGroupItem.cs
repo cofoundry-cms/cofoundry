@@ -3,6 +3,7 @@ using System.Collections.Generic;
 
 namespace Cofoundry.Domain.Data
 {
+    [Obsolete("The page grouping system will be revised in an upcomming release.")]
     public partial class PageGroupItem : ICreateAuditable
     {
         public int PageId { get; set; }

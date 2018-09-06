@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using Cofoundry.Core.Validation;
 using Cofoundry.Core.MessageAggregator;
 using Cofoundry.Core;
-using Cofoundry.Core.EntityFramework;
+using Cofoundry.Core.Data;
 
 namespace Cofoundry.Domain
 {
@@ -26,7 +26,7 @@ namespace Cofoundry.Domain
         private readonly IPageCache _pageCache;
         private readonly IMessageAggregator _messageAggregator;
         private readonly IPageStoredProcedures _pageStoredProcedures;
-        private readonly ITransactionScopeFactory _transactionScopeFactory;
+        private readonly ITransactionScopeManager _transactionScopeFactory;
         
         public AddPageCommandHandler(
             CofoundryDbContext dbContext,
@@ -36,7 +36,7 @@ namespace Cofoundry.Domain
             IPageCache pageCache,
             IMessageAggregator messageAggregator,
             IPageStoredProcedures pageStoredProcedures,
-            ITransactionScopeFactory transactionScopeFactory
+            ITransactionScopeManager transactionScopeFactory
             )
         {
             _dbContext = dbContext;
@@ -66,15 +66,20 @@ namespace Cofoundry.Domain
                 await _dbContext.SaveChangesAsync();
                 await _pageStoredProcedures.UpdatePublishStatusQueryLookupAsync(page.PageId);
 
-                scope.Complete();
-            }
+                scope.QueueCompletionTask(() => OnTransactionComplete(command, page));
 
-            _pageCache.ClearRoutes();
+                await scope.CompleteAsync();
+            }
 
             // Set Ouput
             command.OutputPageId = page.PageId;
+        }
 
-            await _messageAggregator.PublishAsync(new PageAddedMessage()
+        private Task OnTransactionComplete(AddPageCommand command, Page page)
+        {
+            _pageCache.ClearRoutes();
+
+            return _messageAggregator.PublishAsync(new PageAddedMessage()
             {
                 PageId = page.PageId,
                 HasPublishedVersionChanged = command.Publish
@@ -172,6 +177,7 @@ namespace Cofoundry.Domain
             pageVersion.OpenGraphDescription = command.OpenGraphDescription;
             pageVersion.OpenGraphImageId = command.OpenGraphImageId;
             pageVersion.PageTemplate = pageTemplate;
+            pageVersion.DisplayVersion = 1;
 
             if (command.Publish)
             {

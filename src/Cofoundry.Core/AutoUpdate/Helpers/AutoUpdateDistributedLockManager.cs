@@ -1,8 +1,11 @@
-﻿using System;
+﻿using Cofoundry.Core.Data;
+using Cofoundry.Core.Data.SimpleDatabase;
+using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Cofoundry.Core.AutoUpdate
 {
@@ -19,11 +22,11 @@ namespace Cofoundry.Core.AutoUpdate
     {
         const string DISTRIBUTED_LOCK_ID = "COFUPD";
 
-        private readonly IDatabase _db;
+        private readonly ICofoundryDatabase _db;
         private readonly AutoUpdateSettings _autoUpdateSettings;
 
         public AutoUpdateDistributedLockManager(
-            IDatabase db,
+            ICofoundryDatabase db,
             AutoUpdateSettings autoUpdateSettings
             )
         {
@@ -31,9 +34,9 @@ namespace Cofoundry.Core.AutoUpdate
             _autoUpdateSettings = autoUpdateSettings;
         }
 
-        public void Lock(Guid lockingId)
+        public async Task LockAsync(Guid lockingId)
         {
-            EnsureDistributedLockInfrastructureExists();
+            await EnsureDistributedLockInfrastructureExistsAsync();
 
             var query = @" 
                 declare @DateNow datetime2(7) = GetUtcDate()
@@ -48,12 +51,12 @@ namespace Cofoundry.Core.AutoUpdate
                 where DistributedLockId = @DistributedLockId
                 ";
 
-            var distributedLock = _db.Read(query,
+            var distributedLock = (await _db.ReadAsync(query,
                 MapDistributedLock,
                 new SqlParameter("DistributedLockId", DISTRIBUTED_LOCK_ID),
                 new SqlParameter("LockingId", lockingId),
                 new SqlParameter("TimeoutInSeconds", _autoUpdateSettings.ProcessLockTimeoutInSeconds)
-                )
+                ))
                 .SingleOrDefault();
 
             if (distributedLock == null)
@@ -67,7 +70,7 @@ namespace Cofoundry.Core.AutoUpdate
             }
         }
 
-        public void Unlock(Guid lockingId)
+        public Task UnlockAsync(Guid lockingId)
         {
             var sql = @"
                 update Cofoundry.DistributedLock 
@@ -75,7 +78,7 @@ namespace Cofoundry.Core.AutoUpdate
                 where LockingId = @LockingId
                 ";
 
-            _db.Execute(sql, new SqlParameter("LockingId", lockingId));
+            return _db.ExecuteAsync(sql, new SqlParameter("LockingId", lockingId));
         }
 
         private AutoUpdateDistributedLock MapDistributedLock(SqlDataReader reader)
@@ -91,15 +94,15 @@ namespace Cofoundry.Core.AutoUpdate
             return result;
         }
 
-        private void EnsureDistributedLockInfrastructureExists()
+        private async Task EnsureDistributedLockInfrastructureExistsAsync()
         {
-            _db.Execute(@"
+            await _db.ExecuteAsync(@"
                 if not exists (select schema_name from information_schema.schemata where schema_name = 'Cofoundry')
                 begin
 	                exec sp_executesql N'create schema Cofoundry'
                 end");
 
-            _db.Execute(@"
+            await _db.ExecuteAsync(@"
                 if (not exists (select * 
                     from information_schema.tables 
                     where table_schema = 'Cofoundry' 
@@ -116,7 +119,7 @@ namespace Cofoundry.Core.AutoUpdate
 	                )
                 end");
 
-            _db.Execute(@"
+            await _db.ExecuteAsync(@"
                 with data as (select '" + DISTRIBUTED_LOCK_ID + @"' as DistributedLockId, 'Cofoundry auto-update process' as [Name])
                 merge Cofoundry.DistributedLock t
                 using data s on s.DistributedLockId = t.DistributedLockId

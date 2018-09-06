@@ -6,10 +6,6 @@
 
     <cms-page-actions>
 
-        <!--RESULTS-->
-        <cms-pager cms-result="result"
-                   cms-query="query"></cms-pager>
-
         <cms-button class="main-cta" cms-text="Ok" ng-click="onOk()"></cms-button>
         <cms-button cms-text="Cancel" ng-click="onCancel()"></cms-button>
 
@@ -26,6 +22,9 @@
                                  cms-model="filter.text"></cms-form-field-text>
 
         </cms-search-filter>
+
+        <cms-pager cms-result="result"
+                   cms-query="query"></cms-pager>
 
     </cms-page-actions>
 
@@ -62,11 +61,9 @@
                         </td>
                         <td ng-if="previewFields.fields.previewDescription">{{entity.model[previewFields.fields.previewDescription.lowerName]}}</td>
                         <td ng-if="::!customEntityDefinition.autoPublish">
-                            <span ng-if="entity.isPublished">Published</span>
-                            <span ng-if="!entity.isPublished && entity.publishStatus == 'Published'">Scheduled</span>
-                            <span ng-if="entity.publishStatus == 'Unpublished'">Unpublished</span>
+                            <span>{{::entity.getPublishStatusLabel()}}</span>
                             <br />
-                            <span ng-if="entity.hasDraft">(Pending Draft)</span>
+                            <span ng-if="entity.hasDraftVersion">(Pending Draft)</span>
                         </td>
                         <td class="lowPriority">
                             <cms-table-cell-created-audit-data cms-audit-data="::entity.auditData"></cms-table-cell-created-audit-data>

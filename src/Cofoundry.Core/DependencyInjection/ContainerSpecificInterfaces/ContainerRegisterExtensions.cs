@@ -34,7 +34,7 @@ namespace Cofoundry.Core.DependencyInjection
         /// <summary>
         /// Registers a service instance using InstanceLifetime.Singleton.
         /// </summary>
-        /// <typeparam name="TRegisterAs">Type to register the service as.</typeparam>
+        /// <typeparam name="TConcrete">Concrete type to register.</typeparam>
         /// <returns>The IContainerRegister instance for method chaining.</returns>
         public static IContainerRegister RegisterSingleton<TConcrete>(this IContainerRegister containerRegister)
         {

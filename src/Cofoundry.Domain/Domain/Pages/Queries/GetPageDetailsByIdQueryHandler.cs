@@ -10,6 +10,12 @@ using Cofoundry.Core;
 
 namespace Cofoundry.Domain
 {
+    /// <summary>
+    /// Returns detailed information on a page and it's latest version. This 
+    /// query is primarily used in the admin area because it is not version-specific
+    /// and the PageDetails projection includes audit data and other additional 
+    /// information that should normally be hidden from a customer facing app.
+    /// </summary>
     public class GetPageDetailsByIdQueryHandler 
         : IAsyncQueryHandler<GetPageDetailsByIdQuery, PageDetails>
         , IPermissionRestrictedQueryHandler<GetPageDetailsByIdQuery, PageDetails>
@@ -84,6 +90,7 @@ namespace Cofoundry.Domain
                 MetaDescription = dbPageVersion.MetaDescription,
                 PageVersionId = dbPageVersion.PageVersionId,
                 ShowInSiteMap = !dbPageVersion.ExcludeFromSitemap,
+                DisplayVersion = dbPageVersion.DisplayVersion,
                 Title = dbPageVersion.Title,
                 WorkFlowStatus = (WorkFlowStatus)dbPageVersion.WorkFlowStatusId
             };
@@ -107,6 +114,7 @@ namespace Cofoundry.Domain
                 .ThenInclude(p => p.PageTags)
                 .ThenInclude(t => t.Tag)
                 .Include(v => v.OpenGraphImageAsset)
+                .ThenInclude(v => v.Creator)
                 .AsNoTracking()
                 .FilterActive()
                 .FilterByPageId(id)

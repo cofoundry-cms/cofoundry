@@ -8,7 +8,9 @@ namespace Cofoundry.Core.IO
     /// <summary>
     /// TextWriter implementation to write to the debug log.
     /// </summary>
-    /// <see cref="http://stackoverflow.com/a/637151/486434"/>
+    /// <remarks>
+    /// See http://stackoverflow.com/a/637151/486434
+    /// </remarks>
     public class DebugTextWriter : System.IO.TextWriter
     {
         public override void Write(char[] buffer, int index, int count)

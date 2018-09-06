@@ -7,7 +7,7 @@ using Cofoundry.Domain.Data;
 using Cofoundry.Domain.CQS;
 using Microsoft.EntityFrameworkCore;
 using Cofoundry.Core;
-using Cofoundry.Core.EntityFramework;
+using Cofoundry.Core.Data;
 using Cofoundry.Core.MessageAggregator;
 
 namespace Cofoundry.Domain
@@ -24,7 +24,7 @@ namespace Cofoundry.Domain
         private readonly IImageAssetFileService _imageAssetFileService;
         private readonly IImageAssetCache _imageAssetCache;
         private readonly IResizedImageAssetFileService _imageAssetFileCache;
-        private readonly ITransactionScopeFactory _transactionScopeFactory;
+        private readonly ITransactionScopeManager _transactionScopeFactory;
         private readonly IMessageAggregator _messageAggregator;
 
         public UpdateImageAssetCommandHandler(
@@ -34,7 +34,7 @@ namespace Cofoundry.Domain
             IImageAssetFileService imageAssetFileService,
             IImageAssetCache imageAssetCache,
             IResizedImageAssetFileService imageAssetFileCache,
-            ITransactionScopeFactory transactionScopeFactory,
+            ITransactionScopeManager transactionScopeFactory,
             IMessageAggregator messageAggregator
             )
         {
@@ -78,13 +78,19 @@ namespace Cofoundry.Domain
 
                 await _dbContext.SaveChangesAsync();
 
-                scope.Complete();
-            }
+                scope.QueueCompletionTask(() => OnTransactionComplete(hasNewFile, imageAsset));
 
+                await scope.CompleteAsync();
+            }
+        }
+
+        private async Task OnTransactionComplete(bool hasNewFile, ImageAsset imageAsset)
+        {
             if (hasNewFile)
             {
                 await _imageAssetFileCache.ClearAsync(imageAsset.ImageAssetId);
             }
+
             _imageAssetCache.Clear(imageAsset.ImageAssetId);
 
             await _messageAggregator.PublishAsync(new ImageAssetUpdatedMessage()

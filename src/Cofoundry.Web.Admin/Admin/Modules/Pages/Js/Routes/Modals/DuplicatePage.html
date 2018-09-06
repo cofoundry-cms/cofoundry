@@ -1,7 +1,7 @@
 ﻿<cms-modal-dialog-container cms-modal-size="large">
 
     <cms-modal-dialog-header>
-        Duplicate Page {{::page.latestVersion.title}}
+        Duplicate Page: {{::page.latestVersion.title}}
     </cms-modal-dialog-header>
 
     <cms-form cms-name="duplicatePageForm" 
@@ -26,6 +26,7 @@
                 <cms-form-field-text cms-title="Title"
                                      cms-model="command.title"
                                      cms-description="A few words descriptive page title, e.g. 'About the team'."
+                                     cms-change="onTitleChanged()"
                                      maxlength="70"
                                      required></cms-form-field-text>
 

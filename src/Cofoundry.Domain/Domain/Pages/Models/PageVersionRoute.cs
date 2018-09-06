@@ -19,9 +19,22 @@ namespace Cofoundry.Domain
         public int VersionId { get; set; }
 
         /// <summary>
-        /// Title of the page.
+        /// The workflow state of this version e.g. draft/published.
+        /// </summary>
+        public WorkFlowStatus WorkFlowStatus { get; set; }
+
+        /// <summary>
+        /// The display title of the page. Often used as the meta
+        /// title of the webpage, but it is not mandatory.
         /// </summary>
         public string Title { get; set; }
+
+        /// <summary>
+        /// A page can have many published versions, this flag indicates if
+        /// it is the latest published version which displays on the live site
+        /// when the page itself is published.
+        /// </summary>
+        public bool IsLatestPublishedVersion { get; set; }
 
         /// <summary>
         /// Date that the page version was created.
@@ -44,10 +57,5 @@ namespace Cofoundry.Domain
         /// regions for custom entity data defined; otherwise false.
         /// </summary>
         public bool HasCustomEntityRegions { get; set; }
-
-        /// <summary>
-        /// The workflow state of this version e.g. draft/published.
-        /// </summary>
-        public WorkFlowStatus WorkFlowStatus { get; set; }
     }
 }

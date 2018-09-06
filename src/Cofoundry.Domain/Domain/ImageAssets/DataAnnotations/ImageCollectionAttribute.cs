@@ -29,6 +29,8 @@ namespace Cofoundry.Domain
 
         public void Process(DisplayMetadataProviderContext context)
         {
+            MetaDataAttributePlacementValidator.ValidateCollectionPropertyType(this, context, typeof(int));
+
             var modelMetaData = context.DisplayMetadata;
 
             modelMetaData

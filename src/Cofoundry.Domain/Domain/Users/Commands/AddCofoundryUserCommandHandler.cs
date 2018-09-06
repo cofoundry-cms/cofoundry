@@ -12,7 +12,6 @@ namespace Cofoundry.Domain
     /// <summary>
     /// Adds a user to the Cofoundry user area and sends a welcome notification.
     /// </summary>
-    /// <remarks>
     public class AddCofoundryUserCommandHandler
         : IAsyncCommandHandler<AddCofoundryUserCommand>
         , IPermissionRestrictedCommandHandler<AddCofoundryUserCommand>

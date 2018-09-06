@@ -10,7 +10,7 @@ using Cofoundry.Domain.Data;
 namespace Cofoundry.Domain
 {
     public class GetCustomEntityVersionSummariesByCustomEntityIdQueryHandler 
-        : IAsyncQueryHandler<GetCustomEntityVersionSummariesByCustomEntityIdQuery, ICollection<CustomEntityVersionSummary>>
+        : IAsyncQueryHandler<GetCustomEntityVersionSummariesByCustomEntityIdQuery, PagedQueryResult<CustomEntityVersionSummary>>
         , IIgnorePermissionCheckHandler
     {
         #region constructor
@@ -35,7 +35,7 @@ namespace Cofoundry.Domain
 
         #region execution
 
-        public async Task<ICollection<CustomEntityVersionSummary>> ExecuteAsync(GetCustomEntityVersionSummariesByCustomEntityIdQuery query, IExecutionContext executionContext)
+        public async Task<PagedQueryResult<CustomEntityVersionSummary>> ExecuteAsync(GetCustomEntityVersionSummariesByCustomEntityIdQuery query, IExecutionContext executionContext)
         {
             var definitionCode = await _dbContext
                 .CustomEntities
@@ -43,11 +43,12 @@ namespace Cofoundry.Domain
                 .Where(c => c.CustomEntityId == query.CustomEntityId)
                 .Select(c => c.CustomEntityDefinitionCode)
                 .FirstOrDefaultAsync();
+
             if (definitionCode == null) return null;
 
             _permissionValidationService.EnforceCustomEntityPermission<CustomEntityReadPermission>(definitionCode, executionContext.UserContext);
 
-            var dbVersions = await Query(query.CustomEntityId).ToListAsync();
+            var dbVersions = await Query(query.CustomEntityId).ToPagedResultAsync(query);
             var versions = _customEntityVersionSummaryMapper.MapVersions(query.CustomEntityId, dbVersions);
             
             return versions;
@@ -59,7 +60,7 @@ namespace Cofoundry.Domain
                 .CustomEntityVersions
                 .AsNoTracking()
                 .Include(e => e.Creator)
-                .FilterByActive()
+                .FilterActive()
                 .FilterByCustomEntityId(id)
                 .OrderByDescending(v => v.WorkFlowStatusId == (int)WorkFlowStatus.Draft)
                 .ThenByDescending(v => v.CreateDate);

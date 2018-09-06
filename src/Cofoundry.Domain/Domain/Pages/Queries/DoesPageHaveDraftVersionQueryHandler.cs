@@ -9,6 +9,10 @@ using Cofoundry.Domain.CQS;
 
 namespace Cofoundry.Domain
 {
+    /// <summary>
+    /// Determines if a page has a draft version of not. A page can only have one draft
+    /// version at a time.
+    /// </summary>
     public class DoesPageHaveDraftVersionQueryHandler
         : IAsyncQueryHandler<DoesPageHaveDraftVersionQuery, bool>
         , IPermissionRestrictedQueryHandler<DoesPageHaveDraftVersionQuery, bool>

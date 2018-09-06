@@ -30,13 +30,13 @@ namespace Cofoundry.Domain
         /// </summary>
         /// <param name="dbCustomEntity">CustomEntity record from the database.</param>
         /// <param name="locale">Locale to map to the object.</param>
-        /// <param name="routingDataProperties">Collection of data properties to map to the routing parameters collection.</param>
         public CustomEntityRoute Map(
             CustomEntity dbCustomEntity, 
             ActiveLocale locale
             )
         {
             if (dbCustomEntity == null) throw new ArgumentNullException(nameof(dbCustomEntity));
+            if (dbCustomEntity.CustomEntityVersions == null) throw new ArgumentNullException(nameof(dbCustomEntity.CustomEntityVersions));
 
             var route = new CustomEntityRoute()
             {
@@ -49,10 +49,12 @@ namespace Cofoundry.Domain
                 Ordering = dbCustomEntity.Ordering
             };
 
-            var versions = new List<CustomEntityVersionRoute>();
-            route.Versions = versions;
+            bool hasLatestPublishVersion = false;
+            route.Versions = new List<CustomEntityVersionRoute>();
 
-            foreach (var dbVersion in dbCustomEntity.CustomEntityVersions)
+            foreach (var dbVersion in dbCustomEntity
+                .CustomEntityVersions
+                .OrderByLatest())
             {
                 var version = new CustomEntityVersionRoute()
                 {
@@ -61,8 +63,17 @@ namespace Cofoundry.Domain
                     VersionId = dbVersion.CustomEntityVersionId,
                     WorkFlowStatus = (WorkFlowStatus)dbVersion.WorkFlowStatusId
                 };
-                versions.Add(version);
+
+                if (!hasLatestPublishVersion && version.WorkFlowStatus == WorkFlowStatus.Published)
+                {
+                    version.IsLatestPublishedVersion = true;
+                    hasLatestPublishVersion = true;
+                }
+                route.Versions.Add(version);
             }
+
+            route.HasDraftVersion = route.Versions.Any(v => v.WorkFlowStatus == WorkFlowStatus.Draft);
+            route.HasPublishedVersion = route.Versions.Any(v => v.WorkFlowStatus == WorkFlowStatus.Published);
 
             return route;
         }

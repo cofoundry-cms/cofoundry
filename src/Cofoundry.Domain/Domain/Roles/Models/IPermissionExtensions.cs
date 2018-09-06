@@ -143,6 +143,20 @@ namespace Cofoundry.Domain
         }
 
         /// <summary>
+        /// Filters a collection of permissions to only include permissions that permit
+        /// access to sections in the admin panel. Specifically permissions that use the
+        /// admin module common permission type code and the dashboard permission type code.
+        /// </summary>
+        /// <param name="permissionsToFilter">The collection of permissions to filter</param>
+        /// <returns>Filtered collection of permissions</returns>
+        public static IEnumerable<IPermission> FilterToAdminModulePermissions(this IEnumerable<IPermission> permissionsToFilter)
+        {
+            return permissionsToFilter
+                .Where(p => p.PermissionType.Code == CommonPermissionTypes.AdminModulePermissionCode
+                    || p.PermissionType.Code == DashboardAdminModulePermission.PermissionTypeCode);
+        }
+
+        /// <summary>
         /// The anonymous role by default can read any entity except for users.
         /// This is because user read permission means 'all users' not just 'current user'
         /// and is associated with user management.
@@ -235,7 +249,7 @@ namespace Cofoundry.Domain
         /// <typeparam name="TEntityDefinition">Definition type of the entity to remove from the collection</typeparam>
         /// <param name="permissionsToFilter">The collection of permissions to filter</param>
         /// <returns>Filtered collection of permissions</returns>
-        public static IEnumerable<IEntityPermission> ExceptEntityPermissions<TEntityDefinition>(this IEnumerable<IPermission> permissionsToFilter)
+        public static IEnumerable<IPermission> ExceptEntityPermissions<TEntityDefinition>(this IEnumerable<IPermission> permissionsToFilter)
             where TEntityDefinition : IEntityDefinition, new()
         {
             var entityDefiniton = new TEntityDefinition();
@@ -249,11 +263,10 @@ namespace Cofoundry.Domain
         /// <param name="permissionsToFilter">The collection of permissions to filter</param>
         /// <param name="entityDefinitionCode">The definition code of the entity to remove e.g. PageEntityDefinition.DefinitionCode</param>
         /// <returns></returns>
-        public static IEnumerable<IEntityPermission> ExceptEntityPermissions(this IEnumerable<IPermission> permissionsToFilter, string entityDefinitionCode)
+        public static IEnumerable<IPermission> ExceptEntityPermissions(this IEnumerable<IPermission> permissionsToFilter, string entityDefinitionCode)
         {
             return permissionsToFilter
-                .Where(p => !(p is IEntityPermission) || ((IEntityPermission)p).EntityDefinition?.EntityDefinitionCode != entityDefinitionCode)
-                .Cast<IEntityPermission>();
+                .Where(p => !(p is IEntityPermission) || ((IEntityPermission)p).EntityDefinition?.EntityDefinitionCode != entityDefinitionCode);
         }
 
         /// <summary>

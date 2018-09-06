@@ -25,7 +25,7 @@ namespace Cofoundry.Domain
         }
 
         /// <summary>
-        /// Initializes the query with parameters
+        /// Initializes the query with parameters.
         /// </summary>
         /// <param name="pageIds">A collection of database ids of the pages to fetch.</param>
         public GetPageSummariesByIdRangeQuery(IReadOnlyCollection<int> pageIds)

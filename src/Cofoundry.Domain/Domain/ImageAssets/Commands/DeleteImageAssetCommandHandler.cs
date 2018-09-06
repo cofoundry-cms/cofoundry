@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Cofoundry.Domain.Data;
 using Cofoundry.Domain.CQS;
 using Microsoft.EntityFrameworkCore;
-using Cofoundry.Core.EntityFramework;
+using Cofoundry.Core.Data;
 using Cofoundry.Core.MessageAggregator;
 
 namespace Cofoundry.Domain
@@ -20,14 +20,14 @@ namespace Cofoundry.Domain
         private readonly CofoundryDbContext _dbContext;
         private readonly IImageAssetCache _imageAssetCache;
         private readonly ICommandExecutor _commandExecutor;
-        private readonly ITransactionScopeFactory _transactionScopeFactory;
+        private readonly ITransactionScopeManager _transactionScopeFactory;
         private readonly IMessageAggregator _messageAggregator;
 
         public DeleteImageAssetCommandHandler(
             CofoundryDbContext dbContext,
             IImageAssetCache imageAssetCache,
             ICommandExecutor commandExecutor,
-            ITransactionScopeFactory transactionScopeFactory,
+            ITransactionScopeManager transactionScopeFactory,
             IMessageAggregator messageAggregator
             )
         {
@@ -57,15 +57,22 @@ namespace Cofoundry.Domain
                     await _commandExecutor.ExecuteAsync(new DeleteUnstructuredDataDependenciesCommand(ImageAssetEntityDefinition.DefinitionCode, imageAsset.ImageAssetId), executionContext);
 
                     await _dbContext.SaveChangesAsync();
-                    scope.Complete();
-                }
-                _imageAssetCache.Clear(command.ImageAssetId);
 
-                await _messageAggregator.PublishAsync(new ImageAssetDeletedMessage()
-                {
-                    ImageAssetId = command.ImageAssetId
-                });
+                    scope.QueueCompletionTask(() => OnTransactionComplete(command));
+
+                    await scope.CompleteAsync();
+                }
             }
+        }
+
+        private Task OnTransactionComplete(DeleteImageAssetCommand command)
+        {
+            _imageAssetCache.Clear(command.ImageAssetId);
+
+            return _messageAggregator.PublishAsync(new ImageAssetDeletedMessage()
+            {
+                ImageAssetId = command.ImageAssetId
+            });
         }
 
         #endregion

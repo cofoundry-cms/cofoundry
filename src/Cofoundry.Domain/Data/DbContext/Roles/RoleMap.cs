@@ -1,4 +1,5 @@
 using Cofoundry.Core;
+using Cofoundry.Core.EntityFramework;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
@@ -35,7 +36,7 @@ namespace Cofoundry.Domain.Data
 
             builder.HasOne(s => s.UserArea)
                 .WithMany()
-                .HasForeignKey(d => d.UserAreaCode);
+                .HasForeignKey(s => s.UserAreaCode);
         }
     }
 }

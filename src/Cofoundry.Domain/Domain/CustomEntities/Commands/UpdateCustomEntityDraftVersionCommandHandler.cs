@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using Cofoundry.Core.MessageAggregator;
 using Cofoundry.Core;
 using Cofoundry.Core.Validation;
-using Cofoundry.Core.EntityFramework;
+using Cofoundry.Core.Data;
 
 namespace Cofoundry.Domain
 {
@@ -26,7 +26,7 @@ namespace Cofoundry.Domain
         private readonly IDbUnstructuredDataSerializer _dbUnstructuredDataSerializer;
         private readonly IMessageAggregator _messageAggregator;
         private readonly ICustomEntityDefinitionRepository _customEntityDefinitionRepository;
-        private readonly ITransactionScopeFactory _transactionScopeFactory;
+        private readonly ITransactionScopeManager _transactionScopeFactory;
 
         public UpdateCustomEntityDraftVersionCommandHandler(
             IQueryExecutor queryExecutor,
@@ -36,7 +36,7 @@ namespace Cofoundry.Domain
             IDbUnstructuredDataSerializer dbUnstructuredDataSerializer,
             IMessageAggregator messageAggregator,
             ICustomEntityDefinitionRepository customEntityDefinitionRepository,
-            ITransactionScopeFactory transactionScopeFactory
+            ITransactionScopeManager transactionScopeFactory
             )
         {
             _queryExecutor = queryExecutor;
@@ -73,25 +73,27 @@ namespace Cofoundry.Domain
 
                 await _commandExecutor.ExecuteAsync(dependencyCommand, executionContext);
 
-                scope.Complete();
-            }
+                scope.QueueCompletionTask(() => OnUpdateDraftComplete(command, draft));
 
+                if (command.Publish)
+                {
+                    await _commandExecutor.ExecuteAsync(new PublishCustomEntityCommand(draft.CustomEntityId, command.PublishDate), executionContext);
+                }
+
+                await scope.CompleteAsync();
+            }
+        }
+
+        private Task OnUpdateDraftComplete(UpdateCustomEntityDraftVersionCommand command, CustomEntityVersion draft)
+        {
             _customEntityCache.Clear(command.CustomEntityDefinitionCode, command.CustomEntityId);
-            await _messageAggregator.PublishAsync(new CustomEntityDraftVersionUpdatedMessage()
+
+            return _messageAggregator.PublishAsync(new CustomEntityDraftVersionUpdatedMessage()
             {
                 CustomEntityId = command.CustomEntityId,
                 CustomEntityDefinitionCode = command.CustomEntityDefinitionCode,
                 CustomEntityVersionId = draft.CustomEntityVersionId
             });
-
-            if (command.Publish)
-            {
-                using (var scope = _transactionScopeFactory.Create(_dbContext))
-                {
-                    await _commandExecutor.ExecuteAsync(new PublishCustomEntityCommand(draft.CustomEntityId, command.PublishDate), executionContext);
-                    scope.Complete();
-                }
-            }
         }
 
         #endregion

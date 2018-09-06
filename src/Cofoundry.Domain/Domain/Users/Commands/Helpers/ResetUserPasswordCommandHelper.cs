@@ -5,7 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Cofoundry.Domain.Data;
 using Cofoundry.Domain.CQS;
-using Cofoundry.Core.EntityFramework;
+using Cofoundry.Core.Data;
 using Cofoundry.Core.Validation;
 using Microsoft.EntityFrameworkCore;
 using Cofoundry.Core.Mail;
@@ -28,7 +28,7 @@ namespace Cofoundry.Domain
         private readonly ISecurityTokenGenerationService _securityTokenGenerationService;
         private readonly IUserAreaDefinitionRepository _userAreaRepository;
         private readonly IMailService _mailService;
-        private readonly ITransactionScopeFactory _transactionScopeFactory;
+        private readonly ITransactionScopeManager _transactionScopeFactory;
         private readonly IClientConnectionService _clientConnectionService;
 
         public ResetUserPasswordCommandHelper(
@@ -37,7 +37,7 @@ namespace Cofoundry.Domain
             IPasswordCryptographyService passwordCryptographyService,
             ISecurityTokenGenerationService securityTokenGenerationService,
             IMailService mailService,
-            ITransactionScopeFactory transactionScopeFactory,
+            ITransactionScopeManager transactionScopeFactory,
             IClientConnectionService clientConnectionService
             )
         {
@@ -75,7 +75,7 @@ namespace Cofoundry.Domain
                 await _dbContext.SaveChangesAsync();
                 await _mailService.SendAsync(user.Email, user.GetFullName(), command.MailTemplate);
 
-                scope.Complete();
+                await scope.CompleteAsync();
             }
         }
 

@@ -8,7 +8,10 @@ namespace Cofoundry.Domain
 {
     /// <summary>
     /// Implement this interface to define a custom entity type. The definition
-    /// will automatically get picked up and added to the system.
+    /// will automatically get picked up and added to the system. There's a few
+    /// other interfaces can be used to extend the defintion with other bhaviours
+    /// such as IOrderableCustomEntityDefinition, ICustomizedTermCustomEntityDefinition
+    /// and ISortedCustomEntityDefinition.
     /// </summary>
     public interface ICustomEntityDefinition
     {

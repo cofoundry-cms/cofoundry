@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -10,7 +11,7 @@ using Microsoft.AspNetCore.Mvc.ModelBinding.Metadata;
 namespace Cofoundry.Domain
 {
     /// <summary>
-    /// Use this to decorate an array of `CustomEntityIdentity` types and indicate that it should be a 
+    /// Use this to decorate a collection of `CustomEntityIdentity` types and indicate that it should be a 
     /// collection of custom entities for a mix of custom entity types. Optional parameters indicate 
     /// whether the collection is sortable.
     /// </summary>
@@ -25,6 +26,8 @@ namespace Cofoundry.Domain
 
         public void Process(DisplayMetadataProviderContext context)
         {
+            MetaDataAttributePlacementValidator.ValidateCollectionPropertyType(this, context, typeof(CustomEntityIdentity));
+
             var modelMetaData = context.DisplayMetadata;
 
             modelMetaData

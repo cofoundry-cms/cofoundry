@@ -23,7 +23,7 @@
         <cms-button cms-text="Publish"
                     ng-click="vm.publish()"
                     ng-disabled="vm.globalLoadState.isLoading"
-                    ng-if="!vm.options.autoPublish && (!vm.isMarkedPublished || vm.customEntity.hasDraft) && vm.canPublish"></cms-button>
+                    ng-if="!vm.options.autoPublish && (!vm.isMarkedPublished || vm.customEntity.hasDraftVersion) && vm.canPublish"></cms-button>
 
         <cms-button cms-text="Unpublish"
                     ng-click="vm.unpublish()"
@@ -34,6 +34,11 @@
                     ng-click="vm.changeUrl()"
                     ng-disabled="vm.globalLoadState.isLoading"
                     ng-if="vm.canChangeUrl && vm.canUpdateUrl"></cms-button>
+
+        <cms-button cms-text="Duplicate"
+                    ng-if="::vm.canCreate"
+                    ng-click="vm.duplicate()"
+                    ng-disabled="vm.editMode || vm.globalLoadState.isLoading"></cms-button>
 
         <cms-button cms-text="Delete"
                     ng-click="vm.deleteCustomEntity()"
@@ -84,7 +89,7 @@
             </cms-form-field-container>
 
             <cms-form-field-readonly cms-title="Published Status"
-                                     cms-model="vm.customEntity.publishStatus"
+                                     cms-model="vm.publishStatusLabel"
                                      ng-if="!vm.options.autoPublish"></cms-form-field-readonly>
 
             <cms-form-field-container cms-title="Publish Date" 
@@ -170,26 +175,22 @@
                         <thead>
                             <tr>
                                 <th>Version</th>
-                                <th>Status</th>
                                 <th class="lowPriority">Created</th>
                                 <th cms-table-column-actions
                                     ng-show="!vm.editMode">Actions</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr ng-repeat="version in vm.versions">
+                            <tr ng-repeat="version in vm.versions.items">
                                 <td>
-                                    {{::version.customEntityVersionId}}
-                                </td>
-                                <td>
-                                    {{::version.workFlowStatus}}
+                                    {{::version.versionLabel}}
                                 </td>
                                 <td class="lowPriority">
                                     <cms-table-cell-created-audit-data cms-audit-data="::version.auditData"></cms-table-cell-created-audit-data>
                                 </td>
                                 <td cms-table-column-actions ng-show="!vm.editMode">
-                                    <div ng-if="version.workFlowStatus == 'Draft'">
-                                        <span ng-if="vm.versions.length > 1 && vm.canUpdate">
+                                    <span ng-if="version.workFlowStatus == 'Draft'">
+                                        <span ng-if="vm.versions.items.length > 1 && vm.canUpdate">
                                             <a href=""
                                                class="btn-icon"
                                                title="Discard"
@@ -204,13 +205,8 @@
                                            ng-click="vm.loading || vm.publish(vm.customEntity.customEntityId)">
                                             <i class="fa fa-cloud-upload"></i>
                                         </a>
-                                        <a href="{{::vm.customEntity.fullPath}}?mode=draft"
-                                           ng-if="::vm.customEntity.fullPath"
-                                           class="btn-icon" title="Open">
-                                            <i class="fa fa-external-link"></i>
-                                        </a>
-                                    </div>
-                                    <div ng-if="version.isLatestPublishedVersion">
+                                    </span>
+                                    <span ng-if="version.isLatestPublishedVersion">
                                         <a href=""
                                            class="btn-icon"
                                            title="Un-publish"
@@ -218,14 +214,8 @@
                                            ng-click="vm.loading || vm.unpublish()">
                                             <i class="fa fa-cloud-download"></i>
                                         </a>
-                                        <a href="{{::vm.customEntity.fullPath}}?mode=live"
-                                           class="btn-icon"
-                                           title="Open"
-                                           ng-if="::vm.customEntity.fullPath">
-                                            <i class="fa fa-external-link"></i>
-                                        </a>
-                                    </div>
-                                    <div ng-if="!version.isLatestPublishedVersion && version.workFlowStatus == 'Published'">
+                                    </span>
+                                    <span ng-if="!version.isLatestPublishedVersion && version.workFlowStatus == 'Published'">
                                         <a href=""
                                            class="btn-icon"
                                            title="Copy to draft"
@@ -233,19 +223,24 @@
                                            ng-click="vm.loading || vm.copyToDraft(version)">
                                             <i class="fa fa-files-o"></i>
                                         </a>
-                                        <a href="{{vm.customEntity.fullPath}}?version={{version.customEntityVersionId}}"
-                                           class="btn-icon"
-                                           title="Open"
-                                           ng-if="::vm.customEntity.fullPath">
-                                            <i class="fa fa-external-link"></i>
-                                        </a>
-                                    </div>
+                                    </span>
+                                    <a href="{{version.browseUrl}}"
+                                       class="btn-icon"
+                                       title="Browse to page: {{::version.versionLabel}}"
+                                       target="_blank"
+                                       ng-if="::version.browseUrl">
+                                        <i class="fa fa-external-link"></i>
+                                    </a>
                                 </td>
                             </tr>
                         </tbody>
                     </table>
 
                 </cms-table-container>
+
+                <cms-pager cms-result="vm.versions"
+                           cms-query="vm.versionsQuery"></cms-pager>
+
             </cms-form-field-container>
         </cms-form-section>
 

@@ -11,6 +11,11 @@ using Cofoundry.Core;
 
 namespace Cofoundry.Domain
 {
+    /// <summary>
+    /// Returns data for a specific custom entity page block by it's id. Because
+    /// the mapped display model may contain other versioned entities, you can 
+    /// optionally pass down a PublishStatusQuery to use in the mapping process.
+    /// </summary>
     public class GetCustomEntityVersionPageBlockRenderDetailsByIdQueryHandler
         : IAsyncQueryHandler<GetCustomEntityVersionPageBlockRenderDetailsByIdQuery, CustomEntityVersionPageBlockRenderDetails>
         , IIgnorePermissionCheckHandler
@@ -83,7 +88,8 @@ namespace Cofoundry.Domain
                 .AsNoTracking()
                 .FilterActive()
                 .Where(m => m.CustomEntityVersionId == versionBlock.CustomEntityVersionId 
-                    && m.PageTemplateRegionId == versionBlock.PageTemplateRegionId)
+                    && m.PageTemplateRegionId == versionBlock.PageTemplateRegionId
+                    && m.PageId == versionBlock.PageId)
                 .OrderBy(m => m.Ordering)
                 .Select(m => m.CustomEntityVersionPageBlockId);
         }

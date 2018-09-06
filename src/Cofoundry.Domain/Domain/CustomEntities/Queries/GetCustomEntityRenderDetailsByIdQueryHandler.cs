@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Cofoundry.Domain.Data;
 using Cofoundry.Domain.CQS;
 using Microsoft.EntityFrameworkCore;
+using Cofoundry.Core;
 
 namespace Cofoundry.Domain
 {
@@ -13,8 +14,6 @@ namespace Cofoundry.Domain
         : IAsyncQueryHandler<GetCustomEntityRenderDetailsByIdQuery, CustomEntityRenderDetails>
         , IIgnorePermissionCheckHandler
     {
-        #region constructor
-
         private readonly CofoundryDbContext _dbContext;
         private readonly ICustomEntityDataModelMapper _customEntityDataModelMapper;
         private readonly IEntityVersionPageBlockMapper _entityVersionPageBlockMapper;
@@ -36,10 +35,6 @@ namespace Cofoundry.Domain
             _queryExecutor = queryExecutor;
         }
 
-        #endregion
-
-        #region execution
-
         public async Task<CustomEntityRenderDetails> ExecuteAsync(GetCustomEntityRenderDetailsByIdQuery query, IExecutionContext executionContext)
         {
             var dbResult = await QueryCustomEntityAsync(query, executionContext);
@@ -53,39 +48,56 @@ namespace Cofoundry.Domain
                 entity.Locale = await _queryExecutor.ExecuteAsync(getLocaleQuery, executionContext);
             }
 
-            entity.Regions = await QueryRegions(query).ToListAsync();
-            var dbPageBlocks = await QueryPageBlocks(entity).ToListAsync();
+            var pageRoutesQuery = new GetPageRoutingInfoByCustomEntityIdQuery(dbResult.CustomEntityId);
+            var pageRoutes = await _queryExecutor.ExecuteAsync(pageRoutesQuery, executionContext);
+            entity.PageUrls = MapPageRoutings(pageRoutes, dbResult);
 
-            var allBlockTypes = await _queryExecutor.ExecuteAsync(new GetAllPageBlockTypeSummariesQuery(), executionContext);
-            await _entityVersionPageBlockMapper.MapRegionsAsync(dbPageBlocks, entity.Regions, allBlockTypes, query.PublishStatus);
+            var selectedRoute = pageRoutes.FirstOrDefault(r => r.PageRoute.PageId == query.PageId);
 
-            var routingQuery = new GetPageRoutingInfoByCustomEntityIdQuery(dbResult.CustomEntityId);
-            var routing = await _queryExecutor.ExecuteAsync(routingQuery, executionContext);
-            entity.PageUrls = MapPageRoutings(routing, dbResult);
+            if (selectedRoute != null)
+            {
+                var pageVersion = selectedRoute.PageRoute.Versions.GetVersionRouting(PublishStatusQuery.PreferPublished);
+                if (pageVersion == null)
+                {
+                    throw new Exception($"Error mapping routes: {nameof(pageVersion)} cannot be null. A page route should always have at least one version.");
+                }
+
+                entity.Regions = await GetRegionsAsync(pageVersion.PageTemplateId);
+                var dbPageBlocks = await GetPageBlocksAsync(entity.CustomEntityVersionId, selectedRoute.PageRoute.PageId);
+
+                var allBlockTypes = await _queryExecutor.ExecuteAsync(new GetAllPageBlockTypeSummariesQuery(), executionContext);
+                await _entityVersionPageBlockMapper.MapRegionsAsync(dbPageBlocks, entity.Regions, allBlockTypes, query.PublishStatus);
+            }
+            else
+            {
+                entity.Regions = Array.Empty<CustomEntityPageRegionRenderDetails>();
+            }
 
             return entity;
         }
 
-        private IQueryable<CustomEntityVersionPageBlock> QueryPageBlocks(CustomEntityRenderDetails entity)
+        private Task<List<CustomEntityVersionPageBlock>> GetPageBlocksAsync(int customEntityVersionId, int pageId)
         {
             return _dbContext
                 .CustomEntityVersionPageBlocks
                 .AsNoTracking()
                 .FilterActive()
-                .Where(m => m.CustomEntityVersionId == entity.CustomEntityVersionId);
+                .Where(m => m.CustomEntityVersionId == customEntityVersionId && m.PageId == pageId)
+                .ToListAsync();
         }
 
-        private IQueryable<CustomEntityPageRegionRenderDetails> QueryRegions(GetCustomEntityRenderDetailsByIdQuery query)
+        private Task<List<CustomEntityPageRegionRenderDetails>> GetRegionsAsync(int pageTemplateId)
         {
             return _dbContext
                 .PageTemplateRegions
                 .AsNoTracking()
-                .Where(s => s.PageTemplateId == query.PageTemplateId)
+                .Where(s => s.PageTemplateId == pageTemplateId)
                 .Select(s => new CustomEntityPageRegionRenderDetails()
                 {
                     PageTemplateRegionId = s.PageTemplateRegionId,
                     Name = s.Name
-                });
+                })
+                .ToListAsync();
         }
 
         private CustomEntityRenderDetails MapCustomEntity(CustomEntityVersion dbResult, IExecutionContext executionContext)
@@ -126,7 +138,7 @@ namespace Cofoundry.Domain
                     .CustomEntityVersions
                     .AsNoTracking()
                     .Include(e => e.CustomEntity)
-                    .FilterByActive()
+                    .FilterActive()
                     .FilterByCustomEntityId(query.CustomEntityId)
                     .FilterByCustomEntityVersionId(query.CustomEntityVersionId.Value)
                     .SingleOrDefaultAsync();
@@ -138,7 +150,7 @@ namespace Cofoundry.Domain
                     .AsNoTracking()
                     .Include(e => e.CustomEntityVersion)
                     .ThenInclude(e => e.CustomEntity)
-                    .FilterByActive()
+                    .FilterActive()
                     .FilterByCustomEntityId(query.CustomEntityId)
                     .FilterByStatus(query.PublishStatus, executionContext.ExecutionDate)
                     .SingleOrDefaultAsync();
@@ -170,7 +182,5 @@ namespace Cofoundry.Domain
 
             return urls;
         }
-
-        #endregion
     }
 }

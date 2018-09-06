@@ -78,13 +78,6 @@ namespace Cofoundry.Domain
         /// <param name="executionContext">Optional execution context to use when executing the command. Useful if you need to temporarily elevate your permission level.</param>
         Task DeleteRoleAsync(int roleId, IExecutionContext executionContext = null);
 
-        /// <summary>
-        /// Registers new roles defined in code via IRoleDefinition and initializes
-        /// permissions when an IRoleInitializer has been implemented.
-        /// </summary>
-        /// <param name="executionContext">Optional execution context to use when executing the command. Useful if you need to temporarily elevate your permission level.</param>
-        Task RegisterDefinedRoles(bool updateExistingRoles, IExecutionContext executionContext = null);
-
         #endregion
     }
 }

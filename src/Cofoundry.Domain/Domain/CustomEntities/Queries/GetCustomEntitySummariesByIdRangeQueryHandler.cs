@@ -9,6 +9,13 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Cofoundry.Domain
 {
+    /// <summary>
+    /// An id range query for custom entities which returns basic
+    /// custom entity information with workflow status and model data for the
+    /// latest version. The query is not version-sensitive and is designed to be 
+    /// used in the admin panel and not in a version-sensitive context such as a 
+    /// public webpage.
+    /// </summary>
     public class GetCustomEntitySummariesByIdRangeQueryHandler 
         : IAsyncQueryHandler<GetCustomEntitySummariesByIdRangeQuery, IDictionary<int, CustomEntitySummary>>
         , IIgnorePermissionCheckHandler
@@ -60,12 +67,10 @@ namespace Cofoundry.Domain
                 .Include(e => e.CustomEntityVersion)
                 .ThenInclude(e => e.Creator)
                 .Include(e => e.CustomEntity)
-                .ThenInclude(e => e.Locale)
-                .Include(e => e.CustomEntity)
                 .ThenInclude(e => e.Creator)
                 .Where(v => query.CustomEntityIds.Contains(v.CustomEntityId))
-                .FilterByActive()
-                .FilterByStatus(query.PublishStatus, executionContext.ExecutionDate)
+                .FilterActive()
+                .FilterByStatus(PublishStatusQuery.Latest, executionContext.ExecutionDate)
                 .ToListAsync();
             
             return dbResults;

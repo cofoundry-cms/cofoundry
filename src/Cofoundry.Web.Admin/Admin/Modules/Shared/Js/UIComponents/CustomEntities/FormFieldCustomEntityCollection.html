@@ -40,13 +40,11 @@
                                                             cms-custom-entity="entity"></cms-custom-entity-link>
                                 </strong>
                             </td>
-                            <td ng-if="vm.previewFields.fields.previewDescription">{{entity.model[vm.previewFields.fields.previewDescription.lowerName]}}</td>
+                            <td ng-if="::vm.previewFields.fields.previewDescription">{{entity.model[vm.previewFields.fields.previewDescription.lowerName]}}</td>
                             <td ng-if="::!vm.customEntityDefinition.autoPublish">
-                                <span ng-if="entity.isPublished">Published</span>
-                                <span ng-if="!entity.isPublished && entity.publishStatus == 'Published'">Scheduled</span>
-                                <span ng-if="entity.publishStatus == 'Unpublished'">Unpublished</span>
+                                <span>{{entity.getPublishStatusLabel()}}</span>
                                 <br />
-                                <a href="{{ entity.fullPath }}" ng-if="entity.hasDraft">(Pending Draft)</a>
+                                <span ng-if="entity.hasDraftVersion">(Pending Draft)</span>
                             </td>
                             <td cms-table-column-actions ng-if="vm.formScope.editMode">
                                 <cms-button-icon cms-title="Remove"

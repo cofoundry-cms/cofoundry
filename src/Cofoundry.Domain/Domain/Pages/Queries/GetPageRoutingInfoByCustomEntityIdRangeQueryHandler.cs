@@ -9,6 +9,12 @@ using Cofoundry.Core;
 
 namespace Cofoundry.Domain
 {
+    /// <summary>
+    /// Finds routing information for a set of custom entities by their ids. Although
+    /// in a typical website you wouldn't have multiple details pages for a custom entity
+    /// type, it is supported and so each custom entity id in the query returns a collection
+    /// of routes.
+    /// </summary>
     public class GetPageRoutingInfoByCustomEntityIdRangeQueryHandler 
         : IAsyncQueryHandler<GetPageRoutingInfoByCustomEntityIdRangeQuery, IDictionary<int, ICollection<PageRoutingInfo>>>
         , IPermissionRestrictedQueryHandler<GetPageRoutingInfoByCustomEntityIdRangeQuery, IDictionary<int, ICollection<PageRoutingInfo>>>
@@ -56,7 +62,7 @@ namespace Cofoundry.Domain
                 }
             }
 
-            var pageRoutesQuery = new GetPageRoutesByIdRangeQuery(idSets.Select(p => p.PageId));
+            var pageRoutesQuery = new GetPageRoutesByIdRangeQuery(idSets.Select(p => p.PageId).Distinct());
             var pageRoutes = await _queryExecutor.ExecuteAsync(pageRoutesQuery, executionContext);
 
             return await MapAsync(executionContext, idSets, customEntityRoutes, pageRoutes);

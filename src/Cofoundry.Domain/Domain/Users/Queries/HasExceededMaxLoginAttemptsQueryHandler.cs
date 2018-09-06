@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using Microsoft.EntityFrameworkCore;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Text;

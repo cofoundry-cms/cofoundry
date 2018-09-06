@@ -6,6 +6,7 @@ using Cofoundry.Domain.CQS;
 using Cofoundry.Domain.Data;
 using Microsoft.EntityFrameworkCore;
 using Cofoundry.Core;
+using Cofoundry.Core.Data;
 
 namespace Cofoundry.Domain
 {
@@ -24,6 +25,7 @@ namespace Cofoundry.Domain
         private readonly IPageBlockTypeCache _blockCache;
         private readonly IEnumerable<IPageBlockTypeDataModel> _allPageBlockTypeDataModels;
         private readonly IPageBlockTypeFileNameFormatter _blockTypeFileNameFormatter;
+        private readonly ITransactionScopeManager _transactionScopeFactory;
 
         public RegisterPageBlockTypesCommandHandler(
             CofoundryDbContext dbContext,
@@ -31,7 +33,8 @@ namespace Cofoundry.Domain
             IPageCache pageCache,
             IPageBlockTypeCache blockCache,
             IEnumerable<IPageBlockTypeDataModel> allPageBlockTypeDataModels,
-            IPageBlockTypeFileNameFormatter blockTypeFileNameFormatter
+            IPageBlockTypeFileNameFormatter blockTypeFileNameFormatter,
+            ITransactionScopeManager transactionScopeFactory
             )
         {
             _dbContext = dbContext;
@@ -40,6 +43,7 @@ namespace Cofoundry.Domain
             _allPageBlockTypeDataModels = allPageBlockTypeDataModels;
             _blockCache = blockCache;
             _blockTypeFileNameFormatter = blockTypeFileNameFormatter;
+            _transactionScopeFactory = transactionScopeFactory;
         }
 
         public async Task ExecuteAsync(RegisterPageBlockTypesCommand command, IExecutionContext executionContext)
@@ -59,8 +63,9 @@ namespace Cofoundry.Domain
             await UpdateBlocksAsync(executionContext, dbPageBlockTypes, blockTypeDataModels);
 
             await _dbContext.SaveChangesAsync();
-            _pageCache.Clear();
-            _blockCache.Clear();
+
+            _transactionScopeFactory.QueueCompletionTask(_dbContext, _pageCache.Clear);
+            _transactionScopeFactory.QueueCompletionTask(_dbContext, _blockCache.Clear);
         }
 
         private async Task UpdateBlocksAsync(
@@ -76,7 +81,10 @@ namespace Cofoundry.Domain
                 bool isUpdated = false;
 
                 var fileDetails = await _queryExecutor.ExecuteAsync(new GetPageBlockTypeFileDetailsByFileNameQuery(fileName), executionContext);
+                DetectDuplicateTemplateFileNames(fileDetails);
+
                 var name = string.IsNullOrWhiteSpace(fileDetails.Name) ? TextFormatter.PascalCaseToSentence(fileName) : fileDetails.Name;
+
                 if (existingBlock == null)
                 {
                     existingBlock = new PageBlockType();
@@ -109,7 +117,30 @@ namespace Cofoundry.Domain
                 if (isUpdated)
                 {
                     existingBlock.UpdateDate = executionContext.ExecutionDate;
+                    ValidateBlockProperties(existingBlock);
                 }
+            }
+        }
+
+        /// <summary>
+        /// Some properties of the block type are generated based on the class name or paths and these
+        /// should be validated to ensure that they do not exceed the database column sizes.
+        /// </summary>
+        private static void ValidateBlockProperties(PageBlockType dbPageBlockType)
+        {
+            if (string.IsNullOrWhiteSpace(dbPageBlockType.Name))
+            {
+                throw new PageBlockTypeRegistrationException($"Page block type name cannot be null. FileName: {dbPageBlockType.FileName}");
+            }
+
+            if (dbPageBlockType.Name.Length > 50)
+            {
+                throw new PageBlockTypeRegistrationException($"Page block type name exceeds the maximum length of 50 characters: {dbPageBlockType.Name}");
+            }
+
+            if (dbPageBlockType.FileName.Length > 50)
+            {
+                throw new PageBlockTypeRegistrationException($"Page block type file nameexceeds the maximum length of 50 characters: {dbPageBlockType.FileName}");
             }
         }
 
@@ -145,8 +176,53 @@ namespace Cofoundry.Domain
                 existingTemplate.FileName = fileTemplate.FileName;
                 existingTemplate.Name = fileTemplate.Name;
                 existingTemplate.Description = fileTemplate.Description;
+
+                ValidateTemplateProperties(existingTemplate);
             }
         }
+
+        private void DetectDuplicateTemplateFileNames(PageBlockTypeFileDetails fileDetails)
+        {
+            // It's quite difficult to create duplicate template files since they should
+            // all be in the same directory, but it is possible to spread between multiple 
+            // directories so we check to be sure.
+
+            var duplicates = fileDetails
+                .Templates
+                .GroupBy(t => t.FileName)
+                .Where(m => m.Count() > 1)
+                .FirstOrDefault();
+
+            if (!EnumerableHelper.IsNullOrEmpty(duplicates))
+            {
+                var duplicateNames = string.Join(", ", duplicates.Select(t => t.FileName));
+                throw new PageBlockTypeRegistrationException(
+                    $"Duplicate page block type templates '{ duplicates.Key }' detected. Conflicting template file names: { duplicateNames }");
+            }
+        }
+
+        /// <summary>
+        /// Some properties of the template are generated based on the file name and these
+        /// should be validated to ensure that they do not exceed the database column sizes.
+        /// </summary>
+        private static void ValidateTemplateProperties(PageBlockTypeTemplate dbPageBlockTypeTemplate)
+        {
+            if (string.IsNullOrWhiteSpace(dbPageBlockTypeTemplate.Name))
+            {
+                throw new PageBlockTypeRegistrationException($"Page block type template name cannot be null. FileName: {dbPageBlockTypeTemplate.FileName}");
+            }
+
+            if (dbPageBlockTypeTemplate.Name.Length > 50)
+            {
+                throw new PageBlockTypeRegistrationException($"Page block type template name exceeds the maximum length of 50 characters: {dbPageBlockTypeTemplate.Name}");
+            }
+
+            if (dbPageBlockTypeTemplate.FileName.Length > 50)
+            {
+                throw new PageBlockTypeRegistrationException($"Page block type template file name exceeds the maximum length of 50 characters: {dbPageBlockTypeTemplate.FileName}");
+            }
+        }
+
 
         private async Task DeleteBlockTypes(
             IExecutionContext executionContext,

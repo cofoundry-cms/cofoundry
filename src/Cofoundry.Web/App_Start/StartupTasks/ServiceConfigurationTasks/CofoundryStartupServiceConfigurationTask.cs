@@ -45,6 +45,9 @@ namespace Cofoundry.Web
         /// <param name="mvcBuilder">IMvcBuilder to configure.</param>
         public void ConfigureServices(IMvcBuilder mvcBuilder)
         {
+            // Set MVC compatibility to latest tested version.
+            mvcBuilder.SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+
             _authConfiguration.Configure(mvcBuilder);
 
             foreach (var config in EnumerableHelper

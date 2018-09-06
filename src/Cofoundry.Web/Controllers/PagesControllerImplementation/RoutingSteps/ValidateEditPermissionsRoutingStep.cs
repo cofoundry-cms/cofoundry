@@ -7,7 +7,6 @@ using System.Threading.Tasks;
 using Cofoundry.Domain;
 using Cofoundry.Domain.CQS;
 using Microsoft.AspNetCore.Mvc;
-using Cofoundry.Core;
 
 namespace Cofoundry.Web
 {
@@ -32,7 +31,7 @@ namespace Cofoundry.Web
         public Task ExecuteAsync(Controller controller, PageActionRoutingState state)
         {
             var pageRoutingInfo = state.PageRoutingInfo;
-            if (pageRoutingInfo == null || state.VisualEditorMode != VisualEditorMode.Edit) return Task.CompletedTask;
+            if (pageRoutingInfo == null || state.VisualEditorState.VisualEditorMode != VisualEditorMode.Edit) return Task.CompletedTask;
             
             if (pageRoutingInfo.CustomEntityRoute != null 
                 && state.InputParameters.IsEditingCustomEntity
@@ -54,7 +53,7 @@ namespace Cofoundry.Web
             var pageQuery = new GetPageRoutingInfoByPathQuery()
             {
                 Path = state.InputParameters.Path,
-                IncludeUnpublished = state.VisualEditorMode != VisualEditorMode.Live
+                IncludeUnpublished = state.VisualEditorState.VisualEditorMode != VisualEditorMode.Live
             };
 
             if (state.Locale != null)

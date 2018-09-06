@@ -2,11 +2,12 @@
     '$http',
     '_',
     'shared.serviceBase',
+    'shared.publishableEntityMapper',
 function (
     $http,
     _,
-    serviceBase
-    ) {
+    serviceBase,
+    publishableEntityMapper) {
 
     var service = {},
         customEntityServiceBase = serviceBase + 'custom-entities',
@@ -17,7 +18,13 @@ function (
     service.getAll = function (query, customEntityDefinitionCode) {
         return $http.get(getCustomEntityDefinitionServiceBase(customEntityDefinitionCode) + '/custom-entities', {
             params: query
-        });
+        }).then(map);
+
+        function map(pagedResult) {
+            _.each(pagedResult.items, publishableEntityMapper.map);
+
+            return pagedResult;
+        }
     }
 
     service.getDefinition = function (customEntityDefinitionCode) {
@@ -56,17 +63,36 @@ function (
             params: {
                 'customEntityIds': ids
             }
-        });
+        }).then(map);
+
+        function map(customEntitySummaries) {
+            _.each(customEntitySummaries, publishableEntityMapper.map);
+
+            return customEntitySummaries;
+        }
     }
 
     service.getById = function (customEntityId) {
 
-        return $http.get(getIdRoute(customEntityId));
+        return $http
+            .get(getIdRoute(customEntityId))
+            .then(map);
+
+        function map(entity) {
+
+            if (entity) {
+                publishableEntityMapper.map(entity);
+            }
+
+            return entity;
+        }
     }
 
-    service.getVersionsByCustomEntityId = function (customEntityId) {
+    service.getVersionsByCustomEntityId = function (customEntityId, query) {
 
-        return $http.get(getVerionsRoute(customEntityId));
+        return $http.get(getVerionsRoute(customEntityId), {
+            params: query
+        });
     }
 
 
@@ -103,6 +129,9 @@ function (
         return $http.delete(getVerionsRoute(id) + '/draft');
     }
 
+    service.duplicate = function (command) {
+        return $http.post(getIdRoute(command.customEntityToDuplicateId) + '/duplicate', command);
+    }
 
     /* PRIVATES */
 
@@ -121,7 +150,6 @@ function (
         }
         return customEntityDefinitionServiceBase + customEntityDefinitionCode;
     }
-
 
     return service;
 }]);

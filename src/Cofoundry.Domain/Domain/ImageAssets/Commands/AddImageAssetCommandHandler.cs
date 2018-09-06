@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Cofoundry.Domain.Data;
 using Cofoundry.Domain.CQS;
 using Cofoundry.Core;
-using Cofoundry.Core.EntityFramework;
+using Cofoundry.Core.Data;
 using Cofoundry.Core.MessageAggregator;
 
 namespace Cofoundry.Domain
@@ -21,7 +21,7 @@ namespace Cofoundry.Domain
         private readonly EntityAuditHelper _entityAuditHelper;
         private readonly EntityTagHelper _entityTagHelper;
         private readonly IImageAssetFileService _imageAssetFileService;
-        private readonly ITransactionScopeFactory _transactionScopeFactory;
+        private readonly ITransactionScopeManager _transactionScopeFactory;
         private readonly IMessageAggregator _messageAggregator;
 
         public AddImageAssetCommandHandler(
@@ -29,7 +29,7 @@ namespace Cofoundry.Domain
             EntityAuditHelper entityAuditHelper,
             EntityTagHelper entityTagHelper,
             IImageAssetFileService imageAssetFileService,
-            ITransactionScopeFactory transactionScopeFactory,
+            ITransactionScopeManager transactionScopeFactory,
             IMessageAggregator messageAggregator
             )
         {
@@ -63,15 +63,21 @@ namespace Cofoundry.Domain
                 await _imageAssetFileService.SaveAsync(command.File, imageAsset, nameof(command.File));
 
                 command.OutputImageAssetId = imageAsset.ImageAssetId;
-                scope.Complete();
-            }
 
-            await _messageAggregator.PublishAsync(new ImageAssetAddedMessage()
+                scope.QueueCompletionTask(() => OnTransactionComplete(imageAsset));
+
+                await scope.CompleteAsync();
+            }
+        }
+
+        private Task OnTransactionComplete(ImageAsset imageAsset)
+        {
+            return _messageAggregator.PublishAsync(new ImageAssetAddedMessage()
             {
                 ImageAssetId = imageAsset.ImageAssetId
             });
         }
-        
+
         #endregion
 
         #region Permission

@@ -7,7 +7,7 @@ using Cofoundry.Domain.CQS;
 using Cofoundry.Domain.Data;
 using Microsoft.EntityFrameworkCore;
 using Cofoundry.Core.MessageAggregator;
-using Cofoundry.Core.EntityFramework;
+using Cofoundry.Core.Data;
 using Cofoundry.Core;
 
 namespace Cofoundry.Domain
@@ -23,7 +23,7 @@ namespace Cofoundry.Domain
         private readonly IDbUnstructuredDataSerializer _dbUnstructuredDataSerializer;
         private readonly ICommandExecutor _commandExecutor;
         private readonly IMessageAggregator _messageAggregator;
-        private readonly ITransactionScopeFactory _transactionScopeFactory;
+        private readonly ITransactionScopeManager _transactionScopeFactory;
 
         public UpdatePageVersionBlockCommandHandler(
             CofoundryDbContext dbContext,
@@ -31,7 +31,7 @@ namespace Cofoundry.Domain
             IDbUnstructuredDataSerializer dbUnstructuredDataSerializer,
             ICommandExecutor commandExecutor,
             IMessageAggregator messageAggregator,
-            ITransactionScopeFactory transactionScopeFactory
+            ITransactionScopeManager transactionScopeFactory
             )
         {
             _dbContext = dbContext;
@@ -98,14 +98,21 @@ namespace Cofoundry.Domain
                     command.DataModel);
 
                 await _commandExecutor.ExecuteAsync(dependencyCommand, executionContext);
-                scope.Complete();
+
+                scope.QueueCompletionTask(() => OnTransactionComplete(dbBlock));
+
+                await scope.CompleteAsync();
             }
+        }
+
+        private Task OnTransactionComplete(PageVersionBlock dbBlock)
+        {
             _pageCache.Clear(dbBlock.PageVersion.PageId);
 
-            await _messageAggregator.PublishAsync(new PageVersionBlockUpdatedMessage()
+            return _messageAggregator.PublishAsync(new PageVersionBlockUpdatedMessage()
             {
                 PageId = dbBlock.PageVersion.PageId,
-                PageVersionBlockId = command.PageVersionBlockId
+                PageVersionBlockId = dbBlock.PageVersionBlockId
             });
         }
 

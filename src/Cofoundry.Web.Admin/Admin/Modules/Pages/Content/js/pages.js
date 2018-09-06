@@ -168,7 +168,7 @@ function (
             .then(redirect);
 
         function redirect(page) {
-            $window.location.href = urlLibrary.pageVisualEditor(page.pageRoute, true);
+            $window.location.href = urlLibrary.visualEditorForPage(page.pageRoute, true);
         }
     }
 
@@ -235,6 +235,7 @@ angular.module('cms.pages').controller('PageDetailsController', [
     '$location',
     '_',
     'shared.LoadState',
+    'shared.SearchQuery',
     'shared.modalDialogService',
     'shared.entityVersionModalDialogService',
     'shared.urlLibrary',
@@ -247,6 +248,7 @@ function (
     $location,
     _,
     LoadState,
+    SearchQuery,
     modalDialogService,
     entityVersionModalDialogService,
     urlLibrary,
@@ -276,16 +278,23 @@ function (
         vm.duplicatePage = duplicatePage;
         vm.changeUrl = changeUrl;
 
-        // Helper Functions
-        vm.getPartialUrl = getPartialUrl;
-
         // Properties
         vm.editMode = false;
         vm.globalLoadState = new LoadState();
         vm.saveLoadState = new LoadState();
         vm.saveAndPublishLoadState = new LoadState();
         vm.formLoadState = new LoadState(true);
+        vm.versionsLoadState = new LoadState();
+
         vm.urlLibrary = urlLibrary;
+
+        vm.versionsQuery = new SearchQuery({
+            onChanged: loadVersions,
+            useHistory: false,
+            defaultParams: {
+                pageSize: 6
+            }
+        });
 
         vm.canCreate = permissionValidationService.canCreate('COFPGE');
         vm.canUpdate = permissionValidationService.canUpdate('COFPGE');
@@ -295,12 +304,6 @@ function (
 
         // Init
         initData(vm.formLoadState);
-    }
-
-    /* PUBLIC FUNCS */
-
-    function getPartialUrl(file) {
-        return modulePath + 'Routes/Partials/' + file + '.html';
     }
 
     /* UI ACTIONS */
@@ -370,10 +373,9 @@ function (
     }
 
     function copyToDraft(version) {
-        var hasDraftVersion = !!getDraftVersion();
 
         entityVersionModalDialogService
-            .copyToDraft(vm.page.pageId, version.pageVersionId, hasDraftVersion, setLoadingOn)
+            .copyToDraft(vm.page.pageId, version.pageVersionId, vm.page.pageRoute.hasDraftVersion, setLoadingOn)
             .then(onOkSuccess)
             .catch(setLoadingOff);
 
@@ -428,20 +430,18 @@ function (
     /* PRIVATE FUNCS */
     
     function onSuccess(message, loadStateToTurnOff) {
+
         return initData(loadStateToTurnOff)
             .then(vm.mainForm.formStatus.success.bind(null, message));
-    }
-
-    function getDraftVersion() {
-        return _.find(vm.versions, function (version) {
-            return version.workFlowStatus === 'Draft';
-        });
     }
 
     function initData(loadStateToTurnOff) {
 
         return $q
             .all([getPage(), getVersions()])
+            .then(function (results) {
+                mapVersions(results[1]);
+            })
             .then(setLoadingOff.bind(null, loadStateToTurnOff));
            
         /* helpers */
@@ -453,14 +453,56 @@ function (
                 vm.updateDraftCommand = mapUpdateDraftCommand(page);
                 vm.editMode = false;
                 vm.isMarkedPublished = vm.page.pageRoute.publishStatus == 'Published';
+                vm.publishStatusLabel = getPublishStatusLabel(page.pageRoute);
+
+                return page;
             });
+        }
+    }
+
+    function loadVersions() {
+        vm.versionsLoadState.on();
+
+        return getVersions()
+            .then(mapVersions)
+            .then(setLoadingOff.bind(null, vm.versionsLoadState));
+    }
+
+    function getVersions() {
+
+        return pageService.getVersionsByPageId($routeParams.id, vm.versionsQuery.getParameters());
+    }
+
+    function mapVersions(pagedVersions) {
+        var page = vm.page,
+            isPublished = page.pageRoute.isPublished();
+
+        _.each(pagedVersions.items, function (version) {
+
+            version.versionLabel = getVersionLabel(version, page.pageRoute);
+            version.browseUrl = vm.urlLibrary.visualEditorForVersion(page.pageRoute, version, false, isPublished);
+        });
+
+        vm.versions = pagedVersions;
+
+        function getVersionLabel(version, entityRoute) {
+
+            if (version.workFlowStatus == 'Draft') return version.workFlowStatus;
+
+            var versionNumber = 'V' + version.displayVersion;
+
+            if (!version.isLatestPublishedVersion) return versionNumber;
+
+            return versionNumber + ' (' + getPublishStatusLabel(entityRoute) + ')';
+        }
+    }
+
+    function getPublishStatusLabel(entityRoute) {
+        if (entityRoute.publishStatus == 'Published' && entityRoute.publishDate < Date.now()) {
+            return 'Pending Publish';
         }
 
-        function getVersions() {
-            return pageService.getVersionsByPageId($routeParams.id).then(function (versions) {
-                vm.versions = versions;
-            });
-        }
+        return entityRoute.publishStatus;
     }
 
     function mapUpdatePageCommand(page) {
@@ -680,6 +722,7 @@ angular.module('cms.pages').controller('DuplicatePageController', [
     '$scope',
     '$q',
     '$location',
+    'shared.stringUtilities',
     'shared.LoadState',
     'shared.pageService',
     'pages.customEntityService',
@@ -689,6 +732,7 @@ function (
     $scope,
     $q,
     $location,
+    stringUtilities,
     LoadState,
     pageService,
     customEntityService,
@@ -711,6 +755,8 @@ function (
 
         $scope.save = save;
         $scope.close = close;
+        $scope.onTitleChanged = onTitleChanged;
+
         $scope.localesLoaded = loadLocalesDeferred.resolve;
         $scope.pageDirectoriesLoaded = loadPageDirectoryDeferred.resolve;
         $scope.formLoadState.offWhen(loadLocalesDeferred, loadPageDirectoryDeferred, loadRoutingRules());
@@ -734,7 +780,13 @@ function (
         if ($scope.isCustomEntityRoute) {
             $scope.command.customEntityRoutingRule = pageRoute.urlPath;
         } else {
-            $scope.command.urlPath = pageRoute.urlPath + '-copy';
+            onTitleChanged();
+        }
+    }
+
+    function onTitleChanged() {
+        if (!$scope.isCustomEntityRoute) {
+            $scope.command.urlPath = stringUtilities.slugify($scope.command.title);
         }
     }
 

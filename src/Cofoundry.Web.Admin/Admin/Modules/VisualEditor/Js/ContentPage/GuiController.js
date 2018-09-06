@@ -54,13 +54,28 @@ Cofoundry.visualEditor = (function () {
 
         bindToolbar: function () {
             var toolbar = document.getElementById('cofoundry-sv'),
-                visualEditorMode = _internal.model.visualEditorMode
+                model = _internal.model,
+                visualEditorMode = model.visualEditorMode,
+                route = model.isCustomEntityRoute ? model.pageRoutingInfo.customEntityRoute : model.pageRoutingInfo.pageRoute
                 ;
 
             // Internal refs
             __TOOLBAR = toolbar;
 
-            if ((visualEditorMode === 'Draft' || visualEditorMode === 'Edit') && _internal.model.hasEntityPublishPermission) {
+            if (visualEditorMode === 'SpecificVersion' && model.hasEntityUpdatePermission) {
+                // Insert copy to draft button
+                _toolBar.addButton({
+                    icon: 'fa-files-o',
+                    title: 'Copy to<br />draft',
+                    type: 'primary',
+                    classNames: 'publish popup',
+                    click: _internal.copyToDraft
+                });
+            }
+
+            if (((visualEditorMode === 'Preview' || visualEditorMode === 'Edit')
+                || (route.publishStatus == 'Unpublished' && model.pageVersion.isLatestPublishedVersion && !model.hasDraftVersion))
+                && model.hasEntityPublishPermission) {
                 // Insert publish button
                 _toolBar.addButton({
                     icon: 'fa-cloud-upload',
@@ -69,7 +84,7 @@ Cofoundry.visualEditor = (function () {
                     classNames: 'publish popup',
                     click: _internal.publish
                 });
-            } else if (visualEditorMode === 'Live' && _internal.model.hasEntityPublishPermission) {
+            } else if (visualEditorMode === 'Live' && model.hasEntityPublishPermission) {
                 // Insert unpublish button
                 _toolBar.addButton({
                     icon: 'fa-cloud-download',
@@ -77,15 +92,6 @@ Cofoundry.visualEditor = (function () {
                     type: 'primary',
                     classNames: 'publish popup',
                     click: _internal.unpublish
-                });
-            } else if (visualEditorMode === 'SpecificVersion' && _internal.model.hasEntityUpdatePermission) {
-                // Insert copy to draft button
-                _toolBar.addButton({
-                    icon: 'fa-files-o',
-                    title: 'Copy to<br />draft',
-                    type: 'primary',
-                    classNames: 'publish popup',
-                    click: _internal.copyToDraft
                 });
             }
         },
@@ -158,7 +164,7 @@ Cofoundry.visualEditor = (function () {
                     for (i = 0; i < len; ++i) {
                         var el = elements[i],
                             el_data = getElementData(el, componentName)
-                        ;
+                            ;
 
                         // If name is null then discard as its an empty placeholder block
                         if (!el_data.name) {
@@ -226,7 +232,7 @@ Cofoundry.visualEditor = (function () {
                 data.width = el.offsetWidth;
                 data.height = el.offsetHeight;
                 data.el = el;
-                data.hasContent = el.innerHTML.length > 0;
+                data.hasContent = isBlock ? el.innerHTML.length > 0 : !el.hasAttribute('data-cms-page-region-empty');
                 data.html = el.innerHTML;
                 data.name = el.getAttribute(isBlock ? 'data-cms-page-block-title' : 'data-cms-page-region-name');
                 data.regionName = rootEl.getAttribute('data-cms-page-region-name');
@@ -323,7 +329,8 @@ Cofoundry.visualEditor = (function () {
                     versionBlockId: data.versionBlockId,
                     pageBlockTypeId: data.pageBlockTypeId,
                     isCustomEntity: _internal.model.isCustomEntityRoute,
-                    regionName: data.regionName
+                    regionName: data.regionName,
+                    pageId: _internal.model.page.page.pageId
                 });
             }
 
@@ -358,7 +365,8 @@ Cofoundry.visualEditor = (function () {
                     permittedBlockTypes: scope.permittedBlockTypes,
                     versionBlockId: scope.versionBlockId,
                     pageBlockTypeId: scope.pageBlockTypeId,
-                    isCustomEntity: _internal.model.isCustomEntityRoute
+                    isCustomEntity: _internal.model.isCustomEntityRoute,
+                    pageId: _internal.model.page.page.pageId
                 });
             }
 
@@ -369,7 +377,8 @@ Cofoundry.visualEditor = (function () {
                     permittedBlockTypes: scope.permittedBlockTypes,
                     versionBlockId: scope.versionBlockId,
                     pageBlockTypeId: scope.pageBlockTypeId,
-                    isCustomEntity: _internal.model.isCustomEntityRoute
+                    isCustomEntity: _internal.model.isCustomEntityRoute,
+                    pageId: _internal.model.page.page.pageId
                 });
             }
 
@@ -380,7 +389,8 @@ Cofoundry.visualEditor = (function () {
                     permittedBlockTypes: scope.permittedBlockTypes,
                     versionBlockId: scope.versionBlockId,
                     pageBlockTypeId: scope.pageBlockTypeId,
-                    isCustomEntity: _internal.model.isCustomEntityRoute
+                    isCustomEntity: _internal.model.isCustomEntityRoute,
+                    pageId: _internal.model.page.page.pageId
                 });
             }
 

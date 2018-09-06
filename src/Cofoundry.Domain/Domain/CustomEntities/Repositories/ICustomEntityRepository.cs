@@ -51,7 +51,15 @@ namespace Cofoundry.Domain
 
         Task<CustomEntityDataModelSchema> GetCustomEntityDataModelSchemaDetailsByCodeAsync(string customEntityDefinitionCode, IExecutionContext executionContext = null);
 
-        Task<CustomEntityDetails> GetCustomEntityDetailsByIdAsync(int id, IExecutionContext executionContext = null);
+        /// <summary>
+        /// Returns detailed information on a custom entity and it's latest version. This 
+        /// query is primarily used in the admin area because it is not version-specific
+        /// and the CustomEntityDetails projection includes audit data and other additional 
+        /// information that should normally be hidden from a customer facing app.
+        /// </summary>
+        /// <param name="customEntityId">Id of the custom entity to find.</param>
+        /// <param name="executionContext">Optional execution context to use when executing the query. Useful if you need to temporarily elevate your permission level.</param>
+        Task<CustomEntityDetails> GetCustomEntityDetailsByIdAsync(int customEntityId, IExecutionContext executionContext = null);
 
         Task<ICollection<CustomEntityRenderSummary>> GetCustomEntityRenderSummariesByDefinitionCodeAsync(GetCustomEntityRenderSummariesByDefinitionCodeQuery query, IExecutionContext executionContext = null);
 
@@ -61,9 +69,16 @@ namespace Cofoundry.Domain
 
         Task<IDictionary<int, CustomEntitySummary>> GetCustomEntitySummariesByIdRangeAsync(IEnumerable<int> ids, IExecutionContext executionContext = null);
 
+        /// <summary>
+        /// Returns data for a specific custom entity page block by it's id. Because
+        /// the mapped display model may contain other versioned entities, you can 
+        /// optionally pass down a PublishStatusQuery to use in the mapping process.
+        /// </summary>
+        /// <param name="query">Query parameters.</param>
+        /// <param name="executionContext">Optional execution context to use when executing the query. Useful if you need to temporarily elevate your permission level.</param>
         Task<CustomEntityVersionPageBlockRenderDetails> GetCustomEntityVersionPageBlockRenderDetailsByIdAsync(GetCustomEntityVersionPageBlockRenderDetailsByIdQuery query, IExecutionContext executionContext = null);
 
-        Task<ICollection<CustomEntityVersionSummary>> GetCustomEntityVersionSummariesByCustomEntityIdAsync(int id, IExecutionContext executionContext = null);
+        Task<PagedQueryResult<CustomEntityVersionSummary>> GetCustomEntityVersionSummariesByCustomEntityIdAsync(GetCustomEntityVersionSummariesByCustomEntityIdQuery query, IExecutionContext executionContext = null);
 
         Task<bool> IsCustomEntityPathUniqueAsync(IsCustomEntityPathUniqueQuery query, IExecutionContext executionContext = null);
 

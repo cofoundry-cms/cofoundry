@@ -11,6 +11,9 @@ namespace Cofoundry.Web.Admin
         {
             container.Register<IVisualEditorActionResultFactory, VisualEditorActionResultFactory>();
             container.RegisterAll<IVisualEditorRequestExclusionRule>();
+
+            var overrideOptions = RegistrationOptions.Override(RegistrationOverridePriority.Low);
+            container.Register<IVisualEditorStateService, AdminVisualEditorStateService>(overrideOptions);
         }
     }
 }

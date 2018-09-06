@@ -3,6 +3,7 @@ using System.Collections.Generic;
 
 namespace Cofoundry.Domain.Data
 {
+    [Obsolete("The image asset grouping system will be revised in an upcomming release.")]
     public partial class ImageAssetGroupItem : ICreateAuditable
     {
         public int ImageAssetId { get; set; }

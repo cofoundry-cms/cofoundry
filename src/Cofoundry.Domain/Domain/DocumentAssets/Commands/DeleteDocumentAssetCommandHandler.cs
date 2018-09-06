@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Cofoundry.Domain.Data;
 using Cofoundry.Domain.CQS;
 using Microsoft.EntityFrameworkCore;
-using Cofoundry.Core.EntityFramework;
+using Cofoundry.Core.Data;
 using Cofoundry.Core.MessageAggregator;
 
 namespace Cofoundry.Domain
@@ -19,13 +19,13 @@ namespace Cofoundry.Domain
 
         private readonly CofoundryDbContext _dbContext;
         private readonly ICommandExecutor _commandExecutor;
-        private readonly ITransactionScopeFactory _transactionScopeFactory;
+        private readonly ITransactionScopeManager _transactionScopeFactory;
         private readonly IMessageAggregator _messageAggregator;
 
         public DeleteDocumentAssetCommandHandler(
             CofoundryDbContext dbContext,
             ICommandExecutor commandExecutor,
-            ITransactionScopeFactory transactionScopeFactory,
+            ITransactionScopeManager transactionScopeFactory,
             IMessageAggregator messageAggregator
             )
         {
@@ -54,14 +54,20 @@ namespace Cofoundry.Domain
                     await _commandExecutor.ExecuteAsync(new DeleteUnstructuredDataDependenciesCommand(DocumentAssetEntityDefinition.DefinitionCode, documentAsset.DocumentAssetId), executionContext);
 
                     await _dbContext.SaveChangesAsync();
-                    scope.Complete();
-                }
 
-                await _messageAggregator.PublishAsync(new DocumentAssetAddedMessage()
-                {
-                    DocumentAssetId = command.DocumentAssetId
-                });
+                    scope.QueueCompletionTask(() => OnTransactionComplete(command));
+
+                    await scope.CompleteAsync();
+                }
             }
+        }
+
+        private Task OnTransactionComplete(DeleteDocumentAssetCommand command)
+        {
+            return _messageAggregator.PublishAsync(new DocumentAssetAddedMessage()
+            {
+                DocumentAssetId = command.DocumentAssetId
+            });
         }
 
         #endregion

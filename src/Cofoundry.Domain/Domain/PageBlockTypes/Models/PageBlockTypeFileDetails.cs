@@ -18,12 +18,15 @@ namespace Cofoundry.Domain
         public ICollection<PageBlockTypeTemplateFileDetails> Templates { get; set; }
 
         /// <summary>
-        /// The display name for the block in the administration UI
+        /// A human readable name that is displayed when selecting block types.
+        /// The name should ideally be unique but this is not enforced as long as
+        /// the filename is unique.
         /// </summary>
         public string Name { get; set; }
 
         /// <summary>
-        /// The description of the block in the administration UI
+        /// An optional description used to help users pick a block
+        /// type from a list of options.
         /// </summary>
         public string Description { get; set; }
     }

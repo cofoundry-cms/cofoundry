@@ -7,7 +7,7 @@ using Cofoundry.Domain.Data;
 using Cofoundry.Domain.CQS;
 using Microsoft.EntityFrameworkCore;
 using Cofoundry.Core.MessageAggregator;
-using Cofoundry.Core.EntityFramework;
+using Cofoundry.Core.Data;
 using Cofoundry.Core;
 
 namespace Cofoundry.Domain
@@ -22,14 +22,14 @@ namespace Cofoundry.Domain
         private readonly ICommandExecutor _commandExecutor;
         private readonly IPageCache _pageCache;
         private readonly IMessageAggregator _messageAggregator;
-        private readonly ITransactionScopeFactory _transactionScopeFactory;
+        private readonly ITransactionScopeManager _transactionScopeFactory;
 
         public DeletePageVersionBlockCommandHandler(
             CofoundryDbContext dbContext,
             IPageCache pageCache,
             ICommandExecutor commandExecutor,
             IMessageAggregator messageAggregator,
-            ITransactionScopeFactory transactionScopeFactory
+            ITransactionScopeManager transactionScopeFactory
             )
         {
             _dbContext = dbContext;
@@ -70,17 +70,26 @@ namespace Cofoundry.Domain
 
                     _dbContext.PageVersionBlocks.Remove(dbResult.Block);
                     await _dbContext.SaveChangesAsync();
-                    scope.Complete();
-                }
-                _pageCache.Clear(dbResult.PageId);
 
-                await _messageAggregator.PublishAsync(new PageVersionBlockDeletedMessage()
-                {
-                    PageId = dbResult.PageId,
-                    PageVersionId = versionId
-                });
-                
+                    scope.QueueCompletionTask(() => OnTransactionComplete(dbResult.PageId, versionId));
+
+                    await scope.CompleteAsync();
+                }
             }
+        }
+
+        private Task OnTransactionComplete(
+            int pageId,
+            int pageVersionId
+            )
+        {
+            _pageCache.Clear(pageId);
+
+            return _messageAggregator.PublishAsync(new PageVersionBlockDeletedMessage()
+            {
+                PageId = pageId,
+                PageVersionId = pageVersionId
+            });
         }
 
         #endregion

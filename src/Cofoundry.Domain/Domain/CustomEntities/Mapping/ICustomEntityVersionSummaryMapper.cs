@@ -11,12 +11,11 @@ namespace Cofoundry.Domain
     public interface ICustomEntityVersionSummaryMapper
     {
         /// <summary>
-        /// Maps a collection EF CustomEntityVersion records for a single custom entity into 
-        /// a collection of CustomEntityVersionSummary objects. If the db record is null 
-        /// then null is returned.
+        /// aps a set of paged EF CustomEntityVersion records for a single custom entity into 
+        /// CustomEntityVersionSummary objects.
         /// </summary>
         /// <param name="customEntityId">Id of the custom entity that these versions belong to.</param>
-        /// <param name="dbVersions">CustomEntityVersion records from the database to map.</param>
-        List<CustomEntityVersionSummary> MapVersions(int customEntityId, ICollection<CustomEntityVersion> dbVersions);
+        /// <param name="dbResult">Paged result set of records to map.</param>
+        PagedQueryResult<CustomEntityVersionSummary> MapVersions(int customEntityId, PagedQueryResult<CustomEntityVersion> dbResult);
     }
 }

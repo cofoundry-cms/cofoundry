@@ -1,4 +1,4 @@
-﻿using Cofoundry.Core.EntityFramework;
+﻿using Cofoundry.Core.Data;
 using Cofoundry.Core.Validation;
 using Cofoundry.Domain.Data;
 using System;

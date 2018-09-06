@@ -1,8 +1,8 @@
 using System;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore;
 using Cofoundry.Core;
+using Cofoundry.Core.EntityFramework;
 
 namespace Cofoundry.Domain.Data
 {
@@ -35,6 +35,10 @@ namespace Cofoundry.Domain.Data
             builder.HasOne(s => s.PageBlockTypeTemplate)
                 .WithMany()
                 .HasForeignKey(s => s.PageBlockTypeTemplateId);
+
+            builder.HasOne(s => s.Page)
+                .WithMany()
+                .HasForeignKey(s => s.PageId);
         }
     }
 }

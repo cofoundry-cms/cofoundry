@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Cofoundry.Domain.Data;
 using Cofoundry.Domain.CQS;
+using Cofoundry.Core.Data;
 
 namespace Cofoundry.Domain
 {
@@ -20,15 +21,18 @@ namespace Cofoundry.Domain
 
         private readonly CofoundryDbContext _dbContext;
         private readonly IRoleCache _roleCache;
+        private readonly ITransactionScopeManager _transactionScopeFactory;
 
         public DeleteRoleCommandHandler(
             CofoundryDbContext dbContext,
             UserCommandPermissionsHelper userCommandPermissionsHelper,
-            IRoleCache roleCache
+            IRoleCache roleCache,
+            ITransactionScopeManager transactionScopeFactory
             )
         {
             _dbContext = dbContext;
             _roleCache = roleCache;
+            _transactionScopeFactory = transactionScopeFactory;
         }
 
         #endregion
@@ -47,8 +51,9 @@ namespace Cofoundry.Domain
                 ValidateCanDelete(role, command);
 
                 _dbContext.Roles.Remove(role);
+
                 await _dbContext.SaveChangesAsync();
-                _roleCache.Clear(role.RoleId);
+                _transactionScopeFactory.QueueCompletionTask(_dbContext, () => _roleCache.Clear(command.RoleId));
             }
         }
 

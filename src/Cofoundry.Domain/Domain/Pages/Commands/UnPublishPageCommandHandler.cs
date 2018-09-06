@@ -8,10 +8,16 @@ using Cofoundry.Domain.CQS;
 using Microsoft.EntityFrameworkCore;
 using Cofoundry.Core.MessageAggregator;
 using Cofoundry.Core;
-using Cofoundry.Core.EntityFramework;
+using Cofoundry.Core.Data;
 
 namespace Cofoundry.Domain
 {
+    /// <summary>
+    /// Sets the status of a page to un-published, but does not
+    /// remove the publish date, which is preserved so that it
+    /// can be used as a default when the user chooses to publish
+    /// again.
+    /// </summary>
     public class UnPublishPageCommandHandler 
         : IAsyncCommandHandler<UnPublishPageCommand>
         , IPermissionRestrictedCommandHandler<UnPublishPageCommand>
@@ -21,14 +27,14 @@ namespace Cofoundry.Domain
         private readonly CofoundryDbContext _dbContext;
         private readonly IPageCache _pageCache;
         private readonly IMessageAggregator _messageAggregator;
-        private readonly ITransactionScopeFactory _transactionScopeFactory;
+        private readonly ITransactionScopeManager _transactionScopeFactory;
         private readonly IPageStoredProcedures _pageStoredProcedures;
 
         public UnPublishPageCommandHandler(
             CofoundryDbContext dbContext,
             IPageCache pageCache,
             IMessageAggregator messageAggregator,
-            ITransactionScopeFactory transactionScopeFactory,
+            ITransactionScopeManager transactionScopeFactory,
             IPageStoredProcedures pageStoredProcedures
             )
         {
@@ -62,12 +68,9 @@ namespace Cofoundry.Domain
             var version = await _dbContext
                 .PageVersions
                 .Include(p => p.Page)
-                .Where(v => v.PageId == command.PageId
-                    && !v.IsDeleted
-                    && !v.Page.IsDeleted
-                    && (v.WorkFlowStatusId == (int)WorkFlowStatus.Draft || v.WorkFlowStatusId == (int)WorkFlowStatus.Published))
-                .OrderByDescending(v => v.WorkFlowStatusId == (int)WorkFlowStatus.Draft)
-                .ThenByDescending(v => v.CreateDate)
+                .FilterActive()
+                .FilterByPageId(command.PageId)
+                .OrderByLatest()
                 .FirstOrDefaultAsync();
             EntityNotFoundException.ThrowIfNull(version, command.PageId);
 
@@ -78,12 +81,18 @@ namespace Cofoundry.Domain
             {
                 await _dbContext.SaveChangesAsync();
                 await _pageStoredProcedures.UpdatePublishStatusQueryLookupAsync(command.PageId);
-                scope.Complete();
-            }
 
+                scope.QueueCompletionTask(() => OnTransactionComplete(command));
+
+                await scope.CompleteAsync();
+            }
+        }
+
+        private Task OnTransactionComplete(UnPublishPageCommand command)
+        {
             _pageCache.Clear();
 
-            await _messageAggregator.PublishAsync(new PageUnPublishedMessage()
+            return _messageAggregator.PublishAsync(new PageUnPublishedMessage()
             {
                 PageId = command.PageId
             });

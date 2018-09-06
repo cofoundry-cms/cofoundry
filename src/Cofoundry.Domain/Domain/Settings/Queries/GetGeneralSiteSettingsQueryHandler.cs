@@ -35,19 +35,22 @@ namespace Cofoundry.Domain
         public async Task<GeneralSiteSettings> ExecuteAsync(GetSettingsQuery<GeneralSiteSettings> query, IExecutionContext executionContext)
         {
             var allSettings = await _internalSettingsRepository.GetAllSettingsAsync();
-            return MapSettings(allSettings);
+            return await MapSettingsAsync(allSettings);
         }
 
         #endregion
 
         #region helpers
 
-        private GeneralSiteSettings MapSettings(Dictionary<string, string> allSettings)
+        private async Task<GeneralSiteSettings> MapSettingsAsync(Dictionary<string, string> allSettings)
         {
             var settings = new GeneralSiteSettings();
 
             _getSettingQueryHelper.SetSettingProperty(settings, s => s.ApplicationName, allSettings);
-            settings.AllowAutomaticUpdates = !_autoUpdateService.IsLocked();
+
+            var isLocked = await _autoUpdateService.IsLockedAsync();
+            settings.AllowAutomaticUpdates = !isLocked;
+
             return settings;
         }
 

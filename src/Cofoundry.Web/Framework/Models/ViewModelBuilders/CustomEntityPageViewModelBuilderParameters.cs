@@ -20,7 +20,7 @@ namespace Cofoundry.Web
         /// Parameters for mapping an ICustomEntityPageViewModel using an
         /// IPageViewModelMapper implementation.
         /// </summary>
-        /// <param name="pageModel">The page data to include in the view model.</param>
+        /// <param name="page">The page data to include in the view model.</param>
         /// <param name="visualEditorMode">The view mode requested by the visual editor or a default value.</param>
         /// <param name="customEntityModel">he custom entity model data to use in the mapping.</param>
         public CustomEntityPageViewModelBuilderParameters(

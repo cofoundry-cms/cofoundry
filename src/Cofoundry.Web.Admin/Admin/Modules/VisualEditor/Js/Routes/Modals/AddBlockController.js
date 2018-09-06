@@ -26,6 +26,7 @@ function (
 
         $scope.command = { 
             dataModel: {},
+            pageId: options.pageId,
             pageTemplateRegionId: options.pageTemplateRegionId,
             pageVersionId: visualEditorOptions.pageVerisonId,
             adjacentVersionBlockId: options.adjacentVersionBlockId,

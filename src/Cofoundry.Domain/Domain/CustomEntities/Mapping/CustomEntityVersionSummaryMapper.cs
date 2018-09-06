@@ -21,28 +21,22 @@ namespace Cofoundry.Domain
         }
 
         /// <summary>
-        /// Maps a collection EF CustomEntityVersion records for a single custom entity into 
-        /// a collection of CustomEntityVersionSummary objects.
+        /// aps a set of paged EF CustomEntityVersion records for a single custom entity into 
+        /// CustomEntityVersionSummary objects.
         /// </summary>
         /// <param name="customEntityId">Id of the custom entity that these versions belong to.</param>
-        /// <param name="dbVersions">CustomEntityVersion records from the database to map.</param>
-        public List<CustomEntityVersionSummary> MapVersions(int customEntityId, ICollection<CustomEntityVersion> dbVersions)
+        /// <param name="dbResult">Paged result set of records to map.</param>
+        public PagedQueryResult<CustomEntityVersionSummary> MapVersions(int customEntityId, PagedQueryResult<CustomEntityVersion> dbResult)
         {
-            if (dbVersions == null) throw new ArgumentNullException(nameof(dbVersions));
+            if (dbResult == null) throw new ArgumentNullException(nameof(dbResult));
             if (customEntityId <= 0) throw new ArgumentOutOfRangeException(nameof(customEntityId));
 
-            var orderedVersions = dbVersions
-                .Select(MapVersion)
-                .OrderByDescending(v => v.WorkFlowStatus == WorkFlowStatus.Draft)
-                .ThenByDescending(v => v.AuditData.CreateDate)
-                .ToList();
+            // We should only check for the latested published version on the first page
+            // as it will only be 1st or 2nd in the list (depending on whether there is a draft)
+            bool hasLatestPublishVersion = dbResult.PageNumber > 1;
+            var results = new List<CustomEntityVersionSummary>(dbResult.Items.Count);
 
-            bool hasLatestPublishVersioned = false;
-            var results = new List<CustomEntityVersionSummary>(dbVersions.Count);
-
-            foreach (var dbVersion in dbVersions
-                .OrderByDescending(v => v.WorkFlowStatusId == (int)WorkFlowStatus.Draft)
-                .ThenByDescending(v => v.CreateDate))
+            foreach (var dbVersion in dbResult.Items.OrderByLatest())
             {
                 if (dbVersion.CustomEntityId != customEntityId)
                 {
@@ -51,16 +45,16 @@ namespace Cofoundry.Domain
                 }
 
                 var result = MapVersion(dbVersion);
-                if (!hasLatestPublishVersioned && result.WorkFlowStatus == WorkFlowStatus.Published)
+                if (!hasLatestPublishVersion && result.WorkFlowStatus == WorkFlowStatus.Published)
                 {
                     result.IsLatestPublishedVersion = true;
-                    hasLatestPublishVersioned = true;
+                    hasLatestPublishVersion = true;
                 }
 
                 results.Add(result);
             }
 
-            return results;
+            return dbResult.ChangeType(results);
         }
 
         /// <summary>
@@ -73,6 +67,7 @@ namespace Cofoundry.Domain
             var versionSummary = new CustomEntityVersionSummary()
             {
                 CustomEntityVersionId = dbVersion.CustomEntityVersionId,
+                DisplayVersion = dbVersion.DisplayVersion,
                 Title = dbVersion.Title,
                 WorkFlowStatus = (WorkFlowStatus)dbVersion.WorkFlowStatusId,
                 AuditData = _auditDataMapper.MapCreateAuditData(dbVersion)

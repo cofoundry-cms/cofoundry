@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Cofoundry.Domain.Data;
 using Cofoundry.Domain.CQS;
 using Microsoft.EntityFrameworkCore;
-using Cofoundry.Core.EntityFramework;
+using Cofoundry.Core.Data;
 
 namespace Cofoundry.Domain
 {
@@ -18,14 +18,14 @@ namespace Cofoundry.Domain
 
         private readonly CofoundryDbContext _dbContext;
         private readonly IPageDirectoryCache _cache;
-        private readonly ITransactionScopeFactory _transactionScopeFactory;
+        private readonly ITransactionScopeManager _transactionScopeFactory;
         private readonly ICommandExecutor _commandExecutor;
 
         public DeletePageDirectoryCommandHandler(
             CofoundryDbContext dbContext,
             IPageDirectoryCache cache,
             ICommandExecutor commandExecutor,
-            ITransactionScopeFactory transactionScopeFactory
+            ITransactionScopeManager transactionScopeFactory
             )
         {
             _dbContext = dbContext;
@@ -59,9 +59,11 @@ namespace Cofoundry.Domain
                     await _commandExecutor.ExecuteAsync(new DeleteUnstructuredDataDependenciesCommand(PageDirectoryEntityDefinition.DefinitionCode, pageDirectory.PageDirectoryId), executionContext);
 
                     await _dbContext.SaveChangesAsync();
-                    scope.Complete();
+
+                    scope.QueueCompletionTask(() => _cache.Clear());
+
+                    await scope.CompleteAsync();
                 }
-                _cache.Clear();
             }
         }
 

@@ -7,7 +7,7 @@ using Cofoundry.Domain.Data;
 using Cofoundry.Domain.CQS;
 using Microsoft.EntityFrameworkCore;
 using Cofoundry.Core.MessageAggregator;
-using Cofoundry.Core.EntityFramework;
+using Cofoundry.Core.Data;
 using Cofoundry.Core;
 
 namespace Cofoundry.Domain
@@ -23,7 +23,7 @@ namespace Cofoundry.Domain
         private readonly ICommandExecutor _commandExecutor;
         private readonly IMessageAggregator _messageAggregator;
         private readonly IPermissionValidationService _permissionValidationService;
-        private readonly ITransactionScopeFactory _transactionScopeFactory;
+        private readonly ITransactionScopeManager _transactionScopeFactory;
 
         public DeleteCustomEntityVersionPageBlockCommandHandler(
             CofoundryDbContext dbContext,
@@ -32,7 +32,7 @@ namespace Cofoundry.Domain
             IMessageAggregator messageAggregator,
             ICustomEntityDefinitionRepository customEntityDefinitionRepository,
             IPermissionValidationService permissionValidationService,
-            ITransactionScopeFactory transactionScopeFactory
+            ITransactionScopeManager transactionScopeFactory
             )
         {
             _dbContext = dbContext;
@@ -78,17 +78,29 @@ namespace Cofoundry.Domain
 
                     _dbContext.CustomEntityVersionPageBlocks.Remove(dbResult.Block);
                     await _dbContext.SaveChangesAsync();
-                    scope.Complete();
-                }
-                _customEntityCache.Clear(dbResult.CustomEntityDefinitionCode, dbResult.CustomEntityId);
 
-                await _messageAggregator.PublishAsync(new CustomEntityVersionBlockDeletedMessage()
-                {
-                    CustomEntityId = dbResult.CustomEntityId,
-                    CustomEntityDefinitionCode = dbResult.CustomEntityDefinitionCode,
-                    CustomEntityVersionId = customEntityVersionBlockId
-                });
+                    scope.QueueCompletionTask(() => OnTransactionComplete(dbResult.CustomEntityDefinitionCode, dbResult.CustomEntityId, customEntityVersionBlockId));
+
+                    await scope.CompleteAsync();
+                }
+                
             }
+        }
+
+        private Task OnTransactionComplete(
+            string customEntityDefinitionCode, 
+            int customEntityId, 
+            int customEntityVersionBlockId
+            )
+        {
+            _customEntityCache.Clear(customEntityDefinitionCode, customEntityId);
+
+            return _messageAggregator.PublishAsync(new CustomEntityVersionBlockDeletedMessage()
+            {
+                CustomEntityId = customEntityId,
+                CustomEntityDefinitionCode = customEntityDefinitionCode,
+                CustomEntityVersionId = customEntityVersionBlockId
+            });
         }
 
         #endregion

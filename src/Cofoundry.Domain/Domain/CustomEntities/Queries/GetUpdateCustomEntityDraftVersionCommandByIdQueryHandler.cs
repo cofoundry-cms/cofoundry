@@ -44,7 +44,7 @@ namespace Cofoundry.Domain
                 .CustomEntityVersions
                 .Include(v => v.CustomEntity)
                 .AsNoTracking()
-                .FilterByActive()
+                .FilterActive()
                 .FilterByCustomEntityId(query.Id)
                 .Where(v => v.WorkFlowStatusId == (int)WorkFlowStatus.Draft)
                 .SingleOrDefaultAsync();

@@ -61,6 +61,34 @@ namespace Cofoundry.Domain.Data
         }
 
         /// <summary>
+        /// Copies all the page blocks from one custom entity version into the draft 
+        /// version of another custom entity. The version must be of the same custom 
+        /// entity definition.  The custom entity should already have a draft version.
+        /// </summary>
+        /// <param name="copyToCustomEntityId">
+        /// Id of the custom entity with a draft to copy the blocks to. The custom entity 
+        /// should already have a draft version; the procedure will throw an error if a draft 
+        /// version is not found.
+        /// </param>
+        /// <param name="copyFromCustomEntityIdVersionId">
+        /// Id of the custom entity version to copy from. The version must be of the same custom 
+        /// entity definition (i.e. same custom entity definition code) otherwise an exception 
+        /// will be thrown.
+        /// </param>
+        public Task CopyBlocksToDraftAsync(
+            int copyToCustomEntityId,
+            int copyFromCustomEntityIdVersionId
+            )
+        {
+            return _entityFrameworkSqlExecutor
+                .ExecuteCommandAsync(_dbContext,
+                "Cofoundry.CustomEntity_CopyBlocksToDraft",
+                 new SqlParameter("CustomEntityId", copyToCustomEntityId),
+                 new SqlParameter("CopyFromCustomEntityVersionId", copyFromCustomEntityIdVersionId)
+                 );
+        }
+
+        /// <summary>
         /// Updates the CustomEntityPublishStatusQuery lookup table for all 
         /// PublishStatusQuery values.
         /// </summary>

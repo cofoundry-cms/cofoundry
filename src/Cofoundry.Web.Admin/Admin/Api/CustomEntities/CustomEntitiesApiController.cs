@@ -48,6 +48,7 @@ namespace Cofoundry.Web.Admin
             }
 
             if (query == null) query = new SearchCustomEntitySummariesQuery();
+            ApiPagingHelper.SetDefaultBounds(query);
 
             var results = await _queryExecutor.ExecuteAsync(query);
             return _apiResponseHelper.SimpleQueryResponse(this, results);
@@ -90,6 +91,12 @@ namespace Cofoundry.Web.Admin
             var command = new DeleteCustomEntityCommand();
             command.CustomEntityId = customEntityId;
 
+            return await _apiResponseHelper.RunCommandAsync(this, command);
+        }
+
+        [HttpPost(ID_ROUTE + "/duplicate")]
+        public async Task<IActionResult> Post([FromBody] DuplicateCustomEntityCommand command)
+        {
             return await _apiResponseHelper.RunCommandAsync(this, command);
         }
 

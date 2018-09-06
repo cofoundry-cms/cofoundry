@@ -10,8 +10,9 @@ using System.Threading.Tasks;
 namespace Cofoundry.Domain
 {
     /// <summary>
-    /// Use this to decorate an integer array and indicate that it should be a collection of custom entity ids for a specific 
-    /// custom entity type. Optional parameters indicate whether the collection is sortable.
+    /// Use this to decorate an integer collection and indicate that it should be a 
+    /// collection of custom entity ids for a specific custom entity type. Optional
+    /// parameters indicate whether the collection is sortable.
     /// </summary>
     [AttributeUsage(AttributeTargets.Property)]
     public class CustomEntityCollectionAttribute : Attribute, IMetadataAttribute, IEntityRelationAttribute
@@ -24,6 +25,8 @@ namespace Cofoundry.Domain
 
         public void Process(DisplayMetadataProviderContext context)
         {
+            MetaDataAttributePlacementValidator.ValidateCollectionPropertyType(this, context, typeof(int));
+
             var modelMetaData = context.DisplayMetadata;
 
             modelMetaData

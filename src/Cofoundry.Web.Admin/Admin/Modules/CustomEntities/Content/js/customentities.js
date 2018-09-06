@@ -168,6 +168,7 @@ angular.module('cms.customEntities').controller('CustomEntityDetailsController',
     '$location',
     '_',
     'shared.LoadState',
+    'shared.SearchQuery',
     'shared.modalDialogService',
     'shared.entityVersionModalDialogService',
     'shared.customEntityService',
@@ -181,6 +182,7 @@ function (
     $location,
     _,
     LoadState,
+    SearchQuery,
     modalDialogService,
     entityVersionModalDialogService,
     customEntityService,
@@ -213,6 +215,7 @@ function (
         vm.unpublish = unpublish;
         vm.discardDraft = discardDraft;
         vm.copyToDraft = copyToDraft;
+        vm.duplicate = duplicate;
         vm.deleteCustomEntity = deleteCustomEntity;
         vm.changeUrl = changeUrl;
 
@@ -222,15 +225,25 @@ function (
         vm.saveLoadState = new LoadState();
         vm.saveAndPublishLoadState = new LoadState();
         vm.formLoadState = new LoadState(true);
+        vm.versionsLoadState = new LoadState();
         vm.options = moduleOptions;
         vm.urlLibrary = urlLibrary;
         vm.saveButtonText = moduleOptions.autoPublish ? 'Save' : 'Save & Publish';
         vm.canChangeUrl = !moduleOptions.autoGenerateUrlSlug || moduleOptions.hasLocale;
 
+        vm.versionsQuery = new SearchQuery({
+            onChanged: loadVersions,
+            useHistory: false,
+            defaultParams: {
+                pageSize: 6
+            }
+        });
+
         vm.canPublish = getPermission('CMEPUB');
         vm.canUpdateUrl = getPermission('UPDURL');
         vm.canDelete = getPermission('COMDEL');
         vm.canUpdate = getPermission('CMEPUB');
+        vm.canCreate = getPermission('COMCRT');
 
         // Init
         initData(vm.formLoadState);
@@ -303,16 +316,26 @@ function (
     }
 
     function copyToDraft(version) {
-        var hasDraftVersion = !!getDraftVersion();
 
         entityVersionModalDialogService
-            .copyToDraft(vm.customEntity.customEntityId, version.customEntityVersionId, hasDraftVersion, setLoadingOn, entityDialogConfig)
+            .copyToDraft(vm.customEntity.customEntityId, version.customEntityVersionId, vm.customEntity.hasDraftVersion, setLoadingOn, entityDialogConfig)
             .then(onOkSuccess)
             .catch(setLoadingOff);
 
         function onOkSuccess() {
             onSuccess('Draft created successfully.')
         }
+    }
+
+    function duplicate() {
+
+        modalDialogService.show({
+            templateUrl: modulePath + 'Routes/Modals/DuplicateCustomEntity.html',
+            controller: 'DuplicateCustomEntityController',
+            options: {
+                customEntity: vm.customEntity
+            }
+        });
     }
 
     function deleteCustomEntity() {
@@ -357,12 +380,6 @@ function (
             .then(vm.mainForm.formStatus.success.bind(null, message));
     }
 
-    function getDraftVersion() {
-        return _.find(vm.versions, function (version) {
-            return version.workFlowStatus === 'Draft';
-        });
-    }
-
     function initData(loadStateToTurnOff) {
 
         return $q
@@ -374,14 +391,15 @@ function (
 
         function onLoaded(results) {
             var customEntity = results[0],
-                versions = results[1];
+                pagedVersions = results[1];
 
             modelMetaData = results[2];
 
             vm.customEntity = customEntity;
-            vm.versions = versions;
+            mapVersions(customEntity, pagedVersions);
             vm.updateCommand = mapUpdateCommand(customEntity);
             vm.isMarkedPublished = vm.customEntity.publishStatus == 'Published';
+            vm.publishStatusLabel = getPublishStatusLabel(customEntity);
 
             if (vm.customEntity.locale) {
                 vm.additionalParameters = {
@@ -393,7 +411,7 @@ function (
 
             vm.editMode = false;
         }
-
+        
         function getMetaData() {
             return customEntityService.getDataModelSchema(moduleOptions.customEntityDefinitionCode);
         }
@@ -401,12 +419,54 @@ function (
         function getCustomEntity() {
             return customEntityService.getById($routeParams.id);
         }
-
-        function getVersions() {
-            return customEntityService.getVersionsByCustomEntityId($routeParams.id);
-        }
     }
-    
+
+    function loadVersions() {
+        vm.versionsLoadState.on();
+
+        return getVersions()
+            .then(function (pagedVersions) {
+                mapVersions(vm.customEntity, pagedVersions);
+            })
+            .then(setLoadingOff.bind(null, vm.versionsLoadState));
+    }
+
+    function getVersions() {
+        return customEntityService.getVersionsByCustomEntityId($routeParams.id, vm.versionsQuery.getParameters());
+    }
+
+    function mapVersions(customEntity, pagedVersions) {
+        var page = customEntity.latestVersion.pages[0],
+            isPublished = customEntity.isPublished();
+
+        _.each(pagedVersions.items, function (version) {
+
+            version.versionLabel = getVersionLabel(version, customEntity);
+            version.browseUrl = vm.urlLibrary.visualEditorForVersion(customEntity, version, true, isPublished);
+        });
+
+        vm.versions = pagedVersions;
+    }
+
+    function getVersionLabel(version, publishableEntity) {
+
+        if (version.workFlowStatus == 'Draft') return version.workFlowStatus;
+
+        var versionNumber = 'V' + version.displayVersion;
+
+        if (!version.isLatestPublishedVersion) return versionNumber;
+
+        return versionNumber + ' (' + getPublishStatusLabel(publishableEntity) + ')';
+    }
+
+    function getPublishStatusLabel(publishableEntity) {
+        if (publishableEntity.publishStatus == 'Published' && publishableEntity.publishDate < Date.now()) {
+            return 'Pending Publish';
+        }
+
+        return publishableEntity.publishStatus;
+    }
+
     function mapUpdateCommand(customEntity) {
 
         var command = {
@@ -798,4 +858,82 @@ function (
             .finally($scope.submitLoadState.off);
     }
 
+}]);
+angular.module('cms.customEntities').controller('DuplicateCustomEntityController', [
+    '$scope',
+    '$q',
+    '$location',
+    'shared.stringUtilities',
+    'shared.LoadState',
+    'shared.customEntityService',
+    'customEntities.options',
+    'options',
+    'close',
+function (
+    $scope,
+    $q,
+    $location,
+    stringUtilities,
+    LoadState,
+    customEntityService,
+    customEntityOptions,
+    options,
+    close) {
+
+    var loadLocalesDeferred = $q.defer();
+
+    init();
+    
+    /* INIT */
+
+    function init() {
+       
+        initData();
+
+        $scope.submitLoadState = new LoadState();
+        $scope.formLoadState = new LoadState(customEntityOptions.hasLocale);
+        $scope.customEntityDefinition = customEntityOptions;
+
+        $scope.save = save;
+        $scope.close = close;
+        $scope.onTitleChanged = onTitleChanged;
+
+        $scope.localesLoaded = loadLocalesDeferred.resolve;
+        $scope.formLoadState.offWhen(loadLocalesDeferred);
+    }
+
+    /* EVENTS */
+
+    function initData() {
+        var customEntity = options.customEntity;
+
+        $scope.customEntity = customEntity;
+        $scope.command = {
+            customEntityToDuplicateId: customEntity.customEntityId,
+            localeId: customEntity.locale ? customEntity.locale.localeId : undefined,
+            title: 'Copy of ' + customEntity.latestVersion.title
+        }
+
+        onTitleChanged();
+    }
+
+    function onTitleChanged() {
+        $scope.command.urlSlug = stringUtilities.slugify($scope.command.title);
+    }
+
+    function save() {
+        $scope.submitLoadState.on();
+
+        customEntityService
+            .duplicate($scope.command)
+            .then(redirectoToEntity)
+            .then(close)
+            .finally($scope.submitLoadState.off);
+    }
+
+    /* PRIVATE FUNCS */
+
+    function redirectoToEntity(customEntityId) {
+        $location.path('/' + customEntityId);
+    }
 }]);

@@ -26,6 +26,8 @@ namespace Cofoundry.Web
                 .Register<ICofoundryHtmlHelper, CofoundryHtmlHelper>()
                 .Register<IUserSessionService, UserSessionService>(RegistrationOptions.Scoped())
                 .Register<IAuthCookieNamespaceProvider, AuthCookieNamespaceProvider>()
+                .Register<IVisualEditorStateService, DefaultVisualEditorStateService>()
+                .Register<IVisualEditorStateCache, VisualEditorStateCache>(RegistrationOptions.Scoped())
 
                 .Register<IPageViewModelMapper, PageViewModelMapper>()
                 .Register<IPageViewModelFactory, PageViewModelFactory>()

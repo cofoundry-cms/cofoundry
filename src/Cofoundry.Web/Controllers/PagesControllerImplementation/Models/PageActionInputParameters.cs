@@ -16,11 +16,6 @@ namespace Cofoundry.Web
         public string Path { get; set; }
 
         /// <summary>
-        /// String representation of the request site viewer mode.
-        /// </summary>
-        public string VisualEditorMode { get; set; }
-
-        /// <summary>
         /// Optionally a VersionId can be specified to
         /// view a specific version of a page or custom entity.
         /// </summary>

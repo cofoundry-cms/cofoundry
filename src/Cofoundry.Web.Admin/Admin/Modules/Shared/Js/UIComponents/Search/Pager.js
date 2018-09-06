@@ -43,6 +43,7 @@ function (
 
         /* Watches*/
         scope.$watch('vm.result', function (newResult) {
+
             if (!newResult) {
                 vm.isFirstPage = true;
                 vm.isLastPage = true;

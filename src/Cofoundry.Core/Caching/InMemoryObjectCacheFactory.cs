@@ -9,21 +9,12 @@ using System.Threading.Tasks;
 namespace Cofoundry.Core.Caching
 {
     /// <summary>
-    /// Factory for creating IObjectCache instances
+    /// Factory for creating IObjectCache instances.
     /// </summary>
     public class InMemoryObjectCacheFactory : IObjectCacheFactory
     {
-        #region constructor
-
         private readonly ClearableMemoryCache _memoryCache;
 
-        /// <summary>
-        /// Creates a new InMemoryObjectCacheFactory instance
-        /// </summary>
-        /// <param name="cacheName">
-        /// The name of the MemoryCache configuration to use. If the cacheName is null the Default 
-        /// MemoryCache instance is used (recommended).
-        /// </param>
         public InMemoryObjectCacheFactory(
             IOptions<MemoryCacheOptions> optionsAccessor
             )
@@ -31,12 +22,8 @@ namespace Cofoundry.Core.Caching
             _memoryCache = new ClearableMemoryCache(optionsAccessor);
         }
 
-        #endregion
-
-        #region public methods
-
         /// <summary>
-        /// Gets an instance of an IObjectCache
+        /// Gets an instance of an IObjectCache.
         /// </summary>
         /// <param name="cacheNamespace">The cache namespace to organise cache entries under</param>
         /// <returns>IObjectCache instance</returns>
@@ -52,7 +39,5 @@ namespace Cofoundry.Core.Caching
         {
             _memoryCache.ClearAll();
         }
-
-        #endregion
     }
 }

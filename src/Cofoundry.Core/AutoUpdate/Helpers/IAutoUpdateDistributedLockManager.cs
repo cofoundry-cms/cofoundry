@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Cofoundry.Core.AutoUpdate
 {
@@ -19,7 +20,7 @@ namespace Cofoundry.Core.AutoUpdate
         /// <param name="lockingId">
         /// Unique identifier to represent the process that owns the lock.
         /// </param>
-        void Lock(Guid lockingId);
+        Task LockAsync(Guid lockingId);
 
         /// <summary>
         /// Unlocks the auto-update process, indicating that the process
@@ -28,6 +29,6 @@ namespace Cofoundry.Core.AutoUpdate
         /// <param name="lockingId">
         /// Unique identifier that represent the process that owns the lock.
         /// </param>
-        void Unlock(Guid lockingId);
+        Task UnlockAsync(Guid lockingId);
     }
 }

@@ -73,7 +73,9 @@ namespace Cofoundry.Core.Web
         /// <summary>
         /// Remove HTML tags from string
         /// </summary>
-        /// <see cref="http://www.dotnetperls.com/remove-html-tags"/>
+        /// <remakrs>
+        /// See http://www.dotnetperls.com/remove-html-tags
+        /// </remakrs>
         public string StripHtml(string source)
         {
             if (source == null) return string.Empty;

@@ -9,7 +9,7 @@ using Cofoundry.Domain.CQS;
 using Microsoft.EntityFrameworkCore;
 using Cofoundry.Core.Validation;
 using Cofoundry.Core.MessageAggregator;
-using Cofoundry.Core.EntityFramework;
+using Cofoundry.Core.Data;
 
 namespace Cofoundry.Domain
 {
@@ -28,7 +28,7 @@ namespace Cofoundry.Domain
         private readonly IMessageAggregator _messageAggregator;
         private readonly ICustomEntityDefinitionRepository _customEntityDefinitionRepository;
         private readonly IPermissionValidationService _permissionValidationService;
-        private readonly ITransactionScopeFactory _transactionScopeFactory;
+        private readonly ITransactionScopeManager _transactionScopeFactory;
         private readonly ICustomEntityStoredProcedures _customEntityStoredProcedures;
 
         public AddCustomEntityCommandHandler(
@@ -41,7 +41,7 @@ namespace Cofoundry.Domain
             IMessageAggregator messageAggregator,
             ICustomEntityDefinitionRepository customEntityDefinitionRepository,
             IPermissionValidationService permissionValidationService,
-            ITransactionScopeFactory transactionScopeFactory,
+            ITransactionScopeManager transactionScopeFactory,
             ICustomEntityStoredProcedures customEntityStoredProcedures
             )
         {
@@ -73,8 +73,11 @@ namespace Cofoundry.Domain
             // Custom Validation
             ValidateCommand(command, definition);
             await ValidateIsUniqueAsync(command, definition, executionContext);
-            
+
             var entity = MapEntity(command, definition, executionContext);
+
+            await SetOrdering(entity, definition);
+
             _dbContext.CustomEntities.Add(entity);
 
             using (var scope = _transactionScopeFactory.Create(_dbContext))
@@ -84,23 +87,31 @@ namespace Cofoundry.Domain
                 var dependencyCommand = new UpdateUnstructuredDataDependenciesCommand(
                     CustomEntityVersionEntityDefinition.DefinitionCode,
                     entity.CustomEntityVersions.First().CustomEntityVersionId,
-                    command.Model); 
-                
+                    command.Model);
+
                 await _commandExecutor.ExecuteAsync(dependencyCommand, executionContext);
                 await _customEntityStoredProcedures.UpdatePublishStatusQueryLookupAsync(entity.CustomEntityId);
 
-                scope.Complete();
-            }
+                scope.QueueCompletionTask(() => OnTransactionComplete(command, entity));
 
-            _customEntityCache.ClearRoutes(definition.CustomEntityDefinitionCode);
+                await scope.CompleteAsync();
+            }
 
             // Set Ouput
             command.OutputCustomEntityId = entity.CustomEntityId;
+        }
+        
+        private Task OnTransactionComplete(
+            AddCustomEntityCommand command, 
+            CustomEntity entity
+            )
+        {
+            _customEntityCache.ClearRoutes(entity.CustomEntityDefinitionCode);
 
-            await _messageAggregator.PublishAsync(new CustomEntityAddedMessage()
+            return _messageAggregator.PublishAsync(new CustomEntityAddedMessage()
             {
                 CustomEntityId = entity.CustomEntityId,
-                CustomEntityDefinitionCode = definition.CustomEntityDefinitionCode,
+                CustomEntityDefinitionCode = entity.CustomEntityDefinitionCode,
                 HasPublishedVersionChanged = command.Publish
             });
         }
@@ -150,6 +161,28 @@ namespace Cofoundry.Domain
                 .Where(d => d.CustomEntityDefinitionCode == command.CustomEntityDefinitionCode);
         }
 
+        private async Task SetOrdering(CustomEntity customEntity, CustomEntityDefinitionSummary definition)
+        {
+            if (definition.Ordering == CustomEntityOrdering.Full)
+            {
+                var maxOrdering = await _dbContext
+                    .CustomEntities
+                    .MaxAsync(e => e.Ordering);
+
+                if (maxOrdering.HasValue)
+                {
+                    // don't worry too much about race conditons here
+                    // if two entities are added at the same time it's no
+                    // big deal if the ordering is tied
+                    customEntity.Ordering = maxOrdering.Value + 1;
+                }
+                else
+                {
+                    customEntity.Ordering = 0;
+                }
+            }
+        }
+
         private CustomEntity MapEntity(AddCustomEntityCommand command, CustomEntityDefinitionSummary definition, IExecutionContext executionContext)
         {
             var entity = new CustomEntity();
@@ -162,6 +195,7 @@ namespace Cofoundry.Domain
             var version = new CustomEntityVersion();
             version.Title = command.Title.Trim();
             version.SerializedData = _dbUnstructuredDataSerializer.Serialize(command.Model);
+            version.DisplayVersion = 1;
 
             if (command.Publish)
             {

@@ -2,10 +2,18 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Cofoundry.Core;
 using Cofoundry.Domain.CQS;
 
 namespace Cofoundry.Domain
 {
+    /// <summary>
+    /// Returns page routing data for a single page. The 
+    /// PageRoute projection is a small page object focused on providing 
+    /// routing data only. Data returned from this query is cached by 
+    /// default as it's core to routing and often incorporated in more detailed
+    /// page projections.
+    /// </summary>
     public class GetPageRouteByIdQueryHandler 
         : IAsyncQueryHandler<GetPageRouteByIdQuery, PageRoute>
         , IPermissionRestrictedQueryHandler<GetPageRouteByIdQuery, PageRoute>
@@ -21,8 +29,8 @@ namespace Cofoundry.Domain
 
         public async Task<PageRoute> ExecuteAsync(GetPageRouteByIdQuery query, IExecutionContext executionContext)
         {
-            var allPageRoutes = await _queryExecutor.ExecuteAsync(new GetAllPageRoutesQuery(), executionContext);
-            var result = allPageRoutes.SingleOrDefault(p => p.PageId == query.PageId);
+            var allPageRoutes = await _queryExecutor.ExecuteAsync(new GetPageRouteLookupQuery(), executionContext);
+            var result = allPageRoutes.GetOrDefault(query.PageId);
 
             return result;
         }

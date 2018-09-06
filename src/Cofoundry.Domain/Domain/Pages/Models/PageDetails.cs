@@ -13,8 +13,14 @@ namespace Cofoundry.Domain
     /// </summary>
     public class PageDetails : ICreateAudited
     {
+        /// <summary>
+        /// Database id of the page record.
+        /// </summary>
         public int PageId { get; set; }
 
+        /// <summary>
+        /// The routing data for the page.
+        /// </summary>
         public PageRoute PageRoute { get; set; }
 
         /// <summary>
@@ -28,6 +34,9 @@ namespace Cofoundry.Domain
         /// </summary>
         public PageVersionDetails LatestVersion { get; set; }
 
+        /// <summary>
+        /// Simple audit data for page creation.
+        /// </summary>
         public CreateAuditData AuditData { get; set; }
     }
 }

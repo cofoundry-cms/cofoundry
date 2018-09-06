@@ -23,6 +23,8 @@ namespace Cofoundry.Domain
 
         public void Process(DisplayMetadataProviderContext context)
         {
+            MetaDataAttributePlacementValidator.ValidatePropertyType(this, context, typeof(int), typeof(int?));
+
             var modelMetaData = context.DisplayMetadata;
 
             modelMetaData.AddAdditionalValueIfNotEmpty("CustomEntityDefinitionCode", CustomEntityDefinitionCode);

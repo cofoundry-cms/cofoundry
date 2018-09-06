@@ -26,17 +26,20 @@ namespace Cofoundry.Core
         });
 
         /// <summary>
-        /// Converts a datetime into a relative string description compared to the time right now, e.g. 2 days ago or about a minute from now.
+        /// Converts a datetime into a relative string description compared to the time 
+        /// right now, e.g. 2 days ago or about a minute from now.
         /// </summary>
-        /// <param name="dateTime">The date time.</param>
-        /// <returns></returns>
-        public static string ToRelativeDateString(DateTime input)
+        /// <param name="dateTime">The date time to convert.</param>
+        public static string ToRelativeDateString(DateTime dateTime)
         {
-            TimeSpan x = DateTime.Now - input;
-            string Suffix = x.TotalMinutes > 0 ? " ago" : " from now";
-            x = new TimeSpan(Math.Abs(x.Ticks));
+            var timeDifference = DateTime.Now - dateTime;
+            string suffix = timeDifference.TotalMinutes > 0 ? " ago" : " from now";
+            timeDifference = new TimeSpan(Math.Abs(timeDifference.Ticks));
 
-            return relativeDateOffsets.Value.First(n => x.TotalMinutes < n.Key).Value(x) + Suffix;
+            return relativeDateOffsets
+                .Value
+                .First(n => timeDifference.TotalMinutes < n.Key)
+                .Value(timeDifference) + suffix;
         }
     }
 }

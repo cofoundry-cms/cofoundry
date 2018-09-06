@@ -4107,11 +4107,12 @@ angular.module('cms.shared').factory('shared.customEntityService', [
     '$http',
     '_',
     'shared.serviceBase',
+    'shared.publishableEntityMapper',
 function (
     $http,
     _,
-    serviceBase
-    ) {
+    serviceBase,
+    publishableEntityMapper) {
 
     var service = {},
         customEntityServiceBase = serviceBase + 'custom-entities',
@@ -4122,7 +4123,13 @@ function (
     service.getAll = function (query, customEntityDefinitionCode) {
         return $http.get(getCustomEntityDefinitionServiceBase(customEntityDefinitionCode) + '/custom-entities', {
             params: query
-        });
+        }).then(map);
+
+        function map(pagedResult) {
+            _.each(pagedResult.items, publishableEntityMapper.map);
+
+            return pagedResult;
+        }
     }
 
     service.getDefinition = function (customEntityDefinitionCode) {
@@ -4161,17 +4168,36 @@ function (
             params: {
                 'customEntityIds': ids
             }
-        });
+        }).then(map);
+
+        function map(customEntitySummaries) {
+            _.each(customEntitySummaries, publishableEntityMapper.map);
+
+            return customEntitySummaries;
+        }
     }
 
     service.getById = function (customEntityId) {
 
-        return $http.get(getIdRoute(customEntityId));
+        return $http
+            .get(getIdRoute(customEntityId))
+            .then(map);
+
+        function map(entity) {
+
+            if (entity) {
+                publishableEntityMapper.map(entity);
+            }
+
+            return entity;
+        }
     }
 
-    service.getVersionsByCustomEntityId = function (customEntityId) {
+    service.getVersionsByCustomEntityId = function (customEntityId, query) {
 
-        return $http.get(getVerionsRoute(customEntityId));
+        return $http.get(getVerionsRoute(customEntityId), {
+            params: query
+        });
     }
 
 
@@ -4208,6 +4234,9 @@ function (
         return $http.delete(getVerionsRoute(id) + '/draft');
     }
 
+    service.duplicate = function (command) {
+        return $http.post(getIdRoute(command.customEntityToDuplicateId) + '/duplicate', command);
+    }
 
     /* PRIVATES */
 
@@ -4226,7 +4255,6 @@ function (
         }
         return customEntityDefinitionServiceBase + customEntityDefinitionCode;
     }
-
 
     return service;
 }]);
@@ -4512,11 +4540,15 @@ function (
     return service;
 }]);
 angular.module('cms.shared').factory('shared.pageService', [
+    '_',
     '$http',
     'shared.serviceBase',
+    'shared.publishableEntityMapper',
 function (
+    _,
     $http,
-    serviceBase) {
+    serviceBase,
+    publishableEntityMapper) {
 
     var service = {},
         pagesServiceBase = serviceBase + 'pages';
@@ -4526,7 +4558,13 @@ function (
     service.getAll = function (query) {
         return $http.get(pagesServiceBase, {
             params: query
-        });
+        }).then(map);
+
+        function map(pagedResult) {
+            _.map(pagedResult.items, publishableEntityMapper.map);
+
+            return pagedResult;
+        }
     }
 
     service.getByIdRange = function (pageIds) {
@@ -4534,17 +4572,36 @@ function (
             params: {
                 'pageIds': pageIds
             }
-        });
+        }).then(map);
+
+        function map(pageSummaries) {
+            _.map(pageSummaries, publishableEntityMapper.map);
+
+            return pageSummaries;
+        }
     }
     
     service.getById = function (pageId) {
 
-        return $http.get(service.getIdRoute(pageId));
+        return $http
+            .get(service.getIdRoute(pageId))
+            .then(map);
+
+        function map(page) {
+
+            if (page) {
+                publishableEntityMapper.map(page.pageRoute);
+            }
+
+            return page;
+        }
     }
 
-    service.getVersionsByPageId = function (pageId) {
+    service.getVersionsByPageId = function (pageId, query) {
 
-        return $http.get(service.getPageVerionsRoute(pageId));
+        return $http.get(service.getPageVerionsRoute(pageId), {
+            params: query
+        });
     }
 
     service.getPageTypes = function () {
@@ -4594,8 +4651,6 @@ function (
         return $http.post(service.getIdRoute(command.pageToDuplicateId) + '/duplicate', command);
     }
 
-    /* PRIVATES */
-
     /* HELPERS */
 
     service.getIdRoute = function (pageId) {
@@ -4604,6 +4659,46 @@ function (
 
     service.getPageVerionsRoute = function (pageId) {
         return service.getIdRoute(pageId) + '/versions';
+    }
+
+    function mapPageSummaries(page) {
+
+        return _.map(publishableEntityMapper.map);
+    }
+
+    return service;
+}]);
+angular.module('cms.shared').factory('shared.publishableEntityMapper', [
+'$http',
+'shared.serviceBase',
+function (
+    $http,
+    serviceBase) {
+
+    var service = {};
+
+    /* MAPPERS */
+
+    service.map = function (entity) {
+        entity.isPublished = isPublished.bind(null, entity);
+        entity.getPublishStatusLabel = getPublishStatusLabel.bind(null, entity);
+    }
+
+    /* PRIVATE */
+
+    function isPublished(entity) {
+
+        return entity.publishStatus == 'Published'
+            && entity.hasPublishedVersion
+            && new Date(entity.publishDate) < Date.now();
+    }
+
+    function getPublishStatusLabel(entity) {
+        if (entity.publishStatus == 'Published' && entity.publishDate < Date.now()) {
+            return 'Pending Publish';
+        }
+
+        return entity.publishStatus;
     }
 
     return service;
@@ -5037,7 +5132,7 @@ function (
 
     /* Pages */
 
-    service.pageVisualEditor = function (pageRoute, isEditMode) {
+    service.visualEditorForPage = function (pageRoute, isEditMode) {
         if (!pageRoute) return '';
 
         var path = pageRoute.fullPath;
@@ -5047,6 +5142,36 @@ function (
         }
 
         return path;
+    }
+
+    service.visualEditorForVersion = function (
+        pageRoute,
+        versionRoute,
+        isCustomEntityVersion,
+        isPublished
+    ) {
+        if (!pageRoute) return '';
+
+        var url = pageRoute.fullPath + "?";
+
+        // Some of the latest version states will have a default view e.g. preview 
+        // or live so check for these first before we defer to showing by version number
+        if (versionRoute.workFlowStatus == 'Draft') {
+            url += "mode=preview";
+        }
+        else if (versionRoute.isLatestPublishedVersion && isPublished) {
+            // Published, so show live view
+            url += "mode=live";
+        } else {
+            var versionIdProperty = (isCustomEntityVersion ? 'customEntity' : 'page') + 'VersionId';
+            url += "version=" + versionRoute[versionIdProperty];
+        }
+
+        if (isCustomEntityVersion) {
+            url += "&edittype=entity";
+        }
+
+        return url;
     }
 
     /* Custom Entities */
@@ -8962,10 +9087,10 @@ function (
         var DEFAULT_CONFIG = 'headings,basicFormatting',
             buttonConfig = {
                 headings: 'formatselect',
-                basicFormatting: 'fullscreen undo redo | bold italic underline | link unlink',
+                basicFormatting: 'fullscreen undo redo removeformat | bold italic underline | link unlink',
                 advancedFormatting: 'bullist numlist blockquote | alignleft aligncenter alignright alignjustify | strikethrough superscript subscript',
                 media: 'cfimage media',
-                source: 'code removeformat',
+                source: 'code',
             }, toolbars = [];
 
         toolbarsConfig = toolbarsConfig || DEFAULT_CONFIG;
@@ -11220,7 +11345,7 @@ function (
 
             arrayUtilities.moveObject(vm.gridData, droppedEntity, $index, PAGE_ID_PROP);
 
-            // Update model with new orering
+            // Update model with new ordering
             setModelFromGridData();
         }
 
@@ -11599,6 +11724,7 @@ function (
 
         /* Watches*/
         scope.$watch('vm.result', function (newResult) {
+
             if (!newResult) {
                 vm.isFirstPage = true;
                 vm.isLastPage = true;
@@ -11700,7 +11826,7 @@ angular.module('cms.shared').factory('shared.SearchQuery', ['$location', '_', fu
          * Updates the query parameters.
          */
         me.update = function (query) {
-            var newParams = _.defaults({}, query, pagingDefaultConfig, searchParams);
+            var newParams = _.defaults({}, query, defaultParams, searchParams);
             setParams(newParams);
         }
 

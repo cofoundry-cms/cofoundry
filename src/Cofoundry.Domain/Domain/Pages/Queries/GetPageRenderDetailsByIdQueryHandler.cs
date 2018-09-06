@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 namespace Cofoundry.Domain
 {
     /// <summary>
-    /// Gets a page object that contains the data required to render a page, including template 
+    /// Gets a projection of a page that contains the data required to render a page, including template 
     /// data for all the content-editable regions.
     /// </summary>
     public class GetPageRenderDetailsByIdQueryHandler 
@@ -44,10 +44,11 @@ namespace Cofoundry.Domain
         {
             var dbPage = await QueryPageAsync(query, executionContext);
             if (dbPage == null) return null;
-            var page = _pageRenderDetailsMapper.Map(dbPage);
 
             var pageRouteQuery = new GetPageRouteByIdQuery(dbPage.PageId);
-            page.PageRoute = await _queryExecutor.ExecuteAsync(pageRouteQuery, executionContext);
+            var pageRoute = await _queryExecutor.ExecuteAsync(pageRouteQuery, executionContext);
+
+            var page = _pageRenderDetailsMapper.Map(dbPage, pageRoute);
 
             var dbPageBlocks = await QueryPageBlocks(page).ToListAsync();
             var allBlockTypes = await _queryExecutor.ExecuteAsync(new GetAllPageBlockTypeSummariesQuery(), executionContext);

@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using System.IO;
 using System.Text.Encodings.Web;
 using Cofoundry.Core;
+using Microsoft.Extensions.Logging;
 
 namespace Cofoundry.Web
 {
@@ -25,12 +26,15 @@ namespace Cofoundry.Web
         private readonly IPageBlockRenderer _blockRenderer;
         private readonly IPageBlockTypeDataModelTypeFactory _pageBlockDataModelTypeFactory;
         private readonly IPageBlockTypeFileNameFormatter _blockTypeFileNameFormatter;
-        private readonly List<string> _allowedBlocks = new List<string>();
+        private readonly IVisualEditorStateService _visualEditorStateService;
+        private readonly ILogger<CustomEntityTemplateRegionTagBuilder<TModel>> _logger;
 
         public CustomEntityTemplateRegionTagBuilder(
             IPageBlockRenderer blockRenderer,
             IPageBlockTypeDataModelTypeFactory pageBlockDataModelTypeFactory,
             IPageBlockTypeFileNameFormatter pageBlockTypeFileNameFormatter,
+            IVisualEditorStateService visualEditorStateService,
+            ILogger<CustomEntityTemplateRegionTagBuilder<TModel>> logger,
             ViewContext viewContext,
             ICustomEntityPageViewModel<TModel> customEntityViewModel, 
             string regionName
@@ -43,6 +47,8 @@ namespace Cofoundry.Web
             _blockRenderer = blockRenderer;
             _pageBlockDataModelTypeFactory = pageBlockDataModelTypeFactory;
             _blockTypeFileNameFormatter = pageBlockTypeFileNameFormatter;
+            _visualEditorStateService = visualEditorStateService;
+            _logger = logger;
             _regionName = regionName;
             _customEntityViewModel = customEntityViewModel;
             _viewContext = viewContext;
@@ -58,7 +64,7 @@ namespace Cofoundry.Web
         private bool _allowMultipleBlocks = false;
         private int? _emptyContentMinHeight = null;
         private Dictionary<string, string> _additonalHtmlAttributes = null;
-        private Dictionary<string, object> _permittedBlockTypes = new Dictionary<string, object>();
+        private readonly HashSet<string> _permittedBlocks = new HashSet<string>();
 
         #endregion
 
@@ -166,7 +172,7 @@ namespace Cofoundry.Web
             // Make sure we have the correct name casing
             var formattedBlockTypeName = _blockTypeFileNameFormatter.FormatFromDataModelType(blockType);
 
-            _permittedBlockTypes.Add(formattedBlockTypeName, null);
+            _permittedBlocks.Add(formattedBlockTypeName);
         }
 
         #endregion
@@ -190,12 +196,11 @@ namespace Cofoundry.Web
             }
             else
             {
-                var msg = "WARNING: The custom entity region '" + _regionName + "' cannot be found in the database";
+                _logger.LogDebug("The custom entity region '{RegionName}' cannot be found in the database", _regionName);
 
-                Debug.Assert(region != null, msg);
                 if (_customEntityViewModel.CustomEntity.WorkFlowStatus != WorkFlowStatus.Published)
                 {
-                    _output = "<!-- " + msg + " -->";
+                    _output = "<!-- The custom entity region " + _regionName + " cannot be found in the database -->";
                 }
             }
 
@@ -204,9 +209,11 @@ namespace Cofoundry.Web
 
         public void WriteTo(TextWriter writer, HtmlEncoder encoder)
         {
-            Debug.Assert(_output != null, $"Template region '{ _regionName }' definition does not call { nameof(InvokeAsync)}().");
-
-            if (_output != null)
+            if (_output == null)
+            {
+                _logger.LogWarning("Template region '{RegionName}' definition does not call " + nameof(InvokeAsync) + "().", _regionName);
+            }
+            else
             {
                 writer.Write(_output);
             }
@@ -214,35 +221,12 @@ namespace Cofoundry.Web
 
         private async Task<string> RenderRegion(CustomEntityPageRegionRenderDetails pageRegion)
         {
-            string blocksHtml = string.Empty;
-
-            if (pageRegion.Blocks.Any())
-            {
-                var renderingTasks = pageRegion
-                        .Blocks
-                        .Select(m => _blockRenderer.RenderBlockAsync(_viewContext, _customEntityViewModel, m));
-
-                var blockHtmlParts = await Task.WhenAll(renderingTasks);
-
-                if (!_allowMultipleBlocks)
-                {
-                    // If for some reason another block has been added in error, make sure we only display one.
-                    blocksHtml = blockHtmlParts.Last();
-                }
-                else
-                {
-                    blocksHtml = string.Join(string.Empty, blockHtmlParts);
-                }
-            }
-            else if (!_allowMultipleBlocks)
-            {
-                // If there are no blocks and this is a single block region
-                // add a placeholder element so we always have a menu
-                blocksHtml = _blockRenderer.RenderPlaceholderBlock(_emptyContentMinHeight);
-            }
+            var regionAttributes = new Dictionary<string, string>();
+            var visualEditorState = await _visualEditorStateService.GetCurrentAsync();
+            var blocksHtml = await RenderBlocksToHtml(pageRegion, regionAttributes, visualEditorState);
 
             // If we're not in edit mode just return the blocks.
-            if (!_customEntityViewModel.IsPageEditMode) // TODO: IsCustom entity mode
+            if (visualEditorState.VisualEditorMode != VisualEditorMode.Edit)
             {
                 if (_wrappingTagName != null)
                 {
@@ -257,36 +241,81 @@ namespace Cofoundry.Web
                 return blocksHtml;
             }
 
-            var attrs = new Dictionary<string, string>();
-            attrs.Add("data-cms-page-template-region-id", pageRegion.PageTemplateRegionId.ToString());
-            attrs.Add("data-cms-page-region-name", pageRegion.Name);
-            attrs.Add("data-cms-custom-entity-region", string.Empty);
+            regionAttributes.Add("data-cms-page-template-region-id", pageRegion.PageTemplateRegionId.ToString());
+            regionAttributes.Add("data-cms-page-region-name", pageRegion.Name);
+            regionAttributes.Add("data-cms-custom-entity-region", string.Empty);
+            regionAttributes.Add("class", "cofoundry__sv-region");
 
-            attrs.Add("class", "cofoundry__sv-region");
-
-            if (_permittedBlockTypes.Any())
+            if (_permittedBlocks.Any())
             {
-                var permittedBlockTypes = _permittedBlockTypes.Select(m => m.Key);
-                attrs.Add("data-cms-page-region-permitted-block-types", string.Join(",", permittedBlockTypes));
+                regionAttributes.Add("data-cms-page-region-permitted-block-types", string.Join(",", _permittedBlocks));
             }
 
             if (_allowMultipleBlocks)
             {
-                attrs.Add("data-cms-multi-block", "true");
+                regionAttributes.Add("data-cms-multi-block", "true");
 
                 if (_emptyContentMinHeight.HasValue)
                 {
-                    attrs.Add("style", "min-height:" + _emptyContentMinHeight + "px");
+                    regionAttributes.Add("style", "min-height:" + _emptyContentMinHeight + "px");
                 }
             }
-            
+
             return TemplateRegionTagBuilderHelper.WrapInTag(
                 blocksHtml,
                 _wrappingTagName,
                 _allowMultipleBlocks,
                 _additonalHtmlAttributes,
-                attrs
+                regionAttributes
                 );
+        }
+
+        private async Task<string> RenderBlocksToHtml(
+            CustomEntityPageRegionRenderDetails pageRegion,
+            Dictionary<string, string> regionAttributes,
+            VisualEditorState visualEditorState
+            )
+        {
+            // No _permittedBlocks means any is allowed.
+            var blocksToRender = pageRegion
+                .Blocks
+                .Where(m => _permittedBlocks.Count == 0 || _permittedBlocks.Contains(m.BlockType.FileName));
+
+            var blockHtmlParts = new List<string>();
+
+            foreach (var block in blocksToRender)
+            {
+                var renderedBlock = await _blockRenderer.RenderBlockAsync(_viewContext, _customEntityViewModel, block);
+                blockHtmlParts.Add(renderedBlock);
+            }
+
+            string blocksHtml = string.Empty;
+
+            if (blockHtmlParts.Any())
+            {
+                if (!_allowMultipleBlocks)
+                {
+                    // If for some reason another block has been added in error, make sure we only display one.
+                    blocksHtml = blockHtmlParts.Last();
+                }
+                else
+                {
+                    blocksHtml = string.Join(string.Empty, blockHtmlParts);
+                }
+            }
+            else
+            {
+                regionAttributes.Add("data-cms-page-region-empty", string.Empty);
+
+                if (!_allowMultipleBlocks && visualEditorState.VisualEditorMode == VisualEditorMode.Edit)
+                {
+                    // If there are no blocks and this is a single block region
+                    // add a placeholder element so we always have a menu
+                    blocksHtml = _blockRenderer.RenderPlaceholderBlock(_emptyContentMinHeight);
+                }
+            }
+
+            return blocksHtml;
         }
 
         #endregion

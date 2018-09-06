@@ -13,20 +13,20 @@ namespace Cofoundry.Domain
     /// </summary>
     public class OpenGraphDataMapper : IOpenGraphDataMapper
     {
-        private readonly IImageAssetSummaryMapper _imageAssetSummaryMapper;
+        private readonly IImageAssetRenderDetailsMapper _imageAssetRenderDetailsMapper;
 
         public OpenGraphDataMapper(
-            IImageAssetSummaryMapper imageAssetSummaryMapper
+            IImageAssetRenderDetailsMapper imageAssetRenderDetailsMapper
             )
         {
-            _imageAssetSummaryMapper = imageAssetSummaryMapper;
+            _imageAssetRenderDetailsMapper = imageAssetRenderDetailsMapper;
         }
 
         /// <summary>
         /// Maps an EF PageVersion record from the db into an OpenGraphData 
         /// object.
         /// </summary>
-        /// <param name="dbPageVersion">PageVersion record from the database.</param>
+        /// <param name="dbPageVersion">PageVersion record from the database, must include the OpenGraphImageAsset property.</param>
         public OpenGraphData Map(PageVersion dbPageVersion)
         {
             var result = new OpenGraphData()
@@ -35,9 +35,14 @@ namespace Cofoundry.Domain
                 Title = dbPageVersion.OpenGraphTitle
             };
 
-            if (result.Image != null)
+            if (dbPageVersion.OpenGraphImageId.HasValue && dbPageVersion.OpenGraphImageAsset == null)
             {
-                result.Image = _imageAssetSummaryMapper.Map(dbPageVersion.OpenGraphImageAsset);
+                throw new Exception($"{nameof(PageVersion)}.{nameof(dbPageVersion.OpenGraphImageAsset)} must be included in the EF query if using {nameof(OpenGraphDataMapper)}. ");
+            }
+
+            if (dbPageVersion.OpenGraphImageAsset != null)
+            {
+                result.Image = _imageAssetRenderDetailsMapper.Map(dbPageVersion.OpenGraphImageAsset);
             }
 
             return result;

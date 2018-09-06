@@ -1,0 +1,49 @@
+﻿<cms-modal-dialog-container cms-modal-size="large">
+
+    <cms-modal-dialog-header>
+        Duplicate {{::customEntityDefinition.nameSingular}}: {{::customEntity.latestVersion.title}}
+    </cms-modal-dialog-header>
+
+    <cms-form cms-name="duplicatePageForm" 
+              cms-loading="formLoadState.isLoading">
+
+        <cms-page-actions>
+            <cms-button-submit cms-text="Create duplicate"
+                               ng-click="save()"
+                               ng-disabled="duplicatePageForm.$invalid || submitLoadState.isLoading"
+                               cms-loading="submitLoadState.isLoading"></cms-button-submit>
+
+            <cms-button cms-text="Cancel"
+                        ng-click="close()"></cms-button>
+        </cms-page-actions>
+
+        <cms-page-body>
+
+            <cms-form-status></cms-form-status>
+
+            <cms-form-section cms-title="Settings">
+
+                <cms-form-field-locale-selector cms-model="command.localeId"
+                                                cms-on-loaded="localesLoaded()"
+                                                ng-if="::correctScore.hasLocale"></cms-form-field-locale-selector>
+
+                <cms-form-field-text cms-model="command.title"
+                                     cms-title="{{::customEntityDefinition.terms['title']}}"
+                                     cms-change="onTitleChanged()"
+                                     required
+                                     maxlength="200"></cms-form-field-text>
+
+                <cms-form-field-text cms-title="{{::customEntityDefinition.terms['urlSlug']}}"
+                                     cms-model="command.urlSlug"
+                                     description="Lower case and containing only letter, numbers, underscores and hyphens. E.g. 'rock-and-roll'"
+                                     ng-if="::!customEntityDefinition.autoGenerateUrlSlug"
+                                     required
+                                     maxlength="200"></cms-form-field-text>
+
+            </cms-form-section>
+
+        </cms-page-body>
+
+    </cms-form>
+
+</cms-modal-dialog-container>

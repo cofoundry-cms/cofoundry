@@ -119,7 +119,7 @@ namespace Cofoundry.Web
         /// <summary>
         /// Logs the user out of the specified user area.
         /// </summary>
-        /// <param name="userAreaCode">Unique code of the user area to log the user into (required).</param>
+        /// <param name="userAreaCode">Unique code of the user area to log the user out of (required).</param>
         public async Task LogUserOutAsync(string userAreaCode)
         {
             if (userAreaCode == null)

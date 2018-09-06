@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using Cofoundry.Core.Validation;
 using Cofoundry.Core.MessageAggregator;
 using Cofoundry.Core;
+using Cofoundry.Core.Data;
 
 namespace Cofoundry.Domain
 {
@@ -24,6 +25,7 @@ namespace Cofoundry.Domain
         private readonly ICustomEntityCache _customEntityCache;
         private readonly IMessageAggregator _messageAggregator;
         private readonly IPermissionValidationService _permissionValidationService;
+        private readonly ITransactionScopeManager _transactionScopeFactory;
 
         public UpdateCustomEntityUrlCommandHandler(
             IQueryExecutor queryExecutor,
@@ -31,7 +33,8 @@ namespace Cofoundry.Domain
             EntityAuditHelper entityAuditHelper,
             ICustomEntityCache customEntityCache,
             IMessageAggregator messageAggregator,
-            IPermissionValidationService permissionValidationService
+            IPermissionValidationService permissionValidationService,
+            ITransactionScopeManager transactionScopeFactory
             )
         {
             _queryExecutor = queryExecutor;
@@ -40,6 +43,7 @@ namespace Cofoundry.Domain
             _customEntityCache = customEntityCache;
             _messageAggregator = messageAggregator;
             _permissionValidationService = permissionValidationService;
+            _transactionScopeFactory = transactionScopeFactory;
         }
 
         #endregion
@@ -64,16 +68,22 @@ namespace Cofoundry.Domain
             Map(command, entity, definition);
 
             await _dbContext.SaveChangesAsync();
-            _customEntityCache.Clear(entity.CustomEntityDefinitionCode, command.CustomEntityId);
 
-            await _messageAggregator.PublishAsync(new CustomEntityUrlChangedMessage()
+            await _transactionScopeFactory.QueueCompletionTaskAsync(_dbContext, () => OnTransactionComplete(entity));
+        }
+
+        private Task OnTransactionComplete(CustomEntity entity)
+        {
+            _customEntityCache.Clear(entity.CustomEntityDefinitionCode, entity.CustomEntityId);
+
+            return _messageAggregator.PublishAsync(new CustomEntityUrlChangedMessage()
             {
-                CustomEntityId = command.CustomEntityId,
+                CustomEntityId = entity.CustomEntityId,
                 CustomEntityDefinitionCode = entity.CustomEntityDefinitionCode,
                 HasPublishedVersionChanged = entity.PublishStatusCode == PublishStatusCode.Published
             });
         }
-        
+
         private async Task ValidateIsUniqueAsync(
             UpdateCustomEntityUrlCommand command, 
             CustomEntityDefinitionSummary definition,

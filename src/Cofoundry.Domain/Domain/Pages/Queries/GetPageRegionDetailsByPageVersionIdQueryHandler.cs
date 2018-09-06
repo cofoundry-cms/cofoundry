@@ -11,10 +11,8 @@ using System.Diagnostics;
 namespace Cofoundry.Domain
 {
     /// <summary>
-    /// Gets a collection of the content managed regions and
-    /// blocks for a specific version of a page. These are the 
-    /// content blocks that get rendered in the page template linked
-    /// to the page version.
+    /// Returns a collection of the content managed regions and
+    /// blocks for a specific version of a page.
     /// </summary>
     public class GetPageRegionDetailsByPageVersionIdQueryHandler 
         : IAsyncQueryHandler<GetPageRegionDetailsByPageVersionIdQuery, ICollection<PageRegionDetails>>

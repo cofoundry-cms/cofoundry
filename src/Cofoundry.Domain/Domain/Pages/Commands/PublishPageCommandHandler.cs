@@ -7,11 +7,15 @@ using Cofoundry.Domain.Data;
 using Cofoundry.Domain.CQS;
 using Microsoft.EntityFrameworkCore;
 using Cofoundry.Core.MessageAggregator;
-using Cofoundry.Core.EntityFramework;
+using Cofoundry.Core.Data;
 using Cofoundry.Core;
 
 namespace Cofoundry.Domain
 {
+    /// <summary>
+    /// Publishes a page. If the page is already published and
+    /// a date is specified then the publish date will be updated.
+    /// </summary>
     public class PublishPageCommandHandler 
         : IAsyncCommandHandler<PublishPageCommand>
         , IPermissionRestrictedCommandHandler<PublishPageCommand>
@@ -20,7 +24,7 @@ namespace Cofoundry.Domain
         private readonly CofoundryDbContext _dbContext;
         private readonly IPageCache _pageCache;
         private readonly IMessageAggregator _messageAggregator;
-        private readonly ITransactionScopeFactory _transactionScopeFactory;
+        private readonly ITransactionScopeManager _transactionScopeFactory;
         private readonly IPageStoredProcedures _pageStoredProcedures;
 
         public PublishPageCommandHandler(
@@ -28,7 +32,7 @@ namespace Cofoundry.Domain
             CofoundryDbContext dbContext,
             IPageCache pageCache,
             IMessageAggregator messageAggregator,
-            ITransactionScopeFactory transactionScopeFactory,
+            ITransactionScopeManager transactionScopeFactory,
             IPageStoredProcedures pageStoredProcedures
             )
         {
@@ -44,25 +48,25 @@ namespace Cofoundry.Domain
 
         public async Task ExecuteAsync(PublishPageCommand command, IExecutionContext executionContext)
         {
-            var version =await _dbContext
+            var version = await _dbContext
                 .PageVersions
                 .Include(p => p.Page)
-                .Where(v => v.PageId == command.PageId
-                    && !v.IsDeleted
-                    && !v.Page.IsDeleted
-                    && (v.WorkFlowStatusId == (int)WorkFlowStatus.Draft || v.WorkFlowStatusId == (int)WorkFlowStatus.Published))
-                .OrderByDescending(v => v.WorkFlowStatusId == (int)WorkFlowStatus.Draft)
-                .ThenByDescending(v => v.CreateDate)
+                .FilterActive()
+                .FilterByPageId(command.PageId)
+                .OrderByLatest()
                 .FirstOrDefaultAsync();
 
             EntityNotFoundException.ThrowIfNull(version, command.PageId);
 
             UpdatePublishDate(command, executionContext, version);
 
-            if (version.WorkFlowStatusId == (int)WorkFlowStatus.Published)
+            if (version.WorkFlowStatusId == (int)WorkFlowStatus.Published
+                && version.Page.PublishStatusCode == PublishStatusCode.Published)
             {
                 // only thing we can do with a published version is update the date
                 await _dbContext.SaveChangesAsync();
+
+                await _transactionScopeFactory.QueueCompletionTaskAsync(_dbContext, () => OnTransactionComplete(command));
             }
             else
             {
@@ -73,13 +77,19 @@ namespace Cofoundry.Domain
                 {
                     await _dbContext.SaveChangesAsync();
                     await _pageStoredProcedures.UpdatePublishStatusQueryLookupAsync(command.PageId);
-                    scope.Complete();
+
+                    scope.QueueCompletionTask(() => OnTransactionComplete(command));
+
+                    await scope.CompleteAsync();
                 }
             }
+        }
 
+        private Task OnTransactionComplete(PublishPageCommand command)
+        {
             _pageCache.Clear();
 
-            await _messageAggregator.PublishAsync(new PagePublishedMessage()
+            return _messageAggregator.PublishAsync(new PagePublishedMessage()
             {
                 PageId = command.PageId
             });

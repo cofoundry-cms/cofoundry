@@ -36,7 +36,7 @@ namespace Cofoundry.Web
                 if (state.Result != null) return;
 
                 // else try and find a 404 page route
-                state.PageRoutingInfo = await TryFindNotFoundPageRoute(state.InputParameters.Path, state.VisualEditorMode);
+                state.PageRoutingInfo = await TryFindNotFoundPageRoute(state.InputParameters.Path, state.VisualEditorState.VisualEditorMode);
 
                 // If we still can't find a 404, fall back to the generic 404 view
                 if (state.PageRoutingInfo == null)

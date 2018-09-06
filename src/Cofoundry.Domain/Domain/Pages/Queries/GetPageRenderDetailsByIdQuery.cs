@@ -8,24 +8,29 @@ using Cofoundry.Core.Validation;
 namespace Cofoundry.Domain
 {
     /// <summary>
-    /// Gets a page object that contains the data required to render a page, including template 
+    /// Gets a projection of a page that contains the data required to render a page, including template 
     /// data for all the content-editable regions.
     /// </summary>
     public class GetPageRenderDetailsByIdQuery : IQuery<PageRenderDetails>, IValidatableObject
     {
+        /// <summary>
+        /// Gets a projection of a page that contains the data required to render a page, including template 
+        /// data for all the content-editable regions.
+        /// </summary>
         public GetPageRenderDetailsByIdQuery() { }
 
         /// <summary>
-        /// Initializes the query with the specified parameters.
+        /// Gets a projection of a page that contains the data required to render a page, including template 
+        /// data for all the content-editable regions.
         /// </summary>
         /// <param name="pageId">PageId of the page to get.</param>
-        /// <param name="workFlowStatus">Used to determine which version of the page to include data for.</param>
-        public GetPageRenderDetailsByIdQuery(int pageId, PublishStatusQuery? workFlowStatus = null)
+        /// <param name="publishStatus">Used to determine which version of the page to include data for.</param>
+        public GetPageRenderDetailsByIdQuery(int pageId, PublishStatusQuery? publishStatus = null)
         {
             PageId = pageId;
-            if (workFlowStatus.HasValue)
+            if (publishStatus.HasValue)
             {
-                PublishStatus = workFlowStatus.Value;
+                PublishStatus = publishStatus.Value;
             }
         }
 
@@ -51,14 +56,7 @@ namespace Cofoundry.Domain
 
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
-            if (PublishStatus == PublishStatusQuery.SpecificVersion && (!PageVersionId.HasValue || PageVersionId < 1))
-            {
-                yield return new ValidationResult("Value cannot be null if PublishStatusQuery.SpecificVersion is specified", new string[] { nameof(PageVersionId) });
-            }
-            else if (PublishStatus != PublishStatusQuery.SpecificVersion && PageVersionId.HasValue)
-            {
-                yield return new ValidationResult("Value should be null if PublishStatusQuery.SpecificVersion is not specified", new string[] { nameof(PageVersionId) });
-            }
+            return PublishStatusQueryModelValidator.ValidateVersionId(PublishStatus, PageVersionId, nameof(PageVersionId));
         }
     }
 }

@@ -11,15 +11,8 @@ namespace Cofoundry.Domain
 {
     public class UpdateSeoSettingsCommand : ICommand, ILoggableCommand
     {
-        [RegularExpression(@"(UA|YT|MO)-\d+-\d+")]
-        [MaxLength(50)]
-        public string GoogleAnalyticsUAId { get; set; }
-
         public string RobotsTxt { get; set; }
 
         public string HumansTxt { get; set; }
-
-        [MaxLength(32)]
-        public string BingWebmasterToolsApiKey { get; set; }
     }
 }

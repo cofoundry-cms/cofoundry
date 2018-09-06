@@ -5,7 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Cofoundry.Domain.Data;
-using Cofoundry.Core.EntityFramework;
+using Cofoundry.Core.Data;
 
 namespace Cofoundry.Domain
 {
@@ -15,12 +15,12 @@ namespace Cofoundry.Domain
 
         private readonly CofoundryDbContext _dbContext;
         private readonly IFileStoreService _fileStoreService;
-        private readonly ITransactionScopeFactory _transactionScopeFactory;
+        private readonly ITransactionScopeManager _transactionScopeFactory;
 
         public DocumentAssetCommandHelper(
             CofoundryDbContext dbContext,
             IFileStoreService fileStoreService,
-            ITransactionScopeFactory transactionScopeFactory
+            ITransactionScopeManager transactionScopeFactory
             )
         {
             _dbContext = dbContext;
@@ -59,7 +59,8 @@ namespace Cofoundry.Domain
                     {
                         await _dbContext.SaveChangesAsync();
                     }
-                    scope.Complete();
+
+                    await scope.CompleteAsync();
                 }
             }
         }

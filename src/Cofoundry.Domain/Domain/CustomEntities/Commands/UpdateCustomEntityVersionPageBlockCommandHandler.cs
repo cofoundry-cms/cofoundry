@@ -7,7 +7,7 @@ using Cofoundry.Domain.CQS;
 using Cofoundry.Domain.Data;
 using Microsoft.EntityFrameworkCore;
 using Cofoundry.Core.MessageAggregator;
-using Cofoundry.Core.EntityFramework;
+using Cofoundry.Core.Data;
 using Cofoundry.Core;
 
 namespace Cofoundry.Domain
@@ -24,7 +24,7 @@ namespace Cofoundry.Domain
         private readonly IPageBlockCommandHelper _pageBlockCommandHelper;
         private readonly IMessageAggregator _messageAggregator;
         private readonly IPermissionValidationService _permissionValidationService;
-        private readonly ITransactionScopeFactory _transactionScopeFactory;
+        private readonly ITransactionScopeManager _transactionScopeFactory;
 
         public UpdateCustomEntityVersionPageBlockCommandHandler(
             CofoundryDbContext dbContext,
@@ -33,7 +33,7 @@ namespace Cofoundry.Domain
             IPageBlockCommandHelper pageBlockCommandHelper,
             IMessageAggregator messageAggregator,
             IPermissionValidationService permissionValidationService,
-            ITransactionScopeFactory transactionScopeFactory
+            ITransactionScopeManager transactionScopeFactory
             )
         {
             _dbContext = dbContext;
@@ -79,12 +79,17 @@ namespace Cofoundry.Domain
 
                 await _commandExecutor.ExecuteAsync(dependencyCommand, executionContext);
 
-                scope.Complete();
-            }
+                scope.QueueCompletionTask(() => OnTransactionComplete(dbBlock));
 
+                await scope.CompleteAsync();
+            }
+        }
+
+        private Task OnTransactionComplete(CustomEntityVersionPageBlock dbBlock)
+        {
             _customEntityCache.Clear(dbBlock.CustomEntityVersion.CustomEntity.CustomEntityDefinitionCode, dbBlock.CustomEntityVersion.CustomEntity.CustomEntityId);
 
-            await _messageAggregator.PublishAsync(new CustomEntityVersionBlockUpdatedMessage()
+            return _messageAggregator.PublishAsync(new CustomEntityVersionBlockUpdatedMessage()
             {
                 CustomEntityId = dbBlock.CustomEntityVersion.CustomEntityId,
                 CustomEntityDefinitionCode = dbBlock.CustomEntityVersion.CustomEntity.CustomEntityDefinitionCode,

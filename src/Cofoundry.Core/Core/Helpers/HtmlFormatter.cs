@@ -22,8 +22,11 @@ namespace Cofoundry.Core
         /// <summary>
         /// Converts urls in a string in to links.
         /// </summary>
-        /// <param name="text">The text.</param>
-        /// <param name="newWindow">if set to <c>true</c> [new window].</param>
+        /// <param name="text">The text to format.</param>
+        /// <param name="formatOptions">
+        /// Options used to describe how you want the links to be 
+        /// formatted e.g. new window or no-follow.
+        /// </param>
         public static string ConvertUrlsToLinks(string text, BasicHtmlFormatOption formatOptions = BasicHtmlFormatOption.None)
         {
             var reg = new Regex(@"[""'=]?(http://|ftp://|https://|www\.|ftp\.[\w]+)([\w\-\.,@?^=%&amp;:/~\+#]*[\w\-\@?^=%&amp;/~\+#])",
@@ -79,21 +82,26 @@ namespace Cofoundry.Core
         /// Converts the specified plain text to have basic html formattign with line breaks and url links
         /// </summary>
         /// <param name="s">String to convert</param>
-        /// <param name="formatOptions">Options to use in the converstion</param>
+        /// <param name="formatOptions">
+        /// Options used to describe how you want the links to be 
+        /// formatted e.g. new window or no-follow.
+        /// </param>
         /// <returns>HtmlString version of the input string formatted to basic html.</returns>
         public static IHtmlContent ConvertToBasicHtml(string s, BasicHtmlFormatOption formatOptions = BasicHtmlFormatOption.None)
         {
             if (string.IsNullOrEmpty(s)) return new HtmlString(string.Empty);
             var html = ConvertLineBreaksToBrTags(s);
-            html = ConvertUrlsToLinks(s, formatOptions);
+            html = ConvertUrlsToLinks(html, formatOptions);
 
             return new HtmlString(html);
         }
 
         /// <summary>
-        /// Determins if the string contains html tags.
+        /// Determines if the string contains html tags.
         /// </summary>
-        /// <see cref="http://stackoverflow.com/a/204664"/>
+        /// <remarks>
+        /// See http://stackoverflow.com/a/204664.
+        /// </remarks>
         public static bool ContainsHtml(string source)
         {
             var tagRegex = new Regex(@"<[^>]+>");

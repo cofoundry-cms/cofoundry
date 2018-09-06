@@ -74,25 +74,26 @@ function (
     function publish(args) {
         entityVersionModalDialogService
             .publish(args.entityId, setLoadingOn, entityDialogServiceConfig)
-            .then(preview)
+            .then(reloadDefaultMode)
             .catch(setLoadingOff);
     }
 
     function unpublish(args) {
         entityVersionModalDialogService
             .unpublish(args.entityId, setLoadingOn, entityDialogServiceConfig)
-            .then(reload)
+            .then(reloadDefaultMode)
             .catch(setLoadingOff);
     }
 
     function copyToDraft(args) {
         entityVersionModalDialogService
             .copyToDraft(args.entityId, args.versionId, args.hasDraftVersion, setLoadingOn, entityDialogServiceConfig)
-            .then(reloadWithoutVersion)
+            .then(reloadDefaultMode)
             .catch(setLoadingOff);
     }
 
     function addRegionBlock(args) {
+
         modalDialogService.show({
             templateUrl: modulePath + 'Routes/Modals/AddBlock.html',
             controller: 'AddBlockController',
@@ -101,10 +102,11 @@ function (
                 pageTemplateRegionId: args.pageTemplateRegionId,
                 adjacentVersionBlockId: args.versionBlockId,
                 permittedBlockTypes: args.permittedBlockTypes,
-                onClose: onClose,
-                refreshContent: refreshRegion,
                 isCustomEntity: args.isCustomEntity,
-                regionName: args.regionName
+                regionName: args.regionName,
+                pageId: args.pageId,
+                onClose: onClose,
+                refreshContent: refreshRegion
             }
         });
 
@@ -128,6 +130,7 @@ function (
                 insertMode: args.insertMode,
                 refreshContent: refreshRegion,
                 isCustomEntity: args.isCustomEntity,
+                pageId: args.pageId,
                 onClose: onClose
             }
         });
@@ -216,11 +219,43 @@ function (
         $window.parent.location = $window.parent.location;
     }
 
-    function reloadWithoutVersion() {
-        var location = $window.parent.location.href;
-        // remove the version query parameter
-        location = location.replace(/(.+\?(?:.+&|))(version=\d+&?)(.*)/i, '$1$3');
-        $window.parent.location = location
+    function reloadDefaultMode() {
+        var location = filterQueryParamsFromUrl($window.parent.location.href, ['version', 'mode']);
+
+        $window.parent.location = location;
+    }
+
+    /**
+     * Removes the specified querystring parameters from a url
+     */
+    function filterQueryParamsFromUrl(url, paramsToFilter) {
+        var queryMatches = url.match(/(.+)(?:\?)([^#\s]*)(#.*|)/i),
+            validParams = [],
+            validParamsResult = '';
+
+        if (!queryMatches) return url;
+
+        // parse and strip out any unwanted qs parameters
+        _.each(queryMatches[2].split('&'), function (queryParam) {
+            if (!queryParam) return;
+
+            var canAdd = _.every(paramsToFilter, function (paramToFilter) {
+                return queryParam.indexOf(paramToFilter + '=') === -1;
+            });
+
+            if (canAdd) {
+                validParams.push(queryParam);
+            }
+        });
+
+        if (validParams.length) {
+            validParamsResult = '?' + validParams.join('&');
+        }
+
+        // re-build the url without the parameters
+        url = queryMatches[1] + validParamsResult + queryMatches[3];
+
+        return url;
     }
 
     function setLoadingOn(loadState) {

@@ -15,10 +15,10 @@ namespace Cofoundry.Domain
     {
         /// <summary>
         /// Creates an instance of a role initializer for the specified role
-        /// definition if one has been implemented; otherwise returns null
+        /// definition if one has been implemented; otherwise returns null.
         /// </summary>
-        /// <typeparam name="TRoleDefinition">The role to find an initializer for</typeparam>
-        /// <returns>IRoleInitializer if one has been implemented; otherwise null</returns>
+        /// <param name="roleDefinition">The role to find an initializer for.</param>
+        /// <returns>IRoleInitializer if one has been implemented; otherwise null.</returns>
         IRoleInitializer Create(IRoleDefinition roleDefinition);
     }
 }

@@ -8,6 +8,7 @@ using Cofoundry.Core.Validation;
 using Cofoundry.Domain.CQS;
 using Microsoft.EntityFrameworkCore;
 using Cofoundry.Core;
+using Cofoundry.Core.Data;
 
 namespace Cofoundry.Domain
 {
@@ -21,18 +22,21 @@ namespace Cofoundry.Domain
         private readonly CofoundryDbContext _dbContext;
         private readonly EntityAuditHelper _entityAuditHelper;
         private readonly IPageDirectoryCache _cache;
+        private readonly ITransactionScopeManager _transactionScopeFactory;
 
         public UpdatePageDirectoryCommandHandler(
             IQueryExecutor queryExecutor,
             CofoundryDbContext dbContext,
             EntityAuditHelper entityAuditHelper,
-            IPageDirectoryCache cache
+            IPageDirectoryCache cache,
+            ITransactionScopeManager transactionScopeFactory
             )
         {
             _dbContext = dbContext;
             _entityAuditHelper = entityAuditHelper;
             _queryExecutor = queryExecutor;
             _cache = cache;
+            _transactionScopeFactory = transactionScopeFactory;
         }
 
         #endregion
@@ -56,7 +60,7 @@ namespace Cofoundry.Domain
 
             await _dbContext.SaveChangesAsync();
 
-            _cache.Clear();
+            _transactionScopeFactory.QueueCompletionTask(_dbContext, _cache.Clear);
         }
 
         private async Task ValidateUrlPropertiesAllowedToChange(UpdatePageDirectoryCommand command, PageDirectory pageDirectory)

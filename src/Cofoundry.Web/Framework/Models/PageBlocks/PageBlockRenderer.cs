@@ -33,10 +33,10 @@ namespace Cofoundry.Web
         /// <summary>
         /// Renders a page block by finding the template and applying the specified model to it
         /// </summary>
-        /// <param name="controllerContext">ControllerContext is required so we can render the razor view</param>
-        /// <param name="pageViewModel">The view model for the page being rendered</param>
-        /// <param name="blockViewModel">The view model for the module being rendered</param>
-        /// <returns>The rednered module html</returns>
+        /// <param name="viewContext">ViewContext is required so we can render the razor view.</param>
+        /// <param name="pageViewModel">The view model for the page being rendered.</param>
+        /// <param name="blockViewModel">The view model for the module being rendered.</param>
+        /// <returns>The rendered module html.</returns>
         public async Task<string> RenderBlockAsync(
             ViewContext viewContext, 
             IEditablePageViewModel pageViewModel, 

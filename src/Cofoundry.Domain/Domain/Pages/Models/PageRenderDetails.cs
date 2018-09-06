@@ -11,30 +11,26 @@ namespace Cofoundry.Domain
     /// regions. This object is specific to a particular version which may not always be the 
     /// latest (depending on the query).
     /// </summary>
-    public class PageRenderDetails
+    public class PageRenderDetails : PageRenderSummary
     {
+        /// <summary>
+        /// Page data required to render a page, including template data for all the content-editable
+        /// regions. This object is specific to a particular version which may not always be the 
+        /// latest (depending on the query).
+        /// </summary>
         public PageRenderDetails()
+            : base()
         {
-            OpenGraph = new OpenGraphData();
         }
 
-        public int PageId { get; set; }
-        public int PageVersionId { get; set; }
-
-        public string Title { get; set; }
-        public string MetaDescription { get; set; }
+        /// <summary>
+        /// The template used to render this page.
+        /// </summary>
+        public PageTemplateMicroSummary Template { get; set; }
 
         /// <summary>
-        /// WorkFlowStatus of the version that this instance represents. The version
-        /// may not always be the latest version and is dependent on the query that
-        /// was used to load this instance, typically using a PublishStatusQuery value.
+        /// Content-editable page region and block data for rendering out to the template.
         /// </summary>
-        public WorkFlowStatus WorkFlowStatus { get; set; }
-
-        public OpenGraphData OpenGraph { get; set; }
-        public PageRoute PageRoute { get; set; }
-
-        public PageTemplateMicroSummary Template { get; set; }
         public ICollection<PageRegionRenderDetails> Regions { get; set; }
     }
 }

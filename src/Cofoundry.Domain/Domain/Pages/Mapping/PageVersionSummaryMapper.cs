@@ -25,28 +25,22 @@ namespace Cofoundry.Domain
         }
 
         /// <summary>
-        /// Maps a collection EF PageVersion records for a single page into 
-        /// a collection of PageVersionSummary objects.
+        /// Maps a set of paged EF PageVersion records for a single page into 
+        /// PageVersionSummary objects.
         /// </summary>
         /// <param name="pageId">Id of the page that these versions belong to.</param>
-        /// <param name="dbVersions">PageVersion records from the database to map.</param>
-        public List<PageVersionSummary> MapVersions(int pageId, ICollection<PageVersion> dbVersions)
+        /// <param name="dbResult">Paged result set of records to map.</param>
+        public PagedQueryResult<PageVersionSummary> MapVersions(int pageId, PagedQueryResult<PageVersion> dbResult)
         {
-            if (dbVersions == null) throw new ArgumentNullException(nameof(dbVersions));
+            if (dbResult == null) throw new ArgumentNullException(nameof(dbResult));
             if (pageId <= 0) throw new ArgumentOutOfRangeException(nameof(pageId));
 
-            var orderedVersions = dbVersions
-                .Select(MapVersion)
-                .OrderByDescending(v => v.WorkFlowStatus == WorkFlowStatus.Draft)
-                .ThenByDescending(v => v.AuditData.CreateDate)
-                .ToList();
+            // We should only check for the latested published version on the first page
+            // as it will only be 1st or 2nd in the list (depending on whether there is a draft)
+            bool hasLatestPublishVersion = dbResult.PageNumber > 1;
+            var results = new List<PageVersionSummary>(dbResult.Items.Count);
 
-            bool hasLatestPublishVersioned = false;
-            var results = new List<PageVersionSummary>(dbVersions.Count);
-
-            foreach (var dbVersion in dbVersions
-                .OrderByDescending(v => v.WorkFlowStatusId == (int)WorkFlowStatus.Draft)
-                .ThenByDescending(v => v.CreateDate))
+            foreach (var dbVersion in dbResult.Items.OrderByLatest())
             {
                 if (dbVersion.PageId != pageId)
                 {
@@ -55,16 +49,16 @@ namespace Cofoundry.Domain
                 }
 
                 var result = MapVersion(dbVersion);
-                if (!hasLatestPublishVersioned && result.WorkFlowStatus == WorkFlowStatus.Published)
+                if (!hasLatestPublishVersion && result.WorkFlowStatus == WorkFlowStatus.Published)
                 {
                     result.IsLatestPublishedVersion = true;
-                    hasLatestPublishVersioned = true;
+                    hasLatestPublishVersion = true;
                 }
 
                 results.Add(result);
             }
 
-            return results;
+            return dbResult.ChangeType(results);
 
         }
 
@@ -73,6 +67,7 @@ namespace Cofoundry.Domain
             var result = new PageVersionSummary()
             {
                 PageVersionId = dbPageVersion.PageVersionId,
+                DisplayVersion = dbPageVersion.DisplayVersion,
                 ShowInSiteMap = !dbPageVersion.ExcludeFromSitemap,
                 Title = dbPageVersion.Title,
                 WorkFlowStatus = (WorkFlowStatus)dbPageVersion.WorkFlowStatusId

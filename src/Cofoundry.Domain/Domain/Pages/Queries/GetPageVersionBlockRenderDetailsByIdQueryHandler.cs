@@ -10,6 +10,11 @@ using Cofoundry.Core;
 
 namespace Cofoundry.Domain
 {
+    /// <summary>
+    /// Returns data for a specific block in a page version by it's id. Because
+    /// the mapped display model may contain other versioned entities, you can 
+    /// optionally pass down a PublishStatusQuery to use in the mapping process.
+    /// </summary>
     public class GetPageVersionBlockRenderDetailsByIdQueryHandler
         : IAsyncQueryHandler<GetPageVersionBlockRenderDetailsByIdQuery, PageVersionBlockRenderDetails>
         , IPermissionRestrictedQueryHandler<GetPageVersionBlockRenderDetailsByIdQuery, PageVersionBlockRenderDetails>

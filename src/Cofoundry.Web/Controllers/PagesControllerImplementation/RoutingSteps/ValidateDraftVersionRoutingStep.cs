@@ -36,7 +36,7 @@ namespace Cofoundry.Web
 
             // If there's no draft version and we're in edit mode for 'Pages' then
             // create one and re-run the query
-            var publishStatus = state.VisualEditorMode.ToPublishStatusQuery();
+            var publishStatus = state.VisualEditorState.GetPublishStatusQuery();
             if (!state.InputParameters.IsEditingCustomEntity
                 && publishStatus != PublishStatusQuery.Published
                 && publishStatus != PublishStatusQuery.SpecificVersion
@@ -86,7 +86,7 @@ namespace Cofoundry.Web
             var pageQuery = new GetPageRoutingInfoByPathQuery()
             {
                 Path = state.InputParameters.Path,
-                IncludeUnpublished = state.VisualEditorMode != VisualEditorMode.Live
+                IncludeUnpublished = state.VisualEditorState.VisualEditorMode != VisualEditorMode.Live
             };
 
             if (state.Locale != null)

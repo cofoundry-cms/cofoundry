@@ -1,9 +1,13 @@
 ﻿angular.module('cms.shared').factory('shared.pageService', [
+    '_',
     '$http',
     'shared.serviceBase',
+    'shared.publishableEntityMapper',
 function (
+    _,
     $http,
-    serviceBase) {
+    serviceBase,
+    publishableEntityMapper) {
 
     var service = {},
         pagesServiceBase = serviceBase + 'pages';
@@ -13,7 +17,13 @@ function (
     service.getAll = function (query) {
         return $http.get(pagesServiceBase, {
             params: query
-        });
+        }).then(map);
+
+        function map(pagedResult) {
+            _.map(pagedResult.items, publishableEntityMapper.map);
+
+            return pagedResult;
+        }
     }
 
     service.getByIdRange = function (pageIds) {
@@ -21,17 +31,36 @@ function (
             params: {
                 'pageIds': pageIds
             }
-        });
+        }).then(map);
+
+        function map(pageSummaries) {
+            _.map(pageSummaries, publishableEntityMapper.map);
+
+            return pageSummaries;
+        }
     }
     
     service.getById = function (pageId) {
 
-        return $http.get(service.getIdRoute(pageId));
+        return $http
+            .get(service.getIdRoute(pageId))
+            .then(map);
+
+        function map(page) {
+
+            if (page) {
+                publishableEntityMapper.map(page.pageRoute);
+            }
+
+            return page;
+        }
     }
 
-    service.getVersionsByPageId = function (pageId) {
+    service.getVersionsByPageId = function (pageId, query) {
 
-        return $http.get(service.getPageVerionsRoute(pageId));
+        return $http.get(service.getPageVerionsRoute(pageId), {
+            params: query
+        });
     }
 
     service.getPageTypes = function () {
@@ -81,8 +110,6 @@ function (
         return $http.post(service.getIdRoute(command.pageToDuplicateId) + '/duplicate', command);
     }
 
-    /* PRIVATES */
-
     /* HELPERS */
 
     service.getIdRoute = function (pageId) {
@@ -91,6 +118,11 @@ function (
 
     service.getPageVerionsRoute = function (pageId) {
         return service.getIdRoute(pageId) + '/versions';
+    }
+
+    function mapPageSummaries(page) {
+
+        return _.map(publishableEntityMapper.map);
     }
 
     return service;

@@ -1,15 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
-using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using Cofoundry.Domain.Data;
 using Cofoundry.Domain.CQS;
 
 namespace Cofoundry.Domain
 {
+    /// <summary>
+    /// Attempts to find a matching page route using the supplied path. The path
+    /// has to be an absolute match, i.e. the query does not try and find a fall-back similar route.
+    /// </summary>
     public class GetPageRoutingInfoByPathQueryHandler 
         : IAsyncQueryHandler<GetPageRoutingInfoByPathQuery, PageRoutingInfo>
         , IPermissionRestrictedQueryHandler<GetPageRoutingInfoByPathQuery, PageRoutingInfo>
@@ -49,9 +51,11 @@ namespace Cofoundry.Domain
                 .ToList();
 
             PageRoutingInfo result = null;
-            
+
+            if (!pageRoutes.Any()) return result;
+
             // Exact match
-            if (pageRoutes.Any() && pageRoutes[0].PageType != PageType.CustomEntityDetails)
+            if (pageRoutes[0].PageType != PageType.CustomEntityDetails)
             {
                 result = ToRoutingInfo(pageRoutes[0]);
             }
