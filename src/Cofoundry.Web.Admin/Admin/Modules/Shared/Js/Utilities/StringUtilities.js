@@ -61,11 +61,12 @@
     service.slugify = function (s) {
         if (!s) return s;
         var result = service.latinise(s)
-            .replace(' & ', ' and ')
+            .replace(/&/g, ' and ')
+            .replace(/[/\\\.,\+=–—:_]/g, ' ')
             .replace(/[^\w\s-]/g, '')
             .toLowerCase()
             .trim()
-            .replace(/[_\s]+/g, '-')
+            .replace(/\s+/g, '-')
             .replace(/-+/g, '-');
 
         if (result.charAt(0) === '-') result = result.substr(1);

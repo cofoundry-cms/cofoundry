@@ -21,9 +21,8 @@ namespace Cofoundry.Core
 
             string str = TextFormatter.RemoveDiacritics(s)
                 .ToLower()
-                .Replace(" & ", " and ")
-                .Replace("/", " ")
-                .Replace("\\", " ");
+                .Replace("&", " and ");
+            str = Regex.Replace(str, @"[/\\\.,\+=–—:_]", " ");
             str = Regex.Replace(str, @"[^a-z0-9\s-]", "");
             str = Regex.Replace(str, @"\s+", " ").Trim();
             str = Regex.Replace(str, @"\s", "-");

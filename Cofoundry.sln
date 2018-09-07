@@ -11,15 +11,17 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "samples", "samples", "{8FCD
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "plugins", "plugins", "{22FE4195-4C00-444A-9873-1435F4F11A81}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cofoundry.Core", "Cofoundry.Core\Cofoundry.Core.csproj", "{22E7BFD5-C829-4793-83C6-445944D605F4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cofoundry.Core", "src\Cofoundry.Core\Cofoundry.Core.csproj", "{22E7BFD5-C829-4793-83C6-445944D605F4}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cofoundry.Domain", "Cofoundry.Domain\Cofoundry.Domain.csproj", "{7F758F8D-D973-4DB5-84D6-B8A5C795A1CB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cofoundry.Domain", "src\Cofoundry.Domain\Cofoundry.Domain.csproj", "{7F758F8D-D973-4DB5-84D6-B8A5C795A1CB}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cofoundry.Web", "Cofoundry.Web\Cofoundry.Web.csproj", "{EB7DB360-013B-4F22-BD81-7AA26ECF5120}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cofoundry.Web", "src\Cofoundry.Web\Cofoundry.Web.csproj", "{EB7DB360-013B-4F22-BD81-7AA26ECF5120}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cofoundry.Web.Admin", "Cofoundry.Web.Admin\Cofoundry.Web.Admin.csproj", "{C168F1B9-A30D-429A-B8A1-E77991167E0D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cofoundry.Web.Admin", "src\Cofoundry.Web.Admin\Cofoundry.Web.Admin.csproj", "{C168F1B9-A30D-429A-B8A1-E77991167E0D}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cofoundry.BasicTestSite", "Cofoundry.BasicTestSite\Cofoundry.BasicTestSite.csproj", "{F18AD5CE-1929-47D8-9028-C1CE0B77E1B1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cofoundry.BasicTestSite", "src\Cofoundry.BasicTestSite\Cofoundry.BasicTestSite.csproj", "{F18AD5CE-1929-47D8-9028-C1CE0B77E1B1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cofoundry.Core.Tests", "test\Cofoundry.Core.Tests\Cofoundry.Core.Tests.csproj", "{A1700147-1310-4DBA-80DA-B157F57F8A7C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -47,6 +49,10 @@ Global
 		{F18AD5CE-1929-47D8-9028-C1CE0B77E1B1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F18AD5CE-1929-47D8-9028-C1CE0B77E1B1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F18AD5CE-1929-47D8-9028-C1CE0B77E1B1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A1700147-1310-4DBA-80DA-B157F57F8A7C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A1700147-1310-4DBA-80DA-B157F57F8A7C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A1700147-1310-4DBA-80DA-B157F57F8A7C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A1700147-1310-4DBA-80DA-B157F57F8A7C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -57,6 +63,7 @@ Global
 		{EB7DB360-013B-4F22-BD81-7AA26ECF5120} = {4996A61A-00E1-4363-9BC7-1F877E4AD933}
 		{C168F1B9-A30D-429A-B8A1-E77991167E0D} = {4996A61A-00E1-4363-9BC7-1F877E4AD933}
 		{F18AD5CE-1929-47D8-9028-C1CE0B77E1B1} = {8FCDFF68-9BCF-499B-8E2D-7E08E824F40A}
+		{A1700147-1310-4DBA-80DA-B157F57F8A7C} = {EAA517AB-9245-45E4-9929-C28E3BC944CC}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {69E60B88-9077-484B-AD67-D85641B1F45A}

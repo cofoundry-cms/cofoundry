@@ -21,7 +21,7 @@ namespace Cofoundry.Core
 
         /// <summary>
         /// A simple method to convert a pascal case string to a space
-        /// delimited sentence, e.g. MyPropertyName to "My Property Name".
+        /// delimited sentence, e.g. MyPropertyName to "My property name".
         /// </summary>
         /// <remarks>
         /// Used in place of Humanizer to avoid a dependency.
@@ -45,9 +45,9 @@ namespace Cofoundry.Core
         /// <param name="s">String instance to format.</param>
         public static string Pascalize(string s)
         {
-            if (s == null) return s;
+            if (s == null) return string.Empty;
 
-            return Regex.Replace(s, @"(?:^|[_\s-])(.)", match => match.Groups[1].Value.ToUpper());
+            return Regex.Replace(s.Trim(), @"(?:^|[_\s-])(.)", match => match.Groups[1].Value.ToUpper());
         }
 
         /// <summary>
@@ -61,9 +61,12 @@ namespace Cofoundry.Core
         /// <param name="s">String instance to format.</param>
         public static string Camelize(string s)
         {
-            if (s == null) return s;
+            if (string.IsNullOrWhiteSpace(s)) return string.Empty;
 
             var word = Pascalize(s);
+
+            if (string.IsNullOrEmpty(word)) return string.Empty;
+
             return word
                 .Substring(0, 1)
                 .ToLower() + word.Substring(1);
@@ -87,9 +90,9 @@ namespace Cofoundry.Core
         public static string LimitWithElipses(string s, int characterCount)
         {
             if (s == null) return string.Empty;
-            if (characterCount < 5) return Limit(s, characterCount);       // Can’t do much with such a short limit
-            if (s.Length <= characterCount - 3) return s;
-            else return s.Substring(0, characterCount - 3) + ELIPSIS;
+            if (characterCount < 3) return Limit(s, characterCount);       // Can’t do much with such a short limit
+            if (s.Length <= characterCount) return s;
+            else return s.Substring(0, characterCount - ELIPSIS.Length).TrimEnd() + ELIPSIS;
         }
 
         /// <summary>
@@ -100,12 +103,14 @@ namespace Cofoundry.Core
         public static string LimitWithElipsesOnWordBoundary(string s, int characterCount)
         {
             if (s == null) return string.Empty;
-            if (characterCount < 5) return Limit(s, characterCount);       // Can’t do much with such a short limit
-            if (s.Length <= characterCount - 3)
+            if (characterCount < 3) return Limit(s, characterCount);       // Can’t do much with such a short limit
+            if (s.Length <= characterCount)
+            {
                 return s;
+            }
             else
             {
-                int lastspace = s.Substring(0, characterCount - 3).LastIndexOf(" ");
+                int lastspace = s.Substring(0, characterCount - (1 - ELIPSIS.Length)).LastIndexOf(" ");
                 if (lastspace > 0 && lastspace > characterCount - 10)
                 {
                     return s.Substring(0, lastspace) + ELIPSIS;
@@ -113,7 +118,7 @@ namespace Cofoundry.Core
                 else
                 {
                     // No suitable space was found
-                    return s.Substring(0, characterCount - 3) + ELIPSIS;
+                    return s.Substring(0, characterCount - ELIPSIS.Length) + ELIPSIS;
                 }
             }
         }
@@ -125,7 +130,7 @@ namespace Cofoundry.Core
         /// <param name="s">String instance to format.</param>
         public static string FirstLetterToUpperCase(string s)
         {
-            if (string.IsNullOrEmpty(s)) return s;
+            if (string.IsNullOrEmpty(s)) return string.Empty;
 
             char[] a = s.ToCharArray();
             a[0] = char.ToUpper(a[0]);
@@ -144,6 +149,8 @@ namespace Cofoundry.Core
         /// <param name="s">The string from which to remove diacratics.</param>
         public static string RemoveDiacritics(string s)
         {
+            if (s == null) return string.Empty;
+
             var characters = s.SelectMany(TranslateCharacter);
             string result = new string(characters.ToArray());
 
@@ -271,7 +278,7 @@ namespace Cofoundry.Core
                     yield return character;
                 }
             }
-            else
+            else if (CharUnicodeInfo.GetUnicodeCategory(characterToTranslate) != UnicodeCategory.NonSpacingMark)
             {
                 yield return characterToTranslate;
             }

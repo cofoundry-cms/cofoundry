@@ -99,6 +99,7 @@ Desktop.ini
 src/.vs
 .vscode
 src/Cofoundry.Web.Admin/Admin/App/
+.vs
 
 # Cake Build
 /tools

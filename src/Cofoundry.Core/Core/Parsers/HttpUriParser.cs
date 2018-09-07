@@ -5,13 +5,18 @@ using System.Text;
 
 namespace Cofoundry.Core
 {
-    public static class UriParse
+    /// <summary>
+    /// A URI parsing helper for http/https based uris.
+    /// </summary>
+    public static class HttpUriParser
     {
         /// <summary>
-        /// Parses a uri string into an absolute uri, ensuring the uri starts with a scheme (using http by default)
+        /// Parses a uri string into an absolute uri, ensuring the uri starts with a 
+        /// scheme (using http by default). If the scheme is not http or https then
+        /// the URI is considered invalid.
         /// </summary>
-        /// <param name="s">String to parse</param>
-        /// <returns>Uri if parsing was successful, otherwise null</returns>
+        /// <param name="s">String to parse.</param>
+        /// <returns>Uri if parsing was successful, otherwise null.</returns>
         public static Uri ParseAbsoluteOrDefault(string s)
         {
             if (string.IsNullOrWhiteSpace(s)) return null;
@@ -35,7 +40,9 @@ namespace Cofoundry.Core
         }
 
         /// <summary>
-        /// Parses a uri string into an absolute uri, ensuring the uri starts with a scheme (using http by default)
+        /// Parses a uri string into a uri. If the uri is absollute then it will ensure 
+        /// the uri starts with a scheme (using http by default). If the URI is absolute 
+        /// and the scheme is not http or https then the URI is considered invalid.
         /// </summary>
         /// <param name="s">String to parse</param>
         /// <returns>Uri if parsing was successful, otherwise null</returns>
