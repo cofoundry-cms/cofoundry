@@ -19,23 +19,21 @@ namespace Cofoundry.BasicTestSite
         /// map it. Mapping is done in batch to improve performance when 
         /// the same block type is used multiple times on a page.
         /// </summary>
-        public Task<IEnumerable<PageBlockTypeDisplayModelMapperOutput>> MapAsync(
-            IReadOnlyCollection<PageBlockTypeDisplayModelMapperInput<ContentSectionDataModel>> inputCollection, 
-            PublishStatusQuery publishStatus
+        public Task MapAsync(
+            PageBlockTypeDisplayModelMapperContext<ContentSectionDataModel> context, 
+            PageBlockTypeDisplayModelMapperResult<ContentSectionDataModel> result
             )
         {
-            var results = new List<PageBlockTypeDisplayModelMapperOutput>(inputCollection.Count);
-
-            foreach (var input in inputCollection)
+            foreach (var input in context.Items)
             {
                 var output = new ContentSectionDisplayModel();
                 output.HtmlText = new HtmlString(input.DataModel.HtmlText);
                 output.Title = input.DataModel.Title;
 
-                results.Add(input.CreateOutput(output));
+                result.Add(input, output);
             }
 
-            return Task.FromResult(results.AsEnumerable());
+            return Task.CompletedTask;
         }
     }
 }

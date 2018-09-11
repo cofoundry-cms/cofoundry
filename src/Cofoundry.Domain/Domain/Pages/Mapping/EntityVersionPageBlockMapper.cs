@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -44,17 +43,16 @@ namespace Cofoundry.Domain
 
         #endregion
 
-        #region public methods
-
         public async Task MapRegionsAsync<TBlockRenderDetails>(
             IEnumerable<IEntityVersionPageBlock> dbBlock,
             IEnumerable<IEntityRegionRenderDetails<TBlockRenderDetails>> regions,
             ICollection<PageBlockTypeSummary> allBlockTypes,
-            PublishStatusQuery publishStatus
+            PublishStatusQuery publishStatus,
+            IExecutionContext executionContext
             )
             where TBlockRenderDetails : IEntityVersionPageBlockRenderDetails, new()
         {
-            var mappedBlocks = await ToBlockMappingDataAsync(dbBlock, allBlockTypes, publishStatus);
+            var mappedBlocks = await ToBlockMappingDataAsync(dbBlock, allBlockTypes, publishStatus, executionContext);
 
             // Map Regions
 
@@ -93,15 +91,11 @@ namespace Cofoundry.Domain
             return template;
         }
 
-
-        #endregion
-
-        #region private methods
-
         private async Task<ICollection<MappedPageBlock>> ToBlockMappingDataAsync(
             IEnumerable<IEntityVersionPageBlock> entityBlocks, 
             IEnumerable<PageBlockTypeSummary> blockTypes, 
-            PublishStatusQuery workflowStatus
+            PublishStatusQuery publishStatus,
+            IExecutionContext executionContext
             )
         {
             var mappedBlocks = new List<MappedPageBlock>();
@@ -113,18 +107,28 @@ namespace Cofoundry.Domain
                 // If missing e.g. archived, skip
                 if (blockType == null) continue;
 
-                var mapperOutput = await _pageVersionBlockModelMapper.MapDisplayModelAsync(blockType.FileName, group, workflowStatus);
+                var mapperOutput = await _pageVersionBlockModelMapper.MapDisplayModelAsync(
+                    blockType.FileName, 
+                    group, 
+                    publishStatus,
+                    executionContext
+                    );
 
                 foreach (var block in group)
                 {
-                    var mappedBlock = new MappedPageBlock()
-                    {
-                        PageBlock = block,
-                        BlockType = blockType,
-                        DisplayModel = mapperOutput.Single(o => o.VersionBlockId == block.GetVersionBlockId()).DisplayModel
-                    };
+                    var versionBlockId = block.GetVersionBlockId();
 
-                    mappedBlocks.Add(mappedBlock);
+                    if (mapperOutput.ContainsKey(versionBlockId) && mapperOutput[versionBlockId] != null)
+                    {
+                        var mappedBlock = new MappedPageBlock()
+                        {
+                            PageBlock = block,
+                            BlockType = blockType,
+                            DisplayModel = mapperOutput[versionBlockId]
+                        };
+
+                        mappedBlocks.Add(mappedBlock);
+                    }
                 }
             }
 
@@ -161,7 +165,5 @@ namespace Cofoundry.Domain
                 yield return block;
             }
         }
-
-        #endregion
     }
 }

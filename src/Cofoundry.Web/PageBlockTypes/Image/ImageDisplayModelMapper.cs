@@ -26,33 +26,29 @@ namespace Cofoundry.Web
 
         #endregion
 
-        public async Task<IEnumerable<PageBlockTypeDisplayModelMapperOutput>> MapAsync(
-            IReadOnlyCollection<PageBlockTypeDisplayModelMapperInput<ImageDataModel>> inputCollection, 
-            PublishStatusQuery publishStatusQuery
+        public async Task MapAsync(
+            PageBlockTypeDisplayModelMapperContext<ImageDataModel> context, 
+            PageBlockTypeDisplayModelMapperResult<ImageDataModel> result
             )
         {
-            var imageAssetIds = inputCollection.SelectDistinctModelValuesWithoutEmpty(i => i.ImageId);
+            var imageAssetIds = context.Items.SelectDistinctModelValuesWithoutEmpty(i => i.ImageId);
             var imagesQuery = new GetImageAssetRenderDetailsByIdRangeQuery(imageAssetIds);
-            var images = await _queryExecutor.ExecuteAsync(imagesQuery);
+            var images = await _queryExecutor.ExecuteAsync(imagesQuery, context.ExecutionContext);
 
-            var results = new List<PageBlockTypeDisplayModelMapperOutput>(inputCollection.Count);
-
-            foreach (var input in inputCollection)
+            foreach (var item in context.Items)
             {
-                var output = new ImageDisplayModel()
+                var displayModel = new ImageDisplayModel()
                 {
-                    AltText = input.DataModel.AltText,
-                    LinkPath = input.DataModel.LinkPath,
-                    LinkTarget = input.DataModel.LinkTarget
+                    AltText = item.DataModel.AltText,
+                    LinkPath = item.DataModel.LinkPath,
+                    LinkTarget = item.DataModel.LinkTarget
                 };
 
-                var image = images.GetOrDefault(input.DataModel.ImageId);
-                output.Source = _imageAssetRouteLibrary.ImageAsset(image);
+                var image = images.GetOrDefault(item.DataModel.ImageId);
+                displayModel.Source = _imageAssetRouteLibrary.ImageAsset(image);
 
-                results.Add(input.CreateOutput(output));
+                result.Add(item, displayModel);
             }
-
-            return results;
         }
     }
 }

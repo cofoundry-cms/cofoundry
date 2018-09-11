@@ -66,7 +66,7 @@ namespace Cofoundry.Domain
                 var dbPageBlocks = await GetPageBlocksAsync(entity.CustomEntityVersionId, selectedRoute.PageRoute.PageId);
 
                 var allBlockTypes = await _queryExecutor.ExecuteAsync(new GetAllPageBlockTypeSummariesQuery(), executionContext);
-                await _entityVersionPageBlockMapper.MapRegionsAsync(dbPageBlocks, entity.Regions, allBlockTypes, query.PublishStatus);
+                await _entityVersionPageBlockMapper.MapRegionsAsync(dbPageBlocks, entity.Regions, allBlockTypes, query.PublishStatus, executionContext);
             }
             else
             {

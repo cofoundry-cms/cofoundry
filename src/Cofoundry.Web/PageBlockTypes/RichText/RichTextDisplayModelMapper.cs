@@ -9,22 +9,20 @@ namespace Cofoundry.Web
 {
     public class RichTextDisplayModelMapper : IPageBlockTypeDisplayModelMapper<RichTextDataModel>
     {
-        public Task<IEnumerable<PageBlockTypeDisplayModelMapperOutput>> MapAsync(
-            IReadOnlyCollection<PageBlockTypeDisplayModelMapperInput<RichTextDataModel>> inputCollection, 
-            PublishStatusQuery publishStatusQuery
+        public Task MapAsync(
+            PageBlockTypeDisplayModelMapperContext<RichTextDataModel> context,
+            PageBlockTypeDisplayModelMapperResult<RichTextDataModel> result
             )
         {
-            var results = new List<PageBlockTypeDisplayModelMapperOutput>(inputCollection.Count);
-
-            foreach (var input in inputCollection)
+            foreach (var item in context.Items)
             {
-                var output = new RichTextDisplayModel();
-                output.RawHtml = new HtmlString(input.DataModel.RawHtml);
+                var displayModel = new RichTextDisplayModel();
+                displayModel.RawHtml = new HtmlString(item.DataModel.RawHtml);
 
-                results.Add(input.CreateOutput(output));
+                result.Add(item, displayModel);
             }
 
-            return Task.FromResult(results.AsEnumerable());
+            return Task.CompletedTask;
         }
     }
 }

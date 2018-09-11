@@ -111,7 +111,12 @@ namespace Cofoundry.Domain
             var result = new CustomEntityVersionPageBlockRenderDetails();
             result.CustomEntityVersionPageBlockId = versionBlock.CustomEntityVersionPageBlockId;
             result.BlockType = blockType;
-            result.DisplayModel = await _pageVersionBlockModelMapper.MapDisplayModelAsync(blockTypeFileName, versionBlock, publishStatus);
+            result.DisplayModel = await _pageVersionBlockModelMapper.MapDisplayModelAsync(
+                blockTypeFileName, 
+                versionBlock, 
+                publishStatus,
+                executionContext
+                );
             
             return result;
         }

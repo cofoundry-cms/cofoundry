@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Cofoundry.Domain.Data;
 using Cofoundry.Core.DependencyInjection;
+using Cofoundry.Domain.CQS;
 
 namespace Cofoundry.Domain
 {
@@ -26,11 +27,16 @@ namespace Cofoundry.Domain
         /// being mapped. This is provided so dependent entities can use
         /// the same publish status.
         /// </param>
+        /// <param name="executionContext">
+        /// The execution context from the caller which can be used in
+        /// any child queries to ensure any elevated permissions are 
+        /// passed down the chain of execution.
+        /// </param>
         /// <returns>
-        /// Collection of mapped display models, wrapped in an output class that
-        /// can be used to identify them.
+        /// Dictionary of mapped display models, with a key (block version id) that can be 
+        /// used to identify them.
         /// </returns>
-        Task<ICollection<PageBlockTypeDisplayModelMapperOutput>> MapDisplayModelAsync(string typeName, IEnumerable<IEntityVersionPageBlock> entityBlocks, PublishStatusQuery publishStatus);
+        Task<IReadOnlyDictionary<int, IPageBlockTypeDisplayModel>> MapDisplayModelAsync(string typeName, IEnumerable<IEntityVersionPageBlock> entityBlocks, PublishStatusQuery publishStatus, IExecutionContext executionContext);
 
         /// <summary>
         /// Maps a single page block data model to a concrete display model.
@@ -42,8 +48,13 @@ namespace Cofoundry.Domain
         /// being mapped. This is provided so dependent entities can use
         /// the same publish status.
         /// </param>
+        /// <param name="executionContext">
+        /// The execution context from the caller which can be used in
+        /// any child queries to ensure any elevated permissions are 
+        /// passed down the chain of execution.
+        /// </param>
         /// <returns>Mapped display model.</returns>
-        Task<IPageBlockTypeDisplayModel> MapDisplayModelAsync(string typeName, IEntityVersionPageBlock entityBlock, PublishStatusQuery publishStatus);
+        Task<IPageBlockTypeDisplayModel> MapDisplayModelAsync(string typeName, IEntityVersionPageBlock entityBlock, PublishStatusQuery publishStatus, IExecutionContext executionContext);
 
         /// <summary>
         /// Deserialized a block data model to a stongly typed model.

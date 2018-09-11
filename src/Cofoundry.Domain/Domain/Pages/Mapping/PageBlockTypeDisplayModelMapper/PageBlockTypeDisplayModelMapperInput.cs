@@ -7,11 +7,11 @@ using System.Threading.Tasks;
 namespace Cofoundry.Domain
 {
     /// <summary>
-    /// A wrapper object containing a page block display model
-    /// and an identifier that is used to put it back into 
-    /// a collection after mapping.
+    /// A wrapper object that contains information that can be used to map
+    /// an IPageBlockTypeDataModel to an instance of IPageBlockTypeDisplayModel.
     /// </summary>
-    public class PageBlockTypeDisplayModelMapperOutput
+    /// <typeparam name="TDataModel">The data model type being mapped.</typeparam>
+    public class PageBlockTypeDisplayModelMapperInput<TDataModel> where TDataModel : IPageBlockTypeDataModel
     {
         /// <summary>
         /// The id of the versioned entity to which this block belongs
@@ -22,8 +22,8 @@ namespace Cofoundry.Domain
         public int VersionBlockId { get; set; }
 
         /// <summary>
-        /// A mapped display model ready for rendering.
+        /// The data model to map to a display model.
         /// </summary>
-        public IPageBlockTypeDisplayModel DisplayModel { get; set; }
+        public TDataModel DataModel { get; set; }
     }
 }

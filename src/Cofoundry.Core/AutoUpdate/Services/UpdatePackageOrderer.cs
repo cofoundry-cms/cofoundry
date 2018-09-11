@@ -36,7 +36,7 @@ namespace Cofoundry.Core.AutoUpdate
                 .ToList();
 
             // Sort based on dependencies
-            var topologicallySortedPackages = TopologicalSorter.Sort(orderedPackages, p => FindDependencies(p, dependentModuleLookup), true);
+            var topologicallySortedPackages = TopologicalSorter.Sort(orderedPackages, (p, l) => FindDependencies(p, dependentModuleLookup), true);
 
             return topologicallySortedPackages;
         }

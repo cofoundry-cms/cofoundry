@@ -9,23 +9,20 @@ namespace Cofoundry.Web
 {
     public class SingleLineTextDisplayModelMapper : IPageBlockTypeDisplayModelMapper<SingleLineTextDataModel>
     {
-        public Task<IEnumerable<PageBlockTypeDisplayModelMapperOutput>> MapAsync(
-            IReadOnlyCollection<PageBlockTypeDisplayModelMapperInput<SingleLineTextDataModel>> inputCollection, 
-            PublishStatusQuery publishStatusQuery
+        public Task MapAsync(
+            PageBlockTypeDisplayModelMapperContext<SingleLineTextDataModel> context,
+            PageBlockTypeDisplayModelMapperResult<SingleLineTextDataModel> result
             )
         {
-            return Task.FromResult(Map(inputCollection));
-        }
-
-        private IEnumerable<PageBlockTypeDisplayModelMapperOutput> Map(IEnumerable<PageBlockTypeDisplayModelMapperInput<SingleLineTextDataModel>> inputs)
-        {
-            foreach (var input in inputs)
+            foreach (var item in context.Items)
             {
-                var output = new SingleLineTextDisplayModel();
-                output.Text = new HtmlString(input.DataModel.Text);
+                var displayModel = new SingleLineTextDisplayModel();
+                displayModel.Text = new HtmlString(item.DataModel.Text);
 
-                yield return input.CreateOutput(output);
+                result.Add(item, displayModel);
             }
+
+            return Task.CompletedTask;
         }
     }
 }

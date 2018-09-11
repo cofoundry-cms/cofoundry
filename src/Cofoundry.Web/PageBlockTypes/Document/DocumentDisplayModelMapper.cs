@@ -26,40 +26,36 @@ namespace Cofoundry.Web
 
         #endregion
 
-        public async Task<IEnumerable<PageBlockTypeDisplayModelMapperOutput>> MapAsync(
-            IReadOnlyCollection<PageBlockTypeDisplayModelMapperInput<DocumentDataModel>> inputCollection, 
-            PublishStatusQuery publishStatusQuery
+        public async Task MapAsync(
+            PageBlockTypeDisplayModelMapperContext<DocumentDataModel> context, 
+            PageBlockTypeDisplayModelMapperResult<DocumentDataModel> result
             )
         {
-            var documentIds = inputCollection.SelectDistinctModelValuesWithoutEmpty(i => i.DocumentAssetId);
+            var documentIds = context.Items.SelectDistinctModelValuesWithoutEmpty(i => i.DocumentAssetId);
             var documentsQuery = new GetDocumentAssetRenderDetailsByIdRangeQuery(documentIds);
-            var documents = await _queryExecutor.ExecuteAsync(documentsQuery);
+            var documents = await _queryExecutor.ExecuteAsync(documentsQuery, context.ExecutionContext);
 
-            var results = new List<PageBlockTypeDisplayModelMapperOutput>(inputCollection.Count);
-
-            foreach (var input in inputCollection)
+            foreach (var item in context.Items)
             {
-                var document = documents.GetOrDefault(input.DataModel.DocumentAssetId);
+                var document = documents.GetOrDefault(item.DataModel.DocumentAssetId);
 
-                var output = new DocumentDisplayModel();
+                var displayModel = new DocumentDisplayModel();
                 if (document != null)
                 {
-                    output.Description = document.Description;
-                    output.Title = document.Title;
-                    if (input.DataModel.DownloadMode == DocumentDownloadMode.ForceDownload)
+                    displayModel.Description = document.Description;
+                    displayModel.Title = document.Title;
+                    if (item.DataModel.DownloadMode == DocumentDownloadMode.ForceDownload)
                     {
-                        output.Url = _documentAssetRouteLibrary.DocumentAssetDownload(document);
+                        displayModel.Url = _documentAssetRouteLibrary.DocumentAssetDownload(document);
                     }
                     else
                     {
-                        output.Url = _documentAssetRouteLibrary.DocumentAsset(document);
+                        displayModel.Url = _documentAssetRouteLibrary.DocumentAsset(document);
                     }
                 }
 
-                results.Add(input.CreateOutput(output));
+                result.Add(item, displayModel);
             }
-
-            return results;
         }
     }
 }

@@ -16,10 +16,6 @@
     {
         <li>
             <a href="@Cofoundry.Routing.Page(pageItem.PageRoute)">@pageItem.Title</a>
-            @foreach (var pageRegion in pageItem.Regions)
-            {
-                <h3>@pageRegion.Name (@pageRegion.Blocks.Count())</h3>
-            }
             <p>
                 @pageItem.MetaDescription
             </p>

@@ -19,27 +19,23 @@ namespace Cofoundry.BasicTestSite
             _imageAssetRepository = imageAssetRepository;
         }
 
-        public async Task<IEnumerable<PageBlockTypeDisplayModelMapperOutput>> MapAsync(
-            IReadOnlyCollection<PageBlockTypeDisplayModelMapperInput<ContentSplitSectionDataModel>> inputCollection, 
-            PublishStatusQuery publishStatus
+        public async Task MapAsync(
+            PageBlockTypeDisplayModelMapperContext<ContentSplitSectionDataModel> context,
+            PageBlockTypeDisplayModelMapperResult<ContentSplitSectionDataModel> result
             )
         {
-            var imageAssetIds = inputCollection.SelectDistinctModelValuesWithoutEmpty(i => i.ImageAssetId); ;
-            var imageAssets = await _imageAssetRepository.GetImageAssetRenderDetailsByIdRangeAsync(imageAssetIds);
+            var imageAssetIds = context.Items.SelectDistinctModelValuesWithoutEmpty(i => i.ImageAssetId);
+            var imageAssets = await _imageAssetRepository.GetImageAssetRenderDetailsByIdRangeAsync(imageAssetIds, context.ExecutionContext);
 
-            var results = new List<PageBlockTypeDisplayModelMapperOutput>(inputCollection.Count);
-
-            foreach (var input in inputCollection)
+            foreach (var item in context.Items)
             {
-                var output = new ContentSplitSectionDisplayModel();
-                output.HtmlText = new HtmlString(input.DataModel.HtmlText);
-                output.Title = input.DataModel.Title;
-                output.Image = imageAssets.GetOrDefault(input.DataModel.ImageAssetId);
+                var displayModel = new ContentSplitSectionDisplayModel();
+                displayModel.HtmlText = new HtmlString(item.DataModel.HtmlText);
+                displayModel.Title = item.DataModel.Title;
+                displayModel.Image = imageAssets.GetOrDefault(item.DataModel.ImageAssetId);
 
-                results.Add(input.CreateOutput(output));
+                result.Add(item, displayModel);
             }
-
-            return results;
         }
     }
 }

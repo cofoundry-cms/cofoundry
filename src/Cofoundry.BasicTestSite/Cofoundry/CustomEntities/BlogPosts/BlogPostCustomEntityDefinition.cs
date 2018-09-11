@@ -51,7 +51,7 @@ namespace Cofoundry.BasicTestSite
         /// is selected then the user will not be shown the UrlSlug property
         /// and it will be auto-generated based on the title.
         /// </summary>
-        public bool AutoGenerateUrlSlug => true;
+        public bool AutoGenerateUrlSlug => false;
 
         /// <summary>
         /// Indicates whether this custom entity should always be published when 

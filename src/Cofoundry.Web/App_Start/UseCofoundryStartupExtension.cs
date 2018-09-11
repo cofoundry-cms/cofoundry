@@ -29,7 +29,7 @@ namespace Cofoundry.Web
                     .ServiceProvider
                     .GetServices<IStartupConfigurationTask>();
 
-                startupTasks = SortTasksByDependency(startupTasks);
+                startupTasks = SortTasksByDependency(startupTasks.ToArray());
 
                 if (configuration.StartupTaskFilter != null)
                 {
@@ -54,7 +54,7 @@ namespace Cofoundry.Web
             public List<IStartupConfigurationTask> Dependencies { get; set; } = new List<IStartupConfigurationTask>();
         }
 
-        private static IEnumerable<IStartupConfigurationTask> SortTasksByDependency(IEnumerable<IStartupConfigurationTask> startupTasks)
+        private static ICollection<IStartupConfigurationTask> SortTasksByDependency(ICollection<IStartupConfigurationTask> startupTasks)
         {
             // Set up a lookup of task
             var startupTaskLookup = startupTasks.ToDictionary(k => k.GetType(), v => new StartupTaskLookupItem(v));
@@ -84,21 +84,20 @@ namespace Cofoundry.Web
 
             // Pre-sort by numerical task ordering
             // The fullname secondry ordering is used to get predicatable task ordering
-            IEnumerable<IStartupConfigurationTask> orderedTasks = startupTasks
+            var orderedTasks = startupTasks
                 .OrderBy(t => t.Ordering)
-                .ThenBy(t => t.GetType().FullName);
+                .ThenBy(t => t.GetType().FullName)
+                .ToArray();
 
             try
             {
                 // Then do a Topological Sort based on task dependencies
-                orderedTasks = TopologicalSorter.Sort(orderedTasks, t => startupTaskLookup[t.GetType()].Dependencies, true);
+                return TopologicalSorter.Sort(orderedTasks, (task, source) => startupTaskLookup[task.GetType()].Dependencies, true);
             }
             catch (CyclicDependencyException ex)
             {
                 throw new CyclicDependencyException("A cyclic dependency has been detected between multiple IStartupConfigurationTask classes. Check your startup tasks to ensure they do not depend on each other. For more details see the inner exception message.", ex);
             }
-
-            return orderedTasks;
         }
     }
 }

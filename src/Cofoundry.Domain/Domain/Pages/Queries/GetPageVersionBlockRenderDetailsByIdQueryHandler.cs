@@ -4,7 +4,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using Cofoundry.Domain.Data;
 using Cofoundry.Domain.CQS;
-using System.Diagnostics;
 using Microsoft.EntityFrameworkCore;
 using Cofoundry.Core;
 
@@ -101,7 +100,12 @@ namespace Cofoundry.Domain
             var result = new PageVersionBlockRenderDetails();
             result.PageVersionBlockId = pageVersionBlock.PageVersionBlockId;
             result.BlockType = blockType;
-            result.DisplayModel = await _pageVersionBlockModelMapper.MapDisplayModelAsync(blockTypeFileName, pageVersionBlock, publishStatus);
+            result.DisplayModel = await _pageVersionBlockModelMapper.MapDisplayModelAsync(
+                blockTypeFileName, 
+                pageVersionBlock, 
+                publishStatus,
+                executionContext
+                );
             
             return result;
         }

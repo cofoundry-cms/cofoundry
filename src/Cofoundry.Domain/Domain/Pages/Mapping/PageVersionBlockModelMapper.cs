@@ -5,7 +5,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using Cofoundry.Domain.Data;
-using Cofoundry.Core.DependencyInjection;
+using Cofoundry.Domain.CQS;
 
 namespace Cofoundry.Domain
 {
@@ -43,20 +43,26 @@ namespace Cofoundry.Domain
         /// of display models ready for rendering.
         /// </summary>
         /// <param name="typeName">The block type name e.g. 'PlainText', 'RawHtml'.</param>
-        /// <param name="pageBlocks">The version data to get the serialized model from.</param>
+        /// <param name="entityBlocks">The version data to get the serialized model from.</param>
         /// <param name="publishStatus">
         /// The publish status of the parent page or custom entity 
         /// being mapped. This is provided so dependent entities can use
         /// the same publish status.
         /// </param>
+        /// <param name="executionContext">
+        /// The execution context from the caller which can be used in
+        /// any child queries to ensure any elevated permissions are 
+        /// passed down the chain of execution.
+        /// </param>
         /// <returns>
-        /// Collection of mapped display models, wrapped in an output class that
-        /// can be used to identify them.
+        /// Dictionary of mapped display models, with a key (block version id) that can be 
+        /// used to identify them.
         /// </returns>
-        public async Task<ICollection<PageBlockTypeDisplayModelMapperOutput>> MapDisplayModelAsync(
+        public async Task<IReadOnlyDictionary<int, IPageBlockTypeDisplayModel>> MapDisplayModelAsync(
             string typeName, 
-            IEnumerable<IEntityVersionPageBlock> pageBlocks, 
-            PublishStatusQuery publishStatus
+            IEnumerable<IEntityVersionPageBlock> entityBlocks, 
+            PublishStatusQuery publishStatus,
+            IExecutionContext executionContext
             )
         {
             // Find the data-provider class for this block type
@@ -65,13 +71,18 @@ namespace Cofoundry.Domain
             if (typeof(IPageBlockTypeDisplayModel).IsAssignableFrom(modelType))
             {
                 // We can serialize directly to the display model
-                var displayModels = new List<PageBlockTypeDisplayModelMapperOutput>();
-                foreach (var pageBlock in pageBlocks)
+                var displayModels = new Dictionary<int, IPageBlockTypeDisplayModel>();
+                foreach (var pageBlock in entityBlocks)
                 {
-                    var mapperModel = new PageBlockTypeDisplayModelMapperOutput();
-                    mapperModel.DisplayModel = (IPageBlockTypeDisplayModel)_dbUnstructuredDataSerializer.Deserialize(pageBlock.SerializedData, modelType);
-                    mapperModel.VersionBlockId = pageBlock.GetVersionBlockId();
-                    displayModels.Add(mapperModel);
+                    var displayModel = (IPageBlockTypeDisplayModel)_dbUnstructuredDataSerializer.Deserialize(pageBlock.SerializedData, modelType);
+                    var versionBlockId = pageBlock.GetVersionBlockId();
+
+                    if (displayModels.ContainsKey(versionBlockId))
+                    {
+                        throw new Exception($"A block with a version id of {versionBlockId} has already been added to the mapping collection.");
+                    }
+
+                    displayModels.Add(versionBlockId, displayModel);
                 }
 
                 return displayModels;
@@ -81,9 +92,9 @@ namespace Cofoundry.Domain
                 var blockWorkflowStatus = publishStatus.ToRelatedEntityQueryStatus();
 
                 // We have to use a mapping class to do some custom mapping
-                var displayModels = (Task<List<PageBlockTypeDisplayModelMapperOutput>>)_mapGenericMethod
+                var displayModels = (Task<IReadOnlyDictionary<int, IPageBlockTypeDisplayModel>>)_mapGenericMethod
                     .MakeGenericMethod(modelType)
-                    .Invoke(this, new object[] { pageBlocks, blockWorkflowStatus });
+                    .Invoke(this, new object[] { entityBlocks, blockWorkflowStatus, executionContext });
 
                 return await displayModels;
             }
@@ -100,17 +111,30 @@ namespace Cofoundry.Domain
         /// being mapped. This is provided so dependent entities can use
         /// the same publish status.
         /// </param>
+        /// <param name="executionContext">
+        /// The execution context from the caller which can be used in
+        /// any child queries to ensure any elevated permissions are 
+        /// passed down the chain of execution.
+        /// </param>
         /// <returns>Mapped display model.</returns>
         public async Task<IPageBlockTypeDisplayModel> MapDisplayModelAsync(
             string typeName,
             IEntityVersionPageBlock pageBlock, 
-            PublishStatusQuery publishStatus
+            PublishStatusQuery publishStatus,
+            IExecutionContext executionContext
             )
         {
-            var mapped = await MapDisplayModelAsync(typeName, new IEntityVersionPageBlock[] { pageBlock }, publishStatus);
-            return mapped
-                .Select(m => m.DisplayModel)
-                .SingleOrDefault();
+            var mapped = await MapDisplayModelAsync(
+                typeName, 
+                new IEntityVersionPageBlock[] { pageBlock }, 
+                publishStatus,
+                executionContext
+                );
+
+            var id = pageBlock.GetVersionBlockId();
+            if (mapped.ContainsKey(id)) return mapped[id];
+
+            return null;
         }
 
         /// <summary>
@@ -131,33 +155,36 @@ namespace Cofoundry.Domain
 
         #region privates
         
-        private async Task<List<PageBlockTypeDisplayModelMapperOutput>> MapGeneric<T>(
+        private async Task<IReadOnlyDictionary<int, IPageBlockTypeDisplayModel>> MapGeneric<TDataModel>(
             IEnumerable<IEntityVersionPageBlock> pageBlocks, 
-            PublishStatusQuery publishStatusQuery
-            ) where T : IPageBlockTypeDataModel
+            PublishStatusQuery publishStatusQuery,
+            IExecutionContext executionContext
+            ) where TDataModel : IPageBlockTypeDataModel
         {
-            var mapperType = typeof(IPageBlockTypeDisplayModelMapper<T>);
-            var mapper = (IPageBlockTypeDisplayModelMapper<T>)_serviceProvider.GetService(mapperType);
+            var mapperType = typeof(IPageBlockTypeDisplayModelMapper<TDataModel>);
+            var mapper = (IPageBlockTypeDisplayModelMapper<TDataModel>)_serviceProvider.GetService(mapperType);
             if (mapper == null)
             {
                 string msg = @"{0} does not implement IPageBlockDisplayModel and no custom mapper could be found. You must create 
                                a class that implements IPageBlockDisplayModelMapper<{0}> if you are using a custom display model. Full type name: {1}";
-                throw new Exception(string.Format(msg, typeof(T).Name, typeof(T).FullName));
+                throw new Exception(string.Format(msg, typeof(TDataModel).Name, typeof(TDataModel).FullName));
             }
 
-            var dataModels = new List<PageBlockTypeDisplayModelMapperInput<T>>();
+            var dataModels = new List<PageBlockTypeDisplayModelMapperInput<TDataModel>>();
 
             foreach (var pageBlock in pageBlocks)
             {
-                var mapperModel = new PageBlockTypeDisplayModelMapperInput<T>();
-                mapperModel.DataModel = (T)_dbUnstructuredDataSerializer.Deserialize(pageBlock.SerializedData, typeof(T));
+                var mapperModel = new PageBlockTypeDisplayModelMapperInput<TDataModel>();
+                mapperModel.DataModel = (TDataModel)_dbUnstructuredDataSerializer.Deserialize(pageBlock.SerializedData, typeof(TDataModel));
                 mapperModel.VersionBlockId = pageBlock.GetVersionBlockId();
                 dataModels.Add(mapperModel);
             }
 
-            var results = await mapper.MapAsync(dataModels, publishStatusQuery);
+            var context = new PageBlockTypeDisplayModelMapperContext<TDataModel>(dataModels, publishStatusQuery, executionContext);
+            var result = new PageBlockTypeDisplayModelMapperResult<TDataModel>(dataModels.Count);
+            await mapper.MapAsync(context, result);
 
-            return results.ToList();
+            return result.Items;
         }
 
         #endregion
