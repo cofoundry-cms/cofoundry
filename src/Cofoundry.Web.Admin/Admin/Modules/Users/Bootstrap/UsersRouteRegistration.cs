@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Builder;
 
 namespace Cofoundry.Web.Admin
 {
-    public class UsersRouteRegistration : IRouteRegistration
+    public class UsersRouteRegistration : IOrderedRouteRegistration
     {
         private readonly IUserAreaDefinitionRepository _userAreaDefinitionRepository;
 
@@ -20,6 +20,8 @@ namespace Cofoundry.Web.Admin
             _userAreaDefinitionRepository = userAreaDefinitionRepository;
         }
 
+        public int Ordering => (int)RouteRegistrationOrdering.Early;
+
         public void RegisterRoutes(IRouteBuilder routeBuilder)
         {
             foreach (var userArea in _userAreaDefinitionRepository.GetAll())
@@ -27,7 +29,7 @@ namespace Cofoundry.Web.Admin
                 var routePrefix = SlugFormatter.ToSlug(userArea.Name);
 
                 routeBuilder.MapRoute(
-                    "Users Cofoundry Admin Module - " + userArea.Name,
+                    "Cofoundry Admin Module - " + userArea.Name + " users",
                     RouteConstants.AdminAreaPrefix + "/" + routePrefix + "-users",
                     new { controller = "UsersModule", action = "Index", Area = RouteConstants.AdminAreaName },
                     null,

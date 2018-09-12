@@ -9,7 +9,6 @@ using Microsoft.AspNetCore.Mvc;
 namespace Cofoundry.Web.Admin
 {
     [Area(RouteConstants.AdminAreaName)]
-    [AdminRoute(SetupRouteLibrary.RoutePrefix)]
     public class SetupController : Controller
     {
         #region Constructor
@@ -31,9 +30,6 @@ namespace Cofoundry.Web.Admin
 
         #endregion
 
-        #region routes
-
-        [Route("")]
         public async Task<ActionResult> Index()
         {
             var settings = await _queryExecutor.ExecuteAsync(new GetSettingsQuery<InternalSettings>());
@@ -49,15 +45,9 @@ namespace Cofoundry.Web.Admin
             return View(viewPath);
         }
 
-        #endregion
-
-        #region private helpers
-
         private ActionResult RedirectToDashboard()
         {
             return Redirect(_adminRouteLibrary.Dashboard.Dashboard());
         }
-
-        #endregion
     }
 }

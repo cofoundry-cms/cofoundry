@@ -13,7 +13,10 @@ namespace Cofoundry.Web.Admin
     /// register angular admin modules that follow a standard pattern. RegisterRoutes needs to be manually called at the 
     /// point at which we want to routes added to the routing table, otherwise the rest should happen automatically.
     /// </summary>
-    public class StandardAngularModuleRegistrationBootstrapper : IEmbeddedResourceRouteRegistration, IAdminModuleRegistration, IRouteRegistration
+    public class StandardAngularModuleRegistrationBootstrapper 
+        : IEmbeddedResourceRouteRegistration
+        , IAdminModuleRegistration
+        , IOrderedRouteRegistration
     {
         #region constructor
 
@@ -37,6 +40,8 @@ namespace Cofoundry.Web.Admin
                 yield return registration.GetModule();
             }
         }
+
+        public int Ordering => (int)RouteRegistrationOrdering.Early;
 
         public void RegisterRoutes(IRouteBuilder routes)
         {

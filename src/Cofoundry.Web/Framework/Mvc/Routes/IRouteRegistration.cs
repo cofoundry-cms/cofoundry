@@ -6,9 +6,12 @@ using System.Linq;
 namespace Cofoundry.Web
 {
     /// <summary>
-    /// Use this to inject route registrations into the 
-    /// Route Collection. The ordering that instances of IRouteRegistration
-    /// get run cannot be guaranteed.
+    /// Implement this interface to define routes that should be
+    /// injected into the MVC route collection during the startup 
+    /// process. IRunAfterRouteRegistration or IRunBeforeRouteRegistration
+    /// can be used to affect the ordering of registrations, but otherwise
+    /// the ordering that instances of IRouteRegistration get run cannot 
+    /// is not guaranteed.
     /// </summary>
     public interface IRouteRegistration
     {

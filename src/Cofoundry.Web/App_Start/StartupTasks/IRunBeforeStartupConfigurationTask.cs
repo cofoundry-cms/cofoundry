@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Cofoundry.Core;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -10,11 +11,7 @@ namespace Cofoundry.Web
     /// the task should run before other tasks specified in the RunBefore
     /// property.
     /// </summary>
-    public interface IRunBeforeStartupConfigurationTask : IStartupConfigurationTask
+    public interface IRunBeforeStartupConfigurationTask : IStartupConfigurationTask, IRunBeforeTask
     {
-        /// <summary>
-        /// Indicates the type of task that this task should run before.
-        /// </summary>
-        ICollection<Type> RunBefore { get; }
     }
 }

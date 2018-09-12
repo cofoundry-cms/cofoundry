@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Cofoundry.Core;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -9,11 +10,7 @@ namespace Cofoundry.Web
     /// initialization pipeline. The task is dependent on another 
     /// task being executed first.
     /// </summary>
-    public interface IRunAfterStartupConfigurationTask : IStartupConfigurationTask
+    public interface IRunAfterStartupConfigurationTask : IStartupConfigurationTask, IRunAfterTask
     {
-        /// <summary>
-        /// Indicates the type of task that this task should run after.
-        /// </summary>
-        ICollection<Type> RunAfter { get; }
     }
 }

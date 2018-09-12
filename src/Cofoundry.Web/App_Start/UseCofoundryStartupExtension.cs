@@ -29,7 +29,7 @@ namespace Cofoundry.Web
                     .ServiceProvider
                     .GetServices<IStartupConfigurationTask>();
 
-                startupTasks = SortTasksByDependency(startupTasks.ToArray());
+                startupTasks = SortTasksByDependency(startupTasks);
 
                 if (configuration.StartupTaskFilter != null)
                 {
@@ -43,56 +43,12 @@ namespace Cofoundry.Web
             }
         }
 
-        private class StartupTaskLookupItem
+        private static ICollection<IStartupConfigurationTask> SortTasksByDependency(IEnumerable<IStartupConfigurationTask> startupTasks)
         {
-            public StartupTaskLookupItem(IStartupConfigurationTask startupTask)
-            {
-                StartupTask = startupTask;
-            }
-            public IStartupConfigurationTask StartupTask { get; set; }
-
-            public List<IStartupConfigurationTask> Dependencies { get; set; } = new List<IStartupConfigurationTask>();
-        }
-
-        private static ICollection<IStartupConfigurationTask> SortTasksByDependency(ICollection<IStartupConfigurationTask> startupTasks)
-        {
-            // Set up a lookup of task
-            var startupTaskLookup = startupTasks.ToDictionary(k => k.GetType(), v => new StartupTaskLookupItem(v));
-
-            foreach (var startupTask in startupTasks
-                .Where(t => t is IRunAfterStartupConfigurationTask)
-                .Cast<IRunAfterStartupConfigurationTask>())
-            {
-                var startupTaskLookupItem = startupTaskLookup[startupTask.GetType()];
-
-                foreach (var runAfterTaskType in startupTask.RunAfter)
-                {
-                    var dependentTask = startupTaskLookup[runAfterTaskType].StartupTask;
-                    startupTaskLookupItem.Dependencies.Add(dependentTask);
-                }
-            }
-
-            foreach (var startupTask in startupTasks
-                .Where(t => t is IRunBeforeStartupConfigurationTask)
-                .Cast<IRunBeforeStartupConfigurationTask>())
-            {
-                foreach (var runBeforeTaskType in startupTask.RunBefore)
-                {
-                    startupTaskLookup[runBeforeTaskType].Dependencies.Add(startupTask);
-                }
-            }
-
-            // Pre-sort by numerical task ordering
-            // The fullname secondry ordering is used to get predicatable task ordering
-            var orderedTasks = startupTasks
-                .OrderBy(t => t.Ordering)
-                .ThenBy(t => t.GetType().FullName)
-                .ToArray();
-
             try
             {
-                // Then do a Topological Sort based on task dependencies
-                return TopologicalSorter.Sort(orderedTasks, (task, source) => startupTaskLookup[task.GetType()].Dependencies, true);
+                // Do a Topological Sort based on task dependencies
+                return OrderableTaskSorter.Sort(startupTasks);
             }
             catch (CyclicDependencyException ex)
             {

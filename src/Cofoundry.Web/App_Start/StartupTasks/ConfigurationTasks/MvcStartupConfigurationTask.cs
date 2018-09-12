@@ -41,49 +41,6 @@ namespace Cofoundry.Web
 
         private void GetRoutes(IRouteBuilder routes)
         {
-            RegisterRootFiles(routes);
-            RegisterControllerRoutes(routes);
-        }
-
-        private static void RegisterRootFiles(IRouteBuilder routes)
-        {
-            // General files
-            routes.MapRoute("RobotsTxt", "robots.txt", new { controller = "CofoundryFiles", action = "RobotsTxt" });
-            routes.MapRoute("HumansTxt", "humans.txt", new { controller = "CofoundryFiles", action = "HumansTxt" });
-        }
-
-        private void RegisterControllerRoutes(IRouteBuilder routes)
-        {
-            routes.MapRoute(
-                "Cofoundry_ImageAsset",
-                "assets/images/{assetId}_{fileName}.{extension}",
-                new { controller = "CofoundryAssets", action = "Image" },
-                new { assetId = @"\d+" });
-
-            // File assets
-            routes.MapRoute(
-                "Cofoundry_DocumentAsset",
-                "assets/files/{assetId}_{fileName}.{extension}",
-                new { controller = "CofoundryAssets", action = "File" },
-                new { assetId = @"\d+" });
-
-            routes.MapRoute(
-                "Cofoundry_DocumentAsset_Download",
-                "assets/files/download/{assetId}_{fileName}.{extension}",
-                new { controller = "CofoundryAssets", action = "FileDownload" },
-                new { assetId = @"\d+" });
-
-            routes.MapRoute(
-                "Cofoundry_ErrorCode",
-                "cofoundryerror/errorcode/{statusCode}",
-                new { controller = "CofoundryError", action = "ErrorCode" },
-                new { statusCode = @"\d+" });
-
-            routes.MapRoute(
-                "Cofoundry_Exception",
-                "cofoundryerror/exception/",
-                new { controller = "CofoundryError", action = "Exception" });
-
             RegisterInjectedRoutes(routes);
 
             routes.MapRoute(
