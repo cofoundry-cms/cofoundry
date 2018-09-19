@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using Cofoundry.Domain;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
 
@@ -8,39 +9,38 @@ namespace Cofoundry.Web.Admin
 {
     public class AuthRouteRegistration : IOrderedRouteRegistration
     {
+        private readonly AdminSettings _adminSettings;
+
+        public AuthRouteRegistration(
+            AdminSettings adminSettings
+            )
+        {
+            _adminSettings = adminSettings;
+        }
+
         public int Ordering => (int)RouteRegistrationOrdering.Early;
 
         public void RegisterRoutes(IRouteBuilder routeBuilder)
         {
+            // this is usually handled by ForAdminController etc but
+            // since we have a custom route for the default redirect we need
+            // to check it here.
+            if (_adminSettings.Disabled) return;
+
+            routeBuilder.ForAdminController<AuthController>("auth")
+                .MapIndexRoute()
+                .MapRoute("Login")
+                .MapRoute("Logout")
+                .MapRoute("ForgotPassword")
+                .MapRoute("ResetPassword")
+                .MapRoute("ChangePassword");
+
             routeBuilder.MapRoute(
                 "Cofoundry Admin - Root default action",
-                RouteConstants.AdminAreaPrefix,
+                _adminSettings.DirectoryName,
                 new { controller = "Auth", action = "DefaultRedirect", Area = RouteConstants.AdminAreaName }
                 );
 
-            routeBuilder.MapRoute(
-                "Cofoundry Admin Module - Auth:ForgotPassword",
-                RouteConstants.AdminAreaPrefix + "/auth/forgot-password",
-                new { controller = "Auth", action = "ForgotPassword", Area = RouteConstants.AdminAreaName }
-                );
-
-            routeBuilder.MapRoute(
-                "Cofoundry Admin Module - Auth:ResetPassword",
-                RouteConstants.AdminAreaPrefix + "/auth/reset-password",
-                new { controller = "Auth", action = "ResetPassword", Area = RouteConstants.AdminAreaName }
-                );
-
-            routeBuilder.MapRoute(
-                "Cofoundry Admin Module - Auth:ChangePassword",
-                RouteConstants.AdminAreaPrefix + "/auth/change-password",
-                new { controller = "Auth", action = "ChangePassword", Area = RouteConstants.AdminAreaName }
-                );
-
-            routeBuilder.MapRoute(
-                "Cofoundry Admin Module - Auth",
-                RouteConstants.AdminAreaPrefix + "/auth/{action}",
-                new { controller = "Auth", action = "Index", Area = RouteConstants.AdminAreaName }
-                );
         }
     }
 }

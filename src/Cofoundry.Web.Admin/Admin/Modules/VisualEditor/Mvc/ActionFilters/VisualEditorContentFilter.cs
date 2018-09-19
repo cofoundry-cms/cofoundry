@@ -25,16 +25,19 @@ namespace Cofoundry.Web.Admin
         private readonly IVisualEditorActionResultFactory _visualEditorActionResultFactory;
         private readonly IUserContextService _userContextService;
         private readonly IEnumerable<IVisualEditorRequestExclusionRule> _visualEditorRouteExclusionRules;
+        private readonly AdminSettings _adminSettings;
 
         public VisualEditorContentFilter(
             IVisualEditorActionResultFactory visualEditorActionResultFactory,
             IUserContextService userContextService,
-            IEnumerable<IVisualEditorRequestExclusionRule> visualEditorRouteExclusionRules
+            IEnumerable<IVisualEditorRequestExclusionRule> visualEditorRouteExclusionRules,
+            AdminSettings adminSettings
             )
         {
             _visualEditorActionResultFactory = visualEditorActionResultFactory;
             _userContextService = userContextService;
             _visualEditorRouteExclusionRules = visualEditorRouteExclusionRules;
+            _adminSettings = adminSettings;
         }
 
         public async Task OnResultExecutionAsync(
@@ -42,7 +45,6 @@ namespace Cofoundry.Web.Admin
             ResultExecutionDelegate next
             )
         {
-
             var cofoundryUser = await GetCofoundryUserIfCanShowVisualEditorAsync(context);
 
             if (cofoundryUser != null)
@@ -60,8 +62,10 @@ namespace Cofoundry.Web.Admin
             var path = httpContext.Request.Path;
 
             var canShowSiteViewer =
+                // Admin panel isn't disabled
+                !_adminSettings.Disabled
                 // We have an exsting filter to override
-                filterContext.Result != null
+                && filterContext.Result != null
                 // Valid Result Type
                 && IsValidActionType(filterContext.Result)
                 // Isn't an ajax request

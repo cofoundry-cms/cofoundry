@@ -18,6 +18,9 @@ namespace Cofoundry.Core.ResourceFiles
         private readonly IFileProvider _assemblyProvider;
         private readonly IFileProvider _overrideProvider;
         private readonly string _restrictToPath;
+        private readonly string _rewriteFromPath = null;
+
+        #region constructor
 
         /// <summary>
         /// A file provider that wraps an EmbeddedFileProvider and restricts
@@ -28,6 +31,11 @@ namespace Cofoundry.Core.ResourceFiles
         /// An EmbeddedFileProvider instance instantiated with the assembly containing the 
         /// embedded resources to serve.</param>
         /// <param name="filterToPath">The relative file path to restrict file access to e.g. '/parent/child/content'.</param>
+        /// <param name="rewriteFromPath">
+        /// The relative file path to rewrite file requests from e.g. '/virtual/path/to/content'. The 
+        /// rewriteFromPath value will be replaced by filterToPath in the underlying file request. Pass
+        /// null if rewriting is not required.
+        /// </param>
         /// <param name="overrideProvider">
         /// A file provider that can contain files that override the assembly provider. Typically
         /// this is a physical file provider for the website root so projects can override files embedded
@@ -36,62 +44,102 @@ namespace Cofoundry.Core.ResourceFiles
         public FilteredEmbeddedFileProvider(
             IFileProvider assemblyProvider,
             string filterToPath,
+            string rewriteFromPath,
             IFileProvider overrideProvider = null
             )
         {
             if (assemblyProvider == null) throw new ArgumentNullException(nameof(assemblyProvider));
             if (filterToPath == null) throw new ArgumentNullException(nameof(filterToPath));
             if (string.IsNullOrWhiteSpace(filterToPath)) throw new ArgumentEmptyException(nameof(filterToPath));
-         
+
             _restrictToPath = filterToPath.TrimStart('~');
+            ValidatePath(_restrictToPath, nameof(filterToPath));
 
-            if (!_restrictToPath.StartsWith("/"))
+            if (!string.IsNullOrEmpty(rewriteFromPath))
             {
-                throw new ArgumentException(nameof(filterToPath) + " must start with a forward slash.");
-            }
+                var formattedRewritePath = rewriteFromPath.TrimStart('~');
+                ValidatePath(formattedRewritePath, nameof(rewriteFromPath));
 
-            if (_restrictToPath.Length <= 1)
-            {
-                throw new ArgumentException(nameof(filterToPath) + " cannot be the root directory.");
+                if (!rewriteFromPath.Equals(filterToPath, StringComparison.OrdinalIgnoreCase))
+                {
+                    _rewriteFromPath = formattedRewritePath;
+                }
             }
 
             _assemblyProvider = assemblyProvider;
             _overrideProvider = overrideProvider;
         }
 
+        private static void ValidatePath(string pathToTest, string parameterName)
+        {
+            if (!pathToTest.StartsWith("/"))
+            {
+                throw new ArgumentException(parameterName + " must start with a forward slash.");
+            }
+
+            if (pathToTest.Length <= 1)
+            {
+                throw new ArgumentException(parameterName + " cannot be the root directory.");
+            }
+        }
+
+        #endregion
+
         public IDirectoryContents GetDirectoryContents(string subpath)
         {
-            if (subpath == null || !subpath.StartsWith(_restrictToPath))
+            if (!StartsWithPath(subpath))
             {
                 return NotFoundDirectoryContents.Singleton;
             }
-            
+
+            var rewrittenPath = RewritePath(subpath);
+
             return _assemblyProvider.GetDirectoryContents(subpath);
         }
 
         public IFileInfo GetFileInfo(string subpath)
         {
-            if (string.IsNullOrEmpty(subpath) || !subpath.StartsWith(_restrictToPath, StringComparison.OrdinalIgnoreCase))
+            if (!StartsWithPath(subpath))
             {
                 return new NotFoundFileInfo(subpath);
             }
 
+            var rewrittenPath = RewritePath(subpath);
+
             if (_overrideProvider != null)
             {
-                var overrideFile = _overrideProvider.GetFileInfo(subpath);
+                var overrideFile = _overrideProvider.GetFileInfo(rewrittenPath);
                 if (overrideFile != null && overrideFile.Exists)
                 {
                     return overrideFile;
                 }
             }
 
-            var fileInfo = _assemblyProvider.GetFileInfo(subpath);
+            var fileInfo = _assemblyProvider.GetFileInfo(rewrittenPath);
             return fileInfo;
         }
 
         public IChangeToken Watch(string filter)
         {
             return _assemblyProvider.Watch(filter);
+        }
+
+        private string RewritePath(string path)
+        {
+            if (_rewriteFromPath == null) return path;
+
+            var newPath = _restrictToPath + path.Remove(0, _rewriteFromPath.Length);
+
+            return newPath;
+        }
+
+        private bool StartsWithPath(string subpath)
+        {
+            if (string.IsNullOrEmpty(subpath)) return false;
+
+            var pathToTest = _rewriteFromPath ?? _restrictToPath;
+
+            return subpath.StartsWith(pathToTest, StringComparison.OrdinalIgnoreCase);
         }
     }
 }

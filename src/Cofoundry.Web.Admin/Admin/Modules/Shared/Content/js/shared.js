@@ -4095,12 +4095,6 @@ angular
     .constant('shared.internalModulePath', '/Admin/Modules/Shared/Js/')
     .constant('shared.pluginModulePath', '/Plugins/Admin/Modules/Shared/Js/')
     .constant('shared.modulePath', '/Cofoundry/Admin/Modules/Shared/Js/')
-    .constant('shared.serviceBase', '/Admin/Api/')
-    .constant('shared.pluginServiceBase', '/Admin/Api/Plugins/')
-    .constant('shared.urlBaseBase', '/Admin/')
-    .constant('shared.internalContentPath', '/Admin/Modules/Shared/Content/')
-    .constant('shared.contentPath', '/Cofoundry/Admin/Modules/Shared/Content/')
-    .constant('shared.pluginContentPath', '/Plugins/Admin/Modules/Shared/Content/')
     ;
 
 angular.module('cms.shared').factory('shared.customEntityService', [
@@ -5072,6 +5066,8 @@ function (
 
     /* CRUD Routes */
 
+    addCrudRoutes('document', 'documents');
+    addCrudRoutes('image', 'images');
     addCrudRoutes('page', 'pages');
     addCrudRoutes('pageTemplate', 'page-templates');
     addCrudRoutes('role', 'roles');
@@ -5127,8 +5123,14 @@ function (
 
     /* Login */
 
-    service.login = function () {
-        return urlBaseBase + 'auth';
+    service.login = function (returnUrl) {
+        var url = urlBaseBase + 'auth/login';
+
+        if (returnUrl) {
+            url += '?returnUrl=' + encodeURIComponent(returnUrl);
+        }
+
+        return url;
     }
 
     /* Pages */
@@ -5454,14 +5456,22 @@ function (
         }
     }
 }]);
-angular.module('cms.shared').factory('authenticationService', ['$window', function ($window) {
+angular.module('cms.shared').factory('authenticationService', [
+    '$window',
+    'shared.urlLibrary',
+function (
+    $window,
+    urlLibrary
+) {
+
     var service = {};
 
     /* PUBLIC */
 
     service.redirectToLogin = function () {
         var loc = $window.location;
-        var path = '/admin/auth/login?returnUrl=' + encodeURIComponent(loc.pathname + loc.hash);
+        var path = urlLibrary.login(loc.pathname + loc.hash);
+
         $window.location = path;
     }
 
@@ -5680,11 +5690,11 @@ angular.module('cms.shared').config([
     '$httpProvider',
     'csrfToken',
     'csrfHeaderName',
-    function (
-        $httpProvider,
-        csrfToken,
-        csrfHeaderName
-    ) {
+function (
+    $httpProvider,
+    csrfToken,
+    csrfHeaderName
+) {
 
     var headers = $httpProvider.defaults.headers,
         csrfableVerbs = [
@@ -5700,6 +5710,8 @@ angular.module('cms.shared').config([
         headers[verb] = headers[verb] || {};
         headers[verb][csrfHeaderName] = csrfToken;
     });
+
+    headers.common['X-Requested-With'] = 'XMLHttpRequest';
 
 }]);
 /**
@@ -7171,6 +7183,7 @@ angular.module('cms.shared').directive('cmsFormFieldDocumentAsset', [
     'shared.modalDialogService',
     'shared.stringUtilities',
     'shared.documentService',
+    'shared.urlLibrary',
     'baseFormFieldFactory',
 function (
     _,
@@ -7179,6 +7192,7 @@ function (
     modalDialogService,
     stringUtilities,
     documentService,
+    urlLibrary,
     baseFormFieldFactory) {
 
     /* CONFIG */
@@ -7209,6 +7223,8 @@ function (
         /* INIT */
 
         function init() {
+
+            vm.urlLibrary = urlLibrary;
             vm.showPicker = showPicker;
             vm.remove = remove;
             vm.isRemovable = _.isObject(vm.model) && !isRequired;
@@ -7328,6 +7344,7 @@ angular.module('cms.shared').directive('cmsFormFieldDocumentAssetCollection', [
     'shared.modalDialogService',
     'shared.arrayUtilities',
     'shared.stringUtilities',
+    'shared.urlLibrary',
     'baseFormFieldFactory',
 function (
     _,
@@ -7337,6 +7354,7 @@ function (
     modalDialogService,
     arrayUtilities,
     stringUtilities,
+    urlLibrary,
     baseFormFieldFactory) {
 
     /* VARS */
@@ -7369,6 +7387,7 @@ function (
 
         function init() {
 
+            vm.urlLibrary = urlLibrary;
             vm.gridLoadState = new LoadState();
 
             vm.showPicker = showPicker;
@@ -9507,6 +9526,7 @@ angular.module('cms.shared').directive('cmsFormFieldImageAsset', [
             'shared.modalDialogService',
             'shared.stringUtilities',
             'shared.imageService',
+            'shared.urlLibrary',
             'baseFormFieldFactory',
         function (
             _,
@@ -9515,6 +9535,7 @@ angular.module('cms.shared').directive('cmsFormFieldImageAsset', [
             modalDialogService,
             stringUtilities,
             imageService,
+            urlLibrary,
             baseFormFieldFactory) {
 
             /* VARS */
@@ -9553,6 +9574,8 @@ angular.module('cms.shared').directive('cmsFormFieldImageAsset', [
                 /* INIT */
 
                 function init() {
+
+                    vm.urlLibrary = urlLibrary;
                     vm.showPicker = showPicker;
                     vm.remove = remove;
                     vm.isRemovable = _.isObject(vm.model) && !isRequired;
@@ -9560,8 +9583,7 @@ angular.module('cms.shared').directive('cmsFormFieldImageAsset', [
                     vm.filter = parseFilters(attributes);
                     vm.previewWidth = attributes['cmsPreviewWidth'] || 220;
                     vm.previewHeight = attributes['cmsPreviewHeight'];
-
-
+                    
                     scope.$watch("vm.asset", setAsset);
                     scope.$watch("vm.model", setAssetById);
                 }
@@ -9683,6 +9705,7 @@ angular.module('cms.shared').directive('cmsFormFieldImageAssetCollection', [
     'shared.modalDialogService',
     'shared.arrayUtilities',
     'shared.stringUtilities',
+    'shared.urlLibrary',
     'baseFormFieldFactory',
 function (
     _,
@@ -9692,6 +9715,7 @@ function (
     modalDialogService,
     arrayUtilities,
     stringUtilities,
+    urlLibrary,
     baseFormFieldFactory) {
 
     /* VARS */
@@ -9725,6 +9749,7 @@ function (
         function init() {
 
             vm.gridLoadState = new LoadState();
+            vm.urlLibrary = urlLibrary;
 
             vm.showPicker = showPicker;
             vm.remove = remove;
@@ -11261,6 +11286,7 @@ angular.module('cms.shared').directive('cmsFormFieldPageCollection', [
     'shared.pageService',
     'shared.modalDialogService',
     'shared.arrayUtilities',
+    'shared.urlLibrary',
     'baseFormFieldFactory',
 function (
     _,
@@ -11269,6 +11295,7 @@ function (
     pageService,
     modalDialogService,
     arrayUtilities,
+    urlLibrary,
     baseFormFieldFactory) {
 
     /* VARS */
@@ -11313,6 +11340,7 @@ function (
             vm.showPicker = showPicker;
             vm.remove = remove;
             vm.onDrop = onDrop;
+            vm.urlLibrary = urlLibrary;
 
             scope.$watch("vm.model", setGridItems);
         }
@@ -11552,6 +11580,7 @@ angular.module('cms.shared').controller('PagePickerDialogController', [
     'shared.SearchQuery',
     'shared.modalDialogService',
     'shared.internalModulePath',
+    'shared.urlLibrary',
     'options',
     'close',
 function (
@@ -11561,6 +11590,7 @@ function (
     SearchQuery,
     modalDialogService,
     modulePath,
+    urlLibrary,
     options,
     close) {
 
@@ -11595,6 +11625,7 @@ function (
         vm.toggleFilter = toggleFilter;
         vm.isSelected = isSelected;
         vm.multiMode = vm.selectedIds ? true : false;
+        vm.urlLibrary = urlLibrary;
 
         toggleFilter(false);
         loadGrid();
@@ -12049,6 +12080,7 @@ function (
     };
 
     function link(scope, el, attributes, modalDialogContainerController) {
+
         if (modalDialogContainerController) {
             scope.isInModal = true;
         }

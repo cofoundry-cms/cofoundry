@@ -23,11 +23,13 @@ namespace Cofoundry.Web.Admin
 
             yield return new EmbeddedResourcePath(
                 assembly,
-                _adminRouteLibrary.Shared.StaticResourcePrefix
+                _adminRouteLibrary.Shared.GetStaticResourceFilePath(),
+                _adminRouteLibrary.Shared.GetStaticResourceUrlPath()
                 );
             yield return new EmbeddedResourcePath(
                 assembly,
-                _adminRouteLibrary.SharedAlternate.StaticResourcePrefix
+                _adminRouteLibrary.SharedAlternate.GetStaticResourceFilePath(),
+                _adminRouteLibrary.SharedAlternate.GetStaticResourceUrlPath()
                 );
         }
     }

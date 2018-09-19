@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Cofoundry.Domain;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -8,14 +9,13 @@ namespace Cofoundry.Web.Admin
     {
         public const string RoutePrefix = "pages";
 
-        #region constructor
+        private readonly AdminSettings _adminSettings;
 
-        public PagesModuleRouteLibrary()
-            : base(RoutePrefix, RouteConstants.InternalModuleResourcePathPrefix)
+        public PagesModuleRouteLibrary(AdminSettings adminSettings)
+            : base(adminSettings, RoutePrefix, RouteConstants.InternalModuleResourcePathPrefix)
         {
+            _adminSettings = adminSettings;
         }
-
-        #endregion
 
         #region routes
 
@@ -39,13 +39,9 @@ namespace Cofoundry.Web.Admin
             return CreatePageDirectoryRoute();
         }
 
-        #endregion
-
-        #region helpers
-
         private string CreatePageDirectoryRoute(string path = null)
         {
-            return "/" + UrlPrefix + "#/directories/" + path;
+            return _adminSettings.DirectoryName + "/" + UrlPrefix + "#/directories/" + path;
         }
 
         #endregion

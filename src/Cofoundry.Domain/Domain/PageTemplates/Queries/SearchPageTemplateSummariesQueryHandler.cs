@@ -31,8 +31,6 @@ namespace Cofoundry.Domain
 
         #endregion
 
-        #region execution
-        
         public async Task<PagedQueryResult<PageTemplateSummary>> ExecuteAsync(SearchPageTemplateSummariesQuery query, IExecutionContext executionContext)
         {
             var dbPagedResult = await CreateQuery(query).ToPagedResultAsync(query);
@@ -78,6 +76,7 @@ namespace Cofoundry.Domain
             return (await _dbContext
                     .PageVersions
                     .AsNoTracking()
+                    .FilterActive()
                     .Where(v => allPageTemplateIds.Contains(v.PageTemplateId))
                     .Select(v => new { v.PageId, v.PageVersionId, v.PageTemplateId })
                     .ToListAsync())
@@ -89,10 +88,6 @@ namespace Cofoundry.Domain
                     })
                     .ToDictionary(v => v.PageTemplateId, v => v.NumPages);
         }
-
-        #endregion
-
-        #region helpers
 
         private IQueryable<PageTemplateSummaryQueryModel> CreateQuery(SearchPageTemplateSummariesQuery query)
         {
@@ -120,9 +115,6 @@ namespace Cofoundry.Domain
                     //    .Count()
                 });
         }
-
-
-        #endregion
 
         #region Permission
 

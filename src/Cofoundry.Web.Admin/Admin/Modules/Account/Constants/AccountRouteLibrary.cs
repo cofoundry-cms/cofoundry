@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Cofoundry.Domain;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -6,20 +7,12 @@ namespace Cofoundry.Web.Admin
 {
     public class AccountRouteLibrary : AngularModuleRouteLibrary
     {
-        #region statics
-
         public const string RoutePrefix = "account";
 
-        #endregion
-
-        #region constructor
-
-        public AccountRouteLibrary()
-            : base(RoutePrefix, RouteConstants.InternalModuleResourcePathPrefix)
+        public AccountRouteLibrary(AdminSettings adminSettings)
+            : base(adminSettings, RoutePrefix, RouteConstants.InternalModuleResourcePathPrefix)
         {
         }
-
-        #endregion
 
         #region routes
 

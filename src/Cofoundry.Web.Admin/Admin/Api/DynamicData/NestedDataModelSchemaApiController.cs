@@ -8,7 +8,6 @@ using System.Threading.Tasks;
 
 namespace Cofoundry.Web.Admin
 {
-    [AdminApiRoute("nested-data-model-schemas")]
     public class NestedDataModelSchemaApiController : BaseAdminApiController
     {
         private readonly IQueryExecutor _queryExecutor;
@@ -23,7 +22,6 @@ namespace Cofoundry.Web.Admin
             _apiResponseHelper = apiResponseHelper;
         }
 
-        [HttpGet("{dataModelName}")]
         public async Task<IActionResult> Get(string dataModelName)
         {
             var results = await _queryExecutor.ExecuteAsync(new GetNestedDataModelSchemaByNameQuery(dataModelName));

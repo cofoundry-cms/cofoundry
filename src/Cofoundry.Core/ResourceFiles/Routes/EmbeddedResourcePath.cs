@@ -9,15 +9,17 @@ namespace Cofoundry.Core.ResourceFiles
     /// Represents a path to a set of embedded resources E.g. '/parent/child/content'
     /// in a specific assembly.
     /// </summary>
-    public struct EmbeddedResourcePath
+    public class EmbeddedResourcePath
     {
         public EmbeddedResourcePath(
             Assembly assembly,
-            string path
+            string path,
+            string rewriteFrom = null
             )
         {
             Assembly = assembly;
             Path = path;
+            RewriteFrom = rewriteFrom;
         }
 
         /// <summary>
@@ -29,5 +31,10 @@ namespace Cofoundry.Core.ResourceFiles
         /// The path containing embedded resources. E.g. '/parent/child/content'
         /// </summary>
         public string Path { get; }
+
+        /// <summary>
+        /// Optional inbound url route to rewrite the path from e.g. /virtual/path/to/content
+        /// </summary>
+        public string RewriteFrom { get; set; }
     }
 }

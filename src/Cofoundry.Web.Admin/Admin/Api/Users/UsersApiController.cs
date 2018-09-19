@@ -8,19 +8,12 @@ using Cofoundry.Domain.CQS;
 
 namespace Cofoundry.Web.Admin
 {
-    [AdminApiRoute("users")]
     public class UsersApiController : BaseAdminApiController
     {
-        #region private member variables
-
         private const string ID_ROUTE = "{userId:int}";
 
         private readonly IQueryExecutor _queryExecutor;
         private readonly IApiResponseHelper _apiResponseHelper;
-
-        #endregion
-
-        #region constructor
 
         public UsersApiController(
             IQueryExecutor queryExecutor,
@@ -31,13 +24,8 @@ namespace Cofoundry.Web.Admin
             _apiResponseHelper = apiResponseHelper;
         }
 
-        #endregion
-
-        #region routes
-
         #region queries
 
-        [HttpGet]
         public async Task<IActionResult> Get([FromQuery] SearchUserSummariesQuery query)
         {
             if (query == null) query = new SearchUserSummariesQuery();
@@ -47,8 +35,7 @@ namespace Cofoundry.Web.Admin
             return _apiResponseHelper.SimpleQueryResponse(this, results);
         }
         
-        [HttpGet(ID_ROUTE)]
-        public async Task<IActionResult> Get(int userId)
+        public async Task<IActionResult> GetById(int userId)
         {
             var query = new GetUserDetailsByIdQuery(userId);
             var result = await _queryExecutor.ExecuteAsync(query);
@@ -60,7 +47,6 @@ namespace Cofoundry.Web.Admin
 
         #region commands
 
-        [HttpPost]
         public async Task<IActionResult> Post([FromBody] AddUserCommand command)
         {
             if (command.UserAreaCode == CofoundryAdminUserArea.AreaCode)
@@ -81,13 +67,11 @@ namespace Cofoundry.Web.Admin
             }
         }
 
-        [HttpPatch(ID_ROUTE)]
         public async Task<IActionResult> Patch(int userId, [FromBody] IDelta<UpdateUserCommand> delta)
         {
             return await _apiResponseHelper.RunCommandAsync(this, userId, delta);
         }
 
-        [HttpDelete(ID_ROUTE)]
         public async Task<IActionResult> Delete(int userId)
         {
             var command = new DeleteUserCommand();
@@ -95,8 +79,6 @@ namespace Cofoundry.Web.Admin
 
             return await _apiResponseHelper.RunCommandAsync(this, command);
         }
-
-        #endregion
 
         #endregion
     }

@@ -12,31 +12,6 @@ namespace Cofoundry.Web.Admin
         public const string AdminAreaName = "CofoundryAdmin";
 
         /// <summary>
-        /// The name of the naked admin route prefix i.e. 'admin'
-        /// </summary>
-        public const string AdminAreaPrefix = "admin";
-
-        /// <summary>
-        /// For constructing urls i.e. "/admin"
-        /// </summary>
-        public const string AdminUrlRoot = "/" + AdminAreaPrefix;
-
-        /// <summary>
-        /// For constructing urls i.e. "/admin/api"
-        /// </summary>
-        public const string ApiUrlRoot = AdminUrlRoot + "/api";
-
-        /// <summary>
-        /// For constructing api controller routes i.e. "admin/api/"
-        /// </summary>
-        public const string ApiRoutePrefix = AdminAreaPrefix + "/api";
-
-        /// <summary>
-        /// For constructing api controller routes i.e. "admin/api/plugins"
-        /// </summary>
-        public const string PluginApiRoutePrefix = ApiRoutePrefix + "/plugins";
-
-        /// <summary>
         /// For constructing urls i.e. "admin/modules/"
         /// </summary>
         /// <remarks>

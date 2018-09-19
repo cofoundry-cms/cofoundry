@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Cofoundry.Domain;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -10,8 +11,8 @@ namespace Cofoundry.Web.Admin
 
         #region constructor
 
-        public SettingsRouteLibrary()
-            : base(RoutePrefix, RouteConstants.InternalModuleResourcePathPrefix)
+        public SettingsRouteLibrary(AdminSettings adminSettings)
+            : base(adminSettings, RoutePrefix, RouteConstants.InternalModuleResourcePathPrefix)
         {
         }
 

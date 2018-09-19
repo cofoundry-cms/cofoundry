@@ -189,7 +189,7 @@ namespace Cofoundry.Web.Admin
 
         private async Task<string> RenderSvgIconsToStringAsync()
         {
-            var virtualFile = _resourceLocator.GetFile(_adminRouteLibrary.VisualEditor.StaticResource("svg-cache.html"));
+            var virtualFile = _resourceLocator.GetFile(_adminRouteLibrary.VisualEditor.StaticResourceFilePath("svg-cache.html"));
             string result = null;
 
             using (var stream = virtualFile.CreateReadStream())

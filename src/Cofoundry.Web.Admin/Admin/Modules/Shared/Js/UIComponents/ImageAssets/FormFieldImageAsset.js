@@ -9,6 +9,7 @@ angular.module('cms.shared').directive('cmsFormFieldImageAsset', [
             'shared.modalDialogService',
             'shared.stringUtilities',
             'shared.imageService',
+            'shared.urlLibrary',
             'baseFormFieldFactory',
         function (
             _,
@@ -17,6 +18,7 @@ angular.module('cms.shared').directive('cmsFormFieldImageAsset', [
             modalDialogService,
             stringUtilities,
             imageService,
+            urlLibrary,
             baseFormFieldFactory) {
 
             /* VARS */
@@ -55,6 +57,8 @@ angular.module('cms.shared').directive('cmsFormFieldImageAsset', [
                 /* INIT */
 
                 function init() {
+
+                    vm.urlLibrary = urlLibrary;
                     vm.showPicker = showPicker;
                     vm.remove = remove;
                     vm.isRemovable = _.isObject(vm.model) && !isRequired;
@@ -62,8 +66,7 @@ angular.module('cms.shared').directive('cmsFormFieldImageAsset', [
                     vm.filter = parseFilters(attributes);
                     vm.previewWidth = attributes['cmsPreviewWidth'] || 220;
                     vm.previewHeight = attributes['cmsPreviewHeight'];
-
-
+                    
                     scope.$watch("vm.asset", setAsset);
                     scope.$watch("vm.model", setAssetById);
                 }

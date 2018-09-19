@@ -5,6 +5,7 @@
     'shared.pageService',
     'shared.modalDialogService',
     'shared.arrayUtilities',
+    'shared.urlLibrary',
     'baseFormFieldFactory',
 function (
     _,
@@ -13,6 +14,7 @@ function (
     pageService,
     modalDialogService,
     arrayUtilities,
+    urlLibrary,
     baseFormFieldFactory) {
 
     /* VARS */
@@ -57,6 +59,7 @@ function (
             vm.showPicker = showPicker;
             vm.remove = remove;
             vm.onDrop = onDrop;
+            vm.urlLibrary = urlLibrary;
 
             scope.$watch("vm.model", setGridItems);
         }

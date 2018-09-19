@@ -1,9 +1,7 @@
 ﻿using Cofoundry.Core;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Cofoundry.Domain;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
 using System.Linq;
 
 namespace Cofoundry.Web.Admin
@@ -14,6 +12,7 @@ namespace Cofoundry.Web.Admin
     public class ModuleRouteLibrary
     {
         private const string CONTENT_FOLDER = "Content";
+        private readonly AdminSettings _adminSettings;
 
         #region constructor
 
@@ -26,9 +25,10 @@ namespace Cofoundry.Web.Admin
         /// urls e.g. products, users, honeybagders.
         /// </param>
         public ModuleRouteLibrary(
+            AdminSettings adminSettings,
             string routePrefix
             )
-            : this(routePrefix, RouteConstants.ModuleResourcePathPrefix)
+            : this(adminSettings, routePrefix, RouteConstants.ModuleResourcePathPrefix)
         {
         }
 
@@ -43,6 +43,7 @@ namespace Cofoundry.Web.Admin
         /// </param>
         /// <param name="resourcePathPrefix">The path prefix to your module e.g. '/admin/modules/'</param>
         public ModuleRouteLibrary(
+            AdminSettings adminSettings,
             string routePrefix, 
             string resourcePathPrefix
             )
@@ -50,7 +51,9 @@ namespace Cofoundry.Web.Admin
             ModuleFolderName = TextFormatter.Pascalize(routePrefix);
             ResourcePrefix = resourcePathPrefix + ModuleFolderName + "/";
             StaticResourcePrefix = FilePathHelper.CombineVirtualPath(ResourcePrefix, CONTENT_FOLDER);
-            UrlPrefix = RouteConstants.AdminAreaPrefix + "/" + routePrefix;
+            UrlPrefix = routePrefix;
+
+            _adminSettings = adminSettings;
         }
 
         #endregion
@@ -64,7 +67,7 @@ namespace Cofoundry.Web.Admin
         public string ModuleFolderName { get; private set; }
 
         /// <summary>
-        /// For constructing resource paths i.e. "Admin/Modules/Entity/"
+        /// For constructing resource paths i.e. "Modules/Entity/"
         /// </summary>
         /// <remarks>
         /// Note that resource paths have to mimic the directory structure
@@ -73,12 +76,12 @@ namespace Cofoundry.Web.Admin
         public string ResourcePrefix { get; private set; }
 
         /// <summary>
-        /// Route for the static resource folder i.e. "Admin/Modules/Entity/Content"
+        /// Route for the static resource folder i.e. "/AdminModules/Entity/Content"
         /// </summary>
         public string StaticResourcePrefix { get; private set; }
 
         /// <summary>
-        /// Prefix for constructing navigation urls i.e. "/admin/entity"
+        /// Prefix for constructing navigation urls i.e. "entity"
         /// </summary>
         public string UrlPrefix { get; private set; }
 
@@ -88,39 +91,55 @@ namespace Cofoundry.Web.Admin
 
         public string StaticResource(string fileName)
         {
+            return FilePathHelper.CombineVirtualPath(_adminSettings.DirectoryName, StaticResourcePrefix, fileName);
+        }
+        
+        public string StaticResourceFilePath(string fileName)
+        {
             return FilePathHelper.CombineVirtualPath(StaticResourcePrefix, fileName);
         }
 
         public string JsDirectory()
         {
-            return FilePathHelper.CombineVirtualPath(StaticResourcePrefix, "js");
+            return FilePathHelper.CombineVirtualPath(_adminSettings.DirectoryName, StaticResourcePrefix, "js");
         }
 
         public string JsFile(string fileName)
         {
-            return FilePathHelper.CombineVirtualPath(StaticResourcePrefix, "js", fileName + ".js");
+            return FilePathHelper.CombineVirtualPath(_adminSettings.DirectoryName, StaticResourcePrefix, "js", fileName + ".js");
         }
 
         public string CssDirectory()
         {
-            return FilePathHelper.CombineVirtualPath(StaticResourcePrefix, "css");
+            return FilePathHelper.CombineVirtualPath(_adminSettings.DirectoryName, StaticResourcePrefix, "css");
         }
 
         public string CssFile(string fileName)
         {
-            return FilePathHelper.CombineVirtualPath(StaticResourcePrefix, "css", fileName + ".css");
+            return FilePathHelper.CombineVirtualPath(_adminSettings.DirectoryName, StaticResourcePrefix, "css", fileName + ".css");
         }
+
+        public string GetStaticResourceFilePath()
+        {
+            return StaticResourcePrefix;
+        }
+
+        public string GetStaticResourceUrlPath()
+        {
+            return FilePathHelper.CombineVirtualPath(_adminSettings.DirectoryName, StaticResourcePrefix);
+        }
+
 
         public string AngularRoute(string path = null)
         {
-            return "/" + UrlPrefix + "#/" + path;
+            return "/" + _adminSettings.DirectoryName + "/" + UrlPrefix + "#/" + path;
         }
 
         public string MvcRoute(string action = null, string qs = null)
         {
-            if (action == null) return "/" + UrlPrefix + qs;
+            if (action == null) return "/" + _adminSettings.DirectoryName + "/" + UrlPrefix + qs;
 
-            return "/" + UrlPrefix + "/" + action + qs;
+            return "/" + _adminSettings.DirectoryName + "/" + UrlPrefix + "/" + action + qs;
         }
 
         #endregion

@@ -9,10 +9,12 @@ namespace Cofoundry.Web.Admin
     public class UsersRouteLibrary : AngularModuleRouteLibrary
     {
         public const string RoutePrefix = "users";
-        
-        public UsersRouteLibrary()
-            : base(RoutePrefix, RouteConstants.InternalModuleResourcePathPrefix)
+        private readonly AdminSettings _adminSettings;
+
+        public UsersRouteLibrary(AdminSettings adminSettings)
+            : base(adminSettings, RoutePrefix, RouteConstants.InternalModuleResourcePathPrefix)
         {
+            _adminSettings = adminSettings;
         }
 
         #region routes
@@ -34,10 +36,10 @@ namespace Cofoundry.Web.Admin
             return List(definition) + id.ToString();
         }
 
-        private static string GetUserAreaRoute(IUserAreaDefinition definition, string route = null)
+        private string GetUserAreaRoute(IUserAreaDefinition definition, string route = null)
         {
             if (definition == null) return string.Empty;
-            return "/" + RouteConstants.AdminAreaPrefix + "/" + SlugFormatter.ToSlug(definition.Name) + "-users#/" + route;
+            return "/" + _adminSettings.DirectoryName + "/" + SlugFormatter.ToSlug(definition.Name) + "-users#/" + route;
         }
 
         #endregion

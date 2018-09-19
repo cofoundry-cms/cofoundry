@@ -330,7 +330,7 @@ footer a {
   *display: inline;
   height: 58px;
   width: 250px;
-  background-image: url('/Admin/Modules/Shared/Content/css/img/icons/normal.png');
+  background-image: url("img/icons/normal.png");
   background-position: 0 -209px;
   background-repeat: no-repeat;
   margin-bottom: 20px;
@@ -340,7 +340,7 @@ footer a {
 @media (-webkit-min-device-pixel-ratio: 1.5), (min--moz-device-pixel-ratio: 1.5), (-o-min-device-pixel-ratio: 3 / 2), (min-device-pixel-ratio: 1.5), (min-resolution: 144dppx) {
   /* line 17, ../../Sass/Core/_login.scss */
   .login-container h1 {
-    background-image: url('/Admin/Modules/Shared/Content/css/img/icons/retina.png');
+    background-image: url("img/icons/retina.png");
     background-position: 0 -201px;
     -moz-background-size: 250px auto;
     -o-background-size: 250px auto;
@@ -440,7 +440,7 @@ footer a {
   *display: inline;
   height: 80px;
   width: 80px;
-  background-image: url('/Admin/Modules/Shared/Content/css/img/icons/normal.png');
+  background-image: url("img/icons/normal.png");
   background-position: 0 -269px;
   background-repeat: no-repeat;
   background-color: #413851;
@@ -455,7 +455,7 @@ footer a {
 @media (-webkit-min-device-pixel-ratio: 1.5), (min--moz-device-pixel-ratio: 1.5), (-o-min-device-pixel-ratio: 3 / 2), (min-device-pixel-ratio: 1.5), (min-resolution: 144dppx) {
   /* line 36, ../../Sass/Core/_navigation.scss */
   .main-nav .home {
-    background-image: url('/Admin/Modules/Shared/Content/css/img/icons/retina.png');
+    background-image: url("img/icons/retina.png");
     background-position: 0 -260px;
     -moz-background-size: 250px auto;
     -o-background-size: 250px auto;
@@ -664,7 +664,7 @@ footer a {
   *display: inline;
   height: 58px;
   width: 250px;
-  background-image: url('/Admin/Modules/Shared/Content/css/img/icons/normal.png');
+  background-image: url("img/icons/normal.png");
   background-position: 0 -209px;
   background-repeat: no-repeat;
   margin-bottom: 20px;
@@ -674,7 +674,7 @@ footer a {
 @media (-webkit-min-device-pixel-ratio: 1.5), (min--moz-device-pixel-ratio: 1.5), (-o-min-device-pixel-ratio: 3 / 2), (min-device-pixel-ratio: 1.5), (min-resolution: 144dppx) {
   /* line 12, ../../Sass/Core/_setup.scss */
   .setup-container h1 {
-    background-image: url('/Admin/Modules/Shared/Content/css/img/icons/retina.png');
+    background-image: url("img/icons/retina.png");
     background-position: 0 -201px;
     -moz-background-size: 250px auto;
     -o-background-size: 250px auto;
@@ -2227,7 +2227,7 @@ form.loading > *, table.loading > *, div.loading > *, fieldset.loading > * {
   *display: inline;
   height: 15px;
   width: 18px;
-  background-image: url('/Admin/Modules/Shared/Content/css/img/icons/normal.png');
+  background-image: url("img/icons/normal.png");
   background-position: 0 -92px;
   background-repeat: no-repeat;
   margin-left: -9px;
@@ -2236,7 +2236,7 @@ form.loading > *, table.loading > *, div.loading > *, fieldset.loading > * {
 @media (-webkit-min-device-pixel-ratio: 1.5), (min--moz-device-pixel-ratio: 1.5), (-o-min-device-pixel-ratio: 3 / 2), (min-device-pixel-ratio: 1.5), (min-resolution: 144dppx) {
   /* line 115, ../../Js/UIComponents/Table/_table.scss */
   .table tbody tr td .row-type-folder i {
-    background-image: url('/Admin/Modules/Shared/Content/css/img/icons/retina.png');
+    background-image: url("img/icons/retina.png");
     background-position: 0 -89px;
     -moz-background-size: 250px auto;
     -o-background-size: 250px auto;
@@ -2263,7 +2263,7 @@ form.loading > *, table.loading > *, div.loading > *, fieldset.loading > * {
   *display: inline;
   height: 18px;
   width: 14px;
-  background-image: url('/Admin/Modules/Shared/Content/css/img/icons/normal.png');
+  background-image: url("img/icons/normal.png");
   background-position: 0 -72px;
   background-repeat: no-repeat;
   margin-left: -7px;
@@ -2272,7 +2272,7 @@ form.loading > *, table.loading > *, div.loading > *, fieldset.loading > * {
 @media (-webkit-min-device-pixel-ratio: 1.5), (min--moz-device-pixel-ratio: 1.5), (-o-min-device-pixel-ratio: 3 / 2), (min-device-pixel-ratio: 1.5), (min-resolution: 144dppx) {
   /* line 128, ../../Js/UIComponents/Table/_table.scss */
   .table tbody tr td .row-type-doc i {
-    background-image: url('/Admin/Modules/Shared/Content/css/img/icons/retina.png');
+    background-image: url("img/icons/retina.png");
     background-position: 0 -70px;
     -moz-background-size: 250px auto;
     -o-background-size: 250px auto;
@@ -2289,14 +2289,14 @@ form.loading > *, table.loading > *, div.loading > *, fieldset.loading > * {
   *display: inline;
   height: 34px;
   width: 34px;
-  background-image: url('/Admin/Modules/Shared/Content/css/img/icons/normal.png');
+  background-image: url("img/icons/normal.png");
   background-position: 0 0;
   background-repeat: no-repeat;
 }
 @media (-webkit-min-device-pixel-ratio: 1.5), (min--moz-device-pixel-ratio: 1.5), (-o-min-device-pixel-ratio: 3 / 2), (min-device-pixel-ratio: 1.5), (min-resolution: 144dppx) {
   /* line 135, ../../Js/UIComponents/Table/_table.scss */
   .table tbody tr td .action-edit {
-    background-image: url('/Admin/Modules/Shared/Content/css/img/icons/retina.png');
+    background-image: url("img/icons/retina.png");
     background-position: 0 0;
     -moz-background-size: 250px auto;
     -o-background-size: 250px auto;
@@ -2313,14 +2313,14 @@ form.loading > *, table.loading > *, div.loading > *, fieldset.loading > * {
   *display: inline;
   height: 34px;
   width: 34px;
-  background-image: url('/Admin/Modules/Shared/Content/css/img/icons/normal.png');
+  background-image: url("img/icons/normal.png");
   background-position: 0 -36px;
   background-repeat: no-repeat;
 }
 @media (-webkit-min-device-pixel-ratio: 1.5), (min--moz-device-pixel-ratio: 1.5), (-o-min-device-pixel-ratio: 3 / 2), (min-device-pixel-ratio: 1.5), (min-resolution: 144dppx) {
   /* line 140, ../../Js/UIComponents/Table/_table.scss */
   .table tbody tr td .action-open {
-    background-image: url('/Admin/Modules/Shared/Content/css/img/icons/retina.png');
+    background-image: url("img/icons/retina.png");
     background-position: 0 -35px;
     -moz-background-size: 250px auto;
     -o-background-size: 250px auto;

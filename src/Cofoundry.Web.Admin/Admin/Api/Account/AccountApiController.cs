@@ -8,7 +8,6 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Cofoundry.Web.Admin
 {
-    [Route(RouteConstants.ApiRoutePrefix + "/account")]
     public class AccountApiController : BaseAdminApiController
     {
         #region constructor
@@ -34,7 +33,6 @@ namespace Cofoundry.Web.Admin
 
         #region queries
 
-        [HttpGet]
         public async Task<IActionResult> Get()
         {
             var query = new GetCurrentUserAccountDetailsQuery();
@@ -47,7 +45,6 @@ namespace Cofoundry.Web.Admin
 
         #region commands
 
-        [HttpPatch]
         public async Task<IActionResult> Patch([FromBody] IDelta<UpdateCurrentUserAccountCommand> delta)
         {
             var userContext = await _userContextService.GetCurrentContextAsync();
@@ -56,8 +53,7 @@ namespace Cofoundry.Web.Admin
             return await _apiResponseHelper.RunCommandAsync(this, userId, delta);
         }
 
-        [HttpPut("Password")]
-        public async Task<IActionResult> PutPassword([FromBody] UpdateCurrentUserUserPasswordCommandDto dto)
+        public async Task<IActionResult> PutPassword([FromBody] UpdateCurrentUserPasswordCommandDto dto)
         {
             var command = new UpdateCurrentUserPasswordCommand()
             {

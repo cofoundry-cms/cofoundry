@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Cofoundry.Domain;
 using Microsoft.AspNetCore.Http;
 
 namespace Cofoundry.Web.Admin
@@ -12,15 +13,24 @@ namespace Cofoundry.Web.Admin
     /// </summary>
     public class DefaultVisualEditorRequestExclusionRule : IVisualEditorRequestExclusionRule
     {
-        private static PathString[] _routesToExclude = new PathString[] {
-                new PathString(RouteConstants.AdminUrlRoot),
-                new PathString(RouteConstants.ApiUrlRoot),
-                new PathString("/api")
-            };
+        private readonly AdminSettings _adminSettings;
+
+        public DefaultVisualEditorRequestExclusionRule(
+            AdminSettings adminSettings
+            )
+        {
+            _adminSettings = adminSettings;
+        }
 
         public bool ShouldExclude(HttpRequest request)
         {
-            return _routesToExclude.Any(r => request.Path.StartsWithSegments(r, StringComparison.OrdinalIgnoreCase));
+            return GetRoutes().Any(r => request.Path.StartsWithSegments(r, StringComparison.OrdinalIgnoreCase));
+        }
+
+        public IEnumerable<PathString> GetRoutes()
+        {
+            yield return '/' + _adminSettings.DirectoryName;
+            yield return "/api";
         }
     }
 }

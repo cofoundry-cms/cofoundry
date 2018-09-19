@@ -1,4 +1,5 @@
 ﻿using Cofoundry.Core;
+using Cofoundry.Domain;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,9 +22,10 @@ namespace Cofoundry.Web.Admin
         /// urls e.g. products, users, honeybagders.
         /// </param>
         public AngularModuleRouteLibrary(
+            AdminSettings adminSettings,
             string routePrefix
             )
-            : base(routePrefix, RouteConstants.ModuleResourcePathPrefix)
+            : base(adminSettings, routePrefix, RouteConstants.ModuleResourcePathPrefix)
         {
             Angular = new AngularScriptRoutes(this);
         }
@@ -39,10 +41,11 @@ namespace Cofoundry.Web.Admin
         /// </param>
         /// <param name="resourcePathPrefix">The path prefix to your module e.g. '/admin/modules/'</param>
         public AngularModuleRouteLibrary(
+            AdminSettings adminSettings,
             string routePrefix, 
             string resourcePathPrefix
             )
-            : base(routePrefix, resourcePathPrefix)
+            : base(adminSettings, routePrefix, resourcePathPrefix)
         {
             Angular = new AngularScriptRoutes(this);
         }

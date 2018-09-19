@@ -11,6 +11,13 @@ namespace Cofoundry.Domain
     /// </summary>
     public class CofoundryAdminUserArea : IUserAreaDefinition
     {
+        public CofoundryAdminUserArea(
+            AdminSettings adminSetting
+            )
+        {
+            LoginPath = "/" + adminSetting.DirectoryName + "/auth/login";
+        }
+
         /// <summary>
         /// Constant containing the Cofoundry admin area UserAreaCode.
         /// </summary>
@@ -24,7 +31,7 @@ namespace Cofoundry.Domain
 
         public bool UseEmailAsUsername { get; } = true;
 
-        public string LoginPath { get; } = "/admin/auth/login";
+        public string LoginPath { get; private set;  }
 
         /// <summary>
         /// Although this is set to false, it is the fall-back schema if no default schema is set.

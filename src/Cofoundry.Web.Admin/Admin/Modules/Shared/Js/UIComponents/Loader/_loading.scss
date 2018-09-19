@@ -6,7 +6,7 @@
  * buttons at the moment).
  */
 form.loading, table.loading, div.loading, fieldset.loading {
-    background: url("img/loaders/ajax-loader.gif") no-repeat 50%;
+    background: url("/Admin/Modules/Shared/Content/css/img/loaders/ajax-loader.gif") no-repeat 50%;
     border: none;
 	min-height: 200px;
     max-height: 600px;

@@ -37,7 +37,7 @@
             <cms-form-field-validation-summary></cms-form-field-validation-summary>
             <div class="collection-actions">
                 <div ng-show="vm.formScope.editMode">
-                    <cms-button-icon cms-href="/admin/images#/{{vm.previewAsset.imageAssetId}}"
+                    <cms-button-icon cms-href="{{vm.urlLibrary.imageDetails(vm.previewAsset.imageAssetId)}}"
                                      cms-external="true"
                                      cms-title="Edit image"
                                      cms-icon="external-link"

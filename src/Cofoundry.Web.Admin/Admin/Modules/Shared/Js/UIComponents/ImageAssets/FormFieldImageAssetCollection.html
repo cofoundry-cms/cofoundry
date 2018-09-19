@@ -33,7 +33,7 @@
                             </td>
                             <td>{{image.title}}</td>
                             <td cms-table-column-actions ng-if="vm.formScope.editMode">
-                                <cms-button-icon cms-href="/admin/images#/{{image.imageAssetId}}"
+                                <cms-button-icon cms-href="{{vm.urlLibrary.imageDetails(image.imageAssetId)}}"
                                                  cms-external="true"
                                                  cms-title="Edit image"
                                                  cms-icon="external-link">

@@ -7,17 +7,11 @@ using Cofoundry.Domain;
 
 namespace Cofoundry.Web.Admin
 {
-    [AdminApiRoute("setup")]
+    [Area(RouteConstants.AdminAreaName)]
     [AutoValidateAntiforgeryToken]
     public class SetupApiController : Controller
     {
-        #region private member variables
-
         private readonly IApiResponseHelper _apiResponseHelper;
-
-        #endregion
-
-        #region constructor
 
         public SetupApiController(
             IApiResponseHelper apiResponseHelper
@@ -26,13 +20,6 @@ namespace Cofoundry.Web.Admin
             _apiResponseHelper = apiResponseHelper;
         }
 
-        #endregion
-
-        #region routes
-
-        #region commands
-
-        [HttpPost]
         public async Task<IActionResult> Post([FromBody] SetupCofoundryCommandDto dto)
         {
             var command = new SetupCofoundryCommand()
@@ -46,9 +33,5 @@ namespace Cofoundry.Web.Admin
 
             return await _apiResponseHelper.RunCommandAsync(this, command);
         }
-
-        #endregion
-
-        #endregion
     }
 }

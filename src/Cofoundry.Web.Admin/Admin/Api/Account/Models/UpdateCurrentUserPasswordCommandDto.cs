@@ -9,7 +9,7 @@ namespace Cofoundry.Web.Admin
     /// Dto used because json ignore on password properties prevent them
     /// from being serialized.
     /// </summary>
-    public class UpdateCurrentUserUserPasswordCommandDto
+    public class UpdateCurrentUserPasswordCommandDto
     {
         [Required]
         public string OldPassword { get; set; }

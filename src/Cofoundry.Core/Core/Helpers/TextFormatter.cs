@@ -23,15 +23,18 @@ namespace Cofoundry.Core
         /// A simple method to convert a pascal case string to a space
         /// delimited sentence, e.g. MyPropertyName to "My property name".
         /// </summary>
-        /// <remarks>
-        /// Used in place of Humanizer to avoid a dependency.
-        /// </remarks>
         /// <param name="s">String instance to format.</param>
         public static string PascalCaseToSentence(string s)
         {
             if (s == null) return string.Empty;
 
-            return Regex.Replace(s, "[a-z][A-Z]", m => $"{m.Value[0]} {char.ToLower(m.Value[1])}");
+            var conveted = Regex.Replace(s, "(?<=.)[A-Z](?![A-Z])|[A-Z]+(?![a-z])", m => 
+            {
+                var transformed = m.Value.Length > 1 ? m.Value : m.Value.ToLowerInvariant();
+                return " " + transformed;
+            });
+
+            return conveted;
         }
 
         /// <summary>

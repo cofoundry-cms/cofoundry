@@ -60,7 +60,7 @@
                         {{::pageTemplate.numRegions}}
                     </td>
                     <td>
-                        <a href="/admin/pages#/?pageTemplateId={{::pageTemplate.pageTemplateId}}">{{::pageTemplate.numPages}}</a>
+                        <a href="{{::vm.urlLibrary.pageList({ pageTemplateId: pageTemplate.pageTemplateId })}}">{{::pageTemplate.numPages}}</a>
                     </td>
                     <td class="lowPriority">
                         <cms-time-ago cms-time="::pageTemplate.updateDate"></cms-time-ago>

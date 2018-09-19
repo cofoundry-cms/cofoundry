@@ -14,16 +14,11 @@ namespace Cofoundry.Web.Admin
     /// as well we could sub-class this type and create two versions with diffent route constraints. See
     /// http://stackoverflow.com/a/24969829/716689 for more info about route inheritance.
     /// </remarks>
-    [AdminApiRoute("page-version-region-blocks")]
     public class PageVersionRegionBlocksApiController : BaseAdminApiController
     {
-        private const string ID_ROUTE = "{pageVersionBlockId:int}";
-
         private readonly IQueryExecutor _queryExecutor;
         private readonly IApiResponseHelper _apiResponseHelper;
         private readonly ICommandExecutor _commandExecutor;
-
-        #region constructor
 
         public PageVersionRegionBlocksApiController(
             IQueryExecutor queryExecutor,
@@ -36,13 +31,8 @@ namespace Cofoundry.Web.Admin
             _commandExecutor = commandExecutor;
         }
 
-        #endregion
-
-        #region routes
-
         #region queries
 
-        [HttpGet(ID_ROUTE)]
         public async Task<IActionResult> Get(int pageVersionBlockId, PageVersionRegionBlocksActionDataType dataType = PageVersionRegionBlocksActionDataType.RenderDetails)
         {
             if (dataType == PageVersionRegionBlocksActionDataType.UpdateCommand)
@@ -63,19 +53,16 @@ namespace Cofoundry.Web.Admin
 
         #region commands
 
-        [HttpPost]
         public async Task<IActionResult> Post([ModelBinder(BinderType = typeof(PageVersionBlockDataModelCommandModelBinder))] AddPageVersionBlockCommand command)
         {
             return await _apiResponseHelper.RunCommandAsync(this, command);
         }
 
-        [HttpPut(ID_ROUTE)]
         public async Task<IActionResult> Put(int PageVersionBlockId, [ModelBinder(BinderType = typeof(PageVersionBlockDataModelCommandModelBinder))] UpdatePageVersionBlockCommand command)
         {
             return await _apiResponseHelper.RunCommandAsync(this, command);
         }
 
-        [HttpDelete(ID_ROUTE)]
         public async Task<IActionResult> Delete(int pageVersionBlockId)
         {
             var command = new DeletePageVersionBlockCommand() { PageVersionBlockId = pageVersionBlockId };
@@ -83,7 +70,6 @@ namespace Cofoundry.Web.Admin
             return await _apiResponseHelper.RunCommandAsync(this, command);
         }
 
-        [HttpPut(ID_ROUTE + "/move-up")]
         public async Task<IActionResult> MoveUp(int pageVersionBlockId)
         {
             var command = new MovePageVersionBlockCommand();
@@ -93,7 +79,6 @@ namespace Cofoundry.Web.Admin
             return await _apiResponseHelper.RunCommandAsync(this, command);
         }
 
-        [HttpPut(ID_ROUTE + "/move-down")]
         public async Task<IActionResult> MoveDown(int pageVersionBlockId)
         {
             var command = new MovePageVersionBlockCommand();
@@ -103,8 +88,6 @@ namespace Cofoundry.Web.Admin
             return await _apiResponseHelper.RunCommandAsync(this, command);
         }
         
-        #endregion
-
         #endregion
     }
 }

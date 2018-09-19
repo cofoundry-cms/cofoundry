@@ -39,7 +39,7 @@
                                      ng-if="vm.pageTemplate.pageType == 'CustomEntityDetails'"></cms-form-field-readonly>
 
             <cms-form-field-container cms-title="Num Pages">
-                <a ng-href="/admin/pages#/?pageTemplateId={{::vm.pageTemplate.pageTemplateId}}">{{::vm.pageTemplate.numPages}}</a>
+                <a href="{{vm.urlLibrary.pageList({ pageTemplateId: vm.pageTemplate.pageTemplateId })}}">{{::vm.pageTemplate.numPages}}</a>
             </cms-form-field-container>
 
         </cms-form-section>

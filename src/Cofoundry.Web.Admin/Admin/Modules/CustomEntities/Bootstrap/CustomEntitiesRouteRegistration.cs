@@ -28,13 +28,9 @@ namespace Cofoundry.Web.Admin
             {
                 var routePrefix = SlugFormatter.ToSlug(definition.NamePlural);
 
-                routeBuilder.MapRoute(
-                    "Cofoundry Admin Module - " + definition.NamePlural + " Custom Entity ",
-                    RouteConstants.AdminAreaPrefix + "/" + routePrefix,
-                    new { controller = "CustomEntityModule", action = "Index", Area = RouteConstants.AdminAreaName },
-                    null,
-                    new { Definition = definition }
-                    );
+                routeBuilder
+                    .ForAdminController<CustomEntityModuleController>(routePrefix)
+                    .MapIndexRoute(new { Definition = definition });
             }
         }
     }

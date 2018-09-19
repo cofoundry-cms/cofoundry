@@ -8,17 +8,10 @@ using Cofoundry.Core.Validation;
 
 namespace Cofoundry.Web.Admin
 {
-    [AdminApiRoute("cache")]
     public class CacheApiController : BaseAdminApiController
     {
-        #region private member variables
-
         private readonly IObjectCacheFactory _objectCacheFactory;
         private readonly IApiResponseHelper _apiResponseHelper;
-
-        #endregion
-
-        #region constructor
 
         public CacheApiController(
             IApiResponseHelper apiResponseHelper,
@@ -29,27 +22,16 @@ namespace Cofoundry.Web.Admin
             _apiResponseHelper = apiResponseHelper;
         }
 
-        #endregion
-
-        #region routes
-
-        #region commands
-
         /// <summary>
         /// Admin remote access method to clear the
         /// data cache in case we run into a caching issue in a live
         /// deployment
         /// </summary>
-        [HttpDelete]
         public IActionResult Delete()
         {
             _objectCacheFactory.Clear();
 
             return _apiResponseHelper.SimpleCommandResponse(this, Enumerable.Empty<ValidationError>());
         }
-
-        #endregion
-
-        #endregion
     }
 }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Cofoundry.Domain;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -6,25 +7,25 @@ namespace Cofoundry.Web.Admin
 {
     public class AdminRouteLibrary : IAdminRouteLibrary
     {
-        public AdminRouteLibrary()
+        public AdminRouteLibrary(AdminSettings adminSettings)
         {
-            Account = new AccountRouteLibrary();
-            Auth = new AuthRouteLibrary();
-            CustomEntities = new CustomEntitiesRouteLibrary();
-            Dashboard = new DashboardRouteLibrary();
-            Directories = new DirectoriesRouteLibrary();
-            Documents = new DocumentsModuleRouteLibrary();
-            Images = new ImagesModuleRouteLibrary();
-            Pages = new PagesModuleRouteLibrary();
-            PageTemplates = new PageTemplatesRouteLibrary();
-            Roles = new RolesRouteLibrary();
-            Settings = new SettingsRouteLibrary();
-            Setup = new SetupRouteLibrary();
-            Shared = new SharedRouteLibrary();
-            SharedAlternate = new SharedAlternateRouteLibrary();
-            SharedPlugin = new SharedPluginRouteLibrary();
-            Users = new UsersRouteLibrary();
-            VisualEditor = new VisualEditorRouteLibrary();
+            Account = new AccountRouteLibrary(adminSettings);
+            Auth = new AuthRouteLibrary(adminSettings);
+            CustomEntities = new CustomEntitiesRouteLibrary(adminSettings);
+            Dashboard = new DashboardRouteLibrary(adminSettings);
+            Directories = new DirectoriesRouteLibrary(adminSettings);
+            Documents = new DocumentsModuleRouteLibrary(adminSettings);
+            Images = new ImagesModuleRouteLibrary(adminSettings);
+            Pages = new PagesModuleRouteLibrary(adminSettings);
+            PageTemplates = new PageTemplatesRouteLibrary(adminSettings);
+            Roles = new RolesRouteLibrary(adminSettings);
+            Settings = new SettingsRouteLibrary(adminSettings);
+            Setup = new SetupRouteLibrary(adminSettings);
+            Shared = new SharedRouteLibrary(adminSettings);
+            SharedAlternate = new SharedAlternateRouteLibrary(adminSettings);
+            SharedPlugin = new SharedPluginRouteLibrary(adminSettings);
+            Users = new UsersRouteLibrary(adminSettings);
+            VisualEditor = new VisualEditorRouteLibrary(adminSettings);
         }
 
         public AccountRouteLibrary Account { get; private set; }

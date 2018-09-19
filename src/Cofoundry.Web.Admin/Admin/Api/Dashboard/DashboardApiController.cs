@@ -8,11 +8,8 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Cofoundry.Web.Admin
 {
-    [Route(RouteConstants.ApiRoutePrefix + "/dashboard")]
     public class DashboardApiController : BaseAdminApiController
     {
-        #region constructor
-
         private readonly IApiResponseHelper _apiResponseHelper;
         private readonly IDashboardContentProvider _dashboardContentService;
 
@@ -25,17 +22,10 @@ namespace Cofoundry.Web.Admin
             _dashboardContentService = dashboardContentService;
         }
 
-        #endregion
-
-        #region routes
-
-        [HttpGet]
         public async Task<IActionResult> Get()
         {
             var result = await _dashboardContentService.GetAsync();
             return _apiResponseHelper.SimpleQueryResponse(this, result);
         }
-
-        #endregion
     }
 }

@@ -11,15 +11,6 @@ namespace Cofoundry.Web
     /// </summary>
     public class DefaultSetupPageActionFactory : ISetupPageActionFactory
     {
-        private readonly IQueryExecutor _queryExecutor;
-
-        public DefaultSetupPageActionFactory(
-            IQueryExecutor queryExecutor
-            )
-        {
-            _queryExecutor = queryExecutor;
-        }
-
         public ActionResult GetSetupPageAction(Controller controller)
         {
             throw new Exception("Cofoundry has not been setup. Admin panel is not installed so installation must be done manually.");

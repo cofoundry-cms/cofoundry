@@ -13,6 +13,7 @@ function (
     };
 
     function link(scope, el, attributes, modalDialogContainerController) {
+
         if (modalDialogContainerController) {
             scope.isInModal = true;
         }

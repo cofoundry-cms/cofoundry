@@ -9,19 +9,10 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Cofoundry.Web.Admin
 {
-    [AdminApiRoute("custom-entities")]
     public class CustomEntitiesApiController : BaseAdminApiController
     {
-        #region private member variables
-
-        private const string ID_ROUTE = "{customEntityId:int}";
-
         private readonly IQueryExecutor _queryExecutor;
         private readonly IApiResponseHelper _apiResponseHelper;
-
-        #endregion
-
-        #region constructor
 
         public CustomEntitiesApiController(
             IQueryExecutor queryExecutor,
@@ -32,13 +23,8 @@ namespace Cofoundry.Web.Admin
             _apiResponseHelper = apiResponseHelper;
         }
 
-        #endregion
-
-        #region routes
-
         #region queries
 
-        [HttpGet]
         public async Task<IActionResult> Get([FromQuery] SearchCustomEntitySummariesQuery query, [FromQuery] GetCustomEntitySummariesByIdRangeQuery rangeQuery)
         {
             if (rangeQuery != null && rangeQuery.CustomEntityIds != null)
@@ -54,8 +40,7 @@ namespace Cofoundry.Web.Admin
             return _apiResponseHelper.SimpleQueryResponse(this, results);
         }
 
-        [HttpGet(ID_ROUTE)]
-        public async Task<IActionResult> Get(int customEntityId)
+        public async Task<IActionResult> GetById(int customEntityId)
         {
             var query = new GetCustomEntityDetailsByIdQuery(customEntityId);
             var result = await _queryExecutor.ExecuteAsync(query);
@@ -67,25 +52,21 @@ namespace Cofoundry.Web.Admin
 
         #region commands
 
-        [HttpPost]
         public async Task<IActionResult> Post([ModelBinder(BinderType = typeof(CustomEntityDataModelCommandModelBinder))] AddCustomEntityCommand command)
         {
             return await _apiResponseHelper.RunCommandAsync(this, command);
         }
 
-        [HttpPut("ordering")]
         public async Task<IActionResult> PutOrdering([FromBody] ReOrderCustomEntitiesCommand command)
         {
             return await _apiResponseHelper.RunCommandAsync(this, command);
         }
 
-        [HttpPut(ID_ROUTE + "/url")]
         public async Task<IActionResult> PutCustomEntityUrl(int customEntityId, [FromBody] UpdateCustomEntityUrlCommand command)
         {
             return await _apiResponseHelper.RunCommandAsync(this, command);
         }
 
-        [HttpDelete(ID_ROUTE)]
         public async Task<IActionResult> Delete(int customEntityId)
         {
             var command = new DeleteCustomEntityCommand();
@@ -94,13 +75,10 @@ namespace Cofoundry.Web.Admin
             return await _apiResponseHelper.RunCommandAsync(this, command);
         }
 
-        [HttpPost(ID_ROUTE + "/duplicate")]
-        public async Task<IActionResult> Post([FromBody] DuplicateCustomEntityCommand command)
+        public async Task<IActionResult> PostDuplicate([FromBody] DuplicateCustomEntityCommand command)
         {
             return await _apiResponseHelper.RunCommandAsync(this, command);
         }
-
-        #endregion
 
         #endregion
     }

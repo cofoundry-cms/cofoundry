@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Cofoundry.Domain;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -8,15 +9,11 @@ namespace Cofoundry.Web.Admin
     {
         public const string RoutePrefix = "images";
 
-        #region constructor
-        
-        public ImagesModuleRouteLibrary()
-            : base(RoutePrefix, RouteConstants.InternalModuleResourcePathPrefix)
+        public ImagesModuleRouteLibrary(AdminSettings adminSettings)
+            : base(adminSettings, RoutePrefix, RouteConstants.InternalModuleResourcePathPrefix)
         {
         }
-
-        #endregion
-
+        
         #region routes
 
         public string List()

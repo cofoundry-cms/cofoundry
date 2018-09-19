@@ -8,19 +8,10 @@ using Cofoundry.Domain.CQS;
 
 namespace Cofoundry.Web.Admin
 {
-    [AdminApiRoute("page-templates")]
     public class PageTemplatesApiController : BaseAdminApiController
     {
-        #region private member variables
-        
-        private const string ID_ROUTE = "{id:int}";
-
         private readonly IQueryExecutor _queryExecutor;
         private readonly IApiResponseHelper _apiResponseHelper;
-
-        #endregion
-
-        #region constructor
 
         public PageTemplatesApiController(
             IQueryExecutor queryExecutor,
@@ -31,13 +22,6 @@ namespace Cofoundry.Web.Admin
             _apiResponseHelper = apiResponseHelper;
         }
 
-        #endregion
-
-        #region routes
-
-        #region queries
-
-        [HttpGet]
         public async Task<IActionResult> Get([FromQuery] SearchPageTemplateSummariesQuery query)
         {
             if (query == null) query = new SearchPageTemplateSummariesQuery();
@@ -47,17 +31,12 @@ namespace Cofoundry.Web.Admin
             return _apiResponseHelper.SimpleQueryResponse(this, results);
         }
 
-        [HttpGet(ID_ROUTE)]
-        public async Task<IActionResult> Get(int id)
+        public async Task<IActionResult> GetById(int id)
         {
             var query = new GetPageTemplateDetailsByIdQuery(id);
             var result = await _queryExecutor.ExecuteAsync(query);
 
             return _apiResponseHelper.SimpleQueryResponse(this, result);
         }
-
-        #endregion
-
-        #endregion
     }
 }

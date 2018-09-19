@@ -18,18 +18,21 @@ namespace Cofoundry.Web.Admin
         private readonly IUserContextService _userContextService;
         private readonly ContentSettings _contentSettings;
         private IVisualEditorStateCache _visualEditorStateCache;
+        private AdminSettings _adminSettings;
 
         public AdminVisualEditorStateService(
             IHttpContextAccessor httpContextAccessor,
             IUserContextService userContextService,
             ContentSettings contentSettings,
-            IVisualEditorStateCache visualEditorStateCache
+            IVisualEditorStateCache visualEditorStateCache,
+            AdminSettings adminSettings
             )
         {
             _httpContextAccessor = httpContextAccessor;
             _userContextService = userContextService;
             _contentSettings = contentSettings;
             _visualEditorStateCache = visualEditorStateCache;
+            _adminSettings = adminSettings;
         }
 
         public async Task<VisualEditorState> GetCurrentAsync()
@@ -48,8 +51,10 @@ namespace Cofoundry.Web.Admin
 
         private async Task<VisualEditorState> CreateAsync()
         {
-            var requestParameters = GetRequestParameters();
             var state = new VisualEditorState();
+            if (_adminSettings.Disabled) return state;
+
+            var requestParameters = GetRequestParameters();
 
             var cofoundryUserContext = await _userContextService.GetCurrentContextByUserAreaAsync(CofoundryAdminUserArea.AreaCode);
 

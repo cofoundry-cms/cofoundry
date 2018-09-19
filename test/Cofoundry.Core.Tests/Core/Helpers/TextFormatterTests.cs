@@ -39,8 +39,8 @@ namespace Cofoundry.Core.Tests
             Assert.Equal(expected, result);
         }
 
-        [Theory(Skip = "See issue #241")]
-        [InlineData("CostInGBP", "Cost in GDP")]
+        [Theory]
+        [InlineData("CostInGBP", "Cost in GBP")]
         [InlineData("WinningWithTheABCMethod", "Winning with the ABC method")]
         public void PascalCaseToSentence_KeepsAcronymsIntact(string input, string expected)
         {

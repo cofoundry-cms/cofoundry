@@ -9,6 +9,15 @@ namespace Cofoundry.BasicTestSite
 {
     public class ProductsModuleRegistration : IStandardAngularModuleRegistration
     {
+        private readonly AdminSettings _adminSettings;
+
+        public ProductsModuleRegistration(
+            AdminSettings adminSettings
+            )
+        {
+            _adminSettings = adminSettings;
+        }
+
         public AdminModule GetModule()
         {
             var module = new AdminModule()
@@ -18,7 +27,7 @@ namespace Cofoundry.BasicTestSite
                 Description = "Testing module.",
                 MenuCategory = AdminModuleMenuCategory.ManageSite,
                 PrimaryOrdering = AdminModuleMenuPrimaryOrdering.Tertiary,
-                Url = RouteConstants.AdminUrlRoot + "/" + RoutePrefix
+                Url = "/" + _adminSettings.DirectoryName + "/" + RoutePrefix
             };
 
             return module;

@@ -20,7 +20,8 @@ namespace Cofoundry.Web.Admin
         {
             var path = new EmbeddedResourcePath(
                 GetType().Assembly,
-                _adminRouteLibrary.CustomEntities.StaticResourcePrefix
+                _adminRouteLibrary.CustomEntities.GetStaticResourceFilePath(),
+                _adminRouteLibrary.CustomEntities.GetStaticResourceUrlPath()
                 );
 
             yield return path;

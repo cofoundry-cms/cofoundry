@@ -91,7 +91,7 @@ a[disabled], button[disabled], input[disabled] {
     of loading gif to let the user know the action is in progress.
 */
 .btn.loading {
-    background: url("img/loaders/generic-horizontal.gif") no-repeat 50%;
+    background: url("/Admin/Modules/Shared/Content/css/img/loaders/generic-horizontal.gif") no-repeat 50%;
     text-indent: -9999px;
     min-width: 100px;
 

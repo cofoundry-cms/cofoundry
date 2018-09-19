@@ -10,11 +10,8 @@ using System.Threading.Tasks;
 
 namespace Cofoundry.Web.Admin
 {
-    [AdminApiRoute("custom-entity-data-model-schemas")]
     public class CustomEntityDataModelSchemaApiController : BaseAdminApiController
     {
-        private const string ID_ROUTE = "{customEntityDefinitionCode}";
-
         private readonly IQueryExecutor _queryExecutor;
         private readonly IApiResponseHelper _apiResponseHelper;
 
@@ -27,7 +24,6 @@ namespace Cofoundry.Web.Admin
             _apiResponseHelper = apiResponseHelper;
         }
 
-        [HttpGet]
         public async Task<IActionResult> Get([FromQuery] GetCustomEntityDataModelSchemaDetailsByDefinitionCodeRangeQuery rangeQuery)
         {
             if (rangeQuery.CustomEntityDefinitionCodes == null)
@@ -38,7 +34,6 @@ namespace Cofoundry.Web.Admin
             return _apiResponseHelper.SimpleQueryResponse(this, result.FilterAndOrderByKeys(rangeQuery.CustomEntityDefinitionCodes));
         }
 
-        [HttpGet(ID_ROUTE)]
         public async Task<IActionResult> GetDataModelSchema(string customEntityDefinitionCode)
         {
             var result = await _queryExecutor.ExecuteAsync(new GetCustomEntityDataModelSchemaDetailsByDefinitionCodeQuery(customEntityDefinitionCode));

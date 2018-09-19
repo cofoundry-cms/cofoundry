@@ -12,11 +12,9 @@ namespace Cofoundry.Web.Admin
 
         public void RegisterRoutes(IRouteBuilder routeBuilder)
         {
-            routeBuilder.MapRoute(
-                "Cofoundry Admin Module - Visual editor frame",
-                RouteConstants.AdminAreaPrefix + "/" + VisualEditorRouteLibrary.RoutePrefix + "/frame",
-                new { controller = "VisualEditor", action = "Frame", Area = RouteConstants.AdminAreaName }
-                );
+            routeBuilder
+                .ForAdminController<VisualEditorController>(VisualEditorRouteLibrary.RoutePrefix + "/frame")
+                .MapRoute("Frame");
         }
     }
 }

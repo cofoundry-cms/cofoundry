@@ -4,7 +4,6 @@ using System.Linq;
 using Cofoundry.Domain;
 using Cofoundry.Core.ResourceFiles;
 using Microsoft.AspNetCore.Routing;
-using Microsoft.AspNetCore.Builder;
 
 namespace Cofoundry.Web.Admin
 {
@@ -21,12 +20,15 @@ namespace Cofoundry.Web.Admin
         #region constructor
 
         private readonly IEnumerable<IStandardAngularModuleRegistration> _standardAdminModuleRegistrations;
+        private readonly AdminSettings _adminSettings;
 
         public StandardAngularModuleRegistrationBootstrapper(
+            AdminSettings adminSettings,
             IEnumerable<IStandardAngularModuleRegistration> standardAdminModuleRegistrations
             )
         {
             _standardAdminModuleRegistrations = standardAdminModuleRegistrations;
+            _adminSettings = adminSettings;
         }
 
         #endregion
@@ -43,20 +45,16 @@ namespace Cofoundry.Web.Admin
 
         public int Ordering => (int)RouteRegistrationOrdering.Early;
 
-        public void RegisterRoutes(IRouteBuilder routes)
+        public void RegisterRoutes(IRouteBuilder routeBuilder)
         {
             foreach (var registration in _standardAdminModuleRegistrations)
             {
                 var routeLibrary = GetRouteLibrary(registration);
                 var module = registration.GetModule();
 
-                routes.MapRoute(
-                    "Cofoundry Admin Module - " + registration.RoutePrefix,
-                    RouteConstants.AdminAreaPrefix + "/" + registration.RoutePrefix,
-                    new { controller = "StandardAngularModule", action = "Index", Area = RouteConstants.AdminAreaName },
-                    null,
-                    new { RouteLibrary = routeLibrary, ModuleTitle = module.Title }
-                    );
+                routeBuilder
+                    .ForAdminController<StandardAngularModuleController>(registration.RoutePrefix)
+                    .MapIndexRoute(new { RouteLibrary = routeLibrary, ModuleTitle = module.Title });
             }
         }
 
@@ -66,7 +64,11 @@ namespace Cofoundry.Web.Admin
             {
                 var routeLibrary = GetRouteLibrary(registration);
                 var assembly = registration.GetType().Assembly;
-                var path = new EmbeddedResourcePath(assembly, routeLibrary.StaticResourcePrefix);
+                var path = new EmbeddedResourcePath(
+                    assembly, 
+                    routeLibrary.GetStaticResourceFilePath(), 
+                    routeLibrary.GetStaticResourceUrlPath()
+                    );
 
                 yield return path;
             }
@@ -84,6 +86,7 @@ namespace Cofoundry.Web.Admin
             {
                 // Internal modules are in a different folder format to prevent name clashes
                 routeLibrary = new AngularModuleRouteLibrary(
+                    _adminSettings,
                     registration.RoutePrefix, 
                     RouteConstants.InternalModuleResourcePathPrefix
                     );
@@ -92,13 +95,14 @@ namespace Cofoundry.Web.Admin
             {
                 // Plugin modules are in a different folder format to prevent name clashes
                 routeLibrary = new AngularModuleRouteLibrary(
+                    _adminSettings,
                     registration.RoutePrefix, 
                     RouteConstants.PluginModuleResourcePathPrefix
                     );
             }
             else
             {
-                routeLibrary = new AngularModuleRouteLibrary(registration.RoutePrefix);
+                routeLibrary = new AngularModuleRouteLibrary(_adminSettings, registration.RoutePrefix);
             }
 
             return routeLibrary;

@@ -10,20 +10,11 @@ using Cofoundry.Core;
 
 namespace Cofoundry.Web.Admin
 {
-    [AdminApiRoute("documents")]
     public class DocumentsApiController : BaseAdminApiController
     {
-        #region private member variables
-
-        private const string ID_ROUTE = "{documentAssetId:int}";
-
         private readonly IQueryExecutor _queryExecutor;
         private readonly IApiResponseHelper _apiResponseHelper;
         private readonly IFormFileUploadedFileFactory _formFileUploadedFileFactory;
-
-        #endregion
-
-        #region constructor
 
         public DocumentsApiController(
             IQueryExecutor queryExecutor,
@@ -36,13 +27,8 @@ namespace Cofoundry.Web.Admin
             _formFileUploadedFileFactory = formFileUploadedFileFactory;
         }
 
-        #endregion
-
-        #region routes
-
         #region queries
 
-        [HttpGet]
         public async Task<IActionResult> Get(
             [FromQuery] SearchDocumentAssetSummariesQuery query, 
             [FromQuery] GetDocumentAssetRenderDetailsByIdRangeQuery rangeQuery
@@ -61,8 +47,7 @@ namespace Cofoundry.Web.Admin
             return _apiResponseHelper.SimpleQueryResponse(this, results);
         }
 
-        [HttpGet(ID_ROUTE)]
-        public async Task<IActionResult> Get(int documentAssetId)
+        public async Task<IActionResult> GetById(int documentAssetId)
         {
             var query = new GetDocumentAssetDetailsByIdQuery(documentAssetId);
             var result = await _queryExecutor.ExecuteAsync(query);
@@ -81,7 +66,6 @@ namespace Cofoundry.Web.Admin
             return await _apiResponseHelper.RunCommandAsync(this, command);
         }
 
-        [HttpPut(ID_ROUTE)]
         public async Task<IActionResult> Put(int documentAssetId, UpdateDocumentAssetCommand command, IFormFile file)
         {
             command.File = _formFileUploadedFileFactory.Create(file);
@@ -89,7 +73,6 @@ namespace Cofoundry.Web.Admin
             return await _apiResponseHelper.RunCommandAsync(this, command);
         }
 
-        [HttpDelete(ID_ROUTE)]
         public async Task<IActionResult> Delete(int documentAssetId)
         {
             var command = new DeleteDocumentAssetCommand();
@@ -98,8 +81,6 @@ namespace Cofoundry.Web.Admin
             return await _apiResponseHelper.RunCommandAsync(this, command);
         }
 
-
-        #endregion
 
         #endregion
     }

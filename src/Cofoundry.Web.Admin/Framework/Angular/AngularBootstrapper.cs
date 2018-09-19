@@ -29,6 +29,7 @@ namespace Cofoundry.Web.Admin
         private readonly IQueryExecutor _queryExecutor;
         private readonly IHostingEnvironment _hostingEnvironment;
         private readonly DebugSettings _debugSettings;
+        private readonly AdminSettings _adminSettings;
 
         public AngularBootstrapper(
             IAntiforgery antiforgery,
@@ -38,7 +39,8 @@ namespace Cofoundry.Web.Admin
             IAdminRouteLibrary adminRouteLibrary,
             IQueryExecutor queryExecutor,
             IHostingEnvironment hostingEnvironment,
-            DebugSettings debugSettings
+            DebugSettings debugSettings,
+            AdminSettings adminSettings
             )
         {
             _antiforgery = antiforgery;
@@ -49,6 +51,7 @@ namespace Cofoundry.Web.Admin
             _queryExecutor = queryExecutor;
             _hostingEnvironment = hostingEnvironment;
             _debugSettings = debugSettings;
+            _adminSettings = adminSettings;
         }
 
         /// <summary>
@@ -64,7 +67,6 @@ namespace Cofoundry.Web.Admin
             var bootstrapScript = await RenderBootstrapperAsync(routeLibrary, options);
 
             var formattedPluginScripts = GetPluginScripts();
-            //if (_debugSettings.CanShowDeveloperExceptionPage(env))
 
             var scripts = new List<string>();
             AddScript(scripts, _adminRouteLibrary.Shared, _adminRouteLibrary.Shared.Angular.MainScriptName);
@@ -100,6 +102,7 @@ namespace Cofoundry.Web.Admin
             {
                 script = _staticResourceReferenceRenderer.ScriptTag(moduleRouteLibrary, fileName);
             }
+
             if (script != null)
             {
                 scriptToAddTo.Add(script.ToString());
@@ -148,6 +151,12 @@ namespace Cofoundry.Web.Admin
                                .constant('csrfToken', '" + tokens.RequestToken + @"')
                                .constant('csrfHeaderName', '" + tokens.HeaderName + @"')"
                                + GetConstant(_adminRouteLibrary.Shared, "showDevException", canShowDeveloperException)
+                               + GetConstant(_adminRouteLibrary.Shared, "serviceBase", "/" + _adminSettings.DirectoryName + "/api/") 
+                               + GetConstant(_adminRouteLibrary.Shared, "pluginServiceBase", "/" + _adminSettings.DirectoryName + "/api/plugins/") 
+                               + GetConstant(_adminRouteLibrary.Shared, "urlBaseBase", "/" + _adminSettings.DirectoryName + "/")
+                               + GetConstant(_adminRouteLibrary.Shared, "internalContentPath", _adminRouteLibrary.Shared.GetStaticResourceUrlPath() + "/")
+                               + GetConstant(_adminRouteLibrary.Shared, "pluginContentPath", _adminRouteLibrary.SharedPlugin.GetStaticResourceUrlPath() + "/")
+                               + GetConstant(_adminRouteLibrary.Shared, "contentPath", _adminRouteLibrary.SharedAlternate.GetStaticResourceUrlPath() + "/")
                                + GetConstant(routeLibrary, "options", options) // not sure why the current module is loaded into the shared module - seems like a mistake?
                                + GetConstant(_adminRouteLibrary.Shared, "currentUser", currentUserInfo) + @";
                         angular.bootstrap(document, ['" + routeLibrary.Angular.AngularModuleName + "']" + args + @");

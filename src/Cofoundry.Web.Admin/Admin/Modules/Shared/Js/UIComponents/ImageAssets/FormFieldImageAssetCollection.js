@@ -6,6 +6,7 @@
     'shared.modalDialogService',
     'shared.arrayUtilities',
     'shared.stringUtilities',
+    'shared.urlLibrary',
     'baseFormFieldFactory',
 function (
     _,
@@ -15,6 +16,7 @@ function (
     modalDialogService,
     arrayUtilities,
     stringUtilities,
+    urlLibrary,
     baseFormFieldFactory) {
 
     /* VARS */
@@ -48,6 +50,7 @@ function (
         function init() {
 
             vm.gridLoadState = new LoadState();
+            vm.urlLibrary = urlLibrary;
 
             vm.showPicker = showPicker;
             vm.remove = remove;

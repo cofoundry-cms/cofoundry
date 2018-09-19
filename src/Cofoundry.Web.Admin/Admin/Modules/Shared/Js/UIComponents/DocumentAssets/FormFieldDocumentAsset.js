@@ -9,6 +9,7 @@ angular.module('cms.shared').directive('cmsFormFieldDocumentAsset', [
     'shared.modalDialogService',
     'shared.stringUtilities',
     'shared.documentService',
+    'shared.urlLibrary',
     'baseFormFieldFactory',
 function (
     _,
@@ -17,6 +18,7 @@ function (
     modalDialogService,
     stringUtilities,
     documentService,
+    urlLibrary,
     baseFormFieldFactory) {
 
     /* CONFIG */
@@ -47,6 +49,8 @@ function (
         /* INIT */
 
         function init() {
+
+            vm.urlLibrary = urlLibrary;
             vm.showPicker = showPicker;
             vm.remove = remove;
             vm.isRemovable = _.isObject(vm.model) && !isRequired;

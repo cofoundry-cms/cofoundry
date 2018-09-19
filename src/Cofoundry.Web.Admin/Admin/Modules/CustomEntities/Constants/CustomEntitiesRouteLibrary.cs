@@ -8,20 +8,14 @@ namespace Cofoundry.Web.Admin
 {
     public class CustomEntitiesRouteLibrary : AngularModuleRouteLibrary
     {
-        #region statics
-
         public const string RoutePrefix = "custom-entities";
+        private readonly AdminSettings _adminSettings;
 
-        #endregion
-
-        #region constructor
-
-        public CustomEntitiesRouteLibrary()
-            : base(RoutePrefix, RouteConstants.InternalModuleResourcePathPrefix)
+        public CustomEntitiesRouteLibrary(AdminSettings adminSettings)
+            : base(adminSettings, RoutePrefix, RouteConstants.InternalModuleResourcePathPrefix)
         {
+            _adminSettings = adminSettings;
         }
-
-        #endregion
 
         #region routes
 
@@ -47,10 +41,10 @@ namespace Cofoundry.Web.Admin
             return List(definition) + id.ToString();
         }
 
-        private static string GetCustomEntityRoute(string namePlural, string route = null)
+        private string GetCustomEntityRoute(string namePlural, string route = null)
         {
             if (namePlural == null) return string.Empty;
-            return "/" + RouteConstants.AdminAreaPrefix + "/" + SlugFormatter.ToSlug(namePlural) + "#/" + route;
+            return "/" + _adminSettings.DirectoryName + "/" + SlugFormatter.ToSlug(namePlural) + "#/" + route;
         }
 
         #endregion

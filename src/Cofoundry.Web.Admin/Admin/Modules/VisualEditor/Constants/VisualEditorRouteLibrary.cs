@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Cofoundry.Domain;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -7,15 +8,13 @@ namespace Cofoundry.Web.Admin
     public class VisualEditorRouteLibrary : AngularModuleRouteLibrary
     {
         public const string RoutePrefix = "visual-editor";
+        private readonly AdminSettings _adminSettings;
 
-        #region constructor
-
-        public VisualEditorRouteLibrary()
-            : base(RoutePrefix, RouteConstants.InternalModuleResourcePathPrefix)
+        public VisualEditorRouteLibrary(AdminSettings adminSettings)
+            : base(adminSettings, RoutePrefix, RouteConstants.InternalModuleResourcePathPrefix)
         {
+            _adminSettings = adminSettings;
         }
-
-        #endregion
 
         #region resources
 

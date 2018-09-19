@@ -76,7 +76,13 @@ namespace Cofoundry.Web
                 var fileProvider = embeddedFileProviderFactory.Create(assemblyRoute.Key);
                 foreach (var route in assemblyRoute)
                 {
-                    allFileProviders.Add(new FilteredEmbeddedFileProvider(fileProvider, route.Path, hostingEnvironment.ContentRootFileProvider));
+                    var filteredFileProvider = new FilteredEmbeddedFileProvider(
+                        fileProvider, 
+                        route.Path, 
+                        route.RewriteFrom,
+                        hostingEnvironment.ContentRootFileProvider
+                        );
+                    allFileProviders.Add(filteredFileProvider);
                 }
             }
             

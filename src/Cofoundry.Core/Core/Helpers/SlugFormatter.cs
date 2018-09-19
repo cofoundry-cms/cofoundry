@@ -27,7 +27,25 @@ namespace Cofoundry.Core
             str = Regex.Replace(str, @"\s+", " ").Trim();
             str = Regex.Replace(str, @"\s", "-");
             str = Regex.Replace(str, @"--+", "-");
-            return str;
+
+            return str.Trim('-');
+        }
+
+
+        /// <summary>
+        /// A simple method to convert a upper or lower camel case string 
+        /// to a dash delimited token, e.g. MyPropertyName to "my-property-name".
+        /// </summary>
+        /// <param name="s">String instance to format.</param>
+        public static string CamelCaseToSlug(string s)
+        {
+            if (s == null) return string.Empty;
+
+            // first separate any upper case characters
+            var conveted = Regex.Replace(s, "[A-Z](?![A-Z])|[A-Z]+(?![a-z])", m => $"-{m.Value.ToLowerInvariant()}");
+
+            // If there's any other formatting issues, the regular slugify should pick them up.
+            return ToSlug(conveted);
         }
     }
 }

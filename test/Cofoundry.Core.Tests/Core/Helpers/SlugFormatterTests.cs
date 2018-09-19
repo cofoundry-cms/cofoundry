@@ -5,6 +5,8 @@ namespace Cofoundry.Core.Tests
 {
     public class SlugFormatterTests
     {
+        #region ToSlug
+
         [Theory]
         [InlineData(null)]
         [InlineData("")]
@@ -86,5 +88,43 @@ namespace Cofoundry.Core.Tests
 
             Assert.Equal(expected, result);
         }
+
+        #endregion
+
+        #region CamelCaseToSlug
+
+        [Theory]
+        [InlineData(null)]
+        [InlineData("")]
+        [InlineData(" ")]
+        [InlineData("    ")]
+        public void CamelCaseToSlug_WhenNullOrWhitespace_ReturnsEmptyString(string s)
+        {
+            var result = SlugFormatter.CamelCaseToSlug(s);
+
+            Assert.Equal(result, string.Empty);
+        }
+
+        [Theory]
+        [InlineData("ThisAndThat", "this-and-that")]
+        [InlineData("ofMiceAndMen", "of-mice-and-men")]
+        public void CamelCaseToSlug_CanDoBasicConversion(string input, string expected)
+        {
+            var result = SlugFormatter.CamelCaseToSlug(input);
+
+            Assert.Equal(expected, result);
+        }
+
+        [Theory]
+        [InlineData("CostInGBP", "cost-in-gbp")]
+        [InlineData("WinningWithTheABCMethod", "winning-with-the-abc-method")]
+        public void CamelCaseToSlug_KeepsAcronymsIntact(string input, string expected)
+        {
+            var result = SlugFormatter.CamelCaseToSlug(input);
+
+            Assert.Equal(expected, result);
+        }
+
+        #endregion
     }
 }

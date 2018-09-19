@@ -5,11 +5,11 @@ angular.module('cms.shared').config([
     '$httpProvider',
     'csrfToken',
     'csrfHeaderName',
-    function (
-        $httpProvider,
-        csrfToken,
-        csrfHeaderName
-    ) {
+function (
+    $httpProvider,
+    csrfToken,
+    csrfHeaderName
+) {
 
     var headers = $httpProvider.defaults.headers,
         csrfableVerbs = [
@@ -25,5 +25,7 @@ angular.module('cms.shared').config([
         headers[verb] = headers[verb] || {};
         headers[verb][csrfHeaderName] = csrfToken;
     });
+
+    headers.common['X-Requested-With'] = 'XMLHttpRequest';
 
 }]);

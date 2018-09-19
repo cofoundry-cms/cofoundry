@@ -42,7 +42,7 @@
         @if (Model.ManageSiteModules.Any())
         {
             <li class="category settings @ActiveIfCategory(AdminModuleMenuCategory.Settings)">
-                <a href="/admin/settings" class="main-button @ActiveIfCategory(AdminModuleMenuCategory.Settings)"><i class="fa fa-cog"></i> Settings</a>
+                <a href="@Model.ManageSiteModules.First().Url" class="main-button @ActiveIfCategory(AdminModuleMenuCategory.Settings)"><i class="fa fa-cog"></i> Settings</a>
                 <div class="sub-nav">
                     <div class="results">
                         <ol>

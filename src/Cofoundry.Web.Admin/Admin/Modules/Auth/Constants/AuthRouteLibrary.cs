@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Cofoundry.Core.Web;
+using Cofoundry.Domain;
 
 namespace Cofoundry.Web.Admin
 {
@@ -17,8 +18,8 @@ namespace Cofoundry.Web.Admin
 
         #region constructor
 
-        public AuthRouteLibrary()
-            : base(RoutePrefix, RouteConstants.InternalModuleResourcePathPrefix)
+        public AuthRouteLibrary(AdminSettings adminSettings)
+            : base(adminSettings, RoutePrefix, RouteConstants.InternalModuleResourcePathPrefix)
         {
         }
 

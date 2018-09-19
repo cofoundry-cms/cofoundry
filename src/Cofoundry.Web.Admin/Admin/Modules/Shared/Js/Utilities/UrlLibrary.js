@@ -33,6 +33,8 @@ function (
 
     /* CRUD Routes */
 
+    addCrudRoutes('document', 'documents');
+    addCrudRoutes('image', 'images');
     addCrudRoutes('page', 'pages');
     addCrudRoutes('pageTemplate', 'page-templates');
     addCrudRoutes('role', 'roles');
@@ -88,8 +90,14 @@ function (
 
     /* Login */
 
-    service.login = function () {
-        return urlBaseBase + 'auth';
+    service.login = function (returnUrl) {
+        var url = urlBaseBase + 'auth/login';
+
+        if (returnUrl) {
+            url += '?returnUrl=' + encodeURIComponent(returnUrl);
+        }
+
+        return url;
     }
 
     /* Pages */

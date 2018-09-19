@@ -5,6 +5,7 @@
     'shared.SearchQuery',
     'shared.modalDialogService',
     'shared.internalModulePath',
+    'shared.urlLibrary',
     'options',
     'close',
 function (
@@ -14,6 +15,7 @@ function (
     SearchQuery,
     modalDialogService,
     modulePath,
+    urlLibrary,
     options,
     close) {
 
@@ -48,6 +50,7 @@ function (
         vm.toggleFilter = toggleFilter;
         vm.isSelected = isSelected;
         vm.multiMode = vm.selectedIds ? true : false;
+        vm.urlLibrary = urlLibrary;
 
         toggleFilter(false);
         loadGrid();

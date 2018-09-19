@@ -2,19 +2,23 @@
     '_',
     'shared.LoadState',
     'shared.SearchQuery',
+    'shared.urlLibrary',
     'pageTemplates.pageTemplateService',
 function (
     _,
     LoadState,
     SearchQuery,
-    pageTemplateService) {
+    urlLibrary,
+    pageTemplateService
+) {
 
     var vm = this;
 
     init();
 
     function init() {
-        
+
+        vm.urlLibrary = urlLibrary;
         vm.gridLoadState = new LoadState();
         vm.query = new SearchQuery({
             onChanged: onQueryChanged

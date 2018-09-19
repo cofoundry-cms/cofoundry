@@ -61,10 +61,6 @@ namespace Cofoundry.Domain
             command.OutputPageId = addPageCommand.OutputPageId;
         }
 
-        #endregion
-
-        #region helpers
-
         private class PageQuery
         {
             public int PageTypeId { get; set; }

@@ -22,7 +22,8 @@ namespace Cofoundry.Web.Admin
 
             yield return new EmbeddedResourcePath(
                 assembly,
-                _adminRouteLibrary.VisualEditor.StaticResourcePrefix
+                _adminRouteLibrary.VisualEditor.GetStaticResourceFilePath(),
+                _adminRouteLibrary.VisualEditor.GetStaticResourceUrlPath()
                 );
         }
     }

@@ -49,12 +49,14 @@ angular.module('cms.pageTemplates').controller('PageTemplateDetailsController', 
     '$routeParams',
     '$location',
     'shared.LoadState',
+    'shared.urlLibrary',
     'pageTemplates.pageTemplateService',
     'pageTemplates.modulePath',
 function (
     $routeParams,
     $location,
     LoadState,
+    urlLibrary,
     pageTemplateService,
     modulePath
     ) {
@@ -68,6 +70,7 @@ function (
     function init() {
 
         // Properties
+        vm.urlLibrary = urlLibrary;
         vm.editMode = false;
         vm.globalLoadState = new LoadState();
         vm.formLoadState = new LoadState(true);
@@ -116,19 +119,23 @@ angular.module('cms.pageTemplates').controller('PageTemplateListController', [
     '_',
     'shared.LoadState',
     'shared.SearchQuery',
+    'shared.urlLibrary',
     'pageTemplates.pageTemplateService',
 function (
     _,
     LoadState,
     SearchQuery,
-    pageTemplateService) {
+    urlLibrary,
+    pageTemplateService
+) {
 
     var vm = this;
 
     init();
 
     function init() {
-        
+
+        vm.urlLibrary = urlLibrary;
         vm.gridLoadState = new LoadState();
         vm.query = new SearchQuery({
             onChanged: onQueryChanged
