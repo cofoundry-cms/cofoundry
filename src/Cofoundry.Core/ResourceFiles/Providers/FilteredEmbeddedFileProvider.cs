@@ -52,13 +52,11 @@ namespace Cofoundry.Core.ResourceFiles
             if (filterToPath == null) throw new ArgumentNullException(nameof(filterToPath));
             if (string.IsNullOrWhiteSpace(filterToPath)) throw new ArgumentEmptyException(nameof(filterToPath));
 
-            _restrictToPath = filterToPath.TrimStart('~');
-            ValidatePath(_restrictToPath, nameof(filterToPath));
+            _restrictToPath = ValidatePath(filterToPath, nameof(filterToPath));
 
             if (!string.IsNullOrEmpty(rewriteFromPath))
             {
-                var formattedRewritePath = rewriteFromPath.TrimStart('~');
-                ValidatePath(formattedRewritePath, nameof(rewriteFromPath));
+                var formattedRewritePath = ValidatePath(rewriteFromPath, nameof(rewriteFromPath));
 
                 if (!rewriteFromPath.Equals(filterToPath, StringComparison.OrdinalIgnoreCase))
                 {
@@ -70,7 +68,7 @@ namespace Cofoundry.Core.ResourceFiles
             _overrideProvider = overrideProvider;
         }
 
-        private static void ValidatePath(string pathToTest, string parameterName)
+        private static string ValidatePath(string pathToTest, string parameterName)
         {
             if (!pathToTest.StartsWith("/"))
             {
@@ -81,6 +79,15 @@ namespace Cofoundry.Core.ResourceFiles
             {
                 throw new ArgumentException(parameterName + " cannot be the root directory.");
             }
+
+            var formattedRewritePath = pathToTest.TrimStart('~');
+
+            if (!formattedRewritePath.EndsWith("/"))
+            {
+                formattedRewritePath += '/';
+            }
+
+            return formattedRewritePath;
         }
 
         #endregion
@@ -94,7 +101,7 @@ namespace Cofoundry.Core.ResourceFiles
 
             var rewrittenPath = RewritePath(subpath);
 
-            return _assemblyProvider.GetDirectoryContents(subpath);
+            return _assemblyProvider.GetDirectoryContents(rewrittenPath);
         }
 
         public IFileInfo GetFileInfo(string subpath)
