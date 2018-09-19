@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
 
 namespace Cofoundry.Web.Admin
@@ -13,7 +12,7 @@ namespace Cofoundry.Web.Admin
         public void RegisterRoutes(IRouteBuilder routeBuilder)
         {
             routeBuilder
-                .ForAdminController<VisualEditorController>(VisualEditorRouteLibrary.RoutePrefix + "/frame")
+                .ForAdminController<VisualEditorController>(VisualEditorRouteLibrary.RoutePrefix)
                 .MapRoute("Frame");
         }
     }
