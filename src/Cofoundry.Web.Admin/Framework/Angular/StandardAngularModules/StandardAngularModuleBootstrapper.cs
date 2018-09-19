@@ -60,6 +60,8 @@ namespace Cofoundry.Web.Admin
 
         public IEnumerable<EmbeddedResourcePath> GetEmbeddedResourcePaths()
         {
+            if (_adminSettings.Disabled) yield break;
+
             foreach (var registration in _standardAdminModuleRegistrations)
             {
                 var routeLibrary = GetRouteLibrary(registration);

@@ -4,6 +4,10 @@ using System.Text;
 
 namespace Cofoundry.Web
 {
+    /// <summary>
+    /// Some sensible defaults for the numerical ordering value to use
+    /// in an IOrderableRouteRegistration.
+    /// </summary>
     public enum RouteRegistrationOrdering
     {
         /// <summary>
