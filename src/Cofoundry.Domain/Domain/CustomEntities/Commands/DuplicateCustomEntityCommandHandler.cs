@@ -20,13 +20,15 @@ namespace Cofoundry.Domain
         private readonly ICustomEntityStoredProcedures _customEntityStoredProcedures;
         private readonly ITransactionScopeManager _transactionScopeFactory;
         private readonly ICustomEntityDataModelMapper _customEntityDataModelMapper;
+        private readonly ICustomEntityDefinitionRepository _customEntityDefinitionRepository;
 
         public DuplicateCustomEntityCommandHandler(
             ICommandExecutor commandExecutor,
             CofoundryDbContext dbContext,
             ICustomEntityStoredProcedures customEntityStoredProcedures,
             ITransactionScopeManager transactionScopeFactory,
-            ICustomEntityDataModelMapper customEntityDataModelMapper
+            ICustomEntityDataModelMapper customEntityDataModelMapper,
+            ICustomEntityDefinitionRepository customEntityDefinitionRepository
             )
         {
             _commandExecutor = commandExecutor;
@@ -34,11 +36,13 @@ namespace Cofoundry.Domain
             _customEntityStoredProcedures = customEntityStoredProcedures;
             _transactionScopeFactory = transactionScopeFactory;
             _customEntityDataModelMapper = customEntityDataModelMapper;
+            _customEntityDefinitionRepository = customEntityDefinitionRepository;
         }
 
         public async Task ExecuteAsync(DuplicateCustomEntityCommand command, IExecutionContext executionContext)
         {
             var customEntityToDuplicate = await GetCustomEntityToDuplicateAsync(command);
+            var definition = _customEntityDefinitionRepository.GetByCode(customEntityToDuplicate.CustomEntity.CustomEntityDefinitionCode);
             var addCustomEntityCommand = MapCommand(command, customEntityToDuplicate);
 
             using (var scope = _transactionScopeFactory.Create(_dbContext))
@@ -49,6 +53,12 @@ namespace Cofoundry.Domain
                 await _customEntityStoredProcedures.CopyBlocksToDraftAsync(
                     addCustomEntityCommand.OutputCustomEntityId,
                     customEntityToDuplicate.CustomEntityVersionId);
+
+                if (definition.AutoPublish)
+                {
+                    var publishCommand = new PublishCustomEntityCommand(addCustomEntityCommand.OutputCustomEntityId);
+                    await _commandExecutor.ExecuteAsync(publishCommand);
+                }
 
                 await scope.CompleteAsync();
             }
@@ -69,18 +79,21 @@ namespace Cofoundry.Domain
                 .FirstOrDefaultAsync();
         }
 
-        private AddCustomEntityCommand MapCommand(DuplicateCustomEntityCommand command, CustomEntityVersion customEntityVersionToDuplicate)
+        private AddCustomEntityCommand MapCommand(
+            DuplicateCustomEntityCommand command, 
+            CustomEntityVersion customEntityVersionToDuplicate
+            )
         {
             EntityNotFoundException.ThrowIfNull(customEntityVersionToDuplicate, command.CustomEntityToDuplicateId);
 
-            var addPageCommand = new AddCustomEntityCommand();
-            addPageCommand.Title = command.Title;
-            addPageCommand.LocaleId = command.LocaleId;
-            addPageCommand.UrlSlug = command.UrlSlug;
-            addPageCommand.CustomEntityDefinitionCode = customEntityVersionToDuplicate.CustomEntity.CustomEntityDefinitionCode;
-            addPageCommand.Model = _customEntityDataModelMapper.Map(addPageCommand.CustomEntityDefinitionCode, customEntityVersionToDuplicate.SerializedData);
-
-            return addPageCommand;
+            var addCustomEntityCommand = new AddCustomEntityCommand();
+            addCustomEntityCommand.Title = command.Title;
+            addCustomEntityCommand.LocaleId = command.LocaleId;
+            addCustomEntityCommand.UrlSlug = command.UrlSlug;
+            addCustomEntityCommand.CustomEntityDefinitionCode = customEntityVersionToDuplicate.CustomEntity.CustomEntityDefinitionCode;
+            addCustomEntityCommand.Model = _customEntityDataModelMapper.Map(addCustomEntityCommand.CustomEntityDefinitionCode, customEntityVersionToDuplicate.SerializedData);
+            
+            return addCustomEntityCommand;
         }
     }
 }
