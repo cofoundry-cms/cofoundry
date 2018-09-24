@@ -4,10 +4,10 @@
     <TargetFramework>netcoreapp2.1</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="AngleSharp" Version="0.9.9.2" />
-    <PackageReference Include="HtmlSanitizer" Version="4.0.185" />
 
     <PackageReference Include="Microsoft.AspNetCore.App" />
+
+    <PackageReference Include="SixLabors.ImageSharp" Version="1.0.0-beta0005" />
   </ItemGroup>
   
   <ItemGroup>

@@ -100,7 +100,8 @@ function (
                     onclick: onEditorImageButtonClick.bind(null, editor)
                 });
             },
-            browser_spellcheck: true
+            browser_spellcheck: true,
+            convert_urls: false
         };
 
         if (vm.configPath) {

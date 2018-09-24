@@ -127,7 +127,10 @@ function (
         });
 
         function onUploadComplete(imageAssetId) {
-            onSelectAndClose({ imageAssetId: imageAssetId });
+
+            imageService
+                .getById(imageAssetId)
+                .then(onSelectAndClose);
         }
     }
 

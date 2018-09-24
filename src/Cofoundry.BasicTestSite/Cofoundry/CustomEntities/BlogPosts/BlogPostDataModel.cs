@@ -19,14 +19,14 @@ namespace Cofoundry.BasicTestSite
         }
     }
 
-    public class TestApiOptionSource : IListOptionApiSource
-    {
-        public string Path => "/admin/api/test";
+    //public class TestApiOptionSource : IListOptionApiSource
+    //{
+    //    public string Path => "/admin/api/test";
 
-        public string NameField => "Title";
+    //    public string NameField => "Title";
 
-        public string ValueField => "Id";
-    }
+    //    public string ValueField => "Id";
+    //}
 
     /// <summary>
     /// This defines the custom data that gets stored with each blog post. Data
@@ -54,33 +54,33 @@ namespace Cofoundry.BasicTestSite
         [CustomEntity(CategoryCustomEntityDefinition.DefinitionCode)]
         public int CategoryId { get; set; }
 
-        [Required]
-        [CheckboxList(typeof(TestOptionSource), NoValueText = "None")]
-        public ICollection<int> TestCheckboxList1 { get; set; }
+        //[Required]
+        //[CheckboxList(typeof(TestOptionSource), NoValueText = "None")]
+        //public ICollection<int> TestCheckboxList1 { get; set; }
 
-        [CheckboxList(typeof(PublishStatus))]
-        public ICollection<PublishStatus> TestCheckboxList2 { get; set; }
+        //[CheckboxList(typeof(PublishStatus))]
+        //public ICollection<PublishStatus> TestCheckboxList2 { get; set; }
 
-        [CheckboxList(typeof(TestApiOptionSource))]
-        public ICollection<int> TestCheckboxList3 { get; set; }
+        //[CheckboxList(typeof(TestApiOptionSource))]
+        //public ICollection<int> TestCheckboxList3 { get; set; }
 
-        [RadioList(typeof(TestOptionSource), DefaultItemText ="OffNot")]
-        public int TestOption1 { get; set; }
+        //[RadioList(typeof(TestOptionSource), DefaultItemText ="OffNot")]
+        //public int TestOption1 { get; set; }
 
-        [RadioList(typeof(PublishStatus))]
-        public PublishStatus TestOption2 { get; set; }
+        //[RadioList(typeof(PublishStatus))]
+        //public PublishStatus TestOption2 { get; set; }
 
-        [RadioList(typeof(TestApiOptionSource))]
-        public int TestOption3 { get; set; }
+        //[RadioList(typeof(TestApiOptionSource))]
+        //public int TestOption3 { get; set; }
 
-        [RadioList(typeof(TestOptionSource), DefaultItemText = "Off")]
-        public int? TestNullableOption1 { get; set; }
+        //[RadioList(typeof(TestOptionSource), DefaultItemText = "Off")]
+        //public int? TestNullableOption1 { get; set; }
 
-        [RadioList(typeof(PublishStatus))]
-        public PublishStatus? TestNullableOption2 { get; set; }
+        //[RadioList(typeof(PublishStatus))]
+        //public PublishStatus? TestNullableOption2 { get; set; }
 
-        [RadioList(typeof(TestApiOptionSource))]
-        public int? TestNullableOption3 { get; set; }
+        //[RadioList(typeof(TestApiOptionSource))]
+        //public int? TestNullableOption3 { get; set; }
 
         [Required]
         [ImageCollection]

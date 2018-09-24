@@ -30,6 +30,8 @@ function (
 
         vm.onInsert = onInsert;
         vm.onCancel = onCancel;
+
+        vm.onImageChanged = onImageChanged;
         vm.command = {};
 
         setCurrentImage();
@@ -71,6 +73,10 @@ function (
 
     function onCancel() {
         close();
+    }
+
+    function onImageChanged() {
+        vm.command.altTag = vm.command.imageAsset.title || vm.command.imageAsset.fileName;
     }
 
     function onInsert() {

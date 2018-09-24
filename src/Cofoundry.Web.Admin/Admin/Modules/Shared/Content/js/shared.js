@@ -7660,6 +7660,8 @@ function (
 
         vm.onInsert = onInsert;
         vm.onCancel = onCancel;
+
+        vm.onImageChanged = onImageChanged;
         vm.command = {};
 
         setCurrentImage();
@@ -7701,6 +7703,10 @@ function (
 
     function onCancel() {
         close();
+    }
+
+    function onImageChanged() {
+        vm.command.altTag = vm.command.imageAsset.title || vm.command.imageAsset.fileName;
     }
 
     function onInsert() {
@@ -9058,7 +9064,8 @@ function (
                     onclick: onEditorImageButtonClick.bind(null, editor)
                 });
             },
-            browser_spellcheck: true
+            browser_spellcheck: true,
+            convert_urls: false
         };
 
         if (vm.configPath) {
@@ -9610,8 +9617,12 @@ angular.module('cms.shared').directive('cmsFormFieldImageAsset', [
 
                         if (!newAsset && vm.previewAsset) {
                             setAsset(null);
+
+                            vm.onChange();
                         } else if (!vm.previewAsset || (newAsset && vm.previewAsset.imageAssetId !== newAsset.imageAssetId)) {
                             setAsset(newAsset);
+
+                            vm.onChange();
                         }
                     }
                 }
@@ -10041,7 +10052,10 @@ function (
         });
 
         function onUploadComplete(imageAssetId) {
-            onSelectAndClose({ imageAssetId: imageAssetId });
+
+            imageService
+                .getById(imageAssetId)
+                .then(onSelectAndClose);
         }
     }
 

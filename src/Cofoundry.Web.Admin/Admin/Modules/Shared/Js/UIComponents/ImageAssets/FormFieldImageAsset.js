@@ -93,8 +93,12 @@ angular.module('cms.shared').directive('cmsFormFieldImageAsset', [
 
                         if (!newAsset && vm.previewAsset) {
                             setAsset(null);
+
+                            vm.onChange();
                         } else if (!vm.previewAsset || (newAsset && vm.previewAsset.imageAssetId !== newAsset.imageAssetId)) {
                             setAsset(newAsset);
+
+                            vm.onChange();
                         }
                     }
                 }
