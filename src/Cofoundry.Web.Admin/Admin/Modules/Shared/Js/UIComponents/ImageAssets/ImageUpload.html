@@ -1,43 +1,46 @@
-﻿<div ng-file-drop
+﻿<div ngf-drop
+     ngf-change="vm.fileChanged($files, $event)"
+     ngf-accept="image/gif,image/jpeg,image/png,image/tiff,image/bmp,.tif"
+     ngf-hide-on-drop-not-available="false"
+     ngf-drag-over-class="{accept:'dragover-accepted', reject:'dragover-rejected'}"
      ng-show="vm.isEditMode"
-     ng-file-change="vm.fileChanged($files, $event)"
-     accept="image/gif,image/jpeg,image/png,image/tiff,image/bmp,.tif"
-     hideondropnotavailable="false"
-     drag-over-class="{accept:'dragover-accepted', reject:'dragover-rejected'}"
      id="{{vm.modelName}}"
      name="{{vm.modelName}}"
      ng-model="vm.ngModel"
      class="dragarea">
 
     <img ng-if="vm.ngModel" 
-         ng-file-select
-         ng-file-change="vm.fileChanged($files, $event)"
-         accept="image/gif,image/jpeg,image/png,image/tiff,image/bmp,.tif"
-         reset-on-click="false"
+         ngf-select
+         ngf-change="vm.fileChanged($files, $event)"
+         ngf-accept="'image/gif,image/jpeg,image/png,image/tiff,image/bmp,.tif'"
+         ngf-reset-on-click="false"
          ng-src="{{vm.previewUrl}}" 
          class="img-polaroid selectable" 
          width="220" 
          alt="{{vm.ngModel.name}}" />
 
     <cms-progress-bar load-state="vm.loadState" ng-if="vm.ngModel && !vm.ngModel.isCurrentFile"></cms-progress-bar>
+
     <div>
         <button ng-if="!vm.ngModel"
                 class="btn-icon" 
-                ng-file-select title="{{vm.buttonText}}"
+                ngf-select 
+                title="{{vm.buttonText}}"
                 type="button"
-                ng-file-change="vm.fileChanged($files, $event)"
-                accept="image/gif,image/jpeg,image/png,image/tiff,image/bmp,.tif"
-                reset-on-click="false"
+                ngf-change="vm.fileChanged($files, $event)"
+                ngf-accept="'image/gif,image/jpeg,image/png,image/tiff,image/bmp,.tif'"
+                ngf-reset-on-click="false"
                 ng-disabled="vm.loadState.isLoading">
             <i class="fa fa-picture-o"></i>
         </button>
         <button ng-if="vm.ngModel"
                 class="btn-icon image-upload-cog" 
-                ng-file-select title="{{vm.buttonText}}"
+                ngf-select 
+                title="{{vm.buttonText}}"
                 type="button"
-                ng-file-change="vm.fileChanged($files, $event)"
-                accept="image/gif,image/jpeg,image/png,image/tiff,image/bmp,.tif"
-                reset-on-click="false"
+                ngf-change="vm.fileChanged($files, $event)"
+                ngf-accept="'image/gif,image/jpeg,image/png,image/tiff,image/bmp,.tif'"
+                ngf-reset-on-click="false"
                 ng-disabled="vm.loadState.isLoading">
             <i class="fa fa-cog"></i>
         </button>

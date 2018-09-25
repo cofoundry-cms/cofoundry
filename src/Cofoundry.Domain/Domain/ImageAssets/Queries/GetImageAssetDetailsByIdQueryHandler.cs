@@ -38,6 +38,8 @@ namespace Cofoundry.Domain
                 .AsNoTracking()
                 .Include(i => i.Creator)
                 .Include(i => i.Updater)
+                .Include(i => i.ImageAssetTags)
+                .ThenInclude(i => i.Tag)
                 .FilterById(query.ImageAssetId)
                 .SingleOrDefaultAsync();
 

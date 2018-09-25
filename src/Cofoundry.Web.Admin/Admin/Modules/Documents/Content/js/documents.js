@@ -16,11 +16,9 @@ function (
 }]);
 angular.module('cms.documents').factory('documents.documentService', [
         '$http',
-        '$upload',
         'shared.documentService',
     function (
         $http,
-        $upload,
         sharedDocumentService) {
 
     var service = _.extend({}, sharedDocumentService);
@@ -169,8 +167,9 @@ function (
 
         documentService
             .update(vm.command)
+            .progress(vm.saveLoadState.setProgress)
             .then(onSuccess.bind(null, 'Changes were saved successfully', vm.saveLoadState))
-        .finally(setLoadingOff.bind(null, vm.saveLoadState));
+            .finally(setLoadingOff.bind(null, vm.saveLoadState));
     }
 
     function reset() {

@@ -411,469 +411,6 @@ tinymce.PluginManager.add("visualblocks",function(a,b){function c(){var b=this;b
 tinymce.PluginManager.add("visualchars",function(a){function b(b){function c(a){return'<span data-mce-bogus="1" class="mce-'+n[a]+'">'+a+"</span>"}function f(){var a,b="";for(a in n)b+=a;return new RegExp("["+b+"]","g")}function g(){var a,b="";for(a in n)b&&(b+=","),b+="span.mce-"+n[a];return b}var h,i,j,k,l,m,n,o,p=a.getBody(),q=a.selection;if(n={"\xa0":"nbsp","\xad":"shy"},d=!d,e.state=d,a.fire("VisualChars",{state:d}),o=f(),b&&(m=q.getBookmark()),d)for(i=[],tinymce.walk(p,function(a){3==a.nodeType&&a.nodeValue&&o.test(a.nodeValue)&&i.push(a)},"childNodes"),j=0;j<i.length;j++){for(k=i[j].nodeValue,k=k.replace(o,c),l=a.dom.create("div",null,k);h=l.lastChild;)a.dom.insertAfter(h,i[j]);a.dom.remove(i[j])}else for(i=a.dom.select(g(),p),j=i.length-1;j>=0;j--)a.dom.remove(i[j],1);q.moveToBookmark(m)}function c(){var b=this;a.on("VisualChars",function(a){b.active(a.state)})}var d,e=this;a.addCommand("mceVisualChars",b),a.addButton("visualchars",{title:"Show invisible characters",cmd:"mceVisualChars",onPostRender:c}),a.addMenuItem("visualchars",{text:"Show invisible characters",cmd:"mceVisualChars",onPostRender:c,selectable:!0,context:"view",prependToContext:!0}),a.on("beforegetcontent",function(a){d&&"raw"!=a.format&&!a.draft&&(d=!0,b(!1))})});
 tinymce.PluginManager.add("wordcount",function(a){function b(){a.theme.panel.find("#wordcount").text(["Words: {0}",e.getCount()])}var c,d,e=this;c=a.getParam("wordcount_countregex",/[\w\u2019\x27\-\u00C0-\u1FFF]+/g),d=a.getParam("wordcount_cleanregex",/[0-9.(),;:!?%#$?\x27\x22_+=\\\/\-]*/g),a.on("init",function(){var c=a.theme.panel&&a.theme.panel.find("#statusbar")[0];c&&tinymce.util.Delay.setEditorTimeout(a,function(){c.insert({type:"label",name:"wordcount",text:["Words: {0}",e.getCount()],classes:"wordcount",disabled:a.settings.readonly},0),a.on("setcontent beforeaddundo",b),a.on("keyup",function(a){32==a.keyCode&&b()})},0)}),e.getCount=function(){var b=a.getContent({format:"raw"}),e=0;if(b){b=b.replace(/\.\.\./g," "),b=b.replace(/<.[^<>]*?>/g," ").replace(/&nbsp;|&#160;/gi," "),b=b.replace(/(\w+)(&#?[a-z0-9]+;)+(\w+)/i,"$1$3").replace(/&.+?;/g," "),b=b.replace(d,"");var f=b.match(c);f&&(e=f.length)}return e}});
 angular.module("ui.tinymce", []).value("uiTinymceConfig", {}).directive("uiTinymce", ["$rootScope", "$compile", "$timeout", "$window", "$sce", "uiTinymceConfig", function (a, b, c, d, e, f) { f = f || {}; var g = "ui-tinymce"; return f.baseUrl && (tinymce.baseURL = f.baseUrl), { require: ["ngModel", "^?form"], priority: 599, link: function (h, i, j, k) { function l(a) { a ? (m(), o && o.getBody().setAttribute("contenteditable", !1)) : (m(), o && !o.settings.readonly && o.getDoc() && o.getBody().setAttribute("contenteditable", !0)) } function m() { o || (o = tinymce.get(j.id)) } if (d.tinymce) { var n, o, p = k[0], q = k[1] || null, r = { debounce: !0 }, s = function (b) { var c = b.getContent({ format: r.format }).trim(); c = e.trustAsHtml(c), p.$setViewValue(c), a.$$phase || h.$digest() }; j.$set("id", g + "-" + (new Date).valueOf()), n = {}, angular.extend(n, h.$eval(j.uiTinymce)); var t = function (a) { var b; return function (d) { c.cancel(b), b = c(function () { return function (a) { a.isDirty() && (a.save(), s(a)) }(d) }, a) } }(400), u = { setup: function (b) { b.on("init", function () { p.$render(), p.$setPristine(), p.$setUntouched(), q && q.$setPristine() }), b.on("ExecCommand change NodeChange ObjectResized", function () { return r.debounce ? void t(b) : (b.save(), void s(b)) }), b.on("blur", function () { i[0].blur(), p.$setTouched(), a.$$phase || h.$digest() }), b.on("remove", function () { i.remove() }), f.setup && f.setup(b, { updateView: s }), n.setup && n.setup(b, { updateView: s }) }, format: n.format || "html", selector: "#" + j.id }; angular.extend(r, f, n, u), c(function () { r.baseURL && (tinymce.baseURL = r.baseURL); var a = tinymce.init(r); a && "function" == typeof a.then ? a.then(function () { l(h.$eval(j.ngDisabled)) }) : l(h.$eval(j.ngDisabled)) }), p.$formatters.unshift(function (a) { return a ? e.trustAsHtml(a) : "" }), p.$parsers.unshift(function (a) { return a ? e.getTrustedHtml(a) : "" }), p.$render = function () { m(); var a = p.$viewValue ? e.getTrustedHtml(p.$viewValue) : ""; o && o.getDoc() && (o.setContent(a), o.fire("change")) }, j.$observe("disabled", l), h.$on("$tinymce:refresh", function (a, c) { var d = j.id; if (angular.isUndefined(c) || c === d) { var e = i.parent(), f = i.clone(); f.removeAttr("id"), f.removeAttr("style"), f.removeAttr("aria-hidden"), tinymce.execCommand("mceRemoveEditor", !1, d), e.append(b(f)(h)) } }), h.$on("$destroy", function () { m(), o && (o.remove(), o = null) }) } } } }]);
-/**!
- * AngularJS file upload/drop directive with progress and abort
- * @author  Danial  <danial.farid@gmail.com>
- * @version 2.0.0
- */
-(function() {
-	
-function patchXHR(fnName, newFn) {
-	window.XMLHttpRequest.prototype[fnName] = newFn(window.XMLHttpRequest.prototype[fnName]);
-}
-
-if (window.XMLHttpRequest && !window.XMLHttpRequest.__isFileAPIShim) {
-	patchXHR('setRequestHeader', function(orig) {
-		return function(header, value) {
-			if (header === '__setXHR_') {
-				var val = value(this);
-				// fix for angular < 1.2.0
-				if (val instanceof Function) {
-					val(this);
-				}
-			} else {
-				orig.apply(this, arguments);
-			}
-		}
-	});
-}
-	
-var angularFileUpload = angular.module('angularFileUpload', []);
-angularFileUpload.version = '2.0.0';
-angularFileUpload.service('$upload', ['$http', '$q', '$timeout', function($http, $q, $timeout) {
-	function sendHttp(config) {
-		config.method = config.method || 'POST';
-		config.headers = config.headers || {};
-		config.transformRequest = config.transformRequest || function(data, headersGetter) {
-			if (window.ArrayBuffer && data instanceof window.ArrayBuffer) {
-				return data;
-			}
-			return $http.defaults.transformRequest[0](data, headersGetter);
-		};
-		var deferred = $q.defer();
-		var promise = deferred.promise;
-
-		config.headers['__setXHR_'] = function() {
-			return function(xhr) {
-				if (!xhr) return;
-				config.__XHR = xhr;
-				config.xhrFn && config.xhrFn(xhr);
-				xhr.upload.addEventListener('progress', function(e) {
-					e.config = config;
-					deferred.notify ? deferred.notify(e) : promise.progress_fn && $timeout(function(){promise.progress_fn(e)});
-				}, false);
-				//fix for firefox not firing upload progress end, also IE8-9
-				xhr.upload.addEventListener('load', function(e) {
-					if (e.lengthComputable) {
-						e.config = config;
-						deferred.notify ? deferred.notify(e) : promise.progress_fn && $timeout(function(){promise.progress_fn(e)});
-					}
-				}, false);
-			};
-		};
-
-		$http(config).then(function(r){deferred.resolve(r)}, function(e){deferred.reject(e)}, function(n){deferred.notify(n)});
-		
-		promise.success = function(fn) {
-			promise.then(function(response) {
-				fn(response.data, response.status, response.headers, config);
-			});
-			return promise;
-		};
-
-		promise.error = function(fn) {
-			promise.then(null, function(response) {
-				fn(response.data, response.status, response.headers, config);
-			});
-			return promise;
-		};
-
-		promise.progress = function(fn) {
-			promise.progress_fn = fn;
-			promise.then(null, null, function(update) {
-				fn(update);
-			});
-			return promise;
-		};
-		promise.abort = function() {
-			if (config.__XHR) {
-				$timeout(function() {
-					config.__XHR.abort();
-				});
-			}
-			return promise;
-		};
-		promise.xhr = function(fn) {
-			config.xhrFn = (function(origXhrFn) {
-				return function() {
-					origXhrFn && origXhrFn.apply(promise, arguments);
-					fn.apply(promise, arguments);
-				}
-			})(config.xhrFn);
-			return promise;
-		};
-		
-		return promise;
-	}
-
-	this.upload = function(config) {
-		config.headers = config.headers || {};
-		config.headers['Content-Type'] = undefined;
-		config.transformRequest = config.transformRequest || $http.defaults.transformRequest;
-		var formData = new FormData();
-		var origTransformRequest = config.transformRequest;
-		var origData = config.data;
-		config.transformRequest = function(formData, headerGetter) {
-			if (origData) {
-				if (config.formDataAppender) {
-					for (var key in origData) {
-						var val = origData[key];
-						config.formDataAppender(formData, key, val);
-					}
-				} else {
-					for (var key in origData) {
-						var val = origData[key];
-						if (typeof origTransformRequest == 'function') {
-							val = origTransformRequest(val, headerGetter);
-						} else {
-							for (var i = 0; i < origTransformRequest.length; i++) {
-								var transformFn = origTransformRequest[i];
-								if (typeof transformFn == 'function') {
-									val = transformFn(val, headerGetter);
-								}
-							}
-						}
-                        // JM: Change undefined/null to empty string
-						//if (val != undefined) formData.append(key, val);
-						formData.append(key, val == null ? '' : val);
-					}
-				}
-			}
-
-			if (config.file != null) {
-				var fileFormName = config.fileFormDataName || 'file';
-
-				if (Object.prototype.toString.call(config.file) === '[object Array]') {
-					var isFileFormNameString = Object.prototype.toString.call(fileFormName) === '[object String]';
-					for (var i = 0; i < config.file.length; i++) {
-						formData.append(isFileFormNameString ? fileFormName : fileFormName[i], config.file[i], 
-								(config.fileName && config.fileName[i]) || config.file[i].name);
-					}
-				} else {
-					formData.append(fileFormName, config.file, config.fileName || config.file.name);
-				}
-			}
-			return formData;
-		};
-
-		config.data = formData;
-
-		return sendHttp(config);
-	};
-
-	this.http = function(config) {
-		return sendHttp(config);
-	}
-}]);
-
-angularFileUpload.directive('ngFileSelect', [ '$parse', '$timeout', function($parse, $timeout) { return {
-	restrict: 'AEC',
-	require:'?ngModel',
-	scope: {
-		fileModel: '=ngModel',
-		change: '&ngFileChange',
-		select : '&ngFileSelect',
-		resetOnClick: '&resetOnClick'
-	},
-	link: function(scope, elem, attr, ngModel) {
-		handleFileSelect(scope, elem, attr, ngModel, $parse, $timeout);
-	}
-}}]);
-
-function handleFileSelect(scope, elem, attr, ngModel, $parse, $timeout) {
-	ngModel && ngModel.$setViewValue('');
-	if (elem[0].tagName.toLowerCase() !== 'input' || (elem.attr('type') && elem.attr('type').toLowerCase()) !== 'file') {
-		var fileElem = angular.element('<input type="file">')
-		if (attr['multiple']) fileElem.attr('multiple', attr['multiple']);
-		if (attr['accept']) fileElem.attr('accept', attr['accept']);
-		fileElem.css('width', '1px').css('height', '1px').css('opacity', 0).css('position', 'absolute').css('filter', 'alpha(opacity=0)')
-				.css('padding', 0).css('margin', 0).css('overflow', 'hidden').attr('tabindex', '-1').attr('ng-file-generated-elem', true);
-		elem.append(fileElem);
-		elem.scope().fileClickDelegate = function() {
-			fileElem[0].click();
-		}; 
-		elem.bind('click', elem.scope().fileClickDelegate);
-		elem.css('overflow', 'hidden');
-		elem = fileElem;
-	}
-	if (scope.resetOnClick() != false) {
-		elem.bind('click', function(evt) {
-			this.value = null;
-			updateModel([], attr, ngModel, scope, evt);
-		});
-	}
-	if (attr['ngFileSelect'] != '') {
-		scope.change = scope.select;
-	}
-	elem.bind('change', function(evt) {
-		var files = [], fileList, i;
-		fileList = evt.__files_ || evt.target.files;
-		updateModel(fileList, attr, ngModel, scope, evt);
-	});
-	
-	function updateModel(fileList, attr, ngModel, scope, evt) {
-		$timeout(function() {
-			var files = [];
-			for (var i = 0; i < fileList.length; i++) {
-				files.push(fileList.item(i));
-			}
-			if (ngModel) {
-				scope.fileModel = files;
-				ngModel && ngModel.$setViewValue(files != null && files.length == 0 ? '' : files);
-			}
-			$timeout(function() {
-				scope.change({
-					$files : files,
-					$event : evt
-				});
-			});
-		});
-	}
-}
-
-angularFileUpload.directive('ngFileDrop', [ '$parse', '$timeout', '$location', function($parse, $timeout, $location) { return {
-	restrict: 'AEC',
-	require:'?ngModel',
-	scope: {
-		fileModel: '=ngModel',
-		fileRejectedModel: '=ngFileRejectedModel',
-		change: '&ngFileChange',
-		drop: '&ngFileDrop',
-		allowDir: '&allowDir',
-		dragOverClass: '&dragOverClass',
-		dropAvailable: '=dropAvailable', 
-		stopPropagation: '&stopPropagation',
-		hideOnDropNotAvailable: '&hideOnDropNotAvailable'
-	},
-	link: function(scope, elem, attr, ngModel) {
-		handleDrop(scope, elem, attr, ngModel, $parse, $timeout, $location);
-	}
-}}]);
-
-angularFileUpload.directive('ngNoFileDrop', function() { 
-	return function(scope, elem, attr) {
-		if (dropAvailable()) elem.css('display', 'none')
-	}
-});
-
-//for backward compatibility
-angularFileUpload.directive('ngFileDropAvailable', [ '$parse', '$timeout', function($parse, $timeout) { 
-	return function(scope, elem, attr) {
-		if (dropAvailable()) {
-			var fn = $parse(attr['ngFileDropAvailable']);
-			$timeout(function() {
-				fn(scope);
-			});
-		}
-	}
-}]);
-
-function handleDrop(scope, elem, attr, ngModel, $parse, $timeout, $location) {
-	ngModel && ngModel.$setViewValue('');
-	var available = dropAvailable();
-	if (attr['dropAvailable']) {
-		$timeout(function() {
-			scope.dropAvailable = available;
-		});
-	}
-	if (!available) {
-		if (scope.hideOnDropNotAvailable() != false) {
-			elem.css('display', 'none');
-		}
-		return;
-	}
-	var leaveTimeout = null;
-	var stopPropagation = scope.stopPropagation();
-	var dragOverDelay = 1;
-	var regexp = attr['accept'] == null ? null : new RegExp(globStringToRegex(attr['accept']));
-	elem[0].addEventListener('dragover', function(evt) {
-		evt.preventDefault();
-		if (stopPropagation) evt.stopPropagation();
-		$timeout.cancel(leaveTimeout);
-		if (!scope.actualDragOverClass) {
-			scope.actualDragOverClass = calculateDragOverClass(scope, attr, evt);
-		}
-		elem.addClass(scope.actualDragOverClass);
-	}, false);
-	elem[0].addEventListener('dragenter', function(evt) {
-		evt.preventDefault();
-		if (stopPropagation) evt.stopPropagation();
-	}, false);
-	elem[0].addEventListener('dragleave', function(evt) {
-		leaveTimeout = $timeout(function() {
-			elem.removeClass(scope.actualDragOverClass);
-			scope.actualDragOverClass = null;
-		}, dragOverDelay || 1);
-	}, false);
-	if (attr['ngFileDrop'] != '') {
-		scope.change = scope.drop;
-	}
-	elem[0].addEventListener('drop', function(evt) {
-		evt.preventDefault();
-		if (stopPropagation) evt.stopPropagation();
-		elem.removeClass(scope.actualDragOverClass);
-		scope.actualDragOverClass = null;
-		extractFiles(evt, function(files, rejFiles) {
-			if (ngModel) {
-				scope.fileModel = files;
-				ngModel && ngModel.$setViewValue(files != null && files.length == 0 ? '' : files);
-			}
-			if (attr['ngFileRejectedModel']) scope.fileRejectedModel = rejFiles;
-			$timeout(function(){
-				scope.change({
-					$files : files,
-					$rejectedFiles: rejFiles,
-					$event : evt
-				});
-			});
-		}, scope.allowDir() != false, attr['multiple']);
-	}, false);
-	
-	function calculateDragOverClass(scope, attr, evt) {
-		var valid = true;
-		if (regexp) {
-			var items = evt.dataTransfer.items;
-			if (items != null) {
-				for (var i = 0 ; i < items.length && valid; i++) {
-					valid = valid && (items[i].kind == 'file' || items[i].kind == '') && 
-						(items[i].type.match(regexp) != null || (items[i].name != null && items[i].name.match(regexp) != null));
-				}
-			}
-		}
-		var clazz = scope.dragOverClass({$event : evt});
-		if (clazz.delay) dragOverDelay = clazz.delay; 
-		if (clazz.accept) clazz = valid ? clazz.accept : clazz.reject;
-		return clazz || 'dragover';
-	}
-				
-	function extractFiles(evt, callback, allowDir, multiple) {
-		var files = [], rejFiles = [], items = evt.dataTransfer.items;
-		
-		function addFile(file) {
-			if (!regexp || file.type.match(regexp) || (file.name != null && file.name.match(regexp))) {
-				files.push(file);
-			} else {
-				rejFiles.push(file);
-			}
-		}
-		
-		if (items && items.length > 0 && $location.protocol() != 'file') {
-			for (var i = 0; i < items.length; i++) {
-				if (items[i].webkitGetAsEntry && items[i].webkitGetAsEntry() && items[i].webkitGetAsEntry().isDirectory) {
-					var entry = items[i].webkitGetAsEntry();
-					if (entry.isDirectory && !allowDir) {
-						continue;
-					}
-					if (entry != null) {
-						//fix for chrome bug https://code.google.com/p/chromium/issues/detail?id=149735
-						if (isASCII(entry.name)) {
-							traverseFileTree(files, entry);
-						} else if (!items[i].webkitGetAsEntry().isDirectory) {
-							addFile(items[i].getAsFile());
-						}
-					}
-				} else {
-					var f = items[i].getAsFile();
-					if (f != null) addFile(f);
-				}
-				if (!multiple && files.length > 0) break;
-			}
-		} else {
-			var fileList = evt.dataTransfer.files;
-			if (fileList != null) {
-				for (var i = 0; i < fileList.length; i++) {
-					addFile(fileList.item(i));
-					if (!multiple && files.length > 0) break;
-				}
-			}
-		}
-		var delays = 0;
-		(function waitForProcess(delay) {
-			$timeout(function() {
-				if (!processing) {
-					if (!multiple && files.length > 1) {
-						var i = 0;
-						while (files[i].type == 'directory') i++;
-						files = [files[i]];
-					}
-					callback(files, rejFiles);
-				} else {
-					if (delays++ * 10 < 20 * 1000) {
-						waitForProcess(10);
-					}
-				}
-			}, delay || 0)
-		})();
-		
-		var processing = 0;
-		function traverseFileTree(files, entry, path) {
-			if (entry != null) {
-				if (entry.isDirectory) {
-					addFile({name: entry.name, type: 'directory', path: (path ? path : '') + entry.name});
-					var dirReader = entry.createReader();
-					processing++;
-					dirReader.readEntries(function(entries) {
-						try {
-							for (var i = 0; i < entries.length; i++) {
-								traverseFileTree(files, entries[i], (path ? path : '') + entry.name + '/');
-							}
-						} finally {
-							processing--;
-						}
-					});
-				} else {
-					processing++;
-					entry.file(function(file) {
-						processing--;
-						file.path = (path ? path : '') + file.name;
-						addFile(file);
-					});
-				}
-			}
-		}
-	}
-}
-
-function dropAvailable() {
-    var div = document.createElement('div');
-    return ('draggable' in div) && ('ondrop' in div);
-}
-
-function isASCII(str) {
-	return /^[\000-\177]*$/.test(str);
-}
-
-function globStringToRegex(str) {
-	if (str.length > 2 && str[0] === '/' && str[str.length -1] === '/') {
-		return str.substring(1, str.length - 1);
-	}
-	var split = str.split(','), result = '';
-	if (split.length > 1) {
-		for (var i = 0; i < split.length; i++) {
-			result += '(' + globStringToRegex(split[i]) + ')';
-			if (i < split.length - 1) {
-				result += '|'
-			}
-		}
-	} else {
-		result = '^' + str.replace(new RegExp('[.\\\\+*?\\[\\^\\]$(){}=!<>|:\\' + '-]', 'g'), '\\$&') + '$';
-		result = result.replace(/\\\*/g, '.*').replace(/\\\?/g, '.');
-	}
-	return result;
-}
-
-})();
-
 /*
  AngularJS v1.6.4
  (c) 2010-2017 Google, Inc. http://angularjs.org
@@ -1656,6 +1193,2483 @@ function globStringToRegex(str) {
     ]);
 
 }(angular));
+/**!
+ * AngularJS file upload directives and services. Supoorts: file upload/drop/paste, resume, cancel/abort,
+ * progress, resize, thumbnail, preview, validation and CORS
+ * @author  Danial  <danial.farid@gmail.com>
+ * @version 12.2.13
+ */
+
+if (window.XMLHttpRequest && !(window.FileAPI && FileAPI.shouldLoad)) {
+  window.XMLHttpRequest.prototype.setRequestHeader = (function (orig) {
+    return function (header, value) {
+      if (header === '__setXHR_') {
+        var val = value(this);
+        // fix for angular < 1.2.0
+        if (val instanceof Function) {
+          val(this);
+        }
+      } else {
+        orig.apply(this, arguments);
+      }
+    };
+  })(window.XMLHttpRequest.prototype.setRequestHeader);
+}
+
+var ngFileUpload = angular.module('ngFileUpload', []);
+
+ngFileUpload.version = '12.2.13';
+
+ngFileUpload.service('UploadBase', ['$http', '$q', '$timeout', function ($http, $q, $timeout) {
+  var upload = this;
+  upload.promisesCount = 0;
+
+  this.isResumeSupported = function () {
+    return window.Blob && window.Blob.prototype.slice;
+  };
+
+  var resumeSupported = this.isResumeSupported();
+
+  function sendHttp(config) {
+    config.method = config.method || 'POST';
+    config.headers = config.headers || {};
+
+    var deferred = config._deferred = config._deferred || $q.defer();
+    var promise = deferred.promise;
+
+    function notifyProgress(e) {
+      if (deferred.notify) {
+        deferred.notify(e);
+      }
+      if (promise.progressFunc) {
+        $timeout(function () {
+          promise.progressFunc(e);
+        });
+      }
+    }
+
+    function getNotifyEvent(n) {
+      if (config._start != null && resumeSupported) {
+        return {
+          loaded: n.loaded + config._start,
+          total: (config._file && config._file.size) || n.total,
+          type: n.type, config: config,
+          lengthComputable: true, target: n.target
+        };
+      } else {
+        return n;
+      }
+    }
+
+    if (!config.disableProgress) {
+      config.headers.__setXHR_ = function () {
+        return function (xhr) {
+          if (!xhr || !xhr.upload || !xhr.upload.addEventListener) return;
+          config.__XHR = xhr;
+          if (config.xhrFn) config.xhrFn(xhr);
+          xhr.upload.addEventListener('progress', function (e) {
+            e.config = config;
+            notifyProgress(getNotifyEvent(e));
+          }, false);
+          //fix for firefox not firing upload progress end, also IE8-9
+          xhr.upload.addEventListener('load', function (e) {
+            if (e.lengthComputable) {
+              e.config = config;
+              notifyProgress(getNotifyEvent(e));
+            }
+          }, false);
+        };
+      };
+    }
+
+    function uploadWithAngular() {
+      $http(config).then(function (r) {
+          if (resumeSupported && config._chunkSize && !config._finished && config._file) {
+            var fileSize = config._file && config._file.size || 0;
+            notifyProgress({
+                loaded: Math.min(config._end, fileSize),
+                total: fileSize,
+                config: config,
+                type: 'progress'
+              }
+            );
+            upload.upload(config, true);
+          } else {
+            if (config._finished) delete config._finished;
+            deferred.resolve(r);
+          }
+        }, function (e) {
+          deferred.reject(e);
+        }, function (n) {
+          deferred.notify(n);
+        }
+      );
+    }
+
+    if (!resumeSupported) {
+      uploadWithAngular();
+    } else if (config._chunkSize && config._end && !config._finished) {
+      config._start = config._end;
+      config._end += config._chunkSize;
+      uploadWithAngular();
+    } else if (config.resumeSizeUrl) {
+      $http.get(config.resumeSizeUrl).then(function (resp) {
+        if (config.resumeSizeResponseReader) {
+          config._start = config.resumeSizeResponseReader(resp.data);
+        } else {
+          config._start = parseInt((resp.data.size == null ? resp.data : resp.data.size).toString());
+        }
+        if (config._chunkSize) {
+          config._end = config._start + config._chunkSize;
+        }
+        uploadWithAngular();
+      }, function (e) {
+        throw e;
+      });
+    } else if (config.resumeSize) {
+      config.resumeSize().then(function (size) {
+        config._start = size;
+        if (config._chunkSize) {
+          config._end = config._start + config._chunkSize;
+        }
+        uploadWithAngular();
+      }, function (e) {
+        throw e;
+      });
+    } else {
+      if (config._chunkSize) {
+        config._start = 0;
+        config._end = config._start + config._chunkSize;
+      }
+      uploadWithAngular();
+    }
+
+
+    promise.success = function (fn) {
+      promise.then(function (response) {
+        fn(response.data, response.status, response.headers, config);
+      });
+      return promise;
+    };
+
+    promise.error = function (fn) {
+      promise.then(null, function (response) {
+        fn(response.data, response.status, response.headers, config);
+      });
+      return promise;
+    };
+
+    promise.progress = function (fn) {
+      promise.progressFunc = fn;
+      promise.then(null, null, function (n) {
+        fn(n);
+      });
+      return promise;
+    };
+    promise.abort = promise.pause = function () {
+      if (config.__XHR) {
+        $timeout(function () {
+          config.__XHR.abort();
+        });
+      }
+      return promise;
+    };
+    promise.xhr = function (fn) {
+      config.xhrFn = (function (origXhrFn) {
+        return function () {
+          if (origXhrFn) origXhrFn.apply(promise, arguments);
+          fn.apply(promise, arguments);
+        };
+      })(config.xhrFn);
+      return promise;
+    };
+
+    upload.promisesCount++;
+    if (promise['finally'] && promise['finally'] instanceof Function) {
+      promise['finally'](function () {
+        upload.promisesCount--;
+      });
+    }
+    return promise;
+  }
+
+  this.isUploadInProgress = function () {
+    return upload.promisesCount > 0;
+  };
+
+  this.rename = function (file, name) {
+    file.ngfName = name;
+    return file;
+  };
+
+  this.jsonBlob = function (val) {
+    if (val != null && !angular.isString(val)) {
+      val = JSON.stringify(val);
+    }
+    var blob = new window.Blob([val], {type: 'application/json'});
+    blob._ngfBlob = true;
+    return blob;
+  };
+
+  this.json = function (val) {
+    return angular.toJson(val);
+  };
+
+  function copy(obj) {
+    var clone = {};
+    for (var key in obj) {
+      if (obj.hasOwnProperty(key)) {
+        clone[key] = obj[key];
+      }
+    }
+    return clone;
+  }
+
+  this.isFile = function (file) {
+    return file != null && (file instanceof window.Blob || (file.flashId && file.name && file.size));
+  };
+
+  this.upload = function (config, internal) {
+    function toResumeFile(file, formData) {
+      if (file._ngfBlob) return file;
+      config._file = config._file || file;
+      if (config._start != null && resumeSupported) {
+        if (config._end && config._end >= file.size) {
+          config._finished = true;
+          config._end = file.size;
+        }
+        var slice = file.slice(config._start, config._end || file.size);
+        slice.name = file.name;
+        slice.ngfName = file.ngfName;
+        if (config._chunkSize) {
+          formData.append('_chunkSize', config._chunkSize);
+          formData.append('_currentChunkSize', config._end - config._start);
+          formData.append('_chunkNumber', Math.floor(config._start / config._chunkSize));
+          formData.append('_totalSize', config._file.size);
+        }
+        return slice;
+      }
+      return file;
+    }
+
+    function addFieldToFormData(formData, val, key) {
+      if (val !== undefined) {
+        if (angular.isDate(val)) {
+          val = val.toISOString();
+        }
+        if (angular.isString(val)) {
+          formData.append(key, val);
+        } else if (upload.isFile(val)) {
+          var file = toResumeFile(val, formData);
+          var split = key.split(',');
+          if (split[1]) {
+            file.ngfName = split[1].replace(/^\s+|\s+$/g, '');
+            key = split[0];
+          }
+          config._fileKey = config._fileKey || key;
+          formData.append(key, file, file.ngfName || file.name);
+        } else {
+          if (angular.isObject(val)) {
+            if (val.$$ngfCircularDetection) throw 'ngFileUpload: Circular reference in config.data. Make sure specified data for Upload.upload() has no circular reference: ' + key;
+
+            val.$$ngfCircularDetection = true;
+            try {
+              for (var k in val) {
+                if (val.hasOwnProperty(k) && k !== '$$ngfCircularDetection') {
+                  var objectKey = config.objectKey == null ? '[i]' : config.objectKey;
+                  if (val.length && parseInt(k) > -1) {
+                    objectKey = config.arrayKey == null ? objectKey : config.arrayKey;
+                  }
+                  addFieldToFormData(formData, val[k], key + objectKey.replace(/[ik]/g, k));
+                }
+              }
+            } finally {
+              delete val.$$ngfCircularDetection;
+            }
+          } else {
+            formData.append(key, val);
+          }
+        }
+      }
+    }
+
+    function digestConfig() {
+      config._chunkSize = upload.translateScalars(config.resumeChunkSize);
+      config._chunkSize = config._chunkSize ? parseInt(config._chunkSize.toString()) : null;
+
+      config.headers = config.headers || {};
+      config.headers['Content-Type'] = undefined;
+      config.transformRequest = config.transformRequest ?
+        (angular.isArray(config.transformRequest) ?
+          config.transformRequest : [config.transformRequest]) : [];
+      config.transformRequest.push(function (data) {
+        var formData = new window.FormData(), key;
+        data = data || config.fields || {};
+        if (config.file) {
+          data.file = config.file;
+        }
+        for (key in data) {
+          if (data.hasOwnProperty(key)) {
+            var val = data[key];
+            if (config.formDataAppender) {
+              config.formDataAppender(formData, key, val);
+            } else {
+              addFieldToFormData(formData, val, key);
+            }
+          }
+        }
+
+        return formData;
+      });
+    }
+
+    if (!internal) config = copy(config);
+    if (!config._isDigested) {
+      config._isDigested = true;
+      digestConfig();
+    }
+
+    return sendHttp(config);
+  };
+
+  this.http = function (config) {
+    config = copy(config);
+    config.transformRequest = config.transformRequest || function (data) {
+        if ((window.ArrayBuffer && data instanceof window.ArrayBuffer) || data instanceof window.Blob) {
+          return data;
+        }
+        return $http.defaults.transformRequest[0].apply(this, arguments);
+      };
+    config._chunkSize = upload.translateScalars(config.resumeChunkSize);
+    config._chunkSize = config._chunkSize ? parseInt(config._chunkSize.toString()) : null;
+
+    return sendHttp(config);
+  };
+
+  this.translateScalars = function (str) {
+    if (angular.isString(str)) {
+      if (str.search(/kb/i) === str.length - 2) {
+        return parseFloat(str.substring(0, str.length - 2) * 1024);
+      } else if (str.search(/mb/i) === str.length - 2) {
+        return parseFloat(str.substring(0, str.length - 2) * 1048576);
+      } else if (str.search(/gb/i) === str.length - 2) {
+        return parseFloat(str.substring(0, str.length - 2) * 1073741824);
+      } else if (str.search(/b/i) === str.length - 1) {
+        return parseFloat(str.substring(0, str.length - 1));
+      } else if (str.search(/s/i) === str.length - 1) {
+        return parseFloat(str.substring(0, str.length - 1));
+      } else if (str.search(/m/i) === str.length - 1) {
+        return parseFloat(str.substring(0, str.length - 1) * 60);
+      } else if (str.search(/h/i) === str.length - 1) {
+        return parseFloat(str.substring(0, str.length - 1) * 3600);
+      }
+    }
+    return str;
+  };
+
+  this.urlToBlob = function(url) {
+    var defer = $q.defer();
+    $http({url: url, method: 'get', responseType: 'arraybuffer'}).then(function (resp) {
+      var arrayBufferView = new Uint8Array(resp.data);
+      var type = resp.headers('content-type') || 'image/WebP';
+      var blob = new window.Blob([arrayBufferView], {type: type});
+      var matches = url.match(/.*\/(.+?)(\?.*)?$/);
+      if (matches.length > 1) {
+        blob.name = matches[1];
+      }
+      defer.resolve(blob);
+    }, function (e) {
+      defer.reject(e);
+    });
+    return defer.promise;
+  };
+
+  this.setDefaults = function (defaults) {
+    this.defaults = defaults || {};
+  };
+
+  this.defaults = {};
+  this.version = ngFileUpload.version;
+}
+
+]);
+
+ngFileUpload.service('Upload', ['$parse', '$timeout', '$compile', '$q', 'UploadExif', function ($parse, $timeout, $compile, $q, UploadExif) {
+  var upload = UploadExif;
+  upload.getAttrWithDefaults = function (attr, name) {
+    if (attr[name] != null) return attr[name];
+    var def = upload.defaults[name];
+    return (def == null ? def : (angular.isString(def) ? def : JSON.stringify(def)));
+  };
+
+  upload.attrGetter = function (name, attr, scope, params) {
+    var attrVal = this.getAttrWithDefaults(attr, name);
+    if (scope) {
+      try {
+        if (params) {
+          return $parse(attrVal)(scope, params);
+        } else {
+          return $parse(attrVal)(scope);
+        }
+      } catch (e) {
+        // hangle string value without single qoute
+        if (name.search(/min|max|pattern/i)) {
+          return attrVal;
+        } else {
+          throw e;
+        }
+      }
+    } else {
+      return attrVal;
+    }
+  };
+
+  upload.shouldUpdateOn = function (type, attr, scope) {
+    var modelOptions = upload.attrGetter('ngfModelOptions', attr, scope);
+    if (modelOptions && modelOptions.updateOn) {
+      return modelOptions.updateOn.split(' ').indexOf(type) > -1;
+    }
+    return true;
+  };
+
+  upload.emptyPromise = function () {
+    var d = $q.defer();
+    var args = arguments;
+    $timeout(function () {
+      d.resolve.apply(d, args);
+    });
+    return d.promise;
+  };
+
+  upload.rejectPromise = function () {
+    var d = $q.defer();
+    var args = arguments;
+    $timeout(function () {
+      d.reject.apply(d, args);
+    });
+    return d.promise;
+  };
+
+  upload.happyPromise = function (promise, data) {
+    var d = $q.defer();
+    promise.then(function (result) {
+      d.resolve(result);
+    }, function (error) {
+      $timeout(function () {
+        throw error;
+      });
+      d.resolve(data);
+    });
+    return d.promise;
+  };
+
+  function applyExifRotations(files, attr, scope) {
+    var promises = [upload.emptyPromise()];
+    angular.forEach(files, function (f, i) {
+      if (f.type.indexOf('image/jpeg') === 0 && upload.attrGetter('ngfFixOrientation', attr, scope, {$file: f})) {
+        promises.push(upload.happyPromise(upload.applyExifRotation(f), f).then(function (fixedFile) {
+          files.splice(i, 1, fixedFile);
+        }));
+      }
+    });
+    return $q.all(promises);
+  }
+
+  function resizeFile(files, attr, scope, ngModel) {
+    var resizeVal = upload.attrGetter('ngfResize', attr, scope);
+    if (!resizeVal || !upload.isResizeSupported() || !files.length) return upload.emptyPromise();
+    if (resizeVal instanceof Function) {
+      var defer = $q.defer();
+      return resizeVal(files).then(function (p) {
+        resizeWithParams(p, files, attr, scope, ngModel).then(function (r) {
+          defer.resolve(r);
+        }, function (e) {
+          defer.reject(e);
+        });
+      }, function (e) {
+        defer.reject(e);
+      });
+    } else {
+      return resizeWithParams(resizeVal, files, attr, scope, ngModel);
+    }
+  }
+
+  function resizeWithParams(params, files, attr, scope, ngModel) {
+    var promises = [upload.emptyPromise()];
+
+    function handleFile(f, i) {
+      if (f.type.indexOf('image') === 0) {
+        if (params.pattern && !upload.validatePattern(f, params.pattern)) return;
+        params.resizeIf = function (width, height) {
+          return upload.attrGetter('ngfResizeIf', attr, scope,
+            {$width: width, $height: height, $file: f});
+        };
+        var promise = upload.resize(f, params);
+        promises.push(promise);
+        promise.then(function (resizedFile) {
+          files.splice(i, 1, resizedFile);
+        }, function (e) {
+          f.$error = 'resize';
+          (f.$errorMessages = (f.$errorMessages || {})).resize = true;
+          f.$errorParam = (e ? (e.message ? e.message : e) + ': ' : '') + (f && f.name);
+          ngModel.$ngfValidations.push({name: 'resize', valid: false});
+          upload.applyModelValidation(ngModel, files);
+        });
+      }
+    }
+
+    for (var i = 0; i < files.length; i++) {
+      handleFile(files[i], i);
+    }
+    return $q.all(promises);
+  }
+
+  upload.updateModel = function (ngModel, attr, scope, fileChange, files, evt, noDelay) {
+    function update(files, invalidFiles, newFiles, dupFiles, isSingleModel) {
+      attr.$$ngfPrevValidFiles = files;
+      attr.$$ngfPrevInvalidFiles = invalidFiles;
+      var file = files && files.length ? files[0] : null;
+      var invalidFile = invalidFiles && invalidFiles.length ? invalidFiles[0] : null;
+
+      if (ngModel) {
+        upload.applyModelValidation(ngModel, files);
+        ngModel.$setViewValue(isSingleModel ? file : files);
+      }
+
+      if (fileChange) {
+        $parse(fileChange)(scope, {
+          $files: files,
+          $file: file,
+          $newFiles: newFiles,
+          $duplicateFiles: dupFiles,
+          $invalidFiles: invalidFiles,
+          $invalidFile: invalidFile,
+          $event: evt
+        });
+      }
+
+      var invalidModel = upload.attrGetter('ngfModelInvalid', attr);
+      if (invalidModel) {
+        $timeout(function () {
+          $parse(invalidModel).assign(scope, isSingleModel ? invalidFile : invalidFiles);
+        });
+      }
+      $timeout(function () {
+        // scope apply changes
+      });
+    }
+
+    var allNewFiles, dupFiles = [], prevValidFiles, prevInvalidFiles,
+      invalids = [], valids = [];
+
+    function removeDuplicates() {
+      function equals(f1, f2) {
+        return f1.name === f2.name && (f1.$ngfOrigSize || f1.size) === (f2.$ngfOrigSize || f2.size) &&
+          f1.type === f2.type;
+      }
+
+      function isInPrevFiles(f) {
+        var j;
+        for (j = 0; j < prevValidFiles.length; j++) {
+          if (equals(f, prevValidFiles[j])) {
+            return true;
+          }
+        }
+        for (j = 0; j < prevInvalidFiles.length; j++) {
+          if (equals(f, prevInvalidFiles[j])) {
+            return true;
+          }
+        }
+        return false;
+      }
+
+      if (files) {
+        allNewFiles = [];
+        dupFiles = [];
+        for (var i = 0; i < files.length; i++) {
+          if (isInPrevFiles(files[i])) {
+            dupFiles.push(files[i]);
+          } else {
+            allNewFiles.push(files[i]);
+          }
+        }
+      }
+    }
+
+    function toArray(v) {
+      return angular.isArray(v) ? v : [v];
+    }
+
+    function resizeAndUpdate() {
+      function updateModel() {
+        $timeout(function () {
+          update(keep ? prevValidFiles.concat(valids) : valids,
+            keep ? prevInvalidFiles.concat(invalids) : invalids,
+            files, dupFiles, isSingleModel);
+        }, options && options.debounce ? options.debounce.change || options.debounce : 0);
+      }
+
+      var resizingFiles = validateAfterResize ? allNewFiles : valids;
+      resizeFile(resizingFiles, attr, scope, ngModel).then(function () {
+        if (validateAfterResize) {
+          upload.validate(allNewFiles, keep ? prevValidFiles.length : 0, ngModel, attr, scope)
+            .then(function (validationResult) {
+              valids = validationResult.validsFiles;
+              invalids = validationResult.invalidsFiles;
+              updateModel();
+            });
+        } else {
+          updateModel();
+        }
+      }, function () {
+        for (var i = 0; i < resizingFiles.length; i++) {
+          var f = resizingFiles[i];
+          if (f.$error === 'resize') {
+            var index = valids.indexOf(f);
+            if (index > -1) {
+              valids.splice(index, 1);
+              invalids.push(f);
+            }
+            updateModel();
+          }
+        }
+      });
+    }
+
+    prevValidFiles = attr.$$ngfPrevValidFiles || [];
+    prevInvalidFiles = attr.$$ngfPrevInvalidFiles || [];
+    if (ngModel && ngModel.$modelValue) {
+      prevValidFiles = toArray(ngModel.$modelValue);
+    }
+
+    var keep = upload.attrGetter('ngfKeep', attr, scope);
+    allNewFiles = (files || []).slice(0);
+    if (keep === 'distinct' || upload.attrGetter('ngfKeepDistinct', attr, scope) === true) {
+      removeDuplicates(attr, scope);
+    }
+
+    var isSingleModel = !keep && !upload.attrGetter('ngfMultiple', attr, scope) && !upload.attrGetter('multiple', attr);
+
+    if (keep && !allNewFiles.length) return;
+
+    upload.attrGetter('ngfBeforeModelChange', attr, scope, {
+      $files: files,
+      $file: files && files.length ? files[0] : null,
+      $newFiles: allNewFiles,
+      $duplicateFiles: dupFiles,
+      $event: evt
+    });
+
+    var validateAfterResize = upload.attrGetter('ngfValidateAfterResize', attr, scope);
+
+    var options = upload.attrGetter('ngfModelOptions', attr, scope);
+    upload.validate(allNewFiles, keep ? prevValidFiles.length : 0, ngModel, attr, scope)
+      .then(function (validationResult) {
+      if (noDelay) {
+        update(allNewFiles, [], files, dupFiles, isSingleModel);
+      } else {
+        if ((!options || !options.allowInvalid) && !validateAfterResize) {
+          valids = validationResult.validFiles;
+          invalids = validationResult.invalidFiles;
+        } else {
+          valids = allNewFiles;
+        }
+        if (upload.attrGetter('ngfFixOrientation', attr, scope) && upload.isExifSupported()) {
+          applyExifRotations(valids, attr, scope).then(function () {
+            resizeAndUpdate();
+          });
+        } else {
+          resizeAndUpdate();
+        }
+      }
+    });
+  };
+
+  return upload;
+}]);
+
+ngFileUpload.directive('ngfSelect', ['$parse', '$timeout', '$compile', 'Upload', function ($parse, $timeout, $compile, Upload) {
+  var generatedElems = [];
+
+  function isDelayedClickSupported(ua) {
+    // fix for android native browser < 4.4 and safari windows
+    var m = ua.match(/Android[^\d]*(\d+)\.(\d+)/);
+    if (m && m.length > 2) {
+      var v = Upload.defaults.androidFixMinorVersion || 4;
+      return parseInt(m[1]) < 4 || (parseInt(m[1]) === v && parseInt(m[2]) < v);
+    }
+
+    // safari on windows
+    return ua.indexOf('Chrome') === -1 && /.*Windows.*Safari.*/.test(ua);
+  }
+
+  function linkFileSelect(scope, elem, attr, ngModel, $parse, $timeout, $compile, upload) {
+    /** @namespace attr.ngfSelect */
+    /** @namespace attr.ngfChange */
+    /** @namespace attr.ngModel */
+    /** @namespace attr.ngfModelOptions */
+    /** @namespace attr.ngfMultiple */
+    /** @namespace attr.ngfCapture */
+    /** @namespace attr.ngfValidate */
+    /** @namespace attr.ngfKeep */
+    var attrGetter = function (name, scope) {
+      return upload.attrGetter(name, attr, scope);
+    };
+
+    function isInputTypeFile() {
+      return elem[0].tagName.toLowerCase() === 'input' && attr.type && attr.type.toLowerCase() === 'file';
+    }
+
+    function fileChangeAttr() {
+      return attrGetter('ngfChange') || attrGetter('ngfSelect');
+    }
+
+    function changeFn(evt) {
+      if (upload.shouldUpdateOn('change', attr, scope)) {
+        var fileList = evt.__files_ || (evt.target && evt.target.files), files = [];
+        /* Handle duplicate call in  IE11 */
+        if (!fileList) return;
+        for (var i = 0; i < fileList.length; i++) {
+          files.push(fileList[i]);
+        }
+        upload.updateModel(ngModel, attr, scope, fileChangeAttr(),
+          files.length ? files : null, evt);
+      }
+    }
+
+    upload.registerModelChangeValidator(ngModel, attr, scope);
+
+    var unwatches = [];
+    if (attrGetter('ngfMultiple')) {
+      unwatches.push(scope.$watch(attrGetter('ngfMultiple'), function () {
+        fileElem.attr('multiple', attrGetter('ngfMultiple', scope));
+      }));
+    }
+    if (attrGetter('ngfCapture')) {
+      unwatches.push(scope.$watch(attrGetter('ngfCapture'), function () {
+        fileElem.attr('capture', attrGetter('ngfCapture', scope));
+      }));
+    }
+    if (attrGetter('ngfAccept')) {
+      unwatches.push(scope.$watch(attrGetter('ngfAccept'), function () {
+        fileElem.attr('accept', attrGetter('ngfAccept', scope));
+      }));
+    }
+    unwatches.push(attr.$observe('accept', function () {
+      fileElem.attr('accept', attrGetter('accept'));
+    }));
+    function bindAttrToFileInput(fileElem, label) {
+      function updateId(val) {
+        fileElem.attr('id', 'ngf-' + val);
+        label.attr('id', 'ngf-label-' + val);
+      }
+
+      for (var i = 0; i < elem[0].attributes.length; i++) {
+        var attribute = elem[0].attributes[i];
+        if (attribute.name !== 'type' && attribute.name !== 'class' && attribute.name !== 'style') {
+          if (attribute.name === 'id') {
+            updateId(attribute.value);
+            unwatches.push(attr.$observe('id', updateId));
+          } else {
+            fileElem.attr(attribute.name, (!attribute.value && (attribute.name === 'required' ||
+            attribute.name === 'multiple')) ? attribute.name : attribute.value);
+          }
+        }
+      }
+    }
+
+    function createFileInput() {
+      if (isInputTypeFile()) {
+        return elem;
+      }
+
+      var fileElem = angular.element('<input type="file">');
+
+      var label = angular.element('<label>upload</label>');
+      label.css('visibility', 'hidden').css('position', 'absolute').css('overflow', 'hidden')
+        .css('width', '0px').css('height', '0px').css('border', 'none')
+        .css('margin', '0px').css('padding', '0px').attr('tabindex', '-1');
+      bindAttrToFileInput(fileElem, label);
+
+      generatedElems.push({el: elem, ref: label});
+
+      document.body.appendChild(label.append(fileElem)[0]);
+
+      return fileElem;
+    }
+
+    function clickHandler(evt) {
+      if (elem.attr('disabled')) return false;
+      if (attrGetter('ngfSelectDisabled', scope)) return;
+
+      var r = detectSwipe(evt);
+      // prevent the click if it is a swipe
+      if (r != null) return r;
+
+      resetModel(evt);
+
+      // fix for md when the element is removed from the DOM and added back #460
+      try {
+        if (!isInputTypeFile() && !document.body.contains(fileElem[0])) {
+          generatedElems.push({el: elem, ref: fileElem.parent()});
+          document.body.appendChild(fileElem.parent()[0]);
+          fileElem.bind('change', changeFn);
+        }
+      } catch (e) {/*ignore*/
+      }
+
+      if (isDelayedClickSupported(navigator.userAgent)) {
+        setTimeout(function () {
+          fileElem[0].click();
+        }, 0);
+      } else {
+        fileElem[0].click();
+      }
+
+      return false;
+    }
+
+
+    var initialTouchStartY = 0;
+    var initialTouchStartX = 0;
+
+    function detectSwipe(evt) {
+      var touches = evt.changedTouches || (evt.originalEvent && evt.originalEvent.changedTouches);
+      if (touches) {
+        if (evt.type === 'touchstart') {
+          initialTouchStartX = touches[0].clientX;
+          initialTouchStartY = touches[0].clientY;
+          return true; // don't block event default
+        } else {
+          // prevent scroll from triggering event
+          if (evt.type === 'touchend') {
+            var currentX = touches[0].clientX;
+            var currentY = touches[0].clientY;
+            if ((Math.abs(currentX - initialTouchStartX) > 20) ||
+              (Math.abs(currentY - initialTouchStartY) > 20)) {
+              evt.stopPropagation();
+              evt.preventDefault();
+              return false;
+            }
+          }
+          return true;
+        }
+      }
+    }
+
+    var fileElem = elem;
+
+    function resetModel(evt) {
+      if (upload.shouldUpdateOn('click', attr, scope) && fileElem.val()) {
+        fileElem.val(null);
+        upload.updateModel(ngModel, attr, scope, fileChangeAttr(), null, evt, true);
+      }
+    }
+
+    if (!isInputTypeFile()) {
+      fileElem = createFileInput();
+    }
+    fileElem.bind('change', changeFn);
+
+    if (!isInputTypeFile()) {
+      elem.bind('click touchstart touchend', clickHandler);
+    } else {
+      elem.bind('click', resetModel);
+    }
+
+    function ie10SameFileSelectFix(evt) {
+      if (fileElem && !fileElem.attr('__ngf_ie10_Fix_')) {
+        if (!fileElem[0].parentNode) {
+          fileElem = null;
+          return;
+        }
+        evt.preventDefault();
+        evt.stopPropagation();
+        fileElem.unbind('click');
+        var clone = fileElem.clone();
+        fileElem.replaceWith(clone);
+        fileElem = clone;
+        fileElem.attr('__ngf_ie10_Fix_', 'true');
+        fileElem.bind('change', changeFn);
+        fileElem.bind('click', ie10SameFileSelectFix);
+        fileElem[0].click();
+        return false;
+      } else {
+        fileElem.removeAttr('__ngf_ie10_Fix_');
+      }
+    }
+
+    if (navigator.appVersion.indexOf('MSIE 10') !== -1) {
+      fileElem.bind('click', ie10SameFileSelectFix);
+    }
+
+    if (ngModel) ngModel.$formatters.push(function (val) {
+      if (val == null || val.length === 0) {
+        if (fileElem.val()) {
+          fileElem.val(null);
+        }
+      }
+      return val;
+    });
+
+    scope.$on('$destroy', function () {
+      if (!isInputTypeFile()) fileElem.parent().remove();
+      angular.forEach(unwatches, function (unwatch) {
+        unwatch();
+      });
+    });
+
+    $timeout(function () {
+      for (var i = 0; i < generatedElems.length; i++) {
+        var g = generatedElems[i];
+        if (!document.body.contains(g.el[0])) {
+          generatedElems.splice(i, 1);
+          g.ref.remove();
+        }
+      }
+    });
+
+    if (window.FileAPI && window.FileAPI.ngfFixIE) {
+      window.FileAPI.ngfFixIE(elem, fileElem, changeFn);
+    }
+  }
+
+  return {
+    restrict: 'AEC',
+    require: '?ngModel',
+    link: function (scope, elem, attr, ngModel) {
+      linkFileSelect(scope, elem, attr, ngModel, $parse, $timeout, $compile, Upload);
+    }
+  };
+}]);
+
+(function () {
+
+  ngFileUpload.service('UploadDataUrl', ['UploadBase', '$timeout', '$q', function (UploadBase, $timeout, $q) {
+    var upload = UploadBase;
+    upload.base64DataUrl = function (file) {
+      if (angular.isArray(file)) {
+        var d = $q.defer(), count = 0;
+        angular.forEach(file, function (f) {
+          upload.dataUrl(f, true)['finally'](function () {
+            count++;
+            if (count === file.length) {
+              var urls = [];
+              angular.forEach(file, function (ff) {
+                urls.push(ff.$ngfDataUrl);
+              });
+              d.resolve(urls, file);
+            }
+          });
+        });
+        return d.promise;
+      } else {
+        return upload.dataUrl(file, true);
+      }
+    };
+    upload.dataUrl = function (file, disallowObjectUrl) {
+      if (!file) return upload.emptyPromise(file, file);
+      if ((disallowObjectUrl && file.$ngfDataUrl != null) || (!disallowObjectUrl && file.$ngfBlobUrl != null)) {
+        return upload.emptyPromise(disallowObjectUrl ? file.$ngfDataUrl : file.$ngfBlobUrl, file);
+      }
+      var p = disallowObjectUrl ? file.$$ngfDataUrlPromise : file.$$ngfBlobUrlPromise;
+      if (p) return p;
+
+      var deferred = $q.defer();
+      $timeout(function () {
+        if (window.FileReader && file &&
+          (!window.FileAPI || navigator.userAgent.indexOf('MSIE 8') === -1 || file.size < 20000) &&
+          (!window.FileAPI || navigator.userAgent.indexOf('MSIE 9') === -1 || file.size < 4000000)) {
+          //prefer URL.createObjectURL for handling refrences to files of all sizes
+          //since it doesn´t build a large string in memory
+          var URL = window.URL || window.webkitURL;
+          if (URL && URL.createObjectURL && !disallowObjectUrl) {
+            var url;
+            try {
+              url = URL.createObjectURL(file);
+            } catch (e) {
+              $timeout(function () {
+                file.$ngfBlobUrl = '';
+                deferred.reject();
+              });
+              return;
+            }
+            $timeout(function () {
+              file.$ngfBlobUrl = url;
+              if (url) {
+                deferred.resolve(url, file);
+                upload.blobUrls = upload.blobUrls || [];
+                upload.blobUrlsTotalSize = upload.blobUrlsTotalSize || 0;
+                upload.blobUrls.push({url: url, size: file.size});
+                upload.blobUrlsTotalSize += file.size || 0;
+                var maxMemory = upload.defaults.blobUrlsMaxMemory || 268435456;
+                var maxLength = upload.defaults.blobUrlsMaxQueueSize || 200;
+                while ((upload.blobUrlsTotalSize > maxMemory || upload.blobUrls.length > maxLength) && upload.blobUrls.length > 1) {
+                  var obj = upload.blobUrls.splice(0, 1)[0];
+                  URL.revokeObjectURL(obj.url);
+                  upload.blobUrlsTotalSize -= obj.size;
+                }
+              }
+            });
+          } else {
+            var fileReader = new FileReader();
+            fileReader.onload = function (e) {
+              $timeout(function () {
+                file.$ngfDataUrl = e.target.result;
+                deferred.resolve(e.target.result, file);
+                $timeout(function () {
+                  delete file.$ngfDataUrl;
+                }, 1000);
+              });
+            };
+            fileReader.onerror = function () {
+              $timeout(function () {
+                file.$ngfDataUrl = '';
+                deferred.reject();
+              });
+            };
+            fileReader.readAsDataURL(file);
+          }
+        } else {
+          $timeout(function () {
+            file[disallowObjectUrl ? '$ngfDataUrl' : '$ngfBlobUrl'] = '';
+            deferred.reject();
+          });
+        }
+      });
+
+      if (disallowObjectUrl) {
+        p = file.$$ngfDataUrlPromise = deferred.promise;
+      } else {
+        p = file.$$ngfBlobUrlPromise = deferred.promise;
+      }
+      p['finally'](function () {
+        delete file[disallowObjectUrl ? '$$ngfDataUrlPromise' : '$$ngfBlobUrlPromise'];
+      });
+      return p;
+    };
+    return upload;
+  }]);
+
+  function getTagType(el) {
+    if (el.tagName.toLowerCase() === 'img') return 'image';
+    if (el.tagName.toLowerCase() === 'audio') return 'audio';
+    if (el.tagName.toLowerCase() === 'video') return 'video';
+    return /./;
+  }
+
+  function linkFileDirective(Upload, $timeout, scope, elem, attr, directiveName, resizeParams, isBackground) {
+    function constructDataUrl(file) {
+      var disallowObjectUrl = Upload.attrGetter('ngfNoObjectUrl', attr, scope);
+      Upload.dataUrl(file, disallowObjectUrl)['finally'](function () {
+        $timeout(function () {
+          var src = (disallowObjectUrl ? file.$ngfDataUrl : file.$ngfBlobUrl) || file.$ngfDataUrl;
+          if (isBackground) {
+            elem.css('background-image', 'url(\'' + (src || '') + '\')');
+          } else {
+            elem.attr('src', src);
+          }
+          if (src) {
+            elem.removeClass('ng-hide');
+          } else {
+            elem.addClass('ng-hide');
+          }
+        });
+      });
+    }
+
+    $timeout(function () {
+      var unwatch = scope.$watch(attr[directiveName], function (file) {
+        var size = resizeParams;
+        if (directiveName === 'ngfThumbnail') {
+          if (!size) {
+            size = {
+              width: elem[0].naturalWidth || elem[0].clientWidth,
+              height: elem[0].naturalHeight || elem[0].clientHeight
+            };
+          }
+          if (size.width === 0 && window.getComputedStyle) {
+            var style = getComputedStyle(elem[0]);
+            if (style.width && style.width.indexOf('px') > -1 && style.height && style.height.indexOf('px') > -1) {
+              size = {
+                width: parseInt(style.width.slice(0, -2)),
+                height: parseInt(style.height.slice(0, -2))
+              };
+            }
+          }
+        }
+
+        if (angular.isString(file)) {
+          elem.removeClass('ng-hide');
+          if (isBackground) {
+            return elem.css('background-image', 'url(\'' + file + '\')');
+          } else {
+            return elem.attr('src', file);
+          }
+        }
+        if (file && file.type && file.type.search(getTagType(elem[0])) === 0 &&
+          (!isBackground || file.type.indexOf('image') === 0)) {
+          if (size && Upload.isResizeSupported()) {
+            size.resizeIf = function (width, height) {
+              return Upload.attrGetter('ngfResizeIf', attr, scope,
+                {$width: width, $height: height, $file: file});
+            };
+            Upload.resize(file, size).then(
+              function (f) {
+                constructDataUrl(f);
+              }, function (e) {
+                throw e;
+              }
+            );
+          } else {
+            constructDataUrl(file);
+          }
+        } else {
+          elem.addClass('ng-hide');
+        }
+      });
+
+      scope.$on('$destroy', function () {
+        unwatch();
+      });
+    });
+  }
+
+
+  /** @namespace attr.ngfSrc */
+  /** @namespace attr.ngfNoObjectUrl */
+  ngFileUpload.directive('ngfSrc', ['Upload', '$timeout', function (Upload, $timeout) {
+    return {
+      restrict: 'AE',
+      link: function (scope, elem, attr) {
+        linkFileDirective(Upload, $timeout, scope, elem, attr, 'ngfSrc',
+          Upload.attrGetter('ngfResize', attr, scope), false);
+      }
+    };
+  }]);
+
+  /** @namespace attr.ngfBackground */
+  /** @namespace attr.ngfNoObjectUrl */
+  ngFileUpload.directive('ngfBackground', ['Upload', '$timeout', function (Upload, $timeout) {
+    return {
+      restrict: 'AE',
+      link: function (scope, elem, attr) {
+        linkFileDirective(Upload, $timeout, scope, elem, attr, 'ngfBackground',
+          Upload.attrGetter('ngfResize', attr, scope), true);
+      }
+    };
+  }]);
+
+  /** @namespace attr.ngfThumbnail */
+  /** @namespace attr.ngfAsBackground */
+  /** @namespace attr.ngfSize */
+  /** @namespace attr.ngfNoObjectUrl */
+  ngFileUpload.directive('ngfThumbnail', ['Upload', '$timeout', function (Upload, $timeout) {
+    return {
+      restrict: 'AE',
+      link: function (scope, elem, attr) {
+        var size = Upload.attrGetter('ngfSize', attr, scope);
+        linkFileDirective(Upload, $timeout, scope, elem, attr, 'ngfThumbnail', size,
+          Upload.attrGetter('ngfAsBackground', attr, scope));
+      }
+    };
+  }]);
+
+  ngFileUpload.config(['$compileProvider', function ($compileProvider) {
+    if ($compileProvider.imgSrcSanitizationWhitelist) $compileProvider.imgSrcSanitizationWhitelist(/^\s*(https?|ftp|mailto|tel|webcal|local|file|data|blob):/);
+    if ($compileProvider.aHrefSanitizationWhitelist) $compileProvider.aHrefSanitizationWhitelist(/^\s*(https?|ftp|mailto|tel|webcal|local|file|data|blob):/);
+  }]);
+
+  ngFileUpload.filter('ngfDataUrl', ['UploadDataUrl', '$sce', function (UploadDataUrl, $sce) {
+    return function (file, disallowObjectUrl, trustedUrl) {
+      if (angular.isString(file)) {
+        return $sce.trustAsResourceUrl(file);
+      }
+      var src = file && ((disallowObjectUrl ? file.$ngfDataUrl : file.$ngfBlobUrl) || file.$ngfDataUrl);
+      if (file && !src) {
+        if (!file.$ngfDataUrlFilterInProgress && angular.isObject(file)) {
+          file.$ngfDataUrlFilterInProgress = true;
+          UploadDataUrl.dataUrl(file, disallowObjectUrl);
+        }
+        return '';
+      }
+      if (file) delete file.$ngfDataUrlFilterInProgress;
+      return (file && src ? (trustedUrl ? $sce.trustAsResourceUrl(src) : src) : file) || '';
+    };
+  }]);
+
+})();
+
+ngFileUpload.service('UploadValidate', ['UploadDataUrl', '$q', '$timeout', function (UploadDataUrl, $q, $timeout) {
+  var upload = UploadDataUrl;
+
+  function globStringToRegex(str) {
+    var regexp = '', excludes = [];
+    if (str.length > 2 && str[0] === '/' && str[str.length - 1] === '/') {
+      regexp = str.substring(1, str.length - 1);
+    } else {
+      var split = str.split(',');
+      if (split.length > 1) {
+        for (var i = 0; i < split.length; i++) {
+          var r = globStringToRegex(split[i]);
+          if (r.regexp) {
+            regexp += '(' + r.regexp + ')';
+            if (i < split.length - 1) {
+              regexp += '|';
+            }
+          } else {
+            excludes = excludes.concat(r.excludes);
+          }
+        }
+      } else {
+        if (str.indexOf('!') === 0) {
+          excludes.push('^((?!' + globStringToRegex(str.substring(1)).regexp + ').)*$');
+        } else {
+          if (str.indexOf('.') === 0) {
+            str = '*' + str;
+          }
+          regexp = '^' + str.replace(new RegExp('[.\\\\+*?\\[\\^\\]$(){}=!<>|:\\-]', 'g'), '\\$&') + '$';
+          regexp = regexp.replace(/\\\*/g, '.*').replace(/\\\?/g, '.');
+        }
+      }
+    }
+    return {regexp: regexp, excludes: excludes};
+  }
+
+  upload.validatePattern = function (file, val) {
+    if (!val) {
+      return true;
+    }
+    var pattern = globStringToRegex(val), valid = true;
+    if (pattern.regexp && pattern.regexp.length) {
+      var regexp = new RegExp(pattern.regexp, 'i');
+      valid = (file.type != null && regexp.test(file.type)) ||
+        (file.name != null && regexp.test(file.name));
+    }
+    var len = pattern.excludes.length;
+    while (len--) {
+      var exclude = new RegExp(pattern.excludes[len], 'i');
+      valid = valid && (file.type == null || exclude.test(file.type)) &&
+        (file.name == null || exclude.test(file.name));
+    }
+    return valid;
+  };
+
+  upload.ratioToFloat = function (val) {
+    var r = val.toString(), xIndex = r.search(/[x:]/i);
+    if (xIndex > -1) {
+      r = parseFloat(r.substring(0, xIndex)) / parseFloat(r.substring(xIndex + 1));
+    } else {
+      r = parseFloat(r);
+    }
+    return r;
+  };
+
+  upload.registerModelChangeValidator = function (ngModel, attr, scope) {
+    if (ngModel) {
+      ngModel.$formatters.push(function (files) {
+        if (ngModel.$dirty) {
+          var filesArray = files;
+          if (files && !angular.isArray(files)) {
+            filesArray = [files];
+          }
+          upload.validate(filesArray, 0, ngModel, attr, scope).then(function () {
+            upload.applyModelValidation(ngModel, filesArray);
+          });
+        }
+        return files;
+      });
+    }
+  };
+
+  function markModelAsDirty(ngModel, files) {
+    if (files != null && !ngModel.$dirty) {
+      if (ngModel.$setDirty) {
+        ngModel.$setDirty();
+      } else {
+        ngModel.$dirty = true;
+      }
+    }
+  }
+
+  upload.applyModelValidation = function (ngModel, files) {
+    markModelAsDirty(ngModel, files);
+    angular.forEach(ngModel.$ngfValidations, function (validation) {
+      ngModel.$setValidity(validation.name, validation.valid);
+    });
+  };
+
+  upload.getValidationAttr = function (attr, scope, name, validationName, file) {
+    var dName = 'ngf' + name[0].toUpperCase() + name.substr(1);
+    var val = upload.attrGetter(dName, attr, scope, {$file: file});
+    if (val == null) {
+      val = upload.attrGetter('ngfValidate', attr, scope, {$file: file});
+      if (val) {
+        var split = (validationName || name).split('.');
+        val = val[split[0]];
+        if (split.length > 1) {
+          val = val && val[split[1]];
+        }
+      }
+    }
+    return val;
+  };
+
+  upload.validate = function (files, prevLength, ngModel, attr, scope) {
+    ngModel = ngModel || {};
+    ngModel.$ngfValidations = ngModel.$ngfValidations || [];
+
+    angular.forEach(ngModel.$ngfValidations, function (v) {
+      v.valid = true;
+    });
+
+    var attrGetter = function (name, params) {
+      return upload.attrGetter(name, attr, scope, params);
+    };
+
+    var ignoredErrors = (upload.attrGetter('ngfIgnoreInvalid', attr, scope) || '').split(' ');
+    var runAllValidation = upload.attrGetter('ngfRunAllValidations', attr, scope);
+
+    if (files == null || files.length === 0) {
+      return upload.emptyPromise({'validFiles': files, 'invalidFiles': []});
+    }
+
+    files = files.length === undefined ? [files] : files.slice(0);
+    var invalidFiles = [];
+
+    function validateSync(name, validationName, fn) {
+      if (files) {
+        var i = files.length, valid = null;
+        while (i--) {
+          var file = files[i];
+          if (file) {
+            var val = upload.getValidationAttr(attr, scope, name, validationName, file);
+            if (val != null) {
+              if (!fn(file, val, i)) {
+                if (ignoredErrors.indexOf(name) === -1) {
+                  file.$error = name;
+                  (file.$errorMessages = (file.$errorMessages || {}))[name] = true;
+                  file.$errorParam = val;
+                  if (invalidFiles.indexOf(file) === -1) {
+                    invalidFiles.push(file);
+                  }
+                  if (!runAllValidation) {
+                    files.splice(i, 1);
+                  }
+                  valid = false;
+                } else {
+                  files.splice(i, 1);
+                }
+              }
+            }
+          }
+        }
+        if (valid !== null) {
+          ngModel.$ngfValidations.push({name: name, valid: valid});
+        }
+      }
+    }
+
+    validateSync('pattern', null, upload.validatePattern);
+    validateSync('minSize', 'size.min', function (file, val) {
+      return file.size + 0.1 >= upload.translateScalars(val);
+    });
+    validateSync('maxSize', 'size.max', function (file, val) {
+      return file.size - 0.1 <= upload.translateScalars(val);
+    });
+    var totalSize = 0;
+    validateSync('maxTotalSize', null, function (file, val) {
+      totalSize += file.size;
+      if (totalSize > upload.translateScalars(val)) {
+        files.splice(0, files.length);
+        return false;
+      }
+      return true;
+    });
+
+    validateSync('validateFn', null, function (file, r) {
+      return r === true || r === null || r === '';
+    });
+
+    if (!files.length) {
+      return upload.emptyPromise({'validFiles': [], 'invalidFiles': invalidFiles});
+    }
+
+    function validateAsync(name, validationName, type, asyncFn, fn) {
+      function resolveResult(defer, file, val) {
+        function resolveInternal(fn) {
+          if (fn()) {
+            if (ignoredErrors.indexOf(name) === -1) {
+              file.$error = name;
+              (file.$errorMessages = (file.$errorMessages || {}))[name] = true;
+              file.$errorParam = val;
+              if (invalidFiles.indexOf(file) === -1) {
+                invalidFiles.push(file);
+              }
+              if (!runAllValidation) {
+                var i = files.indexOf(file);
+                if (i > -1) files.splice(i, 1);
+              }
+              defer.resolve(false);
+            } else {
+              var j = files.indexOf(file);
+              if (j > -1) files.splice(j, 1);
+              defer.resolve(true);
+            }
+          } else {
+            defer.resolve(true);
+          }
+        }
+
+        if (val != null) {
+          asyncFn(file, val).then(function (d) {
+            resolveInternal(function () {
+              return !fn(d, val);
+            });
+          }, function () {
+            resolveInternal(function () {
+              return attrGetter('ngfValidateForce', {$file: file});
+            });
+          });
+        } else {
+          defer.resolve(true);
+        }
+      }
+
+      var promises = [upload.emptyPromise(true)];
+      if (files) {
+        files = files.length === undefined ? [files] : files;
+        angular.forEach(files, function (file) {
+          var defer = $q.defer();
+          promises.push(defer.promise);
+          if (type && (file.type == null || file.type.search(type) !== 0)) {
+            defer.resolve(true);
+            return;
+          }
+          if (name === 'dimensions' && upload.attrGetter('ngfDimensions', attr) != null) {
+            upload.imageDimensions(file).then(function (d) {
+              resolveResult(defer, file,
+                attrGetter('ngfDimensions', {$file: file, $width: d.width, $height: d.height}));
+            }, function () {
+              defer.resolve(false);
+            });
+          } else if (name === 'duration' && upload.attrGetter('ngfDuration', attr) != null) {
+            upload.mediaDuration(file).then(function (d) {
+              resolveResult(defer, file,
+                attrGetter('ngfDuration', {$file: file, $duration: d}));
+            }, function () {
+              defer.resolve(false);
+            });
+          } else {
+            resolveResult(defer, file,
+              upload.getValidationAttr(attr, scope, name, validationName, file));
+          }
+        });
+      }
+      var deffer = $q.defer();
+      $q.all(promises).then(function (values) {
+        var isValid = true;
+        for (var i = 0; i < values.length; i++) {
+          if (!values[i]) {
+            isValid = false;
+            break;
+          }
+        }
+        ngModel.$ngfValidations.push({name: name, valid: isValid});
+        deffer.resolve(isValid);
+      });
+      return deffer.promise;
+    }
+
+    var deffer = $q.defer();
+    var promises = [];
+
+    promises.push(validateAsync('maxHeight', 'height.max', /image/,
+      this.imageDimensions, function (d, val) {
+        return d.height <= val;
+      }));
+    promises.push(validateAsync('minHeight', 'height.min', /image/,
+      this.imageDimensions, function (d, val) {
+        return d.height >= val;
+      }));
+    promises.push(validateAsync('maxWidth', 'width.max', /image/,
+      this.imageDimensions, function (d, val) {
+        return d.width <= val;
+      }));
+    promises.push(validateAsync('minWidth', 'width.min', /image/,
+      this.imageDimensions, function (d, val) {
+        return d.width >= val;
+      }));
+    promises.push(validateAsync('dimensions', null, /image/,
+      function (file, val) {
+        return upload.emptyPromise(val);
+      }, function (r) {
+        return r;
+      }));
+    promises.push(validateAsync('ratio', null, /image/,
+      this.imageDimensions, function (d, val) {
+        var split = val.toString().split(','), valid = false;
+        for (var i = 0; i < split.length; i++) {
+          if (Math.abs((d.width / d.height) - upload.ratioToFloat(split[i])) < 0.01) {
+            valid = true;
+          }
+        }
+        return valid;
+      }));
+    promises.push(validateAsync('maxRatio', 'ratio.max', /image/,
+      this.imageDimensions, function (d, val) {
+        return (d.width / d.height) - upload.ratioToFloat(val) < 0.0001;
+      }));
+    promises.push(validateAsync('minRatio', 'ratio.min', /image/,
+      this.imageDimensions, function (d, val) {
+        return (d.width / d.height) - upload.ratioToFloat(val) > -0.0001;
+      }));
+    promises.push(validateAsync('maxDuration', 'duration.max', /audio|video/,
+      this.mediaDuration, function (d, val) {
+        return d <= upload.translateScalars(val);
+      }));
+    promises.push(validateAsync('minDuration', 'duration.min', /audio|video/,
+      this.mediaDuration, function (d, val) {
+        return d >= upload.translateScalars(val);
+      }));
+    promises.push(validateAsync('duration', null, /audio|video/,
+      function (file, val) {
+        return upload.emptyPromise(val);
+      }, function (r) {
+        return r;
+      }));
+
+    promises.push(validateAsync('validateAsyncFn', null, null,
+      function (file, val) {
+        return val;
+      }, function (r) {
+        return r === true || r === null || r === '';
+      }));
+
+    $q.all(promises).then(function () {
+
+      if (runAllValidation) {
+        for (var i = 0; i < files.length; i++) {
+          var file = files[i];
+          if (file.$error) {
+            files.splice(i--, 1);
+          }
+        }
+      }
+
+      runAllValidation = false;
+      validateSync('maxFiles', null, function (file, val, i) {
+        return prevLength + i < val;
+      });
+
+      deffer.resolve({'validFiles': files, 'invalidFiles': invalidFiles});
+    });
+    return deffer.promise;
+  };
+
+  upload.imageDimensions = function (file) {
+    if (file.$ngfWidth && file.$ngfHeight) {
+      var d = $q.defer();
+      $timeout(function () {
+        d.resolve({width: file.$ngfWidth, height: file.$ngfHeight});
+      });
+      return d.promise;
+    }
+    if (file.$ngfDimensionPromise) return file.$ngfDimensionPromise;
+
+    var deferred = $q.defer();
+    $timeout(function () {
+      if (file.type.indexOf('image') !== 0) {
+        deferred.reject('not image');
+        return;
+      }
+      upload.dataUrl(file).then(function (dataUrl) {
+        var img = angular.element('<img>').attr('src', dataUrl)
+          .css('visibility', 'hidden').css('position', 'fixed')
+          .css('max-width', 'none !important').css('max-height', 'none !important');
+
+        function success() {
+          var width = img[0].naturalWidth || img[0].clientWidth;
+          var height = img[0].naturalHeight || img[0].clientHeight;
+          img.remove();
+          file.$ngfWidth = width;
+          file.$ngfHeight = height;
+          deferred.resolve({width: width, height: height});
+        }
+
+        function error() {
+          img.remove();
+          deferred.reject('load error');
+        }
+
+        img.on('load', success);
+        img.on('error', error);
+
+        var secondsCounter = 0;
+        function checkLoadErrorInCaseOfNoCallback() {
+          $timeout(function () {
+            if (img[0].parentNode) {
+              if (img[0].clientWidth) {
+                success();
+              } else if (secondsCounter++ > 10) {
+                error();
+              } else {
+                checkLoadErrorInCaseOfNoCallback();
+              }
+            }
+          }, 1000);
+        }
+
+        checkLoadErrorInCaseOfNoCallback();
+
+        angular.element(document.getElementsByTagName('body')[0]).append(img);
+      }, function () {
+        deferred.reject('load error');
+      });
+    });
+
+    file.$ngfDimensionPromise = deferred.promise;
+    file.$ngfDimensionPromise['finally'](function () {
+      delete file.$ngfDimensionPromise;
+    });
+    return file.$ngfDimensionPromise;
+  };
+
+  upload.mediaDuration = function (file) {
+    if (file.$ngfDuration) {
+      var d = $q.defer();
+      $timeout(function () {
+        d.resolve(file.$ngfDuration);
+      });
+      return d.promise;
+    }
+    if (file.$ngfDurationPromise) return file.$ngfDurationPromise;
+
+    var deferred = $q.defer();
+    $timeout(function () {
+      if (file.type.indexOf('audio') !== 0 && file.type.indexOf('video') !== 0) {
+        deferred.reject('not media');
+        return;
+      }
+      upload.dataUrl(file).then(function (dataUrl) {
+        var el = angular.element(file.type.indexOf('audio') === 0 ? '<audio>' : '<video>')
+          .attr('src', dataUrl).css('visibility', 'none').css('position', 'fixed');
+
+        function success() {
+          var duration = el[0].duration;
+          file.$ngfDuration = duration;
+          el.remove();
+          deferred.resolve(duration);
+        }
+
+        function error() {
+          el.remove();
+          deferred.reject('load error');
+        }
+
+        el.on('loadedmetadata', success);
+        el.on('error', error);
+        var count = 0;
+
+        function checkLoadError() {
+          $timeout(function () {
+            if (el[0].parentNode) {
+              if (el[0].duration) {
+                success();
+              } else if (count > 10) {
+                error();
+              } else {
+                checkLoadError();
+              }
+            }
+          }, 1000);
+        }
+
+        checkLoadError();
+
+        angular.element(document.body).append(el);
+      }, function () {
+        deferred.reject('load error');
+      });
+    });
+
+    file.$ngfDurationPromise = deferred.promise;
+    file.$ngfDurationPromise['finally'](function () {
+      delete file.$ngfDurationPromise;
+    });
+    return file.$ngfDurationPromise;
+  };
+  return upload;
+}
+]);
+
+ngFileUpload.service('UploadResize', ['UploadValidate', '$q', function (UploadValidate, $q) {
+  var upload = UploadValidate;
+
+  /**
+   * Conserve aspect ratio of the original region. Useful when shrinking/enlarging
+   * images to fit into a certain area.
+   * Source:  http://stackoverflow.com/a/14731922
+   *
+   * @param {Number} srcWidth Source area width
+   * @param {Number} srcHeight Source area height
+   * @param {Number} maxWidth Nestable area maximum available width
+   * @param {Number} maxHeight Nestable area maximum available height
+   * @return {Object} { width, height }
+   */
+  var calculateAspectRatioFit = function (srcWidth, srcHeight, maxWidth, maxHeight, centerCrop) {
+    var ratio = centerCrop ? Math.max(maxWidth / srcWidth, maxHeight / srcHeight) :
+      Math.min(maxWidth / srcWidth, maxHeight / srcHeight);
+    return {
+      width: srcWidth * ratio, height: srcHeight * ratio,
+      marginX: srcWidth * ratio - maxWidth, marginY: srcHeight * ratio - maxHeight
+    };
+  };
+
+  // Extracted from https://github.com/romelgomez/angular-firebase-image-upload/blob/master/app/scripts/fileUpload.js#L89
+  var resize = function (imagen, width, height, quality, type, ratio, centerCrop, resizeIf) {
+    var deferred = $q.defer();
+    var canvasElement = document.createElement('canvas');
+    var imageElement = document.createElement('img');
+    imageElement.setAttribute('style', 'visibility:hidden;position:fixed;z-index:-100000');
+    document.body.appendChild(imageElement);
+
+    imageElement.onload = function () {
+      var imgWidth = imageElement.width, imgHeight = imageElement.height;
+      imageElement.parentNode.removeChild(imageElement);
+      if (resizeIf != null && resizeIf(imgWidth, imgHeight) === false) {
+        deferred.reject('resizeIf');
+        return;
+      }
+      try {
+        if (ratio) {
+          var ratioFloat = upload.ratioToFloat(ratio);
+          var imgRatio = imgWidth / imgHeight;
+          if (imgRatio < ratioFloat) {
+            width = imgWidth;
+            height = width / ratioFloat;
+          } else {
+            height = imgHeight;
+            width = height * ratioFloat;
+          }
+        }
+        if (!width) {
+          width = imgWidth;
+        }
+        if (!height) {
+          height = imgHeight;
+        }
+        var dimensions = calculateAspectRatioFit(imgWidth, imgHeight, width, height, centerCrop);
+        canvasElement.width = Math.min(dimensions.width, width);
+        canvasElement.height = Math.min(dimensions.height, height);
+        var context = canvasElement.getContext('2d');
+        context.drawImage(imageElement,
+          Math.min(0, -dimensions.marginX / 2), Math.min(0, -dimensions.marginY / 2),
+          dimensions.width, dimensions.height);
+        deferred.resolve(canvasElement.toDataURL(type || 'image/WebP', quality || 0.934));
+      } catch (e) {
+        deferred.reject(e);
+      }
+    };
+    imageElement.onerror = function () {
+      imageElement.parentNode.removeChild(imageElement);
+      deferred.reject();
+    };
+    imageElement.src = imagen;
+    return deferred.promise;
+  };
+
+  upload.dataUrltoBlob = function (dataurl, name, origSize) {
+    var arr = dataurl.split(','), mime = arr[0].match(/:(.*?);/)[1],
+      bstr = atob(arr[1]), n = bstr.length, u8arr = new Uint8Array(n);
+    while (n--) {
+      u8arr[n] = bstr.charCodeAt(n);
+    }
+    var blob = new window.Blob([u8arr], {type: mime});
+    blob.name = name;
+    blob.$ngfOrigSize = origSize;
+    return blob;
+  };
+
+  upload.isResizeSupported = function () {
+    var elem = document.createElement('canvas');
+    return window.atob && elem.getContext && elem.getContext('2d') && window.Blob;
+  };
+
+  if (upload.isResizeSupported()) {
+    // add name getter to the blob constructor prototype
+    Object.defineProperty(window.Blob.prototype, 'name', {
+      get: function () {
+        return this.$ngfName;
+      },
+      set: function (v) {
+        this.$ngfName = v;
+      },
+      configurable: true
+    });
+  }
+
+  upload.resize = function (file, options) {
+    if (file.type.indexOf('image') !== 0) return upload.emptyPromise(file);
+
+    var deferred = $q.defer();
+    upload.dataUrl(file, true).then(function (url) {
+      resize(url, options.width, options.height, options.quality, options.type || file.type,
+        options.ratio, options.centerCrop, options.resizeIf)
+        .then(function (dataUrl) {
+          if (file.type === 'image/jpeg' && options.restoreExif !== false) {
+            try {
+              dataUrl = upload.restoreExif(url, dataUrl);
+            } catch (e) {
+              setTimeout(function () {throw e;}, 1);
+            }
+          }
+          try {
+            var blob = upload.dataUrltoBlob(dataUrl, file.name, file.size);
+            deferred.resolve(blob);
+          } catch (e) {
+            deferred.reject(e);
+          }
+        }, function (r) {
+          if (r === 'resizeIf') {
+            deferred.resolve(file);
+          }
+          deferred.reject(r);
+        });
+    }, function (e) {
+      deferred.reject(e);
+    });
+    return deferred.promise;
+  };
+
+  return upload;
+}]);
+
+(function () {
+  ngFileUpload.directive('ngfDrop', ['$parse', '$timeout', '$window', 'Upload', '$http', '$q',
+    function ($parse, $timeout, $window, Upload, $http, $q) {
+      return {
+        restrict: 'AEC',
+        require: '?ngModel',
+        link: function (scope, elem, attr, ngModel) {
+          linkDrop(scope, elem, attr, ngModel, $parse, $timeout, $window, Upload, $http, $q);
+        }
+      };
+    }]);
+
+  ngFileUpload.directive('ngfNoFileDrop', function () {
+    return function (scope, elem) {
+      if (dropAvailable()) elem.css('display', 'none');
+    };
+  });
+
+  ngFileUpload.directive('ngfDropAvailable', ['$parse', '$timeout', 'Upload', function ($parse, $timeout, Upload) {
+    return function (scope, elem, attr) {
+      if (dropAvailable()) {
+        var model = $parse(Upload.attrGetter('ngfDropAvailable', attr));
+        $timeout(function () {
+          model(scope);
+          if (model.assign) {
+            model.assign(scope, true);
+          }
+        });
+      }
+    };
+  }]);
+
+  function linkDrop(scope, elem, attr, ngModel, $parse, $timeout, $window, upload, $http, $q) {
+    var available = dropAvailable();
+
+    var attrGetter = function (name, scope, params) {
+      return upload.attrGetter(name, attr, scope, params);
+    };
+
+    if (attrGetter('dropAvailable')) {
+      $timeout(function () {
+        if (scope[attrGetter('dropAvailable')]) {
+          scope[attrGetter('dropAvailable')].value = available;
+        } else {
+          scope[attrGetter('dropAvailable')] = available;
+        }
+      });
+    }
+    if (!available) {
+      if (attrGetter('ngfHideOnDropNotAvailable', scope) === true) {
+        elem.css('display', 'none');
+      }
+      return;
+    }
+
+    function isDisabled() {
+      return elem.attr('disabled') || attrGetter('ngfDropDisabled', scope);
+    }
+
+    if (attrGetter('ngfSelect') == null) {
+      upload.registerModelChangeValidator(ngModel, attr, scope);
+    }
+
+    var leaveTimeout = null;
+    var stopPropagation = $parse(attrGetter('ngfStopPropagation'));
+    var dragOverDelay = 1;
+    var actualDragOverClass;
+
+    elem[0].addEventListener('dragover', function (evt) {
+      if (isDisabled() || !upload.shouldUpdateOn('drop', attr, scope)) return;
+      evt.preventDefault();
+      if (stopPropagation(scope)) evt.stopPropagation();
+      // handling dragover events from the Chrome download bar
+      if (navigator.userAgent.indexOf('Chrome') > -1) {
+        var b = evt.dataTransfer.effectAllowed;
+        evt.dataTransfer.dropEffect = ('move' === b || 'linkMove' === b) ? 'move' : 'copy';
+      }
+      $timeout.cancel(leaveTimeout);
+      if (!actualDragOverClass) {
+        actualDragOverClass = 'C';
+        calculateDragOverClass(scope, attr, evt, function (clazz) {
+          actualDragOverClass = clazz;
+          elem.addClass(actualDragOverClass);
+          attrGetter('ngfDrag', scope, {$isDragging: true, $class: actualDragOverClass, $event: evt});
+        });
+      }
+    }, false);
+    elem[0].addEventListener('dragenter', function (evt) {
+      if (isDisabled() || !upload.shouldUpdateOn('drop', attr, scope)) return;
+      evt.preventDefault();
+      if (stopPropagation(scope)) evt.stopPropagation();
+    }, false);
+    elem[0].addEventListener('dragleave', function (evt) {
+      if (isDisabled() || !upload.shouldUpdateOn('drop', attr, scope)) return;
+      evt.preventDefault();
+      if (stopPropagation(scope)) evt.stopPropagation();
+      leaveTimeout = $timeout(function () {
+        if (actualDragOverClass) elem.removeClass(actualDragOverClass);
+        actualDragOverClass = null;
+        attrGetter('ngfDrag', scope, {$isDragging: false, $event: evt});
+      }, dragOverDelay || 100);
+    }, false);
+    elem[0].addEventListener('drop', function (evt) {
+      if (isDisabled() || !upload.shouldUpdateOn('drop', attr, scope)) return;
+      evt.preventDefault();
+      if (stopPropagation(scope)) evt.stopPropagation();
+      if (actualDragOverClass) elem.removeClass(actualDragOverClass);
+      actualDragOverClass = null;
+      extractFilesAndUpdateModel(evt.dataTransfer, evt, 'dropUrl');
+    }, false);
+    elem[0].addEventListener('paste', function (evt) {
+      if (navigator.userAgent.toLowerCase().indexOf('firefox') > -1 &&
+        attrGetter('ngfEnableFirefoxPaste', scope)) {
+        evt.preventDefault();
+      }
+      if (isDisabled() || !upload.shouldUpdateOn('paste', attr, scope)) return;
+      extractFilesAndUpdateModel(evt.clipboardData || evt.originalEvent.clipboardData, evt, 'pasteUrl');
+    }, false);
+
+    if (navigator.userAgent.toLowerCase().indexOf('firefox') > -1 &&
+      attrGetter('ngfEnableFirefoxPaste', scope)) {
+      elem.attr('contenteditable', true);
+      elem.on('keypress', function (e) {
+        if (!e.metaKey && !e.ctrlKey) {
+          e.preventDefault();
+        }
+      });
+    }
+
+    function extractFilesAndUpdateModel(source, evt, updateOnType) {
+      if (!source) return;
+      // html needs to be calculated on the same process otherwise the data will be wiped
+      // after promise resolve or setTimeout.
+      var html;
+      try {
+        html = source && source.getData && source.getData('text/html');
+      } catch (e) {/* Fix IE11 that throw error calling getData */
+      }
+      extractFiles(source.items, source.files, attrGetter('ngfAllowDir', scope) !== false,
+        attrGetter('multiple') || attrGetter('ngfMultiple', scope)).then(function (files) {
+        if (files.length) {
+          updateModel(files, evt);
+        } else {
+          extractFilesFromHtml(updateOnType, html).then(function (files) {
+            updateModel(files, evt);
+          });
+        }
+      });
+    }
+
+    function updateModel(files, evt) {
+      upload.updateModel(ngModel, attr, scope, attrGetter('ngfChange') || attrGetter('ngfDrop'), files, evt);
+    }
+
+    function extractFilesFromHtml(updateOn, html) {
+      if (!upload.shouldUpdateOn(updateOn, attr, scope) || typeof html !== 'string') return upload.rejectPromise([]);
+      var urls = [];
+      html.replace(/<(img src|img [^>]* src) *=\"([^\"]*)\"/gi, function (m, n, src) {
+        urls.push(src);
+      });
+      var promises = [], files = [];
+      if (urls.length) {
+        angular.forEach(urls, function (url) {
+          promises.push(upload.urlToBlob(url).then(function (blob) {
+            files.push(blob);
+          }));
+        });
+        var defer = $q.defer();
+        $q.all(promises).then(function () {
+          defer.resolve(files);
+        }, function (e) {
+          defer.reject(e);
+        });
+        return defer.promise;
+      }
+      return upload.emptyPromise();
+    }
+
+    function calculateDragOverClass(scope, attr, evt, callback) {
+      var obj = attrGetter('ngfDragOverClass', scope, {$event: evt}), dClass = 'dragover';
+      if (angular.isString(obj)) {
+        dClass = obj;
+      } else if (obj) {
+        if (obj.delay) dragOverDelay = obj.delay;
+        if (obj.accept || obj.reject) {
+          var items = evt.dataTransfer.items;
+          if (items == null || !items.length) {
+            dClass = obj.accept;
+          } else {
+            var pattern = obj.pattern || attrGetter('ngfPattern', scope, {$event: evt});
+            var len = items.length;
+            while (len--) {
+              if (!upload.validatePattern(items[len], pattern)) {
+                dClass = obj.reject;
+                break;
+              } else {
+                dClass = obj.accept;
+              }
+            }
+          }
+        }
+      }
+      callback(dClass);
+    }
+
+    function extractFiles(items, fileList, allowDir, multiple) {
+      var maxFiles = upload.getValidationAttr(attr, scope, 'maxFiles');
+      if (maxFiles == null) {
+        maxFiles = Number.MAX_VALUE;
+      }
+      var maxTotalSize = upload.getValidationAttr(attr, scope, 'maxTotalSize');
+      if (maxTotalSize == null) {
+        maxTotalSize = Number.MAX_VALUE;
+      }
+      var includeDir = attrGetter('ngfIncludeDir', scope);
+      var files = [], totalSize = 0;
+
+      function traverseFileTree(entry, path) {
+        var defer = $q.defer();
+        if (entry != null) {
+          if (entry.isDirectory) {
+            var promises = [upload.emptyPromise()];
+            if (includeDir) {
+              var file = {type: 'directory'};
+              file.name = file.path = (path || '') + entry.name;
+              files.push(file);
+            }
+            var dirReader = entry.createReader();
+            var entries = [];
+            var readEntries = function () {
+              dirReader.readEntries(function (results) {
+                try {
+                  if (!results.length) {
+                    angular.forEach(entries.slice(0), function (e) {
+                      if (files.length <= maxFiles && totalSize <= maxTotalSize) {
+                        promises.push(traverseFileTree(e, (path ? path : '') + entry.name + '/'));
+                      }
+                    });
+                    $q.all(promises).then(function () {
+                      defer.resolve();
+                    }, function (e) {
+                      defer.reject(e);
+                    });
+                  } else {
+                    entries = entries.concat(Array.prototype.slice.call(results || [], 0));
+                    readEntries();
+                  }
+                } catch (e) {
+                  defer.reject(e);
+                }
+              }, function (e) {
+                defer.reject(e);
+              });
+            };
+            readEntries();
+          } else {
+            entry.file(function (file) {
+              try {
+                file.path = (path ? path : '') + file.name;
+                if (includeDir) {
+                  file = upload.rename(file, file.path);
+                }
+                files.push(file);
+                totalSize += file.size;
+                defer.resolve();
+              } catch (e) {
+                defer.reject(e);
+              }
+            }, function (e) {
+              defer.reject(e);
+            });
+          }
+        }
+        return defer.promise;
+      }
+
+      var promises = [upload.emptyPromise()];
+
+      if (items && items.length > 0 && $window.location.protocol !== 'file:') {
+        for (var i = 0; i < items.length; i++) {
+          if (items[i].webkitGetAsEntry && items[i].webkitGetAsEntry() && items[i].webkitGetAsEntry().isDirectory) {
+            var entry = items[i].webkitGetAsEntry();
+            if (entry.isDirectory && !allowDir) {
+              continue;
+            }
+            if (entry != null) {
+              promises.push(traverseFileTree(entry));
+            }
+          } else {
+            var f = items[i].getAsFile();
+            if (f != null) {
+              files.push(f);
+              totalSize += f.size;
+            }
+          }
+          if (files.length > maxFiles || totalSize > maxTotalSize ||
+            (!multiple && files.length > 0)) break;
+        }
+      } else {
+        if (fileList != null) {
+          for (var j = 0; j < fileList.length; j++) {
+            var file = fileList.item(j);
+            if (file.type || file.size > 0) {
+              files.push(file);
+              totalSize += file.size;
+            }
+            if (files.length > maxFiles || totalSize > maxTotalSize ||
+              (!multiple && files.length > 0)) break;
+          }
+        }
+      }
+
+      var defer = $q.defer();
+      $q.all(promises).then(function () {
+        if (!multiple && !includeDir && files.length) {
+          var i = 0;
+          while (files[i] && files[i].type === 'directory') i++;
+          defer.resolve([files[i]]);
+        } else {
+          defer.resolve(files);
+        }
+      }, function (e) {
+        defer.reject(e);
+      });
+
+      return defer.promise;
+    }
+  }
+
+  function dropAvailable() {
+    var div = document.createElement('div');
+    return ('draggable' in div) && ('ondrop' in div) && !/Edge\/12./i.test(navigator.userAgent);
+  }
+
+})();
+
+// customized version of https://github.com/exif-js/exif-js
+ngFileUpload.service('UploadExif', ['UploadResize', '$q', function (UploadResize, $q) {
+  var upload = UploadResize;
+
+  upload.isExifSupported = function () {
+    return window.FileReader && new FileReader().readAsArrayBuffer && upload.isResizeSupported();
+  };
+
+  function applyTransform(ctx, orientation, width, height) {
+    switch (orientation) {
+      case 2:
+        return ctx.transform(-1, 0, 0, 1, width, 0);
+      case 3:
+        return ctx.transform(-1, 0, 0, -1, width, height);
+      case 4:
+        return ctx.transform(1, 0, 0, -1, 0, height);
+      case 5:
+        return ctx.transform(0, 1, 1, 0, 0, 0);
+      case 6:
+        return ctx.transform(0, 1, -1, 0, height, 0);
+      case 7:
+        return ctx.transform(0, -1, -1, 0, height, width);
+      case 8:
+        return ctx.transform(0, -1, 1, 0, 0, width);
+    }
+  }
+
+  upload.readOrientation = function (file) {
+    var defer = $q.defer();
+    var reader = new FileReader();
+    var slicedFile = file.slice ? file.slice(0, 64 * 1024) : file;
+    reader.readAsArrayBuffer(slicedFile);
+    reader.onerror = function (e) {
+      return defer.reject(e);
+    };
+    reader.onload = function (e) {
+      var result = {orientation: 1};
+      var view = new DataView(this.result);
+      if (view.getUint16(0, false) !== 0xFFD8) return defer.resolve(result);
+
+      var length = view.byteLength,
+        offset = 2;
+      while (offset < length) {
+        var marker = view.getUint16(offset, false);
+        offset += 2;
+        if (marker === 0xFFE1) {
+          if (view.getUint32(offset += 2, false) !== 0x45786966) return defer.resolve(result);
+
+          var little = view.getUint16(offset += 6, false) === 0x4949;
+          offset += view.getUint32(offset + 4, little);
+          var tags = view.getUint16(offset, little);
+          offset += 2;
+          for (var i = 0; i < tags; i++)
+            if (view.getUint16(offset + (i * 12), little) === 0x0112) {
+              var orientation = view.getUint16(offset + (i * 12) + 8, little);
+              if (orientation >= 2 && orientation <= 8) {
+                view.setUint16(offset + (i * 12) + 8, 1, little);
+                result.fixedArrayBuffer = e.target.result;
+              }
+              result.orientation = orientation;
+              return defer.resolve(result);
+            }
+        } else if ((marker & 0xFF00) !== 0xFF00) break;
+        else offset += view.getUint16(offset, false);
+      }
+      return defer.resolve(result);
+    };
+    return defer.promise;
+  };
+
+  function arrayBufferToBase64(buffer) {
+    var binary = '';
+    var bytes = new Uint8Array(buffer);
+    var len = bytes.byteLength;
+    for (var i = 0; i < len; i++) {
+      binary += String.fromCharCode(bytes[i]);
+    }
+    return window.btoa(binary);
+  }
+
+  upload.applyExifRotation = function (file) {
+    if (file.type.indexOf('image/jpeg') !== 0) {
+      return upload.emptyPromise(file);
+    }
+
+    var deferred = $q.defer();
+    upload.readOrientation(file).then(function (result) {
+      if (result.orientation < 2 || result.orientation > 8) {
+        return deferred.resolve(file);
+      }
+      upload.dataUrl(file, true).then(function (url) {
+        var canvas = document.createElement('canvas');
+        var img = document.createElement('img');
+
+        img.onload = function () {
+          try {
+            canvas.width = result.orientation > 4 ? img.height : img.width;
+            canvas.height = result.orientation > 4 ? img.width : img.height;
+            var ctx = canvas.getContext('2d');
+            applyTransform(ctx, result.orientation, img.width, img.height);
+            ctx.drawImage(img, 0, 0);
+            var dataUrl = canvas.toDataURL(file.type || 'image/WebP', 0.934);
+            dataUrl = upload.restoreExif(arrayBufferToBase64(result.fixedArrayBuffer), dataUrl);
+            var blob = upload.dataUrltoBlob(dataUrl, file.name);
+            deferred.resolve(blob);
+          } catch (e) {
+            return deferred.reject(e);
+          }
+        };
+        img.onerror = function () {
+          deferred.reject();
+        };
+        img.src = url;
+      }, function (e) {
+        deferred.reject(e);
+      });
+    }, function (e) {
+      deferred.reject(e);
+    });
+    return deferred.promise;
+  };
+
+  upload.restoreExif = function (orig, resized) {
+    var ExifRestorer = {};
+
+    ExifRestorer.KEY_STR = 'ABCDEFGHIJKLMNOP' +
+      'QRSTUVWXYZabcdef' +
+      'ghijklmnopqrstuv' +
+      'wxyz0123456789+/' +
+      '=';
+
+    ExifRestorer.encode64 = function (input) {
+      var output = '',
+        chr1, chr2, chr3 = '',
+        enc1, enc2, enc3, enc4 = '',
+        i = 0;
+
+      do {
+        chr1 = input[i++];
+        chr2 = input[i++];
+        chr3 = input[i++];
+
+        enc1 = chr1 >> 2;
+        enc2 = ((chr1 & 3) << 4) | (chr2 >> 4);
+        enc3 = ((chr2 & 15) << 2) | (chr3 >> 6);
+        enc4 = chr3 & 63;
+
+        if (isNaN(chr2)) {
+          enc3 = enc4 = 64;
+        } else if (isNaN(chr3)) {
+          enc4 = 64;
+        }
+
+        output = output +
+          this.KEY_STR.charAt(enc1) +
+          this.KEY_STR.charAt(enc2) +
+          this.KEY_STR.charAt(enc3) +
+          this.KEY_STR.charAt(enc4);
+        chr1 = chr2 = chr3 = '';
+        enc1 = enc2 = enc3 = enc4 = '';
+      } while (i < input.length);
+
+      return output;
+    };
+
+    ExifRestorer.restore = function (origFileBase64, resizedFileBase64) {
+      if (origFileBase64.match('data:image/jpeg;base64,')) {
+        origFileBase64 = origFileBase64.replace('data:image/jpeg;base64,', '');
+      }
+
+      var rawImage = this.decode64(origFileBase64);
+      var segments = this.slice2Segments(rawImage);
+
+      var image = this.exifManipulation(resizedFileBase64, segments);
+
+      return 'data:image/jpeg;base64,' + this.encode64(image);
+    };
+
+
+    ExifRestorer.exifManipulation = function (resizedFileBase64, segments) {
+      var exifArray = this.getExifArray(segments),
+        newImageArray = this.insertExif(resizedFileBase64, exifArray);
+      return new Uint8Array(newImageArray);
+    };
+
+
+    ExifRestorer.getExifArray = function (segments) {
+      var seg;
+      for (var x = 0; x < segments.length; x++) {
+        seg = segments[x];
+        if (seg[0] === 255 & seg[1] === 225) //(ff e1)
+        {
+          return seg;
+        }
+      }
+      return [];
+    };
+
+
+    ExifRestorer.insertExif = function (resizedFileBase64, exifArray) {
+      var imageData = resizedFileBase64.replace('data:image/jpeg;base64,', ''),
+        buf = this.decode64(imageData),
+        separatePoint = buf.indexOf(255, 3),
+        mae = buf.slice(0, separatePoint),
+        ato = buf.slice(separatePoint),
+        array = mae;
+
+      array = array.concat(exifArray);
+      array = array.concat(ato);
+      return array;
+    };
+
+
+    ExifRestorer.slice2Segments = function (rawImageArray) {
+      var head = 0,
+        segments = [];
+
+      while (1) {
+        if (rawImageArray[head] === 255 & rawImageArray[head + 1] === 218) {
+          break;
+        }
+        if (rawImageArray[head] === 255 & rawImageArray[head + 1] === 216) {
+          head += 2;
+        }
+        else {
+          var length = rawImageArray[head + 2] * 256 + rawImageArray[head + 3],
+            endPoint = head + length + 2,
+            seg = rawImageArray.slice(head, endPoint);
+          segments.push(seg);
+          head = endPoint;
+        }
+        if (head > rawImageArray.length) {
+          break;
+        }
+      }
+
+      return segments;
+    };
+
+
+    ExifRestorer.decode64 = function (input) {
+      var chr1, chr2, chr3 = '',
+        enc1, enc2, enc3, enc4 = '',
+        i = 0,
+        buf = [];
+
+      // remove all characters that are not A-Z, a-z, 0-9, +, /, or =
+      var base64test = /[^A-Za-z0-9\+\/\=]/g;
+      if (base64test.exec(input)) {
+        console.log('There were invalid base64 characters in the input text.\n' +
+          'Valid base64 characters are A-Z, a-z, 0-9, ' + ', ' / ',and "="\n' +
+          'Expect errors in decoding.');
+      }
+      input = input.replace(/[^A-Za-z0-9\+\/\=]/g, '');
+
+      do {
+        enc1 = this.KEY_STR.indexOf(input.charAt(i++));
+        enc2 = this.KEY_STR.indexOf(input.charAt(i++));
+        enc3 = this.KEY_STR.indexOf(input.charAt(i++));
+        enc4 = this.KEY_STR.indexOf(input.charAt(i++));
+
+        chr1 = (enc1 << 2) | (enc2 >> 4);
+        chr2 = ((enc2 & 15) << 4) | (enc3 >> 2);
+        chr3 = ((enc3 & 3) << 6) | enc4;
+
+        buf.push(chr1);
+
+        if (enc3 !== 64) {
+          buf.push(chr2);
+        }
+        if (enc4 !== 64) {
+          buf.push(chr3);
+        }
+
+        chr1 = chr2 = chr3 = '';
+        enc1 = enc2 = enc3 = enc4 = '';
+
+      } while (i < input.length);
+
+      return buf;
+    };
+
+    return ExifRestorer.restore(orig, resized);  //<= EXIF
+  };
+
+  return upload;
+}]);
+
+
 /*!
  * ui-select
  * http://github.com/angular-ui/ui-select
@@ -4082,8 +6096,8 @@ angular.module("ui.select").run(["$templateCache", function ($templateCache) {
     $templateCache.put("selectize/select-multiple.tpl.html", "<div class=\"ui-select-container selectize-control multi plugin-remove_button\" ng-class=\"{\'open\': $select.open}\"><div class=\"selectize-input\" ng-class=\"{\'focus\': $select.open, \'disabled\': $select.disabled, \'selectize-focus\' : $select.focus}\" ng-click=\"$select.open && !$select.searchEnabled ? $select.toggle($event) : $select.activate()\"><div class=\"ui-select-match\"></div><input type=\"search\" autocomplete=\"off\" tabindex=\"-1\" class=\"ui-select-search\" ng-class=\"{\'ui-select-search-hidden\':!$select.searchEnabled}\" placeholder=\"{{$selectMultiple.getPlaceholder()}}\" ng-model=\"$select.search\" ng-disabled=\"$select.disabled\" aria-expanded=\"{{$select.open}}\" aria-label=\"{{ $select.baseTitle }}\" ondrop=\"return false;\"></div><div class=\"ui-select-choices\"></div><div class=\"ui-select-no-choice\"></div></div>");
     $templateCache.put("selectize/select.tpl.html", "<div class=\"ui-select-container selectize-control single\" ng-class=\"{\'open\': $select.open}\"><div class=\"selectize-input\" ng-class=\"{\'focus\': $select.open, \'disabled\': $select.disabled, \'selectize-focus\' : $select.focus}\" ng-click=\"$select.open && !$select.searchEnabled ? $select.toggle($event) : $select.activate()\"><div class=\"ui-select-match\"></div><input type=\"search\" autocomplete=\"off\" tabindex=\"-1\" class=\"ui-select-search ui-select-toggle\" ng-class=\"{\'ui-select-search-hidden\':!$select.searchEnabled}\" ng-click=\"$select.toggle($event)\" placeholder=\"{{$select.placeholder}}\" ng-model=\"$select.search\" ng-hide=\"!$select.isEmpty() && !$select.open\" ng-disabled=\"$select.disabled\" aria-label=\"{{ $select.baseTitle }}\"></div><div class=\"ui-select-choices\"></div><div class=\"ui-select-no-choice\"></div></div>");
 }]);
-/*! Cofoundry 2018-09-24 */
-function RoutingUtilitites(){var a={};return a.mapOptions=function(a,b){return{controller:b+"Controller",controllerAs:"vm",templateUrl:a+"Routes/"+b+".html"}},a.registerCrudRoutes=function(b,c,d){b.when("/new",a.mapOptions(c,"Add"+d)).when("/:id",a.mapOptions(c,d+"Details")).otherwise(a.mapOptions(c,d+"List"))},a}angular.module("cms.shared",["ngRoute","ngSanitize","angularModalService","angularFileUpload","ui.tinymce","ang-drag-drop","ui.select"]).constant("shared.internalModulePath","/Admin/Modules/Shared/Js/").constant("shared.pluginModulePath","/Plugins/Admin/Modules/Shared/Js/").constant("shared.modulePath","/Cofoundry/Admin/Modules/Shared/Js/"),angular.module("cms.shared").factory("shared.customEntityService",["$http","_","shared.serviceBase","shared.publishableEntityMapper",function(a,b,c,d){function e(a){return i+"/"+a}function f(a){return e(a)+"/versions"}function g(a){var b=c+"custom-entity-definitions/";return a?b+a:b}var h={},i=c+"custom-entities",j=c+"custom-entity-data-model-schemas";return h.getAll=function(c,e){function f(a){return b.each(a.items,d.map),a}return a.get(g(e)+"/custom-entities",{params:c}).then(f)},h.getDefinition=function(b){return a.get(g(b))},h.getDataModelSchema=function(b){return a.get(g(b)+"/data-model-schema")},h.getDataModelSchemasByCodeRange=function(b){return a.get(j,{params:{customEntityDefinitionCodes:b}})},h.getPageRoutes=function(b){return a.get(g(b)+"/routes")},h.getDefinitionsByIdRange=function(c){function d(a){return b.filter(a,function(a){return b.contains(c,a.customEntityDefinitionCode)})}return a.get(g()).then(d)},h.getByIdRange=function(c){function e(a){return b.each(a,d.map),a}return a.get(i+"/",{params:{customEntityIds:c}}).then(e)},h.getById=function(b){function c(a){return a&&d.map(a),a}return a.get(e(b)).then(c)},h.getVersionsByCustomEntityId=function(b,c){return a.get(f(b),{params:c})},h.add=function(b,c){return b.customEntityDefinitionCode=c,a.post(i,b)},h.updateUrl=function(b){return a.put(e(b.customEntityId)+"/url",b)},h.updateOrdering=function(b){return a.put(i+"/ordering",b)},h.updateDraft=function(b,c){return b.customEntityDefinitionCode=c,a.put(f(b.customEntityId)+"/draft",b)},h.remove=function(b){return a["delete"](e(b))},h.removeDraft=function(b){return a["delete"](f(b)+"/draft")},h.duplicate=function(b){return a.post(e(b.customEntityToDuplicateId)+"/duplicate",b)},h}]),angular.module("cms.shared").factory("shared.directoryService",["$http","_","shared.serviceBase",function(a,b,c){var d={},e=c+"page-directories";return d.getAll=function(){return a.get(e)},d}]),angular.module("cms.shared").factory("shared.documentService",["$http","$upload","shared.serviceBase",function(a,b,c){var d={},e=c+"documents";return d.getAll=function(b){return a.get(e,{params:b})},d.getById=function(b){return a.get(d.getIdRoute(b))},d.getByIdRange=function(b){return a.get(e+"/",{params:{documentAssetIds:b}})},d.getAllDocumentFileTypes=function(){return a.get(c+"document-file-types")},d.add=function(a){return d.uploadFile(d.getBaseRoute(),a,"POST")},d.getIdRoute=function(a){return e+"/"+a},d.getBaseRoute=function(){return e},d.uploadFile=function(a,c,d){var e=_.omit(c,"file");return b.upload({url:a,data:e,file:c.file,method:d})},d}]),angular.module("cms.shared").factory("shared.entityVersionService",["$http","shared.serviceBase",function(a,b){function c(a,b){return d(a,b)+"/versions"}function d(a,b){return e(a)+"/"+b}function e(a){return a?h:g}var f={},g=b+"pages",h=b+"custom-entities";return f.publish=function(b,d){return a.patch(c(b,d)+"/draft/publish")},f.unpublish=function(b,d){return a.patch(c(b,d)+"/published/unpublish")},f.duplicateDraft=function(b,d,e){var f;return f=b?{customEntityId:d,copyFromCustomEntityVersionId:e}:{pageId:d,copyFromPageVersionId:e},a.post(c(b,d),f)},f.removeDraft=function(b,d){return a["delete"](c(b,d)+"/draft")},f}]),angular.module("cms.shared").factory("shared.imageService",["$http","$upload","shared.stringUtilities","shared.serviceBase",function(a,b,c,d){function e(a,c,d){var e,f=_.omit(c,"file");return c.file&&!c.file.isCurrentFile&&(e=c.file),b.upload({url:a,data:f,file:e,method:d})}var f={},g=d+"images";return f.add=function(a){return e(f.getBaseRoute(),a,"POST")},f.update=function(a){return e(f.getIdRoute(a.imageAssetId),a,"PUT")},f.getAll=function(b){return a.get(g,{params:b})},f.getById=function(b){return a.get(f.getIdRoute(b))},f.getByIdRange=function(b){return a.get(g+"/",{params:{imageAssetIds:b}})},f.getIdRoute=function(a){return g+"/"+a},f.getBaseRoute=function(){return g},f}]),angular.module("cms.shared").factory("shared.localStorage",["shared.serviceBase",function(a){var b={};return b.setValue=function(a,b){localStorage.setItem(a,b)},b.getValue=function(a){var b=localStorage.getItem(a);return b},b}]),angular.module("cms.shared").factory("shared.localeService",["$http","shared.serviceBase",function(a,b){var c={},d=b+"locales";return c.getAll=function(){return a.get(d)},c}]),angular.module("cms.shared").factory("shared.nestedDataModelSchemaService",["$http","_","shared.serviceBase",function(a,b,c){var d={};return d.getByName=function(b){return a.get(c+"nested-data-model-schemas/"+b)},d}]),angular.module("cms.shared").factory("shared.pageService",["_","$http","shared.serviceBase","shared.publishableEntityMapper",function(a,b,c,d){var e={},f=c+"pages";return e.getAll=function(c){function e(b){return a.map(b.items,d.map),b}return b.get(f,{params:c}).then(e)},e.getByIdRange=function(c){function e(b){return a.map(b,d.map),b}return b.get(f,{params:{pageIds:c}}).then(e)},e.getById=function(a){function c(a){return a&&d.map(a.pageRoute),a}return b.get(e.getIdRoute(a)).then(c)},e.getVersionsByPageId=function(a,c){return b.get(e.getPageVerionsRoute(a),{params:c})},e.getPageTypes=function(){return[{name:"Generic",value:"Generic"},{name:"Custom Entity Details",value:"CustomEntityDetails"}]},e.add=function(a){return b.post(f,a)},e.update=function(a){return b.patch(e.getIdRoute(a.pageId),a)},e.updateUrl=function(a){return b.put(e.getIdRoute(a.pageId)+"/url",a)},e.updateDraft=function(a){return b.patch(e.getPageVerionsRoute(a.pageId)+"/draft",a)},e.removeDraft=function(a){return b["delete"](e.getPageVerionsRoute(a)+"/draft")},e.remove=function(a){return b["delete"](e.getIdRoute(a))},e.duplicate=function(a){return b.post(e.getIdRoute(a.pageToDuplicateId)+"/duplicate",a)},e.getIdRoute=function(a){return f+"/"+a},e.getPageVerionsRoute=function(a){return e.getIdRoute(a)+"/versions"},e}]),angular.module("cms.shared").factory("shared.publishableEntityMapper",["$http","shared.serviceBase",function(a,b){function c(a){return"Published"==a.publishStatus&&a.hasPublishedVersion&&new Date(a.publishDate)<Date.now()}function d(a){return"Published"==a.publishStatus&&a.publishDate<Date.now()?"Pending Publish":a.publishStatus}var e={};return e.map=function(a){a.isPublished=c.bind(null,a),a.getPublishStatusLabel=d.bind(null,a)},e}]),angular.module("cms.shared").factory("shared.arrayUtilities",function(){var a={};return a.move=function(a,b,c){a.splice(c,0,a.splice(b,1)[0])},a.moveObject=function(b,c,d,e){var f;f=e?_.findIndex(b,function(a){return a[e]===c[e]}):b.indexOf(c),a.move(b,f,d)},a.removeObject=function(a,b){var c=a.indexOf(b);return c>=0?a.splice(c,1):void 0},a.remove=function(a,b){return b>=0?a.splice(b,1):void 0},a}),angular.module("cms.shared").factory("shared.directiveUtilities",function(){var a={};return a.setModelName=function(b,c){c.cmsModelName?b.modelName=c.cmsModelName:b.modelName=a.parseModelName(c.cmsModel)},a.parseModelName=function(a){var b,c;if(a)return b=a.substring(a.lastIndexOf(".")+1,a.length),c=/['"]([^'"]*)['"]/g.exec(b),c&&c.length>1?c[1]:b},a}),function(a,b){function c(b,c,e){a.prototype[b]||(a.prototype[b]=function(b,f){for(var g,h=0;h<this.length;h++)void 0==g?(g=e(this[h],b,f),void 0!==g&&c&&(g=a(g))):d(g,e(this[h],b,f));return void 0==g?this:g})}function d(a,b){if(b)if(b.nodeType)a[a.length++]=b;else{var c=b.length;if("number"==typeof c&&b.window!==b){if(c)for(var d=0;c>d;d++)a[a.length++]=b[d]}else a[a.length++]=b}}c("offset",!1,function(a,c,d){var e,f={top:0,left:0},g=a&&a.ownerDocument;if(g&&b.isUndefined(c))return e=g.documentElement,b.isUndefined(a.getBoundingClientRect)||(f=a.getBoundingClientRect()),{top:f.top+(window.pageYOffset||e.scrollTop)-(e.clientTop||0),left:f.left+(window.pageXOffset||e.scrollLeft)-(e.clientLeft||0)}})}(angular.element,_),angular.module("cms.shared").constant("shared.routingUtilities",new RoutingUtilitites),angular.module("cms.shared").factory("shared.stringUtilities",function(){var a={},b={"Á":"A","Ă":"A","Ắ":"A","Ặ":"A","Ằ":"A","Ẳ":"A","Ẵ":"A","Ǎ":"A","Â":"A","Ấ":"A","Ậ":"A","Ầ":"A","Ẩ":"A","Ẫ":"A","Ä":"A","Ǟ":"A","Ȧ":"A","Ǡ":"A","Ạ":"A","Ȁ":"A","À":"A","Ả":"A","Ȃ":"A","Ā":"A","Ą":"A","Å":"A","Ǻ":"A","Ḁ":"A","Ⱥ":"A","Ã":"A","Ꜳ":"AA","Æ":"AE","Ǽ":"AE","Ǣ":"AE","Ꜵ":"AO","Ꜷ":"AU","Ꜹ":"AV","Ꜻ":"AV","Ꜽ":"AY","Ḃ":"B","Ḅ":"B","Ɓ":"B","Ḇ":"B","Ƀ":"B","Ƃ":"B","Ć":"C","Č":"C","Ç":"C","Ḉ":"C","Ĉ":"C","Ċ":"C","Ƈ":"C","Ȼ":"C","Ď":"D","Ḑ":"D","Ḓ":"D","Ḋ":"D","Ḍ":"D","Ɗ":"D","Ḏ":"D","ǲ":"D","ǅ":"D","Đ":"D","Ƌ":"D","Ǳ":"DZ","Ǆ":"DZ","É":"E","Ĕ":"E","Ě":"E","Ȩ":"E","Ḝ":"E","Ê":"E","Ế":"E","Ệ":"E","Ề":"E","Ể":"E","Ễ":"E","Ḙ":"E","Ë":"E","Ė":"E","Ẹ":"E","Ȅ":"E","È":"E","Ẻ":"E","Ȇ":"E","Ē":"E","Ḗ":"E","Ḕ":"E","Ę":"E","Ɇ":"E","Ẽ":"E","Ḛ":"E","Ꝫ":"ET","Ḟ":"F","Ƒ":"F","Ǵ":"G","Ğ":"G","Ǧ":"G","Ģ":"G","Ĝ":"G","Ġ":"G","Ɠ":"G","Ḡ":"G","Ǥ":"G","Ḫ":"H","Ȟ":"H","Ḩ":"H","Ĥ":"H","Ⱨ":"H","Ḧ":"H","Ḣ":"H","Ḥ":"H","Ħ":"H","Í":"I","Ĭ":"I","Ǐ":"I","Î":"I","Ï":"I","Ḯ":"I","İ":"I","Ị":"I","Ȉ":"I","Ì":"I","Ỉ":"I","Ȋ":"I","Ī":"I","Į":"I","Ɨ":"I","Ĩ":"I","Ḭ":"I","Ꝺ":"D","Ꝼ":"F","Ᵹ":"G","Ꞃ":"R","Ꞅ":"S","Ꞇ":"T","Ꝭ":"IS","Ĵ":"J","Ɉ":"J","Ḱ":"K","Ǩ":"K","Ķ":"K","Ⱪ":"K","Ꝃ":"K","Ḳ":"K","Ƙ":"K","Ḵ":"K","Ꝁ":"K","Ꝅ":"K","Ĺ":"L","Ƚ":"L","Ľ":"L","Ļ":"L","Ḽ":"L","Ḷ":"L","Ḹ":"L","Ⱡ":"L","Ꝉ":"L","Ḻ":"L","Ŀ":"L","Ɫ":"L","ǈ":"L","Ł":"L","Ǉ":"LJ","Ḿ":"M","Ṁ":"M","Ṃ":"M","Ɱ":"M","Ń":"N","Ň":"N","Ņ":"N","Ṋ":"N","Ṅ":"N","Ṇ":"N","Ǹ":"N","Ɲ":"N","Ṉ":"N","Ƞ":"N","ǋ":"N","Ñ":"N","Ǌ":"NJ","Ó":"O","Ŏ":"O","Ǒ":"O","Ô":"O","Ố":"O","Ộ":"O","Ồ":"O","Ổ":"O","Ỗ":"O","Ö":"O","Ȫ":"O","Ȯ":"O","Ȱ":"O","Ọ":"O","Ő":"O","Ȍ":"O","Ò":"O","Ỏ":"O","Ơ":"O","Ớ":"O","Ợ":"O","Ờ":"O","Ở":"O","Ỡ":"O","Ȏ":"O","Ꝋ":"O","Ꝍ":"O","Ō":"O","Ṓ":"O","Ṑ":"O","Ɵ":"O","Ǫ":"O","Ǭ":"O","Ø":"O","Ǿ":"O","Õ":"O","Ṍ":"O","Ṏ":"O","Ȭ":"O","Ƣ":"OI","Ꝏ":"OO","Ɛ":"E","Ɔ":"O","Ȣ":"OU","Ṕ":"P","Ṗ":"P","Ꝓ":"P","Ƥ":"P","Ꝕ":"P","Ᵽ":"P","Ꝑ":"P","Ꝙ":"Q","Ꝗ":"Q","Ŕ":"R","Ř":"R","Ŗ":"R","Ṙ":"R","Ṛ":"R","Ṝ":"R","Ȑ":"R","Ȓ":"R","Ṟ":"R","Ɍ":"R","Ɽ":"R","Ꜿ":"C","Ǝ":"E","Ś":"S","Ṥ":"S","Š":"S","Ṧ":"S","Ş":"S","Ŝ":"S","Ș":"S","Ṡ":"S","Ṣ":"S","Ṩ":"S","ẞ":"SS","Ť":"T","Ţ":"T","Ṱ":"T","Ț":"T","Ⱦ":"T","Ṫ":"T","Ṭ":"T","Ƭ":"T","Ṯ":"T","Ʈ":"T","Ŧ":"T","Ɐ":"A","Ꞁ":"L","Ɯ":"M","Ʌ":"V","Ꜩ":"TZ","Ú":"U","Ŭ":"U","Ǔ":"U","Û":"U","Ṷ":"U","Ü":"U","Ǘ":"U","Ǚ":"U","Ǜ":"U","Ǖ":"U","Ṳ":"U","Ụ":"U","Ű":"U","Ȕ":"U","Ù":"U","Ủ":"U","Ư":"U","Ứ":"U","Ự":"U","Ừ":"U","Ử":"U","Ữ":"U","Ȗ":"U","Ū":"U","Ṻ":"U","Ų":"U","Ů":"U","Ũ":"U","Ṹ":"U","Ṵ":"U","Ꝟ":"V","Ṿ":"V","Ʋ":"V","Ṽ":"V","Ꝡ":"VY","Ẃ":"W","Ŵ":"W","Ẅ":"W","Ẇ":"W","Ẉ":"W","Ẁ":"W","Ⱳ":"W","Ẍ":"X","Ẋ":"X","Ý":"Y","Ŷ":"Y","Ÿ":"Y","Ẏ":"Y","Ỵ":"Y","Ỳ":"Y","Ƴ":"Y","Ỷ":"Y","Ỿ":"Y","Ȳ":"Y","Ɏ":"Y","Ỹ":"Y","Ź":"Z","Ž":"Z","Ẑ":"Z","Ⱬ":"Z","Ż":"Z","Ẓ":"Z","Ȥ":"Z","Ẕ":"Z","Ƶ":"Z","Ĳ":"IJ","Œ":"OE","ᴀ":"A","ᴁ":"AE","ʙ":"B","ᴃ":"B","ᴄ":"C","ᴅ":"D","ᴇ":"E","ꜰ":"F","ɢ":"G","ʛ":"G","ʜ":"H","ɪ":"I","ʁ":"R","ᴊ":"J","ᴋ":"K","ʟ":"L","ᴌ":"L","ᴍ":"M","ɴ":"N","ᴏ":"O","ɶ":"OE","ᴐ":"O","ᴕ":"OU","ᴘ":"P","ʀ":"R","ᴎ":"N","ᴙ":"R","ꜱ":"S","ᴛ":"T","ⱻ":"E","ᴚ":"R","ᴜ":"U","ᴠ":"V","ᴡ":"W","ʏ":"Y","ᴢ":"Z","á":"a","ă":"a","ắ":"a","ặ":"a","ằ":"a","ẳ":"a","ẵ":"a","ǎ":"a","â":"a","ấ":"a","ậ":"a","ầ":"a","ẩ":"a","ẫ":"a","ä":"a","ǟ":"a","ȧ":"a","ǡ":"a","ạ":"a","ȁ":"a","à":"a","ả":"a","ȃ":"a","ā":"a","ą":"a","ᶏ":"a","ẚ":"a","å":"a","ǻ":"a","ḁ":"a","ⱥ":"a","ã":"a","ꜳ":"aa","æ":"ae","ǽ":"ae","ǣ":"ae","ꜵ":"ao","ꜷ":"au","ꜹ":"av","ꜻ":"av","ꜽ":"ay","ḃ":"b","ḅ":"b","ɓ":"b","ḇ":"b","ᵬ":"b","ᶀ":"b","ƀ":"b","ƃ":"b","ɵ":"o","ć":"c","č":"c","ç":"c","ḉ":"c","ĉ":"c","ɕ":"c","ċ":"c","ƈ":"c","ȼ":"c","ď":"d","ḑ":"d","ḓ":"d","ȡ":"d","ḋ":"d","ḍ":"d","ɗ":"d","ᶑ":"d","ḏ":"d","ᵭ":"d","ᶁ":"d","đ":"d","ɖ":"d","ƌ":"d","ı":"i","ȷ":"j","ɟ":"j","ʄ":"j","ǳ":"dz","ǆ":"dz","é":"e","ĕ":"e","ě":"e","ȩ":"e","ḝ":"e","ê":"e","ế":"e","ệ":"e","ề":"e","ể":"e","ễ":"e","ḙ":"e","ë":"e","ė":"e","ẹ":"e","ȅ":"e","è":"e","ẻ":"e","ȇ":"e","ē":"e","ḗ":"e","ḕ":"e","ⱸ":"e","ę":"e","ᶒ":"e","ɇ":"e","ẽ":"e","ḛ":"e","ꝫ":"et","ḟ":"f","ƒ":"f","ᵮ":"f","ᶂ":"f","ǵ":"g","ğ":"g","ǧ":"g","ģ":"g","ĝ":"g","ġ":"g","ɠ":"g","ḡ":"g","ᶃ":"g","ǥ":"g","ḫ":"h","ȟ":"h","ḩ":"h","ĥ":"h","ⱨ":"h","ḧ":"h","ḣ":"h","ḥ":"h","ɦ":"h","ẖ":"h","ħ":"h","ƕ":"hv","í":"i","ĭ":"i","ǐ":"i","î":"i","ï":"i","ḯ":"i","ị":"i","ȉ":"i","ì":"i","ỉ":"i","ȋ":"i","ī":"i","į":"i","ᶖ":"i","ɨ":"i","ĩ":"i","ḭ":"i","ꝺ":"d","ꝼ":"f","ᵹ":"g","ꞃ":"r","ꞅ":"s","ꞇ":"t","ꝭ":"is","ǰ":"j","ĵ":"j","ʝ":"j","ɉ":"j","ḱ":"k","ǩ":"k","ķ":"k","ⱪ":"k","ꝃ":"k","ḳ":"k","ƙ":"k","ḵ":"k","ᶄ":"k","ꝁ":"k","ꝅ":"k","ĺ":"l","ƚ":"l","ɬ":"l","ľ":"l","ļ":"l","ḽ":"l","ȴ":"l","ḷ":"l","ḹ":"l","ⱡ":"l","ꝉ":"l","ḻ":"l","ŀ":"l","ɫ":"l","ᶅ":"l","ɭ":"l","ł":"l","ǉ":"lj","ſ":"s","ẜ":"s","ẛ":"s","ẝ":"s","ḿ":"m","ṁ":"m","ṃ":"m","ɱ":"m","ᵯ":"m","ᶆ":"m","ń":"n","ň":"n","ņ":"n","ṋ":"n","ȵ":"n","ṅ":"n","ṇ":"n","ǹ":"n","ɲ":"n","ṉ":"n","ƞ":"n","ᵰ":"n","ᶇ":"n","ɳ":"n","ñ":"n","ǌ":"nj","ó":"o","ŏ":"o","ǒ":"o","ô":"o","ố":"o","ộ":"o","ồ":"o","ổ":"o","ỗ":"o","ö":"o","ȫ":"o","ȯ":"o","ȱ":"o","ọ":"o","ő":"o","ȍ":"o","ò":"o","ỏ":"o","ơ":"o","ớ":"o","ợ":"o","ờ":"o","ở":"o","ỡ":"o","ȏ":"o","ꝋ":"o","ꝍ":"o","ⱺ":"o","ō":"o","ṓ":"o","ṑ":"o","ǫ":"o","ǭ":"o","ø":"o","ǿ":"o","õ":"o","ṍ":"o","ṏ":"o","ȭ":"o","ƣ":"oi","ꝏ":"oo","ɛ":"e","ᶓ":"e","ɔ":"o","ᶗ":"o","ȣ":"ou","ṕ":"p","ṗ":"p","ꝓ":"p","ƥ":"p","ᵱ":"p","ᶈ":"p","ꝕ":"p","ᵽ":"p","ꝑ":"p","ꝙ":"q","ʠ":"q","ɋ":"q","ꝗ":"q","ŕ":"r","ř":"r","ŗ":"r","ṙ":"r","ṛ":"r","ṝ":"r","ȑ":"r","ɾ":"r","ᵳ":"r","ȓ":"r","ṟ":"r","ɼ":"r","ᵲ":"r","ᶉ":"r","ɍ":"r","ɽ":"r","ↄ":"c","ꜿ":"c","ɘ":"e","ɿ":"r","ś":"s","ṥ":"s","š":"s","ṧ":"s","ş":"s","ŝ":"s","ș":"s","ṡ":"s","ṣ":"s","ṩ":"s","ʂ":"s","ᵴ":"s","ᶊ":"s","ȿ":"s","ɡ":"g","ß":"ss","ᴑ":"o","ᴓ":"o","ᴝ":"u","ť":"t","ţ":"t","ṱ":"t","ț":"t","ȶ":"t","ẗ":"t","ⱦ":"t","ṫ":"t","ṭ":"t","ƭ":"t","ṯ":"t","ᵵ":"t","ƫ":"t","ʈ":"t","ŧ":"t","ᵺ":"th","ɐ":"a","ᴂ":"ae","ǝ":"e","ᵷ":"g","ɥ":"h","ʮ":"h","ʯ":"h","ᴉ":"i","ʞ":"k","ꞁ":"l","ɯ":"m","ɰ":"m","ᴔ":"oe","ɹ":"r","ɻ":"r","ɺ":"r","ⱹ":"r","ʇ":"t","ʌ":"v","ʍ":"w","ʎ":"y","ꜩ":"tz","ú":"u","ŭ":"u","ǔ":"u","û":"u","ṷ":"u","ü":"u","ǘ":"u","ǚ":"u","ǜ":"u","ǖ":"u","ṳ":"u","ụ":"u","ű":"u","ȕ":"u","ù":"u","ủ":"u","ư":"u","ứ":"u","ự":"u","ừ":"u","ử":"u","ữ":"u","ȗ":"u","ū":"u","ṻ":"u","ų":"u","ᶙ":"u","ů":"u","ũ":"u","ṹ":"u","ṵ":"u","ᵫ":"ue","ꝸ":"um","ⱴ":"v","ꝟ":"v","ṿ":"v","ʋ":"v","ᶌ":"v","ⱱ":"v","ṽ":"v","ꝡ":"vy","ẃ":"w","ŵ":"w","ẅ":"w","ẇ":"w","ẉ":"w","ẁ":"w","ⱳ":"w","ẘ":"w","ẍ":"x","ẋ":"x","ᶍ":"x","ý":"y","ŷ":"y","ÿ":"y","ẏ":"y","ỵ":"y","ỳ":"y","ƴ":"y","ỷ":"y","ỿ":"y","ȳ":"y","ẙ":"y","ɏ":"y","ỹ":"y","ź":"z","ž":"z","ẑ":"z","ʑ":"z","ⱬ":"z","ż":"z","ẓ":"z","ȥ":"z","ẕ":"z","ᵶ":"z","ᶎ":"z","ʐ":"z","ƶ":"z","ɀ":"z","ﬀ":"ff","ﬃ":"ffi","ﬄ":"ffl","ﬁ":"fi","ﬂ":"fl","ĳ":"ij","œ":"oe","ﬆ":"st","ₐ":"a","ₑ":"e","ᵢ":"i","ⱼ":"j","ₒ":"o","ᵣ":"r","ᵤ":"u","ᵥ":"v","ₓ":"x"};return a.getFileNameWithoutExtension=function(a){return a?a.substring(a.lastIndexOf("/")+1,a.lastIndexOf(".")):a},a.capitaliseFirstLetter=function(a){return a?a.charAt(0).toUpperCase()+a.slice(1):a},a.lowerCaseFirstWord=function(a){return a?a.replace(/^([A-Z]+)([a-z]?)(\w*)$/,function(a,b,c,d){return!c||b.length<2?b.toLowerCase()+c+d:b.toLowerCase().slice(0,b.length-1)+b[b.length-1]+c+d}):a},a.endsWith=function(a,b){return-1!==a.indexOf(b,a.length-b.length)},a.startsWith=function(a,b){return 0===a.lastIndexOf(b,0)},a.slugify=function(b){if(!b)return b;var c=a.latinise(b).replace(/&/g," and ").replace(/[\/\\\.,\+=–—:_]/g," ").replace(/[^\w\s-]/g,"").toLowerCase().trim().replace(/\s+/g,"-").replace(/-+/g,"-");return"-"===c.charAt(0)&&(c=c.substr(1)),c},a.toSnakeCase=function(a){return a?a.replace(/\B([A-Z])/g,"-$1").toLowerCase():""},a.toQueryString=function(a){return _.chain(a).pairs().sortBy(function(a){return a[0]}).map(function(a){return _.isUndefined(a[1])?void 0:a[0]+"="+encodeURIComponent(a[1])}).filter(function(a){return!_.isEmpty(a)}).value().join("&")},a.latinise=function(a){if(!a)return a;var c=a.replace(/[^A-Za-z0-9\[\] ]/g,function(a){return b[a]||a});return c},a.format=function(a){var b=Array.prototype.slice.call(arguments,1);return a.replace(/{(\d+)}/g,function(a,c){return"undefined"!=typeof b[c]?b[c]:a})},a.stripTags=function(a){return a?a.replace(/<([^>]+)>/gi,""):a},a}),angular.module("cms.shared").factory("shared.urlLibrary",["_","shared.urlBaseBase","shared.stringUtilities",function(a,b,c){function d(a){var b=a?a.name:"cms";return c.slugify(b)+"-users"}function e(a,b){f[a+"List"]=function(a){return f.makePath(b,null,a)},f[a+"New"]=function(a){return f.makePath(b,"new",a)},f[a+"Details"]=function(a){return f.makePath(b,a)}}var f={};return f.makePath=function(d,e,f){var g=b+d+"#/";return a.isArray(e)?g+=e.join("/"):null!=e&&(g+=e),f&&(g+="?"+c.toQueryString(f)),g},e("document","documents"),e("image","images"),e("page","pages"),e("pageTemplate","page-templates"),e("role","roles"),f.getDocumentUrl=function(a){var b;if(a)return b="/assets/files/download/"+a.documentAssetId+"_"+a.fileName+"."+a.fileExtension},f.getImageUrl=function(a,b){function d(a,b){b&&(e(b.width,a.width)||e(b.height,a.height))&&(b.mode||(b.mode="Crop"),a.defaultAnchorLocation&&(b.anchor=a.defaultAnchorLocation))}function e(a,b){return a>0&&a!=b}var f;if(a)return f="/assets/images/"+a.imageAssetId+"_"+a.fileName+"."+a.extension,d(a,b),b&&(f=f+"?"+c.toQueryString(b)),f},f.login=function(a){var c=b+"auth/login";return a&&(c+="?returnUrl="+encodeURIComponent(a)),c},f.visualEditorForPage=function(a,b){if(!a)return"";var c=a.fullPath;return b&&(c+="?mode=edit"),c},f.visualEditorForVersion=function(a,b,c,d){if(!a)return"";var e=a.fullPath+"?";if("Draft"==b.workFlowStatus)e+="mode=preview";else if(b.isLatestPublishedVersion&&d)e+="mode=live";else{var f=(c?"customEntity":"page")+"VersionId";e+="version="+b[f]}return c&&(e+="&edittype=entity"),e},f.customEntityList=function(a){return f.makePath(c.slugify(a.name))},f.customEntityDetails=function(a,b){return f.makePath(c.slugify(a.name),b)},f.customEntityVisualEditor=function(a,b){if(!a)return"";var c=a.fullPath;return c?(b&&(c+="?mode=edit&edittype=entity"),c):c},f.userDetails=function(a,b){return f.makePath(d(a),b)},f.userList=function(a,b){return f.makePath(d(a),null,b)},f.userNew=function(a,b){return f.makePath(d(a),"new",b)},f}]),angular.module("cms.shared").filter("bytes",function(){return function(a,b){var c,d=["bytes","kb","mb","gb","tb","pb"];return isNaN(parseFloat(a))||!isFinite(a)?"-":a?("undefined"==typeof b&&(b=1),c=Math.floor(Math.log(a)/Math.log(1024)),(a/Math.pow(1024,Math.floor(c))).toFixed(b)+" "+d[c]):"0 "+d[1]}}),angular.module("cms.shared").provider("filterWatcher",function(){function a(a){return a&&a.$evalAsync&&a.$watch}this.$get=["$window","$rootScope",function(b,c){function d(a,b){return[a,angular.toJson(b)].join("#").replace(/"/g,"")}function e(a){var b=a.targetScope.$id;forEach(k[b],function(a){delete j[a]}),delete k[b]}function f(){l(function(){c.$$phase||(j={})})}function g(a,b){var c=a.$id;return isUndefined(k[c])&&(a.$on("$destroy",e),k[c]=[]),k[c].push(b)}function h(a,b){var c=d(a,b);return j[c]}function i(b,c,e,h){var i=d(b,c);return j[i]=h,a(e)?g(e,i):f(),h}var j={},k={},l=b.setTimeout;return{isMemoized:h,memoize:i}}]}),angular.module("cms.shared").filter("groupBy",["$parse","_","filterWatcher",function(a,b,c){return function(d,e){function f(a,c){var d,e={};return b.each(a,function(a){d=c(a),e[d]||(e[d]=[]),e[d].push(a)}),e}if(!b.isObject(d)||b.isUndefined(e))return d;var g=a(e);return c.isMemoized("groupBy",arguments)||c.memoize("groupBy",arguments,this,f(d,g))}}]),angular.module("cms.shared").factory("authenticationService",["$window","shared.urlLibrary",function(a,b){var c={};return c.redirectToLogin=function(){var c=a.location,d=b.login(c.pathname+c.hash);a.location=d},c}]),angular.module("cms.shared").run(["shared.errorService","shared.modalDialogService","shared.internalModulePath","shared.stringUtilities","shared.showDevException",function(a,b,c,d,e){function f(a){var c=a.response,f=c?c.config:null;e&&f&&d.startsWith(f.url,"/")&&d.startsWith(c.headers("Content-Type"),"text/html")&&d.startsWith(c.data,"<!DOCTYPE html>")?g(a):b.alert(a)}function g(a){b.show({templateUrl:c+"UIComponents/Modals/DeveloperException.html",controller:"DeveloperExceptionController",options:a})}a.addHandler(f)}]),angular.module("cms.shared").factory("shared.errorService",function(){var a={},b=[];return a.raise=function(a){b.forEach(function(b){b(a)})},a.addHandler=function(a){return b.push(a),a},a.removeHandler=function(a){developerExceptionHandlers=_.difference(developerExceptionHandlers,a)},a}),angular.module("cms.shared").factory("shared.focusService",["$document",function(a){var b={},c=a[0];return b.focusById=function(a){var b=c.getElementById(a);b&&b.focus()},b}]),angular.module("cms.shared").factory("httpInterceptor",["$q","$rootScope","_","shared.validationErrorService","authenticationService","shared.errorService","shared.stringUtilities",function(a,b,c,d,e,f,g){var h={};return h.response=function(a){return c.isUndefined(a.data.data)||(a=a.data.data),a},h.responseError=function(b){function c(){switch(b.status){case 400:b.data.isValid===!1&&d.raise(b.data.errors);break;case 401:e.redirectToLogin();break;case 403:f.raise({title:"Permission Denied",message:"This action is not authorized"});break;default:(404!=b.status||"GET"!==b.config.method)&&(h={title:b.statusText,message:"An unexpected server error has occured.",response:b},f.raise(h))}}var h;return g.startsWith(b.config.url,"/")&&c(),a.reject(b)},h}]),angular.module("cms.shared").config(["$httpProvider","csrfToken","csrfHeaderName",function(a,b,c){var d=a.defaults.headers,e=["put","post","patch","delete"];a.interceptors.push("httpInterceptor"),e.forEach(function(a){d[a]=d[a]||{},d[a][c]=b}),d.common["X-Requested-With"]="XMLHttpRequest"}]),angular.module("cms.shared").config(["$locationProvider",function(a){a.hashPrefix("")}]),angular.module("cms.shared").factory("shared.permissionValidationService",["_","shared.currentUser",function(a,b){var c={},d="COMMOD",e="COMRED",f="COMCRT",g="COMUPD",h="COMDEL";return c.hasPermission=function(c){return a.contains(b.permissionCodes,c)},c.canRead=function(a){return c.hasPermission(a+e)},c.canViewModule=function(a){return c.hasPermission(a+d)},c.canCreate=function(a){return c.hasPermission(a+f)},c.canUpdate=function(a){return c.hasPermission(a+g)},c.canDelete=function(a){return c.hasPermission(a+h)},c}]),angular.module("cms.shared").factory("shared.validationErrorService",["_",function(a){function b(a){throw new Error("An unhandled validation exception has occured")}function c(a,b){a.forEach(function(a){a.fn(b)})}var d={},e=[];return d.raise=function(d){var f=[];if(d.forEach(function(b){var c=a.filter(e,function(c){return a.find(b.properties,function(a){return a&&c.prop?c.prop.toLowerCase()===a.toLowerCase():!1})});c.length?c.forEach(function(a){a.fn([b])}):f.push(b)}),f.length){var g=a.filter(e,function(a){return!a.prop});g.length?c(g,f):b(d)}},d.addHandler=function(a,b){var c={prop:a,fn:b};return e.push(c),c},d.removeHandler=function(b){var c;c=a.isFunction(b)?a.where(e,{fn:b}):a.where(e,{prop:b}),e=a.difference(e,c)},d}]),angular.module("cms.shared").directive("cmsButton",["shared.internalModulePath",function(a){return{restrict:"E",replace:!0,templateUrl:a+"UIComponents/Buttons/Button.html",scope:{text:"@cmsText"}}}]),angular.module("cms.shared").directive("cmsButtonIcon",["shared.internalModulePath",function(a){return{restrict:"E",replace:!1,templateUrl:a+"UIComponents/Buttons/ButtonIcon.html",scope:{title:"@cmsTitle",icon:"@cmsIcon",href:"@cmsHref",external:"@cmsExternal"},link:function(a,b){a.icon&&(a.iconCls="fa-"+a.icon)}}}]),angular.module("cms.shared").directive("cmsButtonLink",["shared.internalModulePath",function(a){return{restrict:"E",replace:!0,templateUrl:a+"UIComponents/Buttons/ButtonLink.html",scope:{text:"@cmsText",href:"@cmsHref"}}}]),angular.module("cms.shared").directive("cmsButtonSubmit",["shared.internalModulePath",function(a){return{restrict:"E",replace:!0,templateUrl:a+"UIComponents/Buttons/ButtonSubmit.html",scope:{text:"@cmsText"}}}]),angular.module("cms.shared").controller("AddCustomEntityDialogController",["$scope","$location","shared.stringUtilities","shared.LoadState","shared.customEntityService","options","close",function(a,b,c,d,e,f,g){function h(){angular.extend(a,f.customEntityDefinition),p.globalLoadState=new d,p.saveLoadState=new d,p.saveAndPublishLoadState=new d,p.formLoadState=new d(!0),p.editMode=!1,p.options=f.customEntityDefinition,p.saveButtonText=f.customEntityDefinition.autoPublish?"Save":"Save & Publish",p.save=i.bind(null,!1),p.saveAndPublish=i.bind(null,!0),p.cancel=k,p.close=k,p.onNameChanged=j,m()}function i(a){var b;a?(p.command.publish=!0,b=p.saveAndPublishLoadState):b=p.saveLoadState,n(b),e.add(p.command,f.customEntityDefinition.customEntityDefinitionCode).then(l)["finally"](o.bind(null,b))}function j(){p.command.urlSlug=c.slugify(p.command.title)}function k(){g()}function l(a){f.onComplete(a),g()}function m(){function b(a){p.command.model={},p.formDataSource={model:p.command.model,modelMetaData:a},p.formLoadState.off()}e.getDataModelSchema(f.customEntityDefinition.customEntityDefinitionCode).then(b),p.command={},a.$watch("vm.command.localeId",function(a){a?p.additionalParameters={localeId:a}:p.additionalParameters={}})}function n(a){p.globalLoadState.on(),a&&_.isFunction(a.on)&&a.on()}function o(a){p.globalLoadState.off(),a&&_.isFunction(a.off)&&a.off()}var p=a;h()}]),angular.module("cms.shared").directive("cmsCustomEntityLink",["shared.internalModulePath","shared.urlLibrary",function(a,b){function c(){var a=this;a.urlLibrary=b}return{restrict:"E",scope:{customEntityDefinition:"=cmsCustomEntityDefinition",customEntity:"=cmsCustomEntity"},templateUrl:a+"UIComponents/CustomEntities/CustomEntityLink.html",controller:c,controllerAs:"vm",bindToController:!0}}]),angular.module("cms.shared").controller("CustomEntityPickerDialogController",["$scope","$q","shared.LoadState","shared.customEntityService","shared.SearchQuery","shared.modalDialogService","shared.internalModulePath","shared.permissionValidationService","shared.ModelPreviewFieldset","shared.ImagePreviewFieldCollection","options","close",function(a,b,c,d,e,f,g,h,i,j,k,l){function m(){angular.extend(a,k),y.onOk=t,y.onCancel=q,y.onSelect=r,y.onCreate=u,y.selectedEntity=y.currentEntity,y.onSelectAndClose=s,y.close=q,y.gridLoadState=new c,y.query=new e({onChanged:o,useHistory:!1,defaultParams:k.filter}),y.presetFilter=k.filter,y.filter=y.query.getFilters(),y.toggleFilter=n,y.isSelected=w,y.customEntityDefinition=k.customEntityDefinition,y.multiMode=y.selectedIds?!0:!1,y.canCreate=v("COMCRT"),n(!1),p()}function n(a){y.isFilterVisible=_.isUndefined(a)?!y.isFilterVisible:a}function o(){n(!1),p()}function p(){function a(){return y.gridLoadState.on(),d.getAll(y.query.getParameters(),h).then(function(a){y.result=a,y.gridLoadState.off()})}function c(){return d.getDataModelSchema(h)}function e(a){y.previewFields=new i(a)}function f(){return y.gridImages=new j,y.gridImages.load(y.result.items,y.previewFields)}var g,h=k.customEntityDefinition.customEntityDefinitionCode,l=a();return y.previewFields?(g=b.defer(),g.resolve()):g=c().then(e),b.all([g,l]).then(f)}function q(){y.multiMode||y.onSelected(y.currentEntity),l()}function r(a){return y.multiMode?void x(a):void(y.selectedEntity=a)}function s(a){return y.multiMode?(x(a),void t()):(y.selectedEntity=a,void t())}function t(){y.multiMode?y.onSelected(y.selectedIds):y.onSelected(y.selectedEntity),l()}function u(){function a(a){y.multiMode?(r({customEntityId:a}),p()):s({customEntityId:a})}f.show({templateUrl:g+"UIComponents/CustomEntities/AddCustomEntityDialog.html",controller:"AddCustomEntityDialogController",options:{customEntityDefinition:k.customEntityDefinition,onComplete:a}})}function v(a){return h.hasPermission(k.customEntityDefinition.customEntityDefinitionCode+a)}function w(a){return y.selectedIds&&a&&y.selectedIds.indexOf(a.customEntityId)>-1?!0:a&&y.selectedEntity?a.customEntityId===y.selectedEntity.customEntityId:!1}function x(a){if(w(a)){var b=y.selectedIds.indexOf(a.customEntityId);y.selectedIds.splice(b,1)}else y.selectedIds.push(a.customEntityId)}var y=a;m()}]),angular.module("cms.shared").directive("cmsFormFieldCustomEntityCollection",["_","shared.internalModulePath","shared.LoadState","shared.customEntityService","shared.modalDialogService","shared.arrayUtilities","shared.ModelPreviewFieldset","shared.ImagePreviewFieldCollection","baseFormFieldFactory",function(a,b,c,d,e,f,g,h,i){function j(i,j,m,n){function o(){B.gridLoadState=new c,B.showPicker=q,B.remove=p,B.onDrop=r,B.onDropSuccess=s,y=d.getDefinition(B.customEntityDefinitionCode).then(function(a){B.customEntityDefinition=a}),z=d.getDataModelSchema(B.customEntityDefinitionCode).then(w),i.$watch("vm.model",x)}function p(a,b){f.removeObject(B.gridData,a),f.removeObject(B.model,a[k]),B.gridImages.remove(b)}function q(){function a(a){B.model=a,x(a)}e.show({templateUrl:b+"UIComponents/CustomEntities/CustomEntityPickerDialog.html",controller:"CustomEntityPickerDialogController",options:{selectedIds:B.model||[],customEntityDefinition:B.customEntityDefinition,filter:v(),onSelected:a}})}function r(a,b){A=a}function s(a){f.move(B.gridData,a,A),B.gridImages.move(a,A),u()}function t(){function b(){return B.gridImages=new h,B.gridImages.load(B.gridData,B.previewFields)}B.orderable||(B.gridData=a.sortBy(B.gridData,"title"),u()),z.then(b)}function u(){B.model=a.pluck(B.gridData,k)}function v(){var a,b={};return B.localeId?a=B.localeId:C&&C.additionalParameters&&(a=C.additionalParameters.localeId),a&&(b.localeId=a),b}function w(a){B.previewFields=new g(a)}function x(b){if(b&&b.length){if(!B.gridData||a.pluck(B.gridData,k).join()!=b.join()){B.gridLoadState.on();var c=d.getByIdRange(b).then(function(a){B.gridData=a,t()});B.gridLoadState.offWhen(y,c)}}else B.gridData=[]}var y,z,A,B=i.vm,C=(a.has(m,"required"),a.last(n));return o(),l.link(i,j,m,n)}var k="customEntityId",l=i.defaultConfig,m={templateUrl:b+"UIComponents/CustomEntities/FormFieldCustomEntityCollection.html",scope:a.extend(l.scope,{customEntityDefinitionCode:"@cmsCustomEntityDefinitionCode",localeId:"=cmsLocaleId",orderable:"=cmsOrderable"}),require:a.union(l.require,["?^^cmsFormDynamicFieldSet"]),passThroughAttributes:["required"],link:j};return i.create(m)}]),angular.module("cms.shared").directive("cmsFormFieldCustomEntityMultiTypeCollection",["_","shared.internalModulePath","shared.LoadState","shared.customEntityService","shared.modalDialogService","shared.arrayUtilities","shared.ModelPreviewFieldset","shared.ImagePreviewFieldCollection","baseFormFieldFactory",function(a,b,c,d,e,f,g,h,i){function j(i,j,o,p){function q(){var b=x();E.gridLoadState=new c,E.showPicker=s,E.remove=r,E.onDrop=t,E.onDropSuccess=u,B=d.getDefinitionsByIdRange(b).then(function(b){E.customEntityDefinitions={},a.each(b,function(a){E.customEntityDefinitions[a.customEntityDefinitionCode]=a,a.autoPublish||(E.showPublishColumn=!0)})}),C=d.getDataModelSchemasByCodeRange(b).then(z),i.$watch("vm.model",A)}function r(a,b){f.removeObject(E.gridData,a),f.remove(E.model,b),E.gridImages.remove(b)}function s(c){function d(){return a.chain(E.model).where({customEntityDefinitionCode:c[l]}).map(function(a){return a[k]}).value()}function f(a){if(E.model||(E.model=[]),E.model.length>0)for(var b=0;b<E.model.length;b++)if(E.model[b].customEntityDefinitionCode===c[l]){var d=a.indexOf(E.model[b].customEntityId);if(d>-1){a.splice(d,1);continue}E.model.splice(b,1)}for(var b=0;b<a.length;b++)E.model.push({customEntityId:a[b],
-customEntityDefinitionCode:c[l]});A(E.model)}e.show({templateUrl:b+"UIComponents/CustomEntities/CustomEntityPickerDialog.html",controller:"CustomEntityPickerDialogController",options:{selectedIds:d(),customEntityDefinition:c,filter:y(),onSelected:f}})}function t(a){D=a}function u(a){f.move(E.gridData,a,D),E.gridImages.move(a,D),w()}function v(){function b(){return E.gridImages=new h("customEntityDefinitionCode"),E.gridImages.load(E.gridData,E.previewFields)}E.orderable||(E.gridData=a.sortBy(E.gridData,"title"),w()),C.then(b)}function w(){E.model=a.map(E.gridData,function(b){return a.pick(b,k,l)})}function x(){return E.customEntityDefinitionCodes?E.customEntityDefinitionCodes.split(","):[]}function y(){var a,b={};return E.localeId?a=E.localeId:F&&F.additionalParameters&&(a=F.additionalParameters.localeId),a&&(b.localeId=a),b}function z(b){E.previewFields={},a.each(b,function(a){var b=new g(a);b.fields[m]&&(E.previewFields.showDescription=!0),b.fields[n]&&(E.previewFields.showImage=!0),E.previewFields[a.customEntityDefinitionCode]=b})}function A(b){var c=b?a.pluck(b,k):[];if(c&&c.length){if(!E.gridData||a.pluck(E.gridData,k).join()!=c.join()){E.gridLoadState.on();var e=d.getByIdRange(c).then(function(a){E.gridData=a,v()});E.gridLoadState.offWhen(B,e)}}else E.gridData=[]}var B,C,D,E=i.vm,F=(a.has(o,"required"),a.last(p));return q(),baseConfig.link(i,j,o,p)}var k="customEntityId",l="customEntityDefinitionCode",m="previewDescription",n="previewImage";baseConfig=i.defaultConfig;var o={templateUrl:b+"UIComponents/CustomEntities/FormFieldCustomEntityMultiTypeCollection.html",scope:a.extend(baseConfig.scope,{customEntityDefinitionCodes:"@cmsCustomEntityDefinitionCodes",localeId:"=cmsLocaleId",orderable:"=cmsOrderable"}),require:a.union(baseConfig.require,["?^^cmsFormDynamicFieldSet"]),passThroughAttributes:["required"],link:j};return i.create(o)}]),angular.module("cms.shared").directive("cmsFormFieldCustomEntitySelector",["_","shared.internalModulePath","shared.customEntityService","shared.directiveUtilities","shared.modalDialogService","shared.permissionValidationService",function(a,b,c,d,e,f){function g(a,g,h,i){function j(a){l.customEntityDefinition=a,l.canCreate=k("COMCRT")}function k(a){return f.hasPermission(l.customEntityDefinition.customEntityDefinitionCode+a)}var l=a.vm;i[0];angular.isDefined(h.required)?l.isRequired=!0:l.isRequired=!1,d.setModelName(l,h),l.search=function(a){return c.getAll(a,l.customEntityDefinitionCode)},c.getDefinition(l.customEntityDefinitionCode).then(j),l.create=function(){function a(a){l.model=a}e.show({templateUrl:b+"UIComponents/CustomEntities/AddCustomEntityDialog.html",controller:"AddCustomEntityDialogController",options:{customEntityDefinition:l.customEntityDefinition,onComplete:a}})},l.initialItemFunction=function(a){return c.getByIdRange([a]).then(function(a){return a[0]})}}function h(){}return{restrict:"E",templateUrl:b+"UIComponents/CustomEntities/FormFieldCustomEntitySelector.html",scope:{model:"=cmsModel",title:"@cmsTitle",localeId:"=cmsLocaleId",customEntityDefinitionCode:"@cmsCustomEntityDefinitionCode"},require:["?^^cmsFormDynamicFieldSet"],link:{pre:g},controller:h,controllerAs:"vm",bindToController:!0}}]),angular.module("cms.shared").directive("cmsFormFieldDirectorySelector",["_","shared.directiveUtilities","shared.internalModulePath","shared.directoryService",function(a,b,c,d){function e(a,c,d){var e=a.vm;angular.isDefined(d.required)?e.isRequired=!0:(e.isRequired=!1,e.defaultItemText=d.cmsDefaultItemText||"None"),e.title=d.cmsTitle||"Directory",e.description=d.cmsDescription,b.setModelName(e,d)}function f(){var a=this;d.getAll().then(function(b){a.pageDirectories=b,a.onLoaded&&a.onLoaded()})}return{restrict:"E",templateUrl:c+"UIComponents/Directories/FormFieldDirectorySelector.html",scope:{model:"=cmsModel",title:"@cmsTitle",onLoaded:"&cmsOnLoaded"},link:{pre:e},controller:f,controllerAs:"vm",bindToController:!0}}]),angular.module("cms.shared").directive("cmsDocumentAsset",["shared.internalModulePath","shared.urlLibrary",function(a,b){return{restrict:"E",scope:{document:"=cmsDocument"},templateUrl:a+"UIComponents/DocumentAssets/DocumentAsset.html",link:function(a,c,d){a.getDocumentUrl=b.getDocumentUrl}}}]),angular.module("cms.shared").controller("DocumentAssetPickerDialogController",["$scope","shared.LoadState","shared.documentService","shared.SearchQuery","shared.modalDialogService","shared.internalModulePath","shared.permissionValidationService","shared.urlLibrary","options","close",function(a,b,c,d,e,f,g,h,i,j){function k(){angular.extend(a,i),v.onOk=r,v.onCancel=o,v.onSelect=p,v.onUpload=s,v.selectedAsset=v.currentAsset,v.onSelectAndClose=q,v.close=o,v.gridLoadState=new b,v.query=new d({onChanged:m,useHistory:!1,defaultParams:v.filter}),v.presetFilter=i.filter,v.filter=v.query.getFilters(),v.toggleFilter=l,v.isSelected=t,v.multiMode=v.selectedIds?!0:!1,v.okText=v.multiMode?"Ok":"Select",v.canCreate=g.canCreate("COFDOC"),v.getDocumentUrl=h.getDocumentUrl,l(!1),n()}function l(a){v.isFilterVisible=_.isUndefined(a)?!v.isFilterVisible:a}function m(){l(!1),n()}function n(){return v.gridLoadState.on(),c.getAll(v.query.getParameters()).then(function(a){v.result=a,v.gridLoadState.off()})}function o(){v.multiMode||v.onSelected(v.currentAsset),j()}function p(a){return v.multiMode?void u(a):void(v.selectedAsset=a)}function q(a){return v.multiMode?(u(a),void r()):(v.selectedAsset=a,void r())}function r(){v.multiMode?v.onSelected(v.selectedIds):v.onSelected(v.selectedAsset),j()}function s(){function a(a){q({documentAssetId:a})}e.show({templateUrl:f+"UIComponents/DocumentAssets/UploadDocumentAssetDialog.html",controller:"UploadDocumentAssetDialogController",options:{filter:i.filter,onUploadComplete:a}})}function t(a){return v.selectedIds&&a&&v.selectedIds.indexOf(a.documentAssetId)>-1?!0:a&&v.selectedAsset?a.documentAssetId===v.selectedAsset.documentAssetId:!1}function u(a){if(t(a)){var b=v.selectedIds.indexOf(a.documentAssetId);v.selectedIds.splice(b,1)}else v.selectedIds.push(a.documentAssetId)}var v=a;k()}]),angular.module("cms.shared").directive("cmsDocumentUpload",["_","shared.internalModulePath","shared.urlLibrary",function(a,b,c){function d(b,d,e,f){function g(){l.remove=h,l.fileChanged=j,l.isRemovable=a.isObject(l.ngModel)&&!m,b.$watch("vm.asset",i)}function h(){j()}function i(){var a=l.asset;a?(l.previewUrl=c.getDocumentUrl(a),l.isRemovable=!m,f.$setViewValue({name:a.fileName+"."+a.fileExtension,size:a.fileSizeInBytes,isCurrentFile:!0})):(l.isRemovable=!1,f.$modelValue&&f.$setViewValue(void 0)),k()}function j(b){b&&b[0]?(f.$setViewValue(b[0]),l.isRemovable=!m):(!l.ngModel||a.isUndefined(b))&&(f.$setViewValue(void 0),l.previewUrl=null,l.isRemovable=!1,l.asset=void 0),k(),l.onChange&&l.onChange(l.ngModel)}function k(){l.buttonText=f.$modelValue?"Change":"Upload"}var l=b.vm,m=a.has(e,"required");g()}return{restrict:"E",templateUrl:b+"UIComponents/DocumentAssets/DocumentUpload.html",scope:{asset:"=cmsAsset",loadState:"=cmsLoadState",isEditMode:"=cmsIsEditMode",modelName:"=cmsModelName",ngModel:"=ngModel",onChange:"&cmsOnChange"},require:"ngModel",controller:function(){},controllerAs:"vm",bindToController:!0,link:d}}]),angular.module("cms.shared").directive("cmsFormFieldDocumentAsset",["_","shared.internalModulePath","shared.internalContentPath","shared.modalDialogService","shared.stringUtilities","shared.documentService","shared.urlLibrary","baseFormFieldFactory",function(a,b,c,d,e,f,g,h){function i(c,i,j,k){function l(){t.urlLibrary=g,t.showPicker=n,t.remove=m,t.isRemovable=a.isObject(t.model)&&!u,t.filter=q(j),c.$watch("vm.asset",p),c.$watch("vm.model",o)}function m(){p(null)}function n(){function a(a){!a&&t.asset?p(null):(!t.asset||a&&t.asset.documentAssetId!==a.documentAssetId)&&p(a)}d.show({templateUrl:b+"UIComponents/DocumentAssets/DocumentAssetPickerDialog.html",controller:"DocumentAssetPickerDialogController",options:{currentAsset:t.previewAsset,filter:t.filter,onSelected:a}})}function o(a){a||(t.model=a=void 0),!a||t.previewAsset&&t.previewAsset.documentAssetId==a||f.getById(a).then(function(a){p(a)})}function p(a){a?(t.previewAsset=a,t.isRemovable=!u,t.model=a.documentAssetId,t.updateAsset&&(t.asset=a)):s&&(t.previewAsset=null,t.isRemovable=!1,t.model&&(t.model=null),t.updateAsset&&(t.asset=null)),r(),s=!0}function q(a){function b(b){var f=e.lowerCaseFirstWord(b);c[f]=a[d+b]}var c={},d="cms";return b("Tags"),b("FileExtension"),b("FileExtensions"),c}function r(){t.buttonText=t.model?"Change":"Select"}var s,t=c.vm,u=a.has(j,"required");return l(),h.defaultConfig.link(c,i,j,k)}var j={templateUrl:b+"UIComponents/DocumentAssets/FormFieldDocumentAsset.html",scope:a.extend(h.defaultConfig.scope,{asset:"=cmsAsset",loadState:"=cmsLoadState",updateAsset:"@cmsUpdateAsset"}),passThroughAttributes:["required"],link:i};return h.create(j)}]),angular.module("cms.shared").directive("cmsFormFieldDocumentAssetCollection",["_","shared.internalModulePath","shared.LoadState","shared.documentService","shared.modalDialogService","shared.arrayUtilities","shared.stringUtilities","shared.urlLibrary","baseFormFieldFactory",function(a,b,c,d,e,f,g,h,i){function j(i,j,m,n){function o(){v.urlLibrary=h,v.gridLoadState=new c,v.showPicker=q,v.remove=p,v.onDrop=r,i.$watch("vm.model",u)}function p(a){function b(a,b){var c=a.indexOf(b);return c>=0?a.splice(c,1):void 0}b(v.gridData,a),b(v.model,a[k])}function q(){function a(a){v.model=a,u(a)}e.show({templateUrl:b+"UIComponents/DocumentAssets/DocumentAssetPickerDialog.html",controller:"DocumentAssetPickerDialogController",options:{selectedIds:v.model||[],filter:t(),onSelected:a}})}function r(a,b){f.moveObject(v.gridData,b,a,k),s()}function s(){v.model=a.pluck(v.gridData,k)}function t(){function a(a){var d=g.lowerCaseFirstWord(a);b[d]=m[c+a]}var b={},c="cms";return a("Tags"),a("FileExtension"),a("FileExtensions"),b}function u(b){b&&b.length?v.gridData&&a.pluck(v.gridData,k).join()==b.join()||(v.gridLoadState.on(),d.getByIdRange(b).then(function(a){v.gridData=a,v.gridLoadState.off()})):v.gridData=[]}var v=i.vm;a.has(m,"required");return o(),l.link(i,j,m,n)}var k="documentAssetId",l=i.defaultConfig,m={templateUrl:b+"UIComponents/DocumentAssets/FormFieldDocumentAssetCollection.html",passThroughAttributes:["required"],link:j};return i.create(m)}]),angular.module("cms.shared").directive("cmsFormFieldDocumentTypeSelector",["_","shared.internalModulePath","shared.documentService",function(a,b,c){function d(){var a=this;c.getAllDocumentFileTypes().then(function(b){a.fileTypes=b,a.onLoaded&&a.onLoaded()})}return{restrict:"E",templateUrl:b+"UIComponents/DocumentAssets/FormFieldDocumentTypeSelector.html",scope:{model:"=cmsModel",disabled:"=cmsDisabled",onLoaded:"&cmsOnLoaded"},controller:d,controllerAs:"vm",bindToController:!0}}]),angular.module("cms.shared").directive("cmsFormFieldDocumentUpload",["_","shared.internalModulePath","baseFormFieldFactory",function(a,b,c){function d(a){return a.find("cms-document-upload")}var e={templateUrl:b+"UIComponents/DocumentAssets/FormFieldDocumentUpload.html",scope:a.extend(c.defaultConfig.scope,{asset:"=cmsAsset",loadState:"=cmsLoadState"}),passThroughAttributes:["required","ngRequired"],getInputEl:d};return c.create(e)}]),angular.module("cms.shared").controller("UploadDocumentAssetDialogController",["$scope","shared.LoadState","shared.documentService","shared.SearchQuery","shared.focusService","shared.stringUtilities","options","close",function(a,b,c,d,e,f,g,h){function i(){angular.extend(a,g),m(),p.onUpload=j,p.onCancel=l,p.close=l,p.filter=g.filter,p.onFileChanged=k,p.hasFilterRestrictions=n,p.saveLoadState=new b}function j(){p.saveLoadState.on(),c.add(p.command).progress(p.saveLoadState.setProgress).then(o)}function k(){var a=p.command;a.file&&a.file.name&&(a.title=f.capitaliseFirstLetter(f.getFileNameWithoutExtension(a.file.name)),a.fileName=f.slugify(a.title),e.focusById("title"))}function l(){h()}function m(){p.command={}}function n(){return g.filter.fileExtension||g.filter.fileExtensions}function o(a){g.onUploadComplete(a),h()}var p=a;i()}]),angular.module("cms.shared").controller("ImageAssetEditorDialogController",["$scope","shared.LoadState","shared.imageService","shared.SearchQuery","shared.urlLibrary","options","close",function(a,b,c,d,e,f,g){function h(){angular.extend(a,f),q.formLoadState=new b,q.saveLoadState=new b,q.onInsert=l,q.onCancel=j,q.onImageChanged=k,q.command={},i()}function i(){if(q.imageAssetHtml&&q.imageAssetHtml.length){if(q.command.imageAssetId=q.imageAssetHtml.attr("data-image-asset-id"),q.command.altTag=q.imageAssetHtml.attr("alt"),q.command.style=q.imageAssetHtml.attr("style"),q.command.style){var a=p(q.command.style);q.command.width=a.width,q.command.height=a.height}else q.command.width=q.imageAssetHtml.attr("width"),q.command.height=q.imageAssetHtml.attr("height");if(!q.command.imageAssetId){var b=q.imageAssetHtml.attr("src"),c=b.lastIndexOf("/"),d=b.substr(c+1,b.indexOf("_")-c-1);q.command.imageAssetId=d}}}function j(){g()}function k(){q.command.altTag=q.command.imageAsset.title||q.command.imageAsset.fileName}function l(){var a={width:o(q.command.width),height:o(q.command.height)};a.width||a.height||(a.width="100%",a.height="auto");var b=e.getImageUrl(q.command.imageAsset,n(a)),c=q.command.altTag||"",d={markdown:"![Alt "+c+"]("+b+")",html:"<img src='"+b+"' alt='"+c+"' data-image-asset-id='"+q.command.imageAssetId+"' />",model:q.command};d.html=m(d.html,a),q.onSelected(d),g()}function m(a,b){return angular.element(a).css(b)[0].outerHTML}function n(a){return(a.width||"").indexOf("%")>-1||(a.height||"").indexOf("%")>-1?{}:{width:a.width.replace("px",""),height:a.height.replace("px","")}}function o(a){return a?-1==a.indexOf("px")&&-1==a.indexOf("%")&&-1==a.indexOf("auto")?a+"px":a:""}function p(a){for(var b,c=/([\w-]*)\s*:\s*([^;]*)/g,d={};b=c.exec(a);)d[b[1]]=b[2];return d}var q=a;h()}]),angular.module("cms.shared").factory("shared.entityVersionModalDialogService",["shared.entityVersionService","shared.modalDialogService",function(a,b){var c={},d={entityNameSingular:"Page"};return c.publish=function(c,e,f){function g(){return e(),a.publish(h.isCustomEntity,c)}var h=f||d,i={title:"Publish "+h.entityNameSingular,message:"Are you sure you want to publish this "+h.entityNameSingular.toLowerCase()+"?",okButtonTitle:"Yes, publish it",onOk:g};return b.confirm(i)},c.unpublish=function(c,e,f){function g(){return e(),a.unpublish(h.isCustomEntity,c)}var h=f||d,i={title:"Unpublish "+h.entityNameSingular,message:"Unpublishing this "+h.entityNameSingular.toLowerCase()+" will remove it from the live site and put it into draft status. Are you sure you want to continue?",okButtonTitle:"Yes, unpublish it",onOk:g};return b.confirm(i)},c.copyToDraft=function(c,e,f,g,h){function i(){return g(),a.removeDraft(k.isCustomEntity,c).then(j)}function j(){return a.duplicateDraft(k.isCustomEntity,c,e)}var k=h||d,l={title:"Copy "+k.entityNameSingular+" Version",message:"A draft version of this "+k.entityNameSingular.toLowerCase()+" already exists. Copying this version will delete the current draft. Do you wish to continue?",okButtonTitle:"Yes, replace it",onOk:i};return f?b.confirm(l):(g(),j())},c}]),angular.module("cms.shared").directive("cmsForm",["shared.internalModulePath",function(a){function b(a){a.getForm=function(){return a[a.name]},this.getFormScope=function(){return a}}function c(a,b){return angular.isDefined(b.cmsEditMode)||(b.cmsEditMode="true"),d}function d(a,b,c,d){var f=e(a);f[a.name]=a.getForm()}function e(a,b){var c=a.$parent;return c?(angular.isDefined(c.vm)&&(b=c.vm),e(c,b)):b||a}return{restrict:"E",templateUrl:a+"UIComponents/Form/Form.html",replace:!0,transclude:!0,scope:{editMode:"=cmsEditMode",name:"@cmsName"},compile:c,controller:["$scope",b]}}]),angular.module("cms.shared").directive("cmsFormSection",["shared.internalModulePath","$timeout",function(a,b){function c(a,c,d){b(function(){var a=angular.element(c[0].querySelector(".help-inline")),b=angular.element(c[0].querySelector(".toggle-helpers"));a.length&&b.addClass("show").on("click",function(){b.toggleClass("active"),c.toggleClass("show-helpers")})},100)}return{restrict:"E",templateUrl:a+"UIComponents/Form/FormSection.html",scope:{title:"@cmsTitle"},replace:!0,transclude:!0,link:c}}]),angular.module("cms.shared").directive("cmsFormSectionActions",["shared.internalModulePath","$timeout",function(a,b){function c(a,b,c){}return{restrict:"E",templateUrl:a+"UIComponents/Form/FormSectionActions.html",scope:{},replace:!0,transclude:!0,link:c}}]),angular.module("cms.shared").directive("cmsFormSectionAuditData",["shared.internalModulePath",function(a){return{restrict:"E",templateUrl:a+"UIComponents/Form/FormSectionAuditData.html",scope:{auditData:"=cmsAuditData"}}}]),angular.module("cms.shared").directive("cmsFormStatus",["_","shared.validationErrorService","shared.internalModulePath",function(a,b,c){function d(a,b,c,d){e(a,d[0]),f(a,b)}function e(a,b){var c=b.getFormScope(),d=c.getForm();a.success=i.bind(a),a.error=h.bind(a),a.errors=g.bind(a),a.clear=j.bind(a),d.formStatus=a}function f(a,c){b.addHandler("",a.errors),a.$on("$destroy",function(){b.removeHandler(a.errors)})}function g(b,c){var d=a.uniq(b,function(a){return a.message});k(this,c,"error",d)}function h(a){k(this,a,"error")}function i(a){k(this,a,"success")}function j(){k(this)}function k(a,b,c,d){a.message=b,a.errors=d,a.cls=c}return{restrict:"E",templateUrl:c+"UIComponents/Form/FormStatus.html",require:["^^cmsForm"],replace:!0,scope:!0,link:{post:d}}}]),angular.module("cms.shared").directive("cmsFormDynamicFieldSet",["$compile","_","shared.stringUtilities","shared.internalModulePath","shared.LoadState",function(a,b,c,d,e){function f(a){}function g(d,e,f,g){function j(f){var g="";e.empty(),f&&f.modelMetaData.dataModelProperties.length&&(f.modelMetaData.dataModelProperties.forEach(function(a,d){var e=h(a);g+="<"+e,g+=k.map("model",c.lowerCaseFirstWord(a.name)),g+=k.map("title",a.displayName),g+=k.map("required",a.isRequired),g+=k.map("description",a.description),a.additionalAttributes&&b.each(a.additionalAttributes,function(a,b){g+=k.map(b,a,d)}),g+="></"+e+">"}),e.append(a(g)(d)))}var k=(d.vm,new i);d.$watch("vm.dataSource",function(a){j(a)})}function h(a){var b="cms-form-field-";switch(a.dataTemplateName){case"Int32":return b+"number";case"String":return b+"text";case"Boolean":return b+"checkbox";case"MultilineText":return b+"text-area"}return b+c.toSnakeCase(a.dataTemplateName)}function i(){function a(a,b){return b="vm.dataSource.model['"+b+"']",f(a,b)}function b(a,b,c){return b="vm.dataSource.modelMetaData.dataModelProperties["+c+"].additionalAttributes['"+a+"']",f(a,b)}function d(a,b){return g(c.toSnakeCase(a),b)}function e(a,b){return b?g(a.toLowerCase()):""}function f(a,b){return a=h+c.toSnakeCase(a),g(a,b)}function g(a,b){return b?" "+a+'="'+b+'"':" "+a}var h="cms-",i={maxlength:d,minlength:d,min:d,max:d,pattern:d,step:d,placeholder:d,match:a,model:a,options:b,required:e,rows:d,cols:d};this.map=function(a,b,e){var g,h="ValMsg",j=i[a];return!j&&c.endsWith(a,h)?(g=a.substring(0,a.length-h.length),b&&i[g]===d&&(j=d)):j||(j=f),j?j(a,b,e):""}}return{restrict:"E",replace:!0,scope:{dataSource:"=cmsDataSource",additionalParameters:"=cmsAdditionalParameters"},link:g,controller:["$scope",f],bindToController:!0,controllerAs:"vm"}}]),angular.module("cms.shared").factory("baseFormFieldFactory",["$timeout","shared.stringUtilities","shared.directiveUtilities","shared.validationErrorService",function(a,b,c,d){function e(a,b){return g.call(this,a,b),this.link.bind(this)}function f(a,b,d,e){var f=a.vm,g=e[0];f.formScope=g.getFormScope(),f.form=f.formScope.getForm(),c.setModelName(f,d),j(f,d),f.onChange=l.bind(f),f.resetCustomErrors=m.bind(f),f.resetCustomErrors(),i(a,b),a.$watch("vm.model",function(){f.resetCustomErrors()})}function g(a,b){var c=this,d=c.getInputEl(a);(c.passThroughAttributes||[]).forEach(function(a){angular.isDefined(b[a])&&d[0].setAttribute(b.$attr[a],b[a])})}function h(a){return a.find("input")}function i(a,b){var c=_.partial(k,a.vm,b);d.addHandler(a.vm.modelName,c),a.$on("$destroy",function(){d.removeHandler(c)})}function j(a,c){function d(b,d){var e=_.find(b,function(a){return a.attr===d});return e?_.isFunction(e.msg)?e.msg(a.modelName,c):e.msg:void 0}var e=this,f="ValMsg",g="-val-msg";a.validators=[],_.each(c.$attr,function(h,i){var j,k;b.endsWith(i,f)?(j=h.substring(0,h.length-g.length),k=c[i]):(j=h,k=d(e.defaultValidationMessages,i)||d(o,i)),k&&a.validators.push({name:c.$normalize(j),message:b.format(k,c[i])})})}function k(a,b,c){var d=a.formScope.getForm(),e=d[a.modelName];a.resetCustomErrors(),e.$setValidity("server",!1),h(b).removeClass("ng-pristine").addClass("ng-dirty"),c.forEach(function(b){a.customErrors.push(b)})}function l(){var b=this;b.resetCustomErrors(),b.change&&a(b.change,0)}function m(){var a=this.form[this.modelName];a&&a.$setValidity("server",!0),this.customErrors=[]}var n={},o=[{attr:"required",msg:"This field is required"},{attr:"maxlength",msg:"This field cannot be longer than {0} characters"},{attr:"minlength",msg:"This must be at least {0} characters long"}];return n.create=function(a){return angular.extend({},n.defaultConfig,a)},n.defaultConfig={restrict:"E",replace:!0,require:["^^cmsForm"],scope:{title:"@cmsTitle",description:"@cmsDescription",change:"&cmsChange",model:"=cmsModel",disabled:"=cmsDisabled"},compile:e,link:f,controller:function(){},controllerAs:"vm",bindToController:!0,getInputEl:h,passThroughAttributes:[],defaultValidationMessages:[]},n}]),angular.module("cms.shared").directive("cmsFormFieldCheckbox",["shared.internalModulePath","baseFormFieldFactory",function(a,b){var c={templateUrl:a+"UIComponents/FormFields/FormFieldCheckbox.html",passThroughAttributes:["disabled"]};return b.create(c)}]),angular.module("cms.shared").directive("cmsFormFieldCheckboxList",["_","$http","shared.internalModulePath","baseFormFieldFactory",function(a,b,c,d){function e(c,e,f,g){function h(){if(o.isRequiredAttributeDefined=angular.isDefined(f.required),o.onCheckChanged=n,o.optionsApi)j(o.optionsApi);else{c.$watch("vm.options",function(){k(o.options),m()})}c.$watch("vm.model",i)}function i(){l(),m()}function j(a){function c(a){k(a),m()}return b.get(a).then(c)}function k(b){function c(a){return{text:a[o.optionName],value:a[o.optionValue]}}o.listOptions=a.map(b,c),l()}function l(){var b=!o.model||!o.model.length;o.displayValues=[],a.each(o.listOptions,function(c){c.selected=!b&&!!a.find(o.model,function(a){return a===c.value})})}function m(){o.displayValues=a.chain(o.listOptions).filter(function(a){return a.selected}).pluck("text").value()}function n(){o.model=a.chain(o.listOptions).filter(function(a){return a.selected}).pluck("value").value()}var o=c.vm;h(),d.defaultConfig.link.apply(this,arguments)}var f={templateUrl:c+"UIComponents/FormFields/FormFieldCheckboxList.html",scope:a.extend(d.defaultConfig.scope,{options:"=cmsOptions",optionValue:"@cmsOptionValue",optionName:"@cmsOptionName",optionsApi:"@cmsOptionsApi",noValueText:"@cmsNoValueText",required:"=cmsRequired",disabled:"=cmsDisabled"}),passThroughAttributes:["placeholder","disabled","cmsMatch","required"],link:e};return d.create(f)}]),angular.module("cms.shared").directive("cmsFormFieldColor",["shared.internalModulePath","baseFormFieldFactory",function(a,b){function c(a){var c=a.vm;b.defaultConfig.link.apply(this,arguments),c.validators.push({name:"pattern",message:c.title+" must be a hexadecimal colour value e.g. '#EFEFEF' or '#fff'"})}var d={templateUrl:a+"UIComponents/FormFields/FormFieldColor.html",passThroughAttributes:["required","disabled"],link:c};return b.create(d)}]),angular.module("cms.shared").directive("cmsFormFieldContainer",["shared.internalModulePath",function(a){return{restrict:"E",templateUrl:a+"UIComponents/FormFields/FormFieldContainer.html",require:["^^cmsForm"],replace:!0,transclude:!0,scope:{title:"@cmsTitle",description:"@cmsDescription"}}}]),angular.module("cms.shared").directive("cmsFormFieldDate",["shared.internalModulePath","baseFormFieldFactory",function(a,b){var c={templateUrl:a+"UIComponents/FormFields/FormFieldDate.html",passThroughAttributes:["required","min","max","disabled","cmsMatch"]};return b.create(c)}]),angular.module("cms.shared").directive("cmsFormFieldDropdown",["_","$http","shared.internalModulePath","baseFormFieldFactory",function(a,b,c,d){function e(c,e,f,g){function h(){if(k.isRequiredAttributeDefined=angular.isDefined(f.required),k.optionsApi)i(k.optionsApi);else{c.$watch("vm.options",function(){k.listOptions=k.options,j()})}c.$watch("vm.model",j)}function i(a){function c(a){k.listOptions=a,j()}return b.get(a).then(c)}function j(){var b=a.find(k.listOptions,function(a){return a[k.optionValue]==k.model});k.displayValue=b?b[k.optionName]:k.defaultItemText,!b&&void 0!=k.model&&k.listOptions&&(k.model=void 0)}var k=c.vm;h(),d.defaultConfig.link.apply(this,arguments)}function f(a){return a.find("select")}var g={templateUrl:c+"UIComponents/FormFields/FormFieldDropdown.html",scope:a.extend(d.defaultConfig.scope,{options:"=cmsOptions",optionValue:"@cmsOptionValue",optionName:"@cmsOptionName",optionsApi:"@cmsOptionsApi",defaultItemText:"@cmsDefaultItemText",required:"=cmsRequired",disabled:"=cmsDisabled"}),passThroughAttributes:["placeholder","disabled","cmsMatch"],getInputEl:f,link:e};return d.create(g)}]),angular.module("cms.shared").directive("cmsFormFieldEmailAddress",["shared.internalModulePath","baseFormFieldFactory",function(a,b){function c(a){var c=a.vm;b.defaultConfig.link.apply(this,arguments),c.validators.push({name:"email",message:"Please enter a valid email address"})}var d={templateUrl:a+"UIComponents/FormFields/FormFieldEmailAddress.html",passThroughAttributes:["required","maxlength","placeholder","disabled","cmsMatch"],link:c};return b.create(d)}]),angular.module("cms.shared").directive("cmsFormFieldFilteredDropdown",["$q","_","shared.internalModulePath","shared.stringUtilities","baseFormFieldFactory",function(a,b,c,d,e){function f(c,d,f,g){function h(){l.refreshDataSource=k,l.dataSource=[],l.hasRequiredAttribute=b.has(f,"required"),l.placeholder=f.placeholder,l.clearSelected=j,c.$watch("vm.model",i)}function i(c){function d(a){a&&(l.selectedText=a[l.optionName],k(l.selectedText))}if(l.selectedText="",c&&l.dataSource&&l.dataSource.length){var e=b.find(l.dataSource,function(a){return c==a[l.optionValue]});e&&(l.selectedText=e[l.optionName])}!l.selectedText&&c&&l.initialItemFunction&&a.when(l.initialItemFunction({id:c})).then(d)}function j(){l.selectedText="",l.model&&(l.model=null)}function k(a){function b(a){l.dataSource=a.items}var c={text:a,pageSize:20};return l.localeId?c.localeId=l.localeId:m&&m.additionalParameters&&(c.localeId=m.additionalParameters.localeId),l.searchFunction({$query:c}).then(b)}var l=c.vm,m=b.last(g);h(),e.defaultConfig.link.apply(this,arguments)}var g={templateUrl:c+"UIComponents/FormFields/FormFieldFilteredDropdown.html",passThroughAttributes:["required","disabled"],scope:b.extend(e.defaultConfig.scope,{defaultItemText:"@cmsDefaultItemText",searchFunction:"&cmsSearchFunction",initialItemFunction:"&cmsInitialItemFunction",optionName:"@cmsOptionName",optionValue:"@cmsOptionValue",required:"=cmsRequired"}),require:b.union(e.defaultConfig.require,["?^^cmsFormDynamicFieldSet"]),link:f,transclude:!0};return e.create(g)}]),angular.module("cms.shared").directive("cmsFormFieldHtml",["$sce","$q","$http","_","shared.internalModulePath","shared.internalContentPath","shared.stringUtilities","shared.modalDialogService","baseFormFieldFactory",function(a,b,c,d,e,f,g,h,i){function j(b,c,d){function e(b){b!==g.editorModel&&(g.editorModel=b,g.rawHtml=a.trustAsHtml(b))}function f(b){b!==g.model&&(g.model=b,g.rawHtml=a.trustAsHtml(b))}var g=b.vm;i.defaultConfig.link.apply(this,arguments),l(g,d).then(function(a){g.tinymceOptions=a}),b.$watch("vm.model",e),b.$watch("vm.editorModel",f)}function k(a){return a.find("textarea")}function l(a,e){function g(a){a&&a.data&&d.extend(k,a.data),h()}function h(){a.options&&d.extend(k,a.options),j.resolve(k)}var i=20,j=b.defer();e.rows&&(i=parseInt(e.rows));var k={toolbar:n(a.toolbarsConfig,a.toolbarCustomConfig),plugins:"link image media fullscreen imagetools code",content_css:f+"css/third-party/tinymce/content.min.css",menubar:!1,min_height:16*i,setup:function(a){a.addButton("cfimage",{icon:"image",onclick:m.bind(null,a)})},browser_spellcheck:!0,convert_urls:!1};return a.configPath?c.get(a.configPath).then(g):h(),j.promise}function m(a){var b=a.selection.getContent({format:"image"}),c=b.length?angular.element(b):null;h.show({templateUrl:e+"UIComponents/EditorDialogs/ImageAssetEditorDialog.html",controller:"ImageAssetEditorDialogController",options:{imageAssetHtml:c,onSelected:function(b){a.insertContent(b.html)}}})}function n(a,b){function c(a){var b;if(a){if(!a.startsWith("'")&&!a.startsWith('"'))return[a];try{b=JSON.parse('{"j":['+a.replace(/'/g,'"')+"]}").j}catch(c){}if(b&&b.length)return b}return[]}var e="headings,basicFormatting",f={headings:"formatselect",basicFormatting:"fullscreen undo redo removeformat | bold italic underline | link unlink",advancedFormatting:"bullist numlist blockquote | alignleft aligncenter alignright alignjustify | strikethrough superscript subscript",media:"cfimage media",source:"code"},h=[];return a=a||e,a.split(",").forEach(function(a){a=g.lowerCaseFirstWord(a.trim()),"custom"===a?h=d.union(h,c(b)):f[a]&&h.push(f[a])}),h.join(" | ")}var o={templateUrl:e+"UIComponents/FormFields/FormFieldHtml.html",passThroughAttributes:["required","maxlength","disabled","rows"],getInputEl:k,scope:d.extend(i.defaultConfig.scope,{toolbarsConfig:"@cmsToolbars",toolbarCustomConfig:"@cmsCustomToolbar",options:"=cmsOptions",configPath:"@cmsConfigPath"}),link:j};return i.create(o)}]),angular.module("cms.shared").directive("cmsFormFieldNumber",["shared.internalModulePath","baseFormFieldFactory",function(a,b){var c={templateUrl:a+"UIComponents/FormFields/FormFieldNumber.html",passThroughAttributes:["required","maxlength","min","max","step","disabled","placeholder","cmsMatch"]};return b.create(c)}]),angular.module("cms.shared").directive("cmsFormFieldPassword",["shared.internalModulePath","baseFormFieldFactory",function(a,b){var c={templateUrl:a+"UIComponents/FormFields/FormFieldPassword.html",passThroughAttributes:["required","minlength","maxlength","disabled","cmsMatch"]};return b.create(c)}]),angular.module("cms.shared").directive("cmsFormFieldRadioList",["_","$http","shared.internalModulePath","baseFormFieldFactory",function(a,b,c,d){function e(c,e,f,g){function h(){if(k.isRequiredAttributeDefined=angular.isDefined(f.required),k.optionsApi)i(k.optionsApi);else{c.$watch("vm.options",function(){k.listOptions=k.options,j()})}c.$watch("vm.model",j)}function i(a){function c(a){k.listOptions=a,j()}return b.get(a).then(c)}function j(){var b=a.find(k.listOptions,function(a){return a[k.optionValue]==k.model});k.displayValue=b?b[k.optionName]:k.defaultItemText,!b&&void 0!=k.model&&k.listOptions&&(k.model=void 0)}var k=c.vm;h(),d.defaultConfig.link.apply(this,arguments)}var f={templateUrl:c+"UIComponents/FormFields/FormFieldRadioList.html",scope:a.extend(d.defaultConfig.scope,{options:"=cmsOptions",optionValue:"@cmsOptionValue",optionName:"@cmsOptionName",optionsApi:"@cmsOptionsApi",defaultItemText:"@cmsDefaultItemText",required:"=cmsRequired",disabled:"=cmsDisabled"}),passThroughAttributes:["placeholder","disabled","cmsMatch"],link:e};return d.create(f)}]),angular.module("cms.shared").directive("cmsFormFieldReadonly",["shared.internalModulePath",function(a){return{restrict:"E",templateUrl:a+"UIComponents/FormFields/FormFieldReadonly.html",replace:!0,require:"^^cmsForm",scope:{title:"@cmsTitle",description:"@cmsDescription",model:"=cmsModel"},controller:function(){},controllerAs:"vm",bindToController:!0}}]),angular.module("cms.shared").directive("cmsFormFieldText",["_","shared.internalModulePath","baseFormFieldFactory",function(a,b,c){var d={templateUrl:b+"UIComponents/FormFields/FormFieldText.html",
-passThroughAttributes:["required","minlength","maxlength","placeholder","pattern","disabled","cmsMatch"]};return c.create(d)}]),angular.module("cms.shared").directive("cmsFormFieldTextArea",["shared.internalModulePath","shared.stringUtilities","baseFormFieldFactory",function(a,b,c){function d(a){return a.find("textarea")}var e={templateUrl:a+"UIComponents/FormFields/FormFieldTextArea.html",passThroughAttributes:["required","maxlength","placeholder","ngMinlength","ngMaxlength","ngPattern","disabled","rows","cols","wrap"],getInputEl:d};return c.create(e)}]),angular.module("cms.shared").directive("cmsFormFieldUrl",["_","shared.internalModulePath","baseFormFieldFactory",function(a,b,c){var d={templateUrl:b+"UIComponents/FormFields/FormFieldUrl.html",passThroughAttributes:["required","minlength","maxlength","placeholder","pattern","disabled","cmsMatch"]};return c.create(d)}]),angular.module("cms.shared").directive("cmsFormFieldValidationSummary",["shared.internalModulePath",function(a){return{restrict:"E",templateUrl:a+"UIComponents/FormFields/FormFieldValidationSummary.html",replace:!0}}]),angular.module("cms.shared").directive("cmsHttpPrefix",function(){return{restrict:"A",require:"ngModel",link:function(a,b,c,d){function e(a){var b="http://";return a&&!/^(https?):\/\//i.test(a)&&-1===b.indexOf(a)&&-1==="https://".indexOf(a)?(d.$setViewValue(b+a),d.$render(),b+a):a}d.$formatters.push(e),d.$parsers.splice(0,0,e)}}}),angular.module("cms.shared").directive("cmsMatch",["$parse","$timeout","shared.internalModulePath","shared.directiveUtilities",function(a,b,c,d){function e(a,b,c,e){if(c[f]&&e[1]){var g=e[0],h=e[1],i=g.getFormScope().getForm(),j=d.parseModelName(c[f]),k=function(a,b){var c=i[j];if(!c)return!1;var d=c.$viewValue;return a===d};h.$validators[f]=k}}var f="cmsMatch";return{link:e,restrict:"A",require:["^^cmsForm","?ngModel"]}}]),angular.module("cms.shared").directive("cmsFormFieldImageAnchorLocationSelector",["_","shared.internalModulePath",function(a,b){function c(){var a=this;a.options=[{name:"Top Left",id:"TopLeft"},{name:"Top Center",id:"TopCenter"},{name:"Top Right",id:"TopRight"},{name:"Middle Left",id:"MiddleLeft"},{name:"Middle Center",id:"MiddleCenter"},{name:"Middle Right",id:"MiddleRight"},{name:"Bottom Left",id:"BottomLeft"},{name:"Bottom Center",id:"BottomCenter"},{name:"Bottom Right",id:"BottomRight"}]}return{restrict:"E",templateUrl:b+"UIComponents/ImageAssets/FormFieldImageAnchorLocationSelector.html",scope:{model:"=cmsModel"},controller:c,controllerAs:"vm",bindToController:!0}}]),angular.module("cms.shared").directive("cmsFormFieldImageAsset",["_","shared.internalModulePath","shared.internalContentPath","shared.modalDialogService","shared.stringUtilities","shared.imageService","shared.urlLibrary","baseFormFieldFactory",function(a,b,c,d,e,f,g,h){function i(c,h,i,k){function l(){t.urlLibrary=g,t.showPicker=n,t.remove=m,t.isRemovable=a.isObject(t.model)&&!u,t.filter=q(i),t.previewWidth=i.cmsPreviewWidth||220,t.previewHeight=i.cmsPreviewHeight,c.$watch("vm.asset",p),c.$watch("vm.model",o)}function m(){p(null)}function n(){function a(a){!a&&t.previewAsset?(p(null),t.onChange()):(!t.previewAsset||a&&t.previewAsset.imageAssetId!==a.imageAssetId)&&(p(a),t.onChange())}d.show({templateUrl:b+"UIComponents/ImageAssets/ImageAssetPickerDialog.html",controller:"ImageAssetPickerDialogController",options:{currentAsset:t.previewAsset,filter:t.filter,onSelected:a}})}function o(a){a||(t.model=a=void 0),!a||t.previewAsset&&t.previewAsset.imageAssetId==a||f.getById(a).then(function(a){a&&p(a)})}function p(a){a?(t.previewAsset=a,t.isRemovable=!u,t.model=a.imageAssetId,t.updateAsset&&(t.asset=a)):s&&(t.previewAsset=null,t.isRemovable=!1,t.model&&(t.model=null),t.updateAsset&&(t.asset=null)),r(),s=!0}function q(a){function b(b,f){var g=a[d+b];g&&(b=e.lowerCaseFirstWord(b),c[b]=f?parseInt(g):g)}var c={},d="cms";return b("Tags"),b("Width",!0),b("Height",!0),b("MinWidth",!0),b("MinHeight",!0),c}function r(){t.buttonText=t.model?"Change":"Select"}var s,t=c.vm,u=a.has(i,"required");return l(),j.link(c,h,i,k)}var j=h.defaultConfig,k={templateUrl:b+"UIComponents/ImageAssets/FormFieldImageAsset.html",scope:a.extend(j.scope,{asset:"=cmsAsset",loadState:"=cmsLoadState",updateAsset:"@cmsUpdateAsset"}),passThroughAttributes:["required"],link:i};return h.create(k)}]),angular.module("cms.shared").directive("cmsFormFieldImageAssetCollection",["_","shared.internalModulePath","shared.LoadState","shared.imageService","shared.modalDialogService","shared.arrayUtilities","shared.stringUtilities","shared.urlLibrary","baseFormFieldFactory",function(a,b,c,d,e,f,g,h,i){function j(i,j,m,n){function o(){v.gridLoadState=new c,v.urlLibrary=h,v.showPicker=q,v.remove=p,v.onDrop=r,i.$watch("vm.model",u)}function p(a){function b(a,b){var c=a.indexOf(b);return c>=0?a.splice(c,1):void 0}b(v.gridData,a),b(v.model,a.imageAssetId)}function q(){function a(a){v.model=a,u(a)}e.show({templateUrl:b+"UIComponents/ImageAssets/ImageAssetPickerDialog.html",controller:"ImageAssetPickerDialogController",options:{selectedIds:v.model||[],filter:t(),onSelected:a}})}function r(a,b){f.moveObject(v.gridData,b,a,k),s()}function s(){v.model=a.pluck(v.gridData,k)}function t(){function a(a){var c=m["cms"+a];c&&(a=g.lowerCaseFirstWord(a),b[a]=parseInt(c))}var b={};return a("Width"),a("Height"),a("MinWidth"),a("MinHeight"),b}function u(b){b&&b.length?v.gridData&&a.pluck(v.gridData,k).join()==b.join()||(v.gridLoadState.on(),d.getByIdRange(b).then(function(a){v.gridData=a,v.gridLoadState.off()})):v.gridData=[]}var v=i.vm;a.has(m,"required");return o(),l.link(i,j,m,n)}var k="imageAssetId",l=i.defaultConfig,m={templateUrl:b+"UIComponents/ImageAssets/FormFieldImageAssetCollection.html",passThroughAttributes:["required"],link:j};return i.create(m)}]),angular.module("cms.shared").directive("cmsFormFieldImageUpload",["_","shared.internalModulePath","baseFormFieldFactory",function(a,b,c){function d(a){return a.find("cms-image-upload")}var e={templateUrl:b+"UIComponents/ImageAssets/FormFieldImageUpload.html",scope:a.extend(c.defaultConfig.scope,{asset:"=cmsAsset",loadState:"=cmsLoadState"}),passThroughAttributes:["required","ngRequired"],getInputEl:d};return c.create(e)}]),angular.module("cms.shared").directive("cmsImageAsset",["shared.internalModulePath","shared.internalContentPath","shared.urlLibrary",function(a,b,c){return{restrict:"E",scope:{image:"=cmsImage",width:"@cmsWidth",height:"@cmsHeight",cropMode:"@cmsCropMode"},templateUrl:a+"UIComponents/ImageAssets/ImageAsset.html",link:function(a,d,e){a.$watch("image",function(d,e){d&&d.imageAssetId?a.src=c.getImageUrl(d,{width:a.width,height:a.height,mode:a.cropMode}):a.src=b+"img/AssetReplacement/image-replacement.png"})},replace:!0}}]),angular.module("cms.shared").controller("ImageAssetPickerDialogController",["$scope","shared.LoadState","shared.imageService","shared.SearchQuery","shared.modalDialogService","shared.internalModulePath","shared.permissionValidationService","options","close",function(a,b,c,d,e,f,g,h,i){function j(){angular.extend(a,h),u.onOk=q,u.onCancel=n,u.onSelect=o,u.onUpload=r,u.selectedAsset=u.currentAsset,u.onSelectAndClose=p,u.close=n,u.gridLoadState=new b,u.query=new d({onChanged:l,useHistory:!1,defaultParams:h.filter}),u.presetFilter=h.filter,u.filter=u.query.getFilters(),u.toggleFilter=k,u.isSelected=s,u.multiMode=u.selectedIds?!0:!1,u.okText=u.multiMode?"Ok":"Select",u.canCreate=g.canCreate("COFIMG"),k(!1),m()}function k(a){u.isFilterVisible=_.isUndefined(a)?!u.isFilterVisible:a}function l(){k(!1),m()}function m(){return u.gridLoadState.on(),c.getAll(u.query.getParameters()).then(function(a){u.result=a,u.gridLoadState.off()})}function n(){u.multiMode||u.onSelected(u.currentAsset),i()}function o(a){return u.multiMode?void t(a):void(u.selectedAsset=a)}function p(a){return u.multiMode?(t(a),void q()):(u.selectedAsset=a,void q())}function q(){u.multiMode?u.onSelected(u.selectedIds):u.onSelected(u.selectedAsset),i()}function r(){function a(a){c.getById(a).then(p)}e.show({templateUrl:f+"UIComponents/ImageAssets/UploadImageAssetDialog.html",controller:"UploadImageAssetDialogController",options:{filter:h.filter,onUploadComplete:a}})}function s(a){return u.selectedIds&&a&&u.selectedIds.indexOf(a.imageAssetId)>-1?!0:a&&u.selectedAsset?a.imageAssetId===u.selectedAsset.imageAssetId:!1}function t(a){if(s(a)){var b=u.selectedIds.indexOf(a.imageAssetId);u.selectedIds.splice(b,1)}else u.selectedIds.push(a.imageAssetId)}var u=a;j()}]),angular.module("cms.shared").directive("cmsImageUpload",["_","shared.internalModulePath","shared.internalContentPath","shared.stringUtilities","shared.urlLibrary",function(a,b,c,d,e){function f(b,c,f,g){function j(){q.remove=k,q.fileChanged=m,q.isRemovable=a.isObject(q.ngModel)&&!r,b.$watch("vm.asset",l)}function k(){m()}function l(){var a=q.asset;a?(q.previewUrl=e.getImageUrl(a,{width:220}),q.isRemovable=!r,g.$setViewValue({name:a.fileName+"."+a.extension,size:a.fileSizeInBytes,isCurrentFile:!0})):(q.previewUrl=i,q.isRemovable=!1,g.$modelValue&&g.$setViewValue(void 0)),p()}function m(b){b&&b[0]?(g.$setViewValue(b[0]),n(b[0]),q.isRemovable=!r):(!q.ngModel||a.isUndefined(b))&&(g.$setViewValue(void 0),q.previewUrl=i,q.isRemovable=!1),p(),q.onChange&&q.onChange(q.ngModel)}function n(a){if(!o(a))return void(q.previewUrl=h);try{q.previewUrl=URL.createObjectURL(a)}catch(b){q.previewUrl=h}}function o(b){var c=[".tiff",".tif"];return!a.find(c,function(a){return d.endsWith(b.name,a)})}function p(){q.buttonText=g.$modelValue?"Change":"Upload"}var q=b.vm,r=a.has(f,"required");j()}var g=c+"img/AssetReplacement/",h=g+"preview-not-supported.png",i=g+"image-replacement.png";return{restrict:"E",templateUrl:b+"UIComponents/ImageAssets/ImageUpload.html",scope:{asset:"=cmsAsset",loadState:"=cmsLoadState",isEditMode:"=cmsIsEditMode",modelName:"=cmsModelName",ngModel:"=ngModel",onChange:"&cmsOnChange"},require:"ngModel",controller:function(){},controllerAs:"vm",bindToController:!0,link:f}}]),angular.module("cms.shared").controller("UploadImageAssetDialogController",["$scope","shared.LoadState","shared.imageService","shared.SearchQuery","shared.focusService","shared.stringUtilities","options","close",function(a,b,c,d,e,f,g,h){function i(){angular.extend(a,g),m(),p.onUpload=j,p.onCancel=l,p.close=l,p.filter=g.filter,p.onFileChanged=k,p.hasFilterRestrictions=n,p.saveLoadState=new b}function j(){p.saveLoadState.on(),c.add(p.command).progress(p.saveLoadState.setProgress).then(o)}function k(){var a=p.command;a.file&&a.file.name&&(a.title=f.capitaliseFirstLetter(f.getFileNameWithoutExtension(a.file.name)),e.focusById("title"))}function l(){h()}function m(){p.command={}}function n(){return g.filter.minWidth||g.filter.minHeight||g.filter.width||g.filter.height}function o(a){g.onUploadComplete(a),h()}var p=a;i()}]),angular.module("cms.shared").directive("cmsField",["$timeout","shared.internalModulePath",function(a,b){return{restrict:"E",templateUrl:b+"UIComponents/Layout/Field.html",transclude:!0,replace:!0,require:"^^cmsForm"}}]),function(a){function b(){c=a(document.getElementsByClassName("category")),d=a(document.getElementsByClassName("category selected")),c.on("mouseenter",function(b){a(b.srcElement);d.removeClass("selected")}),c.on("mouseleave",function(b){a(b.srcElement);d.addClass("selected")})}var c,d;a(document.getElementsByClassName("main-nav"));b()}(angular.element),angular.module("cms.shared").directive("cmsPageActions",function(){return{restrict:"E",template:'<div class="page-actions" ng-transclude></div>',replace:!0,transclude:!0}}),angular.module("cms.shared").directive("cmsPageBody",function(){return{restrict:"E",template:'<div class="page-body {{ contentType }} {{ subHeader }}"><div class="form-wrap" ng-transclude></div></div>',scope:{contentType:"@cmsContentType",subHeader:"@cmsSubHeader"},replace:!0,transclude:!0}}),angular.module("cms.shared").directive("cmsPageFilter",function(){return{restrict:"E",template:'<div class="page-filter" ng-transclude></div>',replace:!0,transclude:!0}}),angular.module("cms.shared").directive("cmsPageHeader",function(){return{restrict:"E",template:'<h1 class="page-header"><a ng-href="{{parentHref ? parentHref : \'#/\'}}" ng-if="parentTitle">{{parentTitle}}</a><span ng-if="parentTitle && title"> &gt; </span>{{title}}</h1>',replace:!0,scope:{title:"@cmsTitle",parentTitle:"@cmsParentTitle",parentHref:"@cmsParentHref"}}}),angular.module("cms.shared").directive("cmsPageHeaderButtons",function(){return{restrict:"E",template:'<div class="btn-group page-header-buttons" ng-transclude></div>',replace:!0,transclude:!0}}),angular.module("cms.shared").directive("cmsPageSubHeader",function(){return{restrict:"E",template:'<div class="page-sub-header" ng-transclude></div>',replace:!0,transclude:!0}}),angular.module("cms.shared").factory("shared.LoadState",["$q","$rootScope","_",function(a,b,c){function d(b){var d=this;d.isLoading=b===!0,d.progress=d.isLoading?0:100,d.on=function(){d.isLoading=!0,100===d.progress&&(d.progress=0)},d.off=function(){d.isLoading=!1,d.progress=100},d.offWhen=function(){var b=[],e=Array.prototype.slice.call(arguments);return c.each(e,function(a){b.push(a.promise?a.promise:a)}),a.all(b).then(function(){d.off()})},d.setProgress=function(a,b){var e;c.isObject(a)&&(b=a.total,a=a.loaded),c.isUndefined(b)&&(b=100),e=parseInt(100*a/b),0>=e&&(e=0),e>=100?e=100:d.on(),d.progress=e}}return d}]),angular.module("cms.shared").directive("cmsLoading",function(){return{restrict:"A",link:function(a,b,c){a.$watch(c.cmsLoading,function(a){b.toggleClass("loading",a)})}}}),angular.module("cms.shared").directive("cmsProgressBar",["shared.internalModulePath",function(a){return{restrict:"E",scope:{loadState:"="},templateUrl:a+"UIComponents/Loader/ProgressBar.html"}}]),angular.module("cms.shared").directive("cmsFormFieldLocaleSelector",["_","shared.internalModulePath","shared.localeService","shared.directiveUtilities",function(a,b,c,d){function e(a,b,c){var e=a.vm;angular.isDefined(c.required)?e.isRequired=!0:(e.isRequired=!1,e.defaultItemText=c.cmsDefaultItemText||"None"),d.setModelName(e,c)}function f(){var b=this;c.getAll().then(function(c){b.locales=a.map(c,function(a){return{name:a.name+" ("+a.ietfLanguageTag+")",id:a.localeId}}),b.onLoaded&&b.onLoaded()})}return{restrict:"E",templateUrl:b+"UIComponents/Locales/FormFieldLocaleSelector.html",scope:{model:"=cmsModel",onLoaded:"&cmsOnLoaded"},link:{pre:e},controller:f,controllerAs:"vm",bindToController:!0}}]),angular.module("cms.shared").directive("cmsMenu",["shared.internalModulePath",function(a){return{restrict:"E",replace:!0,transclude:!0,templateUrl:a+"UIComponents/Menus/Menu.html",scope:{text:"@cmsIcon"}}}]),angular.module("cms.shared").controller("AlertController",["$scope","options","close",function(a,b,c){angular.extend(a,b),a.close=c}]),angular.module("cms.shared").controller("ConfirmDialogController",["$scope","options","close",function(a,b,c){function d(a){var c=a?b.ok:b.cancel;c&&c().then(e)["finally"](b.onCancel)}function e(){b.autoClose&&c()}angular.extend(a,b),a.close=d}]),angular.module("cms.shared").controller("DeveloperExceptionController",["$scope","$sce","shared.internalContentPath","options","close",function(a,b,c,d,e){var f=d.response.data,g=document.createElement("iframe");g.setAttribute("srcdoc",f),g.setAttribute("src",c+"developer-exception-not-supported.html"),g.setAttribute("sandbox","allow-scripts"),a.messageHtml=b.trustAsHtml(g.outerHTML),angular.extend(a,d),a.close=e}]),angular.module("cms.shared").directive("cmsModalDialogActions",["shared.internalModulePath",function(a){return{restrict:"E",templateUrl:a+"UIComponents/Modals/ModalDialogActions.html",transclude:!0}}]),angular.module("cms.shared").directive("cmsModalDialogBody",["shared.internalModulePath",function(a){return{restrict:"E",templateUrl:a+"UIComponents/Modals/ModalDialogBody.html",transclude:!0}}]),angular.module("cms.shared").directive("cmsModalDialogContainer",["shared.internalModulePath","$timeout",function(a,b){function c(a,c,d){var e="large"===d.cmsModalSize?"modal-lg":"";e+=a.isRootModal?" is-root-modal":" is-child-modal","large"===d.cmsModalSize&&(a.sizeCls=e),b(function(){a.sizeCls=e+" modal--show"},1)}return{restrict:"E",templateUrl:a+"UIComponents/Modals/ModalDialogContainer.html",transclude:!0,link:c,controller:angular.noop}}]),angular.module("cms.shared").directive("cmsModalDialogHeader",["shared.internalModulePath",function(a){return{restrict:"E",templateUrl:a+"UIComponents/Modals/ModalDialogHeader.html",transclude:!0}}]),angular.module("cms.shared").factory("shared.modalDialogService",["$q","_","ModalService","shared.internalModulePath","shared.LoadState",function(a,b,c,d,e){var f={};return f.alert=function(e){var f=a.defer(),g=e||{};return b.isString(e)&&(g={message:e}),c.showModal({templateUrl:d+"UIComponents/Modals/Alert.html",controller:"AlertController",inputs:{options:g}}).then(function(a){a.close.then(f.resolve)}),f.promise},f.show=function(a){return c.showModal({templateUrl:a.templateUrl,controller:a.controller,inputs:{options:a.options}})},f.confirm=function(f){function g(a){var c=a||{},d={okButtonTitle:"OK",cancelButtonTitle:"Cancel",autoClose:!0},e={ok:h.bind(null,!0),cancel:h.bind(null,!1),onOkLoadState:j};return b.isString(a)&&(c={message:a}),b.defaults(e,c,d)}function h(c){var d,e=c?k.onOk:k.onOk.onCancel,f=c?i.resolve:i.reject;return b.isFunction(e)&&(j.on(),d=e()),a.when(d).then(f)}var i=a.defer(),j=new e,k=g(f);return c.showModal({templateUrl:d+"UIComponents/Modals/ConfirmDialog.html",controller:"ConfirmDialogController",inputs:{options:k}}),i.promise},f}]),angular.module("cms.shared").factory("shared.ImagePreviewFieldCollection",["$q","_","shared.arrayUtilities","shared.imageService",function(a,b,c,d){function e(e){function f(a){if(e){var b=a[e],c=i[b].fields[k];return c?c.lowerName:void 0}return!h&&i.fields[k]&&(h=i.fields[k].lowerName),h}function g(a,b,c){function e(a){j.images[b]=a}var g=f(a);if(g){var h=a[g];if(!c){var i,k=j.images[b];if(k&&(i=k.imageAssetId),h==i)return;if(!h)return void(j.images[b]=void 0)}return d.getById(h).then(e)}}var h,i,j=this,k="previewImage";j.load=function(c,e){function g(){var b=a.defer();return b.resolve(),j.images=[],b.promise}function h(a,b){return b?a.model?a.model[b]:a[b]:void 0}if(i=e,!c||!c.length||!e)return g();var k=b.chain(c).map(function(a){return h(a,f(a))}).filter(function(a){return!!a}).uniq().value();return k.length?d.getByIdRange(k).then(function(a){j.images=[],b.each(c,function(c){var d,e=h(c,f(c));e&&(d=b.find(a,{imageAssetId:e})),j.images.push(d)})}):g()},j.move=function(a,b){c.move(j.images,a,b)},j.add=function(a,b){return g(a,b,!0)},j.update=function(a,b){return g(a,b)},j.remove=function(a){c.remove(j.images,a)}}return e}]),angular.module("cms.shared").factory("shared.ModelPreviewFieldset",["$q","_","shared.stringUtilities","shared.imageService",function(a,b,c,d){function e(a){function d(a){function d(d){var f=b.find(a.dataModelProperties,function(a){return a.additionalAttributes[d]});f&&(f.lowerName=c.lowerCaseFirstWord(f.name),e[d]=f,e.hasFields=!0)}var e={};return d(h),d(i),d(j),e}function e(a){return a[h]||!a.hasFields}function f(a){return a[h]?a[h].displayName:"Title"}var g=this,h="previewTitle",i="previewDescription",j="previewImage";g.modelMetaData=a,g.fields=d(a),g.showTitle=e(g.fields),g.titleTerm=f(g.fields),g.on=function(){g.isLoading=!0,100===g.progress&&(g.progress=0)}}return e}]),angular.module("cms.shared").controller("EditNestedDataModelDialogController",["$scope","shared.focusService","shared.stringUtilities","options","close",function(a,b,c,d,e){function f(){angular.extend(a,d),i.save=g,i.onCancel=h,i.close=h,i.title=d.model?"Edit Item":"Add Item",i.formDataSource={model:d.model||{},modelMetaData:d.modelMetaData}}function g(){d.onSave&&d.onSave(i.formDataSource.model),e()}function h(){e()}var i=a;f()}]),angular.module("cms.shared").directive("cmsFormFieldNestedDataModelCollection",["_","shared.internalModulePath","shared.LoadState","shared.nestedDataModelSchemaService","shared.modalDialogService","shared.arrayUtilities","shared.ModelPreviewFieldset","shared.ImagePreviewFieldCollection","baseFormFieldFactory",function(a,b,c,d,e,f,g,h,i){function j(c,i,j,m){function n(){y.add=r,y.edit=q,y.remove=p,y.onDrop=t,y.onDropSuccess=u,y.getTitle=v,w=d.getByName(y.modelType).then(function(a){y.modelMetaData=a,y.previewFields=new g(a),y.gridImages=new h,y.gridImages.load(y.model,y.previewFields)})}function o(){y.model=y.model.slice(0)}function p(a,b){f.removeObject(y.model,a),y.gridImages.remove(b)}function q(a,b){function c(){y.gridImages.update(a,b),o()}s({model:a,onSave:c})}function r(){function a(a){y.model=y.model||[],y.model.push(a),y.gridImages.add(a,y.model.length-1),o()}s({onSave:a})}function s(a){a.modelMetaData=y.modelMetaData,z&&(a.additionalParameters=z.additionalParameters),e.show({templateUrl:b+"UIComponents/NestedDataModels/EditNestedDataModelDialog.html",controller:"EditNestedDataModelDialogController",options:a})}function t(a,b){x=a}function u(a){f.move(y.model,a,x),y.gridImages.move(a,x)}function v(a,b){var c=y.previewFields.fields[l];return c?a[c.lowerName]:a.title?a.title:"Item "+(b+1)}var w,x,y=c.vm,z=a.last(m);return n(),k.link(c,i,j,m)}var k=i.defaultConfig,l="previewTitle",m={templateUrl:b+"UIComponents/NestedDataModels/FormFieldNestedDataModelCollection.html",scope:a.extend(k.scope,{minItems:"@cmsMinItems",maxItems:"@cmsMaxItems",modelType:"@cmsModelType",orderable:"=cmsOrderable"}),passThroughAttributes:["required"],link:j};return i.create(m)}]),angular.module("cms.shared").directive("cmsFormFieldPageCollection",["_","shared.internalModulePath","shared.LoadState","shared.pageService","shared.modalDialogService","shared.arrayUtilities","shared.urlLibrary","baseFormFieldFactory",function(a,b,c,d,e,f,g,h){function i(h,i,l,m){function n(){v.gridLoadState=new c,v.showPicker=p,v.remove=o,v.onDrop=q,v.urlLibrary=g,h.$watch("vm.model",u)}function o(a){f.removeObject(v.gridData,a),f.removeObject(v.model,a[j])}function p(){function a(a){v.model=a,u(a)}e.show({templateUrl:b+"UIComponents/Pages/PagePickerDialog.html",controller:"PagePickerDialogController",options:{selectedIds:v.model||[],filter:t(),onSelected:a}})}function q(a,b){f.moveObject(v.gridData,b,a,j),s()}function r(){v.orderable||(v.gridData=a.sortBy(v.gridData,function(a){return a.auditData.createDate}).reverse(),s())}function s(){v.model=a.pluck(v.gridData,j)}function t(){var a,b={};return v.localeId?a=v.localeId:w&&w.additionalParameters&&(a=w.additionalParameters.localeId),a&&(b.localeId=a),b}function u(b){function c(a){v.gridData=a,r()}b&&b.length?v.gridData&&a.pluck(v.gridData,j).join()==b.join()||(v.gridLoadState.on(),d.getByIdRange(b).then(c).then(v.gridLoadState.off)):v.gridData=[]}var v=h.vm,w=(a.has(l,"required"),a.last(m));return n(),k.link(h,i,l,m)}var j="pageId",k=h.defaultConfig,l={templateUrl:b+"UIComponents/Pages/FormFieldPageCollection.html",scope:a.extend(k.scope,{localeId:"=cmsLocaleId",orderable:"=cmsOrderable"}),require:a.union(k.require,["?^^cmsFormDynamicFieldSet"]),passThroughAttributes:["required"],link:i};return h.create(l)}]),angular.module("cms.shared").directive("cmsFormFieldPageSelector",["_","shared.internalModulePath","shared.pageService","shared.directiveUtilities","shared.modalDialogService",function(a,b,c,d,e){function f(a,b,e,f){var g=a.vm;f[0];angular.isDefined(e.required)?g.isRequired=!0:g.isRequired=!1,d.setModelName(g,e),g.search=function(a){return c.getAll(a)},g.initialItemFunction=function(a){return c.getByIdRange([a]).then(function(a){return a[0]})}}function g(){}return{restrict:"E",templateUrl:b+"UIComponents/Pages/FormFieldPageSelector.html",scope:{model:"=cmsModel",title:"@cmsTitle",localeId:"=cmsLocaleId"},require:["?^^cmsFormDynamicFieldSet"],link:{pre:f},controller:g,controllerAs:"vm",bindToController:!0}}]),angular.module("cms.shared").factory("shared.pageModalDialogService",["shared.pageService","shared.modalDialogService",function(a,b){var c={};return c.publish=function(c,d){function e(){return d(),a.publish(c)}var f={title:"Publish Page",message:"Are you sure you want to publish this page?",okButtonTitle:"Yes, publish it",onOk:e};return b.confirm(f)},c.unpublish=function(c,d){function e(){return d(),a.unpublish(c)}var f={title:"Unpublish Page",message:"Unpublishing this page will remove it from the live site and put the page into draft status. Are you sure you want to continue?",okButtonTitle:"Yes, unpublish it",onOk:e};return b.confirm(f)},c.copyToDraft=function(c,d,e,f){function g(){return f(),a.removeDraft(c).then(h)}function h(){return a.duplicateDraft(c,d)}var i={title:"Copy Version",message:"A draft version of this page already exists. Copying this version will delete the current draft. Do you wish to continue?",okButtonTitle:"Yes, replace it",onOk:g};return e?b.confirm(i):(f(),h())},c}]),angular.module("cms.shared").controller("PagePickerDialogController",["$scope","shared.LoadState","shared.pageService","shared.SearchQuery","shared.modalDialogService","shared.internalModulePath","shared.urlLibrary","options","close",function(a,b,c,d,e,f,g,h,i){function j(){angular.extend(a,h),t.onOk=q,t.onCancel=n,t.onSelect=o,t.selectedPage=t.currentPage,t.onSelectAndClose=p,t.close=n,t.gridLoadState=new b,t.query=new d({onChanged:l,useHistory:!1,defaultParams:h.filter}),t.presetFilter=h.filter,t.filter=t.query.getFilters(),t.toggleFilter=k,t.isSelected=r,t.multiMode=t.selectedIds?!0:!1,t.urlLibrary=g,k(!1),m()}function k(a){t.isFilterVisible=_.isUndefined(a)?!t.isFilterVisible:a}function l(){k(!1),m()}function m(){return t.gridLoadState.on(),c.getAll(t.query.getParameters()).then(function(a){t.result=a,t.gridLoadState.off()})}function n(){t.multiMode||t.onSelected(t.currentPage),i()}function o(a){return t.multiMode?void s(a):void(t.selectedPage=a)}function p(a){return t.multiMode?(s(a),void q()):(t.selectedPage=a,void q())}function q(){t.multiMode?t.onSelected(t.selectedIds):t.onSelected(t.selectedPage),i()}function r(a){return t.selectedIds&&a&&t.selectedIds.indexOf(a.pageId)>-1?!0:a&&t.selectedPage?a[u]===t.selectedPage[u]:!1}function s(a){if(r(a)){var b=t.selectedIds.indexOf(a[u]);t.selectedIds.splice(b,1)}else t.selectedIds.push(a[u])}var t=a,u="pageId";j()}]),angular.module("cms.shared").directive("cmsPager",["shared.internalModulePath",function(a){function b(a,b,c){function d(){f.setPage=e}function e(a){f.query&&f.query.update({pageNumber:a})}var f=a.vm;d(),a.$watch("vm.result",function(a){a?(f.isFirstPage=a.pageNumber<=1,f.isLastPage=a.pageNumber===a.pageCount):(f.isFirstPage=!0,f.isLastPage=!0)})}return{restrict:"E",scope:{result:"=cmsResult",query:"=cmsQuery"},templateUrl:a+"UIComponents/Search/Pager.html",controller:angular.noop,controllerAs:"vm",bindToController:!0,link:b}}]),angular.module("cms.shared").directive("cmsSearchFilter",["shared.internalModulePath",function(a){function b(a,b,c){function d(){_.isUndefined(g.ngShow)&&(g.ngShow=!0),g.setFilter=e,g.cancel=f}function e(){g.query.update(g.filter),g.ngShow=!0}function f(){g.ngShow=!1,g.query.clear()}var g=a.vm;d()}return{restrict:"E",scope:{query:"=cmsQuery",filter:"=cmsFilter",ngShow:"="},templateUrl:a+"UIComponents/Search/SearchFilter.html",transclude:!0,controller:angular.noop,controllerAs:"vm",bindToController:!0,link:b}}]),angular.module("cms.shared").factory("shared.SearchQuery",["$location","_",function(a,b){function c(c){function e(){if(!h)return{};var c=a.search();return b.each(c,function(a,b){isNaN(a)||(c[b]=parseInt(a))}),c}function f(d){j=d,h&&(qsParams=b.omit(d,function(a,b){return i[b]===a||!a}),a.search(qsParams)),c.onChanged&&c.onChanged(g)}var g=this,h=b.isUndefined(c.useHistory)||c.useHistory,i=b.defaults({},c.defaultParams,d),j=(c.filters||[],b.defaults({},e(),i));g.getParameters=function(){return j},g.getFilters=function(){return b.omit(j,Object.keys(d))},g.update=function(a){var c=b.defaults({},a,i,j);f(c)},g.clear=function(){f(i)}}var d={pageSize:30,pageNumber:1};return c}]),angular.module("cms.shared").directive("cmsSuccessMessage",["shared.internalModulePath",function(a){return{restrict:"E",templateUrl:a+"UIComponents/StatusMessages/SuccessMessage.html",replace:!0,transclude:!0}}]),angular.module("cms.shared").directive("cmsWarningMessage",["shared.internalModulePath",function(a){return{restrict:"E",templateUrl:a+"UIComponents/StatusMessages/WarningMessage.html",replace:!0,transclude:!0}}]),angular.module("cms.shared").directive("cmsTableActions",["shared.internalModulePath",function(a){return{restrict:"E",templateUrl:a+"UIComponents/Table/TableActions.html",replace:!0,transclude:!0,link:function(a,b,c,d,e){}}}]),angular.module("cms.shared").directive("cmsTableCellCreatedAuditData",["shared.internalModulePath",function(a){return{restrict:"E",scope:{auditData:"=cmsAuditData"},templateUrl:a+"UIComponents/Table/TableCellCreatedAuditData.html"}}]),angular.module("cms.shared").directive("cmsTableCellImage",["shared.internalModulePath",function(a){return{restrict:"E",scope:{image:"=cmsImage"},templateUrl:a+"UIComponents/Table/TableCellImage.html"}}]),angular.module("cms.shared").directive("cmsTableCellUpdatedAuditData",["shared.internalModulePath",function(a){return{restrict:"E",scope:{auditData:"=cmsAuditData"},templateUrl:a+"UIComponents/Table/TableCellUpdatedAuditData.html"}}]),angular.module("cms.shared").directive("cmsTableColumnActions",function(){return{restrict:"A",link:function(a,b,c,d){b.addClass("actions")}}}),angular.module("cms.shared").directive("cmsTableContainer",["shared.internalModulePath",function(a){return{restrict:"E",templateUrl:a+"UIComponents/Table/TableContainer.html",replace:!0,transclude:!0,link:function(a,b,c,d,e){b.find("table").addClass("table")}}}]),angular.module("cms.shared").directive("cmsTableGroupHeading",function(){return{restrict:"E",template:'<h5 class="table-group-heading" ng-transclude></h5>',replace:!0,transclude:!0}}),angular.module("cms.shared").directive("cmsTableRowInactive",function(){return{restrict:"A",scope:{tableRowInactive:"=cmsTableRowInactive"},link:function(a,b,c,d){a.$watch("tableRowInactive",function(a){b.toggleClass("inactive",!!a)})}}}),angular.module("cms.shared").directive("cmsFormFieldTags",["_","shared.internalModulePath","shared.stringUtilities","baseFormFieldFactory",function(a,b,c,d){var e={templateUrl:b+"UIComponents/Tags/FormFieldTags.html",passThroughAttributes:["required"]};return d.create(e)}]),angular.module("cms.shared").directive("cmsTagList",["shared.internalModulePath",function(a){function b(a,b,c,d){d&&(a.isInModal=!0)}return{restrict:"E",scope:{tags:"=cmsTags"},require:"?^^cmsModalDialogContainer",templateUrl:a+"UIComponents/Tags/TagList.html",link:b}}]),angular.module("cms.shared").directive("cmsTagsInput",["_","shared.stringUtilities",function(a,b){function c(c,f,g,h){function i(){h.$formatters.push(j),h.$parsers.push(k),h.$render=function(){f.val(h.$viewValue||"")},f.on("keypress",m),f.on("blur change keyup",l)}function j(c){return c&&c.length?a.map(c,function(a){return b.capitaliseFirstLetter(a.replace(p(),"").trim())}).join(e):""}function k(b){var c,d;return d=b.replace(p(),"").split(",").map(function(a){return a.trim()}),c=a.filter(d,function(a){return a&&","!==a}),c.length?c:null}function l(a){n(),c.$evalAsync(o)}function m(a){var b=String.fromCharCode(a.which);p().test(b)&&a.preventDefault()}function n(){var a=f.val(),b=a.replace(p(),"");a!=b&&f.val(b)}function o(){var a=f.val();h.$setViewValue(a)}function p(){return d.lastIndex=0,d}c.vm;i()}var d=/[^,&\w\s'()-]+/g,e=", ";return{restrict:"A",require:"ngModel",link:c}}]),angular.module("cms.shared").directive("cmsTimeAgo",["shared.internalModulePath",function(a){function b(a){var b=this;a.$watch("time",function(){a.time?(b.date=new Date(a.time),b.timeAgo=c(b.date)):(b.date=null,b.timeAgo=null)})}function c(a){switch(typeof a){case"number":break;case"string":a=+new Date(a);break;case"object":a.constructor===Date&&(a=a.getTime());break;default:a=+new Date}var b=[[60,"seconds",1],[120,"1 minute ago","1 minute from now"],[3600,"minutes",60],[7200,"1 hour ago","1 hour from now"],[86400,"hours",3600],[172800,"Yesterday","Tomorrow"],[604800,"days",86400],[1209600,"Last week","Next week"],[2419200,"weeks",604800],[4838400,"Last month","Next month"],[29030400,"months",2419200],[58060800,"Last year","Next year"],[290304e4,"years",29030400],[580608e4,"Last century","Next century"],[580608e5,"centuries",290304e4]],c=(+new Date-a)/1e3,d="ago",e=1;
+/*! Cofoundry 2018-09-25 */
+function RoutingUtilitites(){var a={};return a.mapOptions=function(a,b){return{controller:b+"Controller",controllerAs:"vm",templateUrl:a+"Routes/"+b+".html"}},a.registerCrudRoutes=function(b,c,d){b.when("/new",a.mapOptions(c,"Add"+d)).when("/:id",a.mapOptions(c,d+"Details")).otherwise(a.mapOptions(c,d+"List"))},a}angular.module("cms.shared",["ngRoute","ngSanitize","angularModalService","ngFileUpload","ui.tinymce","ang-drag-drop","ui.select"]).constant("shared.internalModulePath","/Admin/Modules/Shared/Js/").constant("shared.pluginModulePath","/Plugins/Admin/Modules/Shared/Js/").constant("shared.modulePath","/Cofoundry/Admin/Modules/Shared/Js/"),angular.module("cms.shared").factory("shared.customEntityService",["$http","_","shared.serviceBase","shared.publishableEntityMapper",function(a,b,c,d){function e(a){return i+"/"+a}function f(a){return e(a)+"/versions"}function g(a){var b=c+"custom-entity-definitions/";return a?b+a:b}var h={},i=c+"custom-entities",j=c+"custom-entity-data-model-schemas";return h.getAll=function(c,e){function f(a){return b.each(a.items,d.map),a}return a.get(g(e)+"/custom-entities",{params:c}).then(f)},h.getDefinition=function(b){return a.get(g(b))},h.getDataModelSchema=function(b){return a.get(g(b)+"/data-model-schema")},h.getDataModelSchemasByCodeRange=function(b){return a.get(j,{params:{customEntityDefinitionCodes:b}})},h.getPageRoutes=function(b){return a.get(g(b)+"/routes")},h.getDefinitionsByIdRange=function(c){function d(a){return b.filter(a,function(a){return b.contains(c,a.customEntityDefinitionCode)})}return a.get(g()).then(d)},h.getByIdRange=function(c){function e(a){return b.each(a,d.map),a}return a.get(i+"/",{params:{customEntityIds:c}}).then(e)},h.getById=function(b){function c(a){return a&&d.map(a),a}return a.get(e(b)).then(c)},h.getVersionsByCustomEntityId=function(b,c){return a.get(f(b),{params:c})},h.add=function(b,c){return b.customEntityDefinitionCode=c,a.post(i,b)},h.updateUrl=function(b){return a.put(e(b.customEntityId)+"/url",b)},h.updateOrdering=function(b){return a.put(i+"/ordering",b)},h.updateDraft=function(b,c){return b.customEntityDefinitionCode=c,a.put(f(b.customEntityId)+"/draft",b)},h.remove=function(b){return a["delete"](e(b))},h.removeDraft=function(b){return a["delete"](f(b)+"/draft")},h.duplicate=function(b){return a.post(e(b.customEntityToDuplicateId)+"/duplicate",b)},h}]),angular.module("cms.shared").factory("shared.directoryService",["$http","_","shared.serviceBase",function(a,b,c){var d={},e=c+"page-directories";return d.getAll=function(){return a.get(e)},d}]),angular.module("cms.shared").factory("shared.documentService",["$http","Upload","shared.serviceBase",function(a,b,c){var d={},e=c+"documents";return d.getAll=function(b){return a.get(e,{params:b})},d.getById=function(b){return a.get(d.getIdRoute(b))},d.getByIdRange=function(b){return a.get(e+"/",{params:{documentAssetIds:b}})},d.getAllDocumentFileTypes=function(){return a.get(c+"document-file-types")},d.add=function(a){return d.uploadFile(d.getBaseRoute(),a,"POST")},d.getIdRoute=function(a){return e+"/"+a},d.getBaseRoute=function(){return e},d.uploadFile=function(a,c,d){return b.upload({url:a,data:c,method:d})},d}]),angular.module("cms.shared").factory("shared.entityVersionService",["$http","shared.serviceBase",function(a,b){function c(a,b){return d(a,b)+"/versions"}function d(a,b){return e(a)+"/"+b}function e(a){return a?h:g}var f={},g=b+"pages",h=b+"custom-entities";return f.publish=function(b,d){return a.patch(c(b,d)+"/draft/publish")},f.unpublish=function(b,d){return a.patch(c(b,d)+"/published/unpublish")},f.duplicateDraft=function(b,d,e){var f;return f=b?{customEntityId:d,copyFromCustomEntityVersionId:e}:{pageId:d,copyFromPageVersionId:e},a.post(c(b,d),f)},f.removeDraft=function(b,d){return a["delete"](c(b,d)+"/draft")},f}]),angular.module("cms.shared").factory("shared.imageService",["$http","Upload","shared.stringUtilities","shared.serviceBase",function(a,b,c,d){function e(a,c,d){var e=_.omit(c,"file");return c.file&&!c.file.isCurrentFile&&(e.file=c.file),b.upload({url:a,data:e,method:d})}var f={},g=d+"images";return f.add=function(a){return e(f.getBaseRoute(),a,"POST")},f.update=function(a){return e(f.getIdRoute(a.imageAssetId),a,"PUT")},f.getAll=function(b){return a.get(g,{params:b})},f.getById=function(b){return a.get(f.getIdRoute(b))},f.getByIdRange=function(b){return a.get(g+"/",{params:{imageAssetIds:b}})},f.getIdRoute=function(a){return g+"/"+a},f.getBaseRoute=function(){return g},f}]),angular.module("cms.shared").factory("shared.localStorage",["shared.serviceBase",function(a){var b={};return b.setValue=function(a,b){localStorage.setItem(a,b)},b.getValue=function(a){var b=localStorage.getItem(a);return b},b}]),angular.module("cms.shared").factory("shared.localeService",["$http","shared.serviceBase",function(a,b){var c={},d=b+"locales";return c.getAll=function(){return a.get(d)},c}]),angular.module("cms.shared").factory("shared.nestedDataModelSchemaService",["$http","_","shared.serviceBase",function(a,b,c){var d={};return d.getByName=function(b){return a.get(c+"nested-data-model-schemas/"+b)},d}]),angular.module("cms.shared").factory("shared.pageService",["_","$http","shared.serviceBase","shared.publishableEntityMapper",function(a,b,c,d){var e={},f=c+"pages";return e.getAll=function(c){function e(b){return a.map(b.items,d.map),b}return b.get(f,{params:c}).then(e)},e.getByIdRange=function(c){function e(b){return a.map(b,d.map),b}return b.get(f,{params:{pageIds:c}}).then(e)},e.getById=function(a){function c(a){return a&&d.map(a.pageRoute),a}return b.get(e.getIdRoute(a)).then(c)},e.getVersionsByPageId=function(a,c){return b.get(e.getPageVerionsRoute(a),{params:c})},e.getPageTypes=function(){return[{name:"Generic",value:"Generic"},{name:"Custom Entity Details",value:"CustomEntityDetails"}]},e.add=function(a){return b.post(f,a)},e.update=function(a){return b.patch(e.getIdRoute(a.pageId),a)},e.updateUrl=function(a){return b.put(e.getIdRoute(a.pageId)+"/url",a)},e.updateDraft=function(a){return b.patch(e.getPageVerionsRoute(a.pageId)+"/draft",a)},e.removeDraft=function(a){return b["delete"](e.getPageVerionsRoute(a)+"/draft")},e.remove=function(a){return b["delete"](e.getIdRoute(a))},e.duplicate=function(a){return b.post(e.getIdRoute(a.pageToDuplicateId)+"/duplicate",a)},e.getIdRoute=function(a){return f+"/"+a},e.getPageVerionsRoute=function(a){return e.getIdRoute(a)+"/versions"},e}]),angular.module("cms.shared").factory("shared.publishableEntityMapper",["$http","shared.serviceBase",function(a,b){function c(a){return"Published"==a.publishStatus&&a.hasPublishedVersion&&new Date(a.publishDate)<Date.now()}function d(a){return"Published"==a.publishStatus&&a.publishDate<Date.now()?"Pending Publish":a.publishStatus}var e={};return e.map=function(a){a.isPublished=c.bind(null,a),a.getPublishStatusLabel=d.bind(null,a)},e}]),angular.module("cms.shared").factory("shared.arrayUtilities",function(){var a={};return a.move=function(a,b,c){a.splice(c,0,a.splice(b,1)[0])},a.moveObject=function(b,c,d,e){var f;f=e?_.findIndex(b,function(a){return a[e]===c[e]}):b.indexOf(c),a.move(b,f,d)},a.removeObject=function(a,b){var c=a.indexOf(b);return c>=0?a.splice(c,1):void 0},a.remove=function(a,b){return b>=0?a.splice(b,1):void 0},a}),angular.module("cms.shared").factory("shared.directiveUtilities",function(){var a={};return a.setModelName=function(b,c){c.cmsModelName?b.modelName=c.cmsModelName:b.modelName=a.parseModelName(c.cmsModel)},a.parseModelName=function(a){var b,c;if(a)return b=a.substring(a.lastIndexOf(".")+1,a.length),c=/['"]([^'"]*)['"]/g.exec(b),c&&c.length>1?c[1]:b},a}),function(a,b){function c(b,c,e){a.prototype[b]||(a.prototype[b]=function(b,f){for(var g,h=0;h<this.length;h++)void 0==g?(g=e(this[h],b,f),void 0!==g&&c&&(g=a(g))):d(g,e(this[h],b,f));return void 0==g?this:g})}function d(a,b){if(b)if(b.nodeType)a[a.length++]=b;else{var c=b.length;if("number"==typeof c&&b.window!==b){if(c)for(var d=0;c>d;d++)a[a.length++]=b[d]}else a[a.length++]=b}}c("offset",!1,function(a,c,d){var e,f={top:0,left:0},g=a&&a.ownerDocument;if(g&&b.isUndefined(c))return e=g.documentElement,b.isUndefined(a.getBoundingClientRect)||(f=a.getBoundingClientRect()),{top:f.top+(window.pageYOffset||e.scrollTop)-(e.clientTop||0),left:f.left+(window.pageXOffset||e.scrollLeft)-(e.clientLeft||0)}})}(angular.element,_),angular.module("cms.shared").constant("shared.routingUtilities",new RoutingUtilitites),angular.module("cms.shared").factory("shared.stringUtilities",function(){var a={},b={"Á":"A","Ă":"A","Ắ":"A","Ặ":"A","Ằ":"A","Ẳ":"A","Ẵ":"A","Ǎ":"A","Â":"A","Ấ":"A","Ậ":"A","Ầ":"A","Ẩ":"A","Ẫ":"A","Ä":"A","Ǟ":"A","Ȧ":"A","Ǡ":"A","Ạ":"A","Ȁ":"A","À":"A","Ả":"A","Ȃ":"A","Ā":"A","Ą":"A","Å":"A","Ǻ":"A","Ḁ":"A","Ⱥ":"A","Ã":"A","Ꜳ":"AA","Æ":"AE","Ǽ":"AE","Ǣ":"AE","Ꜵ":"AO","Ꜷ":"AU","Ꜹ":"AV","Ꜻ":"AV","Ꜽ":"AY","Ḃ":"B","Ḅ":"B","Ɓ":"B","Ḇ":"B","Ƀ":"B","Ƃ":"B","Ć":"C","Č":"C","Ç":"C","Ḉ":"C","Ĉ":"C","Ċ":"C","Ƈ":"C","Ȼ":"C","Ď":"D","Ḑ":"D","Ḓ":"D","Ḋ":"D","Ḍ":"D","Ɗ":"D","Ḏ":"D","ǲ":"D","ǅ":"D","Đ":"D","Ƌ":"D","Ǳ":"DZ","Ǆ":"DZ","É":"E","Ĕ":"E","Ě":"E","Ȩ":"E","Ḝ":"E","Ê":"E","Ế":"E","Ệ":"E","Ề":"E","Ể":"E","Ễ":"E","Ḙ":"E","Ë":"E","Ė":"E","Ẹ":"E","Ȅ":"E","È":"E","Ẻ":"E","Ȇ":"E","Ē":"E","Ḗ":"E","Ḕ":"E","Ę":"E","Ɇ":"E","Ẽ":"E","Ḛ":"E","Ꝫ":"ET","Ḟ":"F","Ƒ":"F","Ǵ":"G","Ğ":"G","Ǧ":"G","Ģ":"G","Ĝ":"G","Ġ":"G","Ɠ":"G","Ḡ":"G","Ǥ":"G","Ḫ":"H","Ȟ":"H","Ḩ":"H","Ĥ":"H","Ⱨ":"H","Ḧ":"H","Ḣ":"H","Ḥ":"H","Ħ":"H","Í":"I","Ĭ":"I","Ǐ":"I","Î":"I","Ï":"I","Ḯ":"I","İ":"I","Ị":"I","Ȉ":"I","Ì":"I","Ỉ":"I","Ȋ":"I","Ī":"I","Į":"I","Ɨ":"I","Ĩ":"I","Ḭ":"I","Ꝺ":"D","Ꝼ":"F","Ᵹ":"G","Ꞃ":"R","Ꞅ":"S","Ꞇ":"T","Ꝭ":"IS","Ĵ":"J","Ɉ":"J","Ḱ":"K","Ǩ":"K","Ķ":"K","Ⱪ":"K","Ꝃ":"K","Ḳ":"K","Ƙ":"K","Ḵ":"K","Ꝁ":"K","Ꝅ":"K","Ĺ":"L","Ƚ":"L","Ľ":"L","Ļ":"L","Ḽ":"L","Ḷ":"L","Ḹ":"L","Ⱡ":"L","Ꝉ":"L","Ḻ":"L","Ŀ":"L","Ɫ":"L","ǈ":"L","Ł":"L","Ǉ":"LJ","Ḿ":"M","Ṁ":"M","Ṃ":"M","Ɱ":"M","Ń":"N","Ň":"N","Ņ":"N","Ṋ":"N","Ṅ":"N","Ṇ":"N","Ǹ":"N","Ɲ":"N","Ṉ":"N","Ƞ":"N","ǋ":"N","Ñ":"N","Ǌ":"NJ","Ó":"O","Ŏ":"O","Ǒ":"O","Ô":"O","Ố":"O","Ộ":"O","Ồ":"O","Ổ":"O","Ỗ":"O","Ö":"O","Ȫ":"O","Ȯ":"O","Ȱ":"O","Ọ":"O","Ő":"O","Ȍ":"O","Ò":"O","Ỏ":"O","Ơ":"O","Ớ":"O","Ợ":"O","Ờ":"O","Ở":"O","Ỡ":"O","Ȏ":"O","Ꝋ":"O","Ꝍ":"O","Ō":"O","Ṓ":"O","Ṑ":"O","Ɵ":"O","Ǫ":"O","Ǭ":"O","Ø":"O","Ǿ":"O","Õ":"O","Ṍ":"O","Ṏ":"O","Ȭ":"O","Ƣ":"OI","Ꝏ":"OO","Ɛ":"E","Ɔ":"O","Ȣ":"OU","Ṕ":"P","Ṗ":"P","Ꝓ":"P","Ƥ":"P","Ꝕ":"P","Ᵽ":"P","Ꝑ":"P","Ꝙ":"Q","Ꝗ":"Q","Ŕ":"R","Ř":"R","Ŗ":"R","Ṙ":"R","Ṛ":"R","Ṝ":"R","Ȑ":"R","Ȓ":"R","Ṟ":"R","Ɍ":"R","Ɽ":"R","Ꜿ":"C","Ǝ":"E","Ś":"S","Ṥ":"S","Š":"S","Ṧ":"S","Ş":"S","Ŝ":"S","Ș":"S","Ṡ":"S","Ṣ":"S","Ṩ":"S","ẞ":"SS","Ť":"T","Ţ":"T","Ṱ":"T","Ț":"T","Ⱦ":"T","Ṫ":"T","Ṭ":"T","Ƭ":"T","Ṯ":"T","Ʈ":"T","Ŧ":"T","Ɐ":"A","Ꞁ":"L","Ɯ":"M","Ʌ":"V","Ꜩ":"TZ","Ú":"U","Ŭ":"U","Ǔ":"U","Û":"U","Ṷ":"U","Ü":"U","Ǘ":"U","Ǚ":"U","Ǜ":"U","Ǖ":"U","Ṳ":"U","Ụ":"U","Ű":"U","Ȕ":"U","Ù":"U","Ủ":"U","Ư":"U","Ứ":"U","Ự":"U","Ừ":"U","Ử":"U","Ữ":"U","Ȗ":"U","Ū":"U","Ṻ":"U","Ų":"U","Ů":"U","Ũ":"U","Ṹ":"U","Ṵ":"U","Ꝟ":"V","Ṿ":"V","Ʋ":"V","Ṽ":"V","Ꝡ":"VY","Ẃ":"W","Ŵ":"W","Ẅ":"W","Ẇ":"W","Ẉ":"W","Ẁ":"W","Ⱳ":"W","Ẍ":"X","Ẋ":"X","Ý":"Y","Ŷ":"Y","Ÿ":"Y","Ẏ":"Y","Ỵ":"Y","Ỳ":"Y","Ƴ":"Y","Ỷ":"Y","Ỿ":"Y","Ȳ":"Y","Ɏ":"Y","Ỹ":"Y","Ź":"Z","Ž":"Z","Ẑ":"Z","Ⱬ":"Z","Ż":"Z","Ẓ":"Z","Ȥ":"Z","Ẕ":"Z","Ƶ":"Z","Ĳ":"IJ","Œ":"OE","ᴀ":"A","ᴁ":"AE","ʙ":"B","ᴃ":"B","ᴄ":"C","ᴅ":"D","ᴇ":"E","ꜰ":"F","ɢ":"G","ʛ":"G","ʜ":"H","ɪ":"I","ʁ":"R","ᴊ":"J","ᴋ":"K","ʟ":"L","ᴌ":"L","ᴍ":"M","ɴ":"N","ᴏ":"O","ɶ":"OE","ᴐ":"O","ᴕ":"OU","ᴘ":"P","ʀ":"R","ᴎ":"N","ᴙ":"R","ꜱ":"S","ᴛ":"T","ⱻ":"E","ᴚ":"R","ᴜ":"U","ᴠ":"V","ᴡ":"W","ʏ":"Y","ᴢ":"Z","á":"a","ă":"a","ắ":"a","ặ":"a","ằ":"a","ẳ":"a","ẵ":"a","ǎ":"a","â":"a","ấ":"a","ậ":"a","ầ":"a","ẩ":"a","ẫ":"a","ä":"a","ǟ":"a","ȧ":"a","ǡ":"a","ạ":"a","ȁ":"a","à":"a","ả":"a","ȃ":"a","ā":"a","ą":"a","ᶏ":"a","ẚ":"a","å":"a","ǻ":"a","ḁ":"a","ⱥ":"a","ã":"a","ꜳ":"aa","æ":"ae","ǽ":"ae","ǣ":"ae","ꜵ":"ao","ꜷ":"au","ꜹ":"av","ꜻ":"av","ꜽ":"ay","ḃ":"b","ḅ":"b","ɓ":"b","ḇ":"b","ᵬ":"b","ᶀ":"b","ƀ":"b","ƃ":"b","ɵ":"o","ć":"c","č":"c","ç":"c","ḉ":"c","ĉ":"c","ɕ":"c","ċ":"c","ƈ":"c","ȼ":"c","ď":"d","ḑ":"d","ḓ":"d","ȡ":"d","ḋ":"d","ḍ":"d","ɗ":"d","ᶑ":"d","ḏ":"d","ᵭ":"d","ᶁ":"d","đ":"d","ɖ":"d","ƌ":"d","ı":"i","ȷ":"j","ɟ":"j","ʄ":"j","ǳ":"dz","ǆ":"dz","é":"e","ĕ":"e","ě":"e","ȩ":"e","ḝ":"e","ê":"e","ế":"e","ệ":"e","ề":"e","ể":"e","ễ":"e","ḙ":"e","ë":"e","ė":"e","ẹ":"e","ȅ":"e","è":"e","ẻ":"e","ȇ":"e","ē":"e","ḗ":"e","ḕ":"e","ⱸ":"e","ę":"e","ᶒ":"e","ɇ":"e","ẽ":"e","ḛ":"e","ꝫ":"et","ḟ":"f","ƒ":"f","ᵮ":"f","ᶂ":"f","ǵ":"g","ğ":"g","ǧ":"g","ģ":"g","ĝ":"g","ġ":"g","ɠ":"g","ḡ":"g","ᶃ":"g","ǥ":"g","ḫ":"h","ȟ":"h","ḩ":"h","ĥ":"h","ⱨ":"h","ḧ":"h","ḣ":"h","ḥ":"h","ɦ":"h","ẖ":"h","ħ":"h","ƕ":"hv","í":"i","ĭ":"i","ǐ":"i","î":"i","ï":"i","ḯ":"i","ị":"i","ȉ":"i","ì":"i","ỉ":"i","ȋ":"i","ī":"i","į":"i","ᶖ":"i","ɨ":"i","ĩ":"i","ḭ":"i","ꝺ":"d","ꝼ":"f","ᵹ":"g","ꞃ":"r","ꞅ":"s","ꞇ":"t","ꝭ":"is","ǰ":"j","ĵ":"j","ʝ":"j","ɉ":"j","ḱ":"k","ǩ":"k","ķ":"k","ⱪ":"k","ꝃ":"k","ḳ":"k","ƙ":"k","ḵ":"k","ᶄ":"k","ꝁ":"k","ꝅ":"k","ĺ":"l","ƚ":"l","ɬ":"l","ľ":"l","ļ":"l","ḽ":"l","ȴ":"l","ḷ":"l","ḹ":"l","ⱡ":"l","ꝉ":"l","ḻ":"l","ŀ":"l","ɫ":"l","ᶅ":"l","ɭ":"l","ł":"l","ǉ":"lj","ſ":"s","ẜ":"s","ẛ":"s","ẝ":"s","ḿ":"m","ṁ":"m","ṃ":"m","ɱ":"m","ᵯ":"m","ᶆ":"m","ń":"n","ň":"n","ņ":"n","ṋ":"n","ȵ":"n","ṅ":"n","ṇ":"n","ǹ":"n","ɲ":"n","ṉ":"n","ƞ":"n","ᵰ":"n","ᶇ":"n","ɳ":"n","ñ":"n","ǌ":"nj","ó":"o","ŏ":"o","ǒ":"o","ô":"o","ố":"o","ộ":"o","ồ":"o","ổ":"o","ỗ":"o","ö":"o","ȫ":"o","ȯ":"o","ȱ":"o","ọ":"o","ő":"o","ȍ":"o","ò":"o","ỏ":"o","ơ":"o","ớ":"o","ợ":"o","ờ":"o","ở":"o","ỡ":"o","ȏ":"o","ꝋ":"o","ꝍ":"o","ⱺ":"o","ō":"o","ṓ":"o","ṑ":"o","ǫ":"o","ǭ":"o","ø":"o","ǿ":"o","õ":"o","ṍ":"o","ṏ":"o","ȭ":"o","ƣ":"oi","ꝏ":"oo","ɛ":"e","ᶓ":"e","ɔ":"o","ᶗ":"o","ȣ":"ou","ṕ":"p","ṗ":"p","ꝓ":"p","ƥ":"p","ᵱ":"p","ᶈ":"p","ꝕ":"p","ᵽ":"p","ꝑ":"p","ꝙ":"q","ʠ":"q","ɋ":"q","ꝗ":"q","ŕ":"r","ř":"r","ŗ":"r","ṙ":"r","ṛ":"r","ṝ":"r","ȑ":"r","ɾ":"r","ᵳ":"r","ȓ":"r","ṟ":"r","ɼ":"r","ᵲ":"r","ᶉ":"r","ɍ":"r","ɽ":"r","ↄ":"c","ꜿ":"c","ɘ":"e","ɿ":"r","ś":"s","ṥ":"s","š":"s","ṧ":"s","ş":"s","ŝ":"s","ș":"s","ṡ":"s","ṣ":"s","ṩ":"s","ʂ":"s","ᵴ":"s","ᶊ":"s","ȿ":"s","ɡ":"g","ß":"ss","ᴑ":"o","ᴓ":"o","ᴝ":"u","ť":"t","ţ":"t","ṱ":"t","ț":"t","ȶ":"t","ẗ":"t","ⱦ":"t","ṫ":"t","ṭ":"t","ƭ":"t","ṯ":"t","ᵵ":"t","ƫ":"t","ʈ":"t","ŧ":"t","ᵺ":"th","ɐ":"a","ᴂ":"ae","ǝ":"e","ᵷ":"g","ɥ":"h","ʮ":"h","ʯ":"h","ᴉ":"i","ʞ":"k","ꞁ":"l","ɯ":"m","ɰ":"m","ᴔ":"oe","ɹ":"r","ɻ":"r","ɺ":"r","ⱹ":"r","ʇ":"t","ʌ":"v","ʍ":"w","ʎ":"y","ꜩ":"tz","ú":"u","ŭ":"u","ǔ":"u","û":"u","ṷ":"u","ü":"u","ǘ":"u","ǚ":"u","ǜ":"u","ǖ":"u","ṳ":"u","ụ":"u","ű":"u","ȕ":"u","ù":"u","ủ":"u","ư":"u","ứ":"u","ự":"u","ừ":"u","ử":"u","ữ":"u","ȗ":"u","ū":"u","ṻ":"u","ų":"u","ᶙ":"u","ů":"u","ũ":"u","ṹ":"u","ṵ":"u","ᵫ":"ue","ꝸ":"um","ⱴ":"v","ꝟ":"v","ṿ":"v","ʋ":"v","ᶌ":"v","ⱱ":"v","ṽ":"v","ꝡ":"vy","ẃ":"w","ŵ":"w","ẅ":"w","ẇ":"w","ẉ":"w","ẁ":"w","ⱳ":"w","ẘ":"w","ẍ":"x","ẋ":"x","ᶍ":"x","ý":"y","ŷ":"y","ÿ":"y","ẏ":"y","ỵ":"y","ỳ":"y","ƴ":"y","ỷ":"y","ỿ":"y","ȳ":"y","ẙ":"y","ɏ":"y","ỹ":"y","ź":"z","ž":"z","ẑ":"z","ʑ":"z","ⱬ":"z","ż":"z","ẓ":"z","ȥ":"z","ẕ":"z","ᵶ":"z","ᶎ":"z","ʐ":"z","ƶ":"z","ɀ":"z","ﬀ":"ff","ﬃ":"ffi","ﬄ":"ffl","ﬁ":"fi","ﬂ":"fl","ĳ":"ij","œ":"oe","ﬆ":"st","ₐ":"a","ₑ":"e","ᵢ":"i","ⱼ":"j","ₒ":"o","ᵣ":"r","ᵤ":"u","ᵥ":"v","ₓ":"x"};return a.getFileNameWithoutExtension=function(a){return a?a.substring(a.lastIndexOf("/")+1,a.lastIndexOf(".")):a},a.capitaliseFirstLetter=function(a){return a?a.charAt(0).toUpperCase()+a.slice(1):a},a.lowerCaseFirstWord=function(a){return a?a.replace(/^([A-Z]+)([a-z]?)(\w*)$/,function(a,b,c,d){return!c||b.length<2?b.toLowerCase()+c+d:b.toLowerCase().slice(0,b.length-1)+b[b.length-1]+c+d}):a},a.endsWith=function(a,b){return-1!==a.indexOf(b,a.length-b.length)},a.startsWith=function(a,b){return 0===a.lastIndexOf(b,0)},a.slugify=function(b){if(!b)return b;var c=a.latinise(b).replace(/&/g," and ").replace(/[\/\\\.,\+=–—:_]/g," ").replace(/[^\w\s-]/g,"").toLowerCase().trim().replace(/\s+/g,"-").replace(/-+/g,"-");return"-"===c.charAt(0)&&(c=c.substr(1)),c},a.toSnakeCase=function(a){return a?a.replace(/\B([A-Z])/g,"-$1").toLowerCase():""},a.toQueryString=function(a){return _.chain(a).pairs().sortBy(function(a){return a[0]}).map(function(a){return _.isUndefined(a[1])?void 0:a[0]+"="+encodeURIComponent(a[1])}).filter(function(a){return!_.isEmpty(a)}).value().join("&")},a.latinise=function(a){if(!a)return a;var c=a.replace(/[^A-Za-z0-9\[\] ]/g,function(a){return b[a]||a});return c},a.format=function(a){var b=Array.prototype.slice.call(arguments,1);return a.replace(/{(\d+)}/g,function(a,c){return"undefined"!=typeof b[c]?b[c]:a})},a.stripTags=function(a){return a?a.replace(/<([^>]+)>/gi,""):a},a}),angular.module("cms.shared").factory("shared.urlLibrary",["_","shared.urlBaseBase","shared.stringUtilities",function(a,b,c){function d(a){var b=a?a.name:"cms";return c.slugify(b)+"-users"}function e(a,b){f[a+"List"]=function(a){return f.makePath(b,null,a)},f[a+"New"]=function(a){return f.makePath(b,"new",a)},f[a+"Details"]=function(a){return f.makePath(b,a)}}var f={};return f.makePath=function(d,e,f){var g=b+d+"#/";return a.isArray(e)?g+=e.join("/"):null!=e&&(g+=e),f&&(g+="?"+c.toQueryString(f)),g},e("document","documents"),e("image","images"),e("page","pages"),e("pageTemplate","page-templates"),e("role","roles"),f.getDocumentUrl=function(a){var b;if(a)return b="/assets/files/download/"+a.documentAssetId+"_"+a.fileName+"."+a.fileExtension},f.getImageUrl=function(a,b){function d(a,b){b&&(e(b.width,a.width)||e(b.height,a.height))&&(b.mode||(b.mode="Crop"),a.defaultAnchorLocation&&(b.anchor=a.defaultAnchorLocation))}function e(a,b){return a>0&&a!=b}var f;if(a)return f="/assets/images/"+a.imageAssetId+"_"+a.fileName+"."+a.extension,d(a,b),b&&(f=f+"?"+c.toQueryString(b)),f},f.login=function(a){var c=b+"auth/login";return a&&(c+="?returnUrl="+encodeURIComponent(a)),c},f.visualEditorForPage=function(a,b){if(!a)return"";var c=a.fullPath;return b&&(c+="?mode=edit"),c},f.visualEditorForVersion=function(a,b,c,d){if(!a)return"";var e=a.fullPath+"?";if("Draft"==b.workFlowStatus)e+="mode=preview";else if(b.isLatestPublishedVersion&&d)e+="mode=live";else{var f=(c?"customEntity":"page")+"VersionId";e+="version="+b[f]}return c&&(e+="&edittype=entity"),e},f.customEntityList=function(a){return f.makePath(c.slugify(a.name))},f.customEntityDetails=function(a,b){return f.makePath(c.slugify(a.name),b)},f.customEntityVisualEditor=function(a,b){if(!a)return"";var c=a.fullPath;return c?(b&&(c+="?mode=edit&edittype=entity"),c):c},f.userDetails=function(a,b){return f.makePath(d(a),b)},f.userList=function(a,b){return f.makePath(d(a),null,b)},f.userNew=function(a,b){return f.makePath(d(a),"new",b)},f}]),angular.module("cms.shared").filter("bytes",function(){return function(a,b){var c,d=["bytes","kb","mb","gb","tb","pb"];return isNaN(parseFloat(a))||!isFinite(a)?"-":a?("undefined"==typeof b&&(b=1),c=Math.floor(Math.log(a)/Math.log(1024)),(a/Math.pow(1024,Math.floor(c))).toFixed(b)+" "+d[c]):"0 "+d[1]}}),angular.module("cms.shared").provider("filterWatcher",function(){function a(a){return a&&a.$evalAsync&&a.$watch}this.$get=["$window","$rootScope",function(b,c){function d(a,b){return[a,angular.toJson(b)].join("#").replace(/"/g,"")}function e(a){var b=a.targetScope.$id;forEach(k[b],function(a){delete j[a]}),delete k[b]}function f(){l(function(){c.$$phase||(j={})})}function g(a,b){var c=a.$id;return isUndefined(k[c])&&(a.$on("$destroy",e),k[c]=[]),k[c].push(b)}function h(a,b){var c=d(a,b);return j[c]}function i(b,c,e,h){var i=d(b,c);return j[i]=h,a(e)?g(e,i):f(),h}var j={},k={},l=b.setTimeout;return{isMemoized:h,memoize:i}}]}),angular.module("cms.shared").filter("groupBy",["$parse","_","filterWatcher",function(a,b,c){return function(d,e){function f(a,c){var d,e={};return b.each(a,function(a){d=c(a),e[d]||(e[d]=[]),e[d].push(a)}),e}if(!b.isObject(d)||b.isUndefined(e))return d;var g=a(e);return c.isMemoized("groupBy",arguments)||c.memoize("groupBy",arguments,this,f(d,g))}}]),angular.module("cms.shared").factory("authenticationService",["$window","shared.urlLibrary",function(a,b){var c={};return c.redirectToLogin=function(){var c=a.location,d=b.login(c.pathname+c.hash);a.location=d},c}]),angular.module("cms.shared").run(["shared.errorService","shared.modalDialogService","shared.internalModulePath","shared.stringUtilities","shared.showDevException",function(a,b,c,d,e){function f(a){var c=a.response,f=c?c.config:null;e&&f&&d.startsWith(f.url,"/")&&d.startsWith(c.headers("Content-Type"),"text/html")&&d.startsWith(c.data,"<!DOCTYPE html>")?g(a):b.alert(a)}function g(a){b.show({templateUrl:c+"UIComponents/Modals/DeveloperException.html",controller:"DeveloperExceptionController",options:a})}a.addHandler(f)}]),angular.module("cms.shared").factory("shared.errorService",function(){var a={},b=[];return a.raise=function(a){b.forEach(function(b){b(a)})},a.addHandler=function(a){return b.push(a),a},a.removeHandler=function(a){developerExceptionHandlers=_.difference(developerExceptionHandlers,a)},a}),angular.module("cms.shared").factory("shared.focusService",["$document",function(a){var b={},c=a[0];return b.focusById=function(a){var b=c.getElementById(a);b&&b.focus()},b}]),angular.module("cms.shared").factory("httpInterceptor",["$q","$rootScope","_","shared.validationErrorService","authenticationService","shared.errorService","shared.stringUtilities",function(a,b,c,d,e,f,g){var h={};return h.response=function(a){return c.isUndefined(a.data.data)||(a=a.data.data),a},h.responseError=function(b){function c(){switch(b.status){case 400:b.data.isValid===!1&&d.raise(b.data.errors);break;case 401:e.redirectToLogin();break;case 403:f.raise({title:"Permission Denied",message:"This action is not authorized"});break;default:(404!=b.status||"GET"!==b.config.method)&&(h={title:b.statusText,message:"An unexpected server error has occured.",response:b},f.raise(h))}}var h;return g.startsWith(b.config.url,"/")&&c(),a.reject(b)},h}]),angular.module("cms.shared").config(["$httpProvider","csrfToken","csrfHeaderName",function(a,b,c){var d=a.defaults.headers,e=["put","post","patch","delete"];a.interceptors.push("httpInterceptor"),e.forEach(function(a){d[a]=d[a]||{},d[a][c]=b}),d.common["X-Requested-With"]="XMLHttpRequest"}]),angular.module("cms.shared").config(["$locationProvider",function(a){a.hashPrefix("")}]),angular.module("cms.shared").factory("shared.permissionValidationService",["_","shared.currentUser",function(a,b){var c={},d="COMMOD",e="COMRED",f="COMCRT",g="COMUPD",h="COMDEL";return c.hasPermission=function(c){return a.contains(b.permissionCodes,c)},c.canRead=function(a){return c.hasPermission(a+e)},c.canViewModule=function(a){return c.hasPermission(a+d)},c.canCreate=function(a){return c.hasPermission(a+f)},c.canUpdate=function(a){return c.hasPermission(a+g)},c.canDelete=function(a){return c.hasPermission(a+h)},c}]),angular.module("cms.shared").factory("shared.validationErrorService",["_",function(a){function b(a){throw new Error("An unhandled validation exception has occured")}function c(a,b){a.forEach(function(a){a.fn(b)})}var d={},e=[];return d.raise=function(d){var f=[];if(d.forEach(function(b){var c=a.filter(e,function(c){return a.find(b.properties,function(a){return a&&c.prop?c.prop.toLowerCase()===a.toLowerCase():!1})});c.length?c.forEach(function(a){a.fn([b])}):f.push(b)}),f.length){var g=a.filter(e,function(a){return!a.prop});g.length?c(g,f):b(d)}},d.addHandler=function(a,b){var c={prop:a,fn:b};return e.push(c),c},d.removeHandler=function(b){var c;c=a.isFunction(b)?a.where(e,{fn:b}):a.where(e,{prop:b}),e=a.difference(e,c)},d}]),angular.module("cms.shared").directive("cmsButton",["shared.internalModulePath",function(a){return{restrict:"E",replace:!0,templateUrl:a+"UIComponents/Buttons/Button.html",scope:{text:"@cmsText"}}}]),angular.module("cms.shared").directive("cmsButtonIcon",["shared.internalModulePath",function(a){return{restrict:"E",replace:!1,templateUrl:a+"UIComponents/Buttons/ButtonIcon.html",scope:{title:"@cmsTitle",icon:"@cmsIcon",href:"@cmsHref",external:"@cmsExternal"},link:function(a,b){a.icon&&(a.iconCls="fa-"+a.icon)}}}]),angular.module("cms.shared").directive("cmsButtonLink",["shared.internalModulePath",function(a){return{restrict:"E",replace:!0,templateUrl:a+"UIComponents/Buttons/ButtonLink.html",scope:{text:"@cmsText",href:"@cmsHref"}}}]),angular.module("cms.shared").directive("cmsButtonSubmit",["shared.internalModulePath",function(a){return{restrict:"E",replace:!0,templateUrl:a+"UIComponents/Buttons/ButtonSubmit.html",scope:{text:"@cmsText"}}}]),angular.module("cms.shared").controller("AddCustomEntityDialogController",["$scope","$location","shared.stringUtilities","shared.LoadState","shared.customEntityService","options","close",function(a,b,c,d,e,f,g){function h(){angular.extend(a,f.customEntityDefinition),p.globalLoadState=new d,p.saveLoadState=new d,p.saveAndPublishLoadState=new d,p.formLoadState=new d(!0),p.editMode=!1,p.options=f.customEntityDefinition,p.saveButtonText=f.customEntityDefinition.autoPublish?"Save":"Save & Publish",p.save=i.bind(null,!1),p.saveAndPublish=i.bind(null,!0),p.cancel=k,p.close=k,p.onNameChanged=j,m()}function i(a){var b;a?(p.command.publish=!0,b=p.saveAndPublishLoadState):b=p.saveLoadState,n(b),e.add(p.command,f.customEntityDefinition.customEntityDefinitionCode).then(l)["finally"](o.bind(null,b))}function j(){p.command.urlSlug=c.slugify(p.command.title)}function k(){g()}function l(a){f.onComplete(a),g()}function m(){function b(a){p.command.model={},p.formDataSource={model:p.command.model,modelMetaData:a},p.formLoadState.off()}e.getDataModelSchema(f.customEntityDefinition.customEntityDefinitionCode).then(b),p.command={},a.$watch("vm.command.localeId",function(a){a?p.additionalParameters={localeId:a}:p.additionalParameters={}})}function n(a){p.globalLoadState.on(),a&&_.isFunction(a.on)&&a.on()}function o(a){p.globalLoadState.off(),a&&_.isFunction(a.off)&&a.off()}var p=a;h()}]),angular.module("cms.shared").directive("cmsCustomEntityLink",["shared.internalModulePath","shared.urlLibrary",function(a,b){function c(){var a=this;a.urlLibrary=b}return{restrict:"E",scope:{customEntityDefinition:"=cmsCustomEntityDefinition",customEntity:"=cmsCustomEntity"},templateUrl:a+"UIComponents/CustomEntities/CustomEntityLink.html",controller:c,controllerAs:"vm",bindToController:!0}}]),angular.module("cms.shared").controller("CustomEntityPickerDialogController",["$scope","$q","shared.LoadState","shared.customEntityService","shared.SearchQuery","shared.modalDialogService","shared.internalModulePath","shared.permissionValidationService","shared.ModelPreviewFieldset","shared.ImagePreviewFieldCollection","options","close",function(a,b,c,d,e,f,g,h,i,j,k,l){function m(){angular.extend(a,k),y.onOk=t,y.onCancel=q,y.onSelect=r,y.onCreate=u,y.selectedEntity=y.currentEntity,y.onSelectAndClose=s,y.close=q,y.gridLoadState=new c,y.query=new e({onChanged:o,useHistory:!1,defaultParams:k.filter}),y.presetFilter=k.filter,y.filter=y.query.getFilters(),y.toggleFilter=n,y.isSelected=w,y.customEntityDefinition=k.customEntityDefinition,y.multiMode=y.selectedIds?!0:!1,y.canCreate=v("COMCRT"),n(!1),p()}function n(a){y.isFilterVisible=_.isUndefined(a)?!y.isFilterVisible:a}function o(){n(!1),p()}function p(){function a(){return y.gridLoadState.on(),d.getAll(y.query.getParameters(),h).then(function(a){y.result=a,y.gridLoadState.off()})}function c(){return d.getDataModelSchema(h)}function e(a){y.previewFields=new i(a)}function f(){return y.gridImages=new j,y.gridImages.load(y.result.items,y.previewFields)}var g,h=k.customEntityDefinition.customEntityDefinitionCode,l=a();return y.previewFields?(g=b.defer(),g.resolve()):g=c().then(e),b.all([g,l]).then(f)}function q(){y.multiMode||y.onSelected(y.currentEntity),l()}function r(a){return y.multiMode?void x(a):void(y.selectedEntity=a)}function s(a){return y.multiMode?(x(a),void t()):(y.selectedEntity=a,void t())}function t(){y.multiMode?y.onSelected(y.selectedIds):y.onSelected(y.selectedEntity),l()}function u(){function a(a){y.multiMode?(r({customEntityId:a}),p()):s({customEntityId:a})}f.show({templateUrl:g+"UIComponents/CustomEntities/AddCustomEntityDialog.html",controller:"AddCustomEntityDialogController",options:{customEntityDefinition:k.customEntityDefinition,onComplete:a}})}function v(a){return h.hasPermission(k.customEntityDefinition.customEntityDefinitionCode+a)}function w(a){return y.selectedIds&&a&&y.selectedIds.indexOf(a.customEntityId)>-1?!0:a&&y.selectedEntity?a.customEntityId===y.selectedEntity.customEntityId:!1}function x(a){if(w(a)){var b=y.selectedIds.indexOf(a.customEntityId);y.selectedIds.splice(b,1)}else y.selectedIds.push(a.customEntityId)}var y=a;m()}]),angular.module("cms.shared").directive("cmsFormFieldCustomEntityCollection",["_","shared.internalModulePath","shared.LoadState","shared.customEntityService","shared.modalDialogService","shared.arrayUtilities","shared.ModelPreviewFieldset","shared.ImagePreviewFieldCollection","baseFormFieldFactory",function(a,b,c,d,e,f,g,h,i){function j(i,j,m,n){function o(){B.gridLoadState=new c,B.showPicker=q,B.remove=p,B.onDrop=r,B.onDropSuccess=s,y=d.getDefinition(B.customEntityDefinitionCode).then(function(a){B.customEntityDefinition=a}),z=d.getDataModelSchema(B.customEntityDefinitionCode).then(w),i.$watch("vm.model",x)}function p(a,b){f.removeObject(B.gridData,a),f.removeObject(B.model,a[k]),B.gridImages.remove(b)}function q(){function a(a){B.model=a,x(a)}e.show({templateUrl:b+"UIComponents/CustomEntities/CustomEntityPickerDialog.html",controller:"CustomEntityPickerDialogController",options:{selectedIds:B.model||[],customEntityDefinition:B.customEntityDefinition,filter:v(),onSelected:a}})}function r(a,b){A=a}function s(a){f.move(B.gridData,a,A),B.gridImages.move(a,A),u()}function t(){function b(){return B.gridImages=new h,B.gridImages.load(B.gridData,B.previewFields)}B.orderable||(B.gridData=a.sortBy(B.gridData,"title"),u()),z.then(b)}function u(){B.model=a.pluck(B.gridData,k)}function v(){var a,b={};return B.localeId?a=B.localeId:C&&C.additionalParameters&&(a=C.additionalParameters.localeId),a&&(b.localeId=a),b}function w(a){B.previewFields=new g(a)}function x(b){if(b&&b.length){if(!B.gridData||a.pluck(B.gridData,k).join()!=b.join()){B.gridLoadState.on();var c=d.getByIdRange(b).then(function(a){B.gridData=a,t()});B.gridLoadState.offWhen(y,c)}}else B.gridData=[]}var y,z,A,B=i.vm,C=(a.has(m,"required"),a.last(n));return o(),l.link(i,j,m,n)}var k="customEntityId",l=i.defaultConfig,m={templateUrl:b+"UIComponents/CustomEntities/FormFieldCustomEntityCollection.html",scope:a.extend(l.scope,{customEntityDefinitionCode:"@cmsCustomEntityDefinitionCode",localeId:"=cmsLocaleId",orderable:"=cmsOrderable"}),require:a.union(l.require,["?^^cmsFormDynamicFieldSet"]),passThroughAttributes:["required"],link:j};return i.create(m)}]),angular.module("cms.shared").directive("cmsFormFieldCustomEntityMultiTypeCollection",["_","shared.internalModulePath","shared.LoadState","shared.customEntityService","shared.modalDialogService","shared.arrayUtilities","shared.ModelPreviewFieldset","shared.ImagePreviewFieldCollection","baseFormFieldFactory",function(a,b,c,d,e,f,g,h,i){function j(i,j,o,p){function q(){var b=x();E.gridLoadState=new c,E.showPicker=s,E.remove=r,E.onDrop=t,E.onDropSuccess=u,B=d.getDefinitionsByIdRange(b).then(function(b){E.customEntityDefinitions={},a.each(b,function(a){E.customEntityDefinitions[a.customEntityDefinitionCode]=a,a.autoPublish||(E.showPublishColumn=!0)})}),C=d.getDataModelSchemasByCodeRange(b).then(z),i.$watch("vm.model",A)}function r(a,b){f.removeObject(E.gridData,a),f.remove(E.model,b),E.gridImages.remove(b)}function s(c){function d(){return a.chain(E.model).where({customEntityDefinitionCode:c[l]}).map(function(a){return a[k]}).value()}function f(a){if(E.model||(E.model=[]),E.model.length>0)for(var b=0;b<E.model.length;b++)if(E.model[b].customEntityDefinitionCode===c[l]){var d=a.indexOf(E.model[b].customEntityId);if(d>-1){a.splice(d,1);continue}E.model.splice(b,1)}for(var b=0;b<a.length;b++)E.model.push({customEntityId:a[b],customEntityDefinitionCode:c[l]
+});A(E.model)}e.show({templateUrl:b+"UIComponents/CustomEntities/CustomEntityPickerDialog.html",controller:"CustomEntityPickerDialogController",options:{selectedIds:d(),customEntityDefinition:c,filter:y(),onSelected:f}})}function t(a){D=a}function u(a){f.move(E.gridData,a,D),E.gridImages.move(a,D),w()}function v(){function b(){return E.gridImages=new h("customEntityDefinitionCode"),E.gridImages.load(E.gridData,E.previewFields)}E.orderable||(E.gridData=a.sortBy(E.gridData,"title"),w()),C.then(b)}function w(){E.model=a.map(E.gridData,function(b){return a.pick(b,k,l)})}function x(){return E.customEntityDefinitionCodes?E.customEntityDefinitionCodes.split(","):[]}function y(){var a,b={};return E.localeId?a=E.localeId:F&&F.additionalParameters&&(a=F.additionalParameters.localeId),a&&(b.localeId=a),b}function z(b){E.previewFields={},a.each(b,function(a){var b=new g(a);b.fields[m]&&(E.previewFields.showDescription=!0),b.fields[n]&&(E.previewFields.showImage=!0),E.previewFields[a.customEntityDefinitionCode]=b})}function A(b){var c=b?a.pluck(b,k):[];if(c&&c.length){if(!E.gridData||a.pluck(E.gridData,k).join()!=c.join()){E.gridLoadState.on();var e=d.getByIdRange(c).then(function(a){E.gridData=a,v()});E.gridLoadState.offWhen(B,e)}}else E.gridData=[]}var B,C,D,E=i.vm,F=(a.has(o,"required"),a.last(p));return q(),baseConfig.link(i,j,o,p)}var k="customEntityId",l="customEntityDefinitionCode",m="previewDescription",n="previewImage";baseConfig=i.defaultConfig;var o={templateUrl:b+"UIComponents/CustomEntities/FormFieldCustomEntityMultiTypeCollection.html",scope:a.extend(baseConfig.scope,{customEntityDefinitionCodes:"@cmsCustomEntityDefinitionCodes",localeId:"=cmsLocaleId",orderable:"=cmsOrderable"}),require:a.union(baseConfig.require,["?^^cmsFormDynamicFieldSet"]),passThroughAttributes:["required"],link:j};return i.create(o)}]),angular.module("cms.shared").directive("cmsFormFieldCustomEntitySelector",["_","shared.internalModulePath","shared.customEntityService","shared.directiveUtilities","shared.modalDialogService","shared.permissionValidationService",function(a,b,c,d,e,f){function g(a,g,h,i){function j(a){l.customEntityDefinition=a,l.canCreate=k("COMCRT")}function k(a){return f.hasPermission(l.customEntityDefinition.customEntityDefinitionCode+a)}var l=a.vm;i[0];angular.isDefined(h.required)?l.isRequired=!0:l.isRequired=!1,d.setModelName(l,h),l.search=function(a){return c.getAll(a,l.customEntityDefinitionCode)},c.getDefinition(l.customEntityDefinitionCode).then(j),l.create=function(){function a(a){l.model=a}e.show({templateUrl:b+"UIComponents/CustomEntities/AddCustomEntityDialog.html",controller:"AddCustomEntityDialogController",options:{customEntityDefinition:l.customEntityDefinition,onComplete:a}})},l.initialItemFunction=function(a){return c.getByIdRange([a]).then(function(a){return a[0]})}}function h(){}return{restrict:"E",templateUrl:b+"UIComponents/CustomEntities/FormFieldCustomEntitySelector.html",scope:{model:"=cmsModel",title:"@cmsTitle",localeId:"=cmsLocaleId",customEntityDefinitionCode:"@cmsCustomEntityDefinitionCode"},require:["?^^cmsFormDynamicFieldSet"],link:{pre:g},controller:h,controllerAs:"vm",bindToController:!0}}]),angular.module("cms.shared").directive("cmsFormFieldDirectorySelector",["_","shared.directiveUtilities","shared.internalModulePath","shared.directoryService",function(a,b,c,d){function e(a,c,d){var e=a.vm;angular.isDefined(d.required)?e.isRequired=!0:(e.isRequired=!1,e.defaultItemText=d.cmsDefaultItemText||"None"),e.title=d.cmsTitle||"Directory",e.description=d.cmsDescription,b.setModelName(e,d)}function f(){var a=this;d.getAll().then(function(b){a.pageDirectories=b,a.onLoaded&&a.onLoaded()})}return{restrict:"E",templateUrl:c+"UIComponents/Directories/FormFieldDirectorySelector.html",scope:{model:"=cmsModel",title:"@cmsTitle",onLoaded:"&cmsOnLoaded"},link:{pre:e},controller:f,controllerAs:"vm",bindToController:!0}}]),angular.module("cms.shared").directive("cmsDocumentAsset",["shared.internalModulePath","shared.urlLibrary",function(a,b){return{restrict:"E",scope:{document:"=cmsDocument"},templateUrl:a+"UIComponents/DocumentAssets/DocumentAsset.html",link:function(a,c,d){a.getDocumentUrl=b.getDocumentUrl}}}]),angular.module("cms.shared").controller("DocumentAssetPickerDialogController",["$scope","shared.LoadState","shared.documentService","shared.SearchQuery","shared.modalDialogService","shared.internalModulePath","shared.permissionValidationService","shared.urlLibrary","options","close",function(a,b,c,d,e,f,g,h,i,j){function k(){angular.extend(a,i),v.onOk=r,v.onCancel=o,v.onSelect=p,v.onUpload=s,v.selectedAsset=v.currentAsset,v.onSelectAndClose=q,v.close=o,v.gridLoadState=new b,v.query=new d({onChanged:m,useHistory:!1,defaultParams:v.filter}),v.presetFilter=i.filter,v.filter=v.query.getFilters(),v.toggleFilter=l,v.isSelected=t,v.multiMode=v.selectedIds?!0:!1,v.okText=v.multiMode?"Ok":"Select",v.canCreate=g.canCreate("COFDOC"),v.getDocumentUrl=h.getDocumentUrl,l(!1),n()}function l(a){v.isFilterVisible=_.isUndefined(a)?!v.isFilterVisible:a}function m(){l(!1),n()}function n(){return v.gridLoadState.on(),c.getAll(v.query.getParameters()).then(function(a){v.result=a,v.gridLoadState.off()})}function o(){v.multiMode||v.onSelected(v.currentAsset),j()}function p(a){return v.multiMode?void u(a):void(v.selectedAsset=a)}function q(a){return v.multiMode?(u(a),void r()):(v.selectedAsset=a,void r())}function r(){v.multiMode?v.onSelected(v.selectedIds):v.onSelected(v.selectedAsset),j()}function s(){function a(a){q({documentAssetId:a})}e.show({templateUrl:f+"UIComponents/DocumentAssets/UploadDocumentAssetDialog.html",controller:"UploadDocumentAssetDialogController",options:{filter:i.filter,onUploadComplete:a}})}function t(a){return v.selectedIds&&a&&v.selectedIds.indexOf(a.documentAssetId)>-1?!0:a&&v.selectedAsset?a.documentAssetId===v.selectedAsset.documentAssetId:!1}function u(a){if(t(a)){var b=v.selectedIds.indexOf(a.documentAssetId);v.selectedIds.splice(b,1)}else v.selectedIds.push(a.documentAssetId)}var v=a;k()}]),angular.module("cms.shared").directive("cmsDocumentUpload",["_","shared.internalModulePath","shared.urlLibrary",function(a,b,c){function d(b,d,e,f){function g(){l.remove=h,l.fileChanged=j,l.isRemovable=a.isObject(l.ngModel)&&!m,b.$watch("vm.asset",i)}function h(){j()}function i(){var a=l.asset;a?(l.previewUrl=c.getDocumentUrl(a),l.isRemovable=!m,f.$setViewValue({name:a.fileName+"."+a.fileExtension,size:a.fileSizeInBytes,isCurrentFile:!0})):(l.isRemovable=!1,f.$modelValue&&f.$setViewValue(void 0)),k()}function j(b){b&&b[0]?(f.$setViewValue(b[0]),l.isRemovable=!m):(!l.ngModel||a.isUndefined(b))&&(f.$setViewValue(void 0),l.previewUrl=null,l.isRemovable=!1,l.asset=void 0),k(),l.onChange&&l.onChange(l.ngModel)}function k(){l.buttonText=f.$modelValue?"Change":"Upload"}var l=b.vm,m=a.has(e,"required");g()}return{restrict:"E",templateUrl:b+"UIComponents/DocumentAssets/DocumentUpload.html",scope:{asset:"=cmsAsset",loadState:"=cmsLoadState",isEditMode:"=cmsIsEditMode",modelName:"=cmsModelName",ngModel:"=ngModel",onChange:"&cmsOnChange"},require:"ngModel",controller:function(){},controllerAs:"vm",bindToController:!0,link:d}}]),angular.module("cms.shared").directive("cmsFormFieldDocumentAsset",["_","shared.internalModulePath","shared.internalContentPath","shared.modalDialogService","shared.stringUtilities","shared.documentService","shared.urlLibrary","baseFormFieldFactory",function(a,b,c,d,e,f,g,h){function i(c,i,j,k){function l(){t.urlLibrary=g,t.showPicker=n,t.remove=m,t.isRemovable=a.isObject(t.model)&&!u,t.filter=q(j),c.$watch("vm.asset",p),c.$watch("vm.model",o)}function m(){p(null)}function n(){function a(a){!a&&t.asset?p(null):(!t.asset||a&&t.asset.documentAssetId!==a.documentAssetId)&&p(a)}d.show({templateUrl:b+"UIComponents/DocumentAssets/DocumentAssetPickerDialog.html",controller:"DocumentAssetPickerDialogController",options:{currentAsset:t.previewAsset,filter:t.filter,onSelected:a}})}function o(a){a||(t.model=a=void 0),!a||t.previewAsset&&t.previewAsset.documentAssetId==a||f.getById(a).then(function(a){p(a)})}function p(a){a?(t.previewAsset=a,t.isRemovable=!u,t.model=a.documentAssetId,t.updateAsset&&(t.asset=a)):s&&(t.previewAsset=null,t.isRemovable=!1,t.model&&(t.model=null),t.updateAsset&&(t.asset=null)),r(),s=!0}function q(a){function b(b){var f=e.lowerCaseFirstWord(b);c[f]=a[d+b]}var c={},d="cms";return b("Tags"),b("FileExtension"),b("FileExtensions"),c}function r(){t.buttonText=t.model?"Change":"Select"}var s,t=c.vm,u=a.has(j,"required");return l(),h.defaultConfig.link(c,i,j,k)}var j={templateUrl:b+"UIComponents/DocumentAssets/FormFieldDocumentAsset.html",scope:a.extend(h.defaultConfig.scope,{asset:"=cmsAsset",loadState:"=cmsLoadState",updateAsset:"@cmsUpdateAsset"}),passThroughAttributes:["required"],link:i};return h.create(j)}]),angular.module("cms.shared").directive("cmsFormFieldDocumentAssetCollection",["_","shared.internalModulePath","shared.LoadState","shared.documentService","shared.modalDialogService","shared.arrayUtilities","shared.stringUtilities","shared.urlLibrary","baseFormFieldFactory",function(a,b,c,d,e,f,g,h,i){function j(i,j,m,n){function o(){v.urlLibrary=h,v.gridLoadState=new c,v.showPicker=q,v.remove=p,v.onDrop=r,i.$watch("vm.model",u)}function p(a){function b(a,b){var c=a.indexOf(b);return c>=0?a.splice(c,1):void 0}b(v.gridData,a),b(v.model,a[k])}function q(){function a(a){v.model=a,u(a)}e.show({templateUrl:b+"UIComponents/DocumentAssets/DocumentAssetPickerDialog.html",controller:"DocumentAssetPickerDialogController",options:{selectedIds:v.model||[],filter:t(),onSelected:a}})}function r(a,b){f.moveObject(v.gridData,b,a,k),s()}function s(){v.model=a.pluck(v.gridData,k)}function t(){function a(a){var d=g.lowerCaseFirstWord(a);b[d]=m[c+a]}var b={},c="cms";return a("Tags"),a("FileExtension"),a("FileExtensions"),b}function u(b){b&&b.length?v.gridData&&a.pluck(v.gridData,k).join()==b.join()||(v.gridLoadState.on(),d.getByIdRange(b).then(function(a){v.gridData=a,v.gridLoadState.off()})):v.gridData=[]}var v=i.vm;a.has(m,"required");return o(),l.link(i,j,m,n)}var k="documentAssetId",l=i.defaultConfig,m={templateUrl:b+"UIComponents/DocumentAssets/FormFieldDocumentAssetCollection.html",passThroughAttributes:["required"],link:j};return i.create(m)}]),angular.module("cms.shared").directive("cmsFormFieldDocumentTypeSelector",["_","shared.internalModulePath","shared.documentService",function(a,b,c){function d(){var a=this;c.getAllDocumentFileTypes().then(function(b){a.fileTypes=b,a.onLoaded&&a.onLoaded()})}return{restrict:"E",templateUrl:b+"UIComponents/DocumentAssets/FormFieldDocumentTypeSelector.html",scope:{model:"=cmsModel",disabled:"=cmsDisabled",onLoaded:"&cmsOnLoaded"},controller:d,controllerAs:"vm",bindToController:!0}}]),angular.module("cms.shared").directive("cmsFormFieldDocumentUpload",["_","shared.internalModulePath","baseFormFieldFactory",function(a,b,c){function d(a){return a.find("cms-document-upload")}var e={templateUrl:b+"UIComponents/DocumentAssets/FormFieldDocumentUpload.html",scope:a.extend(c.defaultConfig.scope,{asset:"=cmsAsset",loadState:"=cmsLoadState"}),passThroughAttributes:["required","ngRequired"],getInputEl:d};return c.create(e)}]),angular.module("cms.shared").controller("UploadDocumentAssetDialogController",["$scope","shared.LoadState","shared.documentService","shared.SearchQuery","shared.focusService","shared.stringUtilities","options","close",function(a,b,c,d,e,f,g,h){function i(){angular.extend(a,g),m(),p.onUpload=j,p.onCancel=l,p.close=l,p.filter=g.filter,p.onFileChanged=k,p.hasFilterRestrictions=n,p.saveLoadState=new b}function j(){p.saveLoadState.on(),c.add(p.command).progress(p.saveLoadState.setProgress).then(o)}function k(){var a=p.command;a.file&&a.file.name&&(a.title=f.capitaliseFirstLetter(f.getFileNameWithoutExtension(a.file.name)),a.fileName=f.slugify(a.title),e.focusById("title"))}function l(){h()}function m(){p.command={}}function n(){return g.filter.fileExtension||g.filter.fileExtensions}function o(a){g.onUploadComplete(a),h()}var p=a;i()}]),angular.module("cms.shared").controller("ImageAssetEditorDialogController",["$scope","shared.LoadState","shared.imageService","shared.SearchQuery","shared.urlLibrary","options","close",function(a,b,c,d,e,f,g){function h(){angular.extend(a,f),q.formLoadState=new b,q.saveLoadState=new b,q.onInsert=l,q.onCancel=j,q.onImageChanged=k,q.command={},i()}function i(){if(q.imageAssetHtml&&q.imageAssetHtml.length){if(q.command.imageAssetId=q.imageAssetHtml.attr("data-image-asset-id"),q.command.altTag=q.imageAssetHtml.attr("alt"),q.command.style=q.imageAssetHtml.attr("style"),q.command.style){var a=p(q.command.style);q.command.width=a.width,q.command.height=a.height}else q.command.width=q.imageAssetHtml.attr("width"),q.command.height=q.imageAssetHtml.attr("height");if(!q.command.imageAssetId){var b=q.imageAssetHtml.attr("src"),c=b.lastIndexOf("/"),d=b.substr(c+1,b.indexOf("_")-c-1);q.command.imageAssetId=d}}}function j(){g()}function k(){q.command.altTag=q.command.imageAsset.title||q.command.imageAsset.fileName}function l(){var a={width:o(q.command.width),height:o(q.command.height)};a.width||a.height||(a.width="100%",a.height="auto");var b=e.getImageUrl(q.command.imageAsset,n(a)),c=q.command.altTag||"",d={markdown:"![Alt "+c+"]("+b+")",html:"<img src='"+b+"' alt='"+c+"' data-image-asset-id='"+q.command.imageAssetId+"' />",model:q.command};d.html=m(d.html,a),q.onSelected(d),g()}function m(a,b){return angular.element(a).css(b)[0].outerHTML}function n(a){return(a.width||"").indexOf("%")>-1||(a.height||"").indexOf("%")>-1?{}:{width:a.width.replace("px",""),height:a.height.replace("px","")}}function o(a){return a?-1==a.indexOf("px")&&-1==a.indexOf("%")&&-1==a.indexOf("auto")?a+"px":a:""}function p(a){for(var b,c=/([\w-]*)\s*:\s*([^;]*)/g,d={};b=c.exec(a);)d[b[1]]=b[2];return d}var q=a;h()}]),angular.module("cms.shared").factory("shared.entityVersionModalDialogService",["shared.entityVersionService","shared.modalDialogService",function(a,b){var c={},d={entityNameSingular:"Page"};return c.publish=function(c,e,f){function g(){return e(),a.publish(h.isCustomEntity,c)}var h=f||d,i={title:"Publish "+h.entityNameSingular,message:"Are you sure you want to publish this "+h.entityNameSingular.toLowerCase()+"?",okButtonTitle:"Yes, publish it",onOk:g};return b.confirm(i)},c.unpublish=function(c,e,f){function g(){return e(),a.unpublish(h.isCustomEntity,c)}var h=f||d,i={title:"Unpublish "+h.entityNameSingular,message:"Unpublishing this "+h.entityNameSingular.toLowerCase()+" will remove it from the live site and put it into draft status. Are you sure you want to continue?",okButtonTitle:"Yes, unpublish it",onOk:g};return b.confirm(i)},c.copyToDraft=function(c,e,f,g,h){function i(){return g(),a.removeDraft(k.isCustomEntity,c).then(j)}function j(){return a.duplicateDraft(k.isCustomEntity,c,e)}var k=h||d,l={title:"Copy "+k.entityNameSingular+" Version",message:"A draft version of this "+k.entityNameSingular.toLowerCase()+" already exists. Copying this version will delete the current draft. Do you wish to continue?",okButtonTitle:"Yes, replace it",onOk:i};return f?b.confirm(l):(g(),j())},c}]),angular.module("cms.shared").directive("cmsForm",["shared.internalModulePath",function(a){function b(a){a.getForm=function(){return a[a.name]},this.getFormScope=function(){return a}}function c(a,b){return angular.isDefined(b.cmsEditMode)||(b.cmsEditMode="true"),d}function d(a,b,c,d){var f=e(a);f[a.name]=a.getForm()}function e(a,b){var c=a.$parent;return c?(angular.isDefined(c.vm)&&(b=c.vm),e(c,b)):b||a}return{restrict:"E",templateUrl:a+"UIComponents/Form/Form.html",replace:!0,transclude:!0,scope:{editMode:"=cmsEditMode",name:"@cmsName"},compile:c,controller:["$scope",b]}}]),angular.module("cms.shared").directive("cmsFormSection",["shared.internalModulePath","$timeout",function(a,b){function c(a,c,d){b(function(){var a=angular.element(c[0].querySelector(".help-inline")),b=angular.element(c[0].querySelector(".toggle-helpers"));a.length&&b.addClass("show").on("click",function(){b.toggleClass("active"),c.toggleClass("show-helpers")})},100)}return{restrict:"E",templateUrl:a+"UIComponents/Form/FormSection.html",scope:{title:"@cmsTitle"},replace:!0,transclude:!0,link:c}}]),angular.module("cms.shared").directive("cmsFormSectionActions",["shared.internalModulePath","$timeout",function(a,b){function c(a,b,c){}return{restrict:"E",templateUrl:a+"UIComponents/Form/FormSectionActions.html",scope:{},replace:!0,transclude:!0,link:c}}]),angular.module("cms.shared").directive("cmsFormSectionAuditData",["shared.internalModulePath",function(a){return{restrict:"E",templateUrl:a+"UIComponents/Form/FormSectionAuditData.html",scope:{auditData:"=cmsAuditData"}}}]),angular.module("cms.shared").directive("cmsFormStatus",["_","shared.validationErrorService","shared.internalModulePath",function(a,b,c){function d(a,b,c,d){e(a,d[0]),f(a,b)}function e(a,b){var c=b.getFormScope(),d=c.getForm();a.success=i.bind(a),a.error=h.bind(a),a.errors=g.bind(a),a.clear=j.bind(a),d.formStatus=a}function f(a,c){b.addHandler("",a.errors),a.$on("$destroy",function(){b.removeHandler(a.errors)})}function g(b,c){var d=a.uniq(b,function(a){return a.message});k(this,c,"error",d)}function h(a){k(this,a,"error")}function i(a){k(this,a,"success")}function j(){k(this)}function k(a,b,c,d){a.message=b,a.errors=d,a.cls=c}return{restrict:"E",templateUrl:c+"UIComponents/Form/FormStatus.html",require:["^^cmsForm"],replace:!0,scope:!0,link:{post:d}}}]),angular.module("cms.shared").directive("cmsFormDynamicFieldSet",["$compile","_","shared.stringUtilities","shared.internalModulePath","shared.LoadState",function(a,b,c,d,e){function f(a){}function g(d,e,f,g){function j(f){var g="";e.empty(),f&&f.modelMetaData.dataModelProperties.length&&(f.modelMetaData.dataModelProperties.forEach(function(a,d){var e=h(a);g+="<"+e,g+=k.map("model",c.lowerCaseFirstWord(a.name)),g+=k.map("title",a.displayName),g+=k.map("required",a.isRequired),g+=k.map("description",a.description),a.additionalAttributes&&b.each(a.additionalAttributes,function(a,b){g+=k.map(b,a,d)}),g+="></"+e+">"}),e.append(a(g)(d)))}var k=(d.vm,new i);d.$watch("vm.dataSource",function(a){j(a)})}function h(a){var b="cms-form-field-";switch(a.dataTemplateName){case"Int32":return b+"number";case"String":return b+"text";case"Boolean":return b+"checkbox";case"MultilineText":return b+"text-area"}return b+c.toSnakeCase(a.dataTemplateName)}function i(){function a(a,b){return b="vm.dataSource.model['"+b+"']",f(a,b)}function b(a,b,c){return b="vm.dataSource.modelMetaData.dataModelProperties["+c+"].additionalAttributes['"+a+"']",f(a,b)}function d(a,b){return g(c.toSnakeCase(a),b)}function e(a,b){return b?g(a.toLowerCase()):""}function f(a,b){return a=h+c.toSnakeCase(a),g(a,b)}function g(a,b){return b?" "+a+'="'+b+'"':" "+a}var h="cms-",i={maxlength:d,minlength:d,min:d,max:d,pattern:d,step:d,placeholder:d,match:a,model:a,options:b,required:e,rows:d,cols:d};this.map=function(a,b,e){var g,h="ValMsg",j=i[a];return!j&&c.endsWith(a,h)?(g=a.substring(0,a.length-h.length),b&&i[g]===d&&(j=d)):j||(j=f),j?j(a,b,e):""}}return{restrict:"E",replace:!0,scope:{dataSource:"=cmsDataSource",additionalParameters:"=cmsAdditionalParameters"},link:g,controller:["$scope",f],bindToController:!0,controllerAs:"vm"}}]),angular.module("cms.shared").factory("baseFormFieldFactory",["$timeout","shared.stringUtilities","shared.directiveUtilities","shared.validationErrorService",function(a,b,c,d){function e(a,b){return g.call(this,a,b),this.link.bind(this)}function f(a,b,d,e){var f=a.vm,g=e[0];f.formScope=g.getFormScope(),f.form=f.formScope.getForm(),c.setModelName(f,d),j(f,d),f.onChange=l.bind(f),f.resetCustomErrors=m.bind(f),f.resetCustomErrors(),i(a,b),a.$watch("vm.model",function(){f.resetCustomErrors()})}function g(a,b){var c=this,d=c.getInputEl(a);(c.passThroughAttributes||[]).forEach(function(a){angular.isDefined(b[a])&&d[0].setAttribute(b.$attr[a],b[a])})}function h(a){return a.find("input")}function i(a,b){var c=_.partial(k,a.vm,b);d.addHandler(a.vm.modelName,c),a.$on("$destroy",function(){d.removeHandler(c)})}function j(a,c){function d(b,d){var e=_.find(b,function(a){return a.attr===d});return e?_.isFunction(e.msg)?e.msg(a.modelName,c):e.msg:void 0}var e=this,f="ValMsg",g="-val-msg";a.validators=[],_.each(c.$attr,function(h,i){var j,k;b.endsWith(i,f)?(j=h.substring(0,h.length-g.length),k=c[i]):(j=h,k=d(e.defaultValidationMessages,i)||d(o,i)),k&&a.validators.push({name:c.$normalize(j),message:b.format(k,c[i])})})}function k(a,b,c){var d=a.formScope.getForm(),e=d[a.modelName];a.resetCustomErrors(),e.$setValidity("server",!1),h(b).removeClass("ng-pristine").addClass("ng-dirty"),c.forEach(function(b){a.customErrors.push(b)})}function l(){var b=this;b.resetCustomErrors(),b.change&&a(b.change,0)}function m(){var a=this.form[this.modelName];a&&a.$setValidity("server",!0),this.customErrors=[]}var n={},o=[{attr:"required",msg:"This field is required"},{attr:"maxlength",msg:"This field cannot be longer than {0} characters"},{attr:"minlength",msg:"This must be at least {0} characters long"}];return n.create=function(a){return angular.extend({},n.defaultConfig,a)},n.defaultConfig={restrict:"E",replace:!0,require:["^^cmsForm"],scope:{title:"@cmsTitle",description:"@cmsDescription",change:"&cmsChange",model:"=cmsModel",disabled:"=cmsDisabled"},compile:e,link:f,controller:function(){},controllerAs:"vm",bindToController:!0,getInputEl:h,passThroughAttributes:[],defaultValidationMessages:[]},n}]),angular.module("cms.shared").directive("cmsFormFieldCheckbox",["shared.internalModulePath","baseFormFieldFactory",function(a,b){var c={templateUrl:a+"UIComponents/FormFields/FormFieldCheckbox.html",passThroughAttributes:["disabled"]};return b.create(c)}]),angular.module("cms.shared").directive("cmsFormFieldCheckboxList",["_","$http","shared.internalModulePath","baseFormFieldFactory",function(a,b,c,d){function e(c,e,f,g){function h(){if(o.isRequiredAttributeDefined=angular.isDefined(f.required),o.onCheckChanged=n,o.optionsApi)j(o.optionsApi);else{c.$watch("vm.options",function(){k(o.options),m()})}c.$watch("vm.model",i)}function i(){l(),m()}function j(a){function c(a){k(a),m()}return b.get(a).then(c)}function k(b){function c(a){return{text:a[o.optionName],value:a[o.optionValue]}}o.listOptions=a.map(b,c),l()}function l(){var b=!o.model||!o.model.length;o.displayValues=[],a.each(o.listOptions,function(c){c.selected=!b&&!!a.find(o.model,function(a){return a===c.value})})}function m(){o.displayValues=a.chain(o.listOptions).filter(function(a){return a.selected}).pluck("text").value()}function n(){o.model=a.chain(o.listOptions).filter(function(a){return a.selected}).pluck("value").value()}var o=c.vm;h(),d.defaultConfig.link.apply(this,arguments)}var f={templateUrl:c+"UIComponents/FormFields/FormFieldCheckboxList.html",scope:a.extend(d.defaultConfig.scope,{options:"=cmsOptions",optionValue:"@cmsOptionValue",optionName:"@cmsOptionName",optionsApi:"@cmsOptionsApi",noValueText:"@cmsNoValueText",required:"=cmsRequired",disabled:"=cmsDisabled"}),passThroughAttributes:["placeholder","disabled","cmsMatch","required"],link:e};return d.create(f)}]),angular.module("cms.shared").directive("cmsFormFieldColor",["shared.internalModulePath","baseFormFieldFactory",function(a,b){function c(a){var c=a.vm;b.defaultConfig.link.apply(this,arguments),c.validators.push({name:"pattern",message:c.title+" must be a hexadecimal colour value e.g. '#EFEFEF' or '#fff'"})}var d={templateUrl:a+"UIComponents/FormFields/FormFieldColor.html",passThroughAttributes:["required","disabled"],link:c};return b.create(d)}]),angular.module("cms.shared").directive("cmsFormFieldContainer",["shared.internalModulePath",function(a){return{restrict:"E",templateUrl:a+"UIComponents/FormFields/FormFieldContainer.html",require:["^^cmsForm"],replace:!0,transclude:!0,scope:{title:"@cmsTitle",description:"@cmsDescription"}}}]),angular.module("cms.shared").directive("cmsFormFieldDate",["shared.internalModulePath","baseFormFieldFactory",function(a,b){var c={templateUrl:a+"UIComponents/FormFields/FormFieldDate.html",passThroughAttributes:["required","min","max","disabled","cmsMatch"]};return b.create(c)}]),angular.module("cms.shared").directive("cmsFormFieldDropdown",["_","$http","shared.internalModulePath","baseFormFieldFactory",function(a,b,c,d){function e(c,e,f,g){function h(){if(k.isRequiredAttributeDefined=angular.isDefined(f.required),k.optionsApi)i(k.optionsApi);else{c.$watch("vm.options",function(){k.listOptions=k.options,j()})}c.$watch("vm.model",j)}function i(a){function c(a){k.listOptions=a,j()}return b.get(a).then(c)}function j(){var b=a.find(k.listOptions,function(a){return a[k.optionValue]==k.model});k.displayValue=b?b[k.optionName]:k.defaultItemText,!b&&void 0!=k.model&&k.listOptions&&(k.model=void 0)}var k=c.vm;h(),d.defaultConfig.link.apply(this,arguments)}function f(a){return a.find("select")}var g={templateUrl:c+"UIComponents/FormFields/FormFieldDropdown.html",scope:a.extend(d.defaultConfig.scope,{options:"=cmsOptions",optionValue:"@cmsOptionValue",optionName:"@cmsOptionName",optionsApi:"@cmsOptionsApi",defaultItemText:"@cmsDefaultItemText",required:"=cmsRequired",disabled:"=cmsDisabled"}),passThroughAttributes:["placeholder","disabled","cmsMatch"],getInputEl:f,link:e};return d.create(g)}]),angular.module("cms.shared").directive("cmsFormFieldEmailAddress",["shared.internalModulePath","baseFormFieldFactory",function(a,b){function c(a){var c=a.vm;b.defaultConfig.link.apply(this,arguments),c.validators.push({name:"email",message:"Please enter a valid email address"})}var d={templateUrl:a+"UIComponents/FormFields/FormFieldEmailAddress.html",passThroughAttributes:["required","maxlength","placeholder","disabled","cmsMatch"],link:c};return b.create(d)}]),angular.module("cms.shared").directive("cmsFormFieldFilteredDropdown",["$q","_","shared.internalModulePath","shared.stringUtilities","baseFormFieldFactory",function(a,b,c,d,e){function f(c,d,f,g){function h(){l.refreshDataSource=k,l.dataSource=[],l.hasRequiredAttribute=b.has(f,"required"),l.placeholder=f.placeholder,l.clearSelected=j,c.$watch("vm.model",i)}function i(c){function d(a){a&&(l.selectedText=a[l.optionName],k(l.selectedText))}if(l.selectedText="",c&&l.dataSource&&l.dataSource.length){var e=b.find(l.dataSource,function(a){return c==a[l.optionValue]});e&&(l.selectedText=e[l.optionName])}!l.selectedText&&c&&l.initialItemFunction&&a.when(l.initialItemFunction({id:c})).then(d)}function j(){l.selectedText="",l.model&&(l.model=null)}function k(a){function b(a){l.dataSource=a.items}var c={text:a,pageSize:20};return l.localeId?c.localeId=l.localeId:m&&m.additionalParameters&&(c.localeId=m.additionalParameters.localeId),l.searchFunction({$query:c}).then(b)}var l=c.vm,m=b.last(g);h(),e.defaultConfig.link.apply(this,arguments)}var g={templateUrl:c+"UIComponents/FormFields/FormFieldFilteredDropdown.html",passThroughAttributes:["required","disabled"],scope:b.extend(e.defaultConfig.scope,{defaultItemText:"@cmsDefaultItemText",searchFunction:"&cmsSearchFunction",initialItemFunction:"&cmsInitialItemFunction",optionName:"@cmsOptionName",optionValue:"@cmsOptionValue",required:"=cmsRequired"}),require:b.union(e.defaultConfig.require,["?^^cmsFormDynamicFieldSet"]),link:f,transclude:!0};return e.create(g)}]),angular.module("cms.shared").directive("cmsFormFieldHtml",["$sce","$q","$http","_","shared.internalModulePath","shared.internalContentPath","shared.stringUtilities","shared.modalDialogService","baseFormFieldFactory",function(a,b,c,d,e,f,g,h,i){function j(b,c,d){function e(b){b!==g.editorModel&&(g.editorModel=b,g.rawHtml=a.trustAsHtml(b))}function f(b){b!==g.model&&(g.model=b,g.rawHtml=a.trustAsHtml(b))}var g=b.vm;i.defaultConfig.link.apply(this,arguments),l(g,d).then(function(a){g.tinymceOptions=a}),b.$watch("vm.model",e),b.$watch("vm.editorModel",f)}function k(a){return a.find("textarea")}function l(a,e){function g(a){a&&a.data&&d.extend(k,a.data),h()}function h(){a.options&&d.extend(k,a.options),j.resolve(k)}var i=20,j=b.defer();e.rows&&(i=parseInt(e.rows));var k={toolbar:n(a.toolbarsConfig,a.toolbarCustomConfig),plugins:"link image media fullscreen imagetools code",content_css:f+"css/third-party/tinymce/content.min.css",menubar:!1,min_height:16*i,setup:function(a){a.addButton("cfimage",{icon:"image",onclick:m.bind(null,a)})},browser_spellcheck:!0,convert_urls:!1};return a.configPath?c.get(a.configPath).then(g):h(),j.promise}function m(a){var b=a.selection.getContent({format:"image"}),c=b.length?angular.element(b):null;h.show({templateUrl:e+"UIComponents/EditorDialogs/ImageAssetEditorDialog.html",controller:"ImageAssetEditorDialogController",options:{imageAssetHtml:c,onSelected:function(b){a.insertContent(b.html)}}})}function n(a,b){function c(a){var b;if(a){if(!a.startsWith("'")&&!a.startsWith('"'))return[a];try{b=JSON.parse('{"j":['+a.replace(/'/g,'"')+"]}").j}catch(c){}if(b&&b.length)return b}return[]}var e="headings,basicFormatting",f={headings:"formatselect",basicFormatting:"fullscreen undo redo removeformat | bold italic underline | link unlink",advancedFormatting:"bullist numlist blockquote | alignleft aligncenter alignright alignjustify | strikethrough superscript subscript",media:"cfimage media",source:"code"},h=[];return a=a||e,a.split(",").forEach(function(a){a=g.lowerCaseFirstWord(a.trim()),"custom"===a?h=d.union(h,c(b)):f[a]&&h.push(f[a])}),h.join(" | ")}var o={templateUrl:e+"UIComponents/FormFields/FormFieldHtml.html",passThroughAttributes:["required","maxlength","disabled","rows"],getInputEl:k,scope:d.extend(i.defaultConfig.scope,{toolbarsConfig:"@cmsToolbars",toolbarCustomConfig:"@cmsCustomToolbar",options:"=cmsOptions",configPath:"@cmsConfigPath"}),link:j};return i.create(o)}]),angular.module("cms.shared").directive("cmsFormFieldNumber",["shared.internalModulePath","baseFormFieldFactory",function(a,b){var c={templateUrl:a+"UIComponents/FormFields/FormFieldNumber.html",passThroughAttributes:["required","maxlength","min","max","step","disabled","placeholder","cmsMatch"]};return b.create(c)}]),angular.module("cms.shared").directive("cmsFormFieldPassword",["shared.internalModulePath","baseFormFieldFactory",function(a,b){var c={templateUrl:a+"UIComponents/FormFields/FormFieldPassword.html",passThroughAttributes:["required","minlength","maxlength","disabled","cmsMatch"]};return b.create(c)}]),angular.module("cms.shared").directive("cmsFormFieldRadioList",["_","$http","shared.internalModulePath","baseFormFieldFactory",function(a,b,c,d){function e(c,e,f,g){function h(){if(k.isRequiredAttributeDefined=angular.isDefined(f.required),k.optionsApi)i(k.optionsApi);else{c.$watch("vm.options",function(){k.listOptions=k.options,j()})}c.$watch("vm.model",j)}function i(a){function c(a){k.listOptions=a,j()}return b.get(a).then(c)}function j(){var b=a.find(k.listOptions,function(a){return a[k.optionValue]==k.model});k.displayValue=b?b[k.optionName]:k.defaultItemText,!b&&void 0!=k.model&&k.listOptions&&(k.model=void 0)}var k=c.vm;h(),d.defaultConfig.link.apply(this,arguments)}var f={templateUrl:c+"UIComponents/FormFields/FormFieldRadioList.html",scope:a.extend(d.defaultConfig.scope,{options:"=cmsOptions",optionValue:"@cmsOptionValue",optionName:"@cmsOptionName",optionsApi:"@cmsOptionsApi",defaultItemText:"@cmsDefaultItemText",required:"=cmsRequired",disabled:"=cmsDisabled"}),passThroughAttributes:["placeholder","disabled","cmsMatch"],link:e};return d.create(f)}]),angular.module("cms.shared").directive("cmsFormFieldReadonly",["shared.internalModulePath",function(a){return{restrict:"E",templateUrl:a+"UIComponents/FormFields/FormFieldReadonly.html",replace:!0,require:"^^cmsForm",scope:{title:"@cmsTitle",description:"@cmsDescription",model:"=cmsModel"},controller:function(){},controllerAs:"vm",bindToController:!0}}]),angular.module("cms.shared").directive("cmsFormFieldText",["_","shared.internalModulePath","baseFormFieldFactory",function(a,b,c){var d={templateUrl:b+"UIComponents/FormFields/FormFieldText.html",passThroughAttributes:["required","minlength","maxlength","placeholder","pattern","disabled","cmsMatch"]
+};return c.create(d)}]),angular.module("cms.shared").directive("cmsFormFieldTextArea",["shared.internalModulePath","shared.stringUtilities","baseFormFieldFactory",function(a,b,c){function d(a){return a.find("textarea")}var e={templateUrl:a+"UIComponents/FormFields/FormFieldTextArea.html",passThroughAttributes:["required","maxlength","placeholder","ngMinlength","ngMaxlength","ngPattern","disabled","rows","cols","wrap"],getInputEl:d};return c.create(e)}]),angular.module("cms.shared").directive("cmsFormFieldUrl",["_","shared.internalModulePath","baseFormFieldFactory",function(a,b,c){var d={templateUrl:b+"UIComponents/FormFields/FormFieldUrl.html",passThroughAttributes:["required","minlength","maxlength","placeholder","pattern","disabled","cmsMatch"]};return c.create(d)}]),angular.module("cms.shared").directive("cmsFormFieldValidationSummary",["shared.internalModulePath",function(a){return{restrict:"E",templateUrl:a+"UIComponents/FormFields/FormFieldValidationSummary.html",replace:!0}}]),angular.module("cms.shared").directive("cmsHttpPrefix",function(){return{restrict:"A",require:"ngModel",link:function(a,b,c,d){function e(a){var b="http://";return a&&!/^(https?):\/\//i.test(a)&&-1===b.indexOf(a)&&-1==="https://".indexOf(a)?(d.$setViewValue(b+a),d.$render(),b+a):a}d.$formatters.push(e),d.$parsers.splice(0,0,e)}}}),angular.module("cms.shared").directive("cmsMatch",["$parse","$timeout","shared.internalModulePath","shared.directiveUtilities",function(a,b,c,d){function e(a,b,c,e){if(c[f]&&e[1]){var g=e[0],h=e[1],i=g.getFormScope().getForm(),j=d.parseModelName(c[f]),k=function(a,b){var c=i[j];if(!c)return!1;var d=c.$viewValue;return a===d};h.$validators[f]=k}}var f="cmsMatch";return{link:e,restrict:"A",require:["^^cmsForm","?ngModel"]}}]),angular.module("cms.shared").directive("cmsFormFieldImageAnchorLocationSelector",["_","shared.internalModulePath",function(a,b){function c(){var a=this;a.options=[{name:"Top Left",id:"TopLeft"},{name:"Top Center",id:"TopCenter"},{name:"Top Right",id:"TopRight"},{name:"Middle Left",id:"MiddleLeft"},{name:"Middle Center",id:"MiddleCenter"},{name:"Middle Right",id:"MiddleRight"},{name:"Bottom Left",id:"BottomLeft"},{name:"Bottom Center",id:"BottomCenter"},{name:"Bottom Right",id:"BottomRight"}]}return{restrict:"E",templateUrl:b+"UIComponents/ImageAssets/FormFieldImageAnchorLocationSelector.html",scope:{model:"=cmsModel"},controller:c,controllerAs:"vm",bindToController:!0}}]),angular.module("cms.shared").directive("cmsFormFieldImageAsset",["_","shared.internalModulePath","shared.internalContentPath","shared.modalDialogService","shared.stringUtilities","shared.imageService","shared.urlLibrary","baseFormFieldFactory",function(a,b,c,d,e,f,g,h){function i(c,h,i,k){function l(){t.urlLibrary=g,t.showPicker=n,t.remove=m,t.isRemovable=a.isObject(t.model)&&!u,t.filter=q(i),t.previewWidth=i.cmsPreviewWidth||220,t.previewHeight=i.cmsPreviewHeight,c.$watch("vm.asset",p),c.$watch("vm.model",o)}function m(){p(null)}function n(){function a(a){!a&&t.previewAsset?(p(null),t.onChange()):(!t.previewAsset||a&&t.previewAsset.imageAssetId!==a.imageAssetId)&&(p(a),t.onChange())}d.show({templateUrl:b+"UIComponents/ImageAssets/ImageAssetPickerDialog.html",controller:"ImageAssetPickerDialogController",options:{currentAsset:t.previewAsset,filter:t.filter,onSelected:a}})}function o(a){a||(t.model=a=void 0),!a||t.previewAsset&&t.previewAsset.imageAssetId==a||f.getById(a).then(function(a){a&&p(a)})}function p(a){a?(t.previewAsset=a,t.isRemovable=!u,t.model=a.imageAssetId,t.updateAsset&&(t.asset=a)):s&&(t.previewAsset=null,t.isRemovable=!1,t.model&&(t.model=null),t.updateAsset&&(t.asset=null)),r(),s=!0}function q(a){function b(b,f){var g=a[d+b];g&&(b=e.lowerCaseFirstWord(b),c[b]=f?parseInt(g):g)}var c={},d="cms";return b("Tags"),b("Width",!0),b("Height",!0),b("MinWidth",!0),b("MinHeight",!0),c}function r(){t.buttonText=t.model?"Change":"Select"}var s,t=c.vm,u=a.has(i,"required");return l(),j.link(c,h,i,k)}var j=h.defaultConfig,k={templateUrl:b+"UIComponents/ImageAssets/FormFieldImageAsset.html",scope:a.extend(j.scope,{asset:"=cmsAsset",loadState:"=cmsLoadState",updateAsset:"@cmsUpdateAsset"}),passThroughAttributes:["required"],link:i};return h.create(k)}]),angular.module("cms.shared").directive("cmsFormFieldImageAssetCollection",["_","shared.internalModulePath","shared.LoadState","shared.imageService","shared.modalDialogService","shared.arrayUtilities","shared.stringUtilities","shared.urlLibrary","baseFormFieldFactory",function(a,b,c,d,e,f,g,h,i){function j(i,j,m,n){function o(){v.gridLoadState=new c,v.urlLibrary=h,v.showPicker=q,v.remove=p,v.onDrop=r,i.$watch("vm.model",u)}function p(a){function b(a,b){var c=a.indexOf(b);return c>=0?a.splice(c,1):void 0}b(v.gridData,a),b(v.model,a.imageAssetId)}function q(){function a(a){v.model=a,u(a)}e.show({templateUrl:b+"UIComponents/ImageAssets/ImageAssetPickerDialog.html",controller:"ImageAssetPickerDialogController",options:{selectedIds:v.model||[],filter:t(),onSelected:a}})}function r(a,b){f.moveObject(v.gridData,b,a,k),s()}function s(){v.model=a.pluck(v.gridData,k)}function t(){function a(a){var c=m["cms"+a];c&&(a=g.lowerCaseFirstWord(a),b[a]=parseInt(c))}var b={};return a("Width"),a("Height"),a("MinWidth"),a("MinHeight"),b}function u(b){b&&b.length?v.gridData&&a.pluck(v.gridData,k).join()==b.join()||(v.gridLoadState.on(),d.getByIdRange(b).then(function(a){v.gridData=a,v.gridLoadState.off()})):v.gridData=[]}var v=i.vm;a.has(m,"required");return o(),l.link(i,j,m,n)}var k="imageAssetId",l=i.defaultConfig,m={templateUrl:b+"UIComponents/ImageAssets/FormFieldImageAssetCollection.html",passThroughAttributes:["required"],link:j};return i.create(m)}]),angular.module("cms.shared").directive("cmsFormFieldImageUpload",["_","shared.internalModulePath","baseFormFieldFactory",function(a,b,c){function d(a){return a.find("cms-image-upload")}var e={templateUrl:b+"UIComponents/ImageAssets/FormFieldImageUpload.html",scope:a.extend(c.defaultConfig.scope,{asset:"=cmsAsset",loadState:"=cmsLoadState"}),passThroughAttributes:["required","ngRequired"],getInputEl:d};return c.create(e)}]),angular.module("cms.shared").directive("cmsImageAsset",["shared.internalModulePath","shared.internalContentPath","shared.urlLibrary",function(a,b,c){return{restrict:"E",scope:{image:"=cmsImage",width:"@cmsWidth",height:"@cmsHeight",cropMode:"@cmsCropMode"},templateUrl:a+"UIComponents/ImageAssets/ImageAsset.html",link:function(a,d,e){a.$watch("image",function(d,e){d&&d.imageAssetId?a.src=c.getImageUrl(d,{width:a.width,height:a.height,mode:a.cropMode}):a.src=b+"img/AssetReplacement/image-replacement.png"})},replace:!0}}]),angular.module("cms.shared").controller("ImageAssetPickerDialogController",["$scope","shared.LoadState","shared.imageService","shared.SearchQuery","shared.modalDialogService","shared.internalModulePath","shared.permissionValidationService","options","close",function(a,b,c,d,e,f,g,h,i){function j(){angular.extend(a,h),u.onOk=q,u.onCancel=n,u.onSelect=o,u.onUpload=r,u.selectedAsset=u.currentAsset,u.onSelectAndClose=p,u.close=n,u.gridLoadState=new b,u.query=new d({onChanged:l,useHistory:!1,defaultParams:h.filter}),u.presetFilter=h.filter,u.filter=u.query.getFilters(),u.toggleFilter=k,u.isSelected=s,u.multiMode=u.selectedIds?!0:!1,u.okText=u.multiMode?"Ok":"Select",u.canCreate=g.canCreate("COFIMG"),k(!1),m()}function k(a){u.isFilterVisible=_.isUndefined(a)?!u.isFilterVisible:a}function l(){k(!1),m()}function m(){return u.gridLoadState.on(),c.getAll(u.query.getParameters()).then(function(a){u.result=a,u.gridLoadState.off()})}function n(){u.multiMode||u.onSelected(u.currentAsset),i()}function o(a){return u.multiMode?void t(a):void(u.selectedAsset=a)}function p(a){return u.multiMode?(t(a),void q()):(u.selectedAsset=a,void q())}function q(){u.multiMode?u.onSelected(u.selectedIds):u.onSelected(u.selectedAsset),i()}function r(){function a(a){c.getById(a).then(p)}e.show({templateUrl:f+"UIComponents/ImageAssets/UploadImageAssetDialog.html",controller:"UploadImageAssetDialogController",options:{filter:h.filter,onUploadComplete:a}})}function s(a){return u.selectedIds&&a&&u.selectedIds.indexOf(a.imageAssetId)>-1?!0:a&&u.selectedAsset?a.imageAssetId===u.selectedAsset.imageAssetId:!1}function t(a){if(s(a)){var b=u.selectedIds.indexOf(a.imageAssetId);u.selectedIds.splice(b,1)}else u.selectedIds.push(a.imageAssetId)}var u=a;j()}]),angular.module("cms.shared").directive("cmsImageUpload",["_","shared.internalModulePath","shared.internalContentPath","shared.stringUtilities","shared.urlLibrary",function(a,b,c,d,e){function f(b,c,f,g){function j(){q.remove=k,q.fileChanged=m,q.isRemovable=a.isObject(q.ngModel)&&!r,b.$watch("vm.asset",l)}function k(){m()}function l(){var a=q.asset;a?(q.previewUrl=e.getImageUrl(a,{width:220}),q.isRemovable=!r,g.$setViewValue({name:a.fileName+"."+a.extension,size:a.fileSizeInBytes,isCurrentFile:!0})):(q.previewUrl=i,q.isRemovable=!1,g.$modelValue&&g.$setViewValue(void 0)),p()}function m(b){b&&b[0]?(g.$setViewValue(b[0]),n(b[0]),q.isRemovable=!r):(!q.ngModel||a.isUndefined(b))&&(g.$setViewValue(void 0),q.previewUrl=i,q.isRemovable=!1),p(),q.onChange&&q.onChange(q.ngModel)}function n(a){if(!o(a))return void(q.previewUrl=h);try{q.previewUrl=URL.createObjectURL(a)}catch(b){q.previewUrl=h}}function o(b){var c=[".tiff",".tif"];return!a.find(c,function(a){return d.endsWith(b.name,a)})}function p(){q.buttonText=g.$modelValue?"Change":"Upload"}var q=b.vm,r=a.has(f,"required");j()}var g=c+"img/AssetReplacement/",h=g+"preview-not-supported.png",i=g+"image-replacement.png";return{restrict:"E",templateUrl:b+"UIComponents/ImageAssets/ImageUpload.html",scope:{asset:"=cmsAsset",loadState:"=cmsLoadState",isEditMode:"=cmsIsEditMode",modelName:"=cmsModelName",ngModel:"=ngModel",onChange:"&cmsOnChange"},require:"ngModel",controller:function(){},controllerAs:"vm",bindToController:!0,link:f}}]),angular.module("cms.shared").controller("UploadImageAssetDialogController",["$scope","shared.LoadState","shared.imageService","shared.SearchQuery","shared.focusService","shared.stringUtilities","options","close",function(a,b,c,d,e,f,g,h){function i(){angular.extend(a,g),m(),p.onUpload=j,p.onCancel=l,p.close=l,p.filter=g.filter,p.onFileChanged=k,p.hasFilterRestrictions=n,p.saveLoadState=new b}function j(){p.saveLoadState.on(),c.add(p.command).progress(p.saveLoadState.setProgress).then(o)}function k(){var a=p.command;a.file&&a.file.name&&(a.title=f.capitaliseFirstLetter(f.getFileNameWithoutExtension(a.file.name)),e.focusById("title"))}function l(){h()}function m(){p.command={}}function n(){return g.filter.minWidth||g.filter.minHeight||g.filter.width||g.filter.height}function o(a){g.onUploadComplete(a),h()}var p=a;i()}]),angular.module("cms.shared").directive("cmsField",["$timeout","shared.internalModulePath",function(a,b){return{restrict:"E",templateUrl:b+"UIComponents/Layout/Field.html",transclude:!0,replace:!0,require:"^^cmsForm"}}]),function(a){function b(){c=a(document.getElementsByClassName("category")),d=a(document.getElementsByClassName("category selected")),c.on("mouseenter",function(b){a(b.srcElement);d.removeClass("selected")}),c.on("mouseleave",function(b){a(b.srcElement);d.addClass("selected")})}var c,d;a(document.getElementsByClassName("main-nav"));b()}(angular.element),angular.module("cms.shared").directive("cmsPageActions",function(){return{restrict:"E",template:'<div class="page-actions" ng-transclude></div>',replace:!0,transclude:!0}}),angular.module("cms.shared").directive("cmsPageBody",function(){return{restrict:"E",template:'<div class="page-body {{ contentType }} {{ subHeader }}"><div class="form-wrap" ng-transclude></div></div>',scope:{contentType:"@cmsContentType",subHeader:"@cmsSubHeader"},replace:!0,transclude:!0}}),angular.module("cms.shared").directive("cmsPageFilter",function(){return{restrict:"E",template:'<div class="page-filter" ng-transclude></div>',replace:!0,transclude:!0}}),angular.module("cms.shared").directive("cmsPageHeader",function(){return{restrict:"E",template:'<h1 class="page-header"><a ng-href="{{parentHref ? parentHref : \'#/\'}}" ng-if="parentTitle">{{parentTitle}}</a><span ng-if="parentTitle && title"> &gt; </span>{{title}}</h1>',replace:!0,scope:{title:"@cmsTitle",parentTitle:"@cmsParentTitle",parentHref:"@cmsParentHref"}}}),angular.module("cms.shared").directive("cmsPageHeaderButtons",function(){return{restrict:"E",template:'<div class="btn-group page-header-buttons" ng-transclude></div>',replace:!0,transclude:!0}}),angular.module("cms.shared").directive("cmsPageSubHeader",function(){return{restrict:"E",template:'<div class="page-sub-header" ng-transclude></div>',replace:!0,transclude:!0}}),angular.module("cms.shared").factory("shared.LoadState",["$q","$rootScope","_",function(a,b,c){function d(b){var d=this;d.isLoading=b===!0,d.progress=d.isLoading?0:100,d.on=function(){d.isLoading=!0,100===d.progress&&(d.progress=0)},d.off=function(){d.isLoading=!1,d.progress=100},d.offWhen=function(){var b=[],e=Array.prototype.slice.call(arguments);return c.each(e,function(a){b.push(a.promise?a.promise:a)}),a.all(b).then(function(){d.off()})},d.setProgress=function(a,b){var e;c.isObject(a)&&(b=a.total,a=a.loaded),c.isUndefined(b)&&(b=100),e=parseInt(100*a/b),0>=e&&(e=0),e>=100?e=100:d.on(),d.progress=e}}return d}]),angular.module("cms.shared").directive("cmsLoading",function(){return{restrict:"A",link:function(a,b,c){a.$watch(c.cmsLoading,function(a){b.toggleClass("loading",a)})}}}),angular.module("cms.shared").directive("cmsProgressBar",["shared.internalModulePath",function(a){return{restrict:"E",scope:{loadState:"="},templateUrl:a+"UIComponents/Loader/ProgressBar.html"}}]),angular.module("cms.shared").directive("cmsFormFieldLocaleSelector",["_","shared.internalModulePath","shared.localeService","shared.directiveUtilities",function(a,b,c,d){function e(a,b,c){var e=a.vm;angular.isDefined(c.required)?e.isRequired=!0:(e.isRequired=!1,e.defaultItemText=c.cmsDefaultItemText||"None"),d.setModelName(e,c)}function f(){var b=this;c.getAll().then(function(c){b.locales=a.map(c,function(a){return{name:a.name+" ("+a.ietfLanguageTag+")",id:a.localeId}}),b.onLoaded&&b.onLoaded()})}return{restrict:"E",templateUrl:b+"UIComponents/Locales/FormFieldLocaleSelector.html",scope:{model:"=cmsModel",onLoaded:"&cmsOnLoaded"},link:{pre:e},controller:f,controllerAs:"vm",bindToController:!0}}]),angular.module("cms.shared").directive("cmsMenu",["shared.internalModulePath",function(a){return{restrict:"E",replace:!0,transclude:!0,templateUrl:a+"UIComponents/Menus/Menu.html",scope:{text:"@cmsIcon"}}}]),angular.module("cms.shared").controller("AlertController",["$scope","options","close",function(a,b,c){angular.extend(a,b),a.close=c}]),angular.module("cms.shared").controller("ConfirmDialogController",["$scope","options","close",function(a,b,c){function d(a){var c=a?b.ok:b.cancel;c&&c().then(e)["finally"](b.onCancel)}function e(){b.autoClose&&c()}angular.extend(a,b),a.close=d}]),angular.module("cms.shared").controller("DeveloperExceptionController",["$scope","$sce","shared.internalContentPath","options","close",function(a,b,c,d,e){var f=d.response.data,g=document.createElement("iframe");g.setAttribute("srcdoc",f),g.setAttribute("src",c+"developer-exception-not-supported.html"),g.setAttribute("sandbox","allow-scripts"),a.messageHtml=b.trustAsHtml(g.outerHTML),angular.extend(a,d),a.close=e}]),angular.module("cms.shared").directive("cmsModalDialogActions",["shared.internalModulePath",function(a){return{restrict:"E",templateUrl:a+"UIComponents/Modals/ModalDialogActions.html",transclude:!0}}]),angular.module("cms.shared").directive("cmsModalDialogBody",["shared.internalModulePath",function(a){return{restrict:"E",templateUrl:a+"UIComponents/Modals/ModalDialogBody.html",transclude:!0}}]),angular.module("cms.shared").directive("cmsModalDialogContainer",["shared.internalModulePath","$timeout",function(a,b){function c(a,c,d){var e="large"===d.cmsModalSize?"modal-lg":"";e+=a.isRootModal?" is-root-modal":" is-child-modal","large"===d.cmsModalSize&&(a.sizeCls=e),b(function(){a.sizeCls=e+" modal--show"},1)}return{restrict:"E",templateUrl:a+"UIComponents/Modals/ModalDialogContainer.html",transclude:!0,link:c,controller:angular.noop}}]),angular.module("cms.shared").directive("cmsModalDialogHeader",["shared.internalModulePath",function(a){return{restrict:"E",templateUrl:a+"UIComponents/Modals/ModalDialogHeader.html",transclude:!0}}]),angular.module("cms.shared").factory("shared.modalDialogService",["$q","_","ModalService","shared.internalModulePath","shared.LoadState",function(a,b,c,d,e){var f={};return f.alert=function(e){var f=a.defer(),g=e||{};return b.isString(e)&&(g={message:e}),c.showModal({templateUrl:d+"UIComponents/Modals/Alert.html",controller:"AlertController",inputs:{options:g}}).then(function(a){a.close.then(f.resolve)}),f.promise},f.show=function(a){return c.showModal({templateUrl:a.templateUrl,controller:a.controller,inputs:{options:a.options}})},f.confirm=function(f){function g(a){var c=a||{},d={okButtonTitle:"OK",cancelButtonTitle:"Cancel",autoClose:!0},e={ok:h.bind(null,!0),cancel:h.bind(null,!1),onOkLoadState:j};return b.isString(a)&&(c={message:a}),b.defaults(e,c,d)}function h(c){var d,e=c?k.onOk:k.onOk.onCancel,f=c?i.resolve:i.reject;return b.isFunction(e)&&(j.on(),d=e()),a.when(d).then(f)}var i=a.defer(),j=new e,k=g(f);return c.showModal({templateUrl:d+"UIComponents/Modals/ConfirmDialog.html",controller:"ConfirmDialogController",inputs:{options:k}}),i.promise},f}]),angular.module("cms.shared").factory("shared.ImagePreviewFieldCollection",["$q","_","shared.arrayUtilities","shared.imageService",function(a,b,c,d){function e(e){function f(a){if(e){var b=a[e],c=i[b].fields[k];return c?c.lowerName:void 0}return!h&&i.fields[k]&&(h=i.fields[k].lowerName),h}function g(a,b,c){function e(a){j.images[b]=a}var g=f(a);if(g){var h=a[g];if(!c){var i,k=j.images[b];if(k&&(i=k.imageAssetId),h==i)return;if(!h)return void(j.images[b]=void 0)}return d.getById(h).then(e)}}var h,i,j=this,k="previewImage";j.load=function(c,e){function g(){var b=a.defer();return b.resolve(),j.images=[],b.promise}function h(a,b){return b?a.model?a.model[b]:a[b]:void 0}if(i=e,!c||!c.length||!e)return g();var k=b.chain(c).map(function(a){return h(a,f(a))}).filter(function(a){return!!a}).uniq().value();return k.length?d.getByIdRange(k).then(function(a){j.images=[],b.each(c,function(c){var d,e=h(c,f(c));e&&(d=b.find(a,{imageAssetId:e})),j.images.push(d)})}):g()},j.move=function(a,b){c.move(j.images,a,b)},j.add=function(a,b){return g(a,b,!0)},j.update=function(a,b){return g(a,b)},j.remove=function(a){c.remove(j.images,a)}}return e}]),angular.module("cms.shared").factory("shared.ModelPreviewFieldset",["$q","_","shared.stringUtilities","shared.imageService",function(a,b,c,d){function e(a){function d(a){function d(d){var f=b.find(a.dataModelProperties,function(a){return a.additionalAttributes[d]});f&&(f.lowerName=c.lowerCaseFirstWord(f.name),e[d]=f,e.hasFields=!0)}var e={};return d(h),d(i),d(j),e}function e(a){return a[h]||!a.hasFields}function f(a){return a[h]?a[h].displayName:"Title"}var g=this,h="previewTitle",i="previewDescription",j="previewImage";g.modelMetaData=a,g.fields=d(a),g.showTitle=e(g.fields),g.titleTerm=f(g.fields),g.on=function(){g.isLoading=!0,100===g.progress&&(g.progress=0)}}return e}]),angular.module("cms.shared").controller("EditNestedDataModelDialogController",["$scope","shared.focusService","shared.stringUtilities","options","close",function(a,b,c,d,e){function f(){angular.extend(a,d),i.save=g,i.onCancel=h,i.close=h,i.title=d.model?"Edit Item":"Add Item",i.formDataSource={model:d.model||{},modelMetaData:d.modelMetaData}}function g(){d.onSave&&d.onSave(i.formDataSource.model),e()}function h(){e()}var i=a;f()}]),angular.module("cms.shared").directive("cmsFormFieldNestedDataModelCollection",["_","shared.internalModulePath","shared.LoadState","shared.nestedDataModelSchemaService","shared.modalDialogService","shared.arrayUtilities","shared.ModelPreviewFieldset","shared.ImagePreviewFieldCollection","baseFormFieldFactory",function(a,b,c,d,e,f,g,h,i){function j(c,i,j,m){function n(){y.add=r,y.edit=q,y.remove=p,y.onDrop=t,y.onDropSuccess=u,y.getTitle=v,w=d.getByName(y.modelType).then(function(a){y.modelMetaData=a,y.previewFields=new g(a),y.gridImages=new h,y.gridImages.load(y.model,y.previewFields)})}function o(){y.model=y.model.slice(0)}function p(a,b){f.removeObject(y.model,a),y.gridImages.remove(b)}function q(a,b){function c(){y.gridImages.update(a,b),o()}s({model:a,onSave:c})}function r(){function a(a){y.model=y.model||[],y.model.push(a),y.gridImages.add(a,y.model.length-1),o()}s({onSave:a})}function s(a){a.modelMetaData=y.modelMetaData,z&&(a.additionalParameters=z.additionalParameters),e.show({templateUrl:b+"UIComponents/NestedDataModels/EditNestedDataModelDialog.html",controller:"EditNestedDataModelDialogController",options:a})}function t(a,b){x=a}function u(a){f.move(y.model,a,x),y.gridImages.move(a,x)}function v(a,b){var c=y.previewFields.fields[l];return c?a[c.lowerName]:a.title?a.title:"Item "+(b+1)}var w,x,y=c.vm,z=a.last(m);return n(),k.link(c,i,j,m)}var k=i.defaultConfig,l="previewTitle",m={templateUrl:b+"UIComponents/NestedDataModels/FormFieldNestedDataModelCollection.html",scope:a.extend(k.scope,{minItems:"@cmsMinItems",maxItems:"@cmsMaxItems",modelType:"@cmsModelType",orderable:"=cmsOrderable"}),passThroughAttributes:["required"],link:j};return i.create(m)}]),angular.module("cms.shared").directive("cmsFormFieldPageCollection",["_","shared.internalModulePath","shared.LoadState","shared.pageService","shared.modalDialogService","shared.arrayUtilities","shared.urlLibrary","baseFormFieldFactory",function(a,b,c,d,e,f,g,h){function i(h,i,l,m){function n(){v.gridLoadState=new c,v.showPicker=p,v.remove=o,v.onDrop=q,v.urlLibrary=g,h.$watch("vm.model",u)}function o(a){f.removeObject(v.gridData,a),f.removeObject(v.model,a[j])}function p(){function a(a){v.model=a,u(a)}e.show({templateUrl:b+"UIComponents/Pages/PagePickerDialog.html",controller:"PagePickerDialogController",options:{selectedIds:v.model||[],filter:t(),onSelected:a}})}function q(a,b){f.moveObject(v.gridData,b,a,j),s()}function r(){v.orderable||(v.gridData=a.sortBy(v.gridData,function(a){return a.auditData.createDate}).reverse(),s())}function s(){v.model=a.pluck(v.gridData,j)}function t(){var a,b={};return v.localeId?a=v.localeId:w&&w.additionalParameters&&(a=w.additionalParameters.localeId),a&&(b.localeId=a),b}function u(b){function c(a){v.gridData=a,r()}b&&b.length?v.gridData&&a.pluck(v.gridData,j).join()==b.join()||(v.gridLoadState.on(),d.getByIdRange(b).then(c).then(v.gridLoadState.off)):v.gridData=[]}var v=h.vm,w=(a.has(l,"required"),a.last(m));return n(),k.link(h,i,l,m)}var j="pageId",k=h.defaultConfig,l={templateUrl:b+"UIComponents/Pages/FormFieldPageCollection.html",scope:a.extend(k.scope,{localeId:"=cmsLocaleId",orderable:"=cmsOrderable"}),require:a.union(k.require,["?^^cmsFormDynamicFieldSet"]),passThroughAttributes:["required"],link:i};return h.create(l)}]),angular.module("cms.shared").directive("cmsFormFieldPageSelector",["_","shared.internalModulePath","shared.pageService","shared.directiveUtilities","shared.modalDialogService",function(a,b,c,d,e){function f(a,b,e,f){var g=a.vm;f[0];angular.isDefined(e.required)?g.isRequired=!0:g.isRequired=!1,d.setModelName(g,e),g.search=function(a){return c.getAll(a)},g.initialItemFunction=function(a){return c.getByIdRange([a]).then(function(a){return a[0]})}}function g(){}return{restrict:"E",templateUrl:b+"UIComponents/Pages/FormFieldPageSelector.html",scope:{model:"=cmsModel",title:"@cmsTitle",localeId:"=cmsLocaleId"},require:["?^^cmsFormDynamicFieldSet"],link:{pre:f},controller:g,controllerAs:"vm",bindToController:!0}}]),angular.module("cms.shared").factory("shared.pageModalDialogService",["shared.pageService","shared.modalDialogService",function(a,b){var c={};return c.publish=function(c,d){function e(){return d(),a.publish(c)}var f={title:"Publish Page",message:"Are you sure you want to publish this page?",okButtonTitle:"Yes, publish it",onOk:e};return b.confirm(f)},c.unpublish=function(c,d){function e(){return d(),a.unpublish(c)}var f={title:"Unpublish Page",message:"Unpublishing this page will remove it from the live site and put the page into draft status. Are you sure you want to continue?",okButtonTitle:"Yes, unpublish it",onOk:e};return b.confirm(f)},c.copyToDraft=function(c,d,e,f){function g(){return f(),a.removeDraft(c).then(h)}function h(){return a.duplicateDraft(c,d)}var i={title:"Copy Version",message:"A draft version of this page already exists. Copying this version will delete the current draft. Do you wish to continue?",okButtonTitle:"Yes, replace it",onOk:g};return e?b.confirm(i):(f(),h())},c}]),angular.module("cms.shared").controller("PagePickerDialogController",["$scope","shared.LoadState","shared.pageService","shared.SearchQuery","shared.modalDialogService","shared.internalModulePath","shared.urlLibrary","options","close",function(a,b,c,d,e,f,g,h,i){function j(){angular.extend(a,h),t.onOk=q,t.onCancel=n,t.onSelect=o,t.selectedPage=t.currentPage,t.onSelectAndClose=p,t.close=n,t.gridLoadState=new b,t.query=new d({onChanged:l,useHistory:!1,defaultParams:h.filter}),t.presetFilter=h.filter,t.filter=t.query.getFilters(),t.toggleFilter=k,t.isSelected=r,t.multiMode=t.selectedIds?!0:!1,t.urlLibrary=g,k(!1),m()}function k(a){t.isFilterVisible=_.isUndefined(a)?!t.isFilterVisible:a}function l(){k(!1),m()}function m(){return t.gridLoadState.on(),c.getAll(t.query.getParameters()).then(function(a){t.result=a,t.gridLoadState.off()})}function n(){t.multiMode||t.onSelected(t.currentPage),i()}function o(a){return t.multiMode?void s(a):void(t.selectedPage=a)}function p(a){return t.multiMode?(s(a),void q()):(t.selectedPage=a,void q())}function q(){t.multiMode?t.onSelected(t.selectedIds):t.onSelected(t.selectedPage),i()}function r(a){return t.selectedIds&&a&&t.selectedIds.indexOf(a.pageId)>-1?!0:a&&t.selectedPage?a[u]===t.selectedPage[u]:!1}function s(a){if(r(a)){var b=t.selectedIds.indexOf(a[u]);t.selectedIds.splice(b,1)}else t.selectedIds.push(a[u])}var t=a,u="pageId";j()}]),angular.module("cms.shared").directive("cmsPager",["shared.internalModulePath",function(a){function b(a,b,c){function d(){f.setPage=e}function e(a){f.query&&f.query.update({pageNumber:a})}var f=a.vm;d(),a.$watch("vm.result",function(a){a?(f.isFirstPage=a.pageNumber<=1,f.isLastPage=a.pageNumber===a.pageCount):(f.isFirstPage=!0,f.isLastPage=!0)})}return{restrict:"E",scope:{result:"=cmsResult",query:"=cmsQuery"},templateUrl:a+"UIComponents/Search/Pager.html",controller:angular.noop,controllerAs:"vm",bindToController:!0,link:b}}]),angular.module("cms.shared").directive("cmsSearchFilter",["shared.internalModulePath",function(a){function b(a,b,c){function d(){_.isUndefined(g.ngShow)&&(g.ngShow=!0),g.setFilter=e,g.cancel=f}function e(){g.query.update(g.filter),g.ngShow=!0}function f(){g.ngShow=!1,g.query.clear()}var g=a.vm;d()}return{restrict:"E",scope:{query:"=cmsQuery",filter:"=cmsFilter",ngShow:"="},templateUrl:a+"UIComponents/Search/SearchFilter.html",transclude:!0,controller:angular.noop,controllerAs:"vm",bindToController:!0,link:b}}]),angular.module("cms.shared").factory("shared.SearchQuery",["$location","_",function(a,b){function c(c){function e(){if(!h)return{};var c=a.search();return b.each(c,function(a,b){isNaN(a)||(c[b]=parseInt(a))}),c}function f(d){j=d,h&&(qsParams=b.omit(d,function(a,b){return i[b]===a||!a}),a.search(qsParams)),c.onChanged&&c.onChanged(g)}var g=this,h=b.isUndefined(c.useHistory)||c.useHistory,i=b.defaults({},c.defaultParams,d),j=(c.filters||[],b.defaults({},e(),i));g.getParameters=function(){return j},g.getFilters=function(){return b.omit(j,Object.keys(d))},g.update=function(a){var c=b.defaults({},a,i,j);f(c)},g.clear=function(){f(i)}}var d={pageSize:30,pageNumber:1};return c}]),angular.module("cms.shared").directive("cmsSuccessMessage",["shared.internalModulePath",function(a){return{restrict:"E",templateUrl:a+"UIComponents/StatusMessages/SuccessMessage.html",replace:!0,transclude:!0}}]),angular.module("cms.shared").directive("cmsWarningMessage",["shared.internalModulePath",function(a){return{restrict:"E",templateUrl:a+"UIComponents/StatusMessages/WarningMessage.html",replace:!0,transclude:!0}}]),angular.module("cms.shared").directive("cmsTableActions",["shared.internalModulePath",function(a){return{restrict:"E",templateUrl:a+"UIComponents/Table/TableActions.html",replace:!0,transclude:!0,link:function(a,b,c,d,e){}}}]),angular.module("cms.shared").directive("cmsTableCellCreatedAuditData",["shared.internalModulePath",function(a){return{restrict:"E",scope:{auditData:"=cmsAuditData"},templateUrl:a+"UIComponents/Table/TableCellCreatedAuditData.html"}}]),angular.module("cms.shared").directive("cmsTableCellImage",["shared.internalModulePath",function(a){return{restrict:"E",scope:{image:"=cmsImage"},templateUrl:a+"UIComponents/Table/TableCellImage.html"}}]),angular.module("cms.shared").directive("cmsTableCellUpdatedAuditData",["shared.internalModulePath",function(a){return{restrict:"E",scope:{auditData:"=cmsAuditData"},templateUrl:a+"UIComponents/Table/TableCellUpdatedAuditData.html"}}]),angular.module("cms.shared").directive("cmsTableColumnActions",function(){return{restrict:"A",link:function(a,b,c,d){b.addClass("actions")}}}),angular.module("cms.shared").directive("cmsTableContainer",["shared.internalModulePath",function(a){return{restrict:"E",templateUrl:a+"UIComponents/Table/TableContainer.html",replace:!0,transclude:!0,link:function(a,b,c,d,e){b.find("table").addClass("table")}}}]),angular.module("cms.shared").directive("cmsTableGroupHeading",function(){return{restrict:"E",template:'<h5 class="table-group-heading" ng-transclude></h5>',replace:!0,transclude:!0}}),angular.module("cms.shared").directive("cmsTableRowInactive",function(){return{restrict:"A",scope:{tableRowInactive:"=cmsTableRowInactive"},link:function(a,b,c,d){a.$watch("tableRowInactive",function(a){b.toggleClass("inactive",!!a)})}}}),angular.module("cms.shared").directive("cmsFormFieldTags",["_","shared.internalModulePath","shared.stringUtilities","baseFormFieldFactory",function(a,b,c,d){var e={templateUrl:b+"UIComponents/Tags/FormFieldTags.html",passThroughAttributes:["required"]};return d.create(e)}]),angular.module("cms.shared").directive("cmsTagList",["shared.internalModulePath",function(a){function b(a,b,c,d){d&&(a.isInModal=!0)}return{restrict:"E",scope:{tags:"=cmsTags"},require:"?^^cmsModalDialogContainer",templateUrl:a+"UIComponents/Tags/TagList.html",link:b}}]),angular.module("cms.shared").directive("cmsTagsInput",["_","shared.stringUtilities",function(a,b){function c(c,f,g,h){function i(){h.$formatters.push(j),h.$parsers.push(k),h.$render=function(){f.val(h.$viewValue||"")},f.on("keypress",m),f.on("blur change keyup",l)}function j(c){return c&&c.length?a.map(c,function(a){return b.capitaliseFirstLetter(a.replace(p(),"").trim())}).join(e):""}function k(b){var c,d;return d=b.replace(p(),"").split(",").map(function(a){return a.trim()}),c=a.filter(d,function(a){return a&&","!==a}),c.length?c:null}function l(a){n(),c.$evalAsync(o)}function m(a){var b=String.fromCharCode(a.which);p().test(b)&&a.preventDefault()}function n(){var a=f.val(),b=a.replace(p(),"");a!=b&&f.val(b)}function o(){var a=f.val();h.$setViewValue(a)}function p(){return d.lastIndex=0,d}c.vm;i()}var d=/[^,&\w\s'()-]+/g,e=", ";return{restrict:"A",require:"ngModel",link:c}}]),angular.module("cms.shared").directive("cmsTimeAgo",["shared.internalModulePath",function(a){function b(a){var b=this;a.$watch("time",function(){a.time?(b.date=new Date(a.time),b.timeAgo=c(b.date)):(b.date=null,b.timeAgo=null)})}function c(a){switch(typeof a){case"number":break;case"string":a=+new Date(a);break;case"object":a.constructor===Date&&(a=a.getTime());break;default:a=+new Date}var b=[[60,"seconds",1],[120,"1 minute ago","1 minute from now"],[3600,"minutes",60],[7200,"1 hour ago","1 hour from now"],[86400,"hours",3600],[172800,"Yesterday","Tomorrow"],[604800,"days",86400],[1209600,"Last week","Next week"],[2419200,"weeks",604800],[4838400,"Last month","Next month"],[29030400,"months",2419200],[58060800,"Last year","Next year"],[290304e4,"years",29030400],[580608e4,"Last century","Next century"],[580608e5,"centuries",290304e4]],c=(+new Date-a)/1e3,d="ago",e=1;
 if(0>=c&&c>-3600||0==Math.abs(c))return"Just now";0>c&&(c=Math.abs(c),d="from now",e=2);for(var f,g=0;f=b[g++];)if(c<f[0])return"string"==typeof f[2]?f[e]:Math.floor(c/f[2])+" "+f[1]+" "+d;return a}return{restrict:"E",scope:{time:"=cmsTime"},templateUrl:a+"UIComponents/Time/TimeAgo.html",controller:["$scope",b],controllerAs:"vm"}}]),angular.module("cms.shared").directive("cmsUserLink",["shared.internalModulePath","shared.urlLibrary","shared.permissionValidationService",function(a,b,c){function d(){var a=this;a.urlLibrary=b,a.canRead=c.canRead("COFUSR")}return{restrict:"E",scope:{user:"=cmsUser"},templateUrl:a+"UIComponents/User/UserLink.html",controller:d,controllerAs:"vm",bindToController:!0}}]),angular.module("cms.shared").directive("cmsAutoTargetBlank",function(){function a(a,b,c,d){var e=d[0],f=d[1];e?b.attr("target","_blank"):f&&(a.formScope=f.getFormScope(),a.$watch("formScope.editMode",function(){a.formScope.editMode?b.attr("target","_blank"):b.removeAttr("target")}))}return{restrict:"A",require:["?^^cmsModalDialogContainer","?^^cmsForm"],link:a}}),angular.module("cms.shared").directive("cmsModelAsDate",function(){function a(a,b,c,d){d.$formatters.push(function(a){return a?new Date(a):null})}return{require:"ngModel",link:a}});

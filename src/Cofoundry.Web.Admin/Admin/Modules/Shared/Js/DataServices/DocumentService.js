@@ -1,10 +1,10 @@
 ﻿angular.module('cms.shared').factory('shared.documentService', [
     '$http',
-    '$upload',
+    'Upload',
     'shared.serviceBase',
 function (
     $http,
-    $upload,
+    Upload,
     serviceBase) {
 
     var service = {},
@@ -57,12 +57,10 @@ function (
     }
 
     service.uploadFile = function (path, command, method) {
-        var data = _.omit(command, 'file');
 
-        return $upload.upload({
+        return Upload.upload({
             url: path,
-            data: data,
-            file: command.file,
+            data: command,
             method: method
         });
     }

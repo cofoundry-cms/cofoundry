@@ -59,8 +59,9 @@ function (
 
         documentService
             .update(vm.command)
+            .progress(vm.saveLoadState.setProgress)
             .then(onSuccess.bind(null, 'Changes were saved successfully', vm.saveLoadState))
-        .finally(setLoadingOff.bind(null, vm.saveLoadState));
+            .finally(setLoadingOff.bind(null, vm.saveLoadState));
     }
 
     function reset() {

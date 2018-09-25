@@ -16,11 +16,9 @@ function (
 }]);
 angular.module('cms.images').factory('images.imageService', [
         '$http',
-        '$upload',
         'shared.imageService',
     function (
         $http,
-        $upload,
         sharedImageService) {
 
     var service = _.extend({}, sharedImageService);
@@ -165,6 +163,7 @@ function (
 
         imageService
             .update(vm.command)
+            .progress(vm.saveLoadState.setProgress)
             .then(onSuccess.bind(null, 'Changes were saved successfully', vm.saveLoadState));
     }
 

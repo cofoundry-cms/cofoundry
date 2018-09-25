@@ -1,10 +1,8 @@
 ﻿angular.module('cms.documents').factory('documents.documentService', [
         '$http',
-        '$upload',
         'shared.documentService',
     function (
         $http,
-        $upload,
         sharedDocumentService) {
 
     var service = _.extend({}, sharedDocumentService);

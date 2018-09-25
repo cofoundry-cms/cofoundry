@@ -1,11 +1,11 @@
 ﻿angular.module('cms.shared').factory('shared.imageService', [
     '$http',
-    '$upload',
+    'Upload',
     'shared.stringUtilities',
     'shared.serviceBase',
 function (
     $http,
-    $upload,
+    Upload,
     stringUtilities,
     serviceBase) {
 
@@ -63,13 +63,12 @@ function (
         // the isCurrentFile flag tells us this is a mock version of a file
         // used as placeholder to enable a preview. We shouldn't try and upload it.
         if (command.file && !command.file.isCurrentFile) {
-            file = command.file;
+            data.file = command.file;
         }
 
-        return $upload.upload({
+        return Upload.upload({
             url: path,
             data: data,
-            file: file,
             method: method
         });
     }

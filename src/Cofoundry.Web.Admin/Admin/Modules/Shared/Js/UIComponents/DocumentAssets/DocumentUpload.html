@@ -1,9 +1,9 @@
-﻿<div ng-file-drop
+﻿<div ngf-drop
      ng-show="vm.isEditMode"
-     ng-file-change="vm.fileChanged($files, $event)"
-     accept="*.*"
-     hideondropnotavailable="false"
-     drag-over-class="{accept:'dragover-accepted', reject:'dragover-rejected'}"
+     ngf-change="vm.fileChanged($files, $event)"
+     ngf-accept="'*.*'"
+     ngf-hide-on-drop-not-available="false"
+     ngf-drag-over-class="{accept:'dragover-accepted', reject:'dragover-rejected'}"
      id="{{vm.modelName}}"
      name="{{vm.modelName}}"
      ng-model="vm.ngModel">
@@ -14,11 +14,13 @@
     </div>
     <cms-progress-bar load-state="vm.loadState" ng-if="vm.ngModel && !vm.ngModel.isCurrentFile"></cms-progress-bar>
     <div>
-        <button class="btn-icon" ng-file-select title="{{vm.buttonText}}"
+        <button class="btn-icon" 
+                ngf-select 
+                title="{{vm.buttonText}}"
                 type="button"
-                ng-file-change="vm.fileChanged($files, $event)"
-                accept="*.*" ,
-                reset-on-click="false"
+                ngf-change="vm.fileChanged($files, $event)"
+                ngf-accept="'*.*'"
+                ngf-reset-on-click="false"
                 ng-disabled="vm.loadState.isLoading">
             <i class="fa fa-upload"></i>
         </button>
