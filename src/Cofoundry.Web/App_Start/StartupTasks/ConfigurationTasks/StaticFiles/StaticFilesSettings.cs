@@ -11,8 +11,9 @@ namespace Cofoundry.Web
     public class StaticFilesSettings : CofoundryConfigurationSettingsBase
     {
         /// <summary>
-        /// The default max-age to use for the cache control header. The 
-        /// default value is 1 year. General advice here for a maximum is 1 year.
+        /// The default max-age to use for the cache control header, measured in
+        /// seconds. The default value is 1 year. General advice here for a maximum 
+        /// is 1 year.
         /// </summary>
         public int MaxAge { get; set; } = 31536000;
 

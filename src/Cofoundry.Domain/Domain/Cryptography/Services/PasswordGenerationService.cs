@@ -9,7 +9,8 @@ namespace Cofoundry.Domain
 {
     public class PasswordGenerationService : IPasswordGenerationService
     {
-        private const string ALLOWED_CHARACTERS = "abcdefghijkmnopqrstuvwxyzABCDEFGHJKLMNOPQRSTUVWXYZ23456789";
+        private const string ALLOWED_CHARACTERS = "abcdefghijkmnopqrstuvwxyzABCDEFGHJKLMNOPQRSTUVWXYZ2345679";
+
         private const int DEFAULT_LENGTH = 10;
 
         public string Generate()
@@ -19,20 +20,9 @@ namespace Cofoundry.Domain
 
         public string Generate(int passwordLength)
         {
-            Byte[] randomBytes = new Byte[passwordLength];
-            using (var generator = RandomNumberGenerator.Create())
-            {
-                generator.GetBytes(randomBytes);
-            }
-            char[] chars = new char[passwordLength];
-            int allowedCharCount = ALLOWED_CHARACTERS.Length;
+            var generator = new RandomStringGenerator();
 
-            for (int i = 0; i < passwordLength; i++)
-            {
-                chars[i] = ALLOWED_CHARACTERS[(int)randomBytes[i] % allowedCharCount];
-            }
-
-            return new string(chars);
+            return generator.Generate(passwordLength, ALLOWED_CHARACTERS);
         }
     }
 }

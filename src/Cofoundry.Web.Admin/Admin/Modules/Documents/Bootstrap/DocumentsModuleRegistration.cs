@@ -8,16 +8,21 @@ namespace Cofoundry.Web.Admin
     public class DocumentsModuleRegistration : IInternalAngularModuleRegistration
     {
         private readonly IAdminRouteLibrary _adminRouteLibrary;
+        private readonly DocumentAssetsSettings _documentAssetsSettings;
 
         public DocumentsModuleRegistration(
-            IAdminRouteLibrary adminRouteLibrary
+            IAdminRouteLibrary adminRouteLibrary,
+            DocumentAssetsSettings documentAssetsSettings
             )
         {
             _adminRouteLibrary = adminRouteLibrary;
+            _documentAssetsSettings = documentAssetsSettings;
         }
 
         public AdminModule GetModule()
         {
+            if (_documentAssetsSettings.Disabled) return null;
+
             var module = new AdminModule()
             {
                 AdminModuleCode = "COFDOC",

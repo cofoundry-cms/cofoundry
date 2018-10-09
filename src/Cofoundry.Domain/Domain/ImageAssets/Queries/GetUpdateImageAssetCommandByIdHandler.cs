@@ -42,7 +42,7 @@ namespace Cofoundry.Domain
             {
                 ImageAssetId = dbResult.ImageAssetId,
                 DefaultAnchorLocation = dbResult.DefaultAnchorLocation,
-                Title = dbResult.FileDescription
+                Title = dbResult.Title
             };
 
             result.Tags = dbResult

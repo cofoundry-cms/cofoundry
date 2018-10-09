@@ -1,4 +1,5 @@
 using Cofoundry.Core;
+using Cofoundry.Core.EntityFramework;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
@@ -14,11 +15,15 @@ namespace Cofoundry.Domain.Data
             // Properties
             builder.Property(s => s.FileName)
                 .IsRequired()
-                .HasMaxLength(100);
+                .HasMaxLength(130);
+
+            builder.Property(s => s.FileNameOnDisk)
+                .IsRequired()
+                .HasMaxLength(50);
 
             builder.Property(s => s.Title)
                 .IsRequired()
-                .HasMaxLength(100);
+                .HasMaxLength(130);
 
             builder.Property(s => s.Description)
                 .IsRequired();
@@ -26,6 +31,10 @@ namespace Cofoundry.Domain.Data
             builder.Property(s => s.FileExtension)
                 .IsRequired()
                 .HasMaxLength(5);
+
+            builder.Property(s => s.VerificationToken)
+                .IsRequired()
+                .IsCharType(6);
 
             builder.Property(s => s.ContentType)
                 .HasMaxLength(100);

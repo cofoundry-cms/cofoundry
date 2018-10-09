@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.StaticFiles;
+using Microsoft.Net.Http.Headers;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -46,7 +47,7 @@ namespace Cofoundry.Web
             if (!setCachingHeaders) return;
 
             // cache for 1 year
-            context.Context.Response.Headers.Add("Cache-Control", new[] { "public,max-age=" + _staticFilesSettings.MaxAge });
+            context.Context.Response.Headers.Add(HeaderNames.CacheControl, new[] { "public,max-age=" + _staticFilesSettings.MaxAge });
         }
     }
 }

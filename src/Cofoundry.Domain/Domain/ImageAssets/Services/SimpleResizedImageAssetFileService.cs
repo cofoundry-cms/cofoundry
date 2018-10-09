@@ -41,7 +41,7 @@ namespace Cofoundry.Domain
             return GetFileStreamAsync(asset.ImageAssetId);
         }
 
-        public Task ClearAsync(int imageAssetId)
+        public Task ClearAsync(string fileNameOnDisk)
         {
             // nothing to clear
             return Task.CompletedTask;

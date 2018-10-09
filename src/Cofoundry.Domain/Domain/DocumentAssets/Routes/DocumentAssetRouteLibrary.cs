@@ -53,7 +53,11 @@ namespace Cofoundry.Domain
         {
             if (asset == null) return string.Empty;
 
-            return DocumentAsset(asset.DocumentAssetId, asset.FileName, asset.FileExtension);
+            var pathName = MakeFolderName(asset);
+            var filename = MakeFileName(asset);
+            var url = $"/assets/documents/{pathName}/{filename}";
+
+            return url;
         }
 
         /// <summary>
@@ -81,7 +85,11 @@ namespace Cofoundry.Domain
         {
             if (asset == null) return string.Empty;
 
-            return DocumentAssetDownload(asset.DocumentAssetId, asset.FileName, asset.FileExtension);
+            var pathName = MakeFolderName(asset);
+            var filename = MakeFileName(asset);
+            var url = $"/assets/documents/download/{pathName}/{filename}";
+
+            return url;
         }
 
         #endregion
@@ -94,25 +102,14 @@ namespace Cofoundry.Domain
             return asset;
         }
 
-        private static string DocumentAsset(int assetId, string fileName, string extension)
+        private static string MakeFolderName(IDocumentAssetRenderable asset)
         {
-            string filename = MakeFilename(assetId, fileName, extension);
-            var url = "/assets/files/" + filename;
-
-            return url;
+            return asset.DocumentAssetId + "-" + asset.FileStamp + "-" + asset.VerificationToken;
         }
 
-        private static string DocumentAssetDownload(int assetId, string fileName, string extension)
+        private static string MakeFileName(IDocumentAssetRenderable asset)
         {
-            string filename = MakeFilename(assetId, fileName, extension);
-            var url = "/assets/files/download/" + filename;
-
-            return url;
-        }
-
-        private static string MakeFilename(int assetId, string fileName, string extension)
-        {
-            return Path.ChangeExtension(assetId + "_" + SlugFormatter.ToSlug(fileName), extension);
+            return Path.ChangeExtension(SlugFormatter.ToSlug(asset.FileName), asset.FileExtension);
         }
     }
 }

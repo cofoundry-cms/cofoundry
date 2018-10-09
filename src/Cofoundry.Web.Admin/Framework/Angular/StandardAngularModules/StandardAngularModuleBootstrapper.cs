@@ -37,10 +37,9 @@ namespace Cofoundry.Web.Admin
 
         public IEnumerable<AdminModule> GetModules()
         {
-            foreach (var registration in _standardAdminModuleRegistrations)
-            {
-                yield return registration.GetModule();
-            }
+            return _standardAdminModuleRegistrations
+                .Select(r => r.GetModule())
+                .Where(m => m != null);
         }
 
         public int Ordering => (int)RouteRegistrationOrdering.Early;
@@ -49,8 +48,11 @@ namespace Cofoundry.Web.Admin
         {
             foreach (var registration in _standardAdminModuleRegistrations)
             {
-                var routeLibrary = GetRouteLibrary(registration);
                 var module = registration.GetModule();
+                // if module null, then may be disabled
+                if (module == null) continue;
+
+                var routeLibrary = GetRouteLibrary(registration);
 
                 routeBuilder
                     .ForAdminController<StandardAngularModuleController>(registration.RoutePrefix)

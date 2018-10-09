@@ -18,9 +18,9 @@ namespace Cofoundry.Domain
         /// </summary>
         /// <param name="dbImage">ImageAssetRenderDetails record to map.</param>
         /// <param name="contentStream">Steam containing the file data.</param>
-        public ImageAssetFile Map(ImageAssetRenderDetails cachedImage, Stream contentStream)
+        public ImageAssetFile Map(ImageAssetRenderDetails renderDetails, Stream contentStream)
         {
-            if (cachedImage == null) return null;
+            if (renderDetails == null) return null;
 
             if (contentStream == null)
             {
@@ -29,15 +29,18 @@ namespace Cofoundry.Domain
 
             var image = new ImageAssetFile()
             {
-                ImageAssetId = cachedImage.ImageAssetId,
-                Extension = cachedImage.Extension,
-                FileName = cachedImage.FileName,
-                Height = cachedImage.Height,
-                Width = cachedImage.Width,
-                Title = cachedImage.Title,
-                DefaultAnchorLocation = cachedImage.DefaultAnchorLocation,
-                UpdateDate = cachedImage.UpdateDate,
-                ContentStream = contentStream
+                ImageAssetId = renderDetails.ImageAssetId,
+                FileExtension = renderDetails.FileExtension,
+                FileName = renderDetails.FileName,
+                FileNameOnDisk = renderDetails.FileNameOnDisk,
+                Height = renderDetails.Height,
+                Width = renderDetails.Width,
+                Title = renderDetails.Title,
+                DefaultAnchorLocation = renderDetails.DefaultAnchorLocation,
+                FileStamp = renderDetails.FileStamp,
+                FileUpdateDate = renderDetails.FileUpdateDate,
+                ContentStream = contentStream,
+                VerificationToken = renderDetails.VerificationToken
             };
 
             return image;

@@ -41,7 +41,7 @@ namespace Cofoundry.Domain
             var dbResult = await _queryExecutor.ExecuteAsync(getImageQuery, executionContext);
 
             if (dbResult == null) return null;
-            var fileName = Path.ChangeExtension(query.ImageAssetId.ToString(), dbResult.Extension);
+            var fileName = Path.ChangeExtension(dbResult.FileNameOnDisk, dbResult.FileExtension);
             var contentStream = await _fileStoreService.GetAsync(ImageAssetConstants.FileContainerName, fileName); ;
 
             if (contentStream == null)

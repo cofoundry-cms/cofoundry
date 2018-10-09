@@ -8,16 +8,21 @@ namespace Cofoundry.Web.Admin
     public class ImagesModuleRegistration: IInternalAngularModuleRegistration
     {
         private readonly IAdminRouteLibrary _adminRouteLibrary;
+        private readonly ImageAssetsSettings _imageAssetsSettings;
 
         public ImagesModuleRegistration(
-            IAdminRouteLibrary adminRouteLibrary
+            IAdminRouteLibrary adminRouteLibrary,
+            ImageAssetsSettings imageAssetsSettings
             )
         {
             _adminRouteLibrary = adminRouteLibrary;
+            _imageAssetsSettings = imageAssetsSettings;
         }
 
         public AdminModule GetModule()
         {
+            if (_imageAssetsSettings.Disabled) return null;
+
             var module = new AdminModule()
             {
                 AdminModuleCode = "COFIMG",

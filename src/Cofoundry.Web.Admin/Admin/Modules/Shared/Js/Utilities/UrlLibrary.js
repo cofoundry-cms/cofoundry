@@ -42,23 +42,21 @@ function (
     /* Asset File Routes */
 
     service.getDocumentUrl = function (document) {
-        var url;
         if (!document) return;
 
-        url = '/assets/files/download/' + document.documentAssetId + '_' + document.fileName + '.' + document.fileExtension;
-
-        return url;
+        return document.downloadUrl;
     }
 
     service.getImageUrl = function (img, settings) {
         var url;
         if (!img) return;
 
-        url = '/assets/images/' + img.imageAssetId + '_' + img.fileName + '.' + img.extension;
         setDefaultCrop(img, settings);
 
         if (settings) {
-            url = url + '?' + stringUtilities.toQueryString(settings);
+            url = img.url + '?' + stringUtilities.toQueryString(settings);
+        } else {
+            url = img.url;
         }
 
         return url;

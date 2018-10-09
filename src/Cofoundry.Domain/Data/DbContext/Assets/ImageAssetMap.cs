@@ -2,6 +2,7 @@ using System;
 using Cofoundry.Core;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.EntityFrameworkCore;
+using Cofoundry.Core.EntityFramework;
 
 namespace Cofoundry.Domain.Data
 {
@@ -14,15 +15,23 @@ namespace Cofoundry.Domain.Data
             // Properties
             builder.Property(s => s.FileName)
                 .IsRequired()
-                .HasMaxLength(128);
+                .HasMaxLength(130);
 
-            builder.Property(s => s.FileDescription)
+            builder.Property(s => s.FileNameOnDisk)
                 .IsRequired()
-                .HasMaxLength(512);
+                .HasMaxLength(50);
 
-            builder.Property(s => s.Extension)
+            builder.Property(s => s.Title)
                 .IsRequired()
-                .HasMaxLength(5);
+                .HasMaxLength(130);
+
+            builder.Property(s => s.FileExtension)
+                .IsRequired()
+                .HasMaxLength(30);
+
+            builder.Property(s => s.VerificationToken)
+                .IsRequired()
+                .IsCharType(6);
 
             // Table & Column Mappings
             builder.Property(s => s.DefaultAnchorLocation).HasColumnName("ImageCropAnchorLocationId");

@@ -63,9 +63,10 @@ namespace Cofoundry.Domain
                 .FilterById(command.ImageAssetId)
                 .SingleOrDefaultAsync();
 
-            imageAsset.FileDescription = command.Title;
+            imageAsset.Title = command.Title;
             imageAsset.FileName = SlugFormatter.ToSlug(command.Title);
             imageAsset.DefaultAnchorLocation = command.DefaultAnchorLocation;
+
             _entityTagHelper.UpdateTags(imageAsset.ImageAssetTags, command.Tags, executionContext);
             _entityAuditHelper.SetUpdated(imageAsset, executionContext);
 
@@ -73,6 +74,10 @@ namespace Cofoundry.Domain
             {
                 if (hasNewFile)
                 {
+                    imageAsset.FileUpdateDate = executionContext.ExecutionDate;
+                    var fileStamp = AssetFileStampHelper.ToFileStamp(imageAsset.FileUpdateDate);
+                    imageAsset.FileNameOnDisk = $"{imageAsset.ImageAssetId}-{fileStamp}";
+
                     await _imageAssetFileService.SaveAsync(command.File, imageAsset, nameof(command.File));
                 }
 
@@ -88,7 +93,7 @@ namespace Cofoundry.Domain
         {
             if (hasNewFile)
             {
-                await _imageAssetFileCache.ClearAsync(imageAsset.ImageAssetId);
+                await _imageAssetFileCache.ClearAsync(imageAsset.FileNameOnDisk);
             }
 
             _imageAssetCache.Clear(imageAsset.ImageAssetId);

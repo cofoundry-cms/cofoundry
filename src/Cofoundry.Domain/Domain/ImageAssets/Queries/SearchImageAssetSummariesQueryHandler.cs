@@ -33,14 +33,13 @@ namespace Cofoundry.Domain
 
         public async Task<PagedQueryResult<ImageAssetSummary>> ExecuteAsync(SearchImageAssetSummariesQuery query, IExecutionContext executionContext)
         {
-            var dbQuery = _dbContext
+            IQueryable<ImageAsset> dbQuery = _dbContext
                 .ImageAssets
                 .AsNoTracking()
                 .Include(i => i.Creator)
                 .Include(i => i.Updater)
                 .Include(i => i.ImageAssetTags)
-                .ThenInclude(i => i.Tag)
-                .Where(i => !i.IsDeleted);
+                .ThenInclude(i => i.Tag);
 
             // Filter by tags
             if (!string.IsNullOrEmpty(query.Tags))
@@ -61,20 +60,20 @@ namespace Cofoundry.Domain
             // Filter Dimensions
             if (query.Height > 0)
             {
-                dbQuery = dbQuery.Where(p => p.Height == query.Height);
+                dbQuery = dbQuery.Where(p => p.HeightInPixels == query.Height);
             }
             else if (query.MinHeight > 0)
             {
-                dbQuery = dbQuery.Where(p => p.Height >= query.MinHeight);
+                dbQuery = dbQuery.Where(p => p.HeightInPixels >= query.MinHeight);
             }
 
             if (query.Width > 0)
             {
-                dbQuery = dbQuery.Where(p => p.Width == query.Width);
+                dbQuery = dbQuery.Where(p => p.WidthInPixels == query.Width);
             }
             else if (query.MinWidth > 0)
             {
-                dbQuery = dbQuery.Where(p => p.Width >= query.MinWidth);
+                dbQuery = dbQuery.Where(p => p.WidthInPixels >= query.MinWidth);
             }
 
             var dbPagedResults = await dbQuery

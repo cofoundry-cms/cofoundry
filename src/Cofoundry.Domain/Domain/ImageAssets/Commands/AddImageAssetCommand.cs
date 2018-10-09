@@ -18,7 +18,7 @@ namespace Cofoundry.Domain
         [ValidateObject]
         public IUploadedFile File { get; set; }
 
-        [StringLength(120)]
+        [StringLength(130)]
         [Required]
         public string Title { get; set; }
 

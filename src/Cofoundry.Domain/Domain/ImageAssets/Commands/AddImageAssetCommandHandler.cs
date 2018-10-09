@@ -23,6 +23,7 @@ namespace Cofoundry.Domain
         private readonly IImageAssetFileService _imageAssetFileService;
         private readonly ITransactionScopeManager _transactionScopeFactory;
         private readonly IMessageAggregator _messageAggregator;
+        private readonly IRandomStringGenerator _randomStringGenerator;
 
         public AddImageAssetCommandHandler(
             CofoundryDbContext dbContext,
@@ -30,7 +31,8 @@ namespace Cofoundry.Domain
             EntityTagHelper entityTagHelper,
             IImageAssetFileService imageAssetFileService,
             ITransactionScopeManager transactionScopeFactory,
-            IMessageAggregator messageAggregator
+            IMessageAggregator messageAggregator,
+            IRandomStringGenerator randomStringGenerator
             )
         {
             _dbContext = dbContext;
@@ -39,6 +41,7 @@ namespace Cofoundry.Domain
             _imageAssetFileService = imageAssetFileService;
             _transactionScopeFactory = transactionScopeFactory;
             _messageAggregator = messageAggregator;
+            _randomStringGenerator = randomStringGenerator;
         }
 
         #endregion
@@ -49,16 +52,28 @@ namespace Cofoundry.Domain
         {
             var imageAsset = new ImageAsset();
 
-            imageAsset.FileDescription = command.Title;
+            imageAsset.Title = command.Title;
             imageAsset.FileName = SlugFormatter.ToSlug(command.Title);
             imageAsset.DefaultAnchorLocation = command.DefaultAnchorLocation;
+            imageAsset.FileUpdateDate = executionContext.ExecutionDate;
+            imageAsset.FileNameOnDisk = "file-not-saved";
+            imageAsset.FileExtension = "unknown";
+            imageAsset.VerificationToken = _randomStringGenerator.Generate(6);
+
+            var fileStamp = AssetFileStampHelper.ToFileStamp(imageAsset.FileUpdateDate);
+
             _entityTagHelper.UpdateTags(imageAsset.ImageAssetTags, command.Tags, executionContext);
             _entityAuditHelper.SetCreated(imageAsset, executionContext);
 
+            _dbContext.ImageAssets.Add(imageAsset);
+
             using (var scope = _transactionScopeFactory.Create(_dbContext))
             {
-                // if adding, save this up front
-                _dbContext.ImageAssets.Add(imageAsset);
+                // Save first to get an Id
+                await _dbContext.SaveChangesAsync();
+
+                // Update the disk filename
+                imageAsset.FileNameOnDisk = $"{imageAsset.ImageAssetId}-{fileStamp}";
 
                 await _imageAssetFileService.SaveAsync(command.File, imageAsset, nameof(command.File));
 

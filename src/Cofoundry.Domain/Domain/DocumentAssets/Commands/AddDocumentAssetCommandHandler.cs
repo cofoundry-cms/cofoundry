@@ -5,10 +5,10 @@ using System.Text;
 using System.Threading.Tasks;
 using Cofoundry.Domain.Data;
 using Cofoundry.Domain.CQS;
-using Microsoft.EntityFrameworkCore;
 using Cofoundry.Core.Data;
 using Cofoundry.Core;
 using Cofoundry.Core.MessageAggregator;
+using Cofoundry.Core.Validation;
 
 namespace Cofoundry.Domain
 {
@@ -24,6 +24,7 @@ namespace Cofoundry.Domain
         private readonly DocumentAssetCommandHelper _documentAssetCommandHelper;
         private readonly ITransactionScopeManager _transactionScopeFactory;
         private readonly IMessageAggregator _messageAggregator;
+        private readonly IRandomStringGenerator _randomStringGenerator;
 
         public AddDocumentAssetCommandHandler(
             CofoundryDbContext dbContext,
@@ -31,7 +32,8 @@ namespace Cofoundry.Domain
             EntityTagHelper entityTagHelper,
             DocumentAssetCommandHelper documentAssetCommandHelper,
             ITransactionScopeManager transactionScopeFactory,
-            IMessageAggregator messageAggregator
+            IMessageAggregator messageAggregator,
+            IRandomStringGenerator randomStringGenerator
             )
         {
             _dbContext = dbContext;
@@ -40,6 +42,7 @@ namespace Cofoundry.Domain
             _documentAssetCommandHelper = documentAssetCommandHelper;
             _transactionScopeFactory = transactionScopeFactory;
             _messageAggregator = messageAggregator;
+            _randomStringGenerator = randomStringGenerator;
         }
 
         #endregion
@@ -52,9 +55,17 @@ namespace Cofoundry.Domain
 
             documentAsset.Title = command.Title;
             documentAsset.Description = command.Description ?? string.Empty;
-            documentAsset.FileName = SlugFormatter.ToSlug(command.Title);
+            documentAsset.FileName = FilePathHelper.CleanFileName(command.Title);
+            documentAsset.VerificationToken = _randomStringGenerator.Generate(6);            if (string.IsNullOrWhiteSpace(documentAsset.FileName))
+
+            if (string.IsNullOrWhiteSpace(documentAsset.FileName))
+            {
+                throw new PropertyValidationException("Document title is empty or does not contain any safe file path characters.", nameof(command.Title));
+            }
+
             _entityTagHelper.UpdateTags(documentAsset.DocumentAssetTags, command.Tags, executionContext);
             _entityAuditHelper.SetCreated(documentAsset, executionContext);
+            documentAsset.FileUpdateDate = executionContext.ExecutionDate;
 
             using (var scope = _transactionScopeFactory.Create(_dbContext))
             {

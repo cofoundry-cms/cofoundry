@@ -33,14 +33,13 @@ namespace Cofoundry.Domain
 
         public async Task<PagedQueryResult<DocumentAssetSummary>> ExecuteAsync(SearchDocumentAssetSummariesQuery query, IExecutionContext executionContext)
         {
-            var dbQuery = _dbContext
+            IQueryable<DocumentAsset> dbQuery = _dbContext
                 .DocumentAssets
                 .AsNoTracking()
                 .Include(a => a.Creator)
                 .Include(a => a.Updater)
                 .Include(a => a.DocumentAssetTags)
-                .ThenInclude(a => a.Tag)
-                .Where(i => !i.IsDeleted);
+                .ThenInclude(a => a.Tag);
 
             // Filter by tags
             if (!string.IsNullOrEmpty(query.Tags))
@@ -53,9 +52,9 @@ namespace Cofoundry.Domain
                     string localTag = tag;
 
                     dbQuery = dbQuery.Where(p => p.DocumentAssetTags
-                                                  .Select(t => t.Tag.TagText)
-                                                  .Contains(localTag)
-                                           );
+                        .Select(t => t.Tag.TagText)
+                        .Contains(localTag)
+                        );
                 }
             }
 

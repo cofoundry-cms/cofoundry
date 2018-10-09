@@ -249,7 +249,7 @@ namespace Cofoundry.Core.AutoUpdate
         public async Task<bool> IsLockedAsync()
         {
             // First check config
-            if (_autoUpdateSettings.IsDisabled) return true;
+            if (_autoUpdateSettings.Disabled) return true;
 
             // else this option can also be set in the db
             var query = @"

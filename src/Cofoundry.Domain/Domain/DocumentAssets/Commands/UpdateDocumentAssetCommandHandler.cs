@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using Cofoundry.Core;
 using Cofoundry.Core.Data;
 using Cofoundry.Core.MessageAggregator;
+using Cofoundry.Core.Validation;
 
 namespace Cofoundry.Domain
 {
@@ -44,8 +45,6 @@ namespace Cofoundry.Domain
 
         #endregion
 
-        #region Execute
-
         public async Task ExecuteAsync(UpdateDocumentAssetCommand command, IExecutionContext executionContext)
         {
             bool hasNewFile = command.File != null;
@@ -59,7 +58,13 @@ namespace Cofoundry.Domain
 
             documentAsset.Title = command.Title;
             documentAsset.Description = command.Description ?? string.Empty;
-            documentAsset.FileName = SlugFormatter.ToSlug(command.Title);
+            documentAsset.FileName = FilePathHelper.CleanFileName(command.Title);
+
+            if (string.IsNullOrWhiteSpace(documentAsset.FileName))
+            {
+                throw new PropertyValidationException("Document title is empty or does not contain any safe file path characters.", nameof(command.Title));
+            }
+
             _entityTagHelper.UpdateTags(documentAsset.DocumentAssetTags, command.Tags, executionContext);
             _entityAuditHelper.SetUpdated(documentAsset, executionContext);
 
@@ -68,6 +73,7 @@ namespace Cofoundry.Domain
                 if (hasNewFile)
                 {
                     await _documentAssetCommandHelper.SaveFile(command.File, documentAsset);
+                    documentAsset.FileUpdateDate = executionContext.ExecutionDate;
                 }
 
                 await _dbContext.SaveChangesAsync();
@@ -86,8 +92,6 @@ namespace Cofoundry.Domain
                 HasFileChanged = hasNewFile
             });
         }
-
-        #endregion
 
         #region Permission
 

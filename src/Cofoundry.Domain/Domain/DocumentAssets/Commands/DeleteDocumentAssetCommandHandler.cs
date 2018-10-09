@@ -8,6 +8,7 @@ using Cofoundry.Domain.CQS;
 using Microsoft.EntityFrameworkCore;
 using Cofoundry.Core.Data;
 using Cofoundry.Core.MessageAggregator;
+using System.IO;
 
 namespace Cofoundry.Domain
 {
@@ -21,23 +22,24 @@ namespace Cofoundry.Domain
         private readonly ICommandExecutor _commandExecutor;
         private readonly ITransactionScopeManager _transactionScopeFactory;
         private readonly IMessageAggregator _messageAggregator;
+        private readonly IFileStoreService _fileStoreService;
 
         public DeleteDocumentAssetCommandHandler(
             CofoundryDbContext dbContext,
             ICommandExecutor commandExecutor,
             ITransactionScopeManager transactionScopeFactory,
-            IMessageAggregator messageAggregator
+            IMessageAggregator messageAggregator,
+            IFileStoreService fileStoreService
             )
         {
             _dbContext = dbContext;
             _commandExecutor = commandExecutor;
             _transactionScopeFactory = transactionScopeFactory;
             _messageAggregator = messageAggregator;
+            _fileStoreService = fileStoreService;
         }
 
         #endregion
-
-        #region Execute
 
         public async Task ExecuteAsync(DeleteDocumentAssetCommand command, IExecutionContext executionContext)
         {
@@ -48,12 +50,15 @@ namespace Cofoundry.Domain
 
             if (documentAsset != null)
             {
-                documentAsset.IsDeleted = true;
+                _dbContext.DocumentAssets.Remove(documentAsset);
+                var fileName = Path.ChangeExtension(documentAsset.FileNameOnDisk, documentAsset.FileExtension);
+
                 using (var scope = _transactionScopeFactory.Create(_dbContext))
                 {
+                    await _dbContext.SaveChangesAsync();
                     await _commandExecutor.ExecuteAsync(new DeleteUnstructuredDataDependenciesCommand(DocumentAssetEntityDefinition.DefinitionCode, documentAsset.DocumentAssetId), executionContext);
 
-                    await _dbContext.SaveChangesAsync();
+                    await _fileStoreService.DeleteAsync(DocumentAssetConstants.FileContainerName, fileName);
 
                     scope.QueueCompletionTask(() => OnTransactionComplete(command));
 
@@ -69,8 +74,6 @@ namespace Cofoundry.Domain
                 DocumentAssetId = command.DocumentAssetId
             });
         }
-
-        #endregion
 
         #region Permission
 

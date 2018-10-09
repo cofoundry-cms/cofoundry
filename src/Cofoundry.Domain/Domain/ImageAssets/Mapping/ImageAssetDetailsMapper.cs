@@ -14,10 +14,11 @@ namespace Cofoundry.Domain
         private readonly ImageAssetSummaryMapper _imageAssetSummaryMapper;
 
         public ImageAssetDetailsMapper(
-            IAuditDataMapper auditDataMapper
+            IAuditDataMapper auditDataMapper,
+            IImageAssetRouteLibrary imageAssetRouteLibrary
             )
         {
-            _imageAssetSummaryMapper = new ImageAssetSummaryMapper(auditDataMapper);
+            _imageAssetSummaryMapper = new ImageAssetSummaryMapper(auditDataMapper, imageAssetRouteLibrary);
         }
 
         /// <summary>
@@ -31,7 +32,7 @@ namespace Cofoundry.Domain
 
             var image = new ImageAssetDetails();
             _imageAssetSummaryMapper.Map(image, dbImage);
-
+            image.FileUpdateDate = dbImage.FileUpdateDate;
             return image;
         }
     }

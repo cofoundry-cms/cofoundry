@@ -16,10 +16,13 @@ namespace Cofoundry.Core.AutoUpdate
             ProcessLockTimeoutInSeconds = 600;
         }
 
+        [Obsolete("Please use 'Disabled' which is more inline with naming of this functionality in other settings files.")]
+        public bool IsDisabled { private get; set; }
+
         /// <summary>
         /// Disables the auto-update process entirely.
         /// </summary>
-        public bool IsDisabled { get; set; }
+        public bool Disabled { get; set; }
 
         /// <summary>
         /// This is the amount of time before the process lock expires and

@@ -6,6 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Cofoundry.Domain.Data;
 using Cofoundry.Core.Data;
+using Cofoundry.Core;
 
 namespace Cofoundry.Domain
 {
@@ -30,8 +31,6 @@ namespace Cofoundry.Domain
 
         #endregion
 
-        #region public methods
-
         public async Task SaveFile(IUploadedFile uploadedFile, DocumentAsset documentAsset)
         {
             using (var inputSteam = await uploadedFile.OpenReadStreamAsync())
@@ -41,24 +40,26 @@ namespace Cofoundry.Domain
                 documentAsset.FileExtension = Path.GetExtension(uploadedFile.FileName).TrimStart('.');
                 documentAsset.FileSizeInBytes = Convert.ToInt32(inputSteam.Length);
                 documentAsset.ContentType = uploadedFile.MimeType;
-
-                // Save at this point if it's a new image
-                if (isNew)
-                {
-                    await _dbContext.SaveChangesAsync();
-                }
-
-                var fileName = Path.ChangeExtension(documentAsset.DocumentAssetId.ToString(), documentAsset.FileExtension);
+                documentAsset.FileNameOnDisk = "file-not-saved";
+                var fileStamp = AssetFileStampHelper.ToFileStamp(documentAsset.FileUpdateDate);
 
                 using (var scope = _transactionScopeFactory.Create(_dbContext))
                 {
-                    // Save the raw file directly
-                    await CreateFileAsync(isNew, fileName, inputSteam);
-
-                    if (!isNew)
+                    // Save at this point if it's a new file
+                    if (isNew)
                     {
                         await _dbContext.SaveChangesAsync();
                     }
+
+                    // update the filename
+                    documentAsset.FileNameOnDisk = $"{documentAsset.DocumentAssetId}-{fileStamp}";
+                    var fileName = Path.ChangeExtension(documentAsset.FileNameOnDisk, documentAsset.FileExtension);
+
+                    // Save the raw file directly
+                    await CreateFileAsync(isNew, fileName, inputSteam);
+
+                    // Update the filename
+                    await _dbContext.SaveChangesAsync();
 
                     await scope.CompleteAsync();
                 }
@@ -72,19 +73,44 @@ namespace Cofoundry.Domain
         {
             if (file != null && !string.IsNullOrWhiteSpace(file.FileName))
             {
-                var ext = Path.GetExtension(file.FileName);
+                // Validate extension & mime type
 
-                if ((ImageAssetConstants.PermittedImageTypes.ContainsKey(ext))
+                var ext = Path.GetExtension(file.FileName)?.Trim();
+
+                if (string.IsNullOrWhiteSpace(ext))
+                {
+                    yield return new ValidationResult("The file you're uploading has no file extension.", new string[] { "File" });
+                }
+                else if (FilePathHelper.FileExtensionContainsInvalidChars(ext))
+                {
+                    yield return new ValidationResult("The file you're uploading uses an extension containing invalid characters.", new string[] { "File" });
+                }
+                else if ((ImageAssetConstants.PermittedImageTypes.ContainsKey(ext))
                 || (!string.IsNullOrEmpty(file.MimeType) && ImageAssetConstants.PermittedImageTypes.ContainsValue(file.MimeType)))
                 {
                     yield return new ValidationResult("Image files shoud be uploaded in the image assets section.", new string[] { "File" });
                 }
+                else if (DangerousFileConstants.DangerousFileExtensions.Contains(ext))
+                {
+                    yield return new ValidationResult("The type of file you're trying to upload isn't allowed.", new string[] { "File" });
+                }
+                else if (string.IsNullOrWhiteSpace(file.MimeType) || DangerousFileConstants.DangerousMimeTypes.Contains(file.MimeType))
+                {
+                    yield return new ValidationResult("The type of file you're trying to upload isn't allowed.", new string[] { "File" });
+                }
+
+                // Validate filename
+
+                if (string.IsNullOrWhiteSpace(file.FileName))
+                {
+                    yield return new ValidationResult("The file you're uploading has no file name.", new string[] { "File" });
+                }
+                else if (string.IsNullOrWhiteSpace(FilePathHelper.CleanFileName(file.FileName)))
+                {
+                    yield return new ValidationResult("The file you're uploading has an invalid file name.", new string[] { "File" });
+                }
             }
         }
-        
-        #endregion
-
-        #region private helpers
 
         private Task CreateFileAsync(bool isNew, string fileName, Stream outputStream)
         {
@@ -97,7 +123,5 @@ namespace Cofoundry.Domain
                 return _fileStoreService.CreateOrReplaceAsync(DocumentAssetConstants.FileContainerName, fileName, outputStream);
             }
         }
-
-        #endregion
     }
 }

@@ -11,6 +11,15 @@ namespace Cofoundry.Domain
     /// </summary>
     public class DocumentAssetRenderDetailsMapper : IDocumentAssetRenderDetailsMapper
     {
+        private readonly IDocumentAssetRouteLibrary _documentAssetRouteLibrary;
+
+        public DocumentAssetRenderDetailsMapper(
+            IDocumentAssetRouteLibrary documentAssetRouteLibrary
+            )
+        {
+            _documentAssetRouteLibrary = documentAssetRouteLibrary;
+        }
+
         /// <summary>
         /// Maps an EF DocumentAsset record from the db into a DocumentAssetDetails 
         /// object. If the db record is null then null is returned.
@@ -27,7 +36,12 @@ namespace Cofoundry.Domain
             document.FileName = dbDocument.FileName;
             document.FileSizeInBytes = dbDocument.FileSizeInBytes;
             document.Title = dbDocument.Title;
+            document.FileStamp = AssetFileStampHelper.ToFileStamp(dbDocument.FileUpdateDate);
             document.Description = dbDocument.Description;
+            document.VerificationToken = dbDocument.VerificationToken;
+
+            document.Url = _documentAssetRouteLibrary.DocumentAsset(document);
+            document.DownloadUrl = _documentAssetRouteLibrary.DocumentAssetDownload(document);
 
             return document;
         }

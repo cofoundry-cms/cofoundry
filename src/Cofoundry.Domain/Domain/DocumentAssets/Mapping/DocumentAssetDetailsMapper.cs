@@ -12,12 +12,13 @@ namespace Cofoundry.Domain
     public class DocumentAssetDetailsMapper : IDocumentAssetDetailsMapper
     {
         private readonly DocumentAssetSummaryMapper _documentAssetSummaryMapper;
-
+        private readonly IDocumentAssetRouteLibrary _documentAssetRouteLibrary;
         public DocumentAssetDetailsMapper(
-            IAuditDataMapper auditDataMapper
+            IAuditDataMapper auditDataMapper,
+            IDocumentAssetRouteLibrary documentAssetRouteLibrary
             )
         {
-            _documentAssetSummaryMapper = new DocumentAssetSummaryMapper(auditDataMapper);
+            _documentAssetSummaryMapper = new DocumentAssetSummaryMapper(auditDataMapper, documentAssetRouteLibrary);
         }
 
         /// <summary>
@@ -32,6 +33,7 @@ namespace Cofoundry.Domain
             var document = new DocumentAssetDetails();
             _documentAssetSummaryMapper.Map(document, dbDocument);
             document.Description = dbDocument.Description;
+            document.FileUpdateDate = DbDateTimeMapper.AsUtc(dbDocument.FileUpdateDate);
 
             return document;
         }

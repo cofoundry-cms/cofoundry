@@ -1,5 +1,4 @@
 ﻿using Cofoundry.Core.Data;
-using Cofoundry.Core.EntityFramework;
 using Cofoundry.Core.Validation;
 using Cofoundry.Domain;
 using Cofoundry.Domain.Data;
@@ -32,21 +31,28 @@ namespace Cofoundry.Plugins.Imaging.ImageSharp
         private readonly CofoundryDbContext _dbContext;
         private readonly IFileStoreService _fileStoreService;
         private readonly ITransactionScopeManager _transactionScopeManager;
+        private readonly ImageAssetsSettings _imageAssetsSettings;
 
         public ImageSharpImageAssetFileService(
             CofoundryDbContext dbContext,
             IFileStoreService fileStoreService,
-            ITransactionScopeManager transactionScopeManager
+            ITransactionScopeManager transactionScopeManager,
+            ImageAssetsSettings imageAssetsSettings
             )
         {
             _dbContext = dbContext;
             _fileStoreService = fileStoreService;
             _transactionScopeManager = transactionScopeManager;
+            _imageAssetsSettings = imageAssetsSettings;
         }
 
         #endregion
 
-        public async Task SaveAsync(IUploadedFile uploadedFile, ImageAsset imageAsset, string propertyName)
+        public async Task SaveAsync(
+            IUploadedFile uploadedFile, 
+            ImageAsset imageAsset, 
+            string propertyName
+            )
         {
             Image<Rgba32> imageFile = null;
             IImageFormat imageFormat = null;
@@ -74,7 +80,7 @@ namespace Cofoundry.Plugins.Imaging.ImageSharp
 
                 using (imageFile) // validate image file
                 {
-                    if (imageFormat == null) throw new PropertyValidationException("Unable to determine image type.", propertyName);
+                    ValidateImage(propertyName, imageFile, imageFormat);
 
                     var requiredReEncoding = true;
                     var fileExtension = "jpg";
@@ -87,22 +93,14 @@ namespace Cofoundry.Plugins.Imaging.ImageSharp
                         requiredReEncoding = false;
                     }
 
-                    bool isNew = imageAsset.ImageAssetId < 1;
-
-                    imageAsset.Width = imageFile.Width;
-                    imageAsset.Height = imageFile.Height;
-                    imageAsset.Extension = fileExtension;
-                    imageAsset.FileSize = Convert.ToInt32(inputSteam.Length);
-
-                    // Save at this point if it's a new image
-                    if (isNew)
-                    {
-                        await _dbContext.SaveChangesAsync();
-                    }
+                    imageAsset.WidthInPixels = imageFile.Width;
+                    imageAsset.HeightInPixels = imageFile.Height;
+                    imageAsset.FileExtension = fileExtension;
+                    imageAsset.FileSizeInBytes = inputSteam.Length;
 
                     using (var scope = _transactionScopeManager.Create(_dbContext))
                     {
-                        var fileName = Path.ChangeExtension(imageAsset.ImageAssetId.ToString(), imageAsset.Extension);
+                        var fileName = Path.ChangeExtension(imageAsset.FileNameOnDisk, imageAsset.FileExtension);
 
                         if (requiredReEncoding)
                         {
@@ -117,33 +115,44 @@ namespace Cofoundry.Plugins.Imaging.ImageSharp
                                 {
                                     imageFile.Save(outputStream, imageFormat);
                                 }
-                                await CreateFileAsync(isNew, fileName, outputStream);
+
+                                await _fileStoreService.CreateAsync(ASSET_FILE_CONTAINER_NAME, fileName, outputStream);
+
                                 // recalculate size and save
-                                imageAsset.FileSize = Convert.ToInt32(outputStream.Length);
-                                await _dbContext.SaveChangesAsync();
+                                imageAsset.FileSizeInBytes = outputStream.Length;
                             }
                         }
                         else
                         {
                             // Save the raw file directly
-                            await CreateFileAsync(isNew, fileName, inputSteam);
+                            await _fileStoreService.CreateAsync(ASSET_FILE_CONTAINER_NAME, fileName, inputSteam);
                         }
 
+                        await _dbContext.SaveChangesAsync();
                         await scope.CompleteAsync();
                     };
                 }
             }
         }
 
-        private Task CreateFileAsync(bool isNew, string fileName, Stream outputStream)
+        private void ValidateImage(
+            string propertyName, 
+            Image<Rgba32> imageFile, 
+            IImageFormat imageFormat
+            )
         {
-            if (isNew)
+            if (imageFormat == null)
             {
-                return  _fileStoreService.CreateAsync(ASSET_FILE_CONTAINER_NAME, fileName, outputStream);
+                throw new PropertyValidationException("Unable to determine image type.", propertyName);
             }
-            else
+
+            if (imageFile.Width > _imageAssetsSettings.MaxUploadWidth)
             {
-                return _fileStoreService.CreateOrReplaceAsync(ASSET_FILE_CONTAINER_NAME, fileName, outputStream);
+                throw new PropertyValidationException($"Image exceeds the maximum permitted width of {_imageAssetsSettings.MaxUploadWidth} pixels.", propertyName);
+            }
+            if (imageFile.Height > _imageAssetsSettings.MaxUploadHeight)
+            {
+                throw new PropertyValidationException($"Image exceeds the maximum permitted height of {_imageAssetsSettings.MaxUploadHeight} pixels.", propertyName);
             }
         }
     }

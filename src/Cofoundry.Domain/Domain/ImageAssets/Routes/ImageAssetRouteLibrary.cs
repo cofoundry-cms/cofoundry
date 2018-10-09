@@ -64,7 +64,7 @@ namespace Cofoundry.Domain
 
             var settings = GetResizeSettings(asset, width, height);
 
-            return ImageAsset(asset.ImageAssetId, asset.FileName, asset.Extension, settings);
+            return GetUrl(asset, settings);
         }
 
         /// <summary>
@@ -77,7 +77,7 @@ namespace Cofoundry.Domain
             if (asset == null) return string.Empty;
             SetDefaultCrop(asset, settings);
 
-            return ImageAsset(asset.ImageAssetId, asset.FileName, asset.Extension, settings);
+            return GetUrl(asset, settings);
         }
 
         /// <summary>
@@ -91,8 +91,12 @@ namespace Cofoundry.Domain
             if (asset == null) return string.Empty;
             var settings = GetResizeSettings(asset, width, height);
 
-            return ImageAsset(asset.ImageAssetId, asset.FileName, asset.Extension, settings);
+            return GetUrl(asset, settings);
         }
+
+        #endregion
+
+        #region private helpers
 
         private static ImageResizeSettings GetResizeSettings(IImageAssetRenderable asset, int? width, int? height)
         {
@@ -113,18 +117,17 @@ namespace Cofoundry.Domain
             return settings;
         }
 
-        #endregion
-
-        #region private helpers
-
-        private static string ImageAsset(int assetId, string fileName, string extension, IImageResizeSettings settings = null)
+        private static string GetUrl(IImageAssetRenderable asset, IImageResizeSettings settings = null)
         {
-            var pathFileName = Path.ChangeExtension(assetId + "_" + SlugFormatter.ToSlug(fileName), extension);
-            var url = "/assets/images/" + pathFileName;
+            var fileName = Path.ChangeExtension(SlugFormatter.ToSlug(asset.FileName), asset.FileExtension);
+            var pathPart = asset.ImageAssetId + "-" + asset.FileStamp + "-" + asset.VerificationToken;
+            var url = $"/assets/images/{pathPart}/{fileName}";
+
             if (settings != null)
             {
                 url += settings.ToQueryString();
             }
+
             return url;
         }
 

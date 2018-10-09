@@ -53,7 +53,7 @@
             <cms-form-field-text cms-title="Title"
                                  cms-model="vm.command.title"
                                  cms-description="A short descriptive title e.g. 'Today's Menu' or 'Directions to our office'."
-                                 max-length="100"
+                                 max-length="130"
                                  required></cms-form-field-text>
 
             <cms-form-field-text-area cms-title="Description"
@@ -61,7 +61,7 @@
             
             <cms-form-field-readonly cms-title="Path"
                                      cms-description="Full path to the document file."
-                                     cms-model="vm.previewUrl"></cms-form-field-readonly>
+                                     cms-model="vm.document.url"></cms-form-field-readonly>
 
             <cms-form-field-tags cms-title="CMS Tags"
                                  cms-model="vm.command.tags"></cms-form-field-tags>

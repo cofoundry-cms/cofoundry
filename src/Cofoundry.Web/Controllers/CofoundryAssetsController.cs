@@ -7,7 +7,6 @@ using Cofoundry.Domain;
 using Cofoundry.Core;
 using Microsoft.AspNetCore.Mvc;
 using Cofoundry.Core.Web;
-using Microsoft.AspNetCore.Http;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Microsoft.Net.Http.Headers;
@@ -16,67 +15,57 @@ namespace Cofoundry.Web
 {
     public class CofoundryAssetsController : Controller
     {
-        #region Constructors
-
         private readonly IQueryExecutor _queryExecutor;
         private readonly IResizedImageAssetFileService _resizedImageAssetFileService;
         private readonly IImageAssetRouteLibrary _imageAssetRouteLibrary;
+        private readonly IDocumentAssetRouteLibrary _documentAssetRouteLibrary;
         private readonly IMimeTypeService _mimeTypeService;
         private readonly ILogger<CofoundryAssetsController> _logger;
+        private readonly ImageAssetsSettings _imageAssetsSettings;
+        private readonly DocumentAssetsSettings _documentAssetsSettings;
 
         public CofoundryAssetsController(
             IQueryExecutor queryExecutor,
             IResizedImageAssetFileService resizedImageAssetFileService,
             IImageAssetRouteLibrary imageAssetRouteLibrary,
+            IDocumentAssetRouteLibrary documentAssetRouteLibrary,
             IMimeTypeService mimeTypeService,
-            ILogger<CofoundryAssetsController> logger
+            ILogger<CofoundryAssetsController> logger,
+            ImageAssetsSettings imageAssetsSettings,
+            DocumentAssetsSettings documentAssetsSettings
             )
         {
             _queryExecutor = queryExecutor;
             _resizedImageAssetFileService = resizedImageAssetFileService;
             _imageAssetRouteLibrary = imageAssetRouteLibrary;
+            _documentAssetRouteLibrary = documentAssetRouteLibrary;
             _mimeTypeService = mimeTypeService;
             _logger = logger;
+            _imageAssetsSettings = imageAssetsSettings;
+            _documentAssetsSettings = documentAssetsSettings;
         }
 
-        #endregion
+        #region images
 
-        private ContentResult FileAssetNotFound(string message)
-        {
-            ControllerContext.HttpContext.Response.StatusCode = 404;
-            return new ContentResult() { Content = message };
-        }
-
-        //[OutputCache(Duration = 60 * 60 * 24 * 30, Location = OutputCacheLocation.Downstream)]
-        public async Task<ActionResult> Image(int assetId, string fileName, string extension, int? cropSizeId)
+        public async Task<ActionResult> Image(int imageAssetId, long fileStamp, string verificationToken, string fileName, string extension)
         {
             var settings = ImageResizeSettings.ParseFromQueryString(Request.Query);
 
-            var getImageQuery = new GetImageAssetRenderDetailsByIdQuery(assetId);
+            var getImageQuery = new GetImageAssetRenderDetailsByIdQuery(imageAssetId);
             var asset = await _queryExecutor.ExecuteAsync(getImageQuery);
 
-            if (asset == null)
+            // additionally check that filestamp is not after the curent update date
+            if (asset == null || !IsFileStampValid(fileStamp, asset.FileUpdateDate) || asset.VerificationToken != verificationToken)
             {
                 return FileAssetNotFound("Image could not be found");
             }
 
-            if (SlugFormatter.ToSlug(asset.FileName) != fileName)
+            // if the title or filestamp is different, redirect to the correct url
+            var sluggedFileName = SlugFormatter.ToSlug(asset.FileName);
+            if (sluggedFileName != fileName || fileStamp.ToString() != asset.FileStamp)
             {
                 var url = _imageAssetRouteLibrary.ImageAsset(asset, settings);
                 return RedirectPermanent(url);
-            }
-
-            var lastModified = DateTime.SpecifyKind(asset.UpdateDate, DateTimeKind.Utc);
-            // Round the ticks down (see http://stackoverflow.com/a/1005222/486434), because http headers are only accurate to seconds, so get rounded down
-            lastModified = lastModified.AddTicks(-(lastModified.Ticks % TimeSpan.TicksPerSecond));
-
-            if (!string.IsNullOrEmpty(Request.Headers["If-Modified-Since"]))
-            {
-                DateTime ifModifiedSince;
-                if (DateTime.TryParse(Request.Headers["If-Modified-Since"], out ifModifiedSince) && lastModified <= ifModifiedSince.ToUniversalTime())
-                {
-                    return StatusCode(304);
-                }
             }
 
             Stream stream = null;
@@ -88,52 +77,101 @@ namespace Cofoundry.Web
             catch (FileNotFoundException ex)
             {
                 // If the file exists but the file has gone missing, log and return a 404
-                _logger.LogError(0, ex, "Image Asset exists, but has no file: {0}", assetId);
+                _logger.LogError(0, ex, "Image Asset exists, but has no file: {0}", imageAssetId);
                 return FileAssetNotFound("File not found");
             }
 
-            // Expire the image, so browsers always check with the server, but also send a last modified date so we can check for If-Modified-Since on the next request and return a 304 Not Modified.
-            var headers = Response.GetTypedHeaders();
-            headers.Expires = DateTime.UtcNow.AddMonths(-1);
-            headers.LastModified = lastModified;
-            
-            var contentType = _mimeTypeService.MapFromFileName("." + asset.Extension);
+            var contentType = _mimeTypeService.MapFromFileName("." + asset.FileExtension);
+            SetCacheHeader(_imageAssetsSettings.CacheMaxAge);
+
             return new FileStreamResult(stream, contentType);
         }
-        
-        [ResponseCache(Duration = 60 * 60, Location = ResponseCacheLocation.Client)]
-        public async Task<ActionResult> File(int assetId, string fileName, string extension)
-        {
-            var file = await GetFile(assetId);
 
-            if (file == null)
+        public async Task<ActionResult> Image_OldPath(int assetId, string fileName, string extension, int? cropSizeId)
+        {
+            var settings = ImageResizeSettings.ParseFromQueryString(Request.Query);
+
+            var getImageQuery = new GetImageAssetRenderDetailsByIdQuery(assetId);
+            var asset = await _queryExecutor.ExecuteAsync(getImageQuery);
+
+            if (asset == null)
             {
-                return FileAssetNotFound("File not found");
+                return FileAssetNotFound("Image could not be found");
             }
+
+            var url = _imageAssetRouteLibrary.ImageAsset(asset, settings);
+            return RedirectPermanent(url);
+        }
+
+        #endregion
+
+        #region documents
+
+        public async Task<ActionResult> Document(int documentAssetId, long fileStamp, string verificationToken, string fileName, string extension)
+        {
+            var file = await GetDocumentAssetFile(documentAssetId);
+
+            var validationAction = ValidateDocumentFileRequest(fileStamp, verificationToken, fileName, file, false);
+            if (validationAction != null) return validationAction;
 
             // Set the filename header separately to force "inline" content 
             // disposition even though a filename is specified.
             var contentDisposition = new ContentDispositionHeaderValue("inline");
-            contentDisposition.SetHttpFileName(file.FileName);
+            contentDisposition.SetHttpFileName(file.GetFileNameWithExtension());
+
             Response.Headers[HeaderNames.ContentDisposition] = contentDisposition.ToString();
+            SetCacheHeader(_documentAssetsSettings.CacheMaxAge);
 
             return File(file.ContentStream, file.ContentType);
         }
 
-        [ResponseCache(Duration = 60 * 60, Location = ResponseCacheLocation.Client)]
-        public async Task<ActionResult> FileDownload(int assetId, string fileName, string extension)
+        public async Task<ActionResult> DocumentDownload(int documentAssetId, long fileStamp, string verificationToken, string fileName, string extension)
         {
-            var file = await GetFile(assetId);
+            var file = await GetDocumentAssetFile(documentAssetId);
+
+            var validationAction = ValidateDocumentFileRequest(fileStamp, verificationToken, fileName, file, true);
+            if (validationAction != null) return validationAction;
+
+            SetCacheHeader(_documentAssetsSettings.CacheMaxAge);
+
+            return File(file.ContentStream, file.ContentType, file.GetFileNameWithExtension());
+        }
+
+        /// <summary>
+        /// Old action for routing files without update timestamps and therefore
+        /// not permanently cacheable.
+        /// </summary>
+        public async Task<ActionResult> File_OldPath(int assetId, string fileName, string extension)
+        {
+            var file = await GetDocumentAssetFile(assetId);
 
             if (file == null)
             {
                 return FileAssetNotFound("File not found");
             }
 
-            return File(file.ContentStream, file.ContentType, file.FileName);
+            var url = _documentAssetRouteLibrary.DocumentAsset(file);
+            return RedirectPermanent(url);
         }
 
-        private async Task<DocumentAssetFile> GetFile(int assetId)
+        /// <summary>
+        /// Old action for routing files without update timestamps and therefore
+        /// not permanently cacheable.
+        /// </summary>
+        public async Task<ActionResult> FileDownload_OldPath(int assetId, string fileName, string extension)
+        {
+            var file = await GetDocumentAssetFile(assetId);
+
+            if (file == null)
+            {
+                return FileAssetNotFound("File not found");
+            }
+
+            var url = _documentAssetRouteLibrary.DocumentAsset(file);
+            return RedirectPermanent(url);
+        }
+
+        private async Task<DocumentAssetFile> GetDocumentAssetFile(int assetId)
         {
             DocumentAssetFile file = null;
 
@@ -149,6 +187,47 @@ namespace Cofoundry.Web
             }
 
             return file;
+        }
+
+        private ActionResult ValidateDocumentFileRequest(long fileStamp, string verificationToken, string fileName, DocumentAssetFile file, bool isDownload)
+        {
+            // additionally check that filestamp is not after the curent update date
+            if (file == null || !IsFileStampValid(fileStamp, file.FileUpdateDate) || file.VerificationToken != verificationToken)
+            {
+                return FileAssetNotFound("Document file not found");
+            }
+
+            // if the title or filestamp is different, redirect to the correct url
+            var sluggedFileName = SlugFormatter.ToSlug(file.FileName);
+            if (sluggedFileName != fileName || fileStamp.ToString() != file.FileStamp)
+            {
+                var url = isDownload ? _documentAssetRouteLibrary.DocumentAssetDownload(file) : _documentAssetRouteLibrary.DocumentAsset(file);
+                return RedirectPermanent(url);
+            }
+
+            return null;
+        }
+
+        #endregion
+
+        private ContentResult FileAssetNotFound(string message)
+        {
+            ControllerContext.HttpContext.Response.StatusCode = 404;
+            return new ContentResult() { Content = message };
+        }
+
+        private static bool IsFileStampValid(long fileStamp, DateTime fileUpdateDate)
+        {
+            if (fileStamp < 1) return false;
+
+            var fileStampDate = AssetFileStampHelper.ToDate(fileStamp);
+
+            return fileStampDate.HasValue && fileStampDate.Value.Ticks <= fileUpdateDate.Ticks;
+        }
+
+        private void SetCacheHeader(int maxAge)
+        {
+            this.Response.Headers.Add(HeaderNames.CacheControl, new[] { "public,max-age=" + maxAge });
         }
     }
 }

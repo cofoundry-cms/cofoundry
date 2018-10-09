@@ -14,7 +14,9 @@ namespace Cofoundry.Domain
             container
                 .Register<IPasswordCryptographyService, PasswordCryptographyService>()
                 .Register<ISecurityTokenGenerationService, SecurityTokenGenerationService>()
-                .Register<IPasswordGenerationService, PasswordGenerationService>();
+                .Register<IPasswordGenerationService, PasswordGenerationService>()
+                .Register<IRandomStringGenerator, RandomStringGenerator>()
+                ;
         }
     }
 }

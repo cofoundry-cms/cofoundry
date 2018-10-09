@@ -12,12 +12,15 @@ namespace Cofoundry.Domain
     public class DocumentAssetSummaryMapper : IDocumentAssetSummaryMapper
     {
         private readonly IAuditDataMapper _auditDataMapper;
+        private readonly IDocumentAssetRouteLibrary _documentAssetRouteLibrary;
 
         public DocumentAssetSummaryMapper(
-            IAuditDataMapper auditDataMapper
+            IAuditDataMapper auditDataMapper,
+            IDocumentAssetRouteLibrary documentAssetRouteLibrary
             )
         {
             _auditDataMapper = auditDataMapper;
+            _documentAssetRouteLibrary = documentAssetRouteLibrary;
         }
 
         /// <summary>
@@ -46,12 +49,18 @@ namespace Cofoundry.Domain
             document.FileExtension = dbDocument.FileExtension;
             document.FileName = dbDocument.FileName;
             document.FileSizeInBytes = dbDocument.FileSizeInBytes;
+            document.FileStamp = AssetFileStampHelper.ToFileStamp(dbDocument.FileUpdateDate);
             document.Title = dbDocument.Title;
+            document.VerificationToken = dbDocument.VerificationToken;
+
             document.Tags = dbDocument
                 .DocumentAssetTags
                 .Select(t => t.Tag.TagText)
                 .OrderBy(t => t)
                 .ToList();
+
+            document.Url = _documentAssetRouteLibrary.DocumentAsset(document);
+            document.DownloadUrl = _documentAssetRouteLibrary.DocumentAssetDownload(document);
 
             return document;
         }

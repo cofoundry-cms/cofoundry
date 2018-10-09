@@ -12,12 +12,15 @@ namespace Cofoundry.Domain
     public class ImageAssetSummaryMapper : IImageAssetSummaryMapper
     {
         private readonly IAuditDataMapper _auditDataMapper;
+        private readonly IImageAssetRouteLibrary _imageAssetRouteLibrary;
 
         public ImageAssetSummaryMapper(
-            IAuditDataMapper auditDataMapper
+            IAuditDataMapper auditDataMapper,
+            IImageAssetRouteLibrary imageAssetRouteLibrary
             )
         {
             _auditDataMapper = auditDataMapper;
+            _imageAssetRouteLibrary = imageAssetRouteLibrary;
         }
 
         /// <summary>
@@ -38,25 +41,31 @@ namespace Cofoundry.Domain
         /// <summary>
         /// Used internally to map a model that inherits from ImageAssetSummary. 
         /// </summary>
-        public ImageAssetSummary Map<TModel>(TModel image, ImageAsset dbImage)
+        public ImageAssetSummary Map<TModel>(TModel imageToMap, ImageAsset dbImage)
             where TModel : ImageAssetSummary
         {
-            image.AuditData = _auditDataMapper.MapUpdateAuditData(dbImage);
-            image.ImageAssetId = dbImage.ImageAssetId;
-            image.Extension = dbImage.Extension;
-            image.FileName = dbImage.FileName;
-            image.FileSizeInBytes = dbImage.FileSize;
-            image.Height = dbImage.Height;
-            image.Width = dbImage.Width;
-            image.Title = dbImage.FileDescription;
-            image.DefaultAnchorLocation = dbImage.DefaultAnchorLocation;
-            image.Tags = dbImage
+            imageToMap.AuditData = _auditDataMapper.MapUpdateAuditData(dbImage);
+            imageToMap.ImageAssetId = dbImage.ImageAssetId;
+            imageToMap.FileExtension = dbImage.FileExtension;
+            imageToMap.FileName = dbImage.FileName;
+            imageToMap.FileSizeInBytes = dbImage.FileSizeInBytes;
+            imageToMap.Height = dbImage.HeightInPixels;
+            imageToMap.Width = dbImage.WidthInPixels;
+            imageToMap.Title = dbImage.Title;
+            imageToMap.FileStamp = AssetFileStampHelper.ToFileStamp(dbImage.FileUpdateDate);
+            imageToMap.FileNameOnDisk = dbImage.FileNameOnDisk;
+            imageToMap.DefaultAnchorLocation = dbImage.DefaultAnchorLocation;
+            imageToMap.VerificationToken = dbImage.VerificationToken;
+
+            imageToMap.Tags = dbImage
                 .ImageAssetTags
                 .Select(t => t.Tag.TagText)
                 .OrderBy(t => t)
                 .ToList();
 
-            return image;
+            imageToMap.Url = _imageAssetRouteLibrary.ImageAsset(imageToMap);
+
+            return imageToMap;
         }
     }
 }

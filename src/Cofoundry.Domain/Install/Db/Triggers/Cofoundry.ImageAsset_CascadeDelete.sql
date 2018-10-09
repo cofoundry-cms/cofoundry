@@ -8,6 +8,11 @@ begin
 	
 	-- Dependencies
 
+	update Cofoundry.PageVersion
+	set OpenGraphImageId = null
+	from Cofoundry.PageVersion e
+	inner join deleted d on e.OpenGraphImageId = d.ImageAssetId
+
     delete Cofoundry.ImageAssetGroupItem
 	from Cofoundry.ImageAssetGroupItem e
 	inner join deleted d on e.ImageAssetId = d.ImageAssetId

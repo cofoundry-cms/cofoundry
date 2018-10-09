@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 using Cofoundry.Domain.CQS;
 using Cofoundry.Domain.Data;
 using System.IO;
-using Cofoundry.Core;
 using Microsoft.EntityFrameworkCore;
 
 namespace Cofoundry.Domain
@@ -31,22 +30,33 @@ namespace Cofoundry.Domain
         {
             var dbResult = await _dbContext
                 .DocumentAssets
-                .Where(f => f.DocumentAssetId == query.DocumentAssetId && !f.IsDeleted)
+                .Where(f => f.DocumentAssetId == query.DocumentAssetId)
                 .Select(f => new {
-                    Extension = f.FileExtension,
-                    ContentType = f.ContentType,
-                    FileName = f.Title
+                    f.FileExtension,
+                    f.ContentType,
+                    f.FileName,
+                    f.FileUpdateDate,
+                    f.FileNameOnDisk,
+                    f.VerificationToken
                 })
                 .SingleOrDefaultAsync();
 
             if (dbResult == null) return null;
-            var fileName = Path.ChangeExtension(query.DocumentAssetId.ToString(), dbResult.Extension);
 
-            var result = new DocumentAssetFile();
-            result.DocumentAssetId = query.DocumentAssetId;
-            result.ContentType = dbResult.ContentType;
+            var result = new DocumentAssetFile()
+            {
+                DocumentAssetId = query.DocumentAssetId,
+                ContentType = dbResult.ContentType,
+                FileName = dbResult.FileName,
+                FileNameOnDisk = dbResult.FileNameOnDisk,
+                FileExtension = dbResult.FileExtension,
+                FileUpdateDate = dbResult.FileUpdateDate,
+                VerificationToken = dbResult.VerificationToken
+            };
+
+            result.FileStamp = AssetFileStampHelper.ToFileStamp(dbResult.FileUpdateDate);
+            var fileName = Path.ChangeExtension(dbResult.FileNameOnDisk, dbResult.FileExtension);
             result.ContentStream = await _fileStoreService.GetAsync(DocumentAssetConstants.FileContainerName, fileName);
-            result.FileName = FilePathHelper.CleanFileName(Path.ChangeExtension(dbResult.FileName, dbResult.Extension), fileName);
 
             if (result.ContentStream == null)
             {

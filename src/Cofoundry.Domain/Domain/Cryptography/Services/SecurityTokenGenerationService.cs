@@ -8,13 +8,13 @@ namespace Cofoundry.Domain
 {
     public class SecurityTokenGenerationService : ISecurityTokenGenerationService
     {
-        private IPasswordGenerationService _passwordGenerationService;
+        private IRandomStringGenerator _randomStringGenerator;
         
         public SecurityTokenGenerationService(
-            IPasswordGenerationService passwordGenerationService
+            IRandomStringGenerator randomStringGenerator
             )
         {
-            _passwordGenerationService = passwordGenerationService;
+            _randomStringGenerator = randomStringGenerator;
         }
 
         /// <summary>
@@ -26,7 +26,7 @@ namespace Cofoundry.Domain
             // Get a little uniquess
             var guid = Guid.NewGuid().ToString().Replace("-", string.Empty);
             // Sprinkle some random padding
-            var randomString = _passwordGenerationService.Generate(20);
+            var randomString = _randomStringGenerator.Generate(20);
             // Encrypt the lot to obfuscate it
             var token = Defuse.PasswordCryptographyV2.CreateHash(guid + randomString);
 
