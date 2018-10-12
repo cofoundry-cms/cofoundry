@@ -13,7 +13,7 @@ namespace Cofoundry.Domain
     /// </summary>
     public class NonCofoundryUserEntityDefinition : IEntityDefinition
     {
-        public static string DefinitionCode = "COFUSN";
+        public const string DefinitionCode = "COFUSN";
 
         public string EntityDefinitionCode { get { return DefinitionCode; } }
 

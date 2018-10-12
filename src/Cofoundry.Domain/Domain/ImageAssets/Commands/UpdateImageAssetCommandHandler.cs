@@ -26,6 +26,7 @@ namespace Cofoundry.Domain
         private readonly IResizedImageAssetFileService _imageAssetFileCache;
         private readonly ITransactionScopeManager _transactionScopeFactory;
         private readonly IMessageAggregator _messageAggregator;
+        private readonly ICommandExecutor _commandExecutor;
 
         public UpdateImageAssetCommandHandler(
             CofoundryDbContext dbContext,
@@ -35,7 +36,8 @@ namespace Cofoundry.Domain
             IImageAssetCache imageAssetCache,
             IResizedImageAssetFileService imageAssetFileCache,
             ITransactionScopeManager transactionScopeFactory,
-            IMessageAggregator messageAggregator
+            IMessageAggregator messageAggregator,
+            ICommandExecutor commandExecutor
             )
         {
             _dbContext = dbContext;
@@ -46,6 +48,7 @@ namespace Cofoundry.Domain
             _imageAssetFileCache = imageAssetFileCache;
             _transactionScopeFactory = transactionScopeFactory;
             _messageAggregator = messageAggregator;
+            _commandExecutor = commandExecutor;
         }
 
         #endregion
@@ -74,10 +77,18 @@ namespace Cofoundry.Domain
             {
                 if (hasNewFile)
                 {
+                    var deleteOldFileCommand = new QueueAssetFileDeletionCommand()
+                    {
+                        EntityDefinitionCode = ImageAssetEntityDefinition.DefinitionCode,
+                        FileNameOnDisk = imageAsset.FileNameOnDisk,
+                        FileExtension = imageAsset.FileExtension
+                    };
+
                     imageAsset.FileUpdateDate = executionContext.ExecutionDate;
                     var fileStamp = AssetFileStampHelper.ToFileStamp(imageAsset.FileUpdateDate);
                     imageAsset.FileNameOnDisk = $"{imageAsset.ImageAssetId}-{fileStamp}";
 
+                    await _commandExecutor.ExecuteAsync(deleteOldFileCommand);
                     await _imageAssetFileService.SaveAsync(command.File, imageAsset, nameof(command.File));
                 }
 

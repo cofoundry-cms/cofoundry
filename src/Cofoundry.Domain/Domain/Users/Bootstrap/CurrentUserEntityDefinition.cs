@@ -14,7 +14,7 @@ namespace Cofoundry.Domain
     /// </summary>
     public class CurrentUserEntityDefinition : IEntityDefinition
     {
-        public static string DefinitionCode = "COFCUR";
+        public const string DefinitionCode = "COFCUR";
 
         public string EntityDefinitionCode { get { return DefinitionCode; } }
 

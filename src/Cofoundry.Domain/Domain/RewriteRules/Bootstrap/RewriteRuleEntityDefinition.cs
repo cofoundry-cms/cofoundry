@@ -9,7 +9,7 @@ namespace Cofoundry.Domain
 {
     public class RewriteRuleEntityDefinition : IEntityDefinition
     {
-        public static string DefinitionCode = "COFRWR";
+        public const string DefinitionCode = "COFRWR";
 
         public string EntityDefinitionCode { get { return DefinitionCode; } }
 

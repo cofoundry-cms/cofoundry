@@ -57,16 +57,21 @@ namespace Cofoundry.Domain
             if (imageAsset != null)
             {
                 _dbContext.ImageAssets.Remove(imageAsset);
+
                 var fileName = Path.ChangeExtension(imageAsset.FileNameOnDisk, imageAsset.FileExtension);
+                var deleteUnstructuredDataComand = new DeleteUnstructuredDataDependenciesCommand(ImageAssetEntityDefinition.DefinitionCode, imageAsset.ImageAssetId);
+                var deleteFileCommand = new QueueAssetFileDeletionCommand()
+                {
+                    EntityDefinitionCode = ImageAssetEntityDefinition.DefinitionCode,
+                    FileNameOnDisk = imageAsset.FileNameOnDisk,
+                    FileExtension = imageAsset.FileExtension
+                };
 
                 using (var scope = _transactionScopeFactory.Create(_dbContext))
                 {
                     await _dbContext.SaveChangesAsync();
-                    await _commandExecutor.ExecuteAsync(new DeleteUnstructuredDataDependenciesCommand(ImageAssetEntityDefinition.DefinitionCode, imageAsset.ImageAssetId), executionContext);
-
-                    // TODO: background task this to improve reliability
-                    await _fileStoreService.DeleteAsync(ImageAssetConstants.FileContainerName, fileName);
-                    await _resizedImageAssetFileService.ClearAsync(imageAsset.FileNameOnDisk);
+                    await _commandExecutor.ExecuteAsync(deleteFileCommand, executionContext);
+                    await _commandExecutor.ExecuteAsync(deleteUnstructuredDataComand, executionContext);
 
                     scope.QueueCompletionTask(() => OnTransactionComplete(command));
 

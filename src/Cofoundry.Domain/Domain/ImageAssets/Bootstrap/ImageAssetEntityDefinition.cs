@@ -9,7 +9,7 @@ namespace Cofoundry.Domain
 {
     public class ImageAssetEntityDefinition : IDependableEntityDefinition
     {
-        public static string DefinitionCode = "COFIMG";
+        public const string DefinitionCode = "COFIMG";
 
         public string EntityDefinitionCode { get { return DefinitionCode; } }
 

@@ -51,14 +51,21 @@ namespace Cofoundry.Domain
             if (documentAsset != null)
             {
                 _dbContext.DocumentAssets.Remove(documentAsset);
+
                 var fileName = Path.ChangeExtension(documentAsset.FileNameOnDisk, documentAsset.FileExtension);
+                var deleteUnstructuredDataComand = new DeleteUnstructuredDataDependenciesCommand(DocumentAssetEntityDefinition.DefinitionCode, documentAsset.DocumentAssetId);
+                var deleteFileCommand = new QueueAssetFileDeletionCommand()
+                {
+                    EntityDefinitionCode = DocumentAssetEntityDefinition.DefinitionCode,
+                    FileNameOnDisk = documentAsset.FileNameOnDisk,
+                    FileExtension = documentAsset.FileExtension
+                };
 
                 using (var scope = _transactionScopeFactory.Create(_dbContext))
                 {
                     await _dbContext.SaveChangesAsync();
-                    await _commandExecutor.ExecuteAsync(new DeleteUnstructuredDataDependenciesCommand(DocumentAssetEntityDefinition.DefinitionCode, documentAsset.DocumentAssetId), executionContext);
-
-                    await _fileStoreService.DeleteAsync(DocumentAssetConstants.FileContainerName, fileName);
+                    await _commandExecutor.ExecuteAsync(deleteFileCommand, executionContext);
+                    await _commandExecutor.ExecuteAsync(deleteUnstructuredDataComand, executionContext);
 
                     scope.QueueCompletionTask(() => OnTransactionComplete(command));
 

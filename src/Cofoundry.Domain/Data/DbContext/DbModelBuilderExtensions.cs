@@ -127,6 +127,7 @@ namespace Cofoundry.Domain.Data
                 .MapCofoundryTags()
                 .MapCofoundryImageAssets()
                 .MapCofoundryDocumentAssets()
+                .ApplyConfiguration(new AssetFileCleanupQueueItemMap())
                 .ApplyConfiguration(new CustomEntityVersionPageBlockMap())
                 .ApplyConfiguration(new PageTemplateMap())
                 .ApplyConfiguration(new PageTemplateRegionMap())
@@ -146,7 +147,8 @@ namespace Cofoundry.Domain.Data
                 .ApplyConfiguration(new CustomEntityDefinitionMap())
                 .ApplyConfiguration(new CustomEntityMap())
                 .ApplyConfiguration(new CustomEntityPublishStatusQueryMap())
-                .ApplyConfiguration(new CustomEntityVersionMap());
+                .ApplyConfiguration(new CustomEntityVersionMap())
+                ;
 
             return modelBuilder;
         }

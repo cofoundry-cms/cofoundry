@@ -45,6 +45,8 @@ namespace Cofoundry.Domain.Data
 
         #region properties
 
+        public DbSet<AssetFileCleanupQueueItem> AssetFileCleanupQueueItems { get; set; }
+
         public DbSet<CustomEntityDefinition> CustomEntityDefinitions { get; set; }
 
         public DbSet<CustomEntity> CustomEntities { get; set; }

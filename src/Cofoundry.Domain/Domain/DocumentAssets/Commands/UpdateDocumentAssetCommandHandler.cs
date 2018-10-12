@@ -25,6 +25,7 @@ namespace Cofoundry.Domain
         private readonly DocumentAssetCommandHelper _documentAssetCommandHelper;
         private readonly ITransactionScopeManager _transactionScopeFactory;
         private readonly IMessageAggregator _messageAggregator;
+        private readonly ICommandExecutor _commandExecutor;
 
         public UpdateDocumentAssetCommandHandler(
             CofoundryDbContext dbContext,
@@ -32,7 +33,8 @@ namespace Cofoundry.Domain
             EntityTagHelper entityTagHelper,
             DocumentAssetCommandHelper documentAssetCommandHelper,
             ITransactionScopeManager transactionScopeFactory,
-            IMessageAggregator messageAggregator
+            IMessageAggregator messageAggregator,
+            ICommandExecutor commandExecutor
             )
         {
             _dbContext = dbContext;
@@ -41,6 +43,7 @@ namespace Cofoundry.Domain
             _documentAssetCommandHelper = documentAssetCommandHelper;
             _transactionScopeFactory = transactionScopeFactory;
             _messageAggregator = messageAggregator;
+            _commandExecutor = commandExecutor;
         }
 
         #endregion
@@ -72,6 +75,14 @@ namespace Cofoundry.Domain
             {
                 if (hasNewFile)
                 {
+                    var deleteOldFileCommand = new QueueAssetFileDeletionCommand()
+                    {
+                        EntityDefinitionCode = DocumentAssetEntityDefinition.DefinitionCode,
+                        FileNameOnDisk = documentAsset.FileNameOnDisk,
+                        FileExtension = documentAsset.FileExtension
+                    };
+
+                    await _commandExecutor.ExecuteAsync(deleteOldFileCommand);
                     await _documentAssetCommandHelper.SaveFile(command.File, documentAsset);
                     documentAsset.FileUpdateDate = executionContext.ExecutionDate;
                 }

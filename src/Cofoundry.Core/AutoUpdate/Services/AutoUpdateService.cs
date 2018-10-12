@@ -1,9 +1,7 @@
-﻿using Cofoundry.Core.Data;
-using Cofoundry.Core.Data.SimpleDatabase;
+﻿using Cofoundry.Core.Data.SimpleDatabase;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
-using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -82,8 +80,7 @@ namespace Cofoundry.Core.AutoUpdate
             }
 
             // Lock the process to prevent concurrent updates
-            var lockingId = Guid.NewGuid();
-            await _autoUpdateDistributedLockManager.LockAsync(lockingId);
+            var distributedLock = await _autoUpdateDistributedLockManager.LockAsync();
 
             try
             {
@@ -94,7 +91,7 @@ namespace Cofoundry.Core.AutoUpdate
             }
             finally
             {
-                await _autoUpdateDistributedLockManager.UnlockAsync(lockingId);
+                await _autoUpdateDistributedLockManager.UnlockAsync(distributedLock);
             }
         }
 

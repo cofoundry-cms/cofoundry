@@ -9,7 +9,7 @@ namespace Cofoundry.Domain
 {
     public class SettingsEntityDefinition : IEntityDefinition
     {
-        public static string DefinitionCode = "COFSET";
+        public const string DefinitionCode = "COFSET";
 
         public string EntityDefinitionCode { get { return DefinitionCode; } }
 

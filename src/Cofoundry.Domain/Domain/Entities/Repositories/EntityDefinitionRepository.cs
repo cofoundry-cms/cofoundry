@@ -33,6 +33,8 @@ namespace Cofoundry.Domain
 
         private void DetectInvalidDefinitions(IEnumerable<IEntityDefinition> definitions)
         {
+            const string WHY_VALID_CODE_MESSAGE = "All entity definition codes must be 6 characters and contain only non-unicode caracters.";
+
             var nullName = definitions
                 .Where(d => string.IsNullOrWhiteSpace(d.EntityDefinitionCode))
                 .FirstOrDefault();
@@ -71,8 +73,18 @@ namespace Cofoundry.Domain
 
             if (nameNot6Chars != null)
             {
-                var message = nameNot6Chars.GetType().Name + " has a definition code that is not 6 characters in length. All entity definition codes must be 6 characters.";
+                var message = nameNot6Chars.GetType().Name + " has a definition code that is not 6 characters in length. " + WHY_VALID_CODE_MESSAGE;
                 throw new InvalidEntityDefinitionException(message, nameNot6Chars, definitions);
+            }
+
+            var notValidCode = definitions
+                .Where(d => !SqlCharValidator.IsValid(d.EntityDefinitionCode, 6))
+                .FirstOrDefault();
+
+            if (notValidCode != null)
+            {
+                var message = notValidCode.GetType().Name + " has an invalid definition code. " + WHY_VALID_CODE_MESSAGE;
+                throw new InvalidEntityDefinitionException(message, notValidCode, definitions);
             }
         }
 

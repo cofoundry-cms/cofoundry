@@ -19,6 +19,7 @@ namespace Cofoundry.Domain.Data
 
             builder.Property(s => s.FileNameOnDisk)
                 .IsRequired()
+                .IsUnicode(false)
                 .HasMaxLength(50);
 
             builder.Property(s => s.Title)

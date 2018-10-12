@@ -13,7 +13,7 @@ namespace Cofoundry.Domain
     /// </summary>
     public class UserEntityDefinition : IEntityDefinition
     {
-        public static string DefinitionCode = "COFUSR";
+        public const string DefinitionCode = "COFUSR";
 
         public string EntityDefinitionCode { get { return DefinitionCode; } }
 

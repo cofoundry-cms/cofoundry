@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Cofoundry.Core.DistributedLocks;
+using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
@@ -17,10 +18,7 @@ namespace Cofoundry.Core.AutoUpdate
         /// Locks the auto-update process using a unique
         /// identifier.
         /// </summary>
-        /// <param name="lockingId">
-        /// Unique identifier to represent the process that owns the lock.
-        /// </param>
-        Task LockAsync(Guid lockingId);
+        Task<DistributedLock> LockAsync();
 
         /// <summary>
         /// Unlocks the auto-update process, indicating that the process
@@ -29,6 +27,6 @@ namespace Cofoundry.Core.AutoUpdate
         /// <param name="lockingId">
         /// Unique identifier that represent the process that owns the lock.
         /// </param>
-        Task UnlockAsync(Guid lockingId);
+        Task UnlockAsync(DistributedLock distributedLock);
     }
 }

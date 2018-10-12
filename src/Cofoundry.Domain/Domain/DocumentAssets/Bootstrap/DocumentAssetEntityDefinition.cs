@@ -8,7 +8,7 @@ namespace Cofoundry.Domain
 {
     public class DocumentAssetEntityDefinition : IEntityDefinition
     {
-        public static string DefinitionCode = "COFDOC";
+        public const string DefinitionCode = "COFDOC";
 
         public string EntityDefinitionCode { get { return DefinitionCode; } }
 

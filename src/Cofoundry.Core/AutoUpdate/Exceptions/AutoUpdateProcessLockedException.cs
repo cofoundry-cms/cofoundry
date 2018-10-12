@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Cofoundry.Core.DistributedLocks;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -13,15 +14,15 @@ namespace Cofoundry.Core.AutoUpdate
     /// </summary>
     public class AutoUpdateProcessLockedException : Exception
     {
-        public AutoUpdateProcessLockedException(AutoUpdateDistributedLock distributedLock)
+        public AutoUpdateProcessLockedException(DistributedLock distributedLock)
             : base(FormatMessage(distributedLock))
         {
             DistributedLock = distributedLock;
         }
 
-        public AutoUpdateDistributedLock DistributedLock { get; set; }
+        public DistributedLock DistributedLock { get; set; }
 
-        private static string FormatMessage(AutoUpdateDistributedLock distributedLock)
+        private static string FormatMessage(DistributedLock distributedLock)
         {
             return $"The auto-update process cannot be started because it has been locked by another " +
                 $"machine on {distributedLock.LockDate}. The lock is due to expire on {distributedLock.ExpiryDate}.";

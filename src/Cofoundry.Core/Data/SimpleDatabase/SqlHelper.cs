@@ -21,7 +21,7 @@ namespace Cofoundry.Core.Data.SimpleDatabase
             sql = Regex.Replace(sql, "--.*", string.Empty);
 
             // Split go statements into batches
-            var sqlBatches = Regex.Split(sql, @"^go\s*$", RegexOptions.IgnoreCase | RegexOptions.Multiline)
+            var sqlBatches = Regex.Split(sql, @"^\s*(?:go){1}\s*$", RegexOptions.IgnoreCase | RegexOptions.Multiline)
                 .Where(s => !string.IsNullOrWhiteSpace(s));
 
             return sqlBatches;

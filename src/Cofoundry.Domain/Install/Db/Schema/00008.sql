@@ -1,8 +1,59 @@
-﻿-- ImageAsset
+﻿/* 
+	#170 IFileStoreService and orphan items
+*/
 
--- Remove soft deletes & tidy naming
+ create table Cofoundry.AssetFileCleanupQueueItem (
+	AssetFileCleanupQueueItemId int identity(1,1) not null,
+	EntityDefinitionCode char(6) not null,
+	FileNameOnDisk varchar(50) not null,
+	FileExtension nvarchar(30) not null,
+	CreateDate datetime2(4) not null,
+	LastAttemptDate datetime2(4) null,
+	CompletedDate datetime2(4) null,
+	CanRetry bit not null,
+	AttemptPermittedDate datetime2(4) not null,
+
+	constraint PK_AssetFileCleanupQueueItem primary key (AssetFileCleanupQueueItemId),
+	constraint FK_AssetFileCleanupQueueItem_EntityDefinition foreign key (EntityDefinitionCode) references Cofoundry.EntityDefinition (EntityDefinitionCode)
+)
+go
+
+ -- insert soft-deleted items into the queue
+
+ insert into Cofoundry.AssetFileCleanupQueueItem (
+	EntityDefinitionCode,
+	FileNameOnDisk,
+	FileExtension,
+	CreateDate,
+	CanRetry,
+	AttemptPermittedDate
+ ) 
+ select 'COFIMG', convert(varchar(50), ImageAssetId), Extension, GetUTCDate(), 1, GetUTCDate()
+ from Cofoundry.ImageAsset
+ where IsDeleted = 1
+
+ insert into Cofoundry.AssetFileCleanupQueueItem (
+	EntityDefinitionCode,
+	FileNameOnDisk,
+	FileExtension,
+	CreateDate,
+	CanRetry,
+	AttemptPermittedDate
+ ) 
+ select 'COFDOC', convert(varchar(50), DocumentAssetId), FileExtension, GetUTCDate(), 1, GetUTCDate()
+ from Cofoundry.DocumentAsset
+ where IsDeleted = 1
+
+go
+
+/* 
+	#33 Make Image Asset Files Permanently Cachable
+*/
+
+-- Also remove soft deletes & tidy naming
 delete from Cofoundry.ImageAsset where IsDeleted = 1
 delete from Cofoundry.DocumentAsset where IsDeleted = 1
+
 go
 
 alter table Cofoundry.ImageAsset drop column IsDeleted
@@ -59,10 +110,3 @@ exec sp_rename 'Cofoundry.ImageAsset.Extension' , 'FileExtension', 'column'
 go
 exec sp_rename 'Cofoundry.ImageAsset.FileSize' , 'FileSizeInBytes', 'column'
 go
-
--- TODO: 
--- When we add a queue, add soft-deleted assets to it
--- Image title is new? Might need to do some UI stuff for that
-
--- https://github.com/cofoundry-cms/cofoundry/issues/33
--- https://github.com/cofoundry-cms/cofoundry/issues/170

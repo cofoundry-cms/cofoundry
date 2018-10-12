@@ -17,6 +17,7 @@ namespace Cofoundry.Domain.Data
                 .Register<IDbUnstructuredDataSerializer, DbUnstructuredDataSerializer>()
                 .Register<ICustomEntityStoredProcedures, CustomEntityStoredProcedures>()
                 .Register<IPageStoredProcedures, PageStoredProcedures>()
+                .Register<IAssetStoredProcedures, AssetStoredProcedures>()
                 ;
         }
     }

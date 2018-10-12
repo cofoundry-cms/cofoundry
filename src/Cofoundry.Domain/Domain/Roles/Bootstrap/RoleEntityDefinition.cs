@@ -9,7 +9,7 @@ namespace Cofoundry.Domain
 {
     public class RoleEntityDefinition : IEntityDefinition
     {
-        public static string DefinitionCode = "COFROL";
+        public const string DefinitionCode = "COFROL";
 
         public string EntityDefinitionCode { get { return DefinitionCode; } }
 

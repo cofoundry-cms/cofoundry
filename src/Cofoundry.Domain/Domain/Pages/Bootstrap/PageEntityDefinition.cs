@@ -9,7 +9,7 @@ namespace Cofoundry.Domain
 {
     public class PageEntityDefinition : IDependableEntityDefinition
     {
-        public static string DefinitionCode = "COFPGE";
+        public const string DefinitionCode = "COFPGE";
 
         public string EntityDefinitionCode { get { return DefinitionCode; } }
 
