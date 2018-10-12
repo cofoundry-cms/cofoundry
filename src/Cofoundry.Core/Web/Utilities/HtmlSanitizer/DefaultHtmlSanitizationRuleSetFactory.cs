@@ -28,7 +28,7 @@ namespace Cofoundry.Core.Web
             ruleSet.PermittedSchemes = Ganss.XSS.HtmlSanitizer.DefaultAllowedSchemes;
             ruleSet.PermittedTags = Ganss.XSS.HtmlSanitizer.DefaultAllowedTags;
             ruleSet.PermittedUriAttributes = Ganss.XSS.HtmlSanitizer.DefaultUriAttributes;
-            ruleSet.PermittedCssProperties.Add("class");
+            ruleSet.PermittedAttributes.Add("class");
             ruleSet.PermittedSchemes.Add("mailto");
 
             return ruleSet;
