@@ -3,6 +3,7 @@
 @inject IPermissionValidationService permissionValidationService
 @inject ICofoundryHelper Cofoundry
 @inject IPageRouteLibrary pageRouteLibrary
+@inject ImageAssetsSettings imageAssetsSettings
 
 @functions {
     bool IsEditTypeSwitchRequired(IPageResponseData pageResponseData)
@@ -140,7 +141,7 @@
                         </a>
                     </li>
 }
-@if (permissionValidationService.HasPermission<ImageAssetAdminModulePermission>(pageResponseData.CofoundryAdminUserContext))
+@if (!imageAssetsSettings.Disabled && permissionValidationService.HasPermission<ImageAssetAdminModulePermission>(pageResponseData.CofoundryAdminUserContext))
 {
                     <li>
                         <a href="@adminRouteLibrary.Images.List()" class="cofoundry-sv__navmenu-list__item">

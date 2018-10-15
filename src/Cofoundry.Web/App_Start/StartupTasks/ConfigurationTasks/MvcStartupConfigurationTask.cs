@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using Cofoundry.Domain;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
 using System;
 using System.Collections.Generic;
@@ -14,12 +15,15 @@ namespace Cofoundry.Web
         #region constructor
 
         private readonly IRouteInitializer _routeInitializer;
+        private readonly PagesSettings _pagesSettings;
 
         public MvcStartupConfigurationTask(
-            IRouteInitializer routeInitializer
+            IRouteInitializer routeInitializer,
+            PagesSettings pagesSettings
             )
         {
             _routeInitializer = routeInitializer;
+            _pagesSettings = pagesSettings;
         }
 
         #endregion
@@ -43,10 +47,13 @@ namespace Cofoundry.Web
         {
             RegisterInjectedRoutes(routes);
 
-            routes.MapRoute(
-                "Cofoundry_Page",
-                "{*path}",
-                new { controller = "CofoundryPages", action = "Page" });
+            if (!_pagesSettings.Disabled)
+            {
+                routes.MapRoute(
+                    "Cofoundry_Page",
+                    "{*path}",
+                    new { controller = "CofoundryPages", action = "Page" });
+            }
         }
 
         private void RegisterInjectedRoutes(IRouteBuilder routes)
