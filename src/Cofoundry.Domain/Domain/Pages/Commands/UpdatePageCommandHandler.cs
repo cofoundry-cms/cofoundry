@@ -81,7 +81,7 @@ namespace Cofoundry.Domain
                 .ThenInclude(a => a.Tag)
                 .FilterActive()
                 .FilterByPageId(id)
-                .Where(p => p.PageId == id && !p.IsDeleted);
+                .Where(p => p.PageId == id);
         }
 
         private void MapPage(UpdatePageCommand command, IExecutionContext executionContext, Page page)

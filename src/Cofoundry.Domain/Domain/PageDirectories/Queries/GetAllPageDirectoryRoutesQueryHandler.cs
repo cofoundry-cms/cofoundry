@@ -47,8 +47,7 @@ namespace Cofoundry.Domain
             return _dbContext
                 .PageDirectories
                 .AsNoTracking()
-                .Include(d => d.PageDirectoryLocales)
-                .Where(d => d.IsActive);
+                .Include(d => d.PageDirectoryLocales);
         }
 
         #endregion

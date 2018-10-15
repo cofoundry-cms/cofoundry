@@ -49,7 +49,6 @@ namespace Cofoundry.Domain
             var pageDirectory = new PageDirectory();
             pageDirectory.Name = command.Name;
             pageDirectory.UrlPath = command.UrlPath;
-            pageDirectory.IsActive = true;
             pageDirectory.ParentPageDirectoryId = command.ParentPageDirectoryId;
             _entityAuditHelper.SetCreated(pageDirectory, executionContext);
 

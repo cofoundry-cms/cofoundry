@@ -48,7 +48,6 @@ namespace Cofoundry.Domain
                 .PageDirectories
                 .AsNoTracking()
                 .Where(d => d.PageDirectoryId != query.PageDirectoryId
-                    && d.IsActive
                     && d.UrlPath == query.UrlPath
                     && d.ParentPageDirectoryId == query.ParentPageDirectoryId
                     );

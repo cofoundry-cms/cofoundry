@@ -54,7 +54,7 @@ namespace Cofoundry.Domain
             queryModel.NumPages = await _dbContext
                 .PageVersions
                 .AsNoTracking()
-                .Where(v => v.PageTemplateId == query.PageTemplateId && !v.Page.IsDeleted)
+                .Where(v => v.PageTemplateId == query.PageTemplateId)
                 .GroupBy(v => v.PageId)
                 .CountAsync();
 

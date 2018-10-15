@@ -49,13 +49,6 @@ namespace Cofoundry.Domain.Data
         public int PageTypeId { get; set; }
 
         /// <summary>
-        /// Versions are currently able to be soft-deleted but this will likely
-        /// be removed at a later date and replaced by a system that doesn't keep
-        /// data hanging around in production tables.
-        /// </summary>
-        public bool IsDeleted { get; set; }
-
-        /// <summary>
         /// If this is of PageType.CustomEntityDetails, this is used
         /// to look up the routing.
         /// </summary>

@@ -38,8 +38,6 @@ namespace Cofoundry.Domain.Data
         /// </summary>
         public string UrlPath { get; set; }
 
-        public bool IsActive { get; set; }
-
         public virtual ICollection<Page> Pages { get; set; }
 
         public virtual ICollection<PageDirectory> ChildPageDirectories { get; set; }

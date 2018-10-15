@@ -21,7 +21,6 @@ begin
 		from Cofoundry.PageVersion v
 		inner join Cofoundry.[Page] p on p.PageId = v.PageId
 		where p.PageId = @CopyToPageId 
-			and p.IsDeleted = 0 
 			and WorkFlowStatusId =@DraftWorkFlowStatus
 	
 	if (@CopyToPageVersionId is null) 

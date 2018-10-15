@@ -15,7 +15,6 @@ namespace Cofoundry.Domain.Data
         public int DocumentAssetGroupId { get; set; }
         public string GroupName { get; set; }
         public Nullable<int> ParentDocumentAssetGroupId { get; set; }
-        public bool IsDeleted { get; set; }
         public virtual ICollection<DocumentAssetGroupItem> DocumentAssetGroupItems { get; set; }
         public virtual ICollection<DocumentAssetGroup> ChildDocumentAssetGroups { get; set; }
         public virtual DocumentAssetGroup ParentDocumentAssetGroup { get; set; }

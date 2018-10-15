@@ -15,7 +15,6 @@ namespace Cofoundry.Domain.Data
         public int ImageAssetGroupId { get; set; }
         public string GroupName { get; set; }
         public int? ParentImageAssetGroupId { get; set; }
-        public bool IsDeleted { get; set; }
         public virtual ICollection<ImageAssetGroupItem> ImageAssetGroupItems { get; set; }
         public virtual ICollection<ImageAssetGroup> ChildImageAssetGroups { get; set; }
         public virtual ImageAssetGroup ParentImageAssetGroup { get; set; }

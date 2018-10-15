@@ -37,10 +37,7 @@ namespace Cofoundry.Domain.Data
         public static IQueryable<PageVersion> FilterActive(this IQueryable<PageVersion> pageVersions)
         {
             var filtered = pageVersions
-                .Where(v => !v.Page.IsDeleted 
-                    && v.Page.PageDirectory.IsActive 
-                    && !v.PageTemplate.IsArchived
-                    );
+                .Where(v => !v.PageTemplate.IsArchived);
 
             return filtered;
         }

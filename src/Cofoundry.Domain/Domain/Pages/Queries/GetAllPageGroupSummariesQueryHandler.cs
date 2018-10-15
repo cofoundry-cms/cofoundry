@@ -31,7 +31,6 @@ namespace Cofoundry.Domain
             var dbResults = await _dbContext
                 .PageGroups
                 .AsNoTracking()
-                .Where(g => !g.IsDeleted)
                 .OrderBy(m => m.GroupName)
                 .Select(g => new PageGroupSummaryQueryModel()
                 {

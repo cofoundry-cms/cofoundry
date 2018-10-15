@@ -44,7 +44,6 @@ namespace Cofoundry.Domain
                 .Pages
                 .AsNoTracking()
                 .Where(d => d.PageId != query.PageId
-                    && !d.IsDeleted
                     && d.UrlPath == query.UrlPath
                     && d.LocaleId == query.LocaleId
                     && d.PageDirectoryId == query.PageDirectoryId

@@ -49,12 +49,11 @@ namespace Cofoundry.Domain
                    .PageDirectories
                    .AsNoTracking()
                    .Include(w => w.Creator)
-                   .Where(w => w.IsActive)
                    .Select(d => new PageDirectoryTreeNodeQueryModel()
                     {
                        Creator = d.Creator,
                        PageDirectory = d,
-                       NumPages = d.Pages.Count(p => !p.IsDeleted)
+                       NumPages = d.Pages.Count()
                    });
 
             return allPageDirectories;

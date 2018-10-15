@@ -42,7 +42,6 @@ namespace Cofoundry.Domain
         {
             var pageDirectory = await _dbContext
                 .PageDirectories
-                .Include(d => d.ChildPageDirectories)
                 .SingleOrDefaultAsync(d => d.PageDirectoryId == command.PageDirectoryId);
 
             if (pageDirectory != null)
@@ -52,7 +51,7 @@ namespace Cofoundry.Domain
                     throw new ValidationException("Cannot delete the root page directory.");
                 }
 
-                pageDirectory.IsActive = false;
+                _dbContext.PageDirectories.Remove(pageDirectory);
 
                 using (var scope = _transactionScopeFactory.Create(_dbContext))
                 {

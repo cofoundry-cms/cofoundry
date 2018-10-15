@@ -27,9 +27,9 @@ namespace Cofoundry.Domain.Data
         /// </summary>
         public static IQueryable<Page> FilterActive(this IQueryable<Page> pages)
         {
-            var filtered = pages.Where(p => !p.IsDeleted && p.PageDirectory.IsActive);
-
-            return filtered;
+            // Not currently filtered, but may need to add locale filtering in here
+            // in a later version so will leave this here for now.
+            return pages;
         }
     }
 }

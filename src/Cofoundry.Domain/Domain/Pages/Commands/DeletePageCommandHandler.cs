@@ -48,7 +48,7 @@ namespace Cofoundry.Domain
 
             if (page != null)
             {
-                page.IsDeleted = true;
+                _dbContext.Pages.Remove(page);
 
                 using (var scope = _transactionScopeFactory.Create(_dbContext))
                 {

@@ -123,24 +123,7 @@ namespace Cofoundry.Domain
                 throw new PropertyValidationException("The selected page directory does not exist.", nameof(pageDirectory.PageDirectoryId));
             }
 
-            CheckPageDirectoryIsActive(pageDirectory, pageDirectories);
-
             return pageDirectory;
-        }
-
-        private void CheckPageDirectoryIsActive(PageDirectory pageDirectory, Dictionary<int, PageDirectory> allPageDirectories)
-        {
-            if (!pageDirectory.IsActive)
-            {
-                throw new PropertyValidationException("The selected page directory is not active and cannot be used.", nameof(pageDirectory.PageDirectoryId));
-            }
-
-            if (pageDirectory.ParentPageDirectoryId.HasValue)
-            {
-                var parentDirectory = allPageDirectories.GetOrDefault(pageDirectory.ParentPageDirectoryId.Value);
-                EntityNotFoundException.ThrowIfNull(parentDirectory, pageDirectory.ParentPageDirectoryId);
-                CheckPageDirectoryIsActive(pageDirectory.ParentPageDirectory, allPageDirectories);
-            }
         }
 
         private async Task<Page> MapPage(AddPageCommand command, IExecutionContext executionContext)

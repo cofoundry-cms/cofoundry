@@ -321,7 +321,7 @@ function (
     function deleteDirectory() {
         var options = {
             title: 'Delete Directory',
-            message: 'Are you sure you want to delete this directory?',
+            message: 'Deleting this directory will delete ALL sub-directories and pages linked to this directory. Are you sure you want to continue?',
             okButtonTitle: 'Yes, delete it',
             onOk: onOk
         };

@@ -33,7 +33,7 @@ namespace Cofoundry.Domain
             var dbResult = await _dbContext
                 .PageDirectories
                 .AsNoTracking()
-                .Where(w => w.PageDirectoryId == query.Id && w.IsActive)
+                .Where(w => w.PageDirectoryId == query.Id)
                 .SingleOrDefaultAsync();
 
             EntityNotFoundException.ThrowIfNull(dbResult, query.Id);

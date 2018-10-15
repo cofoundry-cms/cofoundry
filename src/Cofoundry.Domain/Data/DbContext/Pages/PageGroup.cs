@@ -15,7 +15,6 @@ namespace Cofoundry.Domain.Data
         public int PageGroupId { get; set; }
         public string GroupName { get; set; }
         public Nullable<int> ParentGroupId { get; set; }
-        public bool IsDeleted { get; set; }
         public virtual ICollection<PageGroupItem> PageGroupItems { get; set; }
         public virtual ICollection<PageGroup> ChildPageGroups { get; set; }
         public virtual PageGroup ParentPageGroup { get; set; }
