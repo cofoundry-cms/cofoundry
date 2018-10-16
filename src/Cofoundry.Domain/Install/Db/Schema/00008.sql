@@ -174,4 +174,5 @@ alter table Cofoundry.PageDirectory drop column IsActive
 
 create unique index UIX_Page_Path on Cofoundry.[Page] (PageDirectoryId, LocaleId, UrlPath)
 create unique index UIX_PageDirectory_UrlPath on Cofoundry.PageDirectory (ParentPageDirectoryId, UrlPath)
+create unique index UIX_PageDirectory_RootDirectory on Cofoundry.PageDirectory (ParentPageDirectoryId) where ParentPageDirectoryId is null
 go

@@ -17,7 +17,7 @@ namespace Cofoundry.Web
     public class UserSessionService : IUserSessionService
     {
         /// <summary>
-        /// SignInUSer doesn't always update the HttpContext.Current.User so we set this
+        /// SignInUser doesn't always update the HttpContext.Current.User so we set this
         /// cache value instead which will last for the lifetime of the request. This is only used
         /// when signing in and isn't otherwise cached.
         /// </summary>
@@ -25,7 +25,6 @@ namespace Cofoundry.Web
         private string cachedUserIdArea = null;
 
         private readonly IHttpContextAccessor _httpContextAccessor;
-        private static readonly AuthenticationProperties _defaultAuthenticationProperties = new AuthenticationProperties() { IsPersistent = true };
         private readonly IUserAreaDefinitionRepository _userAreaDefinitionRepository;
 
         public UserSessionService(
@@ -113,7 +112,15 @@ namespace Cofoundry.Web
             userIdCache = userId;
             cachedUserIdArea = userAreaCode;
 
-            return _httpContextAccessor.HttpContext.SignInAsync(scheme, userPrincipal, _defaultAuthenticationProperties);
+            if (rememberUser)
+            {
+                var authProperties = new AuthenticationProperties() { IsPersistent = true };
+                return _httpContextAccessor.HttpContext.SignInAsync(scheme, userPrincipal, authProperties);
+            }
+            else
+            {
+                return _httpContextAccessor.HttpContext.SignInAsync(scheme, userPrincipal);
+            }
         }
 
         /// <summary>
