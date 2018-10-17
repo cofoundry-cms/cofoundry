@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.IO;
 using System.Linq;
-using System.Net.Http;
 using System.Threading.Tasks;
 using Cofoundry.Domain;
 using Cofoundry.Core.Web;
@@ -28,7 +27,7 @@ namespace Cofoundry.Web
             _formFile = formFile;
 
             FileName = _formFile.FileName;
-            MimeType = string.IsNullOrEmpty(_formFile.ContentType) ? mimeTypeService.MapFromFileName(FileName) : _formFile.ContentType;
+            MimeType = mimeTypeService.MapFromFileName(_formFile.FileName, _formFile.ContentType);
             FileLength = _formFile.Length;
         }
 
@@ -37,7 +36,6 @@ namespace Cofoundry.Web
         /// file name is specified by the client and so cannot be trusted.
         /// </summary>
         [Required]
-        [NotDangerousFileExtension]
         public string FileName { get; private set; }
 
         /// <summary>
@@ -45,7 +43,6 @@ namespace Cofoundry.Web
         /// by the client and is not to be trusted.
         /// </summary>
         [Required]
-        [NotDangerousMimeType]
         public string MimeType { get; private set; }
 
         /// <summary>

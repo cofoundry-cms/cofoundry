@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using Cofoundry.Core;
 using Cofoundry.Core.Data;
 using Cofoundry.Core.MessageAggregator;
+using System.IO;
 
 namespace Cofoundry.Domain
 {
@@ -27,6 +28,7 @@ namespace Cofoundry.Domain
         private readonly ITransactionScopeManager _transactionScopeFactory;
         private readonly IMessageAggregator _messageAggregator;
         private readonly ICommandExecutor _commandExecutor;
+        private readonly IAssetFileTypeValidator _assetFileTypeValidator;
 
         public UpdateImageAssetCommandHandler(
             CofoundryDbContext dbContext,
@@ -37,7 +39,8 @@ namespace Cofoundry.Domain
             IResizedImageAssetFileService imageAssetFileCache,
             ITransactionScopeManager transactionScopeFactory,
             IMessageAggregator messageAggregator,
-            ICommandExecutor commandExecutor
+            ICommandExecutor commandExecutor,
+            IAssetFileTypeValidator assetFileTypeValidator
             )
         {
             _dbContext = dbContext;
@@ -49,6 +52,7 @@ namespace Cofoundry.Domain
             _transactionScopeFactory = transactionScopeFactory;
             _messageAggregator = messageAggregator;
             _commandExecutor = commandExecutor;
+            _assetFileTypeValidator = assetFileTypeValidator;
         }
 
         #endregion
@@ -58,6 +62,11 @@ namespace Cofoundry.Domain
         public async Task ExecuteAsync(UpdateImageAssetCommand command, IExecutionContext executionContext)
         {
             bool hasNewFile = command.File != null;
+
+            if (hasNewFile)
+            {
+                _assetFileTypeValidator.ValidateAndThrow(command.File.FileName, command.File.MimeType, nameof(command.File));
+            }
 
             var imageAsset = await _dbContext
                 .ImageAssets

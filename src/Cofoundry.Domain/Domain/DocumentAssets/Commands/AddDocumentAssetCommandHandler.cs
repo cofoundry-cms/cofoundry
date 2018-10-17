@@ -56,7 +56,7 @@ namespace Cofoundry.Domain
             documentAsset.Title = command.Title;
             documentAsset.Description = command.Description ?? string.Empty;
             documentAsset.FileName = FilePathHelper.CleanFileName(command.Title);
-            documentAsset.VerificationToken = _randomStringGenerator.Generate(6);            if (string.IsNullOrWhiteSpace(documentAsset.FileName))
+            documentAsset.VerificationToken = _randomStringGenerator.Generate(6);
 
             if (string.IsNullOrWhiteSpace(documentAsset.FileName))
             {

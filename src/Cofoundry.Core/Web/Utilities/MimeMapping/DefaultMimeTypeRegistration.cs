@@ -19,6 +19,7 @@ namespace Cofoundry.Core.Web
             context.AddOrUpdate(".weba", "audio/webm");
             context.AddOrUpdate(".epub", "application/epub+zip");
             context.AddOrUpdate(".azw", "application/vnd.amazon.ebook");
+            context.AddOrUpdate(".csv", "text/csv");
         }
     }
 }

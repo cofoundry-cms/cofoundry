@@ -24,6 +24,7 @@ namespace Cofoundry.Domain
         private readonly ITransactionScopeManager _transactionScopeFactory;
         private readonly IMessageAggregator _messageAggregator;
         private readonly IRandomStringGenerator _randomStringGenerator;
+        private readonly IAssetFileTypeValidator _assetFileTypeValidator;
 
         public AddImageAssetCommandHandler(
             CofoundryDbContext dbContext,
@@ -32,7 +33,8 @@ namespace Cofoundry.Domain
             IImageAssetFileService imageAssetFileService,
             ITransactionScopeManager transactionScopeFactory,
             IMessageAggregator messageAggregator,
-            IRandomStringGenerator randomStringGenerator
+            IRandomStringGenerator randomStringGenerator,
+            IAssetFileTypeValidator assetFileTypeValidator
             )
         {
             _dbContext = dbContext;
@@ -42,6 +44,7 @@ namespace Cofoundry.Domain
             _transactionScopeFactory = transactionScopeFactory;
             _messageAggregator = messageAggregator;
             _randomStringGenerator = randomStringGenerator;
+            _assetFileTypeValidator = assetFileTypeValidator;
         }
 
         #endregion
@@ -59,6 +62,8 @@ namespace Cofoundry.Domain
             imageAsset.FileNameOnDisk = "file-not-saved";
             imageAsset.FileExtension = "unknown";
             imageAsset.VerificationToken = _randomStringGenerator.Generate(6);
+
+            _assetFileTypeValidator.ValidateAndThrow(command.File.FileName, command.File.MimeType, nameof(command.File));
 
             var fileStamp = AssetFileStampHelper.ToFileStamp(imageAsset.FileUpdateDate);
 

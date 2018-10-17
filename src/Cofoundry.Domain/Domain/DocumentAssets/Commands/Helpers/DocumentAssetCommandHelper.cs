@@ -7,6 +7,8 @@ using System.Threading.Tasks;
 using Cofoundry.Domain.Data;
 using Cofoundry.Core.Data;
 using Cofoundry.Core;
+using Cofoundry.Core.Web;
+using Cofoundry.Core.Validation;
 
 namespace Cofoundry.Domain
 {
@@ -17,31 +19,42 @@ namespace Cofoundry.Domain
         private readonly CofoundryDbContext _dbContext;
         private readonly IFileStoreService _fileStoreService;
         private readonly ITransactionScopeManager _transactionScopeFactory;
+        private readonly IMimeTypeService _mimeTypeService;
+        private readonly IAssetFileTypeValidator _assetFileTypeValidator;
 
         public DocumentAssetCommandHelper(
             CofoundryDbContext dbContext,
             IFileStoreService fileStoreService,
-            ITransactionScopeManager transactionScopeFactory
+            ITransactionScopeManager transactionScopeFactory,
+            IMimeTypeService mimeTypeService,
+            IAssetFileTypeValidator assetFileTypeValidator
             )
         {
             _dbContext = dbContext;
             _fileStoreService = fileStoreService;
             _transactionScopeFactory = transactionScopeFactory;
+            _mimeTypeService = mimeTypeService;
+            _assetFileTypeValidator = assetFileTypeValidator;
         }
 
         #endregion
 
         public async Task SaveFile(IUploadedFile uploadedFile, DocumentAsset documentAsset)
         {
+            documentAsset.ContentType = _mimeTypeService.MapFromFileName(uploadedFile.FileName, uploadedFile.MimeType);
+            documentAsset.FileExtension = Path.GetExtension(uploadedFile.FileName).TrimStart('.');
+            documentAsset.FileNameOnDisk = "file-not-saved";
+
+            _assetFileTypeValidator.ValidateAndThrow(documentAsset.FileExtension, documentAsset.ContentType, "File");
+            ValidateFileType(documentAsset);
+
+            var fileStamp = AssetFileStampHelper.ToFileStamp(documentAsset.FileUpdateDate);
+
             using (var inputSteam = await uploadedFile.OpenReadStreamAsync())
             {
                 bool isNew = documentAsset.DocumentAssetId < 1;
 
-                documentAsset.FileExtension = Path.GetExtension(uploadedFile.FileName).TrimStart('.');
                 documentAsset.FileSizeInBytes = Convert.ToInt32(inputSteam.Length);
-                documentAsset.ContentType = uploadedFile.MimeType;
-                documentAsset.FileNameOnDisk = "file-not-saved";
-                var fileStamp = AssetFileStampHelper.ToFileStamp(documentAsset.FileUpdateDate);
 
                 using (var scope = _transactionScopeFactory.Create(_dbContext))
                 {
@@ -63,6 +76,21 @@ namespace Cofoundry.Domain
 
                     await scope.CompleteAsync();
                 }
+            }
+        }
+        
+        private void ValidateFileType(DocumentAsset file)
+        {
+            // TODO: this i think should be wrapped in a IAssetFileValidator service
+            // Asset file settings to disable checking
+            // configurable blacklist or whitelist? 
+            if (DangerousFileConstants.DangerousFileExtensions.Contains(file.FileExtension))
+            {
+                throw new PropertyValidationException("The type of file you're trying to upload isn't allowed.", "File");
+            }
+            else if (string.IsNullOrWhiteSpace(file.ContentType) || DangerousFileConstants.DangerousMimeTypes.Contains(file.ContentType))
+            {
+                throw new PropertyValidationException("The type of file you're trying to upload isn't allowed.", "File");
             }
         }
 
@@ -89,14 +117,6 @@ namespace Cofoundry.Domain
                 || (!string.IsNullOrEmpty(file.MimeType) && ImageAssetConstants.PermittedImageTypes.ContainsValue(file.MimeType)))
                 {
                     yield return new ValidationResult("Image files shoud be uploaded in the image assets section.", new string[] { "File" });
-                }
-                else if (DangerousFileConstants.DangerousFileExtensions.Contains(ext))
-                {
-                    yield return new ValidationResult("The type of file you're trying to upload isn't allowed.", new string[] { "File" });
-                }
-                else if (string.IsNullOrWhiteSpace(file.MimeType) || DangerousFileConstants.DangerousMimeTypes.Contains(file.MimeType))
-                {
-                    yield return new ValidationResult("The type of file you're trying to upload isn't allowed.", new string[] { "File" });
                 }
 
                 // Validate filename
