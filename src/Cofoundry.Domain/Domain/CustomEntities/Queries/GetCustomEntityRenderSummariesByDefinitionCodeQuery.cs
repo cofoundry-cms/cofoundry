@@ -23,9 +23,16 @@ namespace Cofoundry.Domain
             PublishStatus = workflowStatus;
         }
 
+        /// <summary>
+        /// Required. The definition code of the custom entity to filter on.
+        /// </summary>
         [Required]
         public string CustomEntityDefinitionCode { get; set; }
 
+        /// <summary>
+        /// Used to determine which version of the custom entities to include data for. This 
+        /// defaults to Published, meaning that only published custom entities will be returned.
+        /// </summary>
         public PublishStatusQuery PublishStatus { get; set; }
     }
 }

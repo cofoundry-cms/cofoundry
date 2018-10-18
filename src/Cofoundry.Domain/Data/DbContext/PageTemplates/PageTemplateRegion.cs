@@ -29,7 +29,7 @@ namespace Cofoundry.Domain.Data
 
         /// <summary>
         /// Region names can be any text string but will likely be 
-        /// alpha-numerical human readable names like 'Heading', 'Main Content'.
+        /// alpha-numerical human readable names like 'Heading' or 'Main Content'.
         /// Region names should be unique (non-case sensitive) irrespective of
         /// whether they are custom entity regions or not.
         /// </summary>

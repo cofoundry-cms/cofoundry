@@ -65,6 +65,8 @@ namespace Cofoundry.Domain
             foreach (var code in query.CustomEntityDefinitionCodes)
             {
                 var definition = _customEntityDefinitionRepository.GetByCode(code);
+                EntityNotFoundException.ThrowIfNull(definition, code);
+
                 yield return new CustomEntityReadPermission(definition);
             }
         }

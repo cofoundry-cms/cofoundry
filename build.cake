@@ -122,10 +122,10 @@ Task("PushNuGetPackage")
         
         if (isPrerelease)
         {
-            //NuGetPush(nugets, new NuGetPushSettings {
-            //    Source = "https://www.myget.org/F/cofoundry/api/v2/package",
-            //    ApiKey = EnvironmentVariable("MYGET_API_KEY")
-            //});
+            NuGetPush(nugets, new NuGetPushSettings {
+                Source = "https://www.myget.org/F/cofoundry/api/v2/package",
+                ApiKey = EnvironmentVariable("MYGET_API_KEY")
+            });
         }
         else
         {

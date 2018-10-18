@@ -43,8 +43,7 @@ namespace Cofoundry.Domain
 
         /// <summary>
         /// Used to determine which version of the page to include data for. This 
-        /// defaults to Latest, meaning that a draft page will be returned ahead of a
-        /// published version of the page.
+        /// defaults to Published, meaning that only published pages will be returned.
         /// </summary>
         public PublishStatusQuery PublishStatus { get; set; }
 

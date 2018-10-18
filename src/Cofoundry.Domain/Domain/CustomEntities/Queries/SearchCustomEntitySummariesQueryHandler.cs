@@ -105,6 +105,8 @@ namespace Cofoundry.Domain
         public IEnumerable<IPermissionApplication> GetPermissions(SearchCustomEntitySummariesQuery query)
         {
             var definition = _customEntityDefinitionRepository.GetByCode(query.CustomEntityDefinitionCode);
+            EntityNotFoundException.ThrowIfNull(definition, query.CustomEntityDefinitionCode);
+
             yield return new CustomEntityReadPermission(definition);
         }
 

@@ -31,8 +31,15 @@ namespace Cofoundry.Domain
         [PositiveInteger]
         public int CustomEntityId { get; set; }
 
+        /// <summary>
+        /// Used to determine which version of the custom entity to include data for. This 
+        /// defaults to Published, meaning that only published custom entities will be returned.
+        /// </summary>
         public PublishStatusQuery PublishStatus { get; set; }
 
+        /// <summary>
+        /// Use this to specify a specific version to return in the query. Mandatory when using PublishStatusQuery.SpecificVersion
+        /// </summary>
         public int? CustomEntityVersionId { get; set; }
 
         [Required]

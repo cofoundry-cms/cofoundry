@@ -22,7 +22,20 @@ namespace Cofoundry.Domain.Data
         }
 
         /// <summary>
-        /// Filters the collection to only include the verion with the specific Id
+        /// Filters the collection to only include records associated with
+        /// the specified custom entity UrlSlug.
+        /// </summary>
+        /// <param name="urlSlug">Url slug of the custom entity record to filter by.</param>
+        public static IQueryable<CustomEntityVersion> FilterByCustomEntityUrlSlug(this IQueryable<CustomEntityVersion> customEntities, string urlSlug)
+        {
+            var result = customEntities
+                .Where(e => e.CustomEntity.UrlSlug == urlSlug);
+
+            return result;
+        }
+
+        /// <summary>
+        /// Filters the collection to only include the version with the specific Id
         /// </summary>
         /// <param name="customEntityVersionId">Database id of the version to filter by.</param>
         public static IQueryable<CustomEntityVersion> FilterByCustomEntityVersionId(this IQueryable<CustomEntityVersion> customEntities, int customEntityVersionId)

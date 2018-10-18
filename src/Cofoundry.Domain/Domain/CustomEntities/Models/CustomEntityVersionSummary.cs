@@ -6,8 +6,17 @@ using System.Threading.Tasks;
 
 namespace Cofoundry.Domain
 {
+    /// <summary>
+    /// Light-weight information about a specific custom entity version
+    /// that is ideal for displaying in a list. No data model or page data
+    /// is included in this projection.
+    /// </summary>
     public class CustomEntityVersionSummary : ICreateAudited
     {
+        /// <summary>
+        /// Database id of the specific custom entity version this 
+        /// model represents.
+        /// </summary>
         public int CustomEntityVersionId { get; set; }
         
         /// <summary>
@@ -19,8 +28,15 @@ namespace Cofoundry.Domain
         /// </summary>
         public int DisplayVersion { get; set; }
 
+        /// <summary>
+        /// Indicates if the page is marked as published or not, which allows the page
+        /// to be shown on the live site if the PublishDate has passed.
+        /// </summary>
         public string Title { get; set; }
-                
+
+        /// <summary>
+        /// The workflow state of this version e.g. draft/published.
+        /// </summary>
         public WorkFlowStatus WorkFlowStatus { get; set; }
 
         /// <summary>
@@ -30,6 +46,9 @@ namespace Cofoundry.Domain
         /// </summary>
         public bool IsLatestPublishedVersion { get; set; }
 
+        /// <summary>
+        /// Simple audit data for custom entity creation.
+        /// </summary>
         public CreateAuditData AuditData { get; set; }
     }
 }

@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Cofoundry.Domain.Data;
 using Cofoundry.Domain.CQS;
+using Cofoundry.Core;
 
 namespace Cofoundry.Domain
 {
@@ -42,6 +43,8 @@ namespace Cofoundry.Domain
         public IEnumerable<IPermissionApplication> GetPermissions(GetPageRoutesByCustomEntityDefinitionCodeQuery query)
         {
             var definition = _customEntityDefinitionRepository.GetByCode(query.CustomEntityDefinitionCode);
+            EntityNotFoundException.ThrowIfNull(definition, query.CustomEntityDefinitionCode);
+
             yield return new CustomEntityReadPermission(definition);
             yield return new PageReadPermission();
         }

@@ -61,6 +61,19 @@ namespace Cofoundry.Domain.Data
         }
 
         /// <summary>
+        /// Filters the collection to only include records associated with
+        /// the specified custom entity UrlSlug.
+        /// </summary>
+        /// <param name="urlSlug">Url slug of the custom entity record to filter by.</param>
+        public static IQueryable<CustomEntityPublishStatusQuery> FilterByCustomEntityUrlSlug(this IQueryable<CustomEntityPublishStatusQuery> customEntities, string urlSlug)
+        {
+            var result = customEntities
+                .Where(e => e.CustomEntity.UrlSlug == urlSlug);
+
+            return result;
+        }
+
+        /// <summary>
         /// Fitlers the results to only include custom entities of a specific type.
         /// </summary>
         /// <param name="customEntityDefinitionCode">Unique definition code of the custom entity type to filter by.</param>

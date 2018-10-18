@@ -115,6 +115,18 @@ namespace Cofoundry.Domain
             return _queryExecutor.ExecuteAsync(query, executionContext);
         }
 
+        /// <summary>
+        /// Returns custom entities filtered on the url slug value. This query
+        /// can return multiple custom entities because unique UrlSlugs is an
+        /// optional setting on the custom entity definition.
+        /// </summary>
+        /// <param name="query">Query parameters.</param>
+        /// <param name="executionContext">Optional execution context to use when executing the query. Useful if you need to temporarily elevate your permission level.</param>
+        public Task<ICollection<CustomEntityRenderSummary>> GetCustomEntityRenderSummariesByUrlSlugAsync(GetCustomEntityRenderSummariesByUrlSlugQuery query, IExecutionContext executionContext = null)
+        {
+            return _queryExecutor.ExecuteAsync(query, executionContext);
+        }
+
         #endregion
 
         #region CustomEntitySummary

@@ -14,10 +14,20 @@ namespace Cofoundry.Domain
     /// </summary>
     public class CustomEntityDataModelSchema : IDynamicDataModelSchema
     {
+        /// <summary>
+        /// The six character definition code that represents the type of custom
+        /// entity e.g. Blog Post, Project, Product. The definition code is defined
+        /// in a class that inherits from ICustomEntityDefinition.
+        /// </summary>
         public string CustomEntityDefinitionCode { get; set; }
 
         public string DataTemplateName { get; set; }
 
+        /// <summary>
+        /// Data model property meta data, including UI display details
+        /// and validation attributes. This is typically used for dynamically generating 
+        /// parts of the admin UI.
+        /// </summary>
         public ICollection<DynamicDataModelSchemaProperty> DataModelProperties { get; set; }
     }
 }

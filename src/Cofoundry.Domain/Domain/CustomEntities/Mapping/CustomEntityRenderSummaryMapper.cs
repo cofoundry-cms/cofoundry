@@ -36,26 +36,6 @@ namespace Cofoundry.Domain
 
         #endregion
 
-        #region ICustomEntityRenderSummaryMapper Implementation
-
-        /// <summary>
-        /// Maps a collection of EF CustomEntityVersion record from the db into CustomEntityRenderSummary 
-        /// objects.
-        /// </summary>
-        /// <param name="dbResult">CustomEntityVersion records from the database.</param>
-        /// <param name="executionContext">Context to run any sub queries under.</param>
-        public async Task<ICollection<CustomEntityRenderSummary>> MapAsync(
-            ICollection<CustomEntityVersion> dbResults,
-            IExecutionContext executionContext
-            )
-        {
-            var routingsQuery = GetPageRoutingQuery(dbResults);
-            var allRoutings = await _queryExecutor.ExecuteAsync(routingsQuery, executionContext);
-            var allLocales = await _queryExecutor.ExecuteAsync(new GetAllActiveLocalesQuery(), executionContext);
-
-            return Map(dbResults, allRoutings, allLocales);
-        }
-
         /// <summary>
         /// Maps an EF CustomEntityVersion record from the db into a CustomEntityRenderSummary 
         /// object. If the db record is null then null is returned.
@@ -82,7 +62,23 @@ namespace Cofoundry.Domain
             return MapSingle(dbResult, routing, locale);
         }
 
-        #endregion
+        /// <summary>
+        /// Maps a collection of EF CustomEntityVersion record from the db into CustomEntityRenderSummary 
+        /// objects.
+        /// </summary>
+        /// <param name="dbResult">CustomEntityVersion records from the database.</param>
+        /// <param name="executionContext">Context to run any sub queries under.</param>
+        public async Task<ICollection<CustomEntityRenderSummary>> MapAsync(
+            ICollection<CustomEntityVersion> dbResults,
+            IExecutionContext executionContext
+            )
+        {
+            var routingsQuery = GetPageRoutingQuery(dbResults);
+            var allRoutings = await _queryExecutor.ExecuteAsync(routingsQuery, executionContext);
+            var allLocales = await _queryExecutor.ExecuteAsync(new GetAllActiveLocalesQuery(), executionContext);
+
+            return Map(dbResults, allRoutings, allLocales);
+        }
 
         #region helpers
 

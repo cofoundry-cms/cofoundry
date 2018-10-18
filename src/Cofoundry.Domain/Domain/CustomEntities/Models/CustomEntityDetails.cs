@@ -18,8 +18,18 @@ namespace Cofoundry.Domain
         /// </summary>
         public int CustomEntityId { get; set; }
 
+        /// <summary>
+        /// Optional locale assigned to the custom entity
+        /// if used in a localized site.
+        /// </summary>
         public ActiveLocale Locale { get; set; }
 
+        /// <summary>
+        /// The string identifier slug which can
+        /// be used as a lookup identifier or in the routing 
+        /// of the custom entity page. Can be forced to be unique
+        /// by a setting on the custom entity definition.
+        /// </summary>
         public string UrlSlug { get; set; }
 
         /// <summary>
