@@ -35,13 +35,23 @@ namespace Cofoundry.Domain
         {
             const string WHY_VALID_CODE_MESSAGE = "All entity definition codes must be 6 characters and contain only non-unicode caracters.";
 
-            var nullName = definitions
+            var nullCode = definitions
                 .Where(d => string.IsNullOrWhiteSpace(d.EntityDefinitionCode))
+                .FirstOrDefault();
+
+            if (nullCode != null)
+            {
+                var message = nullCode.GetType().Name + " does not have a definition code specified.";
+                throw new InvalidEntityDefinitionException(message, nullCode, definitions);
+            }
+
+            var nullName = definitions
+                .Where(d => string.IsNullOrWhiteSpace(d.Name))
                 .FirstOrDefault();
 
             if (nullName != null)
             {
-                var message = nullName.GetType().Name + " does not have a definition code specified.";
+                var message = nullName.GetType().Name + " does not have a name specified.";
                 throw new InvalidEntityDefinitionException(message, nullName, definitions);
             }
 
@@ -67,14 +77,14 @@ namespace Cofoundry.Domain
                 throw new InvalidEntityDefinitionException(message, dulpicateName.First(), definitions);
             }
 
-            var nameNot6Chars = definitions
+            var codeNot6Chars = definitions
                 .Where(d => d.EntityDefinitionCode.Length != 6)
                 .FirstOrDefault();
 
-            if (nameNot6Chars != null)
+            if (codeNot6Chars != null)
             {
-                var message = nameNot6Chars.GetType().Name + " has a definition code that is not 6 characters in length. " + WHY_VALID_CODE_MESSAGE;
-                throw new InvalidEntityDefinitionException(message, nameNot6Chars, definitions);
+                var message = codeNot6Chars.GetType().Name + " has a definition code that is not 6 characters in length. " + WHY_VALID_CODE_MESSAGE;
+                throw new InvalidEntityDefinitionException(message, codeNot6Chars, definitions);
             }
 
             var notValidCode = definitions

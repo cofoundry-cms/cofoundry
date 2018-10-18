@@ -109,7 +109,6 @@ namespace Cofoundry.Core.Tests
 
         #endregion
 
-
         #region FileExtensionContainsInvalidChars
 
         [Theory]
@@ -159,6 +158,46 @@ namespace Cofoundry.Core.Tests
             var result = FilePathHelper.FileExtensionContainsInvalidChars(s);
 
             Assert.True(result);
+        }
+
+        #endregion
+
+        #region CombineVirtualPath
+
+        [Theory]
+        [InlineData(null)]
+        [InlineData("")]
+        [InlineData(" ")]
+        [InlineData("    ")]
+        public void CombineVirtualPath_WhenNullOrWhitespace_ReturnsEmptyPath(string s)
+        {
+            var result = FilePathHelper.CombineVirtualPath(s);
+
+            Assert.Equal("/", result);
+        }
+
+        [Theory]
+        [InlineData(null)]
+        [InlineData("")]
+        [InlineData(" ")]
+        [InlineData("    ")]
+        public void CombineVirtualPath_WhenMultipleNullOrWhitespace_ReturnsPath(string s)
+        {
+            var result = FilePathHelper.CombineVirtualPath(s, s, s);
+
+            Assert.Equal("/", result);
+        }
+
+        [Theory]
+        [InlineData("path", "to", "somefile.exe", "/path/to/somefile.exe")]
+        [InlineData("/path/", "/to/", "/somefile.exe", "/path/to/somefile.exe")]
+        [InlineData("//path", "TO ", "some-file.exe", "/path/TO /some-file.exe")]
+        [InlineData("\\path\\", "\\to\\", "/somefile.exe", "/path/to/somefile.exe")]
+        public void CombineVirtualPath_WhenValid_ReturnsCombined(string path1, string path2, string path3, string expected)
+        {
+            var result = FilePathHelper.CombineVirtualPath(path1, path2, path3);
+
+            Assert.Equal(expected, result);
         }
 
         #endregion

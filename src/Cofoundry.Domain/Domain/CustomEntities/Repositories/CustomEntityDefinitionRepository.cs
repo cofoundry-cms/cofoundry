@@ -25,13 +25,23 @@ namespace Cofoundry.Domain
         {
             const string WHY_VALID_CODE_MESSAGE = "All custom entity definition codes must be 6 characters and contain only non-unicode caracters.";
 
-            var nullName = definitions
+            var nullCode = definitions
                 .Where(d => string.IsNullOrWhiteSpace(d.CustomEntityDefinitionCode))
+                .FirstOrDefault();
+
+            if (nullCode != null)
+            {
+                var message = nullCode.GetType().Name + " does not have a definition code specified.";
+                throw new InvalidCustomEntityDefinitionException(message, nullCode, definitions);
+            }
+
+            var nullName = definitions
+                .Where(d => string.IsNullOrWhiteSpace(d.Name))
                 .FirstOrDefault();
 
             if (nullName != null)
             {
-                var message = nullName.GetType().Name + " does not have a definition code specified.";
+                var message = nullName.GetType().Name + " does not have a name specified.";
                 throw new InvalidCustomEntityDefinitionException(message, nullName, definitions);
             }
 

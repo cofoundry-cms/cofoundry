@@ -112,7 +112,8 @@ namespace Cofoundry.Core
         {
             var trimmedPaths = paths
                 .Where(p => !string.IsNullOrEmpty(p))
-                .Select(p => p.Trim(VIRTUAL_PATH_SEPARATOR));
+                .Select(p => p.Trim(ALL_PATH_SEPARATORS))
+                .Where(p => !string.IsNullOrWhiteSpace(p));
 
             var result = VIRTUAL_PATH_SEPARATOR + string.Join(VIRTUAL_PATH_SEPARATOR_AS_STRING, trimmedPaths);
             return result;
