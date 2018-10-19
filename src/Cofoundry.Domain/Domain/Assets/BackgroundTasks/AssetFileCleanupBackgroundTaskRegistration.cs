@@ -7,9 +7,18 @@ namespace Cofoundry.Domain
 {
     public class AssetFileCleanupBackgroundTaskRegistration : IBackgroundTaskRegistration
     {
+        private readonly AssetFileCleanupSettings _assetFileCleanupSettings;
+
+
+        public AssetFileCleanupBackgroundTaskRegistration(
+            AssetFileCleanupSettings assetFileCleanupSettings
+            )
+        {
+            _assetFileCleanupSettings = assetFileCleanupSettings;
+        }
         public void Register(IBackgroundTaskScheduler scheduler)
         {
-            scheduler.RegisterAsyncRecurringTask<AssetFileCleanupBackgroundTask>(60);
+            scheduler.RegisterAsyncRecurringTask<AssetFileCleanupBackgroundTask>(_assetFileCleanupSettings.BackgroundTaskFrequencyInMinutes);
         }
     }
 }
