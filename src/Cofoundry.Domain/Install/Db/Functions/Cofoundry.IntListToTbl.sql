@@ -1,4 +1,4 @@
-﻿CREATE FUNCTION Cofoundry.IntListToTbl (@list nvarchar(MAX))
+﻿CREATE FUNCTION Cofoundry.IntListToTbl (@list varchar(MAX))
  RETURNS @tbl TABLE (number int NULL) AS
 BEGIN
    DECLARE @pos        int,
