@@ -1,10 +1,12 @@
 ﻿CREATE FUNCTION Cofoundry.IntListToTbl (@list nvarchar(MAX))
- RETURNS @tbl TABLE (number int NOT NULL) AS
+ RETURNS @tbl TABLE (number int NULL) AS
 BEGIN
    DECLARE @pos        int,
            @nextpos    int,
            @valuelen   int
 
+   IF (@list is null) RETURN;
+   
    SELECT @pos = 0, @nextpos = 1
 
    WHILE @nextpos > 0

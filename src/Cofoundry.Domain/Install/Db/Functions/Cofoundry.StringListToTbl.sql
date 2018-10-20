@@ -15,6 +15,8 @@ BEGIN
            @leftover nvarchar(4000),
            @tmpval   nvarchar(4000)
 
+   IF (@list is null) RETURN;
+
    SET @textpos = 1
    SET @leftover = ''
    WHILE @textpos <= datalength(@list) / 2
