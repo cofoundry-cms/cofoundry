@@ -128,10 +128,10 @@ namespace Cofoundry.Core.DistributedLocks
             var result = new DistributedLock();
             if (reader[nameof(result.DistributedLockId)] == null) return null;
 
-            result.DistributedLockId = (string)reader["DistributedLockId"];
-            result.LockedByLockingId = (Guid?)reader["LockingId"];
-            result.LockDate = (DateTime?)reader["LockDate"];
-            result.ExpiryDate = (DateTime?)reader["ExpiryDate"];
+            result.DistributedLockId = reader["DistributedLockId"] as string;
+            result.LockedByLockingId = reader["LockingId"] as Guid?;
+            result.LockDate = reader["LockDate"] as DateTime?;
+            result.ExpiryDate = reader["ExpiryDate"] as DateTime?;
 
             return result;
         }
