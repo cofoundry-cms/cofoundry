@@ -229,7 +229,7 @@ namespace Cofoundry.Domain
             }
 
             if (!permissionsToInclude.Any()) return;
-            ValidatePermissions(permissionsToInclude);
+            ValidatePermissions(dbRole.RolePermissions, permissionsToInclude);
 
             // add new permissions
             IEnumerable<IPermission> permissionsToAdd;
@@ -266,13 +266,15 @@ namespace Cofoundry.Domain
         /// permission. E.g. having 'UpdatePage' permission without also
         /// having 'ReadPage' permission.
         /// </summary>
-        private void ValidatePermissions(IEnumerable<IPermission> permissions)
+        private void ValidatePermissions(ICollection<RolePermission> existingPermissions, IEnumerable<IPermission> permissions)
         {
             var entityWithoutReadPermission = permissions
                 .FilterEntityPermissions()
                 .Where(p => !string.IsNullOrWhiteSpace(p.EntityDefinition?.EntityDefinitionCode))
                 .GroupBy(p => p.EntityDefinition.EntityDefinitionCode)
-                .Where(g => !g.Any(p => p.PermissionType?.Code == CommonPermissionTypes.ReadPermissionCode));
+                .Where(g => 
+                    !g.Any(p => p.PermissionType?.Code == CommonPermissionTypes.ReadPermissionCode) 
+                    && !existingPermissions.Any(p => p.Permission.EntityDefinitionCode == g.Key && p.Permission.PermissionCode == CommonPermissionTypes.ReadPermissionCode));
 
             foreach (var entity in entityWithoutReadPermission)
             {

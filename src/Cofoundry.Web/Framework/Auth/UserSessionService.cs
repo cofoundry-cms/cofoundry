@@ -48,8 +48,8 @@ namespace Cofoundry.Web
         {
             if (userIdCache.HasValue) return userIdCache;
 
-            var user = _httpContextAccessor.HttpContext?.User;
-            var userIdClaim = user.FindFirst(ClaimTypes.NameIdentifier);
+            var user = _httpContextAccessor?.HttpContext?.User;
+            var userIdClaim = user?.FindFirst(ClaimTypes.NameIdentifier);
 
             if (userIdClaim == null) return null;
 
