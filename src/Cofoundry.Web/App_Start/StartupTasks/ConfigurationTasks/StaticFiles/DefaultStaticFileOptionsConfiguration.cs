@@ -47,7 +47,7 @@ namespace Cofoundry.Web
             if (!setCachingHeaders) return;
 
             // cache for 1 year
-            context.Context.Response.Headers.Add(HeaderNames.CacheControl, new[] { "public,max-age=" + _staticFilesSettings.MaxAge });
+            context.Context.Response.Headers[HeaderNames.CacheControl] = new[] { "public,max-age=" + _staticFilesSettings.MaxAge };
         }
     }
 }

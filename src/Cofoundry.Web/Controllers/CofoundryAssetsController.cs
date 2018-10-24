@@ -227,7 +227,7 @@ namespace Cofoundry.Web
 
         private void SetCacheHeader(int maxAge)
         {
-            this.Response.Headers.Add(HeaderNames.CacheControl, new[] { "public,max-age=" + maxAge });
+            Response.Headers[HeaderNames.CacheControl] = new[] { "public,max-age=" + maxAge };
         }
     }
 }
