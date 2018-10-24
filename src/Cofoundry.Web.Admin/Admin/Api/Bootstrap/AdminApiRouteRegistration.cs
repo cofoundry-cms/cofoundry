@@ -213,7 +213,7 @@ namespace Cofoundry.Web.Admin
                 .MapGet()
                 .MapPost()
                 .MapPatch("draft", "PatchDraft")
-                .MapDelete("draft")
+                .MapDelete("draft", "DeleteDraft")
                 .MapPatch("draft/publish", "Publish")
                 .MapPatch("published/unpublish", "UnPublish")
                 ;
