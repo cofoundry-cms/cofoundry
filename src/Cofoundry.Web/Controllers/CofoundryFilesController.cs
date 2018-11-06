@@ -34,22 +34,27 @@ namespace Cofoundry.Web
 
         public async Task<ActionResult> RobotsTxt()
         {
-            string robotsTxt = "Sitemap: " + _siteUriResolver.MakeAbsolute("/sitemap.xml") + "\r\n";
+            string robotsTxt = string.Empty;
 
             if (_debugSettings.DisableRobotsTxt)
             {
                 // Disallow when we're on the server but in debug mode
-                robotsTxt += "User-agent: iisbot/1.0 (+http://www.iis.net/iisbot.html)\r\nAllow: /\r\nUser-agent: *\r\nDisallow: /";
+                robotsTxt = "User-agent: iisbot/1.0 (+http://www.iis.net/iisbot.html)\r\nAllow: /\r\nUser-agent: *\r\nDisallow: /";
             }
             else
             {
                 var settings = await _queryExecutor.ExecuteAsync(new GetSettingsQuery<SeoSettings>());
-                robotsTxt += settings.RobotsTxt;
+                robotsTxt = settings.RobotsTxt;
 
                 if (string.IsNullOrEmpty(robotsTxt))
                 {
                     Response.StatusCode = 404;
                     return Content("Not found", "text/plain", Encoding.UTF8);
+                }
+
+                if (robotsTxt.IndexOf("sitemap", StringComparison.OrdinalIgnoreCase) == -1)
+                {
+                    robotsTxt += "\r\nSitemap: " + _siteUriResolver.MakeAbsolute("/sitemap.xml");
                 }
             }
 

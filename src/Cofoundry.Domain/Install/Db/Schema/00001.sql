@@ -1089,7 +1089,7 @@ insert Cofoundry.[Role] (Title, SpecialistRoleTypeCode, UserAreaCode) values (N'
 /****** Cofoundry.Setting ******/
 
 insert Cofoundry.Setting (SettingKey, SettingValue, CreateDate, UpdateDate) values ('ApplicationName', N'"Cofoundry"', GetUtcDate(), GetUtcDate())
-insert Cofoundry.Setting (SettingKey, SettingValue, CreateDate, UpdateDate) values ('RobotsTxt', N'"User-agent: *\r\nSitemap: /sitemap.xml"', GetUtcDate(), GetUtcDate())
+insert Cofoundry.Setting (SettingKey, SettingValue, CreateDate, UpdateDate) values ('RobotsTxt', N'"User-agent: *"', GetUtcDate(), GetUtcDate())
 insert Cofoundry.Setting (SettingKey, SettingValue, CreateDate, UpdateDate) values ('HumansTxt', N'""', GetUtcDate(), GetUtcDate())
 insert Cofoundry.Setting (SettingKey, SettingValue, CreateDate, UpdateDate) values ('GoogleAnalyticsUAId', N'""', GetUtcDate(), GetUtcDate())
 insert Cofoundry.Setting (SettingKey, SettingValue, CreateDate, UpdateDate) values ('IsSetup', N'false', GetUtcDate(), GetUtcDate())
