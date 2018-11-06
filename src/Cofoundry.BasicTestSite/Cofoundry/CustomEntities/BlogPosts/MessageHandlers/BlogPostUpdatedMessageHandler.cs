@@ -8,24 +8,24 @@ using System.Threading.Tasks;
 
 namespace Cofoundry.BasicTestSite
 {
-    public class BlogPostUpdatedMessageHandler : IMessageHandler<ICustomEntityContentUpdatedMessage>
+public class BlogPostUpdatedMessageHandler : IMessageHandler<ICustomEntityContentUpdatedMessage>
+{
+    private readonly ICommandExecutor _commandExecutor;
+
+    public BlogPostUpdatedMessageHandler(
+        ICommandExecutor commandExecutor
+        )
     {
-        private readonly IQueryExecutor _queryExecutor;
-
-        public BlogPostUpdatedMessageHandler(
-            IQueryExecutor queryExecutor
-            )
-        {
-            _queryExecutor = queryExecutor;
-        }
-
-        public Task HandleAsync(ICustomEntityContentUpdatedMessage message) 
-        {
-            if (message.CustomEntityDefinitionCode != BlogPostCustomEntityDefinition.DefinitionCode) return Task.CompletedTask;
-
-            // TODO: stuff
-
-            return Task.CompletedTask;
-        }
+        _commandExecutor = commandExecutor;
     }
+
+    public Task HandleAsync(ICustomEntityContentUpdatedMessage message) 
+    {
+        if (message.CustomEntityDefinitionCode != BlogPostCustomEntityDefinition.DefinitionCode) return Task.CompletedTask;
+
+        // TODO: Add logic here
+
+        return Task.CompletedTask;
+    }
+}
 }

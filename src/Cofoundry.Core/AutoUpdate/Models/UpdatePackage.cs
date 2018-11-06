@@ -11,17 +11,11 @@ namespace Cofoundry.Core.AutoUpdate
     /// </summary>
     public class UpdatePackage
     {
-        #region constructor
-
         public UpdatePackage()
         {
             VersionedCommands = new List<IVersionedUpdateCommand>();
             DependentModules = new List<string>();
         }
-
-        #endregion
-
-        #region public properties
 
         /// <summary>
         /// Unique identifier for the module
@@ -43,6 +37,14 @@ namespace Cofoundry.Core.AutoUpdate
         /// </summary>
         public ICollection<string> DependentModules { get; set; }
 
-        #endregion
+        /// <summary>
+        /// Indicates if this contains one-off versioned updates. This basically
+        /// ignores "always update commands" when checking to see if an exception
+        /// should be thrown if the db is locked for updates and updates are required. 
+        /// </summary>
+        public bool ContainsVersionUpdates()
+        {
+            return !EnumerableHelper.IsNullOrEmpty(VersionedCommands);
+        }
     }
 }

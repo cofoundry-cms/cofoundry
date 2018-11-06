@@ -33,6 +33,10 @@ namespace Cofoundry.Core.Data
         {
             _innerScope.Complete();
 
+            // Dispose of the inner scope so transactions are freed up for
+            // code running in the on-complete actions
+            DisposeInnerScope();
+
             // Run all actions
             while (_runOnCompleteActions.Count > 0)
             {
@@ -43,13 +47,21 @@ namespace Cofoundry.Core.Data
         
         public void Dispose()
         {
+            DisposeInnerScope();
+        }
+
+        private void DisposeInnerScope()
+        {
             if (_innerScope != null)
             {
+                var scopeToDispose = _innerScope;
+                _innerScope = null;
+
                 // De-register this scope as the primary transaction so others can be created
                 _transactionScopeManager?.DeregisterTransaction(this);
 
                 // Dispose of the EF transaction which should tidy itself up.
-                _innerScope.Dispose();
+                scopeToDispose.Dispose();
             }
         }
 

@@ -74,7 +74,15 @@ namespace Cofoundry.Core.AutoUpdate
 
             if (!packages.Any()) return;
 
-            if (await IsLockedAsync())
+            var isLocked = await IsLockedAsync();
+
+            if (isLocked && !packages.Any(p => p.ContainsVersionUpdates()))
+            {
+                // if locked ignore always-update commands and only throw if there
+                // are required version updates.
+                return;
+            }
+            else if (isLocked)
             {
                 throw new DatabaseLockedException();
             }
