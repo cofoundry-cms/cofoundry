@@ -13,6 +13,15 @@
         The page you're looking for could not be found.
     </p>
 }
+else if (Model.StatusCode == 503)
+{
+    <h1>
+        Temporarily unavailable
+    </h1>
+    <p>
+        The site is temporarily unavailable. Please try again later.
+    </p>
+}
 else
 {
     <h1>

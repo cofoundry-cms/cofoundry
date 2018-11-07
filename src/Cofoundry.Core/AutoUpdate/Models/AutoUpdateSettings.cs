@@ -14,6 +14,7 @@ namespace Cofoundry.Core.AutoUpdate
         public AutoUpdateSettings()
         {
             ProcessLockTimeoutInSeconds = 600;
+            RequestWaitForCompletionTimeInSeconds = 15;
         }
 
         [Obsolete("Please use 'Disabled' which is more inline with naming of this functionality in other settings files.")]
@@ -33,5 +34,14 @@ namespace Cofoundry.Core.AutoUpdate
         /// this depending on your needs.
         /// </summary>
         public int ProcessLockTimeoutInSeconds { get; set; }
+
+        /// <summary>
+        /// The amount of time (in seconds) that a request should pause
+        /// and wait for the auto-update process to complete before 
+        /// returning a 5.3 "temporarily unavailable" response to the
+        /// client. This defaults to 15 seconds. Setting this to 0 will
+        /// cause the process not to wait.
+        /// </summary>
+        public int RequestWaitForCompletionTimeInSeconds { get; set; }
     }
 }

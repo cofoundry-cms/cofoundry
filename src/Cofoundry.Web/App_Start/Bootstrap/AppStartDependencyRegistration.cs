@@ -14,6 +14,7 @@ namespace Cofoundry.Web
                 .RegisterAll<IRazorViewEngineOptionsConfiguration>()
                 .Register<IStaticFileOptionsConfiguration, DefaultStaticFileOptionsConfiguration>()
                 .Register<IAuthConfiguration, DefaultAuthConfiguration>()
+                .RegisterSingleton<AutoUpdateState>()
             ;
         }
     }
