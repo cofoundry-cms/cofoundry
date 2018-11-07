@@ -38,7 +38,7 @@ namespace Cofoundry.Core.AutoUpdate
         /// <summary>
         /// The amount of time (in seconds) that a request should pause
         /// and wait for the auto-update process to complete before 
-        /// returning a 5.3 "temporarily unavailable" response to the
+        /// returning a 503 "temporarily unavailable" response to the
         /// client. This defaults to 15 seconds. Setting this to 0 will
         /// cause the process not to wait.
         /// </summary>
