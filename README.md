@@ -11,14 +11,37 @@ Cofoundry is an open source .Net Core CMS and application framework focusing on:
 - Extensible & flexible architecture
 - Simple & user friendly content management
 
-Find out more at [Cofoundry.org](https://www.cofoundry.org/) or head to the [docs wiki](https://github.com/cofoundry-cms/cofoundry/wiki) to get started.
 
-### Getting Started
+## Getting Started
 
-- [Overview](https://github.com/cofoundry-cms/cofoundry/wiki/Overview)
-- [Sample Projects](https://github.com/cofoundry-cms/cofoundry/wiki/Sample-Projects)
-- [Installing](https://github.com/cofoundry-cms/cofoundry/wiki/Installing)
-- [Status and Roadmap](https://github.com/cofoundry-cms/cofoundry/wiki/Status-and-Roadmap)
-- [Feedback & Community](https://github.com/cofoundry-cms/cofoundry/wiki/Feedback-&-Community)
-- [Full Documentation](https://github.com/cofoundry-cms/cofoundry/wiki)
+Find out more at [Cofoundry.org](https://www.cofoundry.org/) or head to the [docs](https://www.cofoundry.org/docs) to get started.
+
+## Feedback & Community
+
+We're keen to hear feedback about Cofoundry. Whether you've been playing about with the samples, run into some issues or just browsed the docs and have an opinion on the concept we'd love to hear it.
+
+Here's a list of the best ways to give feedback and keep in touch
+
+- [Chat with us on Gitter](https://gitter.im/cofoundry-cms/cofoundry)
+- [Follow us on Twitter](https://twitter.com/cofoundrycms)
+- [Submit an issue](https://github.com/cofoundry-cms/cofoundry/issues)
+- [Ask a question on StackOverflow](http://stackoverflow.com/search?q=cofoundry)
+- [Contact us directly](https://www.cofoundry.org/contact)
+- [Follow our blog](https://www.cofoundry.org/blog)
+
+## Roadmap
+
+For up to date information on what's going into up-coming releases check out our [GitHub milestones](https://github.com/cofoundry-cms/cofoundry/milestones).
+
+You can also keep up to date with recent developments on [our blog](https://www.cofoundry.org/blog).
+
+### SemVer & 1.0
+
+As per [SemVer](https://semver.org/) our 0.x set of releases are considered early development and breaking changes can happen at any point, however our approach is that patch releases are non-breaking while minor releases can be breaking, but will be documented as such in release notes.
+
+Having been open sourced from an existing product, Cofoundry is already loaded with features, and is already used in production by our sponsor agency [Uber Digital](https://www.uberdigital.com). What 0.x releases do give us is the agility to make breaking changes and alter our public API as we receive feedback from the public, without constantly publishing major releases.
+
+## Contributing
+
+For up to date information check out our [contributor guidelines](https://github.com/cofoundry-cms/cofoundry/blob/master/CONTRIBUTING.md)
  
