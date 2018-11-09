@@ -14,7 +14,7 @@ Cofoundry is an open source .Net Core CMS and application framework focusing on:
 
 ## Getting Started
 
-Find out more at [Cofoundry.org](https://www.cofoundry.org/) or head to the [docs](https://www.cofoundry.org/docs) to get started.
+Find out more at [Cofoundry.org](https://www.cofoundry.org/) or head to the [docs](https://github.com/cofoundry-cms/cofoundry/wiki) to get started.
 
 ## Feedback & Community
 
