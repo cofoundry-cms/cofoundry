@@ -43,9 +43,9 @@ function (
         vm.formLoadState = new LoadState(true);
         vm.userArea = options;
 
-        vm.userAreaCode = options.userAreaCode + 'USR';
-        vm.canUpdate = permissionValidationService.canUpdate(vm.userAreaCode);
-        vm.canDelete = permissionValidationService.canDelete(vm.userAreaCode);
+        var entityDefinitionCode = options.userAreaCode === 'COF' ? 'COFUSR' : 'COFUSN';
+        vm.canUpdate = permissionValidationService.canUpdate(entityDefinitionCode);
+        vm.canDelete = permissionValidationService.canDelete(entityDefinitionCode);
 
         // Init
         $q.all([loadRoles(), loadUser()])
