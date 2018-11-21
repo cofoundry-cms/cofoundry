@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using Cofoundry.Domain.CQS;
 using Cofoundry.Domain;
-using Cofoundry.Domain.MailTemplates;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 
@@ -42,16 +41,13 @@ namespace Cofoundry.Web.Identity
 
         #region Log in
 
-        public async Task<AuthenticationResult> LogUserInAsync(Controller controller, ILoginViewModel vm, IUserAreaDefinition userAreaToLogInTo)
+        public async Task<LoginResult> LogUserInAsync(Controller controller, ILoginViewModel vm, IUserAreaDefinition userAreaToLogInTo)
         {
             if (controller == null) throw new ArgumentNullException(nameof(controller));
             if (userAreaToLogInTo == null) throw new ArgumentNullException(nameof(userAreaToLogInTo));
             if (vm == null) throw new ArgumentNullException(nameof(vm));
-
-            var result = new AuthenticationResult();
-            result.ReturnUrl = GetAndValidateReturnUrl(controller);
-
-            if (!controller.ModelState.IsValid) return result;
+            
+            if (!controller.ModelState.IsValid) return LoginResult.Failed;
 
             var command = new LogUserInWithCredentialsCommand()
             {
@@ -67,18 +63,19 @@ namespace Cofoundry.Web.Identity
             }
             catch (PasswordChangeRequiredException ex)
             {
-                result.RequiresPasswordChange = true;
                 // Add modelstate error as a precaution, because
                 // result.RequiresPasswordChange may not be handled by the caller
                 controller.ModelState.AddModelError(string.Empty, "Password change required.");
+
+                return LoginResult.PasswordChangeRequired;
             }
 
-            result.IsAuthenticated = controller.ModelState.IsValid;
+            if (controller.ModelState.IsValid) return LoginResult.Sucess;
 
-            return result;
+            return LoginResult.Failed;
         }
 
-        private static string GetAndValidateReturnUrl(Controller controller)
+        public string GetAndValidateReturnUrl(Controller controller)
         {
             var returnUrl = controller.Request.Query["ReturnUrl"].FirstOrDefault();
 
@@ -90,6 +87,45 @@ namespace Cofoundry.Web.Identity
             return null;
         }
 
+
+        #endregion
+
+        #region ChangePasswordAsync
+
+        /// <summary>
+        /// Changes a users password, sending them an email notification if the operation 
+        /// was successful.
+        /// </summary>
+        /// <param name="controller">Controller instance</param>
+        /// <param name="vm">The IChangePasswordTemplate containing the data entered by the user.</param>
+        /// <param name="userArea">
+        /// The user area that the user belongs to. Usernames are only unique by user area 
+        /// so all user commands need to be run against a specific user area.
+        /// </param>
+        /// <returns>The user id of the updated user if the action was successful; otheriwse null.</returns>
+        public async Task ChangePasswordAsync(
+            Controller controller,
+            IChangePasswordViewModel vm,
+            IUserAreaDefinition userArea
+            )
+        {
+            if (controller == null) throw new ArgumentNullException(nameof(controller));
+            if (userArea == null) throw new ArgumentNullException(nameof(userArea));
+            if (vm == null) throw new ArgumentNullException(nameof(vm));
+
+            if (controller.ModelState.IsValid)
+            {
+                var command = new UpdateUnauthenticatedUserPasswordCommand()
+                {
+                    UserAreaCode = userArea.UserAreaCode,
+                    Username = vm.Username,
+                    NewPassword = vm.NewPassword,
+                    OldPassword = vm.OldPassword
+                };
+
+                await _controllerResponseHelper.ExecuteIfValidAsync(controller, command);
+            }
+        }
 
         #endregion
 
@@ -106,20 +142,29 @@ namespace Cofoundry.Web.Identity
 
         #region forgot password
 
-        public Task SendPasswordResetNotificationAsync<TNotificationViewModel>(Controller controller, IForgotPasswordViewModel vm, TNotificationViewModel notificationTemplate, IUserAreaDefinition userArea) 
-            where TNotificationViewModel : IResetPasswordTemplate
+        public Task SendPasswordResetNotificationAsync(
+            Controller controller, 
+            IForgotPasswordViewModel vm, 
+            IUserAreaDefinition userArea
+            )
         {
             if (!controller.ModelState.IsValid) return Task.CompletedTask;
 
-            var command = new ResetUserPasswordByUsernameCommand();
-            command.Username = vm.Username;
-            command.UserAreaCode = userArea.UserAreaCode;
-            command.MailTemplate = notificationTemplate;
+            var command = new InitiatePasswordResetRequestCommand()
+            {
+                Username = vm.Username,
+                UserAreaCode = userArea.UserAreaCode
+            };
 
             return _controllerResponseHelper.ExecuteIfValidAsync(controller, command);
         }
 
-        public async Task<PasswordResetRequestAuthenticationResult> IsPasswordRequestValidAsync(Controller controller, string requestId, string token, IUserAreaDefinition userAreaToLogInTo)
+        public async Task<PasswordResetRequestAuthenticationResult> IsPasswordRequestValidAsync(
+            Controller controller, 
+            string requestId, 
+            string token, 
+            IUserAreaDefinition userAreaToLogInTo
+            )
         {
             var result = new PasswordResetRequestAuthenticationResult();
             result.ValidationErrorMessage = "Invalid password reset request";
@@ -149,12 +194,14 @@ namespace Cofoundry.Web.Identity
             return result;
         }
 
-        public Task CompletePasswordResetAsync<TNotificationTemplate>(Controller controller, ICompletePasswordResetViewModel vm, TNotificationTemplate notificationTemplate, IUserAreaDefinition userAreaToLogInTo) where TNotificationTemplate : IPasswordChangedTemplate
+        public Task CompletePasswordResetAsync(
+            Controller controller, 
+            ICompletePasswordResetViewModel vm, 
+            IUserAreaDefinition userAreaToLogInTo
+            )
         {
             if (!controller.ModelState.IsValid) return Task.CompletedTask;
             
-            var command = new CompleteUserPasswordResetCommand();
-
             Guid requestGuid;
             if (!Guid.TryParse(vm.UserPasswordResetRequestId, out requestGuid))
             {
@@ -162,11 +209,13 @@ namespace Cofoundry.Web.Identity
                 return Task.CompletedTask;
             }
 
-            command.NewPassword = vm.NewPassword;
-            command.Token = vm.Token;
-            command.MailTemplate = notificationTemplate;
-            command.UserPasswordResetRequestId = requestGuid;
-            command.UserAreaCode = userAreaToLogInTo.UserAreaCode;
+            var command = new CompleteUserPasswordResetCommand()
+            {
+                NewPassword = vm.NewPassword,
+                Token = vm.Token,
+                UserPasswordResetRequestId = requestGuid,
+                UserAreaCode = userAreaToLogInTo.UserAreaCode
+            };
 
             return _controllerResponseHelper.ExecuteIfValidAsync(controller, command);
         }

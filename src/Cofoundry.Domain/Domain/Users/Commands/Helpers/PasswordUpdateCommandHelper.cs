@@ -1,8 +1,12 @@
-﻿using Cofoundry.Domain.CQS;
+﻿using Cofoundry.Core;
+using Cofoundry.Core.Mail;
+using Cofoundry.Domain.CQS;
 using Cofoundry.Domain.Data;
+using Cofoundry.Domain.MailTemplates;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Cofoundry.Domain
 {
@@ -14,16 +18,25 @@ namespace Cofoundry.Domain
         private readonly IPermissionValidationService _permissionValidationService;
         private readonly IUserAreaDefinitionRepository _userAreaRepository;
         private readonly IPasswordCryptographyService _passwordCryptographyService;
+        private readonly IUserMailTemplateBuilderFactory _userMailTemplateBuilderFactory;
+        private readonly IQueryExecutor _queryExecutor;
+        private readonly IMailService _mailService;
 
         public PasswordUpdateCommandHelper(
             IPermissionValidationService permissionValidationService,
             IUserAreaDefinitionRepository userAreaRepository,
-            IPasswordCryptographyService passwordCryptographyService
+            IPasswordCryptographyService passwordCryptographyService,
+            IMailService mailService,
+            IQueryExecutor queryExecutor,
+            IUserMailTemplateBuilderFactory userMailTemplateBuilderFactory
             )
         {
             _passwordCryptographyService = passwordCryptographyService;
             _permissionValidationService = permissionValidationService;
             _userAreaRepository = userAreaRepository;
+            _mailService = mailService;
+            _queryExecutor = queryExecutor;
+            _userMailTemplateBuilderFactory = userMailTemplateBuilderFactory;
         }
 
         public void ValidateUserArea(IUserAreaDefinition userArea)
@@ -54,6 +67,41 @@ namespace Cofoundry.Domain
             var hashResult = _passwordCryptographyService.CreateHash(newPassword);
             user.Password = hashResult.Hash;
             user.PasswordHashVersion = hashResult.HashVersion;
+        }
+
+        /// <summary>
+        /// Send a notification to the user to let them know their 
+        /// password has been changed. The template is built using the
+        /// registered UserMailTemplateBuilderFactory for the users
+        /// user area.
+        /// </summary>
+        /// <param name="user">The user to send the notification to.</param>
+        public async Task SendPasswordChangedNotification(User user)
+        {
+            // Send mail notification
+            var mailTemplateBuilder = _userMailTemplateBuilderFactory.Create(user.UserAreaCode);
+
+            var context = await CreateMailTemplateContextAsync(user.UserId);
+            var mailTemplate = await mailTemplateBuilder.BuildPasswordChangedTemplateAsync(context);
+
+            // Null template means don't send a notification
+            if (mailTemplate == null) return;
+             
+            await _mailService.SendAsync(user.Email, mailTemplate);
+        }
+
+        private async Task<PasswordChangedTemplateBuilderContext> CreateMailTemplateContextAsync(int userId)
+        {
+            var query = new GetUserSummaryByIdQuery(userId);
+            var user = await _queryExecutor.ExecuteAsync(query);
+            EntityNotFoundException.ThrowIfNull(user, userId);
+
+            var context = new PasswordChangedTemplateBuilderContext()
+            {
+                User = user
+            };
+
+            return context;
         }
     }
 }

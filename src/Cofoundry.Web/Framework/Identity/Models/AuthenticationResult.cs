@@ -4,10 +4,28 @@ using System.Linq;
 
 namespace Cofoundry.Web.Identity
 {
-    public class AuthenticationResult
+    /// <summary>
+    /// Represents the result of an authentication request.
+    /// </summary>
+    public enum LoginResult
     {
-        public bool IsAuthenticated { get; set; }
-        public bool RequiresPasswordChange { get; set; }
-        public string ReturnUrl { get; set; }
+        /// <summary>
+        /// The user could not be authenticated and errors
+        /// have been added to the ModelState.
+        /// </summary>
+        Failed = 0,
+
+        /// <summary>
+        /// The user was authenticated but a password change
+        /// is required before the user is able to be logged 
+        /// in. The user was not logged in.
+        /// </summary>
+        PasswordChangeRequired = 1,
+
+        /// <summary>
+        /// The user was successfully authenticated and has
+        /// been logged in.
+        /// </summary>
+        Sucess = 2
     }
 }

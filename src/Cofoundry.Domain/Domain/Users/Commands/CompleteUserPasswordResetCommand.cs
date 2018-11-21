@@ -1,17 +1,20 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Cofoundry.Domain.CQS;
-using Cofoundry.Domain.MailTemplates;
 using System.Runtime.Serialization;
 
 namespace Cofoundry.Domain
 {
     public class CompleteUserPasswordResetCommand : ICommand, ILoggableCommand
     {
+        public CompleteUserPasswordResetCommand()
+        {
+            SendNotification = true;
+        }
+
         [Required]
         public Guid UserPasswordResetRequestId { get; set; }
 
@@ -29,9 +32,9 @@ namespace Cofoundry.Domain
         public string NewPassword { get; set; }
 
         /// <summary>
-        /// Template for the notification that tells a user that thier password has been changed.
+        /// Indicates whether to send a notification to the user to let them
+        /// know their password has been changed. Defaults to true.
         /// </summary>
-        [Required]
-        public IPasswordChangedTemplate MailTemplate { get; set; }
+        public bool SendNotification { get; set; }
     }
 }

@@ -24,7 +24,6 @@ namespace Cofoundry.Domain
         private readonly CofoundryDbContext _dbContext;
         private readonly IQueryExecutor _queryExecutor;
         private readonly IPasswordCryptographyService _passwordCryptographyService;
-        private readonly IPasswordGenerationService _passwordGenerationService;
         private readonly IMailService _mailService;
         private readonly UserCommandPermissionsHelper _userCommandPermissionsHelper;
         private readonly IPermissionValidationService _permissionValidationService;
@@ -34,7 +33,6 @@ namespace Cofoundry.Domain
             CofoundryDbContext dbContext,
             IQueryExecutor queryExecutor,
             IPasswordCryptographyService passwordCryptographyService,
-            IPasswordGenerationService passwordGenerationService,
             IMailService mailService,
             UserCommandPermissionsHelper userCommandPermissionsHelper,
             IPermissionValidationService permissionValidationService,
@@ -48,12 +46,9 @@ namespace Cofoundry.Domain
             _userCommandPermissionsHelper = userCommandPermissionsHelper;
             _permissionValidationService = permissionValidationService;
             _userAreaRepository = userAreaRepository;
-            _passwordGenerationService = passwordGenerationService;
         }
 
         #endregion
-
-        #region execution
 
         public async Task ExecuteAsync(AddUserCommand command, IExecutionContext executionContext)
         {
@@ -73,10 +68,6 @@ namespace Cofoundry.Domain
             command.OutputUserId = user.UserId;
         }
 
-        #endregion
-
-        #region helpers
-
         /// <summary>
         /// Perform some additional command validation that we can't do using data 
         /// annotations.
@@ -86,13 +77,13 @@ namespace Cofoundry.Domain
             // Password
             var isPasswordEmpty = string.IsNullOrWhiteSpace(command.Password);
 
-            if (userArea.AllowPasswordLogin && isPasswordEmpty && !command.GeneratePassword)
+            if (userArea.AllowPasswordLogin && isPasswordEmpty)
             {
                 throw new PropertyValidationException("Password field is required", "Password");
             }
             else if (!userArea.AllowPasswordLogin && !isPasswordEmpty)
             {
-                throw new PropertyValidationException("Password field should be empty because the specified user area does not use passwords", "Password");
+                throw new InvalidOperationException("Password field should be empty because the specified user area does not use passwords");
             }
 
             // Email
@@ -146,9 +137,7 @@ namespace Cofoundry.Domain
 
             if (userArea.AllowPasswordLogin)
             {
-                var password = command.GeneratePassword ? _passwordGenerationService.Generate() : command.Password;
-
-                var hashResult = _passwordCryptographyService.CreateHash(password);
+                var hashResult = _passwordCryptographyService.CreateHash(command.Password);
                 user.Password = hashResult.Hash;
                 user.PasswordHashVersion = hashResult.HashVersion;
             }
@@ -205,8 +194,6 @@ namespace Cofoundry.Domain
                 .Roles
                 .FilterById(command.RoleId);
         }
-
-        #endregion
 
         #region Permission
 

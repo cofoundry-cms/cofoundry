@@ -116,13 +116,38 @@ namespace Cofoundry.Domain
         }
 
         /// <summary>
-        /// Clears out the cached user context if one exists. The user 
-        /// context is cached for the duration of the request so it needs clearing if
+        /// Clears out any cached user contexts. The user context is cached for 
+        /// the duration of the request so it needs clearing if
         /// it changes (i.e. logged in or out).
         /// </summary>
         public void ClearCache()
         {
             _currentUserContext = null;
+            _alternativeUserContextCache.Clear();
+        }
+
+        /// <summary>
+        /// Clears out the cached user context if one exists for the specified
+        /// user area. The user context is cached for the duration of the request 
+        /// so it needs clearing if it changes (i.e. logged in or out).
+        /// </summary>
+        /// <param name="userAreaCode">The user area code to clear the cache for.</param>
+        public void ClearCache(string userAreaCode)
+        {
+            if (userAreaCode == null) throw new ArgumentNullException(nameof(userAreaCode));
+
+            // Also remove the anonymous user contextt o force re-validation
+            if (_currentUserContext != null
+                || !_currentUserContext.IsLoggedIn() 
+                || _currentUserContext.UserArea.UserAreaCode == userAreaCode)
+            {
+                _currentUserContext = null;
+            }
+
+            if (_alternativeUserContextCache.ContainsKey(userAreaCode))
+            {
+                _alternativeUserContextCache.Remove(userAreaCode);
+            }
         }
 
         #endregion

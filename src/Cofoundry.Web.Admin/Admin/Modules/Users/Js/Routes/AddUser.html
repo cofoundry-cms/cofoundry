@@ -30,15 +30,8 @@
                                  maxlength="32"
                                  required></cms-form-field-text>
 
-            <cms-form-field-text cms-title="Username"
-                                 cms-model="vm.command.username"
-                                 ng-if="::!vm.userArea.useEmailAsUsername"
-                                 maxlength="150"
-                                 required></cms-form-field-text>
-
             <cms-form-field-email-address cms-title="Email"
                                           cms-model="vm.command.email"
-                                          ng-if="::vm.userArea.useEmailAsUsername"
                                           maxlength="150"
                                           required></cms-form-field-email-address>
 

@@ -52,6 +52,7 @@ namespace Cofoundry.Domain
             await _commandExecutor.ExecuteAsync(command);
 
             await _userSessionService.LogUserInAsync(userAreaCode, userId, rememberUser);
+            _userContextService.ClearCache(userAreaCode);
         }
 
         /// <summary>
@@ -73,7 +74,7 @@ namespace Cofoundry.Domain
         public async Task SignOutAsync(string userAreaCode)
         {
             await _userSessionService.LogUserOutAsync(userAreaCode);
-            _userContextService.ClearCache();
+            _userContextService.ClearCache(userAreaCode);
         }
 
         /// <summary>

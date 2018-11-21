@@ -2,14 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Data.SqlClient;
-using Microsoft.EntityFrameworkCore;
-using Cofoundry.Domain.Data;
 using Cofoundry.Domain.CQS;
-using Cofoundry.Core.Data;
-using Cofoundry.Core;
 using System.ComponentModel.DataAnnotations;
-using Cofoundry.Core.Validation;
 
 namespace Cofoundry.Domain
 {

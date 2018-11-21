@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using Cofoundry.Domain;
 using Cofoundry.Domain.CQS;
 using Cofoundry.Web.Identity;
-using Cofoundry.Domain.MailTemplates;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Authorization;
@@ -89,7 +88,6 @@ namespace Cofoundry.Web.Admin
             return View(viewPath, vm);
         }
 
-        [AdminAuthorize]
         [AllowAnonymous]
         [HttpPost]
         public async Task<ActionResult> Login(string returnUrl, LoginViewModel command)
@@ -106,7 +104,6 @@ namespace Cofoundry.Web.Admin
             }
             else if (result.IsAuthenticated)
             {
-                _userContextService.ClearCache();
                 return await GetLoggedInDefaultRedirectActionAsync();
             }
 
@@ -134,11 +131,7 @@ namespace Cofoundry.Web.Admin
         [HttpPost]
         public async Task<ViewResult> ForgotPassword(ForgotPasswordViewModel command)
         {
-            var template = new ResetPasswordTemplate();
-            var settings = await _queryExecutor.ExecuteAsync(new GetSettingsQuery<GeneralSiteSettings>());
-            template.ApplicationName = settings.ApplicationName;
-
-            await _authenticationHelper.SendPasswordResetNotificationAsync(this, command, template, _adminUserArea);
+            await _authenticationHelper.SendPasswordResetNotificationAsync(this, command, _adminUserArea);
 
             var viewPath = ViewPathFormatter.View(CONTROLLER_NAME, nameof(ForgotPassword));
             return View(viewPath, command);
@@ -173,11 +166,7 @@ namespace Cofoundry.Web.Admin
             var user = await _userContextService.GetCurrentContextAsync();
             if (user.IsCofoundryUser()) return await GetLoggedInDefaultRedirectActionAsync();
 
-            var template = new PasswordChangedTemplate();
-            var settings = await _queryExecutor.ExecuteAsync(new GetSettingsQuery<GeneralSiteSettings>());
-            template.ApplicationName = settings.ApplicationName;
-
-            await _authenticationHelper.CompletePasswordResetAsync(this, vm, template, _adminUserArea);
+            await _authenticationHelper.CompletePasswordResetAsync(this, vm, _adminUserArea);
 
             if (ModelState.IsValid)
             {

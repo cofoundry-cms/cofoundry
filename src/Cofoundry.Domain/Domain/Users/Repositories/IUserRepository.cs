@@ -124,6 +124,7 @@ namespace Cofoundry.Domain
         /// A generic user creation command for use with Cofoundry users and
         /// other non-Cofoundry users. Does not send any email notifications.
         /// </summary>
+        /// <param name="command">Command to execute.</param>
         /// <param name="executionContext">Optional execution context to use when executing the command. Useful if you need to temporarily elevate your permission level.</param>
         Task AddUserAsync(AddUserCommand command, IExecutionContext executionContext = null);
 
@@ -131,13 +132,15 @@ namespace Cofoundry.Domain
         /// Adds a user to the Cofoundry user area and sends a welcome notification
         /// containing a generated password which must be changed at first login.
         /// </summary>
+        /// <param name="command">Command to execute.</param>
         /// <param name="executionContext">Optional execution context to use when executing the command. Useful if you need to temporarily elevate your permission level.</param>
-        Task AddCofoundryUserAsync(AddCofoundryUserCommand command, IExecutionContext executionContext = null);
+        Task AddUserWithTemporaryPasswordAsync(AddUserWithTemporaryPasswordCommand command, IExecutionContext executionContext = null);
 
         /// <summary>
         /// A generic user update command for use with Cofoundry users and
         /// other non-Cofoundry users.
         /// </summary>
+        /// <param name="command">Command to execute.</param>
         /// <param name="executionContext">Optional execution context to use when executing the command. Useful if you need to temporarily elevate your permission level.</param>
         Task UpdateUserAsync(UpdateUserCommand command, IExecutionContext executionContext = null);
 
@@ -151,6 +154,7 @@ namespace Cofoundry.Domain
         /// <summary>
         /// Updates the user account of the currently logged in user.
         /// </summary>
+        /// <param name="command">Command to execute.</param>
         /// <param name="executionContext">Optional execution context to use when executing the command. Useful if you need to temporarily elevate your permission level.</param>
         Task UpdateCurrentUserAccountAsync(UpdateCurrentUserAccountCommand command, IExecutionContext executionContext = null);
 
@@ -158,6 +162,8 @@ namespace Cofoundry.Domain
         /// Updates the password of the currently logged in user, using the
         /// OldPassword field to authenticate the request.
         /// </summary>
+        /// <param name="command">Command to execute.</param>
+        /// <param name="executionContext">Optional execution context to use when executing the command. Useful if you need to temporarily elevate your permission level.</param>
         Task UpdateCurrentUserUserPasswordAsync(UpdateCurrentUserPasswordCommand command, IExecutionContext executionContext = null);
 
         #endregion

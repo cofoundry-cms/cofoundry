@@ -50,7 +50,7 @@ namespace Cofoundry.Web.Admin
         {
             ModuleFolderName = TextFormatter.Pascalize(routePrefix);
             ResourcePrefix = resourcePathPrefix + ModuleFolderName + "/";
-            StaticResourcePrefix = FilePathHelper.CombineVirtualPath(ResourcePrefix, CONTENT_FOLDER);
+            StaticResourcePrefix = RelativePathHelper.Combine(ResourcePrefix, CONTENT_FOLDER);
             UrlPrefix = routePrefix;
 
             _adminSettings = adminSettings;
@@ -91,32 +91,32 @@ namespace Cofoundry.Web.Admin
 
         public string StaticResource(string fileName)
         {
-            return FilePathHelper.CombineVirtualPath(_adminSettings.DirectoryName, StaticResourcePrefix, fileName);
+            return RelativePathHelper.Combine(_adminSettings.DirectoryName, StaticResourcePrefix, fileName);
         }
         
         public string StaticResourceFilePath(string fileName)
         {
-            return FilePathHelper.CombineVirtualPath(StaticResourcePrefix, fileName);
+            return RelativePathHelper.Combine(StaticResourcePrefix, fileName);
         }
 
         public string JsDirectory()
         {
-            return FilePathHelper.CombineVirtualPath(_adminSettings.DirectoryName, StaticResourcePrefix, "js");
+            return RelativePathHelper.Combine(_adminSettings.DirectoryName, StaticResourcePrefix, "js");
         }
 
         public string JsFile(string fileName)
         {
-            return FilePathHelper.CombineVirtualPath(_adminSettings.DirectoryName, StaticResourcePrefix, "js", fileName + ".js");
+            return RelativePathHelper.Combine(_adminSettings.DirectoryName, StaticResourcePrefix, "js", fileName + ".js");
         }
 
         public string CssDirectory()
         {
-            return FilePathHelper.CombineVirtualPath(_adminSettings.DirectoryName, StaticResourcePrefix, "css");
+            return RelativePathHelper.Combine(_adminSettings.DirectoryName, StaticResourcePrefix, "css");
         }
 
         public string CssFile(string fileName)
         {
-            return FilePathHelper.CombineVirtualPath(_adminSettings.DirectoryName, StaticResourcePrefix, "css", fileName + ".css");
+            return RelativePathHelper.Combine(_adminSettings.DirectoryName, StaticResourcePrefix, "css", fileName + ".css");
         }
 
         public string GetStaticResourceFilePath()
@@ -126,7 +126,7 @@ namespace Cofoundry.Web.Admin
 
         public string GetStaticResourceUrlPath()
         {
-            return FilePathHelper.CombineVirtualPath(_adminSettings.DirectoryName, StaticResourcePrefix);
+            return RelativePathHelper.Combine(_adminSettings.DirectoryName, StaticResourcePrefix);
         }
 
 

@@ -43,11 +43,6 @@ namespace Cofoundry.Domain
         public string Password { get; set; }
 
         /// <summary>
-        /// When set to true, this will generate a random password for the user.
-        /// </summary>
-        public bool GeneratePassword { get; set; }
-
-        /// <summary>
         /// The email address is required if the user area has UseEmailAsUsername 
         /// set to true.
         /// </summary>

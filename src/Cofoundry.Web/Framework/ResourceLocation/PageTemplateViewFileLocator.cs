@@ -127,7 +127,7 @@ namespace Cofoundry.Web
                 .Select(f => f.Name)
                 )
             {
-                var childDirectoryPath = FilePathHelper.CombineVirtualPath(directoryPath, childDirectoryName);
+                var childDirectoryPath = RelativePathHelper.Combine(directoryPath, childDirectoryName);
                 foreach (var file in SearchDirectoryForPageTemplateFiles(childDirectoryPath, searchText))
                 {
                     yield return file;
@@ -138,7 +138,7 @@ namespace Cofoundry.Web
         private PageTemplateFile MapPageTemplateFile(string virtualDirectoryPath, IFileInfo file)
         {
             var fileName = Path.ChangeExtension(file.Name, null).TrimStart(TEMPLATE_NAME_CHAR_TO_TRIM);
-            var virtualPath = FilePathHelper.CombineVirtualPath(virtualDirectoryPath, file.Name);
+            var virtualPath = RelativePathHelper.Combine(virtualDirectoryPath, file.Name);
             var templateFile = new PageTemplateFile()
             {
                 FileName = fileName,

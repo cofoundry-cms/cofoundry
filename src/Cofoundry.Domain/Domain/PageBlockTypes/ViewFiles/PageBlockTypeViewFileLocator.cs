@@ -125,7 +125,7 @@ namespace Cofoundry.Domain
                     .Where(d => d.IsDirectory
                         && !foldersToExclude.Any(f => d.Name.Equals(f, StringComparison.OrdinalIgnoreCase))))
                 {
-                    var childDirectoryPath = FilePathHelper.CombineVirtualPath(directoryPath, childDirectory.Name);
+                    var childDirectoryPath = RelativePathHelper.Combine(directoryPath, childDirectory.Name);
 
                     foreach (var viewFile in FilterChildDirectoryFiles(childDirectoryPath, directory, foldersToExclude))
                     {
@@ -173,10 +173,10 @@ namespace Cofoundry.Domain
         {
             var templateFile = new PageBlockTypeFileLocation();
 
-            templateFile.Path = FilePathHelper.CombineVirtualPath(directoryPath, file.Name);
+            templateFile.Path = RelativePathHelper.Combine(directoryPath, file.Name);
             templateFile.FileName = Path.GetFileNameWithoutExtension(file.Name);
 
-            var templatePath = FilePathHelper.CombineVirtualPath(directoryPath, TEMPLATES_FOLDER_NAME);
+            var templatePath = RelativePathHelper.Combine(directoryPath, TEMPLATES_FOLDER_NAME);
 
             var templateDirectory = _resourceLocator.GetDirectory(templatePath);
             if (templateDirectory != null)
@@ -186,7 +186,7 @@ namespace Cofoundry.Domain
                     .Select(t => new PageBlockTypeTemplateFileLocation()
                     {
                         FileName = Path.GetFileNameWithoutExtension(t.Name),
-                        Path = FilePathHelper.CombineVirtualPath(templatePath, t.Name)
+                        Path = RelativePathHelper.Combine(templatePath, t.Name)
                     })
                     .ToDictionary(t => t.FileName);
             }

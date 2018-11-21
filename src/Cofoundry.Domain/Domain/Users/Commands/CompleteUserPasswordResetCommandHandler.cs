@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using Cofoundry.Core.Data;
 using Cofoundry.Core.Mail;
 using Cofoundry.Core;
+using Cofoundry.Domain.MailTemplates;
 
 namespace Cofoundry.Domain
 {
@@ -25,13 +26,17 @@ namespace Cofoundry.Domain
         private readonly IMailService _mailService;
         private readonly ITransactionScopeManager _transactionScopeFactory;
         private readonly IPasswordUpdateCommandHelper _passwordUpdateCommandHelper;
+        private readonly IUserMailTemplateBuilderFactory _userMailTemplateBuilderFactory;
+        private readonly IUserAreaDefinitionRepository _userAreaDefinitionRepository;
 
         public CompleteUserPasswordResetCommandHandler(
             CofoundryDbContext dbContext,
             IQueryExecutor queryExecutor,
             IMailService mailService,
             ITransactionScopeManager transactionScopeFactory,
-            IPasswordUpdateCommandHelper passwordUpdateCommandHelper
+            IPasswordUpdateCommandHelper passwordUpdateCommandHelper,
+            IUserMailTemplateBuilderFactory userMailTemplateBuilderFactory,
+            IUserAreaDefinitionRepository userAreaDefinitionRepository
             )
         {
             _dbContext = dbContext;
@@ -39,11 +44,11 @@ namespace Cofoundry.Domain
             _mailService = mailService;
             _transactionScopeFactory = transactionScopeFactory;
             _passwordUpdateCommandHelper = passwordUpdateCommandHelper;
+            _userMailTemplateBuilderFactory = userMailTemplateBuilderFactory;
+            _userAreaDefinitionRepository = userAreaDefinitionRepository;
         }
 
         #endregion
-
-        #region execution
 
         public async Task ExecuteAsync(CompleteUserPasswordResetCommand command, IExecutionContext executionContext)
         {
@@ -54,20 +59,19 @@ namespace Cofoundry.Domain
             EntityNotFoundException.ThrowIfNull(request, command.UserPasswordResetRequestId);
 
             UpdatePasswordAndSetComplete(request, command, executionContext);
-            SetMailTemplate(command, request.User);
 
             using (var scope = _transactionScopeFactory.Create(_dbContext))
             {
                 await _dbContext.SaveChangesAsync();
-                await _mailService.SendAsync(request.User.Email, request.User.GetFullName(), command.MailTemplate);
+
+                if (command.SendNotification)
+                {
+                    await SendNotificationAsync(command, request.User);
+                }
 
                 await scope.CompleteAsync();
             }
         }
-
-        #endregion
-
-        #region private helpers
 
         private void UpdatePasswordAndSetComplete(UserPasswordResetRequest request, CompleteUserPasswordResetCommand command, IExecutionContext executionContext)
         {
@@ -109,12 +113,35 @@ namespace Cofoundry.Domain
             return dt > executionContext.ExecutionDate.AddHours(-NUMHOURS_PASSWORD_RESET_VALID);
         }
 
-        private void SetMailTemplate(CompleteUserPasswordResetCommand command, User user)
+        private async Task SendNotificationAsync(
+            CompleteUserPasswordResetCommand command,
+            User user
+            )
         {
-            command.MailTemplate.FirstName = user.FirstName;
-            command.MailTemplate.LastName = user.LastName;
+            // Send mail notification
+            var mailTemplateBuilder = _userMailTemplateBuilderFactory.Create(command.UserAreaCode);
+
+            var context = await CreateMailTemplateContextAsync(user.UserId);
+            var mailTemplate = await mailTemplateBuilder.BuildPasswordChangedTemplateAsync(context);
+
+            // Null template means don't send a notification
+            if (mailTemplate == null) return;
+
+            await _mailService.SendAsync(user.Email, mailTemplate);
         }
 
-        #endregion
+        private async Task<PasswordChangedTemplateBuilderContext> CreateMailTemplateContextAsync(int userId)
+        {
+            var query = new GetUserSummaryByIdQuery(userId);
+            var userSummary = await _queryExecutor.ExecuteAsync(query);
+            EntityNotFoundException.ThrowIfNull(userSummary, userId);
+
+            var context = new PasswordChangedTemplateBuilderContext()
+            {
+                User = userSummary
+            };
+
+            return context;
+        }
     }
 }

@@ -37,10 +37,18 @@ namespace Cofoundry.Domain
         Task<IUserContext> GetCurrentContextByUserAreaAsync(string userAreaCode);
 
         /// <summary>
-        /// Clears out the cached user context if one exists. Typically the user 
-        /// context is cached for the duration of the request so it needs clearing if
+        /// Clears out any cached user contexts. The user context is cached for 
+        /// the duration of the request so it needs clearing if
         /// it changes (i.e. logged in or out).
         /// </summary>
         void ClearCache();
+
+        /// <summary>
+        /// Clears out the cached user context if one exists for the specified
+        /// user area. The user context is cached for the duration of the request 
+        /// so it needs clearing if it changes (i.e. logged in or out).
+        /// </summary>
+        /// <param name="userAreaCode">The suer area code to clear the cache for.</param>
+        void ClearCache(string userAreaCode);
     }
 }

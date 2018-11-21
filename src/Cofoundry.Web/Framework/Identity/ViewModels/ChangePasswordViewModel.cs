@@ -30,10 +30,5 @@ namespace Cofoundry.Web.Identity
         [DataType(DataType.Password)]
         [Compare("NewPassword", ErrorMessage = "Password does not match")]
         public string ConfirmNewPassword { get; set; }
-
-        /// <summary>
-        /// Indicates if the password change is madatory (e.g. after first login)
-        /// </summary>
-        public bool IsPasswordChangeRequired { get; set; }
     }
 }

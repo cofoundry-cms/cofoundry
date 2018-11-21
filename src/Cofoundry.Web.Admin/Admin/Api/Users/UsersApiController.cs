@@ -47,24 +47,9 @@ namespace Cofoundry.Web.Admin
 
         #region commands
 
-        public async Task<IActionResult> Post([FromBody] AddUserCommand command)
+        public async Task<IActionResult> Post([FromBody] AddUserWithTemporaryPasswordCommand command)
         {
-            if (command.UserAreaCode == CofoundryAdminUserArea.AreaCode)
-            {
-                // TODO: We have a separate command here for adding Cofoundry Admin users, but we could re-use the same one
-                // and separate the notification part out of the handler and make it a separate function in the admin panel.
-                var userCommand = new AddCofoundryUserCommand();
-                userCommand.Email = command.Email;
-                userCommand.FirstName = command.FirstName;
-                userCommand.LastName = command.LastName;
-                userCommand.RoleId = command.RoleId;
-
-                return await _apiResponseHelper.RunCommandAsync(this, userCommand);
-            }
-            else
-            {
-                return await _apiResponseHelper.RunCommandAsync(this, command);
-            }
+            return await _apiResponseHelper.RunCommandAsync(this, command);
         }
 
         public async Task<IActionResult> Patch(int userId, [FromBody] IDelta<UpdateUserCommand> delta)
