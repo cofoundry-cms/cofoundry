@@ -1,0 +1,28 @@
+﻿@using Cofoundry.Web.Identity;
+@model LoginViewModel
+@inject ICofoundryHelper Cofoundry
+
+<h1 class="mt-3">Partner Login</h1>
+
+<div class="row mt-4 mb-5">
+    <form method="post">
+
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+        <div class="form-group">
+            <label asp-for="Username"></label>
+            <input asp-for="Username" class="form-control" aria-describedby="emailHelp">
+            <span asp-validation-for="Username" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="Password"></label>
+            <input asp-for="Password" class="form-control" placeholder="Password">
+            <span asp-validation-for="Password" class="text-danger"></span>
+        </div>
+        <div class="form-group form-check">
+            <input asp-for="RememberMe" class="form-check-input">
+            <label asp-for="RememberMe" class="form-check-label">remember me</label>
+        </div>
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+</div>

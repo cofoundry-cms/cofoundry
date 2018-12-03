@@ -42,12 +42,6 @@ namespace Cofoundry.Web.Identity
         
         #region change password
 
-        public async Task InitViewModelAsync(IChangePasswordViewModel vm)
-        {
-            var cx = await _userContextService.GetCurrentContextAsync();
-            vm.IsPasswordChangeRequired = cx.IsPasswordChangeRequired;
-        }
-
         /// <summary>
         /// Changes a users password, sending them an email notification if the operation 
         /// was successful.

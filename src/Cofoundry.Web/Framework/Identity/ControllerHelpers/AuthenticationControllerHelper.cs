@@ -70,7 +70,7 @@ namespace Cofoundry.Web.Identity
                 return LoginResult.PasswordChangeRequired;
             }
 
-            if (controller.ModelState.IsValid) return LoginResult.Sucess;
+            if (controller.ModelState.IsValid) return LoginResult.Success;
 
             return LoginResult.Failed;
         }

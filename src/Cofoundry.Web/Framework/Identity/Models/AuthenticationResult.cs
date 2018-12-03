@@ -26,6 +26,6 @@ namespace Cofoundry.Web.Identity
         /// The user was successfully authenticated and has
         /// been logged in.
         /// </summary>
-        Sucess = 2
+        Success = 2
     }
 }

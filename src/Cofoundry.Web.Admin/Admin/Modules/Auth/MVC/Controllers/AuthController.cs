@@ -21,7 +21,7 @@ namespace Cofoundry.Web.Admin
 
         private readonly IQueryExecutor _queryExecutor;
         private readonly IUserContextService _userContextService;
-        private readonly AuthenticationControllerHelper _authenticationHelper;
+        private readonly AuthenticationControllerHelper _authenticationControllerHelper;
         private readonly AccountManagementControllerHelper _accountManagementControllerHelper;
         private readonly IAdminRouteLibrary _adminRouteLibrary;
         private readonly IUserAreaDefinition _adminUserArea;
@@ -29,14 +29,14 @@ namespace Cofoundry.Web.Admin
         public AuthController(
             IQueryExecutor queryExecutor,
             IUserContextService userContextService,
-            AuthenticationControllerHelper authenticationHelper,
+            AuthenticationControllerHelper authenticationControllerHelper,
             AccountManagementControllerHelper accountManagementControllerHelper,
             IAdminRouteLibrary adminRouteLibrary,
             IEnumerable<IUserAreaDefinition> userAreaDefinitions
             )
         {
             _queryExecutor = queryExecutor;
-            _authenticationHelper = authenticationHelper;
+            _authenticationControllerHelper = authenticationControllerHelper;
             _userContextService = userContextService;
             _accountManagementControllerHelper = accountManagementControllerHelper;
             _adminRouteLibrary = adminRouteLibrary;
@@ -92,17 +92,18 @@ namespace Cofoundry.Web.Admin
         [HttpPost]
         public async Task<ActionResult> Login(string returnUrl, LoginViewModel command)
         {
-            var result = await _authenticationHelper.LogUserInAsync(this, command, _adminUserArea);
+            var loginResult = await _authenticationControllerHelper.LogUserInAsync(this, command, _adminUserArea);
+            var redirectUrl = _authenticationControllerHelper.GetAndValidateReturnUrl(this);
 
-            if (result.RequiresPasswordChange)
+            if (loginResult == LoginResult.PasswordChangeRequired)
             {
                 return Redirect(_adminRouteLibrary.Auth.ChangePassword(returnUrl));
             }
-            else if (result.IsAuthenticated && !string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))
+            else if (loginResult == LoginResult.Success && redirectUrl != null)
             {
-                return Redirect(returnUrl);
+                return Redirect(redirectUrl);
             }
-            else if (result.IsAuthenticated)
+            else if (loginResult == LoginResult.Success)
             {
                 return await GetLoggedInDefaultRedirectActionAsync();
             }
@@ -113,7 +114,7 @@ namespace Cofoundry.Web.Admin
 
         public async Task<ActionResult> Logout()
         {
-            await _authenticationHelper.LogoutAsync(_adminUserArea);
+            await _authenticationControllerHelper.LogoutAsync(_adminUserArea);
             return Redirect(_adminRouteLibrary.Auth.Login(Request.Query["ReturnUrl"].FirstOrDefault()));
         }
 
@@ -131,7 +132,7 @@ namespace Cofoundry.Web.Admin
         [HttpPost]
         public async Task<ViewResult> ForgotPassword(ForgotPasswordViewModel command)
         {
-            await _authenticationHelper.SendPasswordResetNotificationAsync(this, command, _adminUserArea);
+            await _authenticationControllerHelper.SendPasswordResetNotificationAsync(this, command, _adminUserArea);
 
             var viewPath = ViewPathFormatter.View(CONTROLLER_NAME, nameof(ForgotPassword));
             return View(viewPath, command);
@@ -143,7 +144,7 @@ namespace Cofoundry.Web.Admin
             var user = await _userContextService.GetCurrentContextAsync();
             if (user.IsCofoundryUser()) return await GetLoggedInDefaultRedirectActionAsync();
 
-            var request = await _authenticationHelper.IsPasswordRequestValidAsync(this, i, t, _adminUserArea);
+            var request = await _authenticationControllerHelper.IsPasswordRequestValidAsync(this, i, t, _adminUserArea);
 
             if (!request.IsValid)
             {
@@ -166,7 +167,7 @@ namespace Cofoundry.Web.Admin
             var user = await _userContextService.GetCurrentContextAsync();
             if (user.IsCofoundryUser()) return await GetLoggedInDefaultRedirectActionAsync();
 
-            await _authenticationHelper.CompletePasswordResetAsync(this, vm, _adminUserArea);
+            await _authenticationControllerHelper.CompletePasswordResetAsync(this, vm, _adminUserArea);
 
             if (ModelState.IsValid)
             {
@@ -190,7 +191,7 @@ namespace Cofoundry.Web.Admin
                 }
 
                 // The user shouldn't be logged in, but if so, log them out
-                await _authenticationHelper.LogoutAsync(_adminUserArea);
+                await _authenticationControllerHelper.LogoutAsync(_adminUserArea);
             }
 
             var viewPath = ViewPathFormatter.View(CONTROLLER_NAME, nameof(ChangePassword));
@@ -210,7 +211,7 @@ namespace Cofoundry.Web.Admin
                 }
 
                 // The user shouldn't be logged in, but if so, log them out
-                await _authenticationHelper.LogoutAsync(_adminUserArea);
+                await _authenticationControllerHelper.LogoutAsync(_adminUserArea);
             }
 
             await _accountManagementControllerHelper.ChangePasswordAsync(this, vm, _adminUserArea);
