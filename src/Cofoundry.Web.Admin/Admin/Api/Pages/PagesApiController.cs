@@ -56,21 +56,25 @@ namespace Cofoundry.Web.Admin
 
         #region commands
 
+        [HttpPost]
         public async Task<IActionResult> Post([FromBody] AddPageCommand command)
         {
             return await _apiResponseHelper.RunCommandAsync(this, command);
         }
 
+        [HttpPatch]
         public async Task<IActionResult> Patch(int pageId, [FromBody] IDelta<UpdatePageCommand> delta)
         {
             return await _apiResponseHelper.RunCommandAsync(this, pageId, delta);
         }
 
+        [HttpPut]
         public async Task<IActionResult> PutPageUrl(int pageId, [FromBody] UpdatePageUrlCommand command)
         {
             return await _apiResponseHelper.RunCommandAsync(this, command);
         }
 
+        [HttpDelete]
         public async Task<IActionResult> Delete(int pageId)
         {
             var command = new DeletePageCommand();
@@ -79,6 +83,7 @@ namespace Cofoundry.Web.Admin
             return await _apiResponseHelper.RunCommandAsync(this, command);
         }
 
+        [HttpPost]
         public async Task<IActionResult> PostDuplicate([FromBody] DuplicatePageCommand command)
         {
             return await _apiResponseHelper.RunCommandAsync(this, command);

@@ -27,6 +27,7 @@ namespace Cofoundry.Web.Admin
         /// data cache in case we run into a caching issue in a live
         /// deployment
         /// </summary>
+        [HttpDelete]
         public IActionResult Delete()
         {
             _objectCacheFactory.Clear();

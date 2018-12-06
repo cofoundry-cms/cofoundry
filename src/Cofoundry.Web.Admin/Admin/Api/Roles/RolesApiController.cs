@@ -43,16 +43,19 @@ namespace Cofoundry.Web.Admin
 
         #region commands
 
+        [HttpPost]
         public async Task<IActionResult> Post([FromBody] AddRoleCommand command)
         {
             return await _apiResponseHelper.RunCommandAsync(this, command);
         }
 
+        [HttpPatch]
         public async Task<IActionResult> Patch(int roleId, [FromBody] IDelta<UpdateRoleCommand> delta)
         {
             return await _apiResponseHelper.RunCommandAsync(this, roleId, delta);
         }
 
+        [HttpDelete]
         public async Task<IActionResult> Delete(int roleId)
         {
             var command = new DeleteRoleCommand();

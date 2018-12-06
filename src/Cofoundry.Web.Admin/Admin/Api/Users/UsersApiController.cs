@@ -47,6 +47,7 @@ namespace Cofoundry.Web.Admin
 
         #region commands
 
+        [HttpPost]
         public async Task<IActionResult> Post([FromBody] AddUserCommand command)
         {
             if (command.UserAreaCode == CofoundryAdminUserArea.AreaCode)
@@ -67,11 +68,13 @@ namespace Cofoundry.Web.Admin
             }
         }
 
+        [HttpPatch]
         public async Task<IActionResult> Patch(int userId, [FromBody] IDelta<UpdateUserCommand> delta)
         {
             return await _apiResponseHelper.RunCommandAsync(this, userId, delta);
         }
 
+        [HttpDelete]
         public async Task<IActionResult> Delete(int userId)
         {
             var command = new DeleteUserCommand();

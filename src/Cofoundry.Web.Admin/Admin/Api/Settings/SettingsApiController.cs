@@ -39,12 +39,16 @@ namespace Cofoundry.Web.Admin
         #endregion
 
         #region commands
+        // Adding verbs ere fixes things
+        // https://blogs.msdn.microsoft.com/webdev/2018/08/27/asp-net-core-2-2-0-preview1-endpoint-routing/
 
+        [HttpPatch]
         public async Task<IActionResult> PatchGeneralSiteSettings([FromBody] IDelta<UpdateGeneralSiteSettingsCommand> delta)
         {
             return await _apiResponseHelper.RunCommandAsync(this, delta);
         }
 
+        [HttpPatch]
         public async Task<IActionResult> PatchSeoSettings([FromBody] IDelta<UpdateSeoSettingsCommand> delta)
         {
             return await _apiResponseHelper.RunCommandAsync(this, delta);
