@@ -42,7 +42,7 @@ namespace Cofoundry.Web
         public void ConfigureServices(IMvcBuilder mvcBuilder)
         {
             // Set MVC compatibility to latest tested version.
-            mvcBuilder.SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            mvcBuilder.SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
             _authConfiguration.Configure(mvcBuilder);
 
