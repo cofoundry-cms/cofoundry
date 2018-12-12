@@ -14,7 +14,7 @@ Cofoundry is an open source .Net Core CMS and application framework focusing on:
 
 ## Getting Started
 
-Find out more at [Cofoundry.org](https://www.cofoundry.org/) or head to the [docs](https://github.com/cofoundry-cms/cofoundry/wiki) to get started.
+Find out more at [Cofoundry.org](https://www.cofoundry.org/) or head to the [docs](https://www.cofoundry.org/docs) to get started.
 
 ## Feedback & Community
 
@@ -39,7 +39,7 @@ You can also keep up to date with recent developments on [our blog](https://www.
 
 As per [SemVer](https://semver.org/) our 0.x set of releases are considered early development and breaking changes can happen at any point, however our approach is that patch releases are non-breaking while minor releases can be breaking, but will be documented as such in release notes.
 
-Having been open sourced from an existing product, Cofoundry is already loaded with features, and is already used in production by our sponsor agency [Uber Digital](https://www.uberdigital.com). What 0.x releases do give us is the agility to make breaking changes and alter our public API as we receive feedback from the public, without constantly publishing major releases.
+Having been open sourced from an existing product, Cofoundry is already loaded with features, and is already used in production by our sponsor agency [Uber Digital](https://www.uberdigital.com). What 0.x releases do give us is the ability to make breaking changes and alter our public API as we receive feedback from the public, without constantly publishing major releases.
 
 ## Contributing
 
