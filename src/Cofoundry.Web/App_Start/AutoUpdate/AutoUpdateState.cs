@@ -16,12 +16,26 @@ namespace Cofoundry.Web
         public AutoUpdateStatus Status { get; private set; }
 
         /// <summary>
+        /// The exception that caused the stats to be put into the 
+        /// AutoUpdateStatus.Error state.
+        /// </summary>
+        internal Exception Exception { get; private set; }
+
+        /// <summary>
         /// Updated internally from the AutoUpdateHostedService to 
         /// update the status.
         /// </summary>
-        internal void Update(AutoUpdateStatus newStatus)
+        /// <param name="newStatus">The new state.</param>
+        /// <param name="ex">An exception can optionally be provded if the status is AutoUpdateStatus.Error</param>
+        internal void Update(AutoUpdateStatus newStatus, Exception ex = null)
         {
+            if (ex != null && newStatus != AutoUpdateStatus.Error)
+            {
+                throw new ArgumentException("An exception parameter can only be supplied if the status is AutoUpdateStatus.Error", nameof(ex));
+            }
+
             Status = newStatus;
+            Exception = ex;
         }
     }
 }

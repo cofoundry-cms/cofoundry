@@ -5,6 +5,8 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Diagnostics;
+using Cofoundry.Core;
+using Microsoft.AspNetCore.Hosting;
 
 namespace Cofoundry.Web
 {
@@ -46,8 +48,7 @@ namespace Cofoundry.Web
 
                 case AutoUpdateStatus.Error:
                     // Throw an error which will redirect the user to the error handling page. 
-                    throw new Exception("An error has occured while updating the system. See the logs for more details.");
-
+                    throw new AutoUpdateFailedException(autoUpdateState.Exception);
                 case AutoUpdateStatus.LockedByAnotherProcess:
                 case AutoUpdateStatus.NotStarted:
                 case AutoUpdateStatus.InProgress:
@@ -83,6 +84,11 @@ namespace Cofoundry.Web
             if (updatedStatus == AutoUpdateStatus.Complete)
             {
                 await _next.Invoke(cx);
+            }
+            else if (updatedStatus == AutoUpdateStatus.Error)
+            {
+                // Throw an error which will redirect the user to the error handling page. 
+                throw new AutoUpdateFailedException(autoUpdateState.Exception);
             }
             else
             {

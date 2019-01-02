@@ -35,6 +35,7 @@ namespace Cofoundry.Web
             bool isComplete = false;
 
             _logger.LogInformation("Starting service");
+            uint numAttempts = 0;
 
             // The update is essential so we should keep re-trying until compelete
             while (!stoppingToken.IsCancellationRequested && !isComplete)
@@ -43,12 +44,26 @@ namespace Cofoundry.Web
 
                 if (!isComplete)
                 {
+                    var retryTimeout = GetRetryTimeoutInSeconds(numAttempts);
+
                     // Use a short re-try delay to ensure we process the update quickly
                     // without overwhelming server resources
-                    _logger.LogInformation("Process failed, retrying in 1 second");
-                    await Task.Delay(TimeSpan.FromSeconds(1));
+                    _logger.LogInformation($"Process failed, retrying in {retryTimeout} seconds");
+                    await Task.Delay(TimeSpan.FromSeconds(retryTimeout));
+
+                    numAttempts++;
                 }
             }
+        }
+
+        private int GetRetryTimeoutInSeconds(ulong numAttmpts)
+        {
+            if (numAttmpts > 30) return 60;
+            if (numAttmpts > 20) return 30;
+            if (numAttmpts > 10) return 15;
+            if (numAttmpts > 2) return 5;
+
+            return 1;
         }
 
         private async Task<bool> TryUpdate()
@@ -79,7 +94,7 @@ namespace Cofoundry.Web
                 catch (Exception ex)
                 {
                     _logger.LogError(ex, "Error executing update");
-                    state.Update(AutoUpdateStatus.Error);
+                    state.Update(AutoUpdateStatus.Error, ex);
                 }
 
                 if (state.Status == AutoUpdateStatus.Complete)
