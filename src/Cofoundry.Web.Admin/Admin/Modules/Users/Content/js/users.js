@@ -225,9 +225,9 @@ function (
         vm.formLoadState = new LoadState(true);
         vm.userArea = options;
 
-        vm.userAreaCode = options.userAreaCode + 'USR';
-        vm.canUpdate = permissionValidationService.canUpdate(vm.userAreaCode);
-        vm.canDelete = permissionValidationService.canDelete(vm.userAreaCode);
+        var entityDefinitionCode = options.userAreaCode === 'COF' ? 'COFUSR' : 'COFUSN';
+        vm.canUpdate = permissionValidationService.canUpdate(entityDefinitionCode);
+        vm.canDelete = permissionValidationService.canDelete(entityDefinitionCode);
 
         // Init
         $q.all([loadRoles(), loadUser()])
@@ -379,10 +379,10 @@ function (
         vm.filter = vm.query.getFilters();
         vm.toggleFilter = toggleFilter;
 
-        vm.userAreaCode = options.userAreaCode + 'USR';
-        vm.canRead = permissionValidationService.canRead(vm.userAreaCode);
-        vm.canUpdate = permissionValidationService.canUpdate(vm.userAreaCode);
-        vm.canCreate = permissionValidationService.canCreate(vm.userAreaCode);
+        var entityDefinitionCode = options.userAreaCode === 'COF' ? 'COFUSR' : 'COFUSN';
+        vm.canRead = permissionValidationService.canRead(entityDefinitionCode);
+        vm.canUpdate = permissionValidationService.canUpdate(entityDefinitionCode);
+        vm.canCreate = permissionValidationService.canCreate(entityDefinitionCode);
 
         toggleFilter(false);
 

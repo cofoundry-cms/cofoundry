@@ -49,7 +49,8 @@ namespace Cofoundry.Web.Identity
             if (vm == null) throw new ArgumentNullException(nameof(vm));
 
             var result = new AuthenticationResult();
-            result.ReturnUrl = controller.Request.Query["ReturnUrl"].FirstOrDefault();
+            result.ReturnUrl = GetAndValidateReturnUrl(controller);
+
             if (!controller.ModelState.IsValid) return result;
 
             var command = new LogUserInWithCredentialsCommand()
@@ -75,6 +76,18 @@ namespace Cofoundry.Web.Identity
             result.IsAuthenticated = controller.ModelState.IsValid;
 
             return result;
+        }
+
+        private static string GetAndValidateReturnUrl(Controller controller)
+        {
+            var returnUrl = controller.Request.Query["ReturnUrl"].FirstOrDefault();
+
+            if (!string.IsNullOrEmpty(returnUrl) && controller.Url.IsLocalUrl(returnUrl))
+            {
+                return returnUrl;
+            }
+
+            return null;
         }
 
 

@@ -45,6 +45,7 @@ namespace Cofoundry.Web.Admin
 
         #region commands
 
+        [HttpPatch]
         public async Task<IActionResult> Patch([FromBody] IDelta<UpdateCurrentUserAccountCommand> delta)
         {
             var userContext = await _userContextService.GetCurrentContextAsync();
@@ -53,6 +54,7 @@ namespace Cofoundry.Web.Admin
             return await _apiResponseHelper.RunCommandAsync(this, userId, delta);
         }
 
+        [HttpPut]
         public async Task<IActionResult> PutPassword([FromBody] UpdateCurrentUserPasswordCommandDto dto)
         {
             var command = new UpdateCurrentUserPasswordCommand()

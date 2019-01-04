@@ -49,16 +49,19 @@ namespace Cofoundry.Web.Admin
 
         #region commands
 
+        [HttpPost]
         public async Task<IActionResult> Post([FromBody] AddPageDirectoryCommand command)
         {
             return await _apiResponseHelper.RunCommandAsync(this, command);
         }
 
+        [HttpPatch]
         public async Task<IActionResult> Patch(int pageDirectoryId, [FromBody] IDelta<UpdatePageDirectoryCommand> delta)
         {
             return await _apiResponseHelper.RunCommandAsync(this, pageDirectoryId, delta);
         }
 
+        [HttpDelete]
         public async Task<IActionResult> Delete(int pageDirectoryId)
         {
             var command = new DeletePageDirectoryCommand();

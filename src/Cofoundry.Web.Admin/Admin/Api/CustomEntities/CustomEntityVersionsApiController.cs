@@ -42,16 +42,19 @@ namespace Cofoundry.Web.Admin
 
         #region commands
 
+        [HttpPost]
         public async Task<IActionResult> Post([FromBody] AddCustomEntityDraftVersionCommand command)
         {
             return await _apiResponseHelper.RunCommandAsync(this, command);
         }
 
+        [HttpPut]
         public async Task<IActionResult> PutDraft(int customEntityId, [ModelBinder(BinderType = typeof(CustomEntityDataModelCommandModelBinder))] UpdateCustomEntityDraftVersionCommand command)
         {
             return await _apiResponseHelper.RunCommandAsync(this, command);
         }
 
+        [HttpDelete]
         public async Task<IActionResult> DeleteDraft(int customEntityId)
         {
             var command = new DeleteCustomEntityDraftVersionCommand() { CustomEntityId = customEntityId };
@@ -59,12 +62,14 @@ namespace Cofoundry.Web.Admin
             return await _apiResponseHelper.RunCommandAsync(this, command);
         }
 
+        [HttpPatch]
         public async Task<IActionResult> Publish(int customEntityId)
         {
             var command = new PublishCustomEntityCommand() { CustomEntityId = customEntityId };
             return await _apiResponseHelper.RunCommandAsync(this, command);
         }
 
+        [HttpPatch]
         public async Task<IActionResult> UnPublish(int customEntityId)
         {
             var command = new UnPublishCustomEntityCommand() { CustomEntityId = customEntityId };

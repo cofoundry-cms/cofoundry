@@ -59,18 +59,21 @@ namespace Cofoundry.Web.Admin
 
         #region commands
 
+        [HttpPost]
         public async Task<IActionResult> Post(AddImageAssetCommand command, IFormFile file) 
         {
             command.File = _formFileUploadedFileFactory.Create(file);
             return await _apiResponseHelper.RunCommandAsync(this, command);
         }
 
+        [HttpPut]
         public async Task<IActionResult> Put(int imageAssetId, UpdateImageAssetCommand command, IFormFile file)
         {
             command.File = _formFileUploadedFileFactory.Create(file);
             return await _apiResponseHelper.RunCommandAsync(this, command);
         }
 
+        [HttpDelete]
         public async Task<IActionResult> Delete(int imageAssetId)
         {
             var command = new DeleteImageAssetCommand();
