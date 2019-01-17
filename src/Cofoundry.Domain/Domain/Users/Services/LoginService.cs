@@ -45,13 +45,15 @@ namespace Cofoundry.Domain
         /// </param>
         public async Task LogAuthenticatedUserInAsync(string userAreaCode, int userId, bool rememberUser)
         {
-            // Remove any existing login
+            // Clear any existing session
             await SignOutAsync(userAreaCode);
 
-            var command = new LogAuthenticatedUserInCommand() { UserId = userId };
-            await _commandExecutor.ExecuteAsync(command);
-
+            // Log in new session
             await _userSessionService.LogUserInAsync(userAreaCode, userId, rememberUser);
+
+            // Update the user record
+            var command = new LogSuccessfulLoginCommand() { UserId = userId };
+            await _commandExecutor.ExecuteAsync(command);
         }
 
         /// <summary>
