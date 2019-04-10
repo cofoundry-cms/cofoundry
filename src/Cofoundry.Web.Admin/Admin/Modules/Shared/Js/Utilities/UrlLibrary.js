@@ -22,14 +22,14 @@ function (
             path += pathParts.join('/');
         } else if (pathParts != null) {
             path += pathParts;
-        } 
+        }
 
         if (query) {
             path += '?' + stringUtilities.toQueryString(query);
         }
 
         return path;
-    }
+    };
 
     /* CRUD Routes */
 
@@ -45,7 +45,7 @@ function (
         if (!document) return;
 
         return document.downloadUrl;
-    }
+    };
 
     service.getImageUrl = function (img, settings) {
         var url;
@@ -64,18 +64,15 @@ function (
         /* Helpers */
 
         function setDefaultCrop(asset, settings) {
-            
+
             if (!settings) return;
 
-            if (isDefinedAndChanged(settings.width, asset.width) || isDefinedAndChanged(settings.height, asset.height))
-            {
-                if (!settings.mode)
-                {
+            if (isDefinedAndChanged(settings.width, asset.width) || isDefinedAndChanged(settings.height, asset.height)) {
+                if (!settings.mode) {
                     settings.mode = 'Crop';
                 }
 
-                if (asset.defaultAnchorLocation)
-                {
+                if (asset.defaultAnchorLocation) {
                     settings.anchor = asset.defaultAnchorLocation;
                 }
             }
@@ -84,7 +81,7 @@ function (
         function isDefinedAndChanged(settingValue, imageValue) {
             return settingValue > 0 && settingValue != imageValue;
         }
-    }
+    };
 
     /* Login */
 
@@ -96,7 +93,7 @@ function (
         }
 
         return url;
-    }
+    };
 
     /* Pages */
 
@@ -110,7 +107,7 @@ function (
         }
 
         return path;
-    }
+    };
 
     service.visualEditorForVersion = function (
         pageRoute,
@@ -140,19 +137,19 @@ function (
         }
 
         return url;
-    }
+    };
 
     /* Custom Entities */
 
     service.customEntityList = function (customEntityDefinition) {
-        return service.makePath(stringUtilities.slugify(customEntityDefinition.name))
-    }
+        return service.makePath(stringUtilities.slugify(customEntityDefinition.name));
+    };
 
     service.customEntityDetails = function (customEntityDefinition, id) {
-        return service.makePath(stringUtilities.slugify(customEntityDefinition.name), id);
-    }
+        return service.makePath(stringUtilities.slugify(customEntityDefinition.namePlural), id);
+    };
 
-    service.customEntityVisualEditor = function(customEntityDetails, isEditMode) {
+    service.customEntityVisualEditor = function (customEntityDetails, isEditMode) {
         if (!customEntityDetails) return '';
 
         var path = customEntityDetails.fullPath;
@@ -164,21 +161,21 @@ function (
         }
 
         return path;
-    }
+    };
 
     /* Users */
 
     service.userDetails = function (userArea, id) {
         return service.makePath(getGetAreaPath(userArea), id);
-    }
+    };
 
     service.userList = function (userArea, query) {
         return service.makePath(getGetAreaPath(userArea), null, query)
-    }
+    };
 
     service.userNew = function (userArea, query) {
         return service.makePath(getGetAreaPath(userArea), 'new', query)
-    }
+    };
     
     /* Private Helpers */
 
