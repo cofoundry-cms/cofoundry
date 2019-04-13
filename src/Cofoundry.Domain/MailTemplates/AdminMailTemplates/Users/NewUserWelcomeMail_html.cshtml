@@ -1,10 +1,9 @@
 ﻿@model NewUserWelcomeMailTemplate
 @inject ICofoundryMailTemplateHelper Cofoundry
-
+@inject Microsoft.Extensions.Configuration.IConfiguration configuration
 @{
     Layout = TemplatePath.DefaultLayoutPath_Html;
 }
-
 <h2>Hi @Model.FirstName</h2>
 
 <p>
@@ -15,7 +14,7 @@
     Your temporary password is: @Model.TemporaryPassword
 </p>
 <p>
-    Login <a href="@Cofoundry.Routing.ToAbsolute(UrlLibrary.Login)">here</a>
+    Login <a href="@Cofoundry.Routing.ToAbsolute(UrlLibrary.LoginUrl(configuration))">here</a>
 </p>
 
 <p>
