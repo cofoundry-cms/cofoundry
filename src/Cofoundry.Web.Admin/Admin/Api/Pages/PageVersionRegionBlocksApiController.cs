@@ -53,16 +53,19 @@ namespace Cofoundry.Web.Admin
 
         #region commands
 
+        [HttpPost]
         public async Task<IActionResult> Post([ModelBinder(BinderType = typeof(PageVersionBlockDataModelCommandModelBinder))] AddPageVersionBlockCommand command)
         {
             return await _apiResponseHelper.RunCommandAsync(this, command);
         }
 
+        [HttpPut]
         public async Task<IActionResult> Put(int PageVersionBlockId, [ModelBinder(BinderType = typeof(PageVersionBlockDataModelCommandModelBinder))] UpdatePageVersionBlockCommand command)
         {
             return await _apiResponseHelper.RunCommandAsync(this, command);
         }
 
+        [HttpDelete]
         public async Task<IActionResult> Delete(int pageVersionBlockId)
         {
             var command = new DeletePageVersionBlockCommand() { PageVersionBlockId = pageVersionBlockId };
@@ -70,6 +73,7 @@ namespace Cofoundry.Web.Admin
             return await _apiResponseHelper.RunCommandAsync(this, command);
         }
 
+        [HttpPut]
         public async Task<IActionResult> MoveUp(int pageVersionBlockId)
         {
             var command = new MovePageVersionBlockCommand();
@@ -79,6 +83,7 @@ namespace Cofoundry.Web.Admin
             return await _apiResponseHelper.RunCommandAsync(this, command);
         }
 
+        [HttpPut]
         public async Task<IActionResult> MoveDown(int pageVersionBlockId)
         {
             var command = new MovePageVersionBlockCommand();

@@ -83,6 +83,8 @@ namespace Cofoundry.Domain
 
             // otherwise, try and get a specific user context:
             var userId = await _userSessionService.GetUserIdByUserAreaCodeAsync(userAreaCode);
+            if (!userId.HasValue) return new UserContext();
+
             userContext = await GetUserContextByIdAsync(userId);
 
             if (!userContext.UserId.HasValue)

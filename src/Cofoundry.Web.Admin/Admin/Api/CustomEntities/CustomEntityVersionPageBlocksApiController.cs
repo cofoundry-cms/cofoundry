@@ -53,17 +53,20 @@ namespace Cofoundry.Web.Admin
 
         #region commands
 
+        [HttpPost]
         public async Task<IActionResult> Post([ModelBinder(BinderType = typeof(PageVersionBlockDataModelCommandModelBinder))] AddCustomEntityVersionPageBlockCommand command)
         {
             return await _apiResponseHelper.RunCommandAsync(this, command);
         }
 
+        [HttpPut]
         public async Task<IActionResult> Put(int customEntityVersionPageBlockId, [ModelBinder(BinderType = typeof(PageVersionBlockDataModelCommandModelBinder))] UpdateCustomEntityVersionPageBlockCommand command)
         {
             command.CustomEntityVersionPageBlockId = customEntityVersionPageBlockId;
             return await _apiResponseHelper.RunCommandAsync(this, command);
         }
 
+        [HttpDelete]
         public async Task<IActionResult> Delete(int customEntityVersionPageBlockId)
         {
             var command = new DeleteCustomEntityVersionPageBlockCommand() { CustomEntityVersionPageBlockId = customEntityVersionPageBlockId };
@@ -71,6 +74,7 @@ namespace Cofoundry.Web.Admin
             return await _apiResponseHelper.RunCommandAsync(this, command);
         }
 
+        [HttpPut]
         public async Task<IActionResult> MoveUp(int customEntityVersionPageBlockId)
         {
             var command = new MoveCustomEntityVersionPageBlockCommand();
@@ -80,6 +84,7 @@ namespace Cofoundry.Web.Admin
             return await _apiResponseHelper.RunCommandAsync(this, command);
         }
 
+        [HttpPut]
         public async Task<IActionResult> MoveDown(int customEntityVersionPageBlockId)
         {
             var command = new MoveCustomEntityVersionPageBlockCommand();

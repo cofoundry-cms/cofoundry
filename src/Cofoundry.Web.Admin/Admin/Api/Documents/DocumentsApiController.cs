@@ -66,6 +66,7 @@ namespace Cofoundry.Web.Admin
             return await _apiResponseHelper.RunCommandAsync(this, command);
         }
 
+        [HttpPut]
         public async Task<IActionResult> Put(int documentAssetId, UpdateDocumentAssetCommand command, IFormFile file)
         {
             command.File = _formFileUploadedFileFactory.Create(file);
@@ -73,6 +74,7 @@ namespace Cofoundry.Web.Admin
             return await _apiResponseHelper.RunCommandAsync(this, command);
         }
 
+        [HttpDelete]
         public async Task<IActionResult> Delete(int documentAssetId)
         {
             var command = new DeleteDocumentAssetCommand();

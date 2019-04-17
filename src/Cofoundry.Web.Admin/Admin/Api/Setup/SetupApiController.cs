@@ -20,6 +20,7 @@ namespace Cofoundry.Web.Admin
             _apiResponseHelper = apiResponseHelper;
         }
 
+        [HttpPost]
         public async Task<IActionResult> Post([FromBody] SetupCofoundryCommandDto dto)
         {
             var command = new SetupCofoundryCommand()

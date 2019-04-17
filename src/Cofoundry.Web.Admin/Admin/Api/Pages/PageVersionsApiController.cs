@@ -41,11 +41,13 @@ namespace Cofoundry.Web.Admin
 
         #region commands
 
+        [HttpPost]
         public async Task<IActionResult> Post([FromBody] AddPageDraftVersionCommand command)
         {
             return await _apiResponseHelper.RunCommandAsync(this, command);
         }
 
+        [HttpPatch]
         public async Task<IActionResult> PatchDraft(int pageId, [FromBody] IDelta<UpdatePageDraftVersionCommand> delta)
         {
             // Custom patching because we may need to create a draft version first
@@ -65,6 +67,7 @@ namespace Cofoundry.Web.Admin
             return await _apiResponseHelper.RunCommandAsync(this, command);
         }
 
+        [HttpDelete]
         public async Task<IActionResult> DeleteDraft(int pageId)
         {
             var command = new DeletePageDraftVersionCommand() { PageId = pageId };
@@ -72,12 +75,14 @@ namespace Cofoundry.Web.Admin
             return await _apiResponseHelper.RunCommandAsync(this, command);
         }
 
+        [HttpPatch]
         public async Task<IActionResult> Publish(int pageId)
         {
             var command = new PublishPageCommand() { PageId = pageId };
             return await _apiResponseHelper.RunCommandAsync(this, command);
         }
 
+        [HttpPatch]
         public async Task<IActionResult> UnPublish(int pageId)
         {
             var command = new UnPublishPageCommand() { PageId = pageId };

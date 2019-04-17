@@ -51,7 +51,7 @@ namespace Cofoundry.Web
             {
                 routes.MapRoute(
                     "Cofoundry_Page",
-                    "{*path}",
+                    "{**path}",
                     new { controller = "CofoundryPages", action = "Page" });
             }
         }

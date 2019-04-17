@@ -84,7 +84,7 @@ Task("Build")
                 .Append("/p:AssemblyVersion=" + versionInfo.AssemblySemVer)
                 .Append("/p:FileVersion=" + versionInfo.MajorMinorPatch + ".0")
                 .Append("/p:InformationalVersion=" + versionInfo.InformationalVersion)
-                .Append("/p:Copyright=" + "\"Copyright © Cofoundry.org " + DateTime.Now.Year + "\"")
+                .Append("/p:Copyright=" + "\"Copyright © Cofoundry Technologies Ltd " + DateTime.Now.Year + "\"")
         };
     
     foreach (var projectToBuild in projectsToBuild)

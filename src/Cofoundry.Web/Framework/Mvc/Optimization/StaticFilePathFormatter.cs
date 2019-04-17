@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc.TagHelpers.Internal;
-using Microsoft.Extensions.Caching.Memory;
-using Microsoft.Extensions.FileProviders;
+﻿using Microsoft.Extensions.Caching.Memory;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -43,9 +41,8 @@ namespace Cofoundry.Web
         public string AppendVersion(string applicationRelativePath)
         {
             // Only support site relative urls, so no need to pass requestPathBase;
-            var versionProvider = new FileVersionProvider(_staticResourceFileProvider, _memoryCache, null);
-
-            var path = versionProvider.AddFileVersionToPath(applicationRelativePath);
+            var versionProvider = new CofoundryFileVersionProvider(_staticResourceFileProvider, _memoryCache);
+            var path = versionProvider.AddFileVersionToPath(null, applicationRelativePath);
 
             return path;
         }

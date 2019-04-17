@@ -11,8 +11,13 @@ using Cofoundry.Core;
 
 namespace Cofoundry.Domain
 {
-    public class LogAuthenticatedUserInCommandHandler 
-        : IAsyncCommandHandler<LogAuthenticatedUserInCommand>
+    /// <summary>
+    /// Updates user auditing information in the database to record 
+    /// the successful login. Does not do anything to login a user
+    /// session.
+    /// </summary>
+    public class LogSuccessfulLoginCommandHandler 
+        : IAsyncCommandHandler<LogSuccessfulLoginCommand>
         , IIgnorePermissionCheckHandler
     {
         #region constructor
@@ -21,7 +26,7 @@ namespace Cofoundry.Domain
         private readonly IEntityFrameworkSqlExecutor _sqlExecutor;
         private readonly IClientConnectionService _clientConnectionService;
 
-        public LogAuthenticatedUserInCommandHandler(
+        public LogSuccessfulLoginCommandHandler(
             CofoundryDbContext dbContext,
             IEntityFrameworkSqlExecutor sqlExecutor,
             IClientConnectionService clientConnectionService
@@ -34,7 +39,7 @@ namespace Cofoundry.Domain
 
         #endregion
 
-        public async Task ExecuteAsync(LogAuthenticatedUserInCommand command, IExecutionContext executionContext)
+        public async Task ExecuteAsync(LogSuccessfulLoginCommand command, IExecutionContext executionContext)
         {
             var user = await Query(command.UserId).SingleOrDefaultAsync();
             EntityNotFoundException.ThrowIfNull(user, command.UserId);
