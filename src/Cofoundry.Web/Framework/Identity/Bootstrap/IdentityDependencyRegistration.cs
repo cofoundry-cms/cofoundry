@@ -13,10 +13,9 @@ namespace Cofoundry.Web.Identity
         {
             container
                 .Register<AccountManagementControllerHelper, AccountManagementControllerHelper>()
-                .Register<AuthenticationControllerHelper, AuthenticationControllerHelper>()
+                .RegisterGeneric(typeof(IAuthenticationControllerHelper<>), typeof(AuthenticationControllerHelper<>))
                 .Register<UserManagementControllerHelper, UserManagementControllerHelper>()
                 ;
-
         }
     }
 }

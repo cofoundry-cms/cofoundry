@@ -12,7 +12,9 @@ namespace Cofoundry.Web.Identity
     /// A helper class with shared functionality between controllers
     /// that manage user login.
     /// </summary>
-    public class AuthenticationControllerHelper
+    public class AuthenticationControllerHelper<TUserArea>
+        : IAuthenticationControllerHelper<TUserArea>
+        where TUserArea : IUserAreaDefinition
     {
         #region constructor
 
@@ -22,6 +24,7 @@ namespace Cofoundry.Web.Identity
         private readonly IUserContextService _userContextService;
         private readonly IControllerResponseHelper _controllerResponseHelper;
         private readonly IPasswordResetUrlHelper _passwordResetUrlHelper;
+        private readonly TUserArea _userAreaDefinition;
 
         public AuthenticationControllerHelper(
             IQueryExecutor queryExecutor,
@@ -29,7 +32,8 @@ namespace Cofoundry.Web.Identity
             ILoginService loginService,
             IControllerResponseHelper controllerResponseHelper,
             IUserContextService userContextService,
-            IPasswordResetUrlHelper passwordResetUrlHelper
+            IPasswordResetUrlHelper passwordResetUrlHelper,
+            TUserArea userAreaDefinition
             )
         {
             _queryExecutor = queryExecutor;
@@ -38,23 +42,34 @@ namespace Cofoundry.Web.Identity
             _controllerResponseHelper = controllerResponseHelper;
             _userContextService = userContextService;
             _passwordResetUrlHelper = passwordResetUrlHelper;
+            _userAreaDefinition = userAreaDefinition;
         }
 
         #endregion
 
         #region Log in
 
-        public async Task<LoginResult> LogUserInAsync(Controller controller, ILoginViewModel vm, IUserAreaDefinition userAreaToLogInTo)
+        /// <summary>
+        /// Attempts to log a user in using the data in the specified view 
+        /// model, returning the result. ModelState is first checked to be 
+        /// valid before checking the auth data against the database.
+        /// </summary>
+        /// <param name="controller">
+        /// This method is intended to be called from an MVC controller and this
+        /// should be the controller instance.
+        /// </param>
+        /// <param name="vm">The view-model data posted to the action.</param>
+        /// <returns></returns>
+        public async Task<LoginResult> LogUserInAsync(Controller controller, ILoginViewModel vm)
         {
             if (controller == null) throw new ArgumentNullException(nameof(controller));
-            if (userAreaToLogInTo == null) throw new ArgumentNullException(nameof(userAreaToLogInTo));
             if (vm == null) throw new ArgumentNullException(nameof(vm));
             
             if (!controller.ModelState.IsValid) return LoginResult.Failed;
 
             var command = new LogUserInWithCredentialsCommand()
             {
-                UserAreaCode = userAreaToLogInTo.UserAreaCode,
+                UserAreaCode = _userAreaDefinition.UserAreaCode,
                 Username = vm.Username,
                 Password = vm.Password,
                 RememberUser = vm.RememberMe
@@ -78,6 +93,15 @@ namespace Cofoundry.Web.Identity
             return LoginResult.Failed;
         }
 
+        /// <summary>
+        /// Retreives the ASP.NET MVC standard "ReturnUrl" query parameter and
+        /// validates it to be a local url before returning it.
+        /// </summary>
+        /// <param name="controller">
+        /// This method is intended to be called from an MVC controller and this
+        /// should be the controller instance.
+        /// </param>
+        /// <returns>The return url if it is a valid local url; otherwise null.</returns>
         public string GetAndValidateReturnUrl(Controller controller)
         {
             var returnUrl = controller.Request.Query["ReturnUrl"].FirstOrDefault();
@@ -90,37 +114,32 @@ namespace Cofoundry.Web.Identity
             return null;
         }
 
-
         #endregion
 
         #region ChangePasswordAsync
 
         /// <summary>
-        /// Changes a users password, sending them an email notification if the operation 
-        /// was successful.
+        /// Used to change a users password when it is required before login. Once
+        /// completed the user should be redirected back to login to re-authenticate.
         /// </summary>
-        /// <param name="controller">Controller instance</param>
-        /// <param name="vm">The IChangePasswordTemplate containing the data entered by the user.</param>
-        /// <param name="userArea">
-        /// The user area that the user belongs to. Usernames are only unique by user area 
-        /// so all user commands need to be run against a specific user area.
+        /// <param name="controller">
+        /// This method is intended to be called from an MVC controller and this
+        /// should be the controller instance.
         /// </param>
-        /// <returns>The user id of the updated user if the action was successful; otheriwse null.</returns>
+        /// <param name="vm">The view-model containing the data entered by the user.</param>
         public async Task ChangePasswordAsync(
             Controller controller,
-            IChangePasswordViewModel vm,
-            IUserAreaDefinition userArea
+            IChangePasswordViewModel vm
             )
         {
             if (controller == null) throw new ArgumentNullException(nameof(controller));
-            if (userArea == null) throw new ArgumentNullException(nameof(userArea));
             if (vm == null) throw new ArgumentNullException(nameof(vm));
 
             if (controller.ModelState.IsValid)
             {
                 var command = new UpdateUnauthenticatedUserPasswordCommand()
                 {
-                    UserAreaCode = userArea.UserAreaCode,
+                    UserAreaCode = _userAreaDefinition.UserAreaCode,
                     Username = vm.Username,
                     NewPassword = vm.NewPassword,
                     OldPassword = vm.OldPassword
@@ -134,21 +153,34 @@ namespace Cofoundry.Web.Identity
 
         #region log out
 
-        public Task LogoutAsync(IUserAreaDefinition userAreaToLogInTo)
+        /// <summary>
+        /// Signs the user out of the user area.
+        /// </summary>
+        public Task LogoutAsync()
         {
-            if (userAreaToLogInTo == null) throw new ArgumentNullException(nameof(userAreaToLogInTo));
-
-            return _loginService.SignOutAsync(userAreaToLogInTo.UserAreaCode);
+            return _loginService.SignOutAsync(_userAreaDefinition.UserAreaCode);
         }
 
         #endregion
 
         #region forgot password
 
+        /// <summary>
+        /// Checks the ModelState is valid and then initiates
+        /// a password reset request.
+        /// </summary>
+        /// <param name="controller">
+        /// This method is intended to be called from an MVC controller and this
+        /// should be the controller instance.
+        /// </param>
+        /// <param name="vm">The view-model data posted to the action.</param>
+        /// <param name="resetUrlBase">
+        /// The relative base path used to construct the reset url 
+        /// e.g. new Uri("/auth/forgot-password").
+        /// </param>
         public Task SendPasswordResetNotificationAsync(
             Controller controller, 
-            IForgotPasswordViewModel vm, 
-            IUserAreaDefinition userArea,
+            IForgotPasswordViewModel vm,
             Uri resetUrlBase
             )
         {
@@ -157,21 +189,31 @@ namespace Cofoundry.Web.Identity
             var command = new InitiatePasswordResetRequestCommand()
             {
                 Username = vm.Username,
-                UserAreaCode = userArea.UserAreaCode,
+                UserAreaCode = _userAreaDefinition.UserAreaCode,
                 ResetUrlBase = resetUrlBase
             };
 
             return _controllerResponseHelper.ExecuteIfValidAsync(controller, command);
         }
 
+        /// <summary>
+        /// Parses the password reset authentication parameters out of the request
+        /// url and validates them against the database before returning the result.
+        /// </summary>
+        /// <param name="controller">
+        /// This method is intended to be called from an MVC controller and this
+        /// should be the controller instance.
+        /// </param>
+        /// <returns>
+        /// An object containing the validation result, details of any errors
+        /// and the parsed authentication data.
+        /// </returns>
         public async Task<PasswordResetRequestValidationResult> ParseAndValidatePasswordResetRequestAsync(
-            Controller controller, 
-            IUserAreaDefinition userAreaToLogInTo
+            Controller controller
             )
         {
             if (controller == null) throw new ArgumentNullException(nameof(controller));
-            if (userAreaToLogInTo == null) throw new ArgumentNullException(nameof(userAreaToLogInTo));
-
+            
             var result = new PasswordResetRequestValidationResult();
             result.ValidationErrorMessage = "Invalid password reset request";
 
@@ -193,7 +235,7 @@ namespace Cofoundry.Web.Identity
             var query = new ValidatePasswordResetRequestQuery();
             query.UserPasswordResetRequestId = urlParameters.UserPasswordResetRequestId;
             query.Token = urlParameters.Token;
-            query.UserAreaCode = userAreaToLogInTo.UserAreaCode;
+            query.UserAreaCode = _userAreaDefinition.UserAreaCode;
 
             var validationResult = await _queryExecutor.ExecuteAsync(query);
 
@@ -203,10 +245,19 @@ namespace Cofoundry.Web.Identity
             return result;
         }
 
+        /// <summary>
+        /// Completes a password reset, validating the ModelState and
+        /// view-model data before updating the database and sending
+        /// a confirmation notification.
+        /// </summary>
+        /// <param name="controller">
+        /// This method is intended to be called from an MVC controller and this
+        /// should be the controller instance.
+        /// </param>
+        /// <param name="vm">The view-model data posted to the action.</param>
         public Task CompletePasswordResetAsync(
             Controller controller, 
-            ICompletePasswordResetViewModel vm, 
-            IUserAreaDefinition userAreaToLogInTo
+            ICompletePasswordResetViewModel vm
             )
         {
             if (!controller.ModelState.IsValid) return Task.CompletedTask;
@@ -222,7 +273,7 @@ namespace Cofoundry.Web.Identity
                 NewPassword = vm.NewPassword,
                 Token = vm.Token,
                 UserPasswordResetRequestId = vm.UserPasswordResetRequestId,
-                UserAreaCode = userAreaToLogInTo.UserAreaCode
+                UserAreaCode = _userAreaDefinition.UserAreaCode
             };
 
             return _controllerResponseHelper.ExecuteIfValidAsync(controller, command);

@@ -13,11 +13,11 @@ namespace Cofoundry.Samples.UserAreas
     [AuthorizeUserArea(PartnerUserAreaDefinition.Code)]
     public class PartnerAccountController : Controller
     {
-        private static IUserAreaDefinition USER_AREA = new PartnerUserAreaDefinition();
+        private readonly IAuthenticationControllerHelper<PartnerUserAreaDefinition> _authenticationControllerHelper;
 
-        private readonly AuthenticationControllerHelper _authenticationControllerHelper;
-
-        public PartnerAccountController(AuthenticationControllerHelper authenticationControllerHelper)
+        public PartnerAccountController(
+            IAuthenticationControllerHelper<PartnerUserAreaDefinition> authenticationControllerHelper
+            )
         {
             _authenticationControllerHelper = authenticationControllerHelper;
         }
