@@ -54,31 +54,31 @@
   <ItemGroup>
     <None Remove="MailTemplates\AdminMailTemplates\Templates\AdminPasswordResetByAdminMailTemplate_html.cshtml" />
     <None Remove="MailTemplates\AdminMailTemplates\Templates\AdminPasswordResetByAdminMailTemplate_text.cshtml" />
-    <None Remove="MailTemplates\GenericMailTemplates\Layouts\_GenericMailLayout_html.cshtml" />
-    <None Remove="MailTemplates\GenericMailTemplates\Layouts\_GenericMailLayout_text.cshtml" />
-    <None Remove="MailTemplates\GenericMailTemplates\Templates\GenericNewUserWithTemporaryPasswordMailTemplate_html.cshtml" />
-    <None Remove="MailTemplates\GenericMailTemplates\Templates\GenericNewUserWithTemporaryPasswordMailTemplate_text.cshtml" />
-    <None Remove="MailTemplates\GenericMailTemplates\Templates\GenericPasswordChangedMailTemplate_html.cshtml" />
-    <None Remove="MailTemplates\GenericMailTemplates\Templates\GenericPasswordChangedMailTemplate_text.cshtml" />
-    <None Remove="MailTemplates\GenericMailTemplates\Templates\GenericPasswordResetByAdminMailTemplate_html.cshtml" />
-    <None Remove="MailTemplates\GenericMailTemplates\Templates\GenericPasswordResetByAdminMailTemplate_text.cshtml" />
-    <None Remove="MailTemplates\GenericMailTemplates\Templates\GenericPasswordResetRequestedByUserMailTemplate_html.cshtml" />
-    <None Remove="MailTemplates\GenericMailTemplates\Templates\GenericPasswordResetRequestedByUserMailTemplate_text.cshtml" />
-    <None Remove="MailTemplates\GenericMailTemplates\Templates\_ViewImports.cshtml" />
+    <None Remove="MailTemplates\DefaultMailTemplates\Layouts\_DefaultMailLayout_html.cshtml" />
+    <None Remove="MailTemplates\DefaultMailTemplates\Layouts\_DefaultMailLayout_text.cshtml" />
+    <None Remove="MailTemplates\DefaultMailTemplates\Templates\DefaultNewUserWithTemporaryPasswordMailTemplate_html.cshtml" />
+    <None Remove="MailTemplates\DefaultMailTemplates\Templates\DefaultNewUserWithTemporaryPasswordMailTemplate_text.cshtml" />
+    <None Remove="MailTemplates\DefaultMailTemplates\Templates\DefaultPasswordChangedMailTemplate_html.cshtml" />
+    <None Remove="MailTemplates\DefaultMailTemplates\Templates\DefaultPasswordChangedMailTemplate_text.cshtml" />
+    <None Remove="MailTemplates\DefaultMailTemplates\Templates\DefaultPasswordResetByAdminMailTemplate_html.cshtml" />
+    <None Remove="MailTemplates\DefaultMailTemplates\Templates\DefaultPasswordResetByAdminMailTemplate_text.cshtml" />
+    <None Remove="MailTemplates\DefaultMailTemplates\Templates\DefaultPasswordResetRequestedByUserMailTemplate_html.cshtml" />
+    <None Remove="MailTemplates\DefaultMailTemplates\Templates\DefaultPasswordResetRequestedByUserMailTemplate_text.cshtml" />
+    <None Remove="MailTemplates\DefaultMailTemplates\Templates\_ViewImports.cshtml" />
   </ItemGroup>
   
   <ItemGroup>
-    <EmbeddedResource Include="MailTemplates\GenericMailTemplates\Layouts\_GenericMailLayout_html.cshtml" />
-    <EmbeddedResource Include="MailTemplates\GenericMailTemplates\Layouts\_GenericMailLayout_text.cshtml" />
-    <EmbeddedResource Include="MailTemplates\GenericMailTemplates\Templates\GenericPasswordResetByAdminMailTemplate_html.cshtml" />
-    <EmbeddedResource Include="MailTemplates\GenericMailTemplates\Templates\GenericPasswordResetByAdminMailTemplate_text.cshtml" />
-    <EmbeddedResource Include="MailTemplates\GenericMailTemplates\Templates\GenericNewUserWithTemporaryPasswordMailTemplate_html.cshtml" />
-    <EmbeddedResource Include="MailTemplates\GenericMailTemplates\Templates\GenericNewUserWithTemporaryPasswordMailTemplate_text.cshtml" />
-    <EmbeddedResource Include="MailTemplates\GenericMailTemplates\Templates\GenericPasswordChangedMailTemplate_html.cshtml" />
-    <EmbeddedResource Include="MailTemplates\GenericMailTemplates\Templates\GenericPasswordChangedMailTemplate_text.cshtml" />
-    <EmbeddedResource Include="MailTemplates\GenericMailTemplates\Templates\GenericPasswordResetRequestedByUserMailTemplate_html.cshtml" />
-    <EmbeddedResource Include="MailTemplates\GenericMailTemplates\Templates\GenericPasswordResetRequestedByUserMailTemplate_text.cshtml" />
-    <EmbeddedResource Include="MailTemplates\GenericMailTemplates\Templates\_ViewImports.cshtml" />
+    <EmbeddedResource Include="MailTemplates\DefaultMailTemplates\Layouts\_DefaultMailLayout_html.cshtml" />
+    <EmbeddedResource Include="MailTemplates\DefaultMailTemplates\Layouts\_DefaultMailLayout_text.cshtml" />
+    <EmbeddedResource Include="MailTemplates\DefaultMailTemplates\Templates\DefaultPasswordResetByAdminMailTemplate_html.cshtml" />
+    <EmbeddedResource Include="MailTemplates\DefaultMailTemplates\Templates\DefaultPasswordResetByAdminMailTemplate_text.cshtml" />
+    <EmbeddedResource Include="MailTemplates\DefaultMailTemplates\Templates\DefaultNewUserWithTemporaryPasswordMailTemplate_html.cshtml" />
+    <EmbeddedResource Include="MailTemplates\DefaultMailTemplates\Templates\DefaultNewUserWithTemporaryPasswordMailTemplate_text.cshtml" />
+    <EmbeddedResource Include="MailTemplates\DefaultMailTemplates\Templates\DefaultPasswordChangedMailTemplate_html.cshtml" />
+    <EmbeddedResource Include="MailTemplates\DefaultMailTemplates\Templates\DefaultPasswordChangedMailTemplate_text.cshtml" />
+    <EmbeddedResource Include="MailTemplates\DefaultMailTemplates\Templates\DefaultPasswordResetRequestedByUserMailTemplate_html.cshtml" />
+    <EmbeddedResource Include="MailTemplates\DefaultMailTemplates\Templates\DefaultPasswordResetRequestedByUserMailTemplate_text.cshtml" />
+    <EmbeddedResource Include="MailTemplates\DefaultMailTemplates\Templates\_ViewImports.cshtml" />
   </ItemGroup>
 	
 </Project>

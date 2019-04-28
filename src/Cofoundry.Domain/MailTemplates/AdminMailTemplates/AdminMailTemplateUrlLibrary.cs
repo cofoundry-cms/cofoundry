@@ -23,13 +23,5 @@ namespace Cofoundry.Domain.MailTemplates.AdminMailTemplates
         {
             return "/" + _adminSettings.DirectoryName;
         }
-
-        public string PasswordReset(PasswordResetRequestedByUserTemplateBuilderContext context)
-        {
-            return string.Format("{0}/auth/reset-password?i={1}&t={2}",
-                _adminSettings.DirectoryName,
-                context.UserPasswordResetRequestId.ToString("N"),
-                Uri.EscapeDataString(context.Token));
-        }
     }
 }

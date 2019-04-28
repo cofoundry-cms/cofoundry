@@ -8,10 +8,24 @@ namespace Cofoundry.Domain.MailTemplates.AdminMailTemplates
     {
         public const string Root = "~/MailTemplates/AdminMailTemplates/";
         private const string LayoutPath = Root + "Layouts/";
-        
-        public const string DefaultLayoutPath_Html = LayoutPath + "_DefaultLayout_Html.cshtml";
-        public const string DefaultLayoutPath_Text = LayoutPath + "_DefaultLayout_Text.cshtml";
 
+        /// <summary>
+        /// Path to the layout view for html mail templates.
+        /// </summary>
+        public const string LayoutPath_Html = LayoutPath + "_AdminMailLayout_Html.cshtml";
+
+        /// <summary>
+        /// Path to the layout file for plain text mail templates.
+        /// </summary>
+        public const string LayoutPath_Text = LayoutPath + "_AdminMailLayout_Text.cshtml";
+
+        /// <summary>
+        /// Formats the path to a view file in the AdminMailTemplates folder.
+        /// </summary>
+        /// <param name="viewName">
+        /// Name of the view without the html/text postfix or file 
+        /// extension e.g. "MyTemplateName".
+        /// </param>
         public static string TemplateView(string viewName)
         {
             return Root + "Templates/" + viewName;

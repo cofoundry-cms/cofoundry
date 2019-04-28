@@ -1,23 +1,22 @@
 ﻿using Cofoundry.Core.Mail;
-using Microsoft.AspNetCore.Html;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 
-namespace Cofoundry.Domain.MailTemplates.GenericMailTemplates
+namespace Cofoundry.Domain.MailTemplates.DefaultMailTemplates
 {
     /// <summary>
-    /// Template for the email sent to a new user when their account has
-    /// been created with a temporary password. This generic version of the 
-    /// template is used by default for all user areas except the Cofoundry admin 
-    /// user area.
+    /// Template for the email sent to a user to notify them that their
+    /// password has been changed. This default version of the template 
+    /// is used for all user areas except the Cofoundry admin user area.
     /// </summary>
-    public class GenericNewUserWithTemporaryPasswordMailTemplate : IMailTemplate
+    public class DefaultPasswordChangedMailTemplate : IMailTemplate
     {
-        public GenericNewUserWithTemporaryPasswordMailTemplate()
+        public DefaultPasswordChangedMailTemplate()
         {
-            ViewFile = GenericMailTemplatePath.TemplateView(nameof(GenericNewUserWithTemporaryPasswordMailTemplate));
-            SubjectFormat = "{0}: Your account has been created";
+            SubjectFormat = "{0}: Password changed";
+            ViewFile = DefaultMailTemplatePath.TemplateView(nameof(DefaultPasswordChangedMailTemplate));
         }
 
         /// <summary>
@@ -39,7 +38,7 @@ namespace Cofoundry.Domain.MailTemplates.GenericMailTemplates
         /// <summary>
         /// String used to format the email subject. This can optionally 
         /// include a token "{0}" which is replaced with the application 
-        /// name configuration setting e.g. "{0}: Your account has been created".
+        /// name configuration setting e.g. "{0}: Password changed".
         /// </summary>
         public string SubjectFormat { get; set; }
 
@@ -50,15 +49,9 @@ namespace Cofoundry.Domain.MailTemplates.GenericMailTemplates
         public string ApplicationName { get; set; }
 
         /// <summary>
-        /// The username of the new user.
+        /// The username of the user who has had their password changed.
         /// </summary>
         public string Username { get; set; }
-
-        /// <summary>
-        /// The temporary password that the user can use to log in to 
-        /// the site.
-        /// </summary>
-        public IHtmlContent TemporaryPassword { get; set; }
 
         /// <summary>
         /// The path that the user can use to log in.

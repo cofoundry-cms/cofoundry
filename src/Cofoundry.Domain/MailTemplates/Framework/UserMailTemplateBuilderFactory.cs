@@ -1,7 +1,7 @@
 ﻿using Cofoundry.Core;
 using Cofoundry.Domain.CQS;
 using Cofoundry.Domain.MailTemplates.AdminMailTemplates;
-using Cofoundry.Domain.MailTemplates.GenericMailTemplates;
+using Cofoundry.Domain.MailTemplates.DefaultMailTemplates;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
@@ -13,14 +13,17 @@ namespace Cofoundry.Domain.MailTemplates
     {
         private readonly IServiceProvider _serviceProvider;
         private readonly IUserAreaDefinitionRepository _userAreaDefinitionRepository;
+        private readonly IPasswordResetUrlHelper _passwordResetUrlHelper;
 
         public UserMailTemplateBuilderFactory(
             IServiceProvider serviceProvider,
-            IUserAreaDefinitionRepository userAreaDefinitionRepository
+            IUserAreaDefinitionRepository userAreaDefinitionRepository,
+            IPasswordResetUrlHelper passwordResetUrlHelper
             )
         {
             _serviceProvider = serviceProvider;
             _userAreaDefinitionRepository = userAreaDefinitionRepository;
+            _passwordResetUrlHelper = passwordResetUrlHelper;
         }
 
         public IUserMailTemplateBuilder Create(string userAreaDefinitionCode)
@@ -43,14 +46,15 @@ namespace Cofoundry.Domain.MailTemplates
 
                 return new CofoundryAdminMailTemplateBuilder(
                     queryExecutor,
-                    adminMailTemplateUrlLibrary
+                    adminMailTemplateUrlLibrary,
+                    _passwordResetUrlHelper
                     );
             }
 
-            var genericBuilderType = typeof(GenericMailTemplateBuilderWrapper<>).MakeGenericType(definitionType);
+            var defaultBuilderType = typeof(DefaultMailTemplateBuilderWrapper<>).MakeGenericType(definitionType);
 
-            // for other user areas fall back to the generic builder
-            return (IUserMailTemplateBuilder)_serviceProvider.GetService(genericBuilderType);
+            // for other user areas fall back to the default builder
+            return (IUserMailTemplateBuilder)_serviceProvider.GetService(defaultBuilderType);
         }
     }
 }

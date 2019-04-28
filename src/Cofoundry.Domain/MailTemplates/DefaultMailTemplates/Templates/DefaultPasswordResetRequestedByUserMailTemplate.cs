@@ -4,20 +4,20 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 
-namespace Cofoundry.Domain.MailTemplates.GenericMailTemplates
+namespace Cofoundry.Domain.MailTemplates.DefaultMailTemplates
 {
     /// <summary>
     /// Template for the email sent when a user requests to resets their 
     /// own password which is usually via a 'forgot password' mechanism on
-    /// a login form. This generic version of the template is used by default 
-    /// for all user areas except the Cofoundry admin user area.
+    /// a login form. This default version of the template is used for all 
+    /// user areas except the Cofoundry admin user area.
     /// </summary>
-    public class GenericPasswordResetRequestedByUserMailTemplate : IMailTemplate
+    public class DefaultPasswordResetRequestedByUserMailTemplate : IMailTemplate
     {
-        public GenericPasswordResetRequestedByUserMailTemplate()
+        public DefaultPasswordResetRequestedByUserMailTemplate()
         {
             SubjectFormat = "{0}: Password reset request";
-            ViewFile = GenericMailTemplatePath.TemplateView(nameof(GenericPasswordResetRequestedByUserMailTemplate));
+            ViewFile = DefaultMailTemplatePath.TemplateView(nameof(DefaultPasswordResetRequestedByUserMailTemplate));
         }
 
         /// <summary>

@@ -11,14 +11,17 @@ namespace Cofoundry.Domain.MailTemplates.AdminMailTemplates
     {
         private readonly IQueryExecutor _queryExecutor;
         private readonly AdminMailTemplateUrlLibrary _adminMailTemplateUrlLibrary;
+        private readonly IPasswordResetUrlHelper _passwordResetUrlHelper;
 
         public CofoundryAdminMailTemplateBuilder(
             IQueryExecutor queryExecutor,
-            AdminMailTemplateUrlLibrary adminMailTemplateUrlLibrary
+            AdminMailTemplateUrlLibrary adminMailTemplateUrlLibrary,
+            IPasswordResetUrlHelper passwordResetUrlHelper
             )
         {
             _queryExecutor = queryExecutor;
             _adminMailTemplateUrlLibrary = adminMailTemplateUrlLibrary;
+            _passwordResetUrlHelper = passwordResetUrlHelper;
         }
 
         public virtual async Task<IMailTemplate> BuildNewUserWithTemporaryPasswordTemplateAsync(NewUserWithTemporaryPasswordTemplateBuilderContext context)
@@ -35,7 +38,7 @@ namespace Cofoundry.Domain.MailTemplates.AdminMailTemplates
             };
         }
 
-        public async Task<IMailTemplate> BuildPasswordResetByAdminTemplateAsync(PasswordResetByAdminTemplateBuilderContext context)
+        public virtual async Task<IMailTemplate> BuildPasswordResetByAdminTemplateAsync(PasswordResetByAdminTemplateBuilderContext context)
         {
             var applicationName = await GetApplicationNameAsync();
             var loginPath = _adminMailTemplateUrlLibrary.Login();
@@ -52,13 +55,13 @@ namespace Cofoundry.Domain.MailTemplates.AdminMailTemplates
         public virtual async Task<IMailTemplate> BuildPasswordResetRequestedByUserTemplateAsync(PasswordResetRequestedByUserTemplateBuilderContext context)
         {
             var applicationName = await GetApplicationNameAsync();
-            var url = _adminMailTemplateUrlLibrary.PasswordReset(context);
+            var resetUrl = _passwordResetUrlHelper.MakeUrl(context);
 
             return new AdminPasswordResetRequestedByUserMailTemplate()
             {
                 Username = context.User.Username,
                 ApplicationName = applicationName,
-                ResetUrl = url
+                ResetUrl = resetUrl
             };
         }
 

@@ -4,47 +4,47 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Cofoundry.Domain.MailTemplates.GenericMailTemplates
+namespace Cofoundry.Domain.MailTemplates.DefaultMailTemplates
 {
     /// <summary>
-    /// A simple wrapper around IGenericMailTemplateBuilder for internal use
-    /// which allows the IGenericMailTemplateBuilder to be easier to inject in
+    /// A simple wrapper around IDefaultMailTemplateBuilder for internal use
+    /// which allows the IDefaultMailTemplateBuilder to be easier to inject in
     /// custom implementation. It's a little verbose here but it makes overriding
-    /// generic mail templates simpler.
+    /// default mail templates simpler.
     /// </summary>
-    public class GenericMailTemplateBuilderWrapper<T> : IUserMailTemplateBuilder
+    public class DefaultMailTemplateBuilderWrapper<T> : IUserMailTemplateBuilder
         where T : IUserAreaDefinition
     { 
         private readonly IUserAreaDefinition _userAreaDefinition;
-        private readonly IGenericMailTemplateBuilder<T> _genericMailTemplateBuilder;
+        private readonly IDefaultMailTemplateBuilder<T> _defaultMailTemplateBuilder;
 
-        public GenericMailTemplateBuilderWrapper(
+        public DefaultMailTemplateBuilderWrapper(
             IUserAreaDefinition userAreaDefinition,
-            IGenericMailTemplateBuilder<T> genericMailTemplateBuilder
+            IDefaultMailTemplateBuilder<T> defaultMailTemplateBuilder
             )
         {
             _userAreaDefinition = userAreaDefinition;
-            _genericMailTemplateBuilder = genericMailTemplateBuilder;
+            _defaultMailTemplateBuilder = defaultMailTemplateBuilder;
         }
 
         public async Task<IMailTemplate> BuildNewUserWithTemporaryPasswordTemplateAsync(NewUserWithTemporaryPasswordTemplateBuilderContext context)
         {
-            return await _genericMailTemplateBuilder.BuildNewUserWithTemporaryPasswordTemplateAsync(context);
+            return await _defaultMailTemplateBuilder.BuildNewUserWithTemporaryPasswordTemplateAsync(context);
         }
 
         public async Task<IMailTemplate> BuildPasswordResetByAdminTemplateAsync(PasswordResetByAdminTemplateBuilderContext context)
         {
-            return await _genericMailTemplateBuilder.BuildPasswordResetByAdminTemplateAsync(context);
+            return await _defaultMailTemplateBuilder.BuildPasswordResetByAdminTemplateAsync(context);
         }
 
         public async Task<IMailTemplate> BuildPasswordResetRequestedByUserTemplateAsync(PasswordResetRequestedByUserTemplateBuilderContext context)
         {
-            return await _genericMailTemplateBuilder.BuildPasswordResetRequestedByUserTemplateAsync(context);
+            return await _defaultMailTemplateBuilder.BuildPasswordResetRequestedByUserTemplateAsync(context);
         }
 
         public async Task<IMailTemplate> BuildPasswordChangedTemplateAsync(PasswordChangedTemplateBuilderContext context)
         {
-            return await _genericMailTemplateBuilder.BuildPasswordChangedTemplateAsync(context);
+            return await _defaultMailTemplateBuilder.BuildPasswordChangedTemplateAsync(context);
         }
     }
 }

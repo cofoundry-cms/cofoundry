@@ -4,19 +4,19 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Cofoundry.Domain.MailTemplates.GenericMailTemplates
+namespace Cofoundry.Domain.MailTemplates.DefaultMailTemplates
 {
     /// <summary>
     /// Template for the email sent when an administrator resets a users 
-    /// password either programatically or via the admin panel. This generic
-    /// version of the template is used by default for all user areas except
-    /// the Cofoundry admin user area.
+    /// password either programatically or via the admin panel. This default
+    /// version of the template is used for all user areas except the Cofoundry 
+    /// admin user area.
     /// </summary>
-    public class GenericPasswordResetByAdminMailTemplate : IMailTemplate
+    public class DefaultPasswordResetByAdminMailTemplate : IMailTemplate
     {
-        public GenericPasswordResetByAdminMailTemplate()
+        public DefaultPasswordResetByAdminMailTemplate()
         {
-            ViewFile = GenericMailTemplatePath.TemplateView(nameof(GenericPasswordResetByAdminMailTemplate));
+            ViewFile = DefaultMailTemplatePath.TemplateView(nameof(DefaultPasswordResetByAdminMailTemplate));
             SubjectFormat = "{0}: Your password has been reset";
         }
 

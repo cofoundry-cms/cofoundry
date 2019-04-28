@@ -6,16 +6,16 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Cofoundry.Domain.MailTemplates.GenericMailTemplates
+namespace Cofoundry.Domain.MailTemplates.DefaultMailTemplates
 {
-    public class GenericMailTemplateBuilder<T> : IGenericMailTemplateBuilder<T>
+    public class DefaultMailTemplateBuilder<T> : IDefaultMailTemplateBuilder<T>
         where T : IUserAreaDefinition
     { 
         private readonly IQueryExecutor _queryExecutor;
         private readonly IPasswordResetUrlHelper _passwordResetUrlHelper;
         private readonly IUserAreaDefinition _userAreaDefinition;
 
-        public GenericMailTemplateBuilder(
+        public DefaultMailTemplateBuilder(
             IQueryExecutor queryExecutor,
             IPasswordResetUrlHelper passwordResetUrlHelper,
             T userAreaDefinition
@@ -26,14 +26,14 @@ namespace Cofoundry.Domain.MailTemplates.GenericMailTemplates
             _userAreaDefinition = userAreaDefinition;
         }
 
-        public virtual async Task<GenericNewUserWithTemporaryPasswordMailTemplate> BuildNewUserWithTemporaryPasswordTemplateAsync(
+        public virtual async Task<DefaultNewUserWithTemporaryPasswordMailTemplate> BuildNewUserWithTemporaryPasswordTemplateAsync(
             NewUserWithTemporaryPasswordTemplateBuilderContext context
             )
         {
             var applicationName = await GetApplicationNameAsync();
             var loginPath = _userAreaDefinition.LoginPath;
 
-            return new GenericNewUserWithTemporaryPasswordMailTemplate()
+            return new DefaultNewUserWithTemporaryPasswordMailTemplate()
             {
                 Username = context.User.Username,
                 ApplicationName = applicationName,
@@ -42,14 +42,14 @@ namespace Cofoundry.Domain.MailTemplates.GenericMailTemplates
             };
         }
 
-        public async Task<GenericPasswordResetByAdminMailTemplate> BuildPasswordResetByAdminTemplateAsync(
+        public virtual async Task<DefaultPasswordResetByAdminMailTemplate> BuildPasswordResetByAdminTemplateAsync(
             PasswordResetByAdminTemplateBuilderContext context
             )
         {
             var applicationName = await GetApplicationNameAsync();
             var loginPath = _userAreaDefinition.LoginPath;
 
-            return new GenericPasswordResetByAdminMailTemplate()
+            return new DefaultPasswordResetByAdminMailTemplate()
             {
                 Username = context.User.Username,
                 ApplicationName = applicationName,
@@ -58,14 +58,14 @@ namespace Cofoundry.Domain.MailTemplates.GenericMailTemplates
             };
         }
 
-        public virtual async Task<GenericPasswordResetRequestedByUserMailTemplate> BuildPasswordResetRequestedByUserTemplateAsync(
+        public virtual async Task<DefaultPasswordResetRequestedByUserMailTemplate> BuildPasswordResetRequestedByUserTemplateAsync(
             PasswordResetRequestedByUserTemplateBuilderContext context
             )
         {
             var applicationName = await GetApplicationNameAsync();
             var resetUrl = _passwordResetUrlHelper.MakeUrl(context);
 
-            return new GenericPasswordResetRequestedByUserMailTemplate()
+            return new DefaultPasswordResetRequestedByUserMailTemplate()
             {
                 Username = context.User.Username,
                 ApplicationName = applicationName,
@@ -73,14 +73,14 @@ namespace Cofoundry.Domain.MailTemplates.GenericMailTemplates
             };
         }
 
-        public virtual async Task<GenericPasswordChangedMailTemplate> BuildPasswordChangedTemplateAsync(
+        public virtual async Task<DefaultPasswordChangedMailTemplate> BuildPasswordChangedTemplateAsync(
             PasswordChangedTemplateBuilderContext context
             )
         {
             var applicationName = await GetApplicationNameAsync();
             var loginPath = _userAreaDefinition.LoginPath;
 
-            return new GenericPasswordChangedMailTemplate()
+            return new DefaultPasswordChangedMailTemplate()
             {
                 Username = context.User.Username,
                 ApplicationName = applicationName,
