@@ -22,6 +22,7 @@ namespace Cofoundry.Domain
                 .Register<IUserAccountDetailsMapper, UserAccountDetailsMapper>()
                 .Register<IUserDetailsMapper, UserDetailsMapper>()
                 .RegisterAll<IUserAreaDefinition>()
+                .Register<IPasswordResetUrlHelper, PasswordResetUrlHelper>()
                 ;
         }
     }

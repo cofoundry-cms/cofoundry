@@ -8,21 +8,27 @@ using System.Threading.Tasks;
 
 namespace Cofoundry.Domain.MailTemplates.GenericMailTemplates
 {
-    public class GenericMailTemplateBuilder : IUserMailTemplateBuilder
+    public class GenericMailTemplateBuilder<T> : IGenericMailTemplateBuilder<T>
+        where T : IUserAreaDefinition
     { 
-        private readonly IUserAreaDefinition _userAreaDefinition;
         private readonly IQueryExecutor _queryExecutor;
+        private readonly IPasswordResetUrlHelper _passwordResetUrlHelper;
+        private readonly IUserAreaDefinition _userAreaDefinition;
 
         public GenericMailTemplateBuilder(
-            IUserAreaDefinition userAreaDefinition,
-            IQueryExecutor queryExecutor
+            IQueryExecutor queryExecutor,
+            IPasswordResetUrlHelper passwordResetUrlHelper,
+            T userAreaDefinition
             )
         {
-            _userAreaDefinition = userAreaDefinition;
             _queryExecutor = queryExecutor;
+            _passwordResetUrlHelper = passwordResetUrlHelper;
+            _userAreaDefinition = userAreaDefinition;
         }
 
-        public virtual async Task<IMailTemplate> BuildNewUserWithTemporaryPasswordTemplateAsync(NewUserWithTemporaryPasswordTemplateBuilderContext context)
+        public virtual async Task<GenericNewUserWithTemporaryPasswordMailTemplate> BuildNewUserWithTemporaryPasswordTemplateAsync(
+            NewUserWithTemporaryPasswordTemplateBuilderContext context
+            )
         {
             var applicationName = await GetApplicationNameAsync();
             var loginPath = _userAreaDefinition.LoginPath;
@@ -36,7 +42,9 @@ namespace Cofoundry.Domain.MailTemplates.GenericMailTemplates
             };
         }
 
-        public async Task<IMailTemplate> BuildPasswordResetByAdminTemplateAsync(PasswordResetByAdminTemplateBuilderContext context)
+        public async Task<GenericPasswordResetByAdminMailTemplate> BuildPasswordResetByAdminTemplateAsync(
+            PasswordResetByAdminTemplateBuilderContext context
+            )
         {
             var applicationName = await GetApplicationNameAsync();
             var loginPath = _userAreaDefinition.LoginPath;
@@ -50,10 +58,12 @@ namespace Cofoundry.Domain.MailTemplates.GenericMailTemplates
             };
         }
 
-        public virtual async Task<IMailTemplate> BuildPasswordResetRequestedByUserTemplateAsync(PasswordResetRequestedByUserTemplateBuilderContext context)
+        public virtual async Task<GenericPasswordResetRequestedByUserMailTemplate> BuildPasswordResetRequestedByUserTemplateAsync(
+            PasswordResetRequestedByUserTemplateBuilderContext context
+            )
         {
             var applicationName = await GetApplicationNameAsync();
-            var resetUrl = GetPasswordResetUrl(_userAreaDefinition, context);
+            var resetUrl = _passwordResetUrlHelper.MakeUrl(context);
 
             return new GenericPasswordResetRequestedByUserMailTemplate()
             {
@@ -63,7 +73,9 @@ namespace Cofoundry.Domain.MailTemplates.GenericMailTemplates
             };
         }
 
-        public virtual async Task<IMailTemplate> BuildPasswordChangedTemplateAsync(PasswordChangedTemplateBuilderContext context)
+        public virtual async Task<GenericPasswordChangedMailTemplate> BuildPasswordChangedTemplateAsync(
+            PasswordChangedTemplateBuilderContext context
+            )
         {
             var applicationName = await GetApplicationNameAsync();
             var loginPath = _userAreaDefinition.LoginPath;
@@ -82,16 +94,6 @@ namespace Cofoundry.Domain.MailTemplates.GenericMailTemplates
             var result = await _queryExecutor.ExecuteAsync(query);
 
             return result?.ApplicationName;
-        }
-
-        protected virtual string GetPasswordResetUrl(IUserAreaDefinition userAreaDefinition, PasswordResetRequestedByUserTemplateBuilderContext context)
-        {
-            var baseUrl = RelativePathHelper.Combine(userAreaDefinition.LoginPath, "reset-password");
-
-            return string.Format("{0}?i={1}&t={2}",
-                baseUrl,
-                context.UserPasswordResetRequestId.ToString("N"),
-                Uri.EscapeDataString(context.Token));
         }
     }
 }

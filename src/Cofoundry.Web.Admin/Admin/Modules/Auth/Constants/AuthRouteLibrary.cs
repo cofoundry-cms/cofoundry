@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
 using Cofoundry.Core.Web;
 using Cofoundry.Domain;
 
@@ -49,6 +50,15 @@ namespace Cofoundry.Web.Admin
         public string LogOut()
         {
             return MvcRoute("logout");
+        }
+
+        /// <summary>
+        /// The base url for password reset requests i.e. without the
+        /// required query parameters.
+        /// </summary>
+        public string ResetPasswordBase()
+        {
+            return MvcRoute("reset-password");
         }
 
         #endregion

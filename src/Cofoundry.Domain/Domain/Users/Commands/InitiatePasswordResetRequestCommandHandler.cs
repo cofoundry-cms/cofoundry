@@ -90,7 +90,7 @@ namespace Cofoundry.Domain
             using (var scope = _transactionScopeFactory.Create(_dbContext))
             {
                 await _dbContext.SaveChangesAsync();
-                await SendNotificationAsync(request);
+                await SendNotificationAsync(request, command);
 
                 await scope.CompleteAsync();
             }
@@ -157,12 +157,12 @@ namespace Cofoundry.Domain
             return request;
         }
 
-        private async Task SendNotificationAsync(UserPasswordResetRequest request)
+        private async Task SendNotificationAsync(UserPasswordResetRequest request, InitiatePasswordResetRequestCommand command)
         {
             // Send mail notification
             var mailTemplateBuilder = _userMailTemplateBuilderFactory.Create(request.User.UserAreaCode);
             
-            var context = await CreateMailTemplateContextAsync(request);
+            var context = await CreateMailTemplateContextAsync(request, command);
             var mailTemplate = await mailTemplateBuilder.BuildPasswordResetRequestedByUserTemplateAsync(context);
 
             // Null template means don't send a notification
@@ -172,7 +172,8 @@ namespace Cofoundry.Domain
         }
 
         private async Task<PasswordResetRequestedByUserTemplateBuilderContext> CreateMailTemplateContextAsync(
-            UserPasswordResetRequest request
+            UserPasswordResetRequest request, 
+            InitiatePasswordResetRequestCommand command
             )
         {
             var query = new GetUserSummaryByIdQuery(request.UserId);
@@ -183,7 +184,8 @@ namespace Cofoundry.Domain
             {
                 User = userSummary,
                 Token = request.Token,
-                UserPasswordResetRequestId = request.UserPasswordResetRequestId
+                UserPasswordResetRequestId = request.UserPasswordResetRequestId,
+                ResetUrlBase = command.ResetUrlBase
             };
 
             return context;

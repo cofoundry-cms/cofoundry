@@ -21,13 +21,15 @@ namespace Cofoundry.Web.Identity
         private readonly ILoginService _loginService;
         private readonly IUserContextService _userContextService;
         private readonly IControllerResponseHelper _controllerResponseHelper;
+        private readonly IPasswordResetUrlHelper _passwordResetUrlHelper;
 
         public AuthenticationControllerHelper(
             IQueryExecutor queryExecutor,
             ICommandExecutor commandExecutor,
             ILoginService loginService,
             IControllerResponseHelper controllerResponseHelper,
-            IUserContextService userContextService
+            IUserContextService userContextService,
+            IPasswordResetUrlHelper passwordResetUrlHelper
             )
         {
             _queryExecutor = queryExecutor;
@@ -35,6 +37,7 @@ namespace Cofoundry.Web.Identity
             _loginService = loginService;
             _controllerResponseHelper = controllerResponseHelper;
             _userContextService = userContextService;
+            _passwordResetUrlHelper = passwordResetUrlHelper;
         }
 
         #endregion
@@ -145,7 +148,8 @@ namespace Cofoundry.Web.Identity
         public Task SendPasswordResetNotificationAsync(
             Controller controller, 
             IForgotPasswordViewModel vm, 
-            IUserAreaDefinition userArea
+            IUserAreaDefinition userArea,
+            Uri resetUrlBase
             )
         {
             if (!controller.ModelState.IsValid) return Task.CompletedTask;
@@ -153,43 +157,48 @@ namespace Cofoundry.Web.Identity
             var command = new InitiatePasswordResetRequestCommand()
             {
                 Username = vm.Username,
-                UserAreaCode = userArea.UserAreaCode
+                UserAreaCode = userArea.UserAreaCode,
+                ResetUrlBase = resetUrlBase
             };
 
             return _controllerResponseHelper.ExecuteIfValidAsync(controller, command);
         }
 
-        public async Task<PasswordResetRequestAuthenticationResult> IsPasswordRequestValidAsync(
+        public async Task<PasswordResetRequestValidationResult> ParseAndValidatePasswordResetRequestAsync(
             Controller controller, 
-            string requestId, 
-            string token, 
             IUserAreaDefinition userAreaToLogInTo
             )
         {
-            var result = new PasswordResetRequestAuthenticationResult();
+            if (controller == null) throw new ArgumentNullException(nameof(controller));
+            if (userAreaToLogInTo == null) throw new ArgumentNullException(nameof(userAreaToLogInTo));
+
+            var result = new PasswordResetRequestValidationResult();
             result.ValidationErrorMessage = "Invalid password reset request";
 
             if (!controller.ModelState.IsValid) return result;
 
-            if (string.IsNullOrWhiteSpace(requestId) || string.IsNullOrWhiteSpace(token))
+            // Parse the auth tokens from the request
+            var urlParameters = _passwordResetUrlHelper.ParseFromQuery(controller.Request.Query);
+            result.UserPasswordResetRequestId = urlParameters.UserPasswordResetRequestId;
+            result.Token = urlParameters.Token;
+
+            // Check for missing parameters
+            if (urlParameters.UserPasswordResetRequestId == Guid.Empty || string.IsNullOrWhiteSpace(urlParameters.Token))
             {
                 AddPasswordRequestInvalidError(controller);
                 return result;
             }
 
-            Guid requestGuid;
-            if (!Guid.TryParse(requestId, out requestGuid))
-            {
-                AddPasswordRequestInvalidError(controller);
-                return result;
-            }
-
+            // Validate the request against the db
             var query = new ValidatePasswordResetRequestQuery();
-            query.UserPasswordResetRequestId = requestGuid;
-            query.Token = Uri.UnescapeDataString(token);
+            query.UserPasswordResetRequestId = urlParameters.UserPasswordResetRequestId;
+            query.Token = urlParameters.Token;
             query.UserAreaCode = userAreaToLogInTo.UserAreaCode;
 
-            result = await _queryExecutor.ExecuteAsync(query);
+            var validationResult = await _queryExecutor.ExecuteAsync(query);
+
+            result.IsValid = validationResult.IsValid;
+            result.ValidationErrorMessage = validationResult.ValidationErrorMessage;
 
             return result;
         }
@@ -202,8 +211,7 @@ namespace Cofoundry.Web.Identity
         {
             if (!controller.ModelState.IsValid) return Task.CompletedTask;
             
-            Guid requestGuid;
-            if (!Guid.TryParse(vm.UserPasswordResetRequestId, out requestGuid))
+            if (vm.UserPasswordResetRequestId == Guid.Empty)
             {
                 AddPasswordRequestInvalidError(controller);
                 return Task.CompletedTask;
@@ -213,7 +221,7 @@ namespace Cofoundry.Web.Identity
             {
                 NewPassword = vm.NewPassword,
                 Token = vm.Token,
-                UserPasswordResetRequestId = requestGuid,
+                UserPasswordResetRequestId = vm.UserPasswordResetRequestId,
                 UserAreaCode = userAreaToLogInTo.UserAreaCode
             };
 

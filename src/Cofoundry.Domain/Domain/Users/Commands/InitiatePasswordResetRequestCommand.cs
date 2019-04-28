@@ -36,5 +36,12 @@ namespace Cofoundry.Domain
         /// </summary>
         [Required]
         public string UserAreaCode { get; set; }
+
+        [Required]
+        /// <summary>
+        /// The relative base path used to construct the reset url 
+        /// e.g. new Uri("/auth/forgot-password").
+        /// </summary>
+        public Uri ResetUrlBase { get; set; }
     }
 }

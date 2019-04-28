@@ -10,7 +10,7 @@ namespace Cofoundry.Web.Identity
 
         string ConfirmNewPassword { get; set; }
 
-        string UserPasswordResetRequestId { get; set; }
+        Guid UserPasswordResetRequestId { get; set; }
 
         string Token { get; set; }
     }

@@ -7,6 +7,15 @@ using System.Threading.Tasks;
 
 namespace Cofoundry.Samples.UserAreas.PartnerMailTemplates
 {
+    /// <summary>
+    /// An example of how to completely customize mail templates generated
+    /// by Cofoundry for a user area. 
+    /// 
+    /// Each method represents a specific email sent out by the system and 
+    /// should return an IMailTemplate instance which will be rendered by 
+    /// Cofoundry. The methods are async so you have the freedom to fetch 
+    /// and mix in any additional data you need.
+    /// </summary>
     public class PartnerMailTemplateBuilder : IUserMailTemplateBuilder<PartnerUserAreaDefinition>
     { 
         public Task<IMailTemplate> BuildNewUserWithTemporaryPasswordTemplateAsync(NewUserWithTemporaryPasswordTemplateBuilderContext context)

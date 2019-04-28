@@ -25,6 +25,7 @@ namespace Cofoundry.Web.Admin
         private readonly AccountManagementControllerHelper _accountManagementControllerHelper;
         private readonly IAdminRouteLibrary _adminRouteLibrary;
         private readonly IUserAreaDefinition _adminUserArea;
+        private readonly IPasswordResetUrlHelper _passwordResetUrlHelper;
 
         public AuthController(
             IQueryExecutor queryExecutor,
@@ -32,7 +33,8 @@ namespace Cofoundry.Web.Admin
             AuthenticationControllerHelper authenticationControllerHelper,
             AccountManagementControllerHelper accountManagementControllerHelper,
             IAdminRouteLibrary adminRouteLibrary,
-            IEnumerable<IUserAreaDefinition> userAreaDefinitions
+            IEnumerable<IUserAreaDefinition> userAreaDefinitions,
+            IPasswordResetUrlHelper passwordResetUrlHelper
             )
         {
             _queryExecutor = queryExecutor;
@@ -41,6 +43,7 @@ namespace Cofoundry.Web.Admin
             _accountManagementControllerHelper = accountManagementControllerHelper;
             _adminRouteLibrary = adminRouteLibrary;
             _adminUserArea = userAreaDefinitions.Single(d => d is CofoundryAdminUserArea);
+            _passwordResetUrlHelper = passwordResetUrlHelper;
         }
 
         #endregion
@@ -132,31 +135,30 @@ namespace Cofoundry.Web.Admin
         [HttpPost]
         public async Task<ViewResult> ForgotPassword(ForgotPasswordViewModel command)
         {
-            await _authenticationControllerHelper.SendPasswordResetNotificationAsync(this, command, _adminUserArea);
+            var resetUrl = new Uri(_adminRouteLibrary.Auth.ResetPasswordBase(), UriKind.Relative);
+            await _authenticationControllerHelper.SendPasswordResetNotificationAsync(this, command, _adminUserArea, resetUrl);
 
             var viewPath = ViewPathFormatter.View(CONTROLLER_NAME, nameof(ForgotPassword));
             return View(viewPath, command);
         }
 
         [AllowAnonymous]
-        public async Task<ActionResult> ResetPassword(string i, string t)
+        public async Task<ActionResult> ResetPassword()
         {
             var user = await _userContextService.GetCurrentContextAsync();
             if (user.IsCofoundryUser()) return await GetLoggedInDefaultRedirectActionAsync();
 
-            var request = await _authenticationControllerHelper.IsPasswordRequestValidAsync(this, i, t, _adminUserArea);
+            var requestValidationResult = await _authenticationControllerHelper.ParseAndValidatePasswordResetRequestAsync(this, _adminUserArea);
 
-            if (!request.IsValid)
+            if (!requestValidationResult.IsValid)
             {
                 var invalidViewPath = ViewPathFormatter.View(CONTROLLER_NAME, nameof(ResetPassword) + "RequestInvalid");
-                return View(invalidViewPath, request);
+                return View(invalidViewPath, requestValidationResult);
             }
 
-            var vm = new CompletePasswordResetViewModel();
-            vm.UserPasswordResetRequestId = i;
-            vm.Token = t;
-
+            var vm = new CompletePasswordResetViewModel(requestValidationResult);
             var viewPath = ViewPathFormatter.View(CONTROLLER_NAME, nameof(ResetPassword));
+
             return View(viewPath, vm);
         }
 

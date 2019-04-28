@@ -13,13 +13,14 @@ namespace Cofoundry.Core.Mail
     public interface IMailTemplate
     {
         /// <summary>
-        /// Name or full path to the view file. This should not include the type part 
-        /// or file extension (i.e. '_Html.cshml' or '_Text.cshml') because this is automatically added
+        /// Full path to the view file. This should not include the type part 
+        /// or file extension (i.e. '_html.cshml' or '_text.cshml') because this is automatically 
+        /// added. E.g. "~/Cofoundry/MailTemplates/MyMailTemplate".
         /// </summary>
         string ViewFile { get; }
 
         /// <summary>
-        /// String to use as the subject to the email
+        /// String to use as the subject to the email.
         /// </summary>
         string Subject { get; }
     }

@@ -1,45 +1,13 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp2.1</TargetFramework>
+    <TargetFramework>netcoreapp2.2</TargetFramework>
     <MvcRazorExcludeViewFilesFromPublish>false</MvcRazorExcludeViewFilesFromPublish>
     <MvcRazorExcludeRefAssembliesFromPublish>false</MvcRazorExcludeRefAssembliesFromPublish>
   </PropertyGroup>
 
   <ItemGroup>
-    <Content Remove="Cofoundry\MailTemplates\PartnerUsers\Layouts\_PartnerMailLayout_html.cshtml" />
-    <Content Remove="Cofoundry\MailTemplates\PartnerUsers\Layouts\_PartnerMailLayout_text.cshtml" />
-    <Content Remove="Cofoundry\MailTemplates\PartnerUsers\Templates\NewUserWithTemporaryPasswordMailTemplate_html.cshtml" />
-    <Content Remove="Cofoundry\MailTemplates\PartnerUsers\Templates\NewUserWithTemporaryPasswordMailTemplate_text.cshtml" />
-    <Content Remove="Cofoundry\MailTemplates\PartnerUsers\Templates\PasswordChangedMailTemplate_html.cshtml" />
-    <Content Remove="Cofoundry\MailTemplates\PartnerUsers\Templates\PasswordChangedMailTemplate_text.cshtml" />
-    <Content Remove="Cofoundry\MailTemplates\PartnerUsers\Templates\PasswordResetByAdminMailTemplate_html.cshtml" />
-    <Content Remove="Cofoundry\MailTemplates\PartnerUsers\Templates\PasswordResetByAdminMailTemplate_text.cshtml" />
-    <Content Remove="Cofoundry\MailTemplates\PartnerUsers\Templates\PasswordResetRequestedByUserMailTemplate_html.cshtml" />
-    <Content Remove="Cofoundry\MailTemplates\PartnerUsers\Templates\PasswordResetRequestedByUserMailTemplate_text.cshtml" />
-    <Content Remove="Cofoundry\MailTemplates\PartnerUsers\Templates\_ViewImports.cshtml" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <EmbeddedResource Include="Cofoundry\MailTemplates\PartnerUsers\Layouts\_PartnerMailLayout_html.cshtml" />
-    <EmbeddedResource Include="Cofoundry\MailTemplates\PartnerUsers\Layouts\_PartnerMailLayout_text.cshtml" />
-    <EmbeddedResource Include="Cofoundry\MailTemplates\PartnerUsers\Templates\NewUserWithTemporaryPasswordMailTemplate_html.cshtml" />
-    <EmbeddedResource Include="Cofoundry\MailTemplates\PartnerUsers\Templates\NewUserWithTemporaryPasswordMailTemplate_text.cshtml" />
-    <EmbeddedResource Include="Cofoundry\MailTemplates\PartnerUsers\Templates\PasswordChangedMailTemplate_html.cshtml" />
-    <EmbeddedResource Include="Cofoundry\MailTemplates\PartnerUsers\Templates\PasswordChangedMailTemplate_text.cshtml" />
-    <EmbeddedResource Include="Cofoundry\MailTemplates\PartnerUsers\Templates\PasswordResetByAdminMailTemplate_html.cshtml" />
-    <EmbeddedResource Include="Cofoundry\MailTemplates\PartnerUsers\Templates\PasswordResetByAdminMailTemplate_text.cshtml" />
-    <EmbeddedResource Include="Cofoundry\MailTemplates\PartnerUsers\Templates\PasswordResetRequestedByUserMailTemplate_html.cshtml" />
-    <EmbeddedResource Include="Cofoundry\MailTemplates\PartnerUsers\Templates\PasswordResetRequestedByUserMailTemplate_text.cshtml" />
-    <EmbeddedResource Include="Cofoundry\MailTemplates\PartnerUsers\_ViewImports.cshtml" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.App" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Cofoundry\CustomEntities\" />
   </ItemGroup>
 
   <ItemGroup>
@@ -47,18 +15,6 @@
     <ProjectReference Include="..\Cofoundry.Domain\Cofoundry.Domain.csproj" />
     <ProjectReference Include="..\Cofoundry.Web.Admin\Cofoundry.Web.Admin.csproj" />
     <ProjectReference Include="..\Cofoundry.Web\Cofoundry.Web.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Content Update="Views\PartnerAuth\ChangePassword.cshtml">
-      <Pack>$(IncludeRazorContentInPack)</Pack>
-    </Content>
-    <Content Update="Views\PartnerAuth\Login.cshtml">
-      <Pack>$(IncludeRazorContentInPack)</Pack>
-    </Content>
-    <Content Update="Views\PartnerAccount\Index.cshtml">
-      <Pack>$(IncludeRazorContentInPack)</Pack>
-    </Content>
   </ItemGroup>
 
 </Project>

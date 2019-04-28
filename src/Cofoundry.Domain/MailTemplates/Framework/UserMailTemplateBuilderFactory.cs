@@ -29,7 +29,8 @@ namespace Cofoundry.Domain.MailTemplates
             EntityNotFoundException.ThrowIfNull(userAreaDefinition, userAreaDefinitionCode);
 
             // Try and find a factory registered for the specific user area
-            var factoryType = typeof(IUserMailTemplateBuilder<>).MakeGenericType(userAreaDefinition.GetType());
+            var definitionType = userAreaDefinition.GetType();
+            var factoryType = typeof(IUserMailTemplateBuilder<>).MakeGenericType(definitionType);
             var factory = _serviceProvider.GetService(factoryType);
 
             if (factory != null) return (IUserMailTemplateBuilder)factory;
@@ -46,11 +47,10 @@ namespace Cofoundry.Domain.MailTemplates
                     );
             }
 
+            var genericBuilderType = typeof(GenericMailTemplateBuilderWrapper<>).MakeGenericType(definitionType);
+
             // for other user areas fall back to the generic builder
-            return new GenericMailTemplateBuilder(
-                userAreaDefinition,
-                queryExecutor
-                );
+            return (IUserMailTemplateBuilder)_serviceProvider.GetService(genericBuilderType);
         }
     }
 }

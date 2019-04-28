@@ -126,7 +126,6 @@ namespace Cofoundry.Samples.UserAreas
             // TODO: this has been moved from the account helper, which should be a diff method
             await _authenticationControllerHelper.ChangePasswordAsync(this, viewModel, USER_AREA);
 
-            // forgot password
             // confirm email
             // two factor auth
             /// TODO: 
@@ -166,27 +165,26 @@ namespace Cofoundry.Samples.UserAreas
         [HttpPost("forgot-password")]
         public async Task<ViewResult> ForgotPassword(ForgotPasswordViewModel command)
         {
-            await _authenticationControllerHelper.SendPasswordResetNotificationAsync(this, command, USER_AREA);
+            var uri = new Uri("/partner/auth/forgot-password");
+            await _authenticationControllerHelper.SendPasswordResetNotificationAsync(this, command, USER_AREA, uri);
 
             return View(command);
         }
 
         [Route("reset-password")]
-        public async Task<ActionResult> ResetPassword(string i, string t)
+        public async Task<ActionResult> ResetPassword()
         {
             var user = await _userContextService.GetCurrentContextByUserAreaAsync(USER_AREA.UserAreaCode);
             if (user.IsLoggedIn()) return GetLoggedInDefaultRedirectAction();
 
-            var request = await _authenticationControllerHelper.IsPasswordRequestValidAsync(this, i, t, USER_AREA);
+            var requestValidationResult = await _authenticationControllerHelper.ParseAndValidatePasswordResetRequestAsync(this, USER_AREA);
 
-            if (!request.IsValid)
+            if (!requestValidationResult.IsValid)
             {
-                return View(nameof(ResetPassword) + "RequestInvalid", request);
+                return View(nameof(ResetPassword) + "RequestInvalid", requestValidationResult);
             }
 
-            var vm = new CompletePasswordResetViewModel();
-            vm.UserPasswordResetRequestId = i;
-            vm.Token = t;
+            var vm = new CompletePasswordResetViewModel(requestValidationResult);
 
             return View(vm);
         }
