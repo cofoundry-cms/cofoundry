@@ -8,14 +8,14 @@ using System.Threading.Tasks;
 
 namespace Cofoundry.Samples.UserAreas
 {
-    [Route("partner/auth")]
+    [Route("partners/auth")]
     public class PartnerAuthController : Controller
     {
-        private readonly AuthenticationControllerHelper<PartnerUserAreaDefinition> _authenticationControllerHelper;
+        private readonly IAuthenticationControllerHelper<PartnerUserAreaDefinition> _authenticationControllerHelper;
         private readonly IUserContextService _userContextService;
 
         public PartnerAuthController(
-            AuthenticationControllerHelper<PartnerUserAreaDefinition> authenticationControllerHelper,
+            IAuthenticationControllerHelper<PartnerUserAreaDefinition> authenticationControllerHelper,
             IUserContextService userContextService
             )
         {
@@ -24,6 +24,7 @@ namespace Cofoundry.Samples.UserAreas
         }
 
         [Route("")]
+        [Route("/partners")]
         public IActionResult Index()
         {
             return RedirectToActionPermanent(nameof(Login));
@@ -100,21 +101,8 @@ namespace Cofoundry.Samples.UserAreas
                 // The user shouldn't be logged in, but if so, log them out
                 await _authenticationControllerHelper.LogoutAsync();
             }
-            // TODO: this has been moved from the account helper, which should be a diff method
             await _authenticationControllerHelper.ChangePasswordAsync(this, viewModel);
 
-            // confirm email
-            // two factor auth
-            /// TODO: 
-            /// - Password reset - add views etc.
-            /// - PAssword reset isn't necessarily part of the leanest default flow
-            /// so maybe it shouldn't have a default template. Admin does require it,
-            /// but then there's stuff like confirm email which is not default workflow
-            /// but should be easy to add in (like forgot password). 
-            /// Maybe less is more here. Template-wise you'd have to create the builder
-            /// and the separate templates, but otherwise where do you sotp!
-            /// - is this the best/leanest we can do here?
-            ///  - PRevent returnUrl redirect loop
             ViewBag.ReturnUrl = _authenticationControllerHelper.GetAndValidateReturnUrl(this);
 
             return View(viewModel);
@@ -128,25 +116,27 @@ namespace Cofoundry.Samples.UserAreas
         }
 
         [Route("forgot-password")]
-        public async Task<ActionResult> ForgotPassword(string email)
+        public async Task<ActionResult> ForgotPassword()
         {
             var user = await _userContextService.GetCurrentContextByUserAreaAsync(PartnerUserAreaDefinition.Code);
             if (user.IsLoggedIn()) return GetLoggedInDefaultRedirectAction();
 
-            return View(new ForgotPasswordViewModel { Username = email });
+            return View(new ForgotPasswordViewModel());
         }
 
         [HttpPost("forgot-password")]
         public async Task<ViewResult> ForgotPassword(ForgotPasswordViewModel command)
         {
-            var resetUrl = new Uri("/partner/auth/forgot-password");
+            // We need to pass in the url to our custom password reset action, which 
+            // will then get included in the email notification
+            var resetUrl = new Uri("/partners/auth/password-reset", UriKind.Relative);
             await _authenticationControllerHelper.SendPasswordResetNotificationAsync(this, command, resetUrl);
 
             return View(command);
         }
 
-        [Route("reset-password")]
-        public async Task<ActionResult> ResetPassword()
+        [Route("password-reset")]
+        public async Task<ActionResult> PasswordReset()
         {
             var user = await _userContextService.GetCurrentContextByUserAreaAsync(PartnerUserAreaDefinition.Code);
             if (user.IsLoggedIn()) return GetLoggedInDefaultRedirectAction();
@@ -155,7 +145,7 @@ namespace Cofoundry.Samples.UserAreas
 
             if (!requestValidationResult.IsValid)
             {
-                return View(nameof(ResetPassword) + "RequestInvalid", requestValidationResult);
+                return View(nameof(PasswordReset) + "RequestInvalid", requestValidationResult);
             }
 
             var vm = new CompletePasswordResetViewModel(requestValidationResult);
@@ -163,8 +153,8 @@ namespace Cofoundry.Samples.UserAreas
             return View(vm);
         }
 
-        [HttpPost("reset-password")]
-        public async Task<ActionResult> ResetPassword(CompletePasswordResetViewModel vm)
+        [HttpPost("password-reset")]
+        public async Task<ActionResult> PasswordReset(CompletePasswordResetViewModel vm)
         {
             var user = await _userContextService.GetCurrentContextByUserAreaAsync(PartnerUserAreaDefinition.Code);
             if (user.IsLoggedIn()) return GetLoggedInDefaultRedirectAction();
@@ -173,7 +163,7 @@ namespace Cofoundry.Samples.UserAreas
 
             if (ModelState.IsValid)
             {
-                return View(nameof(ResetPassword) + "Complete");
+                return View(nameof(PasswordReset) + "Complete");
             }
 
             return View(vm);

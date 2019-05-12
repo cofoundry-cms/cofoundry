@@ -8,9 +8,16 @@ namespace Cofoundry.Samples.UserAreas
 {
     public static class UrlLibrary
     {
+        #region partners
+
+        public static string PartnerRoot()
+        {
+            return "/partners";
+        }
+
         public static string PartnerLogin(string returnUrl = null)
         {
-            var url = "/partner/auth/login";
+            var url = PartnerRoot() + "/auth/login";
 
             if (returnUrl != null)
             {
@@ -20,9 +27,26 @@ namespace Cofoundry.Samples.UserAreas
             return url;
         }
 
+        public static string PartnerForgotPassword()
+        {
+            return PartnerRoot() + "/auth/forgot-password";
+        }
+
+        public static string PartnerLogout()
+        {
+            return PartnerRoot() + "/auth/logout";
+        }
+
         public static string PartnerDefault()
         {
-            return "/partner/welcome";
+            return PartnerWelcome();
         }
+
+        public static string PartnerWelcome()
+        {
+            return PartnerRoot() + "/welcome";
+        }
+
+        #endregion
     }
 }

@@ -25,6 +25,15 @@ namespace Cofoundry.Domain.CQS
         /// Optional custom execution context which can be used to impersonate/elevate permissions 
         /// or change the execution date.
         /// </param>
-        Task<TResult> ExecuteAsync<TResult>(IQuery<TResult> query, IExecutionContext executionContext = null);
+        Task<TResult> ExecuteAsync<TResult>(IQuery<TResult> query, IExecutionContext executionContext);
+
+        /// <summary>
+        /// Handles the asynchronous execution the specified query.
+        /// </summary>
+        /// <param name="query">Query to execute.</param>
+        /// <param name="userContext">
+        /// Optional user context which can be used to impersonate/elevate permissions.
+        /// </param>
+        Task<TResult> ExecuteAsync<TResult>(IQuery<TResult> query, IUserContext userContext);
     }
 }

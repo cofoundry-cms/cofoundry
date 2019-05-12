@@ -34,5 +34,51 @@ namespace Cofoundry.Core
             var result = VIRTUAL_PATH_SEPARATOR + string.Join(VIRTUAL_PATH_SEPARATOR_AS_STRING, trimmedPaths);
             return result;
         }
+
+        /// <summary>
+        /// Detects whether two strings are valid full relative paths and the same. 
+        /// If the path is a url the comparison ignores the query string and fragment 
+        /// portion.
+        /// </summary>
+        /// <param name="path1">Path to compare.</param>
+        /// <param name="path2">Path to compare to.</param>
+        public static bool IsWellFormattedAndEqual(string path1, string path2)
+        {
+            if (StringHelper.IsNullOrWhiteSpace(path1, path2)) return false;
+
+            var cleanPath1 = CleanAndRemoveQueryFromPath(path1);
+            var cleanPath2 = CleanAndRemoveQueryFromPath(path2);
+
+            if (!cleanPath1.StartsWith(VIRTUAL_PATH_SEPARATOR_AS_STRING)
+                || !cleanPath2.StartsWith(VIRTUAL_PATH_SEPARATOR_AS_STRING)
+                || !Uri.IsWellFormedUriString(cleanPath1, UriKind.Relative)
+                || !Uri.IsWellFormedUriString(cleanPath2, UriKind.Relative))
+            {
+                return false;
+            }
+
+            return cleanPath1.Equals(cleanPath2, StringComparison.OrdinalIgnoreCase);
+        }
+
+        private static string CleanAndRemoveQueryFromPath(string path)
+        {
+            path = path.TrimStart(new char[] { '~' });
+
+            var queryIndex = path.IndexOf('?');
+            if (queryIndex != -1)
+            {
+                path = path.Remove(queryIndex);
+            }
+
+            var fragmentIndex = path.IndexOf('#');
+            if (fragmentIndex != -1)
+            {
+                path = path.Remove(fragmentIndex);
+            }
+            
+            path = path.TrimEnd(VIRTUAL_PATH_SEPARATOR);
+
+            return path;
+        }
     }
 }

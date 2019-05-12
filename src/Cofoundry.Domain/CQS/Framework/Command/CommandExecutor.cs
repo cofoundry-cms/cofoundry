@@ -1,14 +1,10 @@
-﻿using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using Microsoft.EntityFrameworkCore;
-using System.Data.SqlClient;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.ExceptionServices;
-using System.Text;
 using System.Threading.Tasks;
 using Cofoundry.Core.Validation;
 
@@ -54,8 +50,57 @@ namespace Cofoundry.Domain.CQS
         }
 
         #endregion
+        
+        /// <summary>
+        /// Handles the execution the specified command.
+        /// </summary>
+        /// <param name="command">Command to execute.</param>
+        public Task ExecuteAsync(ICommand command)
+        {
+            IExecutionContext executionContext = null;
 
-        #region public methods
+            return ExecuteAsync(command, executionContext);
+        }
+
+        /// <summary>
+        /// Handles the execution the specified command.
+        /// </summary>
+        /// <param name="command">Command to execute.</param>
+        /// <param name="executionContext">
+        /// Optional custom execution context which can be used to impersonate/elevate permissions 
+        /// or change the execution date.
+        /// </param>
+        public async Task ExecuteAsync(ICommand command, IExecutionContext executionContext)
+        {
+            if (command == null) return;
+
+            try
+            {
+                var commandType = command.GetType();
+                var genericExecuteMethod = _cachedAsyncMethods.GetOrAdd(commandType, t => { return CreateExecuteMethod(_executeAsyncMethod, t); });
+                await (Task)genericExecuteMethod.Invoke(this, new object[] { command, executionContext });
+            }
+            catch (TargetInvocationException ex)
+            {
+                HandleException(ex);
+            }
+        }
+
+        /// <summary>
+        /// Handles the execution the specified command.
+        /// </summary>
+        /// <param name="command">Command to execute.</param>
+        /// <param name="userContext">
+        /// Optional user context which can be used to impersonate/elevate permissions.
+        /// </param>
+        public Task ExecuteAsync(ICommand command, IUserContext userContext)
+        {
+            if (userContext == null) throw new ArgumentNullException(nameof(userContext));
+
+            var executionContext = _executionContextFactory.Create(userContext);
+
+            return ExecuteAsync(command, executionContext);
+        }
 
         /// <summary>
         /// Creates an generic version of the execute method, but does
@@ -89,40 +134,6 @@ namespace Cofoundry.Domain.CQS
             throw new InvalidOperationException(msg);
         }
 
-        #region async execute
-
-        /// <summary>
-        /// Handles the execution the specified command.
-        /// </summary>
-        /// <param name="command">Command to execute.</param>
-        public async Task ExecuteAsync(ICommand command)
-        {
-            await ExecuteAsync(command, null);
-        }
-
-        /// <summary>
-        /// Handles the execution the specified command.
-        /// </summary>
-        /// <param name="command">Command to execute.</param>
-        /// <param name="executionContext">
-        /// Optional custom execution context which can be used to impersonate/elevate permissions 
-        /// or change the execution date.
-        /// </param>
-        public async Task ExecuteAsync(ICommand command, IExecutionContext executionContext = null)
-        {
-            if (command == null) return;
-            try
-            {
-                var commandType = command.GetType();
-                var genericExecuteMethod = _cachedAsyncMethods.GetOrAdd(commandType, t => { return CreateExecuteMethod(_executeAsyncMethod, t); });
-                await (Task)genericExecuteMethod.Invoke(this, new object[] { command, executionContext });
-            }
-            catch (TargetInvocationException ex)
-            {
-                HandleException(ex);
-            }
-        }
-
         private async Task ExecuteCommandAsync<TCommand>(TCommand command, IExecutionContext executionContext) where TCommand : ICommand
         {
             if (command == null) return;
@@ -149,12 +160,6 @@ namespace Cofoundry.Domain.CQS
             await _commandLogService.LogAsync(command, cx);
         }
 
-        #endregion
-
-        #endregion
-
-        #region helpers
-
         private async Task<IExecutionContext> CreateExecutionContextAsync(IExecutionContext cx)
         {
             if (cx == null)
@@ -180,7 +185,5 @@ namespace Cofoundry.Domain.CQS
             var info = ExceptionDispatchInfo.Capture(ex.InnerException);
             info.Throw();
         }
-
-        #endregion
     }
 }

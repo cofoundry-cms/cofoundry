@@ -5,6 +5,7 @@ using Cofoundry.Domain.CQS;
 using Cofoundry.Domain;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
+using Cofoundry.Core;
 
 namespace Cofoundry.Web.Identity
 {
@@ -106,7 +107,10 @@ namespace Cofoundry.Web.Identity
         {
             var returnUrl = controller.Request.Query["ReturnUrl"].FirstOrDefault();
 
-            if (!string.IsNullOrEmpty(returnUrl) && controller.Url.IsLocalUrl(returnUrl))
+            if (!string.IsNullOrEmpty(returnUrl) 
+                && controller.Url.IsLocalUrl(returnUrl)
+                && !RelativePathHelper.IsWellFormattedAndEqual(controller.Request.Path, returnUrl)
+                )
             {
                 return returnUrl;
             }
@@ -215,7 +219,7 @@ namespace Cofoundry.Web.Identity
             if (controller == null) throw new ArgumentNullException(nameof(controller));
             
             var result = new PasswordResetRequestValidationResult();
-            result.ValidationErrorMessage = "Invalid password reset request";
+            result.Error = PasswordResetRequestAuthenticationError.InvalidRequest;
 
             if (!controller.ModelState.IsValid) return result;
 
@@ -240,7 +244,7 @@ namespace Cofoundry.Web.Identity
             var validationResult = await _queryExecutor.ExecuteAsync(query);
 
             result.IsValid = validationResult.IsValid;
-            result.ValidationErrorMessage = validationResult.ValidationErrorMessage;
+            result.Error = validationResult.Error;
 
             return result;
         }
@@ -281,7 +285,7 @@ namespace Cofoundry.Web.Identity
 
         private static void AddPasswordRequestInvalidError(Controller controller)
         {
-            controller.ModelState.AddModelError(string.Empty, "Invalid password request");
+            controller.ModelState.AddModelError(string.Empty, PasswordResetRequestAuthenticationError.InvalidRequest.ToDisplayText());
         }
 
         #endregion

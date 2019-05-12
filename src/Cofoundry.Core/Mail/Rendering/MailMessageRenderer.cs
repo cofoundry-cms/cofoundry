@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -36,8 +37,19 @@ namespace Cofoundry.Core.Mail
             message.To = toAddress;
             FormatFromAddress(template, message);
 
-            message.TextBody = await RenderViewAsync(template, "text");
+            var textBody = await RenderViewAsync(template, "text");
+
+            if (!string.IsNullOrWhiteSpace(textBody))
+            {
+                // Remove any html encodings created by the Razor parser
+                message.TextBody = WebUtility.HtmlDecode(textBody);
+            }
             message.HtmlBody = await RenderViewAsync(template, "html");
+
+             if (message.HtmlBody == null&& message.TextBody == null)
+            {
+                throw new InvalidOperationException($"Couldn't find a text or html mail template file for '{template.ViewFile}'");
+            }
 
             return message;
         }
@@ -64,7 +76,7 @@ namespace Cofoundry.Core.Mail
                 throw new TemplateRenderException(path, template, ex);
             }
 
-            return view.Trim();
+            return view?.Trim();
         }
     }
 }

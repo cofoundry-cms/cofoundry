@@ -1,11 +1,8 @@
 ﻿using Cofoundry.Core.Validation;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
 using System.Reflection;
 using System.Runtime.ExceptionServices;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Cofoundry.Domain.CQS
@@ -42,15 +39,15 @@ namespace Cofoundry.Domain.CQS
 
         #endregion
 
-        #region async execution
-
         /// <summary>
         /// Handles the asynchronous execution the specified query.
         /// </summary>
         /// <param name="query">Query to execute.</param>
-        public async Task<TResult> ExecuteAsync<TResult>(IQuery<TResult> query)
+        public Task<TResult> ExecuteAsync<TResult>(IQuery<TResult> query)
         {
-            return await ExecuteAsync(query, null);
+            IExecutionContext executionContext = null;
+
+            return ExecuteAsync(query, executionContext);
         }
 
         /// <summary>
@@ -61,7 +58,7 @@ namespace Cofoundry.Domain.CQS
         /// Optional custom execution context which can be used to impersonate/elevate permissions 
         /// or change the execution date.
         /// </param>
-        public async Task<TResult> ExecuteAsync<TResult>(IQuery<TResult> query, IExecutionContext executionContext = null)
+        public async Task<TResult> ExecuteAsync<TResult>(IQuery<TResult> query, IExecutionContext executionContext)
         {
             TResult result;
 
@@ -78,6 +75,21 @@ namespace Cofoundry.Domain.CQS
             }
 
             return result;
+        }
+
+        /// <summary>
+        /// Handles the asynchronous execution the specified query.
+        /// </summary>
+        /// <param name="query">Query to execute.</param>
+        /// <param name="userContext">
+        /// Optional user context which can be used to impersonate/elevate permissions.
+        /// </param>
+        public Task<TResult> ExecuteAsync<TResult>(IQuery<TResult> query, IUserContext userContext)
+        {
+            if (userContext == null) throw new ArgumentNullException(nameof(userContext));
+
+            var executionContext = _executionContextFactory.Create(userContext);
+            return ExecuteAsync(query, executionContext);
         }
 
         private async Task<TResult> ExecuteQueryAsync<TQuery, TResult>(TQuery query, IExecutionContext executionContext) where TQuery : IQuery<TResult>
@@ -98,10 +110,6 @@ namespace Cofoundry.Domain.CQS
 
             return result;
         }
-
-        #endregion
-
-        #region helpers
 
         private async Task<IExecutionContext> CreateExecutionContextAsync(IExecutionContext cx)
         {
@@ -131,7 +139,5 @@ namespace Cofoundry.Domain.CQS
             // compiler requires assignment
             return default(TResult);
         }
-
-        #endregion
     }
 }

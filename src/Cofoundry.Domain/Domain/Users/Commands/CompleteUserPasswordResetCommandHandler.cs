@@ -28,6 +28,7 @@ namespace Cofoundry.Domain
         private readonly IPasswordUpdateCommandHelper _passwordUpdateCommandHelper;
         private readonly IUserMailTemplateBuilderFactory _userMailTemplateBuilderFactory;
         private readonly IUserAreaDefinitionRepository _userAreaDefinitionRepository;
+        private readonly IExecutionContextFactory _executionContextFactory;
 
         public CompleteUserPasswordResetCommandHandler(
             CofoundryDbContext dbContext,
@@ -36,7 +37,8 @@ namespace Cofoundry.Domain
             ITransactionScopeManager transactionScopeFactory,
             IPasswordUpdateCommandHelper passwordUpdateCommandHelper,
             IUserMailTemplateBuilderFactory userMailTemplateBuilderFactory,
-            IUserAreaDefinitionRepository userAreaDefinitionRepository
+            IUserAreaDefinitionRepository userAreaDefinitionRepository,
+            IExecutionContextFactory executionContextFactory
             )
         {
             _dbContext = dbContext;
@@ -46,6 +48,7 @@ namespace Cofoundry.Domain
             _passwordUpdateCommandHelper = passwordUpdateCommandHelper;
             _userMailTemplateBuilderFactory = userMailTemplateBuilderFactory;
             _userAreaDefinitionRepository = userAreaDefinitionRepository;
+            _executionContextFactory = executionContextFactory;
         }
 
         #endregion
@@ -66,7 +69,7 @@ namespace Cofoundry.Domain
 
                 if (command.SendNotification)
                 {
-                    await SendNotificationAsync(command, request.User);
+                    await SendNotificationAsync(command, request.User, executionContext);
                 }
 
                 await scope.CompleteAsync();
@@ -104,7 +107,7 @@ namespace Cofoundry.Domain
         {
             if (!result.IsValid)
             {
-                throw new ValidationException(result.ValidationErrorMessage);
+                throw new ValidationException(result.Error.ToDisplayText());
             }
         }
 
@@ -115,13 +118,14 @@ namespace Cofoundry.Domain
 
         private async Task SendNotificationAsync(
             CompleteUserPasswordResetCommand command,
-            User user
+            User user,
+            IExecutionContext executionContext
             )
         {
             // Send mail notification
             var mailTemplateBuilder = _userMailTemplateBuilderFactory.Create(command.UserAreaCode);
 
-            var context = await CreateMailTemplateContextAsync(user.UserId);
+            var context = await CreateMailTemplateContextAsync(user.UserId, executionContext);
             var mailTemplate = await mailTemplateBuilder.BuildPasswordChangedTemplateAsync(context);
 
             // Null template means don't send a notification
@@ -130,10 +134,17 @@ namespace Cofoundry.Domain
             await _mailService.SendAsync(user.Email, mailTemplate);
         }
 
-        private async Task<PasswordChangedTemplateBuilderContext> CreateMailTemplateContextAsync(int userId)
+        private async Task<PasswordChangedTemplateBuilderContext> CreateMailTemplateContextAsync(
+            int userId,
+            IExecutionContext executionContext
+            )
         {
+            // user is will not be logged in so we need to elevate user 
+            // privilidges here to get the user data
             var query = new GetUserSummaryByIdQuery(userId);
-            var userSummary = await _queryExecutor.ExecuteAsync(query);
+            var adminExecutionContext = await _executionContextFactory.CreateSystemUserExecutionContextAsync(executionContext);
+
+            var userSummary = await _queryExecutor.ExecuteAsync(query, adminExecutionContext);
             EntityNotFoundException.ThrowIfNull(userSummary, userId);
 
             var context = new PasswordChangedTemplateBuilderContext()

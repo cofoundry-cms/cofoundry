@@ -1,4 +1,5 @@
 ﻿using Cofoundry.Domain.MailTemplates;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Internal;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Primitives;

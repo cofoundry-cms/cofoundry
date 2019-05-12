@@ -1,0 +1,32 @@
+﻿@inject ICofoundryHelper Cofoundry
+@{
+    Layout = "_MasterLayout";
+    var user = await Cofoundry.CurrentUser.GetAsync(PartnerUserAreaDefinition.Code);
+}
+
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <span class="navbar-brand mb-0 h1">Partner Area</span>
+
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav">
+            @if (user.IsLoggedIn)
+            {
+            <li class="nav-item">
+                <a class="nav-link" href="@UrlLibrary.PartnerLogout()">Logout</a>
+            </li>
+            }
+            else
+            {
+            <li class="nav-item">
+                <a class="nav-link" href="@UrlLibrary.PartnerLogin()">Login</a>
+            </li>
+            }
+        </ul>
+    </div>
+</nav>
+
+@RenderBody()

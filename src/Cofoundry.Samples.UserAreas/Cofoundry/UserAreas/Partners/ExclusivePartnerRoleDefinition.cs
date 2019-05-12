@@ -16,7 +16,7 @@ namespace Cofoundry.Samples.UserAreas
     /// </summary>
     public class ExclusivePartnerRoleDefinition : IRoleDefinition
     {
-        public const string MemberRoleCode = "EXP";
+        public const string Code = "EXP";
 
         /// <summary>
         /// The role title is used to identify the role and select it in the admin 
@@ -29,7 +29,7 @@ namespace Cofoundry.Samples.UserAreas
         /// the role programatically. The code must be unique and convention is to use 
         /// upper case, although code matching is case insensitive.
         /// </summary>
-        public string RoleCode { get { return MemberRoleCode; } }
+        public string RoleCode { get { return Code; } }
 
         /// <summary>
         /// A role must be assigned to a user area, in this case the role is 

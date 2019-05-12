@@ -18,9 +18,9 @@ namespace Cofoundry.Domain
         public bool IsValid { get; set; }
 
         /// <summary>
-        /// Contains user a friendly error message if the request is not 
-        /// valid. This message is safe to display to a user.
+        /// If the request is invalid, then this will represent the type
+        /// of error that has occured.
         /// </summary>
-        public string ValidationErrorMessage { get; set; }
+        public PasswordResetRequestAuthenticationError Error { get; set; }
     }
 }

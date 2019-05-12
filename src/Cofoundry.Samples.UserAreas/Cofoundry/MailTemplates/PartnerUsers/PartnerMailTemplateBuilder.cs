@@ -1,4 +1,5 @@
 ﻿using Cofoundry.Core.Mail;
+using Cofoundry.Domain;
 using Cofoundry.Domain.MailTemplates;
 using System;
 using System.Collections.Generic;
@@ -17,7 +18,14 @@ namespace Cofoundry.Samples.UserAreas.PartnerMailTemplates
     /// and mix in any additional data you need.
     /// </summary>
     public class PartnerMailTemplateBuilder : IUserMailTemplateBuilder<PartnerUserAreaDefinition>
-    { 
+    {
+        private readonly IPasswordResetUrlHelper _passwordResetUrlHelper;
+
+        public PartnerMailTemplateBuilder(IPasswordResetUrlHelper passwordResetUrlHelper)
+        {
+            _passwordResetUrlHelper = passwordResetUrlHelper;
+        }
+
         public Task<IMailTemplate> BuildNewUserWithTemporaryPasswordTemplateAsync(NewUserWithTemporaryPasswordTemplateBuilderContext context)
         {
             var template = new NewUserWithTemporaryPasswordMailTemplate()
@@ -44,7 +52,7 @@ namespace Cofoundry.Samples.UserAreas.PartnerMailTemplates
 
         public Task<IMailTemplate> BuildPasswordResetRequestedByUserTemplateAsync(PasswordResetRequestedByUserTemplateBuilderContext context)
         {
-            var resetUrl = "";// todo GetPasswordResetUrl(_userAreaDefinition, context);
+            var resetUrl = _passwordResetUrlHelper.MakeUrl(context);
 
             var template = new PasswordResetRequestedByUserMailTemplate()
             {
@@ -65,15 +73,5 @@ namespace Cofoundry.Samples.UserAreas.PartnerMailTemplates
 
             return Task.FromResult<IMailTemplate>(template);
         }
-
-        //protected string GetPasswordResetUrl(IUserAreaDefinition userAreaDefinition, PasswordResetRequestedByUserTemplateBuilderContext context)
-        //{
-        //    var baseUrl = RelativePathHelper.Combine(userAreaDefinition.LoginPath, "reset-password");
-
-        //    return string.Format("{0}?i={1}&t={2}",
-        //        baseUrl,
-        //        context.UserPasswordResetRequestId.ToString("N"),
-        //        Uri.EscapeDataString(context.Token));
-        //}
     }
 }

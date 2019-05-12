@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 using Cofoundry.Core;
 using Cofoundry.Domain.Data;
 using Microsoft.EntityFrameworkCore;
-using System.Collections.Concurrent;
 
 namespace Cofoundry.Domain
 {
@@ -70,6 +69,8 @@ namespace Cofoundry.Domain
         /// </remarks>
         public async Task<IUserContext> GetCurrentContextByUserAreaAsync(string userAreaCode)
         {
+            if (string.IsNullOrWhiteSpace(userAreaCode)) throw new ArgumentEmptyException(nameof(userAreaCode));
+
             var userContext = _alternativeUserContextCache.GetOrDefault(userAreaCode);
             if (userContext != null) return userContext;
 
@@ -136,12 +137,12 @@ namespace Cofoundry.Domain
         /// <param name="userAreaCode">The user area code to clear the cache for.</param>
         public void ClearCache(string userAreaCode)
         {
-            if (userAreaCode == null) throw new ArgumentNullException(nameof(userAreaCode));
+            if (string.IsNullOrWhiteSpace(userAreaCode)) throw new ArgumentEmptyException(nameof(userAreaCode));
 
-            // Also remove the anonymous user contextt o force re-validation
-            if (_currentUserContext != null
-                || !_currentUserContext.IsLoggedIn() 
-                || _currentUserContext.UserArea.UserAreaCode == userAreaCode)
+            // Also remove the anonymous user context to force re-validation
+            if (_currentUserContext != null && 
+                (!_currentUserContext.IsLoggedIn() 
+                || _currentUserContext.UserArea.UserAreaCode == userAreaCode))
             {
                 _currentUserContext = null;
             }

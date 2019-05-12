@@ -1,0 +1,20 @@
+﻿@model IPageViewModel
+@inject ICofoundryTemplateHelper<IPageViewModel> Cofoundry
+@Cofoundry.Template.UseDescription("A general template for the partner area")
+
+@{
+    Layout = "~/Views/Shared/_PartnerLayout.cshtml";
+}
+
+<h1 class="mt-3">@Model.PageTitle</h1>
+
+<div class="row mt-4 mb-5">
+    <div class="col">
+        @(await Cofoundry.Template.Region("Body")
+                    .AllowMultipleBlocks()
+                    .AllowBlockType<ContentSectionDataModel>()
+                    .AllowBlockType<ExclusivePartnerContentDataModel>()
+                    .EmptyContentMinHeight(500)
+                    .InvokeAsync())
+    </div>
+</div>

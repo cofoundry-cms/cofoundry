@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Cofoundry.Domain.CQS;
 using Cofoundry.Domain;
+using Cofoundry.Core;
 
 namespace Cofoundry.Web
 {
@@ -14,7 +14,8 @@ namespace Cofoundry.Web
     {
         #region construction
 
-        private CurrentUserViewHelperContext _context = null;
+        private CurrentUserViewHelperContext _helperContext = null;
+        private Dictionary<string, CurrentUserViewHelperContext> _alternativeHelperContextCache = new Dictionary<string, CurrentUserViewHelperContext>();
 
         private readonly IUserContextService _userContextServiceService;
         private readonly IQueryExecutor _queryExecutor;
@@ -30,31 +31,73 @@ namespace Cofoundry.Web
 
         #endregion
 
+        /// <summary>
+        /// Returns information about the currently logged in user. If your 
+        /// project has multiple user areas then this method will run on the
+        /// user area marked as the default auth schema. Once the user data is 
+        /// loaded it is cached so you don't have to worry about calling this 
+        /// multiple times.
+        /// </summary>
         public async Task<CurrentUserViewHelperContext> GetAsync()
         {
             // since this only runs in views it shouldn't need to be threadsafe
-            if (_context == null)
+            if (_helperContext == null)
             {
-                await InitializeContextAsync();
-            }
+                var userContext = await _userContextServiceService.GetCurrentContextAsync();
+                _helperContext = await GetHelperContextAsync(userContext);
+                }
 
-            return _context;
+            return _helperContext;
         }
 
-        private async Task InitializeContextAsync()
+        /// <summary>
+        /// Returns information about the currently logged in user for a 
+        /// specific user area. This is useful if you have multiple user
+        /// areas because only one can be set as the default auth schema.
+        /// Once the user data is loaded it is cached so you don't have to worry 
+        /// about calling this multiple times.
+        /// </summary>
+        /// <param name="userAreaCode">
+        /// The unique 3 letter identifier code for the user area to check for.
+        /// </param>
+        public async Task<CurrentUserViewHelperContext> GetAsync(string userAreaCode)
+        {
+            if (string.IsNullOrWhiteSpace(userAreaCode)) throw new ArgumentEmptyException(nameof(userAreaCode));
+
+            if (_helperContext?.User?.UserArea?.UserAreaCode == userAreaCode)
+            {
+                return _helperContext;
+            }
+
+            var helperContext = _alternativeHelperContextCache.GetOrDefault(userAreaCode);
+
+            if (helperContext != null)
+            {
+                return helperContext;
+            }
+
+            var userContext = await _userContextServiceService.GetCurrentContextByUserAreaAsync(userAreaCode);
+            helperContext = await GetHelperContextAsync(userContext);
+
+            _alternativeHelperContextCache.Add(userAreaCode, helperContext);
+
+            return helperContext;
+        }
+
+
+        private async Task<CurrentUserViewHelperContext> GetHelperContextAsync(IUserContext userContext)
         {
             var context = new CurrentUserViewHelperContext();
-            var userContext = await _userContextServiceService.GetCurrentContextAsync();
-            context.Role = await _queryExecutor.ExecuteAsync(new GetRoleDetailsByIdQuery(userContext.RoleId));
+            context.Role = await _queryExecutor.ExecuteAsync(new GetRoleDetailsByIdQuery(userContext.RoleId), userContext);
 
             if (userContext.UserId.HasValue)
             {
                 var query = new GetUserMicroSummaryByIdQuery(userContext.UserId.Value);
-                context.User = await _queryExecutor.ExecuteAsync(query);
+                context.User = await _queryExecutor.ExecuteAsync(query, userContext);
                 context.IsLoggedIn = true;
             }
 
-            _context = context;
+            return context;
         }
     }
 }

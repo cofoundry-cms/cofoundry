@@ -58,7 +58,7 @@ namespace Cofoundry.Core.Mail
 
             if (!viewEngineResult.Success)
             {
-                throw new InvalidOperationException(string.Format("Couldn't find mail template '{0}'", viewPath));
+                return null;
             }
 
             var view = viewEngineResult.View;

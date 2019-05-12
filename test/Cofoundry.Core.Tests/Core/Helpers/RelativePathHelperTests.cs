@@ -46,5 +46,103 @@ namespace Cofoundry.Core.Tests
         }
 
         #endregion
+
+        #region IsWellFormattedAndEqual
+
+        [Theory]
+        [InlineData(null)]
+        [InlineData("")]
+        [InlineData(" ")]
+        [InlineData("    ")]
+        public void IsWellFormattedAndEqual_WhenNullOrEmpty_ReturnsFalse(string path)
+        {
+            var bothResult = RelativePathHelper.IsWellFormattedAndEqual(path, path);
+            var path1Result = RelativePathHelper.IsWellFormattedAndEqual(path, "/mypath");
+            var path2Result = RelativePathHelper.IsWellFormattedAndEqual("/mypath", path);
+
+            Assert.False(bothResult);
+            Assert.False(path1Result);
+            Assert.False(path2Result);
+        }
+
+        [Theory]
+        [InlineData("https://www.cofoundry.org/test")]
+        [InlineData("../bad-path")]
+        [InlineData("no-fun")]
+        [InlineData("/!invalid>path<chars")]
+        public void IsWellFormattedAndEqual_WhenInvalid_ReturnsFalse(string path)
+        {
+            var bothResult = RelativePathHelper.IsWellFormattedAndEqual(path, path);
+            var path1Result = RelativePathHelper.IsWellFormattedAndEqual(path, "/mypath");
+            var path2Result = RelativePathHelper.IsWellFormattedAndEqual("/mypath", path);
+
+            Assert.False(bothResult);
+            Assert.False(path1Result);
+            Assert.False(path2Result);
+        }
+
+        [Theory]
+        [InlineData("/test", "/test")]
+        [InlineData("/test/", "/test")]
+        [InlineData("/test/myfile.jpg", "/test/myfile.jpg")]
+        [InlineData("/test/deep/deeper/", "/test/deep/deeper")]
+        public void IsWellFormattedAndEqual_WhenValid_ReturnsTrue(string path1, string path2)
+        {
+            var bothResult = RelativePathHelper.IsWellFormattedAndEqual(path1, path1);
+            var path1Result = RelativePathHelper.IsWellFormattedAndEqual(path1, path2);
+            var path2Result = RelativePathHelper.IsWellFormattedAndEqual(path2, path1);
+
+            Assert.True(bothResult);
+            Assert.True(path1Result);
+            Assert.True(path2Result);
+        }
+
+        [Theory]
+        [InlineData("~/test", "/test")]
+        [InlineData("~/test/deep", "/test/deep")]
+        [InlineData("~/test?var=test", "/test")]
+        [InlineData("~/test#test", "/test")]
+        public void IsWellFormattedAndEqual_ValidWithAppReleative_ReturnsTrue(string path1, string path2)
+        {
+            var bothResult = RelativePathHelper.IsWellFormattedAndEqual(path1, path1);
+            var path1Result = RelativePathHelper.IsWellFormattedAndEqual(path1, path2);
+            var path2Result = RelativePathHelper.IsWellFormattedAndEqual(path2, path1);
+
+            Assert.True(bothResult);
+            Assert.True(path1Result);
+            Assert.True(path2Result);
+        }
+
+        [Theory]
+        [InlineData("/test?test=true", "/test")]
+        [InlineData("/test/deep?a=b&y=x", "/test/deep?a=c&y=f")]
+        public void IsWellFormattedAndEqual_ValidWithQueryString_ReturnsTrue(string path1, string path2)
+        {
+            var bothResult = RelativePathHelper.IsWellFormattedAndEqual(path1, path1);
+            var path1Result = RelativePathHelper.IsWellFormattedAndEqual(path1, path2);
+            var path2Result = RelativePathHelper.IsWellFormattedAndEqual(path2, path1);
+
+            Assert.True(bothResult);
+            Assert.True(path1Result);
+            Assert.True(path2Result);
+        }
+
+        [Theory]
+        [InlineData("/test#test", "/test")]
+        [InlineData("/test/#test", "/test")]
+        [InlineData("/test.html#test", "/test.html")]
+        [InlineData("/test/deep/#test", "/test/deep")]
+        public void IsWellFormattedAndEqual_ValidWithFragment_ReturnsTrue(string path1, string path2)
+        {
+            var bothResult = RelativePathHelper.IsWellFormattedAndEqual(path1, path1);
+            var path1Result = RelativePathHelper.IsWellFormattedAndEqual(path1, path2);
+            var path2Result = RelativePathHelper.IsWellFormattedAndEqual(path2, path1);
+
+            Assert.True(bothResult);
+            Assert.True(path1Result);
+            Assert.True(path2Result);
+        }
+
+        #endregion
     }
 }

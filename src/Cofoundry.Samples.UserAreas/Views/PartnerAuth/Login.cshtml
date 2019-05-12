@@ -2,16 +2,16 @@
 @model LoginViewModel
 @inject ICofoundryHelper Cofoundry
 
-<h1 class="mt-3">Partner Login</h1>
+<h1 class="mt-3">Login</h1>
 
 <div class="row mt-4 mb-5">
-    <form method="post">
+    <form method="post" class="col col-4">
 
         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
         <div class="form-group">
             <label asp-for="Username"></label>
-            <input asp-for="Username" class="form-control" aria-describedby="emailHelp">
+            <input asp-for="Username" class="form-control" placeholder="Email">
             <span asp-validation-for="Username" class="text-danger"></span>
         </div>
         <div class="form-group">
@@ -24,5 +24,8 @@
             <label asp-for="RememberMe" class="form-check-label">remember me</label>
         </div>
         <button type="submit" class="btn btn-primary">Submit</button>
+        <p class="mt-3">
+            <a href="@UrlLibrary.PartnerForgotPassword()">Forgotten your password?</a>
+        </p>
     </form>
 </div>

@@ -1,0 +1,18 @@
+﻿@model ExclusivePartnerContentDataModel
+@inject ICofoundryBlockTypeHelper<ExclusivePartnerContentDataModel> Cofoundry
+
+@Cofoundry.BlockType.UseDescription("This is a content block that is only displayed only for users with the Exclusive Partner role")
+@{ 
+    var user = await Cofoundry.CurrentUser.GetAsync(PartnerUserAreaDefinition.Code);
+}
+@if (user.Role.RoleCode == ExclusivePartnerRoleDefinition.Code)
+{
+<div>
+    @if (!string.IsNullOrWhiteSpace(Model.Title))
+    {
+        <h1>@Model.Title</h1>
+    }
+
+    @Cofoundry.Sanitizer.Sanitize(Model.HtmlText)
+</div>
+}

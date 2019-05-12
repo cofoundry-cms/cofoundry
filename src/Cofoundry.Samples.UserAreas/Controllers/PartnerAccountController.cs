@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Cofoundry.Samples.UserAreas
 {
-    [Route("partner/account")]
+    [Route("partners/account")]
     [AuthorizeUserArea(PartnerUserAreaDefinition.Code)]
     public class PartnerAccountController : Controller
     {

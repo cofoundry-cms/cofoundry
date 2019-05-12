@@ -8,7 +8,7 @@ namespace Cofoundry.Domain
 {
     /// <summary>
     /// Exception thrown from the ValidatePasswordResetRequestQueryHandler
-    /// when the request is malformed or invalid for exceptional reasons.
+    /// when the request is invalid for exceptional reasons.
     /// </summary>
     public class InvalidPasswordResetRequestException : Exception
     {

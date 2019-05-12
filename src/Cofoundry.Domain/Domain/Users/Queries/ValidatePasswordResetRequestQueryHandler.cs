@@ -32,34 +32,28 @@ namespace Cofoundry.Domain
         
         #endregion
 
-        #region execution
-
         public async Task<PasswordResetRequestAuthenticationResult> ExecuteAsync(ValidatePasswordResetRequestQuery query, IExecutionContext executionContext)
         {
-            var request = await GetRequest(query).SingleOrDefaultAsync();
+            var request = await _dbContext
+                .UserPasswordResetRequests
+                .AsNoTracking()
+                .Include(r => r.User)
+                .Where(r => r.UserPasswordResetRequestId == query.UserPasswordResetRequestId)
+                .SingleOrDefaultAsync();
+
             var result = ValidatePasswordRequest(request, query, executionContext);
 
             return result;
         }
 
-        #endregion
-
-        #region helpers
-
-        private IQueryable<UserPasswordResetRequest> GetRequest(ValidatePasswordResetRequestQuery query)
-        {
-            return _dbContext
-                .UserPasswordResetRequests
-                .AsNoTracking()
-                .Include(r => r.User)
-                .Where(r => r.UserPasswordResetRequestId == query.UserPasswordResetRequestId);
-        }
-
         private PasswordResetRequestAuthenticationResult ValidatePasswordRequest(UserPasswordResetRequest request, ValidatePasswordResetRequestQuery query, IExecutionContext executionContext)
         {
+            var result = new PasswordResetRequestAuthenticationResult();
+
             if (request == null || request.Token != query.Token)
             {
-                throw new InvalidPasswordResetRequestException(query, "Invalid password request - Id: " + query.UserPasswordResetRequestId + " Token: " + query.Token);
+                result.Error = PasswordResetRequestAuthenticationError.InvalidRequest;
+                return result;
             }
 
             if (request.User.UserAreaCode != query.UserAreaCode)
@@ -79,21 +73,19 @@ namespace Cofoundry.Domain
                 throw new InvalidPasswordResetRequestException(query, "Cannot update the password to account in a user area that does not allow password logins.");
             }
 
-            var result = new PasswordResetRequestAuthenticationResult();
-            result.IsValid = true;
-
             if (request.IsComplete)
             {
-                result.IsValid = false;
-                result.ValidationErrorMessage = "The password recovery request is no longer valid.";
+                result.Error = PasswordResetRequestAuthenticationError.AlreadyComplete;
+                return result;
             }
 
             if (!IsPasswordRecoveryDateValid(request.CreateDate, executionContext))
             {
-                result.IsValid = false;
-                result.ValidationErrorMessage = "The password recovery request has expired.";
+                result.Error = PasswordResetRequestAuthenticationError.Expired;
+                return result;
             }
 
+            result.IsValid = true;
             return result;
         }
 
@@ -101,9 +93,6 @@ namespace Cofoundry.Domain
         {
             return dt > executionContext.ExecutionDate.AddHours(-_authenticationSettings.NumHoursPasswordResetLinkValid);
         }
-
-
-        #endregion
     }
 
 }
