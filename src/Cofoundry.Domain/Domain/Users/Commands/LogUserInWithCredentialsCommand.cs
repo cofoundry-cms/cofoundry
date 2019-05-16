@@ -43,6 +43,7 @@ namespace Cofoundry.Domain
         /// <summary>
         /// True if the user should stay logged in perminantely; false
         /// if the user should only stay logged in for the duration of
+        /// the browser session.
         /// </summary>
         public bool RememberUser { get; set; }
     }

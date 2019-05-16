@@ -14,10 +14,8 @@ namespace Cofoundry.Domain
     /// </summary>
     public class TooManyFailedAttemptsAuthenticationException : ValidationException
     {
-        const string MESSAGE = "Too many failed login attempts have been detected, please try again later.";
-
         public TooManyFailedAttemptsAuthenticationException()
-            : base(MESSAGE)
+            : base(UserLoginInfoAuthenticationError.TooManyFailedAttempts.ToDisplayText())
         {
         }
 

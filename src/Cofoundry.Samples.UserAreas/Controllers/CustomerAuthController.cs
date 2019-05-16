@@ -8,27 +8,58 @@ using System.Threading.Tasks;
 
 namespace Cofoundry.Samples.UserAreas
 {
-    [Route("partners/auth")]
-    public class PartnerAuthController : Controller
+    [Route("customers/auth")]
+    public class CustomerAuthController : Controller
     {
         private readonly IAuthenticationControllerHelper<PartnerUserAreaDefinition> _authenticationControllerHelper;
         private readonly IUserContextService _userContextService;
+        private readonly IUserRepository _userRepository;
 
-        public PartnerAuthController(
+        public CustomerAuthController(
             IAuthenticationControllerHelper<PartnerUserAreaDefinition> authenticationControllerHelper,
-            IUserContextService userContextService
+            IUserContextService userContextService,
+            IUserRepository userRepository
             )
         {
             _authenticationControllerHelper = authenticationControllerHelper;
             _userContextService = userContextService;
+            _userRepository = userRepository;
         }
 
         [Route("")]
-        [Route("/partners")]
         public IActionResult Index()
         {
             return RedirectToActionPermanent(nameof(Login));
         }
+
+        #region register
+
+        [Route("register")]
+        public async Task<IActionResult> Register()
+        {
+            var user = await _userContextService.GetCurrentContextByUserAreaAsync(PartnerUserAreaDefinition.Code);
+            if (user.IsLoggedIn()) return GetLoggedInDefaultRedirectAction();
+
+            // If you need to customize the model you can create your own 
+            // that implements ILoginViewModel
+            var viewModel = new LoginViewModel();
+
+            return View(viewModel);
+        }
+
+        [HttpPost("register")]
+        public async Task<IActionResult> Register(LoginViewModel viewModel)
+        {
+            throw new NotImplementedException();
+
+            // TODO: register new user and send email verification/ welcome notification
+            
+            return View(viewModel);
+        }
+
+        #endregion
+
+        #region login/logout
 
         [Route("login")]
         public async Task<IActionResult> Login()
@@ -58,17 +89,18 @@ namespace Cofoundry.Samples.UserAreas
                 return View(viewModel);
             }
 
-            // Support redirect urls from login
-            var redirectUrl = _authenticationControllerHelper.GetAndValidateReturnUrl(this);
-
-            if (!authResult.User.RequirePasswordChange)
+            // An example of using custom logic at login to verify a user has 
+            // confirmed their email before logging them in.
+            if (!authResult.User.IsEmailConfirmed)
             {
-                return RedirectToAction(nameof(ChangePassword), new { redirectUrl });
+                return Redirect(nameof(EmailVerificationRequired));
             }
-
+            
             // If no action required, log the user in
             await _authenticationControllerHelper.LogUserInAsync(this, authResult.User, true);
 
+            // Support redirect urls from login
+            var redirectUrl = _authenticationControllerHelper.GetAndValidateReturnUrl(this);
             if (redirectUrl != null)
             {
                 return Redirect(redirectUrl);
@@ -77,55 +109,16 @@ namespace Cofoundry.Samples.UserAreas
             return GetLoggedInDefaultRedirectAction();
         }
 
-        [Route("change-password")]
-        public async Task<IActionResult> ChangePassword()
-        {
-            var user = await _userContextService.GetCurrentContextByUserAreaAsync(PartnerUserAreaDefinition.Code);
-            if (user.IsLoggedIn())
-            {
-                if (!user.IsPasswordChangeRequired)
-                {
-                    return GetLoggedInDefaultRedirectAction();
-                }
-
-                // The user shouldn't be logged in, but if so, log them out
-                await _authenticationControllerHelper.LogoutAsync();
-            }
-
-            // If you need to customize the model you can create your own 
-            // that implements IChangePasswordViewModel
-            var viewModel = new ChangePasswordViewModel();
-
-            return View(viewModel);
-        }
-
-        [HttpPost("change-password")]
-        public async Task<IActionResult> ChangePassword(ChangePasswordViewModel viewModel)
-        {
-            var user = await _userContextService.GetCurrentContextByUserAreaAsync(PartnerUserAreaDefinition.Code);
-            if (user.IsLoggedIn())
-            {
-                if (!user.IsPasswordChangeRequired)
-                {
-                    return GetLoggedInDefaultRedirectAction();
-                }
-
-                // The user shouldn't be logged in, but if so, log them out
-                await _authenticationControllerHelper.LogoutAsync();
-            }
-            await _authenticationControllerHelper.ChangePasswordAsync(this, viewModel);
-
-            ViewBag.ReturnUrl = _authenticationControllerHelper.GetAndValidateReturnUrl(this);
-
-            return View(viewModel);
-        }
-
         [Route("logout")]
         public async Task<ActionResult> Logout()
         {
             await _authenticationControllerHelper.LogoutAsync();
             return Redirect(UrlLibrary.PartnerLogin());
         }
+
+        #endregion
+
+        #region forgot password / reset
 
         [Route("forgot-password")]
         public async Task<ActionResult> ForgotPassword()
@@ -181,6 +174,66 @@ namespace Cofoundry.Samples.UserAreas
             return View(vm);
         }
 
+        #endregion
+
+        #region verify email
+
+        [Route("email-verification-required")]
+        public async Task<ActionResult> EmailVerificationRequired()
+        {
+            var user = await _userContextService.GetCurrentContextByUserAreaAsync(PartnerUserAreaDefinition.Code);
+            if (user.IsLoggedIn()) return GetLoggedInDefaultRedirectAction();
+
+            return View();
+        }
+
+        [Route("email-verification-required")]
+        public async Task<ActionResult> EmailVerificationRequired(LoginViewModel viewModel)
+        {
+            var user = await _userContextService.GetCurrentContextByUserAreaAsync(PartnerUserAreaDefinition.Code);
+            if (user.IsLoggedIn()) return GetLoggedInDefaultRedirectAction();
+
+            // TODO: Verify user and re-send email
+
+
+            return View();
+        }
+
+        [Route("verify-email")]
+        public async Task<ActionResult> VerifyEmail()
+        {
+            var user = await _userContextService.GetCurrentContextByUserAreaAsync(PartnerUserAreaDefinition.Code);
+            if (user.IsLoggedIn()) return GetLoggedInDefaultRedirectAction();
+
+            var requestValidationResult = await _authenticationControllerHelper.ParseAndValidatePasswordResetRequestAsync(this);
+
+            if (!requestValidationResult.IsValid)
+            {
+                return View(nameof(PasswordReset) + "RequestInvalid", requestValidationResult);
+            }
+
+            var vm = new CompletePasswordResetViewModel(requestValidationResult);
+
+            return View(vm);
+        }
+
+        [HttpPost("verify-email")]
+        public async Task<ActionResult> VerifyEmail(CompletePasswordResetViewModel vm)
+        {
+            var user = await _userContextService.GetCurrentContextByUserAreaAsync(PartnerUserAreaDefinition.Code);
+            if (user.IsLoggedIn()) return GetLoggedInDefaultRedirectAction();
+
+            await _authenticationControllerHelper.CompletePasswordResetAsync(this, vm);
+
+            if (ModelState.IsValid)
+            {
+                return View(nameof(PasswordReset) + "Complete");
+            }
+
+            return View(vm);
+        }
+
+        #endregion
 
         private ActionResult GetLoggedInDefaultRedirectAction()
         {

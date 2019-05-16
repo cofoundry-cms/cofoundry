@@ -84,26 +84,33 @@ namespace Cofoundry.Web.Admin
 
         [AllowAnonymous]
         [HttpPost]
-        public async Task<ActionResult> Login(string returnUrl, LoginViewModel command)
+        public async Task<ActionResult> Login(string returnUrl, LoginViewModel viewModel)
         {
-            var loginResult = await _authenticationControllerHelper.LogUserInAsync(this, command);
+            var authResult = await _authenticationControllerHelper.AuthenticateAsync(this, viewModel);
+
+            if (!authResult.IsSuccess)
+            {
+                var viewPath = ViewPathFormatter.View(CONTROLLER_NAME, nameof(Login));
+                return View(viewPath, viewModel);
+            }
+
+            // Support redirect urls from login
             var redirectUrl = _authenticationControllerHelper.GetAndValidateReturnUrl(this);
 
-            if (loginResult == LoginResult.PasswordChangeRequired)
+            if (!authResult.User.RequirePasswordChange)
             {
                 return Redirect(_adminRouteLibrary.Auth.ChangePassword(returnUrl));
             }
-            else if (loginResult == LoginResult.Success && redirectUrl != null)
+
+            // If no action required, log the user in
+            await _authenticationControllerHelper.LogUserInAsync(this, authResult.User, true);
+
+            if (redirectUrl != null)
             {
                 return Redirect(redirectUrl);
             }
-            else if (loginResult == LoginResult.Success)
-            {
-                return await GetLoggedInDefaultRedirectActionAsync();
-            }
 
-            var viewPath = ViewPathFormatter.View(CONTROLLER_NAME, nameof(Login));
-            return View(viewPath, command);
+            return await GetLoggedInDefaultRedirectActionAsync();
         }
 
         public async Task<ActionResult> Logout()

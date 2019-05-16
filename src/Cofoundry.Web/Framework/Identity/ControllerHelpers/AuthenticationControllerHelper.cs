@@ -6,6 +6,7 @@ using Cofoundry.Domain;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 using Cofoundry.Core;
+using System.ComponentModel.DataAnnotations;
 
 namespace Cofoundry.Web.Identity
 {
@@ -48,51 +49,132 @@ namespace Cofoundry.Web.Identity
 
         #endregion
 
-        #region Log in
+        #region auth
 
         /// <summary>
-        /// Attempts to log a user in using the data in the specified view 
-        /// model, returning the result. ModelState is first checked to be 
-        /// valid before checking the auth data against the database.
+        /// Attempts to authenticate the login request, returning the result. This
+        /// does not log the user in and can be used instead of LogUserInAsync when 
+        /// you want more control over the login workflow. 
+        /// 
+        /// ModelState is first checked to be valid before checking the auth data against 
+        /// the database. An auth errors are added to the ModelState.
         /// </summary>
         /// <param name="controller">
         /// This method is intended to be called from an MVC controller and this
         /// should be the controller instance.
         /// </param>
-        /// <param name="vm">The view-model data posted to the action.</param>
-        /// <returns></returns>
-        public async Task<LoginResult> LogUserInAsync(Controller controller, ILoginViewModel vm)
+        /// <param name="viewModel">The view-model data posted to the action.</param>
+        /// <returns>The result of the authentication check, this should never be null.</returns>
+        public async Task<UserLoginInfoAuthenticationResult> AuthenticateAsync(Controller controller, ILoginViewModel viewModel)
         {
             if (controller == null) throw new ArgumentNullException(nameof(controller));
-            if (vm == null) throw new ArgumentNullException(nameof(vm));
-            
-            if (!controller.ModelState.IsValid) return LoginResult.Failed;
+            if (viewModel == null) throw new ArgumentNullException(nameof(viewModel));
 
-            var command = new LogUserInWithCredentialsCommand()
+            if (!controller.ModelState.IsValid)
+            {
+                return UserLoginInfoAuthenticationResult.CreateFailedResult();
+            }
+
+            var query = new GetUserLoginInfoIfAuthenticatedQuery()
             {
                 UserAreaCode = _userAreaDefinition.UserAreaCode,
-                Username = vm.Username,
-                Password = vm.Password,
-                RememberUser = vm.RememberMe
+                Username = viewModel.Username,
+                Password = viewModel.Password
             };
 
-            try
-            {
-                await _controllerResponseHelper.ExecuteIfValidAsync(controller, command);
-            }
-            catch (PasswordChangeRequiredException ex)
-            {
-                // Add modelstate error as a precaution, because
-                // result.RequiresPasswordChange may not be handled by the caller
-                controller.ModelState.AddModelError(string.Empty, "Password change required.");
+            var result = await _queryExecutor.ExecuteAsync(query);
 
-                return LoginResult.PasswordChangeRequired;
+            if (!result.IsSuccess)
+            {
+                controller.ModelState.AddModelError(string.Empty, result.Error.ToDisplayText());
             }
 
-            if (controller.ModelState.IsValid) return LoginResult.Success;
-
-            return LoginResult.Failed;
+            return result;
         }
+
+        /// <summary>
+        /// Logs in a user that has already been authenticated, typically
+        /// by the AuthenticateAsync method.
+        /// </summary>
+        /// <param name="controller">
+        /// This method is intended to be called from an MVC controller and this
+        /// should be the controller instance.
+        /// </param>
+        /// <param name="user">A UserLoginInfo object that has been returned from a sucessful authentication request.</param>
+        /// <param name="rememberUser">
+        /// True if the user should stay logged in perminantely; false
+        /// if the user should only stay logged in for the duration of
+        /// the browser session.
+        /// </param>
+        public Task LogUserInAsync(
+            Controller controller, 
+            UserLoginInfo user,
+            bool rememberUser
+            )
+        {
+            if (controller == null) throw new ArgumentNullException(nameof(controller));
+            if (user == null) throw new ArgumentNullException(nameof(user));
+
+            if (user.RequirePasswordChange)
+            {
+                throw new PasswordChangeRequiredException();
+            }
+
+            if (_userAreaDefinition.UserAreaCode != user.UserAreaCode)
+            {
+                throw new ValidationException("This user account is not permitted to log in via this route.");
+            }
+
+            return _loginService.LogAuthenticatedUserInAsync(
+                _userAreaDefinition.UserAreaCode,
+                user.UserId,
+                rememberUser
+                );
+        }
+
+        /// <summary>
+        /// Attempts to authenticate and log a user in using the data in the 
+        /// specified view model, returning the result. ModelState is first 
+        /// checked to be valid before checking the auth data against the database.
+        /// </summary>
+        /// <param name="controller">
+        /// This method is intended to be called from an MVC controller and this
+        /// should be the controller instance.
+        /// </param>
+        /// <param name="viewModel">The view-model data posted to the action.</param>
+        /// <returns>The result of the authentication check.</returns>
+        //public async Task<UserLoginInfoAuthenticationResult> AuthenticateAndLogUserInAsync(Controller controller, ILoginViewModel viewModel)
+        //{
+        //    if (controller == null) throw new ArgumentNullException(nameof(controller));
+        //    if (viewModel == null) throw new ArgumentNullException(nameof(viewModel));
+            
+        //    if (!controller.ModelState.IsValid) return LoginResult.Failed;
+
+        //    var command = new LogUserInWithCredentialsCommand()
+        //    {
+        //        UserAreaCode = _userAreaDefinition.UserAreaCode,
+        //        Username = viewModel.Username,
+        //        Password = viewModel.Password,
+        //        RememberUser = viewModel.RememberMe
+        //    };
+
+        //    try
+        //    {
+        //        await _controllerResponseHelper.ExecuteIfValidAsync(controller, command);
+        //    }
+        //    catch (PasswordChangeRequiredException ex)
+        //    {
+        //        // Add modelstate error as a precaution, because
+        //        // result.RequiresPasswordChange may not be handled by the caller
+        //        controller.ModelState.AddModelError(string.Empty, "Password change required.");
+
+        //        return LoginResult.PasswordChangeRequired;
+        //    }
+
+        //    if (controller.ModelState.IsValid) return LoginResult.Success;
+
+        //    return LoginResult.Failed;
+        //}
 
         /// <summary>
         /// Retreives the ASP.NET MVC standard "ReturnUrl" query parameter and

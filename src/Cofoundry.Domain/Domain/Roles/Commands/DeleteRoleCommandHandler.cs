@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using Cofoundry.Domain.Data;
 using Cofoundry.Domain.CQS;
 using Cofoundry.Core.Data;
+using Cofoundry.Domain.Internal;
 
 namespace Cofoundry.Domain
 {
@@ -36,8 +37,6 @@ namespace Cofoundry.Domain
         }
 
         #endregion
-
-        #region execution
 
         public async Task ExecuteAsync(DeleteRoleCommand command, IExecutionContext executionContext)
         {
@@ -78,8 +77,6 @@ namespace Cofoundry.Domain
                 throw new ValidationException("Role is in use and cannot be deleted.");
             }
         }
-
-        #endregion
 
         #region Permission
 

@@ -15,20 +15,40 @@ namespace Cofoundry.Web.Identity
     public interface IAuthenticationControllerHelper<TUserArea>
         where TUserArea : IUserAreaDefinition
     {
-        #region Log in
+
+        #region auth
 
         /// <summary>
-        /// Attempts to log a user in using the data in the specified view 
-        /// model, returning the result. ModelState is first checked to be 
-        /// valid before checking the auth data against the database.
+        /// Attempts to authenticate the login request, returning the result. This
+        /// does not log the user in and can be used instead of LogUserInAsync when 
+        /// you want more control over the login workflow. 
+        /// 
+        /// ModelState is first checked to be valid before checking the auth data against 
+        /// the database. An auth errors are added to the ModelState.
         /// </summary>
         /// <param name="controller">
         /// This method is intended to be called from an MVC controller and this
         /// should be the controller instance.
         /// </param>
-        /// <param name="vm">The view-model data posted to the action.</param>
-        /// <returns></returns>
-        Task<LoginResult> LogUserInAsync(Controller controller, ILoginViewModel vm);
+        /// <param name="viewModel">The view-model data posted to the action.</param>
+        /// <returns>The result of the authentication check, this should never be null.</returns>
+        Task<UserLoginInfoAuthenticationResult> AuthenticateAsync(Controller controller, ILoginViewModel viewModel);
+
+        /// <summary>
+        /// Logs in a user that has already been authenticated, typically
+        /// by the AuthenticateAsync method.
+        /// </summary>
+        /// <param name="controller">
+        /// This method is intended to be called from an MVC controller and this
+        /// should be the controller instance.
+        /// </param>
+        /// <param name="user">A UserLoginInfo object that has been returned from a sucessful authentication request.</param>
+        /// <param name="rememberUser">
+        /// True if the user should stay logged in perminantely; false
+        /// if the user should only stay logged in for the duration of
+        /// the browser session.
+        /// </param>
+        Task LogUserInAsync(Controller controller, UserLoginInfo user, bool rememberUser);
 
         /// <summary>
         /// Retreives the ASP.NET MVC standard "ReturnUrl" query parameter and

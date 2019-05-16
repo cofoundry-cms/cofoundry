@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Cofoundry.Domain.CQS;
 using System.ComponentModel.DataAnnotations;
+using Cofoundry.Core;
 
 namespace Cofoundry.Domain
 {
@@ -22,14 +23,17 @@ namespace Cofoundry.Domain
         
         private readonly IQueryExecutor _queryExecutor;
         private readonly ILoginService _loginService;
+        private readonly ICommandExecutor _commandExecutor;
 
         public LogUserInWithCredentialsCommandHandler(
             IQueryExecutor queryExecutor,
-            ILoginService loginService
+            ILoginService loginService,
+            ICommandExecutor commandExecutor
             )
         {
             _queryExecutor = queryExecutor;
             _loginService = loginService;
+            _commandExecutor = commandExecutor;
         }
 
         #endregion
@@ -38,25 +42,20 @@ namespace Cofoundry.Domain
         {
             if (IsLoggedInAlready(command, executionContext)) return;
 
-            var hasExceededMaxLoginAttempts = await _queryExecutor.ExecuteAsync(GetMaxLoginAttemptsQuery(command), executionContext);
-            ValidateMaxLoginAttemptsNotExceeded(hasExceededMaxLoginAttempts);
+            var authResult = await GetUserLoginInfoAsync(command, executionContext);
+            authResult.ThrowIfUnsuccessful(nameof(command.Password));
 
-            var user = await GetUserLoginInfoAsync(command, executionContext);
-
-            if (user == null)
-            {
-                await _loginService.LogFailedLoginAttemptAsync(command.UserAreaCode, command.Username);
-
-                throw new InvalidCredentialsAuthenticationException(nameof(command.Password));
-            }
-
-            if (user.RequirePasswordChange)
+            if (authResult.User.RequirePasswordChange)
             {
                 throw new PasswordChangeRequiredException();
             }
 
-            ValidateLoginArea(command.UserAreaCode, user.UserAreaCode);
-            await _loginService.LogAuthenticatedUserInAsync(command.UserAreaCode, user.UserId, command.RememberUser);
+            ValidateLoginArea(command.UserAreaCode, authResult.User.UserAreaCode);
+            await _loginService.LogAuthenticatedUserInAsync(
+                command.UserAreaCode, 
+                authResult.User.UserId, 
+                command.RememberUser
+                );
         }
         
         private static bool IsLoggedInAlready(LogUserInWithCredentialsCommand command, IExecutionContext executionContext)
@@ -67,24 +66,7 @@ namespace Cofoundry.Domain
             return currentContext.UserId.HasValue && !isLoggedIntoDifferentUserArea;
         }
 
-        private static HasExceededMaxLoginAttemptsQuery GetMaxLoginAttemptsQuery(LogUserInWithCredentialsCommand command)
-        {
-            return new HasExceededMaxLoginAttemptsQuery()
-            {
-                UserAreaCode = command.UserAreaCode,
-                Username = command.Username
-            };
-        }
-
-        private static void ValidateMaxLoginAttemptsNotExceeded(bool hasAttemptsExceeded)
-        {
-            if (hasAttemptsExceeded)
-            {
-                throw new TooManyFailedAttemptsAuthenticationException();
-            }
-        }
-
-        private Task<UserLoginInfo> GetUserLoginInfoAsync(LogUserInWithCredentialsCommand command, IExecutionContext executionContext)
+        private Task<UserLoginInfoAuthenticationResult> GetUserLoginInfoAsync(LogUserInWithCredentialsCommand command, IExecutionContext executionContext)
         {
             var query = new GetUserLoginInfoIfAuthenticatedQuery()
             {

@@ -40,6 +40,12 @@ namespace Cofoundry.Domain
         public bool RequirePasswordChange { get; set; }
 
         /// <summary>
+        /// A flag to indicate if the users email address has been confirmed via a 
+        /// sign-up notification.
+        /// </summary>
+        public bool IsEmailConfirmed { get; set; }
+
+        /// <summary>
         /// Data detailing who created the user and when.
         /// </summary>
         public CreateAuditData AuditData { get; set; }

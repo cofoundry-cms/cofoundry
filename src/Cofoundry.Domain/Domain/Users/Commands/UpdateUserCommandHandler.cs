@@ -7,6 +7,7 @@ using Cofoundry.Domain.CQS;
 using Microsoft.EntityFrameworkCore;
 using Cofoundry.Core.Validation;
 using Cofoundry.Core;
+using Cofoundry.Domain.Internal;
 
 namespace Cofoundry.Domain
 {

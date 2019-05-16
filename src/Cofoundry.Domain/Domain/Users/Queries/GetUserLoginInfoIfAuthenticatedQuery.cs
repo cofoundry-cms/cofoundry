@@ -10,9 +10,9 @@ namespace Cofoundry.Domain
 {
     /// <summary>
     /// A query that gets information about a user if the specified credentials
-    /// pass an authentication check
+    /// pass an authentication check.
     /// </summary>
-    public class GetUserLoginInfoIfAuthenticatedQuery : IQuery<UserLoginInfo>
+    public class GetUserLoginInfoIfAuthenticatedQuery : IQuery<UserLoginInfoAuthenticationResult>
     {
         /// <summary>
         /// The unique code of the user area match logins for. Note

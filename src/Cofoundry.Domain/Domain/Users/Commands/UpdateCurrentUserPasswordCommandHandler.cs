@@ -7,6 +7,7 @@ using Cofoundry.Domain.CQS;
 using Microsoft.EntityFrameworkCore;
 using Cofoundry.Core.Validation;
 using Cofoundry.Core;
+using Cofoundry.Domain.Internal;
 
 namespace Cofoundry.Domain
 {
@@ -21,6 +22,8 @@ namespace Cofoundry.Domain
         #region constructor
 
         private readonly CofoundryDbContext _dbContext;
+        private readonly IQueryExecutor _queryExecutor;
+        private readonly ICommandExecutor _commandExecutor;
         private readonly UserAuthenticationHelper _userAuthenticationHelper;
         private readonly IPermissionValidationService _permissionValidationService;
         private readonly IUserAreaDefinitionRepository _userAreaRepository;
@@ -28,6 +31,8 @@ namespace Cofoundry.Domain
 
         public UpdateCurrentUserPasswordCommandHandler(
             CofoundryDbContext dbContext,
+            IQueryExecutor queryExecutor,
+            ICommandExecutor commandExecutor,
             UserAuthenticationHelper userAuthenticationHelper,
             IPermissionValidationService permissionValidationService,
             IUserAreaDefinitionRepository userAreaRepository,
@@ -35,6 +40,8 @@ namespace Cofoundry.Domain
             )
         {
             _dbContext = dbContext;
+            _queryExecutor = queryExecutor;
+            _commandExecutor = commandExecutor;
             _userAuthenticationHelper = userAuthenticationHelper;
             _permissionValidationService = permissionValidationService;
             _userAreaRepository = userAreaRepository;
@@ -50,11 +57,13 @@ namespace Cofoundry.Domain
             _permissionValidationService.EnforceIsLoggedIn(executionContext.UserContext);
 
             var user = await GetUser(command, executionContext);
-            UpdatePassword(command, executionContext, user);
-            await _dbContext.SaveChangesAsync();
+
+            await ValidateMaxLoginAttemptsNotExceededAsync(user, executionContext);
+
+            await UpdatePasswordAsync(command, executionContext, user);
         }
 
-        private void UpdatePassword(UpdateCurrentUserPasswordCommand command, IExecutionContext executionContext, User user)
+        private async Task UpdatePasswordAsync(UpdateCurrentUserPasswordCommand command, IExecutionContext executionContext, User user)
         {
             EntityNotFoundException.ThrowIfNull(user, executionContext.UserContext.UserId);
             var userArea = _userAreaRepository.GetByCode(user.UserAreaCode);
@@ -63,10 +72,14 @@ namespace Cofoundry.Domain
 
             if (!_userAuthenticationHelper.IsPasswordCorrect(user, command.OldPassword))
             {
-                throw new PropertyValidationException("Incorrect password", "OldPassword");
+                var logFailedAttemptCommand = new LogFailedLoginAttemptCommand(user.UserAreaCode, user.Username);
+                await _commandExecutor.ExecuteAsync(logFailedAttemptCommand);
+
+                throw new InvalidCredentialsAuthenticationException(nameof(command.OldPassword), "Incorrect password");
             }
 
             _passwordUpdateCommandHelper.UpdatePassword(command.NewPassword, user, executionContext);
+            await _dbContext.SaveChangesAsync();
         }
 
         private Task<User> GetUser(UpdateCurrentUserPasswordCommand command, IExecutionContext executionContext)
@@ -76,6 +89,22 @@ namespace Cofoundry.Domain
                 .FilterCanLogIn()
                 .FilterById(executionContext.UserContext.UserId.Value)
                 .SingleOrDefaultAsync();
+        }
+
+        private async Task ValidateMaxLoginAttemptsNotExceededAsync(User user, IExecutionContext executionContext)
+        {
+            var query = new HasExceededMaxLoginAttemptsQuery()
+            {
+                UserAreaCode = user.UserAreaCode,
+                Username = user.Username
+            };
+
+            var hasExceededMaxLoginAttempts = await _queryExecutor.ExecuteAsync(query, executionContext);
+
+            if (hasExceededMaxLoginAttempts)
+            {
+                throw new TooManyFailedAttemptsAuthenticationException();
+            }
         }
 
         #endregion

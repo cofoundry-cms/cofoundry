@@ -32,8 +32,6 @@ namespace Cofoundry.Domain
 
         #endregion
 
-        #region execution
-
         public async Task ExecuteAsync(UpdateUserPasswordByUserIdCommand command, IExecutionContext executionContext)
         {
             var user = await GetUser(command.UserId);
@@ -47,10 +45,6 @@ namespace Cofoundry.Domain
 
             await _dbContext.SaveChangesAsync();
         }
-
-
-        #endregion
-        
 
         private Task<User> GetUser(int userId)
         {

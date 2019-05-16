@@ -58,18 +58,6 @@ namespace Cofoundry.Domain
         }
 
         /// <summary>
-        /// Logs a failed login attempt. A history of logins is used
-        /// to prevent brute force login attacks.
-        /// </summary>
-        /// <param name="userAreaCode">The code of the user area attempting to be logged into.</param>
-        /// <param name="username">The username attempting to be logged in with.</param>
-        public async Task LogFailedLoginAttemptAsync(string userAreaCode, string username)
-        {
-            var command = new LogFailedLoginAttemptCommand(userAreaCode, username);
-            await _commandExecutor.ExecuteAsync(command);
-        }
-
-        /// <summary>
         /// Signs the user out of the application and ends the session.
         /// </summary>
         /// <param name="userAreaCode">The code of the user area to log out of.</param>

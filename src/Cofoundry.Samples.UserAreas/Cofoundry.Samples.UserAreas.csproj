@@ -31,4 +31,8 @@
     <ProjectReference Include="..\Cofoundry.Web\Cofoundry.Web.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Views\CustomerAuth\" />
+  </ItemGroup>
+
 </Project>

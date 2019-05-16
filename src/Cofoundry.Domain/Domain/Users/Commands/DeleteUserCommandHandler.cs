@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Cofoundry.Domain.Data;
 using Cofoundry.Domain.CQS;
 using Cofoundry.Core;
+using Cofoundry.Domain.Internal;
 
 namespace Cofoundry.Domain
 {

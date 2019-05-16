@@ -13,10 +13,8 @@ namespace Cofoundry.Domain
     /// </summary>
     public class InvalidCredentialsAuthenticationException : PropertyValidationException
     {
-        const string MESSAGE = "Invalid username or password";
-
         public InvalidCredentialsAuthenticationException(string propertyName)
-            : base(MESSAGE, propertyName)
+            : base(UserLoginInfoAuthenticationError.InvalidCredentials.ToDisplayText(), propertyName)
         {
         }
 

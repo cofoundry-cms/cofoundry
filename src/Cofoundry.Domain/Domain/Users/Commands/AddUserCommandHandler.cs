@@ -8,6 +8,7 @@ using Cofoundry.Domain.Data;
 using Cofoundry.Domain.CQS;
 using Cofoundry.Core.Validation;
 using Cofoundry.Core.Mail;
+using Cofoundry.Domain.Internal;
 
 namespace Cofoundry.Domain
 {

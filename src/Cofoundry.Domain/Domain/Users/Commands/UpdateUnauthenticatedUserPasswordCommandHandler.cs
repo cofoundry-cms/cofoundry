@@ -36,8 +36,6 @@ namespace Cofoundry.Domain
 
         #endregion
 
-        #region execution
-        
         public async Task ExecuteAsync(UpdateUnauthenticatedUserPasswordCommand command, IExecutionContext executionContext)
         {
             if (IsLoggedInAlready(command, executionContext))
@@ -45,23 +43,14 @@ namespace Cofoundry.Domain
                 throw new Exception("UpdateUnauthenticatedUserPasswordCommand cannot be used when the user is already logged in.");
             }
 
-            await ValidateMaxLoginAttemptsNotExceeded(command, executionContext);
-
             var userArea = _userAreaRepository.GetByCode(command.UserAreaCode);
 
-            var userLoginInfo = await GetUserLoginInfoAsync(command, executionContext);
-
-            if (userLoginInfo == null)
-            {
-                var failedLoginLogCommand = new LogFailedLoginAttemptCommand(command.UserAreaCode, command.Username);
-                await _commandExecutor.ExecuteAsync(failedLoginLogCommand);
-
-                throw new InvalidCredentialsAuthenticationException(nameof(command.OldPassword));
-            }
+            var authResult = await GetUserLoginInfoAsync(command, executionContext);
+            authResult.ThrowIfUnsuccessful(nameof(command.OldPassword));
 
             var updatePasswordCommand = new UpdateUserPasswordByUserIdCommand()
             {
-                UserId = userLoginInfo.UserId,
+                UserId = authResult.User.UserId,
                 NewPassword = command.NewPassword
             };
 
@@ -70,10 +59,10 @@ namespace Cofoundry.Domain
             await _commandExecutor.ExecuteAsync(updatePasswordCommand, systemExecutionContext);
 
             // We pass out the userid since we do the auth inside the command and it might be useful to the callee
-            command.OutputUserId = userLoginInfo.UserId;
+            command.OutputUserId = authResult.User.UserId;
         }
 
-        private Task<UserLoginInfo> GetUserLoginInfoAsync(
+        private Task<UserLoginInfoAuthenticationResult> GetUserLoginInfoAsync(
             UpdateUnauthenticatedUserPasswordCommand command, 
             IExecutionContext executionContext
             )
@@ -110,7 +99,5 @@ namespace Cofoundry.Domain
                 throw new TooManyFailedAttemptsAuthenticationException();
             }
         }
-
-        #endregion
     }
 }
