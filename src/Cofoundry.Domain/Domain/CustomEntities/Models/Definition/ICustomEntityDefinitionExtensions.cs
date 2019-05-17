@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Cofoundry.Domain
 {
-    public static class ICustomEntityDefinitionExtentions
+    public static class ICustomEntityDefinitionExtensions
     {
         public static Type GetDataModelType<TDefition>(this TDefition definition)
             where TDefition : ICustomEntityDefinition

@@ -1,0 +1,17 @@
+﻿using Cofoundry.Core.DependencyInjection;
+using System;
+using System.Collections.Generic;
+using System.Text;
+
+namespace Cofoundry.Domain
+{
+    public class ContentRepositoryDependencyRegistration : IDependencyRegistration
+    {
+        public void Register(IContainerRegister container)
+        {
+            container.Register<ContentRepository>(new Type[] { typeof(IContentRepository), typeof(IAdvancedContentRepository) });
+            container.Register<IContentRepositoryWithElevatedPermissions, ContentRepositoryWithElevatedPermissions>();
+            container.Register<IContentRepositoryWithCustomExecutionContext, ContentRepositoryWithCustomExecutionContext>();
+        }
+    }
+}

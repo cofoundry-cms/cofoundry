@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Cofoundry.Domain.Data
 {
-    public static class OrderBySortDirectionExtentions
+    public static class OrderBySortDirectionExtensions
     {
         /// <summary>
         /// Does the same as a regular OrderBy clause, but inverts the direction if the SortDirection

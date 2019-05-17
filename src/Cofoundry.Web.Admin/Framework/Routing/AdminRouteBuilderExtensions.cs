@@ -8,7 +8,7 @@ using System.Text;
 
 namespace Cofoundry.Web.Admin
 {
-    public static class AdminRouteBuilderExtentions
+    public static class AdminRouteBuilderExtensions
     {
         /// <summary>
         /// Returns a builder context than can be used to add admin panel routes 

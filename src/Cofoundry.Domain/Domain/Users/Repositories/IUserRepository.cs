@@ -10,6 +10,7 @@ namespace Cofoundry.Domain
     /// <summary>
     /// Simple facade over role data access queries/commands to them more discoverable.
     /// </summary>
+    [Obsolete("Use the new IContentRepository instead.")]
     public interface IUserRepository
     {
         #region queries
