@@ -89,8 +89,8 @@ namespace Cofoundry.Domain
         #region Output
 
         /// <summary>
-        /// The database id of the newly created user. This is set after the command
-        /// has been run.
+        /// The database id of the newly created user. This is set after the 
+        /// command has been run.
         /// </summary>
         [OutputValue]
         public int OutputUserId { get; set; }

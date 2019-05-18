@@ -35,7 +35,7 @@ namespace Cofoundry.Domain
         /// Determines if a username is unique within a specific UserArea.
         /// Usernames only have to be unique per UserArea.
         /// </summary>
-        Task<bool> IsUsernameUnique(IsUsernameUniqueQuery query);
+        Task<bool> IsUsernameUniqueAsync(IsUsernameUniqueQuery query);
 
         #endregion
 

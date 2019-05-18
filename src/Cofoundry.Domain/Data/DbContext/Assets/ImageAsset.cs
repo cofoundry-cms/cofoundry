@@ -56,13 +56,14 @@ namespace Cofoundry.Domain.Data
         public int HeightInPixels { get; set; }
 
         /// <summary>
-        /// The default Anchor Location when using dynamic cropping
+        /// The focal point to use when using dynamic cropping
+        /// by default. 
         /// </summary>
         public ImageAnchorLocation? DefaultAnchorLocation {get; set; }
 
         /// <summary>
-        /// The title or alt text for an image. Recommended to be up 125 characters 
-        /// to accomodate screen readers.
+        /// The title or alt text for an image. Recommended to be up 
+        /// 125 characters to accomodate screen readers.
         /// </summary>
         public string Title { get; set; }
 
@@ -79,6 +80,9 @@ namespace Cofoundry.Domain.Data
 
         public virtual ICollection<ImageAssetGroupItem> ImageAssetGroupItems { get; set; }
 
+        /// <summary>
+        /// Tags can be used to categorize an entity.
+        /// </summary>
         public virtual ICollection<ImageAssetTag> ImageAssetTags { get; set; }
 
         #region IUpdateAuditable

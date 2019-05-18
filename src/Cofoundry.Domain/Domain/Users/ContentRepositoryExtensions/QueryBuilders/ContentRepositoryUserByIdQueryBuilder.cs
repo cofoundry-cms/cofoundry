@@ -18,17 +18,18 @@ namespace Cofoundry.Domain
             )
         {
             ExtendableContentRepository = contentRepository;
+            _userId = userId;
         }
 
         public IExtendableContentRepository ExtendableContentRepository { get; }
 
-        public Task<UserMicroSummary> AsMicroSummary()
+        public Task<UserMicroSummary> AsMicroSummaryAsync()
         {
             var query = new GetUserMicroSummaryByIdQuery(_userId);
             return ExtendableContentRepository.ExecuteQueryAsync(query);
         }
 
-        public Task<UserDetails> AsDetails()
+        public Task<UserDetails> AsDetailsAsync()
         {
             var query = new GetUserDetailsByIdQuery(_userId);
             return ExtendableContentRepository.ExecuteQueryAsync(query);

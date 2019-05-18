@@ -8,14 +8,14 @@ namespace Cofoundry.Domain
     /// <summary>
     /// Queries to search for user data, returning paged lists of data.
     /// </summary>
-    public interface IContentRepositoryUserSearchQueryBuilder
+    public interface IContentRepositoryImageAssetSearchQueryBuilder
     {
         /// <summary>
-        /// Searches users based on simple filter criteria and returns 
-        /// a paged set of summary results. 
+        /// Searches image assets based on simple filter criteria and 
+        /// returns a paged set of summary results. 
         /// </summary>
         /// <param name="query">Criteria to filter results by.</param>
         /// <returns>Paged set of results.</returns>
-        Task<PagedQueryResult<UserSummary>> AsSummariesAsync(SearchUserSummariesQuery query);
+        Task<PagedQueryResult<ImageAssetSummary>> AsSummariesAsync(SearchImageAssetSummariesQuery query);
     }
 }

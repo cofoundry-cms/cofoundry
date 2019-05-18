@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 namespace Cofoundry.Domain
 {
     /// <summary>
-    /// Queries for retieving user data by a unique database id.
+    /// Queries for retieving user data for a unique database id.
     /// </summary>
     public interface IContentRepositoryUserByIdQueryBuilder
     {
@@ -14,13 +14,13 @@ namespace Cofoundry.Domain
         /// The UserMicroSummary is a minimal projection of user data 
         /// that is quick to load.
         /// </summary>
-        Task<UserMicroSummary> AsMicroSummary();
+        Task<UserMicroSummary> AsMicroSummaryAsync();
 
         /// <summary>
         /// The UserDetails projection is a full representation of a user, containing 
         /// all properties including role and permission data. If the user is not logged 
         /// in then null is returned.
         /// </summary>
-        Task<UserDetails> AsDetails();
+        Task<UserDetails> AsDetailsAsync();
     }
 }

@@ -19,6 +19,20 @@ namespace Cofoundry.BasicTestSite
             _contentRepository = contentRepository;
         }
 
+        [Route("/test-admin/api/pets")]
+        public IActionResult Pets()
+        {
+            var result = new object[]
+            {
+                new { Id = 1, Title = "Dog" },
+                new { Id = 2, Title = "Cat" },
+                new { Id = 3, Title = "Llama" }
+            };
+
+            return Json(result);
+        }
+
+
         [Route("test/test")]
         public async Task<IActionResult> Test()
         {
@@ -26,11 +40,16 @@ namespace Cofoundry.BasicTestSite
                 .WithElevatedPermissions()
                 .Users()
                 .GetById(2)
-                .AsMicroSummary();
+                .AsMicroSummaryAsync();
+
+            var image = await _contentRepository
+                .ImageAssets()
+                .GetById(2)
+                .AsRenderDetailsAsync();
 
             var isUnique = await _contentRepository
                 .Users()
-                .IsUsernameUnique(new IsUsernameUniqueQuery()
+                .IsUsernameUniqueAsync(new IsUsernameUniqueQuery()
                 {
                     UserAreaCode = CofoundryAdminUserArea.AreaCode,
                     Username = "test@cofoundry.org"
@@ -46,6 +65,13 @@ namespace Cofoundry.BasicTestSite
                         Email = "test@cofoundry.org",
                         Password = "badpassword"
                     });
+
+                await _contentRepository
+                    .WithElevatedPermissions()
+                    .ImageAssets()
+                    .DeleteAsync(2);
+
+
 
                 await scope.CompleteAsync();
             }

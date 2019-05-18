@@ -6,21 +6,26 @@ using System.Threading.Tasks;
 
 namespace Cofoundry.Domain
 {
-    public class ContentRepositoryUserSearchQueryBuilder
-        : IContentRepositoryUserSearchQueryBuilder
+    public class ContentRepositoryImageAssetByIdQueryBuilder
+        : IContentRepositoryImageAssetByIdQueryBuilder
         , IExtendableContentRepositoryPart
     {
-        public ContentRepositoryUserSearchQueryBuilder(
-            IExtendableContentRepository contentRepository
+        private int _imageAssetId;
+
+        public ContentRepositoryImageAssetByIdQueryBuilder(
+            IExtendableContentRepository contentRepository,
+            int imageAssetId
             )
         {
             ExtendableContentRepository = contentRepository;
+            _imageAssetId = imageAssetId;
         }
 
         public IExtendableContentRepository ExtendableContentRepository { get; }
 
-        public Task<PagedQueryResult<UserSummary>> AsSummariesAsync(SearchUserSummariesQuery query)
+        public Task<ImageAssetRenderDetails> AsRenderDetailsAsync()
         {
+            var query = new GetImageAssetRenderDetailsByIdQuery(_imageAssetId);
             return ExtendableContentRepository.ExecuteQueryAsync(query);
         }
     }

@@ -22,9 +22,9 @@ namespace Cofoundry.Domain
         /// system. This includes users from both the Cofoundry admin user area
         /// and any custom user areas.
         /// </summary>
-        public static AdvancedContentRepositoryUserRepository Users(this IAdvancedContentRepository contentRepository)
+        public static IAdvancedContentRepositoryUserRepository Users(this IAdvancedContentRepository contentRepository)
         {
-            return new AdvancedContentRepositoryUserRepository(contentRepository.AsExtendableContentRepository());
+            return new ContentRepositoryUserRepository(contentRepository.AsExtendableContentRepository());
         }
     }
 }

@@ -80,8 +80,14 @@ namespace Cofoundry.Domain
         /// </summary>
         public string Url { get; set; }
 
+        /// <summary>
+        /// Tags can be used to categorize an entity.
+        /// </summary>
         public ICollection<string> Tags { get; set; }
 
+        /// <summary>
+        /// Data detailing who created and updated the image asset and when.
+        /// </summary>
         public UpdateAuditData AuditData { get; set; }
     }
 }

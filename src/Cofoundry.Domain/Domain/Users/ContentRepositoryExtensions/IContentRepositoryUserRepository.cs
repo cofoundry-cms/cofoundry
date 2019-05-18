@@ -33,7 +33,7 @@ namespace Cofoundry.Domain
         /// Determines if a username is unique within a specific UserArea.
         /// Usernames only have to be unique per UserArea.
         /// </summary>
-        Task<bool> IsUsernameUnique(IsUsernameUniqueQuery query);
+        Task<bool> IsUsernameUniqueAsync(IsUsernameUniqueQuery query);
 
         #endregion
 
@@ -60,7 +60,7 @@ namespace Cofoundry.Domain
         /// <summary>
         /// Marks a user as deleted in the database (soft delete).
         /// </summary>
-        /// <param name="userId">Id of the role to delete.</param>
+        /// <param name="userId">Id of the user to delete.</param>
         Task DeleteUserAsync(int userId);
 
         #endregion

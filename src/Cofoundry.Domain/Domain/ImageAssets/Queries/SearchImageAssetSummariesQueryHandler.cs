@@ -9,6 +9,10 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Cofoundry.Domain
 {
+    /// <summary>
+    /// Searches image assets based on simple filter criteria and 
+    /// returns a paged set of summary results. 
+    /// </summary>
     public class SearchImageAssetSummariesQueryHandler 
         : IAsyncQueryHandler<SearchImageAssetSummariesQuery, PagedQueryResult<ImageAssetSummary>>
         , IPermissionRestrictedQueryHandler<SearchImageAssetSummariesQuery, PagedQueryResult<ImageAssetSummary>>

@@ -11,6 +11,9 @@ using Cofoundry.Core.MessageAggregator;
 
 namespace Cofoundry.Domain
 {
+    /// <summary>
+    /// Adds a new image asset.
+    /// </summary>
     public class AddImageAssetCommandHandler 
         : IAsyncCommandHandler<AddImageAssetCommand>
         , IPermissionRestrictedCommandHandler<AddImageAssetCommand>
