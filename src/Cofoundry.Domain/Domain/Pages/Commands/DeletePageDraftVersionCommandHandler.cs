@@ -43,8 +43,6 @@ namespace Cofoundry.Domain
 
         #endregion
 
-        #region execution
-
         public async Task ExecuteAsync(DeletePageDraftVersionCommand command, IExecutionContext executionContext)
         {
             var draft = await _dbContext
@@ -81,8 +79,6 @@ namespace Cofoundry.Domain
                 PageVersionId = versionId
             });
         }
-
-        #endregion
 
         #region Permission
 

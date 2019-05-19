@@ -10,7 +10,7 @@ namespace Cofoundry.Domain
         : IAdvancedContentRepositoryImageAssetByIdQueryBuilder
         , IExtendableContentRepositoryPart
     {
-        private int _imageAssetId;
+        private readonly int _imageAssetId;
 
         public AdvancedContentRepositoryImageAssetByIdQueryBuilder(
             IExtendableContentRepository contentRepository,

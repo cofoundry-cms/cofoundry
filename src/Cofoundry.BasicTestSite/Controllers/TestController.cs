@@ -10,10 +10,10 @@ namespace Cofoundry.BasicTestSite
 {
     public class TestController : Controller
     {
-        private readonly IContentRepository _contentRepository;
+        private readonly IAdvancedContentRepository _contentRepository;
 
         public TestController(
-            IContentRepository contentRepository
+            IAdvancedContentRepository contentRepository
             )
         {
             _contentRepository = contentRepository;
@@ -47,6 +47,35 @@ namespace Cofoundry.BasicTestSite
                 .GetById(2)
                 .AsRenderDetailsAsync();
 
+            var page = await _contentRepository
+                .Pages()
+                .Search()
+                .AsRenderSummariesAsync(new SearchPageRenderSummariesQuery()
+                {
+                    PageSize = 20,
+                    PageDirectoryId = 2
+                });
+
+            // Perhaps NotFound should look like this:
+            await _contentRepository
+                .Pages()
+                .NotFound()
+                .GetByPathAsync(new GetNotFoundPageRouteByPathQuery());
+
+            var regions = await _contentRepository
+                .Pages()
+                .Versions()
+                .Regions()
+                .Blocks()
+                .GetById(2)
+                .AsRenderDetailsAsync(PublishStatusQuery.Latest);
+
+            await _contentRepository
+                .Pages()
+                .GetByPath()
+                .AsRoutingInfo(new GetPageRoutingInfoByPathQuery());
+            //.PublishAsync(new PublishPageCommand() { PageId = 2 });
+
             var isUnique = await _contentRepository
                 .Users()
                 .IsUsernameUniqueAsync(new IsUsernameUniqueQuery()
@@ -55,7 +84,7 @@ namespace Cofoundry.BasicTestSite
                     Username = "test@cofoundry.org"
                 });
 
-            using (var scope = _contentRepository.Transactions().Create())
+            using (var scope = _contentRepository.Transactions().CreateScope())
             {
                 await _contentRepository
                     .WithElevatedPermissions()
@@ -70,6 +99,7 @@ namespace Cofoundry.BasicTestSite
                     .WithElevatedPermissions()
                     .ImageAssets()
                     .DeleteAsync(2);
+
 
 
 

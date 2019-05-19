@@ -31,7 +31,7 @@ namespace Cofoundry.Domain
         /// implements IDisposable and should be wrapped in a using statement.
         /// </summary>
         /// <returns>ITransactionScope, which is IDisposable and must be disposed.</returns>
-        public ITransactionScope Create()
+        public ITransactionScope CreateScope()
         {
             return _transactionScopeManager.Create(_dbContext);
         }

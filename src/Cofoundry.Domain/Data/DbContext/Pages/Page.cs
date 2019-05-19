@@ -84,6 +84,9 @@ namespace Cofoundry.Domain.Data
 
         public virtual ICollection<PageGroupItem> PageGroupItems { get; set; }
 
+        /// <summary>
+        /// Tags can be used to categorize an entity.
+        /// </summary>
         public virtual ICollection<PageTag> PageTags { get; set; }
 
         /// <summary>

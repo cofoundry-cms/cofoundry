@@ -17,6 +17,7 @@ namespace Cofoundry.Domain
         /// <summary>
         /// Retieve an image asset by a unique database id.
         /// </summary>
+        /// <param name="imageAssetId">ImageAssetId of the image to get.</param>
         IAdvancedContentRepositoryImageAssetByIdQueryBuilder GetById(int imageAssetId);
 
         /// <summary>
@@ -24,6 +25,7 @@ namespace Cofoundry.Domain
         /// The Cofoundry.Core dictionary extensions can be useful for 
         /// ordering the results e.g. results.FilterAndOrderByKeys(ids).
         /// </summary>
+        /// <param name="imageAssetIds">Range of ImageAssetIds of the images to get.</param>
         IContentRepositoryImageAssetByIdRangeQueryBuilder GetByIdRange(IEnumerable<int> imageAssetIds);
 
         /// <summary>
@@ -38,6 +40,7 @@ namespace Cofoundry.Domain
         /// <summary>
         /// Adds a new image asset.
         /// </summary>
+        /// <param name="command">Command parameters.</param>
         Task AddAsync(AddImageAssetCommand command);
 
         /// <summary>
@@ -45,6 +48,7 @@ namespace Cofoundry.Domain
         /// the file is optional, but if you do then existing links to the
         /// asset file will redirect to the new asset file.
         /// </summary>
+        /// <param name="command">Command parameters.</param>
         Task UpdateAsync(UpdateImageAssetCommand command);
 
         /// <summary>

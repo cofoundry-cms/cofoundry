@@ -8,8 +8,8 @@ using System.Threading.Tasks;
 namespace Cofoundry.Domain
 {
     /// <summary>
-    /// Returns a collection of the content managed regions and
-    /// blocks for a specific version of a page.
+    /// Returns a collection of content managed regions with
+    /// block data for a specific version of a page.
     /// </summary>
     public class GetPageRegionDetailsByPageVersionIdQuery : IQuery<ICollection<PageRegionDetails>>
     {

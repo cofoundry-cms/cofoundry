@@ -46,8 +46,6 @@ namespace Cofoundry.Domain
 
         #endregion
 
-        #region execution
-
         public async Task ExecuteAsync(AddPageDraftVersionCommand command, IExecutionContext executionContext)
         {
             var newVersionId = await _pageStoredProcedures.AddDraftAsync(
@@ -72,8 +70,6 @@ namespace Cofoundry.Domain
                 PageVersionId = newVersionId
             });
         }
-
-        #endregion
 
         #region Permissions
 

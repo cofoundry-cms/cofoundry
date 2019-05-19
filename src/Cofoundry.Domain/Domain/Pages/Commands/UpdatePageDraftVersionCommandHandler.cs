@@ -45,8 +45,6 @@ namespace Cofoundry.Domain
 
         #endregion
 
-        #region execute
-
         public async Task ExecuteAsync(UpdatePageDraftVersionCommand command, IExecutionContext executionContext)
         {
             var draft = await GetDraftVersion(command.PageId).SingleOrDefaultAsync();
@@ -81,10 +79,6 @@ namespace Cofoundry.Domain
             });
         }
 
-        #endregion
-
-        #region helpers
-
         private IQueryable<PageVersion> GetDraftVersion(int pageId)
         {
             return _dbContext
@@ -114,8 +108,6 @@ namespace Cofoundry.Domain
             draft.OpenGraphDescription = command.OpenGraphDescription;
             draft.OpenGraphImageId = command.OpenGraphImageId;
         }
-
-        #endregion
 
         #region Permission
 

@@ -15,6 +15,7 @@ namespace Cofoundry.Domain
         /// <summary>
         /// Retieve an image asset by a unique database id.
         /// </summary>
+        /// <param name="imageAssetId">ImageAssetId of the image to get.</param>
         IContentRepositoryImageAssetByIdQueryBuilder GetById(int imageAssetId);
 
         /// <summary>
@@ -22,36 +23,13 @@ namespace Cofoundry.Domain
         /// The Cofoundry.Core dictionary extensions can be useful for 
         /// ordering the results e.g. results.FilterAndOrderByKeys(ids).
         /// </summary>
+        /// <param name="imageAssetIds">Range of ImageAssetIds of the images to get.</param>
         IContentRepositoryImageAssetByIdRangeQueryBuilder GetByIdRange(IEnumerable<int> imageAssetIds);
 
         /// <summary>
         /// Search for image assets, returning paged lists of data.
         /// </summary>
         IContentRepositoryImageAssetSearchQueryBuilder Search();
-
-        #endregion
-
-        #region commands
-
-        /// <summary>
-        /// Adds a new image asset.
-        /// </summary>
-        Task AddAsync(AddImageAssetCommand command);
-
-        /// <summary>
-        /// Updates the properties of an existing image asset. Updating
-        /// the file is optional, but if you do then existing links to the
-        /// asset file will redirect to the new asset file.
-        /// </summary>
-        Task UpdateAsync(UpdateImageAssetCommand command);
-
-        /// <summary>
-        /// Removes an image asset from the system and
-        /// queues any related files or caches to be removed
-        /// as a separate process.
-        /// </summary>
-        /// <param name="imageAssetId">Id of the image asset to delete.</param>
-        Task DeleteAsync(int imageAssetId);
 
         #endregion
     }

@@ -10,7 +10,7 @@ namespace Cofoundry.Domain
         : IContentRepositoryUserByIdQueryBuilder
         , IExtendableContentRepositoryPart
     {
-        private int _userId;
+        private readonly int _userId;
 
         public ContentRepositoryUserByIdQueryBuilder(
             IExtendableContentRepository contentRepository,

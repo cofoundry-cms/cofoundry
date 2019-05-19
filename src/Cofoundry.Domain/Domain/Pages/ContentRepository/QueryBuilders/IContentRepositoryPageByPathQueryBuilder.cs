@@ -1,0 +1,21 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Cofoundry.Domain
+{
+    /// <summary>
+    /// Queries for retieving page data by a url path.
+    /// </summary>
+    public interface IContentRepositoryPageByPathQueryBuilder
+    {
+        /// <summary>
+        /// Attempts to find a matching page route using the supplied path. The path
+        /// has to be an absolute match, i.e. the query does not try and find a fall-back 
+        /// similar route.
+        /// </summary>
+        /// <param name="query">Query parameters.</param>
+        Task<PageRoutingInfo> AsRoutingInfo(GetPageRoutingInfoByPathQuery query);
+    }
+}
