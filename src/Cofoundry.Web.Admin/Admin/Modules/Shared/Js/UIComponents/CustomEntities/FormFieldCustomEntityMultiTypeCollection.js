@@ -24,7 +24,7 @@ function (
     var CUSTOM_ENTITY_ID_PROP = 'customEntityId',
         CUSTOM_ENTITY_DEFINITION_CODE_PROP = 'customEntityDefinitionCode',
         PREVIEW_DESCRIPTION_FIELD_NAME = 'previewDescription',
-        PREVIEW_IMAGE_FIELD_NAME = 'previewImage'
+        PREVIEW_IMAGE_FIELD_NAME = 'previewImage',
         baseConfig = baseFormFieldFactory.defaultConfig;
 
     /* CONFIG */
@@ -142,7 +142,7 @@ function (
                 }
 
                 // Add new items to the end of the list
-                for (var i = 0; i < newEntityArr.length; i++) {
+                for (i = 0; i < newEntityArr.length; i++) {
                     vm.model.push({
                         customEntityId: newEntityArr[i],
                         customEntityDefinitionCode: definition[CUSTOM_ENTITY_DEFINITION_CODE_PROP]

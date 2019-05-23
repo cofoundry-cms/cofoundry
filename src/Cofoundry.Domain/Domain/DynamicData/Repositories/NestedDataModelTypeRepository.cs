@@ -16,6 +16,9 @@ namespace Cofoundry.Domain
     {
         const string MODEL_SUFFIX = "DataModel";
 
+
+        #region constructor
+
         private readonly Dictionary<string, INestedDataModel> _nestedDataModels;
 
         public NestedDataModelTypeRepository(
@@ -42,23 +45,30 @@ namespace Cofoundry.Domain
         {
             var typeName = model.GetType().Name;
             
-            return StringHelper.RemoveSuffix(typeName, MODEL_SUFFIX, StringComparison.OrdinalIgnoreCase);
+            return NormalizeName(typeName);
         }
 
+        #endregion
+
         /// <summary>
-        /// Gets a specific INestedDataModel type by it's name. The
-        /// name is the type name with the 'DataModel' suffix removed e.g. for the 
-        /// data model type "CarouselItemDataModel", the name would be "CarouselItem".
+        /// Gets a specific INestedDataModel type by it's name. The "DataModel"
+        /// suffix is options e.g. "CarouselItemDataModel" and "CarouselItem"
+        /// both match the same type.
         /// </summary>
         /// <param name="name">
-        /// The name of the model to get. The
-        /// name is the type name with the 'DataModel' suffix removed e.g. for the 
-        /// data model type "CarouselItemDataModel", the name would be "CarouselItem".
+        /// The name of the model to get. The "DataModel" suffix is options e.g. 
+        /// "CarouselItemDataModel" and "CarouselItem" both match the same type.
         /// </param>
         public Type GetByName(string name)
         {
-            var model = _nestedDataModels.GetOrDefault(name);
+            var normalizedName = NormalizeName(name);
+            var model = _nestedDataModels.GetOrDefault(normalizedName);
             return model?.GetType();
+        }
+
+        private static string NormalizeName(string typeName)
+        {
+            return StringHelper.RemoveSuffix(typeName, MODEL_SUFFIX, StringComparison.OrdinalIgnoreCase);
         }
     }
 }

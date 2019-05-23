@@ -12,8 +12,30 @@ namespace Cofoundry.Domain
     /// </summary>
     public class NestedDataModelSchema : IDynamicDataModelSchema
     {
+        /// <summary>
+        /// The name of the .NET data model type that the schema has been generated from.
+        /// </summary>
+        public string TypeName { get; set; }
+
+        /// <summary>
+        /// The user-friendly display name, which is used to pick the model from a list
+        /// in the admin panel.
+        /// </summary>
+        public string DisplayName { get; set; }
+
+        /// <summary>
+        /// Optional description of the data model, which is used to pick the model from a list
+        /// in the admin panel.
+        /// </summary>
+        public string Description { get; set; }
+
         public string DataTemplateName { get; set; }
 
+        /// <summary>
+        /// Data model property meta data, including UI display details
+        /// and validation attributes. This is typically used for dynamically generating 
+        /// parts of the admin UI.
+        /// </summary>
         public ICollection<DynamicDataModelSchemaProperty> DataModelProperties { get; set; }
     }
 }

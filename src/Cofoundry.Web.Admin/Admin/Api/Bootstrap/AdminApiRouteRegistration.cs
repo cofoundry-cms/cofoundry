@@ -133,7 +133,8 @@ namespace Cofoundry.Web.Admin
         {
             routeBuilder
                 .ForAdminApiController<NestedDataModelSchemaApiController>("nested-data-model-schemas")
-                .MapGet("{dataModelName}")
+                .MapGet()
+                .MapGet("{dataModelName}", "GetByName")
                 ;
         }
 

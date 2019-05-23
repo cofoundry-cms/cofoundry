@@ -34,8 +34,6 @@ namespace Cofoundry.Domain
 
         #endregion
 
-        #region execution
-
         public async Task<IDictionary<string, CustomEntityDataModelSchema>> ExecuteAsync(GetCustomEntityDataModelSchemaDetailsByDefinitionCodeRangeQuery query, IExecutionContext executionContext)
         {
             var definitionQuery = new GetAllCustomEntityDefinitionSummariesQuery();
@@ -55,8 +53,6 @@ namespace Cofoundry.Domain
 
             return results;
         }
-
-        #endregion
 
         #region Permission
 

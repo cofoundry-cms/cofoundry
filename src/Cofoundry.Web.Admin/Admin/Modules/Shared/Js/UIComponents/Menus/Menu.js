@@ -9,7 +9,7 @@ function (
         transclude: true,
         templateUrl: modulePath + 'UIComponents/Menus/Menu.html',
         scope: {
-            text: '@cmsIcon'
+            icon: '@cmsIcon'
         }
     };
 }]);

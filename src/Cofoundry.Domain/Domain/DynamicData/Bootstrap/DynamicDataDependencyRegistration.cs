@@ -14,6 +14,7 @@ namespace Cofoundry.Domain
             container
                 .RegisterSingleton<INestedDataModelTypeRepository, NestedDataModelTypeRepository>()
                 .Register<IDynamicDataModelSchemaMapper, DynamicDataModelSchemaMapper>()
+                .Register<INestedDataModelSchemaMapper, NestedDataModelSchemaMapper>()
                 .RegisterAll<INestedDataModel>()
                 ;
         }

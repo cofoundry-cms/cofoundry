@@ -31,7 +31,7 @@ function (
             if (me.progress === 100) {
                 me.progress = 0;
             }
-        }
+        };
 
         /* Private */
 
@@ -103,7 +103,7 @@ function (
                         image;
 
                     if (id) {
-                        image = _.find(images, { imageAssetId: id })
+                        image = _.find(images, { imageAssetId: id });
                     }
 
                     vm.modelImages.push(image);

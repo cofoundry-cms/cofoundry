@@ -14,7 +14,15 @@ function (
     
     service.getByName = function (name) {
         return $http.get(serviceBase + 'nested-data-model-schemas/' + name);
-    }
+    };
+
+    service.getByNames = function (names) {
+        return $http.get(serviceBase + 'nested-data-model-schemas/', {
+            params: {
+                names: names
+            }
+        });
+    };
     
     return service;
 }]);

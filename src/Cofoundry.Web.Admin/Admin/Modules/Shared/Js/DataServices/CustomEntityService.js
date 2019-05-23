@@ -25,15 +25,15 @@ function (
 
             return pagedResult;
         }
-    }
+    };
 
     service.getDefinition = function (customEntityDefinitionCode) {
         return $http.get(getCustomEntityDefinitionServiceBase(customEntityDefinitionCode));
-    }
+    };
 
     service.getDataModelSchema = function (customEntityDefinitionCode) {
         return $http.get(getCustomEntityDefinitionServiceBase(customEntityDefinitionCode) + '/data-model-schema');
-    }
+    };
 
     service.getDataModelSchemasByCodeRange = function (codes) {
         return $http.get(schemaServiceBase, {
@@ -41,11 +41,11 @@ function (
                 customEntityDefinitionCodes: codes
             }
         });
-    }
+    };
 
     service.getPageRoutes = function (customEntityDefinitionCode) {
         return $http.get(getCustomEntityDefinitionServiceBase(customEntityDefinitionCode) + '/routes');
-    }
+    };
 
     service.getDefinitionsByIdRange = function (customEntityDefinitionCodes) {
         return $http.get(getCustomEntityDefinitionServiceBase()).then(filterByIdRange);
@@ -55,7 +55,7 @@ function (
                 return _.contains(customEntityDefinitionCodes, result.customEntityDefinitionCode);
             });
         }
-    }
+    };
 
     service.getByIdRange = function (ids) {
 
@@ -70,7 +70,7 @@ function (
 
             return customEntitySummaries;
         }
-    }
+    };
 
     service.getById = function (customEntityId) {
 
@@ -86,14 +86,14 @@ function (
 
             return entity;
         }
-    }
+    };
 
     service.getVersionsByCustomEntityId = function (customEntityId, query) {
 
         return $http.get(getVerionsRoute(customEntityId), {
             params: query
         });
-    }
+    };
 
 
     /* COMMANDS */
@@ -101,37 +101,37 @@ function (
     service.add = function (command, customEntityDefinitionCode) {
         command.customEntityDefinitionCode = customEntityDefinitionCode;
         return $http.post(customEntityServiceBase, command);
-    }
+    };
 
     service.updateUrl = function (command) {
 
         return $http.put(getIdRoute(command.customEntityId) + '/url', command);
-    }
+    };
 
     service.updateOrdering = function (command) {
 
         return $http.put(customEntityServiceBase + '/ordering', command);
-    }
+    };
 
     service.updateDraft = function (command, customEntityDefinitionCode) {
         command.customEntityDefinitionCode = customEntityDefinitionCode;
 
         return $http.put(getVerionsRoute(command.customEntityId) + '/draft', command);
-    }
+    };
 
     service.remove = function (customEntityId) {
 
         return $http.delete(getIdRoute(customEntityId));
-    }
+    };
 
     service.removeDraft = function (id) {
 
         return $http.delete(getVerionsRoute(id) + '/draft');
-    }
+    };
 
     service.duplicate = function (command) {
         return $http.post(getIdRoute(command.customEntityToDuplicateId) + '/duplicate', command);
-    }
+    };
 
     /* PRIVATES */
 

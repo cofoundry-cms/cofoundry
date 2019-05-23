@@ -17,8 +17,24 @@ namespace Cofoundry.Domain
     /// is sortable.
     /// </summary>
     [AttributeUsage(AttributeTargets.Property)]
-    public class NestedDataModelCollectionAttribute : ValidationAttribute, IMetadataAttribute, IEntityRelationAttribute
+    public class NestedDataModelMultiTypeCollectionAttribute : ValidationAttribute, IMetadataAttribute, IEntityRelationAttribute
     {
+        private readonly IEnumerable<Type> _types;
+
+        /// <summary>
+        /// Use this to decorate a collection of INestedDataModel objects, allowing them 
+        /// to be edited in the admin UI. Optional parameters indicate whether the collection 
+        /// is sortable.
+        /// </summary>
+        /// <param name="types">
+        /// The data model types that are permitted to be added to the collection. Each type
+        /// must implement the INestedDataModel  market interface.
+        /// </param>
+        public NestedDataModelMultiTypeCollectionAttribute(Type[] types)
+        {
+            _types = types;
+        }
+
         /// <summary>
         /// The minimum number of items that need to be included in the collection. 0 indicates
         /// no minimum.
@@ -35,45 +51,54 @@ namespace Cofoundry.Domain
         /// Can the collection be manually ordered by the user?
         /// </summary>
         public bool IsOrderable { get; set; }
-
+        
         public void Process(DisplayMetadataProviderContext context)
         {
-            string nestedModelTypeName = GetNestedModelTypeName(context);
+            ValidateModelType(context);
+
+            var nestedModelTypeNames = _types
+                .Select(t => t.Name)
+                .ToList();
+
             var modelMetaData = context.DisplayMetadata;
 
             modelMetaData
                 .AddAdditionalValueIfNotEmpty("MinItems", MinItems)
                 .AddAdditionalValueIfNotEmpty("MaxItems", MaxItems)
                 .AddAdditionalValueIfNotEmpty("Orderable", IsOrderable)
-                .AddAdditionalValueIfNotEmpty("ModelType", nestedModelTypeName);
+                .AddAdditionalValueIfNotEmpty("ModelTypes", nestedModelTypeNames);
 
-            modelMetaData.TemplateHint = "NestedDataModelCollection";
+            modelMetaData.TemplateHint = "NestedDataModelMultiTypeCollection";
         }
 
-        private string GetNestedModelTypeName(DisplayMetadataProviderContext context)
+        /// <summary>
+        /// Validates that the property type is an enumerable collection
+        /// of INestedDataModel types e.g. ICollection<INestedDataModel>.
+        /// It's less likely but also possible that the type could be an 
+        /// interface or base class that inherits from INestedDataModel e.g.
+        /// you may want all your nested model types to implement a common 
+        /// interface e.g. IContentBlockDataModel.
+        /// </summary>
+        private void ValidateModelType(DisplayMetadataProviderContext context)
         {
-
             var singularType = TypeHelper.GetCollectionTypeOrNull(context.Key.ModelType);
-          
+
             if (singularType == null)
             {
                 throw GetIncorrectTypeException(context);
             }
 
-            if (!typeof(INestedDataModel).IsAssignableFrom(singularType))
+            if (!typeof(NestedDataModelMultiTypeItem).IsAssignableFrom(singularType))
             {
                 throw GetIncorrectTypeException(context);
             }
-
-            var nestedModelName = StringHelper.RemoveSuffix(singularType.Name, "DataModel", StringComparison.OrdinalIgnoreCase);
-            return nestedModelName;
         }
 
         private IncorrectCollectionMetaDataAttributePlacementException GetIncorrectTypeException(DisplayMetadataProviderContext context)
         {
             var propertyName = context.Key.ContainerType.Name + "." + context.Key.Name;
-            var msg = $"{nameof(NestedDataModelCollectionAttribute)} can only be placed on properties with a generic collection of types that inherit from {typeof(INestedDataModel).Name}. Property name is {propertyName} and the type is {context.Key.ModelType}.";
-            var exception = new IncorrectCollectionMetaDataAttributePlacementException(this, context, new Type[] { typeof(INestedDataModel) }, msg);
+            var msg = $"{nameof(NestedDataModelMultiTypeCollectionAttribute)} can only be placed on properties with a generic collection of {typeof(NestedDataModelMultiTypeItem).Name} types. Property name is {propertyName} and the type is {context.Key.ModelType}.";
+            var exception = new IncorrectCollectionMetaDataAttributePlacementException(this, context, new Type[] { typeof(NestedDataModelMultiTypeItem) }, msg);
 
             return exception;
         }
@@ -83,10 +108,11 @@ namespace Cofoundry.Domain
             if (model == null) throw new ArgumentNullException(nameof(model));
             if (propertyInfo == null) throw new ArgumentNullException(nameof(propertyInfo));
 
-            var nestedItems = propertyInfo.GetValue(model) as IEnumerable<INestedDataModel>;
+            var nestedItems = propertyInfo.GetValue(model) as IEnumerable<NestedDataModelMultiTypeItem>;
 
             var dependencies = EnumerableHelper
                 .Enumerate(nestedItems)
+                .Select(i => i.DataModel)
                 .SelectMany(EntityRelationAttributeHelper.GetRelations);
 
             return dependencies;
@@ -94,7 +120,7 @@ namespace Cofoundry.Domain
 
         protected override ValidationResult IsValid(object value, ValidationContext validationContext)
         {
-            var collection = value as IEnumerable<INestedDataModel>;
+            var collection = value as IEnumerable<NestedDataModelMultiTypeItem>;
 
             if (MinItems > 0 && EnumerableHelper.Enumerate(collection).Count() < MinItems)
             {
