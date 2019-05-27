@@ -17,7 +17,7 @@ namespace Cofoundry.Domain
     public class DeleteImageAssetCommand : ICommand, ILoggableCommand
     {
         /// <summary>
-        /// Database if of the image asset to remove.
+        /// Database id of the image asset to remove.
         /// </summary>
         [Required]
         [PositiveInteger]
