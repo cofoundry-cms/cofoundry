@@ -10,6 +10,11 @@ using Cofoundry.Core;
 
 namespace Cofoundry.Domain
 {
+    /// <summary>
+    /// Returns custom entities filtered on the url slug value. This query
+    /// can return multiple custom entities because unique url slugs are an
+    /// optional setting on the custom entity definition.
+    /// </summary>
     public class GetCustomEntityRenderSummariesByUrlSlugQueryHandler
         : IAsyncQueryHandler<GetCustomEntityRenderSummariesByUrlSlugQuery, ICollection<CustomEntityRenderSummary>>
         , IPermissionRestrictedQueryHandler<GetCustomEntityRenderSummariesByUrlSlugQuery, ICollection<CustomEntityRenderSummary>>

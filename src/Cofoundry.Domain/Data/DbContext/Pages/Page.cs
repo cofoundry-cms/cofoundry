@@ -31,7 +31,7 @@ namespace Cofoundry.Domain.Data
         public int PageDirectoryId { get; set; }
 
         /// <summary>
-        /// Optional locale id of the page if used in a localized site.
+        /// Optional id of the locale if used in a localized site.
         /// </summary>
         public int? LocaleId { get; set; }
 

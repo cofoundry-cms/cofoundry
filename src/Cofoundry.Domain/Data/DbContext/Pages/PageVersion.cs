@@ -108,17 +108,27 @@ namespace Cofoundry.Domain.Data
 
         /// <summary>
         /// Lookup cache used for quickly finding the correct version for a
-        /// specific publish status query e.g. 'Latest', 'Published', 'PreferPublished'
+        /// specific publish status query e.g. 'Latest', 'Published', 
+        /// 'PreferPublished'.
         /// </summary>
         public ICollection<PagePublishStatusQuery> PagePublishStatusQueries { get; set; }
 
         #region ICreateAuditable
 
+        /// <summary>
+        /// The user that created the page version.
+        /// </summary>
+        public User Creator { get; set; }
+
+        /// <summary>
+        /// The date the page version was created.
+        /// </summary>
         public DateTime CreateDate { get; set; }
 
+        /// <summary>
+        /// The database id of the user that created the page version.
+        /// </summary>
         public int CreatorId { get; set; }
-
-        public virtual User Creator { get; set; }
 
         #endregion
     }

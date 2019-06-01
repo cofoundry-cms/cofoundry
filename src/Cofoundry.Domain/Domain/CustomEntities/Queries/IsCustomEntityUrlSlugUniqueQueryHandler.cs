@@ -10,9 +10,15 @@ using Cofoundry.Core;
 
 namespace Cofoundry.Domain
 {
-    public class IsCustomEntityPathUniqueQueryHandler 
-        : IAsyncQueryHandler<IsCustomEntityPathUniqueQuery, bool>
-        , IPermissionRestrictedQueryHandler<IsCustomEntityPathUniqueQuery, bool>
+    /// <summary>
+    /// Determines if the UrlSlug property for a custom entity is invalid because it
+    /// already exists. If the custom entity defition has ForceUrlSlugUniqueness 
+    /// set to true then duplicates are not permitted, otherwise true will always
+    /// be returned.
+    /// </summary>
+    public class IsCustomEntityUrlSlugUniqueQueryHandler
+        : IAsyncQueryHandler<IsCustomEntityUrlSlugUniqueQuery, bool>
+        , IPermissionRestrictedQueryHandler<IsCustomEntityUrlSlugUniqueQuery, bool>
     {
         #region constructor
 
@@ -20,7 +26,7 @@ namespace Cofoundry.Domain
         private readonly IQueryExecutor _queryExecutor;
         private readonly ICustomEntityDefinitionRepository _customEntityDefinitionRepository;
 
-        public IsCustomEntityPathUniqueQueryHandler(
+        public IsCustomEntityUrlSlugUniqueQueryHandler(
             CofoundryDbContext dbContext,
             IQueryExecutor queryExecutor,
             ICustomEntityDefinitionRepository customEntityDefinitionRepository
@@ -33,9 +39,7 @@ namespace Cofoundry.Domain
         
         #endregion
 
-        #region execution
-
-        public async Task<bool> ExecuteAsync(IsCustomEntityPathUniqueQuery query, IExecutionContext executionContext)
+        public async Task<bool> ExecuteAsync(IsCustomEntityUrlSlugUniqueQuery query, IExecutionContext executionContext)
         {
             var definition = await GetDefinitionAsync(query, executionContext);
             if (!definition.ForceUrlSlugUniqueness) return true;
@@ -46,7 +50,7 @@ namespace Cofoundry.Domain
             return !exisits;
         }
 
-        private IQueryable<CustomEntity> Query(IsCustomEntityPathUniqueQuery query)
+        private IQueryable<CustomEntity> Query(IsCustomEntityUrlSlugUniqueQuery query)
         {
             var dbQuery = _dbContext
                 .CustomEntities
@@ -61,7 +65,7 @@ namespace Cofoundry.Domain
         }
 
         private async Task<CustomEntityDefinitionSummary> GetDefinitionAsync(
-            IsCustomEntityPathUniqueQuery query,
+            IsCustomEntityUrlSlugUniqueQuery query,
             IExecutionContext executionContext
             )
         {
@@ -72,11 +76,9 @@ namespace Cofoundry.Domain
             return definition;
         }
 
-        #endregion
-
         #region Permission
 
-        public IEnumerable<IPermissionApplication> GetPermissions(IsCustomEntityPathUniqueQuery query)
+        public IEnumerable<IPermissionApplication> GetPermissions(IsCustomEntityUrlSlugUniqueQuery query)
         {
             var definition = _customEntityDefinitionRepository.GetByCode(query.CustomEntityDefinitionCode);
             EntityNotFoundException.ThrowIfNull(definition, query.CustomEntityDefinitionCode);

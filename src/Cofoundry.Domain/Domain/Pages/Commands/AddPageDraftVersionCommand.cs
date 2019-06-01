@@ -24,9 +24,9 @@ namespace Cofoundry.Domain
         public int PageId { get; set; }
 
         /// <summary>
-        /// Optional id of the page version to copy data
+        /// Optional id of a page version to copy data
         /// from. If not specified then data will be copied
-        /// from the latest version of the page.
+        /// from the latest version.
         /// </summary>
         [PositiveInteger]
         public int? CopyFromPageVersionId { get; set; }

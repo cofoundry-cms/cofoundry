@@ -11,6 +11,9 @@ using Cofoundry.Core.Data;
 
 namespace Cofoundry.Domain
 {
+    /// <summary>
+    /// Creates a new custom entity, copying from an existing custom entity.
+    /// </summary>
     public class DuplicateCustomEntityCommandHandler
         : IAsyncCommandHandler<DuplicateCustomEntityCommand>
         , IIgnorePermissionCheckHandler

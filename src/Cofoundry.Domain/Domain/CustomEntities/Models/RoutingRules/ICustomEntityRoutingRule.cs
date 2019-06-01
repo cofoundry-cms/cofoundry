@@ -14,7 +14,7 @@ namespace Cofoundry.Domain
     public interface ICustomEntityRoutingRule
     {
         /// <summary>
-        /// A string representation of the route format e.g.  "{Id}/{UrlSlug}". Used as a display value
+        /// A string representation of the route format e.g. "{Id}/{UrlSlug}". Used as a display value
         /// but also as the unique identifier for the rule, so it shouldn't clash with any other routing rule.
         /// </summary>
         string RouteFormat { get; }

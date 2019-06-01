@@ -7,11 +7,14 @@ using System.Threading.Tasks;
 namespace Cofoundry.Domain
 {
     /// <summary>
+    /// <para>
     /// A general-purpose projection of a custom entity with version 
     /// specific data, including a deserialized data model.
-    /// 
+    /// </para>
+    /// <para>
     /// This object is specific to a particular version which 
     /// may not always be the latest (depending on the query)
+    /// </para>
     /// </summary>
     public class CustomEntityRenderSummary : ICustomEntityRoutable
     {

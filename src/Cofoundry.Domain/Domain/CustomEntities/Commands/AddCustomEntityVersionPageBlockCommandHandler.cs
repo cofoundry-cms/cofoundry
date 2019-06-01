@@ -12,6 +12,9 @@ using Cofoundry.Core;
 
 namespace Cofoundry.Domain
 {
+    /// <summary>
+    /// Adds a new block to a template region on a custom entity page.
+    /// </summary>
     public class AddCustomEntityVersionPageBlockCommandHandler
         : IAsyncCommandHandler<AddCustomEntityVersionPageBlockCommand>
         , IIgnorePermissionCheckHandler

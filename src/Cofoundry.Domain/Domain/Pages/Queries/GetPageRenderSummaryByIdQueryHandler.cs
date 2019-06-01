@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 namespace Cofoundry.Domain
 {
     /// <summary>
-    /// Gets a page PageRenderSummary projection by id, which is
+    /// Query to get a page by an id, projected as a PageRenderSummary which is
     /// a lighter weight projection designed for rendering to a site when the 
     /// templates, region and block data is not required. The result is 
     /// version-sensitive and defaults to returning published versions only, but
@@ -37,8 +37,6 @@ namespace Cofoundry.Domain
         }
 
         #endregion
-
-        #region execution
 
         public async Task<PageRenderSummary> ExecuteAsync(GetPageRenderSummaryByIdQuery query, IExecutionContext executionContext)
         {
@@ -89,8 +87,6 @@ namespace Cofoundry.Domain
 
             return result;
         }
-
-        #endregion
 
         #region Permission
 

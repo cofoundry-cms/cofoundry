@@ -201,7 +201,7 @@ namespace Cofoundry.Domain
             return _queryExecutor.ExecuteAsync(query, executionContext);
         }
 
-        public Task<bool> IsCustomEntityPathUniqueAsync(IsCustomEntityPathUniqueQuery query, IExecutionContext executionContext = null)
+        public Task<bool> IsCustomEntityPathUniqueAsync(IsCustomEntityUrlSlugUniqueQuery query, IExecutionContext executionContext = null)
         {
             return _queryExecutor.ExecuteAsync(query);
         }

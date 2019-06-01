@@ -11,7 +11,7 @@ using Cofoundry.Core;
 namespace Cofoundry.Domain
 {
     /// <summary>
-    /// Returns detailed information on a custom entity and it's latest version. This 
+    /// Query for detailed information on a custom entity and it's latest version. This 
     /// query is primarily used in the admin area because it is not version-specific
     /// and the CustomEntityDetails projection includes audit data and other additional 
     /// information that should normally be hidden from a customer facing app.

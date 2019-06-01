@@ -8,7 +8,10 @@ using Cofoundry.Domain.CQS;
 namespace Cofoundry.Domain
 {
     /// <summary>
-    /// Updates the url of a page.
+    /// Updates the url of a page. This is a separate command from
+    /// the UpdatePageCommand as it's a specific action that can
+    /// have specific side effects such as breaking page links outside
+    /// of the CMS.
     /// </summary>
     public class UpdatePageUrlCommand : ICommand, ILoggableCommand
     {
@@ -27,7 +30,7 @@ namespace Cofoundry.Domain
         public int PageDirectoryId { get; set; }
 
         /// <summary>
-        /// Optional locale id of the page if used in a localized site.
+        /// Optional id of the locale if used in a localized site.
         /// </summary>
         [PositiveInteger]
         public int? LocaleId { get; set; }

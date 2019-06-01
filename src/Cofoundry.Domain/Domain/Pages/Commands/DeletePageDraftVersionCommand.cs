@@ -10,8 +10,8 @@ using Cofoundry.Core.Validation;
 namespace Cofoundry.Domain
 {
     /// <summary>
-    /// Deletes the draft verison a page version permanently if 
-    /// it exists. I no draft exists then no action is taken.
+    /// Deletes the draft verison of a page permanently if 
+    /// it exists. If no draft exists then no action is taken.
     /// </summary>
     public class DeletePageDraftVersionCommand : ICommand, ILoggableCommand
     {

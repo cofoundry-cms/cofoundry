@@ -12,6 +12,10 @@ using Cofoundry.Core.Data;
 
 namespace Cofoundry.Domain
 {
+    /// <summary>
+    /// Reorders a set of custom entities. The custom entity definition must implement 
+    /// IOrderableCustomEntityDefintion to be able to set ordering.
+    /// </summary>
     public class ReOrderCustomEntitiesCommandHandler 
         : IAsyncCommandHandler<ReOrderCustomEntitiesCommand>
         , IPermissionRestrictedCommandHandler<ReOrderCustomEntitiesCommand>
@@ -43,8 +47,6 @@ namespace Cofoundry.Domain
         }
 
         #endregion
-
-        #region execution
 
         public async Task ExecuteAsync(ReOrderCustomEntitiesCommand command, IExecutionContext executionContext)
         {
@@ -84,8 +86,6 @@ namespace Cofoundry.Domain
 
             return _messageAggregator.PublishBatchAsync(messages);
         }
-
-        #endregion
 
         #region permissions
 

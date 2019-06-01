@@ -45,14 +45,61 @@ namespace Cofoundry.Domain.Data
 
         #region properties
 
+        /// <summary>
+        /// This queue keeps track of files belonging to assets that 
+        /// have been deleted in the system. The files don't get deleted
+        /// at the same time as the asset record and instead are queued
+        /// and deleted by a background task to avoid issues with file
+        /// locking and other errors that may cause the delete operation 
+        /// to fail. It also enabled the file deletion to run in a 
+        /// transaction.
+        /// </summary>
         public DbSet<AssetFileCleanupQueueItem> AssetFileCleanupQueueItems { get; set; }
 
         public DbSet<CustomEntityDefinition> CustomEntityDefinitions { get; set; }
 
+        /// <summary>
+        /// <para>
+        /// Custom entities are a flexible system for developer defined
+        /// data structures. The identity  for these entities are persisted in
+        /// this CustomEntity table, while the majority of data is versioned in 
+        /// the CustomEntityVersion table.
+        /// </para>
+        /// <para>
+        /// The CustomEntityVersion table also contains the custom data model
+        /// data, which is serialized as unstructured data. Entity relations
+        /// on the unstructured data model are tracked via the 
+        /// UnstructuredDataDependency table.
+        /// </para>
+        /// </summary>
         public DbSet<CustomEntity> CustomEntities { get; set; }
 
+        /// <summary>
+        /// <para>
+        /// Custom entities can have one or more version, with a collection
+        /// of versions representing the change history of custom entity
+        /// data. 
+        /// </para>
+        /// <para>
+        /// Only one draft version can exist at any one time, and 
+        /// only one version may be published at any one time. Although
+        /// you can revert to a previous version, this is done by copying
+        /// the old version data to a new version, so that a full history is
+        /// always maintained.
+        /// </para>
+        /// <param>
+        /// Typically you should query for version data via the 
+        /// CustomEntityPublishStatusQuery table, which serves as a quicker
+        /// look up for an applicable version for various PublishStatusQuery
+        /// states.
+        /// </param>
+        /// </summary>
         public DbSet<CustomEntityVersion> CustomEntityVersions { get; set; }
 
+        /// <summary>
+        /// Page block data for a specific custom entity version on a custom entity
+        /// details page.
+        /// </summary>
         public DbSet<CustomEntityVersionPageBlock> CustomEntityVersionPageBlocks { get; set; }
 
         /// <summary>
@@ -69,6 +116,12 @@ namespace Cofoundry.Domain.Data
 
         public DbSet<DocumentAssetGroup> DocumentAssetGroups { get; set; }
 
+        /// <summary>
+        /// Represents a non-image file that has been uploaded to the 
+        /// CMS. The name could be misleading here as any file type except
+        /// images are supported, but at least it is less ambigous than the 
+        /// term 'file'.
+        /// </summary>
         public DbSet<DocumentAsset> DocumentAssets { get; set; }
 
         public DbSet<DocumentAssetTag> DocumentAssetTags { get; set; }
@@ -77,6 +130,9 @@ namespace Cofoundry.Domain.Data
 
         public DbSet<ImageAssetGroup> ImageAssetGroups { get; set; }
 
+        /// <summary>
+        /// Represents an image that has been uploaded to the CMS.
+        /// </summary>
         public DbSet<ImageAsset> ImageAssets { get; set; }
 
         public DbSet<ImageAssetTag> ImageAssetTags { get; set; }
@@ -155,10 +211,22 @@ namespace Cofoundry.Domain.Data
         /// </summary>
         public DbSet<PagePublishStatusQuery> PagePublishStatusQueries { get; set; }
 
+        /// <summary>
+        /// A permission represents an type action a user can
+        /// be permitted to perform. Typically this is associated
+        /// with a specified entity type, but doesn't have to be e.g.
+        /// "read pages", "access dashboard", "delete images". The 
+        /// combination of EntityDefinitionCode and PermissionCode
+        /// must be unique
+        /// </summary>
         public DbSet<Permission> Permissions { get; set; }
 
         public DbSet<RewriteRule> RewriteRules { get; set; }
 
+        /// <summary>
+        /// Roles are an assignable collection of permissions. Every user has to 
+        /// be assigned to one role.
+        /// </summary>
         public DbSet<Role> Roles { get; set; }
 
         public DbSet<RolePermission> RolePermissions { get; set; }

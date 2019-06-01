@@ -11,6 +11,10 @@ using Cofoundry.Core.Data;
 
 namespace Cofoundry.Domain
 {
+    /// <summary>
+    /// Deletes the draft verison of a page version permanently if 
+    /// it exists. If no draft exists then no action is taken.
+    /// </summary>
     public class DeletePageDraftVersionCommandHandler
         : IAsyncCommandHandler<DeletePageDraftVersionCommand>
         , IPermissionRestrictedCommandHandler<DeletePageDraftVersionCommand>

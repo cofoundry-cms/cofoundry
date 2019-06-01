@@ -11,6 +11,10 @@ using Cofoundry.Core.Data;
 
 namespace Cofoundry.Domain
 {
+    /// <summary>
+    /// Moves a block up or down within a multi-block region 
+    /// on a custom entity page.
+    /// </summary>
     public class MoveCustomEntityVersionPageBlockCommandHandler
         : IAsyncCommandHandler<MoveCustomEntityVersionPageBlockCommand>
         , IIgnorePermissionCheckHandler
@@ -45,8 +49,6 @@ namespace Cofoundry.Domain
         }
 
         #endregion
-
-        #region execution
 
         public async Task ExecuteAsync(MoveCustomEntityVersionPageBlockCommand command, IExecutionContext executionContext)
         {
@@ -120,7 +122,5 @@ namespace Cofoundry.Domain
                 CustomEntityVersionBlockId = customEntityVersionPageBlockId
             });
         }
-
-        #endregion
     }
 }

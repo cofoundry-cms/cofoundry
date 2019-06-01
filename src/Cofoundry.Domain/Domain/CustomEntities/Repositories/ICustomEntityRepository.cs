@@ -93,7 +93,7 @@ namespace Cofoundry.Domain
 
         Task<PagedQueryResult<CustomEntityVersionSummary>> GetCustomEntityVersionSummariesByCustomEntityIdAsync(GetCustomEntityVersionSummariesByCustomEntityIdQuery query, IExecutionContext executionContext = null);
 
-        Task<bool> IsCustomEntityPathUniqueAsync(IsCustomEntityPathUniqueQuery query, IExecutionContext executionContext = null);
+        Task<bool> IsCustomEntityPathUniqueAsync(IsCustomEntityUrlSlugUniqueQuery query, IExecutionContext executionContext = null);
 
         Task<PagedQueryResult<CustomEntitySummary>> SearchCustomEntitySummariesAsync(SearchCustomEntitySummariesQuery query, IExecutionContext executionContext = null);
 

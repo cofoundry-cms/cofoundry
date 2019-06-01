@@ -38,7 +38,7 @@ namespace Cofoundry.Domain
         public int? PageBlockTypeTemplateId { get; set; }
 
         /// <summary>
-        /// The model data to save against the new block.
+        /// The block type model data to save against the new block.
         /// </summary>
         [Required]
         [ValidateObject]

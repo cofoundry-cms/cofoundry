@@ -7,6 +7,12 @@ using Cofoundry.Domain.CQS;
 
 namespace Cofoundry.Domain
 {
+    /// <summary>
+    /// Query to get a collection of all custom entity definitions registered
+    /// with the system. The returned object is a lightweight projection of the
+    /// data defined in a custom entity definition class which is typically used 
+    /// as part of another domain model.
+    /// </summary>
     public class GetAllCustomEntityDefinitionMicroSummariesQueryHandler 
         : IAsyncQueryHandler<GetAllCustomEntityDefinitionMicroSummariesQuery, ICollection<CustomEntityDefinitionMicroSummary>>
         , IIgnorePermissionCheckHandler
@@ -27,8 +33,6 @@ namespace Cofoundry.Domain
 
         #endregion
 
-        #region execution
-
         public Task<ICollection<CustomEntityDefinitionMicroSummary>> ExecuteAsync(GetAllCustomEntityDefinitionMicroSummariesQuery query, IExecutionContext executionContext)
         {
             var result = _customEntityDefinitionRepository
@@ -38,7 +42,5 @@ namespace Cofoundry.Domain
 
             return Task.FromResult<ICollection<CustomEntityDefinitionMicroSummary>>(result);
         }
-
-        #endregion
     }
 }

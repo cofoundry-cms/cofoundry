@@ -10,6 +10,9 @@ using Cofoundry.Core.Data;
 
 namespace Cofoundry.Domain
 {
+    /// <summary>
+    /// Deletes a custom entity and all associated versions permanently.
+    /// </summary>
     public class DeleteCustomEntityCommandHandler 
         : IAsyncCommandHandler<DeleteCustomEntityCommand>
         , IIgnorePermissionCheckHandler

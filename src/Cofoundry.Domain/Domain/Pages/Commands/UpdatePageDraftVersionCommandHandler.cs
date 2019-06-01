@@ -12,6 +12,11 @@ using Cofoundry.Core;
 
 namespace Cofoundry.Domain
 {
+    /// <summary>
+    /// Updates the draft version of a custom entity. If a draft version
+    /// does not exist then one is created first from the currently
+    /// published version.
+    /// </summary>
     public class UpdatePageDraftVersionCommandHandler 
         : IAsyncCommandHandler<UpdatePageDraftVersionCommand>
         , IPermissionRestrictedCommandHandler<UpdatePageDraftVersionCommand>

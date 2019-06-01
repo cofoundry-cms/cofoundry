@@ -7,6 +7,11 @@ using Cofoundry.Domain.CQS;
 
 namespace Cofoundry.Domain
 {
+    /// <summary>
+    /// Looks up a route for a custom entity page using either the 
+    /// CustomEntityId or UrlSlug property. These route objects are 
+    /// cached in order to make routing lookups speedy.
+    /// </summary>
     public class GetCustomEntityRouteByPathQueryHandler 
         : IAsyncQueryHandler<GetCustomEntityRouteByPathQuery, CustomEntityRoute>
         , IIgnorePermissionCheckHandler

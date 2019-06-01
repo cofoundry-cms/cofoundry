@@ -5,13 +5,15 @@ using System.Threading.Tasks;
 using Cofoundry.Domain.Data;
 using Cofoundry.Domain.CQS;
 using Microsoft.EntityFrameworkCore;
-using Cofoundry.Core;
 
 namespace Cofoundry.Domain
 {
     /// <summary>
-    /// Gets a range of pages by their ids projected as PageRenderDetails models. A PageRenderDetails contains 
-    /// the data required to render a page, including template data for all the content-editable regions.
+    /// Query to get a range of pages by a set of ids, projected as a PageRenderSummary, which is
+    /// a lighter weight projection designed for rendering to a site when the 
+    /// templates, region and block data is not required. The results are 
+    /// version-sensitive and defaults to returning published versions only, but
+    /// this behavior can be controlled by the publishStatus query property.
     /// </summary>
     public class GetPageRenderSummariesByIdRangeQueryHandler
         : IAsyncQueryHandler<GetPageRenderSummariesByIdRangeQuery, IDictionary<int, PageRenderSummary>>
@@ -35,8 +37,6 @@ namespace Cofoundry.Domain
         }
 
         #endregion
-
-        #region execution
 
         public async Task<IDictionary<int, PageRenderSummary>> ExecuteAsync(GetPageRenderSummariesByIdRangeQuery query, IExecutionContext executionContext)
         {
@@ -72,8 +72,6 @@ namespace Cofoundry.Domain
 
             return dbResults;
         }
-
-        #endregion
 
         #region Permission
 

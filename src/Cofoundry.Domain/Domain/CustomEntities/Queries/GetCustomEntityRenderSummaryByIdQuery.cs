@@ -9,16 +9,45 @@ using Cofoundry.Core.Validation;
 
 namespace Cofoundry.Domain
 {
+    /// <summary>
+    /// Gets a custom entity by it's database id, returning a 
+    /// general-purpose CustomEntityRenderSummary projection which
+    /// includes version specific data and a deserialized data model. 
+    /// The result is  version-sensitive and defaults to returning published 
+    /// versions only, but this behavior can be controlled by the 
+    /// publishStatus query property.
+    /// </summary>
     public class GetCustomEntityRenderSummaryByIdQuery : IQuery<CustomEntityRenderSummary>, IValidatableObject
     {
+        /// <summary>
+        /// Gets a custom entity by it's database id, returning a 
+        /// general-purpose CustomEntityRenderSummary projection which
+        /// includes version specific data and a deserialized data model. 
+        /// The result is  version-sensitive and defaults to returning published 
+        /// versions only, but this behavior can be controlled by the 
+        /// publishStatus query property.
+        /// </summary>
         public GetCustomEntityRenderSummaryByIdQuery() { }
 
+        /// <summary>
+        /// Gets a custom entity by it's database id, returning a 
+        /// general-purpose CustomEntityRenderSummary projection which
+        /// includes version specific data and a deserialized data model. 
+        /// The result is  version-sensitive and defaults to returning published 
+        /// versions only, but this behavior can be controlled by the 
+        /// publishStatus query property.
+        /// </summary>
+        /// <param name="customEntityId">CustomEntityId of the custom entity to get.</param>
+        /// <param name="publishStatus">Used to determine which version of the page to include data for.</param>
         public GetCustomEntityRenderSummaryByIdQuery(int customEntityId, PublishStatusQuery workFlowStatus = PublishStatusQuery.Published)
         {
             CustomEntityId = customEntityId;
             PublishStatus = workFlowStatus;
         }
 
+        /// <summary>
+        /// The database id of the custom entity to find.
+        /// </summary>
         [Required]
         [PositiveInteger]
         public int CustomEntityId { get; set; }

@@ -9,6 +9,13 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Cofoundry.Domain
 {
+    /// <summary>
+    /// Query to retreive all custom entites of a specific type, projected as a
+    /// CustomEntityRenderSummary, which is a general-purpose projection with version 
+    /// specific data, including a deserialized data model. The results are 
+    /// version-sensitive and defaults to returning published versions only, but
+    /// this behavior can be controlled by the publishStatus query property.    
+    /// </summary>
     public class GetCustomEntityRenderSummariesByDefinitionCodeQueryHandler
         : IAsyncQueryHandler<GetCustomEntityRenderSummariesByDefinitionCodeQuery, ICollection<CustomEntityRenderSummary>>
         , IPermissionRestrictedQueryHandler<GetCustomEntityRenderSummariesByDefinitionCodeQuery, ICollection<CustomEntityRenderSummary>>
@@ -31,8 +38,6 @@ namespace Cofoundry.Domain
         }
 
         #endregion
-
-        #region execution
 
         public async Task<ICollection<CustomEntityRenderSummary>> ExecuteAsync(GetCustomEntityRenderSummariesByDefinitionCodeQuery query, IExecutionContext executionContext)
         {
@@ -65,8 +70,6 @@ namespace Cofoundry.Domain
                 .Select(e => e.CustomEntityVersion)
                 .ToList();
         }
-        
-        #endregion
 
         #region Permission
 

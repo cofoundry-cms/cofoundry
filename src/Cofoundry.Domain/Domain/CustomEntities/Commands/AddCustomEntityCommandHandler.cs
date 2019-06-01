@@ -13,6 +13,9 @@ using Cofoundry.Core.Data;
 
 namespace Cofoundry.Domain
 {
+    /// <summary>
+    /// Adds a new custom entity with a draft version and optionally publishes it.
+    /// </summary>
     public class AddCustomEntityCommandHandler 
         : IAsyncCommandHandler<AddCustomEntityCommand>
         , IPermissionRestrictedCommandHandler<AddCustomEntityCommand>
@@ -59,8 +62,6 @@ namespace Cofoundry.Domain
         }
 
         #endregion
-
-        #region Execution
 
         public async Task ExecuteAsync(AddCustomEntityCommand command, IExecutionContext executionContext)
         {
@@ -231,9 +232,9 @@ namespace Cofoundry.Domain
             EnforceUniquenessResult(isUnique, command, definition);
         }
 
-        private IsCustomEntityPathUniqueQuery GetUniquenessQuery(AddCustomEntityCommand command, CustomEntityDefinitionSummary definition)
+        private IsCustomEntityUrlSlugUniqueQuery GetUniquenessQuery(AddCustomEntityCommand command, CustomEntityDefinitionSummary definition)
         {
-            var query = new IsCustomEntityPathUniqueQuery();
+            var query = new IsCustomEntityUrlSlugUniqueQuery();
             query.CustomEntityDefinitionCode = definition.CustomEntityDefinitionCode;
             query.LocaleId = command.LocaleId;
             query.UrlSlug = command.UrlSlug;
@@ -267,8 +268,6 @@ namespace Cofoundry.Domain
                 throw new UniqueConstraintViolationException(message, prop, command.UrlSlug);
             }
         }
-
-        #endregion
 
         #endregion
 

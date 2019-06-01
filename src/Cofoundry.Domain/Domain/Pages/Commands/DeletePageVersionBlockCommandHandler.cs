@@ -12,6 +12,9 @@ using Cofoundry.Core;
 
 namespace Cofoundry.Domain
 {
+    /// <summary>
+    /// Deletes a block from a template region on a custom entity page.
+    /// </summary>
     public class DeletePageVersionBlockCommandHandler
         : IAsyncCommandHandler<DeletePageVersionBlockCommand>
         , IPermissionRestrictedCommandHandler<DeletePageVersionBlockCommand>
@@ -40,8 +43,6 @@ namespace Cofoundry.Domain
         }
 
         #endregion
-
-        #region execution
 
         public async Task ExecuteAsync(DeletePageVersionBlockCommand command, IExecutionContext executionContext)
         {
@@ -91,8 +92,6 @@ namespace Cofoundry.Domain
                 PageVersionId = pageVersionId
             });
         }
-
-        #endregion
 
         #region Permission
 

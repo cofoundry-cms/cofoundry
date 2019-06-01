@@ -10,7 +10,7 @@ namespace Cofoundry.Domain
     /// <summary>
     /// Search page data returning the PageRenderSummary projection, which is
     /// a lighter weight projection designed for rendering to a site when the 
-    /// templates, region and block data is not required. The result is 
+    /// templates, region and block data is not required. The query is 
     /// version-sensitive and defaults to returning published versions only, but
     /// this behavior can be controlled by the PublishStatus query property.
     /// </summary>

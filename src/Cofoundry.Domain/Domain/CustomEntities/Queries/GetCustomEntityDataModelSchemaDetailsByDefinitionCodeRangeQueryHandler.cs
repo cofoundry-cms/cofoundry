@@ -8,6 +8,10 @@ using Cofoundry.Domain.CQS;
 
 namespace Cofoundry.Domain
 {
+    /// <summary>
+    /// Query to extract and return meta data information about a custom 
+    /// entity data model for a range of custom entity definitions.
+    /// </summary>
     public class GetCustomEntityDataModelSchemaDetailsByDefinitionCodeRangeQueryHandler
         : IAsyncQueryHandler<GetCustomEntityDataModelSchemaDetailsByDefinitionCodeRangeQuery, IDictionary<string, CustomEntityDataModelSchema>>
         , IPermissionRestrictedQueryHandler<GetCustomEntityDataModelSchemaDetailsByDefinitionCodeRangeQuery, IDictionary<string, CustomEntityDataModelSchema>>
@@ -34,8 +38,6 @@ namespace Cofoundry.Domain
 
         #endregion
 
-        #region execution
-
         public async Task<IDictionary<string, CustomEntityDataModelSchema>> ExecuteAsync(GetCustomEntityDataModelSchemaDetailsByDefinitionCodeRangeQuery query, IExecutionContext executionContext)
         {
             var definitionQuery = new GetAllCustomEntityDefinitionSummariesQuery();
@@ -55,8 +57,6 @@ namespace Cofoundry.Domain
 
             return results;
         }
-
-        #endregion
 
         #region Permission
 
