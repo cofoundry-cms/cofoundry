@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 namespace Cofoundry.Domain
 {
     /// <summary>
-    /// Queries for retieving paged collections of page versions by a page id.
+    /// Queries for retrieving paged collections of page versions by a page id.
     /// </summary>
     public interface IAdvancedContentRepositoryPageVersionsByPageIdQueryBuilder
     {

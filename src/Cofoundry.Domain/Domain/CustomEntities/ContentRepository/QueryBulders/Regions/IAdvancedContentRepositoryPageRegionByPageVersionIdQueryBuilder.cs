@@ -14,6 +14,6 @@ namespace Cofoundry.Domain
         /// Returns a collection of content managed regions with
         /// block data for a specific version of a page.
         /// </summary>
-        Task<ICollection<PageRegionDetails>> AsDetailsAsync();
+        Task<ICollection<CustomEntityPageRegionDetails>> AsDetailsAsync();
     }
 }

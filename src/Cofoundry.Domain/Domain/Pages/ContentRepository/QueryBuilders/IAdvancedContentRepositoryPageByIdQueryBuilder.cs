@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 namespace Cofoundry.Domain
 {
     /// <summary>
-    /// Queries for retieving page data by a unique database id.
+    /// Queries for retrieving page data by a unique database id.
     /// </summary>
     public interface IAdvancedContentRepositoryPageByIdQueryBuilder
         : IContentRepositoryPageByIdQueryBuilder

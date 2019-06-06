@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 namespace Cofoundry.Domain
 {
     /// <summary>
-    /// Queries for retieving page data nested immediately inside a specific directory.
+    /// Queries for retrieving page data nested immediately inside a specific directory.
     /// </summary>
     public interface IContentRepositoryPageByDirectoryIdQueryBuilder
     {

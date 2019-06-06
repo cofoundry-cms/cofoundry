@@ -50,5 +50,9 @@
     <EmbeddedResource Include="MailTemplates\AdminMailTemplates\**\*.cshtml;MailTemplates\AdminMailTemplates\*\content\**\*.*;" />
     <EmbeddedResource Include="Install\**\*.sql" />
   </ItemGroup>
+  
+  <ItemGroup>
+    <Folder Include="Domain\CustomEntities\ContentRepository\QueryBulders\DataModelSchemas\" />
+  </ItemGroup>
 	
 </Project>

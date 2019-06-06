@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 namespace Cofoundry.Domain
 {
     /// <summary>
-    /// Queries for retieving data for "not found" (404) pages.
+    /// Queries for retrieving data for "not found" (404) pages.
     /// </summary>
     public interface IAdvancedContentRepositoryPageNotFoundQueryBuilder
     {

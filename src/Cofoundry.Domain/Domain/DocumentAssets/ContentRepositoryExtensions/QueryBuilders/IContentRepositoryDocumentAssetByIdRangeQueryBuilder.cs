@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 namespace Cofoundry.Domain
 {
     /// <summary>
-    /// Queries for retieving a set of document assets using a batch of 
+    /// Queries for retrieving a set of document assets using a batch of 
     /// database ids. The Cofoundry.Core dictionary extensions can be 
     /// useful for ordering the results e.g. results.FilterAndOrderByKeys(ids).
     /// </summary>

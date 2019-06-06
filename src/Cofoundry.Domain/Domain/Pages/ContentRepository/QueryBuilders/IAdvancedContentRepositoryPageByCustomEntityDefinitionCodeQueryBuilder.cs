@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 namespace Cofoundry.Domain
 {
     /// <summary>
-    /// Queries for retieving custom entity page data for a single custom 
+    /// Queries for retrieving custom entity page data for a single custom 
     /// entity type.
     /// </summary>
     public interface IAdvancedContentRepositoryPageByCustomEntityDefinitionCodeQueryBuilder

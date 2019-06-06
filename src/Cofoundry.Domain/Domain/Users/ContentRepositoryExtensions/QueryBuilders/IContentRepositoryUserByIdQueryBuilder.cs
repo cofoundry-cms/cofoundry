@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 namespace Cofoundry.Domain
 {
     /// <summary>
-    /// Queries for retieving user data for a unique database id.
+    /// Queries for retrieving user data for a unique database id.
     /// </summary>
     public interface IContentRepositoryUserByIdQueryBuilder
     {

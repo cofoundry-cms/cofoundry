@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 namespace Cofoundry.Domain
 {
     /// <summary>
-    /// Queries for retieving image asset data by a unique database id.
+    /// Queries for retrieving image asset data by a unique database id.
     /// </summary>
     public interface IAdvancedContentRepositoryImageAssetByIdQueryBuilder 
         : IContentRepositoryImageAssetByIdQueryBuilder
