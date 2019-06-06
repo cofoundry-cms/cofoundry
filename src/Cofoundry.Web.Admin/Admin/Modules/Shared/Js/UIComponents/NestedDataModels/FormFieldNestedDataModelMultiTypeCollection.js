@@ -120,7 +120,6 @@
                 }
 
                 vm.gridImages = new ImagePreviewFieldCollection('typeName');
-
                 vm.gridImages.load(vm.model, vm.previewFields);
             }
 
@@ -132,16 +131,16 @@
                 vm.gridImages.remove($index);
             }
 
-            function edit(model, $index) {
+            function edit(item, $index) {
 
                 showEditDialog({
-                    model: model,
+                    model: item.model,
                     onSave: onSave,
-                    modelMetaData: vm.modelMetaDataLookup[model.typeName]
+                    modelMetaData: vm.modelMetaDataLookup[item.typeName]
                 });
 
                 function onSave() {
-                    vm.gridImages.update(model, $index);
+                    vm.gridImages.update(item, $index);
                     triggerModelChange();
                 }
             }
@@ -153,13 +152,17 @@
                     modelMetaData: modelMetaData
                 });
 
-                function onSave(newEntity) {
+                function onSave(dataModel) {
                     vm.model = vm.model || [];
-                    newEntity.typeName = modelMetaData.typeName;
 
-                    vm.model.push(newEntity);
+                    var newItem = {
+                        model: dataModel,
+                        typeName: modelMetaData.typeName
+                    };
 
-                    vm.gridImages.add(newEntity, vm.model.length - 1);
+                    vm.model.push(newItem);
+
+                    vm.gridImages.add(newItem, vm.model.length - 1, true);
                     triggerModelChange();
                 }
             }
@@ -191,14 +194,14 @@
 
             /* FORMATTERS */
 
-            function getTitle(entity, index) {
-                var field = vm.previewFields[entity.typeName].fields[PREVIEW_TITLE_FIELD_NAME];
+            function getTitle(item, index) {
+                var field = vm.previewFields[item.typeName].fields[PREVIEW_TITLE_FIELD_NAME];
 
                 if (field) {
-                    return entity[field.lowerName];
+                    return item.model[field.lowerName];
                 }
 
-                if (entity.title) return entity.title;
+                if (item.model.title) return item.model.title;
 
                 return 'Item ' + (index + 1);
             }

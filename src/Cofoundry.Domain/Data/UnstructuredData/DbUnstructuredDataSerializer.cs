@@ -20,16 +20,19 @@ namespace Cofoundry.Domain.Data
     {
         #region constructor
 
-        private readonly IJsonSerializerSettingsFactory _jsonSerializerSettingsFactory;
         private readonly ILogger<DbUnstructuredDataSerializer> _logger;
+        private readonly IJsonSerializerSettingsFactory _jsonSerializerSettingsFactory;
+        private readonly INestedDataModelTypeRepository _nestedDataModelTypeRepository;
 
         public DbUnstructuredDataSerializer(
             ILogger<DbUnstructuredDataSerializer> logger,
-            IJsonSerializerSettingsFactory jsonSerializerSettingsFactory
+            IJsonSerializerSettingsFactory jsonSerializerSettingsFactory,
+            INestedDataModelTypeRepository nestedDataModelTypeRepository
             )
         {
             _logger = logger;
             _jsonSerializerSettingsFactory = jsonSerializerSettingsFactory;
+            _nestedDataModelTypeRepository = nestedDataModelTypeRepository;
         }
 
         #endregion
@@ -69,6 +72,7 @@ namespace Cofoundry.Domain.Data
         {
             var settings = _jsonSerializerSettingsFactory.Create();
             settings.Error = HandleDeserializationError;
+            settings.Converters.Add(new NestedDataModelMultiTypeItemJsonConverter(_jsonSerializerSettingsFactory, _nestedDataModelTypeRepository));
 
             return settings;
         }

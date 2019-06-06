@@ -112,7 +112,7 @@ namespace Cofoundry.Domain
 
             var dependencies = EnumerableHelper
                 .Enumerate(nestedItems)
-                .Select(i => i.DataModel)
+                .Select(i => i.Model)
                 .SelectMany(EntityRelationAttributeHelper.GetRelations);
 
             return dependencies;

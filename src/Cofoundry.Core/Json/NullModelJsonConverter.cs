@@ -2,21 +2,29 @@
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using Cofoundry.Domain;
-using System.Reflection;
+using System.Text;
 
-namespace Cofoundry.Web.Admin
+namespace Cofoundry.Core.Json
 {
     /// <summary>
-    /// Used to ignore parsing of an IPageBlockDataModel child object, because the type cannot be
-    /// inferred without mapping the parent object first.
+    /// <para>
+    /// Json.NET converter used to ignore parsing of a child
+    /// object that is an interface type when the concrete type 
+    /// cannot be determined. E.g. this is used when deserializing
+    /// the model property of AddCustomEntityCommand when the 
+    /// model is null or the provided custom entity definition 
+    /// is not registered with the system.
+    /// </para>
+    /// <para>
+    /// Without using this converter Json.NET will throw an 
+    /// exception.
+    /// </para>
     /// </summary>
-    public class NullPageBlockDataModelJsonConverter : JsonConverter
+    public class NullModelJsonConverter<T> : JsonConverter
     {
         public override bool CanConvert(Type objectType)
         {
-            return typeof(IPageBlockTypeDataModel).IsAssignableFrom(objectType);
+            return typeof(T).IsAssignableFrom(objectType);
         }
 
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)

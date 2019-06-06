@@ -24,9 +24,9 @@
                         <tr ng-if="!vm.model.length">
                             <td colspan="100" class="empty">None</td>
                         </tr>
-                        <tr ng-repeat="entity in vm.model track by $index"
+                        <tr ng-repeat="item in vm.model track by $index"
                             ui-draggable="vm.formScope.editMode && vm.orderable"
-                            data-drag="entity"
+                            data-drag="item"
                             data-drag-channel="nested-model-{{vm.modelName}}"
                             ui-on-drop="vm.onDrop($index, $data)"
                             on-drop-success="vm.onDropSuccess($index)"
@@ -35,20 +35,20 @@
                                 <cms-table-cell-image cms-image="vm.gridImages.images[$index]"></cms-table-cell-image>
                             </td>
                             <td ng-if="vm.previewFields.showTitle">
-                                <strong>{{vm.getTitle(entity, $index)}}</strong>
+                                <strong>{{vm.getTitle(item, $index)}}</strong>
                             </td>
-                            <td ng-if="vm.previewFields.showDescription">{{entity[vm.previewFields[entity.typeName].fields.previewDescription.lowerName]}}</td>
+                            <td ng-if="vm.previewFields.showDescription">{{item.model[vm.previewFields[item.typeName].fields.previewDescription.lowerName]}}</td>
                             <td ng-if="vm.previewFields.showTitle">
-                                {{vm.modelMetaDataLookup[entity.typeName].displayName}}
+                                {{vm.modelMetaDataLookup[item.typeName].displayName}}
                             </td>
                             <td cms-table-column-actions ng-if="vm.formScope.editMode">
                                 <cms-button-icon cms-title="Edit"
                                                  cms-icon="pencil"
-                                                 ng-click="vm.edit(entity, $index)">
+                                                 ng-click="vm.edit(item, $index)">
                                 </cms-button-icon>
                                 <cms-button-icon cms-title="Remove"
                                                  cms-icon="trash-o"
-                                                 ng-click="vm.remove(entity, $index)">
+                                                 ng-click="vm.remove(item, $index)">
                                 </cms-button-icon>
                             </td>
                         </tr>
