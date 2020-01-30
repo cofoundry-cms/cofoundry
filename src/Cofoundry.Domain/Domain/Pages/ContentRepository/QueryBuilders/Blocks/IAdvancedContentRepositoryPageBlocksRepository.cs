@@ -13,7 +13,7 @@ namespace Cofoundry.Domain
         #region queries
 
         /// <summary>
-        /// Search for page entities, returning paged lists of data.
+        /// Query for page blocks by an id.
         /// </summary>
         /// <param name="pageVersionBlockId">Database id of the page version block to get.</param>
         IAdvancedContentRepositoryPageBlockByIdQueryBuilder GetById(int pageVersionBlockId);

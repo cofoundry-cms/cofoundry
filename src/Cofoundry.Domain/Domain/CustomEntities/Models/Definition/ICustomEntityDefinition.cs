@@ -7,11 +7,20 @@ using System.Threading.Tasks;
 namespace Cofoundry.Domain
 {
     /// <summary>
+    /// <para>
+    /// Custom entity definitions are used to define the identity and
+    /// behavior of a custom entity type. This includes meta data such
+    /// as the name and description, but also the configuration of
+    /// features such as whether the identity can contain a locale
+    /// and whether versioning (i.e. auto-publish) is enabled.
+    /// </para>
+    /// <para>
     /// Implement this interface to define a custom entity type. The definition
     /// will automatically get picked up and added to the system. There's a few
-    /// other interfaces can be used to extend the defintion with other bhaviours
+    /// other interfaces can be used to extend the defintion with other behaviours
     /// such as IOrderableCustomEntityDefinition, ICustomizedTermCustomEntityDefinition
     /// and ISortedCustomEntityDefinition.
+    /// </para>
     /// </summary>
     public interface ICustomEntityDefinition
     {

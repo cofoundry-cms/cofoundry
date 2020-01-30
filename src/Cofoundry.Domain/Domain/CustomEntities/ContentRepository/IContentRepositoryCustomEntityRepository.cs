@@ -48,5 +48,18 @@ namespace Cofoundry.Domain
         IContentRepositoryPageSearchQueryBuilder Search();
 
         #endregion
+
+        #region child entities
+
+        /// <summary>
+        /// Custom entity definitions are used to define the identity and
+        /// behavior of a custom entity type. This includes meta data such
+        /// as the name and description, but also the configuration of
+        /// features such as whether the identity can contain a locale
+        /// and whether versioning (i.e. auto-publish) is enabled.
+        /// </summary>
+        IContentRepositoryCustomEntityDefinitionsRepository Definitions();
+
+        #endregion
     }
 }

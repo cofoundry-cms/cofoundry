@@ -100,8 +100,15 @@ namespace Cofoundry.BasicTestSite
                     .ImageAssets()
                     .DeleteAsync(2);
 
+                await _contentRepository
+                    .CustomEntities()
+                    .GetByCustomEntityId(2)
+                    .AsRoutingInfoAsync();
 
-
+                await _contentRepository
+                    .CustomEntities()
+                    .GetById(2)
+                    .AsPageDetailsAsync();
 
                 await scope.CompleteAsync();
             }

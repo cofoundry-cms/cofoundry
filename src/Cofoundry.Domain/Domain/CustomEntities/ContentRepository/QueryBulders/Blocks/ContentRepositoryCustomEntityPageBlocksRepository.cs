@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 
 namespace Cofoundry.Domain
 {
-    public class ContentRepositoryPageBlocksRepository
-            : IAdvancedContentRepositoryPageBlocksRepository
+    public class ContentRepositoryCustomEntityPageBlocksRepository
+            : IAdvancedContentRepositoryCustomEntityPageBlocksRepository
             , IExtendableContentRepositoryPart
     {
-        public ContentRepositoryPageBlocksRepository(
+        public ContentRepositoryCustomEntityPageBlocksRepository(
             IExtendableContentRepository contentRepository
             )
         {
@@ -21,33 +21,33 @@ namespace Cofoundry.Domain
 
         #region queries
 
-        public IAdvancedContentRepositoryPageBlockByIdQueryBuilder GetById(int pageVersionBlockId)
+        public IAdvancedContentRepositoryCustomEntityPageBlockByIdQueryBuilder GetById(int customEntityVersionPageBlockId)
         {
-            return new ContentRepositoryPageBlockByIdQueryBuilder(ExtendableContentRepository, pageVersionBlockId);
+            return new ContentRepositoryCustomEntityPageBlockByIdQueryBuilder(ExtendableContentRepository, customEntityVersionPageBlockId);
         }
 
         #endregion
 
         #region commands
 
-        public Task AddAsync(AddPageVersionBlockCommand command)
+        public Task AddAsync(AddCustomEntityVersionPageBlockCommand command)
         {
             return ExtendableContentRepository.ExecuteCommandAsync(command);
         }
 
-        public Task UpdateAsync(UpdatePageVersionBlockCommand command)
+        public Task UpdateAsync(UpdateCustomEntityVersionPageBlockCommand command)
         {
             return ExtendableContentRepository.ExecuteCommandAsync(command);
         }
 
-        public Task MoveAsync(MovePageVersionBlockCommand command)
+        public Task MoveAsync(MoveCustomEntityVersionPageBlockCommand command)
         {
             return ExtendableContentRepository.ExecuteCommandAsync(command);
         }
 
-        public Task DeleteAsync(int pageVersionBlockId)
+        public Task DeleteAsync(int customEntityVersionPageBlockId)
         {
-            var command = new DeletePageVersionBlockCommand() { PageVersionBlockId = pageVersionBlockId };
+            var command = new DeleteCustomEntityVersionPageBlockCommand() { CustomEntityVersionPageBlockId = customEntityVersionPageBlockId };
             return ExtendableContentRepository.ExecuteCommandAsync(command);
         }
 

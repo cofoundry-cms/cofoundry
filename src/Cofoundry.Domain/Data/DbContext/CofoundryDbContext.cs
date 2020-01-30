@@ -56,12 +56,31 @@ namespace Cofoundry.Domain.Data
         /// </summary>
         public DbSet<AssetFileCleanupQueueItem> AssetFileCleanupQueueItems { get; set; }
 
+        /// <summary>
+        /// <para>
+        /// Custom entity definitions are used to define the identity and
+        /// behavior of a custom entity type. This includes meta data such
+        /// as the name and description, but also the configuration of
+        /// features such as whether the identity can contain a locale
+        /// and whether versioning (i.e. auto-publish) is enabled.
+        /// </para>
+        /// <para>
+        /// Definitions are defined in code by implementing ICustomEntityDefinition
+        /// but they are also stored in the database to help with queries and data 
+        /// integrity.
+        /// </para>
+        /// <para>
+        /// The code definition is the source of truth and the database is updated
+        /// at runtime when an entity is added/updated. This is done via 
+        /// EnsureCustomEntityDefinitionExistsCommand.
+        /// </para>
+        /// </summary>
         public DbSet<CustomEntityDefinition> CustomEntityDefinitions { get; set; }
 
         /// <summary>
         /// <para>
         /// Custom entities are a flexible system for developer defined
-        /// data structures. The identity  for these entities are persisted in
+        /// data structures. The identity for these entities are persisted in
         /// this CustomEntity table, while the majority of data is versioned in 
         /// the CustomEntityVersion table.
         /// </para>

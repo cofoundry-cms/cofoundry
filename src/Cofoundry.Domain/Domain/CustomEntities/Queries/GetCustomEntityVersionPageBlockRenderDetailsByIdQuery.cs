@@ -14,6 +14,27 @@ namespace Cofoundry.Domain
     /// </summary>
     public class GetCustomEntityVersionPageBlockRenderDetailsByIdQuery : IQuery<CustomEntityVersionPageBlockRenderDetails>
     {
+        public GetCustomEntityVersionPageBlockRenderDetailsByIdQuery() { }
+
+        /// <summary>
+        /// Initializes the query with the specified parameters.
+        /// </summary>
+        /// <param name="customEntityVersionPageBlockId">Id of the custom entity page block version to find..</param>
+        /// <param name="publishStatus">
+        /// Optional publish status of the parent page or custom entity 
+        /// being mapped. This is provided so related entities can use
+        /// the same publish status when queried in the mapping process. 
+        /// Defaults to PublishStatusQuery.Published.
+        /// </param>
+        public GetCustomEntityVersionPageBlockRenderDetailsByIdQuery(int customEntityVersionPageBlockId, PublishStatusQuery? publishStatus = null)
+        {
+            CustomEntityVersionPageBlockId = customEntityVersionPageBlockId;
+            if (publishStatus.HasValue)
+            {
+                PublishStatus = publishStatus.Value;
+            }
+        }
+
         /// <summary>
         /// Id of the custom entity page block version to find.
         /// </summary>

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace Cofoundry.Domain
 {
     public class ContentRepositoryCustomEntityVersionsRepository
-            : IAdvancedContentRepositoryPageVersionsRepository
+            : IAdvancedContentRepositoryCustomEntityVersionsRepository
             , IExtendableContentRepositoryPart
     {
         public ContentRepositoryCustomEntityVersionsRepository(
@@ -20,6 +20,11 @@ namespace Cofoundry.Domain
         public IExtendableContentRepository ExtendableContentRepository { get; }
 
         #region queries
+
+        public IAdvancedContentRepositoryCustomEntityVersionsByCustomEntityIdQueryBuilder GetByCustomEntityId()
+        {
+            return new ContentRepositoryCustomEntityVersionsByCustomEntityIdQueryBuilder(ExtendableContentRepository);
+        }
 
         public IAdvancedContentRepositoryPageVersionsByPageIdQueryBuilder GetByPageId()
         {
@@ -36,19 +41,19 @@ namespace Cofoundry.Domain
 
         #region commands
 
-        public Task AddDraftAsync(AddPageDraftVersionCommand command)
+        public Task AddDraftAsync(AddCustomEntityDraftVersionCommand command)
         {
             return ExtendableContentRepository.ExecuteCommandAsync(command);
         }
 
-        public Task UpdateDraftAsync(UpdatePageDraftVersionCommand command)
+        public Task UpdateDraftAsync(UpdateCustomEntityDraftVersionCommand command)
         {
             return ExtendableContentRepository.ExecuteCommandAsync(command);
         }
 
-        public Task DeleteDraftAsync(int pageId)
+        public Task DeleteDraftAsync(int customEntityId)
         {
-            var command = new DeletePageDraftVersionCommand() { PageId = pageId };
+            var command = new DeleteCustomEntityDraftVersionCommand() { CustomEntityId = customEntityId };
             return ExtendableContentRepository.ExecuteCommandAsync(command);
         }
 
