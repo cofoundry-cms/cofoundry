@@ -146,6 +146,13 @@ namespace Cofoundry.Domain
             return new AdvancedContentRepositoryCustomEntityDefinitionsRepository(ExtendableContentRepository);
         }
 
-        #endregion
-    }
+        /// <summary>
+        /// Queries for working with custom entity data model schemas.
+        /// </summary>
+        public IAdvancedContentRepositoryCustomEntityDataModelSchemasRepository DataModelSchemas()
+        {
+            return new ContentRepositoryCustomEntityDataModelSchemasRepository(ExtendableContentRepository);
+        }
+    #endregion
+}
 }

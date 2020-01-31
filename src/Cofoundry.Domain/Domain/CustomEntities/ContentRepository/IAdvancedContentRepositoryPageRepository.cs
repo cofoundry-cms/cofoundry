@@ -149,7 +149,18 @@ namespace Cofoundry.Domain
         #region child entities
 
         /// <summary>
-        /// Command and queries for working with custom entity versions.
+        /// <para>
+        /// Custom entities can have one or more version, with a collection
+        /// of versions representing the change history of custom entity
+        /// data. 
+        /// </para>
+        /// <para>
+        /// Only one draft version can exist at any one time, and 
+        /// only one version may be published at any one time. Although
+        /// you can revert to a previous version, this is done by copying
+        /// the old version data to a new version, so that a full history is
+        /// always maintained.
+        /// </para>
         /// </summary>
         IAdvancedContentRepositoryCustomEntityVersionsRepository Versions();
 
@@ -161,6 +172,14 @@ namespace Cofoundry.Domain
         /// and whether versioning (i.e. auto-publish) is enabled.
         /// </summary>
         IAdvancedContentRepositoryCustomEntityDefinitionsRepository Definitions();
+
+        /// <summary>
+        /// A data model schema contains meta information about a custom entity data 
+        /// model, including UI display details and validation attributes for each public 
+        /// property. This is typically used for expressing these entities in dynamically 
+        /// generated parts of the UI e.g. edit forms and lists.
+        /// </summary>
+        IAdvancedContentRepositoryCustomEntityDataModelSchemasRepository DataModelSchemas();
 
         #endregion
     }

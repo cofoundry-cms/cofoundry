@@ -16,13 +16,13 @@ namespace Cofoundry.Domain.Data
     /// the old version data to a new version, so that a full history is
     /// always maintained.
     /// </para>
-    /// <param>
+    /// </summary>
+    /// <remarks>
     /// Typically you should query for version data via the 
     /// CustomEntityPublishStatusQuery table, which serves as a quicker
     /// look up for an applicable version for various PublishStatusQuery
     /// states.
-    /// </param>
-    /// </summary>
+    /// </remarks>
     public class CustomEntityVersion : ICreateAuditable, IEntityVersion
     {
         public CustomEntityVersion()

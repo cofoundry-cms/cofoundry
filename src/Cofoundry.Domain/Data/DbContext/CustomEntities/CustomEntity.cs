@@ -6,9 +6,10 @@ namespace Cofoundry.Domain.Data
     /// <summary>
     /// <para>
     /// Custom entities are a flexible system for developer defined
-    /// data structures. The identity  for these entities are persisted in
-    /// this CustomEntity table, while the majority of data is versioned in 
-    /// the CustomEntityVersion table.
+    /// data structures which can be fully managed in the admin panel 
+    /// with minimal configuration. The identity for these entities are 
+    /// persisted in this CustomEntity table, while the majority of data 
+    /// is versioned in the CustomEntityVersion table.
     /// </para>
     /// <para>
     /// The CustomEntityVersion table also contains the custom data model

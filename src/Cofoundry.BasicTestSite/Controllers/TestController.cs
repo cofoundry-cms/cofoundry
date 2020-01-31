@@ -102,13 +102,15 @@ namespace Cofoundry.BasicTestSite
 
                 await _contentRepository
                     .CustomEntities()
-                    .GetByCustomEntityId(2)
-                    .AsRoutingInfoAsync();
+                    .Definitions()
+                    .GetByCode("MYCODEE")
+                    .AsSummaryAsync();
 
                 await _contentRepository
                     .CustomEntities()
-                    .GetById(2)
-                    .AsPageDetailsAsync();
+                    .DataModelSchemas()
+                    .GetByCustomEntityDefinitionCode("TESTYY")
+                    .AsDetailsAsync();
 
                 await scope.CompleteAsync();
             }

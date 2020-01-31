@@ -8,7 +8,9 @@ namespace Cofoundry.Domain
     public static class ContentRepositoryCustomEntityExtensions
     {
         /// <summary>
-        /// Queries and commands relating to custom entities.
+        /// Custom entities are a flexible system for developer defined
+        /// data structures which can be fully managed in the admin panel 
+        /// with minimal configuration.
         /// </summary>
         public static IContentRepositoryCustomEntityRepository CustomEntities(this IContentRepository contentRepository)
         {
@@ -16,7 +18,9 @@ namespace Cofoundry.Domain
         }
 
         /// <summary>
-        /// Queries and commands relating to custom entities.
+        /// Custom entities are a flexible system for developer defined
+        /// data structures which can be fully managed in the admin panel 
+        /// with minimal configuration.
         /// </summary>
         public static IAdvancedContentRepositoryCustomEntityRepository CustomEntities(this IAdvancedContentRepository contentRepository)
         {
