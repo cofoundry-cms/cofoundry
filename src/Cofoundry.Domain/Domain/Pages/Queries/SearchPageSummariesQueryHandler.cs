@@ -83,7 +83,11 @@ namespace Cofoundry.Domain
             if (!string.IsNullOrWhiteSpace(query.Text))
             {
                 var sluggedQuery = SlugFormatter.ToSlug(query.Text);
-                dbQuery = dbQuery.Where(p => p.Page.UrlPath.Contains(sluggedQuery) || p.PageVersion.Title.Contains(query.Text));
+                var textQuery = sluggedQuery.Replace("-", " ");
+
+                dbQuery = dbQuery.Where(p => 
+                    (p.Page.UrlPath.Contains(sluggedQuery) || (p.Page.UrlPath == string.Empty && p.Page.PageDirectory.UrlPath.Contains(sluggedQuery)))
+                    || p.PageVersion.Title.Contains(textQuery));
             }
 
             // Filter by workflow status (only draft and published are applicable
