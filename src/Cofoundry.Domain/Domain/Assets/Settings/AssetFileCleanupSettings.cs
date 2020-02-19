@@ -5,6 +5,11 @@ using System.Text;
 
 namespace Cofoundry.Domain
 {
+    /// <summary>
+    /// These settings control the background task that runs to clean up 
+    /// deleted asset files. Asset files are deleted as a background process 
+    /// to avoid file locking issues.
+    /// </summary>
     public class AssetFileCleanupSettings : CofoundryConfigurationSettingsBase
     {
         /// <summary>
@@ -24,7 +29,7 @@ namespace Cofoundry.Domain
         public int BatchSize { get; set; } = 60;
 
         /// <summary>
-        /// The number of minutes to stored data on completed items in
+        /// The number of minutes to store data on completed items in
         /// the queue.
         /// </summary>
         public int CompletedItemRetentionTimeInMinutes { get; set; } = 43200;
