@@ -244,7 +244,6 @@ function (
         vm.canDelete = getPermission('COMDEL');
         vm.canUpdate = getPermission('COMUPD');
         vm.canCreate = getPermission('COMCRT');
-        console.log(vm.canUpdate);
 
         // Init
         initData(vm.formLoadState);
