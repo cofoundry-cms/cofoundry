@@ -17,6 +17,6 @@ namespace Cofoundry.Domain
         /// be a single page for a custom entity (e.g. blog post details)
         /// but it is possible to have multiple.
         /// </summary>
-        Task<ICollection<PageRoute>> AsPageRoutesAsync();
+        Task<ICollection<PageRoute>> AsRoutesAsync();
     }
 }

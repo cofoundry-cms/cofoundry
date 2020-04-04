@@ -17,6 +17,6 @@ namespace Cofoundry.Domain
         /// default as it's core to routing and often incorporated in more detailed
         /// page projections.
         /// </summary>
-        Task<ICollection<PageRoute>> AsPageRoutesAsync();
+        Task<ICollection<PageRoute>> AsRoutesAsync();
     }
 }

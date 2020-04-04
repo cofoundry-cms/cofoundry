@@ -24,7 +24,7 @@ namespace Cofoundry.Domain
 
         public IExtendableContentRepository ExtendableContentRepository { get; }
 
-        public Task<IDictionary<int, PageRoute>> AsPageRoutesAsync()
+        public Task<IDictionary<int, PageRoute>> AsRoutesAsync()
         {
             var query = new GetPageRoutesByIdRangeQuery(_pageIds);
             return ExtendableContentRepository.ExecuteQueryAsync(query);

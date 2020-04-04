@@ -39,7 +39,7 @@ namespace Cofoundry.Domain
         public int? CustomEntityVersionId { get; set; }
 
         /// <summary>
-        /// PageId to use to determine which page to get data for. Although often you
+        /// PageId to use to determine which page to include data for. Although often you
         /// may only have one custom entity page, it is possible to have multiple. If a
         /// page with the specified id cannot be found then no page region data will be 
         /// included in the returned object.

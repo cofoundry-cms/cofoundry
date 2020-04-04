@@ -17,6 +17,30 @@ namespace Cofoundry.Domain
         /// and the PageDetails projection includes audit data and other additional 
         /// information that should normally be hidden from a customer facing app.
         /// </summary>
-        Task<PageDetails> AsPageDetailsAsync();
+        Task<PageDetails> AsDetailsAsync();
+
+        /// <summary>
+        /// Gets a specific version of a page (equivalent to using 
+        /// PublishStatusQuery.SpecificVersion), projected as a PageRenderSummary 
+        /// model, which is a lighter weight projection designed for rendering to a site 
+        /// when the templates, region and block data is not required. The result is 
+        /// version-sensitive and defaults to returning published versions only, but
+        /// this behavior can be controlled by the publishStatus query property.
+        /// </summary>
+        /// <param name="pageVersionId">
+        /// Use this to specify a specific version to return in the query.
+        /// </param>
+        Task<PageRenderSummary> AsRenderSummaryAsync(int pageVersionId);
+
+        /// <summary>
+        /// Gets a specific version of a page (equivalent to using 
+        /// PublishStatusQuery.SpecificVersion), projected as a model that 
+        /// contains all the data required to render a page, including template 
+        /// data for all the content-editable regions.
+        /// </summary>
+        /// <param name="pageVersionId">
+        /// Use this to specify a specific version to return in the query.
+        /// </param>
+        Task<PageRenderDetails> AsRenderDetailsAsync(int pageVersionId);
     }
 }

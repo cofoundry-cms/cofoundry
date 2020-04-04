@@ -95,10 +95,17 @@ namespace Cofoundry.Domain
             return _customEntityDefinitions.GetOrDefault(code);
         }
 
-
         public IEnumerable<ICustomEntityDefinition> GetAll()
         {
             return _customEntityDefinitions.Select(p => p.Value);
+        }
+
+        public ICustomEntityDefinition Get<TDefinition>()
+            where TDefinition : ICustomEntityDefinition
+        {
+            return _customEntityDefinitions
+                .Select(p => p.Value)
+                .FirstOrDefault(p => p is TDefinition);
         }
     }
 }

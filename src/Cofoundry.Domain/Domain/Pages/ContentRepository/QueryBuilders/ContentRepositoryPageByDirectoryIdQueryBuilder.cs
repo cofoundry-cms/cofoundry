@@ -23,7 +23,7 @@ namespace Cofoundry.Domain
 
         public IExtendableContentRepository ExtendableContentRepository { get; }
 
-        public Task<ICollection<PageRoute>> AsPageRoutesAsync()
+        public Task<ICollection<PageRoute>> AsRoutesAsync()
         {
             var query = new GetPageRoutesByPageDirectoryIdQuery(_pageDirectoryId);
             return ExtendableContentRepository.ExecuteQueryAsync(query);

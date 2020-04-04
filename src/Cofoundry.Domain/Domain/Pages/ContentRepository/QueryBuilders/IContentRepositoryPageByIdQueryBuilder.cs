@@ -17,7 +17,7 @@ namespace Cofoundry.Domain
         /// default as it's core to routing and often incorporated in more detailed
         /// page projections.
         /// </summary>
-        Task<PageRoute> AsPageRouteAsync();
+        Task<PageRoute> AsRouteAsync();
 
         /// <summary>
         /// Gets a page PageRenderSummary projection by id, which is
@@ -27,13 +27,13 @@ namespace Cofoundry.Domain
         /// this behavior can be controlled by the publishStatus query property.
         /// </summary>
         /// <param name="publishStatus">Used to determine which version of the page to include data for.</param>
-        Task<PageRenderSummary> AsPageRenderSummaryAsync(PublishStatusQuery? publishStatus = null);
+        Task<PageRenderSummary> AsRenderSummaryAsync(PublishStatusQuery? publishStatus = null);
 
         /// <summary>
         /// Gets a projection of a page that contains the data required to render a 
         /// page, including template data for all the content-editable regions.
         /// </summary>
         /// <param name="publishStatus">Used to determine which version of the page to include data for.</param>
-        Task<PageRenderDetails> AsPageRenderDetailsAsync(PublishStatusQuery? publishStatus = null);
+        Task<PageRenderDetails> AsRenderDetailsAsync(PublishStatusQuery? publishStatus = null);
     }
 }

@@ -13,7 +13,7 @@ namespace Cofoundry.Domain
     /// Gets a custom entity by it's database id, returning a 
     /// general-purpose CustomEntityRenderSummary projection which
     /// includes version specific data and a deserialized data model. 
-    /// The result is  version-sensitive and defaults to returning published 
+    /// The result is version-sensitive and defaults to returning published 
     /// versions only, but this behavior can be controlled by the 
     /// publishStatus query property.
     /// </summary>
@@ -38,11 +38,14 @@ namespace Cofoundry.Domain
         /// publishStatus query property.
         /// </summary>
         /// <param name="customEntityId">CustomEntityId of the custom entity to get.</param>
-        /// <param name="publishStatus">Used to determine which version of the page to include data for.</param>
-        public GetCustomEntityRenderSummaryByIdQuery(int customEntityId, PublishStatusQuery workFlowStatus = PublishStatusQuery.Published)
+        /// <param name="publishStatusQuery">Used to determine which version of the custom entity to include data for.</param>
+        public GetCustomEntityRenderSummaryByIdQuery(int customEntityId, PublishStatusQuery? publishStatusQuery)
         {
             CustomEntityId = customEntityId;
-            PublishStatus = workFlowStatus;
+            if (publishStatusQuery.HasValue)
+            {
+                PublishStatus = publishStatusQuery.Value;
+            }
         }
 
         /// <summary>

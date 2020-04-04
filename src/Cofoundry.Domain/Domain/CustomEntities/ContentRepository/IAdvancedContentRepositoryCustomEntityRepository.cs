@@ -15,15 +15,26 @@ namespace Cofoundry.Domain
         #region queries
 
         /// <summary>
-        /// Retrieve all pages in one query.
+        /// Retrieve all custom entities of a type in one query.
         /// </summary>
-        IContentRepositoryPageGetAllQueryBuilder GetAll();
+        /// <param name="customEntityDefinitionCode">
+        /// The code identifier for the custom entity type
+        /// to query for.
+        /// </param>
+        IContentRepositoryCustomEntityGetAllQueryBuilder GetAll(string customEntityDefinitionCode);
 
         /// <summary>
-        /// Retieve a page by a unique database id.
+        /// Retrieve all custom entities of a type in one query.
         /// </summary>
-        /// <param name="pageId">PageId of the page to get.</param>
-        IAdvancedContentRepositoryPageByIdQueryBuilder GetById(int imageAssetId);
+        /// <typeparam name="TDefinition">The definition type to fetch custom entities for.</typeparam>
+        IContentRepositoryCustomEntityGetAllQueryBuilder GetAll<TDefinition>() where TDefinition : ICustomEntityDefinition;
+
+
+        /// <summary>
+        /// Retieve a custom entity by its unique database id.
+        /// </summary>
+        /// <param name="customEntityId">Id of the custom entity to get.</param>
+        IAdvancedContentRepositoryCustomEntityByIdQueryBuilder GetById(int customEntityId);
 
         /// <summary>
         /// Retieve a set of pages using a batch of database ids.
@@ -31,55 +42,20 @@ namespace Cofoundry.Domain
         /// ordering the results e.g. results.FilterAndOrderByKeys(ids).
         /// </summary>
         /// <param name="pageIds">Range of PageIds of the pages to get.</param>
-        IAdvancedContentRepositoryPageByIdRangeQueryBuilder GetByIdRange(IEnumerable<int> imageAssetIds);
-
-        /// <summary>
-        /// Retieve a page for a specific path.
-        /// </summary>
-        IContentRepositoryPageByPathQueryBuilder GetByPath();
-
-        /// <summary>
-        /// Retieve data for "not found" (404) pages.
-        /// </summary>
-        IAdvancedContentRepositoryPageNotFoundQueryBuilder NotFound();
+        IAdvancedContentRepositoryCustomEntityByIdRangeQueryBuilder GetByIdRange(IEnumerable<int> pageIds);
 
         /// <summary>
         /// Search for page entities, returning paged lists of data.
         /// </summary>
-        IAdvancedContentRepositoryPageSearchQueryBuilder Search();
+        IAdvancedContentRepositoryCustomEntitySearchQueryBuilder Search();
 
         /// <summary>
-        /// Retrieve custom entity page data for a single custom 
-        /// entity type.
+        /// Determines if the UrlSlug property for a custom entity is invalid because it
+        /// already exists. If the custom entity defition has ForceUrlSlugUniqueness 
+        /// set to true then duplicates are not permitted, otherwise true will always
+        /// be returned.
         /// </summary>
-        /// <param name="customEntityDefinitionCode">6 character CustomEntityDefinitionCode to query pages with.</param>
-        IAdvancedContentRepositoryPageByCustomEntityDefinitionCodeQueryBuilder GetByCustomEntityDefinitionCode(string customEntityDefinitionCode);
-
-        /// <summary>
-        /// Retrieve custom entity page data for a custom entity id.
-        /// </summary>
-        /// <param name="customEntityId">CustomEntityId to query pages with.</param>
-        IAdvancedContentRepositoryPageByCustomEntityIdQueryBuilder GetByCustomEntityId(int customEntityId);
-
-        /// <summary>
-        /// Retrieve custom entity page data for a set of custom 
-        /// entity ids.
-        /// </summary>
-        /// <param name="customEntityIds">Range of CustomEntityIds to query pages with.</param>
-        IAdvancedContentRepositoryPageByCustomEntityIdRangeQueryBuilder GetByCustomEntityIdRange(IEnumerable<int> customEntityIds);
-
-        /// <summary>
-        /// Retrieve page data nested immediately inside a specific directory.
-        /// </summary>
-        /// <param name="directoryId">DirectoryId to query for pages with.</param>
-        IContentRepositoryPageByDirectoryIdQueryBuilder GetByDirectoryId(int customEntityId);
-
-        /// <summary>
-        /// Determines if a page path already exists. Page paths are made
-        /// up of a locale, directory and url path; duplicates are not permitted.
-        /// </summary>
-        /// <param name="query">Query parameters.</param>
-        Task<bool> IsPathUniqueAsync(IsPagePathUniqueQuery query);
+        Task<bool> IsUrlSlugUniqueAsync(IsCustomEntityUrlSlugUniqueQuery query);
 
         #endregion
 

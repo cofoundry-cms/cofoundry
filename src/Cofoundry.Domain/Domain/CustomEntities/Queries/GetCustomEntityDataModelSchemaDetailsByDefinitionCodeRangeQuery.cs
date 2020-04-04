@@ -25,11 +25,11 @@ namespace Cofoundry.Domain
         /// Query to extract and return meta data information about a custom 
         /// entity data model for a range of custom entity definitions.
         /// </summary>
-        /// <param name="customEntityDefinitioCodes">Range of definition codes to query (the unique 6 letter code representing the entity).</param>
+        /// <param name="customEntityDefinitionCodes">Range of definition codes to query (the unique 6 letter code representing the entity).</param>
         public GetCustomEntityDataModelSchemaDetailsByDefinitionCodeRangeQuery(
-            IEnumerable<string> customEntityDefinitioCodes
+            IEnumerable<string> customEntityDefinitionCodes
             )
-            : this(customEntityDefinitioCodes?.ToList())
+            : this(customEntityDefinitionCodes?.ToList())
         {
         }
 

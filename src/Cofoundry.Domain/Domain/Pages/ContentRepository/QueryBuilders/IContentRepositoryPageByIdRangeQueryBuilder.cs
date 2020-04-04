@@ -19,7 +19,7 @@ namespace Cofoundry.Domain
         /// default as it's core to routing and often incorporated in more detailed
         /// page projections.
         /// </summary>
-        Task<IDictionary<int, PageRoute>> AsPageRoutesAsync();
+        Task<IDictionary<int, PageRoute>> AsRoutesAsync();
 
         /// <summary>
         /// Gets a range of pages by a set of id, projected as a PageRenderSummary, which is
