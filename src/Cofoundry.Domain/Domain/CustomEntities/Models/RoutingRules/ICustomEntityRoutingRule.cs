@@ -8,8 +8,10 @@ using Cofoundry.Domain.CQS;
 namespace Cofoundry.Domain
 {
     /// <summary>
-    /// Represents a dynamic routing rule that can be used to work out which custom entity should be 
-    /// displayed in a custom entity details page.
+    /// Custom entity routing rules respresent the dynamic routing 
+    /// rules used to work out which custom  entity should be displayed 
+    /// in a custom entity details page. E.g. a rule with a format of
+    /// "{Id}/{UrlSlug}" uses those parameters to identify a custom entity.
     /// </summary>
     public interface ICustomEntityRoutingRule
     {

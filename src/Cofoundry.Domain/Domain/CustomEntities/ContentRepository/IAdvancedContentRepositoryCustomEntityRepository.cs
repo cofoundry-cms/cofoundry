@@ -1,6 +1,4 @@
-﻿using Cofoundry.Domain.CQS;
-using Cofoundry.Domain.Extendable;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
@@ -156,6 +154,14 @@ namespace Cofoundry.Domain
         /// generated parts of the UI e.g. edit forms and lists.
         /// </summary>
         IAdvancedContentRepositoryCustomEntityDataModelSchemasRepository DataModelSchemas();
+
+        /// <summary>
+        /// Custom entity routing rules respresent the dynamic routing 
+        /// rules used to work out which custom  entity should be displayed 
+        /// in a custom entity details page. E.g. a rule with a format of
+        /// "{Id}/{UrlSlug}" uses those parameters to identify a custom entity.
+        /// </summary>
+        IAdvancedContentRepositoryCustomEntityRoutingRulesRepository RoutingRules();
 
         #endregion
     }
