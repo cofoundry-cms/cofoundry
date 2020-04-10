@@ -72,13 +72,5 @@ namespace Cofoundry.Domain
 
             return ExtendableContentRepository.ExecuteQueryAsync(query);
         }
-
-        // TODO: YAH
-
-        public Task<PageRoute> AsRouteAsync()
-        {
-            // TODO: This is probably not required? Is there an exquivalent?
-            throw new NotImplementedException();
-        }
     }
 }

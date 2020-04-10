@@ -46,6 +46,8 @@ namespace Cofoundry.Domain
         /// </summary>
         IContentRepositoryCustomEntitySearchQueryBuilder Search();
 
+        // TODO: GetCustomEntityRouteByPathQuery
+
         #endregion
 
         #region child entities

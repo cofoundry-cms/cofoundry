@@ -140,6 +140,11 @@ namespace Cofoundry.Domain
             return new ContentRepositoryCustomEntityDataModelSchemasRepository(ExtendableContentRepository);
         }
 
+        public IAdvancedContentRepositoryCustomEntityRoutingRulesRepository RoutingRules()
+        {
+            return new ContentRepositoryCustomEntityRoutingRulesRepository(ExtendableContentRepository);
+        }
+
         #endregion
     }
 }
