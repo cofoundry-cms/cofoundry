@@ -55,6 +55,12 @@ namespace Cofoundry.Domain
         /// </summary>
         Task<bool> IsUrlSlugUniqueAsync(IsCustomEntityUrlSlugUniqueQuery query);
 
+        /// <summary>
+        /// Retrie custom entity page data by a url path/route. Note that this
+        /// is specific to custom entity pages.
+        /// </summary>
+        IAdvancedContentRepositoryCustomEntityByPathQueryBuilder GetByPath();
+
         #endregion
 
         #region commands

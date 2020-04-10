@@ -145,6 +145,11 @@ namespace Cofoundry.Domain
             return new ContentRepositoryCustomEntityRoutingRulesRepository(ExtendableContentRepository);
         }
 
+        public IAdvancedContentRepositoryCustomEntityByPathQueryBuilder GetByPath()
+        {
+            return new ContentRepositoryCustomEntityByPathQueryBuilder(ExtendableContentRepository);
+        }
+
         #endregion
     }
 }
