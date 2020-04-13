@@ -14,12 +14,21 @@ namespace Cofoundry.Domain
         /// Gets a custom entity by it's database id, returning a 
         /// general-purpose CustomEntityRenderSummary projection which
         /// includes version specific data and a deserialized data model. 
-        /// The result is version-sensitive and defaults to returning published 
-        /// versions only, but this behavior can be controlled by the 
-        /// publishStatusQuery parameter.
+        /// The result is version-sensitive, use the publishStatusQuery parameter
+        /// to control the version returned.
         /// </summary>
         /// <param name="publishStatusQuery">Used to determine which version of the custom entity to include data for.</param>
-        Task<CustomEntityRenderSummary> AsRenderSummaryAsync(PublishStatusQuery? publishStatusQuery = null);
+        Task<CustomEntityRenderSummary> AsRenderSummaryAsync(PublishStatusQuery publishStatusQuery);
+
+        /// <summary>
+        /// Gets a custom entity by it's database id, returning a 
+        /// general-purpose CustomEntityRenderSummary projection which
+        /// includes version specific data and a deserialized data model. 
+        /// The result is version-sensitive and defaults to returning published 
+        /// versions only, but you can use the overload with the publishStatusQuery 
+        /// parameter to control this behavior.
+        /// </summary>
+        Task<CustomEntityRenderSummary> AsRenderSummaryAsync();
 
         /// <summary>
         /// Gets a custom entity by it's database id, projected as a

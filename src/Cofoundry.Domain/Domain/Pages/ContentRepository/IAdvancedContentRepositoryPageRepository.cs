@@ -23,7 +23,7 @@ namespace Cofoundry.Domain
         /// Retieve a page by a unique database id.
         /// </summary>
         /// <param name="pageId">PageId of the page to get.</param>
-        IAdvancedContentRepositoryPageByIdQueryBuilder GetById(int imageAssetId);
+        IAdvancedContentRepositoryPageByIdQueryBuilder GetById(int pageId);
 
         /// <summary>
         /// Retieve a set of pages using a batch of database ids.

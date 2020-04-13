@@ -56,6 +56,11 @@ namespace Cofoundry.BasicTestSite
                     PageDirectoryId = 2
                 });
 
+            var page2 = await _contentRepository
+                .Pages()
+                .GetById(1)
+                .AsRenderSummaryAsync();
+
             // Perhaps NotFound should look like this:
             await _contentRepository
                 .Pages()
@@ -112,15 +117,24 @@ namespace Cofoundry.BasicTestSite
                     .GetByCustomEntityDefinitionCode("TESTYY")
                     .AsDetailsAsync();
 
-                // TODO: is it wierd that the overload for version comes up first?
                 await _contentRepository
                     .CustomEntities()
                     .GetById(1)
                     .AsRenderSummaryAsync();
 
+                var anonymousRole = await _contentRepository
+                    .Roles()
+                    .GetById(null)
+                    .AsDetailsAsync();
+
+                var permissions = await _contentRepository
+                    .Roles()
+                    .Permissions()
+                    .GetAll()
+                    .AsIPermissionAsync();
+
                 await scope.CompleteAsync();
             }
-
 
             return View();
         }

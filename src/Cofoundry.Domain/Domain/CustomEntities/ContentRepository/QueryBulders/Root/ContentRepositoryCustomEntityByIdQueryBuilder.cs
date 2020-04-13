@@ -24,9 +24,16 @@ namespace Cofoundry.Domain
 
         public IExtendableContentRepository ExtendableContentRepository { get; }
         
-        public Task<CustomEntityRenderSummary> AsRenderSummaryAsync(PublishStatusQuery? publishStatus = null)
+        public Task<CustomEntityRenderSummary> AsRenderSummaryAsync(PublishStatusQuery publishStatus)
         {
             var query = new GetCustomEntityRenderSummaryByIdQuery(_customEntityId, publishStatus);
+            return ExtendableContentRepository.ExecuteQueryAsync(query);
+        }
+
+        public Task<CustomEntityRenderSummary> AsRenderSummaryAsync()
+        {
+            var query = new GetCustomEntityRenderSummaryByIdQuery();
+            query.CustomEntityId = _customEntityId;
             return ExtendableContentRepository.ExecuteQueryAsync(query);
         }
 

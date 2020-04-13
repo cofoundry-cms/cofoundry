@@ -30,7 +30,13 @@ namespace Cofoundry.Domain
             return ExtendableContentRepository.ExecuteQueryAsync(query);
         }
 
-        public Task<PageRenderSummary> AsRenderSummaryAsync(PublishStatusQuery? publishStatus = null)
+        public Task<PageRenderSummary> AsRenderSummaryAsync()
+        {
+            var query = new GetPageRenderSummaryByIdQuery(_pageId);
+            return ExtendableContentRepository.ExecuteQueryAsync(query);
+        }
+
+        public Task<PageRenderSummary> AsRenderSummaryAsync(PublishStatusQuery publishStatus)
         {
             var query = new GetPageRenderSummaryByIdQuery(_pageId, publishStatus);
             return ExtendableContentRepository.ExecuteQueryAsync(query);
@@ -44,7 +50,13 @@ namespace Cofoundry.Domain
             return ExtendableContentRepository.ExecuteQueryAsync(query);
         }
 
-        public Task<PageRenderDetails> AsRenderDetailsAsync(PublishStatusQuery? publishStatus = null)
+        public Task<PageRenderDetails> AsRenderDetailsAsync()
+        {
+            var query = new GetPageRenderDetailsByIdQuery(_pageId);
+            return ExtendableContentRepository.ExecuteQueryAsync(query);
+        }
+
+        public Task<PageRenderDetails> AsRenderDetailsAsync(PublishStatusQuery publishStatus)
         {
             var query = new GetPageRenderDetailsByIdQuery(_pageId, publishStatus);
             return ExtendableContentRepository.ExecuteQueryAsync(query);

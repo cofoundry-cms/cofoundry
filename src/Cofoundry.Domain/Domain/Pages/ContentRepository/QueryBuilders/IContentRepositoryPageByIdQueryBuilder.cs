@@ -23,17 +23,38 @@ namespace Cofoundry.Domain
         /// Gets a page PageRenderSummary projection by id, which is
         /// a lighter weight projection designed for rendering to a site when the 
         /// templates, region and block data is not required. The result is 
-        /// version-sensitive and defaults to returning published versions only, but
-        /// this behavior can be controlled by the publishStatus query property.
+        /// version-sensitive and defaults to returning published 
+        /// versions only, but you can use the overload with the publishStatusQuery 
+        /// parameter to control this behavior.
         /// </summary>
-        /// <param name="publishStatus">Used to determine which version of the page to include data for.</param>
-        Task<PageRenderSummary> AsRenderSummaryAsync(PublishStatusQuery? publishStatus = null);
+        Task<PageRenderSummary> AsRenderSummaryAsync();
+
+        /// <summary>
+        /// Gets a page PageRenderSummary projection by id, which is
+        /// a lighter weight projection designed for rendering to a site when the 
+        /// templates, region and block data is not required. 
+        /// The result is version-sensitive, use the publishStatusQuery parameter
+        /// to control the version returned.
+        /// </summary>
+        /// <param name="publishStatusQuery">Used to determine which version of the page to include data for.</param>
+        Task<PageRenderSummary> AsRenderSummaryAsync(PublishStatusQuery publishStatusQuery);
 
         /// <summary>
         /// Gets a projection of a page that contains the data required to render a 
         /// page, including template data for all the content-editable regions.
+        /// The result is version-sensitive and defaults to returning published 
+        /// versions only, but you can use the overload with the publishStatusQuery 
+        /// parameter to control this behavior.
         /// </summary>
-        /// <param name="publishStatus">Used to determine which version of the page to include data for.</param>
-        Task<PageRenderDetails> AsRenderDetailsAsync(PublishStatusQuery? publishStatus = null);
+        Task<PageRenderDetails> AsRenderDetailsAsync();
+
+        /// <summary>
+        /// Gets a projection of a page that contains the data required to render a 
+        /// page, including template data for all the content-editable regions.
+        /// The result is version-sensitive, use the publishStatusQuery parameter
+        /// to control the version returned.
+        /// </summary>
+        /// <param name="publishStatusQuery">Used to determine which version of the page to include data for.</param>
+        Task<PageRenderDetails> AsRenderDetailsAsync(PublishStatusQuery publishStatusQuery);
     }
 }

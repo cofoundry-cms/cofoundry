@@ -9,7 +9,8 @@ using Cofoundry.Core.Validation;
 namespace Cofoundry.Domain
 {
     /// <summary>
-    /// Deletes a role with the specified database id.
+    /// Deletes a role with the specified database id. Roles cannot be
+    /// deleted if assigned to users.
     /// </summary>
     public class DeleteRoleCommand : ICommand, ILoggableCommand
     {

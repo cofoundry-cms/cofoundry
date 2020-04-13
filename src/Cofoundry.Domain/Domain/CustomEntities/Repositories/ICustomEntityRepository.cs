@@ -9,6 +9,7 @@ namespace Cofoundry.Domain
     /// Simple facade over custom entity data access queries/commands to them more discoverable
     /// in implementations.
     /// </summary>
+    [Obsolete("Use the new IContentRepository instead.")]
     public interface ICustomEntityRepository
     {
         #region queries
