@@ -11,6 +11,7 @@ namespace Cofoundry.Domain
     /// Simple facade over rewrite rule data access queries/commands to them more discoverable
     /// in implementations.
     /// </summary>
+    [Obsolete("Use the new IContentRepository instead.")]
     public class RewriteRuleRepository : IRewriteRuleRepository
     {
         #region constructor

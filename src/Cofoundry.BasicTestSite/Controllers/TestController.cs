@@ -133,6 +133,12 @@ namespace Cofoundry.BasicTestSite
                     .GetAll()
                     .AsIPermissionAsync();
 
+                var directoryTree = await _contentRepository
+                    .PageDirectories()
+                    .GetAll()
+                    .AsTreeAsync();
+
+
                 await scope.CompleteAsync();
             }
 
