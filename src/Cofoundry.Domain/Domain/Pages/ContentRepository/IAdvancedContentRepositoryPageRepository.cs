@@ -137,7 +137,10 @@ namespace Cofoundry.Domain
         #region child entities
 
         /// <summary>
-        /// Command and queries for working with page versions.
+        /// Pages are a versioned entity and therefore have many page version
+        /// records. At one time a page may only have one draft version, but
+        /// can have many published versions; the latest published version is
+        /// the one that is rendered when the page is published. 
         /// </summary>
         IAdvancedContentRepositoryPageVersionsRepository Versions();
 

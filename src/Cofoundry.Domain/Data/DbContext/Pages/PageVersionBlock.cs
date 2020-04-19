@@ -5,7 +5,8 @@ namespace Cofoundry.Domain.Data
 {
     /// <summary>
     /// Page block data for a specific page version. Each page block appears 
-    /// in a template region.
+    /// in a template region. The data and rendering of each block is controlled 
+    /// by the page block type assigned to it.
     /// </summary>
     public partial class PageVersionBlock : ICreateAuditable, IEntityVersionPageBlock
     {

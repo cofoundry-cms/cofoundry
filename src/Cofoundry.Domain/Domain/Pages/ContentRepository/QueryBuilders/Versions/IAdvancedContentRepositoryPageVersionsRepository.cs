@@ -55,7 +55,10 @@ namespace Cofoundry.Domain
         #region child entities
 
         /// <summary>
-        /// Queries and commands for regions in page.
+        /// Each PageTemplate can have zero or more regions which are defined in the 
+        /// template file using the CofoundryTemplate helper, 
+        /// e.g. @Cofoundry.Template.Region("MyRegionName"). These regions represent
+        /// areas where page blocks can be placed (i.e. insert content).
         /// </summary>
         IAdvancedContentRepositoryPageRegionsRepository Regions();
 

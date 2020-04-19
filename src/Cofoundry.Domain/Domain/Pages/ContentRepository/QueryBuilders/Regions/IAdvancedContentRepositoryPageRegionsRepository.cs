@@ -17,7 +17,9 @@ namespace Cofoundry.Domain
         IAdvancedContentRepositoryPageRegionByPageVersionIdQueryBuilder GetByPageVersionId(int pageVersionId);
 
         /// <summary>
-        /// Queries and commands for page version block data.
+        /// Each page region can contain one or more blocks of content. The data
+        /// and rendering of each block is controlled by the page block type 
+        /// assigned to it.
         /// </summary>
         IAdvancedContentRepositoryPageBlocksRepository Blocks();
     }
