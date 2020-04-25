@@ -138,6 +138,10 @@ namespace Cofoundry.BasicTestSite
                     .GetAll()
                     .AsTreeAsync();
 
+                var rewriteRules = await _contentRepository
+                    .RewriteRules()
+                    .GetAll()
+                    .AsSummariesAsync();
 
                 await scope.CompleteAsync();
             }
