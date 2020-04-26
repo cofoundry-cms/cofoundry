@@ -1,4 +1,7 @@
-﻿using Cofoundry.Domain;
+﻿using Cofoundry.Core.Data;
+using Cofoundry.Core.Mail;
+using Cofoundry.Domain;
+using Cofoundry.Domain.CQS;
 using Cofoundry.Web.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -13,17 +16,29 @@ namespace Cofoundry.Samples.UserAreas
     {
         private readonly IAuthenticationControllerHelper<PartnerUserAreaDefinition> _authenticationControllerHelper;
         private readonly IUserContextService _userContextService;
+        private readonly IContentRepository _contentRepository;
         private readonly IUserRepository _userRepository;
+        private readonly IRoleRepository _roleRepository;
+        private readonly IExecutionContextFactory _executionContextFactory;
+        private readonly IMailService _mailService;
 
         public CustomerAuthController(
             IAuthenticationControllerHelper<PartnerUserAreaDefinition> authenticationControllerHelper,
             IUserContextService userContextService,
-            IUserRepository userRepository
+            IContentRepository contentRepository,
+            IUserRepository userRepository,
+            IRoleRepository roleRepository,
+            IExecutionContextFactory executionContextFactory,
+            IMailService mailService
             )
         {
             _authenticationControllerHelper = authenticationControllerHelper;
             _userContextService = userContextService;
+            _contentRepository = contentRepository;
             _userRepository = userRepository;
+            _roleRepository = roleRepository;
+            _executionContextFactory = executionContextFactory;
+            _mailService = mailService;
         }
 
         [Route("")]
@@ -40,20 +55,79 @@ namespace Cofoundry.Samples.UserAreas
             var user = await _userContextService.GetCurrentContextByUserAreaAsync(PartnerUserAreaDefinition.Code);
             if (user.IsLoggedIn()) return GetLoggedInDefaultRedirectAction();
 
-            // If you need to customize the model you can create your own 
-            // that implements ILoginViewModel
-            var viewModel = new LoginViewModel();
+            var viewModel = new RegisterNewUserViewModel();
 
             return View(viewModel);
         }
 
         [HttpPost("register")]
-        public async Task<IActionResult> Register(LoginViewModel viewModel)
+        public async Task<IActionResult> Register(RegisterNewUserViewModel viewModel)
         {
-            throw new NotImplementedException();
+            // TODO: yah: pull in content repository code and improve this,
+            dynamic _contentApi = new object();
+            dynamic contentRepository = new object();
 
-            // TODO: register new user and send email verification/ welcome notification
-            
+            var user = await _userContextService.GetCurrentContextByUserAreaAsync(PartnerUserAreaDefinition.Code);
+            if (user.IsLoggedIn())
+            {
+                ModelState.AddModelError(string.Empty, "You cannot register because you are already logged in.");
+            }
+
+            if (!ModelState.IsValid) return View(viewModel);
+
+            var addUserCommand = new AddUserCommand()
+            {
+                Email = viewModel.Email,
+                Password = viewModel.Password,
+                RoleCode = CustomerRoleDefinition.Code,
+                UserAreaCode = CustomerUserAreaDefinition.Code
+                // DisplayName = 
+            };
+
+            // Because we're not logged in, we'll need to elevate permissions to 
+            // add a new user account. IExecutionContextFactory can be used to get 
+            // an execution context for the system user, which we then use to
+            // execute the command.
+            var systemExecutionContext = await _executionContextFactory.CreateSystemUserExecutionContextAsync();
+
+            var role = contentRepository
+                .Roles()
+                .GetByCode("myRole");
+
+
+            //var isUnique = await _contentRepository
+            //        .Users()
+            //        .IsUsernameUniqueAsync("");
+
+
+            using (var scope = _contentApi.Transactions.Create())
+            {
+                await _contentRepository
+                    .ElevatePermissions()
+                    .Users()
+                    .AddAsync(addUserCommand);
+
+                await contentRepository
+                    .WithElevatedPermissions()
+                    .WithExecutionContext()
+                    .Users()
+                    .AddAsync(addUserCommand);
+
+                scope.Complete();
+            }
+
+            // TODO
+            var welcomeEmailTemplate = new NewUserWelcomeMailTemplate()
+            {
+                DisplayName = "TODO",
+                EmailVerificationUrl = "TODO"
+            };
+
+            await _mailService.SendAsync(viewModel.Email, welcomeEmailTemplate);
+            //}
+            //await _loginService.LogAuthenticatedUserInAsync(addUserCommand.UserAreaCode, addUserCommand.OutputUserId, true);
+
+
             return View(viewModel);
         }
 

@@ -15,13 +15,13 @@ namespace Cofoundry.Domain.CQS
     public interface ICommandExecutor
     {
         /// <summary>
-        /// Handles the execution the specified command.
+        /// Handles the execution of the specified command.
         /// </summary>
         /// <param name="command">Command to execute.</param>
         Task ExecuteAsync(ICommand command);
 
         /// <summary>
-        /// Handles the execution the specified command.
+        /// Handles the execution of the specified command.
         /// </summary>
         /// <param name="command">Command to execute.</param>
         /// <param name="executionContext">
@@ -31,7 +31,7 @@ namespace Cofoundry.Domain.CQS
         Task ExecuteAsync(ICommand command, IExecutionContext executionContext);
 
         /// <summary>
-        /// Handles the execution the specified command.
+        /// Handles the execution of the specified command.
         /// </summary>
         /// <param name="command">Command to execute.</param>
         /// <param name="userContext">

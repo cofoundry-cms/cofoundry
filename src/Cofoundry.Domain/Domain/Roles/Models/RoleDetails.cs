@@ -34,8 +34,8 @@ namespace Cofoundry.Domain
         public bool IsAnonymousRole { get; set; }
 
         /// <summary>
-        /// The specialist role type code is a unique three letter code that
-        /// can be used to reference the role programatically. The code must be unique
+        /// The role code is a unique three letter code that can be used to 
+        /// reference the role programatically. The code must be unique
         /// and convention is to use upper case, although code matching is case insensitive.
         /// This is only used by roles defined in code using IRoleDefinition.
         /// </summary>

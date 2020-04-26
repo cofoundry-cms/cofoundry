@@ -18,7 +18,7 @@ namespace Cofoundry.Domain
     /// explicitly and shouldn't allow any possible injection of passwords or
     /// user areas.
     /// </remarks>
-    public sealed class AddUserCommand : ICommand, ILoggableCommand
+    public sealed class AddUserCommand : ICommand, ILoggableCommand, IValidatableObject
     {
         /// <summary>
         /// The first name is not required.
@@ -74,12 +74,20 @@ namespace Cofoundry.Domain
         public string UserAreaCode { get; set; }
 
         /// <summary>
-        /// The role that this user is assigned to. The role is required and
-        /// determines the permissions available to the user.
+        /// The id of the role that this user is assigned to. Either the
+        /// RoleId or RoleCode property must be filled in, but not both. The 
+        /// role is required and determines the permissions available to the user. 
         /// </summary>
-        [Required]
         [PositiveInteger]
-        public int RoleId { get; set; }
+        public int? RoleId { get; set; }
+
+        /// <summary>
+        /// The code for the role that this user is assigned to. Either the
+        /// RoleId or RoleCode property must be filled in, but not both. The 
+        /// role is required and determines the permissions available to the user.
+        /// </summary>
+        [StringLength(3)]
+        public string RoleCode { get; set; }
 
         #region Output
 
@@ -89,6 +97,23 @@ namespace Cofoundry.Domain
         /// </summary>
         [OutputValue]
         public int OutputUserId { get; set; }
+
+        #endregion
+
+        #region IValidatableObject
+
+        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        {
+            if (string.IsNullOrWhiteSpace(RoleCode) && !RoleId.HasValue)
+            {
+                yield return new ValidationResult("Either a role id or role code must be defined.", new string[] { nameof(RoleId) });
+            }
+
+            if (!string.IsNullOrWhiteSpace(RoleCode) && RoleId.HasValue)
+            {
+                yield return new ValidationResult("Either a role id or role code must be defined, not both.", new string[] { nameof(RoleId) });
+            }
+        }
 
         #endregion
     }

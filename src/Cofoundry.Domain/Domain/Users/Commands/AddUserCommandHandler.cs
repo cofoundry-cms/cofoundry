@@ -9,6 +9,7 @@ using Cofoundry.Domain.CQS;
 using Cofoundry.Core.Validation;
 using Cofoundry.Core.Mail;
 using Cofoundry.Domain.Internal;
+using Cofoundry.Core;
 
 namespace Cofoundry.Domain
 {
@@ -60,13 +61,42 @@ namespace Cofoundry.Domain
             ValidateCommand(command, userArea);
             var isUnique = await _queryExecutor.ExecuteAsync(GetUniqueQuery(command, userArea), executionContext);
             ValidateIsUnique(isUnique, userArea);
+            var newRole = await GetNewRole(command, executionContext);
 
-            var newRole = await _userCommandPermissionsHelper.GetAndValidateNewRoleAsync(command.RoleId, null, command.UserAreaCode, executionContext);
+            await _userCommandPermissionsHelper.ValidateNewRoleAsync(newRole, null, command.UserAreaCode, executionContext);
 
             var user = MapAndAddUser(command, executionContext, newRole, userArea, dbUserArea);
             await _dbContext.SaveChangesAsync();
 
             command.OutputUserId = user.UserId;
+        }
+
+        private async Task<Role> GetNewRole(AddUserCommand command, IExecutionContext executionContext)
+        {
+            Role role;
+
+            if (command.RoleId.HasValue)
+            {
+                role = await _dbContext
+                  .Roles
+                  .FilterById(command.RoleId.Value)
+                  .SingleOrDefaultAsync();
+
+                EntityNotFoundException.ThrowIfNull(role, command.RoleId.Value);
+            }
+            else
+            {
+                role = await _dbContext
+                  .Roles
+                  .FilterByRoleCode(command.RoleCode)
+                  .SingleOrDefaultAsync();
+
+                EntityNotFoundException.ThrowIfNull(role, command.RoleCode);
+            }
+
+            await _userCommandPermissionsHelper.ValidateNewRoleAsync(role, null, command.UserAreaCode, executionContext);
+
+            return role;
         }
 
         /// <summary>
@@ -187,13 +217,6 @@ namespace Cofoundry.Domain
             query.UserAreaCode = command.UserAreaCode;
 
             return query;
-        }
-
-        private IQueryable<Role> QueryRole(AddUserCommand command)
-        {
-            return _dbContext
-                .Roles
-                .FilterById(command.RoleId);
         }
 
         #region Permission

@@ -52,7 +52,7 @@ namespace Cofoundry.Domain.CQS
         #endregion
         
         /// <summary>
-        /// Handles the execution the specified command.
+        /// Handles the execution of the specified command.
         /// </summary>
         /// <param name="command">Command to execute.</param>
         public Task ExecuteAsync(ICommand command)
@@ -63,7 +63,7 @@ namespace Cofoundry.Domain.CQS
         }
 
         /// <summary>
-        /// Handles the execution the specified command.
+        /// Handles the execution of the specified command.
         /// </summary>
         /// <param name="command">Command to execute.</param>
         /// <param name="executionContext">
@@ -87,7 +87,7 @@ namespace Cofoundry.Domain.CQS
         }
 
         /// <summary>
-        /// Handles the execution the specified command.
+        /// Handles the execution of the specified command.
         /// </summary>
         /// <param name="command">Command to execute.</param>
         /// <param name="userContext">

@@ -33,18 +33,17 @@ namespace Cofoundry.Domain.Internal
 
         #region public methods
 
-        public async Task<Role> GetAndValidateNewRoleAsync(int newRoleId, int? oldRoleId, string userAreaCode, IExecutionContext executionContext)
+        public async Task ValidateNewRoleAsync(Role newRole, int? oldRoleId, string userAreaCode, IExecutionContext executionContext)
         {
-            var executorRole = await GetExecutorRoleAsync(executionContext);
+            if (newRole == null) throw new ArgumentNullException(nameof(newRole));
+            if (userAreaCode == null) throw new ArgumentNullException(nameof(userAreaCode));
+            if (executionContext == null) throw new ArgumentNullException(nameof(executionContext));
 
-            var newRole = await QueryRole(newRoleId).SingleOrDefaultAsync();
+            var executorRole = await GetExecutorRoleAsync(executionContext);
             
-            EntityNotFoundException.ThrowIfNull(newRole, newRoleId);
             ValidateRole(userAreaCode, newRole, executorRole);
 
             await ValidateDeAssignmentAsync(oldRoleId, newRole, executorRole);
-
-            return newRole;
         }
 
         public async Task<RoleDetails> GetExecutorRoleAsync(IExecutionContext executionContext)
@@ -91,19 +90,16 @@ namespace Cofoundry.Domain.Internal
                 && !executorRole.IsSuperAdministrator
                 && newUserRole.RoleCode != SuperAdminRole.SuperAdminRoleCode)
             {
-                var oldRole = await QueryRole(oldRoleId.Value).SingleOrDefaultAsync();
+                var oldRole = await _dbContext
+                    .Roles
+                    .FilterById(oldRoleId.Value)
+                    .SingleOrDefaultAsync();
+
                 if (oldRole.RoleCode == SuperAdminRole.SuperAdminRoleCode)
                 {
                     throw new NotPermittedException("Only Super Administrator users can de-assign the Super Administrator role");
                 }
             }
-        }
-
-        private IQueryable<Role> QueryRole(int roleId)
-        {
-            return _dbContext
-                .Roles
-                .FilterById(roleId);
         }
 
         #endregion

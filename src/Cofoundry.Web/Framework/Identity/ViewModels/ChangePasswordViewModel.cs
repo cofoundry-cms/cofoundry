@@ -28,7 +28,7 @@ namespace Cofoundry.Web.Identity
         [Display(Name = "Confirm new password")]
         [StringLength(300, MinimumLength = 8)]
         [DataType(DataType.Password)]
-        [Compare("NewPassword", ErrorMessage = "Password does not match")]
+        [Compare(nameof(NewPassword), ErrorMessage = "Password does not match")]
         public string ConfirmNewPassword { get; set; }
     }
 }

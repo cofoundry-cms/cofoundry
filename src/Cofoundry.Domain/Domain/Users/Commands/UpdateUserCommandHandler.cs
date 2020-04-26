@@ -61,12 +61,20 @@ namespace Cofoundry.Domain
             // Role
             if (command.RoleId != user.RoleId)
             {
-                user.Role = await _userCommandPermissionsHelper.GetAndValidateNewRoleAsync(
-                    command.RoleId,
+                var newRole = await _dbContext
+                    .Roles
+                    .FilterById(command.RoleId)
+                    .SingleOrDefaultAsync();
+                EntityNotFoundException.ThrowIfNull(newRole, command.RoleId);
+
+                await _userCommandPermissionsHelper.ValidateNewRoleAsync(
+                    newRole,
                     user.RoleId,
                     user.UserAreaCode, 
                     executionContext
                     );
+
+                user.Role = newRole;
             }
             
             // Map
