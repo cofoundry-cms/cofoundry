@@ -28,7 +28,8 @@ namespace Cofoundry.Domain
         /// thrown if there is already a draft version.
         /// </summary>
         /// <param name="command">Command parameters.</param>
-        Task AddDraftAsync(AddCustomEntityDraftVersionCommand command);
+        /// <returns>Id of the newly created draft version.</returns>
+        Task<int> AddDraftAsync(AddCustomEntityDraftVersionCommand command);
 
         /// <summary>
         /// Updates the draft version of a custom entity. If a draft version

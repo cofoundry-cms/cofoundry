@@ -40,9 +40,10 @@ namespace Cofoundry.Domain
 
         #region commands
 
-        public Task AddAsync(AddPageDirectoryCommand command)
+        public async Task<int> AddAsync(AddPageDirectoryCommand command)
         {
-            return ExtendableContentRepository.ExecuteCommandAsync(command);
+            await ExtendableContentRepository.ExecuteCommandAsync(command);
+            return command.OutputPageDirectoryId;
         }
 
         public Task UpdateAsync(UpdatePageDirectoryCommand command)

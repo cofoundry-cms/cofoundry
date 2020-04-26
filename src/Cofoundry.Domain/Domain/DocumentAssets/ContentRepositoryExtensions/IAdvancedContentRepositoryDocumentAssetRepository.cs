@@ -39,7 +39,8 @@ namespace Cofoundry.Domain
         /// Adds a new document asset.
         /// </summary>
         /// <param name="command">Command parameters.</param>
-        Task AddAsync(AddDocumentAssetCommand command);
+        /// <returns>Id of the newly created document asset.</returns>
+        Task<int> AddAsync(AddDocumentAssetCommand command);
 
         /// <summary>
         /// Updates the properties of an existing document asset. Updating

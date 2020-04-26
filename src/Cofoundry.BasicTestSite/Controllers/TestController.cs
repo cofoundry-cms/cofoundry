@@ -3,7 +3,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Cofoundry.Domain.Data;
 using Cofoundry.Domain;
 
 namespace Cofoundry.BasicTestSite
@@ -89,43 +88,47 @@ namespace Cofoundry.BasicTestSite
                     Username = "test@cofoundry.org"
                 });
 
+            int userId;
+
             using (var scope = _contentRepository.Transactions().CreateScope())
             {
-                await _contentRepository
+                var adminRole = await _contentRepository
+                    .Roles()
+                    .GetByCode(SuperAdminRole.SuperAdminRoleCode)
+                    .AsDetailsAsync();
+
+                userId = await _contentRepository
                     .WithElevatedPermissions()
                     .Users()
                     .AddAsync(new AddUserCommand()
                     {
-                        Email = "test@cofoundry.org",
-                        Password = "badpassword"
+                        Email = Guid.NewGuid().ToString() + "@cofoundry.org",
+                        Password = "badpassword",
+                        UserAreaCode = CofoundryAdminUserArea.AreaCode,
+                        RoleId = adminRole.RoleId
                     });
 
-                await _contentRepository
-                    .WithElevatedPermissions()
-                    .ImageAssets()
-                    .DeleteAsync(2);
+                //await _contentRepository
+                //    .WithElevatedPermissions()
+                //    .ImageAssets()
+                //    .DeleteAsync(2);
 
                 await _contentRepository
                     .CustomEntities()
                     .Definitions()
-                    .GetByCode("MYCODEE")
+                    .GetByCode(BlogPostCustomEntityDefinition.DefinitionCode)
                     .AsSummaryAsync();
 
                 await _contentRepository
                     .CustomEntities()
                     .DataModelSchemas()
-                    .GetByCustomEntityDefinitionCode("TESTYY")
+                    .GetByCustomEntityDefinitionCode(BlogPostCustomEntityDefinition.DefinitionCode)
                     .AsDetailsAsync();
 
                 await _contentRepository
                     .CustomEntities()
                     .GetById(1)
                     .AsRenderSummaryAsync();
-
-                var anonymousRole = await _contentRepository
-                    .Roles()
-                    .GetById(null)
-                    .AsDetailsAsync();
 
                 var permissions = await _contentRepository
                     .Roles()
@@ -143,8 +146,18 @@ namespace Cofoundry.BasicTestSite
                     .GetAll()
                     .AsSummariesAsync();
 
+                var blockTypes = await _contentRepository
+                    .PageBlockTypes()
+                    .GetAll()
+                    .AsSummariesAsync();
+
                 await scope.CompleteAsync();
             }
+
+            await _contentRepository
+                .WithElevatedPermissions()
+                .Users()
+                .DeleteUserAsync(userId);
 
             return View();
         }

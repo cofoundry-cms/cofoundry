@@ -37,7 +37,8 @@ namespace Cofoundry.Domain
         /// Adds a new rewrite rule.
         /// </summary>
         /// <param name="command">Command parameters.</param>
-        Task AddAsync(AddRedirectRuleCommand command);
+        /// <returns>Id of the newly created rewrite rule.</returns>
+        Task<int> AddAsync(AddRedirectRuleCommand command);
 
         #endregion
     }

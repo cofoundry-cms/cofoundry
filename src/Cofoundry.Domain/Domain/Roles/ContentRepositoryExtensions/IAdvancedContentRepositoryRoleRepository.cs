@@ -1,6 +1,4 @@
-﻿using Cofoundry.Domain.CQS;
-using Cofoundry.Domain.Extendable;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
@@ -35,7 +33,8 @@ namespace Cofoundry.Domain
         /// Adds a new role to a user area with a specific set of permissions.
         /// </summary>
         /// <param name="command">Command parameters.</param>
-        Task AddAsync(AddRoleCommand command);
+        /// <returns>Id of the newly created role.</returns>
+        Task<int> AddAsync(AddRoleCommand command);
 
         /// <summary>
         /// Updates an existing role. Also updates the role permission set.

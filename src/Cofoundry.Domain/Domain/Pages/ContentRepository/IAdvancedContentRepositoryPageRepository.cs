@@ -1,6 +1,4 @@
-﻿using Cofoundry.Domain.CQS;
-using Cofoundry.Domain.Extendable;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
@@ -89,7 +87,8 @@ namespace Cofoundry.Domain
         /// Adds a new page with a draft version and optionally publishes it.
         /// </summary>
         /// <param name="command">Command parameters.</param>
-        Task AddAsync(AddPageCommand command);
+        /// <returns>Id of the newly created page.</returns>
+        Task<int> AddAsync(AddPageCommand command);
 
         /// <summary>
         /// Creates a new page, copying from an existing page.

@@ -41,9 +41,10 @@ namespace Cofoundry.Domain
 
         #region commands
 
-        public Task AddDraftAsync(AddCustomEntityDraftVersionCommand command)
+        public async Task<int> AddDraftAsync(AddCustomEntityDraftVersionCommand command)
         {
-            return ExtendableContentRepository.ExecuteCommandAsync(command);
+            await ExtendableContentRepository.ExecuteCommandAsync(command);
+            return command.CustomEntityId;
         }
 
         public Task UpdateDraftAsync(UpdateCustomEntityDraftVersionCommand command)

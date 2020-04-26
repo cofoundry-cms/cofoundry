@@ -66,9 +66,10 @@ namespace Cofoundry.Domain
 
         #region commands
         
-        public Task AddAsync(AddCustomEntityCommand command)
+        public async Task<int> AddAsync(AddCustomEntityCommand command)
         {
-            return ExtendableContentRepository.ExecuteCommandAsync(command);
+            await ExtendableContentRepository.ExecuteCommandAsync(command);
+            return command.OutputCustomEntityId;
         }
 
         public Task DuplicateAsync(DuplicateCustomEntityCommand command)

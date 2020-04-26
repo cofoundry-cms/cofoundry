@@ -26,7 +26,8 @@ namespace Cofoundry.Domain
         /// Adds a new block to a template region on a custom entity page.
         /// </summary>
         /// <param name="command">Command parameters.</param>
-        Task AddAsync(AddCustomEntityVersionPageBlockCommand command);
+        /// <returns>Id of the newly created block.</returns>
+        Task<int> AddAsync(AddCustomEntityVersionPageBlockCommand command);
 
         /// <summary>
         /// Updates an existing block within a template region 

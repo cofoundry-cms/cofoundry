@@ -23,7 +23,7 @@ namespace Cofoundry.Domain
         /// </summary>
         /// <param name="pageId">PageId of the page to check.</param>
         Task<bool> HasDraftAsync(int pageId);
-               
+
         #endregion
 
         #region commands
@@ -34,7 +34,8 @@ namespace Cofoundry.Domain
         /// thrown if there is already a draft version.
         /// </summary>
         /// <param name="command">Command parameters.</param>
-        Task AddDraftAsync(AddPageDraftVersionCommand command);
+        /// <returns>Id of the newly created draft version.</returns>
+        Task<int> AddDraftAsync(AddPageDraftVersionCommand command);
 
         /// <summary>
         /// Updates the draft version of a page. If a draft version

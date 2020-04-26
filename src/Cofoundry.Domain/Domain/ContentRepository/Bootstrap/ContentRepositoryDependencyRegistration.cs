@@ -12,6 +12,8 @@ namespace Cofoundry.Domain
             container.Register<ContentRepository>(new Type[] { typeof(IContentRepository), typeof(IAdvancedContentRepository) });
             container.Register<IContentRepositoryWithElevatedPermissions, ContentRepositoryWithElevatedPermissions>();
             container.Register<IContentRepositoryWithCustomExecutionContext, ContentRepositoryWithCustomExecutionContext>();
+            container.Register<IContentRepositoryTransactionManager, ContentRepositoryTransactionManager>();
+            
         }
     }
 }

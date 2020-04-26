@@ -46,9 +46,10 @@ namespace Cofoundry.Domain
 
         #region commands
 
-        public Task AddAsync(AddRoleCommand command)
+        public async Task<int> AddAsync(AddRoleCommand command)
         {
-            return ExtendableContentRepository.ExecuteCommandAsync(command);
+            await ExtendableContentRepository.ExecuteCommandAsync(command);
+            return command.OutputRoleId;
         }
         
         public Task UpdateRoleAsync(UpdateRoleCommand command)

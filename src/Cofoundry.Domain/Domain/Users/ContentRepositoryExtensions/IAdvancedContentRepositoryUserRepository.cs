@@ -1,6 +1,4 @@
-﻿using Cofoundry.Domain.CQS;
-using Cofoundry.Domain.Extendable;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
@@ -48,14 +46,16 @@ namespace Cofoundry.Domain
         /// other non-Cofoundry users. Does not send any email notifications.
         /// </summary>
         /// <param name="command">Command parameters.</param>
-        Task AddAsync(AddUserCommand command);
+        /// <returns>Id of the newly created user.</returns>
+        Task<int> AddAsync(AddUserCommand command);
 
         /// <summary>
         /// Adds a user to the Cofoundry user area and sends a welcome notification
         /// containing a generated password which must be changed at first login.
         /// </summary>
         /// <param name="command">Command parameters.</param>
-        Task AddCofoundryUserAsync(AddCofoundryUserCommand command);
+        /// <returns>Id of the newly created user.</returns>
+        Task<int> AddCofoundryUserAsync(AddCofoundryUserCommand command);
 
         /// <summary>
         /// A generic user update command for use with Cofoundry users and

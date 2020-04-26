@@ -56,7 +56,7 @@ namespace Cofoundry.Domain
         Task<bool> IsUrlSlugUniqueAsync(IsCustomEntityUrlSlugUniqueQuery query);
 
         /// <summary>
-        /// Retrie custom entity page data by a url path/route. Note that this
+        /// Gets custom entity page data by a url path/route. Note that this
         /// is specific to custom entity pages.
         /// </summary>
         IAdvancedContentRepositoryCustomEntityByPathQueryBuilder GetByPath();
@@ -69,7 +69,8 @@ namespace Cofoundry.Domain
         /// Adds a new custom entity with a draft version and optionally publishes it.
         /// </summary>
         /// <param name="command">Command parameters.</param>
-        Task AddAsync(AddCustomEntityCommand command);
+        /// <returns>Id of the newly created custom entity.</returns>
+        Task<int> AddAsync(AddCustomEntityCommand command);
 
         /// <summary>
         /// Creates a new custom entity, copying from an existing custom entity.

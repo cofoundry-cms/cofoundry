@@ -30,9 +30,10 @@ namespace Cofoundry.Domain
 
         #region commands
 
-        public Task AddAsync(AddPageVersionBlockCommand command)
+        public async Task<int> AddAsync(AddPageVersionBlockCommand command)
         {
-            return ExtendableContentRepository.ExecuteCommandAsync(command);
+            await ExtendableContentRepository.ExecuteCommandAsync(command);
+            return command.OutputPageBlockId;
         }
 
         public Task UpdateAsync(UpdatePageVersionBlockCommand command)

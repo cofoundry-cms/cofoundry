@@ -46,14 +46,16 @@ namespace Cofoundry.Domain
 
         #region commands
 
-        public Task AddAsync(AddUserCommand command)
+        public async Task<int> AddAsync(AddUserCommand command)
         {
-            return ExtendableContentRepository.ExecuteCommandAsync(command);
+            await ExtendableContentRepository.ExecuteCommandAsync(command);
+            return command.OutputUserId;
         }
 
-        public Task AddCofoundryUserAsync(AddCofoundryUserCommand command)
+        public async Task<int> AddCofoundryUserAsync(AddCofoundryUserCommand command)
         {
-            return ExtendableContentRepository.ExecuteCommandAsync(command);
+            await ExtendableContentRepository.ExecuteCommandAsync(command);
+            return command.OutputUserId;
         }
 
         public Task UpdateUserAsync(UpdateUserCommand command)

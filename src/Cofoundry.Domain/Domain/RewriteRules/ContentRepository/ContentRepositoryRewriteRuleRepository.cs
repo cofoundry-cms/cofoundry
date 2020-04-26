@@ -35,9 +35,10 @@ namespace Cofoundry.Domain
 
         #region commands
 
-        public Task AddAsync(AddRedirectRuleCommand command)
+        public async Task<int> AddAsync(AddRedirectRuleCommand command)
         {
-            return ExtendableContentRepository.ExecuteCommandAsync(command);
+            await ExtendableContentRepository.ExecuteCommandAsync(command);
+            return command.OutputRedirectRuleId;
         }
 
         #endregion

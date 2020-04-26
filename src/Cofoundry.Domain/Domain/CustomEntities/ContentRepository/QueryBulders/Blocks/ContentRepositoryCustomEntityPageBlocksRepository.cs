@@ -30,9 +30,10 @@ namespace Cofoundry.Domain
 
         #region commands
 
-        public Task AddAsync(AddCustomEntityVersionPageBlockCommand command)
+        public async Task<int> AddAsync(AddCustomEntityVersionPageBlockCommand command)
         {
-            return ExtendableContentRepository.ExecuteCommandAsync(command);
+            await ExtendableContentRepository.ExecuteCommandAsync(command);
+            return command.CustomEntityVersionId;
         }
 
         public Task UpdateAsync(UpdateCustomEntityVersionPageBlockCommand command)

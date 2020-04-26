@@ -1,6 +1,4 @@
-﻿using Cofoundry.Domain.CQS;
-using Cofoundry.Domain.Extendable;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
@@ -41,7 +39,8 @@ namespace Cofoundry.Domain
         /// Adds a new image asset.
         /// </summary>
         /// <param name="command">Command parameters.</param>
-        Task AddAsync(AddImageAssetCommand command);
+        /// <returns>Id of the newly created user.</returns>
+        Task<int> AddAsync(AddImageAssetCommand command);
 
         /// <summary>
         /// Updates the properties of an existing image asset. Updating

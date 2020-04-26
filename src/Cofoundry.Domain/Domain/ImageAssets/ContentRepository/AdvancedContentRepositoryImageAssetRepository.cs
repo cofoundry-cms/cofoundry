@@ -40,9 +40,10 @@ namespace Cofoundry.Domain
 
         #region commands
 
-        public Task AddAsync(AddImageAssetCommand command)
+        public async Task<int> AddAsync(AddImageAssetCommand command)
         {
-            return ExtendableContentRepository.ExecuteCommandAsync(command);
+            await ExtendableContentRepository.ExecuteCommandAsync(command);
+            return command.OutputImageAssetId;
         }
 
         public Task UpdateAsync(UpdateImageAssetCommand command)

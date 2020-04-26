@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 namespace Cofoundry.Domain
 {
     /// <summary>
-    /// Queries to search for user data, returning paged lists of data.
+    /// Queries to return all rewrite rules.
     /// </summary>
     public interface IContentRepositoryRewriteRuleGetAllQueryBuilder
     {

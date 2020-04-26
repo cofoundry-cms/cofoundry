@@ -80,9 +80,10 @@ namespace Cofoundry.Domain
 
         #region commands
         
-        public Task AddAsync(AddPageCommand command)
+        public async Task<int> AddAsync(AddPageCommand command)
         {
-            return ExtendableContentRepository.ExecuteCommandAsync(command);
+            await ExtendableContentRepository.ExecuteCommandAsync(command);
+            return command.OutputPageId;
         }
 
         public Task DuplicateAsync(DuplicatePageCommand command)

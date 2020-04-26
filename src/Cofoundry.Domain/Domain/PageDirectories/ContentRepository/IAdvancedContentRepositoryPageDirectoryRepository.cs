@@ -1,6 +1,4 @@
-﻿using Cofoundry.Domain.CQS;
-using Cofoundry.Domain.Extendable;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
@@ -39,7 +37,8 @@ namespace Cofoundry.Domain
         /// Adds a new page directory.
         /// </summary>
         /// <param name="command">Command parameters.</param>
-        Task AddAsync(AddPageDirectoryCommand command);
+        /// <returns>Id of the newly created directory.</returns>
+        Task<int> AddAsync(AddPageDirectoryCommand command);
 
         /// <summary>
         /// Updates the properties of an existing page directory, including

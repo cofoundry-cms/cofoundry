@@ -17,7 +17,7 @@ namespace Cofoundry.Domain
         /// </summary>
         /// <param name="pageVersionBlockId">Database id of the page version block to get.</param>
         IAdvancedContentRepositoryPageBlockByIdQueryBuilder GetById(int pageVersionBlockId);
-        
+
         #endregion
 
         #region commands
@@ -26,7 +26,8 @@ namespace Cofoundry.Domain
         /// Adds a new block to a template region on a page.
         /// </summary>
         /// <param name="command">Command parameters.</param>
-        Task AddAsync(AddPageVersionBlockCommand command);
+        /// <returns>Id of the newly created block.</returns>
+        Task<int> AddAsync(AddPageVersionBlockCommand command);
 
         /// <summary>
         /// Updates an existing block within a template region 
