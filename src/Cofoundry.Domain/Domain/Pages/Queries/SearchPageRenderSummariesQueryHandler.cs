@@ -59,6 +59,8 @@ namespace Cofoundry.Domain
             var dbQuery = _dbContext
                 .PagePublishStatusQueries
                 .AsNoTracking()
+                .Include(v => v.PageVersion)
+                .ThenInclude(v => v.OpenGraphImageAsset)
                 .FilterByStatus(query.PublishStatus, executionContext.ExecutionDate)
                 .FilterActive()
                 ;
@@ -77,8 +79,7 @@ namespace Cofoundry.Domain
 
             return dbQuery
                 .SortBy(query.SortBy, query.SortDirection)
-                .Select(p => p.PageVersion)
-                .Include(p => p.OpenGraphImageAsset);
+                .Select(p => p.PageVersion);
         }
 
         #region Permission

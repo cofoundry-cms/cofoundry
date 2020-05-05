@@ -54,6 +54,8 @@ namespace Cofoundry.Domain
             var dbQuery = _dbContext
                 .PagePublishStatusQueries
                 .AsNoTracking()
+                .Include(p => p.Page)
+                .ThenInclude(p => p.Creator)
                 .FilterByStatus(PublishStatusQuery.Latest, executionContext.ExecutionDate)
                 .FilterActive()
                 ;
@@ -120,9 +122,7 @@ namespace Cofoundry.Domain
 
             return dbQuery
                 .SortBy(query.SortBy, query.SortDirection)
-                .Select(p => p.Page)
-                .Include(p => p.Creator)
-                ;
+                .Select(p => p.Page);
         }
 
 

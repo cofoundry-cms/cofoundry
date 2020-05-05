@@ -39,12 +39,13 @@ namespace Cofoundry.Domain
             var dbResult = await _dbContext
                 .CustomEntityPublishStatusQueries
                 .AsNoTracking()
+                .Include(e => e.CustomEntityVersion)
+                .ThenInclude(e => e.CustomEntity)
                 .FilterActive()
                 .FilterByCustomEntityDefinitionCode(query.CustomEntityDefinitionCode)
                 .FilterByCustomEntityUrlSlug(query.UrlSlug)
                 .FilterByStatus(query.PublishStatus, executionContext.ExecutionDate)
                 .Select(e => e.CustomEntityVersion)
-                .Include(e => e.CustomEntity)
                 .ToListAsync();
 
             if (!dbResult.Any()) return Array.Empty<CustomEntityRenderSummary>();

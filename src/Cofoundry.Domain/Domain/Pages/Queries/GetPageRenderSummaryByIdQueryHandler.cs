@@ -79,11 +79,12 @@ namespace Cofoundry.Domain
                 result = await _dbContext
                     .PagePublishStatusQueries
                     .AsNoTracking()
+                    .Include(v => v.PageVersion)
+                    .ThenInclude(v => v.OpenGraphImageAsset)
                     .FilterActive()
                     .FilterByStatus(query.PublishStatus, executionContext.ExecutionDate)
                     .FilterByPageId(query.PageId)
                     .Select(p => p.PageVersion)
-                    .Include(v => v.OpenGraphImageAsset)
                     .FirstOrDefaultAsync();
             }
 
