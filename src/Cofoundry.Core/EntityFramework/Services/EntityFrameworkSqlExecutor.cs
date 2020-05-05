@@ -6,11 +6,11 @@ using Microsoft.EntityFrameworkCore.Storage;
 using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
+using Microsoft.Data.SqlClient;
 
 namespace Cofoundry.Core.EntityFramework
 {
@@ -66,14 +66,13 @@ namespace Cofoundry.Core.EntityFramework
                 // see https://github.com/aspnet/EntityFramework/issues/1862
                 // and https://github.com/aspnet/EntityFrameworkCore/issues/10753
 
-                //var results = _dbContext.Database.SqlQuery<T>(cmd, sqlParams);
-                var results = dbContext.Set<T>().FromSql(cmd, sqlParams);
+                var results = dbContext.Set<T>().FromSqlRaw(cmd, sqlParams);
 
                 return results;
             }
             else
             {
-                return dbContext.Set<T>().FromSql(spName);
+                return dbContext.Set<T>().FromSqlRaw(spName);
             }
         }
 
@@ -93,6 +92,8 @@ namespace Cofoundry.Core.EntityFramework
         /// </returns>
         public async Task<T> ExecuteScalarAsync<T>(DbContext dbContext, string spName, params SqlParameter[] sqlParams)
         {
+            // Derived from code in https://github.com/dotnet/efcore/issues/1862
+            // Needs to be updated when EF Core finally supports ad-hoc queries again
             var databaseFacade = dbContext.Database;
             var concurrencyDetector = databaseFacade.GetService<IConcurrencyDetector>();
             var sql = FormatSqlCommand(spName, sqlParams);
@@ -103,11 +104,16 @@ namespace Cofoundry.Core.EntityFramework
                     .GetService<IRawSqlCommandBuilder>()
                     .Build(sql, sqlParams);
 
+                var commandParameters = new RelationalCommandParameterObject(
+                    databaseFacade.GetService<IRelationalConnection>(),
+                    rawSqlCommand.ParameterValues,
+                    null,
+                    dbContext,
+                    null);
+
                 var result = await rawSqlCommand
                     .RelationalCommand
-                    .ExecuteScalarAsync(
-                        databaseFacade.GetService<IRelationalConnection>(),
-                        rawSqlCommand.ParameterValues);
+                    .ExecuteScalarAsync(commandParameters);
 
                 var typedResult = ParseScalarResult<T>(result);
 
@@ -158,7 +164,7 @@ namespace Cofoundry.Core.EntityFramework
                 {
                     using (var scope = _transactionScopeFactory.Create(dbContext))
                     {
-                        rowsAffected = await dbContext.Database.ExecuteSqlCommandAsync(cmd, sqlParams);
+                        rowsAffected = await dbContext.Database.ExecuteSqlRawAsync(cmd, sqlParams);
                         await scope.CompleteAsync();
                     }
                 });
@@ -171,7 +177,7 @@ namespace Cofoundry.Core.EntityFramework
                 {
                     using (var scope = _transactionScopeFactory.Create(dbContext))
                     {
-                        result = await dbContext.Database.ExecuteSqlCommandAsync(spName);
+                        result = await dbContext.Database.ExecuteSqlRawAsync(spName);
                         await scope.CompleteAsync();
                     }
                 });
