@@ -15,7 +15,7 @@ namespace Cofoundry.Web.Admin
     {
         public int Ordering => (int)RouteRegistrationOrdering.Early;
 
-        public void RegisterRoutes(IRouteBuilder routeBuilder)
+        public void RegisterRoutes(IEndpointRouteBuilder routeBuilder)
         {
             MapAccountApiRoutes(routeBuilder);
             MapCustomEntityApiRoutes(routeBuilder);
@@ -33,7 +33,7 @@ namespace Cofoundry.Web.Admin
             MapUserApiRoutes(routeBuilder);
         }
 
-        private static void MapAccountApiRoutes(IRouteBuilder routeBuilder)
+        private static void MapAccountApiRoutes(IEndpointRouteBuilder routeBuilder)
         {
             routeBuilder
                 .ForAdminApiController<AccountApiController>("account")
@@ -42,7 +42,7 @@ namespace Cofoundry.Web.Admin
                 .MapPut("Password", "PutPassword");
         }
 
-        private static void MapCustomEntityApiRoutes(IRouteBuilder routeBuilder)
+        private static void MapCustomEntityApiRoutes(IEndpointRouteBuilder routeBuilder)
         {
             var customEntityIdRoute = "{customEntityId:int}";
 
@@ -102,7 +102,7 @@ namespace Cofoundry.Web.Admin
                 ;
         }
 
-        private static void MapDashboardApiRoutes(IRouteBuilder routeBuilder)
+        private static void MapDashboardApiRoutes(IEndpointRouteBuilder routeBuilder)
         {
             routeBuilder
                 .ForAdminApiController<DashboardApiController>("dashboard")
@@ -110,7 +110,7 @@ namespace Cofoundry.Web.Admin
                 ;
         }
 
-        private static void MapDocumentApiRoutes(IRouteBuilder routeBuilder)
+        private static void MapDocumentApiRoutes(IEndpointRouteBuilder routeBuilder)
         {
             routeBuilder
                 .ForAdminApiController<DocumentFileTypesApiController>("document-file-types")
@@ -129,7 +129,7 @@ namespace Cofoundry.Web.Admin
                 ;
         }
 
-        private static void MapDynamicDataApiRoutes(IRouteBuilder routeBuilder)
+        private static void MapDynamicDataApiRoutes(IEndpointRouteBuilder routeBuilder)
         {
             routeBuilder
                 .ForAdminApiController<NestedDataModelSchemaApiController>("nested-data-model-schemas")
@@ -137,7 +137,7 @@ namespace Cofoundry.Web.Admin
                 ;
         }
 
-        private static void MapImageApiRoutes(IRouteBuilder routeBuilder)
+        private static void MapImageApiRoutes(IEndpointRouteBuilder routeBuilder)
         {
             var imageAssetIdRoute = "{imageAssetId:int}";
 
@@ -151,7 +151,7 @@ namespace Cofoundry.Web.Admin
                 ;
         }
 
-        private static void MapLocaleApiRoutes(IRouteBuilder routeBuilder)
+        private static void MapLocaleApiRoutes(IEndpointRouteBuilder routeBuilder)
         {
             routeBuilder
                 .ForAdminApiController<LocalesApiController>("locales")
@@ -159,7 +159,7 @@ namespace Cofoundry.Web.Admin
                 ;
         }
 
-        private static void MapPageDirectoryApiRoutes(IRouteBuilder routeBuilder)
+        private static void MapPageDirectoryApiRoutes(IEndpointRouteBuilder routeBuilder)
         {
             var pageDirectoryIdRoute = "{pageDirectoryId:int}";
 
@@ -174,7 +174,7 @@ namespace Cofoundry.Web.Admin
                 ;
         }
 
-        private static void MapPageApiRoutes(IRouteBuilder routeBuilder)
+        private static void MapPageApiRoutes(IEndpointRouteBuilder routeBuilder)
         {
 
             routeBuilder
@@ -220,7 +220,7 @@ namespace Cofoundry.Web.Admin
 
         }
 
-        private static void MapPageTemplateApiRoutes(IRouteBuilder routeBuilder)
+        private static void MapPageTemplateApiRoutes(IEndpointRouteBuilder routeBuilder)
         {
             routeBuilder
                 .ForAdminApiController<PageTemplatesApiController>("page-templates")
@@ -229,7 +229,7 @@ namespace Cofoundry.Web.Admin
                 ;
         }
 
-        private static void MapRolesApiRoutes(IRouteBuilder routeBuilder)
+        private static void MapRolesApiRoutes(IEndpointRouteBuilder routeBuilder)
         {
             routeBuilder
                 .ForAdminApiController<PermissionsApiController>("permissions")
@@ -248,7 +248,7 @@ namespace Cofoundry.Web.Admin
                 ;
         }
 
-        private static void MapSettingsApiRoutes(IRouteBuilder routeBuilder)
+        private static void MapSettingsApiRoutes(IEndpointRouteBuilder routeBuilder)
         {
             routeBuilder
                 .ForAdminApiController<CacheApiController>("cache")
@@ -267,7 +267,7 @@ namespace Cofoundry.Web.Admin
                 ;
         }
 
-        private static void MapSetupApiRoutes(IRouteBuilder routeBuilder)
+        private static void MapSetupApiRoutes(IEndpointRouteBuilder routeBuilder)
         {
             routeBuilder
                 .ForAdminApiController<SetupApiController>("setup")
@@ -275,7 +275,7 @@ namespace Cofoundry.Web.Admin
                 ;
         }
 
-        private static void MapUserApiRoutes(IRouteBuilder routeBuilder)
+        private static void MapUserApiRoutes(IEndpointRouteBuilder routeBuilder)
         {
             routeBuilder
                 .ForAdminApiController<UserAreasApiController>("user-areas")

@@ -8,9 +8,11 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 namespace Cofoundry.Web
 {
     /// <summary>
-    /// Adds the asp.net auth middleware into the pipeline.
+    /// Adds the asp.net routing middleware into the pipeline.
+    /// This must run after the static file handler but before 
+    /// authentication is added.
     /// </summary>
-    public class AuthStartupConfigurationTask 
+    public class UseRoutingStartupConfigurationTask
         : IStartupConfigurationTask
         , IRunAfterStartupConfigurationTask
     {
@@ -19,12 +21,11 @@ namespace Cofoundry.Web
             get { return (int)StartupTaskOrdering.Early; }
         }
 
-        public ICollection<Type> RunAfter => new Type[] { typeof(UseRoutingStartupConfigurationTask) };
+        public ICollection<Type> RunAfter => new Type[] { typeof(StaticFileStartupConfigurationTask) };
 
         public void Configure(IApplicationBuilder app)
         {
-            app.UseAuthentication();
-            app.UseAuthorization();
+            app.UseRouting();
         }
     }
 }

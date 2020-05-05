@@ -12,15 +12,15 @@ namespace Cofoundry.Web
 
         public ICollection<Type> RunAfter => new Type[] { typeof(AssetsRouteRegistration) };
 
-        public void RegisterRoutes(IRouteBuilder routeBuilder)
+        public void RegisterRoutes(IEndpointRouteBuilder routeBuilder)
         {
-            routeBuilder.MapRoute(
+            routeBuilder.MapControllerRoute(
                 "Cofoundry_ErrorCode",
                 "cofoundryerror/errorcode/{statusCode}",
                 new { controller = "CofoundryError", action = "ErrorCode" },
                 new { statusCode = @"\d+" });
 
-            routeBuilder.MapRoute(
+            routeBuilder.MapControllerRoute(
                 "Cofoundry_Exception",
                 "cofoundryerror/exception/",
                 new { controller = "CofoundryError", action = "Exception" });

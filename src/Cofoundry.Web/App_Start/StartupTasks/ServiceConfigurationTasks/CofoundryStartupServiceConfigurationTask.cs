@@ -42,8 +42,8 @@ namespace Cofoundry.Web
         /// <param name="mvcBuilder">IMvcBuilder to configure.</param>
         public void ConfigureServices(IMvcBuilder mvcBuilder)
         {
-            // Set MVC compatibility to latest tested version.
-            mvcBuilder.SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
+            // Set MVC compatibility to latest tested version (Not required for 3.1).
+            //mvcBuilder.SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
 
             _authConfiguration.Configure(mvcBuilder);
 
@@ -68,6 +68,7 @@ namespace Cofoundry.Web
                 mvcBuilder.Services.Configure<MvcRazorRuntimeCompilationOptions>(o => config.Configure(o));
             }
 
+            // Required to access embedded views in assemblies
             mvcBuilder.AddRazorRuntimeCompilation();
         }
     }

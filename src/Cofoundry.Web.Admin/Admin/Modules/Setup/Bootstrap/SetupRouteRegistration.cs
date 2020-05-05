@@ -9,7 +9,7 @@ namespace Cofoundry.Web.Admin
     {
         public int Ordering => (int)RouteRegistrationOrdering.Early;
 
-        public void RegisterRoutes(IRouteBuilder routeBuilder)
+        public void RegisterRoutes(IEndpointRouteBuilder routeBuilder)
         {
             routeBuilder
                 .ForAdminController<SetupController>(SetupRouteLibrary.RoutePrefix)
