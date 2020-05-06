@@ -5,8 +5,8 @@ using System.Threading.Tasks;
 using Cofoundry.Domain;
 using Cofoundry.Core.Web;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using AngleSharp.Parser.Html;
 using AngleSharp.Dom;
+using AngleSharp.Html.Parser;
 
 namespace Cofoundry.Web
 {
@@ -126,7 +126,7 @@ namespace Cofoundry.Web
             }
 
             var parser = new HtmlParser();
-            var document = parser.Parse(blockHtml.Trim());
+            var document = parser.ParseDocument(blockHtml.Trim());
 
             var elements = document.Body.Children;
 
