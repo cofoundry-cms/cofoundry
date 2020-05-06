@@ -7,5 +7,5 @@ environment:
     secure: JNkkCPfd2fNbhiTek4Hg4lP3Gf1IvB9xFf/Gv0pJGbw4+h8inQBaKZ6XlxpgRO44
 
 build_script:
-- cmd: PowerShell .\build.ps1 -PushPackages true
+- cmd: PowerShell .\build.ps1 --PushPackages "true"
 test: off
