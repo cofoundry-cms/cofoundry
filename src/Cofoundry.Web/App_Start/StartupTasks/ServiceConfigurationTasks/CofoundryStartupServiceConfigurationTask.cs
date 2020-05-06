@@ -67,9 +67,6 @@ namespace Cofoundry.Web
             {
                 mvcBuilder.Services.Configure<MvcRazorRuntimeCompilationOptions>(o => config.Configure(o));
             }
-
-            // Required to access embedded views in assemblies
-            mvcBuilder.AddRazorRuntimeCompilation();
         }
     }
 }
