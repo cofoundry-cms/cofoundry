@@ -17,7 +17,8 @@ namespace Cofoundry.Domain
         public int ImageAssetId { get; set; }
 
         [IgnoreDataMember]
-        [JsonIgnore]
+        [Newtonsoft.Json.JsonIgnore]
+        [System.Text.Json.Serialization.JsonIgnore]
         [ValidateObject]
         public IUploadedFile File { get; set; }
 

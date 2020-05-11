@@ -31,7 +31,8 @@ namespace Cofoundry.Domain
         [Required]
         [StringLength(300, MinimumLength = 8)]
         [IgnoreDataMember]
-        [JsonIgnore]
+        [Newtonsoft.Json.JsonIgnore]
+        [System.Text.Json.Serialization.JsonIgnore]
         public string UserPassword { get; set; }
     }
 }
