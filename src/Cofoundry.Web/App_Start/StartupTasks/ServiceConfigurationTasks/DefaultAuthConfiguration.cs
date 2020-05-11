@@ -65,8 +65,6 @@ namespace Cofoundry.Web
                     });
             }
 
-            // TODO: How does authorization need to be applied here?
-            //mvcBuilder.Services.AddAuthorization(o => o.DefaultPolicy = new AuthorizationPolicyBuilder().Build());
             mvcBuilder.Services.AddAuthorization();
         }
     }
