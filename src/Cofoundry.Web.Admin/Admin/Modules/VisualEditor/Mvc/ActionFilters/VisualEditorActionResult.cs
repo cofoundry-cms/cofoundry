@@ -76,6 +76,7 @@ namespace Cofoundry.Web.Admin
                 using (var outputStream = new StreamWriter(wrappedStream, Encoding.UTF8))
                 {
                     await outputStream.WriteAsync(html);
+                    await outputStream.FlushAsync();
                 }
             }
         }
