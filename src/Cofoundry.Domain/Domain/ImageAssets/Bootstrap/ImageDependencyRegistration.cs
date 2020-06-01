@@ -21,6 +21,7 @@ namespace Cofoundry.Domain.Bootstrap
                 .Register<IImageAssetDetailsMapper, ImageAssetDetailsMapper>()
                 .Register<IImageAssetRenderDetailsMapper, ImageAssetRenderDetailsMapper>()
                 .Register<IImageAssetFileMapper, ImageAssetFileMapper>()
+                .Register<IImageResizeSettingsValidator, ImageResizeSettingsValidator>()
                 ;
         }
     }

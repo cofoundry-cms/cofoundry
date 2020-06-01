@@ -13,7 +13,8 @@ namespace Cofoundry.Domain
     public enum ImageFitMode
     {
         /// <summary>
-        /// The default fit mode will be used.
+        /// The default fit mode will be used. This can vary depending on the plugin 
+        /// being used, but is typically set to Crop.
         /// </summary>
         Default = 0,
 

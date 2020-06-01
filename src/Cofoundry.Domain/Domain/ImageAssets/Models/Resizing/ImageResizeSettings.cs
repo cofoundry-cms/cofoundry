@@ -58,8 +58,9 @@ namespace Cofoundry.Domain
         public ImageFitMode Mode { get; set; }
 
         /// <summary>
-        ///  Whether to downscale, upscale, upscale the canvas, or both upscale
-        ///  or downscale the image as needed. Defaults to DownscaleOnly.
+        /// Defines if and how the image should be scaled to fit the resized dimensions e.g. is the 
+        /// image allowed to up-scaled or should padding be added or should the natural image size 
+        /// be returned. Defaults to DownscaleOnly, which prevents images being upscaled.
         /// </summary>
         public ImageScaleMode Scale { get; set; }
 
