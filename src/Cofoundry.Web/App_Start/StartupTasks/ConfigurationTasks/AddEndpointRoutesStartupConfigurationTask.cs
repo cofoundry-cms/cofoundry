@@ -8,16 +8,16 @@ using System.Linq;
 namespace Cofoundry.Web
 {
     /// <summary>
-    /// Adds the ASP.Net MVC middleware to the pipeline and sets up Cofoundry routing.
+    /// Configures Cofoundry routing.
     /// </summary>
-    public class AddEndpointRoutesConfigurationTask : IStartupConfigurationTask
+    public class AddEndpointRoutesStartupConfigurationTask : IStartupConfigurationTask
     {
         #region constructor
 
         private readonly IRouteInitializer _routeInitializer;
         private readonly PagesSettings _pagesSettings;
 
-        public AddEndpointRoutesConfigurationTask(
+        public AddEndpointRoutesStartupConfigurationTask(
             IRouteInitializer routeInitializer,
             PagesSettings pagesSettings
             )

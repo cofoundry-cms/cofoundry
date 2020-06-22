@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 namespace Cofoundry.Web
 {
     /// <summary>
-    /// Adds the asp.net routing middleware into the pipeline.
+    /// Adds the ASP.NET endpoint routing middleware to the pipeline.
     /// This must run after the static file handler but before 
     /// authentication is added.
     /// </summary>
