@@ -268,6 +268,7 @@
                     '../Admin/Modules/' + moduleName + '/Js/DataServices/*.js',
                     '../Admin/Modules/' + moduleName + '/Js/UIComponents/*.js',
                     '../Admin/Modules/' + moduleName + '/Js/Routes/*.js',
+                    '../Admin/Modules/' + moduleName + '/Js/Routes/Modals/*.js',
                 ],
                 dest: '../Admin/Modules/' + moduleName + '/Content/js/' + moduleName.toLowerCase() + '.js'
             };
@@ -319,6 +320,8 @@
 			'concat:visualEditorHTML',
 			'concat:contentPage'
 		];
+		
+		standardModules.forEach(addConfig);
 		
 		function addConfig(moduleName) {
 			var camelCaseName = camelize(moduleName);
