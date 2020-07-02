@@ -27,10 +27,6 @@ namespace Cofoundry.Domain.Data
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             _cofoundryDbContextInitializer.Configure(this, optionsBuilder);
-
-            optionsBuilder.ConfigureWarnings(warnings => 
-                warnings.Log(RelationalEventId.QueryClientEvaluationWarning)
-            );
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
