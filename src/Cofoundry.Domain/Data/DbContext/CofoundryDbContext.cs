@@ -1,7 +1,6 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Cofoundry.Core;
-using Microsoft.EntityFrameworkCore.Diagnostics;
 using Cofoundry.Core.EntityFramework;
 
 namespace Cofoundry.Domain.Data

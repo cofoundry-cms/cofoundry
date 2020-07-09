@@ -40,7 +40,7 @@ namespace Cofoundry.Web
             // The update is essential so we should keep re-trying until compelete
             while (!stoppingToken.IsCancellationRequested && !isComplete)
             {
-                isComplete = await TryUpdate();
+                isComplete = await TryUpdate(stoppingToken);
 
                 if (!isComplete)
                 {
@@ -49,7 +49,7 @@ namespace Cofoundry.Web
                     // Use a short re-try delay to ensure we process the update quickly
                     // without overwhelming server resources
                     _logger.LogInformation($"Process failed, retrying in {retryTimeout} seconds");
-                    await Task.Delay(TimeSpan.FromSeconds(retryTimeout));
+                    await Task.Delay(TimeSpan.FromSeconds(retryTimeout), stoppingToken);
 
                     numAttempts++;
                 }
@@ -66,7 +66,7 @@ namespace Cofoundry.Web
             return 1;
         }
 
-        private async Task<bool> TryUpdate()
+        private async Task<bool> TryUpdate(CancellationToken stoppingToken)
         {
             using (var scope = _serviceProvider.CreateScope())
             {
@@ -83,7 +83,7 @@ namespace Cofoundry.Web
                 try
                 {
                     var autoUpdateService = scope.ServiceProvider.GetRequiredService<IAutoUpdateService>();
-                    await autoUpdateService.UpdateAsync();
+                    await autoUpdateService.UpdateAsync(stoppingToken);
 
                     state.Update(AutoUpdateStatus.Complete);
                 }

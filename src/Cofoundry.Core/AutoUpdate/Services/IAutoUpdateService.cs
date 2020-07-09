@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
 namespace Cofoundry.Core.AutoUpdate
 {
@@ -11,13 +12,11 @@ namespace Cofoundry.Core.AutoUpdate
         /// Updates an application and referenced modules by scanning for implementations
         /// of IUpdatePackageFactory and executing any packages found.
         /// </summary>
-        /// <remarks>
-        /// Async because sometimes UpdateCommands need to be async to save having to create
-        /// sync versions of methods that would not normally require them. E.g. when calling into
-        /// shared command handlers. I don't really think there's much benefit in making any other
-        /// part asyn because nothing else useful should be happening while the db update is going on anyway.
-        /// </remarks>
-        Task UpdateAsync();
+        /// <param name="cancellationToken">
+        /// Optional cancellation token that can be used to try and stop the update early, although
+        /// a unit of updates will attempt to be completed before stopping.
+        /// </param>
+        Task UpdateAsync(CancellationToken? cancellationToken = null);
 
         /// <summary>
         /// Runs a query to work out whether the database is locked for 
