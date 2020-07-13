@@ -8,13 +8,11 @@ using System.Threading.Tasks;
 namespace Cofoundry.Domain
 {
     /// <summary>
-    /// Cache for wbe directories, which are frequently requested to 
-    /// work out routing
+    /// Cache for web directories, which are frequently requested to 
+    /// work out routing.
     /// </summary>
     public class PageDirectoryCache : IPageDirectoryCache
     {
-        #region constructor
-
         private const string PAGEDIRECTORYROUTES_CACHEKEY = "PageRoutes";
         private const string CACHEKEY = "COF_PageDirectories";
 
@@ -29,10 +27,6 @@ namespace Cofoundry.Domain
             _cache = cacheFactory.Get(CACHEKEY);
             _pageCache = pageCache;
         }
-
-        #endregion
-
-        #region public methods
 
         /// <summary>
         /// Gets a collection of page directory routes, if the collection is already cached it 
@@ -53,7 +47,5 @@ namespace Cofoundry.Domain
             _cache.Clear();
             _pageCache.Clear();
         }
-
-        #endregion
     }
 }
