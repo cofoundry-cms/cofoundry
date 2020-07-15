@@ -1,5 +1,4 @@
-﻿using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -32,7 +31,8 @@ namespace Cofoundry.Domain
         /// new asset file.
         /// </summary>
         [IgnoreDataMember]
-        [JsonIgnore]
+        [Newtonsoft.Json.JsonIgnore]
+        [System.Text.Json.Serialization.JsonIgnore]
         [ValidateObject]
         public IUploadedFile File { get; set; }
 

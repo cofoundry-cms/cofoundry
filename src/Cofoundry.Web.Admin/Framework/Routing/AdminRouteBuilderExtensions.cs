@@ -26,7 +26,7 @@ namespace Cofoundry.Web.Admin
         /// or any leading or trailing slashes e.g. "auth", "images", "users/roles"
         /// </param>
         /// <returns>Builder context that can be used to add routes.</returns>
-        public static AdminRouteBuilderContext<TController> ForAdminController<TController>(this IRouteBuilder routeBuilder, string basePath)
+        public static AdminRouteBuilderContext<TController> ForAdminController<TController>(this IEndpointRouteBuilder routeBuilder, string basePath)
             where TController : Controller
         {
             var adminSettings = routeBuilder.ServiceProvider.GetRequiredService<AdminSettings>();
@@ -49,7 +49,7 @@ namespace Cofoundry.Web.Admin
         /// or any leading or trailing slashes e.g. "auth", "images", "users/roles"
         /// </param>
         /// <returns>Api builder context that can be used to add routes.</returns>
-        public static AdminApiRouteBuilderContext<TController> ForAdminApiController<TController>(this IRouteBuilder routeBuilder, string basePath)
+        public static AdminApiRouteBuilderContext<TController> ForAdminApiController<TController>(this IEndpointRouteBuilder routeBuilder, string basePath)
             where TController : Controller
         {
             var adminSettings = routeBuilder.ServiceProvider.GetRequiredService<AdminSettings>();

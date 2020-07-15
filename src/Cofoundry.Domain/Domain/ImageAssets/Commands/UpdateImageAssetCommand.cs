@@ -31,7 +31,8 @@ namespace Cofoundry.Domain
         /// new asset file.
         /// </summary>
         [IgnoreDataMember]
-        [JsonIgnore]
+        [Newtonsoft.Json.JsonIgnore]
+        [System.Text.Json.Serialization.JsonIgnore]
         [ValidateObject]
         public IUploadedFile File { get; set; }
 

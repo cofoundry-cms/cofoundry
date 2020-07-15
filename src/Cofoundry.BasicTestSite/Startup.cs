@@ -8,6 +8,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Cofoundry.Web;
 using Microsoft.Extensions.Configuration;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Hosting;
 
 namespace Cofoundry.BasicTestSite
 {
@@ -32,11 +33,11 @@ namespace Cofoundry.BasicTestSite
             });
 
             services
-                .AddMvc()
+                .AddControllersWithViews()
                 .AddCofoundry(Configuration);
         }
 
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             // Https redirection / cookie policy and hsts is all non-cofoundry stuff
             if (!env.IsDevelopment())

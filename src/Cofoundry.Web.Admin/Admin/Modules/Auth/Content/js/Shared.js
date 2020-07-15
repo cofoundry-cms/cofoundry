@@ -1,2 +1,2 @@
-/*! Cofoundry 2018-09-18 */
+/*! Cofoundry 2020-06-22 */
 !function(a,b){function c(){this.querySelector('input[type="submit"]').setAttribute("disabled","disabled")}function d(){var c=a.getElementById("ReturnUrl"),d=b.location.hash;c.value&&d&&(c.value=c.value+d)}a.getElementById("MainForm").addEventListener("submit",c,!1),d()}(document,window);

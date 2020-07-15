@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Cofoundry.Domain.CQS;
 using Cofoundry.Core.EntityFramework;
-using System.Data.SqlClient;
+using Microsoft.Data.SqlClient;
 using Cofoundry.Core;
 using Cofoundry.Domain.Data;
 

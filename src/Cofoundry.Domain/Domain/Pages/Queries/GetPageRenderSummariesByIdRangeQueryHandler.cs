@@ -62,12 +62,13 @@ namespace Cofoundry.Domain
 
             var dbResults = await _dbContext
                 .PagePublishStatusQueries
+                .Include(v => v.PageVersion)
+                .ThenInclude(v => v.OpenGraphImageAsset)
                 .AsNoTracking()
                 .FilterActive()
                 .FilterByStatus(query.PublishStatus, executionContext.ExecutionDate)
                 .Where(v => query.PageIds.Contains(v.PageId))
                 .Select(r => r.PageVersion)
-                .Include(v => v.OpenGraphImageAsset)
                 .ToListAsync();
 
             return dbResults;

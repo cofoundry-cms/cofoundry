@@ -21,12 +21,12 @@ namespace Cofoundry.Web.Admin
         where TController : Controller
     {
         private readonly AdminSettings _adminSettings;
-        private readonly IRouteBuilder _routeBuilder;
+        private readonly IEndpointRouteBuilder _routeBuilder;
         private readonly string _basePath;
 
         public AdminApiRouteBuilderContext(
             AdminSettings adminSettings,
-            IRouteBuilder routeBuilder,
+            IEndpointRouteBuilder routeBuilder,
             string basePath
             )
         {
@@ -254,7 +254,7 @@ namespace Cofoundry.Web.Admin
 
             string controllerName = GetControllerName();
 
-            _routeBuilder.MapRoute(
+            _routeBuilder.MapControllerRoute(
                 $"Cofoundry Admin Module - {verb}: {path}",
                 _adminSettings.DirectoryName + "/api/" + path,
                 new { controller = controllerName, action = actionName, Area = RouteConstants.AdminAreaName },

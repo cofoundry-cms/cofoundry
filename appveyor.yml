@@ -1,5 +1,5 @@
 version: '{build}'
-image: Visual Studio 2017
+image: Visual Studio 2019
 environment:
   NUGET_API_KEY:
     secure: ZipOsavSURgYiPIWD01xFd9ug5f8/qaNNsHRwuPsqlSFrr6adAwd4yG4qgDQ6jOC
@@ -7,5 +7,5 @@ environment:
     secure: JNkkCPfd2fNbhiTek4Hg4lP3Gf1IvB9xFf/Gv0pJGbw4+h8inQBaKZ6XlxpgRO44
 
 build_script:
-- cmd: PowerShell -Version 2.0 .\build.ps1 -PushPackages true
+- cmd: PowerShell .\build.ps1 --PushPackages="true"
 test: off

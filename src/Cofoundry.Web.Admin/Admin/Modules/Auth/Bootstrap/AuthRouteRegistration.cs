@@ -20,7 +20,7 @@ namespace Cofoundry.Web.Admin
 
         public int Ordering => (int)RouteRegistrationOrdering.Early;
 
-        public void RegisterRoutes(IRouteBuilder routeBuilder)
+        public void RegisterRoutes(IEndpointRouteBuilder routeBuilder)
         {
             // this is usually handled by ForAdminController etc but
             // since we have a custom route for the default redirect we need
@@ -35,7 +35,7 @@ namespace Cofoundry.Web.Admin
                 .MapRoute("ResetPassword")
                 .MapRoute("ChangePassword");
 
-            routeBuilder.MapRoute(
+            routeBuilder.MapControllerRoute(
                 "Cofoundry Admin - Root default action",
                 _adminSettings.DirectoryName,
                 new { controller = "Auth", action = "DefaultRedirect", Area = RouteConstants.AdminAreaName }

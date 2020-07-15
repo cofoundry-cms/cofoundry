@@ -1,5 +1,6 @@
 ﻿using Cofoundry.Core.ResourceFiles;
 using Microsoft.AspNetCore.Mvc.Razor;
+using Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Options;
 using System;
@@ -16,10 +17,10 @@ namespace Cofoundry.Web
         private readonly IList<IFileProvider> _fileProviders;
 
         public WebsiteResourceLocator(
-            IOptions<RazorViewEngineOptions> mvcOptions
+            IOptions<MvcRazorRuntimeCompilationOptions> mvcRazorRuntimeCompilationOptions
             )
         {
-            _fileProviders = mvcOptions.Value.FileProviders;
+            _fileProviders = mvcRazorRuntimeCompilationOptions.Value.FileProviders;
         }
 
         public bool DirectoryExists(string virtualDir)

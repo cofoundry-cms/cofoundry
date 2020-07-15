@@ -19,7 +19,7 @@ namespace Cofoundry.Web.Admin
 
         public int Ordering => (int)RouteRegistrationOrdering.Early;
 
-        public void RegisterRoutes(IRouteBuilder routeBuilder)
+        public void RegisterRoutes(IEndpointRouteBuilder routeBuilder)
         {
             if (_pagesSettings.Disabled) return;
 

@@ -23,7 +23,7 @@ namespace Cofoundry.Web
             _jsonSerializerSettingsFactory = jsonSerializerSettingsFactory;
         }
 
-        public void Configure(MvcJsonOptions options)
+        public void Configure(MvcNewtonsoftJsonOptions options)
         {
             _jsonSerializerSettingsFactory.Configure(options.SerializerSettings);
         }

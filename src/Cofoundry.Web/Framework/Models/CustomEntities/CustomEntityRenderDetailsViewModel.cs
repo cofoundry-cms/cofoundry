@@ -12,7 +12,7 @@ namespace Cofoundry.Web
     /// is mapped from the raw custom entity data model.
     /// </summary>
     /// <typeparam name="TDisplayModel">The type of view model used to represent the custom entity data model when formatted for display.</typeparam>
-    public class CustomEntityRenderDetailsViewModel<TDisplayModel>
+    public class CustomEntityRenderDetailsViewModel<TDisplayModel> : ICustomEntityRoutable
     {
         public int CustomEntityId { get; set; }
 

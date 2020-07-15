@@ -28,7 +28,7 @@ namespace Cofoundry.Web
 
         public void Configure(IApplicationBuilder app)
         {
-            var env = app.ApplicationServices.GetService<IHostingEnvironment>();
+            var env = app.ApplicationServices.GetService<IWebHostEnvironment>();
 
             if (_debugSettings.CanShowDeveloperExceptionPage(env))
             {

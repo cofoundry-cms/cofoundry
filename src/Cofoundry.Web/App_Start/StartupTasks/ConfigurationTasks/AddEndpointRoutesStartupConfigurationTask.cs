@@ -8,16 +8,16 @@ using System.Linq;
 namespace Cofoundry.Web
 {
     /// <summary>
-    /// Adds the ASP.Net MVC middleware to the pipeline and sets up Cofoundry routing.
+    /// Configures Cofoundry routing.
     /// </summary>
-    public class MvcStartupConfigurationTask : IStartupConfigurationTask
+    public class AddEndpointRoutesStartupConfigurationTask : IStartupConfigurationTask
     {
         #region constructor
 
         private readonly IRouteInitializer _routeInitializer;
         private readonly PagesSettings _pagesSettings;
 
-        public MvcStartupConfigurationTask(
+        public AddEndpointRoutesStartupConfigurationTask(
             IRouteInitializer routeInitializer,
             PagesSettings pagesSettings
             )
@@ -38,25 +38,25 @@ namespace Cofoundry.Web
 
         public void Configure(IApplicationBuilder app)
         {
-            app.UseMvc(GetRoutes);
+            app.UseEndpoints(GetRoutes);
         }
 
         #region helpers
 
-        private void GetRoutes(IRouteBuilder routes)
+        private void GetRoutes(IEndpointRouteBuilder routes)
         {
             RegisterInjectedRoutes(routes);
 
             if (!_pagesSettings.Disabled)
             {
-                routes.MapRoute(
+                routes.MapControllerRoute(
                     "Cofoundry_Page",
                     "{**path}",
                     new { controller = "CofoundryPages", action = "Page" });
             }
         }
 
-        private void RegisterInjectedRoutes(IRouteBuilder routes)
+        private void RegisterInjectedRoutes(IEndpointRouteBuilder routes)
         {
             _routeInitializer.Initialize(routes);
         }

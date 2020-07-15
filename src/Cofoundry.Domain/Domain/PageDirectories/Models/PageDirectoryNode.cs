@@ -1,5 +1,4 @@
-﻿using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
@@ -39,7 +38,8 @@ namespace Cofoundry.Domain
         /// of data.
         /// </remarks>
         [IgnoreDataMember]
-        [JsonIgnore]
+        [Newtonsoft.Json.JsonIgnore]
+        [System.Text.Json.Serialization.JsonIgnore]
         public PageDirectoryNode ParentPageDirectory { get; set; }
 
         /// <summary>
