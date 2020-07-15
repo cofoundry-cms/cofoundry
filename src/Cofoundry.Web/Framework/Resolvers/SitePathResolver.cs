@@ -14,10 +14,10 @@ namespace Cofoundry.Web
     /// </summary>
     public class SitePathResolver : IPathResolver
     {
-        private readonly IHostingEnvironment _hostingEnvironment;
+        private readonly IWebHostEnvironment _hostingEnvironment;
 
         public SitePathResolver(
-            IHostingEnvironment hostingEnvironment
+            IWebHostEnvironment hostingEnvironment
             )
         {
             _hostingEnvironment = hostingEnvironment;

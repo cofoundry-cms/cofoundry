@@ -17,11 +17,11 @@ namespace Cofoundry.Web
     /// </summary>
     public class AuthCookieNamespaceProvider : IAuthCookieNamespaceProvider
     {
-        private readonly IHostingEnvironment _hostingEnvironment;
+        private readonly IWebHostEnvironment _hostingEnvironment;
         private readonly AuthenticationSettings _authenticationSettings;
 
         public AuthCookieNamespaceProvider(
-            IHostingEnvironment hostingEnvironment,
+            IWebHostEnvironment hostingEnvironment,
             AuthenticationSettings authenticationSettings
             )
         {
