@@ -138,7 +138,7 @@ namespace Cofoundry.Core.AutoUpdate
 
         private static bool IsCancelled(CancellationToken? cancellationToken)
         {
-            return !cancellationToken.HasValue && cancellationToken.Value.IsCancellationRequested;
+            return cancellationToken.HasValue && cancellationToken.Value.IsCancellationRequested;
         }
 
         private Task LogUpdateSuccessAsync(string module, int version, string description)
