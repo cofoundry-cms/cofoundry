@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Cofoundry.Core.Data
 {
-    public class DataDependencyRegistration : IDependencyRegistration
+    public class DataTimeDependencyRegistration : IDependencyRegistration
     {
         public void Register(IContainerRegister container)
         {
