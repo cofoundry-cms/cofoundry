@@ -15,16 +15,16 @@ namespace Cofoundry.Core.Time.Mocks
         {
             MockDateTime = mockDateTime;
         }
-        public DateTimeOffset MockDateTime { get; set; }
+        public DateTimeOffset? MockDateTime { get; set; }
 
         public DateTimeOffset OffsetUtcNow()
         {
-            return MockDateTime;
+            return MockDateTime ?? DateTimeOffset.UtcNow;
         }
 
         public DateTime UtcNow()
         {
-            return MockDateTime.UtcDateTime;
+            return OffsetUtcNow().UtcDateTime;
         }
     }
 }
