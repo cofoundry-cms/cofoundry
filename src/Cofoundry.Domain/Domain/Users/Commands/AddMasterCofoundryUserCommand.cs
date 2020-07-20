@@ -51,6 +51,12 @@ namespace Cofoundry.Domain
         [System.Text.Json.Serialization.JsonIgnore]
         public string Password { get; set; }
 
+        /// <summary>
+        /// True if a password change should be required when first logging on. The
+        /// default value is false for the master user.
+        /// </summary>
+        public bool RequirePasswordChange { get; set; }
+
         #region Output
 
         /// <summary>
