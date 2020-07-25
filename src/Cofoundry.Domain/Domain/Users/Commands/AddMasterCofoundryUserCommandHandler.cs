@@ -84,7 +84,7 @@ namespace Cofoundry.Domain
             user.LastName = command.LastName;
             user.Username = command.Email;
             user.Email = command.Email;
-            user.RequirePasswordChange = false;
+            user.RequirePasswordChange = command.RequirePasswordChange;
             user.LastPasswordChangeDate = executionContext.ExecutionDate;
             user.CreateDate = executionContext.ExecutionDate;
             user.Role = superUserRole;

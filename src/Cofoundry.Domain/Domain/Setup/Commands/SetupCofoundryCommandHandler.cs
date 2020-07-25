@@ -105,6 +105,7 @@ namespace Cofoundry.Domain
             newUserCommand.FirstName = command.UserFirstName;
             newUserCommand.LastName = command.UserLastName;
             newUserCommand.Password = command.UserPassword;
+            newUserCommand.RequirePasswordChange = command.RequirePasswordChange;
             await _commandExecutor.ExecuteAsync(newUserCommand);
 
             return newUserCommand.OutputUserId;

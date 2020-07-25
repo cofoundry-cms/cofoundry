@@ -25,7 +25,7 @@ namespace Cofoundry.Web
         /// <typeparam name="T">Type of the result</typeparam>
         /// <param name="controller">The Controller instance using the helper</param>
         /// <param name="result">The result to return</param>
-        IActionResult SimpleQueryResponse<T>(Controller controller, T result);
+        IActionResult SimpleQueryResponse<T>(ControllerBase controller, T result);
 
         /// <summary>
         /// Formats a command response wrapping it in a SimpleCommandResponse object and setting
@@ -35,7 +35,7 @@ namespace Cofoundry.Web
         /// <param name="controller">The Controller instance using the helper</param>
         /// <param name="validationErrors">Validation errors, if any, to be returned.</param>
         /// <param name="returnData">Data to return in the data property of the response object.</param>
-        IActionResult SimpleCommandResponse<T>(Controller controller, IEnumerable<ValidationError> validationErrors, T returnData);
+        IActionResult SimpleCommandResponse<T>(ControllerBase controller, IEnumerable<ValidationError> validationErrors, T returnData);
 
         /// <summary>
         /// Formats a command response wrapping it in a SimpleCommandResponse object and setting
@@ -43,14 +43,14 @@ namespace Cofoundry.Web
         /// </summary>
         /// <param name="controller">The Controller instance using the helper</param>
         /// <param name="validationErrors">Validation errors, if any, to be returned.</param>
-        IActionResult SimpleCommandResponse(Controller controller, IEnumerable<ValidationError> validationErrors);
+        IActionResult SimpleCommandResponse(ControllerBase controller, IEnumerable<ValidationError> validationErrors);
 
         /// <summary>
         /// Returns a formatted 403 error response using the message of the specified exception
         /// </summary>
         /// <param name="controller">The Controller instance using the helper</param>
         /// <param name="ex">The NotPermittedException to extract the message from</param>
-        IActionResult NotPermittedResponse(Controller controller, NotPermittedException ex);
+        IActionResult NotPermittedResponse(ControllerBase controller, NotPermittedException ex);
 
         #endregion
 
@@ -66,7 +66,7 @@ namespace Cofoundry.Web
         /// <typeparam name="TCommand">Type of the command to execute</typeparam>
         /// <param name="controller">The Controller instance using the helper</param>
         /// <param name="delta">The delta of the command to patch and execute</param>
-        Task<IActionResult> RunCommandAsync<TCommand>(Controller controller, int id, IDelta<TCommand> delta) where TCommand : class, ICommand;
+        Task<IActionResult> RunCommandAsync<TCommand>(ControllerBase controller, int id, IDelta<TCommand> delta) where TCommand : class, ICommand;
 
         /// <summary>
         /// Executes a command in a "Patch" style, allowing for a partial update of a resource. In
@@ -78,7 +78,7 @@ namespace Cofoundry.Web
         /// <typeparam name="TCommand">Type of the command to execute</typeparam>
         /// <param name="controller">The Controller instance using the helper</param>
         /// <param name="delta">The delta of the command to patch and execute</param>
-        Task<IActionResult> RunCommandAsync<TCommand>(Controller controller, IDelta<TCommand> delta) where TCommand : class, ICommand;
+        Task<IActionResult> RunCommandAsync<TCommand>(ControllerBase controller, IDelta<TCommand> delta) where TCommand : class, ICommand;
         /// <summary>
         /// Executes a command and returns a formatted IHttpActionResult, handling any validation 
         /// errors and permission errors. If the command has a property with the OutputValueAttribute
@@ -87,7 +87,7 @@ namespace Cofoundry.Web
         /// <typeparam name="TCommand">Type of the command to execute</typeparam>
         /// <param name="controller">The Controller instance using the helper</param>
         /// <param name="command">The command to execute</param>
-        Task<IActionResult> RunCommandAsync<TCommand>(Controller controller, TCommand command) where TCommand : ICommand;
+        Task<IActionResult> RunCommandAsync<TCommand>(ControllerBase controller, TCommand command) where TCommand : ICommand;
 
         /// <summary>
         /// Executes an action and returns a formatted IHttpActionResult, handling any validation 
@@ -95,7 +95,7 @@ namespace Cofoundry.Web
         /// </summary>
         /// <param name="controller">The Controller instance using the helper</param>
         /// <param name="action">The action to execute</param>
-        Task<IActionResult> RunAsync(Controller controller, Func<Task> action);
+        Task<IActionResult> RunAsync(ControllerBase controller, Func<Task> action);
 
         /// <summary>
         /// Executes a function and returns a formatted IHttpActionResult, handling any validation 
@@ -104,7 +104,7 @@ namespace Cofoundry.Web
         /// <typeparam name="TResult">Type of result returned from the function</typeparam>
         /// <param name="controller">The Controller instance using the helper</param>
         /// <param name="functionToExecute">The function to execute</param>
-        Task<IActionResult> RunWithResultAsync<TResult>(Controller controller, Func<Task<TResult>> functionToExecute);
+        Task<IActionResult> RunWithResultAsync<TResult>(ControllerBase controller, Func<Task<TResult>> functionToExecute);
 
         #endregion
     }
