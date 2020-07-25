@@ -19,13 +19,13 @@ namespace Cofoundry.Domain
         /// The code identifier for the custom entity type
         /// to query for.
         /// </param>
-        IContentRepositoryCustomEntityGetByDefinitionQueryBuilder GetAll(string customEntityDefinitionCode);
+        IContentRepositoryCustomEntityGetByDefinitionQueryBuilder GetByDefinitionCode(string customEntityDefinitionCode);
 
         /// <summary>
         /// Retrieve all custom entities of a type in one query.
         /// </summary>
         /// <typeparam name="TDefinition">The definition type to fetch custom entities for.</typeparam>
-        IContentRepositoryCustomEntityGetByDefinitionQueryBuilder GetAll<TDefinition>() where TDefinition : ICustomEntityDefinition;
+        IContentRepositoryCustomEntityGetByDefinitionQueryBuilder GetByDefinition<TDefinition>() where TDefinition : ICustomEntityDefinition;
 
         /// <summary>
         /// Retrieve a custom entity by its unique database id.

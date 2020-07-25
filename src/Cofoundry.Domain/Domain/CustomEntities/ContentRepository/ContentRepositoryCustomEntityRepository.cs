@@ -25,12 +25,12 @@ namespace Cofoundry.Domain
 
         #region queries
 
-        public IContentRepositoryCustomEntityGetByDefinitionQueryBuilder GetAll(string customEntityDefinitionCode)
+        public IContentRepositoryCustomEntityGetByDefinitionQueryBuilder GetByDefinitionCode(string customEntityDefinitionCode)
         {
             return new ContentRepositoryCustomEntityGetByDefinitionQueryBuilder(ExtendableContentRepository, customEntityDefinitionCode);
         }
 
-        public IContentRepositoryCustomEntityGetByDefinitionQueryBuilder GetAll<TDefinition>() where TDefinition : ICustomEntityDefinition
+        public IContentRepositoryCustomEntityGetByDefinitionQueryBuilder GetByDefinition<TDefinition>() where TDefinition : ICustomEntityDefinition
         {
             var customEntityDefinition = _customEntityDefinitionRepository.Get<TDefinition>();
 

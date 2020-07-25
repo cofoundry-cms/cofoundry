@@ -199,7 +199,8 @@ namespace Cofoundry.Domain
         /// orderedKeys collection, in the order they appear in that collection.
         /// Duplicates may be returned if the ordered keys collections contains 
         /// them.
-        /// </summary>me="TQueryResult">The type of the original query result.</typeparam>
+        /// </summary>
+        /// <typeparam name="TQueryResult">The type of the original query result.</typeparam>
         /// <typeparam name="TKey">The dictionary key type.</typeparam>
         /// <typeparam name="TValue">The dictionary value type.</typeparam>
         /// <param name="innerMutator">The chained query mutator to run before this instance is applied.</param>
