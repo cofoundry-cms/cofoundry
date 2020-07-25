@@ -13,13 +13,13 @@ namespace Cofoundry.Domain
         #region queries
 
         /// <summary>
-        /// Retieve an document asset by a unique database id.
+        /// Retrieve an document asset by a unique database id.
         /// </summary>
         /// <param name="documentAssetId">DocumentAssetId of the document to get.</param>
         IAdvancedContentRepositoryDocumentAssetByIdQueryBuilder GetById(int documentAssetId);
 
         /// <summary>
-        /// Retieve a set of document assets using a batch of database ids.
+        /// Retrieve a set of document assets using a batch of database ids.
         /// The Cofoundry.Core dictionary extensions can be useful for 
         /// ordering the results e.g. results.FilterAndOrderByKeys(ids).
         /// </summary>

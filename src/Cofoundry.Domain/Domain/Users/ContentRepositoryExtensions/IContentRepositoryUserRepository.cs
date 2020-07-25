@@ -20,7 +20,7 @@ namespace Cofoundry.Domain
         IContentRepositoryCurrentUserQueryBuilder GetCurrent();
 
         /// <summary>
-        /// Retieve a user by a unique database id.
+        /// Retrieve a user by a unique database id.
         /// </summary>
         /// <param name="userId">UserId of the user to get.</param>
         IContentRepositoryUserByIdQueryBuilder GetById(int userId);

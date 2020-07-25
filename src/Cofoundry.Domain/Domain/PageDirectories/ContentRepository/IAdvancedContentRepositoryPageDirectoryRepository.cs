@@ -13,7 +13,7 @@ namespace Cofoundry.Domain
         #region queries
 
         /// <summary>
-        /// Retieve an image asset by a unique database id.
+        /// Retrieve an image asset by a unique database id.
         /// </summary>
         /// <param name="pageDirectoryId">Id of the directory to get.</param>
         IAdvancedContentRepositoryPageDirectoryByIdQueryBuilder GetById(int pageDirectoryId);

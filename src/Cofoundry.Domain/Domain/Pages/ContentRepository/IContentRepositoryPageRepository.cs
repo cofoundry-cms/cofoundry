@@ -18,13 +18,13 @@ namespace Cofoundry.Domain
         IContentRepositoryPageGetAllQueryBuilder GetAll();
 
         /// <summary>
-        /// Retieve an page by a unique database id.
+        /// Retrieve an page by a unique database id.
         /// </summary>
         /// <param name="pageId">PageId of the page to get.</param>
         IContentRepositoryPageByIdQueryBuilder GetById(int pageId);
 
         /// <summary>
-        /// Retieve a set of pages using a batch of database ids.
+        /// Retrieve a set of pages using a batch of database ids.
         /// The Cofoundry.Core dictionary extensions can be useful for 
         /// ordering the results e.g. results.FilterAndOrderByKeys(ids).
         /// </summary>
@@ -32,7 +32,7 @@ namespace Cofoundry.Domain
         IContentRepositoryPageByIdRangeQueryBuilder GetByIdRange(IEnumerable<int> pageIds);
 
         /// <summary>
-        /// Retieve a page for a specific path.
+        /// Retrieve a page for a specific path.
         /// </summary>
         IContentRepositoryPageByPathQueryBuilder GetByPath();
 

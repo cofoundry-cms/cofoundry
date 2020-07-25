@@ -29,13 +29,13 @@ namespace Cofoundry.Domain
 
 
         /// <summary>
-        /// Retieve a custom entity by its unique database id.
+        /// Retrieve a custom entity by its unique database id.
         /// </summary>
         /// <param name="customEntityId">Id of the custom entity to get.</param>
         IAdvancedContentRepositoryCustomEntityByIdQueryBuilder GetById(int customEntityId);
 
         /// <summary>
-        /// Retieve a set of pages using a batch of database ids.
+        /// Retrieve a set of pages using a batch of database ids.
         /// The Cofoundry.Core dictionary extensions can be useful for 
         /// ordering the results e.g. results.FilterAndOrderByKeys(ids).
         /// </summary>

@@ -28,13 +28,13 @@ namespace Cofoundry.Domain
         IContentRepositoryCustomEntityGetByDefinitionQueryBuilder GetAll<TDefinition>() where TDefinition : ICustomEntityDefinition;
 
         /// <summary>
-        /// Retieve a custom entity by its unique database id.
+        /// Retrieve a custom entity by its unique database id.
         /// </summary>
         /// <param name="customEntityId">Id of the custom entity to get.</param>
         IContentRepositoryCustomEntityByIdQueryBuilder GetById(int customEntityId);
 
         /// <summary>
-        /// Retieve a set of custom entities using a batch of ids.
+        /// Retrieve a set of custom entities using a batch of ids.
         /// The Cofoundry.Core dictionary extensions can be useful for 
         /// ordering the results e.g. results.FilterAndOrderByKeys(ids).
         /// </summary>

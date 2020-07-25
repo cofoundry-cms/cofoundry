@@ -13,13 +13,13 @@ namespace Cofoundry.Domain
         #region queries
 
         /// <summary>
-        /// Retieve an image asset by a unique database id.
+        /// Retrieve an image asset by a unique database id.
         /// </summary>
         /// <param name="imageAssetId">ImageAssetId of the image to get.</param>
         IAdvancedContentRepositoryImageAssetByIdQueryBuilder GetById(int imageAssetId);
 
         /// <summary>
-        /// Retieve a set of image assets using a batch of database ids.
+        /// Retrieve a set of image assets using a batch of database ids.
         /// The Cofoundry.Core dictionary extensions can be useful for 
         /// ordering the results e.g. results.FilterAndOrderByKeys(ids).
         /// </summary>
