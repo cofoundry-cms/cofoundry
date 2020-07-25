@@ -40,11 +40,21 @@ namespace Cofoundry.BasicTestSite
                 .AsRenderSummary(PublishStatusQuery.Published)
                 .ExecuteAsync();
 
+            var entities = await _contentRepository
+                .CustomEntities()
+                .GetByDefinitionCode("")
+                .AsRenderSummary(PublishStatusQuery.Published)
+                .MapItem(e => new
+                {
+                    e.Title
+                })
+                .ExecuteAsync();
+
             var enity2 = await _contentRepository
                 .CustomEntities()
                 .GetById(1)
                 .AsRenderSummary(PublishStatusQuery.Published)
-                .Map(e => (IDictionary<string,string>)(new Dictionary<string, string>()))
+                .Map(e => new Dictionary<string, string>())
                 .ExecuteAsync();
 
             var ids = new int[] { 1 };

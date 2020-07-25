@@ -71,6 +71,32 @@ namespace Cofoundry.Domain
         /// <param name="mapper">A mapper function to run on each item in the query result.</param>
         /// <returns>A new query mutator instance that allows for method chaining.</returns>
         public static IContentRepositoryQueryMutator<TQueryResult, ICollection<TOutputValue>> MapItem<TQueryResult, TInputValue, TOutputValue>(
+            this IContentRepositoryQueryMutator<TQueryResult, ICollection<TInputValue>> innerMutator,
+            Func<TInputValue, TOutputValue> mapper
+            )
+        {
+            return new ContentRepositoryQueryMutator<TQueryResult, ICollection<TOutputValue>>(
+                innerMutator.Query,
+                async () =>
+                {
+                    var result = await innerMutator.ExecuteAsync();
+
+                    return result.Select(i => mapper(i)).ToList();
+                });
+        }
+
+        /// <summary>
+        /// Maps each item in the collection result of a query using the specified
+        /// mapper function, returning a new collection of mapped items. The mapping 
+        /// takes place after the original query has been executed.
+        /// </summary>
+        /// <typeparam name="TQueryResult">The type of the original query result.</typeparam>
+        /// <typeparam name="TInputValue">The type of collection item to map from.</typeparam>
+        /// <typeparam name="TOutputValue">The result item type after the mutation has been applied.</typeparam>
+        /// <param name="innerMutator">The chained query mutator to run before this instance is applied.</param>
+        /// <param name="mapper">A mapper function to run on each item in the query result.</param>
+        /// <returns>A new query mutator instance that allows for method chaining.</returns>
+        public static IContentRepositoryQueryMutator<TQueryResult, ICollection<TOutputValue>> MapItem<TQueryResult, TInputValue, TOutputValue>(
             this IContentRepositoryQueryMutator<TQueryResult, IEnumerable<TInputValue>> innerMutator,
             Func<TInputValue, TOutputValue> mapper
             )
