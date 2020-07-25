@@ -15,6 +15,6 @@ namespace Cofoundry.Domain
         /// Query to extract and return meta data information about a custom 
         /// entity data model for a range of custom entity definitions.
         /// </summary>
-        Task<IDictionary<string, CustomEntityDataModelSchema>> AsDetailsAsync();
+        IContentRepositoryQueryContext<IDictionary<string, CustomEntityDataModelSchema>> AsDetails();
     }
 }

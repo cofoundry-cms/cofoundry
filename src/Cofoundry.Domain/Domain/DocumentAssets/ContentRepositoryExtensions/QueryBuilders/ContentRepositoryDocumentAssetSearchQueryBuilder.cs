@@ -19,9 +19,9 @@ namespace Cofoundry.Domain
 
         public IExtendableContentRepository ExtendableContentRepository { get; }
 
-        public Task<PagedQueryResult<DocumentAssetSummary>> AsSummariesAsync(SearchDocumentAssetSummariesQuery query)
+        public IContentRepositoryQueryContext<PagedQueryResult<DocumentAssetSummary>> AsSummaries(SearchDocumentAssetSummariesQuery query)
         {
-            return ExtendableContentRepository.ExecuteQueryAsync(query);
+            return ContentRepositoryQueryContextFactory.Create(query, ExtendableContentRepository);
         }
     }
 }

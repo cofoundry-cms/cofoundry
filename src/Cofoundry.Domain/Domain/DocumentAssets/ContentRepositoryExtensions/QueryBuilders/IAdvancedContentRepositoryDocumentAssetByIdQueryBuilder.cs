@@ -15,13 +15,13 @@ namespace Cofoundry.Domain
         /// The DocumentAssetFile projection represents the file associated 
         /// with a document asset, including stream access to the file itself.
         /// </summary>
-        Task<DocumentAssetFile> AsFileAsync();
+        IContentRepositoryQueryContext<DocumentAssetFile> AsFile();
 
         /// <summary>
         /// The DocumentAssetDetails projection contains contains full 
         /// document information. This is specifically used in the 
         /// admin panel and so contains audit data and tagging information.
         /// </summary>
-        Task<DocumentAssetDetails> AsDetailsAsync();
+        IContentRepositoryQueryContext<DocumentAssetDetails> AsDetails();
     }
 }

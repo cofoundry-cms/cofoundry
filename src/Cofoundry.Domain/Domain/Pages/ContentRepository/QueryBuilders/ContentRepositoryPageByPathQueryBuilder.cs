@@ -19,9 +19,9 @@ namespace Cofoundry.Domain
 
         public IExtendableContentRepository ExtendableContentRepository { get; }
 
-        public Task<PageRoutingInfo> AsRoutingInfo(GetPageRoutingInfoByPathQuery query)
+        public IContentRepositoryQueryContext<PageRoutingInfo> AsRoutingInfo(GetPageRoutingInfoByPathQuery query)
         {
-            return ExtendableContentRepository.ExecuteQueryAsync(query);
+            return ContentRepositoryQueryContextFactory.Create(query, ExtendableContentRepository);
         }
     }
 }

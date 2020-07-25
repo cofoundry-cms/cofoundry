@@ -23,14 +23,14 @@ namespace Cofoundry.Domain
 
         public IExtendableContentRepository ExtendableContentRepository { get; }
 
-        public Task<CustomEntityDefinitionMicroSummary> AsMicroSummaryAsync()
+        public IContentRepositoryQueryContext<CustomEntityDefinitionMicroSummary> AsMicroSummary()
         {
             var query = new GetCustomEntityDefinitionMicroSummaryByDisplayModelTypeQuery()
             {
                 DisplayModelType = _displayModelType
             };
 
-            return ExtendableContentRepository.ExecuteQueryAsync(query);
+            return ContentRepositoryQueryContextFactory.Create(query, ExtendableContentRepository);
         }
 
     }

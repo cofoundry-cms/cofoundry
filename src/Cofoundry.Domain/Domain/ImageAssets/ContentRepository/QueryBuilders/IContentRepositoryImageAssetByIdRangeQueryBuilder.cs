@@ -17,6 +17,6 @@ namespace Cofoundry.Domain
         /// information required to render out an image asset to a page, 
         /// including all the data needed to construct an asset file url.
         /// </summary>
-        Task<IDictionary<int, ImageAssetRenderDetails>> AsRenderDetailsAsync();
+        IContentRepositoryQueryContext<IDictionary<int, ImageAssetRenderDetails>> AsRenderDetails();
     }
 }

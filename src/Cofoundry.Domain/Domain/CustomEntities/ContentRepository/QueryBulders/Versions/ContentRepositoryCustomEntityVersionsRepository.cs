@@ -26,17 +26,6 @@ namespace Cofoundry.Domain
             return new ContentRepositoryCustomEntityVersionsByCustomEntityIdQueryBuilder(ExtendableContentRepository);
         }
 
-        public IAdvancedContentRepositoryPageVersionsByPageIdQueryBuilder GetByPageId()
-        {
-            return new ContentRepositoryPageVersionsByPageIdQueryBuilder(ExtendableContentRepository);
-        }
-
-        public Task<bool> HasDraftAsync(int pageId)
-        {
-            var query = new DoesPageHaveDraftVersionQuery(pageId);
-            return ExtendableContentRepository.ExecuteQueryAsync(query);
-        }
-
         #endregion
 
         #region commands

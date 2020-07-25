@@ -23,16 +23,16 @@ namespace Cofoundry.Domain
 
         public IExtendableContentRepository ExtendableContentRepository { get; }
 
-        public Task<PageBlockTypeSummary> AsSummaryAsync()
+        public IContentRepositoryQueryContext<PageBlockTypeSummary> AsSummary()
         {
             var query = new GetPageBlockTypeSummaryByIdQuery(_pageBlockTypeId);
-            return ExtendableContentRepository.ExecuteQueryAsync(query);
+            return ContentRepositoryQueryContextFactory.Create(query, ExtendableContentRepository);
         }
 
-        public Task<PageBlockTypeDetails> AsDetailsAsync()
+        public IContentRepositoryQueryContext<PageBlockTypeDetails> AsDetails()
         {
             var query = new GetPageBlockTypeDetailsByIdQuery(_pageBlockTypeId);
-            return ExtendableContentRepository.ExecuteQueryAsync(query);
+            return ContentRepositoryQueryContextFactory.Create(query, ExtendableContentRepository);
         }
     }
 }

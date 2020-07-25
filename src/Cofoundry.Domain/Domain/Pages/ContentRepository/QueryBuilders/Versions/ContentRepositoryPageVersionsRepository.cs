@@ -26,10 +26,10 @@ namespace Cofoundry.Domain
             return new ContentRepositoryPageVersionsByPageIdQueryBuilder(ExtendableContentRepository);
         }
 
-        public Task<bool> HasDraftAsync(int pageId)
+        public IContentRepositoryQueryContext<bool> HasDraft(int pageId)
         {
             var query = new DoesPageHaveDraftVersionQuery(pageId);
-            return ExtendableContentRepository.ExecuteQueryAsync(query);
+            return ContentRepositoryQueryContextFactory.Create(query, ExtendableContentRepository);
         }
 
         #endregion

@@ -17,20 +17,20 @@ namespace Cofoundry.Domain
         /// that is quick to load. If the user is not logged in then null #
         /// is returned.
         /// </summary>
-        Task<UserMicroSummary> AsMicroSummaryAsync();
+        IContentRepositoryQueryContext<UserMicroSummary> AsMicroSummary();
 
         /// <summary>
         /// The UserSummary is a reduced representation of a user. Building on 
         /// the UserMicroSummary, this projection contains additional audit 
         /// and basic role data. If the user is not logged in then null is returned.
         /// </summary>
-        Task<UserSummary> AsSummaryAsync();
+        IContentRepositoryQueryContext<UserSummary> AsSummary();
 
         /// <summary>
         /// The UserDetails projection is a full representation of a user, containing 
         /// all properties including role and permission data. If the user is not logged 
         /// in then null is returned.
         /// </summary>
-        Task<UserDetails> AsDetailsAsync();
+        IContentRepositoryQueryContext<UserDetails> AsDetails();
     }
 }

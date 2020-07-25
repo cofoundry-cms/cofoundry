@@ -14,10 +14,10 @@ namespace Cofoundry.Domain
         : IContentRepositoryPageByIdRangeQueryBuilder
     {
         /// <summary>
-        /// Finds pages with the specified page ids and returns them as PageSummary 
+        /// A query that finds pages with the specified page ids and returns them as PageSummary 
         /// objects. Note that this query does not account for WorkFlowStatus and so
         /// pages will be returned irrecpective of whether they aree published or not.
         /// </summary>
-        Task<IDictionary<int, PageSummary>> AsSummariesAsync();
+        IContentRepositoryQueryContext<IDictionary<int, PageSummary>> AsSummaries();
     }
 }

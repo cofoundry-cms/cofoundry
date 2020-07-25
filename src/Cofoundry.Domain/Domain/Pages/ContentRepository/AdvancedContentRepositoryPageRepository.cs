@@ -71,9 +71,9 @@ namespace Cofoundry.Domain
             return new ContentRepositoryPageNotFoundQueryBuilder(ExtendableContentRepository);
         }
 
-        public Task<bool> IsPathUniqueAsync(IsPagePathUniqueQuery query)
+        public IContentRepositoryQueryContext<bool> IsPathUnique(IsPagePathUniqueQuery query)
         {
-            return ExtendableContentRepository.ExecuteQueryAsync(query);
+            return ContentRepositoryQueryContextFactory.Create(query, ExtendableContentRepository);
         }
 
         #endregion

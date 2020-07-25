@@ -15,6 +15,6 @@ namespace Cofoundry.Domain
         /// Returns a single routing rule that matches the route format exactly, 
         /// or null if one cannot be found.
         /// </summary>
-        Task<ICustomEntityRoutingRule> AsRoutingRuleAsync();
+        IContentRepositoryQueryContext<ICustomEntityRoutingRule> AsRoutingRule();
     }
 }

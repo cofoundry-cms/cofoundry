@@ -13,13 +13,13 @@ namespace Cofoundry.Domain
     public interface IContentRepositoryCustomEntityByIdRangeQueryBuilder
     {
         /// <summary>
-        /// Returns a range of custom entities by a set of ids projected as a 
-        /// CustomEntityRenderSummary, which is a general-purpose projection with version 
-        /// specific data, including a deserialized data model. The results are 
-        /// version-sensitive and defaults to returning published versions only, but
-        /// this behavior can be controlled by the publishStatus parameter.
+        /// Projects the result as a CustomEntityRenderSummary, which is a 
+        /// general-purpose projection with version specific data, including 
+        /// a deserialized data model. The results are version-sensitive and 
+        /// defaults to returning published versions only, but this behavior 
+        /// can be controlled by the publishStatus parameter.
         /// </summary>
         /// <param name="publishStatusQuery">Used to determine which version of the custom entities to include data for.</param>
-        Task<IDictionary<int, CustomEntityRenderSummary>> AsRenderSummariesAsync(PublishStatusQuery? publishStatusQuery = null);
+        IContentRepositoryQueryContext<IDictionary<int, CustomEntityRenderSummary>> AsRenderSummaries(PublishStatusQuery? publishStatusQuery = null);
     }
 }

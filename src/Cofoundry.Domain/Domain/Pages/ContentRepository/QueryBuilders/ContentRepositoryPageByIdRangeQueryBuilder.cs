@@ -24,28 +24,28 @@ namespace Cofoundry.Domain
 
         public IExtendableContentRepository ExtendableContentRepository { get; }
 
-        public Task<IDictionary<int, PageRoute>> AsRoutesAsync()
+        public IContentRepositoryQueryContext<IDictionary<int, PageRoute>> AsRoutes()
         {
             var query = new GetPageRoutesByIdRangeQuery(_pageIds);
-            return ExtendableContentRepository.ExecuteQueryAsync(query);
+            return ContentRepositoryQueryContextFactory.Create(query, ExtendableContentRepository);
         }
         
-        public Task<IDictionary<int, PageRenderSummary>> AsRenderSummariesAsync(PublishStatusQuery? publishStatus = null)
+        public IContentRepositoryQueryContext<IDictionary<int, PageRenderSummary>> AsRenderSummaries(PublishStatusQuery? publishStatus = null)
         {
             var query = new GetPageRenderSummariesByIdRangeQuery(_pageIds, publishStatus);
-            return ExtendableContentRepository.ExecuteQueryAsync(query);
+            return ContentRepositoryQueryContextFactory.Create(query, ExtendableContentRepository);
         }
 
-        public Task<IDictionary<int, PageRenderDetails>> AsRenderDetailsAsync(PublishStatusQuery? publishStatus = null)
+        public IContentRepositoryQueryContext<IDictionary<int, PageRenderDetails>> AsRenderDetails(PublishStatusQuery? publishStatus = null)
         {
             var query = new GetPageRenderDetailsByIdRangeQuery(_pageIds, publishStatus);
-            return ExtendableContentRepository.ExecuteQueryAsync(query);
+            return ContentRepositoryQueryContextFactory.Create(query, ExtendableContentRepository);
         }
 
-        public Task<IDictionary<int, PageSummary>> AsSummariesAsync()
+        public IContentRepositoryQueryContext<IDictionary<int, PageSummary>> AsSummaries()
         {
             var query = new GetPageSummariesByIdRangeQuery(_pageIds);
-            return ExtendableContentRepository.ExecuteQueryAsync(query);
+            return ContentRepositoryQueryContextFactory.Create(query, ExtendableContentRepository);
         }
     }
 }

@@ -16,6 +16,6 @@ namespace Cofoundry.Domain
         /// The UserMicroSummary is a minimal projection of user data that is quick
         /// to load. 
         /// </summary>
-        Task<UserMicroSummary> AsMicroSummaryAsync();
+        IContentRepositoryQueryContext<UserMicroSummary> AsMicroSummary();
     }
 }

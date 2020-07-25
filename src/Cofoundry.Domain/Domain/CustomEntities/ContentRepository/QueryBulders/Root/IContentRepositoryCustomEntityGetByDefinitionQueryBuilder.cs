@@ -8,10 +8,10 @@ namespace Cofoundry.Domain
     /// <summary>
     /// Queries for retrieving all custom entities of a specific type (definition).
     /// </summary>
-    public interface IContentRepositoryCustomEntityGetAllQueryBuilder
+    public interface IContentRepositoryCustomEntityGetByDefinitionQueryBuilder
     {
         /// <summary>
-        /// Gets all custom entites of a specific type, projected as a
+        /// Queries all custom entites of a specific type, projected as a
         /// CustomEntityRenderSummary, which is a general-purpose projection with version 
         /// specific data, including a deserialized data model. The results are 
         /// version-sensitive and defaults to returning published versions only, but
@@ -21,13 +21,13 @@ namespace Cofoundry.Domain
         /// Used to determine which version of the custom entities to include data for. This 
         /// defaults to Published, meaning that only published custom entities will be returned.
         /// </param>
-        Task<ICollection<CustomEntityRenderSummary>> AsRenderSummaryAsync(PublishStatusQuery? publishStatusQuery = null);
+        IContentRepositoryQueryContext<ICollection<CustomEntityRenderSummary>> AsRenderSummary(PublishStatusQuery? publishStatusQuery = null);
 
         /// <summary>
-        /// Gets CustomEntityRoute data for all custom entities of a 
+        /// Queries CustomEntityRoute data for all custom entities of a 
         /// specific type. These route objects are small and cached which
         /// makes them good for quick lookups.
         /// </summary>
-        Task<ICollection<CustomEntityRoute>> AsRoutesAsync();
+        IContentRepositoryQueryContext<ICollection<CustomEntityRoute>> AsRoutes();
     }
 }

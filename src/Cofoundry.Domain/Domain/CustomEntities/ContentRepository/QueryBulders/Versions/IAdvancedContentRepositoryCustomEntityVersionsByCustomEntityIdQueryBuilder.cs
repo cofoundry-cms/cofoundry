@@ -16,6 +16,6 @@ namespace Cofoundry.Domain
         /// them as a paged collection of CustomEntityVersionSummary
         /// projections.
         /// </summary>
-        Task<PagedQueryResult<CustomEntityVersionSummary>> AsVersionSummariesAsync(GetCustomEntityVersionSummariesByCustomEntityIdQuery query);
+        IContentRepositoryQueryContext<PagedQueryResult<CustomEntityVersionSummary>> AsVersionSummaries(GetCustomEntityVersionSummariesByCustomEntityIdQuery query);
     }
 }

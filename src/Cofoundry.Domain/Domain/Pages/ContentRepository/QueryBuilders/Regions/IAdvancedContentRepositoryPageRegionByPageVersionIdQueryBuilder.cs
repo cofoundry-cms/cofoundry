@@ -11,9 +11,9 @@ namespace Cofoundry.Domain
     public interface IAdvancedContentRepositoryPageRegionByPageVersionIdQueryBuilder
     {
         /// <summary>
-        /// Returns a collection of content managed regions with
+        /// Query retruning a collection of content managed regions with
         /// block data for a specific version of a page.
         /// </summary>
-        Task<ICollection<PageRegionDetails>> AsDetailsAsync();
+        IContentRepositoryQueryContext<ICollection<PageRegionDetails>> AsDetails();
     }
 }

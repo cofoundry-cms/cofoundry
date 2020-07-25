@@ -19,16 +19,16 @@ namespace Cofoundry.Domain
 
         public IExtendableContentRepository ExtendableContentRepository { get; }
 
-        public Task<ICollection<CustomEntityDefinitionMicroSummary>> AsMicroSummariesAsync()
+        public IContentRepositoryQueryContext<ICollection<CustomEntityDefinitionMicroSummary>> AsMicroSummaries()
         {
             var query = new GetAllCustomEntityDefinitionMicroSummariesQuery();
-            return ExtendableContentRepository.ExecuteQueryAsync(query);
+            return ContentRepositoryQueryContextFactory.Create(query, ExtendableContentRepository);
         }
 
-        public Task<ICollection<CustomEntityDefinitionSummary>> AsSummariesAsync()
+        public IContentRepositoryQueryContext<ICollection<CustomEntityDefinitionSummary>> AsSummaries()
         {
             var query = new GetAllCustomEntityDefinitionSummariesQuery();
-            return ExtendableContentRepository.ExecuteQueryAsync(query);
+            return ContentRepositoryQueryContextFactory.Create(query, ExtendableContentRepository);
         }
     }
 }

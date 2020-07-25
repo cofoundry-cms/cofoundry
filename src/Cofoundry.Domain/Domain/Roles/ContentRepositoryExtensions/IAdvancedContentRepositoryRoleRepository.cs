@@ -19,11 +19,11 @@ namespace Cofoundry.Domain
         IContentRepositoryRoleSearchQueryBuilder Search();
 
         /// <summary>
-        /// Determines if a role title is unique within a specific UserArea.
+        /// Query to determine if a role title is unique within a specific UserArea.
         /// Role titles only have to be unique per UserArea.
         /// </summary>
         /// <param name="query">The parameters to run the query with.</param>
-        Task<bool> IsRoleTitleUniqueAsync(IsRoleTitleUniqueQuery query);
+        IContentRepositoryQueryContext<bool> IsRoleTitleUnique(IsRoleTitleUniqueQuery query);
 
         #endregion
 

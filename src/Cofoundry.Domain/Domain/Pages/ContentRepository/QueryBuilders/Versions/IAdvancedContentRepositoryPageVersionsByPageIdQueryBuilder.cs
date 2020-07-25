@@ -11,9 +11,9 @@ namespace Cofoundry.Domain
     public interface IAdvancedContentRepositoryPageVersionsByPageIdQueryBuilder
     {
         /// <summary>
-        /// Returns a paged collection of versions of a specific page, ordered 
+        /// Query returning a paged collection of versions of a specific page, ordered 
         /// historically with the latest/draft version first.
         /// </summary>
-        Task<PagedQueryResult<PageVersionSummary>> AsVersionSummariesAsync(GetPageVersionSummariesByPageIdQuery query);
+        IContentRepositoryQueryContext<PagedQueryResult<PageVersionSummary>> AsVersionSummaries(GetPageVersionSummariesByPageIdQuery query);
     }
 }

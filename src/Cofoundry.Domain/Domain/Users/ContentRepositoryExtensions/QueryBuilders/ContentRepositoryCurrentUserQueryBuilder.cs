@@ -20,22 +20,22 @@ namespace Cofoundry.Domain
 
         public IExtendableContentRepository ExtendableContentRepository { get; }
 
-        public Task<UserMicroSummary> AsMicroSummaryAsync()
+        public IContentRepositoryQueryContext<UserMicroSummary> AsMicroSummary()
         {
             var query = new GetCurrentUserMicroSummaryQuery();
-            return ExtendableContentRepository.ExecuteQueryAsync(query);
+            return ContentRepositoryQueryContextFactory.Create(query, ExtendableContentRepository);
         }
 
-        public Task<UserSummary> AsSummaryAsync()
+        public IContentRepositoryQueryContext<UserSummary> AsSummary()
         {
             var query = new GetCurrentUserSummaryQuery();
-            return ExtendableContentRepository.ExecuteQueryAsync(query);
+            return ContentRepositoryQueryContextFactory.Create(query, ExtendableContentRepository);
         }
 
-        public Task<UserDetails> AsDetailsAsync()
+        public IContentRepositoryQueryContext<UserDetails> AsDetails()
         {
             var query = new GetCurrentUserDetailsQuery();
-            return ExtendableContentRepository.ExecuteQueryAsync(query);
+            return ContentRepositoryQueryContextFactory.Create(query, ExtendableContentRepository);
         }
     }
 }

@@ -12,9 +12,9 @@ namespace Cofoundry.Domain
         : IContentRepositoryPageDirectoryGetAllQueryBuilder
     {
         /// <summary>
-        /// Returns a complete tree of page directory nodes, starting
+        /// Query to return a complete tree of page directory nodes, starting
         /// with the root page directory as a single node.
         /// </summary>
-        Task<PageDirectoryNode> AsTreeAsync();
+        IContentRepositoryQueryContext<PageDirectoryNode> AsTree();
     }
 }

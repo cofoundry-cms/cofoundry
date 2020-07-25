@@ -19,10 +19,10 @@ namespace Cofoundry.Domain
 
         public IExtendableContentRepository ExtendableContentRepository { get; }
 
-        public Task<ICollection<IPermission>> AsIPermissionAsync()
+        public IContentRepositoryQueryContext<ICollection<IPermission>> AsIPermission()
         {
             var query = new GetAllPermissionsQuery();
-            return ExtendableContentRepository.ExecuteQueryAsync(query);
+            return ContentRepositoryQueryContextFactory.Create(query, ExtendableContentRepository);
         }
     }
 }

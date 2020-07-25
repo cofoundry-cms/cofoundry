@@ -23,22 +23,22 @@ namespace Cofoundry.Domain
 
         public IExtendableContentRepository ExtendableContentRepository { get; }
 
-        public Task<ImageAssetDetails> AsDetailsAsync()
+        public IContentRepositoryQueryContext<ImageAssetDetails> AsDetails()
         {
             var query = new GetImageAssetDetailsByIdQuery(_imageAssetId);
-            return ExtendableContentRepository.ExecuteQueryAsync(query);
+            return ContentRepositoryQueryContextFactory.Create(query, ExtendableContentRepository);
         }
 
-        public Task<ImageAssetFile> AsFileAsync()
+        public IContentRepositoryQueryContext<ImageAssetFile> AsFile()
         {
             var query = new GetImageAssetFileByIdQuery(_imageAssetId);
-            return ExtendableContentRepository.ExecuteQueryAsync(query);
+            return ContentRepositoryQueryContextFactory.Create(query, ExtendableContentRepository);
         }
 
-        public Task<ImageAssetRenderDetails> AsRenderDetailsAsync()
+        public IContentRepositoryQueryContext<ImageAssetRenderDetails> AsRenderDetails()
         {
             var query = new GetImageAssetRenderDetailsByIdQuery(_imageAssetId);
-            return ExtendableContentRepository.ExecuteQueryAsync(query);
+            return ContentRepositoryQueryContextFactory.Create(query, ExtendableContentRepository);
         }
     }
 }

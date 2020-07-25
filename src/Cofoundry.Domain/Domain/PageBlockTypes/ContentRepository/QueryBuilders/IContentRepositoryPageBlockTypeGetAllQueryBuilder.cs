@@ -14,6 +14,6 @@ namespace Cofoundry.Domain
         /// The PageBlockTypeSummary projection is lightweight and designed to be cacheable.
         /// The results of this query are cached by default.
         /// </summary>
-        Task<ICollection<PageBlockTypeSummary>> AsSummariesAsync();
+        IContentRepositoryQueryContext<ICollection<PageBlockTypeSummary>> AsSummaries();
     }
 }

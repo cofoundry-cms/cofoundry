@@ -6,13 +6,13 @@ using System.Threading.Tasks;
 
 namespace Cofoundry.Domain
 {
-    public class ContentRepositoryCustomEntityGetAllQueryBuilder
-        : IContentRepositoryCustomEntityGetAllQueryBuilder
+    public class ContentRepositoryCustomEntityGetByDefinitionQueryBuilder
+        : IContentRepositoryCustomEntityGetByDefinitionQueryBuilder
         , IExtendableContentRepositoryPart
     {
         private readonly string _customEntityDefinitionCode;
 
-        public ContentRepositoryCustomEntityGetAllQueryBuilder(
+        public ContentRepositoryCustomEntityGetByDefinitionQueryBuilder(
             IExtendableContentRepository contentRepository,
             string customEntityDefinitionCode
             )
@@ -23,7 +23,7 @@ namespace Cofoundry.Domain
 
         public IExtendableContentRepository ExtendableContentRepository { get; }
 
-        public Task<ICollection<CustomEntityRenderSummary>> AsRenderSummaryAsync(PublishStatusQuery? publishStatusQuery = null)
+        public IContentRepositoryQueryContext<ICollection<CustomEntityRenderSummary>> AsRenderSummary(PublishStatusQuery? publishStatusQuery = null)
         {
             var query = new GetCustomEntityRenderSummariesByDefinitionCodeQuery(_customEntityDefinitionCode);
 
@@ -32,13 +32,13 @@ namespace Cofoundry.Domain
                 query.PublishStatus = publishStatusQuery.Value;
             }
 
-            return ExtendableContentRepository.ExecuteQueryAsync(query);
+            return ContentRepositoryQueryContextFactory.Create(query, ExtendableContentRepository);
         }
 
-        public Task<ICollection<CustomEntityRoute>> AsRoutesAsync()
+        public IContentRepositoryQueryContext<ICollection<CustomEntityRoute>> AsRoutes()
         {
             var query = new GetCustomEntityRoutesByDefinitionCodeQuery(_customEntityDefinitionCode);
-            return ExtendableContentRepository.ExecuteQueryAsync(query);
+            return ContentRepositoryQueryContextFactory.Create(query, ExtendableContentRepository);
         }
     }
 }

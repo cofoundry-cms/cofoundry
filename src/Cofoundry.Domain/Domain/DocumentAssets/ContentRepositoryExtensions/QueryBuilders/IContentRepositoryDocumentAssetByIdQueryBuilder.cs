@@ -15,6 +15,6 @@ namespace Cofoundry.Domain
         /// information required to render out a document to page, including 
         /// all the data needed to construct a document file url.
         /// </summary>
-        Task<DocumentAssetRenderDetails> AsRenderDetailsAsync();
+        IContentRepositoryQueryContext<DocumentAssetRenderDetails> AsRenderDetails();
     }
 }

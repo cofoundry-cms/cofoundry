@@ -18,11 +18,11 @@ namespace Cofoundry.Domain
         IAdvancedContentRepositoryPageVersionsByPageIdQueryBuilder GetByPageId();
 
         /// <summary>
-        /// Determines if a page has a draft version of not. A page can only have one draft
+        /// Query to determines if a page has a draft version of not. A page can only have one draft
         /// version at a time.
         /// </summary>
         /// <param name="pageId">PageId of the page to check.</param>
-        Task<bool> HasDraftAsync(int pageId);
+        IContentRepositoryQueryContext<bool> HasDraft(int pageId);
 
         #endregion
 

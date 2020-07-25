@@ -51,8 +51,6 @@ namespace Cofoundry.Domain
 
         #endregion
 
-        #region execution
-
         public async Task<CustomEntityDetails> ExecuteAsync(GetCustomEntityDetailsByIdQuery query, IExecutionContext executionContext)
         {
             var customEntityVersion = await QueryAsync(query.CustomEntityId);
@@ -242,7 +240,5 @@ namespace Cofoundry.Domain
 
             version.Model = (ICustomEntityDataModel)_dbUnstructuredDataSerializer.Deserialize(dbVersion.SerializedData, definition.DataModelType);
         }
-
-        #endregion
     }
 }

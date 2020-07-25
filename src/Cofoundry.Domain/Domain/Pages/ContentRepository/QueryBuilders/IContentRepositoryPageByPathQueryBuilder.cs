@@ -11,11 +11,11 @@ namespace Cofoundry.Domain
     public interface IContentRepositoryPageByPathQueryBuilder
     {
         /// <summary>
-        /// Attempts to find a matching page route using the supplied path. The path
+        /// A query that attempts to find a matching page route using the supplied path. The path
         /// has to be an absolute match, i.e. the query does not try and find a fall-back 
         /// similar route.
         /// </summary>
         /// <param name="query">Query parameters.</param>
-        Task<PageRoutingInfo> AsRoutingInfo(GetPageRoutingInfoByPathQuery query);
+        IContentRepositoryQueryContext<PageRoutingInfo> AsRoutingInfo(GetPageRoutingInfoByPathQuery query);
     }
 }

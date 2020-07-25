@@ -11,12 +11,12 @@ namespace Cofoundry.Domain
     public interface IContentRepositoryPageByDirectoryIdQueryBuilder
     {
         /// <summary>
-        /// Returns page routing data for pages that are nested immediately inside the specified 
+        /// Query returning page routing data for pages that are nested immediately inside the specified 
         /// directory. The PageRoute projection is a small page object focused on providing 
         /// routing data only. Data returned from this query is cached by 
         /// default as it's core to routing and often incorporated in more detailed
         /// page projections.
         /// </summary>
-        Task<ICollection<PageRoute>> AsRoutesAsync();
+        IContentRepositoryQueryContext<ICollection<PageRoute>> AsRoutes();
     }
 }

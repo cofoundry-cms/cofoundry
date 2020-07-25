@@ -16,6 +16,6 @@ namespace Cofoundry.Domain
         /// cached in order to make routing lookups speedy.
         /// </summary>
         /// <param name="query">The query parameters.</param>
-        Task<CustomEntityRoute> AsCustomEntityRoute(GetCustomEntityRouteByPathQuery query);
+        IContentRepositoryQueryContext<CustomEntityRoute> AsCustomEntityRoute(GetCustomEntityRouteByPathQuery query);
     }
 }

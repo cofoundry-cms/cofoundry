@@ -15,6 +15,6 @@ namespace Cofoundry.Domain
         /// Returns all instances of ICustomEntityRoutingRule registered
         /// in the application.
         /// </summary>
-        Task<ICollection<ICustomEntityRoutingRule>> AsRoutingRulesAsync();
+        IContentRepositoryQueryContext<ICollection<ICustomEntityRoutingRule>> AsRoutingRules();
     }
 }

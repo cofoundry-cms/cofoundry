@@ -24,7 +24,7 @@ namespace Cofoundry.Domain
 
         public IExtendableContentRepository ExtendableContentRepository { get; }
 
-        public Task<IDictionary<int, CustomEntityRenderSummary>> AsRenderSummariesAsync(PublishStatusQuery? publishStatus = null)
+        public IContentRepositoryQueryContext<IDictionary<int, CustomEntityRenderSummary>> AsRenderSummaries(PublishStatusQuery? publishStatus = null)
         {
             var query = new GetCustomEntityRenderSummariesByIdRangeQuery(_customEntityIds);
             if (publishStatus.HasValue)
@@ -32,13 +32,13 @@ namespace Cofoundry.Domain
                 query.PublishStatus = publishStatus.Value;
             }
 
-            return ExtendableContentRepository.ExecuteQueryAsync(query);
+            return ContentRepositoryQueryContextFactory.Create(query, ExtendableContentRepository);
         }
         
-        public Task<IDictionary<int, CustomEntitySummary>> AsSummariesAsync()
+        public IContentRepositoryQueryContext<IDictionary<int, CustomEntitySummary>> AsSummaries()
         {
             var query = new GetCustomEntitySummariesByIdRangeQuery(_customEntityIds);
-            return ExtendableContentRepository.ExecuteQueryAsync(query);
+            return ContentRepositoryQueryContextFactory.Create(query, ExtendableContentRepository);
         }
     }
 }

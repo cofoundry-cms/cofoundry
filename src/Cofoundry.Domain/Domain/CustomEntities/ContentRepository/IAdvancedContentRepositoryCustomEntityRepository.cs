@@ -19,13 +19,13 @@ namespace Cofoundry.Domain
         /// The code identifier for the custom entity type
         /// to query for.
         /// </param>
-        IContentRepositoryCustomEntityGetAllQueryBuilder GetAll(string customEntityDefinitionCode);
+        IContentRepositoryCustomEntityGetByDefinitionQueryBuilder GetByDefinitionCode(string customEntityDefinitionCode);
 
         /// <summary>
         /// Retrieve all custom entities of a type in one query.
         /// </summary>
         /// <typeparam name="TDefinition">The definition type to fetch custom entities for.</typeparam>
-        IContentRepositoryCustomEntityGetAllQueryBuilder GetAll<TDefinition>() where TDefinition : ICustomEntityDefinition;
+        IContentRepositoryCustomEntityGetByDefinitionQueryBuilder GetByDefinition<TDefinition>() where TDefinition : ICustomEntityDefinition;
 
 
         /// <summary>
@@ -48,12 +48,12 @@ namespace Cofoundry.Domain
         IAdvancedContentRepositoryCustomEntitySearchQueryBuilder Search();
 
         /// <summary>
-        /// Determines if the UrlSlug property for a custom entity is invalid because it
+        /// Query to determine if the UrlSlug property for a custom entity is invalid because it
         /// already exists. If the custom entity defition has ForceUrlSlugUniqueness 
         /// set to true then duplicates are not permitted, otherwise true will always
         /// be returned.
         /// </summary>
-        Task<bool> IsUrlSlugUniqueAsync(IsCustomEntityUrlSlugUniqueQuery query);
+        IContentRepositoryQueryContext<bool> IsUrlSlugUnique(IsCustomEntityUrlSlugUniqueQuery query);
 
         /// <summary>
         /// Gets custom entity page data by a url path/route. Note that this

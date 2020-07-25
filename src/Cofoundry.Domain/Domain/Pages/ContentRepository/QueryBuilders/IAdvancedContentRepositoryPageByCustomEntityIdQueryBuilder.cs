@@ -11,10 +11,10 @@ namespace Cofoundry.Domain
     public interface IAdvancedContentRepositoryPageByCustomEntityIdQueryBuilder
     {
         /// <summary>
-        /// Finds routing information for a custom entitiy by it's id. Although
+        /// Query that finds routing information for a custom entitiy by it's id. Although
         /// in a typical website you wouldn't have multiple details pages for a custom entity
         /// type, it is supported and the query returns a collection of routes.
         /// </summary>
-        Task<ICollection<PageRoutingInfo>> AsRoutingInfoAsync();
+        IContentRepositoryQueryContext<ICollection<PageRoutingInfo>> AsRoutingInfo();
     }
 }

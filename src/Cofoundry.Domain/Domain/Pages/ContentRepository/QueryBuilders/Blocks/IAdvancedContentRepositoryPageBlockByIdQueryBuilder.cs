@@ -11,10 +11,10 @@ namespace Cofoundry.Domain
     public interface IAdvancedContentRepositoryPageBlockByIdQueryBuilder
     {
         /// <summary>
-        /// Returns data for a specific block in a page version by it's id. Because
+        /// Query returning data for a specific block in a page version by it's id. Because
         /// the mapped display model may contain other versioned entities, you can 
         /// optionally pass down a PublishStatusQuery to use in the mapping process.
         /// </summary>
-        Task<PageVersionBlockRenderDetails> AsRenderDetailsAsync(PublishStatusQuery? publishStatusQuery = null);
+        IContentRepositoryQueryContext<PageVersionBlockRenderDetails> AsRenderDetails(PublishStatusQuery? publishStatusQuery = null);
     }
 }

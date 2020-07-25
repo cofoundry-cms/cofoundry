@@ -14,6 +14,6 @@ namespace Cofoundry.Domain
         /// Returns all the permissions in the system as instances
         /// of their base definition types, which all inherit from IPermission.
         /// </summary>
-        Task<ICollection<IPermission>> AsIPermissionAsync();
+        IContentRepositoryQueryContext<ICollection<IPermission>> AsIPermission();
     }
 }

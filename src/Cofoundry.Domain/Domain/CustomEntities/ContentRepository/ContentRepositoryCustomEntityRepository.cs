@@ -25,12 +25,12 @@ namespace Cofoundry.Domain
 
         #region queries
 
-        public IContentRepositoryCustomEntityGetAllQueryBuilder GetAll(string customEntityDefinitionCode)
+        public IContentRepositoryCustomEntityGetByDefinitionQueryBuilder GetAll(string customEntityDefinitionCode)
         {
-            return new ContentRepositoryCustomEntityGetAllQueryBuilder(ExtendableContentRepository, customEntityDefinitionCode);
+            return new ContentRepositoryCustomEntityGetByDefinitionQueryBuilder(ExtendableContentRepository, customEntityDefinitionCode);
         }
 
-        public IContentRepositoryCustomEntityGetAllQueryBuilder GetAll<TDefinition>() where TDefinition : ICustomEntityDefinition
+        public IContentRepositoryCustomEntityGetByDefinitionQueryBuilder GetAll<TDefinition>() where TDefinition : ICustomEntityDefinition
         {
             var customEntityDefinition = _customEntityDefinitionRepository.Get<TDefinition>();
 
@@ -39,7 +39,7 @@ namespace Cofoundry.Domain
                 throw new Exception("Custom Entity Definition not returned from ICustomEntityDefinitionRepository: " + typeof(TDefinition).FullName);
             }
 
-            return new ContentRepositoryCustomEntityGetAllQueryBuilder(ExtendableContentRepository, customEntityDefinition.CustomEntityDefinitionCode);
+            return new ContentRepositoryCustomEntityGetByDefinitionQueryBuilder(ExtendableContentRepository, customEntityDefinition.CustomEntityDefinitionCode);
         }
 
         public IContentRepositoryCustomEntityByIdQueryBuilder GetById(int customEntityId)

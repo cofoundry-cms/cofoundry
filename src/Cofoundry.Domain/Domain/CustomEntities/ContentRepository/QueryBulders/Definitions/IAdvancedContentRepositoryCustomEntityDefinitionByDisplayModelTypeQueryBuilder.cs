@@ -16,6 +16,6 @@ namespace Cofoundry.Domain
         /// The returned object is a lightweight projection of the data defined in a custom entity 
         /// definition class and is typically used as part of another domain model.
         /// </summary>
-        Task<CustomEntityDefinitionMicroSummary> AsMicroSummaryAsync();
+        IContentRepositoryQueryContext<CustomEntityDefinitionMicroSummary> AsMicroSummary();
     }
 }

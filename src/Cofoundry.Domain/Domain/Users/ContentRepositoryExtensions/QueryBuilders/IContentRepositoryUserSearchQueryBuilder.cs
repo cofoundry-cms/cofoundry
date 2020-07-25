@@ -15,7 +15,6 @@ namespace Cofoundry.Domain
         /// a paged set of summary results. 
         /// </summary>
         /// <param name="query">Criteria to filter results by.</param>
-        /// <returns>Paged set of results.</returns>
-        Task<PagedQueryResult<UserSummary>> AsSummariesAsync(SearchUserSummariesQuery query);
+        IContentRepositoryQueryContext<PagedQueryResult<UserSummary>> AsSummaries(SearchUserSummariesQuery query);
     }
 }

@@ -19,10 +19,10 @@ namespace Cofoundry.Domain
 
         public IExtendableContentRepository ExtendableContentRepository { get; }
 
-        public Task<ICollection<RewriteRuleSummary>> AsSummariesAsync()
+        public IContentRepositoryQueryContext<ICollection<RewriteRuleSummary>> AsSummaries()
         {
             var query = new GetAllRewriteRuleSummariesQuery();
-            return ExtendableContentRepository.ExecuteQueryAsync(query);
+            return ContentRepositoryQueryContextFactory.Create(query, ExtendableContentRepository);
         }
     }
 }

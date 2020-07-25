@@ -35,7 +35,7 @@ namespace Cofoundry.Domain
         /// Usernames only have to be unique per UserArea.
         /// </summary>
         /// <param name="query">Query parameters.</param>
-        Task<bool> IsUsernameUniqueAsync(IsUsernameUniqueQuery query);
+        IContentRepositoryQueryContext<bool> IsUsernameUnique(IsUsernameUniqueQuery query);
 
         #endregion
 

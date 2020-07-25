@@ -31,6 +31,40 @@ namespace Cofoundry.BasicTestSite
             return Json(result);
         }
 
+        [Route("test2")]
+        public async Task<IActionResult> Test2()
+        {
+            var entity = await _contentRepository
+                .CustomEntities()
+                .GetById(1)
+                .AsRenderSummary(PublishStatusQuery.Published)
+                .ExecuteAsync();
+
+            var enity2 = await _contentRepository
+                .CustomEntities()
+                .GetById(1)
+                .AsRenderSummary(PublishStatusQuery.Published)
+                .Map(e => (IDictionary<string,string>)(new Dictionary<string, string>()))
+                .ExecuteAsync();
+
+            var ids = new int[] { 1 };
+            var catCustomEntities = await _contentRepository
+                .CustomEntities()
+                .GetByIdRange(ids)
+                .AsRenderSummaries()
+                //.MapItem(i => new { i.UrlSlug, i.Title })
+                .MapItem(MapCatAsync)
+                .FilterAndOrderByKeys(ids)
+                .Map(v => v.OrderBy(v => v.Title))
+                .ExecuteAsync();
+
+            return Json(entity);
+        }
+
+        private Task<CustomEntityRenderSummary> MapCatAsync(CustomEntityRenderSummary entity)
+        {
+            return Task.FromResult(entity);
+        }
 
         [Route("test/test")]
         public async Task<IActionResult> Test()
@@ -39,32 +73,37 @@ namespace Cofoundry.BasicTestSite
                 .WithElevatedPermissions()
                 .Users()
                 .GetById(2)
-                .AsMicroSummaryAsync();
+                .AsMicroSummary()
+                .ExecuteAsync();
 
             var image = await _contentRepository
                 .ImageAssets()
                 .GetById(2)
-                .AsRenderDetailsAsync();
+                .AsRenderDetails()
+                .ExecuteAsync();
 
             var page = await _contentRepository
                 .Pages()
                 .Search()
-                .AsRenderSummariesAsync(new SearchPageRenderSummariesQuery()
+                .AsRenderSummaries(new SearchPageRenderSummariesQuery()
                 {
                     PageSize = 20,
                     PageDirectoryId = 2
-                });
+                })
+                .ExecuteAsync();
 
             var page2 = await _contentRepository
                 .Pages()
                 .GetById(1)
-                .AsRenderSummaryAsync();
+                .AsRenderSummary()
+                .ExecuteAsync();
 
             // Perhaps NotFound should look like this:
             await _contentRepository
                 .Pages()
                 .NotFound()
-                .GetByPathAsync(new GetNotFoundPageRouteByPathQuery());
+                .GetByPath(new GetNotFoundPageRouteByPathQuery())
+                .ExecuteAsync();
 
             var regions = await _contentRepository
                 .Pages()
@@ -72,21 +111,24 @@ namespace Cofoundry.BasicTestSite
                 .Regions()
                 .Blocks()
                 .GetById(2)
-                .AsRenderDetailsAsync(PublishStatusQuery.Latest);
+                .AsRenderDetails(PublishStatusQuery.Latest)
+                .ExecuteAsync();
 
             await _contentRepository
                 .Pages()
                 .GetByPath()
-                .AsRoutingInfo(new GetPageRoutingInfoByPathQuery());
+                .AsRoutingInfo(new GetPageRoutingInfoByPathQuery())
+                .ExecuteAsync();
             //.PublishAsync(new PublishPageCommand() { PageId = 2 });
 
             var isUnique = await _contentRepository
                 .Users()
-                .IsUsernameUniqueAsync(new IsUsernameUniqueQuery()
+                .IsUsernameUnique(new IsUsernameUniqueQuery()
                 {
                     UserAreaCode = CofoundryAdminUserArea.AreaCode,
                     Username = "test@cofoundry.org"
-                });
+                })
+                .ExecuteAsync();
 
             int userId;
 
@@ -95,7 +137,8 @@ namespace Cofoundry.BasicTestSite
                 var adminRole = await _contentRepository
                     .Roles()
                     .GetByCode(SuperAdminRole.SuperAdminRoleCode)
-                    .AsDetailsAsync();
+                    .AsDetails()
+                    .ExecuteAsync();
 
                 userId = await _contentRepository
                     .WithElevatedPermissions()
@@ -117,39 +160,46 @@ namespace Cofoundry.BasicTestSite
                     .CustomEntities()
                     .Definitions()
                     .GetByCode(BlogPostCustomEntityDefinition.DefinitionCode)
-                    .AsSummaryAsync();
+                    .AsSummary()
+                    .ExecuteAsync();
 
                 await _contentRepository
                     .CustomEntities()
                     .DataModelSchemas()
                     .GetByCustomEntityDefinitionCode(BlogPostCustomEntityDefinition.DefinitionCode)
-                    .AsDetailsAsync();
+                    .AsDetails()
+                    .ExecuteAsync();
 
                 await _contentRepository
                     .CustomEntities()
                     .GetById(1)
-                    .AsRenderSummaryAsync();
+                    .AsRenderSummary()
+                    .ExecuteAsync();
 
                 var permissions = await _contentRepository
                     .Roles()
                     .Permissions()
                     .GetAll()
-                    .AsIPermissionAsync();
+                    .AsIPermission()
+                    .ExecuteAsync();
 
                 var directoryTree = await _contentRepository
                     .PageDirectories()
                     .GetAll()
-                    .AsTreeAsync();
+                    .AsTree()
+                    .ExecuteAsync();
 
                 var rewriteRules = await _contentRepository
                     .RewriteRules()
                     .GetAll()
-                    .AsSummariesAsync();
+                    .AsSummaries()
+                    .ExecuteAsync();
 
                 var blockTypes = await _contentRepository
                     .PageBlockTypes()
                     .GetAll()
-                    .AsSummariesAsync();
+                    .AsSummaries()
+                    .ExecuteAsync();
 
                 await scope.CompleteAsync();
             }

@@ -16,7 +16,7 @@ namespace Cofoundry.Domain
         /// data defined in a custom entity definition class which is typically used 
         /// as part of another domain model.
         /// </summary>
-        Task<ICollection<CustomEntityDefinitionMicroSummary>> AsMicroSummariesAsync();
+        IContentRepositoryQueryContext<ICollection<CustomEntityDefinitionMicroSummary>> AsMicroSummaries();
 
         /// <summary>
         /// Gets a collection of all custom entity definitions registered
@@ -25,6 +25,6 @@ namespace Cofoundry.Domain
         /// using generics to identify the data model type, there is instead a 
         /// DataModelType property.
         /// </summary>
-        Task<ICollection<CustomEntityDefinitionSummary>> AsSummariesAsync();
+        IContentRepositoryQueryContext<ICollection<CustomEntityDefinitionSummary>> AsSummaries();
     }
 }

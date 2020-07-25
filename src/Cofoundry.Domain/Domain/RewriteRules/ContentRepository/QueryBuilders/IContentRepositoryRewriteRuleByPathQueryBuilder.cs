@@ -14,6 +14,6 @@ namespace Cofoundry.Domain
         /// The RewriteRuleSummary projection is small and designed to be cacheable.
         /// This query used a cache by default and is quick to access.
         /// </summary>
-        Task<RewriteRuleSummary> AsSummaryAsync();
+        IContentRepositoryQueryContext<RewriteRuleSummary> AsSummary();
     }
 }

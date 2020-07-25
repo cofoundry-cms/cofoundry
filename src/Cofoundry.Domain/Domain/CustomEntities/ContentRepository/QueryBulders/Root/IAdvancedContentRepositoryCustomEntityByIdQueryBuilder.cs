@@ -17,7 +17,7 @@ namespace Cofoundry.Domain
         /// and the CustomEntityDetails projection includes audit data and other additional 
         /// information that should normally be hidden from a customer facing app.
         /// </summary>
-        Task<CustomEntityDetails> AsDetailsAsync();
+        IContentRepositoryQueryContext<CustomEntityDetails> AsDetails();
 
         /// <summary>
         /// Gets a specific version of a custom entity (equivalent to using 
@@ -31,7 +31,7 @@ namespace Cofoundry.Domain
         /// <param name="customEntityVersionId">
         /// Use this to specify a specific version to return in the query.
         /// </param>
-        Task<CustomEntityRenderSummary> AsRenderSummaryAsync(int customEntityVersionId);
+        IContentRepositoryQueryContext<CustomEntityRenderSummary> AsRenderSummary(int customEntityVersionId);
 
         /// <summary>
         /// Gets a specific version of a custom entity (equivalent to using 
@@ -52,6 +52,6 @@ namespace Cofoundry.Domain
         /// <param name="customEntityVersionId">
         /// Use this to specify a specific version to return in the query.
         /// </param>
-        Task<CustomEntityRenderDetails> AsRenderDetailsAsync(int pageId, int customEntityVersionId);
+        IContentRepositoryQueryContext<CustomEntityRenderDetails> AsRenderDetails(int pageId, int customEntityVersionId);
     }
 }

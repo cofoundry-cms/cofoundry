@@ -12,11 +12,11 @@ namespace Cofoundry.Domain
     public interface IAdvancedContentRepositoryPageByCustomEntityDefinitionCodeQueryBuilder
     {
         /// <summary>
-        /// Retreives all page routes for custom entity details pages for a 
+        /// Query that returns all page routes for custom entity details pages for a 
         /// specific custom entity definition. Typically there would only
         /// be a single page for a custom entity (e.g. blog post details)
         /// but it is possible to have multiple.
         /// </summary>
-        Task<ICollection<PageRoute>> AsRoutesAsync();
+        IContentRepositoryQueryContext<ICollection<PageRoute>> AsRoutes();
     }
 }

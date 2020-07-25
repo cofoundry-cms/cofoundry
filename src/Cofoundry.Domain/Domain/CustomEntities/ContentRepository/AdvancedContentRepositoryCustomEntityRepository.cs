@@ -25,12 +25,12 @@ namespace Cofoundry.Domain
 
         #region queries
 
-        public IContentRepositoryCustomEntityGetAllQueryBuilder GetAll(string customEntityDefinitionCode)
+        public IContentRepositoryCustomEntityGetByDefinitionQueryBuilder GetByDefinitionCode(string customEntityDefinitionCode)
         {
-            return new ContentRepositoryCustomEntityGetAllQueryBuilder(ExtendableContentRepository, customEntityDefinitionCode);
+            return new ContentRepositoryCustomEntityGetByDefinitionQueryBuilder(ExtendableContentRepository, customEntityDefinitionCode);
         }
 
-        public IContentRepositoryCustomEntityGetAllQueryBuilder GetAll<TDefinition>() where TDefinition : ICustomEntityDefinition
+        public IContentRepositoryCustomEntityGetByDefinitionQueryBuilder GetByDefinition<TDefinition>() where TDefinition : ICustomEntityDefinition
         {
             var customEntityDefinition = _customEntityDefinitionRepository.Get<TDefinition>();
 
@@ -39,7 +39,7 @@ namespace Cofoundry.Domain
                 throw new Exception("Custom Entity Definition not returned from ICustomEntityDefinitionRepository: " + typeof(TDefinition).FullName);
             }
 
-            return new ContentRepositoryCustomEntityGetAllQueryBuilder(ExtendableContentRepository, customEntityDefinition.CustomEntityDefinitionCode);
+            return new ContentRepositoryCustomEntityGetByDefinitionQueryBuilder(ExtendableContentRepository, customEntityDefinition.CustomEntityDefinitionCode);
         }
 
         public IAdvancedContentRepositoryCustomEntityByIdQueryBuilder GetById(int customEntityId)
@@ -57,9 +57,9 @@ namespace Cofoundry.Domain
             return new ContentRepositoryCustomEntitySearchQueryBuilder(ExtendableContentRepository);
         }
 
-        public Task<bool> IsUrlSlugUniqueAsync(IsCustomEntityUrlSlugUniqueQuery query)
+        public IContentRepositoryQueryContext<bool> IsUrlSlugUnique(IsCustomEntityUrlSlugUniqueQuery query)
         {
-            return ExtendableContentRepository.ExecuteQueryAsync(query);
+            return ContentRepositoryQueryContextFactory.Create(query, ExtendableContentRepository);
         }
 
         #endregion

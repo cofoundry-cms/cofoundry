@@ -23,10 +23,10 @@ namespace Cofoundry.Domain
 
         public IExtendableContentRepository ExtendableContentRepository { get; }
 
-        public Task<IDictionary<int, ImageAssetRenderDetails>> AsRenderDetailsAsync()
+        public IContentRepositoryQueryContext<IDictionary<int, ImageAssetRenderDetails>> AsRenderDetails()
         {
             var query = new GetImageAssetRenderDetailsByIdRangeQuery(_imageAssetIds);
-            return ExtendableContentRepository.ExecuteQueryAsync(query);
+            return ContentRepositoryQueryContextFactory.Create(query, ExtendableContentRepository);
         }
     }
 }

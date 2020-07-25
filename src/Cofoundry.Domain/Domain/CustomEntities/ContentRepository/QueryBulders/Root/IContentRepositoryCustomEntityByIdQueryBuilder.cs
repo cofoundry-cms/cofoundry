@@ -11,27 +11,27 @@ namespace Cofoundry.Domain
     public interface IContentRepositoryCustomEntityByIdQueryBuilder
     {
         /// <summary>
-        /// Gets a custom entity by it's database id, returning a 
+        /// Queries a custom entity by it's database id, returning a 
         /// general-purpose CustomEntityRenderSummary projection which
         /// includes version specific data and a deserialized data model. 
         /// The result is version-sensitive, use the publishStatusQuery parameter
         /// to control the version returned.
         /// </summary>
         /// <param name="publishStatusQuery">Used to determine which version of the custom entity to include data for.</param>
-        Task<CustomEntityRenderSummary> AsRenderSummaryAsync(PublishStatusQuery publishStatusQuery);
+        IContentRepositoryQueryContext<CustomEntityRenderSummary> AsRenderSummary(PublishStatusQuery publishStatusQuery);
 
         /// <summary>
-        /// Gets a custom entity by it's database id, returning a 
+        /// Queries a custom entity by it's database id, returning a 
         /// general-purpose CustomEntityRenderSummary projection which
         /// includes version specific data and a deserialized data model. 
         /// The result is version-sensitive and defaults to returning published 
         /// versions only, but you can use the overload with the publishStatusQuery 
         /// parameter to control this behavior.
         /// </summary>
-        Task<CustomEntityRenderSummary> AsRenderSummaryAsync();
+        IContentRepositoryQueryContext<CustomEntityRenderSummary> AsRenderSummary();
 
         /// <summary>
-        /// Gets a custom entity by it's database id, projected as a
+        /// Queries a custom entity by it's database id, projected as a
         /// CustomEntityRenderDetails, which contains all data for rendering a specific 
         /// version of a custom entity out to a page, including template data for all the 
         /// content-editable page regions. This projection is specific to a particular 
@@ -46,6 +46,6 @@ namespace Cofoundry.Domain
         /// included in the returned object.
         /// </param>
         /// <param name="publishStatusQuery">Used to determine which version of the custom entity to include data for.</param>
-        Task<CustomEntityRenderDetails> AsRenderDetailsAsync(int pageId, PublishStatusQuery? publishStatusQuery = null);
+        IContentRepositoryQueryContext<CustomEntityRenderDetails> AsRenderDetails(int pageId, PublishStatusQuery? publishStatusQuery = null);
     }
 }

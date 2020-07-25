@@ -15,7 +15,6 @@ namespace Cofoundry.Domain
         /// a paged result. 
         /// </summary>
         /// <param name="query">Criteria to filter results by.</param>
-        /// <returns>Paged set of results.</returns>
-        Task<PagedQueryResult<RoleMicroSummary>> AsMicroSummariesAsync(SearchRolesQuery query);
+        IContentRepositoryQueryContext<PagedQueryResult<RoleMicroSummary>> AsMicroSummaries(SearchRolesQuery query);
     }
 }

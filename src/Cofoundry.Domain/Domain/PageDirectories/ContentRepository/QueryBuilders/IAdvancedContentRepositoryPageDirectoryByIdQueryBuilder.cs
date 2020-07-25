@@ -17,6 +17,6 @@ namespace Cofoundry.Domain
         /// navigations properties.
         /// </summary>
         /// <returns></returns>
-        Task<PageDirectoryNode> AsNodeAsync();
+        IContentRepositoryQueryContext<PageDirectoryNode> AsNode();
     }
 }
