@@ -7,6 +7,11 @@ namespace Cofoundry.Domain.Extendable
 {
     public static class IContentRepositoryExtendableExtensions
     {
+        public static IExtendableContentRepository AsExtendableContentRepository(this IDomainRepository contentRepository)
+        {
+            return CastToExtendableContentRepository(contentRepository);
+        }
+
         public static IExtendableContentRepository AsExtendableContentRepository(this IContentRepository contentRepository)
         {
             return CastToExtendableContentRepository(contentRepository);

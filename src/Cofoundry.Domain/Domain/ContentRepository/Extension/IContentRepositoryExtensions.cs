@@ -11,18 +11,6 @@ namespace Cofoundry.Domain
     public static class IContentRepositoryExtensions
     {
         /// <summary>
-        /// Used to manage transactions for multiple domain commands.
-        /// This abstraction is an enhanced version of 
-        /// System.Transaction.TransactionScope and works in the same way.
-        /// </summary>
-        public static IContentRepositoryTransactionManager Transactions(this IContentRepository contentRepository)
-        {
-            var extendedContentRepositry = contentRepository.AsExtendableContentRepository();
-
-            return extendedContentRepositry.ServiceProvider.GetRequiredService<IContentRepositoryTransactionManager>();
-        }
-
-        /// <summary>
         /// Sets the execution context for any queries or commands
         /// chained of this instance. Typically used to impersonate
         /// a user, elevate permissions or maintain context in nested

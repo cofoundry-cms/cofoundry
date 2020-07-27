@@ -10,12 +10,15 @@ namespace Cofoundry.BasicTestSite
     public class TestController : Controller
     {
         private readonly IAdvancedContentRepository _contentRepository;
+        private readonly IDomainRepository _domainRepository;
 
         public TestController(
-            IAdvancedContentRepository contentRepository
+            IAdvancedContentRepository contentRepository,
+            IDomainRepository domainRepository
             )
         {
             _contentRepository = contentRepository;
+            _domainRepository = domainRepository;
         }
 
         [Route("/test-admin/api/pets")]
@@ -34,7 +37,12 @@ namespace Cofoundry.BasicTestSite
         [Route("test2")]
         public async Task<IActionResult> Test2()
         {
+            await _domainRepository
+                .WithElevatedPermissions()
+                .ExecuteQueryAsync(new GetCustomEntityDataModelSchemaDetailsByDefinitionCodeQuery(""));
+
             var entity = await _contentRepository
+                .WithElevatedPermissions()
                 .CustomEntities()
                 .GetById(1)
                 .AsRenderSummary(PublishStatusQuery.Published)

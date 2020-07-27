@@ -8,8 +8,20 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Cofoundry.Domain
 {
-    public static class IAdvancedContentRepositoryExtensions
+    public static class IDomainRepositoryExtensions
     {
+        /// <summary>
+        /// Used to manage transactions for multiple domain commands.
+        /// This abstraction is an enhanced version of 
+        /// System.Transaction.TransactionScope and works in the same way.
+        /// </summary>
+        public static IContentRepositoryTransactionManager Transactions(this IDomainRepository contentRepository)
+        {
+            var extendedContentRepositry = contentRepository.AsExtendableContentRepository();
+
+            return extendedContentRepositry.ServiceProvider.GetRequiredService<IContentRepositoryTransactionManager>();
+        }
+
         /// <summary>
         /// Sets the execution context for any queries or commands
         /// chained of this instance. Typically used to impersonate
@@ -19,7 +31,7 @@ namespace Cofoundry.Domain
         /// <param name="executionContext">
         /// The execution context instance to use.
         /// </param>
-        public static IAdvancedContentRepository WithExecutionContext(this IAdvancedContentRepository contentRepository, IExecutionContext executionContext)
+        public static IDomainRepository WithExecutionContext(this IDomainRepository contentRepository, IExecutionContext executionContext)
         {
             if (executionContext == null) throw new ArgumentNullException(nameof(executionContext));
 
@@ -37,7 +49,7 @@ namespace Cofoundry.Domain
         /// logged in user does not have permission for, e.g. signing up a new
         /// user prior to login.
         /// </summary>
-        public static IAdvancedContentRepository WithElevatedPermissions(this IAdvancedContentRepository contentRepository)
+        public static IDomainRepository WithElevatedPermissions(this IDomainRepository contentRepository)
         {
             var extendedApi = contentRepository.AsExtendableContentRepository();
 

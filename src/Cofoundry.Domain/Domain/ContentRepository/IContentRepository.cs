@@ -11,19 +11,7 @@ namespace Cofoundry.Domain
     /// a single repository. A more extensive range of queries and
     /// commands are available in IAdvancedContentRepository.
     /// </summary>
-    public interface IContentRepository
+    public interface IContentRepository : IDomainRepository
     {
-        /// <summary>
-        /// Directly executes an IQuery instance and returns
-        /// the results.
-        /// </summary>
-        /// <param name="query">Query to execute.</param>
-        Task<TResult> ExecuteQueryAsync<TResult>(IQuery<TResult> query);
-
-        /// <summary>
-        /// Directly executes an ICommand instance.
-        /// </summary>
-        /// <param name="command">Command to execute.</param>
-        Task ExecuteCommandAsync(ICommand command);
     }
 }
