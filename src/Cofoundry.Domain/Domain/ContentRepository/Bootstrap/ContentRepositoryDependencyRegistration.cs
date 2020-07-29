@@ -9,7 +9,7 @@ namespace Cofoundry.Domain
     {
         public void Register(IContainerRegister container)
         {
-            container.Register<ContentRepository>(new Type[] { typeof(IContentRepository), typeof(IAdvancedContentRepository) });
+            container.Register<ContentRepository>(new Type[] { typeof(IContentRepository), typeof(IAdvancedContentRepository), typeof(IDomainRepository) });
             container.Register<IContentRepositoryWithElevatedPermissions, ContentRepositoryWithElevatedPermissions>();
             container.Register<IContentRepositoryWithCustomExecutionContext, ContentRepositoryWithCustomExecutionContext>();
             container.Register<IContentRepositoryTransactionManager, ContentRepositoryTransactionManager>();
