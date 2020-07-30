@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Cofoundry.Web;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 
 namespace Cofoundry.BasicTestSite
@@ -24,10 +24,7 @@ namespace Cofoundry.BasicTestSite
         {
             webBuilder
                 .UseStartup<Startup>()
-                .ConfigureAppConfiguration((hostContext, config) =>
-                {
-                    config.AddJsonFile("appsettings.local.json", optional: true);
-                });
+                .UseLocalConfigFile();
         }
     }
 }
