@@ -50,7 +50,7 @@ namespace Cofoundry.Core.Validation
         public ValidationErrorException(ValidationError validationError)
             : base(new ValidationResult(validationError?.Message, validationError?.Properties), null, null)
         {
-            ErrorCode = validationError.Message;
+            ErrorCode = validationError.ErrorCode;
         }
 
         /// <summary>
