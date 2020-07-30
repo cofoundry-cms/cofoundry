@@ -13,7 +13,7 @@ using Cofoundry.Core.Data;
 namespace Cofoundry.Domain
 {
     public class UpdatePageUrlCommandHandler 
-        : IAsyncCommandHandler<UpdatePageUrlCommand>
+        : ICommandHandler<UpdatePageUrlCommand>
         , IPermissionRestrictedCommandHandler<UpdatePageUrlCommand>
     {
         #region constructor
@@ -89,7 +89,7 @@ namespace Cofoundry.Domain
                 var rule = await _queryExecutor.ExecuteAsync(new GetCustomEntityRoutingRuleByRouteFormatQuery(command.CustomEntityRoutingRule), executionContext);
                 if (rule == null)
                 {
-                    throw new PropertyValidationException("Routing rule not found", "CustomEntityRoutingRule", command.CustomEntityRoutingRule);
+                    throw ValidationErrorException.CreateWithProperties("Routing rule not found", "CustomEntityRoutingRule");
                 }
 
                 var customEntityDefinition = await _queryExecutor.ExecuteAsync(new GetCustomEntityDefinitionSummaryByCodeQuery(page.CustomEntityDefinitionCode), executionContext);
@@ -97,7 +97,7 @@ namespace Cofoundry.Domain
 
                 if (customEntityDefinition.ForceUrlSlugUniqueness && !rule.RequiresUniqueUrlSlug)
                 {
-                    throw new PropertyValidationException("Ths routing rule requires a unique url slug, but the selected custom entity does not enforce url slug uniqueness", "CustomEntityRoutingRule", command.CustomEntityRoutingRule);
+                    throw ValidationErrorException.CreateWithProperties("Ths routing rule requires a unique url slug, but the selected custom entity does not enforce url slug uniqueness", "CustomEntityRoutingRule");
                 }
 
                 page.UrlPath = rule.RouteFormat;

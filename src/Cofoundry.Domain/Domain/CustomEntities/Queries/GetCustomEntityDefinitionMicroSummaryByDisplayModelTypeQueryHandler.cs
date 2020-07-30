@@ -13,7 +13,7 @@ namespace Cofoundry.Domain
     /// definition class and is typically used as part of another domain model.
     /// </summary>
     public class GetCustomEntityDefinitionMicroSummaryByDisplayModelTypeQueryHandler 
-        : IAsyncQueryHandler<GetCustomEntityDefinitionMicroSummaryByDisplayModelTypeQuery, CustomEntityDefinitionMicroSummary>
+        : IQueryHandler<GetCustomEntityDefinitionMicroSummaryByDisplayModelTypeQuery, CustomEntityDefinitionMicroSummary>
         , IIgnorePermissionCheckHandler
     {
         #region constructor

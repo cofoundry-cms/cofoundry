@@ -20,7 +20,7 @@ namespace Cofoundry.Domain
     /// data migration and prevents unintended deletions of page content.
     /// </summary>
     public class RegisterPageTemplatesCommandHandler
-        : IAsyncCommandHandler<RegisterPageTemplatesCommand>
+        : ICommandHandler<RegisterPageTemplatesCommand>
         , IPermissionRestrictedCommandHandler<RegisterPageTemplatesCommand>
     {
         #region constructor

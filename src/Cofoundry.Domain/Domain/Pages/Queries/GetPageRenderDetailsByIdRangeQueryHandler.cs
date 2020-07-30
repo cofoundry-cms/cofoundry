@@ -14,7 +14,7 @@ namespace Cofoundry.Domain
     /// the data required to render a page, including template data for all the content-editable regions.
     /// </summary>
     public class GetPageRenderDetailsByIdRangeQueryHandler
-        : IAsyncQueryHandler<GetPageRenderDetailsByIdRangeQuery, IDictionary<int, PageRenderDetails>>
+        : IQueryHandler<GetPageRenderDetailsByIdRangeQuery, IDictionary<int, PageRenderDetails>>
         , IPermissionRestrictedQueryHandler<GetPageRenderDetailsByIdRangeQuery, IDictionary<int, PageRenderDetails>>
     {
         #region constructor

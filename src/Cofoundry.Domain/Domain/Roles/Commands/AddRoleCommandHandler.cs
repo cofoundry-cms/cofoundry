@@ -15,7 +15,7 @@ namespace Cofoundry.Domain
     /// Adds a new role to a user area with a set of permissions.
     /// </summary>
     public class AddRoleCommandHandler 
-        : IAsyncCommandHandler<AddRoleCommand>
+        : ICommandHandler<AddRoleCommand>
         , IPermissionRestrictedCommandHandler<AddRoleCommand>
     {
         #region constructor
@@ -114,7 +114,7 @@ namespace Cofoundry.Domain
         {
             if (!isUnique)
             {
-                throw new PropertyValidationException("A role with this title already exists", nameof(Role.Title));
+                throw ValidationErrorException.CreateWithProperties("A role with this title already exists", nameof(Role.Title));
             }
         }
 

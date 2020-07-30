@@ -12,7 +12,7 @@ using Cofoundry.Core;
 namespace Cofoundry.Domain
 {
     public class GetPageTemplateFileInfoByPathQueryHandler 
-        : IAsyncQueryHandler<GetPageTemplateFileInfoByPathQuery, PageTemplateFileInfo>
+        : IQueryHandler<GetPageTemplateFileInfoByPathQuery, PageTemplateFileInfo>
         , IPermissionRestrictedQueryHandler<GetPageTemplateFileInfoByPathQuery, PageTemplateFileInfo>
     {
         #region constructor

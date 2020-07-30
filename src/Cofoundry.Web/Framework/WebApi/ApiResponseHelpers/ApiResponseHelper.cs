@@ -308,14 +308,25 @@ namespace Cofoundry.Web
                     errors.Add(ToValidationError(result));
                 }
             }
-            else if (ex.ValidationResult != null)
-            {
-                errors.Add(ToValidationError(ex.ValidationResult));
-            }
             else
             {
-                var error = new ValidationError();
-                error.Message = ex.Message;
+                ValidationError error;
+
+                if (ex.ValidationResult != null)
+                {
+                    error = ToValidationError(ex.ValidationResult);
+                }
+                else
+                {
+                    error = new ValidationError();
+                    error.Message = ex.Message;
+                }
+
+                if (ex is ValidationErrorException exceptionWithCode)
+                {
+                    error.ErrorCode = exceptionWithCode.ErrorCode;
+                }
+
                 errors.Add(error);
             }
         }

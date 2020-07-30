@@ -10,7 +10,7 @@ using Cofoundry.Core.Data;
 namespace Cofoundry.Domain
 {
     public class MarkAsSetUpCommandHandler 
-        : IAsyncCommandHandler<MarkAsSetUpCommand>
+        : ICommandHandler<MarkAsSetUpCommand>
         , IIgnorePermissionCheckHandler
     {
         private const string SETTING_KEY = "IsSetup";

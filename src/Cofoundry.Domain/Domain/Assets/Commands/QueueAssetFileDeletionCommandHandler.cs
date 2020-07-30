@@ -12,7 +12,7 @@ namespace Cofoundry.Domain
     /// can be deleted by a background process.
     /// </summary>
     public class QueueAssetFileDeletionCommandHandler 
-        : IAsyncCommandHandler<QueueAssetFileDeletionCommand>
+        : ICommandHandler<QueueAssetFileDeletionCommand>
         , IPermissionRestrictedCommandHandler<QueueAssetFileDeletionCommand>
     {
         private readonly CofoundryDbContext _dbContext;

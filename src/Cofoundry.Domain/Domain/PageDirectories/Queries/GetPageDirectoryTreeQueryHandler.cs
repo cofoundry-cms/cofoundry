@@ -14,7 +14,7 @@ namespace Cofoundry.Domain
     /// with the root directory as a single node.
     /// </summary>
     public class GetPageDirectoryTreeQueryHandler 
-        : IAsyncQueryHandler<GetPageDirectoryTreeQuery, PageDirectoryNode>
+        : IQueryHandler<GetPageDirectoryTreeQuery, PageDirectoryNode>
         , IPermissionRestrictedQueryHandler<GetPageDirectoryTreeQuery, PageDirectoryNode>
     {
         #region constructor

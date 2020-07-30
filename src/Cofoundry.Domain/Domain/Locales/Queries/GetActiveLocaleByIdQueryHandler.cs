@@ -8,7 +8,7 @@ using Cofoundry.Domain.CQS;
 namespace Cofoundry.Domain
 {
     public class GetActiveLocaleByIdQueryHandler 
-        : IAsyncQueryHandler<GetActiveLocaleByIdQuery, ActiveLocale>
+        : IQueryHandler<GetActiveLocaleByIdQuery, ActiveLocale>
         , IIgnorePermissionCheckHandler
     {
         private readonly IQueryExecutor _queryExecutor;

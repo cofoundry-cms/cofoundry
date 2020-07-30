@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 namespace Cofoundry.Domain
 {
     public class GetUpdatePageDraftVersionCommandByIdQueryHandler 
-        : IAsyncQueryHandler<GetUpdateCommandByIdQuery<UpdatePageDraftVersionCommand>, UpdatePageDraftVersionCommand>
+        : IQueryHandler<GetUpdateCommandByIdQuery<UpdatePageDraftVersionCommand>, UpdatePageDraftVersionCommand>
         , IPermissionRestrictedQueryHandler<GetUpdateCommandByIdQuery<UpdatePageDraftVersionCommand>, UpdatePageDraftVersionCommand>
     {
         #region constructor

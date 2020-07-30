@@ -14,7 +14,7 @@ namespace Cofoundry.Domain
     /// pages will be returned irrecpective of whether they aree published or not.
     /// </summary>
     public class GetPageSummariesByIdRangeQueryHandler
-        : IAsyncQueryHandler<GetPageSummariesByIdRangeQuery, IDictionary<int, PageSummary>>
+        : IQueryHandler<GetPageSummariesByIdRangeQuery, IDictionary<int, PageSummary>>
         , IIgnorePermissionCheckHandler
     {
         #region constructor

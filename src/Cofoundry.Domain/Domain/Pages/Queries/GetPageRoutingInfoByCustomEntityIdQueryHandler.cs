@@ -13,7 +13,7 @@ namespace Cofoundry.Domain
     /// type, it is supported and the query returns a collection of routes.
     /// </summary>
     public class GetPageRoutingInfoByCustomEntityIdQueryHandler 
-        : IAsyncQueryHandler<GetPageRoutingInfoByCustomEntityIdQuery, ICollection<PageRoutingInfo>>
+        : IQueryHandler<GetPageRoutingInfoByCustomEntityIdQuery, ICollection<PageRoutingInfo>>
         , IPermissionRestrictedQueryHandler<GetPageRoutingInfoByCustomEntityIdQuery, ICollection<PageRoutingInfo>>
     {
         private readonly IQueryExecutor _queryExecutor;

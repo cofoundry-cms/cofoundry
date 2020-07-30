@@ -15,7 +15,7 @@ namespace Cofoundry.Domain
     /// OldPassword field to authenticate the request.
     /// </summary>
     public class UpdateCurrentUserPasswordCommandHandler 
-        : IAsyncCommandHandler<UpdateCurrentUserPasswordCommand>
+        : ICommandHandler<UpdateCurrentUserPasswordCommand>
         , IPermissionRestrictedCommandHandler<UpdateCurrentUserPasswordCommand>
     {
         #region constructor
@@ -63,7 +63,7 @@ namespace Cofoundry.Domain
 
             if (!_userAuthenticationHelper.IsPasswordCorrect(user, command.OldPassword))
             {
-                throw new PropertyValidationException("Incorrect password", "OldPassword");
+                throw ValidationErrorException.CreateWithProperties("Incorrect password", "OldPassword");
             }
 
             _passwordUpdateCommandHelper.UpdatePassword(command.NewPassword, user, executionContext);

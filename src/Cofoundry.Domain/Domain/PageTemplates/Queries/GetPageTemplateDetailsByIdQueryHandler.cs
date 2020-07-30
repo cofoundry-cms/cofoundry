@@ -10,7 +10,7 @@ using Cofoundry.Domain.QueryModels;
 namespace Cofoundry.Domain
 {
     public class GetPageTemplateDetailsByIdQueryHandler 
-        : IAsyncQueryHandler<GetPageTemplateDetailsByIdQuery, PageTemplateDetails>
+        : IQueryHandler<GetPageTemplateDetailsByIdQuery, PageTemplateDetails>
         , IPermissionRestrictedQueryHandler<GetPageTemplateDetailsByIdQuery, PageTemplateDetails>
     {
         #region constructor

@@ -18,7 +18,7 @@ namespace Cofoundry.Domain
     /// as a separate process.
     /// </summary>
     public class DeleteImageAssetCommandHandler 
-        : IAsyncCommandHandler<DeleteImageAssetCommand>
+        : ICommandHandler<DeleteImageAssetCommand>
         , IPermissionRestrictedCommandHandler<DeleteImageAssetCommand>
     {
         #region constructor

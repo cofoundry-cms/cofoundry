@@ -14,7 +14,7 @@ namespace Cofoundry.Domain
     /// to identify the data model type, there is instead a DataModelType property.
     /// </summary>
     public class GetCustomEntityDefinitionSummaryByCodeQueryHandler 
-        : IAsyncQueryHandler<GetCustomEntityDefinitionSummaryByCodeQuery, CustomEntityDefinitionSummary>
+        : IQueryHandler<GetCustomEntityDefinitionSummaryByCodeQuery, CustomEntityDefinitionSummary>
         , IIgnorePermissionCheckHandler
     {
         private readonly ICustomEntityDefinitionRepository _customEntityDefinitionRepository;

@@ -14,7 +14,7 @@ namespace Cofoundry.Domain
     /// version at a time.
     /// </summary>
     public class DoesPageHaveDraftVersionQueryHandler
-        : IAsyncQueryHandler<DoesPageHaveDraftVersionQuery, bool>
+        : IQueryHandler<DoesPageHaveDraftVersionQuery, bool>
         , IPermissionRestrictedQueryHandler<DoesPageHaveDraftVersionQuery, bool>
     {
         #region constructor

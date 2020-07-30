@@ -19,7 +19,7 @@ namespace Cofoundry.Domain
     /// again.
     /// </summary>
     public class UnPublishPageCommandHandler 
-        : IAsyncCommandHandler<UnPublishPageCommand>
+        : ICommandHandler<UnPublishPageCommand>
         , IPermissionRestrictedCommandHandler<UnPublishPageCommand>
     {
         #region constructor

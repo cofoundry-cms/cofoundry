@@ -12,7 +12,7 @@ using System.ComponentModel.DataAnnotations;
 namespace Cofoundry.Domain
 {
     public class AddRedirectRuleCommandHandler 
-        : IAsyncCommandHandler<AddRedirectRuleCommand>
+        : ICommandHandler<AddRedirectRuleCommand>
         , IPermissionRestrictedCommandHandler<AddRedirectRuleCommand>
     {
         #region constructor

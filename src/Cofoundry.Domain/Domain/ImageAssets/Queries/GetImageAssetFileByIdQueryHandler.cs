@@ -10,7 +10,7 @@ using System.IO;
 namespace Cofoundry.Domain
 {
     public class GetImageAssetFileByIdQueryHandler 
-        : IAsyncQueryHandler<GetImageAssetFileByIdQuery, ImageAssetFile>
+        : IQueryHandler<GetImageAssetFileByIdQuery, ImageAssetFile>
         , IPermissionRestrictedQueryHandler<GetImageAssetFileByIdQuery, ImageAssetFile>
     {
         #region constructor

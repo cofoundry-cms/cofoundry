@@ -13,7 +13,7 @@ using Cofoundry.Core;
 namespace Cofoundry.Domain
 {
     public class AddPageVersionBlockCommandHandler
-        : IAsyncCommandHandler<AddPageVersionBlockCommand>
+        : ICommandHandler<AddPageVersionBlockCommand>
         , IPermissionRestrictedCommandHandler<AddPageVersionBlockCommand>
     {
         private readonly CofoundryDbContext _dbContext;

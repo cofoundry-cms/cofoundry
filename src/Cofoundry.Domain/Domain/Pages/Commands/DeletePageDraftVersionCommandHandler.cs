@@ -16,7 +16,7 @@ namespace Cofoundry.Domain
     /// it exists. If no draft exists then no action is taken.
     /// </summary>
     public class DeletePageDraftVersionCommandHandler
-        : IAsyncCommandHandler<DeletePageDraftVersionCommand>
+        : ICommandHandler<DeletePageDraftVersionCommand>
         , IPermissionRestrictedCommandHandler<DeletePageDraftVersionCommand>
     {
         #region constructor

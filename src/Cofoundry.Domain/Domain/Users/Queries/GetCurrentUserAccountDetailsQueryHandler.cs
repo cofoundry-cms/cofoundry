@@ -13,7 +13,7 @@ namespace Cofoundry.Domain
     /// user. If the user is not logged in then null is returned.
     /// </summary>
     public class GetCurrentUserAccountDetailsQueryHandler 
-        : IAsyncQueryHandler<GetCurrentUserAccountDetailsQuery, UserAccountDetails>
+        : IQueryHandler<GetCurrentUserAccountDetailsQuery, UserAccountDetails>
         , IIgnorePermissionCheckHandler
     {
         private readonly CofoundryDbContext _dbContext;

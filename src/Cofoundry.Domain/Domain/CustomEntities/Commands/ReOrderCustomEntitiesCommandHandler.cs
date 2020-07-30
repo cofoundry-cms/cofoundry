@@ -17,7 +17,7 @@ namespace Cofoundry.Domain
     /// IOrderableCustomEntityDefintion to be able to set ordering.
     /// </summary>
     public class ReOrderCustomEntitiesCommandHandler 
-        : IAsyncCommandHandler<ReOrderCustomEntitiesCommand>
+        : ICommandHandler<ReOrderCustomEntitiesCommand>
         , IPermissionRestrictedCommandHandler<ReOrderCustomEntitiesCommand>
     {
         #region constructor

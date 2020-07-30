@@ -86,11 +86,11 @@ namespace Cofoundry.Domain
             // configurable blacklist or whitelist? 
             if (DangerousFileConstants.DangerousFileExtensions.Contains(file.FileExtension))
             {
-                throw new PropertyValidationException("The type of file you're trying to upload isn't allowed.", "File");
+                throw ValidationErrorException.CreateWithProperties("The type of file you're trying to upload isn't allowed.", "File");
             }
             else if (string.IsNullOrWhiteSpace(file.ContentType) || DangerousFileConstants.DangerousMimeTypes.Contains(file.ContentType))
             {
-                throw new PropertyValidationException("The type of file you're trying to upload isn't allowed.", "File");
+                throw ValidationErrorException.CreateWithProperties("The type of file you're trying to upload isn't allowed.", "File");
             }
         }
 

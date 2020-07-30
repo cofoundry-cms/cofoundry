@@ -17,7 +17,7 @@ namespace Cofoundry.Domain
     /// this behavior can be controlled by the PublishStatus query property.
     /// </summary>
     public class SearchPageRenderSummariesQueryHandler 
-        : IAsyncQueryHandler<SearchPageRenderSummariesQuery, PagedQueryResult<PageRenderSummary>>
+        : IQueryHandler<SearchPageRenderSummariesQuery, PagedQueryResult<PageRenderSummary>>
         , IPermissionRestrictedQueryHandler<SearchPageRenderSummariesQuery, PagedQueryResult<PageRenderSummary>>
     {
         private readonly CofoundryDbContext _dbContext;

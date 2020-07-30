@@ -16,7 +16,7 @@ namespace Cofoundry.Domain
     /// projections.
     /// </summary>
     public class GetCustomEntityVersionSummariesByCustomEntityIdQueryHandler 
-        : IAsyncQueryHandler<GetCustomEntityVersionSummariesByCustomEntityIdQuery, PagedQueryResult<CustomEntityVersionSummary>>
+        : IQueryHandler<GetCustomEntityVersionSummariesByCustomEntityIdQuery, PagedQueryResult<CustomEntityVersionSummary>>
         , IIgnorePermissionCheckHandler
     {
         #region constructor

@@ -11,7 +11,7 @@ using Cofoundry.Core;
 namespace Cofoundry.Domain
 {
     public class EnsureUserAreaExistsCommandHandler
-        : IAsyncCommandHandler<EnsureUserAreaExistsCommand>
+        : ICommandHandler<EnsureUserAreaExistsCommand>
         , IIgnorePermissionCheckHandler
     {
         #region constructor

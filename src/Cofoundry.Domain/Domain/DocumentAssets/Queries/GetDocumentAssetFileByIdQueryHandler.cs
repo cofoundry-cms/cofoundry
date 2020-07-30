@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore;
 namespace Cofoundry.Domain
 {
     public class GetDocumentAssetFileByIdQueryHandler 
-        : IAsyncQueryHandler<GetDocumentAssetFileByIdQuery, DocumentAssetFile>
+        : IQueryHandler<GetDocumentAssetFileByIdQuery, DocumentAssetFile>
         , IPermissionRestrictedQueryHandler<GetDocumentAssetFileByIdQuery, DocumentAssetFile>
     {
         private readonly IFileStoreService _fileStoreService;

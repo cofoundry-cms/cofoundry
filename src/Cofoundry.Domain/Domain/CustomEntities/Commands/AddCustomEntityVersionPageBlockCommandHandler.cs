@@ -16,7 +16,7 @@ namespace Cofoundry.Domain
     /// Adds a new block to a template region on a custom entity page.
     /// </summary>
     public class AddCustomEntityVersionPageBlockCommandHandler
-        : IAsyncCommandHandler<AddCustomEntityVersionPageBlockCommand>
+        : ICommandHandler<AddCustomEntityVersionPageBlockCommand>
         , IIgnorePermissionCheckHandler
     {
         #region constructor

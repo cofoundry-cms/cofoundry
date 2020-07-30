@@ -9,7 +9,7 @@ using System.Text.RegularExpressions;
 namespace Cofoundry.Domain
 {
     public class GetActiveLocaleByIETFLanguageTagQueryHandler 
-        : IAsyncQueryHandler<GetActiveLocaleByIETFLanguageTagQuery, ActiveLocale>
+        : IQueryHandler<GetActiveLocaleByIETFLanguageTagQuery, ActiveLocale>
         , IIgnorePermissionCheckHandler
     {
         private readonly IQueryExecutor _queryExecutor;

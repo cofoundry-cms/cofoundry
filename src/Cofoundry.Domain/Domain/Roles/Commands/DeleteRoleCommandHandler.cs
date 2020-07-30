@@ -15,7 +15,7 @@ namespace Cofoundry.Domain
     /// deleted if assigned to users.
     /// </summary>
     public class DeleteRoleCommandHandler 
-        : IAsyncCommandHandler<DeleteRoleCommand>
+        : ICommandHandler<DeleteRoleCommand>
         , IPermissionRestrictedCommandHandler<DeleteRoleCommand>
     {
         #region constructor

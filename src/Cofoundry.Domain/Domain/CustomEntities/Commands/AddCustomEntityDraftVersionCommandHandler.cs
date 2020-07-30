@@ -18,7 +18,7 @@ namespace Cofoundry.Domain
     /// thrown if there is already a draft version.
     /// </summary>
     public class AddCustomEntityDraftVersionCommandHandler 
-        : IAsyncCommandHandler<AddCustomEntityDraftVersionCommand>
+        : ICommandHandler<AddCustomEntityDraftVersionCommand>
         , IIgnorePermissionCheckHandler
     {
         #region constructor

@@ -14,7 +14,7 @@ namespace Cofoundry.Domain
     /// for querying lists of definitions in the admin panel.
     /// </summary>
     public class GetCustomEntityDefinitionMicroSummaryByCodeQueryHandler 
-        : IAsyncQueryHandler<GetCustomEntityDefinitionMicroSummaryByCodeQuery, CustomEntityDefinitionMicroSummary>
+        : IQueryHandler<GetCustomEntityDefinitionMicroSummaryByCodeQuery, CustomEntityDefinitionMicroSummary>
         , IIgnorePermissionCheckHandler
     {
         #region constructor 

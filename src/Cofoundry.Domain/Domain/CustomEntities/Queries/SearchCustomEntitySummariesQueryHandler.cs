@@ -17,7 +17,7 @@ namespace Cofoundry.Domain
     /// version-sensitive context sach as a public webpage.
     /// </summary>
     public class SearchCustomEntitySummariesQueryHandler 
-        : IAsyncQueryHandler<SearchCustomEntitySummariesQuery, PagedQueryResult<CustomEntitySummary>>
+        : IQueryHandler<SearchCustomEntitySummariesQuery, PagedQueryResult<CustomEntitySummary>>
         , IPermissionRestrictedQueryHandler<SearchCustomEntitySummariesQuery, PagedQueryResult<CustomEntitySummary>>
     {
         #region constructor

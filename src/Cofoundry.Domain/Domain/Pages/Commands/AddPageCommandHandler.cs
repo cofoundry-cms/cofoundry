@@ -14,7 +14,7 @@ using Cofoundry.Core.Data;
 namespace Cofoundry.Domain
 {
     public class AddPageCommandHandler 
-        : IAsyncCommandHandler<AddPageCommand>
+        : ICommandHandler<AddPageCommand>
         , IPermissionRestrictedCommandHandler<AddPageCommand>
     {
         #region constructor
@@ -100,11 +100,11 @@ namespace Cofoundry.Domain
 
             if (locale == null)
             {
-                throw new PropertyValidationException("The selected locale does not exist.", "LocaleId");
+                throw ValidationErrorException.CreateWithProperties("The selected locale does not exist.", "LocaleId");
             }
             if (!locale.IsActive)
             {
-                throw new PropertyValidationException("The selected locale is not active and cannot be used.", "LocaleId");
+                throw ValidationErrorException.CreateWithProperties("The selected locale is not active and cannot be used.", "LocaleId");
             }
 
             return locale;
@@ -120,7 +120,7 @@ namespace Cofoundry.Domain
 
             if (pageDirectory == null)
             {
-                throw new PropertyValidationException("The selected page directory does not exist.", nameof(pageDirectory.PageDirectoryId));
+                throw ValidationErrorException.CreateWithProperties("The selected page directory does not exist.", nameof(pageDirectory.PageDirectoryId));
             }
 
             return pageDirectory;
@@ -191,12 +191,12 @@ namespace Cofoundry.Domain
 
             if (rule == null)
             {
-                throw new PropertyValidationException("Routing rule not found", "CustomEntityRoutingRule", command.CustomEntityRoutingRule);
+                throw ValidationErrorException.CreateWithProperties("Routing rule not found", "CustomEntityRoutingRule");
             }
 
             if (rule.RequiresUniqueUrlSlug && !definition.ForceUrlSlugUniqueness)
             {
-                throw new PropertyValidationException("Ths routing rule requires a unique url slug, but the selected custom entity does not enforce url slug uniqueness", "CustomEntityRoutingRule");
+                throw ValidationErrorException.CreateWithProperties("Ths routing rule requires a unique url slug, but the selected custom entity does not enforce url slug uniqueness", "CustomEntityRoutingRule");
             }
 
             return rule;
@@ -207,7 +207,7 @@ namespace Cofoundry.Domain
             var definition = await _queryExecutor.ExecuteAsync(new GetCustomEntityDefinitionSummaryByCodeQuery(customEntityDefinitionCode), executionContext);
             if (definition == null)
             {
-                throw new PropertyValidationException("Custom entity defintion does not exists", nameof(definition.CustomEntityDefinitionCode), customEntityDefinitionCode);
+                throw ValidationErrorException.CreateWithProperties("Custom entity defintion does not exists", nameof(definition.CustomEntityDefinitionCode));
             }
             return definition;
         }
@@ -220,14 +220,14 @@ namespace Cofoundry.Domain
 
             if (template == null)
             {
-                throw new PropertyValidationException("Template not found", nameof(command.PageTemplateId));
+                throw ValidationErrorException.CreateWithProperties("Template not found", nameof(command.PageTemplateId));
             }
 
             if (command.PageType == PageType.CustomEntityDetails)
             {
                 if (!template.IsCustomEntityTemplate())
                 {
-                    throw new PropertyValidationException("Template does not support custom entities", nameof(command.PageTemplateId));
+                    throw ValidationErrorException.CreateWithProperties("Template does not support custom entities", nameof(command.PageTemplateId));
                 }
             }
 

@@ -19,7 +19,7 @@ namespace Cofoundry.Domain
     /// asset file will redirect to the new asset file.
     /// </summary>
     public class UpdateImageAssetCommandHandler 
-        : IAsyncCommandHandler<UpdateImageAssetCommand>
+        : ICommandHandler<UpdateImageAssetCommand>
         , IPermissionRestrictedCommandHandler<UpdateImageAssetCommand>
     {
         #region constructor

@@ -11,7 +11,7 @@ using System.Reflection;
 namespace Cofoundry.Domain
 {
     public class UpdateUnstructuredDataDependenciesCommandHandler 
-        : IAsyncCommandHandler<UpdateUnstructuredDataDependenciesCommand>
+        : ICommandHandler<UpdateUnstructuredDataDependenciesCommand>
         , IPermissionRestrictedCommandHandler<UpdateUnstructuredDataDependenciesCommand>
     {
         #region constructor

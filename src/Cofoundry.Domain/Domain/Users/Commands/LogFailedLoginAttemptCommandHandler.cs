@@ -11,7 +11,7 @@ using Cofoundry.Domain.Data;
 namespace Cofoundry.Domain
 {
     public class LogFailedLoginAttemptCommandHandler
-        : IAsyncCommandHandler<LogFailedLoginAttemptCommand>
+        : ICommandHandler<LogFailedLoginAttemptCommand>
         , IIgnorePermissionCheckHandler
     {
         #region constructor

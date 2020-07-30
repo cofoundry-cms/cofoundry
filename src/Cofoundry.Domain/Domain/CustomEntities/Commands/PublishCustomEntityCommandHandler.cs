@@ -18,7 +18,7 @@ namespace Cofoundry.Domain
     /// a date is specified then the publish date will be updated.
     /// </summary>
     public class PublishCustomEntityCommandHandler 
-        : IAsyncCommandHandler<PublishCustomEntityCommand>
+        : ICommandHandler<PublishCustomEntityCommand>
         , IIgnorePermissionCheckHandler
     {
         #region constructor

@@ -7,7 +7,7 @@ using Cofoundry.Core;
 namespace Cofoundry.Domain
 {
     public class GetPageRoutesByIdRangeQueryHandler 
-        : IAsyncQueryHandler<GetPageRoutesByIdRangeQuery, IDictionary<int, PageRoute>>
+        : IQueryHandler<GetPageRoutesByIdRangeQuery, IDictionary<int, PageRoute>>
         , IPermissionRestrictedQueryHandler<GetPageRoutesByIdRangeQuery, IDictionary<int, PageRoute>>
     {
         private readonly IQueryExecutor _queryExecutor;

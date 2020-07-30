@@ -17,7 +17,7 @@ namespace Cofoundry.Domain
     /// of a custom entity page.
     /// </summary>
     public class UpdateCustomEntityVersionPageBlockCommandHandler
-        : IAsyncCommandHandler<UpdateCustomEntityVersionPageBlockCommand>
+        : ICommandHandler<UpdateCustomEntityVersionPageBlockCommand>
         , IIgnorePermissionCheckHandler
     {
         #region constructor

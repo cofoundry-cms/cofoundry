@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore;
 namespace Cofoundry.Domain
 {
     public class GetUpdateCurrentUserAccountCommandByIdQueryHandler 
-        : IAsyncQueryHandler<GetUpdateCommandByIdQuery<UpdateCurrentUserAccountCommand>, UpdateCurrentUserAccountCommand>
+        : IQueryHandler<GetUpdateCommandByIdQuery<UpdateCurrentUserAccountCommand>, UpdateCurrentUserAccountCommand>
         , IIgnorePermissionCheckHandler
     {
         private readonly CofoundryDbContext _dbContext;

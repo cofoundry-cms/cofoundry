@@ -14,7 +14,7 @@ namespace Cofoundry.Domain
     /// Deletes a custom entity and all associated versions permanently.
     /// </summary>
     public class DeleteCustomEntityCommandHandler 
-        : IAsyncCommandHandler<DeleteCustomEntityCommand>
+        : ICommandHandler<DeleteCustomEntityCommand>
         , IIgnorePermissionCheckHandler
     {
         #region constructor

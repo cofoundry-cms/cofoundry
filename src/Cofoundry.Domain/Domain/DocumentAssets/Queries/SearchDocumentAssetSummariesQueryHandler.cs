@@ -14,7 +14,7 @@ namespace Cofoundry.Domain
     /// returns a paged set of summary results. 
     /// </summary>
     public class SearchDocumentAssetSummariesQueryHandler 
-        : IAsyncQueryHandler<SearchDocumentAssetSummariesQuery, PagedQueryResult<DocumentAssetSummary>>
+        : IQueryHandler<SearchDocumentAssetSummariesQuery, PagedQueryResult<DocumentAssetSummary>>
         , IPermissionRestrictedQueryHandler<SearchDocumentAssetSummariesQuery, PagedQueryResult<DocumentAssetSummary>>
     {
         #region constructor

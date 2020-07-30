@@ -10,7 +10,7 @@ using Cofoundry.Core;
 namespace Cofoundry.Domain
 {
     public class GetUpdatePageDirectoryCommandByIdQueryHandler
-        : IAsyncQueryHandler<GetUpdateCommandByIdQuery<UpdatePageDirectoryCommand>, UpdatePageDirectoryCommand>
+        : IQueryHandler<GetUpdateCommandByIdQuery<UpdatePageDirectoryCommand>, UpdatePageDirectoryCommand>
         , IPermissionRestrictedQueryHandler<GetUpdateCommandByIdQuery<UpdatePageDirectoryCommand>, UpdatePageDirectoryCommand>
     {
         #region constructor

@@ -19,7 +19,7 @@ namespace Cofoundry.Domain
     /// published version.
     /// </summary>
     public class UpdateCustomEntityDraftVersionCommandHandler 
-        : IAsyncCommandHandler<UpdateCustomEntityDraftVersionCommand>
+        : ICommandHandler<UpdateCustomEntityDraftVersionCommand>
         , IPermissionRestrictedCommandHandler<UpdateCustomEntityDraftVersionCommand>
     {
         #region constructor

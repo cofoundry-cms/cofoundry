@@ -11,7 +11,7 @@ using Cofoundry.Core;
 namespace Cofoundry.Domain
 {
     public class GetUpdateCustomEntityDraftVersionCommandByIdQueryHandler 
-        : IAsyncQueryHandler<GetUpdateCommandByIdQuery<UpdateCustomEntityDraftVersionCommand>, UpdateCustomEntityDraftVersionCommand>
+        : IQueryHandler<GetUpdateCommandByIdQuery<UpdateCustomEntityDraftVersionCommand>, UpdateCustomEntityDraftVersionCommand>
         , IIgnorePermissionCheckHandler
     {
         #region constructor

@@ -8,7 +8,7 @@ using Cofoundry.Domain.CQS;
 namespace Cofoundry.Domain
 {
     public class GetPageBlockTypeSummaryByIdQueryHandler
-        : IAsyncQueryHandler<GetPageBlockTypeSummaryByIdQuery, PageBlockTypeSummary>
+        : IQueryHandler<GetPageBlockTypeSummaryByIdQuery, PageBlockTypeSummary>
         , IPermissionRestrictedQueryHandler<GetPageBlockTypeSummaryByIdQuery, PageBlockTypeSummary>
     {
         #region constructor

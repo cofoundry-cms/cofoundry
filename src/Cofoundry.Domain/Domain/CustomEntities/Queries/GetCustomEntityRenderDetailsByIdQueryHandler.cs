@@ -19,7 +19,7 @@ namespace Cofoundry.Domain
     /// possible to have multiple.
     /// </summary>
     public class GetCustomEntityRenderDetailsByIdQueryHandler
-        : IAsyncQueryHandler<GetCustomEntityRenderDetailsByIdQuery, CustomEntityRenderDetails>
+        : IQueryHandler<GetCustomEntityRenderDetailsByIdQuery, CustomEntityRenderDetails>
         , IIgnorePermissionCheckHandler
     {
         private readonly CofoundryDbContext _dbContext;

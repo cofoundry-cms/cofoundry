@@ -14,7 +14,7 @@ namespace Cofoundry.Domain
     /// set is cached in memory and quick to access.
     /// </summary>
     public class GetAllRewriteRuleSummariesQueryHandler 
-        : IAsyncQueryHandler<GetAllRewriteRuleSummariesQuery, ICollection<RewriteRuleSummary>>
+        : IQueryHandler<GetAllRewriteRuleSummariesQuery, ICollection<RewriteRuleSummary>>
         , IPermissionRestrictedQueryHandler<GetAllRewriteRuleSummariesQuery, ICollection<RewriteRuleSummary>>
     {
         #region constructor

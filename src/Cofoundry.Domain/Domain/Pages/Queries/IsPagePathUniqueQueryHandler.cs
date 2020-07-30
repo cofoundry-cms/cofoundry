@@ -14,7 +14,7 @@ namespace Cofoundry.Domain
     /// up of a locale, directory and url slug; duplicates are not permitted.
     /// </summary>
     public class IsPagePathUniqueQueryHandler 
-        : IAsyncQueryHandler<IsPagePathUniqueQuery, bool>
+        : IQueryHandler<IsPagePathUniqueQuery, bool>
         , IPermissionRestrictedQueryHandler<IsPagePathUniqueQuery, bool>
     {
         #region constructor

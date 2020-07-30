@@ -11,7 +11,7 @@ using Cofoundry.Core.EntityFramework;
 namespace Cofoundry.Domain
 {
     public class HasExceededMaxLoginAttemptsQueryHandler 
-        : IAsyncQueryHandler<HasExceededMaxLoginAttemptsQuery, bool>
+        : IQueryHandler<HasExceededMaxLoginAttemptsQuery, bool>
         , IIgnorePermissionCheckHandler
     {
         #region constructor

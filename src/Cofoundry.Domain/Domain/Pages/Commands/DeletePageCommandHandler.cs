@@ -12,7 +12,7 @@ using Cofoundry.Core.Data;
 namespace Cofoundry.Domain
 {
     public class DeletePageCommandHandler 
-        : IAsyncCommandHandler<DeletePageCommand>
+        : ICommandHandler<DeletePageCommand>
         , IPermissionRestrictedCommandHandler<DeletePageCommand>
     {
         private readonly CofoundryDbContext _dbContext;

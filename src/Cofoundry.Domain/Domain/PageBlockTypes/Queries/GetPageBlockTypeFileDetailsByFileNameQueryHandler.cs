@@ -14,7 +14,7 @@ namespace Cofoundry.Domain
     /// the specified name. If the file is not found then null is returned.
     /// </summary>
     public class GetPageBlockTypeFileDetailsByFileNameQueryHandler
-        : IAsyncQueryHandler<GetPageBlockTypeFileDetailsByFileNameQuery, PageBlockTypeFileDetails>
+        : IQueryHandler<GetPageBlockTypeFileDetailsByFileNameQuery, PageBlockTypeFileDetails>
         , IPermissionRestrictedQueryHandler<GetPageBlockTypeFileDetailsByFileNameQuery, PageBlockTypeFileDetails>
     {
         #region constructor

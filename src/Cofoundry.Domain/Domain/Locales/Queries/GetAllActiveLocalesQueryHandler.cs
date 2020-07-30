@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore;
 namespace Cofoundry.Domain
 {
     public class GetAllActiveLocalesQueryHandler 
-        : IAsyncQueryHandler<GetAllActiveLocalesQuery, ICollection<ActiveLocale>>
+        : IQueryHandler<GetAllActiveLocalesQuery, ICollection<ActiveLocale>>
         , IIgnorePermissionCheckHandler
     {
         #region constructor

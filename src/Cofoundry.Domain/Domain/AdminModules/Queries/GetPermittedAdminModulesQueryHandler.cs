@@ -8,7 +8,7 @@ using Cofoundry.Domain.CQS;
 namespace Cofoundry.Domain
 {
     public class GetPermittedAdminModulesQueryHandler
-        : IAsyncQueryHandler<GetPermittedAdminModulesQuery, ICollection<AdminModule>>
+        : IQueryHandler<GetPermittedAdminModulesQuery, ICollection<AdminModule>>
         , IIgnorePermissionCheckHandler
     {
         private readonly IEnumerable<IAdminModuleRegistration> _moduleRegistrations;

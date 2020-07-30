@@ -14,7 +14,7 @@ namespace Cofoundry.Domain
     /// is found, otherwise null.
     /// </summary>
     public class GetUserMicroSummaryByIdQueryHandler 
-        : IAsyncQueryHandler<GetUserMicroSummaryByIdQuery, UserMicroSummary>
+        : IQueryHandler<GetUserMicroSummaryByIdQuery, UserMicroSummary>
         , IIgnorePermissionCheckHandler
     {
         #region constructor

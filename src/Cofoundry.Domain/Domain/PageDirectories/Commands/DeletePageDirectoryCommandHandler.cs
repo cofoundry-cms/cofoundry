@@ -11,7 +11,7 @@ using Cofoundry.Core.Data;
 namespace Cofoundry.Domain
 {
     public class DeletePageDirectoryCommandHandler
-        : IAsyncCommandHandler<DeletePageDirectoryCommand>
+        : ICommandHandler<DeletePageDirectoryCommand>
         , IPermissionRestrictedCommandHandler<DeletePageDirectoryCommand>
     {
         #region constructor 

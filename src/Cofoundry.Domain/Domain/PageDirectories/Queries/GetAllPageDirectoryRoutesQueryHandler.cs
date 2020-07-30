@@ -13,7 +13,7 @@ namespace Cofoundry.Domain
     /// query are cached.
     /// </summary>
     public class GetAllPageDirectoryRoutesQueryHandler 
-        : IAsyncQueryHandler<GetAllPageDirectoryRoutesQuery, ICollection<PageDirectoryRoute>>
+        : IQueryHandler<GetAllPageDirectoryRoutesQuery, ICollection<PageDirectoryRoute>>
         , IPermissionRestrictedQueryHandler<GetAllPageDirectoryRoutesQuery, ICollection<PageDirectoryRoute>>
     {
         #region constructor

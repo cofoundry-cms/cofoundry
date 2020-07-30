@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore;
 namespace Cofoundry.Domain
 {
     public class GetAllPageTemplateMicroSummariesQueryHandler 
-        : IAsyncQueryHandler<GetAllPageTemplateMicroSummariesQuery, ICollection<PageTemplateMicroSummary>>
+        : IQueryHandler<GetAllPageTemplateMicroSummariesQuery, ICollection<PageTemplateMicroSummary>>
         , IPermissionRestrictedQueryHandler<GetAllPageTemplateMicroSummariesQuery, ICollection<PageTemplateMicroSummary>>
     {
         #region constructor

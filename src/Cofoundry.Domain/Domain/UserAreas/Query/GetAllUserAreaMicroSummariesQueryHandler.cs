@@ -7,7 +7,7 @@ using Cofoundry.Domain.CQS;
 namespace Cofoundry.Domain
 {
     public class GetAllUserAreaMicroSummariesQueryHandler 
-        : IAsyncQueryHandler<GetAllUserAreaMicroSummariesQuery, ICollection<UserAreaMicroSummary>>
+        : IQueryHandler<GetAllUserAreaMicroSummariesQuery, ICollection<UserAreaMicroSummary>>
         , ICofoundryUserPermissionCheckHandler
     {
         #region constructor

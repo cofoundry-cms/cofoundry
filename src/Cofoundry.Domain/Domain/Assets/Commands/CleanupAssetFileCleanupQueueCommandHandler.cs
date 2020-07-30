@@ -12,7 +12,7 @@ namespace Cofoundry.Domain
     /// table.
     /// </summary>
     public class CleanupAssetFileCleanupQueueCommandHandler 
-        : IAsyncCommandHandler<CleanupAssetFileCleanupQueueCommand>
+        : ICommandHandler<CleanupAssetFileCleanupQueueCommand>
         , ICofoundryUserPermissionCheckHandler
     {
         private readonly IAssetStoredProcedures _assetStoredProcedures;

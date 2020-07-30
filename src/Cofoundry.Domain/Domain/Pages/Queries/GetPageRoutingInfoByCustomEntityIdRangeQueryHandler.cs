@@ -16,7 +16,7 @@ namespace Cofoundry.Domain
     /// of routes.
     /// </summary>
     public class GetPageRoutingInfoByCustomEntityIdRangeQueryHandler 
-        : IAsyncQueryHandler<GetPageRoutingInfoByCustomEntityIdRangeQuery, IDictionary<int, ICollection<PageRoutingInfo>>>
+        : IQueryHandler<GetPageRoutingInfoByCustomEntityIdRangeQuery, IDictionary<int, ICollection<PageRoutingInfo>>>
         , IPermissionRestrictedQueryHandler<GetPageRoutingInfoByCustomEntityIdRangeQuery, IDictionary<int, ICollection<PageRoutingInfo>>>
     {
         #region constructor

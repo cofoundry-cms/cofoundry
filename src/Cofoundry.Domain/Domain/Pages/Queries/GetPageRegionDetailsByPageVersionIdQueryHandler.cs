@@ -15,7 +15,7 @@ namespace Cofoundry.Domain
     /// block data for a specific version of a page.
     /// </summary>
     public class GetPageRegionDetailsByPageVersionIdQueryHandler 
-        : IAsyncQueryHandler<GetPageRegionDetailsByPageVersionIdQuery, ICollection<PageRegionDetails>>
+        : IQueryHandler<GetPageRegionDetailsByPageVersionIdQuery, ICollection<PageRegionDetails>>
         , IPermissionRestrictedQueryHandler<GetPageRegionDetailsByPageVersionIdQuery, ICollection<PageRegionDetails>>
     {
         #region constructor

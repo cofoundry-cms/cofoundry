@@ -11,7 +11,7 @@ using Cofoundry.Core;
 namespace Cofoundry.Domain
 {
     public class SearchPageTemplateSummariesQueryHandler 
-        : IAsyncQueryHandler<SearchPageTemplateSummariesQuery, PagedQueryResult<PageTemplateSummary>>
+        : IQueryHandler<SearchPageTemplateSummariesQuery, PagedQueryResult<PageTemplateSummary>>
         , IPermissionRestrictedQueryHandler<SearchPageTemplateSummariesQuery, PagedQueryResult<PageTemplateSummary>>
     {
         #region constructor

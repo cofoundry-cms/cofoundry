@@ -7,7 +7,7 @@ using Cofoundry.Domain.CQS;
 namespace Cofoundry.Domain
 {
     public class GetNestedDataModelSchemaByNameQueryHandler
-        : IAsyncQueryHandler<GetNestedDataModelSchemaByNameQuery, NestedDataModelSchema>
+        : IQueryHandler<GetNestedDataModelSchemaByNameQuery, NestedDataModelSchema>
         , IIgnorePermissionCheckHandler
     {
         #region constructor

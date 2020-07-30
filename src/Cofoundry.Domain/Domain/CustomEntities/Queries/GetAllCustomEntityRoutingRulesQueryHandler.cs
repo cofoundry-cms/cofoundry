@@ -13,7 +13,7 @@ namespace Cofoundry.Domain
     /// collection before returning them.
     /// </summary>
     public class GetAllCustomEntityRoutingRulesQueryHandler 
-        : IAsyncQueryHandler<GetAllCustomEntityRoutingRulesQuery, ICollection<ICustomEntityRoutingRule>>
+        : IQueryHandler<GetAllCustomEntityRoutingRulesQuery, ICollection<ICustomEntityRoutingRule>>
         , IIgnorePermissionCheckHandler
     {
         private readonly IEnumerable<ICustomEntityRoutingRule> _customEntityRoutingRules;

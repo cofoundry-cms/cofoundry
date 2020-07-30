@@ -12,7 +12,7 @@ using Cofoundry.Core.Caching;
 namespace Cofoundry.Domain
 {
     public class SetupCofoundryCommandHandler
-        : IAsyncCommandHandler<SetupCofoundryCommand>
+        : ICommandHandler<SetupCofoundryCommand>
         , IIgnorePermissionCheckHandler
     {
         #region constructor

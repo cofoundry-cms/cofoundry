@@ -21,7 +21,7 @@ namespace Cofoundry.Domain
     /// of the CMS.
     /// </summary>
     public class UpdateCustomEntityUrlCommandHandler 
-        : IAsyncCommandHandler<UpdateCustomEntityUrlCommand>
+        : ICommandHandler<UpdateCustomEntityUrlCommand>
         , IIgnorePermissionCheckHandler
     {
         #region constructor

@@ -16,7 +16,7 @@ namespace Cofoundry.Domain
     /// because by design it has to forgo permission checks.
     /// </summary>
     public class AddMasterCofoundryUserCommandHandler
-        : IAsyncCommandHandler<AddMasterCofoundryUserCommand>
+        : ICommandHandler<AddMasterCofoundryUserCommand>
         , IIgnorePermissionCheckHandler
     {
         #region constructor

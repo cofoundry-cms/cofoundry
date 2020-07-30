@@ -16,7 +16,7 @@ namespace Cofoundry.Domain
     /// on a custom entity page.
     /// </summary>
     public class MoveCustomEntityVersionPageBlockCommandHandler
-        : IAsyncCommandHandler<MoveCustomEntityVersionPageBlockCommand>
+        : ICommandHandler<MoveCustomEntityVersionPageBlockCommand>
         , IIgnorePermissionCheckHandler
     {
         #region constructor

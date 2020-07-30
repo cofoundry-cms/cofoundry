@@ -11,7 +11,7 @@ namespace Cofoundry.Domain
     /// Returns a page directory with the specified id as a PageDirectoryRoute instance.
     /// </summary>
     public class GetPageDirectoryRouteByIdQueryHandler 
-        : IAsyncQueryHandler<GetPageDirectoryRouteByIdQuery, PageDirectoryRoute>
+        : IQueryHandler<GetPageDirectoryRouteByIdQuery, PageDirectoryRoute>
         , IPermissionRestrictedQueryHandler<GetPageDirectoryRouteByIdQuery, PageDirectoryRoute>
     {
         #region constructor

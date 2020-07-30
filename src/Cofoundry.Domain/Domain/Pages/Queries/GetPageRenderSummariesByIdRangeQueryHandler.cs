@@ -16,7 +16,7 @@ namespace Cofoundry.Domain
     /// this behavior can be controlled by the publishStatus query property.
     /// </summary>
     public class GetPageRenderSummariesByIdRangeQueryHandler
-        : IAsyncQueryHandler<GetPageRenderSummariesByIdRangeQuery, IDictionary<int, PageRenderSummary>>
+        : IQueryHandler<GetPageRenderSummariesByIdRangeQuery, IDictionary<int, PageRenderSummary>>
         , IPermissionRestrictedQueryHandler<GetPageRenderSummariesByIdRangeQuery, IDictionary<int, PageRenderSummary>>
     {
         #region constructor

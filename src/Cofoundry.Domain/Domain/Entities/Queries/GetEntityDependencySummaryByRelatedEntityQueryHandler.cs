@@ -10,7 +10,7 @@ using Cofoundry.Core;
 namespace Cofoundry.Domain
 {
     public class GetEntityDependencySummaryByRelatedEntityHandler 
-        : IAsyncQueryHandler<GetEntityDependencySummaryByRelatedEntityQuery, ICollection<EntityDependencySummary>>
+        : IQueryHandler<GetEntityDependencySummaryByRelatedEntityQuery, ICollection<EntityDependencySummary>>
         , IPermissionRestrictedQueryHandler<GetEntityDependencySummaryByRelatedEntityQuery, ICollection<EntityDependencySummary>>
     {
         #region constructor

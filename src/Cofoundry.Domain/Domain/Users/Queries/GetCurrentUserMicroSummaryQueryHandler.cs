@@ -11,7 +11,7 @@ namespace Cofoundry.Domain
     /// user. If the user is not logged in then null is returned.
     /// </summary>
     public class GetCurrentUserMicroSummaryQueryHandler 
-        : IAsyncQueryHandler<GetCurrentUserMicroSummaryQuery, UserMicroSummary>
+        : IQueryHandler<GetCurrentUserMicroSummaryQuery, UserMicroSummary>
         , IIgnorePermissionCheckHandler
     {
         private readonly IQueryExecutor _queryExecutor;

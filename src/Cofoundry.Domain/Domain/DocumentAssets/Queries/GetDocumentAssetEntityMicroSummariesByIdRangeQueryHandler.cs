@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 namespace Cofoundry.Domain
 {
     public class GetDocumentAssetEntityMicroSummariesByIdRangeQueryHandler
-        : IAsyncQueryHandler<GetDocumentAssetEntityMicroSummariesByIdRangeQuery, IDictionary<int, RootEntityMicroSummary>>
+        : IQueryHandler<GetDocumentAssetEntityMicroSummariesByIdRangeQuery, IDictionary<int, RootEntityMicroSummary>>
         , IPermissionRestrictedQueryHandler<GetDocumentAssetEntityMicroSummariesByIdRangeQuery, IDictionary<int, RootEntityMicroSummary>>
     {
         #region constructor

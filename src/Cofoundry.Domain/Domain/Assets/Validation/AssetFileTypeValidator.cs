@@ -78,7 +78,7 @@ namespace Cofoundry.Domain
             
             if (error != null)
             {
-                throw new PropertyValidationException(error.ErrorMessage, error.MemberNames);
+                throw ValidationErrorException.CreateWithProperties(error.ErrorMessage, error.MemberNames?.ToArray());
             }
         }
 

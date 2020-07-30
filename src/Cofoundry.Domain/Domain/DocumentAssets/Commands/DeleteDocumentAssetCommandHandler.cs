@@ -13,7 +13,7 @@ using System.IO;
 namespace Cofoundry.Domain
 {
     public class DeleteDocumentAssetCommandHandler 
-        : IAsyncCommandHandler<DeleteDocumentAssetCommand>
+        : ICommandHandler<DeleteDocumentAssetCommand>
         , IPermissionRestrictedCommandHandler<DeleteDocumentAssetCommand>
     {
         #region constructor

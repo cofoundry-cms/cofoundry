@@ -17,7 +17,7 @@ namespace Cofoundry.Domain
     /// public webpage.
     /// </summary>
     public class GetCustomEntitySummariesByIdRangeQueryHandler 
-        : IAsyncQueryHandler<GetCustomEntitySummariesByIdRangeQuery, IDictionary<int, CustomEntitySummary>>
+        : IQueryHandler<GetCustomEntitySummariesByIdRangeQuery, IDictionary<int, CustomEntitySummary>>
         , IIgnorePermissionCheckHandler
     {
         #region constructor

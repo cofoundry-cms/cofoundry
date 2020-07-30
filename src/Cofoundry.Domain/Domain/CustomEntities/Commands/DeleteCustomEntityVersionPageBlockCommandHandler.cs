@@ -16,7 +16,7 @@ namespace Cofoundry.Domain
     /// Deletes a block from a template region on a custom entity page.
     /// </summary>
     public class DeleteCustomEntityVersionPageBlockCommandHandler
-        : IAsyncCommandHandler<DeleteCustomEntityVersionPageBlockCommand>
+        : ICommandHandler<DeleteCustomEntityVersionPageBlockCommand>
         , IIgnorePermissionCheckHandler
     {
         #region constructor

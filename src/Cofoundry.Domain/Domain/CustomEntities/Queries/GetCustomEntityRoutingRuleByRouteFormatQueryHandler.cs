@@ -14,7 +14,7 @@ namespace Cofoundry.Domain
     /// duplicate RouteFormat values.
     /// </summary>
     public class GetCustomEntityRoutingRuleByRouteFormatQueryHandler
-        : IAsyncQueryHandler<GetCustomEntityRoutingRuleByRouteFormatQuery, ICustomEntityRoutingRule>
+        : IQueryHandler<GetCustomEntityRoutingRuleByRouteFormatQuery, ICustomEntityRoutingRule>
         , IIgnorePermissionCheckHandler
     {
         private readonly IEnumerable<ICustomEntityRoutingRule> _customEntityRoutingRules;

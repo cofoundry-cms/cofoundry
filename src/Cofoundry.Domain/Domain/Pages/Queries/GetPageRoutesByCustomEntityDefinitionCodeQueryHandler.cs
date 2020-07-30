@@ -11,7 +11,7 @@ using Cofoundry.Core;
 namespace Cofoundry.Domain
 {
     public class GetPageRoutesByCustomEntityDefinitionCodeQueryHandler
-        : IAsyncQueryHandler<GetPageRoutesByCustomEntityDefinitionCodeQuery, ICollection<PageRoute>>
+        : IQueryHandler<GetPageRoutesByCustomEntityDefinitionCodeQuery, ICollection<PageRoute>>
         , IPermissionRestrictedQueryHandler<GetPageRoutesByCustomEntityDefinitionCodeQuery, ICollection<PageRoute>>
     {
         private readonly IQueryExecutor _queryExecutor;

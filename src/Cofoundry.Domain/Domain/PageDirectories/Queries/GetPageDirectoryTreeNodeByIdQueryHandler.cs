@@ -7,7 +7,7 @@ using Cofoundry.Domain.CQS;
 namespace Cofoundry.Domain
 {
     public class GetPageDirectoryNodeByIdQueryHandler 
-        : IAsyncQueryHandler<GetPageDirectoryNodeByIdQuery, PageDirectoryNode>
+        : IQueryHandler<GetPageDirectoryNodeByIdQuery, PageDirectoryNode>
         , IPermissionRestrictedQueryHandler<GetPageDirectoryNodeByIdQuery, PageDirectoryNode>
     {
         #region constructor

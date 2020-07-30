@@ -15,7 +15,7 @@ namespace Cofoundry.Domain
     /// Adds a new image asset.
     /// </summary>
     public class AddImageAssetCommandHandler 
-        : IAsyncCommandHandler<AddImageAssetCommand>
+        : ICommandHandler<AddImageAssetCommand>
         , IPermissionRestrictedCommandHandler<AddImageAssetCommand>
     {
         #region constructor

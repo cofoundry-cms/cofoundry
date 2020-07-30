@@ -10,7 +10,7 @@ using Cofoundry.Core;
 namespace Cofoundry.Domain
 {
     public class GetInternalSettingsQueryHandler 
-        : IAsyncQueryHandler<GetSettingsQuery<InternalSettings>, InternalSettings>
+        : IQueryHandler<GetSettingsQuery<InternalSettings>, InternalSettings>
         , IIgnorePermissionCheckHandler
     {
         #region constructor

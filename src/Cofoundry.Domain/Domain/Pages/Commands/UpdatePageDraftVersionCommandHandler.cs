@@ -18,7 +18,7 @@ namespace Cofoundry.Domain
     /// published version.
     /// </summary>
     public class UpdatePageDraftVersionCommandHandler 
-        : IAsyncCommandHandler<UpdatePageDraftVersionCommand>
+        : ICommandHandler<UpdatePageDraftVersionCommand>
         , IPermissionRestrictedCommandHandler<UpdatePageDraftVersionCommand>
     {
         #region constructor

@@ -13,7 +13,7 @@ namespace Cofoundry.Domain
     /// set is cached in memory and quick to access.
     /// </summary>
     public class GetRewriteRuleSummaryByPathQueryHandler
-        : IAsyncQueryHandler<GetRewriteRuleSummaryByPathQuery, RewriteRuleSummary>
+        : IQueryHandler<GetRewriteRuleSummaryByPathQuery, RewriteRuleSummary>
         , IPermissionRestrictedQueryHandler<GetRewriteRuleSummaryByPathQuery, RewriteRuleSummary>
     {
         #region constructor

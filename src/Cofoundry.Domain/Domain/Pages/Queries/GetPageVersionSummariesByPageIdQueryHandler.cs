@@ -13,7 +13,7 @@ namespace Cofoundry.Domain
     /// historically with the latest/draft version first.
     /// </summary>
     public class GetPageVersionSummariesByPageIdQueryHandler
-        : IAsyncQueryHandler<GetPageVersionSummariesByPageIdQuery, PagedQueryResult<PageVersionSummary>>
+        : IQueryHandler<GetPageVersionSummariesByPageIdQuery, PagedQueryResult<PageVersionSummary>>
         , IPermissionRestrictedQueryHandler<GetPageVersionSummariesByPageIdQuery, PagedQueryResult<PageVersionSummary>>
     {
         #region constructor

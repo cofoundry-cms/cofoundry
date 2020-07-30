@@ -13,7 +13,7 @@ namespace Cofoundry.Domain
     /// has to be an absolute match, i.e. the query does not try and find a fall-back similar route.
     /// </summary>
     public class GetPageRoutingInfoByPathQueryHandler 
-        : IAsyncQueryHandler<GetPageRoutingInfoByPathQuery, PageRoutingInfo>
+        : IQueryHandler<GetPageRoutingInfoByPathQuery, PageRoutingInfo>
         , IPermissionRestrictedQueryHandler<GetPageRoutingInfoByPathQuery, PageRoutingInfo>
     {
         #region constructor

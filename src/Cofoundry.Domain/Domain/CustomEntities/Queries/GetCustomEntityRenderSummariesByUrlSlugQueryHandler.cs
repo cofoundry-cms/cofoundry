@@ -16,7 +16,7 @@ namespace Cofoundry.Domain
     /// optional setting on the custom entity definition.
     /// </summary>
     public class GetCustomEntityRenderSummariesByUrlSlugQueryHandler
-        : IAsyncQueryHandler<GetCustomEntityRenderSummariesByUrlSlugQuery, ICollection<CustomEntityRenderSummary>>
+        : IQueryHandler<GetCustomEntityRenderSummariesByUrlSlugQuery, ICollection<CustomEntityRenderSummary>>
         , IPermissionRestrictedQueryHandler<GetCustomEntityRenderSummariesByUrlSlugQuery, ICollection<CustomEntityRenderSummary>>
     {
         #region constructor

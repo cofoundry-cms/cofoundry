@@ -18,7 +18,7 @@ namespace Cofoundry.Domain
     /// page projections.
     /// </summary>
     public class GetPageRouteLookupQueryHandler
-        : IAsyncQueryHandler<GetPageRouteLookupQuery, IDictionary<int, PageRoute>>
+        : IQueryHandler<GetPageRouteLookupQuery, IDictionary<int, PageRoute>>
         , IPermissionRestrictedQueryHandler<GetPageRouteLookupQuery, IDictionary<int, PageRoute>>
     {
         #region constructor

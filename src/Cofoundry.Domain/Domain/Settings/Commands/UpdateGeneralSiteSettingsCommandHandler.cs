@@ -11,7 +11,7 @@ using Cofoundry.Core.Data;
 namespace Cofoundry.Domain
 {
     public class UpdateGeneralSiteSettingsCommandHandler 
-        : IAsyncCommandHandler<UpdateGeneralSiteSettingsCommand>
+        : ICommandHandler<UpdateGeneralSiteSettingsCommand>
         , IPermissionRestrictedCommandHandler<UpdateGeneralSiteSettingsCommand>
     {
         #region constructor

@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore;
 namespace Cofoundry.Domain
 {
     public class GetUpdateCustomEntityVersionPageBlockCommandByIdQueryHandler
-        : IAsyncQueryHandler<GetUpdateCommandByIdQuery<UpdateCustomEntityVersionPageBlockCommand>, UpdateCustomEntityVersionPageBlockCommand>
+        : IQueryHandler<GetUpdateCommandByIdQuery<UpdateCustomEntityVersionPageBlockCommand>, UpdateCustomEntityVersionPageBlockCommand>
         , IIgnorePermissionCheckHandler
     {
         #region constructor

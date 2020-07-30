@@ -13,7 +13,7 @@ using Cofoundry.Core.EntityFramework;
 namespace Cofoundry.Domain
 {
     public class DeleteUnstructuredDataDependenciesCommandHandler 
-        : IAsyncCommandHandler<DeleteUnstructuredDataDependenciesCommand>
+        : ICommandHandler<DeleteUnstructuredDataDependenciesCommand>
         , IPermissionRestrictedCommandHandler<DeleteUnstructuredDataDependenciesCommand>
     {
         #region constructor

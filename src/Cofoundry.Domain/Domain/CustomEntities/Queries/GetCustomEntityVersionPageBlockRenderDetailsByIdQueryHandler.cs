@@ -17,7 +17,7 @@ namespace Cofoundry.Domain
     /// optionally pass down a PublishStatusQuery to use in the mapping process.
     /// </summary>
     public class GetCustomEntityVersionPageBlockRenderDetailsByIdQueryHandler
-        : IAsyncQueryHandler<GetCustomEntityVersionPageBlockRenderDetailsByIdQuery, CustomEntityVersionPageBlockRenderDetails>
+        : IQueryHandler<GetCustomEntityVersionPageBlockRenderDetailsByIdQuery, CustomEntityVersionPageBlockRenderDetails>
         , IIgnorePermissionCheckHandler
     {
         #region constructor

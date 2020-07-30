@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore;
 namespace Cofoundry.Domain
 {
     public class EnsureEntityDefinitionExistsCommandHandler 
-        : IAsyncCommandHandler<EnsureEntityDefinitionExistsCommand>
+        : ICommandHandler<EnsureEntityDefinitionExistsCommand>
         , IIgnorePermissionCheckHandler
     {
         #region constructor

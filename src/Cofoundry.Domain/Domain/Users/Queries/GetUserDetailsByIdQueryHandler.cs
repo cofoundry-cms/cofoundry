@@ -13,7 +13,7 @@ namespace Cofoundry.Domain
     /// is found, otherwise null.
     /// </summary>
     public class GetUserDetailsByIdQueryHandler 
-        : IAsyncQueryHandler<GetUserDetailsByIdQuery, UserDetails>
+        : IQueryHandler<GetUserDetailsByIdQuery, UserDetails>
         , IIgnorePermissionCheckHandler
     {
         private readonly CofoundryDbContext _dbContext;

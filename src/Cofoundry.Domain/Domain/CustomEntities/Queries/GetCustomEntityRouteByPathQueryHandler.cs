@@ -13,7 +13,7 @@ namespace Cofoundry.Domain
     /// cached in order to make routing lookups speedy.
     /// </summary>
     public class GetCustomEntityRouteByPathQueryHandler 
-        : IAsyncQueryHandler<GetCustomEntityRouteByPathQuery, CustomEntityRoute>
+        : IQueryHandler<GetCustomEntityRouteByPathQuery, CustomEntityRoute>
         , IIgnorePermissionCheckHandler
     {
         #region constructor

@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore;
 namespace Cofoundry.Domain
 {
     public class GetUpdateDocumentAssetCommandByIdQueryHandler 
-        : IAsyncQueryHandler<GetUpdateCommandByIdQuery<UpdateDocumentAssetCommand>, UpdateDocumentAssetCommand>
+        : IQueryHandler<GetUpdateCommandByIdQuery<UpdateDocumentAssetCommand>, UpdateDocumentAssetCommand>
         , IPermissionRestrictedQueryHandler<GetUpdateCommandByIdQuery<UpdateDocumentAssetCommand>, UpdateDocumentAssetCommand>
     {
         #region constructor

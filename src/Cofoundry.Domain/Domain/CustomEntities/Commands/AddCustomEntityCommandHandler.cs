@@ -17,7 +17,7 @@ namespace Cofoundry.Domain
     /// Adds a new custom entity with a draft version and optionally publishes it.
     /// </summary>
     public class AddCustomEntityCommandHandler 
-        : IAsyncCommandHandler<AddCustomEntityCommand>
+        : ICommandHandler<AddCustomEntityCommand>
         , IPermissionRestrictedCommandHandler<AddCustomEntityCommand>
     {
         #region constructor
@@ -130,7 +130,7 @@ namespace Cofoundry.Domain
 
             if (command.LocaleId.HasValue && !definition.HasLocale)
             {
-                throw new PropertyValidationException(definition.NamePlural + " cannot be assigned locales", "LocaleId");
+                throw ValidationErrorException.CreateWithProperties(definition.NamePlural + " cannot be assigned locales", "LocaleId");
             }
         }
         
@@ -144,11 +144,11 @@ namespace Cofoundry.Domain
 
             if (locale == null)
             {
-                throw new PropertyValidationException("The selected locale does not exist.", "LocaleId");
+                throw ValidationErrorException.CreateWithProperties("The selected locale does not exist.", "LocaleId");
             }
             if (!locale.IsActive)
             {
-                throw new PropertyValidationException("The selected locale is not active and cannot be used.", "LocaleId");
+                throw ValidationErrorException.CreateWithProperties("The selected locale is not active and cannot be used.", "LocaleId");
             }
 
             return locale;

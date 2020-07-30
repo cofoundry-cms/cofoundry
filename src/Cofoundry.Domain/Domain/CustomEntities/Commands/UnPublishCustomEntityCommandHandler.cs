@@ -19,7 +19,7 @@ namespace Cofoundry.Domain
     /// again.
     /// </summary>
     public class UnPublishCustomEntityCommandHandler 
-        : IAsyncCommandHandler<UnPublishCustomEntityCommand>
+        : ICommandHandler<UnPublishCustomEntityCommand>
         , IIgnorePermissionCheckHandler
     {
         #region constructor

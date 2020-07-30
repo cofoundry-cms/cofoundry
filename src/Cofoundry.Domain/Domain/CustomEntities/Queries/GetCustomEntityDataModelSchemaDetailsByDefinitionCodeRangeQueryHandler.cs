@@ -13,7 +13,7 @@ namespace Cofoundry.Domain
     /// entity data model for a range of custom entity definitions.
     /// </summary>
     public class GetCustomEntityDataModelSchemaDetailsByDefinitionCodeRangeQueryHandler
-        : IAsyncQueryHandler<GetCustomEntityDataModelSchemaDetailsByDefinitionCodeRangeQuery, IDictionary<string, CustomEntityDataModelSchema>>
+        : IQueryHandler<GetCustomEntityDataModelSchemaDetailsByDefinitionCodeRangeQuery, IDictionary<string, CustomEntityDataModelSchema>>
         , IPermissionRestrictedQueryHandler<GetCustomEntityDataModelSchemaDetailsByDefinitionCodeRangeQuery, IDictionary<string, CustomEntityDataModelSchema>>
     {
         #region constructor

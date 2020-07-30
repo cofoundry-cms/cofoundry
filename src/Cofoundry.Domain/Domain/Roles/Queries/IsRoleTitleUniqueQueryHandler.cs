@@ -14,7 +14,7 @@ namespace Cofoundry.Domain
     /// Role titles only have to be unique per UserArea.
     /// </summary>
     public class IsRoleTitleUniqueQueryHandler 
-        : IAsyncQueryHandler<IsRoleTitleUniqueQuery, bool>
+        : IQueryHandler<IsRoleTitleUniqueQuery, bool>
         , IPermissionRestrictedQueryHandler<IsRoleTitleUniqueQuery, bool>
     {
         #region constructor

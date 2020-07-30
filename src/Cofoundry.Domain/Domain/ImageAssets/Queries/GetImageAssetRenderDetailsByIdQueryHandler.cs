@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore;
 namespace Cofoundry.Domain
 {
     public class GetImageAssetRenderDetailsByIdQueryHandler 
-        : IAsyncQueryHandler<GetImageAssetRenderDetailsByIdQuery, ImageAssetRenderDetails>
+        : IQueryHandler<GetImageAssetRenderDetailsByIdQuery, ImageAssetRenderDetails>
         , IPermissionRestrictedQueryHandler<GetImageAssetRenderDetailsByIdQuery, ImageAssetRenderDetails>
     {
         #region constructor

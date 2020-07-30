@@ -12,7 +12,7 @@ using Cofoundry.Core.Data;
 namespace Cofoundry.Domain
 {
     public class MovePageVersionBlockCommandHandler
-        : IAsyncCommandHandler<MovePageVersionBlockCommand>
+        : ICommandHandler<MovePageVersionBlockCommand>
         , IPermissionRestrictedCommandHandler<MovePageVersionBlockCommand>
     {
         #region constructor

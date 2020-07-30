@@ -17,7 +17,7 @@ namespace Cofoundry.Domain
     /// information that should normally be hidden from a customer facing app.
     /// </summary>
     public class GetCustomEntityDetailsByIdQueryHandler 
-        : IAsyncQueryHandler<GetCustomEntityDetailsByIdQuery, CustomEntityDetails>
+        : IQueryHandler<GetCustomEntityDetailsByIdQuery, CustomEntityDetails>
         , IIgnorePermissionCheckHandler
     {
         #region constructor

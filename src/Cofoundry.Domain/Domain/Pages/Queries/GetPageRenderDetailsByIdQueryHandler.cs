@@ -13,7 +13,7 @@ namespace Cofoundry.Domain
     /// data for all the content-editable regions.
     /// </summary>
     public class GetPageRenderDetailsByIdQueryHandler 
-        : IAsyncQueryHandler<GetPageRenderDetailsByIdQuery, PageRenderDetails>
+        : IQueryHandler<GetPageRenderDetailsByIdQuery, PageRenderDetails>
         , IPermissionRestrictedQueryHandler<GetPageRenderDetailsByIdQuery, PageRenderDetails>
     {
         #region constructor

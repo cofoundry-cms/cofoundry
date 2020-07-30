@@ -13,7 +13,7 @@ using Cofoundry.Core.Data;
 namespace Cofoundry.Domain
 {
     public class UpdatePageCommandHandler 
-        : IAsyncCommandHandler<UpdatePageCommand>
+        : ICommandHandler<UpdatePageCommand>
         , IPermissionRestrictedCommandHandler<UpdatePageCommand>
     {
         #region constructor

@@ -15,7 +15,7 @@ namespace Cofoundry.Domain
     /// to the database before assigning it to another entity.
     /// </summary>
     public class EnsureCustomEntityDefinitionExistsCommandHandler 
-        : IAsyncCommandHandler<EnsureCustomEntityDefinitionExistsCommand>
+        : ICommandHandler<EnsureCustomEntityDefinitionExistsCommand>
         , IIgnorePermissionCheckHandler
     {
         #region constructor

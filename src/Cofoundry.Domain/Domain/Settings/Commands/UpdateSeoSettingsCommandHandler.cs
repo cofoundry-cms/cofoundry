@@ -10,7 +10,7 @@ using Cofoundry.Core.Data;
 namespace Cofoundry.Domain
 {
     public class UpdateSeoSettingsCommandHandler 
-        : IAsyncCommandHandler<UpdateSeoSettingsCommand>
+        : ICommandHandler<UpdateSeoSettingsCommand>
         , IPermissionRestrictedCommandHandler<UpdateSeoSettingsCommand>
     {
         #region constructor

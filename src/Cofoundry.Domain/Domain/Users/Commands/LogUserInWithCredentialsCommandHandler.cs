@@ -21,7 +21,7 @@ namespace Cofoundry.Domain
     /// are thrown as ValidationExceptions.
     /// </summary>
     public class LogUserInWithCredentialsCommandHandler
-        : IAsyncCommandHandler<LogUserInWithCredentialsCommand>
+        : ICommandHandler<LogUserInWithCredentialsCommand>
         , IIgnorePermissionCheckHandler
     {
         #region constructor

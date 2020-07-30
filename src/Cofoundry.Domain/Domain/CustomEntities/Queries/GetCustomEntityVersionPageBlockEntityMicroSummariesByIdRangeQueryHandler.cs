@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore;
 namespace Cofoundry.Domain
 {
     public class GetCustomEntityVersionPageBlockEntityMicroSummariesByIdRangeQueryHandler
-        : IAsyncQueryHandler<GetCustomEntityVersionPageBlockEntityMicroSummariesByIdRangeQuery, IDictionary<int, RootEntityMicroSummary>>
+        : IQueryHandler<GetCustomEntityVersionPageBlockEntityMicroSummariesByIdRangeQuery, IDictionary<int, RootEntityMicroSummary>>
         , IIgnorePermissionCheckHandler
     {
         #region constructor

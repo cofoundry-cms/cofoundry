@@ -14,7 +14,7 @@ namespace Cofoundry.Domain
     /// within its parent directory.
     /// </summary>
     public class IsPageDirectoryPathUniqueQueryHandler
-        : IAsyncQueryHandler<IsPageDirectoryPathUniqueQuery, bool>
+        : IQueryHandler<IsPageDirectoryPathUniqueQuery, bool>
         , IPermissionRestrictedQueryHandler<IsPageDirectoryPathUniqueQuery, bool>
     {
         #region constructor

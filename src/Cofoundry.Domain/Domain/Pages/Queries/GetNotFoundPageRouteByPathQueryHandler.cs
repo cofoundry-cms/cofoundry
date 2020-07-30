@@ -12,7 +12,7 @@ namespace Cofoundry.Domain
     /// for a 'Not Found' page up the directory tree of a specific path.
     /// </summary>
     public class GetNotFoundPageRouteByPathQueryHandler 
-        : IAsyncQueryHandler<GetNotFoundPageRouteByPathQuery, PageRoute>
+        : IQueryHandler<GetNotFoundPageRouteByPathQuery, PageRoute>
         , IPermissionRestrictedQueryHandler<GetNotFoundPageRouteByPathQuery, PageRoute>
     {
         #region constructor

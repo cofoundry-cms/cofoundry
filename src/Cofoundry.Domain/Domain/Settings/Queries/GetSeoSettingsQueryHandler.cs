@@ -10,7 +10,7 @@ using Cofoundry.Core;
 namespace Cofoundry.Domain
 {
     public class GetSeoSettingsQueryHandler 
-        : IAsyncQueryHandler<GetSettingsQuery<SeoSettings>, SeoSettings>
+        : IQueryHandler<GetSettingsQuery<SeoSettings>, SeoSettings>
         , IIgnorePermissionCheckHandler
     {
         #region constructor

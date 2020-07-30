@@ -17,7 +17,7 @@ namespace Cofoundry.Domain
     /// run during the auto-update process when the application starst up.
     /// </summary>
     public class RegisterPageBlockTypesCommandHandler
-        : IAsyncCommandHandler<RegisterPageBlockTypesCommand>
+        : ICommandHandler<RegisterPageBlockTypesCommand>
         , IPermissionRestrictedCommandHandler<RegisterPageBlockTypesCommand>
     {
         private readonly CofoundryDbContext _dbContext;

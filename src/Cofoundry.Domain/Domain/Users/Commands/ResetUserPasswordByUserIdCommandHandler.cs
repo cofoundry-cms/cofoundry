@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 namespace Cofoundry.Domain
 {
     public class ResetUserPasswordByUserIdCommandHandler 
-        : IAsyncCommandHandler<ResetUserPasswordByUserIdCommand>
+        : ICommandHandler<ResetUserPasswordByUserIdCommand>
         , IIgnorePermissionCheckHandler
     {
         #region construstor

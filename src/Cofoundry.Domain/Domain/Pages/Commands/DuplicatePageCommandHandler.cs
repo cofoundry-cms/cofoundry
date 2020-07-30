@@ -12,7 +12,7 @@ using Cofoundry.Core.Data;
 namespace Cofoundry.Domain
 {
     public class DuplicatePageCommandHandler 
-        : IAsyncCommandHandler<DuplicatePageCommand>
+        : ICommandHandler<DuplicatePageCommand>
         , IPermissionRestrictedCommandHandler<DuplicatePageCommand>
     {
         #region constructor

@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore;
 namespace Cofoundry.Domain
 {
     public class GetAllPageGroupMicroSummariesQueryHandler
-        : IAsyncQueryHandler<GetAllPageGroupMicroSummariesQuery, ICollection<PageGroupMicroSummary>>
+        : IQueryHandler<GetAllPageGroupMicroSummariesQuery, ICollection<PageGroupMicroSummary>>
         , IPermissionRestrictedQueryHandler<GetAllPageGroupMicroSummariesQuery, ICollection<PageGroupMicroSummary>>
     {
         private readonly CofoundryDbContext _dbContext;

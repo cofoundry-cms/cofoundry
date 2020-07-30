@@ -13,7 +13,7 @@ using Cofoundry.Core.Validation;
 namespace Cofoundry.Domain
 {
     public class AddDocumentAssetCommandHandler 
-        : IAsyncCommandHandler<AddDocumentAssetCommand>
+        : ICommandHandler<AddDocumentAssetCommand>
         , IPermissionRestrictedCommandHandler<AddDocumentAssetCommand>
     {
         #region constructor
@@ -60,7 +60,7 @@ namespace Cofoundry.Domain
 
             if (string.IsNullOrWhiteSpace(documentAsset.FileName))
             {
-                throw new PropertyValidationException("Document title is empty or does not contain any safe file path characters.", nameof(command.Title));
+                throw ValidationErrorException.CreateWithProperties("Document title is empty or does not contain any safe file path characters.", nameof(command.Title));
             }
 
             _entityTagHelper.UpdateTags(documentAsset.DocumentAssetTags, command.Tags, executionContext);

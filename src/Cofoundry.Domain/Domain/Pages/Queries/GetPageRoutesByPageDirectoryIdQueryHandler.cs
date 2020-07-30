@@ -17,7 +17,7 @@ namespace Cofoundry.Domain
     /// page projections.
     /// </summary>
     public class GetPageRoutesByPageDirectoryIdQueryHandler 
-        : IAsyncQueryHandler<GetPageRoutesByPageDirectoryIdQuery, ICollection<PageRoute>>
+        : IQueryHandler<GetPageRoutesByPageDirectoryIdQuery, ICollection<PageRoute>>
         , IPermissionRestrictedQueryHandler<GetPageRoutesByPageDirectoryIdQuery, ICollection<PageRoute>>
     {
         private readonly IQueryExecutor _queryExecutor;

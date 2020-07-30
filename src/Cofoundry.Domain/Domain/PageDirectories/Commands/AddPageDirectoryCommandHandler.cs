@@ -11,7 +11,7 @@ using Cofoundry.Core.Data;
 namespace Cofoundry.Domain
 {
     public class AddPageDirectoryCommandHandler
-        : IAsyncCommandHandler<AddPageDirectoryCommand>
+        : ICommandHandler<AddPageDirectoryCommand>
         , IPermissionRestrictedCommandHandler<AddPageDirectoryCommand>
     {
         #region constructor

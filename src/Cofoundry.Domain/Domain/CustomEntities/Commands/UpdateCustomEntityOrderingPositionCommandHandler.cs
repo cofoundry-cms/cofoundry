@@ -17,7 +17,7 @@ namespace Cofoundry.Domain
     /// able to set ordering.
     /// </summary>
     public class UpdateCustomEntityOrderingPositionCommandHandler
-        : IAsyncCommandHandler<UpdateCustomEntityOrderingPositionCommand>
+        : ICommandHandler<UpdateCustomEntityOrderingPositionCommand>
         , IIgnorePermissionCheckHandler
     {
         #region constructor

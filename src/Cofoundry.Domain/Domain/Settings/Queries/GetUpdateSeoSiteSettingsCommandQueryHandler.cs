@@ -8,7 +8,7 @@ using Cofoundry.Domain.CQS;
 namespace Cofoundry.Domain
 {
     public class GetUpdateSeoSiteSettingsCommandQueryHandler 
-        : IAsyncQueryHandler<GetUpdateCommandQuery<UpdateSeoSettingsCommand>, UpdateSeoSettingsCommand>
+        : IQueryHandler<GetUpdateCommandQuery<UpdateSeoSettingsCommand>, UpdateSeoSettingsCommand>
         , IIgnorePermissionCheckHandler
     {
         private readonly IQueryExecutor _queryExecutor;

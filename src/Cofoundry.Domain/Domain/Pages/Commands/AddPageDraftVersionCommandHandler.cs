@@ -18,7 +18,7 @@ namespace Cofoundry.Domain
     /// thrown if there is already a draft version.
     /// </summary>
     public class AddPageDraftVersionCommandHandler 
-        : IAsyncCommandHandler<AddPageDraftVersionCommand>
+        : ICommandHandler<AddPageDraftVersionCommand>
         , IPermissionRestrictedCommandHandler<AddPageDraftVersionCommand>
     {
         #region constructor

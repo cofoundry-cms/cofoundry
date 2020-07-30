@@ -13,7 +13,7 @@ using Cofoundry.Core;
 namespace Cofoundry.Domain
 {
     public class CompleteUserPasswordResetCommandHandler 
-        : IAsyncCommandHandler<CompleteUserPasswordResetCommand>
+        : ICommandHandler<CompleteUserPasswordResetCommand>
         , IIgnorePermissionCheckHandler
     {
         private const int NUMHOURS_PASSWORD_RESET_VALID = 16;

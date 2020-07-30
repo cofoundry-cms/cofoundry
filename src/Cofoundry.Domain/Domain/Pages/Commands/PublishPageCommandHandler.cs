@@ -17,7 +17,7 @@ namespace Cofoundry.Domain
     /// a date is specified then the publish date will be updated.
     /// </summary>
     public class PublishPageCommandHandler 
-        : IAsyncCommandHandler<PublishPageCommand>
+        : ICommandHandler<PublishPageCommand>
         , IPermissionRestrictedCommandHandler<PublishPageCommand>
     {
         private readonly IQueryExecutor _queryExecutor;

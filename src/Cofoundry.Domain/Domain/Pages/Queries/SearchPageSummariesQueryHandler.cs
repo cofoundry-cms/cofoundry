@@ -16,7 +16,7 @@ namespace Cofoundry.Domain
     /// the pages returned may be unpublished.
     /// </summary>
     public class SearchPageSummariesQueryHandler 
-        : IAsyncQueryHandler<SearchPageSummariesQuery, PagedQueryResult<PageSummary>>
+        : IQueryHandler<SearchPageSummariesQuery, PagedQueryResult<PageSummary>>
         , IPermissionRestrictedQueryHandler<SearchPageSummariesQuery, PagedQueryResult<PageSummary>>
     {
         #region constructor

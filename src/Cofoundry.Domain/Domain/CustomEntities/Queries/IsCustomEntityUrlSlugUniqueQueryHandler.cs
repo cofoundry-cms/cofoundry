@@ -17,7 +17,7 @@ namespace Cofoundry.Domain
     /// be returned.
     /// </summary>
     public class IsCustomEntityUrlSlugUniqueQueryHandler
-        : IAsyncQueryHandler<IsCustomEntityUrlSlugUniqueQuery, bool>
+        : IQueryHandler<IsCustomEntityUrlSlugUniqueQuery, bool>
         , IPermissionRestrictedQueryHandler<IsCustomEntityUrlSlugUniqueQuery, bool>
     {
         #region constructor

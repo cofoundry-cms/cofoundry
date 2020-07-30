@@ -113,7 +113,7 @@ namespace Cofoundry.Domain
         {
             if (user == null)
             {
-                throw new PropertyValidationException("Account not found.", "Username");
+                throw ValidationErrorException.CreateWithProperties("Account not found.", "Username");
             }
         }
 

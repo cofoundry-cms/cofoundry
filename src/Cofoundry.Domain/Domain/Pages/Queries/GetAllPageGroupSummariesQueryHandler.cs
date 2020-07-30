@@ -11,7 +11,7 @@ using Cofoundry.Domain.QueryModels;
 namespace Cofoundry.Domain
 {
     public class GetAllPageGroupSummariesQueryHandler
-        : IAsyncQueryHandler<GetAllPageGroupSummariesQuery, ICollection<PageGroupSummary>>
+        : IQueryHandler<GetAllPageGroupSummariesQuery, ICollection<PageGroupSummary>>
         , IPermissionRestrictedQueryHandler<GetAllPageGroupSummariesQuery, ICollection<PageGroupSummary>>
     {
         private readonly CofoundryDbContext _dbContext;

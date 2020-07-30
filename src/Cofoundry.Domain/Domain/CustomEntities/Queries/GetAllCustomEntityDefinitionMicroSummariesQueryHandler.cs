@@ -14,7 +14,7 @@ namespace Cofoundry.Domain
     /// as part of another domain model.
     /// </summary>
     public class GetAllCustomEntityDefinitionMicroSummariesQueryHandler 
-        : IAsyncQueryHandler<GetAllCustomEntityDefinitionMicroSummariesQuery, ICollection<CustomEntityDefinitionMicroSummary>>
+        : IQueryHandler<GetAllCustomEntityDefinitionMicroSummariesQuery, ICollection<CustomEntityDefinitionMicroSummary>>
         , IIgnorePermissionCheckHandler
     {
         #region constructor

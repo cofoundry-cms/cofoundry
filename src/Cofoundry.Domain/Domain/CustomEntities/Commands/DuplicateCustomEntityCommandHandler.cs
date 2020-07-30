@@ -15,7 +15,7 @@ namespace Cofoundry.Domain
     /// Creates a new custom entity, copying from an existing custom entity.
     /// </summary>
     public class DuplicateCustomEntityCommandHandler
-        : IAsyncCommandHandler<DuplicateCustomEntityCommand>
+        : ICommandHandler<DuplicateCustomEntityCommand>
         , IIgnorePermissionCheckHandler
     {
         private readonly ICommandExecutor _commandExecutor;

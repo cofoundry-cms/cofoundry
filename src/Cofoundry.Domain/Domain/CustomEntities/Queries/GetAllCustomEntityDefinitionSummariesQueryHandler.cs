@@ -15,7 +15,7 @@ namespace Cofoundry.Domain
     /// DataModelType property.
     /// </summary>
     public class GetAllCustomEntityDefinitionSummariesQueryHandler 
-        : IAsyncQueryHandler<GetAllCustomEntityDefinitionSummariesQuery, ICollection<CustomEntityDefinitionSummary>>
+        : IQueryHandler<GetAllCustomEntityDefinitionSummariesQuery, ICollection<CustomEntityDefinitionSummary>>
         , IIgnorePermissionCheckHandler
     {
         #region constructor 

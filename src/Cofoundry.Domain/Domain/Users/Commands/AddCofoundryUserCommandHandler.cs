@@ -13,7 +13,7 @@ namespace Cofoundry.Domain
     /// Adds a user to the Cofoundry user area and sends a welcome notification.
     /// </summary>
     public class AddCofoundryUserCommandHandler
-        : IAsyncCommandHandler<AddCofoundryUserCommand>
+        : ICommandHandler<AddCofoundryUserCommand>
         , IPermissionRestrictedCommandHandler<AddCofoundryUserCommand>
     {
         #region constructor

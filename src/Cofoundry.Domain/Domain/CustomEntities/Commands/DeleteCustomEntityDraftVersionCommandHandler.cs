@@ -15,7 +15,7 @@ namespace Cofoundry.Domain
     /// it exists. If no draft exists then no action is taken.
     /// </summary>
     public class DeleteCustomEntityDraftVersionCommandHandler 
-        : IAsyncCommandHandler<DeleteCustomEntityDraftVersionCommand>
+        : ICommandHandler<DeleteCustomEntityDraftVersionCommand>
         , IIgnorePermissionCheckHandler
     {
         #region constructor

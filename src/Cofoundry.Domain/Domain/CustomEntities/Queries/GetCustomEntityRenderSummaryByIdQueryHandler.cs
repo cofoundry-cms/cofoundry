@@ -18,7 +18,7 @@ namespace Cofoundry.Domain
     /// publishStatus query property.
     /// </summary>
     public class GetCustomEntityRenderSummaryByIdQueryHandler 
-        : IAsyncQueryHandler<GetCustomEntityRenderSummaryByIdQuery, CustomEntityRenderSummary>
+        : IQueryHandler<GetCustomEntityRenderSummaryByIdQuery, CustomEntityRenderSummary>
         , IIgnorePermissionCheckHandler
     {
         #region constructor
