@@ -27,7 +27,7 @@ namespace Cofoundry.Core.AutoUpdate
         /// </summary>
         public virtual string ScriptPath { get { return "Install.Db."; } }
 
-        public IEnumerable<UpdatePackage> Create(ICollection<ModuleVersion> versionHistory)
+        public virtual IEnumerable<UpdatePackage> Create(ICollection<ModuleVersion> versionHistory)
         {
             var moduleVersion = versionHistory.SingleOrDefault(m => m.Module == ModuleIdentifier);
 
