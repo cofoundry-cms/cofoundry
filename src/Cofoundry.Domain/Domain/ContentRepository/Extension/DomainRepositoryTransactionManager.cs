@@ -7,14 +7,14 @@ using System.Text;
 namespace Cofoundry.Domain
 {
     /// <summary>
-    /// ContentApi wrapper around ITransactionScopeManager.
+    /// DomainRepository wrapper around ITransactionScopeManager.
     /// </summary>
-    public class ContentRepositoryTransactionManager : IContentRepositoryTransactionManager
+    public class DomainRepositoryTransactionManager : IDomainRepositoryTransactionManager
     {
         private readonly ITransactionScopeManager _transactionScopeManager;
         private readonly CofoundryDbContext _dbContext;
 
-        public ContentRepositoryTransactionManager(
+        public DomainRepositoryTransactionManager(
             ITransactionScopeManager transactionScopeManager,
             CofoundryDbContext dbContext
             )

@@ -14,6 +14,6 @@ namespace Cofoundry.Domain
         /// The PageDirectoryRoute projection is used in dynamic page routing and is designed to
         /// be lightweight and cacheable. The results of this query are cached by default.
         /// </summary>
-        IContentRepositoryQueryContext<ICollection<PageDirectoryRoute>> AsRoutes();
+        IDomainRepositoryQueryContext<ICollection<PageDirectoryRoute>> AsRoutes();
     }
 }

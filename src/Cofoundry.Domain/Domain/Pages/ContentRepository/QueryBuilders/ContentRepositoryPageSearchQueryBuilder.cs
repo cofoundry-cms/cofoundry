@@ -20,14 +20,14 @@ namespace Cofoundry.Domain
 
         public IExtendableContentRepository ExtendableContentRepository { get; }
 
-        public IContentRepositoryQueryContext<PagedQueryResult<PageSummary>> AsSummaries(SearchPageSummariesQuery query)
+        public IDomainRepositoryQueryContext<PagedQueryResult<PageSummary>> AsSummaries(SearchPageSummariesQuery query)
         {
-            return ContentRepositoryQueryContextFactory.Create(query, ExtendableContentRepository);
+            return DomainRepositoryQueryContextFactory.Create(query, ExtendableContentRepository);
         }
 
-        public IContentRepositoryQueryContext<PagedQueryResult<PageRenderSummary>> AsRenderSummaries(SearchPageRenderSummariesQuery query)
+        public IDomainRepositoryQueryContext<PagedQueryResult<PageRenderSummary>> AsRenderSummaries(SearchPageRenderSummariesQuery query)
         {
-            return ContentRepositoryQueryContextFactory.Create(query, ExtendableContentRepository);
+            return DomainRepositoryQueryContextFactory.Create(query, ExtendableContentRepository);
         }
     }
 }

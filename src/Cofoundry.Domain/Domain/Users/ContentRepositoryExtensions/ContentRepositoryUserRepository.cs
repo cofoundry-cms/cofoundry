@@ -37,9 +37,9 @@ namespace Cofoundry.Domain
             return new ContentRepositoryUserSearchQueryBuilder(ExtendableContentRepository);
         }
 
-        public IContentRepositoryQueryContext<bool> IsUsernameUnique(IsUsernameUniqueQuery query)
+        public IDomainRepositoryQueryContext<bool> IsUsernameUnique(IsUsernameUniqueQuery query)
         {
-            return ContentRepositoryQueryContextFactory.Create(query, ExtendableContentRepository);
+            return DomainRepositoryQueryContextFactory.Create(query, ExtendableContentRepository);
         }
 
         #endregion

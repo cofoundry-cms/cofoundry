@@ -20,6 +20,6 @@ namespace Cofoundry.Domain
         /// can be controlled by the publishStatus parameter.
         /// </summary>
         /// <param name="publishStatusQuery">Used to determine which version of the custom entities to include data for.</param>
-        IContentRepositoryQueryContext<IDictionary<int, CustomEntityRenderSummary>> AsRenderSummaries(PublishStatusQuery? publishStatusQuery = null);
+        IDomainRepositoryQueryContext<IDictionary<int, CustomEntityRenderSummary>> AsRenderSummaries(PublishStatusQuery? publishStatusQuery = null);
     }
 }

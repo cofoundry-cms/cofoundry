@@ -17,7 +17,7 @@ namespace Cofoundry.Domain
         /// and the PageDetails projection includes audit data and other additional 
         /// information that should normally be hidden from a customer facing app.
         /// </summary>
-        IContentRepositoryQueryContext<PageDetails> AsDetails();
+        IDomainRepositoryQueryContext<PageDetails> AsDetails();
 
         /// <summary>
         /// Query that returns a specific version of a page (equivalent to using 
@@ -30,7 +30,7 @@ namespace Cofoundry.Domain
         /// <param name="pageVersionId">
         /// Use this to specify a specific version to return in the query.
         /// </param>
-        IContentRepositoryQueryContext<PageRenderSummary> AsRenderSummary(int pageVersionId);
+        IDomainRepositoryQueryContext<PageRenderSummary> AsRenderSummary(int pageVersionId);
 
         /// <summary>
         /// Query that returns a specific version of a page (equivalent to using 
@@ -41,6 +41,6 @@ namespace Cofoundry.Domain
         /// <param name="pageVersionId">
         /// Use this to specify a specific version to return in the query.
         /// </param>
-        IContentRepositoryQueryContext<PageRenderDetails> AsRenderDetails(int pageVersionId);
+        IDomainRepositoryQueryContext<PageRenderDetails> AsRenderDetails(int pageVersionId);
     }
 }

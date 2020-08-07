@@ -24,56 +24,56 @@ namespace Cofoundry.Domain
 
         public IExtendableContentRepository ExtendableContentRepository { get; }
 
-        public IContentRepositoryQueryContext<PageRoute> AsRoute()
+        public IDomainRepositoryQueryContext<PageRoute> AsRoute()
         {
             var query = new GetPageRouteByIdQuery(_pageId);
-            return ContentRepositoryQueryContextFactory.Create(query, ExtendableContentRepository);
+            return DomainRepositoryQueryContextFactory.Create(query, ExtendableContentRepository);
         }
 
-        public IContentRepositoryQueryContext<PageRenderSummary> AsRenderSummary()
+        public IDomainRepositoryQueryContext<PageRenderSummary> AsRenderSummary()
         {
             var query = new GetPageRenderSummaryByIdQuery(_pageId);
-            return ContentRepositoryQueryContextFactory.Create(query, ExtendableContentRepository);
+            return DomainRepositoryQueryContextFactory.Create(query, ExtendableContentRepository);
         }
 
-        public IContentRepositoryQueryContext<PageRenderSummary> AsRenderSummary(PublishStatusQuery publishStatus)
+        public IDomainRepositoryQueryContext<PageRenderSummary> AsRenderSummary(PublishStatusQuery publishStatus)
         {
             var query = new GetPageRenderSummaryByIdQuery(_pageId, publishStatus);
-            return ContentRepositoryQueryContextFactory.Create(query, ExtendableContentRepository);
+            return DomainRepositoryQueryContextFactory.Create(query, ExtendableContentRepository);
         }
 
-        public IContentRepositoryQueryContext<PageRenderSummary> AsRenderSummary(int pageVersionId)
+        public IDomainRepositoryQueryContext<PageRenderSummary> AsRenderSummary(int pageVersionId)
         {
             var query = new GetPageRenderSummaryByIdQuery(_pageId, PublishStatusQuery.SpecificVersion);
             query.PageVersionId = pageVersionId;
 
-            return ContentRepositoryQueryContextFactory.Create(query, ExtendableContentRepository);
+            return DomainRepositoryQueryContextFactory.Create(query, ExtendableContentRepository);
         }
 
-        public IContentRepositoryQueryContext<PageRenderDetails> AsRenderDetails()
+        public IDomainRepositoryQueryContext<PageRenderDetails> AsRenderDetails()
         {
             var query = new GetPageRenderDetailsByIdQuery(_pageId);
-            return ContentRepositoryQueryContextFactory.Create(query, ExtendableContentRepository);
+            return DomainRepositoryQueryContextFactory.Create(query, ExtendableContentRepository);
         }
 
-        public IContentRepositoryQueryContext<PageRenderDetails> AsRenderDetails(PublishStatusQuery publishStatus)
+        public IDomainRepositoryQueryContext<PageRenderDetails> AsRenderDetails(PublishStatusQuery publishStatus)
         {
             var query = new GetPageRenderDetailsByIdQuery(_pageId, publishStatus);
-            return ContentRepositoryQueryContextFactory.Create(query, ExtendableContentRepository);
+            return DomainRepositoryQueryContextFactory.Create(query, ExtendableContentRepository);
         }
 
-        public IContentRepositoryQueryContext<PageRenderDetails> AsRenderDetails(int pageVersionId)
+        public IDomainRepositoryQueryContext<PageRenderDetails> AsRenderDetails(int pageVersionId)
         {
             var query = new GetPageRenderDetailsByIdQuery(_pageId, PublishStatusQuery.SpecificVersion);
             query.PageVersionId = pageVersionId;
 
-            return ContentRepositoryQueryContextFactory.Create(query, ExtendableContentRepository);
+            return DomainRepositoryQueryContextFactory.Create(query, ExtendableContentRepository);
         }
 
-        public IContentRepositoryQueryContext<PageDetails> AsDetails()
+        public IDomainRepositoryQueryContext<PageDetails> AsDetails()
         {
             var query = new GetPageDetailsByIdQuery(_pageId);
-            return ContentRepositoryQueryContextFactory.Create(query, ExtendableContentRepository);
+            return DomainRepositoryQueryContextFactory.Create(query, ExtendableContentRepository);
         }
     }
 }

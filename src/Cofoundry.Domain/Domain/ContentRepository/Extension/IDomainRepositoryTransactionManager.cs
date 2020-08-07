@@ -6,9 +6,9 @@ using System.Text;
 namespace Cofoundry.Domain
 {
     /// <summary>
-    /// ContentApi wrapper around ITransactionScopeManager.
+    /// DomainRepository wrapper around ITransactionScopeManager.
     /// </summary>
-    public interface IContentRepositoryTransactionManager
+    public interface IDomainRepositoryTransactionManager
     {
         /// <summary>
         /// Creates a new transaction scope associated with the connection in use by the

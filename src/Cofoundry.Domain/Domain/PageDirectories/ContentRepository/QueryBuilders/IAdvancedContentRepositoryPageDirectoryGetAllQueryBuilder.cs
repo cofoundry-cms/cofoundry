@@ -15,6 +15,6 @@ namespace Cofoundry.Domain
         /// Query to return a complete tree of page directory nodes, starting
         /// with the root page directory as a single node.
         /// </summary>
-        IContentRepositoryQueryContext<PageDirectoryNode> AsTree();
+        IDomainRepositoryQueryContext<PageDirectoryNode> AsTree();
     }
 }

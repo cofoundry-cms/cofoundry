@@ -18,7 +18,7 @@ namespace Cofoundry.Domain
         /// to control the version returned.
         /// </summary>
         /// <param name="publishStatusQuery">Used to determine which version of the custom entity to include data for.</param>
-        IContentRepositoryQueryContext<CustomEntityRenderSummary> AsRenderSummary(PublishStatusQuery publishStatusQuery);
+        IDomainRepositoryQueryContext<CustomEntityRenderSummary> AsRenderSummary(PublishStatusQuery publishStatusQuery);
 
         /// <summary>
         /// Queries a custom entity by it's database id, returning a 
@@ -28,7 +28,7 @@ namespace Cofoundry.Domain
         /// versions only, but you can use the overload with the publishStatusQuery 
         /// parameter to control this behavior.
         /// </summary>
-        IContentRepositoryQueryContext<CustomEntityRenderSummary> AsRenderSummary();
+        IDomainRepositoryQueryContext<CustomEntityRenderSummary> AsRenderSummary();
 
         /// <summary>
         /// Queries a custom entity by it's database id, projected as a
@@ -46,6 +46,6 @@ namespace Cofoundry.Domain
         /// included in the returned object.
         /// </param>
         /// <param name="publishStatusQuery">Used to determine which version of the custom entity to include data for.</param>
-        IContentRepositoryQueryContext<CustomEntityRenderDetails> AsRenderDetails(int pageId, PublishStatusQuery? publishStatusQuery = null);
+        IDomainRepositoryQueryContext<CustomEntityRenderDetails> AsRenderDetails(int pageId, PublishStatusQuery? publishStatusQuery = null);
     }
 }

@@ -16,7 +16,7 @@ namespace Cofoundry.Domain
         /// defintion class, but the main difference is that instead of using generics 
         /// to identify the data model type, there is instead a DataModelType property.
         /// </summary>
-        IContentRepositoryQueryContext<CustomEntityDefinitionSummary> AsSummary();
+        IDomainRepositoryQueryContext<CustomEntityDefinitionSummary> AsSummary();
 
         /// <summary>
         /// Gets a custom entity definition by it's unique 6 character code.
@@ -24,6 +24,6 @@ namespace Cofoundry.Domain
         /// definition class. This is typically used as part of another domain model or
         /// for querying lists of definitions in the admin panel.
         /// </summary>
-        IContentRepositoryQueryContext<CustomEntityDefinitionMicroSummary> AsMicroSummary();
+        IDomainRepositoryQueryContext<CustomEntityDefinitionMicroSummary> AsMicroSummary();
     }
 }

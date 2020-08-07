@@ -19,10 +19,10 @@ namespace Cofoundry.Domain
 
         public IExtendableContentRepository ExtendableContentRepository { get; }
 
-        public IContentRepositoryQueryContext<ICollection<ICustomEntityRoutingRule>> AsRoutingRules()
+        public IDomainRepositoryQueryContext<ICollection<ICustomEntityRoutingRule>> AsRoutingRules()
         {
             var query = new GetAllCustomEntityRoutingRulesQuery();
-            return ContentRepositoryQueryContextFactory.Create(query, ExtendableContentRepository);
+            return DomainRepositoryQueryContextFactory.Create(query, ExtendableContentRepository);
         }
     }
 }

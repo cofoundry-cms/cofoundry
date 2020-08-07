@@ -23,16 +23,16 @@ namespace Cofoundry.Domain
 
         public IExtendableContentRepository ExtendableContentRepository { get; }
 
-        public IContentRepositoryQueryContext<UserMicroSummary> AsMicroSummary()
+        public IDomainRepositoryQueryContext<UserMicroSummary> AsMicroSummary()
         {
             var query = new GetUserMicroSummaryByIdQuery(_userId);
-            return ContentRepositoryQueryContextFactory.Create(query, ExtendableContentRepository);
+            return DomainRepositoryQueryContextFactory.Create(query, ExtendableContentRepository);
         }
 
-        public IContentRepositoryQueryContext<UserDetails> AsDetails()
+        public IDomainRepositoryQueryContext<UserDetails> AsDetails()
         {
             var query = new GetUserDetailsByIdQuery(_userId);
-            return ContentRepositoryQueryContextFactory.Create(query, ExtendableContentRepository);
+            return DomainRepositoryQueryContextFactory.Create(query, ExtendableContentRepository);
         }
     }
 }

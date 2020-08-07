@@ -21,13 +21,13 @@ namespace Cofoundry.Domain
         /// Used to determine which version of the custom entities to include data for. This 
         /// defaults to Published, meaning that only published custom entities will be returned.
         /// </param>
-        IContentRepositoryQueryContext<ICollection<CustomEntityRenderSummary>> AsRenderSummary(PublishStatusQuery? publishStatusQuery = null);
+        IDomainRepositoryQueryContext<ICollection<CustomEntityRenderSummary>> AsRenderSummary(PublishStatusQuery? publishStatusQuery = null);
 
         /// <summary>
         /// Queries CustomEntityRoute data for all custom entities of a 
         /// specific type. These route objects are small and cached which
         /// makes them good for quick lookups.
         /// </summary>
-        IContentRepositoryQueryContext<ICollection<CustomEntityRoute>> AsRoutes();
+        IDomainRepositoryQueryContext<ICollection<CustomEntityRoute>> AsRoutes();
     }
 }

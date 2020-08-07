@@ -7,12 +7,12 @@ using System.Threading.Tasks;
 namespace Cofoundry.Domain
 {
     /// <summary>
-    /// Wraps a content repository query with mutator actions
-    /// that allow you to change the result during execution.
+    /// Wraps a repository query with mutator actions
+    /// that allow you to change the result after execution.
     /// </summary>
     /// <typeparam name="TQueryResult">The type of the original query result.</typeparam>
     /// <typeparam name="TOutput">The result type after the mutation has been applied.</typeparam>
-    public interface IContentRepositoryQueryMutator<TQueryResult, TOutput>
+    public interface IDomainRepositoryQueryMutator<TQueryResult, TOutput>
     {
         /// <summary>
         /// The original query that is to be executed prior to mutation.

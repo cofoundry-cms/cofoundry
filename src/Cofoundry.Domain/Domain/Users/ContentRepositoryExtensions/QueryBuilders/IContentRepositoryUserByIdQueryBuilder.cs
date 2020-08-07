@@ -14,13 +14,13 @@ namespace Cofoundry.Domain
         /// The UserMicroSummary is a minimal projection of user data 
         /// that is quick to load.
         /// </summary>
-        IContentRepositoryQueryContext<UserMicroSummary> AsMicroSummary();
+        IDomainRepositoryQueryContext<UserMicroSummary> AsMicroSummary();
 
         /// <summary>
         /// The UserDetails projection is a full representation of a user, containing 
         /// all properties including role and permission data. If the user is not logged 
         /// in then null is returned.
         /// </summary>
-        IContentRepositoryQueryContext<UserDetails> AsDetails();
+        IDomainRepositoryQueryContext<UserDetails> AsDetails();
     }
 }

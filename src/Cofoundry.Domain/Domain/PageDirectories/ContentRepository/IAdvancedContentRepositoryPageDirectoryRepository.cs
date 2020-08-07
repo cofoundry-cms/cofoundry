@@ -27,7 +27,7 @@ namespace Cofoundry.Domain
         /// Query to determine if a page directory UrlPath is unique
         /// within its parent directory.
         /// </summary>
-        IContentRepositoryQueryContext<bool> IsPathUnique(IsPageDirectoryPathUniqueQuery query);
+        IDomainRepositoryQueryContext<bool> IsPathUnique(IsPageDirectoryPathUniqueQuery query);
 
         #endregion
 

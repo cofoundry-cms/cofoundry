@@ -6,12 +6,12 @@ using System.Threading.Tasks;
 
 namespace Cofoundry.Domain
 {
-    public class ContentRepositoryQueryMutator<TQueryResult, TResult>
-        : IContentRepositoryQueryMutator<TQueryResult, TResult>
+    public class DomainRepositoryQueryMutator<TQueryResult, TResult>
+        : IDomainRepositoryQueryMutator<TQueryResult, TResult>
     {
         private readonly Func<Task<TResult>> _modifier;
 
-        public ContentRepositoryQueryMutator(
+        public DomainRepositoryQueryMutator(
             IQuery<TQueryResult> query,
             Func<Task<TResult>> modifier 
             )

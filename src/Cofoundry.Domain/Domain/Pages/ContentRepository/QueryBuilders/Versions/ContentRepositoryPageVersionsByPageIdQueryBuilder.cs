@@ -19,9 +19,9 @@ namespace Cofoundry.Domain
 
         public IExtendableContentRepository ExtendableContentRepository { get; }
 
-        public IContentRepositoryQueryContext<PagedQueryResult<PageVersionSummary>> AsVersionSummaries(GetPageVersionSummariesByPageIdQuery query)
+        public IDomainRepositoryQueryContext<PagedQueryResult<PageVersionSummary>> AsVersionSummaries(GetPageVersionSummariesByPageIdQuery query)
         {
-            return ContentRepositoryQueryContextFactory.Create(query, ExtendableContentRepository);
+            return DomainRepositoryQueryContextFactory.Create(query, ExtendableContentRepository);
         }
     }
 }

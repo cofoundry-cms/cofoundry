@@ -15,6 +15,6 @@ namespace Cofoundry.Domain
         /// the mapped display model may contain other versioned entities, you can 
         /// optionally pass down a PublishStatusQuery to use in the mapping process.
         /// </summary>
-        IContentRepositoryQueryContext<PageVersionBlockRenderDetails> AsRenderDetails(PublishStatusQuery? publishStatusQuery = null);
+        IDomainRepositoryQueryContext<PageVersionBlockRenderDetails> AsRenderDetails(PublishStatusQuery? publishStatusQuery = null);
     }
 }

@@ -22,7 +22,7 @@ namespace Cofoundry.Domain
         /// version at a time.
         /// </summary>
         /// <param name="pageId">PageId of the page to check.</param>
-        IContentRepositoryQueryContext<bool> HasDraft(int pageId);
+        IDomainRepositoryQueryContext<bool> HasDraft(int pageId);
 
         #endregion
 

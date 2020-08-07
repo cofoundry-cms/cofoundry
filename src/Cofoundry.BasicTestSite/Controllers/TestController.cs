@@ -76,6 +76,11 @@ namespace Cofoundry.BasicTestSite
                 .Map(v => v.OrderBy(v => v.Title))
                 .ExecuteAsync();
 
+            var customExecution = await _domainRepository
+                .WithQuery(new SearchCustomEntityRenderSummariesQuery())
+                .MapItem(b => new { b.CreateDate })
+                .ExecuteAsync();
+
             return Json(entity);
         }
 

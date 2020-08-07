@@ -7,15 +7,15 @@ using System.Threading.Tasks;
 
 namespace Cofoundry.Domain
 {
-    public class ContentRepositoryQueryContext<TResult> : IContentRepositoryQueryContext<TResult>
+    public class DomainRepositoryQueryContext<TResult> : IDomainRepositoryQueryContext<TResult>
     {
-        public ContentRepositoryQueryContext(
+        public DomainRepositoryQueryContext(
             IQuery<TResult> query,
-            IExtendableContentRepository contentRepository
+            IExtendableContentRepository extendableRepository
             )
         {
             Query = query;
-            ExtendableContentRepository = contentRepository;
+            ExtendableContentRepository = extendableRepository;
         }
 
         public IExtendableContentRepository ExtendableContentRepository { get; }

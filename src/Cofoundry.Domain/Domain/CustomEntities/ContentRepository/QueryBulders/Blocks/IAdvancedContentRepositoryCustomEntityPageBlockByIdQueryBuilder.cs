@@ -16,6 +16,6 @@ namespace Cofoundry.Domain
         /// entities, you can optionally pass down a PublishStatusQuery to use 
         /// in the mapping process.
         /// </summary>
-        IContentRepositoryQueryContext<CustomEntityVersionPageBlockRenderDetails> AsRenderDetails(PublishStatusQuery? publishStatusQuery = null);
+        IDomainRepositoryQueryContext<CustomEntityVersionPageBlockRenderDetails> AsRenderDetails(PublishStatusQuery? publishStatusQuery = null);
     }
 }

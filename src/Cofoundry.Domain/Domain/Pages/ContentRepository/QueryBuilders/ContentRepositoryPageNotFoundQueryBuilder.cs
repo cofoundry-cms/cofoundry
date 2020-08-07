@@ -21,9 +21,9 @@ namespace Cofoundry.Domain
 
         public IExtendableContentRepository ExtendableContentRepository { get; }
 
-        public IContentRepositoryQueryContext<PageRoute> GetByPath(GetNotFoundPageRouteByPathQuery query)
+        public IDomainRepositoryQueryContext<PageRoute> GetByPath(GetNotFoundPageRouteByPathQuery query)
         {
-            return ContentRepositoryQueryContextFactory.Create(query, ExtendableContentRepository);
+            return DomainRepositoryQueryContextFactory.Create(query, ExtendableContentRepository);
         }
     }
 }

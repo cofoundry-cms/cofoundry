@@ -19,7 +19,7 @@ namespace Cofoundry.Domain
         /// default as it's core to routing and often incorporated in more detailed
         /// page projections.
         /// </summary>
-        IContentRepositoryQueryContext<IDictionary<int, PageRoute>> AsRoutes();
+        IDomainRepositoryQueryContext<IDictionary<int, PageRoute>> AsRoutes();
 
         /// <summary>
         /// Query returning a range of pages by a set of id, projected as a PageRenderSummary, which is
@@ -29,13 +29,13 @@ namespace Cofoundry.Domain
         /// this behavior can be controlled by the publishStatus query property.
         /// </summary>
         /// <param name="publishStatus">Used to determine which version of the page to include data for.</param>
-        IContentRepositoryQueryContext<IDictionary<int, PageRenderSummary>> AsRenderSummaries(PublishStatusQuery? publishStatus = null);
+        IDomainRepositoryQueryContext<IDictionary<int, PageRenderSummary>> AsRenderSummaries(PublishStatusQuery? publishStatus = null);
 
         /// <summary>
         /// Query returning a range of pages by their ids projected as PageRenderDetails models. A PageRenderDetails contains 
         /// the data required to render a page, including template data for all the content-editable regions.
         /// </summary>
         /// <param name="publishStatus">Used to determine which version of the page to include data for.</param>
-        IContentRepositoryQueryContext<IDictionary<int, PageRenderDetails>> AsRenderDetails(PublishStatusQuery? publishStatus = null);
+        IDomainRepositoryQueryContext<IDictionary<int, PageRenderDetails>> AsRenderDetails(PublishStatusQuery? publishStatus = null);
     }
 }

@@ -14,6 +14,6 @@ namespace Cofoundry.Domain
         /// Query returning a paged collection of versions of a specific page, ordered 
         /// historically with the latest/draft version first.
         /// </summary>
-        IContentRepositoryQueryContext<PagedQueryResult<PageVersionSummary>> AsVersionSummaries(GetPageVersionSummariesByPageIdQuery query);
+        IDomainRepositoryQueryContext<PagedQueryResult<PageVersionSummary>> AsVersionSummaries(GetPageVersionSummariesByPageIdQuery query);
     }
 }

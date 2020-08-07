@@ -25,6 +25,6 @@ namespace Cofoundry.Domain
         /// </summary>
         /// <param name="query">Criteria to filter results by.</param>
         /// <returns>Paged set of results.</returns>
-        IContentRepositoryQueryContext<PagedQueryResult<CustomEntityRenderSummary>> AsRenderSummaries(SearchCustomEntityRenderSummariesQuery query);
+        IDomainRepositoryQueryContext<PagedQueryResult<CustomEntityRenderSummary>> AsRenderSummaries(SearchCustomEntityRenderSummariesQuery query);
     }
 }

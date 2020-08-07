@@ -14,12 +14,12 @@ namespace Cofoundry.Domain
         /// The PageBlockTypeSummary projection is lightweight and designed to be cacheable.
         /// The results of this query are cached by default.
         /// </summary>
-        IContentRepositoryQueryContext<PageBlockTypeSummary> AsSummary();
+        IDomainRepositoryQueryContext<PageBlockTypeSummary> AsSummary();
 
         /// <summary>
         /// The PageBlockTypeDetails projection extends the PageBlockTypeSummary model and
         /// contains additional data model schema meta data.
         /// </summary>
-        IContentRepositoryQueryContext<PageBlockTypeDetails> AsDetails();
+        IDomainRepositoryQueryContext<PageBlockTypeDetails> AsDetails();
     }
 }

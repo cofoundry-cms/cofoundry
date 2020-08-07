@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Cofoundry.Domain
 {
-    public static class IContentRepositoryQueryMutatorExtensions
+    public static class IDomainRepositoryQueryMutatorExtensions
     {
         /// <summary>
         /// Maps the result of the query using the specified mapper function. The 
@@ -21,12 +21,12 @@ namespace Cofoundry.Domain
         /// <param name="innerMutator">The chained query mutator to run before this instance is applied.</param>
         /// <param name="mapper">A mapper function to run on the query result.</param>
         /// <returns>A new query mutator instance that allows for method chaining.</returns>
-        public static IContentRepositoryQueryMutator<TQueryResult, TOutput> Map<TQueryResult, TInput, TOutput>(
-            this IContentRepositoryQueryMutator<TQueryResult, TInput> innerMutator,
+        public static IDomainRepositoryQueryMutator<TQueryResult, TOutput> Map<TQueryResult, TInput, TOutput>(
+            this IDomainRepositoryQueryMutator<TQueryResult, TInput> innerMutator,
             Func<TInput, TOutput> mapper
             )
         {
-            return new ContentRepositoryQueryMutator<TQueryResult, TOutput>(
+            return new DomainRepositoryQueryMutator<TQueryResult, TOutput>(
                 innerMutator.Query,
                 async () =>
                 {
@@ -45,12 +45,12 @@ namespace Cofoundry.Domain
         /// <param name="innerMutator">The chained query mutator to run before this instance is applied.</param>
         /// <param name="mapper">An async mapper function to run on the query result.</param>
         /// <returns>A new query mutator instance that allows for method chaining.</returns>
-        public static IContentRepositoryQueryMutator<TQueryResult, TOutput> Map<TQueryResult, TInput, TOutput>(
-            this IContentRepositoryQueryMutator<TQueryResult, TInput> innerMutator,
+        public static IDomainRepositoryQueryMutator<TQueryResult, TOutput> Map<TQueryResult, TInput, TOutput>(
+            this IDomainRepositoryQueryMutator<TQueryResult, TInput> innerMutator,
             Func<TInput, Task<TOutput>> mapper
             )
         {
-            return new ContentRepositoryQueryMutator<TQueryResult, TOutput>(
+            return new DomainRepositoryQueryMutator<TQueryResult, TOutput>(
                 innerMutator.Query,
                 async () =>
                 {
@@ -70,12 +70,12 @@ namespace Cofoundry.Domain
         /// <param name="innerMutator">The chained query mutator to run before this instance is applied.</param>
         /// <param name="mapper">A mapper function to run on each item in the query result.</param>
         /// <returns>A new query mutator instance that allows for method chaining.</returns>
-        public static IContentRepositoryQueryMutator<TQueryResult, ICollection<TOutputValue>> MapItem<TQueryResult, TInputValue, TOutputValue>(
-            this IContentRepositoryQueryMutator<TQueryResult, ICollection<TInputValue>> innerMutator,
+        public static IDomainRepositoryQueryMutator<TQueryResult, ICollection<TOutputValue>> MapItem<TQueryResult, TInputValue, TOutputValue>(
+            this IDomainRepositoryQueryMutator<TQueryResult, ICollection<TInputValue>> innerMutator,
             Func<TInputValue, TOutputValue> mapper
             )
         {
-            return new ContentRepositoryQueryMutator<TQueryResult, ICollection<TOutputValue>>(
+            return new DomainRepositoryQueryMutator<TQueryResult, ICollection<TOutputValue>>(
                 innerMutator.Query,
                 async () =>
                 {
@@ -96,12 +96,12 @@ namespace Cofoundry.Domain
         /// <param name="innerMutator">The chained query mutator to run before this instance is applied.</param>
         /// <param name="mapper">A mapper function to run on each item in the query result.</param>
         /// <returns>A new query mutator instance that allows for method chaining.</returns>
-        public static IContentRepositoryQueryMutator<TQueryResult, ICollection<TOutputValue>> MapItem<TQueryResult, TInputValue, TOutputValue>(
-            this IContentRepositoryQueryMutator<TQueryResult, IEnumerable<TInputValue>> innerMutator,
+        public static IDomainRepositoryQueryMutator<TQueryResult, ICollection<TOutputValue>> MapItem<TQueryResult, TInputValue, TOutputValue>(
+            this IDomainRepositoryQueryMutator<TQueryResult, IEnumerable<TInputValue>> innerMutator,
             Func<TInputValue, TOutputValue> mapper
             )
         {
-            return new ContentRepositoryQueryMutator<TQueryResult, ICollection<TOutputValue>>(
+            return new DomainRepositoryQueryMutator<TQueryResult, ICollection<TOutputValue>>(
                 innerMutator.Query,
                 async () =>
                 {
@@ -122,12 +122,12 @@ namespace Cofoundry.Domain
         /// <param name="innerMutator">The chained query mutator to run before this instance is applied.</param>
         /// <param name="mapper">An async mapper function to run on each item in the query result.</param>
         /// <returns>A new query mutator instance that allows for method chaining.</returns>
-        public static IContentRepositoryQueryMutator<TQueryResult, ICollection<TOutputValue>> MapItem<TQueryResult, TInputValue, TOutputValue>(
-            this IContentRepositoryQueryMutator<TQueryResult, IEnumerable<TInputValue>> innerMutator,
+        public static IDomainRepositoryQueryMutator<TQueryResult, ICollection<TOutputValue>> MapItem<TQueryResult, TInputValue, TOutputValue>(
+            this IDomainRepositoryQueryMutator<TQueryResult, IEnumerable<TInputValue>> innerMutator,
             Func<TInputValue, Task<TOutputValue>> mapper
             )
         {
-            return new ContentRepositoryQueryMutator<TQueryResult, ICollection<TOutputValue>>(
+            return new DomainRepositoryQueryMutator<TQueryResult, ICollection<TOutputValue>>(
                 innerMutator.Query,
                 async () =>
                 {
@@ -165,12 +165,12 @@ namespace Cofoundry.Domain
         /// time consuming tasks.
         /// </param>
         /// <returns>A new query mutator instance that allows for method chaining.</returns>
-        public static IContentRepositoryQueryMutator<TQueryResult, IDictionary<TKey, TOutputValue>> MapItem<TQueryResult, TKey, TInputValue, TOutputValue>(
-            this IContentRepositoryQueryMutator<TQueryResult, IDictionary<TKey, TInputValue>> innerMutator,
+        public static IDomainRepositoryQueryMutator<TQueryResult, IDictionary<TKey, TOutputValue>> MapItem<TQueryResult, TKey, TInputValue, TOutputValue>(
+            this IDomainRepositoryQueryMutator<TQueryResult, IDictionary<TKey, TInputValue>> innerMutator,
             Func<TInputValue, TOutputValue> mapper
             )
         {
-            return new ContentRepositoryQueryMutator<TQueryResult, IDictionary<TKey, TOutputValue>>(
+            return new DomainRepositoryQueryMutator<TQueryResult, IDictionary<TKey, TOutputValue>>(
                 innerMutator.Query,
                 async () =>
                 {
@@ -197,12 +197,12 @@ namespace Cofoundry.Domain
         /// <param name="innerMutator">The chained query mutator to run before this instance is applied.</param>
         /// <param name="mapper">An async mapper function to run on each value in the query result.</param>
         /// <returns>A new query mutator instance that allows for method chaining.</returns>
-        public static IContentRepositoryQueryMutator<TQueryResult, IDictionary<TKey, TOutputValue>> MapItem<TQueryResult, TKey, TInputValue, TOutputValue>(
-            this IContentRepositoryQueryMutator<TQueryResult, IDictionary<TKey, TInputValue>> innerMutator,
+        public static IDomainRepositoryQueryMutator<TQueryResult, IDictionary<TKey, TOutputValue>> MapItem<TQueryResult, TKey, TInputValue, TOutputValue>(
+            this IDomainRepositoryQueryMutator<TQueryResult, IDictionary<TKey, TInputValue>> innerMutator,
             Func<TInputValue, Task<TOutputValue>> mapper
             )
         {
-            return new ContentRepositoryQueryMutator<TQueryResult, IDictionary<TKey, TOutputValue>>(
+            return new DomainRepositoryQueryMutator<TQueryResult, IDictionary<TKey, TOutputValue>>(
                 innerMutator.Query,
                 async () =>
                 {
@@ -236,12 +236,12 @@ namespace Cofoundry.Domain
         /// contains duplicates.
         /// </param>
         /// <returns>A new query mutator instance that allows for method chaining.</returns>
-        public static IContentRepositoryQueryMutator<TQueryResult, ICollection<TValue>> FilterAndOrderByKeys<TQueryResult, TKey, TValue>(
-            this IContentRepositoryQueryMutator<TQueryResult, IDictionary<TKey, TValue>> innerMutator,
+        public static IDomainRepositoryQueryMutator<TQueryResult, ICollection<TValue>> FilterAndOrderByKeys<TQueryResult, TKey, TValue>(
+            this IDomainRepositoryQueryMutator<TQueryResult, IDictionary<TKey, TValue>> innerMutator,
             IEnumerable<TKey> orderedKeys
             )
         {
-            return new ContentRepositoryQueryMutator<TQueryResult, ICollection<TValue>>(
+            return new DomainRepositoryQueryMutator<TQueryResult, ICollection<TValue>>(
                 innerMutator.Query,
                 async () =>
                 {
@@ -263,12 +263,12 @@ namespace Cofoundry.Domain
         /// <param name="innerMutator">The chained query mutator to run before this instance is applied.</param>
         /// <param name="mapper">A mapper function to run on each item in the query result.</param>
         /// <returns>A new query mutator instance that allows for method chaining.</returns>
-        public static IContentRepositoryQueryMutator<TQueryResult, PagedQueryResult<TOutputValue>> MapItem<TQueryResult, TInputValue, TOutputValue>(
-            this IContentRepositoryQueryMutator<TQueryResult, PagedQueryResult<TInputValue>> innerMutator,
+        public static IDomainRepositoryQueryMutator<TQueryResult, PagedQueryResult<TOutputValue>> MapItem<TQueryResult, TInputValue, TOutputValue>(
+            this IDomainRepositoryQueryMutator<TQueryResult, PagedQueryResult<TInputValue>> innerMutator,
             Func<TInputValue, TOutputValue> mapper
             )
         {
-            return new ContentRepositoryQueryMutator<TQueryResult, PagedQueryResult<TOutputValue>>(
+            return new DomainRepositoryQueryMutator<TQueryResult, PagedQueryResult<TOutputValue>>(
                 innerMutator.Query,
                 async () =>
                 {
@@ -294,12 +294,12 @@ namespace Cofoundry.Domain
         /// <param name="innerMutator">The chained query mutator to run before this instance is applied.</param>
         /// <param name="mapper">An async mapper function to run on each item in the query result.</param>
         /// <returns>A new query mutator instance that allows for method chaining.</returns>
-        public static IContentRepositoryQueryMutator<TQueryResult, PagedQueryResult<TOutputValue>> MapItem<TQueryResult, TInputValue, TOutputValue>(
-            this IContentRepositoryQueryMutator<TQueryResult, PagedQueryResult<TInputValue>> innerMutator,
+        public static IDomainRepositoryQueryMutator<TQueryResult, PagedQueryResult<TOutputValue>> MapItem<TQueryResult, TInputValue, TOutputValue>(
+            this IDomainRepositoryQueryMutator<TQueryResult, PagedQueryResult<TInputValue>> innerMutator,
             Func<TInputValue, Task<TOutputValue>> mapper
             )
         {
-            return new ContentRepositoryQueryMutator<TQueryResult, PagedQueryResult<TOutputValue>>(
+            return new DomainRepositoryQueryMutator<TQueryResult, PagedQueryResult<TOutputValue>>(
                 innerMutator.Query,
                 async () =>
                 {

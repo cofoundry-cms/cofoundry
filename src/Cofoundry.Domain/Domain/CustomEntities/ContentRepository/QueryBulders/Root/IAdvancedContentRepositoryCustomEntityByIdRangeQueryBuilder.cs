@@ -20,6 +20,6 @@ namespace Cofoundry.Domain
         /// used in the admin panel and not in a version-sensitive context such as a 
         /// public webpage.
         /// </summary>
-        IContentRepositoryQueryContext<IDictionary<int, CustomEntitySummary>> AsSummaries();
+        IDomainRepositoryQueryContext<IDictionary<int, CustomEntitySummary>> AsSummaries();
     }
 }

@@ -16,6 +16,6 @@ namespace Cofoundry.Domain
         /// similar route.
         /// </summary>
         /// <param name="query">Query parameters.</param>
-        IContentRepositoryQueryContext<PageRoutingInfo> AsRoutingInfo(GetPageRoutingInfoByPathQuery query);
+        IDomainRepositoryQueryContext<PageRoutingInfo> AsRoutingInfo(GetPageRoutingInfoByPathQuery query);
     }
 }

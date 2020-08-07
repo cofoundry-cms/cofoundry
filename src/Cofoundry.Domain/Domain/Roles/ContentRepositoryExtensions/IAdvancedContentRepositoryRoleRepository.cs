@@ -23,7 +23,7 @@ namespace Cofoundry.Domain
         /// Role titles only have to be unique per UserArea.
         /// </summary>
         /// <param name="query">The parameters to run the query with.</param>
-        IContentRepositoryQueryContext<bool> IsRoleTitleUnique(IsRoleTitleUniqueQuery query);
+        IDomainRepositoryQueryContext<bool> IsRoleTitleUnique(IsRoleTitleUniqueQuery query);
 
         #endregion
 

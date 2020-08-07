@@ -24,21 +24,21 @@ namespace Cofoundry.Domain
 
         public IExtendableContentRepository ExtendableContentRepository { get; }
         
-        public IContentRepositoryQueryContext<CustomEntityRenderSummary> AsRenderSummary(PublishStatusQuery publishStatus)
+        public IDomainRepositoryQueryContext<CustomEntityRenderSummary> AsRenderSummary(PublishStatusQuery publishStatus)
         {
             var query = new GetCustomEntityRenderSummaryByIdQuery(_customEntityId, publishStatus);
-            return ContentRepositoryQueryContextFactory.Create(query, ExtendableContentRepository);
+            return DomainRepositoryQueryContextFactory.Create(query, ExtendableContentRepository);
         }
 
-        public IContentRepositoryQueryContext<CustomEntityRenderSummary> AsRenderSummary()
+        public IDomainRepositoryQueryContext<CustomEntityRenderSummary> AsRenderSummary()
         {
             var query = new GetCustomEntityRenderSummaryByIdQuery();
             query.CustomEntityId = _customEntityId;
 
-            return ContentRepositoryQueryContextFactory.Create(query, ExtendableContentRepository);
+            return DomainRepositoryQueryContextFactory.Create(query, ExtendableContentRepository);
         }
 
-        public IContentRepositoryQueryContext<CustomEntityRenderDetails> AsRenderDetails(int pageId, PublishStatusQuery? publishStatus = null)
+        public IDomainRepositoryQueryContext<CustomEntityRenderDetails> AsRenderDetails(int pageId, PublishStatusQuery? publishStatus = null)
         {
             var query = new GetCustomEntityRenderDetailsByIdQuery()
             {
@@ -51,24 +51,24 @@ namespace Cofoundry.Domain
                 query.PublishStatus = publishStatus.Value;
             }
 
-            return ContentRepositoryQueryContextFactory.Create(query, ExtendableContentRepository);
+            return DomainRepositoryQueryContextFactory.Create(query, ExtendableContentRepository);
         }
 
-        public IContentRepositoryQueryContext<CustomEntityDetails> AsDetails()
+        public IDomainRepositoryQueryContext<CustomEntityDetails> AsDetails()
         {
             var query = new GetCustomEntityDetailsByIdQuery(_customEntityId);
-            return ContentRepositoryQueryContextFactory.Create(query, ExtendableContentRepository);
+            return DomainRepositoryQueryContextFactory.Create(query, ExtendableContentRepository);
         }
 
-        public IContentRepositoryQueryContext<CustomEntityRenderSummary> AsRenderSummary(int customEntityVersionId)
+        public IDomainRepositoryQueryContext<CustomEntityRenderSummary> AsRenderSummary(int customEntityVersionId)
         {
             var query = new GetCustomEntityRenderSummaryByIdQuery(_customEntityId, PublishStatusQuery.SpecificVersion);
             query.CustomEntityVersionId = customEntityVersionId;
 
-            return ContentRepositoryQueryContextFactory.Create(query, ExtendableContentRepository);
+            return DomainRepositoryQueryContextFactory.Create(query, ExtendableContentRepository);
         }
 
-        public IContentRepositoryQueryContext<CustomEntityRenderDetails> AsRenderDetails(int pageId, int customEntityVersionId)
+        public IDomainRepositoryQueryContext<CustomEntityRenderDetails> AsRenderDetails(int pageId, int customEntityVersionId)
         {
             var query = new GetCustomEntityRenderDetailsByIdQuery()
             {
@@ -78,7 +78,7 @@ namespace Cofoundry.Domain
                 CustomEntityVersionId = customEntityVersionId
             };
 
-            return ContentRepositoryQueryContextFactory.Create(query, ExtendableContentRepository);
+            return DomainRepositoryQueryContextFactory.Create(query, ExtendableContentRepository);
         }
     }
 }

@@ -15,6 +15,6 @@ namespace Cofoundry.Domain
         /// for a 'Not Found' page up the directory tree of a specific path.
         /// </summary>
         /// <param name="query">Query parameters.</param>
-        IContentRepositoryQueryContext<PageRoute> GetByPath(GetNotFoundPageRouteByPathQuery query);
+        IDomainRepositoryQueryContext<PageRoute> GetByPath(GetNotFoundPageRouteByPathQuery query);
     }
 }

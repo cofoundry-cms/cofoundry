@@ -23,10 +23,10 @@ namespace Cofoundry.Domain
 
         public IExtendableContentRepository ExtendableContentRepository { get; }
 
-        public IContentRepositoryQueryContext<ICollection<PageRoute>> AsRoutes()
+        public IDomainRepositoryQueryContext<ICollection<PageRoute>> AsRoutes()
         {
             var query = new GetPageRoutesByPageDirectoryIdQuery(_pageDirectoryId);
-            return ContentRepositoryQueryContextFactory.Create(query, ExtendableContentRepository);
+            return DomainRepositoryQueryContextFactory.Create(query, ExtendableContentRepository);
         }
     }
 }

@@ -23,10 +23,10 @@ namespace Cofoundry.Domain
 
         public IExtendableContentRepository ExtendableContentRepository { get; }
 
-        public IContentRepositoryQueryContext<IDictionary<string, CustomEntityDataModelSchema>> AsDetails()
+        public IDomainRepositoryQueryContext<IDictionary<string, CustomEntityDataModelSchema>> AsDetails()
         {
             var query = new GetCustomEntityDataModelSchemaDetailsByDefinitionCodeRangeQuery(_customEntityDefinitionCodes);
-            return ContentRepositoryQueryContextFactory.Create(query, ExtendableContentRepository);
+            return DomainRepositoryQueryContextFactory.Create(query, ExtendableContentRepository);
         }
     }
 }

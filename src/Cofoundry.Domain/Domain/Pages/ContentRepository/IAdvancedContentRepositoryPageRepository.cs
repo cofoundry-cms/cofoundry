@@ -77,7 +77,7 @@ namespace Cofoundry.Domain
         /// up of a locale, directory and url path; duplicates are not permitted.
         /// </summary>
         /// <param name="query">Query parameters.</param>
-        IContentRepositoryQueryContext<bool> IsPathUnique(IsPagePathUniqueQuery query);
+        IDomainRepositoryQueryContext<bool> IsPathUnique(IsPagePathUniqueQuery query);
 
         #endregion
 

@@ -15,6 +15,6 @@ namespace Cofoundry.Domain
         /// in a typical website you wouldn't have multiple details pages for a custom entity
         /// type, it is supported and the query returns a collection of routes.
         /// </summary>
-        IContentRepositoryQueryContext<ICollection<PageRoutingInfo>> AsRoutingInfo();
+        IDomainRepositoryQueryContext<ICollection<PageRoutingInfo>> AsRoutingInfo();
     }
 }

@@ -17,6 +17,6 @@ namespace Cofoundry.Domain
         /// RoleDetails is a fully featured role projection including all properties and 
         /// permission information.
         /// </summary>
-        IContentRepositoryQueryContext<RoleDetails> AsDetails();
+        IDomainRepositoryQueryContext<RoleDetails> AsDetails();
     }
 }

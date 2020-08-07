@@ -15,11 +15,11 @@ namespace Cofoundry.Domain
         /// This abstraction is an enhanced version of 
         /// System.Transaction.TransactionScope and works in the same way.
         /// </summary>
-        public static IContentRepositoryTransactionManager Transactions(this IDomainRepository contentRepository)
+        public static IDomainRepositoryTransactionManager Transactions(this IDomainRepository domainRepository)
         {
-            var extendedContentRepositry = contentRepository.AsExtendableContentRepository();
+            var extendedContentRepositry = domainRepository.AsExtendableContentRepository();
 
-            return extendedContentRepositry.ServiceProvider.GetRequiredService<IContentRepositoryTransactionManager>();
+            return extendedContentRepositry.ServiceProvider.GetRequiredService<IDomainRepositoryTransactionManager>();
         }
 
         /// <summary>
@@ -31,11 +31,11 @@ namespace Cofoundry.Domain
         /// <param name="executionContext">
         /// The execution context instance to use.
         /// </param>
-        public static IDomainRepository WithExecutionContext(this IDomainRepository contentRepository, IExecutionContext executionContext)
+        public static IDomainRepository WithExecutionContext(this IDomainRepository domainRepository, IExecutionContext executionContext)
         {
             if (executionContext == null) throw new ArgumentNullException(nameof(executionContext));
 
-            var extendedContentRepositry = contentRepository.AsExtendableContentRepository();
+            var extendedContentRepositry = domainRepository.AsExtendableContentRepository();
             var newRepository = extendedContentRepositry.ServiceProvider.GetRequiredService<IContentRepositoryWithCustomExecutionContext>();
             newRepository.SetExecutionContext(executionContext);
 
@@ -49,11 +49,24 @@ namespace Cofoundry.Domain
         /// logged in user does not have permission for, e.g. signing up a new
         /// user prior to login.
         /// </summary>
-        public static IDomainRepository WithElevatedPermissions(this IDomainRepository contentRepository)
+        public static IDomainRepository WithElevatedPermissions(this IDomainRepository domainRepository)
         {
-            var extendedApi = contentRepository.AsExtendableContentRepository();
+            var extendedApi = domainRepository.AsExtendableContentRepository();
 
             return extendedApi.ServiceProvider.GetRequiredService<IContentRepositoryWithElevatedPermissions>();
+        }
+
+        /// <summary>
+        /// Allows you to chain mutator functions to run after execution of a query.
+        /// </summary>
+        /// <typeparam name="TResult">Query result type.</typeparam>
+        /// <param name="query">Query to mutate.</param>
+        /// <returns>A query context that allows chaining of mutator functions.</returns>
+        public static IDomainRepositoryQueryContext<TResult> WithQuery<TResult>(this IDomainRepository domainRepository, IQuery<TResult> query)
+        {
+            var extendableContentRepository = domainRepository.AsExtendableContentRepository();
+
+            return DomainRepositoryQueryContextFactory.Create(query, extendableContentRepository);
         }
     }
 }

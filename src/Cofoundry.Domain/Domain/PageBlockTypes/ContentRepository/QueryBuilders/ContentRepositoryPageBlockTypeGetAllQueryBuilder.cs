@@ -19,10 +19,10 @@ namespace Cofoundry.Domain
 
         public IExtendableContentRepository ExtendableContentRepository { get; }
 
-        public IContentRepositoryQueryContext<ICollection<PageBlockTypeSummary>> AsSummaries()
+        public IDomainRepositoryQueryContext<ICollection<PageBlockTypeSummary>> AsSummaries()
         {
             var query = new GetAllPageBlockTypeSummariesQuery();
-            return ContentRepositoryQueryContextFactory.Create(query, ExtendableContentRepository);
+            return DomainRepositoryQueryContextFactory.Create(query, ExtendableContentRepository);
         }
     }
 }

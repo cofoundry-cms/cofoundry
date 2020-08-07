@@ -17,6 +17,6 @@ namespace Cofoundry.Domain
         /// default as it's core to routing and often incorporated in more detailed
         /// page projections.
         /// </summary>
-        IContentRepositoryQueryContext<ICollection<PageRoute>> AsRoutes();
+        IDomainRepositoryQueryContext<ICollection<PageRoute>> AsRoutes();
     }
 }

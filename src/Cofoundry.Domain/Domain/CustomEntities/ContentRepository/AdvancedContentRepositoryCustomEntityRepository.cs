@@ -57,9 +57,9 @@ namespace Cofoundry.Domain
             return new ContentRepositoryCustomEntitySearchQueryBuilder(ExtendableContentRepository);
         }
 
-        public IContentRepositoryQueryContext<bool> IsUrlSlugUnique(IsCustomEntityUrlSlugUniqueQuery query)
+        public IDomainRepositoryQueryContext<bool> IsUrlSlugUnique(IsCustomEntityUrlSlugUniqueQuery query)
         {
-            return ContentRepositoryQueryContextFactory.Create(query, ExtendableContentRepository);
+            return DomainRepositoryQueryContextFactory.Create(query, ExtendableContentRepository);
         }
 
         #endregion

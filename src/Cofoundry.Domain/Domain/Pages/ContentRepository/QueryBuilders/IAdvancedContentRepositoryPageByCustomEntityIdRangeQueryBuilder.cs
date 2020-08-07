@@ -17,6 +17,6 @@ namespace Cofoundry.Domain
         /// type, it is supported and so each custom entity id in the query returns a collection
         /// of routes.
         /// </summary>
-        IContentRepositoryQueryContext<IDictionary<int, ICollection<PageRoutingInfo>>> AsRoutingInfo();
+        IDomainRepositoryQueryContext<IDictionary<int, ICollection<PageRoutingInfo>>> AsRoutingInfo();
     }
 }

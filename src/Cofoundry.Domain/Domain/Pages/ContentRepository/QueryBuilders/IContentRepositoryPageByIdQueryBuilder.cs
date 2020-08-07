@@ -17,7 +17,7 @@ namespace Cofoundry.Domain
         /// default as it's core to routing and often incorporated in more detailed
         /// page projections.
         /// </summary>
-        IContentRepositoryQueryContext<PageRoute> AsRoute();
+        IDomainRepositoryQueryContext<PageRoute> AsRoute();
 
         /// <summary>
         /// Query returning a page PageRenderSummary projection by id, which is
@@ -27,7 +27,7 @@ namespace Cofoundry.Domain
         /// versions only, but you can use the overload with the publishStatusQuery 
         /// parameter to control this behavior.
         /// </summary>
-        IContentRepositoryQueryContext<PageRenderSummary> AsRenderSummary();
+        IDomainRepositoryQueryContext<PageRenderSummary> AsRenderSummary();
 
         /// <summary>
         /// Query returning a page PageRenderSummary projection by id, which is
@@ -37,7 +37,7 @@ namespace Cofoundry.Domain
         /// to control the version returned.
         /// </summary>
         /// <param name="publishStatusQuery">Used to determine which version of the page to include data for.</param>
-        IContentRepositoryQueryContext<PageRenderSummary> AsRenderSummary(PublishStatusQuery publishStatusQuery);
+        IDomainRepositoryQueryContext<PageRenderSummary> AsRenderSummary(PublishStatusQuery publishStatusQuery);
 
         /// <summary>
         /// Query returning a projection of a page that contains the data required to render a 
@@ -46,7 +46,7 @@ namespace Cofoundry.Domain
         /// versions only, but you can use the overload with the publishStatusQuery 
         /// parameter to control this behavior.
         /// </summary>
-        IContentRepositoryQueryContext<PageRenderDetails> AsRenderDetails();
+        IDomainRepositoryQueryContext<PageRenderDetails> AsRenderDetails();
 
         /// <summary>
         /// Query returning a projection of a page that contains the data required to render a 
@@ -55,6 +55,6 @@ namespace Cofoundry.Domain
         /// to control the version returned.
         /// </summary>
         /// <param name="publishStatusQuery">Used to determine which version of the page to include data for.</param>
-        IContentRepositoryQueryContext<PageRenderDetails> AsRenderDetails(PublishStatusQuery publishStatusQuery);
+        IDomainRepositoryQueryContext<PageRenderDetails> AsRenderDetails(PublishStatusQuery publishStatusQuery);
     }
 }

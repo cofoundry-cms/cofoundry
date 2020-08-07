@@ -37,9 +37,9 @@ namespace Cofoundry.Domain
             return new ContentRepositoryRoleSearchQueryBuilder(ExtendableContentRepository);
         }
 
-        public IContentRepositoryQueryContext<bool> IsRoleTitleUnique(IsRoleTitleUniqueQuery query)
+        public IDomainRepositoryQueryContext<bool> IsRoleTitleUnique(IsRoleTitleUniqueQuery query)
         {
-            return ContentRepositoryQueryContextFactory.Create(query, ExtendableContentRepository);
+            return DomainRepositoryQueryContextFactory.Create(query, ExtendableContentRepository);
         }
 
         #endregion

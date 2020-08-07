@@ -53,7 +53,7 @@ namespace Cofoundry.Domain
         /// set to true then duplicates are not permitted, otherwise true will always
         /// be returned.
         /// </summary>
-        IContentRepositoryQueryContext<bool> IsUrlSlugUnique(IsCustomEntityUrlSlugUniqueQuery query);
+        IDomainRepositoryQueryContext<bool> IsUrlSlugUnique(IsCustomEntityUrlSlugUniqueQuery query);
 
         /// <summary>
         /// Gets custom entity page data by a url path/route. Note that this

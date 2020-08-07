@@ -15,6 +15,6 @@ namespace Cofoundry.Domain
         /// returns a paged set of summary results. 
         /// </summary>
         /// <param name="query">Criteria to filter results by.</param>
-        IContentRepositoryQueryContext<PagedQueryResult<ImageAssetSummary>> AsSummaries(SearchImageAssetSummariesQuery query);
+        IDomainRepositoryQueryContext<PagedQueryResult<ImageAssetSummary>> AsSummaries(SearchImageAssetSummariesQuery query);
     }
 }

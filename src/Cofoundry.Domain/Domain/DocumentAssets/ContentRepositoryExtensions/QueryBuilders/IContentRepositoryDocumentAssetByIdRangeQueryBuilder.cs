@@ -17,6 +17,6 @@ namespace Cofoundry.Domain
         /// information required to render out a document to page, including 
         /// all the data needed to construct a document file url.
         /// </summary>
-        IContentRepositoryQueryContext<IDictionary<int, DocumentAssetRenderDetails>> AsRenderDetails();
+        IDomainRepositoryQueryContext<IDictionary<int, DocumentAssetRenderDetails>> AsRenderDetails();
     }
 }

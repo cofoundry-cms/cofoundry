@@ -19,9 +19,9 @@ namespace Cofoundry.Domain
 
         public IExtendableContentRepository ExtendableContentRepository { get; }
 
-        public IContentRepositoryQueryContext<CustomEntityRoute> AsCustomEntityRoute(GetCustomEntityRouteByPathQuery query)
+        public IDomainRepositoryQueryContext<CustomEntityRoute> AsCustomEntityRoute(GetCustomEntityRouteByPathQuery query)
         {
-            return ContentRepositoryQueryContextFactory.Create(query, ExtendableContentRepository);
+            return DomainRepositoryQueryContextFactory.Create(query, ExtendableContentRepository);
         }
     }
 }

@@ -14,6 +14,6 @@ namespace Cofoundry.Domain
         /// Query retruning a collection of content managed regions with
         /// block data for a specific version of a page.
         /// </summary>
-        IContentRepositoryQueryContext<ICollection<PageRegionDetails>> AsDetails();
+        IDomainRepositoryQueryContext<ICollection<PageRegionDetails>> AsDetails();
     }
 }

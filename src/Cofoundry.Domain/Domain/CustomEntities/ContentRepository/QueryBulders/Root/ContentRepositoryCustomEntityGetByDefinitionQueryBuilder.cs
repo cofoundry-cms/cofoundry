@@ -23,7 +23,7 @@ namespace Cofoundry.Domain
 
         public IExtendableContentRepository ExtendableContentRepository { get; }
 
-        public IContentRepositoryQueryContext<ICollection<CustomEntityRenderSummary>> AsRenderSummary(PublishStatusQuery? publishStatusQuery = null)
+        public IDomainRepositoryQueryContext<ICollection<CustomEntityRenderSummary>> AsRenderSummary(PublishStatusQuery? publishStatusQuery = null)
         {
             var query = new GetCustomEntityRenderSummariesByDefinitionCodeQuery(_customEntityDefinitionCode);
 
@@ -32,13 +32,13 @@ namespace Cofoundry.Domain
                 query.PublishStatus = publishStatusQuery.Value;
             }
 
-            return ContentRepositoryQueryContextFactory.Create(query, ExtendableContentRepository);
+            return DomainRepositoryQueryContextFactory.Create(query, ExtendableContentRepository);
         }
 
-        public IContentRepositoryQueryContext<ICollection<CustomEntityRoute>> AsRoutes()
+        public IDomainRepositoryQueryContext<ICollection<CustomEntityRoute>> AsRoutes()
         {
             var query = new GetCustomEntityRoutesByDefinitionCodeQuery(_customEntityDefinitionCode);
-            return ContentRepositoryQueryContextFactory.Create(query, ExtendableContentRepository);
+            return DomainRepositoryQueryContextFactory.Create(query, ExtendableContentRepository);
         }
     }
 }
