@@ -4,14 +4,12 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Cofoundry.Domain
+namespace Cofoundry.Domain.Internal
 {
     public class ContentRepositoryPageNotFoundQueryBuilder
         : IAdvancedContentRepositoryPageNotFoundQueryBuilder
         , IExtendableContentRepositoryPart
     {
-        private readonly int _pageId;
-
         public ContentRepositoryPageNotFoundQueryBuilder(
             IExtendableContentRepository contentRepository
             )

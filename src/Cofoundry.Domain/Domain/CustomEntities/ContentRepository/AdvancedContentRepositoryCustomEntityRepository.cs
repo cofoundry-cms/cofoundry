@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Cofoundry.Domain
+namespace Cofoundry.Domain.Internal
 {
     public class AdvancedContentRepositoryCustomEntityRepository
             : IAdvancedContentRepositoryCustomEntityRepository

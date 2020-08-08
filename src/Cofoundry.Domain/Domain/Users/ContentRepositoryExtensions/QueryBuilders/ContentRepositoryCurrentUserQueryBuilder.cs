@@ -1,11 +1,10 @@
-﻿using Cofoundry.Domain.CQS;
-using Cofoundry.Domain.Extendable;
+﻿using Cofoundry.Domain.Extendable;
 using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Cofoundry.Domain
+namespace Cofoundry.Domain.Internal
 {
     public class ContentRepositoryCurrentUserQueryBuilder 
         : IContentRepositoryCurrentUserQueryBuilder

@@ -1,4 +1,5 @@
 ﻿using Cofoundry.Domain.Extendable;
+using Cofoundry.Domain.Internal;
 using System;
 using System.Collections.Generic;
 using System.Text;
