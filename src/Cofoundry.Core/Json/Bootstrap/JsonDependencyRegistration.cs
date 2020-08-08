@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Cofoundry.Core.DependencyInjection;
 
-namespace Cofoundry.Core.Json
+namespace Cofoundry.Core.Json.DependencyRegistration
 {
     public class JsonDependencyRegistration : IDependencyRegistration
     {

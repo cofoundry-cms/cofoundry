@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Cofoundry.Web.Identity
+namespace Cofoundry.Web.Identity.DependencyRegistration
 {
     public class IdentityDependencyRegistration : IDependencyRegistration
     {

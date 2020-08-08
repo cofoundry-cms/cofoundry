@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Cofoundry.Core.DependencyInjection;
 
-namespace Cofoundry.Domain.Bootstrap
+namespace Cofoundry.Domain.DependencyRegistration
 {
     public class ImageDependencyRegistration : IDependencyRegistration
     {

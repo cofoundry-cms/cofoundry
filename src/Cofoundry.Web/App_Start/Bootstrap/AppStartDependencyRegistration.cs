@@ -1,6 +1,6 @@
 ﻿using Cofoundry.Core.DependencyInjection;
 
-namespace Cofoundry.Web
+namespace Cofoundry.Web.DependencyRegistration
 {
     public class AppStartDependencyRegistration : IDependencyRegistration
     {

@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Cofoundry.Core.Data
+namespace Cofoundry.Core.Data.DependencyRegistration
 {
     public class DataTimeDependencyRegistration : IDependencyRegistration
     {

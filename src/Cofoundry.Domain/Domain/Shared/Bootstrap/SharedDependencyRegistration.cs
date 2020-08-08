@@ -3,10 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Cofoundry.Domain.CQS;
 using Cofoundry.Core.DependencyInjection;
 
-namespace Cofoundry.Domain.Bootstrap
+namespace Cofoundry.Domain.DependencyRegistration
 {
     public class SharedDependencyRegistration : IDependencyRegistration
     {

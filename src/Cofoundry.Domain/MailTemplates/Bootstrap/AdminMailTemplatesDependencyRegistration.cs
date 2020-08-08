@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Cofoundry.Domain
+namespace Cofoundry.Domain.DependencyRegistration
 {
     public class AdminMailTemplatesDependencyRegistration : IDependencyRegistration
     {

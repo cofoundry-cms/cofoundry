@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Cofoundry.Plugins.Imaging.ImageSharp
+namespace Cofoundry.Plugins.Imaging.ImageSharp.DependencyRegistration
 {
     public class ImageResizerDependencyRegistration : IDependencyRegistration
     {

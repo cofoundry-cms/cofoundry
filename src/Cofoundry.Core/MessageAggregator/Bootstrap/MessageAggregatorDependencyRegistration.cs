@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Cofoundry.Core.DependencyInjection;
 
-namespace Cofoundry.Core.MessageAggregator
+namespace Cofoundry.Core.MessageAggregator.DependencyRegistration
 {
     public class MessageAggregatorDependencyRegistration : IDependencyRegistration
     {

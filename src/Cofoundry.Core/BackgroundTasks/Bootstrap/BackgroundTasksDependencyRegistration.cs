@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Cofoundry.Core.DependencyInjection;
 
-namespace Cofoundry.Core.BackgroundTasks
+namespace Cofoundry.Core.BackgroundTasks.DependencyRegistration
 {
     public class BackgroundTasksDependencyRegistration : IDependencyRegistration
     {

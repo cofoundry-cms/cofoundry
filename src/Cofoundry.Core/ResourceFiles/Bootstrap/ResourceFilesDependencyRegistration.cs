@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Cofoundry.Core.DependencyInjection;
 
-namespace Cofoundry.Core.ResourceFiles
+namespace Cofoundry.Core.ResourceFiles.DependencyRegistration
 {
     public class ResourceFilesDependencyRegistration : IDependencyRegistration
     {

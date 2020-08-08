@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Cofoundry.Core.DependencyInjection;
 
-namespace Cofoundry.Core.Mail
+namespace Cofoundry.Core.Mail.DependencyRegistration
 {
     public class MailDependencyRegistration : IDependencyRegistration
     {

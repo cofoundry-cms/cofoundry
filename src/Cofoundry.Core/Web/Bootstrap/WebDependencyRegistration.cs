@@ -3,14 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Newtonsoft.Json;
 using Cofoundry.Core.DependencyInjection;
-using Cofoundry.Core.Configuration;
 using Microsoft.AspNetCore.StaticFiles;
 
-namespace Cofoundry.Core.Web.Bootstrap
+namespace Cofoundry.Core.Web.DependencyRegistration
 {
-    public class DependencyRegistration : IDependencyRegistration
+    public class WebDependencyRegistration : IDependencyRegistration
     {
         public void Register(IContainerRegister container)
         {

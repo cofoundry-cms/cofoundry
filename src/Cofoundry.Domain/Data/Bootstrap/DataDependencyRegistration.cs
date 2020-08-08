@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Cofoundry.Core.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
 
-namespace Cofoundry.Domain.Data
+namespace Cofoundry.Domain.Data.DependencyRegistration
 {
     public class DataDependencyRegistration : IDependencyRegistration
     {

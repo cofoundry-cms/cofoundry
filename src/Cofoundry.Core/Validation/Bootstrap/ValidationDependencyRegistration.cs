@@ -5,9 +5,9 @@ using System.Text;
 using System.Threading.Tasks;
 using Cofoundry.Core.DependencyInjection;
 
-namespace Cofoundry.Core.Validation
+namespace Cofoundry.Core.Validation.DependencyRegistration
 {
-    public class DependencyRegistration : IDependencyRegistration
+    public class ValidationDependencyRegistration : IDependencyRegistration
     {
         public void Register(IContainerRegister container)
         {

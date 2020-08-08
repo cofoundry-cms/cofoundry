@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Cofoundry.Core.DependencyInjection;
 
-namespace Cofoundry.Web.Admin
+namespace Cofoundry.Web.Admin.DependencyRegistration
 {
     public class CofoundryAdminDependencyRegistration : IDependencyRegistration
     {

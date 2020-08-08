@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Cofoundry.Core.Time
+namespace Cofoundry.Core.Time.DependencyRegistration
 {
     public class TimeDependencyRegistration : IDependencyRegistration
     {

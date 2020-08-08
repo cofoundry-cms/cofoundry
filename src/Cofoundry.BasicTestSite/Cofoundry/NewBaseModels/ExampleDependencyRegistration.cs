@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Cofoundry.BasicTestSite.Cofoundry
+namespace Cofoundry.BasicTestSite.Cofoundry.DependencyRegistration
 {
 public class ExampleDependencyRegistration : IDependencyRegistration
 {

@@ -4,9 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Cofoundry.Core.DependencyInjection;
-using Microsoft.AspNetCore.Mvc.ModelBinding.Metadata;
 
-namespace Cofoundry.Domain
+namespace Cofoundry.Domain.DependencyRegistration
 {
     public class ModelMetadataDependencyRegistration : IDependencyRegistration
     {
