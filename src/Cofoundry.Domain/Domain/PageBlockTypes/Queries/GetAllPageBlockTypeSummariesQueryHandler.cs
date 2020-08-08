@@ -7,7 +7,7 @@ using Cofoundry.Domain.Data;
 using Cofoundry.Domain.CQS;
 using Microsoft.EntityFrameworkCore;
 
-namespace Cofoundry.Domain
+namespace Cofoundry.Domain.Internal
 {
     public class GetAllPageBlockTypeSummariesQueryHandler
         : IQueryHandler<GetAllPageBlockTypeSummariesQuery, ICollection<PageBlockTypeSummary>>

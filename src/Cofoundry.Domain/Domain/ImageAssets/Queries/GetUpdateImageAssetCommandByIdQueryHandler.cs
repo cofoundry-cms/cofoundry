@@ -7,9 +7,9 @@ using Cofoundry.Domain.Data;
 using Cofoundry.Domain.CQS;
 using Microsoft.EntityFrameworkCore;
 
-namespace Cofoundry.Domain
+namespace Cofoundry.Domain.Internal
 {
-    public class GetUpdateImageAssetCommandByIdHandler 
+    public class GetUpdateImageAssetCommandByIdQueryHandler 
         : IQueryHandler<GetUpdateCommandByIdQuery<UpdateImageAssetCommand>, UpdateImageAssetCommand>
         , IPermissionRestrictedQueryHandler<GetUpdateCommandByIdQuery<UpdateImageAssetCommand>, UpdateImageAssetCommand>
     {
@@ -17,7 +17,7 @@ namespace Cofoundry.Domain
 
         private readonly CofoundryDbContext _dbContext;
 
-        public GetUpdateImageAssetCommandByIdHandler(
+        public GetUpdateImageAssetCommandByIdQueryHandler(
             CofoundryDbContext dbContext
             )
         {

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Cofoundry.Domain.CQS;
 using System.IO;
 
-namespace Cofoundry.Domain
+namespace Cofoundry.Domain.Internal
 {
     /// <summary>
     /// Gets a complete list of all rewrite rules set up in the system. This result

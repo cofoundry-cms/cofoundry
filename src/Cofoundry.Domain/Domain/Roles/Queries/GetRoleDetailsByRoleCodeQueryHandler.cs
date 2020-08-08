@@ -8,7 +8,7 @@ using System.Collections.ObjectModel;
 using Cofoundry.Core;
 using Microsoft.EntityFrameworkCore;
 
-namespace Cofoundry.Domain
+namespace Cofoundry.Domain.Internal
 {
     /// <summary>
     /// Find a role with the specified role code, returning

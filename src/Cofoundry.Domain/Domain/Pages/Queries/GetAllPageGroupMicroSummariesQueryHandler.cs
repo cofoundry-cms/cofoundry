@@ -7,7 +7,7 @@ using Cofoundry.Domain.CQS;
 using Cofoundry.Domain.Data;
 using Microsoft.EntityFrameworkCore;
 
-namespace Cofoundry.Domain
+namespace Cofoundry.Domain.Internal
 {
     public class GetAllPageGroupMicroSummariesQueryHandler
         : IQueryHandler<GetAllPageGroupMicroSummariesQuery, ICollection<PageGroupMicroSummary>>

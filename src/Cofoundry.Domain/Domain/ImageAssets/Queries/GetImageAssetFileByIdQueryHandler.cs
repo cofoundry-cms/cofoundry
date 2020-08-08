@@ -7,7 +7,7 @@ using Cofoundry.Domain.CQS;
 using Cofoundry.Domain.Data;
 using System.IO;
 
-namespace Cofoundry.Domain
+namespace Cofoundry.Domain.Internal
 {
     public class GetImageAssetFileByIdQueryHandler 
         : IQueryHandler<GetImageAssetFileByIdQuery, ImageAssetFile>

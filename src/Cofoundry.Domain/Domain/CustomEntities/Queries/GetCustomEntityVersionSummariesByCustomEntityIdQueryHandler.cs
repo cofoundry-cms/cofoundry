@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using Cofoundry.Domain.CQS;
 using Cofoundry.Domain.Data;
 
-namespace Cofoundry.Domain
+namespace Cofoundry.Domain.Internal
 {
     /// <summary>
     /// Gets a set of custom entity versions for a specific 

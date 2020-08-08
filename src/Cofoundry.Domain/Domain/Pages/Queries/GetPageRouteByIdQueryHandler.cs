@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Cofoundry.Core;
 using Cofoundry.Domain.CQS;
 
-namespace Cofoundry.Domain
+namespace Cofoundry.Domain.Internal
 {
     /// <summary>
     /// Returns page routing data for a single page. The 

@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Cofoundry.Domain.CQS;
 using System.Reflection;
 
-namespace Cofoundry.Domain
+namespace Cofoundry.Domain.Internal
 {
     /// <summary>
     /// Query to get a custom entity definition by display model type definition.

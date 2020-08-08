@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Cofoundry.Domain.QueryModels;
 using Cofoundry.Core;
 
-namespace Cofoundry.Domain
+namespace Cofoundry.Domain.Internal
 {
     public class SearchPageTemplateSummariesQueryHandler 
         : IQueryHandler<SearchPageTemplateSummariesQuery, PagedQueryResult<PageTemplateSummary>>

@@ -8,7 +8,7 @@ using Cofoundry.Domain.CQS;
 using Cofoundry.Core;
 using Microsoft.EntityFrameworkCore;
 
-namespace Cofoundry.Domain
+namespace Cofoundry.Domain.Internal
 {
     /// <summary>
     /// A workflow non-specifc search of custom entities which returns basic

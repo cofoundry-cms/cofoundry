@@ -4,7 +4,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using Cofoundry.Domain.CQS;
 using Cofoundry.Core;
-namespace Cofoundry.Domain
+
+namespace Cofoundry.Domain.Internal
 {
     public class GetPageRoutesByIdRangeQueryHandler 
         : IQueryHandler<GetPageRoutesByIdRangeQuery, IDictionary<int, PageRoute>>

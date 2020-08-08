@@ -7,7 +7,7 @@ using Cofoundry.Domain.CQS;
 using Microsoft.EntityFrameworkCore;
 using Cofoundry.Domain.QueryModels;
 
-namespace Cofoundry.Domain
+namespace Cofoundry.Domain.Internal
 {
     public class GetPageTemplateDetailsByIdQueryHandler 
         : IQueryHandler<GetPageTemplateDetailsByIdQuery, PageTemplateDetails>

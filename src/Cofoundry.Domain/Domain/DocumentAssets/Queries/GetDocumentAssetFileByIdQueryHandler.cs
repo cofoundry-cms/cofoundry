@@ -8,7 +8,7 @@ using Cofoundry.Domain.Data;
 using System.IO;
 using Microsoft.EntityFrameworkCore;
 
-namespace Cofoundry.Domain
+namespace Cofoundry.Domain.Internal
 {
     public class GetDocumentAssetFileByIdQueryHandler 
         : IQueryHandler<GetDocumentAssetFileByIdQuery, DocumentAssetFile>

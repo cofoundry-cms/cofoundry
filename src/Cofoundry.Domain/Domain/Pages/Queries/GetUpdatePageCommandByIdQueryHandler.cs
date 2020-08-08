@@ -8,7 +8,7 @@ using Cofoundry.Domain.CQS;
 using Microsoft.EntityFrameworkCore;
 using Cofoundry.Core;
 
-namespace Cofoundry.Domain
+namespace Cofoundry.Domain.Internal
 {
     public class GetUpdatePageCommandByIdQueryHandler 
         : IQueryHandler<GetUpdateCommandByIdQuery<UpdatePageCommand>, UpdatePageCommand>

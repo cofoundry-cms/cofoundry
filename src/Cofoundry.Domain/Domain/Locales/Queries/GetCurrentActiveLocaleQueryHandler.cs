@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Cofoundry.Domain.CQS;
 
-namespace Cofoundry.Domain
+namespace Cofoundry.Domain.Internal
 {
     public class GetCurrentActiveLocaleQueryHandler 
         : IQueryHandler<GetCurrentActiveLocaleQuery, ActiveLocale>

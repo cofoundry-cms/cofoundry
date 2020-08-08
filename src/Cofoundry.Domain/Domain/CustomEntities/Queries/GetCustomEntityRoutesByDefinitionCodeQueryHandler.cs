@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using Cofoundry.Core;
 using System.Reflection;
 
-namespace Cofoundry.Domain
+namespace Cofoundry.Domain.Internal
 {
     /// <summary>
     /// Gets CustomEntityRoute data for all custom entities of a 

@@ -7,7 +7,7 @@ using Cofoundry.Domain.Data;
 using Cofoundry.Core;
 using Microsoft.EntityFrameworkCore;
 
-namespace Cofoundry.Domain
+namespace Cofoundry.Domain.Internal
 {
     /// <summary>
     /// Searches image assets based on simple filter criteria and 

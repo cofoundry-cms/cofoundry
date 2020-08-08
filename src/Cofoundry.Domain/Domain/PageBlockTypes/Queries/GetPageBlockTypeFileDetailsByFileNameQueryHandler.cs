@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using Cofoundry.Domain.CQS;
 using Cofoundry.Core;
 
-namespace Cofoundry.Domain
+namespace Cofoundry.Domain.Internal
 {
     /// <summary>
     /// Extracts information about a page block type from a view file with

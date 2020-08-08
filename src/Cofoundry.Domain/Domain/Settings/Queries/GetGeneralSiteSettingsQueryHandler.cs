@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Cofoundry.Domain.CQS;
 using Cofoundry.Core.AutoUpdate;
 
-namespace Cofoundry.Domain
+namespace Cofoundry.Domain.Internal
 {
     public class GetGeneralSiteSettingsQueryHandler 
         : IQueryHandler<GetSettingsQuery<GeneralSiteSettings>, GeneralSiteSettings>

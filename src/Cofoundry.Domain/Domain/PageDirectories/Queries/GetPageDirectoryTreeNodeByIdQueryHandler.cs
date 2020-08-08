@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Cofoundry.Domain.CQS;
 
-namespace Cofoundry.Domain
+namespace Cofoundry.Domain.Internal
 {
     public class GetPageDirectoryNodeByIdQueryHandler 
         : IQueryHandler<GetPageDirectoryNodeByIdQuery, PageDirectoryNode>
