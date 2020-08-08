@@ -4,7 +4,7 @@ using System.Data.Common;
 using Microsoft.Data.SqlClient;
 using System.Text;
 
-namespace Cofoundry.Core.Data
+namespace Cofoundry.Core.Data.Internal
 {
     /// <summary>
     /// <para>

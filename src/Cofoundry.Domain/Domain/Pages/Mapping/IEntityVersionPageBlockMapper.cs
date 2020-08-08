@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Cofoundry.Domain.Data;
 using Cofoundry.Domain.CQS;
 
-namespace Cofoundry.Domain
+namespace Cofoundry.Domain.Internal
 {
     /// <summary>
     /// A mapping helper containing a couple of mapping methods used in multiple queires

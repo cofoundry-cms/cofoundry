@@ -7,7 +7,7 @@ using Cofoundry.Domain.CQS;
 using Microsoft.EntityFrameworkCore;
 using Cofoundry.Core;
 
-namespace Cofoundry.Domain
+namespace Cofoundry.Domain.Internal
 {
     /// <summary>
     /// CustomEntityDefinitions are definied in code and stored in the database, so if they are missing

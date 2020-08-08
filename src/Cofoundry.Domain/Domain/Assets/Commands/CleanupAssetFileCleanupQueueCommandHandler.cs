@@ -1,11 +1,11 @@
 ﻿using Cofoundry.Domain.CQS;
-using Cofoundry.Domain.Data;
+using Cofoundry.Domain.Data.Internal;
 using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Cofoundry.Domain
+namespace Cofoundry.Domain.Internal
 {
     /// <summary>
     /// Removes old completed entries from the AssetFileCleanupQueueItem

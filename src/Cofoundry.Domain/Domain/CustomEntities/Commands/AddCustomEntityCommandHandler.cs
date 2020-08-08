@@ -10,8 +10,9 @@ using Microsoft.EntityFrameworkCore;
 using Cofoundry.Core.Validation;
 using Cofoundry.Core.MessageAggregator;
 using Cofoundry.Core.Data;
+using Cofoundry.Domain.Data.Internal;
 
-namespace Cofoundry.Domain
+namespace Cofoundry.Domain.Internal
 {
     /// <summary>
     /// Adds a new custom entity with a draft version and optionally publishes it.

@@ -10,7 +10,7 @@ using Cofoundry.Core;
 using Cofoundry.Core.MessageAggregator;
 using Cofoundry.Core.Validation;
 
-namespace Cofoundry.Domain
+namespace Cofoundry.Domain.Internal
 {
     public class AddDocumentAssetCommandHandler 
         : ICommandHandler<AddDocumentAssetCommand>

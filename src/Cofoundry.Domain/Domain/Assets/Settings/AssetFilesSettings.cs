@@ -19,7 +19,7 @@ namespace Cofoundry.Domain
         /// FileExtensionValidationList setting. The default is UseBlacklist,
         /// and other options are UseWhitelist or Disable.
         /// </summary>
-        public AssetFileTypeValidation FileExtensionValidation { get; set; } = AssetFileTypeValidation.UseBlacklist;
+        public AssetFileTypeValidation FileExtensionValidation { get; set; } = AssetFileTypeValidation.UseDenyList;
 
         /// <summary>
         /// Indicates the type of validation to perform against a mime
@@ -27,7 +27,7 @@ namespace Cofoundry.Domain
         /// MimeTypeValidationList setting. The default is UseBlacklist,
         /// and other options are UseWhitelist or Disable.
         /// </summary>
-        public AssetFileTypeValidation MimeTypeValidation { get; set; } = AssetFileTypeValidation.UseBlacklist;
+        public AssetFileTypeValidation MimeTypeValidation { get; set; } = AssetFileTypeValidation.UseDenyList;
 
         /// <summary>
         /// The list of file extensions to use when validating an uploaded
@@ -42,9 +42,9 @@ namespace Cofoundry.Domain
         /// <summary>
         /// The list of mime types to use when validating an uploaded
         /// file by it's mime type. By default this is a list of potentially 
-        /// harmful mime types and is treated as a blacklist, but the 
+        /// harmful mime types and is treated as a denylist, but the 
         /// MimeTypeValidation setting can be used to change this behavior 
-        /// to interpret it as a whitelist, or disabled this validation entirely.
+        /// to interpret it as an allowlist, or disable this validation entirely.
         /// </summary>
         public ICollection<string> MimeTypeValidationList { get; set; }
 

@@ -5,6 +5,7 @@ using Cofoundry.Core.DependencyInjection;
 using Cofoundry.Domain;
 using Cofoundry.Core;
 using Cofoundry.Core.ResourceFiles;
+using Cofoundry.Domain.Internal;
 
 namespace Cofoundry.Web.DependencyRegistration
 {

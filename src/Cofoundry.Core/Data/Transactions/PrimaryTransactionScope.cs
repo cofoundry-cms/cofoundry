@@ -1,11 +1,12 @@
-﻿using Microsoft.EntityFrameworkCore.Storage;
+﻿using Cofoundry.Core.Data.Internal;
+using Microsoft.EntityFrameworkCore.Storage;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Cofoundry.Core.Data
+namespace Cofoundry.Core.Data.Internal
 {
     /// <summary>
     /// A 'primary' or 'outer' transaction scope that directly represents

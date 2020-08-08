@@ -11,7 +11,7 @@ using Cofoundry.Core;
 using Cofoundry.Core.Validation;
 using Cofoundry.Core.Data;
 
-namespace Cofoundry.Domain
+namespace Cofoundry.Domain.Internal
 {
     /// <summary>
     /// Updates the draft version of a custom entity. If a draft version

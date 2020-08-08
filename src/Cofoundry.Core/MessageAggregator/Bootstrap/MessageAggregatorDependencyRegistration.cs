@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Cofoundry.Core.DependencyInjection;
+using Cofoundry.Core.MessageAggregator.Internal;
 
 namespace Cofoundry.Core.MessageAggregator.DependencyRegistration
 {
@@ -14,7 +15,7 @@ namespace Cofoundry.Core.MessageAggregator.DependencyRegistration
             container
                 .RegisterSingleton<IMessageAggregatorState>(new MessageAggregatorState())
                 .Register<IMessageSubscriptionInitializer, MessageSubscriptionInitializer>()
-                .Register<IMessageAggregator, MessageAggregator>()
+                .Register<IMessageAggregator, Internal.MessageAggregator>()
                 .Register<IMessageSubscriptionConfig, MessageSubscriptionConfig>()
                 .RegisterAll<IMessageSubscriptionRegistration>()
                 .RegisterAllGenericImplementations(typeof(IMessageHandler<>))

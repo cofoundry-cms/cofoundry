@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Cofoundry.Core.Mail
+namespace Cofoundry.Core.Mail.Internal
 {
     /// <summary>
     /// A service to for sending email directly using the IMailClient implementation. Does not support

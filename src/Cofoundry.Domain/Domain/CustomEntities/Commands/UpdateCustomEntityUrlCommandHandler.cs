@@ -11,7 +11,7 @@ using Cofoundry.Core.MessageAggregator;
 using Cofoundry.Core;
 using Cofoundry.Core.Data;
 
-namespace Cofoundry.Domain
+namespace Cofoundry.Domain.Internal
 {
     /// <summary>
     /// Updates the UrlSlug and locale of a custom entity which often forms

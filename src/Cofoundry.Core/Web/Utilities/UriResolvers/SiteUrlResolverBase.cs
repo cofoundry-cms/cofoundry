@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Cofoundry.Core.Web
+namespace Cofoundry.Core.Web.Internal
 {
     /// <summary>
     /// Base class for an ISiteUrlResolver that includes most of the bare functionality

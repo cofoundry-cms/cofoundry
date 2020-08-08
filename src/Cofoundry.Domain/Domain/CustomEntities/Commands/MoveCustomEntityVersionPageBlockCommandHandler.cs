@@ -9,7 +9,7 @@ using Cofoundry.Core.MessageAggregator;
 using Cofoundry.Core;
 using Cofoundry.Core.Data;
 
-namespace Cofoundry.Domain
+namespace Cofoundry.Domain.Internal
 {
     /// <summary>
     /// Moves a block up or down within a multi-block region 

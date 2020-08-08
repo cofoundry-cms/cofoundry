@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Cofoundry.Core.Time
+namespace Cofoundry.Core.Time.Internal
 {
     /// <summary>
     /// Utilities for converting between different timezones.
@@ -14,7 +14,7 @@ namespace Cofoundry.Core.Time
         /// </summary>
         /// <param name="dateTime">UTC timezone to convert from.</param>
         /// <param name="timeZoneId">Timezone to convert to.</param>
-        public DateTimeOffset FromUtcToOffset(DateTime dateTime, string timeZoneId)
+        public virtual DateTimeOffset FromUtcToOffset(DateTime dateTime, string timeZoneId)
         {
             if (timeZoneId == null) throw new ArgumentNullException(timeZoneId);
             if (string.IsNullOrWhiteSpace(timeZoneId)) throw new ArgumentEmptyException(timeZoneId);

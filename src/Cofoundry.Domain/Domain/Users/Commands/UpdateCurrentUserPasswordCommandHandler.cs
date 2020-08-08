@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Cofoundry.Core.Validation;
 using Cofoundry.Core;
 
-namespace Cofoundry.Domain
+namespace Cofoundry.Domain.Internal
 {
     /// <summary>
     /// Updates the password of the currently logged in user, using the

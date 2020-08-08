@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Cofoundry.Core.DependencyInjection;
 
-namespace Cofoundry.Domain
+namespace Cofoundry.Domain.Internal
 {
     /// <summary>
     /// Factory for creating role initializers to avoid exposing IResolutionContext
@@ -28,7 +28,7 @@ namespace Cofoundry.Domain
         /// </summary>
         /// <param name="roleDefinition">The role to find an initializer for.</param>
         /// <returns>IRoleInitializer if one has been implemented; otherwise null.</returns>
-        public IRoleInitializer Create(IRoleDefinition roleDefinition)
+        public virtual IRoleInitializer Create(IRoleDefinition roleDefinition)
         {
             if (roleDefinition == null) throw new ArgumentNullException(nameof(roleDefinition));
 

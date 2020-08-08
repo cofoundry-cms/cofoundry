@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Cofoundry.Core.Time
+namespace Cofoundry.Core.Time.Internal
 {
     public class DateTimeService : IDateTimeService
     {
@@ -19,7 +19,7 @@ namespace Cofoundry.Core.Time
             _dateModifier = dateTimeSettings.BaseDate - dateTimeNow;
         }
 
-        public DateTime UtcNow()
+        public virtual DateTime UtcNow()
         {
             var dateTimeNow = DateTime.UtcNow;
             if (!_dateModifier.HasValue) return dateTimeNow;
@@ -29,7 +29,7 @@ namespace Cofoundry.Core.Time
             return modifiedDate;
         }
 
-        public DateTimeOffset OffsetUtcNow()
+        public virtual DateTimeOffset OffsetUtcNow()
         {
             var dateTimeNow = DateTimeOffset.UtcNow;
             if (!_dateModifier.HasValue) return dateTimeNow;

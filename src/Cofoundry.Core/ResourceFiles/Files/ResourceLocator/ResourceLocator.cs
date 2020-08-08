@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Cofoundry.Core.ResourceFiles
+namespace Cofoundry.Core.ResourceFiles.Internal
 {
     public class ResourceLocator : IResourceLocator
     {

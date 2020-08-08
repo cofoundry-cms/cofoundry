@@ -10,7 +10,7 @@ using Cofoundry.Core.MessageAggregator;
 using Cofoundry.Core.Data;
 using Cofoundry.Core;
 
-namespace Cofoundry.Domain
+namespace Cofoundry.Domain.Internal
 {
     /// <summary>
     /// Deletes a block from a template region on a custom entity page.

@@ -10,7 +10,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Cofoundry.Domain.Data
+namespace Cofoundry.Domain.Data.Internal
 {
     /// <summary>
     /// Handles serialization for unstructured data stored in the db, e.g.

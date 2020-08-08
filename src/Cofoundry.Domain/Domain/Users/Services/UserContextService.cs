@@ -2,13 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-
 using Cofoundry.Core;
 using Cofoundry.Domain.Data;
 using Microsoft.EntityFrameworkCore;
-using System.Collections.Concurrent;
 
-namespace Cofoundry.Domain
+namespace Cofoundry.Domain.Internal
 {
     /// <summary>
     /// Service for retreiving user connection information.
@@ -47,7 +45,7 @@ namespace Cofoundry.Domain
         /// <summary>
         /// Get the connection context of the current user.
         /// </summary>
-        public async Task<IUserContext> GetCurrentContextAsync()
+        public virtual async Task<IUserContext> GetCurrentContextAsync()
         {
             if (_currentUserContext == null)
             {
@@ -68,7 +66,7 @@ namespace Cofoundry.Domain
         /// user for the site viewer, irrespective of the ambient user context, which 
         /// potentially could be (for example) a members area.
         /// </remarks>
-        public async Task<IUserContext> GetCurrentContextByUserAreaAsync(string userAreaCode)
+        public virtual async Task<IUserContext> GetCurrentContextByUserAreaAsync(string userAreaCode)
         {
             var userContext = _alternativeUserContextCache.GetOrDefault(userAreaCode);
             if (userContext != null) return userContext;
@@ -104,7 +102,7 @@ namespace Cofoundry.Domain
         /// if you need to impersonate the user to perform an action with elevated 
         /// privileges.
         /// </summary>
-        public async Task<IUserContext> GetSystemUserContextAsync()
+        public virtual async Task<IUserContext> GetSystemUserContextAsync()
         {
             // BUG: Got a managed debugging assistant exception? Try this:
             // https://developercommunity.visualstudio.com/content/problem/29782/managed-debugging-assistant-fatalexecutionengineer.html
@@ -122,7 +120,7 @@ namespace Cofoundry.Domain
         /// context is cached for the duration of the request so it needs clearing if
         /// it changes (i.e. logged in or out).
         /// </summary>
-        public void ClearCache()
+        public virtual void ClearCache()
         {
             _currentUserContext = null;
         }
@@ -131,7 +129,7 @@ namespace Cofoundry.Domain
 
         #region helpers
 
-        private async Task SetUserContextAsync(int? userId)
+        protected virtual async Task SetUserContextAsync(int? userId)
         {
             var cx = await GetUserContextByIdAsync(userId);
 
@@ -145,7 +143,7 @@ namespace Cofoundry.Domain
             _currentUserContext = cx;
         }
 
-        private async Task<UserContext> GetUserContextByIdAsync(int? userId)
+        protected virtual async Task<UserContext> GetUserContextByIdAsync(int? userId)
         {
             if (!userId.HasValue) return new UserContext();
 
@@ -172,7 +170,7 @@ namespace Cofoundry.Domain
             return cx;
         }
 
-        private IQueryable<User> QuerySystemUser()
+        protected virtual IQueryable<User> QuerySystemUser()
         {
             var query = _dbContext
                 .Users

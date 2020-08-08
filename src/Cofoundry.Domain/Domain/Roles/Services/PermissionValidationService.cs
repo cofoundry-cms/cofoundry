@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Cofoundry.Core;
 
-namespace Cofoundry.Domain
+namespace Cofoundry.Domain.Internal
 {
     /// <summary>
     /// Centralised service containging helper methods for handling permission checks. The 
@@ -35,7 +35,7 @@ namespace Cofoundry.Domain
         /// Checks to see if the currently logged in user is in the super administrator role,
         /// if not, throws an exception.
         /// </summary>
-        public async Task EnforceIsSuperAdminRoleAsync()
+        public virtual async Task EnforceIsSuperAdminRoleAsync()
         {
             var userContext = await _userContextService.GetCurrentContextAsync();
             EnforceIsSuperAdminRole(userContext);
@@ -45,7 +45,7 @@ namespace Cofoundry.Domain
         /// Checks to see if the specified user context is in the super administrator role,
         /// if not, throws an exception.
         /// </summary>
-        public void EnforceIsSuperAdminRole(IUserContext userContext)
+        public virtual void EnforceIsSuperAdminRole(IUserContext userContext)
         {
             bool isSuperAdmin = false;
 
@@ -63,7 +63,7 @@ namespace Cofoundry.Domain
         /// <summary>
         /// Checks to see if the user if logged in and throws a NotPermittedException if not.
         /// </summary>
-        public async Task EnforceIsLoggedInAsync()
+        public virtual async Task EnforceIsLoggedInAsync()
         {
             var userContext = await _userContextService.GetCurrentContextAsync();
             EnforceIsLoggedIn(userContext);
@@ -72,7 +72,7 @@ namespace Cofoundry.Domain
         /// <summary>
         /// Checks to see if the specified user context is logged in and throws a NotPermittedException if not.
         /// </summary>
-        public void EnforceIsLoggedIn(IUserContext userContext)
+        public virtual void EnforceIsLoggedIn(IUserContext userContext)
         {
             ThrowExceptionIfNotLoggedIn(userContext);
         }
@@ -81,7 +81,7 @@ namespace Cofoundry.Domain
         /// Checks to see if the user has permission to the specified user area. Note that Cofoundry users
         /// have permissions to any user area
         /// </summary>
-        public async Task EnforceHasPermissionToUserAreaAsync(string userAreaCode)
+        public virtual async Task EnforceHasPermissionToUserAreaAsync(string userAreaCode)
         {
             var userContext = await _userContextService.GetCurrentContextAsync();
             EnforceHasPermissionToUserArea(userAreaCode, userContext);
@@ -91,7 +91,7 @@ namespace Cofoundry.Domain
         /// Checks to see if the specified user context has permission to the specified user area. Note that Cofoundry users
         /// have permissions to any user area
         /// </summary>
-        public void EnforceHasPermissionToUserArea(string userAreaCode, IUserContext userContext)
+        public virtual void EnforceHasPermissionToUserArea(string userAreaCode, IUserContext userContext)
         {
             ThrowExceptionIfNotLoggedIn(userContext);
 
@@ -109,7 +109,7 @@ namespace Cofoundry.Domain
         /// </summary>
         /// <typeparam name="TPermission">Type of permission to check for if the id is not the currently logged in user</typeparam>
         /// <param name="userId">UserId to compare with the currently logged in user</param>
-        public async Task<bool> IsCurrentUserOrHasPermissionAsync<TPermission>(int userId) where TPermission : IPermissionApplication, new()
+        public virtual async Task<bool> IsCurrentUserOrHasPermissionAsync<TPermission>(int userId) where TPermission : IPermissionApplication, new()
         {
             var userContext = await _userContextService.GetCurrentContextAsync();
             return IsCurrentUserOrHasPermission<TPermission>(userId, userContext);
@@ -123,7 +123,7 @@ namespace Cofoundry.Domain
         /// <typeparam name="TPermission">Type of permission to check for if the id is not the currently logged in user</typeparam>
         /// <param name="userId">UserId to compare with the currently logged in user</param>
         /// <param name="currentUserContext">An IUserContext representing the currently logged in user.</param>
-        public bool IsCurrentUserOrHasPermission<TPermission>(int userId, IUserContext currentUserContext) where TPermission : IPermissionApplication, new()
+        public virtual bool IsCurrentUserOrHasPermission<TPermission>(int userId, IUserContext currentUserContext) where TPermission : IPermissionApplication, new()
         {
             if (currentUserContext == null) return false;
 
@@ -140,7 +140,7 @@ namespace Cofoundry.Domain
         /// </summary>
         /// <typeparam name="TPermission">Type of permission to check for if the id is not the currently logged in user</typeparam>
         /// <param name="userId">UserId to compare with the currently logged in user</param>
-        public async Task EnforceCurrentUserOrHasPermissionAsync<TPermission>(int userId) where TPermission : IPermissionApplication, new()
+        public virtual async Task EnforceCurrentUserOrHasPermissionAsync<TPermission>(int userId) where TPermission : IPermissionApplication, new()
         {
             var hasPermission = await IsCurrentUserOrHasPermissionAsync<TPermission>(userId);
             if (!hasPermission)
@@ -159,7 +159,7 @@ namespace Cofoundry.Domain
         /// <typeparam name="TPermission">Type of permission to check for if the id is not the currently logged in user</typeparam>
         /// <param name="userId">UserId to compare with the currently logged in user</param>
         /// <param name="currentUserContext">An IUserContext representing the currently logged in user.</param>
-        public void EnforceCurrentUserOrHasPermission<TPermission>(int userId, IUserContext currentUserContext) where TPermission : IPermissionApplication, new()
+        public virtual void EnforceCurrentUserOrHasPermission<TPermission>(int userId, IUserContext currentUserContext) where TPermission : IPermissionApplication, new()
         {
             if (!IsCurrentUserOrHasPermission<TPermission>(userId, currentUserContext))
             {
@@ -167,24 +167,24 @@ namespace Cofoundry.Domain
             }
         }
 
-        public Task<bool> HasPermissionAsync<TPermission>() where TPermission : IPermissionApplication, new()
+        public virtual Task<bool> HasPermissionAsync<TPermission>() where TPermission : IPermissionApplication, new()
         {
             return HasPermissionAsync(new TPermission());
         }
 
-        public bool HasPermission<TPermission>(IUserContext userContext) where TPermission : IPermissionApplication, new()
+        public virtual bool HasPermission<TPermission>(IUserContext userContext) where TPermission : IPermissionApplication, new()
         {
             return HasPermission(new TPermission(), userContext);
         }
 
-        public async Task<bool> HasPermissionAsync(IPermissionApplication permissionApplication)
+        public virtual async Task<bool> HasPermissionAsync(IPermissionApplication permissionApplication)
         {
             var userContext = await _userContextService.GetCurrentContextAsync();
 
             return HasPermission(permissionApplication, userContext);
         }
 
-        public bool HasPermission(IPermissionApplication permissionApplication, IUserContext userContext)
+        public virtual bool HasPermission(IPermissionApplication permissionApplication, IUserContext userContext)
         {
             if (permissionApplication == null) return true;
 
@@ -211,13 +211,13 @@ namespace Cofoundry.Domain
             }
         }
 
-        public async Task<bool> HasPermissionAsync(IEnumerable<IPermissionApplication> permissions)
+        public virtual async Task<bool> HasPermissionAsync(IEnumerable<IPermissionApplication> permissions)
         {
             var userContext = await _userContextService.GetCurrentContextAsync();
             return HasPermission(permissions, userContext);
         }
 
-        public bool HasPermission(IEnumerable<IPermissionApplication> permissions, IUserContext userContext)
+        public virtual bool HasPermission(IEnumerable<IPermissionApplication> permissions, IUserContext userContext)
         {
             foreach (var permission in permissions)
             {
@@ -230,13 +230,13 @@ namespace Cofoundry.Domain
             return true;
         }
 
-        public async Task EnforcePermissionAsync(IPermissionApplication permission)
+        public virtual async Task EnforcePermissionAsync(IPermissionApplication permission)
         {
             var userContext = await _userContextService.GetCurrentContextAsync();
             EnforcePermission(permission, userContext);
         }
 
-        public void EnforcePermission(IPermissionApplication permission, IUserContext userContext)
+        public virtual void EnforcePermission(IPermissionApplication permission, IUserContext userContext)
         {
             if (!HasPermission(permission, userContext))
             {
@@ -244,13 +244,13 @@ namespace Cofoundry.Domain
             }
         }
 
-        public async Task EnforcePermissionAsync<TPermission>() where TPermission : IPermissionApplication, new()
+        public virtual async Task EnforcePermissionAsync<TPermission>() where TPermission : IPermissionApplication, new()
         {
             var userContext = await _userContextService.GetCurrentContextAsync();
             EnforcePermission<TPermission>(userContext);
         }
 
-        public void EnforcePermission<TPermission>(IUserContext userContext) where TPermission : IPermissionApplication, new()
+        public virtual void EnforcePermission<TPermission>(IUserContext userContext) where TPermission : IPermissionApplication, new()
         {
             var permission = new TPermission();
             if (!HasPermission(permission, userContext))
@@ -259,13 +259,13 @@ namespace Cofoundry.Domain
             }
         }
 
-        public async Task EnforcePermissionAsync(IEnumerable<IPermissionApplication> permissions)
+        public virtual async Task EnforcePermissionAsync(IEnumerable<IPermissionApplication> permissions)
         {
             var userContext = await _userContextService.GetCurrentContextAsync();
             EnforcePermission(permissions, userContext);
         }
 
-        public void EnforcePermission(IEnumerable<IPermissionApplication> permissions, IUserContext userContext)
+        public virtual void EnforcePermission(IEnumerable<IPermissionApplication> permissions, IUserContext userContext)
         {
             foreach (var permission in permissions)
             {
@@ -273,26 +273,26 @@ namespace Cofoundry.Domain
             }
         }
 
-        public async Task<bool> HasCustomEntityPermissionAsync<TPermission>(string definitionCode) where TPermission : ICustomEntityPermissionTemplate, new()
+        public virtual async Task<bool> HasCustomEntityPermissionAsync<TPermission>(string definitionCode) where TPermission : ICustomEntityPermissionTemplate, new()
         {
             var userContext = await _userContextService.GetCurrentContextAsync();
             return HasCustomEntityPermission<TPermission>(definitionCode, userContext);
         }
 
-        public bool HasCustomEntityPermission<TPermission>(string definitionCode, IUserContext userContext) where TPermission : ICustomEntityPermissionTemplate, new()
+        public virtual bool HasCustomEntityPermission<TPermission>(string definitionCode, IUserContext userContext) where TPermission : ICustomEntityPermissionTemplate, new()
         {
             var permission = GetCustomEntityPermission<TPermission>(definitionCode);
 
             return HasPermission(permission, userContext);
         }
 
-        public async Task EnforceCustomEntityPermissionAsync<TPermission>(IEnumerable<string> definitionCodes) where TPermission : ICustomEntityPermissionTemplate, new()
+        public virtual async Task EnforceCustomEntityPermissionAsync<TPermission>(IEnumerable<string> definitionCodes) where TPermission : ICustomEntityPermissionTemplate, new()
         {
             var userContext = await _userContextService.GetCurrentContextAsync();
             EnforceCustomEntityPermission<TPermission>(definitionCodes, userContext);
         }
 
-        public void EnforceCustomEntityPermission<TPermission>(IEnumerable<string> definitionCodes, IUserContext userContext) where TPermission : ICustomEntityPermissionTemplate, new()
+        public virtual void EnforceCustomEntityPermission<TPermission>(IEnumerable<string> definitionCodes, IUserContext userContext) where TPermission : ICustomEntityPermissionTemplate, new()
         {
             foreach (var definitionCode in definitionCodes.Distinct())
             {
@@ -300,13 +300,13 @@ namespace Cofoundry.Domain
             }
         }
 
-        public async Task EnforceCustomEntityPermissionAsync<TPermission>(string definitionCode) where TPermission : ICustomEntityPermissionTemplate, new()
+        public virtual async Task EnforceCustomEntityPermissionAsync<TPermission>(string definitionCode) where TPermission : ICustomEntityPermissionTemplate, new()
         {
             var userContext = await _userContextService.GetCurrentContextAsync();
             EnforceCustomEntityPermission<TPermission>(definitionCode, userContext);
         }
 
-        public void EnforceCustomEntityPermission<TPermission>(string definitionCode, IUserContext userContext) where TPermission : ICustomEntityPermissionTemplate, new()
+        public virtual void EnforceCustomEntityPermission<TPermission>(string definitionCode, IUserContext userContext) where TPermission : ICustomEntityPermissionTemplate, new()
         {
             var permission = GetCustomEntityPermission<TPermission>(definitionCode);
 

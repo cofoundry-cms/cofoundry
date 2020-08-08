@@ -8,8 +8,9 @@ using Cofoundry.Domain.CQS;
 using Microsoft.EntityFrameworkCore;
 using Cofoundry.Core.MessageAggregator;
 using Cofoundry.Core.Data;
+using Cofoundry.Domain.Data.Internal;
 
-namespace Cofoundry.Domain
+namespace Cofoundry.Domain.Internal
 {
     /// <summary>
     /// Deletes the draft verison of a page version permanently if 

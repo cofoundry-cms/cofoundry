@@ -8,7 +8,7 @@ using Cofoundry.Domain.CQS;
 using Cofoundry.Core;
 using Microsoft.EntityFrameworkCore;
 
-namespace Cofoundry.Domain
+namespace Cofoundry.Domain.Internal
 {
     /// <summary>
     /// Common mapping functionality for PageSummaries
@@ -36,7 +36,7 @@ namespace Cofoundry.Domain
         /// <summary>
         /// Finishes off bulk mapping of tags and page routes in a PageSummary object
         /// </summary>
-        public async Task<List<PageSummary>> MapAsync(ICollection<Page> dbPages, IExecutionContext executionContext)
+        public virtual async Task<List<PageSummary>> MapAsync(ICollection<Page> dbPages, IExecutionContext executionContext)
         {
             var ids = dbPages
                 .Select(p => p.PageId)

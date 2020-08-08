@@ -4,10 +4,10 @@ using System.Linq;
 using System.Threading.Tasks;
 using Cofoundry.Domain.Data;
 
-namespace Cofoundry.Domain
+namespace Cofoundry.Domain.Internal
 {
     /// <summary>
-    /// Shared auser uthentication methods
+    /// Shared user authentication methods
     /// </summary>
     public class UserAuthenticationHelper
     {

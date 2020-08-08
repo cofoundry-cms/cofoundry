@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Cofoundry.Domain
+namespace Cofoundry.Domain.Internal
 {
     /// <summary>
     /// Helper to load view files from a path.
@@ -30,7 +30,7 @@ namespace Cofoundry.Domain
         /// Attempts to read a view file to a string, returning null if the file does not exist.
         /// </summary>
         /// <param name="path">The virtual path to the view file.</param>
-        public async Task<string> ReadViewFileAsync(string path)
+        public virtual async Task<string> ReadViewFileAsync(string path)
         {
             string result = null;
 
@@ -48,7 +48,7 @@ namespace Cofoundry.Domain
             return result;
         }
 
-        private bool FileExists(string path)
+        protected bool FileExists(string path)
         {
             if (string.IsNullOrEmpty(path)) return false;
             // check well formatted path

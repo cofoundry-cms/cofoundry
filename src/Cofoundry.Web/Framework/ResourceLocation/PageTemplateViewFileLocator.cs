@@ -1,6 +1,7 @@
 ﻿using Cofoundry.Core;
 using Cofoundry.Core.ResourceFiles;
 using Cofoundry.Domain;
+using Cofoundry.Domain.Internal;
 using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.Extensions.FileProviders;
 using System;

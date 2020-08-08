@@ -7,7 +7,7 @@ using Cofoundry.Core.DependencyInjection;
 using System.Reflection;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Cofoundry.Core.MessageAggregator
+namespace Cofoundry.Core.MessageAggregator.Internal
 {
     /// <summary>
     /// Represents an individual subscription to a message

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Cofoundry.Core.DependencyInjection;
+using Cofoundry.Domain.Data.Internal;
 using Microsoft.EntityFrameworkCore;
 
 namespace Cofoundry.Domain.Data.DependencyRegistration

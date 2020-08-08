@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Cofoundry.Domain.Data
+namespace Cofoundry.Domain.Data.Internal
 {
     /// <summary>
     /// Data access abstraction over stored procedures for image and document asset entities.

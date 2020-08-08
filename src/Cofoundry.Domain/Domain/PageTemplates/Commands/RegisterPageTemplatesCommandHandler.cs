@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Cofoundry.Core;
 using Cofoundry.Core.Data;
 
-namespace Cofoundry.Domain
+namespace Cofoundry.Domain.Internal
 {
     /// <summary>
     /// Updates the page templates registered in the database by scanning

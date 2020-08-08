@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Data.SqlClient;
 
-namespace Cofoundry.Core.DistributedLocks
+namespace Cofoundry.Core.DistributedLocks.Internal
 {
     /// <summary>
     /// A distributed lock is a locking mechanism that can be used to

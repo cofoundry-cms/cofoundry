@@ -8,7 +8,7 @@ using Cofoundry.Core.Validation;
 using Cofoundry.Domain.CQS;
 using Cofoundry.Core.Data;
 
-namespace Cofoundry.Domain
+namespace Cofoundry.Domain.Internal
 {
     public class AddPageDirectoryCommandHandler
         : ICommandHandler<AddPageDirectoryCommand>

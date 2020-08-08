@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Cofoundry.Core.AutoUpdate;
 using Cofoundry.Core.Data;
 
-namespace Cofoundry.Domain
+namespace Cofoundry.Domain.Internal
 {
     public class UpdateGeneralSiteSettingsCommandHandler 
         : ICommandHandler<UpdateGeneralSiteSettingsCommand>

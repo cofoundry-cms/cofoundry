@@ -8,8 +8,9 @@ using Microsoft.EntityFrameworkCore;
 using Cofoundry.Core.Data;
 using Cofoundry.Core;
 using Cofoundry.Core.Caching;
+using Cofoundry.Domain.CQS.Internal;
 
-namespace Cofoundry.Domain
+namespace Cofoundry.Domain.Internal
 {
     public class SetupCofoundryCommandHandler
         : ICommandHandler<SetupCofoundryCommand>

@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Threading;
 
-namespace Cofoundry.Core.AutoUpdate
+namespace Cofoundry.Core.AutoUpdate.Internal
 {
     /// <summary>
     /// Service to update applications and modules. Typically this is

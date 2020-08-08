@@ -10,8 +10,9 @@ using Cofoundry.Core.MessageAggregator;
 using Cofoundry.Core;
 using Cofoundry.Core.Validation;
 using Cofoundry.Core.Data;
+using Cofoundry.Domain.Data.Internal;
 
-namespace Cofoundry.Domain
+namespace Cofoundry.Domain.Internal
 {
     /// <summary>
     /// Publishes a custom entity. If the custom entity is already published and

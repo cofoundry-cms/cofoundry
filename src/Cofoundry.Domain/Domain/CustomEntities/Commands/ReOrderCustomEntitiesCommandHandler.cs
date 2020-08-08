@@ -9,8 +9,9 @@ using Cofoundry.Core.MessageAggregator;
 using Cofoundry.Core;
 using System.ComponentModel.DataAnnotations;
 using Cofoundry.Core.Data;
+using Cofoundry.Domain.Data.Internal;
 
-namespace Cofoundry.Domain
+namespace Cofoundry.Domain.Internal
 {
     /// <summary>
     /// Reorders a set of custom entities. The custom entity definition must implement 

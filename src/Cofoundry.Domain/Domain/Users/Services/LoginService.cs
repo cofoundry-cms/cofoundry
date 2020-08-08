@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Cofoundry.Domain
+namespace Cofoundry.Domain.Internal
 {
     /// <summary>
     /// Service for logging users in and out of the application.
@@ -43,7 +43,7 @@ namespace Cofoundry.Domain
         /// if the user should only stay logged in for the duration of
         /// the session.
         /// </param>
-        public async Task LogAuthenticatedUserInAsync(string userAreaCode, int userId, bool rememberUser)
+        public virtual async Task LogAuthenticatedUserInAsync(string userAreaCode, int userId, bool rememberUser)
         {
             // Clear any existing session
             await SignOutAsync(userAreaCode);
@@ -62,7 +62,7 @@ namespace Cofoundry.Domain
         /// </summary>
         /// <param name="userAreaCode">The code of the user area attempting to be logged into.</param>
         /// <param name="username">The username attempting to be logged in with.</param>
-        public async Task LogFailedLoginAttemptAsync(string userAreaCode, string username)
+        public virtual async Task LogFailedLoginAttemptAsync(string userAreaCode, string username)
         {
             var command = new LogFailedLoginAttemptCommand(userAreaCode, username);
             await _commandExecutor.ExecuteAsync(command);
@@ -72,7 +72,7 @@ namespace Cofoundry.Domain
         /// Signs the user out of the application and ends the session.
         /// </summary>
         /// <param name="userAreaCode">The code of the user area to log out of.</param>
-        public async Task SignOutAsync(string userAreaCode)
+        public virtual async Task SignOutAsync(string userAreaCode)
         {
             await _userSessionService.LogUserOutAsync(userAreaCode);
             _userContextService.ClearCache();
@@ -81,7 +81,7 @@ namespace Cofoundry.Domain
         /// <summary>
         /// Signs the user out of all user areas and ends the session.
         /// </summary>
-        public async Task SignOutAllUserAreasAsync()
+        public virtual async Task SignOutAllUserAreasAsync()
         {
             await _userSessionService.LogUserOutOfAllUserAreasAsync();
             _userContextService.ClearCache();

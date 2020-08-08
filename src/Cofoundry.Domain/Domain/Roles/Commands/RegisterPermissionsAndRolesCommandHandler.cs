@@ -11,7 +11,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Cofoundry.Core.Data;
 
-namespace Cofoundry.Domain
+namespace Cofoundry.Domain.Internal
 {
     /// <summary>
     /// Registers new roles and permissions defined in code and initializes

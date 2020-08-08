@@ -8,7 +8,7 @@ using Microsoft.Data.SqlClient;
 using Cofoundry.Core;
 using Cofoundry.Domain.Data;
 
-namespace Cofoundry.Domain
+namespace Cofoundry.Domain.Internal
 {
     public class LogFailedLoginAttemptCommandHandler
         : ICommandHandler<LogFailedLoginAttemptCommand>

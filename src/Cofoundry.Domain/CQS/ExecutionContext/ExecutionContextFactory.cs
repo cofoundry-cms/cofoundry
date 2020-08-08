@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Cofoundry.Domain.CQS
+namespace Cofoundry.Domain.CQS.Internal
 {
     /// <summary>
     /// Factory for creating an IExecutionContext instance.

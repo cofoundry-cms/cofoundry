@@ -10,7 +10,7 @@ using Cofoundry.Core.Data;
 using Cofoundry.Core.Mail;
 using Cofoundry.Core;
 
-namespace Cofoundry.Domain
+namespace Cofoundry.Domain.Internal
 {
     public class CompleteUserPasswordResetCommandHandler 
         : ICommandHandler<CompleteUserPasswordResetCommand>

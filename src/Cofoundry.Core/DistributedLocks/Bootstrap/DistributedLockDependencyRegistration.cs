@@ -1,4 +1,5 @@
 ﻿using Cofoundry.Core.DependencyInjection;
+using Cofoundry.Core.DistributedLocks.Internal;
 using System;
 using System.Collections.Generic;
 using System.Text;

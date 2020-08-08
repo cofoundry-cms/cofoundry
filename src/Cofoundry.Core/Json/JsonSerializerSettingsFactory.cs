@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Cofoundry.Core.Json
+namespace Cofoundry.Core.Json.Internal
 {
     /// <summary>
     /// Gets the default JsonSerializerSettings used by Cofoundry and assigned

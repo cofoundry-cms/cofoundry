@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Cofoundry.Core.DependencyInjection;
+using Cofoundry.Core.Validation.Internal;
 
 namespace Cofoundry.Core.Validation.DependencyRegistration
 {

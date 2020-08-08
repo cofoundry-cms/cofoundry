@@ -9,7 +9,7 @@ using Cofoundry.Domain.CQS;
 using Cofoundry.Core.EntityFramework;
 using Cofoundry.Core;
 
-namespace Cofoundry.Domain
+namespace Cofoundry.Domain.Internal
 {
     /// <summary>
     /// Updates user auditing information in the database to record 

@@ -10,7 +10,7 @@ using Cofoundry.Core.Data;
 using Cofoundry.Core.MessageAggregator;
 using System.IO;
 
-namespace Cofoundry.Domain
+namespace Cofoundry.Domain.Internal
 {
     public class DeleteDocumentAssetCommandHandler 
         : ICommandHandler<DeleteDocumentAssetCommand>

@@ -1,4 +1,5 @@
-﻿using Cofoundry.Core.DependencyInjection;
+﻿using Cofoundry.Core.AutoUpdate.Internal;
+using Cofoundry.Core.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Linq;

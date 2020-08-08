@@ -11,7 +11,7 @@ using Cofoundry.Core.Data;
 using Cofoundry.Core.MessageAggregator;
 using Cofoundry.Core.Validation;
 
-namespace Cofoundry.Domain
+namespace Cofoundry.Domain.Internal
 {
     public class UpdateDocumentAssetCommandHandler 
         : ICommandHandler<UpdateDocumentAssetCommand>

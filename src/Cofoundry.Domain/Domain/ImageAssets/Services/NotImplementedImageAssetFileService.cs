@@ -1,6 +1,4 @@
-﻿using Cofoundry.Core.Data;
-using Cofoundry.Core.Validation;
-using Cofoundry.Domain.Data;
+﻿using Cofoundry.Domain.Data;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -8,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Cofoundry.Domain
+namespace Cofoundry.Domain.Internal
 {
     /// <summary>
     /// Currently we're unable to offer a default cross-platform implementation out of the box.

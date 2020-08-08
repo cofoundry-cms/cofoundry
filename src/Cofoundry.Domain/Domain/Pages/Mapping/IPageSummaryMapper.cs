@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Cofoundry.Domain.Data;
 using Cofoundry.Domain.CQS;
 
-namespace Cofoundry.Domain
+namespace Cofoundry.Domain.Internal
 {
     /// <summary>
     /// Common mapping functionality for PageSummaries

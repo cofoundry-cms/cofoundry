@@ -10,7 +10,7 @@ using Microsoft.Data.SqlClient;
 using Cofoundry.Core;
 using Cofoundry.Core.EntityFramework;
 
-namespace Cofoundry.Domain
+namespace Cofoundry.Domain.Internal
 {
     public class DeleteUnstructuredDataDependenciesCommandHandler 
         : ICommandHandler<DeleteUnstructuredDataDependenciesCommand>

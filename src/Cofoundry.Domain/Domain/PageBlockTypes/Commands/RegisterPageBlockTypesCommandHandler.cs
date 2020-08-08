@@ -9,7 +9,7 @@ using Cofoundry.Core;
 using Cofoundry.Core.Data;
 using System.IO;
 
-namespace Cofoundry.Domain
+namespace Cofoundry.Domain.Internal
 {
     /// <summary>
     /// Updates the page block types registered in the database using the

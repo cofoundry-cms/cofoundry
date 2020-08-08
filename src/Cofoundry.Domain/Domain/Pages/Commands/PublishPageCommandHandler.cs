@@ -9,8 +9,9 @@ using Microsoft.EntityFrameworkCore;
 using Cofoundry.Core.MessageAggregator;
 using Cofoundry.Core.Data;
 using Cofoundry.Core;
+using Cofoundry.Domain.Data.Internal;
 
-namespace Cofoundry.Domain
+namespace Cofoundry.Domain.Internal
 {
     /// <summary>
     /// Publishes a page. If the page is already published and

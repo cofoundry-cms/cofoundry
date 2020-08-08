@@ -6,7 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Data.SqlClient;
 
-namespace Cofoundry.Core.Data.SimpleDatabase
+namespace Cofoundry.Core.Data.SimpleDatabase.Internal
 {
     /// <summary>
     /// Simple Db raw sql execution on the Cofoundry database which by

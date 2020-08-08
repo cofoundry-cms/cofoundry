@@ -12,7 +12,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Cofoundry.Core.Validation;
 
-namespace Cofoundry.Domain.CQS
+namespace Cofoundry.Domain.CQS.Internal
 {
 
     /// <summary>

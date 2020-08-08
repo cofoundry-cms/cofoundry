@@ -1,6 +1,4 @@
-﻿using Cofoundry.Core;
-using Cofoundry.Domain.CQS;
-using Cofoundry.Domain.Data;
+﻿using Cofoundry.Domain.Data;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,7 +6,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Cofoundry.Domain
+namespace Cofoundry.Domain.Internal
 {
     /// <summary>
     /// Simple mapper for mapping to CustomEntityRoute objects.

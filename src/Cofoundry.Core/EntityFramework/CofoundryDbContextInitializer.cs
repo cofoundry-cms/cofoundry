@@ -4,7 +4,7 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 
-namespace Cofoundry.Core.EntityFramework
+namespace Cofoundry.Core.EntityFramework.Internal
 {
     /// <summary>
     /// Used to configure the default settings for an EF DbContext that connects 

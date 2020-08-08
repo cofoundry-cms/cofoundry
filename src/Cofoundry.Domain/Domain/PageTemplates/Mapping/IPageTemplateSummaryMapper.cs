@@ -1,12 +1,11 @@
-﻿using Cofoundry.Domain.Data;
-using Cofoundry.Domain.QueryModels;
+﻿using Cofoundry.Domain.QueryModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Cofoundry.Domain
+namespace Cofoundry.Domain.Internal
 {
     /// <summary>
     /// Simple mapper for mapping to PageTemplateSummary objects.

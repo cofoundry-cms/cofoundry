@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Transactions;
 
-namespace Cofoundry.Core.Data
+namespace Cofoundry.Core.Data.Internal
 {
     /// <summary>
     /// A 'child' or 'inner' transaction scope that takes place within a 

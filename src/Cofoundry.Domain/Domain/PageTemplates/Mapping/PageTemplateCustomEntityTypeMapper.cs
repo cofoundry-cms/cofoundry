@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Cofoundry.Domain
+namespace Cofoundry.Domain.Internal
 {
     /// <summary>
     /// Used to look up custom entity display model types from a string type 
@@ -33,7 +33,7 @@ namespace Cofoundry.Domain
         /// be included (but isn't checked).
         /// </param>
         /// <returns>ICustomEntityDisplayModel type if a match is found; otherwise null.</returns>
-        public Type Map(string typeName)
+        public virtual Type Map(string typeName)
         {
             typeName = RemoveNamespace(typeName);
             if (string.IsNullOrEmpty(typeName)) return null;
@@ -52,7 +52,7 @@ namespace Cofoundry.Domain
             return result;
         }
 
-        private string RemoveNamespace(string typeName)
+        protected string RemoveNamespace(string typeName)
         {
             if (string.IsNullOrEmpty(typeName)) return null;
 

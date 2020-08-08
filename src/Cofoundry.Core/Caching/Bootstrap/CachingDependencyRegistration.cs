@@ -1,4 +1,5 @@
-﻿using Cofoundry.Core.DependencyInjection;
+﻿using Cofoundry.Core.Caching.Internal;
+using Cofoundry.Core.DependencyInjection;
 using Microsoft.Extensions.Caching.Memory;
 using System;
 using System.Collections.Generic;

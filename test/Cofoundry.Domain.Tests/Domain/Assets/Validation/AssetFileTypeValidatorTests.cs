@@ -1,4 +1,5 @@
 ﻿using Cofoundry.Core.Validation;
+using Cofoundry.Domain.Internal;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -57,27 +58,27 @@ namespace Cofoundry.Domain.Tests
         [Fact]
         public void Validate_WhenNullExtension_IsInvalid()
         {
-            var validator = CreateValidator(AssetFileTypeValidation.UseBlacklist, AssetFileTypeValidation.Disabled);
+            var validator = CreateValidator(AssetFileTypeValidation.UseDenyList, AssetFileTypeValidation.Disabled);
             string fileExtension = null;
             var mimeType = JPEG_MIME_TYPE;
 
             var result = validator.Validate(fileExtension, mimeType, VALIDATOR_PROP_NAME);
 
             Assert.Single(result);
-            Assert.Throws<PropertyValidationException>(() => validator.ValidateAndThrow(fileExtension, "Disabled", VALIDATOR_PROP_NAME));
+            Assert.Throws<ValidationErrorException>(() => validator.ValidateAndThrow(fileExtension, "Disabled", VALIDATOR_PROP_NAME));
         }
 
         [Fact]
         public void Validate_WhenNullMimeType_IsInvalid()
         {
-            var validator = CreateValidator(AssetFileTypeValidation.UseBlacklist, AssetFileTypeValidation.UseWhitelist);
+            var validator = CreateValidator(AssetFileTypeValidation.UseDenyList, AssetFileTypeValidation.UseAllowList);
             string fileExtension = JPEG_FILE_EXTENSION;
             string mimeType = null;
 
             var result = validator.Validate(fileExtension, mimeType, VALIDATOR_PROP_NAME);
 
             Assert.Single(result);
-            Assert.Throws<PropertyValidationException>(() => validator.ValidateAndThrow(fileExtension, "Disabled", VALIDATOR_PROP_NAME));
+            Assert.Throws<ValidationErrorException>(() => validator.ValidateAndThrow(fileExtension, "Disabled", VALIDATOR_PROP_NAME));
         }
 
         [Theory]
@@ -85,9 +86,9 @@ namespace Cofoundry.Domain.Tests
         [InlineData(CSV_FILE_EXTENSION)]
         [InlineData("." + CSV_FILE_EXTENSION)]
         [InlineData(VALID_FILE_PATH)]
-        public void Validate_WhenWhitelistAndValidExtension_IsValid(string fileExtension)
+        public void Validate_WhenAllowListAndValidExtension_IsValid(string fileExtension)
         {
-            var validator = CreateValidator(AssetFileTypeValidation.UseWhitelist, AssetFileTypeValidation.Disabled);
+            var validator = CreateValidator(AssetFileTypeValidation.UseAllowList, AssetFileTypeValidation.Disabled);
             var mimeType = "Disabled";
 
             validator.ValidateAndThrow(fileExtension, mimeType, VALIDATOR_PROP_NAME);
@@ -101,9 +102,9 @@ namespace Cofoundry.Domain.Tests
         [InlineData(CSV_FILE_EXTENSION)]
         [InlineData("." + CSV_FILE_EXTENSION)]
         [InlineData(VALID_FILE_PATH)]
-        public void Validate_WhenWhitelistAndValidUpperExtension_IsValid(string fileExtension)
+        public void Validate_WhenAllowListAndValidUpperExtension_IsValid(string fileExtension)
         {
-            var validator = CreateValidator(AssetFileTypeValidation.UseWhitelist, AssetFileTypeValidation.Disabled);
+            var validator = CreateValidator(AssetFileTypeValidation.UseAllowList, AssetFileTypeValidation.Disabled);
             var mimeType = "Disabled";
 
             validator.ValidateAndThrow(fileExtension.ToUpperInvariant(), mimeType, VALIDATOR_PROP_NAME);
@@ -121,7 +122,7 @@ namespace Cofoundry.Domain.Tests
         {
             var settings = new AssetFilesSettings()
             {
-                FileExtensionValidation = AssetFileTypeValidation.UseWhitelist,
+                FileExtensionValidation = AssetFileTypeValidation.UseAllowList,
                 FileExtensionValidationList = FileTypeList.Select(f => "." + f).ToList(),
                 MimeTypeValidation = AssetFileTypeValidation.Disabled,
                 MimeTypeValidationList = MimeTypeList
@@ -140,24 +141,24 @@ namespace Cofoundry.Domain.Tests
         [InlineData("rubbish")]
         [InlineData(".wibble")]
         [InlineData("/path/to/file.wibble")]
-        public void Validate_WhenWhitelistAndInvalidExtension_IsInvalid(string fileExtension)
+        public void Validate_WhenAllowListAndInvalidExtension_IsInvalid(string fileExtension)
         {
-            var validator = CreateValidator(AssetFileTypeValidation.UseWhitelist, AssetFileTypeValidation.Disabled);
+            var validator = CreateValidator(AssetFileTypeValidation.UseAllowList, AssetFileTypeValidation.Disabled);
             var mimeType = "Disabled";
 
             var result = validator.Validate(fileExtension, mimeType, VALIDATOR_PROP_NAME);
 
             Assert.Single(result);
-            Assert.Throws<PropertyValidationException>(() => validator.ValidateAndThrow(fileExtension, mimeType, VALIDATOR_PROP_NAME));
+            Assert.Throws<ValidationErrorException>(() => validator.ValidateAndThrow(fileExtension, mimeType, VALIDATOR_PROP_NAME));
         }
 
         [Theory]
         [InlineData("pdf")]
         [InlineData(".wibble")]
         [InlineData("/path/to/file.wibble")]
-        public void Validate_WhenBlacklistAndValidExtension_IsValid(string fileExtension)
+        public void Validate_WhenDenyListAndValidExtension_IsValid(string fileExtension)
         {
-            var validator = CreateValidator(AssetFileTypeValidation.UseBlacklist, AssetFileTypeValidation.Disabled);
+            var validator = CreateValidator(AssetFileTypeValidation.UseDenyList, AssetFileTypeValidation.Disabled);
             var mimeType = "Disabled";
 
             validator.ValidateAndThrow(fileExtension, mimeType, VALIDATOR_PROP_NAME);
@@ -171,23 +172,23 @@ namespace Cofoundry.Domain.Tests
         [InlineData(CSV_FILE_EXTENSION)]
         [InlineData("." + CSV_FILE_EXTENSION)]
         [InlineData(VALID_FILE_PATH)]
-        public void Validate_WhenBlacklistAndInvalidExtension_IsInvalid(string fileExtension)
+        public void Validate_WhenDenyListAndInvalidExtension_IsInvalid(string fileExtension)
         {
-            var validator = CreateValidator(AssetFileTypeValidation.UseBlacklist, AssetFileTypeValidation.Disabled);
+            var validator = CreateValidator(AssetFileTypeValidation.UseDenyList, AssetFileTypeValidation.Disabled);
             var mimeType = "Disabled";
 
             var result = validator.Validate(fileExtension, mimeType, VALIDATOR_PROP_NAME);
 
             Assert.Single(result);
-            Assert.Throws<PropertyValidationException>(() => validator.ValidateAndThrow(fileExtension, mimeType, VALIDATOR_PROP_NAME));
+            Assert.Throws<ValidationErrorException>(() => validator.ValidateAndThrow(fileExtension, mimeType, VALIDATOR_PROP_NAME));
         }
 
         [Theory]
         [InlineData(JPEG_MIME_TYPE)]
         [InlineData(CSV_MIME_TYPE)]
-        public void Validate_WhenWhitelistAndValidMimeType_IsValid(string mimeType)
+        public void Validate_WhenAllowListAndValidMimeType_IsValid(string mimeType)
         {
-            var validator = CreateValidator(AssetFileTypeValidation.Disabled, AssetFileTypeValidation.UseWhitelist);
+            var validator = CreateValidator(AssetFileTypeValidation.Disabled, AssetFileTypeValidation.UseAllowList);
             var fileExtension = "Disabled";
 
             validator.ValidateAndThrow(fileExtension, mimeType, VALIDATOR_PROP_NAME);
@@ -199,9 +200,9 @@ namespace Cofoundry.Domain.Tests
         [Theory]
         [InlineData(JPEG_MIME_TYPE)]
         [InlineData(CSV_MIME_TYPE)]
-        public void Validate_WhenWhitelistAndValidUpperMimeType_IsValid(string mimeType)
+        public void Validate_WhenAllowListAndValidUpperMimeType_IsValid(string mimeType)
         {
-            var validator = CreateValidator(AssetFileTypeValidation.Disabled, AssetFileTypeValidation.UseWhitelist);
+            var validator = CreateValidator(AssetFileTypeValidation.Disabled, AssetFileTypeValidation.UseAllowList);
             var fileExtension = "Disabled";
 
             validator.ValidateAndThrow(fileExtension, mimeType.ToUpperInvariant(), VALIDATOR_PROP_NAME);
@@ -213,23 +214,23 @@ namespace Cofoundry.Domain.Tests
         [Theory]
         [InlineData("application/rubbish")]
         [InlineData("text/wibble")]
-        public void Validate_WhenWhitelistAndInvalidMimeType_IsInvalid(string mimeType)
+        public void Validate_WhenAllowListAndInvalidMimeType_IsInvalid(string mimeType)
         {
-            var validator = CreateValidator(AssetFileTypeValidation.Disabled, AssetFileTypeValidation.UseWhitelist);
+            var validator = CreateValidator(AssetFileTypeValidation.Disabled, AssetFileTypeValidation.UseAllowList);
             var fileExtension = "Disabled";
 
             var result = validator.Validate(fileExtension, mimeType, VALIDATOR_PROP_NAME);
 
             Assert.Single(result);
-            Assert.Throws<PropertyValidationException>(() => validator.ValidateAndThrow(fileExtension, mimeType, VALIDATOR_PROP_NAME));
+            Assert.Throws<ValidationErrorException>(() => validator.ValidateAndThrow(fileExtension, mimeType, VALIDATOR_PROP_NAME));
         }
 
         [Theory]
         [InlineData("application/rubbish")]
         [InlineData("text/wibble")]
-        public void Validate_WhenBlacklistAndValidMimeType_IsValid(string mimeType)
+        public void Validate_WhenDenyListAndValidMimeType_IsValid(string mimeType)
         {
-            var validator = CreateValidator(AssetFileTypeValidation.Disabled, AssetFileTypeValidation.UseBlacklist);
+            var validator = CreateValidator(AssetFileTypeValidation.Disabled, AssetFileTypeValidation.UseDenyList);
             var fileExtension = "Disabled";
 
             validator.ValidateAndThrow(fileExtension, mimeType, VALIDATOR_PROP_NAME);
@@ -241,15 +242,15 @@ namespace Cofoundry.Domain.Tests
         [Theory]
         [InlineData(JPEG_MIME_TYPE)]
         [InlineData(CSV_MIME_TYPE)]
-        public void Validate_WhenBlacklistAndInvalidMimeType_IsInvalid(string mimeType)
+        public void Validate_WhenDenyListAndInvalidMimeType_IsInvalid(string mimeType)
         {
-            var validator = CreateValidator(AssetFileTypeValidation.Disabled, AssetFileTypeValidation.UseBlacklist);
+            var validator = CreateValidator(AssetFileTypeValidation.Disabled, AssetFileTypeValidation.UseDenyList);
             var fileExtension = "Disabled";
 
             var result = validator.Validate(fileExtension, mimeType, VALIDATOR_PROP_NAME);
 
             Assert.Single(result);
-            Assert.Throws<PropertyValidationException>(() => validator.ValidateAndThrow(fileExtension, mimeType, VALIDATOR_PROP_NAME));
+            Assert.Throws<ValidationErrorException>(() => validator.ValidateAndThrow(fileExtension, mimeType, VALIDATOR_PROP_NAME));
         }
 
         #endregion

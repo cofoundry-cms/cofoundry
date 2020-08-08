@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Cofoundry.Domain.CQS
+namespace Cofoundry.Domain.CQS.Internal
 {
     /// <summary>
     /// Basic service for logging audit data about executed commands.

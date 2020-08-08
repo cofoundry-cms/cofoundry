@@ -9,7 +9,7 @@ using Cofoundry.Domain.CQS;
 using Cofoundry.Core.Validation;
 using Cofoundry.Core;
 
-namespace Cofoundry.Domain
+namespace Cofoundry.Domain.Internal
 {
     /// <summary>
     /// Adds a new role to a user area with a set of permissions.

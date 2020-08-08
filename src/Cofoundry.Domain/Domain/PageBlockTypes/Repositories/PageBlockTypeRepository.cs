@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Cofoundry.Domain.CQS;
 
-namespace Cofoundry.Domain
+namespace Cofoundry.Domain.Internal
 {
     /// <summary>
     /// Simple facade over page data access queries/commands to them more discoverable

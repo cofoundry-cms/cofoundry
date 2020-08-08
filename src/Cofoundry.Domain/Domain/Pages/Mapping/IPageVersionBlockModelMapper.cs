@@ -8,7 +8,7 @@ using Cofoundry.Domain.Data;
 using Cofoundry.Core.DependencyInjection;
 using Cofoundry.Domain.CQS;
 
-namespace Cofoundry.Domain
+namespace Cofoundry.Domain.Internal
 {
     /// <summary>
     /// Helper for mapping page and custom entity version block data from an 

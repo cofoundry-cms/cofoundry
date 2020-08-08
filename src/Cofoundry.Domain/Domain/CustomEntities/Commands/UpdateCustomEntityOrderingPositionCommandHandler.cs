@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using Cofoundry.Core.MessageAggregator;
 using Cofoundry.Core;
 
-namespace Cofoundry.Domain
+namespace Cofoundry.Domain.Internal
 {
     /// <summary>
     /// Changes the order of a single custom entity. The custom entity 

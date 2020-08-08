@@ -7,7 +7,7 @@ using Cofoundry.Domain.Data;
 using Cofoundry.Domain.CQS;
 using Microsoft.Extensions.Logging;
 
-namespace Cofoundry.Domain
+namespace Cofoundry.Domain.Internal
 {
     /// <summary>
     /// A mapping helper containing a couple of mapping methods used in multiple queires

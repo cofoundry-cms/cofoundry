@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Cofoundry.Core.Web
+namespace Cofoundry.Core.Web.Internal
 {
     /// <summary>
     /// Service for working with mime types. This gets mime types from 
@@ -29,7 +29,7 @@ namespace Cofoundry.Core.Web
         /// the old MimeMapping.GetMimeMapping method from .NET 4.x.
         /// </summary>
         /// <param name="fileName">File name with file extension (path optional).</param>
-        public string MapFromFileName(string fileName)
+        public virtual string MapFromFileName(string fileName)
         {
             return MapFromFileName(fileName, DEFAULT_MIME_TYPE);
         }
@@ -46,7 +46,7 @@ namespace Cofoundry.Core.Web
         /// default value is null or empty then "application/octet-stream" 
         /// is used instead.
         /// </param>
-        public string MapFromFileName(string fileName, string defaultMimeType)
+        public virtual string MapFromFileName(string fileName, string defaultMimeType)
         {
             if (string.IsNullOrWhiteSpace(fileName)) throw new ArgumentEmptyException(fileName);
 

@@ -5,7 +5,7 @@ using System.Data.SqlClient;
 using System.Text;
 using Microsoft.Data.SqlClient;
 
-namespace Cofoundry.Core.EntityFramework
+namespace Cofoundry.Core.EntityFramework.Internal
 {
     public class SqlParameterFactory : ISqlParameterFactory
     {

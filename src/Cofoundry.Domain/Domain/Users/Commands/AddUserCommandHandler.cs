@@ -9,7 +9,7 @@ using Cofoundry.Domain.CQS;
 using Cofoundry.Core.Validation;
 using Cofoundry.Core.Mail;
 
-namespace Cofoundry.Domain
+namespace Cofoundry.Domain.Internal
 {
     /// <summary>
     /// A generic user creation command for use with Cofoundry users and

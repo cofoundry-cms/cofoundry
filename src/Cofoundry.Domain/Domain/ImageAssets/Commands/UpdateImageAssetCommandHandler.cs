@@ -9,9 +9,8 @@ using Microsoft.EntityFrameworkCore;
 using Cofoundry.Core;
 using Cofoundry.Core.Data;
 using Cofoundry.Core.MessageAggregator;
-using System.IO;
 
-namespace Cofoundry.Domain
+namespace Cofoundry.Domain.Internal
 {
     /// <summary>
     /// Updates the properties of an existing image asset. Updating

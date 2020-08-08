@@ -1,4 +1,6 @@
-﻿using Cofoundry.Core.Data.SimpleDatabase;
+﻿using Cofoundry.Core.Data.Internal;
+using Cofoundry.Core.Data.SimpleDatabase;
+using Cofoundry.Core.Data.SimpleDatabase.Internal;
 using Cofoundry.Core.DependencyInjection;
 using System;
 using System.Collections.Generic;

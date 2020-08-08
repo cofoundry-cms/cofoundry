@@ -10,7 +10,7 @@ using Cofoundry.Core.Validation;
 using Cofoundry.Core;
 using Cofoundry.Core.Data;
 
-namespace Cofoundry.Domain
+namespace Cofoundry.Domain.Internal
 {
     public class UpdateRoleCommandHandler 
         : ICommandHandler<UpdateRoleCommand>
