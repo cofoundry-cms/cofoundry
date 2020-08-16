@@ -53,7 +53,7 @@ namespace Cofoundry.Domain
             {
                 bool isNew = documentAsset.DocumentAssetId < 1;
 
-                documentAsset.FileSizeInBytes = Convert.ToInt32(inputSteam.Length);
+                documentAsset.FileSizeInBytes = inputSteam.Length;
 
                 using (var scope = _transactionScopeFactory.Create(_dbContext))
                 {
