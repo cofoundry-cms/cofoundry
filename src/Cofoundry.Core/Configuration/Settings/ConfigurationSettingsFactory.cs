@@ -43,6 +43,12 @@ namespace Cofoundry.Core.Configuration
             var settingsOptions = _serviceProvider.GetRequiredService<IOptions<TSettings>>();
             var settings = settingsOptions.Value;
 
+            if (settings is IFeatureEnableable featureEnableable && !featureEnableable.Enabled)
+            {
+                // feature is disabled, so skip validation.
+                return settings;
+            }
+
             var errors = _modelValidationService.GetErrors(settings);
 
             if (!EnumerableHelper.IsNullOrEmpty(errors))
