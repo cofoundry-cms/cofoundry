@@ -8,7 +8,6 @@ using Cofoundry.Domain.Data;
 using Cofoundry.Core.Data;
 using Cofoundry.Core;
 using Cofoundry.Core.Web;
-using Cofoundry.Core.Validation;
 
 namespace Cofoundry.Domain
 {

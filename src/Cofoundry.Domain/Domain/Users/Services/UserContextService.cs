@@ -107,7 +107,6 @@ namespace Cofoundry.Domain.Internal
             // BUG: Got a managed debugging assistant exception? Try this:
             // https://developercommunity.visualstudio.com/content/problem/29782/managed-debugging-assistant-fatalexecutionengineer.html
 
-            // Grab the first super admin user.
             var dbUser = await QuerySystemUser().FirstOrDefaultAsync();
             EntityNotFoundException.ThrowIfNull(dbUser, SuperAdminRole.SuperAdminRoleCode);
             var impersonatedUserContext = _userContextMapper.Map(dbUser);
