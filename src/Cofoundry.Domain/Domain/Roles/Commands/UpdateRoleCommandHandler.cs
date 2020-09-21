@@ -128,7 +128,8 @@ namespace Cofoundry.Domain.Internal
                 // Get permissions from the db
                 var dbPermissions = await _dbContext
                     .Permissions
-                    .Where(p => permissionToAddTokens.Contains(p.EntityDefinitionCode + p.PermissionCode))
+                    .Where(p => 
+                        permissionToAddTokens.Contains((p.EntityDefinitionCode ?? "") + p.PermissionCode))
                     .ToListAsync();
 
                 foreach (var permissionToAdd in permissionsToAdd)
