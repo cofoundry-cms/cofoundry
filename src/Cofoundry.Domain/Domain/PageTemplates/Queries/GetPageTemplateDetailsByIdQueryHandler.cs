@@ -55,7 +55,8 @@ namespace Cofoundry.Domain.Internal
                 .PageVersions
                 .AsNoTracking()
                 .Where(v => v.PageTemplateId == query.PageTemplateId)
-                .GroupBy(v => v.PageId)
+                .Select(v => v.Page)
+                .Distinct()
                 .CountAsync();
 
             var template = _pageTemplateDetailsMapper.Map(queryModel);
