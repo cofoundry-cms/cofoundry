@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Cofoundry.Domain;
+using System.Transactions;
+using Cofoundry.Domain.TransactionManager.Default;
 
 namespace Cofoundry.BasicTestSite
 {
@@ -155,7 +157,9 @@ namespace Cofoundry.BasicTestSite
 
             int userId;
 
-            using (var scope = _contentRepository.Transactions().CreateScope())
+            using (var scope = _contentRepository
+                .Transactions()
+                .CreateScope()
             {
                 var adminRole = await _contentRepository
                     .Roles()

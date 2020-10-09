@@ -14,17 +14,18 @@ namespace Cofoundry.Core.Data.Internal
     /// </summary>
     public class PrimaryTransactionScope : ITransactionScope, IDisposable
     {
-        private readonly TransactionScopeManager _transactionScopeManager;
+        private readonly DefaultTransactionScopeManager _transactionScopeManager;
         private Queue<Func<Task>> _runOnCompleteActions = new Queue<Func<Task>>();
         private System.Transactions.TransactionScope _innerScope;
 
         public PrimaryTransactionScope(
-            TransactionScopeManager transactionScopeFactory
+            DefaultTransactionScopeManager transactionScopeManager,
+            Func<System.Transactions.TransactionScope> transactionScopeFactory
             )
         {
-            _transactionScopeManager = transactionScopeFactory;
+            _transactionScopeManager = transactionScopeManager;
 
-            _innerScope = new System.Transactions.TransactionScope(System.Transactions.TransactionScopeAsyncFlowOption.Enabled);
+            _innerScope = transactionScopeFactory();
         }
 
         /// <summary>
