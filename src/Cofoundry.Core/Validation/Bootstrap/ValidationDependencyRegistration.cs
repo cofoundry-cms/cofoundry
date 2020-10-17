@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Cofoundry.Core.DependencyInjection;
 using Cofoundry.Core.Validation.Internal;
 
-namespace Cofoundry.Core.Validation.DependencyRegistration
+namespace Cofoundry.Core.Validation.Registration
 {
     public class ValidationDependencyRegistration : IDependencyRegistration
     {

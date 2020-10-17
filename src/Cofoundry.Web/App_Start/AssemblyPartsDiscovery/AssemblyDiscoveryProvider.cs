@@ -32,7 +32,7 @@ namespace Cofoundry.Web
         /// A collection of additional assemblies to reference that aren't already referenced 
         /// by the IMvcBuilder AssemblyPartsProvider.
         /// </returns>
-        public IEnumerable<Assembly> DiscoverAssemblies(
+        public virtual IEnumerable<Assembly> DiscoverAssemblies(
             IMvcBuilder mvcBuilder, 
             IEnumerable<IAssemblyDiscoveryRule> rules
             )

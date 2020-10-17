@@ -6,7 +6,7 @@ using Cofoundry.Core.DependencyInjection;
 using Cofoundry.Domain.Data.Internal;
 using Microsoft.EntityFrameworkCore;
 
-namespace Cofoundry.Domain.Data.DependencyRegistration
+namespace Cofoundry.Domain.Data.Registration
 {
     public class DataDependencyRegistration : IDependencyRegistration
     {

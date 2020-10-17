@@ -7,7 +7,7 @@ using Cofoundry.Core.DependencyInjection;
 using Cofoundry.Domain.CQS;
 using Cofoundry.Domain.Internal;
 
-namespace Cofoundry.Domain.DependencyRegistration
+namespace Cofoundry.Domain.Registration
 {
     public class RolesDependencyRegistration : IDependencyRegistration
     {

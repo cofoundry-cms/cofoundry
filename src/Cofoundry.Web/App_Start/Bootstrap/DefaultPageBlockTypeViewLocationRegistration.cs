@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Cofoundry.Web
+namespace Cofoundry.Web.Registration
 {
     /// <summary>
     /// Registers the default locations for page block type view files

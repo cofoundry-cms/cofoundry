@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Cofoundry.Core.DependencyInjection;
 using Cofoundry.Core.EntityFramework.Internal;
 
-namespace Cofoundry.Core.EntityFramework.DependencyRegistration
+namespace Cofoundry.Core.EntityFramework.Registration
 {
     public class EntityFrameworkDependencyRegistration : IDependencyRegistration
     {

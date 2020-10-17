@@ -7,7 +7,7 @@ using Cofoundry.Core.DependencyInjection;
 using Cofoundry.Core.Web.Internal;
 using Microsoft.AspNetCore.StaticFiles;
 
-namespace Cofoundry.Core.Web.DependencyRegistration
+namespace Cofoundry.Core.Web.Registration
 {
     public class WebDependencyRegistration : IDependencyRegistration
     {

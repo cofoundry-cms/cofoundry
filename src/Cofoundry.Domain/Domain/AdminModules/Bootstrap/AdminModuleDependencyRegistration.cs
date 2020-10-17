@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Cofoundry.Core.DependencyInjection;
 
-namespace Cofoundry.Domain.DependencyRegistration
+namespace Cofoundry.Domain.Registration
 {
     public class AdminModuleDependencyRegistration : IDependencyRegistration
     {

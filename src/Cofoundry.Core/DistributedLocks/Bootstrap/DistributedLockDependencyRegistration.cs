@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Cofoundry.Core.DistributedLocks.DependencyRegistration
+namespace Cofoundry.Core.DistributedLocks.Registration
 {
     public class DistributedLockDependencyRegistration : IDependencyRegistration
     {

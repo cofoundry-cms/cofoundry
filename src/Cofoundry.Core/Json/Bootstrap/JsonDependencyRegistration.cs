@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Cofoundry.Core.DependencyInjection;
 using Cofoundry.Core.Json.Internal;
 
-namespace Cofoundry.Core.Json.DependencyRegistration
+namespace Cofoundry.Core.Json.Registration
 {
     public class JsonDependencyRegistration : IDependencyRegistration
     {

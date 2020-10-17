@@ -8,7 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Cofoundry.Core.Data.DependencyRegistration
+namespace Cofoundry.Core.Data.Registration
 {
     public class DataTimeDependencyRegistration : IDependencyRegistration
     {

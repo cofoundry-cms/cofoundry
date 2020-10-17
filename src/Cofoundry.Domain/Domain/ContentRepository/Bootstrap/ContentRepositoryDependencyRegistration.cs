@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Cofoundry.Domain.DependencyRegistration
+namespace Cofoundry.Domain.Registration
 {
     public class ContentRepositoryDependencyRegistration : IDependencyRegistration
     {

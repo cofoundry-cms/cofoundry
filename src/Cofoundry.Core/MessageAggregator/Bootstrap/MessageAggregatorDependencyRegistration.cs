@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Cofoundry.Core.DependencyInjection;
 using Cofoundry.Core.MessageAggregator.Internal;
 
-namespace Cofoundry.Core.MessageAggregator.DependencyRegistration
+namespace Cofoundry.Core.MessageAggregator.Registration
 {
     public class MessageAggregatorDependencyRegistration : IDependencyRegistration
     {

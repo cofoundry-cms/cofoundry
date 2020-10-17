@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Cofoundry.Core.DependencyInjection;
 using Cofoundry.Core.ResourceFiles.Internal;
 
-namespace Cofoundry.Core.ResourceFiles.DependencyRegistration
+namespace Cofoundry.Core.ResourceFiles.Registration
 {
     public class ResourceFilesDependencyRegistration : IDependencyRegistration
     {

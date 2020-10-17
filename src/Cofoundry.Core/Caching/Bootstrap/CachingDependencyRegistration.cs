@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Cofoundry.Core.Caching.DependencyRegistration
+namespace Cofoundry.Core.Caching.Registration
 {
     public class CachingDependencyRegistration : IDependencyRegistration
     {

@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Cofoundry.Core.AutoUpdate.DependencyRegistration
+namespace Cofoundry.Core.AutoUpdate.Registration
 {
     public class AutoUpdateDependencyRegistration : IDependencyRegistration
     {

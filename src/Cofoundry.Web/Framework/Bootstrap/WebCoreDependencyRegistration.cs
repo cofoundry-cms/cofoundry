@@ -7,7 +7,7 @@ using Cofoundry.Core;
 using Cofoundry.Core.ResourceFiles;
 using Cofoundry.Domain.Internal;
 
-namespace Cofoundry.Web.DependencyRegistration
+namespace Cofoundry.Web.Registration
 {
     public class WebCoreDependencyRegistration : IDependencyRegistration
     {
