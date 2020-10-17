@@ -19,11 +19,12 @@ namespace Cofoundry.Core.Data.Internal
         private TransactionScope _innerScope;
 
         public ChildTransactionScope(
-            PrimaryTransactionScope primaryTransactionScope
+            PrimaryTransactionScope primaryTransactionScope,
+            Func<System.Transactions.TransactionScope> transactionScopeFactory
             )
         {
             _primaryTransactionScope = primaryTransactionScope;
-            _innerScope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled);
+            _innerScope = transactionScopeFactory();
         }
 
         /// <summary>

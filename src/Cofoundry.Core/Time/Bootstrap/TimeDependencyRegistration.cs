@@ -13,7 +13,7 @@ namespace Cofoundry.Core.Time.Registration
         public void Register(IContainerRegister container)
         {
             container
-                .RegisterScoped<IDateTimeService, DateTimeService>()
+                .RegisterSingleton<IDateTimeService, DateTimeService>()
                 .RegisterScoped<ITimeZoneConverter, TimeZoneConverter>()
                 ;
         }

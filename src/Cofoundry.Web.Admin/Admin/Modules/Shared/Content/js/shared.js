@@ -6893,7 +6893,8 @@ function RoutingUtilitites() {
         return {
             controller: controllerName + 'Controller',
             controllerAs: 'vm',
-            templateUrl: modulePath + 'Routes/' + controllerName + '.html'
+            templateUrl: modulePath + 'Routes/' + controllerName + '.html',
+            reloadOnSearch: false
         }
     },
 

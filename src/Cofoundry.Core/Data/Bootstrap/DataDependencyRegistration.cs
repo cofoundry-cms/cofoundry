@@ -16,8 +16,9 @@ namespace Cofoundry.Core.Data.Registration
         {
             container
                 .RegisterScoped<ICofoundryDbConnectionManager, CofoundryDbConnectionManager>()
-                .RegisterScoped<ITransactionScopeManager, TransactionScopeManager>()
+                .RegisterScoped<ITransactionScopeManager, DefaultTransactionScopeManager>()
                 .RegisterScoped<ICofoundryDatabase, CofoundrySqlDatabase>()
+                .RegisterScoped<ITransactionScopeFactory, TransactionScopeFactory>()
                 ;
         }
     }

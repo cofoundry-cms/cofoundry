@@ -6,6 +6,7 @@ using System.Data.Common;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Transactions;
 
 namespace Cofoundry.Core.Data.Internal
 {
@@ -30,9 +31,17 @@ namespace Cofoundry.Core.Data.Internal
     /// to manage transaction scopes. Prior to .NET Core 2.0 this used EF transactions
     /// because System.Transactions was not available.
     /// </remarks>
-    public class TransactionScopeManager : ITransactionScopeManager
+    public class DefaultTransactionScopeManager : IDefaultTransactionScopeManager
     {
         private Dictionary<int, PrimaryTransactionScope> _primaryTransactionScopes = new Dictionary<int, PrimaryTransactionScope>();
+        private readonly ITransactionScopeFactory _transactionScopeFactory;
+
+        public DefaultTransactionScopeManager(
+            ITransactionScopeFactory transactionScopeFactory
+            )
+        {
+            _transactionScopeFactory = transactionScopeFactory;
+        }
 
         /// <summary>
         /// Creates a new transaction scope associated with the specified connection. 
@@ -56,19 +65,80 @@ namespace Cofoundry.Core.Data.Internal
         /// <returns>ITransactionScope, which is IDisposable and must be disposed.</returns>
         public ITransactionScope Create(DbConnection dbConnection)
         {
+            return Create(dbConnection, CreateScopeFactory());
+        }
+
+        /// <summary>
+        /// Creates a new transaction scope associated with the specified connection, 
+        /// using the specified transaction configuration options. 
+        /// The scope can be nested inside another scope in which case the underlying 
+        /// db transaction is only committed once both the outer and inner transaction(s) 
+        /// have been committed. The returned ITransactionScope implements IDisposable 
+        /// and should be wrapped in a using statement.
+        /// </summary>
+        /// <param name="dbConnection">
+        /// <para>
+        /// The DbConnection instance to manage transactions for. Transaction scopes
+        /// created by this instance only apply to a single DbConnection, so if you want 
+        /// the scope to span additional data access mechanism then they must share the 
+        /// same connection.
+        /// </para>
+        /// <para>
+        /// You can use the ICofoundryDbConnectionManager to get a reference to the shared 
+        /// connection directly.
+        /// </para>
+        /// </param>
+        /// <param name="transactionScopeOption">This is defaulted to TransactionScopeOption.Required.</param>
+        /// <param name="isolationLevel">This is defaulted to IsolationLevel.ReadCommitted.</param>
+        /// <returns>ITransactionScope, which is IDisposable and must be disposed.</returns>
+        public ITransactionScope Create(DbConnection dbConnection,
+                System.Transactions.TransactionScopeOption transactionScopeOption = System.Transactions.TransactionScopeOption.Required,
+                System.Transactions.IsolationLevel isolationLevel = System.Transactions.IsolationLevel.ReadCommitted
+            )
+        {
+            var transactionScopeFactory = CreateScopeFactory(transactionScopeOption, isolationLevel);
+            return Create(dbConnection, transactionScopeFactory);
+        }
+
+        /// <summary>
+        /// Creates a new transaction scope associated with the specified connection, 
+        /// creating the inner scope using the specified factory method. 
+        /// The scope can be nested inside another scope in which case the underlying 
+        /// db transaction is only committed once both the outer and inner transaction(s) 
+        /// have been committed. The returned ITransactionScope implements IDisposable 
+        /// and should be wrapped in a using statement.
+        /// </summary>
+        /// <param name="dbConnection">
+        /// <para>
+        /// The DbConnection instance to manage transactions for. Transaction scopes
+        /// created by this instance only apply to a single DbConnection, so if you want 
+        /// the scope to span additional data access mechanism then they must share the 
+        /// same connection.
+        /// </para>
+        /// <para>
+        /// You can use the ICofoundryDbConnectionManager to get a reference to the shared 
+        /// connection directly.
+        /// </para>
+        /// </param>
+        /// <returns>ITransactionScope, which is IDisposable and must be disposed.</returns>
+        public ITransactionScope Create(DbConnection dbConnection, Func<System.Transactions.TransactionScope> transactionScopeFactory)
+        {
+            if (dbConnection == null) throw new ArgumentNullException(nameof(dbConnection));
+            if (transactionScopeFactory == null) throw new ArgumentNullException(nameof(transactionScopeFactory));
+
             ITransactionScope scope;
             var connectionHash = dbConnection.GetHashCode();
             var primaryScope = _primaryTransactionScopes.GetOrDefault(connectionHash);
 
             if (primaryScope == null)
             {
-                primaryScope = new PrimaryTransactionScope(this);
+                primaryScope = new PrimaryTransactionScope(this, transactionScopeFactory);
                 _primaryTransactionScopes.Add(connectionHash, primaryScope);
                 scope = primaryScope;
             }
             else
             {
-                scope = new ChildTransactionScope(primaryScope);
+                scope = new ChildTransactionScope(primaryScope, transactionScopeFactory);
             }
 
             return scope;
@@ -101,6 +171,20 @@ namespace Cofoundry.Core.Data.Internal
             var connection = dbContext.Database.GetDbConnection();
 
             return Create(connection);
+        }
+
+        public ITransactionScope Create(DbContext dbContext, TransactionScopeOption transactionScopeOption = TransactionScopeOption.Required, IsolationLevel isolationLevel = IsolationLevel.ReadCommitted)
+        {
+            var connection = dbContext.Database.GetDbConnection();
+
+            return Create(connection, transactionScopeOption, isolationLevel);
+        }
+
+        public ITransactionScope Create(DbContext dbContext, Func<TransactionScope> transactionScopeFactory)
+        {
+            var connection = dbContext.Database.GetDbConnection();
+
+            return Create(connection, transactionScopeFactory);
         }
 
         /// <summary>
@@ -261,6 +345,17 @@ namespace Cofoundry.Core.Data.Internal
             {
                 _primaryTransactionScopes.Remove(scopeToRemoveKey.Value);
             }
+        }
+
+        private Func<System.Transactions.TransactionScope> CreateScopeFactory(
+                System.Transactions.TransactionScopeOption transactionScopeOption = System.Transactions.TransactionScopeOption.Required,
+                System.Transactions.IsolationLevel isolationLevel = System.Transactions.IsolationLevel.ReadCommitted
+            )
+        {
+            return () => _transactionScopeFactory.Create(
+                transactionScopeOption,
+                isolationLevel
+            );
         }
 
         public void Dispose()

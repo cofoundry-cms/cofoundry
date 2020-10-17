@@ -1,4 +1,5 @@
 using Cofoundry.Core;
+using Cofoundry.Core.EntityFramework;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
@@ -13,10 +14,10 @@ namespace Cofoundry.Domain.Data
 
             builder.Property(s => s.PermissionCode)
                 .IsRequired()
-                .HasMaxLength(6);
+                .IsCharType(6);
 
             builder.Property(s => s.EntityDefinitionCode)
-                .HasMaxLength(6);
+                .IsCharType(6);
 
             builder.HasOne(s => s.EntityDefinition)
                 .WithMany(d => d.Permissions)
