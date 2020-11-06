@@ -159,7 +159,7 @@ namespace Cofoundry.BasicTestSite
 
             using (var scope = _contentRepository
                 .Transactions()
-                .CreateScope()
+                .CreateScope())
             {
                 var adminRole = await _contentRepository
                     .Roles()
