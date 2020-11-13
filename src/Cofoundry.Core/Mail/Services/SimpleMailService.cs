@@ -30,9 +30,6 @@ namespace Cofoundry.Core.Mail.Internal
 
         #region public methods
 
-        /// <summary>
-        /// Queues an email for sending to the specified email address
-        /// </summary>
         public async Task SendAsync(string toEmail, string toDisplayName, IMailTemplate template)
         {
             var toAddress = new MailAddress(toEmail, toDisplayName);
@@ -41,17 +38,11 @@ namespace Cofoundry.Core.Mail.Internal
             await _mailDispatchService.DispatchAsync(message);
         }
 
-        /// <summary>
-        /// Queues an email for sending to the specified email address
-        /// </summary>
         public async Task SendAsync(string toEmail, IMailTemplate template)
         {
             await SendAsync(toEmail, null, template);
         }
 
-        /// <summary>
-        /// Queues an email for sending to the specified email address
-        /// </summary>
         public async Task SendAsync(MailAddress address, IMailTemplate template)
         {
             if (address == null) throw new ArgumentNullException(nameof(address));
