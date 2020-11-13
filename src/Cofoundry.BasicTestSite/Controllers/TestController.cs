@@ -11,35 +11,6 @@ using Cofoundry.Web;
 
 namespace Cofoundry.BasicTestSite
 {
-
-public class DocumentExample
-{
-    private IDocumentAssetRouteLibrary _documentAssetRouteLibrary;
-    private readonly IContentRepository _contentRepository;
-
-    public DocumentExample(
-        IDocumentAssetRouteLibrary documentAssetRouteLibrary,
-        IContentRepository contentRepository
-        )
-    {
-        _documentAssetRouteLibrary = documentAssetRouteLibrary;
-        _contentRepository = contentRepository;
-    }
-
-    public async Task<string> GetExampleUrl(int documentId)
-    {
-        var document = await _contentRepository
-            .DocumentAssets()
-            .GetById(documentId)
-            .AsRenderDetails()
-            .ExecuteAsync();
-
-        var url = _documentAssetRouteLibrary.DocumentAsset(document);
-
-        return url;
-    }
-}
-
     public class TestController : Controller
     {
         private readonly IAdvancedContentRepository _contentRepository;
