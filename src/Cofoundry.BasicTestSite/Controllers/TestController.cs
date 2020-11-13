@@ -6,9 +6,40 @@ using System.Threading.Tasks;
 using Cofoundry.Domain;
 using System.Transactions;
 using Cofoundry.Domain.TransactionManager.Default;
+using Cofoundry.Core;
+using Cofoundry.Web;
 
 namespace Cofoundry.BasicTestSite
 {
+
+public class DocumentExample
+{
+    private IDocumentAssetRouteLibrary _documentAssetRouteLibrary;
+    private readonly IContentRepository _contentRepository;
+
+    public DocumentExample(
+        IDocumentAssetRouteLibrary documentAssetRouteLibrary,
+        IContentRepository contentRepository
+        )
+    {
+        _documentAssetRouteLibrary = documentAssetRouteLibrary;
+        _contentRepository = contentRepository;
+    }
+
+    public async Task<string> GetExampleUrl(int documentId)
+    {
+        var document = await _contentRepository
+            .DocumentAssets()
+            .GetById(documentId)
+            .AsRenderDetails()
+            .ExecuteAsync();
+
+        var url = _documentAssetRouteLibrary.DocumentAsset(document);
+
+        return url;
+    }
+}
+
     public class TestController : Controller
     {
         private readonly IAdvancedContentRepository _contentRepository;
@@ -67,20 +98,19 @@ namespace Cofoundry.BasicTestSite
                 .Map(e => new Dictionary<string, string>())
                 .ExecuteAsync();
 
-            var ids = new int[] { 1 };
-            var catCustomEntities = await _contentRepository
+            var ids = new int[] { 3, 1, 6 };
+            var customEntities = await _contentRepository
                 .CustomEntities()
                 .GetByIdRange(ids)
                 .AsRenderSummaries()
-                //.MapItem(i => new { i.UrlSlug, i.Title })
-                .MapItem(MapCatAsync)
+                .MapItem(i => new { i.UrlSlug, i.Title })
                 .FilterAndOrderByKeys(ids)
                 .Map(v => v.OrderBy(v => v.Title))
                 .ExecuteAsync();
 
-            var customExecution = await _domainRepository
+            var results = await _domainRepository
                 .WithQuery(new SearchCustomEntityRenderSummariesQuery())
-                .MapItem(b => new { b.CreateDate })
+                .MapItem(b => new { b.Title })
                 .ExecuteAsync();
 
             return Json(entity);
@@ -159,7 +189,7 @@ namespace Cofoundry.BasicTestSite
 
             using (var scope = _contentRepository
                 .Transactions()
-                .CreateScope()
+                .CreateScope())
             {
                 var adminRole = await _contentRepository
                     .Roles()

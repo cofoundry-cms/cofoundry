@@ -58,7 +58,7 @@ namespace Cofoundry.Domain.Tests
         [Fact]
         public void Validate_WhenNullExtension_IsInvalid()
         {
-            var validator = CreateValidator(AssetFileTypeValidation.UseDenyList, AssetFileTypeValidation.Disabled);
+            var validator = CreateValidator(AssetFileTypeValidation.UseBlockList, AssetFileTypeValidation.Disabled);
             string fileExtension = null;
             var mimeType = JPEG_MIME_TYPE;
 
@@ -71,7 +71,7 @@ namespace Cofoundry.Domain.Tests
         [Fact]
         public void Validate_WhenNullMimeType_IsInvalid()
         {
-            var validator = CreateValidator(AssetFileTypeValidation.UseDenyList, AssetFileTypeValidation.UseAllowList);
+            var validator = CreateValidator(AssetFileTypeValidation.UseBlockList, AssetFileTypeValidation.UseAllowList);
             string fileExtension = JPEG_FILE_EXTENSION;
             string mimeType = null;
 
@@ -158,7 +158,7 @@ namespace Cofoundry.Domain.Tests
         [InlineData("/path/to/file.wibble")]
         public void Validate_WhenDenyListAndValidExtension_IsValid(string fileExtension)
         {
-            var validator = CreateValidator(AssetFileTypeValidation.UseDenyList, AssetFileTypeValidation.Disabled);
+            var validator = CreateValidator(AssetFileTypeValidation.UseBlockList, AssetFileTypeValidation.Disabled);
             var mimeType = "Disabled";
 
             validator.ValidateAndThrow(fileExtension, mimeType, VALIDATOR_PROP_NAME);
@@ -174,7 +174,7 @@ namespace Cofoundry.Domain.Tests
         [InlineData(VALID_FILE_PATH)]
         public void Validate_WhenDenyListAndInvalidExtension_IsInvalid(string fileExtension)
         {
-            var validator = CreateValidator(AssetFileTypeValidation.UseDenyList, AssetFileTypeValidation.Disabled);
+            var validator = CreateValidator(AssetFileTypeValidation.UseBlockList, AssetFileTypeValidation.Disabled);
             var mimeType = "Disabled";
 
             var result = validator.Validate(fileExtension, mimeType, VALIDATOR_PROP_NAME);
@@ -230,7 +230,7 @@ namespace Cofoundry.Domain.Tests
         [InlineData("text/wibble")]
         public void Validate_WhenDenyListAndValidMimeType_IsValid(string mimeType)
         {
-            var validator = CreateValidator(AssetFileTypeValidation.Disabled, AssetFileTypeValidation.UseDenyList);
+            var validator = CreateValidator(AssetFileTypeValidation.Disabled, AssetFileTypeValidation.UseBlockList);
             var fileExtension = "Disabled";
 
             validator.ValidateAndThrow(fileExtension, mimeType, VALIDATOR_PROP_NAME);
@@ -244,7 +244,7 @@ namespace Cofoundry.Domain.Tests
         [InlineData(CSV_MIME_TYPE)]
         public void Validate_WhenDenyListAndInvalidMimeType_IsInvalid(string mimeType)
         {
-            var validator = CreateValidator(AssetFileTypeValidation.Disabled, AssetFileTypeValidation.UseDenyList);
+            var validator = CreateValidator(AssetFileTypeValidation.Disabled, AssetFileTypeValidation.UseBlockList);
             var fileExtension = "Disabled";
 
             var result = validator.Validate(fileExtension, mimeType, VALIDATOR_PROP_NAME);

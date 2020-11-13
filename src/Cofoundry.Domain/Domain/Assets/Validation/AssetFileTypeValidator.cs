@@ -104,7 +104,7 @@ namespace Cofoundry.Domain.Internal
             {
                 case AssetFileTypeValidation.UseAllowList:
                     return contains;
-                case AssetFileTypeValidation.UseDenyList:
+                case AssetFileTypeValidation.UseBlockList:
                     return !contains;
                 default:
                     throw new Exception($"{nameof(AssetFileTypeValidation)} not recognised: {assetFileTypeValidation}");

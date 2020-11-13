@@ -66,7 +66,7 @@ namespace Cofoundry.Web.Admin
                 && httpContext.Request.Headers["X-Requested-With"] != "XMLHttpRequest"
                 // Is a page and not a static resource
                 && Regex.IsMatch(path, PAGE_PATH_REGEX, RegexOptions.IgnoreCase)
-                // Isn't in the path blacklist
+                // Isn't in the path blocklist
                 && !_visualEditorRouteExclusionRules.Any(r => r.ShouldExclude(httpContext.Request));
 
             if (!canShowSiteViewer) return Task.FromResult<IUserContext>(null);

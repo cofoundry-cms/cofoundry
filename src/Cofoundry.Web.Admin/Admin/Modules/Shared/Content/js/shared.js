@@ -14192,7 +14192,6 @@ function (
         function onKeyPress(e) {
             var charToTest = String.fromCharCode(e.which);
 
-            // if the key entered isn't on the whitelist, ignore it 
             if (getBadTagRegex().test(charToTest)) {
                 e.preventDefault();
             }

@@ -12,11 +12,11 @@ namespace Cofoundry.Domain
     public enum AssetFileTypeValidation
     {
         /// <summary>
-        /// Treat the list of values as a denylist, ensuring
+        /// Treat the list of values as a blocklist, ensuring
         /// the value being validated does not appear in the
         /// list.
         /// </summary>
-        UseDenyList,
+        UseBlockList,
 
         /// <summary>
         /// Treat the list of values as an allowlist, ensuring
