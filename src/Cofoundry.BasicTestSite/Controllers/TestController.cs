@@ -4,10 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Cofoundry.Domain;
-using System.Transactions;
-using Cofoundry.Domain.TransactionManager.Default;
 using Cofoundry.Core;
-using Cofoundry.Web;
 
 namespace Cofoundry.BasicTestSite
 {
