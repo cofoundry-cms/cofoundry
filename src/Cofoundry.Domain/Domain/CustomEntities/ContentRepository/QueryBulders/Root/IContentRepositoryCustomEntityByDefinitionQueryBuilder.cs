@@ -8,7 +8,7 @@ namespace Cofoundry.Domain
     /// <summary>
     /// Queries for retrieving all custom entities of a specific type (definition).
     /// </summary>
-    public interface IContentRepositoryCustomEntityGetByDefinitionQueryBuilder
+    public interface IContentRepositoryCustomEntityByDefinitionQueryBuilder
     {
         /// <summary>
         /// Queries all custom entites of a specific type, projected as a

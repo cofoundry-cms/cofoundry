@@ -19,13 +19,13 @@ namespace Cofoundry.Domain
         /// The code identifier for the custom entity type
         /// to query for.
         /// </param>
-        IContentRepositoryCustomEntityGetByDefinitionQueryBuilder GetByDefinitionCode(string customEntityDefinitionCode);
+        IContentRepositoryCustomEntityByDefinitionQueryBuilder GetByDefinitionCode(string customEntityDefinitionCode);
 
         /// <summary>
         /// Retrieve all custom entities of a type in one query.
         /// </summary>
         /// <typeparam name="TDefinition">The definition type to fetch custom entities for.</typeparam>
-        IContentRepositoryCustomEntityGetByDefinitionQueryBuilder GetByDefinition<TDefinition>() where TDefinition : ICustomEntityDefinition;
+        IContentRepositoryCustomEntityByDefinitionQueryBuilder GetByDefinition<TDefinition>() where TDefinition : ICustomEntityDefinition;
 
 
         /// <summary>
@@ -41,6 +41,22 @@ namespace Cofoundry.Domain
         /// </summary>
         /// <param name="pageIds">Range of PageIds of the pages to get.</param>
         IAdvancedContentRepositoryCustomEntityByIdRangeQueryBuilder GetByIdRange(IEnumerable<int> pageIds);
+
+        /// <summary>
+        /// Fetch custom entities filtering on the UrlSlug property.
+        /// </summary>
+        /// <param name="customEntityDefinitionCode">
+        /// The code identifier for the custom entity type to query for.
+        /// </param>
+        /// <param name="urlSlug">UrlSlug to filter the results on.</param>
+        IContentRepositoryCustomEntityByUrlSlugQueryBuilder GetByUrlSlug(string customEntityDefinitionCode, string urlSlug);
+
+        /// <summary>
+        /// Fetch custom entities filtering on the UrlSlug property.
+        /// </summary>
+        /// <typeparam name="TDefinition">The definition type to fetch custom entities for.</typeparam>
+        /// <param name="urlSlug">UrlSlug to filter the results on.</param>
+        IContentRepositoryCustomEntityByUrlSlugQueryBuilder GetByUrlSlug<TDefinition>(string urlSlug) where TDefinition : ICustomEntityDefinition;
 
         /// <summary>
         /// Search for page entities, returning paged lists of data.

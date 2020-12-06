@@ -6,13 +6,13 @@ using System.Threading.Tasks;
 
 namespace Cofoundry.Domain.Internal
 {
-    public class ContentRepositoryCustomEntityGetByDefinitionQueryBuilder
-        : IContentRepositoryCustomEntityGetByDefinitionQueryBuilder
+    public class ContentRepositoryCustomEntityByDefinitionQueryBuilder
+        : IContentRepositoryCustomEntityByDefinitionQueryBuilder
         , IExtendableContentRepositoryPart
     {
         private readonly string _customEntityDefinitionCode;
 
-        public ContentRepositoryCustomEntityGetByDefinitionQueryBuilder(
+        public ContentRepositoryCustomEntityByDefinitionQueryBuilder(
             IExtendableContentRepository contentRepository,
             string customEntityDefinitionCode
             )

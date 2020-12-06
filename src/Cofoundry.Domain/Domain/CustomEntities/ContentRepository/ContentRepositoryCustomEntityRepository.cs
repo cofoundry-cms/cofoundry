@@ -25,12 +25,12 @@ namespace Cofoundry.Domain.Internal
 
         #region queries
 
-        public IContentRepositoryCustomEntityGetByDefinitionQueryBuilder GetByDefinitionCode(string customEntityDefinitionCode)
+        public IContentRepositoryCustomEntityByDefinitionQueryBuilder GetByDefinitionCode(string customEntityDefinitionCode)
         {
-            return new ContentRepositoryCustomEntityGetByDefinitionQueryBuilder(ExtendableContentRepository, customEntityDefinitionCode);
+            return new ContentRepositoryCustomEntityByDefinitionQueryBuilder(ExtendableContentRepository, customEntityDefinitionCode);
         }
 
-        public IContentRepositoryCustomEntityGetByDefinitionQueryBuilder GetByDefinition<TDefinition>() where TDefinition : ICustomEntityDefinition
+        public IContentRepositoryCustomEntityByDefinitionQueryBuilder GetByDefinition<TDefinition>() where TDefinition : ICustomEntityDefinition
         {
             var customEntityDefinition = _customEntityDefinitionRepository.Get<TDefinition>();
 
@@ -39,7 +39,7 @@ namespace Cofoundry.Domain.Internal
                 throw new Exception("Custom Entity Definition not returned from ICustomEntityDefinitionRepository: " + typeof(TDefinition).FullName);
             }
 
-            return new ContentRepositoryCustomEntityGetByDefinitionQueryBuilder(ExtendableContentRepository, customEntityDefinition.CustomEntityDefinitionCode);
+            return new ContentRepositoryCustomEntityByDefinitionQueryBuilder(ExtendableContentRepository, customEntityDefinition.CustomEntityDefinitionCode);
         }
 
         public IContentRepositoryCustomEntityByIdQueryBuilder GetById(int customEntityId)
@@ -51,6 +51,31 @@ namespace Cofoundry.Domain.Internal
         {
             return new ContentRepositoryCustomEntityByIdRangeQueryBuilder(ExtendableContentRepository, pageIds);
         }
+
+        public IContentRepositoryCustomEntityByUrlSlugQueryBuilder GetByUrlSlug(string customEntityDefinitionCode, string urlSlug)
+        {
+            var customEntityDefinition = _customEntityDefinitionRepository.GetByCode(customEntityDefinitionCode);
+
+            if (customEntityDefinition == null)
+            {
+                throw new Exception("Custom Entity Definition not returned from ICustomEntityDefinitionRepository: " + customEntityDefinitionCode);
+            }
+
+            return new ContentRepositoryCustomEntityByUrlSlugQueryBuilder(ExtendableContentRepository, customEntityDefinition, urlSlug);
+        }
+
+        public IContentRepositoryCustomEntityByUrlSlugQueryBuilder GetByUrlSlug<TDefinition>(string urlSlug) where TDefinition : ICustomEntityDefinition
+        {
+            var customEntityDefinition = _customEntityDefinitionRepository.Get<TDefinition>();
+
+            if (customEntityDefinition == null)
+            {
+                throw new Exception("Custom Entity Definition not returned from ICustomEntityDefinitionRepository: " + typeof(TDefinition).FullName);
+            }
+
+            return new ContentRepositoryCustomEntityByUrlSlugQueryBuilder(ExtendableContentRepository, customEntityDefinition, urlSlug);
+        }
+
 
         public IContentRepositoryCustomEntitySearchQueryBuilder Search()
         {
