@@ -328,7 +328,7 @@ namespace Cofoundry.Domain.Internal
         {
             if (userContext == null || !userContext.UserId.HasValue)
             {
-                throw new NotPermittedException("This operation required that a user is logged in");
+                throw new NotPermittedException("This operation requires that a user is logged in");
             }
         }
 
