@@ -13,7 +13,7 @@ namespace Cofoundry.Domain
     public interface IListOptionApiSource
     {
         /// <summary>
-        /// The path the to the list option api. This should be relative
+        /// The path the to the list option API. This should be relative
         /// e.g. /admin/api/example-options and conform to the expected 
         /// api response format used by IApiResponseHelper.
         /// </summary>

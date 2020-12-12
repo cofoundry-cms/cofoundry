@@ -9,7 +9,7 @@ namespace Cofoundry.Domain
 {
     /// <summary>
     /// Use this to decorate a collection property to indicate it should be
-    /// rendered as a radio input list in the admin UI. The collection type should 
+    /// rendered as a radio input list in the admin UI. The property should 
     /// use the same type as the associated option values.
     /// </summary>
     [AttributeUsage(AttributeTargets.Property)]
