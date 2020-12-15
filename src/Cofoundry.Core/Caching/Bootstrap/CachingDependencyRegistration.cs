@@ -13,9 +13,16 @@ namespace Cofoundry.Core.Caching.Registration
     {
         public void Register(IContainerRegister container)
         {
-            container
-                .RegisterSingleton<IObjectCacheFactory, InMemoryObjectCacheFactory>()
-                ;
+            var cacheMode = container.Configuration.GetValue("Cofoundry:InMemoryObjectCache:CacheMode", InMemoryObjectCacheMode.Persitent);
+
+            if (cacheMode == InMemoryObjectCacheMode.PerScope)
+            {
+                container.RegisterScoped<IObjectCacheFactory, InMemoryObjectCacheFactory>();
+            }
+            else
+            {
+                container.RegisterSingleton<IObjectCacheFactory, InMemoryObjectCacheFactory>();
+            }
         }
     }
 }
