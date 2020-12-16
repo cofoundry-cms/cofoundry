@@ -20,9 +20,9 @@ namespace Cofoundry.Domain
         /// the data required to render a page, including template data for all the content-editable regions.
         /// </summary>
         /// <param name="pageIds">PageIds of the pages to get.</param>
-        /// <param name="publishStatus">Used to determine which version of the page to include data for.</param>
-        public GetPageRenderDetailsByIdRangeQuery(IEnumerable<int> pageIds, PublishStatusQuery? publishStatus = null)
-            : this(pageIds?.ToList(), publishStatus)
+        /// <param name="publishStatusQuery">Used to determine which version of the page to include data for.</param>
+        public GetPageRenderDetailsByIdRangeQuery(IEnumerable<int> pageIds, PublishStatusQuery? publishStatusQuery = null)
+            : this(pageIds?.ToList(), publishStatusQuery)
         {
         }
 
@@ -31,13 +31,13 @@ namespace Cofoundry.Domain
         /// the data required to render a page, including template data for all the content-editable regions.
         /// </summary>
         /// <param name="pageIds">PageIds of the pages to get.</param>
-        /// <param name="publishStatus">Used to determine which version of the page to include data for.</param>
-        public GetPageRenderDetailsByIdRangeQuery(IReadOnlyCollection<int> pageIds, PublishStatusQuery? publishStatus = null)
+        /// <param name="publishStatusQuery">Used to determine which version of the page to include data for.</param>
+        public GetPageRenderDetailsByIdRangeQuery(IReadOnlyCollection<int> pageIds, PublishStatusQuery? publishStatusQuery = null)
         {
             PageIds = pageIds;
-            if (publishStatus.HasValue)
+            if (publishStatusQuery.HasValue)
             {
-                PublishStatus = publishStatus.Value;
+                PublishStatus = publishStatusQuery.Value;
             }
         }
 

@@ -4,8 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Cofoundry.Core.DependencyInjection;
+using Cofoundry.Domain.CQS.Internal;
 
-namespace Cofoundry.Domain.CQS
+namespace Cofoundry.Domain.CQS.Registration
 {
     public class CQSDependencyRegistration : IDependencyRegistration
     {

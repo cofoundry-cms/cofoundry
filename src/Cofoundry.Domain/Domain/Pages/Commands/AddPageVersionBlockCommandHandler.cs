@@ -10,10 +10,10 @@ using Cofoundry.Core.MessageAggregator;
 using Cofoundry.Core.Data;
 using Cofoundry.Core;
 
-namespace Cofoundry.Domain
+namespace Cofoundry.Domain.Internal
 {
     public class AddPageVersionBlockCommandHandler
-        : IAsyncCommandHandler<AddPageVersionBlockCommand>
+        : ICommandHandler<AddPageVersionBlockCommand>
         , IPermissionRestrictedCommandHandler<AddPageVersionBlockCommand>
     {
         private readonly CofoundryDbContext _dbContext;

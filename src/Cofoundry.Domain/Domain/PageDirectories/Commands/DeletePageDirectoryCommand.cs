@@ -9,7 +9,8 @@ using Cofoundry.Core.Validation;
 namespace Cofoundry.Domain
 {
     /// <summary>
-    /// Deletes a page directory with the specified database id.
+    /// Removes a page directory from the system. The root directory cannot
+    /// be deleted.
     /// </summary>
     public class DeletePageDirectoryCommand : ICommand, ILoggableCommand
     {

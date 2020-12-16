@@ -4,10 +4,10 @@ using System.Linq;
 using System.Threading.Tasks;
 using Cofoundry.Domain.CQS;
 
-namespace Cofoundry.Domain
+namespace Cofoundry.Domain.Internal
 {
     public class GetNestedDataModelSchemaByNameQueryHandler
-        : IAsyncQueryHandler<GetNestedDataModelSchemaByNameQuery, NestedDataModelSchema>
+        : IQueryHandler<GetNestedDataModelSchemaByNameQuery, NestedDataModelSchema>
         , IIgnorePermissionCheckHandler
     {
         #region constructor

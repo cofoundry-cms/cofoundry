@@ -6,13 +6,13 @@ using Microsoft.EntityFrameworkCore.Storage;
 using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
+using Microsoft.Data.SqlClient;
 
-namespace Cofoundry.Core.EntityFramework
+namespace Cofoundry.Core.EntityFramework.Internal
 {
     /// <summary>
     /// A service for executing raw SQL statements against an EF DataContext.
@@ -46,7 +46,7 @@ namespace Cofoundry.Core.EntityFramework
         /// <returns>
         /// An array of the results of the query.
         /// </returns>
-        public async Task<T[]> ExecuteQueryAsync<T>(DbContext dbContext, string spName, params SqlParameter[] sqlParams)
+        public async virtual Task<T[]> ExecuteQueryAsync<T>(DbContext dbContext, string spName, params SqlParameter[] sqlParams)
             where T : class
         {
             var results = await CreateQuery<T>(dbContext, spName, sqlParams).ToArrayAsync();
@@ -66,14 +66,13 @@ namespace Cofoundry.Core.EntityFramework
                 // see https://github.com/aspnet/EntityFramework/issues/1862
                 // and https://github.com/aspnet/EntityFrameworkCore/issues/10753
 
-                //var results = _dbContext.Database.SqlQuery<T>(cmd, sqlParams);
-                var results = dbContext.Set<T>().FromSql(cmd, sqlParams);
+                var results = dbContext.Set<T>().FromSqlRaw(cmd, sqlParams);
 
                 return results;
             }
             else
             {
-                return dbContext.Set<T>().FromSql(spName);
+                return dbContext.Set<T>().FromSqlRaw(spName);
             }
         }
 
@@ -91,8 +90,10 @@ namespace Cofoundry.Core.EntityFramework
         /// <returns>
         /// The result of the query. Throws an exception if more than one result is returned.
         /// </returns>
-        public async Task<T> ExecuteScalarAsync<T>(DbContext dbContext, string spName, params SqlParameter[] sqlParams)
+        public async virtual Task<T> ExecuteScalarAsync<T>(DbContext dbContext, string spName, params SqlParameter[] sqlParams)
         {
+            // Derived from code in https://github.com/dotnet/efcore/issues/1862
+            // Needs to be updated when EF Core finally supports ad-hoc queries again
             var databaseFacade = dbContext.Database;
             var concurrencyDetector = databaseFacade.GetService<IConcurrencyDetector>();
             var sql = FormatSqlCommand(spName, sqlParams);
@@ -103,11 +104,16 @@ namespace Cofoundry.Core.EntityFramework
                     .GetService<IRawSqlCommandBuilder>()
                     .Build(sql, sqlParams);
 
+                var commandParameters = new RelationalCommandParameterObject(
+                    databaseFacade.GetService<IRelationalConnection>(),
+                    rawSqlCommand.ParameterValues,
+                    null,
+                    dbContext,
+                    null);
+
                 var result = await rawSqlCommand
                     .RelationalCommand
-                    .ExecuteScalarAsync(
-                        databaseFacade.GetService<IRelationalConnection>(),
-                        rawSqlCommand.ParameterValues);
+                    .ExecuteScalarAsync(commandParameters);
 
                 var typedResult = ParseScalarResult<T>(result);
 
@@ -144,7 +150,7 @@ namespace Cofoundry.Core.EntityFramework
         /// Either the number of rows affected or optionally returning the value of the 
         /// first output parameter passed in the parameters collection.
         /// </returns>
-        public async Task<object> ExecuteCommandAsync(DbContext dbContext, string spName, params SqlParameter[] sqlParams)
+        public async virtual Task<object> ExecuteCommandAsync(DbContext dbContext, string spName, params SqlParameter[] sqlParams)
         {
             object result = null;
 
@@ -158,7 +164,7 @@ namespace Cofoundry.Core.EntityFramework
                 {
                     using (var scope = _transactionScopeFactory.Create(dbContext))
                     {
-                        rowsAffected = await dbContext.Database.ExecuteSqlCommandAsync(cmd, sqlParams);
+                        rowsAffected = await dbContext.Database.ExecuteSqlRawAsync(cmd, sqlParams);
                         await scope.CompleteAsync();
                     }
                 });
@@ -171,7 +177,7 @@ namespace Cofoundry.Core.EntityFramework
                 {
                     using (var scope = _transactionScopeFactory.Create(dbContext))
                     {
-                        result = await dbContext.Database.ExecuteSqlCommandAsync(spName);
+                        result = await dbContext.Database.ExecuteSqlRawAsync(spName);
                         await scope.CompleteAsync();
                     }
                 });
@@ -210,7 +216,7 @@ namespace Cofoundry.Core.EntityFramework
         /// <returns>
         /// The value of the first output parameter in the executed query.
         /// </returns>
-        public async Task<T> ExecuteCommandWithOutputAsync<T>(DbContext dbContext, string spName, string outputParameterName, params SqlParameter[] sqlParams)
+        public async virtual Task<T> ExecuteCommandWithOutputAsync<T>(DbContext dbContext, string spName, string outputParameterName, params SqlParameter[] sqlParams)
         {
             var outputParam = CreateOutputParameter<T>(outputParameterName);
             var modifiedParams = MergeParameters(sqlParams, outputParam);

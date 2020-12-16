@@ -7,10 +7,10 @@ using Cofoundry.Domain.CQS;
 using Microsoft.EntityFrameworkCore;
 using Cofoundry.Core.Data;
 
-namespace Cofoundry.Domain
+namespace Cofoundry.Domain.Internal
 {
     public class MarkAsSetUpCommandHandler 
-        : IAsyncCommandHandler<MarkAsSetUpCommand>
+        : ICommandHandler<MarkAsSetUpCommand>
         , IIgnorePermissionCheckHandler
     {
         private const string SETTING_KEY = "IsSetup";

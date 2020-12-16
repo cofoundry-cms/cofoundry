@@ -11,6 +11,7 @@ namespace Cofoundry.Domain
     /// Simple facade over custom entity data access queries/commands to them more discoverable
     /// in implementations.
     /// </summary>
+    [Obsolete("Use the new IContentRepository instead.")]
     public class CustomEntityRepository : ICustomEntityRepository
     {
         #region constructor
@@ -201,7 +202,7 @@ namespace Cofoundry.Domain
             return _queryExecutor.ExecuteAsync(query, executionContext);
         }
 
-        public Task<bool> IsCustomEntityPathUniqueAsync(IsCustomEntityPathUniqueQuery query, IExecutionContext executionContext = null)
+        public Task<bool> IsCustomEntityPathUniqueAsync(IsCustomEntityUrlSlugUniqueQuery query, IExecutionContext executionContext = null)
         {
             return _queryExecutor.ExecuteAsync(query);
         }

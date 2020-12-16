@@ -8,13 +8,13 @@ using Microsoft.EntityFrameworkCore;
 using Cofoundry.Core.Validation;
 using Cofoundry.Core;
 
-namespace Cofoundry.Domain
+namespace Cofoundry.Domain.Internal
 {
     /// <summary>
     /// Updates the user account of the currently logged in user.
     /// </summary>
     public class UpdateCurrentUserAccountCommandHandler 
-        : IAsyncCommandHandler<UpdateCurrentUserAccountCommand>
+        : ICommandHandler<UpdateCurrentUserAccountCommand>
         , IPermissionRestrictedCommandHandler<UpdateCurrentUserAccountCommand>
     {
         #region consructor
@@ -83,7 +83,7 @@ namespace Cofoundry.Domain
 
                 if (!await _queryExecutor.ExecuteAsync(uniqueQuery, executionContext))
                 {
-                    throw new PropertyValidationException("This email is already registered", "Email");
+                    throw ValidationErrorException.CreateWithProperties("This email is already registered", "Email");
                 }
 
                 user.Username = newEmail;

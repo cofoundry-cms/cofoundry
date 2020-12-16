@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Cofoundry.Core.MessageAggregator
+namespace Cofoundry.Core.MessageAggregator.Internal
 {
     /// <summary>
     /// Used to run all instances of IMessageSubscriptionRegistration registered

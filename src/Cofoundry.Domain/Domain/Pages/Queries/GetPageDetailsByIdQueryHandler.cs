@@ -8,7 +8,7 @@ using Cofoundry.Domain.CQS;
 using Microsoft.EntityFrameworkCore;
 using Cofoundry.Core;
 
-namespace Cofoundry.Domain
+namespace Cofoundry.Domain.Internal
 {
     /// <summary>
     /// Returns detailed information on a page and it's latest version. This 
@@ -17,7 +17,7 @@ namespace Cofoundry.Domain
     /// information that should normally be hidden from a customer facing app.
     /// </summary>
     public class GetPageDetailsByIdQueryHandler 
-        : IAsyncQueryHandler<GetPageDetailsByIdQuery, PageDetails>
+        : IQueryHandler<GetPageDetailsByIdQuery, PageDetails>
         , IPermissionRestrictedQueryHandler<GetPageDetailsByIdQuery, PageDetails>
     {
         #region constructor

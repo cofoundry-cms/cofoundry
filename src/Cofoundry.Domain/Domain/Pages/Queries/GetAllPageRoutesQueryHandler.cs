@@ -8,7 +8,7 @@ using Cofoundry.Domain.CQS;
 using Microsoft.EntityFrameworkCore;
 using Cofoundry.Core;
 
-namespace Cofoundry.Domain
+namespace Cofoundry.Domain.Internal
 {
     /// <summary>
     /// Returns a collection of page routing data for all pages. The 
@@ -18,7 +18,7 @@ namespace Cofoundry.Domain
     /// page projections.
     /// </summary>
     public class GetAllPageRoutesQueryHandler 
-        : IAsyncQueryHandler<GetAllPageRoutesQuery, ICollection<PageRoute>>
+        : IQueryHandler<GetAllPageRoutesQuery, ICollection<PageRoute>>
         , IPermissionRestrictedQueryHandler<GetAllPageRoutesQuery, ICollection<PageRoute>>
     {
         private readonly IQueryExecutor _queryExecutor;

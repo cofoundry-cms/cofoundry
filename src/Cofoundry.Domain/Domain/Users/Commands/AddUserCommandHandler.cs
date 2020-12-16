@@ -9,14 +9,14 @@ using Cofoundry.Domain.CQS;
 using Cofoundry.Core.Validation;
 using Cofoundry.Core.Mail;
 
-namespace Cofoundry.Domain
+namespace Cofoundry.Domain.Internal
 {
     /// <summary>
     /// A generic user creation command for use with Cofoundry users and
     /// other non-Cofoundry users. Does not send any email notifications.
     /// </summary>
     public class AddUserCommandHandler 
-        : IAsyncCommandHandler<AddUserCommand>
+        : ICommandHandler<AddUserCommand>
         , IPermissionRestrictedCommandHandler<AddUserCommand>
     {
         #region constructor
@@ -88,27 +88,27 @@ namespace Cofoundry.Domain
 
             if (userArea.AllowPasswordLogin && isPasswordEmpty && !command.GeneratePassword)
             {
-                throw new PropertyValidationException("Password field is required", "Password");
+                throw ValidationErrorException.CreateWithProperties("Password field is required", "Password");
             }
             else if (!userArea.AllowPasswordLogin && !isPasswordEmpty)
             {
-                throw new PropertyValidationException("Password field should be empty because the specified user area does not use passwords", "Password");
+                throw ValidationErrorException.CreateWithProperties("Password field should be empty because the specified user area does not use passwords", "Password");
             }
 
             // Email
             if (userArea.UseEmailAsUsername && string.IsNullOrEmpty(command.Email))
             {
-                throw new PropertyValidationException("Email field is required.", "Email");
+                throw ValidationErrorException.CreateWithProperties("Email field is required.", "Email");
             }
 
             // Username
             if (userArea.UseEmailAsUsername && !string.IsNullOrEmpty(command.Username))
             {
-                throw new PropertyValidationException("Username field should be empty becuase the specified user area uses the email as the username.", "Password");
+                throw ValidationErrorException.CreateWithProperties("Username field should be empty becuase the specified user area uses the email as the username.", "Password");
             }
             else if (!userArea.UseEmailAsUsername && string.IsNullOrWhiteSpace(command.Username))
             {
-                throw new PropertyValidationException("Username field is required", "Username");
+                throw ValidationErrorException.CreateWithProperties("Username field is required", "Username");
             }
         }
 
@@ -173,11 +173,11 @@ namespace Cofoundry.Domain
             {
                 if (userArea.UseEmailAsUsername)
                 {
-                    throw new PropertyValidationException("This email is already registered", "Email");
+                    throw ValidationErrorException.CreateWithProperties("This email is already registered", "Email");
                 }
                 else
                 {
-                    throw new PropertyValidationException("This username is already registered", "Username");
+                    throw ValidationErrorException.CreateWithProperties("This username is already registered", "Username");
                 }
             }
         }

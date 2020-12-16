@@ -7,7 +7,7 @@ using Cofoundry.Domain.Data;
 using Cofoundry.Domain.CQS;
 using Microsoft.EntityFrameworkCore;
 
-namespace Cofoundry.Domain
+namespace Cofoundry.Domain.Internal
 {
     /// <summary>
     /// Search page data returning the PageRenderSummary projection, which is
@@ -17,7 +17,7 @@ namespace Cofoundry.Domain
     /// this behavior can be controlled by the PublishStatus query property.
     /// </summary>
     public class SearchPageRenderSummariesQueryHandler 
-        : IAsyncQueryHandler<SearchPageRenderSummariesQuery, PagedQueryResult<PageRenderSummary>>
+        : IQueryHandler<SearchPageRenderSummariesQuery, PagedQueryResult<PageRenderSummary>>
         , IPermissionRestrictedQueryHandler<SearchPageRenderSummariesQuery, PagedQueryResult<PageRenderSummary>>
     {
         private readonly CofoundryDbContext _dbContext;
@@ -59,6 +59,8 @@ namespace Cofoundry.Domain
             var dbQuery = _dbContext
                 .PagePublishStatusQueries
                 .AsNoTracking()
+                .Include(v => v.PageVersion)
+                .ThenInclude(v => v.OpenGraphImageAsset)
                 .FilterByStatus(query.PublishStatus, executionContext.ExecutionDate)
                 .FilterActive()
                 ;
@@ -77,8 +79,7 @@ namespace Cofoundry.Domain
 
             return dbQuery
                 .SortBy(query.SortBy, query.SortDirection)
-                .Select(p => p.PageVersion)
-                .Include(p => p.OpenGraphImageAsset);
+                .Select(p => p.PageVersion);
         }
 
         #region Permission

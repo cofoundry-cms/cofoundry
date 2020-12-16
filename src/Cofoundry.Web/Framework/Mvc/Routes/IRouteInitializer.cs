@@ -17,8 +17,8 @@ namespace Cofoundry.Web
         /// registered in the dependency container.
         /// </summary>
         /// <param name="routeBuilder">
-        /// The MVC routeBuilder to add routes to.
+        /// The MVC IEndpointRouteBuilder to add routes to.
         /// </param>
-        void Initialize(IRouteBuilder routes);
+        void Initialize(IEndpointRouteBuilder routes);
     }
 }

@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Cofoundry.Core.Mail
+namespace Cofoundry.Core.Mail.Internal
 {
     /// <summary>
     /// This is a simple debug implementation that writes out mail

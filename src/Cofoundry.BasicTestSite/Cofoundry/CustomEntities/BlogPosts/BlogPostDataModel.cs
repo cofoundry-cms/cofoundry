@@ -19,14 +19,14 @@ namespace Cofoundry.BasicTestSite
         }
     }
 
-    //public class TestApiOptionSource : IListOptionApiSource
-    //{
-    //    public string Path => "/admin/api/test";
+    public class TestApiOptionSource : IListOptionApiSource
+    {
+        public string Path => "/test-admin/api/pets";
 
-    //    public string NameField => "Title";
+        public string NameField => "title";
 
-    //    public string ValueField => "Id";
-    //}
+        public string ValueField => "id";
+    }
 
     /// <summary>
     /// This defines the custom data that gets stored with each blog post. Data
@@ -61,8 +61,8 @@ namespace Cofoundry.BasicTestSite
         //[CheckboxList(typeof(PublishStatus))]
         //public ICollection<PublishStatus> TestCheckboxList2 { get; set; }
 
-        //[CheckboxList(typeof(TestApiOptionSource))]
-        //public ICollection<int> TestCheckboxList3 { get; set; }
+        [SelectList(typeof(TestApiOptionSource))]
+        public ICollection<int> TestCheckboxList3 { get; set; }
 
         //[RadioList(typeof(TestOptionSource), DefaultItemText ="OffNot")]
         //public int TestOption1 { get; set; }

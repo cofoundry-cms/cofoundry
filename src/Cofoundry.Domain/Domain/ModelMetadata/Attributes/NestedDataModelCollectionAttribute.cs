@@ -32,7 +32,8 @@ namespace Cofoundry.Domain
         public int MaxItems { get; set; }
 
         /// <summary>
-        /// Can the collection be manually ordered by the user?
+        /// Set to true to allow the collection ordering to be set by an editor 
+        /// using a drag and drop interface. Defaults to false.
         /// </summary>
         public bool IsOrderable { get; set; }
 

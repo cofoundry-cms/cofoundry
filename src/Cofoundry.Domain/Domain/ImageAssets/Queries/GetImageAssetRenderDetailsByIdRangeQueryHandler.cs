@@ -7,10 +7,10 @@ using Cofoundry.Domain.CQS;
 using Cofoundry.Domain.Data;
 using Microsoft.EntityFrameworkCore;
 
-namespace Cofoundry.Domain
+namespace Cofoundry.Domain.Internal
 {
     public class GetImageAssetRenderDetailsByIdRangeQueryHandler 
-        : IAsyncQueryHandler<GetImageAssetRenderDetailsByIdRangeQuery, IDictionary<int, ImageAssetRenderDetails>>
+        : IQueryHandler<GetImageAssetRenderDetailsByIdRangeQuery, IDictionary<int, ImageAssetRenderDetails>>
         , IPermissionRestrictedQueryHandler<GetImageAssetRenderDetailsByIdRangeQuery, IDictionary<int, ImageAssetRenderDetails>>
     {
         #region constructor

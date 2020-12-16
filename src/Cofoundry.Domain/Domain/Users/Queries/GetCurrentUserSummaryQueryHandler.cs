@@ -4,14 +4,14 @@ using System.Linq;
 using System.Threading.Tasks;
 using Cofoundry.Domain.CQS;
 
-namespace Cofoundry.Domain
+namespace Cofoundry.Domain.Internal
 {
     /// <summary>
     /// Gets a UserSummary object representing the currently logged in 
     /// user. If the user is not logged in then null is returned.
     /// </summary>
     public class GetCurrentUserSummaryQueryHandler
-        : IAsyncQueryHandler<GetCurrentUserSummaryQuery, UserSummary>
+        : IQueryHandler<GetCurrentUserSummaryQuery, UserSummary>
         , IIgnorePermissionCheckHandler
     {
         private readonly IQueryExecutor _queryExecutor;

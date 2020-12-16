@@ -7,10 +7,10 @@ using System.Threading.Tasks;
 using Cofoundry.Domain.Data;
 using Cofoundry.Domain.CQS;
 
-namespace Cofoundry.Domain
+namespace Cofoundry.Domain.Internal
 {
     public class ValidatePasswordResetRequestQueryHandler
-        : IAsyncQueryHandler<ValidatePasswordResetRequestQuery, PasswordResetRequestAuthenticationResult>
+        : IQueryHandler<ValidatePasswordResetRequestQuery, PasswordResetRequestAuthenticationResult>
         , IIgnorePermissionCheckHandler
     {
         #region constructor

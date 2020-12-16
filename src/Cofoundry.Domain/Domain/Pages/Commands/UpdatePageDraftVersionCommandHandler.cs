@@ -9,11 +9,17 @@ using Microsoft.EntityFrameworkCore;
 using Cofoundry.Core.MessageAggregator;
 using Cofoundry.Core.Data;
 using Cofoundry.Core;
+using Cofoundry.Domain.Data.Internal;
 
-namespace Cofoundry.Domain
+namespace Cofoundry.Domain.Internal
 {
+    /// <summary>
+    /// Updates the draft version of a custom entity. If a draft version
+    /// does not exist then one is created first from the currently
+    /// published version.
+    /// </summary>
     public class UpdatePageDraftVersionCommandHandler 
-        : IAsyncCommandHandler<UpdatePageDraftVersionCommand>
+        : ICommandHandler<UpdatePageDraftVersionCommand>
         , IPermissionRestrictedCommandHandler<UpdatePageDraftVersionCommand>
     {
         #region constructor
@@ -44,8 +50,6 @@ namespace Cofoundry.Domain
         }
 
         #endregion
-
-        #region execute
 
         public async Task ExecuteAsync(UpdatePageDraftVersionCommand command, IExecutionContext executionContext)
         {
@@ -81,10 +85,6 @@ namespace Cofoundry.Domain
             });
         }
 
-        #endregion
-
-        #region helpers
-
         private IQueryable<PageVersion> GetDraftVersion(int pageId)
         {
             return _dbContext
@@ -114,8 +114,6 @@ namespace Cofoundry.Domain
             draft.OpenGraphDescription = command.OpenGraphDescription;
             draft.OpenGraphImageId = command.OpenGraphImageId;
         }
-
-        #endregion
 
         #region Permission
 

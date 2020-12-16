@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Cofoundry.Core;
 using Cofoundry.Core.Data;
 
-namespace Cofoundry.Domain
+namespace Cofoundry.Domain.Internal
 {
     /// <summary>
     /// Updates the page templates registered in the database by scanning
@@ -20,7 +20,7 @@ namespace Cofoundry.Domain
     /// data migration and prevents unintended deletions of page content.
     /// </summary>
     public class RegisterPageTemplatesCommandHandler
-        : IAsyncCommandHandler<RegisterPageTemplatesCommand>
+        : ICommandHandler<RegisterPageTemplatesCommand>
         , IPermissionRestrictedCommandHandler<RegisterPageTemplatesCommand>
     {
         #region constructor

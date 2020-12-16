@@ -1,9 +1,10 @@
 ﻿using Cofoundry.Core.DependencyInjection;
+using Cofoundry.Core.DistributedLocks.Internal;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Cofoundry.Core.DistributedLocks
+namespace Cofoundry.Core.DistributedLocks.Registration
 {
     public class DistributedLockDependencyRegistration : IDependencyRegistration
     {

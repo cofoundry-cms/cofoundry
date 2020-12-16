@@ -4,9 +4,10 @@ using System.Collections.Generic;
 namespace Cofoundry.Domain.Data
 {
     /// <summary>
-    /// Represents the user in the Cofoundry custom identity system. Users can be partitioned into
-    /// different 'User Areas' that enabled the identity system use by the Cofoundry administration area 
-    /// to be reused for other purposes, but this isn't a common scenario and often there will only be the Cofoundry UserArea.
+    /// Represents a user in the Cofoundry custom identity system. Users can be partitioned into
+    /// different 'User Areas', which enables the identity system used by the Cofoundry administration area 
+    /// to be reused for other purposes, but this isn't a common scenario and often there will only be the 
+    /// Cofoundry UserArea.
     /// </summary>
     public partial class User
     {

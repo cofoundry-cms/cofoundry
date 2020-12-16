@@ -1,12 +1,11 @@
-﻿using Cofoundry.Domain.Data;
-using Cofoundry.Domain.QueryModels;
+﻿using Cofoundry.Domain.QueryModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Cofoundry.Domain
+namespace Cofoundry.Domain.Internal
 {
     /// <summary>
     /// Simple mapper for mapping to PageTemplateSummary objects.
@@ -27,7 +26,7 @@ namespace Cofoundry.Domain
         /// object. If the db record is null then null is returned.
         /// </summary>
         /// <param name="queryModel">Query model with data from the database.</param>
-        public PageTemplateSummary Map(PageTemplateSummaryQueryModel queryModel)
+        public virtual PageTemplateSummary Map(PageTemplateSummaryQueryModel queryModel)
         {
             var dbPageTemplate = queryModel?.PageTemplate;
             if (dbPageTemplate == null) return null;

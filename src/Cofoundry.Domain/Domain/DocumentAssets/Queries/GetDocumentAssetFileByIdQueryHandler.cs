@@ -8,10 +8,10 @@ using Cofoundry.Domain.Data;
 using System.IO;
 using Microsoft.EntityFrameworkCore;
 
-namespace Cofoundry.Domain
+namespace Cofoundry.Domain.Internal
 {
     public class GetDocumentAssetFileByIdQueryHandler 
-        : IAsyncQueryHandler<GetDocumentAssetFileByIdQuery, DocumentAssetFile>
+        : IQueryHandler<GetDocumentAssetFileByIdQuery, DocumentAssetFile>
         , IPermissionRestrictedQueryHandler<GetDocumentAssetFileByIdQuery, DocumentAssetFile>
     {
         private readonly IFileStoreService _fileStoreService;

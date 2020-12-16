@@ -10,10 +10,13 @@ using Cofoundry.Core.MessageAggregator;
 using Cofoundry.Core.Data;
 using Cofoundry.Core;
 
-namespace Cofoundry.Domain
+namespace Cofoundry.Domain.Internal
 {
+    /// <summary>
+    /// Adds a new block to a template region on a custom entity page.
+    /// </summary>
     public class AddCustomEntityVersionPageBlockCommandHandler
-        : IAsyncCommandHandler<AddCustomEntityVersionPageBlockCommand>
+        : ICommandHandler<AddCustomEntityVersionPageBlockCommand>
         , IIgnorePermissionCheckHandler
     {
         #region constructor

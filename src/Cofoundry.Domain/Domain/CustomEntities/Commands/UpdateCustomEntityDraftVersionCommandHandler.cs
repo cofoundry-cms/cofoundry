@@ -11,10 +11,15 @@ using Cofoundry.Core;
 using Cofoundry.Core.Validation;
 using Cofoundry.Core.Data;
 
-namespace Cofoundry.Domain
+namespace Cofoundry.Domain.Internal
 {
+    /// <summary>
+    /// Updates the draft version of a custom entity. If a draft version
+    /// does not exist then one is created first from the currently
+    /// published version.
+    /// </summary>
     public class UpdateCustomEntityDraftVersionCommandHandler 
-        : IAsyncCommandHandler<UpdateCustomEntityDraftVersionCommand>
+        : ICommandHandler<UpdateCustomEntityDraftVersionCommand>
         , IPermissionRestrictedCommandHandler<UpdateCustomEntityDraftVersionCommand>
     {
         #region constructor
@@ -50,8 +55,6 @@ namespace Cofoundry.Domain
         }
 
         #endregion
-
-        #region execute
 
         public async Task ExecuteAsync(UpdateCustomEntityDraftVersionCommand command, IExecutionContext executionContext)
         {
@@ -96,10 +99,6 @@ namespace Cofoundry.Domain
             });
         }
 
-        #endregion
-
-        #region helpers
-
         private async Task ValidateTitleAsync(
             UpdateCustomEntityDraftVersionCommand command, 
             CustomEntityVersion dbVersion, 
@@ -122,9 +121,9 @@ namespace Cofoundry.Domain
             }
         }
 
-        private IsCustomEntityPathUniqueQuery GetUniquenessQuery(UpdateCustomEntityDraftVersionCommand command, ICustomEntityDefinition definition, CustomEntityVersion dbVersion)
+        private IsCustomEntityUrlSlugUniqueQuery GetUniquenessQuery(UpdateCustomEntityDraftVersionCommand command, ICustomEntityDefinition definition, CustomEntityVersion dbVersion)
         {
-            var query = new IsCustomEntityPathUniqueQuery();
+            var query = new IsCustomEntityUrlSlugUniqueQuery();
             query.CustomEntityDefinitionCode = definition.CustomEntityDefinitionCode;
             query.LocaleId = dbVersion.CustomEntity.LocaleId;
             query.UrlSlug = SlugFormatter.ToSlug(command.Title);
@@ -166,8 +165,6 @@ namespace Cofoundry.Domain
             draft.Title = command.Title.Trim();
             draft.SerializedData = _dbUnstructuredDataSerializer.Serialize(command.Model);
         }
-
-        #endregion
 
         #region Permission
 

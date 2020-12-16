@@ -17,7 +17,7 @@ namespace Cofoundry.Domain.Data
         }
 
         /// <summary>
-        /// Database id of the directory.
+        /// Database primary key.
         /// </summary>
         public int PageDirectoryId { get; set; }
 

@@ -242,7 +242,7 @@ function (
         vm.canPublish = getPermission('CMEPUB');
         vm.canUpdateUrl = getPermission('UPDURL');
         vm.canDelete = getPermission('COMDEL');
-        vm.canUpdate = getPermission('CMEPUB');
+        vm.canUpdate = getPermission('COMUPD');
         vm.canCreate = getPermission('COMCRT');
 
         // Init

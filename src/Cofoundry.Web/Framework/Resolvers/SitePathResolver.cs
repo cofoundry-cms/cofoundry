@@ -1,5 +1,5 @@
 ﻿using Cofoundry.Core;
-using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Hosting;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -14,10 +14,10 @@ namespace Cofoundry.Web
     /// </summary>
     public class SitePathResolver : IPathResolver
     {
-        private readonly IHostingEnvironment _hostingEnvironment;
+        private readonly IHostEnvironment _hostingEnvironment;
 
         public SitePathResolver(
-            IHostingEnvironment hostingEnvironment
+            IHostEnvironment hostingEnvironment
             )
         {
             _hostingEnvironment = hostingEnvironment;

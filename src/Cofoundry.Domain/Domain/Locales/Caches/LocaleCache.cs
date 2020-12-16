@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Cofoundry.Domain
+namespace Cofoundry.Domain.Internal
 {
     /// <summary>
     /// Cache for locale data, which is frequently requested to 
@@ -13,8 +13,6 @@ namespace Cofoundry.Domain
     /// </summary>
     public class LocaleCache : ILocaleCache
     {
-        #region constructor
-
         private const string CACHEKEY = "COF_Locales";
         private const string ACTIVELOCALE_CACHEKEY = "ActiveLocales";
 
@@ -23,10 +21,6 @@ namespace Cofoundry.Domain
         {
             _cache = cacheFactory.Get(CACHEKEY);
         }
-
-        #endregion
-
-        #region public methods
 
         /// <summary>
         /// Gets all active locales if they are already cached, otherwise the 
@@ -47,7 +41,5 @@ namespace Cofoundry.Domain
         {
             return await _cache.GetOrAddAsync(ACTIVELOCALE_CACHEKEY, getter);
         }
-
-        #endregion
     }
 }

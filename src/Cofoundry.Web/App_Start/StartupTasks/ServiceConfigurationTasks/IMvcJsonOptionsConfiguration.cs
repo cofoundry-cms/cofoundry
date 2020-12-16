@@ -19,6 +19,6 @@ namespace Cofoundry.Web
         /// Performs additional option configuration. 
         /// </summary>
         /// <param name="options">The options to perform configuration on.</param>
-        void Configure(MvcJsonOptions options);
+        void Configure(MvcNewtonsoftJsonOptions options);
     }
 }

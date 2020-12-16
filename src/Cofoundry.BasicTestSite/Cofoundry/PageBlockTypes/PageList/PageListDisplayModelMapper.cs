@@ -21,13 +21,13 @@ namespace Cofoundry.BasicTestSite
     /// </summary>
     public class PageListDisplayModelMapper : IPageBlockTypeDisplayModelMapper<PageListDataModel>
     {
-        private readonly IPageRepository _pageRepository;
+        private readonly IContentRepository _contentRepository;
 
         public PageListDisplayModelMapper(
-            IPageRepository pageRepository
+            IContentRepository contentRepository
             )
         {
-            _pageRepository = pageRepository;
+            _contentRepository = contentRepository;
         }
 
         public async Task MapAsync(
@@ -40,7 +40,12 @@ namespace Cofoundry.BasicTestSite
             // Page routes are cached and so are the quickest way to get simple page information.
             // If we needed more data we could use a different but slower query to get it.
             var query = new GetPageRenderSummariesByIdRangeQuery(allPageIds, context.PublishStatusQuery);
-            var allPageRoutes = await _pageRepository.GetPageRenderSummariesByIdRangeAsync(query, context.ExecutionContext);
+            var allPageRoutes = await _contentRepository
+                .WithExecutionContext(context.ExecutionContext)
+                .Pages()
+                .GetByIdRange(allPageIds)
+                .AsRenderSummaries(context.PublishStatusQuery)
+                .ExecuteAsync();
 
             foreach (var item in context.Items)
             {

@@ -1,26 +1,50 @@
-﻿using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
-using System.Xml.Serialization;
 
 namespace Cofoundry.Domain
 {
+    /// <summary>
+    /// Represents a page directory in a hierarchy of tree nodes, containing parent 
+    /// and child tree node 
+    /// navigations properties.
+    /// </summary>
     public class PageDirectoryNode : ICreateAudited
     {
+        /// <summary>
+        /// Database primary key.
+        /// </summary>
         public int PageDirectoryId { get; set; }
 
+        /// <summary>
+        /// User friendly display name of the directory.
+        /// </summary>
         public string Name { get; set; }
 
+        /// <summary>
+        /// Id of the parent directory. This can only be null for the 
+        /// root directory.
+        /// </summary>
         public int? ParentPageDirectoryId { get; set; }
 
+        /// <summary>
+        /// The parent directory in the site tree structure.
+        /// </summary>
+        /// <remarks>
+        /// This property is ignored in serialization to prevent duplication 
+        /// of data.
+        /// </remarks>
         [IgnoreDataMember]
-        [JsonIgnore]
+        [Newtonsoft.Json.JsonIgnore]
+        [System.Text.Json.Serialization.JsonIgnore]
         public PageDirectoryNode ParentPageDirectory { get; set; }
 
+        /// <summary>
+        /// Child pages in the site tree hierarchy.
+        /// </summary>
         public ICollection<PageDirectoryNode> ChildPageDirectories { get; set; }
 
         /// <summary>

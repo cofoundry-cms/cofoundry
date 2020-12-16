@@ -15,10 +15,17 @@ namespace Cofoundry.Domain
     /// </summary>
     public class GetCustomEntityRoutesByDefinitionCodeQuery : IQuery<ICollection<CustomEntityRoute>>
     {
+        /// <summary>
+        /// Gets CustomEntityRoute data for all custom entities of a 
+        /// specific type. These route objects are small and cached which
+        /// makes them good for quick lookups.
+        /// </summary>
         public GetCustomEntityRoutesByDefinitionCodeQuery() { }
 
         /// <summary>
-        /// Initializes the query with parameters.
+        /// Gets CustomEntityRoute data for all custom entities of a 
+        /// specific type. These route objects are small and cached which
+        /// makes them good for quick lookups.
         /// </summary>
         /// <param name="customEntityDefinitionCode">
         /// The code identifier for the custom entity type

@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Cofoundry.Web.Admin
+namespace Cofoundry.Web.Admin.Registration
 {
     public class VisualEditorDependencyRegistration : IDependencyRegistration
     {

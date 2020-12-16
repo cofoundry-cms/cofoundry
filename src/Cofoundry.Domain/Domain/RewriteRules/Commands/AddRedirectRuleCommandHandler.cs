@@ -4,15 +4,11 @@ using System.Linq;
 using System.Threading.Tasks;
 using Cofoundry.Domain.Data;
 using Cofoundry.Domain.CQS;
-using Microsoft.EntityFrameworkCore;
-using System.IO;
-using Cofoundry.Core;
-using System.ComponentModel.DataAnnotations;
 
-namespace Cofoundry.Domain
+namespace Cofoundry.Domain.Internal
 {
     public class AddRedirectRuleCommandHandler 
-        : IAsyncCommandHandler<AddRedirectRuleCommand>
+        : ICommandHandler<AddRedirectRuleCommand>
         , IPermissionRestrictedCommandHandler<AddRedirectRuleCommand>
     {
         #region constructor

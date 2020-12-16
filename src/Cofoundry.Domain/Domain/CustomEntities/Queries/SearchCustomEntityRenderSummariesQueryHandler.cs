@@ -7,10 +7,10 @@ using Cofoundry.Domain.CQS;
 using Cofoundry.Domain.Data;
 using Microsoft.EntityFrameworkCore;
 
-namespace Cofoundry.Domain
+namespace Cofoundry.Domain.Internal
 {
     public class SearchCustomEntityRenderSummariesQueryHandler
-        : IAsyncQueryHandler<SearchCustomEntityRenderSummariesQuery, PagedQueryResult<CustomEntityRenderSummary>>
+        : IQueryHandler<SearchCustomEntityRenderSummariesQuery, PagedQueryResult<CustomEntityRenderSummary>>
         , IPermissionRestrictedQueryHandler<SearchCustomEntityRenderSummariesQuery, PagedQueryResult<CustomEntityRenderSummary>>
     {
         #region constructor
@@ -50,6 +50,8 @@ namespace Cofoundry.Domain
             var dbQuery = _dbContext
                 .CustomEntityPublishStatusQueries
                 .AsNoTracking()
+                .Include(c => c.CustomEntityVersion)
+                .ThenInclude(c => c.CustomEntity)
                 .FilterByCustomEntityDefinitionCode(query.CustomEntityDefinitionCode)
                 .FilterActive()
                 .FilterByStatus(query.PublishStatus, executionContext.ExecutionDate);
@@ -67,7 +69,6 @@ namespace Cofoundry.Domain
             var dbPagedResult = await dbQuery
                 .SortBy(definition, query.SortBy, query.SortDirection)
                 .Select(p => p.CustomEntityVersion)
-                .Include(e => e.CustomEntity)
                 .ToPagedResultAsync(query);
 
             return dbPagedResult;

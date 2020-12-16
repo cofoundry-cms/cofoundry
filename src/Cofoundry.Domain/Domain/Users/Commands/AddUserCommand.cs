@@ -1,5 +1,4 @@
-﻿using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -39,7 +38,8 @@ namespace Cofoundry.Domain
         [StringLength(300, MinimumLength = 8)]
         [DataType(DataType.Password)]
         [IgnoreDataMember]
-        [JsonIgnore]
+        [Newtonsoft.Json.JsonIgnore]
+        [System.Text.Json.Serialization.JsonIgnore]
         public string Password { get; set; }
 
         /// <summary>
@@ -89,8 +89,8 @@ namespace Cofoundry.Domain
         #region Output
 
         /// <summary>
-        /// The database id of the newly created user. This is set after the command
-        /// has been run.
+        /// The database id of the newly created user. This is set after the 
+        /// command has been run.
         /// </summary>
         [OutputValue]
         public int OutputUserId { get; set; }

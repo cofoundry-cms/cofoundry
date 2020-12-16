@@ -14,11 +14,11 @@ Your feedback is really important in helping us shape Cofoundry and focus on bui
 
 ## Code Contributions and PRs
 
-Cofoundry is developed by a small team at [Uber Digital](https://www.uberdigital.com). We currently do not have the resources to review and accept code contributions or put in place the legal framework that would allow us to integrate contributed code.
+Cofoundry is developed by a very small team. **We currently do not have the resources to review and accept code contributions or put in place the legal framework that would allow us to integrate contributed code.**
 
 We hope that in time as Cofoundry becomes more popular we will be able to invest in this area and start accepting code contributions.
 
-Please do not send pull requests. If you are interested in contributing code do get in touch so we can start to gauge interest and advise on alternative ways to contribute.
+**Please do not send pull requests.** If you are interested in contributing code do get in touch so we can start to gauge interest and advise on alternative ways to contribute.
 
 ## Plugin Development
 

@@ -40,7 +40,7 @@ namespace Cofoundry.Web
         /// <param name="routeBuilder">
         /// The MVC routeBuilder to add routes to.
         /// </param>
-        public void Initialize(IRouteBuilder routeBuilder)
+        public void Initialize(IEndpointRouteBuilder routeBuilder)
         {
             ICollection<IRouteRegistration> sortedRoutes;
 

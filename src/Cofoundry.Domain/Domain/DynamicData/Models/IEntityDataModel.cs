@@ -13,7 +13,7 @@ namespace Cofoundry.Domain
     /// ICustomEntityDataModel and IPageBlockTypeDataModel.
     /// </para>
     /// <para>
-    /// This market interface is important for classifying which
+    /// This marker interface is important for classifying which
     /// classes can be serialized/deserialized into the database.
     /// for security it's important to be able to restrict which
     /// classes can be deserialized to.

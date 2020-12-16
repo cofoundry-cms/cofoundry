@@ -1,11 +1,12 @@
-﻿using Microsoft.EntityFrameworkCore.Storage;
+﻿using Cofoundry.Core.Data.Internal;
+using Microsoft.EntityFrameworkCore.Storage;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Cofoundry.Core.Data
+namespace Cofoundry.Core.Data.Internal
 {
     /// <summary>
     /// A 'primary' or 'outer' transaction scope that directly represents
@@ -13,17 +14,18 @@ namespace Cofoundry.Core.Data
     /// </summary>
     public class PrimaryTransactionScope : ITransactionScope, IDisposable
     {
-        private readonly TransactionScopeManager _transactionScopeManager;
+        private readonly DefaultTransactionScopeManager _transactionScopeManager;
         private Queue<Func<Task>> _runOnCompleteActions = new Queue<Func<Task>>();
         private System.Transactions.TransactionScope _innerScope;
 
         public PrimaryTransactionScope(
-            TransactionScopeManager transactionScopeFactory
+            DefaultTransactionScopeManager transactionScopeManager,
+            Func<System.Transactions.TransactionScope> transactionScopeFactory
             )
         {
-            _transactionScopeManager = transactionScopeFactory;
+            _transactionScopeManager = transactionScopeManager;
 
-            _innerScope = new System.Transactions.TransactionScope(System.Transactions.TransactionScopeAsyncFlowOption.Enabled);
+            _innerScope = transactionScopeFactory();
         }
 
         /// <summary>

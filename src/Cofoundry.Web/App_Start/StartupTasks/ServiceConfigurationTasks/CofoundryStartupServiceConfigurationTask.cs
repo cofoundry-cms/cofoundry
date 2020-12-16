@@ -1,6 +1,7 @@
 ﻿using Cofoundry.Core;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Razor;
+using Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
@@ -18,13 +19,13 @@ namespace Cofoundry.Web
     {
         private readonly IEnumerable<IMvcJsonOptionsConfiguration> _mvcJsonOptionsConfigurations;
         private readonly IEnumerable<IMvcOptionsConfiguration> _mvcOptionsConfigurations;
-        private readonly IEnumerable<IRazorViewEngineOptionsConfiguration> _razorViewEngineOptionsConfigurations;
+        private readonly IEnumerable<IMvcRazorRuntimeCompilationOptionsConfiguration> _razorViewEngineOptionsConfigurations;
         private readonly IAuthConfiguration _authConfiguration;
 
         public CofoundryStartupServiceConfigurationTask(
             IEnumerable<IMvcJsonOptionsConfiguration> mvcJsonOptionsConfigurations,
             IEnumerable<IMvcOptionsConfiguration> mvcOptionsConfigurations,
-            IEnumerable<IRazorViewEngineOptionsConfiguration> razorViewEngineOptionsConfigurations,
+            IEnumerable<IMvcRazorRuntimeCompilationOptionsConfiguration> razorViewEngineOptionsConfigurations,
             IAuthConfiguration authConfiguration
             )
         {
@@ -41,8 +42,8 @@ namespace Cofoundry.Web
         /// <param name="mvcBuilder">IMvcBuilder to configure.</param>
         public void ConfigureServices(IMvcBuilder mvcBuilder)
         {
-            // Set MVC compatibility to latest tested version.
-            mvcBuilder.SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            // Set MVC compatibility to latest tested version (Not required for 3.1).
+            //mvcBuilder.SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
 
             _authConfiguration.Configure(mvcBuilder);
 
@@ -50,8 +51,10 @@ namespace Cofoundry.Web
                 .Enumerate(_mvcJsonOptionsConfigurations)
                 .OrderByDescending(o => o is CofoundryMvcJsonOptionsConfiguration))
             {
-                mvcBuilder.Services.Configure<MvcJsonOptions>(o => config.Configure(o));
+                mvcBuilder.Services.Configure<MvcNewtonsoftJsonOptions>(o => config.Configure(o));
             }
+
+            mvcBuilder.AddNewtonsoftJson();
 
             foreach (var config in EnumerableHelper.Enumerate(_mvcOptionsConfigurations))
             {
@@ -60,9 +63,9 @@ namespace Cofoundry.Web
 
             foreach (var config in EnumerableHelper
                 .Enumerate(_razorViewEngineOptionsConfigurations)
-                .OrderByDescending(o => o is CofoundryRazorViewEngineOptionsConfiguration))
+                .OrderByDescending(o => o is CofoundryMvcRazorRuntimeCompilationOptionsConfiguration))
             {
-                mvcBuilder.Services.Configure<RazorViewEngineOptions>(o => config.Configure(o));
+                mvcBuilder.Services.Configure<MvcRazorRuntimeCompilationOptions>(o => config.Configure(o));
             }
         }
     }

@@ -5,14 +5,14 @@ using System.Text;
 using System.Threading.Tasks;
 using Cofoundry.Domain.CQS;
 
-namespace Cofoundry.Domain
+namespace Cofoundry.Domain.Internal
 {
     /// <summary>
     /// Attempts to find the most relevant 'Not Found' page route by searching
-    /// for a 'Not Found' page up the directory tree.
+    /// for a 'Not Found' page up the directory tree of a specific path.
     /// </summary>
     public class GetNotFoundPageRouteByPathQueryHandler 
-        : IAsyncQueryHandler<GetNotFoundPageRouteByPathQuery, PageRoute>
+        : IQueryHandler<GetNotFoundPageRouteByPathQuery, PageRoute>
         , IPermissionRestrictedQueryHandler<GetNotFoundPageRouteByPathQuery, PageRoute>
     {
         #region constructor
@@ -30,8 +30,6 @@ namespace Cofoundry.Domain
         }
 
         #endregion
-
-        #region execution
 
         public async Task<PageRoute> ExecuteAsync(GetNotFoundPageRouteByPathQuery query, IExecutionContext executionContext)
         {
@@ -83,8 +81,6 @@ namespace Cofoundry.Domain
             var localeIdToCheck = locale == null ? (int?)null : locale.LocaleId;
             return localeId == localeIdToCheck;
         }
-
-        #endregion
 
         #region Permission
 

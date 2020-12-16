@@ -8,7 +8,7 @@ using System.Collections.ObjectModel;
 using Cofoundry.Core;
 using Microsoft.EntityFrameworkCore;
 
-namespace Cofoundry.Domain
+namespace Cofoundry.Domain.Internal
 {
     /// <summary>
     /// Find a role with the specified role code, returning
@@ -17,7 +17,7 @@ namespace Cofoundry.Domain
     /// rather than the GUI. For GUI generated roles use GetRoleDetailsByIdQuery.
     /// </summary>
     public class GetRoleDetailsByRoleCodeQueryHandler
-        : IAsyncQueryHandler<GetRoleDetailsByRoleCodeQuery, RoleDetails>
+        : IQueryHandler<GetRoleDetailsByRoleCodeQuery, RoleDetails>
         , IPermissionRestrictedQueryHandler<GetRoleDetailsByRoleCodeQuery, RoleDetails>
     {
         #region constructor

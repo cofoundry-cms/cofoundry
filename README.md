@@ -20,14 +20,20 @@ Find out more at [Cofoundry.org](https://www.cofoundry.org/) or head to the [doc
 
 We're keen to hear feedback about Cofoundry. Whether you've been playing about with the samples, run into some issues or just browsed the docs and have an opinion on the concept we'd love to hear it.
 
-Here's a list of the best ways to give feedback and keep in touch
+If you have a technical question or issue, please either:
 
-- [Chat with us on Gitter](https://gitter.im/cofoundry-cms/cofoundry)
-- [Follow us on Twitter](https://twitter.com/cofoundrycms)
 - [Submit an issue](https://github.com/cofoundry-cms/cofoundry/issues)
 - [Ask a question on StackOverflow](http://stackoverflow.com/search?q=cofoundry)
-- [Contact us directly](https://www.cofoundry.org/contact)
+
+To keep updated:
+
+- [Follow us on Twitter](https://twitter.com/cofoundrycms)
 - [Follow our blog](https://www.cofoundry.org/blog)
+
+To give informal feedback or talk more generally about the project:
+
+- [Chat with us on Gitter](https://gitter.im/cofoundry-cms/cofoundry)
+- [Contact us directly](https://www.cofoundry.org/contact)
 
 ## Roadmap
 
@@ -39,9 +45,8 @@ You can also keep up to date with recent developments on [our blog](https://www.
 
 As per [SemVer](https://semver.org/) our 0.x set of releases are considered early development and breaking changes can happen at any point, however our approach is that patch releases are non-breaking while minor releases can be breaking, but will be documented as such in release notes.
 
-Having been open sourced from an existing product, Cofoundry is already loaded with features, and is already used in production by our sponsor agency [Uber Digital](https://www.uberdigital.com). What 0.x releases do give us is the ability to make breaking changes and alter our public API as we receive feedback from the public, without constantly publishing major releases.
+Having been open sourced from an existing product, Cofoundry is already loaded with features. What 0.x releases do give us is the ability to make breaking changes and alter our public API as we receive feedback, without constantly publishing major releases.
 
 ## Contributing
 
-For up to date information check out our [contributor guidelines](https://github.com/cofoundry-cms/cofoundry/blob/master/CONTRIBUTING.md)
- 
+For up to date information check out our [contributor guidelines](https://github.com/cofoundry-cms/cofoundry/blob/master/CONTRIBUTING.md).

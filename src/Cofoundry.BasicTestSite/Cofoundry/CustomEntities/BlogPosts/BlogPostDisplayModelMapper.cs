@@ -16,13 +16,13 @@ namespace Cofoundry.BasicTestSite
     public class BlogPostDetailsDisplayModelMapper
         : ICustomEntityDisplayModelMapper<BlogPostDataModel, BlogPostDisplayModel>
     {
-        private readonly ICustomEntityRepository _customEntityRepository;
+        private readonly IContentRepository _contentRepository;
 
         public BlogPostDetailsDisplayModelMapper(
-            ICustomEntityRepository customEntityRepository
+            IContentRepository contentRepository
             )
         {
-            _customEntityRepository = customEntityRepository;
+            _contentRepository = contentRepository;
         }
 
         public async Task<BlogPostDisplayModel> MapDisplayModelAsync(
@@ -43,14 +43,13 @@ namespace Cofoundry.BasicTestSite
             {
                 // We manually query and map relations which gives us maximum flexibility when mapping models
                 // Fortunately the framework provides tools to make this fairly simple
-                var relatedEntityPublishStatusQuery = publishStatusQuery.ToRelatedEntityQueryStatus();
-                var categoriesQuery = new GetCustomEntityRenderSummariesByIdRangeQuery(dataModel.CategoryIds, relatedEntityPublishStatusQuery);
-                var customEntities = await _customEntityRepository.GetCustomEntityRenderSummariesByIdRangeAsync(categoriesQuery);
-
-                vm.Categories = customEntities
+                vm.Categories = await _contentRepository
+                    .CustomEntities()
+                    .GetByIdRange(dataModel.CategoryIds)
+                    .AsRenderSummaries(publishStatusQuery)
+                    .MapItem(MapCategory)
                     .FilterAndOrderByKeys(dataModel.CategoryIds)
-                    .Select(c => MapCategory(c))
-                    .ToList();
+                    .ExecuteAsync();
             }
 
             return vm;

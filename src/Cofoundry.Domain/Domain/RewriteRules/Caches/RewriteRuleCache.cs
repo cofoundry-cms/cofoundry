@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Cofoundry.Domain
+namespace Cofoundry.Domain.Internal
 {
     /// <summary>
     /// Cache for rewrite rules, which are frequently requested to 
@@ -12,8 +12,6 @@ namespace Cofoundry.Domain
     /// </summary>
     public class RewriteRuleCache : IRewriteRuleCache
     {
-        #region constructor
-
         private const string REWRITERULESUMMARY_CACHEKEY = "RewriteRuleSummaries";
         private const string CACHEKEY = "COF_RewriteRules";
 
@@ -22,10 +20,6 @@ namespace Cofoundry.Domain
         {
             _cache = cacheFactory.Get(CACHEKEY);
         }
-
-        #endregion
-
-        #region public methods
 
         /// <summary>
         /// Gets a collection of rewrite rules, if the collection is already cached it 
@@ -54,7 +48,5 @@ namespace Cofoundry.Domain
         {
             _cache.Clear();
         }
-
-        #endregion
     }
 }

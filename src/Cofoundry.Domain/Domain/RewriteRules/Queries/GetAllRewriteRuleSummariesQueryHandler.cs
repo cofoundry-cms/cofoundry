@@ -7,14 +7,14 @@ using System.Threading.Tasks;
 using Cofoundry.Domain.Data;
 using Cofoundry.Domain.CQS;
 
-namespace Cofoundry.Domain
+namespace Cofoundry.Domain.Internal
 {
     /// <summary>
     /// Gets a complete list of all rewrite rules set up in the system. This result
     /// set is cached in memory and quick to access.
     /// </summary>
     public class GetAllRewriteRuleSummariesQueryHandler 
-        : IAsyncQueryHandler<GetAllRewriteRuleSummariesQuery, ICollection<RewriteRuleSummary>>
+        : IQueryHandler<GetAllRewriteRuleSummariesQuery, ICollection<RewriteRuleSummary>>
         , IPermissionRestrictedQueryHandler<GetAllRewriteRuleSummariesQuery, ICollection<RewriteRuleSummary>>
     {
         #region constructor

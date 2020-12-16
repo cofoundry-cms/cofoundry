@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Cofoundry.Domain.Data;
 
-namespace Cofoundry.Domain
+namespace Cofoundry.Domain.Internal
 {
     /// <summary>
     /// Simple mapper for mapping to RoleMicroSummary objects.
@@ -26,7 +26,7 @@ namespace Cofoundry.Domain
         /// object. If the db record is null then null is returned.
         /// </summary>
         /// <param name="dbRole">Role record from the database.</param>
-        public RoleMicroSummary Map(Role dbRole)
+        public virtual RoleMicroSummary Map(Role dbRole)
         {
             if (dbRole == null) return null;
 

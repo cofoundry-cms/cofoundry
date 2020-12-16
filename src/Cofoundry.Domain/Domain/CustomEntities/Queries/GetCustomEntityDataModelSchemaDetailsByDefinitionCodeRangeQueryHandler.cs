@@ -6,10 +6,14 @@ using Cofoundry.Core;
 using Cofoundry.Domain.Data;
 using Cofoundry.Domain.CQS;
 
-namespace Cofoundry.Domain
+namespace Cofoundry.Domain.Internal
 {
+    /// <summary>
+    /// Query to extract and return meta data information about a custom 
+    /// entity data model for a range of custom entity definitions.
+    /// </summary>
     public class GetCustomEntityDataModelSchemaDetailsByDefinitionCodeRangeQueryHandler
-        : IAsyncQueryHandler<GetCustomEntityDataModelSchemaDetailsByDefinitionCodeRangeQuery, IDictionary<string, CustomEntityDataModelSchema>>
+        : IQueryHandler<GetCustomEntityDataModelSchemaDetailsByDefinitionCodeRangeQuery, IDictionary<string, CustomEntityDataModelSchema>>
         , IPermissionRestrictedQueryHandler<GetCustomEntityDataModelSchemaDetailsByDefinitionCodeRangeQuery, IDictionary<string, CustomEntityDataModelSchema>>
     {
         #region constructor

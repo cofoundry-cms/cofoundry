@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Cofoundry.Domain
+namespace Cofoundry.Domain.Internal
 {
     public class CofoundryDisplayMetadataProvider : IDisplayMetadataProvider
     {
@@ -23,12 +23,10 @@ namespace Cofoundry.Domain
 
         #endregion
 
-        public void CreateDisplayMetadata(DisplayMetadataProviderContext context)
+        public virtual void CreateDisplayMetadata(DisplayMetadataProviderContext context)
         {
-
             var modelMetadata = context.DisplayMetadata;
 
-            //if (modelMetadata.DisplayName == null && !string.IsNullOrEmpty(propertyName))
             if (modelMetadata.DisplayName == null && !string.IsNullOrEmpty(context.Key.Name))
             {
                 modelMetadata.DisplayName = () => HumanizePropertyName(context.Key.Name);

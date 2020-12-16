@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Cofoundry.Core.AutoUpdate
+namespace Cofoundry.Core.AutoUpdate.Internal
 {
     /// <summary>
     /// Order UpdatePackage instances into the correct execution order, making

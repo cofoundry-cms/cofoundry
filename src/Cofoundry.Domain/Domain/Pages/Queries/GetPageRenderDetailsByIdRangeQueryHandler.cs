@@ -7,14 +7,14 @@ using Cofoundry.Domain.CQS;
 using Microsoft.EntityFrameworkCore;
 using Cofoundry.Core;
 
-namespace Cofoundry.Domain
+namespace Cofoundry.Domain.Internal
 {
     /// <summary>
     /// Gets a range of pages by their ids projected as PageRenderDetails models. A PageRenderDetails contains 
     /// the data required to render a page, including template data for all the content-editable regions.
     /// </summary>
     public class GetPageRenderDetailsByIdRangeQueryHandler
-        : IAsyncQueryHandler<GetPageRenderDetailsByIdRangeQuery, IDictionary<int, PageRenderDetails>>
+        : IQueryHandler<GetPageRenderDetailsByIdRangeQuery, IDictionary<int, PageRenderDetails>>
         , IPermissionRestrictedQueryHandler<GetPageRenderDetailsByIdRangeQuery, IDictionary<int, PageRenderDetails>>
     {
         #region constructor

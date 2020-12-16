@@ -8,11 +8,12 @@ using Microsoft.EntityFrameworkCore;
 using Cofoundry.Core.Data;
 using Cofoundry.Core;
 using Cofoundry.Core.Caching;
+using Cofoundry.Domain.CQS.Internal;
 
-namespace Cofoundry.Domain
+namespace Cofoundry.Domain.Internal
 {
     public class SetupCofoundryCommandHandler
-        : IAsyncCommandHandler<SetupCofoundryCommand>
+        : ICommandHandler<SetupCofoundryCommand>
         , IIgnorePermissionCheckHandler
     {
         #region constructor
@@ -105,6 +106,7 @@ namespace Cofoundry.Domain
             newUserCommand.FirstName = command.UserFirstName;
             newUserCommand.LastName = command.UserLastName;
             newUserCommand.Password = command.UserPassword;
+            newUserCommand.RequirePasswordChange = command.RequirePasswordChange;
             await _commandExecutor.ExecuteAsync(newUserCommand);
 
             return newUserCommand.OutputUserId;

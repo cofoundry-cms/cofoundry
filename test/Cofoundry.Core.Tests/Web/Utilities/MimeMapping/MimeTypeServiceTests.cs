@@ -5,6 +5,7 @@ using Xunit;
 using Moq;
 using Microsoft.AspNetCore.StaticFiles;
 using Cofoundry.Core.Web;
+using Cofoundry.Core.Web.Internal;
 
 namespace Cofoundry.Core.Tests
 {

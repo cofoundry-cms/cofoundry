@@ -7,10 +7,10 @@ using Cofoundry.Domain.CQS;
 using Microsoft.EntityFrameworkCore;
 using Cofoundry.Core;
 
-namespace Cofoundry.Domain
+namespace Cofoundry.Domain.Internal
 {
     public class UpdateUserPasswordByUserIdCommandHandler
-        : IAsyncCommandHandler<UpdateUserPasswordByUserIdCommand>
+        : ICommandHandler<UpdateUserPasswordByUserIdCommand>
         , IIgnorePermissionCheckHandler
     {
         #region construstor

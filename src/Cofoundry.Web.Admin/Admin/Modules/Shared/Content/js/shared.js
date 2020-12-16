@@ -6901,7 +6901,8 @@ function RoutingUtilitites() {
         return {
             controller: controllerName + 'Controller',
             controllerAs: 'vm',
-            templateUrl: modulePath + 'Routes/' + controllerName + '.html'
+            templateUrl: modulePath + 'Routes/' + controllerName + '.html',
+            reloadOnSearch: false
         }
     },
 
@@ -14408,7 +14409,6 @@ function (
         function onKeyPress(e) {
             var charToTest = String.fromCharCode(e.which);
 
-            // if the key entered isn't on the whitelist, ignore it 
             if (getBadTagRegex().test(charToTest)) {
                 e.preventDefault();
             }

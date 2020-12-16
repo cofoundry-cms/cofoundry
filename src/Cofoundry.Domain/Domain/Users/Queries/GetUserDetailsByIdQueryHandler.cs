@@ -6,14 +6,14 @@ using Cofoundry.Domain.Data;
 using Cofoundry.Domain.CQS;
 using Microsoft.EntityFrameworkCore;
 
-namespace Cofoundry.Domain
+namespace Cofoundry.Domain.Internal
 {
     /// <summary>
     /// Finds a user by a database id returning a UserDetails object if it 
     /// is found, otherwise null.
     /// </summary>
     public class GetUserDetailsByIdQueryHandler 
-        : IAsyncQueryHandler<GetUserDetailsByIdQuery, UserDetails>
+        : IQueryHandler<GetUserDetailsByIdQuery, UserDetails>
         , IIgnorePermissionCheckHandler
     {
         private readonly CofoundryDbContext _dbContext;

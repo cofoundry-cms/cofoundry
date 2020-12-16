@@ -9,7 +9,7 @@ namespace Cofoundry.Domain
     /// <summary>
     /// Page block data for a specific custom entity version on a custom entity
     /// details page. This model contains a fully mapped display model, mapped
-    /// from the unstructured data model data from the the db.
+    /// from the unstructured data model data from the the database.
     /// </summary>
     public class CustomEntityVersionPageBlockRenderDetails : IEntityVersionPageBlockRenderDetails
     {

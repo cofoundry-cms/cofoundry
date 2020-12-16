@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Cofoundry.Domain
+namespace Cofoundry.Domain.Internal
 {
     /// <summary>
     /// Simple mapper for mapping to PageTemplateMicroSummary objects.
@@ -26,7 +26,7 @@ namespace Cofoundry.Domain
         /// object. If the db record is null then null is returned.
         /// </summary>
         /// <param name="dbPageTemplate">PageTemplate record from the database.</param>
-        public PageTemplateMicroSummary Map(PageTemplate dbPageTemplate)
+        public virtual PageTemplateMicroSummary Map(PageTemplate dbPageTemplate)
         {
             if (dbPageTemplate == null) return null;
 

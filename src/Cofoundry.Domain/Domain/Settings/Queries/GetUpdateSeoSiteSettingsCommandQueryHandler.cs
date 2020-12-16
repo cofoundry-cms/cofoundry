@@ -5,10 +5,10 @@ using System.Text;
 using System.Threading.Tasks;
 using Cofoundry.Domain.CQS;
 
-namespace Cofoundry.Domain
+namespace Cofoundry.Domain.Internal
 {
     public class GetUpdateSeoSiteSettingsCommandQueryHandler 
-        : IAsyncQueryHandler<GetUpdateCommandQuery<UpdateSeoSettingsCommand>, UpdateSeoSettingsCommand>
+        : IQueryHandler<GetUpdateCommandQuery<UpdateSeoSettingsCommand>, UpdateSeoSettingsCommand>
         , IIgnorePermissionCheckHandler
     {
         private readonly IQueryExecutor _queryExecutor;

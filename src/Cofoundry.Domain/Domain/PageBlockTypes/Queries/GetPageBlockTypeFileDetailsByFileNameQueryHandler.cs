@@ -7,14 +7,14 @@ using System.Threading.Tasks;
 using Cofoundry.Domain.CQS;
 using Cofoundry.Core;
 
-namespace Cofoundry.Domain
+namespace Cofoundry.Domain.Internal
 {
     /// <summary>
     /// Extracts information about a page block type from a view file with
     /// the specified name. If the file is not found then null is returned.
     /// </summary>
     public class GetPageBlockTypeFileDetailsByFileNameQueryHandler
-        : IAsyncQueryHandler<GetPageBlockTypeFileDetailsByFileNameQuery, PageBlockTypeFileDetails>
+        : IQueryHandler<GetPageBlockTypeFileDetailsByFileNameQuery, PageBlockTypeFileDetails>
         , IPermissionRestrictedQueryHandler<GetPageBlockTypeFileDetailsByFileNameQuery, PageBlockTypeFileDetails>
     {
         #region constructor
@@ -43,14 +43,14 @@ namespace Cofoundry.Domain
             var viewPath = _viewLocator.GetPathByFileName(query.FileName);
             if (string.IsNullOrEmpty(viewPath))
             {
-                throw new FileNotFoundException($"Page block type view file '{query.FileName}' not found.");
+                throw new FileNotFoundException($"Page block type view file '{query.FileName}' not found.", query.FileName);
             }
 
             var view = await _viewFileReader.ReadViewFileAsync(viewPath);
 
             if (view == null)
             {
-                throw new FileNotFoundException($"Page block type view file '{query.FileName}' not found at location '{viewPath}'.");
+                throw new FileNotFoundException($"Page block type view file '{query.FileName}' not found at location '{viewPath}'.", viewPath);
             }
 
             var parsedData = ParseViewFile(view);

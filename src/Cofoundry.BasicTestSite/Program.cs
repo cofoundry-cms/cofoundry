@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Cofoundry.Web;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore;
-using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Hosting;
 
 namespace Cofoundry.BasicTestSite
 {
@@ -13,15 +13,18 @@ namespace Cofoundry.BasicTestSite
     {
         public static void Main(string[] args)
         {
-            CreateWebHostBuilder(args).Build().Run();
+            CreateHostBuilder(args).Build().Run();
         }
 
-        public static IWebHostBuilder CreateWebHostBuilder(string[] args) => WebHost
-            .CreateDefaultBuilder(args)
-            .UseStartup<Startup>()
-            .ConfigureAppConfiguration((hostContext, config) =>
-            {
-                config.AddJsonFile("appsettings.local.json", optional: true);
-            });
+        public static IHostBuilder CreateHostBuilder(string[] args) =>
+            Host.CreateDefaultBuilder(args)
+                .ConfigureWebHostDefaults(ConfigureWebHost);
+
+        public static void ConfigureWebHost(IWebHostBuilder webBuilder)
+        {
+            webBuilder
+                .UseStartup<Startup>()
+                .UseLocalConfigFile();
+        }
     }
 }

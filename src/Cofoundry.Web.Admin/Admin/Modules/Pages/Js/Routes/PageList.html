@@ -107,7 +107,7 @@
                         <a href=""
                            ng-if="::!page.isPublished() || page.hasDraftVersion"
                            ng-click="vm.publish(page.pageId)"
-                           ng-disabled="vm.globalLoadState.isLoading" class="btn-icon" title="Publish">
+                           ng-disabled="vm.gridLoadState.isLoading" class="btn-icon" title="Publish">
                             <i class="fa fa-globe"></i>
                         </a>
                         <a href="#/{{::page.pageId }}"

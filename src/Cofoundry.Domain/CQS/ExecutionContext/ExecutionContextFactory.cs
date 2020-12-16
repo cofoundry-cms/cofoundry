@@ -1,10 +1,11 @@
-﻿using System;
+﻿using Cofoundry.Core.Time;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Cofoundry.Domain.CQS
+namespace Cofoundry.Domain.CQS.Internal
 {
     /// <summary>
     /// Factory for creating an IExecutionContext instance.
@@ -14,12 +15,15 @@ namespace Cofoundry.Domain.CQS
         #region constructor
 
         private readonly IUserContextService _userContextService;
+        private readonly IDateTimeService _dateTimeService;
 
         public ExecutionContextFactory(
-            IUserContextService userContextService
+            IUserContextService userContextService,
+            IDateTimeService dateTimeService
             )
         {
             _userContextService = userContextService;
+            _dateTimeService = dateTimeService;
         }
 
         #endregion
@@ -53,7 +57,7 @@ namespace Cofoundry.Domain.CQS
             }
             else
             {
-                newContext.ExecutionDate = DateTime.UtcNow;
+                newContext.ExecutionDate = _dateTimeService.UtcNow();
             }
 
             return newContext;

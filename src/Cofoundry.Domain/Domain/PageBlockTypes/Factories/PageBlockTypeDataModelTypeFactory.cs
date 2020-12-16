@@ -5,7 +5,7 @@ using Cofoundry.Domain.CQS;
 using Cofoundry.Core;
 using System.Threading.Tasks;
 
-namespace Cofoundry.Domain
+namespace Cofoundry.Domain.Internal
 {
     /// <summary>
     /// Used to create data model types and validate they exist

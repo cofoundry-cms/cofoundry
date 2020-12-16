@@ -5,10 +5,16 @@ using System.Text;
 using System.Threading.Tasks;
 using Cofoundry.Domain.CQS;
 
-namespace Cofoundry.Domain
+namespace Cofoundry.Domain.Internal
 {
+    /// <summary>
+    /// Finds a custom entity routing rule with a specific route 
+    /// format identifier. The routing rules are registered at
+    /// startup and will have been checked to ensure there are no
+    /// duplicate RouteFormat values.
+    /// </summary>
     public class GetCustomEntityRoutingRuleByRouteFormatQueryHandler
-        : IAsyncQueryHandler<GetCustomEntityRoutingRuleByRouteFormatQuery, ICustomEntityRoutingRule>
+        : IQueryHandler<GetCustomEntityRoutingRuleByRouteFormatQuery, ICustomEntityRoutingRule>
         , IIgnorePermissionCheckHandler
     {
         private readonly IEnumerable<ICustomEntityRoutingRule> _customEntityRoutingRules;

@@ -7,14 +7,14 @@ using System.Threading.Tasks;
 using Cofoundry.Domain.Data;
 using Cofoundry.Domain.CQS;
 
-namespace Cofoundry.Domain
+namespace Cofoundry.Domain.Internal
 {
     /// <summary>
     /// Determines if a role title is unique within a specific UserArea.
     /// Role titles only have to be unique per UserArea.
     /// </summary>
     public class IsRoleTitleUniqueQueryHandler 
-        : IAsyncQueryHandler<IsRoleTitleUniqueQuery, bool>
+        : IQueryHandler<IsRoleTitleUniqueQuery, bool>
         , IPermissionRestrictedQueryHandler<IsRoleTitleUniqueQuery, bool>
     {
         #region constructor

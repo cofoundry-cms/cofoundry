@@ -6,10 +6,10 @@ using Cofoundry.Domain.Data;
 using Cofoundry.Domain.CQS;
 using Microsoft.EntityFrameworkCore;
 
-namespace Cofoundry.Domain
+namespace Cofoundry.Domain.Internal
 {
     public class GetUpdatePageVersionBlockCommandByIdQueryHandler
-        : IAsyncQueryHandler<GetUpdateCommandByIdQuery<UpdatePageVersionBlockCommand>, UpdatePageVersionBlockCommand>
+        : IQueryHandler<GetUpdateCommandByIdQuery<UpdatePageVersionBlockCommand>, UpdatePageVersionBlockCommand>
         , IPermissionRestrictedQueryHandler<GetUpdateCommandByIdQuery<UpdatePageVersionBlockCommand>, UpdatePageVersionBlockCommand>
     {
         #region constructor

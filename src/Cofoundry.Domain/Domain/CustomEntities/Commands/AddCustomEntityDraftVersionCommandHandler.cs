@@ -9,11 +9,17 @@ using Microsoft.EntityFrameworkCore;
 using Cofoundry.Core.MessageAggregator;
 using Cofoundry.Core;
 using Cofoundry.Core.Data;
+using Cofoundry.Domain.Data.Internal;
 
-namespace Cofoundry.Domain
+namespace Cofoundry.Domain.Internal
 {
+    /// <summary>
+    /// Creates a new draft version of a custom entity from the currently published version. If there
+    /// isn't a currently published version then an exception will be thrown. An exception is also 
+    /// thrown if there is already a draft version.
+    /// </summary>
     public class AddCustomEntityDraftVersionCommandHandler 
-        : IAsyncCommandHandler<AddCustomEntityDraftVersionCommand>
+        : ICommandHandler<AddCustomEntityDraftVersionCommand>
         , IIgnorePermissionCheckHandler
     {
         #region constructor

@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Cofoundry.Core;
 using Cofoundry.Domain.CQS;
 
-namespace Cofoundry.Domain
+namespace Cofoundry.Domain.Internal
 {
     /// <summary>
     /// Returns page routing data for a single page. The 
@@ -15,7 +15,7 @@ namespace Cofoundry.Domain
     /// page projections.
     /// </summary>
     public class GetPageRouteByIdQueryHandler 
-        : IAsyncQueryHandler<GetPageRouteByIdQuery, PageRoute>
+        : IQueryHandler<GetPageRouteByIdQuery, PageRoute>
         , IPermissionRestrictedQueryHandler<GetPageRouteByIdQuery, PageRoute>
     {
         private readonly IQueryExecutor _queryExecutor;

@@ -1,5 +1,4 @@
-﻿using Cofoundry.Core;
-using Cofoundry.Core.Validation;
+﻿using Cofoundry.Core.Validation;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -7,7 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 
-namespace Cofoundry.Domain
+namespace Cofoundry.Domain.Internal
 {
     /// <summary>
     /// Used to validate an uploaded file by checking it's file extension
@@ -40,7 +39,7 @@ namespace Cofoundry.Domain
         /// <param name="propertyName">
         /// The name of the model property being validated, used in the validation error.
         /// </param>
-        public IEnumerable<ValidationResult> Validate(string fileNameOrFileExtension, string mimeType, string propertyName)
+        public virtual IEnumerable<ValidationResult> Validate(string fileNameOrFileExtension, string mimeType, string propertyName)
         {
             propertyName = propertyName ?? string.Empty;
             var formattedFileExtension = fileNameOrFileExtension;
@@ -72,13 +71,13 @@ namespace Cofoundry.Domain
         /// <param name="propertyName">
         /// The name of the model property being validated, used in the validation exception.
         /// </param>
-        public void ValidateAndThrow(string fileNameOrFileExtension, string mimeType, string propertyName)
+        public virtual void ValidateAndThrow(string fileNameOrFileExtension, string mimeType, string propertyName)
         {
             var error = Validate(fileNameOrFileExtension, mimeType, propertyName).FirstOrDefault();
             
             if (error != null)
             {
-                throw new PropertyValidationException(error.ErrorMessage, error.MemberNames);
+                throw ValidationErrorException.CreateWithProperties(error.ErrorMessage, error.MemberNames?.ToArray());
             }
         }
 
@@ -103,9 +102,9 @@ namespace Cofoundry.Domain
 
             switch (assetFileTypeValidation)
             {
-                case AssetFileTypeValidation.UseWhitelist:
+                case AssetFileTypeValidation.UseAllowList:
                     return contains;
-                case AssetFileTypeValidation.UseBlacklist:
+                case AssetFileTypeValidation.UseBlockList:
                     return !contains;
                 default:
                     throw new Exception($"{nameof(AssetFileTypeValidation)} not recognised: {assetFileTypeValidation}");

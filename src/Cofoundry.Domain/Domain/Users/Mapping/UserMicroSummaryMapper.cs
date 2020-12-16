@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Cofoundry.Domain
+namespace Cofoundry.Domain.Internal
 {
     /// <summary>
     /// Simple mapper for mapping to UserMicroSummary objects.
@@ -23,7 +23,7 @@ namespace Cofoundry.Domain
         /// db record is null then null is returned.
         /// </summary>
         /// <param name="dbUser">User record from the database.</param>
-        public UserMicroSummary Map(User dbUser)
+        public virtual UserMicroSummary Map(User dbUser)
         {
             if (dbUser == null) return null;
 

@@ -13,7 +13,7 @@ namespace Cofoundry.Core.Web
         string Sanitize(IHtmlContent source);
 
         /// <summary>
-        /// Takes raw HTML input and cleans against a whitelist
+        /// Takes raw HTML input and cleans against an allowlist
         /// </summary>
         /// <param name="source">Html source</param>
         /// <param name="ruleSet">A custom set of tags to allow. first generic parameter is the tag, second is the allowed attributes.</param>

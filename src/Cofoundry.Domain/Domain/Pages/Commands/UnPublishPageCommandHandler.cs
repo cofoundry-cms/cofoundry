@@ -9,8 +9,9 @@ using Microsoft.EntityFrameworkCore;
 using Cofoundry.Core.MessageAggregator;
 using Cofoundry.Core;
 using Cofoundry.Core.Data;
+using Cofoundry.Domain.Data.Internal;
 
-namespace Cofoundry.Domain
+namespace Cofoundry.Domain.Internal
 {
     /// <summary>
     /// Sets the status of a page to un-published, but does not
@@ -19,7 +20,7 @@ namespace Cofoundry.Domain
     /// again.
     /// </summary>
     public class UnPublishPageCommandHandler 
-        : IAsyncCommandHandler<UnPublishPageCommand>
+        : ICommandHandler<UnPublishPageCommand>
         , IPermissionRestrictedCommandHandler<UnPublishPageCommand>
     {
         #region constructor

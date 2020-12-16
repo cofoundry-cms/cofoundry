@@ -7,11 +7,16 @@ using Cofoundry.Domain.CQS;
 using Microsoft.EntityFrameworkCore;
 using Cofoundry.Core.MessageAggregator;
 using Cofoundry.Core.Data;
+using Cofoundry.Domain.Data.Internal;
 
-namespace Cofoundry.Domain
+namespace Cofoundry.Domain.Internal
 {
+    /// <summary>
+    /// Deletes the draft verison of a custom entity permanently if 
+    /// it exists. If no draft exists then no action is taken.
+    /// </summary>
     public class DeleteCustomEntityDraftVersionCommandHandler 
-        : IAsyncCommandHandler<DeleteCustomEntityDraftVersionCommand>
+        : ICommandHandler<DeleteCustomEntityDraftVersionCommand>
         , IIgnorePermissionCheckHandler
     {
         #region constructor
@@ -44,8 +49,6 @@ namespace Cofoundry.Domain
         }
 
         #endregion
-
-        #region execution
 
         public async Task ExecuteAsync(DeleteCustomEntityDraftVersionCommand command, IExecutionContext executionContext)
         {
@@ -92,7 +95,5 @@ namespace Cofoundry.Domain
                 CustomEntityVersionId = versionId
             });
         }
-
-        #endregion
     }
 }

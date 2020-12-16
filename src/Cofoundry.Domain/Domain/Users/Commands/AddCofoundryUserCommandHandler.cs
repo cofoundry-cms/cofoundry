@@ -7,13 +7,13 @@ using Cofoundry.Core.Mail;
 using Cofoundry.Domain.MailTemplates;
 using Microsoft.AspNetCore.Html;
 
-namespace Cofoundry.Domain
+namespace Cofoundry.Domain.Internal
 {
     /// <summary>
     /// Adds a user to the Cofoundry user area and sends a welcome notification.
     /// </summary>
     public class AddCofoundryUserCommandHandler
-        : IAsyncCommandHandler<AddCofoundryUserCommand>
+        : ICommandHandler<AddCofoundryUserCommand>
         , IPermissionRestrictedCommandHandler<AddCofoundryUserCommand>
     {
         #region constructor

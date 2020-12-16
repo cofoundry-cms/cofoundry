@@ -7,7 +7,8 @@ using System.Threading.Tasks;
 namespace Cofoundry.Domain
 {
     /// <summary>
-    /// A reduced representation of a user, containing additional audit 
+    /// The UserSummary is a reduced representation of a user. Building on 
+    /// the UserMicroSummary, the Usersummary contains additional audit 
     /// and role data. Users are partitioned by user area so a user might be 
     /// a Cofoundry admin user or could belong to a custom user area. Users 
     /// cannot belong to more than one user area.

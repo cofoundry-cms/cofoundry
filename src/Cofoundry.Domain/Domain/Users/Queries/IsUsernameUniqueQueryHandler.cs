@@ -7,14 +7,14 @@ using System.Threading.Tasks;
 using Cofoundry.Domain.Data;
 using Cofoundry.Domain.CQS;
 
-namespace Cofoundry.Domain
+namespace Cofoundry.Domain.Internal
 {
     /// <summary>
     /// Determines if a username is unique within a specific UserArea.
     /// Usernames only have to be unique per UserArea.
     /// </summary>
     public class IsUsernameUniqueQueryHandler 
-        : IAsyncQueryHandler<IsUsernameUniqueQuery, bool>
+        : IQueryHandler<IsUsernameUniqueQuery, bool>
         , IPermissionRestrictedQueryHandler<IsUsernameUniqueQuery, bool>
     {
         #region constructor

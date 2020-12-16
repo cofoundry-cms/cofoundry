@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Cofoundry.Domain;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Cofoundry.Web
@@ -54,6 +56,7 @@ namespace Cofoundry.Web
                         cookieOptions.Cookie.Name = cookieNamespace + userAreaDefinition.UserAreaCode;
                         cookieOptions.Cookie.HttpOnly = true;
                         cookieOptions.Cookie.IsEssential = true;
+                        cookieOptions.Cookie.SameSite = SameSiteMode.Lax;
 
                         if (!string.IsNullOrWhiteSpace(userAreaDefinition.LoginPath))
                         {
@@ -61,6 +64,8 @@ namespace Cofoundry.Web
                         }
                     });
             }
+
+            mvcBuilder.Services.AddAuthorization();
         }
     }
 }

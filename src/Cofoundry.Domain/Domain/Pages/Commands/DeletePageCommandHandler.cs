@@ -8,11 +8,12 @@ using Cofoundry.Domain.CQS;
 using Microsoft.EntityFrameworkCore;
 using Cofoundry.Core.MessageAggregator;
 using Cofoundry.Core.Data;
+using Cofoundry.Domain.Data.Internal;
 
-namespace Cofoundry.Domain
+namespace Cofoundry.Domain.Internal
 {
     public class DeletePageCommandHandler 
-        : IAsyncCommandHandler<DeletePageCommand>
+        : ICommandHandler<DeletePageCommand>
         , IPermissionRestrictedCommandHandler<DeletePageCommand>
     {
         private readonly CofoundryDbContext _dbContext;

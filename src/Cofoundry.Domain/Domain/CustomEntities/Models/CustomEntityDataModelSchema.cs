@@ -9,8 +9,8 @@ namespace Cofoundry.Domain
     /// <summary>
     /// Meta information about a data model, including UI display details
     /// and validation attributes for each public property. This is typically 
-    /// used for expressing dynamic data parts of Cofoundry (e.g. custom entities
-    /// and page block data models) in dynamically generated parts of the UI
+    /// used for expressing these entities in dynamically generated parts of 
+    /// the UI e.g. edit forms and lists.
     /// </summary>
     public class CustomEntityDataModelSchema : IDynamicDataModelSchema
     {

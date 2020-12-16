@@ -23,7 +23,7 @@ namespace Cofoundry.Domain
         }
 
         /// <summary>
-        /// Takes raw HTML input and cleans against a whitelist to prevent
+        /// Takes raw HTML input and cleans against an allowlist to prevent
         /// XSS attacks
         /// </summary>
         /// <param name="source">Html source</param>
@@ -33,7 +33,7 @@ namespace Cofoundry.Domain
         }
 
         /// <summary>
-        /// Takes raw HTML input and cleans against a whitelist to prevent
+        /// Takes raw HTML input and cleans against a allowlist to prevent
         /// XSS attacks
         /// </summary>
         /// <param name="source">Html source</param>

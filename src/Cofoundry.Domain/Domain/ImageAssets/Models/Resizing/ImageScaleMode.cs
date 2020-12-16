@@ -7,33 +7,33 @@ using System.Threading.Tasks;
 namespace Cofoundry.Domain
 {
     /// <summary>
-    /// Controls whether the image is allowed to upscale, downscale, both, or if
-    /// only the canvas gets to be upscaled.
+    /// Defines if and how the image should be scaled to fit the resized dimensions e.g. is the 
+    /// image allowed to up-scaled or should padding be added or should the natural image size 
+    /// be returned. Defaults to DownscaleOnly, which prevents images being upscaled.
     /// </summary>
     public enum ImageScaleMode
     {
         /// <summary>
-        /// The default. Only downsamples images - never enlarges. If an image is smaller
-        /// than 'width' and 'height', the image coordinates are used instead.
+        /// (Default) Only reduce the size of images - never enlarge. If the original image is smaller
+        /// than resize settings, the original image is returned.
         /// </summary>
         DownscaleOnly = 0,
 
         /// <summary>
-        /// Only upscales (zooms) images - never downsamples except to meet web.config
-        /// restrictions. If an image is larger than 'width' and 'height', the image
-        /// coordinates are used instead.
+        /// Only upscales (zooms) images. If the original image is larger than the resize settings, the 
+        /// original image is returned.
         /// </summary>
+        [Obsolete("I can't see in which situation this would be used so it will be removed in the default implementations.")]
         UpscaleOnly = 1,
 
         /// <summary>
-        /// Upscales and downscales images according to 'width' and 'height', within
-        /// web.config restrictions.
+        /// Allows both upscaling and downscaling of images.
         /// </summary>
         Both = 2,
 
         /// <summary>
-        /// When the image is smaller than the requested size, padding is added instead 
-        /// of stretching the image
+        /// Downscaling is permitted, but when the requested size is bigger than the original 
+        /// image padding is added. 
         /// </summary>
         UpscaleCanvas = 3,
     }

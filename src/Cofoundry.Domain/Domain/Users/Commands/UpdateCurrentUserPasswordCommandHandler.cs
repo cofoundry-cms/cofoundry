@@ -8,14 +8,14 @@ using Microsoft.EntityFrameworkCore;
 using Cofoundry.Core.Validation;
 using Cofoundry.Core;
 
-namespace Cofoundry.Domain
+namespace Cofoundry.Domain.Internal
 {
     /// <summary>
     /// Updates the password of the currently logged in user, using the
     /// OldPassword field to authenticate the request.
     /// </summary>
     public class UpdateCurrentUserPasswordCommandHandler 
-        : IAsyncCommandHandler<UpdateCurrentUserPasswordCommand>
+        : ICommandHandler<UpdateCurrentUserPasswordCommand>
         , IPermissionRestrictedCommandHandler<UpdateCurrentUserPasswordCommand>
     {
         #region constructor
@@ -63,7 +63,7 @@ namespace Cofoundry.Domain
 
             if (!_userAuthenticationHelper.IsPasswordCorrect(user, command.OldPassword))
             {
-                throw new PropertyValidationException("Incorrect password", "OldPassword");
+                throw ValidationErrorException.CreateWithProperties("Incorrect password", "OldPassword");
             }
 
             _passwordUpdateCommandHelper.UpdatePassword(command.NewPassword, user, executionContext);

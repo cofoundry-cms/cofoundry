@@ -6,14 +6,14 @@ using Microsoft.EntityFrameworkCore;
 using Cofoundry.Domain.Data;
 using Cofoundry.Domain.CQS;
 
-namespace Cofoundry.Domain
+namespace Cofoundry.Domain.Internal
 {
     /// <summary>
     /// Gets a UserAccountDetails object representing the currently logged in 
     /// user. If the user is not logged in then null is returned.
     /// </summary>
     public class GetCurrentUserAccountDetailsQueryHandler 
-        : IAsyncQueryHandler<GetCurrentUserAccountDetailsQuery, UserAccountDetails>
+        : IQueryHandler<GetCurrentUserAccountDetailsQuery, UserAccountDetails>
         , IIgnorePermissionCheckHandler
     {
         private readonly CofoundryDbContext _dbContext;

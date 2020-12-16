@@ -8,11 +8,15 @@ using Cofoundry.Domain.CQS;
 using Microsoft.EntityFrameworkCore;
 using Cofoundry.Core;
 using Cofoundry.Core.Data;
+using Cofoundry.Domain.Data.Internal;
 
-namespace Cofoundry.Domain
+namespace Cofoundry.Domain.Internal
 {
+    /// <summary>
+    /// Creates a new custom entity, copying from an existing custom entity.
+    /// </summary>
     public class DuplicateCustomEntityCommandHandler
-        : IAsyncCommandHandler<DuplicateCustomEntityCommand>
+        : ICommandHandler<DuplicateCustomEntityCommand>
         , IIgnorePermissionCheckHandler
     {
         private readonly ICommandExecutor _commandExecutor;

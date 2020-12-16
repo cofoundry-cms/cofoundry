@@ -8,14 +8,14 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
 
-namespace Cofoundry.Domain
+namespace Cofoundry.Domain.Internal
 {
     /// <summary>
-    /// Returns a collection of the content managed regions and
-    /// blocks for a specific version of a page.
+    /// Returns a collection of content managed regions with
+    /// block data for a specific version of a page.
     /// </summary>
     public class GetPageRegionDetailsByPageVersionIdQueryHandler 
-        : IAsyncQueryHandler<GetPageRegionDetailsByPageVersionIdQuery, ICollection<PageRegionDetails>>
+        : IQueryHandler<GetPageRegionDetailsByPageVersionIdQuery, ICollection<PageRegionDetails>>
         , IPermissionRestrictedQueryHandler<GetPageRegionDetailsByPageVersionIdQuery, ICollection<PageRegionDetails>>
     {
         #region constructor

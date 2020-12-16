@@ -10,10 +10,10 @@ using Microsoft.EntityFrameworkCore;
 using Cofoundry.Core;
 using Cofoundry.Core.Data;
 
-namespace Cofoundry.Domain
+namespace Cofoundry.Domain.Internal
 {
     public class UpdatePageDirectoryCommandHandler
-        : IAsyncCommandHandler<UpdatePageDirectoryCommand>
+        : ICommandHandler<UpdatePageDirectoryCommand>
         , IPermissionRestrictedCommandHandler<UpdatePageDirectoryCommand>
     {
         #region constructor
@@ -69,7 +69,7 @@ namespace Cofoundry.Domain
 
             if (props.Any() && await HasDependencies(pageDirectory)) 
             {
-                throw new PropertyValidationException("This directory is in use and the url cannot be changed", props.First());
+                throw ValidationErrorException.CreateWithProperties("This directory is in use and the url cannot be changed", props.First());
             }
         }
 

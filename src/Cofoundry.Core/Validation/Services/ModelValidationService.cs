@@ -5,7 +5,7 @@ using System.Text;
 using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 
-namespace Cofoundry.Core.Validation
+namespace Cofoundry.Core.Validation.Internal
 {
     /// <summary>
     /// Service for validating models using DataAnnotation validation.
@@ -18,7 +18,7 @@ namespace Cofoundry.Core.Validation
         /// </summary>
         /// <typeparam name="T">Type of the model to validate.</typeparam>
         /// <param name="modelToValidate">The command to validate.</param>
-        public void Validate<T>(T modelToValidate)
+        public virtual void Validate<T>(T modelToValidate)
         {
             if (modelToValidate == null)
             {
@@ -36,7 +36,7 @@ namespace Cofoundry.Core.Validation
         /// <typeparam name="T">Type of model to validate.</typeparam>
         /// <param name="modelsToValidate">Collection of objects to validate.</param>
         /// <returns>Enumerable collection of any errors found. Will be empty if the model is valid.</returns>
-        public IEnumerable<ValidationError> GetErrors<T>(IEnumerable<T> modelsToValidate)
+        public virtual IEnumerable<ValidationError> GetErrors<T>(IEnumerable<T> modelsToValidate)
         {
             foreach (var model in modelsToValidate)
             {
@@ -55,7 +55,7 @@ namespace Cofoundry.Core.Validation
         /// <typeparam name="T">Type of model to validate.</typeparam>
         /// <param name="modelToValidate">The object to validate.</param>
         /// <returns>Enumerable collection of any errors found. Will be empty if the model is valid.</returns>
-        public IEnumerable<ValidationError> GetErrors<T>(T modelToValidate)
+        public virtual IEnumerable<ValidationError> GetErrors<T>(T modelToValidate)
         {
             if (modelToValidate == null)
             {
@@ -83,7 +83,7 @@ namespace Cofoundry.Core.Validation
             }
         }
 
-        private ValidationError MapErrors(ValidationResult result)
+        protected ValidationError MapErrors(ValidationResult result)
         {
             var error = new ValidationError();
             error.Message = result.ErrorMessage;

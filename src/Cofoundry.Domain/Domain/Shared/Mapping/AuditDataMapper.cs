@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Cofoundry.Domain
+namespace Cofoundry.Domain.Internal
 {
     /// <summary>
     /// Simple mapper for mapping to entity audit objects.
@@ -24,7 +24,7 @@ namespace Cofoundry.Domain
         /// db record is null then an ArgumentNullException is thrown.
         /// </summary>
         /// <param name="model">ICreateAuditable EF database record.</param>
-        public CreateAuditData MapCreateAuditData(ICreateAuditable model)
+        public virtual CreateAuditData MapCreateAuditData(ICreateAuditable model)
         {
             if (model == null) throw new ArgumentNullException(nameof(model));
             ValidateUserProperty(model.Creator, nameof(model.Creator));
@@ -41,7 +41,7 @@ namespace Cofoundry.Domain
         /// db record is null then an ArgumentNullException is thrown.
         /// </summary>
         /// <param name="model">IUpdateAuditable EF database record.</param>
-        public UpdateAuditData MapUpdateAuditData(IUpdateAuditable model)
+        public virtual UpdateAuditData MapUpdateAuditData(IUpdateAuditable model)
         {
             if (model == null) throw new ArgumentNullException(nameof(model));
             ValidateUserProperty(model.Creator, nameof(model.Creator));
@@ -62,7 +62,7 @@ namespace Cofoundry.Domain
         /// information from two different objects. If the db record is null then an ArgumentNullException is thrown.
         /// </summary>
         /// <param name="model">ICreateAuditable EF database record to map create data from.</param>
-        public UpdateAuditData MapUpdateAuditDataCreatorData(ICreateAuditable model)
+        public virtual UpdateAuditData MapUpdateAuditDataCreatorData(ICreateAuditable model)
         {
             if (model == null) throw new ArgumentNullException(nameof(model));
             ValidateUserProperty(model.Creator, nameof(model.Creator));
@@ -80,7 +80,7 @@ namespace Cofoundry.Domain
         /// db record is null then an ArgumentNullException is thrown.
         /// </summary>
         /// <param name="model">ICreateAuditable EF database record to map create data from.</param>
-        public void MapUpdateAuditDataUpdaterData(UpdateAuditData updateAuditDatra, ICreateAuditable model)
+        public virtual void MapUpdateAuditDataUpdaterData(UpdateAuditData updateAuditDatra, ICreateAuditable model)
         {
             if (model == null) throw new ArgumentNullException(nameof(model));
             ValidateUserProperty(model.Creator, nameof(model.Creator));
@@ -89,7 +89,7 @@ namespace Cofoundry.Domain
             updateAuditDatra.Updater = _userMicroSummaryMapper.Map(model.Creator);
         }
 
-        private void ValidateUserProperty(User user, string name)
+        protected void ValidateUserProperty(User user, string name)
         {
             if (user == null)
             {

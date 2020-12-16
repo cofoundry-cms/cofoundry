@@ -8,16 +8,16 @@ using Cofoundry.Domain.CQS;
 using Microsoft.EntityFrameworkCore;
 using Cofoundry.Core;
 
-namespace Cofoundry.Domain
+namespace Cofoundry.Domain.Internal
 {
     /// <summary>
-    /// Returns detailed information on a custom entity and it's latest version. This 
+    /// Query for detailed information on a custom entity and it's latest version. This 
     /// query is primarily used in the admin area because it is not version-specific
     /// and the CustomEntityDetails projection includes audit data and other additional 
     /// information that should normally be hidden from a customer facing app.
     /// </summary>
     public class GetCustomEntityDetailsByIdQueryHandler 
-        : IAsyncQueryHandler<GetCustomEntityDetailsByIdQuery, CustomEntityDetails>
+        : IQueryHandler<GetCustomEntityDetailsByIdQuery, CustomEntityDetails>
         , IIgnorePermissionCheckHandler
     {
         #region constructor
@@ -50,8 +50,6 @@ namespace Cofoundry.Domain
         }
 
         #endregion
-
-        #region execution
 
         public async Task<CustomEntityDetails> ExecuteAsync(GetCustomEntityDetailsByIdQuery query, IExecutionContext executionContext)
         {
@@ -242,7 +240,5 @@ namespace Cofoundry.Domain
 
             version.Model = (ICustomEntityDataModel)_dbUnstructuredDataSerializer.Deserialize(dbVersion.SerializedData, definition.DataModelType);
         }
-
-        #endregion
     }
 }

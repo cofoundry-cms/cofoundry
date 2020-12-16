@@ -5,10 +5,16 @@ using System.Text;
 using System.Threading.Tasks;
 using Cofoundry.Domain.CQS;
 
-namespace Cofoundry.Domain
+namespace Cofoundry.Domain.Internal
 {
+    /// <summary>
+    /// Query to get a custom entity definition by it's unique 6 character code.
+    /// The returned projection contains much of the same data as the source 
+    /// defintion class, but the main difference is that instead of using generics 
+    /// to identify the data model type, there is instead a DataModelType property.
+    /// </summary>
     public class GetCustomEntityDefinitionSummaryByCodeQueryHandler 
-        : IAsyncQueryHandler<GetCustomEntityDefinitionSummaryByCodeQuery, CustomEntityDefinitionSummary>
+        : IQueryHandler<GetCustomEntityDefinitionSummaryByCodeQuery, CustomEntityDefinitionSummary>
         , IIgnorePermissionCheckHandler
     {
         private readonly ICustomEntityDefinitionRepository _customEntityDefinitionRepository;

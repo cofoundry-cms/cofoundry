@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using Cofoundry.Domain.Data;
 using Cofoundry.Domain.CQS;
 
-namespace Cofoundry.Domain
+namespace Cofoundry.Domain.Internal
 {
     /// <summary>
     /// Helper for mapping page and custom entity version page block data from an 
@@ -58,7 +58,7 @@ namespace Cofoundry.Domain
         /// Dictionary of mapped display models, with a key (block version id) that can be 
         /// used to identify them.
         /// </returns>
-        public async Task<IReadOnlyDictionary<int, IPageBlockTypeDisplayModel>> MapDisplayModelAsync(
+        public virtual async Task<IReadOnlyDictionary<int, IPageBlockTypeDisplayModel>> MapDisplayModelAsync(
             string typeName, 
             IEnumerable<IEntityVersionPageBlock> entityBlocks, 
             PublishStatusQuery publishStatus,
@@ -117,7 +117,7 @@ namespace Cofoundry.Domain
         /// passed down the chain of execution.
         /// </param>
         /// <returns>Mapped display model.</returns>
-        public async Task<IPageBlockTypeDisplayModel> MapDisplayModelAsync(
+        public virtual async Task<IPageBlockTypeDisplayModel> MapDisplayModelAsync(
             string typeName,
             IEntityVersionPageBlock pageBlock, 
             PublishStatusQuery publishStatus,
@@ -143,7 +143,7 @@ namespace Cofoundry.Domain
         /// <param name="typeName">The block type name e.g. 'PlainText', 'RawHtml'.</param>
         /// <param name="pageBlock">The version data to get the serialized model from.</param>
         /// <returns>Strongly typed data model including deserialized data.</returns>
-        public IPageBlockTypeDataModel MapDataModel(string typeName, IEntityVersionPageBlock pageBlock)
+        public virtual IPageBlockTypeDataModel MapDataModel(string typeName, IEntityVersionPageBlock pageBlock)
         {
             Type modelType = _pageBlockDataModelTypeFactory.CreateByPageBlockTypeFileName(typeName);
             var model = (IPageBlockTypeDataModel)_dbUnstructuredDataSerializer.Deserialize(pageBlock.SerializedData, modelType);
@@ -155,7 +155,7 @@ namespace Cofoundry.Domain
 
         #region privates
         
-        private async Task<IReadOnlyDictionary<int, IPageBlockTypeDisplayModel>> MapGeneric<TDataModel>(
+        protected async Task<IReadOnlyDictionary<int, IPageBlockTypeDisplayModel>> MapGeneric<TDataModel>(
             IEnumerable<IEntityVersionPageBlock> pageBlocks, 
             PublishStatusQuery publishStatusQuery,
             IExecutionContext executionContext

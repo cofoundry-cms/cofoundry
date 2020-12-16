@@ -7,17 +7,17 @@ using Cofoundry.Domain.CQS;
 using Cofoundry.Domain.Data;
 using Microsoft.EntityFrameworkCore;
 using Cofoundry.Core.MessageAggregator;
-using Cofoundry.Core.Data;
-using System.Data.SqlClient;
 using Cofoundry.Core;
 
-namespace Cofoundry.Domain
+namespace Cofoundry.Domain.Internal
 {
     /// <summary>
-    /// Set the position of the custopm entity in the order
+    /// Changes the order of a single custom entity. The custom entity 
+    /// definition must implement IOrderableCustomEntityDefintion to be 
+    /// able to set ordering.
     /// </summary>
     public class UpdateCustomEntityOrderingPositionCommandHandler
-        : IAsyncCommandHandler<UpdateCustomEntityOrderingPositionCommand>
+        : ICommandHandler<UpdateCustomEntityOrderingPositionCommand>
         , IIgnorePermissionCheckHandler
     {
         #region constructor
@@ -44,8 +44,6 @@ namespace Cofoundry.Domain
         }
 
         #endregion
-
-        #region execution
 
         public async Task ExecuteAsync(UpdateCustomEntityOrderingPositionCommand command, IExecutionContext executionContext)
         {
@@ -97,7 +95,5 @@ namespace Cofoundry.Domain
             customEntity.Ordering = null;
             await _dbContext.SaveChangesAsync();
         }
-
-        #endregion
     }
 }

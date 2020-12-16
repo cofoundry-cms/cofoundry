@@ -1,13 +1,14 @@
 ﻿using Cofoundry.Core.Data.SimpleDatabase;
 using System;
 using System.Collections.Generic;
-using System.Data.SqlClient;
+using Microsoft.Data.SqlClient;
 using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using System.Threading;
 
-namespace Cofoundry.Core.AutoUpdate
+namespace Cofoundry.Core.AutoUpdate.Internal
 {
     /// <summary>
     /// Service to update applications and modules. Typically this is
@@ -56,13 +57,7 @@ namespace Cofoundry.Core.AutoUpdate
         /// Updates an application and referenced modules by scanning for implementations
         /// of IUpdatePackageFactory and executing any packages found.
         /// </summary>
-        /// <remarks>
-        /// Async because sometimes UpdateCommands need to be async to save having to create
-        /// sync versions of methods that would not normally require them. E.g. when calling into
-        /// shared command handlers. I don't really think there's much benefit in making any other
-        /// part async because nothing else useful should be happening while the db update is going on anyway.
-        /// </remarks>
-        public async Task UpdateAsync()
+        public async Task UpdateAsync(CancellationToken? cancellationToken = null)
         {
             var previouslyAppliedVersions = await GetUpdateVersionHistoryAsync();
 
@@ -87,6 +82,8 @@ namespace Cofoundry.Core.AutoUpdate
                 throw new DatabaseLockedException();
             }
 
+            if (IsCancelled(cancellationToken)) return;
+
             // Lock the process to prevent concurrent updates
             var distributedLock = await _autoUpdateDistributedLockManager.LockAsync();
 
@@ -94,7 +91,12 @@ namespace Cofoundry.Core.AutoUpdate
             {
                 foreach (var package in packages)
                 {
-                    await ExecutePackage(package);
+                    if (IsCancelled(cancellationToken))
+                    {
+                        break;
+                    }
+
+                    await ExecutePackage(package, cancellationToken);
                 }
             }
             finally
@@ -103,11 +105,17 @@ namespace Cofoundry.Core.AutoUpdate
             }
         }
 
-        private async Task ExecutePackage(UpdatePackage package)
+        private async Task ExecutePackage(UpdatePackage package, CancellationToken? cancellationToken)
         {
             // Versioned Commands
             foreach (var command in EnumerableHelper.Enumerate(package.VersionedCommands))
             {
+                if (IsCancelled(cancellationToken))
+                {
+                    // If cancelled, don't try the next version package, but do try and run the always run commands.
+                    break;
+                }
+
                 try
                 {
                     await ExecuteCommandAsync(command);
@@ -126,6 +134,11 @@ namespace Cofoundry.Core.AutoUpdate
             {
                 await ExecuteCommandAsync(command);
             }
+        }
+
+        private static bool IsCancelled(CancellationToken? cancellationToken)
+        {
+            return cancellationToken.HasValue && cancellationToken.Value.IsCancellationRequested;
         }
 
         private Task LogUpdateSuccessAsync(string module, int version, string description)

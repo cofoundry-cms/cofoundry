@@ -8,7 +8,7 @@ using Cofoundry.Core.Validation;
 namespace Cofoundry.Domain
 {
     /// <summary>
-    /// Gets a page PageRenderSummary projection by id, which is
+    /// Query to get a page by an id, projected as a PageRenderSummary which is
     /// a lighter weight projection designed for rendering to a site when the 
     /// templates, region and block data is not required. The result is 
     /// version-sensitive and defaults to returning published versions only, but
@@ -17,7 +17,7 @@ namespace Cofoundry.Domain
     public class GetPageRenderSummaryByIdQuery : IQuery<PageRenderSummary>, IValidatableObject
     {
         /// <summary>
-        /// Gets a page PageRenderSummary projection by id, which is
+        /// Query to get a page by an id, projected as a PageRenderSummary which is
         /// a lighter weight projection designed for rendering to a site when the 
         /// templates, region and block data is not required. The result is 
         /// version-sensitive and defaults to returning published versions only, but
@@ -26,7 +26,11 @@ namespace Cofoundry.Domain
         public GetPageRenderSummaryByIdQuery() { }
 
         /// <summary>
-        /// Initializes the query with the specified parameters.
+        /// Query to get a page by an id, projected as a PageRenderSummary which is
+        /// a lighter weight projection designed for rendering to a site when the 
+        /// templates, region and block data is not required. The result is 
+        /// version-sensitive and defaults to returning published versions only, but
+        /// this behavior can be controlled by the publishStatus query property.
         /// </summary>
         /// <param name="pageId">PageId of the page to get.</param>
         /// <param name="publishStatus">Used to determine which version of the page to include data for.</param>

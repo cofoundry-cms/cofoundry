@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
-using System.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Data.SqlClient;
 
-namespace Cofoundry.Core.Data.SimpleDatabase
+namespace Cofoundry.Core.Data.SimpleDatabase.Internal
 {
     /// <summary>
     /// Simple Db raw sql execution on the Cofoundry database which by
@@ -47,7 +47,7 @@ namespace Cofoundry.Core.Data.SimpleDatabase
         /// <summary>
         /// Executes a sql command with the specified parameters.
         /// </summary>
-        /// <param name="sql">Raw SQL string to execute against the database..</param>
+        /// <param name="sql">Raw SQL string to execute against the database.</param>
         /// <param name="sqlParams">Any parameters to add to the command.</param>
         public Task ExecuteAsync(string sql, params SqlParameter[] sqlParams)
         {

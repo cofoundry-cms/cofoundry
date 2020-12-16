@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Cofoundry.Domain
+namespace Cofoundry.Domain.Internal
 {
     /// <summary>
     /// Simple mapper for mapping to RewriteRuleSummary objects.
@@ -16,7 +16,7 @@ namespace Cofoundry.Domain
         /// object. If the db record is null then null is returned.
         /// </summary>
         /// <param name="dbRewriteRule">RewriteRule record from the database.</param>
-        public RewriteRuleSummary Map(RewriteRule dbRewriteRule)
+        public virtual RewriteRuleSummary Map(RewriteRule dbRewriteRule)
         {
             if (dbRewriteRule == null) return null;
 

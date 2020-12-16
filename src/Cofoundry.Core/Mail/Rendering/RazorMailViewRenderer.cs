@@ -11,7 +11,7 @@ using System;
 using System.IO;
 using System.Threading.Tasks;
 
-namespace Cofoundry.Core.Mail
+namespace Cofoundry.Core.Mail.Internal
 {
     /// <summary>
     /// Renders mail template view files using a razor view engine and a 

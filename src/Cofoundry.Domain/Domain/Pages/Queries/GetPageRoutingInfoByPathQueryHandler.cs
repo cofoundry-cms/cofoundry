@@ -6,14 +6,14 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Cofoundry.Domain.CQS;
 
-namespace Cofoundry.Domain
+namespace Cofoundry.Domain.Internal
 {
     /// <summary>
     /// Attempts to find a matching page route using the supplied path. The path
     /// has to be an absolute match, i.e. the query does not try and find a fall-back similar route.
     /// </summary>
     public class GetPageRoutingInfoByPathQueryHandler 
-        : IAsyncQueryHandler<GetPageRoutingInfoByPathQuery, PageRoutingInfo>
+        : IQueryHandler<GetPageRoutingInfoByPathQuery, PageRoutingInfo>
         , IPermissionRestrictedQueryHandler<GetPageRoutingInfoByPathQuery, PageRoutingInfo>
     {
         #region constructor

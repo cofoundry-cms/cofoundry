@@ -10,10 +10,15 @@ using Cofoundry.Core.Data;
 using Cofoundry.Core.MessageAggregator;
 using System.IO;
 
-namespace Cofoundry.Domain
+namespace Cofoundry.Domain.Internal
 {
+    /// <summary>
+    /// Removes an image asset from the system and
+    /// queues any related files or caches to be removed
+    /// as a separate process.
+    /// </summary>
     public class DeleteImageAssetCommandHandler 
-        : IAsyncCommandHandler<DeleteImageAssetCommand>
+        : ICommandHandler<DeleteImageAssetCommand>
         , IPermissionRestrictedCommandHandler<DeleteImageAssetCommand>
     {
         #region constructor

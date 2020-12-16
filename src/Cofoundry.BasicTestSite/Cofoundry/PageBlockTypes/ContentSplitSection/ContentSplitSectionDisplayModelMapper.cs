@@ -10,13 +10,13 @@ namespace Cofoundry.BasicTestSite
 {
     public class ContentSplitSectionDisplayModelMapper : IPageBlockTypeDisplayModelMapper<ContentSplitSectionDataModel>
     {
-        private readonly IImageAssetRepository _imageAssetRepository;
+        private readonly IContentRepository _contentRepository;
 
         public ContentSplitSectionDisplayModelMapper(
-            IImageAssetRepository imageAssetRepository
+            IContentRepository contentRepository
             )
         {
-            _imageAssetRepository = imageAssetRepository;
+            _contentRepository = contentRepository;
         }
 
         public async Task MapAsync(
@@ -25,7 +25,12 @@ namespace Cofoundry.BasicTestSite
             )
         {
             var imageAssetIds = context.Items.SelectDistinctModelValuesWithoutEmpty(i => i.ImageAssetId);
-            var imageAssets = await _imageAssetRepository.GetImageAssetRenderDetailsByIdRangeAsync(imageAssetIds, context.ExecutionContext);
+            var imageAssets = await _contentRepository
+                .WithExecutionContext(context.ExecutionContext)
+                .ImageAssets()
+                .GetByIdRange(imageAssetIds)
+                .AsRenderDetails()
+                .ExecuteAsync();
 
             foreach (var item in context.Items)
             {

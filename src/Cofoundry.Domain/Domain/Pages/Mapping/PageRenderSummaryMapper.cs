@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Cofoundry.Domain
+namespace Cofoundry.Domain.Internal
 {
     public class PageRenderSummaryMapper : IPageRenderSummaryMapper
     {
@@ -27,7 +27,7 @@ namespace Cofoundry.Domain
         /// </summary>
         /// <param name="dbPageVersion">PageVersion record from the database. Must include the OpenGraphImageAsset property.</param>
         /// <param name="pageRoute">The page route to map to the new object.</param>
-        public T Map<T>(PageVersion dbPageVersion, PageRoute pageRoute)
+        public virtual T Map<T>(PageVersion dbPageVersion, PageRoute pageRoute)
             where T : PageRenderSummary, new()
         {
             if (dbPageVersion == null) throw new ArgumentNullException(nameof(dbPageVersion));
@@ -44,7 +44,7 @@ namespace Cofoundry.Domain
         /// </summary>
         /// <param name="dbPageVersion">PageVersion record from the database. Must include the OpenGraphImageAsset property.</param>
         /// <param name="pageRouteLookup">Dictionary containing all page routes.</param>
-        public T Map<T>(PageVersion dbPageVersion, IDictionary<int, PageRoute> pageRouteLookup)
+        public virtual T Map<T>(PageVersion dbPageVersion, IDictionary<int, PageRoute> pageRouteLookup)
             where T : PageRenderSummary, new()
         {
             if (dbPageVersion == null) throw new ArgumentNullException(nameof(dbPageVersion));
@@ -62,7 +62,7 @@ namespace Cofoundry.Domain
             return page;
         }
 
-        private T MapInternal<T>(PageVersion dbPageVersion) where T : PageRenderSummary, new()
+        protected T MapInternal<T>(PageVersion dbPageVersion) where T : PageRenderSummary, new()
         {
             var page = new T()
             {

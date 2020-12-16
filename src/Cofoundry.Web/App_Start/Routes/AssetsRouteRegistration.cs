@@ -25,11 +25,11 @@ namespace Cofoundry.Web
 
         public ICollection<Type> RunAfter => new Type[] { typeof(RobotsRouteRegistration) };
 
-        public void RegisterRoutes(IRouteBuilder routeBuilder)
+        public void RegisterRoutes(IEndpointRouteBuilder routeBuilder)
         {
             if (!_imageAssetsSettings.Disabled)
             {
-                routeBuilder.MapRoute(
+                routeBuilder.MapControllerRoute(
                     "Cofoundry_ImageAsset",
                     "assets/images/{imageAssetId}-{fileStamp}-{verificationToken}/{fileName}.{extension}",
                     new { controller = "CofoundryAssets", action = "Image" },
@@ -39,13 +39,13 @@ namespace Cofoundry.Web
                 {
                     // These old route are to support pre v0.5 asset routes.
 
-                    routeBuilder.MapRoute(
+                    routeBuilder.MapControllerRoute(
                         "Cofoundry_ImageAsset_OldPath",
                         "assets/images/{assetId}_{fileName}.{extension}",
                         new { controller = "CofoundryAssets", action = "Image_OldPath" },
                         new { assetId = @"\d+" });
 
-                    routeBuilder.MapRoute(
+                    routeBuilder.MapControllerRoute(
                         "Cofoundry_DocumentAsset_Download_OldPath",
                         "assets/files/download/{assetId}_{fileName}.{extension}",
                         new { controller = "CofoundryAssets", action = "FileDownload_OldPath" },
@@ -55,13 +55,13 @@ namespace Cofoundry.Web
 
             if (!_documentAssetsSettings.Disabled)
             {
-                routeBuilder.MapRoute(
+                routeBuilder.MapControllerRoute(
                     "Cofoundry_DocumentAsset",
                     "assets/documents/{documentAssetId}-{fileStamp}-{verificationToken}/{fileName}.{extension}",
                     new { controller = "CofoundryAssets", action = "Document" },
                     new { documentAssetId = @"\d+", fileStamp = @"\d+" });
 
-                routeBuilder.MapRoute(
+                routeBuilder.MapControllerRoute(
                     "Cofoundry_DocumentAsset_Download",
                     "assets/documents/download/{documentAssetId}-{fileStamp}-{verificationToken}/{fileName}.{extension}",
                     new { controller = "CofoundryAssets", action = "DocumentDownload" },
@@ -71,7 +71,7 @@ namespace Cofoundry.Web
                 {
                     // These old route are to support pre v0.5 asset routes.
 
-                    routeBuilder.MapRoute(
+                    routeBuilder.MapControllerRoute(
                         "Cofoundry_DocumentAsset_OldPath",
                         "assets/files/{assetId}_{fileName}.{extension}",
                         new { controller = "CofoundryAssets", action = "File_OldPath" },

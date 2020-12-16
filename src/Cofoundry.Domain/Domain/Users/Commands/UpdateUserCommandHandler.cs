@@ -8,10 +8,10 @@ using Microsoft.EntityFrameworkCore;
 using Cofoundry.Core.Validation;
 using Cofoundry.Core;
 
-namespace Cofoundry.Domain
+namespace Cofoundry.Domain.Internal
 {
     public class UpdateUserCommandHandler
-        : IAsyncCommandHandler<UpdateUserCommand>
+        : ICommandHandler<UpdateUserCommand>
         , IIgnorePermissionCheckHandler
     {
         #region constructor
@@ -98,13 +98,13 @@ namespace Cofoundry.Domain
             // Email
             if (userArea.UseEmailAsUsername && string.IsNullOrEmpty(command.Email))
             {
-                throw new PropertyValidationException("Email field is required.", "Email");
+                throw ValidationErrorException.CreateWithProperties("Email field is required.", "Email");
             }
 
             // Username
             if (!userArea.UseEmailAsUsername && string.IsNullOrWhiteSpace(command.Username))
             {
-                throw new PropertyValidationException("Username field is required", "Username");
+                throw ValidationErrorException.CreateWithProperties("Username field is required", "Username");
             }
         }
 
@@ -135,11 +135,11 @@ namespace Cofoundry.Domain
             {
                 if (userArea.UseEmailAsUsername)
                 {
-                    throw new PropertyValidationException("This email is already registered", "Email");
+                    throw ValidationErrorException.CreateWithProperties("This email is already registered", "Email");
                 }
                 else
                 {
-                    throw new PropertyValidationException("This username is already registered", "Username");
+                    throw ValidationErrorException.CreateWithProperties("This username is already registered", "Username");
                 }
             }
         }

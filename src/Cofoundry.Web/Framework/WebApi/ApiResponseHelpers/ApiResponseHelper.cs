@@ -48,7 +48,7 @@ namespace Cofoundry.Web
         /// <typeparam name="T">Type of the result</typeparam>
         /// <param name="controller">The Controller instance using the helper</param>
         /// <param name="result">The result to return</param>
-        public IActionResult SimpleQueryResponse<T>(Controller controller, T result)
+        public IActionResult SimpleQueryResponse<T>(ControllerBase controller, T result)
         {
             var response = new SimpleResponseData<T>() { Data = result };
 
@@ -65,7 +65,7 @@ namespace Cofoundry.Web
         /// <param name="controller">The Controller instance using the helper</param>
         /// <param name="validationErrors">Validation errors, if any, to be returned.</param>
         /// <param name="returnData">Data to return in the data property of the response object.</param>
-        public IActionResult SimpleCommandResponse<T>(Controller controller, IEnumerable<ValidationError> validationErrors, T returnData)
+        public IActionResult SimpleCommandResponse<T>(ControllerBase controller, IEnumerable<ValidationError> validationErrors, T returnData)
         {
             var response = new SimpleCommandResponseData<T>();
             response.Errors = FormatValidationErrors(validationErrors);
@@ -81,7 +81,7 @@ namespace Cofoundry.Web
         /// </summary>
         /// <param name="controller">The Controller instance using the helper</param>
         /// <param name="validationErrors">Validation errors, if any, to be returned.</param>
-        public IActionResult SimpleCommandResponse(Controller controller, IEnumerable<ValidationError> validationErrors)
+        public IActionResult SimpleCommandResponse(ControllerBase controller, IEnumerable<ValidationError> validationErrors)
         {
             var response = new SimpleCommandResponseData();
             response.Errors = FormatValidationErrors(validationErrors);
@@ -95,7 +95,7 @@ namespace Cofoundry.Web
         /// </summary>
         /// <param name="controller">The Controller instance using the helper</param>
         /// <param name="ex">The NotPermittedException to extract the message from</param>
-        public IActionResult NotPermittedResponse(Controller controller, NotPermittedException ex)
+        public IActionResult NotPermittedResponse(ControllerBase controller, NotPermittedException ex)
         {
             var response = new SimpleCommandResponseData();
             response.Errors = new ValidationError[] { new ValidationError(ex.Message) };
@@ -140,7 +140,7 @@ namespace Cofoundry.Web
         /// <typeparam name="TCommand">Type of the command to execute</typeparam>
         /// <param name="controller">The Controller instance using the helper</param>
         /// <param name="delta">The delta of the command to patch and execute</param>
-        public async Task<IActionResult> RunCommandAsync<TCommand>(Controller controller, int id, IDelta<TCommand> delta) where TCommand : class, ICommand
+        public async Task<IActionResult> RunCommandAsync<TCommand>(ControllerBase controller, int id, IDelta<TCommand> delta) where TCommand : class, ICommand
         {
             var query = new GetUpdateCommandByIdQuery<TCommand>(id);
             var command = await _queryExecutor.ExecuteAsync(query);
@@ -163,7 +163,7 @@ namespace Cofoundry.Web
         /// <typeparam name="TCommand">Type of the command to execute</typeparam>
         /// <param name="controller">The Controller instance using the helper</param>
         /// <param name="delta">The delta of the command to patch and execute</param>
-        public async Task<IActionResult> RunCommandAsync<TCommand>(Controller controller, IDelta<TCommand> delta) where TCommand : class, ICommand
+        public async Task<IActionResult> RunCommandAsync<TCommand>(ControllerBase controller, IDelta<TCommand> delta) where TCommand : class, ICommand
         {
             var query = new GetUpdateCommandQuery<TCommand>();
             var command = await _queryExecutor.ExecuteAsync(query);
@@ -184,7 +184,7 @@ namespace Cofoundry.Web
         /// <typeparam name="TCommand">Type of the command to execute</typeparam>
         /// <param name="controller">The Controller instance using the helper</param>
         /// <param name="command">The command to execute</param>
-        public async Task<IActionResult> RunCommandAsync<TCommand>(Controller controller, TCommand command) where TCommand : ICommand
+        public async Task<IActionResult> RunCommandAsync<TCommand>(ControllerBase controller, TCommand command) where TCommand : ICommand
         {
             var errors = _commandValidationService.GetErrors(command).ToList();
 
@@ -219,7 +219,7 @@ namespace Cofoundry.Web
         /// </summary>
         /// <param name="controller">The Controller instance using the helper</param>
         /// <param name="action">The action to execute</param>
-        public async Task<IActionResult> RunAsync(Controller controller, Func<Task> action)
+        public async Task<IActionResult> RunAsync(ControllerBase controller, Func<Task> action)
         {
             var errors = new List<ValidationError>();
 
@@ -249,7 +249,7 @@ namespace Cofoundry.Web
         /// <typeparam name="TResult">Type of result returned from the function</typeparam>
         /// <param name="controller">The Controller instance using the helper</param>
         /// <param name="functionToExecute">The function to execute</param>
-        public async Task<IActionResult> RunWithResultAsync<TResult>(Controller controller, Func<Task<TResult>> functionToExecute)
+        public async Task<IActionResult> RunWithResultAsync<TResult>(ControllerBase controller, Func<Task<TResult>> functionToExecute)
         {
             var errors = new List<ValidationError>();
             TResult result = default(TResult);
@@ -275,7 +275,7 @@ namespace Cofoundry.Web
 
         #region private helpers
 
-        private IActionResult GetCommandResponse<T>(T response, Controller controller) where T : SimpleCommandResponseData
+        private IActionResult GetCommandResponse<T>(T response, ControllerBase controller) where T : SimpleCommandResponseData
         {
             if (!response.IsValid)
             {
@@ -308,14 +308,25 @@ namespace Cofoundry.Web
                     errors.Add(ToValidationError(result));
                 }
             }
-            else if (ex.ValidationResult != null)
-            {
-                errors.Add(ToValidationError(ex.ValidationResult));
-            }
             else
             {
-                var error = new ValidationError();
-                error.Message = ex.Message;
+                ValidationError error;
+
+                if (ex.ValidationResult != null)
+                {
+                    error = ToValidationError(ex.ValidationResult);
+                }
+                else
+                {
+                    error = new ValidationError();
+                    error.Message = ex.Message;
+                }
+
+                if (ex is ValidationErrorException exceptionWithCode)
+                {
+                    error.ErrorCode = exceptionWithCode.ErrorCode;
+                }
+
                 errors.Add(error);
             }
         }

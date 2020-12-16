@@ -6,14 +6,14 @@ using System.Threading.Tasks;
 using Cofoundry.Domain.CQS;
 using System.IO;
 
-namespace Cofoundry.Domain
+namespace Cofoundry.Domain.Internal
 {
     /// <summary>
     /// Gets a complete list of all rewrite rules set up in the system. This result
     /// set is cached in memory and quick to access.
     /// </summary>
     public class GetRewriteRuleSummaryByPathQueryHandler
-        : IAsyncQueryHandler<GetRewriteRuleSummaryByPathQuery, RewriteRuleSummary>
+        : IQueryHandler<GetRewriteRuleSummaryByPathQuery, RewriteRuleSummary>
         , IPermissionRestrictedQueryHandler<GetRewriteRuleSummaryByPathQuery, RewriteRuleSummary>
     {
         #region constructor

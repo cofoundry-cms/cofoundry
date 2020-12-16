@@ -6,7 +6,7 @@ using Cofoundry.Domain.CQS;
 namespace Cofoundry.Domain
 {
     /// <summary>
-    /// Gets a range of pages by a set of id, projected as a PageRenderSummary, which is
+    /// Query to get a range of pages by a set of ids, projected as a PageRenderSummary, which is
     /// a lighter weight projection designed for rendering to a site when the 
     /// templates, region and block data is not required. The results are 
     /// version-sensitive and defaults to returning published versions only, but
@@ -14,10 +14,21 @@ namespace Cofoundry.Domain
     /// </summary>
     public class GetPageRenderSummariesByIdRangeQuery : IQuery<IDictionary<int, PageRenderSummary>>
     {
+        /// <summary>
+        /// Query to get a range of pages by a set of ids, projected as a PageRenderSummary, which is
+        /// a lighter weight projection designed for rendering to a site when the 
+        /// templates, region and block data is not required. The results are 
+        /// version-sensitive and defaults to returning published versions only, but
+        /// this behavior can be controlled by the publishStatus query property.
+        /// </summary>
         public GetPageRenderSummariesByIdRangeQuery() { }
 
         /// <summary>
-        /// Initializes the query with the specified parameters.
+        /// Query to get a range of pages by a set of ids, projected as a PageRenderSummary, which is
+        /// a lighter weight projection designed for rendering to a site when the 
+        /// templates, region and block data is not required. The results are 
+        /// version-sensitive and defaults to returning published versions only, but
+        /// this behavior can be controlled by the publishStatus query property.
         /// </summary>
         /// <param name="pageIds">Database ids of the pages to get.</param>
         /// <param name="publishStatus">Used to determine which version of the page to include data for.</param>
@@ -27,7 +38,11 @@ namespace Cofoundry.Domain
         }
 
         /// <summary>
-        /// Initializes the query with the specified parameters.
+        /// Query to get a range of pages by a set of ids, projected as a PageRenderSummary, which is
+        /// a lighter weight projection designed for rendering to a site when the 
+        /// templates, region and block data is not required. The results are 
+        /// version-sensitive and defaults to returning published versions only, but
+        /// this behavior can be controlled by the publishStatus query property.
         /// </summary>
         /// <param name="pageIds">Database ids of the pages to get.</param>
         /// <param name="publishStatus">Used to determine which version of the page to include data for.</param>

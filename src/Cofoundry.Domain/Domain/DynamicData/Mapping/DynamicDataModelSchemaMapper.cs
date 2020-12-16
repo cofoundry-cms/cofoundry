@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Cofoundry.Core;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 
-namespace Cofoundry.Domain
+namespace Cofoundry.Domain.Internal
 {
     public class DynamicDataModelSchemaMapper : IDynamicDataModelSchemaMapper
     {

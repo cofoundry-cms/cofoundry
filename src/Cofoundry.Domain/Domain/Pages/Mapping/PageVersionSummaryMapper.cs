@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Cofoundry.Domain.Data;
 
-namespace Cofoundry.Domain
+namespace Cofoundry.Domain.Internal
 {
     /// <summary>
     /// Simple mapper for mapping to PageVersionSummary objects.
@@ -30,7 +30,7 @@ namespace Cofoundry.Domain
         /// </summary>
         /// <param name="pageId">Id of the page that these versions belong to.</param>
         /// <param name="dbResult">Paged result set of records to map.</param>
-        public PagedQueryResult<PageVersionSummary> MapVersions(int pageId, PagedQueryResult<PageVersion> dbResult)
+        public virtual PagedQueryResult<PageVersionSummary> MapVersions(int pageId, PagedQueryResult<PageVersion> dbResult)
         {
             if (dbResult == null) throw new ArgumentNullException(nameof(dbResult));
             if (pageId <= 0) throw new ArgumentOutOfRangeException(nameof(pageId));
@@ -62,7 +62,7 @@ namespace Cofoundry.Domain
 
         }
 
-        private PageVersionSummary MapVersion(PageVersion dbPageVersion)
+        protected PageVersionSummary MapVersion(PageVersion dbPageVersion)
         {
             var result = new PageVersionSummary()
             {

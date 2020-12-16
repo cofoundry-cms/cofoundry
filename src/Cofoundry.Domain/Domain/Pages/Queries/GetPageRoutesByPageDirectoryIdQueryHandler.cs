@@ -1,13 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Cofoundry.Domain.Data;
 using Cofoundry.Domain.CQS;
 
-namespace Cofoundry.Domain
+namespace Cofoundry.Domain.Internal
 {
     /// <summary>
     /// Returns page routing data for pages that are nested immediately inside the specified 
@@ -17,7 +15,7 @@ namespace Cofoundry.Domain
     /// page projections.
     /// </summary>
     public class GetPageRoutesByPageDirectoryIdQueryHandler 
-        : IAsyncQueryHandler<GetPageRoutesByPageDirectoryIdQuery, ICollection<PageRoute>>
+        : IQueryHandler<GetPageRoutesByPageDirectoryIdQuery, ICollection<PageRoute>>
         , IPermissionRestrictedQueryHandler<GetPageRoutesByPageDirectoryIdQuery, ICollection<PageRoute>>
     {
         private readonly IQueryExecutor _queryExecutor;

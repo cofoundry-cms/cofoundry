@@ -596,6 +596,7 @@ function (
         entityVersionModalDialogService
             .publish(pageId, vm.globalLoadState.on)
             .then(loadGrid)
+            .then(vm.globalLoadState.off)
             .catch(vm.globalLoadState.off);
     }
 

@@ -6,6 +6,13 @@ using System.Threading.Tasks;
 
 namespace Cofoundry.Domain
 {
+    /// <summary>
+    /// Contains block data for a single region in a custom entity page.
+    /// This data is for a specific version of a custom entity. The block 
+    /// type used in this projection does not include the mapped display 
+    /// model, if you need the mapped data then use the 
+    /// CustomEntityPageRegionRenderDetails projection instead.
+    /// </summary>
     public class CustomEntityPageRegionDetails
     {
         /// <summary>

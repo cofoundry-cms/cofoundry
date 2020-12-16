@@ -4,14 +4,14 @@ using System.Linq;
 using System.Threading.Tasks;
 using Cofoundry.Domain.CQS;
 using Cofoundry.Core.EntityFramework;
-using System.Data.SqlClient;
+using Microsoft.Data.SqlClient;
 using Cofoundry.Core;
 using Cofoundry.Domain.Data;
 
-namespace Cofoundry.Domain
+namespace Cofoundry.Domain.Internal
 {
     public class LogFailedLoginAttemptCommandHandler
-        : IAsyncCommandHandler<LogFailedLoginAttemptCommand>
+        : ICommandHandler<LogFailedLoginAttemptCommand>
         , IIgnorePermissionCheckHandler
     {
         #region constructor

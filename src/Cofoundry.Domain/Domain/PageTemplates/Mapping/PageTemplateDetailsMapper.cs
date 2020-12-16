@@ -1,5 +1,4 @@
-﻿using Cofoundry.Core;
-using Cofoundry.Domain.Data;
+﻿using Cofoundry.Domain.Data;
 using Cofoundry.Domain.QueryModels;
 using System;
 using System.Collections.Generic;
@@ -7,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Cofoundry.Domain
+namespace Cofoundry.Domain.Internal
 {
     /// <summary>
     /// Simple mapper for mapping to PageTemplateDetails objects.
@@ -19,7 +18,7 @@ namespace Cofoundry.Domain
         /// object. If the db record is null then null is returned.
         /// </summary>
         /// <param name="queryModel">Query data returned from the database.</param>
-        public PageTemplateDetails Map(PageTemplateDetailsQueryModel queryModel)
+        public virtual PageTemplateDetails Map(PageTemplateDetailsQueryModel queryModel)
         {
             var dbPageTemplate = queryModel?.PageTemplate;
             if (dbPageTemplate == null) return null;
@@ -49,7 +48,7 @@ namespace Cofoundry.Domain
             return pageTemplate;
         }
 
-        private PageTemplateRegionDetails MapRegion(PageTemplateRegion dbRegion)
+        protected PageTemplateRegionDetails MapRegion(PageTemplateRegion dbRegion)
         {
             return new PageTemplateRegionDetails()
             {
