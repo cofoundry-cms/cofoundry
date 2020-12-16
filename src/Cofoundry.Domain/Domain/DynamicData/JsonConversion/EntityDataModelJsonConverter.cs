@@ -6,6 +6,11 @@ using System.Text;
 
 namespace Cofoundry.Domain
 {
+    /// <summary>
+    /// JsonConverter used for deserializing IEntityDataModel
+    /// instances such as custom entity data models and page
+    /// block data models.
+    /// </summary>
     public class EntityDataModelJsonConverter : JsonConverter
     {
         private readonly IJsonSerializerSettingsFactory _jsonSerializerSettingsFactory;

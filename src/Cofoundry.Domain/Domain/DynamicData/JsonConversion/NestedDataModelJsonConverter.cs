@@ -5,7 +5,6 @@ using System.Text;
 
 namespace Cofoundry.Domain
 {
-
     /// <summary>
     /// Json.NET converter to convert a json representation of a concrete 
     /// nested data model type into a INestedDataModel property.

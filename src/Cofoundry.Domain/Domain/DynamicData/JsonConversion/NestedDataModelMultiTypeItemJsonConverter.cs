@@ -7,6 +7,10 @@ using System.Text;
 
 namespace Cofoundry.Domain
 {
+    /// <summary>
+    /// JsonConverter for converting the NestedDataModelMultiTypeItem
+    /// objects used in the NestedDataModelMultiTypeCollection value.
+    /// </summary>
     public class NestedDataModelMultiTypeItemJsonConverter : JsonConverter
     {
         private readonly IJsonSerializerSettingsFactory _jsonSerializerSettingsFactory;
