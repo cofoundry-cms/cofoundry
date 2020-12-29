@@ -14,12 +14,15 @@ namespace Cofoundry.Core.Caching.Internal
     public class InMemoryObjectCacheFactory : IObjectCacheFactory
     {
         private readonly ClearableMemoryCache _memoryCache;
+        private readonly InMemoryObjectCacheSettings _inMemoryObjectCacheSettings;
 
         public InMemoryObjectCacheFactory(
-            IOptions<MemoryCacheOptions> optionsAccessor
+            IOptions<MemoryCacheOptions> optionsAccessor,
+            InMemoryObjectCacheSettings inMemoryObjectCacheSettings
             )
         {
             _memoryCache = new ClearableMemoryCache(optionsAccessor);
+            _inMemoryObjectCacheSettings = inMemoryObjectCacheSettings;
         }
 
         /// <summary>
@@ -29,7 +32,14 @@ namespace Cofoundry.Core.Caching.Internal
         /// <returns>IObjectCache instance</returns>
         public IObjectCache Get(string cacheNamespace)
         {
-            return new InMemoryObjectCache(_memoryCache, cacheNamespace);
+            if (_inMemoryObjectCacheSettings.CacheMode == InMemoryObjectCacheMode.Off)
+            {
+                return new CacheDisabledObjectCache();
+            }
+            else
+            {
+                return new InMemoryObjectCache(_memoryCache, cacheNamespace);
+            }
         }
 
         /// <summary>
