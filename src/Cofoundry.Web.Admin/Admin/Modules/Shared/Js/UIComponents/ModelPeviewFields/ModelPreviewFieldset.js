@@ -73,6 +73,7 @@ function (
          * the [PreviewTitle] attribute
          */
         function getTitleTerm(gridFields) {
+
             if (gridFields[PREVIEW_TITLE_FIELD_NAME]) {
                 return gridFields[PREVIEW_TITLE_FIELD_NAME].displayName;
             }

@@ -32,7 +32,11 @@
                 minItems: '@cmsMinItems',
                 maxItems: '@cmsMaxItems',
                 modelTypes: '@cmsModelTypes',
-                orderable: '=cmsOrderable'
+                orderable: '=cmsOrderable',
+                titleColumnHeader: '@cmsTitleColumnHeader',
+                descriptionColumnHeader: '@cmsDescriptionColumnHeader',
+                imageColumnHeader: '@cmsImageColumnHeader',
+                typeColumnHeader: '@cmsTypeColumnHeader'
             }),
             passThroughAttributes: [
                 'required'
@@ -71,6 +75,8 @@
                 nestedDataModelSchemaService
                     .getByNames(allModelTypes)
                     .then(loadModelMetaData);
+
+                initDisplayFields();
             }
 
             function triggerModelChange() {
@@ -121,6 +127,20 @@
 
                 vm.gridImages = new ImagePreviewFieldCollection('typeName');
                 vm.gridImages.load(vm.model, vm.previewFields);
+            }
+
+            function initDisplayFields() {
+                if (vm.titleColumnHeader === undefined) {
+                    vm.titleColumnHeader = "Title";
+                }
+
+                if (vm.descriptionColumnHeader === undefined) {
+                    vm.descriptionColumnHeader = "Description";
+                }
+
+                if (vm.typeColumnHeader === undefined) {
+                    vm.typeColumnHeader = "Type";
+                }
             }
 
             /* EVENTS */

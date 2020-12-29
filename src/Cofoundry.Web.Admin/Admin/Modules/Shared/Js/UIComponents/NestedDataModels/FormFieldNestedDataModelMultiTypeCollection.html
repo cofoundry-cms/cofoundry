@@ -12,10 +12,10 @@
                 <table>
                     <thead>
                         <tr>
-                            <th ng-if="vm.previewFields.showImage"></th>
-                            <th ng-if="vm.previewFields.showTitle">Title</th>
-                            <th ng-if="vm.previewFields.showDescription">Description</th>
-                            <th >Type</th>
+                            <th ng-if="vm.previewFields.showImage">{{vm.imageColumnHeader}}</th>
+                            <th ng-if="vm.previewFields.showTitle">{{vm.titleColumnHeader}}</th>
+                            <th ng-if="vm.previewFields.showDescription">{{vm.descriptionColumnHeader}}</th>
+                            <th>{{vm.typeColumnHeader}}</th>
                             <th cms-table-column-actions
                                 ng-if="vm.formScope.editMode">Actions</th>
                         </tr>

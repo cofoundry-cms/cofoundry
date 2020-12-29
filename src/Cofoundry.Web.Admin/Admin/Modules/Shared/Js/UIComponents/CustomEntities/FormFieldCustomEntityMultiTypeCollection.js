@@ -34,7 +34,11 @@ function (
         scope: _.extend(baseConfig.scope, {
             customEntityDefinitionCodes: '@cmsCustomEntityDefinitionCodes',
             localeId: '=cmsLocaleId',
-            orderable: '=cmsOrderable'
+            orderable: '=cmsOrderable',
+            titleColumnHeader: '@cmsTitleColumnHeader',
+            descriptionColumnHeader: '@cmsDescriptionColumnHeader',
+            imageColumnHeader: '@cmsImageColumnHeader',
+            typeColumnHeader: '@cmsTypeColumnHeader'
         }),
         require: _.union(baseConfig.require, ['?^^cmsFormDynamicFieldSet']),
         passThroughAttributes: [
@@ -89,6 +93,21 @@ function (
                 .then(loadMetaData);
 
             scope.$watch("vm.model", setGridItems);
+            initDisplayFields();
+        }
+
+        function initDisplayFields() {
+            if (vm.titleColumnHeader === undefined) {
+                vm.titleColumnHeader = "Title";
+            }
+
+            if (vm.descriptionColumnHeader === undefined) {
+                vm.descriptionColumnHeader = "Description";
+            }
+
+            if (vm.typeColumnHeader === undefined) {
+                vm.typeColumnHeader = "Type";
+            }
         }
 
         /* EVENTS */

@@ -12,8 +12,11 @@ using System.Threading.Tasks;
 namespace Cofoundry.Domain
 {
     /// <summary>
-    /// Use this to decorate a collection of INestedDataModel objects, allowing them 
-    /// to be edited in the admin UI. Optional parameters indicate whether the collection 
+    /// Use this to decorate a collection of NestedDataModelMultiTypeItem
+    /// objects, indicating the property represents a set of nested data 
+    /// models of mixed types. The types must be defined in the attribute 
+    /// constructor by passing in a type reference for each nested data model 
+    /// you want to be able to add.
     /// is sortable.
     /// </summary>
     [AttributeUsage(AttributeTargets.Property)]
@@ -22,7 +25,7 @@ namespace Cofoundry.Domain
         private readonly IEnumerable<Type> _types;
 
         /// <summary>
-        /// Use this to decorate a collection of INestedDataModel objects, allowing them 
+        /// Use this to decorate a collection of NestedDataModelMultiTypeItem objects, allowing them 
         /// to be edited in the admin UI. Optional parameters indicate whether the collection 
         /// is sortable.
         /// </summary>
@@ -51,7 +54,31 @@ namespace Cofoundry.Domain
         /// Can the collection be manually ordered by the user?
         /// </summary>
         public bool IsOrderable { get; set; }
-        
+
+        /// <summary>
+        /// The text to use in the column header for the title field. Defaults
+        /// to "Title".
+        /// </summary>
+        public string TitleColumnHeader { get; set; }
+
+        /// <summary>
+        /// The text to use in the column header for the description field. Defaults
+        /// to "Description".
+        /// </summary>
+        public string DescriptionColumnHeader { get; set; }
+
+        /// <summary>
+        /// The text to use in the column header for the image field. Defaults
+        /// to empty string.
+        /// </summary>
+        public string ImageColumnHeader { get; set; }
+
+        /// <summary>
+        /// The text to use in the column header for the model type field. Defaults
+        /// to "Type".
+        /// </summary>
+        public string TypeColumnHeader { get; set; }
+
         public void Process(DisplayMetadataProviderContext context)
         {
             ValidateModelType(context);
@@ -66,6 +93,10 @@ namespace Cofoundry.Domain
                 .AddAdditionalValueIfNotEmpty("MinItems", MinItems)
                 .AddAdditionalValueIfNotEmpty("MaxItems", MaxItems)
                 .AddAdditionalValueIfNotEmpty("Orderable", IsOrderable)
+                .AddAdditionalValueIfNotNull("TitleColumnHeader", TitleColumnHeader)
+                .AddAdditionalValueIfNotNull("DescriptionColumnHeader", DescriptionColumnHeader)
+                .AddAdditionalValueIfNotNull("ImageColumnHeader", ImageColumnHeader)
+                .AddAdditionalValueIfNotNull("TypeColumnHeader", TypeColumnHeader)
                 .AddAdditionalValueIfNotEmpty("ModelTypes", nestedModelTypeNames);
 
             modelMetaData.TemplateHint = "NestedDataModelMultiTypeCollection";
