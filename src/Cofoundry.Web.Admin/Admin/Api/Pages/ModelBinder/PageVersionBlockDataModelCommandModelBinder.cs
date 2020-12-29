@@ -64,7 +64,7 @@ namespace Cofoundry.Web.Admin
         {
             // If there's no id then the model probably wasn't supplied and should be
             // considered null which will cause a validation error
-            if (pageBlockTypeId.HasValue || pageBlockTypeId < 1) return null;
+            if (!pageBlockTypeId.HasValue || pageBlockTypeId < 1) return null;
 
             var dataBlockType = await _pageBlockTypeDataModelTypeFactory.CreateByPageBlockTypeIdAsync(pageBlockTypeId.Value);
             EntityNotFoundException.ThrowIfNull(dataBlockType, pageBlockTypeId);
