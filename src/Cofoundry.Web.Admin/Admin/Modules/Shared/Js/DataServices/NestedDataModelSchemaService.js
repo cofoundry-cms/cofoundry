@@ -23,6 +23,13 @@ function (
             }
         });
     };
+
+    service.validate = function (typeName, model) {
+        return $http.post(serviceBase + 'nested-data-model-schemas/validate', {
+            typeName: typeName,
+            model: model
+        });
+    };
     
     return service;
 }]);

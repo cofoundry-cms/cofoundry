@@ -1,5 +1,7 @@
-﻿using System;
+﻿using Cofoundry.Core.Validation;
+using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Text;
 
 namespace Cofoundry.Domain
@@ -14,11 +16,13 @@ namespace Cofoundry.Domain
         /// The type name of the concrete data model type. The model
         /// type must implement INestedDataModel.
         /// </summary>
+        [Required]
         public string TypeName { get; set; }
 
         /// <summary>
         /// The model data to stored as unstructured data.
         /// </summary>
+        [ValidateObject]
         public INestedDataModel Model { get; set; }
     }
 }

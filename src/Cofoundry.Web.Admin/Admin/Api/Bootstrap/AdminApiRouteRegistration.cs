@@ -135,6 +135,7 @@ namespace Cofoundry.Web.Admin
                 .ForAdminApiController<NestedDataModelSchemaApiController>("nested-data-model-schemas")
                 .MapGet()
                 .MapGet("{dataModelName}", "GetByName")
+                .MapPost("validate", "Validate")
                 ;
         }
 

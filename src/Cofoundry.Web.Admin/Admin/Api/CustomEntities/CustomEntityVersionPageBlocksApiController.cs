@@ -18,17 +18,14 @@ namespace Cofoundry.Web.Admin
 
         private readonly IQueryExecutor _queryExecutor;
         private readonly IApiResponseHelper _apiResponseHelper;
-        private readonly ICommandExecutor _commandExecutor;
 
         public CustomEntityVersionPageBlocksApiController(
             IQueryExecutor queryExecutor,
-            ICommandExecutor commandExecutor,
             IApiResponseHelper apiResponseHelper
             )
         {
             _queryExecutor = queryExecutor;
             _apiResponseHelper = apiResponseHelper;
-            _commandExecutor = commandExecutor;
         }
 
         #region queries

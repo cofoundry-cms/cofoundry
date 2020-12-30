@@ -1,4 +1,5 @@
 ﻿using Cofoundry.Core;
+using Cofoundry.Core.Validation;
 using Cofoundry.Domain;
 using Cofoundry.Domain.CQS;
 using Microsoft.AspNetCore.Mvc;
@@ -14,14 +15,17 @@ namespace Cofoundry.Web.Admin
     {
         private readonly IQueryExecutor _queryExecutor;
         private readonly IApiResponseHelper _apiResponseHelper;
+        private readonly IModelValidationService _modelValidationService;
 
         public NestedDataModelSchemaApiController(
             IQueryExecutor queryExecutor,
-            IApiResponseHelper apiResponseHelper
+            IApiResponseHelper apiResponseHelper,
+            IModelValidationService modelValidationService
             )
         {
             _queryExecutor = queryExecutor;
             _apiResponseHelper = apiResponseHelper;
+            _modelValidationService = modelValidationService;
         }
 
         public async Task<IActionResult> Get([FromQuery] GetNestedDataModelSchemaByNameRangeQuery rangeQuery)
@@ -38,6 +42,18 @@ namespace Cofoundry.Web.Admin
         {
             var results = await _queryExecutor.ExecuteAsync(new GetNestedDataModelSchemaByNameQuery(dataModelName));
             return _apiResponseHelper.SimpleQueryResponse(this, results);
+        }
+
+        public IActionResult Validate([ModelBinder(BinderType = typeof(NestedDataModelMultiTypeItemModelBinder))] NestedDataModelMultiTypeItem item)
+        {
+            if (item?.Model == null)
+            {
+                throw new Exception("Error binding model");
+            }
+
+            var errors = _modelValidationService.GetErrors(item.Model).ToList();
+
+            return _apiResponseHelper.SimpleCommandResponse(this, errors);
         }
     }
 }

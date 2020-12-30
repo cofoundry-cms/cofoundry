@@ -1,4 +1,5 @@
 ﻿using Cofoundry.Core;
+using Cofoundry.Core.Validation;
 using Microsoft.AspNetCore.Mvc.ModelBinding.Metadata;
 using System;
 using System.Collections;
@@ -20,7 +21,7 @@ namespace Cofoundry.Domain
     /// is sortable.
     /// </summary>
     [AttributeUsage(AttributeTargets.Property)]
-    public class NestedDataModelMultiTypeCollectionAttribute : ValidationAttribute, IMetadataAttribute, IEntityRelationAttribute
+    public class NestedDataModelMultiTypeCollectionAttribute : ValidateObjectAttribute, IMetadataAttribute, IEntityRelationAttribute
     {
         private readonly IEnumerable<Type> _types;
 
@@ -163,7 +164,7 @@ namespace Cofoundry.Domain
                 return new ValidationResult(validationContext.MemberName + $" cannot have more than {MaxItems} items.", new string[] { validationContext.MemberName });
             }
 
-            return ValidationResult.Success;
+            return base.IsValid(value, validationContext);
         }
     }
 }

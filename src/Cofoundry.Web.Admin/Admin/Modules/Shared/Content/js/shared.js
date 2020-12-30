@@ -6549,6 +6549,13 @@ function (
             }
         });
     };
+
+    service.validate = function (typeName, model) {
+        return $http.post(serviceBase + 'nested-data-model-schemas/validate', {
+            typeName: typeName,
+            model: model
+        });
+    };
     
     return service;
 }]);
@@ -13114,14 +13121,14 @@ function (
 }]);
 angular.module('cms.shared').controller('EditNestedDataModelDialogController', [
     '$scope',
-    'shared.focusService',
-    'shared.stringUtilities',
+    'shared.nestedDataModelSchemaService',
+    'shared.LoadState',
     'options',
     'close',
 function (
     $scope,
-    focusService,
-    stringUtilities,
+    nestedDataModelSchemaService,
+    LoadState,
     options,
     close) {
     
@@ -13139,15 +13146,25 @@ function (
         vm.formDataSource = {
             model: options.model || {},
             modelMetaData: options.modelMetaData
-        }
+        };
+        vm.saveLoadState = new LoadState();
     }
 
     /* EVENTS */
 
     function onSave() {
+        vm.saveLoadState.on();
 
-        if (options.onSave) options.onSave(vm.formDataSource.model);
-        close();
+        console.log('save', vm.formDataSource);
+        nestedDataModelSchemaService
+            .validate(vm.formDataSource.modelMetaData.typeName, vm.formDataSource.model)
+            .then(onValidationSuccess)
+            .finally(vm.saveLoadState.off);
+
+        function onValidationSuccess() {
+            if (options.onSave) options.onSave(vm.formDataSource.name, vm.formDataSource.model);
+            close();
+        }
     }
 
     function onCancel() {
