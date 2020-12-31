@@ -1857,10 +1857,6 @@ form.loading > *, table.loading > *, div.loading > *, fieldset.loading > * {
 /* line 55, ../../Js/UIComponents/Table/_table.scss */
 .table tbody tr {
   background-color: #fff;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -khtml-user-select: none;
-  -ms-user-select: none;
 }
 /* line 62, ../../Js/UIComponents/Table/_table.scss */
 .table tbody tr:nth-child(odd) {
