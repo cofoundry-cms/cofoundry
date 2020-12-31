@@ -16,13 +16,18 @@ namespace Cofoundry.Domain
     {
         #region constructors
 
+        /// <summary>
+        /// This can be used to decorate image properties in dynamic data providers to give properties about the image for filtering when browsing.
+        /// I.e. you can specify dimensions and tags for filtering the list of images.
+        /// </summary>
         public ImageAttribute()
             : this(null)
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ImageAttribute"/> class.
+        /// This can be used to decorate image properties in dynamic data providers to give properties about the image for filtering when browsing.
+        /// I.e. you can specify dimensions and tags for filtering the list of images.
         /// </summary>
         /// <param name="tags">An array of tags for which to filter when browsing for this image</param>
         public ImageAttribute(params string[] tags)

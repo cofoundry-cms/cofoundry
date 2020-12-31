@@ -18,9 +18,21 @@ namespace Cofoundry.Domain
     {
         #region constructor
 
-        public ImageCollectionAttribute()
+        /// <summary>
+        /// Use this to decorate an integer array of ImageAssetIds and indicate that it should be a collection 
+        /// of image assets. The editor allows for sorting of linked image assets and you can set filters for restricting image sizes.
+        /// </summary>
+        public ImageCollectionAttribute() { }
+
+        /// <summary>
+        /// Use this to decorate an integer array of ImageAssetIds and indicate that it should be a collection 
+        /// of image assets. The editor allows for sorting of linked image assets and you can set filters for restricting image sizes.
+        /// </summary>
+        /// <param name="tags">An array of tags for which to filter when browsing for images.</param>
+        public ImageCollectionAttribute(params string[] tags)
             : base()
         {
+            Tags = tags;
         }
 
         #endregion
@@ -34,6 +46,7 @@ namespace Cofoundry.Domain
             var modelMetaData = context.DisplayMetadata;
 
             modelMetaData
+                .AddAdditionalValueIfNotEmpty("Tags", Tags)
                 .AddAdditionalValueIfNotEmpty("Width", Width)
                 .AddAdditionalValueIfNotEmpty("Height", Height)
                 .AddAdditionalValueIfNotEmpty("MinWidth", MinWidth)
@@ -78,6 +91,12 @@ namespace Cofoundry.Domain
         /// The minimum height of the image for which to browse.
         /// </summary>
         public int MinHeight { get; set; }
+
+        /// <summary>
+        /// Filters the image selection to only show images with tags that 
+        /// match this value.
+        /// </summary>
+        public string[] Tags { get; set; }
 
         #endregion
     }
