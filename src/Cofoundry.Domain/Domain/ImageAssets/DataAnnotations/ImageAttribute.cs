@@ -117,7 +117,7 @@ namespace Cofoundry.Domain
         /// Filters the image selection to only show images with tags that 
         /// match this value.
         /// </summary>
-        public string[] Tags { get; private set; }
+        public string[] Tags { get; set; }
 
         #endregion
     }

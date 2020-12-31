@@ -3673,6 +3673,7 @@ input[type="color"] {
 /* line 8, ../../Js/UIComponents/ImageAssets/_image-asset.scss */
 .image-asset img {
   max-width: 85%;
+  max-height: 150px;
 }
 /* line 12, ../../Js/UIComponents/ImageAssets/_image-asset.scss */
 .image-asset img.selectable {

@@ -12,7 +12,7 @@ function (
 
     /* CONSTANTS */
 
-    var CHAR_BLACKLIST = /[^,&\w\s'()-]+/g,
+    var CHAR_BLOCKLIST = /[^,&\w\s'()-]+/g,
         TAG_DELIMITER = ', ';
 
     /* CONFIG */
@@ -105,8 +105,8 @@ function (
         }
 
         function getBadTagRegex() {
-            CHAR_BLACKLIST.lastIndex = 0;
-            return CHAR_BLACKLIST;
+            CHAR_BLOCKLIST.lastIndex = 0;
+            return CHAR_BLOCKLIST;
         }
     }
 }]);

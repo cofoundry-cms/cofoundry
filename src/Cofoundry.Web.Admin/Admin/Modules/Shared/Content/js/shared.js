@@ -12310,6 +12310,7 @@ function (
             loadState: '=cmsLoadState',
             isEditMode: '=cmsIsEditMode',
             modelName: '=cmsModelName',
+            modelName: '=cmsFilter',
             ngModel: '=ngModel',
             onChange: '&cmsOnChange'
         },
@@ -12402,7 +12403,10 @@ function (
                 if (!imgInfo) {
                     onNoFileSelected();
                 }
+
                 ngModelController.$setViewValue(imgInfo.file);
+                ngModelController.$setValidity('filterError', true);
+
                 setPreviewImage(imgInfo.file);
                 vm.isRemovable = !isRequired;
                 vm.isResized = imgInfo.isResized;
@@ -12491,8 +12495,9 @@ function (
         vm.onCancel = onCancel;
         vm.close = onCancel;
         vm.filter = options.filter;
-        vm.onFileChanged = onFileChanged;
-        vm.hasFilterRestrictions = hasFilterRestrictions;
+        $scope.$watch("command.file", setFileName);
+
+        setFilter(options.filter);
 
         vm.saveLoadState = new LoadState();
     }
@@ -12507,7 +12512,7 @@ function (
             .then(uploadComplete);
     }
 
-    function onFileChanged() {
+    function setFileName() {
         var command = vm.command;
 
         if (command.file && command.file.name) {
@@ -12523,13 +12528,38 @@ function (
     /* PUBLIC HELPERS */
     function initData() {
         vm.command = {};
+        console.log(vm.filter.tags);
+        if (vm.filter.tags) {
+            vm.command.tags = vm.filter.tags.split(',');
+        }
     }
 
-    function hasFilterRestrictions() {
-        return options.filter.minWidth ||
-            options.filter.minHeight ||
-            options.filter.width ||
-            options.filter.height;
+    function setFilter(filter) {
+        var parts = [];
+
+        if (filter) {
+            addSize(filter.width, filter.height);
+            addSize(filter.minWidth, filter.minHeight, 'min-');
+        }
+
+        vm.filterText = parts.join(', ');
+        vm.isFilterSet = parts.length > 0;
+
+        function addSize(width, height, prefix) {
+            if (width && height) {
+                parts.push(prefix + 'size ' + width + 'x' + height);
+            }
+            else {
+                addIfSet(prefix + 'width', width);
+                addIfSet(prefix + 'height', height);
+            }
+        }
+
+        function addIfSet(name, value) {
+            if (value) {
+                parts.push(name + ' ' + value);
+            }
+        }
     }
 
     function cancel() {
@@ -14588,7 +14618,7 @@ function (
 
     /* CONSTANTS */
 
-    var CHAR_BLACKLIST = /[^,&\w\s'()-]+/g,
+    var CHAR_BLOCKLIST = /[^,&\w\s'()-]+/g,
         TAG_DELIMITER = ', ';
 
     /* CONFIG */
@@ -14681,8 +14711,8 @@ function (
         }
 
         function getBadTagRegex() {
-            CHAR_BLACKLIST.lastIndex = 0;
-            return CHAR_BLACKLIST;
+            CHAR_BLOCKLIST.lastIndex = 0;
+            return CHAR_BLOCKLIST;
         }
     }
 }]);

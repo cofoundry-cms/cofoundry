@@ -36,6 +36,7 @@ function (
             loadState: '=cmsLoadState',
             isEditMode: '=cmsIsEditMode',
             modelName: '=cmsModelName',
+            modelName: '=cmsFilter',
             ngModel: '=ngModel',
             onChange: '&cmsOnChange'
         },
@@ -128,7 +129,10 @@ function (
                 if (!imgInfo) {
                     onNoFileSelected();
                 }
+
                 ngModelController.$setViewValue(imgInfo.file);
+                ngModelController.$setValidity('filterError', true);
+
                 setPreviewImage(imgInfo.file);
                 vm.isRemovable = !isRequired;
                 vm.isResized = imgInfo.isResized;

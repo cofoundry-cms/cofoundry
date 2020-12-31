@@ -14,14 +14,14 @@
 
         <cms-page-body>
 
-            <cms-warning-message ng-if="hasFilterRestrictions()">The image field you are assigning to has restrictions. If you are unsure, cancel this dialog and check the filters menu.</cms-warning-message>
+            <cms-warning-message ng-if="isFilterSet">This image field has restrictions: {{filterText}}</cms-warning-message>
 
             <cms-form-section cms-title="Image details">
 
                 <cms-form-field-image-upload cms-title="File"
                                              cms-model="command.file"
-                                             cms-change="onFileChanged()"
                                              cms-load-state="saveLoadState"
+                                             cms-filter="filter"
                                              required></cms-form-field-image-upload>
 
                 <cms-form-field-text cms-title="Title"
