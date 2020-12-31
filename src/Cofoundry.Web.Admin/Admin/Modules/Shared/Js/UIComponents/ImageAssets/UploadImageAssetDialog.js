@@ -63,7 +63,7 @@ function (
     /* PUBLIC HELPERS */
     function initData() {
         vm.command = {};
-        console.log(vm.filter.tags);
+
         if (vm.filter.tags) {
             vm.command.tags = vm.filter.tags.split(',');
         }

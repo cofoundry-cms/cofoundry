@@ -29,7 +29,8 @@ function (
     var config = {
         templateUrl: modulePath + 'UIComponents/ImageAssets/FormFieldImageAssetCollection.html',
         passThroughAttributes: [
-            'required'
+            'required',
+            'ngRequired'
         ],
         link: link
     };
@@ -39,8 +40,7 @@ function (
     /* LINK */
 
     function link(scope, el, attributes, controllers) {
-        var vm = scope.vm,
-            isRequired = _.has(attributes, 'required');
+        var vm = scope.vm;
 
         init();
         return baseConfig.link(scope, el, attributes, controllers);

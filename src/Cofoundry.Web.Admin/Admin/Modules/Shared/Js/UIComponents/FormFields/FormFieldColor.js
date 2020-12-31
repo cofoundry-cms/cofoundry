@@ -23,7 +23,7 @@ function (
         // call base
         baseFormFieldFactory.defaultConfig.link.apply(this, arguments);
 
-        // add custom error for email since its not attribute based like other validation messages
+        // add custom error for value since its not attribute based like other validation messages
         vm.validators.push({
             name: 'pattern',
             message: vm.title + " must be a hexadecimal colour value e.g. '#EFEFEF' or '#fff'"

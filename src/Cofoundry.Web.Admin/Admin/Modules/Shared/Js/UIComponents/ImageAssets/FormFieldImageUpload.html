@@ -3,14 +3,70 @@
         <label class="control-label" for="{{vm.modelName}}">{{vm.title}}:</label>
         <div class="controls">
             <div class="image-asset">
-                <cms-image-upload cms-asset="vm.asset"
-                                  cms-load-state="vm.loadState"
-                                  cms-is-edit-mode="vm.formScope.editMode"
-                                  cms-model-name="vm.modelName"
-                                  cms-on-change="vm.change()"
-                                  ng-model="vm.model">
+                <div ngf-drop
+                     ngf-change="vm.fileChanged($files, $event)"
+                     ngf-accept="image/gif,image/jpeg,image/png,image/tiff,image/bmp,.tif"
+                     ngf-hide-on-drop-not-available="false"
+                     ngf-drag-over-class="{accept:'dragover-accepted', reject:'dragover-rejected'}"
+                     ng-show="vm.formScope.editMode"
+                     id="{{vm.modelName}}"
+                     name="{{vm.modelName}}"
+                     ng-model="vm.model"
+                     ng-required="vm.isRequired"
+                     class="dragarea js-image-upload"
+                     cms-loading="vm.mainLoadState.isLoading">
 
-                </cms-image-upload>
+                    <img ng-if="vm.model"
+                         ngf-select
+                         ngf-change="vm.fileChanged($files, $event)"
+                         ngf-accept="'image/gif,image/jpeg,image/png,image/tiff,image/bmp,.tif'"
+                         ngf-reset-on-click="false"
+                         ng-src="{{vm.previewUrl}}"
+                         class="img-polaroid selectable"
+                         alt="{{vm.model.name}}" />
+
+                    <cms-progress-bar load-state="vm.loadState" ng-if="vm.model && !vm.model.isCurrentFile"></cms-progress-bar>
+
+                    <div>
+                        <button ng-if="!vm.model"
+                                class="btn-icon"
+                                ngf-select
+                                title="{{vm.buttonText}}"
+                                type="button"
+                                ngf-change="vm.fileChanged($files, $event)"
+                                ngf-accept="'image/gif,image/jpeg,image/png,image/tiff,image/bmp,.tif'"
+                                ngf-reset-on-click="false"
+                                ng-disabled="vm.loadState.isLoading">
+                            <i class="fa fa-picture-o"></i>
+                        </button>
+                        <button ng-if="vm.model"
+                                class="btn-icon image-upload-cog"
+                                ngf-select
+                                title="{{vm.buttonText}}"
+                                type="button"
+                                ngf-change="vm.fileChanged($files, $event)"
+                                ngf-accept="'image/gif,image/jpeg,image/png,image/tiff,image/bmp,.tif'"
+                                ngf-reset-on-click="false"
+                                ng-disabled="vm.loadState.isLoading">
+                            <i class="fa fa-cog"></i>
+                        </button>
+                        <button type="button"
+                                ng-if="vm.isRemovable"
+                                ng-click="vm.remove()"
+                                ng-disabled="vm.loadState.isLoading">
+                            Remove
+                        </button>
+                    </div>
+
+                    <div class="image-upload-info" ng-if="!vm.model">Click the icon above or drag and drop a file here</div>
+                    <div class="image-upload-drop-info">Drop file here</div>
+                    <div class="image-upload-drop-rejected">This file is not valid</div>
+                    <div ng-if="vm.isResized">The image is too large and will be resized to {{vm.resizeSize}}.</div>
+                </div>
+
+                <div ng-show="!vm.formScope.editMode">
+                    <img ng-src="{{vm.previewUrl}}" class="img-polaroid" alt="{{vm.model.name}}" />
+                </div>
             </div>
             <cms-form-field-validation-summary></cms-form-field-validation-summary>
         </div>
