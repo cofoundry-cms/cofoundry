@@ -15,16 +15,19 @@ namespace Cofoundry.Web.Admin
         private readonly IQueryExecutor _queryExecutor;
         private readonly IApiResponseHelper _apiResponseHelper;
         private readonly IFormFileUploadedFileFactory _formFileUploadedFileFactory;
+        private readonly ImageAssetsSettings _imageAssetsSettings;
 
         public ImagesApiController(
             IQueryExecutor queryExecutor,
             IApiResponseHelper apiResponseHelper,
-            IFormFileUploadedFileFactory formFileUploadedFileFactory
+            IFormFileUploadedFileFactory formFileUploadedFileFactory,
+            ImageAssetsSettings imageAssetsSettings
             )
         {
             _queryExecutor = queryExecutor;
             _apiResponseHelper = apiResponseHelper;
             _formFileUploadedFileFactory = formFileUploadedFileFactory;
+            _imageAssetsSettings = imageAssetsSettings;
         }
 
         #region queries
@@ -53,6 +56,14 @@ namespace Cofoundry.Web.Admin
             var result = await _queryExecutor.ExecuteAsync(query);
 
             return _apiResponseHelper.SimpleQueryResponse(this, result);
+        }
+
+        public IActionResult GetSettings()
+        {
+            return _apiResponseHelper.SimpleQueryResponse(this, new { 
+                _imageAssetsSettings.MaxUploadWidth,
+                _imageAssetsSettings.MaxUploadHeight
+            });
         }
 
         #endregion

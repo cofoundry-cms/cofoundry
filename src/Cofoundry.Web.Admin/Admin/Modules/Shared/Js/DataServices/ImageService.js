@@ -35,6 +35,11 @@ function (
         return $http.get(service.getIdRoute(imageId));
     }
 
+    service.getSettings = function () {
+
+        return $http.get(imagesServiceBase + "/settings");
+    }
+
     service.getByIdRange = function (ids) {
 
         return $http.get(imagesServiceBase + '/', {

@@ -7,24 +7,26 @@
      id="{{vm.modelName}}"
      name="{{vm.modelName}}"
      ng-model="vm.ngModel"
-     class="dragarea">
+     class="dragarea"
+     cms-loading="vm.mainLoadState.isLoading">
 
-    <img ng-if="vm.ngModel" 
+    <img ng-if="vm.ngModel"
          ngf-select
          ngf-change="vm.fileChanged($files, $event)"
          ngf-accept="'image/gif,image/jpeg,image/png,image/tiff,image/bmp,.tif'"
          ngf-reset-on-click="false"
-         ng-src="{{vm.previewUrl}}" 
-         class="img-polaroid selectable" 
-         width="220" 
+         ng-src="{{vm.previewUrl}}"
+         class="img-polaroid selectable"
+         width="220"
          alt="{{vm.ngModel.name}}" />
+
 
     <cms-progress-bar load-state="vm.loadState" ng-if="vm.ngModel && !vm.ngModel.isCurrentFile"></cms-progress-bar>
 
     <div>
         <button ng-if="!vm.ngModel"
-                class="btn-icon" 
-                ngf-select 
+                class="btn-icon"
+                ngf-select
                 title="{{vm.buttonText}}"
                 type="button"
                 ngf-change="vm.fileChanged($files, $event)"
@@ -34,8 +36,8 @@
             <i class="fa fa-picture-o"></i>
         </button>
         <button ng-if="vm.ngModel"
-                class="btn-icon image-upload-cog" 
-                ngf-select 
+                class="btn-icon image-upload-cog"
+                ngf-select
                 title="{{vm.buttonText}}"
                 type="button"
                 ngf-change="vm.fileChanged($files, $event)"
@@ -51,9 +53,11 @@
             Remove
         </button>
     </div>
+
     <div class="image-upload-info" ng-if="!vm.ngModel">Click the icon above or drag and drop a file here</div>
     <div class="image-upload-drop-info">Drop file here</div>
     <div class="image-upload-drop-rejected">This file is not valid</div>
+    <div ng-if="vm.isResized">The image is too large and will be resized to {{vm.resizeSize}}.</div>
 </div>
 
 <div ng-show="!vm.isEditMode">

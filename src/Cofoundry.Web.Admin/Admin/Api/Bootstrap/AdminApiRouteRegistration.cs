@@ -147,6 +147,7 @@ namespace Cofoundry.Web.Admin
                 .ForAdminApiController<ImagesApiController>("images")
                 .MapGet()
                 .MapGetById(imageAssetIdRoute)
+                .MapGet("settings", "GetSettings")
                 .MapPost()
                 .MapPut(imageAssetIdRoute)
                 .MapDelete(imageAssetIdRoute)

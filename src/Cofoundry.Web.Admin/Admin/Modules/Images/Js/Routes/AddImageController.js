@@ -1,18 +1,20 @@
 ﻿angular.module('cms.images').controller('AddImageController', [
-            '$location',
-            '_',
-            'shared.focusService',
-            'shared.stringUtilities',
-            'shared.LoadState',
-            'images.imageService',
-        function (
-            $location,
-            _,
-            focusService,
-            stringUtilities,
-            LoadState,
-            imageService
-        ) {
+    '$location',
+    '$scope',
+    '_',
+    'shared.focusService',
+    'shared.stringUtilities',
+    'shared.LoadState',
+    'images.imageService',
+function (
+    $location,
+    $scope,
+    _,
+    focusService,
+    stringUtilities,
+    LoadState,
+    imageService
+) {
 
     var vm = this;
 
@@ -26,7 +28,7 @@
 
         vm.save = save;
         vm.cancel = cancel;
-        vm.onFileChanged = onFileChanged;
+        $scope.$watch("vm.command.file", setFileName);
 
         vm.editMode = false;
         vm.saveLoadState = new LoadState();
@@ -43,10 +45,11 @@
             .then(redirectToList);
     }
 
-    function onFileChanged() {
-        var command = vm.command;
+    function setFileName() {
 
+        var command = vm.command;
         if (command.file && command.file.name) {
+
             command.title = stringUtilities.capitaliseFirstLetter(stringUtilities.getFileNameWithoutExtension(command.file.name));
             focusService.focusById('title');
         }

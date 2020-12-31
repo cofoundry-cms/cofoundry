@@ -2,17 +2,23 @@
  * File upload control for images. Uses https://github.com/danialfarid/angular-file-upload
  */
 angular.module('cms.shared').directive('cmsImageUpload', [
-            '_',
-            'shared.internalModulePath',
-            'shared.internalContentPath',
-            'shared.stringUtilities',
-            'shared.urlLibrary',
-        function (
-            _,
-            modulePath,
-            contentPath,
-            stringUtilities,
-            urlLibrary) {
+    '_',
+    'shared.internalModulePath',
+    'shared.internalContentPath',
+    'shared.LoadState',
+    'shared.stringUtilities',
+    'shared.imageFileUtilities',
+    'shared.imageService',
+    'shared.urlLibrary',
+function (
+    _,
+    modulePath,
+    contentPath,
+    LoadState,
+    stringUtilities,
+    imageFileUtilities,
+    imageService,
+    urlLibrary) {
 
     /* VARS */
 
@@ -55,7 +61,18 @@ angular.module('cms.shared').directive('cmsImageUpload', [
             vm.remove = remove;
             vm.fileChanged = onFileChanged;
             vm.isRemovable = _.isObject(vm.ngModel) && !isRequired;
+            vm.mainLoadState = new LoadState(true);
+
             scope.$watch("vm.asset", setAsset);
+
+            imageService
+                .getSettings()
+                .then(mapSettings)
+                .then(vm.mainLoadState.off);
+        }
+
+        function mapSettings(settings) {
+            vm.settings = settings;
         }
 
         /* EVENTS */
@@ -95,23 +112,46 @@ angular.module('cms.shared').directive('cmsImageUpload', [
 
         function onFileChanged($files) {
             if ($files && $files[0]) {
-                // set the file is one is selected
-                ngModelController.$setViewValue($files[0]);
-                setPreviewImage($files[0]);
-                vm.isRemovable = !isRequired;
+                vm.mainLoadState.on();
+
+                // set the file if one is selected
+                imageFileUtilities
+                    .getFileInfoAndResizeIfRequired($files[0], vm.settings)
+                    .then(onImageInfoLoaded)
+                    .finally(vm.mainLoadState.off);
 
             } else if (!vm.ngModel || _.isUndefined($files)) {
+                onNoFileSelected();
+            }
+
+            function onImageInfoLoaded(imgInfo) {
+                if (!imgInfo) {
+                    onNoFileSelected();
+                }
+                ngModelController.$setViewValue(imgInfo.file);
+                setPreviewImage(imgInfo.file);
+                vm.isRemovable = !isRequired;
+                vm.isResized = imgInfo.isResized;
+                vm.resizeSize = imgInfo.width + 'x' + imgInfo.height;
+                onComplete();
+            }
+
+            function onNoFileSelected() {
+
                 // if we don't have an image loaded already, remove the file.
                 ngModelController.$setViewValue(undefined);
                 vm.previewUrl = noImagePath;
                 vm.isRemovable = false;
-                //vm.asset = undefined;
+                vm.isResized = false;
+                onComplete();
             }
 
-            setButtonText();
+            function onComplete() {
+                setButtonText();
 
-            // base onChange event
-            if (vm.onChange) vm.onChange(vm.ngModel);
+                // base onChange event
+                if (vm.onChange) vm.onChange();
+            }
         }
 
         /* Helpers */
