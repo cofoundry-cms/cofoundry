@@ -89,7 +89,9 @@ function (
 
         // default fields for simple properties
         switch (modelProperty.dataTemplateName) {
-            case 'Int32':
+            case 'Single':
+            case 'Double':
+            case 'Decimal':
                 return fieldPrefix + 'number';
             case 'String':
                 return fieldPrefix + 'text';

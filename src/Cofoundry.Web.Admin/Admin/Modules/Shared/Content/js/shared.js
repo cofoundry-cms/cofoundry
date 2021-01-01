@@ -10345,7 +10345,9 @@ function (
 
         // default fields for simple properties
         switch (modelProperty.dataTemplateName) {
-            case 'Int32':
+            case 'Single':
+            case 'Double':
+            case 'Decimal':
                 return fieldPrefix + 'number';
             case 'String':
                 return fieldPrefix + 'text';
@@ -10589,8 +10591,12 @@ function (
             el = config.getInputEl(rootEl);
 
         (config.passThroughAttributes || []).forEach(function (passThroughAttribute) {
-            if (angular.isDefined(attrs[passThroughAttribute])) {
-                el[0].setAttribute(attrs.$attr[passThroughAttribute], attrs[passThroughAttribute]);
+            var name = passThroughAttribute.name || passThroughAttribute;
+            if (angular.isDefined(attrs[name])) {
+                el[0].setAttribute(attrs.$attr[name], attrs[name]);
+            }
+            else if (passThroughAttribute.default) {
+                el[0].setAttribute(name, passThroughAttribute.default);
             }
         });
     }
@@ -10693,6 +10699,28 @@ function (
     /* DEFINITION */
 
     return service;
+}]);
+angular.module('cms.shared').directive('cmsFormFieldChar', [
+    '_',
+    'shared.internalModulePath',
+    'baseFormFieldFactory',
+function (
+    _,
+    modulePath,
+    baseFormFieldFactory) {
+
+    var config = {
+        templateUrl: modulePath + 'UIComponents/FormFields/FormFieldChar.html',
+        passThroughAttributes: [
+            'required',
+            'placeholder',
+            'pattern',
+            'disabled',
+            'cmsMatch'
+        ]
+    };
+
+    return baseFormFieldFactory.create(config);
 }]);
 angular.module('cms.shared').directive('cmsFormFieldCheckbox', [
     'shared.internalModulePath',
@@ -11378,6 +11406,44 @@ function (
 
     return baseFormFieldFactory.create(config);
 }]);
+var numericTypes = [
+    { name: 'Byte', min: 0, max: 255, step: 1 },
+    { name: 'SByte', min: -128, max: 127, step: 1 },
+    { name: 'Int16', min: -32768, max: 32767, step: 1 },
+    { name: 'UInt16', min: 0, max: 65535, step: 1 },
+    { name: 'Int32', min: -2147483648, max: 2147483647, step: 1 },
+    { name: 'UInt32', min: 0, max: 4294967295, step: 1 },
+    { name: 'Int64', step: 1 },
+    { name: 'UInt64', min: 0, step: 1 }
+];
+
+numericTypes.forEach(function (numericType) {
+
+    angular.module('cms.shared').directive('cmsFormField' + numericType.name, [
+        'shared.internalModulePath',
+        'baseFormFieldFactory',
+        function (
+            modulePath,
+            baseFormFieldFactory
+        ) {
+
+            var config = {
+                templateUrl: modulePath + 'UIComponents/FormFields/FormFieldNumber.html',
+                passThroughAttributes: [
+                    'required',
+                    'maxlength',
+                    { name: 'min', default: numericType.min },
+                    { name: 'max', default: numericType.max },
+                    { name: 'step', default: numericType.step },
+                    'disabled',
+                    'placeholder',
+                    'cmsMatch'
+                ]
+            };
+
+            return baseFormFieldFactory.create(config);
+        }]);
+});
 angular.module('cms.shared').directive('cmsFormFieldPassword', [
     'shared.internalModulePath',
     'baseFormFieldFactory',

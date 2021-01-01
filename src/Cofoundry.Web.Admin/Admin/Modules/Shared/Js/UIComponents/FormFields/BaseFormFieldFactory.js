@@ -129,8 +129,12 @@ function (
             el = config.getInputEl(rootEl);
 
         (config.passThroughAttributes || []).forEach(function (passThroughAttribute) {
-            if (angular.isDefined(attrs[passThroughAttribute])) {
-                el[0].setAttribute(attrs.$attr[passThroughAttribute], attrs[passThroughAttribute]);
+            var name = passThroughAttribute.name || passThroughAttribute;
+            if (angular.isDefined(attrs[name])) {
+                el[0].setAttribute(attrs.$attr[name], attrs[name]);
+            }
+            else if (passThroughAttribute.default) {
+                el[0].setAttribute(name, passThroughAttribute.default);
             }
         });
     }
