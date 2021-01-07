@@ -9,7 +9,8 @@ namespace Cofoundry.Plugins.Imaging.ImageSharp
     /// <summary>
     /// An attempt to cover some of the most popular image sharp configuration
     /// settings. Anything more compilated can be acheived by setting the ImageSharp
-    /// configuration manually using SixLabors.ImageSharp.Configuration.Default.SetEncoder
+    /// configuration manually by implementing your own IImageSharpInitializer or 
+    /// by configuring SixLabors.ImageSharp.Configuration.Default. 
     /// </summary>
     public class ImageSharpSettings : PluginConfigurationSettingsBase
     {

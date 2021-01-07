@@ -1,4 +1,4 @@
-﻿angular.module('cms.shared').directive('cmsFormFieldDate', [
+﻿angular.module('cms.shared').directive('cmsFormFieldDateLocal', [
     'shared.internalModulePath',
     'baseFormFieldFactory',
 function (
@@ -7,12 +7,11 @@ function (
     ) {
 
     var config = {
-        templateUrl: modulePath + 'UIComponents/FormFields/FormFieldDate.html',
+        templateUrl: modulePath + 'UIComponents/FormFields/FormFieldDateLocal.html',
         passThroughAttributes: [
             'required',
             'min',
             'max',
-            'step',
             'disabled',
             'cmsMatch'
         ],

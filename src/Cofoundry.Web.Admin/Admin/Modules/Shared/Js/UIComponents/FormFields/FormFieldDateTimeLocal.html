@@ -9,10 +9,12 @@
                    ng-model="vm.model"
                    ng-disabled="vm.disabled"
                    ng-change="vm.onChange()"
-                   type="date"
-                   ng-model-options="{timezone: 'utc'}"/>
+                   min="{{vm.minLocal}}"
+                   max="{{vm.maxLocal}}"
+                   type="datetime-local" />
+
             <div ng-hide="vm.formScope.editMode" ng-if="!vm.model" class="text-block-display-value">None</div>
-            <div ng-hide="vm.formScope.editMode" ng-if="vm.model" class="text-block-display-value">{{vm.model | date : 'longDate' : 'utc'}}</div>
+            <div ng-hide="vm.formScope.editMode" ng-if="vm.model" class="text-block-display-value">{{vm.model | date : 'longDate'}} at {{vm.model | date : 'HH:mm'}}</div>
             <cms-form-field-validation-summary></cms-form-field-validation-summary>
         </div>
     </cms-field>

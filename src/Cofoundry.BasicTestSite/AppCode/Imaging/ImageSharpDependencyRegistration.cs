@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Cofoundry.Plugins.Imaging.ImageSharp.Registration
+namespace Cofoundry.Plugins.Imaging.ImageSharp
 {
     public class ImageResizerDependencyRegistration : IDependencyRegistration
     {
@@ -15,6 +15,7 @@ namespace Cofoundry.Plugins.Imaging.ImageSharp.Registration
             container
                 .Register<IImageAssetFileService, ImageSharpImageAssetFileService>(overrideOptions)
                 .Register<IResizedImageAssetFileService, ImageSharpResizedImageAssetFileService>(overrideOptions)
+                .Register<IImageSharpInitializer, DefaultImageSharpInitializer>()
                 ;
         }
     }

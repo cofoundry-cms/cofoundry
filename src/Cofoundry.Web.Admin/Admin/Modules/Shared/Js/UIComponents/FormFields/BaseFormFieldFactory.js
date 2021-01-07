@@ -103,8 +103,8 @@ function (
 
         // Model Funcs
         vm.onChange = onChange.bind(vm);
-
         vm.resetCustomErrors = resetCustomErrors.bind(vm);
+        vm.addOrUpdateValidator = addOrUpdateValidator.bind(vm);
 
         // Init Errors
         vm.resetCustomErrors();
@@ -116,6 +116,36 @@ function (
         scope.$watch('vm.model', function () {
             vm.resetCustomErrors();
         });
+    }
+
+    /* PUBLIC */
+
+    function onChange() {
+        var vm = this;
+
+        vm.resetCustomErrors();
+        if (vm.change) {
+            // run after digest cycle completes so the parent ngModel is updated
+            $timeout(vm.change, 0);
+        }
+    }
+
+    function resetCustomErrors() {
+        var model = this.form[this.modelName];
+
+        if (model) {
+            model.$setValidity('server', true);
+        }
+        this.customErrors = [];
+    }
+
+    function addOrUpdateValidator(validator) {
+        var vm = this;
+        var validators = _.filter(vm.validators, function (v) {
+            return v.name !== validator.name;
+        });
+        validators.push(validator);
+        vm.validators = validators;
     }
 
     /* HELPERS */
@@ -165,7 +195,6 @@ function (
                 msg;
 
             if (stringUtilities.endsWith(key, postfix)) {
-
                 // if the property is postfix '-val-msg' then pull in the message from the attribute
                 attributeToValidate = value.substring(0, value.length - attrPostfix.length);
                 msg = attrs[key];
@@ -213,25 +242,6 @@ function (
         errors.forEach(function (error) {
             vm.customErrors.push(error);
         });
-    }
-
-    function onChange() {
-        var vm = this;
-
-        vm.resetCustomErrors();
-        if (vm.change) {
-            // run after digest cycle completes so the parent ngModel is updated
-            $timeout(vm.change, 0);
-        }
-    }
-
-    function resetCustomErrors() {
-        var model = this.form[this.modelName];
-
-        if (model) {
-            model.$setValidity('server', true);
-        }
-        this.customErrors = [];
     }
 
     /* DEFINITION */

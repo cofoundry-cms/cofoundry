@@ -33,6 +33,8 @@ namespace Cofoundry.Core.Json.Internal
         {
             if (settings == null) throw new ArgumentNullException(nameof(settings));
 
+            // Force dates to include the miliseconds portion, which fixes issues with Angular date field validation.
+            settings.DateFormatString = "yyyy'-'MM'-'dd'T'HH':'mm':'ss.fffK";
             settings.Converters.Add(new StringEnumConverter());
             settings.Converters.Add(new HtmlStringJsonConverter());
             settings.ContractResolver = new CamelCasePropertyNamesContractResolver();

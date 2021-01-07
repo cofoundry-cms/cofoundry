@@ -12,13 +12,13 @@ namespace Cofoundry.Plugins.Imaging.ImageSharp
 {
     public class ImageSharpConfigurationStartupTask : IStartupConfigurationTask
     {
-        private readonly ImageSharpSettings _imageSharpSettings;
+        private readonly IImageSharpInitializer _imageSharpConfiguration;
 
         public ImageSharpConfigurationStartupTask(
-            ImageSharpSettings imageSharpSettings
+            IImageSharpInitializer imageSharpConfiguration
             )
         {
-            _imageSharpSettings = imageSharpSettings;
+            _imageSharpConfiguration = imageSharpConfiguration;
         }
 
         public int Ordering => (int)StartupTaskOrdering.Early;
@@ -27,15 +27,8 @@ namespace Cofoundry.Plugins.Imaging.ImageSharp
         {
             // Setup some initial config
             var imgConfig = SixLabors.ImageSharp.Configuration.Default;
-            imgConfig.ImageFormatsManager.SetEncoder(ImageFormats.Jpeg, new JpegEncoder()
-            {
-                Quality = _imageSharpSettings.JpegQuality,
-                IgnoreMetadata = _imageSharpSettings.IgnoreMetadata
-            });
-            imgConfig.ImageFormatsManager.SetEncoder(ImageFormats.Gif, new GifEncoder()
-            {
-                IgnoreMetadata = _imageSharpSettings.IgnoreMetadata
-            });
+
+            _imageSharpConfiguration.Initialize(imgConfig);
         }
     }
 }

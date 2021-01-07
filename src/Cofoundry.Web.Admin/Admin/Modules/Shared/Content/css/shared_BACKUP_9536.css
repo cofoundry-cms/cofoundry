@@ -753,7 +753,7 @@ a[disabled]:hover, button[disabled]:hover, input[disabled]:hover {
 }
 
 /* line 7, ../../Js/UIComponents/FormFields/_formfields.scss */
-input[type="text"], input[type="email"], input[type="password"], input[type="number"], input[type="date"], input[type="url"], input[type="tel"], textarea, select {
+input[type="text"], input[type="email"], input[type="password"], input[type="number"], input[type="date"], input[type="datetime"], input[type="datetime-local"], input[type="time"], input[type="url"], input[type="tel"], textarea, select {
   -moz-border-radius: 2px;
   -webkit-border-radius: 2px;
   border-radius: 2px;

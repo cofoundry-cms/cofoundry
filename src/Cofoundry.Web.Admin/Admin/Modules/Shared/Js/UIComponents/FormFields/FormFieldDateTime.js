@@ -1,4 +1,4 @@
-﻿angular.module('cms.shared').directive('cmsFormFieldDate', [
+﻿angular.module('cms.shared').directive('cmsFormFieldDateTime', [
     'shared.internalModulePath',
     'baseFormFieldFactory',
 function (
@@ -7,12 +7,11 @@ function (
     ) {
 
     var config = {
-        templateUrl: modulePath + 'UIComponents/FormFields/FormFieldDate.html',
+        templateUrl: modulePath + 'UIComponents/FormFields/FormFieldDateTime.html',
         passThroughAttributes: [
             'required',
             'min',
             'max',
-            'step',
             'disabled',
             'cmsMatch'
         ],
@@ -33,15 +32,17 @@ function (
 
         function init() {
             if (attrs.min) {
+                var minDate = attrs.min.replace('T', ' ');
                 vm.addOrUpdateValidator({
                     name: 'min',
-                    message: "This date cannot be before " + attrs.min
+                    message: "This date cannot be before " + minDate
                 });
             }
             if (attrs.max) {
+                var maxDate = attrs.min.replace('T', ' ');
                 vm.addOrUpdateValidator({
                     name: 'max',
-                    message: "This date cannot be after " + attrs.max
+                    message: "This date cannot be after " + maxDate
                 });
             }
         }

@@ -1,4 +1,5 @@
 ﻿using Cofoundry.Core.Data;
+using Cofoundry.Core.EntityFramework;
 using Cofoundry.Core.Validation;
 using Cofoundry.Domain;
 using Cofoundry.Domain.Data;
@@ -20,7 +21,7 @@ namespace Cofoundry.Plugins.Imaging.ImageSharp
         private const string ASSET_FILE_CONTAINER_NAME = "Images";
 
         private static readonly HashSet<string> _permittedImageFileExtensions = new HashSet<string>(StringComparer.OrdinalIgnoreCase) {
-            "jpg", 
+            "jpg",
             "jpeg",
             "png",
             "gif"
@@ -49,14 +50,14 @@ namespace Cofoundry.Plugins.Imaging.ImageSharp
         #endregion
 
         public async Task SaveAsync(
-            IUploadedFile uploadedFile, 
-            ImageAsset imageAsset, 
+            IUploadedFile uploadedFile,
+            ImageAsset imageAsset,
             string propertyName
             )
         {
-            Image<Rgba32> imageFile = null;
+            Image imageFile = null;
             IImageFormat imageFormat = null;
-                
+
             using (var inputSteam = await uploadedFile.OpenReadStreamAsync())
             {
                 try
@@ -72,7 +73,7 @@ namespace Cofoundry.Plugins.Imaging.ImageSharp
                     if ((!string.IsNullOrEmpty(ext) && !ImageAssetConstants.PermittedImageTypes.ContainsKey(ext))
                         || (!string.IsNullOrEmpty(uploadedFile.MimeType) && !ImageAssetConstants.PermittedImageTypes.ContainsValue(uploadedFile.MimeType)))
                     {
-                        throw ValidationErrorException.CreateWithProperties("The file is not a supported image type.", propertyName);
+                        throw new PropertyValidationException("The file is not a supported image type.", propertyName);
                     }
 
                     throw;
@@ -136,23 +137,23 @@ namespace Cofoundry.Plugins.Imaging.ImageSharp
         }
 
         private void ValidateImage(
-            string propertyName, 
-            Image<Rgba32> imageFile, 
+            string propertyName,
+            Image imageFile,
             IImageFormat imageFormat
             )
         {
             if (imageFormat == null)
             {
-                throw ValidationErrorException.CreateWithProperties("Unable to determine image type.", propertyName);
+                throw new PropertyValidationException("Unable to determine image type.", propertyName);
             }
 
             if (imageFile.Width > _imageAssetsSettings.MaxUploadWidth)
             {
-                throw ValidationErrorException.CreateWithProperties($"Image exceeds the maximum permitted width of {_imageAssetsSettings.MaxUploadWidth} pixels.", propertyName);
+                throw new PropertyValidationException($"Image exceeds the maximum permitted width of {_imageAssetsSettings.MaxUploadWidth} pixels.", propertyName);
             }
             if (imageFile.Height > _imageAssetsSettings.MaxUploadHeight)
             {
-                throw ValidationErrorException.CreateWithProperties($"Image exceeds the maximum permitted height of {_imageAssetsSettings.MaxUploadHeight} pixels.", propertyName);
+                throw new PropertyValidationException($"Image exceeds the maximum permitted height of {_imageAssetsSettings.MaxUploadHeight} pixels.", propertyName);
             }
         }
     }

@@ -98,21 +98,18 @@ namespace Cofoundry.BasicTestSite
 
     public class ExampleDataModel : ICustomEntityDataModel
     {
-        [HtmlWithCustomEditor]
-        public string Content { get; set; }
-
         //[NestedDataModelCollection(
         //    IsOrderable = true,
         //    MinItems = 2,
         //    MaxItems = 6)]
         //public ICollection<TeaserBlockDataModel> Blocks { get; set; }
 
-        [NestedDataModelMultiTypeCollection(
-            new Type[] { typeof(ContentBlock), typeof(TeaserBlockDataModel), typeof(HeaderBlock) },
-            IsOrderable = true,
-            //MinItems = 2, 
-            MaxItems = 6
-            )]
-        public ICollection<NestedDataModelMultiTypeItem> TestCollection { get; set; }
+        //[NestedDataModelMultiTypeCollection(
+        //    new Type[] { typeof(ContentBlock), typeof(TeaserBlockDataModel), typeof(HeaderBlock) },
+        //    IsOrderable = true,
+        //    //MinItems = 2, 
+        //    MaxItems = 6
+        //    )]
+        //public ICollection<NestedDataModelMultiTypeItem> TestCollection { get; set; }
     }
 }
