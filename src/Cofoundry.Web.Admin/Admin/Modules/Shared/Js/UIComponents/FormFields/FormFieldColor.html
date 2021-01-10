@@ -4,14 +4,14 @@
         <div class="controls">
             <input id="{{vm.modelName}}"
                    name="{{vm.modelName}}"
-                   ng-show="vm.formScope.editMode"
+                   ng-show="vm.formScope.editMode && !vm.readonly"
                    ng-model="vm.model"
                    ng-disabled="vm.disabled"
                    ng-change="vm.onChange()"
                    type="color"
                    pattern="^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$"/>
-            <span class="color-box edit" ng-show="vm.formScope.editMode" style="background-color:{{vm.model}}">{{vm.model}}</span>
-            <span class="color-box" ng-hide="vm.formScope.editMode" style="background-color:{{vm.model}}">{{vm.model}}</span>
+            <span class="color-box edit" ng-show="vm.formScope.editMode && !vm.readonly" style="background-color:{{vm.model}}">{{vm.model}}</span>
+            <span class="color-box" ng-hide="vm.formScope.editMode && !vm.readonly" style="background-color:{{vm.model}}">{{vm.model}}</span>
             <cms-form-field-validation-summary></cms-form-field-validation-summary>
         </div>
     </cms-field>

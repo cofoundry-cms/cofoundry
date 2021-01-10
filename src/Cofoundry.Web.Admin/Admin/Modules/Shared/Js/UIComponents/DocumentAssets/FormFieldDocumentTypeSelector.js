@@ -13,6 +13,7 @@ function (
         scope: {
             model: '=cmsModel',
             disabled: '=cmsDisabled',
+            readonly: '=cmsReadonly',
             onLoaded: '&cmsOnLoaded'
         },
         controller: Controller,

@@ -51,7 +51,8 @@ function (
             description: '@cmsDescription',
             change: '&cmsChange',
             model: '=cmsModel',
-            disabled: '=cmsDisabled'
+            disabled: '=cmsDisabled',
+            readonly: '=cmsReadonly'
         },
         compile: compile,
         link: link,
@@ -211,7 +212,6 @@ function (
                     name: attrs.$normalize(attributeToValidate),
                     message: stringUtilities.format(msg, attrs[key])
                 });
-
             }
         });
 

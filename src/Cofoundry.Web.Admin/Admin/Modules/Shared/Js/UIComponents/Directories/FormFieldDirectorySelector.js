@@ -16,7 +16,8 @@ function (
         scope: {
             model: '=cmsModel',
             title: '@cmsTitle',
-            onLoaded: '&cmsOnLoaded'
+            onLoaded: '&cmsOnLoaded',
+            readonly: '=cmsReadonly'
         },
         link: {
             pre: preLink

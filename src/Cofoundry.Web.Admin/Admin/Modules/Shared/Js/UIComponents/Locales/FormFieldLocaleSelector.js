@@ -15,7 +15,8 @@ function (
         templateUrl: modulePath + 'UIComponents/Locales/FormFieldLocaleSelector.html',
         scope: {
             model: '=cmsModel',
-            onLoaded: '&cmsOnLoaded'
+            onLoaded: '&cmsOnLoaded',
+            readonly: '=cmsReadonly'
         },
         link: {
             pre: preLink

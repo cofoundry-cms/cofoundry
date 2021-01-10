@@ -64,7 +64,7 @@ function (
 
                     html += attributeMapper.map('model', stringUtilities.lowerCaseFirstWord(modelProperty.name));
                     html += attributeMapper.map('title', modelProperty.displayName);
-                    html += attributeMapper.map('required', modelProperty.isRequired);
+                    html += attributeMapper.map('required', modelProperty.isRequired && !modelProperty.additionalAttributes.readonly);
                     html += attributeMapper.map('description', modelProperty.description);
 
                     if (modelProperty.additionalAttributes) {

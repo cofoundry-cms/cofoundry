@@ -9,13 +9,13 @@
                        ng-model="vm.model"
                        ng-change="vm.onChange()" />
 
-                <cms-image-asset ng-if="vm.previewAsset && !vm.formScope.editMode"
+                <cms-image-asset ng-if="vm.previewAsset && (!vm.formScope.editMode || vm.readonly)"
                                  cms-image="vm.previewAsset"
                                  cms-width="{{vm.previewWidth}}"
                                  cms-height="{{vm.previewHeight}}"
                                  class="img-polaroid"></cms-image-asset>
 
-                <cms-image-asset ng-if="vm.previewAsset && vm.formScope.editMode"
+                <cms-image-asset ng-if="vm.previewAsset && vm.formScope.editMode && !vm.readonly"
                                  cms-image="vm.previewAsset"
                                  cms-width="{{vm.previewWidth}}"
                                  cms-height="{{vm.previewHeight}}"
@@ -23,12 +23,12 @@
                                  class="img-polaroid selectable"></cms-image-asset>
 
                 <i class="fa fa-picture-o"
-                   ng-hide="vm.formScope.editMode"
+                   ng-hide="vm.formScope.editMode && !vm.readonly"
                    ng-if="!vm.previewAsset"></i>
 
                 <cms-button-icon cms-title="{{vm.buttonText}}"
                                  cms-icon="picture-o"
-                                 ng-show="vm.formScope.editMode"
+                                 ng-show="vm.formScope.editMode && !vm.readonly"
                                  ng-if="!vm.previewAsset"
                                  ng-click="vm.showPicker()"
                                  ng-disabled="vm.loadState.isLoading || vm.disabled">
@@ -36,7 +36,7 @@
 
             <cms-form-field-validation-summary></cms-form-field-validation-summary>
             <div class="collection-actions">
-                <div ng-show="vm.formScope.editMode">
+                <div ng-show="vm.formScope.editMode  && !vm.readonly">
                     <cms-button-icon cms-href="{{vm.urlLibrary.imageDetails(vm.previewAsset.imageAssetId)}}"
                                      cms-external="true"
                                      cms-title="Edit image"

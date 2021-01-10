@@ -5,7 +5,7 @@
             <select id="{{vm.modelName}}"
                     ng-if="vm.listOptions"
                     name="{{vm.modelName}}"
-                    ng-show="vm.formScope.editMode"
+                    ng-show="vm.formScope.editMode && !vm.readonly"
                     ng-model="vm.model"
                     ng-change="vm.onChange()"
                     ng-required="vm.isRequiredAttributeDefined || vm.required"
@@ -14,7 +14,7 @@
                 <option ng-show="!vm.isRequiredAttributeDefined && !vm.required" value='' selected>{{vm.defaultItemText}}</option>
             </select>
 
-            <div ng-hide="vm.formScope.editMode" class="text-block-display-value">{{vm.displayValue || 'None'}}</div>
+            <div ng-hide="vm.formScope.editMode && !vm.readonly" class="text-block-display-value">{{vm.displayValue || 'None'}}</div>
             <cms-form-field-validation-summary></cms-form-field-validation-summary>
         </div>
     </cms-field>

@@ -17,7 +17,7 @@
                             <th ng-if="vm.previewFields.fields.previewDescription">{{vm.previewFields.fields.previewDescription.displayName}}</th>
                             <th ng-if="!vm.customEntityDefinition.autoPublish">Status</th>
                             <th cms-table-column-actions
-                                ng-if="vm.formScope.editMode">Actions</th>
+                                ng-if="vm.formScope.editMode && !vm.readonly">Actions</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -41,12 +41,12 @@
                                 </strong>
                             </td>
                             <td ng-if="::vm.previewFields.fields.previewDescription">{{entity.model[vm.previewFields.fields.previewDescription.lowerName]}}</td>
-                            <td ng-if="::!vm.customEntityDefinition.autoPublish">
+                            <td ng-if="!vm.customEntityDefinition.autoPublish">
                                 <span>{{entity.getPublishStatusLabel()}}</span>
                                 <br />
                                 <span ng-if="entity.hasDraftVersion">(Pending Draft)</span>
                             </td>
-                            <td cms-table-column-actions ng-if="vm.formScope.editMode">
+                            <td cms-table-column-actions ng-if="vm.formScope.editMode && !vm.readonly">
                                 <cms-button-icon cms-title="Remove"
                                                  cms-icon="trash-o"
                                                  ng-click="vm.remove(entity, $index)">
@@ -59,7 +59,7 @@
                     <a href="" class="btn-icon" title="Add"
                        cms-icon="plus-circle"
                        ng-click="vm.showPicker()"
-                       ng-if="vm.formScope.editMode"
+                       ng-if="vm.formScope.editMode && !vm.readonly"
                        ng-disabled="vm.gridLoadState.isLoading || vm.disabled">
                         <i class="fa fa-plus-circle"></i>
                     </a>

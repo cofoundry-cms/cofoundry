@@ -16,7 +16,7 @@
                             <th ng-if="vm.previewFields.showTitle">{{vm.previewFields.titleTerm}}</th>
                             <th ng-if="vm.previewFields.fields.previewDescription">{{vm.previewFields.fields.previewDescription.displayName}}</th>
                             <th cms-table-column-actions
-                                ng-if="vm.formScope.editMode">Actions</th>
+                                ng-if="vm.formScope.editMode && !vm.readonly">Actions</th>
                         </tr>
                     </thead>
                     <tbody> 
@@ -37,7 +37,7 @@
                                 <strong>{{vm.getTitle(entity, $index)}}</strong>
                             </td>
                             <td ng-if="vm.previewFields.fields.previewDescription">{{entity[vm.previewFields.fields.previewDescription.lowerName]}}</td>
-                            <td cms-table-column-actions ng-if="vm.formScope.editMode">
+                            <td cms-table-column-actions ng-if="vm.formScope.editMode && !vm.readonly">
                                 <cms-button-icon cms-title="Edit"
                                                  cms-icon="pencil"
                                                  ng-click="vm.edit(entity, $index)">
@@ -54,7 +54,7 @@
                     <a href="" class="btn-icon" title="Add"
                        cms-icon="plus-circle"
                        ng-click="vm.add()"
-                       ng-if="vm.formScope.editMode && (!vm.maxItems || !vm.model || vm.model.length < vm.maxItems)"
+                       ng-if="vm.formScope.editMode  && !vm.readonly && (!vm.maxItems || !vm.model || vm.model.length < vm.maxItems)"
                        ng-disabled="vm.disabled">
                         <i class="fa fa-plus-circle"></i>
                     </a>

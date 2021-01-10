@@ -14,7 +14,7 @@
                         <tr>
                             <th>Document</th>
                             <th cms-table-column-actions
-                                ng-if="vm.formScope.editMode">Actions</th>
+                                ng-if="vm.formScope.editMode && !vm.readonly">Actions</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -30,7 +30,7 @@
                             <td>
                                 <cms-document-asset cms-document="document"></cms-document-asset>
                             </td>
-                            <td cms-table-column-actions ng-if="vm.formScope.editMode">
+                            <td cms-table-column-actions ng-if="vm.formScope.editMode && !vm.readonly">
                                 <cms-button-icon cms-href="{{vm.urlLibrary.documentDetails(document.documentAssetId)}}"
                                                  cms-external="true"
                                                  cms-title="Edit document"
@@ -47,7 +47,7 @@
                 <cms-table-actions>
                     <a href="" class="btn-icon" title="Add"
                        ng-click="vm.showPicker()"
-                       ng-if="vm.formScope.editMode"
+                       ng-if="vm.formScope.editMode && !vm.readonly"
                        ng-disabled="vm.gridLoadState.isLoading || vm.disabled">
                         <i class="fa fa-plus-circle"></i>
                     </a>

@@ -8997,6 +8997,7 @@ function (
             model: '=cmsModel',
             title: '@cmsTitle',
             localeId: '=cmsLocaleId',
+            readonly: '=cmsReadonly',
             customEntityDefinitionCode: '@cmsCustomEntityDefinitionCode'
         },
         require: ['?^^cmsFormDynamicFieldSet'],
@@ -9084,7 +9085,8 @@ function (
         scope: {
             model: '=cmsModel',
             title: '@cmsTitle',
-            onLoaded: '&cmsOnLoaded'
+            onLoaded: '&cmsOnLoaded',
+            readonly: '=cmsReadonly'
         },
         link: {
             pre: preLink
@@ -9732,6 +9734,7 @@ function (
         scope: {
             model: '=cmsModel',
             disabled: '=cmsDisabled',
+            readonly: '=cmsReadonly',
             onLoaded: '&cmsOnLoaded'
         },
         controller: Controller,
@@ -10364,7 +10367,7 @@ function (
 
                     html += attributeMapper.map('model', stringUtilities.lowerCaseFirstWord(modelProperty.name));
                     html += attributeMapper.map('title', modelProperty.displayName);
-                    html += attributeMapper.map('required', modelProperty.isRequired);
+                    html += attributeMapper.map('required', modelProperty.isRequired && !modelProperty.additionalAttributes.readonly);
                     html += attributeMapper.map('description', modelProperty.description);
 
                     if (modelProperty.additionalAttributes) {
@@ -10557,7 +10560,8 @@ function (
             description: '@cmsDescription',
             change: '&cmsChange',
             model: '=cmsModel',
-            disabled: '=cmsDisabled'
+            disabled: '=cmsDisabled',
+            readonly: '=cmsReadonly'
         },
         compile: compile,
         link: link,
@@ -10717,7 +10721,6 @@ function (
                     name: attrs.$normalize(attributeToValidate),
                     message: stringUtilities.format(msg, attrs[key])
                 });
-
             }
         });
 
@@ -11858,6 +11861,7 @@ function (
             'placeholder',
             'pattern',
             'disabled',
+            'readonly',
             'cmsMatch'
         ]
     };
@@ -11915,6 +11919,7 @@ function (
             'step',
             'max',
             'disabled',
+            'readonly',
             'cmsMatch'
         ],
         link: link
@@ -12074,7 +12079,8 @@ angular.module('cms.shared').directive('cmsFormFieldImageAnchorLocationSelector'
             restrict: 'E',
             templateUrl: modulePath + 'UIComponents/ImageAssets/FormFieldImageAnchorLocationSelector.html',
             scope: {
-                model: '=cmsModel'
+                model: '=cmsModel',
+                readonly: '=cmsReadonly'
             },
             controller: Controller,
             controllerAs: 'vm',
@@ -13172,7 +13178,8 @@ function (
         templateUrl: modulePath + 'UIComponents/Locales/FormFieldLocaleSelector.html',
         scope: {
             model: '=cmsModel',
-            onLoaded: '&cmsOnLoaded'
+            onLoaded: '&cmsOnLoaded',
+            readonly: '=cmsReadonly'
         },
         link: {
             pre: preLink
@@ -13460,9 +13467,9 @@ function (
 }]);
 /**
  * Helper used for working with collections of dynamic model data that
- * might use the [PReviewImage] data annotation to provide an image preview
+ * might use the [PreviewImage] data annotation to provide an image preview
  * field. This helper extracts the ids, loads the data and provides methods
- * for upading the dataset without havign to reload all the images.
+ * for upading the dataset without having to reload all the images.
  */
 angular.module('cms.shared').factory('shared.ImagePreviewFieldCollection', [
     '$q',
@@ -13571,9 +13578,9 @@ angular.module('cms.shared').factory('shared.ImagePreviewFieldCollection', [
             }
 
             function updateImage(itemToUpdate, index, isNew) {
-
                 var propertyName = getImagePropertyName(itemToUpdate);
                 if (!propertyName) return;
+                console.log('updateImage', itemToUpdate);
 
                 var newImageId = modelPropertyAccessor(itemToUpdate, propertyName);
 
@@ -13765,14 +13772,13 @@ function (
     function onSave() {
         vm.saveLoadState.on();
 
-        console.log('save', vm.formDataSource);
         nestedDataModelSchemaService
             .validate(vm.formDataSource.modelMetaData.typeName, vm.formDataSource.model)
             .then(onValidationSuccess)
             .finally(vm.saveLoadState.off);
 
         function onValidationSuccess() {
-            if (options.onSave) options.onSave(vm.formDataSource.name, vm.formDataSource.model);
+            if (options.onSave) options.onSave(vm.formDataSource.model);
             close();
         }
     }
@@ -13904,7 +13910,7 @@ angular.module('cms.shared').directive('cmsFormFieldNestedDataModelCollection', 
                     onSave: onSave
                 });
 
-                function onSave(newEntity) {
+                function onSave(newEntity, test) {
                     vm.model = vm.model || [];
                     vm.model.push(newEntity);
 
@@ -14360,7 +14366,8 @@ function (
         scope: {
             model: '=cmsModel',
             title: '@cmsTitle',
-            localeId: '=cmsLocaleId'
+            localeId: '=cmsLocaleId',
+            readonly: '=cmsReadonly'
         },
         require: ['?^^cmsFormDynamicFieldSet'],
         link: {

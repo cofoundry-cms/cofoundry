@@ -1,8 +1,8 @@
 ﻿/**
  * Helper used for working with collections of dynamic model data that
- * might use the [PReviewImage] data annotation to provide an image preview
+ * might use the [PreviewImage] data annotation to provide an image preview
  * field. This helper extracts the ids, loads the data and provides methods
- * for upading the dataset without havign to reload all the images.
+ * for upading the dataset without having to reload all the images.
  */
 angular.module('cms.shared').factory('shared.ImagePreviewFieldCollection', [
     '$q',
@@ -111,9 +111,9 @@ angular.module('cms.shared').factory('shared.ImagePreviewFieldCollection', [
             }
 
             function updateImage(itemToUpdate, index, isNew) {
-
                 var propertyName = getImagePropertyName(itemToUpdate);
                 if (!propertyName) return;
+                console.log('updateImage', itemToUpdate);
 
                 var newImageId = modelPropertyAccessor(itemToUpdate, propertyName);
 

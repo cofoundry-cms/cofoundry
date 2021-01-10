@@ -18,7 +18,7 @@
                             <th ng-if="vm.previewFields.showDescription">{{vm.descriptionColumnHeader}}</th>
                             <th ng-if="vm.showPublishColumn">Status</th>
                             <th cms-table-column-actions
-                                ng-if="vm.formScope.editMode">Actions</th>
+                                ng-if="vm.formScope.editMode && !vm.readonly">Actions</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -48,7 +48,7 @@
                                 <br />
                                 <span ng-if="entity.hasDraftVersion">(Pending Draft)</span>
                             </td>
-                            <td cms-table-column-actions ng-if="vm.formScope.editMode">
+                            <td cms-table-column-actions ng-if="vm.formScope.editMode && !vm.readonly">
                                 <cms-button-icon cms-title="Remove"
                                                  cms-icon="trash-o"
                                                  ng-click="vm.remove(entity, $index)">
@@ -57,7 +57,7 @@
                         </tr>
                     </tbody>
                 </table>
-                <cms-table-actions ng-if="vm.formScope.editMode">
+                <cms-table-actions ng-if="vm.formScope.editMode && !vm.readonly">
                     <cms-menu cms-icon="plus-circle">
                         <cms-button ng-repeat="(code, definition) in vm.customEntityDefinitions"
                                     cms-text="Add or remove {{definition.name}}"

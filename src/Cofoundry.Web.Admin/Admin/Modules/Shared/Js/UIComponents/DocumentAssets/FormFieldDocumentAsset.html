@@ -18,7 +18,7 @@
 
                 <span ng-if="!vm.previewAsset">None</span>
 
-                <span ng-hide="!vm.formScope.editMode">
+                <span ng-hide="!vm.formScope.editMode || vm.readonly">
                     <cms-button-icon cms-href="{{vm.urlLibrary.documentDetails(vm.previewAsset.documentAssetId)}}"
                                      cms-external="true"
                                      cms-title="Edit document"

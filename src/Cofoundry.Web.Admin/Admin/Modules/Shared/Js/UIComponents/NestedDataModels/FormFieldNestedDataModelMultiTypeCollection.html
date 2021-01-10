@@ -17,7 +17,7 @@
                             <th ng-if="vm.previewFields.showDescription">{{vm.descriptionColumnHeader}}</th>
                             <th>{{vm.typeColumnHeader}}</th>
                             <th cms-table-column-actions
-                                ng-if="vm.formScope.editMode">Actions</th>
+                                ng-if="vm.formScope.editMode && !vm.readonly">Actions</th>
                         </tr>
                     </thead>
                     <tbody> 
@@ -41,7 +41,7 @@
                             <td ng-if="vm.previewFields.showTitle">
                                 {{vm.modelMetaDataLookup[item.typeName].displayName}}
                             </td>
-                            <td cms-table-column-actions ng-if="vm.formScope.editMode">
+                            <td cms-table-column-actions ng-if="vm.formScope.editMode && !vm.readonly">
                                 <cms-button-icon cms-title="Edit"
                                                  cms-icon="pencil"
                                                  ng-click="vm.edit(item, $index)">
@@ -54,7 +54,7 @@
                         </tr>
                     </tbody>
                 </table>
-                <cms-table-actions ng-if="vm.formScope.editMode && (!vm.maxItems || !vm.model || vm.model.length < vm.maxItems)">
+                <cms-table-actions ng-if="vm.formScope.editMode && !vm.readonly && (!vm.maxItems || !vm.model || vm.model.length < vm.maxItems)">
                     <cms-menu cms-icon="plus-circle">
                         <cms-button ng-repeat="(typeName, modelMetaData) in vm.modelMetaDataLookup"
                                     cms-text="Add {{modelMetaData.displayName}}"

@@ -16,6 +16,7 @@ function (
             'step',
             'max',
             'disabled',
+            'readonly',
             'cmsMatch'
         ],
         link: link

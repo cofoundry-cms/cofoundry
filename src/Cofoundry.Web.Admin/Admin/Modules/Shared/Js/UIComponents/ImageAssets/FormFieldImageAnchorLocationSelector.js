@@ -8,7 +8,8 @@
             restrict: 'E',
             templateUrl: modulePath + 'UIComponents/ImageAssets/FormFieldImageAnchorLocationSelector.html',
             scope: {
-                model: '=cmsModel'
+                model: '=cmsModel',
+                readonly: '=cmsReadonly'
             },
             controller: Controller,
             controllerAs: 'vm',

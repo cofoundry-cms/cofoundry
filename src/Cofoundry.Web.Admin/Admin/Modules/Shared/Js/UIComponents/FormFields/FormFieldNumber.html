@@ -4,13 +4,13 @@
         <div class="controls">
             <input id="{{vm.modelName}}"
                    name="{{vm.modelName}}"
-                   ng-show="vm.formScope.editMode"
+                   ng-show="vm.formScope.editMode && !vm.readonly"
                    ng-model="vm.model"
                    ng-disabled="vm.disabled"
                    ng-change="vm.onChange()"
                    type="number" />
 
-            <span ng-hide="vm.formScope.editMode">{{vm.model}}</span>
+            <span ng-hide="vm.formScope.editMode && !vm.readonly">{{vm.model}}</span>
             <cms-form-field-validation-summary></cms-form-field-validation-summary>
 
         </div>

@@ -34,14 +34,13 @@ function (
     function onSave() {
         vm.saveLoadState.on();
 
-        console.log('save', vm.formDataSource);
         nestedDataModelSchemaService
             .validate(vm.formDataSource.modelMetaData.typeName, vm.formDataSource.model)
             .then(onValidationSuccess)
             .finally(vm.saveLoadState.off);
 
         function onValidationSuccess() {
-            if (options.onSave) options.onSave(vm.formDataSource.name, vm.formDataSource.model);
+            if (options.onSave) options.onSave(vm.formDataSource.model);
             close();
         }
     }

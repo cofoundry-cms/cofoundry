@@ -8,7 +8,7 @@
                      ngf-accept="image/gif,image/jpeg,image/png,image/tiff,image/bmp,.tif"
                      ngf-hide-on-drop-not-available="false"
                      ngf-drag-over-class="{accept:'dragover-accepted', reject:'dragover-rejected'}"
-                     ng-show="vm.formScope.editMode"
+                     ng-show="vm.formScope.editMode && !vm.readonly"
                      id="{{vm.modelName}}"
                      name="{{vm.modelName}}"
                      ng-model="vm.model"
@@ -64,7 +64,7 @@
                     <div ng-if="vm.isResized">The image is too large and will be resized to {{vm.resizeSize}}.</div>
                 </div>
 
-                <div ng-show="!vm.formScope.editMode">
+                <div ng-show="!vm.formScope.editMode || vm.readonly">
                     <img ng-src="{{vm.previewUrl}}" class="img-polaroid" alt="{{vm.model.name}}" />
                 </div>
             </div>

@@ -110,7 +110,7 @@
                     onSave: onSave
                 });
 
-                function onSave(newEntity) {
+                function onSave(newEntity, test) {
                     vm.model = vm.model || [];
                     vm.model.push(newEntity);
 
