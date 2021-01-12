@@ -13,15 +13,12 @@ namespace Cofoundry.Domain
     /// </summary>
     public class NestedDataModelMultiTypeItemJsonConverter : JsonConverter
     {
-        private readonly IJsonSerializerSettingsFactory _jsonSerializerSettingsFactory;
         private readonly INestedDataModelTypeRepository _nestedDataModelTypeRepository;
 
         public NestedDataModelMultiTypeItemJsonConverter(
-            IJsonSerializerSettingsFactory jsonSerializerSettingsFactory,
             INestedDataModelTypeRepository nestedDataModelTypeRepository
             )
         {
-            _jsonSerializerSettingsFactory = jsonSerializerSettingsFactory;
             _nestedDataModelTypeRepository = nestedDataModelTypeRepository;
         }
 

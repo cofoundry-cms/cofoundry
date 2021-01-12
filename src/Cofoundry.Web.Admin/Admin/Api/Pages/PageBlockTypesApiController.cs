@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Cofoundry.Domain;
 using Cofoundry.Domain.CQS;
+using Cofoundry.Domain.Internal;
 
 namespace Cofoundry.Web.Admin
 {
@@ -12,26 +13,34 @@ namespace Cofoundry.Web.Admin
     {
         private readonly IQueryExecutor _queryExecutor;
         private readonly IApiResponseHelper _apiResponseHelper;
+        private readonly DynamicDataModelJsonSerializerSettingsCache _dynamicDataModelSchemaJsonSerializerSettingsCache;
 
         public PageBlockTypesApiController(
             IQueryExecutor queryExecutor,
-            IApiResponseHelper apiResponseHelper
+            IApiResponseHelper apiResponseHelper,
+            DynamicDataModelJsonSerializerSettingsCache dynamicDataModelSchemaJsonSerializerSettingsCache
             )
         {
             _queryExecutor = queryExecutor;
             _apiResponseHelper = apiResponseHelper;
+            _dynamicDataModelSchemaJsonSerializerSettingsCache = dynamicDataModelSchemaJsonSerializerSettingsCache;
         }
 
-        public async Task<IActionResult> Get()
+        public async Task<JsonResult> Get()
         {
             var results = await _queryExecutor.ExecuteAsync(new GetAllPageBlockTypeSummariesQuery());
-            return _apiResponseHelper.SimpleQueryResponse(this, results);
+            return _apiResponseHelper.SimpleQueryResponse(results);
         }
 
-        public async Task<IActionResult> GetById(int pageBlockTypeId)
+        public async Task<JsonResult> GetById(int pageBlockTypeId)
         {
-            var results = await _queryExecutor.ExecuteAsync(new GetPageBlockTypeDetailsByIdQuery(pageBlockTypeId));
-            return _apiResponseHelper.SimpleQueryResponse(this, results);
+            var result = await _queryExecutor.ExecuteAsync(new GetPageBlockTypeDetailsByIdQuery(pageBlockTypeId));
+
+            var settings = _dynamicDataModelSchemaJsonSerializerSettingsCache.GetInstance();
+            var jsonResponse = _apiResponseHelper.SimpleQueryResponse(result);
+            jsonResponse.SerializerSettings = settings;
+
+            return jsonResponse;
         }
     }
 }

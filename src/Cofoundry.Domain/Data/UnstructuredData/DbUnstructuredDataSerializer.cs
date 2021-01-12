@@ -1,4 +1,5 @@
 ﻿using Cofoundry.Core.Json;
+using Cofoundry.Domain.Internal;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
@@ -18,26 +19,14 @@ namespace Cofoundry.Domain.Data.Internal
     /// </summary>
     public class DbUnstructuredDataSerializer : IDbUnstructuredDataSerializer
     {
-        #region constructor
-
-        private readonly ILogger<DbUnstructuredDataSerializer> _logger;
-        private readonly IJsonSerializerSettingsFactory _jsonSerializerSettingsFactory;
-        private readonly INestedDataModelTypeRepository _nestedDataModelTypeRepository;
+        private readonly DynamicDataModelJsonSerializerSettingsCache _dynamicDataModelJsonSerializerSettingsCache;
 
         public DbUnstructuredDataSerializer(
-            ILogger<DbUnstructuredDataSerializer> logger,
-            IJsonSerializerSettingsFactory jsonSerializerSettingsFactory,
-            INestedDataModelTypeRepository nestedDataModelTypeRepository
+            DynamicDataModelJsonSerializerSettingsCache dynamicDataModelJsonSerializerSettingsCache
             )
         {
-            _logger = logger;
-            _jsonSerializerSettingsFactory = jsonSerializerSettingsFactory;
-            _nestedDataModelTypeRepository = nestedDataModelTypeRepository;
+            _dynamicDataModelJsonSerializerSettingsCache = dynamicDataModelJsonSerializerSettingsCache;
         }
-
-        #endregion
-
-        #region public methods
 
         public object Deserialize(string serialized, Type type)
         {
@@ -64,32 +53,9 @@ namespace Cofoundry.Domain.Data.Internal
             return s;
         }
 
-        #endregion
-
-        #region private helpers
-
         private JsonSerializerSettings GetDeserializerSettings()
         {
-            var settings = _jsonSerializerSettingsFactory.Create();
-            settings.Error = HandleDeserializationError;
-            settings.Converters.Add(new NestedDataModelMultiTypeItemJsonConverter(_jsonSerializerSettingsFactory, _nestedDataModelTypeRepository));
-
-            return settings;
+            return _dynamicDataModelJsonSerializerSettingsCache.GetInstance();
         }
-
-        private void HandleDeserializationError(object sender, ErrorEventArgs errorArgs)
-        {
-            if (Debugger.IsAttached)
-            {
-                Debug.Assert(false, errorArgs.ErrorContext.Error.Message);
-            }
-            else
-            {
-                _logger.LogWarning(0, errorArgs.ErrorContext.Error, errorArgs.ErrorContext.Error.Message);
-            }
-            errorArgs.ErrorContext.Handled = true;
-        }
-
-        #endregion
     }
 }

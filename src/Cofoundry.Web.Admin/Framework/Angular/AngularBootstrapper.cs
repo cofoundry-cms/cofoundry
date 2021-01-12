@@ -31,6 +31,7 @@ namespace Cofoundry.Web.Admin
         private readonly IWebHostEnvironment _webHostEnvironment;
         private readonly DebugSettings _debugSettings;
         private readonly AdminSettings _adminSettings;
+        private readonly JsonSerializerSettings _jsonSerializerSettings;
 
         public AngularBootstrapper(
             IAntiforgery antiforgery,
@@ -41,7 +42,8 @@ namespace Cofoundry.Web.Admin
             IQueryExecutor queryExecutor,
             IWebHostEnvironment webHostEnvironment,
             DebugSettings debugSettings,
-            AdminSettings adminSettings
+            AdminSettings adminSettings,
+            JsonSerializerSettings jsonSerializerSettings
             )
         {
             _antiforgery = antiforgery;
@@ -53,6 +55,7 @@ namespace Cofoundry.Web.Admin
             _webHostEnvironment = webHostEnvironment;
             _debugSettings = debugSettings;
             _adminSettings = adminSettings;
+            _jsonSerializerSettings = jsonSerializerSettings;
         }
 
         /// <summary>
@@ -164,16 +167,16 @@ namespace Cofoundry.Web.Admin
                     });</script>";
         }
 
-        private static string GetOptions(AngularModuleRouteLibrary routeLibrary, object options)
+        private string GetOptions(AngularModuleRouteLibrary routeLibrary, object options)
         {
             return GetConstant(routeLibrary, "options", options);
         }
 
-        private static string GetConstant<TValue>(AngularModuleRouteLibrary routeLibrary, string name, TValue value)
+        private string GetConstant<TValue>(AngularModuleRouteLibrary routeLibrary, string name, TValue value)
         {
             if (value != null)
             {
-                var valueJson = JsonConvert.SerializeObject(value);
+                var valueJson = JsonConvert.SerializeObject(value, _jsonSerializerSettings);
                 return ".constant('" + routeLibrary.Angular.AngularModuleIdentifier + "." + name + "', " + valueJson + ")";
             }
 

@@ -24,44 +24,41 @@ namespace Cofoundry.Web.Admin
 
         #region queries
 
-        public async Task<IActionResult> Get([FromQuery] SearchRolesQuery query)
+        public async Task<JsonResult> Get([FromQuery] SearchRolesQuery query)
         {
             if (query == null) query = new SearchRolesQuery();
             ApiPagingHelper.SetDefaultBounds(query);
 
             var results = await _queryExecutor.ExecuteAsync(query);
-            return _apiResponseHelper.SimpleQueryResponse(this, results);
+            return _apiResponseHelper.SimpleQueryResponse(results);
         }
         
-        public async Task<IActionResult> GetById(int roleId)
+        public async Task<JsonResult> GetById(int roleId)
         {
             var result = await _queryExecutor.ExecuteAsync(new GetRoleDetailsByIdQuery(roleId));
-            return _apiResponseHelper.SimpleQueryResponse(this, result);
+            return _apiResponseHelper.SimpleQueryResponse(result);
         }
 
         #endregion
 
         #region commands
 
-        [HttpPost]
-        public async Task<IActionResult> Post([FromBody] AddRoleCommand command)
+        public Task<JsonResult> Post([FromBody] AddRoleCommand command)
         {
-            return await _apiResponseHelper.RunCommandAsync(this, command);
+            return _apiResponseHelper.RunCommandAsync(command);
         }
 
-        [HttpPatch]
-        public async Task<IActionResult> Patch(int roleId, [FromBody] IDelta<UpdateRoleCommand> delta)
+        public Task<JsonResult> Patch(int roleId, [FromBody] IDelta<UpdateRoleCommand> delta)
         {
-            return await _apiResponseHelper.RunCommandAsync(this, roleId, delta);
+            return _apiResponseHelper.RunCommandAsync(roleId, delta);
         }
 
-        [HttpDelete]
-        public async Task<IActionResult> Delete(int roleId)
+        public Task<JsonResult> Delete(int roleId)
         {
             var command = new DeleteRoleCommand();
             command.RoleId = roleId;
 
-            return await _apiResponseHelper.RunCommandAsync(this, command);
+            return _apiResponseHelper.RunCommandAsync(command);
         }
 
         #endregion

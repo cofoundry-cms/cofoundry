@@ -3,64 +3,71 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Cofoundry.Core;
+using Cofoundry.Core.Json;
 using Cofoundry.Domain;
 using Cofoundry.Domain.CQS;
+using Cofoundry.Domain.Internal;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Cofoundry.Web.Admin
 {
     public class CustomEntityDefinitionsApiController : BaseAdminApiController
     {
-        private const string ID_ROUTE = "{customEntityDefinitionCode}";
-
         private readonly IQueryExecutor _queryExecutor;
         private readonly IApiResponseHelper _apiResponseHelper;
+        private readonly DynamicDataModelJsonSerializerSettingsCache _dynamicDataModelSchemaJsonSerializerSettingsCache;
 
         public CustomEntityDefinitionsApiController(
             IQueryExecutor queryExecutor,
-            IApiResponseHelper apiResponseHelper
+            IApiResponseHelper apiResponseHelper,
+            DynamicDataModelJsonSerializerSettingsCache dynamicDataModelSchemaJsonSerializerSettingsCache
             )
         {
             _queryExecutor = queryExecutor;
             _apiResponseHelper = apiResponseHelper;
+            _dynamicDataModelSchemaJsonSerializerSettingsCache = dynamicDataModelSchemaJsonSerializerSettingsCache;
         }
 
         #region queries
 
-        public async Task<IActionResult> Get()
+        public async Task<JsonResult> Get()
         {
             var results = await _queryExecutor.ExecuteAsync(new GetAllCustomEntityDefinitionSummariesQuery());
-            return _apiResponseHelper.SimpleQueryResponse(this, results);
+            return _apiResponseHelper.SimpleQueryResponse(results);
         }
 
-        public async Task<IActionResult> GetById(string customEntityDefinitionCode)
+        public async Task<JsonResult> GetById(string customEntityDefinitionCode)
         {
             var result = await _queryExecutor.ExecuteAsync(new GetCustomEntityDefinitionSummaryByCodeQuery(customEntityDefinitionCode));
-            return _apiResponseHelper.SimpleQueryResponse(this, result);
+            return _apiResponseHelper.SimpleQueryResponse(result);
         }
         
-        public async Task<IActionResult> GetCustomEntityRoutes(string customEntityDefinitionCode)
+        public async Task<JsonResult> GetCustomEntityRoutes(string customEntityDefinitionCode)
         {
             var query = new GetPageRoutesByCustomEntityDefinitionCodeQuery(customEntityDefinitionCode);
             var result = await _queryExecutor.ExecuteAsync(query);
 
-            return _apiResponseHelper.SimpleQueryResponse(this, result);
+            return _apiResponseHelper.SimpleQueryResponse(result);
         }
 
-        public async Task<IActionResult> GetDataModelSchema(string customEntityDefinitionCode)
+        public async Task<JsonResult> GetDataModelSchema(string customEntityDefinitionCode)
         {
             var result = await _queryExecutor.ExecuteAsync(new GetCustomEntityDataModelSchemaDetailsByDefinitionCodeQuery(customEntityDefinitionCode));
-            return _apiResponseHelper.SimpleQueryResponse(this, result);
+            var settings = _dynamicDataModelSchemaJsonSerializerSettingsCache.GetInstance();
+            var jsonResponse = _apiResponseHelper.SimpleQueryResponse(result);
+            jsonResponse.SerializerSettings = settings;
+
+            return jsonResponse;
         }
         
-        public async Task<IActionResult> GetCustomEntities(string customEntityDefinitionCode, [FromQuery] SearchCustomEntitySummariesQuery query)
+        public async Task<JsonResult> GetCustomEntities(string customEntityDefinitionCode, [FromQuery] SearchCustomEntitySummariesQuery query)
         {
             if (query == null) query = new SearchCustomEntitySummariesQuery();
             query.CustomEntityDefinitionCode = customEntityDefinitionCode;
             ApiPagingHelper.SetDefaultBounds(query);
 
             var results = await _queryExecutor.ExecuteAsync(query);
-            return _apiResponseHelper.SimpleQueryResponse(this, results);
+            return _apiResponseHelper.SimpleQueryResponse(results);
         }
 
         #endregion

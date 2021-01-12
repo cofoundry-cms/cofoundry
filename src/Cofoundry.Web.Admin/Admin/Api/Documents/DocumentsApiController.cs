@@ -29,7 +29,7 @@ namespace Cofoundry.Web.Admin
 
         #region queries
 
-        public async Task<IActionResult> Get(
+        public async Task<JsonResult> Get(
             [FromQuery] SearchDocumentAssetSummariesQuery query, 
             [FromQuery] GetDocumentAssetRenderDetailsByIdRangeQuery rangeQuery
             )
@@ -37,50 +37,47 @@ namespace Cofoundry.Web.Admin
             if (rangeQuery != null && rangeQuery.DocumentAssetIds != null)
             {
                 var rangeResults = await _queryExecutor.ExecuteAsync(rangeQuery);
-                return _apiResponseHelper.SimpleQueryResponse(this, rangeResults.FilterAndOrderByKeys(rangeQuery.DocumentAssetIds));
+                return _apiResponseHelper.SimpleQueryResponse(rangeResults.FilterAndOrderByKeys(rangeQuery.DocumentAssetIds));
             }
 
             if (query == null) query = new SearchDocumentAssetSummariesQuery();
             ApiPagingHelper.SetDefaultBounds(query);
 
             var results = await _queryExecutor.ExecuteAsync(query);
-            return _apiResponseHelper.SimpleQueryResponse(this, results);
+            return _apiResponseHelper.SimpleQueryResponse(results);
         }
 
-        public async Task<IActionResult> GetById(int documentAssetId)
+        public async Task<JsonResult> GetById(int documentAssetId)
         {
             var query = new GetDocumentAssetDetailsByIdQuery(documentAssetId);
             var result = await _queryExecutor.ExecuteAsync(query);
 
-            return _apiResponseHelper.SimpleQueryResponse(this, result);
+            return _apiResponseHelper.SimpleQueryResponse(result);
         }
 
         #endregion
 
         #region commands
 
-        [HttpPost]
-        public async Task<IActionResult> Post(AddDocumentAssetCommand command, IFormFile file)
+        public Task<JsonResult> Post(AddDocumentAssetCommand command, IFormFile file)
         {
             command.File = _formFileUploadedFileFactory.Create(file);
-            return await _apiResponseHelper.RunCommandAsync(this, command);
+            return _apiResponseHelper.RunCommandAsync(command);
         }
 
-        [HttpPut]
-        public async Task<IActionResult> Put(int documentAssetId, UpdateDocumentAssetCommand command, IFormFile file)
+        public Task<JsonResult> Put(int documentAssetId, UpdateDocumentAssetCommand command, IFormFile file)
         {
             command.File = _formFileUploadedFileFactory.Create(file);
 
-            return await _apiResponseHelper.RunCommandAsync(this, command);
+            return _apiResponseHelper.RunCommandAsync(command);
         }
 
-        [HttpDelete]
-        public async Task<IActionResult> Delete(int documentAssetId)
+        public Task<JsonResult> Delete(int documentAssetId)
         {
             var command = new DeleteDocumentAssetCommand();
             command.DocumentAssetId = documentAssetId;
 
-            return await _apiResponseHelper.RunCommandAsync(this, command);
+            return _apiResponseHelper.RunCommandAsync(command);
         }
 
 

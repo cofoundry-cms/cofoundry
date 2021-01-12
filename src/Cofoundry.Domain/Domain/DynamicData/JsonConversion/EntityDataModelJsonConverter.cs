@@ -1,4 +1,5 @@
 ﻿using Cofoundry.Core.Json;
+using Cofoundry.Domain.Internal;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -13,18 +14,15 @@ namespace Cofoundry.Domain
     /// </summary>
     public class EntityDataModelJsonConverter : JsonConverter
     {
-        private readonly IJsonSerializerSettingsFactory _jsonSerializerSettingsFactory;
-        private readonly INestedDataModelTypeRepository _nestedDataModelTypeRepository;
+        private readonly DynamicDataModelJsonSerializerSettingsCache _dynamicDataModelJsonSerializerSettingsCache;
         private readonly Type _dataModelType;
 
         public EntityDataModelJsonConverter(
-            IJsonSerializerSettingsFactory jsonSerializerSettingsFactory,
-            INestedDataModelTypeRepository nestedDataModelTypeRepository,
+            DynamicDataModelJsonSerializerSettingsCache dynamicDataModelJsonSerializerSettingsCache,
             Type dataModelType
             )
         {
-            _jsonSerializerSettingsFactory = jsonSerializerSettingsFactory;
-            _nestedDataModelTypeRepository = nestedDataModelTypeRepository;
+            _dynamicDataModelJsonSerializerSettingsCache = dynamicDataModelJsonSerializerSettingsCache;
 
             if (!dataModelType.IsClass)
             {
@@ -46,9 +44,7 @@ namespace Cofoundry.Domain
 
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
         {
-            var settings = _jsonSerializerSettingsFactory.Create();
-            settings.Converters.Add(new NestedDataModelMultiTypeItemJsonConverter(_jsonSerializerSettingsFactory, _nestedDataModelTypeRepository));
-
+            var settings = _dynamicDataModelJsonSerializerSettingsCache.GetInstance();
             var newSerializer = JsonSerializer.Create(settings);
             return newSerializer.Deserialize(reader, _dataModelType);
         }

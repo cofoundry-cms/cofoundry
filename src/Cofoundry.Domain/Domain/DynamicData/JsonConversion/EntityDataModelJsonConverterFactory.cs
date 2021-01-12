@@ -1,4 +1,5 @@
 ﻿using Cofoundry.Core.Json;
+using Cofoundry.Domain.Internal;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -8,23 +9,19 @@ namespace Cofoundry.Domain
 {
     public class EntityDataModelJsonConverterFactory : IEntityDataModelJsonConverterFactory
     {
-        private readonly IJsonSerializerSettingsFactory _jsonSerializerSettingsFactory;
-        private readonly INestedDataModelTypeRepository _nestedDataModelTypeRepository;
+        private readonly DynamicDataModelJsonSerializerSettingsCache _dynamicDataModelJsonSerializerSettingsCache;
 
         public EntityDataModelJsonConverterFactory(
-            IJsonSerializerSettingsFactory jsonSerializerSettingsFactory,
-            INestedDataModelTypeRepository nestedDataModelTypeRepository
+            DynamicDataModelJsonSerializerSettingsCache dynamicDataModelJsonSerializerSettingsCache
             )
         {
-            _jsonSerializerSettingsFactory = jsonSerializerSettingsFactory;
-            _nestedDataModelTypeRepository = nestedDataModelTypeRepository;
+            _dynamicDataModelJsonSerializerSettingsCache = dynamicDataModelJsonSerializerSettingsCache;
         }
 
         public JsonConverter Create(Type concreteDataModelType)
         {
             return new EntityDataModelJsonConverter(
-                _jsonSerializerSettingsFactory,
-                _nestedDataModelTypeRepository,
+                _dynamicDataModelJsonSerializerSettingsCache,
                 concreteDataModelType
                 );
         }

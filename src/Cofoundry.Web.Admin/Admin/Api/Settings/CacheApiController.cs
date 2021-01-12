@@ -27,12 +27,11 @@ namespace Cofoundry.Web.Admin
         /// data cache in case we run into a caching issue in a live
         /// deployment
         /// </summary>
-        [HttpDelete]
         public IActionResult Delete()
         {
             _objectCacheFactory.Clear();
 
-            return _apiResponseHelper.SimpleCommandResponse(this, Enumerable.Empty<ValidationError>());
+            return _apiResponseHelper.SimpleCommandResponse(Enumerable.Empty<ValidationError>());
         }
     }
 }

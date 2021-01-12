@@ -8266,7 +8266,11 @@ function (
         });
 
         function loadModelSchema(modelMetaData) {
-            vm.command.model = {};
+            if (modelMetaData.defaultValue && modelMetaData.defaultValue.value) {
+                vm.command.model = angular.copy(modelMetaData.defaultValue.value);
+            } else {
+                vm.command.model = {};
+            }
 
             vm.formDataSource = {
                 model: vm.command.model,
@@ -13580,7 +13584,6 @@ angular.module('cms.shared').factory('shared.ImagePreviewFieldCollection', [
             function updateImage(itemToUpdate, index, isNew) {
                 var propertyName = getImagePropertyName(itemToUpdate);
                 if (!propertyName) return;
-                console.log('updateImage', itemToUpdate);
 
                 var newImageId = modelPropertyAccessor(itemToUpdate, propertyName);
 
@@ -13759,15 +13762,27 @@ function (
         vm.save = onSave;
         vm.onCancel = onCancel;
         vm.close = onCancel;
-        vm.title = options.model ? 'Edit Item' : 'Add Item';
-        vm.formDataSource = {
-            model: options.model || {},
-            modelMetaData: options.modelMetaData
-        };
+        vm.isNew = !options.model;
+        vm.title = vm.isNew ? 'Add Item' : 'Edit Item';
         vm.saveLoadState = new LoadState();
+        initFormDataSource(options);
     }
 
     /* EVENTS */
+
+    function initFormDataSource(options) {
+        var model = options.model || {},
+            modelMetaData = options.modelMetaData;
+
+        if (vm.isNew && modelMetaData.defaultValue && modelMetaData.defaultValue.value) {
+            model = angular.copy(modelMetaData.defaultValue.value);
+        }
+
+        vm.formDataSource = {
+            model: model,
+            modelMetaData: modelMetaData
+        };
+    }
 
     function onSave() {
         vm.saveLoadState.on();

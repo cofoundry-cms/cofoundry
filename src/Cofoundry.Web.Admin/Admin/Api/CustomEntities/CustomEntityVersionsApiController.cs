@@ -12,22 +12,19 @@ namespace Cofoundry.Web.Admin
     {
         private readonly IQueryExecutor _queryExecutor;
         private readonly IApiResponseHelper _apiResponseHelper;
-        private readonly ICommandExecutor _commandExecutor;
 
         public CustomEntityVersionsApiController(
             IQueryExecutor queryExecutor,
-            ICommandExecutor commandExecutor,
             IApiResponseHelper apiResponseHelper
             )
         {
             _queryExecutor = queryExecutor;
             _apiResponseHelper = apiResponseHelper;
-            _commandExecutor = commandExecutor;
         }
 
         #region queries
 
-        public async Task<IActionResult> Get(int customEntityId, GetCustomEntityVersionSummariesByCustomEntityIdQuery query)
+        public async Task<JsonResult> Get(int customEntityId, GetCustomEntityVersionSummariesByCustomEntityIdQuery query)
         {
             if (query == null) query = new GetCustomEntityVersionSummariesByCustomEntityIdQuery();
 
@@ -35,45 +32,40 @@ namespace Cofoundry.Web.Admin
             ApiPagingHelper.SetDefaultBounds(query);
 
             var results = await _queryExecutor.ExecuteAsync(query);
-            return _apiResponseHelper.SimpleQueryResponse(this, results);
+            return _apiResponseHelper.SimpleQueryResponse(results);
         }
 
         #endregion
 
         #region commands
 
-        [HttpPost]
-        public async Task<IActionResult> Post([FromBody] AddCustomEntityDraftVersionCommand command)
+        public Task<JsonResult> Post([FromBody] AddCustomEntityDraftVersionCommand command)
         {
-            return await _apiResponseHelper.RunCommandAsync(this, command);
+            return _apiResponseHelper.RunCommandAsync(command);
         }
 
-        [HttpPut]
-        public async Task<IActionResult> PutDraft(int customEntityId, [ModelBinder(BinderType = typeof(CustomEntityDataModelCommandModelBinder))] UpdateCustomEntityDraftVersionCommand command)
+        public Task<JsonResult> PutDraft(int customEntityId, [ModelBinder(BinderType = typeof(CustomEntityDataModelCommandModelBinder))] UpdateCustomEntityDraftVersionCommand command)
         {
-            return await _apiResponseHelper.RunCommandAsync(this, command);
+            return _apiResponseHelper.RunCommandAsync(command);
         }
 
-        [HttpDelete]
-        public async Task<IActionResult> DeleteDraft(int customEntityId)
+        public Task<JsonResult> DeleteDraft(int customEntityId)
         {
             var command = new DeleteCustomEntityDraftVersionCommand() { CustomEntityId = customEntityId };
 
-            return await _apiResponseHelper.RunCommandAsync(this, command);
+            return _apiResponseHelper.RunCommandAsync(command);
         }
 
-        [HttpPatch]
-        public async Task<IActionResult> Publish(int customEntityId)
+        public Task<JsonResult> Publish(int customEntityId)
         {
             var command = new PublishCustomEntityCommand() { CustomEntityId = customEntityId };
-            return await _apiResponseHelper.RunCommandAsync(this, command);
+            return _apiResponseHelper.RunCommandAsync(command);
         }
 
-        [HttpPatch]
-        public async Task<IActionResult> UnPublish(int customEntityId)
+        public Task<JsonResult> UnPublish(int customEntityId)
         {
             var command = new UnPublishCustomEntityCommand() { CustomEntityId = customEntityId };
-            return await _apiResponseHelper.RunCommandAsync(this, command);
+            return _apiResponseHelper.RunCommandAsync(command);
         }
 
         #endregion

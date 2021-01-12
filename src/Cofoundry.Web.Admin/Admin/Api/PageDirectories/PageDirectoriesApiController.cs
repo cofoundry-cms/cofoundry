@@ -10,8 +10,6 @@ namespace Cofoundry.Web.Admin
 {
     public class PageDirectoriesApiController : BaseAdminApiController
     {
-        private const string ID_ROUTE = "{pageDirectoryId:int}";
-
         private readonly IQueryExecutor _queryExecutor;
         private readonly IApiResponseHelper _apiResponseHelper;
 
@@ -26,48 +24,45 @@ namespace Cofoundry.Web.Admin
 
         #region queries
 
-        public async Task<IActionResult> Get()
+        public async Task<JsonResult> Get()
         {
             var results = await _queryExecutor.ExecuteAsync(new GetAllPageDirectoryRoutesQuery());
-            return _apiResponseHelper.SimpleQueryResponse(this, results);
+            return _apiResponseHelper.SimpleQueryResponse(results);
         }
 
-        public async Task<IActionResult> GetTree()
+        public async Task<JsonResult> GetTree()
         {
             var query = new GetPageDirectoryTreeQuery();
             var results = await _queryExecutor.ExecuteAsync(query);
-            return _apiResponseHelper.SimpleQueryResponse(this, results);
+            return _apiResponseHelper.SimpleQueryResponse(results);
         }
         
-        public async Task<IActionResult> GetById(int pageDirectoryId)
+        public async Task<JsonResult> GetById(int pageDirectoryId)
         {
             var result = await _queryExecutor.ExecuteAsync(new GetPageDirectoryNodeByIdQuery(pageDirectoryId));
-            return _apiResponseHelper.SimpleQueryResponse(this, result);
+            return _apiResponseHelper.SimpleQueryResponse(result);
         }
 
         #endregion
 
         #region commands
 
-        [HttpPost]
-        public async Task<IActionResult> Post([FromBody] AddPageDirectoryCommand command)
+        public Task<JsonResult> Post([FromBody] AddPageDirectoryCommand command)
         {
-            return await _apiResponseHelper.RunCommandAsync(this, command);
+            return _apiResponseHelper.RunCommandAsync(command);
         }
 
-        [HttpPatch]
-        public async Task<IActionResult> Patch(int pageDirectoryId, [FromBody] IDelta<UpdatePageDirectoryCommand> delta)
+        public Task<JsonResult> Patch(int pageDirectoryId, [FromBody] IDelta<UpdatePageDirectoryCommand> delta)
         {
-            return await _apiResponseHelper.RunCommandAsync(this, pageDirectoryId, delta);
+            return _apiResponseHelper.RunCommandAsync(pageDirectoryId, delta);
         }
 
-        [HttpDelete]
-        public async Task<IActionResult> Delete(int pageDirectoryId)
+        public Task<JsonResult> Delete(int pageDirectoryId)
         {
             var command = new DeletePageDirectoryCommand();
             command.PageDirectoryId = pageDirectoryId;
 
-            return await _apiResponseHelper.RunCommandAsync(this, command);
+            return _apiResponseHelper.RunCommandAsync(command);
         }
 
         #endregion

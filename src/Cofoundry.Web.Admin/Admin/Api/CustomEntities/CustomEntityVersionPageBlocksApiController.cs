@@ -14,8 +14,6 @@ namespace Cofoundry.Web.Admin
     /// </summary>
     public class CustomEntityVersionPageBlocksApiController : BaseAdminApiController
     {
-        private const string ID_ROUTE = "{customEntityVersionPageBlockId:int}";
-
         private readonly IQueryExecutor _queryExecutor;
         private readonly IApiResponseHelper _apiResponseHelper;
 
@@ -30,65 +28,60 @@ namespace Cofoundry.Web.Admin
 
         #region queries
 
-        public async Task<IActionResult> Get(int customEntityVersionPageBlockId, CustomEntityVersionPageBlocksActionDataType dataType = CustomEntityVersionPageBlocksActionDataType.RenderDetails)
+        public async Task<JsonResult> Get(int customEntityVersionPageBlockId, CustomEntityVersionPageBlocksActionDataType dataType = CustomEntityVersionPageBlocksActionDataType.RenderDetails)
         {
             if (dataType == CustomEntityVersionPageBlocksActionDataType.UpdateCommand)
             {
                 var updateCommandQuery = new GetUpdateCommandByIdQuery<UpdateCustomEntityVersionPageBlockCommand>(customEntityVersionPageBlockId);
                 var updateCommandResult = await _queryExecutor.ExecuteAsync(updateCommandQuery);
 
-                return _apiResponseHelper.SimpleQueryResponse(this, updateCommandResult);
+                return _apiResponseHelper.SimpleQueryResponse(updateCommandResult);
             }
 
             var query = new GetCustomEntityVersionPageBlockRenderDetailsByIdQuery() { CustomEntityVersionPageBlockId = customEntityVersionPageBlockId, PublishStatus = PublishStatusQuery.Latest };
             var results = await _queryExecutor.ExecuteAsync(query);
 
-            return _apiResponseHelper.SimpleQueryResponse(this, results);
+            return _apiResponseHelper.SimpleQueryResponse(results);
         }
         
         #endregion
 
         #region commands
 
-        [HttpPost]
-        public async Task<IActionResult> Post([ModelBinder(BinderType = typeof(PageVersionBlockDataModelCommandModelBinder))] AddCustomEntityVersionPageBlockCommand command)
+        public Task<JsonResult> Post([ModelBinder(BinderType = typeof(PageVersionBlockDataModelCommandModelBinder))] AddCustomEntityVersionPageBlockCommand command)
         {
-            return await _apiResponseHelper.RunCommandAsync(this, command);
+            return _apiResponseHelper.RunCommandAsync(command);
         }
 
-        [HttpPut]
-        public async Task<IActionResult> Put(int customEntityVersionPageBlockId, [ModelBinder(BinderType = typeof(PageVersionBlockDataModelCommandModelBinder))] UpdateCustomEntityVersionPageBlockCommand command)
+        public Task<JsonResult> Put(int customEntityVersionPageBlockId, [ModelBinder(BinderType = typeof(PageVersionBlockDataModelCommandModelBinder))] UpdateCustomEntityVersionPageBlockCommand command)
         {
             command.CustomEntityVersionPageBlockId = customEntityVersionPageBlockId;
-            return await _apiResponseHelper.RunCommandAsync(this, command);
+            return _apiResponseHelper.RunCommandAsync(command);
         }
 
-        [HttpDelete]
-        public async Task<IActionResult> Delete(int customEntityVersionPageBlockId)
+        public Task<JsonResult> Delete(int customEntityVersionPageBlockId)
         {
             var command = new DeleteCustomEntityVersionPageBlockCommand() { CustomEntityVersionPageBlockId = customEntityVersionPageBlockId };
 
-            return await _apiResponseHelper.RunCommandAsync(this, command);
+            return _apiResponseHelper.RunCommandAsync(command);
         }
 
-        [HttpPut]
-        public async Task<IActionResult> MoveUp(int customEntityVersionPageBlockId)
+        public Task<JsonResult> MoveUp(int customEntityVersionPageBlockId)
         {
             var command = new MoveCustomEntityVersionPageBlockCommand();
             command.CustomEntityVersionPageBlockId = customEntityVersionPageBlockId;
             command.Direction = OrderedItemMoveDirection.Up;
 
-            return await _apiResponseHelper.RunCommandAsync(this, command);
+            return _apiResponseHelper.RunCommandAsync(command);
         }
 
-        [HttpPut]
-        public async Task<IActionResult> MoveDown(int customEntityVersionPageBlockId)
+        public Task<JsonResult> MoveDown(int customEntityVersionPageBlockId)
         {
             var command = new MoveCustomEntityVersionPageBlockCommand();
             command.CustomEntityVersionPageBlockId = customEntityVersionPageBlockId;
             command.Direction = OrderedItemMoveDirection.Down;
 
-            return await _apiResponseHelper.RunCommandAsync(this, command);
+            return _apiResponseHelper.RunCommandAsync(command);
         }
         
         #endregion

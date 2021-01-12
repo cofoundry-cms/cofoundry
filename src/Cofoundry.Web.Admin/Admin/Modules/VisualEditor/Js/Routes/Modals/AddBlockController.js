@@ -112,6 +112,10 @@ function (
 
         function onLoaded(modelMetaData) {
 
+            if (modelMetaData.defaultValue && modelMetaData.defaultValue.value) {
+                _.defaults($scope.command.dataModel, angular.copy(modelMetaData.defaultValue.value));
+            }
+
             $scope.formDataSource = {
                 modelMetaData: modelMetaData,
                 model: $scope.command.dataModel

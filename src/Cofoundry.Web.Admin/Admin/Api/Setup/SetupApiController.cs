@@ -20,8 +20,7 @@ namespace Cofoundry.Web.Admin
             _apiResponseHelper = apiResponseHelper;
         }
 
-        [HttpPost]
-        public async Task<IActionResult> Post([FromBody] SetupCofoundryCommandDto dto)
+        public Task<JsonResult> Post([FromBody] SetupCofoundryCommandDto dto)
         {
             var command = new SetupCofoundryCommand()
             {
@@ -32,7 +31,7 @@ namespace Cofoundry.Web.Admin
                 UserPassword = dto.UserPassword
             };
 
-            return await _apiResponseHelper.RunCommandAsync(this, command);
+            return _apiResponseHelper.RunCommandAsync(command);
         }
     }
 }

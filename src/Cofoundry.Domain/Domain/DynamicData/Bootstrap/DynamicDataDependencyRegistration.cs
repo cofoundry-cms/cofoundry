@@ -18,6 +18,7 @@ namespace Cofoundry.Domain.Registration
                 .Register<INestedDataModelSchemaMapper, NestedDataModelSchemaMapper>()
                 .Register<IEntityDataModelJsonConverterFactory, EntityDataModelJsonConverterFactory>()
                 .RegisterAll<INestedDataModel>()
+                .RegisterSingleton<DynamicDataModelJsonSerializerSettingsCache>();
                 ;
         }
     }

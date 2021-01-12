@@ -29,5 +29,7 @@ namespace Cofoundry.Domain
         /// parts of the admin UI.
         /// </summary>
         public ICollection<DynamicDataModelSchemaProperty> DataModelProperties { get; set; }
+
+        public DynamicDataModelDefaultValue DefaultValue { get; set; }
     }
 }

@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using System.IO;
 using System.Text;
 using Cofoundry.Core.Json;
+using Cofoundry.Domain.Internal;
 
 namespace Cofoundry.Web.Admin
 {
@@ -17,27 +18,22 @@ namespace Cofoundry.Web.Admin
     /// </summary>
     public class NestedDataModelMultiTypeItemModelBinder : IModelBinder
     {
-        private readonly IJsonSerializerSettingsFactory _jsonSerializerSettingsFactory;
-        private readonly INestedDataModelTypeRepository _nestedDataModelTypeRepository;
+        private readonly DynamicDataModelJsonSerializerSettingsCache _dynamicDataModelJsonSerializerSettingsCache;
 
         public NestedDataModelMultiTypeItemModelBinder(
-            IJsonSerializerSettingsFactory jsonSerializerSettingsFactory,
-            INestedDataModelTypeRepository nestedDataModelTypeRepository
+            DynamicDataModelJsonSerializerSettingsCache dynamicDataModelJsonSerializerSettingsCache
             )
         {
-            _jsonSerializerSettingsFactory = jsonSerializerSettingsFactory;
-            _nestedDataModelTypeRepository = nestedDataModelTypeRepository;
+            _dynamicDataModelJsonSerializerSettingsCache = dynamicDataModelJsonSerializerSettingsCache;
         }
 
         public async Task BindModelAsync(ModelBindingContext bindingContext)
         {
             if (bindingContext == null) throw new ArgumentNullException(nameof(bindingContext));
 
-            var settings = _jsonSerializerSettingsFactory.Create();
-            settings.Converters.Add(new NestedDataModelMultiTypeItemJsonConverter(_jsonSerializerSettingsFactory, _nestedDataModelTypeRepository));
+            var settings = _dynamicDataModelJsonSerializerSettingsCache.GetInstance();
 
             var jsonString = await ReadBodyAsString(bindingContext);
-            var newSerializer = JsonSerializer.Create(settings);
 
             var result = JsonConvert.DeserializeObject(jsonString, bindingContext.ModelType, settings);
 

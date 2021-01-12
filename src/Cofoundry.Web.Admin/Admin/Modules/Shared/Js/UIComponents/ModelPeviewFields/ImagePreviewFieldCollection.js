@@ -113,7 +113,6 @@ angular.module('cms.shared').factory('shared.ImagePreviewFieldCollection', [
             function updateImage(itemToUpdate, index, isNew) {
                 var propertyName = getImagePropertyName(itemToUpdate);
                 if (!propertyName) return;
-                console.log('updateImage', itemToUpdate);
 
                 var newImageId = modelPropertyAccessor(itemToUpdate, propertyName);
 

@@ -100,6 +100,8 @@ function (
 
     function initData() {
 
+        vm.command = {};
+
         var schemaDefferred = customEntityService
             .getDataModelSchema(moduleOptions.customEntityDefinitionCode)
             .then(loadModelSchema);
@@ -109,8 +111,6 @@ function (
             .then(loadPageRoutes);
 
         vm.formLoadState.offWhen(schemaDefferred, pageRoutesDefferred);
-
-        vm.command = {};
 
         $scope.$watch('vm.command.localeId', function (localeId) {
 
@@ -124,7 +124,12 @@ function (
         });
 
         function loadModelSchema(modelMetaData) {
-            vm.command.model = {};
+
+            if (modelMetaData.defaultValue && modelMetaData.defaultValue.value) {
+                vm.command.model = angular.copy(modelMetaData.defaultValue.value);
+            } else {
+                vm.command.model  = {};
+            }
 
             vm.formDataSource = {
                 model: vm.command.model,
