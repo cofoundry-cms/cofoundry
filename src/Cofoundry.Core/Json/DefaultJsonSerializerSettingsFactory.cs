@@ -7,13 +7,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Cofoundry.Core.Json.Internal
+namespace Cofoundry.Core.Json.Overridable
 {
     /// <summary>
     /// Gets the default JsonSerializerSettings used by Cofoundry and assigned
     /// to the default Json serializer in asp.net MVC and web api.
     /// </summary>
-    public class JsonSerializerSettingsFactory : IJsonSerializerSettingsFactory
+    public class DefaultJsonSerializerSettingsFactory : IJsonSerializerSettingsFactory
     {
         /// <summary>
         /// Creates a new JsonSerializerSettings instance .
@@ -29,7 +29,7 @@ namespace Cofoundry.Core.Json.Internal
         /// Applies the json serializer settings to an existing settings instance.
         /// </summary>
         /// <param name="settings">An existing settings instance to apply updated settings to.</param>
-        public JsonSerializerSettings Configure(JsonSerializerSettings settings)
+        public virtual JsonSerializerSettings Configure(JsonSerializerSettings settings)
         {
             if (settings == null) throw new ArgumentNullException(nameof(settings));
 
