@@ -18,7 +18,7 @@ namespace Cofoundry.Web.Admin
     /// can be altered via the Cofoundry:Admin:DirectoryName setting.
     /// </summary>
     public class AdminApiRouteBuilderContext<TController>
-        where TController : Controller
+        where TController : ControllerBase
     {
         private readonly AdminSettings _adminSettings;
         private readonly IEndpointRouteBuilder _routeBuilder;

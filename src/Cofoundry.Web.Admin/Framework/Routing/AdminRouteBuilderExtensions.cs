@@ -50,7 +50,7 @@ namespace Cofoundry.Web.Admin
         /// </param>
         /// <returns>Api builder context that can be used to add routes.</returns>
         public static AdminApiRouteBuilderContext<TController> ForAdminApiController<TController>(this IEndpointRouteBuilder routeBuilder, string basePath)
-            where TController : Controller
+            where TController : ControllerBase
         {
             var adminSettings = routeBuilder.ServiceProvider.GetRequiredService<AdminSettings>();
             return new AdminApiRouteBuilderContext<TController>(adminSettings, routeBuilder, basePath);
