@@ -1,10 +1,11 @@
 ﻿using Cofoundry.Core.ResourceFiles;
-using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation;
 using Microsoft.Extensions.FileProviders;
+using Microsoft.Extensions.FileProviders.Composite;
 using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Cofoundry.Web
 {
@@ -45,12 +46,15 @@ namespace Cofoundry.Web
 
         public IDirectoryContents GetDirectory(string virtualDir)
         {
-            IDirectoryContents directoryContents = null;
-            
-            foreach (var fileProvider in _fileProviders)
+            var directories = _fileProviders
+                .Where(d => d.GetDirectoryContents(virtualDir).Exists)
+                .ToList();
+
+            // The directory might appear in multiple file providers, but
+            // each may contain different files, so we need to return all matches
+            if (directories.Any())
             {
-                directoryContents = fileProvider.GetDirectoryContents(virtualDir);
-                if (directoryContents.Exists) return directoryContents;
+                return new CompositeDirectoryContents(directories, virtualDir);
             }
 
             return new NotFoundDirectoryContents();
