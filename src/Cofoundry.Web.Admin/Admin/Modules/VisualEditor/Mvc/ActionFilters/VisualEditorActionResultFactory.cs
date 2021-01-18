@@ -3,54 +3,35 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using System.IO;
-using System.Text;
-using Cofoundry.Core.ResourceFiles;
-using Cofoundry.Core.Json;
 using Cofoundry.Domain;
 
-namespace Cofoundry.Web.Admin
+namespace Cofoundry.Web.Admin.Internal
 {
+    /// <summary>
+    /// Factory for generating the VisualEditorActionResult
+    /// that wraps the current action current AxctionResult
+    /// and modified it to include visual editor scripts.
+    /// </summary>
     public class VisualEditorActionResultFactory : IVisualEditorActionResultFactory
     {
-        private readonly IStaticResourceReferenceRenderer _staticResourceReferenceRenderer;
-        private readonly IAdminRouteLibrary _adminRouteLibrary;
-        private readonly IPageResponseDataCache _pageResponseDataCache;
-        private readonly IJsonSerializerSettingsFactory _jsonSerializerSettingsFactory;
-        private readonly IRazorViewRenderer _razorViewRenderer;
-        private readonly IResourceLocator _resourceLocator;
-        private readonly IPermissionValidationService _permissionValidationService;
+        private readonly IVisualEditorScriptGenerator _visualEditorScriptGenerator;
+        private readonly IHtmlDocumentScriptInjector _htmlDocumentScriptInjector;
 
         public VisualEditorActionResultFactory(
-            IStaticResourceReferenceRenderer staticResourceReferenceRenderer,
-            IAdminRouteLibrary adminRouteLibrary,
-            IPageResponseDataCache pageResponseDataCache,
-            IJsonSerializerSettingsFactory jsonSerializerSettingsFactory,
-            IRazorViewRenderer razorViewRenderer,
-            IResourceLocator resourceLocator,
-            IPermissionValidationService permissionValidationService
+            IVisualEditorScriptGenerator visualEditorScriptGenerator,
+            IHtmlDocumentScriptInjector htmlDocumentScriptInjector
             )
         {
-            _staticResourceReferenceRenderer = staticResourceReferenceRenderer;
-            _adminRouteLibrary = adminRouteLibrary;
-            _pageResponseDataCache = pageResponseDataCache;
-            _jsonSerializerSettingsFactory = jsonSerializerSettingsFactory;
-            _resourceLocator = resourceLocator;
-            _razorViewRenderer = razorViewRenderer;
-            _permissionValidationService = permissionValidationService;
+            _visualEditorScriptGenerator = visualEditorScriptGenerator;
+            _htmlDocumentScriptInjector = htmlDocumentScriptInjector;
         }
 
         public IActionResult Create(IActionResult wrappedActionResult)
         {
             return new VisualEditorActionResult(
                 wrappedActionResult,
-                _staticResourceReferenceRenderer,
-                _adminRouteLibrary,
-                _jsonSerializerSettingsFactory,
-                _pageResponseDataCache,
-                _razorViewRenderer,
-                _resourceLocator,
-                _permissionValidationService
+                _visualEditorScriptGenerator,
+                _htmlDocumentScriptInjector
                 );
         }
     }

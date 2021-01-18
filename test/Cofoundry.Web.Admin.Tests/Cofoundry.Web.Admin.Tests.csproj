@@ -1,0 +1,48 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Admin\Modules\VisuaEditor\Resources\BodyScript.html" />
+    <None Remove="Admin\Modules\VisuaEditor\Resources\EmptyHeadAndBody.html" />
+    <None Remove="Admin\Modules\VisuaEditor\Resources\EmptyHeadAndBodyOutput.html" />
+    <None Remove="Admin\Modules\VisuaEditor\Resources\HeadBodyAndContent.html" />
+    <None Remove="Admin\Modules\VisuaEditor\Resources\HeadBodyAndContentOutput.html" />
+    <None Remove="Admin\Modules\VisuaEditor\Resources\HeadScript.html" />
+    <None Remove="Admin\Modules\VisuaEditor\Resources\InvalidStructure.html" />
+    <None Remove="Admin\Modules\VisuaEditor\Resources\JSON.html" />
+    <None Remove="Admin\Modules\VisuaEditor\Resources\NoHead.html" />
+    <None Remove="Admin\Modules\VisuaEditor\Resources\NoHeadOutput.html" />
+    <None Remove="Admin\Modules\VisuaEditor\Resources\XsltDocument.html" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Admin\Modules\VisuaEditor\Resources\BodyScript.html" />
+    <EmbeddedResource Include="Admin\Modules\VisuaEditor\Resources\JSON.html" />
+    <EmbeddedResource Include="Admin\Modules\VisuaEditor\Resources\InvalidStructure.html" />
+    <EmbeddedResource Include="Admin\Modules\VisuaEditor\Resources\XsltDocument.html" />
+    <EmbeddedResource Include="Admin\Modules\VisuaEditor\Resources\NoHeadOutput.html" />
+    <EmbeddedResource Include="Admin\Modules\VisuaEditor\Resources\NoHead.html" />
+    <EmbeddedResource Include="Admin\Modules\VisuaEditor\Resources\HeadBodyAndContentOutput.html" />
+    <EmbeddedResource Include="Admin\Modules\VisuaEditor\Resources\HeadBodyAndContent.html" />
+    <EmbeddedResource Include="Admin\Modules\VisuaEditor\Resources\EmptyHeadAndBody.html" />
+    <EmbeddedResource Include="Admin\Modules\VisuaEditor\Resources\EmptyHeadAndBodyOutput.html" />
+    <EmbeddedResource Include="Admin\Modules\VisuaEditor\Resources\HeadScript.html" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.5.0" />
+    <PackageReference Include="xunit" Version="2.4.0" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.4.0" />
+    <PackageReference Include="coverlet.collector" Version="1.2.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Cofoundry.Web.Admin\Cofoundry.Web.Admin.csproj" />
+  </ItemGroup>
+
+</Project>

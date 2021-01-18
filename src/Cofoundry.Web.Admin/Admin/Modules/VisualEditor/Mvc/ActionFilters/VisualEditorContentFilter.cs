@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
-namespace Cofoundry.Web.Admin
+namespace Cofoundry.Web.Admin.Internal
 {
     /// <summary>
     /// Adds in styles and js to run the site viewer if it is required.

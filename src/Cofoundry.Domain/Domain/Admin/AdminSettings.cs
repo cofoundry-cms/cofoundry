@@ -35,5 +35,12 @@ namespace Cofoundry.Domain
             set { _directoryName = value?.ToLowerInvariant(); }
         }
         private string _directoryName = null;
+
+        /// <summary>
+        /// Indicates whether to automatically inject the visual editor
+        /// into your content managed pages and other MVC results. 
+        /// Enabled by default.
+        /// </summary>
+        public bool AutoInjectVisualEditor { get; set; } = true;
     }
 }
