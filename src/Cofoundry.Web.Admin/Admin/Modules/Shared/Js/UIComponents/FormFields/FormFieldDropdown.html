@@ -14,7 +14,11 @@
                 <option ng-show="!vm.isRequiredAttributeDefined && !vm.required" value='' selected>{{vm.defaultItemText}}</option>
             </select>
 
-            <div ng-hide="vm.formScope.editMode && !vm.readonly" class="text-block-display-value">{{vm.displayValue || 'None'}}</div>
+            <div ng-hide="vm.formScope.editMode && !vm.readonly" ng-if="vm.displayValue" class="text-block-display-value">
+                <span ng-if="!vm.href">{{vm.displayValue}}</span>
+                <a ng-if="vm.href" ng-href="{{vm.href}}">{{vm.displayValue}}</a>
+            </div>
+            <div ng-hide="vm.formScope.editMode && !vm.readonly" ng-if="!vm.displayValue" class="text-block-display-value">None</div>
             <cms-form-field-validation-summary></cms-form-field-validation-summary>
         </div>
     </cms-field>

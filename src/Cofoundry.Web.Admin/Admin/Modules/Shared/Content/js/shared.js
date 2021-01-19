@@ -11256,6 +11256,7 @@ function (
             optionName: '@cmsOptionName',
             optionsApi: '@cmsOptionsApi',
             defaultItemText: '@cmsDefaultItemText',
+            href: '@cmsHref',
             required: '=cmsRequired',
             disabled: '=cmsDisabled'
         }),
@@ -11390,6 +11391,7 @@ function (
         ],
         scope: _.extend(baseFormFieldFactory.defaultConfig.scope, {
             defaultItemText: '@cmsDefaultItemText',
+            href: '@cmsHref',
             searchFunction: '&cmsSearchFunction',
             initialItemFunction: '&cmsInitialItemFunction',
             optionName: '@cmsOptionName',

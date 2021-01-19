@@ -19,6 +19,7 @@ function (
         ],
         scope: _.extend(baseFormFieldFactory.defaultConfig.scope, {
             defaultItemText: '@cmsDefaultItemText',
+            href: '@cmsHref',
             searchFunction: '&cmsSearchFunction',
             initialItemFunction: '&cmsInitialItemFunction',
             optionName: '@cmsOptionName',

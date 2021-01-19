@@ -32,7 +32,10 @@
                 </ui-select-choices>
             </ui-select>
 
-            <div ng-hide="vm.formScope.editMode && !vm.readonly" ng-if="vm.selectedText" class="text-block-display-value">{{vm.selectedText}}</div>
+            <div ng-hide="vm.formScope.editMode && !vm.readonly" ng-if="vm.selectedText" class="text-block-display-value">
+                <span ng-if="!vm.href">{{vm.selectedText}}</span>
+                <a ng-if="vm.href" ng-href="{{vm.href}}">{{vm.selectedText}}</a>
+            </div>
             <div ng-hide="vm.formScope.editMode && !vm.readonly" ng-if="!vm.selectedText" class="text-block-display-value">None</div>
 
             <cms-form-field-validation-summary></cms-form-field-validation-summary>
