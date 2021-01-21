@@ -30,7 +30,7 @@ namespace Cofoundry.Domain
         public string Text { get; set; }
 
         /// <summary>
-        /// Locale id to filter the rssults by, if null then the is no filter (rather
+        /// Locale id to filter the results by, if null then the is no filter (rather
         /// than entities with just a null locale.
         /// </summary>
         public int? LocaleId { get; set; }
@@ -48,5 +48,15 @@ namespace Cofoundry.Domain
         /// 'any' option.
         /// </remarks>
         public bool InterpretNullLocaleAsNone { get; set; }
+
+        /// <summary>
+        /// Filter to entities created on or after this date (inclusive).
+        /// </summary>
+        public DateTime? CreatedAfter { get; set; }
+
+        /// <summary>
+        /// Filter to entities created on or before this date (inclusive).
+        /// </summary>
+        public DateTime? CreatedBefore { get; set; }
     }
 }

@@ -67,12 +67,22 @@
         }
 
         function setParams(params) {
+            var qsParams = {};
+
             searchParams = params;
 
             if (useHistory) {
                 // filter out default params so they dont appear in the query string
-                qsParams = _.omit(params, function (value, key) {
-                    return defaultParams[key] === value || !value;
+              
+                _.each(qsParams, function (value, key) {
+                    if (defaultParams[key] !== value && !value) {
+                        if (_.isFunction(value.toJSON)) {
+                            // Dates need converting to ISO otherwise they break when re-loading from the query string
+                            qsParams[key] = value.toJSON();
+                        } else {
+                            qsParams[key] = value;
+                        }
+                    }
                 });
 
                 $location.search(qsParams);

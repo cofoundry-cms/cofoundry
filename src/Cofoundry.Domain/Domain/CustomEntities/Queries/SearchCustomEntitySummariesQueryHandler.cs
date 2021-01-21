@@ -39,8 +39,6 @@ namespace Cofoundry.Domain.Internal
 
         #endregion
 
-        #region execution
-
         public async Task<PagedQueryResult<CustomEntitySummary>> ExecuteAsync(SearchCustomEntitySummariesQuery query, IExecutionContext executionContext)
         {
             var definition = _customEntityDefinitionRepository.GetByCode(query.CustomEntityDefinitionCode);
@@ -67,6 +65,7 @@ namespace Cofoundry.Domain.Internal
                 .Include(v => v.CustomEntity)
                 .ThenInclude(c => c.Creator)
                 .FilterActive()
+                .FilterByDate(c => c.CustomEntity.CreateDate, query.CreatedAfter, query.CreatedBefore)
                 .FilterByStatus(PublishStatusQuery.Latest, executionContext.ExecutionDate)
                 .FilterByCustomEntityDefinitionCode(query.CustomEntityDefinitionCode);
 
@@ -97,8 +96,6 @@ namespace Cofoundry.Domain.Internal
 
             return dbPagedResult;
         }
-
-        #endregion
 
         #region Permission
 

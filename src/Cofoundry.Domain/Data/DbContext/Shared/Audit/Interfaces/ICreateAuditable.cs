@@ -10,17 +10,12 @@ namespace Cofoundry.Domain.Data
     /// Marks an Entity Framework entity that has audit data 
     /// for entity creation.
     /// </summary>
-    public interface ICreateAuditable
+    public interface ICreateAuditable : ICreateable
     {
         /// <summary>
         /// The user that created the entity.
         /// </summary>
         User Creator { get; set; }
-
-        /// <summary>
-        /// The date the entity was created.
-        /// </summary>
-        DateTime CreateDate { get; set; }
 
         /// <summary>
         /// The database id of the user that created the entity.
