@@ -74,8 +74,8 @@
             if (useHistory) {
                 // filter out default params so they dont appear in the query string
               
-                _.each(qsParams, function (value, key) {
-                    if (defaultParams[key] !== value && !value) {
+                _.each(params, function (value, key) {
+                    if (defaultParams[key] !== value && value) {
                         if (_.isFunction(value.toJSON)) {
                             // Dates need converting to ISO otherwise they break when re-loading from the query string
                             qsParams[key] = value.toJSON();
@@ -84,7 +84,7 @@
                         }
                     }
                 });
-
+                console.log(qsParams);
                 $location.search(qsParams);
             }
 
