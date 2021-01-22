@@ -1,0 +1,42 @@
+
+/*===============================
+	Required compass includes
+=================================*/
+@import "../../Shared/Sass/Compass/compass/css3/images";
+@import "../../Shared/Sass/Compass/compass/css3/border-radius";
+@import "../../Shared/Sass/Compass/compass/css3/box-shadow";
+@import "../../Shared/Sass/Compass/compass/css3/box-sizing";
+@import "../../Shared/Sass/Compass/compass/css3/transform";
+@import "../../Shared/Sass/Compass/compass/css3/transition";
+@import "../../Shared/Sass/Compass/compass/css3/opacity";
+
+/*
+    LIBRARIES
+    Now we include any libraries/utilities we have written
+*/
+@import "../../Shared/Sass/Libs/**";
+@import "../../Shared/Sass/Config/**";
+@import "../../Shared/Sass/Common/**";
+@import "../Js/UIComponents/**/*";
+
+// Visula Editor
+@import "sassutils/functions";
+@import "sassutils/mixins";
+@import "sassutils/vendor";
+
+// Block styles
+@import "blocks/page-ui";
+@import "blocks/frame";
+@import "blocks/preview-menu";
+@import "blocks/mini-menu";
+@import "blocks/versions";
+@import "blocks/navmenu";
+@import "blocks/tabs";
+
+// Element styles
+@import "elements/page-details";
+@import "elements/mode";
+@import "elements/options";
+@import "elements/settings";
+@import "elements/edit-mode";
+@import "elements/info-list";

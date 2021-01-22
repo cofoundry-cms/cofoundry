@@ -1,0 +1,77 @@
+/* 
+    Shared styles
+
+    This is the root stylesheet. Everything should be imported here so that it can be compiled down to one, minified stylesheet.
+*/
+
+/*===============================
+	Required compass includes
+=================================*/
+@import "Compass/compass/reset";
+
+@import "Compass/compass/reset";
+@import "Compass/compass/utilities/general/clearfix";
+@import "Compass/compass/css3/images";
+@import "Compass/compass/css3/border-radius";
+@import "Compass/compass/css3/box-shadow";
+@import "Compass/compass/css3/box-sizing";
+@import "Compass/compass/css3/transform";
+@import "Compass/compass/css3/transition";
+@import "Compass/compass/css3/opacity";
+
+
+/*===============================
+	Sprites, see https://github.com/novascreen/Retina-mixins-for-Compass
+=================================*/
+
+// @import "Libs/retina-sprites";
+// @import "Libs/sprites";
+// @include retina-sprite-add(icons, "icons/normal/*.png", "icons/retina/*.png");
+
+
+/*===============================
+	Core includes
+=================================*/
+
+
+/*===============================
+    THIRD PARTY
+    Next we import any 3rd Party libraries we need (CSS or SASS)
+=============================== */
+
+@import "../Content/css/font-awesome";
+@import "../Content/css/third-party/tinymce/skin.min";
+@import "../Content/css/third-party/ui-select";
+@import "../Content/css/third-party/selectize.default";
+
+/*===============================
+    LIBRARIES
+    Now we include any libraries/utilities we have written
+=================================*/
+@import "Libs/mixins";
+@import "Libs/retina";
+
+/*===============================
+    CONFIG
+    Here we include any config we want to use, such as colour and dimension maps. 
+=================================*/
+@import "Config/**";
+
+/*===============================
+    COMMON BASE
+    Next we import any common base styles, which are reused by UI components. 
+    These common styles get extended 
+=================================*/
+@import "Common/**";
+
+/*===============================
+    GLOBAL STYLES
+    These are globally applicable styles that don't change and aren't really modular, like top level layout and typography.
+=================================*/
+@import "Core/**";
+
+/*===============================
+    COMPONENTS
+    We import component styles from wherever they may be living. These should be kept as modular as possible, extending from common base styles where needed.
+=================================*/
+@import "../Js/UIComponents/**/*";
