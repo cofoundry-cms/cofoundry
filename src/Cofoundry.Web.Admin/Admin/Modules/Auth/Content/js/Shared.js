@@ -1,2 +1,22 @@
-/*! Cofoundry 2020-12-16 */
-!function(a,b){function c(){this.querySelector('input[type="submit"]').setAttribute("disabled","disabled")}function d(){var c=a.getElementById("ReturnUrl"),d=b.location.hash;c.value&&d&&(c.value=c.value+d)}a.getElementById("MainForm").addEventListener("submit",c,!1),d()}(document,window);
+(function (document, window) {
+
+    document
+        .getElementById('MainForm')
+        .addEventListener('submit', disableButton, false);
+
+    formatReturnUrl();
+
+    function disableButton() {
+        this.querySelector('input[type="submit"]')
+            .setAttribute('disabled', 'disabled');
+    }
+
+    function formatReturnUrl() {
+        var returnUrlInput = document.getElementById('ReturnUrl'),
+            hash = window.location.hash;
+
+        if (returnUrlInput.value && hash) {
+            returnUrlInput.value = returnUrlInput.value + hash;
+        }
+    }
+})(document, window);

@@ -6489,6 +6489,18 @@ function (
 
     return service;
 }]);
+angular.module('cms.shared').factory('shared.localeService', ['$http', 'shared.serviceBase', function ($http, serviceBase) {
+    var service = {},
+        localeServiceBase = serviceBase + 'locales';
+
+    /* QUERIES */
+
+    service.getAll = function () {
+        return $http.get(localeServiceBase);
+    }
+
+    return service;
+}]);
 angular.module('cms.shared').factory('shared.localStorage', ['shared.serviceBase', function (serviceBase) {
     var service = {},
         localStorageServiceBase = serviceBase + 'localStorage';
@@ -6500,18 +6512,6 @@ angular.module('cms.shared').factory('shared.localStorage', ['shared.serviceBase
     service.getValue = function (key) {
         var value = localStorage.getItem(key);
         return value;
-    }
-
-    return service;
-}]);
-angular.module('cms.shared').factory('shared.localeService', ['$http', 'shared.serviceBase', function ($http, serviceBase) {
-    var service = {},
-        localeServiceBase = serviceBase + 'locales';
-
-    /* QUERIES */
-
-    service.getAll = function () {
-        return $http.get(localeServiceBase);
     }
 
     return service;
@@ -8126,10 +8126,6 @@ function (
 
     return service;
 }]);
-/**
-  * Placeholder js file to solve issue with Azure and Bundle.IncludeDirectory, because
-  * without this file the directory is empty.
-*/
 angular.module('cms.shared').directive('cmsButton', [
     'shared.internalModulePath',
 function (
@@ -13099,6 +13095,17 @@ angular.module('cms.shared').directive('cmsPageSubHeader', function () {
         transclude: true
     }
 });
+angular.module('cms.shared').directive('cmsLoading', function () {
+    return {
+        restrict: 'A',
+        link: function (scope, el, attributes) {
+
+            scope.$watch(attributes.cmsLoading, function (isLoading) {
+                el.toggleClass('loading', isLoading);
+            });
+        }
+    };
+});
 angular.module('cms.shared').factory('shared.LoadState', ['$q', '$rootScope', '_', function($q, $rootScope, _) {
     return LoaderState;
 
@@ -13168,17 +13175,6 @@ angular.module('cms.shared').factory('shared.LoadState', ['$q', '$rootScope', '_
         }
     }
 }]);
-angular.module('cms.shared').directive('cmsLoading', function () {
-    return {
-        restrict: 'A',
-        link: function (scope, el, attributes) {
-
-            scope.$watch(attributes.cmsLoading, function (isLoading) {
-                el.toggleClass('loading', isLoading);
-            });
-        }
-    };
-});
 angular.module('cms.shared').directive('cmsProgressBar', [
     'shared.internalModulePath',
 function (
@@ -15300,3 +15296,7 @@ angular.module('cms.shared').directive('cmsModelAsDate', function () {
         });
     }
 });
+/**
+  * Placeholder js file to solve issue with Azure and Bundle.IncludeDirectory, because
+  * without this file the directory is empty.
+*/

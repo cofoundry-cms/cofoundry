@@ -10,7 +10,15 @@
     }
 
     h1 {
-        @include retina-sprite(logo-full);
+        // @include retina-sprite(logo-full);`
+        background-image: url("img/icons/retina/logo-full.png");
+        background-size: 250px auto;
+        background-repeat: no-repeat;
+        display: inline-block;
+        vertical-align: middle;
+        height: 58px;
+        width: 250px;
+
         margin-bottom: 20px;
         text-indent:-2000px;
         overflow:hidden;

@@ -53,7 +53,7 @@ namespace Cofoundry.Web.Admin.Internal
         {
             return TAB + _staticResourceReferenceRenderer.ScriptTag(_adminRouteLibrary.VisualEditor, "contentpage").ToString()
                 + Environment.NewLine
-                + TAB + _staticResourceReferenceRenderer.CssTag(_adminRouteLibrary.VisualEditor, "site-viewer").ToString()
+                + TAB + _staticResourceReferenceRenderer.CssTag(_adminRouteLibrary.VisualEditor, "visualeditor").ToString()
                 + Environment.NewLine
                 ;
         }

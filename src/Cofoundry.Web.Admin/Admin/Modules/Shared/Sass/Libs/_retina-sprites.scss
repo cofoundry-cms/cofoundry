@@ -1,6 +1,6 @@
-@import "compass/utilities/sprites";         // Include compass sprite helpers
-@import "compass/css3/background-size";      // Include helper to calc background size
-@import "compass/css3/inline-block";
+// @import "compass/utilities/sprites";         // Include compass sprite helpers
+// @import "compass/css3/background-size";      // Include helper to calc background size
+// @import "compass/css3/inline-block";
 
 @import "retina";
 
@@ -28,22 +28,22 @@ $retina-sprite-urls2x    : 0;
  * @param {Boolean} [$active=false]
  */
 @mixin retina-sprite($name, $sprites-name: 0, $hover: false, $active: false) {
-  $index: 2;
-  $len: length($retina-sprite-names);
+  // $index: 2;
+  // $len: length($retina-sprite-names);
 
-  @for $i from $index through $len {
-    @if $sprites-name == nth($retina-sprite-names, $i) {
-      $index: $i;
-    }
-  }
+  // @for $i from $index through $len {
+  //   @if $sprites-name == nth($retina-sprite-names, $i) {
+  //     $index: $i;
+  //   }
+  // }
 
-  $sprites       : nth($retina-sprite-sprites, $index);
-  $sprites-url   : nth($retina-sprite-urls, $index);
+  // $sprites       : nth($retina-sprite-sprites, $index);
+  // $sprites-url   : nth($retina-sprite-urls, $index);
 
-  $sprites2x     : nth($retina-sprite-sprites2x, $index);
-  $sprites-url2x : nth($retina-sprite-urls2x, $index);
+  // $sprites2x     : nth($retina-sprite-sprites2x, $index);
+  // $sprites-url2x : nth($retina-sprite-urls2x, $index);
 
-  @include _retina-sprite($name, $sprites, $sprites-url, $sprites2x, $sprites-url2x, $hover, $active);
+  // @include _retina-sprite($name, $sprites, $sprites-url, $sprites2x, $sprites-url2x, $hover, $active);
 }
 
 
@@ -53,18 +53,18 @@ $retina-sprite-urls2x    : 0;
  * @param {String} $path2x
  */
 @mixin retina-sprite-add($name, $path, $path2x) {
-  $retina-sprite-spacing: 2px !default;
+  // $retina-sprite-spacing: 2px !default;
 
-  $sprites   : sprite-map($path, $spacing: $retina-sprite-spacing);
-  $sprites2x : sprite-map($path2x, $spacing: $retina-sprite-spacing);
+  // $sprites   : sprite-map($path, $spacing: $retina-sprite-spacing);
+  // $sprites2x : sprite-map($path2x, $spacing: $retina-sprite-spacing);
 
-  $retina-sprite-names     : append($retina-sprite-names, $name) !global;
+  // $retina-sprite-names     : append($retina-sprite-names, $name) !global;
 
-  $retina-sprite-sprites   : append($retina-sprite-sprites, $sprites) !global;
-  $retina-sprite-urls      : append($retina-sprite-urls, sprite-url($sprites)) !global;
+  // $retina-sprite-sprites   : append($retina-sprite-sprites, $sprites) !global;
+  // $retina-sprite-urls      : append($retina-sprite-urls, sprite-url($sprites)) !global;
 
-  $retina-sprite-sprites2x : append($retina-sprite-sprites2x, $sprites2x) !global;
-  $retina-sprite-urls2x    : append($retina-sprite-urls2x, sprite-url($sprites2x)) !global;
+  // $retina-sprite-sprites2x : append($retina-sprite-sprites2x, $sprites2x) !global;
+  // $retina-sprite-urls2x    : append($retina-sprite-urls2x, sprite-url($sprites2x)) !global;
 }
 
 
