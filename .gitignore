@@ -11,7 +11,6 @@
 [Dd]ebug/
 [Rr]elease/
 x64/
-build/
 [Bb]in/
 [Oo]bj/
 
@@ -96,9 +95,7 @@ Desktop.ini
 # Mac crap
 .DS_Store
 
-src/.vs
 .vscode
-src/Cofoundry.Web.Admin/Admin/App/
 .vs
 
 # Cake Build
@@ -107,5 +104,5 @@ src/Cofoundry.Web.Admin/Admin/App/
 
 appsettings.local.json
 
-
-bower_components/
+node_modules
+bower_components
