@@ -5579,13 +5579,13 @@ input[type="color"] {
   filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=80);
   opacity: 0.8;
   position: fixed;
-  width: 100%;
   font-size: 120%;
   font-weight: 700;
   z-index: 99999;
   top: 0px;
-  left: 0;
-  padding: 15px; }
+  right: 0;
+  padding: 15px;
+  background: #fff; }
   .page-sub-header a {
     color: #413851; }
   .page-sub-header:hover {

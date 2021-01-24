@@ -31,13 +31,13 @@
 .page-sub-header {
     @include opacity(0.8);
     position:fixed;
-    width:100%;
     font-size:120%;
     font-weight:$fontweight-bold;
     z-index:99999;
     top: 0px;
-    left: 0;
+    right: 0;
     padding: 15px;
+    background: #fff;
 
     a {
         color:$color-secondary;
