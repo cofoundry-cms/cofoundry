@@ -15,5 +15,8 @@
     "node-sass": "^5.0.0",
     "postcss": "^8.2.4"
   },
-  "dependencies": {}
+  "dependencies": {
+    "branch-pipe": "^1.0.1",
+    "gulp-if": "^3.0.0"
+  }
 }

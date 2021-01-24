@@ -6,6 +6,8 @@ const sassGlob  = require('gulp-sass-glob');
 const concat = require('gulp-concat-util');
 const uglify = require('gulp-uglify');
 const path = require('path');
+const gulpif = require('gulp-if');
+const branch = require('branch-pipe')
 
 exports.CofoundryBuild = class  {
 
@@ -87,18 +89,19 @@ exports.CofoundryBuild = class  {
         }
 
         function jsModuleTask(module) {
-            
+
             return gulp
                 .src([
                     ...module.additionalSources.map(sourcePath),
                     ...module.defaultSources.map(sourcePath)
                 ])
-                .pipe(concat(module.outputFileName + '.js'))
-                .pipe(gulp.dest(sourcePath(module.moduleName + '/Content/js')))
-                .pipe(uglify())
-                .pipe(concat(module.outputFileName + '_min.js'))
-                .pipe(gulp.dest(sourcePath(module.moduleName + '/Content/js')))
-                ;
+                .pipe(branch.obj(src => [
+                    src.pipe(concat(module.outputFileName + '.js'))
+                       .pipe(gulp.dest(sourcePath(module.moduleName + '/Content/js'))),
+                    src.pipe(gulpif('!**/*.min.js', uglify()))
+                       .pipe(concat(module.outputFileName + '_min.js'))
+                       .pipe(gulp.dest(sourcePath(module.moduleName + '/Content/js')))
+                  ]));
         }
 
         /**

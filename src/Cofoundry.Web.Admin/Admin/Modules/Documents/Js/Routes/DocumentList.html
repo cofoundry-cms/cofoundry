@@ -23,7 +23,7 @@
 </cms-page-sub-header>
 
 <!-- Default toolbar -->
-<cms-page-actions ng-show="!vm.editMode">
+<cms-page-actions>
 
     <cms-button-link class="main-cta"
                      cms-text="Upload Document"
@@ -36,7 +36,7 @@
 </cms-page-actions>
 
 <cms-page-body cms-content-type="form"
-               cms-sub-header="with-header">
+               cms-has-actions="true">
 
     <span ng-if="vm.result.items.length == 0">
         No documents could be found.

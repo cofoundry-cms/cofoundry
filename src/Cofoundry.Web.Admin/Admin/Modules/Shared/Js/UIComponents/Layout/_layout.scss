@@ -118,10 +118,6 @@
     position:fixed;
     width:125px;
 
-    &.with-header {
-            
-    }
-
     .btn:not(.pager) {
         width: 100%;
         margin-bottom:10px;
@@ -136,7 +132,7 @@
     max-width: 900px;
 
     &.form {
-        margin-left: 150px;
+        margin-left: 20px;
         margin-top: 80px;
         margin-right: 20px;
 
@@ -181,10 +177,10 @@
                 border-top: 3px solid #dddddd;
             }
         }
-    }
 
-    &.with-header {
-        margin-top: 70px;
+        &.with-actions {
+            margin-left: 150px;
+        }
     }
 
     fieldset {

@@ -5654,7 +5654,7 @@ input[type="color"] {
 .page-body {
   max-width: 900px; }
   .page-body.form {
-    margin-left: 150px;
+    margin-left: 20px;
     margin-top: 80px;
     margin-right: 20px; }
     .page-body.form fieldset legend {
@@ -5695,8 +5695,8 @@ input[type="color"] {
       height: 17px;
       z-index: 2;
       border-top: 3px solid #dddddd; }
-  .page-body.with-header {
-    margin-top: 70px; }
+    .page-body.form.with-actions {
+      margin-left: 150px; }
   .page-body fieldset {
     margin-bottom: 20px;
     position: relative;
