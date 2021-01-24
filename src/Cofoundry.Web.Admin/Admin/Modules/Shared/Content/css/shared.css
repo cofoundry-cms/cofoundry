@@ -5484,9 +5484,15 @@ input[type="color"] {
     left: 228px;
     width: auto;
     right: 0; }
+    .modal .form-field-text-area .mce-fullscreen {
+      top: 0;
+      left: 0; }
   @media screen and (min-width: 950px) {
     .form-field-text-area .mce-fullscreen {
       left: 288px; } }
+
+.mce-container[aria-label="Source code"] textarea {
+  font-family: monospace; }
 
 /* Actions that nest below an input field (used in YouTube and vimeo plugins */
 .form-field-input-actions {

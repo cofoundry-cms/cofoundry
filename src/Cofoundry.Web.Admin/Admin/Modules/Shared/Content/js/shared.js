@@ -8190,63 +8190,6 @@ function (
         }
     };
 }]);
-angular.module('cms.shared').directive('cmsFormFieldDirectorySelector', [
-    '_',
-    'shared.directiveUtilities',
-    'shared.internalModulePath',
-    'shared.directoryService',
-function (
-    _,
-    directiveUtilities,
-    modulePath,
-    directoryService
-    ) {
-
-    return {
-        restrict: 'E',
-        templateUrl: modulePath + 'UIComponents/Directories/FormFieldDirectorySelector.html',
-        scope: {
-            model: '=cmsModel',
-            title: '@cmsTitle',
-            onLoaded: '&cmsOnLoaded',
-            readonly: '=cmsReadonly'
-        },
-        link: {
-            pre: preLink
-        },
-        controller: Controller,
-        controllerAs: 'vm',
-        bindToController: true
-    };
-
-    /* COMPILE */
-
-    function preLink(scope, el, attrs) {
-        var vm = scope.vm;
-
-        if (angular.isDefined(attrs.required)) {
-            vm.isRequired = true;
-        } else {
-            vm.isRequired = false;
-            vm.defaultItemText = attrs.cmsDefaultItemText || 'None';
-        }
-        vm.title = attrs.cmsTitle || 'Directory';
-        vm.description = attrs.cmsDescription;
-        directiveUtilities.setModelName(vm, attrs);
-    }
-
-    /* CONTROLLER */
-
-    function Controller() {
-        var vm = this;
-
-        directoryService.getAll().then(function (pageDirectories) {
-            vm.pageDirectories = pageDirectories;
-
-            if (vm.onLoaded) vm.onLoaded();
-        });
-    }
-}]);
 angular.module('cms.shared').controller('AddCustomEntityDialogController', [
     '$scope',
     '$location',
@@ -9146,6 +9089,63 @@ function (
     /* CONTROLLER */
 
     function Controller() {
+    }
+}]);
+angular.module('cms.shared').directive('cmsFormFieldDirectorySelector', [
+    '_',
+    'shared.directiveUtilities',
+    'shared.internalModulePath',
+    'shared.directoryService',
+function (
+    _,
+    directiveUtilities,
+    modulePath,
+    directoryService
+    ) {
+
+    return {
+        restrict: 'E',
+        templateUrl: modulePath + 'UIComponents/Directories/FormFieldDirectorySelector.html',
+        scope: {
+            model: '=cmsModel',
+            title: '@cmsTitle',
+            onLoaded: '&cmsOnLoaded',
+            readonly: '=cmsReadonly'
+        },
+        link: {
+            pre: preLink
+        },
+        controller: Controller,
+        controllerAs: 'vm',
+        bindToController: true
+    };
+
+    /* COMPILE */
+
+    function preLink(scope, el, attrs) {
+        var vm = scope.vm;
+
+        if (angular.isDefined(attrs.required)) {
+            vm.isRequired = true;
+        } else {
+            vm.isRequired = false;
+            vm.defaultItemText = attrs.cmsDefaultItemText || 'None';
+        }
+        vm.title = attrs.cmsTitle || 'Directory';
+        vm.description = attrs.cmsDescription;
+        directiveUtilities.setModelName(vm, attrs);
+    }
+
+    /* CONTROLLER */
+
+    function Controller() {
+        var vm = this;
+
+        directoryService.getAll().then(function (pageDirectories) {
+            vm.pageDirectories = pageDirectories;
+
+            if (vm.onLoaded) vm.onLoaded();
+        });
     }
 }]);
 angular.module('cms.shared').directive('cmsDocumentAsset', [
@@ -12995,98 +12995,6 @@ function (
 
 }]);
 
-angular.module('cms.shared').directive('cmsLoading', function () {
-    return {
-        restrict: 'A',
-        link: function (scope, el, attributes) {
-
-            scope.$watch(attributes.cmsLoading, function (isLoading) {
-                el.toggleClass('loading', isLoading);
-            });
-        }
-    };
-});
-angular.module('cms.shared').factory('shared.LoadState', ['$q', '$rootScope', '_', function($q, $rootScope, _) {
-    return LoaderState;
-
-    function LoaderState(onByDefault) {
-        var me = this;
-
-        /* Properties */
-
-        me.isLoading = onByDefault === true;
-        me.progress = me.isLoading ? 0 : 100;
-
-        /* Funcs */
-
-        me.on = function () {
-            me.isLoading = true;
-            if (me.progress === 100) {
-                me.progress = 0;
-            }
-        }
-
-        me.off = function() {
-            me.isLoading = false;
-            me.progress = 100;
-        }
-
-        me.offWhen = function () {
-            var promises = [],
-                promise,
-                args = Array.prototype.slice.call(arguments);
-
-            _.each(args, function(arg) {
-                promises.push(arg.promise ? arg.promise : arg);
-            });
-
-            return $q.all(promises).then(function () {
-                me.off();
-            });
-        }
-
-        /**
-         * Update the progress of the loader. Loaded can be a a numerical value
-         * or the eventArgs to a file upload progress event. Total is optional 
-         * in which case total is assumed to be 100.
-         */
-        me.setProgress = function (loaded, total) {
-            var progress;
-
-            // If we pass in the eventArgs of a progress event
-            if (_.isObject(loaded)) {
-                total = loaded.total;
-                loaded = loaded.loaded;
-            }
-
-            // If no total is provided assume 100
-            if (_.isUndefined(total)) total = 100;
-            progress = parseInt(100.0 * loaded / total);
-
-            if (progress <= 0) progress = 0;
-
-            if (progress >= 100) {
-                progress = 100;
-            } else {
-                me.on();
-            }
-
-            me.progress = progress;
-        }
-    }
-}]);
-angular.module('cms.shared').directive('cmsProgressBar', [
-    'shared.internalModulePath',
-function (
-    modulePath
-    ) {
-
-    return {
-        restrict: 'E',
-        scope: { loadState: '=' },
-        templateUrl: modulePath + 'UIComponents/Loader/ProgressBar.html'
-    };
-}]);
 angular.module('cms.shared').directive('cmsField', [
     '$timeout',
     'shared.internalModulePath',
@@ -13249,6 +13157,98 @@ function (
             if (vm.onLoaded) vm.onLoaded();
         });
     }
+}]);
+angular.module('cms.shared').directive('cmsLoading', function () {
+    return {
+        restrict: 'A',
+        link: function (scope, el, attributes) {
+
+            scope.$watch(attributes.cmsLoading, function (isLoading) {
+                el.toggleClass('loading', isLoading);
+            });
+        }
+    };
+});
+angular.module('cms.shared').factory('shared.LoadState', ['$q', '$rootScope', '_', function($q, $rootScope, _) {
+    return LoaderState;
+
+    function LoaderState(onByDefault) {
+        var me = this;
+
+        /* Properties */
+
+        me.isLoading = onByDefault === true;
+        me.progress = me.isLoading ? 0 : 100;
+
+        /* Funcs */
+
+        me.on = function () {
+            me.isLoading = true;
+            if (me.progress === 100) {
+                me.progress = 0;
+            }
+        }
+
+        me.off = function() {
+            me.isLoading = false;
+            me.progress = 100;
+        }
+
+        me.offWhen = function () {
+            var promises = [],
+                promise,
+                args = Array.prototype.slice.call(arguments);
+
+            _.each(args, function(arg) {
+                promises.push(arg.promise ? arg.promise : arg);
+            });
+
+            return $q.all(promises).then(function () {
+                me.off();
+            });
+        }
+
+        /**
+         * Update the progress of the loader. Loaded can be a a numerical value
+         * or the eventArgs to a file upload progress event. Total is optional 
+         * in which case total is assumed to be 100.
+         */
+        me.setProgress = function (loaded, total) {
+            var progress;
+
+            // If we pass in the eventArgs of a progress event
+            if (_.isObject(loaded)) {
+                total = loaded.total;
+                loaded = loaded.loaded;
+            }
+
+            // If no total is provided assume 100
+            if (_.isUndefined(total)) total = 100;
+            progress = parseInt(100.0 * loaded / total);
+
+            if (progress <= 0) progress = 0;
+
+            if (progress >= 100) {
+                progress = 100;
+            } else {
+                me.on();
+            }
+
+            me.progress = progress;
+        }
+    }
+}]);
+angular.module('cms.shared').directive('cmsProgressBar', [
+    'shared.internalModulePath',
+function (
+    modulePath
+    ) {
+
+    return {
+        restrict: 'E',
+        scope: { loadState: '=' },
+        templateUrl: modulePath + 'UIComponents/Loader/ProgressBar.html'
+    };
 }]);
 angular.module('cms.shared').directive('cmsMenu', [
     'shared.internalModulePath',
@@ -14899,6 +14899,110 @@ function (
     };
 }]);
 
+angular.module('cms.shared').directive('cmsTableActions', [
+    'shared.internalModulePath',
+function (
+    modulePath
+    ) {
+
+    return {
+        restrict: 'E',
+        templateUrl: modulePath + 'UIComponents/Table/TableActions.html',
+        replace: true,
+        transclude: true,
+        link: function (scope, el, attrs, controllers, transclude) {
+
+        }
+    };
+}]);
+angular.module('cms.shared').directive('cmsTableCellCreatedAuditData', [
+    'shared.internalModulePath',
+function (
+    modulePath
+    ) {
+
+    return {
+        restrict: 'E',
+        scope: { auditData: '=cmsAuditData' },
+        templateUrl: modulePath + 'UIComponents/Table/TableCellCreatedAuditData.html'
+    };
+}]);
+angular.module('cms.shared').directive('cmsTableCellImage', [
+    'shared.internalModulePath',
+function (
+    modulePath
+    ) {
+
+    return {
+        restrict: 'E',
+        scope: { image: '=cmsImage' },
+        templateUrl: modulePath + 'UIComponents/Table/TableCellImage.html'
+    };
+}]);
+angular.module('cms.shared').directive('cmsTableCellUpdatedAuditData', [
+    'shared.internalModulePath',
+function (
+    modulePath
+    ) {
+
+    return {
+        restrict: 'E',
+        scope: { auditData: '=cmsAuditData' },
+        templateUrl: modulePath + 'UIComponents/Table/TableCellUpdatedAuditData.html'
+    };
+}]);
+angular.module('cms.shared').directive('cmsTableColumnActions', function () {
+    return {
+        restrict: 'A',
+        link: function (scope, element, attrs, ctrls) {
+            element.addClass("actions");
+        }
+    }
+});
+angular.module('cms.shared').directive('cmsTableContainer', [
+    'shared.internalModulePath',
+function (
+    modulePath
+    ) {
+
+    return {
+        restrict: 'E',
+        templateUrl: modulePath + 'UIComponents/Table/TableContainer.html',
+        replace: true,
+        transclude: true,
+        link: function (scope, el, attrs, controllers, transclude) {
+
+            el.find('table').addClass('table');
+
+            //transclude(scope, function (clone) {
+            //    clone.find('table').addClass('table');
+            //    el.append(clone);
+            //});
+        }
+    };
+}]);
+angular.module('cms.shared').directive('cmsTableGroupHeading', function () {
+    return {
+        restrict: 'E',
+        template: '<h5 class="table-group-heading" ng-transclude></h5>',
+        replace: true,
+        transclude: true
+    }
+});
+angular.module('cms.shared').directive('cmsTableRowInactive', function () {
+    return {
+        restrict: 'A',
+        scope: {
+            tableRowInactive: '=cmsTableRowInactive',
+        },
+        link: function (scope, element, attrs, ctrls) {
+
+            scope.$watch('tableRowInactive', function (isTableRowInactive) {
+                element.toggleClass("inactive", !!isTableRowInactive);
+            });
+        }
+    }
+});
 /**
  * Formfield wrapper around a TagInput
  */
@@ -15057,110 +15161,6 @@ function (
         }
     }
 }]);
-angular.module('cms.shared').directive('cmsTableActions', [
-    'shared.internalModulePath',
-function (
-    modulePath
-    ) {
-
-    return {
-        restrict: 'E',
-        templateUrl: modulePath + 'UIComponents/Table/TableActions.html',
-        replace: true,
-        transclude: true,
-        link: function (scope, el, attrs, controllers, transclude) {
-
-        }
-    };
-}]);
-angular.module('cms.shared').directive('cmsTableCellCreatedAuditData', [
-    'shared.internalModulePath',
-function (
-    modulePath
-    ) {
-
-    return {
-        restrict: 'E',
-        scope: { auditData: '=cmsAuditData' },
-        templateUrl: modulePath + 'UIComponents/Table/TableCellCreatedAuditData.html'
-    };
-}]);
-angular.module('cms.shared').directive('cmsTableCellImage', [
-    'shared.internalModulePath',
-function (
-    modulePath
-    ) {
-
-    return {
-        restrict: 'E',
-        scope: { image: '=cmsImage' },
-        templateUrl: modulePath + 'UIComponents/Table/TableCellImage.html'
-    };
-}]);
-angular.module('cms.shared').directive('cmsTableCellUpdatedAuditData', [
-    'shared.internalModulePath',
-function (
-    modulePath
-    ) {
-
-    return {
-        restrict: 'E',
-        scope: { auditData: '=cmsAuditData' },
-        templateUrl: modulePath + 'UIComponents/Table/TableCellUpdatedAuditData.html'
-    };
-}]);
-angular.module('cms.shared').directive('cmsTableColumnActions', function () {
-    return {
-        restrict: 'A',
-        link: function (scope, element, attrs, ctrls) {
-            element.addClass("actions");
-        }
-    }
-});
-angular.module('cms.shared').directive('cmsTableContainer', [
-    'shared.internalModulePath',
-function (
-    modulePath
-    ) {
-
-    return {
-        restrict: 'E',
-        templateUrl: modulePath + 'UIComponents/Table/TableContainer.html',
-        replace: true,
-        transclude: true,
-        link: function (scope, el, attrs, controllers, transclude) {
-
-            el.find('table').addClass('table');
-
-            //transclude(scope, function (clone) {
-            //    clone.find('table').addClass('table');
-            //    el.append(clone);
-            //});
-        }
-    };
-}]);
-angular.module('cms.shared').directive('cmsTableGroupHeading', function () {
-    return {
-        restrict: 'E',
-        template: '<h5 class="table-group-heading" ng-transclude></h5>',
-        replace: true,
-        transclude: true
-    }
-});
-angular.module('cms.shared').directive('cmsTableRowInactive', function () {
-    return {
-        restrict: 'A',
-        scope: {
-            tableRowInactive: '=cmsTableRowInactive',
-        },
-        link: function (scope, element, attrs, ctrls) {
-
-            scope.$watch('tableRowInactive', function (isTableRowInactive) {
-                element.toggleClass("inactive", !!isTableRowInactive);
-            });
-        }
-    }
-});
 angular.module('cms.shared').directive('cmsTimeAgo', ['shared.internalModulePath', function (modulePath) {
 
     return {

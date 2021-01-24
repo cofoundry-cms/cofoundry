@@ -3,8 +3,9 @@ const sass = require('gulp-sass');
 const postcss = require('gulp-postcss');
 const cssnano = require('cssnano');
 const sassGlob  = require('gulp-sass-glob');
-const concat = require('gulp-concat');
+const concat = require('gulp-concat-util');
 const uglify = require('gulp-uglify');
+const path = require('path');
 
 exports.CofoundryBuild = class  {
 
@@ -17,8 +18,8 @@ exports.CofoundryBuild = class  {
      */
     constructor(basePath, config) {
         this.basePath = basePath;
-        this.jsModules = config.jsModules;
-        this.sassModules = config.sassModules;
+        this.jsModules = mapJsModules(config.jsModules);
+        this.sassModules = config.sassModules || [];
     }
 
     /**
@@ -33,7 +34,8 @@ exports.CofoundryBuild = class  {
         attachTo.buildJs = gulp.parallel(createJsTasks(this.jsModules));
         attachTo.build = attachTo.default = gulp.parallel(
             createSassTasks(this.sassModules), 
-            createJsTasks(this.jsModules)
+            createJsTasks(this.jsModules),
+            createHtmlTasks(this.jsModules)
             );
         
         attachTo.watch = watch.bind(this);
@@ -43,6 +45,17 @@ exports.CofoundryBuild = class  {
         function createJsTasks(jsModules) {
             var tasks = jsModules.map(module => {
                 return jsModuleTask.bind(null, module);
+            });
+
+            return gulp.parallel(...tasks);
+        }
+        
+        function createHtmlTasks(jsModules) {
+            var tasks = jsModules.filter(module => {
+                // if we're ignoring defaults, assume there's no html templates
+                return !module.ignoreDefaultSources;
+            }).map(module => {
+                return htmlModuleTask.bind(null, module);
             });
 
             return gulp.parallel(...tasks);
@@ -73,48 +86,18 @@ exports.CofoundryBuild = class  {
                 ;
         }
 
-        function jsModuleTask(config) {
-            
-            // If passing a string, it will be the module name (container
-            // directory) e.g. "CustomEntities"
-            if (typeof(config) === 'string') {
-                config = {
-                    moduleName: config
-                };
-            }
-
-            // The standard module sources to scan for, which can be 
-            // ignored with the ignoreDefaultSources flag if you want to load
-            // custom scripts
-            config.defaultSources = config.ignoreDefaultSources ? [] : [
-                config.moduleName + '/Js/Bootstrap/**/*.js',
-                config.moduleName + '/Js/DataServices/**/*.js',
-                config.moduleName + '/Js/Utilities/**/*.js',
-                config.moduleName + '/Js/Filters/**/*.js',
-                config.moduleName + '/Js/Framework/**/*.js',
-                config.moduleName + '/Js/UIComponents/**/*.js',
-                config.moduleName + '/Js/UIComponents/**/*.js',
-                config.moduleName + '/Js/Routes/**/*.js',
-            ];
-
-            // Additonal sources allows you to load any extra libs or custom files 
-            // ahead of the standard modules.
-            config.additionalSources = config.additionalSources || [];
-
-            // By default the module name is lowercased to make the output file 
-            // name e.g. "customentities.css", but you can provide a custom one
-            config.outputFileName = config.outputFileName || config.moduleName.toLowerCase();
+        function jsModuleTask(module) {
             
             return gulp
                 .src([
-                    ...config.additionalSources.map(sourcePath),
-                    ...config.defaultSources.map(sourcePath)
+                    ...module.additionalSources.map(sourcePath),
+                    ...module.defaultSources.map(sourcePath)
                 ])
-                .pipe(concat(config.outputFileName + '.js'))
-                .pipe(gulp.dest(sourcePath(config.moduleName + '/Content/js')))
+                .pipe(concat(module.outputFileName + '.js'))
+                .pipe(gulp.dest(sourcePath(module.moduleName + '/Content/js')))
                 .pipe(uglify())
-                .pipe(concat(config.outputFileName + '_min.js'))
-                .pipe(gulp.dest(sourcePath(config.moduleName + '/Content/js')))
+                .pipe(concat(module.outputFileName + '_min.js'))
+                .pipe(gulp.dest(sourcePath(module.moduleName + '/Content/js')))
                 ;
         }
 
@@ -124,18 +107,28 @@ exports.CofoundryBuild = class  {
          * 
          * @param {string} moduleName The name of the module (container directory) e.g. "CustomEntities"
          */
-        function htmlModuleTask(moduleName) {
-            let outputFileName = moduleName.toLowerCase();
-            let jsModuleName = camelize(moduleName);
+        function htmlModuleTask(module) {
+            let jsModuleName = camelize(module.moduleName);
 
-            return gulp.src(sourcePath(moduleName + '/Js/**/*.html'))
-                .pipe(concat(outputFileName + '_templates.js', {
+            return gulp.src(sourcePath(module.moduleName + '/Js/**/*.html'))
+                .pipe(concat(module.outputFileName + '_templates.js', {
                     process: prepareTemplate
                 }))
                 .pipe(concat.header("angular.module('cms." + jsModuleName + "').run(['$templateCache',function(t){"))
                 .pipe(concat.footer('}]);'))
-                .pipe(gulp.dest(sourcePath(moduleName + '/Content/js')))
+                .pipe(gulp.dest(sourcePath(module.moduleName + '/Content/js')))
                 ;
+                        
+            function prepareTemplate(src, filePath) {
+                
+                var removeSpaces = src.replace(/[\t\n\r]/gm, "");
+                var escapeQuotes = removeSpaces.replace(/'/g, "\\'");		
+                var releativePath = path.relative(__dirname, filePath).replace(/\\/g, '/');
+                var splitPath = releativePath.split('..');
+                var formattedSrc = "t.put('" + splitPath[1] + "','" + escapeQuotes + "');";
+                
+                return formattedSrc;
+            }
         }
 
         function watch() {
@@ -154,25 +147,28 @@ exports.CofoundryBuild = class  {
             // Currently we watch for sass and css files, but we
             // might also need to add images in here if they form
             // part of the build
-            const EXTENSIONS = ['.scss', '.css'];
+            const EXTENSIONS = ['.css'];
             moduleDirectory = moduleDirectory || moduleName;
 
             gulp.watch(
-                globExtensions(moduleDirectory + '/Sass/**/*', EXTENSIONS), 
+                [
+                    ...globExtensions(moduleDirectory + '/Sass/**/*', EXTENSIONS), 
+                    sourcePath(moduleName + '/**/*.scss')
+                ], 
                 sassModuleTask.bind(null, moduleName)
                 );
         }
 
         function watchJsModule(module) {
             gulp.watch(
-                sourcePath(module + '/Js/**/*.js'), 
+                sourcePath(module.moduleName + '/Js/**/*.js'), 
                 jsModuleTask.bind(null, module)
                 );
         }
 
         function watchHtmlModule(module) {
             gulp.watch(
-                sourcePath(module + '/Js/**/*.html'), 
+                sourcePath(module.moduleName + '/Js/**/*.html'), 
                 htmlModuleTask.bind(null, module)
                 );
         }
@@ -190,10 +186,46 @@ exports.CofoundryBuild = class  {
             return basePath + path;
         }
     }
-
-
 }
 
+function mapJsModules(jsModules) {
+            
+    return jsModules.map(mapJsModule || []);
+    
+    function mapJsModule(module) {
+        // If passing a string, it will be the module name (container
+        // directory) e.g. "CustomEntities"
+        if (typeof(module) === 'string') {
+            module = {
+                moduleName: module
+            };
+        }
+
+        // The standard module sources to scan for, which can be 
+        // ignored with the ignoreDefaultSources flag if you want to load
+        // custom scripts
+        module.defaultSources = module.ignoreDefaultSources ? [] : [
+            module.moduleName + '/Js/Bootstrap/**/*.js',
+            module.moduleName + '/Js/DataServices/**/*.js',
+            module.moduleName + '/Js/Utilities/**/*.js',
+            module.moduleName + '/Js/Filters/**/*.js',
+            module.moduleName + '/Js/Framework/**/*.js',
+            module.moduleName + '/Js/UIComponents/**/*.js',
+            module.moduleName + '/Js/UIComponents/**/*.js',
+            module.moduleName + '/Js/Routes/**/*.js',
+        ];
+
+        // Additonal sources allows you to load any extra libs or custom files 
+        // ahead of the standard modules.
+        module.additionalSources = module.additionalSources || [];
+
+        // By default the module name is lowercased to make the output file 
+        // name e.g. "customentities.css", but you can provide a custom one
+        module.outputFileName = module.outputFileName || module.moduleName.toLowerCase();
+
+        return module;
+    }
+}
 
 function camelize(string) {
     return string.charAt(0).toLowerCase() + string.slice(1);

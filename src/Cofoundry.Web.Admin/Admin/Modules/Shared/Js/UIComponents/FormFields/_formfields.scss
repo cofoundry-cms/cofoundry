@@ -215,14 +215,19 @@ input[type="color"] {
 }
 
 .form-field-text-area {
-    z-index:10000!important;
+    z-index: 10000 !important;
 
     .mce-fullscreen {
-        top:70px;
+        top: 70px;
         bottom: 0;
         left: 228px;
-        width:auto;
+        width: auto;
         right: 0;
+
+        @at-root .modal #{&} {
+            top: 0;
+            left: 0;
+        }
     }
 
     @media screen and (min-width: 950px) {
@@ -230,6 +235,11 @@ input[type="color"] {
             left: 288px;
         }
     }
+}
+
+// aria-label seems to be the only hook available for the code editor :(
+.mce-container[aria-label="Source code"] textarea {
+    font-family: monospace;
 }
 
 /* Actions that nest below an input field (used in YouTube and vimeo plugins */
