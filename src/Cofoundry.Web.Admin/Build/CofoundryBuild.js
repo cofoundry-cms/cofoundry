@@ -32,19 +32,30 @@ exports.CofoundryBuild = class  {
      */
     addGulpTasks = function(attachTo) {
         let basePath = this.basePath;
-        attachTo.buildCss = gulp.parallel(createSassTasks(this.sassModules));
-        attachTo.buildJs = gulp.parallel(createJsTasks(this.jsModules));
-        attachTo.build = attachTo.default = gulp.parallel(
-            createSassTasks(this.sassModules), 
-            createJsTasks(this.jsModules),
-            createHtmlTasks(this.jsModules)
-            );
+		let cssTasks = createSassTasks(this.sassModules);
+		let jsTasks = createJsTasks(this.jsModules);
+		let htmlTasks = createHtmlTasks(this.jsModules);
+
+        attachTo.buildCss = cssTasks ? cssTasks : noTasks;
+		
+		var jsBuildTasks = [jsTasks, htmlTasks].filter(t => t != null);
+        attachTo.buildJs = jsTasks.length ? gulp.parallel(jsBuildTasks) : noTasks;
+				
+		var allBuildTasks = [cssTasks, jsTasks, htmlTasks].filter(t => t != null);
+        attachTo.build = attachTo.default = allBuildTasks.length ? gulp.parallel(...allBuildTasks) : noTasks;
         
         attachTo.watch = watch.bind(this);
 
         /* PRIVATE */
+		
+		function noTasks() {
+			console.log('No modules found to build.');
+		}
         
         function createJsTasks(jsModules) {
+			
+			if (!jsModules || !jsModules.length) return null;
+			
             var tasks = jsModules.map(module => {
                 return jsModuleTask.bind(null, module);
             });
@@ -53,6 +64,9 @@ exports.CofoundryBuild = class  {
         }
         
         function createHtmlTasks(jsModules) {
+			
+			if (!jsModules || !jsModules.length) return null;
+			
             var tasks = jsModules.filter(module => {
                 // if we're ignoring defaults, assume there's no html templates
                 return !module.ignoreDefaultSources;
@@ -63,9 +77,11 @@ exports.CofoundryBuild = class  {
             return gulp.parallel(...tasks);
         }
 
-        function createSassTasks(sassTasks) {
+        function createSassTasks(sassModules) {
             
-            var tasks = sassTasks.map(module => {
+			if (!sassModules || !sassModules.length) return null;
+			
+            var tasks = sassModules.map(module => {
                 return sassModuleTask.bind(null, module.moduleName);
             });
 
