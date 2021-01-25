@@ -9148,6 +9148,160 @@ function (
         });
     }
 }]);
+angular.module('cms.shared').controller('ImageAssetEditorDialogController', [
+    '$scope',
+    'shared.LoadState',
+    'shared.imageService',
+    'shared.SearchQuery',
+    'shared.urlLibrary',
+    'options',
+    'close',
+function (
+    $scope,
+    LoadState,
+    imageService,
+    SearchQuery,
+    urlLibrary,
+    options,
+    close) {
+    
+    var vm = $scope,
+        isAssetInitialized;
+
+    init();
+    
+    /* INIT */
+    
+    function init() {
+        angular.extend($scope, options);
+
+        vm.formLoadState = new LoadState();
+        vm.saveLoadState = new LoadState();
+
+        vm.onInsert = onInsert;
+        vm.onCancel = onCancel;
+
+        vm.onImageChanged = onImageChanged;
+        vm.command = {};
+
+        setCurrentImage();
+    }
+
+    /* ACTIONS */
+
+    function setCurrentImage() {
+        // If we have an existing image, we need to find the asset id to set the command image
+        if (vm.imageAssetHtml && vm.imageAssetHtml.length) {
+            vm.command.imageAssetId = vm.imageAssetHtml.attr('data-image-asset-id');
+            vm.command.altTag = vm.imageAssetHtml.attr('alt');
+            vm.command.style = vm.imageAssetHtml.attr('style');
+
+            // If the image had any styles (mainly dimensions), pass them to the command so they are retained
+            if (vm.command.style) {
+                var styles = parseStyles(vm.command.style);
+                vm.command.width = styles['width'];
+                vm.command.height = styles['height'];
+
+            // Else, look to see if the dimensions are stored as attibutes of the image
+            } else {
+                vm.command.width = vm.imageAssetHtml.attr('width');
+                vm.command.height = vm.imageAssetHtml.attr('height');
+            }
+
+            // If we cannot find the asset id (could have removed the data attribute that this relies on),
+            // we try to work this out based on the image path (this might change in future versions of cofoundry so less reliable)
+            if (!vm.command.imageAssetId) {
+                var src = vm.imageAssetHtml.attr('src');
+                var lastIndex = src.lastIndexOf('/');
+                var extractId = src.substr(lastIndex + 1, ((src.indexOf('_') - lastIndex) - 1));
+                vm.command.imageAssetId = extractId;
+            }
+        }
+    }
+    
+    /* EVENTS */
+
+    function onCancel() {
+        close();
+    }
+
+    function onImageChanged() {
+        vm.command.altTag = vm.command.imageAsset.title || vm.command.imageAsset.fileName;
+    }
+
+    function onInsert() {
+
+        // Parse and hold dimensions
+        var dimensions = {
+            width: parseUnits(vm.command.width),
+            height: parseUnits(vm.command.height)
+        };
+
+        // If we have no sizes set, default to percentage respecting ratio
+        if (!dimensions.width && !dimensions.height) {
+            dimensions.width = '100%';
+            dimensions.height = 'auto';
+        }
+
+        // Get the image path, including specific size options if nessessary
+        var path = urlLibrary.getImageUrl(vm.command.imageAsset, parseImageRequestSize(dimensions));
+
+        // Default the alt tag to an empty string if not specified
+        var alt = vm.command.altTag || '';
+
+        // Define an object thay holds formatted outputs, plus the model itself
+        var output = {
+            markdown: "![Alt " + alt + "](" + path + ")",
+            html: "<img src='" + path + "' alt='" + alt + "' data-image-asset-id='" + vm.command.imageAssetId + "' />",
+            model: vm.command
+        };
+
+        // Add css styles to output html
+        output.html = insertCssStyles(output.html, dimensions);
+
+        // Call callback with output
+        vm.onSelected(output);
+
+        // Close dialog
+        close();
+    }
+
+    /* PUBLIC HELPERS */
+
+    function insertCssStyles(html, styles) {
+        return angular.element(html).css(styles)[0].outerHTML;
+    }
+
+    function parseImageRequestSize(dimensions) {
+        // If unit type is percent, use original image size
+        if ((dimensions.width || '').indexOf('%') > -1 || (dimensions.height || '').indexOf('%') > -1) return {};
+
+        // Else, return raw pixel sizes
+        return {
+            width: dimensions.width.replace('px', ''),
+            height: dimensions.height.replace('px', '')
+        };
+    }
+
+    function parseUnits(value) {
+        if (!value) return '';
+
+        // Default to pixels if not unit type specified
+        if (value.indexOf('px') == -1 && value.indexOf('%') == -1 && value.indexOf('auto') == -1) return value + 'px';
+
+        // Return original value if we get here
+        return value;
+    }
+
+    function parseStyles(cssText) {
+        var regex = /([\w-]*)\s*:\s*([^;]*)/g;
+        var match, properties = {};
+        while (match = regex.exec(cssText)) properties[match[1]] = match[2];
+        return properties;
+    }
+
+}]);
+
 angular.module('cms.shared').directive('cmsDocumentAsset', [
     'shared.internalModulePath',
     'shared.urlLibrary',
@@ -9888,160 +10042,6 @@ function (
     function uploadComplete(documentAssetId) {
         options.onUploadComplete(documentAssetId);
         close();
-    }
-
-}]);
-
-angular.module('cms.shared').controller('ImageAssetEditorDialogController', [
-    '$scope',
-    'shared.LoadState',
-    'shared.imageService',
-    'shared.SearchQuery',
-    'shared.urlLibrary',
-    'options',
-    'close',
-function (
-    $scope,
-    LoadState,
-    imageService,
-    SearchQuery,
-    urlLibrary,
-    options,
-    close) {
-    
-    var vm = $scope,
-        isAssetInitialized;
-
-    init();
-    
-    /* INIT */
-    
-    function init() {
-        angular.extend($scope, options);
-
-        vm.formLoadState = new LoadState();
-        vm.saveLoadState = new LoadState();
-
-        vm.onInsert = onInsert;
-        vm.onCancel = onCancel;
-
-        vm.onImageChanged = onImageChanged;
-        vm.command = {};
-
-        setCurrentImage();
-    }
-
-    /* ACTIONS */
-
-    function setCurrentImage() {
-        // If we have an existing image, we need to find the asset id to set the command image
-        if (vm.imageAssetHtml && vm.imageAssetHtml.length) {
-            vm.command.imageAssetId = vm.imageAssetHtml.attr('data-image-asset-id');
-            vm.command.altTag = vm.imageAssetHtml.attr('alt');
-            vm.command.style = vm.imageAssetHtml.attr('style');
-
-            // If the image had any styles (mainly dimensions), pass them to the command so they are retained
-            if (vm.command.style) {
-                var styles = parseStyles(vm.command.style);
-                vm.command.width = styles['width'];
-                vm.command.height = styles['height'];
-
-            // Else, look to see if the dimensions are stored as attibutes of the image
-            } else {
-                vm.command.width = vm.imageAssetHtml.attr('width');
-                vm.command.height = vm.imageAssetHtml.attr('height');
-            }
-
-            // If we cannot find the asset id (could have removed the data attribute that this relies on),
-            // we try to work this out based on the image path (this might change in future versions of cofoundry so less reliable)
-            if (!vm.command.imageAssetId) {
-                var src = vm.imageAssetHtml.attr('src');
-                var lastIndex = src.lastIndexOf('/');
-                var extractId = src.substr(lastIndex + 1, ((src.indexOf('_') - lastIndex) - 1));
-                vm.command.imageAssetId = extractId;
-            }
-        }
-    }
-    
-    /* EVENTS */
-
-    function onCancel() {
-        close();
-    }
-
-    function onImageChanged() {
-        vm.command.altTag = vm.command.imageAsset.title || vm.command.imageAsset.fileName;
-    }
-
-    function onInsert() {
-
-        // Parse and hold dimensions
-        var dimensions = {
-            width: parseUnits(vm.command.width),
-            height: parseUnits(vm.command.height)
-        };
-
-        // If we have no sizes set, default to percentage respecting ratio
-        if (!dimensions.width && !dimensions.height) {
-            dimensions.width = '100%';
-            dimensions.height = 'auto';
-        }
-
-        // Get the image path, including specific size options if nessessary
-        var path = urlLibrary.getImageUrl(vm.command.imageAsset, parseImageRequestSize(dimensions));
-
-        // Default the alt tag to an empty string if not specified
-        var alt = vm.command.altTag || '';
-
-        // Define an object thay holds formatted outputs, plus the model itself
-        var output = {
-            markdown: "![Alt " + alt + "](" + path + ")",
-            html: "<img src='" + path + "' alt='" + alt + "' data-image-asset-id='" + vm.command.imageAssetId + "' />",
-            model: vm.command
-        };
-
-        // Add css styles to output html
-        output.html = insertCssStyles(output.html, dimensions);
-
-        // Call callback with output
-        vm.onSelected(output);
-
-        // Close dialog
-        close();
-    }
-
-    /* PUBLIC HELPERS */
-
-    function insertCssStyles(html, styles) {
-        return angular.element(html).css(styles)[0].outerHTML;
-    }
-
-    function parseImageRequestSize(dimensions) {
-        // If unit type is percent, use original image size
-        if ((dimensions.width || '').indexOf('%') > -1 || (dimensions.height || '').indexOf('%') > -1) return {};
-
-        // Else, return raw pixel sizes
-        return {
-            width: dimensions.width.replace('px', ''),
-            height: dimensions.height.replace('px', '')
-        };
-    }
-
-    function parseUnits(value) {
-        if (!value) return '';
-
-        // Default to pixels if not unit type specified
-        if (value.indexOf('px') == -1 && value.indexOf('%') == -1 && value.indexOf('auto') == -1) return value + 'px';
-
-        // Return original value if we get here
-        return value;
-    }
-
-    function parseStyles(cssText) {
-        var regex = /([\w-]*)\s*:\s*([^;]*)/g;
-        var match, properties = {};
-        while (match = regex.exec(cssText)) properties[match[1]] = match[2];
-        return properties;
     }
 
 }]);
@@ -15015,80 +15015,6 @@ angular.module('cms.shared').directive('cmsTableRowInactive', function () {
         }
     }
 });
-angular.module('cms.shared').directive('cmsTimeAgo', ['shared.internalModulePath', function (modulePath) {
-
-    return {
-        restrict: 'E',
-        scope: { time: '=cmsTime' },
-        templateUrl: modulePath + 'UIComponents/Time/TimeAgo.html',
-        controller: ['$scope', TimeAgoController],
-        controllerAs: 'vm'
-    };
-
-    function TimeAgoController($scope) {
-        var vm = this;
-
-        $scope.$watch('time', function () {
-            if ($scope.time) {
-                vm.date = new Date($scope.time);
-                vm.timeAgo = timeSince(vm.date);
-            } else {
-                vm.date = null;
-                vm.timeAgo = null;
-            }
-        });
-    }
-
-    function timeSince(time) {
-
-        switch (typeof time) {
-            case 'number': break;
-            case 'string': time = +new Date(time); break;
-            case 'object': if (time.constructor === Date) time = time.getTime(); break;
-            default: time = +new Date();
-        }
-
-        var time_formats = [
-            [60, 'seconds', 1], // 60
-            [120, '1 minute ago', '1 minute from now'], // 60*2
-            [3600, 'minutes', 60], // 60*60, 60
-            [7200, '1 hour ago', '1 hour from now'], // 60*60*2
-            [86400, 'hours', 3600], // 60*60*24, 60*60
-            [172800, 'Yesterday', 'Tomorrow'], // 60*60*24*2
-            [604800, 'days', 86400], // 60*60*24*7, 60*60*24
-            [1209600, 'Last week', 'Next week'], // 60*60*24*7*4*2
-            [2419200, 'weeks', 604800], // 60*60*24*7*4, 60*60*24*7
-            [4838400, 'Last month', 'Next month'], // 60*60*24*7*4*2
-            [29030400, 'months', 2419200], // 60*60*24*7*4*12, 60*60*24*7*4
-            [58060800, 'Last year', 'Next year'], // 60*60*24*7*4*12*2
-            [2903040000, 'years', 29030400], // 60*60*24*7*4*12*100, 60*60*24*7*4*12
-            [5806080000, 'Last century', 'Next century'], // 60*60*24*7*4*12*100*2
-            [58060800000, 'centuries', 2903040000] // 60*60*24*7*4*12*100*20, 60*60*24*7*4*12*100
-        ];
-        var seconds = (+new Date() - time) / 1000,
-            token = 'ago', list_choice = 1;
-
-        // browser time may not be in sync with server time so treat
-        // negative minutes as 'just now' to avoid outputting future times.
-        if ((seconds <= 0 && seconds > -3600) || Math.abs(seconds) == 0) {
-            return 'Just now'
-        }
-        if (seconds < 0) {
-            seconds = Math.abs(seconds);
-            token = 'from now';
-            list_choice = 2;
-        }
-        var i = 0, format;
-        while (format = time_formats[i++])
-            if (seconds < format[0]) {
-                if (typeof format[2] == 'string')
-                    return format[list_choice];
-                else
-                    return Math.floor(seconds / format[2]) + ' ' + format[1] + ' ' + token;
-            }
-        return time;
-    }
-}]);
 /**
  * Formfield wrapper around a TagInput
  */
@@ -15245,6 +15171,80 @@ function (
             CHAR_BLOCKLIST.lastIndex = 0;
             return CHAR_BLOCKLIST;
         }
+    }
+}]);
+angular.module('cms.shared').directive('cmsTimeAgo', ['shared.internalModulePath', function (modulePath) {
+
+    return {
+        restrict: 'E',
+        scope: { time: '=cmsTime' },
+        templateUrl: modulePath + 'UIComponents/Time/TimeAgo.html',
+        controller: ['$scope', TimeAgoController],
+        controllerAs: 'vm'
+    };
+
+    function TimeAgoController($scope) {
+        var vm = this;
+
+        $scope.$watch('time', function () {
+            if ($scope.time) {
+                vm.date = new Date($scope.time);
+                vm.timeAgo = timeSince(vm.date);
+            } else {
+                vm.date = null;
+                vm.timeAgo = null;
+            }
+        });
+    }
+
+    function timeSince(time) {
+
+        switch (typeof time) {
+            case 'number': break;
+            case 'string': time = +new Date(time); break;
+            case 'object': if (time.constructor === Date) time = time.getTime(); break;
+            default: time = +new Date();
+        }
+
+        var time_formats = [
+            [60, 'seconds', 1], // 60
+            [120, '1 minute ago', '1 minute from now'], // 60*2
+            [3600, 'minutes', 60], // 60*60, 60
+            [7200, '1 hour ago', '1 hour from now'], // 60*60*2
+            [86400, 'hours', 3600], // 60*60*24, 60*60
+            [172800, 'Yesterday', 'Tomorrow'], // 60*60*24*2
+            [604800, 'days', 86400], // 60*60*24*7, 60*60*24
+            [1209600, 'Last week', 'Next week'], // 60*60*24*7*4*2
+            [2419200, 'weeks', 604800], // 60*60*24*7*4, 60*60*24*7
+            [4838400, 'Last month', 'Next month'], // 60*60*24*7*4*2
+            [29030400, 'months', 2419200], // 60*60*24*7*4*12, 60*60*24*7*4
+            [58060800, 'Last year', 'Next year'], // 60*60*24*7*4*12*2
+            [2903040000, 'years', 29030400], // 60*60*24*7*4*12*100, 60*60*24*7*4*12
+            [5806080000, 'Last century', 'Next century'], // 60*60*24*7*4*12*100*2
+            [58060800000, 'centuries', 2903040000] // 60*60*24*7*4*12*100*20, 60*60*24*7*4*12*100
+        ];
+        var seconds = (+new Date() - time) / 1000,
+            token = 'ago', list_choice = 1;
+
+        // browser time may not be in sync with server time so treat
+        // negative minutes as 'just now' to avoid outputting future times.
+        if ((seconds <= 0 && seconds > -3600) || Math.abs(seconds) == 0) {
+            return 'Just now'
+        }
+        if (seconds < 0) {
+            seconds = Math.abs(seconds);
+            token = 'from now';
+            list_choice = 2;
+        }
+        var i = 0, format;
+        while (format = time_formats[i++])
+            if (seconds < format[0]) {
+                if (typeof format[2] == 'string')
+                    return format[list_choice];
+                else
+                    return Math.floor(seconds / format[2]) + ' ' + format[1] + ' ' + token;
+            }
+        return time;
     }
 }]);
 angular.module('cms.shared').directive('cmsUserLink', [

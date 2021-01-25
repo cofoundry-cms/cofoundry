@@ -15,11 +15,12 @@ exports.CofoundryBuild = class  {
      * Attaches several gulp tasks to an object, which includes a 'build' and 
      * 'watch' task, as well as separate 'buildCss' and 'buildJs' tasks.
      * 
-     * @param {string} basePath - The base path to your admin modules, relative to the gulp script.
+     * @param {string} filePath - The base path to your admin modules, relative to the gulp script.
      * @param {object} config - A configuration object containing properties for the js and sass modules to build
      */
-    constructor(basePath, config) {
-        this.basePath = basePath;
+    constructor(filePath, config) {
+        this.filePath = filePath;
+		this.urlBase = config.urlBase;
         this.jsModules = mapJsModules(config.jsModules);
         this.sassModules = config.sassModules || [];
     }
@@ -31,7 +32,8 @@ exports.CofoundryBuild = class  {
      * @param {object} attachTo - An object to attach gulp tasks to
      */
     addGulpTasks = function(attachTo) {
-        let basePath = this.basePath;
+        let filePath = this.filePath;
+		let urlBase = this.urlBase;
 		let cssTasks = createSassTasks(this.sassModules);
 		let jsTasks = createJsTasks(this.jsModules);
 		let htmlTasks = createHtmlTasks(this.jsModules);
@@ -144,7 +146,7 @@ exports.CofoundryBuild = class  {
                 var escapeQuotes = removeSpaces.replace(/'/g, "\\'");		
                 var releativePath = path.relative(__dirname, filePath).replace(/\\/g, '/');
                 var splitPath = releativePath.split('..');
-                var formattedSrc = "t.put('" + splitPath[1] + "','" + escapeQuotes + "');";
+                var formattedSrc = "t.put('" + (urlBase || '') + splitPath[1] + "','" + escapeQuotes + "');";
                 
                 return formattedSrc;
             }
@@ -202,7 +204,7 @@ exports.CofoundryBuild = class  {
         }
 
         function sourcePath(path) {
-            return basePath + path;
+            return filePath + path;
         }
     }
 }
