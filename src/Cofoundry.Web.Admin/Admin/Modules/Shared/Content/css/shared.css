@@ -5652,7 +5652,22 @@ input[type="color"] {
       width: 160px; } }
 
 .page-body {
-  max-width: 900px; }
+  max-width: 900px;
+  /* 
+        Value for in "cms-content-type" attribute.
+        This feels like it should be the default, but there may be areas that require
+        no margins, so this has been introduced for the Dashboard page or any other page
+        that does not have a form or actions and will give you the basic margins (e.g. Dashboard).
+    */
+  /*  
+        Value for "cms-content-type" attribute.
+        The form type seems to be used in places other than forms e.g. tables / lists
+        It basically allows space for the left-hand actions bar.
+    */ }
+  .page-body.page {
+    margin-left: 20px;
+    margin-top: 80px;
+    margin-right: 20px; }
   .page-body.form {
     margin-left: 20px;
     margin-top: 80px;
@@ -5802,7 +5817,7 @@ input[type="color"] {
         .page-body .control-group .control-group-area .controls .btn {
           display: inline-block; }
   @media screen and (min-width: 1200px) {
-    .page-body.form {
+    .page-body.form.with-actions {
       margin-left: 185px; } }
 
 .on-drag-hover {

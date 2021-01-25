@@ -115,12 +115,12 @@
 }
 
 .page-actions {
-    position:fixed;
-    width:125px;
+    position: fixed;
+    width: 125px;
 
     .btn:not(.pager) {
         width: 100%;
-        margin-bottom:10px;
+        margin-bottom: 10px;
     }
 
     @media screen and (min-width: 1200px) {
@@ -131,6 +131,22 @@
 .page-body {
     max-width: 900px;
 
+    /* 
+        Value for in "cms-content-type" attribute.
+        This feels like it should be the default, but there may be areas that require
+        no margins, so this has been introduced for the Dashboard page or any other page
+        that does not have a form or actions and will give you the basic margins (e.g. Dashboard).
+    */
+    &.page {
+        margin-left: 20px;
+        margin-top: 80px;
+        margin-right: 20px;
+    }
+    /*  
+        Value for "cms-content-type" attribute.
+        The form type seems to be used in places other than forms e.g. tables / lists
+        It basically allows space for the left-hand actions bar.
+    */
     &.form {
         margin-left: 20px;
         margin-top: 80px;
@@ -337,7 +353,7 @@
     }
 
     @media screen and (min-width: 1200px) {
-        &.form {
+        &.form.with-actions {
             margin-left: 185px;
         }
     }
