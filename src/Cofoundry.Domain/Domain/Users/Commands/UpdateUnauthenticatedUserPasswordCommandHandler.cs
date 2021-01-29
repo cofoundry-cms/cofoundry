@@ -4,14 +4,14 @@ using System.Linq;
 using System.Threading.Tasks;
 using Cofoundry.Domain.CQS;
 
-namespace Cofoundry.Domain
+namespace Cofoundry.Domain.Internal
 {
     /// <summary>
     /// Updates the password of the currently logged in user, using the
     /// OldPassword field to authenticate the request.
     /// </summary>
     public class UpdateUnauthenticatedUserPasswordCommandHandler
-        : IAsyncCommandHandler<UpdateUnauthenticatedUserPasswordCommand>
+        : ICommandHandler<UpdateUnauthenticatedUserPasswordCommand>
         , IIgnorePermissionCheckHandler
     {
         #region constructor

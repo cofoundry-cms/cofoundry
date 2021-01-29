@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Cofoundry.Domain
+namespace Cofoundry.Domain.Internal
 {
     /// <summary>
     /// Cache for page block data, which is frequently requested to 
@@ -14,8 +14,6 @@ namespace Cofoundry.Domain
     /// </summary>
     public class PageBlockTypeCache : IPageBlockTypeCache
     {
-        #region constructor
-
         private const string SUMMARIES_CACHEKEY = "Summaries";
         private const string FILE_LOCATIONS_CACHEKEY = "FileLocations";
         private const string CACHEKEY = "Cofoundry.Domain.PageBlockTypeCache";
@@ -26,10 +24,6 @@ namespace Cofoundry.Domain
         {
             _cache = cacheFactory.Get(CACHEKEY);
         }
-
-        #endregion
-
-        #region public methods
 
         /// <summary>
         /// Gets all page block types if they are already cached, otherwise the 
@@ -68,7 +62,5 @@ namespace Cofoundry.Domain
         {
             _cache.Clear();
         }
-
-        #endregion
     }
 }

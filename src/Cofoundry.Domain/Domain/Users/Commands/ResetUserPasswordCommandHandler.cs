@@ -11,7 +11,7 @@ using Cofoundry.Core.Data;
 using Cofoundry.Core;
 using Microsoft.AspNetCore.Html;
 
-namespace Cofoundry.Domain
+namespace Cofoundry.Domain.Internal
 {
     /// <summary>
     /// Resets a users password to a randomly generated temporary value
@@ -22,7 +22,7 @@ namespace Cofoundry.Domain
     /// InitiatePasswordResetRequestCommand.
     /// </summary>
     public class ResetUserPasswordCommandHandler 
-        : IAsyncCommandHandler<ResetUserPasswordCommand>
+        : ICommandHandler<ResetUserPasswordCommand>
         , IIgnorePermissionCheckHandler
     {
         #region construstor

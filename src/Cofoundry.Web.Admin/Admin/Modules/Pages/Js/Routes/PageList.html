@@ -56,8 +56,7 @@
 
 </cms-page-actions>
 
-<cms-page-body cms-sub-header="with-header"
-               cms-content-type="form">
+<cms-page-body cms-content-type="form">
     <cms-table-container cms-loading="vm.gridLoadState.isLoading">
         <table>
             <thead>
@@ -107,7 +106,7 @@
                         <a href=""
                            ng-if="::!page.isPublished() || page.hasDraftVersion"
                            ng-click="vm.publish(page.pageId)"
-                           ng-disabled="vm.globalLoadState.isLoading" class="btn-icon" title="Publish">
+                           ng-disabled="vm.gridLoadState.isLoading" class="btn-icon" title="Publish">
                             <i class="fa fa-globe"></i>
                         </a>
                         <a href="#/{{::page.pageId }}"

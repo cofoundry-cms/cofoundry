@@ -4,8 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Cofoundry.Core.DependencyInjection;
+using Cofoundry.Core.ResourceFiles.Internal;
 
-namespace Cofoundry.Core.ResourceFiles
+namespace Cofoundry.Core.ResourceFiles.Registration
 {
     public class ResourceFilesDependencyRegistration : IDependencyRegistration
     {

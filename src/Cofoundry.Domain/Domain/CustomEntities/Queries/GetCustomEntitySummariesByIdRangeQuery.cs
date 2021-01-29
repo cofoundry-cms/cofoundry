@@ -10,7 +10,7 @@ namespace Cofoundry.Domain
 {
     /// <summary>
     /// An id range query for custom entities which returns basic
-    /// custom entity information with workflow status and model data for the
+    /// custom entity information with publish status and model data for the
     /// latest version. The query is not version-sensitive and is designed to be 
     /// used in the admin panel and not in a version-sensitive context such as a 
     /// public webpage.
@@ -30,7 +30,7 @@ namespace Cofoundry.Domain
 
         /// <summary>
         /// An id range query for custom entities which returns basic
-        /// custom entity information with workflow status and model data for the
+        /// custom entity information with publish status and model data for the
         /// latest version. The query is not version-sensitive and is designed to be 
         /// used in the admin panel and not in a version-sensitive context such as a 
         /// public webpage.
@@ -48,7 +48,7 @@ namespace Cofoundry.Domain
 
         /// <summary>
         /// An id range query for custom entities which returns basic
-        /// custom entity information with workflow status and model data for the
+        /// custom entity information with publish status and model data for the
         /// latest version. The query is not version-sensitive and is designed to be 
         /// used in the admin panel and not in a version-sensitive context such as a 
         /// public webpage.

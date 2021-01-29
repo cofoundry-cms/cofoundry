@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Html;
 
-namespace Cofoundry.Core.Web
+namespace Cofoundry.Core.Web.Internal
 {
     /// <summary>
     /// An HtmlSanitizer that uses the Ganss.XSS.HtmlSanitizer
@@ -27,7 +27,7 @@ namespace Cofoundry.Core.Web
             _defaultBaseUrl = GetBaseUrl(defaultHtmlSanitizationRuleSet);
         }
 
-        public string Sanitize(IHtmlContent source)
+        public virtual string Sanitize(IHtmlContent source)
         {
             if (source == null) return string.Empty;
             IHtmlSanitizationRuleSet ruleSet = null;
@@ -39,7 +39,7 @@ namespace Cofoundry.Core.Web
             return Sanitize(source.ToString()?.Trim(), ruleSet);
         }
 
-        public string Sanitize(string source, IHtmlSanitizationRuleSet ruleSet = null)
+        public virtual string Sanitize(string source, IHtmlSanitizationRuleSet ruleSet = null)
         {
             if (string.IsNullOrWhiteSpace(source)) return null;
             string result;
@@ -50,7 +50,6 @@ namespace Cofoundry.Core.Web
             }
             else
             {
-
                 var sanitizer = CreateSanitizer(ruleSet);
                 var baseUrl = GetBaseUrl(ruleSet);
 
@@ -63,7 +62,7 @@ namespace Cofoundry.Core.Web
         /// <summary>
         /// Remove HTML tags from string
         /// </summary>
-        public string StripHtml(HtmlString content)
+        public virtual string StripHtml(HtmlString content)
         {
             if (content == null) return null;
 
@@ -76,7 +75,7 @@ namespace Cofoundry.Core.Web
         /// <remakrs>
         /// See http://www.dotnetperls.com/remove-html-tags
         /// </remakrs>
-        public string StripHtml(string source)
+        public virtual string StripHtml(string source)
         {
             if (source == null) return string.Empty;
 
@@ -107,7 +106,7 @@ namespace Cofoundry.Core.Web
             return new string(array, 0, arrayIndex);
         }
 
-        private string GetBaseUrl(IHtmlSanitizationRuleSet ruleSet)
+        protected string GetBaseUrl(IHtmlSanitizationRuleSet ruleSet)
         {
             var ganssRuleSet = ruleSet as IGanssHtmlSanitizationRuleSet;
             if (ganssRuleSet == null) return null;
@@ -115,7 +114,7 @@ namespace Cofoundry.Core.Web
             return ganssRuleSet.BaseUrl;
         }
 
-        private Ganss.XSS.HtmlSanitizer CreateSanitizer(IHtmlSanitizationRuleSet ruleSet)
+        protected Ganss.XSS.HtmlSanitizer CreateSanitizer(IHtmlSanitizationRuleSet ruleSet)
         {
             var sanitizer = new Ganss.XSS.HtmlSanitizer(
                 ruleSet.PermittedTags,

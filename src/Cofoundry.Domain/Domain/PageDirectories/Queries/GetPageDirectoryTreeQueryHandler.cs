@@ -7,14 +7,14 @@ using Cofoundry.Domain.CQS;
 using Microsoft.EntityFrameworkCore;
 using Cofoundry.Domain.QueryModels;
 
-namespace Cofoundry.Domain
+namespace Cofoundry.Domain.Internal
 {
     /// <summary>
     /// Returns a complete tree of page directory nodes, starting
     /// with the root directory as a single node.
     /// </summary>
     public class GetPageDirectoryTreeQueryHandler 
-        : IAsyncQueryHandler<GetPageDirectoryTreeQuery, PageDirectoryNode>
+        : IQueryHandler<GetPageDirectoryTreeQuery, PageDirectoryNode>
         , IPermissionRestrictedQueryHandler<GetPageDirectoryTreeQuery, PageDirectoryNode>
     {
         #region constructor

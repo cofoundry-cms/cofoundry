@@ -1,10 +1,17 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp2.2</TargetFramework>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
     <MvcRazorExcludeViewFilesFromPublish>false</MvcRazorExcludeViewFilesFromPublish>
     <MvcRazorExcludeRefAssembliesFromPublish>false</MvcRazorExcludeRefAssembliesFromPublish>
   </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Cofoundry.Core\Cofoundry.Core.csproj" />
+    <ProjectReference Include="..\Cofoundry.Domain\Cofoundry.Domain.csproj" />
+    <ProjectReference Include="..\Cofoundry.Web.Admin\Cofoundry.Web.Admin.csproj" />
+    <ProjectReference Include="..\Cofoundry.Web\Cofoundry.Web.csproj" />
+  </ItemGroup>
 
   <ItemGroup>
     <Content Remove="Views\PartnerAuth\ForgotPassword.cshtml" />
@@ -18,17 +25,6 @@
     <EmbeddedResource Include="Views\PartnerAuth\PasswordReset.cshtml" />
     <EmbeddedResource Include="Views\PartnerAuth\PasswordResetComplete.cshtml" />
     <EmbeddedResource Include="Views\PartnerAuth\PasswordResetRequestInvalid.cshtml" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.App" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\Cofoundry.Core\Cofoundry.Core.csproj" />
-    <ProjectReference Include="..\Cofoundry.Domain\Cofoundry.Domain.csproj" />
-    <ProjectReference Include="..\Cofoundry.Web.Admin\Cofoundry.Web.Admin.csproj" />
-    <ProjectReference Include="..\Cofoundry.Web\Cofoundry.Web.csproj" />
   </ItemGroup>
 
   <ItemGroup>

@@ -1,13 +1,11 @@
-﻿using Cofoundry.Core;
-using Cofoundry.Core.Data;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Cofoundry.Domain.Data
+namespace Cofoundry.Domain.Data.Internal
 {
     /// <summary>
     /// Data access abstraction over custom entity stored procedures.

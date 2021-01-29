@@ -6,17 +6,17 @@ using Cofoundry.Domain.Data;
 using Cofoundry.Domain.CQS;
 using Microsoft.EntityFrameworkCore;
 
-namespace Cofoundry.Domain
+namespace Cofoundry.Domain.Internal
 {
     /// <summary>
-    /// Gets a page PageRenderSummary projection by id, which is
+    /// Query to get a page by an id, projected as a PageRenderSummary which is
     /// a lighter weight projection designed for rendering to a site when the 
     /// templates, region and block data is not required. The result is 
     /// version-sensitive and defaults to returning published versions only, but
     /// this behavior can be controlled by the publishStatus query property.
     /// </summary>
     public class GetPageRenderSummaryByIdQueryHandler
-        : IAsyncQueryHandler<GetPageRenderSummaryByIdQuery, PageRenderSummary>
+        : IQueryHandler<GetPageRenderSummaryByIdQuery, PageRenderSummary>
         , IPermissionRestrictedQueryHandler<GetPageRenderSummaryByIdQuery, PageRenderSummary>
     {
         #region constructor
@@ -37,8 +37,6 @@ namespace Cofoundry.Domain
         }
 
         #endregion
-
-        #region execution
 
         public async Task<PageRenderSummary> ExecuteAsync(GetPageRenderSummaryByIdQuery query, IExecutionContext executionContext)
         {
@@ -79,18 +77,17 @@ namespace Cofoundry.Domain
                 result = await _dbContext
                     .PagePublishStatusQueries
                     .AsNoTracking()
+                    .Include(v => v.PageVersion)
+                    .ThenInclude(v => v.OpenGraphImageAsset)
                     .FilterActive()
                     .FilterByStatus(query.PublishStatus, executionContext.ExecutionDate)
                     .FilterByPageId(query.PageId)
                     .Select(p => p.PageVersion)
-                    .Include(v => v.OpenGraphImageAsset)
                     .FirstOrDefaultAsync();
             }
 
             return result;
         }
-
-        #endregion
 
         #region Permission
 

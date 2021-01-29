@@ -12,6 +12,7 @@ namespace Cofoundry.BasicTestSite
     public class ExampleCustomEntityDefinition 
         : ICustomEntityDefinition<ExampleDataModel>
         , ISortedCustomEntityDefinition
+        , IOrderableCustomEntityDefinition
     {
         /// <summary>
         /// This constant is a convention that allows us to reference this definition code 
@@ -68,5 +69,7 @@ namespace Cofoundry.BasicTestSite
         public CustomEntityQuerySortType DefaultSortType => CustomEntityQuerySortType.Title;
 
         public SortDirection DefaultSortDirection => SortDirection.Reversed;
+
+        public CustomEntityOrdering Ordering => CustomEntityOrdering.Full;
     }
 }

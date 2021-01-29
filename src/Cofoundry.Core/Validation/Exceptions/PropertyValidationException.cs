@@ -11,6 +11,7 @@ namespace Cofoundry.Core.Validation
     /// A validation exception that relates to a specific property or number of properties 
     /// on an object
     /// </summary>
+    [Obsolete("Use ValidationErrorException or ValidationErrorException.NewWithProperties()")]
     public class PropertyValidationException : ValidationException
     {
         /// <summary>

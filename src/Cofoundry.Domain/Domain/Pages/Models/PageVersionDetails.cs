@@ -27,7 +27,7 @@ namespace Cofoundry.Domain
         public int DisplayVersion { get; set; }
 
         /// <summary>
-        /// The descriptive human-readable title of page that is often 
+        /// The descriptive human-readable title of the page that is often 
         /// used in the html page title meta tag. Does not have to be
         /// unique.
         /// </summary>

@@ -9,10 +9,10 @@ using Cofoundry.Core.MessageAggregator;
 using Cofoundry.Core;
 using Cofoundry.Core.Data;
 
-namespace Cofoundry.Domain
+namespace Cofoundry.Domain.Internal
 {
     public class MovePageVersionBlockCommandHandler
-        : IAsyncCommandHandler<MovePageVersionBlockCommand>
+        : ICommandHandler<MovePageVersionBlockCommand>
         , IPermissionRestrictedCommandHandler<MovePageVersionBlockCommand>
     {
         #region constructor

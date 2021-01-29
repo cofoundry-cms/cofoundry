@@ -8,6 +8,7 @@ namespace Cofoundry.Domain
     /// Simple facade over page data access queries/commands to them more discoverable
     /// in implementations.
     /// </summary>
+    [Obsolete("Use the new IContentRepository instead.")]
     public interface IPageRepository
     {
         #region queries

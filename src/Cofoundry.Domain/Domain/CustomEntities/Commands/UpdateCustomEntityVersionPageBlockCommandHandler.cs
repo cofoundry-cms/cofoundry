@@ -10,10 +10,14 @@ using Cofoundry.Core.MessageAggregator;
 using Cofoundry.Core.Data;
 using Cofoundry.Core;
 
-namespace Cofoundry.Domain
+namespace Cofoundry.Domain.Internal
 {
+    /// <summary>
+    /// Updates an existing block within a template region 
+    /// of a custom entity page.
+    /// </summary>
     public class UpdateCustomEntityVersionPageBlockCommandHandler
-        : IAsyncCommandHandler<UpdateCustomEntityVersionPageBlockCommand>
+        : ICommandHandler<UpdateCustomEntityVersionPageBlockCommand>
         , IIgnorePermissionCheckHandler
     {
         #region constructor
@@ -46,8 +50,6 @@ namespace Cofoundry.Domain
         }
 
         #endregion
-
-        #region execution
 
         public async Task ExecuteAsync(UpdateCustomEntityVersionPageBlockCommand command, IExecutionContext executionContext)
         {
@@ -96,7 +98,5 @@ namespace Cofoundry.Domain
                 CustomEntityVersionBlockId = dbBlock.CustomEntityVersionPageBlockId
             });
         }
-
-        #endregion
     }
 }

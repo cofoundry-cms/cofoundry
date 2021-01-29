@@ -65,16 +65,51 @@ namespace Cofoundry.BasicTestSite
             : base(HtmlToolbarPreset.BasicFormatting, HtmlToolbarPreset.Media, HtmlToolbarPreset.Source)
         {
             //ConfigFilePath = "/content/html-editor-config.json";
-            Rows = 40;
+            Rows = 6;
         }
+    }
+
+    public class HeaderBlock : INestedDataModel
+    {
+        [Required]
+        public string Text { get; set; }
+    }
+
+    public class TeaserBlockDataModel : INestedDataModel
+    {
+        [Required]
+        public string Title { get; set; }
+
+        [PreviewImage]
+        [Display(Name = "Image")]
+        [Image]
+        public int? ImageAssetId { get; set; }
+    }
+
+    [Display(Name ="Content Blocky block")]
+    public class ContentBlock : INestedDataModel
+    {
+        [PreviewTitle]
+        public string Title { get; set; }
+
+        [PreviewDescription]
+        public string Text { get; set; }
     }
 
     public class ExampleDataModel : ICustomEntityDataModel
     {
-        [HtmlWithCustomEditor]
-        public string Content { get; set; }
+        [NestedDataModelCollection(
+            IsOrderable = true,
+            MinItems = 2,
+            MaxItems = 6)]
+        public ICollection<TeaserBlockDataModel> Blocks { get; set; }
 
-        [CustomEntity(CategoryCustomEntityDefinition.DefinitionCode)]
-        public int CategoryId { get; set; }
+        [NestedDataModelMultiTypeCollection(
+            new Type[] { typeof(ContentBlock), typeof(TeaserBlockDataModel), typeof(HeaderBlock) },
+            IsOrderable = true,
+            //MinItems = 2, 
+            MaxItems = 6
+            )]
+        public ICollection<NestedDataModelMultiTypeItem> TestCollection { get; set; }
     }
 }

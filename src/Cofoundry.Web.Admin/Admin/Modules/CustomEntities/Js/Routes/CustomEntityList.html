@@ -16,6 +16,12 @@
             <cms-form-field-text cms-title="Text"
                                  cms-model="vm.filter.text"></cms-form-field-text>
 
+            <cms-form-field-date-time-local cms-title="Created After"
+                                            cms-model="vm.filter.createdAfter"></cms-form-field-date-time-local>
+
+            <cms-form-field-date-time-local cms-title="Created Before"
+                                            cms-model="vm.filter.createdBefore"></cms-form-field-date-time-local>
+
             <cms-form-field-locale-selector cms-model="vm.filter.localeId"
                                             cms-default-item-text="Any"></cms-form-field-locale-selector>
 
@@ -42,8 +48,7 @@
 </cms-page-actions>
 
 <!--RESULTS-->
-<cms-page-body cms-content-type="form"
-               cms-sub-header="with-header">
+<cms-page-body cms-content-type="form">
 
     <cms-table-container cms-loading="vm.gridLoadState.isLoading">
 

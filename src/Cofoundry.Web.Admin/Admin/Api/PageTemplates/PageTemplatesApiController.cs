@@ -22,21 +22,21 @@ namespace Cofoundry.Web.Admin
             _apiResponseHelper = apiResponseHelper;
         }
 
-        public async Task<IActionResult> Get([FromQuery] SearchPageTemplateSummariesQuery query)
+        public async Task<JsonResult> Get([FromQuery] SearchPageTemplateSummariesQuery query)
         {
             if (query == null) query = new SearchPageTemplateSummariesQuery();
             ApiPagingHelper.SetDefaultBounds(query);
 
             var results = await _queryExecutor.ExecuteAsync(query);
-            return _apiResponseHelper.SimpleQueryResponse(this, results);
+            return _apiResponseHelper.SimpleQueryResponse(results);
         }
 
-        public async Task<IActionResult> GetById(int id)
+        public async Task<JsonResult> GetById(int id)
         {
             var query = new GetPageTemplateDetailsByIdQuery(id);
             var result = await _queryExecutor.ExecuteAsync(query);
 
-            return _apiResponseHelper.SimpleQueryResponse(this, result);
+            return _apiResponseHelper.SimpleQueryResponse(result);
         }
     }
 }

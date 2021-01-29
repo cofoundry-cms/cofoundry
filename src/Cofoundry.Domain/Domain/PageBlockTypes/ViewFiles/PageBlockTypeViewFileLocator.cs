@@ -8,7 +8,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Cofoundry.Domain
+namespace Cofoundry.Domain.Internal
 {
     /// <summary>
     /// Allows searching for view files in the website directory.
@@ -45,7 +45,7 @@ namespace Cofoundry.Domain
         /// null if it could not be found.
         /// </summary>
         /// <param name="pageBlockTypeFileName">The file name (without extension) of the page block type. E.g 'RawHtml', 'SingleLineText'</param>
-        public string GetPathByFileName(string pageBlockTypeFileName)
+        public virtual string GetPathByFileName(string pageBlockTypeFileName)
         {
             var blockLocation = GetLocationByFileName(pageBlockTypeFileName);
 
@@ -58,7 +58,7 @@ namespace Cofoundry.Domain
         /// </summary>
         /// <param name="pageBlockTypeFileName">The file name of the page block type this template is for e.g. 'SingleLineText'</param>
         /// <param name="templateFileName">The file name of the template e.g. 'H1'</param>
-        public string GetTemplatePathByTemplateFileName(string pageBlockTypeFileName, string templateFileName)
+        public virtual string GetTemplatePathByTemplateFileName(string pageBlockTypeFileName, string templateFileName)
         {
             var blockTypeLocation = GetLocationByFileName(pageBlockTypeFileName);
 
@@ -71,7 +71,7 @@ namespace Cofoundry.Domain
         /// Gets a collection of paths to template files for the specified page block type.
         /// </summary>
         /// <param name="pageBlockTypeFileName">The file name of the page block e.g. 'SingleLineText'</param>
-        public IEnumerable<string> GetAllTemplatePathsByFileName(string pageBlockTypeFileName)
+        public virtual IEnumerable<string> GetAllTemplatePathsByFileName(string pageBlockTypeFileName)
         {
             var blockTypeLocation = GetLocationByFileName(pageBlockTypeFileName);
             if (blockTypeLocation == null) return Enumerable.Empty<string>();

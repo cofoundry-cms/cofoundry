@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyModel;
+using Microsoft.Extensions.Hosting;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -31,15 +32,12 @@ namespace Cofoundry.Web
         /// A collection of additional assemblies to reference that aren't already referenced 
         /// by the IMvcBuilder AssemblyPartsProvider.
         /// </returns>
-        public IEnumerable<Assembly> DiscoverAssemblies(
+        public virtual IEnumerable<Assembly> DiscoverAssemblies(
             IMvcBuilder mvcBuilder, 
             IEnumerable<IAssemblyDiscoveryRule> rules
             )
         {
-            var environment = GetServiceFromCollection<IHostingEnvironment>(mvcBuilder.Services);
-            if (string.IsNullOrEmpty(environment?.ApplicationName)) return Enumerable.Empty<Assembly>();
-
-            var entryAssembly = Assembly.Load(new AssemblyName(environment.ApplicationName));
+            var entryAssembly = Assembly.GetEntryAssembly();
             var dependencyContext = DependencyContext.Load(entryAssembly);
             if (dependencyContext == null) return Enumerable.Empty<Assembly>();
 
@@ -78,13 +76,6 @@ namespace Cofoundry.Web
             {
                 yield return assembly;
             }
-        }
-
-        private static T GetServiceFromCollection<T>(IServiceCollection services)
-        {
-            return (T)services
-                .LastOrDefault(d => d.ServiceType == typeof(T))
-                ?.ImplementationInstance;
         }
     }
 }

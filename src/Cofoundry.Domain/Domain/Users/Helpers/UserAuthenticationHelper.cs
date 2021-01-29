@@ -7,7 +7,7 @@ using Cofoundry.Domain.Data;
 namespace Cofoundry.Domain.Internal
 {
     /// <summary>
-    /// Shared user authentication methods.
+    /// Shared user authentication methods
     /// </summary>
     public class UserAuthenticationHelper
     {

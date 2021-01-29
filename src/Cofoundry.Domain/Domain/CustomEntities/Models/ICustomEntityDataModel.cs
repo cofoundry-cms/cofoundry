@@ -12,7 +12,7 @@ namespace Cofoundry.Domain
     /// the model which influences how the fields are displayed in the
     /// editor in the admin panel.
     /// </summary>
-    public interface ICustomEntityDataModel
+    public interface ICustomEntityDataModel : IEntityDataModel
     {
     }
 }

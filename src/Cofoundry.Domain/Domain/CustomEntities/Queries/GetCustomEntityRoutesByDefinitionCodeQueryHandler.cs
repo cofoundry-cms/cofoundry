@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using Cofoundry.Core;
 using System.Reflection;
 
-namespace Cofoundry.Domain
+namespace Cofoundry.Domain.Internal
 {
     /// <summary>
     /// Gets CustomEntityRoute data for all custom entities of a 
@@ -17,7 +17,7 @@ namespace Cofoundry.Domain
     /// makes them good for quick lookups.
     /// </summary>
     public class GetCustomEntityRoutesByDefinitionCodeQueryHandler
-        : IAsyncQueryHandler<GetCustomEntityRoutesByDefinitionCodeQuery, ICollection<CustomEntityRoute>>
+        : IQueryHandler<GetCustomEntityRoutesByDefinitionCodeQuery, ICollection<CustomEntityRoute>>
         , IIgnorePermissionCheckHandler
     {
         private static readonly MethodInfo _mapAdditionalRouteDataAsyncMethod = typeof(GetCustomEntityRoutesByDefinitionCodeQueryHandler).GetMethod(nameof(MapAdditionalRouteDataAsync), BindingFlags.NonPublic | BindingFlags.Instance);

@@ -4,8 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Cofoundry.Core.DependencyInjection;
+using Cofoundry.Domain.Internal;
 
-namespace Cofoundry.Domain
+namespace Cofoundry.Domain.Registration
 {
     public class DynamicDataDependencyRegistration : IDependencyRegistration
     {
@@ -14,7 +15,10 @@ namespace Cofoundry.Domain
             container
                 .RegisterSingleton<INestedDataModelTypeRepository, NestedDataModelTypeRepository>()
                 .Register<IDynamicDataModelSchemaMapper, DynamicDataModelSchemaMapper>()
+                .Register<INestedDataModelSchemaMapper, NestedDataModelSchemaMapper>()
+                .Register<IEntityDataModelJsonConverterFactory, EntityDataModelJsonConverterFactory>()
                 .RegisterAll<INestedDataModel>()
+                .RegisterSingleton<DynamicDataModelJsonSerializerSettingsCache>();
                 ;
         }
     }

@@ -69,6 +69,7 @@
                     .then(function (modelMetaData) {
                         vm.modelMetaData = modelMetaData;
                         vm.previewFields = new ModelPreviewFieldset(modelMetaData);
+
                         vm.gridImages = new ImagePreviewFieldCollection();
 
                         vm.gridImages.load(vm.model, vm.previewFields);
@@ -109,7 +110,7 @@
                     onSave: onSave
                 });
 
-                function onSave(newEntity) {
+                function onSave(newEntity, test) {
                     vm.model = vm.model || [];
                     vm.model.push(newEntity);
 

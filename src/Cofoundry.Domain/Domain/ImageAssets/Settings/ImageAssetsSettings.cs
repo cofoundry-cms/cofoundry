@@ -39,13 +39,15 @@ namespace Cofoundry.Domain
 
         /// <summary>
         /// The maximum size in pixels of the image that can be uploaded. Defaults
-        /// to 3200.
+        /// to 3200. If uploading via the admin panel, oversized images will be resized
+        /// automatically before uploading.
         /// </summary>
         public int MaxUploadWidth { get; set; } = 3200;
 
         /// <summary>
         /// The maximum height in pixels of the image that can be uploaded. Defaults
-        /// to 3200.
+        /// to 3200. If uploading via the admin panel, oversized images will be resized
+        /// automatically before uploading.
         /// </summary>
         public int MaxUploadHeight { get; set; } = 3200;
 

@@ -22,10 +22,10 @@ namespace Cofoundry.Web.Admin
             _dashboardContentService = dashboardContentService;
         }
 
-        public async Task<IActionResult> Get()
+        public async Task<JsonResult> Get()
         {
             var result = await _dashboardContentService.GetAsync();
-            return _apiResponseHelper.SimpleQueryResponse(this, result);
+            return _apiResponseHelper.SimpleQueryResponse(result);
         }
     }
 }

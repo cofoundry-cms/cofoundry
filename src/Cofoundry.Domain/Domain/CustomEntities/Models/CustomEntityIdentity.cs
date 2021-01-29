@@ -15,6 +15,17 @@ namespace Cofoundry.Domain
     /// </summary>
     public class CustomEntityIdentity
     {
+        public CustomEntityIdentity() { }
+
+        public CustomEntityIdentity(
+            string customEntityDefinitionCode,
+            int customEnttiyId
+            )
+        {
+            CustomEntityDefinitionCode = customEntityDefinitionCode;
+            CustomEntityId = customEnttiyId;
+        }
+
         /// <summary>
         /// Unique 6 letter code representing the type of custom entity.
         /// </summary>

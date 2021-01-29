@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Cofoundry.Domain
+namespace Cofoundry.Domain.Internal
 {
     /// <summary>
     /// Simple mapper for mapping to UserDetails objects.
@@ -31,7 +31,7 @@ namespace Cofoundry.Domain
         /// db record is null then null is returned.
         /// </summary>
         /// <param name="dbUser">User record from the database.</param>
-        public UserDetails Map(User dbUser)
+        public virtual UserDetails Map(User dbUser)
         {
             if (dbUser == null) return null;
 

@@ -1,0 +1,132 @@
+// @import "compass/utilities/sprites";         // Include compass sprite helpers
+// @import "compass/css3/background-size";      // Include helper to calc background size
+// @import "compass/css3/inline-block";
+
+@import "retina";
+
+
+$retina-sprite-names     : 0;
+$retina-sprite-sprites   : 0;
+$retina-sprite-urls      : 0;
+$retina-sprite-sprites2x : 0;
+$retina-sprite-urls2x    : 0;
+
+/**
+ * A mixin to create retina sprites with hover & active states
+ *
+ * You have to register a pair of sprites using `{@link #retina-sprite-add}` and then you can use this mixin:
+ *
+ *     @include retina-sprite-add(icons, "icons/*.png", "icons-retina/*.png");
+ *
+ *     .my-icon {
+ *       @include retina-sprite(icon-name, icons);
+ *     }
+ *
+ * @param {String} $name
+ * @param {String} [$sprites-name]
+ * @param {Boolean} [$hover=false]
+ * @param {Boolean} [$active=false]
+ */
+@mixin retina-sprite($name, $sprites-name: 0, $hover: false, $active: false) {
+  // $index: 2;
+  // $len: length($retina-sprite-names);
+
+  // @for $i from $index through $len {
+  //   @if $sprites-name == nth($retina-sprite-names, $i) {
+  //     $index: $i;
+  //   }
+  // }
+
+  // $sprites       : nth($retina-sprite-sprites, $index);
+  // $sprites-url   : nth($retina-sprite-urls, $index);
+
+  // $sprites2x     : nth($retina-sprite-sprites2x, $index);
+  // $sprites-url2x : nth($retina-sprite-urls2x, $index);
+
+  // @include _retina-sprite($name, $sprites, $sprites-url, $sprites2x, $sprites-url2x, $hover, $active);
+}
+
+
+/**
+ * @param {String} $name
+ * @param {String} $path
+ * @param {String} $path2x
+ */
+@mixin retina-sprite-add($name, $path, $path2x) {
+  // $retina-sprite-spacing: 2px !default;
+
+  // $sprites   : sprite-map($path, $spacing: $retina-sprite-spacing);
+  // $sprites2x : sprite-map($path2x, $spacing: $retina-sprite-spacing);
+
+  // $retina-sprite-names     : append($retina-sprite-names, $name) !global;
+
+  // $retina-sprite-sprites   : append($retina-sprite-sprites, $sprites) !global;
+  // $retina-sprite-urls      : append($retina-sprite-urls, sprite-url($sprites)) !global;
+
+  // $retina-sprite-sprites2x : append($retina-sprite-sprites2x, $sprites2x) !global;
+  // $retina-sprite-urls2x    : append($retina-sprite-urls2x, sprite-url($sprites2x)) !global;
+}
+
+
+// The general purpose retina sprite mixin.
+//
+//    @include retina-sprite(name, $spritesmap1, $spritesmap2)
+//    @include retina-sprite(name, $spritesmap1, $spritesmap2[, $dimensions: true, $pad: 0])
+//
+//    If `dimensions` is true, then width/height will also be set.
+//
+//    if `pad` is non-zero, then that's how much padding the element will have (requires
+//    $spacing on the sprite maps). Great for iPhone interfaces to make hit areas bigger.
+//
+@mixin _retina-sprite($name, $sprites, $sprites-url, $sprites2x, $sprites-url2x, $hover, $active, $dimensions: true, $pad: 0) {
+  @include inline-block();
+
+  @if $dimensions == true {
+    @include sprite-dimensions($sprites, $name);
+  }
+  background-image: $sprites-url;
+  background-position: sprite-position($sprites, $name, -$pad, -$pad);
+  background-repeat: no-repeat;
+
+  @if $hover == true {
+    $name_hover: $name + _hover;
+    &:hover {
+      background-position: sprite-position($sprites, $name_hover, -$pad, -$pad);
+    }
+  }
+  @if $active == true {
+    $name_active: $name + _active;
+    &:active {
+      background-position: sprite-position($sprites, $name_active, -$pad, -$pad);
+    }
+  }
+
+  @if $pad > 0 {
+    padding: $pad;
+  }
+
+  @include retina {
+    $pos: sprite-position($sprites2x, $name, -$pad * 2, -$pad * 2);
+    background-image: $sprites-url2x;
+    background-position: nth($pos, 1) nth($pos, 2) / 2;
+    @include background-size(ceil(image-width(sprite-path($sprites2x)) / 2) auto);
+    //  sprite-path() returns the path of the generated sprite sheet, which
+    //  image-width() calculates the width of. the ceil() is in place in case
+    //  you have sprites that have an odd-number of pixels in width
+
+    @if $hover == true {
+      $name_hover: $name + _hover;    // create myButton_hover and assign it
+      &:hover{
+        $pos: sprite-position($sprites2x, $name_hover, -$pad * 2, -$pad * 2);
+        background-position: nth($pos, 1) nth($pos, 2) / 2;
+      }
+    }
+    @if $active == true {
+      $name_active: $name + _active;    // create myButton_active and assign it
+      &:active{
+        $pos: sprite-position($sprites2x, $name_active, -$pad * 2, -$pad * 2);
+        background-position: nth($pos, 1) nth($pos, 2) / 2;
+      }
+    }
+  }
+}

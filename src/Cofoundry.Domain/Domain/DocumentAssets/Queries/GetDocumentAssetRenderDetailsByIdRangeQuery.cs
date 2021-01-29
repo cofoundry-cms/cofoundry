@@ -7,28 +7,46 @@ using Cofoundry.Domain.CQS;
 
 namespace Cofoundry.Domain
 {
+    /// <summary>
+    /// Gets a range of document assets by their ids projected as 
+    /// DocumentAssetRenderDetails models. A DocumentAssetRenderDetails 
+    /// contains all the basic information required to render out a document
+    /// to page, including all the data needed to construct a document file 
+    /// url.
+    /// </summary>
     public class GetDocumentAssetRenderDetailsByIdRangeQuery : IQuery<IDictionary<int, DocumentAssetRenderDetails>>
     {
         public GetDocumentAssetRenderDetailsByIdRangeQuery()
         {
         }
 
+        /// <summary>
+        /// Initializes the query with parameters.
+        /// </summary>
+        /// <param name="documentAssetIds">Collection of database ids of the document assets to get.</param>
         public GetDocumentAssetRenderDetailsByIdRangeQuery(
-            IEnumerable<int> ids
+            IEnumerable<int> documentAssetIds
             )
-            : this(ids?.ToList())
+            : this(documentAssetIds?.ToList())
         {
         }
 
+        /// <summary>
+        /// Initializes the query with parameters.
+        /// </summary>
+        /// <param name="documentAssetIds">Collection of database ids of the document assets to get.</param>
         public GetDocumentAssetRenderDetailsByIdRangeQuery(
-            IReadOnlyCollection<int> ids
+            IReadOnlyCollection<int> documentAssetIds
             )
         {
-            if (ids == null) throw new ArgumentNullException(nameof(ids));
+            if (documentAssetIds == null) throw new ArgumentNullException(nameof(documentAssetIds));
 
-            DocumentAssetIds = ids;
+            DocumentAssetIds = documentAssetIds;
         }
 
+        /// <summary>
+        /// Collection of database ids of the document assets to get.
+        /// </summary>
         [Required]
         public IReadOnlyCollection<int> DocumentAssetIds { get; set; }
     }

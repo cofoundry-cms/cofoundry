@@ -2,7 +2,7 @@
     <cms-field>
         <label class="control-label" for="{{vm.modelName}}">{{vm.title}}:</label>
         <div class="controls">
-            <input ng-show="vm.formScope.editMode"
+            <input ng-show="vm.formScope.editMode && !vm.readonly"
                    type="text"
                    ng-model="vm.model"
                    ng-change="vm.onChange()"
@@ -10,10 +10,10 @@
                    name="{{vm.modelName}}"
                    cms-tags-input />
 
-            <span ng-if="!vm.formScope.editMode">
+            <span ng-if="!vm.formScope.editMode || vm.readonly">
                 <cms-tag-list cms-tags="vm.model"></cms-tag-list>
             </span>
-            <div ng-hide="vm.formScope.editMode" ng-if="!vm.model.length" class="text-block-display-value">None</div>
+            <div ng-hide="vm.formScope.editMode || vm.readonly" ng-if="!vm.model.length" class="text-block-display-value">None</div>
             <cms-form-field-validation-summary></cms-form-field-validation-summary>
         </div>
     </cms-field>

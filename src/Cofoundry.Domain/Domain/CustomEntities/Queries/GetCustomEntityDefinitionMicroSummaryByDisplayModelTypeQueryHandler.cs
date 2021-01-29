@@ -5,10 +5,15 @@ using System.Threading.Tasks;
 using Cofoundry.Domain.CQS;
 using System.Reflection;
 
-namespace Cofoundry.Domain
+namespace Cofoundry.Domain.Internal
 {
+    /// <summary>
+    /// Query to get a custom entity definition by display model type definition.
+    /// The returned object is a lightweight projection of the data defined in a custom entity 
+    /// definition class and is typically used as part of another domain model.
+    /// </summary>
     public class GetCustomEntityDefinitionMicroSummaryByDisplayModelTypeQueryHandler 
-        : IAsyncQueryHandler<GetCustomEntityDefinitionMicroSummaryByDisplayModelTypeQuery, CustomEntityDefinitionMicroSummary>
+        : IQueryHandler<GetCustomEntityDefinitionMicroSummaryByDisplayModelTypeQuery, CustomEntityDefinitionMicroSummary>
         , IIgnorePermissionCheckHandler
     {
         #region constructor
@@ -43,9 +48,20 @@ namespace Cofoundry.Domain
 
             var allDefinitions = await _queryExecutor.ExecuteAsync(new GetAllCustomEntityDefinitionSummariesQuery(), executionContext);
 
-            var definition = allDefinitions.FirstOrDefault(d => d.DataModelType == dataModelType);
+            var definitions = allDefinitions
+                .Where(d => d.DataModelType == dataModelType)
+                .ToList();
 
-            var microSummary = _customEntityDefinitionMicroSummaryMapper.Map(definition);
+            if (!definitions.Any())
+            {
+                return null;
+            }
+            else if (definitions.Count > 1)
+            {
+                throw new Exception($"{nameof(ICustomEntityDataModel)} implementations cannot be used on multiple custom entity definitions.");
+            }
+
+            var microSummary = _customEntityDefinitionMicroSummaryMapper.Map(definitions.First());
 
             return microSummary;
         }

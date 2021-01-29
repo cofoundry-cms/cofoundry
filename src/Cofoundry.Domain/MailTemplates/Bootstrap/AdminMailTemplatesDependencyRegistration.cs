@@ -1,10 +1,11 @@
 ﻿using Cofoundry.Core.DependencyInjection;
+using Cofoundry.Domain.MailTemplates;
 using Cofoundry.Domain.MailTemplates.AdminMailTemplates;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Cofoundry.Domain.MailTemplates
+namespace Cofoundry.Domain.Registration
 {
     public class AdminMailTemplatesDependencyRegistration : IDependencyRegistration
     {

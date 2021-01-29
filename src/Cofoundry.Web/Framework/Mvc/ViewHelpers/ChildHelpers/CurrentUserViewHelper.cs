@@ -45,7 +45,7 @@ namespace Cofoundry.Web
             {
                 var userContext = await _userContextServiceService.GetCurrentContextAsync();
                 _helperContext = await GetHelperContextAsync(userContext);
-                }
+            }
 
             return _helperContext;
         }

@@ -5,12 +5,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Cofoundry.Domain
+namespace Cofoundry.Domain.Internal
 {
     public class SettingCache : ISettingCache
     {
-        #region constructor
-
         private const string CACHEKEY = "COF_Settings";
         private const string SETTING_TABLE_KEY = "SettingTable";
 
@@ -19,10 +17,6 @@ namespace Cofoundry.Domain
         {
             _cache = cacheFactory.Get(CACHEKEY);
         }
-
-        #endregion
-
-        #region public methods
 
         public Dictionary<string, string> GetOrAddSettingsTable(Func<Dictionary<string, string>> getter)
         {
@@ -38,7 +32,5 @@ namespace Cofoundry.Domain
         {
             _cache.Clear();
         }
-
-        #endregion
     }
 }

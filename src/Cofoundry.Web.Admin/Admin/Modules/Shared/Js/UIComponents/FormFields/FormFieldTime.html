@@ -1,0 +1,21 @@
+﻿<div class="control-group">
+    <cms-field>
+        <label class="control-label" for="{{vm.modelName}}">{{vm.title}}:</label>
+        <div class="controls">
+            <input id="{{vm.modelName}}"
+                   name="{{vm.modelName}}"
+                   ng-show="vm.formScope.editMode && !vm.readonly"
+                   ng-model="vm.editorModel"
+                   ng-disabled="vm.disabled"
+                   ng-change="vm.onChange()"
+                   type="time"
+                   ng-model-options="{timezone: 'utc'}"/>
+            <div ng-hide="vm.formScope.editMode && !vm.readonly" ng-if="!vm.model" class="text-block-display-value">None</div>
+            <div ng-hide="vm.formScope.editMode && !vm.readonly" ng-if="vm.model" class="text-block-display-value">{{vm.model | time}}</div>
+            <cms-form-field-validation-summary></cms-form-field-validation-summary>
+        </div>
+    </cms-field>
+    <p class="help-inline" ng-if="vm.description">
+        <small>{{vm.description}}</small>
+    </p>
+</div>

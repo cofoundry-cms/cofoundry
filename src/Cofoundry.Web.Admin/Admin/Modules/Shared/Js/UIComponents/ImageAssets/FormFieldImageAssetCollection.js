@@ -29,7 +29,8 @@ function (
     var config = {
         templateUrl: modulePath + 'UIComponents/ImageAssets/FormFieldImageAssetCollection.html',
         passThroughAttributes: [
-            'required'
+            'required',
+            'ngRequired'
         ],
         link: link
     };
@@ -39,8 +40,7 @@ function (
     /* LINK */
 
     function link(scope, el, attributes, controllers) {
-        var vm = scope.vm,
-            isRequired = _.has(attributes, 'required');
+        var vm = scope.vm;
 
         init();
         return baseConfig.link(scope, el, attributes, controllers);
@@ -108,21 +108,23 @@ function (
         /* HELPERS */
 
         function getFilter() {
-            var filter = {};
+            var filter = {},
+                attributePrefix = 'cms';
 
-            setAttribute('Width');
-            setAttribute('Height');
-            setAttribute('MinWidth');
-            setAttribute('MinHeight');
+            setAttribute('Tags');
+            setAttribute('Width', true);
+            setAttribute('Height', true);
+            setAttribute('MinWidth', true);
+            setAttribute('MinHeight', true);
 
             return filter;
 
-            function setAttribute(filterName) {
-                var value = attributes['cms' + filterName];
+            function setAttribute(filterName, isInt) {
+                var value = attributes[attributePrefix + filterName];
 
                 if (value) {
                     filterName = stringUtilities.lowerCaseFirstWord(filterName);
-                    filter[filterName] = parseInt(value);
+                    filter[filterName] = isInt ? parseInt(value) : value;
                 }
             }
         }

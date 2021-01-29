@@ -10,13 +10,13 @@ using Cofoundry.Core;
 using Cofoundry.Core.Data;
 using Cofoundry.Domain.Data;
 
-namespace Cofoundry.Domain
+namespace Cofoundry.Domain.Internal
 {
     /// <summary>
     /// Adds a user to the Cofoundry user area and sends a welcome notification.
     /// </summary>
     public class AddUserWithTemporaryPasswordCommandHandler
-        : IAsyncCommandHandler<AddUserWithTemporaryPasswordCommand>
+        : ICommandHandler<AddUserWithTemporaryPasswordCommand>
         , IPermissionRestrictedCommandHandler<AddUserWithTemporaryPasswordCommand>
     {
         #region constructor

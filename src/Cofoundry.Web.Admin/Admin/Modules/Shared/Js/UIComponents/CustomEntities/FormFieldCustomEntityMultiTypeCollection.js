@@ -24,7 +24,7 @@ function (
     var CUSTOM_ENTITY_ID_PROP = 'customEntityId',
         CUSTOM_ENTITY_DEFINITION_CODE_PROP = 'customEntityDefinitionCode',
         PREVIEW_DESCRIPTION_FIELD_NAME = 'previewDescription',
-        PREVIEW_IMAGE_FIELD_NAME = 'previewImage'
+        PREVIEW_IMAGE_FIELD_NAME = 'previewImage',
         baseConfig = baseFormFieldFactory.defaultConfig;
 
     /* CONFIG */
@@ -34,7 +34,11 @@ function (
         scope: _.extend(baseConfig.scope, {
             customEntityDefinitionCodes: '@cmsCustomEntityDefinitionCodes',
             localeId: '=cmsLocaleId',
-            orderable: '=cmsOrderable'
+            orderable: '=cmsOrderable',
+            titleColumnHeader: '@cmsTitleColumnHeader',
+            descriptionColumnHeader: '@cmsDescriptionColumnHeader',
+            imageColumnHeader: '@cmsImageColumnHeader',
+            typeColumnHeader: '@cmsTypeColumnHeader'
         }),
         require: _.union(baseConfig.require, ['?^^cmsFormDynamicFieldSet']),
         passThroughAttributes: [
@@ -89,6 +93,21 @@ function (
                 .then(loadMetaData);
 
             scope.$watch("vm.model", setGridItems);
+            initDisplayFields();
+        }
+
+        function initDisplayFields() {
+            if (vm.titleColumnHeader === undefined) {
+                vm.titleColumnHeader = "Title";
+            }
+
+            if (vm.descriptionColumnHeader === undefined) {
+                vm.descriptionColumnHeader = "Description";
+            }
+
+            if (vm.typeColumnHeader === undefined) {
+                vm.typeColumnHeader = "Type";
+            }
         }
 
         /* EVENTS */
@@ -142,7 +161,7 @@ function (
                 }
 
                 // Add new items to the end of the list
-                for (var i = 0; i < newEntityArr.length; i++) {
+                for (i = 0; i < newEntityArr.length; i++) {
                     vm.model.push({
                         customEntityId: newEntityArr[i],
                         customEntityDefinitionCode: definition[CUSTOM_ENTITY_DEFINITION_CODE_PROP]

@@ -25,64 +25,59 @@ namespace Cofoundry.Web.Admin
 
         #region queries
 
-        public async Task<IActionResult> Get([FromQuery] SearchCustomEntitySummariesQuery query, [FromQuery] GetCustomEntitySummariesByIdRangeQuery rangeQuery)
+        public async Task<JsonResult> Get([FromQuery] SearchCustomEntitySummariesQuery query, [FromQuery] GetCustomEntitySummariesByIdRangeQuery rangeQuery)
         {
             if (rangeQuery != null && rangeQuery.CustomEntityIds != null)
             {
                 var rangeResults = await _queryExecutor.ExecuteAsync(rangeQuery);
-                return _apiResponseHelper.SimpleQueryResponse(this, rangeResults.FilterAndOrderByKeys(rangeQuery.CustomEntityIds));
+                return _apiResponseHelper.SimpleQueryResponse(rangeResults.FilterAndOrderByKeys(rangeQuery.CustomEntityIds));
             }
 
             if (query == null) query = new SearchCustomEntitySummariesQuery();
             ApiPagingHelper.SetDefaultBounds(query);
 
             var results = await _queryExecutor.ExecuteAsync(query);
-            return _apiResponseHelper.SimpleQueryResponse(this, results);
+            return _apiResponseHelper.SimpleQueryResponse(results);
         }
 
-        public async Task<IActionResult> GetById(int customEntityId)
+        public async Task<JsonResult> GetById(int customEntityId)
         {
             var query = new GetCustomEntityDetailsByIdQuery(customEntityId);
             var result = await _queryExecutor.ExecuteAsync(query);
 
-            return _apiResponseHelper.SimpleQueryResponse(this, result);
+            return _apiResponseHelper.SimpleQueryResponse(result);
         }
 
         #endregion
 
         #region commands
 
-        [HttpPost]
-        public async Task<IActionResult> Post([ModelBinder(BinderType = typeof(CustomEntityDataModelCommandModelBinder))] AddCustomEntityCommand command)
+        public Task<JsonResult> Post([ModelBinder(BinderType = typeof(CustomEntityDataModelCommandModelBinder))] AddCustomEntityCommand command)
         {
-            return await _apiResponseHelper.RunCommandAsync(this, command);
+            return _apiResponseHelper.RunCommandAsync(command);
         }
 
-        [HttpPut]
-        public async Task<IActionResult> PutOrdering([FromBody] ReOrderCustomEntitiesCommand command)
+        public Task<JsonResult> PutOrdering([FromBody] ReOrderCustomEntitiesCommand command)
         {
-            return await _apiResponseHelper.RunCommandAsync(this, command);
+            return _apiResponseHelper.RunCommandAsync(command);
         }
 
-        [HttpPut]
-        public async Task<IActionResult> PutCustomEntityUrl(int customEntityId, [FromBody] UpdateCustomEntityUrlCommand command)
+        public Task<JsonResult> PutCustomEntityUrl(int customEntityId, [FromBody] UpdateCustomEntityUrlCommand command)
         {
-            return await _apiResponseHelper.RunCommandAsync(this, command);
+            return _apiResponseHelper.RunCommandAsync(command);
         }
 
-        [HttpDelete]
-        public async Task<IActionResult> Delete(int customEntityId)
+        public Task<JsonResult> Delete(int customEntityId)
         {
             var command = new DeleteCustomEntityCommand();
             command.CustomEntityId = customEntityId;
 
-            return await _apiResponseHelper.RunCommandAsync(this, command);
+            return _apiResponseHelper.RunCommandAsync(command);
         }
 
-        [HttpPost]
-        public async Task<IActionResult> PostDuplicate([FromBody] DuplicateCustomEntityCommand command)
+        public Task<JsonResult> PostDuplicate([FromBody] DuplicateCustomEntityCommand command)
         {
-            return await _apiResponseHelper.RunCommandAsync(this, command);
+            return _apiResponseHelper.RunCommandAsync(command);
         }
 
         #endregion

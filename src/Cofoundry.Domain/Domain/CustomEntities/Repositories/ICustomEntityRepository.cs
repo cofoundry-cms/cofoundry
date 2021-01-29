@@ -9,6 +9,7 @@ namespace Cofoundry.Domain
     /// Simple facade over custom entity data access queries/commands to them more discoverable
     /// in implementations.
     /// </summary>
+    [Obsolete("Use the new IContentRepository instead.")]
     public interface ICustomEntityRepository
     {
         #region queries
@@ -93,7 +94,7 @@ namespace Cofoundry.Domain
 
         Task<PagedQueryResult<CustomEntityVersionSummary>> GetCustomEntityVersionSummariesByCustomEntityIdAsync(GetCustomEntityVersionSummariesByCustomEntityIdQuery query, IExecutionContext executionContext = null);
 
-        Task<bool> IsCustomEntityPathUniqueAsync(IsCustomEntityPathUniqueQuery query, IExecutionContext executionContext = null);
+        Task<bool> IsCustomEntityPathUniqueAsync(IsCustomEntityUrlSlugUniqueQuery query, IExecutionContext executionContext = null);
 
         Task<PagedQueryResult<CustomEntitySummary>> SearchCustomEntitySummariesAsync(SearchCustomEntitySummariesQuery query, IExecutionContext executionContext = null);
 

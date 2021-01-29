@@ -8,7 +8,7 @@ namespace Cofoundry.Web.Admin
     [Area(RouteConstants.AdminAreaName)]
     [AdminAuthorize]
     [AutoValidateAntiforgeryToken]
-    public class BaseAdminApiController : Controller
+    public class BaseAdminApiController : ControllerBase
     {
     }
 }

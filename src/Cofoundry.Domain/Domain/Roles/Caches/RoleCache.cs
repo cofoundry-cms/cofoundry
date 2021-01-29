@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Cofoundry.Domain
+namespace Cofoundry.Domain.Internal
 {
     /// <summary>
     /// Cache for role data, which is frequently accessed when
@@ -14,8 +14,6 @@ namespace Cofoundry.Domain
     /// </summary>
     public class RoleCache : IRoleCache
     {
-        #region constructor
-
         private const string ROLE_CODE_LOOKUP_CACHEKEY = "RoleCodes";
         private const string ROLE_DETAILS_CACHEKEY = "RoleDetails";
         private const string ANON_ROLE_CACHEKEY = "AnonymousRole";
@@ -27,10 +25,6 @@ namespace Cofoundry.Domain
         {
             _cache = cacheFactory.Get(CACHEKEY);
         }
-
-        #endregion
-
-        #region public methods
 
         /// <summary>
         /// Gets a dictionary used to lookup role ids from role codes. This is used
@@ -106,7 +100,5 @@ namespace Cofoundry.Domain
             }
             _cache.Clear(ROLE_DETAILS_CACHEKEY + roleId);
         }
-
-        #endregion
     }
 }

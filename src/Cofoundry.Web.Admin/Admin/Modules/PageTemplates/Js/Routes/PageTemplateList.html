@@ -23,7 +23,7 @@
 </cms-page-sub-header>
 
 <!-- Default toolbar -->
-<cms-page-actions ng-show="!vm.editMode">
+<cms-page-actions ng-show="vm.result.pageCount > 1">
 
     <!--RESULTS-->
     <cms-pager cms-result="vm.result"
@@ -32,7 +32,8 @@
 </cms-page-actions>
 
 <!-- Scrollable content area -->
-<cms-page-body cms-content-type="form">
+<cms-page-body cms-content-type="form"
+               cms-has-actions="vm.result.pageCount > 1">
 
     <cms-table-container cms-loading="vm.gridLoadState.isLoading">
         <table>

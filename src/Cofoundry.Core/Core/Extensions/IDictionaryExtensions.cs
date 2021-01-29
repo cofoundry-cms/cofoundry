@@ -78,7 +78,11 @@ namespace Cofoundry.Core
         /// them.
         /// </summary>
         /// <param name="source">The dictionary to filter</param>
-        /// <param name="orderedKeys">Ordered keys to lookup values for</param>
+        /// <param name="orderedKeys">
+        /// A collection of dictionary keys in the order that you would like the results
+        /// return in. Duplicate items may be returned if the orderedKeys collection 
+        /// contains duplicates.
+        /// </param>
         public static IEnumerable<TValue> FilterAndOrderByKeys<TKey, TValue>(this IDictionary<TKey, TValue> source, IEnumerable<TKey> orderedKeys)
         {
             if (orderedKeys == null) yield break;

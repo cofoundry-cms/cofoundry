@@ -17,7 +17,7 @@ namespace Cofoundry.BasicTestSite
         public string HtmlText { get; set; }
 
         [Display(Description = "Image to display alongside the text")]
-        [Image(MinWidth = 400, MinHeight = 400)]
+        [Image(MinWidth = 1000, MinHeight = 1000)]
         public int ImageAssetId { get; set; }
     }
 }

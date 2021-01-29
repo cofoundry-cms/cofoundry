@@ -5,10 +5,15 @@ using System.Text;
 using System.Threading.Tasks;
 using Cofoundry.Domain.CQS;
 
-namespace Cofoundry.Domain
+namespace Cofoundry.Domain.Internal
 {
+    /// <summary>
+    /// Looks up a route for a custom entity page using either the 
+    /// CustomEntityId or UrlSlug property. These route objects are 
+    /// cached in order to make routing lookups speedy.
+    /// </summary>
     public class GetCustomEntityRouteByPathQueryHandler 
-        : IAsyncQueryHandler<GetCustomEntityRouteByPathQuery, CustomEntityRoute>
+        : IQueryHandler<GetCustomEntityRouteByPathQuery, CustomEntityRoute>
         , IIgnorePermissionCheckHandler
     {
         #region constructor

@@ -2,7 +2,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
-using Newtonsoft.Json;
 using Cofoundry.Domain.CQS;
 using System.Runtime.Serialization;
 
@@ -28,7 +27,8 @@ namespace Cofoundry.Domain
         [StringLength(300, MinimumLength = 8)]
         [DataType(DataType.Password)]
         [IgnoreDataMember]
-        [JsonIgnore]
+        [Newtonsoft.Json.JsonIgnore]
+        [System.Text.Json.Serialization.JsonIgnore]
         public string NewPassword { get; set; }
 
         /// <summary>

@@ -8,7 +8,6 @@ using Cofoundry.Domain.Data;
 using Cofoundry.Core.Data;
 using Cofoundry.Core;
 using Cofoundry.Core.Web;
-using Cofoundry.Core.Validation;
 
 namespace Cofoundry.Domain
 {
@@ -46,7 +45,6 @@ namespace Cofoundry.Domain
             documentAsset.FileNameOnDisk = "file-not-saved";
 
             _assetFileTypeValidator.ValidateAndThrow(documentAsset.FileExtension, documentAsset.ContentType, "File");
-            ValidateFileType(documentAsset);
 
             var fileStamp = AssetFileStampHelper.ToFileStamp(documentAsset.FileUpdateDate);
 
@@ -54,7 +52,7 @@ namespace Cofoundry.Domain
             {
                 bool isNew = documentAsset.DocumentAssetId < 1;
 
-                documentAsset.FileSizeInBytes = Convert.ToInt32(inputSteam.Length);
+                documentAsset.FileSizeInBytes = inputSteam.Length;
 
                 using (var scope = _transactionScopeFactory.Create(_dbContext))
                 {
@@ -76,21 +74,6 @@ namespace Cofoundry.Domain
 
                     await scope.CompleteAsync();
                 }
-            }
-        }
-        
-        private void ValidateFileType(DocumentAsset file)
-        {
-            // TODO: this i think should be wrapped in a IAssetFileValidator service
-            // Asset file settings to disable checking
-            // configurable blacklist or whitelist? 
-            if (DangerousFileConstants.DangerousFileExtensions.Contains(file.FileExtension))
-            {
-                throw new PropertyValidationException("The type of file you're trying to upload isn't allowed.", "File");
-            }
-            else if (string.IsNullOrWhiteSpace(file.ContentType) || DangerousFileConstants.DangerousMimeTypes.Contains(file.ContentType))
-            {
-                throw new PropertyValidationException("The type of file you're trying to upload isn't allowed.", "File");
             }
         }
 

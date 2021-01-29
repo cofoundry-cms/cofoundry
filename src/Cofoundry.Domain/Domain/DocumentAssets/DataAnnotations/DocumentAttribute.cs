@@ -67,12 +67,14 @@ namespace Cofoundry.Domain
         #region properties
 
         /// <summary>
-        /// Restrict the input to allow only documents with these file extensions
+        /// Filters the document selection to only show documents with these 
+        /// file extensions.
         /// </summary>
         public string[] FileExtensions { get; set; }
 
         /// <summary>
-        /// Restrict the input to allow documents with only these tags
+        /// Filters the document selection to only show documents with tags that 
+        /// match this value.
         /// </summary>
         public string[] Tags { get; private set; }
 

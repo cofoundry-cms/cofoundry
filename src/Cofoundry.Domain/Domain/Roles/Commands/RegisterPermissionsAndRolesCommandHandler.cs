@@ -11,14 +11,14 @@ using System.Text;
 using System.Threading.Tasks;
 using Cofoundry.Core.Data;
 
-namespace Cofoundry.Domain
+namespace Cofoundry.Domain.Internal
 {
     /// <summary>
     /// Registers new roles and permissions defined in code and initializes
     /// permissions when an IRoleInitializer has been implemented.
     /// </summary>
     public class RegisterPermissionsAndRolesCommandHandler
-        : IAsyncCommandHandler<RegisterPermissionsAndRolesCommand>
+        : ICommandHandler<RegisterPermissionsAndRolesCommand>
         , IPermissionRestrictedCommandHandler<RegisterPermissionsAndRolesCommand>
     {
         #region constructor
@@ -318,17 +318,17 @@ namespace Cofoundry.Domain
         {
             if (string.IsNullOrWhiteSpace(roleDefinition.Title))
             {
-                throw new PropertyValidationException("Role title cannot be empty", nameof(IRoleDefinition.Title));
+                throw ValidationErrorException.CreateWithProperties("Role title cannot be empty", nameof(IRoleDefinition.Title));
             }
 
             if (string.IsNullOrWhiteSpace(roleDefinition.RoleCode))
             {
-                throw new PropertyValidationException("Role RoleCode cannot be empty", nameof(IRoleDefinition.RoleCode));
+                throw ValidationErrorException.CreateWithProperties("Role RoleCode cannot be empty", nameof(IRoleDefinition.RoleCode));
             }
 
             if (roleDefinition.RoleCode.Length != 3)
             {
-                throw new PropertyValidationException("Role RoleCode must be 3 characters in length", nameof(IRoleDefinition.RoleCode));
+                throw ValidationErrorException.CreateWithProperties("Role RoleCode must be 3 characters in length", nameof(IRoleDefinition.RoleCode));
             }
             if (existingRoles
                     .Any(r =>

@@ -9,12 +9,16 @@ using Microsoft.EntityFrameworkCore;
 using Cofoundry.Core;
 using Cofoundry.Core.Data;
 using Cofoundry.Core.MessageAggregator;
-using System.IO;
 
-namespace Cofoundry.Domain
+namespace Cofoundry.Domain.Internal
 {
+    /// <summary>
+    /// Updates the properties of an existing image asset. Updating
+    /// the file is optional, but if you do then existing links to the
+    /// asset file will redirect to the new asset file.
+    /// </summary>
     public class UpdateImageAssetCommandHandler 
-        : IAsyncCommandHandler<UpdateImageAssetCommand>
+        : ICommandHandler<UpdateImageAssetCommand>
         , IPermissionRestrictedCommandHandler<UpdateImageAssetCommand>
     {
         #region constructor

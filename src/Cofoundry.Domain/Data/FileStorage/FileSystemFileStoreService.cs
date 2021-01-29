@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Cofoundry.Domain.Data
+namespace Cofoundry.Domain.Data.Internal
 {
     /// <summary>
     /// File storage abstraction using the file system

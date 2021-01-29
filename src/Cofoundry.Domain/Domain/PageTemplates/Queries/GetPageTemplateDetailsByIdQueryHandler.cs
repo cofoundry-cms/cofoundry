@@ -7,10 +7,10 @@ using Cofoundry.Domain.CQS;
 using Microsoft.EntityFrameworkCore;
 using Cofoundry.Domain.QueryModels;
 
-namespace Cofoundry.Domain
+namespace Cofoundry.Domain.Internal
 {
     public class GetPageTemplateDetailsByIdQueryHandler 
-        : IAsyncQueryHandler<GetPageTemplateDetailsByIdQuery, PageTemplateDetails>
+        : IQueryHandler<GetPageTemplateDetailsByIdQuery, PageTemplateDetails>
         , IPermissionRestrictedQueryHandler<GetPageTemplateDetailsByIdQuery, PageTemplateDetails>
     {
         #region constructor
@@ -55,7 +55,8 @@ namespace Cofoundry.Domain
                 .PageVersions
                 .AsNoTracking()
                 .Where(v => v.PageTemplateId == query.PageTemplateId)
-                .GroupBy(v => v.PageId)
+                .Select(v => v.Page)
+                .Distinct()
                 .CountAsync();
 
             var template = _pageTemplateDetailsMapper.Map(queryModel);

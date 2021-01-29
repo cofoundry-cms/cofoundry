@@ -1,0 +1,24 @@
+﻿<div class="control-group">
+    <cms-field>
+        <label class="control-label" for="{{vm.modelName}}">{{vm.title}}:</label>
+        <div class="controls">
+            <input id="{{vm.modelName}}"
+                   name="{{vm.modelName}}"
+                   cms-model-as-date
+                   ng-show="vm.formScope.editMode && !vm.readonly"
+                   ng-model="vm.model"
+                   ng-disabled="vm.disabled"
+                   ng-change="vm.onChange()"
+                   min="{{vm.minLocal}}"
+                   max="{{vm.maxLocal}}"
+                   type="datetime-local" />
+
+            <div ng-hide="vm.formScope.editMode && !vm.readonly" ng-if="!vm.model" class="text-block-display-value">None</div>
+            <div ng-hide="vm.formScope.editMode && !vm.readonly" ng-if="vm.model" class="text-block-display-value">{{vm.model | date : 'longDate'}} at {{vm.model | date : 'HH:mm'}}</div>
+            <cms-form-field-validation-summary></cms-form-field-validation-summary>
+        </div>
+    </cms-field>
+    <p class="help-inline" ng-if="vm.description">
+        <small>{{vm.description}}</small>
+    </p>
+</div>

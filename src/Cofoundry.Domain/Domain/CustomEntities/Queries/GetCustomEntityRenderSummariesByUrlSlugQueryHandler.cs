@@ -8,10 +8,15 @@ using Cofoundry.Domain.CQS;
 using Microsoft.EntityFrameworkCore;
 using Cofoundry.Core;
 
-namespace Cofoundry.Domain
+namespace Cofoundry.Domain.Internal
 {
+    /// <summary>
+    /// Returns custom entities filtered on the url slug value. This query
+    /// can return multiple custom entities because unique url slugs are an
+    /// optional setting on the custom entity definition.
+    /// </summary>
     public class GetCustomEntityRenderSummariesByUrlSlugQueryHandler
-        : IAsyncQueryHandler<GetCustomEntityRenderSummariesByUrlSlugQuery, ICollection<CustomEntityRenderSummary>>
+        : IQueryHandler<GetCustomEntityRenderSummariesByUrlSlugQuery, ICollection<CustomEntityRenderSummary>>
         , IPermissionRestrictedQueryHandler<GetCustomEntityRenderSummariesByUrlSlugQuery, ICollection<CustomEntityRenderSummary>>
     {
         #region constructor
@@ -39,12 +44,13 @@ namespace Cofoundry.Domain
             var dbResult = await _dbContext
                 .CustomEntityPublishStatusQueries
                 .AsNoTracking()
+                .Include(e => e.CustomEntityVersion)
+                .ThenInclude(e => e.CustomEntity)
                 .FilterActive()
                 .FilterByCustomEntityDefinitionCode(query.CustomEntityDefinitionCode)
                 .FilterByCustomEntityUrlSlug(query.UrlSlug)
                 .FilterByStatus(query.PublishStatus, executionContext.ExecutionDate)
                 .Select(e => e.CustomEntityVersion)
-                .Include(e => e.CustomEntity)
                 .ToListAsync();
 
             if (!dbResult.Any()) return Array.Empty<CustomEntityRenderSummary>();

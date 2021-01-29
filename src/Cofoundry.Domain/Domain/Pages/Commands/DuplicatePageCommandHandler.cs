@@ -8,11 +8,12 @@ using Cofoundry.Domain.CQS;
 using Microsoft.EntityFrameworkCore;
 using Cofoundry.Core;
 using Cofoundry.Core.Data;
+using Cofoundry.Domain.Data.Internal;
 
-namespace Cofoundry.Domain
+namespace Cofoundry.Domain.Internal
 {
     public class DuplicatePageCommandHandler 
-        : IAsyncCommandHandler<DuplicatePageCommand>
+        : ICommandHandler<DuplicatePageCommand>
         , IPermissionRestrictedCommandHandler<DuplicatePageCommand>
     {
         #region constructor

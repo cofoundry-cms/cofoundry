@@ -15,6 +15,7 @@ namespace Cofoundry.Plugins.Imaging.ImageSharp
             container
                 .Register<IImageAssetFileService, ImageSharpImageAssetFileService>(overrideOptions)
                 .Register<IResizedImageAssetFileService, ImageSharpResizedImageAssetFileService>(overrideOptions)
+                .Register<IImageSharpInitializer, DefaultImageSharpInitializer>()
                 ;
         }
     }

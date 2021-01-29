@@ -74,10 +74,6 @@
 
         tr {
             background-color:#fff;
-            -webkit-user-select: none;
-            -moz-user-select: none;
-            -khtml-user-select: none;
-            -ms-user-select: none;
 
             &:nth-child(odd) {
                 //background-color:#f8f8f8;
@@ -103,43 +99,6 @@
                 .row-type {
                     width:52px;
                     position:relative;
-                }
-
-                .row-type-folder {
-                    @extend %row-type;
-                    @include border-top-left-radius(2px);
-                    @include border-bottom-left-radius(2px);
-                    background-color:$color-primary;
-                    display:block;
-                
-                    i {
-                        @include retina-sprite(icon-folder);
-                        margin-left:-(sprite-width(icon-folder)/2);
-                        margin-top:-(sprite-height(icon-folder)/2);
-                    }
-                }
-
-                .row-type-doc {
-                    @extend %row-type;
-                    @include border-top-left-radius(2px);
-                    @include border-bottom-left-radius(2px);
-                    display:block;
-                
-                    i {
-                        @include retina-sprite(icon-doc);
-                        margin-left:-(sprite-width(icon-doc)/2);
-                        margin-top:-(sprite-height(icon-doc)/2);
-                    }
-                }
-
-                .action-edit {
-                    @extend %action;
-                    @include retina-sprite(icon-action-edit);
-                }
-
-                .action-open {
-                    @extend %action;
-                    @include retina-sprite(icon-action-open);
                 }
 
                 &.actions {

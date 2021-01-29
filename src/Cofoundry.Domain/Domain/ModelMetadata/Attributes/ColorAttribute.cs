@@ -9,8 +9,8 @@ using Microsoft.AspNetCore.Mvc.ModelBinding.Metadata;
 namespace Cofoundry.Domain
 {
     /// <summary>
-    /// Use this to decorate a string field and provide a UI hint to the admin interface 
-    /// to display a color picker field and validates a hexidecimal color value
+    /// Use this to decorate a string property and provide a UI hint to the admin interface 
+    /// to display a color picker field and validate a hexadecimal color value
     /// </summary>
     [AttributeUsage(AttributeTargets.Property)]
     public class ColorAttribute : RegularExpressionAttribute, IMetadataAttribute

@@ -6,13 +6,13 @@ using Cofoundry.Domain.CQS;
 using Cofoundry.Domain.Data;
 using Microsoft.EntityFrameworkCore;
 
-namespace Cofoundry.Domain
+namespace Cofoundry.Domain.Internal
 {
     /// <summary>
     /// Seaches users based on simple filter criteria and returns a paged result. 
     /// </summary>
     public class SearchUserSummariesQueryHandler 
-        : IAsyncQueryHandler<SearchUserSummariesQuery, PagedQueryResult<UserSummary>>
+        : IQueryHandler<SearchUserSummariesQuery, PagedQueryResult<UserSummary>>
         , IPermissionRestrictedQueryHandler<SearchUserSummariesQuery, PagedQueryResult<UserSummary>>
     {
         #region constructor

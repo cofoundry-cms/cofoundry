@@ -3,14 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Cofoundry.Domain.Data;
 using Cofoundry.Domain.CQS;
-using Cofoundry.Core;
 
-namespace Cofoundry.Domain
+namespace Cofoundry.Domain.Internal
 {
     public class GetInternalSettingsQueryHandler 
-        : IAsyncQueryHandler<GetSettingsQuery<InternalSettings>, InternalSettings>
+        : IQueryHandler<GetSettingsQuery<InternalSettings>, InternalSettings>
         , IIgnorePermissionCheckHandler
     {
         #region constructor

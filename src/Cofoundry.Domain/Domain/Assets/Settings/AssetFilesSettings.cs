@@ -16,25 +16,25 @@ namespace Cofoundry.Domain
         /// <summary>
         /// Indicates the type of validation to perform against a file
         /// extension and is used in combination with the values in the 
-        /// FileExtensionValidationList setting. The default is UseBlacklist,
-        /// and other options are UseWhitelist or Disable.
+        /// FileExtensionValidationList setting. The default is UseBlocklist,
+        /// and other options are UseAllowlist or Disable.
         /// </summary>
-        public AssetFileTypeValidation FileExtensionValidation { get; set; } = AssetFileTypeValidation.UseBlacklist;
+        public AssetFileTypeValidation FileExtensionValidation { get; set; } = AssetFileTypeValidation.UseBlockList;
 
         /// <summary>
         /// Indicates the type of validation to perform against a mime
         /// type and is used in combination with the values in the 
-        /// MimeTypeValidationList setting. The default is UseBlacklist,
-        /// and other options are UseWhitelist or Disable.
+        /// MimeTypeValidationList setting. The default is UseBlocklist,
+        /// and other options are UseAllowlist or Disable.
         /// </summary>
-        public AssetFileTypeValidation MimeTypeValidation { get; set; } = AssetFileTypeValidation.UseBlacklist;
+        public AssetFileTypeValidation MimeTypeValidation { get; set; } = AssetFileTypeValidation.UseBlockList;
 
         /// <summary>
         /// The list of file extensions to use when validating an uploaded
         /// file by it's file extension. By default this is a list of
-        /// potentially harmful file extensions and is treated as a blacklist, 
+        /// potentially harmful file extensions and is treated as a blocklist, 
         /// but the FileExtensionValidation setting can be used to change this 
-        /// behavior to interpret it as a whitelist, or disabled this validation 
+        /// behavior to interpret it as a allowlist, or disabled this validation 
         /// entirely.
         /// </summary>
         public ICollection<string> FileExtensionValidationList { get; set; }
@@ -42,9 +42,9 @@ namespace Cofoundry.Domain
         /// <summary>
         /// The list of mime types to use when validating an uploaded
         /// file by it's mime type. By default this is a list of potentially 
-        /// harmful mime types and is treated as a blacklist, but the 
+        /// harmful mime types and is treated as a blocklist, but the 
         /// MimeTypeValidation setting can be used to change this behavior 
-        /// to interpret it as a whitelist, or disabled this validation entirely.
+        /// to interpret it as an allowlist, or disable this validation entirely.
         /// </summary>
         public ICollection<string> MimeTypeValidationList { get; set; }
 

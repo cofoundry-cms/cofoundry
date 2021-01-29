@@ -16,6 +16,7 @@ function (
             'placeholder',
             'pattern',
             'disabled',
+            'readonly',
             'cmsMatch'
         ]
     };

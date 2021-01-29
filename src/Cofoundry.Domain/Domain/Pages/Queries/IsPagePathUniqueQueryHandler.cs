@@ -7,14 +7,14 @@ using System.Threading.Tasks;
 using Cofoundry.Domain.Data;
 using Cofoundry.Domain.CQS;
 
-namespace Cofoundry.Domain
+namespace Cofoundry.Domain.Internal
 {
     /// <summary>
     /// Determines if a page path already exists. Page paths are made
     /// up of a locale, directory and url slug; duplicates are not permitted.
     /// </summary>
     public class IsPagePathUniqueQueryHandler 
-        : IAsyncQueryHandler<IsPagePathUniqueQuery, bool>
+        : IQueryHandler<IsPagePathUniqueQuery, bool>
         , IPermissionRestrictedQueryHandler<IsPagePathUniqueQuery, bool>
     {
         #region constructor

@@ -34,7 +34,11 @@
 	}
 
 	.home {
-        @include retina-sprite(logo);
+        // @include retina-sprite(logo);
+        background-image: url("img/icons/retina/logo.png");
+        background-size: 80px auto;
+        background-repeat: no-repeat;
+
 		background-color:$color-secondary;
 		display: block;
         text-align:center;

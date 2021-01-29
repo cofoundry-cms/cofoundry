@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Cofoundry.Domain
+namespace Cofoundry.Domain.Internal
 {
     /// <summary>
     /// Cache for image asset data, which is frequently accessed when
@@ -13,10 +13,7 @@ namespace Cofoundry.Domain
     /// </summary>
     public class ImageAssetCache : IImageAssetCache
     {
-        #region constructor
-
         private const string IMAGE_ASSET_RENDER_DETAILS_CACHEKEY = "ImageAssetRenderDetails:";
-
         private readonly IObjectCache _cache;
 
         public ImageAssetCache(
@@ -25,10 +22,6 @@ namespace Cofoundry.Domain
         {
             _cache = cacheFactory.Get("COF_ImageAssets");
         }
-
-        #endregion
-
-        #region public methods
 
         /// <summary>
         /// Gets an image if it's already cached, otherwise returns null
@@ -77,8 +70,5 @@ namespace Cofoundry.Domain
         {
             _cache.Clear(IMAGE_ASSET_RENDER_DETAILS_CACHEKEY + imageAssetId);
         }
-
-        #endregion
-
     }
 }

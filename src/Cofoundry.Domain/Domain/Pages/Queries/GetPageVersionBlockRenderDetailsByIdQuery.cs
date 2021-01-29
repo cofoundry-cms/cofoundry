@@ -14,6 +14,22 @@ namespace Cofoundry.Domain
     /// </summary>
     public class GetPageVersionBlockRenderDetailsByIdQuery : IQuery<PageVersionBlockRenderDetails>
     {
+        public GetPageVersionBlockRenderDetailsByIdQuery() { }
+
+        /// <summary>
+        /// Initializes the query with the specified parameters.
+        /// </summary>
+        /// <param name="pageVersionBlockId">Id of the page block version to find..</param>
+        /// <param name="publishStatus">Used to determine which version of the page to include data for.</param>
+        public GetPageVersionBlockRenderDetailsByIdQuery(int pageVersionBlockId, PublishStatusQuery? publishStatus = null)
+        {
+            PageVersionBlockId = pageVersionBlockId;
+            if (publishStatus.HasValue)
+            {
+                PublishStatus = publishStatus.Value;
+            }
+        }
+
         /// <summary>
         /// Id of the page block version to find.
         /// </summary>

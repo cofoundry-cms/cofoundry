@@ -1,5 +1,5 @@
 ﻿using Cofoundry.Domain;
-using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Hosting;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,11 +17,11 @@ namespace Cofoundry.Web
     /// </summary>
     public class AuthCookieNamespaceProvider : IAuthCookieNamespaceProvider
     {
-        private readonly IHostingEnvironment _hostingEnvironment;
+        private readonly IHostEnvironment _hostingEnvironment;
         private readonly AuthenticationSettings _authenticationSettings;
 
         public AuthCookieNamespaceProvider(
-            IHostingEnvironment hostingEnvironment,
+            IHostEnvironment hostingEnvironment,
             AuthenticationSettings authenticationSettings
             )
         {

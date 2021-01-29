@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Cofoundry.Core.Web
+namespace Cofoundry.Core.Web.Internal
 {
     /// <summary>
     /// A SiteUriResolver that uses the HttpContext.Current.Request object to work

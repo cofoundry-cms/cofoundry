@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 using Cofoundry.Domain.Data;
 using Cofoundry.Domain.CQS;
 
-namespace Cofoundry.Domain
+namespace Cofoundry.Domain.Internal
 {
     public class GetPageBlockTypeDetailsByIdQueryHandler
-        : IAsyncQueryHandler<GetPageBlockTypeDetailsByIdQuery, PageBlockTypeDetails>
+        : IQueryHandler<GetPageBlockTypeDetailsByIdQuery, PageBlockTypeDetails>
         , IPermissionRestrictedQueryHandler<GetPageBlockTypeDetailsByIdQuery, PageBlockTypeDetails>
     {
         #region constructor

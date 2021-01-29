@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Cofoundry.Core;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 
-namespace Cofoundry.Domain
+namespace Cofoundry.Domain.Internal
 {
     public class DynamicDataModelSchemaMapper : IDynamicDataModelSchemaMapper
     {
@@ -58,6 +58,11 @@ namespace Cofoundry.Domain
             }
 
             details.DataModelProperties = dataModelProperties.ToArray();
+
+            // A default constructor is required for data model seralization anyway
+            // so that constraint isn't an issue here.
+            details.DefaultValue = new DynamicDataModelDefaultValue();
+            details.DefaultValue.Value = Activator.CreateInstance(modelType);
         }
     }
 }

@@ -10,8 +10,6 @@ namespace Cofoundry.Web.Admin
 {
     public class AccountApiController : BaseAdminApiController
     {
-        #region constructor
-
         private readonly IQueryExecutor _queryExecutor;
         private readonly IApiResponseHelper _apiResponseHelper;
         private readonly IUserContextService _userContextService;
@@ -27,35 +25,29 @@ namespace Cofoundry.Web.Admin
             _userContextService = userContextService;
         }
 
-        #endregion
-
-        #region routes
-
         #region queries
 
-        public async Task<IActionResult> Get()
+        public async Task<JsonResult> Get()
         {
             var query = new GetCurrentUserAccountDetailsQuery();
 
             var results = await _queryExecutor.ExecuteAsync(query);
-            return _apiResponseHelper.SimpleQueryResponse(this, results);
+            return _apiResponseHelper.SimpleQueryResponse(results);
         }
         
         #endregion
 
         #region commands
 
-        [HttpPatch]
-        public async Task<IActionResult> Patch([FromBody] IDelta<UpdateCurrentUserAccountCommand> delta)
+        public async Task<JsonResult> Patch([FromBody] IDelta<UpdateCurrentUserAccountCommand> delta)
         {
             var userContext = await _userContextService.GetCurrentContextAsync();
             var userId = userContext.UserId.Value;
 
-            return await _apiResponseHelper.RunCommandAsync(this, userId, delta);
+            return await _apiResponseHelper.RunCommandAsync(userId, delta);
         }
 
-        [HttpPut]
-        public async Task<IActionResult> PutPassword([FromBody] UpdateCurrentUserPasswordCommandDto dto)
+        public Task<JsonResult> PutPassword([FromBody] UpdateCurrentUserPasswordCommandDto dto)
         {
             var command = new UpdateCurrentUserPasswordCommand()
             {
@@ -63,10 +55,8 @@ namespace Cofoundry.Web.Admin
                 NewPassword = dto.NewPassword
             };
 
-            return await _apiResponseHelper.RunCommandAsync(this, command);
+            return _apiResponseHelper.RunCommandAsync(command);
         }
-
-        #endregion
 
         #endregion
     }

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Cofoundry.Core.Web
+namespace Cofoundry.Core.Web.Internal
 {
     /// <summary>
     /// Registers a few additional mime types missing from the asp.net FileExtensionContentTypeProvider

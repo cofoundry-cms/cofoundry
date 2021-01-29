@@ -8,7 +8,7 @@ using Cofoundry.Domain.Data;
 using Cofoundry.Domain.CQS;
 using Cofoundry.Core;
 
-namespace Cofoundry.Domain
+namespace Cofoundry.Domain.Internal
 {
     /// <summary>
     /// Creates the initial super admin account for the site as part
@@ -16,7 +16,7 @@ namespace Cofoundry.Domain
     /// because by design it has to forgo permission checks.
     /// </summary>
     public class AddMasterCofoundryUserCommandHandler
-        : IAsyncCommandHandler<AddMasterCofoundryUserCommand>
+        : ICommandHandler<AddMasterCofoundryUserCommand>
         , IIgnorePermissionCheckHandler
     {
         #region constructor
@@ -84,7 +84,7 @@ namespace Cofoundry.Domain
             user.LastName = command.LastName;
             user.Username = command.Email;
             user.Email = command.Email;
-            user.RequirePasswordChange = false;
+            user.RequirePasswordChange = command.RequirePasswordChange;
             user.LastPasswordChangeDate = executionContext.ExecutionDate;
             user.CreateDate = executionContext.ExecutionDate;
             user.Role = superUserRole;

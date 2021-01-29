@@ -13,6 +13,7 @@ using Cofoundry.Domain.CQS;
 using System.IO;
 using Cofoundry.Core;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Hosting;
 
 namespace Cofoundry.Web.Admin
 {
@@ -27,9 +28,10 @@ namespace Cofoundry.Web.Admin
         private readonly IAdminRouteLibrary _adminRouteLibrary;
         private readonly IUserContextService _userContextService;
         private readonly IQueryExecutor _queryExecutor;
-        private readonly IHostingEnvironment _hostingEnvironment;
+        private readonly IWebHostEnvironment _webHostEnvironment;
         private readonly DebugSettings _debugSettings;
         private readonly AdminSettings _adminSettings;
+        private readonly JsonSerializerSettings _jsonSerializerSettings;
 
         public AngularBootstrapper(
             IAntiforgery antiforgery,
@@ -38,9 +40,10 @@ namespace Cofoundry.Web.Admin
             IUserContextService userContextService,
             IAdminRouteLibrary adminRouteLibrary,
             IQueryExecutor queryExecutor,
-            IHostingEnvironment hostingEnvironment,
+            IWebHostEnvironment webHostEnvironment,
             DebugSettings debugSettings,
-            AdminSettings adminSettings
+            AdminSettings adminSettings,
+            JsonSerializerSettings jsonSerializerSettings
             )
         {
             _antiforgery = antiforgery;
@@ -49,9 +52,10 @@ namespace Cofoundry.Web.Admin
             _userContextService = userContextService;
             _adminRouteLibrary = adminRouteLibrary;
             _queryExecutor = queryExecutor;
-            _hostingEnvironment = hostingEnvironment;
+            _webHostEnvironment = webHostEnvironment;
             _debugSettings = debugSettings;
             _adminSettings = adminSettings;
+            _jsonSerializerSettings = jsonSerializerSettings;
         }
 
         /// <summary>
@@ -127,7 +131,7 @@ namespace Cofoundry.Web.Admin
         private async Task<string> RenderBootstrapperAsync(AngularModuleRouteLibrary routeLibrary, object options)
         {
             var args = string.Empty;
-            if (_hostingEnvironment.IsDevelopment())
+            if (_webHostEnvironment.IsDevelopment())
             {
                 // use strict DI when in debug mode to throw up errors
                 args = ", { strictDi: true }"; 
@@ -144,7 +148,7 @@ namespace Cofoundry.Web.Admin
             };
 
             var tokens = _antiforgery.GetAndStoreTokens(_httpContextAccessor.HttpContext);
-            var canShowDeveloperException = _debugSettings.CanShowDeveloperExceptionPage(_hostingEnvironment);
+            var canShowDeveloperException = _debugSettings.CanShowDeveloperExceptionPage(_webHostEnvironment);
 
             return @"<script>angular.element(document).ready(function() {
                         angular.module('" + _adminRouteLibrary.Shared.Angular.AngularModuleName + @"')
@@ -163,16 +167,16 @@ namespace Cofoundry.Web.Admin
                     });</script>";
         }
 
-        private static string GetOptions(AngularModuleRouteLibrary routeLibrary, object options)
+        private string GetOptions(AngularModuleRouteLibrary routeLibrary, object options)
         {
             return GetConstant(routeLibrary, "options", options);
         }
 
-        private static string GetConstant<TValue>(AngularModuleRouteLibrary routeLibrary, string name, TValue value)
+        private string GetConstant<TValue>(AngularModuleRouteLibrary routeLibrary, string name, TValue value)
         {
             if (value != null)
             {
-                var valueJson = JsonConvert.SerializeObject(value);
+                var valueJson = JsonConvert.SerializeObject(value, _jsonSerializerSettings);
                 return ".constant('" + routeLibrary.Angular.AngularModuleIdentifier + "." + name + "', " + valueJson + ")";
             }
 

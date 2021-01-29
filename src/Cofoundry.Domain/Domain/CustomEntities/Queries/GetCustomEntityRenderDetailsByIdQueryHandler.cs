@@ -6,12 +6,20 @@ using System.Threading.Tasks;
 using Cofoundry.Domain.Data;
 using Cofoundry.Domain.CQS;
 using Microsoft.EntityFrameworkCore;
-using Cofoundry.Core;
 
-namespace Cofoundry.Domain
+namespace Cofoundry.Domain.Internal
 {
+    /// <summary>
+    /// Query to retreive a custom entity by it's database id, projected as a
+    /// CustomEntityRenderDetails, which contains all data for rendering a specific 
+    /// version of a custom entity out to a page, including template data for all the 
+    /// content-editable page regions. This projection is specific to a particular 
+    /// version which may not always be the latest (depending on the query), and to a 
+    /// specific page. Although often you may only have one custom entity page, it is 
+    /// possible to have multiple.
+    /// </summary>
     public class GetCustomEntityRenderDetailsByIdQueryHandler
-        : IAsyncQueryHandler<GetCustomEntityRenderDetailsByIdQuery, CustomEntityRenderDetails>
+        : IQueryHandler<GetCustomEntityRenderDetailsByIdQuery, CustomEntityRenderDetails>
         , IIgnorePermissionCheckHandler
     {
         private readonly CofoundryDbContext _dbContext;

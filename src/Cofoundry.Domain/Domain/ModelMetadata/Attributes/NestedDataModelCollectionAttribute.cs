@@ -1,4 +1,5 @@
 ﻿using Cofoundry.Core;
+using Cofoundry.Core.Validation;
 using Microsoft.AspNetCore.Mvc.ModelBinding.Metadata;
 using System;
 using System.Collections;
@@ -17,7 +18,7 @@ namespace Cofoundry.Domain
     /// is sortable.
     /// </summary>
     [AttributeUsage(AttributeTargets.Property)]
-    public class NestedDataModelCollectionAttribute : ValidationAttribute, IMetadataAttribute, IEntityRelationAttribute
+    public class NestedDataModelCollectionAttribute : ValidateObjectAttribute, IMetadataAttribute, IEntityRelationAttribute
     {
         /// <summary>
         /// The minimum number of items that need to be included in the collection. 0 indicates
@@ -32,7 +33,8 @@ namespace Cofoundry.Domain
         public int MaxItems { get; set; }
 
         /// <summary>
-        /// Can the collection be manually ordered by the user?
+        /// Set to true to allow the collection ordering to be set by an editor 
+        /// using a drag and drop interface. Defaults to false.
         /// </summary>
         public bool IsOrderable { get; set; }
 
@@ -53,30 +55,8 @@ namespace Cofoundry.Domain
         private string GetNestedModelTypeName(DisplayMetadataProviderContext context)
         {
 
-            var propertyModelType = context.Key.ModelType;
-
-            if (!typeof(IEnumerable).IsAssignableFrom(propertyModelType))
-            {
-                throw GetIncorrectTypeException(context);
-            }
-
-            Type singularType = null;
-            if (propertyModelType.IsGenericType)
-            {
-                var genericParameters = propertyModelType.GetGenericArguments();
-
-                if (genericParameters?.Length != 1)
-                {
-                    throw GetIncorrectTypeException(context);
-                }
-
-                singularType = genericParameters.Single();
-            }
-            else if (propertyModelType.IsArray)
-            {
-                singularType = propertyModelType.GetElementType();
-            }
-
+            var singularType = TypeHelper.GetCollectionTypeOrNull(context.Key.ModelType);
+          
             if (singularType == null)
             {
                 throw GetIncorrectTypeException(context);
@@ -94,7 +74,7 @@ namespace Cofoundry.Domain
         private IncorrectCollectionMetaDataAttributePlacementException GetIncorrectTypeException(DisplayMetadataProviderContext context)
         {
             var propertyName = context.Key.ContainerType.Name + "." + context.Key.Name;
-            var msg = $"{typeof(NestedDataModelCollectionAttribute).Name} can only be placed on properties with a generic collection of types that inherit from {typeof(INestedDataModel).Name}. Property name is {propertyName} and the type is {context.Key.ModelType}.";
+            var msg = $"{nameof(NestedDataModelCollectionAttribute)} can only be placed on properties with a generic collection of types that inherit from {typeof(INestedDataModel).Name}. Property name is {propertyName} and the type is {context.Key.ModelType}.";
             var exception = new IncorrectCollectionMetaDataAttributePlacementException(this, context, new Type[] { typeof(INestedDataModel) }, msg);
 
             return exception;
@@ -128,7 +108,7 @@ namespace Cofoundry.Domain
                 return new ValidationResult(validationContext.MemberName + $" cannot have more than {MaxItems} items.", new string[] { validationContext.MemberName });
             }
 
-            return ValidationResult.Success;
+            return base.IsValid(value, validationContext);
         }
     }
 }

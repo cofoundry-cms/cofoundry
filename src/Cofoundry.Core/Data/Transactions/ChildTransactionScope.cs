@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Transactions;
 
-namespace Cofoundry.Core.Data
+namespace Cofoundry.Core.Data.Internal
 {
     /// <summary>
     /// A 'child' or 'inner' transaction scope that takes place within a 
@@ -19,11 +19,12 @@ namespace Cofoundry.Core.Data
         private TransactionScope _innerScope;
 
         public ChildTransactionScope(
-            PrimaryTransactionScope primaryTransactionScope
+            PrimaryTransactionScope primaryTransactionScope,
+            Func<System.Transactions.TransactionScope> transactionScopeFactory
             )
         {
             _primaryTransactionScope = primaryTransactionScope;
-            _innerScope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled);
+            _innerScope = transactionScopeFactory();
         }
 
         /// <summary>

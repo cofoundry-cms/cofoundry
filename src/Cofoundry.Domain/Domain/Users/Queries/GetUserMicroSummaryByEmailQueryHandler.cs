@@ -7,7 +7,7 @@ using Cofoundry.Domain.Data;
 using Cofoundry.Domain.CQS;
 using Microsoft.EntityFrameworkCore;
 
-namespace Cofoundry.Domain
+namespace Cofoundry.Domain.Internal
 {
     /// <summary>
     /// Finds a user with a specific email address in a specific user area 
@@ -15,7 +15,7 @@ namespace Cofoundry.Domain
     /// area does not support email addresses then the email field will be empty.
     /// </summary>
     public class GetUserMicroSummaryByEmailQueryHandler 
-        : IAsyncQueryHandler<GetUserMicroSummaryByEmailQuery, UserMicroSummary>
+        : IQueryHandler<GetUserMicroSummaryByEmailQuery, UserMicroSummary>
         , IPermissionRestrictedQueryHandler<GetUserMicroSummaryByEmailQuery, UserMicroSummary>
     {
         #region constructor

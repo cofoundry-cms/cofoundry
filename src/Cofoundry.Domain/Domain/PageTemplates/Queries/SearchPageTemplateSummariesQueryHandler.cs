@@ -8,10 +8,10 @@ using Microsoft.EntityFrameworkCore;
 using Cofoundry.Domain.QueryModels;
 using Cofoundry.Core;
 
-namespace Cofoundry.Domain
+namespace Cofoundry.Domain.Internal
 {
     public class SearchPageTemplateSummariesQueryHandler 
-        : IAsyncQueryHandler<SearchPageTemplateSummariesQuery, PagedQueryResult<PageTemplateSummary>>
+        : IQueryHandler<SearchPageTemplateSummariesQuery, PagedQueryResult<PageTemplateSummary>>
         , IPermissionRestrictedQueryHandler<SearchPageTemplateSummariesQuery, PagedQueryResult<PageTemplateSummary>>
     {
         #region constructor

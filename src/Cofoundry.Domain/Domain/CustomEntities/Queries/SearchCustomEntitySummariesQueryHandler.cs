@@ -8,7 +8,7 @@ using Cofoundry.Domain.CQS;
 using Cofoundry.Core;
 using Microsoft.EntityFrameworkCore;
 
-namespace Cofoundry.Domain
+namespace Cofoundry.Domain.Internal
 {
     /// <summary>
     /// A workflow non-specifc search of custom entities which returns basic
@@ -17,7 +17,7 @@ namespace Cofoundry.Domain
     /// version-sensitive context sach as a public webpage.
     /// </summary>
     public class SearchCustomEntitySummariesQueryHandler 
-        : IAsyncQueryHandler<SearchCustomEntitySummariesQuery, PagedQueryResult<CustomEntitySummary>>
+        : IQueryHandler<SearchCustomEntitySummariesQuery, PagedQueryResult<CustomEntitySummary>>
         , IPermissionRestrictedQueryHandler<SearchCustomEntitySummariesQuery, PagedQueryResult<CustomEntitySummary>>
     {
         #region constructor
@@ -38,8 +38,6 @@ namespace Cofoundry.Domain
         }
 
         #endregion
-
-        #region execution
 
         public async Task<PagedQueryResult<CustomEntitySummary>> ExecuteAsync(SearchCustomEntitySummariesQuery query, IExecutionContext executionContext)
         {
@@ -67,6 +65,7 @@ namespace Cofoundry.Domain
                 .Include(v => v.CustomEntity)
                 .ThenInclude(c => c.Creator)
                 .FilterActive()
+                .FilterByDate(c => c.CustomEntity.CreateDate, query.CreatedAfter, query.CreatedBefore)
                 .FilterByStatus(PublishStatusQuery.Latest, executionContext.ExecutionDate)
                 .FilterByCustomEntityDefinitionCode(query.CustomEntityDefinitionCode);
 
@@ -97,8 +96,6 @@ namespace Cofoundry.Domain
 
             return dbPagedResult;
         }
-
-        #endregion
 
         #region Permission
 

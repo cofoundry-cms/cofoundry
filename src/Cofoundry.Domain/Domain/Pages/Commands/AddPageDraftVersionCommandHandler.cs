@@ -5,12 +5,11 @@ using System.Text;
 using System.Threading.Tasks;
 using Cofoundry.Domain.Data;
 using Cofoundry.Domain.CQS;
-using Microsoft.EntityFrameworkCore;
 using Cofoundry.Core.Data;
-using System.Data.SqlClient;
 using Cofoundry.Core.MessageAggregator;
+using Cofoundry.Domain.Data.Internal;
 
-namespace Cofoundry.Domain
+namespace Cofoundry.Domain.Internal
 {
     /// <summary>
     /// Creates a new draft version of a page from the currently published version. If there
@@ -18,7 +17,7 @@ namespace Cofoundry.Domain
     /// thrown if there is already a draft version.
     /// </summary>
     public class AddPageDraftVersionCommandHandler 
-        : IAsyncCommandHandler<AddPageDraftVersionCommand>
+        : ICommandHandler<AddPageDraftVersionCommand>
         , IPermissionRestrictedCommandHandler<AddPageDraftVersionCommand>
     {
         #region constructor
@@ -46,8 +45,6 @@ namespace Cofoundry.Domain
 
         #endregion
 
-        #region execution
-
         public async Task ExecuteAsync(AddPageDraftVersionCommand command, IExecutionContext executionContext)
         {
             var newVersionId = await _pageStoredProcedures.AddDraftAsync(
@@ -72,8 +69,6 @@ namespace Cofoundry.Domain
                 PageVersionId = newVersionId
             });
         }
-
-        #endregion
 
         #region Permissions
 

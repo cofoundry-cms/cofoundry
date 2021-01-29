@@ -5,16 +5,15 @@ using System.Threading.Tasks;
 using Cofoundry.Domain.Data;
 using Cofoundry.Domain.CQS;
 using Microsoft.EntityFrameworkCore;
-using Cofoundry.Domain.Internal;
 
-namespace Cofoundry.Domain
+namespace Cofoundry.Domain.Internal
 {
     /// <summary>
     /// A query handler that gets information about a user if the specified credentials
     /// pass an authentication check
     /// </summary>
     public class GetUserLoginInfoIfAuthenticatedQueryHandler
-        : IAsyncQueryHandler<GetUserLoginInfoIfAuthenticatedQuery, UserLoginInfoAuthenticationResult>
+        : IQueryHandler<GetUserLoginInfoIfAuthenticatedQuery, UserLoginInfoAuthenticationResult>
         , IIgnorePermissionCheckHandler
     {
         private readonly UserAuthenticationHelper _userAuthenticationHelper;

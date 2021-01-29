@@ -4,29 +4,27 @@ using System.Linq;
 using System.Threading.Tasks;
 using Cofoundry.Domain.CQS;
 
-namespace Cofoundry.Domain
+namespace Cofoundry.Domain.Internal
 {
     public class GetNestedDataModelSchemaByNameQueryHandler
-        : IAsyncQueryHandler<GetNestedDataModelSchemaByNameQuery, NestedDataModelSchema>
+        : IQueryHandler<GetNestedDataModelSchemaByNameQuery, NestedDataModelSchema>
         , IIgnorePermissionCheckHandler
     {
         #region constructor
 
-        private readonly IDynamicDataModelSchemaMapper _dynamicDataModelTypeMapper;
+        private readonly INestedDataModelSchemaMapper _nestedDataModelSchemaMapper;
         private readonly INestedDataModelTypeRepository _nestedDataModelRepository;
 
         public GetNestedDataModelSchemaByNameQueryHandler(
-            IDynamicDataModelSchemaMapper dynamicDataModelTypeMapper,
+            INestedDataModelSchemaMapper nestedDataModelSchemaMapper,
             INestedDataModelTypeRepository nestedDataModelRepository
             )
         {
-            _dynamicDataModelTypeMapper = dynamicDataModelTypeMapper;
+            _nestedDataModelSchemaMapper = nestedDataModelSchemaMapper;
             _nestedDataModelRepository = nestedDataModelRepository;
         }
 
         #endregion
-
-        #region execution
 
         public Task<NestedDataModelSchema> ExecuteAsync(GetNestedDataModelSchemaByNameQuery query, IExecutionContext executionContext)
         {
@@ -38,13 +36,9 @@ namespace Cofoundry.Domain
 
             if (dataModelType == null) return Task.FromResult(result);
 
-            result = new NestedDataModelSchema();
-
-            _dynamicDataModelTypeMapper.Map(result, dataModelType);
+            result = _nestedDataModelSchemaMapper.Map(dataModelType);
 
             return Task.FromResult(result);
         }
-
-        #endregion
     }
 }

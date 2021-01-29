@@ -1,6 +1,6 @@
 ﻿using Cofoundry.Core.DependencyInjection;
 
-namespace Cofoundry.Web
+namespace Cofoundry.Web.Registration
 {
     public class AppStartDependencyRegistration : IDependencyRegistration
     {
@@ -11,7 +11,7 @@ namespace Cofoundry.Web
                 .RegisterAll<IStartupConfigurationTask>()
                 .RegisterAll<IMvcJsonOptionsConfiguration>()
                 .RegisterAll<IMvcOptionsConfiguration>()
-                .RegisterAll<IRazorViewEngineOptionsConfiguration>()
+                .RegisterAll<IMvcRazorRuntimeCompilationOptionsConfiguration>()
                 .Register<IStaticFileOptionsConfiguration, DefaultStaticFileOptionsConfiguration>()
                 .Register<IAuthConfiguration, DefaultAuthConfiguration>()
                 .RegisterSingleton<AutoUpdateState>()

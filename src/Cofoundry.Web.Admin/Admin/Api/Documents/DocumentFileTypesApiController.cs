@@ -22,10 +22,10 @@ namespace Cofoundry.Web.Admin
             _apiResponseHelper = apiResponseHelper;
         }
 
-        public async Task<IActionResult> Get()
+        public async Task<JsonResult> Get()
         {
             var results = await _queryExecutor.ExecuteAsync(new GetAllDocumentAssetFileTypesQuery());
-            return _apiResponseHelper.SimpleQueryResponse(this, results);
+            return _apiResponseHelper.SimpleQueryResponse(results);
         }
     }
 }

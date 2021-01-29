@@ -9,7 +9,7 @@
                    ng-change="vm.onChange()"
                    ng-hide="true"/>
 
-            <ul ng-show="vm.formScope.editMode" ng-if="vm.listOptions">
+            <ul ng-show="vm.formScope.editMode && !vm.readonly" ng-if="vm.listOptions">
                 <li ng-repeat="option in vm.listOptions track by $index">
                     <input type="checkbox"
                            id="{{vm.modelName + $index}}"
@@ -21,12 +21,12 @@
                 </li>
             </ul>
 
-            <div ng-if="vm.model.length && !vm.formScope.editMode" class="checkbox-display-value">
+            <div ng-if="vm.model.length && (!vm.formScope.editMode || vm.readonly)" class="checkbox-display-value">
                 <ul>
                     <li ng-repeat="displayValue in vm.displayValues">{{displayValue}}</li>
                 </ul>
             </div>
-            <div ng-if="!vm.model.length && !vm.formScope.editMode" class="text-block-display-value">{{vm.noValueText}}</div>
+            <div ng-if="!vm.model.length && (!vm.formScope.editMode || vm.readonly)" class="text-block-display-value">{{vm.noValueText}}</div>
             <cms-form-field-validation-summary></cms-form-field-validation-summary>
         </div>
     </cms-field>

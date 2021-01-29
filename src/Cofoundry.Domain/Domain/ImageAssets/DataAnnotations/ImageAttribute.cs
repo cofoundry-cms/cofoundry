@@ -16,13 +16,18 @@ namespace Cofoundry.Domain
     {
         #region constructors
 
+        /// <summary>
+        /// This can be used to decorate image properties in dynamic data providers to give properties about the image for filtering when browsing.
+        /// I.e. you can specify dimensions and tags for filtering the list of images.
+        /// </summary>
         public ImageAttribute()
             : this(null)
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ImageAttribute"/> class.
+        /// This can be used to decorate image properties in dynamic data providers to give properties about the image for filtering when browsing.
+        /// I.e. you can specify dimensions and tags for filtering the list of images.
         /// </summary>
         /// <param name="tags">An array of tags for which to filter when browsing for this image</param>
         public ImageAttribute(params string[] tags)
@@ -74,41 +79,50 @@ namespace Cofoundry.Domain
         #region properties
 
         /// <summary>
-        /// The width of the image for which to browse.
+        /// Filters the image selection to only show items with a width exactly
+        /// the same as this value.
         /// </summary>
         public int Width { get; set; }
 
         /// <summary>
-        /// The height of the image for which to browse.
+        /// Filters the image selection to only show items with a height exactly
+        /// the same as this value.
         /// </summary>
         public int Height { get; set; }
 
         /// <summary>
-        /// The minimum width of the image for which to browse.
+        /// Filters the image selection to only show items with a width the same or
+        /// greater than this value.
         /// </summary>
         public int MinWidth { get; set; }
 
         /// <summary>
-        /// The width to set the image at when previewing the asset. Useful if
-        /// you want to preview a cropping ratio once the asset is selected.
-        /// </summary>
-        public int PreviewWidth { get; set; }
-
-        /// <summary>
-        /// The height to set the image at when previewing the asset. Useful if
-        /// you want to preview a cropping ratio once the asset is selected.
-        /// </summary>
-        public int PreviewHeight { get; set; }
-
-        /// <summary>
-        /// The minimum height of the image for which to browse.
+        /// Filters the image selection to only show items with a height  the same or
+        /// greater than this value.
         /// </summary>
         public int MinHeight { get; set; }
 
         /// <summary>
-        /// Filters the image search to show items with tags that match this value
+        /// The width to use when previewing the image in 
+        /// the admin panel. This is useful if you want to preview the 
+        /// image in the selector at a specific crop ratio, e.g.
+        /// a letterbox ratio for a banner.
         /// </summary>
-        public string[] Tags { get; private set; }
+        public int PreviewWidth { get; set; }
+
+        /// <summary>
+        /// The height to use when when previewing the image in 
+        /// the admin panel. This is useful if you want to preview the 
+        /// image in the selector at a specific crop ratio, e.g.
+        /// a letterbox ratio for a banner.
+        /// </summary>
+        public int PreviewHeight { get; set; }
+
+        /// <summary>
+        /// Filters the image selection to only show images with tags that 
+        /// match this value.
+        /// </summary>
+        public string[] Tags { get; set; }
 
         #endregion
     }

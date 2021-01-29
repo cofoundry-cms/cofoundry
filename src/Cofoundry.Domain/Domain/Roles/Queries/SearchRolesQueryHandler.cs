@@ -6,13 +6,13 @@ using Cofoundry.Domain.CQS;
 using Cofoundry.Domain.Data;
 using Microsoft.EntityFrameworkCore;
 
-namespace Cofoundry.Domain
+namespace Cofoundry.Domain.Internal
 {
     /// <summary>
     /// Seaches roles based on simple filter criteria and returns a paged result. 
     /// </summary>
     public class SearchRolesQueryHandler 
-        : IAsyncQueryHandler<SearchRolesQuery, PagedQueryResult<RoleMicroSummary>>
+        : IQueryHandler<SearchRolesQuery, PagedQueryResult<RoleMicroSummary>>
         , IPermissionRestrictedQueryHandler<SearchRolesQuery, PagedQueryResult<RoleMicroSummary>>
     {
         #region constructor

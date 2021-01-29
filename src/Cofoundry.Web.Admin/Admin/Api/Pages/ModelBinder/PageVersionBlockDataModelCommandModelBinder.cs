@@ -8,6 +8,8 @@ using Microsoft.AspNetCore.Mvc.ModelBinding;
 using System.Threading.Tasks;
 using System.IO;
 using System.Text;
+using Cofoundry.Core.Json;
+using Cofoundry.Core;
 
 namespace Cofoundry.Web.Admin
 {
@@ -18,12 +20,15 @@ namespace Cofoundry.Web.Admin
     public class PageVersionBlockDataModelCommandModelBinder : IModelBinder
     {
         private readonly IPageBlockTypeDataModelTypeFactory _pageBlockTypeDataModelTypeFactory;
+        private readonly IEntityDataModelJsonConverterFactory _entityDataModelJsonConverterFactory;
 
         public PageVersionBlockDataModelCommandModelBinder(
-            IPageBlockTypeDataModelTypeFactory pageBlockTypeDataModelTypeFactory
+            IPageBlockTypeDataModelTypeFactory pageBlockTypeDataModelTypeFactory,
+            IEntityDataModelJsonConverterFactory entityDataModelJsonConverterFactory
             )
         {
             _pageBlockTypeDataModelTypeFactory = pageBlockTypeDataModelTypeFactory;
+            _entityDataModelJsonConverterFactory = entityDataModelJsonConverterFactory;
         }
 
         public async Task BindModelAsync(ModelBindingContext bindingContext)
@@ -33,15 +38,11 @@ namespace Cofoundry.Web.Admin
 
             var json = JObject.Parse(jsonString);
             var pageBlockTypeIdProperty = json.GetValue("PageBlockTypeId", StringComparison.OrdinalIgnoreCase);
+            var dataModelConverter = await GetBlockDataTypeConverterAsync(pageBlockTypeIdProperty?.Value<int>());
 
-            JsonConverter dataModelConverter;
-            if (pageBlockTypeIdProperty == null)
+            if (dataModelConverter == null)
             {
-                dataModelConverter = new NullPageBlockDataModelJsonConverter();
-            }
-            else
-            {
-                dataModelConverter = await GetBlockDataTypeConverterAsync(pageBlockTypeIdProperty.Value<int>());
+                dataModelConverter = new NullModelJsonConverter<IPageBlockTypeDataModel>();
             }
             
             var result = JsonConvert.DeserializeObject(jsonString, bindingContext.ModelType, dataModelConverter);
@@ -59,12 +60,18 @@ namespace Cofoundry.Web.Admin
             return body;
         }
 
-        private async Task<JsonConverter> GetBlockDataTypeConverterAsync(int pageBlockTypeId)
+        private async Task<JsonConverter> GetBlockDataTypeConverterAsync(int? pageBlockTypeId)
         {
-            var dataBlockType = await _pageBlockTypeDataModelTypeFactory.CreateByPageBlockTypeIdAsync(pageBlockTypeId);
-            var converterType = typeof(PageBlockDataModelJsonConverter<>).MakeGenericType(dataBlockType);
+            // If there's no id then the model probably wasn't supplied and should be
+            // considered null which will cause a validation error
+            if (!pageBlockTypeId.HasValue || pageBlockTypeId < 1) return null;
 
-            return (JsonConverter)Activator.CreateInstance(converterType);
+            var dataBlockType = await _pageBlockTypeDataModelTypeFactory.CreateByPageBlockTypeIdAsync(pageBlockTypeId.Value);
+            EntityNotFoundException.ThrowIfNull(dataBlockType, pageBlockTypeId);
+
+            var converter = _entityDataModelJsonConverterFactory.Create(dataBlockType);
+
+            return converter;
         }
     }
 }

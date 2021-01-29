@@ -4,10 +4,10 @@ using System.Linq;
 using System.Threading.Tasks;
 using Cofoundry.Domain.CQS;
 
-namespace Cofoundry.Domain
+namespace Cofoundry.Domain.Internal
 {
     public class GetPageDirectoryNodeByIdQueryHandler 
-        : IAsyncQueryHandler<GetPageDirectoryNodeByIdQuery, PageDirectoryNode>
+        : IQueryHandler<GetPageDirectoryNodeByIdQuery, PageDirectoryNode>
         , IPermissionRestrictedQueryHandler<GetPageDirectoryNodeByIdQuery, PageDirectoryNode>
     {
         #region constructor

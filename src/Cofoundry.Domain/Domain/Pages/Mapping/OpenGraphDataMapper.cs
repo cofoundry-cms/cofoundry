@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Cofoundry.Domain.Data;
 
-namespace Cofoundry.Domain
+namespace Cofoundry.Domain.Internal
 {
     /// <summary>
     /// Simple mapper for mapping to OpenGraphData objects.
@@ -27,7 +27,7 @@ namespace Cofoundry.Domain
         /// object.
         /// </summary>
         /// <param name="dbPageVersion">PageVersion record from the database, must include the OpenGraphImageAsset property.</param>
-        public OpenGraphData Map(PageVersion dbPageVersion)
+        public virtual OpenGraphData Map(PageVersion dbPageVersion)
         {
             var result = new OpenGraphData()
             {

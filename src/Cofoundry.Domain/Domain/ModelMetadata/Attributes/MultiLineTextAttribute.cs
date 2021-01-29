@@ -9,7 +9,8 @@ using Microsoft.AspNetCore.Mvc.ModelBinding.Metadata;
 namespace Cofoundry.Domain
 {
     /// <summary>
-    /// Use this to decorate a string field and provide a UI hint to the admin interface to display a text area field
+    /// Use this to decorate a string property and provide a UI hint to 
+    /// the admin interface to display a text area field
     /// </summary>
     [AttributeUsage(AttributeTargets.Property)]
     public class MultiLineTextAttribute : Attribute, IMetadataAttribute

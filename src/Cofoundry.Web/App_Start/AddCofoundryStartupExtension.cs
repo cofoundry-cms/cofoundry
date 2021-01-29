@@ -23,6 +23,7 @@ namespace Cofoundry.Web
         {
             var cofoundryConfig = new AddCofoundryStartupConfiguration();
             configBuilder?.Invoke(cofoundryConfig);
+            mvcBuilder = EnsureCoreMVCServicesAdded(mvcBuilder);
 
             AddAdditionalTypes(mvcBuilder);
             DiscoverAdditionalApplicationParts(mvcBuilder, cofoundryConfig);
@@ -34,6 +35,18 @@ namespace Cofoundry.Web
             RunAdditionalConfiguration(mvcBuilder);
 
             return mvcBuilder;
+        }
+
+        /// <summary>
+        /// Ensure the correct component parts required to run Cofoundry have been added
+        /// In ASP.NET 3.1, IMvcBuilder can be generated a number of different ways
+        /// https://docs.microsoft.com/en-us/aspnet/core/migration/22-to-30?view=aspnetcore-3.1&tabs=visual-studio#mvc-service-registration
+        /// </summary>
+        private static IMvcBuilder EnsureCoreMVCServicesAdded(IMvcBuilder mvcBuilder)
+        {
+            return mvcBuilder.Services
+                .AddControllersWithViews()
+                .AddRazorRuntimeCompilation();
         }
 
         private static void AddAdditionalTypes(IMvcBuilder mvcBuilder)

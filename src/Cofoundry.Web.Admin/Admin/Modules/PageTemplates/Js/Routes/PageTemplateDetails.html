@@ -6,13 +6,9 @@
           ng-submit="vm.save()"
           cms-loading="vm.formLoadState.isLoading">
 
-    <!-- Toolbar -->
-    <cms-page-actions ng-if="!vm.editMode">
-
-    </cms-page-actions>
-
     <!-- Scrollable content area -->
-    <cms-page-body cms-content-type="form">
+    <cms-page-body cms-content-type="form"
+                   cms-has-actions="false">
 
         <cms-form-status></cms-form-status>
 

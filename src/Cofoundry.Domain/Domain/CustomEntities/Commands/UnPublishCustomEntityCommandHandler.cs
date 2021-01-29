@@ -9,11 +9,18 @@ using Microsoft.EntityFrameworkCore;
 using Cofoundry.Core.MessageAggregator;
 using Cofoundry.Core;
 using Cofoundry.Core.Data;
+using Cofoundry.Domain.Data.Internal;
 
-namespace Cofoundry.Domain
+namespace Cofoundry.Domain.Internal
 {
+    /// <summary>
+    /// Sets the status of a custom entity to un-published, but does not
+    /// remove the publish date, which is preserved so that it
+    /// can be used as a default when the user chooses to publish
+    /// again.
+    /// </summary>
     public class UnPublishCustomEntityCommandHandler 
-        : IAsyncCommandHandler<UnPublishCustomEntityCommand>
+        : ICommandHandler<UnPublishCustomEntityCommand>
         , IIgnorePermissionCheckHandler
     {
         #region constructor
@@ -43,8 +50,6 @@ namespace Cofoundry.Domain
         }
 
         #endregion
-
-        #region execution
 
         public async Task ExecuteAsync(UnPublishCustomEntityCommand command, IExecutionContext executionContext)
         {
@@ -94,7 +99,5 @@ namespace Cofoundry.Domain
                 CustomEntityDefinitionCode = entity.CustomEntityDefinitionCode
             });
         }
-
-        #endregion
     }
 }

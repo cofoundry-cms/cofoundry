@@ -1,5 +1,4 @@
-﻿using Cofoundry.Core.Data;
-using Cofoundry.Core.Mail;
+﻿using Cofoundry.Core.Mail;
 using Cofoundry.Domain;
 using Cofoundry.Domain.CQS;
 using Cofoundry.Web.Identity;
@@ -16,18 +15,14 @@ namespace Cofoundry.Samples.UserAreas
     {
         private readonly IAuthenticationControllerHelper<PartnerUserAreaDefinition> _authenticationControllerHelper;
         private readonly IUserContextService _userContextService;
-        private readonly IContentRepository _contentRepository;
-        private readonly IUserRepository _userRepository;
-        private readonly IRoleRepository _roleRepository;
+        private readonly IAdvancedContentRepository _contentRepository;
         private readonly IExecutionContextFactory _executionContextFactory;
         private readonly IMailService _mailService;
 
         public CustomerAuthController(
             IAuthenticationControllerHelper<PartnerUserAreaDefinition> authenticationControllerHelper,
+            IAdvancedContentRepository contentRepository,
             IUserContextService userContextService,
-            IContentRepository contentRepository,
-            IUserRepository userRepository,
-            IRoleRepository roleRepository,
             IExecutionContextFactory executionContextFactory,
             IMailService mailService
             )
@@ -35,8 +30,6 @@ namespace Cofoundry.Samples.UserAreas
             _authenticationControllerHelper = authenticationControllerHelper;
             _userContextService = userContextService;
             _contentRepository = contentRepository;
-            _userRepository = userRepository;
-            _roleRepository = roleRepository;
             _executionContextFactory = executionContextFactory;
             _mailService = mailService;
         }
@@ -64,8 +57,6 @@ namespace Cofoundry.Samples.UserAreas
         public async Task<IActionResult> Register(RegisterNewUserViewModel viewModel)
         {
             // TODO: yah: pull in content repository code and improve this,
-            dynamic _contentApi = new object();
-            dynamic contentRepository = new object();
 
             var user = await _userContextService.GetCurrentContextByUserAreaAsync(PartnerUserAreaDefinition.Code);
             if (user.IsLoggedIn())
@@ -85,12 +76,10 @@ namespace Cofoundry.Samples.UserAreas
             };
 
             // Because we're not logged in, we'll need to elevate permissions to 
-            // add a new user account. IExecutionContextFactory can be used to get 
-            // an execution context for the system user, which we then use to
-            // execute the command.
-            var systemExecutionContext = await _executionContextFactory.CreateSystemUserExecutionContextAsync();
-
-            var role = contentRepository
+            // add a new user account. Using "WithElevatedPermissions" make the
+            // command is executed with the system user account.
+            var role = _contentRepository
+                .WithElevatedPermissions()
                 .Roles()
                 .GetByCode("myRole");
 
@@ -100,20 +89,14 @@ namespace Cofoundry.Samples.UserAreas
             //        .IsUsernameUniqueAsync("");
 
 
-            using (var scope = _contentApi.Transactions.Create())
+            using (var scope = _contentRepository.Transactions().CreateScope())
             {
                 await _contentRepository
-                    .ElevatePermissions()
-                    .Users()
-                    .AddAsync(addUserCommand);
-
-                await contentRepository
                     .WithElevatedPermissions()
-                    .WithExecutionContext()
                     .Users()
                     .AddAsync(addUserCommand);
 
-                scope.Complete();
+                await scope.CompleteAsync();
             }
 
             // TODO

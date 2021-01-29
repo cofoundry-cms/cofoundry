@@ -10,7 +10,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Cofoundry.Domain
+namespace Cofoundry.Domain.Internal
 {
     /// <summary>
     /// <para>
@@ -25,7 +25,7 @@ namespace Cofoundry.Domain
     /// </para>
     /// </summary>
     public class CleanUpAssetFilesCommandHandler
-        : IAsyncCommandHandler<CleanUpAssetFilesCommand>
+        : ICommandHandler<CleanUpAssetFilesCommand>
         , IPermissionRestrictedCommandHandler<CleanUpAssetFilesCommand>
     {
         private readonly IDistributedLockManager _distributedLockManager;

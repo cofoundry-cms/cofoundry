@@ -11,10 +11,17 @@ using Cofoundry.Core.MessageAggregator;
 using Cofoundry.Core;
 using Cofoundry.Core.Data;
 
-namespace Cofoundry.Domain
+namespace Cofoundry.Domain.Internal
 {
+    /// <summary>
+    /// Updates the UrlSlug and locale of a custom entity which often forms
+    /// the identity of the entity and can form part fo the url when used in
+    /// custom entity pages. This is a specific action that can
+    /// have specific side effects such as breaking page links outside
+    /// of the CMS.
+    /// </summary>
     public class UpdateCustomEntityUrlCommandHandler 
-        : IAsyncCommandHandler<UpdateCustomEntityUrlCommand>
+        : ICommandHandler<UpdateCustomEntityUrlCommand>
         , IIgnorePermissionCheckHandler
     {
         #region constructor
@@ -47,8 +54,6 @@ namespace Cofoundry.Domain
         }
 
         #endregion
-
-        #region execute
 
         public async Task ExecuteAsync(UpdateCustomEntityUrlCommand command, IExecutionContext executionContext)
         {
@@ -92,7 +97,7 @@ namespace Cofoundry.Domain
         {
             if (!definition.ForceUrlSlugUniqueness) return;
 
-            var query = new IsCustomEntityPathUniqueQuery();
+            var query = new IsCustomEntityUrlSlugUniqueQuery();
             query.CustomEntityDefinitionCode = definition.CustomEntityDefinitionCode;
             query.CustomEntityId = command.CustomEntityId;
             query.LocaleId = command.LocaleId;
@@ -114,7 +119,5 @@ namespace Cofoundry.Domain
             entity.UrlSlug = command.UrlSlug;
             entity.LocaleId = command.LocaleId;
         }
-
-        #endregion
     }
 }

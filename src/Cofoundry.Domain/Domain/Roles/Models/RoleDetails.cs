@@ -7,7 +7,8 @@ using System.Threading.Tasks;
 namespace Cofoundry.Domain
 {
     /// <summary>
-    /// A full role model including all properties and permission information.
+    /// A fully featured role projection including all properties and 
+    /// permission information.
     /// </summary>
     public class RoleDetails
     {

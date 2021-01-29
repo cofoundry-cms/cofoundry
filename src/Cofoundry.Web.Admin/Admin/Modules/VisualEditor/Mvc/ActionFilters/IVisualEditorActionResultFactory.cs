@@ -3,14 +3,14 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using System.IO;
-using System.Text;
-using Cofoundry.Core.ResourceFiles;
-using Cofoundry.Core.Json;
-using Cofoundry.Domain;
 
-namespace Cofoundry.Web.Admin
+namespace Cofoundry.Web.Admin.Internal
 {
+    /// <summary>
+    /// Factory for generating the VisualEditorActionResult
+    /// that wraps the current action current AxctionResult
+    /// and modified it to include visual editor scripts.
+    /// </summary>
     public interface IVisualEditorActionResultFactory
     {
         IActionResult Create(IActionResult wrappedActionResult);

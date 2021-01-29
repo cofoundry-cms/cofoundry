@@ -1,6 +1,8 @@
 ﻿using Cofoundry.Core;
+using Cofoundry.Core.Json;
 using Cofoundry.Domain;
 using Cofoundry.Domain.CQS;
+using Cofoundry.Domain.Internal;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -12,32 +14,48 @@ namespace Cofoundry.Web.Admin
 {
     public class CustomEntityDataModelSchemaApiController : BaseAdminApiController
     {
-        private readonly IQueryExecutor _queryExecutor;
+        private readonly IDomainRepository _domainRepository;
         private readonly IApiResponseHelper _apiResponseHelper;
+        private readonly DynamicDataModelJsonSerializerSettingsCache _dynamicDataModelSchemaJsonSerializerSettingsCache;
 
         public CustomEntityDataModelSchemaApiController(
-            IQueryExecutor queryExecutor,
-            IApiResponseHelper apiResponseHelper
+            IDomainRepository domainRepository,
+            IApiResponseHelper apiResponseHelper,
+            DynamicDataModelJsonSerializerSettingsCache dynamicDataModelSchemaJsonSerializerSettingsCache
             )
         {
-            _queryExecutor = queryExecutor;
+            _domainRepository = domainRepository;
             _apiResponseHelper = apiResponseHelper;
+            _dynamicDataModelSchemaJsonSerializerSettingsCache = dynamicDataModelSchemaJsonSerializerSettingsCache;
         }
 
-        public async Task<IActionResult> Get([FromQuery] GetCustomEntityDataModelSchemaDetailsByDefinitionCodeRangeQuery rangeQuery)
+        public async Task<JsonResult> Get([FromQuery] GetCustomEntityDataModelSchemaDetailsByDefinitionCodeRangeQuery rangeQuery)
         {
             if (rangeQuery.CustomEntityDefinitionCodes == null)
             {
-                return _apiResponseHelper.SimpleQueryResponse(this, Enumerable.Empty<CustomEntityDataModelSchema>());
+                return _apiResponseHelper.SimpleQueryResponse(Enumerable.Empty<CustomEntityDataModelSchema>());
             }
-            var result = await _queryExecutor.ExecuteAsync(rangeQuery);
-            return _apiResponseHelper.SimpleQueryResponse(this, result.FilterAndOrderByKeys(rangeQuery.CustomEntityDefinitionCodes));
+
+            var result = await _domainRepository
+                .WithQuery(rangeQuery)
+                .FilterAndOrderByKeys(rangeQuery.CustomEntityDefinitionCodes)
+                .ExecuteAsync();
+
+            var settings = _dynamicDataModelSchemaJsonSerializerSettingsCache.GetInstance();
+            var jsonResponse = _apiResponseHelper.SimpleQueryResponse(result);
+            jsonResponse.SerializerSettings = settings;
+
+            return jsonResponse;
         }
 
-        public async Task<IActionResult> GetDataModelSchema(string customEntityDefinitionCode)
+        public async Task<JsonResult> GetDataModelSchema(string customEntityDefinitionCode)
         {
-            var result = await _queryExecutor.ExecuteAsync(new GetCustomEntityDataModelSchemaDetailsByDefinitionCodeQuery(customEntityDefinitionCode));
-            return _apiResponseHelper.SimpleQueryResponse(this, result);
+            var result = await _domainRepository.ExecuteQueryAsync(new GetCustomEntityDataModelSchemaDetailsByDefinitionCodeQuery(customEntityDefinitionCode));
+            var settings = _dynamicDataModelSchemaJsonSerializerSettingsCache.GetInstance();
+            var jsonResponse = _apiResponseHelper.SimpleQueryResponse(result);
+            jsonResponse.SerializerSettings = settings;
+
+            return jsonResponse;
         }
     }
 }

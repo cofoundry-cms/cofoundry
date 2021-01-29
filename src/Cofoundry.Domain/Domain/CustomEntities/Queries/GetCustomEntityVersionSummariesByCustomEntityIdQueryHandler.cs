@@ -7,10 +7,16 @@ using Microsoft.EntityFrameworkCore;
 using Cofoundry.Domain.CQS;
 using Cofoundry.Domain.Data;
 
-namespace Cofoundry.Domain
+namespace Cofoundry.Domain.Internal
 {
+    /// <summary>
+    /// Gets a set of custom entity versions for a specific 
+    /// custom entity, ordered by create date, and returns
+    /// them as a paged collection of CustomEntityVersionSummary
+    /// projections.
+    /// </summary>
     public class GetCustomEntityVersionSummariesByCustomEntityIdQueryHandler 
-        : IAsyncQueryHandler<GetCustomEntityVersionSummariesByCustomEntityIdQuery, PagedQueryResult<CustomEntityVersionSummary>>
+        : IQueryHandler<GetCustomEntityVersionSummariesByCustomEntityIdQuery, PagedQueryResult<CustomEntityVersionSummary>>
         , IIgnorePermissionCheckHandler
     {
         #region constructor
@@ -32,8 +38,6 @@ namespace Cofoundry.Domain
         }
 
         #endregion
-
-        #region execution
 
         public async Task<PagedQueryResult<CustomEntityVersionSummary>> ExecuteAsync(GetCustomEntityVersionSummariesByCustomEntityIdQuery query, IExecutionContext executionContext)
         {
@@ -65,7 +69,5 @@ namespace Cofoundry.Domain
                 .OrderByDescending(v => v.WorkFlowStatusId == (int)WorkFlowStatus.Draft)
                 .ThenByDescending(v => v.CreateDate);
         }
-
-        #endregion
     }
 }

@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
-using System.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Data.SqlClient;
 
-namespace Cofoundry.Core.Data.SimpleDatabase
+namespace Cofoundry.Core.Data.SimpleDatabase.Internal
 {
     /// <summary>
     /// Simple MS SqlServer raw sql execution to avoid a dependency on any particular

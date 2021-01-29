@@ -3,10 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Cofoundry.Domain.CQS;
-using System.ComponentModel.DataAnnotations;
-using Cofoundry.Core;
+using Cofoundry.Core.Validation;
 
-namespace Cofoundry.Domain
+namespace Cofoundry.Domain.Internal
 {
     /// <summary>
     /// Logs a user into the application for a specified user area
@@ -16,7 +15,7 @@ namespace Cofoundry.Domain
     /// are thrown as ValidationExceptions.
     /// </summary>
     public class LogUserInWithCredentialsCommandHandler
-        : IAsyncCommandHandler<LogUserInWithCredentialsCommand>
+        : ICommandHandler<LogUserInWithCredentialsCommand>
         , IIgnorePermissionCheckHandler
     {
         #region constructor
@@ -82,7 +81,7 @@ namespace Cofoundry.Domain
         {
             if (userAreaToLogInto != usersUserArea)
             {
-                throw new ValidationException("This user account is not permitted to log in via this route.");
+                throw new ValidationErrorException("This user account is not permitted to log in via this route.");
             }
         }
     }

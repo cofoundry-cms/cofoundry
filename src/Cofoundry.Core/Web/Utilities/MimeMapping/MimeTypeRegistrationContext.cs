@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Cofoundry.Core.Web
+namespace Cofoundry.Core.Web.Internal
 {
     /// <summary>
     /// Used for registering mime types for use with the IMimeTypeService
@@ -26,7 +26,7 @@ namespace Cofoundry.Core.Web
         /// True if the file extension has already been registered; otherwise false.
         /// Case insensitive.
         /// </summary>
-        public bool IsDefined(string fileExtension)
+        public virtual bool IsDefined(string fileExtension)
         {
             var formattedExtension = FormatFileExtension(fileExtension);
             return _fileExtensionContentTypeProvider.Mappings.ContainsKey(formattedExtension);
@@ -41,7 +41,7 @@ namespace Cofoundry.Core.Web
         /// extension, but it will be added if it has not been included.
         /// </param>
         /// <param name="mimeType">The mime type to assign to the file extension e.g. 'image/jpeg'</param>
-        public void AddOrUpdate(string fileExtension, string mimeType)
+        public virtual void AddOrUpdate(string fileExtension, string mimeType)
         {
             if (string.IsNullOrWhiteSpace(mimeType)) throw new ArgumentException("Mime type cannot be empty.", nameof(mimeType));
 

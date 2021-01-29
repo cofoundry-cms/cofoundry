@@ -2,7 +2,7 @@
     <cms-field>
         <label class="control-label" for="{{vm.modelName}}">{{vm.title}}:</label>
         <div class="controls">
-            <div ng-show="vm.formScope.editMode">
+            <div ng-show="vm.formScope.editMode && !vm.readonly">
                 <textarea ng-if="::vm.tinymceOptions"
                           ui-tinymce="vm.tinymceOptions"
                           ng-show="vm.formScope.editMode"
@@ -11,7 +11,7 @@
                           ng-disabled="vm.disabled"
                           name="{{vm.modelName}}"></textarea>
             </div>
-            <div ng-hide="vm.formScope.editMode"
+            <div ng-hide="vm.formScope.editMode && !vm.readonly"
                   ng-bind-html="vm.rawHtml"
                   class="text-block-display-value ta-text"></div>
 

@@ -37,7 +37,8 @@ namespace Cofoundry.Domain
         /// </summary>
         /// <param name="passwordPropertyName">
         /// The name of the password property, which is used in creating
-        /// a PropertyValidationException hwne the credentials are invalid.
+        /// an InvalidCredentialsAuthenticationException if the credentials 
+        /// are invalid.
         /// </param>
         public void ThrowIfUnsuccessful(string passwordPropertyName)
         {

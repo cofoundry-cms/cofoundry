@@ -25,7 +25,7 @@ namespace Cofoundry.Web.Admin
 
         #region queries
 
-        public async Task<IActionResult> Get(
+        public async Task<JsonResult> Get(
             [FromQuery] SearchPageSummariesQuery query,
             [FromQuery] GetPageSummariesByIdRangeQuery rangeQuery
             )
@@ -33,22 +33,22 @@ namespace Cofoundry.Web.Admin
             if (rangeQuery != null && rangeQuery.PageIds != null)
             {
                 var rangeResults = await _queryExecutor.ExecuteAsync(rangeQuery);
-                return _apiResponseHelper.SimpleQueryResponse(this, rangeResults.FilterAndOrderByKeys(rangeQuery.PageIds));
+                return _apiResponseHelper.SimpleQueryResponse(rangeResults.FilterAndOrderByKeys(rangeQuery.PageIds));
             }
 
             if (query == null) query = new SearchPageSummariesQuery();
             ApiPagingHelper.SetDefaultBounds(query);
 
             var results = await _queryExecutor.ExecuteAsync(query);
-            return _apiResponseHelper.SimpleQueryResponse(this, results);
+            return _apiResponseHelper.SimpleQueryResponse(results);
         }
 
-        public async Task<IActionResult> GetById(int pageId)
+        public async Task<JsonResult> GetById(int pageId)
         {
             var query = new GetPageDetailsByIdQuery(pageId);
             var result = await _queryExecutor.ExecuteAsync(query);
 
-            return _apiResponseHelper.SimpleQueryResponse(this, result);
+            return _apiResponseHelper.SimpleQueryResponse(result);
         }
         
 
@@ -56,37 +56,32 @@ namespace Cofoundry.Web.Admin
 
         #region commands
 
-        [HttpPost]
-        public async Task<IActionResult> Post([FromBody] AddPageCommand command)
+        public Task<JsonResult> Post([FromBody] AddPageCommand command)
         {
-            return await _apiResponseHelper.RunCommandAsync(this, command);
+            return _apiResponseHelper.RunCommandAsync(command);
         }
 
-        [HttpPatch]
-        public async Task<IActionResult> Patch(int pageId, [FromBody] IDelta<UpdatePageCommand> delta)
+        public Task<JsonResult> Patch(int pageId, [FromBody] IDelta<UpdatePageCommand> delta)
         {
-            return await _apiResponseHelper.RunCommandAsync(this, pageId, delta);
+            return _apiResponseHelper.RunCommandAsync(pageId, delta);
         }
 
-        [HttpPut]
-        public async Task<IActionResult> PutPageUrl(int pageId, [FromBody] UpdatePageUrlCommand command)
+        public Task<JsonResult> PutPageUrl(int pageId, [FromBody] UpdatePageUrlCommand command)
         {
-            return await _apiResponseHelper.RunCommandAsync(this, command);
+            return _apiResponseHelper.RunCommandAsync(command);
         }
 
-        [HttpDelete]
-        public async Task<IActionResult> Delete(int pageId)
+        public Task<JsonResult> Delete(int pageId)
         {
             var command = new DeletePageCommand();
             command.PageId = pageId;
 
-            return await _apiResponseHelper.RunCommandAsync(this, command);
+            return _apiResponseHelper.RunCommandAsync(command);
         }
 
-        [HttpPost]
-        public async Task<IActionResult> PostDuplicate([FromBody] DuplicatePageCommand command)
+        public async Task<JsonResult> PostDuplicate([FromBody] DuplicatePageCommand command)
         {
-            return await _apiResponseHelper.RunCommandAsync(this, command);
+            return await _apiResponseHelper.RunCommandAsync(command);
         }
 
         #endregion

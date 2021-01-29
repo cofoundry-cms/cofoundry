@@ -1,11 +1,12 @@
-﻿using Cofoundry.Core.DependencyInjection;
+﻿using Cofoundry.Core.AutoUpdate.Internal;
+using Cofoundry.Core.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Cofoundry.Core.AutoUpdate
+namespace Cofoundry.Core.AutoUpdate.Registration
 {
     public class AutoUpdateDependencyRegistration : IDependencyRegistration
     {

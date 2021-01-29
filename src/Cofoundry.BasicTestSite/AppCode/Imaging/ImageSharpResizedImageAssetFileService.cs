@@ -10,10 +10,12 @@ using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Processing;
 using System.Diagnostics;
 using System.Net;
-using SixLabors.Primitives;
 using Microsoft.Extensions.Logging;
 using SixLabors.ImageSharp.Formats;
 using SixLabors.ImageSharp.PixelFormats;
+using SixLabors.ImageSharp.Formats.Jpeg;
+using SixLabors.ImageSharp.Formats.Bmp;
+using SixLabors.ImageSharp.Formats.Png;
 
 namespace Cofoundry.Plugins.Imaging.ImageSharp
 {
@@ -57,7 +59,7 @@ namespace Cofoundry.Plugins.Imaging.ImageSharp
             {
                 return await GetFileStreamAsync(asset.ImageAssetId);
             }
-            
+
             if (_imageAssetsSettings.DisableResizing)
             {
                 throw new InvalidImageResizeSettingsException("Image resizing has been requested but is disabled.", inputSettings);
@@ -75,30 +77,39 @@ namespace Cofoundry.Plugins.Imaging.ImageSharp
             {
                 imageStream = new MemoryStream();
                 IImageFormat imageFormat = null;
-
                 using (var originalStream = await GetFileStreamAsync(asset.ImageAssetId))
                 using (var image = Image.Load(originalStream, out imageFormat))
                 {
                     if (imageFormat == null) throw new Exception("Unable to determine image type for image asset " + asset.ImageAssetId);
+                    var encoder = Configuration.Default.ImageFormatsManager.FindEncoder(imageFormat);
+                    if (encoder == null) throw new InvalidOperationException("Encoder not found for image format " + imageFormat.Name);
+
                     var resizeOptions = ConvertSettings(inputSettings);
-                    image.Mutate(cx => 
+                    image.Mutate(cx =>
                     {
                         cx.Resize(resizeOptions);
-                        
+
                         if (!string.IsNullOrWhiteSpace(inputSettings.BackgroundColor))
                         {
-                            var color = Rgba32.FromHex(inputSettings.BackgroundColor);
+                            var color = Rgba32.ParseHex(inputSettings.BackgroundColor);
                             cx.BackgroundColor(color);
                         }
-                        else if (CanPad(resizeOptions) && !SupportsTransparency(imageFormat))
+                        else if (CanPad(resizeOptions))
                         {
-                            // default background for jpg encoder is black, but white is a better default in most scenarios.
-                            cx.BackgroundColor(Rgba32.White);
+                            if (SupportsTransparency(imageFormat))
+                            {
+                                cx.BackgroundColor(Color.Transparent);
+                                encoder = EnsureEncoderSupportsTransparency(encoder);
+                            }
+                            else
+                            {
+                                // default background for jpg encoder is black, but white is a better default in most scenarios.
+                                cx.BackgroundColor(Color.White);
+                            }
                         }
                     });
 
-
-                    image.Save(imageStream, imageFormat);
+                    image.Save(imageStream, encoder);
                 }
 
                 try
@@ -123,23 +134,9 @@ namespace Cofoundry.Plugins.Imaging.ImageSharp
             }
         }
 
-        private bool CanPad(ResizeOptions resizeOptions)
-        {
-            switch (resizeOptions.Mode)
-            {
-                case ResizeMode.Crop:
-                case ResizeMode.Max:
-                case ResizeMode.Min:
-                case ResizeMode.Stretch:
-                    return false;
-            }
-
-            return true;
-        }
-
         public bool SupportsTransparency(IImageFormat imageFormat)
         {
-            return imageFormat != ImageFormats.Jpeg && imageFormat != ImageFormats.Png;
+            return imageFormat != JpegFormat.Instance && imageFormat != BmpFormat.Instance;
         }
 
         public Task ClearAsync(string fileNameOnDisk)
@@ -220,6 +217,44 @@ namespace Cofoundry.Plugins.Imaging.ImageSharp
             }
 
             return resizeSettings;
+        }
+
+
+        private IImageEncoder EnsureEncoderSupportsTransparency(IImageEncoder encoder)
+        {
+            if (encoder is PngEncoder pngEncoder)
+            {
+                if (pngEncoder.ColorType != PngColorType.RgbWithAlpha)
+                {
+                    encoder = new PngEncoder()
+                    {
+                        ColorType = PngColorType.RgbWithAlpha,
+                        CompressionLevel = pngEncoder.CompressionLevel,
+                        FilterMethod = pngEncoder.FilterMethod,
+                        Gamma = pngEncoder.Gamma,
+                        InterlaceMethod = pngEncoder.InterlaceMethod,
+                        Quantizer = pngEncoder.Quantizer,
+                        TextCompressionThreshold = pngEncoder.TextCompressionThreshold,
+                        Threshold = pngEncoder.Threshold
+                    };
+                }
+            }
+
+            return encoder;
+        }
+
+        private bool CanPad(ResizeOptions resizeOptions)
+        {
+            switch (resizeOptions.Mode)
+            {
+                case ResizeMode.Crop:
+                case ResizeMode.Max:
+                case ResizeMode.Min:
+                case ResizeMode.Stretch:
+                    return false;
+            }
+
+            return true;
         }
 
         private void ValidateSettings(IImageResizeSettings settings)

@@ -78,7 +78,7 @@ namespace Cofoundry.Domain
                 {
                     entityTag.Tag = new Tag 
                     { 
-                        CreateDate = DateTime.UtcNow, 
+                        CreateDate = executionContext.ExecutionDate, 
                         TagText = tagText 
                     };
                 }

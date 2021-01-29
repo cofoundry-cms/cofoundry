@@ -3,10 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Cofoundry.Core.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Cofoundry.Domain.CQS
+namespace Cofoundry.Domain.CQS.Internal
 {
     /// <summary>
     /// Factory to create ICommandHandler instances

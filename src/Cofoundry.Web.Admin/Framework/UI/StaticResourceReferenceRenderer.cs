@@ -172,7 +172,7 @@ namespace Cofoundry.Web.Admin
 
         private HtmlString FormatCssTag(string cssPath)
         {
-            return new HtmlString($"<link href=\"{cssPath}\" rel=\"stylesheet\"></link>");
+            return new HtmlString($"<link href=\"{cssPath}\" rel=\"stylesheet\">");
         }
 
         /// <summary>

@@ -34,7 +34,7 @@ namespace Cofoundry.Web
             {
                 var serviceProvider = scope.ServiceProvider;
                 // resolve depedencies
-                var hostingEnvironment = serviceProvider.GetRequiredService<IHostingEnvironment>();
+                var hostingEnvironment = serviceProvider.GetRequiredService<IWebHostEnvironment>();
                 var embeddedResourceRouteRegistrations = serviceProvider.GetRequiredService<IEnumerable<IEmbeddedResourceRouteRegistration>>();
                 var embeddedFileProviderFactory = serviceProvider.GetRequiredService<IEmbeddedFileProviderFactory>();
 
@@ -57,7 +57,7 @@ namespace Cofoundry.Web
         }
 
         private List<IFileProvider> GetAllFileProviders(
-            IHostingEnvironment hostingEnvironment,
+            IWebHostEnvironment hostingEnvironment,
             IEnumerable<IEmbeddedResourceRouteRegistration> embeddedResourceRouteRegistrations,
             IEmbeddedFileProviderFactory embeddedFileProviderFactory
             )

@@ -3,6 +3,26 @@ using System.Collections.Generic;
 
 namespace Cofoundry.Domain.Data
 {
+    /// <summary>
+    /// <para>
+    /// Custom entities can have one or more version, with a collection
+    /// of versions representing the change history of custom entity
+    /// data. 
+    /// </para>
+    /// <para>
+    /// Only one draft version can exist at any one time, and 
+    /// only one version may be published at any one time. Although
+    /// you can revert to a previous version, this is done by copying
+    /// the old version data to a new version, so that a full history is
+    /// always maintained.
+    /// </para>
+    /// </summary>
+    /// <remarks>
+    /// Typically you should query for version data via the 
+    /// CustomEntityPublishStatusQuery table, which serves as a quicker
+    /// look up for an applicable version for various PublishStatusQuery
+    /// states.
+    /// </remarks>
     public class CustomEntityVersion : ICreateAuditable, IEntityVersion
     {
         public CustomEntityVersion()
@@ -17,8 +37,17 @@ namespace Cofoundry.Domain.Data
         /// </summary>
         public int CustomEntityVersionId { get; set; }
 
+        /// <summary>
+        /// The id of the custom entity this version is parented to.
+        /// Custom entities can have many versions, but only one is
+        /// published at any one time.
+        /// </summary>
         public int CustomEntityId { get; set; }
 
+        /// <summary>
+        /// Mapped from the domain enum WorkFlowStatus, this is the workflow 
+        /// state of this version e.g. draft/published.
+        /// </summary>
         public int WorkFlowStatusId { get; set; }
 
         /// <summary>
@@ -42,18 +71,44 @@ namespace Cofoundry.Domain.Data
         /// </summary>
         public string SerializedData { get; set; }
 
+        /// <summary>
+        /// The custom entity this version is parented to.
+        /// Custom entities can have many versions, but only one is
+        /// published at any one time.
+        /// </summary>
         public virtual CustomEntity CustomEntity { get; set; }
 
+        /// <summary>
+        /// The dynamic 'Pages' feature can be used to create one or more 
+        /// 'custom entity details' page which displays custom enitity data
+        /// based on the routing parameters (i.e. the details page in a 
+        /// master-details arrangement). This property holds the block data
+        /// for the page template regions on any of these pages.
+        /// </summary>
         public virtual ICollection<CustomEntityVersionPageBlock> CustomEntityVersionPageBlocks { get; set; }
 
+        /// <summary>
+        /// Lookup cache used for quickly finding the correct version for a
+        /// specific publish status query e.g. 'Latest', 'Published', 
+        /// 'PreferPublished'.
+        /// </summary>
         public virtual ICollection<CustomEntityPublishStatusQuery> CustomEntityPublishStatusQueries { get; internal set; }
 
         #region ICreateAuditable
 
+        /// <summary>
+        /// The user that created the custom entity version.
+        /// </summary>
         public User Creator { get; set; }
 
+        /// <summary>
+        /// The date the custom entity version was created.
+        /// </summary>
         public DateTime CreateDate { get; set; }
 
+        /// <summary>
+        /// The database id of the user that created the custom entity version.
+        /// </summary>
         public int CreatorId { get; set; }
 
         #endregion

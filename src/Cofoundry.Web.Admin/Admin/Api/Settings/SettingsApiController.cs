@@ -27,31 +27,27 @@ namespace Cofoundry.Web.Admin
         public async Task<IActionResult> GetGeneralSiteSettings()
         {
             var results = await _queryExecutor.ExecuteAsync(new GetSettingsQuery<GeneralSiteSettings>());
-            return _apiResponseHelper.SimpleQueryResponse(this, results);
+            return _apiResponseHelper.SimpleQueryResponse(results);
         }
 
         public async Task<IActionResult> GetSeoSettings()
         {
             var results = await _queryExecutor.ExecuteAsync(new GetSettingsQuery<SeoSettings>());
-            return _apiResponseHelper.SimpleQueryResponse(this, results);
+            return _apiResponseHelper.SimpleQueryResponse(results);
         }
 
         #endregion
 
         #region commands
-        // Adding verbs ere fixes things
-        // https://blogs.msdn.microsoft.com/webdev/2018/08/27/asp-net-core-2-2-0-preview1-endpoint-routing/
 
-        [HttpPatch]
-        public async Task<IActionResult> PatchGeneralSiteSettings([FromBody] IDelta<UpdateGeneralSiteSettingsCommand> delta)
+        public Task<JsonResult> PatchGeneralSiteSettings([FromBody] IDelta<UpdateGeneralSiteSettingsCommand> delta)
         {
-            return await _apiResponseHelper.RunCommandAsync(this, delta);
+            return _apiResponseHelper.RunCommandAsync(delta);
         }
 
-        [HttpPatch]
-        public async Task<IActionResult> PatchSeoSettings([FromBody] IDelta<UpdateSeoSettingsCommand> delta)
+        public Task<JsonResult> PatchSeoSettings([FromBody] IDelta<UpdateSeoSettingsCommand> delta)
         {
-            return await _apiResponseHelper.RunCommandAsync(this, delta);
+            return _apiResponseHelper.RunCommandAsync(delta);
         }
         
         #endregion

@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 
 namespace Cofoundry.Samples.UserAreas
 {
@@ -22,12 +23,13 @@ namespace Cofoundry.Samples.UserAreas
         public void ConfigureServices(IServiceCollection services)
         {
             services
-                .AddMvc()
+                .AddControllersWithViews()
                 .AddCofoundry(Configuration);
         }
 
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            // Https redirection / cookie policy and hsts is all non-cofoundry stuff
             if (!env.IsDevelopment())
             {
                 app.UseHsts();

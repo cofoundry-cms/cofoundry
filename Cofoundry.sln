@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.27130.2027
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29905.134
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{4996A61A-00E1-4363-9BC7-1F877E4AD933}"
 EndProject
@@ -28,6 +28,8 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cofoundry.Samples.UserAreas", "src\Cofoundry.Samples.UserAreas\Cofoundry.Samples.UserAreas.csproj", "{DE314615-9433-4470-8D89-6534046CCDC8}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cofoundry.Web.Tests", "test\Cofoundry.Web.Tests\Cofoundry.Web.Tests.csproj", "{0CB3F082-7237-499C-ABF6-95BFA501E561}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cofoundry.Web.Admin.Tests", "test\Cofoundry.Web.Admin.Tests\Cofoundry.Web.Admin.Tests.csproj", "{70AB99F5-8E90-4AAD-B844-3BC1F3F50330}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -67,6 +69,10 @@ Global
 		{DE314615-9433-4470-8D89-6534046CCDC8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DE314615-9433-4470-8D89-6534046CCDC8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DE314615-9433-4470-8D89-6534046CCDC8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{70AB99F5-8E90-4AAD-B844-3BC1F3F50330}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{70AB99F5-8E90-4AAD-B844-3BC1F3F50330}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{70AB99F5-8E90-4AAD-B844-3BC1F3F50330}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{70AB99F5-8E90-4AAD-B844-3BC1F3F50330}.Release|Any CPU.Build.0 = Release|Any CPU
 		{0CB3F082-7237-499C-ABF6-95BFA501E561}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{0CB3F082-7237-499C-ABF6-95BFA501E561}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0CB3F082-7237-499C-ABF6-95BFA501E561}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -85,6 +91,7 @@ Global
 		{275C85A3-98AA-4554-9B03-D288E904CC37} = {EAA517AB-9245-45E4-9929-C28E3BC944CC}
 		{DE314615-9433-4470-8D89-6534046CCDC8} = {8FCDFF68-9BCF-499B-8E2D-7E08E824F40A}
 		{0CB3F082-7237-499C-ABF6-95BFA501E561} = {EAA517AB-9245-45E4-9929-C28E3BC944CC}
+		{70AB99F5-8E90-4AAD-B844-3BC1F3F50330} = {EAA517AB-9245-45E4-9929-C28E3BC944CC}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {69E60B88-9077-484B-AD67-D85641B1F45A}

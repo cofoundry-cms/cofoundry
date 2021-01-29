@@ -2,11 +2,13 @@
     '_',
     '$http',
     'shared.internalModulePath',
+    'shared.optionSourceService',
     'baseFormFieldFactory',
 function (
     _,
     $http,
     modulePath,
+    optionSourceService,
     baseFormFieldFactory) {
 
     var config = {
@@ -73,7 +75,7 @@ function (
         /* Helpers */
 
         function getOptions(apiPath) {
-            return $http.get(apiPath).then(loadOptions);
+            return optionSourceService.getFromApi(apiPath).then(loadOptions);
 
             function loadOptions(options) {
                 bindOptions(options);

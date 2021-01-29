@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Cofoundry.Core.Configuration;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Hosting;
 
 namespace Cofoundry.Core
 {
@@ -51,7 +52,7 @@ namespace Cofoundry.Core
         /// </summary>
         /// <param name="env">The current hosting environment.</param>
         /// <returns>True if we can show the developer exception page; otherwise false.</returns>
-        public bool CanShowDeveloperExceptionPage(IHostingEnvironment env)
+        public bool CanShowDeveloperExceptionPage(IWebHostEnvironment env)
         {
             return DeveloperExceptionPageMode == DeveloperExceptionPageMode.On
                 || (DeveloperExceptionPageMode == DeveloperExceptionPageMode.DevelopmentOnly && env.IsDevelopment());

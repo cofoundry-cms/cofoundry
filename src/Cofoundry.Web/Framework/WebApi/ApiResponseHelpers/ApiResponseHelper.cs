@@ -9,13 +9,15 @@ using Cofoundry.Core.Validation;
 using Cofoundry.Core;
 using Microsoft.AspNetCore.Mvc;
 using System.Reflection;
+using Cofoundry.Core.Json;
+using Newtonsoft.Json;
 
 namespace Cofoundry.Web
 {
     /// <summary>
-    /// Use this helper in a Web Api controller to make executing queries and command
+    /// Use this helper in an API controller to make executing queries and command
     /// simpler and less repetitive. The helper handles validation error formatting, 
-    /// permission errors and uses a standard formatting of the response.
+    /// permission errors and uses a standard formatting of the response in JSON.
     /// </summary>
     public class ApiResponseHelper : IApiResponseHelper
     {
@@ -24,16 +26,19 @@ namespace Cofoundry.Web
         private readonly IQueryExecutor _queryExecutor;
         private readonly ICommandExecutor _commandExecutor;
         private readonly IModelValidationService _commandValidationService;
+        private readonly JsonSerializerSettings _jsonSerializerSettings;
 
         public ApiResponseHelper(
             IQueryExecutor queryExecutor,
             ICommandExecutor commandExecutor,
-            IModelValidationService commandValidationService
+            IModelValidationService commandValidationService,
+            JsonSerializerSettings jsonSerializerSettings
             )
         {
             _queryExecutor = queryExecutor;
             _commandExecutor = commandExecutor;
             _commandValidationService = commandValidationService;
+            _jsonSerializerSettings = jsonSerializerSettings;
         }
 
         #endregion
@@ -46,15 +51,19 @@ namespace Cofoundry.Web
         /// null then a 404 response is returned.
         /// </summary>
         /// <typeparam name="T">Type of the result</typeparam>
-        /// <param name="controller">The Controller instance using the helper</param>
         /// <param name="result">The result to return</param>
-        public IActionResult SimpleQueryResponse<T>(Controller controller, T result)
+        public JsonResult SimpleQueryResponse<T>(T result)
         {
             var response = new SimpleResponseData<T>() { Data = result };
 
-            if (result == null) return controller.NotFound(response);
+            var jsonResult = CreateJsonResult(response);
 
-            return controller.Ok(response);
+            if (result == null)
+            {
+                jsonResult.StatusCode = 404;
+            }
+
+            return jsonResult;
         }
 
         /// <summary>
@@ -62,46 +71,45 @@ namespace Cofoundry.Web
         /// properties based on the presence of validation errors. This overload allows you to include
         /// extra response data
         /// </summary>
-        /// <param name="controller">The Controller instance using the helper</param>
         /// <param name="validationErrors">Validation errors, if any, to be returned.</param>
         /// <param name="returnData">Data to return in the data property of the response object.</param>
-        public IActionResult SimpleCommandResponse<T>(Controller controller, IEnumerable<ValidationError> validationErrors, T returnData)
+        public JsonResult SimpleCommandResponse<T>(IEnumerable<ValidationError> validationErrors, T returnData)
         {
             var response = new SimpleCommandResponseData<T>();
             response.Errors = FormatValidationErrors(validationErrors);
             response.IsValid = !response.Errors.Any();
             response.Data = returnData;
 
-            return GetCommandResponse(response, controller);
+            return GetCommandResponse(response);
         }
 
         /// <summary>
         /// Formats a command response wrapping it in a SimpleCommandResponse object and setting
         /// properties based on the presence of validation errors.
         /// </summary>
-        /// <param name="controller">The Controller instance using the helper</param>
         /// <param name="validationErrors">Validation errors, if any, to be returned.</param>
-        public IActionResult SimpleCommandResponse(Controller controller, IEnumerable<ValidationError> validationErrors)
+        public JsonResult SimpleCommandResponse(IEnumerable<ValidationError> validationErrors)
         {
             var response = new SimpleCommandResponseData();
             response.Errors = FormatValidationErrors(validationErrors);
             response.IsValid = !response.Errors.Any();
 
-            return GetCommandResponse(response, controller);
+            return GetCommandResponse(response);
         }
 
         /// <summary>
         /// Returns a formatted 403 error response using the message of the specified exception
         /// </summary>
-        /// <param name="controller">The Controller instance using the helper</param>
         /// <param name="ex">The NotPermittedException to extract the message from</param>
-        public IActionResult NotPermittedResponse(Controller controller, NotPermittedException ex)
+        public JsonResult NotPermittedResponse(NotPermittedException ex)
         {
             var response = new SimpleCommandResponseData();
             response.Errors = new ValidationError[] { new ValidationError(ex.Message) };
             response.IsValid = false;
 
-            return controller.StatusCode(403, response);
+            var jsonResult = CreateJsonResult(response, 403);
+
+            return jsonResult;
         }
 
         private ICollection<ValidationError> FormatValidationErrors(IEnumerable<ValidationError> validationErrors)
@@ -134,13 +142,12 @@ namespace Cofoundry.Web
         /// Executes a command in a "Patch" style, allowing for a partial update of a resource. In
         /// order to support this method, there must be a query handler defined that implements
         /// IQueryHandler&lt;GetByIdQuery&lt;TCommand&gt;&gt; so the full command object can be fecthed 
-        /// prior to patching. Once patched and executed, a formatted IHttpActionResult is returned, 
+        /// prior to patching. Once patched and executed, a formatted JsonResult is returned, 
         /// handling any validation errors and permission errors.
         /// </summary>
         /// <typeparam name="TCommand">Type of the command to execute</typeparam>
-        /// <param name="controller">The Controller instance using the helper</param>
         /// <param name="delta">The delta of the command to patch and execute</param>
-        public async Task<IActionResult> RunCommandAsync<TCommand>(Controller controller, int id, IDelta<TCommand> delta) where TCommand : class, ICommand
+        public async Task<JsonResult> RunCommandAsync<TCommand>(int id, IDelta<TCommand> delta) where TCommand : class, ICommand
         {
             var query = new GetUpdateCommandByIdQuery<TCommand>(id);
             var command = await _queryExecutor.ExecuteAsync(query);
@@ -150,20 +157,19 @@ namespace Cofoundry.Web
                 delta.Patch(command);
             }
 
-            return await RunCommandAsync(controller, command);
+            return await RunCommandAsync(command);
         }
 
         /// <summary>
         /// Executes a command in a "Patch" style, allowing for a partial update of a resource. In
         /// order to support this method, there must be a query handler defined that implements
         /// IQueryHandler&lt;GetQuery&lt;TCommand&gt;&gt; so the full command object can be fecthed 
-        /// prior to patching. Once patched and executed, a formatted IHttpActionResult is returned, 
+        /// prior to patching. Once patched and executed, a formatted JsonResult is returned, 
         /// handling any validation errors and permission errors.
         /// </summary>
         /// <typeparam name="TCommand">Type of the command to execute</typeparam>
-        /// <param name="controller">The Controller instance using the helper</param>
         /// <param name="delta">The delta of the command to patch and execute</param>
-        public async Task<IActionResult> RunCommandAsync<TCommand>(Controller controller, IDelta<TCommand> delta) where TCommand : class, ICommand
+        public async Task<JsonResult> RunCommandAsync<TCommand>(IDelta<TCommand> delta) where TCommand : class, ICommand
         {
             var query = new GetUpdateCommandQuery<TCommand>();
             var command = await _queryExecutor.ExecuteAsync(query);
@@ -173,18 +179,17 @@ namespace Cofoundry.Web
                 delta.Patch(command);
             }
 
-            return await RunCommandAsync(controller, command);
+            return await RunCommandAsync(command);
         }
 
         /// <summary>
-        /// Executes a command and returns a formatted IHttpActionResult, handling any validation 
+        /// Executes a command and returns a formatted JsonResult, handling any validation 
         /// errors and permission errors. If the command has a property with the OutputValueAttribute
         /// the value is extracted and returned in the response.
         /// </summary>
         /// <typeparam name="TCommand">Type of the command to execute</typeparam>
-        /// <param name="controller">The Controller instance using the helper</param>
         /// <param name="command">The command to execute</param>
-        public async Task<IActionResult> RunCommandAsync<TCommand>(Controller controller, TCommand command) where TCommand : ICommand
+        public async Task<JsonResult> RunCommandAsync<TCommand>(TCommand command) where TCommand : ICommand
         {
             var errors = _commandValidationService.GetErrors(command).ToList();
 
@@ -200,7 +205,7 @@ namespace Cofoundry.Web
                 }
                 catch (NotPermittedException ex)
                 {
-                    return NotPermittedResponse(controller, ex);
+                    return NotPermittedResponse(ex);
                 }
             }
 
@@ -208,18 +213,17 @@ namespace Cofoundry.Web
 
             if (outputValue != null)
             {
-                return SimpleCommandResponse(controller, errors, outputValue);
+                return SimpleCommandResponse(errors, outputValue);
             }
-            return SimpleCommandResponse(controller, errors);
+            return SimpleCommandResponse(errors);
         }
 
         /// <summary>
-        /// Executes an action and returns a formatted IHttpActionResult, handling any validation 
+        /// Executes an action and returns a formatted JsonResult, handling any validation 
         /// errors and permission errors.
         /// </summary>
-        /// <param name="controller">The Controller instance using the helper</param>
         /// <param name="action">The action to execute</param>
-        public async Task<IActionResult> RunAsync(Controller controller, Func<Task> action)
+        public async Task<JsonResult> RunAsync(Func<Task> action)
         {
             var errors = new List<ValidationError>();
 
@@ -235,21 +239,20 @@ namespace Cofoundry.Web
                 }
                 catch (NotPermittedException ex)
                 {
-                    return NotPermittedResponse(controller, ex);
+                    return NotPermittedResponse(ex);
                 }
             }
 
-            return SimpleCommandResponse(controller, errors);
+            return SimpleCommandResponse(errors);
         }
 
         /// <summary>
-        /// Executes a function and returns a formatted IHttpActionResult, handling any validation 
+        /// Executes a function and returns a formatted JsonResult, handling any validation 
         /// and permission errors. The result of the function is returned in the response data.
         /// </summary>
         /// <typeparam name="TResult">Type of result returned from the function</typeparam>
-        /// <param name="controller">The Controller instance using the helper</param>
         /// <param name="functionToExecute">The function to execute</param>
-        public async Task<IActionResult> RunWithResultAsync<TResult>(Controller controller, Func<Task<TResult>> functionToExecute)
+        public async Task<JsonResult> RunWithResultAsync<TResult>(Func<Task<TResult>> functionToExecute)
         {
             var errors = new List<ValidationError>();
             TResult result = default(TResult);
@@ -266,23 +269,25 @@ namespace Cofoundry.Web
                 }
                 catch (NotPermittedException ex)
                 {
-                    return NotPermittedResponse(controller, ex);
+                    return NotPermittedResponse(ex);
                 }
             }
 
-            return SimpleCommandResponse(controller, errors, result);
+            return SimpleCommandResponse(errors, result);
         }
 
         #region private helpers
 
-        private IActionResult GetCommandResponse<T>(T response, Controller controller) where T : SimpleCommandResponseData
+        private JsonResult GetCommandResponse<T>(T response) where T : SimpleCommandResponseData
         {
+            var jsonResult = CreateJsonResult(response);
+
             if (!response.IsValid)
             {
-                return controller.BadRequest(response);
+                jsonResult.StatusCode = 400;
             }
 
-            return controller.Ok(response);
+            return jsonResult;
         }
 
         private object GetCommandOutputValue<TCommand>(TCommand command) where TCommand : ICommand
@@ -308,14 +313,25 @@ namespace Cofoundry.Web
                     errors.Add(ToValidationError(result));
                 }
             }
-            else if (ex.ValidationResult != null)
-            {
-                errors.Add(ToValidationError(ex.ValidationResult));
-            }
             else
             {
-                var error = new ValidationError();
-                error.Message = ex.Message;
+                ValidationError error;
+
+                if (ex.ValidationResult != null)
+                {
+                    error = ToValidationError(ex.ValidationResult);
+                }
+                else
+                {
+                    error = new ValidationError();
+                    error.Message = ex.Message;
+                }
+
+                if (ex is ValidationErrorException exceptionWithCode)
+                {
+                    error.ErrorCode = exceptionWithCode.ErrorCode;
+                }
+
                 errors.Add(error);
             }
         }
@@ -329,7 +345,22 @@ namespace Cofoundry.Web
 
             return error;
         }
-        
+
+        private JsonResult CreateJsonResult(
+            object response,
+            int? statusCode = null
+            )
+        {
+            var jsonResponse = new JsonResult(response, _jsonSerializerSettings);
+
+            if (statusCode.HasValue)
+            {
+                jsonResponse.StatusCode = statusCode;
+            }
+
+            return jsonResponse;
+        }
+
         #endregion
 
         #endregion

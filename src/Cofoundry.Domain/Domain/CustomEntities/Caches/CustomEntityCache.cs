@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Cofoundry.Domain
+namespace Cofoundry.Domain.Internal
 {
     /// <summary>
     /// Cache for custom entity data, particularly CustomEntityRoute objects
@@ -13,8 +13,6 @@ namespace Cofoundry.Domain
     /// </summary>
     public class CustomEntityCache : ICustomEntityCache
     {
-        #region constructor
-
         private const string ROUTES_CACHEKEY = "Routes_";
         private const string CACHEKEY = "COF_CustomEntities";
 
@@ -23,10 +21,6 @@ namespace Cofoundry.Domain
         {
             _cache = cacheFactory.Get(CACHEKEY);
         }
-
-        #endregion
-
-        #region public methods
 
         /// <summary>
         /// Gets a collection of custom entity routes for the specified
@@ -68,15 +62,9 @@ namespace Cofoundry.Domain
             _cache.Clear(GetEntityTypeRoutesCacheKey(customEntityTypeCode));
         }
 
-        #endregion
-
-        #region private methods
-
         private string GetEntityTypeRoutesCacheKey(string customEntityTypeCode)
         {
             return ROUTES_CACHEKEY + customEntityTypeCode;
         }
-
-        #endregion
     }
 }

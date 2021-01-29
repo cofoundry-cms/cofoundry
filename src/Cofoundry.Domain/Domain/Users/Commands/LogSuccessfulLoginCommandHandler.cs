@@ -2,14 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Data.SqlClient;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Cofoundry.Domain.Data;
 using Cofoundry.Domain.CQS;
 using Cofoundry.Core.EntityFramework;
 using Cofoundry.Core;
 
-namespace Cofoundry.Domain
+namespace Cofoundry.Domain.Internal
 {
     /// <summary>
     /// Updates user auditing information in the database to record 
@@ -17,7 +17,7 @@ namespace Cofoundry.Domain
     /// session.
     /// </summary>
     public class LogSuccessfulLoginCommandHandler 
-        : IAsyncCommandHandler<LogSuccessfulLoginCommand>
+        : ICommandHandler<LogSuccessfulLoginCommand>
         , IIgnorePermissionCheckHandler
     {
         #region constructor

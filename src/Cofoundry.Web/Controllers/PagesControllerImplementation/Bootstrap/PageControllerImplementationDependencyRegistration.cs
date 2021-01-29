@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Cofoundry.Web.Bootstrap
+namespace Cofoundry.Web.Registration
 {
     public class PageControllerImplementationDependencyRegistration : IDependencyRegistration
     {

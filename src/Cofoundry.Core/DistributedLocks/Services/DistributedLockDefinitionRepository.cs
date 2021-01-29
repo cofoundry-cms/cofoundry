@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Cofoundry.Core.DistributedLocks
+namespace Cofoundry.Core.DistributedLocks.Internal
 {
     /// <summary>
     /// A thin repository that validates and exposes all

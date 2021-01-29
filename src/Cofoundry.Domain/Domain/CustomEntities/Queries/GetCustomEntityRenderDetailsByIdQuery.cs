@@ -9,24 +9,20 @@ using Cofoundry.Core.Validation;
 
 namespace Cofoundry.Domain
 {
+    /// <summary>
+    /// Query to retreive a custom entity by it's database id, projected as a
+    /// CustomEntityRenderDetails, which contains all data for rendering a specific 
+    /// version of a custom entity out to a page, including template data for all the 
+    /// content-editable page regions. This projection is specific to a particular 
+    /// version which may not always be the latest (depending on the query), and to a 
+    /// specific page. Although often you may only have one custom entity page, it is 
+    /// possible to have multiple.
+    /// </summary>
     public class GetCustomEntityRenderDetailsByIdQuery : IQuery<CustomEntityRenderDetails>, IValidatableObject
     {
-        public GetCustomEntityRenderDetailsByIdQuery() { }
-
         /// <summary>
-        /// Initializes the query with the specified parameters.
+        /// Database id of the custom entity to get.
         /// </summary>
-        /// <param name="customEntityId">CustomEntityId of the custom entity to get.</param>
-        /// <param name="publishStatus">Used to determine which version of the page to include data for.</param>
-        public GetCustomEntityRenderDetailsByIdQuery(int customEntityId, PublishStatusQuery? publishStatus = null)
-        {
-            CustomEntityId = customEntityId;
-            if (publishStatus.HasValue)
-            {
-                PublishStatus = publishStatus.Value;
-            }
-        }
-
         [Required]
         [PositiveInteger]
         public int CustomEntityId { get; set; }
@@ -42,6 +38,12 @@ namespace Cofoundry.Domain
         /// </summary>
         public int? CustomEntityVersionId { get; set; }
 
+        /// <summary>
+        /// PageId to use to determine which page to include data for. Although often you
+        /// may only have one custom entity page, it is possible to have multiple. If a
+        /// page with the specified id cannot be found then no page region data will be 
+        /// included in the returned object.
+        /// </summary>
         [Required]
         [PositiveInteger]
         public int PageId { get; set; }

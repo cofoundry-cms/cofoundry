@@ -1,13 +1,13 @@
 ﻿angular.module('cms.shared').controller('EditNestedDataModelDialogController', [
     '$scope',
-    'shared.focusService',
-    'shared.stringUtilities',
+    'shared.nestedDataModelSchemaService',
+    'shared.LoadState',
     'options',
     'close',
 function (
     $scope,
-    focusService,
-    stringUtilities,
+    nestedDataModelSchemaService,
+    LoadState,
     options,
     close) {
     
@@ -21,19 +21,40 @@ function (
         vm.save = onSave;
         vm.onCancel = onCancel;
         vm.close = onCancel;
-        vm.title = options.model ? 'Edit Item' : 'Add Item';
-        vm.formDataSource = {
-            model: options.model || {},
-            modelMetaData: options.modelMetaData
-        }
+        vm.isNew = !options.model;
+        vm.title = vm.isNew ? 'Add Item' : 'Edit Item';
+        vm.saveLoadState = new LoadState();
+        initFormDataSource(options);
     }
 
     /* EVENTS */
 
-    function onSave() {
+    function initFormDataSource(options) {
+        var model = options.model || {},
+            modelMetaData = options.modelMetaData;
 
-        if (options.onSave) options.onSave(vm.formDataSource.model);
-        close();
+        if (vm.isNew && modelMetaData.defaultValue && modelMetaData.defaultValue.value) {
+            model = angular.copy(modelMetaData.defaultValue.value);
+        }
+
+        vm.formDataSource = {
+            model: model,
+            modelMetaData: modelMetaData
+        };
+    }
+
+    function onSave() {
+        vm.saveLoadState.on();
+
+        nestedDataModelSchemaService
+            .validate(vm.formDataSource.modelMetaData.typeName, vm.formDataSource.model)
+            .then(onValidationSuccess)
+            .finally(vm.saveLoadState.off);
+
+        function onValidationSuccess() {
+            if (options.onSave) options.onSave(vm.formDataSource.model);
+            close();
+        }
     }
 
     function onCancel() {

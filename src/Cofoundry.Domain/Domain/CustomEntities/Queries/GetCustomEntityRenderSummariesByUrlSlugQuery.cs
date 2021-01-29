@@ -10,14 +10,14 @@ namespace Cofoundry.Domain
 {
     /// <summary>
     /// Returns custom entities filtered on the url slug value. This query
-    /// can return multiple custom entities because unique UrlSlugs is an
+    /// can return multiple custom entities because unique url slugs are an
     /// optional setting on the custom entity definition.
     /// </summary>
     public class GetCustomEntityRenderSummariesByUrlSlugQuery : IQuery<ICollection<CustomEntityRenderSummary>>
     {
         /// <summary>
         /// Returns custom entities filtered on the url slug value. This query
-        /// can return multiple custom entities because unique UrlSlugs is an
+        /// can return multiple custom entities because unique url slugs are an
         /// optional setting on the custom entity definition.
         /// </summary>
         public GetCustomEntityRenderSummariesByUrlSlugQuery()
@@ -26,7 +26,7 @@ namespace Cofoundry.Domain
 
         /// <summary>
         /// Returns custom entities filtered on the url slug value. This query
-        /// can return multiple custom entities because unique UrlSlugs is an
+        /// can return multiple custom entities because unique url slugs are an
         /// optional setting on the custom entity definition.
         /// </summary>
         /// <param name="customEntityDefinitionCode">Required. The definition code of the custom entity to filter on.</param>

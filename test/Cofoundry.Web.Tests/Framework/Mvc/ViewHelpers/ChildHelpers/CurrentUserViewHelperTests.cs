@@ -40,10 +40,10 @@ namespace Cofoundry.Web.Tests
 
             var queryExecutor = new Mock<IQueryExecutor>();
             queryExecutor
-                .Setup(r => r.ExecuteAsync(It.Is<GetRoleDetailsByIdQuery>(m => m.RoleId == null)))
+                .Setup(r => r.ExecuteAsync(It.Is<GetRoleDetailsByIdQuery>(m => m.RoleId == null), It.Is<IUserContext>(m => m == defaultUserContext)))
                 .ReturnsAsync(() => new RoleDetails() { IsAnonymousRole = true });
             queryExecutor
-                .Setup(r => r.ExecuteAsync(It.Is<GetRoleDetailsByIdQuery>(m => m.RoleId == _userAreaContext.RoleId)))
+                .Setup(r => r.ExecuteAsync(It.Is<GetRoleDetailsByIdQuery>(m => m.RoleId == _userAreaContext.RoleId), It.Is<IUserContext>(m => m == _userAreaContext)))
                 .ReturnsAsync(() => new RoleDetails()
                 {
                     IsAnonymousRole = false,
@@ -51,7 +51,7 @@ namespace Cofoundry.Web.Tests
                 });
 
             queryExecutor
-                .Setup(r => r.ExecuteAsync(It.Is<GetUserMicroSummaryByIdQuery>(m => m.UserId == _userAreaContext.UserId)))
+                .Setup(r => r.ExecuteAsync(It.Is<GetUserMicroSummaryByIdQuery>(m => m.UserId == _userAreaContext.UserId), It.Is<IUserContext>(m => m == _userAreaContext)))
                 .ReturnsAsync(() => new UserMicroSummary()
                 {
                     UserId = _userAreaContext.UserId.Value
@@ -62,14 +62,14 @@ namespace Cofoundry.Web.Tests
             if (defaultUserContext.UserId.HasValue)
             {
                 queryExecutor
-                    .Setup(r => r.ExecuteAsync(It.Is<GetRoleDetailsByIdQuery>(m => m.RoleId == defaultUserContext.RoleId.Value)))
+                    .Setup(r => r.ExecuteAsync(It.Is<GetRoleDetailsByIdQuery>(m => m.RoleId == defaultUserContext.RoleId.Value), It.Is<IUserContext>(m => m == defaultUserContext)))
                     .ReturnsAsync(() => new RoleDetails()
                     {
                         IsAnonymousRole = false,
                         RoleId = defaultUserContext.RoleId.Value
                     });
                 queryExecutor
-                    .Setup(r => r.ExecuteAsync(It.Is<GetUserMicroSummaryByIdQuery>(m => m.UserId == defaultUserContext.UserId.Value)))
+                    .Setup(r => r.ExecuteAsync(It.Is<GetUserMicroSummaryByIdQuery>(m => m.UserId == defaultUserContext.UserId.Value), It.Is<IUserContext>(m => m == defaultUserContext)))
                     .ReturnsAsync(new UserMicroSummary()
                     {
                         UserId = defaultUserContext.UserId.Value

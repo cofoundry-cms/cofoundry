@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Reflection;
@@ -8,7 +7,7 @@ using System.Runtime.ExceptionServices;
 using System.Threading.Tasks;
 using Cofoundry.Core.Validation;
 
-namespace Cofoundry.Domain.CQS
+namespace Cofoundry.Domain.CQS.Internal
 {
 
     /// <summary>

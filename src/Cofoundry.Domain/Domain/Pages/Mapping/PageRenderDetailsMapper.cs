@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Cofoundry.Domain
+namespace Cofoundry.Domain.Internal
 {
     public class PageRenderDetailsMapper : IPageRenderDetailsMapper
     {
@@ -36,7 +36,7 @@ namespace Cofoundry.Domain
         /// <param name="pageRoute">
         /// The page route to map to the new object.
         /// </param>
-        public PageRenderDetails Map(
+        public virtual PageRenderDetails Map(
             PageVersion dbPageVersion,
             PageRoute pageRoute
             )
@@ -63,7 +63,7 @@ namespace Cofoundry.Domain
         /// <param name="pageRouteLookup">
         /// Set of page routes to lookup the route property value.
         /// </param>
-        public PageRenderDetails Map(PageVersion dbPageVersion, IDictionary<int, PageRoute> pageRouteLookup)
+        public virtual PageRenderDetails Map(PageVersion dbPageVersion, IDictionary<int, PageRoute> pageRouteLookup)
         {
             if (dbPageVersion == null) throw new ArgumentNullException(nameof(dbPageVersion));
             if (pageRouteLookup == null) throw new ArgumentNullException(nameof(pageRouteLookup));
@@ -75,7 +75,7 @@ namespace Cofoundry.Domain
             return page;
         }
 
-        private void MapInternal(PageVersion dbPageVersion, PageRenderDetails page)
+        protected void MapInternal(PageVersion dbPageVersion, PageRenderDetails page)
         {
             page.Template = _pageTemplateMapper.Map(dbPageVersion.PageTemplate);
 

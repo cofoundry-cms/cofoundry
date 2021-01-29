@@ -9,10 +9,13 @@ using Cofoundry.Core;
 using Cofoundry.Core.Data;
 using Cofoundry.Core.MessageAggregator;
 
-namespace Cofoundry.Domain
+namespace Cofoundry.Domain.Internal
 {
+    /// <summary>
+    /// Adds a new image asset.
+    /// </summary>
     public class AddImageAssetCommandHandler 
-        : IAsyncCommandHandler<AddImageAssetCommand>
+        : ICommandHandler<AddImageAssetCommand>
         , IPermissionRestrictedCommandHandler<AddImageAssetCommand>
     {
         #region constructor

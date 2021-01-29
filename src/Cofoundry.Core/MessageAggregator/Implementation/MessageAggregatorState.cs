@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Cofoundry.Core.MessageAggregator
+namespace Cofoundry.Core.MessageAggregator.Internal
 {
     /// <summary>
     /// State object to keep track of subscriptions to a message aggregator

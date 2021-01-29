@@ -6,12 +6,11 @@ using Cofoundry.Domain.Data;
 using Cofoundry.Domain.CQS;
 using Microsoft.EntityFrameworkCore;
 using Cofoundry.Core;
-using System.Reflection;
 
-namespace Cofoundry.Domain
+namespace Cofoundry.Domain.Internal
 {
     public class UpdateUnstructuredDataDependenciesCommandHandler 
-        : IAsyncCommandHandler<UpdateUnstructuredDataDependenciesCommand>
+        : ICommandHandler<UpdateUnstructuredDataDependenciesCommand>
         , IPermissionRestrictedCommandHandler<UpdateUnstructuredDataDependenciesCommand>
     {
         #region constructor

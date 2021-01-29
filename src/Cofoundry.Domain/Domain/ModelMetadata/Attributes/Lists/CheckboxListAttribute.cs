@@ -8,9 +8,16 @@ using Microsoft.AspNetCore.Mvc.ModelBinding.Metadata;
 namespace Cofoundry.Domain
 {
     /// <summary>
+    /// <para>
     /// Use this to decorate a collection property to indicate it should be
     /// rendered as a list of checkbox inputs in the admin UI. The collection type 
     /// should use the same type as the associated option values.
+    /// </para>
+    /// <para>
+    /// A checkbox list allows multiple values to be selected and so the property 
+    /// type should be a collection, and the collection type should use the same 
+    /// type as the associated option values.
+    /// </para>
     /// </summary>
     [AttributeUsage(AttributeTargets.Property)]
     public class CheckboxListAttribute : Attribute, IMetadataAttribute

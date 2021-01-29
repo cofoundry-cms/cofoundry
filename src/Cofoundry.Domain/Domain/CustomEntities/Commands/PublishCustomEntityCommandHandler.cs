@@ -10,11 +10,16 @@ using Cofoundry.Core.MessageAggregator;
 using Cofoundry.Core;
 using Cofoundry.Core.Validation;
 using Cofoundry.Core.Data;
+using Cofoundry.Domain.Data.Internal;
 
-namespace Cofoundry.Domain
+namespace Cofoundry.Domain.Internal
 {
+    /// <summary>
+    /// Publishes a custom entity. If the custom entity is already published and
+    /// a date is specified then the publish date will be updated.
+    /// </summary>
     public class PublishCustomEntityCommandHandler 
-        : IAsyncCommandHandler<PublishCustomEntityCommand>
+        : ICommandHandler<PublishCustomEntityCommand>
         , IIgnorePermissionCheckHandler
     {
         #region constructor
@@ -53,8 +58,6 @@ namespace Cofoundry.Domain
         }
 
         #endregion
-
-        #region execution
 
         public async Task ExecuteAsync(PublishCustomEntityCommand command, IExecutionContext executionContext)
         {
@@ -163,9 +166,9 @@ namespace Cofoundry.Domain
             }
         }
 
-        private IsCustomEntityPathUniqueQuery GetUniquenessQuery(CustomEntityVersion dbVersion, ICustomEntityDefinition definition)
+        private IsCustomEntityUrlSlugUniqueQuery GetUniquenessQuery(CustomEntityVersion dbVersion, ICustomEntityDefinition definition)
         {
-            var query = new IsCustomEntityPathUniqueQuery();
+            var query = new IsCustomEntityUrlSlugUniqueQuery();
             query.CustomEntityDefinitionCode = definition.CustomEntityDefinitionCode;
             query.LocaleId = dbVersion.CustomEntity.LocaleId;
             query.UrlSlug = SlugFormatter.ToSlug(dbVersion.Title);
@@ -173,7 +176,5 @@ namespace Cofoundry.Domain
 
             return query;
         }
-
-        #endregion
     }
 }

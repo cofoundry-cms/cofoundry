@@ -6,14 +6,14 @@ using Cofoundry.Domain.Data;
 using Cofoundry.Domain.CQS;
 using Microsoft.EntityFrameworkCore;
 
-namespace Cofoundry.Domain
+namespace Cofoundry.Domain.Internal
 {
     /// <summary>
     /// Returns all page directories as PageDirectoryRoute objects. The results of this 
     /// query are cached.
     /// </summary>
     public class GetAllPageDirectoryRoutesQueryHandler 
-        : IAsyncQueryHandler<GetAllPageDirectoryRoutesQuery, ICollection<PageDirectoryRoute>>
+        : IQueryHandler<GetAllPageDirectoryRoutesQuery, ICollection<PageDirectoryRoute>>
         , IPermissionRestrictedQueryHandler<GetAllPageDirectoryRoutesQuery, ICollection<PageDirectoryRoute>>
     {
         #region constructor

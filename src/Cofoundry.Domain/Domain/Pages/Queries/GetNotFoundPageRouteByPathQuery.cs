@@ -9,7 +9,7 @@ namespace Cofoundry.Domain
 {
     /// <summary>
     /// Attempts to find the most relevant 'Not Found' page route by searching
-    /// for a 'Not Found' page up the directory tree.
+    /// for a 'Not Found' page up the directory tree of a specific path.
     /// </summary>
     public class GetNotFoundPageRouteByPathQuery : IQuery<PageRoute>
     {

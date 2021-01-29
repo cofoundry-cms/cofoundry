@@ -10,11 +10,15 @@ using Microsoft.EntityFrameworkCore;
 using Cofoundry.Core.Validation;
 using Cofoundry.Core.MessageAggregator;
 using Cofoundry.Core.Data;
+using Cofoundry.Domain.Data.Internal;
 
-namespace Cofoundry.Domain
+namespace Cofoundry.Domain.Internal
 {
+    /// <summary>
+    /// Adds a new custom entity with a draft version and optionally publishes it.
+    /// </summary>
     public class AddCustomEntityCommandHandler 
-        : IAsyncCommandHandler<AddCustomEntityCommand>
+        : ICommandHandler<AddCustomEntityCommand>
         , IPermissionRestrictedCommandHandler<AddCustomEntityCommand>
     {
         #region constructor
@@ -59,8 +63,6 @@ namespace Cofoundry.Domain
         }
 
         #endregion
-
-        #region Execution
 
         public async Task ExecuteAsync(AddCustomEntityCommand command, IExecutionContext executionContext)
         {
@@ -129,7 +131,7 @@ namespace Cofoundry.Domain
 
             if (command.LocaleId.HasValue && !definition.HasLocale)
             {
-                throw new PropertyValidationException(definition.NamePlural + " cannot be assigned locales", "LocaleId");
+                throw ValidationErrorException.CreateWithProperties(definition.NamePlural + " cannot be assigned locales", "LocaleId");
             }
         }
         
@@ -143,11 +145,11 @@ namespace Cofoundry.Domain
 
             if (locale == null)
             {
-                throw new PropertyValidationException("The selected locale does not exist.", "LocaleId");
+                throw ValidationErrorException.CreateWithProperties("The selected locale does not exist.", "LocaleId");
             }
             if (!locale.IsActive)
             {
-                throw new PropertyValidationException("The selected locale is not active and cannot be used.", "LocaleId");
+                throw ValidationErrorException.CreateWithProperties("The selected locale is not active and cannot be used.", "LocaleId");
             }
 
             return locale;
@@ -231,9 +233,9 @@ namespace Cofoundry.Domain
             EnforceUniquenessResult(isUnique, command, definition);
         }
 
-        private IsCustomEntityPathUniqueQuery GetUniquenessQuery(AddCustomEntityCommand command, CustomEntityDefinitionSummary definition)
+        private IsCustomEntityUrlSlugUniqueQuery GetUniquenessQuery(AddCustomEntityCommand command, CustomEntityDefinitionSummary definition)
         {
-            var query = new IsCustomEntityPathUniqueQuery();
+            var query = new IsCustomEntityUrlSlugUniqueQuery();
             query.CustomEntityDefinitionCode = definition.CustomEntityDefinitionCode;
             query.LocaleId = command.LocaleId;
             query.UrlSlug = command.UrlSlug;
@@ -267,8 +269,6 @@ namespace Cofoundry.Domain
                 throw new UniqueConstraintViolationException(message, prop, command.UrlSlug);
             }
         }
-
-        #endregion
 
         #endregion
 

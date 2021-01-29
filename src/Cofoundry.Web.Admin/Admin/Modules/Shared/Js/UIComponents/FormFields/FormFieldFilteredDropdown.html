@@ -1,7 +1,7 @@
 ﻿<div class="control-group">
     <cms-field>
         <label class="control-label" for="{{vm.modelName}}">{{vm.title}}:</label>
-        <div class="filtered-dd--actions" ng-show="vm.formScope.editMode" ng-transclude></div>
+        <div class="filtered-dd--actions" ng-show="vm.formScope.editMode && !vm.readonly" ng-transclude></div>
         <div class="controls filtered-dd">
 
             <input type="hidden"
@@ -16,13 +16,13 @@
                              class="btn-remove"
                              ng-if="vm.selectedText"
                              ng-click="vm.clearSelected()"
-                             ng-show="vm.formScope.editMode">
+                             ng-show="vm.formScope.editMode && !vm.readonly">
             </cms-button-icon>
 
             <ui-select ng-model="vm.model"
                        theme="selectize"
                        ng-disabled="vm.disabled"
-                       ng-show="vm.formScope.editMode">
+                       ng-show="vm.formScope.editMode && !vm.readonly">
                 <ui-select-match placeholder="{{vm.placeholder}}"
                                  allow-clear="{{!vm.required && !vm.hasRequiredAttribute}}">{{vm.selectedText}}</ui-select-match>
                 <ui-select-choices repeat="dataItem[vm.optionValue] as dataItem in vm.dataSource track by $index"
@@ -32,8 +32,11 @@
                 </ui-select-choices>
             </ui-select>
 
-            <div ng-hide="vm.formScope.editMode" ng-if="vm.selectedText" class="text-block-display-value">{{vm.selectedText}}</div>
-            <div ng-hide="vm.formScope.editMode" ng-if="!vm.selectedText" class="text-block-display-value">None</div>
+            <div ng-hide="vm.formScope.editMode && !vm.readonly" ng-if="vm.selectedText" class="text-block-display-value">
+                <span ng-if="!vm.href">{{vm.selectedText}}</span>
+                <a ng-if="vm.href" ng-href="{{vm.href}}">{{vm.selectedText}}</a>
+            </div>
+            <div ng-hide="vm.formScope.editMode && !vm.readonly" ng-if="!vm.selectedText" class="text-block-display-value">None</div>
 
             <cms-form-field-validation-summary></cms-form-field-validation-summary>
 

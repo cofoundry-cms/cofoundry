@@ -9,7 +9,7 @@ using System.Diagnostics;
 using Microsoft.EntityFrameworkCore;
 using Cofoundry.Core;
 
-namespace Cofoundry.Domain
+namespace Cofoundry.Domain.Internal
 {
     /// <summary>
     /// Returns data for a specific custom entity page block by it's id. Because
@@ -17,7 +17,7 @@ namespace Cofoundry.Domain
     /// optionally pass down a PublishStatusQuery to use in the mapping process.
     /// </summary>
     public class GetCustomEntityVersionPageBlockRenderDetailsByIdQueryHandler
-        : IAsyncQueryHandler<GetCustomEntityVersionPageBlockRenderDetailsByIdQuery, CustomEntityVersionPageBlockRenderDetails>
+        : IQueryHandler<GetCustomEntityVersionPageBlockRenderDetailsByIdQuery, CustomEntityVersionPageBlockRenderDetails>
         , IIgnorePermissionCheckHandler
     {
         #region constructor

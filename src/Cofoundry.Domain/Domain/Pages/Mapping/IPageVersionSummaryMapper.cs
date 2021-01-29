@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using Cofoundry.Domain.Data;
 
-namespace Cofoundry.Domain
+namespace Cofoundry.Domain.Internal
 {
     /// <summary>
     /// Simple mapper for mapping to PageVersionSummary objects.

@@ -18,7 +18,8 @@ function (
         scope: {
             model: '=cmsModel',
             title: '@cmsTitle',
-            localeId: '=cmsLocaleId'
+            localeId: '=cmsLocaleId',
+            readonly: '=cmsReadonly'
         },
         require: ['?^^cmsFormDynamicFieldSet'],
         link: {

@@ -1,7 +1,6 @@
 ﻿using Cofoundry.Core.Validation;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Text;
 
 namespace Cofoundry.Domain
@@ -11,15 +10,22 @@ namespace Cofoundry.Domain
     /// attempt is invalid because the username or password
     /// is invalid.
     /// </summary>
-    public class InvalidCredentialsAuthenticationException : PropertyValidationException
+    public class InvalidCredentialsAuthenticationException : ValidationErrorException
     {
         public InvalidCredentialsAuthenticationException(string propertyName)
-            : base(UserLoginInfoAuthenticationError.InvalidCredentials.ToDisplayText(), propertyName)
+            : base(new ValidationError() {
+                Message = UserLoginInfoAuthenticationError.InvalidCredentials.ToDisplayText(),
+                Properties = new string[] { propertyName }
+            })
         {
         }
 
         public InvalidCredentialsAuthenticationException(string propertyName, string message)
-            : base(message, propertyName)
+            : base(new ValidationError()
+            {
+                Message = message,
+                Properties = new string[] { propertyName }
+            })
         {
         }
     }

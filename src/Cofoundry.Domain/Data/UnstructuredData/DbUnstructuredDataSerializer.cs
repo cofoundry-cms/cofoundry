@@ -1,4 +1,5 @@
 ﻿using Cofoundry.Core.Json;
+using Cofoundry.Domain.Internal;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
@@ -10,7 +11,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Cofoundry.Domain.Data
+namespace Cofoundry.Domain.Data.Internal
 {
     /// <summary>
     /// Handles serialization for unstructured data stored in the db, e.g.
@@ -18,23 +19,14 @@ namespace Cofoundry.Domain.Data
     /// </summary>
     public class DbUnstructuredDataSerializer : IDbUnstructuredDataSerializer
     {
-        #region constructor
-
-        private readonly IJsonSerializerSettingsFactory _jsonSerializerSettingsFactory;
-        private readonly ILogger<DbUnstructuredDataSerializer> _logger;
+        private readonly DynamicDataModelJsonSerializerSettingsCache _dynamicDataModelJsonSerializerSettingsCache;
 
         public DbUnstructuredDataSerializer(
-            ILogger<DbUnstructuredDataSerializer> logger,
-            IJsonSerializerSettingsFactory jsonSerializerSettingsFactory
+            DynamicDataModelJsonSerializerSettingsCache dynamicDataModelJsonSerializerSettingsCache
             )
         {
-            _logger = logger;
-            _jsonSerializerSettingsFactory = jsonSerializerSettingsFactory;
+            _dynamicDataModelJsonSerializerSettingsCache = dynamicDataModelJsonSerializerSettingsCache;
         }
-
-        #endregion
-
-        #region public methods
 
         public object Deserialize(string serialized, Type type)
         {
@@ -61,31 +53,9 @@ namespace Cofoundry.Domain.Data
             return s;
         }
 
-        #endregion
-
-        #region private helpers
-
         private JsonSerializerSettings GetDeserializerSettings()
         {
-            var settings = _jsonSerializerSettingsFactory.Create();
-            settings.Error = HandleDeserializationError;
-
-            return settings;
+            return _dynamicDataModelJsonSerializerSettingsCache.GetInstance();
         }
-
-        private void HandleDeserializationError(object sender, ErrorEventArgs errorArgs)
-        {
-            if (Debugger.IsAttached)
-            {
-                Debug.Assert(false, errorArgs.ErrorContext.Error.Message);
-            }
-            else
-            {
-                _logger.LogWarning(0, errorArgs.ErrorContext.Error, errorArgs.ErrorContext.Error.Message);
-            }
-            errorArgs.ErrorContext.Handled = true;
-        }
-
-        #endregion
     }
 }

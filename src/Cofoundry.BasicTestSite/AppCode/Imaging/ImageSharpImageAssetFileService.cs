@@ -1,4 +1,5 @@
 ﻿using Cofoundry.Core.Data;
+using Cofoundry.Core.EntityFramework;
 using Cofoundry.Core.Validation;
 using Cofoundry.Domain;
 using Cofoundry.Domain.Data;
@@ -20,7 +21,7 @@ namespace Cofoundry.Plugins.Imaging.ImageSharp
         private const string ASSET_FILE_CONTAINER_NAME = "Images";
 
         private static readonly HashSet<string> _permittedImageFileExtensions = new HashSet<string>(StringComparer.OrdinalIgnoreCase) {
-            "jpg", 
+            "jpg",
             "jpeg",
             "png",
             "gif"
@@ -49,14 +50,14 @@ namespace Cofoundry.Plugins.Imaging.ImageSharp
         #endregion
 
         public async Task SaveAsync(
-            IUploadedFile uploadedFile, 
-            ImageAsset imageAsset, 
+            IUploadedFile uploadedFile,
+            ImageAsset imageAsset,
             string propertyName
             )
         {
-            Image<Rgba32> imageFile = null;
+            Image imageFile = null;
             IImageFormat imageFormat = null;
-                
+
             using (var inputSteam = await uploadedFile.OpenReadStreamAsync())
             {
                 try
@@ -136,8 +137,8 @@ namespace Cofoundry.Plugins.Imaging.ImageSharp
         }
 
         private void ValidateImage(
-            string propertyName, 
-            Image<Rgba32> imageFile, 
+            string propertyName,
+            Image imageFile,
             IImageFormat imageFormat
             )
         {

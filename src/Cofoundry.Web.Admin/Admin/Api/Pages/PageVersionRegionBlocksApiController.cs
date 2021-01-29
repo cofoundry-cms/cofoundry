@@ -33,64 +33,59 @@ namespace Cofoundry.Web.Admin
 
         #region queries
 
-        public async Task<IActionResult> Get(int pageVersionBlockId, PageVersionRegionBlocksActionDataType dataType = PageVersionRegionBlocksActionDataType.RenderDetails)
+        public async Task<JsonResult> Get(int pageVersionBlockId, PageVersionRegionBlocksActionDataType dataType = PageVersionRegionBlocksActionDataType.RenderDetails)
         {
             if (dataType == PageVersionRegionBlocksActionDataType.UpdateCommand)
             {
                 var updateCommandQuery = new GetUpdateCommandByIdQuery<UpdatePageVersionBlockCommand>(pageVersionBlockId);
                 var updateCommandResult = await _queryExecutor.ExecuteAsync(updateCommandQuery);
 
-                return _apiResponseHelper.SimpleQueryResponse(this, updateCommandResult);
+                return _apiResponseHelper.SimpleQueryResponse(updateCommandResult);
             }
             
             var query = new GetPageVersionBlockRenderDetailsByIdQuery() { PageVersionBlockId = pageVersionBlockId, PublishStatus = PublishStatusQuery.Latest };
             var results = await _queryExecutor.ExecuteAsync(query);
             
-            return _apiResponseHelper.SimpleQueryResponse(this, results);
+            return _apiResponseHelper.SimpleQueryResponse(results);
         }
 
         #endregion
 
         #region commands
 
-        [HttpPost]
-        public async Task<IActionResult> Post([ModelBinder(BinderType = typeof(PageVersionBlockDataModelCommandModelBinder))] AddPageVersionBlockCommand command)
+        public Task<JsonResult> Post([ModelBinder(BinderType = typeof(PageVersionBlockDataModelCommandModelBinder))] AddPageVersionBlockCommand command)
         {
-            return await _apiResponseHelper.RunCommandAsync(this, command);
+            return _apiResponseHelper.RunCommandAsync(command);
         }
 
-        [HttpPut]
-        public async Task<IActionResult> Put(int PageVersionBlockId, [ModelBinder(BinderType = typeof(PageVersionBlockDataModelCommandModelBinder))] UpdatePageVersionBlockCommand command)
+        public Task<JsonResult> Put(int PageVersionBlockId, [ModelBinder(BinderType = typeof(PageVersionBlockDataModelCommandModelBinder))] UpdatePageVersionBlockCommand command)
         {
-            return await _apiResponseHelper.RunCommandAsync(this, command);
+            return _apiResponseHelper.RunCommandAsync(command);
         }
 
-        [HttpDelete]
-        public async Task<IActionResult> Delete(int pageVersionBlockId)
+        public Task<JsonResult> Delete(int pageVersionBlockId)
         {
             var command = new DeletePageVersionBlockCommand() { PageVersionBlockId = pageVersionBlockId };
 
-            return await _apiResponseHelper.RunCommandAsync(this, command);
+            return _apiResponseHelper.RunCommandAsync(command);
         }
 
-        [HttpPut]
-        public async Task<IActionResult> MoveUp(int pageVersionBlockId)
+        public Task<JsonResult> MoveUp(int pageVersionBlockId)
         {
             var command = new MovePageVersionBlockCommand();
             command.PageVersionBlockId = pageVersionBlockId;
             command.Direction = OrderedItemMoveDirection.Up;
 
-            return await _apiResponseHelper.RunCommandAsync(this, command);
+            return _apiResponseHelper.RunCommandAsync(command);
         }
 
-        [HttpPut]
-        public async Task<IActionResult> MoveDown(int pageVersionBlockId)
+        public Task<JsonResult> MoveDown(int pageVersionBlockId)
         {
             var command = new MovePageVersionBlockCommand();
             command.PageVersionBlockId = pageVersionBlockId;
             command.Direction = OrderedItemMoveDirection.Down;
 
-            return await _apiResponseHelper.RunCommandAsync(this, command);
+            return _apiResponseHelper.RunCommandAsync(command);
         }
         
         #endregion

@@ -7,8 +7,9 @@ using Cofoundry.Domain.Data;
 using Microsoft.EntityFrameworkCore;
 using Cofoundry.Core;
 using Cofoundry.Core.Data;
+using System.IO;
 
-namespace Cofoundry.Domain
+namespace Cofoundry.Domain.Internal
 {
     /// <summary>
     /// Updates the page block types registered in the database using the
@@ -16,7 +17,7 @@ namespace Cofoundry.Domain
     /// run during the auto-update process when the application starst up.
     /// </summary>
     public class RegisterPageBlockTypesCommandHandler
-        : IAsyncCommandHandler<RegisterPageBlockTypesCommand>
+        : ICommandHandler<RegisterPageBlockTypesCommand>
         , IPermissionRestrictedCommandHandler<RegisterPageBlockTypesCommand>
     {
         private readonly CofoundryDbContext _dbContext;
@@ -80,8 +81,7 @@ namespace Cofoundry.Domain
                 var existingBlock = dbPageBlockTypes.GetOrDefault(fileName);
                 bool isUpdated = false;
 
-                var fileDetails = await _queryExecutor.ExecuteAsync(new GetPageBlockTypeFileDetailsByFileNameQuery(fileName), executionContext);
-                DetectDuplicateTemplateFileNames(fileDetails);
+                var fileDetails = await GetAndValidateBlockTypeFileDetails(fileName, model.Value, executionContext);
 
                 var name = string.IsNullOrWhiteSpace(fileDetails.Name) ? TextFormatter.PascalCaseToSentence(fileName) : fileDetails.Name;
 
@@ -120,6 +120,37 @@ namespace Cofoundry.Domain
                     ValidateBlockProperties(existingBlock);
                 }
             }
+        }
+
+        private async Task<PageBlockTypeFileDetails> GetAndValidateBlockTypeFileDetails(
+            string fileName,
+            IPageBlockTypeDataModel dataModel, 
+            IExecutionContext executionContext
+            )
+        {
+            PageBlockTypeFileDetails fileDetails;
+
+            try
+            { 
+                var query = new GetPageBlockTypeFileDetailsByFileNameQuery(fileName);
+                fileDetails = await _queryExecutor.ExecuteAsync(query, executionContext);
+            }
+            catch (FileNotFoundException ex)
+            {
+                var dataModelType = dataModel.GetType();
+
+                var message =
+                    $"Cannot update registration for block type '{fileName}' because the view file could not be found. "
+                    + "If you have removed the data model type and are still seeing this error, you may need to rebuild your solution to force the assemblies to update. See issue #357. "
+                    + Environment.NewLine
+                    + Environment.NewLine
+                    + $"The corresponding data model type is '{dataModelType.FullName}' in assembly '{dataModelType.Assembly.FullName}' at '{dataModelType.Assembly.Location}'";
+                throw new FileNotFoundException(message, ex.FileName, ex);
+            }
+
+            DetectDuplicateTemplateFileNames(fileDetails);
+
+            return fileDetails;
         }
 
         /// <summary>
@@ -196,8 +227,8 @@ namespace Cofoundry.Domain
             if (!EnumerableHelper.IsNullOrEmpty(duplicates))
             {
                 var duplicateNames = string.Join(", ", duplicates.Select(t => t.FileName));
-                throw new PageBlockTypeRegistrationException(
-                    $"Duplicate page block type templates '{ duplicates.Key }' detected. Conflicting template file names: { duplicateNames }");
+                var message = $"Duplicate page block type templates '{ duplicates.Key }' detected. Conflicting template file names: { duplicateNames }";
+                throw new PageBlockTypeRegistrationException(message);
             }
         }
 

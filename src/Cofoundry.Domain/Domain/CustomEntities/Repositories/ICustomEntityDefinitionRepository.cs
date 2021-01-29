@@ -15,5 +15,6 @@ namespace Cofoundry.Domain
     {
         ICustomEntityDefinition GetByCode(string code);
         IEnumerable<ICustomEntityDefinition> GetAll();
+        ICustomEntityDefinition Get<TDefinition>() where TDefinition : ICustomEntityDefinition;
     }
 }

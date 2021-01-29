@@ -17,6 +17,7 @@ function (
             optionName: '@cmsOptionName',
             optionsApi: '@cmsOptionsApi',
             defaultItemText: '@cmsDefaultItemText',
+            href: '@cmsHref',
             required: '=cmsRequired',
             disabled: '=cmsDisabled'
         }),

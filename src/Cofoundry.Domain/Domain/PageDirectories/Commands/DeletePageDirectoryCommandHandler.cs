@@ -8,10 +8,10 @@ using Cofoundry.Domain.CQS;
 using Microsoft.EntityFrameworkCore;
 using Cofoundry.Core.Data;
 
-namespace Cofoundry.Domain
+namespace Cofoundry.Domain.Internal
 {
     public class DeletePageDirectoryCommandHandler
-        : IAsyncCommandHandler<DeletePageDirectoryCommand>
+        : ICommandHandler<DeletePageDirectoryCommand>
         , IPermissionRestrictedCommandHandler<DeletePageDirectoryCommand>
     {
         #region constructor 

@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Cofoundry.Core.AutoUpdate
+namespace Cofoundry.Core.AutoUpdate.Internal
 {
     /// <summary>
     /// Manages locking of the auto-update process to prevent concurrent update

@@ -30,7 +30,7 @@
 
             /* Actions */
             vm.setFilter = setFilter;
-            vm.cancel = cancel;
+            vm.clear = clear;
         }
 
         /* Actions */
@@ -41,9 +41,10 @@
             vm.ngShow = true;
         }
 
-        function cancel() {
+        function clear() {
             vm.ngShow = false;
             vm.query.clear();
+            vm.filter = vm.query.getFilters();
         }
     }
 }]);

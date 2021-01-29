@@ -1,12 +1,24 @@
-﻿angular.module('cms.shared').directive('cmsPageBody', function () {
+﻿angular.module('cms.shared').directive('cmsPageBody', [
+    'shared.internalModulePath',
+function (
+    modulePath
+) {
     return {
         restrict: 'E',
-        template: '<div class="page-body {{ contentType }} {{ subHeader }}"><div class="form-wrap" ng-transclude></div></div>',
+        templateUrl: modulePath + 'UIComponents/Layout/PageBody.html',
         scope: {
             contentType: '@cmsContentType',
-            subHeader: '@cmsSubHeader'
+            hasActions: '=cmsHasActions'
         },
         replace: true,
-        transclude: true
-    }
-});
+        transclude: true,
+        controllerAs: 'vm',
+        bindToController: true,
+        controller: ['$scope', Controller]
+    };
+
+    /* CONTROLLER */
+
+    function Controller(scope) {
+    };
+}]);

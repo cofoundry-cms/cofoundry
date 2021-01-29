@@ -1,5 +1,6 @@
 ﻿using Cofoundry.Core.Json;
 using Cofoundry.Domain;
+using Cofoundry.Domain.Internal;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;

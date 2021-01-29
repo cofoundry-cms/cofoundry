@@ -1,12 +1,10 @@
-﻿using Cofoundry.Core;
-using Cofoundry.Domain.Data;
-using Cofoundry.Domain.QueryModels;
+﻿using Cofoundry.Domain.QueryModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Cofoundry.Domain
+namespace Cofoundry.Domain.Internal
 {
     /// <summary>
     /// A mapper for mapping a tree structure of PageDirectoryNode objects.

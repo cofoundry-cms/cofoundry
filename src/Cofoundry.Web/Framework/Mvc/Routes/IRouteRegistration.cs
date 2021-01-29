@@ -7,17 +7,17 @@ namespace Cofoundry.Web
 {
     /// <summary>
     /// Implement this interface to define routes that should be
-    /// injected into the MVC route collection during the startup 
+    /// injected into the ASP.NET route collection during the startup 
     /// process. IRunAfterRouteRegistration or IRunBeforeRouteRegistration
     /// can be used to affect the ordering of registrations, but otherwise
     /// the ordering that instances of IRouteRegistration get run cannot 
-    /// is not guaranteed.
+    /// be guaranteed.
     /// </summary>
     public interface IRouteRegistration
     {
         /// <summary>
-        /// Register routes with the mvc RouteCollection. 
+        /// Register routes with the ASP.NET Core endpoint route builder. 
         /// </summary>
-        void RegisterRoutes(IRouteBuilder routeBuilder);
+        void RegisterRoutes(IEndpointRouteBuilder routeBuilder);
     }
 }

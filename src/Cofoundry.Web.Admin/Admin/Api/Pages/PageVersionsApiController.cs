@@ -27,28 +27,26 @@ namespace Cofoundry.Web.Admin
 
         #region queries
 
-        public async Task<IActionResult> Get(int pageId, GetPageVersionSummariesByPageIdQuery query)
+        public async Task<JsonResult> Get(int pageId, GetPageVersionSummariesByPageIdQuery query)
         {
             if (query == null) query = new GetPageVersionSummariesByPageIdQuery();
             query.PageId = pageId;
             ApiPagingHelper.SetDefaultBounds(query);
 
             var results = await _queryExecutor.ExecuteAsync(query);
-            return _apiResponseHelper.SimpleQueryResponse(this, results);
+            return _apiResponseHelper.SimpleQueryResponse(results);
         }
 
         #endregion
 
         #region commands
 
-        [HttpPost]
-        public async Task<IActionResult> Post([FromBody] AddPageDraftVersionCommand command)
+        public Task<JsonResult> Post([FromBody] AddPageDraftVersionCommand command)
         {
-            return await _apiResponseHelper.RunCommandAsync(this, command);
+            return _apiResponseHelper.RunCommandAsync(command);
         }
 
-        [HttpPatch]
-        public async Task<IActionResult> PatchDraft(int pageId, [FromBody] IDelta<UpdatePageDraftVersionCommand> delta)
+        public async Task<JsonResult> PatchDraft(int pageId, [FromBody] IDelta<UpdatePageDraftVersionCommand> delta)
         {
             // Custom patching because we may need to create a draft version first
             var query = new GetUpdateCommandByIdQuery<UpdatePageDraftVersionCommand>(pageId);
@@ -64,29 +62,26 @@ namespace Cofoundry.Web.Admin
 
             delta.Patch(command);
 
-            return await _apiResponseHelper.RunCommandAsync(this, command);
+            return await _apiResponseHelper.RunCommandAsync(command);
         }
 
-        [HttpDelete]
-        public async Task<IActionResult> DeleteDraft(int pageId)
+        public Task<JsonResult> DeleteDraft(int pageId)
         {
             var command = new DeletePageDraftVersionCommand() { PageId = pageId };
 
-            return await _apiResponseHelper.RunCommandAsync(this, command);
+            return _apiResponseHelper.RunCommandAsync(command);
         }
 
-        [HttpPatch]
-        public async Task<IActionResult> Publish(int pageId)
+        public Task<JsonResult> Publish(int pageId)
         {
             var command = new PublishPageCommand() { PageId = pageId };
-            return await _apiResponseHelper.RunCommandAsync(this, command);
+            return _apiResponseHelper.RunCommandAsync(command);
         }
 
-        [HttpPatch]
-        public async Task<IActionResult> UnPublish(int pageId)
+        public Task<JsonResult> UnPublish(int pageId)
         {
             var command = new UnPublishPageCommand() { PageId = pageId };
-            return await _apiResponseHelper.RunCommandAsync(this, command);
+            return _apiResponseHelper.RunCommandAsync(command);
         }
 
         #endregion

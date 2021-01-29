@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 using Cofoundry.Domain.CQS;
 using System.Text.RegularExpressions;
 
-namespace Cofoundry.Domain
+namespace Cofoundry.Domain.Internal
 {
     public class GetActiveLocaleByIETFLanguageTagQueryHandler 
-        : IAsyncQueryHandler<GetActiveLocaleByIETFLanguageTagQuery, ActiveLocale>
+        : IQueryHandler<GetActiveLocaleByIETFLanguageTagQuery, ActiveLocale>
         , IIgnorePermissionCheckHandler
     {
         private readonly IQueryExecutor _queryExecutor;

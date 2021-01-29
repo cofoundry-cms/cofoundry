@@ -3,7 +3,7 @@
         <label class="control-label" for="{{vm.modelName}}">{{vm.title}}:</label>
         <div class="controls">
 
-            <ul ng-show="vm.formScope.editMode" ng-if="vm.listOptions">
+            <ul ng-show="vm.formScope.editMode && !vm.readonly" ng-if="vm.listOptions">
                 <li ng-if="!vm.isRequiredAttributeDefined && !vm.required">
                     <input type="radio"
                            id="{{vm.modelName + "-NA"}}"
@@ -28,7 +28,7 @@
                 </li>
             </ul>
 
-            <div ng-hide="vm.formScope.editMode" class="text-block-display-value">{{vm.displayValue || 'None'}}</div>
+            <div ng-hide="vm.formScope.editMode && !vm.readonly" class="text-block-display-value">{{vm.displayValue || 'None'}}</div>
             <cms-form-field-validation-summary></cms-form-field-validation-summary>
         </div>
     </cms-field>

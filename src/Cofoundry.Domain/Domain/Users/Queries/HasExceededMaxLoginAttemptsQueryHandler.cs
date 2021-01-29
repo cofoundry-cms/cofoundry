@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.SqlClient;
+using Microsoft.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -8,10 +8,10 @@ using Cofoundry.Domain.Data;
 using Cofoundry.Domain.CQS;
 using Cofoundry.Core.EntityFramework;
 
-namespace Cofoundry.Domain
+namespace Cofoundry.Domain.Internal
 {
     public class HasExceededMaxLoginAttemptsQueryHandler 
-        : IAsyncQueryHandler<HasExceededMaxLoginAttemptsQuery, bool>
+        : IQueryHandler<HasExceededMaxLoginAttemptsQuery, bool>
         , IIgnorePermissionCheckHandler
     {
         #region constructor

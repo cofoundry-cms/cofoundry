@@ -9,14 +9,14 @@ using Cofoundry.Core.Validation;
 using Cofoundry.Core;
 using Cofoundry.Domain.Internal;
 
-namespace Cofoundry.Domain
+namespace Cofoundry.Domain.Internal
 {
     /// <summary>
     /// Updates the password of the currently logged in user, using the
     /// OldPassword field to authenticate the request.
     /// </summary>
     public class UpdateCurrentUserPasswordCommandHandler 
-        : IAsyncCommandHandler<UpdateCurrentUserPasswordCommand>
+        : ICommandHandler<UpdateCurrentUserPasswordCommand>
         , IPermissionRestrictedCommandHandler<UpdateCurrentUserPasswordCommand>
     {
         #region constructor

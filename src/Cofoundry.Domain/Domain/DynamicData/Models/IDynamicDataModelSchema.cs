@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.ComponentModel;
 
 namespace Cofoundry.Domain
 {
@@ -21,5 +22,7 @@ namespace Cofoundry.Domain
         /// parts of the admin UI.
         /// </summary>
         ICollection<DynamicDataModelSchemaProperty> DataModelProperties { get; set; }
+
+        public DynamicDataModelDefaultValue DefaultValue { get; set; }
     }
 }

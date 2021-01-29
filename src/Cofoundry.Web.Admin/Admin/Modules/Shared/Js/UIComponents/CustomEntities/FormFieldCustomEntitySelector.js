@@ -21,6 +21,7 @@ function (
             model: '=cmsModel',
             title: '@cmsTitle',
             localeId: '=cmsLocaleId',
+            readonly: '=cmsReadonly',
             customEntityDefinitionCode: '@cmsCustomEntityDefinitionCode'
         },
         require: ['?^^cmsFormDynamicFieldSet'],

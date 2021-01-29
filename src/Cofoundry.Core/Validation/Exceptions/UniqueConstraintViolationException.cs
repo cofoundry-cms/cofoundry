@@ -59,20 +59,30 @@ namespace Cofoundry.Core.Validation
     /// <typeparam name="TEntity">Type of the entity which failed the uniquenss check.</typeparam>
     public class UniqueConstraintViolationException<TEntity> : UniqueConstraintViolationException where TEntity : class
     {
-        private const string errorMessage = "Entity of type '{0}' failed a uniqueness check on property {1}.";
+        private const string errorMessage = "Entity of type '{0}' failed a uniqueness check on property {1}";
+        private const string errorMessageWithoutValue = errorMessage + ".";
+        private const string errorMessageWithValue = errorMessage + " with value {2}.";
 
-        public object Id { get; private set; }
-
-        public UniqueConstraintViolationException(object id)
-            : base(FormatMessage(id))
+        public UniqueConstraintViolationException(string property)
+            : base(FormatMessage(property, null), property)
         {
-            Id = id;
         }
 
-
-        private static string FormatMessage(object id)
+        public UniqueConstraintViolationException(string property, object value = null)
+            : base(FormatMessage(property, value), property, value)
         {
-            return string.Format(errorMessage, typeof(TEntity), id);
+        }
+
+        private static string FormatMessage(string property, object value)
+        {
+            if (value == null)
+            {
+                return string.Format(errorMessageWithoutValue, typeof(TEntity).Name, property);
+            }
+            else
+            {
+                return string.Format(errorMessageWithValue, typeof(TEntity).Name, property, value.ToString());
+            }
         }
     }
 }

@@ -6,7 +6,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Cofoundry.Core.ResourceFiles
+namespace Cofoundry.Core.ResourceFiles.Internal
 {
     /// <summary>
     /// This factory allows us to get hold of an IFileProvider that can be

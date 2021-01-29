@@ -5,7 +5,7 @@ using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Cofoundry.Core.Mail
+namespace Cofoundry.Core.Mail.Internal
 {
     /// <summary>
     /// Renders the contents of a mail template to html/text strings in preparation for 

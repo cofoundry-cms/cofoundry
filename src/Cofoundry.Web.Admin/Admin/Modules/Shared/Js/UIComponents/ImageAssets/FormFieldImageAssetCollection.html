@@ -15,7 +15,7 @@
                             <th>Image</th>
                             <th>Title</th>
                             <th cms-table-column-actions
-                                ng-if="vm.formScope.editMode">Actions</th>
+                                ng-if="vm.formScope.editMode && !vm.readonly">Actions</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -32,7 +32,7 @@
                                 <cms-table-cell-image cms-image="image"></cms-table-cell-image>
                             </td>
                             <td>{{image.title}}</td>
-                            <td cms-table-column-actions ng-if="vm.formScope.editMode">
+                            <td cms-table-column-actions ng-if="vm.formScope.editMode && !vm.readonly">
                                 <cms-button-icon cms-href="{{vm.urlLibrary.imageDetails(image.imageAssetId)}}"
                                                  cms-external="true"
                                                  cms-title="Edit image"
@@ -49,7 +49,7 @@
                 <cms-table-actions>
                     <a href="" class="btn-icon" title="Add"
                        ng-click="vm.showPicker()"
-                       ng-if="vm.formScope.editMode"
+                       ng-if="vm.formScope.editMode && !vm.readonly"
                        ng-disabled="vm.gridLoadState.isLoading || vm.disabled">
                         <i class="fa fa-plus-circle"></i>
                     </a>

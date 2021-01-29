@@ -7,10 +7,17 @@ using Cofoundry.Domain.Data;
 using Cofoundry.Domain.CQS;
 using Microsoft.EntityFrameworkCore;
 
-namespace Cofoundry.Domain
+namespace Cofoundry.Domain.Internal
 {
+    /// <summary>
+    /// Query to get a range of custom entities by a set of ids, projected as a 
+    /// CustomEntityRenderSummary, which is a general-purpose projection with version 
+    /// specific data, including a deserialized data model. The results are 
+    /// version-sensitive and defaults to returning published versions only, but
+    /// this behavior can be controlled by the publishStatus query property.
+    /// </summary>
     public class GetCustomEntityRenderSummariesByIdRangeQueryHandler
-        : IAsyncQueryHandler<GetCustomEntityRenderSummariesByIdRangeQuery, IDictionary<int, CustomEntityRenderSummary>>
+        : IQueryHandler<GetCustomEntityRenderSummariesByIdRangeQuery, IDictionary<int, CustomEntityRenderSummary>>
         , IIgnorePermissionCheckHandler
     {
         #region constructor
@@ -31,8 +38,6 @@ namespace Cofoundry.Domain
         }
 
         #endregion
-
-        #region execution
 
         public async Task<IDictionary<int, CustomEntityRenderSummary>> ExecuteAsync(GetCustomEntityRenderSummariesByIdRangeQuery query, IExecutionContext executionContext)
         {
@@ -71,7 +76,5 @@ namespace Cofoundry.Domain
             var definitionCodes = dbResults.Select(r => r.CustomEntity.CustomEntityDefinitionCode);
             _permissionValidationService.EnforceCustomEntityPermission<CustomEntityReadPermission>(definitionCodes, executionContext.UserContext);
         }
-
-        #endregion
     }
 }

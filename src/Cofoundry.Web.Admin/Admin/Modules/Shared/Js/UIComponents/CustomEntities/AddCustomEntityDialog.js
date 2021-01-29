@@ -94,7 +94,11 @@ function (
         });
 
         function loadModelSchema(modelMetaData) {
-            vm.command.model = {};
+            if (modelMetaData.defaultValue && modelMetaData.defaultValue.value) {
+                vm.command.model = angular.copy(modelMetaData.defaultValue.value);
+            } else {
+                vm.command.model = {};
+            }
 
             vm.formDataSource = {
                 model: vm.command.model,

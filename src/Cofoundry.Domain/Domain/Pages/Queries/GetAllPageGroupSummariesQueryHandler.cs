@@ -8,10 +8,10 @@ using Cofoundry.Domain.Data;
 using Microsoft.EntityFrameworkCore;
 using Cofoundry.Domain.QueryModels;
 
-namespace Cofoundry.Domain
+namespace Cofoundry.Domain.Internal
 {
     public class GetAllPageGroupSummariesQueryHandler
-        : IAsyncQueryHandler<GetAllPageGroupSummariesQuery, ICollection<PageGroupSummary>>
+        : IQueryHandler<GetAllPageGroupSummariesQuery, ICollection<PageGroupSummary>>
         , IPermissionRestrictedQueryHandler<GetAllPageGroupSummariesQuery, ICollection<PageGroupSummary>>
     {
         private readonly CofoundryDbContext _dbContext;

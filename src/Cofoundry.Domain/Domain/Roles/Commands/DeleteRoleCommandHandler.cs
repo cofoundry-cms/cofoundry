@@ -9,13 +9,14 @@ using Cofoundry.Domain.CQS;
 using Cofoundry.Core.Data;
 using Cofoundry.Domain.Internal;
 
-namespace Cofoundry.Domain
+namespace Cofoundry.Domain.Internal
 {
     /// <summary>
-    /// Deletes a role with the specified database id.
+    /// Deletes a role with the specified database id. Roles cannot be
+    /// deleted if assigned to users.
     /// </summary>
     public class DeleteRoleCommandHandler 
-        : IAsyncCommandHandler<DeleteRoleCommand>
+        : ICommandHandler<DeleteRoleCommand>
         , IPermissionRestrictedCommandHandler<DeleteRoleCommand>
     {
         #region constructor

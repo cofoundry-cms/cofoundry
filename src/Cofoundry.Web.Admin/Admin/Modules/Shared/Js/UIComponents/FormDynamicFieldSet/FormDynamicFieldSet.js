@@ -64,7 +64,7 @@ function (
 
                     html += attributeMapper.map('model', stringUtilities.lowerCaseFirstWord(modelProperty.name));
                     html += attributeMapper.map('title', modelProperty.displayName);
-                    html += attributeMapper.map('required', modelProperty.isRequired);
+                    html += attributeMapper.map('required', modelProperty.isRequired && !modelProperty.additionalAttributes.readonly);
                     html += attributeMapper.map('description', modelProperty.description);
 
                     if (modelProperty.additionalAttributes) {
@@ -89,7 +89,9 @@ function (
 
         // default fields for simple properties
         switch (modelProperty.dataTemplateName) {
-            case 'Int32':
+            case 'Single':
+            case 'Double':
+            case 'Decimal':
                 return fieldPrefix + 'number';
             case 'String':
                 return fieldPrefix + 'text';

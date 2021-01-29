@@ -5,13 +5,14 @@
             <input id="{{vm.modelName}}"
                    name="{{vm.modelName}}"
                    cms-model-as-date
-                   ng-show="vm.formScope.editMode"
+                   ng-show="vm.formScope.editMode && !vm.readonly"
                    ng-model="vm.model"
                    ng-disabled="vm.disabled"
                    ng-change="vm.onChange()"
-                   type="date" />
-            <div ng-hide="vm.formScope.editMode" ng-if="!vm.model" class="text-block-display-value">None</div>
-            <div ng-hide="vm.formScope.editMode" ng-if="vm.model" class="text-block-display-value">{{vm.model | date : fullDate}}</div>
+                   type="date"
+                   ng-model-options="{timezone: 'utc'}"/>
+            <div ng-hide="vm.formScope.editMode && !vm.readonly" ng-if="!vm.model" class="text-block-display-value">None</div>
+            <div ng-hide="vm.formScope.editMode && !vm.readonly" ng-if="vm.model" class="text-block-display-value">{{vm.model | date : 'longDate' : 'utc'}}</div>
             <cms-form-field-validation-summary></cms-form-field-validation-summary>
         </div>
     </cms-field>

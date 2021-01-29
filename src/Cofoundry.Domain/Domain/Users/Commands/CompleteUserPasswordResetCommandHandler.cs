@@ -11,10 +11,10 @@ using Cofoundry.Core.Mail;
 using Cofoundry.Core;
 using Cofoundry.Domain.MailTemplates;
 
-namespace Cofoundry.Domain
+namespace Cofoundry.Domain.Internal
 {
     public class CompleteUserPasswordResetCommandHandler 
-        : IAsyncCommandHandler<CompleteUserPasswordResetCommand>
+        : ICommandHandler<CompleteUserPasswordResetCommand>
         , IIgnorePermissionCheckHandler
     {
         private const int NUMHOURS_PASSWORD_RESET_VALID = 16;

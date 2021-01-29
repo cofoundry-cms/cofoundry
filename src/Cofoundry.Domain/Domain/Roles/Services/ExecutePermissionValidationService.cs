@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Cofoundry.Domain
+namespace Cofoundry.Domain.Internal
 {
     /// <summary>
     /// Service to validate the permissions of command/query handler prior to execution.
@@ -25,7 +25,7 @@ namespace Cofoundry.Domain
 
         #endregion
 
-        public void Validate<TCommand>(TCommand command, IAsyncCommandHandler<TCommand> commandHandler, IExecutionContext executionContext) where TCommand : ICommand
+        public virtual void Validate<TCommand>(TCommand command, IAsyncCommandHandler<TCommand> commandHandler, IExecutionContext executionContext) where TCommand : ICommand
         {
             ValidateCommmandImplementation<TCommand>(commandHandler);
 
@@ -38,7 +38,7 @@ namespace Cofoundry.Domain
             CheckAdditionalPermissionHandlers(commandHandler, executionContext, _permissionValidationService);
         }
 
-        public void Validate<TQuery, TResult>(TQuery query, IAsyncQueryHandler<TQuery, TResult> queryHandler, IExecutionContext executionContext) where TQuery : IQuery<TResult>
+        public virtual void Validate<TQuery, TResult>(TQuery query, IAsyncQueryHandler<TQuery, TResult> queryHandler, IExecutionContext executionContext) where TQuery : IQuery<TResult>
         {
             ValidateQueryImplementation<TQuery, TResult>(queryHandler);
 
@@ -53,7 +53,7 @@ namespace Cofoundry.Domain
 
         #region private
 
-        private void ValidateCommmandImplementation<TCommand>(object handler)
+        protected void ValidateCommmandImplementation<TCommand>(object handler)
             where TCommand : ICommand
         {
             if (handler is IPermissionRestrictedCommandHandler)
@@ -71,7 +71,7 @@ namespace Cofoundry.Domain
             }
         }
 
-        private void ValidateQueryImplementation<TQuery, TResult>(object handler)
+        protected void ValidateQueryImplementation<TQuery, TResult>(object handler)
             where TQuery : IQuery<TResult>
         {
             if (handler is IPermissionRestrictedQueryHandler)
@@ -89,7 +89,7 @@ namespace Cofoundry.Domain
             }
         }
 
-        private void CheckAdditionalPermissionHandlers<TCommandHandler>(TCommandHandler _commandHandler, IExecutionContext executionContext, IPermissionValidationService _permissionValidationService)
+        protected void CheckAdditionalPermissionHandlers<TCommandHandler>(TCommandHandler _commandHandler, IExecutionContext executionContext, IPermissionValidationService _permissionValidationService)
         {
             // Hardcoded checking of a few additional handlers, but could use DI here to make this more flexible.
             if (_commandHandler is ILoggedInPermissionCheckHandler)
@@ -108,7 +108,7 @@ namespace Cofoundry.Domain
         /// permission handling is implemented, this ensures that the implementer has thought 
         /// about permission handling and hasn't just forgotton to add it.
         /// </summary>
-        private void ValidateIgnorePermissionImplementation(object handler)
+        protected void ValidateIgnorePermissionImplementation(object handler)
         {
             // HACK: Here we have exclude handlers in Cofoundry.Core because they cannot implement the 
             // Cofoundry permission interfaces. This is a bit hacky but I can't think of another easy way

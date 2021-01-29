@@ -8,7 +8,7 @@ using Cofoundry.Domain.CQS;
 namespace Cofoundry.Domain
 {
     /// <summary>
-    /// Seaches users based on simple filter criteria and returns a paged result. 
+    /// Searches users based on simple filter criteria and returns a paged result. 
     /// </summary>
     public class SearchUserSummariesQuery : SimplePageableQuery, IQuery<PagedQueryResult<UserSummary>>
     {

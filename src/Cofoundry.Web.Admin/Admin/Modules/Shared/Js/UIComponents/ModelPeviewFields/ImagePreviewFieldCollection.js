@@ -1,8 +1,8 @@
 ﻿/**
  * Helper used for working with collections of dynamic model data that
- * might use the [PReviewImage] data annotation to provide an image preview
+ * might use the [PreviewImage] data annotation to provide an image preview
  * field. This helper extracts the ids, loads the data and provides methods
- * for upading the dataset without havign to reload all the images.
+ * for upading the dataset without having to reload all the images.
  */
 angular.module('cms.shared').factory('shared.ImagePreviewFieldCollection', [
     '$q',
@@ -56,7 +56,7 @@ angular.module('cms.shared').factory('shared.ImagePreviewFieldCollection', [
                             image;
 
                         if (id) {
-                            image = _.find(images, { imageAssetId: id })
+                            image = _.find(images, { imageAssetId: id });
                         }
 
                         me.images.push(image);
@@ -71,33 +71,23 @@ angular.module('cms.shared').factory('shared.ImagePreviewFieldCollection', [
 
                     return deferred.promise;
                 }
-
-                function modelPropertyAccessor(item, propertyName) {
-
-                    if (!propertyName) return undefined;
-
-                    // if the model is a child of the item e.g. custom entities
-                    if (item.model) return item.model[propertyName];
-
-                    return item[propertyName];
-                }
-            }
+            };
 
             me.move = function (itemToMoveIndex, moveToIndex) {
                 arrayUtilities.move(me.images, itemToMoveIndex, moveToIndex);
-            }
+            };
 
             me.add = function (itemToAdd, index) {
                 return updateImage(itemToAdd, index, true);
-            }
+            };
 
             me.update = function (itemToUpdate, index) {
                 return updateImage(itemToUpdate, index);
-            }
+            };
 
             me.remove = function (index) {
                 arrayUtilities.remove(me.images, index);
-            }
+            };
 
             /* Private */
 
@@ -121,12 +111,10 @@ angular.module('cms.shared').factory('shared.ImagePreviewFieldCollection', [
             }
 
             function updateImage(itemToUpdate, index, isNew) {
-
                 var propertyName = getImagePropertyName(itemToUpdate);
-
                 if (!propertyName) return;
 
-                var newImageId = itemToUpdate[propertyName];
+                var newImageId = modelPropertyAccessor(itemToUpdate, propertyName);
 
                 if (!isNew) {
                     var existingImage = me.images[index],
@@ -151,6 +139,16 @@ angular.module('cms.shared').factory('shared.ImagePreviewFieldCollection', [
                 function loadImage(image) {
                     me.images[index] = image;
                 }
+            }
+
+            function modelPropertyAccessor(item, propertyName) {
+
+                if (!propertyName) return undefined;
+
+                // if the model is a child of the item e.g. custom entities
+                if (item.model) return item.model[propertyName];
+
+                return item[propertyName];
             }
         }
 }]);

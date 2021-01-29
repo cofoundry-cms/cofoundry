@@ -5,10 +5,16 @@ using System.Text;
 using System.Threading.Tasks;
 using Cofoundry.Domain.CQS;
 
-namespace Cofoundry.Domain
+namespace Cofoundry.Domain.Internal
 {
+    /// <summary>
+    /// Query to get a custom entity definition by it's unique 6 character code.
+    /// The returned object is a lightweight projection of the data defined in a custom entity 
+    /// definition class. This is typically used as part of another domain model or
+    /// for querying lists of definitions in the admin panel.
+    /// </summary>
     public class GetCustomEntityDefinitionMicroSummaryByCodeQueryHandler 
-        : IAsyncQueryHandler<GetCustomEntityDefinitionMicroSummaryByCodeQuery, CustomEntityDefinitionMicroSummary>
+        : IQueryHandler<GetCustomEntityDefinitionMicroSummaryByCodeQuery, CustomEntityDefinitionMicroSummary>
         , IIgnorePermissionCheckHandler
     {
         #region constructor 
@@ -27,8 +33,6 @@ namespace Cofoundry.Domain
 
         #endregion
 
-        #region execution
-
         public Task<CustomEntityDefinitionMicroSummary> ExecuteAsync(GetCustomEntityDefinitionMicroSummaryByCodeQuery query, IExecutionContext executionContext)
         {
             var definition = _customEntityRegistrations.SingleOrDefault(d => d.CustomEntityDefinitionCode == query.CustomEntityDefinitionCode);
@@ -36,7 +40,5 @@ namespace Cofoundry.Domain
 
             return Task.FromResult(result);
         }
-
-        #endregion
     }
 }

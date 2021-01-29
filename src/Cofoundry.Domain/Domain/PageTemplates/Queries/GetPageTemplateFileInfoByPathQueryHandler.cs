@@ -9,10 +9,10 @@ using System.Threading.Tasks;
 using Cofoundry.Domain.CQS;
 using Cofoundry.Core;
 
-namespace Cofoundry.Domain
+namespace Cofoundry.Domain.Internal
 {
     public class GetPageTemplateFileInfoByPathQueryHandler 
-        : IAsyncQueryHandler<GetPageTemplateFileInfoByPathQuery, PageTemplateFileInfo>
+        : IQueryHandler<GetPageTemplateFileInfoByPathQuery, PageTemplateFileInfo>
         , IPermissionRestrictedQueryHandler<GetPageTemplateFileInfoByPathQuery, PageTemplateFileInfo>
     {
         #region constructor
@@ -24,6 +24,7 @@ namespace Cofoundry.Domain
 
         const string REGEX_REMOVE_METHOD_WHITEPSPACE = @"(\w+\s*\.Template+\s*\.[A-Za-z]*Region\()";
         const string PARTIAL_NAME_REGEX = "Html.(?:Render)?Partial(?:Async)?\\(\"([^\"]+)\"";
+        const string COMMENTS_REGEX = @"(@\*.*(\*@))";
 
         private readonly IQueryExecutor _queryExecutor;
         private readonly IPageTemplateViewFileLocator _viewLocator;
@@ -124,13 +125,23 @@ namespace Cofoundry.Domain
             return pageTemplateFileInfo;
         }
 
+        private string TrimLineAndRemoveComments(string line)
+        {
+            if (line == null) return line;
+
+            return Regex.Replace(line, COMMENTS_REGEX, string.Empty);
+        }
+
         /// <summary>
-        /// Removes whitespace when using region definitions in 
+        /// Removes commands and whitespace in region definitions defined in 
         /// a fluent manner across multiple code lines.
         /// </summary>
         private string PrepareViewFileForParsing(string viewFile)
         {
-            return Regex.Replace(viewFile, REGEX_REMOVE_METHOD_WHITEPSPACE, RemoveWhitepace);
+            var whitespaceRemoved = Regex.Replace(viewFile, REGEX_REMOVE_METHOD_WHITEPSPACE, RemoveWhitepace);
+            var commentsRemoved = Regex.Replace(whitespaceRemoved, COMMENTS_REGEX, string.Empty, RegexOptions.Singleline);
+
+            return commentsRemoved;
         }
 
         private string RemoveWhitepace(Match e)
