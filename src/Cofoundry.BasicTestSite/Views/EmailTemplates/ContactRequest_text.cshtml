@@ -4,14 +4,14 @@
     Layout = null;
 }
 
-@Cofoundry.Sanitizer.Sanitize(Model.Subject)
+@Model.Subject
 
 This request came with the following information:
 
 -------------------------------------------------
-Name: @Cofoundry.Sanitizer.Sanitize(Model.Request.Name)
+Name: @Model.Request.Name
 
-Email: @Cofoundry.Sanitizer.Sanitize(Model.Request.EmailAddress)
+Email: @Model.Request.EmailAddress
 
-Message: @Cofoundry.Sanitizer.Sanitize(Model.Request.Message)
+Message: @Model.Request.Message
 --------------------------------------------------
