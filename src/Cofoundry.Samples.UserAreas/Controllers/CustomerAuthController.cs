@@ -78,16 +78,6 @@ namespace Cofoundry.Samples.UserAreas
             // Because we're not logged in, we'll need to elevate permissions to 
             // add a new user account. Using "WithElevatedPermissions" make the
             // command is executed with the system user account.
-            var role = _contentRepository
-                .WithElevatedPermissions()
-                .Roles()
-                .GetByCode("myRole");
-
-
-            //var isUnique = await _contentRepository
-            //        .Users()
-            //        .IsUsernameUniqueAsync("");
-
 
             using (var scope = _contentRepository.Transactions().CreateScope())
             {
@@ -99,7 +89,7 @@ namespace Cofoundry.Samples.UserAreas
                 await scope.CompleteAsync();
             }
 
-            // TODO
+            // TODO: Verify Email
             var welcomeEmailTemplate = new NewUserWelcomeMailTemplate()
             {
                 DisplayName = "TODO",

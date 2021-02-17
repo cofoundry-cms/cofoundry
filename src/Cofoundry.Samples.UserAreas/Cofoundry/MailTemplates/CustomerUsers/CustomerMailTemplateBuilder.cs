@@ -29,7 +29,7 @@ namespace Cofoundry.Samples.UserAreas
             // build the default template
             var template = await _defaultMailTemplateBuilder.BuildNewUserWithTemporaryPasswordTemplateAsync(context);
 
-            // customise the subject, the {0} token is replaced with the application name
+            // customize the subject, the {0} token is replaced with the application name
             template.SubjectFormat = "A new account has been created for you on {0}";
 
             return template;

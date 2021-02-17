@@ -1,5 +1,4 @@
-﻿using Cofoundry.Core.Mail;
-using Cofoundry.Domain.CQS;
+﻿using Cofoundry.Domain.CQS;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -7,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Cofoundry.Domain.MailTemplates.AdminMailTemplates
 {
-    public class CofoundryAdminMailTemplateBuilder : IUserMailTemplateBuilder
+    public class CofoundryAdminMailTemplateBuilder : ICofoundryAdminMailTemplateBuilder
     {
         private readonly IQueryExecutor _queryExecutor;
         private readonly AdminMailTemplateUrlLibrary _adminMailTemplateUrlLibrary;
@@ -24,7 +23,7 @@ namespace Cofoundry.Domain.MailTemplates.AdminMailTemplates
             _passwordResetUrlHelper = passwordResetUrlHelper;
         }
 
-        public virtual async Task<IMailTemplate> BuildNewUserWithTemporaryPasswordTemplateAsync(NewUserWithTemporaryPasswordTemplateBuilderContext context)
+        public virtual async Task<AdminNewUserWithTemporaryPasswordMailTemplate> BuildNewUserWithTemporaryPasswordTemplateAsync(NewUserWithTemporaryPasswordTemplateBuilderContext context)
         {
             var applicationName = await GetApplicationNameAsync();
             var loginPath = _adminMailTemplateUrlLibrary.Login();
@@ -34,11 +33,12 @@ namespace Cofoundry.Domain.MailTemplates.AdminMailTemplates
                 Username = context.User.Username,
                 ApplicationName = applicationName,
                 LoginPath = loginPath,
-                TemporaryPassword = context.TemporaryPassword
+                TemporaryPassword = context.TemporaryPassword,
+                LayoutFile = AdminMailTemplatePath.LayoutPath
             };
         }
 
-        public virtual async Task<IMailTemplate> BuildPasswordResetByAdminTemplateAsync(PasswordResetByAdminTemplateBuilderContext context)
+        public virtual async Task<AdminPasswordResetByAdminMailTemplate> BuildPasswordResetByAdminTemplateAsync(PasswordResetByAdminTemplateBuilderContext context)
         {
             var applicationName = await GetApplicationNameAsync();
             var loginPath = _adminMailTemplateUrlLibrary.Login();
@@ -48,11 +48,12 @@ namespace Cofoundry.Domain.MailTemplates.AdminMailTemplates
                 Username = context.User.Username,
                 ApplicationName = applicationName,
                 LoginPath = loginPath,
-                TemporaryPassword = context.TemporaryPassword
+                TemporaryPassword = context.TemporaryPassword,
+                LayoutFile = AdminMailTemplatePath.LayoutPath
             };
         }
 
-        public virtual async Task<IMailTemplate> BuildPasswordResetRequestedByUserTemplateAsync(PasswordResetRequestedByUserTemplateBuilderContext context)
+        public virtual async Task<AdminPasswordResetRequestedByUserMailTemplate> BuildPasswordResetRequestedByUserTemplateAsync(PasswordResetRequestedByUserTemplateBuilderContext context)
         {
             var applicationName = await GetApplicationNameAsync();
             var resetUrl = _passwordResetUrlHelper.MakeUrl(context);
@@ -61,11 +62,12 @@ namespace Cofoundry.Domain.MailTemplates.AdminMailTemplates
             {
                 Username = context.User.Username,
                 ApplicationName = applicationName,
-                ResetUrl = resetUrl
+                ResetUrl = resetUrl,
+                LayoutFile = AdminMailTemplatePath.LayoutPath
             };
         }
 
-        public virtual async Task<IMailTemplate> BuildPasswordChangedTemplateAsync(PasswordChangedTemplateBuilderContext context)
+        public virtual async Task<AdminPasswordChangedMailTemplate> BuildPasswordChangedTemplateAsync(PasswordChangedTemplateBuilderContext context)
         {
             var applicationName = await GetApplicationNameAsync();
             var loginPath = _adminMailTemplateUrlLibrary.Login();
@@ -74,7 +76,8 @@ namespace Cofoundry.Domain.MailTemplates.AdminMailTemplates
             {
                 Username = context.User.Username,
                 ApplicationName = applicationName,
-                LoginPath = loginPath
+                LoginPath = loginPath,
+                LayoutFile = AdminMailTemplatePath.LayoutPath
             };
         }
 

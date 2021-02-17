@@ -38,7 +38,8 @@ namespace Cofoundry.Domain.MailTemplates.DefaultMailTemplates
                 Username = context.User.Username,
                 ApplicationName = applicationName,
                 LoginPath = loginPath,
-                TemporaryPassword = context.TemporaryPassword
+                TemporaryPassword = context.TemporaryPassword,
+                LayoutFile = DefaultMailTemplatePath.LayoutPath
             };
         }
 
@@ -54,7 +55,8 @@ namespace Cofoundry.Domain.MailTemplates.DefaultMailTemplates
                 Username = context.User.Username,
                 ApplicationName = applicationName,
                 LoginPath = loginPath,
-                TemporaryPassword = context.TemporaryPassword
+                TemporaryPassword = context.TemporaryPassword,
+                LayoutFile = DefaultMailTemplatePath.LayoutPath
             };
         }
 
@@ -69,7 +71,8 @@ namespace Cofoundry.Domain.MailTemplates.DefaultMailTemplates
             {
                 Username = context.User.Username,
                 ApplicationName = applicationName,
-                ResetUrl = resetUrl
+                ResetUrl = resetUrl,
+                LayoutFile = DefaultMailTemplatePath.LayoutPath
             };
         }
 
@@ -84,7 +87,8 @@ namespace Cofoundry.Domain.MailTemplates.DefaultMailTemplates
             {
                 Username = context.User.Username,
                 ApplicationName = applicationName,
-                LoginPath = loginPath
+                LoginPath = loginPath,
+                LayoutFile = DefaultMailTemplatePath.LayoutPath
             };
         }
 

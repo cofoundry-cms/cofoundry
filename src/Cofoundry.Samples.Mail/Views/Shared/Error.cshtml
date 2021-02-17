@@ -1,0 +1,13 @@
+@model IErrorPageViewModel
+
+@{
+    var title = "Error";
+    ViewBag.Title = title;
+}
+
+
+<h1>@title</h1>
+
+<h2>@Model.StatusCodeDescription</h2>
+<p>Sorry, there has been an error</p>
+<p>Please press back and try again. If the error persists then then please contact us.</p>

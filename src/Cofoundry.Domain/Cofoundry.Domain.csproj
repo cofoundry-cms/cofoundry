@@ -71,7 +71,7 @@
     <EmbeddedResource Include="MailTemplates\DefaultMailTemplates\Templates\DefaultPasswordChangedMailTemplate_text.cshtml" />
     <EmbeddedResource Include="MailTemplates\DefaultMailTemplates\Templates\DefaultPasswordResetRequestedByUserMailTemplate_html.cshtml" />
     <EmbeddedResource Include="MailTemplates\DefaultMailTemplates\Templates\DefaultPasswordResetRequestedByUserMailTemplate_text.cshtml" />
-    <EmbeddedResource Include="MailTemplates\DefaultMailTemplates\Templates\_ViewImports.cshtml" />
+    <EmbeddedResource Include="MailTemplates\DefaultMailTemplates\_ViewImports.cshtml" />
   </ItemGroup>
 	
 </Project>

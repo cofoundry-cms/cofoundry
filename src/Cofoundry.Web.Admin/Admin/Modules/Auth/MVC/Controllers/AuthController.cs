@@ -97,7 +97,7 @@ namespace Cofoundry.Web.Admin
             // Support redirect urls from login
             var redirectUrl = _authenticationControllerHelper.GetAndValidateReturnUrl(this);
 
-            if (!authResult.User.RequirePasswordChange)
+            if (authResult.User.RequirePasswordChange)
             {
                 return Redirect(_adminRouteLibrary.Auth.ChangePassword(returnUrl));
             }

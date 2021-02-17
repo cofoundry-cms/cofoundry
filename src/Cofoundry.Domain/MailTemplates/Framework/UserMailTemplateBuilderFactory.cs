@@ -38,17 +38,12 @@ namespace Cofoundry.Domain.MailTemplates
 
             if (factory != null) return (IUserMailTemplateBuilder)factory;
 
-            var queryExecutor = _serviceProvider.GetRequiredService<IQueryExecutor>();
             if (userAreaDefinition is CofoundryAdminUserArea)
             {
                 // create the default Cofoundry admin builder
-                var adminMailTemplateUrlLibrary = _serviceProvider.GetRequiredService<AdminMailTemplateUrlLibrary>();
+                var cofoundryAdminMailTemplateBuilder = _serviceProvider.GetRequiredService<ICofoundryAdminMailTemplateBuilder>();
 
-                return new CofoundryAdminMailTemplateBuilder(
-                    queryExecutor,
-                    adminMailTemplateUrlLibrary,
-                    _passwordResetUrlHelper
-                    );
+                return new CofoundryAdminMailTemplateBuilderWrapper(cofoundryAdminMailTemplateBuilder);
             }
 
             var defaultBuilderType = typeof(DefaultMailTemplateBuilderWrapper<>).MakeGenericType(definitionType);

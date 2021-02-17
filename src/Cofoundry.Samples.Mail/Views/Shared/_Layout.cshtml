@@ -1,0 +1,55 @@
+@inject ICofoundryHelper Cofoundry
+
+@{
+    Layout = null;
+
+    string title = null;
+    string description = null;
+
+    var metaDataModel = Model as IPageWithMetaDataViewModel;
+    if (metaDataModel != null)
+    {
+        description = metaDataModel.MetaDescription;
+        title = metaDataModel.PageTitle;
+    }
+    else
+    {
+        description = "TODO: Add default description";
+    }
+
+    title = StringHelper.FirstNonEmpty(title, ViewBag.Title, "TODO: Add default title");
+    title += " | Cofoundry Template Site";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>@title</title>
+
+    <meta name="description" content="@description" />
+
+    <link rel="stylesheet" href="~/css/style.css" asp-append-version="true" />
+
+</head>
+<body>
+
+    <nav>
+        <span>Cofoundry Template Site</span>
+    </nav>
+
+    <main>
+        @RenderBody()
+    </main>
+
+    <footer>
+        <span>Copyright © @DateTime.Now.Year Example Inc. All Rights Reserved</span>
+    </footer>
+
+    @RenderSection("FooterScripts", required: false)
+
+</body>
+</html>

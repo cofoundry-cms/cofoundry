@@ -16,12 +16,12 @@ namespace Cofoundry.Samples.UserAreas.PartnerMailTemplates
         /// <summary>
         /// Path to the layout view for html mail templates.
         /// </summary>
-        public const string LayoutPath_Html = LayoutPath + "_PartnerMailLayout_html.cshtml";
+        public const string HtmlTemplateLayoutPath = LayoutPath + "_PartnerMailLayout_html.cshtml";
 
         /// <summary>
         /// Path to the layout file for plain text mail templates.
         /// </summary>
-        public const string LayoutPath_Text = LayoutPath + "_PartnerMailLayout_text.cshtml";
+        public const string TextTemplateLayoutPath = LayoutPath + "_PartnerMailLayout_text.cshtml";
 
         /// <summary>
         /// Formats the path to a view file in the PartnerUsers folder.

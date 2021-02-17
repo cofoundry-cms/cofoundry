@@ -106,3 +106,5 @@ appsettings.local.json
 
 node_modules
 bower_components
+
+APP_Data/
