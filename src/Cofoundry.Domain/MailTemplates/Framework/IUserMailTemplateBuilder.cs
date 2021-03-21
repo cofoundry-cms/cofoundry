@@ -17,7 +17,7 @@ namespace Cofoundry.Domain.MailTemplates
     {
         /// <summary>
         /// Creates a mail template that is used when a new user is
-        /// created with a templorary password. This is typically
+        /// created with a temporary password. This is typically
         /// when a user is created in the admin panel.
         /// </summary>
         /// <param name="context">

@@ -74,7 +74,7 @@ namespace Cofoundry.Samples.Mail.AdminMailTemplates
 
         /// <summary>
         /// In this example, the view file is customized, which is useful if
-        /// you want to chage the wording of the email, but don't need any
+        /// you want to change the wording of the email, but don't need any
         /// additional properties in the template model
         /// </summary>
         public async Task<IMailTemplate> BuildPasswordResetByAdminTemplateAsync(PasswordResetByAdminTemplateBuilderContext context)
