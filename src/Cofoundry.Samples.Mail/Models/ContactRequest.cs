@@ -5,6 +5,10 @@ using System.Linq;
 
 namespace Cofoundry.Samples.Mail
 {
+    /// <summary>
+    /// A simple contact request model used in our
+    /// contact form.
+    /// </summary>
     public class ContactRequest
     {
         [Required]

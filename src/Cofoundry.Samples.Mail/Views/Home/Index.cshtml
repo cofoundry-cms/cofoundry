@@ -1,0 +1,45 @@
+@model ContactRequest
+
+<h1 class="mt-3">Example Contact Request</h1>
+
+<div class="row mt-4 mb-5">
+    <div class="col">
+        <p class="mb-3">
+            Use this form to send an email using <strong>IMailService</strong>. The default 
+            implementation will drop the email into the <em>App_Data</em> folder. See readme.md 
+            for more information.
+        </p>
+        @if (ViewBag.Message != null)
+        {
+        <div class="alert alert-primary mb-3" role="alert">
+            @ViewBag.Message
+        </div>
+        }
+
+        <form method="post">
+
+            @Html.AntiForgeryToken()
+
+            <div class="mb-3">
+                @Html.LabelFor(m => m.Name, new { @class = "form-label" })
+                @Html.TextBoxFor(m => m.Name, new { @class = "form-control", placeholder = "Name" })
+                @Html.ValidationMessageFor(m => m.Name)
+            </div>
+
+            <div class="mb-3">
+                @Html.LabelFor(m => m.EmailAddress, new { @class = "form-label" })
+                @Html.TextBoxFor(m => m.EmailAddress, new { @class = "form-control", placeholder = "Email", @type = "Email" })
+                @Html.ValidationMessageFor(m => m.EmailAddress)
+            </div>
+
+            <div class="mb-3">
+                @Html.LabelFor(m => m.Message, new { @class = "form-label" })
+                @Html.TextAreaFor(m => m.Message, new { @class = "form-control", placeholder = "Message", rows = "8" })
+                @Html.ValidationMessageFor(m => m.Message)
+            </div>
+
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+    </div>
+</div>
+

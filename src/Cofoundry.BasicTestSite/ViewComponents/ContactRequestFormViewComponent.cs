@@ -27,7 +27,6 @@ namespace Cofoundry.BasicTestSite
         {
             var contactRequest = new ContactRequest();
 
-
             if (this.Request.Method.Equals("POST", StringComparison.OrdinalIgnoreCase))
             {
                 contactRequest.Name = Request.Form[nameof(contactRequest.Name)];

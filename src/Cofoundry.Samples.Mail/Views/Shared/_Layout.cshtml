@@ -1,55 +1,32 @@
-@inject ICofoundryHelper Cofoundry
-
+﻿@inject ICofoundryHelper Cofoundry
 @{
     Layout = null;
-
-    string title = null;
-    string description = null;
-
-    var metaDataModel = Model as IPageWithMetaDataViewModel;
-    if (metaDataModel != null)
-    {
-        description = metaDataModel.MetaDescription;
-        title = metaDataModel.PageTitle;
-    }
-    else
-    {
-        description = "TODO: Add default description";
-    }
-
-    title = StringHelper.FirstNonEmpty(title, ViewBag.Title, "TODO: Add default title");
-    title += " | Cofoundry Template Site";
 }
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-    <title>@title</title>
+    <title>Cofoundry.Sample.Mail</title>
 
-    <meta name="description" content="@description" />
-
-    <link rel="stylesheet" href="~/css/style.css" asp-append-version="true" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 
 </head>
 <body>
 
-    <nav>
-        <span>Cofoundry Template Site</span>
-    </nav>
+    <div class="container">
+        <nav class="navbar navbar-light bg-light">
+            <span class="navbar-brand mb-0 h1">Cofoundry.Samples.Mail</span>
+        </nav>
 
-    <main>
         @RenderBody()
-    </main>
 
-    <footer>
-        <span>Copyright © @DateTime.Now.Year Example Inc. All Rights Reserved</span>
-    </footer>
+    </div>
 
-    @RenderSection("FooterScripts", required: false)
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
 
 </body>
 </html>

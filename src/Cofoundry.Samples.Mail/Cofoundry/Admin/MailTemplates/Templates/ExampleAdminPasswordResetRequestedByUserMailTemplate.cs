@@ -17,7 +17,7 @@ namespace Cofoundry.Samples.Mail.AdminMailTemplates
         /// <summary>
         /// Name or full path to the view file. This should not include the type part 
         /// or file extension (i.e. '_html.cshml' or '_text.cshml') because this is automatically 
-        /// added. E.g. "~/Cofoundry/MailTemplates/MyMailTemplate".
+        /// added.
         /// </summary>
         public string ViewFile { get; set; } = "~/Cofoundry/Admin/MailTemplates/Templates/ExampleAdminPasswordResetRequestedByUserMailTemplate";
 
@@ -27,6 +27,10 @@ namespace Cofoundry.Samples.Mail.AdminMailTemplates
         /// </summary>
         public string Subject { get; } = "We've received a request to reset your password!";
 
+        /// <summary>
+        /// In our custom template we are including the first name field which 
+        /// is not included in the standard Cofoundry template.
+        /// </summary>
         public string FirstName { get; set; }
 
         /// <summary>
