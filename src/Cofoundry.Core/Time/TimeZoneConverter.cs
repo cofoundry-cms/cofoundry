@@ -26,7 +26,7 @@ namespace Cofoundry.Core.Time.Internal
 
             // will throw a TimeZoneNotFoundException if not found.
             var timezone = TimeZoneInfo.FindSystemTimeZoneById(timeZoneId);
-            var localDate = TimeZoneInfo.ConvertTime(dateTime, timezone);
+            var localDate = TimeZoneInfo.ConvertTime(dateTime, TimeZoneInfo.Utc , timezone);
 
             return localDate;
         }
