@@ -4,6 +4,10 @@ using System.Linq;
 using System.Threading.Tasks;
 using Cofoundry.Domain.CQS;
 using System.ComponentModel.DataAnnotations;
+using Cofoundry.Domain.Data;
+using Microsoft.EntityFrameworkCore;
+using Cofoundry.Core;
+using Microsoft.Extensions.Logging;
 
 namespace Cofoundry.Domain.Internal
 {
@@ -18,18 +22,28 @@ namespace Cofoundry.Domain.Internal
         : ICommandHandler<LogUserInWithCredentialsCommand>
         , IIgnorePermissionCheckHandler
     {
+        private readonly ILogger<LogUserInWithCredentialsCommandHandler> _logger;
+        private readonly CofoundryDbContext _dbContext;
+
         #region constructor
-        
+
         private readonly IQueryExecutor _queryExecutor;
         private readonly ILoginService _loginService;
+        private readonly IPasswordUpdateCommandHelper _passwordUpdateCommandHelper;
 
         public LogUserInWithCredentialsCommandHandler(
+            ILogger<LogUserInWithCredentialsCommandHandler> logger,
+            CofoundryDbContext dbContext,
             IQueryExecutor queryExecutor,
-            ILoginService loginService
+            ILoginService loginService,
+            IPasswordUpdateCommandHelper passwordUpdateCommandHelper
             )
         {
+            _logger = logger;
+            _dbContext = dbContext;
             _queryExecutor = queryExecutor;
             _loginService = loginService;
+            _passwordUpdateCommandHelper = passwordUpdateCommandHelper;
         }
 
         #endregion
@@ -48,6 +62,11 @@ namespace Cofoundry.Domain.Internal
                 await _loginService.LogFailedLoginAttemptAsync(command.UserAreaCode, command.Username);
 
                 throw new InvalidCredentialsAuthenticationException(nameof(command.Password));
+            }
+
+            if (user.PasswordRehashNeeded)
+            {
+                await RehashPassword(user.UserId, command.Password);
             }
 
             if (user.RequirePasswordChange)
@@ -102,6 +121,24 @@ namespace Cofoundry.Domain.Internal
             {
                 throw new ValidationException("This user account is not permitted to log in via this route.");
             }
+        }
+
+        /// <remarks>
+        /// So far this is only used here, but it could be separated into it's own
+        /// command if it was used elsewhere. 
+        /// </remarks>
+        private async Task RehashPassword(int userId, string password)
+        {
+            var user = await _dbContext
+                .Users
+                .SingleOrDefaultAsync(u => u.UserId == userId);
+
+            EntityNotFoundException.ThrowIfNull(user, userId);
+
+            _logger.LogDebug("Rehashing password for user {UserId}", user.UserId);
+            _passwordUpdateCommandHelper.UpdatePasswordHash(password, user);
+
+            await _dbContext.SaveChangesAsync();
         }
     }
 }

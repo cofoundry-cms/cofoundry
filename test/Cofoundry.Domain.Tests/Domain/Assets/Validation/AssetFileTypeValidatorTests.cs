@@ -20,28 +20,6 @@ namespace Cofoundry.Domain.Tests
         private string[] FileTypeList = new string[] { JPEG_FILE_EXTENSION, "zip", CSV_FILE_EXTENSION };
         private string[] MimeTypeList = new string[] { JPEG_MIME_TYPE, "application/zip", CSV_MIME_TYPE };
 
-        #region helpers
-
-        private AssetFileTypeValidator CreateValidator(
-            AssetFileTypeValidation fileExtensionValidation,
-            AssetFileTypeValidation mimeTypeValidation
-            )
-        {
-            var settings = new AssetFilesSettings()
-            {
-                FileExtensionValidation = fileExtensionValidation,
-                FileExtensionValidationList = FileTypeList,
-                MimeTypeValidation = mimeTypeValidation,
-                MimeTypeValidationList = MimeTypeList
-            };
-
-            return new AssetFileTypeValidator(settings);
-        }
-
-        #endregion
-
-        #region Validate
-
         [Fact]
         public void Validate_WhenDisabled_IsValid()
         {
@@ -253,6 +231,20 @@ namespace Cofoundry.Domain.Tests
             Assert.Throws<ValidationErrorException>(() => validator.ValidateAndThrow(fileExtension, mimeType, VALIDATOR_PROP_NAME));
         }
 
-        #endregion
+        private AssetFileTypeValidator CreateValidator(
+            AssetFileTypeValidation fileExtensionValidation,
+            AssetFileTypeValidation mimeTypeValidation
+            )
+        {
+            var settings = new AssetFilesSettings()
+            {
+                FileExtensionValidation = fileExtensionValidation,
+                FileExtensionValidationList = FileTypeList,
+                MimeTypeValidation = mimeTypeValidation,
+                MimeTypeValidationList = MimeTypeList
+            };
+
+            return new AssetFileTypeValidator(settings);
+        }
     }
 }

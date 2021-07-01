@@ -91,7 +91,7 @@ namespace Cofoundry.Domain.Data
 
         /// <summary>
         /// The role that this user is assigned to. The role is required and
-        /// determines the permissions availabel to the user
+        /// determines the permissions available to the user
         /// </summary>
         public virtual Role Role { get; set; }
 

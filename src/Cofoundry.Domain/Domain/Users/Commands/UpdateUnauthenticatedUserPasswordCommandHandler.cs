@@ -47,8 +47,6 @@ namespace Cofoundry.Domain.Internal
 
             await ValidateMaxLoginAttemptsNotExceeded(command, executionContext);
 
-            var userArea = _userAreaRepository.GetByCode(command.UserAreaCode);
-
             var userLoginInfo = await GetUserLoginInfoAsync(command, executionContext);
 
             if (userLoginInfo == null)

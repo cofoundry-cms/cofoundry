@@ -70,8 +70,6 @@ namespace Cofoundry.Web.Admin.Tests.VisuaEditor
             Assert.Equal(input, result);
         }
 
-        #region helpers
-
         private string LoadFile(string name)
         {
             const string RESOURCE_POSTFIX = ".html";
@@ -83,7 +81,5 @@ namespace Cofoundry.Web.Admin.Tests.VisuaEditor
                 return reader.ReadToEnd();
             }
         }
-
-        #endregion
     }
 }

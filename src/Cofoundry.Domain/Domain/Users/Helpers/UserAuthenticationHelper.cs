@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Cofoundry.Domain.Data;
+using Microsoft.AspNetCore.Identity;
 
 namespace Cofoundry.Domain.Internal
 {
@@ -23,9 +24,9 @@ namespace Cofoundry.Domain.Internal
             _userAreaRepository = userAreaRepository;
         }
 
-        public bool IsPasswordCorrect(User user, string password)
+        public PasswordVerificationResult VerifyPassword(User user, string password)
         {
-            if (user == null) return false;
+            if (user == null) return PasswordVerificationResult.Failed;
 
             var userArea = _userAreaRepository.GetByCode(user.UserAreaCode);
 
@@ -39,7 +40,7 @@ namespace Cofoundry.Domain.Internal
                 throw new InvalidOperationException("Cannot authenticate via password because the specified account does not have a password set.");
             }
 
-            bool result = _cryptographyService.Verify(password, user.Password, user.PasswordHashVersion.Value);
+            var result = _cryptographyService.Verify(password, user.Password, user.PasswordHashVersion.Value);
 
             return result;
         }

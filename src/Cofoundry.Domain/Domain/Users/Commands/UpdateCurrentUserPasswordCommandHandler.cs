@@ -7,6 +7,7 @@ using Cofoundry.Domain.CQS;
 using Microsoft.EntityFrameworkCore;
 using Cofoundry.Core.Validation;
 using Cofoundry.Core;
+using Microsoft.AspNetCore.Identity;
 
 namespace Cofoundry.Domain.Internal
 {
@@ -61,7 +62,7 @@ namespace Cofoundry.Domain.Internal
 
             _passwordUpdateCommandHelper.ValidateUserArea(userArea);
 
-            if (!_userAuthenticationHelper.IsPasswordCorrect(user, command.OldPassword))
+            if (_userAuthenticationHelper.VerifyPassword(user, command.OldPassword) == PasswordVerificationResult.Failed)
             {
                 throw ValidationErrorException.CreateWithProperties("Incorrect password", "OldPassword");
             }

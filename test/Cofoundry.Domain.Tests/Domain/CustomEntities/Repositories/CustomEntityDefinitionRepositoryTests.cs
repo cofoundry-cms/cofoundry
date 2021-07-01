@@ -9,53 +9,6 @@ namespace Cofoundry.Domain.Tests
 {
     public class CustomEntityDefinitionRepositoryTests
     {
-        #region helpers
-
-        private class TestCustomEntityDefinition : ICustomEntityDefinition
-        {
-            public string Name { get; set; }
-
-            public string CustomEntityDefinitionCode { get; set; }
-
-            public string NamePlural => throw new NotImplementedException();
-
-            public string Description => throw new NotImplementedException();
-
-            public bool ForceUrlSlugUniqueness => throw new NotImplementedException();
-
-            public bool HasLocale => throw new NotImplementedException();
-
-            public bool AutoGenerateUrlSlug => throw new NotImplementedException();
-
-            public bool AutoPublish => throw new NotImplementedException();
-        }
-
-        private List<ICustomEntityDefinition> GetBaseCustomEntityDefinitions()
-        {
-            return new List<ICustomEntityDefinition>()
-            {
-                new TestCustomEntityDefinition()
-                {
-                    CustomEntityDefinitionCode = "CUS001",
-                    Name = "Test CE 1"
-                },
-                new TestCustomEntityDefinition()
-                {
-                    CustomEntityDefinitionCode = "CUS002",
-                    Name = "Test CE 2"
-                },
-                new TestCustomEntityDefinition()
-                {
-                    CustomEntityDefinitionCode = "CUS003",
-                    Name = "Test CE 3"
-                },
-            };
-        }
-
-        #endregion
-
-        #region CustomEntityDefinitionRepository constructor
-
         [Fact]
         public void Constructor_WhenDuplicateCode_Throws()
         {
@@ -112,10 +65,6 @@ namespace Cofoundry.Domain.Tests
             Assert.Throws<InvalidCustomEntityDefinitionException>(() => new CustomEntityDefinitionRepository(entityDefinitions));
         }
 
-        #endregion
-
-        #region GetAll
-
         [Fact]
         public void GetAll_WhenEmpty_ReturnsNone()
         {
@@ -138,10 +87,6 @@ namespace Cofoundry.Domain.Tests
 
             Assert.Equal(total, result.Count());
         }
-
-        #endregion
-
-        #region GetByCode
 
         [Fact]
         public void GetByCode_WhenNotExists_ReturnsNull()
@@ -167,6 +112,45 @@ namespace Cofoundry.Domain.Tests
             Assert.Equal(definitionCode, result.CustomEntityDefinitionCode);
         }
 
-        #endregion
+        private class TestCustomEntityDefinition : ICustomEntityDefinition
+        {
+            public string Name { get; set; }
+
+            public string CustomEntityDefinitionCode { get; set; }
+
+            public string NamePlural => throw new NotImplementedException();
+
+            public string Description => throw new NotImplementedException();
+
+            public bool ForceUrlSlugUniqueness => throw new NotImplementedException();
+
+            public bool HasLocale => throw new NotImplementedException();
+
+            public bool AutoGenerateUrlSlug => throw new NotImplementedException();
+
+            public bool AutoPublish => throw new NotImplementedException();
+        }
+
+        private List<ICustomEntityDefinition> GetBaseCustomEntityDefinitions()
+        {
+            return new List<ICustomEntityDefinition>()
+            {
+                new TestCustomEntityDefinition()
+                {
+                    CustomEntityDefinitionCode = "CUS001",
+                    Name = "Test CE 1"
+                },
+                new TestCustomEntityDefinition()
+                {
+                    CustomEntityDefinitionCode = "CUS002",
+                    Name = "Test CE 2"
+                },
+                new TestCustomEntityDefinition()
+                {
+                    CustomEntityDefinitionCode = "CUS003",
+                    Name = "Test CE 3"
+                },
+            };
+        }
     }
 }

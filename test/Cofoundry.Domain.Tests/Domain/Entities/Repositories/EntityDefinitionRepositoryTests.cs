@@ -10,7 +10,119 @@ namespace Cofoundry.Domain.Tests
 {
     public class EntityDefinitionRepositoryTests
     {
-        #region helpers
+        [Fact]
+        public void Constructor_WhenDuplicateCode_Throws()
+        {
+            var customEntityRepository = GetCustomEntityRepository();
+            var entityDefinitions = GetBaseEntityDefinitions();
+            entityDefinitions.Add(new TestEntityDefinition()
+            {
+                EntityDefinitionCode = entityDefinitions.First().EntityDefinitionCode,
+                Name = "A unique name"
+            });
+
+            Assert.Throws<InvalidEntityDefinitionException>(() => new EntityDefinitionRepository(entityDefinitions, customEntityRepository));
+        }
+
+        [Fact]
+        public void Constructor_WhenDuplicateName_Throws()
+        {
+            var customEntityRepository = GetCustomEntityRepository();
+            var entityDefinitions = GetBaseEntityDefinitions();
+            entityDefinitions.Add(new TestEntityDefinition()
+            {
+                EntityDefinitionCode = "UNIQUE",
+                Name = entityDefinitions.First().Name
+            });
+
+            Assert.Throws<InvalidEntityDefinitionException>(() => new EntityDefinitionRepository(entityDefinitions, customEntityRepository));
+        }
+
+        [Theory]
+        [InlineData("a silly long code")]
+        [InlineData("хороше")]
+        [InlineData("      ")]
+        [InlineData(null)]
+        public void Constructor_WhenInvalidCode_Throws(string code)
+        {
+            var customEntityRepository = GetCustomEntityRepository();
+            var entityDefinitions = GetBaseEntityDefinitions();
+            entityDefinitions.Add(new TestEntityDefinition()
+            {
+                EntityDefinitionCode = code,
+                Name = "A unique name"
+            });
+
+            Assert.Throws<InvalidEntityDefinitionException>(() => new EntityDefinitionRepository(entityDefinitions, customEntityRepository));
+        }
+
+        [Fact]
+        public void Constructor_WhenNullName_Throws()
+        {
+            var customEntityRepository = GetCustomEntityRepository();
+            var entityDefinitions = GetBaseEntityDefinitions();
+            entityDefinitions.Add(new TestEntityDefinition()
+            {
+                EntityDefinitionCode = "UNIQUE",
+                Name = null
+            });
+
+            Assert.Throws<InvalidEntityDefinitionException>(() => new EntityDefinitionRepository(entityDefinitions, customEntityRepository));
+        }
+
+        [Fact]
+        public void GetAll_WhenEmpty_ReturnsNone()
+        {
+            var mock = new Mock<ICustomEntityDefinitionRepository>();
+            mock.Setup(r => r.GetAll()).Returns(() => Enumerable.Empty<ICustomEntityDefinition>());
+
+            var customEntityRepository = mock.Object;
+            var entityDefinitions = Enumerable.Empty<IEntityDefinition>();
+
+            var repo = new EntityDefinitionRepository(entityDefinitions, customEntityRepository);
+            var result = repo.GetAll();
+
+            Assert.Empty(result);
+        }
+
+        [Fact]
+        public void GetAll_WhenNotEmpty_ReturnsAll()
+        {
+            var customEntityRepository = GetCustomEntityRepository();
+            var entityDefinitions = GetBaseEntityDefinitions();
+            var total = customEntityRepository.GetAll().Count() + entityDefinitions.Count;
+
+            var repo = new EntityDefinitionRepository(entityDefinitions, customEntityRepository);
+            var result = repo.GetAll();
+
+            Assert.Equal(total, result.Count());
+        }
+
+        [Fact]
+        public void GetByCode_WhenNotExists_ReturnsNull()
+        {
+            var customEntityRepository = GetCustomEntityRepository();
+            var entityDefinitions = GetBaseEntityDefinitions();
+
+            var repo = new EntityDefinitionRepository(entityDefinitions, customEntityRepository);
+            var result = repo.GetByCode("UNIQUE");
+
+            Assert.Null(result);
+        }
+
+        [Theory]
+        [InlineData("TST003")]
+        [InlineData("CUS002")]
+        public void GetByCode_WhenExists_Returns(string definitionCode)
+        {
+            var customEntityRepository = GetCustomEntityRepository();
+            var entityDefinitions = GetBaseEntityDefinitions();
+
+            var repo = new EntityDefinitionRepository(entityDefinitions, customEntityRepository);
+            var result = repo.GetByCode(definitionCode);
+
+            Assert.Equal(definitionCode, result.EntityDefinitionCode);
+        }
 
         private class TestEntityDefinition : IEntityDefinition
         {
@@ -90,133 +202,5 @@ namespace Cofoundry.Domain.Tests
 
             return mock.Object;
         }
-
-        #endregion
-
-        #region EntityDefinitionRepository constructor
-
-        [Fact]
-        public void Constructor_WhenDuplicateCode_Throws()
-        {
-            var customEntityRepository = GetCustomEntityRepository();
-            var entityDefinitions = GetBaseEntityDefinitions();
-            entityDefinitions.Add(new TestEntityDefinition()
-            {
-                EntityDefinitionCode = entityDefinitions.First().EntityDefinitionCode,
-                Name = "A unique name"
-            });
-
-            Assert.Throws<InvalidEntityDefinitionException>(() => new EntityDefinitionRepository(entityDefinitions, customEntityRepository));
-        }
-
-        [Fact]
-        public void Constructor_WhenDuplicateName_Throws()
-        {
-            var customEntityRepository = GetCustomEntityRepository();
-            var entityDefinitions = GetBaseEntityDefinitions();
-            entityDefinitions.Add(new TestEntityDefinition()
-            {
-                EntityDefinitionCode = "UNIQUE",
-                Name = entityDefinitions.First().Name
-            });
-
-            Assert.Throws<InvalidEntityDefinitionException>(() => new EntityDefinitionRepository(entityDefinitions, customEntityRepository));
-        }
-
-        [Theory]
-        [InlineData("a silly long code")]
-        [InlineData("хороше")]
-        [InlineData("      ")]
-        [InlineData(null)]
-        public void Constructor_WhenInvalidCode_Throws(string code)
-        {
-            var customEntityRepository = GetCustomEntityRepository();
-            var entityDefinitions = GetBaseEntityDefinitions();
-            entityDefinitions.Add(new TestEntityDefinition()
-            {
-                EntityDefinitionCode = code,
-                Name = "A unique name"
-            });
-
-            Assert.Throws<InvalidEntityDefinitionException>(() => new EntityDefinitionRepository(entityDefinitions, customEntityRepository));
-        }
-
-        [Fact]
-        public void Constructor_WhenNullName_Throws()
-        {
-            var customEntityRepository = GetCustomEntityRepository();
-            var entityDefinitions = GetBaseEntityDefinitions();
-            entityDefinitions.Add(new TestEntityDefinition()
-            {
-                EntityDefinitionCode = "UNIQUE",
-                Name = null
-            });
-
-            Assert.Throws<InvalidEntityDefinitionException>(() => new EntityDefinitionRepository(entityDefinitions, customEntityRepository));
-        }
-
-        #endregion
-
-        #region GetAll
-
-        [Fact]
-        public void GetAll_WhenEmpty_ReturnsNone()
-        {
-            var mock = new Mock<ICustomEntityDefinitionRepository>();
-            mock.Setup(r => r.GetAll()).Returns(() => Enumerable.Empty<ICustomEntityDefinition>());
-
-            var customEntityRepository = mock.Object;
-            var entityDefinitions = Enumerable.Empty<IEntityDefinition>();
-
-            var repo = new EntityDefinitionRepository(entityDefinitions, customEntityRepository);
-            var result = repo.GetAll();
-
-            Assert.Empty(result);
-        }
-
-        [Fact]
-        public void GetAll_WhenNotEmpty_ReturnsAll()
-        {
-            var customEntityRepository = GetCustomEntityRepository();
-            var entityDefinitions = GetBaseEntityDefinitions();
-            var total = customEntityRepository.GetAll().Count() + entityDefinitions.Count;
-
-            var repo = new EntityDefinitionRepository(entityDefinitions, customEntityRepository);
-            var result = repo.GetAll();
-
-            Assert.Equal(total, result.Count());
-        }
-
-        #endregion
-
-        #region GetByCode
-
-        [Fact]
-        public void GetByCode_WhenNotExists_ReturnsNull()
-        {
-            var customEntityRepository = GetCustomEntityRepository();
-            var entityDefinitions = GetBaseEntityDefinitions();
-
-            var repo = new EntityDefinitionRepository(entityDefinitions, customEntityRepository);
-            var result = repo.GetByCode("UNIQUE");
-
-            Assert.Null(result);
-        }
-
-        [Theory]
-        [InlineData("TST003")]
-        [InlineData("CUS002")]
-        public void GetByCode_WhenExists_Returns(string definitionCode)
-        {
-            var customEntityRepository = GetCustomEntityRepository();
-            var entityDefinitions = GetBaseEntityDefinitions();
-
-            var repo = new EntityDefinitionRepository(entityDefinitions, customEntityRepository);
-            var result = repo.GetByCode(definitionCode);
-
-            Assert.Equal(definitionCode, result.EntityDefinitionCode);
-        }
-
-        #endregion
     }
 }

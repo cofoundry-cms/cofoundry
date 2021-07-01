@@ -51,6 +51,11 @@ namespace Cofoundry.Domain
             user.RequirePasswordChange = false;
             user.LastPasswordChangeDate = executionContext.ExecutionDate;
 
+            UpdatePasswordHash(newPassword, user);
+        }
+
+        public void UpdatePasswordHash(string newPassword, User user)
+        {
             var hashResult = _passwordCryptographyService.CreateHash(newPassword);
             user.Password = hashResult.Hash;
             user.PasswordHashVersion = hashResult.HashVersion;
