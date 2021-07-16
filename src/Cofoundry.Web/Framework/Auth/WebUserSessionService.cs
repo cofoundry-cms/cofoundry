@@ -7,38 +7,41 @@ using Cofoundry.Domain;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Authentication;
 using System.Security.Claims;
+using Cofoundry.Domain.Internal;
 
-namespace Cofoundry.Web
+namespace Cofoundry.Web.Internal
 {
     /// <summary>
     /// Service to abstract away the management of a users current browser session and 
     /// authentication cookie.
     /// </summary>
-    public class UserSessionService : IUserSessionService
+    public class WebUserSessionService : IUserSessionService
     {
         /// <summary>
-        /// SignInUser doesn't always update the HttpContext.Current.User so we set this
-        /// cache value instead which will last for the lifetime of the request. This is only used
+        /// SignInUser doesn't always update the HttpContext.Current.User so we use an in-memory
+        /// cache instead which will last for the lifetime of the request. This is only used
         /// when signing in and isn't otherwise cached.
         /// </summary>
-        private int? userIdCache = null;
-        private string cachedUserIdArea = null;
+        private readonly InMemoryUserSessionService _inMemoryUserSessionService;
+        private string _ambientCachedSchemaName = null;
 
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IUserAreaDefinitionRepository _userAreaDefinitionRepository;
 
-        public UserSessionService(
+        public WebUserSessionService(
             IHttpContextAccessor httpContextAccessor,
             IUserAreaDefinitionRepository userAreaDefinitionRepository
             )
         {
             _httpContextAccessor = httpContextAccessor;
             _userAreaDefinitionRepository = userAreaDefinitionRepository;
+            _inMemoryUserSessionService = new InMemoryUserSessionService(_userAreaDefinitionRepository);
         }
 
         /// <summary>
-        /// Gets the UserId of the user authenticated for the
-        /// current request under the ambient authentication scheme.
+        /// Gets the UserId of the user authenticated for the current request under 
+        /// the ambient authentication scheme. The ambient scheme could be the default
+        /// or one that is specified using an AuthorizeAttribute.
         /// </summary>
         /// <returns>
         /// Integer UserId or null if the user is not logged in for the ambient
@@ -46,7 +49,11 @@ namespace Cofoundry.Web
         /// </returns>
         public int? GetCurrentUserId()
         {
-            if (userIdCache.HasValue) return userIdCache;
+            if (_ambientCachedSchemaName != null)
+            {
+                var cachedUserId = _inMemoryUserSessionService.GetUserIdByUserAreaCode(_ambientCachedSchemaName);
+                if (cachedUserId.HasValue) return cachedUserId;
+            }
 
             var user = _httpContextAccessor?.HttpContext?.User;
             var userIdClaim = user?.FindFirst(ClaimTypes.NameIdentifier);
@@ -72,7 +79,8 @@ namespace Cofoundry.Web
                 throw new ArgumentNullException(nameof(userAreaCode));
             }
 
-            if (cachedUserIdArea == userAreaCode && userIdCache.HasValue) return userIdCache.Value;
+            var cachedUserId = await _inMemoryUserSessionService.GetUserIdByUserAreaCodeAsync(userAreaCode);
+            if (cachedUserId.HasValue) return cachedUserId;
 
             var scheme = CofoundryAuthenticationConstants.FormatAuthenticationScheme(userAreaCode);
             var result = await _httpContextAccessor.HttpContext.AuthenticateAsync(scheme);
@@ -94,32 +102,51 @@ namespace Cofoundry.Web
         /// True if the session should last indefinately; false if the 
         /// session should close after a timeout period.
         /// </param>
-        public Task LogUserInAsync(string userAreaCode, int userId, bool rememberUser)
+        public async Task LogUserInAsync(string userAreaCode, int userId, bool rememberUser)
         {
             if (userAreaCode == null) throw new ArgumentNullException(nameof(userAreaCode));
             if (userId < 1) throw new ArgumentOutOfRangeException(nameof(userId));
 
-            var stringId = Convert.ToString(userId);
-            var scheme = CofoundryAuthenticationConstants.FormatAuthenticationScheme(userAreaCode);
+            var userArea = _userAreaDefinitionRepository.GetByCode(userAreaCode);
+            EntityNotFoundException.ThrowIfNull(userArea, userAreaCode);
 
-            var claims = new[] {
-                new Claim(ClaimTypes.NameIdentifier, stringId),
+            var scheme = CofoundryAuthenticationConstants.FormatAuthenticationScheme(userArea.UserAreaCode);
+            var claims = new[]
+            {
+                new Claim(ClaimTypes.NameIdentifier, Convert.ToString(userId))
             };
 
             var claimsIdentity = new ClaimsIdentity(claims, scheme);
             var userPrincipal = new ClaimsPrincipal(claimsIdentity);
 
-            userIdCache = userId;
-            cachedUserIdArea = userAreaCode;
-
             if (rememberUser)
             {
                 var authProperties = new AuthenticationProperties() { IsPersistent = true };
-                return _httpContextAccessor.HttpContext.SignInAsync(scheme, userPrincipal, authProperties);
+                await _httpContextAccessor.HttpContext.SignInAsync(scheme, userPrincipal, authProperties);
             }
             else
             {
-                return _httpContextAccessor.HttpContext.SignInAsync(scheme, userPrincipal);
+                await _httpContextAccessor.HttpContext.SignInAsync(scheme, userPrincipal);
+            }
+
+            await CacheLoginForRequestLifetime(userId, rememberUser, userArea);
+        }
+
+        /// <summary>
+        /// We need to cache the userId value in memory for this request because it won't be retrievable 
+        /// from HttpContext. It's rare that this is actually required as typically a request will end
+        /// after the user is logged in.
+        /// </summary>
+        private async Task CacheLoginForRequestLifetime(int userId, bool rememberUser, IUserAreaDefinition userArea)
+        {
+            await _inMemoryUserSessionService.LogUserInAsync(userArea.UserAreaCode, userId, rememberUser);
+            if (_ambientCachedSchemaName == null)
+            {
+                // We're not able to tell what the ambient schema applied to the controller (or similar) is, 
+                // so we'll have to assume that the first login in schema is ambient schema
+                // There's no real use-case yet for multiple logins during the same request so this shouldn't
+                // be a problem.
+                _ambientCachedSchemaName = userArea.UserAreaCode;
             }
         }
 
@@ -134,10 +161,7 @@ namespace Cofoundry.Web
                 throw new ArgumentNullException(nameof(userAreaCode));
             }
 
-            if (cachedUserIdArea == userAreaCode)
-            {
-                ClearCache();
-            }
+            await _inMemoryUserSessionService.LogUserOutAsync(userAreaCode);
 
             var scheme = CofoundryAuthenticationConstants.FormatAuthenticationScheme(userAreaCode);
             await _httpContextAccessor.HttpContext.SignOutAsync(scheme);
@@ -148,19 +172,13 @@ namespace Cofoundry.Web
         /// </summary>
         public async Task LogUserOutOfAllUserAreasAsync()
         {
-            ClearCache();
+            await _inMemoryUserSessionService.LogUserOutOfAllUserAreasAsync();
 
             foreach (var customEntityDefinition in _userAreaDefinitionRepository.GetAll())
             {
                 var scheme = CofoundryAuthenticationConstants.FormatAuthenticationScheme(customEntityDefinition.UserAreaCode);
                 await _httpContextAccessor.HttpContext.SignOutAsync(scheme);
             }
-        }
-
-        private void ClearCache()
-        {
-            userIdCache = null;
-            cachedUserIdArea = null;
         }
     }
 }

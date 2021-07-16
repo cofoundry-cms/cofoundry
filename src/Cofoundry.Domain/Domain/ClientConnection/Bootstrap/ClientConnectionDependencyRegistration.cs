@@ -13,7 +13,7 @@ namespace Cofoundry.Domain.Registration
         public void Register(IContainerRegister container)
         {
             container
-                .Register<IClientConnectionService, ClientConnectionService>();
+                .Register<IClientConnectionService, DefaultClientConnectionService>();
         }
     }
 }

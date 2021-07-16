@@ -1,20 +1,21 @@
 ﻿using Cofoundry.Core;
+using Cofoundry.Domain;
 using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Cofoundry.Domain.Internal
+namespace Cofoundry.Web.Internal
 {
     /// <summary>
     /// Service for retreiving connection information about a client connected 
     /// to the application e.g. IPAddress and the UserAgent string.
     /// </summary>
-    public class ClientConnectionService : IClientConnectionService
+    public class WebClientConnectionService : IClientConnectionService
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public ClientConnectionService(
+        public WebClientConnectionService(
             IHttpContextAccessor httpContextAccessor
             )
         {

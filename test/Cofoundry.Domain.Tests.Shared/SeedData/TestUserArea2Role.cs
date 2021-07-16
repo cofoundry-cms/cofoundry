@@ -2,13 +2,13 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Cofoundry.Domain.Tests.Integration
+namespace Cofoundry.Domain.Tests.Shared
 {
-    public class TestRole2 : IRoleDefinition
+    public class TestUserArea2Role : IRoleDefinition
     {
         public const string Code = "TS2";
 
-        public string Title => "Test Role 2";
+        public string Title => "Test User Area 2 Role";
 
         public string RoleCode => Code;
 

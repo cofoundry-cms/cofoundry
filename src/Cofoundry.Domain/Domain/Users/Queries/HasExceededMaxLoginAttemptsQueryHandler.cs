@@ -14,8 +14,6 @@ namespace Cofoundry.Domain.Internal
         : IQueryHandler<HasExceededMaxLoginAttemptsQuery, bool>
         , IIgnorePermissionCheckHandler
     {
-        #region constructor
-
         private readonly CofoundryDbContext _dbContext;
         private readonly IEntityFrameworkSqlExecutor _sqlExecutor;
         private readonly AuthenticationSettings _authenticationSettings;
@@ -33,10 +31,6 @@ namespace Cofoundry.Domain.Internal
             _authenticationSettings = authenticationSettings;
             _clientConnectionService = clientConnectionService;
         }
-        
-        #endregion
-
-        #region execution
 
         public async Task<bool> ExecuteAsync(HasExceededMaxLoginAttemptsQuery query, IExecutionContext executionContext)
         {
@@ -56,8 +50,6 @@ namespace Cofoundry.Domain.Internal
 
             return isValid != 1;
         }
-
-        #endregion
     }
 
 }

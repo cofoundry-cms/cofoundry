@@ -18,12 +18,17 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\Cofoundry.Web\Cofoundry.Web.csproj" />
+    <ProjectReference Include="..\Cofoundry.Domain.Tests.Shared\Cofoundry.Domain.Tests.Shared.csproj" />
   </ItemGroup>
 
   <ItemGroup>
     <None Update="appsettings.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Shared\SeedData\" />
   </ItemGroup>
 
 </Project>

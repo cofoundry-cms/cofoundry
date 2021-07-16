@@ -2,8 +2,11 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Cofoundry.Domain.Tests.Integration
+namespace Cofoundry.Domain.Tests.Shared
 {
+    /// <summary>
+    /// Default area
+    /// </summary>
     public class TestUserArea1 : IUserAreaDefinition
     {
         public const string Code = "TS1";
@@ -18,6 +21,6 @@ namespace Cofoundry.Domain.Tests.Integration
 
         public string LoginPath => "/login";
 
-        public bool IsDefaultAuthSchema => false;
+        public bool IsDefaultAuthSchema => true;
     }
 }

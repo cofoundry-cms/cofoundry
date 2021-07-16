@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Cofoundry.Domain.Data;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
+using Cofoundry.Domain.Tests.Shared;
 
 namespace Cofoundry.Domain.Tests.Integration
 {
@@ -290,7 +291,7 @@ namespace Cofoundry.Domain.Tests.Integration
 
                 var testRole = await repository
                     .Roles()
-                    .GetByCode(TestRole1.Code)
+                    .GetByCode(TestUserArea1Role.Code)
                     .AsDetails()
                     .ExecuteAsync();
 

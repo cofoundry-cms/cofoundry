@@ -2,13 +2,16 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Cofoundry.Domain.Tests.Integration
+namespace Cofoundry.Domain.Tests.Shared
 {
-    public class TestRole1 : IRoleDefinition
+    /// <summary>
+    /// This test role has all permissions.
+    /// </summary>
+    public class TestUserArea1Role : IRoleDefinition
     {
         public const string Code = "TS1";
 
-        public string Title => "Test Role 1";
+        public string Title => "Test User Area 1 Role";
 
         public string RoleCode => Code;
 

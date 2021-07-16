@@ -12,18 +12,15 @@ namespace Cofoundry.Domain
     public class PasswordUpdateCommandHelper : IPasswordUpdateCommandHelper
     {
         private readonly IPermissionValidationService _permissionValidationService;
-        private readonly IUserAreaDefinitionRepository _userAreaRepository;
         private readonly IPasswordCryptographyService _passwordCryptographyService;
 
         public PasswordUpdateCommandHelper(
             IPermissionValidationService permissionValidationService,
-            IUserAreaDefinitionRepository userAreaRepository,
             IPasswordCryptographyService passwordCryptographyService
             )
         {
             _passwordCryptographyService = passwordCryptographyService;
             _permissionValidationService = permissionValidationService;
-            _userAreaRepository = userAreaRepository;
         }
 
         public void ValidateUserArea(IUserAreaDefinition userArea)

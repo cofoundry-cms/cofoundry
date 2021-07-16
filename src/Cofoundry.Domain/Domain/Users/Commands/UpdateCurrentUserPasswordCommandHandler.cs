@@ -19,8 +19,6 @@ namespace Cofoundry.Domain.Internal
         : ICommandHandler<UpdateCurrentUserPasswordCommand>
         , IPermissionRestrictedCommandHandler<UpdateCurrentUserPasswordCommand>
     {
-        #region constructor
-
         private readonly CofoundryDbContext _dbContext;
         private readonly UserAuthenticationHelper _userAuthenticationHelper;
         private readonly IPermissionValidationService _permissionValidationService;
@@ -42,15 +40,11 @@ namespace Cofoundry.Domain.Internal
             _passwordUpdateCommandHelper = passwordUpdateCommandHelper;
         }
 
-        #endregion
-
-        #region execution
-        
         public async Task ExecuteAsync(UpdateCurrentUserPasswordCommand command, IExecutionContext executionContext)
         {
             _permissionValidationService.EnforceIsLoggedIn(executionContext.UserContext);
 
-            var user = await GetUser(command, executionContext);
+            var user = await GetUser(executionContext);
             UpdatePassword(command, executionContext, user);
             await _dbContext.SaveChangesAsync();
         }
@@ -64,13 +58,13 @@ namespace Cofoundry.Domain.Internal
 
             if (_userAuthenticationHelper.VerifyPassword(user, command.OldPassword) == PasswordVerificationResult.Failed)
             {
-                throw ValidationErrorException.CreateWithProperties("Incorrect password", "OldPassword");
+                throw ValidationErrorException.CreateWithProperties("Incorrect password", nameof(command.OldPassword));
             }
 
             _passwordUpdateCommandHelper.UpdatePassword(command.NewPassword, user, executionContext);
         }
 
-        private Task<User> GetUser(UpdateCurrentUserPasswordCommand command, IExecutionContext executionContext)
+        private Task<User> GetUser(IExecutionContext executionContext)
         {
             return _dbContext
                 .Users
@@ -79,15 +73,9 @@ namespace Cofoundry.Domain.Internal
                 .SingleOrDefaultAsync();
         }
 
-        #endregion
-
-        #region Permission
-
         public IEnumerable<IPermissionApplication> GetPermissions(UpdateCurrentUserPasswordCommand command)
         {
             yield return new CurrentUserUpdatePermission();
         }
-
-        #endregion
     }
 }

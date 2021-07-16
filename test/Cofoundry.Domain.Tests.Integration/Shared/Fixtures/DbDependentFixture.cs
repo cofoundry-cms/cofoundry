@@ -2,6 +2,8 @@
 using Cofoundry.Core.Time;
 using Cofoundry.Core.Time.Mocks;
 using Cofoundry.Domain.Data;
+using Cofoundry.Domain.Internal;
+using Cofoundry.Domain.Tests.Shared.Mocks;
 using Cofoundry.Web;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -74,7 +76,9 @@ namespace Cofoundry.Domain.Tests.Integration
                 .AddCofoundry(configuration);
 
             services.AddScoped<IDateTimeService, MockDateTimeService>();
-
+            services.AddScoped<IUserSessionService, InMemoryUserSessionService>();
+            services.AddSingleton<IClientConnectionService>(new MockClientConnectionService(c => c.IPAddress = "127.0.0.1"));
+            
             var serviceProvider = services.BuildServiceProvider();
 
             return serviceProvider;

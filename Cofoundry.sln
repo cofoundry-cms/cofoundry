@@ -27,7 +27,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cofoundry.Domain.Tests", "t
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cofoundry.Web.Admin.Tests", "test\Cofoundry.Web.Admin.Tests\Cofoundry.Web.Admin.Tests.csproj", "{70AB99F5-8E90-4AAD-B844-3BC1F3F50330}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cofoundry.Domain.Tests.Integration", "test\Cofoundry.Domain.Tests.Integration\Cofoundry.Domain.Tests.Integration.csproj", "{8585A1DE-EBE5-49CD-B900-BB2514D36304}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cofoundry.Domain.Tests.Integration", "test\Cofoundry.Domain.Tests.Integration\Cofoundry.Domain.Tests.Integration.csproj", "{8585A1DE-EBE5-49CD-B900-BB2514D36304}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cofoundry.Domain.Tests.Shared", "test\Cofoundry.Domain.Tests.Shared\Cofoundry.Domain.Tests.Shared.csproj", "{82FF7D56-3FC3-46A4-91FF-97A198F7B170}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cofoundry.Web.Tests", "test\Cofoundry.Web.Tests\Cofoundry.Web.Tests.csproj", "{EE28E561-3DCA-441D-AC98-19A350E354FC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -71,6 +75,14 @@ Global
 		{8585A1DE-EBE5-49CD-B900-BB2514D36304}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8585A1DE-EBE5-49CD-B900-BB2514D36304}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8585A1DE-EBE5-49CD-B900-BB2514D36304}.Release|Any CPU.Build.0 = Release|Any CPU
+		{82FF7D56-3FC3-46A4-91FF-97A198F7B170}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{82FF7D56-3FC3-46A4-91FF-97A198F7B170}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{82FF7D56-3FC3-46A4-91FF-97A198F7B170}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{82FF7D56-3FC3-46A4-91FF-97A198F7B170}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EE28E561-3DCA-441D-AC98-19A350E354FC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EE28E561-3DCA-441D-AC98-19A350E354FC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EE28E561-3DCA-441D-AC98-19A350E354FC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EE28E561-3DCA-441D-AC98-19A350E354FC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -85,6 +97,8 @@ Global
 		{275C85A3-98AA-4554-9B03-D288E904CC37} = {EAA517AB-9245-45E4-9929-C28E3BC944CC}
 		{70AB99F5-8E90-4AAD-B844-3BC1F3F50330} = {EAA517AB-9245-45E4-9929-C28E3BC944CC}
 		{8585A1DE-EBE5-49CD-B900-BB2514D36304} = {EAA517AB-9245-45E4-9929-C28E3BC944CC}
+		{82FF7D56-3FC3-46A4-91FF-97A198F7B170} = {EAA517AB-9245-45E4-9929-C28E3BC944CC}
+		{EE28E561-3DCA-441D-AC98-19A350E354FC} = {EAA517AB-9245-45E4-9929-C28E3BC944CC}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {69E60B88-9077-484B-AD67-D85641B1F45A}
