@@ -43,8 +43,6 @@ namespace Cofoundry.Domain.Internal
                 throw new Exception("UpdateUnauthenticatedUserPasswordCommand cannot be used when the user is already logged in.");
             }
 
-            var userArea = _userAreaRepository.GetByCode(command.UserAreaCode);
-
             var authResult = await GetUserLoginInfoAsync(command, executionContext);
             authResult.ThrowIfUnsuccessful(nameof(command.OldPassword));
 
@@ -83,21 +81,6 @@ namespace Cofoundry.Domain.Internal
             var isLoggedIntoDifferentUserArea = currentContext.UserArea?.UserAreaCode != command.UserAreaCode;
 
             return currentContext.UserId.HasValue && !isLoggedIntoDifferentUserArea;
-        }
-
-        private async Task ValidateMaxLoginAttemptsNotExceeded(UpdateUnauthenticatedUserPasswordCommand command, IExecutionContext executionContext)
-        {
-            var query = new HasExceededMaxLoginAttemptsQuery()
-            {
-                UserAreaCode = command.UserAreaCode,
-                Username = command.Username
-            };
-
-            var hasAttemptsExceeded = await _queryExecutor.ExecuteAsync(query, executionContext);
-            if (hasAttemptsExceeded)
-            {
-                throw new TooManyFailedAttemptsAuthenticationException();
-            }
         }
     }
 }

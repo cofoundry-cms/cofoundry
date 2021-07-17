@@ -47,7 +47,7 @@ namespace Cofoundry.Domain
                 switch (Error)
                 {
                     case UserLoginInfoAuthenticationError.InvalidCredentials:
-                        throw new InvalidCredentialsAuthenticationException(nameof(passwordPropertyName));
+                        throw new InvalidCredentialsAuthenticationException(passwordPropertyName);
                     case UserLoginInfoAuthenticationError.TooManyFailedAttempts:
                         throw new TooManyFailedAttemptsAuthenticationException();
                     case UserLoginInfoAuthenticationError.NotSpecified:

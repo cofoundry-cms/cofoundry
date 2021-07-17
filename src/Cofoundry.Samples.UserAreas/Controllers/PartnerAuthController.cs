@@ -61,7 +61,7 @@ namespace Cofoundry.Samples.UserAreas
             // Support redirect urls from login
             var redirectUrl = _authenticationControllerHelper.GetAndValidateReturnUrl(this);
 
-            if (!authResult.User.RequirePasswordChange)
+            if (authResult.User.RequirePasswordChange)
             {
                 return RedirectToAction(nameof(ChangePassword), new { redirectUrl });
             }
@@ -184,7 +184,7 @@ namespace Cofoundry.Samples.UserAreas
 
         private ActionResult GetLoggedInDefaultRedirectAction()
         {
-            return Redirect(UrlLibrary.PartnerDefault());
+            return Redirect(UrlLibrary.PartnerWelcome());
         }
     }
 }

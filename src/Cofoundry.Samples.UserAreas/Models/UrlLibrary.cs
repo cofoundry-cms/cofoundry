@@ -75,7 +75,7 @@ namespace Cofoundry.Samples.UserAreas
 
         public static string PartnerDefault()
         {
-            return PartnerWelcome();
+            return PartnerRoot();
         }
 
         public static string PartnerWelcome()
