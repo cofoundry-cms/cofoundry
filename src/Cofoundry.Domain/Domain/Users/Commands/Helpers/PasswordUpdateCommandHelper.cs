@@ -16,7 +16,6 @@ namespace Cofoundry.Domain
     public class PasswordUpdateCommandHelper : IPasswordUpdateCommandHelper
     {
         private readonly IPermissionValidationService _permissionValidationService;
-        private readonly IUserAreaDefinitionRepository _userAreaRepository;
         private readonly IPasswordCryptographyService _passwordCryptographyService;
         private readonly IUserMailTemplateBuilderFactory _userMailTemplateBuilderFactory;
         private readonly IQueryExecutor _queryExecutor;
@@ -24,7 +23,6 @@ namespace Cofoundry.Domain
 
         public PasswordUpdateCommandHelper(
             IPermissionValidationService permissionValidationService,
-            IUserAreaDefinitionRepository userAreaRepository,
             IPasswordCryptographyService passwordCryptographyService,
             IMailService mailService,
             IQueryExecutor queryExecutor,
@@ -33,7 +31,6 @@ namespace Cofoundry.Domain
         {
             _passwordCryptographyService = passwordCryptographyService;
             _permissionValidationService = permissionValidationService;
-            _userAreaRepository = userAreaRepository;
             _mailService = mailService;
             _queryExecutor = queryExecutor;
             _userMailTemplateBuilderFactory = userMailTemplateBuilderFactory;
@@ -64,6 +61,11 @@ namespace Cofoundry.Domain
             user.RequirePasswordChange = false;
             user.LastPasswordChangeDate = executionContext.ExecutionDate;
 
+            UpdatePasswordHash(newPassword, user);
+        }
+
+        public void UpdatePasswordHash(string newPassword, User user)
+        {
             var hashResult = _passwordCryptographyService.CreateHash(newPassword);
             user.Password = hashResult.Hash;
             user.PasswordHashVersion = hashResult.HashVersion;

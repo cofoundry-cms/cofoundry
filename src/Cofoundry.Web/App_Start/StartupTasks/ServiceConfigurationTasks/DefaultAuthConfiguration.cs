@@ -31,15 +31,11 @@ namespace Cofoundry.Web
             var services = mvcBuilder.Services;
             var allUserAreas = _userAreaDefinitionRepository.GetAll();
 
-            // Set default schema as specified in config, falling back to CofoundryAdminUserArea
-            // Since any additional areas are configured by the implementor there shouldn't be multiple
-            // unless the developer has misconfigured their areas.
-            var defaultSchemaCode = allUserAreas
-                .OrderByDescending(u => u.IsDefaultAuthSchema)
-                .ThenByDescending(u => u is CofoundryAdminUserArea)
-                .ThenBy(u => u.Name)
-                .Select(u => u.UserAreaCode)
-                .First();
+            var defaultSchemaCode = _userAreaDefinitionRepository.GetDefault()?.UserAreaCode;
+            if (defaultSchemaCode == null)
+            {
+                throw new InvalidOperationException("Default user area expected, but none are defined. The Cofoundry Admin user area should be defined at least.");
+            }
 
             var defaultScheme = CofoundryAuthenticationConstants.FormatAuthenticationScheme(defaultSchemaCode);
 

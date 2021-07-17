@@ -7,8 +7,6 @@ namespace Cofoundry.Domain.Tests
 {
     public class AssetFileStampHelperTests
     {
-        #region CreateFileStamp
-
         [Theory]
         [InlineData("2009/12/31 23:59:59.9999")]
         [InlineData("1872/04/01 00:00:59.0012")]
@@ -31,10 +29,6 @@ namespace Cofoundry.Domain.Tests
 
             Assert.Equal(expected, result);
         }
-
-        #endregion
-
-        #region ToDate
 
         [Theory]
         [InlineData(-2)]
@@ -60,8 +54,6 @@ namespace Cofoundry.Domain.Tests
             Assert.Equal(expectedDate, result);
             Assert.Equal(DateTimeKind.Utc, result.Value.Kind);
         }
-
-        #endregion
     }
 
 }

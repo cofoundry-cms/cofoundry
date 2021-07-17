@@ -109,8 +109,15 @@ namespace Cofoundry.Domain.Internal
             // BUG: Got a managed debugging assistant exception? Try this:
             // https://developercommunity.visualstudio.com/content/problem/29782/managed-debugging-assistant-fatalexecutionengineer.html
 
-            var dbUser = await QuerySystemUser().FirstOrDefaultAsync();
+            var dbUser = await _dbContext
+                .Users
+                .Include(u => u.Role)
+                .FilterByUserArea(CofoundryAdminUserArea.AreaCode)
+                .FilterActive()
+                .Where(u => u.IsSystemAccount)
+                .FirstOrDefaultAsync();
             EntityNotFoundException.ThrowIfNull(dbUser, SuperAdminRole.SuperAdminRoleCode);
+
             var impersonatedUserContext = _userContextMapper.Map(dbUser);
 
             return impersonatedUserContext;
@@ -194,18 +201,6 @@ namespace Cofoundry.Domain.Internal
             }
 
             return cx;
-        }
-
-        protected virtual IQueryable<User> QuerySystemUser()
-        {
-            var query = _dbContext
-                .Users
-                .Include(u => u.Role)
-                .FilterByUserArea(CofoundryAdminUserArea.AreaCode)
-                .FilterActive()
-                .Where(u => u.IsSystemAccount);
-
-            return query;
         }
 
         #endregion

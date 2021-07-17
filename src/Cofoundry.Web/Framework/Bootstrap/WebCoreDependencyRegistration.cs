@@ -6,6 +6,7 @@ using Cofoundry.Domain;
 using Cofoundry.Core;
 using Cofoundry.Core.ResourceFiles;
 using Cofoundry.Domain.Internal;
+using Cofoundry.Web.Internal;
 
 namespace Cofoundry.Web.Registration
 {
@@ -15,6 +16,8 @@ namespace Cofoundry.Web.Registration
         {
             var singletonRegistrationOptions = RegistrationOptions.SingletonScope();
             var lowPriorityOverrideRegistrationOptions = RegistrationOptions.Override(RegistrationOverridePriority.Low);
+            var lowPriorityScopedOverrideRegistrationOptions = RegistrationOptions.Override(RegistrationOverridePriority.Low);
+            lowPriorityScopedOverrideRegistrationOptions.Lifetime = InstanceLifetime.Scoped;
 
             container
                 .Register<IControllerResponseHelper, ControllerResponseHelper>()
@@ -25,7 +28,7 @@ namespace Cofoundry.Web.Registration
                 .Register<IHtmlSanitizerHelper, HtmlSanitizerHelper>()
                 .Register<IJavascriptViewHelper, JavascriptViewHelper>()
                 .Register<ICofoundryHtmlHelper, CofoundryHtmlHelper>()
-                .Register<IUserSessionService, UserSessionService>(RegistrationOptions.Scoped())
+                .Register<IUserSessionService, WebUserSessionService>(lowPriorityScopedOverrideRegistrationOptions)
                 .Register<IAuthCookieNamespaceProvider, AuthCookieNamespaceProvider>()
                 .Register<IVisualEditorStateService, DefaultVisualEditorStateService>()
                 .Register<IVisualEditorStateCache, VisualEditorStateCache>(RegistrationOptions.Scoped())
@@ -40,6 +43,7 @@ namespace Cofoundry.Web.Registration
                 .Register<IPageTemplateRegionTagBuilderFactory, PageTemplateRegionTagBuilderFactory>()
                 .Register<IPageBlockRenderer, PageBlockRenderer>()
                 .Register<IPathResolver, SitePathResolver>(lowPriorityOverrideRegistrationOptions)
+                .Register<IClientConnectionService, WebClientConnectionService>(lowPriorityOverrideRegistrationOptions)
 
                 .Register<JsonDeltaModelBinder>()
                 .Register<IFormFileUploadedFileFactory, FormFileUploadedFileFactory>()

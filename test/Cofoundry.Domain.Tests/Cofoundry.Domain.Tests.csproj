@@ -20,6 +20,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\src\Cofoundry.Core\Cofoundry.Core.csproj" />
     <ProjectReference Include="..\..\src\Cofoundry.Domain\Cofoundry.Domain.csproj" />
+    <ProjectReference Include="..\Cofoundry.Domain.Tests.Shared\Cofoundry.Domain.Tests.Shared.csproj" />
   </ItemGroup>
 
 </Project>

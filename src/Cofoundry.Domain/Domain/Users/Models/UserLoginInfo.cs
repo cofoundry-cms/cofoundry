@@ -33,5 +33,11 @@ namespace Cofoundry.Domain
         /// sign-up notification.
         /// </summary>
         public bool IsEmailConfirmed { get; set; }
+
+        /// <summary>
+        /// True if the password hash version is out of date. If this true then the password 
+        /// needs updating with the latest hash.
+        /// </summary>
+        public bool PasswordRehashNeeded { get; set; }
     }
 }

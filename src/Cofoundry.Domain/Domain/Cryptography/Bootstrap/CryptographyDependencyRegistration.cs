@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Cofoundry.Core.DependencyInjection;
 using Cofoundry.Domain.Internal;
+using Microsoft.AspNetCore.Identity;
 
 namespace Cofoundry.Domain.Registration
 {
@@ -17,6 +18,7 @@ namespace Cofoundry.Domain.Registration
                 .Register<ISecurityTokenGenerationService, SecurityTokenGenerationService>()
                 .Register<IPasswordGenerationService, PasswordGenerationService>()
                 .Register<IRandomStringGenerator, RandomStringGenerator>()
+                .Register<IPasswordHasher<PasswordHasherUser>, PasswordHasher<PasswordHasherUser>>()
                 ;
         }
     }

@@ -18,5 +18,11 @@ namespace Cofoundry.Domain
         /// Returns all user areas defitions registered in the system.
         /// </summary>
         IEnumerable<IUserAreaDefinition> GetAll();
+
+        /// <summary>
+        /// Returns the default user area, which prefers areas with the IsDefaultAuthSchema
+        /// property set to true, falling back to the Cofoundry Admin user area.
+        /// </summary>
+        IUserAreaDefinition GetDefault();
     }
 }

@@ -9,8 +9,6 @@ namespace Cofoundry.Domain.Tests
 {
     public class RandomStringGeneratorTests
     {
-        #region CreateFileStamp
-
         [Theory]
         [InlineData(1)]
         [InlineData(20)]
@@ -84,7 +82,5 @@ namespace Cofoundry.Domain.Tests
 
             Assert.Throws<ArgumentException>(() => generator.Generate(10, alphabet, untrustworthyCharacters));
         }
-
-        #endregion
     }
 }

@@ -5,6 +5,8 @@ using System.Threading.Tasks;
 using Cofoundry.Domain.Data;
 using Cofoundry.Domain.CQS;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Logging;
 
 namespace Cofoundry.Domain.Internal
 {
@@ -17,11 +19,13 @@ namespace Cofoundry.Domain.Internal
         , IIgnorePermissionCheckHandler
     {
         private readonly UserAuthenticationHelper _userAuthenticationHelper;
+        private readonly ILogger<GetUserLoginInfoIfAuthenticatedQueryHandler> _logger;
         private readonly CofoundryDbContext _dbContext;
         private readonly IQueryExecutor _queryExecutor;
         private readonly ICommandExecutor _commandExecutor;
 
         public GetUserLoginInfoIfAuthenticatedQueryHandler(
+            ILogger<GetUserLoginInfoIfAuthenticatedQueryHandler> logger,
             CofoundryDbContext dbContext,
             UserAuthenticationHelper userAuthenticationHelper,
             IQueryExecutor queryExecutor,
@@ -29,6 +33,7 @@ namespace Cofoundry.Domain.Internal
             )
         {
             _userAuthenticationHelper = userAuthenticationHelper;
+            _logger = logger;
             _dbContext = dbContext;
             _queryExecutor = queryExecutor;
             _commandExecutor = commandExecutor;
@@ -36,60 +41,55 @@ namespace Cofoundry.Domain.Internal
 
         public async Task<UserLoginInfoAuthenticationResult> ExecuteAsync(GetUserLoginInfoIfAuthenticatedQuery query, IExecutionContext executionContext)
         {
-            var result = new UserLoginInfoAuthenticationResult();
-
             if (string.IsNullOrWhiteSpace(query.Username) || string.IsNullOrWhiteSpace(query.Password))
             {
-                result.Error = UserLoginInfoAuthenticationError.InvalidCredentials;
-                return result;
+                return GetAuthenticationFailedForUnknownUserResult(query);
             }
 
             var hasExceededMaxLoginAttempts = await HasExceededMaxLoginAttemptsAsync(query, executionContext);
-
             if (hasExceededMaxLoginAttempts)
             {
-                result.Error = UserLoginInfoAuthenticationError.TooManyFailedAttempts;
-                return result;
-            }
-
-            var user = await GetUserAsync(query);
-            result.User = MapResult(query, user);
-
-            if (result.User == null)
-            {
-                var logFailedAttemptCommand = new LogFailedLoginAttemptCommand(query.UserAreaCode, query.Username);
-                await _commandExecutor.ExecuteAsync(logFailedAttemptCommand);
-
-                result.Error = UserLoginInfoAuthenticationError.InvalidCredentials;
-            }
-            else
-            {
-                if (result.Error != UserLoginInfoAuthenticationError.None)
+                _logger.LogInformation("Authentication failed due to too many failed attempts {UserAreaCode}", query.UserAreaCode);
+                return new UserLoginInfoAuthenticationResult()
                 {
-                    throw new InvalidOperationException($"Unexpected {nameof(UserLoginInfoAuthenticationError)} state for a successful request: {result.Error}");
-                }
-                result.IsSuccess = true;
+                    Error = UserLoginInfoAuthenticationError.TooManyFailedAttempts
+                };
             }
+
+            var dbUser = await GetUserAsync(query);
+            if (dbUser == null)
+            {
+                await LogFailedLogginAttemptAsync(query);
+                return GetAuthenticationFailedForUnknownUserResult(query);
+            }
+
+            var result = new UserLoginInfoAuthenticationResult();
+            result.User = MapUser(query, dbUser);
+
+            await FinalizeResultAsync(query, result);
 
             return result;
         }
 
-        private UserLoginInfo MapResult(GetUserLoginInfoIfAuthenticatedQuery query, User user)
+        private UserLoginInfoAuthenticationResult GetAuthenticationFailedForUnknownUserResult(GetUserLoginInfoIfAuthenticatedQuery query)
         {
-            if (_userAuthenticationHelper.IsPasswordCorrect(user, query.Password))
+            _logger.LogInformation("Authentication failed for unknown user in user area {UserAreaCode}", query.UserAreaCode);
+
+            var result = new UserLoginInfoAuthenticationResult();
+            result.Error = UserLoginInfoAuthenticationError.InvalidCredentials;
+
+            return result;
+        }
+
+        private Task<bool> HasExceededMaxLoginAttemptsAsync(GetUserLoginInfoIfAuthenticatedQuery inputQuery, IExecutionContext executionContext)
+        {
+            var hasExceededMaxLoginAttemptsQuery = new HasExceededMaxLoginAttemptsQuery()
             {
-                var result = new UserLoginInfo()
-                {
-                    RequirePasswordChange = user.RequirePasswordChange,
-                    UserAreaCode = user.UserAreaCode,
-                    UserId = user.UserId,
-                    IsEmailConfirmed = user.IsEmailConfirmed
-                };
+                UserAreaCode = inputQuery.UserAreaCode,
+                Username = inputQuery.Username
+            };
 
-                return result;
-            }
-
-            return null;
+            return _queryExecutor.ExecuteAsync(hasExceededMaxLoginAttemptsQuery, executionContext);
         }
 
         private Task<User> GetUserAsync(GetUserLoginInfoIfAuthenticatedQuery query)
@@ -103,15 +103,76 @@ namespace Cofoundry.Domain.Internal
                 .FirstOrDefaultAsync();
         }
 
-        private Task<bool> HasExceededMaxLoginAttemptsAsync(GetUserLoginInfoIfAuthenticatedQuery inputQuery, IExecutionContext executionContext)
+        private async Task LogFailedLogginAttemptAsync(GetUserLoginInfoIfAuthenticatedQuery query)
         {
-            var hasExceededMaxLoginAttemptsQuery = new HasExceededMaxLoginAttemptsQuery()
+            await _commandExecutor.ExecuteAsync(new LogFailedLoginAttemptCommand(
+                query.UserAreaCode,
+                query.Username
+                ));
+        }
+
+        private UserLoginInfo MapUser(GetUserLoginInfoIfAuthenticatedQuery query, User dbUser)
+        {
+            if (dbUser == null) throw new ArgumentNullException(nameof(dbUser));
+
+            var verificationResult = VerifyPassword(query, dbUser);
+            if (verificationResult == PasswordVerificationResult.Failed) return null;
+
+            var userLoginInfo = new UserLoginInfo()
             {
-                UserAreaCode = inputQuery.UserAreaCode,
-                Username = inputQuery.Username
+                RequirePasswordChange = dbUser.RequirePasswordChange,
+                UserAreaCode = dbUser.UserAreaCode,
+                UserId = dbUser.UserId,
+                IsEmailConfirmed = dbUser.IsEmailConfirmed,
+                PasswordRehashNeeded = verificationResult == PasswordVerificationResult.SuccessRehashNeeded
             };
 
-            return _queryExecutor.ExecuteAsync(hasExceededMaxLoginAttemptsQuery, executionContext);
+            return userLoginInfo;
+        }
+
+        private PasswordVerificationResult VerifyPassword(GetUserLoginInfoIfAuthenticatedQuery query, User dbUser)
+        {
+            if (dbUser == null) throw new ArgumentNullException(nameof(dbUser));
+            var verificationResult = _userAuthenticationHelper.VerifyPassword(dbUser, query.Password);
+
+            switch (verificationResult)
+            {
+                case PasswordVerificationResult.Failed:
+                    _logger.LogInformation("Authentication failed for user {UserId}", dbUser.UserId);
+                    break;
+                case PasswordVerificationResult.SuccessRehashNeeded:
+                    _logger.LogInformation("Authentication success for user {UserId} (rehash needed)", dbUser.UserId);
+                    break;
+                case PasswordVerificationResult.Success:
+                    _logger.LogInformation("Authentication success for user {UserId}", dbUser.UserId);
+                    break;
+                default:
+                    throw new InvalidOperationException("Unrecognised PasswordVerificationResult: " + verificationResult);
+            }
+
+            return verificationResult;
+        }
+
+        /// <summary>
+        /// The user has been mapped, so complete the mapping of the outer result and handle
+        /// any side-effects
+        /// </summary>
+        private async Task FinalizeResultAsync(GetUserLoginInfoIfAuthenticatedQuery query, UserLoginInfoAuthenticationResult result)
+        {
+            if (result.User == null)
+            {
+                await LogFailedLogginAttemptAsync(query);
+
+                result.Error = UserLoginInfoAuthenticationError.InvalidCredentials;
+            }
+            else
+            {
+                if (result.Error != UserLoginInfoAuthenticationError.None)
+                {
+                    throw new InvalidOperationException($"Unexpected {nameof(UserLoginInfoAuthenticationError)} state for a successful request: {result.Error}");
+                }
+                result.IsSuccess = true;
+            }
         }
     }
 }

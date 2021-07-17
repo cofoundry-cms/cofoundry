@@ -5,9 +5,8 @@ using System.Threading.Tasks;
 using Cofoundry.Domain.Data;
 using Cofoundry.Domain.CQS;
 using Microsoft.EntityFrameworkCore;
-using Cofoundry.Core.Validation;
 using Cofoundry.Core;
-using Cofoundry.Domain.Internal;
+using Microsoft.AspNetCore.Identity;
 
 namespace Cofoundry.Domain.Internal
 {
@@ -19,8 +18,6 @@ namespace Cofoundry.Domain.Internal
         : ICommandHandler<UpdateCurrentUserPasswordCommand>
         , IPermissionRestrictedCommandHandler<UpdateCurrentUserPasswordCommand>
     {
-        #region constructor
-
         private readonly CofoundryDbContext _dbContext;
         private readonly IQueryExecutor _queryExecutor;
         private readonly ICommandExecutor _commandExecutor;
@@ -48,29 +45,49 @@ namespace Cofoundry.Domain.Internal
             _passwordUpdateCommandHelper = passwordUpdateCommandHelper;
         }
 
-        #endregion
-
-        #region execution
-        
         public async Task ExecuteAsync(UpdateCurrentUserPasswordCommand command, IExecutionContext executionContext)
         {
             _permissionValidationService.EnforceIsLoggedIn(executionContext.UserContext);
 
-            var user = await GetUser(command, executionContext);
+            var user = await GetUser(executionContext);
+            EntityNotFoundException.ThrowIfNull(user, executionContext.UserContext.UserId);
 
             await ValidateMaxLoginAttemptsNotExceededAsync(user, executionContext);
-
             await UpdatePasswordAsync(command, executionContext, user);
+        }
+
+        private Task<User> GetUser(IExecutionContext executionContext)
+        {
+            return _dbContext
+                .Users
+                .FilterCanLogIn()
+                .FilterById(executionContext.UserContext.UserId.Value)
+                .SingleOrDefaultAsync();
+        }
+
+        private async Task ValidateMaxLoginAttemptsNotExceededAsync(User dbUser, IExecutionContext executionContext)
+        {
+            var query = new HasExceededMaxLoginAttemptsQuery()
+            {
+                UserAreaCode = dbUser.UserAreaCode,
+                Username = dbUser.Username
+            };
+
+            var hasExceededMaxLoginAttempts = await _queryExecutor.ExecuteAsync(query, executionContext);
+
+            if (hasExceededMaxLoginAttempts)
+            {
+                throw new TooManyFailedAttemptsAuthenticationException();
+            }
         }
 
         private async Task UpdatePasswordAsync(UpdateCurrentUserPasswordCommand command, IExecutionContext executionContext, User user)
         {
-            EntityNotFoundException.ThrowIfNull(user, executionContext.UserContext.UserId);
             var userArea = _userAreaRepository.GetByCode(user.UserAreaCode);
 
             _passwordUpdateCommandHelper.ValidateUserArea(userArea);
 
-            if (!_userAuthenticationHelper.IsPasswordCorrect(user, command.OldPassword))
+            if (_userAuthenticationHelper.VerifyPassword(user, command.OldPassword) == PasswordVerificationResult.Failed)
             {
                 var logFailedAttemptCommand = new LogFailedLoginAttemptCommand(user.UserAreaCode, user.Username);
                 await _commandExecutor.ExecuteAsync(logFailedAttemptCommand);
@@ -82,40 +99,9 @@ namespace Cofoundry.Domain.Internal
             await _dbContext.SaveChangesAsync();
         }
 
-        private Task<User> GetUser(UpdateCurrentUserPasswordCommand command, IExecutionContext executionContext)
-        {
-            return _dbContext
-                .Users
-                .FilterCanLogIn()
-                .FilterById(executionContext.UserContext.UserId.Value)
-                .SingleOrDefaultAsync();
-        }
-
-        private async Task ValidateMaxLoginAttemptsNotExceededAsync(User user, IExecutionContext executionContext)
-        {
-            var query = new HasExceededMaxLoginAttemptsQuery()
-            {
-                UserAreaCode = user.UserAreaCode,
-                Username = user.Username
-            };
-
-            var hasExceededMaxLoginAttempts = await _queryExecutor.ExecuteAsync(query, executionContext);
-
-            if (hasExceededMaxLoginAttempts)
-            {
-                throw new TooManyFailedAttemptsAuthenticationException();
-            }
-        }
-
-        #endregion
-
-        #region Permission
-
         public IEnumerable<IPermissionApplication> GetPermissions(UpdateCurrentUserPasswordCommand command)
         {
             yield return new CurrentUserUpdatePermission();
         }
-
-        #endregion
     }
 }

@@ -4,6 +4,10 @@ using System.Linq;
 using System.Threading.Tasks;
 using Cofoundry.Domain.CQS;
 using Cofoundry.Core.Validation;
+using Microsoft.Extensions.Logging;
+using Cofoundry.Domain.Data;
+using Microsoft.EntityFrameworkCore;
+using Cofoundry.Core;
 
 namespace Cofoundry.Domain.Internal
 {
@@ -18,24 +22,27 @@ namespace Cofoundry.Domain.Internal
         : ICommandHandler<LogUserInWithCredentialsCommand>
         , IIgnorePermissionCheckHandler
     {
-        #region constructor
-        
+        private readonly ILogger<LogUserInWithCredentialsCommandHandler> _logger;
+        private readonly CofoundryDbContext _dbContext;
         private readonly IQueryExecutor _queryExecutor;
         private readonly ILoginService _loginService;
-        private readonly ICommandExecutor _commandExecutor;
+        private readonly IPasswordUpdateCommandHelper _passwordUpdateCommandHelper;
 
         public LogUserInWithCredentialsCommandHandler(
+            ILogger<LogUserInWithCredentialsCommandHandler> logger,
+            CofoundryDbContext dbContext,
             IQueryExecutor queryExecutor,
             ILoginService loginService,
-            ICommandExecutor commandExecutor
+            IPasswordUpdateCommandHelper passwordUpdateCommandHelper
             )
         {
+            _logger = logger;
+            _dbContext = dbContext;
             _queryExecutor = queryExecutor;
             _loginService = loginService;
-            _commandExecutor = commandExecutor;
+            _passwordUpdateCommandHelper = passwordUpdateCommandHelper;
         }
 
-        #endregion
 
         public async Task ExecuteAsync(LogUserInWithCredentialsCommand command, IExecutionContext executionContext)
         {
@@ -46,6 +53,12 @@ namespace Cofoundry.Domain.Internal
 
             if (authResult.User.RequirePasswordChange)
             {
+                // Even if a password change is required, we should take the oportunity to rehash
+                if (authResult.User.PasswordRehashNeeded)
+                {
+                    await RehashPassword(authResult.User.UserId, command.Password);
+                }
+
                 throw new PasswordChangeRequiredException();
             }
 
@@ -83,6 +96,24 @@ namespace Cofoundry.Domain.Internal
             {
                 throw new ValidationErrorException("This user account is not permitted to log in via this route.");
             }
+        }
+
+        /// <remarks>
+        /// So far this is only used here, but it could be separated into it's own
+        /// command if it was used elsewhere. 
+        /// </remarks>
+        private async Task RehashPassword(int userId, string password)
+        {
+            var user = await _dbContext
+                .Users
+                .SingleOrDefaultAsync(u => u.UserId == userId);
+
+            EntityNotFoundException.ThrowIfNull(user, userId);
+
+            _logger.LogDebug("Rehashing password for user {UserId}", user.UserId);
+            _passwordUpdateCommandHelper.UpdatePasswordHash(password, user);
+
+            await _dbContext.SaveChangesAsync();
         }
     }
 }

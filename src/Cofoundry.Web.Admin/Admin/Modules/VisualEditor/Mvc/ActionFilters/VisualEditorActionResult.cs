@@ -36,6 +36,7 @@ namespace Cofoundry.Web.Admin.Internal
             var wrappedStream = context.HttpContext.Response.Body;
 
             using (var stream = new MemoryStream())
+            using (var streamReader = new StreamReader(stream, Encoding.UTF8))
             {
                 context.HttpContext.Response.Body = stream;
                 string html = null;
@@ -45,7 +46,9 @@ namespace Cofoundry.Web.Admin.Internal
                     await _wrappedActionResult.ExecuteResultAsync(context);
 
                     stream.Seek(0, SeekOrigin.Begin);
-                    html = Encoding.UTF8.GetString(stream.ToArray()).Trim();
+                    {
+                        html = (await streamReader.ReadToEndAsync()).Trim();
+                    }
                 }
                 finally
                 {
@@ -60,10 +63,16 @@ namespace Cofoundry.Web.Admin.Internal
                     html = _htmlDocumentScriptInjector.InjectScripts(html, headScript, bodyScript);
                 }
 
-                using (var outputStream = new StreamWriter(wrappedStream, Encoding.UTF8))
+                var outputStream = new StreamWriter(wrappedStream, Encoding.UTF8, 1024, true);
+                try
                 {
                     await outputStream.WriteAsync(html);
                     await outputStream.FlushAsync();
+                }
+                finally
+                {
+                    // The "using" pattern would cause a sync flush which throws an error in NET Core 3.1
+                    await outputStream.DisposeAsync();
                 }
             }
         }

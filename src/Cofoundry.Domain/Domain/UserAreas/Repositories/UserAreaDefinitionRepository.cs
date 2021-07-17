@@ -11,6 +11,7 @@ namespace Cofoundry.Domain.Internal
         #region constructor
 
         private readonly Dictionary<string, IUserAreaDefinition> _userAreas;
+        private readonly IUserAreaDefinition _defaultUserArea;
 
         public UserAreaDefinitionRepository(
             IEnumerable<IUserAreaDefinition> userAreas
@@ -18,6 +19,11 @@ namespace Cofoundry.Domain.Internal
         {
             DetectInvalidDefinitions(userAreas);
             _userAreas = userAreas.ToDictionary(k => k.UserAreaCode);
+            _defaultUserArea = userAreas
+                .OrderByDescending(u => u.IsDefaultAuthSchema)
+                .ThenByDescending(u => u is CofoundryAdminUserArea)
+                .ThenBy(u => u.Name)
+                .FirstOrDefault();
         }
 
         private void DetectInvalidDefinitions(IEnumerable<IUserAreaDefinition> definitions)
@@ -52,6 +58,16 @@ namespace Cofoundry.Domain.Internal
                 var message = nameNot3Chars.GetType().Name + " has a definition code that is not 3 characters in length. All user area definition codes must be 3 characters.";
                 throw new InvalidUserAreaDefinitionException(message, nameNot3Chars, definitions);
             }
+
+            var defaultUserAreas = definitions
+                .Where(d => d.IsDefaultAuthSchema)
+                .Select(d=> d.UserAreaCode);
+
+            if (defaultUserAreas.Skip(1).FirstOrDefault() != null)
+            {
+                var message = "More than one user area has IsDefaultAuthSchema defined. Only a single default user area can be defined. Duplicates: " + string.Join(", ", defaultUserAreas);
+                throw new InvalidUserAreaDefinitionException(message, nameNot3Chars, definitions);
+            }
         }
 
         #endregion
@@ -79,6 +95,15 @@ namespace Cofoundry.Domain.Internal
         public IEnumerable<IUserAreaDefinition> GetAll()
         {
             return _userAreas.Select(a => a.Value);
+        }
+
+        /// <summary>
+        /// Returns the default user area, which prefers areas with the IsDefaultAuthSchema
+        /// property set to true, falling back to the Cofoundry Admin user area.
+        /// </summary
+        public IUserAreaDefinition GetDefault()
+        {
+            return _defaultUserArea;
         }
     }
 }
