@@ -7,8 +7,6 @@ namespace Cofoundry.Core.Tests
 {
     public class FilePathHelperTests
     {
-        #region CleanFileName
-
         [Theory]
         [InlineData(null)]
         [InlineData("")]
@@ -107,10 +105,6 @@ namespace Cofoundry.Core.Tests
             Assert.Equal(input, result);
         }
 
-        #endregion
-
-        #region FileExtensionContainsInvalidChars
-
         [Theory]
         [InlineData(null)]
         [InlineData("")]
@@ -159,7 +153,5 @@ namespace Cofoundry.Core.Tests
 
             Assert.True(result);
         }
-
-        #endregion
     }
 }

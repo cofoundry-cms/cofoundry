@@ -7,8 +7,6 @@ namespace Cofoundry.Core.Tests
 {
     public class HttpUriParserTests
     {
-        #region ParseAbsoluteOrDefault
-
         [Theory]
         [InlineData(null)]
         [InlineData("")]
@@ -65,10 +63,6 @@ namespace Cofoundry.Core.Tests
             var result = HttpUriParser.ParseAbsoluteOrDefault(input);
             Assert.Null(result);
         }
-
-        #endregion
-
-        #region ParseOrDefault
 
         [Theory]
         [InlineData(null)]
@@ -128,7 +122,5 @@ namespace Cofoundry.Core.Tests
             Assert.Equal(expectedUri, result);
             Assert.True(!result.IsAbsoluteUri);
         }
-
-        #endregion
     }
 }

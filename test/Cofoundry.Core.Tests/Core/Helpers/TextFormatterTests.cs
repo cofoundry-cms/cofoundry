@@ -7,8 +7,6 @@ namespace Cofoundry.Core.Tests
 {
     public class TextFormatterTests
     {
-        #region PascalCaseToSentence
-
         [Theory]
         [InlineData(null)]
         [InlineData("")]
@@ -49,10 +47,6 @@ namespace Cofoundry.Core.Tests
             Assert.Equal(expected, result);
         }
 
-        #endregion
-
-        #region PascalCaseToSentence
-
         [Theory]
         [InlineData(null)]
         [InlineData("")]
@@ -75,10 +69,6 @@ namespace Cofoundry.Core.Tests
 
             Assert.Equal(expected, result);
         }
-
-        #endregion
-
-        #region PascalCaseToSentence
 
         [Theory]
         [InlineData(null)]
@@ -103,10 +93,6 @@ namespace Cofoundry.Core.Tests
 
             Assert.Equal(expected, result);
         }
-
-        #endregion
-
-        #region LimitWithElipses
 
         [Theory]
         [InlineData(null)]
@@ -150,10 +136,6 @@ namespace Cofoundry.Core.Tests
             Assert.Equal(expected, result);
         }
 
-        #endregion
-
-        #region LimitWithElipses
-
         [Theory]
         [InlineData(null)]
         [InlineData("")]
@@ -195,10 +177,6 @@ namespace Cofoundry.Core.Tests
 
             Assert.Equal(expected, result);
         }
-
-        #endregion
-
-        #region LimitWithElipsesOnWordBoundary
 
         [Theory]
         [InlineData(null)]
@@ -242,10 +220,6 @@ namespace Cofoundry.Core.Tests
             Assert.Equal(expected, result);
         }
 
-        #endregion
-
-        #region FirstLetterToUpperCase
-
         [Theory]
         [InlineData(null)]
         [InlineData("")]
@@ -276,10 +250,6 @@ namespace Cofoundry.Core.Tests
 
             Assert.Equal(expected, result);
         }
-
-        #endregion
-
-        #region RemoveDiacritics
 
         [Theory]
         [InlineData(null)]
@@ -312,7 +282,5 @@ namespace Cofoundry.Core.Tests
 
             Assert.Equal(expected, result);
         }
-
-        #endregion
     }
 }

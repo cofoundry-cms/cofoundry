@@ -8,42 +8,6 @@ namespace Cofoundry.Core.Tests
 {
     public class OrderableTaskSorterTests
     {
-        #region private test classes
-
-        private interface TestSortableTask { };
-
-        private class FirstTask : TestSortableTask, IRunAfterTask, IOrderedTask
-        {
-            public ICollection<Type> RunAfter { get; set; }
-
-            public int Ordering  { get; set; }
-        }
-
-        private class SecondTask : TestSortableTask, IRunBeforeTask, IOrderedTask
-        {
-            public ICollection<Type> RunBefore { get; set; }
-
-            public int Ordering { get; set; }
-        }
-
-        private class ThirdTask : TestSortableTask, IRunAfterTask, IOrderedTask
-        {
-            public ICollection<Type> RunAfter { get; set; }
-
-            public int Ordering { get; set; }
-        }
-
-        private class FourthTask : TestSortableTask, IOrderedTask
-        {
-            public int Ordering { get; set; }
-        }
-
-        private class FithTask : TestSortableTask { }
-
-        private class SixthTask : TestSortableTask { }
-
-        #endregion
-
         [Fact]
         public void Sort_NullSource_ThrowsException()
         {
@@ -117,5 +81,37 @@ namespace Cofoundry.Core.Tests
 
             Assert.Equal(expected, stringResult);
         }
+
+        private interface TestSortableTask { };
+
+        private class FirstTask : TestSortableTask, IRunAfterTask, IOrderedTask
+        {
+            public ICollection<Type> RunAfter { get; set; }
+
+            public int Ordering { get; set; }
+        }
+
+        private class SecondTask : TestSortableTask, IRunBeforeTask, IOrderedTask
+        {
+            public ICollection<Type> RunBefore { get; set; }
+
+            public int Ordering { get; set; }
+        }
+
+        private class ThirdTask : TestSortableTask, IRunAfterTask, IOrderedTask
+        {
+            public ICollection<Type> RunAfter { get; set; }
+
+            public int Ordering { get; set; }
+        }
+
+        private class FourthTask : TestSortableTask, IOrderedTask
+        {
+            public int Ordering { get; set; }
+        }
+
+        private class FithTask : TestSortableTask { }
+
+        private class SixthTask : TestSortableTask { }
     }
 }

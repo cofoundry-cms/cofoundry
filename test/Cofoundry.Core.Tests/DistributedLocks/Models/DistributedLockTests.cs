@@ -8,8 +8,6 @@ namespace Cofoundry.Core.Tests
 {
     public class DistributedLockTests
     {
-        #region IsLocked
-
         [Fact]
         public void IsLocked_WhenLocked_ReturnsTrue()
         {
@@ -39,10 +37,6 @@ namespace Cofoundry.Core.Tests
 
             Assert.False(distributedLock.IsLocked());
         }
-
-        #endregion
-
-        #region IsLockedByAnotherProcess
 
         [Fact]
         public void IsLockedByAnotherProcess_WhenLockedBySelf_ReturnsFalse()
@@ -85,7 +79,5 @@ namespace Cofoundry.Core.Tests
 
             Assert.True(distributedLock.IsLockedByAnotherProcess());
         }
-
-        #endregion
     }
 }

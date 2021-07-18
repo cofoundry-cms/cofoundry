@@ -5,8 +5,6 @@ namespace Cofoundry.Core.Tests
 {
     public class SlugFormatterTests
     {
-        #region ToSlug
-
         [Theory]
         [InlineData(null)]
         [InlineData("")]
@@ -89,10 +87,6 @@ namespace Cofoundry.Core.Tests
             Assert.Equal(expected, result);
         }
 
-        #endregion
-
-        #region CamelCaseToSlug
-
         [Theory]
         [InlineData(null)]
         [InlineData("")]
@@ -124,7 +118,5 @@ namespace Cofoundry.Core.Tests
 
             Assert.Equal(expected, result);
         }
-
-        #endregion
     }
 }

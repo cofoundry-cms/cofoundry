@@ -14,8 +14,6 @@ namespace Cofoundry.Domain.Tests
         private static Guid ID = Guid.Parse(ID_STRING);
         private static Uri ABSOLUTE_BASE_URI = new Uri("https://www.cofoundry.com/auth/forgot-password");
 
-        #region MakeUrl
-
         [Theory]
         [InlineData("/auth/forgot-password", "/auth/forgot-password?i=" + ID_STRING + "&t=" + SIMPLE_TOKEN)]
         [InlineData("/login/forgot-password/", "/login/forgot-password?i=" + ID_STRING + "&t=" + SIMPLE_TOKEN)]
@@ -52,10 +50,6 @@ namespace Cofoundry.Domain.Tests
 
             Assert.Equal(expected, result);
         }
-
-        #endregion
-
-        #region ParseFromQuery
 
         [Fact]
         public void ParseFromQuery_EmptyQuery_ReturnsEmpty()
@@ -115,7 +109,5 @@ namespace Cofoundry.Domain.Tests
 
             Assert.Equal(token, parsed.Token);
         }
-
-        #endregion
     }
 }

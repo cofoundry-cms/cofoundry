@@ -4,7 +4,6 @@ using System.Text;
 using Xunit;
 using Moq;
 using Microsoft.AspNetCore.StaticFiles;
-using Cofoundry.Core.Web;
 using Cofoundry.Core.Web.Internal;
 
 namespace Cofoundry.Core.Tests
@@ -12,10 +11,8 @@ namespace Cofoundry.Core.Tests
     public class MimeTypeServiceTests
     {
         const string JPEG_MIME_TYPE = "image/jpeg";
-        const string CSV_MIME_TYPE = "text/csv";
         const string OCTET_STREAM_MIME_TYPE = "application/octet-stream";
-
-        #region MapFromFileName
+        const string TEST_DEFAULT_MIME_TYPE = "application/wibble";
 
         [Theory]
         [InlineData(null)]
@@ -59,11 +56,6 @@ namespace Cofoundry.Core.Tests
             Assert.Equal(OCTET_STREAM_MIME_TYPE, result);
         }
 
-        #endregion
-
-        #region MapFromFileNameWithDefault
-
-        const string TEST_DEFAULT_MIME_TYPE = "application/wibble";
 
         [Theory]
         [InlineData(null)]
@@ -106,7 +98,5 @@ namespace Cofoundry.Core.Tests
 
             Assert.Equal(TEST_DEFAULT_MIME_TYPE, result);
         }
-
-        #endregion
     }
 }

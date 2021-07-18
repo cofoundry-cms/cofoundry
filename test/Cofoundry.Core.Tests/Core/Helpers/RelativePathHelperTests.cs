@@ -7,8 +7,6 @@ namespace Cofoundry.Core.Tests
 {
     public class RelativePathHelperTests
     {
-        #region CombineVirtualPath
-
         [Theory]
         [InlineData(null)]
         [InlineData("")]
@@ -44,10 +42,6 @@ namespace Cofoundry.Core.Tests
 
             Assert.Equal(expected, result);
         }
-
-        #endregion
-
-        #region IsWellFormattedAndEqual
 
         [Theory]
         [InlineData(null)]
@@ -142,7 +136,5 @@ namespace Cofoundry.Core.Tests
             Assert.True(path1Result);
             Assert.True(path2Result);
         }
-
-        #endregion
     }
 }
