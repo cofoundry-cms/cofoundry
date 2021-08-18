@@ -24,7 +24,7 @@ namespace Cofoundry.Domain.Internal
 
         const string REGEX_REMOVE_METHOD_WHITEPSPACE = @"(\w+\s*\.Template+\s*\.[A-Za-z]*Region\()";
         const string PARTIAL_NAME_REGEX = "Html.(?:Render)?Partial(?:Async)?\\(\"([^\"]+)\"";
-        const string COMMENTS_REGEX = @"(@\*.*(\*@))";
+        const string COMMENTS_REGEX = @"(@\*.*?(\*@))";
 
         private readonly IQueryExecutor _queryExecutor;
         private readonly IPageTemplateViewFileLocator _viewLocator;
