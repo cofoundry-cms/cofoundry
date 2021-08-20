@@ -1,4 +1,4 @@
-#tool "nuget:?package=GitVersion.CommandLine"
+#tool nuget:?package=GitVersion.CommandLine&version=5.7.0
 
 using System.Text.RegularExpressions;
 
@@ -147,4 +147,4 @@ Task("Default").IsDependentOn("PushNuGetPackage");
 // EXECUTION
 //////////////////////////////////////////////////////////////////////
 
-//RunTarget(target);
+RunTarget(target);
