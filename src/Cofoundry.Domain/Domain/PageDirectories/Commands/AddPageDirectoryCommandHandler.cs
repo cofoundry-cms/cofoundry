@@ -1,12 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Cofoundry.Domain.Data;
+﻿using Cofoundry.Core;
+using Cofoundry.Core.Data;
 using Cofoundry.Core.Validation;
 using Cofoundry.Domain.CQS;
-using Cofoundry.Core.Data;
+using Cofoundry.Domain.Data;
+using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Cofoundry.Domain.Internal
 {
@@ -14,8 +13,6 @@ namespace Cofoundry.Domain.Internal
         : ICommandHandler<AddPageDirectoryCommand>
         , IPermissionRestrictedCommandHandler<AddPageDirectoryCommand>
     {
-        #region constructor
-
         private readonly IQueryExecutor _queryExecutor;
         private readonly CofoundryDbContext _dbContext;
         private readonly EntityAuditHelper _entityAuditHelper;
@@ -37,19 +34,15 @@ namespace Cofoundry.Domain.Internal
             _transactionScopeFactory = transactionScopeFactory;
         }
 
-        #endregion
-
-        #region execution
-
         public async Task ExecuteAsync(AddPageDirectoryCommand command, IExecutionContext executionContext)
         {
-            // Custom Validation
+            var parentDirectory = await GetParentDirectoryAsync(command);
             await ValidateIsUniqueAsync(command, executionContext);
 
             var pageDirectory = new PageDirectory();
             pageDirectory.Name = command.Name;
             pageDirectory.UrlPath = command.UrlPath;
-            pageDirectory.ParentPageDirectoryId = command.ParentPageDirectoryId;
+            pageDirectory.ParentPageDirectory = parentDirectory;
             _entityAuditHelper.SetCreated(pageDirectory, executionContext);
 
             _dbContext.PageDirectories.Add(pageDirectory);
@@ -58,6 +51,17 @@ namespace Cofoundry.Domain.Internal
             _transactionScopeFactory.QueueCompletionTask(_dbContext, _cache.Clear);
 
             command.OutputPageDirectoryId = pageDirectory.PageDirectoryId;
+        }
+
+        private async Task<PageDirectory> GetParentDirectoryAsync(AddPageDirectoryCommand command)
+        {
+            var parentDirectory = await _dbContext
+                .PageDirectories
+                .SingleOrDefaultAsync(d => d.PageDirectoryId == command.ParentPageDirectoryId);
+
+            EntityNotFoundException.ThrowIfNull(parentDirectory, command.ParentPageDirectoryId);
+
+            return parentDirectory;
         }
 
         private async Task ValidateIsUniqueAsync(AddPageDirectoryCommand command, IExecutionContext executionContext)
@@ -75,15 +79,9 @@ namespace Cofoundry.Domain.Internal
             }
         }
 
-        #endregion
-
-        #region Permission
-
         public IEnumerable<IPermissionApplication> GetPermissions(AddPageDirectoryCommand command)
         {
             yield return new PageDirectoryCreatePermission();
         }
-
-        #endregion
     }
 }

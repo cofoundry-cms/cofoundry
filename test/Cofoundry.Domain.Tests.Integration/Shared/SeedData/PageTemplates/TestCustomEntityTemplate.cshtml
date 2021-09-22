@@ -1,0 +1,20 @@
+﻿@using Cofoundry.Web
+@using Cofoundry.Domain.Tests.Integration 
+@model ICustomEntityPageViewModel<TestCustomEntityPageDisplayModel>
+@inject ICofoundryTemplateHelper<ICustomEntityPageViewModel<TestCustomEntityPageDisplayModel>> Cofoundry
+
+@Cofoundry.Template.UseDescription("A test custom entity template")
+
+<div>
+    <h1>@Model.PageTitle</h1>
+
+    @(await Cofoundry.Template.Region("Page Body")
+        .AllowMultipleBlocks()
+        .EmptyContentMinHeight(500)
+        .InvokeAsync())
+
+    @(await Cofoundry.Template.CustomEntityRegion("Custom Entity Body")
+        .AllowMultipleBlocks()
+        .EmptyContentMinHeight(500)
+        .InvokeAsync())
+</div>

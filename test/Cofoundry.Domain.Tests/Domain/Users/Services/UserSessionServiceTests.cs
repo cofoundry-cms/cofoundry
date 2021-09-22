@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace Cofoundry.Domain.Tests.Domain
+namespace Cofoundry.Domain.Tests
 {
     public abstract class UserSessionServiceTests
     {

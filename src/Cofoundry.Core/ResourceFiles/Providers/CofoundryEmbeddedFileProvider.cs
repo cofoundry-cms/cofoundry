@@ -54,11 +54,7 @@ namespace Cofoundry.Core.ResourceFiles
                 return new NotFoundDirectoryContents();
             }
 
-            var resourcePath = subpath.Replace("-", "_")
-                .Replace("~/", "")
-                .Replace("/", ".")
-                .Replace("\\", ".")
-                .Trim(new char[] { '.' });
+            var resourcePath = EmbeddedResourcePathFormatter.ConvertFromVirtualDirectory(subpath);
 
             var allFiles = _embeddedFileProvider
                 .GetDirectoryContents(string.Empty)

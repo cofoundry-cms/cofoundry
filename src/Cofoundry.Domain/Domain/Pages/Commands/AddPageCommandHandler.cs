@@ -18,8 +18,6 @@ namespace Cofoundry.Domain.Internal
         : ICommandHandler<AddPageCommand>
         , IPermissionRestrictedCommandHandler<AddPageCommand>
     {
-        #region constructor
-
         private readonly CofoundryDbContext _dbContext;
         private readonly IQueryExecutor _queryExecutor;
         private readonly EntityAuditHelper _entityAuditHelper;
@@ -49,10 +47,6 @@ namespace Cofoundry.Domain.Internal
             _pageStoredProcedures = pageStoredProcedures;
             _transactionScopeFactory = transactionScopeFactory;
         }
-
-        #endregion
-
-        #region Execute
 
         public async Task ExecuteAsync(AddPageCommand command, IExecutionContext executionContext)
         {
@@ -86,10 +80,6 @@ namespace Cofoundry.Domain.Internal
                 HasPublishedVersionChanged = command.Publish
             });
         }
-
-        #endregion
-
-        #region helpers
 
         private Locale GetLocale(int? localeId)
         {
@@ -231,11 +221,13 @@ namespace Cofoundry.Domain.Internal
                     throw ValidationErrorException.CreateWithProperties("Template does not support custom entities", nameof(command.PageTemplateId));
                 }
             }
+            else if (template.IsCustomEntityTemplate())
+            {
+                throw ValidationErrorException.CreateWithProperties("A custom entity template template can only be used for custom entity details pages.", nameof(command.PageTemplateId));
+            }
 
             return template;
         }
-
-        #region uniqueness
 
         private async Task ValidateIsPageUniqueAsync(AddPageCommand command, IExecutionContext executionContext)
         {
@@ -267,15 +259,9 @@ namespace Cofoundry.Domain.Internal
             if (!isUnique)
             {
                 var message = $"A page already exists with the path '{command.UrlPath}' in that directory";
-                throw new UniqueConstraintViolationException(message, "UrlPath", command.UrlPath);
+                throw new UniqueConstraintViolationException(message, nameof(command.UrlPath), command.UrlPath);
             }
         }
-
-        #endregion
-
-        #endregion
-
-        #region Permission
 
         public IEnumerable<IPermissionApplication> GetPermissions(AddPageCommand command)
         {
@@ -286,7 +272,5 @@ namespace Cofoundry.Domain.Internal
                 yield return new PagePublishPermission();
             }
         }
-
-        #endregion
     }
 }

@@ -1,25 +1,21 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Cofoundry.Domain.Data;
-using Cofoundry.Domain.CQS;
-using Cofoundry.Core;
+﻿using Cofoundry.Core;
 using Cofoundry.Core.Data;
 using Cofoundry.Core.MessageAggregator;
+using Cofoundry.Core.Web;
+using Cofoundry.Domain.CQS;
+using Cofoundry.Domain.Data;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Cofoundry.Domain.Internal
 {
     /// <summary>
     /// Adds a new image asset.
     /// </summary>
-    public class AddImageAssetCommandHandler 
+    public class AddImageAssetCommandHandler
         : ICommandHandler<AddImageAssetCommand>
         , IPermissionRestrictedCommandHandler<AddImageAssetCommand>
     {
-        #region constructor
-
         private readonly CofoundryDbContext _dbContext;
         private readonly EntityAuditHelper _entityAuditHelper;
         private readonly EntityTagHelper _entityTagHelper;
@@ -28,6 +24,7 @@ namespace Cofoundry.Domain.Internal
         private readonly IMessageAggregator _messageAggregator;
         private readonly IRandomStringGenerator _randomStringGenerator;
         private readonly IAssetFileTypeValidator _assetFileTypeValidator;
+        private readonly IMimeTypeService _mimeTypeService;
 
         public AddImageAssetCommandHandler(
             CofoundryDbContext dbContext,
@@ -37,7 +34,8 @@ namespace Cofoundry.Domain.Internal
             ITransactionScopeManager transactionScopeFactory,
             IMessageAggregator messageAggregator,
             IRandomStringGenerator randomStringGenerator,
-            IAssetFileTypeValidator assetFileTypeValidator
+            IAssetFileTypeValidator assetFileTypeValidator,
+            IMimeTypeService mimeTypeService
             )
         {
             _dbContext = dbContext;
@@ -48,16 +46,14 @@ namespace Cofoundry.Domain.Internal
             _messageAggregator = messageAggregator;
             _randomStringGenerator = randomStringGenerator;
             _assetFileTypeValidator = assetFileTypeValidator;
+            _mimeTypeService = mimeTypeService;
         }
-
-        #endregion
-
-        #region Execute
 
         public async Task ExecuteAsync(AddImageAssetCommand command, IExecutionContext executionContext)
         {
-            var imageAsset = new ImageAsset();
+            ValidateFileType(command);
 
+            var imageAsset = new ImageAsset();
             imageAsset.Title = command.Title;
             imageAsset.FileName = SlugFormatter.ToSlug(command.Title);
             imageAsset.DefaultAnchorLocation = command.DefaultAnchorLocation;
@@ -65,8 +61,6 @@ namespace Cofoundry.Domain.Internal
             imageAsset.FileNameOnDisk = "file-not-saved";
             imageAsset.FileExtension = "unknown";
             imageAsset.VerificationToken = _randomStringGenerator.Generate(6);
-
-            _assetFileTypeValidator.ValidateAndThrow(command.File.FileName, command.File.MimeType, nameof(command.File));
 
             var fileStamp = AssetFileStampHelper.ToFileStamp(imageAsset.FileUpdateDate);
 
@@ -93,6 +87,12 @@ namespace Cofoundry.Domain.Internal
             }
         }
 
+        private void ValidateFileType(AddImageAssetCommand command)
+        {
+            var contentType = _mimeTypeService.MapFromFileName(command.File.FileName, command.File.MimeType);
+            _assetFileTypeValidator.ValidateAndThrow(command.File.FileName, contentType, nameof(command.File));
+        }
+
         private Task OnTransactionComplete(ImageAsset imageAsset)
         {
             return _messageAggregator.PublishAsync(new ImageAssetAddedMessage()
@@ -101,15 +101,9 @@ namespace Cofoundry.Domain.Internal
             });
         }
 
-        #endregion
-
-        #region Permission
-
         public IEnumerable<IPermissionApplication> GetPermissions(AddImageAssetCommand command)
         {
             yield return new ImageAssetCreatePermission();
         }
-
-        #endregion
     }
 }

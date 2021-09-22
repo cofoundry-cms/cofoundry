@@ -1,10 +1,7 @@
-﻿using System;
+﻿using Cofoundry.Core.Validation;
+using Cofoundry.Domain.CQS;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
-using Cofoundry.Core.Validation;
-using Cofoundry.Domain.CQS;
 using System.Runtime.Serialization;
 
 namespace Cofoundry.Domain
@@ -43,7 +40,7 @@ namespace Cofoundry.Domain
         /// <summary>
         /// Tags can be used to categorize an entity.
         /// </summary>
-        public ICollection<string> Tags { get; set; }
+        public ICollection<string> Tags { get; set; } = new List<string>();
 
         #region Output
 

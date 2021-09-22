@@ -28,11 +28,13 @@ namespace Cofoundry.Core
         /// <summary>
         /// Extracts a youtube video id out of a url. The id can be found in the 8th match.
         /// </summary>
+        [Obsolete("This regex will be removed in an upcoing release, as it's not relevant to core code")]
         public const string YouTubeVideoLink = @"^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#\&\?]*).*";
 
         /// <summary>
         /// Extracts a vimeo video id out of a url. The id can be found in the 4th match.
         /// </summary>
+        [Obsolete("This regex will be removed in an upcoing release, as it's not relevant to core code")]
         public const string VimeoVideoLink = @"(https?:\/\/)?(?:www\.)?vimeo.com\/(?:channels\/|groups\/([^\/]*)\/videos\/|album\/(\d+)\/video\/|)(\d+)(?:$|\/|\?)";
 
     }

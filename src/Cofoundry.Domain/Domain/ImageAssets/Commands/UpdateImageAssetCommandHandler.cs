@@ -1,14 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Cofoundry.Domain.Data;
-using Cofoundry.Domain.CQS;
-using Microsoft.EntityFrameworkCore;
-using Cofoundry.Core;
+﻿using Cofoundry.Core;
 using Cofoundry.Core.Data;
 using Cofoundry.Core.MessageAggregator;
+using Cofoundry.Core.Web;
+using Cofoundry.Domain.CQS;
+using Cofoundry.Domain.Data;
+using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Cofoundry.Domain.Internal
 {
@@ -17,12 +15,10 @@ namespace Cofoundry.Domain.Internal
     /// the file is optional, but if you do then existing links to the
     /// asset file will redirect to the new asset file.
     /// </summary>
-    public class UpdateImageAssetCommandHandler 
+    public class UpdateImageAssetCommandHandler
         : ICommandHandler<UpdateImageAssetCommand>
         , IPermissionRestrictedCommandHandler<UpdateImageAssetCommand>
     {
-        #region constructor
-
         private readonly CofoundryDbContext _dbContext;
         private readonly EntityAuditHelper _entityAuditHelper;
         private readonly EntityTagHelper _entityTagHelper;
@@ -33,6 +29,7 @@ namespace Cofoundry.Domain.Internal
         private readonly IMessageAggregator _messageAggregator;
         private readonly ICommandExecutor _commandExecutor;
         private readonly IAssetFileTypeValidator _assetFileTypeValidator;
+        private readonly IMimeTypeService _mimeTypeService;
 
         public UpdateImageAssetCommandHandler(
             CofoundryDbContext dbContext,
@@ -44,7 +41,8 @@ namespace Cofoundry.Domain.Internal
             ITransactionScopeManager transactionScopeFactory,
             IMessageAggregator messageAggregator,
             ICommandExecutor commandExecutor,
-            IAssetFileTypeValidator assetFileTypeValidator
+            IAssetFileTypeValidator assetFileTypeValidator,
+            IMimeTypeService mimeTypeService
             )
         {
             _dbContext = dbContext;
@@ -57,11 +55,8 @@ namespace Cofoundry.Domain.Internal
             _messageAggregator = messageAggregator;
             _commandExecutor = commandExecutor;
             _assetFileTypeValidator = assetFileTypeValidator;
+            _mimeTypeService = mimeTypeService;
         }
-
-        #endregion
-
-        #region Execute
 
         public async Task ExecuteAsync(UpdateImageAssetCommand command, IExecutionContext executionContext)
         {
@@ -69,7 +64,7 @@ namespace Cofoundry.Domain.Internal
 
             if (hasNewFile)
             {
-                _assetFileTypeValidator.ValidateAndThrow(command.File.FileName, command.File.MimeType, nameof(command.File));
+                ValidateFileType(command);
             }
 
             var imageAsset = await _dbContext
@@ -129,15 +124,15 @@ namespace Cofoundry.Domain.Internal
             });
         }
 
-        #endregion
-
-        #region Permission
+        private void ValidateFileType(UpdateImageAssetCommand command)
+        {
+            var contentType = _mimeTypeService.MapFromFileName(command.File.FileName, command.File.MimeType);
+            _assetFileTypeValidator.ValidateAndThrow(command.File.FileName, contentType, nameof(command.File));
+        }
 
         public IEnumerable<IPermissionApplication> GetPermissions(UpdateImageAssetCommand command)
         {
             yield return new ImageAssetUpdatePermission();
         }
-
-        #endregion
     }
 }

@@ -1,0 +1,14 @@
+﻿@using Cofoundry.Web
+@model IPageViewModel
+@inject ICofoundryTemplateHelper<IPageViewModel> Cofoundry
+
+@Cofoundry.Template.UseDescription("A test template")
+
+<div>
+    <h1>@Model.PageTitle</h1>
+
+    @(await Cofoundry.Template.Region("Body")
+        .AllowMultipleBlocks()
+        .EmptyContentMinHeight(500)
+        .InvokeAsync())
+</div>

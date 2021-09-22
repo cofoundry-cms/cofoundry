@@ -1,11 +1,8 @@
-﻿using System;
+﻿using Cofoundry.Core.Validation;
+using Cofoundry.Domain.CQS;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Cofoundry.Core.Validation;
-using Cofoundry.Domain.CQS;
 
 namespace Cofoundry.Domain
 {
@@ -61,7 +58,7 @@ namespace Cofoundry.Domain
         /// Tags can be used to categorize an entity.
         /// </summary>
         [Display(Name = "Tags", Description = "Separate each tag with a space: dog animal canine. Or to join 2 words together in one tag, use double quotes: \"golden retriever\". Used internally for searching for things.")]
-        public ICollection<string> Tags { get; set; }
+        public ICollection<string> Tags { get; set; } = new List<string>();
 
         /// <summary>
         /// The description of the content of the page. This is intended to
@@ -142,16 +139,24 @@ namespace Cofoundry.Domain
 
         #endregion
 
-        #region IValidatableObject
-
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
-            if (PageType == PageType.CustomEntityDetails && string.IsNullOrWhiteSpace(CustomEntityRoutingRule))
+            if (PageType == PageType.CustomEntityDetails)
             {
-                yield return new ValidationResult("A routing rule is required for custom entity details page types.", new[] { "CustomEntityRoutingRule" });
+                if (string.IsNullOrWhiteSpace(CustomEntityRoutingRule))
+                {
+                    yield return new ValidationResult("A routing rule is required for custom entity details page types.", new[] { nameof(CustomEntityRoutingRule) });
+                }
+                if (!string.IsNullOrEmpty(UrlPath))
+                {
+                    yield return new ValidationResult("Custom entity details pages should not specify a Url Path, instead they should specify a Routing Rule.", new[] { nameof(UrlPath) });
+                }
+            }
+            
+            if (PageType != PageType.CustomEntityDetails && !string.IsNullOrEmpty(CustomEntityRoutingRule))
+            {
+                yield return new ValidationResult("Custom Entity routing rules should only be specified for custom entity details page types.", new[] { nameof(CustomEntityRoutingRule) });
             }
         }
-
-        #endregion
     }
 }

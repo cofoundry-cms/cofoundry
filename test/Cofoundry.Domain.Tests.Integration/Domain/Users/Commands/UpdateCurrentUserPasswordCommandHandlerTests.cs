@@ -10,6 +10,9 @@ using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using Cofoundry.Domain.Tests.Shared;
 using Cofoundry.Core.Validation;
+using FluentAssertions.Execution;
+using FluentAssertions;
+using Cofoundry.Domain.Tests.Shared.Assertions;
 
 namespace Cofoundry.Domain.Tests.Integration
 {
@@ -78,11 +81,14 @@ namespace Cofoundry.Domain.Tests.Integration
                 }
             }
 
-            Assert.NotNull(result);
-            Assert.NotNull(result.User);
-            Assert.False(result.User.RequirePasswordChange);
-            Assert.False(result.User.IsEmailConfirmed);
-            Assert.Equal(updateDate, user.LastPasswordChangeDate);
+            using (new AssertionScope())
+            {
+                result.Should().NotBeNull();
+                result.User.Should().NotBeNull();
+                result.User.RequirePasswordChange.Should().BeFalse();
+                result.User.IsEmailConfirmed.Should().BeFalse();
+                user.LastPasswordChangeDate.Should().Be(updateDate);
+            }
         }
 
         [Fact]
@@ -97,16 +103,17 @@ namespace Cofoundry.Domain.Tests.Integration
                 OldPassword = NEW_PASSWORD
             };
 
-            using (var scope = _dbDependentFixture.CreateServiceScope())
-            {
-                var repository = scope.GetService<IDomainRepository>();
-                var loginService = scope.GetService<ILoginService>();
-                await loginService.LogAuthenticatedUserInAsync(TestUserArea1.Code, userId, false);
+            using var scope = _dbDependentFixture.CreateServiceScope();
 
-                await Assert.ThrowsAsync<InvalidCredentialsAuthenticationException>(
-                    () => repository.ExecuteCommandAsync(command)
-                    );
-            }
+            var repository = scope.GetService<IDomainRepository>();
+            var loginService = scope.GetService<ILoginService>();
+            await loginService.LogAuthenticatedUserInAsync(TestUserArea1.Code, userId, false);
+
+            await repository
+                .Awaiting(r => r.ExecuteCommandAsync(command))
+                .Should()
+                .ThrowAsync<InvalidCredentialsAuthenticationException>()
+                .WithMemberNames(nameof(command.OldPassword));
         }
 
         [Fact]
@@ -118,13 +125,14 @@ namespace Cofoundry.Domain.Tests.Integration
                 OldPassword = OLD_PASSWORD
             };
 
-            using (var scope = _dbDependentFixture.CreateServiceScope())
-            {
-                var repository = scope.GetService<IDomainRepository>();
-                await Assert.ThrowsAsync<PermissionValidationFailedException>(
-                    () => repository.ExecuteCommandAsync(command)
-                    );
-            }
+            using var scope = _dbDependentFixture.CreateServiceScope();
+
+            var repository = scope.GetService<IDomainRepository>();
+
+            await repository
+                .Awaiting(r => r.ExecuteCommandAsync(command))
+                .Should()
+                .ThrowAsync<PermissionValidationFailedException>();
         }
 
         [Fact]
@@ -136,57 +144,59 @@ namespace Cofoundry.Domain.Tests.Integration
                 OldPassword = OLD_PASSWORD
             };
 
+            using var scope = _dbDependentFixture.CreateServiceScope();
+
             // elevate to system user account
-            using (var scope = _dbDependentFixture.CreateServiceScope())
-            {
-                var repository = scope.GetService<IDomainRepository>();
-                await Assert.ThrowsAsync<EntityNotFoundException<User>>(() => repository
-                    .WithElevatedPermissions()
-                    .ExecuteCommandAsync(command));
-            }
+            var repository = scope
+                .GetService<IDomainRepository>()
+                .WithElevatedPermissions();
+
+            await repository
+                .Awaiting(r => r.ExecuteCommandAsync(command))
+                .Should()
+                .ThrowAsync<EntityNotFoundException<User>>();
         }
 
         private async Task<int> AddUserIfNotExistsAsync(string username)
         {
-            using (var scope = _dbDependentFixture.CreateServiceScope())
+            using var scope = _dbDependentFixture.CreateServiceScope();
+            var dbContext = scope.GetService<CofoundryDbContext>();
+
+            var userId = await dbContext
+                .Users
+                .Where(u => u.UserAreaCode == TestUserArea1.Code && u.Username == username)
+                .Select(u => u.UserId)
+                .SingleOrDefaultAsync();
+
+            if (userId > 0)
             {
-                var dbContext = scope.GetService<CofoundryDbContext>();
-
-                var userId = await dbContext
-                    .Users
-                    .Where(u => u.UserAreaCode == TestUserArea1.Code && u.Username == username)
-                    .Select(u => u.UserId)
-                    .SingleOrDefaultAsync();
-
-                if (userId > 0)
-                {
-                    return userId;
-                }
-
-                var repository = scope.GetService<IAdvancedContentRepository>();
-
-                var testRole = await repository
-                    .Roles()
-                    .GetByCode(TestUserArea1Role.Code)
-                    .AsDetails()
-                    .ExecuteAsync();
-
-                var command = new AddUserCommand()
-                {
-                    Email = username,
-                    Password = OLD_PASSWORD,
-                    FirstName = "Test",
-                    LastName = "User",
-                    UserAreaCode = TestUserArea1.Code,
-                    RoleId = testRole.RoleId,
-                    RequirePasswordChange = true
-                };
-
-                return await repository
-                    .WithElevatedPermissions()
-                    .Users()
-                    .AddAsync(command);
+                return userId;
             }
+
+            var repository = scope
+                .GetService<IAdvancedContentRepository>()
+                .WithElevatedPermissions();
+
+            var testRole = await repository
+                .Roles()
+                .GetByCode(TestUserArea1Role.Code)
+                .AsDetails()
+                .ExecuteAsync();
+
+            var command = new AddUserCommand()
+            {
+                Email = username,
+                Password = OLD_PASSWORD,
+                FirstName = "Test",
+                LastName = "User",
+                UserAreaCode = TestUserArea1.Code,
+                RoleId = testRole.RoleId,
+                RequirePasswordChange = true
+            };
+
+            return await repository
+                .Users()
+                .AddAsync(command);
         }
     }
 }

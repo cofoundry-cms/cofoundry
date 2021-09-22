@@ -8,6 +8,8 @@ using Cofoundry.Domain.Data;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using Cofoundry.Domain.Tests.Shared;
+using FluentAssertions;
+using FluentAssertions.Execution;
 
 namespace Cofoundry.Domain.Tests.Integration
 {
@@ -43,18 +45,18 @@ namespace Cofoundry.Domain.Tests.Integration
                 Password = VALID_PASSWORD
             };
 
-            UserLoginInfoAuthenticationResult result;
+            using var scope = _dbDependentFixture.CreateServiceScope();
+            var repository = scope.GetService<IDomainRepository>();
+                
+            var result = await repository.ExecuteQueryAsync(query);
 
-            using (var scope = _dbDependentFixture.CreateServiceScope())
+            using (new AssertionScope())
             {
-                var repository = scope.GetService<IDomainRepository>();
-                result = await repository.ExecuteQueryAsync(query);
+                result.Should().NotBeNull();
+                result.User.Should().BeNull();
+                result.IsSuccess.Should().BeFalse();
+                result.Error.Should().Be(UserLoginInfoAuthenticationError.InvalidCredentials);
             }
-
-            Assert.NotNull(result);
-            Assert.Null(result.User);
-            Assert.False(result.IsSuccess);
-            Assert.Equal(UserLoginInfoAuthenticationError.InvalidCredentials, result.Error);
         }
 
         [Theory]
@@ -73,18 +75,18 @@ namespace Cofoundry.Domain.Tests.Integration
                 Password = password
             };
 
-            UserLoginInfoAuthenticationResult result;
+            using var scope = _dbDependentFixture.CreateServiceScope();
+            var repository = scope.GetService<IDomainRepository>();
 
-            using (var scope = _dbDependentFixture.CreateServiceScope())
+            var result = await repository.ExecuteQueryAsync(query);
+
+            using (new AssertionScope())
             {
-                var repository = scope.GetService<IDomainRepository>();
-                result = await repository.ExecuteQueryAsync(query);
+                result.Should().NotBeNull();
+                result.User.Should().BeNull();
+                result.IsSuccess.Should().BeFalse();
+                result.Error.Should().Be(UserLoginInfoAuthenticationError.InvalidCredentials);
             }
-
-            Assert.NotNull(result);
-            Assert.Null(result.User);
-            Assert.False(result.IsSuccess);
-            Assert.Equal(UserLoginInfoAuthenticationError.InvalidCredentials, result.Error);
         }
 
         [Fact]
@@ -122,10 +124,13 @@ namespace Cofoundry.Domain.Tests.Integration
                 result = await repository.ExecuteQueryAsync(query);
             }
 
-            Assert.NotNull(result);
-            Assert.Null(result.User);
-            Assert.False(result.IsSuccess);
-            Assert.Equal(UserLoginInfoAuthenticationError.InvalidCredentials, result.Error);
+            using (new AssertionScope())
+            {
+                result.Should().NotBeNull();
+                result.User.Should().BeNull();
+                result.IsSuccess.Should().BeFalse();
+                result.Error.Should().Be(UserLoginInfoAuthenticationError.InvalidCredentials);
+            }
         }
 
         [Fact]
@@ -157,10 +162,13 @@ namespace Cofoundry.Domain.Tests.Integration
                 result = await repository.ExecuteQueryAsync(query);
             }
 
-            Assert.NotNull(result);
-            Assert.Null(result.User);
-            Assert.False(result.IsSuccess);
-            Assert.Equal(UserLoginInfoAuthenticationError.InvalidCredentials, result.Error);
+            using (new AssertionScope())
+            {
+                result.Should().NotBeNull();
+                result.User.Should().BeNull();
+                result.IsSuccess.Should().BeFalse();
+                result.Error.Should().Be(UserLoginInfoAuthenticationError.InvalidCredentials);
+            }
         }
 
         [Fact]
@@ -183,10 +191,13 @@ namespace Cofoundry.Domain.Tests.Integration
                 result = await repository.ExecuteQueryAsync(query);
             }
 
-            Assert.NotNull(result);
-            Assert.Null(result.User);
-            Assert.False(result.IsSuccess);
-            Assert.Equal(UserLoginInfoAuthenticationError.InvalidCredentials, result.Error);
+            using (new AssertionScope())
+            {
+                result.Should().NotBeNull();
+                result.User.Should().BeNull();
+                result.IsSuccess.Should().BeFalse();
+                result.Error.Should().Be(UserLoginInfoAuthenticationError.InvalidCredentials);
+            }
         }
 
         [Fact]
@@ -201,25 +212,25 @@ namespace Cofoundry.Domain.Tests.Integration
                 Password = VALID_PASSWORD
             };
 
-            UserLoginInfoAuthenticationResult result;
+            using var scope = _dbDependentFixture.CreateServiceScope();
+            var repository = scope.GetService<IDomainRepository>();
 
-            using (var scope = _dbDependentFixture.CreateServiceScope())
+            var result = await repository.ExecuteQueryAsync(query);
+
+            using (new AssertionScope())
             {
-                var repository = scope.GetService<IDomainRepository>();
-                result = await repository.ExecuteQueryAsync(query);
+                result.Should().NotBeNull();
+                result.User.Should().NotBeNull();
+                result.User.UserId.Should().Be(userId);
+                result.User.UserAreaCode.Should().Be(TestUserArea1.Code);
+                result.IsSuccess.Should().BeTrue();
+                result.Error.Should().Be(UserLoginInfoAuthenticationError.None);
+
+                // Non-defaults for these props are covered in other tests
+                result.User.RequirePasswordChange.Should().BeFalse();
+                result.User.PasswordRehashNeeded.Should().BeFalse();
+                result.User.IsEmailConfirmed.Should().BeFalse();
             }
-
-            Assert.NotNull(result);
-            Assert.NotNull(result.User);
-            Assert.Equal(userId, result.User.UserId);
-            Assert.Equal(TestUserArea1.Code, result.User.UserAreaCode);
-            Assert.True(result.IsSuccess);
-            Assert.Equal(UserLoginInfoAuthenticationError.None, result.Error);
-
-            // Non-defaults for these props are covered in other tests
-            Assert.False(result.User.RequirePasswordChange);
-            Assert.False(result.User.PasswordRehashNeeded);
-            Assert.False(result.User.IsEmailConfirmed);
         }
 
         [Fact]
@@ -237,18 +248,20 @@ namespace Cofoundry.Domain.Tests.Integration
 
             UserLoginInfoAuthenticationResult result;
 
-            using (var scope = _dbDependentFixture.CreateServiceScope())
-            {
-                var repository = scope.GetService<IDomainRepository>();
-                result = await repository.ExecuteQueryAsync(query);
-            }
+            using var scope = _dbDependentFixture.CreateServiceScope();
+            var repository = scope.GetService<IDomainRepository>();
 
-            Assert.NotNull(result);
-            Assert.NotNull(result.User);
-            Assert.Equal(userId, result.User.UserId);
-            Assert.True(result.IsSuccess);
-            Assert.Equal(UserLoginInfoAuthenticationError.None, result.Error);
-            Assert.True(result.User.RequirePasswordChange);
+            result = await repository.ExecuteQueryAsync(query);
+
+            using (new AssertionScope())
+            {
+                result.Should().NotBeNull();
+                result.User.Should().NotBeNull();
+                result.User.UserId.Should().Be(userId);
+                result.IsSuccess.Should().BeTrue();
+                result.Error.Should().Be(UserLoginInfoAuthenticationError.None);
+                result.User.RequirePasswordChange.Should().BeTrue();
+            }
         }
 
         [Fact]
@@ -285,12 +298,15 @@ namespace Cofoundry.Domain.Tests.Integration
                 result = await repository.ExecuteQueryAsync(query);
             }
 
-            Assert.NotNull(result);
-            Assert.NotNull(result.User);
-            Assert.Equal(userId, result.User.UserId);
-            Assert.True(result.IsSuccess);
-            Assert.Equal(UserLoginInfoAuthenticationError.None, result.Error);
-            Assert.True(result.User.PasswordRehashNeeded);
+            using (new AssertionScope())
+            {
+                result.Should().NotBeNull();
+                result.User.Should().NotBeNull();
+                result.User.UserId.Should().Be(userId);
+                result.IsSuccess.Should().BeTrue();
+                result.Error.Should().Be(UserLoginInfoAuthenticationError.None);
+                result.User.PasswordRehashNeeded.Should().BeTrue();
+            }
         }
 
         private async Task<int> AddUserIfNotExistsAsync(string username = VALID_USERNAME, Action<AddUserCommand> commandModifier = null)

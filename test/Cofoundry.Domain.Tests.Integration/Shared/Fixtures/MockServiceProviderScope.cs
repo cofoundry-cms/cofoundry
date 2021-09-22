@@ -1,9 +1,9 @@
-﻿using Cofoundry.Core.Time;
+﻿using Cofoundry.Core.MessageAggregator;
+using Cofoundry.Core.Time;
 using Cofoundry.Core.Time.Mocks;
+using Cofoundry.Domain.Tests.Shared.Mocks;
 using Microsoft.Extensions.DependencyInjection;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Cofoundry.Domain.Tests.Integration
 {
@@ -15,8 +15,7 @@ namespace Cofoundry.Domain.Tests.Integration
             IServiceProvider baseServiceProvider
             )
         {
-            ServiceProvider = baseServiceProvider;
-            _baseServiceProviderScope = ServiceProvider.CreateScope();
+            _baseServiceProviderScope = baseServiceProvider.CreateScope();
         }
 
         public object GetService(Type serviceType)
@@ -24,17 +23,33 @@ namespace Cofoundry.Domain.Tests.Integration
             return _baseServiceProviderScope.ServiceProvider.GetService(serviceType);
         }
 
-        public IServiceProvider ServiceProvider { get; private set; }
-
         public void MockDateTime(DateTime utcNow)
         {
-            // If the service is already set up, just adjust the time.
             var dateTimeService = _baseServiceProviderScope.ServiceProvider.GetService<IDateTimeService>() as MockDateTimeService;
             if (dateTimeService == null)
             {
-                throw new Exception("IDateTimeService should be set up as an instance of MockDateTimeService in testing");
+                throw new Exception($"{nameof(IDateTimeService)} is expected to be an instance of {nameof(MockDateTimeService)} in testing");
             }
             dateTimeService.MockDateTime = utcNow;
+        }
+
+        /// <summary>
+        /// Returns the number of messages that have been published to this instance
+        /// that matches the <paramref name="predicate"/>. Use this to check to check
+        /// that the expected message is published only once.
+        /// </summary>
+        /// <typeparam name="TMessage">Type of message to look for.</typeparam>
+        /// <param name="expression">An expression to filter messages by.</param>
+        /// <returns>The number of messages matched by the <paramref name="predicate"/>.</returns>
+        public int CountMessagesPublished<TMessage>(Func<TMessage, bool> predicate)
+        {
+            var auditableMessageAggregator = _baseServiceProviderScope.ServiceProvider.GetService<IMessageAggregator>() as AuditableMessageAggregator;
+            if (auditableMessageAggregator == null)
+            {
+                throw new Exception($"{nameof(IMessageAggregator)} is expected to be an instance of {nameof(AuditableMessageAggregator)} in testing");
+            }
+
+            return auditableMessageAggregator.CountMessagesPublished(predicate);
         }
 
         public void Dispose()

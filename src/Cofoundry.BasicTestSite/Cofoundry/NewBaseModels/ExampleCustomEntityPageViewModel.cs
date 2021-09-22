@@ -1,8 +1,5 @@
-﻿using Cofoundry.Web;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using Cofoundry.Domain;
+﻿using Cofoundry.Domain;
+using Cofoundry.Web;
 
 namespace Cofoundry.BasicTestSite
 {

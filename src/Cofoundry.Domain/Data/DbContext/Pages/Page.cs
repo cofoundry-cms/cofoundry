@@ -55,7 +55,7 @@ namespace Cofoundry.Domain.Data
         public string CustomEntityDefinitionCode { get; set; }
 
         /// <summary>
-        /// D = draft, P = Published. Use the PublishStatusMapper in the
+        /// U = unpublished, P = Published. Use the PublishStatusMapper in the
         /// domain to map this.
         /// </summary>
         public string PublishStatusCode { get; set; }

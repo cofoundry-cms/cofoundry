@@ -17,8 +17,6 @@ namespace Cofoundry.Domain.Internal
         : IQueryHandler<IsPageDirectoryPathUniqueQuery, bool>
         , IPermissionRestrictedQueryHandler<IsPageDirectoryPathUniqueQuery, bool>
     {
-        #region constructor
-
         private readonly CofoundryDbContext _dbContext;
 
         public IsPageDirectoryPathUniqueQueryHandler(
@@ -27,42 +25,25 @@ namespace Cofoundry.Domain.Internal
         {
             _dbContext = dbContext;
         }
-
-        #endregion
-
-        #region execution
         
         public async Task<bool> ExecuteAsync(IsPageDirectoryPathUniqueQuery query, IExecutionContext executionContext)
         {
-            var exists = await Query(query).AnyAsync();
-            return !exists;
-        }
-
-        #endregion
-
-        #region helpers
-
-        private IQueryable<PageDirectory> Query(IsPageDirectoryPathUniqueQuery query)
-        {
-            return _dbContext
+            var exists = await _dbContext
                 .PageDirectories
                 .AsNoTracking()
                 .Where(d => d.PageDirectoryId != query.PageDirectoryId
                     && d.UrlPath == query.UrlPath
                     && d.ParentPageDirectoryId == query.ParentPageDirectoryId
-                    );
+                    )
+                .AnyAsync();
+
+            return !exists;
         }
-
-        #endregion
-
-        #region permissions
 
         public IEnumerable<IPermissionApplication> GetPermissions(IsPageDirectoryPathUniqueQuery command)
         {
             yield return new PageDirectoryReadPermission();
         }
-
-        #endregion
     }
 
 }

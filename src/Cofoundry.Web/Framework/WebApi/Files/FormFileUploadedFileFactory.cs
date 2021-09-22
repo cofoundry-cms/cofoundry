@@ -8,7 +8,7 @@ using Cofoundry.Core.Web;
 namespace Cofoundry.Web
 {
     /// <summary>
-    /// Factory for creating and mapping asp.net IFormFile instances 
+    /// Factory for creating and mapping ASP.Net IFormFile instances 
     /// to Cofoundry IUploadedFile instances.
     /// </summary>
     public class FormFileUploadedFileFactory : IFormFileUploadedFileFactory
