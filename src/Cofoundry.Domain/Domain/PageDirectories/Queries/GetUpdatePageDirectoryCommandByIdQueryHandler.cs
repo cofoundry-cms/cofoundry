@@ -1,11 +1,10 @@
-﻿using System;
+﻿using Cofoundry.Core;
+using Cofoundry.Domain.CQS;
+using Cofoundry.Domain.Data;
+using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Cofoundry.Domain.Data;
-using Cofoundry.Domain.CQS;
-using Microsoft.EntityFrameworkCore;
-using Cofoundry.Core;
 
 namespace Cofoundry.Domain.Internal
 {
@@ -13,8 +12,6 @@ namespace Cofoundry.Domain.Internal
         : IQueryHandler<GetUpdateCommandByIdQuery<UpdatePageDirectoryCommand>, UpdatePageDirectoryCommand>
         , IPermissionRestrictedQueryHandler<GetUpdateCommandByIdQuery<UpdatePageDirectoryCommand>, UpdatePageDirectoryCommand>
     {
-        #region constructor
-
         private readonly CofoundryDbContext _dbContext;
 
         public GetUpdatePageDirectoryCommandByIdQueryHandler(
@@ -23,10 +20,6 @@ namespace Cofoundry.Domain.Internal
         {
             _dbContext = dbContext;
         }
-
-        #endregion
-
-        #region execution
 
         public async Task<UpdatePageDirectoryCommand> ExecuteAsync(GetUpdateCommandByIdQuery<UpdatePageDirectoryCommand> query, IExecutionContext executionContext)
         {
@@ -54,15 +47,9 @@ namespace Cofoundry.Domain.Internal
             return command;
         }
 
-        #endregion
-
-        #region permissions
-
         public IEnumerable<IPermissionApplication> GetPermissions(GetUpdateCommandByIdQuery<UpdatePageDirectoryCommand> command)
         {
             yield return new PageDirectoryReadPermission();
         }
-
-        #endregion
     }
 }

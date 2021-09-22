@@ -1,4 +1,5 @@
 ﻿using Cofoundry.Core;
+using Cofoundry.Domain.Tests.Shared.Assertions;
 using FluentAssertions;
 using FluentAssertions.Execution;
 using System.Linq;
@@ -8,14 +9,14 @@ using Xunit;
 namespace Cofoundry.Domain.Tests.Integration.PageDirectories.Queries
 {
     [Collection(nameof(DbDependentFixture))]
-    public class GetAllPageDirectoryRoutesQueryHandlerTests
+    public class GetPageDirectoryTreeQueryHandlerTests
     {
-        const string DIRECTORY_PREFIX = "GAllPageDirRoutesCHT ";
+        const string DIRECTORY_PREFIX = "GAllPageDirTreeCHT ";
 
         private readonly DbDependentFixture _dbDependentFixture;
         private readonly TestDataHelper _testDataHelper;
 
-        public GetAllPageDirectoryRoutesQueryHandlerTests(
+        public GetPageDirectoryTreeQueryHandlerTests(
             DbDependentFixture dbDependantFixture
             )
         {
@@ -24,33 +25,36 @@ namespace Cofoundry.Domain.Tests.Integration.PageDirectories.Queries
         }
 
         [Fact]
-        public async Task IncludesRootDirectory()
+        public async Task RootNodeIsRootDirectory()
         {
             using var scope = _dbDependentFixture.CreateServiceScope();
             var contentRepository = scope.GetContentRepositoryWithElevatedPermissions();
 
-            var allDirectories = await contentRepository
+            var treeRoot = await contentRepository
                 .PageDirectories()
                 .GetAll()
-                .AsRoutes()
+                .AsTree()
                 .ExecuteAsync();
-
-            var root = allDirectories.SingleOrDefault(d => !d.ParentPageDirectoryId.HasValue);
 
             using (new AssertionScope())
             {
-                root.Should().NotBeNull();
-                root.UrlPath.Should().BeEmpty();
-                root.FullUrlPath.Should().Be("/");
-                root.IsSiteRoot().Should().BeTrue();
-                root.LocaleVariations.Should().NotBeNull().And.BeEmpty();
+                treeRoot.Should().NotBeNull();
+                treeRoot.AuditData.Should().NotBeNull();
+                treeRoot.AuditData.Creator.Should().NotBeNull();
+                treeRoot.AuditData.CreateDate.Should().NotBeDefault();
+                treeRoot.ChildPageDirectories.Should().NotBeNull();
+                treeRoot.Depth.Should().Be(0);
+                treeRoot.UrlPath.Should().BeEmpty();
+                treeRoot.FullUrlPath.Should().Be("/");
+                treeRoot.ParentPageDirectoryId.Should().BeNull();
+                treeRoot.ParentPageDirectory.Should().BeNull();
             }
         }
 
         [Fact]
-        public async Task ReturnsAllMappedRoutes()
+        public async Task ReturnsTreeNodes()
         {
-            var uniqueData = DIRECTORY_PREFIX + nameof(ReturnsAllMappedRoutes);
+            var uniqueData = DIRECTORY_PREFIX + nameof(ReturnsTreeNodes);
 
             using var scope = _dbDependentFixture.CreateServiceScope();
             var contentRepository = scope.GetContentRepositoryWithElevatedPermissions();
@@ -63,39 +67,51 @@ namespace Cofoundry.Domain.Tests.Integration.PageDirectories.Queries
             var directory2Id = await _testDataHelper.PageDirectories().AddAsync("dir-2", parentDirectoryId);
             var directory2AId = await _testDataHelper.PageDirectories().AddAsync("dir-2-A", directory2Id);
 
-            var allDirectories = await contentRepository
+            var tree = await contentRepository
                 .PageDirectories()
                 .GetAll()
-                .AsRoutes()
+                .AsTree()
                 .ExecuteAsync();
 
-            var root = allDirectories.SingleOrDefault(d => !d.ParentPageDirectoryId.HasValue);
-            var parentDirectory = allDirectories.SingleOrDefault(d => d.PageDirectoryId == parentDirectoryId);
-            var directory1 = allDirectories.SingleOrDefault(d => d.PageDirectoryId == directory1Id);
-            var directory2 = allDirectories.SingleOrDefault(d => d.PageDirectoryId == directory2Id);
-            var directory2A = allDirectories.SingleOrDefault(d => d.PageDirectoryId == directory2AId);
+            var parentDirectory = tree.ChildPageDirectories.SingleOrDefault(d => d.PageDirectoryId == parentDirectoryId);
+            var directory1 = parentDirectory.ChildPageDirectories.SingleOrDefault(d => d.PageDirectoryId == directory1Id);
+            var directory2 = parentDirectory.ChildPageDirectories.SingleOrDefault(d => d.PageDirectoryId == directory2Id);
+            var directory2A = directory2.ChildPageDirectories.SingleOrDefault(d => d.PageDirectoryId == directory2AId);
 
             var parentFullPath = "/" + parentDirectoryCommand.UrlPath;
 
             using (new AssertionScope())
             {
                 parentDirectory.Should().NotBeNull();
-                parentDirectory.FullUrlPath.Should().Be(parentFullPath);
-                parentDirectory.IsSiteRoot().Should().BeFalse();
-                parentDirectory.LocaleVariations.Should().NotBeNull().And.BeEmpty();
+                parentDirectory.AuditData.Should().NotBeNull();
+                parentDirectory.AuditData.Creator.Should().NotBeNull();
+                parentDirectory.AuditData.CreateDate.Should().NotBeDefault();
+                parentDirectory.ChildPageDirectories.Should().NotBeNull().And.HaveCount(2);
+                parentDirectory.Depth.Should().Be(1);
                 parentDirectory.Name.Should().Be(parentDirectoryCommand.Name);
-                parentDirectory.ParentPageDirectoryId.Should().Be(root.PageDirectoryId);
                 parentDirectory.UrlPath.Should().Be(parentDirectoryCommand.UrlPath);
+                parentDirectory.FullUrlPath.Should().Be(parentFullPath);
+                parentDirectory.ParentPageDirectoryId.Should().Be(tree.PageDirectoryId);
+                parentDirectory.ParentPageDirectory.Should().Be(tree);
 
                 directory1.Should().NotBeNull();
+                directory1.Depth.Should().Be(2);
+                directory1.ChildPageDirectories.Should().NotBeNull().And.BeEmpty();
+                directory1.ParentPageDirectory.Should().Be(parentDirectory);
                 directory1.ParentPageDirectoryId.Should().Be(parentDirectoryId);
                 directory1.FullUrlPath.Should().Be(parentFullPath + "/dir-1");
 
                 directory2.Should().NotBeNull();
+                directory2.Depth.Should().Be(2);
+                directory2.ChildPageDirectories.Should().NotBeNull().And.HaveCount(1);
+                directory2.ParentPageDirectory.Should().Be(parentDirectory);
                 directory2.ParentPageDirectoryId.Should().Be(parentDirectoryId);
                 directory2.FullUrlPath.Should().Be(parentFullPath + "/dir-2");
 
                 directory2A.Should().NotBeNull();
+                directory2A.Depth.Should().Be(3);
+                directory2A.ChildPageDirectories.Should().NotBeNull().And.BeEmpty();
+                directory2A.ParentPageDirectory.Should().Be(directory2);
                 directory2A.ParentPageDirectoryId.Should().Be(directory2Id);
                 directory2A.FullUrlPath.Should().Be(parentFullPath + "/dir-2/dir-2-a");
             }
