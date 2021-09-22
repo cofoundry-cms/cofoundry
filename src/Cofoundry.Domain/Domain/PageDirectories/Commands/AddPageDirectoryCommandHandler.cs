@@ -40,7 +40,7 @@ namespace Cofoundry.Domain.Internal
             await ValidateIsUniqueAsync(command, executionContext);
 
             var pageDirectory = new PageDirectory();
-            pageDirectory.Name = command.Name;
+            pageDirectory.Name = command.Name.Trim();
             pageDirectory.UrlPath = command.UrlPath;
             pageDirectory.ParentPageDirectory = parentDirectory;
             _entityAuditHelper.SetCreated(pageDirectory, executionContext);

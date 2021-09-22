@@ -1,0 +1,138 @@
+﻿using Cofoundry.Core;
+using Cofoundry.Domain.Data;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using System;
+using System.Linq;
+using System.Threading.Tasks;
+
+namespace Cofoundry.Domain.Tests.Integration
+{
+    /// <summary>
+    /// Used to make it easier to create or reference page 
+    /// directories in test fixtures.
+    /// </summary>
+    public class PageDirectoryTestDataHelper
+    {
+        private readonly DbDependentFixture _dbDependentFixture;
+
+        public PageDirectoryTestDataHelper(DbDependentFixture dbDependentFixture)
+        {
+            _dbDependentFixture = dbDependentFixture;
+        }
+
+        public async Task<int> GetRootDirectoryIdAsync()
+        {
+            using var scope = _dbDependentFixture.CreateServiceScope();
+            var dbContext = scope.GetRequiredService<CofoundryDbContext>();
+
+            return await dbContext
+                .PageDirectories
+                .Where(d => !d.ParentPageDirectoryId.HasValue)
+                .Select(d => d.PageDirectoryId)
+                .SingleAsync();
+        }
+
+        /// <summary>
+        /// Adds a page directory that is parented to the root
+        /// page directory.
+        /// </summary>
+        /// <param name="uniqueData">
+        /// Unique data to use in creating the Name and UrlSlug property. 
+        /// </param>
+        /// <param name="configration">
+        /// Optional additional configuration action to run before the
+        /// command is executed.
+        /// </param>
+        /// <returns>The PageDirectoryId of the newly created directory.</returns>
+        public async Task<int> AddAsync(
+            string uniqueData,
+            Action<AddPageDirectoryCommand> configration = null
+            )
+        {
+            var command = await CreateAddCommandAsync(uniqueData);
+
+            if (configration != null)
+            {
+                configration(command);
+            }
+
+            using var scope = _dbDependentFixture.CreateServiceScope();
+            var contentRepository = scope.GetRequiredService<IAdvancedContentRepository>();
+
+            return await contentRepository
+                .WithElevatedPermissions()
+                .PageDirectories()
+                .AddAsync(command);
+        }
+
+        /// <summary>
+        /// Adds a page directory that is parented to the the specified
+        /// <paramref name="parentDirectoryId"/>.
+        /// </summary>
+        /// <param name="uniqueData">
+        /// Unique data to use in creating the Name and UrlSlug property. 
+        /// </param>
+        /// <param name="parentDirectoryId">
+        /// The database id of the page directory to use as the parent
+        /// directory.
+        /// </param>
+        /// <param name="configration">
+        /// Optional additional configuration action to run before the
+        /// command is executed.
+        /// </param>
+        /// <returns>The PageDirectoryId of the newly created directory.</returns>
+        public Task<int> AddAsync(
+            string uniqueData,
+            int parentDirectoryId,
+            Action<AddPageDirectoryCommand> configration = null
+            )
+        {
+            return AddAsync(uniqueData, command =>
+            {
+                command.ParentPageDirectoryId = parentDirectoryId;
+
+                if (configration != null)
+                {
+                    configration(command);
+                }
+            });
+        }
+
+        /// <summary>
+        /// Creates a valid <see cref="AddPageDirectoryCommand"/> that is
+        /// parented to the root directory.
+        /// </summary>
+        /// <param name="uniqueData">
+        /// Unique data to use in creating the Name and UrlSlug property. 
+        /// </param>
+        public async Task<AddPageDirectoryCommand> CreateAddCommandAsync(string uniqueData)
+        {
+            var rootDirectoryId = await GetRootDirectoryIdAsync();
+            return CreateAddCommand(uniqueData, rootDirectoryId);
+        }
+
+        /// <summary>
+        /// Creates a valid <see cref="AddPageDirectoryCommand"/> that is
+        /// parented to the specified <paramref name="parentDirectoryId"/>.
+        /// </summary>
+        /// <param name="uniqueData">
+        /// Unique data to use in creating the Name and UrlSlug property. 
+        /// </param>
+        /// <param name="parentDirectoryId">
+        /// The database id of the page directory to use as the parent
+        /// directory.
+        /// </param>
+        public AddPageDirectoryCommand CreateAddCommand(string uniqueData, int parentDirectoryId)
+        {
+            var command = new AddPageDirectoryCommand()
+            {
+                Name = uniqueData,
+                ParentPageDirectoryId = parentDirectoryId,
+                UrlPath = SlugFormatter.ToSlug(uniqueData)
+            };
+
+            return command;
+        }
+    }
+}

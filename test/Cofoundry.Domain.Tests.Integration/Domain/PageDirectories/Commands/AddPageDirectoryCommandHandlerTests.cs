@@ -45,7 +45,7 @@ namespace Cofoundry.Domain.Tests.Integration
             var directory = await dbContext
                 .PageDirectories
                 .AsNoTracking()
-                .Where(d => d.PageDirectoryId == addDirectoryCommand.OutputPageDirectoryId)
+                .FilterByPageDirectoryId(addDirectoryCommand.OutputPageDirectoryId)
                 .SingleOrDefaultAsync();
 
             using (new AssertionScope())

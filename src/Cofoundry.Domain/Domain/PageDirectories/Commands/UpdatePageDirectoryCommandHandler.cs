@@ -1,14 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
-using Cofoundry.Domain.Data;
+﻿using Cofoundry.Core;
+using Cofoundry.Core.Data;
 using Cofoundry.Core.Validation;
 using Cofoundry.Domain.CQS;
+using Cofoundry.Domain.Data;
 using Microsoft.EntityFrameworkCore;
-using Cofoundry.Core;
-using Cofoundry.Core.Data;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Cofoundry.Domain.Internal
 {
@@ -16,32 +14,23 @@ namespace Cofoundry.Domain.Internal
         : ICommandHandler<UpdatePageDirectoryCommand>
         , IPermissionRestrictedCommandHandler<UpdatePageDirectoryCommand>
     {
-        #region constructor
-
         private readonly IQueryExecutor _queryExecutor;
         private readonly CofoundryDbContext _dbContext;
-        private readonly EntityAuditHelper _entityAuditHelper;
         private readonly IPageDirectoryCache _cache;
         private readonly ITransactionScopeManager _transactionScopeFactory;
 
         public UpdatePageDirectoryCommandHandler(
             IQueryExecutor queryExecutor,
             CofoundryDbContext dbContext,
-            EntityAuditHelper entityAuditHelper,
             IPageDirectoryCache cache,
             ITransactionScopeManager transactionScopeFactory
             )
         {
             _dbContext = dbContext;
-            _entityAuditHelper = entityAuditHelper;
             _queryExecutor = queryExecutor;
             _cache = cache;
             _transactionScopeFactory = transactionScopeFactory;
         }
-
-        #endregion
-
-        #region execution
 
         public async Task ExecuteAsync(UpdatePageDirectoryCommand command, IExecutionContext executionContext)
         {
@@ -50,11 +39,10 @@ namespace Cofoundry.Domain.Internal
                 .SingleOrDefaultAsync(w => w.PageDirectoryId == command.PageDirectoryId);
             EntityNotFoundException.ThrowIfNull(pageDirectory, command.PageDirectoryId);
 
-            // Custom Validation
             await ValidateIsUniqueAsync(command, executionContext);
             await ValidateUrlPropertiesAllowedToChange(command, pageDirectory);
 
-            pageDirectory.Name = command.Name;
+            pageDirectory.Name = command.Name.Trim();
             pageDirectory.UrlPath = command.UrlPath;
             pageDirectory.ParentPageDirectoryId = command.ParentPageDirectoryId;
 
@@ -67,13 +55,13 @@ namespace Cofoundry.Domain.Internal
         {
             var props = GetChangedPathProperties(command, pageDirectory);
 
-            if (props.Any() && await HasDependencies(pageDirectory)) 
+            if (props.Any() && await HasDependencies(pageDirectory))
             {
                 throw ValidationErrorException.CreateWithProperties("This directory is in use and the url cannot be changed", props.First());
             }
         }
 
-        private IEnumerable<string> GetChangedPathProperties(UpdatePageDirectoryCommand command, PageDirectory pageDirectory) 
+        private IEnumerable<string> GetChangedPathProperties(UpdatePageDirectoryCommand command, PageDirectory pageDirectory)
         {
             if (command.UrlPath != pageDirectory.UrlPath) yield return nameof(pageDirectory.UrlPath);
             if (command.ParentPageDirectoryId != pageDirectory.ParentPageDirectoryId) yield return nameof(pageDirectory.ParentPageDirectoryId);
@@ -109,19 +97,13 @@ namespace Cofoundry.Domain.Internal
             if (!isUnique)
             {
                 var message = $"A page directory already exists in that parent directory with the path '{command.UrlPath}'";
-                throw new UniqueConstraintViolationException(message, "UrlPath", command.UrlPath);
+                throw new UniqueConstraintViolationException(message, nameof(command.UrlPath), command.UrlPath);
             }
         }
-
-        #endregion
-
-        #region Permission
 
         public IEnumerable<IPermissionApplication> GetPermissions(UpdatePageDirectoryCommand command)
         {
             yield return new PageDirectoryUpdatePermission();
         }
-
-        #endregion
     }
 }
