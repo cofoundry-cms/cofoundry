@@ -128,16 +128,12 @@ namespace Cofoundry.Domain
         [PositiveInteger]
         public int? OpenGraphImageId { get; set; }
 
-        #region Output
-
         /// <summary>
         /// The database id of the newly created page. This is set after the 
         /// command has been run.
         /// </summary>
         [OutputValue]
         public int OutputPageId { get; set; }
-
-        #endregion
 
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
@@ -152,7 +148,7 @@ namespace Cofoundry.Domain
                     yield return new ValidationResult("Custom entity details pages should not specify a Url Path, instead they should specify a Routing Rule.", new[] { nameof(UrlPath) });
                 }
             }
-            
+
             if (PageType != PageType.CustomEntityDetails && !string.IsNullOrEmpty(CustomEntityRoutingRule))
             {
                 yield return new ValidationResult("Custom Entity routing rules should only be specified for custom entity details page types.", new[] { nameof(CustomEntityRoutingRule) });

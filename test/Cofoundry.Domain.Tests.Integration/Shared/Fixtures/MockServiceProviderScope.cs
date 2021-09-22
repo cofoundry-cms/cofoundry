@@ -23,6 +23,18 @@ namespace Cofoundry.Domain.Tests.Integration
             return _baseServiceProviderScope.ServiceProvider.GetService(serviceType);
         }
 
+        public IAdvancedContentRepository GetContentRepository()
+        {
+            return this.GetRequiredService<IAdvancedContentRepository>();
+        }
+
+        public IAdvancedContentRepository GetContentRepositoryWithElevatedPermissions()
+        {
+            return this
+                .GetRequiredService<IAdvancedContentRepository>()
+                .WithElevatedPermissions();
+        }
+
         public void MockDateTime(DateTime utcNow)
         {
             var dateTimeService = _baseServiceProviderScope.ServiceProvider.GetService<IDateTimeService>() as MockDateTimeService;

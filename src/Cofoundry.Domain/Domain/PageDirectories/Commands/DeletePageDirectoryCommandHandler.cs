@@ -1,12 +1,11 @@
-﻿using System;
+﻿using Cofoundry.Core.Data;
+using Cofoundry.Core.Validation;
+using Cofoundry.Domain.CQS;
+using Cofoundry.Domain.Data;
+using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
 using System.Threading.Tasks;
-using Cofoundry.Domain.Data;
-using Cofoundry.Domain.CQS;
-using Microsoft.EntityFrameworkCore;
-using Cofoundry.Core.Data;
 
 namespace Cofoundry.Domain.Internal
 {
@@ -14,8 +13,6 @@ namespace Cofoundry.Domain.Internal
         : ICommandHandler<DeletePageDirectoryCommand>
         , IPermissionRestrictedCommandHandler<DeletePageDirectoryCommand>
     {
-        #region constructor 
-
         private readonly CofoundryDbContext _dbContext;
         private readonly IPageDirectoryCache _cache;
         private readonly ITransactionScopeManager _transactionScopeFactory;
@@ -34,10 +31,6 @@ namespace Cofoundry.Domain.Internal
             _transactionScopeFactory = transactionScopeFactory;
         }
 
-        #endregion
-
-        #region execution
-
         public async Task ExecuteAsync(DeletePageDirectoryCommand command, IExecutionContext executionContext)
         {
             var pageDirectory = await _dbContext
@@ -48,7 +41,7 @@ namespace Cofoundry.Domain.Internal
             {
                 if (!pageDirectory.ParentPageDirectoryId.HasValue)
                 {
-                    throw new ValidationException("Cannot delete the root page directory.");
+                    throw ValidationErrorException.CreateWithProperties("Cannot delete the root page directory.", nameof(command.PageDirectoryId));
                 }
 
                 _dbContext.PageDirectories.Remove(pageDirectory);
@@ -66,15 +59,9 @@ namespace Cofoundry.Domain.Internal
             }
         }
 
-        #endregion
-
-        #region Permission
-
         public IEnumerable<IPermissionApplication> GetPermissions(DeletePageDirectoryCommand command)
         {
             yield return new PageDirectoryDeletePermission();
         }
-
-        #endregion
     }
 }
