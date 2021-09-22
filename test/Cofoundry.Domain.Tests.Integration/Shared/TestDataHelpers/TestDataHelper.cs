@@ -10,25 +10,28 @@ namespace Cofoundry.Domain.Tests.Integration
     /// </summary>
     public class TestDataHelper
     {
-        private readonly DbDependentFixture _dbDependentFixture;
-
         public TestDataHelper(DbDependentFixture dbDependentFixture)
         {
-            _dbDependentFixture = dbDependentFixture;
-
-            PageDirectories = new PageDirectoryTestDataHelper(_dbDependentFixture);
-            Pages = new PageTestDataHelper(_dbDependentFixture);
+            DbDependentFixture = dbDependentFixture;
         }
+
+        public DbDependentFixture DbDependentFixture { get; private set; }
 
         /// <summary>
         /// Used to make it easier to create or reference page 
         /// directories in test fixtures.
         /// </summary>
-        public PageDirectoryTestDataHelper PageDirectories { get; private set; }
+        public PageDirectoryTestDataHelper PageDirectories()
+        {
+            return new PageDirectoryTestDataHelper(DbDependentFixture);
+        }
 
         /// <summary>
         /// Used to make it easier to create pages in test fixtures.
         /// </summary>
-        public PageTestDataHelper Pages { get; private set; }
+        public PageTestDataHelper Pages()
+        {
+            return new PageTestDataHelper(DbDependentFixture);
+        }
     }
 }

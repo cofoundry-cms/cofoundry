@@ -8,7 +8,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace Cofoundry.Domain.Tests.Integration.Domain
+namespace Cofoundry.Domain.Tests.Integration.PageDirectories.Commands
 {
     [Collection(nameof(DbDependentFixture))]
     public class DeletePageDirectoryCommandHandlerTests
@@ -30,8 +30,8 @@ namespace Cofoundry.Domain.Tests.Integration.Domain
         public async Task WhenRootParent_DoesNotDeleteSiblings()
         {
             var uniqueData = DIRECTORY_PREFIX + nameof(WhenRootParent_DoesNotDeleteSiblings);
-            var pageDirectory1Id = await _testDataHelper.PageDirectories.AddAsync(uniqueData + "1");
-            var pageDirectory2Id = await _testDataHelper.PageDirectories.AddAsync(uniqueData + "2");
+            var pageDirectory1Id = await _testDataHelper.PageDirectories().AddAsync(uniqueData + "1");
+            var pageDirectory2Id = await _testDataHelper.PageDirectories().AddAsync(uniqueData + "2");
 
             using var scope = _dbDependentFixture.CreateServiceScope();
             var contentRepository = scope.GetContentRepositoryWithElevatedPermissions();
@@ -57,10 +57,10 @@ namespace Cofoundry.Domain.Tests.Integration.Domain
         {
             var uniqueData = DIRECTORY_PREFIX + nameof(WhenHasChildren_DeletesChildren);
 
-            var parentDirectoryId = await _testDataHelper.PageDirectories.AddAsync(uniqueData + " P");
-            var childDirectory1Id = await _testDataHelper.PageDirectories.AddAsync(uniqueData + " C1", parentDirectoryId);
-            var childDirectory2Id = await _testDataHelper.PageDirectories.AddAsync(uniqueData + " C2", childDirectory1Id);
-            var pageId = await _testDataHelper.Pages.AddAsync(uniqueData, childDirectory2Id);
+            var parentDirectoryId = await _testDataHelper.PageDirectories().AddAsync(uniqueData + " P");
+            var childDirectory1Id = await _testDataHelper.PageDirectories().AddAsync(uniqueData + " C1", parentDirectoryId);
+            var childDirectory2Id = await _testDataHelper.PageDirectories().AddAsync(uniqueData + " C2", childDirectory1Id);
+            var pageId = await _testDataHelper.Pages().AddAsync(uniqueData, childDirectory2Id);
 
             using var scope = _dbDependentFixture.CreateServiceScope();
             var contentRepository = scope.GetContentRepositoryWithElevatedPermissions();
@@ -92,7 +92,7 @@ namespace Cofoundry.Domain.Tests.Integration.Domain
         [Fact]
         public async Task WhenRoot_Throws()
         {
-            var rootDirectoryId = await _testDataHelper.PageDirectories.GetRootDirectoryIdAsync();
+            var rootDirectoryId = await _testDataHelper.PageDirectories().GetRootDirectoryIdAsync();
 
             using var scope = _dbDependentFixture.CreateServiceScope();
             var contentRepository = scope.GetContentRepositoryWithElevatedPermissions();

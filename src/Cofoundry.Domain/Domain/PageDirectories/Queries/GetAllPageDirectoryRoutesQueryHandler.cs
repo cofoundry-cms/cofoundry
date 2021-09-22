@@ -16,8 +16,6 @@ namespace Cofoundry.Domain.Internal
         : IQueryHandler<GetAllPageDirectoryRoutesQuery, ICollection<PageDirectoryRoute>>
         , IPermissionRestrictedQueryHandler<GetAllPageDirectoryRoutesQuery, ICollection<PageDirectoryRoute>>
     {
-        #region constructor
-
         private readonly CofoundryDbContext _dbContext;
         private readonly IPageDirectoryRouteMapper _pageDirectoryRouteMapper;
 
@@ -29,36 +27,23 @@ namespace Cofoundry.Domain.Internal
             _dbContext = dbContext;
             _pageDirectoryRouteMapper = pageDirectoryRouteMapper;
         }
-
-        #endregion
-
-        #region execution
         
         public async Task<ICollection<PageDirectoryRoute>> ExecuteAsync(GetAllPageDirectoryRoutesQuery query, IExecutionContext executionContext)
         {
-            var dbPageDirectories = await Query().ToListAsync();
+            var dbPageDirectories = await _dbContext
+                .PageDirectories
+                .AsNoTracking()
+                .Include(d => d.PageDirectoryLocales)
+                .ToListAsync();
+
             var activeWebRoutes = _pageDirectoryRouteMapper.Map(dbPageDirectories);
 
             return activeWebRoutes;
         }
-        
-        private IQueryable<PageDirectory> Query()
-        {
-            return _dbContext
-                .PageDirectories
-                .AsNoTracking()
-                .Include(d => d.PageDirectoryLocales);
-        }
-
-        #endregion
-
-        #region permissions
 
         public IEnumerable<IPermissionApplication> GetPermissions(GetAllPageDirectoryRoutesQuery command)
         {
             yield return new PageDirectoryReadPermission();
         }
-
-        #endregion
     }
 }

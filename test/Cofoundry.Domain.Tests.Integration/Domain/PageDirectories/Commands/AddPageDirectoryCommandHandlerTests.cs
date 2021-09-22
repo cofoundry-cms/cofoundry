@@ -10,7 +10,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace Cofoundry.Domain.Tests.Integration
+namespace Cofoundry.Domain.Tests.Integration.PageDirectories.Commands
 {
     [Collection(nameof(DbDependentFixture))]
     public class AddPageDirectoryCommandHandlerTests
@@ -32,7 +32,7 @@ namespace Cofoundry.Domain.Tests.Integration
         public async Task WhenRootParent_Adds()
         {
             var directoryName = DIRECTORY_PREFIX + nameof(WhenRootParent_Adds);
-            var addDirectoryCommand = await _testDataHelper.PageDirectories.CreateAddCommandAsync(directoryName);
+            var addDirectoryCommand = await _testDataHelper.PageDirectories().CreateAddCommandAsync(directoryName);
 
             using var scope = _dbDependentFixture.CreateServiceScope();
             var contentRepository = scope.GetContentRepositoryWithElevatedPermissions();
@@ -68,10 +68,10 @@ namespace Cofoundry.Domain.Tests.Integration
             using var scope = _dbDependentFixture.CreateServiceScope();
             var contentRepository = scope.GetContentRepositoryWithElevatedPermissions();
 
-            var parentDirectoryId = await _testDataHelper.PageDirectories.AddAsync(directoryName);
+            var parentDirectoryId = await _testDataHelper.PageDirectories().AddAsync(directoryName);
 
             var addChildDirectoryCommand = _testDataHelper
-                .PageDirectories
+                .PageDirectories()
                 .CreateAddCommand(directoryName + " Child", parentDirectoryId);
 
             await contentRepository
@@ -103,14 +103,14 @@ namespace Cofoundry.Domain.Tests.Integration
             using var scope = _dbDependentFixture.CreateServiceScope();
             var contentRepository = scope.GetContentRepositoryWithElevatedPermissions();
 
-            var parentDirectoryId = await _testDataHelper.PageDirectories.AddAsync(directoryName);
+            var parentDirectoryId = await _testDataHelper.PageDirectories().AddAsync(directoryName);
 
             await contentRepository
                 .PageDirectories()
                 .DeleteAsync(parentDirectoryId);
 
             var addChildDirectoryCommand = _testDataHelper
-                .PageDirectories
+                .PageDirectories()
                 .CreateAddCommand(directoryName + " Child", parentDirectoryId);
 
             await contentRepository
@@ -128,8 +128,8 @@ namespace Cofoundry.Domain.Tests.Integration
             using var scope = _dbDependentFixture.CreateServiceScope();
             var contentRepository = scope.GetContentRepositoryWithElevatedPermissions();
 
-            var parentDirectoryId = await _testDataHelper.PageDirectories.AddAsync(directoryName);
-            var addDirectory2Command = await _testDataHelper.PageDirectories.CreateAddCommandAsync(directoryName);
+            var parentDirectoryId = await _testDataHelper.PageDirectories().AddAsync(directoryName);
+            var addDirectory2Command = await _testDataHelper.PageDirectories().CreateAddCommandAsync(directoryName);
 
             await contentRepository
                 .Awaiting(r => r.PageDirectories().AddAsync(addDirectory2Command))

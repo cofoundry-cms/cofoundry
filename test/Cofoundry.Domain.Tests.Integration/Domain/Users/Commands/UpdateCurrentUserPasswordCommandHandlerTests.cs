@@ -1,20 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Cofoundry.Core;
+using Cofoundry.Domain.Data;
+using Cofoundry.Domain.Tests.Shared;
+using Cofoundry.Domain.Tests.Shared.Assertions;
+using FluentAssertions;
+using FluentAssertions.Execution;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using System.Text;
+using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Xunit;
-using Cofoundry.Core;
-using Cofoundry.Domain.Data;
-using System.Linq;
-using Microsoft.EntityFrameworkCore;
-using Cofoundry.Domain.Tests.Shared;
-using Cofoundry.Core.Validation;
-using FluentAssertions.Execution;
-using FluentAssertions;
-using Cofoundry.Domain.Tests.Shared.Assertions;
 
-namespace Cofoundry.Domain.Tests.Integration
+namespace Cofoundry.Domain.Tests.Integration.Users.Commands
 {
     [Collection(nameof(DbDependentFixture))]
     public class UpdateCurrentUserPasswordCommandHandlerTests

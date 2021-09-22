@@ -1,17 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Xunit;
-using Microsoft.Extensions.DependencyInjection;
-using System.Threading.Tasks;
-using Cofoundry.Domain.Data;
-using Microsoft.EntityFrameworkCore;
-using System.Linq;
+﻿using Cofoundry.Domain.Data;
 using Cofoundry.Domain.Tests.Shared;
 using FluentAssertions;
 using FluentAssertions.Execution;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using System;
+using System.Linq;
+using System.Threading.Tasks;
+using Xunit;
 
-namespace Cofoundry.Domain.Tests.Integration
+namespace Cofoundry.Domain.Tests.Integration.Users.Queries
 {
     [Collection(nameof(DbDependentFixture))]
     public class GetUserLoginInfoIfAuthenticatedQueryHandlerTests
@@ -47,7 +45,7 @@ namespace Cofoundry.Domain.Tests.Integration
 
             using var scope = _dbDependentFixture.CreateServiceScope();
             var repository = scope.GetService<IDomainRepository>();
-                
+
             var result = await repository.ExecuteQueryAsync(query);
 
             using (new AssertionScope())

@@ -68,7 +68,7 @@ namespace Cofoundry.Domain.Internal
 
         /// <summary>
         /// If a locale is defined in a parent directory but not in the child we define one 
-        /// using the parent info. This is so we have all locale permitations of this directory even if 
+        /// using the parent info. This is so we have all locale permutations of this directory even if 
         /// locales are defined further down the directory tree.
         /// </summary>
         private void ExpandDirectoryLocales(PageDirectoryRoute parent, PageDirectoryRoute routingInfo)
