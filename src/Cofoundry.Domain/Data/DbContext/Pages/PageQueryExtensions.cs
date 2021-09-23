@@ -10,13 +10,26 @@ namespace Cofoundry.Domain.Data
     {
         /// <summary>
         /// Fitlers the collection to only include pages with the 
-        /// specified page id.
+        /// specified <paramref name="pageId"/>.
         /// </summary>
         /// <param name="pageId">PageId to filter by.</param>
         public static IQueryable<Page> FilterByPageId(this IQueryable<Page> pages, int pageId)
         {
             var result = pages
                 .Where(i => i.PageId == pageId);
+
+            return result;
+        }
+
+        /// <summary>
+        /// Fitlers the collection to only include pages parented to the 
+        /// specified directory.
+        /// </summary>
+        /// <param name="pageDirectoryId">PageDirectoryId to filter by.</param>
+        public static IQueryable<Page> FilterByPageDirectoryId(this IQueryable<Page> pages, int pageDirectoryId)
+        {
+            var result = pages
+                .Where(i => i.PageDirectoryId == pageDirectoryId);
 
             return result;
         }

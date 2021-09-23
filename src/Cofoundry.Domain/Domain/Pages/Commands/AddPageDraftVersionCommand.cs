@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Cofoundry.Core.Validation;
+﻿using Cofoundry.Core.Validation;
 using Cofoundry.Domain.CQS;
+using System.ComponentModel.DataAnnotations;
 
 namespace Cofoundry.Domain
 {
@@ -31,15 +26,11 @@ namespace Cofoundry.Domain
         [PositiveInteger]
         public int? CopyFromPageVersionId { get; set; }
 
-        #region Output
-
         /// <summary>
         /// The database id of the newly created page version. This 
         /// is set after the command has been run.
         /// </summary>
         [OutputValue]
         public int OutputPageVersionId { get; set; }
-
-        #endregion
     }
 }

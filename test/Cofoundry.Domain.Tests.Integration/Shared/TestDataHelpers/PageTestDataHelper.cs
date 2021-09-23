@@ -1,8 +1,10 @@
 ﻿using Cofoundry.Core;
 using Cofoundry.Domain.Data;
+using Cofoundry.Web;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -21,7 +23,7 @@ namespace Cofoundry.Domain.Tests.Integration
         }
 
         /// <summary>
-        /// Adds a page directory that is parented to the the specified
+        /// Adds an unpublished page that is parented to the the specified
         /// <paramref name="parentDirectoryId"/>.
         /// </summary>
         /// <param name="uniqueData">
@@ -50,17 +52,16 @@ namespace Cofoundry.Domain.Tests.Integration
             }
 
             using var scope = _dbDependentFixture.CreateServiceScope();
-            var contentRepository = scope.GetRequiredService<IAdvancedContentRepository>();
+            var contentRepository = scope.GetContentRepositoryWithElevatedPermissions();
 
             return await contentRepository
-                .WithElevatedPermissions()
                 .Pages()
                 .AddAsync(command);
         }
 
         /// <summary>
         /// Creates a valid <see cref="AddPageCommand"/> using a generic page
-        /// template.
+        /// template and without the option to publish.
         /// </summary>
         /// <param name="uniqueData">
         /// Unique data to use in creating the Title and UrlSlug property. 
@@ -77,7 +78,7 @@ namespace Cofoundry.Domain.Tests.Integration
                 PageDirectoryId = parentDirectoryId,
                 UrlPath = SlugFormatter.ToSlug(uniqueData),
                 PageType = PageType.Generic,
-                PageTemplateId = _dbDependentFixture.SeededEntities.TestPageTemplateId
+                PageTemplateId = _dbDependentFixture.SeededEntities.TestPageTemplate.PageTemplateId
             };
 
             return command;
@@ -85,7 +86,7 @@ namespace Cofoundry.Domain.Tests.Integration
 
         /// <summary>
         /// Creates a valid <see cref="AddPageCommand"/> using a custom entity
-        /// details page template.
+        /// details page template and without the option to publish.
         /// </summary>
         /// <param name="uniqueData">
         /// Unique data to use in creating the Title and UrlSlug property. 
@@ -101,11 +102,92 @@ namespace Cofoundry.Domain.Tests.Integration
                 Title = uniqueData,
                 PageDirectoryId = parentDirectoryId,
                 PageType = PageType.CustomEntityDetails,
-                PageTemplateId = _dbDependentFixture.SeededEntities.TestCustomEntityPageTemplateId,
+                PageTemplateId = _dbDependentFixture.SeededEntities.TestCustomEntityPageTemplate.PageTemplateId,
                 CustomEntityRoutingRule = new IdAndUrlSlugCustomEntityRoutingRule().RouteFormat
             };
 
             return command;
+        }
+
+        /// <summary>
+        /// Adds a block of the type associated with the specified data model
+        /// to a page version.
+        /// </summary>
+        /// <param name="pageVersionId">A page version to add the block to.</param>
+        /// <param name="pageTemplateRegionId">
+        /// The region of the template to add the block to. The block is appended to the end of the region.
+        /// </param>
+        /// <param name="dataModel">The data to add to the block type.</param>
+        /// <param name="configration">
+        /// Optional additional configuration action to run before the
+        /// command is executed.
+        /// </param>
+        /// <returns>The PageVersionBlockId of the newly created block.</returns>
+        public async Task<int> AddBlockAsync<TDataModel>(
+            int pageVersionId, 
+            int pageTemplateRegionId, 
+            TDataModel dataModel, 
+            Action<AddPageVersionBlockCommand, PageBlockTypeSummary> configuration = null
+            )
+            where TDataModel : IPageBlockTypeDataModel
+        {
+            using var scope = _dbDependentFixture.CreateServiceScope();
+            var contentRepository = scope.GetContentRepositoryWithElevatedPermissions();
+
+            var allBlocks = await contentRepository
+                .PageBlockTypes()
+                .GetAll()
+                .AsSummaries()
+                .ExecuteAsync();
+
+            var fileName = dataModel.GetType().Name.Replace("DataModel", string.Empty);
+            var blockType = allBlocks.SingleOrDefault(b => b.FileName == fileName);
+            var command = new AddPageVersionBlockCommand()
+            {
+                DataModel = dataModel,
+                PageBlockTypeId = blockType.PageBlockTypeId,
+                PageTemplateRegionId = pageTemplateRegionId,
+                PageVersionId = pageVersionId
+            };
+
+            if (configuration != null)
+            {
+                configuration(command, blockType);
+            }
+
+            return await contentRepository
+                .Pages()
+                .Versions()
+                .Regions()
+                .Blocks()
+                .AddAsync(command);
+        }
+
+        /// <summary>
+        /// Adds a simple plain text block to a page that uses the generic test template.
+        /// </summary>
+        public async Task<int> AddPlainTextBlockToTestTemplateAsync(int pageVersionId, string text = "Test Text")
+        {
+            var template = _dbDependentFixture.SeededEntities.TestPageTemplate;
+
+            return await AddBlockAsync(pageVersionId, template.BodyPageTemplateRegionId, new PlainTextDataModel()
+            {
+                PlainText = text
+            });
+        }
+
+        /// <summary>
+        /// Adds an image block to a page that uses the generic test template.
+        /// </summary>
+        public async Task<int> AddImageTextBlockToTestTemplateAsync(int pageVersionId)
+        {
+            var template = _dbDependentFixture.SeededEntities.TestCustomEntityPageTemplate;
+
+            return await AddBlockAsync(pageVersionId, template.BodyPageTemplateRegionId, new ImageDataModel()
+            {
+                ImageId = _dbDependentFixture.SeededEntities.TestImageId,
+                AltText = "Test Alt Text"
+            });
         }
     }
 }

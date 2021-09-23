@@ -10,7 +10,7 @@
         /// A test generic template with one region named "Body" that accepts 
         /// multiple blocks of any type.
         /// </summary>
-        public int TestPageTemplateId { get; set; }
+        public TestPageTemplateInfo TestPageTemplate { get; } = new TestPageTemplateInfo();
 
         /// <summary>
         /// A test custom entity template for custom entity 
@@ -18,7 +18,12 @@
         /// a custom entity region named "Custom Entity Body". Both regions
         /// accepts multiple blocks of any type.
         /// </summary>
-        public int TestCustomEntityPageTemplateId { get; internal set; }
+        public TestCustomEntityPageTemplateInfo TestCustomEntityPageTemplate { get; } = new TestCustomEntityPageTemplateInfo();
+
+        /// <summary>
+        /// The id of the "Body" region in the test generic template.
+        /// </summary>
+        public int TestCustomEntityPageTemplateBodyRegionId { get; set; }
 
         /// <summary>
         /// An 80x80 jpg.
@@ -28,8 +33,31 @@
         /// <summary>
         /// An existing tag which can be used in combination with a unique tag to test new and existing tag references.
         /// </summary>
-        public string TestTag { get; } = "Test";
+        public TestTagInfo TestTag { get; } = new TestTagInfo();
 
-        public int TestTagId { get; set; }
+        public class TestPageTemplateInfo
+        {
+            public int PageTemplateId { get; set; }
+
+            /// <summary>
+            /// The id of the "Body" page region in the template.
+            /// </summary>
+            public int BodyPageTemplateRegionId { get; set; }
+        }
+
+        public class TestCustomEntityPageTemplateInfo : TestPageTemplateInfo
+        {
+            /// <summary>
+            /// The id of the "Custom Entity Body" page region in the template.
+            /// </summary>
+            public int CustomEntityBodyPageTemplateRegionId { get; set; }
+        }
+
+        public class TestTagInfo
+        {
+            public int TagId { get; set; }
+
+            public string TagText { get; } = "Test";
+        }
     }
 }

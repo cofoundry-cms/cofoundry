@@ -40,13 +40,13 @@ begin
 		if (@LatestWorkFlowStatusId is null) 
 		begin
 			set @ErrorMessage = FORMATMESSAGE('Page_AddDraft: Unable to locate a version to copy from for page, PageId: %i', @PageId);
-			throw 50000, @ErrorMessage, 1;
+			throw 51001, @ErrorMessage, 1;
 		end 
 		
 		if (@LatestWorkFlowStatusId = @DraftWorkFlowStatus) 
 		begin
 			set @ErrorMessage = FORMATMESSAGE('Page_AddDraft: Page already has a draft version, PageId: %i', @PageId);
-			throw 50000, @ErrorMessage, 1;
+			throw 51002, @ErrorMessage, 1;
 		end 
 	end
 	

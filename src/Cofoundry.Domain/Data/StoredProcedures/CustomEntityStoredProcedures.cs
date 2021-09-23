@@ -54,7 +54,7 @@ namespace Cofoundry.Domain.Data.Internal
 
             if (!newVersionId.HasValue)
             {
-                throw new UnexpectedSqlStoredProcedureResultException("Cofoundry.CustomEntity_AddDraft", "No CustomEntityVersionId was returned.");
+                throw new UnexpectedStoredProcedureResultException("Cofoundry.CustomEntity_AddDraft", "No CustomEntityVersionId was returned.");
             }
 
             return newVersionId.Value;

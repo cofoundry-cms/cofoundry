@@ -153,17 +153,35 @@ namespace Cofoundry.Domain.Tests.Integration
 
             // Page Templates
 
-            SeededEntities.TestPageTemplateId = await dbContext
+            var testTemplate = await dbContext
                 .PageTemplates
+                .Include(t => t.PageTemplateRegions)
                 .Where(t => t.FileName == "TestTemplate")
-                .Select(t => t.PageTemplateId)
                 .SingleAsync();
 
-            SeededEntities.TestCustomEntityPageTemplateId = await dbContext
+            SeededEntities.TestPageTemplate.PageTemplateId = testTemplate.PageTemplateId;
+            SeededEntities.TestPageTemplate.BodyPageTemplateRegionId = testTemplate
+                .PageTemplateRegions
+                .Select(t => t.PageTemplateRegionId)
+                .Single();
+
+            var testCustomEntityPageTemplate = await dbContext
                 .PageTemplates
+                .Include(t => t.PageTemplateRegions)
                 .Where(t => t.FileName == "TestCustomEntityTemplate")
-                .Select(t => t.PageTemplateId)
                 .SingleAsync();
+
+            SeededEntities.TestCustomEntityPageTemplate.PageTemplateId = testCustomEntityPageTemplate.PageTemplateId;
+            SeededEntities.TestCustomEntityPageTemplate.BodyPageTemplateRegionId = testCustomEntityPageTemplate
+                .PageTemplateRegions
+                .Where(t => !t.IsCustomEntityRegion)
+                .Select(t => t.PageTemplateRegionId)
+                .Single();
+            SeededEntities.TestCustomEntityPageTemplate.CustomEntityBodyPageTemplateRegionId = testCustomEntityPageTemplate
+                .PageTemplateRegions
+                .Where(t => t.IsCustomEntityRegion)
+                .Select(t => t.PageTemplateRegionId)
+                .Single();
 
             // Images
 
@@ -184,14 +202,14 @@ namespace Cofoundry.Domain.Tests.Integration
 
             var testTag = new Tag()
             {
-                TagText = SeededEntities.TestTag,
+                TagText = SeededEntities.TestTag.TagText,
                 CreateDate = DateTime.UtcNow
             };
 
             dbContext.Tags.Add(testTag);
             await dbContext.SaveChangesAsync();
 
-            SeededEntities.TestTagId = testTag.TagId;
+            SeededEntities.TestTag.TagId = testTag.TagId;
 
         }
 

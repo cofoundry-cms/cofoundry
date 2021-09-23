@@ -1,13 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Cofoundry.Domain.Data;
-using Cofoundry.Domain.CQS;
-using Cofoundry.Core.Data;
+﻿using Cofoundry.Core.Data;
 using Cofoundry.Core.MessageAggregator;
+using Cofoundry.Core.Validation;
+using Cofoundry.Domain.CQS;
+using Cofoundry.Domain.Data;
 using Cofoundry.Domain.Data.Internal;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Cofoundry.Domain.Internal
 {
@@ -16,12 +14,10 @@ namespace Cofoundry.Domain.Internal
     /// isn't a currently published version then an exception will be thrown. An exception is also 
     /// thrown if there is already a draft version.
     /// </summary>
-    public class AddPageDraftVersionCommandHandler 
+    public class AddPageDraftVersionCommandHandler
         : ICommandHandler<AddPageDraftVersionCommand>
         , IPermissionRestrictedCommandHandler<AddPageDraftVersionCommand>
     {
-        #region constructor
-
         private readonly CofoundryDbContext _dbContext;
         private readonly IPageCache _pageCache;
         private readonly IMessageAggregator _messageAggregator;
@@ -43,19 +39,25 @@ namespace Cofoundry.Domain.Internal
             _transactionScopeFactory = transactionScopeFactory;
         }
 
-        #endregion
-
         public async Task ExecuteAsync(AddPageDraftVersionCommand command, IExecutionContext executionContext)
         {
-            var newVersionId = await _pageStoredProcedures.AddDraftAsync(
-                command.PageId,
-                command.CopyFromPageVersionId,
-                executionContext.ExecutionDate,
-                executionContext.UserContext.UserId.Value);
+            int newVersionId;
+
+            try
+            {
+                newVersionId = await _pageStoredProcedures.AddDraftAsync(
+                    command.PageId,
+                    command.CopyFromPageVersionId,
+                    executionContext.ExecutionDate,
+                    executionContext.UserContext.UserId.Value);
+            }
+            catch (StoredProcedureExecutionException ex) when (ex.ErrorNumber == StoredProcedureErrorNumbers.Page_AddDraft.DraftAlreadyExists)
+            {
+                throw ValidationErrorException.CreateWithProperties("A draft cannot be created because this page already has one.", nameof(command.PageId));
+            }
 
             await _transactionScopeFactory.QueueCompletionTaskAsync(_dbContext, () => OnTransactionComplete(command, newVersionId));
 
-            // Set Ouput
             command.OutputPageVersionId = newVersionId;
         }
 
@@ -70,13 +72,9 @@ namespace Cofoundry.Domain.Internal
             });
         }
 
-        #region Permissions
-
         public IEnumerable<IPermissionApplication> GetPermissions(AddPageDraftVersionCommand command)
         {
             yield return new PageUpdatePermission();
         }
-
-        #endregion
     }
 }

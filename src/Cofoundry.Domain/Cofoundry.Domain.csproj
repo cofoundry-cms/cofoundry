@@ -73,5 +73,9 @@
     <EmbeddedResource Include="MailTemplates\DefaultMailTemplates\Templates\DefaultPasswordResetRequestedByUserMailTemplate_text.cshtml" />
     <EmbeddedResource Include="MailTemplates\DefaultMailTemplates\_ViewImports.cshtml" />
   </ItemGroup>
+  
+  <ItemGroup>
+    <Folder Include="Domain\Shared\Exceptions\" />
+  </ItemGroup>
 	
 </Project>

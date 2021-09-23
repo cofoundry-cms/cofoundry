@@ -1,6 +1,6 @@
 ﻿using Cofoundry.Core.EntityFramework;
-using System;
 using Microsoft.Data.SqlClient;
+using System;
 using System.Threading.Tasks;
 
 namespace Cofoundry.Domain.Data.Internal
@@ -38,19 +38,34 @@ namespace Cofoundry.Domain.Data.Internal
             int creatorId
             )
         {
-            var newVersionId = await _entityFrameworkSqlExecutor
-                .ExecuteCommandWithOutputAsync<int?>(_dbContext,
-                "Cofoundry.Page_AddDraft",
-                "PageVersionId",
-                 new SqlParameter("PageId", pageId),
-                 new SqlParameter("CopyFromPageVersionId", copyFromPageVersionId),
-                 new SqlParameter("CreateDate", createDate),
-                 new SqlParameter("CreatorId", creatorId)
-                 );
+            const string SP_NAME = "Cofoundry.Page_AddDraft";
+
+            int? newVersionId;
+
+            try
+            {
+                newVersionId = await _entityFrameworkSqlExecutor
+                    .ExecuteCommandWithOutputAsync<int?>(_dbContext,
+                    SP_NAME,
+                    "PageVersionId",
+                     new SqlParameter("PageId", pageId),
+                     new SqlParameter("CopyFromPageVersionId", copyFromPageVersionId),
+                     new SqlParameter("CreateDate", createDate),
+                     new SqlParameter("CreatorId", creatorId)
+                     );
+            }
+            catch (SqlException ex) when (ex.Number == StoredProcedureErrorNumbers.Page_AddDraft.DraftAlreadyExists)
+            {
+                throw new StoredProcedureExecutionException(ex);
+            }
+            catch (SqlException ex) when (ex.Number == StoredProcedureErrorNumbers.Page_AddDraft.NoVersionFoundToCopyFrom)
+            {
+                throw new StoredProcedureExecutionException(ex);
+            }
 
             if (!newVersionId.HasValue)
             {
-                throw new UnexpectedSqlStoredProcedureResultException("Cofoundry.Page_AddDraft", "No version id was returned.");
+                throw new UnexpectedStoredProcedureResultException(SP_NAME, "No version id was returned.");
             }
 
             return newVersionId.Value;
