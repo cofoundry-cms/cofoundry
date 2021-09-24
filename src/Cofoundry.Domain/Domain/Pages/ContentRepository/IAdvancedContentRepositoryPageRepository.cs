@@ -94,7 +94,8 @@ namespace Cofoundry.Domain
         /// Creates a new page, copying from an existing page.
         /// </summary>
         /// <param name="command">Command parameters.</param>
-        Task DuplicateAsync(DuplicatePageCommand command);
+        /// <returns>Id of the newly created page.</returns>
+        Task<int> DuplicateAsync(DuplicatePageCommand command);
 
         /// <summary>
         /// Publishes a page. If the page is already published and

@@ -1,10 +1,7 @@
 ﻿using Cofoundry.Domain.Data;
-using Cofoundry.Domain.Tests.Shared.Assertions;
 using FluentAssertions;
-using FluentAssertions.Execution;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 using Xunit;
 

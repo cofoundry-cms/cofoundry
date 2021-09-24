@@ -1,23 +1,19 @@
-﻿using System;
+﻿using Cofoundry.Core;
+using Cofoundry.Core.Data;
+using Cofoundry.Domain.CQS;
+using Cofoundry.Domain.Data;
+using Cofoundry.Domain.Data.Internal;
+using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using Cofoundry.Domain.Data;
-using Cofoundry.Domain.CQS;
-using Microsoft.EntityFrameworkCore;
-using Cofoundry.Core;
-using Cofoundry.Core.Data;
-using Cofoundry.Domain.Data.Internal;
 
 namespace Cofoundry.Domain.Internal
 {
-    public class DuplicatePageCommandHandler 
+    public class DuplicatePageCommandHandler
         : ICommandHandler<DuplicatePageCommand>
         , IPermissionRestrictedCommandHandler<DuplicatePageCommand>
     {
-        #region constructor
-
         private readonly ICommandExecutor _commandExecutor;
         private readonly CofoundryDbContext _dbContext;
         private readonly IPageStoredProcedures _pageStoredProcedures;
@@ -35,10 +31,6 @@ namespace Cofoundry.Domain.Internal
             _pageStoredProcedures = pageStoredProcedures;
             _transactionScopeFactory = transactionScopeFactory;
         }
-
-        #endregion
-
-        #region execution
 
         public async Task ExecuteAsync(DuplicatePageCommand command, IExecutionContext executionContext)
         {
@@ -114,15 +106,9 @@ namespace Cofoundry.Domain.Internal
             return addPageCommand;
         }
 
-        #endregion
-
-        #region Permissions
-
         public IEnumerable<IPermissionApplication> GetPermissions(DuplicatePageCommand command)
         {
             yield return new PageCreatePermission();
         }
-
-        #endregion
     }
 }

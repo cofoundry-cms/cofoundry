@@ -86,9 +86,10 @@ namespace Cofoundry.Domain.Internal
             return command.OutputPageId;
         }
 
-        public Task DuplicateAsync(DuplicatePageCommand command)
+        public async Task<int> DuplicateAsync(DuplicatePageCommand command)
         {
-            return ExtendableContentRepository.ExecuteCommandAsync(command);
+             await ExtendableContentRepository.ExecuteCommandAsync(command);
+            return command.OutputPageId;
         }
 
         public Task PublishAsync(PublishPageCommand command)
