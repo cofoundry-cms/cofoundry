@@ -1,18 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Cofoundry.Domain.Data;
-using Cofoundry.Domain.CQS;
-using Microsoft.EntityFrameworkCore;
+﻿using Cofoundry.Core.Data;
 using Cofoundry.Core.MessageAggregator;
-using Cofoundry.Core.Data;
+using Cofoundry.Domain.CQS;
+using Cofoundry.Domain.Data;
 using Cofoundry.Domain.Data.Internal;
+using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Cofoundry.Domain.Internal
 {
-    public class DeletePageCommandHandler 
+    public class DeletePageCommandHandler
         : ICommandHandler<DeletePageCommand>
         , IPermissionRestrictedCommandHandler<DeletePageCommand>
     {
@@ -39,7 +36,7 @@ namespace Cofoundry.Domain.Internal
             _transactionScopeFactory = transactionScopeFactory;
             _pageStoredProcedures = pageStoredProcedures;
         }
-        
+
         public async Task ExecuteAsync(DeletePageCommand command, IExecutionContext executionContext)
         {
             var page = await _dbContext
@@ -73,7 +70,7 @@ namespace Cofoundry.Domain.Internal
                 PageId = command.PageId
             });
         }
-        
+
         #region Permission
 
         public IEnumerable<IPermissionApplication> GetPermissions(DeletePageCommand command)

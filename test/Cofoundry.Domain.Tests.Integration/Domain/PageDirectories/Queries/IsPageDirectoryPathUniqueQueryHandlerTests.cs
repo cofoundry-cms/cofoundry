@@ -7,7 +7,7 @@ namespace Cofoundry.Domain.Tests.Integration.PageDirectories.Queries
     [Collection(nameof(DbDependentFixture))]
     public class IsPageDirectoryPathUniqueQueryHandlerTests
     {
-        const string DIRECTORY_PREFIX = "IsPageDirPathUnqCHT ";
+        const string UNIQUE_PREFIX = "IsPageDirPathUnqCHT ";
 
         private readonly DbDependentFixture _dbDependentFixture;
         private readonly TestDataHelper _testDataHelper;
@@ -22,7 +22,7 @@ namespace Cofoundry.Domain.Tests.Integration.PageDirectories.Queries
 
         public async Task WhenPathUnique_ReturnsTrue()
         {
-            var uniqueData = DIRECTORY_PREFIX + nameof(WhenPathUnique_ReturnsTrue);
+            var uniqueData = UNIQUE_PREFIX + nameof(WhenPathUnique_ReturnsTrue);
             var parentDirectoryId = await _testDataHelper.PageDirectories().AddAsync(uniqueData);
 
             using var scope = _dbDependentFixture.CreateServiceScope();
@@ -42,7 +42,7 @@ namespace Cofoundry.Domain.Tests.Integration.PageDirectories.Queries
 
         public async Task WhenPathNotUnique_ReturnsFalse()
         {
-            var uniqueData = DIRECTORY_PREFIX + nameof(WhenPathNotUnique_ReturnsFalse);
+            var uniqueData = UNIQUE_PREFIX + nameof(WhenPathNotUnique_ReturnsFalse);
             var parentDirectoryId = await _testDataHelper.PageDirectories().AddAsync(uniqueData);
 
             using var scope = _dbDependentFixture.CreateServiceScope();
@@ -62,7 +62,7 @@ namespace Cofoundry.Domain.Tests.Integration.PageDirectories.Queries
 
         public async Task WhenExistingDirectory_ReturnsFalse()
         {
-            var uniqueData = DIRECTORY_PREFIX + nameof(WhenExistingDirectory_ReturnsFalse);
+            var uniqueData = UNIQUE_PREFIX + nameof(WhenExistingDirectory_ReturnsFalse);
             var parentDirectoryId = await _testDataHelper.PageDirectories().AddAsync(uniqueData);
             var childDirectoryId = await _testDataHelper.PageDirectories().AddAsync(uniqueData, parentDirectoryId);
             await _testDataHelper.PageDirectories().AddAsync(uniqueData + "a", parentDirectoryId);

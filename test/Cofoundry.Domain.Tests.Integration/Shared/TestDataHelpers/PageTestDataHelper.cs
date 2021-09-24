@@ -60,6 +60,41 @@ namespace Cofoundry.Domain.Tests.Integration
         }
 
         /// <summary>
+        /// Adds a draft version to the specified page and returns the version id.
+        /// </summary>
+        /// <param name="pageId">Id of the page to add a draft to.</param>
+        /// <returns>The PageVersionId of the newly created version.</returns>
+        public async Task<int> AddDraftAsync(int pageId)
+        {
+            var command = new AddPageDraftVersionCommand()
+            { 
+                PageId = pageId
+            };
+
+            using var scope = _dbDependentFixture.CreateServiceScope();
+            var contentRepository = scope.GetContentRepositoryWithElevatedPermissions();
+
+            return await contentRepository
+                .Pages()
+                .Versions()
+                .AddDraftAsync(command);
+        }
+
+        /// <summary>
+        /// Publishes the current draft version of a page.
+        /// </summary>
+        /// <param name="pageId">Id of the page to publish.</param>
+        public async Task PublishAsync(int pageId)
+        {
+            using var scope = _dbDependentFixture.CreateServiceScope();
+            var contentRepository = scope.GetContentRepositoryWithElevatedPermissions();
+
+            await contentRepository
+                .Pages()
+                .PublishAsync(new PublishPageCommand(pageId));
+        }
+
+        /// <summary>
         /// Creates a valid <see cref="AddPageCommand"/> using a generic page
         /// template and without the option to publish.
         /// </summary>

@@ -13,7 +13,7 @@ namespace Cofoundry.Domain.Tests.Integration.PageDirectories.Commands
     [Collection(nameof(DbDependentFixture))]
     public class DeletePageDirectoryCommandHandlerTests
     {
-        const string DIRECTORY_PREFIX = "DelPageDirectoryCHT ";
+        const string UNIQUE_PREFIX = "DelPageDirectoryCHT ";
 
         private readonly DbDependentFixture _dbDependentFixture;
         private readonly TestDataHelper _testDataHelper;
@@ -29,7 +29,7 @@ namespace Cofoundry.Domain.Tests.Integration.PageDirectories.Commands
         [Fact]
         public async Task WhenRootParent_DoesNotDeleteSiblings()
         {
-            var uniqueData = DIRECTORY_PREFIX + nameof(WhenRootParent_DoesNotDeleteSiblings);
+            var uniqueData = UNIQUE_PREFIX + nameof(WhenRootParent_DoesNotDeleteSiblings);
             var pageDirectory1Id = await _testDataHelper.PageDirectories().AddAsync(uniqueData + "1");
             var pageDirectory2Id = await _testDataHelper.PageDirectories().AddAsync(uniqueData + "2");
 
@@ -55,7 +55,7 @@ namespace Cofoundry.Domain.Tests.Integration.PageDirectories.Commands
         [Fact]
         public async Task WhenHasChildren_DeletesChildren()
         {
-            var uniqueData = DIRECTORY_PREFIX + nameof(WhenHasChildren_DeletesChildren);
+            var uniqueData = UNIQUE_PREFIX + nameof(WhenHasChildren_DeletesChildren);
 
             var parentDirectoryId = await _testDataHelper.PageDirectories().AddAsync(uniqueData + " P");
             var childDirectory1Id = await _testDataHelper.PageDirectories().AddAsync(uniqueData + " C1", parentDirectoryId);

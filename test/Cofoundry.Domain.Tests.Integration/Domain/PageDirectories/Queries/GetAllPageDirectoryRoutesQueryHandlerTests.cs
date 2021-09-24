@@ -10,7 +10,7 @@ namespace Cofoundry.Domain.Tests.Integration.PageDirectories.Queries
     [Collection(nameof(DbDependentFixture))]
     public class GetAllPageDirectoryRoutesQueryHandlerTests
     {
-        const string DIRECTORY_PREFIX = "GAllPageDirRoutesCHT ";
+        const string UNIQUE_PREFIX = "GAllPageDirRoutesCHT ";
 
         private readonly DbDependentFixture _dbDependentFixture;
         private readonly TestDataHelper _testDataHelper;
@@ -50,7 +50,7 @@ namespace Cofoundry.Domain.Tests.Integration.PageDirectories.Queries
         [Fact]
         public async Task ReturnsAllMappedRoutes()
         {
-            var uniqueData = DIRECTORY_PREFIX + nameof(ReturnsAllMappedRoutes);
+            var uniqueData = UNIQUE_PREFIX + nameof(ReturnsAllMappedRoutes);
 
             using var scope = _dbDependentFixture.CreateServiceScope();
             var contentRepository = scope.GetContentRepositoryWithElevatedPermissions();

@@ -14,7 +14,7 @@ namespace Cofoundry.Domain.Tests.Integration.PageDirectories.Commands
     [Collection(nameof(DbDependentFixture))]
     public class UpdatePageDirectoryCommandHandlerTests
     {
-        const string DIRECTORY_PREFIX = "UpdPageDirectoryCHT ";
+        const string UNIQUE_PREFIX = "UpdPageDirectoryCHT ";
 
         private readonly DbDependentFixture _dbDependentFixture;
         private readonly TestDataHelper _testDataHelper;
@@ -30,7 +30,7 @@ namespace Cofoundry.Domain.Tests.Integration.PageDirectories.Commands
         [Fact]
         public async Task CanUpdateProperties()
         {
-            var uniqueData = DIRECTORY_PREFIX + nameof(CanUpdateProperties);
+            var uniqueData = UNIQUE_PREFIX + nameof(CanUpdateProperties);
             var addDirectoryCommand = await _testDataHelper.PageDirectories().CreateAddCommandAsync(uniqueData);
 
             using var scope = _dbDependentFixture.CreateServiceScope();
@@ -65,7 +65,7 @@ namespace Cofoundry.Domain.Tests.Integration.PageDirectories.Commands
         [Fact]
         public async Task WhenNotInUse_CanChangeUrl()
         {
-            var uniqueData = DIRECTORY_PREFIX + nameof(WhenNotInUse_CanChangeUrl);
+            var uniqueData = UNIQUE_PREFIX + nameof(WhenNotInUse_CanChangeUrl);
             var addDirectoryCommand = await _testDataHelper.PageDirectories().CreateAddCommandAsync(uniqueData);
             var newParentDirectoryId = await _testDataHelper.PageDirectories().AddAsync(uniqueData + "2");
 
@@ -101,7 +101,7 @@ namespace Cofoundry.Domain.Tests.Integration.PageDirectories.Commands
         [Fact]
         public async Task WhenDirectoryInUseAndChangingUrl_Throws()
         {
-            var uniqueData = DIRECTORY_PREFIX + nameof(WhenDirectoryInUseAndChangingUrl_Throws);
+            var uniqueData = UNIQUE_PREFIX + nameof(WhenDirectoryInUseAndChangingUrl_Throws);
             var addDirectoryCommand = await _testDataHelper.PageDirectories().CreateAddCommandAsync(uniqueData);
 
             using var scope = _dbDependentFixture.CreateServiceScope();
@@ -127,7 +127,7 @@ namespace Cofoundry.Domain.Tests.Integration.PageDirectories.Commands
         [Fact]
         public async Task WhenDirectoryInUseAndChangingParentDirectory_Throws()
         {
-            var uniqueData = DIRECTORY_PREFIX + "WhenDirInUseAndChangingParentDir";
+            var uniqueData = UNIQUE_PREFIX + "WhenDirInUseAndChangingParentDir";
             var addDirectoryCommand = await _testDataHelper.PageDirectories().CreateAddCommandAsync(uniqueData);
 
             using var scope = _dbDependentFixture.CreateServiceScope();
@@ -154,7 +154,7 @@ namespace Cofoundry.Domain.Tests.Integration.PageDirectories.Commands
         [Fact]
         public async Task WhenNotUnique_Throws()
         {
-            var uniqueData = DIRECTORY_PREFIX + nameof(WhenNotUnique_Throws);
+            var uniqueData = UNIQUE_PREFIX + nameof(WhenNotUnique_Throws);
 
             var addDirectoryCommand = await _testDataHelper.PageDirectories().CreateAddCommandAsync(uniqueData);
             var duplicatePath = addDirectoryCommand.UrlPath + "1";

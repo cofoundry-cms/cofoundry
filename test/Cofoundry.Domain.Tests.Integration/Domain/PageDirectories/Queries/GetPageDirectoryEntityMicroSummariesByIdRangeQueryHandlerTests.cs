@@ -10,7 +10,7 @@ namespace Cofoundry.Domain.Tests.Integration.PageDirectories.Queries
     [Collection(nameof(DbDependentFixture))]
     public class GetPageDirectoryEntityMicroSummariesByIdRangeQueryHandlerTests
     {
-        const string DIRECTORY_PREFIX = "GPageDirEMSByIdRangeCHT ";
+        const string UNIQUE_PREFIX = "GPageDirEMSByIdRangeCHT ";
 
         private readonly DbDependentFixture _dbDependentFixture;
         private readonly TestDataHelper _testDataHelper;
@@ -26,7 +26,7 @@ namespace Cofoundry.Domain.Tests.Integration.PageDirectories.Queries
         [Fact]
         public async Task ReturnsMappedData()
         {
-            var uniqueData = DIRECTORY_PREFIX + nameof(ReturnsMappedData);
+            var uniqueData = UNIQUE_PREFIX + nameof(ReturnsMappedData);
 
             var directory1Id = await _testDataHelper.PageDirectories().AddAsync(uniqueData);
             var directory2Id = await _testDataHelper.PageDirectories().AddAsync(uniqueData + "-sub", directory1Id);

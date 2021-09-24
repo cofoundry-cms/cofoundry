@@ -1,12 +1,9 @@
-﻿using Cofoundry.Core;
-using Cofoundry.Core.Validation;
-using Cofoundry.Domain.Data;
+﻿using Cofoundry.Domain.Data;
 using Cofoundry.Domain.Tests.Shared.Assertions;
 using FluentAssertions;
 using FluentAssertions.Execution;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using System;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
@@ -17,7 +14,7 @@ namespace Cofoundry.Domain.Tests.Integration.Pages.Commands
     [Collection(nameof(DbDependentFixture))]
     public class AddPageDraftVersionCommandHandlerTests
     {
-        const string DATA_PREFIX = "AddPageCHT ";
+        const string UNIQUE_PREFIX = "AddPageCHT ";
         private readonly TestDataHelper _testDataHelper;
 
         private readonly DbDependentFixture _dbDependentFixture;
@@ -33,14 +30,14 @@ namespace Cofoundry.Domain.Tests.Integration.Pages.Commands
         [Fact]
         public async Task WhenPageIsPublished_CopiesBasicData()
         {
-            var uniqueData = DATA_PREFIX + nameof(WhenPageIsPublished_CopiesBasicData);
+            var uniqueData = UNIQUE_PREFIX + nameof(WhenPageIsPublished_CopiesBasicData);
             var directoryId = await _testDataHelper.PageDirectories().AddAsync(uniqueData);
             var pageId = await _testDataHelper.Pages().AddAsync(uniqueData, directoryId, c =>
             {
-                c.MetaDescription = "Test Meta";
-                c.OpenGraphDescription = "OG Desc";
+                c.MetaDescription = uniqueData + " Meta";
+                c.OpenGraphDescription = uniqueData + "OG Desc";
                 c.OpenGraphImageId = _dbDependentFixture.SeededEntities.TestImageId;
-                c.OpenGraphTitle = "OG Title";
+                c.OpenGraphTitle = uniqueData + "OG Title";
                 c.Publish = true;
             });
 
@@ -88,7 +85,7 @@ namespace Cofoundry.Domain.Tests.Integration.Pages.Commands
         [Fact]
         public async Task WhenPageIsPublished_CopiesRegions()
         {
-            var uniqueData = DATA_PREFIX + nameof(WhenPageIsPublished_CopiesRegions);
+            var uniqueData = UNIQUE_PREFIX + nameof(WhenPageIsPublished_CopiesRegions);
             var directoryId = await _testDataHelper.PageDirectories().AddAsync(uniqueData);
             var pageId = await _testDataHelper.Pages().AddAsync(uniqueData, directoryId);
 
@@ -104,7 +101,7 @@ namespace Cofoundry.Domain.Tests.Integration.Pages.Commands
                 .SingleAsync();
 
             // Add some blocks to the draft
-            var textBlockId = await _testDataHelper.Pages().AddPlainTextBlockToTestTemplateAsync(copyFromVersionId);
+            var textBlockId = await _testDataHelper.Pages().AddPlainTextBlockToTestTemplateAsync(copyFromVersionId, uniqueData);
             var imageBlockId = await _testDataHelper.Pages().AddImageTextBlockToTestTemplateAsync(copyFromVersionId);
 
             // Publish the page so we can create a new draft from it
@@ -123,7 +120,7 @@ namespace Cofoundry.Domain.Tests.Integration.Pages.Commands
                 {
                     PageId = pageId
                 });
-            
+
             // Get result data to assert
             var versions = await dbContext
                 .PageVersions
@@ -188,9 +185,80 @@ namespace Cofoundry.Domain.Tests.Integration.Pages.Commands
         }
 
         [Fact]
+        public async Task CanCopyFromPreviousVersion()
+        {
+            var uniqueData = UNIQUE_PREFIX + nameof(CanCopyFromPreviousVersion);
+            var directoryId = await _testDataHelper.PageDirectories().AddAsync(uniqueData);
+            var pageId = await _testDataHelper.Pages().AddAsync(uniqueData, directoryId, c =>
+            {
+                c.Publish = true;
+                c.MetaDescription = "Test Meta";
+                c.OpenGraphTitle = "Test OG Title";
+                c.ShowInSiteMap = true;
+            });
+
+            var version2Id = await _testDataHelper.Pages().AddDraftAsync(pageId);
+            await _testDataHelper.Pages().AddPlainTextBlockToTestTemplateAsync(version2Id, uniqueData);
+            await _testDataHelper.Pages().AddImageTextBlockToTestTemplateAsync(version2Id);
+            await _testDataHelper.Pages().PublishAsync(pageId);
+            var version3Id = await _testDataHelper.Pages().AddDraftAsync(pageId);
+
+
+            using var scope = _dbDependentFixture.CreateServiceScope();
+            var contentRepository = scope.GetContentRepositoryWithElevatedPermissions();
+            var dbContext = scope.GetRequiredService<CofoundryDbContext>();
+
+            await contentRepository
+                .Pages()
+                .Versions()
+                .UpdateDraftAsync(new UpdatePageDraftVersionCommand()
+                {
+                    PageId = pageId,
+                    Title = uniqueData + "Updated Title"
+                });
+
+            await _testDataHelper.Pages().AddPlainTextBlockToTestTemplateAsync(version3Id, uniqueData + " V3");
+            await _testDataHelper.Pages().PublishAsync(pageId);
+
+            await contentRepository
+                .Pages()
+                .Versions()
+                .AddDraftAsync(new AddPageDraftVersionCommand()
+                {
+                    PageId = pageId,
+                    CopyFromPageVersionId = version2Id
+                });
+
+            var versions = await dbContext
+                .PageVersions
+                .AsNoTracking()
+                .Include(v => v.PageVersionBlocks)
+                .FilterActive()
+                .FilterByPageId(pageId)
+                .ToListAsync();
+
+            var version2 = versions.SingleOrDefault(v => v.PageVersionId == version2Id);
+            var version4 = versions.Where(v => v.WorkFlowStatusId == (int)WorkFlowStatus.Draft).SingleOrDefault();
+
+            using (new AssertionScope())
+            {
+                version2.Should().NotBeNull();
+                version4.Should().NotBeNull();
+                version4.ExcludeFromSitemap.Should().Be(version2.ExcludeFromSitemap);
+                version4.MetaDescription.Should().Be(version2.MetaDescription);
+                version4.OpenGraphDescription.Should().Be(version2.OpenGraphDescription);
+                version4.OpenGraphImageId.Should().Be(version2.OpenGraphImageId);
+                version4.OpenGraphTitle.Should().Be(version2.OpenGraphTitle);
+                version4.PageTemplateId.Should().Be(version2.PageTemplateId);
+                version4.PageVersionBlocks.Should().HaveCount(version2.PageVersionBlocks.Count());
+                version4.Title.Should().Be(version2.Title);
+            }
+        }
+
+        [Fact]
         public async Task WhenPageHasDraft_Throws()
         {
-            var uniqueData = DATA_PREFIX + nameof(WhenPageHasDraft_Throws);
+            var uniqueData = UNIQUE_PREFIX + nameof(WhenPageHasDraft_Throws);
             var directoryId = await _testDataHelper.PageDirectories().AddAsync(uniqueData);
             var pageId = await _testDataHelper.Pages().AddAsync(uniqueData, directoryId);
 
@@ -212,7 +280,7 @@ namespace Cofoundry.Domain.Tests.Integration.Pages.Commands
         [Fact]
         public async Task WhenDraftAdded_SendsMessage()
         {
-            var uniqueData = DATA_PREFIX + nameof(WhenDraftAdded_SendsMessage);
+            var uniqueData = UNIQUE_PREFIX + nameof(WhenDraftAdded_SendsMessage);
             var directoryId = await _testDataHelper.PageDirectories().AddAsync(uniqueData);
             var pageId = await _testDataHelper.Pages().AddAsync(uniqueData, directoryId, c => c.Publish = true);
 

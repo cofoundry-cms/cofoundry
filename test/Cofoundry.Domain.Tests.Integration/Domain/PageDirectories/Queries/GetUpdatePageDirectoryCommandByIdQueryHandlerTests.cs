@@ -11,7 +11,7 @@ namespace Cofoundry.Domain.Tests.Integration.PageDirectories.Queries
     [Collection(nameof(DbDependentFixture))]
     public class GetUpdatePageDirectoryCommandByIdQueryHandlerTests
     {
-        const string DIRECTORY_PREFIX = "GUpdPageDirCmdByIdCHT ";
+        const string UNIQUE_PREFIX = "GUpdPageDirCmdByIdCHT ";
 
         private readonly DbDependentFixture _dbDependentFixture;
         private readonly TestDataHelper _testDataHelper;
@@ -27,7 +27,7 @@ namespace Cofoundry.Domain.Tests.Integration.PageDirectories.Queries
         [Fact]
         public async Task ReturnsMappedData()
         {
-            var uniqueData = DIRECTORY_PREFIX + nameof(ReturnsMappedData);
+            var uniqueData = UNIQUE_PREFIX + nameof(ReturnsMappedData);
 
             var parentDirectoryId = await _testDataHelper.PageDirectories().AddAsync(uniqueData);
             var addDirectoryCommand = _testDataHelper.PageDirectories().CreateAddCommand(uniqueData, parentDirectoryId);

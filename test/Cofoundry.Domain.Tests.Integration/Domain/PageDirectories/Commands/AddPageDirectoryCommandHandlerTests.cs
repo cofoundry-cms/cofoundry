@@ -15,7 +15,7 @@ namespace Cofoundry.Domain.Tests.Integration.PageDirectories.Commands
     [Collection(nameof(DbDependentFixture))]
     public class AddPageDirectoryCommandHandlerTests
     {
-        const string DIRECTORY_PREFIX = "AddPageDirectoryCHT ";
+        const string UNIQUE_PREFIX = "AddPageDirectoryCHT ";
         private readonly TestDataHelper _testDataHelper;
 
         private readonly DbDependentFixture _dbDependentFixture;
@@ -31,7 +31,7 @@ namespace Cofoundry.Domain.Tests.Integration.PageDirectories.Commands
         [Fact]
         public async Task WhenRootParent_Adds()
         {
-            var directoryName = DIRECTORY_PREFIX + nameof(WhenRootParent_Adds);
+            var directoryName = UNIQUE_PREFIX + nameof(WhenRootParent_Adds);
             var addDirectoryCommand = await _testDataHelper.PageDirectories().CreateAddCommandAsync(directoryName);
 
             using var scope = _dbDependentFixture.CreateServiceScope();
@@ -63,7 +63,7 @@ namespace Cofoundry.Domain.Tests.Integration.PageDirectories.Commands
         [Fact]
         public async Task WhenNestedParent_Adds()
         {
-            var directoryName = DIRECTORY_PREFIX + nameof(WhenNestedParent_Adds);
+            var directoryName = UNIQUE_PREFIX + nameof(WhenNestedParent_Adds);
 
             using var scope = _dbDependentFixture.CreateServiceScope();
             var contentRepository = scope.GetContentRepositoryWithElevatedPermissions();
@@ -98,7 +98,7 @@ namespace Cofoundry.Domain.Tests.Integration.PageDirectories.Commands
         [Fact]
         public async Task WhenDeletedParent_Throws()
         {
-            var directoryName = DIRECTORY_PREFIX + nameof(WhenDeletedParent_Throws);
+            var directoryName = UNIQUE_PREFIX + nameof(WhenDeletedParent_Throws);
 
             using var scope = _dbDependentFixture.CreateServiceScope();
             var contentRepository = scope.GetContentRepositoryWithElevatedPermissions();
@@ -123,7 +123,7 @@ namespace Cofoundry.Domain.Tests.Integration.PageDirectories.Commands
         [Fact]
         public async Task WhenDuplictate_Throws()
         {
-            var directoryName = DIRECTORY_PREFIX + nameof(WhenDuplictate_Throws);
+            var directoryName = UNIQUE_PREFIX + nameof(WhenDuplictate_Throws);
 
             using var scope = _dbDependentFixture.CreateServiceScope();
             var contentRepository = scope.GetContentRepositoryWithElevatedPermissions();

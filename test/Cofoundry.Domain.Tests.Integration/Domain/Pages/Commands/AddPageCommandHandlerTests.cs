@@ -17,7 +17,7 @@ namespace Cofoundry.Domain.Tests.Integration.Pages.Commands
     [Collection(nameof(DbDependentFixture))]
     public class AddPageCommandHandlerTests
     {
-        const string DATA_PREFIX = "AddPageCHT ";
+        const string UNIQUE_PREFIX = "AddPageCHT ";
         private readonly TestDataHelper _testDataHelper;
 
         private readonly DbDependentFixture _dbDependentFixture;
@@ -33,7 +33,7 @@ namespace Cofoundry.Domain.Tests.Integration.Pages.Commands
         [Fact]
         public async Task WhenMinimalData_Adds()
         {
-            var uniqueData = DATA_PREFIX + nameof(WhenMinimalData_Adds);
+            var uniqueData = UNIQUE_PREFIX + nameof(WhenMinimalData_Adds);
             var directoryId = await _testDataHelper.PageDirectories().AddAsync(uniqueData);
 
             using var scope = _dbDependentFixture.CreateServiceScope();
@@ -88,7 +88,7 @@ namespace Cofoundry.Domain.Tests.Integration.Pages.Commands
         [Fact]
         public async Task WithMetaData_Adds()
         {
-            var uniqueData = DATA_PREFIX + nameof(WithMetaData_Adds);
+            var uniqueData = UNIQUE_PREFIX + nameof(WithMetaData_Adds);
             var directoryId = await _testDataHelper.PageDirectories().AddAsync(uniqueData);
 
             using var scope = _dbDependentFixture.CreateServiceScope();
@@ -131,7 +131,7 @@ namespace Cofoundry.Domain.Tests.Integration.Pages.Commands
         [Fact]
         public async Task WithTags_Adds()
         {
-            var uniqueData = DATA_PREFIX + nameof(WithTags_Adds);
+            var uniqueData = UNIQUE_PREFIX + nameof(WithTags_Adds);
             var directoryId = await _testDataHelper.PageDirectories().AddAsync(uniqueData);
 
             using var scope = _dbDependentFixture.CreateServiceScope();
@@ -170,7 +170,7 @@ namespace Cofoundry.Domain.Tests.Integration.Pages.Commands
         [Fact]
         public async Task WhenPublished_SetsPublishedWithCurrentDate()
         {
-            var uniqueData = DATA_PREFIX + nameof(WhenPublished_SetsPublishedWithCurrentDate);
+            var uniqueData = UNIQUE_PREFIX + nameof(WhenPublished_SetsPublishedWithCurrentDate);
             var directoryId = await _testDataHelper.PageDirectories().AddAsync(uniqueData);
 
             using var scope = _dbDependentFixture.CreateServiceScope();
@@ -209,7 +209,7 @@ namespace Cofoundry.Domain.Tests.Integration.Pages.Commands
         [Fact]
         public async Task WhenPublishedWithDate_SetsPublishedWithSpecifiedDate()
         {
-            var uniqueData = DATA_PREFIX + nameof(WhenPublishedWithDate_SetsPublishedWithSpecifiedDate);
+            var uniqueData = UNIQUE_PREFIX + nameof(WhenPublishedWithDate_SetsPublishedWithSpecifiedDate);
                         var directoryId = await _testDataHelper.PageDirectories().AddAsync(uniqueData);
 
             using var scope = _dbDependentFixture.CreateServiceScope();
@@ -250,7 +250,7 @@ namespace Cofoundry.Domain.Tests.Integration.Pages.Commands
         [Fact]
         public async Task WithCustomEntityTemplate_Adds()
         {
-            var uniqueData = DATA_PREFIX + nameof(WithCustomEntityTemplate_Adds);
+            var uniqueData = UNIQUE_PREFIX + nameof(WithCustomEntityTemplate_Adds);
                         var directoryId = await _testDataHelper.PageDirectories().AddAsync(uniqueData);
 
             using var scope = _dbDependentFixture.CreateServiceScope();
@@ -282,7 +282,7 @@ namespace Cofoundry.Domain.Tests.Integration.Pages.Commands
         [Fact]
         public async Task CanAddMultipleToOneDirectory()
         {
-            var uniqueData = DATA_PREFIX + nameof(CanAddMultipleToOneDirectory);
+            var uniqueData = UNIQUE_PREFIX + nameof(CanAddMultipleToOneDirectory);
             var directoryId = await _testDataHelper.PageDirectories().AddAsync(uniqueData);
 
             using var scope = _dbDependentFixture.CreateServiceScope();
@@ -311,7 +311,7 @@ namespace Cofoundry.Domain.Tests.Integration.Pages.Commands
         [Fact]
         public async Task WhenDuplicatePath_Throws()
         {
-            var uniqueData = DATA_PREFIX + nameof(WhenDuplicatePath_Throws);
+            var uniqueData = UNIQUE_PREFIX + nameof(WhenDuplicatePath_Throws);
             var directoryId = await _testDataHelper.PageDirectories().AddAsync(uniqueData);
 
             using var scope = _dbDependentFixture.CreateServiceScope();
@@ -330,7 +330,7 @@ namespace Cofoundry.Domain.Tests.Integration.Pages.Commands
         [Fact]
         public async Task WhenCustomEntityPageTypeWithGenericTemplate_Throws()
         {
-            var uniqueData = DATA_PREFIX + nameof(WhenCustomEntityPageTypeWithGenericTemplate_Throws);
+            var uniqueData = UNIQUE_PREFIX + nameof(WhenCustomEntityPageTypeWithGenericTemplate_Throws);
             var directoryId = await _testDataHelper.PageDirectories().AddAsync(uniqueData);
 
             using var scope = _dbDependentFixture.CreateServiceScope();
@@ -349,7 +349,7 @@ namespace Cofoundry.Domain.Tests.Integration.Pages.Commands
         [Fact]
         public async Task WhenGenericPageTypeWithCustomEntityTemplate_Throws()
         {
-            var uniqueData = DATA_PREFIX + nameof(WhenGenericPageTypeWithCustomEntityTemplate_Throws);
+            var uniqueData = UNIQUE_PREFIX + nameof(WhenGenericPageTypeWithCustomEntityTemplate_Throws);
             var directoryId = await _testDataHelper.PageDirectories().AddAsync(uniqueData);
 
             using var scope = _dbDependentFixture.CreateServiceScope();
@@ -368,7 +368,7 @@ namespace Cofoundry.Domain.Tests.Integration.Pages.Commands
         [Fact]
         public async Task WhenNotPublished_SendsMessage()
         {
-            var uniqueData = DATA_PREFIX + nameof(WhenNotPublished_SendsMessage);
+            var uniqueData = UNIQUE_PREFIX + nameof(WhenNotPublished_SendsMessage);
             var directoryId = await _testDataHelper.PageDirectories().AddAsync(uniqueData);
 
             using var scope = _dbDependentFixture.CreateServiceScope();
@@ -388,7 +388,7 @@ namespace Cofoundry.Domain.Tests.Integration.Pages.Commands
         [Fact]
         public async Task WhenPublished_SendsMessage()
         {
-            var uniqueData = DATA_PREFIX + nameof(WhenPublished_SendsMessage);
+            var uniqueData = UNIQUE_PREFIX + nameof(WhenPublished_SendsMessage);
             var directoryId = await _testDataHelper.PageDirectories().AddAsync(uniqueData);
 
             using var scope = _dbDependentFixture.CreateServiceScope();

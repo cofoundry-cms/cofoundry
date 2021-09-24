@@ -11,7 +11,7 @@ namespace Cofoundry.Domain.Tests.Integration.PageDirectories.Queries
     [Collection(nameof(DbDependentFixture))]
     public class GetPageDirectoryTreeQueryHandlerTests
     {
-        const string DIRECTORY_PREFIX = "GAllPageDirTreeCHT ";
+        const string UNIQUE_PREFIX = "GAllPageDirTreeCHT ";
 
         private readonly DbDependentFixture _dbDependentFixture;
         private readonly TestDataHelper _testDataHelper;
@@ -54,7 +54,7 @@ namespace Cofoundry.Domain.Tests.Integration.PageDirectories.Queries
         [Fact]
         public async Task ReturnsTreeNodes()
         {
-            var uniqueData = DIRECTORY_PREFIX + nameof(ReturnsTreeNodes);
+            var uniqueData = UNIQUE_PREFIX + nameof(ReturnsTreeNodes);
 
             using var scope = _dbDependentFixture.CreateServiceScope();
             var contentRepository = scope.GetContentRepositoryWithElevatedPermissions();
