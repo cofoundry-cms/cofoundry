@@ -1,24 +1,22 @@
 ﻿using Cofoundry.Core;
 using Cofoundry.Domain.CQS;
 using System;
-using System.Text.RegularExpressions;
 
 namespace Cofoundry.Domain
 {
     /// <summary>
-    /// A routing rule that uses only the UrlSlug property to match the
-    /// custom entity. This rule requires the custom entity definition
-    /// forces url slugs to be unique.
+    /// A routing rule that uses only the CustomEntityId property to match the
+    /// custom entity.
     /// </summary>
-    public class UrlSlugCustomEntityRoutingRule : ICustomEntityRoutingRule
+    public class IdCustomEntityRoutingRule : ICustomEntityRoutingRule
     {
         /// <summary>
-        /// A string representation of the route format e.g.  "{UrlSlug}". Used as a display value
+        /// A string representation of the route format e.g.  "{Id}/{UrlSlug}". Used as a display value
         /// but also as the unique identifier for the rule, so it shouldn't clash with any other routing rule.
         /// </summary>
         public string RouteFormat
         {
-            get { return "{UrlSlug}"; }
+            get { return "{Id}"; }
         }
 
         /// <summary>
@@ -38,7 +36,7 @@ namespace Cofoundry.Domain
         /// </summary>
         public bool RequiresUniqueUrlSlug
         {
-            get { return true; }
+            get { return false; }
         }
 
         /// <summary>
@@ -52,9 +50,10 @@ namespace Cofoundry.Domain
             if (string.IsNullOrWhiteSpace(url)) throw new ArgumentEmptyException(nameof(url));
             if (pageRoute == null) throw new ArgumentNullException(nameof(pageRoute));
 
-            var slugUrlPart = GetRoutingPart(url, pageRoute);
-            if (string.IsNullOrEmpty(slugUrlPart)) return false;
-            var isMatch = Regex.IsMatch(slugUrlPart, RegexLibary.SlugCaseInsensitive);
+            var routingPart = GetRoutingPart(url, pageRoute);
+            if (string.IsNullOrEmpty(routingPart)) return false;
+
+            var isMatch = IntParser.ParseOrDefault(routingPart) > 0;
 
             return isMatch;
         }
@@ -78,13 +77,12 @@ namespace Cofoundry.Domain
                 throw new ArgumentException(nameof(url) + $" does not match the specified page route. {nameof(ExtractRoutingQuery)} can only be called after a successful page route match.", nameof(url));
             }
 
-            var slugUrlPart = GetRoutingPart(url, pageRoute);
+            var routingPart = GetRoutingPart(url, pageRoute);
+            var customEntityId = IntParser.ParseOrDefault(routingPart);
 
-            var query = new GetCustomEntityRouteByPathQuery()
-            {
-                CustomEntityDefinitionCode = pageRoute.CustomEntityDefinitionCode,
-                UrlSlug = slugUrlPart
-            };
+            var query = new GetCustomEntityRouteByPathQuery();
+            query.CustomEntityDefinitionCode = pageRoute.CustomEntityDefinitionCode;
+            query.CustomEntityId = customEntityId;
 
             if (pageRoute.Locale != null)
             {
@@ -105,7 +103,9 @@ namespace Cofoundry.Domain
             if (pageRoute == null) throw new ArgumentNullException(nameof(pageRoute));
             if (entityRoute == null) throw new ArgumentNullException(nameof(entityRoute));
 
-            return pageRoute.FullPath.Replace(RouteFormat, entityRoute.UrlSlug);
+            return pageRoute
+                .FullPath
+                .Replace("{Id}", entityRoute.CustomEntityId.ToString());
         }
 
         /// <summary>

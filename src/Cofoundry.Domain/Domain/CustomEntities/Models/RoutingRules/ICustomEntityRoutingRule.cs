@@ -29,7 +29,9 @@ namespace Cofoundry.Domain
         int Priority { get; }
 
         /// <summary>
-        /// Indicates whether this rule can only be used with custom entities with a unique url slug.
+        /// Indicates whether this rule can only be used with custom entities with a unique 
+        /// url slug, indicated by the ForceUrlSlugUniqueness setting on the 
+        /// <see cref="ICustomEntityDefinition"/> implementation.
         /// </summary>
         bool RequiresUniqueUrlSlug { get; }
 

@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Cofoundry.Domain
 {
@@ -16,7 +13,7 @@ namespace Cofoundry.Domain
         /// Database identifier for the page.
         /// </summary>
         public int PageId { get; set; }
-        
+
         /// <summary>
         /// Optional locale of the page.
         /// </summary>
@@ -90,8 +87,6 @@ namespace Cofoundry.Domain
         /// </summary>
         public string CustomEntityDefinitionCode { get; set; }
 
-        #region public methods
-
         /// <summary>
         /// Determins if the page is within the specified directory path. Does
         /// not return true if it is in a subdirectory of the specified directory path.
@@ -107,7 +102,7 @@ namespace Cofoundry.Domain
 
             return PageDirectory.MatchesPath(directoryPath, Locale.LocaleId);
         }
-        
+
         /// <summary>
         /// Indicates if this is the default file in the directory
         /// </summary>
@@ -115,7 +110,5 @@ namespace Cofoundry.Domain
         {
             return string.IsNullOrWhiteSpace(UrlPath);
         }
-
-        #endregion
     }
 }

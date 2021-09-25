@@ -1,14 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
-using Cofoundry.Core;
+﻿using Cofoundry.Core;
 using Cofoundry.Domain.CQS;
+using System;
+using System.Text.RegularExpressions;
 
 namespace Cofoundry.Domain
 {
+    /// <summary>
+    /// A routing rule that uses the CustomEntityId and UrlSlug properties
+    /// to match the custom entity. When routing the request will be 
+    /// redirected if the UrlSlug does not match exactly; 
+    /// </summary>
     public class IdAndUrlSlugCustomEntityRoutingRule : ICustomEntityRoutingRule
     {
         /// <summary>
@@ -36,7 +37,9 @@ namespace Cofoundry.Domain
         }
 
         /// <summary>
-        /// Indicates whether this rule can only be used with custom entities with a unique url slug.
+        /// Indicates whether this rule can only be used with custom entities with a unique 
+        /// url slug, indicated by the ForceUrlSlugUniqueness setting on the 
+        /// <see cref="ICustomEntityDefinition"/> implementation.
         /// </summary>
         public bool RequiresUniqueUrlSlug
         {
@@ -57,7 +60,11 @@ namespace Cofoundry.Domain
             var routingPart = GetRoutingPart(url, pageRoute);
             if (string.IsNullOrEmpty(routingPart)) return false;
 
-            var isMatch = Regex.IsMatch(routingPart, ROUTE_REGEX);
+            var match = Regex.Match(routingPart, ROUTE_REGEX);
+
+            if (!match.Success) return false;
+
+            var isMatch = IntParser.ParseOrDefault(match.Groups[1].Value) > 0;
 
             return isMatch;
         }
@@ -78,7 +85,7 @@ namespace Cofoundry.Domain
 
             if (!MatchesRule(url, pageRoute))
             {
-                throw new ArgumentException(nameof(url) + $" does not match the specified page route. {nameof(ExtractRoutingQuery)} can only be called after a successful page route match.");
+                throw new ArgumentException(nameof(url) + $" does not match the specified page route. {nameof(ExtractRoutingQuery)} can only be called after a successful page route match.", nameof(url));
             }
 
             var routingPart = GetRoutingPart(url, pageRoute);
@@ -113,8 +120,11 @@ namespace Cofoundry.Domain
                 .Replace("{UrlSlug}", entityRoute.UrlSlug);
         }
 
-        #region private helpers
-
+        /// <summary>
+        /// Extracts the custom entity routing part of the path from 
+        /// a <paramref name="url"/> e.g. url "/my-path/123" with Pageroute 
+        /// "/my-path/{id}" will return "123".
+        /// </summary>
         private string GetRoutingPart(string url, PageRoute pageRoute)
         {
             if (pageRoute.FullPath.IndexOf(RouteFormat) == -1) return null;
@@ -125,7 +135,5 @@ namespace Cofoundry.Domain
 
             return url.Substring(pathRoot.Length - 1).Trim('/');
         }
-
-        #endregion
     }
 }
