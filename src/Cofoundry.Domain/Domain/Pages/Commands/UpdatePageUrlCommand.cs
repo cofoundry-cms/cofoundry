@@ -1,9 +1,7 @@
-﻿using System;
+﻿using Cofoundry.Core.Validation;
+using Cofoundry.Domain.CQS;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using Cofoundry.Core.Validation;
-using Cofoundry.Domain.CQS;
 
 namespace Cofoundry.Domain
 {
@@ -51,14 +49,5 @@ namespace Cofoundry.Domain
         /// </summary>
         [StringLength(70)]
         public string CustomEntityRoutingRule { get; set; }
-
-        #region Permission
-
-        public IEnumerable<IPermissionApplication> GetPermissions()
-        {
-            yield return new PageUpdateUrlPermission();
-        }
-
-        #endregion
     }
 }
