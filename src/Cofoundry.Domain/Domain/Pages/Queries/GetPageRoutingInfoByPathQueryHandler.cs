@@ -1,10 +1,9 @@
-﻿using System;
+﻿using Cofoundry.Domain.CQS;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using Cofoundry.Domain.CQS;
 
 namespace Cofoundry.Domain.Internal
 {
@@ -12,12 +11,10 @@ namespace Cofoundry.Domain.Internal
     /// Attempts to find a matching page route using the supplied path. The path
     /// has to be an absolute match, i.e. the query does not try and find a fall-back similar route.
     /// </summary>
-    public class GetPageRoutingInfoByPathQueryHandler 
+    public class GetPageRoutingInfoByPathQueryHandler
         : IQueryHandler<GetPageRoutingInfoByPathQuery, PageRoutingInfo>
         , IPermissionRestrictedQueryHandler<GetPageRoutingInfoByPathQuery, PageRoutingInfo>
     {
-        #region constructor
-
         private readonly IQueryExecutor _queryExecutor;
         private readonly IPagePathHelper _pathHelper;
 
@@ -29,10 +26,6 @@ namespace Cofoundry.Domain.Internal
             _queryExecutor = queryExecutor;
             _pathHelper = pathHelper;
         }
-
-        #endregion
-
-        #region execution
 
         public async Task<PageRoutingInfo> ExecuteAsync(GetPageRoutingInfoByPathQuery query, IExecutionContext executionContext)
         {
@@ -77,7 +70,7 @@ namespace Cofoundry.Domain.Internal
                     {
                         var customEntityRouteQuery = rule.ExtractRoutingQuery(query.Path, pageRoute);
                         var customEntityRoute = await _queryExecutor.ExecuteAsync(customEntityRouteQuery, executionContext);
-                        if (customEntityRoute != null && (query.IncludeUnpublished  || customEntityRoute.IsPublished()))
+                        if (customEntityRoute != null && (query.IncludeUnpublished || customEntityRoute.IsPublished()))
                         {
                             return ToRoutingInfo(pageRoute, customEntityRoute, rule);
                         }
@@ -91,14 +84,14 @@ namespace Cofoundry.Domain.Internal
         private bool MatchesLocale(ActiveLocale locale, int? localeId)
         {
             var localeIdToCheck = locale == null ? (int?)null : locale.LocaleId;
-            return localeId == localeIdToCheck; 
+            return localeId == localeIdToCheck;
         }
 
         private bool IsCustomRoutingMatch(string urltoTest, string routeUrl)
         {
             var routePattern = "^" + Regex.Replace(routeUrl, @"{[^\/{}]*}", @"[^\/{}]*").Replace("/", @"\/") + "$";
             var isMatch = Regex.IsMatch(urltoTest, routePattern);
-            
+
             return isMatch;
         }
 
@@ -112,16 +105,10 @@ namespace Cofoundry.Domain.Internal
             };
         }
 
-        #endregion
-
-        #region Permission
-
         public IEnumerable<IPermissionApplication> GetPermissions(GetPageRoutingInfoByPathQuery query)
         {
             yield return new PageReadPermission();
         }
-
-        #endregion
     }
 
 }

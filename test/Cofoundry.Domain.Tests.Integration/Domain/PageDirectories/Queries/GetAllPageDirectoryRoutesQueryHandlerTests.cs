@@ -1,5 +1,4 @@
-﻿using Cofoundry.Core;
-using FluentAssertions;
+﻿using FluentAssertions;
 using FluentAssertions.Execution;
 using System.Linq;
 using System.Threading.Tasks;

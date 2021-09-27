@@ -33,5 +33,13 @@ namespace Cofoundry.Domain.Tests.Integration
         {
             return new PageTestDataHelper(DbDependentFixture);
         }
+
+        /// <summary>
+        /// Used to make it easier to create custom entities in test fixtures.
+        /// </summary>
+        public CustomEntityTestDataHelper CustomEntities()
+        {
+            return new CustomEntityTestDataHelper(DbDependentFixture);
+        }
     }
 }

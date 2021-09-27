@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Cofoundry.Core;
+﻿using Cofoundry.Core;
 using Cofoundry.Domain.CQS;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Cofoundry.Domain.Internal
 {
@@ -14,7 +12,7 @@ namespace Cofoundry.Domain.Internal
     /// default as it's core to routing and often incorporated in more detailed
     /// page projections.
     /// </summary>
-    public class GetPageRouteByIdQueryHandler 
+    public class GetPageRouteByIdQueryHandler
         : IQueryHandler<GetPageRouteByIdQuery, PageRoute>
         , IPermissionRestrictedQueryHandler<GetPageRouteByIdQuery, PageRoute>
     {
@@ -35,13 +33,9 @@ namespace Cofoundry.Domain.Internal
             return result;
         }
 
-        #region Permission
-
         public IEnumerable<IPermissionApplication> GetPermissions(GetPageRouteByIdQuery query)
         {
             yield return new PageReadPermission();
         }
-
-        #endregion
     }
 }

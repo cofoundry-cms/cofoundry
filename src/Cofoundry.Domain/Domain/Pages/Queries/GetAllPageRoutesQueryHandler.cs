@@ -1,12 +1,6 @@
-﻿using System;
+﻿using Cofoundry.Domain.CQS;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using Cofoundry.Domain.Data;
-using Cofoundry.Domain.CQS;
-using Microsoft.EntityFrameworkCore;
-using Cofoundry.Core;
 
 namespace Cofoundry.Domain.Internal
 {
@@ -17,7 +11,7 @@ namespace Cofoundry.Domain.Internal
     /// default as it's core to routing and often incorporated in more detailed
     /// page projections.
     /// </summary>
-    public class GetAllPageRoutesQueryHandler 
+    public class GetAllPageRoutesQueryHandler
         : IQueryHandler<GetAllPageRoutesQuery, ICollection<PageRoute>>
         , IPermissionRestrictedQueryHandler<GetAllPageRoutesQuery, ICollection<PageRoute>>
     {
@@ -29,20 +23,16 @@ namespace Cofoundry.Domain.Internal
         {
             _queryExecutor = queryExecutor;
         }
-        
+
         public async Task<ICollection<PageRoute>> ExecuteAsync(GetAllPageRoutesQuery query, IExecutionContext executionContext)
         {
             var result = await _queryExecutor.ExecuteAsync(new GetPageRouteLookupQuery());
             return result.Values;
         }
 
-        #region Permission
-
         public IEnumerable<IPermissionApplication> GetPermissions(GetAllPageRoutesQuery query)
         {
             yield return new PageReadPermission();
         }
-
-        #endregion
     }
 }

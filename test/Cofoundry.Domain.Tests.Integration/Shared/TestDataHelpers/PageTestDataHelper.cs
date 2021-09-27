@@ -23,6 +23,45 @@ namespace Cofoundry.Domain.Tests.Integration
         }
 
         /// <summary>
+        /// Adds an unpublished custom entity details page that is parented 
+        /// to the the specified <paramref name="parentDirectoryId"/>. The
+        /// page will use the test custom entity details template which
+        /// references the <see cref="TestCustomEntityDefinition"/>.
+        /// </summary>
+        /// <param name="uniqueData">
+        /// Unique data to use in creating the Name and UrlSlug property. 
+        /// </param>
+        /// <param name="parentDirectoryId">
+        /// The database id of the page directory to use as the parent
+        /// directory.
+        /// </param>
+        /// <param name="configration">
+        /// Optional additional configuration action to run before the
+        /// command is executed.
+        /// </param>
+        /// <returns>The PageDirectoryId of the newly created page.</returns>
+        public async Task<int> AddAsync(
+            string uniqueData,
+            int parentDirectoryId,
+            Action<AddPageCommand> configration = null
+            )
+        {
+            var command = CreateAddCommand(uniqueData, parentDirectoryId);
+
+            if (configration != null)
+            {
+                configration(command);
+            }
+
+            using var scope = _dbDependentFixture.CreateServiceScope();
+            var contentRepository = scope.GetContentRepositoryWithElevatedPermissions();
+
+            return await contentRepository
+                .Pages()
+                .AddAsync(command);
+        }
+
+        /// <summary>
         /// Adds an unpublished page that is parented to the the specified
         /// <paramref name="parentDirectoryId"/>.
         /// </summary>
@@ -37,14 +76,14 @@ namespace Cofoundry.Domain.Tests.Integration
         /// Optional additional configuration action to run before the
         /// command is executed.
         /// </param>
-        /// <returns>The PageDirectoryId of the newly created directory.</returns>
-        public async Task<int> AddAsync(
+        /// <returns>The PageDirectoryId of the newly created page.</returns>
+        public async Task<int> AddCustomEntityPageDetailsAsync(
             string uniqueData,
             int parentDirectoryId,
             Action<AddPageCommand> configration = null
             )
         {
-            var command = CreateAddCommand(uniqueData, parentDirectoryId);
+            var command = CreateAddCommandWithCustomEntityDetailsPage(uniqueData, parentDirectoryId);
 
             if (configration != null)
             {
@@ -121,7 +160,9 @@ namespace Cofoundry.Domain.Tests.Integration
 
         /// <summary>
         /// Creates a valid <see cref="AddPageCommand"/> using a custom entity
-        /// details page template and without the option to publish.
+        /// details page template and without the option to publish. The
+        /// page will use the test custom entity details template which
+        /// references the <see cref="TestCustomEntityDefinition"/>.
         /// </summary>
         /// <param name="uniqueData">
         /// Unique data to use in creating the Title and UrlSlug property. 

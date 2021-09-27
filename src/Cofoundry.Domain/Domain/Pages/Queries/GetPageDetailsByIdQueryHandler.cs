@@ -1,12 +1,10 @@
-﻿using System;
+﻿using Cofoundry.Core;
+using Cofoundry.Domain.CQS;
+using Cofoundry.Domain.Data;
+using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using Cofoundry.Domain.Data;
-using Cofoundry.Domain.CQS;
-using Microsoft.EntityFrameworkCore;
-using Cofoundry.Core;
 
 namespace Cofoundry.Domain.Internal
 {
@@ -16,12 +14,10 @@ namespace Cofoundry.Domain.Internal
     /// and the PageDetails projection includes audit data and other additional 
     /// information that should normally be hidden from a customer facing app.
     /// </summary>
-    public class GetPageDetailsByIdQueryHandler 
+    public class GetPageDetailsByIdQueryHandler
         : IQueryHandler<GetPageDetailsByIdQuery, PageDetails>
         , IPermissionRestrictedQueryHandler<GetPageDetailsByIdQuery, PageDetails>
     {
-        #region constructor
-
         private readonly CofoundryDbContext _dbContext;
         private readonly IQueryExecutor _queryExecutor;
         private readonly IPageTemplateMicroSummaryMapper _pageTemplateMapper;
@@ -43,10 +39,6 @@ namespace Cofoundry.Domain.Internal
             _openGraphDataMapper = openGraphDataMapper;
         }
 
-        #endregion
-
-        #region execution
-        
         public async Task<PageDetails> ExecuteAsync(GetPageDetailsByIdQuery query, IExecutionContext executionContext)
         {
             var dbPageVersion = await GetPageById(query.PageId).FirstOrDefaultAsync();
@@ -95,6 +87,7 @@ namespace Cofoundry.Domain.Internal
                 WorkFlowStatus = (WorkFlowStatus)dbPageVersion.WorkFlowStatusId
             };
 
+            page.LatestVersion.AuditData = _auditDataMapper.MapCreateAuditData(dbPageVersion);
             page.LatestVersion.OpenGraph = _openGraphDataMapper.Map(dbPageVersion);
             page.LatestVersion.Template = _pageTemplateMapper.Map(dbPageVersion.PageTemplate);
             page.LatestVersion.Regions = regions;
@@ -123,15 +116,9 @@ namespace Cofoundry.Domain.Internal
                 .ThenByDescending(g => g.CreateDate);
         }
 
-        #endregion
-
-        #region Permission
-
         public IEnumerable<IPermissionApplication> GetPermissions(GetPageDetailsByIdQuery query)
         {
             yield return new PageReadPermission();
         }
-
-        #endregion
     }
 }
