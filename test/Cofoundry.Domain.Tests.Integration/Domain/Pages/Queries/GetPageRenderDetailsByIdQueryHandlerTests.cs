@@ -1,5 +1,6 @@
 ﻿using Cofoundry.Core;
 using Cofoundry.Domain.Tests.Shared.Assertions;
+using Cofoundry.Web;
 using FluentAssertions;
 using FluentAssertions.Execution;
 using System.Collections.Generic;
@@ -272,6 +273,88 @@ namespace Cofoundry.Domain.Tests.Integration.Pages.Queries
                 page.WorkFlowStatus.Should().Be(WorkFlowStatus.Published);
                 page.Regions.Should().NotBeNull();
                 page.Regions.Should().HaveCount(1);
+            }
+        }
+
+        [Fact]
+        public async Task DoesNotReturnPageWithArchivedTemplate()
+        {
+            var uniqueData = UNIQUE_PREFIX + nameof(DoesNotReturnPageWithArchivedTemplate);
+
+            using var scope = _dbDependentFixture.CreateServiceScope();
+            var contentRepository = scope.GetContentRepositoryWithElevatedPermissions();
+
+            var directoryId = await _testDataHelper.PageDirectories().AddAsync(uniqueData);
+            var pageTemplateId = await _testDataHelper.PageTemplates().AddMockTemplateAsync(uniqueData);
+            var pageId = await _testDataHelper.Pages().AddAsync(uniqueData, directoryId, c =>
+            {
+                c.Publish = true;
+                c.PageTemplateId = pageTemplateId;
+            });
+            await _testDataHelper.PageTemplates().ArchiveTemplateAsync(pageTemplateId);
+
+            var page = await contentRepository
+                .Pages()
+                .GetById(pageId)
+                .AsRenderDetails()
+                .ExecuteAsync();
+
+            page.Should().BeNull();
+        }
+
+        [Fact]
+        public async Task MapsBlocks()
+        {
+            var uniqueData = UNIQUE_PREFIX + nameof(MapsBlocks);
+
+            using var scope = _dbDependentFixture.CreateServiceScope();
+            var contentRepository = scope.GetContentRepositoryWithElevatedPermissions();
+
+            var directoryId = await _testDataHelper.PageDirectories().AddAsync(uniqueData);
+            var pageId = await _testDataHelper.Pages().AddAsync(uniqueData, directoryId, c => c.Publish = true);
+            var pageVersionId = await _testDataHelper.Pages().AddDraftAsync(pageId);
+            var plainTextBlockId = await _testDataHelper.Pages().AddPlainTextBlockToTestTemplateAsync(pageVersionId, uniqueData);
+            var imageBlockId = await _testDataHelper.Pages().AddImageTextBlockToTestTemplateAsync(pageVersionId);
+            await _testDataHelper.Pages().PublishAsync(pageId);
+
+            var page = await contentRepository
+                .Pages()
+                .GetById(pageId)
+                .AsRenderDetails()
+                .ExecuteAsync();
+
+            using (new AssertionScope())
+            {
+                page.Should().NotBeNull();
+
+                page.Regions.Should().NotBeNull();
+                page.Regions.Should().HaveCount(1);
+
+                var bodyRegion = page.Regions.Single();
+                bodyRegion.Name.Should().Be("Body");
+                bodyRegion.PageTemplateRegionId.Should().BePositive();
+                bodyRegion.Blocks.Should().HaveCount(2);
+
+                var plainTextBlock = bodyRegion.Blocks.SingleOrDefault(b => b.PageVersionBlockId == plainTextBlockId);
+                plainTextBlock.BlockType.Should().NotBeNull();
+                plainTextBlock.BlockType.FileName.Should().Be("PlainText");
+                plainTextBlock.DisplayModel.Should().NotBeNull();
+                plainTextBlock.DisplayModel.Should().BeOfType<PlainTextDataModel>();
+                var plainTextDisplayModel = plainTextBlock.DisplayModel as PlainTextDataModel;
+                plainTextDisplayModel.PlainText.Should().Be(uniqueData);
+                plainTextBlock.EntityVersionPageBlockId.Should().Be(plainTextBlockId);
+                plainTextBlock.Template.Should().BeNull();
+
+                var imageBlock = bodyRegion.Blocks.SingleOrDefault(b => b.PageVersionBlockId == imageBlockId);
+                imageBlock.BlockType.Should().NotBeNull();
+                imageBlock.BlockType.FileName.Should().Be("Image");
+                imageBlock.DisplayModel.Should().NotBeNull();
+                imageBlock.DisplayModel.Should().BeOfType<ImageDisplayModel>();
+                var imageDisplayModel = imageBlock.DisplayModel as ImageDisplayModel;
+                imageDisplayModel.AltText.Should().NotBeNull();
+                imageDisplayModel.Source.Should().NotBeNull();
+                imageBlock.EntityVersionPageBlockId.Should().Be(imageBlockId);
+                imageBlock.Template.Should().BeNull();
             }
         }
     }

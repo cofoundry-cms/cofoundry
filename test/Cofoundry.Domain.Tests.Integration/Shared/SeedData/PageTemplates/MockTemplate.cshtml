@@ -1,0 +1,19 @@
+﻿@using Cofoundry.Web
+@model IPageViewModel
+@inject ICofoundryTemplateHelper<IPageViewModel> Cofoundry
+
+@Cofoundry.Template.UseDescription("A test template that can be used to test archiving functionality")
+
+<div>
+    <h1>@Model.PageTitle</h1>
+
+    @(await Cofoundry.Template.Region("Body")
+        .AllowMultipleBlocks()
+        .EmptyContentMinHeight(500)
+        .InvokeAsync())
+
+    @(await Cofoundry.Template.Region("Archivable Region")
+        .AllowMultipleBlocks()
+        .EmptyContentMinHeight(500)
+        .InvokeAsync())
+</div>

@@ -1,7 +1,7 @@
 ﻿using Cofoundry.Core.MessageAggregator;
 using Cofoundry.Core.Time;
 using Cofoundry.Core.Time.Mocks;
-using Cofoundry.Domain.Tests.Shared.Mocks;
+using Cofoundry.Domain.Tests.Integration.Mocks;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 

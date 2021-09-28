@@ -27,6 +27,15 @@ namespace Cofoundry.Domain.Tests.Integration
         }
 
         /// <summary>
+        /// Used to make it easier to create or reference page 
+        /// templates in test fixtures.
+        /// </summary>
+        public PageTemplateTestDataHelper PageTemplates()
+        {
+            return new PageTemplateTestDataHelper(DbDependentFixture);
+        }
+
+        /// <summary>
         /// Used to make it easier to create pages in test fixtures.
         /// </summary>
         public PageTestDataHelper Pages()

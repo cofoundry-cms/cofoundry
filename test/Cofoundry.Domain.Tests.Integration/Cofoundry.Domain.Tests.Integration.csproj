@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <None Remove="Shared\SeedData\Images\Test jpg 80x80.jpg" />
+    <None Remove="Shared\SeedData\PageTemplates\MockTemplate.cshtml" />
     <None Remove="Shared\SeedData\PageTemplates\TestCustomEntityTemplate.cshtml" />
     <None Remove="Shared\SeedData\PageTemplates\TestTemplate.cshtml" />
   </ItemGroup>
@@ -15,6 +16,10 @@
   <ItemGroup>
     <EmbeddedResource Include="Shared\SeedData\Images\Test jpg 80x80.jpg" />
     <EmbeddedResource Include="Shared\SeedData\PageTemplates\TestCustomEntityTemplate.cshtml">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Shared\SeedData\PageTemplates\MockTemplate.cshtml">
       <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
     </EmbeddedResource>

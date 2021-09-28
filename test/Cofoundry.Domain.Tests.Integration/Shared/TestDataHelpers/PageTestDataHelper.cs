@@ -257,7 +257,7 @@ namespace Cofoundry.Domain.Tests.Integration
         /// </summary>
         public async Task<int> AddImageTextBlockToTestTemplateAsync(int pageVersionId)
         {
-            var template = _dbDependentFixture.SeededEntities.TestCustomEntityPageTemplate;
+            var template = _dbDependentFixture.SeededEntities.TestPageTemplate;
 
             return await AddBlockAsync(pageVersionId, template.BodyPageTemplateRegionId, new ImageDataModel()
             {

@@ -19,8 +19,6 @@ namespace Cofoundry.Web
         private static char[] TEMPLATE_NAME_CHAR_TO_TRIM = new char[] { '_', '-' };
         const string VIEW_FILE_EXTENSION = ".cshtml";
 
-        #region constructor
-
         private readonly IResourceLocator _resourceLocator;
         private readonly IRazorViewEngine _razorViewEngine;
         private readonly IEmptyActionContextFactory _emptyActionContextFactory;
@@ -38,10 +36,6 @@ namespace Cofoundry.Web
             _emptyActionContextFactory = emptyActionContextFactory;
             _pageTemplateViewLocationRegistrations = pageTemplateViewLocationRegistrations;
         }
-
-        #endregion
-
-        #region public methods
 
         /// <summary>
         /// Searches for page layout files in the website directory containing the specified
@@ -78,10 +72,6 @@ namespace Cofoundry.Web
 
             return null;
         }
-
-        #endregion
-
-        #region private helpers
 
         private bool FileExists(string path)
         {
@@ -122,7 +112,7 @@ namespace Cofoundry.Web
                     yield return MapPageTemplateFile(directoryPath, file);
                 }
             }
-            
+
             foreach (var childDirectoryName in directoryContents
                 .Where(f => f.IsDirectory)
                 .Select(f => f.Name)
@@ -135,7 +125,7 @@ namespace Cofoundry.Web
                 }
             }
         }
-        
+
         private PageTemplateFile MapPageTemplateFile(string virtualDirectoryPath, IFileInfo file)
         {
             var fileName = Path.ChangeExtension(file.Name, null).TrimStart(TEMPLATE_NAME_CHAR_TO_TRIM);
@@ -154,11 +144,9 @@ namespace Cofoundry.Web
         /// </summary>
         private bool Contains(string compareFrom, string compareTo)
         {
-            return string.IsNullOrWhiteSpace(compareFrom) 
-                || string.IsNullOrWhiteSpace(compareTo) 
+            return string.IsNullOrWhiteSpace(compareFrom)
+                || string.IsNullOrWhiteSpace(compareTo)
                 || compareFrom.IndexOf(compareTo, StringComparison.OrdinalIgnoreCase) >= 0;
         }
-
-        #endregion
     }
 }

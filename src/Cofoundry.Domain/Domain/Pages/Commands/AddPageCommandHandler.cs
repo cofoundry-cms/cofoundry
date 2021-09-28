@@ -198,7 +198,7 @@ namespace Cofoundry.Domain.Internal
             var definition = await _queryExecutor.ExecuteAsync(new GetCustomEntityDefinitionSummaryByCodeQuery(customEntityDefinitionCode), executionContext);
             if (definition == null)
             {
-                throw ValidationErrorException.CreateWithProperties("Custom entity defintion does not exists", nameof(definition.CustomEntityDefinitionCode));
+                throw ValidationErrorException.CreateWithProperties("Custom entity defintion does not exists.", nameof(definition.CustomEntityDefinitionCode));
             }
             return definition;
         }
@@ -211,14 +211,19 @@ namespace Cofoundry.Domain.Internal
 
             if (template == null)
             {
-                throw ValidationErrorException.CreateWithProperties("Template not found", nameof(command.PageTemplateId));
+                throw ValidationErrorException.CreateWithProperties("Template not found.", nameof(command.PageTemplateId));
+            }
+
+            if (template.IsArchived)
+            {
+                throw ValidationErrorException.CreateWithProperties("You cannot use an archived template to create a new page.", nameof(command.PageTemplateId));
             }
 
             if (command.PageType == PageType.CustomEntityDetails)
             {
                 if (!template.IsCustomEntityTemplate())
                 {
-                    throw ValidationErrorException.CreateWithProperties("Template does not support custom entities", nameof(command.PageTemplateId));
+                    throw ValidationErrorException.CreateWithProperties("Template does not support custom entities.", nameof(command.PageTemplateId));
                 }
             }
             else if (template.IsCustomEntityTemplate())

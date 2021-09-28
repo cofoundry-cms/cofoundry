@@ -21,11 +21,6 @@
         public TestCustomEntityPageTemplateInfo TestCustomEntityPageTemplate { get; } = new TestCustomEntityPageTemplateInfo();
 
         /// <summary>
-        /// The id of the "Body" region in the test generic template.
-        /// </summary>
-        public int TestCustomEntityPageTemplateBodyRegionId { get; set; }
-
-        /// <summary>
         /// An 80x80 jpg.
         /// </summary>
         public int TestImageId { get; set; }

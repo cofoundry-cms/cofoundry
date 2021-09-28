@@ -366,6 +366,27 @@ namespace Cofoundry.Domain.Tests.Integration.Pages.Commands
         }
 
         [Fact]
+        public async Task WhenArchivedPageTemplate_Throws()
+        {
+            var uniqueData = UNIQUE_PREFIX + nameof(WhenArchivedPageTemplate_Throws);
+            var pageTemplateId = await _testDataHelper.PageTemplates().AddMockTemplateAsync(uniqueData);
+            await _testDataHelper.PageTemplates().ArchiveTemplateAsync(pageTemplateId);
+            var directoryId = await _testDataHelper.PageDirectories().AddAsync(uniqueData);
+
+            using var scope = _dbDependentFixture.CreateServiceScope();
+            var contentRepository = scope.GetContentRepositoryWithElevatedPermissions();
+
+            var addPageCommand = _testDataHelper.Pages().CreateAddCommand(uniqueData, directoryId);
+            addPageCommand.PageTemplateId = pageTemplateId;
+
+            await contentRepository
+                .Awaiting(r => r.Pages().AddAsync(addPageCommand))
+                .Should()
+                .ThrowAsync<ValidationException>()
+                .WithMemberNames(nameof(addPageCommand.PageTemplateId));
+        }
+
+        [Fact]
         public async Task WhenNotPublished_SendsMessage()
         {
             var uniqueData = UNIQUE_PREFIX + nameof(WhenNotPublished_SendsMessage);

@@ -21,7 +21,7 @@ namespace Cofoundry.Domain.Data
             // Relationships
 
             builder.HasOne(s => s.PageTemplateRegion)
-                .WithMany(s => s.PageVersionBlockss)
+                .WithMany(s => s.PageVersionBlocks)
                 .HasForeignKey(d => d.PageTemplateRegionId);
 
             builder.HasOne(s => s.PageBlockType)

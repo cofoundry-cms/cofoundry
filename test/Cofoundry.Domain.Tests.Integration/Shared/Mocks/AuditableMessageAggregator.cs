@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Cofoundry.Domain.Tests.Shared.Mocks
+namespace Cofoundry.Domain.Tests.Integration.Mocks
 {
     /// <summary>
     /// A wrapper around <see cref="MessageAggregator"/> that audits

@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using Cofoundry.Core.MessageAggregator;
 using Cofoundry.Core.Data;
 using Cofoundry.Core;
+using Cofoundry.Core.Validation;
 
 namespace Cofoundry.Domain.Internal
 {
@@ -62,6 +63,11 @@ namespace Cofoundry.Domain.Internal
             if (pageVersion.WorkFlowStatusId != (int)WorkFlowStatus.Draft)
             {
                 throw new NotPermittedException("Page blocks cannot be added unless the page version is in draft status");
+            }
+
+            if (pageVersion.PageTemplateId != templateRegion.PageTemplateId)
+            {
+                throw ValidationErrorException.CreateWithProperties("This region does not belong to the template associated with the page.", nameof(command.PageTemplateRegionId));
             }
 
             var pageVersionBlocks = pageVersion

@@ -14,7 +14,7 @@ namespace Cofoundry.Domain.Data
     {
         public PageTemplateRegion()
         {
-            PageVersionBlockss = new List<PageVersionBlock>();
+            PageVersionBlocks = new List<PageVersionBlock>();
         }
 
         /// <summary>
@@ -66,6 +66,6 @@ namespace Cofoundry.Domain.Data
         /// blocks, these contain the dynamic content that gets rendered into
         /// the template.
         /// </summary>
-        public virtual ICollection<PageVersionBlock> PageVersionBlockss { get; set; }
+        public virtual ICollection<PageVersionBlock> PageVersionBlocks { get; set; }
     }
 }
