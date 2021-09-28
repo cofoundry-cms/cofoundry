@@ -1,10 +1,10 @@
-﻿using System;
+﻿using Cofoundry.Domain.CQS;
+using Cofoundry.Domain.Data;
+using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Cofoundry.Domain.Data;
-using Cofoundry.Domain.CQS;
-using Microsoft.EntityFrameworkCore;
 
 namespace Cofoundry.Domain.Internal
 {
@@ -19,8 +19,6 @@ namespace Cofoundry.Domain.Internal
         : IQueryHandler<GetPageRenderSummaryByIdQuery, PageRenderSummary>
         , IPermissionRestrictedQueryHandler<GetPageRenderSummaryByIdQuery, PageRenderSummary>
     {
-        #region constructor
-
         private readonly CofoundryDbContext _dbContext;
         private readonly IQueryExecutor _queryExecutor;
         private readonly IPageRenderSummaryMapper _pageRenderSummaryMapper;
@@ -36,8 +34,6 @@ namespace Cofoundry.Domain.Internal
             _pageRenderSummaryMapper = pageRenderSummaryMapper;
         }
 
-        #endregion
-
         public async Task<PageRenderSummary> ExecuteAsync(GetPageRenderSummaryByIdQuery query, IExecutionContext executionContext)
         {
             var pageRouteQuery = new GetPageRouteByIdQuery(query.PageId);
@@ -48,7 +44,7 @@ namespace Cofoundry.Domain.Internal
             if (dbPage == null) return null;
 
             var page = _pageRenderSummaryMapper.Map<PageRenderSummary>(dbPage, pageRoute);
-            
+
             return page;
         }
 
@@ -89,13 +85,9 @@ namespace Cofoundry.Domain.Internal
             return result;
         }
 
-        #region Permission
-
         public IEnumerable<IPermissionApplication> GetPermissions(GetPageRenderSummaryByIdQuery query)
         {
             yield return new PageReadPermission();
         }
-
-        #endregion
     }
 }

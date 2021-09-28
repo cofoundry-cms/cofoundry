@@ -11,7 +11,7 @@ namespace Cofoundry.Domain.Tests.Integration.PageDirectories.Queries
     [Collection(nameof(DbDependentFixture))]
     public class GetUpdatePageDirectoryCommandByIdQueryHandlerTests
     {
-        const string UNIQUE_PREFIX = "GUpdPageDirCmdByIdCHT ";
+        const string UNIQUE_PREFIX = "GUpdPageDirCmdByIdQHT ";
 
         private readonly DbDependentFixture _dbDependentFixture;
         private readonly TestDataHelper _testDataHelper;

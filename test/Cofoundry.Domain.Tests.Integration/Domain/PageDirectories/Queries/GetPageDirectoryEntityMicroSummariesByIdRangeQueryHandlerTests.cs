@@ -10,7 +10,7 @@ namespace Cofoundry.Domain.Tests.Integration.PageDirectories.Queries
     [Collection(nameof(DbDependentFixture))]
     public class GetPageDirectoryEntityMicroSummariesByIdRangeQueryHandlerTests
     {
-        const string UNIQUE_PREFIX = "GPageDirEMSByIdRangeCHT ";
+        const string UNIQUE_PREFIX = "GPageDirEMSByIdRangeQHT ";
 
         private readonly DbDependentFixture _dbDependentFixture;
         private readonly TestDataHelper _testDataHelper;

@@ -9,14 +9,14 @@ using Xunit;
 namespace Cofoundry.Domain.Tests.Integration.Pages.Queries
 {
     [Collection(nameof(DbDependentFixture))]
-    public class GetPageRenderDetailsByIdRangeQueryHandlerTests
+    public class GetPageRenderSummariesByIdRangeQueryHandlerTests
     {
-        const string UNIQUE_PREFIX = "GPageRenderDetailsByIdRangeQHT ";
+        const string UNIQUE_PREFIX = "GPageRenderSumByIdRangeQHT ";
 
         private readonly DbDependentFixture _dbDependentFixture;
         private readonly TestDataHelper _testDataHelper;
 
-        public GetPageRenderDetailsByIdRangeQueryHandlerTests(
+        public GetPageRenderSummariesByIdRangeQueryHandlerTests(
             DbDependentFixture dbDependantFixture
             )
         {
@@ -50,7 +50,7 @@ namespace Cofoundry.Domain.Tests.Integration.Pages.Queries
             var pages = await contentRepository
                 .Pages()
                 .GetByIdRange(new int[] { pageWithDraftOnlyId, pageWithPublishedOnlyId, pageWithPublishedandDraftId })
-                .AsRenderDetails(publishStatus)
+                .AsRenderSummaries(publishStatus)
                 .ExecuteAsync();
 
             AssertStatus(pages, pageWithDraftOnlyId, draftOnlyWorkFlowStatus);
@@ -58,7 +58,7 @@ namespace Cofoundry.Domain.Tests.Integration.Pages.Queries
             AssertStatus(pages, pageWithPublishedandDraftId, publishAndDraftWorkFlowStatus);
 
             static void AssertStatus(
-                IDictionary<int, PageRenderDetails> pages,
+                IDictionary<int, PageRenderSummary> pages,
                 int pageId,
                 WorkFlowStatus? workFlowStatus
                 )
@@ -91,7 +91,7 @@ namespace Cofoundry.Domain.Tests.Integration.Pages.Queries
                 .Awaiting(r => r
                     .Pages()
                     .GetByIdRange(new int[] { 1 })
-                    .AsRenderDetails(PublishStatusQuery.SpecificVersion)
+                    .AsRenderSummaries(PublishStatusQuery.SpecificVersion)
                     .ExecuteAsync()
                     )
                 .Should()
@@ -117,7 +117,7 @@ namespace Cofoundry.Domain.Tests.Integration.Pages.Queries
             var pages = await contentRepository
                 .Pages()
                 .GetByIdRange(new int[] { pageId })
-                .AsRenderDetails()
+                .AsRenderSummaries()
                 .ExecuteAsync();
 
             pages.Should().NotBeNull();
@@ -144,7 +144,7 @@ namespace Cofoundry.Domain.Tests.Integration.Pages.Queries
             var pages = await contentRepository
                 .Pages()
                 .GetByIdRange(new int[] { pageId })
-                .AsRenderDetails()
+                .AsRenderSummaries()
                 .ExecuteAsync();
 
             using (new AssertionScope())
@@ -182,7 +182,7 @@ namespace Cofoundry.Domain.Tests.Integration.Pages.Queries
             var pages = await contentRepository
                 .Pages()
                 .GetByIdRange(new int[] { pageId })
-                .AsRenderDetails()
+                .AsRenderSummaries()
                 .ExecuteAsync();
 
             using (new AssertionScope())
@@ -190,44 +190,9 @@ namespace Cofoundry.Domain.Tests.Integration.Pages.Queries
                 pages.Should().NotBeNull();
                 var page = pages.GetOrDefault(pageId);
 
-                GetPageRenderDetailsByIdQueryHandlerTests.AssertBasicDataMapping(
+                GetPageRenderSummaryByIdQueryHandlerTests.AssertBasicDataMapping(
                     addPageCommand,
                     versionId,
-                    page
-                    );
-            }
-        }
-
-        [Fact]
-        public async Task MapsBlocks()
-        {
-            var uniqueData = UNIQUE_PREFIX + nameof(MapsBlocks);
-
-            using var scope = _dbDependentFixture.CreateServiceScope();
-            var contentRepository = scope.GetContentRepositoryWithElevatedPermissions();
-
-            var directoryId = await _testDataHelper.PageDirectories().AddAsync(uniqueData);
-            var pageId = await _testDataHelper.Pages().AddAsync(uniqueData, directoryId, c => c.Publish = true);
-            var pageVersionId = await _testDataHelper.Pages().AddDraftAsync(pageId);
-            var plainTextBlockId = await _testDataHelper.Pages().AddPlainTextBlockToTestTemplateAsync(pageVersionId, uniqueData);
-            var imageBlockId = await _testDataHelper.Pages().AddImageTextBlockToTestTemplateAsync(pageVersionId);
-            await _testDataHelper.Pages().PublishAsync(pageId);
-
-            var pages = await contentRepository
-                .Pages()
-                .GetByIdRange(new int[] { pageId })
-                .AsRenderDetails()
-                .ExecuteAsync();
-
-            using (new AssertionScope())
-            {
-                pages.Should().NotBeNull();
-                var page = pages.GetOrDefault(pageId);
-
-                GetPageRenderDetailsByIdQueryHandlerTests.AssertBlockDataMapping(
-                    uniqueData,
-                    plainTextBlockId,
-                    imageBlockId,
                     page
                     );
             }

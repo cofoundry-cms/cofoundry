@@ -9,7 +9,7 @@ namespace Cofoundry.Domain.Tests.Integration.PageDirectories.Queries
     [Collection(nameof(DbDependentFixture))]
     public class GetPageDirectoryTreeNodeByIdQueryHandlerTests
     {
-        const string UNIQUE_PREFIX = "GPageDirTreeNodeByIdCHT ";
+        const string UNIQUE_PREFIX = "GPageDirTreeNodeByIdQHT ";
 
         private readonly DbDependentFixture _dbDependentFixture;
         private readonly TestDataHelper _testDataHelper;

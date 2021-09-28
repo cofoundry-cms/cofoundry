@@ -11,7 +11,7 @@ namespace Cofoundry.Domain.Tests.Integration.Pages.Queries
     [Collection(nameof(DbDependentFixture))]
     public class GetPageRoutingInfoByPathQueryHandlerTests
     {
-        const string UNIQUE_PREFIX = "GPageRoutingInfoByPathCHT ";
+        const string UNIQUE_PREFIX = "GPageRoutingInfoByPathQHT ";
 
         private readonly DbDependentFixture _dbDependentFixture;
         private readonly TestDataHelper _testDataHelper;

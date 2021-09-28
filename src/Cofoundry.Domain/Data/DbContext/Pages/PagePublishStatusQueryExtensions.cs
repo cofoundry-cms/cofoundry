@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Cofoundry.Domain.Data
 {
@@ -17,7 +14,7 @@ namespace Cofoundry.Domain.Data
         {
             if (publishStatusQuery == PublishStatusQuery.SpecificVersion)
             {
-                throw new Exception("Cannot filter by PublishStatusQuery.SpecificVersion using the FilterByStatus extension method.");
+                throw new InvalidOperationException($"Cannot filter by {nameof(PublishStatusQuery)}.{nameof(PublishStatusQuery.SpecificVersion)} using the {nameof(FilterByStatus)} extension method.");
             }
 
             IQueryable<PagePublishStatusQuery> filtered;
@@ -87,7 +84,7 @@ namespace Cofoundry.Domain.Data
         /// </summary>
         public static IOrderedQueryable<PagePublishStatusQuery> SortBy(
             this IQueryable<PagePublishStatusQuery> source,
-            PageQuerySortType pageQuerySortType, 
+            PageQuerySortType pageQuerySortType,
             SortDirection sortDirection
             )
         {

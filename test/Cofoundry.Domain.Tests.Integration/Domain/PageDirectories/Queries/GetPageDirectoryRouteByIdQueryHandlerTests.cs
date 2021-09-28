@@ -10,7 +10,7 @@ namespace Cofoundry.Domain.Tests.Integration.PageDirectories.Queries
     [Collection(nameof(DbDependentFixture))]
     public class GetPageDirectoryRouteByIdQueryHandlerTests
     {
-        const string UNIQUE_PREFIX = "GAllPageDirRouteByIdCHT ";
+        const string UNIQUE_PREFIX = "GAllPageDirRouteByIdQHT ";
 
         private readonly DbDependentFixture _dbDependentFixture;
         private readonly TestDataHelper _testDataHelper;

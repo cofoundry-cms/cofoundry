@@ -11,7 +11,7 @@ namespace Cofoundry.Domain.Tests.Integration.PageDirectories.Queries
     [Collection(nameof(DbDependentFixture))]
     public class GetPageDirectoryTreeQueryHandlerTests
     {
-        const string UNIQUE_PREFIX = "GAllPageDirTreeCHT ";
+        const string UNIQUE_PREFIX = "GAllPageDirTreeQHT ";
 
         private readonly DbDependentFixture _dbDependentFixture;
         private readonly TestDataHelper _testDataHelper;

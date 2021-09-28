@@ -1,22 +1,20 @@
 ﻿using Cofoundry.Domain.Tests.Shared.Assertions;
-using Cofoundry.Web;
 using FluentAssertions;
 using FluentAssertions.Execution;
-using System.Linq;
 using System.Threading.Tasks;
 using Xunit;
 
 namespace Cofoundry.Domain.Tests.Integration.Pages.Queries
 {
     [Collection(nameof(DbDependentFixture))]
-    public class GetPageRenderDetailsByIdQueryHandlerTests
+    public class GetPageRenderSummaryByIdQueryHandlerTests
     {
-        const string UNIQUE_PREFIX = "GPageRenderDetailsByIdQHT ";
+        const string UNIQUE_PREFIX = "GPageRenderSummaryByIdQHT ";
 
         private readonly DbDependentFixture _dbDependentFixture;
         private readonly TestDataHelper _testDataHelper;
 
-        public GetPageRenderDetailsByIdQueryHandlerTests(
+        public GetPageRenderSummaryByIdQueryHandlerTests(
             DbDependentFixture dbDependantFixture
             )
         {
@@ -42,7 +40,7 @@ namespace Cofoundry.Domain.Tests.Integration.Pages.Queries
             var page = await contentRepository
                 .Pages()
                 .GetById(pageId)
-                .AsRenderDetails(publishStatus)
+                .AsRenderSummary(publishStatus)
                 .ExecuteAsync();
 
             if (!workFlowStatus.HasValue)
@@ -78,7 +76,7 @@ namespace Cofoundry.Domain.Tests.Integration.Pages.Queries
             var page = await contentRepository
                 .Pages()
                 .GetById(pageId)
-                .AsRenderDetails(publishStatus)
+                .AsRenderSummary(publishStatus)
                 .ExecuteAsync();
 
             if (!workFlowStatus.HasValue)
@@ -118,7 +116,7 @@ namespace Cofoundry.Domain.Tests.Integration.Pages.Queries
             var page = await contentRepository
                 .Pages()
                 .GetById(pageId)
-                .AsRenderDetails(publishStatus)
+                .AsRenderSummary(publishStatus)
                 .ExecuteAsync();
 
             using (new AssertionScope())
@@ -149,7 +147,7 @@ namespace Cofoundry.Domain.Tests.Integration.Pages.Queries
             var page = await contentRepository
                 .Pages()
                 .GetById(pageId)
-                .AsRenderDetails(versionToQueryId)
+                .AsRenderSummary(versionToQueryId)
                 .ExecuteAsync();
 
             using (new AssertionScope())
@@ -180,7 +178,7 @@ namespace Cofoundry.Domain.Tests.Integration.Pages.Queries
             var page = await contentRepository
                 .Pages()
                 .GetById(page1Id)
-                .AsRenderDetails(versionId)
+                .AsRenderSummary(versionId)
                 .ExecuteAsync();
 
             page.Should().BeNull();
@@ -204,7 +202,7 @@ namespace Cofoundry.Domain.Tests.Integration.Pages.Queries
             var page = await contentRepository
                 .Pages()
                 .GetById(pageId)
-                .AsRenderDetails()
+                .AsRenderSummary()
                 .ExecuteAsync();
 
             page.Should().BeNull();
@@ -230,7 +228,7 @@ namespace Cofoundry.Domain.Tests.Integration.Pages.Queries
             var page = await contentRepository
                 .Pages()
                 .GetById(pageId)
-                .AsRenderDetails()
+                .AsRenderSummary()
                 .ExecuteAsync();
 
             page.Should().BeNull();
@@ -264,7 +262,7 @@ namespace Cofoundry.Domain.Tests.Integration.Pages.Queries
             var page = await contentRepository
                 .Pages()
                 .GetById(pageId)
-                .AsRenderDetails()
+                .AsRenderSummary()
                 .ExecuteAsync();
 
             using (new AssertionScope())
@@ -273,93 +271,36 @@ namespace Cofoundry.Domain.Tests.Integration.Pages.Queries
             }
         }
 
-        [Fact]
-        public async Task MapsBlocks()
-        {
-            var uniqueData = UNIQUE_PREFIX + nameof(MapsBlocks);
-
-            using var scope = _dbDependentFixture.CreateServiceScope();
-            var contentRepository = scope.GetContentRepositoryWithElevatedPermissions();
-
-            var directoryId = await _testDataHelper.PageDirectories().AddAsync(uniqueData);
-            var pageId = await _testDataHelper.Pages().AddAsync(uniqueData, directoryId, c => c.Publish = true);
-            var pageVersionId = await _testDataHelper.Pages().AddDraftAsync(pageId);
-            var plainTextBlockId = await _testDataHelper.Pages().AddPlainTextBlockToTestTemplateAsync(pageVersionId, uniqueData);
-            var imageBlockId = await _testDataHelper.Pages().AddImageTextBlockToTestTemplateAsync(pageVersionId);
-            await _testDataHelper.Pages().PublishAsync(pageId);
-
-            var page = await contentRepository
-                .Pages()
-                .GetById(pageId)
-                .AsRenderDetails()
-                .ExecuteAsync();
-
-            using (new AssertionScope())
-            {
-                AssertBlockDataMapping(uniqueData, plainTextBlockId, imageBlockId, page);
-            }
-        }
-
         /// <summary>
-        /// Shared basic data mapping assertions between <see cref="PageRenderDetails"/> 
+        /// Shared basic data mapping assertions between <see cref="PageRenderSummary"/> 
         /// query handler tests, which are expected to be using the same page
         /// construction schema.
         /// </summary>
         internal static void AssertBasicDataMapping(
             AddPageCommand addPageCommand,
             int versionId,
-            PageRenderDetails page
-            )
-        {
-            GetPageRenderSummaryByIdQueryHandlerTests.AssertBasicDataMapping(addPageCommand, versionId, page);
-
-            page.Template.Should().NotBeNull();
-            page.Regions.Should().NotBeNull();
-            page.Regions.Should().HaveCount(1);
-        }
-
-        /// <summary>
-        /// Shared block data mappingassertions between <see cref="PageRenderDetails"/> 
-        /// query handler tests, which are epxected to be using the same page
-        /// and block data construction schema.
-        /// </summary>
-        internal static void AssertBlockDataMapping(
-            string uniqueData,
-            int plainTextBlockId,
-            int imageBlockId,
-            PageRenderDetails page
+            PageRenderSummary page
             )
         {
             page.Should().NotBeNull();
+            page.PageId.Should().Be(addPageCommand.OutputPageId);
+            page.PageVersionId.Should().Be(versionId);
+            page.CreateDate.Should().NotBeDefault();
 
-            page.Regions.Should().NotBeNull();
-            page.Regions.Should().HaveCount(1);
+            page.PageRoute.Should().NotBeNull();
+            page.PageRoute.PageId.Should().Be(addPageCommand.OutputPageId);
 
-            var bodyRegion = page.Regions.Single();
-            bodyRegion.Name.Should().Be("Body");
-            bodyRegion.PageTemplateRegionId.Should().BePositive();
-            bodyRegion.Blocks.Should().HaveCount(2);
+            page.Should().NotBeNull();
+            page.OpenGraph.Should().NotBeNull();
+            page.OpenGraph.Title.Should().Be(addPageCommand.OpenGraphTitle);
+            page.OpenGraph.Description.Should().Be(addPageCommand.OpenGraphDescription);
+            page.OpenGraph.Image.Should().NotBeNull();
+            page.OpenGraph.Image.ImageAssetId.Should().Be(addPageCommand.OpenGraphImageId);
+            page.MetaDescription.Should().Be(addPageCommand.MetaDescription);
 
-            var plainTextBlock = bodyRegion.Blocks.SingleOrDefault(b => b.PageVersionBlockId == plainTextBlockId);
-            plainTextBlock.BlockType.Should().NotBeNull();
-            plainTextBlock.BlockType.FileName.Should().Be("PlainText");
-            plainTextBlock.DisplayModel.Should().NotBeNull();
-            plainTextBlock.DisplayModel.Should().BeOfType<PlainTextDataModel>();
-            var plainTextDisplayModel = plainTextBlock.DisplayModel as PlainTextDataModel;
-            plainTextDisplayModel.PlainText.Should().Be(uniqueData);
-            plainTextBlock.EntityVersionPageBlockId.Should().Be(plainTextBlockId);
-            plainTextBlock.Template.Should().BeNull();
-
-            var imageBlock = bodyRegion.Blocks.SingleOrDefault(b => b.PageVersionBlockId == imageBlockId);
-            imageBlock.BlockType.Should().NotBeNull();
-            imageBlock.BlockType.FileName.Should().Be("Image");
-            imageBlock.DisplayModel.Should().NotBeNull();
-            imageBlock.DisplayModel.Should().BeOfType<ImageDisplayModel>();
-            var imageDisplayModel = imageBlock.DisplayModel as ImageDisplayModel;
-            imageDisplayModel.AltText.Should().NotBeNull();
-            imageDisplayModel.Source.Should().NotBeNull();
-            imageBlock.EntityVersionPageBlockId.Should().Be(imageBlockId);
-            imageBlock.Template.Should().BeNull();
+            page.Title.Should().Be(addPageCommand.Title);
+            page.PageVersionId.Should().Be(versionId);
+            page.WorkFlowStatus.Should().Be(WorkFlowStatus.Published);
         }
     }
 }

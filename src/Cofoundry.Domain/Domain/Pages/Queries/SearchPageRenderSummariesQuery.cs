@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Cofoundry.Domain.CQS;
+﻿using Cofoundry.Domain.CQS;
 
 namespace Cofoundry.Domain
 {
@@ -14,7 +9,7 @@ namespace Cofoundry.Domain
     /// version-sensitive and defaults to returning published versions only, but
     /// this behavior can be controlled by the PublishStatus query property.
     /// </summary>
-    public class SearchPageRenderSummariesQuery 
+    public class SearchPageRenderSummariesQuery
         : SimplePageableQuery
         , IQuery<PagedQueryResult<PageRenderSummary>>
     {

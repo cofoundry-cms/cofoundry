@@ -1,11 +1,9 @@
-﻿using System;
+﻿using Cofoundry.Domain.CQS;
+using Cofoundry.Domain.Data;
+using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using Cofoundry.Domain.Data;
-using Cofoundry.Domain.CQS;
-using Microsoft.EntityFrameworkCore;
 
 namespace Cofoundry.Domain.Internal
 {
@@ -16,7 +14,7 @@ namespace Cofoundry.Domain.Internal
     /// version-sensitive and defaults to returning published versions only, but
     /// this behavior can be controlled by the PublishStatus query property.
     /// </summary>
-    public class SearchPageRenderSummariesQueryHandler 
+    public class SearchPageRenderSummariesQueryHandler
         : IQueryHandler<SearchPageRenderSummariesQuery, PagedQueryResult<PageRenderSummary>>
         , IPermissionRestrictedQueryHandler<SearchPageRenderSummariesQuery, PagedQueryResult<PageRenderSummary>>
     {
@@ -37,8 +35,7 @@ namespace Cofoundry.Domain.Internal
 
         public async Task<PagedQueryResult<PageRenderSummary>> ExecuteAsync(SearchPageRenderSummariesQuery query, IExecutionContext executionContext)
         {
-            var dbPagedResult = await CreateQuery(query, executionContext)
-                .ToPagedResultAsync(query);
+            var dbPagedResult = await QueryPagesAsync(query, executionContext);
 
             var allPageIds = dbPagedResult.Items.Select(p => p.PageId);
             var allPageRoutes = await _queryExecutor.ExecuteAsync(new GetPageRoutesByIdRangeQuery(allPageIds));
@@ -54,7 +51,7 @@ namespace Cofoundry.Domain.Internal
             return dbPagedResult.ChangeType(results);
         }
 
-        private IQueryable<PageVersion> CreateQuery(SearchPageRenderSummariesQuery query, IExecutionContext executionContext)
+        private Task<PagedQueryResult<PageVersion>> QueryPagesAsync(SearchPageRenderSummariesQuery query, IExecutionContext executionContext)
         {
             var dbQuery = _dbContext
                 .PagePublishStatusQueries
@@ -65,13 +62,11 @@ namespace Cofoundry.Domain.Internal
                 .FilterActive()
                 ;
 
-            // Filter by locale 
             if (query.LocaleId > 0)
             {
                 dbQuery = dbQuery.FilterByLocaleId(query.LocaleId.Value);
             }
 
-            // Filter by directory
             if (query.PageDirectoryId > 0)
             {
                 dbQuery = dbQuery.FilterByDirectoryId(query.PageDirectoryId.Value);
@@ -79,16 +74,13 @@ namespace Cofoundry.Domain.Internal
 
             return dbQuery
                 .SortBy(query.SortBy, query.SortDirection)
-                .Select(p => p.PageVersion);
+                .Select(p => p.PageVersion)
+                .ToPagedResultAsync(query);
         }
-
-        #region Permission
 
         public IEnumerable<IPermissionApplication> GetPermissions(SearchPageRenderSummariesQuery query)
         {
             yield return new PageReadPermission();
         }
-
-        #endregion
     }
 }
