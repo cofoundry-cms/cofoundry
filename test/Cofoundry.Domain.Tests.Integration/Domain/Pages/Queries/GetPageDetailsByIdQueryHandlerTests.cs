@@ -11,7 +11,7 @@ namespace Cofoundry.Domain.Tests.Integration.Pages.Queries
     [Collection(nameof(DbDependentFixture))]
     public class GetPageDetailsByIdQueryHandlerTests
     {
-        const string UNIQUE_PREFIX = "GAllPageDetailsByIdCHT ";
+        const string UNIQUE_PREFIX = "GPageDetailsByIdCHT ";
 
         private readonly DbDependentFixture _dbDependentFixture;
         private readonly TestDataHelper _testDataHelper;
@@ -32,7 +32,7 @@ namespace Cofoundry.Domain.Tests.Integration.Pages.Queries
             var contentRepository = scope.GetContentRepositoryWithElevatedPermissions();
 
             var directoryId = await _testDataHelper.PageDirectories().AddAsync(uniqueData);
-            var pageId = await _testDataHelper.Pages().AddAsync(uniqueData + "1", directoryId);
+            var pageId = await _testDataHelper.Pages().AddAsync(uniqueData, directoryId);
 
             var page = await contentRepository
                 .Pages()

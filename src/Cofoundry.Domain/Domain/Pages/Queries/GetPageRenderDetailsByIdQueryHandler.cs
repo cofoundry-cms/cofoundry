@@ -1,10 +1,10 @@
-﻿using System;
+﻿using Cofoundry.Domain.CQS;
+using Cofoundry.Domain.Data;
+using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Cofoundry.Domain.Data;
-using Cofoundry.Domain.CQS;
-using Microsoft.EntityFrameworkCore;
 
 namespace Cofoundry.Domain.Internal
 {
@@ -12,12 +12,10 @@ namespace Cofoundry.Domain.Internal
     /// Gets a projection of a page that contains the data required to render a page, including template 
     /// data for all the content-editable regions.
     /// </summary>
-    public class GetPageRenderDetailsByIdQueryHandler 
+    public class GetPageRenderDetailsByIdQueryHandler
         : IQueryHandler<GetPageRenderDetailsByIdQuery, PageRenderDetails>
         , IPermissionRestrictedQueryHandler<GetPageRenderDetailsByIdQuery, PageRenderDetails>
     {
-        #region constructor
-
         private readonly CofoundryDbContext _dbContext;
         private readonly IQueryExecutor _queryExecutor;
         private readonly IPageRenderDetailsMapper _pageRenderDetailsMapper;
@@ -35,10 +33,6 @@ namespace Cofoundry.Domain.Internal
             _pageRenderDetailsMapper = pageMapper;
             _entityVersionPageBlockMapper = entityVersionPageBlockMapper;
         }
-
-        #endregion
-
-        #region execution
 
         public async Task<PageRenderDetails> ExecuteAsync(GetPageRenderDetailsByIdQuery query, IExecutionContext executionContext)
         {
@@ -113,15 +107,9 @@ namespace Cofoundry.Domain.Internal
                 .Where(m => m.PageVersionId == page.PageVersionId);
         }
 
-        #endregion
-
-        #region Permission
-
         public IEnumerable<IPermissionApplication> GetPermissions(GetPageRenderDetailsByIdQuery query)
         {
             yield return new PageReadPermission();
         }
-
-        #endregion
     }
 }
