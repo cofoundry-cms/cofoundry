@@ -1,11 +1,11 @@
-﻿using System;
+﻿using Cofoundry.Core;
+using Cofoundry.Domain.CQS;
+using Cofoundry.Domain.Data;
+using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Cofoundry.Domain.Data;
-using Cofoundry.Domain.CQS;
-using Microsoft.EntityFrameworkCore;
-using Cofoundry.Core;
 
 namespace Cofoundry.Domain.Internal
 {
@@ -17,8 +17,6 @@ namespace Cofoundry.Domain.Internal
         : IQueryHandler<GetPageRenderDetailsByIdRangeQuery, IDictionary<int, PageRenderDetails>>
         , IPermissionRestrictedQueryHandler<GetPageRenderDetailsByIdRangeQuery, IDictionary<int, PageRenderDetails>>
     {
-        #region constructor
-
         private readonly CofoundryDbContext _dbContext;
         private readonly IQueryExecutor _queryExecutor;
         private readonly IPageRenderDetailsMapper _pageMapper;
@@ -37,10 +35,6 @@ namespace Cofoundry.Domain.Internal
             _entityVersionPageBlockMapper = entityVersionPageBlockMapper;
         }
 
-        #endregion
-
-        #region execution
-
         public async Task<IDictionary<int, PageRenderDetails>> ExecuteAsync(GetPageRenderDetailsByIdRangeQuery query, IExecutionContext executionContext)
         {
             var dbPages = await GetPagesAsync(query, executionContext);
@@ -58,21 +52,21 @@ namespace Cofoundry.Domain.Internal
             var allBlockTypes = await _queryExecutor.ExecuteAsync(new GetAllPageBlockTypeSummariesQuery(), executionContext);
 
             await _entityVersionPageBlockMapper.MapRegionsAsync(
-                dbPageBlocks, 
-                pages.SelectMany(p => p.Regions), 
-                allBlockTypes, 
-                query.PublishStatus, 
+                dbPageBlocks,
+                pages.SelectMany(p => p.Regions),
+                allBlockTypes,
+                query.PublishStatus,
                 executionContext
                 );
 
             return pages.ToDictionary(d => d.PageId);
         }
-        
+
         private async Task<IEnumerable<PageVersion>> GetPagesAsync(GetPageRenderDetailsByIdRangeQuery query, IExecutionContext executionContext)
         {
             if (query.PublishStatus == PublishStatusQuery.SpecificVersion)
             {
-                throw new InvalidOperationException("PublishStatusQuery.SpecificVersion not supported in GetPageRenderDetailsByIdRangeQuery");
+                throw new InvalidOperationException($"{nameof(PublishStatusQuery)}.{nameof(PublishStatusQuery.SpecificVersion)} not supported in {nameof(GetPageRenderDetailsByIdRangeQuery)}");
             }
 
             var dbResults = await _dbContext
@@ -118,15 +112,9 @@ namespace Cofoundry.Domain.Internal
             }
         }
 
-        #endregion
-
-        #region Permission
-
         public IEnumerable<IPermissionApplication> GetPermissions(GetPageRenderDetailsByIdRangeQuery query)
         {
             yield return new PageReadPermission();
         }
-
-        #endregion
     }
 }
