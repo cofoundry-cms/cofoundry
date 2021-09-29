@@ -1,6 +1,4 @@
-﻿using Cofoundry.Core;
-using Cofoundry.Domain.Tests.Shared.Assertions;
-using FluentAssertions;
+﻿using FluentAssertions;
 using FluentAssertions.Execution;
 using System;
 using System.Linq;
@@ -90,7 +88,7 @@ namespace Cofoundry.Domain.Tests.Integration.Pages.Queries
         public async Task MapsBasicData()
         {
             var uniqueData = UNIQUE_PREFIX + nameof(MapsBasicData);
-            var sluggedUniqueData = SlugFormatter.ToSlug(uniqueData);
+
             using var scope = _dbDependentFixture.CreateServiceScope();
             var contentRepository = scope.GetContentRepositoryWithElevatedPermissions();
 
@@ -124,25 +122,7 @@ namespace Cofoundry.Domain.Tests.Integration.Pages.Queries
             {
                 result.Should().NotBeNull();
                 var page = result.Items.SingleOrDefault(p => p.PageId == pageId);
-
-                page.Should().NotBeNull();
-                page.PageId.Should().Be(addPageCommand.OutputPageId);
-
-                page.AuditData.Should().NotBeNull();
-                page.AuditData.Creator.Should().NotBeNull();
-                page.AuditData.Creator.UserId.Should().BePositive();
-
-                page.FullPath.Should().Be($"/{sluggedUniqueData}/{addPageCommand.UrlPath}");
-
-                page.Should().NotBeNull();
-                page.HasDraftVersion.Should().BeFalse();
-                page.Locale.Should().BeNull();
-                page.PageType.Should().Be(addPageCommand.PageType);
-                page.PublishDate.Should().NotBeNull().And.NotBeDefault();
-                page.PublishStatus.Should().Be(PublishStatus.Published);
-                page.Tags.Should().ContainSingle(t => t == _dbDependentFixture.SeededEntities.TestTag.TagText);
-                page.Title.Should().Be(addPageCommand.Title);
-                page.UrlPath.Should().Be(addPageCommand.UrlPath);
+                GetPageSummariesByIdRangeQueryHandlerTests.AssertBasicDataMapping(uniqueData, addPageCommand, page);
             }
         }
 
@@ -245,9 +225,9 @@ namespace Cofoundry.Domain.Tests.Integration.Pages.Queries
             var tag2 = UNIQUE_PREFIX.Trim() + "s2";
             var directoryId = await _testDataHelper.PageDirectories().AddAsync(uniqueData);
             var page1Id = await _testDataHelper.Pages().AddAsync(uniqueData + "1", directoryId, c =>
-            { 
-                c.Publish = true; 
-                c.Tags = new string[] { tag1 }; 
+            {
+                c.Publish = true;
+                c.Tags = new string[] { tag1 };
             });
             var page2Id = await _testDataHelper.Pages().AddAsync(uniqueData + "2", directoryId, c =>
             {

@@ -17,8 +17,6 @@ namespace Cofoundry.Domain.Internal
         : IQueryHandler<GetPageSummariesByIdRangeQuery, IDictionary<int, PageSummary>>
         , IIgnorePermissionCheckHandler
     {
-        #region constructor
-
         private readonly CofoundryDbContext _dbContext;
         private readonly IPageSummaryMapper _pageSummaryMapper;
 
@@ -31,42 +29,35 @@ namespace Cofoundry.Domain.Internal
             _pageSummaryMapper = pageSummaryMapper;
         }
 
-        #endregion
-
-        #region execution
-
         public async Task<IDictionary<int, PageSummary>> ExecuteAsync(GetPageSummariesByIdRangeQuery query, IExecutionContext executionContext)
         {
-            var dbResult = await CreateQuery(query).ToListAsync();
+            var dbResult = await QueryPages(query, executionContext);
 
-            // Finish mapping children
             var mappedResult = await _pageSummaryMapper.MapAsync(dbResult, executionContext);
             var dictionary = mappedResult.ToDictionary(d => d.PageId);
 
             return dictionary;
         }
 
-        private IQueryable<Page> CreateQuery(GetPageSummariesByIdRangeQuery query)
+        private Task<List<Page>> QueryPages(GetPageSummariesByIdRangeQuery query, IExecutionContext executionContext)
         {
-            var dbQuery = _dbContext
-                .Pages
+            var results = _dbContext
+                .PagePublishStatusQueries
                 .AsNoTracking()
-                .Include(p => p.Creator)
+                .Include(p => p.Page)
+                .ThenInclude(p => p.Creator)
+                .FilterByStatus(PublishStatusQuery.Latest, executionContext.ExecutionDate)
                 .FilterActive()
-                .Where(p => query.PageIds.Contains(p.PageId));
+                .Where(p => query.PageIds.Contains(p.PageId))
+                .Select(p => p.Page)
+                .ToListAsync();
 
-            return dbQuery;
+            return results;
         }
-
-        #endregion
-
-        #region Permission
 
         public IEnumerable<IPermissionApplication> GetPermissions(SearchPageSummariesQuery query)
         {
             yield return new PageReadPermission();
         }
-
-        #endregion
     }
 }
