@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 
 namespace Cofoundry.Core
 {
@@ -24,8 +22,7 @@ namespace Cofoundry.Core
         {
             List<string> tagList = new List<string>();
 
-            if (string.IsNullOrWhiteSpace(tags))
-                return tagList;
+            if (string.IsNullOrWhiteSpace(tags)) return tagList;
 
             // Split by double quotes first
             MatchCollection doubleQuoteMatches = Regex.Matches(tags, "\"[\\S\\s]*?\"");

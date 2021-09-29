@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using Cofoundry.Domain.CQS;
+﻿using Cofoundry.Domain.CQS;
+using System;
 
 namespace Cofoundry.Domain
 {

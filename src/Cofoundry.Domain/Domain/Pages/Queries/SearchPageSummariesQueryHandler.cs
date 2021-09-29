@@ -19,8 +19,6 @@ namespace Cofoundry.Domain.Internal
         : IQueryHandler<SearchPageSummariesQuery, PagedQueryResult<PageSummary>>
         , IPermissionRestrictedQueryHandler<SearchPageSummariesQuery, PagedQueryResult<PageSummary>>
     {
-        #region constructor
-
         private readonly CofoundryDbContext _dbContext;
         private readonly IPageSummaryMapper _pageSummaryMapper;
 
@@ -33,10 +31,6 @@ namespace Cofoundry.Domain.Internal
             _dbContext = dbContext;
             _pageSummaryMapper = pageSummaryMapper;
         }
-
-        #endregion
-
-        #region execution
 
         public async Task<PagedQueryResult<PageSummary>> ExecuteAsync(SearchPageSummariesQuery query, IExecutionContext executionContext)
         {
@@ -125,16 +119,9 @@ namespace Cofoundry.Domain.Internal
                 .Select(p => p.Page);
         }
 
-
-        #endregion
-        
-        #region Permission
-
         public IEnumerable<IPermissionApplication> GetPermissions(SearchPageSummariesQuery query)
         {
             yield return new PageReadPermission();
         }
-
-        #endregion
     }
 }

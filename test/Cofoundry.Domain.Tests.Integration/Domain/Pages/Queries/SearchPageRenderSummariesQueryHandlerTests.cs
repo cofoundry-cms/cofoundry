@@ -10,14 +10,14 @@ using Xunit;
 namespace Cofoundry.Domain.Tests.Integration.Pages.Queries
 {
     [Collection(nameof(DbDependentFixture))]
-    public class SearchPageRenderSummariesByIdRangeQueryHandlerTests
+    public class SearchPageRenderSummariesQueryHandlerTests
     {
         const string UNIQUE_PREFIX = "SearchPageRenderSumQHT ";
 
         private readonly DbDependentFixture _dbDependentFixture;
         private readonly TestDataHelper _testDataHelper;
 
-        public SearchPageRenderSummariesByIdRangeQueryHandlerTests(
+        public SearchPageRenderSummariesQueryHandlerTests(
             DbDependentFixture dbDependantFixture
             )
         {

@@ -1,20 +1,18 @@
-﻿using System;
+﻿using Cofoundry.Core;
+using Cofoundry.Core.Data;
+using Cofoundry.Core.MessageAggregator;
+using Cofoundry.Core.Validation;
+using Cofoundry.Domain.CQS;
+using Cofoundry.Domain.Data;
+using Cofoundry.Domain.Data.Internal;
+using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using Cofoundry.Domain.Data;
-using Cofoundry.Domain.CQS;
-using Microsoft.EntityFrameworkCore;
-using Cofoundry.Core.Validation;
-using Cofoundry.Core.MessageAggregator;
-using Cofoundry.Core;
-using Cofoundry.Core.Data;
-using Cofoundry.Domain.Data.Internal;
 
 namespace Cofoundry.Domain.Internal
 {
-    public class AddPageCommandHandler 
+    public class AddPageCommandHandler
         : ICommandHandler<AddPageCommand>
         , IPermissionRestrictedCommandHandler<AddPageCommand>
     {
@@ -26,7 +24,7 @@ namespace Cofoundry.Domain.Internal
         private readonly IMessageAggregator _messageAggregator;
         private readonly IPageStoredProcedures _pageStoredProcedures;
         private readonly ITransactionScopeManager _transactionScopeFactory;
-        
+
         public AddPageCommandHandler(
             CofoundryDbContext dbContext,
             IQueryExecutor queryExecutor,
@@ -123,7 +121,7 @@ namespace Cofoundry.Domain.Internal
             var page = new Page();
             page.PageTypeId = (int)command.PageType;
             page.Locale = GetLocale(command.LocaleId);
-            page.PageDirectory = await  GetPageDirectoryAsync(command.PageDirectoryId);
+            page.PageDirectory = await GetPageDirectoryAsync(command.PageDirectoryId);
 
             _entityAuditHelper.SetCreated(page, executionContext);
             _entityTagHelper.UpdateTags(page.PageTags, command.Tags, executionContext);
@@ -142,7 +140,7 @@ namespace Cofoundry.Domain.Internal
             {
                 page.UrlPath = command.UrlPath;
             }
-            
+
             var pageVersion = new PageVersion();
             pageVersion.Title = command.Title;
             pageVersion.ExcludeFromSitemap = !command.ShowInSiteMap;
@@ -172,8 +170,8 @@ namespace Cofoundry.Domain.Internal
         }
 
         private async Task<ICustomEntityRoutingRule> GetAndValidateRoutingRuleAsync(
-            AddPageCommand command, 
-            CustomEntityDefinitionSummary definition, 
+            AddPageCommand command,
+            CustomEntityDefinitionSummary definition,
             IExecutionContext executionContext
             )
         {
@@ -236,35 +234,31 @@ namespace Cofoundry.Domain.Internal
 
         private async Task ValidateIsPageUniqueAsync(AddPageCommand command, IExecutionContext executionContext)
         {
-            var query = CreateUniquenessQuery(command);
-            var isUnique = await _queryExecutor.ExecuteAsync(query, executionContext);
-            ValidateIsUnique(command, isUnique);
-        }
-
-        private IsPagePathUniqueQuery CreateUniquenessQuery(AddPageCommand command)
-        {
-            var query = new IsPagePathUniqueQuery();
-            query.LocaleId = command.LocaleId;
-            query.PageDirectoryId = command.PageDirectoryId;
+            string path;
+            string propertyName;
 
             if (command.PageType == PageType.CustomEntityDetails)
             {
-                query.UrlPath = command.CustomEntityRoutingRule;
+                path = command.CustomEntityRoutingRule;
+                propertyName = nameof(command.CustomEntityRoutingRule);
             }
             else
             {
-                query.UrlPath = command.UrlPath;
+                path = command.UrlPath;
+                propertyName = nameof(command.UrlPath);
             }
 
-            return query;
-        }
+            var isUnique = await _queryExecutor.ExecuteAsync(new IsPagePathUniqueQuery()
+            {
+                LocaleId = command.LocaleId,
+                PageDirectoryId = command.PageDirectoryId,
+                UrlPath = path
+            }, executionContext);
 
-        private void ValidateIsUnique(AddPageCommand command, bool isUnique)
-        {
             if (!isUnique)
             {
-                var message = $"A page already exists with the path '{command.UrlPath}' in that directory";
-                throw new UniqueConstraintViolationException(message, nameof(command.UrlPath), command.UrlPath);
+                var message = $"A page already exists with the path '{path}' in that directory";
+                throw new UniqueConstraintViolationException(message, propertyName, path);
             }
         }
 
