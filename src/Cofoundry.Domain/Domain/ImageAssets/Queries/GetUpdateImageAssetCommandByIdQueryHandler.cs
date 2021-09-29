@@ -13,8 +13,6 @@ namespace Cofoundry.Domain.Internal
         : IQueryHandler<GetUpdateCommandByIdQuery<UpdateImageAssetCommand>, UpdateImageAssetCommand>
         , IPermissionRestrictedQueryHandler<GetUpdateCommandByIdQuery<UpdateImageAssetCommand>, UpdateImageAssetCommand>
     {
-        #region constructor
-
         private readonly CofoundryDbContext _dbContext;
 
         public GetUpdateImageAssetCommandByIdQueryHandler(
@@ -23,10 +21,6 @@ namespace Cofoundry.Domain.Internal
         {
             _dbContext = dbContext;
         }
-
-        #endregion
-
-        #region execution
 
         public async Task<UpdateImageAssetCommand> ExecuteAsync(GetUpdateCommandByIdQuery<UpdateImageAssetCommand> query, IExecutionContext executionContext)
         {
@@ -37,6 +31,8 @@ namespace Cofoundry.Domain.Internal
                 .AsNoTracking()
                 .FilterById(query.Id)
                 .SingleOrDefaultAsync();
+
+            if (dbResult == null) return null;
 
             var result = new UpdateImageAssetCommand()
             {
@@ -54,15 +50,9 @@ namespace Cofoundry.Domain.Internal
             return result;
         }
 
-        #endregion
-
-        #region Permission
-
         public IEnumerable<IPermissionApplication> GetPermissions(GetUpdateCommandByIdQuery<UpdateImageAssetCommand> query)
         {
             yield return new ImageAssetUpdatePermission();
         }
-
-        #endregion
     }
 }

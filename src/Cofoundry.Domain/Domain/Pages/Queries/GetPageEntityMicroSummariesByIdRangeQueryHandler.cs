@@ -1,19 +1,17 @@
-﻿using System;
+﻿using Cofoundry.Domain.CQS;
+using Cofoundry.Domain.Data;
+using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Cofoundry.Domain.Data;
-using Cofoundry.Domain.CQS;
-using Microsoft.EntityFrameworkCore;
 
 namespace Cofoundry.Domain.Internal
 {
-    public class GetPageEntityMicroSummariesByIdRangeQueryHandler 
+    public class GetPageEntityMicroSummariesByIdRangeQueryHandler
         : IQueryHandler<GetPageEntityMicroSummariesByIdRangeQuery, IDictionary<int, RootEntityMicroSummary>>
         , IPermissionRestrictedQueryHandler<GetPageEntityMicroSummariesByIdRangeQuery, IDictionary<int, RootEntityMicroSummary>>
     {
-        #region constructor
-
         private readonly CofoundryDbContext _dbContext;
         private readonly IEntityDefinitionRepository _entityDefinitionRepository;
 
@@ -26,22 +24,12 @@ namespace Cofoundry.Domain.Internal
             _entityDefinitionRepository = entityDefinitionRepository;
         }
 
-        #endregion
-
-        #region execution
-
         public async Task<IDictionary<int, RootEntityMicroSummary>> ExecuteAsync(GetPageEntityMicroSummariesByIdRangeQuery query, IExecutionContext executionContext)
         {
-            var results = await Query(query, executionContext).ToDictionaryAsync(e => e.RootEntityId);
 
-            return results;
-        }
-
-        private IQueryable<RootEntityMicroSummary> Query(GetPageEntityMicroSummariesByIdRangeQuery query, IExecutionContext executionContext)
-        {
             var definition = _entityDefinitionRepository.GetByCode(PageEntityDefinition.DefinitionCode);
 
-            var dbQuery = _dbContext
+            var results = await _dbContext
                 .PagePublishStatusQueries
                 .AsNoTracking()
                 .FilterActive()
@@ -54,20 +42,15 @@ namespace Cofoundry.Domain.Internal
                     RootEntityTitle = v.Title,
                     EntityDefinitionName = definition.Name,
                     EntityDefinitionCode = definition.EntityDefinitionCode
-                });
+                })
+                .ToDictionaryAsync(e => e.RootEntityId);
 
-            return dbQuery;
+            return results;
         }
-
-        #endregion
-
-        #region Permission
 
         public IEnumerable<IPermissionApplication> GetPermissions(GetPageEntityMicroSummariesByIdRangeQuery query)
         {
             yield return new PageReadPermission();
         }
-
-        #endregion
     }
 }

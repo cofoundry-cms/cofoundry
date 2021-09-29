@@ -1,19 +1,16 @@
-﻿using System;
+﻿using Cofoundry.Domain.CQS;
+using Cofoundry.Domain.Data;
+using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Cofoundry.Domain.Data;
-using Cofoundry.Domain.CQS;
-using Microsoft.EntityFrameworkCore;
 
 namespace Cofoundry.Domain.Internal
 {
-    public class GetUpdatePageDraftVersionCommandByIdQueryHandler 
+    public class GetUpdatePageDraftVersionCommandByIdQueryHandler
         : IQueryHandler<GetUpdateCommandByIdQuery<UpdatePageDraftVersionCommand>, UpdatePageDraftVersionCommand>
         , IPermissionRestrictedQueryHandler<GetUpdateCommandByIdQuery<UpdatePageDraftVersionCommand>, UpdatePageDraftVersionCommand>
     {
-        #region constructor
-
         private readonly CofoundryDbContext _dbContext;
 
         public GetUpdatePageDraftVersionCommandByIdQueryHandler(
@@ -22,10 +19,6 @@ namespace Cofoundry.Domain.Internal
         {
             _dbContext = dbContext;
         }
-
-        #endregion
-
-        #region execution
 
         public async Task<UpdatePageDraftVersionCommand> ExecuteAsync(GetUpdateCommandByIdQuery<UpdatePageDraftVersionCommand> query, IExecutionContext executionContext)
         {
@@ -50,15 +43,9 @@ namespace Cofoundry.Domain.Internal
             return command;
         }
 
-        #endregion
-        
-        #region Permission
-
         public IEnumerable<IPermissionApplication> GetPermissions(GetUpdateCommandByIdQuery<UpdatePageDraftVersionCommand> query)
         {
             yield return new PageReadPermission();
         }
-
-        #endregion
     }
 }

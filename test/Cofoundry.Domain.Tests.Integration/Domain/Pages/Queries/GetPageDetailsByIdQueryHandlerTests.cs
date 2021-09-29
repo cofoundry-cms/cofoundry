@@ -1,7 +1,5 @@
-﻿using Cofoundry.Core;
-using FluentAssertions;
+﻿using FluentAssertions;
 using FluentAssertions.Execution;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Xunit;

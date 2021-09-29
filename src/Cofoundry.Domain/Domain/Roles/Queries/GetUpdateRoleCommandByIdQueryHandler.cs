@@ -11,8 +11,6 @@ namespace Cofoundry.Domain.Internal
         : IQueryHandler<GetUpdateCommandByIdQuery<UpdateRoleCommand>, UpdateRoleCommand>
         , IPermissionRestrictedQueryHandler<GetUpdateCommandByIdQuery<UpdateRoleCommand>, UpdateRoleCommand>
     {
-        #region constructor
-
         private readonly IInternalRoleRepository _internalRoleRepository;
 
         public GetUpdateRoleCommandByIdQueryHandler(
@@ -22,13 +20,11 @@ namespace Cofoundry.Domain.Internal
             _internalRoleRepository = internalRoleRepository;
         }
 
-        #endregion
-
-        #region execution
-
         public async Task<UpdateRoleCommand> ExecuteAsync(GetUpdateCommandByIdQuery<UpdateRoleCommand> query, IExecutionContext executionContext)
         {
             var role = await _internalRoleRepository.GetByIdAsync(query.Id);
+            if (role == null) return null;
+
             var command = new UpdateRoleCommand()
             {
                 RoleId = role.RoleId,
@@ -47,15 +43,9 @@ namespace Cofoundry.Domain.Internal
             return command;
         }
 
-        #endregion
-
-        #region permissions
-
         public IEnumerable<IPermissionApplication> GetPermissions(GetUpdateCommandByIdQuery<UpdateRoleCommand> command)
         {
             yield return new RoleReadPermission();
         }
-
-        #endregion
     }
 }

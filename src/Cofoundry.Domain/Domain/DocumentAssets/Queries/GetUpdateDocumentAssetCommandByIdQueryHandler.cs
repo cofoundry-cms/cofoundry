@@ -1,20 +1,16 @@
-﻿using System;
+﻿using Cofoundry.Domain.CQS;
+using Cofoundry.Domain.Data;
+using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using Cofoundry.Domain.Data;
-using Cofoundry.Domain.CQS;
-using Microsoft.EntityFrameworkCore;
 
 namespace Cofoundry.Domain.Internal
 {
-    public class GetUpdateDocumentAssetCommandByIdQueryHandler 
+    public class GetUpdateDocumentAssetCommandByIdQueryHandler
         : IQueryHandler<GetUpdateCommandByIdQuery<UpdateDocumentAssetCommand>, UpdateDocumentAssetCommand>
         , IPermissionRestrictedQueryHandler<GetUpdateCommandByIdQuery<UpdateDocumentAssetCommand>, UpdateDocumentAssetCommand>
     {
-        #region constructor
-
         private readonly CofoundryDbContext _dbContext;
 
         public GetUpdateDocumentAssetCommandByIdQueryHandler(
@@ -23,10 +19,6 @@ namespace Cofoundry.Domain.Internal
         {
             _dbContext = dbContext;
         }
-
-        #endregion
-
-        #region execution
 
         public async Task<UpdateDocumentAssetCommand> ExecuteAsync(GetUpdateCommandByIdQuery<UpdateDocumentAssetCommand> query, IExecutionContext executionContext)
         {
@@ -37,6 +29,8 @@ namespace Cofoundry.Domain.Internal
                 .AsNoTracking()
                 .FilterById(query.Id)
                 .SingleOrDefaultAsync();
+
+            if (dbResult == null) return null;
 
             var result = new UpdateDocumentAssetCommand()
             {
@@ -54,15 +48,9 @@ namespace Cofoundry.Domain.Internal
             return result;
         }
 
-        #endregion
-
-        #region Permission
-
         public IEnumerable<IPermissionApplication> GetPermissions(GetUpdateCommandByIdQuery<UpdateDocumentAssetCommand> query)
         {
             yield return new DocumentAssetReadPermission();
         }
-
-        #endregion
     }
 }
