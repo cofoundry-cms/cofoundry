@@ -55,6 +55,13 @@ namespace Cofoundry.Domain
         /// </remarks>
         public ICollection<PageDirectoryRouteLocale> LocaleVariations { get; set; }
 
+        /// <summary>
+        /// Optional rules that can be used to restrict access to this directory.
+        /// This collection contains rules accumulated from parent directories in
+        /// order of specificity, with most specific or "nested" rules first.
+        /// </summary>
+        public ICollection<RouteAccessRule> AccessRules { get; set; }
+
         #region public methods
 
         /// <summary>

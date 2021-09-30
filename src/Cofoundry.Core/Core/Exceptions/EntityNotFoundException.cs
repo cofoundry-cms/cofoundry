@@ -1,36 +1,43 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Cofoundry.Core
 {
     /// <summary>
+    /// <para>
     /// Exception to be used when an entity cannot be found but is required.
+    /// </para>
+    /// <para>
+    /// Use the generic version when throwing the exception, but you may
+    /// catch the non-generic version if you don't want to catch the exception 
+    /// for a specific entity.
+    /// </para>
     /// </summary>
-    /// <remarks>
-    /// Non-Generic class to make it easier to catch.
-    /// </remarks>
-    public class EntityNotFoundException : Exception
+    public abstract class EntityNotFoundException : Exception
     {
         public EntityNotFoundException()
         {
         }
+
         public EntityNotFoundException(string message)
             : base(message)
         {
         }
 
-        /// <summary>
-        /// throw an EntityNotFoundException if the specified entity is null.
-        /// </summary>
-        /// <typeparam name="TEntity">Type fo the entity to check</typeparam>
-        /// <param name="e">The entity to check for a null reference</param>
-        /// <param name="id">The unique identifier for the entity that could not be found.</param>
-        public static void ThrowIfNull<TEntity>(TEntity e, object id) where TEntity : class
+        public EntityNotFoundException(string message, Exception innerException)
+            : base(message, innerException)
         {
-            if (e == null)
+        }
+
+        /// <summary>
+        /// Throw an <see cref="EntityNotFoundException"/> if the specified entity 
+        /// is <see langword="null"/>.
+        /// </summary>
+        /// <typeparam name="TEntity">Type of entity to check.</typeparam>
+        /// <param name="entity">The entity to check for a <see langword="null"/> reference.</param>
+        /// <param name="id">The unique identifier for the entity that could not be found.</param>
+        public static void ThrowIfNull<TEntity>(TEntity entity, object id) where TEntity : class
+        {
+            if (entity == null)
             {
                 throw new EntityNotFoundException<TEntity>(id);
             }
@@ -45,9 +52,22 @@ namespace Cofoundry.Core
     {
         private const string errorMessage = "Entity of type '{0}' and identifier '{1}' could not be found.";
 
-        public object Id { get; private set; }
+        /// <summary>
+        /// The id of the entity that could not be found.
+        /// </summary>
+        public object? Id { get; private set; }
 
         public EntityNotFoundException()
+        {
+        }
+
+        public EntityNotFoundException(string message)
+            : base(message)
+        {
+        }
+
+        public EntityNotFoundException(string message, Exception innerException)
+            : base(message, innerException)
         {
         }
 
@@ -56,7 +76,6 @@ namespace Cofoundry.Core
         {
             Id = id;
         }
-
 
         private static string FormatMessage(object id)
         {

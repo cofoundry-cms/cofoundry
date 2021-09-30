@@ -1,5 +1,7 @@
-﻿using System;
+﻿using Cofoundry.Core;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Cofoundry.Domain
 {
@@ -88,7 +90,15 @@ namespace Cofoundry.Domain
         public string CustomEntityDefinitionCode { get; set; }
 
         /// <summary>
-        /// Determins if the page is within the specified directory path. Does
+        /// Optional rules that can be used to restrict access to this page.
+        /// These rules are for this page only, and does not include rules
+        /// associated with any parent directories or custom entities. To check
+        /// the full directory tree use the <see cref="CanAccess"/> method.
+        /// </summary>
+        public ICollection<RouteAccessRule> AccessRules { get; set; }
+
+        /// <summary>
+        /// Determines if the page is within the specified directory path. Does
         /// not return true if it is in a subdirectory of the specified directory path.
         /// </summary>
         public bool IsInDirectory(string directoryPath)
@@ -109,6 +119,39 @@ namespace Cofoundry.Domain
         public bool IsDirectoryDefaultPage(int? localeId = null)
         {
             return string.IsNullOrWhiteSpace(UrlPath);
+        }
+
+        /// <summary>
+        /// Determines if the <paramref name="role"/> violates any access rules
+        /// for this page or any parent directories. If the role cannot access the 
+        /// page then the rule viloation is returned. The role may violate several 
+        /// rules in the page and directory tree but only the most specific rule is 
+        /// returned, starting with the page and then working back up through the 
+        /// directory tree. 
+        /// </summary>
+        /// <param name="role">The role to check against access rules.</param>
+        /// <returns>
+        /// If any rules are violated, then the most specific rule is returned; 
+        /// otherwise <see langword="null"/>.
+        /// </returns>
+        public RouteAccessRule CanAccess(RoleDetails role)
+        {
+            if (role == null) throw new ArgumentNullException(nameof(role));
+            EntityInvalidOperationException.ThrowIfNull(this, r => r.AccessRules);
+            EntityInvalidOperationException.ThrowIfNull(this, r => r.PageDirectory);
+
+            var pageRule = AccessRules
+                .FilterByRole(role)
+                .FirstOrDefault();
+
+            if (pageRule != null) return pageRule;
+
+            var directoryViolation = PageDirectory
+                .AccessRules
+                .FilterByRole(role)
+                .FirstOrDefault();
+
+            return directoryViolation;
         }
     }
 }
