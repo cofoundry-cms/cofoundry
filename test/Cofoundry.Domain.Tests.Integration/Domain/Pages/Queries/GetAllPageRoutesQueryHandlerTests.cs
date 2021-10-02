@@ -6,20 +6,18 @@ using Xunit;
 
 namespace Cofoundry.Domain.Tests.Integration.Pages.Queries
 {
-    [Collection(nameof(DbDependentFixture))]
+    [Collection(nameof(DbDependentFixtureCollection))]
     public class GetAllPageRoutesQueryHandlerTests
     {
         const string UNIQUE_PREFIX = "GAllPageRoutesQHT ";
 
-        private readonly DbDependentFixture _dbDependentFixture;
-        private readonly TestDataHelper _testDataHelper;
+        private readonly DbDependentTestApplicationFactory _appFactory;
 
         public GetAllPageRoutesQueryHandlerTests(
-            DbDependentFixture dbDependantFixture
+            DbDependentTestApplicationFactory appFactory
             )
         {
-            _dbDependentFixture = dbDependantFixture;
-            _testDataHelper = new TestDataHelper(dbDependantFixture);
+            _appFactory = appFactory;
         }
 
         [Fact]
@@ -27,23 +25,22 @@ namespace Cofoundry.Domain.Tests.Integration.Pages.Queries
         {
             var uniqueData = UNIQUE_PREFIX + nameof(ReturnsAllRoutes);
 
-            using var scope = _dbDependentFixture.CreateServiceScope();
-            var contentRepository = scope.GetContentRepositoryWithElevatedPermissions();
-
+            using var app = _appFactory.Create();
             var testPages = new Dictionary<int, string>();
 
             for (int i = 1; i < 3; i++)
             {
-                var parentDirectoryId = await _testDataHelper.PageDirectories().AddAsync(uniqueData + i);
+                var parentDirectoryId = await app.TestData.PageDirectories().AddAsync(uniqueData + i);
 
                 for (int j = 1; j < 4; j++)
                 {
                     var pageTitle = uniqueData + j;
-                    var pageId = await _testDataHelper.Pages().AddAsync(pageTitle, parentDirectoryId);
+                    var pageId = await app.TestData.Pages().AddAsync(pageTitle, parentDirectoryId);
                     testPages.Add(pageId, pageTitle);
                 }
             }
 
+            var contentRepository = app.Services.GetContentRepositoryWithElevatedPermissions();
             var results = await contentRepository
                 .Pages()
                 .GetAll()

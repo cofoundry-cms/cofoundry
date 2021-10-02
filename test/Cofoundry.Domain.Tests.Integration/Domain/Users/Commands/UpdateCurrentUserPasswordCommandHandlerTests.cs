@@ -13,20 +13,20 @@ using Xunit;
 
 namespace Cofoundry.Domain.Tests.Integration.Users.Commands
 {
-    [Collection(nameof(DbDependentFixture))]
+    [Collection(nameof(DbDependentFixtureCollection))]
     public class UpdateCurrentUserPasswordCommandHandlerTests
     {
         const string TEST_DOMAIN = "@UpdateCurrentUserPasswordCommandHandlerTests.example.com";
         const string OLD_PASSWORD = "Gr!sh3nk0";
         const string NEW_PASSWORD = "S3v3rn@ya";
 
-        private readonly DbDependentFixture _dbDependentFixture;
+        private readonly DbDependentTestApplicationFactory _appFactory;
 
         public UpdateCurrentUserPasswordCommandHandlerTests(
-            DbDependentFixture dbDependantFixture
+            DbDependentTestApplicationFactory appFactory
             )
         {
-            _dbDependentFixture = dbDependantFixture;
+            _appFactory = appFactory;
         }
 
         [Fact]
@@ -42,14 +42,15 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Commands
                 OldPassword = OLD_PASSWORD
             };
 
-            using (var scope = _dbDependentFixture.CreateServiceScope())
+           
+            using (var app = _appFactory.Create())
             {
-                scope.MockDateTime(updateDate);
+                app.Mocks.MockDateTime(updateDate);
 
-                var loginService = scope.GetService<ILoginService>();
+                var loginService = app.Services.GetService<ILoginService>();
                 await loginService.LogAuthenticatedUserInAsync(TestUserArea1.Code, userId, false);
 
-                var repository = scope.GetService<IDomainRepository>();
+                var repository = app.Services.GetService<IDomainRepository>();
                 await repository.ExecuteCommandAsync(command);
             }
 
@@ -63,10 +64,10 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Commands
             UserLoginInfoAuthenticationResult result;
             User user = null;
 
-            using (var scope = _dbDependentFixture.CreateServiceScope())
+            using (var app = _appFactory.Create())
             {
-                var repository = scope.GetService<IDomainRepository>();
-                var dbContext = scope.GetService<CofoundryDbContext>();
+                var repository = app.Services.GetService<IDomainRepository>();
+                var dbContext = app.Services.GetService<CofoundryDbContext>();
                 result = await repository.ExecuteQueryAsync(query);
 
                 if (result?.User != null)
@@ -100,10 +101,10 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Commands
                 OldPassword = NEW_PASSWORD
             };
 
-            using var scope = _dbDependentFixture.CreateServiceScope();
+            using var app = _appFactory.Create();
 
-            var repository = scope.GetService<IDomainRepository>();
-            var loginService = scope.GetService<ILoginService>();
+            var repository = app.Services.GetService<IDomainRepository>();
+            var loginService = app.Services.GetService<ILoginService>();
             await loginService.LogAuthenticatedUserInAsync(TestUserArea1.Code, userId, false);
 
             await repository
@@ -122,9 +123,9 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Commands
                 OldPassword = OLD_PASSWORD
             };
 
-            using var scope = _dbDependentFixture.CreateServiceScope();
+            using var app = _appFactory.Create();
 
-            var repository = scope.GetService<IDomainRepository>();
+            var repository = app.Services.GetService<IDomainRepository>();
 
             await repository
                 .Awaiting(r => r.ExecuteCommandAsync(command))
@@ -141,10 +142,10 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Commands
                 OldPassword = OLD_PASSWORD
             };
 
-            using var scope = _dbDependentFixture.CreateServiceScope();
+            using var app = _appFactory.Create();
 
             // elevate to system user account
-            var repository = scope
+            var repository = app.Services
                 .GetService<IDomainRepository>()
                 .WithElevatedPermissions();
 
@@ -156,8 +157,8 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Commands
 
         private async Task<int> AddUserIfNotExistsAsync(string username)
         {
-            using var scope = _dbDependentFixture.CreateServiceScope();
-            var dbContext = scope.GetService<CofoundryDbContext>();
+            using var app = _appFactory.Create();
+            var dbContext = app.Services.GetService<CofoundryDbContext>();
 
             var userId = await dbContext
                 .Users
@@ -170,7 +171,7 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Commands
                 return userId;
             }
 
-            var repository = scope
+            var repository = app.Services
                 .GetService<IAdvancedContentRepository>()
                 .WithElevatedPermissions();
 

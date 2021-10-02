@@ -6,7 +6,8 @@
 @Cofoundry.Template.UseDescription("A test custom entity template")
 
 <div>
-    <h1>@Model.PageTitle</h1>
+    <h1>@Model.Page.Title</h1>
+    <h2>@Model.PageTitle</h2>
 
     @(await Cofoundry.Template.Region("Page Body")
         .AllowMultipleBlocks()

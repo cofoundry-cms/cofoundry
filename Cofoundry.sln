@@ -37,6 +37,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cofoundry.Samples.Mail", "s
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cofoundry.Samples.UserAreas", "src\Cofoundry.Samples.UserAreas\Cofoundry.Samples.UserAreas.csproj", "{A5C6E692-5B30-4D96-B1BB-8861CF55B0C1}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cofoundry.Web.Tests.Integration", "test\Cofoundry.Web.Tests.Integration\Cofoundry.Web.Tests.Integration.csproj", "{2CC4BFD9-E498-4991-9BB2-EC084FBC3353}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -95,6 +97,10 @@ Global
 		{A5C6E692-5B30-4D96-B1BB-8861CF55B0C1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A5C6E692-5B30-4D96-B1BB-8861CF55B0C1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A5C6E692-5B30-4D96-B1BB-8861CF55B0C1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2CC4BFD9-E498-4991-9BB2-EC084FBC3353}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2CC4BFD9-E498-4991-9BB2-EC084FBC3353}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2CC4BFD9-E498-4991-9BB2-EC084FBC3353}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2CC4BFD9-E498-4991-9BB2-EC084FBC3353}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -113,6 +119,7 @@ Global
 		{EE28E561-3DCA-441D-AC98-19A350E354FC} = {EAA517AB-9245-45E4-9929-C28E3BC944CC}
 		{FF4F5327-3908-49DE-B5D8-C1490A37C0B1} = {8FCDFF68-9BCF-499B-8E2D-7E08E824F40A}
 		{A5C6E692-5B30-4D96-B1BB-8861CF55B0C1} = {8FCDFF68-9BCF-499B-8E2D-7E08E824F40A}
+		{2CC4BFD9-E498-4991-9BB2-EC084FBC3353} = {EAA517AB-9245-45E4-9929-C28E3BC944CC}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {69E60B88-9077-484B-AD67-D85641B1F45A}

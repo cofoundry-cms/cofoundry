@@ -13,39 +13,36 @@ namespace Cofoundry.Domain.Tests.Integration.Pages.Commands
     /// Note that this handler calls AddPageCommandHandler internally
     /// so there is no need to repeat tests for Url uniqueness etc.
     /// </remarks>
-    [Collection(nameof(DbDependentFixture))]
+    [Collection(nameof(DbDependentFixtureCollection))]
     public class DuplicatePageCommandHandlerTests
     {
         const string UNIQUE_PREFIX = "DuplicatePageCHT ";
-        private readonly TestDataHelper _testDataHelper;
 
-        private readonly DbDependentFixture _dbDependentFixture;
+        private readonly DbDependentTestApplicationFactory _appFactory;
 
         public DuplicatePageCommandHandlerTests(
-            DbDependentFixture dbDependantFixture
+            DbDependentTestApplicationFactory appFactory
             )
         {
-            _dbDependentFixture = dbDependantFixture;
-            _testDataHelper = new TestDataHelper(dbDependantFixture);
+            _appFactory = appFactory;
         }
 
         [Fact]
         public async Task CopiesBasicData()
         {
             var uniqueData = UNIQUE_PREFIX + nameof(CopiesBasicData);
-            var directoryId = await _testDataHelper.PageDirectories().AddAsync(uniqueData);
-            var newDirectoryId = await _testDataHelper.PageDirectories().AddAsync(uniqueData + " Copy");
-            var originalPageId = await _testDataHelper.Pages().AddAsync(uniqueData, directoryId, c =>
+
+            using var app = _appFactory.Create();
+            var directoryId = await app.TestData.PageDirectories().AddAsync(uniqueData);
+            var newDirectoryId = await app.TestData.PageDirectories().AddAsync(uniqueData + " Copy");
+            var originalPageId = await app.TestData.Pages().AddAsync(uniqueData, directoryId, c =>
             {
                 c.MetaDescription = uniqueData + " Meta";
                 c.OpenGraphDescription = uniqueData + "OG Desc";
-                c.OpenGraphImageId = _dbDependentFixture.SeededEntities.TestImageId;
+                c.OpenGraphImageId = app.SeededEntities.TestImageId;
                 c.OpenGraphTitle = uniqueData + "OG Title";
                 c.Publish = true;
             });
-
-            using var scope = _dbDependentFixture.CreateServiceScope();
-            var contentRepository = scope.GetContentRepositoryWithElevatedPermissions();
 
             var command = new DuplicatePageCommand()
             {
@@ -55,11 +52,12 @@ namespace Cofoundry.Domain.Tests.Integration.Pages.Commands
                 UrlPath = "page-copy"
             };
 
+            var contentRepository = app.Services.GetContentRepositoryWithElevatedPermissions();
             var newPageId = await contentRepository
                 .Pages()
                 .DuplicateAsync(command);
 
-            var dbContext = scope.GetRequiredService<CofoundryDbContext>();
+            var dbContext = app.Services.GetRequiredService<CofoundryDbContext>();
 
             var originalPage = await GetPageFromDb(originalPageId);
             var originalPageVersion = originalPage?.PageVersions.FirstOrDefault();
@@ -98,15 +96,13 @@ namespace Cofoundry.Domain.Tests.Integration.Pages.Commands
         public async Task CopiesRegions()
         {
             var uniqueData = UNIQUE_PREFIX + nameof(CopiesRegions);
-            var directoryId = await _testDataHelper.PageDirectories().AddAsync(uniqueData);
-            var originalPageId = await _testDataHelper.Pages().AddAsync(uniqueData, directoryId, c => c.Publish = true);
-            var pageVersionId = await _testDataHelper.Pages().AddDraftAsync(originalPageId);
-            var textBlockId = await _testDataHelper.Pages().AddPlainTextBlockToTestTemplateAsync(pageVersionId, uniqueData);
-            var imageBlockId = await _testDataHelper.Pages().AddImageTextBlockToTestTemplateAsync(pageVersionId);
 
-            using var scope = _dbDependentFixture.CreateServiceScope();
-            var contentRepository = scope.GetContentRepositoryWithElevatedPermissions();
-            var dbContext = scope.GetRequiredService<CofoundryDbContext>();
+            using var app = _appFactory.Create();
+            var directoryId = await app.TestData.PageDirectories().AddAsync(uniqueData);
+            var originalPageId = await app.TestData.Pages().AddAsync(uniqueData, directoryId, c => c.Publish = true);
+            var pageVersionId = await app.TestData.Pages().AddDraftAsync(originalPageId);
+            var textBlockId = await app.TestData.Pages().AddPlainTextBlockToTestTemplateAsync(pageVersionId, uniqueData);
+            var imageBlockId = await app.TestData.Pages().AddImageTextBlockToTestTemplateAsync(pageVersionId);
 
             var command = new DuplicatePageCommand()
             {
@@ -116,6 +112,7 @@ namespace Cofoundry.Domain.Tests.Integration.Pages.Commands
                 UrlPath = "page-copy"
             };
 
+            var contentRepository = app.Services.GetContentRepositoryWithElevatedPermissions();
             var newPageId = await contentRepository
                 .Pages()
                 .DuplicateAsync(command);
@@ -145,6 +142,8 @@ namespace Cofoundry.Domain.Tests.Integration.Pages.Commands
                 .FirstOrDefault(v => v.PageBlockTypeId == originalVersionImageBlock?.PageBlockTypeId);
 
             var newVersionImageBlockId = newVersionImageBlock?.PageVersionBlockId;
+
+            var dbContext = app.Services.GetRequiredService<CofoundryDbContext>();
             var unstructuredDependencies = await dbContext
                 .UnstructuredDataDependencies
                 .AsNoTracking()
@@ -166,7 +165,7 @@ namespace Cofoundry.Domain.Tests.Integration.Pages.Commands
                 AssertBlockMatches(originalVersionImageBlock, newVersionImageBlock);
                 unstructuredDependencies.Should().HaveCount(1);
                 copiedImageDependency.Should().NotBeNull();
-                copiedImageDependency.RelatedEntityId.Should().Be(_dbDependentFixture.SeededEntities.TestImageId);
+                copiedImageDependency.RelatedEntityId.Should().Be(app.SeededEntities.TestImageId);
                 copiedImageDependency.RelatedEntityDefinitionCode.Should().Be(ImageAssetEntityDefinition.DefinitionCode);
             }
 
@@ -187,8 +186,10 @@ namespace Cofoundry.Domain.Tests.Integration.Pages.Commands
         public async Task CanCopyFromPreviousVersion()
         {
             var uniqueData = UNIQUE_PREFIX + nameof(CanCopyFromPreviousVersion);
-            var directoryId = await _testDataHelper.PageDirectories().AddAsync(uniqueData);
-            var pageId = await _testDataHelper.Pages().AddAsync(uniqueData, directoryId, c =>
+
+            using var app = _appFactory.Create();
+            var directoryId = await app.TestData.PageDirectories().AddAsync(uniqueData);
+            var pageId = await app.TestData.Pages().AddAsync(uniqueData, directoryId, c =>
             {
                 c.Publish = true;
                 c.MetaDescription = "Test Meta";
@@ -196,17 +197,13 @@ namespace Cofoundry.Domain.Tests.Integration.Pages.Commands
                 c.ShowInSiteMap = true;
             });
 
-            var version2Id = await _testDataHelper.Pages().AddDraftAsync(pageId);
-            await _testDataHelper.Pages().AddPlainTextBlockToTestTemplateAsync(version2Id, uniqueData);
-            await _testDataHelper.Pages().AddImageTextBlockToTestTemplateAsync(version2Id);
-            await _testDataHelper.Pages().PublishAsync(pageId);
-            var version3Id = await _testDataHelper.Pages().AddDraftAsync(pageId);
+            var version2Id = await app.TestData.Pages().AddDraftAsync(pageId);
+            await app.TestData.Pages().AddPlainTextBlockToTestTemplateAsync(version2Id, uniqueData);
+            await app.TestData.Pages().AddImageTextBlockToTestTemplateAsync(version2Id);
+            await app.TestData.Pages().PublishAsync(pageId);
+            var version3Id = await app.TestData.Pages().AddDraftAsync(pageId);
 
-
-            using var scope = _dbDependentFixture.CreateServiceScope();
-            var contentRepository = scope.GetContentRepositoryWithElevatedPermissions();
-            var dbContext = scope.GetRequiredService<CofoundryDbContext>();
-
+            var contentRepository = app.Services.GetContentRepositoryWithElevatedPermissions();
             await contentRepository
                 .Pages()
                 .Versions()
@@ -216,8 +213,8 @@ namespace Cofoundry.Domain.Tests.Integration.Pages.Commands
                     Title = uniqueData + "Updated Title"
                 });
 
-            await _testDataHelper.Pages().AddPlainTextBlockToTestTemplateAsync(version3Id, uniqueData + " V3");
-            await _testDataHelper.Pages().PublishAsync(pageId);
+            await app.TestData.Pages().AddPlainTextBlockToTestTemplateAsync(version3Id, uniqueData + " V3");
+            await app.TestData.Pages().PublishAsync(pageId);
 
             await contentRepository
                 .Pages()
@@ -228,6 +225,7 @@ namespace Cofoundry.Domain.Tests.Integration.Pages.Commands
                     CopyFromPageVersionId = version2Id
                 });
 
+            var dbContext = app.Services.GetRequiredService<CofoundryDbContext>();
             var versions = await dbContext
                 .PageVersions
                 .AsNoTracking()
@@ -258,13 +256,12 @@ namespace Cofoundry.Domain.Tests.Integration.Pages.Commands
         public async Task WhenCopied_SendsMessage()
         {
             var uniqueData = UNIQUE_PREFIX + nameof(WhenCopied_SendsMessage);
-            var directoryId = await _testDataHelper.PageDirectories().AddAsync(uniqueData);
-            var pageId = await _testDataHelper.Pages().AddAsync(uniqueData, directoryId, c => c.Publish = true);
 
-            using var scope = _dbDependentFixture.CreateServiceScope();
-            var contentRepository = scope.GetContentRepositoryWithElevatedPermissions();
-            var dbContext = scope.GetRequiredService<CofoundryDbContext>();
+            using var app = _appFactory.Create();
+            var directoryId = await app.TestData.PageDirectories().AddAsync(uniqueData);
+            var pageId = await app.TestData.Pages().AddAsync(uniqueData, directoryId, c => c.Publish = true);
 
+            var contentRepository = app.Services.GetContentRepositoryWithElevatedPermissions();
             var newPageId = await contentRepository
                 .Pages()
                 .DuplicateAsync(new DuplicatePageCommand()
@@ -275,21 +272,22 @@ namespace Cofoundry.Domain.Tests.Integration.Pages.Commands
                     UrlPath = "copy"
                 });
 
+            var dbContext = app.Services.GetRequiredService<CofoundryDbContext>();
             var draftVersionId = await dbContext
                 .PageVersions
                 .FilterByPageId(newPageId)
                 .Select(p => p.PageVersionId)
                 .SingleAsync();
 
-            scope
+            app.Mocks
                 .CountMessagesPublished<PageAddedMessage>(m => m.PageId == newPageId && !m.HasPublishedVersionChanged)
                 .Should().Be(1);
         }
 
         private async Task<Page> GetPageFromDb(int pageId)
         {
-            using var scope = _dbDependentFixture.CreateServiceScope();
-            var dbContext = scope.GetRequiredService<CofoundryDbContext>();
+            using var app = _appFactory.Create();
+            var dbContext = app.Services.GetRequiredService<CofoundryDbContext>();
 
             return await dbContext
                 .Pages

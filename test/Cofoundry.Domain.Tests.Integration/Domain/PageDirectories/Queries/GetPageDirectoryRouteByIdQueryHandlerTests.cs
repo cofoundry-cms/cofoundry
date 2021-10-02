@@ -7,20 +7,18 @@ using Xunit;
 
 namespace Cofoundry.Domain.Tests.Integration.PageDirectories.Queries
 {
-    [Collection(nameof(DbDependentFixture))]
+    [Collection(nameof(DbDependentFixtureCollection))]
     public class GetPageDirectoryRouteByIdQueryHandlerTests
     {
         const string UNIQUE_PREFIX = "GAllPageDirRouteByIdQHT ";
 
-        private readonly DbDependentFixture _dbDependentFixture;
-        private readonly TestDataHelper _testDataHelper;
+        private readonly DbDependentTestApplicationFactory _appFactory;
 
         public GetPageDirectoryRouteByIdQueryHandlerTests(
-            DbDependentFixture dbDependantFixture
+            DbDependentTestApplicationFactory appFactory
             )
         {
-            _dbDependentFixture = dbDependantFixture;
-            _testDataHelper = new TestDataHelper(dbDependantFixture);
+            _appFactory = appFactory;
         }
 
         [Fact]
@@ -28,14 +26,14 @@ namespace Cofoundry.Domain.Tests.Integration.PageDirectories.Queries
         {
             var uniqueData = UNIQUE_PREFIX + nameof(ReturnsMappedRoute);
 
-            using var scope = _dbDependentFixture.CreateServiceScope();
-            var contentRepository = scope.GetContentRepositoryWithElevatedPermissions();
-            var parentDirectoryCommand = await _testDataHelper.PageDirectories().CreateAddCommandAsync(uniqueData);
+            using var app = _appFactory.Create();
+            var contentRepository = app.Services.GetContentRepositoryWithElevatedPermissions();
+            var parentDirectoryCommand = await app.TestData.PageDirectories().CreateAddCommandAsync(uniqueData);
             var parentDirectoryId = await contentRepository
                 .PageDirectories()
                 .AddAsync(parentDirectoryCommand);
 
-            var directoryId = await _testDataHelper.PageDirectories().AddAsync("Dir-1", parentDirectoryId);
+            var directoryId = await app.TestData.PageDirectories().AddAsync("Dir-1", parentDirectoryId);
 
             var directory = await contentRepository
                 .PageDirectories()

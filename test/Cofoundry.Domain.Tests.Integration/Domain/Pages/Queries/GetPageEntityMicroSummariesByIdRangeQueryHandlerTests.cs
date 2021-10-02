@@ -6,20 +6,18 @@ using Xunit;
 
 namespace Cofoundry.Domain.Tests.Integration.Pages.Queries
 {
-    [Collection(nameof(DbDependentFixture))]
+    [Collection(nameof(DbDependentFixtureCollection))]
     public class GetPageEntityMicroSummariesByIdRangeQueryHandlerTests
     {
         const string UNIQUE_PREFIX = "GPageEMSByIdRangeQHT ";
 
-        private readonly DbDependentFixture _dbDependentFixture;
-        private readonly TestDataHelper _testDataHelper;
+        private readonly DbDependentTestApplicationFactory _appFactory;
 
         public GetPageEntityMicroSummariesByIdRangeQueryHandlerTests(
-            DbDependentFixture dbDependantFixture
+            DbDependentTestApplicationFactory appFactory
             )
         {
-            _dbDependentFixture = dbDependantFixture;
-            _testDataHelper = new TestDataHelper(dbDependantFixture);
+            _appFactory = appFactory;
         }
 
         [Fact]
@@ -27,13 +25,12 @@ namespace Cofoundry.Domain.Tests.Integration.Pages.Queries
         {
             var uniqueData = UNIQUE_PREFIX + nameof(ReturnsMappedData);
 
-            var directoryId = await _testDataHelper.PageDirectories().AddAsync(uniqueData);
-            var page1Id = await _testDataHelper.Pages().AddAsync(uniqueData + "1", directoryId);
-            var page2Id = await _testDataHelper.Pages().AddAsync(uniqueData + "2", directoryId);
+            using var app = _appFactory.Create();
+            var directoryId = await app.TestData.PageDirectories().AddAsync(uniqueData);
+            var page1Id = await app.TestData.Pages().AddAsync(uniqueData + "1", directoryId);
+            var page2Id = await app.TestData.Pages().AddAsync(uniqueData + "2", directoryId);
 
-            using var scope = _dbDependentFixture.CreateServiceScope();
-            var contentRepository = scope.GetContentRepositoryWithElevatedPermissions();
-
+            var contentRepository = app.Services.GetContentRepositoryWithElevatedPermissions();
             var query = new GetPageEntityMicroSummariesByIdRangeQuery(new int[] { page1Id, page2Id });
             var pageLookup = await contentRepository.ExecuteQueryAsync(query);
 

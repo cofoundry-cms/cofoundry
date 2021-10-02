@@ -14,17 +14,17 @@ namespace Cofoundry.Domain.Tests.Integration
     /// </summary>
     public class PageDirectoryTestDataHelper
     {
-        private readonly DbDependentFixture _dbDependentFixture;
+        private readonly IServiceProvider _serviceProvider;
 
-        public PageDirectoryTestDataHelper(DbDependentFixture dbDependentFixture)
+        public PageDirectoryTestDataHelper(IServiceProvider serviceProvider)
         {
-            _dbDependentFixture = dbDependentFixture;
+            _serviceProvider = serviceProvider;
         }
 
         public async Task<int> GetRootDirectoryIdAsync()
         {
-            using var scope = _dbDependentFixture.CreateServiceScope();
-            var dbContext = scope.GetRequiredService<CofoundryDbContext>();
+            using var scope = _serviceProvider.CreateScope();
+            var dbContext = scope.ServiceProvider.GetRequiredService<CofoundryDbContext>();
 
             return await dbContext
                 .PageDirectories
@@ -57,8 +57,8 @@ namespace Cofoundry.Domain.Tests.Integration
                 configration(command);
             }
 
-            using var scope = _dbDependentFixture.CreateServiceScope();
-            var contentRepository = scope.GetRequiredService<IAdvancedContentRepository>();
+            using var scope = _serviceProvider.CreateScope();
+            var contentRepository = scope.ServiceProvider.GetRequiredService<IAdvancedContentRepository>();
 
             return await contentRepository
                 .WithElevatedPermissions()

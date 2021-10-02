@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace Cofoundry.Web
+﻿namespace Cofoundry.Web
 {
     /// <summary>
     /// Represents the input parameters of the Page action.
@@ -11,7 +6,7 @@ namespace Cofoundry.Web
     public class PageActionInputParameters
     {
         /// <summary>
-        /// The raw, relative path of the page without querystring
+        /// The raw, relative path of the page without querystring.
         /// </summary>
         public string Path { get; set; }
 

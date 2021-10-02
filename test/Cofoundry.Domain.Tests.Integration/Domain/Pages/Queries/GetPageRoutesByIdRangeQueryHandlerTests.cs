@@ -6,20 +6,18 @@ using Xunit;
 
 namespace Cofoundry.Domain.Tests.Integration.Pages.Queries
 {
-    [Collection(nameof(DbDependentFixture))]
+    [Collection(nameof(DbDependentFixtureCollection))]
     public class GetPageRoutesByIdRangeQueryHandlerTests
     {
         const string UNIQUE_PREFIX = "GAllPageRoutesQHT ";
 
-        private readonly DbDependentFixture _dbDependentFixture;
-        private readonly TestDataHelper _testDataHelper;
+        private readonly DbDependentTestApplicationFactory _appFactory;
 
         public GetPageRoutesByIdRangeQueryHandlerTests(
-            DbDependentFixture dbDependantFixture
+            DbDependentTestApplicationFactory appFactory
             )
         {
-            _dbDependentFixture = dbDependantFixture;
-            _testDataHelper = new TestDataHelper(dbDependantFixture);
+            _appFactory = appFactory;
         }
 
         [Fact]
@@ -27,16 +25,15 @@ namespace Cofoundry.Domain.Tests.Integration.Pages.Queries
         {
             var uniqueData = UNIQUE_PREFIX + nameof(ReturnsRequestedRoutes);
 
-            using var scope = _dbDependentFixture.CreateServiceScope();
-            var contentRepository = scope.GetContentRepositoryWithElevatedPermissions();
+            using var app = _appFactory.Create();
+            var directory1Id = await app.TestData.PageDirectories().AddAsync(uniqueData + "1");
+            var page1Id = await app.TestData.Pages().AddAsync(uniqueData + "1", directory1Id);
+            var page2Id = await app.TestData.Pages().AddAsync(uniqueData + "2", directory1Id);
+            var directory2Id = await app.TestData.PageDirectories().AddAsync(uniqueData + "2");
+            var page3Id = await app.TestData.Pages().AddAsync(uniqueData + "3", directory2Id);
+            var page4Id = await app.TestData.Pages().AddAsync(uniqueData + "4", directory2Id);
 
-            var directory1Id = await _testDataHelper.PageDirectories().AddAsync(uniqueData + "1");
-            var page1Id = await _testDataHelper.Pages().AddAsync(uniqueData + "1", directory1Id);
-            var page2Id = await _testDataHelper.Pages().AddAsync(uniqueData + "2", directory1Id);
-            var directory2Id = await _testDataHelper.PageDirectories().AddAsync(uniqueData + "2");
-            var page3Id = await _testDataHelper.Pages().AddAsync(uniqueData + "3", directory2Id);
-            var page4Id = await _testDataHelper.Pages().AddAsync(uniqueData + "4", directory2Id);
-
+            var contentRepository = app.Services.GetContentRepositoryWithElevatedPermissions();
             var results = await contentRepository
                 .Pages()
                 .GetByIdRange(new int[] { page1Id, page3Id, page4Id })
@@ -66,13 +63,12 @@ namespace Cofoundry.Domain.Tests.Integration.Pages.Queries
         {
             var uniqueData = UNIQUE_PREFIX + nameof(DoesNotReturnDeletedRoutes);
 
-            using var scope = _dbDependentFixture.CreateServiceScope();
-            var contentRepository = scope.GetContentRepositoryWithElevatedPermissions();
+            using var app = _appFactory.Create();
+            var directory1Id = await app.TestData.PageDirectories().AddAsync(uniqueData + "1");
+            var page1Id = await app.TestData.Pages().AddAsync(uniqueData + "1", directory1Id);
+            var page2Id = await app.TestData.Pages().AddAsync(uniqueData + "2", directory1Id);
 
-            var directory1Id = await _testDataHelper.PageDirectories().AddAsync(uniqueData + "1");
-            var page1Id = await _testDataHelper.Pages().AddAsync(uniqueData + "1", directory1Id);
-            var page2Id = await _testDataHelper.Pages().AddAsync(uniqueData + "2", directory1Id);
-
+            var contentRepository = app.Services.GetContentRepositoryWithElevatedPermissions();
             await contentRepository
                 .Pages()
                 .DeleteAsync(page1Id);

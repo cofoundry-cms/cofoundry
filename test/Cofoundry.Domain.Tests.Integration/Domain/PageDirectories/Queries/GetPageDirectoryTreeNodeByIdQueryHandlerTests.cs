@@ -6,20 +6,18 @@ using Xunit;
 
 namespace Cofoundry.Domain.Tests.Integration.PageDirectories.Queries
 {
-    [Collection(nameof(DbDependentFixture))]
+    [Collection(nameof(DbDependentFixtureCollection))]
     public class GetPageDirectoryTreeNodeByIdQueryHandlerTests
     {
         const string UNIQUE_PREFIX = "GPageDirTreeNodeByIdQHT ";
 
-        private readonly DbDependentFixture _dbDependentFixture;
-        private readonly TestDataHelper _testDataHelper;
+        private readonly DbDependentTestApplicationFactory _appFactory;
 
         public GetPageDirectoryTreeNodeByIdQueryHandlerTests(
-            DbDependentFixture dbDependantFixture
+            DbDependentTestApplicationFactory appFactory
             )
         {
-            _dbDependentFixture = dbDependantFixture;
-            _testDataHelper = new TestDataHelper(dbDependantFixture);
+            _appFactory = appFactory;
         }
 
         [Fact]
@@ -27,17 +25,17 @@ namespace Cofoundry.Domain.Tests.Integration.PageDirectories.Queries
         {
             var uniqueData = UNIQUE_PREFIX + nameof(ReturnsMappedRoute);
 
-            using var scope = _dbDependentFixture.CreateServiceScope();
-            var contentRepository = scope.GetContentRepositoryWithElevatedPermissions();
-            var parentDirectoryCommand = await _testDataHelper.PageDirectories().CreateAddCommandAsync(uniqueData);
+            using var app = _appFactory.Create();
+            var contentRepository = app.Services.GetContentRepositoryWithElevatedPermissions();
+            var parentDirectoryCommand = await app.TestData.PageDirectories().CreateAddCommandAsync(uniqueData);
             var parentDirectoryId = await contentRepository
                 .PageDirectories()
                 .AddAsync(parentDirectoryCommand);
 
-            var directoryId = await _testDataHelper.PageDirectories().AddAsync("Dir-1", parentDirectoryId);
-            await _testDataHelper.PageDirectories().AddAsync("Dir-1-A", directoryId);
-            await _testDataHelper.PageDirectories().AddAsync("Dir-1-B", directoryId);
-            await _testDataHelper.PageDirectories().AddAsync("Dir-1-C", directoryId);
+            var directoryId = await app.TestData.PageDirectories().AddAsync("Dir-1", parentDirectoryId);
+            await app.TestData.PageDirectories().AddAsync("Dir-1-A", directoryId);
+            await app.TestData.PageDirectories().AddAsync("Dir-1-B", directoryId);
+            await app.TestData.PageDirectories().AddAsync("Dir-1-C", directoryId);
 
             var directory = await contentRepository
                 .PageDirectories()

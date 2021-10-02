@@ -15,11 +15,16 @@ namespace Cofoundry.Domain.Tests.Integration
     /// </summary>
     public class PageTestDataHelper
     {
-        private readonly DbDependentFixture _dbDependentFixture;
+        private readonly IServiceProvider _serviceProvider;
+        private readonly SeededEntities _seededEntities;
 
-        public PageTestDataHelper(DbDependentFixture dbDependentFixture)
+        public PageTestDataHelper(
+            IServiceProvider serviceProvider,
+            SeededEntities seededEntities
+            )
         {
-            _dbDependentFixture = dbDependentFixture;
+            _serviceProvider = serviceProvider;
+            _seededEntities = seededEntities;
         }
 
         /// <summary>
@@ -53,8 +58,11 @@ namespace Cofoundry.Domain.Tests.Integration
                 configration(command);
             }
 
-            using var scope = _dbDependentFixture.CreateServiceScope();
-            var contentRepository = scope.GetContentRepositoryWithElevatedPermissions();
+            using var scope = _serviceProvider.CreateScope();
+            var contentRepository = scope
+                .ServiceProvider
+                .GetRequiredService<IAdvancedContentRepository>()
+                .WithElevatedPermissions();
 
             return await contentRepository
                 .Pages()
@@ -90,8 +98,11 @@ namespace Cofoundry.Domain.Tests.Integration
                 configration(command);
             }
 
-            using var scope = _dbDependentFixture.CreateServiceScope();
-            var contentRepository = scope.GetContentRepositoryWithElevatedPermissions();
+            using var scope = _serviceProvider.CreateScope();
+            var contentRepository = scope
+                .ServiceProvider
+                .GetRequiredService<IAdvancedContentRepository>()
+                .WithElevatedPermissions();
 
             return await contentRepository
                 .Pages()
@@ -110,8 +121,11 @@ namespace Cofoundry.Domain.Tests.Integration
                 PageId = pageId
             };
 
-            using var scope = _dbDependentFixture.CreateServiceScope();
-            var contentRepository = scope.GetContentRepositoryWithElevatedPermissions();
+            using var scope = _serviceProvider.CreateScope();
+            var contentRepository = scope
+                .ServiceProvider
+                .GetRequiredService<IAdvancedContentRepository>()
+                .WithElevatedPermissions();
 
             return await contentRepository
                 .Pages()
@@ -125,8 +139,11 @@ namespace Cofoundry.Domain.Tests.Integration
         /// <param name="pageId">Id of the page to publish.</param>
         public async Task PublishAsync(int pageId)
         {
-            using var scope = _dbDependentFixture.CreateServiceScope();
-            var contentRepository = scope.GetContentRepositoryWithElevatedPermissions();
+            using var scope = _serviceProvider.CreateScope();
+            var contentRepository = scope
+                .ServiceProvider
+                .GetRequiredService<IAdvancedContentRepository>()
+                .WithElevatedPermissions();
 
             await contentRepository
                 .Pages()
@@ -152,7 +169,7 @@ namespace Cofoundry.Domain.Tests.Integration
                 PageDirectoryId = parentDirectoryId,
                 UrlPath = SlugFormatter.ToSlug(uniqueData),
                 PageType = PageType.Generic,
-                PageTemplateId = _dbDependentFixture.SeededEntities.TestPageTemplate.PageTemplateId
+                PageTemplateId = _seededEntities.TestPageTemplate.PageTemplateId
             };
 
             return command;
@@ -178,7 +195,7 @@ namespace Cofoundry.Domain.Tests.Integration
                 Title = uniqueData,
                 PageDirectoryId = parentDirectoryId,
                 PageType = PageType.CustomEntityDetails,
-                PageTemplateId = _dbDependentFixture.SeededEntities.TestCustomEntityPageTemplate.PageTemplateId,
+                PageTemplateId = _seededEntities.TestCustomEntityPageTemplate.PageTemplateId,
                 CustomEntityRoutingRule = new IdAndUrlSlugCustomEntityRoutingRule().RouteFormat
             };
 
@@ -207,8 +224,11 @@ namespace Cofoundry.Domain.Tests.Integration
             )
             where TDataModel : IPageBlockTypeDataModel
         {
-            using var scope = _dbDependentFixture.CreateServiceScope();
-            var contentRepository = scope.GetContentRepositoryWithElevatedPermissions();
+            using var scope = _serviceProvider.CreateScope();
+            var contentRepository = scope
+                .ServiceProvider
+                .GetRequiredService<IAdvancedContentRepository>()
+                .WithElevatedPermissions();
 
             var allBlocks = await contentRepository
                 .PageBlockTypes()
@@ -244,7 +264,7 @@ namespace Cofoundry.Domain.Tests.Integration
         /// </summary>
         public async Task<int> AddPlainTextBlockToTestTemplateAsync(int pageVersionId, string text = "Test Text")
         {
-            var template = _dbDependentFixture.SeededEntities.TestPageTemplate;
+            var template = _seededEntities.TestPageTemplate;
 
             return await AddBlockAsync(pageVersionId, template.BodyPageTemplateRegionId, new PlainTextDataModel()
             {
@@ -257,11 +277,11 @@ namespace Cofoundry.Domain.Tests.Integration
         /// </summary>
         public async Task<int> AddImageTextBlockToTestTemplateAsync(int pageVersionId)
         {
-            var template = _dbDependentFixture.SeededEntities.TestPageTemplate;
+            var template = _seededEntities.TestPageTemplate;
 
             return await AddBlockAsync(pageVersionId, template.BodyPageTemplateRegionId, new ImageDataModel()
             {
-                ImageId = _dbDependentFixture.SeededEntities.TestImageId,
+                ImageId = _seededEntities.TestImageId,
                 AltText = "Test Alt Text"
             });
         }

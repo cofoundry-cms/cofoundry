@@ -7,37 +7,30 @@ using System;
 
 namespace Cofoundry.Domain.Tests.Integration
 {
-    public class MockServiceProviderScope : IServiceProvider, IDisposable
+    /// <summary>
+    /// Convenience methods to make it easier to work
+    /// with mocks and service wrappers set up in the 
+    /// service collection for testing.
+    /// </summary>
+    public class MockServicesHelper
     {
-        private readonly IServiceScope _baseServiceProviderScope;
+        private readonly TestApplicationServiceScope _serviceScope;
 
-        public MockServiceProviderScope(
-            IServiceProvider baseServiceProvider
+        public MockServicesHelper(
+            TestApplicationServiceScope serviceScope
             )
         {
-            _baseServiceProviderScope = baseServiceProvider.CreateScope();
+            _serviceScope = serviceScope;
         }
 
-        public object GetService(Type serviceType)
-        {
-            return _baseServiceProviderScope.ServiceProvider.GetService(serviceType);
-        }
-
-        public IAdvancedContentRepository GetContentRepository()
-        {
-            return this.GetRequiredService<IAdvancedContentRepository>();
-        }
-
-        public IAdvancedContentRepository GetContentRepositoryWithElevatedPermissions()
-        {
-            return this
-                .GetRequiredService<IAdvancedContentRepository>()
-                .WithElevatedPermissions();
-        }
-
+        /// <summary>
+        /// Sets the date and time used by Cofoundry (via 
+        /// <see cref="IDateTimeService"/>) to a specific value.
+        /// </summary>
+        /// <param name="utcNow">The UTC time to set as the current time.</param>
         public void MockDateTime(DateTime utcNow)
         {
-            var dateTimeService = _baseServiceProviderScope.ServiceProvider.GetService<IDateTimeService>() as MockDateTimeService;
+            var dateTimeService = _serviceScope.GetService<IDateTimeService>() as MockDateTimeService;
             if (dateTimeService == null)
             {
                 throw new Exception($"{nameof(IDateTimeService)} is expected to be an instance of {nameof(MockDateTimeService)} in testing");
@@ -55,18 +48,13 @@ namespace Cofoundry.Domain.Tests.Integration
         /// <returns>The number of messages matched by the <paramref name="predicate"/>.</returns>
         public int CountMessagesPublished<TMessage>(Func<TMessage, bool> predicate)
         {
-            var auditableMessageAggregator = _baseServiceProviderScope.ServiceProvider.GetService<IMessageAggregator>() as AuditableMessageAggregator;
+            var auditableMessageAggregator = _serviceScope.GetService<IMessageAggregator>() as AuditableMessageAggregator;
             if (auditableMessageAggregator == null)
             {
                 throw new Exception($"{nameof(IMessageAggregator)} is expected to be an instance of {nameof(AuditableMessageAggregator)} in testing");
             }
 
             return auditableMessageAggregator.CountMessagesPublished(predicate);
-        }
-
-        public void Dispose()
-        {
-            _baseServiceProviderScope?.Dispose();
         }
     }
 }

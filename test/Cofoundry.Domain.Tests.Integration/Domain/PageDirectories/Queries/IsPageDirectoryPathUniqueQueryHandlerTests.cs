@@ -4,30 +4,28 @@ using Xunit;
 
 namespace Cofoundry.Domain.Tests.Integration.PageDirectories.Queries
 {
-    [Collection(nameof(DbDependentFixture))]
+    [Collection(nameof(DbDependentFixtureCollection))]
     public class IsPageDirectoryPathUniqueQueryHandlerTests
     {
         const string UNIQUE_PREFIX = "IsPageDirPathUnqQHT ";
 
-        private readonly DbDependentFixture _dbDependentFixture;
-        private readonly TestDataHelper _testDataHelper;
+        private readonly DbDependentTestApplicationFactory _appFactory;
 
         public IsPageDirectoryPathUniqueQueryHandlerTests(
-            DbDependentFixture dbDependantFixture
+            DbDependentTestApplicationFactory appFactory
             )
         {
-            _dbDependentFixture = dbDependantFixture;
-            _testDataHelper = new TestDataHelper(dbDependantFixture);
+            _appFactory = appFactory;
         }
 
         public async Task WhenPathUnique_ReturnsTrue()
         {
             var uniqueData = UNIQUE_PREFIX + nameof(WhenPathUnique_ReturnsTrue);
-            var parentDirectoryId = await _testDataHelper.PageDirectories().AddAsync(uniqueData);
 
-            using var scope = _dbDependentFixture.CreateServiceScope();
-            var contentRepository = scope.GetContentRepositoryWithElevatedPermissions();
+            using var app = _appFactory.Create();
+            var parentDirectoryId = await app.TestData.PageDirectories().AddAsync(uniqueData);
 
+            var contentRepository = app.Services.GetContentRepositoryWithElevatedPermissions();
             var isUnique = await contentRepository
                 .PageDirectories()
                 .IsPathUnique(new IsPageDirectoryPathUniqueQuery()
@@ -43,10 +41,11 @@ namespace Cofoundry.Domain.Tests.Integration.PageDirectories.Queries
         public async Task WhenPathNotUnique_ReturnsFalse()
         {
             var uniqueData = UNIQUE_PREFIX + nameof(WhenPathNotUnique_ReturnsFalse);
-            var parentDirectoryId = await _testDataHelper.PageDirectories().AddAsync(uniqueData);
 
-            using var scope = _dbDependentFixture.CreateServiceScope();
-            var contentRepository = scope.GetContentRepositoryWithElevatedPermissions();
+            using var app = _appFactory.Create();
+            var parentDirectoryId = await app.TestData.PageDirectories().AddAsync(uniqueData);
+
+            var contentRepository = app.Services.GetContentRepositoryWithElevatedPermissions();
 
             var isUnique = await contentRepository
                 .PageDirectories()
@@ -63,12 +62,13 @@ namespace Cofoundry.Domain.Tests.Integration.PageDirectories.Queries
         public async Task WhenExistingDirectory_ReturnsFalse()
         {
             var uniqueData = UNIQUE_PREFIX + nameof(WhenExistingDirectory_ReturnsFalse);
-            var parentDirectoryId = await _testDataHelper.PageDirectories().AddAsync(uniqueData);
-            var childDirectoryId = await _testDataHelper.PageDirectories().AddAsync(uniqueData, parentDirectoryId);
-            await _testDataHelper.PageDirectories().AddAsync(uniqueData + "a", parentDirectoryId);
 
-            using var scope = _dbDependentFixture.CreateServiceScope();
-            var contentRepository = scope.GetContentRepositoryWithElevatedPermissions();
+            using var app = _appFactory.Create();
+            var parentDirectoryId = await app.TestData.PageDirectories().AddAsync(uniqueData);
+            var childDirectoryId = await app.TestData.PageDirectories().AddAsync(uniqueData, parentDirectoryId);
+            await app.TestData.PageDirectories().AddAsync(uniqueData + "a", parentDirectoryId);
+
+            var contentRepository = app.Services.GetContentRepositoryWithElevatedPermissions();
 
             var isUnique = await contentRepository
                 .PageDirectories()

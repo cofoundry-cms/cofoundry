@@ -11,31 +11,29 @@ using Xunit;
 
 namespace Cofoundry.Domain.Tests.Integration.PageDirectories.Commands
 {
-    [Collection(nameof(DbDependentFixture))]
+    [Collection(nameof(DbDependentFixtureCollection))]
     public class UpdatePageDirectoryCommandHandlerTests
     {
         const string UNIQUE_PREFIX = "UpdPageDirectoryCHT ";
 
-        private readonly DbDependentFixture _dbDependentFixture;
-        private readonly TestDataHelper _testDataHelper;
+        private readonly DbDependentTestApplicationFactory _appFactory;
 
         public UpdatePageDirectoryCommandHandlerTests(
-            DbDependentFixture dbDependantFixture
+             DbDependentTestApplicationFactory appFactory
             )
         {
-            _dbDependentFixture = dbDependantFixture;
-            _testDataHelper = new TestDataHelper(dbDependantFixture);
+            _appFactory = appFactory;
         }
 
         [Fact]
         public async Task CanUpdateProperties()
         {
             var uniqueData = UNIQUE_PREFIX + nameof(CanUpdateProperties);
-            var addDirectoryCommand = await _testDataHelper.PageDirectories().CreateAddCommandAsync(uniqueData);
 
-            using var scope = _dbDependentFixture.CreateServiceScope();
-            var contentRepository = scope.GetContentRepositoryWithElevatedPermissions();
+            using var app = _appFactory.Create();
+            var addDirectoryCommand = await app.TestData.PageDirectories().CreateAddCommandAsync(uniqueData);
 
+            var contentRepository = app.Services.GetContentRepositoryWithElevatedPermissions();
             await contentRepository
                 .PageDirectories()
                 .AddAsync(addDirectoryCommand);
@@ -46,7 +44,7 @@ namespace Cofoundry.Domain.Tests.Integration.PageDirectories.Commands
                 .PageDirectories()
                 .UpdateAsync(updateCommand);
 
-            var dbContext = scope.GetRequiredService<CofoundryDbContext>();
+            var dbContext = app.Services.GetRequiredService<CofoundryDbContext>();
             var directory = await dbContext
                 .PageDirectories
                 .AsNoTracking()
@@ -66,12 +64,12 @@ namespace Cofoundry.Domain.Tests.Integration.PageDirectories.Commands
         public async Task WhenNotInUse_CanChangeUrl()
         {
             var uniqueData = UNIQUE_PREFIX + nameof(WhenNotInUse_CanChangeUrl);
-            var addDirectoryCommand = await _testDataHelper.PageDirectories().CreateAddCommandAsync(uniqueData);
-            var newParentDirectoryId = await _testDataHelper.PageDirectories().AddAsync(uniqueData + "2");
 
-            using var scope = _dbDependentFixture.CreateServiceScope();
-            var contentRepository = scope.GetContentRepositoryWithElevatedPermissions();
+            using var app = _appFactory.Create();
+            var addDirectoryCommand = await app.TestData.PageDirectories().CreateAddCommandAsync(uniqueData);
+            var newParentDirectoryId = await app.TestData.PageDirectories().AddAsync(uniqueData + "2");
 
+            var contentRepository = app.Services.GetContentRepositoryWithElevatedPermissions();
             await contentRepository
                 .PageDirectories()
                 .AddAsync(addDirectoryCommand);
@@ -84,7 +82,7 @@ namespace Cofoundry.Domain.Tests.Integration.PageDirectories.Commands
                 .PageDirectories()
                 .UpdateAsync(updateCommand);
 
-            var dbContext = scope.GetRequiredService<CofoundryDbContext>();
+            var dbContext = app.Services.GetRequiredService<CofoundryDbContext>();
             var directory = await dbContext
                 .PageDirectories
                 .AsNoTracking()
@@ -102,17 +100,17 @@ namespace Cofoundry.Domain.Tests.Integration.PageDirectories.Commands
         public async Task WhenDirectoryInUseAndChangingUrl_Throws()
         {
             var uniqueData = UNIQUE_PREFIX + nameof(WhenDirectoryInUseAndChangingUrl_Throws);
-            var addDirectoryCommand = await _testDataHelper.PageDirectories().CreateAddCommandAsync(uniqueData);
 
-            using var scope = _dbDependentFixture.CreateServiceScope();
-            var contentRepository = scope.GetContentRepositoryWithElevatedPermissions();
+            using var app = _appFactory.Create();
+            var addDirectoryCommand = await app.TestData.PageDirectories().CreateAddCommandAsync(uniqueData);
 
+            var contentRepository = app.Services.GetContentRepositoryWithElevatedPermissions();
             await contentRepository
                 .PageDirectories()
                 .AddAsync(addDirectoryCommand);
 
-            var childDirectoryId = await _testDataHelper.PageDirectories().AddAsync(uniqueData, addDirectoryCommand.OutputPageDirectoryId);
-            await _testDataHelper.Pages().AddAsync(uniqueData, childDirectoryId);
+            var childDirectoryId = await app.TestData.PageDirectories().AddAsync(uniqueData, addDirectoryCommand.OutputPageDirectoryId);
+            await app.TestData.Pages().AddAsync(uniqueData, childDirectoryId);
 
             var updateCommand = MapFromAddCommand(addDirectoryCommand);
             updateCommand.UrlPath = uniqueData + "U";
@@ -128,18 +126,18 @@ namespace Cofoundry.Domain.Tests.Integration.PageDirectories.Commands
         public async Task WhenDirectoryInUseAndChangingParentDirectory_Throws()
         {
             var uniqueData = UNIQUE_PREFIX + "WhenDirInUseAndChangingParentDir";
-            var addDirectoryCommand = await _testDataHelper.PageDirectories().CreateAddCommandAsync(uniqueData);
 
-            using var scope = _dbDependentFixture.CreateServiceScope();
-            var contentRepository = scope.GetContentRepositoryWithElevatedPermissions();
+            using var app = _appFactory.Create();
+            var addDirectoryCommand = await app.TestData.PageDirectories().CreateAddCommandAsync(uniqueData);
+            var contentRepository = app.Services.GetContentRepositoryWithElevatedPermissions();
 
             await contentRepository
                 .PageDirectories()
                 .AddAsync(addDirectoryCommand);
 
-            var childDirectoryId = await _testDataHelper.PageDirectories().AddAsync(uniqueData, addDirectoryCommand.OutputPageDirectoryId);
-            await _testDataHelper.Pages().AddAsync(uniqueData, childDirectoryId);
-            var newParentDirectoryId = await _testDataHelper.PageDirectories().AddAsync(uniqueData + "1");
+            var childDirectoryId = await app.TestData.PageDirectories().AddAsync(uniqueData, addDirectoryCommand.OutputPageDirectoryId);
+            await app.TestData.Pages().AddAsync(uniqueData, childDirectoryId);
+            var newParentDirectoryId = await app.TestData.PageDirectories().AddAsync(uniqueData + "1");
 
             var updateCommand = MapFromAddCommand(addDirectoryCommand);
             updateCommand.ParentPageDirectoryId = newParentDirectoryId;
@@ -156,17 +154,16 @@ namespace Cofoundry.Domain.Tests.Integration.PageDirectories.Commands
         {
             var uniqueData = UNIQUE_PREFIX + nameof(WhenNotUnique_Throws);
 
-            var addDirectoryCommand = await _testDataHelper.PageDirectories().CreateAddCommandAsync(uniqueData);
+            using var app = _appFactory.Create();
+            var addDirectoryCommand = await app.TestData.PageDirectories().CreateAddCommandAsync(uniqueData);
             var duplicatePath = addDirectoryCommand.UrlPath + "1";
 
-            using var scope = _dbDependentFixture.CreateServiceScope();
-            var contentRepository = scope.GetContentRepositoryWithElevatedPermissions();
-
+            var contentRepository = app.Services.GetContentRepositoryWithElevatedPermissions();
             await contentRepository
                 .PageDirectories()
                 .AddAsync(addDirectoryCommand);
 
-            await _testDataHelper.PageDirectories().AddAsync(duplicatePath);
+            await app.TestData.PageDirectories().AddAsync(duplicatePath);
 
             var updateCommand = MapFromAddCommand(addDirectoryCommand);
             updateCommand.UrlPath = duplicatePath;
@@ -177,7 +174,6 @@ namespace Cofoundry.Domain.Tests.Integration.PageDirectories.Commands
                 .ThrowAsync<UniqueConstraintViolationException>()
                 .WithMemberNames(nameof(updateCommand.UrlPath));
         }
-
 
         public UpdatePageDirectoryCommand MapFromAddCommand(AddPageDirectoryCommand command)
         {

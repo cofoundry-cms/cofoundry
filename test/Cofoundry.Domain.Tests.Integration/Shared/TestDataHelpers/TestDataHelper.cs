@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Cofoundry.Domain.Tests.Integration
 {
@@ -10,12 +8,17 @@ namespace Cofoundry.Domain.Tests.Integration
     /// </summary>
     public class TestDataHelper
     {
-        public TestDataHelper(DbDependentFixture dbDependentFixture)
-        {
-            DbDependentFixture = dbDependentFixture;
-        }
+        private readonly IServiceProvider _rootServiceProvider;
+        private readonly SeededEntities _seededEntities;
 
-        public DbDependentFixture DbDependentFixture { get; private set; }
+        public TestDataHelper(
+            IServiceProvider rootServiceProvider,
+            SeededEntities seededEntities
+            )
+        {
+            _rootServiceProvider = rootServiceProvider;
+            _seededEntities = seededEntities;
+        }
 
         /// <summary>
         /// Used to make it easier to create or reference page 
@@ -23,7 +26,7 @@ namespace Cofoundry.Domain.Tests.Integration
         /// </summary>
         public PageDirectoryTestDataHelper PageDirectories()
         {
-            return new PageDirectoryTestDataHelper(DbDependentFixture);
+            return new PageDirectoryTestDataHelper(_rootServiceProvider);
         }
 
         /// <summary>
@@ -32,7 +35,7 @@ namespace Cofoundry.Domain.Tests.Integration
         /// </summary>
         public PageTemplateTestDataHelper PageTemplates()
         {
-            return new PageTemplateTestDataHelper(DbDependentFixture);
+            return new PageTemplateTestDataHelper(_rootServiceProvider);
         }
 
         /// <summary>
@@ -40,7 +43,7 @@ namespace Cofoundry.Domain.Tests.Integration
         /// </summary>
         public PageTestDataHelper Pages()
         {
-            return new PageTestDataHelper(DbDependentFixture);
+            return new PageTestDataHelper(_rootServiceProvider, _seededEntities);
         }
 
         /// <summary>
@@ -48,7 +51,7 @@ namespace Cofoundry.Domain.Tests.Integration
         /// </summary>
         public CustomEntityTestDataHelper CustomEntities()
         {
-            return new CustomEntityTestDataHelper(DbDependentFixture);
+            return new CustomEntityTestDataHelper(_rootServiceProvider);
         }
     }
 }

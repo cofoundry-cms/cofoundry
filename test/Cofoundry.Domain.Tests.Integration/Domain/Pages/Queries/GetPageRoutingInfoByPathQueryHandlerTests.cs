@@ -8,20 +8,18 @@ using Xunit;
 
 namespace Cofoundry.Domain.Tests.Integration.Pages.Queries
 {
-    [Collection(nameof(DbDependentFixture))]
+    [Collection(nameof(DbDependentFixtureCollection))]
     public class GetPageRoutingInfoByPathQueryHandlerTests
     {
         const string UNIQUE_PREFIX = "GPageRoutingInfoByPathQHT ";
 
-        private readonly DbDependentFixture _dbDependentFixture;
-        private readonly TestDataHelper _testDataHelper;
+        private readonly DbDependentTestApplicationFactory _appFactory;
 
         public GetPageRoutingInfoByPathQueryHandlerTests(
-            DbDependentFixture dbDependantFixture
+            DbDependentTestApplicationFactory appFactory
             )
         {
-            _dbDependentFixture = dbDependantFixture;
-            _testDataHelper = new TestDataHelper(dbDependantFixture);
+            _appFactory = appFactory;
         }
 
         [Theory]
@@ -32,9 +30,9 @@ namespace Cofoundry.Domain.Tests.Integration.Pages.Queries
         [InlineData(null)]
         public async Task WhenMalformedPath_ReturnsNull(string path)
         {
-            using var scope = _dbDependentFixture.CreateServiceScope();
-            var contentRepository = scope.GetContentRepositoryWithElevatedPermissions();
+            using var app = _appFactory.Create();
 
+            var contentRepository = app.Services.GetContentRepositoryWithElevatedPermissions();
             var result = await contentRepository
                 .Pages()
                 .GetByPath()
@@ -53,19 +51,17 @@ namespace Cofoundry.Domain.Tests.Integration.Pages.Queries
             var uniqueData = UNIQUE_PREFIX + nameof(WhenNotPublished_ReturnsNull);
             var sluggedUniqueData = SlugFormatter.ToSlug(uniqueData);
 
-            using var scope = _dbDependentFixture.CreateServiceScope();
-            var contentRepository = scope.GetContentRepositoryWithElevatedPermissions();
+            using var app = _appFactory.Create();
+            var directoryId = await app.TestData.PageDirectories().AddAsync(uniqueData);
+            await app.TestData.Pages().AddAsync(uniqueData, directoryId);
 
-            var directoryId = await _testDataHelper.PageDirectories().AddAsync(uniqueData);
-            await _testDataHelper.Pages().AddAsync(uniqueData, directoryId);
-
-            var path = $"/{sluggedUniqueData}/{sluggedUniqueData}";
+            var contentRepository = app.Services.GetContentRepositoryWithElevatedPermissions();
             var page = await contentRepository
                 .Pages()
                 .GetByPath()
                 .AsRoutingInfo(new GetPageRoutingInfoByPathQuery()
                 {
-                    Path = path
+                    Path = $"/{sluggedUniqueData}/{sluggedUniqueData}"
                 })
                 .ExecuteAsync();
 
@@ -78,22 +74,21 @@ namespace Cofoundry.Domain.Tests.Integration.Pages.Queries
             var uniqueData = UNIQUE_PREFIX + nameof(WhenUnPublished_ReturnsNull);
             var sluggedUniqueData = SlugFormatter.ToSlug(uniqueData);
 
-            using var scope = _dbDependentFixture.CreateServiceScope();
-            var contentRepository = scope.GetContentRepositoryWithElevatedPermissions();
+            using var app = _appFactory.Create();
+            var directoryId = await app.TestData.PageDirectories().AddAsync(uniqueData);
+            var pageId = await app.TestData.Pages().AddAsync(uniqueData, directoryId, c=> c.Publish = true);
 
-            var directoryId = await _testDataHelper.PageDirectories().AddAsync(uniqueData);
-            var pageId = await _testDataHelper.Pages().AddAsync(uniqueData, directoryId, c=> c.Publish = true);
+            var contentRepository = app.Services.GetContentRepositoryWithElevatedPermissions();
             await contentRepository
                 .Pages()
                 .UnPublishAsync(new UnPublishPageCommand(pageId));
 
-            var path = $"/{sluggedUniqueData}/{sluggedUniqueData}";
             var page = await contentRepository
                 .Pages()
                 .GetByPath()
                 .AsRoutingInfo(new GetPageRoutingInfoByPathQuery()
                 {
-                    Path = path
+                    Path = $"/{sluggedUniqueData}/{sluggedUniqueData}"
                 })
                 .ExecuteAsync();
 
@@ -106,19 +101,17 @@ namespace Cofoundry.Domain.Tests.Integration.Pages.Queries
             var uniqueData = UNIQUE_PREFIX + "WhenIncUnpubTrue_ReturnsUnpubPage";
             var sluggedUniqueData = SlugFormatter.ToSlug(uniqueData);
 
-            using var scope = _dbDependentFixture.CreateServiceScope();
-            var contentRepository = scope.GetContentRepositoryWithElevatedPermissions();
+            using var app = _appFactory.Create();
+            var directoryId = await app.TestData.PageDirectories().AddAsync(uniqueData);
+            var pageId = await app.TestData.Pages().AddAsync(uniqueData, directoryId);
 
-            var directoryId = await _testDataHelper.PageDirectories().AddAsync(uniqueData);
-            var pageId = await _testDataHelper.Pages().AddAsync(uniqueData, directoryId);
-
-            var path = $"/{sluggedUniqueData}/{sluggedUniqueData}";
+            var contentRepository = app.Services.GetContentRepositoryWithElevatedPermissions();
             var page = await contentRepository
                 .Pages()
                 .GetByPath()
                 .AsRoutingInfo(new GetPageRoutingInfoByPathQuery()
                 {
-                    Path = path,
+                    Path = $"/{sluggedUniqueData}/{sluggedUniqueData}",
                     IncludeUnpublished = true
                 })
                 .ExecuteAsync();
@@ -133,19 +126,17 @@ namespace Cofoundry.Domain.Tests.Integration.Pages.Queries
             var uniqueData = UNIQUE_PREFIX + nameof(WhenGenericRoute_Maps);
             var sluggedUniqueData = SlugFormatter.ToSlug(uniqueData);
 
-            using var scope = _dbDependentFixture.CreateServiceScope();
-            var contentRepository = scope.GetContentRepositoryWithElevatedPermissions();
+            using var app = _appFactory.Create();
+            var directoryId = await app.TestData.PageDirectories().AddAsync(uniqueData);
+            var pageId = await app.TestData.Pages().AddAsync(uniqueData, directoryId, c => c.Publish = true);
 
-            var directoryId = await _testDataHelper.PageDirectories().AddAsync(uniqueData);
-            var pageId = await _testDataHelper.Pages().AddAsync(uniqueData, directoryId, c => c.Publish = true);
-
-            var path = $"/{sluggedUniqueData}/{sluggedUniqueData}";
+            var contentRepository = app.Services.GetContentRepositoryWithElevatedPermissions();
             var page = await contentRepository
                 .Pages()
                 .GetByPath()
                 .AsRoutingInfo(new GetPageRoutingInfoByPathQuery()
                 {
-                    Path = path
+                    Path = $"/{sluggedUniqueData}/{sluggedUniqueData}"
                 })
                 .ExecuteAsync();
 
@@ -165,20 +156,18 @@ namespace Cofoundry.Domain.Tests.Integration.Pages.Queries
             var uniqueData = UNIQUE_PREFIX + nameof(WhenCutomEntityRoute_Maps);
             var sluggedUniqueData = SlugFormatter.ToSlug(uniqueData);
 
-            using var scope = _dbDependentFixture.CreateServiceScope();
-            var contentRepository = scope.GetContentRepositoryWithElevatedPermissions();
+            using var app = _appFactory.Create();
+            var customEntityId = await app.TestData.CustomEntities().AddAsync(uniqueData, c => c.Publish = true);
+            var directoryId = await app.TestData.PageDirectories().AddAsync(uniqueData);
+            var pageId = await app.TestData.Pages().AddCustomEntityPageDetailsAsync(uniqueData, directoryId, c => c.Publish = true);
 
-            var customEntityId = await _testDataHelper.CustomEntities().AddAsync(uniqueData, c => c.Publish = true);
-            var directoryId = await _testDataHelper.PageDirectories().AddAsync(uniqueData);
-            var pageId = await _testDataHelper.Pages().AddCustomEntityPageDetailsAsync(uniqueData, directoryId, c => c.Publish = true);
-
-            var path = $"/{sluggedUniqueData}/{customEntityId}/{sluggedUniqueData}";
+            var contentRepository = app.Services.GetContentRepositoryWithElevatedPermissions();
             var page = await contentRepository
                 .Pages()
                 .GetByPath()
                 .AsRoutingInfo(new GetPageRoutingInfoByPathQuery()
                 {
-                    Path = path
+                    Path = $"/{sluggedUniqueData}/{customEntityId}/{sluggedUniqueData}"
                 })
                 .ExecuteAsync();
 
@@ -200,20 +189,18 @@ namespace Cofoundry.Domain.Tests.Integration.Pages.Queries
             var uniqueData = UNIQUE_PREFIX + "WhenIncUnpubTrue_ReturnsCEUnpubPage";
             var sluggedUniqueData = SlugFormatter.ToSlug(uniqueData);
 
-            using var scope = _dbDependentFixture.CreateServiceScope();
-            var contentRepository = scope.GetContentRepositoryWithElevatedPermissions();
+            using var app = _appFactory.Create();
+            var customEntityId = await app.TestData.CustomEntities().AddAsync(uniqueData);
+            var directoryId = await app.TestData.PageDirectories().AddAsync(uniqueData);
+            var pageId = await app.TestData.Pages().AddCustomEntityPageDetailsAsync(uniqueData, directoryId, c => c.Publish = true);
 
-            var customEntityId = await _testDataHelper.CustomEntities().AddAsync(uniqueData);
-            var directoryId = await _testDataHelper.PageDirectories().AddAsync(uniqueData);
-            var pageId = await _testDataHelper.Pages().AddCustomEntityPageDetailsAsync(uniqueData, directoryId, c => c.Publish = true);
-
-            var path = $"/{sluggedUniqueData}/{customEntityId}/{sluggedUniqueData}";
+            var contentRepository = app.Services.GetContentRepositoryWithElevatedPermissions();
             var page = await contentRepository
                 .Pages()
                 .GetByPath()
                 .AsRoutingInfo(new GetPageRoutingInfoByPathQuery()
                 {
-                    Path = path,
+                    Path = $"/{sluggedUniqueData}/{customEntityId}/{sluggedUniqueData}",
                     IncludeUnpublished = true
                 })
                 .ExecuteAsync();
@@ -230,20 +217,18 @@ namespace Cofoundry.Domain.Tests.Integration.Pages.Queries
             var uniqueData = UNIQUE_PREFIX + "WhenCENotPub_RetNull";
             var sluggedUniqueData = SlugFormatter.ToSlug(uniqueData);
 
-            using var scope = _dbDependentFixture.CreateServiceScope();
-            var contentRepository = scope.GetContentRepositoryWithElevatedPermissions();
+            using var app = _appFactory.Create();
+            var customEntityId = await app.TestData.CustomEntities().AddAsync(uniqueData);
+            var directoryId = await app.TestData.PageDirectories().AddAsync(uniqueData);
+            await app.TestData.Pages().AddCustomEntityPageDetailsAsync(uniqueData, directoryId, c => c.Publish = true);
 
-            var customEntityId = await _testDataHelper.CustomEntities().AddAsync(uniqueData);
-            var directoryId = await _testDataHelper.PageDirectories().AddAsync(uniqueData);
-            await _testDataHelper.Pages().AddCustomEntityPageDetailsAsync(uniqueData, directoryId, c => c.Publish = true);
-
-            var path = $"/{sluggedUniqueData}/{customEntityId}/{sluggedUniqueData}";
+            var contentRepository = app.Services.GetContentRepositoryWithElevatedPermissions();
             var page = await contentRepository
                 .Pages()
                 .GetByPath()
                 .AsRoutingInfo(new GetPageRoutingInfoByPathQuery()
                 {
-                    Path = path
+                    Path = $"/{sluggedUniqueData}/{customEntityId}/{sluggedUniqueData}"
                 })
                 .ExecuteAsync();
 
@@ -256,23 +241,22 @@ namespace Cofoundry.Domain.Tests.Integration.Pages.Queries
             var uniqueData = UNIQUE_PREFIX + "WhenCEUnPublished_ReturnsNull";
             var sluggedUniqueData = SlugFormatter.ToSlug(uniqueData);
 
-            using var scope = _dbDependentFixture.CreateServiceScope();
-            var contentRepository = scope.GetContentRepositoryWithElevatedPermissions();
+            using var app = _appFactory.Create();
+            var customEntityId = await app.TestData.CustomEntities().AddAsync(uniqueData);
+            var directoryId = await app.TestData.PageDirectories().AddAsync(uniqueData);
+            var pageId = await app.TestData.Pages().AddAsync(uniqueData, directoryId, c => c.Publish = true);
 
-            var customEntityId = await _testDataHelper.CustomEntities().AddAsync(uniqueData);
-            var directoryId = await _testDataHelper.PageDirectories().AddAsync(uniqueData);
-            var pageId = await _testDataHelper.Pages().AddAsync(uniqueData, directoryId, c => c.Publish = true);
+            var contentRepository = app.Services.GetContentRepositoryWithElevatedPermissions();
             await contentRepository
                 .CustomEntities()
                 .UnPublishAsync(new UnPublishCustomEntityCommand(customEntityId));
 
-            var path = $"/{sluggedUniqueData}/{customEntityId}/{sluggedUniqueData}";
             var page = await contentRepository
                 .Pages()
                 .GetByPath()
                 .AsRoutingInfo(new GetPageRoutingInfoByPathQuery()
                 {
-                    Path = path
+                    Path = $"/{sluggedUniqueData}/{customEntityId}/{sluggedUniqueData}"
                 })
                 .ExecuteAsync();
 
@@ -285,23 +269,21 @@ namespace Cofoundry.Domain.Tests.Integration.Pages.Queries
             var uniqueData = UNIQUE_PREFIX + nameof(DoesNotReturnDeletedRoute);
             var sluggedUniqueData = SlugFormatter.ToSlug(uniqueData);
 
-            using var scope = _dbDependentFixture.CreateServiceScope();
-            var contentRepository = scope.GetContentRepositoryWithElevatedPermissions();
+            using var app = _appFactory.Create();
+            var directoryId = await app.TestData.PageDirectories().AddAsync(uniqueData);
+            var pageId = await app.TestData.Pages().AddAsync(uniqueData, directoryId);
 
-            var directoryId = await _testDataHelper.PageDirectories().AddAsync(uniqueData);
-            var pageId = await _testDataHelper.Pages().AddAsync(uniqueData, directoryId);
-
+            var contentRepository = app.Services.GetContentRepositoryWithElevatedPermissions();
             await contentRepository
                 .Pages()
                 .DeleteAsync(pageId);
 
-            var path = $"/{sluggedUniqueData}/{sluggedUniqueData}";
             var page = await contentRepository
                 .Pages()
                 .GetByPath()
                 .AsRoutingInfo(new GetPageRoutingInfoByPathQuery()
                 {
-                    Path = path
+                    Path = $"/{sluggedUniqueData}/{sluggedUniqueData}"
                 })
                 .ExecuteAsync();
 

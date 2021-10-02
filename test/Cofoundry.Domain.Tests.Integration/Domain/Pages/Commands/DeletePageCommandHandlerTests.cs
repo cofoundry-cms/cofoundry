@@ -7,45 +7,43 @@ using Xunit;
 
 namespace Cofoundry.Domain.Tests.Integration.Pages.Commands
 {
-    [Collection(nameof(DbDependentFixture))]
+    [Collection(nameof(DbDependentFixtureCollection))]
     public class DeletePageCommandHandlerTests
     {
         const string UNIQUE_PREFIX = "DelPageCHT ";
 
-        private readonly DbDependentFixture _dbDependentFixture;
-        private readonly TestDataHelper _testDataHelper;
+        private readonly DbDependentTestApplicationFactory _appFactory;
 
         public DeletePageCommandHandlerTests(
-            DbDependentFixture dbDependantFixture
+            DbDependentTestApplicationFactory appFactory
             )
         {
-            _dbDependentFixture = dbDependantFixture;
-            _testDataHelper = new TestDataHelper(dbDependantFixture);
+            _appFactory = appFactory;
         }
 
         [Fact]
         public async Task CanDelete()
         {
             var uniqueData = UNIQUE_PREFIX + nameof(CanDelete);
-            var directoryId = await _testDataHelper.PageDirectories().AddAsync(uniqueData);
-            var pageId = await _testDataHelper.Pages().AddAsync(uniqueData, directoryId, c =>
+
+            using var app = _appFactory.Create();
+            var directoryId = await app.TestData.PageDirectories().AddAsync(uniqueData);
+            var pageId = await app.TestData.Pages().AddAsync(uniqueData, directoryId, c =>
             {
                 c.Publish = true;
-                c.OpenGraphImageId = _dbDependentFixture.SeededEntities.TestImageId;
-                c.Tags.Add(_dbDependentFixture.SeededEntities.TestTag.TagText);
+                c.OpenGraphImageId = app.SeededEntities.TestImageId;
+                c.Tags.Add(app.SeededEntities.TestTag.TagText);
             });
-            var draftVersionId = await _testDataHelper.Pages().AddDraftAsync(pageId);
-            await _testDataHelper.Pages().AddPlainTextBlockToTestTemplateAsync(draftVersionId);
-            await _testDataHelper.Pages().AddImageTextBlockToTestTemplateAsync(draftVersionId);
+            var draftVersionId = await app.TestData.Pages().AddDraftAsync(pageId);
+            await app.TestData.Pages().AddPlainTextBlockToTestTemplateAsync(draftVersionId);
+            await app.TestData.Pages().AddImageTextBlockToTestTemplateAsync(draftVersionId);
 
-            using var scope = _dbDependentFixture.CreateServiceScope();
-            var contentRepository = scope.GetContentRepositoryWithElevatedPermissions();
-            var dbContext = scope.GetRequiredService<CofoundryDbContext>();
-
+            var contentRepository = app.Services.GetContentRepositoryWithElevatedPermissions();
             await contentRepository
                 .Pages()
                 .DeleteAsync(pageId);
 
+            var dbContext = app.Services.GetRequiredService<CofoundryDbContext>();
             var page = await dbContext
                 .Pages
                 .AsNoTracking()
@@ -58,17 +56,17 @@ namespace Cofoundry.Domain.Tests.Integration.Pages.Commands
         public async Task WhenDeleted_SendsMessage()
         {
             var uniqueData = UNIQUE_PREFIX + nameof(WhenDeleted_SendsMessage);
-            var directoryId = await _testDataHelper.PageDirectories().AddAsync(uniqueData);
-            var pageId = await _testDataHelper.Pages().AddAsync(uniqueData, directoryId, c => c.Publish = true);
 
-            using var scope = _dbDependentFixture.CreateServiceScope();
-            var contentRepository = scope.GetContentRepositoryWithElevatedPermissions();
+            using var app = _appFactory.Create();
+            var directoryId = await app.TestData.PageDirectories().AddAsync(uniqueData);
+            var pageId = await app.TestData.Pages().AddAsync(uniqueData, directoryId, c => c.Publish = true);
 
+            var contentRepository = app.Services.GetContentRepositoryWithElevatedPermissions();
             await contentRepository
                 .Pages()
                 .DeleteAsync(pageId);
 
-            scope
+            app.Mocks
                 .CountMessagesPublished<PageDeletedMessage>(m => m.PageId == pageId)
                 .Should().Be(1);
         }

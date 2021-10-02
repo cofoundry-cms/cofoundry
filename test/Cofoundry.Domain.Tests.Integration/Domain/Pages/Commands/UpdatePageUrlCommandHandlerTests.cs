@@ -12,32 +12,29 @@ using Xunit;
 
 namespace Cofoundry.Domain.Tests.Integration.Pages.Commands
 {
-    [Collection(nameof(DbDependentFixture))]
+    [Collection(nameof(DbDependentFixtureCollection))]
     public class UpdatePageUrlCommandHandlerTests
     {
         const string UNIQUE_PREFIX = "UpdPageUrlCHT ";
-        private readonly TestDataHelper _testDataHelper;
 
-        private readonly DbDependentFixture _dbDependentFixture;
+        private readonly DbDependentTestApplicationFactory _appFactory;
 
         public UpdatePageUrlCommandHandlerTests(
-            DbDependentFixture dbDependantFixture
+            DbDependentTestApplicationFactory appFactory
             )
         {
-            _dbDependentFixture = dbDependantFixture;
-            _testDataHelper = new TestDataHelper(dbDependantFixture);
+            _appFactory = appFactory;
         }
 
         [Fact]
         public async Task CanChangeDirectory()
         {
             var uniqueData = UNIQUE_PREFIX + nameof(CanChangeDirectory);
-            var directoryId = await _testDataHelper.PageDirectories().AddAsync(uniqueData);
-            var newDirectoryId = await _testDataHelper.PageDirectories().AddAsync(uniqueData + " Copy");
-            var pageId = await _testDataHelper.Pages().AddAsync(uniqueData, directoryId);
 
-            using var scope = _dbDependentFixture.CreateServiceScope();
-            var contentRepository = scope.GetContentRepositoryWithElevatedPermissions();
+            using var app = _appFactory.Create();
+            var directoryId = await app.TestData.PageDirectories().AddAsync(uniqueData);
+            var newDirectoryId = await app.TestData.PageDirectories().AddAsync(uniqueData + " Copy");
+            var pageId = await app.TestData.Pages().AddAsync(uniqueData, directoryId);
 
             var command = new UpdatePageUrlCommand()
             {
@@ -46,11 +43,12 @@ namespace Cofoundry.Domain.Tests.Integration.Pages.Commands
                 UrlPath = "moved-to-new-directory"
             };
 
+            var contentRepository = app.Services.GetContentRepositoryWithElevatedPermissions();
             await contentRepository
                 .Pages()
                 .UpdateUrlAsync(command);
 
-            var dbContext = scope.GetRequiredService<CofoundryDbContext>();
+            var dbContext = app.Services.GetRequiredService<CofoundryDbContext>();
 
             var page = await dbContext
                 .Pages
@@ -72,12 +70,12 @@ namespace Cofoundry.Domain.Tests.Integration.Pages.Commands
         public async Task CanChangeCustomEntityPageUrl()
         {
             var uniqueData = UNIQUE_PREFIX + nameof(CanChangeCustomEntityPageUrl);
-            var directoryId = await _testDataHelper.PageDirectories().AddAsync(uniqueData);
-            var addPageCommand = _testDataHelper.Pages().CreateAddCommandWithCustomEntityDetailsPage(uniqueData, directoryId);
 
-            using var scope = _dbDependentFixture.CreateServiceScope();
-            var contentRepository = scope.GetContentRepositoryWithElevatedPermissions();
+            using var app = _appFactory.Create();
+            var directoryId = await app.TestData.PageDirectories().AddAsync(uniqueData);
+            var addPageCommand = app.TestData.Pages().CreateAddCommandWithCustomEntityDetailsPage(uniqueData, directoryId);
 
+            var contentRepository = app.Services.GetContentRepositoryWithElevatedPermissions();
             var pageId = await contentRepository
                 .Pages()
                 .AddAsync(addPageCommand);
@@ -94,7 +92,7 @@ namespace Cofoundry.Domain.Tests.Integration.Pages.Commands
                 .Pages()
                 .UpdateUrlAsync(command);
 
-            var dbContext = scope.GetRequiredService<CofoundryDbContext>();
+            var dbContext = app.Services.GetRequiredService<CofoundryDbContext>();
 
             var page = await dbContext
                 .Pages
@@ -116,12 +114,12 @@ namespace Cofoundry.Domain.Tests.Integration.Pages.Commands
         public async Task WhenRoutingRuleNotExists_Throws()
         {
             var uniqueData = UNIQUE_PREFIX + nameof(WhenRoutingRuleNotExists_Throws);
-            var directoryId = await _testDataHelper.PageDirectories().AddAsync(uniqueData);
-            var addPageCommand = _testDataHelper.Pages().CreateAddCommandWithCustomEntityDetailsPage(uniqueData, directoryId);
 
-            using var scope = _dbDependentFixture.CreateServiceScope();
-            var contentRepository = scope.GetContentRepositoryWithElevatedPermissions();
+            using var app = _appFactory.Create();
+            var directoryId = await app.TestData.PageDirectories().AddAsync(uniqueData);
+            var addPageCommand = app.TestData.Pages().CreateAddCommandWithCustomEntityDetailsPage(uniqueData, directoryId);
 
+            var contentRepository = app.Services.GetContentRepositoryWithElevatedPermissions();
             var pageId = await contentRepository
                 .Pages()
                 .AddAsync(addPageCommand);
@@ -144,14 +142,14 @@ namespace Cofoundry.Domain.Tests.Integration.Pages.Commands
         public async Task WhenRoutingRuleUniquenessRequirementNotSupported_Throws()
         {
             var uniqueData = UNIQUE_PREFIX + "RuleUniquenessReqNotSupported";
-            var directoryId = await _testDataHelper.PageDirectories().AddAsync(uniqueData);
-            var addPage1Command = _testDataHelper.Pages().CreateAddCommandWithCustomEntityDetailsPage(uniqueData, directoryId);
-            var addPage2Command = _testDataHelper.Pages().CreateAddCommandWithCustomEntityDetailsPage(uniqueData, directoryId);
+
+            using var app = _appFactory.Create();
+            var directoryId = await app.TestData.PageDirectories().AddAsync(uniqueData);
+            var addPage1Command = app.TestData.Pages().CreateAddCommandWithCustomEntityDetailsPage(uniqueData, directoryId);
+            var addPage2Command = app.TestData.Pages().CreateAddCommandWithCustomEntityDetailsPage(uniqueData, directoryId);
             addPage2Command.CustomEntityRoutingRule = new IdCustomEntityRoutingRule().RouteFormat;
 
-            using var scope = _dbDependentFixture.CreateServiceScope();
-            var contentRepository = scope.GetContentRepositoryWithElevatedPermissions();
-
+            var contentRepository = app.Services.GetContentRepositoryWithElevatedPermissions();
             var page1Id = await contentRepository
                 .Pages()
                 .AddAsync(addPage1Command);
@@ -178,12 +176,11 @@ namespace Cofoundry.Domain.Tests.Integration.Pages.Commands
         public async Task WhenUrlNotUnique_Throws()
         {
             var uniqueData = UNIQUE_PREFIX + nameof(WhenUrlNotUnique_Throws);
-            var directoryId = await _testDataHelper.PageDirectories().AddAsync(uniqueData);
-            var page1Id = await _testDataHelper.Pages().AddAsync(uniqueData, directoryId);
-            var page2Id = await _testDataHelper.Pages().AddAsync(uniqueData + "2", directoryId);
 
-            using var scope = _dbDependentFixture.CreateServiceScope();
-            var contentRepository = scope.GetContentRepositoryWithElevatedPermissions();
+            using var app = _appFactory.Create();
+            var directoryId = await app.TestData.PageDirectories().AddAsync(uniqueData);
+            var page1Id = await app.TestData.Pages().AddAsync(uniqueData, directoryId);
+            var page2Id = await app.TestData.Pages().AddAsync(uniqueData + "2", directoryId);
 
             var command = new UpdatePageUrlCommand()
             {
@@ -192,6 +189,7 @@ namespace Cofoundry.Domain.Tests.Integration.Pages.Commands
                 UrlPath = SlugFormatter.ToSlug(uniqueData)
             };
 
+            var contentRepository = app.Services.GetContentRepositoryWithElevatedPermissions();
             await contentRepository
                 .Awaiting(r => r.Pages().UpdateUrlAsync(command))
                 .Should()
@@ -205,12 +203,13 @@ namespace Cofoundry.Domain.Tests.Integration.Pages.Commands
         public async Task WhenUrlUpdated_SendsCorrectMessage(bool isPublished)
         {
             var uniqueData = UNIQUE_PREFIX + nameof(WhenUrlUpdated_SendsCorrectMessage) + isPublished.ToString()[0];
-            var directoryId = await _testDataHelper.PageDirectories().AddAsync(uniqueData);
-            var pageId = await _testDataHelper.Pages().AddAsync(uniqueData, directoryId, c => c.Publish = isPublished);
 
-            using var scope = _dbDependentFixture.CreateServiceScope();
-            var contentRepository = scope.GetContentRepositoryWithElevatedPermissions();
-            var dbContext = scope.GetRequiredService<CofoundryDbContext>();
+            using var app = _appFactory.Create();
+            var directoryId = await app.TestData.PageDirectories().AddAsync(uniqueData);
+            var pageId = await app.TestData.Pages().AddAsync(uniqueData, directoryId, c => c.Publish = isPublished);
+
+            var contentRepository = app.Services.GetContentRepositoryWithElevatedPermissions();
+            var dbContext = app.Services.GetRequiredService<CofoundryDbContext>();
 
             await contentRepository
                 .Pages()
@@ -221,7 +220,7 @@ namespace Cofoundry.Domain.Tests.Integration.Pages.Commands
                     UrlPath = "copy"
                 });
 
-            scope
+            app.Mocks
                 .CountMessagesPublished<PageUrlChangedMessage>(m => m.PageId == pageId && m.HasPublishedVersionChanged == isPublished)
                 .Should().Be(1);
         }

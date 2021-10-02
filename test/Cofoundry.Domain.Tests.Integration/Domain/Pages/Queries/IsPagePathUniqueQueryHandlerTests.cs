@@ -4,32 +4,29 @@ using Xunit;
 
 namespace Cofoundry.Domain.Tests.Integration.Pages.Queries
 {
-    [Collection(nameof(DbDependentFixture))]
+    [Collection(nameof(DbDependentFixtureCollection))]
     public class IsPagePathUniqueQueryHandlerTests
     {
         const string UNIQUE_PREFIX = "IsPagePathUnqQHT ";
 
-        private readonly DbDependentFixture _dbDependentFixture;
-        private readonly TestDataHelper _testDataHelper;
+        private readonly DbDependentTestApplicationFactory _appFactory;
 
         public IsPagePathUniqueQueryHandlerTests(
-            DbDependentFixture dbDependantFixture
+            DbDependentTestApplicationFactory appFactory
             )
         {
-            _dbDependentFixture = dbDependantFixture;
-            _testDataHelper = new TestDataHelper(dbDependantFixture);
+            _appFactory = appFactory;
         }
 
         public async Task WhenPathUnique_ReturnsTrue()
         {
             var uniqueData = UNIQUE_PREFIX + nameof(WhenPathUnique_ReturnsTrue);
 
-            var directoryId = await _testDataHelper.PageDirectories().AddAsync(uniqueData);
-            await _testDataHelper.Pages().AddAsync(uniqueData, directoryId);
+            using var app = _appFactory.Create();
+            var directoryId = await app.TestData.PageDirectories().AddAsync(uniqueData);
+            await app.TestData.Pages().AddAsync(uniqueData, directoryId);
 
-            using var scope = _dbDependentFixture.CreateServiceScope();
-            var contentRepository = scope.GetContentRepositoryWithElevatedPermissions();
-
+            var contentRepository = app.Services.GetContentRepositoryWithElevatedPermissions();
             var isUnique = await contentRepository
                 .Pages()
                 .IsPathUnique(new IsPagePathUniqueQuery()
@@ -46,12 +43,11 @@ namespace Cofoundry.Domain.Tests.Integration.Pages.Queries
         {
             var uniqueData = UNIQUE_PREFIX + nameof(WhenPathNotUnique_ReturnsFalse);
 
-            var directoryId = await _testDataHelper.PageDirectories().AddAsync(uniqueData);
-            await _testDataHelper.Pages().AddAsync(uniqueData, directoryId);
+            using var app = _appFactory.Create();
+            var directoryId = await app.TestData.PageDirectories().AddAsync(uniqueData);
+            await app.TestData.Pages().AddAsync(uniqueData, directoryId);
 
-            using var scope = _dbDependentFixture.CreateServiceScope();
-            var contentRepository = scope.GetContentRepositoryWithElevatedPermissions();
-
+            var contentRepository = app.Services.GetContentRepositoryWithElevatedPermissions();
             var isUnique = await contentRepository
                 .Pages()
                 .IsPathUnique(new IsPagePathUniqueQuery()
@@ -68,12 +64,11 @@ namespace Cofoundry.Domain.Tests.Integration.Pages.Queries
         {
             var uniqueData = UNIQUE_PREFIX + nameof(WhenExistingPage_ReturnsFalse);
 
-            var directoryId = await _testDataHelper.PageDirectories().AddAsync(uniqueData);
-            var pageId = await _testDataHelper.Pages().AddAsync(uniqueData, directoryId);
+            using var app = _appFactory.Create();
+            var directoryId = await app.TestData.PageDirectories().AddAsync(uniqueData);
+            var pageId = await app.TestData.Pages().AddAsync(uniqueData, directoryId);
 
-            using var scope = _dbDependentFixture.CreateServiceScope();
-            var contentRepository = scope.GetContentRepositoryWithElevatedPermissions();
-
+            var contentRepository = app.Services.GetContentRepositoryWithElevatedPermissions();
             var isUnique = await contentRepository
                 .Pages()
                 .IsPathUnique(new IsPagePathUniqueQuery()
