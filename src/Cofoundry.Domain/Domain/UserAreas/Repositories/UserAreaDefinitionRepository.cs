@@ -1,15 +1,11 @@
-﻿using System;
+﻿using Cofoundry.Core;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
-using Cofoundry.Core;
 
 namespace Cofoundry.Domain.Internal
 {
     public class UserAreaDefinitionRepository : IUserAreaDefinitionRepository
     {
-        #region constructor
-
         private readonly Dictionary<string, IUserAreaDefinition> _userAreas;
         private readonly IUserAreaDefinition _defaultUserArea;
 
@@ -61,7 +57,7 @@ namespace Cofoundry.Domain.Internal
 
             var defaultUserAreas = definitions
                 .Where(d => d.IsDefaultAuthSchema)
-                .Select(d=> d.UserAreaCode);
+                .Select(d => d.UserAreaCode);
 
             if (defaultUserAreas.Skip(1).FirstOrDefault() != null)
             {
@@ -69,8 +65,6 @@ namespace Cofoundry.Domain.Internal
                 throw new InvalidUserAreaDefinitionException(message, nameNot3Chars, definitions);
             }
         }
-
-        #endregion
 
         /// <summary>
         /// Gets a user area definition using the unique code. Throws an exception
@@ -83,7 +77,7 @@ namespace Cofoundry.Domain.Internal
 
             if (area == null)
             {
-                throw new EntityNotFoundException("UserArea not registered: " + code);
+                throw new EntityNotFoundException<IUserAreaDefinition>(code, $"UserArea '{code}' is not registered. but has been requested.");
             }
 
             return area;
