@@ -7,20 +7,18 @@ using Xunit;
 
 namespace Cofoundry.Domain.Tests.Integration.Pages.Queries
 {
-    [Collection(nameof(DbDependentFixture))]
+    [Collection(nameof(DbDependentFixtureCollection))]
     public class GetPageSummariesByIdRangeQueryHandlerTests
     {
         const string UNIQUE_PREFIX = "GPageSumByIdRangeQHT ";
 
-        private readonly DbDependentFixture _dbDependentFixture;
-        private readonly TestDataHelper _testDataHelper;
+        private readonly DbDependentTestApplicationFactory _appFactory;
 
         public GetPageSummariesByIdRangeQueryHandlerTests(
-            DbDependentFixture dbDependantFixture
+            DbDependentTestApplicationFactory appFactory
             )
         {
-            _dbDependentFixture = dbDependantFixture;
-            _testDataHelper = new TestDataHelper(dbDependantFixture);
+            _appFactory = appFactory;
         }
 
         [Fact]
@@ -28,12 +26,11 @@ namespace Cofoundry.Domain.Tests.Integration.Pages.Queries
         {
             var uniqueData = UNIQUE_PREFIX + nameof(DoesNotReturnDeletedPage);
 
-            using var scope = _dbDependentFixture.CreateServiceScope();
-            var contentRepository = scope.GetContentRepositoryWithElevatedPermissions();
+            using var app = _appFactory.Create();
+            var directoryId = await app.TestData.PageDirectories().AddAsync(uniqueData);
+            var pageId = await app.TestData.Pages().AddAsync(uniqueData, directoryId, c => c.Publish = true);
 
-            var directoryId = await _testDataHelper.PageDirectories().AddAsync(uniqueData);
-            var pageId = await _testDataHelper.Pages().AddAsync(uniqueData, directoryId, c => c.Publish = true);
-
+            var contentRepository = app.Services.GetContentRepositoryWithElevatedPermissions();
             await contentRepository
                 .Pages()
                 .DeleteAsync(pageId);
@@ -53,18 +50,17 @@ namespace Cofoundry.Domain.Tests.Integration.Pages.Queries
         {
             var uniqueData = UNIQUE_PREFIX + "NotRetPageWithArchivedTmpl";
 
-            using var scope = _dbDependentFixture.CreateServiceScope();
-            var contentRepository = scope.GetContentRepositoryWithElevatedPermissions();
-
-            var directoryId = await _testDataHelper.PageDirectories().AddAsync(uniqueData);
-            var pageTemplateId = await _testDataHelper.PageTemplates().AddMockTemplateAsync(uniqueData);
-            var pageId = await _testDataHelper.Pages().AddAsync(uniqueData, directoryId, c =>
+            using var app = _appFactory.Create();
+            var directoryId = await app.TestData.PageDirectories().AddAsync(uniqueData);
+            var pageTemplateId = await app.TestData.PageTemplates().AddMockTemplateAsync(uniqueData);
+            var pageId = await app.TestData.Pages().AddAsync(uniqueData, directoryId, c =>
             {
                 c.Publish = true;
                 c.PageTemplateId = pageTemplateId;
             });
-            await _testDataHelper.PageTemplates().ArchiveTemplateAsync(pageTemplateId);
+            await app.TestData.PageTemplates().ArchiveTemplateAsync(pageTemplateId);
 
+            var contentRepository = app.Services.GetContentRepositoryWithElevatedPermissions();
             var pages = await contentRepository
                 .Pages()
                 .GetByIdRange(new int[] { pageId })
@@ -83,25 +79,24 @@ namespace Cofoundry.Domain.Tests.Integration.Pages.Queries
         {
             var uniqueData = UNIQUE_PREFIX + nameof(MapsBasicData);
 
-            using var scope = _dbDependentFixture.CreateServiceScope();
-            var contentRepository = scope.GetContentRepositoryWithElevatedPermissions();
-
-            var directoryId = await _testDataHelper.PageDirectories().AddAsync(uniqueData);
-            var addPageCommand = _testDataHelper.Pages().CreateAddCommand(uniqueData, directoryId);
-            addPageCommand.Tags.Add(_dbDependentFixture.SeededEntities.TestTag.TagText);
+            using var app = _appFactory.Create();
+            var directoryId = await app.TestData.PageDirectories().AddAsync(uniqueData);
+            var addPageCommand = app.TestData.Pages().CreateAddCommand(uniqueData, directoryId);
+            addPageCommand.Tags.Add(app.SeededEntities.TestTag.TagText);
             addPageCommand.OpenGraphTitle = uniqueData + "OG Title";
             addPageCommand.OpenGraphDescription = uniqueData + "OG desc";
-            addPageCommand.OpenGraphImageId = _dbDependentFixture.SeededEntities.TestImageId;
+            addPageCommand.OpenGraphImageId = app.SeededEntities.TestImageId;
             addPageCommand.MetaDescription = uniqueData + "Meta";
             addPageCommand.Publish = true;
             addPageCommand.ShowInSiteMap = true;
 
+            var contentRepository = app.Services.GetContentRepositoryWithElevatedPermissions();
             var pageId = await contentRepository
                 .Pages()
                 .AddAsync(addPageCommand);
 
-            var versionId = await _testDataHelper.Pages().AddDraftAsync(pageId);
-            await _testDataHelper.Pages().PublishAsync(pageId);
+            var versionId = await app.TestData.Pages().AddDraftAsync(pageId);
+            await app.TestData.Pages().PublishAsync(pageId);
 
             var pages = await contentRepository
                 .Pages()

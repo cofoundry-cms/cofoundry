@@ -8,20 +8,18 @@ using Xunit;
 
 namespace Cofoundry.Domain.Tests.Integration.Pages.Queries
 {
-    [Collection(nameof(DbDependentFixture))]
+    [Collection(nameof(DbDependentFixtureCollection))]
     public class GetPageRenderDetailsByIdQueryHandlerTests
     {
         const string UNIQUE_PREFIX = "GPageRenderDetailsByIdQHT ";
 
-        private readonly DbDependentFixture _dbDependentFixture;
-        private readonly TestDataHelper _testDataHelper;
+        private readonly DbDependentTestApplicationFactory _appFactory;
 
         public GetPageRenderDetailsByIdQueryHandlerTests(
-            DbDependentFixture dbDependantFixture
+            DbDependentTestApplicationFactory appFactory
             )
         {
-            _dbDependentFixture = dbDependantFixture;
-            _testDataHelper = new TestDataHelper(dbDependantFixture);
+            _appFactory = appFactory;
         }
 
         [Theory]
@@ -33,12 +31,11 @@ namespace Cofoundry.Domain.Tests.Integration.Pages.Queries
         {
             var uniqueData = UNIQUE_PREFIX + "DraftOnlyQPubStatus_" + publishStatus;
 
-            using var scope = _dbDependentFixture.CreateServiceScope();
-            var contentRepository = scope.GetContentRepositoryWithElevatedPermissions();
+            using var app = _appFactory.Create();
+            var directoryId = await app.TestData.PageDirectories().AddAsync(uniqueData);
+            var pageId = await app.TestData.Pages().AddAsync(uniqueData, directoryId);
 
-            var directoryId = await _testDataHelper.PageDirectories().AddAsync(uniqueData);
-            var pageId = await _testDataHelper.Pages().AddAsync(uniqueData, directoryId);
-
+            var contentRepository = app.Services.GetContentRepositoryWithElevatedPermissions();
             var page = await contentRepository
                 .Pages()
                 .GetById(pageId)
@@ -69,12 +66,11 @@ namespace Cofoundry.Domain.Tests.Integration.Pages.Queries
         {
             var uniqueData = UNIQUE_PREFIX + "PubOnlyQPubStatus_" + publishStatus;
 
-            using var scope = _dbDependentFixture.CreateServiceScope();
-            var contentRepository = scope.GetContentRepositoryWithElevatedPermissions();
+            using var app = _appFactory.Create();
+            var directoryId = await app.TestData.PageDirectories().AddAsync(uniqueData);
+            var pageId = await app.TestData.Pages().AddAsync(uniqueData, directoryId, c => c.Publish = true);
 
-            var directoryId = await _testDataHelper.PageDirectories().AddAsync(uniqueData);
-            var pageId = await _testDataHelper.Pages().AddAsync(uniqueData, directoryId, c => c.Publish = true);
-
+            var contentRepository = app.Services.GetContentRepositoryWithElevatedPermissions();
             var page = await contentRepository
                 .Pages()
                 .GetById(pageId)
@@ -105,16 +101,15 @@ namespace Cofoundry.Domain.Tests.Integration.Pages.Queries
         {
             var uniqueData = UNIQUE_PREFIX + "PubDraftQPubStatus_" + publishStatus;
 
-            using var scope = _dbDependentFixture.CreateServiceScope();
-            var contentRepository = scope.GetContentRepositoryWithElevatedPermissions();
-
-            var directoryId = await _testDataHelper.PageDirectories().AddAsync(uniqueData);
-            var pageId = await _testDataHelper.Pages().AddAsync(uniqueData, directoryId, c => c.Publish = true);
-            var publishedVersionId = await _testDataHelper.Pages().AddDraftAsync(pageId);
-            await _testDataHelper.Pages().PublishAsync(pageId);
-            var draftVersionId = await _testDataHelper.Pages().AddDraftAsync(pageId);
+            using var app = _appFactory.Create();
+            var directoryId = await app.TestData.PageDirectories().AddAsync(uniqueData);
+            var pageId = await app.TestData.Pages().AddAsync(uniqueData, directoryId, c => c.Publish = true);
+            var publishedVersionId = await app.TestData.Pages().AddDraftAsync(pageId);
+            await app.TestData.Pages().PublishAsync(pageId);
+            var draftVersionId = await app.TestData.Pages().AddDraftAsync(pageId);
             var expectedVersionId = workFlowStatus == WorkFlowStatus.Draft ? draftVersionId : publishedVersionId;
 
+            var contentRepository = app.Services.GetContentRepositoryWithElevatedPermissions();
             var page = await contentRepository
                 .Pages()
                 .GetById(pageId)
@@ -135,17 +130,16 @@ namespace Cofoundry.Domain.Tests.Integration.Pages.Queries
         {
             var uniqueData = UNIQUE_PREFIX + "SpecificVer_RetVer";
 
-            using var scope = _dbDependentFixture.CreateServiceScope();
-            var contentRepository = scope.GetContentRepositoryWithElevatedPermissions();
+            using var app = _appFactory.Create();
+            var directoryId = await app.TestData.PageDirectories().AddAsync(uniqueData);
+            var pageId = await app.TestData.Pages().AddAsync(uniqueData, directoryId, c => c.Publish = true);
+            var versionToQueryId = await app.TestData.Pages().AddDraftAsync(pageId);
+            await app.TestData.Pages().PublishAsync(pageId);
+            await app.TestData.Pages().AddDraftAsync(pageId);
+            await app.TestData.Pages().PublishAsync(pageId);
+            var latestVersionId = await app.TestData.Pages().AddDraftAsync(pageId);
 
-            var directoryId = await _testDataHelper.PageDirectories().AddAsync(uniqueData);
-            var pageId = await _testDataHelper.Pages().AddAsync(uniqueData, directoryId, c => c.Publish = true);
-            var versionToQueryId = await _testDataHelper.Pages().AddDraftAsync(pageId);
-            await _testDataHelper.Pages().PublishAsync(pageId);
-            await _testDataHelper.Pages().AddDraftAsync(pageId);
-            await _testDataHelper.Pages().PublishAsync(pageId);
-            var latestVersionId = await _testDataHelper.Pages().AddDraftAsync(pageId);
-
+            var contentRepository = app.Services.GetContentRepositoryWithElevatedPermissions();
             var page = await contentRepository
                 .Pages()
                 .GetById(pageId)
@@ -167,16 +161,15 @@ namespace Cofoundry.Domain.Tests.Integration.Pages.Queries
         {
             var uniqueData = UNIQUE_PREFIX + "SpecificVerInvalid_RetNull";
 
-            using var scope = _dbDependentFixture.CreateServiceScope();
-            var contentRepository = scope.GetContentRepositoryWithElevatedPermissions();
+            using var app = _appFactory.Create();
+            var directoryId = await app.TestData.PageDirectories().AddAsync(uniqueData);
+            var page1Id = await app.TestData.Pages().AddAsync(uniqueData + "1", directoryId, c => c.Publish = true);
+            await app.TestData.Pages().AddDraftAsync(page1Id);
 
-            var directoryId = await _testDataHelper.PageDirectories().AddAsync(uniqueData);
-            var page1Id = await _testDataHelper.Pages().AddAsync(uniqueData + "1", directoryId, c => c.Publish = true);
-            await _testDataHelper.Pages().AddDraftAsync(page1Id);
+            var page2Id = await app.TestData.Pages().AddAsync(uniqueData + "2", directoryId, c => c.Publish = true);
+            var versionId = await app.TestData.Pages().AddDraftAsync(page2Id);
 
-            var page2Id = await _testDataHelper.Pages().AddAsync(uniqueData + "2", directoryId, c => c.Publish = true);
-            var versionId = await _testDataHelper.Pages().AddDraftAsync(page2Id);
-
+            var contentRepository = app.Services.GetContentRepositoryWithElevatedPermissions();
             var page = await contentRepository
                 .Pages()
                 .GetById(page1Id)
@@ -191,12 +184,11 @@ namespace Cofoundry.Domain.Tests.Integration.Pages.Queries
         {
             var uniqueData = UNIQUE_PREFIX + nameof(DoesNotReturnDeletedPage);
 
-            using var scope = _dbDependentFixture.CreateServiceScope();
-            var contentRepository = scope.GetContentRepositoryWithElevatedPermissions();
+            using var app = _appFactory.Create();
+            var directoryId = await app.TestData.PageDirectories().AddAsync(uniqueData);
+            var pageId = await app.TestData.Pages().AddAsync(uniqueData, directoryId, c => c.Publish = true);
 
-            var directoryId = await _testDataHelper.PageDirectories().AddAsync(uniqueData);
-            var pageId = await _testDataHelper.Pages().AddAsync(uniqueData, directoryId, c => c.Publish = true);
-
+            var contentRepository = app.Services.GetContentRepositoryWithElevatedPermissions();
             await contentRepository
                 .Pages()
                 .DeleteAsync(pageId);
@@ -215,18 +207,17 @@ namespace Cofoundry.Domain.Tests.Integration.Pages.Queries
         {
             var uniqueData = UNIQUE_PREFIX + nameof(DoesNotReturnPageWithArchivedTemplate);
 
-            using var scope = _dbDependentFixture.CreateServiceScope();
-            var contentRepository = scope.GetContentRepositoryWithElevatedPermissions();
-
-            var directoryId = await _testDataHelper.PageDirectories().AddAsync(uniqueData);
-            var pageTemplateId = await _testDataHelper.PageTemplates().AddMockTemplateAsync(uniqueData);
-            var pageId = await _testDataHelper.Pages().AddAsync(uniqueData, directoryId, c =>
+            using var app = _appFactory.Create();
+            var directoryId = await app.TestData.PageDirectories().AddAsync(uniqueData);
+            var pageTemplateId = await app.TestData.PageTemplates().AddMockTemplateAsync(uniqueData);
+            var pageId = await app.TestData.Pages().AddAsync(uniqueData, directoryId, c =>
             {
                 c.Publish = true;
                 c.PageTemplateId = pageTemplateId;
             });
-            await _testDataHelper.PageTemplates().ArchiveTemplateAsync(pageTemplateId);
+            await app.TestData.PageTemplates().ArchiveTemplateAsync(pageTemplateId);
 
+            var contentRepository = app.Services.GetContentRepositoryWithElevatedPermissions();
             var page = await contentRepository
                 .Pages()
                 .GetById(pageId)
@@ -241,25 +232,24 @@ namespace Cofoundry.Domain.Tests.Integration.Pages.Queries
         {
             var uniqueData = UNIQUE_PREFIX + nameof(MapsBasicData);
 
-            using var scope = _dbDependentFixture.CreateServiceScope();
-            var contentRepository = scope.GetContentRepositoryWithElevatedPermissions();
-
-            var directoryId = await _testDataHelper.PageDirectories().AddAsync(uniqueData);
-            var addPageCommand = _testDataHelper.Pages().CreateAddCommand(uniqueData, directoryId);
-            addPageCommand.Tags.Add(_dbDependentFixture.SeededEntities.TestTag.TagText);
+            using var app = _appFactory.Create();
+            var directoryId = await app.TestData.PageDirectories().AddAsync(uniqueData);
+            var addPageCommand = app.TestData.Pages().CreateAddCommand(uniqueData, directoryId);
+            addPageCommand.Tags.Add(app.SeededEntities.TestTag.TagText);
             addPageCommand.OpenGraphTitle = uniqueData + "OG Title";
             addPageCommand.OpenGraphDescription = uniqueData + "OG desc";
-            addPageCommand.OpenGraphImageId = _dbDependentFixture.SeededEntities.TestImageId;
+            addPageCommand.OpenGraphImageId = app.SeededEntities.TestImageId;
             addPageCommand.MetaDescription = uniqueData + "Meta";
             addPageCommand.Publish = true;
             addPageCommand.ShowInSiteMap = true;
 
+            var contentRepository = app.Services.GetContentRepositoryWithElevatedPermissions();
             var pageId = await contentRepository
                 .Pages()
                 .AddAsync(addPageCommand);
 
-            var versionId = await _testDataHelper.Pages().AddDraftAsync(pageId);
-            await _testDataHelper.Pages().PublishAsync(pageId);
+            var versionId = await app.TestData.Pages().AddDraftAsync(pageId);
+            await app.TestData.Pages().PublishAsync(pageId);
 
             var page = await contentRepository
                 .Pages()
@@ -278,16 +268,15 @@ namespace Cofoundry.Domain.Tests.Integration.Pages.Queries
         {
             var uniqueData = UNIQUE_PREFIX + nameof(MapsBlocks);
 
-            using var scope = _dbDependentFixture.CreateServiceScope();
-            var contentRepository = scope.GetContentRepositoryWithElevatedPermissions();
+            using var app = _appFactory.Create();
+            var directoryId = await app.TestData.PageDirectories().AddAsync(uniqueData);
+            var pageId = await app.TestData.Pages().AddAsync(uniqueData, directoryId, c => c.Publish = true);
+            var pageVersionId = await app.TestData.Pages().AddDraftAsync(pageId);
+            var plainTextBlockId = await app.TestData.Pages().AddPlainTextBlockToTestTemplateAsync(pageVersionId, uniqueData);
+            var imageBlockId = await app.TestData.Pages().AddImageTextBlockToTestTemplateAsync(pageVersionId);
+            await app.TestData.Pages().PublishAsync(pageId);
 
-            var directoryId = await _testDataHelper.PageDirectories().AddAsync(uniqueData);
-            var pageId = await _testDataHelper.Pages().AddAsync(uniqueData, directoryId, c => c.Publish = true);
-            var pageVersionId = await _testDataHelper.Pages().AddDraftAsync(pageId);
-            var plainTextBlockId = await _testDataHelper.Pages().AddPlainTextBlockToTestTemplateAsync(pageVersionId, uniqueData);
-            var imageBlockId = await _testDataHelper.Pages().AddImageTextBlockToTestTemplateAsync(pageVersionId);
-            await _testDataHelper.Pages().PublishAsync(pageId);
-
+            var contentRepository = app.Services.GetContentRepositoryWithElevatedPermissions();
             var page = await contentRepository
                 .Pages()
                 .GetById(pageId)

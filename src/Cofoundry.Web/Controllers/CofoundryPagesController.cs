@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Cofoundry.Domain;
-using Microsoft.AspNetCore.Mvc;
+﻿using Cofoundry.Domain;
 using Cofoundry.Domain.CQS;
+using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Threading.Tasks;
 
 namespace Cofoundry.Web
 {
@@ -14,8 +12,6 @@ namespace Cofoundry.Web
     /// </summary>
     public class CofoundryPagesController : Controller
     {
-        #region constructor
-
         private readonly IQueryExecutor _queryExecutor;
         private readonly IPageActionRoutingStepFactory _pageActionRoutingStepFactory;
 
@@ -26,14 +22,30 @@ namespace Cofoundry.Web
         {
             _queryExecutor = queryExecutor;
             _pageActionRoutingStepFactory = pageActionRoutingStepFactory;
-            
         }
 
-        #endregion
-
+        /// <summary>
+        /// Action for all dynamic page routes.
+        /// </summary>
+        /// <param name="path">The raw, relative path of the page without querystring.</param>
+        /// <param name="mode">
+        /// This string maps to the enum <see cref="VisualEditorMode"/> and is used in the
+        /// visual editor in the admin site. The value is not parsed here as the admin panel
+        /// may not be installed, instead it should be parsed in the admin panel
+        /// <see cref="IVisualEditorStateService"/> implementation.
+        /// </param>
+        /// <param name="version">
+        /// Optionally a VersionId can be specified to
+        /// view a specific version of a page or custom entity.
+        /// </param>
+        /// <param name="editType">
+        /// When routing to a custom entity this determines if we are editing the 
+        /// custom entity or the overall page template. Both cannot be edited at the same
+        /// time since it would be confusing to manage both version states.
+        /// </param>
         public async Task<IActionResult> Page(
-            string path, 
-            string mode, 
+            string path,
+            string mode,
             int? version = null,
             string editType = "entity"
             )

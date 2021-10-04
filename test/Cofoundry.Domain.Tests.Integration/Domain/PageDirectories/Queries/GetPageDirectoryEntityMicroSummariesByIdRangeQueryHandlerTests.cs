@@ -7,20 +7,18 @@ using Xunit;
 
 namespace Cofoundry.Domain.Tests.Integration.PageDirectories.Queries
 {
-    [Collection(nameof(DbDependentFixture))]
+    [Collection(nameof(DbDependentFixtureCollection))]
     public class GetPageDirectoryEntityMicroSummariesByIdRangeQueryHandlerTests
     {
         const string UNIQUE_PREFIX = "GPageDirEMSByIdRangeQHT ";
 
-        private readonly DbDependentFixture _dbDependentFixture;
-        private readonly TestDataHelper _testDataHelper;
+        private readonly DbDependentTestApplicationFactory _appFactory;
 
         public GetPageDirectoryEntityMicroSummariesByIdRangeQueryHandlerTests(
-            DbDependentFixture dbDependantFixture
+            DbDependentTestApplicationFactory appFactory
             )
         {
-            _dbDependentFixture = dbDependantFixture;
-            _testDataHelper = new TestDataHelper(dbDependantFixture);
+            _appFactory = appFactory;
         }
 
         [Fact]
@@ -28,12 +26,11 @@ namespace Cofoundry.Domain.Tests.Integration.PageDirectories.Queries
         {
             var uniqueData = UNIQUE_PREFIX + nameof(ReturnsMappedData);
 
-            var directory1Id = await _testDataHelper.PageDirectories().AddAsync(uniqueData);
-            var directory2Id = await _testDataHelper.PageDirectories().AddAsync(uniqueData + "-sub", directory1Id);
+            using var app = _appFactory.Create();
+            var directory1Id = await app.TestData.PageDirectories().AddAsync(uniqueData);
+            var directory2Id = await app.TestData.PageDirectories().AddAsync(uniqueData + "-sub", directory1Id);
 
-            using var scope = _dbDependentFixture.CreateServiceScope();
-            var contentRepository = scope.GetContentRepositoryWithElevatedPermissions();
-
+            var contentRepository = app.Services.GetContentRepositoryWithElevatedPermissions();
             var query = new GetPageDirectoryEntityMicroSummariesByIdRangeQuery(new int[] { directory1Id, directory2Id });
             var directoryLookup = await contentRepository.ExecuteQueryAsync(query);
             var directory1 = directoryLookup.GetOrDefault(directory1Id);

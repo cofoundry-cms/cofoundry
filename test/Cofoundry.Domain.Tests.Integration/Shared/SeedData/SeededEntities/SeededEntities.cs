@@ -1,4 +1,6 @@
-﻿namespace Cofoundry.Domain.Tests.Integration
+﻿using Cofoundry.Domain.Tests.Integration.SeedData;
+
+namespace Cofoundry.Domain.Tests.Integration
 {
     /// <summary>
     /// References to pre-seeded static/global test data. These can be used for convenience i
@@ -21,38 +23,36 @@
         public TestCustomEntityPageTemplateInfo TestCustomEntityPageTemplate { get; } = new TestCustomEntityPageTemplateInfo();
 
         /// <summary>
-        /// An 80x80 jpg.
+        /// 80x80 image
         /// </summary>
         public int TestImageId { get; set; }
+
+        /// <summary>
+        /// Id of the root directory ("/").
+        /// </summary>
+        public int RootDirectoryId { get; set; }
 
         /// <summary>
         /// An existing tag which can be used in combination with a unique tag to test new and existing tag references.
         /// </summary>
         public TestTagInfo TestTag { get; } = new TestTagInfo();
 
-        public class TestPageTemplateInfo
-        {
-            public int PageTemplateId { get; set; }
+        /// <summary>
+        /// Directory with path "/test-directory".
+        /// </summary>
+        public TestDirectoryInfo TestDirectory { get; } = new TestDirectoryInfo();
 
-            /// <summary>
-            /// The id of the "Body" page region in the template.
-            /// </summary>
-            public int BodyPageTemplateRegionId { get; set; }
-        }
+        /// <summary>
+        /// The Cofoundry admin user account initialized in the site setup.
+        /// </summary>
+        public TestUserInfo AdminUser { get; } = new TestUserInfo() { Username = "admin@example.com", Password = "x92Ro01kEpgA" };
 
-        public class TestCustomEntityPageTemplateInfo : TestPageTemplateInfo
-        {
-            /// <summary>
-            /// The id of the "Custom Entity Body" page region in the template.
-            /// </summary>
-            public int CustomEntityBodyPageTemplateRegionId { get; set; }
-        }
+        public TestCustomEntityDefinition TestCustomEntityDefinition { get; } = new TestCustomEntityDefinition();
 
-        public class TestTagInfo
-        {
-            public int TagId { get; set; }
-
-            public string TagText { get; } = "Test";
-        }
+        /// <summary>
+        /// A basic test custom entity for the <see cref="TestCustomEntityDefinition"/>
+        /// type.
+        /// </summary>
+        public TestCustomEntityInfo TestCustomEntity { get; set; } = new TestCustomEntityInfo();
     }
 }

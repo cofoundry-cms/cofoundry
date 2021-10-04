@@ -16,11 +16,11 @@ namespace Cofoundry.Domain.Tests.Integration
     /// </summary>
     public class PageTemplateTestDataHelper
     {
-        private readonly DbDependentFixture _dbDependentFixture;
+        private readonly IServiceProvider _serviceProvider;
 
-        public PageTemplateTestDataHelper(DbDependentFixture dbDependentFixture)
+        public PageTemplateTestDataHelper(IServiceProvider serviceProvider)
         {
-            _dbDependentFixture = dbDependentFixture;
+            _serviceProvider = serviceProvider;
         }
 
         /// <summary>
@@ -33,10 +33,13 @@ namespace Cofoundry.Domain.Tests.Integration
         /// <returns>The PageTemplateId of the newly created page template.</returns>
         public async Task<int> AddMockTemplateAsync(string uniqueData)
         {
-            using var scope = _dbDependentFixture.CreateServiceScope();
-            var pageTemplateViewFileLocator = scope.GetRequiredService<IPageTemplateViewFileLocator>() as TestPageTemplateViewFileLocator;
-            var contentRepository = scope.GetRequiredService<IAdvancedContentRepository>();
-            var dbContext = scope.GetRequiredService<CofoundryDbContext>();
+            using var scope = _serviceProvider.CreateScope();
+            var pageTemplateViewFileLocator = scope.ServiceProvider.GetService<IPageTemplateViewFileLocator>() as TestPageTemplateViewFileLocator;
+            var dbContext = scope.ServiceProvider.GetRequiredService<CofoundryDbContext>();
+            var contentRepository = scope
+                .ServiceProvider
+                .GetRequiredService<IAdvancedContentRepository>()
+                .WithElevatedPermissions();
 
             if (pageTemplateViewFileLocator == null)
             {
@@ -49,9 +52,7 @@ namespace Cofoundry.Domain.Tests.Integration
                 VirtualPath = "/Shared/SeedData/PageTemplates/MockTemplate.cshtml"
             });
 
-            await contentRepository
-                .WithElevatedPermissions()
-                .ExecuteCommandAsync(new RegisterPageTemplatesCommand());
+            await contentRepository.ExecuteCommandAsync(new RegisterPageTemplatesCommand());
 
             var templateId = await dbContext
                 .PageTemplates
@@ -69,8 +70,8 @@ namespace Cofoundry.Domain.Tests.Integration
         /// </summary>
         public async Task ArchiveTemplateAsync(int pageTemplateId)
         {
-            using var scope = _dbDependentFixture.CreateServiceScope();
-            var dbContext = scope.GetRequiredService<CofoundryDbContext>();
+            using var scope = _serviceProvider.CreateScope();
+            var dbContext = scope.ServiceProvider.GetRequiredService<CofoundryDbContext>();
 
             var template = await dbContext
                 .PageTemplates

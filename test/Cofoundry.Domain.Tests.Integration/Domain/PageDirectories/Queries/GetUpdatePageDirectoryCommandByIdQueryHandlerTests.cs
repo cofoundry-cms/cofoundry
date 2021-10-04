@@ -8,20 +8,18 @@ using Xunit;
 
 namespace Cofoundry.Domain.Tests.Integration.PageDirectories.Queries
 {
-    [Collection(nameof(DbDependentFixture))]
+    [Collection(nameof(DbDependentFixtureCollection))]
     public class GetUpdatePageDirectoryCommandByIdQueryHandlerTests
     {
         const string UNIQUE_PREFIX = "GUpdPageDirCmdByIdQHT ";
 
-        private readonly DbDependentFixture _dbDependentFixture;
-        private readonly TestDataHelper _testDataHelper;
+        private readonly DbDependentTestApplicationFactory _appFactory;
 
         public GetUpdatePageDirectoryCommandByIdQueryHandlerTests(
-            DbDependentFixture dbDependantFixture
+            DbDependentTestApplicationFactory appFactory
             )
         {
-            _dbDependentFixture = dbDependantFixture;
-            _testDataHelper = new TestDataHelper(dbDependantFixture);
+            _appFactory = appFactory;
         }
 
         [Fact]
@@ -29,11 +27,11 @@ namespace Cofoundry.Domain.Tests.Integration.PageDirectories.Queries
         {
             var uniqueData = UNIQUE_PREFIX + nameof(ReturnsMappedData);
 
-            var parentDirectoryId = await _testDataHelper.PageDirectories().AddAsync(uniqueData);
-            var addDirectoryCommand = _testDataHelper.PageDirectories().CreateAddCommand(uniqueData, parentDirectoryId);
+            using var app = _appFactory.Create();
+            var parentDirectoryId = await app.TestData.PageDirectories().AddAsync(uniqueData);
+            var addDirectoryCommand = app.TestData.PageDirectories().CreateAddCommand(uniqueData, parentDirectoryId);
 
-            using var scope = _dbDependentFixture.CreateServiceScope();
-            var contentRepository = scope.GetContentRepositoryWithElevatedPermissions();
+            var contentRepository = app.Services.GetContentRepositoryWithElevatedPermissions();
 
             await contentRepository
                 .PageDirectories()
@@ -55,12 +53,11 @@ namespace Cofoundry.Domain.Tests.Integration.PageDirectories.Queries
         [Fact]
         public async Task WhenRootDirectory_Throws()
         {
-            var rootDirectoryId = await _testDataHelper.PageDirectories().GetRootDirectoryIdAsync();
+            using var app = _appFactory.Create();
+            var rootDirectoryId = await app.TestData.PageDirectories().GetRootDirectoryIdAsync();
             var query = new GetUpdateCommandByIdQuery<UpdatePageDirectoryCommand>(rootDirectoryId);
 
-            using var scope = _dbDependentFixture.CreateServiceScope();
-            var contentRepository = scope.GetContentRepositoryWithElevatedPermissions();
-
+            var contentRepository = app.Services.GetContentRepositoryWithElevatedPermissions();
             await contentRepository
                 .Awaiting(r => r.ExecuteQueryAsync(query))
                 .Should()

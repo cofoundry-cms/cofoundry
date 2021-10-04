@@ -1,12 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Xunit;
+﻿using Xunit;
 
 namespace Cofoundry.Domain.Tests.Integration
 {
-    [CollectionDefinition(nameof(DbDependentFixture))]
-    public class DbDependentFixtureCollection : ICollectionFixture<DbDependentFixture>
+    /// <summary>
+    /// A collection that is scoped for the test session to ensure that the
+    /// database is only initialized and seeded the once. Database setup is
+    /// done at the start of the test session and the application factory is
+    /// disposed of at the end of the session.
+    /// </summary>
+    [CollectionDefinition(nameof(DbDependentFixtureCollection))]
+    public class DbDependentFixtureCollection : ICollectionFixture<DbDependentTestApplicationFactory>
     {
     }
 }

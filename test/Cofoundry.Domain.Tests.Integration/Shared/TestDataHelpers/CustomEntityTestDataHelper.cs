@@ -1,4 +1,5 @@
 ﻿using Cofoundry.Core;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Threading.Tasks;
 
@@ -9,11 +10,11 @@ namespace Cofoundry.Domain.Tests.Integration
     /// </summary>
     public class CustomEntityTestDataHelper
     {
-        private readonly DbDependentFixture _dbDependentFixture;
+        private readonly IServiceProvider _serviceProvider;
 
-        public CustomEntityTestDataHelper(DbDependentFixture dbDependentFixture)
+        public CustomEntityTestDataHelper(IServiceProvider serviceProvider)
         {
-            _dbDependentFixture = dbDependentFixture;
+            _serviceProvider = serviceProvider;
         }
 
         /// <summary>
@@ -40,8 +41,11 @@ namespace Cofoundry.Domain.Tests.Integration
                 configration(command);
             }
 
-            using var scope = _dbDependentFixture.CreateServiceScope();
-            var contentRepository = scope.GetContentRepositoryWithElevatedPermissions();
+            using var scope = _serviceProvider.CreateScope();
+            var contentRepository = scope
+                .ServiceProvider
+                .GetRequiredService<IAdvancedContentRepository>()
+                .WithElevatedPermissions();
 
             return await contentRepository
                 .CustomEntities()
