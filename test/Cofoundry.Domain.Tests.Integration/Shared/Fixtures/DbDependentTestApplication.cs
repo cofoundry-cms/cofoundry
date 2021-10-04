@@ -2,6 +2,10 @@
 
 namespace Cofoundry.Domain.Tests.Integration
 {
+    /// <summary>
+    /// A mock application that can be used for integration tests
+    /// outside of a web framework.
+    /// </summary>
     public class DbDependentTestApplication : IDisposable
     {
         private readonly IServiceProvider _rootServiceProvider;
