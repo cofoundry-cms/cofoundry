@@ -43,7 +43,7 @@ namespace Cofoundry.Domain.Tests.Integration.PageDirectories.Commands
             var directory = await dbContext
                 .PageDirectories
                 .AsNoTracking()
-                .FilterByPageDirectoryId(addDirectoryCommand.OutputPageDirectoryId)
+                .FilterById(addDirectoryCommand.OutputPageDirectoryId)
                 .SingleOrDefaultAsync();
 
             using (new AssertionScope())

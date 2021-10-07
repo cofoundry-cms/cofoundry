@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Linq;
 
 namespace Cofoundry.Domain.Data
 {
@@ -13,7 +9,7 @@ namespace Cofoundry.Domain.Data
         /// specified <paramref name="pageId"/>.
         /// </summary>
         /// <param name="pageId">PageId to filter by.</param>
-        public static IQueryable<Page> FilterByPageId(this IQueryable<Page> pages, int pageId)
+        public static IQueryable<Page> FilterById(this IQueryable<Page> pages, int pageId)
         {
             var result = pages
                 .Where(i => i.PageId == pageId);

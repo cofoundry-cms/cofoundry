@@ -101,11 +101,10 @@ namespace Cofoundry.Domain.Internal
 
         private async Task<PageDirectory> GetPageDirectoryAsync(int pageDirectoryId)
         {
-            var pageDirectories = await _dbContext
+            var pageDirectory = await _dbContext
                 .PageDirectories
-                .ToDictionaryAsync(w => w.PageDirectoryId);
-
-            var pageDirectory = pageDirectories.GetOrDefault(pageDirectoryId);
+                .FilterById(pageDirectoryId)
+                .SingleOrDefaultAsync();
 
             if (pageDirectory == null)
             {

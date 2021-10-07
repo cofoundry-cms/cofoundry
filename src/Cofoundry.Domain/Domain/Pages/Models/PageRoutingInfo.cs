@@ -1,8 +1,6 @@
-﻿using System;
+﻿using Cofoundry.Core;
+using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Cofoundry.Domain
 {
@@ -91,7 +89,7 @@ namespace Cofoundry.Domain
         /// </summary>
         public PublishState GetPublishState()
         {
-            var publishState = PageRoute.GetPublishState(); 
+            var publishState = PageRoute.GetPublishState();
 
             if (CustomEntityRoute != null)
             {
@@ -103,16 +101,36 @@ namespace Cofoundry.Domain
                     publishDate = CustomEntityRoute.PublishDate;
                 }
 
-                if (publishStatus == PublishStatus.Published 
+                if (publishStatus == PublishStatus.Published
                     && CustomEntityRoute.PublishStatus == PublishStatus.Unpublished)
                 {
-                    publishStatus = PublishStatus.Unpublished; 
+                    publishStatus = PublishStatus.Unpublished;
                 }
 
                 publishState = new PublishState(publishStatus, publishDate);
             }
 
             return publishState;
+        }
+
+        /// <summary>
+        /// Determines if the <paramref name="user"/> violates any access rules
+        /// for this route. If the user cannot access the route then a rule viloation 
+        /// is returned. The user may violate several rules in the page and directory 
+        /// tree but only the most specific rule is returned, starting with the page and 
+        /// then working back up through the directory tree. 
+        /// </summary>
+        /// <param name="user">The <see cref="IUserContext"/> to check against access rules.</param>
+        /// <returns>
+        /// If any rules are violated, then the most specific rule is returned; 
+        /// otherwise <see langword="null"/>.
+        /// </returns>
+        public RouteAccessRule CanAccess(IUserContext user)
+        {
+            if (user == null) throw new ArgumentNullException(nameof(user));
+            EntityInvalidOperationException.ThrowIfNull(this, r => r.PageRoute);
+
+            return PageRoute.CanAccess(user);
         }
     }
 }

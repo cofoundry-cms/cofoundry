@@ -294,7 +294,7 @@ namespace Cofoundry.Domain.Tests.Integration.Pages.Commands
                 .AsNoTracking()
                 .Include(v => v.PageVersions)
                 .ThenInclude(v => v.PageVersionBlocks)
-                .FilterByPageId(pageId)
+                .FilterById(pageId)
                 .SingleOrDefaultAsync();
         }
     }

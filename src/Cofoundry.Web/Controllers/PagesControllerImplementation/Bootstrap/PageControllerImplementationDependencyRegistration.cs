@@ -22,6 +22,7 @@ namespace Cofoundry.Web.Registration
                 .Register<IValidateEditPermissionsRoutingStep, ValidateEditPermissionsRoutingStep>()
                 .Register<IValidateDraftVersionRoutingStep, ValidateDraftVersionRoutingStep>()
                 .Register<IValidateSpecificVersionRoutingRoutingStep, ValidateSpecificVersionRoutingRoutingStep>()
+                .Register<IValidateAccessRulesRoutingStep, ValidateAccessRulesRoutingStep>()
                 .Register<IGetNotFoundRouteRoutingStep, GetNotFoundRouteRoutingStep>()
                 .Register<IGetPageRenderDataRoutingStep, GetPageRenderDataRoutingStep>()
                 .Register<ISetCachePolicyRoutingStep, SetCachePolicyRoutingStep>()

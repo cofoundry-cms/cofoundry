@@ -21,8 +21,6 @@ namespace Cofoundry.Domain.Internal
         : IQueryHandler<GetPageRouteLookupQuery, IDictionary<int, PageRoute>>
         , IPermissionRestrictedQueryHandler<GetPageRouteLookupQuery, IDictionary<int, PageRoute>>
     {
-        #region constructor
-
         private readonly CofoundryDbContext _dbContext;
         private readonly IQueryExecutor _queryExecutor;
         private readonly IPageCache _pageCache;
@@ -37,10 +35,6 @@ namespace Cofoundry.Domain.Internal
             _queryExecutor = queryExecutor;
             _pageCache = pageCache;
         }
-
-        #endregion
-        
-        #region execution
         
         public async Task<IDictionary<int, PageRoute>> ExecuteAsync(GetPageRouteLookupQuery query, IExecutionContext executionContext)
         {
@@ -79,8 +73,6 @@ namespace Cofoundry.Domain.Internal
 
         #endregion
 
-        #region queries
-        
         private IQueryable<PageVersionQueryResult> QueryPageVersions()
         {
             var dbPageVersions = _dbContext
@@ -139,8 +131,6 @@ namespace Cofoundry.Domain.Internal
 
             return dbTemplates;
         }
-
-        #endregion
 
         private async Task<IDictionary<int, PageRoute>> GetAllPageRoutesAsync(GetPageRouteLookupQuery query, IExecutionContext executionContext)
         {
@@ -298,15 +288,9 @@ namespace Cofoundry.Domain.Internal
             return fullPath;
         }
 
-        #endregion
-        
-        #region Permission
-
         public IEnumerable<IPermissionApplication> GetPermissions(GetPageRouteLookupQuery query)
         {
             yield return new PageReadPermission();
         }
-
-        #endregion
     }
 }

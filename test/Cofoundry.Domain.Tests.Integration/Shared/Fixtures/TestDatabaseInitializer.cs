@@ -228,6 +228,20 @@ namespace Cofoundry.Domain.Tests.Integration
                     UrlSlug = seededEntities.TestCustomEntity.UrlSlug
                 });
 
+            // User areas
+
+            seededEntities.TestUserArea1.RoleId = await dbContext
+                .Roles
+                .FilterByRoleCode(seededEntities.TestUserArea1.RoleCode)
+                .Select(c => c.RoleId)
+                .SingleAsync();
+
+            seededEntities.TestUserArea2.RoleId = await dbContext
+                .Roles
+                .FilterByRoleCode(seededEntities.TestUserArea2.RoleCode)
+                .Select(c => c.RoleId)
+                .SingleAsync();
+
             return seededEntities;
         }
     }

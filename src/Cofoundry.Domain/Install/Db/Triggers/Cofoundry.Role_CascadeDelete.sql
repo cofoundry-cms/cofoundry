@@ -11,6 +11,10 @@ begin
 	from Cofoundry.RolePermission e
 	inner join deleted d on e.RoleId = d.RoleId
 
+    delete Cofoundry.PageDirectoryAccessRule
+	from Cofoundry.PageDirectoryAccessRule e
+	inner join deleted d on e.RoleId = d.RoleId
+
 	-- Main Table
     delete Cofoundry.[Role]
 	from Cofoundry.[Role] e

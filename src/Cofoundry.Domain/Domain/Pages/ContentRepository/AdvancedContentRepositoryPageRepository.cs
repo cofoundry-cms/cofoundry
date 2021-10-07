@@ -1,7 +1,5 @@
 ﻿using Cofoundry.Domain.Extendable;
-using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Cofoundry.Domain.Internal
@@ -18,8 +16,6 @@ namespace Cofoundry.Domain.Internal
         }
 
         public IExtendableContentRepository ExtendableContentRepository { get; }
-
-        #region queries
 
         public IContentRepositoryPageGetAllQueryBuilder GetAll()
         {
@@ -76,10 +72,6 @@ namespace Cofoundry.Domain.Internal
             return DomainRepositoryQueryContextFactory.Create(query, ExtendableContentRepository);
         }
 
-        #endregion
-
-        #region commands
-        
         public async Task<int> AddAsync(AddPageCommand command)
         {
             await ExtendableContentRepository.ExecuteCommandAsync(command);
@@ -88,7 +80,7 @@ namespace Cofoundry.Domain.Internal
 
         public async Task<int> DuplicateAsync(DuplicatePageCommand command)
         {
-             await ExtendableContentRepository.ExecuteCommandAsync(command);
+            await ExtendableContentRepository.ExecuteCommandAsync(command);
             return command.OutputPageId;
         }
 
@@ -122,15 +114,14 @@ namespace Cofoundry.Domain.Internal
             return ExtendableContentRepository.ExecuteCommandAsync(command);
         }
 
-        #endregion
-
-        #region child entities
-
         public IAdvancedContentRepositoryPageVersionsRepository Versions()
         {
             return new ContentRepositoryPageVersionsRepository(ExtendableContentRepository);
         }
 
-        #endregion
+        public IAdvancedContentRepositoryPageAccessRulesRepository AccessRules()
+        {
+            return new ContentRepositoryPageAccessRulesRepository(ExtendableContentRepository);
+        }
     }
 }

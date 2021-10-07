@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 
 namespace Cofoundry.Domain.Data
 {
@@ -7,12 +6,12 @@ namespace Cofoundry.Domain.Data
     /// Represents a user in the Cofoundry custom identity system. Users can be partitioned into
     /// different 'User Areas', which enables the identity system used by the Cofoundry administration area 
     /// to be reused for other purposes, but this isn't a common scenario and often there will only be the 
-    /// Cofoundry UserArea.
+    /// Cofoundry user area.
     /// </summary>
     public partial class User
     {
         /// <summary>
-        /// Database id of the user.
+        /// Database id of the <see cref="User"/>.
         /// </summary>
         public int UserId { get; set; }
 
@@ -45,8 +44,9 @@ namespace Cofoundry.Domain.Data
 
         /// <summary>
         /// Cofoundry supports upgradable password hashing and this integer value
-        /// maps to the PasswordHashVersion enum to tell us which hash function
-        /// type to use. An integer outside of the PasswordHashVersion enum range
+        /// maps to the <see cref="Cofoundry.Domain.PasswordHashVersion"/> enum to 
+        /// tell us which hash function type to use. An integer outside of the 
+        /// <see cref="Cofoundry.Domain.PasswordHashVersion"/> enum range
         /// can be used to set up a completed custom hash provider.
         /// </summary>
         public int? PasswordHashVersion { get; set; }
@@ -58,18 +58,18 @@ namespace Cofoundry.Domain.Data
         public bool IsDeleted { get; set; }
 
         /// <summary>
-        /// The date the password was last changed or the that the password
+        /// The date and time the password was last changed or the that the password
         /// was first set (account create date)
         /// </summary>
         public DateTime LastPasswordChangeDate { get; set; }
 
         /// <summary>
-        /// The date the user last logged in, if ever.
+        /// The date and time the user last logged in, if ever.
         /// </summary>
         public DateTime? LastLoginDate { get; set; }
 
         /// <summary>
-        /// The date the user logged in before the LastLoginDate.
+        /// The date and time the user logged in before the <see cref="LastLoginDate"/>.
         /// </summary>
         /// <remarks>
         /// We can consider dropping this now we have a LoginLog table, I don't think it's
@@ -84,14 +84,14 @@ namespace Cofoundry.Domain.Data
         public bool RequirePasswordChange { get; set; }
 
         /// <summary>
-        /// The role that this user is assigned to. The role is required and
-        /// determines the permissions available to the user
+        /// The <see cref="Role"/> that this user is assigned to. The role is required
+        /// and determines the permissions available to the user
         /// </summary>
         public int RoleId { get; set; }
 
         /// <summary>
-        /// The role that this user is assigned to. The role is required and
-        /// determines the permissions available to the user
+        /// The <see cref="Role"/> that this user is assigned to. The role is 
+        /// required and determines the permissions available to the user
         /// </summary>
         public virtual Role Role { get; set; }
 
@@ -103,8 +103,8 @@ namespace Cofoundry.Domain.Data
         public string UserAreaCode { get; set; }
 
         /// <summary>
-        /// The Cofoundry user system can be partitioned into user areas. This enabled
-        /// reuse of User functionality to create custom login areas in your application.
+        /// The Cofoundry user system can be partitioned into user areas. This enables
+        /// reuse of user functionality to create custom login areas in your application.
         /// </summary>
         public virtual UserArea UserArea { get; set; }
 
@@ -121,15 +121,13 @@ namespace Cofoundry.Domain.Data
         /// </summary>
         public bool IsEmailConfirmed { get; set; }
 
-        #region ICreateAuditable
-
         /// <summary>
-        /// The date the user was created
+        /// The date and time the user was created
         /// </summary>
         public DateTime CreateDate { get; set; }
 
         /// <summary>
-        /// The UserId of the user that created this user. Nullable
+        /// The id of the user that created this user. Nullable
         /// to allow the first user to be created.
         /// </summary>
         public int? CreatorId { get; set; }
@@ -140,10 +138,6 @@ namespace Cofoundry.Domain.Data
         /// </summary>
         public virtual User Creator { get; set; }
 
-        #endregion
-
-        #region methods
-
         /// <summary>
         /// Simply joins the first and last name together e.g. "Scott Pilgrim"
         /// </summary>
@@ -151,7 +145,5 @@ namespace Cofoundry.Domain.Data
         {
             return (FirstName + " " + LastName).Trim();
         }
-
-        #endregion
     }
 }

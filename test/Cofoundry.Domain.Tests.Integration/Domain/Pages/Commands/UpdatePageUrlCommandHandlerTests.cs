@@ -54,7 +54,7 @@ namespace Cofoundry.Domain.Tests.Integration.Pages.Commands
                 .Pages
                 .AsNoTracking()
                 .FilterActive()
-                .FilterByPageId(pageId)
+                .FilterById(pageId)
                 .SingleOrDefaultAsync();
 
             using (new AssertionScope())
@@ -98,7 +98,7 @@ namespace Cofoundry.Domain.Tests.Integration.Pages.Commands
                 .Pages
                 .AsNoTracking()
                 .FilterActive()
-                .FilterByPageId(pageId)
+                .FilterById(pageId)
                 .SingleOrDefaultAsync();
 
             using (new AssertionScope())

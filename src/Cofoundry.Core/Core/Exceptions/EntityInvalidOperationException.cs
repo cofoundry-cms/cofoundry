@@ -14,7 +14,7 @@ namespace Cofoundry.Core
     /// for a specific entity.
     /// </para>
     /// </summary>
-    public abstract class EntityInvalidOperationException : InvalidOperationException
+    public class EntityInvalidOperationException : InvalidOperationException
     {
         public EntityInvalidOperationException()
             : base()

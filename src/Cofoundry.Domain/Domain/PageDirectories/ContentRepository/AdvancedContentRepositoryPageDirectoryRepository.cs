@@ -1,7 +1,4 @@
 ﻿using Cofoundry.Domain.Extendable;
-using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Cofoundry.Domain.Internal
@@ -19,8 +16,6 @@ namespace Cofoundry.Domain.Internal
 
         public IExtendableContentRepository ExtendableContentRepository { get; }
 
-        #region queries
-
         public IAdvancedContentRepositoryPageDirectoryByIdQueryBuilder GetById(int imageAssetId)
         {
             return new ContentRepositoryPageDirectoryByIdQueryBuilder(ExtendableContentRepository, imageAssetId);
@@ -35,10 +30,6 @@ namespace Cofoundry.Domain.Internal
         {
             return DomainRepositoryQueryContextFactory.Create(query, ExtendableContentRepository);
         }
-
-        #endregion
-
-        #region commands
 
         public async Task<int> AddAsync(AddPageDirectoryCommand command)
         {
@@ -61,6 +52,9 @@ namespace Cofoundry.Domain.Internal
             return ExtendableContentRepository.ExecuteCommandAsync(command);
         }
 
-        #endregion
+        public IAdvancedContentRepositoryPageDirectoryAccessRulesRepository AccessRules()
+        {
+            return new ContentRepositoryPageDirectoryAccessRulesRepository(ExtendableContentRepository);
+        }
     }
 }

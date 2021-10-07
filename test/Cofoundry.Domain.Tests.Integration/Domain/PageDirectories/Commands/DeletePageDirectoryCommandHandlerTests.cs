@@ -76,7 +76,7 @@ namespace Cofoundry.Domain.Tests.Integration.PageDirectories.Commands
             var pageExists = await dbContext
                 .Pages
                 .AsNoTracking()
-                .FilterByPageId(pageId)
+                .FilterById(pageId)
                 .AnyAsync();
 
             using (new AssertionScope())
@@ -110,7 +110,7 @@ namespace Cofoundry.Domain.Tests.Integration.PageDirectories.Commands
             var exists = await dbContext
                 .PageDirectories
                 .AsNoTracking()
-                .FilterByPageDirectoryId(directoryId)
+                .FilterById(directoryId)
                 .AnyAsync();
 
             return exists;

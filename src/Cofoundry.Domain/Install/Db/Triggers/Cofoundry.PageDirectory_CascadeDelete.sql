@@ -29,6 +29,10 @@ begin
 	from Cofoundry.[Page] e
 	inner join @PageDirectoryToDelete d on e.PageDirectoryId = d.PageDirectoryId
 
+    delete Cofoundry.PageDirectoryAccessRule
+	from Cofoundry.PageDirectoryAccessRule e
+	inner join deleted d on e.PageDirectoryId = d.PageDirectoryId
+
     delete Cofoundry.PageDirectoryLocale
 	from Cofoundry.PageDirectoryLocale e
 	inner join @PageDirectoryToDelete d on e.PageDirectoryId = d.PageDirectoryId

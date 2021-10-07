@@ -29,7 +29,7 @@ namespace Cofoundry.Domain.Internal
                 .Include(p => p.PageTags)
                 .ThenInclude(t => t.Tag)
                 .FilterActive()
-                .FilterByPageId(query.Id)
+                .FilterById(query.Id)
                 .SingleOrDefaultAsync();
 
             if (dbResult == null) return null;

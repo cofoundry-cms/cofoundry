@@ -1,16 +1,15 @@
-using System;
-using Microsoft.EntityFrameworkCore;
 using Cofoundry.Core;
 using Cofoundry.Core.EntityFramework;
+using Microsoft.EntityFrameworkCore;
 
 namespace Cofoundry.Domain.Data
 {
     /// <summary>
     /// The main Cofoundry entity framework DbContext representing all the main 
-    /// entities in the Cofoundry database. Direct access to the DbContext is
-    /// discouraged, instead we advise you use the domain queries and commands
+    /// entities in the Cofoundry database. Direct access to the <see cref="CofoundryDbContext"/>
+    /// is discouraged, instead we advise you use the domain queries and commands
     /// available in the Cofoundry data repositories, see
-    /// https://github.com/cofoundry-cms/cofoundry/wiki/Data-Access#repositories
+    /// https://www.cofoundry.org/docs/framework/data-access
     /// </summary>
     public partial class CofoundryDbContext : DbContext
     {
@@ -37,8 +36,6 @@ namespace Cofoundry.Domain.Data
                 .ApplyConfiguration(new RewriteRuleMap())
                 ;
         }
-
-        #region properties
 
         /// <summary>
         /// This queue keeps track of files belonging to assets that 
@@ -177,10 +174,40 @@ namespace Cofoundry.Domain.Data
         public DbSet<Page> Pages { get; set; }
 
         /// <summary>
+        /// <para>
+        /// Access rules are used to restrict access to a website resource to users
+        /// fulfilling certain criteria such as a specific user area or role. Page
+        /// access rules are used to define the rules at a <see cref="Page"/> level, 
+        /// however rules are also inherited from the directories the page is parented to.
+        /// </para>
+        /// <para>
+        /// Note that access rules do not apply to users from the Cofoundry Admin user
+        /// area. They aren't intended to be used to restrict editor access in the admin UI 
+        /// but instead are used to restrict public access to website pages and routes.
+        /// </para>
+        /// </summary>
+        public DbSet<PageAccessRule> PageAccessRules { get; set; }
+
+        /// <summary>
         /// Represents a folder in the dynamic web page heirarchy. There is always a 
         /// single root directory.
         /// </summary>
         public DbSet<PageDirectory> PageDirectories { get; set; }
+
+        /// <summary>
+        /// <para>
+        /// Access rules are used to restrict access to a website resource to users
+        /// fulfilling certain criteria such as a specific user area or role. Page
+        /// directory access rules are used to define the rules at a <see cref="PageDirectory"/> 
+        /// level. These rules are inherited by child directories and pages.
+        /// </para>
+        /// <para>
+        /// Note that access rules do not apply to users from the Cofoundry Admin user
+        /// area. They aren't intended to be used to restrict editor access in the admin UI 
+        /// but instead are used to restrict public access to website pages and routes.
+        /// </para>
+        /// </summary>
+        public DbSet<PageDirectoryAccessRule> PageDirectoryAccessRules { get; set; }
 
         public DbSet<PageDirectoryLocale> PageDirectoryLocales { get; set; }
 
@@ -271,7 +298,5 @@ namespace Cofoundry.Domain.Data
         /// should cascade for the relationship.
         /// </summary>
         public DbSet<UnstructuredDataDependency> UnstructuredDataDependencies { get; set; }
-
-        #endregion
     }
 }

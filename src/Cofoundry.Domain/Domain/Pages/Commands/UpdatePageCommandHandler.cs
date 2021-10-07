@@ -1,34 +1,26 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Cofoundry.Domain.Data;
-using Cofoundry.Domain.CQS;
-using Microsoft.EntityFrameworkCore;
-using Cofoundry.Core.MessageAggregator;
-using Cofoundry.Core;
+﻿using Cofoundry.Core;
 using Cofoundry.Core.Data;
+using Cofoundry.Core.MessageAggregator;
+using Cofoundry.Domain.CQS;
+using Cofoundry.Domain.Data;
+using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Cofoundry.Domain.Internal
 {
-    public class UpdatePageCommandHandler 
+    public class UpdatePageCommandHandler
         : ICommandHandler<UpdatePageCommand>
         , IPermissionRestrictedCommandHandler<UpdatePageCommand>
     {
-        #region constructor
-        
         private readonly CofoundryDbContext _dbContext;
-        private readonly EntityAuditHelper _entityAuditHelper;
         private readonly EntityTagHelper _entityTagHelper;
         private readonly IPageCache _pageCache;
         private readonly IMessageAggregator _messageAggregator;
         private readonly ITransactionScopeManager _transactionScopeFactory;
 
         public UpdatePageCommandHandler(
-            IQueryExecutor queryExecutor,
             CofoundryDbContext dbContext,
-            EntityAuditHelper entityAuditHelper,
             EntityTagHelper entityTagHelper,
             IPageCache pageCache,
             IMessageAggregator messageAggregator,
@@ -36,25 +28,18 @@ namespace Cofoundry.Domain.Internal
             )
         {
             _dbContext = dbContext;
-            _entityAuditHelper = entityAuditHelper;
             _entityTagHelper = entityTagHelper;
             _pageCache = pageCache;
             _messageAggregator = messageAggregator;
             _transactionScopeFactory = transactionScopeFactory;
         }
 
-        #endregion
-
-        #region execute
-
         public async Task ExecuteAsync(UpdatePageCommand command, IExecutionContext executionContext)
         {
-            var page = await GetPageById(command.PageId).SingleOrDefaultAsync();
-            EntityNotFoundException.ThrowIfNull(page, command.PageId);
-
+            var page = await GetPageAsync(command.PageId);
             MapPage(command, executionContext, page);
-            await _dbContext.SaveChangesAsync();
 
+            await _dbContext.SaveChangesAsync();
             await _transactionScopeFactory.QueueCompletionTaskAsync(_dbContext, () => OnTransactionComplete(page));
         }
 
@@ -69,19 +54,19 @@ namespace Cofoundry.Domain.Internal
             });
         }
 
-        #endregion
-
-        #region helpers
-
-        private IQueryable<Page> GetPageById(int id)
+        private async Task<Page> GetPageAsync(int id)
         {
-            return _dbContext
+            var page = await _dbContext
                 .Pages
                 .Include(p => p.PageTags)
                 .ThenInclude(a => a.Tag)
                 .FilterActive()
-                .FilterByPageId(id)
-                .Where(p => p.PageId == id);
+                .FilterById(id)
+                .SingleOrDefaultAsync();
+
+            EntityNotFoundException.ThrowIfNull(page, id);
+
+            return page;
         }
 
         private void MapPage(UpdatePageCommand command, IExecutionContext executionContext, Page page)
@@ -89,15 +74,9 @@ namespace Cofoundry.Domain.Internal
             _entityTagHelper.UpdateTags(page.PageTags, command.Tags, executionContext);
         }
 
-        #endregion
-
-        #region Permission
-
         public IEnumerable<IPermissionApplication> GetPermissions(UpdatePageCommand command)
         {
             yield return new PageUpdatePermission();
         }
-
-        #endregion
     }
 }

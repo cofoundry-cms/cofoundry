@@ -114,5 +114,64 @@ namespace Cofoundry.Web.Tests.Integration.Controllers
             var customEntityTitle = $"<h2>{customEntity.Title}</h2>";
             result.StatusCode.Should().Be(HttpStatusCode.OK);
         }
+
+        [Fact]
+        public async Task WhenPageAccessRuleForUserAreaAndUserValid_OK()
+        {
+            throw new NotImplementedException();
+        }
+        [Theory]
+        [InlineData(RouteAccessRuleViolationAction.Error)]
+        [InlineData(RouteAccessRuleViolationAction.NotFound)]
+        [InlineData(RouteAccessRuleViolationAction.RedirectToLogin)]
+        public async Task WhenPageAccessRuleForUserAreaAndUserInvalid_ReturnsCorrectAction(RouteAccessRuleViolationAction routeAccessRuleViolationAction)
+        {
+            throw new NotImplementedException();
+        }
+
+        [Fact]
+        public async Task WhenPageAccessRuleForRoleAndUserValid_OK()
+        {
+            throw new NotImplementedException();
+        }
+
+        [Theory]
+        [InlineData(RouteAccessRuleViolationAction.Error)]
+        [InlineData(RouteAccessRuleViolationAction.NotFound)]
+        [InlineData(RouteAccessRuleViolationAction.RedirectToLogin)]
+        public async Task WhenPageAccessRuleForRoleAndUserInvalid_ReturnsCorrectAction(RouteAccessRuleViolationAction routeAccessRuleViolationAction)
+        {
+            throw new NotImplementedException();
+        }
+
+        [Fact]
+        public async Task WhenDirectoryAccessRuleForUserAreaAndUserValid_OK()
+        {
+            throw new NotImplementedException();
+        }
+
+        [Theory]
+        [InlineData(RouteAccessRuleViolationAction.Error)]
+        [InlineData(RouteAccessRuleViolationAction.NotFound)]
+        [InlineData(RouteAccessRuleViolationAction.RedirectToLogin)]
+        public async Task WhenDirectoryAccessRuleForUserAreaAndUserValid_ReturnsCorrectAction(RouteAccessRuleViolationAction routeAccessRuleViolationAction)
+        {
+            throw new NotImplementedException();
+        }
+
+        [Fact]
+        public async Task WhenDirectoryAccessRuleForRoleAndUserValid_OK()
+        {
+            throw new NotImplementedException();
+        }
+
+        [Theory]
+        [InlineData(RouteAccessRuleViolationAction.Error)]
+        [InlineData(RouteAccessRuleViolationAction.NotFound)]
+        [InlineData(RouteAccessRuleViolationAction.RedirectToLogin)]
+        public async Task WhenDirectoryAccessRuleForRoleAndUserInvalid_ReturnsCorrectAction(RouteAccessRuleViolationAction routeAccessRuleViolationAction)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

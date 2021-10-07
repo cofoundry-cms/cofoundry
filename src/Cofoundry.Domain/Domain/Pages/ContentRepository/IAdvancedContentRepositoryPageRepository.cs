@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Cofoundry.Domain
@@ -10,8 +8,6 @@ namespace Cofoundry.Domain
     /// </summary>
     public interface IAdvancedContentRepositoryPageRepository
     {
-        #region queries
-
         /// <summary>
         /// Retrieve all pages in one query.
         /// </summary>
@@ -79,10 +75,6 @@ namespace Cofoundry.Domain
         /// <param name="query">Query parameters.</param>
         IDomainRepositoryQueryContext<bool> IsPathUnique(IsPagePathUniqueQuery query);
 
-        #endregion
-
-        #region commands
-
         /// <summary>
         /// Adds a new page with a draft version and optionally publishes it.
         /// </summary>
@@ -132,10 +124,6 @@ namespace Cofoundry.Domain
         /// <param name="pageId">Id of the page to delete.</param>
         Task DeleteAsync(int pageId);
 
-        #endregion
-
-        #region child entities
-
         /// <summary>
         /// Pages are a versioned entity and therefore have many page version
         /// records. At one time a page may only have one draft version, but
@@ -144,6 +132,19 @@ namespace Cofoundry.Domain
         /// </summary>
         IAdvancedContentRepositoryPageVersionsRepository Versions();
 
-        #endregion
+        /// <summary>
+        /// <para>
+        /// Access rules are used to restrict access to a website resource to users
+        /// fulfilling certain criteria such as a specific user area or role. Page
+        /// access rules are used to define the rules at a page level, however rules 
+        /// are also inherited from the directories the page is parented to.
+        /// </para>
+        /// <para>
+        /// Note that access rules do not apply to users from the Cofoundry Admin user
+        /// area. They aren't intended to be used to restrict editor access in the admin UI 
+        /// but instead are used to restrict public access to website pages and routes.
+        /// </para>
+        /// </summary>
+        IAdvancedContentRepositoryPageAccessRulesRepository AccessRules();
     }
 }

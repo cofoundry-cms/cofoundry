@@ -54,5 +54,15 @@ namespace Cofoundry.Domain.Tests.Integration
         /// type.
         /// </summary>
         public TestCustomEntityInfo TestCustomEntity { get; set; } = new TestCustomEntityInfo();
+
+        /// <summary>
+        /// A test user area with a single role.
+        /// </summary>
+        public TestUserAreaInfo TestUserArea1 { get; set; } = new TestUserAreaInfo() { UserAreaCode = Shared.TestUserArea1.Code, RoleCode = Shared.TestUserArea1Role.Code };
+
+        /// <summary>
+        /// A secondary test user area with a single role.
+        /// </summary>
+        public TestUserAreaInfo TestUserArea2 { get; set; } = new TestUserAreaInfo() { UserAreaCode = Shared.TestUserArea2.Code, RoleCode = Shared.TestUserArea2Role.Code };
     }
 }

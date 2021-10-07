@@ -47,7 +47,7 @@ namespace Cofoundry.Domain.Tests.Integration.Pages.Commands
                 .Pages
                 .Include(p => p.PageVersions)
                 .FilterActive()
-                .FilterByPageId(addPageCommand.OutputPageId)
+                .FilterById(addPageCommand.OutputPageId)
                 .AsNoTracking()
                 .SingleOrDefaultAsync();
 
@@ -108,7 +108,7 @@ namespace Cofoundry.Domain.Tests.Integration.Pages.Commands
                 .AsNoTracking()
                 .Include(p => p.PageVersions)
                 .FilterActive()
-                .FilterByPageId(addPageCommand.OutputPageId)
+                .FilterById(addPageCommand.OutputPageId)
                 .SingleOrDefaultAsync();
 
             var pageVersion = page.PageVersions.FirstOrDefault();
@@ -149,7 +149,7 @@ namespace Cofoundry.Domain.Tests.Integration.Pages.Commands
                 .Include(p => p.PageTags)
                 .ThenInclude(pt => pt.Tag)
                 .FilterActive()
-                .FilterByPageId(addPageCommand.OutputPageId)
+                .FilterById(addPageCommand.OutputPageId)
                 .SingleOrDefaultAsync();
 
             var testTag = page.PageTags.Select(t => t.TagId == app.SeededEntities.TestTag.TagId);
@@ -189,7 +189,7 @@ namespace Cofoundry.Domain.Tests.Integration.Pages.Commands
                 .AsNoTracking()
                 .Include(p => p.PageVersions)
                 .FilterActive()
-                .FilterByPageId(addPageCommand.OutputPageId)
+                .FilterById(addPageCommand.OutputPageId)
                 .SingleOrDefaultAsync();
 
             var pageVersion = page.PageVersions.FirstOrDefault();
@@ -231,7 +231,7 @@ namespace Cofoundry.Domain.Tests.Integration.Pages.Commands
                 .AsNoTracking()
                 .Include(p => p.PageVersions)
                 .FilterActive()
-                .FilterByPageId(addPageCommand.OutputPageId)
+                .FilterById(addPageCommand.OutputPageId)
                 .SingleOrDefaultAsync();
 
             var pageVersion = page.PageVersions.FirstOrDefault();
@@ -265,7 +265,7 @@ namespace Cofoundry.Domain.Tests.Integration.Pages.Commands
                 .Pages
                 .AsNoTracking()
                 .FilterActive()
-                .FilterByPageId(addPageCommand.OutputPageId)
+                .FilterById(addPageCommand.OutputPageId)
                 .SingleOrDefaultAsync();
 
             using (new AssertionScope())

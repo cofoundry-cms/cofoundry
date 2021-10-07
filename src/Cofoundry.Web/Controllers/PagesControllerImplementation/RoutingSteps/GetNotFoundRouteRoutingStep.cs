@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Cofoundry.Domain;
+﻿using Cofoundry.Domain;
 using Cofoundry.Domain.CQS;
 using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
 
 namespace Cofoundry.Web
 {
@@ -28,7 +25,7 @@ namespace Cofoundry.Web
 
         public async Task ExecuteAsync(Controller controller, PageActionRoutingState state)
         {
-            // Find a 404 page if a version exists.
+            // Find a 404 page if a version does not exist.
             if (state.PageRoutingInfo == null)
             {
                 // First check for a rewrite rule and apply it

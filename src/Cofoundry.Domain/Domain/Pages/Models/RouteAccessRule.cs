@@ -22,6 +22,6 @@
         /// <summary>
         /// An action to take when a user does not meet the rule criteria.
         /// </summary>
-        public PageAccessRuleViolationAction ViolationAction { get; set; }
+        public RouteAccessRuleViolationAction ViolationAction { get; set; }
     }
 }

@@ -75,7 +75,7 @@ namespace Cofoundry.Domain.Internal
             var page = await _dbContext
                 .Pages
                 .FilterActive()
-                .FilterByPageId(command.PageId)
+                .FilterById(command.PageId)
                 .SingleOrDefaultAsync();
 
             EntityNotFoundException.ThrowIfNull(page, command.PageId);

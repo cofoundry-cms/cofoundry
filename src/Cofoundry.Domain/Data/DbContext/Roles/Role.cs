@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 
 namespace Cofoundry.Domain.Data
@@ -9,11 +8,6 @@ namespace Cofoundry.Domain.Data
     /// </summary>
     public partial class Role
     {
-        public Role()
-        {
-            RolePermissions = new List<RolePermission>();
-        }
-
         /// <summary>
         /// Database id of the role.
         /// </summary>
@@ -29,7 +23,7 @@ namespace Cofoundry.Domain.Data
         /// The role code is a unique three letter code that can be used to reference the role 
         /// programatically. The code must be unique and convention is to use upper case, although 
         /// code matching is case insensitive. This is only used by roles defined in code using 
-        /// IRoleDefinition.
+        /// <see cref="IRoleDefinition"/>.
         /// </summary>
         public string RoleCode { get; set; }
 
@@ -47,6 +41,18 @@ namespace Cofoundry.Domain.Data
         /// Collection of permissions that describe the actions this role is 
         /// permitted to perform.
         /// </summary>
-        public virtual ICollection<RolePermission> RolePermissions { get; set; }
+        public virtual ICollection<RolePermission> RolePermissions { get; set; } = new List<RolePermission>();
+
+        /// <summary>
+        /// Dynamic website routes can optionally be restircted to specific roles. This
+        /// collection references zero or more access rules at the <see cref="Page"/> level.
+        /// </summary>
+        public virtual ICollection<PageAccessRule> PageAccessRules { get; set; } = new List<PageAccessRule>();
+
+        /// <summary>
+        /// Dynamic website routes can optionally be restircted to specific roles. This
+        /// collection references zero or more access rules at the <see cref="PageDirectory"/> level.
+        /// </summary>
+        public virtual ICollection<PageDirectoryAccessRule> PageDirectoryAccessRules { get; set; } = new List<PageDirectoryAccessRule>();
     }
 }

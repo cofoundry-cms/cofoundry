@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 
 namespace Cofoundry.Domain
 {
@@ -10,8 +7,6 @@ namespace Cofoundry.Domain
     /// </summary>
     public interface IAdvancedContentRepositoryPageDirectoryRepository
     {
-        #region queries
-
         /// <summary>
         /// Retrieve an image asset by a unique database id.
         /// </summary>
@@ -28,10 +23,6 @@ namespace Cofoundry.Domain
         /// within its parent directory.
         /// </summary>
         IDomainRepositoryQueryContext<bool> IsPathUnique(IsPageDirectoryPathUniqueQuery query);
-
-        #endregion
-
-        #region commands
 
         /// <summary>
         /// Adds a new page directory.
@@ -54,6 +45,19 @@ namespace Cofoundry.Domain
         /// <param name="pageDirectoryId">Id of the page directory to delete.</param>
         Task DeleteAsync(int pageDirectoryId);
 
-        #endregion
+        /// <summary>
+        /// <para>
+        /// Access rules are used to restrict access to a website resource to users
+        /// fulfilling certain criteria such as a specific user area or role. Page
+        /// directory access rules are used to define the rules at a <see cref="PageDirectory"/> 
+        /// level. These rules are inherited by child directories and pages.
+        /// </para>
+        /// <para>
+        /// Note that access rules do not apply to users from the Cofoundry Admin user
+        /// area. They aren't intended to be used to restrict editor access in the admin UI 
+        /// but instead are used to restrict public access to website pages and routes.
+        /// </para>
+        /// </summary>
+        IAdvancedContentRepositoryPageDirectoryAccessRulesRepository AccessRules();
     }
 }

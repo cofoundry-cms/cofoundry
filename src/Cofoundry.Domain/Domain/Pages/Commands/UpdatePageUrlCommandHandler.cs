@@ -42,7 +42,7 @@ namespace Cofoundry.Domain.Internal
                 .Include(p => p.Locale)
                 .Include(p => p.PageDirectory)
                 .FilterActive()
-                .FilterByPageId(command.PageId)
+                .FilterById(command.PageId)
                 .SingleOrDefaultAsync();
             EntityNotFoundException.ThrowIfNull(page, command.PageId);
 

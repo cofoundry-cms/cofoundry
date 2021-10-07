@@ -45,36 +45,6 @@
   </ItemGroup>
   
   <ItemGroup>
-    <None Remove="MailTemplates\AdminMailTemplates\Templates\AdminPasswordResetByAdminMailTemplate_html.cshtml" />
-    <None Remove="MailTemplates\AdminMailTemplates\Templates\AdminPasswordResetByAdminMailTemplate_text.cshtml" />
-    <None Remove="MailTemplates\DefaultMailTemplates\Layouts\_DefaultMailLayout_html.cshtml" />
-    <None Remove="MailTemplates\DefaultMailTemplates\Layouts\_DefaultMailLayout_text.cshtml" />
-    <None Remove="MailTemplates\DefaultMailTemplates\Templates\DefaultNewUserWithTemporaryPasswordMailTemplate_html.cshtml" />
-    <None Remove="MailTemplates\DefaultMailTemplates\Templates\DefaultNewUserWithTemporaryPasswordMailTemplate_text.cshtml" />
-    <None Remove="MailTemplates\DefaultMailTemplates\Templates\DefaultPasswordChangedMailTemplate_html.cshtml" />
-    <None Remove="MailTemplates\DefaultMailTemplates\Templates\DefaultPasswordChangedMailTemplate_text.cshtml" />
-    <None Remove="MailTemplates\DefaultMailTemplates\Templates\DefaultPasswordResetByAdminMailTemplate_html.cshtml" />
-    <None Remove="MailTemplates\DefaultMailTemplates\Templates\DefaultPasswordResetByAdminMailTemplate_text.cshtml" />
-    <None Remove="MailTemplates\DefaultMailTemplates\Templates\DefaultPasswordResetRequestedByUserMailTemplate_html.cshtml" />
-    <None Remove="MailTemplates\DefaultMailTemplates\Templates\DefaultPasswordResetRequestedByUserMailTemplate_text.cshtml" />
-    <None Remove="MailTemplates\DefaultMailTemplates\Templates\_ViewImports.cshtml" />
-  </ItemGroup>
-  
-  <ItemGroup>
-    <EmbeddedResource Include="MailTemplates\DefaultMailTemplates\Layouts\_DefaultMailLayout_html.cshtml" />
-    <EmbeddedResource Include="MailTemplates\DefaultMailTemplates\Layouts\_DefaultMailLayout_text.cshtml" />
-    <EmbeddedResource Include="MailTemplates\DefaultMailTemplates\Templates\DefaultPasswordResetByAdminMailTemplate_html.cshtml" />
-    <EmbeddedResource Include="MailTemplates\DefaultMailTemplates\Templates\DefaultPasswordResetByAdminMailTemplate_text.cshtml" />
-    <EmbeddedResource Include="MailTemplates\DefaultMailTemplates\Templates\DefaultNewUserWithTemporaryPasswordMailTemplate_html.cshtml" />
-    <EmbeddedResource Include="MailTemplates\DefaultMailTemplates\Templates\DefaultNewUserWithTemporaryPasswordMailTemplate_text.cshtml" />
-    <EmbeddedResource Include="MailTemplates\DefaultMailTemplates\Templates\DefaultPasswordChangedMailTemplate_html.cshtml" />
-    <EmbeddedResource Include="MailTemplates\DefaultMailTemplates\Templates\DefaultPasswordChangedMailTemplate_text.cshtml" />
-    <EmbeddedResource Include="MailTemplates\DefaultMailTemplates\Templates\DefaultPasswordResetRequestedByUserMailTemplate_html.cshtml" />
-    <EmbeddedResource Include="MailTemplates\DefaultMailTemplates\Templates\DefaultPasswordResetRequestedByUserMailTemplate_text.cshtml" />
-    <EmbeddedResource Include="MailTemplates\DefaultMailTemplates\_ViewImports.cshtml" />
-  </ItemGroup>
-  
-  <ItemGroup>
     <Folder Include="Domain\Shared\Exceptions\" />
   </ItemGroup>
 	

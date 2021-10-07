@@ -122,33 +122,33 @@ namespace Cofoundry.Domain
         }
 
         /// <summary>
-        /// Determines if the <paramref name="role"/> violates any access rules
-        /// for this page or any parent directories. If the role cannot access the 
-        /// page then the rule viloation is returned. The role may violate several 
+        /// Determines if the <paramref name="user"/> violates any access rules
+        /// for this page or any parent directories. If the user cannot access the 
+        /// page then the rule viloation is returned. The user may violate several 
         /// rules in the page and directory tree but only the most specific rule is 
         /// returned, starting with the page and then working back up through the 
         /// directory tree. 
         /// </summary>
-        /// <param name="role">The role to check against access rules.</param>
+        /// <param name="user">The <see cref="IUserContext"/> to check against access rules.</param>
         /// <returns>
         /// If any rules are violated, then the most specific rule is returned; 
         /// otherwise <see langword="null"/>.
         /// </returns>
-        public RouteAccessRule CanAccess(RoleDetails role)
+        public RouteAccessRule CanAccess(IUserContext user)
         {
-            if (role == null) throw new ArgumentNullException(nameof(role));
+            if (user == null) throw new ArgumentNullException(nameof(user));
             EntityInvalidOperationException.ThrowIfNull(this, r => r.AccessRules);
             EntityInvalidOperationException.ThrowIfNull(this, r => r.PageDirectory);
 
             var pageRule = AccessRules
-                .FilterByRole(role)
+                .GetRuleViolations(user)
                 .FirstOrDefault();
 
             if (pageRule != null) return pageRule;
 
             var directoryViolation = PageDirectory
                 .AccessRules
-                .FilterByRole(role)
+                .GetRuleViolations(user)
                 .FirstOrDefault();
 
             return directoryViolation;

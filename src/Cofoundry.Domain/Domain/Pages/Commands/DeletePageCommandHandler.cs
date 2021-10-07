@@ -41,7 +41,7 @@ namespace Cofoundry.Domain.Internal
         {
             var page = await _dbContext
                 .Pages
-                .FilterByPageId(command.PageId)
+                .FilterById(command.PageId)
                 .SingleOrDefaultAsync();
 
             if (page != null)
