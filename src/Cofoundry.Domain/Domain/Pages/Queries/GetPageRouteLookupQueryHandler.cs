@@ -1,12 +1,11 @@
-﻿using System;
+﻿using Cofoundry.Core;
+using Cofoundry.Domain.CQS;
+using Cofoundry.Domain.Data;
+using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using Cofoundry.Domain.Data;
-using Cofoundry.Domain.CQS;
-using Microsoft.EntityFrameworkCore;
-using Cofoundry.Core;
 
 namespace Cofoundry.Domain.Internal
 {
@@ -24,18 +23,21 @@ namespace Cofoundry.Domain.Internal
         private readonly CofoundryDbContext _dbContext;
         private readonly IQueryExecutor _queryExecutor;
         private readonly IPageCache _pageCache;
+        private readonly IRouteAccessRuleMapper _routeAccessRuleMapper;
 
         public GetPageRouteLookupQueryHandler(
             CofoundryDbContext dbContext,
             IQueryExecutor queryExecutor,
-            IPageCache pageCache
+            IPageCache pageCache,
+            IRouteAccessRuleMapper routeAccessRuleMapper
             )
         {
             _dbContext = dbContext;
             _queryExecutor = queryExecutor;
             _pageCache = pageCache;
+            _routeAccessRuleMapper = routeAccessRuleMapper;
         }
-        
+
         public async Task<IDictionary<int, PageRoute>> ExecuteAsync(GetPageRouteLookupQuery query, IExecutionContext executionContext)
         {
             return await _pageCache.GetOrAddAsync(() =>
@@ -44,58 +46,31 @@ namespace Cofoundry.Domain.Internal
             });
         }
 
-        #region private query classes
-
-        private class PageQueryResult
+        private async Task<IDictionary<int, PageRoute>> GetAllPageRoutesAsync(GetPageRouteLookupQuery query, IExecutionContext executionContext)
         {
-            public PageRoute RoutingInfo { get; set; }
-            public int? LocaleId { get; set; }
-            public int PageDirectoryId { get; set; }
+            var dbPages = await GetPagesAsync();
+            var dbPageVersionLookup = await GetPageVersionsAsync();
+            var pageDirectories = await _queryExecutor.ExecuteAsync(new GetAllPageDirectoryRoutesQuery(), executionContext);
+            var pageDirectoryLookup = pageDirectories.ToDictionary(d => d.PageDirectoryId);
+            var templates = await GetPageTemplatesAsync();
+            var dbPageAccessRulesLookup = await GetAccessRulesAsync();
+            var allLocales = await _queryExecutor.ExecuteAsync(new GetAllActiveLocalesQuery(), executionContext);
+
+            var routes = Map(
+                dbPages, 
+                dbPageVersionLookup, 
+                pageDirectoryLookup, 
+                templates,
+                dbPageAccessRulesLookup,
+                allLocales
+                );
+
+            return routes;
         }
 
-        private class PageVersionQueryResult : IEntityVersion
+        private Task<List<PageQueryResult>> GetPagesAsync()
         {
-            public int PageId { get; set; }
-            public int PageVersionId { get; set; }
-            public string Title { get; set; }
-            public int WorkFlowStatusId { get; set; }
-            public DateTime CreateDate { get; set; }
-            public bool ExcludeFromSitemap { get; set; }
-            public int PageTemplateId { get; set; }
-        }
-
-        private class PageTemplateQueryResult
-        {
-            public int PageTemplateId { get; set; }
-            public bool HasPageRegions { get; set; }
-            public bool HasCustomEntityRegions { get; set; }
-        }
-
-        #endregion
-
-        private IQueryable<PageVersionQueryResult> QueryPageVersions()
-        {
-            var dbPageVersions = _dbContext
-                .PageVersions
-                .AsNoTracking()
-                .FilterActive()
-                .Select(v => new PageVersionQueryResult()
-                {
-                    PageId = v.PageId,
-                    PageVersionId = v.PageVersionId,
-                    Title = v.Title,
-                    WorkFlowStatusId = v.WorkFlowStatusId,
-                    CreateDate = v.CreateDate,
-                    ExcludeFromSitemap = v.ExcludeFromSitemap,
-                    PageTemplateId = v.PageTemplateId,
-                });
-
-            return dbPageVersions;
-        }
-
-        private IQueryable<PageQueryResult> QueryPages()
-        {
-            var dbPages = _dbContext
+            return _dbContext
                 .Pages
                 .AsNoTracking()
                 .FilterActive()
@@ -112,45 +87,67 @@ namespace Cofoundry.Domain.Internal
                     },
                     LocaleId = p.LocaleId,
                     PageDirectoryId = p.PageDirectoryId
-                });
-
-            return dbPages;
+                })
+                .ToListAsync();
         }
 
-        private IQueryable<PageTemplateQueryResult> GetPageTemplates()
+        private async Task<Dictionary<int, IOrderedEnumerable<PageVersionQueryResult>>> GetPageVersionsAsync()
         {
-            var dbTemplates = _dbContext
+            var result = await _dbContext
+                .PageVersions
+                .AsNoTracking()
+                .FilterActive()
+                .Select(v => new PageVersionQueryResult()
+                {
+                    PageId = v.PageId,
+                    PageVersionId = v.PageVersionId,
+                    Title = v.Title,
+                    WorkFlowStatusId = v.WorkFlowStatusId,
+                    CreateDate = v.CreateDate,
+                    ExcludeFromSitemap = v.ExcludeFromSitemap,
+                    PageTemplateId = v.PageTemplateId,
+                })
+                .ToListAsync();
+
+            return result
+                .GroupBy(k => k.PageId)
+                .ToDictionary(k => k.Key, v => v.OrderByLatest());
+        }
+
+        private Task<Dictionary<int, PageTemplateQueryResult>> GetPageTemplatesAsync()
+        {
+            return _dbContext
                 .PageTemplates
+                .AsNoTracking()
                 .FilterActive()
                 .Select(t => new PageTemplateQueryResult()
                 {
                     PageTemplateId = t.PageTemplateId,
                     HasPageRegions = t.PageTemplateRegions.Any(s => !s.IsCustomEntityRegion),
                     HasCustomEntityRegions = t.PageTemplateRegions.Any(s => s.IsCustomEntityRegion)
-                });
-
-            return dbTemplates;
+                })
+                .ToDictionaryAsync(t => t.PageTemplateId);
         }
 
-        private async Task<IDictionary<int, PageRoute>> GetAllPageRoutesAsync(GetPageRouteLookupQuery query, IExecutionContext executionContext)
+        private async Task<Dictionary<int, IEnumerable<PageAccessRule>>> GetAccessRulesAsync()
         {
-            var dbPages = await QueryPages().ToListAsync();
-            var dbPageVersions = await QueryPageVersions().ToListAsync();
-            var pageDirectories = await _queryExecutor.ExecuteAsync(new GetAllPageDirectoryRoutesQuery(), executionContext);
-            var pageDirectoryLookup = pageDirectories.ToDictionary(d => d.PageDirectoryId);
-            var templates = await GetPageTemplates().ToDictionaryAsync(t => t.PageTemplateId);
-            var allLocales = await _queryExecutor.ExecuteAsync(new GetAllActiveLocalesQuery(), executionContext);
+            var result = await _dbContext
+                .PageAccessRules
+                .AsNoTracking()
+                .OrderByDefault()
+                .ToListAsync();
 
-            var routes = Map(dbPages, dbPageVersions, pageDirectoryLookup, templates, allLocales);
-
-            return routes;
+            return result
+                .GroupBy(r => r.PageId)
+                .ToDictionary(k => k.Key, v => v.AsEnumerable());
         }
 
         private Dictionary<int, PageRoute> Map(
             List<PageQueryResult> dbPages,
-            List<PageVersionQueryResult> dbPageVersions,
+            Dictionary<int, IOrderedEnumerable<PageVersionQueryResult>> dbPageVersionLookup,
             Dictionary<int, PageDirectoryRoute> pageDirectories,
             Dictionary<int, PageTemplateQueryResult> templates,
+            Dictionary<int, IEnumerable<PageAccessRule>> accessRuleLookup,
             ICollection<ActiveLocale> activeLocales
             )
         {
@@ -165,9 +162,14 @@ namespace Cofoundry.Domain.Internal
                 if (pageRoute.PageDirectory == null) continue;
 
                 // Configure Version Info
-                SetPageVersions(pageRoute, dbPageVersions, templates);
+                SetPageVersions(pageRoute, dbPageVersionLookup, templates);
                 if (!pageRoute.Versions.Any()) continue;
 
+                var accessRules = accessRuleLookup.GetOrDefault(pageRoute.PageId);
+                pageRoute.AccessRules = EnumerableHelper.Enumerate(accessRules)
+                    .Select(_routeAccessRuleMapper.Map)
+                    .ToList();
+                
                 // Configure Locale
                 string directoryPath = null;
                 if (dbPage.LocaleId.HasValue)
@@ -197,18 +199,16 @@ namespace Cofoundry.Domain.Internal
 
         private void SetPageVersions(
             PageRoute pageRoute,
-            ICollection<PageVersionQueryResult> dbPageVersions, 
+            Dictionary<int, IOrderedEnumerable<PageVersionQueryResult>> dbPageVersionLookup,
             Dictionary<int, PageTemplateQueryResult> templates
             )
         {
             bool hasLatestPublishVersion = false;
-            pageRoute.Versions = new List<PageVersionRoute>(dbPageVersions.Count);
 
-            var orderedDbVersions = dbPageVersions
-                .Where(v => v.PageId == pageRoute.PageId)
-                .OrderByLatest();
+            var orderedDbVersions = dbPageVersionLookup.GetOrDefault(pageRoute.PageId);
 
-            foreach (var dbVersion in orderedDbVersions)
+            pageRoute.Versions = new List<PageVersionRoute>();
+            foreach (var dbVersion in EnumerableHelper.Enumerate(orderedDbVersions))
             {
                 var mappedVersion = MapVersion(pageRoute, dbVersion, templates);
                 if (!hasLatestPublishVersion && mappedVersion.WorkFlowStatus == WorkFlowStatus.Published)
@@ -220,7 +220,7 @@ namespace Cofoundry.Domain.Internal
                 pageRoute.Versions.Add(mappedVersion);
             }
 
-            var latestVersion = orderedDbVersions.FirstOrDefault();
+            var latestVersion = orderedDbVersions?.FirstOrDefault();
 
             // There should always be a latest version - but technically it is possible that one doesn't exist.
             if (latestVersion != null)
@@ -239,8 +239,8 @@ namespace Cofoundry.Domain.Internal
         }
 
         private PageVersionRoute MapVersion(
-            PageRoute routingInfo, 
-            PageVersionQueryResult version, 
+            PageRoute routingInfo,
+            PageVersionQueryResult version,
             Dictionary<int, PageTemplateQueryResult> templates
             )
         {
@@ -263,7 +263,7 @@ namespace Cofoundry.Domain.Internal
 
         private string CreateFullPath(string path1, string path2, ActiveLocale locale)
         {
-            string fullPath = null;
+            string fullPath;
 
             if (string.IsNullOrWhiteSpace(path2))
             {
@@ -291,6 +291,31 @@ namespace Cofoundry.Domain.Internal
         public IEnumerable<IPermissionApplication> GetPermissions(GetPageRouteLookupQuery query)
         {
             yield return new PageReadPermission();
+        }
+
+        private class PageQueryResult
+        {
+            public PageRoute RoutingInfo { get; set; }
+            public int? LocaleId { get; set; }
+            public int PageDirectoryId { get; set; }
+        }
+
+        private class PageVersionQueryResult : IEntityVersion
+        {
+            public int PageId { get; set; }
+            public int PageVersionId { get; set; }
+            public string Title { get; set; }
+            public int WorkFlowStatusId { get; set; }
+            public DateTime CreateDate { get; set; }
+            public bool ExcludeFromSitemap { get; set; }
+            public int PageTemplateId { get; set; }
+        }
+
+        private class PageTemplateQueryResult
+        {
+            public int PageTemplateId { get; set; }
+            public bool HasPageRegions { get; set; }
+            public bool HasCustomEntityRegions { get; set; }
         }
     }
 }

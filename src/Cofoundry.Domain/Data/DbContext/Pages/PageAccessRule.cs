@@ -15,7 +15,7 @@ namespace Cofoundry.Domain.Data
     /// but instead are used to restrict public access to website pages and routes.
     /// </para>
     /// </summary>
-    public class PageAccessRule : ICreateAuditable
+    public class PageAccessRule : IEntityAccessRule
     {
         /// <summary>
         /// Database primary key.
@@ -53,7 +53,7 @@ namespace Cofoundry.Domain.Data
         /// The optional <see cref="Role"/> that this rule restricts page 
         /// access to. The role must belong to the user area defined by <see cref="UserAreaCode"/>.
         /// </summary>
-        public Role Role { get; set; }
+        public virtual Role Role { get; set; }
 
         /// <summary>
         /// 3 letter code representing the action that should be taken when a user

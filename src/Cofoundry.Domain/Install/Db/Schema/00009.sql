@@ -13,9 +13,9 @@ create table Cofoundry.RouteAccessRuleViolationAction (
 create unique index UIX_RouteAccessRuleViolationAction_Title on Cofoundry.RouteAccessRuleViolationAction (Title)
 go
 
-insert into Cofoundry.RouteAccessRuleViolationAction (RouteAccessRuleViolationActionId, Title) values (1, 'Error')
-insert into Cofoundry.RouteAccessRuleViolationAction (RouteAccessRuleViolationActionId, Title) values (2, 'RedirectToLogin')
-insert into Cofoundry.RouteAccessRuleViolationAction (RouteAccessRuleViolationActionId, Title) values (3, 'NotFound')
+insert into Cofoundry.RouteAccessRuleViolationAction (RouteAccessRuleViolationActionId, Title) values (0, 'Error')
+insert into Cofoundry.RouteAccessRuleViolationAction (RouteAccessRuleViolationActionId, Title) values (1, 'RedirectToLogin')
+insert into Cofoundry.RouteAccessRuleViolationAction (RouteAccessRuleViolationActionId, Title) values (2, 'NotFound')
 
 go
 

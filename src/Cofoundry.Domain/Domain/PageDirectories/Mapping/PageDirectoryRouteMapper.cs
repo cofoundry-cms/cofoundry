@@ -3,15 +3,36 @@ using Cofoundry.Domain.Data;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace Cofoundry.Domain.Internal
 {
+    /// <summary>
+    /// A mapper for mapping <see cref="PageDirectoryRoute"/> projections.
+    /// </summary>
     public class PageDirectoryRouteMapper : IPageDirectoryRouteMapper
     {
+        private readonly IRouteAccessRuleMapper _routeAccessRuleMapper;
+
+        public PageDirectoryRouteMapper(
+            IRouteAccessRuleMapper routeAccessRuleMapper
+            )
+        {
+            _routeAccessRuleMapper = routeAccessRuleMapper;
+        }
+
+        /// <summary>
+        /// Maps a <see cref="PageDirectory"/> data from the database to a
+        /// collection of <see cref="PageDirectoryRoute"/> projections.
+        /// </summary>
+        /// <param name="dbPageDirectories">
+        /// Entity Framework query results to map. The query must include the 
+        /// <see cref="PageDirectory.PageDirectoryLocales"/> and <see cref="PageDirectory.PageDirectoryAccessRules"/> relations.
+        /// </param>
         public ICollection<PageDirectoryRoute> Map(IReadOnlyCollection<PageDirectory> dbPageDirectories)
         {
             const string ROOT_PATH = "/";
+
+            if (dbPageDirectories == null) throw new ArgumentNullException(nameof(dbPageDirectories));
 
             var dbRoot = dbPageDirectories.SingleOrDefault(r => !r.ParentPageDirectoryId.HasValue);
             EntityNotFoundException.ThrowIfNull(dbRoot, "ROOT");
@@ -26,11 +47,15 @@ namespace Cofoundry.Domain.Internal
 
         private PageDirectoryRoute MapRoute(PageDirectory dbDirectory)
         {
+            MissingIncludeException.ThrowIfNull(dbDirectory, d => d.PageDirectoryLocales);
+            MissingIncludeException.ThrowIfNull(dbDirectory, d => d.PageDirectoryAccessRules);
+
             var route = new PageDirectoryRoute();
             route.Name = dbDirectory.Name;
             route.PageDirectoryId = dbDirectory.PageDirectoryId;
             route.ParentPageDirectoryId = dbDirectory.ParentPageDirectoryId;
             route.UrlPath = dbDirectory.UrlPath;
+
             route.LocaleVariations = dbDirectory
                 .PageDirectoryLocales
                 .Select(d => new PageDirectoryRouteLocale()
@@ -38,6 +63,12 @@ namespace Cofoundry.Domain.Internal
                     LocaleId = d.LocaleId,
                     UrlPath = d.UrlPath
                 })
+                .ToList();
+
+            route.AccessRules = dbDirectory
+                .PageDirectoryAccessRules
+                .OrderByDefault()
+                .Select(_routeAccessRuleMapper.Map)
                 .ToList();
 
             // FullUrlPaths set elsewhere

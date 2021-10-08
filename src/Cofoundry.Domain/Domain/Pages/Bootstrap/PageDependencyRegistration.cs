@@ -27,6 +27,7 @@ namespace Cofoundry.Domain.Registration
                 .Register<IOpenGraphDataMapper, OpenGraphDataMapper>()
                 .Register<IPageVersionSummaryMapper, PageVersionSummaryMapper>()
                 .Register<IPageRenderSummaryMapper, PageRenderSummaryMapper>()
+                .Register<IRouteAccessRuleMapper, RouteAccessRuleMapper>()
                  ; 
         }
     }

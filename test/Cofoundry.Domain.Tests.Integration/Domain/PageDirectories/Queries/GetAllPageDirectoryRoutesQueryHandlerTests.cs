@@ -97,5 +97,64 @@ namespace Cofoundry.Domain.Tests.Integration.PageDirectories.Queries
                 directory2A.FullUrlPath.Should().Be(parentFullPath + "/dir-2/dir-2-a");
             }
         }
+
+        [Fact]
+        public async Task MapsAccessRules()
+        {
+            var uniqueData = UNIQUE_PREFIX + nameof(MapsAccessRules);
+
+            using var app = _appFactory.Create();
+            var contentRepository = app.Services.GetContentRepositoryWithElevatedPermissions();
+            var directoryId = await app.TestData.PageDirectories().AddAsync(uniqueData);
+
+            var rule1Command = new AddPageDirectoryAccessRuleCommand()
+            {
+                PageDirectoryId = directoryId,
+                UserAreaCode = app.SeededEntities.TestUserArea1.UserAreaCode,
+                RoleId = app.SeededEntities.TestUserArea1.RoleId,
+                ViolationAction = RouteAccessRuleViolationAction.RedirectToLogin
+            };
+
+            await contentRepository
+                .PageDirectories()
+                .AccessRules()
+                .AddAsync(rule1Command);
+
+            var rule2Command = new AddPageDirectoryAccessRuleCommand()
+            {
+                PageDirectoryId = directoryId,
+                UserAreaCode = app.SeededEntities.TestUserArea2.UserAreaCode,
+                ViolationAction = RouteAccessRuleViolationAction.NotFound
+            };
+
+            await contentRepository
+                .PageDirectories()
+                .AccessRules()
+                .AddAsync(rule2Command);
+
+            var allDirectories = await contentRepository
+                .PageDirectories()
+                .GetAll()
+                .AsRoutes()
+                .ExecuteAsync();
+
+            var directory = allDirectories.SingleOrDefault(d => d.PageDirectoryId == directoryId);
+
+            using (new AssertionScope())
+            {
+                directory.Should().NotBeNull();
+                directory.AccessRules.Should().NotBeNull().And.HaveCount(2);
+
+                var rule1 = directory.AccessRules.SingleOrDefault(r => r.UserAreaCode == rule1Command.UserAreaCode);
+                rule1.Should().NotBeNull();
+                rule1.RoleId.Should().Be(rule1Command.RoleId);
+                rule1.ViolationAction.Should().Be(rule1Command.ViolationAction);
+
+                var rule2 = directory.AccessRules.SingleOrDefault(r => r.UserAreaCode == rule2Command.UserAreaCode);
+                rule2.Should().NotBeNull();
+                rule2.RoleId.Should().Be(rule2Command.RoleId);
+                rule2.ViolationAction.Should().Be(rule2Command.ViolationAction);
+            }
+        }
     }
 }

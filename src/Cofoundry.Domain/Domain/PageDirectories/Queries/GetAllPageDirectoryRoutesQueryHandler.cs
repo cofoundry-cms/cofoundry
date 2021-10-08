@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using Cofoundry.Domain.CQS;
 using Cofoundry.Domain.Data;
-using Cofoundry.Domain.CQS;
 using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Cofoundry.Domain.Internal
 {
@@ -12,7 +10,7 @@ namespace Cofoundry.Domain.Internal
     /// Returns all page directories as PageDirectoryRoute objects. The results of this 
     /// query are cached.
     /// </summary>
-    public class GetAllPageDirectoryRoutesQueryHandler 
+    public class GetAllPageDirectoryRoutesQueryHandler
         : IQueryHandler<GetAllPageDirectoryRoutesQuery, ICollection<PageDirectoryRoute>>
         , IPermissionRestrictedQueryHandler<GetAllPageDirectoryRoutesQuery, ICollection<PageDirectoryRoute>>
     {
@@ -27,12 +25,13 @@ namespace Cofoundry.Domain.Internal
             _dbContext = dbContext;
             _pageDirectoryRouteMapper = pageDirectoryRouteMapper;
         }
-        
+
         public async Task<ICollection<PageDirectoryRoute>> ExecuteAsync(GetAllPageDirectoryRoutesQuery query, IExecutionContext executionContext)
         {
             var dbPageDirectories = await _dbContext
                 .PageDirectories
                 .AsNoTracking()
+                .Include(d => d.PageDirectoryAccessRules)
                 .Include(d => d.PageDirectoryLocales)
                 .ToListAsync();
 

@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using Xunit;
 
-namespace Cofoundry.Core.Tests
+namespace Cofoundry.Core.Core.Parsers
 {
     public class HttpUriParserTests
     {
