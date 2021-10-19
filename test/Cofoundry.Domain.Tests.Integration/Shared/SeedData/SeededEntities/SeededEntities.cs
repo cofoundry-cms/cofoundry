@@ -58,11 +58,21 @@ namespace Cofoundry.Domain.Tests.Integration
         /// <summary>
         /// A test user area with a single role.
         /// </summary>
-        public TestUserAreaInfo TestUserArea1 { get; set; } = new TestUserAreaInfo() { UserAreaCode = Shared.TestUserArea1.Code, RoleCode = Shared.TestUserArea1Role.Code };
+        public TestUserAreaInfo TestUserArea1 { get; set; } = new TestUserAreaInfo() 
+        { 
+            Definition = new Shared.TestUserArea1(),
+            UserAreaCode = Shared.TestUserArea1.Code, 
+            RoleCode = Shared.TestUserArea1Role.Code,
+        };
 
         /// <summary>
         /// A secondary test user area with a single role.
         /// </summary>
-        public TestUserAreaInfo TestUserArea2 { get; set; } = new TestUserAreaInfo() { UserAreaCode = Shared.TestUserArea2.Code, RoleCode = Shared.TestUserArea2Role.Code };
+        public TestUserAreaInfo TestUserArea2 { get; set; } = new TestUserAreaInfo() 
+        { 
+            Definition = new Shared.TestUserArea2(),
+            UserAreaCode = Shared.TestUserArea2.Code,
+            RoleCode = Shared.TestUserArea2Role.Code 
+        };
     }
 }

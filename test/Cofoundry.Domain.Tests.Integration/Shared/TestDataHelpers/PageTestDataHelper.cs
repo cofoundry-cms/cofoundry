@@ -285,5 +285,48 @@ namespace Cofoundry.Domain.Tests.Integration
                 AltText = "Test Alt Text"
             });
         }
+
+        /// <summary>
+        /// Adds access rule with an action of <see cref="RouteAccessRuleViolationAction.Error"/>
+        /// </summary>
+        /// <param name="pageId">Id of the page to add the rule to.</param>
+        /// <param name="userAreaCode">
+        /// Unique 3 character code representing the user area to restrict
+        /// the page to. This cannot be the Cofoundry admin user area, as 
+        /// access rules do not apply to admin panel users.
+        /// </param>
+        /// <param name="configration">
+        /// Optional additional configuration action to run before the
+        /// command is executed.
+        /// </param>
+        public async Task<int> AddAccessRuleAsync(
+            int pageId,
+            string userAreaCode,
+            Action<AddPageAccessRuleCommand> configration = null
+            )
+        {
+            var command = new AddPageAccessRuleCommand()
+            {
+                PageId = pageId,
+                UserAreaCode = userAreaCode,
+                ViolationAction = RouteAccessRuleViolationAction.Error
+            };
+
+            if (configration != null)
+            {
+                configration(command);
+            }
+
+            using var scope = _serviceProvider.CreateScope();
+            var contentRepository = scope
+                .ServiceProvider
+                .GetRequiredService<IAdvancedContentRepository>()
+                .WithElevatedPermissions();
+
+            return await contentRepository
+                .Pages()
+                .AccessRules()
+                .AddAsync(command);
+        }
     }
 }

@@ -18,7 +18,7 @@ namespace Cofoundry.Domain
             if (userContext == null) throw new ArgumentNullException(nameof(userContext));
 
             return accessRules
-                .Where(r => r.UserAreaCode != userContext.UserArea.UserAreaCode 
+                .Where(r => r.UserAreaCode != userContext.UserArea?.UserAreaCode 
                     || (r.RoleId.HasValue && r.RoleId != userContext.RoleId));
         }
     }

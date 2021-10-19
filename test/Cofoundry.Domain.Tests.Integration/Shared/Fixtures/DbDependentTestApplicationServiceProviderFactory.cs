@@ -35,7 +35,10 @@ namespace Cofoundry.Domain.Tests.Integration
         /// Cofoundry DI bootstrapper and a handful of useful mock services
         /// to make testing easier.
         /// </summary>
-        public static ServiceProvider Create(Action<ServiceCollection> customServiceConfiguration = null)
+        /// <param name="customServiceConfiguration">
+        /// Optional service configuration to run after the tets services are added.
+        /// </param>
+        public static ServiceProvider CreateTestHostProvider(Action<IServiceCollection> customServiceConfiguration = null)
         {
             var configuration = GetConfiguration();
             var services = new ServiceCollection();
@@ -52,6 +55,23 @@ namespace Cofoundry.Domain.Tests.Integration
                 .AddControllersWithViews()
                 .AddCofoundry(configuration);
 
+            ConfigureTestServices(services, customServiceConfiguration);
+
+            var serviceProvider = services.BuildServiceProvider();
+
+            return serviceProvider;
+        }
+
+        /// <summary>
+        /// Configures an existing service provider to include a handful of useful 
+        /// mock services to make testing easier.
+        /// </summary>
+        /// <param name="services">Service collection to modify.</param>
+        /// <param name="customServiceConfiguration">
+        /// Optional service configuration to run after the tets services are added.
+        /// </param>
+        public static void ConfigureTestServices(IServiceCollection services, Action<IServiceCollection> customServiceConfiguration = null)
+        {
             services.AddScoped<IDateTimeService, MockDateTimeService>();
             services.AddScoped<IUserSessionService, InMemoryUserSessionService>();
             services.AddScoped<IImageAssetFileService, MockImageAssetFileService>();
@@ -64,10 +84,6 @@ namespace Cofoundry.Domain.Tests.Integration
             {
                 customServiceConfiguration(services);
             }
-
-            var serviceProvider = services.BuildServiceProvider();
-
-            return serviceProvider;
         }
 
         private static IConfiguration GetConfiguration()

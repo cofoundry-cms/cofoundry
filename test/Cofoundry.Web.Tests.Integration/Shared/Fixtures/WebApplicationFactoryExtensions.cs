@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc.Testing;
+﻿using Cofoundry.Domain.Tests.Integration;
+using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.DependencyInjection;
 using System;
@@ -35,6 +36,40 @@ namespace Cofoundry.Web.Tests.Integration
             where TEntryPoint : class
         {
             return factory.WithServices(serviceConfiguration).CreateClient();
+        }
+
+        /// <summary>
+        /// <para>
+        /// Creates a new <see cref="DbDependentTestApplication"/> instance
+        /// which can be used to create and work with test entities directly
+        /// through the domain layer with the same API used in the domain
+        /// integration tests project.
+        /// </para>
+        /// <para>
+        /// Note that although the test app and client instances share the same base
+        /// service configuration, they don't seem to share the service collection and
+        /// therefore the same singleton instances, so be aware that features like in-memory
+        /// caching are not shared. To get around this, the caching services in the client
+        /// app will be reset when a new client is created.
+        /// </para>
+        /// <para>
+        /// The application should be disposed of
+        /// when you are done with it.
+        /// </para>
+        /// </summary>
+        public static DbDependentTestApplication CreateApp<TEntryPoint>(this WebApplicationFactory<TEntryPoint> factory)
+            where TEntryPoint : class
+        {
+            var seededEntities = factory.Services.GetRequiredService<SeededEntities>();
+
+            var factoryWithAppDependencies = factory.WithServices(services =>
+            {
+                DbDependentTestApplicationServiceProviderFactory.ConfigureTestServices(services);
+            });
+
+            var app = new DbDependentTestApplication(factoryWithAppDependencies.Services, seededEntities);
+
+            return app;
         }
     }
 }

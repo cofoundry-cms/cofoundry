@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Cofoundry.Web.Tests.Integration
+namespace Cofoundry.Web.Tests.Integration.TestWebApp
 {
     public class Startup
     {

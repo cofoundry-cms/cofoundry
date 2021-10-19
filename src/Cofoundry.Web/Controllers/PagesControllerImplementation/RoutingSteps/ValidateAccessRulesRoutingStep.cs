@@ -1,7 +1,9 @@
 ﻿using Cofoundry.Domain;
 using Cofoundry.Domain.CQS;
+using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.WebUtilities;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Threading.Tasks;
 
@@ -15,22 +17,48 @@ namespace Cofoundry.Web
     public class ValidateAccessRulesRoutingStep : IValidateAccessRulesRoutingStep
     {
         private readonly IQueryExecutor _queryExecutor;
+        private readonly IUserAreaDefinitionRepository _userAreaDefinitionRepository;
+        private readonly ILogger<ValidateAccessRulesRoutingStep> _logger;
 
         public ValidateAccessRulesRoutingStep(
-            IQueryExecutor queryExecutor
+            IQueryExecutor queryExecutor,
+            IUserAreaDefinitionRepository userAreaDefinitionRepository,
+            ILogger<ValidateAccessRulesRoutingStep> logger
             )
         {
             _queryExecutor = queryExecutor;
+            _userAreaDefinitionRepository = userAreaDefinitionRepository;
+            _logger = logger;
         }
 
         public Task ExecuteAsync(Controller controller, PageActionRoutingState state)
         {
             // If no page (404) skip this step - it will be handled later
             // Access rules don't apply to Cofoundry admin users, so skip this step
-            if (state.PageRoutingInfo == null || state.IsCofoundryAdminUser) return Task.CompletedTask;
+            if (state.PageRoutingInfo == null || state.IsCofoundryAdminUser)
+            {
+                var skipReason = state.IsCofoundryAdminUser ? "User is Cofoundry admin user" : "no page found";
+                _logger.LogInformation("Skipping access rule validation step, {SkipReason}.", skipReason);
+
+                return Task.CompletedTask;
+            }
 
             var accessRuleViolation = state.PageRoutingInfo.CanAccess(state.AmbientUserContext);
-            if (accessRuleViolation == null) return Task.CompletedTask;
+            if (accessRuleViolation == null)
+            {
+                _logger.LogInformation("No access rule violations found.");
+            }
+            else
+            {
+                EnforceRuleViolation(controller, state, accessRuleViolation);
+            }
+
+            return Task.CompletedTask;
+        }
+
+        private void EnforceRuleViolation(Controller controller, PageActionRoutingState state, RouteAccessRule accessRuleViolation)
+        {
+            _logger.LogInformation("Processing violation action {ViolationAction}.", accessRuleViolation.ViolationAction);
 
             switch (accessRuleViolation.ViolationAction)
             {
@@ -39,7 +67,8 @@ namespace Cofoundry.Web
                     state.PageRoutingInfo = null;
                     break;
                 case RouteAccessRuleViolationAction.RedirectToLogin:
-                    var loginPath = QueryHelpers.AddQueryString(state.AmbientUserContext.UserArea.LoginPath, "ReturnUrl", state.InputParameters.Path);
+                    var userArea = _userAreaDefinitionRepository.GetByCode(accessRuleViolation.UserAreaCode);
+                    var loginPath = QueryHelpers.AddQueryString(userArea.LoginPath, "ReturnUrl", controller.Request.GetEncodedPathAndQuery());
                     state.Result = new RedirectResult(loginPath, false);
                     break;
                 case RouteAccessRuleViolationAction.Error:
@@ -48,8 +77,6 @@ namespace Cofoundry.Web
                 default:
                     throw new NotImplementedException($"{nameof(RouteAccessRuleViolationAction)}.{accessRuleViolation.ViolationAction} not implemented.");
             };
-
-            return Task.CompletedTask;
         }
     }
 }

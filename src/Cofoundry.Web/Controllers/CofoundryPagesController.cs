@@ -1,6 +1,7 @@
 ﻿using Cofoundry.Domain;
 using Cofoundry.Domain.CQS;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Threading.Tasks;
 
@@ -14,14 +15,17 @@ namespace Cofoundry.Web
     {
         private readonly IQueryExecutor _queryExecutor;
         private readonly IPageActionRoutingStepFactory _pageActionRoutingStepFactory;
+        private readonly ILogger<CofoundryPagesController> _logger;
 
         public CofoundryPagesController(
             IQueryExecutor queryExecutor,
-            IPageActionRoutingStepFactory pageActionRoutingStepFactory
+            IPageActionRoutingStepFactory pageActionRoutingStepFactory,
+            ILogger<CofoundryPagesController> logger
             )
         {
             _queryExecutor = queryExecutor;
             _pageActionRoutingStepFactory = pageActionRoutingStepFactory;
+            _logger = logger;
         }
 
         /// <summary>
@@ -50,9 +54,12 @@ namespace Cofoundry.Web
             string editType = "entity"
             )
         {
+            _logger.LogInformation("Processing route {Path} with visual editor mode '{VisualEditorMode}', page version Id '{PageVersionId}' and edit-type '{EditType}'", path, mode, version, editType);
+
             // Init state
             var state = new PageActionRoutingState();
-            state.Locale = await _queryExecutor.ExecuteAsync(new GetCurrentActiveLocaleQuery());
+            state.Locale = await GetLocaleAsync();
+
             state.InputParameters = new PageActionInputParameters()
             {
                 Path = path,
@@ -60,19 +67,37 @@ namespace Cofoundry.Web
                 IsEditingCustomEntity = editType == "entity"
             };
 
+
             // Run through the pipline in order
             foreach (var method in _pageActionRoutingStepFactory.Create())
             {
+                _logger.LogInformation("Executing step {StepType}", method.GetType());
                 await method.ExecuteAsync(this, state);
                 // If we get an action result, do an early return
                 if (state.Result != null)
                 {
+                    _logger.LogInformation("Step {StepType} returned a result.", method.GetType());
                     return state.Result;
                 }
             }
 
             // We should never get here!
             throw new InvalidOperationException("Unknown Page Routing State");
+        }
+
+        private async Task<ActiveLocale> GetLocaleAsync()
+        {
+            var activeLocale = await _queryExecutor.ExecuteAsync(new GetCurrentActiveLocaleQuery());
+            if (activeLocale != null)
+            {
+                _logger.LogInformation("Found locale {Locale}",activeLocale.IETFLanguageTag);
+            }
+            else
+            {
+                _logger.LogInformation("No locale detected");
+            }
+
+            return activeLocale;
         }
     }
 }

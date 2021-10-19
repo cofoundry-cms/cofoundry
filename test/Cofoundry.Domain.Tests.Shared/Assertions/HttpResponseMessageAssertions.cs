@@ -18,6 +18,13 @@ namespace Cofoundry.Domain.Tests.Shared.Assertions
 
         protected override string Identifier => "response";
 
+        public Task<AndConstraint<HttpResponseMessageAssertions>> BeDeveloperPageExceptionAsync<TException>(
+            string because = "",
+            params object[] becauseArgs
+            )
+        {
+            return BeDeveloperPageExceptionAsync($"*{typeof(TException).Name}*", because, becauseArgs);
+        }
         /// <summary>
         /// Asserts that the response is an error 500 and contains the specified <paramref name="errorMessageWildcardPattern"/>.
         /// You can use this to assert that an exception has been thrown, but in the client setup you'll

@@ -1,5 +1,6 @@
 ﻿using Cofoundry.Core.AutoUpdate;
 using Cofoundry.Domain.Data;
+using Cofoundry.Domain.Tests.Integration.SeedData;
 using Cofoundry.Domain.Tests.Shared.Mocks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -236,13 +237,42 @@ namespace Cofoundry.Domain.Tests.Integration
                 .Select(c => c.RoleId)
                 .SingleAsync();
 
-            seededEntities.TestUserArea2.RoleId = await dbContext
+            await InitUserAreaAsync(seededEntities.TestUserArea1, dbContext, contentRepository);
+            await InitUserAreaAsync(seededEntities.TestUserArea2, dbContext, contentRepository);
+
+            return seededEntities;
+        }
+
+        private async Task InitUserAreaAsync(
+            TestUserAreaInfo testUserAreaInfo, 
+            CofoundryDbContext dbContext,
+            IAdvancedContentRepository contentRepository
+            )
+        {
+            testUserAreaInfo.RoleId = await dbContext
                 .Roles
-                .FilterByRoleCode(seededEntities.TestUserArea2.RoleCode)
+                .FilterByRoleCode(testUserAreaInfo.RoleCode)
                 .Select(c => c.RoleId)
                 .SingleAsync();
 
-            return seededEntities;
+            var uniqueIdentifier = testUserAreaInfo.UserAreaCode + testUserAreaInfo.RoleId;
+            testUserAreaInfo.User = new TestUserInfo()
+            {
+                Username = uniqueIdentifier.ToLower() + "@example.com",
+                Password = uniqueIdentifier + "w1P1r4Rz"
+            };
+
+            testUserAreaInfo.User.UserId = await contentRepository
+                .Users()
+                .AddAsync(new AddUserCommand()
+                {
+                    Email = testUserAreaInfo.User.Username,
+                    FirstName = "Role",
+                    LastName = "User",
+                    Password = testUserAreaInfo.User.Password,
+                    RoleId = testUserAreaInfo.RoleId,
+                    UserAreaCode = testUserAreaInfo.UserAreaCode
+                });
         }
     }
 }

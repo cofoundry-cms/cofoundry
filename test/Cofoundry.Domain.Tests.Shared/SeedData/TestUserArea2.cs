@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Cofoundry.Domain.Tests.Shared
+﻿namespace Cofoundry.Domain.Tests.Shared
 {
     public class TestUserArea2 : IUserAreaDefinition
     {
@@ -16,7 +12,7 @@ namespace Cofoundry.Domain.Tests.Shared
 
         public bool UseEmailAsUsername => true;
 
-        public string LoginPath => "/login";
+        public string LoginPath => "/area-2/login";
 
         public bool IsDefaultAuthSchema => false;
     }

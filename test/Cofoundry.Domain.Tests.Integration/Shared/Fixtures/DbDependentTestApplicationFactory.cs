@@ -14,7 +14,7 @@ namespace Cofoundry.Domain.Tests.Integration
     public class DbDependentTestApplicationFactory : IAsyncLifetime
     {
         private SeededEntities _seededEntities;
-        private ServiceProvider _serviceProvider;
+        private IServiceProvider _serviceProvider;
 
         /// <summary>
         /// Creates a new test application instance with a new DI
@@ -27,7 +27,7 @@ namespace Cofoundry.Domain.Tests.Integration
         /// services.
         /// </param>
         /// <returns>The newly created application instance.</returns>
-        public virtual DbDependentTestApplication Create(Action<ServiceCollection> serviceConfiguration = null)
+        public virtual DbDependentTestApplication Create(Action<IServiceCollection> serviceConfiguration = null)
         {
             if (_serviceProvider == null)
             {
@@ -38,7 +38,7 @@ namespace Cofoundry.Domain.Tests.Integration
             if (serviceConfiguration != null)
             {
                 // Only build a new service provider if we need to
-                serviceProvider = DbDependentTestApplicationServiceProviderFactory.Create(serviceConfiguration);
+                serviceProvider = DbDependentTestApplicationServiceProviderFactory.CreateTestHostProvider(serviceConfiguration);
             }
 
             var app = new DbDependentTestApplication(serviceProvider, _seededEntities);
@@ -53,7 +53,7 @@ namespace Cofoundry.Domain.Tests.Integration
         /// <returns></returns>
         public virtual async Task InitializeAsync()
         {
-            _serviceProvider = DbDependentTestApplicationServiceProviderFactory.Create();
+            _serviceProvider = DbDependentTestApplicationServiceProviderFactory.CreateTestHostProvider();
             var dbInitializer = new TestDatabaseInitializer(_serviceProvider);
             await dbInitializer.InitializeCofoundry();
             await dbInitializer.DeleteTestData();
@@ -62,10 +62,12 @@ namespace Cofoundry.Domain.Tests.Integration
 
         public virtual async Task DisposeAsync()
         {
-            if (_serviceProvider != null)
+            (_serviceProvider as IDisposable)?.Dispose();
+
+            var asyncDisposableServiceProvider = _serviceProvider as IAsyncDisposable;
+            if (asyncDisposableServiceProvider != null)
             {
-                _serviceProvider.Dispose();
-                await _serviceProvider.DisposeAsync();
+                await asyncDisposableServiceProvider.DisposeAsync();
             }
         }
     }

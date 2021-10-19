@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Cofoundry.Domain.Tests.Shared
+﻿namespace Cofoundry.Domain.Tests.Shared
 {
     /// <summary>
     /// Default area
@@ -19,7 +15,7 @@ namespace Cofoundry.Domain.Tests.Shared
 
         public bool UseEmailAsUsername => true;
 
-        public string LoginPath => "/login";
+        public string LoginPath => "/area-1/login";
 
         public bool IsDefaultAuthSchema => true;
     }
