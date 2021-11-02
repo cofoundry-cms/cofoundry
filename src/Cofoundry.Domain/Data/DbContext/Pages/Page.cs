@@ -10,7 +10,8 @@ namespace Cofoundry.Domain.Data
     /// version, but can have many published versions; the latest published version is the one that 
     /// is rendered when the page is published. 
     /// </summary>
-    public partial class Page : ICreateAuditable
+    /// <inheritdoc/>
+    public partial class Page : IEntityAccessRestrictable<PageAccessRule>, ICreateAuditable
     {
         /// <summary>
         /// The auto-incrementing database id of the page.
@@ -77,19 +78,16 @@ namespace Cofoundry.Domain.Data
         /// </summary>
         public DateTime? PublishDate { get; set; }
 
-        /// <summary>
-        /// Date and time at which the page was created.
-        /// </summary>
+        public int AccessRuleViolationActionId { get; set; }
+
+        public string UserAreaCodeForLoginRedirect { get; set; }
+
+        public virtual UserArea UserAreaForLoginRedirect { get; set; }
+
         public DateTime CreateDate { get; set; }
 
-        /// <summary>
-        /// The database id of the <see cref="User"/> that created the page.
-        /// </summary>
         public int CreatorId { get; set; }
 
-        /// <summary>
-        /// The <see cref="User"/> that created the page.
-        /// </summary>
         public virtual User Creator { get; set; }
 
         public virtual ICollection<PageGroupItem> PageGroupItems { get; set; } = new List<PageGroupItem>();
@@ -126,7 +124,11 @@ namespace Cofoundry.Domain.Data
         /// but instead are used to restrict public access to website pages and routes.
         /// </para>
         /// </summary>
-        public virtual ICollection<PageAccessRule> PageAccessRules { get; set; } = new List<PageAccessRule>();
+        public virtual ICollection<PageAccessRule> AccessRules { get; set; } = new List<PageAccessRule>();
 
+        public int GetId()
+        {
+            return PageId;
+        }
     }
 }

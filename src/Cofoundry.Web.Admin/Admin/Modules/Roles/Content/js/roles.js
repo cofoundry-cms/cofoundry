@@ -80,28 +80,6 @@ function (
         return roleServiceBase + '/' + roleId;
     }
 
-
-    /* PRIVATES */
-
-    return service;
-}]);
-angular.module('cms.roles').factory('roles.userAreaService', [
-    '$http',
-    '_',
-    'shared.serviceBase',
-function (
-    $http,
-    _,
-    serviceBase) {
-
-    var service = {};
-
-    /* QUERIES */
-
-    service.getAll = function () {
-        return $http.get(serviceBase + 'user-areas');
-    }
-
     return service;
 }]);
 angular.module('cms.shared').directive('cmsFormFieldPermissionsCollection', [
@@ -308,15 +286,15 @@ function (
 angular.module('cms.roles').controller('AddRoleController', [
     '$location',
     'shared.LoadState',
+    'shared.userAreaService',
     'roles.permissionService',
     'roles.roleService',
-    'roles.userAreaService',
 function (
     $location,
     LoadState,
+    userAreaService,
     permissionService,
-    roleService,
-    userAreaService) {
+    roleService) {
 
     var vm = this;
 

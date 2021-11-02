@@ -21,7 +21,7 @@ namespace Cofoundry.Domain.Data
         /// a specific directory.
         /// </summary>
         /// <param name="pageDirectoryId">Id of the <see cref="PageDirectory"/> to filter on.</param>
-        public static IQueryable<PageDirectoryAccessRule> FilterByPageId(this IQueryable<PageDirectoryAccessRule> accessRules, int pageDirectoryId)
+        public static IQueryable<PageDirectoryAccessRule> FilterByPageDirectoryId(this IQueryable<PageDirectoryAccessRule> accessRules, int pageDirectoryId)
         {
             var filtered = accessRules.Where(p => p.PageDirectoryId == pageDirectoryId);
 

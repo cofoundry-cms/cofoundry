@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Cofoundry.Domain.Internal
@@ -14,7 +12,42 @@ namespace Cofoundry.Domain.Internal
     /// </remarks>
     public interface IInternalRoleRepository
     {
+        /// <summary>
+        /// <para>
+        /// Finds a role by it's database id, returning a <see cref="RoleDetails"/> projection 
+        /// if it is found, otherwise <see langword="null"/>. If no role id is specified then the 
+        /// anonymous role is returned.
+        /// </para>
+        /// <para>
+        /// Roles are cached, so repeat uses of this query is inexpensive.
+        /// </para>
+        /// </summary>
+        /// <param name="roleId">Database id of the role, or <see langword="null"/> to return the anonymous role.</param>
         RoleDetails GetById(int? roleId);
+
+        /// <summary>
+        /// <para>
+        /// Finds a role by it's database id, returning a <see cref="RoleDetails"/> projection 
+        /// if it is found, otherwise <see langword="null"/>. If no role id is specified then the 
+        /// anonymous role is returned.
+        /// </para>
+        /// <para>
+        /// Roles are cached, so repeat uses of this query is inexpensive.
+        /// </para>
+        /// </summary>
+        /// <param name="roleId">Database id of the role, or <see langword="null"/> to return the anonymous role.</param>
         Task<RoleDetails> GetByIdAsync(int? roleId);
+
+        /// <summary>
+        /// <para>
+        /// Finds a set of roles by their database ids as a lookup of <see cref="RoleDetails"/>
+        /// projections.
+        /// <para>
+        /// Roles are cached, so repeat uses of this query is inexpensive.
+        /// </para>
+        /// </summary>
+        /// <param name="roleIds">Database ids of the roles to get.</param>
+        Task<IDictionary<int, RoleDetails>> GetByIdRangeAsync(IEnumerable<int> roleIds);
+
     }
 }

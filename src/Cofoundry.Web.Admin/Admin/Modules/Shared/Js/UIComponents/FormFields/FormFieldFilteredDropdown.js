@@ -102,7 +102,11 @@ function (
             return vm.searchFunction({ $query: query }).then(loadResults);
 
             function loadResults(results) {
-                vm.dataSource = results.items;
+                if (!results || !results.items || !results.items.length) {
+                    vm.dataSource = [];
+                } else {
+                    vm.dataSource = results.items;
+                }
             }
         }
     }

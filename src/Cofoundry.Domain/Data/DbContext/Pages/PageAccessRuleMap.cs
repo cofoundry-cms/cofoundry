@@ -22,7 +22,7 @@ namespace Cofoundry.Domain.Data
 
             builder
                 .HasOne(s => s.Page)
-                .WithMany(d => d.PageAccessRules)
+                .WithMany(d => d.AccessRules)
                 .HasForeignKey(s => s.PageId);
 
             builder

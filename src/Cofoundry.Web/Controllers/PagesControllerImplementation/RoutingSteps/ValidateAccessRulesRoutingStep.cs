@@ -56,26 +56,30 @@ namespace Cofoundry.Web
             return Task.CompletedTask;
         }
 
-        private void EnforceRuleViolation(Controller controller, PageActionRoutingState state, RouteAccessRule accessRuleViolation)
+        private void EnforceRuleViolation(Controller controller, PageActionRoutingState state, EntityAccessRuleSet accessRuleViolation)
         {
-            _logger.LogInformation("Processing violation action {ViolationAction}.", accessRuleViolation.ViolationAction);
+            if (!state.AmbientUserContext.IsLoggedIn() && accessRuleViolation.ShouldTryRedirect())
+            {
+                _logger.LogInformation("User not authenticated, redirecting to login page for user area {UserAreaCodeForLoginRedirect}.", accessRuleViolation.UserAreaCodeForLoginRedirect);
+                var userArea = _userAreaDefinitionRepository.GetByCode(accessRuleViolation.UserAreaCodeForLoginRedirect);
+                var loginPath = QueryHelpers.AddQueryString(userArea.LoginPath, "ReturnUrl", controller.Request.GetEncodedPathAndQuery());
+                state.Result = new RedirectResult(loginPath, false);
 
+                return;
+            }
+
+            _logger.LogInformation("Processing violation action {ViolationAction}.", accessRuleViolation.ViolationAction);
             switch (accessRuleViolation.ViolationAction)
             {
-                case RouteAccessRuleViolationAction.NotFound:
+                case AccessRuleViolationAction.NotFound:
                     // Set the route to null and the IGetNotFoundRouteRoutingStep will figure out the correct result
                     state.PageRoutingInfo = null;
                     break;
-                case RouteAccessRuleViolationAction.RedirectToLogin:
-                    var userArea = _userAreaDefinitionRepository.GetByCode(accessRuleViolation.UserAreaCode);
-                    var loginPath = QueryHelpers.AddQueryString(userArea.LoginPath, "ReturnUrl", controller.Request.GetEncodedPathAndQuery());
-                    state.Result = new RedirectResult(loginPath, false);
-                    break;
-                case RouteAccessRuleViolationAction.Error:
+                case AccessRuleViolationAction.Error:
                     // Throw an exception, which should be picked up by the global handler and dealt with accordingly.
                     throw new AccessRuleViolationException($"User is not permitted to access {state.InputParameters.Path}.");
                 default:
-                    throw new NotImplementedException($"{nameof(RouteAccessRuleViolationAction)}.{accessRuleViolation.ViolationAction} not implemented.");
+                    throw new NotImplementedException($"{nameof(AccessRuleViolationAction)}.{accessRuleViolation.ViolationAction} not implemented.");
             };
         }
     }

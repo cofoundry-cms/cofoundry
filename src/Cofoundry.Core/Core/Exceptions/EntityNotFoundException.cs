@@ -56,7 +56,7 @@ namespace Cofoundry.Core
         /// <typeparam name="TEntity">Type of entity to check.</typeparam>
         /// <param name="entity">The entity to check for a <see langword="null"/> reference.</param>
         /// <param name="id">The unique identifier for the entity that could not be found.</param>
-        public static void ThrowIfNull<TEntity>(TEntity entity, object id) where TEntity : class
+        public static void ThrowIfNull<TEntity>(TEntity entity, object id)
         {
             if (entity == null)
             {
@@ -69,7 +69,7 @@ namespace Cofoundry.Core
     /// Exception to be used when an entity cannot be found but is required.
     /// </summary>
     /// <typeparam name="TEntity">Type of the entity which could not be found.</typeparam>
-    public class EntityNotFoundException<TEntity> : EntityNotFoundException where TEntity : class
+    public class EntityNotFoundException<TEntity> : EntityNotFoundException
     {
         private const string DEFAULT_MESSAGE = "An entity of type '{0}' was required but could not be found.";
         private const string MESSAGE_WITH_ID = "Entity of type '{0}' and identifier '{1}' could not be found.";

@@ -31,7 +31,7 @@ namespace Cofoundry.Domain.Internal
             var dbPageDirectories = await _dbContext
                 .PageDirectories
                 .AsNoTracking()
-                .Include(d => d.PageDirectoryAccessRules)
+                .Include(d => d.AccessRules)
                 .Include(d => d.PageDirectoryLocales)
                 .ToListAsync();
 

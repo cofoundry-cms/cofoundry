@@ -1,8 +1,4 @@
 ﻿using Cofoundry.Domain.Extendable;
-using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Cofoundry.Domain.Internal
 {
@@ -22,6 +18,12 @@ namespace Cofoundry.Domain.Internal
         }
 
         public IExtendableContentRepository ExtendableContentRepository { get; }
+
+        public IDomainRepositoryQueryContext<RoleMicroSummary> AsMicroSummary()
+        {
+            var query = new GetRoleMicroSummaryByIdQuery(_roleId);
+            return DomainRepositoryQueryContextFactory.Create(query, ExtendableContentRepository);
+        }
 
         public IDomainRepositoryQueryContext<RoleDetails> AsDetails()
         {

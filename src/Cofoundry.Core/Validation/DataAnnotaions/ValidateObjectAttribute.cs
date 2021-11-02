@@ -2,9 +2,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Cofoundry.Core.Validation
 {
@@ -12,7 +9,7 @@ namespace Cofoundry.Core.Validation
     /// Validates a child object property
     /// </summary>
     /// <remarks>
-    /// Taken from http://www.technofattie.com/2011/10/05/recursive-validation-using-dataannotations.html
+    /// Adapted from http://www.technofattie.com/2011/10/05/recursive-validation-using-dataannotations.html
     /// </remarks>
     public class ValidateObjectAttribute : ValidationAttribute
     {
@@ -32,7 +29,7 @@ namespace Cofoundry.Core.Validation
             {
                 ValidateValue(value, results);
             }
-            
+
             if (results.Count != 0)
             {
                 var msg = String.Format("{0} validation failed", validationContext.DisplayName);

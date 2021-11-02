@@ -1,0 +1,142 @@
+﻿<cms-modal-dialog-container cms-modal-size="large">
+
+    <cms-modal-dialog-header>
+        Access Rules: {{::page.latestVersion.title}}
+    </cms-modal-dialog-header>
+
+    <cms-form cms-name="mainForm"
+        cms-edit-mode="editMode"
+        ng-submit="save()"
+        cms-loading="formLoadState.isLoading">
+
+        <cms-page-actions ng-show="!editMode">
+
+            <cms-button cms-text="Ok"
+                ng-click="close()"
+                ng-disabled="globalLoadState.isLoading" class="main-cta"></cms-button>
+
+        </cms-page-actions>
+
+        <!-- Edit mode toolbar -->
+        <cms-page-actions ng-show="editMode">
+
+            <cms-button-submit cms-text="Save"
+                cms-loading="saveLoadState.isLoading"
+                ng-disabled="mainForm.$invalid || globalLoadState.isLoading"></cms-button-submit>
+
+            <cms-button cms-text="Cancel"
+                ng-click="close()"
+                ng-disabled="globalLoadState.isLoading"></cms-button>
+
+        </cms-page-actions>
+
+        <cms-page-body>
+
+            <cms-form-status></cms-form-status>
+
+            <cms-form-section cms-title="Inherited Rules">
+                <cms-form-field-container cms-loading="formLoadState.isLoading">
+                    <cms-table-container>
+
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Directory</th>
+                                    <th>User Area</th>
+                                    <th>Role</th>
+                                    <th>Violation Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-if="accessInfo.inheritedAccessRules.length == 0">
+                                    <td colspan="100" class="empty">No rules inherited from parent directories.</td>
+                                </tr>
+                                <tr ng-repeat="rule in accessInfo.inheritedAccessRules">
+                                    <td>(inherited from X?)</td>
+                                    <td>{{rule.userArea.name}}</td>
+                                    <td>{{rule.role.title}}</td>
+                                    <td>{{rule.violationAction}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                    </cms-table-container>
+                </cms-form-field-container>
+            </cms-form-section>
+
+            <cms-form-section cms-title="Access Rules">
+
+                <cms-form-field-container cms-loading="formLoadState.isLoading">
+                    <cms-table-container>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>User Area</th>
+                                    <th>Role</th>
+                                    <th cms-table-column-actions
+                                        ng-if="canManage">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-if="accessInfo.accessRules.length == 0">
+                                    <td colspan="100" class="empty">No rules found.</td>
+                                </tr>
+                                <tr ng-repeat="rule in accessInfo.accessRules">
+                                    <td>{{rule.userArea.name}}</td>
+                                    <td>{{rule.role.title}}</td>
+                                    <td cms-table-column-actions
+                                        ng-if="canManage">
+                                        <cms-button-icon cms-title="Delete"
+                                            cms-icon="trash-o"
+                                            ng-click="deleteRule(rule, $index)"
+                                            ng-disabled="globalLoadState.isLoading">
+                                        </cms-button-icon>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <cms-table-actions>
+                            <a href="" class="btn-icon" title="Add"
+                                cms-icon="plus-circle"
+                                ng-click="add()"
+                                ng-if="canManage"
+                                ng-disabled="globalLoadState.isLoading">
+                                <i class="fa fa-plus-circle"></i>
+                            </a>
+                        </cms-table-actions>
+
+                    </cms-table-container>
+
+                </cms-form-field-container>
+            </cms-form-section>
+
+            <cms-form-section cms-title="Actions">
+
+                <cms-form-field-checkbox cms-title="Redirect to login"
+                    cms-model="command.redirectoToLogin"
+                    cms-description="Selecting this option will redirect the user to the login page if they are not logged in. If they are logged in but not authorized to view the page then the default action will be triggered."
+                ></cms-form-field-checkbox>
+
+                <cms-form-field-dropdown cms-title="Redirect to login for area:"
+                    cms-options="userAreasInRules"
+                    cms-option-name="name"
+                    cms-option-value="userAreaCode"
+                    cms-model="command.userAreaCodeForLoginRedirect"
+                    cms-description="If the user is not logged in, then they will be redirected to the login page for the selected user area."
+                    ng-if="command.redirectoToLogin && userAreasInRules.length > 1"
+                    required></cms-form-field-dropdown>
+
+                <cms-form-field-dropdown cms-title="Default Action"
+                    cms-options="violationActions"
+                    cms-option-name="name"
+                    cms-option-value="id"
+                    cms-model="command.violationAction"
+                    cms-description="The action to take when the a user is not authorized to view the page. Using a n 'Error' action tells the user that the page was found but could not be accessed, whereas a 'Not Found' action will make the page appear not to exist for unauthorized users."
+                    required></cms-form-field-dropdown>
+
+            </cms-form-section>
+
+        </cms-page-body>
+
+</cms-modal-dialog-container>

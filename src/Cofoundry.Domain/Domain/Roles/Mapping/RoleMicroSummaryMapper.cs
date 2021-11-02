@@ -1,15 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Cofoundry.Domain.Data;
+﻿using Cofoundry.Domain.Data;
 
 namespace Cofoundry.Domain.Internal
 {
-    /// <summary>
-    /// Simple mapper for mapping to RoleMicroSummary objects.
-    /// </summary>
+    /// <inheritdoc/>
     public class RoleMicroSummaryMapper : IRoleMicroSummaryMapper
     {
         private readonly IUserAreaDefinitionRepository _userAreaRepository;
@@ -21,11 +14,6 @@ namespace Cofoundry.Domain.Internal
             _userAreaRepository = userAreaRepository;
         }
 
-        /// <summary>
-        /// Maps an EF Role record from the db into an RoleDetails 
-        /// object. If the db record is null then null is returned.
-        /// </summary>
-        /// <param name="dbRole">Role record from the database.</param>
         public virtual RoleMicroSummary Map(Role dbRole)
         {
             if (dbRole == null) return null;
@@ -44,6 +32,18 @@ namespace Cofoundry.Domain.Internal
             };
 
             return role;
+        }
+
+        public RoleMicroSummary Map(RoleDetails roleDetails)
+        {
+            if (roleDetails == null) return null;
+
+            return new RoleMicroSummary()
+            {
+                RoleId = roleDetails.RoleId,
+                Title = roleDetails.Title,
+                UserArea = roleDetails.UserArea
+            };
         }
     }
 }

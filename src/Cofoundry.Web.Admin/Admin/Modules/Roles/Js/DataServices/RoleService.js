@@ -47,8 +47,5 @@ function (
         return roleServiceBase + '/' + roleId;
     }
 
-
-    /* PRIVATES */
-
     return service;
 }]);

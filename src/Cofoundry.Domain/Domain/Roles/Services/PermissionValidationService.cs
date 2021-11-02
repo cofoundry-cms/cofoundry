@@ -191,6 +191,7 @@ namespace Cofoundry.Domain.Internal
             if (userContext == null) return false;
 
             var role = _internalRoleRepository.GetById(userContext.RoleId);
+            EntityNotFoundException.ThrowIfNull(role, userContext.RoleId);
 
             if (permissionApplication is IPermission)
             {

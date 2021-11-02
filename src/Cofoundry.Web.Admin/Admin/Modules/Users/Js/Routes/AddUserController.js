@@ -3,16 +3,16 @@
     '_',
     'shared.stringUtilities',
     'shared.LoadState',
+    'shared.roleService',
     'users.userService',
-    'users.roleService',
     'users.options',
 function (
     $location,
     _,
     stringUtilities,
     LoadState,
-    userService,
     roleService,
+    userService,
     options) {
 
     var vm = this;
@@ -58,7 +58,7 @@ function (
     function initForm() {
 
         return roleService
-            .getSelectionList()
+            .getSelectionList(options.userAreaCode)
             .then(load);
 
         function load(result) {

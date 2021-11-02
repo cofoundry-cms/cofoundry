@@ -1,0 +1,42 @@
+﻿<cms-modal-dialog-container cms-modal-size="large">
+
+    <cms-modal-dialog-header>
+        Add Access Rule
+    </cms-modal-dialog-header>
+
+    <cms-form cms-name="mainForm" ng-submit="onAdd()">
+
+        <cms-page-actions>
+            <cms-button cms-text="Add" ng-click="onAdd()" class="main-cta" ng-disabled="mainForm.$invalid || saveLoadState.isLoading"></cms-button>
+            <cms-button cms-text="Cancel" ng-click="onCancel()"></cms-button>
+        </cms-page-actions>
+
+        <cms-page-body cms-content-type="form">
+
+            <cms-form-status></cms-form-status>
+
+            <cms-form-section cms-title="Permit Access To">
+
+                <cms-form-field-dropdown cms-title="User Area"
+                    cms-options="userAreas"
+                    cms-option-name="name"
+                    cms-option-value="userAreaCode"
+                    cms-model="command.userAreaCode"
+                    cms-description="The user area to restrict access to."
+                    cms-change="onUserAreaChanged()"
+                    required></cms-form-field-dropdown>
+
+                <cms-form-field-filtered-dropdown cms-title="Role"
+                        cms-search-function="searchRoles($query)"
+                        cms-option-name="title"
+                        cms-option-value="roleId"
+                        cms-model="command.roleId"
+                        cms-description="Optionally you can restrict access to a specific role within the user area."
+                        ></cms-form-field-dropdown>
+
+            </cms-form-section>
+
+        </cms-page-body>
+    </cms-form>
+
+</cms-modal-dialog-container>

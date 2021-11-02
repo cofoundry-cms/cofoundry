@@ -3,15 +3,11 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Cofoundry.Domain.Internal
 {
-    /// <summary>
-    /// Cache for role data, which is frequently accessed when
-    /// running requests in order to work out permissions
-    /// </summary>
+    /// <inheritdoc/>
     public class RoleCache : IRoleCache
     {
         private const string ROLE_CODE_LOOKUP_CACHEKEY = "RoleCodes";
@@ -26,72 +22,77 @@ namespace Cofoundry.Domain.Internal
             _cache = cacheFactory.Get(CACHEKEY);
         }
 
-        /// <summary>
-        /// Gets a dictionary used to lookup role ids from role codes. This is used
-        /// because roles are cached by id rather than by code.
-        /// </summary>
-        /// <param name="getter">Function to invoke if the lookup isn't in the cache</param>
-        public Task<ReadOnlyDictionary<string, int>> GetOrAddRoleCodeLookupAsync(Func<Task<ReadOnlyDictionary<string, int>>> getter)
+        public virtual Task<ReadOnlyDictionary<string, int>> GetOrAddRoleCodeLookupAsync(Func<Task<ReadOnlyDictionary<string, int>>> getter)
         {
             return _cache.GetOrAddAsync(ROLE_CODE_LOOKUP_CACHEKEY, getter);
         }
 
-        /// <summary>
-        /// Gets a role if it's already cached, otherwise the getter is invoked
-        /// and the result is cached and returned
-        /// </summary>
-        /// <param name="roleId">Id of the role to return</param>
-        /// <param name="getter">Function to invoke if the role isn't in the cache</param>
-        public RoleDetails GetOrAdd(int roleId, Func<RoleDetails> getter)
+        public virtual RoleDetails GetOrAdd(int roleId, Func<RoleDetails> getter)
         {
-            return _cache.GetOrAdd(ROLE_DETAILS_CACHEKEY + roleId, getter);
+            return _cache.GetOrAdd(CreateRoleCacheKey(roleId), getter);
         }
 
-        /// <summary>
-        /// Gets a role if it's already cached, otherwise the getter is invoked
-        /// and the result is cached and returned
-        /// </summary>
-        /// <param name="roleId">Id of the role to return</param>
-        /// <param name="getter">Function to invoke if the role isn't in the cache</param>
-        public Task<RoleDetails> GetOrAddAsync(int roleId, Func<Task<RoleDetails>> getter)
+        public virtual Task<RoleDetails> GetOrAddAsync(int roleId, Func<Task<RoleDetails>> getter)
         {
             return _cache.GetOrAddAsync(ROLE_DETAILS_CACHEKEY + roleId, getter);
         }
 
-        /// <summary>
-        /// Gets the anonnymous role if it's already cached, otherwise the getter is invoked
-        /// and the result is cached and returned
-        /// </summary>
-        /// <param name="getter">Function to invoke if the annonymous role isn't in the cache</param>
-        public RoleDetails GetOrAddAnonymousRole(Func<RoleDetails> getter)
+        public async virtual Task<IDictionary<int, RoleDetails>> GetOrAddRangeAsync(
+            IEnumerable<int> roleIds,
+            Func<IEnumerable<int>, Task<ICollection<RoleDetails>>> missingRolesGetter
+            )
+        {
+            var missingIds = new HashSet<int>();
+            var result = new Dictionary<int, RoleDetails>();
+
+            foreach (var roleId in roleIds)
+            {
+                if (result.ContainsKey(roleId)) continue;
+
+                var role = _cache.Get<RoleDetails>(CreateRoleCacheKey(roleId));
+
+                if (role != null)
+                {
+                    result.Add(roleId, role);
+                }
+                else if (!missingIds.Contains(roleId))
+                {
+                    missingIds.Add(roleId);
+                }
+            }
+
+            if (missingIds.Any())
+            {
+                var missingRoles = await missingRolesGetter.Invoke(missingIds);
+
+                foreach (var role in missingRoles)
+                {
+                    if (result.ContainsKey(role.RoleId)) continue;
+
+                    _cache.GetOrAdd(CreateRoleCacheKey(role.RoleId), () => role);
+                    result.Add(role.RoleId, role);
+                }
+            }
+
+            return result;
+        }
+
+        public virtual RoleDetails GetOrAddAnonymousRole(Func<RoleDetails> getter)
         {
             return _cache.GetOrAdd(ANON_ROLE_CACHEKEY, getter);
         }
 
-        /// <summary>
-        /// Gets the anonnymous role if it's already cached, otherwise the getter is invoked
-        /// and the result is cached and returned
-        /// </summary>
-        /// <param name="getter">Function to invoke if the annonymous role isn't in the cache</param>
-        public Task<RoleDetails> GetOrAddAnonymousRoleAsync(Func<Task<RoleDetails>> getter)
+        public virtual Task<RoleDetails> GetOrAddAnonymousRoleAsync(Func<Task<RoleDetails>> getter)
         {
             return _cache.GetOrAddAsync(ANON_ROLE_CACHEKEY, getter);
         }
 
-        /// <summary>
-        /// Clears all items in the role cache
-        /// </summary>
-        public void Clear()
+        public virtual void Clear()
         {
             _cache.Clear();
         }
 
-        /// <summary>
-        /// Clears the specified cache entry. If the key parameter is not provided, all
-        /// entries in the cache namespace are removed.
-        /// </summary>
-        /// <param name="roleId">Id of the role to clear out all cache entries for</param>
-        public void Clear(int roleId)
+        public virtual void Clear(int roleId)
         {
             var anonymousRole = _cache.Get<RoleDetails>(ANON_ROLE_CACHEKEY);
             if (anonymousRole?.RoleId == roleId)
@@ -99,6 +100,11 @@ namespace Cofoundry.Domain.Internal
                 _cache.Clear(ANON_ROLE_CACHEKEY);
             }
             _cache.Clear(ROLE_DETAILS_CACHEKEY + roleId);
+        }
+
+        protected virtual string CreateRoleCacheKey(int? roleId)
+        {
+            return ROLE_DETAILS_CACHEKEY + roleId;
         }
     }
 }

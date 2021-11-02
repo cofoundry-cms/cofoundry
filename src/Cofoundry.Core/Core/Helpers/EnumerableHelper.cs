@@ -1,15 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Cofoundry.Core
 {
     public static class EnumerableHelper
     {
         /// <summary>
-        /// Determines if the enumerable is null or contains no elements
+        /// Determines if the enumerable is <see langword="null"/> or contains 
+        /// no elements.
         /// </summary>
         public static bool IsNullOrEmpty<T>(IEnumerable<T> source)
         {
@@ -17,7 +15,7 @@ namespace Cofoundry.Core
         }
 
         /// <summary>
-        /// Unions all the specified enumerables, ignoring null collections
+        /// Unions all elements in <paramref name="enumerables"/>, ignoring null collections.
         /// </summary>
         public static IEnumerable<T> UnionAll<T>(params IEnumerable<T>[] enumerables)
         {
@@ -36,8 +34,8 @@ namespace Cofoundry.Core
         }
 
         /// <summary>
-        /// Unions the specified enumerables, ignoring null collections and returning 
-        /// distinct results.
+        /// Unions the elements in <paramref name="enumerables"/>, ignoring <see langword="null"/> 
+        /// collections and returning distinct elements.
         /// </summary>
         public static IEnumerable<T> Union<T>(params IEnumerable<T>[] enumerables)
         {
@@ -45,8 +43,8 @@ namespace Cofoundry.Core
         }
 
         /// <summary>
-        /// Enumerates the specified enumerable, but doesn't throw an 
-        /// exception if it is null.
+        /// Safely enumerates the elements in <paramref name="enumerable"/> without throwing an 
+        /// exception if <paramref name="enumerable"/> is <see langword="null"/>.
         /// </summary>
         public static IEnumerable<T> Enumerate<T>(IEnumerable<T> enumerable)
         {

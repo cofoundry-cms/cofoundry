@@ -10,6 +10,7 @@
     'shared.urlLibrary',
     'shared.pageService',
     'shared.permissionValidationService',
+    'shared.userAreaService',
     'pages.modulePath',
 function (
     $routeParams,
@@ -23,6 +24,7 @@ function (
     urlLibrary,
     pageService,
     permissionValidationService,
+    userAreaService,
     modulePath
     ) {
 
@@ -46,6 +48,7 @@ function (
         vm.deletePage = deletePage;
         vm.duplicatePage = duplicatePage;
         vm.changeUrl = changeUrl;
+        vm.viewAccessRules = viewAccessRules;
 
         // Properties
         vm.editMode = false;
@@ -196,6 +199,17 @@ function (
         });
     }
 
+    function viewAccessRules() {
+
+        modalDialogService.show({
+            templateUrl: modulePath + 'Routes/Modals/PageAccessRuleList.html',
+            controller: 'PageAccessRuleListController',
+            options: {
+                page: vm.page
+            }
+        });
+    }
+
     /* PRIVATE FUNCS */
     
     function onSuccess(message, loadStateToTurnOff) {
@@ -207,7 +221,7 @@ function (
     function initData(loadStateToTurnOff) {
 
         return $q
-            .all([getPage(), getVersions()])
+            .all([getPage(), getVersions(), getUserAreas()])
             .then(function (results) {
                 mapVersions(results[1]);
             })
@@ -225,6 +239,12 @@ function (
                 vm.publishStatusLabel = getPublishStatusLabel(page.pageRoute);
 
                 return page;
+            });
+        }
+
+        function getUserAreas() {
+            return userAreaService.getAll().then(function (userAreas) {
+                vm.accessRulesEnabled = userAreas.length > 1;
             });
         }
     }

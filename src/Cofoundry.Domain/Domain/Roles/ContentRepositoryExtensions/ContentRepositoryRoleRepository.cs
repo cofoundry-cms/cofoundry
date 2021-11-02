@@ -1,7 +1,5 @@
 ﻿using Cofoundry.Domain.Extendable;
-using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Cofoundry.Domain.Internal
@@ -20,8 +18,6 @@ namespace Cofoundry.Domain.Internal
 
         public IExtendableContentRepository ExtendableContentRepository { get; }
 
-        #region queries
-
         public IContentRepositoryRoleByIdQueryBuilder GetById(int? roleId)
         {
             return new ContentRepositoryRoleByIdQueryBuilder(ExtendableContentRepository, roleId);
@@ -30,6 +26,11 @@ namespace Cofoundry.Domain.Internal
         public IContentRepositoryRoleByCodeQueryBuilder GetByCode(string roleCode)
         {
             return new ContentRepositoryRoleByCodeQueryBuilder(ExtendableContentRepository, roleCode);
+        }
+
+        public IContentRepositoryRoleByIdRangeQueryBuilder GetByIdRange(IEnumerable<int> roleIds)
+        {
+            return new ContentRepositoryRoleByIdRangeQueryBuilder(ExtendableContentRepository, roleIds);
         }
 
         IContentRepositoryRoleSearchQueryBuilder IAdvancedContentRepositoryRoleRepository.Search()
@@ -42,16 +43,12 @@ namespace Cofoundry.Domain.Internal
             return DomainRepositoryQueryContextFactory.Create(query, ExtendableContentRepository);
         }
 
-        #endregion
-
-        #region commands
-
         public async Task<int> AddAsync(AddRoleCommand command)
         {
             await ExtendableContentRepository.ExecuteCommandAsync(command);
             return command.OutputRoleId;
         }
-        
+
         public Task UpdateRoleAsync(UpdateRoleCommand command)
         {
             return ExtendableContentRepository.ExecuteCommandAsync(command);
@@ -67,15 +64,9 @@ namespace Cofoundry.Domain.Internal
             return ExtendableContentRepository.ExecuteCommandAsync(command);
         }
 
-        #endregion
-
-        #region child entities
-
         public IAdvancedContentRepositoryPermissionsRepository Permissions()
         {
             return new ContentRepositoryPermissionsRepository(ExtendableContentRepository);
         }
-
-        #endregion
     }
 }

@@ -1,15 +1,15 @@
 ﻿angular.module('cms.roles').controller('AddRoleController', [
     '$location',
     'shared.LoadState',
+    'shared.userAreaService',
     'roles.permissionService',
     'roles.roleService',
-    'roles.userAreaService',
 function (
     $location,
     LoadState,
+    userAreaService,
     permissionService,
-    roleService,
-    userAreaService) {
+    roleService) {
 
     var vm = this;
 

@@ -1,98 +1,110 @@
-﻿using System;
+﻿using Cofoundry.Core;
+using Cofoundry.Domain.Data;
+using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
-using Cofoundry.Domain.Data;
-using Cofoundry.Core;
 
 namespace Cofoundry.Domain.Internal
 {
-    /// <summary>
-    /// Internal repository for fetching roles which bypasses CQS and permissions infrastructure
-    /// to avoid circular references. Not to be used outside of Cofoundry core projects.
-    /// </summary>
-    /// <remarks>
-    /// Not actually marked internal due to internal visibility restrictions and dependency injection
-    /// </remarks>
+    /// <inheritdoc/>
     public class InternalRoleRepository : IInternalRoleRepository
     {
-        #region constructor
-
         private readonly IRoleCache _roleCache;
         private readonly CofoundryDbContext _dbContext;
-        private readonly IRoleDetailsMapper _roleMappingHelper;
+        private readonly IRoleDetailsMapper _roleDetailsMapper;
 
         public InternalRoleRepository(
             IRoleCache roleCache,
             CofoundryDbContext dbContext,
-            IRoleDetailsMapper roleMappingHelper
+            IRoleDetailsMapper roleDetailsMapper
             )
         {
             _roleCache = roleCache;
             _dbContext = dbContext;
-            _roleMappingHelper = roleMappingHelper;
+            _roleDetailsMapper = roleDetailsMapper;
         }
-
-        #endregion
-
-        #region public methods
 
         public RoleDetails GetById(int? roleId)
         {
-            if (roleId == null || roleId < 1) return GetAnonymousRole();
+            if (!roleId.HasValue) return GetAnonymousRoleFromCache();
+            if (roleId < 1) return null;
 
             var cachedRole = _roleCache.GetOrAdd(roleId.Value, () =>
             {
-                var dbRole = QueryRoleById(roleId.Value).FirstOrDefault();
-                var role = _roleMappingHelper.Map(dbRole);
+                var dbRole = QueryRoles()
+                    .FilterById(roleId.Value)
+                    .SingleOrDefault();
+
+                var role = _roleDetailsMapper.Map(dbRole);
 
                 return role;
             });
 
-            if (cachedRole == null) return GetAnonymousRole();
             return cachedRole;
         }
 
         public async Task<RoleDetails> GetByIdAsync(int? roleId)
         {
-            if (roleId == null || roleId < 1) return await GetAnonymousRoleAsync();
+            if (!roleId.HasValue) return await GetAnonymousRoleFromCacheAsync();
+            if (roleId < 1) return null;
 
             var cachedRole = await _roleCache.GetOrAddAsync(roleId.Value, async () =>
             {
-                var dbRole = await QueryRoleById(roleId.Value).FirstOrDefaultAsync();
-                var result = _roleMappingHelper.Map(dbRole);
+                var dbRole = await QueryRoles()
+                    .FilterById(roleId.Value)
+                    .SingleOrDefaultAsync();
+
+                var result = _roleDetailsMapper.Map(dbRole);
 
                 return result;
             });
 
-            if (cachedRole == null) return await GetAnonymousRoleAsync();
             return cachedRole;
         }
 
-        #endregion
+        public async Task<IDictionary<int, RoleDetails>> GetByIdRangeAsync(IEnumerable<int> roleIds)
+        {
+            var cachedRoles = await _roleCache.GetOrAddRangeAsync(
+                roleIds,
+                GetMissingRolesAsync
+            );
 
-        #region private helpers
+            return cachedRoles;
 
-        private RoleDetails GetAnonymousRole()
+            async Task<ICollection<RoleDetails>> GetMissingRolesAsync(IEnumerable<int> missingRoleIds)
+            {
+                var dbRole = await QueryRoles()
+                    .Where(r => roleIds.Contains(r.RoleId))
+                    .ToListAsync();
+
+                var result = dbRole
+                    .Select(_roleDetailsMapper.Map)
+                    .ToList();
+
+                return result;
+            }
+        }
+
+        private RoleDetails GetAnonymousRoleFromCache()
         {
             return _roleCache.GetOrAddAnonymousRole(() =>
             {
                 var dbRole = QueryAnonymousRole().FirstOrDefault();
                 EntityNotFoundException.ThrowIfNull(dbRole, AnonymousRole.AnonymousRoleCode);
-                var role = _roleMappingHelper.Map(dbRole);
+                var role = _roleDetailsMapper.Map(dbRole);
 
                 return role;
             });
         }
 
-        private Task<RoleDetails> GetAnonymousRoleAsync()
+        private Task<RoleDetails> GetAnonymousRoleFromCacheAsync()
         {
-            return _roleCache.GetOrAddAnonymousRoleAsync(async () =>
+            return _roleCache.GetOrAddAnonymousRoleAsync(async () => 
             {
                 var dbRole = await QueryAnonymousRole().FirstOrDefaultAsync();
                 EntityNotFoundException.ThrowIfNull(dbRole, AnonymousRole.AnonymousRoleCode);
-                var role = _roleMappingHelper.Map(dbRole);
+                var role = _roleDetailsMapper.Map(dbRole);
 
                 return role;
             });
@@ -100,27 +112,19 @@ namespace Cofoundry.Domain.Internal
 
         private IQueryable<Role> QueryAnonymousRole()
         {
-            return _dbContext
-                    .Roles
-                    .AsNoTracking()
-                    .Include(r => r.UserArea)
-                    .Include(r => r.RolePermissions)
-                    .ThenInclude(p => p.Permission)
-                    .Where(r => r.RoleCode == AnonymousRole.AnonymousRoleCode);
+            return QueryRoles()
+                .Where(r => r.RoleCode == AnonymousRole.AnonymousRoleCode);
 
         }
 
-        private IQueryable<Role> QueryRoleById(int roleId)
+        private IQueryable<Role> QueryRoles()
         {
             return _dbContext
-                    .Roles
-                    .AsNoTracking()
-                    .Include(r => r.UserArea)
-                    .Include(r => r.RolePermissions)
-                    .ThenInclude(p => p.Permission)
-                    .Where(r => r.RoleId == roleId);
+                .Roles
+                .AsNoTracking()
+                .Include(r => r.UserArea)
+                .Include(r => r.RolePermissions)
+                .ThenInclude(p => p.Permission);
         }
-
-        #endregion
     }
 }

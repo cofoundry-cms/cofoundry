@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Cofoundry.Domain
 {
@@ -60,9 +58,7 @@ namespace Cofoundry.Domain
         /// This collection contains rules accumulated from parent directories in
         /// order of specificity, with most specific or "nested" rules first.
         /// </summary>
-        public ICollection<RouteAccessRule> AccessRules { get; set; }
-
-        #region public methods
+        public ICollection<EntityAccessRuleSet> AccessRules { get; set; }
 
         /// <summary>
         /// Determins if the specified path matches this directory, does not 
@@ -104,10 +100,6 @@ namespace Cofoundry.Domain
             return !ParentPageDirectoryId.HasValue && FullUrlPath == "/";
         }
 
-        #endregion
-
-        #region equality
-
         public bool Equals(PageDirectoryRoute other)
         {
             if (other == null) return false;
@@ -125,7 +117,5 @@ namespace Cofoundry.Domain
         {
             return PageDirectoryId;
         }
-
-        #endregion
     }
 }

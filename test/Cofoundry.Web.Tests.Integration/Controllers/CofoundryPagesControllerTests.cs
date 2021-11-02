@@ -135,7 +135,6 @@ namespace Cofoundry.Web.Tests.Integration.Controllers
             using var client = _webApplicationFactory.CreateClient();
             await client.ImpersonateUserAsync(app.SeededEntities.TestUserArea1.User);
             var clientCache = _webApplicationFactory.Services.GetRequiredService<IPageCache>();
-
             var result = await client.GetAsync($"/{sluggedUniqueData}/{sluggedUniqueData}");
             var content = await result.Content.ReadAsStringAsync();
 
@@ -143,10 +142,9 @@ namespace Cofoundry.Web.Tests.Integration.Controllers
             content.Should().Match($"*<h1>{uniqueData}</h1>*");
         }
         [Theory]
-        [InlineData(RouteAccessRuleViolationAction.Error)]
-        [InlineData(RouteAccessRuleViolationAction.NotFound)]
-        [InlineData(RouteAccessRuleViolationAction.RedirectToLogin)]
-        public async Task WhenPageAccessRuleForUserAreaAndUserInvalid_ReturnsCorrectAction(RouteAccessRuleViolationAction routeAccessRuleViolationAction)
+        [InlineData(AccessRuleViolationAction.Error)]
+        [InlineData(AccessRuleViolationAction.NotFound)]
+        public async Task WhenPageAccessRuleForUserAreaAndUserInvalid_ReturnsCorrectAction(AccessRuleViolationAction routeAccessRuleViolationAction)
         {
             var uniqueData = UNIQUE_PREFIX + "PAR4UserAreaAndUserInv" + routeAccessRuleViolationAction.ToString().Substring(0, 2);
             var sluggedUniqueData = SlugFormatter.ToSlug(uniqueData);
@@ -154,19 +152,13 @@ namespace Cofoundry.Web.Tests.Integration.Controllers
             using var app = _webApplicationFactory.CreateApp();
             var directoryId = await app.TestData.PageDirectories().AddAsync(uniqueData);
             var pageId = await app.TestData.Pages().AddAsync(uniqueData, directoryId, c => c.Publish = true);
-            await app.TestData.Pages().AddAccessRuleAsync(pageId, app.SeededEntities.TestUserArea1.UserAreaCode, c => c.ViolationAction = routeAccessRuleViolationAction);
+            await app.TestData.Pages().AddAccessRuleAsync(pageId, app.SeededEntities.TestUserArea1.UserAreaCode, null, c => c.ViolationAction = routeAccessRuleViolationAction);
 
-            using var client = _webApplicationFactory
-                .WithServices(s => s.TurnOnDeveloperExceptionPage())
-                .CreateClient(new WebApplicationFactoryClientOptions()
-                {
-                    AllowAutoRedirect = false
-                });
+            using var client = _webApplicationFactory.CreateClientWithServices(s => s.TurnOnDeveloperExceptionPage());
             await client.ImpersonateUserAsync(app.SeededEntities.TestUserArea2.User);
-
             var result = await client.GetAsync($"/{sluggedUniqueData}/{sluggedUniqueData}");
 
-            await AssertAccessRuleResponseAsync(result, routeAccessRuleViolationAction, app.SeededEntities.TestUserArea1);
+            await AssertAccessRuleResponseAsync(result, routeAccessRuleViolationAction);
         }
 
         [Fact]
@@ -178,11 +170,10 @@ namespace Cofoundry.Web.Tests.Integration.Controllers
             using var app = _webApplicationFactory.CreateApp();
             var directoryId = await app.TestData.PageDirectories().AddAsync(uniqueData);
             var pageId = await app.TestData.Pages().AddAsync(uniqueData, directoryId, c => c.Publish = true);
-            await app.TestData.Pages().AddAccessRuleAsync(pageId, app.SeededEntities.TestUserArea1.UserAreaCode, c => c.RoleId = app.SeededEntities.TestUserArea1.RoleId);
+            await app.TestData.Pages().AddAccessRuleAsync(pageId, app.SeededEntities.TestUserArea1.UserAreaCode, app.SeededEntities.TestUserArea1.RoleId);
 
             using var client = _webApplicationFactory.CreateClient();
             await client.ImpersonateUserAsync(app.SeededEntities.TestUserArea1.User);
-
             var result = await client.GetAsync($"/{sluggedUniqueData}/{sluggedUniqueData}");
             var content = await result.Content.ReadAsStringAsync();
 
@@ -191,10 +182,9 @@ namespace Cofoundry.Web.Tests.Integration.Controllers
         }
 
         [Theory]
-        [InlineData(RouteAccessRuleViolationAction.Error)]
-        [InlineData(RouteAccessRuleViolationAction.NotFound)]
-        [InlineData(RouteAccessRuleViolationAction.RedirectToLogin)]
-        public async Task WhenPageAccessRuleForRoleAndUserInvalid_ReturnsCorrectAction(RouteAccessRuleViolationAction routeAccessRuleViolationAction)
+        [InlineData(AccessRuleViolationAction.Error)]
+        [InlineData(AccessRuleViolationAction.NotFound)]
+        public async Task WhenPageAccessRuleForRoleAndUserInvalid_ReturnsCorrectAction(AccessRuleViolationAction routeAccessRuleViolationAction)
         {
             var uniqueData = UNIQUE_PREFIX + "PAR4RoleAndUserInv" + routeAccessRuleViolationAction.ToString().Substring(0, 2);
             var sluggedUniqueData = SlugFormatter.ToSlug(uniqueData);
@@ -202,23 +192,59 @@ namespace Cofoundry.Web.Tests.Integration.Controllers
             using var app = _webApplicationFactory.CreateApp();
             var directoryId = await app.TestData.PageDirectories().AddAsync(uniqueData);
             var pageId = await app.TestData.Pages().AddAsync(uniqueData, directoryId, c => c.Publish = true);
-            await app.TestData.Pages().AddAccessRuleAsync(pageId, app.SeededEntities.TestUserArea1.UserAreaCode, c =>
-            {
-                c.ViolationAction = routeAccessRuleViolationAction;
-                c.RoleId = app.SeededEntities.TestUserArea1.RoleId;
-            });
+            await app.TestData.Pages().AddAccessRuleAsync(
+                pageId, 
+                app.SeededEntities.TestUserArea1.UserAreaCode,
+                app.SeededEntities.TestUserArea1.RoleId, 
+                c => c.ViolationAction = routeAccessRuleViolationAction
+                );
 
-            using var client = _webApplicationFactory
-                .WithServices(s => s.TurnOnDeveloperExceptionPage())
-                .CreateClient(new WebApplicationFactoryClientOptions()
-                {
-                    AllowAutoRedirect = false
-                });
+            using var client = _webApplicationFactory.CreateClientWithServices(s => s.TurnOnDeveloperExceptionPage());
             await client.ImpersonateUserAsync(app.SeededEntities.TestUserArea2.User);
-
             var result = await client.GetAsync($"/{sluggedUniqueData}/{sluggedUniqueData}");
 
-            await AssertAccessRuleResponseAsync(result, routeAccessRuleViolationAction, app.SeededEntities.TestUserArea1);
+            await AssertAccessRuleResponseAsync(result, routeAccessRuleViolationAction);
+        }
+
+        [Fact]
+        public async Task WhenPageAccessRuleWithRedirectAndNotLoggedIn_RedirectsToLogin()
+        {
+            var uniqueData = UNIQUE_PREFIX + "PARWithRedirectNotLoggedIn";
+            var sluggedUniqueData = SlugFormatter.ToSlug(uniqueData);
+
+            using var app = _webApplicationFactory.CreateApp();
+            var directoryId = await app.TestData.PageDirectories().AddAsync(uniqueData);
+            var pageId = await app.TestData.Pages().AddAsync(uniqueData, directoryId, c => c.Publish = true);
+            await app.TestData.Pages().AddAccessRuleAsync(
+                pageId, 
+                app.SeededEntities.TestUserArea1.UserAreaCode,
+                null, 
+                c => c.UserAreaCodeForLoginRedirect = app.SeededEntities.TestUserArea1.UserAreaCode
+                );
+
+            using var client = _webApplicationFactory.CreateClient(o => o.AllowAutoRedirect = false);
+            var result = await client.GetAsync($"/{sluggedUniqueData}/{sluggedUniqueData}");
+
+            AssertLoginRedirect(result, app.SeededEntities.TestUserArea1);
+        }
+
+        [Fact]
+        public async Task WhenPageAccessRuleWithRedirectAndInvalidLogin_ReturnsDefaultAction()
+        {
+            var uniqueData = UNIQUE_PREFIX + "PARWithRedirectInvalidLogin";
+            var sluggedUniqueData = SlugFormatter.ToSlug(uniqueData);
+
+            using var app = _webApplicationFactory.CreateApp();
+            var directory1Id = await app.TestData.PageDirectories().AddAsync(uniqueData + "1");
+            var directory2Id = await app.TestData.PageDirectories().AddAsync(uniqueData + "2", directory1Id);
+            var pageId = await app.TestData.Pages().AddAsync(uniqueData, directory2Id, c => c.Publish = true);
+            await app.TestData.Pages().AddAccessRuleAsync(pageId, app.SeededEntities.TestUserArea1.UserAreaCode);
+
+            using var client = _webApplicationFactory.CreateClientWithServices(s => s.TurnOnDeveloperExceptionPage());
+            await client.ImpersonateUserAsync(app.SeededEntities.TestUserArea2.User);
+            var result = await client.GetAsync($"/{sluggedUniqueData}1/{sluggedUniqueData}2/{sluggedUniqueData}");
+
+            await AssertAccessRuleResponseAsync(result, AccessRuleViolationAction.Error);
         }
 
         [Fact]
@@ -244,10 +270,9 @@ namespace Cofoundry.Web.Tests.Integration.Controllers
         }
 
         [Theory]
-        [InlineData(RouteAccessRuleViolationAction.Error)]
-        [InlineData(RouteAccessRuleViolationAction.NotFound)]
-        [InlineData(RouteAccessRuleViolationAction.RedirectToLogin)]
-        public async Task WhenDirectoryAccessRuleForUserAreaAndUserInvalid_ReturnsCorrectAction(RouteAccessRuleViolationAction routeAccessRuleViolationAction)
+        [InlineData(AccessRuleViolationAction.Error)]
+        [InlineData(AccessRuleViolationAction.NotFound)]
+        public async Task WhenDirectoryAccessRuleForUserAreaAndUserInvalid_ReturnsCorrectAction(AccessRuleViolationAction routeAccessRuleViolationAction)
         {
             var uniqueData = UNIQUE_PREFIX + "DAR4UserAreaAndUserInv" + routeAccessRuleViolationAction.ToString().Substring(0, 2);
             var sluggedUniqueData = SlugFormatter.ToSlug(uniqueData);
@@ -255,19 +280,18 @@ namespace Cofoundry.Web.Tests.Integration.Controllers
             using var app = _webApplicationFactory.CreateApp();
             var directoryId = await app.TestData.PageDirectories().AddAsync(uniqueData);
             var pageId = await app.TestData.Pages().AddAsync(uniqueData, directoryId, c => c.Publish = true);
-            await app.TestData.PageDirectories().AddAccessRuleAsync(directoryId, app.SeededEntities.TestUserArea1.UserAreaCode, c => c.ViolationAction = routeAccessRuleViolationAction);
+            await app.TestData.PageDirectories().AddAccessRuleAsync(
+                directoryId, 
+                app.SeededEntities.TestUserArea1.UserAreaCode, 
+                null, 
+                c => c.ViolationAction = routeAccessRuleViolationAction
+                );
 
-            using var client = _webApplicationFactory
-                .WithServices(s => s.TurnOnDeveloperExceptionPage())
-                .CreateClient(new WebApplicationFactoryClientOptions()
-                {
-                    AllowAutoRedirect = false
-                });
+            using var client = _webApplicationFactory.CreateClientWithServices(s => s.TurnOnDeveloperExceptionPage());
             await client.ImpersonateUserAsync(app.SeededEntities.TestUserArea2.User);
-
             var result = await client.GetAsync($"/{sluggedUniqueData}/{sluggedUniqueData}");
 
-            await AssertAccessRuleResponseAsync(result, routeAccessRuleViolationAction, app.SeededEntities.TestUserArea1);
+            await AssertAccessRuleResponseAsync(result, routeAccessRuleViolationAction);
 
         }
 
@@ -280,7 +304,7 @@ namespace Cofoundry.Web.Tests.Integration.Controllers
             using var app = _webApplicationFactory.CreateApp();
             var directoryId = await app.TestData.PageDirectories().AddAsync(uniqueData);
             var pageId = await app.TestData.Pages().AddAsync(uniqueData, directoryId, c => c.Publish = true);
-            await app.TestData.PageDirectories().AddAccessRuleAsync(directoryId, app.SeededEntities.TestUserArea1.UserAreaCode, c => c.RoleId = app.SeededEntities.TestUserArea1.RoleId);
+            await app.TestData.PageDirectories().AddAccessRuleAsync(directoryId, app.SeededEntities.TestUserArea1.UserAreaCode, app.SeededEntities.TestUserArea1.RoleId);
 
             using var client = _webApplicationFactory.CreateClient();
             await client.ImpersonateUserAsync(app.SeededEntities.TestUserArea1.User);
@@ -293,10 +317,9 @@ namespace Cofoundry.Web.Tests.Integration.Controllers
         }
 
         [Theory]
-        [InlineData(RouteAccessRuleViolationAction.Error)]
-        [InlineData(RouteAccessRuleViolationAction.NotFound)]
-        [InlineData(RouteAccessRuleViolationAction.RedirectToLogin)]
-        public async Task WhenDirectoryAccessRuleForRoleAndUserInvalid_ReturnsCorrectAction(RouteAccessRuleViolationAction routeAccessRuleViolationAction)
+        [InlineData(AccessRuleViolationAction.Error)]
+        [InlineData(AccessRuleViolationAction.NotFound)]
+        public async Task WhenDirectoryAccessRuleForRoleAndUserInvalid_ReturnsCorrectAction(AccessRuleViolationAction routeAccessRuleViolationAction)
         {
             var uniqueData = UNIQUE_PREFIX + "DAR4RoleAndUserInv" + routeAccessRuleViolationAction.ToString().Substring(0, 2);
             var sluggedUniqueData = SlugFormatter.ToSlug(uniqueData);
@@ -304,50 +327,88 @@ namespace Cofoundry.Web.Tests.Integration.Controllers
             using var app = _webApplicationFactory.CreateApp();
             var directoryId = await app.TestData.PageDirectories().AddAsync(uniqueData);
             var pageId = await app.TestData.Pages().AddAsync(uniqueData, directoryId, c => c.Publish = true);
-            await app.TestData.PageDirectories().AddAccessRuleAsync(directoryId, app.SeededEntities.TestUserArea1.UserAreaCode, c =>
-            {
-                c.ViolationAction = routeAccessRuleViolationAction;
-                c.RoleId = app.SeededEntities.TestUserArea1.RoleId;
-            });
+            await app.TestData.PageDirectories().AddAccessRuleAsync(
+                directoryId, 
+                app.SeededEntities.TestUserArea1.UserAreaCode,
+                app.SeededEntities.TestUserArea1.RoleId,
+                c => c.ViolationAction = routeAccessRuleViolationAction
+                );
 
-            using var client = _webApplicationFactory
-                .WithServices(s => s.TurnOnDeveloperExceptionPage())
-                .CreateClient(new WebApplicationFactoryClientOptions()
-                {
-                    AllowAutoRedirect = false
-                });
+            using var client = _webApplicationFactory.CreateClientWithServices(s => s.TurnOnDeveloperExceptionPage());
             await client.ImpersonateUserAsync(app.SeededEntities.TestUserArea2.User);
 
             var result = await client.GetAsync($"/{sluggedUniqueData}/{sluggedUniqueData}");
 
-            await AssertAccessRuleResponseAsync(result, routeAccessRuleViolationAction, app.SeededEntities.TestUserArea1);
+            await AssertAccessRuleResponseAsync(result, routeAccessRuleViolationAction);
+        }
+
+        [Fact]
+        public async Task WhenDirectoryAccessRuleWithRedirectAndNotLoggedIn_RedirectsToLogin()
+        {
+            var uniqueData = UNIQUE_PREFIX + "DARWithRedirectNotLoggedIn";
+            var sluggedUniqueData = SlugFormatter.ToSlug(uniqueData);
+
+            using var app = _webApplicationFactory.CreateApp();
+            var directoryId = await app.TestData.PageDirectories().AddAsync(uniqueData);
+            await app.TestData.Pages().AddAsync(uniqueData, directoryId, c => c.Publish = true);
+            await app.TestData.PageDirectories().AddAccessRuleAsync(
+                directoryId,
+                app.SeededEntities.TestUserArea1.UserAreaCode,
+                null,
+                c => c.UserAreaCodeForLoginRedirect = app.SeededEntities.TestUserArea1.UserAreaCode
+                );
+
+            using var client = _webApplicationFactory.CreateClient(o => o.AllowAutoRedirect = false);
+            var result = await client.GetAsync($"/{sluggedUniqueData}/{sluggedUniqueData}");
+
+            AssertLoginRedirect(result, app.SeededEntities.TestUserArea1);
+        }
+
+        [Fact]
+        public async Task WhenDirectoryAccessRuleWithRedirectAndInvalidLogin_ReturnsDefaultAction()
+        {
+            var uniqueData = UNIQUE_PREFIX + "DARWithRedirectInvalidLogin";
+            var sluggedUniqueData = SlugFormatter.ToSlug(uniqueData);
+
+            using var app = _webApplicationFactory.CreateApp();
+            var directory1Id = await app.TestData.PageDirectories().AddAsync(uniqueData + "1");
+            var directory2Id = await app.TestData.PageDirectories().AddAsync(uniqueData + "2", directory1Id);
+            var pageId = await app.TestData.Pages().AddAsync(uniqueData, directory2Id, c => c.Publish = true);
+            await app.TestData.PageDirectories().AddAccessRuleAsync(directory1Id, app.SeededEntities.TestUserArea1.UserAreaCode);
+
+            using var client = _webApplicationFactory.CreateClientWithServices(s => s.TurnOnDeveloperExceptionPage());
+            var result = await client.GetAsync($"/{sluggedUniqueData}1/{sluggedUniqueData}2/{sluggedUniqueData}");
+            await client.ImpersonateUserAsync(app.SeededEntities.TestUserArea2.User);
+
+            await AssertAccessRuleResponseAsync(result, AccessRuleViolationAction.Error);
         }
 
         private async Task AssertAccessRuleResponseAsync(
             HttpResponseMessage result,
-            RouteAccessRuleViolationAction routeAccessRuleViolationAction,
-            Domain.Tests.Integration.SeedData.TestUserAreaInfo userArea
+            AccessRuleViolationAction routeAccessRuleViolationAction
             )
         {
             switch (routeAccessRuleViolationAction)
             {
-                case RouteAccessRuleViolationAction.Error:
+                case AccessRuleViolationAction.Error:
                     await result.Should().BeDeveloperPageExceptionAsync<AccessRuleViolationException>();
                     break;
-                case RouteAccessRuleViolationAction.NotFound:
+                case AccessRuleViolationAction.NotFound:
                     result.StatusCode.Should().Be(HttpStatusCode.NotFound);
                     break;
-                case RouteAccessRuleViolationAction.RedirectToLogin:
-                    using (new AssertionScope())
-                    {
-                        result.StatusCode.Should().Be(HttpStatusCode.Redirect);
-                        result.Headers.Location.OriginalString.Should().StartWith(userArea.Definition.LoginPath);
-                        var returnUrl = WebUtility.UrlEncode(result.RequestMessage.RequestUri.PathAndQuery.ToString());
-                        result.Headers.Location.OriginalString.Should().EndWith($"ReturnUrl={returnUrl}");
-                    }
-                    break;
                 default:
-                    throw new NotImplementedException($"Known {nameof(RouteAccessRuleViolationAction)} '{routeAccessRuleViolationAction}'");
+                    throw new NotImplementedException($"Known {nameof(AccessRuleViolationAction)} '{routeAccessRuleViolationAction}'");
+            }
+        }
+
+        private static void AssertLoginRedirect(HttpResponseMessage result, Domain.Tests.Integration.SeedData.TestUserAreaInfo userArea)
+        {
+            using (new AssertionScope())
+            {
+                result.StatusCode.Should().Be(HttpStatusCode.Redirect);
+                result.Headers.Location.OriginalString.Should().StartWith(userArea.Definition.LoginPath);
+                var returnUrl = WebUtility.UrlEncode(result.RequestMessage.RequestUri.PathAndQuery.ToString());
+                result.Headers.Location.OriginalString.Should().EndWith($"ReturnUrl={returnUrl}");
             }
         }
     }

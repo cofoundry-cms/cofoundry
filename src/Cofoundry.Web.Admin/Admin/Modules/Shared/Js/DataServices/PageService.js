@@ -63,6 +63,11 @@ function (
         });
     }
 
+    service.getAccessRulesByPageId = function (pageId) {
+
+        return $http.get(service.getAccessRulesRoute(pageId));
+    }
+
     service.getPageTypes = function () {
         return [{
             name: 'Generic',
@@ -110,6 +115,11 @@ function (
         return $http.post(service.getIdRoute(command.pageToDuplicateId) + '/duplicate', command);
     }
 
+    service.updateAccessRules = function (command) {
+
+        return $http.patch(service.getAccessRulesRoute(command.pageId), command);
+    }
+
     /* HELPERS */
 
     service.getIdRoute = function (pageId) {
@@ -120,9 +130,8 @@ function (
         return service.getIdRoute(pageId) + '/versions';
     }
 
-    function mapPageSummaries(page) {
-
-        return _.map(publishableEntityMapper.map);
+    service.getAccessRulesRoute = function (pageId) {
+        return service.getIdRoute(pageId) + '/access-rules';
     }
 
     return service;

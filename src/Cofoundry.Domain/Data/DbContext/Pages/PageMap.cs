@@ -39,6 +39,10 @@ namespace Cofoundry.Domain.Data
                 .WithMany(s => s.Pages)
                 .HasForeignKey(d => d.PageDirectoryId);
 
+            builder.HasOne(s => s.UserAreaForLoginRedirect)
+                .WithMany()
+                .HasForeignKey(s => s.UserAreaCodeForLoginRedirect);
+
             CreateAuditableMappingHelper.Map(builder);
         }
     }

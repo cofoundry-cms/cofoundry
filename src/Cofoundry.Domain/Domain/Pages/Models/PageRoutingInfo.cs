@@ -117,7 +117,7 @@ namespace Cofoundry.Domain
         /// Determines if the <paramref name="user"/> violates any access rules
         /// for this route. If the user cannot access the route then a rule viloation 
         /// is returned. The user may violate several rules in the page and directory 
-        /// tree but only the most specific rule is returned, starting with the page and 
+        /// tree but only the most specific rule set is returned, starting with the page and 
         /// then working back up through the directory tree. 
         /// </summary>
         /// <param name="user">The <see cref="IUserContext"/> to check against access rules.</param>
@@ -125,7 +125,7 @@ namespace Cofoundry.Domain
         /// If any rules are violated, then the most specific rule is returned; 
         /// otherwise <see langword="null"/>.
         /// </returns>
-        public RouteAccessRule CanAccess(IUserContext user)
+        public EntityAccessRuleSet CanAccess(IUserContext user)
         {
             if (user == null) throw new ArgumentNullException(nameof(user));
             EntityInvalidOperationException.ThrowIfNull(this, r => r.PageRoute);

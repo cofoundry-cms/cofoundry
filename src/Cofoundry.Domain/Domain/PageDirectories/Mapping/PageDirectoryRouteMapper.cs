@@ -11,13 +11,13 @@ namespace Cofoundry.Domain.Internal
     /// </summary>
     public class PageDirectoryRouteMapper : IPageDirectoryRouteMapper
     {
-        private readonly IRouteAccessRuleMapper _routeAccessRuleMapper;
+        private readonly IEntityAccessRuleSetMapper _entityAccessRuleSetMapper;
 
         public PageDirectoryRouteMapper(
-            IRouteAccessRuleMapper routeAccessRuleMapper
+            IEntityAccessRuleSetMapper entityAccessRuleSetMapper
             )
         {
-            _routeAccessRuleMapper = routeAccessRuleMapper;
+            _entityAccessRuleSetMapper = entityAccessRuleSetMapper;
         }
 
         /// <summary>
@@ -26,7 +26,7 @@ namespace Cofoundry.Domain.Internal
         /// </summary>
         /// <param name="dbPageDirectories">
         /// Entity Framework query results to map. The query must include the 
-        /// <see cref="PageDirectory.PageDirectoryLocales"/> and <see cref="PageDirectory.PageDirectoryAccessRules"/> relations.
+        /// <see cref="PageDirectory.PageDirectoryLocales"/> and <see cref="PageDirectory.AccessRules"/> relations.
         /// </param>
         public ICollection<PageDirectoryRoute> Map(IReadOnlyCollection<PageDirectory> dbPageDirectories)
         {
@@ -48,7 +48,7 @@ namespace Cofoundry.Domain.Internal
         private PageDirectoryRoute MapRoute(PageDirectory dbDirectory)
         {
             MissingIncludeException.ThrowIfNull(dbDirectory, d => d.PageDirectoryLocales);
-            MissingIncludeException.ThrowIfNull(dbDirectory, d => d.PageDirectoryAccessRules);
+            MissingIncludeException.ThrowIfNull(dbDirectory, d => d.AccessRules);
 
             var route = new PageDirectoryRoute();
             route.Name = dbDirectory.Name;
@@ -65,11 +65,12 @@ namespace Cofoundry.Domain.Internal
                 })
                 .ToList();
 
-            route.AccessRules = dbDirectory
-                .PageDirectoryAccessRules
-                .OrderByDefault()
-                .Select(_routeAccessRuleMapper.Map)
-                .ToList();
+            route.AccessRules = new List<EntityAccessRuleSet>();
+            var accessRuleSet = _entityAccessRuleSetMapper.Map(dbDirectory);
+            if (accessRuleSet != null)
+            {
+                route.AccessRules.Add(accessRuleSet);
+            }
 
             // FullUrlPaths set elsewhere
 
@@ -85,16 +86,26 @@ namespace Cofoundry.Domain.Internal
 
             foreach (var dbRoute in allDbRoutes.Where(r => r.ParentPageDirectoryId == parent.PageDirectoryId))
             {
-                var routingInfo = MapRoute(dbRoute);
-                routingInfo.FullUrlPath = CombineUrl(parent.FullUrlPath, routingInfo.UrlPath);
-                ExpandDirectoryLocales(parent, routingInfo);
-                foreach (var childRoute in SetChildRoutes(routingInfo, allDbRoutes))
+                var mappedRoute = MapRoute(dbRoute);
+                mappedRoute.FullUrlPath = CombineUrl(parent.FullUrlPath, mappedRoute.UrlPath);
+                ExpandDirectoryLocales(parent, mappedRoute);
+                ExpandAccessRules(parent, mappedRoute);
+
+                foreach (var childRoute in SetChildRoutes(mappedRoute, allDbRoutes))
                 {
                     yield return childRoute;
                 }
 
-                yield return routingInfo;
+                yield return mappedRoute;
             }
+        }
+
+        private void ExpandAccessRules(PageDirectoryRoute parent, PageDirectoryRoute routingInfo)
+        {
+            foreach (var accessRule in parent.AccessRules)
+            {
+                routingInfo.AccessRules.Add(accessRule);
+            };
         }
 
         /// <summary>

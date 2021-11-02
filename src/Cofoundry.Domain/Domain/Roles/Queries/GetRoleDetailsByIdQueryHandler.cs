@@ -1,17 +1,23 @@
-﻿using System;
+﻿using Cofoundry.Domain.CQS;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
-using Cofoundry.Domain.CQS;
 
 namespace Cofoundry.Domain.Internal
 {
-    public class GetRoleDetailsByIdQueryHandler 
+    /// <summary>
+    /// <para>
+    /// Finds a role by it's database id, returning a <see cref="RoleDetails"/> projection 
+    /// if it is found, otherwise <see langword="null"/>. If no role id is specified then the 
+    /// anonymous role is returned.
+    /// </para>
+    /// <para>
+    /// Roles are cached, so repeat uses of this query is inexpensive.
+    /// </para>
+    /// </summary>
+    public class GetRoleDetailsByIdQueryHandler
         : IQueryHandler<GetRoleDetailsByIdQuery, RoleDetails>
         , IPermissionRestrictedQueryHandler<GetRoleDetailsByIdQuery, RoleDetails>
     {
-        #region constructor
-
         private readonly IInternalRoleRepository _internalRoleRepository;
 
         public GetRoleDetailsByIdQueryHandler(
@@ -21,18 +27,10 @@ namespace Cofoundry.Domain.Internal
             _internalRoleRepository = internalRoleRepository;
         }
 
-        #endregion
-
-        #region execution
-
         public Task<RoleDetails> ExecuteAsync(GetRoleDetailsByIdQuery query, IExecutionContext executionContext)
         {
             return _internalRoleRepository.GetByIdAsync(query.RoleId);
         }
-
-        #endregion
-
-        #region permissions
 
         public IEnumerable<IPermissionApplication> GetPermissions(GetRoleDetailsByIdQuery command)
         {
@@ -42,7 +40,5 @@ namespace Cofoundry.Domain.Internal
                 yield return new RoleReadPermission();
             }
         }
-
-        #endregion
     }
 }

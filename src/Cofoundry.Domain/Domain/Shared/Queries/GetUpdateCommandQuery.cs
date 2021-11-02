@@ -1,18 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Cofoundry.Domain.CQS
+﻿namespace Cofoundry.Domain.CQS
 {
     /// <summary>
-    /// A query to get a single entity without .
+    /// A generic query to get a pre-populated update command of the specified type.
+    /// This is typically used in as part of a API patch operation where the update 
+    /// command is first loaded and then modified with only the parameters that need
+    /// to be changed.
     /// </summary>
-    /// <typeparam name="TEntity">type of entity to return</typeparam>
-    public class GetUpdateCommandQuery<TEntity> 
-        : IQuery<TEntity>
-        where TEntity : ICommand
+    /// <typeparam name="TCommand"><see cref="ICommand"/>type to fetch.</typeparam>
+    public class GetUpdateCommandQuery<TCommand>
+        : IQuery<TCommand>
+        where TCommand : ICommand
     {
     }
 }

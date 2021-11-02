@@ -30,12 +30,32 @@ namespace Cofoundry.Web.Tests.Integration
         /// Creates a new HttpClient instance for the test application, having
         /// configured it with the specified service overrides.
         /// </summary>
-        /// <typeparam name="TEntryPoint"></typeparam>
         /// <param name="serviceConfiguration">Service configuration delegate to run after all other services have been resgistered.</param>
         public static HttpClient CreateClientWithServices<TEntryPoint>(this WebApplicationFactory<TEntryPoint> factory, Action<IServiceCollection> serviceConfiguration)
             where TEntryPoint : class
         {
             return factory.WithServices(serviceConfiguration).CreateClient();
+        }
+
+        /// <summary>
+        /// Shortcut to creating a new client with configurable options. The default options
+        /// allow for redirects and handle cookies.
+        /// </summary>
+        /// <param name="configureClientOptions">
+        /// Option configuration for a new instance of <see cref="WebApplicationFactoryClientOptions"/>. 
+        /// The default options allow for redirects and handle cookies.
+        /// </param>
+        public static HttpClient CreateClient<TEntryPoint>(this WebApplicationFactory<TEntryPoint> factory, Action<WebApplicationFactoryClientOptions> configureClientOptions)
+           where TEntryPoint : class
+        {
+            var options = new WebApplicationFactoryClientOptions();
+
+            if (configureClientOptions != null)
+            {
+                configureClientOptions(options);
+            }
+
+            return factory.CreateClient(options);
         }
 
         /// <summary>

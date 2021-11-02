@@ -287,7 +287,7 @@ namespace Cofoundry.Domain.Tests.Integration
         }
 
         /// <summary>
-        /// Adds access rule with an action of <see cref="RouteAccessRuleViolationAction.Error"/>
+        /// Adds access rule with an action of <see cref="AccessRuleViolationAction.Error"/>
         /// </summary>
         /// <param name="pageId">Id of the page to add the rule to.</param>
         /// <param name="userAreaCode">
@@ -295,22 +295,29 @@ namespace Cofoundry.Domain.Tests.Integration
         /// the page to. This cannot be the Cofoundry admin user area, as 
         /// access rules do not apply to admin panel users.
         /// </param>
+        /// <param name="roleId">
+        /// Optionally restrict access to a specific role within the selected 
+        /// user area.
+        /// </param>
         /// <param name="configration">
         /// Optional additional configuration action to run before the
         /// command is executed.
         /// </param>
-        public async Task<int> AddAccessRuleAsync(
+        public async Task AddAccessRuleAsync(
             int pageId,
             string userAreaCode,
-            Action<AddPageAccessRuleCommand> configration = null
+            int? roleId = null,
+            Action<UpdatePageAccessRulesCommand> configration = null
             )
         {
-            var command = new AddPageAccessRuleCommand()
+            var command = new UpdatePageAccessRulesCommand()
             {
                 PageId = pageId,
-                UserAreaCode = userAreaCode,
-                ViolationAction = RouteAccessRuleViolationAction.Error
+                ViolationAction = AccessRuleViolationAction.Error
             };
+
+            command.AccessRules.AddNew(userAreaCode, roleId);
+
 
             if (configration != null)
             {
@@ -323,10 +330,10 @@ namespace Cofoundry.Domain.Tests.Integration
                 .GetRequiredService<IAdvancedContentRepository>()
                 .WithElevatedPermissions();
 
-            return await contentRepository
+            await contentRepository
                 .Pages()
                 .AccessRules()
-                .AddAsync(command);
+                .UpdateAsync(command);
         }
     }
 }

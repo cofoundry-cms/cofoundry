@@ -16,25 +16,8 @@ namespace Cofoundry.Domain.Internal
 
         public IExtendableContentRepository ExtendableContentRepository { get; }
 
-        public IDomainRepositoryQueryContext<bool> IsUnique(IsPageAccessRuleUniqueQuery query)
+        public Task UpdateAsync(UpdatePageAccessRulesCommand command)
         {
-            return DomainRepositoryQueryContextFactory.Create(query, ExtendableContentRepository);
-        }
-
-        public async Task<int> AddAsync(AddPageAccessRuleCommand command)
-        {
-            await ExtendableContentRepository.ExecuteCommandAsync(command);
-            return command.OutputPageAccessRuleId;
-        }
-
-        public Task UpdateAsync(UpdatePageAccessRuleCommand command)
-        {
-            return ExtendableContentRepository.ExecuteCommandAsync(command);
-        }
-
-        public Task DeleteAsync(int pageAccessRuleId)
-        {
-            var command = new DeletePageAccessRuleCommand() { PageAccessRuleId = pageAccessRuleId };
             return ExtendableContentRepository.ExecuteCommandAsync(command);
         }
     }

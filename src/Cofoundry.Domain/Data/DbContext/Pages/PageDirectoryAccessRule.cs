@@ -15,6 +15,7 @@ namespace Cofoundry.Domain.Data
     /// but instead are used to restrict public access to website pages and routes.
     /// </para>
     /// </summary>
+    /// <inheritdoc/>
     public class PageDirectoryAccessRule : IEntityAccessRule
     {
         /// <summary>
@@ -34,49 +35,23 @@ namespace Cofoundry.Domain.Data
         /// </summary>
         public virtual PageDirectory PageDirectory { get; set; }
 
-        /// <summary>
-        /// Unique 6 character code representing the <see cref="UserArea"/> to
-        /// restrict access to.
-        /// </summary>
         public string UserAreaCode { get; set; }
 
-        /// <summary>
-        /// The <see cref="UserArea"/> to restrict access to.
-        /// </summary>
         public virtual UserArea UserArea { get; set; }
 
-        /// <summary>
-        /// The optional id of the <see cref="Role"/> that this rule restricts 
-        /// access to. The role must belong to the user area defined by <see cref="UserAreaCode"/>.
-        /// </summary>
         public int? RoleId { get; set; }
 
-        /// <summary>
-        /// The optional <see cref="Role"/> that this rule restricts access to. 
-        /// The role must belong to the user area defined by <see cref="UserAreaCode"/>.
-        /// </summary>
         public virtual Role Role { get; set; }
 
-        /// <summary>
-        /// 3 letter code representing the action that should be taken when a user
-        /// does not meet the criteria of the rule. This maps to the
-        /// <see cref="Cofoundry.Domain.RouteAccessRuleViolationAction"/> enum.
-        /// </summary>
-        public int RouteAccessRuleViolationActionId { get; set; }
-
-        /// <summary>
-        /// Date and time at which the rule was created.
-        /// </summary>
         public DateTime CreateDate { get; set; }
 
-        /// <summary>
-        /// The database id of the <see cref="User"/> that created the rule.
-        /// </summary>
         public int CreatorId { get; set; }
 
-        /// <summary>
-        /// The <see cref="User"/> that created the rule.
-        /// </summary>
         public virtual User Creator { get; set; }
+
+        public int GetId()
+        {
+            return PageDirectoryAccessRuleId;
+        }
     }
 }

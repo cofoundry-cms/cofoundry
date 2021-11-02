@@ -6640,6 +6640,11 @@ function (
         });
     }
 
+    service.getAccessRulesByPageId = function (pageId) {
+
+        return $http.get(service.getAccessRulesRoute(pageId));
+    }
+
     service.getPageTypes = function () {
         return [{
             name: 'Generic',
@@ -6687,6 +6692,11 @@ function (
         return $http.post(service.getIdRoute(command.pageToDuplicateId) + '/duplicate', command);
     }
 
+    service.updateAccessRules = function (command) {
+
+        return $http.patch(service.getAccessRulesRoute(command.pageId), command);
+    }
+
     /* HELPERS */
 
     service.getIdRoute = function (pageId) {
@@ -6697,9 +6707,8 @@ function (
         return service.getIdRoute(pageId) + '/versions';
     }
 
-    function mapPageSummaries(page) {
-
-        return _.map(publishableEntityMapper.map);
+    service.getAccessRulesRoute = function (pageId) {
+        return service.getIdRoute(pageId) + '/access-rules';
     }
 
     return service;
@@ -6735,6 +6744,74 @@ function (
         }
 
         return entity.publishStatus;
+    }
+
+    return service;
+}]);
+angular.module('cms.shared').factory('shared.roleService', [
+    '$http',
+    'shared.serviceBase',
+function (
+    $http,
+    serviceBase) {
+
+    var service = {},
+        roleServiceBase = serviceBase + 'roles';
+
+    /* QUERIES */
+
+    service.search = function (query) {
+
+        return $http.get(roleServiceBase, {
+            params: query
+        });
+    }
+
+    service.getSelectionList = function (userAreaCode) {
+        return service.search({
+            userAreaCode: userAreaCode,
+            excludeAnonymous: true
+        });
+    }
+
+    service.getById = function (roleId) {
+
+        return $http.get(getIdRoute(roleId));
+    }
+
+    /* PRIVATES */
+
+    function getIdRoute(roleId) {
+        return roleServiceBase + '/' + roleId;
+    }
+
+    return service;
+}]);
+angular.module('cms.shared').factory('shared.userAreaService', [
+    '$http',
+    '_',
+    'shared.serviceBase',
+function (
+    $http,
+    _,
+    serviceBase) {
+
+    var service = {};
+
+    /* QUERIES */
+
+    service.getAll = function () {
+        return $http.get(serviceBase + 'user-areas');
+    }
+
+    service.getByCode = function (code) {
+        return service
+            .getAll()
+            .then(function(userAreas) {
+                return _.find(userAreas, function(userArea) {
+                    return userArea.userAreaCode == code;
+                })
+            });
     }
 
     return service;
@@ -9302,6 +9379,94 @@ function (
 
 }]);
 
+angular.module('cms.shared').factory('shared.entityVersionModalDialogService', [
+    'shared.entityVersionService',
+    'shared.modalDialogService',
+function (
+    entityVersionService,
+    modalDialogService) {
+
+    var service = {},
+        pageEntityConfig = {
+            entityNameSingular: 'Page'
+        };
+
+    /* PUBLIC */
+
+    service.publish = function (entityId, onLoadingStart, customEntityConfig) {
+        var config = customEntityConfig || pageEntityConfig;
+
+        var options = {
+            title: 'Publish ' + config.entityNameSingular,
+            message: 'Are you sure you want to publish this ' + config.entityNameSingular.toLowerCase() + '?',
+            okButtonTitle: 'Yes, publish it',
+            onOk: onOk
+        };
+
+        return modalDialogService.confirm(options);
+
+        function onOk() {
+            onLoadingStart();
+            return entityVersionService.publish(config.isCustomEntity, entityId);
+        }
+    }
+
+    service.unpublish = function (entityId, onLoadingStart, customEntityConfig) {
+        var config = customEntityConfig || pageEntityConfig;
+
+        var options = {
+            title: 'Unpublish ' + config.entityNameSingular,
+            message: 'Unpublishing this ' + config.entityNameSingular.toLowerCase() + ' will remove it from the live site and put it into draft status. Are you sure you want to continue?',
+            okButtonTitle: 'Yes, unpublish it',
+            onOk: onOk
+        };
+
+        return modalDialogService.confirm(options);
+
+        function onOk() {
+            onLoadingStart();
+
+            return entityVersionService.unpublish(config.isCustomEntity, entityId);
+        }
+    }
+
+    service.copyToDraft = function (entityId, entityVersionId, hasDraft, onLoadingStart, customEntityConfig) {
+        var config = customEntityConfig || pageEntityConfig;
+
+        var options = {
+            title: 'Copy ' + config.entityNameSingular + ' Version',
+            message: 'A draft version of this ' + config.entityNameSingular.toLowerCase() + ' already exists. Copying this version will delete the current draft. Do you wish to continue?',
+            okButtonTitle: 'Yes, replace it',
+            onOk: onOk
+        };
+
+        if (hasDraft) {
+            // If there's a draft already, warn the user
+            return modalDialogService
+                .confirm(options);
+        } else {
+            // Run the command directly
+            onLoadingStart();
+            return runCommand();
+        }
+
+        /* helpers */
+
+        function onOk() {
+            onLoadingStart();
+
+            return entityVersionService
+                .removeDraft(config.isCustomEntity, entityId)
+                .then(runCommand);
+        }
+
+        function runCommand() {
+            return entityVersionService.duplicateDraft(config.isCustomEntity, entityId, entityVersionId);
+        }
+    }
+    
+    return service;
+}]);
 angular.module('cms.shared').directive('cmsDocumentAsset', [
     'shared.internalModulePath',
     'shared.urlLibrary',
@@ -10046,285 +10211,6 @@ function (
 
 }]);
 
-angular.module('cms.shared').factory('shared.entityVersionModalDialogService', [
-    'shared.entityVersionService',
-    'shared.modalDialogService',
-function (
-    entityVersionService,
-    modalDialogService) {
-
-    var service = {},
-        pageEntityConfig = {
-            entityNameSingular: 'Page'
-        };
-
-    /* PUBLIC */
-
-    service.publish = function (entityId, onLoadingStart, customEntityConfig) {
-        var config = customEntityConfig || pageEntityConfig;
-
-        var options = {
-            title: 'Publish ' + config.entityNameSingular,
-            message: 'Are you sure you want to publish this ' + config.entityNameSingular.toLowerCase() + '?',
-            okButtonTitle: 'Yes, publish it',
-            onOk: onOk
-        };
-
-        return modalDialogService.confirm(options);
-
-        function onOk() {
-            onLoadingStart();
-            return entityVersionService.publish(config.isCustomEntity, entityId);
-        }
-    }
-
-    service.unpublish = function (entityId, onLoadingStart, customEntityConfig) {
-        var config = customEntityConfig || pageEntityConfig;
-
-        var options = {
-            title: 'Unpublish ' + config.entityNameSingular,
-            message: 'Unpublishing this ' + config.entityNameSingular.toLowerCase() + ' will remove it from the live site and put it into draft status. Are you sure you want to continue?',
-            okButtonTitle: 'Yes, unpublish it',
-            onOk: onOk
-        };
-
-        return modalDialogService.confirm(options);
-
-        function onOk() {
-            onLoadingStart();
-
-            return entityVersionService.unpublish(config.isCustomEntity, entityId);
-        }
-    }
-
-    service.copyToDraft = function (entityId, entityVersionId, hasDraft, onLoadingStart, customEntityConfig) {
-        var config = customEntityConfig || pageEntityConfig;
-
-        var options = {
-            title: 'Copy ' + config.entityNameSingular + ' Version',
-            message: 'A draft version of this ' + config.entityNameSingular.toLowerCase() + ' already exists. Copying this version will delete the current draft. Do you wish to continue?',
-            okButtonTitle: 'Yes, replace it',
-            onOk: onOk
-        };
-
-        if (hasDraft) {
-            // If there's a draft already, warn the user
-            return modalDialogService
-                .confirm(options);
-        } else {
-            // Run the command directly
-            onLoadingStart();
-            return runCommand();
-        }
-
-        /* helpers */
-
-        function onOk() {
-            onLoadingStart();
-
-            return entityVersionService
-                .removeDraft(config.isCustomEntity, entityId)
-                .then(runCommand);
-        }
-
-        function runCommand() {
-            return entityVersionService.duplicateDraft(config.isCustomEntity, entityId, entityVersionId);
-        }
-    }
-    
-    return service;
-}]);
-angular.module('cms.shared').directive('cmsForm', [
-    'shared.internalModulePath',
-function (
-    modulePath) {
-
-    return {
-        restrict: 'E',
-        templateUrl: modulePath + 'UIComponents/Form/Form.html',
-        replace: true,
-        transclude: true,
-        scope: {
-            editMode: '=cmsEditMode',
-            name: '@cmsName'
-        },
-        compile: compile,
-        controller: ['$scope', FormController]
-    };
-
-    /* CONTROLLER/COMPILE */
-
-    function FormController($scope) {
-        $scope.getForm = function () {
-            return $scope[$scope.name];
-        }
-
-        this.getFormScope = function () {
-
-            return $scope;
-        }
-    };
-
-    function compile(element, attrs) {
-        // Default edit mode to true if not specified
-        if (!angular.isDefined(attrs.cmsEditMode)) {
-            attrs.cmsEditMode = 'true';
-        }
-
-        return link;
-    }
-
-    function link (scope, el, attrs, controllers) {
-        // Do somethng similar to the behavior of NgForm and bind the form property a 
-        // parent scope except in our case the root scope.
-        var parentScope = findRootScopeModel(scope);
-        parentScope[scope.name] = scope.getForm();
-    }
-
-    /* HELPERS */
-
-    function findRootScopeModel(scope, vmScope) {
-        var parent = scope.$parent;
-
-        // We've reached the root, return a vm scope or the root scope
-        if (!parent) return vmScope || scope;
-
-        if (angular.isDefined(parent.vm)) {
-            // we've found a parent with a controller as 'vm' scope
-            vmScope = parent.vm;
-        }
-
-        // Keep searching up the tree recursively and return the last one found
-        return findRootScopeModel(parent, vmScope);
-    }
-}]);
-angular.module('cms.shared').directive('cmsFormSection', ['shared.internalModulePath', '$timeout', function (modulePath, $timeout) {
-    return {
-        restrict: 'E',
-        templateUrl: modulePath + 'UIComponents/Form/FormSection.html',
-        scope: {
-            title: '@cmsTitle'
-        },
-        replace: true,
-        transclude: true,
-        link: link
-    };
-
-    function link(scope, elem, attrs) {
-        // Wait a moment until child components are rendered before searching the dom
-        $timeout(function () {
-            var helpers = angular.element(elem[0].querySelector('.help-inline'));
-            var btn = angular.element(elem[0].querySelector('.toggle-helpers'));
-
-            if (helpers.length) {
-                btn
-                    .addClass('show')
-                    .on('click', function () {
-                        btn.toggleClass('active');
-                        elem.toggleClass('show-helpers');
-                    });
-            }
-        }, 100);
-    }
-}]);
-angular.module('cms.shared').directive('cmsFormSectionActions', ['shared.internalModulePath', '$timeout', function (modulePath, $timeout) {
-    return {
-        restrict: 'E',
-        templateUrl: modulePath + 'UIComponents/Form/FormSectionActions.html',
-        scope: {
-        },
-        replace: true,
-        transclude: true,
-        link: link
-    };
-
-    function link(scope, elem, attrs) {
-    }
-}]);
-angular.module('cms.shared').directive('cmsFormSectionAuditData', ['shared.internalModulePath', function (modulePath) {
-    return {
-        restrict: 'E',
-        templateUrl: modulePath + 'UIComponents/Form/FormSectionAuditData.html',
-        scope: {
-            auditData: '=cmsAuditData'
-        }
-    };
-}]);
-/**
- * A status message that can appear in a form to notify the user of any errors or other messages. A scope is
- * attached to the parent form and can be accessed via [myFormName].formStatus
- */
-angular.module('cms.shared').directive('cmsFormStatus', [
-    '_',
-    'shared.validationErrorService',
-    'shared.internalModulePath',
-function (
-    _,
-    validationErrorService,
-    modulePath) {
-
-    return {
-        restrict: 'E',
-        templateUrl: modulePath + 'UIComponents/Form/FormStatus.html',
-        require: ['^^cmsForm'],
-        replace: true,
-        scope: true,
-        link: { post: link }
-    };
-
-    function link(scope, el, attr, controllers) {
-
-        initScope(scope, controllers[0]);
-        bindValidationHandler(scope, el);
-    }
-
-    function initScope(scope, formController) {
-        var formScope = formController.getFormScope(),
-            form = formScope.getForm();
-
-        scope.success = success.bind(scope);
-        scope.error = error.bind(scope);
-        scope.errors = errors.bind(scope);
-        scope.clear = clear.bind(scope);
-        form.formStatus = scope;
-    }
-
-    function bindValidationHandler(scope, el) {
-
-        validationErrorService.addHandler('', scope.errors);
-        scope.$on('$destroy', function () {
-            validationErrorService.removeHandler(scope.errors);
-        });
-    }
-
-    function errors(errors, message) {
-
-        var processedErrors = _.uniq(errors, function (error) {
-            return error.message;
-        });
-
-        setScope(this, message, 'error', processedErrors);
-    }
-
-    function error(message) {
-        setScope(this, message, 'error');
-    }
-
-    function success(message) {
-        setScope(this, message, 'success');
-    }
-
-    function clear() {
-        setScope(this);
-    }
-
-    function setScope(scope, message, cls, errors) {
-        scope.message = message;
-        scope.errors = errors;
-        scope.cls = cls;
-    }
-}]);
-
 /**
  * A dynamically generated set of form elements based on model meta data and bound to 
  * a dynamic model.
@@ -10531,6 +10417,197 @@ function (
     }
 
 }]);
+angular.module('cms.shared').directive('cmsForm', [
+    'shared.internalModulePath',
+function (
+    modulePath) {
+
+    return {
+        restrict: 'E',
+        templateUrl: modulePath + 'UIComponents/Form/Form.html',
+        replace: true,
+        transclude: true,
+        scope: {
+            editMode: '=cmsEditMode',
+            name: '@cmsName'
+        },
+        compile: compile,
+        controller: ['$scope', FormController]
+    };
+
+    /* CONTROLLER/COMPILE */
+
+    function FormController($scope) {
+        $scope.getForm = function () {
+            return $scope[$scope.name];
+        }
+
+        this.getFormScope = function () {
+
+            return $scope;
+        }
+    };
+
+    function compile(element, attrs) {
+        // Default edit mode to true if not specified
+        if (!angular.isDefined(attrs.cmsEditMode)) {
+            attrs.cmsEditMode = 'true';
+        }
+
+        return link;
+    }
+
+    function link (scope, el, attrs, controllers) {
+        // Do somethng similar to the behavior of NgForm and bind the form property a 
+        // parent scope except in our case the root scope.
+        var parentScope = findRootScopeModel(scope);
+        parentScope[scope.name] = scope.getForm();
+    }
+
+    /* HELPERS */
+
+    function findRootScopeModel(scope, vmScope) {
+        var parent = scope.$parent;
+
+        // We've reached the root, return a vm scope or the root scope
+        if (!parent) return vmScope || scope;
+
+        if (angular.isDefined(parent.vm)) {
+            // we've found a parent with a controller as 'vm' scope
+            vmScope = parent.vm;
+        }
+
+        // Keep searching up the tree recursively and return the last one found
+        return findRootScopeModel(parent, vmScope);
+    }
+}]);
+angular.module('cms.shared').directive('cmsFormSection', ['shared.internalModulePath', '$timeout', function (modulePath, $timeout) {
+    return {
+        restrict: 'E',
+        templateUrl: modulePath + 'UIComponents/Form/FormSection.html',
+        scope: {
+            title: '@cmsTitle'
+        },
+        replace: true,
+        transclude: true,
+        link: link
+    };
+
+    function link(scope, elem, attrs) {
+        // Wait a moment until child components are rendered before searching the dom
+        $timeout(function () {
+            var helpers = angular.element(elem[0].querySelector('.help-inline'));
+            var btn = angular.element(elem[0].querySelector('.toggle-helpers'));
+
+            if (helpers.length) {
+                btn
+                    .addClass('show')
+                    .on('click', function () {
+                        btn.toggleClass('active');
+                        elem.toggleClass('show-helpers');
+                    });
+            }
+        }, 100);
+    }
+}]);
+angular.module('cms.shared').directive('cmsFormSectionActions', ['shared.internalModulePath', '$timeout', function (modulePath, $timeout) {
+    return {
+        restrict: 'E',
+        templateUrl: modulePath + 'UIComponents/Form/FormSectionActions.html',
+        scope: {
+        },
+        replace: true,
+        transclude: true,
+        link: link
+    };
+
+    function link(scope, elem, attrs) {
+    }
+}]);
+angular.module('cms.shared').directive('cmsFormSectionAuditData', ['shared.internalModulePath', function (modulePath) {
+    return {
+        restrict: 'E',
+        templateUrl: modulePath + 'UIComponents/Form/FormSectionAuditData.html',
+        scope: {
+            auditData: '=cmsAuditData'
+        }
+    };
+}]);
+/**
+ * A status message that can appear in a form to notify the user of any errors or other messages. A scope is
+ * attached to the parent form and can be accessed via [myFormName].formStatus
+ */
+angular.module('cms.shared').directive('cmsFormStatus', [
+    '_',
+    'shared.validationErrorService',
+    'shared.internalModulePath',
+function (
+    _,
+    validationErrorService,
+    modulePath) {
+
+    return {
+        restrict: 'E',
+        templateUrl: modulePath + 'UIComponents/Form/FormStatus.html',
+        require: ['^^cmsForm'],
+        replace: true,
+        scope: true,
+        link: { post: link }
+    };
+
+    function link(scope, el, attr, controllers) {
+
+        initScope(scope, controllers[0]);
+        bindValidationHandler(scope, el);
+    }
+
+    function initScope(scope, formController) {
+        var formScope = formController.getFormScope(),
+            form = formScope.getForm();
+
+        scope.success = success.bind(scope);
+        scope.error = error.bind(scope);
+        scope.errors = errors.bind(scope);
+        scope.clear = clear.bind(scope);
+        form.formStatus = scope;
+    }
+
+    function bindValidationHandler(scope, el) {
+
+        validationErrorService.addHandler('', scope.errors);
+        scope.$on('$destroy', function () {
+            validationErrorService.removeHandler(scope.errors);
+        });
+    }
+
+    function errors(errors, message) {
+
+        var processedErrors = _.uniq(errors, function (error) {
+            return error.message;
+        });
+
+        setScope(this, message, 'error', processedErrors);
+    }
+
+    function error(message) {
+        setScope(this, message, 'error');
+    }
+
+    function success(message) {
+        setScope(this, message, 'success');
+    }
+
+    function clear() {
+        setScope(this);
+    }
+
+    function setScope(scope, message, cls, errors) {
+        scope.message = message;
+        scope.errors = errors;
+        scope.cls = cls;
+    }
+}]);
+
 /**
  * Base class for form fields that uses default conventions and includes integration with 
  * server validation.
@@ -11470,7 +11547,11 @@ function (
             return vm.searchFunction({ $query: query }).then(loadResults);
 
             function loadResults(results) {
-                vm.dataSource = results.items;
+                if (!results || !results.items || !results.items.length) {
+                    vm.dataSource = [];
+                } else {
+                    vm.dataSource = results.items;
+                }
             }
         }
     }
@@ -12097,6 +12178,120 @@ function (
         ngModelController.$validators[DIRECTIVE_ID] = validator;
     }
 }]);
+angular.module('cms.shared').directive('cmsField', [
+    '$timeout',
+    'shared.internalModulePath',
+    function (
+        $timeout,
+        modulePath) {
+    return {
+        restrict: 'E',
+        templateUrl: modulePath + 'UIComponents/Layout/Field.html',
+        transclude: true,
+        replace: true,
+        require: '^^cmsForm'
+    }
+}]);
+(function ($) {
+
+    // Context
+    var $el = $(document.getElementsByClassName('main-nav'));
+
+    // Temp vars
+    var categories, currentCategory;
+
+    function init() {
+
+        categories = $(document.getElementsByClassName('category'));
+        currentCategory = $(document.getElementsByClassName('category selected'));
+
+        //Events
+        categories.on('mouseenter', function (e) {
+            var $src = $(e.srcElement);
+            
+            currentCategory.removeClass('selected');
+            //$src.addClass('selected');
+        });
+
+        categories.on('mouseleave', function (e) {
+            var $src = $(e.srcElement);
+
+            currentCategory.addClass('selected');
+            //$src.removeClass('selected');
+        });
+    }
+
+    init();
+
+})(angular.element);
+angular.module('cms.shared').directive('cmsPageActions', function () {
+    return {
+        restrict: 'E',
+        template: '<div class="page-actions" ng-transclude></div>',
+        replace: true,
+        transclude: true,
+    }
+});
+angular.module('cms.shared').directive('cmsPageBody', [
+    'shared.internalModulePath',
+function (
+    modulePath
+) {
+    return {
+        restrict: 'E',
+        templateUrl: modulePath + 'UIComponents/Layout/PageBody.html',
+        scope: {
+            contentType: '@cmsContentType',
+            hasActions: '=cmsHasActions'
+        },
+        replace: true,
+        transclude: true,
+        controllerAs: 'vm',
+        bindToController: true,
+        controller: ['$scope', Controller]
+    };
+
+    /* CONTROLLER */
+
+    function Controller(scope) {
+    };
+}]);
+angular.module('cms.shared').directive('cmsPageFilter', function () {
+    return {
+        restrict: 'E',
+        template: '<div class="page-filter" ng-transclude></div>',
+        replace: true,
+        transclude: true
+    }
+});
+angular.module('cms.shared').directive('cmsPageHeader', function () {
+    return {
+        restrict: 'E',
+        template: '<h1 class="page-header"><a ng-href="{{parentHref ? parentHref : \'#/\'}}" ng-if="parentTitle">{{parentTitle}}</a><span ng-if="parentTitle && title"> &gt; </span>{{title}}</h1>',
+        replace: true,
+        scope: {
+            title: '@cmsTitle',
+            parentTitle: '@cmsParentTitle',
+            parentHref: '@cmsParentHref'
+        },
+    }
+});
+angular.module('cms.shared').directive('cmsPageHeaderButtons', function () {
+    return {
+        restrict: 'E',
+        template: '<div class="btn-group page-header-buttons" ng-transclude></div>',
+        replace: true,
+        transclude: true
+    }
+});
+angular.module('cms.shared').directive('cmsPageSubHeader', function () {
+    return {
+        restrict: 'E',
+        template: '<div class="page-sub-header" ng-transclude></div>',
+        replace: true,
+        transclude: true
+    }
+});
 angular.module('cms.shared').directive('cmsFormFieldImageAnchorLocationSelector', [
         '_',
         'shared.internalModulePath',
@@ -12995,120 +13190,6 @@ function (
 
 }]);
 
-angular.module('cms.shared').directive('cmsField', [
-    '$timeout',
-    'shared.internalModulePath',
-    function (
-        $timeout,
-        modulePath) {
-    return {
-        restrict: 'E',
-        templateUrl: modulePath + 'UIComponents/Layout/Field.html',
-        transclude: true,
-        replace: true,
-        require: '^^cmsForm'
-    }
-}]);
-(function ($) {
-
-    // Context
-    var $el = $(document.getElementsByClassName('main-nav'));
-
-    // Temp vars
-    var categories, currentCategory;
-
-    function init() {
-
-        categories = $(document.getElementsByClassName('category'));
-        currentCategory = $(document.getElementsByClassName('category selected'));
-
-        //Events
-        categories.on('mouseenter', function (e) {
-            var $src = $(e.srcElement);
-            
-            currentCategory.removeClass('selected');
-            //$src.addClass('selected');
-        });
-
-        categories.on('mouseleave', function (e) {
-            var $src = $(e.srcElement);
-
-            currentCategory.addClass('selected');
-            //$src.removeClass('selected');
-        });
-    }
-
-    init();
-
-})(angular.element);
-angular.module('cms.shared').directive('cmsPageActions', function () {
-    return {
-        restrict: 'E',
-        template: '<div class="page-actions" ng-transclude></div>',
-        replace: true,
-        transclude: true,
-    }
-});
-angular.module('cms.shared').directive('cmsPageBody', [
-    'shared.internalModulePath',
-function (
-    modulePath
-) {
-    return {
-        restrict: 'E',
-        templateUrl: modulePath + 'UIComponents/Layout/PageBody.html',
-        scope: {
-            contentType: '@cmsContentType',
-            hasActions: '=cmsHasActions'
-        },
-        replace: true,
-        transclude: true,
-        controllerAs: 'vm',
-        bindToController: true,
-        controller: ['$scope', Controller]
-    };
-
-    /* CONTROLLER */
-
-    function Controller(scope) {
-    };
-}]);
-angular.module('cms.shared').directive('cmsPageFilter', function () {
-    return {
-        restrict: 'E',
-        template: '<div class="page-filter" ng-transclude></div>',
-        replace: true,
-        transclude: true
-    }
-});
-angular.module('cms.shared').directive('cmsPageHeader', function () {
-    return {
-        restrict: 'E',
-        template: '<h1 class="page-header"><a ng-href="{{parentHref ? parentHref : \'#/\'}}" ng-if="parentTitle">{{parentTitle}}</a><span ng-if="parentTitle && title"> &gt; </span>{{title}}</h1>',
-        replace: true,
-        scope: {
-            title: '@cmsTitle',
-            parentTitle: '@cmsParentTitle',
-            parentHref: '@cmsParentHref'
-        },
-    }
-});
-angular.module('cms.shared').directive('cmsPageHeaderButtons', function () {
-    return {
-        restrict: 'E',
-        template: '<div class="btn-group page-header-buttons" ng-transclude></div>',
-        replace: true,
-        transclude: true
-    }
-});
-angular.module('cms.shared').directive('cmsPageSubHeader', function () {
-    return {
-        restrict: 'E',
-        template: '<div class="page-sub-header" ng-transclude></div>',
-        replace: true,
-        transclude: true
-    }
-});
 angular.module('cms.shared').directive('cmsLoading', function () {
     return {
         restrict: 'A',
@@ -13200,67 +13281,6 @@ function (
         scope: { loadState: '=' },
         templateUrl: modulePath + 'UIComponents/Loader/ProgressBar.html'
     };
-}]);
-angular.module('cms.shared').directive('cmsFormFieldLocaleSelector', [
-    '_',
-    'shared.internalModulePath',
-    'shared.localeService',
-    'shared.directiveUtilities',
-function (
-    _,
-    modulePath,
-    localeService,
-    directiveUtilities
-    ) {
-
-    return {
-        restrict: 'E',
-        templateUrl: modulePath + 'UIComponents/Locales/FormFieldLocaleSelector.html',
-        scope: {
-            model: '=cmsModel',
-            onLoaded: '&cmsOnLoaded',
-            readonly: '=cmsReadonly'
-        },
-        link: {
-            pre: preLink
-        },
-        controller: Controller,
-        controllerAs: 'vm',
-        bindToController: true
-    };
-
-    /* COMPILE */
-
-    function preLink(scope, el, attrs) {
-        var vm = scope.vm;
-
-        if (angular.isDefined(attrs.required)) {
-            vm.isRequired = true;
-        } else {
-            vm.isRequired = false;
-            vm.defaultItemText = attrs.cmsDefaultItemText || 'None';
-        }
-
-        directiveUtilities.setModelName(vm, attrs);
-    }
-
-    /* CONTROLLER */
-
-    function Controller() {
-        var vm = this;
-
-        localeService.getAll().then(function (locales) {
-
-            vm.locales = _.map(locales, function (locale) {
-                return {
-                    name: locale.name + ' (' + locale.ietfLanguageTag + ')',
-                    id: locale.localeId
-                }
-            });
-
-            if (vm.onLoaded) vm.onLoaded();
-        });
-    }
 }]);
 angular.module('cms.shared').directive('cmsMenu', [
     'shared.internalModulePath',
@@ -13775,6 +13795,439 @@ function (
 
     }
 }]);
+angular.module('cms.shared').directive('cmsFormFieldPageCollection', [
+    '_',
+    'shared.internalModulePath',
+    'shared.LoadState',
+    'shared.pageService',
+    'shared.modalDialogService',
+    'shared.arrayUtilities',
+    'shared.urlLibrary',
+    'baseFormFieldFactory',
+function (
+    _,
+    modulePath,
+    LoadState,
+    pageService,
+    modalDialogService,
+    arrayUtilities,
+    urlLibrary,
+    baseFormFieldFactory) {
+
+    /* VARS */
+
+    var PAGE_ID_PROP = 'pageId',
+        baseConfig = baseFormFieldFactory.defaultConfig;
+
+    /* CONFIG */
+
+    var config = {
+        templateUrl: modulePath + 'UIComponents/Pages/FormFieldPageCollection.html',
+        scope: _.extend(baseConfig.scope, {
+            localeId: '=cmsLocaleId',
+            orderable: '=cmsOrderable'
+        }),
+        require: _.union(baseConfig.require, ['?^^cmsFormDynamicFieldSet']),
+        passThroughAttributes: [
+            'required'
+        ],
+        link: link
+    };
+
+    return baseFormFieldFactory.create(config);
+
+    /* LINK */
+
+    function link(scope, el, attributes, controllers) {
+        var vm = scope.vm,
+            isRequired = _.has(attributes, 'required'),
+            definitionPromise,
+            dynamicFormFieldController = _.last(controllers);
+
+        init();
+        return baseConfig.link(scope, el, attributes, controllers);
+
+        /* INIT */
+
+        function init() {
+
+            vm.gridLoadState = new LoadState();
+
+            vm.showPicker = showPicker;
+            vm.remove = remove;
+            vm.onDrop = onDrop;
+            vm.urlLibrary = urlLibrary;
+
+            scope.$watch("vm.model", setGridItems);
+        }
+
+        /* EVENTS */
+
+        function remove(page) {
+
+            arrayUtilities.removeObject(vm.gridData, page);
+            arrayUtilities.removeObject(vm.model, page[PAGE_ID_PROP]);
+        }
+
+        function showPicker() {
+            modalDialogService.show({
+                templateUrl: modulePath + 'UIComponents/Pages/PagePickerDialog.html',
+                controller: 'PagePickerDialogController',
+                options: {
+                    selectedIds: vm.model || [],
+                    filter: getFilter(),
+                    onSelected: onSelected
+                }
+            });
+
+            function onSelected(newEntityArr) {
+                vm.model = newEntityArr
+                setGridItems(newEntityArr);
+            }
+        }
+
+        function onDrop($index, droppedEntity) {
+
+            arrayUtilities.moveObject(vm.gridData, droppedEntity, $index, PAGE_ID_PROP);
+
+            // Update model with new ordering
+            setModelFromGridData();
+        }
+
+        function orderGridItemsAndSetModel() {
+            if (!vm.orderable) {
+                vm.gridData = _.sortBy(vm.gridData, function (page) {
+                    return page.auditData.createDate;
+                }).reverse();
+                setModelFromGridData();
+            }
+        }
+
+        function setModelFromGridData() {
+            vm.model = _.pluck(vm.gridData, PAGE_ID_PROP);
+        }
+
+        /* HELPERS */
+
+        function getFilter() {
+            var filter = {},
+                localeId;
+
+            if (vm.localeId) {
+                localeId = vm.localeId;
+            } else if (dynamicFormFieldController && dynamicFormFieldController.additionalParameters) {
+                localeId = dynamicFormFieldController.additionalParameters.localeId;
+            }
+
+            if (localeId) {
+                filter.localeId = localeId;
+            }
+
+            return filter;
+        }
+
+        /** 
+         * Load the grid data if it is inconsistent with the Ids collection.
+         */
+        function setGridItems(ids) {
+
+            if (!ids || !ids.length) {
+                vm.gridData = [];
+            }
+            else if (!vm.gridData || _.pluck(vm.gridData, PAGE_ID_PROP).join() != ids.join()) {
+
+                vm.gridLoadState.on();
+                pageService
+                    .getByIdRange(ids)
+                    .then(loadPages)
+                    .then(vm.gridLoadState.off);
+            }
+
+            function loadPages(items) {
+                vm.gridData = items;
+                orderGridItemsAndSetModel();
+            }
+        }
+    }
+}]);
+angular.module('cms.shared').directive('cmsFormFieldPageSelector', [
+    '_',
+    'shared.internalModulePath',
+    'shared.pageService',
+    'shared.directiveUtilities',
+    'shared.modalDialogService',
+function (
+    _,
+    modulePath,
+    pageService,
+    directiveUtilities,
+    modalDialogService
+    ) {
+
+    return {
+        restrict: 'E',
+        templateUrl: modulePath + 'UIComponents/Pages/FormFieldPageSelector.html',
+        scope: {
+            model: '=cmsModel',
+            title: '@cmsTitle',
+            localeId: '=cmsLocaleId',
+            readonly: '=cmsReadonly'
+        },
+        require: ['?^^cmsFormDynamicFieldSet'],
+        link: {
+            pre: preLink
+        },
+        controller: Controller,
+        controllerAs: 'vm',
+        bindToController: true
+    };
+
+    /* COMPILE */
+
+    function preLink(scope, el, attrs, controllers) {
+        var vm = scope.vm,
+            dynamicFormFieldController = controllers[0];
+
+        if (angular.isDefined(attrs.required)) {
+            vm.isRequired = true;
+        } else {
+            vm.isRequired = false;
+        }
+
+        directiveUtilities.setModelName(vm, attrs);
+
+        vm.search = function (query) {
+            return pageService.getAll(query);
+        };
+        
+        vm.initialItemFunction = function (id) {
+            return pageService.getByIdRange([id]).then(function (results) {
+                return results[0];
+            });
+        };
+    }
+
+    /* CONTROLLER */
+
+    function Controller() {
+    }
+}]);
+angular.module('cms.shared').factory('shared.pageModalDialogService', [
+    'shared.pageService',
+    'shared.modalDialogService',
+function (
+    pageService,
+    modalDialogService) {
+
+    var service = {};
+
+    /* PUBLIC */
+
+    service.publish = function (pageId, onLoadingStart) {
+        var options = {
+            title: 'Publish Page',
+            message: 'Are you sure you want to publish this page?',
+            okButtonTitle: 'Yes, publish it',
+            onOk: onOk
+        };
+
+        return modalDialogService.confirm(options);
+
+        function onOk() {
+            onLoadingStart();
+            return pageService.publish(pageId);
+        }
+    }
+
+    service.unpublish = function (pageId, onLoadingStart) {
+        var options = {
+            title: 'Unpublish Page',
+            message: 'Unpublishing this page will remove it from the live site and put the page into draft status. Are you sure you want to continue?',
+            okButtonTitle: 'Yes, unpublish it',
+            onOk: onOk
+        };
+
+        return modalDialogService.confirm(options);
+
+        function onOk() {
+            onLoadingStart();
+            return pageService.unpublish(pageId);
+        }
+    }
+
+    service.copyToDraft = function (pageId, pageVersionId, hasDraft, onLoadingStart) {
+        var options = {
+            title: 'Copy Version',
+            message: 'A draft version of this page already exists. Copying this version will delete the current draft. Do you wish to continue?',
+            okButtonTitle: 'Yes, replace it',
+            onOk: onOk
+        };
+
+        if (hasDraft) {
+            // If there's a draft already, warn the user
+            return modalDialogService
+                .confirm(options);
+        } else {
+            // Run the command directly
+            onLoadingStart();
+            return runCommand();
+        }
+
+        /* helpers */
+
+        function onOk() {
+            onLoadingStart();
+
+            return pageService
+                .removeDraft(pageId)
+                .then(runCommand);
+        }
+
+        function runCommand() {
+            return pageService.duplicateDraft(pageId, pageVersionId);
+        }
+    }
+
+    return service;
+}]);
+angular.module('cms.shared').controller('PagePickerDialogController', [
+    '$scope',
+    'shared.LoadState',
+    'shared.pageService',
+    'shared.SearchQuery',
+    'shared.modalDialogService',
+    'shared.internalModulePath',
+    'shared.urlLibrary',
+    'options',
+    'close',
+function (
+    $scope,
+    LoadState,
+    pageService,
+    SearchQuery,
+    modalDialogService,
+    modulePath,
+    urlLibrary,
+    options,
+    close) {
+
+    /* VARS */
+
+    var vm = $scope,
+        PAGE_ID_PROP = 'pageId';
+
+    init();
+    
+    /* INIT */
+    
+    function init() {
+        angular.extend($scope, options);
+
+        vm.onOk = onOk;
+        vm.onCancel = onCancel;
+        vm.onSelect = onSelect;
+        vm.selectedPage = vm.currentPage; // current page is null in single mode
+        vm.onSelectAndClose = onSelectAndClose;
+        vm.close = onCancel;
+
+        vm.gridLoadState = new LoadState();
+        vm.query = new SearchQuery({
+            onChanged: onQueryChanged,
+            useHistory: false,
+            defaultParams: options.filter
+        });
+        vm.presetFilter = options.filter;
+
+        vm.filter = vm.query.getFilters();
+        vm.toggleFilter = toggleFilter;
+        vm.isSelected = isSelected;
+        vm.multiMode = vm.selectedIds ? true : false;
+        vm.urlLibrary = urlLibrary;
+
+        toggleFilter(false);
+        loadGrid();
+    }
+
+    /* ACTIONS */
+
+    function toggleFilter(show) {
+        vm.isFilterVisible = _.isUndefined(show) ? !vm.isFilterVisible : show;
+    }
+
+    function onQueryChanged() {
+        toggleFilter(false);
+        loadGrid();
+    }
+
+    function loadGrid() {
+        vm.gridLoadState.on();
+
+        return pageService.getAll(vm.query.getParameters()).then(function (result) {
+            vm.result = result;
+            vm.gridLoadState.off();
+        });
+    }
+    
+    /* EVENTS */
+
+    function onCancel() {
+        if (!vm.multiMode) {
+            // in single-mode reset the page
+            vm.onSelected(vm.currentPage);
+        }
+        close();
+    }
+
+    function onSelect(page) {
+        if (!vm.multiMode) {
+            vm.selectedPage = page;
+            return;
+        }
+
+        addOrRemove(page);
+    }
+
+    function onSelectAndClose(page) {
+        if (!vm.multiMode) {
+            vm.selectedPage = page;
+            onOk();
+            return;
+        }
+
+        addOrRemove(page);
+        onOk();
+    }
+
+    function onOk() {
+        if (!vm.multiMode) {
+            vm.onSelected(vm.selectedPage);
+        } else {
+            vm.onSelected(vm.selectedIds);
+        }
+
+        close();
+    }
+
+    /* PUBLIC HELPERS */
+
+    function isSelected(page) {
+        if (vm.selectedIds && page && vm.selectedIds.indexOf(page.pageId) > -1) return true;
+
+        if (!page || !vm.selectedPage) return false;
+        
+        return page[PAGE_ID_PROP] === vm.selectedPage[PAGE_ID_PROP];
+    }
+
+    function addOrRemove(page) {
+        if (!isSelected(page)) {
+            vm.selectedIds.push(page[PAGE_ID_PROP]);
+        } else {
+            var index = vm.selectedIds.indexOf(page[PAGE_ID_PROP]);
+            vm.selectedIds.splice(index, 1);
+        }
+    }
+}]);
+
 angular.module('cms.shared').controller('EditNestedDataModelDialogController', [
     '$scope',
     'shared.nestedDataModelSchemaService',
@@ -14242,439 +14695,6 @@ angular.module('cms.shared').directive('cmsFormFieldNestedDataModelMultiTypeColl
 
         }
     }]);
-angular.module('cms.shared').directive('cmsFormFieldPageCollection', [
-    '_',
-    'shared.internalModulePath',
-    'shared.LoadState',
-    'shared.pageService',
-    'shared.modalDialogService',
-    'shared.arrayUtilities',
-    'shared.urlLibrary',
-    'baseFormFieldFactory',
-function (
-    _,
-    modulePath,
-    LoadState,
-    pageService,
-    modalDialogService,
-    arrayUtilities,
-    urlLibrary,
-    baseFormFieldFactory) {
-
-    /* VARS */
-
-    var PAGE_ID_PROP = 'pageId',
-        baseConfig = baseFormFieldFactory.defaultConfig;
-
-    /* CONFIG */
-
-    var config = {
-        templateUrl: modulePath + 'UIComponents/Pages/FormFieldPageCollection.html',
-        scope: _.extend(baseConfig.scope, {
-            localeId: '=cmsLocaleId',
-            orderable: '=cmsOrderable'
-        }),
-        require: _.union(baseConfig.require, ['?^^cmsFormDynamicFieldSet']),
-        passThroughAttributes: [
-            'required'
-        ],
-        link: link
-    };
-
-    return baseFormFieldFactory.create(config);
-
-    /* LINK */
-
-    function link(scope, el, attributes, controllers) {
-        var vm = scope.vm,
-            isRequired = _.has(attributes, 'required'),
-            definitionPromise,
-            dynamicFormFieldController = _.last(controllers);
-
-        init();
-        return baseConfig.link(scope, el, attributes, controllers);
-
-        /* INIT */
-
-        function init() {
-
-            vm.gridLoadState = new LoadState();
-
-            vm.showPicker = showPicker;
-            vm.remove = remove;
-            vm.onDrop = onDrop;
-            vm.urlLibrary = urlLibrary;
-
-            scope.$watch("vm.model", setGridItems);
-        }
-
-        /* EVENTS */
-
-        function remove(page) {
-
-            arrayUtilities.removeObject(vm.gridData, page);
-            arrayUtilities.removeObject(vm.model, page[PAGE_ID_PROP]);
-        }
-
-        function showPicker() {
-            modalDialogService.show({
-                templateUrl: modulePath + 'UIComponents/Pages/PagePickerDialog.html',
-                controller: 'PagePickerDialogController',
-                options: {
-                    selectedIds: vm.model || [],
-                    filter: getFilter(),
-                    onSelected: onSelected
-                }
-            });
-
-            function onSelected(newEntityArr) {
-                vm.model = newEntityArr
-                setGridItems(newEntityArr);
-            }
-        }
-
-        function onDrop($index, droppedEntity) {
-
-            arrayUtilities.moveObject(vm.gridData, droppedEntity, $index, PAGE_ID_PROP);
-
-            // Update model with new ordering
-            setModelFromGridData();
-        }
-
-        function orderGridItemsAndSetModel() {
-            if (!vm.orderable) {
-                vm.gridData = _.sortBy(vm.gridData, function (page) {
-                    return page.auditData.createDate;
-                }).reverse();
-                setModelFromGridData();
-            }
-        }
-
-        function setModelFromGridData() {
-            vm.model = _.pluck(vm.gridData, PAGE_ID_PROP);
-        }
-
-        /* HELPERS */
-
-        function getFilter() {
-            var filter = {},
-                localeId;
-
-            if (vm.localeId) {
-                localeId = vm.localeId;
-            } else if (dynamicFormFieldController && dynamicFormFieldController.additionalParameters) {
-                localeId = dynamicFormFieldController.additionalParameters.localeId;
-            }
-
-            if (localeId) {
-                filter.localeId = localeId;
-            }
-
-            return filter;
-        }
-
-        /** 
-         * Load the grid data if it is inconsistent with the Ids collection.
-         */
-        function setGridItems(ids) {
-
-            if (!ids || !ids.length) {
-                vm.gridData = [];
-            }
-            else if (!vm.gridData || _.pluck(vm.gridData, PAGE_ID_PROP).join() != ids.join()) {
-
-                vm.gridLoadState.on();
-                pageService
-                    .getByIdRange(ids)
-                    .then(loadPages)
-                    .then(vm.gridLoadState.off);
-            }
-
-            function loadPages(items) {
-                vm.gridData = items;
-                orderGridItemsAndSetModel();
-            }
-        }
-    }
-}]);
-angular.module('cms.shared').directive('cmsFormFieldPageSelector', [
-    '_',
-    'shared.internalModulePath',
-    'shared.pageService',
-    'shared.directiveUtilities',
-    'shared.modalDialogService',
-function (
-    _,
-    modulePath,
-    pageService,
-    directiveUtilities,
-    modalDialogService
-    ) {
-
-    return {
-        restrict: 'E',
-        templateUrl: modulePath + 'UIComponents/Pages/FormFieldPageSelector.html',
-        scope: {
-            model: '=cmsModel',
-            title: '@cmsTitle',
-            localeId: '=cmsLocaleId',
-            readonly: '=cmsReadonly'
-        },
-        require: ['?^^cmsFormDynamicFieldSet'],
-        link: {
-            pre: preLink
-        },
-        controller: Controller,
-        controllerAs: 'vm',
-        bindToController: true
-    };
-
-    /* COMPILE */
-
-    function preLink(scope, el, attrs, controllers) {
-        var vm = scope.vm,
-            dynamicFormFieldController = controllers[0];
-
-        if (angular.isDefined(attrs.required)) {
-            vm.isRequired = true;
-        } else {
-            vm.isRequired = false;
-        }
-
-        directiveUtilities.setModelName(vm, attrs);
-
-        vm.search = function (query) {
-            return pageService.getAll(query);
-        };
-        
-        vm.initialItemFunction = function (id) {
-            return pageService.getByIdRange([id]).then(function (results) {
-                return results[0];
-            });
-        };
-    }
-
-    /* CONTROLLER */
-
-    function Controller() {
-    }
-}]);
-angular.module('cms.shared').factory('shared.pageModalDialogService', [
-    'shared.pageService',
-    'shared.modalDialogService',
-function (
-    pageService,
-    modalDialogService) {
-
-    var service = {};
-
-    /* PUBLIC */
-
-    service.publish = function (pageId, onLoadingStart) {
-        var options = {
-            title: 'Publish Page',
-            message: 'Are you sure you want to publish this page?',
-            okButtonTitle: 'Yes, publish it',
-            onOk: onOk
-        };
-
-        return modalDialogService.confirm(options);
-
-        function onOk() {
-            onLoadingStart();
-            return pageService.publish(pageId);
-        }
-    }
-
-    service.unpublish = function (pageId, onLoadingStart) {
-        var options = {
-            title: 'Unpublish Page',
-            message: 'Unpublishing this page will remove it from the live site and put the page into draft status. Are you sure you want to continue?',
-            okButtonTitle: 'Yes, unpublish it',
-            onOk: onOk
-        };
-
-        return modalDialogService.confirm(options);
-
-        function onOk() {
-            onLoadingStart();
-            return pageService.unpublish(pageId);
-        }
-    }
-
-    service.copyToDraft = function (pageId, pageVersionId, hasDraft, onLoadingStart) {
-        var options = {
-            title: 'Copy Version',
-            message: 'A draft version of this page already exists. Copying this version will delete the current draft. Do you wish to continue?',
-            okButtonTitle: 'Yes, replace it',
-            onOk: onOk
-        };
-
-        if (hasDraft) {
-            // If there's a draft already, warn the user
-            return modalDialogService
-                .confirm(options);
-        } else {
-            // Run the command directly
-            onLoadingStart();
-            return runCommand();
-        }
-
-        /* helpers */
-
-        function onOk() {
-            onLoadingStart();
-
-            return pageService
-                .removeDraft(pageId)
-                .then(runCommand);
-        }
-
-        function runCommand() {
-            return pageService.duplicateDraft(pageId, pageVersionId);
-        }
-    }
-
-    return service;
-}]);
-angular.module('cms.shared').controller('PagePickerDialogController', [
-    '$scope',
-    'shared.LoadState',
-    'shared.pageService',
-    'shared.SearchQuery',
-    'shared.modalDialogService',
-    'shared.internalModulePath',
-    'shared.urlLibrary',
-    'options',
-    'close',
-function (
-    $scope,
-    LoadState,
-    pageService,
-    SearchQuery,
-    modalDialogService,
-    modulePath,
-    urlLibrary,
-    options,
-    close) {
-
-    /* VARS */
-
-    var vm = $scope,
-        PAGE_ID_PROP = 'pageId';
-
-    init();
-    
-    /* INIT */
-    
-    function init() {
-        angular.extend($scope, options);
-
-        vm.onOk = onOk;
-        vm.onCancel = onCancel;
-        vm.onSelect = onSelect;
-        vm.selectedPage = vm.currentPage; // current page is null in single mode
-        vm.onSelectAndClose = onSelectAndClose;
-        vm.close = onCancel;
-
-        vm.gridLoadState = new LoadState();
-        vm.query = new SearchQuery({
-            onChanged: onQueryChanged,
-            useHistory: false,
-            defaultParams: options.filter
-        });
-        vm.presetFilter = options.filter;
-
-        vm.filter = vm.query.getFilters();
-        vm.toggleFilter = toggleFilter;
-        vm.isSelected = isSelected;
-        vm.multiMode = vm.selectedIds ? true : false;
-        vm.urlLibrary = urlLibrary;
-
-        toggleFilter(false);
-        loadGrid();
-    }
-
-    /* ACTIONS */
-
-    function toggleFilter(show) {
-        vm.isFilterVisible = _.isUndefined(show) ? !vm.isFilterVisible : show;
-    }
-
-    function onQueryChanged() {
-        toggleFilter(false);
-        loadGrid();
-    }
-
-    function loadGrid() {
-        vm.gridLoadState.on();
-
-        return pageService.getAll(vm.query.getParameters()).then(function (result) {
-            vm.result = result;
-            vm.gridLoadState.off();
-        });
-    }
-    
-    /* EVENTS */
-
-    function onCancel() {
-        if (!vm.multiMode) {
-            // in single-mode reset the page
-            vm.onSelected(vm.currentPage);
-        }
-        close();
-    }
-
-    function onSelect(page) {
-        if (!vm.multiMode) {
-            vm.selectedPage = page;
-            return;
-        }
-
-        addOrRemove(page);
-    }
-
-    function onSelectAndClose(page) {
-        if (!vm.multiMode) {
-            vm.selectedPage = page;
-            onOk();
-            return;
-        }
-
-        addOrRemove(page);
-        onOk();
-    }
-
-    function onOk() {
-        if (!vm.multiMode) {
-            vm.onSelected(vm.selectedPage);
-        } else {
-            vm.onSelected(vm.selectedIds);
-        }
-
-        close();
-    }
-
-    /* PUBLIC HELPERS */
-
-    function isSelected(page) {
-        if (vm.selectedIds && page && vm.selectedIds.indexOf(page.pageId) > -1) return true;
-
-        if (!page || !vm.selectedPage) return false;
-        
-        return page[PAGE_ID_PROP] === vm.selectedPage[PAGE_ID_PROP];
-    }
-
-    function addOrRemove(page) {
-        if (!isSelected(page)) {
-            vm.selectedIds.push(page[PAGE_ID_PROP]);
-        } else {
-            var index = vm.selectedIds.indexOf(page[PAGE_ID_PROP]);
-            vm.selectedIds.splice(index, 1);
-        }
-    }
-}]);
-
 angular.module('cms.shared').directive('cmsPager', [
     'shared.internalModulePath',
 function (
@@ -14877,40 +14897,6 @@ angular.module('cms.shared').factory('shared.SearchQuery', ['$location', '_', fu
         }
     }
 }]);
-/**
- * A success status message, dislpayed in a green coloured box
- */
-angular.module('cms.shared').directive('cmsSuccessMessage', [
-    'shared.internalModulePath',
-function (
-    modulePath
-    ) {
-
-    return {
-        restrict: 'E',
-        templateUrl: modulePath + 'UIComponents/StatusMessages/SuccessMessage.html',
-        replace: true,
-        transclude: true
-    };
-}]);
-
-/**
- * A warning status message, dislpayed in a yellow coloured box
- */
-angular.module('cms.shared').directive('cmsWarningMessage', [
-    'shared.internalModulePath',
-function (
-    modulePath
-    ) {
-
-    return {
-        restrict: 'E',
-        templateUrl: modulePath + 'UIComponents/StatusMessages/WarningMessage.html',
-        replace: true,
-        transclude: true
-    };
-}]);
-
 angular.module('cms.shared').directive('cmsTableActions', [
     'shared.internalModulePath',
 function (
@@ -15247,6 +15233,67 @@ angular.module('cms.shared').directive('cmsTimeAgo', ['shared.internalModulePath
         return time;
     }
 }]);
+angular.module('cms.shared').directive('cmsFormFieldLocaleSelector', [
+    '_',
+    'shared.internalModulePath',
+    'shared.localeService',
+    'shared.directiveUtilities',
+function (
+    _,
+    modulePath,
+    localeService,
+    directiveUtilities
+    ) {
+
+    return {
+        restrict: 'E',
+        templateUrl: modulePath + 'UIComponents/Locales/FormFieldLocaleSelector.html',
+        scope: {
+            model: '=cmsModel',
+            onLoaded: '&cmsOnLoaded',
+            readonly: '=cmsReadonly'
+        },
+        link: {
+            pre: preLink
+        },
+        controller: Controller,
+        controllerAs: 'vm',
+        bindToController: true
+    };
+
+    /* COMPILE */
+
+    function preLink(scope, el, attrs) {
+        var vm = scope.vm;
+
+        if (angular.isDefined(attrs.required)) {
+            vm.isRequired = true;
+        } else {
+            vm.isRequired = false;
+            vm.defaultItemText = attrs.cmsDefaultItemText || 'None';
+        }
+
+        directiveUtilities.setModelName(vm, attrs);
+    }
+
+    /* CONTROLLER */
+
+    function Controller() {
+        var vm = this;
+
+        localeService.getAll().then(function (locales) {
+
+            vm.locales = _.map(locales, function (locale) {
+                return {
+                    name: locale.name + ' (' + locale.ietfLanguageTag + ')',
+                    id: locale.localeId
+                }
+            });
+
+            if (vm.onLoaded) vm.onLoaded();
+        });
+    }
+}]);
 angular.module('cms.shared').directive('cmsUserLink', [
     'shared.internalModulePath',
     'shared.urlLibrary',
@@ -15321,6 +15368,40 @@ angular.module('cms.shared').directive('cmsModelAsDate', function () {
         });
     }
 });
+/**
+ * A success status message, dislpayed in a green coloured box
+ */
+angular.module('cms.shared').directive('cmsSuccessMessage', [
+    'shared.internalModulePath',
+function (
+    modulePath
+    ) {
+
+    return {
+        restrict: 'E',
+        templateUrl: modulePath + 'UIComponents/StatusMessages/SuccessMessage.html',
+        replace: true,
+        transclude: true
+    };
+}]);
+
+/**
+ * A warning status message, dislpayed in a yellow coloured box
+ */
+angular.module('cms.shared').directive('cmsWarningMessage', [
+    'shared.internalModulePath',
+function (
+    modulePath
+    ) {
+
+    return {
+        restrict: 'E',
+        templateUrl: modulePath + 'UIComponents/StatusMessages/WarningMessage.html',
+        replace: true,
+        transclude: true
+    };
+}]);
+
 /**
   * Placeholder js file to solve issue with Azure and Bundle.IncludeDirectory, because
   * without this file the directory is empty.

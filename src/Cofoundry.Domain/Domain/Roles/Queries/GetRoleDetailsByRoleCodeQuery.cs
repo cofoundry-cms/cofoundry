@@ -1,19 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Cofoundry.Domain.CQS;
-using Cofoundry.Core.Validation;
+﻿using Cofoundry.Domain.CQS;
 
 namespace Cofoundry.Domain
 {
     /// <summary>
-    /// Find a role with the specified role code, returning
-    /// a RoleDetails object if one is found, otherwise null. Roles only
-    /// have a RoleCode if they have been generated from code
-    /// rather than the GUI. For GUI generated roles use GetRoleDetailsByIdQuery.
+    /// <para>
+    /// Find a role with the specified role code, returning a <see cref="RoleDetails"/> 
+    /// projection if one is found, otherwise <see langword="null"/>. Roles only
+    /// have a RoleCode if they have been generated from code rather than the GUI. 
+    /// For GUI generated roles use <see cref="GetRoleDetailsByIdQuery"/>.
+    /// </para>
+    /// <para>
+    /// Roles are cached, so repeat uses of this query is inexpensive.
+    /// </para>
     /// </summary>
     public class GetRoleDetailsByRoleCodeQuery : IQuery<RoleDetails>
     {
@@ -22,7 +20,7 @@ namespace Cofoundry.Domain
         }
 
         /// <summary>
-        /// Initializes the query with the specified RoleCode
+        /// Initializes the query with the specified <paramref name="roleCode"/>
         /// </summary>
         /// <param name="roleCode">The code to find a matching role with. Codes are 3 characters long (fixed length).</param>
         public GetRoleDetailsByRoleCodeQuery(string roleCode)
@@ -33,7 +31,7 @@ namespace Cofoundry.Domain
         /// <summary>
         /// The code to find a matching role with. Roles only have a RoleCode 
         /// if they have been generated from code rather than the GUI. For GUI generated roles
-        /// use GetRoleDetailsByIdQuery. Codes are 3 characters long (fixed length).
+        /// use <see cref="GetRoleDetailsByIdQuery"/>. Codes are 3 characters long (fixed length).
         /// </summary>
         public string RoleCode { get; set; }
     }

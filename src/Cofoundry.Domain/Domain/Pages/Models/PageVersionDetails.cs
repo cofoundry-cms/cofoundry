@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace Cofoundry.Domain
 {
@@ -64,9 +60,7 @@ namespace Cofoundry.Domain
         /// </summary>
         public ICollection<PageRegionDetails> Regions { get; set; }
 
-        /// <summary>
-        /// Simple audit data for this instance.
-        /// </summary>
+        /// <inheritdoc/>
         public CreateAuditData AuditData { get; set; }
     }
 }

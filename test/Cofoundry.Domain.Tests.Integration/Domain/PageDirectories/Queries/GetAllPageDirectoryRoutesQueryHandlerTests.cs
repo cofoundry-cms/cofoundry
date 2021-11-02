@@ -105,32 +105,31 @@ namespace Cofoundry.Domain.Tests.Integration.PageDirectories.Queries
 
             using var app = _appFactory.Create();
             var contentRepository = app.Services.GetContentRepositoryWithElevatedPermissions();
-            var directoryId = await app.TestData.PageDirectories().AddAsync(uniqueData);
+            var directory1Id = await app.TestData.PageDirectories().AddAsync(uniqueData);
+            var directory2Id = await app.TestData.PageDirectories().AddAsync(uniqueData, directory1Id);
+            await app.TestData.PageDirectories().AddAccessRuleAsync(
+                directory1Id,
+                app.SeededEntities.TestUserArea1.UserAreaCode,
+                null,
+                c => c.ViolationAction = AccessRuleViolationAction.Error
+                );
 
-            var rule1Command = new AddPageDirectoryAccessRuleCommand()
+            var addRuleToDirectory2Command = new UpdatePageDirectoryAccessRulesCommand()
             {
-                PageDirectoryId = directoryId,
-                UserAreaCode = app.SeededEntities.TestUserArea1.UserAreaCode,
-                RoleId = app.SeededEntities.TestUserArea1.RoleId,
-                ViolationAction = RouteAccessRuleViolationAction.RedirectToLogin
+                PageDirectoryId = directory2Id,
+                ViolationAction = AccessRuleViolationAction.NotFound,
+                UserAreaCodeForLoginRedirect = app.SeededEntities.TestUserArea2.UserAreaCode
             };
+
+            addRuleToDirectory2Command
+                .AccessRules
+                .AddNew(app.SeededEntities.TestUserArea1.UserAreaCode, app.SeededEntities.TestUserArea1.RoleId)
+                .AddNew(app.SeededEntities.TestUserArea2.UserAreaCode);
 
             await contentRepository
                 .PageDirectories()
                 .AccessRules()
-                .AddAsync(rule1Command);
-
-            var rule2Command = new AddPageDirectoryAccessRuleCommand()
-            {
-                PageDirectoryId = directoryId,
-                UserAreaCode = app.SeededEntities.TestUserArea2.UserAreaCode,
-                ViolationAction = RouteAccessRuleViolationAction.NotFound
-            };
-
-            await contentRepository
-                .PageDirectories()
-                .AccessRules()
-                .AddAsync(rule2Command);
+                .UpdateAsync(addRuleToDirectory2Command);
 
             var allDirectories = await contentRepository
                 .PageDirectories()
@@ -138,22 +137,41 @@ namespace Cofoundry.Domain.Tests.Integration.PageDirectories.Queries
                 .AsRoutes()
                 .ExecuteAsync();
 
-            var directory = allDirectories.SingleOrDefault(d => d.PageDirectoryId == directoryId);
+            var directory = allDirectories.SingleOrDefault(d => d.PageDirectoryId == directory2Id);
 
             using (new AssertionScope())
             {
                 directory.Should().NotBeNull();
                 directory.AccessRules.Should().NotBeNull().And.HaveCount(2);
 
-                var rule1 = directory.AccessRules.SingleOrDefault(r => r.UserAreaCode == rule1Command.UserAreaCode);
-                rule1.Should().NotBeNull();
-                rule1.RoleId.Should().Be(rule1Command.RoleId);
-                rule1.ViolationAction.Should().Be(rule1Command.ViolationAction);
+                var directory1RuleSet = directory.AccessRules.Skip(1).FirstOrDefault();
+                directory1RuleSet.Should().NotBeNull();
+                directory1RuleSet.AccessRules.Should().HaveCount(1);
+                directory1RuleSet.ViolationAction.Should().Be(AccessRuleViolationAction.Error);
+                directory1RuleSet.AccessRules.Should().NotBeNull();
+                directory1RuleSet.UserAreaCodeForLoginRedirect.Should().BeNull();
 
-                var rule2 = directory.AccessRules.SingleOrDefault(r => r.UserAreaCode == rule2Command.UserAreaCode);
-                rule2.Should().NotBeNull();
-                rule2.RoleId.Should().Be(rule2Command.RoleId);
-                rule2.ViolationAction.Should().Be(rule2Command.ViolationAction);
+                var rule1 = directory1RuleSet.AccessRules.FirstOrDefault();
+                rule1.Should().NotBeNull();
+                rule1.UserAreaCode.Should().Be(app.SeededEntities.TestUserArea1.UserAreaCode);
+                rule1.RoleId.Should().BeNull();
+
+                var directory2RuleSet = directory.AccessRules.FirstOrDefault(); 
+                directory2RuleSet.Should().NotBeNull();
+                directory2RuleSet.AccessRules.Should().HaveCount(2);
+                directory2RuleSet.ViolationAction.Should().Be(addRuleToDirectory2Command.ViolationAction);
+                directory2RuleSet.AccessRules.Should().NotBeNull();
+                directory2RuleSet.UserAreaCodeForLoginRedirect.Should().Be(addRuleToDirectory2Command.UserAreaCodeForLoginRedirect);
+
+                var rule2A = directory2RuleSet.AccessRules.FirstOrDefault();
+                rule2A.Should().NotBeNull();
+                rule2A.UserAreaCode.Should().Be(app.SeededEntities.TestUserArea1.UserAreaCode);
+                rule2A.RoleId.Should().Be(app.SeededEntities.TestUserArea1.RoleId);
+
+                var rule2B = directory2RuleSet.AccessRules.Skip(1).FirstOrDefault();
+                rule2B.Should().NotBeNull();
+                rule2B.UserAreaCode.Should().Be(app.SeededEntities.TestUserArea2.UserAreaCode);
+                rule2B.RoleId.Should().BeNull();
             }
         }
     }

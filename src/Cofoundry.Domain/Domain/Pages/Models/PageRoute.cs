@@ -90,12 +90,15 @@ namespace Cofoundry.Domain
         public string CustomEntityDefinitionCode { get; set; }
 
         /// <summary>
-        /// Optional rules that can be used to restrict access to this page.
+        /// <para>
+        /// Optional set of rules that can be used to restrict access to this page.
         /// These rules are for this page only, and does not include rules
         /// associated with any parent directories or custom entities. To check
-        /// the full directory tree use the <see cref="CanAccess"/> method.
+        /// the full directory tree use the <see cref="CanAccess"/> method. 
+        /// </para>
+        /// If there are no rules associated with the page then this will be null.
         /// </summary>
-        public ICollection<RouteAccessRule> AccessRules { get; set; }
+        public EntityAccessRuleSet AccessRules { get; set; }
 
         /// <summary>
         /// Determines if the page is within the specified directory path. Does
@@ -134,17 +137,15 @@ namespace Cofoundry.Domain
         /// If any rules are violated, then the most specific rule is returned; 
         /// otherwise <see langword="null"/>.
         /// </returns>
-        public RouteAccessRule CanAccess(IUserContext user)
+        public EntityAccessRuleSet CanAccess(IUserContext user)
         {
             if (user == null) throw new ArgumentNullException(nameof(user));
-            EntityInvalidOperationException.ThrowIfNull(this, r => r.AccessRules);
             EntityInvalidOperationException.ThrowIfNull(this, r => r.PageDirectory);
 
-            var pageRule = AccessRules
-                .GetRuleViolations(user)
-                .FirstOrDefault();
-
-            if (pageRule != null) return pageRule;
+            if (AccessRules != null && !AccessRules.IsAuthorized(user))
+            {
+                return AccessRules;
+            }
 
             var directoryViolation = PageDirectory
                 .AccessRules

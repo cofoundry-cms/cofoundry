@@ -221,6 +221,11 @@ namespace Cofoundry.Web.Admin
                 .MapPatch("published/unpublish", "UnPublish")
                 ;
 
+            routeBuilder
+                .ForAdminApiController<PageAccessRulesApiController>("pages/{pageId:int}/access-rules")
+                .MapGet()
+                .MapPatch()
+                ;
         }
 
         private static void MapPageTemplateApiRoutes(IEndpointRouteBuilder routeBuilder)

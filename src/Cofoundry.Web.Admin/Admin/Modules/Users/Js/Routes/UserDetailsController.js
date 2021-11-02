@@ -5,8 +5,8 @@
     'shared.LoadState',
     'shared.modalDialogService',
     'shared.permissionValidationService',
+    'shared.roleService',
     'users.userService',
-    'users.roleService',
     'users.modulePath',
     'users.options',
 function (
@@ -16,8 +16,8 @@ function (
     LoadState,
     modalDialogService,
     permissionValidationService,
-    userService,
     roleService,
+    userService,
     modulePath,
     options
     ) {
@@ -104,7 +104,7 @@ function (
     function loadRoles() {
 
         return roleService
-            .getSelectionList()
+            .getSelectionList(options.userAreaCode)
             .then(load);
 
         function load(result) {

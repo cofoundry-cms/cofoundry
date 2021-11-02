@@ -34,6 +34,11 @@
                     ng-click="vm.changeUrl()"
                     ng-disabled="vm.editMode || vm.globalLoadState.isLoading"></cms-button>
 
+        <cms-button cms-text="Access Rules"
+                    ng-if="::vm.accessRulesEnabled"
+                    ng-click="vm.viewAccessRules()"
+                    ng-disabled="vm.editMode || vm.globalLoadState.isLoading"></cms-button>
+
         <cms-button cms-text="Duplicate"
                     ng-if="::vm.canCreate"
                     ng-click="vm.duplicatePage()"
@@ -178,8 +183,8 @@
                         </tbody>
                     </table>
                 </cms-table-container>
-        </cms-form-field-container>
-</cms-form-section>
+            </cms-form-field-container>
+    </cms-form-section>
 
         <!-- Page versions -->
         <cms-form-section cms-title="Versions">

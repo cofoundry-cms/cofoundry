@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Cofoundry.Web;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
 
@@ -22,7 +23,8 @@ namespace Cofoundry.Samples.UserAreas
         public static void ConfigureWebHost(IWebHostBuilder webBuilder)
         {
             webBuilder
-                .UseStartup<Startup>();
+                .UseStartup<Startup>()
+                .UseLocalConfigFile();
         }
     }
 }

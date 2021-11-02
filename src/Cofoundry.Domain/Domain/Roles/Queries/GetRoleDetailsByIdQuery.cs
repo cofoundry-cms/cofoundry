@@ -1,18 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Cofoundry.Domain.CQS;
-using Cofoundry.Core.Validation;
+﻿using Cofoundry.Domain.CQS;
 
 namespace Cofoundry.Domain
 {
     /// <summary>
-    /// Finds a role by it's database id, returning a RoleDetails object if it 
-    /// is found, otherwise null. If no role id is specified then the anonymous 
-    /// role is returned.
+    /// <para>
+    /// Finds a role by it's database id, returning a <see cref="RoleDetails"/> projection 
+    /// if it is found, otherwise <see langword="null"/>. If no role id is specified then the 
+    /// anonymous role is returned.
+    /// </para>
+    /// <para>
+    /// Roles are cached, so repeat uses of this query is inexpensive.
+    /// </para>
     /// </summary>
     public class GetRoleDetailsByIdQuery : IQuery<RoleDetails>
     {
@@ -23,14 +21,14 @@ namespace Cofoundry.Domain
         /// <summary>
         /// Initializes the query with the specified role id.
         /// </summary>
-        /// <param name="roleId">Database id of the role, or null to return the anonymous role.</param>
+        /// <param name="roleId">Database id of the role, or <see langword="null"/> to return the anonymous role.</param>
         public GetRoleDetailsByIdQuery(int? roleId)
         {
             RoleId = roleId;
         }
 
         /// <summary>
-        /// Database id of the role, or null to return the anonymous role.
+        /// Database id of the role, or <see langword="null"/> to return the anonymous role.
         /// </summary>
         public int? RoleId { get; set; }
     }

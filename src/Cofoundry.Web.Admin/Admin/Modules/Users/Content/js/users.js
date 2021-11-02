@@ -13,33 +13,6 @@ function (
 
     routingUtilities.registerCrudRoutes($routeProvider, modulePath, 'User');
 }]);
-angular.module('cms.users').factory('users.roleService', [
-    '$http',
-    'shared.serviceBase',
-    'users.options',
-function (
-    $http,
-    serviceBase,
-    options) {
-
-    var service = {},
-        roleServiceBase = serviceBase + 'roles';
-
-    /* QUERIES */
-
-    service.getSelectionList = function () {
-        return $http.get(roleServiceBase, {
-            params: {
-                userAreaCode: options.userAreaCode,
-                excludeAnonymous: true
-            }
-        });
-    }
-
-    /* PRIVATES */
-
-    return service;
-}]);
 angular.module('cms.users').factory('users.userService', [
     '$http',
     'shared.serviceBase',
@@ -106,16 +79,16 @@ angular.module('cms.users').controller('AddUserController', [
     '_',
     'shared.stringUtilities',
     'shared.LoadState',
+    'shared.roleService',
     'users.userService',
-    'users.roleService',
     'users.options',
 function (
     $location,
     _,
     stringUtilities,
     LoadState,
-    userService,
     roleService,
+    userService,
     options) {
 
     var vm = this;
@@ -161,7 +134,7 @@ function (
     function initForm() {
 
         return roleService
-            .getSelectionList()
+            .getSelectionList(options.userAreaCode)
             .then(load);
 
         function load(result) {
@@ -187,8 +160,8 @@ angular.module('cms.users').controller('UserDetailsController', [
     'shared.LoadState',
     'shared.modalDialogService',
     'shared.permissionValidationService',
+    'shared.roleService',
     'users.userService',
-    'users.roleService',
     'users.modulePath',
     'users.options',
 function (
@@ -198,8 +171,8 @@ function (
     LoadState,
     modalDialogService,
     permissionValidationService,
-    userService,
     roleService,
+    userService,
     modulePath,
     options
     ) {
@@ -286,7 +259,7 @@ function (
     function loadRoles() {
 
         return roleService
-            .getSelectionList()
+            .getSelectionList(options.userAreaCode)
             .then(load);
 
         function load(result) {

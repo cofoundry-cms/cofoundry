@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace Cofoundry.Domain
 {
@@ -10,10 +7,8 @@ namespace Cofoundry.Domain
     /// </summary>
     public interface IContentRepositoryRoleRepository
     {
-        #region queries
-
         /// <summary>
-        /// Finds a role by it's database id, returning null if the role could 
+        /// Finds a role by it's database id, returning <see langword="null"/> if the role could 
         /// not be found. If no role id is specified in the query then the anonymous 
         /// role is returned.
         /// </summary>
@@ -21,7 +16,7 @@ namespace Cofoundry.Domain
         IContentRepositoryRoleByIdQueryBuilder GetById(int? roleId);
 
         /// <summary>
-        /// Finds a role with the specified role code, returning null if the role
+        /// Finds a role with the specified role code, returning <see langword="null"/> if the role
         /// could not be found. Roles only have a RoleCode if they have been generated 
         /// from code rather than the GUI. For GUI generated roles use a 'get by id' 
         /// query.
@@ -29,6 +24,11 @@ namespace Cofoundry.Domain
         /// <param name="roleCode">The code to find a matching role with. Codes are 3 characters long (fixed length).</param>
         IContentRepositoryRoleByCodeQueryBuilder GetByCode(string roleCode);
 
-        #endregion
+        /// <summary>
+        /// Finds a set of roles using a collection of database ids, returning them as a 
+        /// <see cref="RoleMicroSummary"/> projection.
+        /// </summary>
+        /// <param name="roleIds">Range of role ids of the pages to get.</param>
+        IContentRepositoryRoleByIdRangeQueryBuilder GetByIdRange(IEnumerable<int> roleIds);
     }
 }

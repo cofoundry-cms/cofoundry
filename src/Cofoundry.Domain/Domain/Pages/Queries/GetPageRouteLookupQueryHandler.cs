@@ -23,13 +23,13 @@ namespace Cofoundry.Domain.Internal
         private readonly CofoundryDbContext _dbContext;
         private readonly IQueryExecutor _queryExecutor;
         private readonly IPageCache _pageCache;
-        private readonly IRouteAccessRuleMapper _routeAccessRuleMapper;
+        private readonly IEntityAccessRuleSetMapper _routeAccessRuleMapper;
 
         public GetPageRouteLookupQueryHandler(
             CofoundryDbContext dbContext,
             IQueryExecutor queryExecutor,
             IPageCache pageCache,
-            IRouteAccessRuleMapper routeAccessRuleMapper
+            IEntityAccessRuleSetMapper routeAccessRuleMapper
             )
         {
             _dbContext = dbContext;
@@ -68,26 +68,13 @@ namespace Cofoundry.Domain.Internal
             return routes;
         }
 
-        private Task<List<PageQueryResult>> GetPagesAsync()
+        private Task<List<Page>> GetPagesAsync()
         {
             return _dbContext
                 .Pages
                 .AsNoTracking()
                 .FilterActive()
-                .Select(p => new PageQueryResult()
-                {
-                    RoutingInfo = new PageRoute()
-                    {
-                        PageId = p.PageId,
-                        UrlPath = p.UrlPath,
-                        PageType = (PageType)p.PageTypeId,
-                        CustomEntityDefinitionCode = p.CustomEntityDefinitionCode,
-                        PublishDate = DbDateTimeMapper.AsUtc(p.PublishDate),
-                        PublishStatus = PublishStatusMapper.FromCode(p.PublishStatusCode)
-                    },
-                    LocaleId = p.LocaleId,
-                    PageDirectoryId = p.PageDirectoryId
-                })
+                .Include(p => p.AccessRules)
                 .ToListAsync();
         }
 
@@ -143,7 +130,7 @@ namespace Cofoundry.Domain.Internal
         }
 
         private Dictionary<int, PageRoute> Map(
-            List<PageQueryResult> dbPages,
+            List<Page> dbPages,
             Dictionary<int, IOrderedEnumerable<PageVersionQueryResult>> dbPageVersionLookup,
             Dictionary<int, PageDirectoryRoute> pageDirectories,
             Dictionary<int, PageTemplateQueryResult> templates,
@@ -155,7 +142,15 @@ namespace Cofoundry.Domain.Internal
 
             foreach (var dbPage in dbPages)
             {
-                var pageRoute = dbPage.RoutingInfo;
+                var pageRoute = new PageRoute()
+                {
+                    PageId = dbPage.PageId,
+                    UrlPath = dbPage.UrlPath,
+                    PageType = (PageType)dbPage.PageTypeId,
+                    CustomEntityDefinitionCode = dbPage.CustomEntityDefinitionCode,
+                    PublishDate = DbDateTimeMapper.AsUtc(dbPage.PublishDate),
+                    PublishStatus = PublishStatusMapper.FromCode(dbPage.PublishStatusCode)
+                };
 
                 // Page directory will be null if it is inactive or has an inactive parent.
                 pageRoute.PageDirectory = pageDirectories.GetOrDefault(dbPage.PageDirectoryId);
@@ -166,9 +161,7 @@ namespace Cofoundry.Domain.Internal
                 if (!pageRoute.Versions.Any()) continue;
 
                 var accessRules = accessRuleLookup.GetOrDefault(pageRoute.PageId);
-                pageRoute.AccessRules = EnumerableHelper.Enumerate(accessRules)
-                    .Select(_routeAccessRuleMapper.Map)
-                    .ToList();
+                pageRoute.AccessRules = _routeAccessRuleMapper.Map(dbPage);
                 
                 // Configure Locale
                 string directoryPath = null;

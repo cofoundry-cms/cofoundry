@@ -7,7 +7,8 @@ namespace Cofoundry.Domain.Data
     /// Represents a folder in the dynamic web page heirarchy. There is always a 
     /// single root directory.
     /// </summary>
-    public partial class PageDirectory : ICreateAuditable
+    /// <inheritdoc/>
+    public partial class PageDirectory : IEntityAccessRestrictable<PageDirectoryAccessRule>, ICreateAuditable
     {
         /// <summary>
         /// Database primary key.
@@ -37,19 +38,16 @@ namespace Cofoundry.Domain.Data
         /// </summary>
         public string UrlPath { get; set; }
 
-        /// <summary>
-        /// Date and time at which the directory was created.
-        /// </summary>
+        public int AccessRuleViolationActionId { get; set; }
+
+        public string UserAreaCodeForLoginRedirect { get; set; }
+
+        public virtual UserArea UserAreaForLoginRedirect { get; set; }
+
         public DateTime CreateDate { get; set; }
 
-        /// <summary>
-        /// The database id of the <see cref="User"/> that created the directory.
-        /// </summary>
         public int CreatorId { get; set; }
 
-        /// <summary>
-        /// The <see cref="User"/> that created the directory.
-        /// </summary>
         public virtual User Creator { get; set; }
 
         /// <summary>
@@ -80,6 +78,11 @@ namespace Cofoundry.Domain.Data
         /// but instead are used to restrict public access to website pages and routes.
         /// </para>
         /// </summary>
-        public virtual ICollection<PageDirectoryAccessRule> PageDirectoryAccessRules { get; set; } = new List<PageDirectoryAccessRule>();
+        public virtual ICollection<PageDirectoryAccessRule> AccessRules { get; set; } = new List<PageDirectoryAccessRule>();
+
+        public int GetId()
+        {
+            return PageDirectoryId;
+        }
     }
 }

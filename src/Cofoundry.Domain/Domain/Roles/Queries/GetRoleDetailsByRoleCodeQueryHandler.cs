@@ -1,27 +1,24 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using Cofoundry.Core;
 using Cofoundry.Domain.CQS;
 using Cofoundry.Domain.Data;
-using System.Collections.ObjectModel;
-using Cofoundry.Core;
 using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Cofoundry.Domain.Internal
 {
     /// <summary>
-    /// Find a role with the specified role code, returning
-    /// a RoleDetails object if one is found, otherwise null. Roles only
-    /// have a RoleCode if they have been generated from code
-    /// rather than the GUI. For GUI generated roles use GetRoleDetailsByIdQuery.
+    /// Find a role with the specified role code, returning a <see cref="RoleDetails"/> 
+    /// projection if one is found, otherwise <see langword="null"/>. Roles only
+    /// have a RoleCode if they have been generated from code rather than the GUI. 
+    /// For GUI generated roles use <see cref="GetRoleDetailsByIdQuery"/>.
     /// </summary>
     public class GetRoleDetailsByRoleCodeQueryHandler
         : IQueryHandler<GetRoleDetailsByRoleCodeQuery, RoleDetails>
         , IPermissionRestrictedQueryHandler<GetRoleDetailsByRoleCodeQuery, RoleDetails>
     {
-        #region constructor
-
         private readonly CofoundryDbContext _dbContext;
         private readonly IInternalRoleRepository _internalRoleRepository;
         private readonly IRoleCache _roleCache;
@@ -37,16 +34,11 @@ namespace Cofoundry.Domain.Internal
             _roleCache = roleCache;
         }
 
-        #endregion
-
-        #region execution
-
         public async Task<RoleDetails> ExecuteAsync(GetRoleDetailsByRoleCodeQuery query, IExecutionContext executionContext)
         {
             var roleCodeLookup = await _roleCache.GetOrAddRoleCodeLookupAsync(async () =>
             {
-                var roleCodes = await QueryRoleCodes()
-                    .ToDictionaryAsync(r => r.RoleCode, r => r.RoleId);
+                var roleCodes = await GetRoleCodesAsync();
 
                 return new ReadOnlyDictionary<string, int>(roleCodes);
             });
@@ -57,23 +49,18 @@ namespace Cofoundry.Domain.Internal
             return await _internalRoleRepository.GetByIdAsync(id);
         }
 
-        private IQueryable<Role> QueryRoleCodes()
+        private Task<Dictionary<string, int>> GetRoleCodesAsync()
         {
             return _dbContext
-                    .Roles
-                    .AsNoTracking()
-                    .Where(r => r.RoleCode != null);
+                .Roles
+                .AsNoTracking()
+                .Where(r => r.RoleCode != null)
+                .ToDictionaryAsync(r => r.RoleCode, r => r.RoleId);
         }
-
-        #endregion
-
-        #region permissions
 
         public IEnumerable<IPermissionApplication> GetPermissions(GetRoleDetailsByRoleCodeQuery command)
         {
             yield return new RoleReadPermission();
         }
-
-        #endregion
     }
 }

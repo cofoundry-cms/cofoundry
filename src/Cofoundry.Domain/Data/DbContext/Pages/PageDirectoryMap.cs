@@ -1,8 +1,6 @@
-using System;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.EntityFrameworkCore;
 using Cofoundry.Core;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Cofoundry.Domain.Data
 {
@@ -26,8 +24,12 @@ namespace Cofoundry.Domain.Data
 
             // Relationships
             builder.HasOne(s => s.ParentPageDirectory)
-                .WithMany(s => s.ChildPageDirectories)
-                .HasForeignKey(d => d.ParentPageDirectoryId);
+                .WithMany(d => d.ChildPageDirectories)
+                .HasForeignKey(s => s.ParentPageDirectoryId);
+
+            builder.HasOne(s => s.UserAreaForLoginRedirect)
+                .WithMany()
+                .HasForeignKey(s => s.UserAreaCodeForLoginRedirect);
 
             CreateAuditableMappingHelper.Map(builder);
         }
