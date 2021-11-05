@@ -9,18 +9,18 @@ using System.Threading.Tasks;
 namespace Cofoundry.Domain
 {
     /// <summary>
-    /// Returns all access rules associated with a page, including those inherited from
-    /// parent directories.
+    /// Returns all access rules associated with a specific page using a default
+    /// ordering of specificity i.e. with user area rules before role-based rules.
     /// </summary>
-    public class GetPageAccessInfoByPageIdQueryHandler
-        : IQueryHandler<GetPageAccessInfoByPageIdQuery, PageAccessInfo>
-        , IPermissionRestrictedQueryHandler<GetPageAccessInfoByPageIdQuery, PageAccessInfo>
+    public class GetPageDirectoryAccessInfoByPageDirectoryIdQueryHandler
+        : IQueryHandler<GetPageDirectoryAccessInfoByPageDirectoryIdQuery, PageDirectoryAccessInfo>
+        , IPermissionRestrictedQueryHandler<GetPageDirectoryAccessInfoByPageDirectoryIdQuery, PageDirectoryAccessInfo>
     {
         private readonly CofoundryDbContext _dbContext;
         private readonly IEntityAccessInfoMapper _entityAccessInfoMapper;
         private readonly IPageDirectoryMicroSummaryMapper _pageDirectoryMicroSummaryMapper;
 
-        public GetPageAccessInfoByPageIdQueryHandler(
+        public GetPageDirectoryAccessInfoByPageDirectoryIdQueryHandler(
             CofoundryDbContext dbContext,
             IEntityAccessInfoMapper entityAccessInfoMapper,
             IPageDirectoryMicroSummaryMapper pageDirectoryMicroSummaryMapper
@@ -31,32 +31,31 @@ namespace Cofoundry.Domain
             _pageDirectoryMicroSummaryMapper = pageDirectoryMicroSummaryMapper;
         }
 
-        public async Task<PageAccessInfo> ExecuteAsync(GetPageAccessInfoByPageIdQuery query, IExecutionContext executionContext)
+        public async Task<PageDirectoryAccessInfo> ExecuteAsync(GetPageDirectoryAccessInfoByPageDirectoryIdQuery query, IExecutionContext executionContext)
         {
-            var dbPage = await _dbContext
-                .Pages
+            var dbDirectory = await _dbContext
+                .PageDirectories
                 .AsNoTracking()
-                .Include(p => p.AccessRules)
-                .FilterActive()
-                .FilterById(query.PageId)
+                .Include(d => d.AccessRules)
+                .FilterById(query.PageDirectoryId)
                 .SingleOrDefaultAsync();
 
-            if (dbPage == null) return null;
+            if (dbDirectory == null) return null;
 
-            var result = new PageAccessInfo();
-            await _entityAccessInfoMapper.MapAsync(dbPage, result, executionContext, (dbRule, rule) =>
+            var result = new PageDirectoryAccessInfo();
+            await _entityAccessInfoMapper.MapAsync(dbDirectory, result, executionContext, (dbRule, rule) =>
             {
-                rule.PageId = dbRule.PageId;
-                rule.PageAccessRuleId = dbRule.PageAccessRuleId;
+                rule.PageDirectoryId = dbRule.PageDirectoryId;
+                rule.PageDirectoryAccessRuleId = dbRule.PageDirectoryAccessRuleId;
             });
 
-            result.PageId = dbPage.PageId;
-            await MapInheritedRules(dbPage, result, executionContext);
+            result.PageDirectoryId = dbDirectory.PageDirectoryId;
+            await MapInheritedRules(dbDirectory, result, executionContext);
 
             return result;
         }
 
-        private async Task MapInheritedRules(Page dbPage, PageAccessInfo result, IExecutionContext executionContext)
+        private async Task MapInheritedRules(PageDirectory dbPageDirectory, PageDirectoryAccessInfo result, IExecutionContext executionContext)
         {
             var dbInheritedRules = await _dbContext
                 .PageDirectoryClosures
@@ -65,8 +64,9 @@ namespace Cofoundry.Domain
                 .ThenInclude(d => d.AccessRules)
                 .Include(d => d.AncestorPageDirectory)
                 .ThenInclude(d => d.PageDirectoryPath)
-                .FilterByDescendantId(dbPage.PageDirectoryId)
-                .Where(d => d.DescendantPageDirectoryId == dbPage.PageDirectoryId && d.AncestorPageDirectory.AccessRules.Any())
+                .FilterByDescendantId(dbPageDirectory.PageDirectoryId)
+                .FilterNotSelfReferencing()
+                .Where(d => d.DescendantPageDirectoryId == dbPageDirectory.PageDirectoryId && d.AncestorPageDirectory.AccessRules.Any())
                 .OrderByDescending(d => d.Distance)
                 .ToListAsync();
 
@@ -86,9 +86,9 @@ namespace Cofoundry.Domain
             }
         }
 
-        public IEnumerable<IPermissionApplication> GetPermissions(GetPageAccessInfoByPageIdQuery query)
+        public IEnumerable<IPermissionApplication> GetPermissions(GetPageDirectoryAccessInfoByPageDirectoryIdQuery query)
         {
-            yield return new PageReadPermission();
+            yield return new PageDirectoryReadPermission();
         }
     }
 }

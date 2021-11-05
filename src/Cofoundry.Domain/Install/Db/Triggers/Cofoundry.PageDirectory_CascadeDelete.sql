@@ -11,7 +11,8 @@ begin
 	with cteExpandedDirectories as (
 		select PageDirectoryId as RootDirectoryId, PageDirectoryId from Cofoundry.PageDirectory
 		union all
-		select ed.RootDirectoryId, pd.PageDirectoryId from cteExpandedDirectories ed
+		select ed.RootDirectoryId, pd.PageDirectoryId 
+		from cteExpandedDirectories ed
 		inner join Cofoundry.PageDirectory pd on pd.ParentPageDirectoryId = ed.PageDirectoryId
 	)
 	insert into @PageDirectoryToDelete
@@ -31,7 +32,15 @@ begin
 
     delete Cofoundry.PageDirectoryAccessRule
 	from Cofoundry.PageDirectoryAccessRule e
-	inner join deleted d on e.PageDirectoryId = d.PageDirectoryId
+	inner join @PageDirectoryToDelete d on e.PageDirectoryId = d.PageDirectoryId
+
+    delete Cofoundry.PageDirectoryPath
+	from Cofoundry.PageDirectoryPath e
+	inner join @PageDirectoryToDelete d on e.PageDirectoryId = d.PageDirectoryId
+
+    delete Cofoundry.PageDirectoryClosure
+	from Cofoundry.PageDirectoryClosure e
+	inner join @PageDirectoryToDelete d on e.DescendantPageDirectoryId = d.PageDirectoryId or e.AncestorPageDirectoryId = d.PageDirectoryId
 
     delete Cofoundry.PageDirectoryLocale
 	from Cofoundry.PageDirectoryLocale e

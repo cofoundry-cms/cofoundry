@@ -54,7 +54,7 @@ namespace Cofoundry.Domain.Internal
                     UserAreaCode = r.UserAreaCode,
                     RoleId = r.RoleId
                 })
-                .ToArray();
+                .ToList();
 
             return command;
         }

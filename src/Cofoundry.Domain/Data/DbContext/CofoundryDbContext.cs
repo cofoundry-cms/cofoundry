@@ -195,6 +195,26 @@ namespace Cofoundry.Domain.Data
         public DbSet<PageDirectory> PageDirectories { get; set; }
 
         /// <summary>
+        /// Information about the full directory path and it's position in the directory 
+        /// heirachy. This table is automatically updated whenever changes are made to the page 
+        /// directory heirarchy and should be treated as read-only.
+        /// </summary>
+        public DbSet<PageDirectoryPath> PageDirectoryPaths { get; set; }
+
+        /// <summary>
+        /// <para>
+        /// A "closure table" for the page directory heirarchy structure that connects
+        /// every page directory with each of it's ancestor directories. The table also
+        /// includes a self-referencing node (the same ancestor and descendant id).
+        /// </para>
+        /// <para>
+        /// This table is automatically updated whenever changes are made to the page 
+        /// directory heirarchy and should be treated as read-only.
+        /// </para>
+        /// </summary>
+        public DbSet<PageDirectoryClosure> PageDirectoryClosures { get; set; }
+
+        /// <summary>
         /// <para>
         /// Access rules are used to restrict access to a website resource to users
         /// fulfilling certain criteria such as a specific user area or role. Page

@@ -9,6 +9,7 @@ namespace Cofoundry.Domain
     /// This representation is used in dynamic page routing and is designed to
     /// be lightweight and cached.
     /// </summary>
+    /// <inheritdoc/>
     public class PageDirectoryRoute : IEquatable<PageDirectoryRoute>
     {
         /// <summary>
@@ -29,8 +30,8 @@ namespace Cofoundry.Domain
         public string UrlPath { get; set; }
 
         /// <summary>
-        /// The complete path of up to and including
-        /// this directory. Does not use a trailing slash.
+        /// The complete path of up to and including this directory. Includes the leading
+        /// slash, but excludes the trailing slash e.g. "/my-directory".
         /// </summary>
         public string FullUrlPath { get; set; }
 

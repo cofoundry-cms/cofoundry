@@ -4,9 +4,9 @@ using System.Collections.Generic;
 namespace Cofoundry.Domain
 {
     /// <summary>
-    /// Returns all access rules directly associated with a specific page using a default
-    /// ordering of specificity i.e. with user area rules before role-based rules.
-    /// </summary>
+    /// Returns all access rules associated with a page, including those inherited from
+    /// parent directories.
+    /// </summary>>
     public class GetPageAccessInfoByPageIdQuery : IQuery<PageAccessInfo>
     {
         public GetPageAccessInfoByPageIdQuery() { }

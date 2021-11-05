@@ -1,10 +1,4 @@
-﻿using Cofoundry.Core;
-using Cofoundry.Core.Data;
-using System;
-using System.Collections.Generic;
-using System.Data.SqlClient;
-using System.Linq;
-using System.Text;
+﻿using System;
 using System.Threading.Tasks;
 
 namespace Cofoundry.Domain.Data.Internal

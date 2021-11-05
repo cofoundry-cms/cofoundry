@@ -1,4 +1,5 @@
-﻿using Cofoundry.Core.Validation;
+﻿using Cofoundry.Core;
+using Cofoundry.Core.Validation;
 using Cofoundry.Domain.Data;
 using Cofoundry.Domain.Tests.Shared.Assertions;
 using FluentAssertions;
@@ -6,6 +7,7 @@ using FluentAssertions.Execution;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -110,15 +112,16 @@ namespace Cofoundry.Domain.Tests.Integration.PageDirectories.Commands
                 .AddAsync(addDirectoryCommand);
 
             var childDirectoryId = await app.TestData.PageDirectories().AddAsync(uniqueData, addDirectoryCommand.OutputPageDirectoryId);
-            await app.TestData.Pages().AddAsync(uniqueData, childDirectoryId);
+            await app.TestData.Pages().AddAsync(uniqueData, childDirectoryId, c => c.Publish = true);
 
             var updateCommand = MapFromAddCommand(addDirectoryCommand);
-            updateCommand.UrlPath = uniqueData + "U";
+            updateCommand.UrlPath = updateCommand.UrlPath + "u";
 
             await contentRepository
                 .Awaiting(r => r.PageDirectories().UpdateAsync(updateCommand))
                 .Should()
                 .ThrowAsync<ValidationException>()
+                .WithMessage("*directory * in use*")
                 .WithMemberNames(nameof(updateCommand.UrlPath));
         }
 
@@ -136,7 +139,7 @@ namespace Cofoundry.Domain.Tests.Integration.PageDirectories.Commands
                 .AddAsync(addDirectoryCommand);
 
             var childDirectoryId = await app.TestData.PageDirectories().AddAsync(uniqueData, addDirectoryCommand.OutputPageDirectoryId);
-            await app.TestData.Pages().AddAsync(uniqueData, childDirectoryId);
+            await app.TestData.Pages().AddAsync(uniqueData, childDirectoryId, c => c.Publish = true);
             var newParentDirectoryId = await app.TestData.PageDirectories().AddAsync(uniqueData + "1");
 
             var updateCommand = MapFromAddCommand(addDirectoryCommand);
@@ -146,6 +149,7 @@ namespace Cofoundry.Domain.Tests.Integration.PageDirectories.Commands
                 .Awaiting(r => r.PageDirectories().UpdateAsync(updateCommand))
                 .Should()
                 .ThrowAsync<ValidationException>()
+                .WithMessage("*directory * in use*")
                 .WithMemberNames(nameof(updateCommand.ParentPageDirectoryId));
         }
 
@@ -173,6 +177,108 @@ namespace Cofoundry.Domain.Tests.Integration.PageDirectories.Commands
                 .Should()
                 .ThrowAsync<UniqueConstraintViolationException>()
                 .WithMemberNames(nameof(updateCommand.UrlPath));
+        }
+
+        [Fact]
+        public async Task UpdatingParentDirectory_UpdatesPageDirectoryClosureTable()
+        {
+            var uniqueData = UNIQUE_PREFIX + "UpdUrl_UpdPDClosure";
+            var sluggedPath = SlugFormatter.ToSlug(uniqueData);
+
+            using var app = _appFactory.Create();
+            var contentRepository = app.Services.GetContentRepositoryWithElevatedPermissions();
+            var dbContext = app.Services.GetRequiredService<CofoundryDbContext>();
+
+            var dir1Id = await app.TestData.PageDirectories().AddAsync(uniqueData);
+            var dir2Id = await app.TestData.PageDirectories().AddAsync("alpha", dir1Id);
+            var dir3Id = await app.TestData.PageDirectories().AddAsync("bravo", dir2Id);
+            var dir4Id = await app.TestData.PageDirectories().AddAsync("papa", dir3Id);
+
+            await contentRepository
+                .PageDirectories()
+                .UpdateAsync(new UpdatePageDirectoryCommand()
+                {
+                    Name = "Papa",
+                    UrlPath = "papa",
+                    PageDirectoryId = dir4Id,
+                    ParentPageDirectoryId = dir2Id
+                });
+
+            var directory4Closures = await dbContext
+                .PageDirectoryClosures
+                .AsNoTracking()
+                .FilterByDescendantId(dir4Id)
+                .ToListAsync();
+
+            using (new AssertionScope())
+            {
+                directory4Closures.Should().HaveCount(4);
+
+                var selfRefNode = directory4Closures.FilterSelfReferencing().SingleOrDefault();
+                selfRefNode.Should().NotBeNull();
+                selfRefNode.Distance.Should().Be(0);
+
+                var dir2Ancestor = directory4Closures.FilterByAncestorId(dir2Id).SingleOrDefault();
+                dir2Ancestor.Should().NotBeNull();
+                dir2Ancestor.Distance.Should().Be(1);
+
+                var dir1Ancestor = directory4Closures.FilterByAncestorId(dir1Id).SingleOrDefault();
+                dir1Ancestor.Should().NotBeNull();
+                dir1Ancestor.Distance.Should().Be(2);
+
+                var rootDirectoryAncestor = directory4Closures.FilterByAncestorId(app.SeededEntities.RootDirectoryId).SingleOrDefault();
+                rootDirectoryAncestor.Should().NotBeNull();
+                rootDirectoryAncestor.Distance.Should().Be(3);
+            }
+        }
+
+        [Fact]
+        public async Task UpdatingUrl_UpdatesPageDirectoryPathTable()
+        {
+            var uniqueData = UNIQUE_PREFIX + "UpdUrl_UpdPDPath";
+            var sluggedPath = SlugFormatter.ToSlug(uniqueData);
+
+            using var app = _appFactory.Create();
+            var contentRepository = app.Services.GetContentRepositoryWithElevatedPermissions();
+            var dbContext = app.Services.GetRequiredService<CofoundryDbContext>();
+
+            var dir1Id = await app.TestData.PageDirectories().AddAsync(uniqueData);
+            var dir2Id = await app.TestData.PageDirectories().AddAsync("delta", dir1Id);
+            var dir3Id = await app.TestData.PageDirectories().AddAsync("india", dir2Id);
+            var dir4Id = await app.TestData.PageDirectories().AddAsync("golf", dir3Id);
+
+            await contentRepository
+                .PageDirectories()
+                .UpdateAsync(new UpdatePageDirectoryCommand()
+                {
+                    Name = "Uniform",
+                    UrlPath = "uniform",
+                    PageDirectoryId = dir3Id,
+                    ParentPageDirectoryId = dir2Id
+                });
+
+            var directory3Path = await dbContext
+                .PageDirectoryPaths
+                .AsNoTracking()
+                .Where(d => d.PageDirectoryId == dir3Id)
+                .SingleOrDefaultAsync();
+
+            var directory4Path = await dbContext
+                .PageDirectoryPaths
+                .AsNoTracking()
+                .Where(d => d.PageDirectoryId == dir4Id)
+                .SingleOrDefaultAsync();
+
+            using (new AssertionScope())
+            {
+                directory3Path.Should().NotBeNull();
+                directory3Path.Depth.Should().Be(3);
+                directory3Path.FullUrlPath.Should().Be($"{sluggedPath}/delta/uniform");
+
+                directory4Path.Should().NotBeNull();
+                directory4Path.Depth.Should().Be(4);
+                directory4Path.FullUrlPath.Should().Be($"{sluggedPath}/delta/uniform/golf");
+            }
         }
 
         public UpdatePageDirectoryCommand MapFromAddCommand(AddPageDirectoryCommand command)

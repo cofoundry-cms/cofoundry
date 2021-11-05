@@ -130,5 +130,73 @@ namespace Cofoundry.Domain.Tests.Integration.PageDirectories.Commands
                 .ThrowAsync<UniqueConstraintViolationException>()
                 .WithMemberNames(nameof(addDirectory2Command.UrlPath));
         }
+
+        [Fact]
+        public async Task WhenAdded_UpdatesPageDirectoryClosureTable()
+        {
+            var directoryName = UNIQUE_PREFIX + "UpdClosureTable";
+
+            using var app = _appFactory.Create();
+            var parentDirectoryId = await app.TestData.PageDirectories().AddAsync(directoryName);
+            var addChildDirectoryCommand = app.TestData.PageDirectories().CreateAddCommand(directoryName + " Child", parentDirectoryId);
+
+            var contentRepository = app.Services.GetContentRepositoryWithElevatedPermissions();
+            await contentRepository
+                .PageDirectories()
+                .AddAsync(addChildDirectoryCommand);
+
+            var dbContext = app.Services.GetRequiredService<CofoundryDbContext>();
+
+            var directoryClosures = await dbContext
+                .PageDirectoryClosures
+                .AsNoTracking()
+                .FilterByDescendantId(addChildDirectoryCommand.OutputPageDirectoryId)
+                .ToListAsync();
+
+            using (new AssertionScope())
+            {
+                directoryClosures.Should().HaveCount(3);
+
+                var selfRefNode = directoryClosures.FilterSelfReferencing().SingleOrDefault();
+                selfRefNode.Should().NotBeNull();
+                selfRefNode.Distance.Should().Be(0);
+
+                var parentDirectoryAncestor = directoryClosures.FilterByAncestorId(parentDirectoryId).SingleOrDefault();
+                parentDirectoryAncestor.Should().NotBeNull();
+                parentDirectoryAncestor.Distance.Should().Be(1);
+
+                var rootDirectoryAncestor = directoryClosures.FilterByAncestorId(app.SeededEntities.RootDirectoryId).SingleOrDefault();
+                rootDirectoryAncestor.Should().NotBeNull();
+                rootDirectoryAncestor.Distance.Should().Be(2);
+            }
+        }
+
+        [Fact]
+        public async Task WhenAdded_UpdatesPageDirectoryPathTable()
+        {
+            var directoryName = UNIQUE_PREFIX + "UpdPathTable";
+            var sluggedPath = SlugFormatter.ToSlug(directoryName);
+
+            using var app = _appFactory.Create();
+            var dir1Id = await app.TestData.PageDirectories().AddAsync(directoryName);
+            var dir2Id = await app.TestData.PageDirectories().AddAsync("red", dir1Id);
+            var dir3Id = await app.TestData.PageDirectories().AddAsync("blue", dir2Id);
+            var dir4Id = await app.TestData.PageDirectories().AddAsync("green", dir3Id);
+
+            var dbContext = app.Services.GetRequiredService<CofoundryDbContext>();
+
+            var directoryPath = await dbContext
+                .PageDirectoryPaths
+                .AsNoTracking()
+                .Where(d => d.PageDirectoryId == dir4Id)
+                .SingleOrDefaultAsync();
+
+            using (new AssertionScope())
+            {
+                directoryPath.Should().NotBeNull();
+                directoryPath.Depth.Should().Be(4);
+                directoryPath.FullUrlPath.Should().Be($"{sluggedPath}/red/blue/green");
+            }
+        }
     }
 }

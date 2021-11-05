@@ -19,6 +19,7 @@ namespace Cofoundry.Domain.Data.Registration
                 .Register<ICustomEntityStoredProcedures, CustomEntityStoredProcedures>()
                 .Register<IPageStoredProcedures, PageStoredProcedures>()
                 .Register<IAssetStoredProcedures, AssetStoredProcedures>()
+                .Register<IPageDirectoryStoredProcedures, PageDirectoryStoredProcedures>()
                 ;
         }
     }

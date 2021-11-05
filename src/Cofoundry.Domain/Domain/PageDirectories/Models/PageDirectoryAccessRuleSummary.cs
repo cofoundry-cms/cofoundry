@@ -22,9 +22,9 @@
         public int PageDirectoryAccessRuleId { get; set; }
 
         /// <summary>
-        /// The directory that this rule controls access to.
+        /// The id of the directory that this rule controls access to.
         /// </summary>
-        public PageDirectoryMicroSummary PageDirectory { get; set; }
+        public int PageDirectoryId { get; set; }
 
         public UserAreaMicroSummary UserArea { get; set; }
 

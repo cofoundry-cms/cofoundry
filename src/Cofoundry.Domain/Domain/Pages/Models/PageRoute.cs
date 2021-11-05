@@ -33,7 +33,9 @@ namespace Cofoundry.Domain
         public string UrlPath { get; set; }
 
         /// <summary>
-        /// The full path of the page including directories and the locale. 
+        /// The full path of the page including directories and the locale. This 
+        /// includes the leading slash, but excludes a trailing slash 
+        /// e.g. "/my-directory/my-page".
         /// </summary>
         public string FullPath { get; set; }
 

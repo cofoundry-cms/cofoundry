@@ -3,6 +3,7 @@ using Cofoundry.Core.Data;
 using Cofoundry.Core.Validation;
 using Cofoundry.Domain.CQS;
 using Cofoundry.Domain.Data;
+using Cofoundry.Domain.Data.Internal;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,17 +17,20 @@ namespace Cofoundry.Domain.Internal
     {
         private readonly IQueryExecutor _queryExecutor;
         private readonly CofoundryDbContext _dbContext;
+        private readonly IPageDirectoryStoredProcedures _pageDirectoryStoredProcedures;
         private readonly IPageDirectoryCache _cache;
         private readonly ITransactionScopeManager _transactionScopeFactory;
 
         public UpdatePageDirectoryCommandHandler(
             IQueryExecutor queryExecutor,
             CofoundryDbContext dbContext,
+            IPageDirectoryStoredProcedures pageDirectoryStoredProcedures,
             IPageDirectoryCache cache,
             ITransactionScopeManager transactionScopeFactory
             )
         {
             _dbContext = dbContext;
+            _pageDirectoryStoredProcedures = pageDirectoryStoredProcedures;
             _queryExecutor = queryExecutor;
             _cache = cache;
             _transactionScopeFactory = transactionScopeFactory;
@@ -39,23 +43,43 @@ namespace Cofoundry.Domain.Internal
                 .SingleOrDefaultAsync(w => w.PageDirectoryId == command.PageDirectoryId);
             EntityNotFoundException.ThrowIfNull(pageDirectory, command.PageDirectoryId);
 
-            await ValidateIsUniqueAsync(command, executionContext);
-            await ValidateUrlPropertiesAllowedToChange(command, pageDirectory);
+            var changedPathProps = GetChangedPathProperties(command, pageDirectory).ToArray();
+            if (changedPathProps.Any())
+            {
+                await ValidateIsUniqueAsync(command, executionContext);
+                await ValidateUrlPropertiesAllowedToChange(changedPathProps, command, pageDirectory);
+            }
 
             pageDirectory.Name = command.Name.Trim();
             pageDirectory.UrlPath = command.UrlPath;
             pageDirectory.ParentPageDirectoryId = command.ParentPageDirectoryId;
 
-            await _dbContext.SaveChangesAsync();
+            using (var scope = _transactionScopeFactory.Create(_dbContext))
+            {
+                await _dbContext.SaveChangesAsync();
 
-            _transactionScopeFactory.QueueCompletionTask(_dbContext, _cache.Clear);
+                if (changedPathProps.Contains(nameof(command.ParentPageDirectoryId)))
+                {
+                    await _pageDirectoryStoredProcedures.UpdatePageDirectoryClosureAsync();
+                }
+                else if (changedPathProps.Contains(nameof(command.UrlPath)))
+                {
+                    await _pageDirectoryStoredProcedures.UpdatePageDirectoryPathAsync();
+                }
+
+                scope.QueueCompletionTask(_cache.Clear);
+                await scope.CompleteAsync();
+            }
+
         }
 
-        private async Task ValidateUrlPropertiesAllowedToChange(UpdatePageDirectoryCommand command, PageDirectory pageDirectory)
+        private async Task ValidateUrlPropertiesAllowedToChange(
+            string[] props,
+            UpdatePageDirectoryCommand command, 
+            PageDirectory pageDirectory
+            )
         {
-            var props = GetChangedPathProperties(command, pageDirectory);
-
-            if (props.Any() && await HasDependencies(pageDirectory))
+            if (await HasDependencies(pageDirectory))
             {
                 throw ValidationErrorException.CreateWithProperties("This directory is in use and the url cannot be changed", props.First());
             }
@@ -69,20 +93,13 @@ namespace Cofoundry.Domain.Internal
 
         private async Task<bool> HasDependencies(PageDirectory pageDirectory)
         {
-            if (await _dbContext
-                .PageDirectories
-                .AsNoTracking()
-                .Where(w => w.ParentPageDirectoryId == pageDirectory.PageDirectoryId)
-                .AnyAsync())
-            {
-                return true;
-            }
-
             return await _dbContext
-                .Pages
+                .PageDirectoryClosures
                 .AsNoTracking()
-                .Where(p => p.PageDirectoryId == pageDirectory.PageDirectoryId)
-                .AnyAsync();
+                .FilterByAncestorId(pageDirectory.PageDirectoryId)
+                .FilterNotSelfReferencing()
+                .SelectMany(r => r.DescendantPageDirectory.Pages)
+                .AnyAsync(p => p.PublishStatusCode == PublishStatusCode.Published);
         }
 
         private async Task ValidateIsUniqueAsync(UpdatePageDirectoryCommand command, IExecutionContext executionContext)

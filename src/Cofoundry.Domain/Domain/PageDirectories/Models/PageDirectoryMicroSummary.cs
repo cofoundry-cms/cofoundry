@@ -1,5 +1,9 @@
 ﻿namespace Cofoundry.Domain
 {
+    /// <summary>
+    /// A minimal projection of a page directory that includes only 
+    /// basic information.
+    /// </summary>
     public class PageDirectoryMicroSummary
     {
         /// <summary>
@@ -24,8 +28,8 @@
         public int Depth { get; set; }
 
         /// <summary>
-        /// The full (relative) url of this directory
-        /// excluding the trailing slash.
+        /// The full (relative) url of this directory with the leading
+        /// slash, but excluding the trailing slash e.g. "/my-directory".
         /// </summary>
         public string FullUrlPath { get; set; }
     }

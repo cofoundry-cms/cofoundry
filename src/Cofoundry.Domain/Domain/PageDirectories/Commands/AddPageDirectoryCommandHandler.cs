@@ -3,6 +3,7 @@ using Cofoundry.Core.Data;
 using Cofoundry.Core.Validation;
 using Cofoundry.Domain.CQS;
 using Cofoundry.Domain.Data;
+using Cofoundry.Domain.Data.Internal;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -18,13 +19,15 @@ namespace Cofoundry.Domain.Internal
         private readonly EntityAuditHelper _entityAuditHelper;
         private readonly IPageDirectoryCache _cache;
         private readonly ITransactionScopeManager _transactionScopeFactory;
+        private readonly IPageDirectoryStoredProcedures _pageDirectoryStoredProcedures;
 
         public AddPageDirectoryCommandHandler(
             IQueryExecutor queryExecutor,
             CofoundryDbContext dbContext,
             EntityAuditHelper entityAuditHelper,
             IPageDirectoryCache cache,
-            ITransactionScopeManager transactionScopeFactory
+            ITransactionScopeManager transactionScopeFactory,
+            IPageDirectoryStoredProcedures pageDirectoryStoredProcedures
             )
         {
             _dbContext = dbContext;
@@ -32,6 +35,7 @@ namespace Cofoundry.Domain.Internal
             _queryExecutor = queryExecutor;
             _cache = cache;
             _transactionScopeFactory = transactionScopeFactory;
+            _pageDirectoryStoredProcedures = pageDirectoryStoredProcedures;
         }
 
         public async Task ExecuteAsync(AddPageDirectoryCommand command, IExecutionContext executionContext)
@@ -46,9 +50,15 @@ namespace Cofoundry.Domain.Internal
             _entityAuditHelper.SetCreated(pageDirectory, executionContext);
 
             _dbContext.PageDirectories.Add(pageDirectory);
-            await _dbContext.SaveChangesAsync();
 
-            _transactionScopeFactory.QueueCompletionTask(_dbContext, _cache.Clear);
+            using (var scope = _transactionScopeFactory.Create(_dbContext))
+            {
+                await _dbContext.SaveChangesAsync();
+                await _pageDirectoryStoredProcedures.UpdatePageDirectoryClosureAsync();
+
+                scope.QueueCompletionTask(_cache.Clear);
+                await scope.CompleteAsync();
+            }
 
             command.OutputPageDirectoryId = pageDirectory.PageDirectoryId;
         }

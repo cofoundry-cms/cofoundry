@@ -17,6 +17,7 @@ namespace Cofoundry.Domain.Registration
                 .Register<IPageDirectoryRepository, PageDirectoryRepository>()
                 .Register<IPageDirectoryRouteMapper, PageDirectoryRouteMapper>()
                 .Register<IPageDirectoryTreeMapper, PageDirectoryTreeMapper>()
+                .Register<IPageDirectoryMicroSummaryMapper, PageDirectoryMicroSummaryMapper>()
                 ;
         }
     }

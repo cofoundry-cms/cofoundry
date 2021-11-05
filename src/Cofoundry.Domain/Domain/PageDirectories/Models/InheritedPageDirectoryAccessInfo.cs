@@ -10,7 +10,7 @@ namespace Cofoundry.Domain
         /// <summary>
         /// Database id of the page these access rules are associated with.
         /// </summary>
-        public int PageDirectoryId { get; set; }
+        public PageDirectoryMicroSummary PageDirectory { get; set; }
 
         /// <summary>
         /// <para>

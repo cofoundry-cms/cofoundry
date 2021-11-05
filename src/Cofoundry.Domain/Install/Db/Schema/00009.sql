@@ -82,14 +82,94 @@ create unique index UIX_PageDirectoryAccessRule_Rule on Cofoundry.PageDirectoryA
 -- The closure table can tell us all the directories that a directory is parented to so we can check for access rules up the heirarchy
 create table Cofoundry.PageDirectoryClosure (
 	AncestorPageDirectoryId int not null,
-	DecendentPageDirectoryId int not null,
+	DescendantPageDirectoryId int not null,
+	Distance int not null,
+
+	constraint PK_PageDirectoryClosure primary key (AncestorPageDirectoryId, DescendantPageDirectoryId),
+	constraint FK_PageDirectoryClosure_AncestorPageDirectory foreign key (AncestorPageDirectoryId) references Cofoundry.PageDirectory (PageDirectoryId),
+	constraint FK_PageDirectoryClosure_DescendantPageDirectory foreign key (DescendantPageDirectoryId) references Cofoundry.PageDirectory (PageDirectoryId)
+)
+
+-- This table is generated from the PageDirectoryClosure table and makes it easier for us to query heirarchy information
+create table Cofoundry.PageDirectoryPath (
+	PageDirectoryId int not null,
+	FullUrlPath nvarchar(max) not null,
 	Depth int not null,
 
-	constraint PK_PageDirectoryClosure primary key (AncestorPageDirectoryId, DecendentPageDirectoryId),
-	constraint FK_PageDirectoryClosure_AncestorPageDirectory foreign key (AncestorPageDirectoryId) references Cofoundry.PageDirectory (PageDirectoryId),
-	constraint FK_PageDirectoryClosure_DecendentPageDirectory foreign key (DecendentPageDirectoryId) references Cofoundry.PageDirectory (PageDirectoryId)
+	constraint PK_PageDirectoryPath primary key (PageDirectoryId),
+	constraint FK_PageDirectoryPath_PageDirectory foreign key (PageDirectoryId) references Cofoundry.PageDirectory (PageDirectoryId)
 )
 
 /* Add missing foreign key to custom entity table */
 
 alter table Cofoundry.CustomEntity add constraint FK_CustomEntity_CreatorUser foreign key (CreatorId) references Cofoundry.[User] (UserId)
+go
+
+/* ***************************************************************************** */
+/* Seed the PageDirectoryClosure and PageDirectoryPath tables with existing data */
+/* This is a copy of the Cofoundry.PageDirectory_UpdatePath stored procedure     */
+/* ***************************************************************************** */
+
+with DirectoryCTE as 
+(
+	select 
+		PageDirectoryId as AncestorPageDirectoryId, 
+		PageDirectoryId as DescendantPageDirectoryId, 
+		0 as Distance
+
+	from Cofoundry.PageDirectory
+	 
+	union all
+
+	select
+		cte.AncestorPageDirectoryId,
+		d.PageDirectoryId as DescendantPageDirectoryId,
+		cte.Distance + 1 AS Distance
+	from Cofoundry.PageDirectory as d
+	inner join DirectoryCTE AS cte on d.ParentPageDirectoryId = cte.DescendantPageDirectoryId
+	inner join Cofoundry.PageDirectory ancestorDirectory on cte.AncestorPageDirectoryId = ancestorDirectory.PageDirectoryId
+)
+merge into Cofoundry.PageDirectoryClosure as t
+using (
+	select AncestorPageDirectoryId, DescendantPageDirectoryId, Distance
+	from DirectoryCTE
+	) as s
+on t.AncestorPageDirectoryId = s.AncestorPageDirectoryId and t.DescendantPageDirectoryId = s.DescendantPageDirectoryId
+when matched and t.Distance <> s.Distance then 
+	update set Distance = s.Distance
+when not matched by target then
+	insert (AncestorPageDirectoryId, DescendantPageDirectoryId, Distance)
+	values (AncestorPageDirectoryId, DescendantPageDirectoryId, Distance)
+when not matched by source then
+	delete;
+
+-- Upsert PageDirectoryPath
+
+merge into Cofoundry.PageDirectoryPath as t
+using (
+	select 
+		c.DescendantPageDirectoryId as PageDirectoryId, 
+		IsNull((
+			select Stuff((
+				select N'/' + d.UrlPath 
+				from Cofoundry.PageDirectoryClosure c2
+				inner join Cofoundry.PageDirectory d on c2.AncestorPageDirectoryId = d.PageDirectoryId
+				where c2.DescendantPageDirectoryId = c.DescendantPageDirectoryId and d.ParentPageDirectoryId is not null
+				order by c2.Distance desc
+				for xml path('')
+			) ,1 ,1, N'')
+		), '') as FullUrlPath,
+		Max(c.Distance) as Depth
+	from Cofoundry.PageDirectoryClosure c
+	group by c.DescendantPageDirectoryId
+) as s
+on t.PageDirectoryId = s.PageDirectoryId
+when matched and t.FullUrlPath <> s.FullUrlPath or t.Depth <> s.Depth  then 
+	update set FullUrlPath = s.FullUrlPath, Depth = s.Depth
+when not matched by target then
+	insert (PageDirectoryId, FullUrlPath, Depth)
+	values (PageDirectoryId, FullUrlPath, Depth)
+when not matched by source then
+	delete;
+
+

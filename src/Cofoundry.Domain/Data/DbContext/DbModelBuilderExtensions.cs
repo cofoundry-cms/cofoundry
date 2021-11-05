@@ -1,10 +1,6 @@
 ﻿using Cofoundry.Core;
 using Microsoft.EntityFrameworkCore;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 
 namespace Cofoundry.Domain.Data
@@ -42,8 +38,6 @@ namespace Cofoundry.Domain.Data
         {
             return modelBuilder.HasDefaultSchema(DbConstants.DefaultAppSchema);
         }
-
-        #region common Cofoundry object mapping
 
         /// <summary>
         /// Maps Cofoundry ImageAsset classes to the DbModelBuilder. Requires Cofoundry Users and Tags to be mapped.
@@ -142,6 +136,8 @@ namespace Cofoundry.Domain.Data
                 .ApplyConfiguration(new PageTagMap())
                 .ApplyConfiguration(new PageVersionMap())
                 .ApplyConfiguration(new PageDirectoryMap())
+                .ApplyConfiguration(new PageDirectoryPathMap())
+                .ApplyConfiguration(new PageDirectoryClosureMap())
                 .ApplyConfiguration(new PageDirectoryAccessRuleMap())
                 .ApplyConfiguration(new PageDirectoryLocaleMap())
                 .ApplyConfiguration(new EntityDefinitionMap())
@@ -154,7 +150,5 @@ namespace Cofoundry.Domain.Data
 
             return modelBuilder;
         }
-
-        #endregion
     }
 }

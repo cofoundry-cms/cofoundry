@@ -80,6 +80,29 @@ namespace Cofoundry.Domain.Data
         /// </summary>
         public virtual ICollection<PageDirectoryAccessRule> AccessRules { get; set; } = new List<PageDirectoryAccessRule>();
 
+        /// <summary>
+        /// Records from the <see cref="PageDirectoryClosure"/> table where this directory is the descendant
+        /// in the relationship i.e. this can be used to reference ancestors. The records will 
+        /// include a self-referencing node. The <see cref="PageDirectoryClosure"/> table is automatically 
+        /// generated and this collection should not be amended manually.
+        /// </summary>
+        public virtual ICollection<PageDirectoryClosure> AncestorPageDirectories { get; set; }
+
+        /// <summary>
+        /// Records from the <see cref="PageDirectoryClosure"/> table where this directory is the ancestor
+        /// in the relationship i.e. this can be used to reference descendants. The records will 
+        /// include a self-referencing node. The <see cref="PageDirectoryClosure"/> table is automatically 
+        /// generated and this collection should not be amended manually.
+        /// </summary>
+        public virtual ICollection<PageDirectoryClosure> DescendantPageDirectories { get; set; }
+
+        /// <summary>
+        /// Information about the full directory path and it's position in the directory 
+        /// heirachy. This table is automatically updated whenever changes are made to the page 
+        /// directory heirarchy and should be treated as read-only.
+        /// </summary>
+        public virtual PageDirectoryPath PageDirectoryPath { get; set; }
+
         public int GetId()
         {
             return PageDirectoryId;
