@@ -11,6 +11,6 @@ namespace Cofoundry.Domain
         /// Updates all access rules associated with a page directory.
         /// </summary>
         /// <param name="command">Command parameters.</param>
-        Task UpdateAsync(UpdatePageDirectoryAccessRulesCommand command);
+        Task UpdateAsync(UpdatePageDirectoryAccessRuleSetCommand command);
     }
 }

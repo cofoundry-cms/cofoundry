@@ -1,15 +1,15 @@
 ﻿using Cofoundry.Domain.CQS;
-using System.Collections.Generic;
 
 namespace Cofoundry.Domain
 {
     /// <summary>
-    /// Returns all access rules associated with a page, including those inherited from
-    /// parent directories.
+    /// Query that returns detailed information about access restrictions
+    /// configured for a page, including all access rules as well as those 
+    /// inherited from parent directories.
     /// </summary>>
-    public class GetPageAccessDetailsByPageIdQuery : IQuery<PageAccessDetails>
+    public class GetPageAccessRuleSetDetailsByPageIdQuery : IQuery<PageAccessRuleSetDetails>
     {
-        public GetPageAccessDetailsByPageIdQuery() { }
+        public GetPageAccessRuleSetDetailsByPageIdQuery() { }
 
         /// <summary>
         /// Initializes the query with the specified <paramref name="pageId"/>.
@@ -17,7 +17,7 @@ namespace Cofoundry.Domain
         /// <param name="pageId">
         /// Database id of the page to filter access rules to.
         /// </param>
-        public GetPageAccessDetailsByPageIdQuery(int pageId)
+        public GetPageAccessRuleSetDetailsByPageIdQuery(int pageId)
         {
             PageId = pageId;
         }

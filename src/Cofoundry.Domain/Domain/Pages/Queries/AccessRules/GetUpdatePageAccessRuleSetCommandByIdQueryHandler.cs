@@ -9,20 +9,20 @@ using System.Threading.Tasks;
 
 namespace Cofoundry.Domain.Internal
 {
-    public class GetUpdatePageAccessRuleCommandByIdQueryHandler
-        : IQueryHandler<GetUpdateCommandByIdQuery<UpdatePageAccessRulesCommand>, UpdatePageAccessRulesCommand>
-        , IPermissionRestrictedQueryHandler<GetUpdateCommandByIdQuery<UpdatePageAccessRulesCommand>, UpdatePageAccessRulesCommand>
+    public class GetUpdatePageAccessRuleSetCommandByIdQueryHandler
+        : IQueryHandler<GetUpdateCommandByIdQuery<UpdatePageAccessRuleSetCommand>, UpdatePageAccessRuleSetCommand>
+        , IPermissionRestrictedQueryHandler<GetUpdateCommandByIdQuery<UpdatePageAccessRuleSetCommand>, UpdatePageAccessRuleSetCommand>
     {
         private readonly CofoundryDbContext _dbContext;
 
-        public GetUpdatePageAccessRuleCommandByIdQueryHandler(
+        public GetUpdatePageAccessRuleSetCommandByIdQueryHandler(
             CofoundryDbContext dbContext
             )
         {
             _dbContext = dbContext;
         }
 
-        public async Task<UpdatePageAccessRulesCommand> ExecuteAsync(GetUpdateCommandByIdQuery<UpdatePageAccessRulesCommand> query, IExecutionContext executionContext)
+        public async Task<UpdatePageAccessRuleSetCommand> ExecuteAsync(GetUpdateCommandByIdQuery<UpdatePageAccessRuleSetCommand> query, IExecutionContext executionContext)
         {
             var dbPage = await _dbContext
                 .Pages
@@ -39,7 +39,7 @@ namespace Cofoundry.Domain.Internal
                 throw new InvalidOperationException($"{nameof(AccessRuleViolationAction)} of value {dbPage.AccessRuleViolationActionId} could not be parsed on a page with an id of {dbPage.PageId}.");
             }
 
-            var command = new UpdatePageAccessRulesCommand()
+            var command = new UpdatePageAccessRuleSetCommand()
             {
                 PageId = dbPage.PageId,
                 UserAreaCodeForLoginRedirect = dbPage.UserAreaCodeForLoginRedirect,
@@ -48,7 +48,7 @@ namespace Cofoundry.Domain.Internal
 
             command.AccessRules = dbPage
                 .AccessRules
-                .Select(r => new UpdatePageAccessRulesCommand.AddOrUpdatePageAccessRuleCommand()
+                .Select(r => new UpdatePageAccessRuleSetCommand.AddOrUpdatePageAccessRuleCommand()
                 {
                     PageAccessRuleId = r.PageAccessRuleId,
                     UserAreaCode = r.UserAreaCode,
@@ -59,7 +59,7 @@ namespace Cofoundry.Domain.Internal
             return command;
         }
 
-        public IEnumerable<IPermissionApplication> GetPermissions(GetUpdateCommandByIdQuery<UpdatePageAccessRulesCommand> query)
+        public IEnumerable<IPermissionApplication> GetPermissions(GetUpdateCommandByIdQuery<UpdatePageAccessRuleSetCommand> query)
         {
             yield return new PageReadPermission();
         }

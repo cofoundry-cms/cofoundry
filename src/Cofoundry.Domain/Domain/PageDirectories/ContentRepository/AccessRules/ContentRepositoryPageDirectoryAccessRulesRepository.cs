@@ -16,7 +16,7 @@ namespace Cofoundry.Domain.Internal
 
         public IExtendableContentRepository ExtendableContentRepository { get; }
 
-        public Task UpdateAsync(UpdatePageDirectoryAccessRulesCommand command)
+        public Task UpdateAsync(UpdatePageDirectoryAccessRuleSetCommand command)
         {
             return ExtendableContentRepository.ExecuteCommandAsync(command);
         }

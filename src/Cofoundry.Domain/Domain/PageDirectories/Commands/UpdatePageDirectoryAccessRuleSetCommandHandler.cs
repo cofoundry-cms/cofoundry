@@ -11,20 +11,20 @@ namespace Cofoundry.Domain.Internal
     /// <summary>
     /// Updates all access rules associated with a page directory.
     /// </summary>
-    public class UpdatePageDirectoryAccessRulesCommandHandler
-        : ICommandHandler<UpdatePageDirectoryAccessRulesCommand>
-        , IPermissionRestrictedCommandHandler<UpdatePageDirectoryAccessRulesCommand>
+    public class UpdatePageDirectoryAccessRuleSetCommandHandler
+        : ICommandHandler<UpdatePageDirectoryAccessRuleSetCommand>
+        , IPermissionRestrictedCommandHandler<UpdatePageDirectoryAccessRuleSetCommand>
     {
         private readonly CofoundryDbContext _dbContext;
         private readonly IDomainRepository _domainRepository;
-        private readonly IUpdateAccessRulesCommandHelper _updateAccessRulesCommandHelper;
+        private readonly IUpdateAccessRuleSetCommandHelper _updateAccessRulesCommandHelper;
         private readonly IPageDirectoryCache _pageDirectoryCache;
         private readonly IMessageAggregator _messageAggregator;
 
-        public UpdatePageDirectoryAccessRulesCommandHandler(
+        public UpdatePageDirectoryAccessRuleSetCommandHandler(
             CofoundryDbContext dbContext,
             IDomainRepository domainRepository,
-            IUpdateAccessRulesCommandHelper updateAccessRulesCommandHelper,
+            IUpdateAccessRuleSetCommandHelper updateAccessRulesCommandHelper,
             IPageDirectoryCache pageDirectoryCache,
             IMessageAggregator messageAggregator
             )
@@ -36,7 +36,7 @@ namespace Cofoundry.Domain.Internal
             _messageAggregator = messageAggregator;
         }
 
-        public async Task ExecuteAsync(UpdatePageDirectoryAccessRulesCommand command, IExecutionContext executionContext)
+        public async Task ExecuteAsync(UpdatePageDirectoryAccessRuleSetCommand command, IExecutionContext executionContext)
         {
             var directory = await GetPageDirectoryAsync(command);
             await _updateAccessRulesCommandHelper.UpdateAsync(directory, command, executionContext);
@@ -45,7 +45,7 @@ namespace Cofoundry.Domain.Internal
             await _domainRepository.Transactions().QueueCompletionTaskAsync(() => OnTransactionComplete(command));
         }
 
-        private async Task<PageDirectory> GetPageDirectoryAsync(UpdatePageDirectoryAccessRulesCommand command)
+        private async Task<PageDirectory> GetPageDirectoryAsync(UpdatePageDirectoryAccessRuleSetCommand command)
         {
             var directory = await _dbContext
                 .PageDirectories
@@ -58,7 +58,7 @@ namespace Cofoundry.Domain.Internal
             return directory;
         }
 
-        private Task OnTransactionComplete(UpdatePageDirectoryAccessRulesCommand command)
+        private Task OnTransactionComplete(UpdatePageDirectoryAccessRuleSetCommand command)
         {
             _pageDirectoryCache.Clear();
 
@@ -68,7 +68,7 @@ namespace Cofoundry.Domain.Internal
             });
         }
 
-        public IEnumerable<IPermissionApplication> GetPermissions(UpdatePageDirectoryAccessRulesCommand command)
+        public IEnumerable<IPermissionApplication> GetPermissions(UpdatePageDirectoryAccessRuleSetCommand command)
         {
             yield return new PageDirectoryAccessRuleManagePermission();
         }

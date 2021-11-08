@@ -10,14 +10,14 @@ using System.Threading.Tasks;
 namespace Cofoundry.Domain.Internal
 {
     /// <inheritdoc/>
-    public class UpdateAccessRulesCommandHelper : IUpdateAccessRulesCommandHelper
+    public class UpdateAccessRuleSetCommandHelper : IUpdateAccessRuleSetCommandHelper
     {
         private readonly CofoundryDbContext _dbContext;
         private readonly IDomainRepository _domainRepository;
         private readonly IUserAreaDefinitionRepository _userAreaDefinitionRepository;
         private readonly EntityAuditHelper _entityAuditHelper;
 
-        public UpdateAccessRulesCommandHelper(
+        public UpdateAccessRuleSetCommandHelper(
             CofoundryDbContext dbContext,
             IDomainRepository domainRepository,
             IUserAreaDefinitionRepository userAreaDefinitionRepository,
@@ -32,7 +32,7 @@ namespace Cofoundry.Domain.Internal
 
         public async Task UpdateAsync<TAccessRule, TAddOrUpdateAccessRuleCommand>(
             IEntityAccessRestrictable<TAccessRule> entity,
-            UpdateAccessRulesCommandBase<TAddOrUpdateAccessRuleCommand> command,
+            UpdateAccessRuleSetCommandBase<TAddOrUpdateAccessRuleCommand> command,
             IExecutionContext executionContext
             )
             where TAccessRule : IEntityAccessRule, new()
@@ -169,7 +169,7 @@ namespace Cofoundry.Domain.Internal
 
         private static void UpdateEntity<TAccessRule, TAddOrUpdateAccessRuleCommand>(
             IEntityAccessRestrictable<TAccessRule> entity,
-            UpdateAccessRulesCommandBase<TAddOrUpdateAccessRuleCommand> command,
+            UpdateAccessRuleSetCommandBase<TAddOrUpdateAccessRuleCommand> command,
             Dictionary<string, IUserAreaDefinition> userAreas
             )
             where TAccessRule : IEntityAccessRule

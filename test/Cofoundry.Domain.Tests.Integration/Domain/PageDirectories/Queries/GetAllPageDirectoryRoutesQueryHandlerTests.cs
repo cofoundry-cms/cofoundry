@@ -114,7 +114,7 @@ namespace Cofoundry.Domain.Tests.Integration.PageDirectories.Queries
                 c => c.ViolationAction = AccessRuleViolationAction.Error
                 );
 
-            var addRuleToDirectory2Command = new UpdatePageDirectoryAccessRulesCommand()
+            var addRuleToDirectory2Command = new UpdatePageDirectoryAccessRuleSetCommand()
             {
                 PageDirectoryId = directory2Id,
                 ViolationAction = AccessRuleViolationAction.NotFound,

@@ -5,7 +5,7 @@ namespace Cofoundry.Domain
     /// <summary>
     /// Access rules for a single page directory that is inherited by another page or directory.
     /// </summary>
-    public class InheritedPageDirectoryAccessDetails : IEntityAccessDetails<PageDirectoryAccessRuleSummary>
+    public class InheritedPageDirectoryAccessDetails : IEntityAccessRuleSetDetails<PageDirectoryAccessRuleSummary>
     {
         /// <summary>
         /// Database id of the page these access rules are associated with.
@@ -29,6 +29,6 @@ namespace Cofoundry.Domain
 
         public AccessRuleViolationAction ViolationAction { get; set; }
 
-        public string UserAreaCodeForLoginRedirect { get; set; }
+        public UserAreaMicroSummary UserAreaForLoginRedirect { get; set; }
     }
 }

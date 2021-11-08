@@ -7,12 +7,12 @@ using Xunit;
 
 namespace Cofoundry.Domain.Tests.Domain.AccessRules
 {
-    public class UpdateAccessRulesCommandBaseTests
+    public class UpdateAccessRuleSetCommandBaseTests
     {
         [Fact]
         public void Validate_WhenAccessRuleIsCofoundryUserArea_ReturnsError()
         {
-            var command = new UpdatePageAccessRulesCommand();
+            var command = new UpdatePageAccessRuleSetCommand();
             command.PageId = 1;
             command.AccessRules
                 .AddNew("TST")
@@ -34,7 +34,7 @@ namespace Cofoundry.Domain.Tests.Domain.AccessRules
         [Fact(Skip = "Multiple errors aren't provided with the current ModelValidationService, so other errors are reported ahead of this one. A new implementation of ModelValidationService might fix this.")]
         public void Validate_WhenRedirectAreaIsCofoundryUserArea_ReturnsError()
         {
-            var command = new UpdatePageAccessRulesCommand();
+            var command = new UpdatePageAccessRuleSetCommand();
             command.PageId = 1;
             command.UserAreaCodeForLoginRedirect = CofoundryAdminUserArea.AreaCode;
             command.AccessRules
@@ -57,7 +57,7 @@ namespace Cofoundry.Domain.Tests.Domain.AccessRules
         [Fact]
         public void Validate_WhenRedirectAreaIsNotInAccessRules_ReturnsError()
         {
-            var command = new UpdatePageAccessRulesCommand();
+            var command = new UpdatePageAccessRuleSetCommand();
             command.PageId = 1;
             command.UserAreaCodeForLoginRedirect = "NON";
             command.AccessRules.AddNew("TST");
@@ -78,7 +78,7 @@ namespace Cofoundry.Domain.Tests.Domain.AccessRules
         [Fact]
         public void Validate_WhenDuplicates_ReturnsError()
         {
-            var command = new UpdatePageAccessRulesCommand();
+            var command = new UpdatePageAccessRuleSetCommand();
             command.PageId = 1;
             command.AccessRules.AddNew("TST");
             command.AccessRules.AddNew("TST");
@@ -109,7 +109,7 @@ namespace Cofoundry.Domain.Tests.Domain.AccessRules
         [Fact]
         public void Validate_WhenBadEnum_ReturnsError()
         {
-            var command = new UpdatePageAccessRulesCommand();
+            var command = new UpdatePageAccessRuleSetCommand();
             command.PageId = 1;
             command.AccessRules.AddNew("TST");
             command.ViolationAction = (AccessRuleViolationAction)Int32.MinValue;

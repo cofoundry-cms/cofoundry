@@ -10,17 +10,16 @@ using System.Linq;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace Cofoundry.Domain.Tests.Integration.Pages.Commands
+namespace Cofoundry.Domain.Tests.Integration.PageDirectories.Commands
 {
     [Collection(nameof(DbDependentFixtureCollection))]
-    public class UpdatePageAccessRulesCommandHandlerTests
+    public class UpdatePageDirectoryAccessRuleSetCommandHandlerTests
     {
-        const string UNIQUE_PREFIX = "UpdPageAccessRulesCHT ";
+        const string UNIQUE_PREFIX = "UpdPageDirAccessRulesCHT ";
 
         private readonly DbDependentTestApplicationFactory _appFactory;
-        private object userAreaAccessRule;
 
-        public UpdatePageAccessRulesCommandHandlerTests(
+        public UpdatePageDirectoryAccessRuleSetCommandHandlerTests(
             DbDependentTestApplicationFactory appFactory
             )
         {
@@ -37,24 +36,23 @@ namespace Cofoundry.Domain.Tests.Integration.Pages.Commands
             var dbContext = app.Services.GetRequiredService<CofoundryDbContext>();
 
             var directoryId = await app.TestData.PageDirectories().AddAsync(uniqueData);
-            var pageId = await app.TestData.Pages().AddAsync(uniqueData, directoryId);
 
-            var command = new UpdatePageAccessRulesCommand()
+            var command = new UpdatePageDirectoryAccessRuleSetCommand()
             {
-                PageId = pageId
+                PageDirectoryId = directoryId
             };
 
             command.AccessRules.AddNew(app.SeededEntities.TestUserArea1.UserAreaCode);
 
             await contentRepository
-                .Pages()
+                .PageDirectories()
                 .AccessRules()
                 .UpdateAsync(command);
 
             var accessRules = await dbContext
-                .PageAccessRules
+                .PageDirectoryAccessRules
                 .AsNoTracking()
-                .FilterByPageId(pageId)
+                .FilterByPageDirectoryId(directoryId)
                 .ToListAsync();
 
             using (new AssertionScope())
@@ -63,8 +61,8 @@ namespace Cofoundry.Domain.Tests.Integration.Pages.Commands
                 var accessRule = accessRules.Single();
                 accessRule.CreateDate.Should().NotBeDefault();
                 accessRule.CreatorId.Should().BePositive();
-                accessRule.PageAccessRuleId.Should().BePositive();
-                accessRule.PageId.Should().Be(pageId);
+                accessRule.PageDirectoryAccessRuleId.Should().BePositive();
+                accessRule.PageDirectoryId.Should().Be(directoryId);
                 accessRule.RoleId.Should().BeNull();
                 accessRule.UserAreaCode.Should().Be(app.SeededEntities.TestUserArea1.UserAreaCode);
             }
@@ -80,24 +78,23 @@ namespace Cofoundry.Domain.Tests.Integration.Pages.Commands
             var dbContext = app.Services.GetRequiredService<CofoundryDbContext>();
 
             var directoryId = await app.TestData.PageDirectories().AddAsync(uniqueData);
-            var pageId = await app.TestData.Pages().AddAsync(uniqueData, directoryId);
 
-            var command = new UpdatePageAccessRulesCommand()
+            var command = new UpdatePageDirectoryAccessRuleSetCommand()
             {
-                PageId = pageId
+                PageDirectoryId = directoryId
             };
 
             command.AccessRules.AddNew(app.SeededEntities.TestUserArea2.UserAreaCode, app.SeededEntities.TestUserArea2.RoleId);
 
             await contentRepository
-                .Pages()
+                .PageDirectories()
                 .AccessRules()
                 .UpdateAsync(command);
 
             var accessRules = await dbContext
-                .PageAccessRules
+                .PageDirectoryAccessRules
                 .AsNoTracking()
-                .FilterByPageId(pageId)
+                .FilterByPageDirectoryId(directoryId)
                 .ToListAsync();
 
             using (new AssertionScope())
@@ -121,31 +118,30 @@ namespace Cofoundry.Domain.Tests.Integration.Pages.Commands
             var dbContext = app.Services.GetRequiredService<CofoundryDbContext>();
 
             var directoryId = await app.TestData.PageDirectories().AddAsync(uniqueData);
-            var pageId = await app.TestData.Pages().AddAsync(uniqueData, directoryId);
 
-            var command = new UpdatePageAccessRulesCommand()
+            var command = new UpdatePageDirectoryAccessRuleSetCommand()
             {
-                PageId = pageId,
+                PageDirectoryId = directoryId,
                 ViolationAction = action
             };
 
             command.AccessRules.AddNew(app.SeededEntities.TestUserArea2.UserAreaCode, app.SeededEntities.TestUserArea2.RoleId);
 
             await contentRepository
-                .Pages()
+                .PageDirectories()
                 .AccessRules()
                 .UpdateAsync(command);
 
-            var page = await dbContext
-                .Pages
+            var directory = await dbContext
+                .PageDirectories
                 .AsNoTracking()
-                .FilterById(pageId)
+                .FilterById(directoryId)
                 .SingleOrDefaultAsync();
 
             using (new AssertionScope())
             {
-                page.Should().NotBeNull();
-                page.AccessRuleViolationActionId.Should().Be((int)action);
+                directory.Should().NotBeNull();
+                directory.AccessRuleViolationActionId.Should().Be((int)action);
             }
         }
 
@@ -158,17 +154,16 @@ namespace Cofoundry.Domain.Tests.Integration.Pages.Commands
             var contentRepository = app.Services.GetContentRepositoryWithElevatedPermissions();
 
             var directoryId = await app.TestData.PageDirectories().AddAsync(uniqueData);
-            var pageId = await app.TestData.Pages().AddAsync(uniqueData, directoryId);
 
-            var command = new UpdatePageAccessRulesCommand()
+            var command = new UpdatePageDirectoryAccessRuleSetCommand()
             {
-                PageId = pageId,
+                PageDirectoryId = directoryId,
             };
 
             command.AccessRules.AddNew(app.SeededEntities.TestUserArea2.UserAreaCode, app.SeededEntities.TestUserArea1.RoleId);
 
             await contentRepository
-                .Awaiting(r => r.Pages().AccessRules().UpdateAsync(command))
+                .Awaiting(r => r.PageDirectories().AccessRules().UpdateAsync(command))
                 .Should()
                 .ThrowAsync<ValidationException>()
                 .WithMemberNames("RoleId");
@@ -184,12 +179,11 @@ namespace Cofoundry.Domain.Tests.Integration.Pages.Commands
             var dbContext = app.Services.GetRequiredService<CofoundryDbContext>();
 
             var directoryId = await app.TestData.PageDirectories().AddAsync(uniqueData);
-            var pageId = await app.TestData.Pages().AddAsync(uniqueData, directoryId);
             var userArea = app.SeededEntities.TestUserArea1;
 
-            var command = new UpdatePageAccessRulesCommand()
+            var command = new UpdatePageDirectoryAccessRuleSetCommand()
             {
-                PageId = pageId,
+                PageDirectoryId = directoryId,
                 UserAreaCodeForLoginRedirect = userArea.UserAreaCode,
                 ViolationAction = AccessRuleViolationAction.NotFound
             };
@@ -198,31 +192,31 @@ namespace Cofoundry.Domain.Tests.Integration.Pages.Commands
             command.AccessRules.AddNew(userArea.UserAreaCode, userArea.RoleId);
 
             await contentRepository
-                .Pages()
+                .PageDirectories()
                 .AccessRules()
                 .UpdateAsync(command);
 
             await contentRepository
-                .Pages()
+                .PageDirectories()
                 .AccessRules()
                 .UpdateAsync(command);
 
-            var page = await dbContext
-                .Pages
+            var directory = await dbContext
+                .PageDirectories
                 .AsNoTracking()
                 .Include(p => p.AccessRules)
-                .FilterById(pageId)
+                .FilterById(directoryId)
                 .SingleOrDefaultAsync();
 
             using (new AssertionScope())
             {
-                page.Should().NotBeNull();
-                page.AccessRuleViolationActionId.Should().Be((int)command.ViolationAction);
-                page.UserAreaCodeForLoginRedirect.Should().Be(command.UserAreaCodeForLoginRedirect);
+                directory.Should().NotBeNull();
+                directory.AccessRuleViolationActionId.Should().Be((int)command.ViolationAction);
+                directory.UserAreaCodeForLoginRedirect.Should().Be(command.UserAreaCodeForLoginRedirect);
 
-                var userAreaAccessRule = page.AccessRules.Single(a => !a.RoleId.HasValue);
+                var userAreaAccessRule = directory.AccessRules.Single(a => !a.RoleId.HasValue);
                 userAreaAccessRule.Should().NotBeNull();
-                var roleAccessArea = page.AccessRules.Single(a => a.RoleId.HasValue);
+                var roleAccessArea = directory.AccessRules.Single(a => a.RoleId.HasValue);
                 roleAccessArea.Should().NotBeNull();
                 roleAccessArea.UserAreaCode.Should().Be(userArea.UserAreaCode);
             }
@@ -238,45 +232,44 @@ namespace Cofoundry.Domain.Tests.Integration.Pages.Commands
             var dbContext = app.Services.GetRequiredService<CofoundryDbContext>();
 
             var directoryId = await app.TestData.PageDirectories().AddAsync(uniqueData);
-            var pageId = await app.TestData.Pages().AddAsync(uniqueData, directoryId);
 
-            var command = new UpdatePageAccessRulesCommand()
+            var command = new UpdatePageDirectoryAccessRuleSetCommand()
             {
-                PageId = pageId,
+                PageDirectoryId = directoryId,
                 UserAreaCodeForLoginRedirect = app.SeededEntities.TestUserArea1.UserAreaCode
             };
 
             command.AccessRules.AddNew(app.SeededEntities.TestUserArea1.UserAreaCode);
 
             await contentRepository
-                .Pages()
+                .PageDirectories()
                 .AccessRules()
                 .UpdateAsync(command);
 
-            var updateCommand = await contentRepository.ExecuteQueryAsync(new GetUpdateCommandByIdQuery<UpdatePageAccessRulesCommand>(pageId));
+            var updateCommand = await contentRepository.ExecuteQueryAsync(new GetUpdateCommandByIdQuery<UpdatePageDirectoryAccessRuleSetCommand>(directoryId));
 
             updateCommand.UserAreaCodeForLoginRedirect = app.SeededEntities.TestUserArea2.UserAreaCode;
             var userAreaAccessRuleCommand = updateCommand.AccessRules.Single();
             userAreaAccessRuleCommand.UserAreaCode = updateCommand.UserAreaCodeForLoginRedirect;
 
             await contentRepository
-                .Pages()
+                .PageDirectories()
                 .AccessRules()
                 .UpdateAsync(updateCommand);
 
-            var page = await dbContext
-                .Pages
+            var directory = await dbContext
+                .PageDirectories
                 .AsNoTracking()
                 .Include(p => p.AccessRules)
-                .FilterById(pageId)
+                .FilterById(directoryId)
                 .SingleOrDefaultAsync();
 
             using (new AssertionScope())
             {
-                page.Should().NotBeNull();
-                page.UserAreaCodeForLoginRedirect.Should().Be(updateCommand.UserAreaCodeForLoginRedirect);
+                directory.Should().NotBeNull();
+                directory.UserAreaCodeForLoginRedirect.Should().Be(updateCommand.UserAreaCodeForLoginRedirect);
 
-                var userAreaAccessRule = page.AccessRules.Single();
+                var userAreaAccessRule = directory.AccessRules.Single();
                 userAreaAccessRule.Should().NotBeNull();
                 userAreaAccessRule.UserAreaCode.Should().Be(userAreaAccessRuleCommand.UserAreaCode);
                 userAreaAccessRule.RoleId.Should().BeNull();
@@ -293,24 +286,23 @@ namespace Cofoundry.Domain.Tests.Integration.Pages.Commands
             var dbContext = app.Services.GetRequiredService<CofoundryDbContext>();
 
             var directoryId = await app.TestData.PageDirectories().AddAsync(uniqueData);
-            var pageId = await app.TestData.Pages().AddAsync(uniqueData, directoryId);
             var userArea1 = app.SeededEntities.TestUserArea1;
             var userArea2 = app.SeededEntities.TestUserArea2;
 
-            var command = new UpdatePageAccessRulesCommand()
+            var command = new UpdatePageDirectoryAccessRuleSetCommand()
             {
-                PageId = pageId,
+                PageDirectoryId = directoryId,
                 UserAreaCodeForLoginRedirect = userArea1.UserAreaCode
             };
 
             command.AccessRules.AddNew(userArea1.UserAreaCode, userArea1.RoleId);
 
             await contentRepository
-                .Pages()
+                .PageDirectories()
                 .AccessRules()
                 .UpdateAsync(command);
 
-            var updateCommand = await contentRepository.ExecuteQueryAsync(new GetUpdateCommandByIdQuery<UpdatePageAccessRulesCommand>(pageId));
+            var updateCommand = await contentRepository.ExecuteQueryAsync(new GetUpdateCommandByIdQuery<UpdatePageDirectoryAccessRuleSetCommand>(directoryId));
 
             updateCommand.UserAreaCodeForLoginRedirect = userArea2.UserAreaCode;
             var roleAccessRuleCommand = updateCommand.AccessRules.Single();
@@ -318,23 +310,23 @@ namespace Cofoundry.Domain.Tests.Integration.Pages.Commands
             roleAccessRuleCommand.RoleId = userArea2.RoleId;
 
             await contentRepository
-                .Pages()
+                .PageDirectories()
                 .AccessRules()
                 .UpdateAsync(updateCommand);
 
-            var page = await dbContext
-                .Pages
+            var directory = await dbContext
+                .PageDirectories
                 .AsNoTracking()
                 .Include(p => p.AccessRules)
-                .FilterById(pageId)
+                .FilterById(directoryId)
                 .SingleOrDefaultAsync();
 
             using (new AssertionScope())
             {
-                page.Should().NotBeNull();
-                page.UserAreaCodeForLoginRedirect.Should().Be(updateCommand.UserAreaCodeForLoginRedirect);
+                directory.Should().NotBeNull();
+                directory.UserAreaCodeForLoginRedirect.Should().Be(updateCommand.UserAreaCodeForLoginRedirect);
 
-                var userAreaAccessRule = page.AccessRules.Single();
+                var userAreaAccessRule = directory.AccessRules.Single();
                 userAreaAccessRule.Should().NotBeNull();
                 userAreaAccessRule.UserAreaCode.Should().Be(roleAccessRuleCommand.UserAreaCode);
                 userAreaAccessRule.RoleId.Should().Be(roleAccessRuleCommand.RoleId);
@@ -351,42 +343,41 @@ namespace Cofoundry.Domain.Tests.Integration.Pages.Commands
             var dbContext = app.Services.GetRequiredService<CofoundryDbContext>();
 
             var directoryId = await app.TestData.PageDirectories().AddAsync(uniqueData);
-            var pageId = await app.TestData.Pages().AddAsync(uniqueData, directoryId);
 
-            var command = new UpdatePageAccessRulesCommand()
+            var command = new UpdatePageDirectoryAccessRuleSetCommand()
             {
-                PageId = pageId
+                PageDirectoryId = directoryId
             };
 
             command.AccessRules.AddNew(app.SeededEntities.TestUserArea1.UserAreaCode, app.SeededEntities.TestUserArea1.RoleId);
 
             await contentRepository
-                .Pages()
+                .PageDirectories()
                 .AccessRules()
                 .UpdateAsync(command);
 
-            var updateCommand = await contentRepository.ExecuteQueryAsync(new GetUpdateCommandByIdQuery<UpdatePageAccessRulesCommand>(pageId));
+            var updateCommand = await contentRepository.ExecuteQueryAsync(new GetUpdateCommandByIdQuery<UpdatePageDirectoryAccessRuleSetCommand>(directoryId));
             var userAreaAccessRuleCommand = updateCommand.AccessRules.Single();
             userAreaAccessRuleCommand.RoleId = null;
 
             await contentRepository
-                .Pages()
+                .PageDirectories()
                 .AccessRules()
                 .UpdateAsync(updateCommand);
 
-            var page = await dbContext
-                .Pages
+            var directory = await dbContext
+                .PageDirectories
                 .AsNoTracking()
                 .Include(p => p.AccessRules)
-                .FilterById(pageId)
+                .FilterById(directoryId)
                 .SingleOrDefaultAsync();
 
             using (new AssertionScope())
             {
-                page.Should().NotBeNull();
-                page.UserAreaCodeForLoginRedirect.Should().BeNull();
+                directory.Should().NotBeNull();
+                directory.UserAreaCodeForLoginRedirect.Should().BeNull();
 
-                var userAreaAccessRule = page.AccessRules.Single();
+                var userAreaAccessRule = directory.AccessRules.Single();
                 userAreaAccessRule.Should().NotBeNull();
                 userAreaAccessRule.UserAreaCode.Should().Be(userAreaAccessRuleCommand.UserAreaCode);
                 userAreaAccessRule.RoleId.Should().BeNull();
@@ -403,43 +394,42 @@ namespace Cofoundry.Domain.Tests.Integration.Pages.Commands
             var dbContext = app.Services.GetRequiredService<CofoundryDbContext>();
 
             var directoryId = await app.TestData.PageDirectories().AddAsync(uniqueData);
-            var pageId = await app.TestData.Pages().AddAsync(uniqueData, directoryId);
 
-            var command = new UpdatePageAccessRulesCommand()
+            var command = new UpdatePageDirectoryAccessRuleSetCommand()
             {
-                PageId = pageId,
+                PageDirectoryId = directoryId,
                 ViolationAction = AccessRuleViolationAction.Error
             };
 
             command.AccessRules.AddNew(app.SeededEntities.TestUserArea1.UserAreaCode);
 
             await contentRepository
-                .Pages()
+                .PageDirectories()
                 .AccessRules()
                 .UpdateAsync(command);
 
-            var updateCommand = await contentRepository.ExecuteQueryAsync(new GetUpdateCommandByIdQuery<UpdatePageAccessRulesCommand>(pageId));
+            var updateCommand = await contentRepository.ExecuteQueryAsync(new GetUpdateCommandByIdQuery<UpdatePageDirectoryAccessRuleSetCommand>(directoryId));
             updateCommand.ViolationAction = AccessRuleViolationAction.NotFound;
 
             await contentRepository
-                .Pages()
+                .PageDirectories()
                 .AccessRules()
                 .UpdateAsync(updateCommand);
 
-            var page = await dbContext
-                .Pages
+            var directory = await dbContext
+                .PageDirectories
                 .AsNoTracking()
                 .Include(p => p.AccessRules)
-                .FilterById(pageId)
+                .FilterById(directoryId)
                 .SingleOrDefaultAsync();
 
             using (new AssertionScope())
             {
-                page.Should().NotBeNull();
-                page.UserAreaCodeForLoginRedirect.Should().BeNull();
-                page.AccessRuleViolationActionId.Should().Be((int)updateCommand.ViolationAction);
+                directory.Should().NotBeNull();
+                directory.UserAreaCodeForLoginRedirect.Should().BeNull();
+                directory.AccessRuleViolationActionId.Should().Be((int)updateCommand.ViolationAction);
 
-                page.AccessRules.Should().HaveCount(1);
+                directory.AccessRules.Should().HaveCount(1);
             }
         }
 
@@ -452,34 +442,33 @@ namespace Cofoundry.Domain.Tests.Integration.Pages.Commands
             var contentRepository = app.Services.GetContentRepositoryWithElevatedPermissions();
             var dbContext = app.Services.GetRequiredService<CofoundryDbContext>();
             var directoryId = await app.TestData.PageDirectories().AddAsync(uniqueData);
-            var pageId = await app.TestData.Pages().AddAsync(uniqueData, directoryId);
 
-            var command = new UpdatePageAccessRulesCommand()
+            var command = new UpdatePageDirectoryAccessRuleSetCommand()
             {
-                PageId = pageId
+                PageDirectoryId = directoryId
             };
 
             command.AccessRules.AddNew(app.SeededEntities.TestUserArea1.UserAreaCode, app.SeededEntities.TestUserArea1.RoleId);
             command.AccessRules.AddNew(app.SeededEntities.TestUserArea2.UserAreaCode);
 
             await contentRepository
-                .Pages()
+                .PageDirectories()
                 .AccessRules()
                 .UpdateAsync(command);
 
-            var updateCommand = await contentRepository.ExecuteQueryAsync(new GetUpdateCommandByIdQuery<UpdatePageAccessRulesCommand>(pageId));
+            var updateCommand = await contentRepository.ExecuteQueryAsync(new GetUpdateCommandByIdQuery<UpdatePageDirectoryAccessRuleSetCommand>(directoryId));
             var accessRuleCommand = updateCommand.AccessRules.Single(r => r.RoleId == app.SeededEntities.TestUserArea1.RoleId);
             updateCommand.AccessRules.Remove(accessRuleCommand);
 
             await contentRepository
-                .Pages()
+                .PageDirectories()
                 .AccessRules()
                 .UpdateAsync(updateCommand);
 
             var accessRules = await dbContext
-                .PageAccessRules
+                .PageDirectoryAccessRules
                 .AsNoTracking()
-                .FilterByPageId(pageId)
+                .FilterByPageDirectoryId(directoryId)
                 .ToListAsync();
 
             using (new AssertionScope())
@@ -501,11 +490,10 @@ namespace Cofoundry.Domain.Tests.Integration.Pages.Commands
             var dbContext = app.Services.GetRequiredService<CofoundryDbContext>();
 
             var directoryId = await app.TestData.PageDirectories().AddAsync(uniqueData);
-            var pageId = await app.TestData.Pages().AddAsync(uniqueData, directoryId);
 
-            var command = new UpdatePageAccessRulesCommand()
+            var command = new UpdatePageDirectoryAccessRuleSetCommand()
             {
-                PageId = pageId,
+                PageDirectoryId = directoryId,
                 UserAreaCodeForLoginRedirect = app.SeededEntities.TestUserArea1.UserAreaCode,
                 ViolationAction = AccessRuleViolationAction.NotFound
             };
@@ -514,11 +502,11 @@ namespace Cofoundry.Domain.Tests.Integration.Pages.Commands
             command.AccessRules.AddNew(app.SeededEntities.TestUserArea2.UserAreaCode);
 
             await contentRepository
-                .Pages()
+                .PageDirectories()
                 .AccessRules()
                 .UpdateAsync(command);
 
-            var updateCommand = await contentRepository.ExecuteQueryAsync(new GetUpdateCommandByIdQuery<UpdatePageAccessRulesCommand>(pageId));
+            var updateCommand = await contentRepository.ExecuteQueryAsync(new GetUpdateCommandByIdQuery<UpdatePageDirectoryAccessRuleSetCommand>(directoryId));
             updateCommand.UserAreaCodeForLoginRedirect = null;
             updateCommand.ViolationAction = AccessRuleViolationAction.Error;
 
@@ -529,29 +517,29 @@ namespace Cofoundry.Domain.Tests.Integration.Pages.Commands
             updateCommand.AccessRules.AddNew(app.SeededEntities.TestUserArea2.UserAreaCode, app.SeededEntities.TestUserArea2.RoleId);
 
             await contentRepository
-                .Pages()
+                .PageDirectories()
                 .AccessRules()
                 .UpdateAsync(updateCommand);
 
-            var page = await dbContext
-                .Pages
+            var directory = await dbContext
+                .PageDirectories
                 .AsNoTracking()
                 .Include(p => p.AccessRules)
-                .FilterById(pageId)
+                .FilterById(directoryId)
                 .SingleOrDefaultAsync();
 
             using (new AssertionScope())
             {
-                page.Should().NotBeNull();
-                page.UserAreaCodeForLoginRedirect.Should().BeNull();
-                page.AccessRuleViolationActionId.Should().Be((int)updateCommand.ViolationAction);
-                page.AccessRules.Should().HaveCount(2);
+                directory.Should().NotBeNull();
+                directory.UserAreaCodeForLoginRedirect.Should().BeNull();
+                directory.AccessRuleViolationActionId.Should().Be((int)updateCommand.ViolationAction);
+                directory.AccessRules.Should().HaveCount(2);
 
-                var userArea1AccessRule = page.AccessRules.Single(r => r.UserAreaCode == app.SeededEntities.TestUserArea1.UserAreaCode);
+                var userArea1AccessRule = directory.AccessRules.Single(r => r.UserAreaCode == app.SeededEntities.TestUserArea1.UserAreaCode);
                 userArea1AccessRule.Should().NotBeNull();
                 userArea1AccessRule.RoleId.Should().BeNull();
 
-                var userArea2AccessRule = page.AccessRules.Single(r => r.UserAreaCode == app.SeededEntities.TestUserArea2.UserAreaCode);
+                var userArea2AccessRule = directory.AccessRules.Single(r => r.UserAreaCode == app.SeededEntities.TestUserArea2.UserAreaCode);
                 userArea2AccessRule.Should().NotBeNull();
                 userArea2AccessRule.RoleId.Should().Be(app.SeededEntities.TestUserArea2.RoleId);
             }
@@ -566,20 +554,19 @@ namespace Cofoundry.Domain.Tests.Integration.Pages.Commands
             var contentRepository = app.Services.GetContentRepositoryWithElevatedPermissions();
 
             var directoryId = await app.TestData.PageDirectories().AddAsync(uniqueData);
-            var pageId = await app.TestData.Pages().AddAsync(uniqueData, directoryId);
 
-            var command = new UpdatePageAccessRulesCommand()
+            var command = new UpdatePageDirectoryAccessRuleSetCommand()
             {
-                PageId = pageId
+                PageDirectoryId = directoryId
             };
 
             await contentRepository
-                .Pages()
+                .PageDirectories()
                 .AccessRules()
                 .UpdateAsync(command);
 
             app.Mocks
-                .CountMessagesPublished<PageAccessRulesUpdatedMessage>(m => m.PageId == pageId)
+                .CountMessagesPublished<PageDirectoryAccessRulesUpdatedMessage>(m => m.PageDirectoryId == directoryId)
                 .Should().Be(1);
         }
     }

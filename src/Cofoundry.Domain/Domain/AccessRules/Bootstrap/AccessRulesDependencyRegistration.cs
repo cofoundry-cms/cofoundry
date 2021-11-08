@@ -8,8 +8,8 @@ namespace Cofoundry.Domain.Registration
         public void Register(IContainerRegister container)
         {
             container
-                .Register<IUpdateAccessRulesCommandHelper, UpdateAccessRulesCommandHelper>()
-                .Register<IEntityAccessDetailsMapper, EntityAccessDetailsMapper>()
+                .Register<IUpdateAccessRuleSetCommandHelper, UpdateAccessRuleSetCommandHelper>()
+                .Register<IEntityAccessRuleSetDetailsMapper, EntityAccessRuleSetDetailsMapper>()
                 .Register<IEntityAccessRuleSetMapper, EntityAccessRuleSetMapper>()
                 ;
         }

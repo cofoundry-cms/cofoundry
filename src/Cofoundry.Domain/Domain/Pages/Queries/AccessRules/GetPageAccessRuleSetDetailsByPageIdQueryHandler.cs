@@ -9,20 +9,21 @@ using System.Threading.Tasks;
 namespace Cofoundry.Domain
 {
     /// <summary>
-    /// Returns all access rules associated with a page, including those inherited from
-    /// parent directories.
+    /// Query that returns detailed information about access restrictions
+    /// configured for a page, including all access rules as well as those 
+    /// inherited from parent directories.
     /// </summary>
-    public class GetPageAccessDetailsByPageIdQueryHandler
-        : IQueryHandler<GetPageAccessDetailsByPageIdQuery, PageAccessDetails>
-        , IPermissionRestrictedQueryHandler<GetPageAccessDetailsByPageIdQuery, PageAccessDetails>
+    public class GetPageAccessRuleSetDetailsByPageIdQueryHandler
+        : IQueryHandler<GetPageAccessRuleSetDetailsByPageIdQuery, PageAccessRuleSetDetails>
+        , IPermissionRestrictedQueryHandler<GetPageAccessRuleSetDetailsByPageIdQuery, PageAccessRuleSetDetails>
     {
         private readonly CofoundryDbContext _dbContext;
-        private readonly IEntityAccessDetailsMapper _entityAccessDetailsMapper;
+        private readonly IEntityAccessRuleSetDetailsMapper _entityAccessDetailsMapper;
         private readonly IPageDirectoryMicroSummaryMapper _pageDirectoryMicroSummaryMapper;
 
-        public GetPageAccessDetailsByPageIdQueryHandler(
+        public GetPageAccessRuleSetDetailsByPageIdQueryHandler(
             CofoundryDbContext dbContext,
-            IEntityAccessDetailsMapper entityAccessDetailsMapper,
+            IEntityAccessRuleSetDetailsMapper entityAccessDetailsMapper,
             IPageDirectoryMicroSummaryMapper pageDirectoryMicroSummaryMapper
             )
         {
@@ -31,7 +32,7 @@ namespace Cofoundry.Domain
             _pageDirectoryMicroSummaryMapper = pageDirectoryMicroSummaryMapper;
         }
 
-        public async Task<PageAccessDetails> ExecuteAsync(GetPageAccessDetailsByPageIdQuery query, IExecutionContext executionContext)
+        public async Task<PageAccessRuleSetDetails> ExecuteAsync(GetPageAccessRuleSetDetailsByPageIdQuery query, IExecutionContext executionContext)
         {
             var dbPage = await _dbContext
                 .Pages
@@ -43,7 +44,7 @@ namespace Cofoundry.Domain
 
             if (dbPage == null) return null;
 
-            var result = new PageAccessDetails();
+            var result = new PageAccessRuleSetDetails();
             await _entityAccessDetailsMapper.MapAsync(dbPage, result, executionContext, (dbRule, rule) =>
             {
                 rule.PageId = dbRule.PageId;
@@ -56,7 +57,7 @@ namespace Cofoundry.Domain
             return result;
         }
 
-        private async Task MapInheritedRules(Page dbPage, PageAccessDetails result, IExecutionContext executionContext)
+        private async Task MapInheritedRules(Page dbPage, PageAccessRuleSetDetails result, IExecutionContext executionContext)
         {
             var dbInheritedRules = await _dbContext
                 .PageDirectoryClosures
@@ -86,7 +87,7 @@ namespace Cofoundry.Domain
             }
         }
 
-        public IEnumerable<IPermissionApplication> GetPermissions(GetPageAccessDetailsByPageIdQuery query)
+        public IEnumerable<IPermissionApplication> GetPermissions(GetPageAccessRuleSetDetailsByPageIdQuery query)
         {
             yield return new PageReadPermission();
         }

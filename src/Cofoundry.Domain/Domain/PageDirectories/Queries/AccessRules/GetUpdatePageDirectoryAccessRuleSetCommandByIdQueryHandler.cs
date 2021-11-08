@@ -9,20 +9,20 @@ using System.Threading.Tasks;
 
 namespace Cofoundry.Domain.Internal
 {
-    public class GetUpdatePageDirectoryAccessRulesCommandByIdQueryHandler
-        : IQueryHandler<GetUpdateCommandByIdQuery<UpdatePageDirectoryAccessRulesCommand>, UpdatePageDirectoryAccessRulesCommand>
-        , IPermissionRestrictedQueryHandler<GetUpdateCommandByIdQuery<UpdatePageDirectoryAccessRulesCommand>, UpdatePageDirectoryAccessRulesCommand>
+    public class GetUpdatePageDirectoryAccessRuleSetCommandByIdQueryHandler
+        : IQueryHandler<GetUpdateCommandByIdQuery<UpdatePageDirectoryAccessRuleSetCommand>, UpdatePageDirectoryAccessRuleSetCommand>
+        , IPermissionRestrictedQueryHandler<GetUpdateCommandByIdQuery<UpdatePageDirectoryAccessRuleSetCommand>, UpdatePageDirectoryAccessRuleSetCommand>
     {
         private readonly CofoundryDbContext _dbContext;
 
-        public GetUpdatePageDirectoryAccessRulesCommandByIdQueryHandler(
+        public GetUpdatePageDirectoryAccessRuleSetCommandByIdQueryHandler(
             CofoundryDbContext dbContext
             )
         {
             _dbContext = dbContext;
         }
 
-        public async Task<UpdatePageDirectoryAccessRulesCommand> ExecuteAsync(GetUpdateCommandByIdQuery<UpdatePageDirectoryAccessRulesCommand> query, IExecutionContext executionContext)
+        public async Task<UpdatePageDirectoryAccessRuleSetCommand> ExecuteAsync(GetUpdateCommandByIdQuery<UpdatePageDirectoryAccessRuleSetCommand> query, IExecutionContext executionContext)
         {
             var dbPageDirectory = await _dbContext
                 .PageDirectories
@@ -39,7 +39,7 @@ namespace Cofoundry.Domain.Internal
                 throw new InvalidOperationException($"{nameof(AccessRuleViolationAction)} of value {dbPageDirectory.AccessRuleViolationActionId} could not be parsed on a page directory with an id of {dbPageDirectory.PageDirectoryId}.");
             }
 
-            var command = new UpdatePageDirectoryAccessRulesCommand()
+            var command = new UpdatePageDirectoryAccessRuleSetCommand()
             {
                 PageDirectoryId = dbPageDirectory.PageDirectoryId,
                 UserAreaCodeForLoginRedirect = dbPageDirectory.UserAreaCodeForLoginRedirect,
@@ -48,7 +48,7 @@ namespace Cofoundry.Domain.Internal
 
             command.AccessRules = dbPageDirectory
                 .AccessRules
-                .Select(r => new UpdatePageDirectoryAccessRulesCommand.AddOrUpdatePageDirectoryAccessRuleCommand()
+                .Select(r => new UpdatePageDirectoryAccessRuleSetCommand.AddOrUpdatePageDirectoryAccessRuleCommand()
                 {
                     PageDirectoryAccessRuleId = r.PageDirectoryAccessRuleId,
                     UserAreaCode = r.UserAreaCode,
@@ -59,7 +59,7 @@ namespace Cofoundry.Domain.Internal
             return command;
         }
 
-        public IEnumerable<IPermissionApplication> GetPermissions(GetUpdateCommandByIdQuery<UpdatePageDirectoryAccessRulesCommand> query)
+        public IEnumerable<IPermissionApplication> GetPermissions(GetUpdateCommandByIdQuery<UpdatePageDirectoryAccessRuleSetCommand> query)
         {
             yield return new PageDirectoryReadPermission();
         }

@@ -78,7 +78,7 @@ function (
     }
 
     function getAccessRulesRoute (pageDirectoryId) {
-        return getIdRoute(pageDirectoryId) + '/access';
+        return getIdRoute(pageDirectoryId) + '/access-rules';
     }
 
     return service;

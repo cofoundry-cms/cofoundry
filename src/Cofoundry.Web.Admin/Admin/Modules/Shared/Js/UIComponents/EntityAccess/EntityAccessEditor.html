@@ -60,11 +60,11 @@
                             </thead>
                             <tbody>
                                 <tr ng-repeat="rule in inheritedRules">
-                                    <td><a href="{{urlLibrary.directoryDetails(rule.accessDetails.pageDirectory.pageDirectoryId)}}" target="_blank">{{rule.accessDetails.pageDirectory.fullUrlPath}}</a></td>
+                                    <td><a href="{{urlLibrary.directoryDetails(rule.accessRuleSet.pageDirectory.pageDirectoryId)}}" target="_blank">{{rule.accessRuleSet.pageDirectory.fullUrlPath}}</a></td>
                                     <td>{{rule.userArea.name}}</td>
                                     <td>{{rule.role.title}}</td>
-                                    <td>{{rule.accessDetails.loginRedirect}}</td>
-                                    <td title="{{rule.accessDetails.violationAction.description}}">{{rule.accessDetails.violationAction.name}}</td>
+                                    <td title="{{rule.accessRuleSet.loginRedirectDescription}}">{{rule.accessRuleSet.loginRedirect}}</td>
+                                    <td title="{{rule.accessRuleSet.violationAction.description}}">{{rule.accessRuleSet.violationAction.name}}</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -76,7 +76,7 @@
             <cms-form-section cms-title="Access Rules">   
                                   
                 <cms-form-field-container> 
-                    <p>To be granted accessto this {{entityDefinitionNameLower}}, users will need to meet the requirements of at least one of these rules.</p>
+                    <p>To be granted access to this {{entityDefinitionNameLower}} users will need to meet the requirements of at least one of these rules.</p>
                 </cms-form-field-container>
 
                 <cms-form-field-container cms-loading="formLoadState.isLoading">
@@ -94,7 +94,7 @@
                                 <tr ng-if="accessInfo.accessRules.length == 0">
                                     <td colspan="100" class="empty">No rules found.</td>
                                 </tr>
-                                <tr ng-repeat="rule in accessDetails.accessRules">
+                                <tr ng-repeat="rule in accessRuleSet.accessRules">
                                     <td>{{rule.userArea.name}}</td>
                                     <td>{{rule.role.title}}</td>
                                     <td cms-table-column-actions
@@ -136,7 +136,7 @@
                     cms-description="Selecting this option will redirect the user to the login page if they are not logged in. If they are logged in but not authorized to view the page then the default action will be triggered."
                 ></cms-form-field-checkbox>
 
-                <cms-form-field-dropdown cms-title="Redirect to login for area:"
+                <cms-form-field-dropdown cms-title="Redirect to login for area"
                     cms-options="userAreasInRules"
                     cms-option-name="name"
                     cms-option-value="userAreaCode"

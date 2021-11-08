@@ -56,7 +56,7 @@ function (
     /* UI ACTIONS */
 
     function save() {
-        vm.command.accessRules = _.map(vm.accessDetails.accessRules, function(rule) {
+        vm.command.accessRules = _.map(vm.accessRuleSet.accessRules, function(rule) {
             var idProp = options.entityIdPrefix + 'AccessRuleId';
             var command = {
                 userAreaCode: rule.userArea.userAreaCode,
@@ -93,7 +93,7 @@ function (
     
     function deleteRule(rule, $index) {
 
-        arrayUtilities.removeObject(vm.accessDetails.accessRules, rule);
+        arrayUtilities.removeObject(vm.accessRuleSet.accessRules, rule);
         setUserAreasInRules();
     }
 
@@ -103,7 +103,7 @@ function (
         
         var rule = {};
 
-        var duplicateRule = _.find(vm.accessDetails.accessRules, function(accessRule) {
+        var duplicateRule = _.find(vm.accessRuleSet.accessRules, function(accessRule) {
             var roleId = accessRule.role ? accessRule.role.roleId : null;
             return accessRule.userArea.userAreaCode === command.userAreaCode && roleId == command.roleId;
         });
@@ -116,7 +116,7 @@ function (
 
         $q.all([getRole(), getUserArea()])
             .then(function() {
-                vm.accessDetails.accessRules.push(rule);
+                vm.accessRuleSet.accessRules.push(rule);
                 sortRules();
                 setUserAreasInRules();
             })
@@ -167,21 +167,23 @@ function (
         }];
 
         return options.entityAccessLoader()
-            .then(function (accessDetails) {
-                vm.accessDetails = accessDetails;
-                vm.command = mapUpdateCommand(accessDetails);
+            .then(function (accessRuleSet) {
+                vm.accessRuleSet = accessRuleSet;
+                vm.command = mapUpdateCommand(accessRuleSet);
                 vm.inheritedRules = [];
                 
-                _.each(vm.accessDetails.inheritedAccessRules, function (inheritedAccessDetails) {
-                    inheritedAccessDetails.violationAction = _.findWhere(vm.violationActions, { id: inheritedAccessDetails.violationAction });
-                    if (inheritedAccessDetails.userAreaCodeForLoginRedirect) {
-                        inheritedAccessDetails.loginRedirect = 'Yes';
+                _.each(vm.accessRuleSet.inheritedAccessRules, function (inheritedAccessRuleSet) {
+                    inheritedAccessRuleSet.violationAction = _.findWhere(vm.violationActions, { id: inheritedAccessRuleSet.violationAction });
+                    if (inheritedAccessRuleSet.userAreaForLoginRedirect) {
+                        inheritedAccessRuleSet.loginRedirect = 'Yes';
+                        inheritedAccessRuleSet.loginRedirectDescription = 'If the user is not logged in, then they will be redirected to the login page associated with the ' + inheritedAccessRuleSet.userAreaForLoginRedirect.name + ' user area.';
                     } else {
-                        inheritedAccessDetails.loginRedirect = 'No';
+                        inheritedAccessRuleSet.loginRedirect = 'No';
+                        inheritedAccessRuleSet.loginRedirectDescription = 'No login redirection, the default action will trigger instead.';
                     }
 
-                    _.each(inheritedAccessDetails.accessRules, function(rule) {
-                        rule.accessDetails = inheritedAccessDetails;
+                    _.each(inheritedAccessRuleSet.accessRules, function(rule) {
+                        rule.accessRuleSet = inheritedAccessRuleSet;
                         vm.inheritedRules.push(rule);
                     });
                 });
@@ -191,21 +193,24 @@ function (
             .then(setLoadingOff.bind(null, loadStateToTurnOff));
     }
 
-    function mapUpdateCommand(accessDetails) {
+    function mapUpdateCommand(accessRuleSet) {
 
-        var command = _.pick(accessDetails,
+        var command = _.pick(accessRuleSet,
             options.entityIdPrefix + 'Id',
             'userAreaCodeForLoginRedirect',
             'violationAction'
         );
         
-        command.redirectoToLogin = !!accessDetails.userAreaCodeForLoginRedirect;
+        if (accessRuleSet.userAreaForLoginRedirect) {
+            command.userAreaCodeForLoginRedirect = accessRuleSet.userAreaForLoginRedirect.userAreaCode;
+            command.redirectoToLogin = true;
+        }
 
         return command;
     }
 
     function setUserAreasInRules() {
-        vm.userAreasInRules = _(vm.accessDetails.accessRules)
+        vm.userAreasInRules = _(vm.accessRuleSet.accessRules)
             .chain()
             .map(function(rule) { return rule.userArea; })
             .uniq(function(userArea) { return userArea.userAreaCode; })
@@ -229,7 +234,7 @@ function (
     }
 
     function sortRules() {
-        vm.accessDetails.accessRules = _(vm.accessDetails.accessRules)
+        vm.accessRuleSet.accessRules = _(vm.accessRuleSet.accessRules)
             .chain()
             .sortBy(function (rule) {
                 return rule.role ? rule.role.roleId : -1;

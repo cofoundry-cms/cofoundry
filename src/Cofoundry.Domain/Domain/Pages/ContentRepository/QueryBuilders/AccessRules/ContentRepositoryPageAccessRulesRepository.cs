@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 
 namespace Cofoundry.Domain.Internal
 {
+    /// <inheritdoc/>
     public class ContentRepositoryPageAccessRulesRepository
             : IAdvancedContentRepositoryPageAccessRulesRepository
             , IExtendableContentRepositoryPart
@@ -16,7 +17,12 @@ namespace Cofoundry.Domain.Internal
 
         public IExtendableContentRepository ExtendableContentRepository { get; }
 
-        public Task UpdateAsync(UpdatePageAccessRulesCommand command)
+        public IAdvancedContentRepositoryPageAccessByPageIdQueryBuilder GetByPageId(int pageId)
+        {
+            return new ContentRepositoryPageAccessByPageIdQueryBuilder(ExtendableContentRepository, pageId);
+        }
+
+        public Task UpdateAsync(UpdatePageAccessRuleSetCommand command)
         {
             return ExtendableContentRepository.ExecuteCommandAsync(command);
         }

@@ -156,10 +156,10 @@ namespace Cofoundry.Domain.Tests.Integration
             int pageDirectoryId,
             string userAreaCode,
             int? roleId = null,
-            Action<UpdatePageDirectoryAccessRulesCommand> configration = null
+            Action<UpdatePageDirectoryAccessRuleSetCommand> configration = null
             )
         {
-            var command = new UpdatePageDirectoryAccessRulesCommand()
+            var command = new UpdatePageDirectoryAccessRuleSetCommand()
             {
                 PageDirectoryId = pageDirectoryId,
                 ViolationAction = AccessRuleViolationAction.Error

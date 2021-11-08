@@ -11,20 +11,20 @@ namespace Cofoundry.Domain.Internal
     /// <summary>
     /// Updates all access rules associated with a page.
     /// </summary>
-    public class UpdatePageAccessRulesCommandHandler
-        : ICommandHandler<UpdatePageAccessRulesCommand>
-        , IPermissionRestrictedCommandHandler<UpdatePageAccessRulesCommand>
+    public class UpdatePageAccessRuleSetCommandHandler
+        : ICommandHandler<UpdatePageAccessRuleSetCommand>
+        , IPermissionRestrictedCommandHandler<UpdatePageAccessRuleSetCommand>
     {
         private readonly CofoundryDbContext _dbContext;
         private readonly IDomainRepository _domainRepository;
-        private readonly IUpdateAccessRulesCommandHelper _updateAccessRulesCommandHelper;
+        private readonly IUpdateAccessRuleSetCommandHelper _updateAccessRulesCommandHelper;
         private readonly IPageCache _pageCache;
         private readonly IMessageAggregator _messageAggregator;
 
-        public UpdatePageAccessRulesCommandHandler(
+        public UpdatePageAccessRuleSetCommandHandler(
             CofoundryDbContext dbContext,
             IDomainRepository domainRepository,
-            IUpdateAccessRulesCommandHelper updateAccessRulesCommandHelper,
+            IUpdateAccessRuleSetCommandHelper updateAccessRulesCommandHelper,
             IPageCache pageCache,
             IMessageAggregator messageAggregator
             )
@@ -36,7 +36,7 @@ namespace Cofoundry.Domain.Internal
             _messageAggregator = messageAggregator;
         }
 
-        public async Task ExecuteAsync(UpdatePageAccessRulesCommand command, IExecutionContext executionContext)
+        public async Task ExecuteAsync(UpdatePageAccessRuleSetCommand command, IExecutionContext executionContext)
         {
             var page = await GetPageAsync(command);
             await _updateAccessRulesCommandHelper.UpdateAsync(page, command, executionContext);
@@ -45,7 +45,7 @@ namespace Cofoundry.Domain.Internal
             await _domainRepository.Transactions().QueueCompletionTaskAsync(() => OnTransactionComplete(command));
         }
 
-        private async Task<Page> GetPageAsync(UpdatePageAccessRulesCommand command)
+        private async Task<Page> GetPageAsync(UpdatePageAccessRuleSetCommand command)
         {
             var page = await _dbContext
                 .Pages
@@ -59,7 +59,7 @@ namespace Cofoundry.Domain.Internal
             return page;
         }
 
-        private Task OnTransactionComplete(UpdatePageAccessRulesCommand command)
+        private Task OnTransactionComplete(UpdatePageAccessRuleSetCommand command)
         {
             _pageCache.Clear(command.PageId);
 
@@ -69,7 +69,7 @@ namespace Cofoundry.Domain.Internal
             });
         }
 
-        public IEnumerable<IPermissionApplication> GetPermissions(UpdatePageAccessRulesCommand command)
+        public IEnumerable<IPermissionApplication> GetPermissions(UpdatePageAccessRuleSetCommand command)
         {
             yield return new PageAccessRuleManagePermission();
         }

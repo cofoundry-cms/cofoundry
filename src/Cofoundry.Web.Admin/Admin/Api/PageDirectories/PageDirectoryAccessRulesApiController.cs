@@ -5,12 +5,12 @@ using System.Threading.Tasks;
 
 namespace Cofoundry.Web.Admin
 {
-    public class PageAccessApiController : BaseAdminApiController
+    public class PageDirectoryAccessRulesApiController : BaseAdminApiController
     {
         private readonly IQueryExecutor _queryExecutor;
         private readonly IApiResponseHelper _apiResponseHelper;
 
-        public PageAccessApiController(
+        public PageDirectoryAccessRulesApiController(
             IQueryExecutor queryExecutor,
             IApiResponseHelper apiResponseHelper
             )
@@ -19,17 +19,17 @@ namespace Cofoundry.Web.Admin
             _apiResponseHelper = apiResponseHelper;
         }
 
-        public async Task<JsonResult> Get(int pageId)
+        public async Task<JsonResult> Get(int pageDirectoryId)
         {
-            var query = new GetPageAccessDetailsByPageIdQuery(pageId);
+            var query = new GetPageDirectoryAccessDetailsByPageDirectoryIdQuery(pageDirectoryId);
 
             var results = await _queryExecutor.ExecuteAsync(query);
             return _apiResponseHelper.SimpleQueryResponse(results);
         }
 
-        public Task<JsonResult> Patch(int pageId, [FromBody] IDelta<UpdatePageAccessRulesCommand> delta)
+        public Task<JsonResult> Patch(int pageDirectoryId, [FromBody] IDelta<UpdatePageDirectoryAccessRuleSetCommand> delta)
         {
-            return _apiResponseHelper.RunCommandAsync(pageId, delta);
+            return _apiResponseHelper.RunCommandAsync(pageDirectoryId, delta);
         }
     }
 }

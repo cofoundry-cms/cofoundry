@@ -10,7 +10,7 @@ namespace Cofoundry.Domain
     /// This base class encapsulated functionality for updating access rules
     /// attached to an entity.
     /// </summary>
-    public abstract class UpdateAccessRulesCommandBase<TAddOrUpdateAccessRuleCommand> : IValidatableObject
+    public abstract class UpdateAccessRuleSetCommandBase<TAddOrUpdateAccessRuleCommand> : IValidatableObject
         where TAddOrUpdateAccessRuleCommand : AddOrUpdateAccessRuleCommandBase
     {
         /// <summary>

@@ -307,10 +307,10 @@ namespace Cofoundry.Domain.Tests.Integration
             int pageId,
             string userAreaCode,
             int? roleId = null,
-            Action<UpdatePageAccessRulesCommand> configration = null
+            Action<UpdatePageAccessRuleSetCommand> configration = null
             )
         {
-            var command = new UpdatePageAccessRulesCommand()
+            var command = new UpdatePageAccessRuleSetCommand()
             {
                 PageId = pageId,
                 ViolationAction = AccessRuleViolationAction.Error

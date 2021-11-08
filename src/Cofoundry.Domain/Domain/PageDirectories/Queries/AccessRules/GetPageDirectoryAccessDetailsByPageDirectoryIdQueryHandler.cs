@@ -13,16 +13,16 @@ namespace Cofoundry.Domain
     /// ordering of specificity i.e. with user area rules before role-based rules.
     /// </summary>
     public class GetPageDirectoryAccessDetailsByPageDirectoryIdQueryHandler
-        : IQueryHandler<GetPageDirectoryAccessDetailsByPageDirectoryIdQuery, PageDirectoryAccessDetails>
-        , IPermissionRestrictedQueryHandler<GetPageDirectoryAccessDetailsByPageDirectoryIdQuery, PageDirectoryAccessDetails>
+        : IQueryHandler<GetPageDirectoryAccessDetailsByPageDirectoryIdQuery, PageDirectoryAccessRuleSetDetails>
+        , IPermissionRestrictedQueryHandler<GetPageDirectoryAccessDetailsByPageDirectoryIdQuery, PageDirectoryAccessRuleSetDetails>
     {
         private readonly CofoundryDbContext _dbContext;
-        private readonly IEntityAccessDetailsMapper _entityAccessDetailsMapper;
+        private readonly IEntityAccessRuleSetDetailsMapper _entityAccessDetailsMapper;
         private readonly IPageDirectoryMicroSummaryMapper _pageDirectoryMicroSummaryMapper;
 
         public GetPageDirectoryAccessDetailsByPageDirectoryIdQueryHandler(
             CofoundryDbContext dbContext,
-            IEntityAccessDetailsMapper entityAccessDetailsMapper,
+            IEntityAccessRuleSetDetailsMapper entityAccessDetailsMapper,
             IPageDirectoryMicroSummaryMapper pageDirectoryMicroSummaryMapper
             )
         {
@@ -31,7 +31,7 @@ namespace Cofoundry.Domain
             _pageDirectoryMicroSummaryMapper = pageDirectoryMicroSummaryMapper;
         }
 
-        public async Task<PageDirectoryAccessDetails> ExecuteAsync(GetPageDirectoryAccessDetailsByPageDirectoryIdQuery query, IExecutionContext executionContext)
+        public async Task<PageDirectoryAccessRuleSetDetails> ExecuteAsync(GetPageDirectoryAccessDetailsByPageDirectoryIdQuery query, IExecutionContext executionContext)
         {
             var dbDirectory = await _dbContext
                 .PageDirectories
@@ -42,7 +42,7 @@ namespace Cofoundry.Domain
 
             if (dbDirectory == null) return null;
 
-            var result = new PageDirectoryAccessDetails();
+            var result = new PageDirectoryAccessRuleSetDetails();
             await _entityAccessDetailsMapper.MapAsync(dbDirectory, result, executionContext, (dbRule, rule) =>
             {
                 rule.PageDirectoryId = dbRule.PageDirectoryId;
@@ -55,7 +55,7 @@ namespace Cofoundry.Domain
             return result;
         }
 
-        private async Task MapInheritedRules(PageDirectory dbPageDirectory, PageDirectoryAccessDetails result, IExecutionContext executionContext)
+        private async Task MapInheritedRules(PageDirectory dbPageDirectory, PageDirectoryAccessRuleSetDetails result, IExecutionContext executionContext)
         {
             var dbInheritedRules = await _dbContext
                 .PageDirectoryClosures

@@ -177,7 +177,7 @@ namespace Cofoundry.Web.Admin
                 ;
 
             routeBuilder
-                .ForAdminApiController<PageDirectoryAccessApiController>("page-directories/{pageDirectoryId:int}/access")
+                .ForAdminApiController<PageDirectoryAccessRulesApiController>("page-directories/{pageDirectoryId:int}/access-rules")
                 .MapGet()
                 .MapPatch()
                 ;
@@ -228,7 +228,7 @@ namespace Cofoundry.Web.Admin
                 ;
 
             routeBuilder
-                .ForAdminApiController<PageAccessApiController>("pages/{pageId:int}/access")
+                .ForAdminApiController<PageAccessRulesApiController>("pages/{pageId:int}/access-rules")
                 .MapGet()
                 .MapPatch()
                 ;

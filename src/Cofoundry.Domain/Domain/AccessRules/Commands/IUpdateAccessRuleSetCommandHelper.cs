@@ -8,7 +8,7 @@ namespace Cofoundry.Domain.Internal
     /// Helper for sharing functionality between the various commands 
     /// for updating access rules on entities that support this feature.
     /// </summary>
-    public interface IUpdateAccessRulesCommandHelper
+    public interface IUpdateAccessRuleSetCommandHelper
     {
         /// <summary>
         /// Updates the access rules and other related properties on the tracked 
@@ -21,7 +21,7 @@ namespace Cofoundry.Domain.Internal
         /// </typeparam>
         /// <typeparam name="TAddOrUpdateAccessRuleCommand">
         /// The entity-specific type of the access rule command data e.g. 
-        /// <see cref="UpdatePageAccessRulesCommand.AddOrUpdateAccessRuleCommand"/>
+        /// <see cref="UpdatePageAccessRuleSetCommand.AddOrUpdateAccessRuleCommand"/>
         /// </typeparam>
         /// <param name="entity">The "tracked" EF entity to update properties on.</param>
         /// <param name="command">The command containing the updated data to apply to <paramref name="entity"/>.</param>
@@ -30,7 +30,7 @@ namespace Cofoundry.Domain.Internal
         /// </param>
         Task UpdateAsync<TAccessRule, TAddOrUpdateAccessRuleCommand>(
             IEntityAccessRestrictable<TAccessRule> entity,
-            UpdateAccessRulesCommandBase<TAddOrUpdateAccessRuleCommand> command,
+            UpdateAccessRuleSetCommandBase<TAddOrUpdateAccessRuleCommand> command,
             IExecutionContext executionContext
             )
             where TAccessRule : IEntityAccessRule, new()

@@ -6,13 +6,13 @@ using System.Threading.Tasks;
 namespace Cofoundry.Domain.Internal
 {
     /// <summary>
-    /// Used for mapping the shared parts of an <see cref="IEntityAccessDetails"/>
+    /// Used for mapping the shared parts of an <see cref="IEntityAccessRuleSetDetails"/>
     /// implementation for a specific entity.
     /// </summary>
-    public interface IEntityAccessDetailsMapper
+    public interface IEntityAccessRuleSetDetailsMapper
     {
         /// <summary>
-        /// Maps the shared parts of an <see cref="IEntityAccessDetails"/>
+        /// Maps the shared parts of an <see cref="IEntityAccessRuleSetDetails"/>
         /// implementation for a specific entity.
         /// </summary>
         /// <typeparam name="TAccessRule">
@@ -25,7 +25,7 @@ namespace Cofoundry.Domain.Internal
         /// </typeparam>
         /// <param name="dbEntity">The entity to map from.</param>
         /// <param name="result">
-        /// The <see cref="IEntityAccessDetails"/> projection to map to. Typically the mapper
+        /// The <see cref="IEntityAccessRuleSetDetails"/> projection to map to. Typically the mapper
         /// would create this instance, but passing it in means we don't need to specify all the
         /// generic parameters in the method call.
         /// </param>
@@ -36,7 +36,7 @@ namespace Cofoundry.Domain.Internal
         /// </param>
         Task MapAsync<TAccessRule, TEntityAccessRuleSummary>(
             IEntityAccessRestrictable<TAccessRule> dbEntity,
-            IEntityAccessDetails<TEntityAccessRuleSummary> result,
+            IEntityAccessRuleSetDetails<TEntityAccessRuleSummary> result,
             IExecutionContext executionContext,
             Action<TAccessRule, TEntityAccessRuleSummary> ruleMapper
             )

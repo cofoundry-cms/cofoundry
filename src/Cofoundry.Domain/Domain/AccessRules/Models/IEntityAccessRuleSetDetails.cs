@@ -3,11 +3,11 @@
 namespace Cofoundry.Domain
 {
     /// <summary>
-    /// Represents the common properties of an "access info" projection for
+    /// Represents the common properties of a "rule set details" projection for
     /// an entity such as a Page or Page Directory.
     /// </summary>
     /// <typeparam name="TEntityAccessRuleSummary">The type of the entity specific access rule projection.</typeparam>
-    public interface IEntityAccessDetails<TEntityAccessRuleSummary> where TEntityAccessRuleSummary : IEntityAccessRuleSummary
+    public interface IEntityAccessRuleSetDetails<TEntityAccessRuleSummary> where TEntityAccessRuleSummary : IEntityAccessRuleSummary
     {
         /// <summary>
         /// <para>
@@ -30,6 +30,6 @@ namespace Cofoundry.Domain
         /// <summary>
         /// The user area to restrict access to.
         /// </summary>
-        public string UserAreaCodeForLoginRedirect { get; set; }
+        public UserAreaMicroSummary UserAreaForLoginRedirect { get; set; }
     }
 }
