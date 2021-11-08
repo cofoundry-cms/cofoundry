@@ -14,6 +14,11 @@
                     ng-click="vm.edit()"
                     ng-disabled="vm.globalLoadState.isLoading"
                     ng-if="::vm.canUpdate"></cms-button>
+
+        <cms-button cms-text="Access  Control"
+                    ng-if="::vm.accessRulesEnabled"
+                    ng-click="vm.viewAccessRules()"
+                    ng-disabled="vm.editMode || vm.globalLoadState.isLoading"></cms-button>
         
         <cms-button cms-text="Delete"
                     ng-click="vm.deleteDirectory()"

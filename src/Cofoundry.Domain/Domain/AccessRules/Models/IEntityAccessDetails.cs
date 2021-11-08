@@ -7,7 +7,7 @@ namespace Cofoundry.Domain
     /// an entity such as a Page or Page Directory.
     /// </summary>
     /// <typeparam name="TEntityAccessRuleSummary">The type of the entity specific access rule projection.</typeparam>
-    public interface IEntityAccessInfo<TEntityAccessRuleSummary> where TEntityAccessRuleSummary : IEntityAccessRuleSummary
+    public interface IEntityAccessDetails<TEntityAccessRuleSummary> where TEntityAccessRuleSummary : IEntityAccessRuleSummary
     {
         /// <summary>
         /// <para>

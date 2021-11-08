@@ -29,6 +29,11 @@ function (
         return $http.get(getIdRoute(pageDirectoryId));
     }
 
+    service.getAccessRulesByPageDirectoryId = function (pageDirectoryId) {
+
+        return $http.get(getAccessRulesRoute(pageDirectoryId));
+    }
+
     /* COMMANDS */
 
     service.add = function (command) {
@@ -46,10 +51,19 @@ function (
         return $http.delete(getIdRoute(pageDirectoryId));
     }
 
+    service.updateAccessRules = function (command) {
+
+        return $http.patch(getAccessRulesRoute(command.pageDirectoryId), command);
+    }
+
     /* PRIVATES */
 
     function getIdRoute(pageDirectoryId) {
         return directoryServiceBase + '/' + pageDirectoryId;
+    }
+
+    function getAccessRulesRoute (pageDirectoryId) {
+        return getIdRoute(pageDirectoryId) + '/access';
     }
 
     return service;

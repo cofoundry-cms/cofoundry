@@ -7,7 +7,7 @@ namespace Cofoundry.Domain
     /// directly associated and those inherited from parent directories.
     /// </summary>
     /// <inheritdoc/>
-    public class PageAccessInfo : IEntityAccessInfo<PageAccessRuleSummary>
+    public class PageAccessDetails : IEntityAccessDetails<PageAccessRuleSummary>
     {
         /// <summary>
         /// Database id of the page these access rules are associated with.
@@ -17,7 +17,7 @@ namespace Cofoundry.Domain
         /// <summary>
         /// Rules inherited from the directories this page is parented to.
         /// </summary>
-        public ICollection<InheritedPageDirectoryAccessInfo> InheritedAccessRules { get; set; }
+        public ICollection<InheritedPageDirectoryAccessDetails> InheritedAccessRules { get; set; }
 
         /// <summary>
         /// <para>

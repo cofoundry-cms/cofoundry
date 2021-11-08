@@ -2,10 +2,6 @@
 using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Serialization;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Cofoundry.Core.Json.Overridable
 {
@@ -38,6 +34,9 @@ namespace Cofoundry.Core.Json.Overridable
             settings.Converters.Add(new StringEnumConverter());
             settings.Converters.Add(new HtmlStringJsonConverter());
             settings.ContractResolver = new CamelCasePropertyNamesContractResolver();
+
+            // When merging commands via delta patching, replace properties like arrays rather than merging
+            settings.ObjectCreationHandling = ObjectCreationHandling.Replace;
 
             return settings;
         }

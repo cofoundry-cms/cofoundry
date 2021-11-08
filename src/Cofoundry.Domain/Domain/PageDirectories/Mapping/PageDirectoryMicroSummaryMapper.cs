@@ -13,7 +13,7 @@ namespace Cofoundry.Domain.Internal
             var result = new PageDirectoryMicroSummary()
             {
                 Depth = pageDirectory.PageDirectoryPath.Depth,
-                FullUrlPath = pageDirectory.PageDirectoryPath.FullUrlPath,
+                FullUrlPath = "/" + pageDirectory.PageDirectoryPath.FullUrlPath,
                 Name = pageDirectory.Name,
                 PageDirectoryId = pageDirectory.PageDirectoryId,
                 ParentPageDirectoryId = pageDirectory.ParentPageDirectoryId

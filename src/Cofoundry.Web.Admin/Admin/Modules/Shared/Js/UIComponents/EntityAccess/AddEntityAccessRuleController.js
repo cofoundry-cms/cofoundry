@@ -1,10 +1,9 @@
-﻿angular.module('cms.pages').controller('AddPageAccessRuleController', [
+﻿angular.module('cms.shared').controller('AddEntityAccessRuleController', [
     '$scope',
     '$q',
     'shared.LoadState',
     'shared.roleService',
     'shared.userAreaService',
-    'shared.modalDialogService',
     'options',
     'close',
 function (
@@ -13,7 +12,6 @@ function (
     LoadState,
     roleService,
     userAreaService,
-    modalDialogService,
     options,
     close) {
 
@@ -24,7 +22,6 @@ function (
     /* INIT */
 
     function init() {
-        angular.extend($scope, options);
 
         vm.globalLoadState = new LoadState();
         vm.saveLoadState = new LoadState();
@@ -59,7 +56,7 @@ function (
     }
 
     function onAdd() {
-        vm.onSave(vm.command);
+        options.onSave(vm.command);
 
         close();
     }

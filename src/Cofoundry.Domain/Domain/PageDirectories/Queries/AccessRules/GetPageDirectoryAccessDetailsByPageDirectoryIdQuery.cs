@@ -7,9 +7,9 @@ namespace Cofoundry.Domain
     /// Returns all access rules associated with a directory, including those inherited from
     /// parent directories.
     /// </summary>
-    public class GetPageDirectoryAccessInfoByPageDirectoryIdQuery : IQuery<PageDirectoryAccessInfo>
+    public class GetPageDirectoryAccessDetailsByPageDirectoryIdQuery : IQuery<PageDirectoryAccessDetails>
     {
-        public GetPageDirectoryAccessInfoByPageDirectoryIdQuery() { }
+        public GetPageDirectoryAccessDetailsByPageDirectoryIdQuery() { }
 
         /// <summary>
         /// Initializes the query with the specified <paramref name="pageDirectoryId"/>.
@@ -17,7 +17,7 @@ namespace Cofoundry.Domain
         /// <param name="pageDirectoryId">
         /// Database id of the page directory to get access rules for.
         /// </param>
-        public GetPageDirectoryAccessInfoByPageDirectoryIdQuery(int pageDirectoryId)
+        public GetPageDirectoryAccessDetailsByPageDirectoryIdQuery(int pageDirectoryId)
         {
             PageDirectoryId = pageDirectoryId;
         }

@@ -11,6 +11,7 @@
     'shared.pageService',
     'shared.permissionValidationService',
     'shared.userAreaService',
+    'shared.internalModulePath',
     'pages.modulePath',
 function (
     $routeParams,
@@ -25,10 +26,12 @@ function (
     pageService,
     permissionValidationService,
     userAreaService,
+    sharedModulePath,
     modulePath
     ) {
 
-    var vm = this;
+    var vm = this,
+        ENTITY_DEFINITION_CODE = 'COFPGE';
 
     init();
     
@@ -68,11 +71,11 @@ function (
             }
         });
 
-        vm.canCreate = permissionValidationService.canCreate('COFPGE');
-        vm.canUpdate = permissionValidationService.canUpdate('COFPGE');
-        vm.canDelete = permissionValidationService.canDelete('COFPGE');
-        vm.canPublishPage = permissionValidationService.hasPermission('COFPGEPAGPUB');
-        vm.canUpdatePageUrl =  permissionValidationService.hasPermission('COFPGEUPDURL');
+        vm.canCreate = permissionValidationService.canCreate(ENTITY_DEFINITION_CODE);
+        vm.canUpdate = permissionValidationService.canUpdate(ENTITY_DEFINITION_CODE);
+        vm.canDelete = permissionValidationService.canDelete(ENTITY_DEFINITION_CODE);
+        vm.canPublishPage = permissionValidationService.hasPermission(ENTITY_DEFINITION_CODE + 'PAGPUB');
+        vm.canUpdatePageUrl =  permissionValidationService.hasPermission(ENTITY_DEFINITION_CODE + 'UPDURL');
 
         // Init
         initData(vm.formLoadState);
@@ -202,12 +205,22 @@ function (
     function viewAccessRules() {
 
         modalDialogService.show({
-            templateUrl: modulePath + 'Routes/Modals/PageAccessRuleList.html',
-            controller: 'PageAccessRuleListController',
+            templateUrl: sharedModulePath + 'UIComponents/EntityAccess/EntityAccessEditor.html',
+            controller: 'EntityAccessEditorController',
             options: {
-                page: vm.page
+                entityDefinitionCode: ENTITY_DEFINITION_CODE,
+                entityIdPrefix: 'page',
+                entityDefinitionName: 'Page',
+                entityDescription: vm.page.pageRoute.fullPath,
+                entityAccessLoader: pageAccessLoader,
+                saveAccess: pageService.updateAccessRules
             }
         });
+
+        function pageAccessLoader() {
+            return pageService
+                .getAccessRulesByPageId(vm.page.pageId);
+        }
     }
 
     /* PRIVATE FUNCS */

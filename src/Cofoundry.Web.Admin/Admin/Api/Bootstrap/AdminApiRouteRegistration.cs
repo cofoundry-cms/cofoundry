@@ -175,6 +175,12 @@ namespace Cofoundry.Web.Admin
                 .MapPatch(pageDirectoryIdRoute)
                 .MapDelete(pageDirectoryIdRoute)
                 ;
+
+            routeBuilder
+                .ForAdminApiController<PageDirectoryAccessApiController>("page-directories/{pageDirectoryId:int}/access")
+                .MapGet()
+                .MapPatch()
+                ;
         }
 
         private static void MapPageApiRoutes(IEndpointRouteBuilder routeBuilder)
@@ -222,7 +228,7 @@ namespace Cofoundry.Web.Admin
                 ;
 
             routeBuilder
-                .ForAdminApiController<PageAccessRulesApiController>("pages/{pageId:int}/access-rules")
+                .ForAdminApiController<PageAccessApiController>("pages/{pageId:int}/access")
                 .MapGet()
                 .MapPatch()
                 ;

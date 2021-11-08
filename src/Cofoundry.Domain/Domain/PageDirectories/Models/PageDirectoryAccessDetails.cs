@@ -3,14 +3,16 @@
 namespace Cofoundry.Domain
 {
     /// <summary>
-    /// Access rules for a single page directory that is inherited by another page or directory.
+    /// Collated information about the access rules for a page directory including both those
+    /// directly associated and those inherited from parent directories.
     /// </summary>
-    public class InheritedPageDirectoryAccessInfo : IEntityAccessInfo<PageDirectoryAccessRuleSummary>
+    /// <inheritdoc/>
+    public class PageDirectoryAccessDetails : IEntityAccessDetails<PageDirectoryAccessRuleSummary>
     {
         /// <summary>
         /// Database id of the page these access rules are associated with.
         /// </summary>
-        public PageDirectoryMicroSummary PageDirectory { get; set; }
+        public int PageDirectoryId { get; set; }
 
         /// <summary>
         /// <para>
@@ -26,6 +28,11 @@ namespace Cofoundry.Domain
         /// </para>
         /// </summary>
         public ICollection<PageDirectoryAccessRuleSummary> AccessRules { get; set; }
+
+        /// <summary>
+        /// Rules inherited from the directories this page is parented to.
+        /// </summary>
+        public ICollection<InheritedPageDirectoryAccessDetails> InheritedAccessRules { get; set; }
 
         public AccessRuleViolationAction ViolationAction { get; set; }
 

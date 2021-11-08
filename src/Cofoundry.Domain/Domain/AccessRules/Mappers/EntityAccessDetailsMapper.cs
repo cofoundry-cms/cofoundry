@@ -10,13 +10,13 @@ using System.Threading.Tasks;
 namespace Cofoundry.Domain.Internal
 {
     /// <inheritdoc/>
-    public class EntityAccessInfoMapper : IEntityAccessInfoMapper
+    public class EntityAccessDetailsMapper : IEntityAccessDetailsMapper
     {
-        private readonly ILogger<IEntityAccessInfoMapper> _logger;
+        private readonly ILogger<IEntityAccessDetailsMapper> _logger;
         private readonly IQueryExecutor _queryExecutor;
 
-        public EntityAccessInfoMapper(
-            ILogger<IEntityAccessInfoMapper> logger,
+        public EntityAccessDetailsMapper(
+            ILogger<IEntityAccessDetailsMapper> logger,
             IQueryExecutor queryExecutor
             )
         {
@@ -26,7 +26,7 @@ namespace Cofoundry.Domain.Internal
 
         public async Task MapAsync<TAccessRule, TEntityAccessRuleSummary>(
             IEntityAccessRestrictable<TAccessRule> dbEntity,
-            IEntityAccessInfo<TEntityAccessRuleSummary> result,
+            IEntityAccessDetails<TEntityAccessRuleSummary> result,
             IExecutionContext executionContext,
             Action<TAccessRule, TEntityAccessRuleSummary> ruleMapper
             )

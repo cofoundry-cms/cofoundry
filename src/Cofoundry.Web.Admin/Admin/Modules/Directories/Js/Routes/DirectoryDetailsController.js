@@ -7,8 +7,9 @@
     'shared.LoadState',
     'shared.modalDialogService',
     'shared.permissionValidationService',
+    'shared.userAreaService',
+    'shared.internalModulePath',
     'directories.directoryService',
-    'directories.modulePath',
 function (
     $routeParams,
     $q,
@@ -18,11 +19,13 @@ function (
     LoadState,
     modalDialogService,
     permissionValidationService,
-    directoryService,
-    modulePath
+    userAreaService,
+    sharedModulePath,
+    directoryService
     ) {
 
-    var vm = this;
+    var vm = this,
+        ENTITY_DEFINITION_CODE = 'COFDIR';
 
     init();
     
@@ -35,6 +38,7 @@ function (
         vm.save = save;
         vm.cancel = reset;
         vm.deleteDirectory = deleteDirectory;
+        vm.viewAccessRules = viewAccessRules;
 
         // Events
         vm.onNameChanged = onNameChanged;
@@ -45,12 +49,11 @@ function (
         vm.saveLoadState = new LoadState();
         vm.formLoadState = new LoadState(true);
 
-        vm.canUpdate = permissionValidationService.canUpdate('COFDIR');
-        vm.canDelete = permissionValidationService.canDelete('COFDIR');
+        vm.canUpdate = permissionValidationService.canUpdate(ENTITY_DEFINITION_CODE);
+        vm.canDelete = permissionValidationService.canDelete(ENTITY_DEFINITION_CODE);
 
         // Init
-        initData()
-            .then(setLoadingOff.bind(null, vm.formLoadState));
+        initData(vm.formLoadState);
     }
 
     /* UI ACTIONS */
@@ -93,6 +96,27 @@ function (
         }
     }
 
+    function viewAccessRules() {
+
+        modalDialogService.show({
+            templateUrl: sharedModulePath + 'UIComponents/EntityAccess/EntityAccessEditor.html',
+            controller: 'EntityAccessEditorController',
+            options: {
+                entityDefinitionCode: ENTITY_DEFINITION_CODE,
+                entityIdPrefix: 'pageDirectory',
+                entityDefinitionName: 'Directory',
+                entityDescription: vm.pageDirectory.fullUrlPath,
+                entityAccessLoader: directoryAccessLoader,
+                saveAccess: directoryService.updateAccessRules
+            }
+        });
+
+        function directoryAccessLoader() {
+            return directoryService
+                .getAccessRulesByPageDirectoryId(vm.pageDirectory.pageDirectoryId);
+        }
+    }
+
     /* EVENTS */
 
     function onNameChanged() {
@@ -108,21 +132,32 @@ function (
             .then(vm.mainForm.formStatus.success.bind(null, message));
     }
 
-    function initData() {
+    function initData(loadStateToTurnOff) {
         var pageDirectoryId = $routeParams.id;
 
-        return directoryService.getTree()
-            .then(loadDirectory);
+        return $q
+            .all([getDirectory(), getUserAreas()])
+            .then(setLoadingOff.bind(null, loadStateToTurnOff));
 
-        function loadDirectory(tree) {
-            var pageDirectory = tree.findNodeById(pageDirectoryId),
-                parentDirectories = tree.flatten(pageDirectoryId);
+        function getDirectory() {
+            return directoryService
+                .getTree()
+                .then(function loadDirectory(tree) {
+                    var pageDirectory = tree.findNodeById(pageDirectoryId),
+                        parentDirectories = tree.flatten(pageDirectoryId);
+        
+                    vm.pageDirectory = pageDirectory;
+                    vm.parentDirectories = parentDirectories;
+                    vm.command = mapUpdateCommand(pageDirectory);
+                    vm.editMode = false;
+                    vm.hasChildContent = pageDirectory.numPages || pageDirectory.childPageDirectories.length;
+                });
+        }
 
-            vm.pageDirectory = pageDirectory;
-            vm.parentDirectories = parentDirectories;
-            vm.command = mapUpdateCommand(pageDirectory);
-            vm.editMode = false;
-            vm.hasChildContent = pageDirectory.numPages || pageDirectory.childPageDirectories.length;
+        function getUserAreas() {
+            return userAreaService.getAll().then(function (userAreas) {
+                vm.accessRulesEnabled = userAreas.length > 1;
+            });
         }
     }
 

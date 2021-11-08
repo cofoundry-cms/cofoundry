@@ -36,6 +36,7 @@ function (
     addCrudRoutes('document', 'documents');
     addCrudRoutes('image', 'images');
     addCrudRoutes('page', 'pages');
+    addCrudRoutes('directory', 'directories');
     addCrudRoutes('pageTemplate', 'page-templates');
     addCrudRoutes('role', 'roles');
 

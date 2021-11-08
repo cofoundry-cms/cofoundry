@@ -1,7 +1,7 @@
 ﻿<cms-modal-dialog-container cms-modal-size="large">
 
     <cms-modal-dialog-header>
-        Access Rules: {{::page.latestVersion.title}}
+        {{::entityDefinitionName}} Access: {{::entityDescription}}
     </cms-modal-dialog-header>
 
     <cms-form cms-name="mainForm"
@@ -34,8 +34,18 @@
 
             <cms-form-status></cms-form-status>
 
-            <cms-form-section cms-title="Inherited Rules">
-                <cms-form-field-container cms-loading="formLoadState.isLoading">
+            <cms-form-section cms-title="Inherited Rules" 
+                ng-if="inheritedRules.length"
+                cms-loading="formLoadState.isLoading">
+
+                <cms-form-field-container> 
+                    <p>
+                        These rules are inherited from parent directories. Users will need to meet the rule requirements for each
+                        parent directory in order to gain access.
+                    </p>
+                </cms-form-field-container>
+
+                <cms-form-field-container>
                     <cms-table-container>
 
                         <table>
@@ -44,18 +54,17 @@
                                     <th>Directory</th>
                                     <th>User Area</th>
                                     <th>Role</th>
-                                    <th>Violation Action</th>
+                                    <th>Redirect to Login</th>
+                                    <th>Default Action</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr ng-if="accessInfo.inheritedAccessRules.length == 0">
-                                    <td colspan="100" class="empty">No rules inherited from parent directories.</td>
-                                </tr>
-                                <tr ng-repeat="rule in accessInfo.inheritedAccessRules">
-                                    <td>(inherited from X?)</td>
+                                <tr ng-repeat="rule in inheritedRules">
+                                    <td><a href="{{urlLibrary.directoryDetails(rule.accessDetails.pageDirectory.pageDirectoryId)}}" target="_blank">{{rule.accessDetails.pageDirectory.fullUrlPath}}</a></td>
                                     <td>{{rule.userArea.name}}</td>
                                     <td>{{rule.role.title}}</td>
-                                    <td>{{rule.violationAction}}</td>
+                                    <td>{{rule.accessDetails.loginRedirect}}</td>
+                                    <td title="{{rule.accessDetails.violationAction.description}}">{{rule.accessDetails.violationAction.name}}</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -64,7 +73,11 @@
                 </cms-form-field-container>
             </cms-form-section>
 
-            <cms-form-section cms-title="Access Rules">
+            <cms-form-section cms-title="Access Rules">   
+                                  
+                <cms-form-field-container> 
+                    <p>To be granted accessto this {{entityDefinitionNameLower}}, users will need to meet the requirements of at least one of these rules.</p>
+                </cms-form-field-container>
 
                 <cms-form-field-container cms-loading="formLoadState.isLoading">
                     <cms-table-container>
@@ -81,7 +94,7 @@
                                 <tr ng-if="accessInfo.accessRules.length == 0">
                                     <td colspan="100" class="empty">No rules found.</td>
                                 </tr>
-                                <tr ng-repeat="rule in accessInfo.accessRules">
+                                <tr ng-repeat="rule in accessDetails.accessRules">
                                     <td>{{rule.userArea.name}}</td>
                                     <td>{{rule.role.title}}</td>
                                     <td cms-table-column-actions
@@ -109,9 +122,14 @@
                     </cms-table-container>
 
                 </cms-form-field-container>
+
             </cms-form-section>
 
-            <cms-form-section cms-title="Actions">
+            <cms-form-section cms-title="Violation Action">
+
+                <cms-form-field-container> 
+                    <p>These options describe what should happen if the user is denied access.</p>
+                </cms-form-field-container>
 
                 <cms-form-field-checkbox cms-title="Redirect to login"
                     cms-model="command.redirectoToLogin"
@@ -129,10 +147,10 @@
 
                 <cms-form-field-dropdown cms-title="Default Action"
                     cms-options="violationActions"
-                    cms-option-name="name"
+                    cms-option-name="description"
                     cms-option-value="id"
                     cms-model="command.violationAction"
-                    cms-description="The action to take when the a user is not authorized to view the page. Using a n 'Error' action tells the user that the page was found but could not be accessed, whereas a 'Not Found' action will make the page appear not to exist for unauthorized users."
+                    cms-description="The action to take when the a user is not authorized to view the page. Using an 'Error' action tells the user that the page was found but could not be accessed, whereas a 'Not Found' action will make the page appear not to exist for unauthorized users."
                     required></cms-form-field-dropdown>
 
             </cms-form-section>

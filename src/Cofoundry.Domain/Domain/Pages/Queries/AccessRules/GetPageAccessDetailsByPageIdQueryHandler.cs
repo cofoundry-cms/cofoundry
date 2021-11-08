@@ -12,26 +12,26 @@ namespace Cofoundry.Domain
     /// Returns all access rules associated with a page, including those inherited from
     /// parent directories.
     /// </summary>
-    public class GetPageAccessInfoByPageIdQueryHandler
-        : IQueryHandler<GetPageAccessInfoByPageIdQuery, PageAccessInfo>
-        , IPermissionRestrictedQueryHandler<GetPageAccessInfoByPageIdQuery, PageAccessInfo>
+    public class GetPageAccessDetailsByPageIdQueryHandler
+        : IQueryHandler<GetPageAccessDetailsByPageIdQuery, PageAccessDetails>
+        , IPermissionRestrictedQueryHandler<GetPageAccessDetailsByPageIdQuery, PageAccessDetails>
     {
         private readonly CofoundryDbContext _dbContext;
-        private readonly IEntityAccessInfoMapper _entityAccessInfoMapper;
+        private readonly IEntityAccessDetailsMapper _entityAccessDetailsMapper;
         private readonly IPageDirectoryMicroSummaryMapper _pageDirectoryMicroSummaryMapper;
 
-        public GetPageAccessInfoByPageIdQueryHandler(
+        public GetPageAccessDetailsByPageIdQueryHandler(
             CofoundryDbContext dbContext,
-            IEntityAccessInfoMapper entityAccessInfoMapper,
+            IEntityAccessDetailsMapper entityAccessDetailsMapper,
             IPageDirectoryMicroSummaryMapper pageDirectoryMicroSummaryMapper
             )
         {
             _dbContext = dbContext;
-            _entityAccessInfoMapper = entityAccessInfoMapper;
+            _entityAccessDetailsMapper = entityAccessDetailsMapper;
             _pageDirectoryMicroSummaryMapper = pageDirectoryMicroSummaryMapper;
         }
 
-        public async Task<PageAccessInfo> ExecuteAsync(GetPageAccessInfoByPageIdQuery query, IExecutionContext executionContext)
+        public async Task<PageAccessDetails> ExecuteAsync(GetPageAccessDetailsByPageIdQuery query, IExecutionContext executionContext)
         {
             var dbPage = await _dbContext
                 .Pages
@@ -43,8 +43,8 @@ namespace Cofoundry.Domain
 
             if (dbPage == null) return null;
 
-            var result = new PageAccessInfo();
-            await _entityAccessInfoMapper.MapAsync(dbPage, result, executionContext, (dbRule, rule) =>
+            var result = new PageAccessDetails();
+            await _entityAccessDetailsMapper.MapAsync(dbPage, result, executionContext, (dbRule, rule) =>
             {
                 rule.PageId = dbRule.PageId;
                 rule.PageAccessRuleId = dbRule.PageAccessRuleId;
@@ -56,7 +56,7 @@ namespace Cofoundry.Domain
             return result;
         }
 
-        private async Task MapInheritedRules(Page dbPage, PageAccessInfo result, IExecutionContext executionContext)
+        private async Task MapInheritedRules(Page dbPage, PageAccessDetails result, IExecutionContext executionContext)
         {
             var dbInheritedRules = await _dbContext
                 .PageDirectoryClosures
@@ -70,13 +70,13 @@ namespace Cofoundry.Domain
                 .OrderByDescending(d => d.Distance)
                 .ToListAsync();
 
-            result.InheritedAccessRules = new List<InheritedPageDirectoryAccessInfo>();
+            result.InheritedAccessRules = new List<InheritedPageDirectoryAccessDetails>();
 
             foreach (var dbInheritedRule in dbInheritedRules)
             {
-                var inheritedDirectory = new InheritedPageDirectoryAccessInfo();
+                var inheritedDirectory = new InheritedPageDirectoryAccessDetails();
                 inheritedDirectory.PageDirectory = _pageDirectoryMicroSummaryMapper.Map(dbInheritedRule.AncestorPageDirectory);
-                await _entityAccessInfoMapper.MapAsync(dbInheritedRule.AncestorPageDirectory, inheritedDirectory, executionContext, (dbRule, rule) =>
+                await _entityAccessDetailsMapper.MapAsync(dbInheritedRule.AncestorPageDirectory, inheritedDirectory, executionContext, (dbRule, rule) =>
                 {
                     rule.PageDirectoryId = dbRule.PageDirectoryId;
                     rule.PageDirectoryAccessRuleId = dbRule.PageDirectoryAccessRuleId;
@@ -86,7 +86,7 @@ namespace Cofoundry.Domain
             }
         }
 
-        public IEnumerable<IPermissionApplication> GetPermissions(GetPageAccessInfoByPageIdQuery query)
+        public IEnumerable<IPermissionApplication> GetPermissions(GetPageAccessDetailsByPageIdQuery query)
         {
             yield return new PageReadPermission();
         }

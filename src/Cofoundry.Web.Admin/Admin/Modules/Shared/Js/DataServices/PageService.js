@@ -131,7 +131,7 @@ function (
     }
 
     service.getAccessRulesRoute = function (pageId) {
-        return service.getIdRoute(pageId) + '/access-rules';
+        return service.getIdRoute(pageId) + '/access';
     }
 
     return service;

@@ -1,25 +1,27 @@
-﻿angular.module('cms.pages').controller('PageAccessRuleListController', [
+﻿angular.module('cms.shared').controller('EntityAccessEditorController', [
     '$scope',
     '$q',
     'shared.LoadState',
-    'shared.pageService',
     'shared.userAreaService',
     'shared.roleService',
     'shared.modalDialogService',
     'shared.arrayUtilities',
-    'pages.modulePath',
+    'shared.internalModulePath',
+    'shared.permissionValidationService',
+    'shared.urlLibrary',
     'options',
     'close',
 function (
     $scope,
     $q,
     LoadState,
-    pageService,
     userAreaService,
     roleService,
     modalDialogService,
     arrayUtilities,
     modulePath,
+    permissionValidationService,
+    urlLibrary,
     options,
     close) {
 
@@ -30,21 +32,21 @@ function (
     /* INIT */
 
     function init() {
-
+ 
         // UI actions
         vm.save = save;
         vm.close = close;
         vm.add = add;
         vm.deleteRule = deleteRule;
 
-
         // Properties
         vm.globalLoadState = new LoadState();
         vm.saveLoadState = new LoadState();
         vm.formLoadState = new LoadState(true);
+        vm.urlLibrary = urlLibrary;
 
         // permissions
-        vm.canManage = true; // TODO
+        vm.canManage = permissionValidationService.hasPermission(options.entityDefinitionCode + 'ACCRUL');
         vm.editMode = vm.canManage;
 
         // Init
@@ -54,12 +56,16 @@ function (
     /* UI ACTIONS */
 
     function save() {
-        vm.command.accessRules = _.map(vm.accessInfo.accessRules, function(rule) {
-            return {
-                pageAccessRuleId: rule.pageAccessRuleId,
+        vm.command.accessRules = _.map(vm.accessDetails.accessRules, function(rule) {
+            var idProp = options.entityIdPrefix + 'AccessRuleId';
+            var command = {
                 userAreaCode: rule.userArea.userAreaCode,
                 roleId: rule.role ? rule.role.roleId : null
-            }
+            };
+
+            command[idProp] = rule[idProp];
+
+            return command;
         });
 
         if (!vm.command.redirectoToLogin) {
@@ -68,7 +74,7 @@ function (
 
         setLoadingOn(vm.saveLoadState);
 
-        pageService.updateAccessRules(vm.command)
+        options.saveAccess(vm.command)
             .then(onSuccess.bind(null, 'Access rules updated successfully'))
             .then(close)
             .finally(setLoadingOff.bind(null, vm.saveLoadState));
@@ -77,8 +83,8 @@ function (
     function add() {
 
         modalDialogService.show({
-            templateUrl: modulePath + 'Routes/Modals/AddPageAccessRule.html',
-            controller: 'AddPageAccessRuleController',
+            templateUrl: modulePath + 'UIComponents/EntityAccess/AddEntityAccessRule.html',
+            controller: 'AddEntityAccessRuleController',
             options: {
                 onSave: onAddRule
             }
@@ -87,7 +93,7 @@ function (
     
     function deleteRule(rule, $index) {
 
-        arrayUtilities.removeObject(vm.accessInfo.accessRules, rule);
+        arrayUtilities.removeObject(vm.accessDetails.accessRules, rule);
         setUserAreasInRules();
     }
 
@@ -97,7 +103,7 @@ function (
         
         var rule = {};
 
-        var duplicateRule = _.find(vm.accessInfo.accessRules, function(accessRule) {
+        var duplicateRule = _.find(vm.accessDetails.accessRules, function(accessRule) {
             var roleId = accessRule.role ? accessRule.role.roleId : null;
             return accessRule.userArea.userAreaCode === command.userAreaCode && roleId == command.roleId;
         });
@@ -110,7 +116,7 @@ function (
 
         $q.all([getRole(), getUserArea()])
             .then(function() {
-                vm.accessInfo.accessRules.push(rule);
+                vm.accessDetails.accessRules.push(rule);
                 sortRules();
                 setUserAreasInRules();
             })
@@ -146,42 +152,60 @@ function (
     /* PRIVATE FUNCS */
 
     function initData(loadStateToTurnOff) {
-        var page = options.page;
-        vm.page = page;
 
+        vm.entityDefinitionName = options.entityDefinitionName;
+        vm.entityDefinitionNameLower = options.entityDefinitionName.toLowerCase();
+        vm.entityDescription = options.entityDescription;
         vm.violationActions = [{
             id: 'Error',
-            name: 'Error (403: Forbidden)'
+            name: 'Error',
+            description: 'Error (403: Forbidden)'
         }, {
             id: 'NotFound',
-            name: 'Not Found (404: Not Found)'
+            name: 'Not Found',
+            description: 'Not Found (404: Not Found)'
         }];
 
-        return pageService
-            .getAccessRulesByPageId(vm.page.pageId)
-            .then(function (accessInfo) {
-                vm.accessInfo = accessInfo;
-                vm.command = mapUpdateCommand(accessInfo);
+        return options.entityAccessLoader()
+            .then(function (accessDetails) {
+                vm.accessDetails = accessDetails;
+                vm.command = mapUpdateCommand(accessDetails);
+                vm.inheritedRules = [];
+                
+                _.each(vm.accessDetails.inheritedAccessRules, function (inheritedAccessDetails) {
+                    inheritedAccessDetails.violationAction = _.findWhere(vm.violationActions, { id: inheritedAccessDetails.violationAction });
+                    if (inheritedAccessDetails.userAreaCodeForLoginRedirect) {
+                        inheritedAccessDetails.loginRedirect = 'Yes';
+                    } else {
+                        inheritedAccessDetails.loginRedirect = 'No';
+                    }
+
+                    _.each(inheritedAccessDetails.accessRules, function(rule) {
+                        rule.accessDetails = inheritedAccessDetails;
+                        vm.inheritedRules.push(rule);
+                    });
+                });
+
                 setUserAreasInRules();
             })
             .then(setLoadingOff.bind(null, loadStateToTurnOff));
     }
 
-    function mapUpdateCommand(accessInfo) {
+    function mapUpdateCommand(accessDetails) {
 
-        var command = _.pick(accessInfo,
-            'pageId',
+        var command = _.pick(accessDetails,
+            options.entityIdPrefix + 'Id',
             'userAreaCodeForLoginRedirect',
             'violationAction'
         );
         
-        command.redirectoToLogin = !!accessInfo.userAreaCodeForLoginRedirect;
+        command.redirectoToLogin = !!accessDetails.userAreaCodeForLoginRedirect;
 
         return command;
     }
 
     function setUserAreasInRules() {
-        vm.userAreasInRules = _(vm.accessInfo.accessRules)
+        vm.userAreasInRules = _(vm.accessDetails.accessRules)
             .chain()
             .map(function(rule) { return rule.userArea; })
             .uniq(function(userArea) { return userArea.userAreaCode; })
@@ -198,14 +222,14 @@ function (
             vm.command.userAreaCodeForLoginRedirect = null;
         }
         
-        if (!vm.command.userAreaCodeForLoginRedirect) {
+        if (!vm.command.userAreaCodeForLoginRedirect && vm.userAreasInRules.length) {
             // set a default selection in-case the list is hidden
             vm.command.userAreaCodeForLoginRedirect = vm.userAreasInRules[0].userAreaCode;
         } 
     }
 
     function sortRules() {
-        vm.accessInfo.accessRules = _(vm.accessInfo.accessRules)
+        vm.accessDetails.accessRules = _(vm.accessDetails.accessRules)
             .chain()
             .sortBy(function (rule) {
                 return rule.role ? rule.role.roleId : -1;
