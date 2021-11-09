@@ -1,4 +1,4 @@
-﻿<cms-page-header cms-title="{{vm.pageDirectory.urlPath}}"
+﻿<cms-page-header cms-title="{{vm.pageDirectory.urlPath || vm.pageDirectory.name}}"
                  cms-parent-title="Directories"></cms-page-header>
 
 <cms-form cms-name="mainForm"
@@ -7,13 +7,13 @@
           cms-loading="vm.formLoadState.isLoading">
 
     <!-- Default toolbar -->
-    <cms-page-actions ng-show="!vm.editMode && vm.pageDirectory.depth !== 0">
+    <cms-page-actions ng-show="!vm.editMode">
 
         <cms-button class="main-cta"
                     cms-text="Edit"
                     ng-click="vm.edit()"
                     ng-disabled="vm.globalLoadState.isLoading"
-                    ng-if="::vm.canUpdate"></cms-button>
+                    ng-if="vm.canUpdate && vm.pageDirectory.depth !== 0"></cms-button>
 
         <cms-button cms-text="Access  Control"
                     ng-if="::vm.accessRulesEnabled"
@@ -23,7 +23,7 @@
         <cms-button cms-text="Delete"
                     ng-click="vm.deleteDirectory()"
                     ng-disabled="vm.globalLoadState.isLoading"
-                    ng-if="::vm.canDelete"></cms-button>
+                    ng-if="vm.canDelete && vm.pageDirectory.depth !== 0"></cms-button>
 
     </cms-page-actions>
 
@@ -91,7 +91,6 @@
 
             <cms-form-field-container>
                 <cms-directory-grid cms-directories="vm.pageDirectory.childPageDirectories"
-                                    cms-start-depth="vm.pageDirectory.depth"
                                     cms-redirect="true"></cms-directory-grid>
             </cms-form-field-container>
 
