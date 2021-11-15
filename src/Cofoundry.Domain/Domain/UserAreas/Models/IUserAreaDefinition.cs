@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Cofoundry.Domain
+﻿namespace Cofoundry.Domain
 {
     /// <summary>
     /// Implementing this allows you to define a custom user area that is completely separate to 
@@ -41,7 +35,8 @@ namespace Cofoundry.Domain
         /// <summary>
         /// Indicates whether the user should login using thier email address
         /// as the username. Some SSO systems might provide only a username and not
-        /// an email address so in this case the email address is allowed to be null. 
+        /// an email address so in this case the email address is allowed to be 
+        /// <see langword="null"/>. 
         /// </summary>
         bool UseEmailAsUsername { get; }
 
@@ -53,10 +48,10 @@ namespace Cofoundry.Domain
         string LoginPath { get; }
 
         /// <summary>
-        /// Cofoundry creates an auth schema for each user area. Use this property to set this
-        /// user area as the default auth schema, which means the HttpContext.User property will 
+        /// Cofoundry creates an auth scheme for each user area. Use this property to set this
+        /// user area as the default auth scheme, which means the HttpContext.User property will 
         /// be set to this identity.
         /// </summary>
-        bool IsDefaultAuthSchema { get;  }
+        bool IsDefaultAuthSchema { get; }
     }
 }
