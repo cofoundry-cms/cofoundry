@@ -1,12 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Cofoundry.Domain.Data;
+﻿using Cofoundry.Core;
+using Cofoundry.Core.Data;
 using Cofoundry.Domain.CQS;
-using Microsoft.EntityFrameworkCore;
-using Cofoundry.Core;
+using Cofoundry.Domain.Data;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Cofoundry.Domain.Internal
 {
@@ -14,7 +13,7 @@ namespace Cofoundry.Domain.Internal
     /// Updates the password of the currently logged in user, using the
     /// OldPassword field to authenticate the request.
     /// </summary>
-    public class UpdateCurrentUserPasswordCommandHandler 
+    public class UpdateCurrentUserPasswordCommandHandler
         : ICommandHandler<UpdateCurrentUserPasswordCommand>
         , IPermissionRestrictedCommandHandler<UpdateCurrentUserPasswordCommand>
     {
@@ -25,6 +24,8 @@ namespace Cofoundry.Domain.Internal
         private readonly IPermissionValidationService _permissionValidationService;
         private readonly IUserAreaDefinitionRepository _userAreaRepository;
         private readonly IPasswordUpdateCommandHelper _passwordUpdateCommandHelper;
+        private readonly ITransactionScopeManager _transactionScopeManager;
+        private readonly IUserContextCache _userContextCache;
 
         public UpdateCurrentUserPasswordCommandHandler(
             CofoundryDbContext dbContext,
@@ -33,7 +34,9 @@ namespace Cofoundry.Domain.Internal
             UserAuthenticationHelper userAuthenticationHelper,
             IPermissionValidationService permissionValidationService,
             IUserAreaDefinitionRepository userAreaRepository,
-            IPasswordUpdateCommandHelper passwordUpdateCommandHelper
+            IPasswordUpdateCommandHelper passwordUpdateCommandHelper,
+            ITransactionScopeManager transactionScopeManager,
+            IUserContextCache userContextCache
             )
         {
             _dbContext = dbContext;
@@ -43,6 +46,8 @@ namespace Cofoundry.Domain.Internal
             _permissionValidationService = permissionValidationService;
             _userAreaRepository = userAreaRepository;
             _passwordUpdateCommandHelper = passwordUpdateCommandHelper;
+            _transactionScopeManager = transactionScopeManager;
+            _userContextCache = userContextCache;
         }
 
         public async Task ExecuteAsync(UpdateCurrentUserPasswordCommand command, IExecutionContext executionContext)
@@ -97,6 +102,8 @@ namespace Cofoundry.Domain.Internal
 
             _passwordUpdateCommandHelper.UpdatePassword(command.NewPassword, user, executionContext);
             await _dbContext.SaveChangesAsync();
+            _transactionScopeManager.QueueCompletionTask(_dbContext, () => _userContextCache.Clear(user.UserId));
+
         }
 
         public IEnumerable<IPermissionApplication> GetPermissions(UpdateCurrentUserPasswordCommand command)

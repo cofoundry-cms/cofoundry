@@ -65,11 +65,11 @@ namespace Cofoundry.Domain.Internal
                 })
                 .ToList();
 
-            route.AccessRules = new List<EntityAccessRuleSet>();
+            route.AccessRuleSets = new List<EntityAccessRuleSet>();
             var accessRuleSet = _entityAccessRuleSetMapper.Map(dbDirectory);
             if (accessRuleSet != null)
             {
-                route.AccessRules.Add(accessRuleSet);
+                route.AccessRuleSets.Add(accessRuleSet);
             }
 
             // FullUrlPaths set elsewhere
@@ -102,9 +102,9 @@ namespace Cofoundry.Domain.Internal
 
         private void ExpandAccessRules(PageDirectoryRoute parent, PageDirectoryRoute routingInfo)
         {
-            foreach (var accessRule in parent.AccessRules)
+            foreach (var accessRuleSet in parent.AccessRuleSets)
             {
-                routingInfo.AccessRules.Add(accessRule);
+                routingInfo.AccessRuleSets.Add(accessRuleSet);
             };
         }
 

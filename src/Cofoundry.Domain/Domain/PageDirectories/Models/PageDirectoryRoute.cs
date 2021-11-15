@@ -57,9 +57,10 @@ namespace Cofoundry.Domain
         /// <summary>
         /// Optional rules that can be used to restrict access to this directory.
         /// This collection contains rules accumulated from parent directories in
-        /// order of specificity, with most specific or "nested" rules first.
+        /// order of distance, with the rules associated with the nearest parent rules 
+        /// first.
         /// </summary>
-        public ICollection<EntityAccessRuleSet> AccessRules { get; set; }
+        public ICollection<EntityAccessRuleSet> AccessRuleSets { get; set; }
 
         /// <summary>
         /// Determins if the specified path matches this directory, does not 

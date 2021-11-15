@@ -92,15 +92,13 @@ namespace Cofoundry.Domain
         public string CustomEntityDefinitionCode { get; set; }
 
         /// <summary>
-        /// <para>
         /// Optional set of rules that can be used to restrict access to this page.
         /// These rules are for this page only, and does not include rules
-        /// associated with any parent directories or custom entities. To check
-        /// the full directory tree use the <see cref="CanAccess"/> method. 
-        /// </para>
-        /// If there are no rules associated with the page then this will be null.
+        /// associated with any parent directories. To check he full directory tree 
+        /// use the <see cref="CanAccess"/> method. If there are no rules associated 
+        /// with the page then this will be null.
         /// </summary>
-        public EntityAccessRuleSet AccessRules { get; set; }
+        public EntityAccessRuleSet AccessRuleSet { get; set; }
 
         /// <summary>
         /// Determines if the page is within the specified directory path. Does
@@ -144,13 +142,13 @@ namespace Cofoundry.Domain
             if (user == null) throw new ArgumentNullException(nameof(user));
             EntityInvalidOperationException.ThrowIfNull(this, r => r.PageDirectory);
 
-            if (AccessRules != null && !AccessRules.IsAuthorized(user))
+            if (AccessRuleSet != null && !AccessRuleSet.IsAuthorized(user))
             {
-                return AccessRules;
+                return AccessRuleSet;
             }
 
             var directoryViolation = PageDirectory
-                .AccessRules
+                .AccessRuleSets
                 .GetRuleViolations(user)
                 .FirstOrDefault();
 

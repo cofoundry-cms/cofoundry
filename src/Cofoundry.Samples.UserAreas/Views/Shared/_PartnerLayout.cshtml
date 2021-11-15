@@ -13,17 +13,23 @@
 
     <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav">
+            @if (user.Role.RoleCode == ExclusivePartnerRoleDefinition.Code)
+            {
+                <li class="nav-item">
+                    <a class="nav-link" href="/partners/exclusive">Exclusive Offers</a>
+                </li>
+            }
             @if (user.IsLoggedIn)
             {
-            <li class="nav-item">
-                <a class="nav-link" href="@UrlLibrary.PartnerLogout()">Logout</a>
-            </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="@UrlLibrary.PartnerLogout()">Logout</a>
+                </li>
             }
             else
             {
-            <li class="nav-item">
-                <a class="nav-link" href="@UrlLibrary.PartnerLogin()">Login</a>
-            </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="@UrlLibrary.PartnerLogin()">Login</a>
+                </li>
             }
         </ul>
     </div>

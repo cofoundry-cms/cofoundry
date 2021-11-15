@@ -1,24 +1,21 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Cofoundry.Domain.Data;
-using Cofoundry.Domain.CQS;
-using Microsoft.EntityFrameworkCore;
+﻿using Cofoundry.Core;
+using Cofoundry.Core.Data;
 using Cofoundry.Core.Validation;
-using Cofoundry.Core;
+using Cofoundry.Domain.CQS;
+using Cofoundry.Domain.Data;
+using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Cofoundry.Domain.Internal
 {
     /// <summary>
     /// Updates the user account of the currently logged in user.
     /// </summary>
-    public class UpdateCurrentUserAccountCommandHandler 
+    public class UpdateCurrentUserAccountCommandHandler
         : ICommandHandler<UpdateCurrentUserAccountCommand>
         , IPermissionRestrictedCommandHandler<UpdateCurrentUserAccountCommand>
     {
-        #region consructor
-
         private readonly CofoundryDbContext _dbContext;
         private readonly IQueryExecutor _queryExecutor;
         private readonly IPermissionValidationService _permissionValidationService;
@@ -36,10 +33,6 @@ namespace Cofoundry.Domain.Internal
             _permissionValidationService = permissionValidationService;
             _userAreaRepository = userAreaRepository;
         }
-
-        #endregion
-
-        #region execution
 
         public async Task ExecuteAsync(UpdateCurrentUserAccountCommand command, IExecutionContext executionContext)
         {
@@ -63,8 +56,8 @@ namespace Cofoundry.Domain.Internal
         }
 
         private async Task UpdateEmailAsync(
-            UpdateCurrentUserAccountCommand command, 
-            int userId, 
+            UpdateCurrentUserAccountCommand command,
+            int userId,
             User user,
             IExecutionContext executionContext
             )
@@ -92,15 +85,9 @@ namespace Cofoundry.Domain.Internal
             user.Email = newEmail;
         }
 
-        #endregion
-
-        #region Permission
-
         public IEnumerable<IPermissionApplication> GetPermissions(UpdateCurrentUserAccountCommand command)
         {
             yield return new CurrentUserUpdatePermission();
         }
-
-        #endregion
     }
 }

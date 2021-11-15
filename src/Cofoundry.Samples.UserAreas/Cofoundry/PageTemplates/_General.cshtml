@@ -1,13 +1,17 @@
 ﻿@model IPageViewModel
 @inject ICofoundryTemplateHelper<IPageViewModel> Cofoundry
 @Cofoundry.Template.UseDescription("A template for simple pages with flexible module content")
-
+@{
+    var user = await Cofoundry.CurrentUser.GetAsync();
+}
 <h1 class="mt-3">@Model.PageTitle</h1>
 
 <div class="row mt-4 mb-5">
-    @(await Cofoundry.Template.Region("Body")
+    <div class="col">
+        @(await Cofoundry.Template.Region("Body")
             .AllowMultipleBlocks()
             .AllowBlockType<ContentSectionDataModel>()
             .EmptyContentMinHeight(500)
             .InvokeAsync())
+    </div>
 </div>

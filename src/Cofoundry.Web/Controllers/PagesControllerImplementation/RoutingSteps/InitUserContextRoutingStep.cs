@@ -1,41 +1,28 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Cofoundry.Domain;
-using Microsoft.AspNetCore.Mvc;
+﻿using Cofoundry.Domain;
 using Cofoundry.Domain.CQS;
+using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
 
 namespace Cofoundry.Web
 {
-    /// <summary>
-    /// Initialises the key parameters of the PageActionRoutingState
-    /// object e.g. the UserContext and VisualEditorMode properties
-    /// </summary>
-    public class InitStateRoutingStep : IInitStateRoutingStep
+    /// <inheritdoc/>
+    public class InitUserContextRoutingStep : IInitUserContextRoutingStep
     {
         private readonly IUserContextService _userContextService;
-        private readonly ContentSettings _contentSettings;
         private readonly IExecutionContextFactory _executionContextFactory;
-        private readonly IVisualEditorStateService _visualEditorStateService;
 
-        public InitStateRoutingStep(
+        public InitUserContextRoutingStep(
             IUserContextService userContextService,
-            ContentSettings contentSettings,
-            IExecutionContextFactory executionContextFactory,
-            IVisualEditorStateService visualEditorStateService
+            IExecutionContextFactory executionContextFactory
             )
         {
             _userContextService = userContextService;
-            _contentSettings = contentSettings;
             _executionContextFactory = executionContextFactory;
-            _visualEditorStateService = visualEditorStateService;
         }
 
         public async Task ExecuteAsync(Controller controller, PageActionRoutingState state)
         {
-            // The ambient auth schema might not be the cofoundry admin scheme
+            // The ambient auth scheme might not be the cofoundry admin scheme
             // So we will attempt to find the cofoundry user to execute the contoller with
             // falling back to the user authenticated with the ambient scheme
             state.AmbientUserContext = await _userContextService.GetCurrentContextAsync();
@@ -56,8 +43,6 @@ namespace Cofoundry.Web
                 state.CofoundryAdminUserContext = cofoundryUserContext;
                 state.CofoundryAdminExecutionContext = _executionContextFactory.Create(state.CofoundryAdminUserContext);
             }
-
-            state.VisualEditorState = await _visualEditorStateService.GetCurrentAsync();
         }
     }
 }

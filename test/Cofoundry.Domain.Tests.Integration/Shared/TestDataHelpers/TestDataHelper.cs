@@ -53,5 +53,14 @@ namespace Cofoundry.Domain.Tests.Integration
         {
             return new CustomEntityTestDataHelper(_rootServiceProvider);
         }
+
+        /// <summary>
+        /// Used to make it easier to create users in test fixtures.
+        /// </summary>
+        public UserTestDataHelper Users()
+        {
+            return new UserTestDataHelper(_rootServiceProvider, _seededEntities);
+        }
+        
     }
 }

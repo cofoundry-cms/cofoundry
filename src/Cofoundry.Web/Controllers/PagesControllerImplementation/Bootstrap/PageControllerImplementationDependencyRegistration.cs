@@ -16,7 +16,8 @@ namespace Cofoundry.Web.Registration
                 .Register<IPageActionRoutingStepFactory, PageActionRoutingStepFactory>()
 
                 .Register<ICheckSiteIsSetupRoutingStep, CheckSiteIsSetupRoutingStep>()
-                .Register<IInitStateRoutingStep, InitStateRoutingStep>()
+                .Register<IInitVisualEditorStateRoutingStep, InitVisualEditorStateRoutingStep>()
+                .Register<IInitUserContextRoutingStep, InitUserContextRoutingStep>()
                 .Register<ITryFindPageRoutingInfoRoutingStep, TryFindPageRoutingInfoRoutingStep>()
                 .Register<IValidateEntityEditModeRoutingStep, ValidateEntityEditModeRoutingStep>()
                 .Register<IValidateEditPermissionsRoutingStep, ValidateEditPermissionsRoutingStep>()

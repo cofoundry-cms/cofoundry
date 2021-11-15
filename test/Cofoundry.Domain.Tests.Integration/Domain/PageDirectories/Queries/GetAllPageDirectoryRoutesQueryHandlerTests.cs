@@ -142,9 +142,9 @@ namespace Cofoundry.Domain.Tests.Integration.PageDirectories.Queries
             using (new AssertionScope())
             {
                 directory.Should().NotBeNull();
-                directory.AccessRules.Should().NotBeNull().And.HaveCount(2);
+                directory.AccessRuleSets.Should().NotBeNull().And.HaveCount(2);
 
-                var directory1RuleSet = directory.AccessRules.Skip(1).FirstOrDefault();
+                var directory1RuleSet = directory.AccessRuleSets.Skip(1).FirstOrDefault();
                 directory1RuleSet.Should().NotBeNull();
                 directory1RuleSet.AccessRules.Should().HaveCount(1);
                 directory1RuleSet.ViolationAction.Should().Be(AccessRuleViolationAction.Error);
@@ -156,7 +156,7 @@ namespace Cofoundry.Domain.Tests.Integration.PageDirectories.Queries
                 rule1.UserAreaCode.Should().Be(app.SeededEntities.TestUserArea1.UserAreaCode);
                 rule1.RoleId.Should().BeNull();
 
-                var directory2RuleSet = directory.AccessRules.FirstOrDefault(); 
+                var directory2RuleSet = directory.AccessRuleSets.FirstOrDefault(); 
                 directory2RuleSet.Should().NotBeNull();
                 directory2RuleSet.AccessRules.Should().HaveCount(2);
                 directory2RuleSet.ViolationAction.Should().Be(addRuleToDirectory2Command.ViolationAction);

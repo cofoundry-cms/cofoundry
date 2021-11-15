@@ -314,46 +314,39 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Queries
                 throw new ArgumentException("You must use a custom username if you are modifying the user command", nameof(username));
             }
 
-            using (var app = _appFactory.Create())
+            using var app = _appFactory.Create();
+            var dbContext = app.Services.GetService<CofoundryDbContext>();
+            var userArea = app.SeededEntities.TestUserArea1;
+
+            var userId = await dbContext
+                .Users
+                .Where(u => u.UserAreaCode == userArea.UserAreaCode && u.Username == username)
+                .Select(u => u.UserId)
+                .SingleOrDefaultAsync();
+
+            if (userId > 0)
             {
-                var dbContext = app.Services.GetService<CofoundryDbContext>();
-
-                var userId = await dbContext
-                    .Users
-                    .Where(u => u.UserAreaCode == TestUserArea1.Code && u.Username == username)
-                    .Select(u => u.UserId)
-                    .SingleOrDefaultAsync();
-
-                if (userId > 0)
-                {
-                    return userId;
-                }
-
-                var repository = app.Services.GetService<IAdvancedContentRepository>();
-
-                var testRole = await repository
-                    .Roles()
-                    .GetByCode(TestUserArea1Role.Code)
-                    .AsDetails()
-                    .ExecuteAsync();
-
-                var command = new AddUserCommand()
-                {
-                    Email = username,
-                    Password = VALID_PASSWORD,
-                    FirstName = "Test",
-                    LastName = "User",
-                    UserAreaCode = TestUserArea1.Code,
-                    RoleId = testRole.RoleId
-                };
-
-                commandModifier?.Invoke(command);
-
-                return await repository
-                    .WithElevatedPermissions()
-                    .Users()
-                    .AddAsync(command);
+                return userId;
             }
+
+            var repository = app.Services.GetService<IAdvancedContentRepository>();
+
+            var command = new AddUserCommand()
+            {
+                Email = username,
+                Password = VALID_PASSWORD,
+                FirstName = "Test",
+                LastName = "User",
+                UserAreaCode = userArea.UserAreaCode,
+                RoleId = userArea.RoleId
+            };
+
+            commandModifier?.Invoke(command);
+
+            return await repository
+                .WithElevatedPermissions()
+                .Users()
+                .AddAsync(command);
         }
     }
 }

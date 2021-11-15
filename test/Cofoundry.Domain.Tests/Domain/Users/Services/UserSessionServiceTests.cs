@@ -1,5 +1,7 @@
 ﻿using Cofoundry.Domain.Internal;
 using Cofoundry.Domain.Tests.Shared;
+using FluentAssertions;
+using FluentAssertions.Execution;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -20,7 +22,7 @@ namespace Cofoundry.Domain.Tests
 
             var userId = service.GetCurrentUserId();
 
-            Assert.Null(userId);
+            userId.Should().BeNull();
         }
 
         [Fact]
@@ -31,7 +33,7 @@ namespace Cofoundry.Domain.Tests
             await service.LogUserInAsync(TestUserArea1.Code, AREA1_USERID, false);
             var userId = service.GetCurrentUserId();
 
-            Assert.Equal(AREA1_USERID, userId);
+            userId.Should().Be(AREA1_USERID);
         }
 
         [Fact]
@@ -42,7 +44,7 @@ namespace Cofoundry.Domain.Tests
             await service.LogUserInAsync(TestUserArea2.Code, AREA2_USERID, false);
             var userId = service.GetCurrentUserId();
 
-            Assert.Null(userId);
+            userId.Should().BeNull();
         }
 
         [Fact]
@@ -53,8 +55,11 @@ namespace Cofoundry.Domain.Tests
             var userId1 = await service.GetUserIdByUserAreaCodeAsync(TestUserArea1.Code);
             var userId2 = await service.GetUserIdByUserAreaCodeAsync(TestUserArea2.Code);
 
-            Assert.Null(userId1);
-            Assert.Null(userId2);
+            using (new AssertionScope())
+            {
+                userId1.Should().BeNull();
+                userId2.Should().BeNull();
+            }
         }
 
         [Fact]
@@ -69,9 +74,12 @@ namespace Cofoundry.Domain.Tests
             var userId1 = await service.GetUserIdByUserAreaCodeAsync(TestUserArea1.Code);
             var userId2 = await service.GetUserIdByUserAreaCodeAsync(TestUserArea2.Code);
 
-            Assert.Equal(AREA1_USERID, currentUserId);
-            Assert.Equal(AREA1_USERID, userId1);
-            Assert.Equal(AREA2_USERID, userId2);
+            using (new AssertionScope())
+            {
+                currentUserId.Should().Be(AREA1_USERID);
+                userId1.Should().Be(AREA1_USERID);
+                userId2.Should().Be(AREA2_USERID);
+            }
         }
 
         [Fact]
@@ -79,8 +87,17 @@ namespace Cofoundry.Domain.Tests
         {
             var service = CreateService(CreateUserAreaRepository());
 
-            await service.LogUserOutAsync(TestUserArea1.Code);
-            await service.LogUserOutAsync(TestUserArea2.Code);
+            using (new AssertionScope())
+            {
+                await service
+                    .Awaiting(s => s.LogUserOutAsync(TestUserArea1.Code))
+                    .Should()
+                    .NotThrowAsync();
+                await service
+                    .Awaiting(s => s.LogUserOutAsync(TestUserArea2.Code))
+                    .Should()
+                    .NotThrowAsync();
+            }
         }
 
         [Fact]
@@ -96,9 +113,12 @@ namespace Cofoundry.Domain.Tests
             var userId1 = await service.GetUserIdByUserAreaCodeAsync(TestUserArea1.Code);
             var userId2 = await service.GetUserIdByUserAreaCodeAsync(TestUserArea2.Code);
 
-            Assert.Equal(AREA1_USERID, currentUserId);
-            Assert.Equal(AREA1_USERID, userId1);
-            Assert.Null(userId2);
+            using (new AssertionScope())
+            {
+                currentUserId.Should().Be(AREA1_USERID);
+                userId1.Should().Be(AREA1_USERID);
+                userId2.Should().BeNull();
+            }
         }
 
         [Fact]
@@ -122,11 +142,42 @@ namespace Cofoundry.Domain.Tests
             var userId1 = await service.GetUserIdByUserAreaCodeAsync(TestUserArea1.Code);
             var userId2 = await service.GetUserIdByUserAreaCodeAsync(TestUserArea2.Code);
 
-            Assert.Null(currentUserId);
-            Assert.Null(userId1);
-            Assert.Null(userId2);
+            using (new AssertionScope())
+            {
+                currentUserId.Should().BeNull();
+                userId1.Should().BeNull();
+                userId2.Should().BeNull();
+            }
         }
 
+        [Fact]
+        public async Task SetAmbientUserAreaAsync_WhenChangedToNonDefault_CurrentUserIsAmbient()
+        {
+            const int USER1_ID = 123456;
+            const int USER2_ID = 654321;
+            var service = CreateService(CreateUserAreaRepository());
+
+            await service.LogUserInAsync(TestUserArea1.Code, USER1_ID, false);
+            await service.LogUserInAsync(TestUserArea2.Code, USER2_ID, false);
+            await service.SetAmbientUserAreaAsync(TestUserArea2.Code);
+            var userId = service.GetCurrentUserId();
+
+            userId.Should().Be(USER2_ID);
+        }
+
+        [Fact]
+        public async Task SetAmbientUserAreaAsync_WhenReturnedToDefault_CurrentUserIsNull()
+        {
+            const int USER_ID = 123456;
+            var service = CreateService(CreateUserAreaRepository());
+
+            await service.LogUserInAsync(TestUserArea2.Code, USER_ID, false);
+            await service.SetAmbientUserAreaAsync(TestUserArea2.Code);
+            await service.SetAmbientUserAreaAsync(TestUserArea1.Code);
+            var userId = service.GetCurrentUserId();
+
+            userId.Should().BeNull();
+        }
 
         protected abstract IUserSessionService CreateService(IUserAreaDefinitionRepository repository);
 

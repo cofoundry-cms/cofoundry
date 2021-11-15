@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using Cofoundry.Domain.CQS;
+using System;
 using System.Threading.Tasks;
-using Cofoundry.Domain.CQS;
 
 namespace Cofoundry.Domain.Internal
 {
@@ -14,27 +12,20 @@ namespace Cofoundry.Domain.Internal
         : ICommandHandler<UpdateUnauthenticatedUserPasswordCommand>
         , IIgnorePermissionCheckHandler
     {
-        #region constructor
-
-        private readonly IUserAreaDefinitionRepository _userAreaRepository;
         private readonly IQueryExecutor _queryExecutor;
         private readonly ICommandExecutor _commandExecutor;
         private readonly IExecutionContextFactory _executionContextFactory;
 
         public UpdateUnauthenticatedUserPasswordCommandHandler(
-            IUserAreaDefinitionRepository userAreaRepository,
             IQueryExecutor queryExecutor,
             ICommandExecutor commandExecutor,
             IExecutionContextFactory executionContextFactory
             )
         {
-            _userAreaRepository = userAreaRepository;
             _queryExecutor = queryExecutor;
             _commandExecutor = commandExecutor;
             _executionContextFactory = executionContextFactory;
         }
-
-        #endregion
 
         public async Task ExecuteAsync(UpdateUnauthenticatedUserPasswordCommand command, IExecutionContext executionContext)
         {
@@ -61,7 +52,7 @@ namespace Cofoundry.Domain.Internal
         }
 
         private Task<UserLoginInfoAuthenticationResult> GetUserLoginInfoAsync(
-            UpdateUnauthenticatedUserPasswordCommand command, 
+            UpdateUnauthenticatedUserPasswordCommand command,
             IExecutionContext executionContext
             )
         {

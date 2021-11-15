@@ -1,23 +1,21 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 
 namespace Cofoundry.Domain
 {
     /// <summary>
-    /// Service to abstract away the management of a users current browser session and 
-    /// authentication cookie.
+    /// Service to abstract away the management of a users current session
+    /// e.g. for a web session this may be managed via a session cookie.
     /// </summary>
     public interface IUserSessionService
     {
         /// <summary>
-        /// Gets the UserId of the user currently logged
-        /// in to this session
+        /// Gets the UserId of the user authenticated for the current request under 
+        /// the ambient authentication scheme. The ambient scheme is usually the
+        /// default scheme, but can be changed in scenarios with multiple user areas.
         /// </summary>
         /// <returns>
-        /// UserId of the user currently logged
-        /// in to this session
+        /// Integer UserId or <see langword="null"/> if the user is not logged in for the ambient
+        /// authentication scheme.
         /// </returns>
         int? GetCurrentUserId();
 
@@ -53,5 +51,15 @@ namespace Cofoundry.Domain
         /// Logs the user out of all user areas.
         /// </summary>
         Task LogUserOutOfAllUserAreasAsync();
+
+        /// <summary>
+        /// Change the ambient user area from the one defined as
+        /// the default.
+        /// </summary>
+        /// <param name="userAreaCode">
+        /// The code identifier for the user area to change the defaut to.
+        /// </param>
+        /// <returns></returns>
+        Task SetAmbientUserAreaAsync(string userAreaCode);
     }
 }

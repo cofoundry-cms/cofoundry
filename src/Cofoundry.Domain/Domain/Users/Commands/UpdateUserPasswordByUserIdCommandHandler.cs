@@ -1,11 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Cofoundry.Domain.Data;
+﻿using Cofoundry.Core;
+using Cofoundry.Core.Data;
 using Cofoundry.Domain.CQS;
+using Cofoundry.Domain.Data;
 using Microsoft.EntityFrameworkCore;
-using Cofoundry.Core;
+using System.Threading.Tasks;
 
 namespace Cofoundry.Domain.Internal
 {
@@ -13,24 +11,26 @@ namespace Cofoundry.Domain.Internal
         : ICommandHandler<UpdateUserPasswordByUserIdCommand>
         , IIgnorePermissionCheckHandler
     {
-        #region construstor
-
         private readonly CofoundryDbContext _dbContext;
         private readonly IUserAreaDefinitionRepository _userAreaRepository;
         private readonly IPasswordUpdateCommandHelper _passwordUpdateCommandHelper;
+        private readonly ITransactionScopeManager _transactionScopeManager;
+        private readonly IUserContextCache _userContextCache;
 
         public UpdateUserPasswordByUserIdCommandHandler(
             CofoundryDbContext dbContext,
             IUserAreaDefinitionRepository userAreaRepository,
-            IPasswordUpdateCommandHelper passwordUpdateCommandHelper
+            IPasswordUpdateCommandHelper passwordUpdateCommandHelper,
+            ITransactionScopeManager transactionScopeManager,
+            IUserContextCache userContextCache
             )
         {
             _dbContext = dbContext;
             _userAreaRepository = userAreaRepository;
             _passwordUpdateCommandHelper = passwordUpdateCommandHelper;
+            _transactionScopeManager = transactionScopeManager;
+            _userContextCache = userContextCache;
         }
-
-        #endregion
 
         public async Task ExecuteAsync(UpdateUserPasswordByUserIdCommand command, IExecutionContext executionContext)
         {
@@ -44,6 +44,7 @@ namespace Cofoundry.Domain.Internal
             _passwordUpdateCommandHelper.UpdatePassword(command.NewPassword, user, executionContext);
 
             await _dbContext.SaveChangesAsync();
+            _transactionScopeManager.QueueCompletionTask(_dbContext, () => _userContextCache.Clear(user.UserId));
         }
 
         private Task<User> GetUser(int userId)
@@ -54,6 +55,6 @@ namespace Cofoundry.Domain.Internal
                 .FilterCanLogIn()
                 .SingleOrDefaultAsync();
         }
-       
+
     }
 }

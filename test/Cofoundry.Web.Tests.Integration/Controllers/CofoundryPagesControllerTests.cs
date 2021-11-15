@@ -383,6 +383,27 @@ namespace Cofoundry.Web.Tests.Integration.Controllers
             await AssertAccessRuleResponseAsync(result, AccessRuleViolationAction.Error);
         }
 
+        [Fact]
+        public async Task WhenPageAccessRuleForNonDefaultUserArea_OK()
+        {
+            var uniqueData = UNIQUE_PREFIX + "WhenPAR4NonDefaultUserArea";
+            var sluggedUniqueData = SlugFormatter.ToSlug(uniqueData);
+
+            using var app = _webApplicationFactory.CreateApp();
+            var directoryId = await app.TestData.PageDirectories().AddAsync(uniqueData);
+            var pageId = await app.TestData.Pages().AddAsync(uniqueData, directoryId, c => c.Publish = true);
+            await app.TestData.Pages().AddAccessRuleAsync(pageId, app.SeededEntities.TestUserArea2.UserAreaCode);
+
+            using var client = _webApplicationFactory.CreateClient();
+            await client.ImpersonateUserAsync(app.SeededEntities.TestUserArea2.User);
+            var result = await client.GetAsync($"/{sluggedUniqueData}/{sluggedUniqueData}");
+            var content = await result.Content.ReadAsStringAsync();
+
+            result.StatusCode.Should().Be(HttpStatusCode.OK);
+            content.Should().Match($"*<h1>{uniqueData}</h1>*");
+        }
+
+
         private async Task AssertAccessRuleResponseAsync(
             HttpResponseMessage result,
             AccessRuleViolationAction routeAccessRuleViolationAction

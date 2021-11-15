@@ -1,114 +1,67 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Cofoundry.Core;
+﻿using Cofoundry.Core;
 using Cofoundry.Domain.Data;
 using Microsoft.EntityFrameworkCore;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Cofoundry.Domain.Internal
 {
-    /// <summary>
-    /// Service for retreiving user connection information.
-    /// </summary>
+    /// <inheritdoc/>
     public class UserContextService : IUserContextService
     {
-        /// <summary>
-        /// Unless logging in or out, the user context is bound to the lifetime
-        /// of the request/service, therefore we cache it because it is regularly
-        /// accessed from many different places.
-        /// </summary>
-        private IUserContext _currentUserContext = null;
-        private Dictionary<string, IUserContext> _alternativeUserContextCache = new Dictionary<string, IUserContext>();
-
-        #region constructor
-
         private readonly CofoundryDbContext _dbContext;
         private readonly IUserSessionService _userSessionService;
         private readonly UserContextMapper _userContextMapper;
+        private readonly IUserContextCache _userContextCache;
+        private readonly IUserAreaDefinitionRepository _userAreaDefinitionRepository;
 
         public UserContextService(
             CofoundryDbContext dbContext,
             IUserSessionService userSessionService,
-            UserContextMapper userContextMapper
+            UserContextMapper userContextMapper,
+            IUserContextCache userContextCache,
+            IUserAreaDefinitionRepository userAreaDefinitionRepository
             )
         {
             _dbContext = dbContext;
             _userSessionService = userSessionService;
             _userContextMapper = userContextMapper;
+            _userContextCache = userContextCache;
+            _userAreaDefinitionRepository = userAreaDefinitionRepository;
         }
 
-        #endregion
 
-        #region public methods
-
-        /// <summary>
-        /// Get the connection context of the current user.
-        /// </summary>
         public virtual async Task<IUserContext> GetCurrentContextAsync()
         {
-            if (_currentUserContext == null)
-            {
-                var userId = _userSessionService.GetCurrentUserId();
-                await SetUserContextAsync(userId);
-            }
+            var userId = _userSessionService.GetCurrentUserId();
+            var userContext = await GetUserContextByIdAsync(userId);
 
-            return _currentUserContext;
+            return userContext;
         }
 
-        /// <summary>
-        /// Get the connection context of the current user for a specific 
-        /// user area. This can be useful in multi-userarea sites where the ambient
-        /// context may not be the context you need.
-        /// </summary>
-        /// <remarks>
-        /// In Cofoundry we use this to get the user context of a logged in Cofoundry
-        /// user for the site viewer, irrespective of the ambient user context, which 
-        /// potentially could be (for example) a members area.
-        /// </remarks>
         public virtual async Task<IUserContext> GetCurrentContextByUserAreaAsync(string userAreaCode)
         {
             if (string.IsNullOrWhiteSpace(userAreaCode)) throw new ArgumentEmptyException(nameof(userAreaCode));
 
-            var userContext = _alternativeUserContextCache.GetOrDefault(userAreaCode);
-            if (userContext != null) return userContext;
-
-            userContext = await GetCurrentContextAsync();
-
-            // if the current context is valid, return that
-            if (userContext != null && userContext.UserId.HasValue && userContext.UserArea?.UserAreaCode == userAreaCode)
-            {
-                return userContext;
-            }
-
-            // otherwise, try and get a specific user context:
             var userId = await _userSessionService.GetUserIdByUserAreaCodeAsync(userAreaCode);
-            if (!userId.HasValue) return new UserContext();
+            var userContext = await GetUserContextByIdAsync(userId);
 
-            userContext = await GetUserContextByIdAsync(userId);
+            return userContext;
+        }
 
-            if (!userContext.UserId.HasValue)
-            {
-                // User no longer valid, clear out invalid login
-                await _userSessionService.LogUserOutAsync(userAreaCode);
-                ClearCache();
-            }
-
-            _alternativeUserContextCache.Add(userAreaCode, userContext);
+        public async Task<IUserContext> GetSystemUserContextAsync()
+        {
+            var userContext = await _userContextCache.GetOrAddSystemContextAsync(QuerySystemUserContextAsync);
 
             return userContext;
         }
 
         /// <summary>
-        /// Use this to get a user context for the system user, useful
-        /// if you need to impersonate the user to perform an action with elevated 
-        /// privileges.
+        /// Queries the database for the system user and returns the result as an <see cref="IUserContext"/>
+        /// projection. The result of this is cached in the <see cref="GetSystemUserContextAsync"/> method.
         /// </summary>
-        public virtual async Task<IUserContext> GetSystemUserContextAsync()
+        protected virtual async Task<IUserContext> QuerySystemUserContextAsync()
         {
-            // BUG: Got a managed debugging assistant exception? Try this:
-            // https://developercommunity.visualstudio.com/content/problem/29782/managed-debugging-assistant-fatalexecutionengineer.html
-
             var dbUser = await _dbContext
                 .Users
                 .Include(u => u.Role)
@@ -116,78 +69,36 @@ namespace Cofoundry.Domain.Internal
                 .FilterActive()
                 .Where(u => u.IsSystemAccount)
                 .FirstOrDefaultAsync();
-            EntityNotFoundException.ThrowIfNull(dbUser, SuperAdminRole.SuperAdminRoleCode);
 
+            EntityNotFoundException.ThrowIfNull(dbUser, SuperAdminRole.SuperAdminRoleCode);
             var impersonatedUserContext = _userContextMapper.Map(dbUser);
 
             return impersonatedUserContext;
         }
 
-        /// <summary>
-        /// Clears out any cached user contexts. The user context is cached for 
-        /// the duration of the request so it needs clearing if
-        /// it changes (i.e. logged in or out).
-        /// </summary>
-        public virtual void ClearCache()
+        private async Task<IUserContext> GetUserContextByIdAsync(int? userId)
         {
-            _currentUserContext = null;
-            _alternativeUserContextCache.Clear();
+            if (!userId.HasValue) return UserContext.Empty;
+
+            var userContext = await _userContextCache.GetOrAddAsync(userId.Value, () => QueryUserContextByIdAsync(userId.Value));
+
+            return userContext;
         }
 
         /// <summary>
-        /// Clears out the cached user context if one exists for the specified
-        /// user area. The user context is cached for the duration of the request 
-        /// so it needs clearing if it changes (i.e. logged in or out).
+        /// Queries the database for the specified user and returns the result as an <see cref="IUserContext"/>
+        /// projection. The result of this is cached in the <see cref="GetUserContextByIdAsync"/> method.
         /// </summary>
-        /// <param name="userAreaCode">The user area code to clear the cache for.</param>
-        public void ClearCache(string userAreaCode)
+        protected virtual async Task<IUserContext> QueryUserContextByIdAsync(int userId)
         {
-            if (string.IsNullOrWhiteSpace(userAreaCode)) throw new ArgumentEmptyException(nameof(userAreaCode));
-
-            // Also remove the anonymous user context to force re-validation
-            if (_currentUserContext != null && 
-                (!_currentUserContext.IsLoggedIn() 
-                || _currentUserContext.UserArea.UserAreaCode == userAreaCode))
-            {
-                _currentUserContext = null;
-            }
-
-            if (_alternativeUserContextCache.ContainsKey(userAreaCode))
-            {
-                _alternativeUserContextCache.Remove(userAreaCode);
-            }
-        }
-
-        #endregion
-
-        #region helpers
-
-        protected virtual async Task SetUserContextAsync(int? userId)
-        {
-            var cx = await GetUserContextByIdAsync(userId);
-
-            if (userId.HasValue && !cx.UserId.HasValue)
-            {
-                // User no longer valid, clear out all logins to be safe
-                await _userSessionService.LogUserOutOfAllUserAreasAsync();
-                ClearCache();
-            }
-
-            _currentUserContext = cx;
-        }
-
-        protected virtual async Task<UserContext> GetUserContextByIdAsync(int? userId)
-        {
-            if (!userId.HasValue) return new UserContext();
-
-            UserContext cx = null;
+            IUserContext cx = null;
 
             // Raw query required here because using IQueryExecutor will cause a stack overflow
             var dbResult = await _dbContext
                 .Users
                 .Include(u => u.Role)
                 .AsNoTracking()
-                .FilterById(userId.Value)
+                .FilterById(userId)
                 .FilterCanLogIn()
                 .SingleOrDefaultAsync();
 
@@ -197,12 +108,13 @@ namespace Cofoundry.Domain.Internal
             }
             else
             {
-                cx = new UserContext();
+                cx = UserContext.Empty;
+
+                // User no longer valid, clear out all logins to be safe
+                await _userSessionService.LogUserOutOfAllUserAreasAsync();
             }
 
             return cx;
         }
-
-        #endregion
     }
 }

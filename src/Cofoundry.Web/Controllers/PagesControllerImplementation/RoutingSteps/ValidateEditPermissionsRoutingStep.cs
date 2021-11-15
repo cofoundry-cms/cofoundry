@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Cofoundry.Domain;
-using Cofoundry.Domain.CQS;
+﻿using Cofoundry.Domain;
 using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
 
 namespace Cofoundry.Web
 {
@@ -17,23 +11,20 @@ namespace Cofoundry.Web
     public class ValidateEditPermissionsRoutingStep : IValidateEditPermissionsRoutingStep
     {
         private readonly IPermissionValidationService _permissionValidationService;
-        private readonly ICommandExecutor _commandExecutor;
 
         public ValidateEditPermissionsRoutingStep(
-            IPermissionValidationService permissionValidationService,
-            ICommandExecutor commandExecutor
+            IPermissionValidationService permissionValidationService
             )
         {
             _permissionValidationService = permissionValidationService;
-            _commandExecutor = commandExecutor;
         }
 
         public Task ExecuteAsync(Controller controller, PageActionRoutingState state)
         {
             var pageRoutingInfo = state.PageRoutingInfo;
             if (pageRoutingInfo == null || state.VisualEditorState.VisualEditorMode != VisualEditorMode.Edit) return Task.CompletedTask;
-            
-            if (pageRoutingInfo.CustomEntityRoute != null 
+
+            if (pageRoutingInfo.CustomEntityRoute != null
                 && state.InputParameters.IsEditingCustomEntity
                 )
             {
@@ -46,22 +37,6 @@ namespace Cofoundry.Web
             }
 
             return Task.CompletedTask;
-        }
-
-        private GetPageRoutingInfoByPathQuery GetPageRoutingInfoQuery(PageActionRoutingState state)
-        {
-            var pageQuery = new GetPageRoutingInfoByPathQuery()
-            {
-                Path = state.InputParameters.Path,
-                IncludeUnpublished = state.VisualEditorState.VisualEditorMode != VisualEditorMode.Live
-            };
-
-            if (state.Locale != null)
-            {
-                pageQuery.LocaleId = state.Locale.LocaleId;
-            }
-
-            return pageQuery;
         }
     }
 }

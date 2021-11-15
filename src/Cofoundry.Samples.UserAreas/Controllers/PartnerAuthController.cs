@@ -24,7 +24,6 @@ namespace Cofoundry.Samples.UserAreas
         }
 
         [Route("")]
-        [Route("/partners")]
         public IActionResult Index()
         {
             return RedirectToActionPermanent(nameof(Login));

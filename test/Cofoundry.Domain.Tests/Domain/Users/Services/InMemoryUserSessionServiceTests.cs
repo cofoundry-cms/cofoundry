@@ -10,7 +10,7 @@ namespace Cofoundry.Domain.Tests.Domain
     {
         protected override IUserSessionService CreateService(IUserAreaDefinitionRepository repository)
         {
-            return new InMemoryUserSessionService(repository);
+            return new InMemoryUserSessionService(repository, new UserContextCache());
         }
     }
 }

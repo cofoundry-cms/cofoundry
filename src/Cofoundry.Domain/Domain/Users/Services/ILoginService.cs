@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 
 namespace Cofoundry.Domain
 {
@@ -11,11 +8,16 @@ namespace Cofoundry.Domain
     public interface ILoginService
     {
         /// <summary>
-        /// Logs a user into the application but performs no 
-        /// authentication. The user should have already passed 
-        /// authentication prior to calling this method.
+        /// Logs a user into the application but performs no authentication. The user 
+        /// should have already passed authentication prior to calling this method. The
+        /// ambient user area (current) is switched to the specified area for the remainder
+        /// of the DI scope (i.e. request for web apps).
         /// </summary>
-        /// <param name="userAreaCode">The code of the user area to log into.</param>
+        /// <param name="userAreaCode">
+        /// The code of the user area to log into. This user area is set as the ambient area 
+        /// for the remainder of the DI scope (i.e. request for web apps) so that this user
+        /// is used by default for any further work until the scope completes.
+        /// </param>
         /// <param name="userId">The id of the user to log in.</param>
         /// <param name="rememberUser">
         /// True if the user should stay logged in perminantely; false

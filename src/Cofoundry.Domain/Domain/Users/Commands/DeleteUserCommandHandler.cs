@@ -1,37 +1,40 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
-using Cofoundry.Domain.Data;
+﻿using Cofoundry.Core;
+using Cofoundry.Core.Data;
 using Cofoundry.Domain.CQS;
-using Cofoundry.Core;
-using Cofoundry.Domain.Internal;
+using Cofoundry.Domain.Data;
+using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Cofoundry.Domain.Internal
 {
     /// <summary>
     /// Marks a user as deleted in the database (soft delete).
     /// </summary>
-    public class DeleteUserCommandHandler 
+    public class DeleteUserCommandHandler
         : ICommandHandler<DeleteUserCommand>
         , IPermissionRestrictedCommandHandler<DeleteUserCommand>
     {
         private readonly CofoundryDbContext _dbContext;
         private readonly UserCommandPermissionsHelper _userCommandPermissionsHelper;
         private readonly IPermissionValidationService _permissionValidationService;
+        private readonly ITransactionScopeManager _transactionScopeManager;
+        private readonly IUserContextCache _userContextCache;
 
         public DeleteUserCommandHandler(
             CofoundryDbContext dbContext,
             UserCommandPermissionsHelper userCommandPermissionsHelper,
-            IPermissionValidationService permissionValidationService
+            IPermissionValidationService permissionValidationService,
+            ITransactionScopeManager transactionScopeManager,
+            IUserContextCache userContextCache
             )
         {
             _dbContext = dbContext;
             _userCommandPermissionsHelper = userCommandPermissionsHelper;
             _permissionValidationService = permissionValidationService;
+            _transactionScopeManager = transactionScopeManager;
+            _userContextCache = userContextCache;
         }
 
         public async Task ExecuteAsync(DeleteUserCommand command, IExecutionContext executionContext)
@@ -40,7 +43,9 @@ namespace Cofoundry.Domain.Internal
             var executorRole = await _userCommandPermissionsHelper.GetExecutorRoleAsync(executionContext);
             ValidateCustomPermissions(user, executionContext, executorRole);
             MarkRecordDeleted(user, executionContext);
+
             await _dbContext.SaveChangesAsync();
+            _transactionScopeManager.QueueCompletionTask(_dbContext, () => _userContextCache.Clear(command.UserId));
         }
 
         private void MarkRecordDeleted(User user, IExecutionContext executionContext)
@@ -58,8 +63,6 @@ namespace Cofoundry.Domain.Internal
                 .Include(u => u.Role)
                 .FilterById(userId);
         }
-
-        #region Permissions
 
         private void ValidateCustomPermissions(User user, IExecutionContext executionContext, RoleDetails executorRole)
         {
@@ -80,7 +83,7 @@ namespace Cofoundry.Domain.Internal
             {
                 throw new NotPermittedException("You cannot delete your own user account via this api.");
             }
-            
+
             // Only super admins can delete super admin
             if (user.Role.RoleCode == SuperAdminRole.SuperAdminRoleCode && !executorRole.IsSuperAdministrator)
             {
@@ -92,7 +95,5 @@ namespace Cofoundry.Domain.Internal
         {
             yield return new CofoundryUserDeletePermission();
         }
-
-        #endregion
     }
 }

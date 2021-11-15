@@ -1,34 +1,31 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Cofoundry.Core;
+using Cofoundry.Core.Data;
+using Cofoundry.Core.Mail;
+using Cofoundry.Domain.CQS;
+using Cofoundry.Domain.Data;
+using Cofoundry.Domain.MailTemplates;
+using Microsoft.EntityFrameworkCore;
+using System;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
-using Cofoundry.Domain.Data;
-using Cofoundry.Domain.CQS;
-using Microsoft.EntityFrameworkCore;
-using Cofoundry.Core.Data;
-using Cofoundry.Core.Mail;
-using Cofoundry.Core;
-using Cofoundry.Domain.MailTemplates;
 
 namespace Cofoundry.Domain.Internal
 {
-    public class CompleteUserPasswordResetCommandHandler 
+    public class CompleteUserPasswordResetCommandHandler
         : ICommandHandler<CompleteUserPasswordResetCommand>
         , IIgnorePermissionCheckHandler
     {
         private const int NUMHOURS_PASSWORD_RESET_VALID = 16;
 
-        #region construstor
-
         private readonly CofoundryDbContext _dbContext;
         private readonly IQueryExecutor _queryExecutor;
         private readonly IMailService _mailService;
-        private readonly ITransactionScopeManager _transactionScopeFactory;
+        private readonly ITransactionScopeManager _transactionScopeManager;
         private readonly IPasswordUpdateCommandHelper _passwordUpdateCommandHelper;
         private readonly IUserMailTemplateBuilderFactory _userMailTemplateBuilderFactory;
-        private readonly IUserAreaDefinitionRepository _userAreaDefinitionRepository;
         private readonly IExecutionContextFactory _executionContextFactory;
+        private readonly IUserContextCache _userContextCache;
 
         public CompleteUserPasswordResetCommandHandler(
             CofoundryDbContext dbContext,
@@ -37,21 +34,19 @@ namespace Cofoundry.Domain.Internal
             ITransactionScopeManager transactionScopeFactory,
             IPasswordUpdateCommandHelper passwordUpdateCommandHelper,
             IUserMailTemplateBuilderFactory userMailTemplateBuilderFactory,
-            IUserAreaDefinitionRepository userAreaDefinitionRepository,
-            IExecutionContextFactory executionContextFactory
+            IExecutionContextFactory transactionScopeManager,
+            IUserContextCache userContextCache
             )
         {
             _dbContext = dbContext;
             _queryExecutor = queryExecutor;
             _mailService = mailService;
-            _transactionScopeFactory = transactionScopeFactory;
+            _transactionScopeManager = transactionScopeFactory;
             _passwordUpdateCommandHelper = passwordUpdateCommandHelper;
             _userMailTemplateBuilderFactory = userMailTemplateBuilderFactory;
-            _userAreaDefinitionRepository = userAreaDefinitionRepository;
-            _executionContextFactory = executionContextFactory;
+            _executionContextFactory = transactionScopeManager;
+            _userContextCache = userContextCache;
         }
-
-        #endregion
 
         public async Task ExecuteAsync(CompleteUserPasswordResetCommand command, IExecutionContext executionContext)
         {
@@ -63,7 +58,7 @@ namespace Cofoundry.Domain.Internal
 
             UpdatePasswordAndSetComplete(request, command, executionContext);
 
-            using (var scope = _transactionScopeFactory.Create(_dbContext))
+            using (var scope = _transactionScopeManager.Create(_dbContext))
             {
                 await _dbContext.SaveChangesAsync();
 
@@ -72,6 +67,7 @@ namespace Cofoundry.Domain.Internal
                     await SendNotificationAsync(command, request.User, executionContext);
                 }
 
+                scope.QueueCompletionTask(() => _userContextCache.Clear(request.UserId));
                 await scope.CompleteAsync();
             }
         }

@@ -16,15 +16,16 @@ namespace Cofoundry.Domain.Registration
                 .Register<IUserRepository, UserRepository>()
                 .Register<UserContextMapper>()
                 .Register<IPasswordUpdateCommandHelper, PasswordUpdateCommandHelper>()
-                .Register<IUserContextService, UserContextService>(RegistrationOptions.Scoped())
+                .Register<IUserContextService, UserContextService>()
                 .Register<IUserSessionService, InMemoryUserSessionService>(RegistrationOptions.Scoped())
                 .Register<ILoginService, LoginService>()
                 .Register<IUserMicroSummaryMapper, UserMicroSummaryMapper>()
                 .Register<IUserSummaryMapper, UserSummaryMapper>()
                 .Register<IUserAccountDetailsMapper, UserAccountDetailsMapper>()
                 .Register<IUserDetailsMapper, UserDetailsMapper>()
-                .RegisterAll<IUserAreaDefinition>()
                 .Register<IPasswordResetUrlHelper, PasswordResetUrlHelper>()
+                .Register<IUserContextCache, UserContextCache>(RegistrationOptions.Scoped())
+                .RegisterAll<IUserAreaDefinition>()
                 ;
         }
     }

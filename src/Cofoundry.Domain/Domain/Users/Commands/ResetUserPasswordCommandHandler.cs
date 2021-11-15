@@ -1,15 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Cofoundry.Domain.Data;
-using Cofoundry.Domain.CQS;
-using Microsoft.EntityFrameworkCore;
-using Cofoundry.Domain.MailTemplates;
-using Cofoundry.Core.Mail;
+﻿using Cofoundry.Core;
 using Cofoundry.Core.Data;
-using Cofoundry.Core;
+using Cofoundry.Core.Mail;
+using Cofoundry.Domain.CQS;
+using Cofoundry.Domain.Data;
+using Cofoundry.Domain.MailTemplates;
 using Microsoft.AspNetCore.Html;
+using Microsoft.EntityFrameworkCore;
+using System;
+using System.Threading.Tasks;
 
 namespace Cofoundry.Domain.Internal
 {
@@ -21,12 +19,10 @@ namespace Cofoundry.Domain.Internal
     /// a self-service reset which can be done via 
     /// InitiatePasswordResetRequestCommand.
     /// </summary>
-    public class ResetUserPasswordCommandHandler 
+    public class ResetUserPasswordCommandHandler
         : ICommandHandler<ResetUserPasswordCommand>
         , IIgnorePermissionCheckHandler
     {
-        #region construstor
-
         private readonly CofoundryDbContext _dbContext;
         private readonly ITransactionScopeManager _transactionScopeFactory;
         private readonly IMailService _mailService;
@@ -36,6 +32,7 @@ namespace Cofoundry.Domain.Internal
         private readonly IUserAreaDefinitionRepository _userAreaDefinitionRepository;
         private readonly IPasswordCryptographyService _passwordCryptographyService;
         private readonly IPasswordGenerationService _passwordGenerationService;
+        private readonly IUserContextCache _userContextCache;
 
         public ResetUserPasswordCommandHandler(
             CofoundryDbContext dbContext,
@@ -46,7 +43,8 @@ namespace Cofoundry.Domain.Internal
             IPermissionValidationService permissionValidationService,
             IUserAreaDefinitionRepository userAreaDefinitionRepository,
             IPasswordCryptographyService passwordCryptographyService,
-            IPasswordGenerationService passwordGenerationService
+            IPasswordGenerationService passwordGenerationService,
+            IUserContextCache userContextCache
             )
         {
             _dbContext = dbContext;
@@ -58,9 +56,8 @@ namespace Cofoundry.Domain.Internal
             _userAreaDefinitionRepository = userAreaDefinitionRepository;
             _passwordCryptographyService = passwordCryptographyService;
             _passwordGenerationService = passwordGenerationService;
+            _userContextCache = userContextCache;
         }
-
-        #endregion
 
         public async Task ExecuteAsync(ResetUserPasswordCommand command, IExecutionContext executionContext)
         {
@@ -81,6 +78,7 @@ namespace Cofoundry.Domain.Internal
                 await _dbContext.SaveChangesAsync();
                 await SendNotificationAsync(user, temporaryPassword);
 
+                _transactionScopeFactory.QueueCompletionTask(_dbContext, () => _userContextCache.Clear());
                 await scope.CompleteAsync();
             }
         }
@@ -115,7 +113,7 @@ namespace Cofoundry.Domain.Internal
         {
             // Send mail notification
             var mailTemplateBuilder = _userMailTemplateBuilderFactory.Create(user.UserAreaCode);
-            
+
             var context = await CreateMailTemplateContextAsync(user, temporaryPassword);
             var mailTemplate = await mailTemplateBuilder.BuildPasswordResetByAdminTemplateAsync(context);
 
@@ -143,8 +141,6 @@ namespace Cofoundry.Domain.Internal
             return context;
         }
 
-        #region Permission
-
         public void ValidatePermissions(User user, IExecutionContext executionContext)
         {
             var userArea = _userAreaDefinitionRepository.GetByCode(user.UserAreaCode);
@@ -157,7 +153,5 @@ namespace Cofoundry.Domain.Internal
                 _permissionValidationService.EnforcePermission(new NonCofoundryUserUpdatePermission(), executionContext.UserContext);
             }
         }
-
-        #endregion
     }
 }

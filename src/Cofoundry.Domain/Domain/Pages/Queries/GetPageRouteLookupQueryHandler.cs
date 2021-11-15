@@ -161,7 +161,7 @@ namespace Cofoundry.Domain.Internal
                 if (!pageRoute.Versions.Any()) continue;
 
                 var accessRules = accessRuleLookup.GetOrDefault(pageRoute.PageId);
-                pageRoute.AccessRules = _routeAccessRuleMapper.Map(dbPage);
+                pageRoute.AccessRuleSet = _routeAccessRuleMapper.Map(dbPage);
                 
                 // Configure Locale
                 string directoryPath = null;

@@ -1,4 +1,5 @@
 ﻿using Cofoundry.Domain;
+using Cofoundry.Domain.Internal;
 using Cofoundry.Domain.Tests;
 using Cofoundry.Domain.Tests.Shared;
 using Cofoundry.Web.Internal;
@@ -13,29 +14,6 @@ namespace Cofoundry.Web.Tests.Framework.ClientConnection
 {
     public class WebUserSessionServiceTests : UserSessionServiceTests
     {
-        [Fact(Skip = "WebUserSessionService works differently because 'current' could mean the ambient authentication scheme rather than the default.")]
-        public override Task GetCurrentUserId_WhenLoggedInToNonDefault_ReturnsNull()
-        {
-            return Task.CompletedTask;
-        }
-
-        /// <summary>
-        /// WebUserSessionService works differently to the base test expectations because 'current' could 
-        /// mean the ambient authentication scheme (applied via an AuthorizeAttribute on a controller) rather 
-        /// than the default.
-        /// </summary>
-        [Fact]
-        public async Task GetCurrentUserId_WhenLoggedInToAmbient_ReturnsUserId()
-        {
-            const int USER_ID = 123456;
-            var service = CreateService(CreateUserAreaRepository());
-
-            await service.LogUserInAsync(TestUserArea2.Code, USER_ID, false);
-            var userId = service.GetCurrentUserId();
-
-            Assert.Equal(USER_ID, userId);
-        }
-
         protected override IUserSessionService CreateService(IUserAreaDefinitionRepository userAreaDefinitionRepository)
         {
             var mockHttpContextAccessor = new Mock<IHttpContextAccessor>();
@@ -43,7 +21,7 @@ namespace Cofoundry.Web.Tests.Framework.ClientConnection
             context.RequestServices = CreateServiceProvider(userAreaDefinitionRepository);
             mockHttpContextAccessor.Setup(m => m.HttpContext).Returns(context);
 
-            return new WebUserSessionService(mockHttpContextAccessor.Object, userAreaDefinitionRepository);
+            return new WebUserSessionService(mockHttpContextAccessor.Object, userAreaDefinitionRepository, new UserContextCache());
         }
 
         /// <summary>

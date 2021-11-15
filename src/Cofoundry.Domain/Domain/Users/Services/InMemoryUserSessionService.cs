@@ -10,52 +10,39 @@ namespace Cofoundry.Domain.Internal
     /// In-memory implementation of IUserSessionService for non-web
     /// scenarios.
     /// </summary>
+    /// <inheritdoc/>
     public class InMemoryUserSessionService : IUserSessionService
     {
-        private const string DEFAULT_USER_AREA_KEY = "DEFAULT_KEY";
+        private const string AMBIENT_USER_AREA_KEY = "AMBIENT_KEY";
         private Dictionary<string, int?> _userIdCache = new Dictionary<string, int?>();
         private object _lock = new object();
+        private string _ambientUserAreaCode;
 
         private readonly IUserAreaDefinitionRepository _userAreaDefinitionRepository;
+        private readonly IUserContextCache _userContextCache;
 
         public InMemoryUserSessionService(
-            IUserAreaDefinitionRepository userAreaDefinitionRepository
+            IUserAreaDefinitionRepository userAreaDefinitionRepository,
+            IUserContextCache userContextCache
             )
         {
             _userAreaDefinitionRepository = userAreaDefinitionRepository;
+            _userContextCache = userContextCache;
+
+            ResetAmbientUserAreaToDefault();
         }
 
-        /// <summary>
-        /// Gets the UserId of the user authenticated for the
-        /// default authentication user area.
-        /// </summary>
-        /// <returns>
-        /// Integer UserId or null if the user is not logged in for the default
-        /// user area.
-        /// </returns>
         public int? GetCurrentUserId()
         {
-            return _userIdCache.GetValueOrDefault(DEFAULT_USER_AREA_KEY);
+            return _userIdCache.GetValueOrDefault(AMBIENT_USER_AREA_KEY);
         }
 
-        /// <summary>
-        /// Gets the UserId of the currently logged in user for a specific UserArea. Useful in multi-userarea
-        /// scenarios where you need to ignore the default user and check for permissions 
-        /// against a specific user area.
-        /// </summary>
-        /// <param name="userAreaCode">The unique identifying code of the user area to check for.</param>
         public Task<int?> GetUserIdByUserAreaCodeAsync(string userAreaCode)
         {
             var result = GetUserIdByUserAreaCode(userAreaCode);
             return Task.FromResult(result);
         }
 
-        /// <summary>
-        /// Gets the UserId of the currently logged in user for a specific UserArea. Useful in multi-userarea
-        /// scenarios where you need to ignore the default user and check for permissions 
-        /// against a specific user area.
-        /// </summary>
-        /// <param name="userAreaCode">The unique identifying code of the user area to check for.</param>
         public int? GetUserIdByUserAreaCode(string userAreaCode)
         {
             if (userAreaCode == null)
@@ -65,16 +52,7 @@ namespace Cofoundry.Domain.Internal
 
             return _userIdCache.GetValueOrDefault(userAreaCode);
         }
-
-        /// <summary>
-        /// Logs the specified UserId into the current session.
-        /// </summary>
-        /// <param name="userAreaCode">Unique code of the user area to log the user into (required).</param>
-        /// <param name="userId">UserId belonging to the owner of the current session.</param>
-        /// <param name="rememberUser">
-        /// This value is ignored for the in-memory store and the value is stored for the 
-        /// lifecycle of the service.
-        /// </param>
+        
         public Task LogUserInAsync(string userAreaCode, int userId, bool rememberUser)
         {
             if (userAreaCode == null) throw new ArgumentNullException(nameof(userAreaCode));
@@ -82,25 +60,21 @@ namespace Cofoundry.Domain.Internal
 
             var userArea = _userAreaDefinitionRepository.GetByCode(userAreaCode);
             EntityNotFoundException.ThrowIfNull(userArea, userAreaCode);
-            var isDefaultUserArea = IsDefaultUserArea(userArea);
+            var isAmbientUserArea = IsAmbientUserArea(userArea);
 
             lock (_lock)
             {
                 _userIdCache[userArea.UserAreaCode] = userId;
 
-                if (isDefaultUserArea)
+                if (isAmbientUserArea)
                 {
-                    _userIdCache[DEFAULT_USER_AREA_KEY] = userId;
+                    _userIdCache[AMBIENT_USER_AREA_KEY] = userId;
                 }
             }
 
             return Task.CompletedTask;
         }
 
-        /// <summary>
-        /// Logs the user out of the specified user area.
-        /// </summary>
-        /// <param name="userAreaCode">Unique code of the user area to log the user out of (required).</param>
         public Task LogUserOutAsync(string userAreaCode)
         {
             if (userAreaCode == null)
@@ -110,16 +84,29 @@ namespace Cofoundry.Domain.Internal
 
             var userArea = _userAreaDefinitionRepository.GetByCode(userAreaCode);
             EntityNotFoundException.ThrowIfNull(userArea, userAreaCode);
-            var isDefaultUserArea = IsDefaultUserArea(userArea);
+            var isAmbientUserArea = IsAmbientUserArea(userArea);
+
+            var userId = _userIdCache.GetOrDefault(userArea.UserAreaCode);
 
             lock (_lock)
             {
-                _userIdCache[userArea.UserAreaCode] = null;
+                _userIdCache.Remove(userArea.UserAreaCode); 
 
-                if (isDefaultUserArea)
+                if (isAmbientUserArea)
                 {
-                    _userIdCache[DEFAULT_USER_AREA_KEY] = null;
+                    _userIdCache.Remove(AMBIENT_USER_AREA_KEY);
                 }
+            }
+
+            if (userId.HasValue)
+            {
+                _userContextCache.Clear(userId.Value);
+            }
+            else
+            {
+                // If for whatever reason the userId wasn't set, we
+                // should clear all contexts to be safe.
+                _userContextCache.Clear();
             }
 
             return Task.CompletedTask;
@@ -135,16 +122,37 @@ namespace Cofoundry.Domain.Internal
                 _userIdCache.Clear();
             }
 
+            _userContextCache.Clear();
+
             return Task.CompletedTask;
         }
 
-        private bool IsDefaultUserArea(IUserAreaDefinition userArea)
+        public Task SetAmbientUserAreaAsync(string userAreaCode)
+        {
+            if (string.IsNullOrWhiteSpace(userAreaCode)) throw new ArgumentEmptyException(nameof(userAreaCode));
+            if (_ambientUserAreaCode == userAreaCode) return Task.CompletedTask;
+
+            lock (_lock)
+            {
+                _ambientUserAreaCode = userAreaCode;
+                var existingUserId = _userIdCache.GetValueOrDefault(userAreaCode);
+                _userIdCache[AMBIENT_USER_AREA_KEY] = existingUserId;
+            }
+
+            return Task.CompletedTask;
+        }
+
+        private void ResetAmbientUserAreaToDefault()
         {
             var defaultUserArea = _userAreaDefinitionRepository.GetDefault();
             EntityNotFoundException.ThrowIfNull(defaultUserArea, "Default");
 
-            var isDefault = userArea.UserAreaCode == defaultUserArea.UserAreaCode;
-            return isDefault;
+            _ambientUserAreaCode = defaultUserArea.UserAreaCode;
+        }
+
+        private bool IsAmbientUserArea(IUserAreaDefinition userArea)
+        {
+            return _ambientUserAreaCode == userArea.UserAreaCode;
         }
     }
 }

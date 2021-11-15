@@ -1,19 +1,33 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using Cofoundry.Domain;
+using Microsoft.AspNetCore.Authorization;
+using System.Threading.Tasks;
 
 namespace Cofoundry.Web
 {
-    public class UserAreaAuthorizationRequirement : IAuthorizationRequirement
+    public class UserAreaAuthorizationHandler : AuthorizationHandler<UserAreaAuthorizationRequirement>
     {
-        public UserAreaAuthorizationRequirement(
-            string userAreaCode
+        private readonly IUserContextService _userContextService;
+
+        public UserAreaAuthorizationHandler(
+            IUserContextService userContextService
             )
         {
-            UserAreaCode = userAreaCode;
+            _userContextService = userContextService;
         }
 
-        public string UserAreaCode { get; private set; }
+        protected override async Task HandleRequirementAsync(
+            AuthorizationHandlerContext context,
+            UserAreaAuthorizationRequirement requirement
+            )
+        {
+            if (context.User?.Identity?.IsAuthenticated ?? false) return;
+
+            var userContext = await _userContextService.GetCurrentContextAsync();
+
+            if (userContext.UserId.HasValue && userContext.UserArea?.UserAreaCode == requirement.UserAreaCode)
+            {
+                context.Succeed(requirement);
+            }
+        }
     }
 }

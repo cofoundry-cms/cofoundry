@@ -1,13 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Cofoundry.Domain.Data;
-using Cofoundry.Domain.CQS;
-using Microsoft.EntityFrameworkCore;
+﻿using Cofoundry.Core;
+using Cofoundry.Core.Data;
 using Cofoundry.Core.Validation;
-using Cofoundry.Core;
-using Cofoundry.Domain.Internal;
+using Cofoundry.Domain.CQS;
+using Cofoundry.Domain.Data;
+using Microsoft.EntityFrameworkCore;
+using System.Threading.Tasks;
 
 namespace Cofoundry.Domain.Internal
 {
@@ -15,20 +12,22 @@ namespace Cofoundry.Domain.Internal
         : ICommandHandler<UpdateUserCommand>
         , IIgnorePermissionCheckHandler
     {
-        #region constructor
-
         private readonly CofoundryDbContext _dbContext;
         private readonly IQueryExecutor _queryExecutor;
         private readonly UserCommandPermissionsHelper _userCommandPermissionsHelper;
         private readonly IUserAreaDefinitionRepository _userAreaRepository;
         private readonly IPermissionValidationService _permissionValidationService;
+        private readonly ITransactionScopeManager _transactionScopeManager;
+        private readonly IUserContextCache _userContextCache;
 
         public UpdateUserCommandHandler(
             IQueryExecutor queryExecutor,
             CofoundryDbContext dbContext,
             UserCommandPermissionsHelper userCommandPermissionsHelper,
             IUserAreaDefinitionRepository userAreaRepository,
-            IPermissionValidationService permissionValidationService
+            IPermissionValidationService permissionValidationService,
+            ITransactionScopeManager transactionScopeManager,
+            IUserContextCache userContextCache
             )
         {
             _queryExecutor = queryExecutor;
@@ -36,11 +35,9 @@ namespace Cofoundry.Domain.Internal
             _userCommandPermissionsHelper = userCommandPermissionsHelper;
             _userAreaRepository = userAreaRepository;
             _permissionValidationService = permissionValidationService;
+            _transactionScopeManager = transactionScopeManager;
+            _userContextCache = userContextCache;
         }
-
-        #endregion
-
-        #region Execution
 
         public async Task ExecuteAsync(UpdateUserCommand command, IExecutionContext executionContext)
         {
@@ -58,48 +55,13 @@ namespace Cofoundry.Domain.Internal
             ValidateCommand(command, userArea);
             await ValidateIsUniqueAsync(command, userArea, executionContext);
 
-            // Role
-            if (command.RoleId != user.RoleId)
-            {
-                var newRole = await _dbContext
-                    .Roles
-                    .FilterById(command.RoleId)
-                    .SingleOrDefaultAsync();
-                EntityNotFoundException.ThrowIfNull(newRole, command.RoleId);
-
-                await _userCommandPermissionsHelper.ValidateNewRoleAsync(
-                    newRole,
-                    user.RoleId,
-                    user.UserAreaCode, 
-                    executionContext
-                    );
-
-                user.Role = newRole;
-            }
-            
-            // Map
-            Map(command, user, userArea);
+            // Map updates
+            await UpdateRoleAsync(command, executionContext, user);
+            UpdateProperties(command, user, userArea);
 
             // Save
             await _dbContext.SaveChangesAsync();
-        }
-
-        private static void Map(UpdateUserCommand command, User user, IUserAreaDefinition userArea)
-        {
-            user.FirstName = command.FirstName?.Trim();
-            user.LastName = command.LastName?.Trim();
-            user.Email = command.Email?.Trim();
-
-            if (userArea.UseEmailAsUsername)
-            {
-                user.Username = command.Email;
-            }
-            else
-            {
-                user.Username = command.Username?.Trim();
-            }
-
-            user.RequirePasswordChange = command.RequirePasswordChange;
+            _transactionScopeManager.QueueCompletionTask(_dbContext, () => _userContextCache.Clear(user.UserId));
         }
 
         private void ValidateCommand(UpdateUserCommand command, IUserAreaDefinition userArea)
@@ -118,7 +80,7 @@ namespace Cofoundry.Domain.Internal
         }
 
         private async Task ValidateIsUniqueAsync(
-            UpdateUserCommand command, 
+            UpdateUserCommand command,
             IUserAreaDefinition userArea,
             IExecutionContext executionContext
             )
@@ -153,10 +115,6 @@ namespace Cofoundry.Domain.Internal
             }
         }
 
-        #endregion
-        
-        #region Permission
-
         public void ValidatePermissions(IUserAreaDefinition userArea, IExecutionContext executionContext)
         {
             if (userArea is CofoundryAdminUserArea)
@@ -169,6 +127,43 @@ namespace Cofoundry.Domain.Internal
             }
         }
 
-        #endregion
+        private async Task UpdateRoleAsync(UpdateUserCommand command, IExecutionContext executionContext, User user)
+        {
+            if (command.RoleId != user.RoleId)
+            {
+                var newRole = await _dbContext
+                    .Roles
+                    .FilterById(command.RoleId)
+                    .SingleOrDefaultAsync();
+                EntityNotFoundException.ThrowIfNull(newRole, command.RoleId);
+
+                await _userCommandPermissionsHelper.ValidateNewRoleAsync(
+                    newRole,
+                    user.RoleId,
+                    user.UserAreaCode,
+                    executionContext
+                    );
+
+                user.Role = newRole;
+            }
+        }
+
+        private static void UpdateProperties(UpdateUserCommand command, User user, IUserAreaDefinition userArea)
+        {
+            user.FirstName = command.FirstName?.Trim();
+            user.LastName = command.LastName?.Trim();
+            user.Email = command.Email?.Trim();
+
+            if (userArea.UseEmailAsUsername)
+            {
+                user.Username = command.Email;
+            }
+            else
+            {
+                user.Username = command.Username?.Trim();
+            }
+
+            user.RequirePasswordChange = command.RequirePasswordChange;
+        }
     }
 }
