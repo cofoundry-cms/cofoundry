@@ -138,7 +138,7 @@ namespace Cofoundry.Web
             if (!state.AmbientUserContext.IsLoggedIn() && accessRuleViolation.ShouldTryRedirect())
             {
                 _logger.LogInformation("User not authenticated, redirecting to login page for user area {UserAreaCodeForLoginRedirect}.", accessRuleViolation.UserAreaCodeForLoginRedirect);
-                var challengeScheme = CofoundryAuthenticationConstants.FormatAuthenticationScheme(accessRuleViolation.UserAreaCodeForLoginRedirect));
+                var challengeScheme = CofoundryAuthenticationConstants.FormatAuthenticationScheme(accessRuleViolation.UserAreaCodeForLoginRedirect);
                 state.Result = new ChallengeResult(challengeScheme);
                 return;
             }
