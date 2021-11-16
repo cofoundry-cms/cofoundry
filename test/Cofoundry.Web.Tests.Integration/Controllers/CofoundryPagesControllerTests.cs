@@ -427,7 +427,7 @@ namespace Cofoundry.Web.Tests.Integration.Controllers
             using (new AssertionScope())
             {
                 result.StatusCode.Should().Be(HttpStatusCode.Redirect);
-                result.Headers.Location.OriginalString.Should().StartWith(userArea.Definition.LoginPath);
+                result.Headers.Location.OriginalString.Should().StartWith("http://localhost" + userArea.Definition.LoginPath);
                 var returnUrl = WebUtility.UrlEncode(result.RequestMessage.RequestUri.PathAndQuery.ToString());
                 result.Headers.Location.OriginalString.Should().EndWith($"ReturnUrl={returnUrl}");
             }
