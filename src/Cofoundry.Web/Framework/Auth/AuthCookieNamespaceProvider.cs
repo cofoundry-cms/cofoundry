@@ -1,20 +1,11 @@
 ﻿using Cofoundry.Domain;
 using Microsoft.Extensions.Hosting;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace Cofoundry.Web
 {
-    /// <summary>
-    /// Used to get a string that is used to make the auth cookies unique. The 
-    /// user area code will be appended to this to make the cookiename, e.g.
-    /// "MyAppAuth_COF". By default the cookie namespace is created
-    /// using characters from the entry assembly name of your applicaiton, but
-    /// you can override this behaviour using the Cofoundry:Auth:CookieNamespace
-    /// config setting.
-    /// </summary>
+    /// <inheritdoc/>
     public class AuthCookieNamespaceProvider : IAuthCookieNamespaceProvider
     {
         private readonly IHostEnvironment _hostingEnvironment;

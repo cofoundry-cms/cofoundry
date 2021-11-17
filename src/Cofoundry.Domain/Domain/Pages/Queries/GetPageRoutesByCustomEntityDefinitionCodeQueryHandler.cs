@@ -1,10 +1,7 @@
-﻿using System;
+﻿using Cofoundry.Domain.CQS;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using Cofoundry.Domain.CQS;
-using Cofoundry.Core;
 
 namespace Cofoundry.Domain.Internal
 {
@@ -36,18 +33,13 @@ namespace Cofoundry.Domain.Internal
             return customEntityRoutes;
         }
 
-        #region Permission
-
         public IEnumerable<IPermissionApplication> GetPermissions(GetPageRoutesByCustomEntityDefinitionCodeQuery query)
         {
-            var definition = _customEntityDefinitionRepository.GetByCode(query.CustomEntityDefinitionCode);
-            EntityNotFoundException.ThrowIfNull(definition, query.CustomEntityDefinitionCode);
+            var definition = _customEntityDefinitionRepository.GetRequiredByCode(query.CustomEntityDefinitionCode);
 
             yield return new CustomEntityReadPermission(definition);
             yield return new PageReadPermission();
         }
-
-        #endregion
     }
 
 }

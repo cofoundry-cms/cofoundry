@@ -39,9 +39,7 @@ namespace Cofoundry.Domain.Internal
 
         public async Task ExecuteAsync(EnsureCustomEntityDefinitionExistsCommand command, IExecutionContext executionContext)
         {
-            var customEntityDefinition = _customEntityDefinitionRepository.GetByCode(command.CustomEntityDefinitionCode);
-            EntityNotFoundException.ThrowIfNull(customEntityDefinition, command.CustomEntityDefinitionCode);
-
+            var customEntityDefinition = _customEntityDefinitionRepository.GetRequiredByCode(command.CustomEntityDefinitionCode);
             var dbDefinition = await _dbContext
                 .CustomEntityDefinitions
                 .FilterByCode(command.CustomEntityDefinitionCode)

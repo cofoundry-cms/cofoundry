@@ -54,7 +54,7 @@ namespace Cofoundry.Domain.Internal
 
             if (!string.IsNullOrWhiteSpace(entity.UserAreaCodeForLoginRedirect))
             {
-                var userArea = _userAreaDefinitionRepository.GetByCode(entity.UserAreaCodeForLoginRedirect);
+                var userArea = _userAreaDefinitionRepository.GetRequiredByCode(entity.UserAreaCodeForLoginRedirect);
                 result.UserAreaCodeForLoginRedirect = userArea.UserAreaCode;
             }
 
@@ -69,7 +69,7 @@ namespace Cofoundry.Domain.Internal
 
         private EntityAccessRule MapAccessRule(IEntityAccessRule entityAccessRule)
         {
-            var userArea = _userAreaDefinitionRepository.GetByCode(entityAccessRule.UserAreaCode);
+            var userArea = _userAreaDefinitionRepository.GetRequiredByCode(entityAccessRule.UserAreaCode);
 
             return new EntityAccessRule()
             {

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace Cofoundry.Domain.Data
 {
@@ -10,8 +9,14 @@ namespace Cofoundry.Domain.Data
             Permissions = new List<Permission>();
         }
 
+        /// <summary>
+        /// Unique 6 character code representing the entity (use uppercase).
+        /// </summary>
         public string EntityDefinitionCode { get; set; }
 
+        /// <summary>
+        /// Singlar name of the entity e.g. 'Page'
+        /// </summary>
         public string Name { get; set; }
 
         public virtual ICollection<Permission> Permissions { get; set; }

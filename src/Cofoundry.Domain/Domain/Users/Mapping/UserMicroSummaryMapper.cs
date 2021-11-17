@@ -36,7 +36,7 @@ namespace Cofoundry.Domain.Internal
                 Username = dbUser.Username
             };
 
-            var userArea = _userAreaRepository.GetByCode(dbUser.UserAreaCode);
+            var userArea = _userAreaRepository.GetRequiredByCode(dbUser.UserAreaCode);
             EntityNotFoundException.ThrowIfNull(userArea, dbUser.UserAreaCode);
 
             user.UserArea = new UserAreaMicroSummary()

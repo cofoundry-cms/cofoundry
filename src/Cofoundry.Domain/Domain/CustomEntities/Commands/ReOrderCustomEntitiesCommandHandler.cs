@@ -1,15 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Cofoundry.Core.Data;
+using Cofoundry.Core.MessageAggregator;
 using Cofoundry.Domain.CQS;
 using Cofoundry.Domain.Data;
-using Cofoundry.Core.MessageAggregator;
-using Cofoundry.Core;
-using System.ComponentModel.DataAnnotations;
-using Cofoundry.Core.Data;
 using Cofoundry.Domain.Data.Internal;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Cofoundry.Domain.Internal
 {
@@ -17,12 +15,10 @@ namespace Cofoundry.Domain.Internal
     /// Reorders a set of custom entities. The custom entity definition must implement 
     /// IOrderableCustomEntityDefintion to be able to set ordering.
     /// </summary>
-    public class ReOrderCustomEntitiesCommandHandler 
+    public class ReOrderCustomEntitiesCommandHandler
         : ICommandHandler<ReOrderCustomEntitiesCommand>
         , IPermissionRestrictedCommandHandler<ReOrderCustomEntitiesCommand>
     {
-        #region constructor
-
         private readonly CofoundryDbContext _dbContext;
         private readonly ICustomEntityStoredProcedures _customEntityStoredProcedures;
         private readonly ICustomEntityCache _customEntityCache;
@@ -47,11 +43,9 @@ namespace Cofoundry.Domain.Internal
             _transactionScopeFactory = transactionScopeFactory;
         }
 
-        #endregion
-
         public async Task ExecuteAsync(ReOrderCustomEntitiesCommand command, IExecutionContext executionContext)
         {
-            var definition = _customEntityDefinitionRepository.GetByCode(command.CustomEntityDefinitionCode) as IOrderableCustomEntityDefinition;
+            var definition = _customEntityDefinitionRepository.GetRequiredByCode(command.CustomEntityDefinitionCode) as IOrderableCustomEntityDefinition;
 
             if (definition == null || definition.Ordering == CustomEntityOrdering.None)
             {
@@ -88,14 +82,10 @@ namespace Cofoundry.Domain.Internal
             return _messageAggregator.PublishBatchAsync(messages);
         }
 
-        #region permissions
-
         public IEnumerable<IPermissionApplication> GetPermissions(ReOrderCustomEntitiesCommand command)
         {
             var definition = _customEntityDefinitionRepository.GetByCode(command.CustomEntityDefinitionCode);
             yield return new CustomEntityUpdatePermission(definition);
         }
-
-        #endregion
     }
 }

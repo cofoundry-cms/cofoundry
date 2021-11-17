@@ -1,9 +1,10 @@
-﻿using Cofoundry.Domain.Internal;
+﻿using Cofoundry.Core;
+using Cofoundry.Domain.Internal;
+using FluentAssertions;
 using Moq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using Xunit;
 
 namespace Cofoundry.Domain.Tests
@@ -95,7 +96,7 @@ namespace Cofoundry.Domain.Tests
             var repo = new EntityDefinitionRepository(entityDefinitions, customEntityRepository);
             var result = repo.GetAll();
 
-            Assert.Equal(total, result.Count());
+            result.Should().HaveCount(total);
         }
 
         [Fact]
@@ -107,7 +108,7 @@ namespace Cofoundry.Domain.Tests
             var repo = new EntityDefinitionRepository(entityDefinitions, customEntityRepository);
             var result = repo.GetByCode("UNIQUE");
 
-            Assert.Null(result);
+            result.Should().BeNull();
         }
 
         [Theory]
@@ -121,7 +122,34 @@ namespace Cofoundry.Domain.Tests
             var repo = new EntityDefinitionRepository(entityDefinitions, customEntityRepository);
             var result = repo.GetByCode(definitionCode);
 
-            Assert.Equal(definitionCode, result.EntityDefinitionCode);
+            result.EntityDefinitionCode.Should().Be(definitionCode);
+        }
+
+        [Fact]
+        public void GetRequiredByCode_WhenNotExists_Throws()
+        {
+            var customEntityRepository = GetCustomEntityRepository();
+            var entityDefinitions = GetBaseEntityDefinitions();
+
+            var repo = new EntityDefinitionRepository(entityDefinitions, customEntityRepository);
+
+            repo.Invoking(r => r.GetRequiredByCode("UNIQUE"))
+                .Should()
+                .Throw<EntityNotFoundException<IEntityDefinition>>();
+        }
+
+        [Theory]
+        [InlineData("TST003")]
+        [InlineData("CUS002")]
+        public void GetRequiredByCode_WhenExists_Returns(string definitionCode)
+        {
+            var customEntityRepository = GetCustomEntityRepository();
+            var entityDefinitions = GetBaseEntityDefinitions();
+
+            var repo = new EntityDefinitionRepository(entityDefinitions, customEntityRepository);
+            var result = repo.GetByCode(definitionCode);
+
+            result.EntityDefinitionCode.Should().Be(definitionCode);
         }
 
         private class TestEntityDefinition : IEntityDefinition

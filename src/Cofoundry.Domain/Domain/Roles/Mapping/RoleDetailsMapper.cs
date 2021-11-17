@@ -39,7 +39,7 @@ namespace Cofoundry.Domain.Internal
                 Title = dbRole.Title
             };
 
-            var userArea = _userAreaRepository.GetByCode(dbRole.UserAreaCode);
+            var userArea = _userAreaRepository.GetRequiredByCode(dbRole.UserAreaCode);
             role.UserArea = new UserAreaMicroSummary()
             {
                 UserAreaCode = dbRole.UserAreaCode,

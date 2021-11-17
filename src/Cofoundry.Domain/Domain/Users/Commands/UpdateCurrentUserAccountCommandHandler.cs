@@ -62,7 +62,7 @@ namespace Cofoundry.Domain.Internal
             IExecutionContext executionContext
             )
         {
-            var userArea = _userAreaRepository.GetByCode(user.UserAreaCode);
+            var userArea = _userAreaRepository.GetRequiredByCode(user.UserAreaCode);
             var newEmail = command.Email?.Trim();
 
             if (userArea.UseEmailAsUsername && user.Username != newEmail)

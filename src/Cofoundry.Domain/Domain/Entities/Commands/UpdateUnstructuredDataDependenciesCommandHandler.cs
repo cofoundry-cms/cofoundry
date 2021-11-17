@@ -1,20 +1,16 @@
-﻿using System;
+﻿using Cofoundry.Domain.CQS;
+using Cofoundry.Domain.Data;
+using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Cofoundry.Domain.Data;
-using Cofoundry.Domain.CQS;
-using Microsoft.EntityFrameworkCore;
-using Cofoundry.Core;
 
 namespace Cofoundry.Domain.Internal
 {
-    public class UpdateUnstructuredDataDependenciesCommandHandler 
+    public class UpdateUnstructuredDataDependenciesCommandHandler
         : ICommandHandler<UpdateUnstructuredDataDependenciesCommand>
         , IPermissionRestrictedCommandHandler<UpdateUnstructuredDataDependenciesCommand>
     {
-        #region constructor
-
         private readonly CofoundryDbContext _dbContext;
         private readonly IEntityDefinitionRepository _entityDefinitionRepository;
         private readonly IPermissionRepository _permissionRepository;
@@ -32,10 +28,6 @@ namespace Cofoundry.Domain.Internal
             _permissionRepository = permissionRepository;
             _commandExecutor = commandExecutor;
         }
-
-        #endregion
-
-        #region Execute
 
         public async Task ExecuteAsync(UpdateUnstructuredDataDependenciesCommand command, IExecutionContext executionContext)
         {
@@ -132,14 +124,9 @@ namespace Cofoundry.Domain.Internal
             }
         }
 
-        #endregion
-
-        #region permissions
-
         public IEnumerable<IPermissionApplication> GetPermissions(UpdateUnstructuredDataDependenciesCommand command)
         {
-            var entityDefinition = _entityDefinitionRepository.GetByCode(command.RootEntityDefinitionCode);
-            EntityNotFoundException.ThrowIfNull(entityDefinition, command.RootEntityDefinitionCode);
+            var entityDefinition = _entityDefinitionRepository.GetRequiredByCode(command.RootEntityDefinitionCode);
 
             // Try and get a delete permission for the root entity.
             var permission = _permissionRepository.GetByEntityAndPermissionType(entityDefinition, CommonPermissionTypes.Update("Entity"));
@@ -149,7 +136,5 @@ namespace Cofoundry.Domain.Internal
                 yield return permission;
             }
         }
-
-        #endregion
     }
 }

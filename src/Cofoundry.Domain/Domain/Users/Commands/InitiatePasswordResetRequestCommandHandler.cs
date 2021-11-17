@@ -101,7 +101,7 @@ namespace Cofoundry.Domain
 
         private void ValidateUserArea(string userAreaCode)
         {
-            var userArea = _userAreaDefinitionRepository.GetByCode(userAreaCode);
+            var userArea = _userAreaDefinitionRepository.GetRequiredByCode(userAreaCode);
 
             if (!userArea.AllowPasswordLogin)
             {

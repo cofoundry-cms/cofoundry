@@ -58,7 +58,7 @@ namespace Cofoundry.Domain.Internal
             if (userAreaCode == null) throw new ArgumentNullException(nameof(userAreaCode));
             if (userId < 1) throw new ArgumentOutOfRangeException(nameof(userId));
 
-            var userArea = _userAreaDefinitionRepository.GetByCode(userAreaCode);
+            var userArea = _userAreaDefinitionRepository.GetRequiredByCode(userAreaCode);
             EntityNotFoundException.ThrowIfNull(userArea, userAreaCode);
             var isAmbientUserArea = IsAmbientUserArea(userArea);
 
@@ -82,7 +82,7 @@ namespace Cofoundry.Domain.Internal
                 throw new ArgumentNullException(nameof(userAreaCode));
             }
 
-            var userArea = _userAreaDefinitionRepository.GetByCode(userAreaCode);
+            var userArea = _userAreaDefinitionRepository.GetRequiredByCode(userAreaCode);
             EntityNotFoundException.ThrowIfNull(userArea, userAreaCode);
             var isAmbientUserArea = IsAmbientUserArea(userArea);
 

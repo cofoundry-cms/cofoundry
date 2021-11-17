@@ -74,7 +74,7 @@ namespace Cofoundry.Domain.Internal
             var userAreas = accessRules
                 .Select(r => r.UserAreaCode)
                 .Distinct()
-                .Select(_userAreaDefinitionRepository.GetByCode)
+                .Select(_userAreaDefinitionRepository.GetRequiredByCode)
                 .ToDictionary(k => k.UserAreaCode);
 
             foreach (var userArea in userAreas)

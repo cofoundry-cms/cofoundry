@@ -1,15 +1,12 @@
-﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using Cofoundry.Core.Json;
 using Cofoundry.Domain;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
-using System.Threading.Tasks;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using System;
 using System.IO;
 using System.Text;
-using Cofoundry.Core;
-using Cofoundry.Core.Json;
+using System.Threading.Tasks;
 
 namespace Cofoundry.Web.Admin
 {
@@ -67,8 +64,7 @@ namespace Cofoundry.Web.Admin
             if (string.IsNullOrWhiteSpace(customEntityDefinitionCode)) return null;
 
             // If there is a code but it's not registered in the system, then thats exeptional and we should throw
-            var definition = _customEntityDefinitionRepository.GetByCode(customEntityDefinitionCode);
-            EntityNotFoundException.ThrowIfNull(definition, customEntityDefinitionCode);
+            var definition = _customEntityDefinitionRepository.GetRequiredByCode(customEntityDefinitionCode);
 
             var dataModelType = definition.GetDataModelType();
             var converterType = _entityDataModelJsonConverterFactory.Create(dataModelType);

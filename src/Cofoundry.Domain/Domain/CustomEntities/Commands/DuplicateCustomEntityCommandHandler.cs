@@ -1,14 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Cofoundry.Domain.Data;
-using Cofoundry.Domain.CQS;
-using Microsoft.EntityFrameworkCore;
-using Cofoundry.Core;
+﻿using Cofoundry.Core;
 using Cofoundry.Core.Data;
+using Cofoundry.Domain.CQS;
+using Cofoundry.Domain.Data;
 using Cofoundry.Domain.Data.Internal;
+using Microsoft.EntityFrameworkCore;
+using System.Threading.Tasks;
 
 namespace Cofoundry.Domain.Internal
 {
@@ -46,7 +42,7 @@ namespace Cofoundry.Domain.Internal
         public async Task ExecuteAsync(DuplicateCustomEntityCommand command, IExecutionContext executionContext)
         {
             var customEntityToDuplicate = await GetCustomEntityToDuplicateAsync(command);
-            var definition = _customEntityDefinitionRepository.GetByCode(customEntityToDuplicate.CustomEntity.CustomEntityDefinitionCode);
+            var definition = _customEntityDefinitionRepository.GetRequiredByCode(customEntityToDuplicate.CustomEntity.CustomEntityDefinitionCode);
             var addCustomEntityCommand = MapCommand(command, customEntityToDuplicate);
 
             using (var scope = _transactionScopeFactory.Create(_dbContext))
@@ -84,7 +80,7 @@ namespace Cofoundry.Domain.Internal
         }
 
         private AddCustomEntityCommand MapCommand(
-            DuplicateCustomEntityCommand command, 
+            DuplicateCustomEntityCommand command,
             CustomEntityVersion customEntityVersionToDuplicate
             )
         {
@@ -96,7 +92,7 @@ namespace Cofoundry.Domain.Internal
             addCustomEntityCommand.UrlSlug = command.UrlSlug;
             addCustomEntityCommand.CustomEntityDefinitionCode = customEntityVersionToDuplicate.CustomEntity.CustomEntityDefinitionCode;
             addCustomEntityCommand.Model = _customEntityDataModelMapper.Map(addCustomEntityCommand.CustomEntityDefinitionCode, customEntityVersionToDuplicate.SerializedData);
-            
+
             return addCustomEntityCommand;
         }
     }

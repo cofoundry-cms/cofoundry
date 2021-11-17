@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Cofoundry.Domain.Data;
+﻿using Cofoundry.Core;
 using Cofoundry.Domain.CQS;
-using Cofoundry.Core;
+using Cofoundry.Domain.Data;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Cofoundry.Domain.Internal
 {
@@ -12,12 +10,10 @@ namespace Cofoundry.Domain.Internal
     /// Query to extract and return meta data information about a custom 
     /// entity data model for a specific custom entity definition.
     /// </summary>
-    public class GetCustomEntityDataModelSchemaDetailsByDefinitionCodeQueryHandler 
+    public class GetCustomEntityDataModelSchemaDetailsByDefinitionCodeQueryHandler
         : IQueryHandler<GetCustomEntityDataModelSchemaDetailsByDefinitionCodeQuery, CustomEntityDataModelSchema>
         , IPermissionRestrictedQueryHandler<GetCustomEntityDataModelSchemaDetailsByDefinitionCodeQuery, CustomEntityDataModelSchema>
     {
-        #region constructor
-
         private readonly CofoundryDbContext _dbContext;
         private readonly IQueryExecutor _queryExecutor;
         private readonly IDynamicDataModelSchemaMapper _dynamicDataModelTypeMapper;
@@ -36,8 +32,6 @@ namespace Cofoundry.Domain.Internal
             _customEntityDefinitionRepository = customEntityDefinitionRepository;
         }
 
-        #endregion
-
         public async Task<CustomEntityDataModelSchema> ExecuteAsync(GetCustomEntityDataModelSchemaDetailsByDefinitionCodeQuery query, IExecutionContext executionContext)
         {
             var definitionQuery = new GetCustomEntityDefinitionSummaryByCodeQuery(query.CustomEntityDefinitionCode);
@@ -52,16 +46,12 @@ namespace Cofoundry.Domain.Internal
             return result;
         }
 
-        #region Permission
-
         public IEnumerable<IPermissionApplication> GetPermissions(GetCustomEntityDataModelSchemaDetailsByDefinitionCodeQuery query)
         {
-            var definition = _customEntityDefinitionRepository.GetByCode(query.CustomEntityDefinitionCode);
+            var definition = _customEntityDefinitionRepository.GetRequiredByCode(query.CustomEntityDefinitionCode);
             EntityNotFoundException.ThrowIfNull(definition, query.CustomEntityDefinitionCode);
 
             yield return new CustomEntityReadPermission(definition);
         }
-
-        #endregion
     }
 }

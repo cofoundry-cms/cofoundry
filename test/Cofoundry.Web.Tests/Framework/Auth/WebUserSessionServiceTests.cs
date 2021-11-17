@@ -1,14 +1,11 @@
 ﻿using Cofoundry.Domain;
 using Cofoundry.Domain.Internal;
 using Cofoundry.Domain.Tests;
-using Cofoundry.Domain.Tests.Shared;
 using Cofoundry.Web.Internal;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Moq;
-using System.Threading.Tasks;
-using Xunit;
 
 namespace Cofoundry.Web.Tests.Framework.ClientConnection
 {
@@ -32,14 +29,14 @@ namespace Cofoundry.Web.Tests.Framework.ClientConnection
             var allUserAreas = userAreaDefinitionRepository.GetAll();
 
             var defaultSchemaCode = userAreaDefinitionRepository.GetDefault().UserAreaCode;
-            var defaultScheme = CofoundryAuthenticationConstants.FormatAuthenticationScheme(defaultSchemaCode);
+            var defaultScheme = AuthenticationSchemeNames.UserArea(defaultSchemaCode);
 
             var services = new ServiceCollection();
             var authBuilder = services.AddAuthentication(defaultScheme);
 
             foreach (var userAreaDefinition in allUserAreas)
             {
-                var scheme = CofoundryAuthenticationConstants.FormatAuthenticationScheme(userAreaDefinition.UserAreaCode);
+                var scheme = AuthenticationSchemeNames.UserArea(userAreaDefinition.UserAreaCode);
                 authBuilder.AddCookie(scheme);
             }
 

@@ -1,15 +1,13 @@
-﻿using System;
+﻿using Cofoundry.Core;
+using Cofoundry.Core.Data;
+using Cofoundry.Core.MessageAggregator;
+using Cofoundry.Core.Validation;
+using Cofoundry.Domain.CQS;
+using Cofoundry.Domain.Data;
+using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using Cofoundry.Domain.Data;
-using Cofoundry.Domain.CQS;
-using Microsoft.EntityFrameworkCore;
-using Cofoundry.Core.MessageAggregator;
-using Cofoundry.Core;
-using Cofoundry.Core.Validation;
-using Cofoundry.Core.Data;
 
 namespace Cofoundry.Domain.Internal
 {
@@ -18,12 +16,10 @@ namespace Cofoundry.Domain.Internal
     /// does not exist then one is created first from the currently
     /// published version.
     /// </summary>
-    public class UpdateCustomEntityDraftVersionCommandHandler 
+    public class UpdateCustomEntityDraftVersionCommandHandler
         : ICommandHandler<UpdateCustomEntityDraftVersionCommand>
         , IPermissionRestrictedCommandHandler<UpdateCustomEntityDraftVersionCommand>
     {
-        #region constructor
-
         private readonly IQueryExecutor _queryExecutor;
         private readonly ICommandExecutor _commandExecutor;
         private readonly CofoundryDbContext _dbContext;
@@ -54,11 +50,9 @@ namespace Cofoundry.Domain.Internal
             _transactionScopeFactory = transactionScopeFactory;
         }
 
-        #endregion
-
         public async Task ExecuteAsync(UpdateCustomEntityDraftVersionCommand command, IExecutionContext executionContext)
         {
-            var definition = _customEntityDefinitionRepository.GetByCode(command.CustomEntityDefinitionCode);
+            var definition = _customEntityDefinitionRepository.GetRequiredByCode(command.CustomEntityDefinitionCode);
             var draft = await GetDraftVersionAsync(command);
 
             using (var scope = _transactionScopeFactory.Create(_dbContext))
@@ -100,8 +94,8 @@ namespace Cofoundry.Domain.Internal
         }
 
         private async Task ValidateTitleAsync(
-            UpdateCustomEntityDraftVersionCommand command, 
-            CustomEntityVersion dbVersion, 
+            UpdateCustomEntityDraftVersionCommand command,
+            CustomEntityVersion dbVersion,
             ICustomEntityDefinition definition,
             IExecutionContext executionContext
             )
@@ -137,14 +131,14 @@ namespace Cofoundry.Domain.Internal
             return await _dbContext
                 .CustomEntityVersions
                 .Include(v => v.CustomEntity)
-                .Where(p => p.CustomEntityId == command.CustomEntityId 
+                .Where(p => p.CustomEntityId == command.CustomEntityId
                     && p.WorkFlowStatusId == (int)WorkFlowStatus.Draft
                     && p.CustomEntity.CustomEntityDefinitionCode == command.CustomEntityDefinitionCode)
                 .SingleOrDefaultAsync();
         }
 
         private async Task<CustomEntityVersion> CreateDraftIfRequiredAsync(
-            UpdateCustomEntityDraftVersionCommand command, 
+            UpdateCustomEntityDraftVersionCommand command,
             CustomEntityVersion draft,
             IExecutionContext executionContext
             )
@@ -166,8 +160,6 @@ namespace Cofoundry.Domain.Internal
             draft.SerializedData = _dbUnstructuredDataSerializer.Serialize(command.Model);
         }
 
-        #region Permission
-
         public IEnumerable<IPermissionApplication> GetPermissions(UpdateCustomEntityDraftVersionCommand command)
         {
             var definition = _customEntityDefinitionRepository.GetByCode(command.CustomEntityDefinitionCode);
@@ -178,7 +170,5 @@ namespace Cofoundry.Domain.Internal
                 yield return new CustomEntityPublishPermission(definition);
             }
         }
-
-        #endregion
     }
 }

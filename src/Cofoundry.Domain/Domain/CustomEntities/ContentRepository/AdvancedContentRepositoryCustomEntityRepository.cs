@@ -1,9 +1,8 @@
 ﻿using Cofoundry.Domain.Extendable;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace Cofoundry.Domain.Internal
 {
@@ -22,8 +21,6 @@ namespace Cofoundry.Domain.Internal
         }
 
         public IExtendableContentRepository ExtendableContentRepository { get; }
-
-        #region queries
 
         public IContentRepositoryCustomEntityByDefinitionQueryBuilder GetByDefinitionCode(string customEntityDefinitionCode)
         {
@@ -54,12 +51,7 @@ namespace Cofoundry.Domain.Internal
 
         public IContentRepositoryCustomEntityByUrlSlugQueryBuilder GetByUrlSlug(string customEntityDefinitionCode, string urlSlug)
         {
-            var customEntityDefinition = _customEntityDefinitionRepository.GetByCode(customEntityDefinitionCode);
-
-            if (customEntityDefinition == null)
-            {
-                throw new Exception("Custom Entity Definition not returned from ICustomEntityDefinitionRepository: " + customEntityDefinitionCode);
-            }
+            var customEntityDefinition = _customEntityDefinitionRepository.GetRequiredByCode(customEntityDefinitionCode);
 
             return new ContentRepositoryCustomEntityByUrlSlugQueryBuilder(ExtendableContentRepository, customEntityDefinition, urlSlug);
         }
@@ -86,10 +78,6 @@ namespace Cofoundry.Domain.Internal
             return DomainRepositoryQueryContextFactory.Create(query, ExtendableContentRepository);
         }
 
-        #endregion
-
-        #region commands
-        
         public async Task<int> AddAsync(AddCustomEntityCommand command)
         {
             await ExtendableContentRepository.ExecuteCommandAsync(command);
@@ -110,7 +98,7 @@ namespace Cofoundry.Domain.Internal
         {
             return ExtendableContentRepository.ExecuteCommandAsync(command);
         }
-        
+
         public Task UpdateUrlAsync(UpdateCustomEntityUrlCommand command)
         {
             return ExtendableContentRepository.ExecuteCommandAsync(command);
@@ -135,10 +123,6 @@ namespace Cofoundry.Domain.Internal
 
             return ExtendableContentRepository.ExecuteCommandAsync(command);
         }
-
-        #endregion
-
-        #region child entities
 
         public IAdvancedContentRepositoryCustomEntityVersionsRepository Versions()
         {
@@ -174,7 +158,5 @@ namespace Cofoundry.Domain.Internal
         {
             return new ContentRepositoryCustomEntityByPathQueryBuilder(ExtendableContentRepository);
         }
-
-        #endregion
     }
 }

@@ -88,7 +88,7 @@ namespace Cofoundry.Domain.Internal
 
         private async Task UpdatePasswordAsync(UpdateCurrentUserPasswordCommand command, IExecutionContext executionContext, User user)
         {
-            var userArea = _userAreaRepository.GetByCode(user.UserAreaCode);
+            var userArea = _userAreaRepository.GetRequiredByCode(user.UserAreaCode);
 
             _passwordUpdateCommandHelper.ValidateUserArea(userArea);
 

@@ -1,16 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Cofoundry.Domain.Data;
-using Cofoundry.Domain.CQS;
-using Microsoft.EntityFrameworkCore;
-using Cofoundry.Core.MessageAggregator;
-using Cofoundry.Core;
-using Cofoundry.Core.Validation;
+﻿using Cofoundry.Core;
 using Cofoundry.Core.Data;
+using Cofoundry.Core.MessageAggregator;
+using Cofoundry.Core.Validation;
+using Cofoundry.Domain.CQS;
+using Cofoundry.Domain.Data;
 using Cofoundry.Domain.Data.Internal;
+using Microsoft.EntityFrameworkCore;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Cofoundry.Domain.Internal
 {
@@ -18,12 +15,10 @@ namespace Cofoundry.Domain.Internal
     /// Publishes a custom entity. If the custom entity is already published and
     /// a date is specified then the publish date will be updated.
     /// </summary>
-    public class PublishCustomEntityCommandHandler 
+    public class PublishCustomEntityCommandHandler
         : ICommandHandler<PublishCustomEntityCommand>
         , IIgnorePermissionCheckHandler
     {
-        #region constructor
-
         private readonly CofoundryDbContext _dbContext;
         private readonly ICommandExecutor _commandExecutor;
         private readonly IQueryExecutor _queryExecutor;
@@ -57,8 +52,6 @@ namespace Cofoundry.Domain.Internal
             _customEntityStoredProcedures = customEntityStoredProcedures;
         }
 
-        #endregion
-
         public async Task ExecuteAsync(PublishCustomEntityCommand command, IExecutionContext executionContext)
         {
             // Prefer draft, but update published entity if no draft (only one draft permitted)
@@ -72,9 +65,7 @@ namespace Cofoundry.Domain.Internal
 
             EntityNotFoundException.ThrowIfNull(version, command.CustomEntityId);
 
-            var definition = _customEntityDefinitionRepository.GetByCode(version.CustomEntity.CustomEntityDefinitionCode);
-            EntityNotFoundException.ThrowIfNull(definition, version.CustomEntity.CustomEntityDefinitionCode);
-
+            var definition = _customEntityDefinitionRepository.GetRequiredByCode(version.CustomEntity.CustomEntityDefinitionCode);
             _permissionValidationService.EnforceCustomEntityPermission<CustomEntityPublishPermission>(definition.CustomEntityDefinitionCode, executionContext.UserContext);
 
             UpdatePublishDate(command, executionContext, version);

@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
+using Cofoundry.Domain;
 
 namespace Cofoundry.Web
 {
@@ -10,10 +11,15 @@ namespace Cofoundry.Web
     /// </summary>
     public class AuthorizeUserAreaAttribute : AuthorizeAttribute
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AuthorizeUserAreaAttribute"/> class.
+        /// </summary>
+        /// <param name="userAreaCode">The <see cref="IUserAreaDefinition.UserAreaCode"/> identifier of the user area to restrict access to.</param>
         public AuthorizeUserAreaAttribute(string userAreaCode)
             : base()
         {
-            AuthenticationSchemes = CofoundryAuthenticationConstants.FormatAuthenticationScheme(userAreaCode);
+            AuthenticationSchemes = AuthenticationSchemeNames.UserArea(userAreaCode);
+            Policy = AuthorizationPolicyNames.UserArea(userAreaCode);
         }
     }
 }

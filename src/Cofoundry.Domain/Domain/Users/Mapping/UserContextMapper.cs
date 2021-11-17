@@ -33,7 +33,7 @@ namespace Cofoundry.Domain.Internal
             cx.RoleId = dbUser.RoleId;
             cx.RoleCode = dbUser.Role.RoleCode;
             cx.UserId = dbUser.UserId;
-            cx.UserArea = _userAreaRepository.GetByCode(dbUser.UserAreaCode);
+            cx.UserArea = _userAreaRepository.GetRequiredByCode(dbUser.UserAreaCode);
 
             return cx;
         }

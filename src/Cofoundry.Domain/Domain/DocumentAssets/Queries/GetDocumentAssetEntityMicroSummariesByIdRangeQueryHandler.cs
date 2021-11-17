@@ -1,10 +1,9 @@
-﻿using System;
+﻿using Cofoundry.Domain.CQS;
+using Cofoundry.Domain.Data;
+using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Cofoundry.Domain.Data;
-using Cofoundry.Domain.CQS;
-using Microsoft.EntityFrameworkCore;
 
 namespace Cofoundry.Domain.Internal
 {
@@ -12,8 +11,6 @@ namespace Cofoundry.Domain.Internal
         : IQueryHandler<GetDocumentAssetEntityMicroSummariesByIdRangeQuery, IDictionary<int, RootEntityMicroSummary>>
         , IPermissionRestrictedQueryHandler<GetDocumentAssetEntityMicroSummariesByIdRangeQuery, IDictionary<int, RootEntityMicroSummary>>
     {
-        #region constructor
-
         private readonly CofoundryDbContext _dbContext;
         private readonly IEntityDefinitionRepository _entityDefinitionRepository;
 
@@ -26,10 +23,6 @@ namespace Cofoundry.Domain.Internal
             _entityDefinitionRepository = entityDefinitionRepository;
         }
 
-        #endregion
-
-        #region execution
-
         public async Task<IDictionary<int, RootEntityMicroSummary>> ExecuteAsync(GetDocumentAssetEntityMicroSummariesByIdRangeQuery query, IExecutionContext executionContext)
         {
             var results = await Query(query).ToDictionaryAsync(e => e.RootEntityId);
@@ -39,7 +32,7 @@ namespace Cofoundry.Domain.Internal
 
         private IQueryable<RootEntityMicroSummary> Query(GetDocumentAssetEntityMicroSummariesByIdRangeQuery query)
         {
-            var definition = _entityDefinitionRepository.GetByCode(DocumentAssetEntityDefinition.DefinitionCode);
+            var definition = _entityDefinitionRepository.GetRequiredByCode(DocumentAssetEntityDefinition.DefinitionCode);
 
             var dbQuery = _dbContext
                 .DocumentAssets
@@ -56,15 +49,9 @@ namespace Cofoundry.Domain.Internal
             return dbQuery;
         }
 
-        #endregion
-
-        #region Permission
-
         public IEnumerable<IPermissionApplication> GetPermissions(GetDocumentAssetEntityMicroSummariesByIdRangeQuery query)
         {
             yield return new DocumentAssetReadPermission();
         }
-
-        #endregion
     }
 }

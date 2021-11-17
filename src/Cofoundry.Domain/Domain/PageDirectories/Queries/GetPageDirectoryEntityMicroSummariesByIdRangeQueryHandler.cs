@@ -26,7 +26,7 @@ namespace Cofoundry.Domain.Internal
 
         public async Task<IDictionary<int, RootEntityMicroSummary>> ExecuteAsync(GetPageDirectoryEntityMicroSummariesByIdRangeQuery query, IExecutionContext executionContext)
         {
-            var definition = _entityDefinitionRepository.GetByCode(PageDirectoryEntityDefinition.DefinitionCode);
+            var definition = _entityDefinitionRepository.GetRequiredByCode(PageDirectoryEntityDefinition.DefinitionCode);
 
             var results = await _dbContext
                 .PageDirectories

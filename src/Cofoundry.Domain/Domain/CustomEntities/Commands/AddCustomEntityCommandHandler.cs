@@ -1,28 +1,24 @@
-﻿using System;
+﻿using Cofoundry.Core;
+using Cofoundry.Core.Data;
+using Cofoundry.Core.MessageAggregator;
+using Cofoundry.Core.Validation;
+using Cofoundry.Domain.CQS;
+using Cofoundry.Domain.Data;
+using Cofoundry.Domain.Data.Internal;
+using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using Cofoundry.Domain.Data;
-using Cofoundry.Core;
-using Cofoundry.Domain.CQS;
-using Microsoft.EntityFrameworkCore;
-using Cofoundry.Core.Validation;
-using Cofoundry.Core.MessageAggregator;
-using Cofoundry.Core.Data;
-using Cofoundry.Domain.Data.Internal;
 
 namespace Cofoundry.Domain.Internal
 {
     /// <summary>
     /// Adds a new custom entity with a draft version and optionally publishes it.
     /// </summary>
-    public class AddCustomEntityCommandHandler 
+    public class AddCustomEntityCommandHandler
         : ICommandHandler<AddCustomEntityCommand>
         , IPermissionRestrictedCommandHandler<AddCustomEntityCommand>
     {
-        #region constructor
-
         private readonly IQueryExecutor _queryExecutor;
         private readonly ICommandExecutor _commandExecutor;
         private readonly CofoundryDbContext _dbContext;
@@ -31,7 +27,6 @@ namespace Cofoundry.Domain.Internal
         private readonly IDbUnstructuredDataSerializer _dbUnstructuredDataSerializer;
         private readonly IMessageAggregator _messageAggregator;
         private readonly ICustomEntityDefinitionRepository _customEntityDefinitionRepository;
-        private readonly IPermissionValidationService _permissionValidationService;
         private readonly ITransactionScopeManager _transactionScopeFactory;
         private readonly ICustomEntityStoredProcedures _customEntityStoredProcedures;
 
@@ -44,7 +39,6 @@ namespace Cofoundry.Domain.Internal
             IDbUnstructuredDataSerializer dbUnstructuredDataSerializer,
             IMessageAggregator messageAggregator,
             ICustomEntityDefinitionRepository customEntityDefinitionRepository,
-            IPermissionValidationService permissionValidationService,
             ITransactionScopeManager transactionScopeFactory,
             ICustomEntityStoredProcedures customEntityStoredProcedures
             )
@@ -57,12 +51,9 @@ namespace Cofoundry.Domain.Internal
             _dbUnstructuredDataSerializer = dbUnstructuredDataSerializer;
             _messageAggregator = messageAggregator;
             _customEntityDefinitionRepository = customEntityDefinitionRepository;
-            _permissionValidationService = permissionValidationService;
             _transactionScopeFactory = transactionScopeFactory;
             _customEntityStoredProcedures = customEntityStoredProcedures;
         }
-
-        #endregion
 
         public async Task ExecuteAsync(AddCustomEntityCommand command, IExecutionContext executionContext)
         {
@@ -102,9 +93,9 @@ namespace Cofoundry.Domain.Internal
             // Set Ouput
             command.OutputCustomEntityId = entity.CustomEntityId;
         }
-        
+
         private Task OnTransactionComplete(
-            AddCustomEntityCommand command, 
+            AddCustomEntityCommand command,
             CustomEntity entity
             )
         {
@@ -134,7 +125,7 @@ namespace Cofoundry.Domain.Internal
                 throw ValidationErrorException.CreateWithProperties(definition.NamePlural + " cannot be assigned locales", "LocaleId");
             }
         }
-        
+
         private Locale GetLocale(int? localeId)
         {
             if (!localeId.HasValue) return null;
@@ -211,17 +202,15 @@ namespace Cofoundry.Domain.Internal
                 entity.PublishDate = command.PublishDate;
                 version.WorkFlowStatusId = (int)WorkFlowStatus.Draft;
             }
-            
+
             _entityAuditHelper.SetCreated(version, executionContext);
             entity.CustomEntityVersions.Add(version);
 
             return entity;
         }
 
-        #region uniqueness
-
         private async Task ValidateIsUniqueAsync(
-            AddCustomEntityCommand command, 
+            AddCustomEntityCommand command,
             CustomEntityDefinitionSummary definition,
             IExecutionContext executionContext
             )
@@ -260,7 +249,7 @@ namespace Cofoundry.Domain.Internal
                 }
                 else
                 {
-                    message = string.Format("The {1} '{0}' must be unique", 
+                    message = string.Format("The {1} '{0}' must be unique",
                         command.UrlSlug,
                         definition.Terms.GetOrDefault(CustomizableCustomEntityTermKeys.UrlSlug, "url slug").ToLower());
                     prop = "UrlSlug";
@@ -270,13 +259,9 @@ namespace Cofoundry.Domain.Internal
             }
         }
 
-        #endregion
-
-        #region Permission
-
         public IEnumerable<IPermissionApplication> GetPermissions(AddCustomEntityCommand command)
         {
-            var definition = _customEntityDefinitionRepository.GetByCode(command.CustomEntityDefinitionCode);
+            var definition = _customEntityDefinitionRepository.GetRequiredByCode(command.CustomEntityDefinitionCode);
             yield return new CustomEntityCreatePermission(definition);
 
             if (command.Publish)
@@ -284,7 +269,5 @@ namespace Cofoundry.Domain.Internal
                 yield return new CustomEntityPublishPermission(definition);
             }
         }
-
-        #endregion
     }
 }

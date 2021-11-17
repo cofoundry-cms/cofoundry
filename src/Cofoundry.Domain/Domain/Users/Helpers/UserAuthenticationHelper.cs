@@ -28,7 +28,7 @@ namespace Cofoundry.Domain.Internal
         {
             if (user == null) return PasswordVerificationResult.Failed;
 
-            var userArea = _userAreaRepository.GetByCode(user.UserAreaCode);
+            var userArea = _userAreaRepository.GetRequiredByCode(user.UserAreaCode);
 
             if (!userArea.AllowPasswordLogin)
             {

@@ -47,6 +47,13 @@ namespace Cofoundry.Samples.UserAreas
         /// </summary>
         public string UserAreaCode => Code;
 
+        /// <summary>
+        /// The path to a login page to use when a user does not have permission to 
+        /// access a resource. The path to the denied resource is appended to the query
+        /// string of the <see cref="LoginPath"/> using the parameter name "ReturnUrl".
+        /// If set to <see langword="null"/> then a 403 (Forbidden) error page will be 
+        /// returned instead of the loginredirect.
+        /// </summary>
         public string LoginPath => UrlLibrary.PartnerLogin();
 
         /// <summary>

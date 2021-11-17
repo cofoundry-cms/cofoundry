@@ -64,7 +64,7 @@ namespace Cofoundry.Web.Internal
             var cachedUserId = await _inMemoryUserSessionService.GetUserIdByUserAreaCodeAsync(userAreaCode);
             if (cachedUserId.HasValue) return cachedUserId;
 
-            var scheme = CofoundryAuthenticationConstants.FormatAuthenticationScheme(userAreaCode);
+            var scheme = AuthenticationSchemeNames.UserArea(userAreaCode);
             var result = await _httpContextAccessor.HttpContext.AuthenticateAsync(scheme);
             if (!result.Succeeded) return null;
 
@@ -87,10 +87,10 @@ namespace Cofoundry.Web.Internal
             if (userAreaCode == null) throw new ArgumentNullException(nameof(userAreaCode));
             if (userId < 1) throw new ArgumentOutOfRangeException(nameof(userId));
 
-            var userArea = _userAreaDefinitionRepository.GetByCode(userAreaCode);
+            var userArea = _userAreaDefinitionRepository.GetRequiredByCode(userAreaCode);
             EntityNotFoundException.ThrowIfNull(userArea, userAreaCode);
 
-            var scheme = CofoundryAuthenticationConstants.FormatAuthenticationScheme(userArea.UserAreaCode);
+            var scheme = AuthenticationSchemeNames.UserArea(userArea.UserAreaCode);
             var claims = new[]
             {
                 new Claim(ClaimTypes.NameIdentifier, Convert.ToString(userId))
@@ -121,7 +121,7 @@ namespace Cofoundry.Web.Internal
 
             await _inMemoryUserSessionService.LogUserOutAsync(userAreaCode);
 
-            var scheme = CofoundryAuthenticationConstants.FormatAuthenticationScheme(userAreaCode);
+            var scheme = AuthenticationSchemeNames.UserArea(userAreaCode);
             await _httpContextAccessor.HttpContext.SignOutAsync(scheme);
         }
 
@@ -131,7 +131,7 @@ namespace Cofoundry.Web.Internal
 
             foreach (var customEntityDefinition in _userAreaDefinitionRepository.GetAll())
             {
-                var scheme = CofoundryAuthenticationConstants.FormatAuthenticationScheme(customEntityDefinition.UserAreaCode);
+                var scheme = AuthenticationSchemeNames.UserArea(customEntityDefinition.UserAreaCode);
                 await _httpContextAccessor.HttpContext.SignOutAsync(scheme);
             }
         }

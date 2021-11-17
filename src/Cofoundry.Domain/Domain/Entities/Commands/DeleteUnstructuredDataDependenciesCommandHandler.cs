@@ -1,23 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Cofoundry.Domain.Data;
-using Cofoundry.Domain.CQS;
-using System.ComponentModel.DataAnnotations;
-using Microsoft.Data.SqlClient;
-using Cofoundry.Core;
+﻿using Cofoundry.Core;
 using Cofoundry.Core.EntityFramework;
+using Cofoundry.Domain.CQS;
+using Cofoundry.Domain.Data;
+using Microsoft.Data.SqlClient;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Cofoundry.Domain.Internal
 {
-    public class DeleteUnstructuredDataDependenciesCommandHandler 
+    public class DeleteUnstructuredDataDependenciesCommandHandler
         : ICommandHandler<DeleteUnstructuredDataDependenciesCommand>
         , IPermissionRestrictedCommandHandler<DeleteUnstructuredDataDependenciesCommand>
     {
-        #region constructor
-
         private readonly CofoundryDbContext _dbContext;
         private readonly IQueryExecutor _queryExecutor;
         private readonly IEntityDefinitionRepository _entityDefinitionRepository;
@@ -39,17 +35,10 @@ namespace Cofoundry.Domain.Internal
             _entityFrameworkSqlExecutor = entityFrameworkSqlExecutor;
         }
 
-        #endregion
-
-        #region Execute
-
         public async Task ExecuteAsync(DeleteUnstructuredDataDependenciesCommand command, IExecutionContext executionContext)
         {
-            string entityName;
-
-            var entityDefinition = _entityDefinitionRepository.GetByCode(command.RootEntityDefinitionCode);
-            EntityNotFoundException.ThrowIfNull(entityDefinition, command.RootEntityDefinitionCode);
-            entityName = entityDefinition.Name;
+            var entityDefinition = _entityDefinitionRepository.GetRequiredByCode(command.RootEntityDefinitionCode);
+            var entityName = entityDefinition.Name;
 
             var query = new GetEntityDependencySummaryByRelatedEntityQuery(command.RootEntityDefinitionCode, command.RootEntityId);
             var dependencies = await _queryExecutor.ExecuteAsync(query, executionContext);
@@ -72,11 +61,6 @@ namespace Cofoundry.Domain.Internal
                     );
         }
 
-
-        #endregion
-
-        #region permissions
-
         public IEnumerable<IPermissionApplication> GetPermissions(DeleteUnstructuredDataDependenciesCommand command)
         {
             var entityDefinition = _entityDefinitionRepository.GetByCode(command.RootEntityDefinitionCode);
@@ -90,7 +74,5 @@ namespace Cofoundry.Domain.Internal
                 yield return permission;
             }
         }
-
-        #endregion
     }
 }

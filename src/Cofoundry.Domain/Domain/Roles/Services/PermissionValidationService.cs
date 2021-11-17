@@ -1,8 +1,8 @@
-﻿using System;
+﻿using Cofoundry.Core;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Cofoundry.Core;
 
 namespace Cofoundry.Domain.Internal
 {
@@ -12,8 +12,6 @@ namespace Cofoundry.Domain.Internal
     /// </summary>
     public class PermissionValidationService : IPermissionValidationService
     {
-        #region constructor
-
         private readonly IUserContextService _userContextService;
         private readonly IInternalRoleRepository _internalRoleRepository;
         private readonly ICustomEntityDefinitionRepository _customEntityDefinitionRepository;
@@ -28,8 +26,6 @@ namespace Cofoundry.Domain.Internal
             _internalRoleRepository = internalRoleRepository;
             _customEntityDefinitionRepository = customEntityDefinitionRepository;
         }
-
-        #endregion
 
         /// <summary>
         /// Checks to see if the currently logged in user is in the super administrator role,
@@ -95,7 +91,7 @@ namespace Cofoundry.Domain.Internal
         {
             ThrowExceptionIfNotLoggedIn(userContext);
 
-            if (!userContext.IsCofoundryUser() 
+            if (!userContext.IsCofoundryUser()
                 && (userContext.UserArea == null || userAreaCode != userContext.UserArea.UserAreaCode))
             {
                 throw new NotPermittedException("Permission to access UserArea '" + userAreaCode + "' denied");
@@ -314,11 +310,9 @@ namespace Cofoundry.Domain.Internal
             EnforcePermission(permission, userContext);
         }
 
-        #region private helpers
-
         private ICustomEntityPermissionTemplate GetCustomEntityPermission<TPermission>(string definitionCode) where TPermission : ICustomEntityPermissionTemplate, new()
         {
-            var definition = _customEntityDefinitionRepository.GetByCode(definitionCode);
+            var definition = _customEntityDefinitionRepository.GetRequiredByCode(definitionCode);
             var template = new TPermission();
 
             var permission = template.CreateImplemention(definition);
@@ -332,8 +326,5 @@ namespace Cofoundry.Domain.Internal
                 throw new NotPermittedException("This operation requires that a user is logged in");
             }
         }
-
-        #endregion
-        
     }
 }

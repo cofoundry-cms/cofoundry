@@ -2,8 +2,12 @@
 using Microsoft.AspNetCore.Authorization;
 using System.Threading.Tasks;
 
-namespace Cofoundry.Web
+namespace Cofoundry.Web.Auth.Internal
 {
+    /// <summary>
+    /// Handles the authorization of the <see cref="UserAreaAuthorizationRequirement"/> in
+    /// an authorization policy.
+    /// </summary>
     public class UserAreaAuthorizationHandler : AuthorizationHandler<UserAreaAuthorizationRequirement>
     {
         private readonly IUserContextService _userContextService;
@@ -15,16 +19,11 @@ namespace Cofoundry.Web
             _userContextService = userContextService;
         }
 
-        protected override async Task HandleRequirementAsync(
-            AuthorizationHandlerContext context,
-            UserAreaAuthorizationRequirement requirement
-            )
+        protected override async Task HandleRequirementAsync(AuthorizationHandlerContext context, UserAreaAuthorizationRequirement requirement)
         {
-            if (context.User?.Identity?.IsAuthenticated ?? false) return;
+            var user = await _userContextService.GetCurrentContextAsync();
 
-            var userContext = await _userContextService.GetCurrentContextAsync();
-
-            if (userContext.UserId.HasValue && userContext.UserArea?.UserAreaCode == requirement.UserAreaCode)
+            if (user.IsLoggedIn() && user.UserArea.UserAreaCode == requirement.UserAreaCode)
             {
                 context.Succeed(requirement);
             }

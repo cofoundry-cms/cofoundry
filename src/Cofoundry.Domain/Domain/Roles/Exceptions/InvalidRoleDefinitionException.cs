@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace Cofoundry.Domain
 {
@@ -14,7 +13,7 @@ namespace Cofoundry.Domain
         public InvalidRoleDefinitionException() { }
 
         /// <summary>
-        /// Consructs a new instance of InvalidRoleDefinitionException.
+        /// Consructs a new instance of <see cref="InvalidRoleDefinitionException"/>.
         /// </summary>
         /// <param name="message">The exception message.</param>
         /// <param name="invalidDefinition">The role definition that caused the exception.</param>

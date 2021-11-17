@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 namespace Cofoundry.Samples.UserAreas
 {
     [Route("partners/account")]
-    [AuthorizeUserArea(PartnerUserAreaDefinition.Code)]
+    [AuthorizeRole(PartnerUserAreaDefinition.Code, PartnerRoleDefinition.Code)]
     public class PartnerAccountController : Controller
     {
         private readonly IAuthenticationControllerHelper<PartnerUserAreaDefinition> _authenticationControllerHelper;

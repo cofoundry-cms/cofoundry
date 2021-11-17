@@ -1,10 +1,10 @@
-﻿using System;
+﻿using Cofoundry.Core;
+using Cofoundry.Domain.CQS;
+using Cofoundry.Domain.Data;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Cofoundry.Core;
-using Cofoundry.Domain.Data;
-using Cofoundry.Domain.CQS;
 
 namespace Cofoundry.Domain.Internal
 {
@@ -16,8 +16,6 @@ namespace Cofoundry.Domain.Internal
         : IQueryHandler<GetCustomEntityDataModelSchemaDetailsByDefinitionCodeRangeQuery, IDictionary<string, CustomEntityDataModelSchema>>
         , IPermissionRestrictedQueryHandler<GetCustomEntityDataModelSchemaDetailsByDefinitionCodeRangeQuery, IDictionary<string, CustomEntityDataModelSchema>>
     {
-        #region constructor
-
         private readonly CofoundryDbContext _dbContext;
         private readonly IQueryExecutor _queryExecutor;
         private readonly IDynamicDataModelSchemaMapper _dynamicDataModelTypeMapper;
@@ -35,8 +33,6 @@ namespace Cofoundry.Domain.Internal
             _dynamicDataModelTypeMapper = dynamicDataModelTypeMapper;
             _customEntityDefinitionRepository = customEntityDefinitionRepository;
         }
-
-        #endregion
 
         public async Task<IDictionary<string, CustomEntityDataModelSchema>> ExecuteAsync(GetCustomEntityDataModelSchemaDetailsByDefinitionCodeRangeQuery query, IExecutionContext executionContext)
         {
@@ -58,19 +54,15 @@ namespace Cofoundry.Domain.Internal
             return results;
         }
 
-        #region Permission
-
         public IEnumerable<IPermissionApplication> GetPermissions(GetCustomEntityDataModelSchemaDetailsByDefinitionCodeRangeQuery query)
         {
             foreach (var code in query.CustomEntityDefinitionCodes)
             {
-                var definition = _customEntityDefinitionRepository.GetByCode(code);
+                var definition = _customEntityDefinitionRepository.GetRequiredByCode(code);
                 EntityNotFoundException.ThrowIfNull(definition, code);
 
                 yield return new CustomEntityReadPermission(definition);
             }
         }
-
-        #endregion
     }
 }

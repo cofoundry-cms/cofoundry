@@ -28,7 +28,7 @@ namespace Cofoundry.Domain.MailTemplates
 
         public IUserMailTemplateBuilder Create(string userAreaDefinitionCode)
         {
-            var userAreaDefinition = _userAreaDefinitionRepository.GetByCode(userAreaDefinitionCode);
+            var userAreaDefinition = _userAreaDefinitionRepository.GetRequiredByCode(userAreaDefinitionCode);
             EntityNotFoundException.ThrowIfNull(userAreaDefinition, userAreaDefinitionCode);
 
             // Try and find a factory registered for the specific user area

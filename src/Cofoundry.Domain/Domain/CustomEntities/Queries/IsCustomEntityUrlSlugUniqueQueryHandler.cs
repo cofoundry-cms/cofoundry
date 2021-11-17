@@ -1,12 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using Microsoft.EntityFrameworkCore;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Cofoundry.Domain.Data;
+﻿using Cofoundry.Core;
 using Cofoundry.Domain.CQS;
-using Cofoundry.Core;
+using Cofoundry.Domain.Data;
+using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Cofoundry.Domain.Internal
 {
@@ -20,8 +18,6 @@ namespace Cofoundry.Domain.Internal
         : IQueryHandler<IsCustomEntityUrlSlugUniqueQuery, bool>
         , IPermissionRestrictedQueryHandler<IsCustomEntityUrlSlugUniqueQuery, bool>
     {
-        #region constructor
-
         private readonly CofoundryDbContext _dbContext;
         private readonly IQueryExecutor _queryExecutor;
         private readonly ICustomEntityDefinitionRepository _customEntityDefinitionRepository;
@@ -36,8 +32,6 @@ namespace Cofoundry.Domain.Internal
             _queryExecutor = queryExecutor;
             _customEntityDefinitionRepository = customEntityDefinitionRepository;
         }
-        
-        #endregion
 
         public async Task<bool> ExecuteAsync(IsCustomEntityUrlSlugUniqueQuery query, IExecutionContext executionContext)
         {
@@ -76,17 +70,11 @@ namespace Cofoundry.Domain.Internal
             return definition;
         }
 
-        #region Permission
-
         public IEnumerable<IPermissionApplication> GetPermissions(IsCustomEntityUrlSlugUniqueQuery query)
         {
-            var definition = _customEntityDefinitionRepository.GetByCode(query.CustomEntityDefinitionCode);
-            EntityNotFoundException.ThrowIfNull(definition, query.CustomEntityDefinitionCode);
-
+            var definition = _customEntityDefinitionRepository.GetRequiredByCode(query.CustomEntityDefinitionCode);
             yield return new CustomEntityReadPermission(definition);
         }
-
-        #endregion
     }
 
 }

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Diagnostics;
+﻿using Cofoundry.Core;
+using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Razor;
 using System;
@@ -48,7 +49,12 @@ namespace Cofoundry.Web
 
             var feature = HttpContext.Features.Get<IExceptionHandlerPathFeature>();
             var request = HttpContext.Request;
-                        
+            
+            if (feature.Error is NotPermittedException)
+            {
+                return ErrorCode(403);
+            }
+
             var vmParameters = new ErrorPageViewModelBuilderParameters()
             {
                 StatusCode = STATUS_CODE,

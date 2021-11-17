@@ -1,16 +1,12 @@
-﻿using System;
+﻿using Cofoundry.Core;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Cofoundry.Core;
 
 namespace Cofoundry.Domain.Internal
 {
+    /// <inheritdoc/>
     public class CustomEntityDefinitionRepository : ICustomEntityDefinitionRepository
     {
-        #region constructor
-
         private readonly Dictionary<string, ICustomEntityDefinition> _customEntityDefinitions;
 
         public CustomEntityDefinitionRepository(
@@ -21,7 +17,44 @@ namespace Cofoundry.Domain.Internal
             _customEntityDefinitions = customEntityDefinitions.ToDictionary(k => k.CustomEntityDefinitionCode);
         }
 
-        private void DetectInvalidDefinitions(IEnumerable<ICustomEntityDefinition> definitions)
+        public ICustomEntityDefinition GetByCode(string code)
+        {
+            return _customEntityDefinitions.GetOrDefault(code);
+        }
+
+        public ICustomEntityDefinition GetRequiredByCode(string code)
+        {
+            var definition = GetByCode(code);
+            ValidateDefinitionExists(definition, code);
+
+            return definition;
+        }
+
+        public IEnumerable<ICustomEntityDefinition> GetAll()
+        {
+            return _customEntityDefinitions.Select(p => p.Value);
+        }
+
+        public ICustomEntityDefinition Get<TDefinition>()
+            where TDefinition : ICustomEntityDefinition
+        {
+            var definition = _customEntityDefinitions
+                .Select(p => p.Value)
+                .FirstOrDefault(p => p is TDefinition);
+            ValidateDefinitionExists(definition, typeof(TDefinition).Name);
+
+            return definition;
+        }
+
+        private static void ValidateDefinitionExists(ICustomEntityDefinition definition, string identifier)
+        {
+            if (definition == null)
+            {
+                throw new EntityNotFoundException<ICustomEntityDefinition>($"ICustomEntityDefinition '{identifier}' is not registered. but has been requested.", identifier);
+            }
+        }
+
+        private static void DetectInvalidDefinitions(IEnumerable<ICustomEntityDefinition> definitions)
         {
             const string WHY_VALID_CODE_MESSAGE = "All custom entity definition codes must be 6 characters and contain only non-unicode caracters.";
 
@@ -88,24 +121,5 @@ namespace Cofoundry.Domain.Internal
             }
         }
 
-        #endregion
-
-        public ICustomEntityDefinition GetByCode(string code)
-        {
-            return _customEntityDefinitions.GetOrDefault(code);
-        }
-
-        public IEnumerable<ICustomEntityDefinition> GetAll()
-        {
-            return _customEntityDefinitions.Select(p => p.Value);
-        }
-
-        public ICustomEntityDefinition Get<TDefinition>()
-            where TDefinition : ICustomEntityDefinition
-        {
-            return _customEntityDefinitions
-                .Select(p => p.Value)
-                .FirstOrDefault(p => p is TDefinition);
-        }
     }
 }

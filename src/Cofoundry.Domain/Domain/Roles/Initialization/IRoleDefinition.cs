@@ -1,16 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Cofoundry.Domain
+﻿namespace Cofoundry.Domain
 {
     /// <summary>
     /// As well as being able to create roles in the UI, roles can also
-    /// be defined in code by implementing IRoleDefinition. To defined the
+    /// be defined in code by implementing <see cref="IRoleDefinition"/>. To defined the
     /// permissions associated with the role implement a class that inherits 
-    /// from IRoleInitializer
+    /// from <see cref="IRoleInitializer"/>
     /// </summary>
     public interface IRoleDefinition
     {

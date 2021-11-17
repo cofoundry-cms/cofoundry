@@ -53,7 +53,7 @@ namespace Cofoundry.Domain.Internal
 
         public async Task ExecuteAsync(AddUserCommand command, IExecutionContext executionContext)
         {
-            var userArea = _userAreaRepository.GetByCode(command.UserAreaCode);
+            var userArea = _userAreaRepository.GetRequiredByCode(command.UserAreaCode);
             var dbUserArea = await QueryUserArea(userArea).SingleOrDefaultAsync();
             dbUserArea = AddUserAreaIfNotExists(userArea, dbUserArea);
 

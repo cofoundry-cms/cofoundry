@@ -1,20 +1,17 @@
-﻿using System;
+﻿using Cofoundry.Core;
+using Cofoundry.Domain.CQS;
+using Cofoundry.Domain.Data;
+using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Cofoundry.Domain.Data;
-using Cofoundry.Domain.CQS;
-using Microsoft.EntityFrameworkCore;
-using Cofoundry.Core;
 
 namespace Cofoundry.Domain.Internal
 {
-    public class GetEntityDependencySummaryByRelatedEntityHandler 
+    public class GetEntityDependencySummaryByRelatedEntityHandler
         : IQueryHandler<GetEntityDependencySummaryByRelatedEntityQuery, ICollection<EntityDependencySummary>>
         , IPermissionRestrictedQueryHandler<GetEntityDependencySummaryByRelatedEntityQuery, ICollection<EntityDependencySummary>>
     {
-        #region constructor
-
         private readonly CofoundryDbContext _dbContext;
         private IQueryExecutor _queryExecutor;
         private readonly IEntityDefinitionRepository _entityDefinitionRepository;
@@ -32,10 +29,6 @@ namespace Cofoundry.Domain.Internal
             _entityDefinitionRepository = entityDefinitionRepository;
             _permissionRepository = permissionRepository;
         }
-
-        #endregion
-
-        #region execution
 
         public async Task<ICollection<EntityDependencySummary>> ExecuteAsync(GetEntityDependencySummaryByRelatedEntityQuery query, IExecutionContext executionContext)
         {
@@ -56,11 +49,10 @@ namespace Cofoundry.Domain.Internal
 
             foreach (var dbDependencyGroup in dbDependencyGroups)
             {
-                var definition = _entityDefinitionRepository.GetByCode(dbDependencyGroup.Key) as IDependableEntityDefinition;
-                IQuery<IDictionary<int, RootEntityMicroSummary>> getEntitiesQuery;
-
+                var definition = _entityDefinitionRepository.GetRequiredByCode(dbDependencyGroup.Key) as IDependableEntityDefinition;
                 EntityNotFoundException.ThrowIfNull(definition, dbDependencyGroup.Key);
-                getEntitiesQuery = definition.CreateGetEntityMicroSummariesByIdRangeQuery(dbDependencyGroup.Select(e => e.RootEntityId));
+
+                var getEntitiesQuery = definition.CreateGetEntityMicroSummariesByIdRangeQuery(dbDependencyGroup.Select(e => e.RootEntityId));
 
                 var entityMicroSummaries = await _queryExecutor.ExecuteAsync(getEntitiesQuery, executionContext);
 
@@ -72,8 +64,8 @@ namespace Cofoundry.Domain.Internal
                     entityDependencySummary.Entity = entityMicroSummary.Value;
 
                     // relations for previous versions can be removed even when they are required.
-                    entityDependencySummary.CanDelete = 
-                        dbDependency.RelatedEntityCascadeActionId != (int)RelatedEntityCascadeAction.None 
+                    entityDependencySummary.CanDelete =
+                        dbDependency.RelatedEntityCascadeActionId != (int)RelatedEntityCascadeAction.None
                         || entityDependencySummary.Entity.IsPreviousVersion;
 
                     allRelatedEntities.Add(entityDependencySummary);
@@ -83,13 +75,9 @@ namespace Cofoundry.Domain.Internal
             return allRelatedEntities;
         }
 
-        #endregion
-
-        #region Permission
-
         public IEnumerable<IPermissionApplication> GetPermissions(GetEntityDependencySummaryByRelatedEntityQuery query)
         {
-            var entityDefinition = _entityDefinitionRepository.GetByCode(query.EntityDefinitionCode);
+            var entityDefinition = _entityDefinitionRepository.GetRequiredByCode(query.EntityDefinitionCode);
             if (entityDefinition == null) yield break;
 
             // Try and get a read permission for the entity.
@@ -100,7 +88,5 @@ namespace Cofoundry.Domain.Internal
                 yield return permission;
             }
         }
-
-        #endregion
     }
 }

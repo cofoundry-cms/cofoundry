@@ -84,7 +84,7 @@ namespace Cofoundry.Domain.Internal
 
         private void ValidateUserArea(AddUserWithTemporaryPasswordCommand command)
         {
-            var userArea = _userAreaDefinitionRepository.GetByCode(command.UserAreaCode);
+            var userArea = _userAreaDefinitionRepository.GetRequiredByCode(command.UserAreaCode);
             EntityNotFoundException.ThrowIfNull(userArea, command.UserAreaCode);
             if (!userArea.AllowPasswordLogin)
             {

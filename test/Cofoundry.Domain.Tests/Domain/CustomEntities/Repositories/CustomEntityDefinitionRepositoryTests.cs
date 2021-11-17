@@ -1,8 +1,9 @@
-﻿using Cofoundry.Domain.Internal;
+﻿using Cofoundry.Core;
+using Cofoundry.Domain.Internal;
+using FluentAssertions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using Xunit;
 
 namespace Cofoundry.Domain.Tests
@@ -13,26 +14,36 @@ namespace Cofoundry.Domain.Tests
         public void Constructor_WhenDuplicateCode_Throws()
         {
             var entityDefinitions = GetBaseCustomEntityDefinitions();
+            var duplicateCode = entityDefinitions.Last().CustomEntityDefinitionCode;
             entityDefinitions.Add(new TestCustomEntityDefinition()
             {
-                CustomEntityDefinitionCode = entityDefinitions.First().CustomEntityDefinitionCode,
+                CustomEntityDefinitionCode = duplicateCode,
                 Name = "A unique name"
             });
 
-            Assert.Throws<InvalidCustomEntityDefinitionException>(() => new CustomEntityDefinitionRepository(entityDefinitions));
+            FluentActions
+                .Invoking(() => new CustomEntityDefinitionRepository(entityDefinitions))
+                .Should()
+                .Throw<InvalidCustomEntityDefinitionException>()
+                .WithMessage($"*{duplicateCode}*");
         }
 
         [Fact]
         public void Constructor_WhenDuplicateName_Throws()
         {
             var entityDefinitions = GetBaseCustomEntityDefinitions();
+            var duplicateName = entityDefinitions.Last().Name;
             entityDefinitions.Add(new TestCustomEntityDefinition()
             {
                 CustomEntityDefinitionCode = "UNIQUE",
-                Name = entityDefinitions.First().Name
+                Name = duplicateName
             });
 
-            Assert.Throws<InvalidCustomEntityDefinitionException>(() => new CustomEntityDefinitionRepository(entityDefinitions));
+            FluentActions
+                .Invoking(() => new CustomEntityDefinitionRepository(entityDefinitions))
+                .Should()
+                .Throw<InvalidCustomEntityDefinitionException>()
+                .WithMessage($"*{duplicateName}*");
         }
 
         [Theory]
@@ -49,7 +60,10 @@ namespace Cofoundry.Domain.Tests
                 Name = "A unique name"
             });
 
-            Assert.Throws<InvalidCustomEntityDefinitionException>(() => new CustomEntityDefinitionRepository(entityDefinitions));
+            FluentActions
+                .Invoking(() => new CustomEntityDefinitionRepository(entityDefinitions))
+                .Should()
+                .Throw<InvalidCustomEntityDefinitionException>();
         }
 
         [Fact]
@@ -62,7 +76,11 @@ namespace Cofoundry.Domain.Tests
                 Name = null
             });
 
-            Assert.Throws<InvalidCustomEntityDefinitionException>(() => new CustomEntityDefinitionRepository(entityDefinitions));
+            FluentActions
+                .Invoking(() => new CustomEntityDefinitionRepository(entityDefinitions))
+                .Should()
+                .Throw<InvalidCustomEntityDefinitionException>()
+                .WithMessage($"*does not have a name*");
         }
 
         [Fact]
@@ -73,7 +91,7 @@ namespace Cofoundry.Domain.Tests
             var repo = new CustomEntityDefinitionRepository(entityDefinitions);
             var result = repo.GetAll();
 
-            Assert.Empty(result);
+            result.Should().BeEmpty();
         }
 
         [Fact]
@@ -85,7 +103,7 @@ namespace Cofoundry.Domain.Tests
             var repo = new CustomEntityDefinitionRepository(entityDefinitions);
             var result = repo.GetAll();
 
-            Assert.Equal(total, result.Count());
+            result.Should().HaveCount(total);
         }
 
         [Fact]
@@ -96,7 +114,7 @@ namespace Cofoundry.Domain.Tests
             var repo = new CustomEntityDefinitionRepository(entityDefinitions);
             var result = repo.GetByCode("UNIQUE");
 
-            Assert.Null(result);
+            result.Should().BeNull();
         }
 
         [Theory]
@@ -109,7 +127,31 @@ namespace Cofoundry.Domain.Tests
             var repo = new CustomEntityDefinitionRepository(entityDefinitions);
             var result = repo.GetByCode(definitionCode);
 
-            Assert.Equal(definitionCode, result.CustomEntityDefinitionCode);
+            result.CustomEntityDefinitionCode.Should().Be(definitionCode);
+        }
+
+        [Fact]
+        public void GetRequiredByCode_WhenNotExists_Throws()
+        {
+            var entityDefinitions = GetBaseCustomEntityDefinitions();
+            var repo = new CustomEntityDefinitionRepository(entityDefinitions);
+
+            repo.Invoking(r => r.GetRequiredByCode("UNIQUE"))
+                .Should()
+                .Throw<EntityNotFoundException<ICustomEntityDefinition>>();
+        }
+
+        [Theory]
+        [InlineData("CUS001")]
+        [InlineData("CUS003")]
+        public void GetRequiredByCode_WhenExists_Returns(string definitionCode)
+        {
+            var entityDefinitions = GetBaseCustomEntityDefinitions();
+
+            var repo = new CustomEntityDefinitionRepository(entityDefinitions);
+            var result = repo.GetByCode(definitionCode);
+
+            result.CustomEntityDefinitionCode.Should().Be(definitionCode);
         }
 
         private class TestCustomEntityDefinition : ICustomEntityDefinition

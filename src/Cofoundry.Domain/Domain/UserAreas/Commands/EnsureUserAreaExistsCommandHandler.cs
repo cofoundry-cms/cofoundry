@@ -34,7 +34,7 @@ namespace Cofoundry.Domain.Internal
 
         public async Task ExecuteAsync(EnsureUserAreaExistsCommand command, IExecutionContext executionContext)
         {
-            var userArea = _userAreaRepository.GetByCode(command.UserAreaCode);
+            var userArea = _userAreaRepository.GetRequiredByCode(command.UserAreaCode);
             EntityNotFoundException.ThrowIfNull(userArea, command.UserAreaCode);
 
             var dbUserArea = await _dbContext

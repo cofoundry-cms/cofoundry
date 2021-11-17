@@ -96,7 +96,7 @@ namespace Cofoundry.Domain.Internal
 
         private void ValidateUserArea(string userAreaCode)
         {
-            var userArea = _userAreaDefinitionRepository.GetByCode(userAreaCode);
+            var userArea = _userAreaDefinitionRepository.GetRequiredByCode(userAreaCode);
 
             if (!userArea.AllowPasswordLogin)
             {
@@ -143,7 +143,7 @@ namespace Cofoundry.Domain.Internal
 
         public void ValidatePermissions(User user, IExecutionContext executionContext)
         {
-            var userArea = _userAreaDefinitionRepository.GetByCode(user.UserAreaCode);
+            var userArea = _userAreaDefinitionRepository.GetRequiredByCode(user.UserAreaCode);
             if (userArea is CofoundryAdminUserArea)
             {
                 _permissionValidationService.EnforcePermission(new CofoundryUserUpdatePermission(), executionContext.UserContext);

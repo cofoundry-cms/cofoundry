@@ -1,12 +1,10 @@
-﻿using System;
+﻿using Cofoundry.Domain.CQS;
+using Cofoundry.Domain.Data;
+using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using Cofoundry.Domain.Data;
-using Cofoundry.Domain.CQS;
-using Microsoft.EntityFrameworkCore;
-using Cofoundry.Core;
 
 namespace Cofoundry.Domain.Internal
 {
@@ -19,15 +17,13 @@ namespace Cofoundry.Domain.Internal
         : IQueryHandler<GetCustomEntityRenderSummariesByUrlSlugQuery, ICollection<CustomEntityRenderSummary>>
         , IPermissionRestrictedQueryHandler<GetCustomEntityRenderSummariesByUrlSlugQuery, ICollection<CustomEntityRenderSummary>>
     {
-        #region constructor
-
         private readonly CofoundryDbContext _dbContext;
         private readonly ICustomEntityRenderSummaryMapper _customEntityRenderSummaryMapper;
         private readonly ICustomEntityDefinitionRepository _customEntityDefinitionRepository;
 
         public GetCustomEntityRenderSummariesByUrlSlugQueryHandler(
             CofoundryDbContext dbContext,
-            IQueryExecutor queryExecutor, 
+            IQueryExecutor queryExecutor,
             ICustomEntityRenderSummaryMapper customEntityRenderSummaryMapper,
             ICustomEntityDefinitionRepository customEntityDefinitionRepository
             )
@@ -36,8 +32,6 @@ namespace Cofoundry.Domain.Internal
             _customEntityRenderSummaryMapper = customEntityRenderSummaryMapper;
             _customEntityDefinitionRepository = customEntityDefinitionRepository;
         }
-
-        #endregion
 
         public async Task<ICollection<CustomEntityRenderSummary>> ExecuteAsync(GetCustomEntityRenderSummariesByUrlSlugQuery query, IExecutionContext executionContext)
         {
@@ -59,17 +53,11 @@ namespace Cofoundry.Domain.Internal
 
             return result;
         }
-        
-        #region Permission
 
         public IEnumerable<IPermissionApplication> GetPermissions(GetCustomEntityRenderSummariesByUrlSlugQuery query)
         {
-            var definition = _customEntityDefinitionRepository.GetByCode(query.CustomEntityDefinitionCode);
-            EntityNotFoundException.ThrowIfNull(definition, query.CustomEntityDefinitionCode);
-
+            var definition = _customEntityDefinitionRepository.GetRequiredByCode(query.CustomEntityDefinitionCode);
             yield return new CustomEntityReadPermission(definition);
         }
-
-        #endregion
     }
 }

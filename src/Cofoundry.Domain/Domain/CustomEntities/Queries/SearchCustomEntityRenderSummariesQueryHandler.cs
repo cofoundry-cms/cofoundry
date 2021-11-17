@@ -1,11 +1,9 @@
-﻿using System;
+﻿using Cofoundry.Domain.CQS;
+using Cofoundry.Domain.Data;
+using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Cofoundry.Core;
-using Cofoundry.Domain.CQS;
-using Cofoundry.Domain.Data;
-using Microsoft.EntityFrameworkCore;
 
 namespace Cofoundry.Domain.Internal
 {
@@ -13,8 +11,6 @@ namespace Cofoundry.Domain.Internal
         : IQueryHandler<SearchCustomEntityRenderSummariesQuery, PagedQueryResult<CustomEntityRenderSummary>>
         , IPermissionRestrictedQueryHandler<SearchCustomEntityRenderSummariesQuery, PagedQueryResult<CustomEntityRenderSummary>>
     {
-        #region constructor
-
         private readonly CofoundryDbContext _dbContext;
         private readonly ICustomEntityDefinitionRepository _customEntityDefinitionRepository;
         private readonly ICustomEntityRenderSummaryMapper _customEntityRenderSummaryMapper;
@@ -30,10 +26,6 @@ namespace Cofoundry.Domain.Internal
             _customEntityDefinitionRepository = customEntityDefinitionRepository;
         }
 
-        #endregion
-
-        #region execution
-
         public async Task<PagedQueryResult<CustomEntityRenderSummary>> ExecuteAsync(SearchCustomEntityRenderSummariesQuery query, IExecutionContext executionContext)
         {
             var dbPagedResult = await GetQueryAsync(query, executionContext);
@@ -44,8 +36,7 @@ namespace Cofoundry.Domain.Internal
 
         private async Task<PagedQueryResult<CustomEntityVersion>> GetQueryAsync(SearchCustomEntityRenderSummariesQuery query, IExecutionContext executionContext)
         {
-            var definition = _customEntityDefinitionRepository.GetByCode(query.CustomEntityDefinitionCode);
-            EntityNotFoundException.ThrowIfNull(definition, query.CustomEntityDefinitionCode);
+            var definition = _customEntityDefinitionRepository.GetRequiredByCode(query.CustomEntityDefinitionCode);
 
             var dbQuery = _dbContext
                 .CustomEntityPublishStatusQueries
@@ -74,18 +65,10 @@ namespace Cofoundry.Domain.Internal
             return dbPagedResult;
         }
 
-        #endregion
-
-        #region Permission
-
         public IEnumerable<IPermissionApplication> GetPermissions(SearchCustomEntityRenderSummariesQuery query)
         {
-            var definition = _customEntityDefinitionRepository.GetByCode(query.CustomEntityDefinitionCode);
-            EntityNotFoundException.ThrowIfNull(definition, query.CustomEntityDefinitionCode);
-
+            var definition = _customEntityDefinitionRepository.GetRequiredByCode(query.CustomEntityDefinitionCode);
             yield return new CustomEntityReadPermission(definition);
         }
-
-        #endregion
     }
 }

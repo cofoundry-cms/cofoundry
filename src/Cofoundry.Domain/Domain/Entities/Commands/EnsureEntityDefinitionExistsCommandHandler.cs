@@ -1,20 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Cofoundry.Domain.CQS;
 using Cofoundry.Domain.Data;
-using Cofoundry.Domain.CQS;
 using Microsoft.EntityFrameworkCore;
+using System.Threading.Tasks;
 
 namespace Cofoundry.Domain.Internal
 {
-    public class EnsureEntityDefinitionExistsCommandHandler 
+    public class EnsureEntityDefinitionExistsCommandHandler
         : ICommandHandler<EnsureEntityDefinitionExistsCommand>
         , IIgnorePermissionCheckHandler
     {
-        #region constructor
-
         private readonly CofoundryDbContext _dbContext;
         private readonly IEntityDefinitionRepository _entityDefinitionRepository;
 
@@ -27,13 +21,9 @@ namespace Cofoundry.Domain.Internal
             _entityDefinitionRepository = entityDefinitionRepository;
         }
 
-        #endregion
-
-        #region Execute
-
         public async Task ExecuteAsync(EnsureEntityDefinitionExistsCommand command, IExecutionContext executionContext)
         {
-            var entityDefinition = _entityDefinitionRepository.GetByCode(command.EntityDefinitionCode);
+            var entityDefinition = _entityDefinitionRepository.GetRequiredByCode(command.EntityDefinitionCode);
 
             var dbDefinition = await _dbContext
                 .EntityDefinitions
@@ -51,7 +41,5 @@ namespace Cofoundry.Domain.Internal
                 await _dbContext.SaveChangesAsync();
             }
         }
-
-        #endregion
     }
 }

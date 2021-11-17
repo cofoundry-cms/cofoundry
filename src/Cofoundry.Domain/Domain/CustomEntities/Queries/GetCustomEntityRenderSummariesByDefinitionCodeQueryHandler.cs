@@ -20,8 +20,6 @@ namespace Cofoundry.Domain.Internal
         : IQueryHandler<GetCustomEntityRenderSummariesByDefinitionCodeQuery, ICollection<CustomEntityRenderSummary>>
         , IPermissionRestrictedQueryHandler<GetCustomEntityRenderSummariesByDefinitionCodeQuery, ICollection<CustomEntityRenderSummary>>
     {
-        #region constructor
-
         private readonly CofoundryDbContext _dbContext;
         private readonly ICustomEntityRenderSummaryMapper _customEntityRenderSummaryMapper;
         private readonly ICustomEntityDefinitionRepository _customEntityDefinitionRepository;
@@ -36,8 +34,6 @@ namespace Cofoundry.Domain.Internal
             _customEntityRenderSummaryMapper = customEntityRenderSummaryMapper;
             _customEntityDefinitionRepository = customEntityDefinitionRepository;
         }
-
-        #endregion
 
         public async Task<ICollection<CustomEntityRenderSummary>> ExecuteAsync(GetCustomEntityRenderSummariesByDefinitionCodeQuery query, IExecutionContext executionContext)
         {
@@ -71,14 +67,10 @@ namespace Cofoundry.Domain.Internal
                 .ToList();
         }
 
-        #region Permission
-
         public IEnumerable<IPermissionApplication> GetPermissions(GetCustomEntityRenderSummariesByDefinitionCodeQuery query)
         {
-            var definition = _customEntityDefinitionRepository.GetByCode(query.CustomEntityDefinitionCode);
+            var definition = _customEntityDefinitionRepository.GetRequiredByCode(query.CustomEntityDefinitionCode);
             yield return new CustomEntityReadPermission(definition);
         }
-
-        #endregion
     }
 }

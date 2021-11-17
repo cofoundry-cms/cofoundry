@@ -66,7 +66,7 @@ namespace Cofoundry.Domain.Internal
                 throw new InvalidPasswordResetRequestException(query, "User not permitted to change password");
             }
 
-            var userArea = _userAreaRepository.GetByCode(request.User.UserAreaCode);
+            var userArea = _userAreaRepository.GetRequiredByCode(request.User.UserAreaCode);
 
             if (!userArea.AllowPasswordLogin)
             {

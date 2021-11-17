@@ -4,6 +4,7 @@ using System.Linq;
 
 namespace Cofoundry.Domain.Internal
 {
+    /// <inheritdoc/>
     public class UserAreaDefinitionRepository : IUserAreaDefinitionRepository
     {
         private readonly Dictionary<string, IUserAreaDefinition> _userAreas;
@@ -20,6 +21,28 @@ namespace Cofoundry.Domain.Internal
                 .ThenByDescending(u => u is CofoundryAdminUserArea)
                 .ThenBy(u => u.Name)
                 .FirstOrDefault();
+        }
+
+        public IUserAreaDefinition GetRequiredByCode(string userAreaCode)
+        {
+            var area = _userAreas.GetOrDefault(userAreaCode);
+
+            if (area == null)
+            {
+                throw new EntityNotFoundException<IUserAreaDefinition>(userAreaCode, $"UserArea '{userAreaCode}' is not registered. but has been requested.");
+            }
+
+            return area;
+        }
+
+        public IEnumerable<IUserAreaDefinition> GetAll()
+        {
+            return _userAreas.Select(a => a.Value);
+        }
+
+        public IUserAreaDefinition GetDefault()
+        {
+            return _defaultUserArea;
         }
 
         private void DetectInvalidDefinitions(IEnumerable<IUserAreaDefinition> definitions)
@@ -64,40 +87,6 @@ namespace Cofoundry.Domain.Internal
                 var message = "More than one user area has IsDefaultAuthSchema defined. Only a single default user area can be defined. Duplicates: " + string.Join(", ", defaultUserAreas);
                 throw new InvalidUserAreaDefinitionException(message, nameNot3Chars, definitions);
             }
-        }
-
-        /// <summary>
-        /// Gets a user area definition using the unique code. Throws an exception
-        /// if the user area is not registered.
-        /// </summary>
-        /// <param name="code">Uniquely identifying user area code.</param>
-        public IUserAreaDefinition GetByCode(string code)
-        {
-            var area = _userAreas.GetOrDefault(code);
-
-            if (area == null)
-            {
-                throw new EntityNotFoundException<IUserAreaDefinition>(code, $"UserArea '{code}' is not registered. but has been requested.");
-            }
-
-            return area;
-        }
-
-        /// <summary>
-        /// Returns all user areas defitions registered in the system.
-        /// </summary>
-        public IEnumerable<IUserAreaDefinition> GetAll()
-        {
-            return _userAreas.Select(a => a.Value);
-        }
-
-        /// <summary>
-        /// Returns the default user area, which prefers areas with the IsDefaultAuthSchema
-        /// property set to true, falling back to the Cofoundry Admin user area.
-        /// </summary
-        public IUserAreaDefinition GetDefault()
-        {
-            return _defaultUserArea;
         }
     }
 }

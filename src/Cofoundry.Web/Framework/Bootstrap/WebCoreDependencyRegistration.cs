@@ -7,6 +7,8 @@ using Cofoundry.Core;
 using Cofoundry.Core.ResourceFiles;
 using Cofoundry.Domain.Internal;
 using Cofoundry.Web.Internal;
+using Microsoft.AspNetCore.Authorization;
+using Cofoundry.Web.Auth.Internal;
 
 namespace Cofoundry.Web.Registration
 {
@@ -30,6 +32,8 @@ namespace Cofoundry.Web.Registration
                 .Register<ICofoundryHtmlHelper, CofoundryHtmlHelper>()
                 .Register<IUserSessionService, WebUserSessionService>(lowPriorityScopedOverrideRegistrationOptions)
                 .Register<IAuthCookieNamespaceProvider, AuthCookieNamespaceProvider>()
+                .Register<IAuthorizationHandler, RoleAuthorizationHandler>()
+                .Register<IAuthorizationHandler, UserAreaAuthorizationHandler>()
                 .Register<IVisualEditorStateService, DefaultVisualEditorStateService>()
                 .Register<IVisualEditorStateCache, VisualEditorStateCache>(RegistrationOptions.Scoped())
 

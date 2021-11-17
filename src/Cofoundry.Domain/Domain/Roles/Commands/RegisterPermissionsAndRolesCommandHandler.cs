@@ -1,15 +1,14 @@
 ﻿using Cofoundry.Core;
+using Cofoundry.Core.Data;
 using Cofoundry.Core.Validation;
 using Cofoundry.Domain.CQS;
 using Cofoundry.Domain.Data;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using Microsoft.EntityFrameworkCore;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using Cofoundry.Core.Data;
 
 namespace Cofoundry.Domain.Internal
 {
@@ -21,13 +20,11 @@ namespace Cofoundry.Domain.Internal
         : ICommandHandler<RegisterPermissionsAndRolesCommand>
         , IPermissionRestrictedCommandHandler<RegisterPermissionsAndRolesCommand>
     {
-        #region constructor
-
         private readonly CofoundryDbContext _dbContext;
         private readonly ICommandExecutor _commandExecutor;
         private readonly IRoleCache _roleCache;
         private readonly IPermissionValidationService _permissionValidationService;
-        private readonly IEnumerable<IRoleDefinition> _roleDefinitions;
+        private readonly IRoleDefinitionRepository _roleDefinitionRepository;
         private readonly IRoleInitializerFactory _roleInitializerFactory;
         private readonly IPermissionRepository _permissionRepository;
         private readonly IEntityDefinitionRepository _entityDefinitionRepository;
@@ -38,7 +35,7 @@ namespace Cofoundry.Domain.Internal
             ICommandExecutor commandExecutor,
             IRoleCache roleCache,
             IPermissionValidationService permissionValidationService,
-            IEnumerable<IRoleDefinition> roleDefinitions,
+            IRoleDefinitionRepository roleDefinitionRepository,
             IRoleInitializerFactory roleInitializerFactory,
             IPermissionRepository permissionRepository,
             IEntityDefinitionRepository entityDefinitionRepository,
@@ -49,21 +46,15 @@ namespace Cofoundry.Domain.Internal
             _commandExecutor = commandExecutor;
             _roleCache = roleCache;
             _permissionValidationService = permissionValidationService;
-            _roleDefinitions = roleDefinitions;
+            _roleDefinitionRepository = roleDefinitionRepository;
             _roleInitializerFactory = roleInitializerFactory;
             _permissionRepository = permissionRepository;
             _entityDefinitionRepository = entityDefinitionRepository;
             _transactionScopeFactory = transactionScopeFactory;
         }
 
-        #endregion
-
-        #region execution
-
         public async Task ExecuteAsync(RegisterPermissionsAndRolesCommand command, IExecutionContext executionContext)
         {
-            DetectDuplicateRoles();
-
             // ENTITY DEFINITIONS
 
             var dbEntityDefinitions = await _dbContext
@@ -104,7 +95,7 @@ namespace Cofoundry.Domain.Internal
 
             await EnsureUserAreaExistsAndValidatePermissionAsync(dbRoles, executionContext);
 
-            foreach (var roleDefinition in _roleDefinitions)
+            foreach (var roleDefinition in _roleDefinitionRepository.GetAll())
             {
                 var dbRole = dbRolesWithCodes.GetOrDefault(roleDefinition.RoleCode.ToUpperInvariant());
 
@@ -132,8 +123,8 @@ namespace Cofoundry.Domain.Internal
         }
 
         private void AddNewPermissionsToDb(
-            Dictionary<string, EntityDefinition> dbEntityDefinitions, 
-            Dictionary<string, Permission> dbPermissions, 
+            Dictionary<string, EntityDefinition> dbEntityDefinitions,
+            Dictionary<string, Permission> dbPermissions,
             List<IPermission> newCodePermissions
             )
         {
@@ -182,7 +173,7 @@ namespace Cofoundry.Domain.Internal
             foreach (var definitionCode in newEntityCodes)
             {
                 // get the entity definition class
-                var entityDefinition = _entityDefinitionRepository.GetByCode(definitionCode);
+                var entityDefinition = _entityDefinitionRepository.GetRequiredByCode(definitionCode);
 
                 // create a matching db record
                 var dbDefinition = new EntityDefinition()
@@ -199,7 +190,7 @@ namespace Cofoundry.Domain.Internal
         }
 
         private void UpdatePermissions(
-            Role dbRole, 
+            Role dbRole,
             IRoleDefinition roleDefinition,
             IEnumerable<IPermission> codePermissions,
             Dictionary<string, Permission> dbPermissions,
@@ -272,8 +263,8 @@ namespace Cofoundry.Domain.Internal
                 .FilterEntityPermissions()
                 .Where(p => !string.IsNullOrWhiteSpace(p.EntityDefinition?.EntityDefinitionCode))
                 .GroupBy(p => p.EntityDefinition.EntityDefinitionCode)
-                .Where(g => 
-                    !g.Any(p => p.PermissionType?.Code == CommonPermissionTypes.ReadPermissionCode) 
+                .Where(g =>
+                    !g.Any(p => p.PermissionType?.Code == CommonPermissionTypes.ReadPermissionCode)
                     && !existingPermissions.Any(p => p.Permission.EntityDefinitionCode == g.Key && p.Permission.PermissionCode == CommonPermissionTypes.ReadPermissionCode));
 
             foreach (var entity in entityWithoutReadPermission)
@@ -286,20 +277,6 @@ namespace Cofoundry.Domain.Internal
                     var msg = "Read permissions must be granted to entity " + entityCode + " in order to assign additional permissions";
                     throw new ValidationException(msg);
                 }
-            }
-        }
-
-        private void DetectDuplicateRoles()
-        {
-            var duplicateDefinition = _roleDefinitions
-                    .GroupBy(d => d.RoleCode)
-                    .Where(d => d.Count() > 1)
-                    .FirstOrDefault();
-
-            if (duplicateDefinition != null)
-            {
-                var message = $"Duplicate role definitions encountered. { duplicateDefinition.Count() } roles defined with the code '{ duplicateDefinition.First().RoleCode}'";
-                throw new InvalidRoleDefinitionException(message, duplicateDefinition.FirstOrDefault(), _roleDefinitions);
             }
         }
 
@@ -316,20 +293,6 @@ namespace Cofoundry.Domain.Internal
 
         private static void ValidateRole(List<Role> existingRoles, IRoleDefinition roleDefinition)
         {
-            if (string.IsNullOrWhiteSpace(roleDefinition.Title))
-            {
-                throw ValidationErrorException.CreateWithProperties("Role title cannot be empty", nameof(IRoleDefinition.Title));
-            }
-
-            if (string.IsNullOrWhiteSpace(roleDefinition.RoleCode))
-            {
-                throw ValidationErrorException.CreateWithProperties("Role RoleCode cannot be empty", nameof(IRoleDefinition.RoleCode));
-            }
-
-            if (roleDefinition.RoleCode.Length != 3)
-            {
-                throw ValidationErrorException.CreateWithProperties("Role RoleCode must be 3 characters in length", nameof(IRoleDefinition.RoleCode));
-            }
             if (existingRoles
                     .Any(r =>
                         r.Title.Equals(roleDefinition.Title?.Trim(), StringComparison.OrdinalIgnoreCase)
@@ -341,11 +304,12 @@ namespace Cofoundry.Domain.Internal
         }
 
         private async Task EnsureUserAreaExistsAndValidatePermissionAsync(
-            List<Role> existingRoles, 
+            List<Role> existingRoles,
             IExecutionContext executionContext
             )
         {
-            var allUserAreaCodes = _roleDefinitions
+            var allUserAreaCodes = _roleDefinitionRepository
+                .GetAll()
                 .Select(a => a.UserAreaCode)
                 .Distinct();
 
@@ -362,15 +326,9 @@ namespace Cofoundry.Domain.Internal
             }
         }
 
-        #endregion
-
-        #region Permission
-
         public IEnumerable<IPermissionApplication> GetPermissions(RegisterPermissionsAndRolesCommand command)
         {
             yield return new RoleCreatePermission();
         }
-
-        #endregion
     }
 }

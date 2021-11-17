@@ -32,6 +32,8 @@ namespace Cofoundry.Domain.Internal
         public Task<CustomEntityDefinitionSummary> ExecuteAsync(GetCustomEntityDefinitionSummaryByCodeQuery query, IExecutionContext executionContext)
         {
             var definition = _customEntityDefinitionRepository.GetByCode(query.CustomEntityDefinitionCode.ToUpperInvariant());
+            if (definition == null) return null;
+
             var result = _customEntityDefinitionSummaryMapper.Map(definition);
 
             return Task.FromResult(result);

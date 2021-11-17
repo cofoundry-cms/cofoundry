@@ -1,12 +1,10 @@
-﻿using System;
+﻿using Cofoundry.Core;
+using Cofoundry.Domain.CQS;
+using Cofoundry.Domain.Data;
+using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using Cofoundry.Domain.Data;
-using Cofoundry.Domain.CQS;
-using Cofoundry.Core;
-using Microsoft.EntityFrameworkCore;
 
 namespace Cofoundry.Domain.Internal
 {
@@ -16,12 +14,10 @@ namespace Cofoundry.Domain.Internal
     /// latest version. Designed to be used in the admin panel and not in a 
     /// version-sensitive context sach as a public webpage.
     /// </summary>
-    public class SearchCustomEntitySummariesQueryHandler 
+    public class SearchCustomEntitySummariesQueryHandler
         : IQueryHandler<SearchCustomEntitySummariesQuery, PagedQueryResult<CustomEntitySummary>>
         , IPermissionRestrictedQueryHandler<SearchCustomEntitySummariesQuery, PagedQueryResult<CustomEntitySummary>>
     {
-        #region constructor
-
         private readonly CofoundryDbContext _dbContext;
         private readonly ICustomEntitySummaryMapper _customEntitySummaryMapper;
         private readonly ICustomEntityDefinitionRepository _customEntityDefinitionRepository;
@@ -37,8 +33,6 @@ namespace Cofoundry.Domain.Internal
             _customEntityDefinitionRepository = customEntityDefinitionRepository;
         }
 
-        #endregion
-
         public async Task<PagedQueryResult<CustomEntitySummary>> ExecuteAsync(SearchCustomEntitySummariesQuery query, IExecutionContext executionContext)
         {
             var definition = _customEntityDefinitionRepository.GetByCode(query.CustomEntityDefinitionCode);
@@ -52,8 +46,8 @@ namespace Cofoundry.Domain.Internal
         }
 
         private Task<PagedQueryResult<CustomEntityPublishStatusQuery>> RunQueryAsync(
-            SearchCustomEntitySummariesQuery query, 
-            ICustomEntityDefinition definition, 
+            SearchCustomEntitySummariesQuery query,
+            ICustomEntityDefinition definition,
             IExecutionContext executionContext
             )
         {
@@ -91,22 +85,16 @@ namespace Cofoundry.Domain.Internal
                 dbQuery = dbQuery
                     .SortBy(definition, CustomEntityQuerySortType.Default);
             }
-            
+
             var dbPagedResult = dbQuery.ToPagedResultAsync(query);
 
             return dbPagedResult;
         }
 
-        #region Permission
-
         public IEnumerable<IPermissionApplication> GetPermissions(SearchCustomEntitySummariesQuery query)
         {
-            var definition = _customEntityDefinitionRepository.GetByCode(query.CustomEntityDefinitionCode);
-            EntityNotFoundException.ThrowIfNull(definition, query.CustomEntityDefinitionCode);
-
+            var definition = _customEntityDefinitionRepository.GetRequiredByCode(query.CustomEntityDefinitionCode);
             yield return new CustomEntityReadPermission(definition);
         }
-
-        #endregion
     }
 }

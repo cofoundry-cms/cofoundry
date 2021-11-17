@@ -1,12 +1,11 @@
-﻿using System;
+﻿using Cofoundry.Core;
+using Cofoundry.Domain.CQS;
+using Cofoundry.Domain.Data;
+using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using Cofoundry.Domain.Data;
-using Cofoundry.Domain.CQS;
-using Cofoundry.Core;
-using Microsoft.EntityFrameworkCore;
 
 namespace Cofoundry.Domain.Internal
 {
@@ -81,7 +80,8 @@ namespace Cofoundry.Domain.Internal
                 if (!string.IsNullOrWhiteSpace(dbPage.CustomEntityDefinitionCode))
                 {
                     var customEntityDefinition = _customEntityDefinitionRepository.GetByCode(dbPage.CustomEntityDefinitionCode);
-                    page.CustomEntityName = customEntityDefinition.Name;
+                    // Graciously fall-back if the definition has been removed, since this is typically just for display purposes
+                    page.CustomEntityName = customEntityDefinition?.Name ?? "Definition Missing";
                 }
 
                 page.Tags = pageTags

@@ -37,7 +37,7 @@ namespace Cofoundry.Domain.Internal
             var user = await GetUser(command.UserId);
             EntityNotFoundException.ThrowIfNull(user, command.UserId);
 
-            var userArea = _userAreaRepository.GetByCode(user.UserAreaCode);
+            var userArea = _userAreaRepository.GetRequiredByCode(user.UserAreaCode);
             _passwordUpdateCommandHelper.ValidateUserArea(userArea);
             _passwordUpdateCommandHelper.ValidatePermissions(userArea, executionContext);
 

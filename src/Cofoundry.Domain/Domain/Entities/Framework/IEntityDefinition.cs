@@ -1,13 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Cofoundry.Domain
+﻿namespace Cofoundry.Domain
 {
     public interface IEntityDefinition
     {
+        /// <summary>
+        /// Unique 6 character code representing the entity (use uppercase).
+        /// </summary>
         string EntityDefinitionCode { get; }
 
         /// <summary>

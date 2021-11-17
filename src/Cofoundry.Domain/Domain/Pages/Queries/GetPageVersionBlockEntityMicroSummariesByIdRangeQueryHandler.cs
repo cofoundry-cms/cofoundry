@@ -1,11 +1,10 @@
-﻿using System;
+﻿using Cofoundry.Domain.CQS;
+using Cofoundry.Domain.Data;
+using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using Cofoundry.Domain.Data;
-using Cofoundry.Domain.CQS;
-using Microsoft.EntityFrameworkCore;
 
 namespace Cofoundry.Domain.Internal
 {
@@ -13,8 +12,6 @@ namespace Cofoundry.Domain.Internal
         : IQueryHandler<GetPageVersionBlockEntityMicroSummariesByIdRangeQuery, IDictionary<int, RootEntityMicroSummary>>
         , IPermissionRestrictedQueryHandler<GetPageVersionBlockEntityMicroSummariesByIdRangeQuery, IDictionary<int, RootEntityMicroSummary>>
     {
-        #region constructor
-
         private readonly CofoundryDbContext _dbContext;
         private readonly IEntityDefinitionRepository _entityDefinitionRepository;
 
@@ -27,10 +24,6 @@ namespace Cofoundry.Domain.Internal
             _entityDefinitionRepository = entityDefinitionRepository;
         }
 
-        #endregion
-
-        #region execution
-
         public async Task<IDictionary<int, RootEntityMicroSummary>> ExecuteAsync(GetPageVersionBlockEntityMicroSummariesByIdRangeQuery query, IExecutionContext executionContext)
         {
             var results = await Query(query).ToDictionaryAsync(e => e.ChildEntityId, e => (RootEntityMicroSummary)e);
@@ -40,7 +33,7 @@ namespace Cofoundry.Domain.Internal
 
         private IQueryable<ChildEntityMicroSummary> Query(GetPageVersionBlockEntityMicroSummariesByIdRangeQuery query)
         {
-            var definition = _entityDefinitionRepository.GetByCode(PageEntityDefinition.DefinitionCode);
+            var definition = _entityDefinitionRepository.GetRequiredByCode(PageEntityDefinition.DefinitionCode);
 
             var dbQuery = _dbContext
                 .PageVersionBlocks
@@ -60,15 +53,10 @@ namespace Cofoundry.Domain.Internal
             return dbQuery;
         }
 
-        #endregion
-
-        #region Permission
 
         public IEnumerable<IPermissionApplication> GetPermissions(GetPageVersionBlockEntityMicroSummariesByIdRangeQuery query)
         {
             yield return new PageReadPermission();
         }
-
-        #endregion
     }
 }

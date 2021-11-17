@@ -1,13 +1,12 @@
-﻿using System;
+﻿using Cofoundry.Core;
+using Cofoundry.Domain.CQS;
+using Cofoundry.Domain.Data;
+using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Cofoundry.Domain.Data;
-using Cofoundry.Domain.CQS;
-using Microsoft.EntityFrameworkCore;
-using Cofoundry.Core;
 using System.Reflection;
+using System.Threading.Tasks;
 
 namespace Cofoundry.Domain.Internal
 {
@@ -21,8 +20,6 @@ namespace Cofoundry.Domain.Internal
         , IIgnorePermissionCheckHandler
     {
         private static readonly MethodInfo _mapAdditionalRouteDataAsyncMethod = typeof(GetCustomEntityRoutesByDefinitionCodeQueryHandler).GetMethod(nameof(MapAdditionalRouteDataAsync), BindingFlags.NonPublic | BindingFlags.Instance);
-
-        #region constructor
 
         private readonly CofoundryDbContext _dbContext;
         private readonly ICustomEntityCache _customEntityCache;
@@ -51,8 +48,6 @@ namespace Cofoundry.Domain.Internal
             _customEntityRouteDataBuilderFactory = customEntityRouteDataBuilderFactory;
         }
 
-        #endregion
-
         public async Task<ICollection<CustomEntityRoute>> ExecuteAsync(GetCustomEntityRoutesByDefinitionCodeQuery query, IExecutionContext executionContext)
         {
             return await _customEntityCache.GetOrAddAsync(query.CustomEntityDefinitionCode, async () =>
@@ -78,8 +73,7 @@ namespace Cofoundry.Domain.Internal
             Dictionary<int, ActiveLocale> allLocales
             )
         {
-            var definition = _customEntityDefinitionRepository.GetByCode(query.CustomEntityDefinitionCode);
-            EntityNotFoundException.ThrowIfNull(definition, query.CustomEntityDefinitionCode);
+            var definition = _customEntityDefinitionRepository.GetRequiredByCode(query.CustomEntityDefinitionCode);
 
             var routes = dbEntities
                 .Select(r => MapRoute(r, allLocales))

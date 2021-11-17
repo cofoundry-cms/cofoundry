@@ -2,8 +2,6 @@
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Cofoundry.Domain.Internal
 {
@@ -22,8 +20,6 @@ namespace Cofoundry.Domain.Internal
         }
 
         public IExtendableContentRepository ExtendableContentRepository { get; }
-
-        #region queries
 
         public IContentRepositoryCustomEntityByDefinitionQueryBuilder GetByDefinitionCode(string customEntityDefinitionCode)
         {
@@ -54,12 +50,7 @@ namespace Cofoundry.Domain.Internal
 
         public IContentRepositoryCustomEntityByUrlSlugQueryBuilder GetByUrlSlug(string customEntityDefinitionCode, string urlSlug)
         {
-            var customEntityDefinition = _customEntityDefinitionRepository.GetByCode(customEntityDefinitionCode);
-
-            if (customEntityDefinition == null)
-            {
-                throw new Exception("Custom Entity Definition not returned from ICustomEntityDefinitionRepository: " + customEntityDefinitionCode);
-            }
+            var customEntityDefinition = _customEntityDefinitionRepository.GetRequiredByCode(customEntityDefinitionCode);
 
             return new ContentRepositoryCustomEntityByUrlSlugQueryBuilder(ExtendableContentRepository, customEntityDefinition, urlSlug);
         }
@@ -76,15 +67,10 @@ namespace Cofoundry.Domain.Internal
             return new ContentRepositoryCustomEntityByUrlSlugQueryBuilder(ExtendableContentRepository, customEntityDefinition, urlSlug);
         }
 
-
         public IContentRepositoryCustomEntitySearchQueryBuilder Search()
         {
             return new ContentRepositoryCustomEntitySearchQueryBuilder(ExtendableContentRepository);
         }
-        
-        #endregion
-
-        #region child entities
 
         /// <summary>
         /// Custom entity definitions are used to define the identity and
@@ -97,7 +83,5 @@ namespace Cofoundry.Domain.Internal
         {
             return new ContentRepositoryCustomEntityDefinitionsRepository(ExtendableContentRepository);
         }
-
-        #endregion
     }
 }

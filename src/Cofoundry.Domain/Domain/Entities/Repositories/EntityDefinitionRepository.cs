@@ -1,16 +1,12 @@
-﻿using System;
+﻿using Cofoundry.Core;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Cofoundry.Core;
 
 namespace Cofoundry.Domain.Internal
 {
+    /// <inheritdoc/>
     public class EntityDefinitionRepository : IEntityDefinitionRepository
     {
-        #region constructor
-
         private readonly Dictionary<string, IEntityDefinition> _entityDefinitions;
 
         public EntityDefinitionRepository(
@@ -29,6 +25,28 @@ namespace Cofoundry.Domain.Internal
             DetectInvalidDefinitions(allDefinitions);
 
             _entityDefinitions = allDefinitions.ToDictionary(k => k.EntityDefinitionCode);
+        }
+
+        public IEntityDefinition GetByCode(string entityDefinitionCode)
+        {
+            return _entityDefinitions.GetOrDefault(entityDefinitionCode);
+        }
+
+        public IEntityDefinition GetRequiredByCode(string entityDefinitionCode)
+        {
+            var definition = GetByCode(entityDefinitionCode);
+
+            if (definition == null)
+            {
+                throw new EntityNotFoundException<IEntityDefinition>($"IEntityDefinition '{entityDefinitionCode}' is not registered. but has been requested.", entityDefinitionCode);
+            }
+
+            return definition;
+        }
+
+        public IEnumerable<IEntityDefinition> GetAll()
+        {
+            return _entityDefinitions.Values;
         }
 
         private void DetectInvalidDefinitions(IEnumerable<IEntityDefinition> definitions)
@@ -96,18 +114,6 @@ namespace Cofoundry.Domain.Internal
                 var message = notValidCode.GetType().Name + " has an invalid definition code. " + WHY_VALID_CODE_MESSAGE;
                 throw new InvalidEntityDefinitionException(message, notValidCode, definitions);
             }
-        }
-
-        #endregion
-
-        public IEntityDefinition GetByCode(string code)
-        {
-            return _entityDefinitions.GetOrDefault(code);
-        }
-
-        public IEnumerable<IEntityDefinition> GetAll()
-        {
-            return _entityDefinitions.Values;
         }
     }
 }

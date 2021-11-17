@@ -50,7 +50,7 @@ namespace Cofoundry.Domain.Internal
             EntityNotFoundException.ThrowIfNull(user, command.UserId);
 
             // Validate
-            var userArea = _userAreaRepository.GetByCode(user.UserAreaCode);
+            var userArea = _userAreaRepository.GetRequiredByCode(user.UserAreaCode);
             ValidatePermissions(userArea, executionContext);
             ValidateCommand(command, userArea);
             await ValidateIsUniqueAsync(command, userArea, executionContext);
