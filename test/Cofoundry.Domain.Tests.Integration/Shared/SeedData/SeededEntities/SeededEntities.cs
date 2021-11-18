@@ -62,7 +62,14 @@ namespace Cofoundry.Domain.Tests.Integration
         { 
             Definition = new Shared.TestUserArea1(),
             UserAreaCode = Shared.TestUserArea1.Code, 
-            RoleCode = Shared.TestUserArea1Role.Code,
+            RoleA = new TestRoleInfo()
+            {
+                RoleCode = Shared.TestUserArea1RoleA.Code
+            },
+            RoleB = new TestRoleInfo()
+            {
+                RoleCode = Shared.TestUserArea1RoleB.Code
+            }
         };
 
         /// <summary>
@@ -72,7 +79,14 @@ namespace Cofoundry.Domain.Tests.Integration
         { 
             Definition = new Shared.TestUserArea2(),
             UserAreaCode = Shared.TestUserArea2.Code,
-            RoleCode = Shared.TestUserArea2Role.Code 
+            RoleA = new TestRoleInfo()
+            {
+                RoleCode = Shared.TestUserArea2RoleA.Code
+            },
+            RoleB = new TestRoleInfo()
+            {
+                RoleCode = Shared.TestUserArea2RoleB.Code
+            }
         };
     }
 }

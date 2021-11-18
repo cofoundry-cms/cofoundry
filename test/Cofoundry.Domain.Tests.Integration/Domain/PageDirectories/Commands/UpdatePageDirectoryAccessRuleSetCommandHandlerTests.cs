@@ -84,7 +84,7 @@ namespace Cofoundry.Domain.Tests.Integration.PageDirectories.Commands
                 PageDirectoryId = directoryId
             };
 
-            command.AccessRules.AddNew(app.SeededEntities.TestUserArea2.UserAreaCode, app.SeededEntities.TestUserArea2.RoleId);
+            command.AccessRules.AddNew(app.SeededEntities.TestUserArea2.UserAreaCode, app.SeededEntities.TestUserArea2.RoleA.RoleId);
 
             await contentRepository
                 .PageDirectories()
@@ -101,7 +101,7 @@ namespace Cofoundry.Domain.Tests.Integration.PageDirectories.Commands
             {
                 accessRules.Should().HaveCount(1);
                 var accessRule = accessRules.Single();
-                accessRule.RoleId.Should().Be(app.SeededEntities.TestUserArea2.RoleId);
+                accessRule.RoleId.Should().Be(app.SeededEntities.TestUserArea2.RoleA.RoleId);
                 accessRule.UserAreaCode.Should().Be(app.SeededEntities.TestUserArea2.UserAreaCode);
             }
         }
@@ -125,7 +125,7 @@ namespace Cofoundry.Domain.Tests.Integration.PageDirectories.Commands
                 ViolationAction = action
             };
 
-            command.AccessRules.AddNew(app.SeededEntities.TestUserArea2.UserAreaCode, app.SeededEntities.TestUserArea2.RoleId);
+            command.AccessRules.AddNew(app.SeededEntities.TestUserArea2.UserAreaCode, app.SeededEntities.TestUserArea2.RoleA.RoleId);
 
             await contentRepository
                 .PageDirectories()
@@ -160,7 +160,7 @@ namespace Cofoundry.Domain.Tests.Integration.PageDirectories.Commands
                 PageDirectoryId = directoryId,
             };
 
-            command.AccessRules.AddNew(app.SeededEntities.TestUserArea2.UserAreaCode, app.SeededEntities.TestUserArea1.RoleId);
+            command.AccessRules.AddNew(app.SeededEntities.TestUserArea2.UserAreaCode, app.SeededEntities.TestUserArea1.RoleA.RoleId);
 
             await contentRepository
                 .Awaiting(r => r.PageDirectories().AccessRules().UpdateAsync(command))
@@ -189,7 +189,7 @@ namespace Cofoundry.Domain.Tests.Integration.PageDirectories.Commands
             };
 
             command.AccessRules.AddNew(userArea.UserAreaCode);
-            command.AccessRules.AddNew(userArea.UserAreaCode, userArea.RoleId);
+            command.AccessRules.AddNew(userArea.UserAreaCode, userArea.RoleA.RoleId);
 
             await contentRepository
                 .PageDirectories()
@@ -295,7 +295,7 @@ namespace Cofoundry.Domain.Tests.Integration.PageDirectories.Commands
                 UserAreaCodeForLoginRedirect = userArea1.UserAreaCode
             };
 
-            command.AccessRules.AddNew(userArea1.UserAreaCode, userArea1.RoleId);
+            command.AccessRules.AddNew(userArea1.UserAreaCode, userArea1.RoleA.RoleId);
 
             await contentRepository
                 .PageDirectories()
@@ -307,7 +307,7 @@ namespace Cofoundry.Domain.Tests.Integration.PageDirectories.Commands
             updateCommand.UserAreaCodeForLoginRedirect = userArea2.UserAreaCode;
             var roleAccessRuleCommand = updateCommand.AccessRules.Single();
             roleAccessRuleCommand.UserAreaCode = userArea2.UserAreaCode;
-            roleAccessRuleCommand.RoleId = userArea2.RoleId;
+            roleAccessRuleCommand.RoleId = userArea2.RoleA.RoleId;
 
             await contentRepository
                 .PageDirectories()
@@ -349,7 +349,7 @@ namespace Cofoundry.Domain.Tests.Integration.PageDirectories.Commands
                 PageDirectoryId = directoryId
             };
 
-            command.AccessRules.AddNew(app.SeededEntities.TestUserArea1.UserAreaCode, app.SeededEntities.TestUserArea1.RoleId);
+            command.AccessRules.AddNew(app.SeededEntities.TestUserArea1.UserAreaCode, app.SeededEntities.TestUserArea1.RoleA.RoleId);
 
             await contentRepository
                 .PageDirectories()
@@ -448,7 +448,7 @@ namespace Cofoundry.Domain.Tests.Integration.PageDirectories.Commands
                 PageDirectoryId = directoryId
             };
 
-            command.AccessRules.AddNew(app.SeededEntities.TestUserArea1.UserAreaCode, app.SeededEntities.TestUserArea1.RoleId);
+            command.AccessRules.AddNew(app.SeededEntities.TestUserArea1.UserAreaCode, app.SeededEntities.TestUserArea1.RoleA.RoleId);
             command.AccessRules.AddNew(app.SeededEntities.TestUserArea2.UserAreaCode);
 
             await contentRepository
@@ -457,7 +457,7 @@ namespace Cofoundry.Domain.Tests.Integration.PageDirectories.Commands
                 .UpdateAsync(command);
 
             var updateCommand = await contentRepository.ExecuteQueryAsync(new GetUpdateCommandByIdQuery<UpdatePageDirectoryAccessRuleSetCommand>(directoryId));
-            var accessRuleCommand = updateCommand.AccessRules.Single(r => r.RoleId == app.SeededEntities.TestUserArea1.RoleId);
+            var accessRuleCommand = updateCommand.AccessRules.Single(r => r.RoleId == app.SeededEntities.TestUserArea1.RoleA.RoleId);
             updateCommand.AccessRules.Remove(accessRuleCommand);
 
             await contentRepository
@@ -498,7 +498,7 @@ namespace Cofoundry.Domain.Tests.Integration.PageDirectories.Commands
                 ViolationAction = AccessRuleViolationAction.NotFound
             };
 
-            command.AccessRules.AddNew(app.SeededEntities.TestUserArea1.UserAreaCode, app.SeededEntities.TestUserArea1.RoleId);
+            command.AccessRules.AddNew(app.SeededEntities.TestUserArea1.UserAreaCode, app.SeededEntities.TestUserArea1.RoleA.RoleId);
             command.AccessRules.AddNew(app.SeededEntities.TestUserArea2.UserAreaCode);
 
             await contentRepository
@@ -512,9 +512,9 @@ namespace Cofoundry.Domain.Tests.Integration.PageDirectories.Commands
 
             var ruleToRemove = updateCommand.AccessRules.Single(r => r.UserAreaCode == app.SeededEntities.TestUserArea2.UserAreaCode);
             updateCommand.AccessRules.Remove(ruleToRemove);
-            var ruleToUpdate = updateCommand.AccessRules.Single(r => r.RoleId == app.SeededEntities.TestUserArea1.RoleId);
+            var ruleToUpdate = updateCommand.AccessRules.Single(r => r.RoleId == app.SeededEntities.TestUserArea1.RoleA.RoleId);
             ruleToUpdate.RoleId = null;
-            updateCommand.AccessRules.AddNew(app.SeededEntities.TestUserArea2.UserAreaCode, app.SeededEntities.TestUserArea2.RoleId);
+            updateCommand.AccessRules.AddNew(app.SeededEntities.TestUserArea2.UserAreaCode, app.SeededEntities.TestUserArea2.RoleA.RoleId);
 
             await contentRepository
                 .PageDirectories()
@@ -541,7 +541,7 @@ namespace Cofoundry.Domain.Tests.Integration.PageDirectories.Commands
 
                 var userArea2AccessRule = directory.AccessRules.Single(r => r.UserAreaCode == app.SeededEntities.TestUserArea2.UserAreaCode);
                 userArea2AccessRule.Should().NotBeNull();
-                userArea2AccessRule.RoleId.Should().Be(app.SeededEntities.TestUserArea2.RoleId);
+                userArea2AccessRule.RoleId.Should().Be(app.SeededEntities.TestUserArea2.RoleA.RoleId);
             }
         }
 

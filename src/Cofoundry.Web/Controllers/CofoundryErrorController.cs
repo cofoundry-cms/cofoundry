@@ -70,11 +70,13 @@ namespace Cofoundry.Web
         {
             var request = HttpContext.Request;
             var feature = HttpContext.Features.Get<IStatusCodeReExecuteFeature>();
+            HttpContext.Response.StatusCode = statusCode;
 
             if (statusCode == (int)HttpStatusCode.NotFound)
             {
                 return await _notFoundViewHelper.GetViewAsync(this);
             }
+
 
             var vmParameters = new ErrorPageViewModelBuilderParameters()
             {

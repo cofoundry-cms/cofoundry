@@ -42,7 +42,7 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Services
             var loginService = app.Services.GetRequiredService<ILoginService>();
             var userArea = app.SeededEntities.TestUserArea1;
 
-            await loginService.LogAuthenticatedUserInAsync(userArea.UserAreaCode, userArea.User.UserId, true);
+            await loginService.LogAuthenticatedUserInAsync(userArea.UserAreaCode, userArea.RoleA.User.UserId, true);
             var currentUser = await userContextService.GetCurrentContextAsync();
 
             using (new AssertionScope())
@@ -60,8 +60,8 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Services
             var userArea1 = app.SeededEntities.TestUserArea1;
             var userArea2 = app.SeededEntities.TestUserArea2;
 
-            await loginService.LogAuthenticatedUserInAsync(userArea2.UserAreaCode, userArea2.User.UserId, true);
-            await loginService.LogAuthenticatedUserInAsync(userArea1.UserAreaCode, userArea1.User.UserId, true);
+            await loginService.LogAuthenticatedUserInAsync(userArea2.UserAreaCode, userArea2.RoleA.User.UserId, true);
+            await loginService.LogAuthenticatedUserInAsync(userArea1.UserAreaCode, userArea1.RoleA.User.UserId, true);
             var currentUser = await userContextService.GetCurrentContextAsync();
 
             using (new AssertionScope())
@@ -139,8 +139,8 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Services
             var userArea1 = app.SeededEntities.TestUserArea1;
             var userArea2 = app.SeededEntities.TestUserArea1;
 
-            await loginService.LogAuthenticatedUserInAsync(userArea1.UserAreaCode, userArea1.User.UserId, true);
-            await loginService.LogAuthenticatedUserInAsync(userArea2.UserAreaCode, userArea2.User.UserId, true);
+            await loginService.LogAuthenticatedUserInAsync(userArea1.UserAreaCode, userArea1.RoleA.User.UserId, true);
+            await loginService.LogAuthenticatedUserInAsync(userArea2.UserAreaCode, userArea2.RoleA.User.UserId, true);
             var currentUser = await userContextService.GetCurrentContextByUserAreaAsync(userArea1.UserAreaCode);
 
             using (new AssertionScope())
@@ -152,9 +152,9 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Services
         private static void AssertBasicMapping(IUserContext currentUser, SeedData.TestUserAreaInfo userArea)
         {
             currentUser.Should().NotBeNull();
-            currentUser.UserId.Should().Be(userArea.User.UserId);
-            currentUser.RoleCode.Should().Be(userArea.RoleCode);
-            currentUser.RoleId.Should().Be(userArea.RoleId);
+            currentUser.UserId.Should().Be(userArea.RoleA.User.UserId);
+            currentUser.RoleCode.Should().Be(userArea.RoleA.RoleCode);
+            currentUser.RoleId.Should().Be(userArea.RoleA.RoleId);
             currentUser.UserArea.Should().NotBeNull();
             currentUser.UserArea.UserAreaCode.Should().Be(userArea.UserAreaCode);
             currentUser.IsPasswordChangeRequired.Should().BeFalse();

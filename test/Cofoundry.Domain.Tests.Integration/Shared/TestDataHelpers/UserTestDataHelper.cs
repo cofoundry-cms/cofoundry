@@ -115,7 +115,7 @@ namespace Cofoundry.Domain.Tests.Integration
                 FirstName = uniqueData,
                 LastName = domainUniqueData ?? "User",
                 UserAreaCode = _seededEntities.TestUserArea1.UserAreaCode,
-                RoleId = _seededEntities.TestUserArea1.RoleId
+                RoleId = _seededEntities.TestUserArea1.RoleA.RoleId
             };
 
             return command;

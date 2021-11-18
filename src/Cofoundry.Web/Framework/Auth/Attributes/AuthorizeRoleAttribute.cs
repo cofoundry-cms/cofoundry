@@ -4,11 +4,10 @@ using Microsoft.AspNetCore.Authorization;
 namespace Cofoundry.Web
 {
     /// <summary>
-    /// Specifies that the class or method that this attribute is applied to can
-    /// only be accessed by users associated with a specific Cofoundry role. Only roles
-    /// defined in code using <see cref="IRoleDefinition"/> can be authorized with this attribute.
-    /// Using this attribute will set the current user context to the user area associated with the
-    /// authorized role rather than the default.
+    /// Ensures that a class or method can only be accessed by users associated with 
+    /// with a specific Cofoundry role. Only roles defined in code using <see cref="IRoleDefinition"/> 
+    /// can be authorized with this attribute. Using this attribute will set the current user context 
+    /// to the user area associated with the authorized role rather than the default.
     /// </summary>
     public class AuthorizeRoleAttribute : AuthorizeAttribute
     {

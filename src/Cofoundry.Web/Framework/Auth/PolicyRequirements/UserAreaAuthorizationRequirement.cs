@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using Cofoundry.Core;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Cofoundry.Web.Auth.Internal
 {
@@ -17,6 +18,7 @@ namespace Cofoundry.Web.Auth.Internal
         /// </param>
         public UserAreaAuthorizationRequirement(string userAreaCode)
         {
+            if (string.IsNullOrWhiteSpace(userAreaCode)) throw new ArgumentEmptyException();
             UserAreaCode = userAreaCode;
         }
 
@@ -24,6 +26,6 @@ namespace Cofoundry.Web.Auth.Internal
         /// The unique 3 character identifier for the user area that the requirement 
         /// should authorize.
         /// </summary>
-        public string UserAreaCode { get; set; }
+        public string UserAreaCode { get; private set; }
     }
 }

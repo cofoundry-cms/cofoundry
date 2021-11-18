@@ -95,8 +95,8 @@ namespace Cofoundry.Domain.Tests.Integration.Pages.Queries
                 ViolationAction = AccessRuleViolationAction.NotFound
             };
 
-            command.AccessRules.AddNew(userArea2.UserAreaCode, userArea2.RoleId);
-            command.AccessRules.AddNew(userArea1.UserAreaCode, userArea1.RoleId);
+            command.AccessRules.AddNew(userArea2.UserAreaCode, userArea2.RoleA.RoleId);
+            command.AccessRules.AddNew(userArea1.UserAreaCode, userArea1.RoleA.RoleId);
             command.AccessRules.AddNew(userArea2.UserAreaCode);
 
             await contentRepository
@@ -149,7 +149,7 @@ namespace Cofoundry.Domain.Tests.Integration.Pages.Queries
                 if (hasRole)
                 {
                     rule.Role.Should().NotBeNull();
-                    rule.Role.RoleId.Should().Be(userArea.RoleId);
+                    rule.Role.RoleId.Should().Be(userArea.RoleA.RoleId);
                     rule.Role.Title.Should().NotBeNullOrWhiteSpace();
                 }
                 else
@@ -171,7 +171,7 @@ namespace Cofoundry.Domain.Tests.Integration.Pages.Queries
             var userArea2 = app.SeededEntities.TestUserArea2;
 
             var directory1Id = await app.TestData.PageDirectories().AddAsync(uniqueData);
-            await app.TestData.PageDirectories().AddAccessRuleAsync(directory1Id, userArea1.UserAreaCode, userArea1.RoleId, c =>
+            await app.TestData.PageDirectories().AddAccessRuleAsync(directory1Id, userArea1.UserAreaCode, userArea1.RoleA.RoleId, c =>
             {
                 c.AccessRules.AddNew(userArea2.UserAreaCode);
                 c.UserAreaCodeForLoginRedirect = userArea2.UserAreaCode;
@@ -179,7 +179,7 @@ namespace Cofoundry.Domain.Tests.Integration.Pages.Queries
             });
             var directory2Id = await app.TestData.PageDirectories().AddAsync(uniqueData, directory1Id);
             var directory3Id = await app.TestData.PageDirectories().AddAsync(uniqueData, directory2Id);
-            await app.TestData.PageDirectories().AddAccessRuleAsync(directory3Id, userArea2.UserAreaCode, userArea2.RoleId);
+            await app.TestData.PageDirectories().AddAccessRuleAsync(directory3Id, userArea2.UserAreaCode, userArea2.RoleA.RoleId);
             var directory4Id = await app.TestData.PageDirectories().AddAsync(uniqueData, directory3Id);
 
             var pageId = await app.TestData.Pages().AddAsync(uniqueData, directory4Id);
@@ -236,7 +236,7 @@ namespace Cofoundry.Domain.Tests.Integration.Pages.Queries
                 if (hasRole)
                 {
                     rule.Role.Should().NotBeNull();
-                    rule.Role.RoleId.Should().Be(userArea.RoleId);
+                    rule.Role.RoleId.Should().Be(userArea.RoleA.RoleId);
                     rule.Role.Title.Should().NotBeNullOrWhiteSpace();
                 }
                 else

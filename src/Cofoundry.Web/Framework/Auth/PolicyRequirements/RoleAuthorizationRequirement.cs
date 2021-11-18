@@ -1,5 +1,8 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using Cofoundry.Core;
+using Microsoft.AspNetCore.Authorization;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Cofoundry.Web.Auth.Internal
 {
@@ -24,6 +27,7 @@ namespace Cofoundry.Web.Auth.Internal
         public RoleAuthorizationRequirement(string userAreaCode, string roleCode)
             : this(userAreaCode, new string[] { roleCode })
         {
+            if (string.IsNullOrWhiteSpace(roleCode)) throw new ArgumentEmptyException();
         }
 
         /// <summary>
@@ -39,6 +43,10 @@ namespace Cofoundry.Web.Auth.Internal
         /// </param>
         public RoleAuthorizationRequirement(string userAreaCode, IEnumerable<string> roleCodes)
         {
+            if (string.IsNullOrWhiteSpace(userAreaCode)) throw new ArgumentEmptyException();
+            if (roleCodes == null) throw new ArgumentNullException(nameof(roleCodes));
+            if (roleCodes.Count() == 0) throw new ArgumentOutOfRangeException(nameof(roleCodes));
+
             UserAreaCode = userAreaCode;
             RoleCodes = roleCodes;
         }

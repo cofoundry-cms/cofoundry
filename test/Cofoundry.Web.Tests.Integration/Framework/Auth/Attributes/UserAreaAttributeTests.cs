@@ -1,0 +1,55 @@
+﻿using Cofoundry.Domain.Tests.Integration;
+using Cofoundry.Domain.Tests.Shared.Assertions;
+using Cofoundry.Web.Tests.Integration.TestWebApp;
+using FluentAssertions;
+using System.Net;
+using System.Threading.Tasks;
+using Xunit;
+
+namespace Cofoundry.Web.Tests.Integration.Framework.Auth.Attributes
+{
+    [Collection(nameof(DbDependentTestApplicationFactory))]
+    public class UserAreaAttributeTests
+    {
+        private readonly DbDependentTestApplicationFactory _appFactory;
+        private readonly TestWebApplicationFactory _webApplicationFactory;
+
+        public UserAreaAttributeTests(
+            DbDependentTestApplicationFactory appFactory,
+            TestWebApplicationFactory webApplicationFactory
+            )
+        {
+            _appFactory = appFactory;
+            _webApplicationFactory = webApplicationFactory;
+        }
+
+        [Fact]
+        public async Task WhenUserValid_OK()
+        {
+            using var app = _webApplicationFactory.CreateApp();
+            using var client = _webApplicationFactory.CreateClient();
+
+            await client.ImpersonateUserAsync(app.SeededEntities.TestUserArea2.RoleA.User);
+            var result = await client.GetAsync(GetRoute("user-area"));
+
+            result.StatusCode.Should().Be(HttpStatusCode.OK);
+        }
+
+        [Fact]
+        public async Task WhenUserNotLoggedIn_RedirectsToLogin()
+        {
+            using var app = _webApplicationFactory.CreateApp();
+            using var client = _webApplicationFactory.CreateClient(o => o.AllowAutoRedirect = false);
+
+            await client.ImpersonateUserAsync(app.SeededEntities.TestUserArea1.RoleA.User);
+            var result = await client.GetAsync(GetRoute("user-area"));
+
+            LoginRedirectAssertions.AssertLoginRedirect(result, app.SeededEntities.TestUserArea2);
+        }
+
+        private string GetRoute(string path)
+        {
+            return $"/{AuthAttributeTestController.RouteBase}/{path}";
+        }
+    }
+}

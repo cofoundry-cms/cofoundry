@@ -4,13 +4,11 @@
     {
         public string UserAreaCode { get; set; }
         
-        public string RoleCode { get; set; }
-
         public IUserAreaDefinition Definition { get; set; }
 
-        public int RoleId { get; set; }
+        public TestRoleInfo RoleA { get; set; }
 
-        public TestUserInfo User { get; set; }
+        public TestRoleInfo RoleB { get; set; }
 
     }
 }

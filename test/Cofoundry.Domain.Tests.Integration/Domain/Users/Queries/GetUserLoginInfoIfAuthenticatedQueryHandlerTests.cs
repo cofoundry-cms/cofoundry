@@ -338,7 +338,7 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Queries
                 FirstName = "Test",
                 LastName = "User",
                 UserAreaCode = userArea.UserAreaCode,
-                RoleId = userArea.RoleId
+                RoleId = userArea.RoleA.RoleId
             };
 
             commandModifier?.Invoke(command);

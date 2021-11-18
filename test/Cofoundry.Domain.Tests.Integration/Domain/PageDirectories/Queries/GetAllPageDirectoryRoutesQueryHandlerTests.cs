@@ -123,7 +123,7 @@ namespace Cofoundry.Domain.Tests.Integration.PageDirectories.Queries
 
             addRuleToDirectory2Command
                 .AccessRules
-                .AddNew(app.SeededEntities.TestUserArea1.UserAreaCode, app.SeededEntities.TestUserArea1.RoleId)
+                .AddNew(app.SeededEntities.TestUserArea1.UserAreaCode, app.SeededEntities.TestUserArea1.RoleA.RoleId)
                 .AddNew(app.SeededEntities.TestUserArea2.UserAreaCode);
 
             await contentRepository
@@ -166,7 +166,7 @@ namespace Cofoundry.Domain.Tests.Integration.PageDirectories.Queries
                 var rule2A = directory2RuleSet.AccessRules.FirstOrDefault();
                 rule2A.Should().NotBeNull();
                 rule2A.UserAreaCode.Should().Be(app.SeededEntities.TestUserArea1.UserAreaCode);
-                rule2A.RoleId.Should().Be(app.SeededEntities.TestUserArea1.RoleId);
+                rule2A.RoleId.Should().Be(app.SeededEntities.TestUserArea1.RoleA.RoleId);
 
                 var rule2B = directory2RuleSet.AccessRules.Skip(1).FirstOrDefault();
                 rule2B.Should().NotBeNull();

@@ -177,7 +177,7 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Commands
 
             var testRole = await repository
                 .Roles()
-                .GetByCode(TestUserArea1Role.Code)
+                .GetByCode(TestUserArea1RoleA.Code)
                 .AsDetails()
                 .ExecuteAsync();
 

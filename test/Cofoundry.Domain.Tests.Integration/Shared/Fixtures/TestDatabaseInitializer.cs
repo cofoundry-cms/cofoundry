@@ -231,12 +231,6 @@ namespace Cofoundry.Domain.Tests.Integration
 
             // User areas
 
-            seededEntities.TestUserArea1.RoleId = await dbContext
-                .Roles
-                .FilterByRoleCode(seededEntities.TestUserArea1.RoleCode)
-                .Select(c => c.RoleId)
-                .SingleAsync();
-
             await InitUserAreaAsync(seededEntities.TestUserArea1, dbContext, contentRepository);
             await InitUserAreaAsync(seededEntities.TestUserArea2, dbContext, contentRepository);
 
@@ -249,28 +243,39 @@ namespace Cofoundry.Domain.Tests.Integration
             IAdvancedContentRepository contentRepository
             )
         {
-            testUserAreaInfo.RoleId = await dbContext
+            await InitRole(testUserAreaInfo, dbContext, contentRepository, testUserAreaInfo.RoleA);
+            await InitRole(testUserAreaInfo, dbContext, contentRepository, testUserAreaInfo.RoleB);
+        }
+
+        private static async Task InitRole(
+            TestUserAreaInfo testUserAreaInfo, 
+            CofoundryDbContext dbContext, 
+            IAdvancedContentRepository contentRepository, 
+            TestRoleInfo role
+            )
+        {
+            role.RoleId = await dbContext
                 .Roles
-                .FilterByRoleCode(testUserAreaInfo.RoleCode)
+                .FilterByRoleCode(role.RoleCode)
                 .Select(c => c.RoleId)
                 .SingleAsync();
 
-            var uniqueIdentifier = testUserAreaInfo.UserAreaCode + testUserAreaInfo.RoleId;
-            testUserAreaInfo.User = new TestUserInfo()
+            var uniqueIdentifier = testUserAreaInfo.UserAreaCode + role.RoleId;
+            role.User = new TestUserInfo()
             {
                 Username = uniqueIdentifier.ToLower() + "@example.com",
                 Password = uniqueIdentifier + "w1P1r4Rz"
             };
 
-            testUserAreaInfo.User.UserId = await contentRepository
+            role.User.UserId = await contentRepository
                 .Users()
                 .AddAsync(new AddUserCommand()
                 {
-                    Email = testUserAreaInfo.User.Username,
+                    Email = role.User.Username,
                     FirstName = "Role",
                     LastName = "User",
-                    Password = testUserAreaInfo.User.Password,
-                    RoleId = testUserAreaInfo.RoleId,
+                    Password = role.User.Password,
+                    RoleId = role.RoleId,
                     UserAreaCode = testUserAreaInfo.UserAreaCode
                 });
         }
