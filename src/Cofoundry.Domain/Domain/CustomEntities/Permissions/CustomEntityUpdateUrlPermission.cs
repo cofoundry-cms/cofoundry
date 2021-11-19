@@ -8,8 +8,12 @@ namespace Cofoundry.Domain
 {
     public class CustomEntityUpdateUrlPermission : ICustomEntityPermissionTemplate
     {
+        /// <summary>
+        /// Constructor used internally by AuthorizePermissionAttribute.
+        /// </summary>
         public CustomEntityUpdateUrlPermission()
         {
+            PermissionType = CreatePermissionType("Not Set");
         }
 
         public CustomEntityUpdateUrlPermission(ICustomEntityDefinition customEntityDefinition)
@@ -25,6 +29,11 @@ namespace Cofoundry.Domain
         {
             var implementedPermission = new CustomEntityUpdateUrlPermission(customEntityDefinition);
             return implementedPermission;
+        }
+
+        private static PermissionType CreatePermissionType(string customEntityName)
+        {
+            return new PermissionType("UPDURL", "Update custom entity Url", "Update the url of a " + customEntityName);
         }
     }
 }

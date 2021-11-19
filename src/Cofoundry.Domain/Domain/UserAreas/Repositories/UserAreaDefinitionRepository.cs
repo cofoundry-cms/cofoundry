@@ -17,7 +17,7 @@ namespace Cofoundry.Domain.Internal
             DetectInvalidDefinitions(userAreas);
             _userAreas = userAreas.ToDictionary(k => k.UserAreaCode);
             _defaultUserArea = userAreas
-                .OrderByDescending(u => u.IsDefaultAuthSchema)
+                .OrderByDescending(u => u.IsDefaultAuthScheme)
                 .ThenByDescending(u => u is CofoundryAdminUserArea)
                 .ThenBy(u => u.Name)
                 .FirstOrDefault();
@@ -79,7 +79,7 @@ namespace Cofoundry.Domain.Internal
             }
 
             var defaultUserAreas = definitions
-                .Where(d => d.IsDefaultAuthSchema)
+                .Where(d => d.IsDefaultAuthScheme)
                 .Select(d => d.UserAreaCode);
 
             if (defaultUserAreas.Skip(1).FirstOrDefault() != null)

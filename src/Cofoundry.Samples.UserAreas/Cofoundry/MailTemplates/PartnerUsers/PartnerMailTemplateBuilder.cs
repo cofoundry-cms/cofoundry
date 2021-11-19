@@ -17,7 +17,7 @@ namespace Cofoundry.Samples.UserAreas.PartnerMailTemplates
     /// Cofoundry. The methods are async so you have the freedom to fetch 
     /// and mix in any additional data you need.
     /// </summary>
-    public class PartnerMailTemplateBuilder : IUserMailTemplateBuilder<PartnerUserAreaDefinition>
+    public class PartnerMailTemplateBuilder : IUserMailTemplateBuilder<PartnerUserArea>
     {
         private readonly IPasswordResetUrlHelper _passwordResetUrlHelper;
 

@@ -18,7 +18,7 @@ namespace Cofoundry.Web.Auth.Internal
         /// </param>
         public UserAreaAuthorizationRequirement(string userAreaCode)
         {
-            if (string.IsNullOrWhiteSpace(userAreaCode)) throw new ArgumentEmptyException();
+            if (string.IsNullOrWhiteSpace(userAreaCode)) throw new ArgumentEmptyException(nameof(userAreaCode));
             UserAreaCode = userAreaCode;
         }
 

@@ -54,6 +54,6 @@
         /// user area as the default auth scheme, which means the HttpContext.User property will 
         /// be set to this identity.
         /// </summary>
-        bool IsDefaultAuthSchema { get; }
+        bool IsDefaultAuthScheme { get; }
     }
 }

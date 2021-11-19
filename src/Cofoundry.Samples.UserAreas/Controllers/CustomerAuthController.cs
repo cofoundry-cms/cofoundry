@@ -13,14 +13,14 @@ namespace Cofoundry.Samples.UserAreas
     [Route("customers/auth")]
     public class CustomerAuthController : Controller
     {
-        private readonly IAuthenticationControllerHelper<PartnerUserAreaDefinition> _authenticationControllerHelper;
+        private readonly IAuthenticationControllerHelper<PartnerUserArea> _authenticationControllerHelper;
         private readonly IUserContextService _userContextService;
         private readonly IAdvancedContentRepository _contentRepository;
         private readonly IExecutionContextFactory _executionContextFactory;
         private readonly IMailService _mailService;
 
         public CustomerAuthController(
-            IAuthenticationControllerHelper<PartnerUserAreaDefinition> authenticationControllerHelper,
+            IAuthenticationControllerHelper<PartnerUserArea> authenticationControllerHelper,
             IAdvancedContentRepository contentRepository,
             IUserContextService userContextService,
             IExecutionContextFactory executionContextFactory,
@@ -45,7 +45,7 @@ namespace Cofoundry.Samples.UserAreas
         [Route("register")]
         public async Task<IActionResult> Register()
         {
-            var user = await _userContextService.GetCurrentContextByUserAreaAsync(PartnerUserAreaDefinition.Code);
+            var user = await _userContextService.GetCurrentContextByUserAreaAsync(PartnerUserArea.Code);
             if (user.IsLoggedIn()) return GetLoggedInDefaultRedirectAction();
 
             var viewModel = new RegisterNewUserViewModel();
@@ -58,7 +58,7 @@ namespace Cofoundry.Samples.UserAreas
         {
             // TODO: yah: pull in content repository code and improve this,
 
-            var user = await _userContextService.GetCurrentContextByUserAreaAsync(PartnerUserAreaDefinition.Code);
+            var user = await _userContextService.GetCurrentContextByUserAreaAsync(PartnerUserArea.Code);
             if (user.IsLoggedIn())
             {
                 ModelState.AddModelError(string.Empty, "You cannot register because you are already logged in.");
@@ -70,8 +70,8 @@ namespace Cofoundry.Samples.UserAreas
             {
                 Email = viewModel.Email,
                 Password = viewModel.Password,
-                RoleCode = CustomerRoleDefinition.Code,
-                UserAreaCode = CustomerUserAreaDefinition.Code
+                RoleCode = CustomerRole.Code,
+                UserAreaCode = CustomerUserArea.Code
                 // DisplayName = 
             };
 
@@ -111,7 +111,7 @@ namespace Cofoundry.Samples.UserAreas
         [Route("login")]
         public async Task<IActionResult> Login()
         {
-            var user = await _userContextService.GetCurrentContextByUserAreaAsync(PartnerUserAreaDefinition.Code);
+            var user = await _userContextService.GetCurrentContextByUserAreaAsync(PartnerUserArea.Code);
             if (user.IsLoggedIn()) return GetLoggedInDefaultRedirectAction();
 
             // If you need to customize the model you can create your own 
@@ -170,7 +170,7 @@ namespace Cofoundry.Samples.UserAreas
         [Route("forgot-password")]
         public async Task<ActionResult> ForgotPassword()
         {
-            var user = await _userContextService.GetCurrentContextByUserAreaAsync(PartnerUserAreaDefinition.Code);
+            var user = await _userContextService.GetCurrentContextByUserAreaAsync(PartnerUserArea.Code);
             if (user.IsLoggedIn()) return GetLoggedInDefaultRedirectAction();
 
             return View(new ForgotPasswordViewModel());
@@ -190,7 +190,7 @@ namespace Cofoundry.Samples.UserAreas
         [Route("password-reset")]
         public async Task<ActionResult> PasswordReset()
         {
-            var user = await _userContextService.GetCurrentContextByUserAreaAsync(PartnerUserAreaDefinition.Code);
+            var user = await _userContextService.GetCurrentContextByUserAreaAsync(PartnerUserArea.Code);
             if (user.IsLoggedIn()) return GetLoggedInDefaultRedirectAction();
 
             var requestValidationResult = await _authenticationControllerHelper.ParseAndValidatePasswordResetRequestAsync(this);
@@ -208,7 +208,7 @@ namespace Cofoundry.Samples.UserAreas
         [HttpPost("password-reset")]
         public async Task<ActionResult> PasswordReset(CompletePasswordResetViewModel vm)
         {
-            var user = await _userContextService.GetCurrentContextByUserAreaAsync(PartnerUserAreaDefinition.Code);
+            var user = await _userContextService.GetCurrentContextByUserAreaAsync(PartnerUserArea.Code);
             if (user.IsLoggedIn()) return GetLoggedInDefaultRedirectAction();
 
             await _authenticationControllerHelper.CompletePasswordResetAsync(this, vm);
@@ -228,7 +228,7 @@ namespace Cofoundry.Samples.UserAreas
         [Route("email-verification-required")]
         public async Task<ActionResult> EmailVerificationRequired()
         {
-            var user = await _userContextService.GetCurrentContextByUserAreaAsync(PartnerUserAreaDefinition.Code);
+            var user = await _userContextService.GetCurrentContextByUserAreaAsync(PartnerUserArea.Code);
             if (user.IsLoggedIn()) return GetLoggedInDefaultRedirectAction();
 
             return View();
@@ -237,7 +237,7 @@ namespace Cofoundry.Samples.UserAreas
         [Route("email-verification-required")]
         public async Task<ActionResult> EmailVerificationRequired(LoginViewModel viewModel)
         {
-            var user = await _userContextService.GetCurrentContextByUserAreaAsync(PartnerUserAreaDefinition.Code);
+            var user = await _userContextService.GetCurrentContextByUserAreaAsync(PartnerUserArea.Code);
             if (user.IsLoggedIn()) return GetLoggedInDefaultRedirectAction();
 
             // TODO: Verify user and re-send email
@@ -249,7 +249,7 @@ namespace Cofoundry.Samples.UserAreas
         [Route("verify-email")]
         public async Task<ActionResult> VerifyEmail()
         {
-            var user = await _userContextService.GetCurrentContextByUserAreaAsync(PartnerUserAreaDefinition.Code);
+            var user = await _userContextService.GetCurrentContextByUserAreaAsync(PartnerUserArea.Code);
             if (user.IsLoggedIn()) return GetLoggedInDefaultRedirectAction();
 
             var requestValidationResult = await _authenticationControllerHelper.ParseAndValidatePasswordResetRequestAsync(this);
@@ -267,7 +267,7 @@ namespace Cofoundry.Samples.UserAreas
         [HttpPost("verify-email")]
         public async Task<ActionResult> VerifyEmail(CompletePasswordResetViewModel vm)
         {
-            var user = await _userContextService.GetCurrentContextByUserAreaAsync(PartnerUserAreaDefinition.Code);
+            var user = await _userContextService.GetCurrentContextByUserAreaAsync(PartnerUserArea.Code);
             if (user.IsLoggedIn()) return GetLoggedInDefaultRedirectAction();
 
             await _authenticationControllerHelper.CompletePasswordResetAsync(this, vm);

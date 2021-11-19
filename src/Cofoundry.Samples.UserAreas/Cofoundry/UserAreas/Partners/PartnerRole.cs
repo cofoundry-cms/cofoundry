@@ -12,10 +12,14 @@ namespace Cofoundry.Samples.UserAreas
     /// Additionally we have a RoleCode that we can use to query 
     /// the role programatically.
     /// 
-    /// See https://github.com/cofoundry-cms/cofoundry/wiki/Roles-&-Permissions
+    /// See https://www.cofoundry.org/docs/framework/roles-and-permissions
     /// </summary>
-    public class PartnerRoleDefinition : IRoleDefinition
+    public class PartnerRole : IRoleDefinition
     {
+        /// <summary>
+        /// By convention we add a constant for the role code
+        /// to make it easier to reference.
+        /// </summary>
         public const string Code = "PAR";
 
         /// <summary>
@@ -35,6 +39,6 @@ namespace Cofoundry.Samples.UserAreas
         /// A role must be assigned to a user area, in this case the role is 
         /// used for partner user area.
         /// </summary
-        public string UserAreaCode { get { return PartnerUserAreaDefinition.Code; } }
+        public string UserAreaCode { get { return PartnerUserArea.Code; } }
     }
 }

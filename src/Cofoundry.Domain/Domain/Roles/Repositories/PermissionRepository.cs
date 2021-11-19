@@ -1,16 +1,12 @@
-﻿using System;
+﻿using Cofoundry.Core;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Cofoundry.Core;
 
 namespace Cofoundry.Domain.Internal
 {
     public class PermissionRepository : IPermissionRepository
     {
-        #region constructor
-
         private readonly IDictionary<string, IPermission> _permissions;
 
         public PermissionRepository(
@@ -55,13 +51,9 @@ namespace Cofoundry.Domain.Internal
             }
         }
 
-        #endregion
-
-        #region public
-
         public IPermission GetByCode(string permissionTypeCode, string entityDefinitionCode)
         {
-            var key = CreateUniqueToken(permissionTypeCode, entityDefinitionCode);
+            var key = PermissionIdentifierFormatter.GetUniqueIdentifier(permissionTypeCode, entityDefinitionCode);
             return _permissions.GetOrDefault(key);
         }
 
@@ -79,40 +71,15 @@ namespace Cofoundry.Domain.Internal
         public IPermission GetByEntityAndPermissionType(string entityDefinitionCode, string permissionTypeCode)
         {
             if (string.IsNullOrEmpty(entityDefinitionCode) || string.IsNullOrEmpty(permissionTypeCode)) return null;
-            var key = CreateUniqueToken(permissionTypeCode, entityDefinitionCode);
+            var key = PermissionIdentifierFormatter.GetUniqueIdentifier(permissionTypeCode, entityDefinitionCode);
             return _permissions.GetOrDefault(key);
         }
-
-        #endregion
-
-        #region helpers
 
         private string GetUniqueKey(IPermission permission)
         {
             if (permission == null) return null;
 
-            if (permission is IEntityPermission)
-            {
-                return CreateUniqueToken(permission.PermissionType, ((IEntityPermission)permission).EntityDefinition);
-            }
-
-            return CreateUniqueToken(permission.PermissionType);
+            return PermissionIdentifierFormatter.GetUniqueIdentifier(permission);
         }
-
-        private string CreateUniqueToken(PermissionType permissionType, IEntityDefinition definition = null)
-        {
-            if (permissionType == null || string.IsNullOrWhiteSpace(permissionType.Code)) return null;
-
-            if (definition == null) return CreateUniqueToken(permissionType.Code);
-            return CreateUniqueToken(permissionType.Code, definition.EntityDefinitionCode);
-        }
-
-        private string CreateUniqueToken(string permissionTypeCode, string entityDefinitionCode = null)
-        {
-            if (string.IsNullOrWhiteSpace(entityDefinitionCode)) return permissionTypeCode.ToUpperInvariant();
-            return (permissionTypeCode + entityDefinitionCode).ToUpperInvariant();
-        }
-
-        #endregion
     }
 }

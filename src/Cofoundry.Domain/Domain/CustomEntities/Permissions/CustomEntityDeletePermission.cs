@@ -1,15 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Cofoundry.Domain
+﻿namespace Cofoundry.Domain
 {
     public class CustomEntityDeletePermission : ICustomEntityPermissionTemplate
     {
+        /// <summary>
+        /// Constructor used internally by AuthorizePermissionAttribute.
+        /// </summary>
         public CustomEntityDeletePermission()
         {
+            PermissionType = CommonPermissionTypes.Delete("Not Set");
         }
 
         public CustomEntityDeletePermission(ICustomEntityDefinition customEntityDefinition)

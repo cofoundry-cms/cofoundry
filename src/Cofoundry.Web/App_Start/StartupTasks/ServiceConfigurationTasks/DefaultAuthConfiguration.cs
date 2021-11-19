@@ -193,6 +193,13 @@ namespace Cofoundry.Web
                 var authRequirement = new RoleAuthorizationRequirement(role.UserAreaCode, role.RoleCode);
                 options.AddPolicy(policyName, p => p.AddRequirements(authRequirement));
             }
+
+            foreach (var permission in _permissionRepository.GetAll())
+            {
+                var policyName = AuthorizationPolicyNames.Permission(permission);
+                var authRequirement = new PermissionAuthorizationRequirement(permission);
+                options.AddPolicy(policyName, p => p.AddRequirements(authRequirement));
+            }
         }
     }
 }

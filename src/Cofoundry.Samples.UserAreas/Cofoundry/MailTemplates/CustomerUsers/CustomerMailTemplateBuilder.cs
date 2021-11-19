@@ -13,12 +13,12 @@ namespace Cofoundry.Samples.UserAreas
     /// area and making use of IDefaultMailTemplateBuilder to make minor modifications
     /// to the built-in default templates instead of starting from scratch.
     /// </summary>
-    public class CustomerMailTemplateBuilder : IUserMailTemplateBuilder<CustomerUserAreaDefinition>
+    public class CustomerMailTemplateBuilder : IUserMailTemplateBuilder<CustomerUserArea>
     {
-        private readonly IDefaultMailTemplateBuilder<CustomerUserAreaDefinition> _defaultMailTemplateBuilder;
+        private readonly IDefaultMailTemplateBuilder<CustomerUserArea> _defaultMailTemplateBuilder;
 
         public CustomerMailTemplateBuilder(
-            IDefaultMailTemplateBuilder<CustomerUserAreaDefinition> defaultMailTemplateBuilder
+            IDefaultMailTemplateBuilder<CustomerUserArea> defaultMailTemplateBuilder
             ) 
         {
             _defaultMailTemplateBuilder = defaultMailTemplateBuilder;

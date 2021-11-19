@@ -10,15 +10,15 @@ namespace Cofoundry.Samples.UserAreas
     /// Defining a user area allows us to require users to
     /// sign-up or log in to access certain features of the site.
     /// 
-    /// For more info see https://github.com/cofoundry-cms/cofoundry/wiki/User-Areas
+    /// For more info see https://www.cofoundry.org/docs/content-management/user-areas
     /// </summary>
-    public class PartnerUserAreaDefinition : IUserAreaDefinition
+    public class CustomerUserArea : IUserAreaDefinition
     {
         /// <summary>
-        /// Static access to the area code to make querying
-        /// easier
+        /// By convention we add a constant for the user area code
+        /// to make it easier to reference.
         /// </summary>
-        public const string Code = "PAR";
+        public const string Code = "CUS";
 
         /// <summary>
         /// Indicates if users in this area can login using a password. If this is false
@@ -32,7 +32,7 @@ namespace Cofoundry.Samples.UserAreas
         /// as the navigation link to manage your users. This should be singular
         /// because "Users" is appended to the link text.
         /// </summary>
-        public string Name => "Partners";
+        public string Name => "Customer";
 
         /// <summary>
         /// Indicates whether the user should login using thier email address as the username.
@@ -54,12 +54,12 @@ namespace Cofoundry.Samples.UserAreas
         /// If set to <see langword="null"/> then a 403 (Forbidden) error page will be 
         /// returned instead of the loginredirect.
         /// </summary>
-        public string LoginPath => UrlLibrary.PartnerLogin();
+        public string LoginPath => "/customers/login/";
 
         /// <summary>
         /// Setting this to true means that this user area will be used as the default login
         /// schema which means the HttpContext.User property will be set to this identity.
         /// </summary>
-        public bool IsDefaultAuthSchema => false;
+        public bool IsDefaultAuthScheme => true;
     }
 }

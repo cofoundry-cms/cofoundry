@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Cofoundry.Samples.UserAreas
 {
-    public class CustomerRoleInitializer : IRoleInitializer<CustomerRoleDefinition>
+    public class CustomerRoleInitializer : IRoleInitializer<CustomerRole>
     {
         public IEnumerable<IPermission> GetPermissions(IEnumerable<IPermission> allPermissions)
         {            

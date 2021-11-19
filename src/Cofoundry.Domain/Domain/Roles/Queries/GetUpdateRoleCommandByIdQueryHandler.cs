@@ -35,7 +35,7 @@ namespace Cofoundry.Domain.Internal
                 .Permissions
                 .Select(p => new PermissionCommandData()
                 {
-                    EntityDefinitionCode = p.GetUniqueCode(),
+                    EntityDefinitionCode = p.GetUniqueIdentifier(),
                     PermissionCode = p is IEntityPermission ? ((IEntityPermission)p).EntityDefinition.EntityDefinitionCode : null
                 })
                 .ToArray();

@@ -36,6 +36,6 @@ namespace Cofoundry.Domain
         /// <summary>
         /// Although this is set to false, it is the fall-back schema if no default schema is set.
         /// </summary>
-        public bool IsDefaultAuthSchema { get; } = false;
+        public bool IsDefaultAuthScheme { get; } = false;
     }
 }

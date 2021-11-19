@@ -11,11 +11,11 @@ namespace Cofoundry.Samples.UserAreas
     [Route("partners/auth")]
     public class PartnerAuthController : Controller
     {
-        private readonly IAuthenticationControllerHelper<PartnerUserAreaDefinition> _authenticationControllerHelper;
+        private readonly IAuthenticationControllerHelper<PartnerUserArea> _authenticationControllerHelper;
         private readonly IUserContextService _userContextService;
 
         public PartnerAuthController(
-            IAuthenticationControllerHelper<PartnerUserAreaDefinition> authenticationControllerHelper,
+            IAuthenticationControllerHelper<PartnerUserArea> authenticationControllerHelper,
             IUserContextService userContextService
             )
         {
@@ -32,7 +32,7 @@ namespace Cofoundry.Samples.UserAreas
         [Route("login")]
         public async Task<IActionResult> Login()
         {
-            var user = await _userContextService.GetCurrentContextByUserAreaAsync(PartnerUserAreaDefinition.Code);
+            var user = await _userContextService.GetCurrentContextByUserAreaAsync(PartnerUserArea.Code);
             if (user.IsLoggedIn()) return GetLoggedInDefaultRedirectAction();
 
             // If you need to customize the model you can create your own 
@@ -79,7 +79,7 @@ namespace Cofoundry.Samples.UserAreas
         [Route("change-password")]
         public async Task<IActionResult> ChangePassword()
         {
-            var user = await _userContextService.GetCurrentContextByUserAreaAsync(PartnerUserAreaDefinition.Code);
+            var user = await _userContextService.GetCurrentContextByUserAreaAsync(PartnerUserArea.Code);
             if (user.IsLoggedIn())
             {
                 if (!user.IsPasswordChangeRequired)
@@ -101,7 +101,7 @@ namespace Cofoundry.Samples.UserAreas
         [HttpPost("change-password")]
         public async Task<IActionResult> ChangePassword(ChangePasswordViewModel viewModel)
         {
-            var user = await _userContextService.GetCurrentContextByUserAreaAsync(PartnerUserAreaDefinition.Code);
+            var user = await _userContextService.GetCurrentContextByUserAreaAsync(PartnerUserArea.Code);
             if (user.IsLoggedIn())
             {
                 if (!user.IsPasswordChangeRequired)
@@ -129,7 +129,7 @@ namespace Cofoundry.Samples.UserAreas
         [Route("forgot-password")]
         public async Task<ActionResult> ForgotPassword()
         {
-            var user = await _userContextService.GetCurrentContextByUserAreaAsync(PartnerUserAreaDefinition.Code);
+            var user = await _userContextService.GetCurrentContextByUserAreaAsync(PartnerUserArea.Code);
             if (user.IsLoggedIn()) return GetLoggedInDefaultRedirectAction();
 
             return View(new ForgotPasswordViewModel());
@@ -149,7 +149,7 @@ namespace Cofoundry.Samples.UserAreas
         [Route("password-reset")]
         public async Task<ActionResult> PasswordReset()
         {
-            var user = await _userContextService.GetCurrentContextByUserAreaAsync(PartnerUserAreaDefinition.Code);
+            var user = await _userContextService.GetCurrentContextByUserAreaAsync(PartnerUserArea.Code);
             if (user.IsLoggedIn()) return GetLoggedInDefaultRedirectAction();
 
             var requestValidationResult = await _authenticationControllerHelper.ParseAndValidatePasswordResetRequestAsync(this);
@@ -167,7 +167,7 @@ namespace Cofoundry.Samples.UserAreas
         [HttpPost("password-reset")]
         public async Task<ActionResult> PasswordReset(CompletePasswordResetViewModel vm)
         {
-            var user = await _userContextService.GetCurrentContextByUserAreaAsync(PartnerUserAreaDefinition.Code);
+            var user = await _userContextService.GetCurrentContextByUserAreaAsync(PartnerUserArea.Code);
             if (user.IsLoggedIn()) return GetLoggedInDefaultRedirectAction();
 
             await _authenticationControllerHelper.CompletePasswordResetAsync(this, vm);

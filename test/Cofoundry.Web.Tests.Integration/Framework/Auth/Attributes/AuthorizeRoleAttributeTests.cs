@@ -9,12 +9,12 @@ using Xunit;
 namespace Cofoundry.Web.Tests.Integration.Framework.Auth.Attributes
 {
     [Collection(nameof(DbDependentTestApplicationFactory))]
-    public class RoleAttributeTests
+    public class AuthorizeRoleAttributeTests
     {
         private readonly DbDependentTestApplicationFactory _appFactory;
         private readonly TestWebApplicationFactory _webApplicationFactory;
 
-        public RoleAttributeTests(
+        public AuthorizeRoleAttributeTests(
             DbDependentTestApplicationFactory appFactory,
             TestWebApplicationFactory webApplicationFactory
             )

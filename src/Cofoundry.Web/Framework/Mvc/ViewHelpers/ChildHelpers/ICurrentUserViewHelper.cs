@@ -14,7 +14,7 @@ namespace Cofoundry.Web
         /// <summary>
         /// Returns information about the currently logged in user. If your 
         /// project has multiple user areas then this method will run on the
-        /// user area marked as the default auth schema. Once the user data is 
+        /// user area marked as the default auth scheme. Once the user data is 
         /// loaded it is cached so you don't have to worry about calling this 
         /// multiple times.
         /// </summary>

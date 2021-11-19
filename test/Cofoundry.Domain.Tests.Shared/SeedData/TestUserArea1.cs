@@ -17,6 +17,6 @@
 
         public string LoginPath => "/area-1/login";
 
-        public bool IsDefaultAuthSchema => true;
+        public bool IsDefaultAuthScheme => true;
     }
 }

@@ -1,7 +1,7 @@
 ﻿@inject ICofoundryHelper Cofoundry
 @{
     Layout = "_MasterLayout";
-    var user = await Cofoundry.CurrentUser.GetAsync(PartnerUserAreaDefinition.Code);
+    var user = await Cofoundry.CurrentUser.GetAsync(PartnerUserArea.Code);
 }
 
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
@@ -13,7 +13,7 @@
 
     <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav">
-            @if (user.Role.RoleCode == ExclusivePartnerRoleDefinition.Code)
+            @if (user.Role.RoleCode == ExclusivePartnerRole.Code)
             {
                 <li class="nav-item">
                     <a class="nav-link" href="/partners/exclusive">Exclusive Offers</a>

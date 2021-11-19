@@ -143,7 +143,7 @@ namespace Cofoundry.Web.Admin
             var currentUserInfo = new {
                 PermissionCodes = role
                     .Permissions
-                    .Select(p => p.GetUniqueCode())
+                    .Select(p => p.GetUniqueIdentifier())
                     .ToList()
             };
 

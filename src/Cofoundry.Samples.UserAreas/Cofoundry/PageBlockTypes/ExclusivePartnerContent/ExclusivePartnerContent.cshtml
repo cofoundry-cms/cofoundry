@@ -3,9 +3,9 @@
 
 @Cofoundry.BlockType.UseDescription("This is a content block that is only displayed only for users with the Exclusive Partner role")
 @{ 
-    var user = await Cofoundry.CurrentUser.GetAsync(PartnerUserAreaDefinition.Code);
+    var user = await Cofoundry.CurrentUser.GetAsync(PartnerUserArea.Code);
 }
-@if (user.Role.RoleCode == ExclusivePartnerRoleDefinition.Code)
+@if (user.Role.RoleCode == ExclusivePartnerRole.Code)
 {
 <div>
     @if (!string.IsNullOrWhiteSpace(Model.Title))

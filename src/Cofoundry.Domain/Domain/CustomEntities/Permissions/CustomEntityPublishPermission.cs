@@ -1,21 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Cofoundry.Domain
+﻿namespace Cofoundry.Domain
 {
     public class CustomEntityPublishPermission : ICustomEntityPermissionTemplate
     {
+        /// <summary>
+        /// Constructor used internally by AuthorizePermissionAttribute.
+        /// </summary>
         public CustomEntityPublishPermission()
         {
+            PermissionType = CreatePermissionType("Not Set");
         }
 
         public CustomEntityPublishPermission(ICustomEntityDefinition customEntityDefinition)
         {
             EntityDefinition = new CustomEntityDynamicEntityDefinition(customEntityDefinition);
-            PermissionType = new PermissionType("CMEPUB", "Publish", "Publish or unpublish a " + customEntityDefinition.Name.ToLower());
+            PermissionType = CreatePermissionType(customEntityDefinition.Name.ToLower());
         }
 
         public IEntityDefinition EntityDefinition { get; private set; }
@@ -25,6 +23,11 @@ namespace Cofoundry.Domain
         {
             var implementedPermission = new CustomEntityPublishPermission(customEntityDefinition);
             return implementedPermission;
+        }
+
+        private static PermissionType CreatePermissionType(string customEntityName)
+        {
+            return new PermissionType("CMEPUB", "Publish", "Publish or unpublish a " + customEntityName);
         }
     }
 }

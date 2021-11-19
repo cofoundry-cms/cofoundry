@@ -32,8 +32,9 @@ namespace Cofoundry.Web.Registration
                 .Register<ICofoundryHtmlHelper, CofoundryHtmlHelper>()
                 .Register<IUserSessionService, WebUserSessionService>(lowPriorityScopedOverrideRegistrationOptions)
                 .Register<IAuthCookieNamespaceProvider, AuthCookieNamespaceProvider>()
-                .Register<IAuthorizationHandler, RoleAuthorizationHandler>()
                 .Register<IAuthorizationHandler, UserAreaAuthorizationHandler>()
+                .Register<IAuthorizationHandler, RoleAuthorizationHandler>()
+                .Register<IAuthorizationHandler, PermissionAuthorizationHandler>()
                 .Register<IVisualEditorStateService, DefaultVisualEditorStateService>()
                 .Register<IVisualEditorStateCache, VisualEditorStateCache>(RegistrationOptions.Scoped())
 

@@ -1,9 +1,5 @@
 ﻿using Cofoundry.Core;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Cofoundry.Domain
 {
@@ -13,12 +9,12 @@ namespace Cofoundry.Domain
     /// </summary>
     public static class CommonPermissionTypes
     {
-        public static readonly string ReadPermissionCode = "COMRED";
-        public static readonly string CreatePermissionCode = "COMCRT";
-        public static readonly string UpdatePermissionCode = "COMUPD";
-        public static readonly string DeletePermissionCode = "COMDEL";
-        public static readonly string WritePermissionCode = "COMWRT";
-        public static readonly string AdminModulePermissionCode = "COMMOD";
+        public const string ReadPermissionCode = "COMRED";
+        public const string CreatePermissionCode = "COMCRT";
+        public const string UpdatePermissionCode = "COMUPD";
+        public const string DeletePermissionCode = "COMDEL";
+        public const string WritePermissionCode = "COMWRT";
+        public const string AdminModulePermissionCode = "COMMOD";
 
         /// <summary>
         /// Access to create a new entity

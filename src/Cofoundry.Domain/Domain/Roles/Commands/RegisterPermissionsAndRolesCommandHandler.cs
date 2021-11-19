@@ -74,7 +74,7 @@ namespace Cofoundry.Domain.Internal
             var codePermissions = _permissionRepository.GetAll();
 
             var newCodePermissions = codePermissions
-                .Where(p => !dbPermissions.ContainsKey(p.GetUniqueCode()))
+                .Where(p => !dbPermissions.ContainsKey(p.GetUniqueIdentifier()))
                 .ToList();
 
             // Add new permissions to db
@@ -130,7 +130,7 @@ namespace Cofoundry.Domain.Internal
         {
             foreach (var permissionToAdd in newCodePermissions)
             {
-                var uniquePermissionCode = permissionToAdd.GetUniqueCode();
+                var uniquePermissionCode = permissionToAdd.GetUniqueIdentifier();
                 // Create if not exists
                 var dbPermission = new Permission();
                 dbPermission.PermissionCode = permissionToAdd.PermissionType.Code;
@@ -210,7 +210,7 @@ namespace Cofoundry.Domain.Internal
             {
                 var permissionsToRemove = dbRole
                     .RolePermissions
-                    .Where(p => !permissionsToInclude.Any(i => i.GetUniqueCode() == p.Permission.GetUniqueCode()))
+                    .Where(p => !permissionsToInclude.Any(i => i.GetUniqueIdentifier() == p.Permission.GetUniqueCode()))
                     .ToList();
 
                 foreach (var permissonToRemove in permissionsToRemove)
@@ -232,12 +232,12 @@ namespace Cofoundry.Domain.Internal
             else
             {
                 permissionsToAdd = permissionsToInclude
-                    .Where(i => !dbRole.RolePermissions.Any(p => p.Permission.GetUniqueCode() == i.GetUniqueCode()));
+                    .Where(i => !dbRole.RolePermissions.Any(p => p.Permission.GetUniqueCode() == i.GetUniqueIdentifier()));
             }
 
             foreach (var permissionToAdd in permissionsToAdd)
             {
-                var uniquePermissionCode = permissionToAdd.GetUniqueCode();
+                var uniquePermissionCode = permissionToAdd.GetUniqueIdentifier();
                 var dbPermission = dbPermissions.GetOrDefault(uniquePermissionCode);
 
                 if (dbPermission == null)

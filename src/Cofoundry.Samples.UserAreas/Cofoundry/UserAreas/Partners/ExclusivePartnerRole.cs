@@ -12,17 +12,21 @@ namespace Cofoundry.Samples.UserAreas
     /// Additionally we have a RoleCode that we can use to query 
     /// the role programatically.
     /// 
-    /// See https://github.com/cofoundry-cms/cofoundry/wiki/Roles-&-Permissions
+    /// See https://www.cofoundry.org/docs/framework/roles-and-permissions
     /// </summary>
-    public class CustomerRoleDefinition : IRoleDefinition
+    public class ExclusivePartnerRole : IRoleDefinition
     {
-        public const string Code = "CUS";
+        /// <summary>
+        /// By convention we add a constant for the role code
+        /// to make it easier to reference.
+        /// </summary>
+        public const string Code = "EXP";
 
         /// <summary>
         /// The role title is used to identify the role and select it in the admin 
         /// UI and therefore must be unique. Max 50 characters.
         /// </summary>
-        public string Title { get { return "Customer"; } }
+        public string Title { get { return "Exclusive Partner"; } }
 
         /// <summary>
         /// The role code is a unique three letter code that can be used to reference 
@@ -35,6 +39,6 @@ namespace Cofoundry.Samples.UserAreas
         /// A role must be assigned to a user area, in this case the role is 
         /// used for partner user area.
         /// </summary
-        public string UserAreaCode { get { return CustomerUserAreaDefinition.Code; } }
+        public string UserAreaCode { get { return PartnerUserArea.Code; } }
     }
 }

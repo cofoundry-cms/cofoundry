@@ -1,15 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Cofoundry.Domain
+﻿namespace Cofoundry.Domain
 {
     public class CustomEntityAdminModulePermission : ICustomEntityPermissionTemplate
     {
+        /// <summary>
+        /// Constructor used internally by AuthorizePermissionAttribute.
+        /// </summary>
         public CustomEntityAdminModulePermission()
         {
+            PermissionType = CommonPermissionTypes.AdminModule("Not Set");
         }
 
         public CustomEntityAdminModulePermission(ICustomEntityDefinition customEntityDefinition)

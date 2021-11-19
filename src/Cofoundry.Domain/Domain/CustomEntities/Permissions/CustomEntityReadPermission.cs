@@ -1,15 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Cofoundry.Domain
+﻿namespace Cofoundry.Domain
 {
     public class CustomEntityReadPermission : ICustomEntityPermissionTemplate
     {
+        /// <summary>
+        /// Constructor used internally by AuthorizePermissionAttribute.
+        /// </summary>
         public CustomEntityReadPermission()
         {
+            PermissionType = CommonPermissionTypes.Read("Not Set");
         }
 
         public CustomEntityReadPermission(ICustomEntityDefinition customEntityDefinition)
