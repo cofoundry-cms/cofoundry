@@ -40,8 +40,6 @@ namespace Cofoundry.Samples.UserAreas
             return RedirectToActionPermanent(nameof(Login));
         }
 
-        #region register
-
         [Route("register")]
         public async Task<IActionResult> Register()
         {
@@ -104,10 +102,6 @@ namespace Cofoundry.Samples.UserAreas
             return View(viewModel);
         }
 
-        #endregion
-
-        #region login/logout
-
         [Route("login")]
         public async Task<IActionResult> Login()
         {
@@ -163,10 +157,6 @@ namespace Cofoundry.Samples.UserAreas
             return Redirect(UrlLibrary.PartnerLogin());
         }
 
-        #endregion
-
-        #region forgot password / reset
-
         [Route("forgot-password")]
         public async Task<ActionResult> ForgotPassword()
         {
@@ -220,10 +210,6 @@ namespace Cofoundry.Samples.UserAreas
 
             return View(vm);
         }
-
-        #endregion
-
-        #region verify email
 
         [Route("email-verification-required")]
         public async Task<ActionResult> EmailVerificationRequired()
@@ -279,8 +265,6 @@ namespace Cofoundry.Samples.UserAreas
 
             return View(vm);
         }
-
-        #endregion
 
         private ActionResult GetLoggedInDefaultRedirectAction()
         {

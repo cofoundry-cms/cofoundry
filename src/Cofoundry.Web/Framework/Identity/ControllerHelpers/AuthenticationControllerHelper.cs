@@ -18,8 +18,6 @@ namespace Cofoundry.Web.Identity
         : IAuthenticationControllerHelper<TUserArea>
         where TUserArea : IUserAreaDefinition
     {
-        #region constructor
-
         private readonly IQueryExecutor _queryExecutor;
         private readonly ICommandExecutor _commandExecutor;
         private readonly ILoginService _loginService;
@@ -47,17 +45,16 @@ namespace Cofoundry.Web.Identity
             _userAreaDefinition = userAreaDefinition;
         }
 
-        #endregion
-
-        #region auth
-
         /// <summary>
+        /// <para>
         /// Attempts to authenticate the login request, returning the result. This
         /// does not log the user in and can be used instead of LogUserInAsync when 
-        /// you want more control over the login workflow. 
-        /// 
+        /// you want more control over the login workflow.
+        /// </para>
+        /// <para>
         /// ModelState is first checked to be valid before checking the auth data against 
         /// the database. An auth errors are added to the ModelState.
+        /// </para>
         /// </summary>
         /// <param name="controller">
         /// This method is intended to be called from an MVC controller and this
@@ -200,10 +197,6 @@ namespace Cofoundry.Web.Identity
             return null;
         }
 
-        #endregion
-
-        #region ChangePasswordAsync
-
         /// <summary>
         /// Used to change a users password when it is required before login. Once
         /// completed the user should be redirected back to login to re-authenticate.
@@ -235,10 +228,6 @@ namespace Cofoundry.Web.Identity
             }
         }
 
-        #endregion
-
-        #region log out
-
         /// <summary>
         /// Signs the user out of the user area.
         /// </summary>
@@ -246,10 +235,6 @@ namespace Cofoundry.Web.Identity
         {
             return _loginService.SignOutAsync(_userAreaDefinition.UserAreaCode);
         }
-
-        #endregion
-
-        #region forgot password
 
         /// <summary>
         /// Checks the ModelState is valid and then initiates
@@ -369,7 +354,5 @@ namespace Cofoundry.Web.Identity
         {
             controller.ModelState.AddModelError(string.Empty, PasswordResetRequestAuthenticationError.InvalidRequest.ToDisplayText());
         }
-
-        #endregion
     }
 }
