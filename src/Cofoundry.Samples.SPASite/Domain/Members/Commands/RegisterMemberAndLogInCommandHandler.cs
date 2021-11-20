@@ -59,7 +59,7 @@ namespace Cofoundry.Samples.SPASite.Domain
         /// 
         /// See https://www.owasp.org/index.php/Web_Parameter_Tampering
         /// </summary>
-        private AddUserCommand MapAddUserCommand(RegisterMemberAndLogInCommand command, int roleId)
+        private AddUserCommand MapAddUserCommand(RegisterMemberAndLogInCommand command)
         {
             var addUserCommand = new AddUserCommand();
             addUserCommand.Email = command.Email;
