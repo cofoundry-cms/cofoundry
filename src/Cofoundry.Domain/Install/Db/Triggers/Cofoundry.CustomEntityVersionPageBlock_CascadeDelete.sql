@@ -10,9 +10,10 @@ begin
 
 	-- Dependencies
 
+	-- NB: related entity cascade constraints are enforced at the domain layer, so here we just need to clear everything
 	delete from Cofoundry.UnstructuredDataDependency
 	from Cofoundry.UnstructuredDataDependency e
-	inner join deleted d on e.RootEntityId = d.CustomEntityVersionPageBlockId and RootEntityDefinitionCode = @DefinitionCode
+	inner join deleted d on (e.RootEntityId = d.CustomEntityVersionPageBlockId and RootEntityDefinitionCode = @DefinitionCode) or (e.RelatedEntityId = d.CustomEntityVersionPageBlockId and RelatedEntityDefinitionCode = @DefinitionCode)
 
 	-- Main Table
     delete Cofoundry.CustomEntityVersionPageBlock

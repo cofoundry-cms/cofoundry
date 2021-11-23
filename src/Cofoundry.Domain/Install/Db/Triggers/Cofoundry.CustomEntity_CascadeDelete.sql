@@ -7,7 +7,6 @@ begin
 	if not exists (select * from deleted) return
 	
 	declare @DefinitionCode char(6) = 'COFCEN'
-	declare @RelatedEntityCascadeActionId_None int = 1
 
 	-- Dependencies
     delete Cofoundry.CustomEntityVersion
@@ -17,12 +16,11 @@ begin
     delete Cofoundry.CustomEntityPublishStatusQuery
 	from Cofoundry.CustomEntityPublishStatusQuery e
 	inner join deleted d on e.CustomEntityId = d.CustomEntityId
-
-	-- Delete any relations that allow cascades
+		
+	-- NB: related entity cascade constraints are enforced at the domain layer, so here we just need to clear everything
 	delete from Cofoundry.UnstructuredDataDependency
 	from Cofoundry.UnstructuredDataDependency e
-	inner join deleted d on e.RelatedEntityId = d.CustomEntityId and RelatedEntityDefinitionCode = @DefinitionCode
-	where RelatedEntityCascadeActionId <> @RelatedEntityCascadeActionId_None
+	inner join deleted d on (e.RootEntityId = d.CustomEntityId and RootEntityDefinitionCode = @DefinitionCode) or (e.RelatedEntityId = d.CustomEntityId and RelatedEntityDefinitionCode = @DefinitionCode)
 
 	-- Main Table
     delete Cofoundry.CustomEntity

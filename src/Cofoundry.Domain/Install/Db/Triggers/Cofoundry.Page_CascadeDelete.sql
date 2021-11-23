@@ -8,9 +8,6 @@ begin
 	declare @DefinitionCode char(6) = 'COFPGE'
 	
 	-- Dependencies
-	delete from Cofoundry.UnstructuredDataDependency
-	from Cofoundry.UnstructuredDataDependency e
-	inner join deleted d on e.RootEntityId = d.PageId and RootEntityDefinitionCode = @DefinitionCode
 
     delete Cofoundry.PageGroupItem
 	from Cofoundry.PageGroupItem e
@@ -35,6 +32,11 @@ begin
     delete Cofoundry.CustomEntityVersionPageBlock
 	from Cofoundry.CustomEntityVersionPageBlock e
 	inner join deleted d on e.PageId = d.PageId
+
+	-- NB: related entity cascade constraints are enforced at the domain layer, so here we just need to clear everything
+	delete from Cofoundry.UnstructuredDataDependency
+	from Cofoundry.UnstructuredDataDependency e
+	inner join deleted d on (e.RootEntityId = d.PageId and RootEntityDefinitionCode = @DefinitionCode) or (e.RelatedEntityId = d.PageId and RelatedEntityDefinitionCode = @DefinitionCode)
 
 	-- Main Table
     delete Cofoundry.[Page]

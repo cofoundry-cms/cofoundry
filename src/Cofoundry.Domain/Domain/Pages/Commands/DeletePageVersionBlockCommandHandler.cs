@@ -1,14 +1,12 @@
-﻿using System;
+﻿using Cofoundry.Core;
+using Cofoundry.Core.Data;
+using Cofoundry.Core.MessageAggregator;
+using Cofoundry.Domain.CQS;
+using Cofoundry.Domain.Data;
+using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using Cofoundry.Domain.Data;
-using Cofoundry.Domain.CQS;
-using Microsoft.EntityFrameworkCore;
-using Cofoundry.Core.MessageAggregator;
-using Cofoundry.Core.Data;
-using Cofoundry.Core;
 
 namespace Cofoundry.Domain.Internal
 {
@@ -19,10 +17,7 @@ namespace Cofoundry.Domain.Internal
         : ICommandHandler<DeletePageVersionBlockCommand>
         , IPermissionRestrictedCommandHandler<DeletePageVersionBlockCommand>
     {
-        #region constructor
-
         private readonly CofoundryDbContext _dbContext;
-        private readonly ICommandExecutor _commandExecutor;
         private readonly IPageCache _pageCache;
         private readonly IMessageAggregator _messageAggregator;
         private readonly ITransactionScopeManager _transactionScopeFactory;
@@ -30,26 +25,22 @@ namespace Cofoundry.Domain.Internal
         public DeletePageVersionBlockCommandHandler(
             CofoundryDbContext dbContext,
             IPageCache pageCache,
-            ICommandExecutor commandExecutor,
             IMessageAggregator messageAggregator,
             ITransactionScopeManager transactionScopeFactory
             )
         {
             _dbContext = dbContext;
             _pageCache = pageCache;
-            _commandExecutor = commandExecutor;
             _messageAggregator = messageAggregator;
             _transactionScopeFactory = transactionScopeFactory;
         }
-
-        #endregion
 
         public async Task ExecuteAsync(DeletePageVersionBlockCommand command, IExecutionContext executionContext)
         {
             var dbResult = await _dbContext
                 .PageVersionBlocks
                 .Where(b => b.PageVersionBlockId == command.PageVersionBlockId)
-                .Select(b => new 
+                .Select(b => new
                 {
                     Block = b,
                     PageId = b.PageVersion.PageId,
@@ -65,17 +56,11 @@ namespace Cofoundry.Domain.Internal
                 }
 
                 var versionId = dbResult.Block.PageVersionId;
-                using (var scope = _transactionScopeFactory.Create(_dbContext))
-                {
-                    await _commandExecutor.ExecuteAsync(new DeleteUnstructuredDataDependenciesCommand(PageVersionBlockEntityDefinition.DefinitionCode, dbResult.Block.PageVersionBlockId), executionContext);
+                _dbContext.PageVersionBlocks.Remove(dbResult.Block);
 
-                    _dbContext.PageVersionBlocks.Remove(dbResult.Block);
-                    await _dbContext.SaveChangesAsync();
+                await _dbContext.SaveChangesAsync();
 
-                    scope.QueueCompletionTask(() => OnTransactionComplete(dbResult.PageId, versionId));
-
-                    await scope.CompleteAsync();
-                }
+                _transactionScopeFactory.QueueCompletionTask(_dbContext, () => OnTransactionComplete(dbResult.PageId, versionId));
             }
         }
 
@@ -93,13 +78,9 @@ namespace Cofoundry.Domain.Internal
             });
         }
 
-        #region Permission
-
         public IEnumerable<IPermissionApplication> GetPermissions(DeletePageVersionBlockCommand command)
         {
             yield return new PageUpdatePermission();
         }
-
-        #endregion
     }
 }

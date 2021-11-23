@@ -6,6 +6,8 @@ begin
 	set nocount on;
 	if not exists (select * from deleted) return
 	
+	declare @DefinitionCode char(6) = 'COFUSR'
+
 	-- Dependencies
     delete Cofoundry.UserLoginLog
 	from Cofoundry.UserLoginLog e
@@ -14,6 +16,11 @@ begin
     delete Cofoundry.UserPasswordResetRequest
 	from Cofoundry.UserPasswordResetRequest e
 	inner join deleted d on e.UserId = d.UserId
+
+	-- NB: related entity cascade constraints are enforced at the domain layer, so here we just need to clear everything
+	delete from Cofoundry.UnstructuredDataDependency
+	from Cofoundry.UnstructuredDataDependency e
+	inner join deleted d on (e.RootEntityId = d.UserId and RootEntityDefinitionCode = @DefinitionCode) or (e.RelatedEntityId = d.UserId and RelatedEntityDefinitionCode = @DefinitionCode)
 	
 	-- Main Table
     delete Cofoundry.[User]

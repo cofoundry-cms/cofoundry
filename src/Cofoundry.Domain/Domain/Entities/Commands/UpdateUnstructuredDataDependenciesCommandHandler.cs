@@ -73,7 +73,7 @@ namespace Cofoundry.Domain.Internal
                     relation.RelatedEntityCascadeAction = relationGroup
                         .Select(r => r.RelatedEntityCascadeAction)
                         .OrderByDescending(r => r == RelatedEntityCascadeAction.None)
-                        .ThenByDescending(r => r == RelatedEntityCascadeAction.CascadeProperty)
+                        .ThenByDescending(r => r == RelatedEntityCascadeAction.Cascade)
                         //.OrderByDescending(r => r == RelatedEntityCascadeAction.WarnAndCascadeEntity)
                         .First();
 

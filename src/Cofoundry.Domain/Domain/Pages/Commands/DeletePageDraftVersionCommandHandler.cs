@@ -1,14 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Cofoundry.Domain.Data;
-using Cofoundry.Domain.CQS;
-using Microsoft.EntityFrameworkCore;
+﻿using Cofoundry.Core.Data;
 using Cofoundry.Core.MessageAggregator;
-using Cofoundry.Core.Data;
+using Cofoundry.Domain.CQS;
+using Cofoundry.Domain.Data;
 using Cofoundry.Domain.Data.Internal;
+using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Cofoundry.Domain.Internal
 {
@@ -20,11 +17,8 @@ namespace Cofoundry.Domain.Internal
         : ICommandHandler<DeletePageDraftVersionCommand>
         , IPermissionRestrictedCommandHandler<DeletePageDraftVersionCommand>
     {
-        #region constructor
-
         private readonly CofoundryDbContext _dbContext;
         private readonly IPageCache _pageCache;
-        private readonly ICommandExecutor _commandExecutor;
         private readonly IMessageAggregator _messageAggregator;
         private readonly ITransactionScopeManager _transactionScopeFactory;
         private readonly IPageStoredProcedures _pageStoredProcedures;
@@ -32,7 +26,6 @@ namespace Cofoundry.Domain.Internal
         public DeletePageDraftVersionCommandHandler(
             CofoundryDbContext dbContext,
             IPageCache pageCache,
-            ICommandExecutor commandExecutor,
             IMessageAggregator messageAggregator,
             ITransactionScopeManager transactionScopeFactory,
             IPageStoredProcedures pageStoredProcedures
@@ -40,13 +33,10 @@ namespace Cofoundry.Domain.Internal
         {
             _dbContext = dbContext;
             _pageCache = pageCache;
-            _commandExecutor = commandExecutor;
             _messageAggregator = messageAggregator;
             _transactionScopeFactory = transactionScopeFactory;
             _pageStoredProcedures = pageStoredProcedures;
         }
-
-        #endregion
 
         public async Task ExecuteAsync(DeletePageDraftVersionCommand command, IExecutionContext executionContext)
         {
@@ -63,12 +53,10 @@ namespace Cofoundry.Domain.Internal
 
                 using (var scope = _transactionScopeFactory.Create(_dbContext))
                 {
-                    await _commandExecutor.ExecuteAsync(new DeleteUnstructuredDataDependenciesCommand(PageVersionEntityDefinition.DefinitionCode, versionId), executionContext);
                     await _dbContext.SaveChangesAsync();
                     await _pageStoredProcedures.UpdatePublishStatusQueryLookupAsync(command.PageId);
 
                     scope.QueueCompletionTask(() => OnTransactionComplete(command, versionId));
-
                     await scope.CompleteAsync();
                 }
             }
@@ -85,13 +73,9 @@ namespace Cofoundry.Domain.Internal
             });
         }
 
-        #region Permission
-
         public IEnumerable<IPermissionApplication> GetPermissions(DeletePageDraftVersionCommand command)
         {
             yield return new PageUpdatePermission();
         }
-
-        #endregion
     }
 }

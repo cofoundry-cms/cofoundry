@@ -2,11 +2,12 @@
 {
     public class TestCustomEntityInfo
     {
+        public string CustomEntityDefinitionCode { get; set; }
+
         public int CustomEntityId { get; set; }
 
-        public string UrlSlug = "test-custom-entity";
+        public string UrlSlug { get; set; }
 
-        public string Title = "Test Custom Entity";
-
+        public string Title { get; set; }
     }
 }

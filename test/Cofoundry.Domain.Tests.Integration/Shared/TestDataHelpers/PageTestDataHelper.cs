@@ -262,6 +262,7 @@ namespace Cofoundry.Domain.Tests.Integration
         /// <summary>
         /// Adds a simple plain text block to a page that uses the generic test template.
         /// </summary>
+        /// <returns>The PageVersionBlockId of the newly created block.</returns>
         public async Task<int> AddPlainTextBlockToTestTemplateAsync(int pageVersionId, string text = "Test Text")
         {
             var template = _seededEntities.TestPageTemplate;
@@ -275,6 +276,7 @@ namespace Cofoundry.Domain.Tests.Integration
         /// <summary>
         /// Adds an image block to a page that uses the generic test template.
         /// </summary>
+        /// <returns>The PageVersionBlockId of the newly created block.</returns>
         public async Task<int> AddImageTextBlockToTestTemplateAsync(int pageVersionId)
         {
             var template = _seededEntities.TestPageTemplate;

@@ -39,7 +39,7 @@ namespace Cofoundry.Web.Tests.Integration
         }
 
         [Route("custom-entity-permission")]
-        [AuthorizePermission(typeof(CustomEntityCreatePermission), TestCustomEntityDefinition.DefinitionCode)]
+        [AuthorizePermission(typeof(CustomEntityCreatePermission), TestCustomEntityDefinition.Code)]
         public IActionResult CustomEntityPermission()
         {
             return Ok();

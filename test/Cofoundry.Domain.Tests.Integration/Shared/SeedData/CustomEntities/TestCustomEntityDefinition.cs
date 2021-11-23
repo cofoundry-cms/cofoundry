@@ -2,11 +2,12 @@
 {
     public class TestCustomEntityDefinition : ICustomEntityDefinition<TestCustomEntityDataModel>
     {
-        public const string DefinitionCode = "TSTENT";
+        public const string Code = "TSTENT";
+        public const string EntityName = "Test Entity";
 
-        public string CustomEntityDefinitionCode => DefinitionCode;
+        public string CustomEntityDefinitionCode => Code;
 
-        public string Name => "Test Entity";
+        public string Name => EntityName;
 
         public string NamePlural => "Test Entities";
 

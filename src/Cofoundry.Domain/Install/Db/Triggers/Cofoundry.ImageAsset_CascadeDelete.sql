@@ -5,6 +5,8 @@ AS
 begin
 	set nocount on;
 	if not exists (select * from deleted) return
+
+	declare @DefinitionCode char(6) = 'COFIMG'
 	
 	-- Dependencies
 
@@ -21,6 +23,11 @@ begin
 	from Cofoundry.ImageAssetTag e
 	inner join deleted d on e.ImageAssetId = d.ImageAssetId
 
+	-- NB: related entity cascade constraints are enforced at the domain layer, so here we just need to clear everything
+	delete from Cofoundry.UnstructuredDataDependency
+	from Cofoundry.UnstructuredDataDependency e
+	inner join deleted d on (e.RootEntityId = d.ImageAssetId and RootEntityDefinitionCode = @DefinitionCode) or (e.RelatedEntityId = d.ImageAssetId and RelatedEntityDefinitionCode = @DefinitionCode)
+	
 	-- Main Table
     delete Cofoundry.ImageAsset
 	from Cofoundry.ImageAsset e

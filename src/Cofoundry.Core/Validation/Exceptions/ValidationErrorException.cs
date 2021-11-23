@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Text;
 
 namespace Cofoundry.Core.Validation
 {
@@ -59,8 +57,6 @@ namespace Cofoundry.Core.Validation
         /// </summary>
         public string ErrorCode { get; private set; }
 
-        #region static creators
-
         /// <summary>
         /// Creates a new ValidationErrorException instance that applies to one or more properties.
         /// </summary>
@@ -115,7 +111,5 @@ namespace Cofoundry.Core.Validation
                 Properties = properties
             });
         }
-
-        #endregion
     }
 }

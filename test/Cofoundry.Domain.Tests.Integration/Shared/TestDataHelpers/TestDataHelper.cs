@@ -55,6 +55,14 @@ namespace Cofoundry.Domain.Tests.Integration
         }
 
         /// <summary>
+        /// Used to make it easier to create unstructured data dependencies in test fixtures.
+        /// </summary>
+        public UnstructuredDataTestDataHelper UnstructuredData()
+        {
+            return new UnstructuredDataTestDataHelper(_rootServiceProvider, _seededEntities);
+        }
+        
+        /// <summary>
         /// Used to make it easier to create users in test fixtures.
         /// </summary>
         public UserTestDataHelper Users()

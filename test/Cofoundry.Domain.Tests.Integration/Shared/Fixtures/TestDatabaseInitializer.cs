@@ -217,17 +217,8 @@ namespace Cofoundry.Domain.Tests.Integration
                 });
 
             // Custom Entities
-
-            seededEntities.TestCustomEntity.CustomEntityId = await contentRepository
-                .CustomEntities()
-                .AddAsync(new AddCustomEntityCommand()
-                {
-                    CustomEntityDefinitionCode = seededEntities.TestCustomEntityDefinition.CustomEntityDefinitionCode,
-                    Model = new TestCustomEntityDataModel(),
-                    Publish = true,
-                    Title = seededEntities.TestCustomEntity.Title,
-                    UrlSlug = seededEntities.TestCustomEntity.UrlSlug
-                });
+            await AddCustomEntity(seededEntities.TestCustomEntity, contentRepository);
+            await AddCustomEntity(seededEntities.CustomEntityForUnstructuredDataTests, contentRepository);
 
             // User areas
 
@@ -235,6 +226,20 @@ namespace Cofoundry.Domain.Tests.Integration
             await InitUserAreaAsync(seededEntities.TestUserArea2, dbContext, contentRepository);
 
             return seededEntities;
+        }
+
+        private static async Task AddCustomEntity(TestCustomEntityInfo customEntity, IAdvancedContentRepository contentRepository)
+        {
+            customEntity.CustomEntityId = await contentRepository
+                .CustomEntities()
+                .AddAsync(new AddCustomEntityCommand()
+                {
+                    CustomEntityDefinitionCode = customEntity.CustomEntityDefinitionCode,
+                    Model = new TestCustomEntityDataModel(),
+                    Publish = true,
+                    Title = customEntity.Title,
+                    UrlSlug = customEntity.UrlSlug
+                });
         }
 
         private async Task InitUserAreaAsync(

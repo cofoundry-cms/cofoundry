@@ -17,11 +17,10 @@ begin
 	from Cofoundry.CustomEntityPublishStatusQuery e
 	inner join deleted d on e.CustomEntityVersionId = d.CustomEntityVersionId
 
-	-- At some point we could allow cascading of deletions, but for now
-	-- we just delete any related entities
+	-- NB: related entity cascade constraints are enforced at the domain layer, so here we just need to clear everything
 	delete from Cofoundry.UnstructuredDataDependency
 	from Cofoundry.UnstructuredDataDependency e
-	inner join deleted d on e.RootEntityId = d.CustomEntityVersionId and RootEntityDefinitionCode = @DefinitionCode
+	inner join deleted d on (e.RootEntityId = d.CustomEntityVersionId and RootEntityDefinitionCode = @DefinitionCode) or (e.RelatedEntityId = d.CustomEntityVersionId and RelatedEntityDefinitionCode = @DefinitionCode)
 
 	-- Main Table
     delete Cofoundry.CustomEntityVersion

@@ -64,7 +64,7 @@ namespace Cofoundry.Domain.Tests.Integration
             var command = new AddCustomEntityCommand()
             {
                 Title = uniqueData,
-                CustomEntityDefinitionCode = TestCustomEntityDefinition.DefinitionCode,
+                CustomEntityDefinitionCode = TestCustomEntityDefinition.Code,
                 Model = new TestCustomEntityDataModel(),
                 UrlSlug = SlugFormatter.ToSlug(uniqueData)
             };

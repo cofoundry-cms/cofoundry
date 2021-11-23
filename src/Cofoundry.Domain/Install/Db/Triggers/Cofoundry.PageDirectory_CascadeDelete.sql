@@ -22,9 +22,12 @@ begin
 	where ParentPageDirectoryId is not null -- ensure root dir is never deleted
 
 	-- Dependencies
+	
+	-- NB: related entity cascade constraints are enforced at the domain layer, so here we just need to clear everything
 	delete from Cofoundry.UnstructuredDataDependency
 	from Cofoundry.UnstructuredDataDependency e
-	inner join @PageDirectoryToDelete d on e.RootEntityId = d.PageDirectoryId and RootEntityDefinitionCode = @DefinitionCode
+	inner join @PageDirectoryToDelete d on (e.RootEntityId = d.PageDirectoryId and RootEntityDefinitionCode = @DefinitionCode) or (e.RelatedEntityId = d.PageDirectoryId and RelatedEntityDefinitionCode = @DefinitionCode)
+	
 
     delete Cofoundry.[Page]
 	from Cofoundry.[Page] e

@@ -15,26 +15,26 @@ namespace Cofoundry.Domain.Internal
     {
         private readonly CofoundryDbContext _dbContext;
         private readonly IPageCache _pageCache;
-        private readonly ICommandExecutor _commandExecutor;
         private readonly IMessageAggregator _messageAggregator;
         private readonly ITransactionScopeManager _transactionScopeFactory;
         private readonly IPageStoredProcedures _pageStoredProcedures;
+        private readonly IDependableEntityDeleteCommandValidator _dependableEntityDeleteCommandValidator;
 
         public DeletePageCommandHandler(
             CofoundryDbContext dbContext,
             IPageCache pageCache,
-            ICommandExecutor commandExecutor,
             IMessageAggregator messageAggregator,
             ITransactionScopeManager transactionScopeFactory,
-            IPageStoredProcedures pageStoredProcedures
+            IPageStoredProcedures pageStoredProcedures,
+            IDependableEntityDeleteCommandValidator dependableEntityDeleteCommandValidator
             )
         {
             _dbContext = dbContext;
             _pageCache = pageCache;
-            _commandExecutor = commandExecutor;
             _messageAggregator = messageAggregator;
             _transactionScopeFactory = transactionScopeFactory;
             _pageStoredProcedures = pageStoredProcedures;
+            _dependableEntityDeleteCommandValidator = dependableEntityDeleteCommandValidator;
         }
 
         public async Task ExecuteAsync(DeletePageCommand command, IExecutionContext executionContext)
@@ -46,16 +46,16 @@ namespace Cofoundry.Domain.Internal
 
             if (page != null)
             {
+                await _dependableEntityDeleteCommandValidator.ValidateAsync(PageEntityDefinition.DefinitionCode, command.PageId, executionContext);
+
                 _dbContext.Pages.Remove(page);
 
                 using (var scope = _transactionScopeFactory.Create(_dbContext))
                 {
-                    await _commandExecutor.ExecuteAsync(new DeleteUnstructuredDataDependenciesCommand(PageEntityDefinition.DefinitionCode, command.PageId), executionContext);
                     await _dbContext.SaveChangesAsync();
                     await _pageStoredProcedures.UpdatePublishStatusQueryLookupAsync(command.PageId);
 
                     scope.QueueCompletionTask(() => OnTransactionComplete(command));
-
                     await scope.CompleteAsync();
                 }
             }
@@ -71,13 +71,9 @@ namespace Cofoundry.Domain.Internal
             });
         }
 
-        #region Permission
-
         public IEnumerable<IPermissionApplication> GetPermissions(DeletePageCommand command)
         {
             yield return new PageDeletePermission();
         }
-
-        #endregion
     }
 }

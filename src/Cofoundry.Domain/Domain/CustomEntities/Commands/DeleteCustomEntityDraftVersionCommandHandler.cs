@@ -1,13 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Cofoundry.Domain.Data;
-using Cofoundry.Domain.CQS;
-using Microsoft.EntityFrameworkCore;
+﻿using Cofoundry.Core.Data;
 using Cofoundry.Core.MessageAggregator;
-using Cofoundry.Core.Data;
+using Cofoundry.Domain.CQS;
+using Cofoundry.Domain.Data;
 using Cofoundry.Domain.Data.Internal;
+using Microsoft.EntityFrameworkCore;
+using System.Threading.Tasks;
 
 namespace Cofoundry.Domain.Internal
 {
@@ -15,12 +12,10 @@ namespace Cofoundry.Domain.Internal
     /// Deletes the draft verison of a custom entity permanently if 
     /// it exists. If no draft exists then no action is taken.
     /// </summary>
-    public class DeleteCustomEntityDraftVersionCommandHandler 
+    public class DeleteCustomEntityDraftVersionCommandHandler
         : ICommandHandler<DeleteCustomEntityDraftVersionCommand>
         , IIgnorePermissionCheckHandler
     {
-        #region constructor
-
         private readonly CofoundryDbContext _dbContext;
         private readonly ICustomEntityCache _customEntityCache;
         private readonly ICommandExecutor _commandExecutor;
@@ -48,14 +43,12 @@ namespace Cofoundry.Domain.Internal
             _customEntityStoredProcedures = customEntityStoredProcedures;
         }
 
-        #endregion
-
         public async Task ExecuteAsync(DeleteCustomEntityDraftVersionCommand command, IExecutionContext executionContext)
         {
             var draft = await _dbContext
                 .CustomEntityVersions
                 .Include(v => v.CustomEntity)
-                .SingleOrDefaultAsync(v => v.CustomEntityId == command.CustomEntityId 
+                .SingleOrDefaultAsync(v => v.CustomEntityId == command.CustomEntityId
                                       && v.WorkFlowStatusId == (int)WorkFlowStatus.Draft);
 
             if (draft != null)
@@ -64,25 +57,22 @@ namespace Cofoundry.Domain.Internal
 
                 var definitionCode = draft.CustomEntity.CustomEntityDefinitionCode;
                 var versionId = draft.CustomEntityVersionId;
+                _dbContext.CustomEntityVersions.Remove(draft);
 
                 using (var scope = _transactionScopeFactory.Create(_dbContext))
                 {
-                    await _commandExecutor.ExecuteAsync(new DeleteUnstructuredDataDependenciesCommand(CustomEntityVersionEntityDefinition.DefinitionCode, draft.CustomEntityVersionId), executionContext);
-
-                    _dbContext.CustomEntityVersions.Remove(draft);
                     await _dbContext.SaveChangesAsync();
                     await _customEntityStoredProcedures.UpdatePublishStatusQueryLookupAsync(command.CustomEntityId);
 
                     scope.QueueCompletionTask(() => OnTransactionComplete(command, definitionCode, versionId));
-
                     await scope.CompleteAsync();
                 }
             }
         }
 
         private Task OnTransactionComplete(
-            DeleteCustomEntityDraftVersionCommand command, 
-            string definitionCode, 
+            DeleteCustomEntityDraftVersionCommand command,
+            string definitionCode,
             int versionId
             )
         {

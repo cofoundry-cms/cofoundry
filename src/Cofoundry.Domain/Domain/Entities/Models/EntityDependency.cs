@@ -1,11 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Cofoundry.Domain
+﻿namespace Cofoundry.Domain
 {
+    /// <summary>
+    /// Represents an entity reference, where this instance forms part of 
+    /// the aggregate of a root entity.
+    /// </summary>
     public class EntityDependency
     {
         public EntityDependency(string entityDefinitionCode, int entityId, bool isRequired)
@@ -13,15 +11,22 @@ namespace Cofoundry.Domain
             EntityDefinitionCode = entityDefinitionCode;
             EntityId = entityId;
 
-            RelatedEntityCascadeAction = isRequired ? RelatedEntityCascadeAction.None : RelatedEntityCascadeAction.CascadeProperty;
+            RelatedEntityCascadeAction = isRequired ? RelatedEntityCascadeAction.None : RelatedEntityCascadeAction.Cascade;
         }
 
+        /// <summary>
+        /// The entity definition code identifier of the entity type this instance
+        /// represents e.g. "COFIMG" for the Cofoundry image entity type.
+        /// </summary>
         public string EntityDefinitionCode { get; set; }
 
+        /// <summary>
+        /// The database identifier for this entity.
+        /// </summary>
         public int EntityId { get; set; }
 
         /// <summary>
-        /// The action to take on the root entity if the related entity is deleted
+        /// The action to take on this entity if the root entity is deleted.
         /// </summary>
         public RelatedEntityCascadeAction RelatedEntityCascadeAction { get; set; }
     }

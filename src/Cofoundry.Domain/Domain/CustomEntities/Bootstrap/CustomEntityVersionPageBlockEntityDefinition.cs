@@ -1,9 +1,5 @@
-﻿using System;
+﻿using Cofoundry.Domain.CQS;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Cofoundry.Domain.CQS;
 
 namespace Cofoundry.Domain
 {
@@ -11,9 +7,9 @@ namespace Cofoundry.Domain
     {
         public static string DefinitionCode = "COFCEB";
 
-        public string EntityDefinitionCode { get { return DefinitionCode; } }
+        public string EntityDefinitionCode => DefinitionCode;
 
-        public string Name { get { return "Custom Entity Version Page Block"; } }
+        public string Name => "Custom Entity Version Page Block";
 
         public IQuery<IDictionary<int, RootEntityMicroSummary>> CreateGetEntityMicroSummariesByIdRangeQuery(IEnumerable<int> ids)
         {

@@ -47,13 +47,29 @@ namespace Cofoundry.Domain.Tests.Integration
         /// </summary>
         public TestUserInfo AdminUser { get; } = new TestUserInfo() { Username = "admin@example.com", Password = "x92Ro01kEpgA" };
 
-        public TestCustomEntityDefinition TestCustomEntityDefinition { get; } = new TestCustomEntityDefinition();
-
         /// <summary>
         /// A basic test custom entity for the <see cref="TestCustomEntityDefinition"/>
         /// type.
         /// </summary>
-        public TestCustomEntityInfo TestCustomEntity { get; set; } = new TestCustomEntityInfo();
+        public TestCustomEntityInfo TestCustomEntity { get; set; } = new TestCustomEntityInfo()
+        {
+            CustomEntityDefinitionCode = TestCustomEntityDefinition.Code,
+            UrlSlug = "test-custom-entity",
+            Title ="Test Custom Entity"
+        };
+
+        /// <summary>
+        /// A dummy custom entity that can be used to for testing unstructured data
+        /// deletions. The entity should not be deleted, but you can assign unstructured data
+        /// relations to it.
+        /// type.
+        /// </summary>
+        public TestCustomEntityInfo CustomEntityForUnstructuredDataTests { get; set; } = new TestCustomEntityInfo()
+        {
+            CustomEntityDefinitionCode = TestCustomEntityDefinition.Code,
+            UrlSlug = "entity-unstructured-data",
+            Title = "Test entity for testing unstructured data dependencies"
+        };
 
         /// <summary>
         /// A test user area with a single role.

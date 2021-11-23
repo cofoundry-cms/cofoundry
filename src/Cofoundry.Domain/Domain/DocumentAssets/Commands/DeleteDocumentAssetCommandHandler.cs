@@ -1,45 +1,38 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Cofoundry.Domain.Data;
-using Cofoundry.Domain.CQS;
-using Microsoft.EntityFrameworkCore;
-using Cofoundry.Core.Data;
+﻿using Cofoundry.Core.Data;
 using Cofoundry.Core.MessageAggregator;
+using Cofoundry.Domain.CQS;
+using Cofoundry.Domain.Data;
+using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
 using System.IO;
+using System.Threading.Tasks;
 
 namespace Cofoundry.Domain.Internal
 {
-    public class DeleteDocumentAssetCommandHandler 
+    public class DeleteDocumentAssetCommandHandler
         : ICommandHandler<DeleteDocumentAssetCommand>
         , IPermissionRestrictedCommandHandler<DeleteDocumentAssetCommand>
     {
-        #region constructor
-
         private readonly CofoundryDbContext _dbContext;
         private readonly ICommandExecutor _commandExecutor;
         private readonly ITransactionScopeManager _transactionScopeFactory;
         private readonly IMessageAggregator _messageAggregator;
-        private readonly IFileStoreService _fileStoreService;
+        private readonly IDependableEntityDeleteCommandValidator _dependableEntityDeleteCommandValidator;
 
         public DeleteDocumentAssetCommandHandler(
             CofoundryDbContext dbContext,
             ICommandExecutor commandExecutor,
             ITransactionScopeManager transactionScopeFactory,
             IMessageAggregator messageAggregator,
-            IFileStoreService fileStoreService
+            IDependableEntityDeleteCommandValidator dependableEntityDeleteCommandValidator
             )
         {
             _dbContext = dbContext;
             _commandExecutor = commandExecutor;
             _transactionScopeFactory = transactionScopeFactory;
             _messageAggregator = messageAggregator;
-            _fileStoreService = fileStoreService;
+            _dependableEntityDeleteCommandValidator = dependableEntityDeleteCommandValidator;
         }
-
-        #endregion
 
         public async Task ExecuteAsync(DeleteDocumentAssetCommand command, IExecutionContext executionContext)
         {
@@ -50,25 +43,22 @@ namespace Cofoundry.Domain.Internal
 
             if (documentAsset != null)
             {
-                _dbContext.DocumentAssets.Remove(documentAsset);
+                await _dependableEntityDeleteCommandValidator.ValidateAsync(DocumentAssetEntityDefinition.DefinitionCode, documentAsset.DocumentAssetId, executionContext);
 
-                var fileName = Path.ChangeExtension(documentAsset.FileNameOnDisk, documentAsset.FileExtension);
-                var deleteUnstructuredDataComand = new DeleteUnstructuredDataDependenciesCommand(DocumentAssetEntityDefinition.DefinitionCode, documentAsset.DocumentAssetId);
                 var deleteFileCommand = new QueueAssetFileDeletionCommand()
                 {
                     EntityDefinitionCode = DocumentAssetEntityDefinition.DefinitionCode,
                     FileNameOnDisk = documentAsset.FileNameOnDisk,
                     FileExtension = documentAsset.FileExtension
                 };
+                _dbContext.DocumentAssets.Remove(documentAsset);
 
                 using (var scope = _transactionScopeFactory.Create(_dbContext))
                 {
                     await _dbContext.SaveChangesAsync();
                     await _commandExecutor.ExecuteAsync(deleteFileCommand, executionContext);
-                    await _commandExecutor.ExecuteAsync(deleteUnstructuredDataComand, executionContext);
 
                     scope.QueueCompletionTask(() => OnTransactionComplete(command));
-
                     await scope.CompleteAsync();
                 }
             }
@@ -82,13 +72,9 @@ namespace Cofoundry.Domain.Internal
             });
         }
 
-        #region Permission
-
         public IEnumerable<IPermissionApplication> GetPermissions(DeleteDocumentAssetCommand command)
         {
             yield return new DocumentAssetDeletePermission();
         }
-
-        #endregion
     }
 }

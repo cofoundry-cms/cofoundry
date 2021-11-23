@@ -8,16 +8,22 @@ using System.Threading.Tasks;
 
 namespace Cofoundry.Domain.Internal
 {
-    public class GetEntityDependencySummaryByRelatedEntityHandler
-        : IQueryHandler<GetEntityDependencySummaryByRelatedEntityQuery, ICollection<EntityDependencySummary>>
-        , IPermissionRestrictedQueryHandler<GetEntityDependencySummaryByRelatedEntityQuery, ICollection<EntityDependencySummary>>
+    /// <summary>
+    /// Returns information about entities that have a dependency on the entity 
+    /// being queried, typically becuase they reference the entity in an 
+    /// unstructured data blob where the relationship cannot be enforced by
+    /// the database.
+    /// </summary>
+    public class GetEntityDependencySummaryByRelatedEntityIdRangeQueryHandler
+        : IQueryHandler<GetEntityDependencySummaryByRelatedEntityIdRangeQuery, ICollection<EntityDependencySummary>>
+        , IPermissionRestrictedQueryHandler<GetEntityDependencySummaryByRelatedEntityIdRangeQuery, ICollection<EntityDependencySummary>>
     {
         private readonly CofoundryDbContext _dbContext;
         private IQueryExecutor _queryExecutor;
         private readonly IEntityDefinitionRepository _entityDefinitionRepository;
         private readonly IPermissionRepository _permissionRepository;
 
-        public GetEntityDependencySummaryByRelatedEntityHandler(
+        public GetEntityDependencySummaryByRelatedEntityIdRangeQueryHandler(
             CofoundryDbContext dbContext,
             IQueryExecutor queryExecutor,
             IEntityDefinitionRepository entityDefinitionRepository,
@@ -30,18 +36,21 @@ namespace Cofoundry.Domain.Internal
             _permissionRepository = permissionRepository;
         }
 
-        public async Task<ICollection<EntityDependencySummary>> ExecuteAsync(GetEntityDependencySummaryByRelatedEntityQuery query, IExecutionContext executionContext)
+        public async Task<ICollection<EntityDependencySummary>> ExecuteAsync(GetEntityDependencySummaryByRelatedEntityIdRangeQuery query, IExecutionContext executionContext)
         {
-            // Where there are duplicates, prioritise relationships that cannot be deleted
-            var dbDependencyPreResult = await _dbContext
+            var dbQuery = _dbContext
                 .UnstructuredDataDependencies
                 .AsNoTracking()
-                .Where(r => r.RelatedEntityDefinitionCode == query.EntityDefinitionCode && r.RelatedEntityId == query.EntityId)
-                .ToListAsync();
+                .FilterByRelatedEntity(query.EntityDefinitionCode, query.EntityIds);
 
-            // Query is split because EF core cannot translate groupings yet
-            var dbDependencyGroups = dbDependencyPreResult
-                .GroupBy(r => new { r.RootEntityDefinitionCode, r.RootEntityId }, (d, e) => e.OrderByDescending(x => x.RelatedEntityCascadeActionId == (int)RelatedEntityCascadeAction.None).FirstOrDefault())
+            if (query.ExcludeDeletable)
+            {
+                dbQuery = dbQuery.Where(r => r.RelatedEntityCascadeActionId == (int)RelatedEntityCascadeAction.None);
+            }
+
+            // Groupby still not suppored in EF 3.1 ¯\_(ツ)_/¯
+            var queryResult = await dbQuery.ToListAsync();
+            var dbDependencyGroups = queryResult
                 .GroupBy(r => r.RootEntityDefinitionCode)
                 .ToList();
 
@@ -53,40 +62,46 @@ namespace Cofoundry.Domain.Internal
                 EntityNotFoundException.ThrowIfNull(definition, dbDependencyGroup.Key);
 
                 var getEntitiesQuery = definition.CreateGetEntityMicroSummariesByIdRangeQuery(dbDependencyGroup.Select(e => e.RootEntityId));
-
                 var entityMicroSummaries = await _queryExecutor.ExecuteAsync(getEntitiesQuery, executionContext);
 
                 foreach (var entityMicroSummary in entityMicroSummaries.OrderBy(e => e.Value.RootEntityTitle))
                 {
                     var dbDependency = dbDependencyGroup.SingleOrDefault(e => e.RootEntityId == entityMicroSummary.Key);
 
-                    var entityDependencySummary = new EntityDependencySummary();
-                    entityDependencySummary.Entity = entityMicroSummary.Value;
-
                     // relations for previous versions can be removed even when they are required.
-                    entityDependencySummary.CanDelete =
-                        dbDependency.RelatedEntityCascadeActionId != (int)RelatedEntityCascadeAction.None
-                        || entityDependencySummary.Entity.IsPreviousVersion;
+                    var canDelete = dbDependency.RelatedEntityCascadeActionId != (int)RelatedEntityCascadeAction.None
+                        || entityMicroSummary.Value.IsPreviousVersion;
 
-                    allRelatedEntities.Add(entityDependencySummary);
+                    if (query.ExcludeDeletable && canDelete)
+                    {
+                        continue;
+                    }
+
+                    allRelatedEntities.Add(new EntityDependencySummary()
+                    {
+                        Entity = entityMicroSummary.Value,
+                        CanDelete = canDelete
+                    });
                 }
             }
 
-            return allRelatedEntities;
+            // filter out duplicates, selecting the more restrictive entity first 
+            var results = allRelatedEntities
+                .GroupBy(e => 
+                    new { e.Entity.EntityDefinitionCode, e.Entity.RootEntityId }, 
+                    (k, v) => v.OrderBy(e => e.CanDelete).ThenBy(e => e.Entity).First())
+                .ToList();
+
+            return results;
         }
 
-        public IEnumerable<IPermissionApplication> GetPermissions(GetEntityDependencySummaryByRelatedEntityQuery query)
+        public IEnumerable<IPermissionApplication> GetPermissions(GetEntityDependencySummaryByRelatedEntityIdRangeQuery query)
         {
             var entityDefinition = _entityDefinitionRepository.GetRequiredByCode(query.EntityDefinitionCode);
             if (entityDefinition == null) yield break;
 
-            // Try and get a read permission for the entity.
             var permission = _permissionRepository.GetByEntityAndPermissionType(entityDefinition, CommonPermissionTypes.Read("Entity"));
-
-            if (permission != null)
-            {
-                yield return permission;
-            }
+            if (permission != null) yield return permission;
         }
     }
 }

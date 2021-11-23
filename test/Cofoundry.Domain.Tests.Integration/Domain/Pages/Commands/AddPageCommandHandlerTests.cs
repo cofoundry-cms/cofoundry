@@ -272,7 +272,7 @@ namespace Cofoundry.Domain.Tests.Integration.Pages.Commands
             {
                 page.Should().NotBeNull();
                 page.PageTypeId.Should().Equals(PageType.CustomEntityDetails);
-                page.CustomEntityDefinitionCode.Should().Equals(TestCustomEntityDefinition.DefinitionCode);
+                page.CustomEntityDefinitionCode.Should().Equals(TestCustomEntityDefinition.Code);
                 page.UrlPath.Should().Equals(addPageCommand.CustomEntityRoutingRule);
             }
         }
