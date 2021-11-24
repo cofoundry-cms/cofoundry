@@ -1,4 +1,5 @@
-﻿using Cofoundry.Domain.Data;
+﻿using Cofoundry.Core;
+using Cofoundry.Domain.Data;
 using Cofoundry.Domain.Tests.Shared;
 using Cofoundry.Domain.Tests.Shared.Assertions;
 using FluentAssertions;
@@ -6,6 +7,7 @@ using FluentAssertions.Execution;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 using Xunit;
@@ -228,6 +230,61 @@ namespace Cofoundry.Domain.Tests.Integration.PageDirectories.Commands
                 .Should()
                 .ThrowAsync<RequiredDependencyConstaintViolationException>()
                 .WithMessage($"Cannot delete * Page Directory * {TestCustomEntityDefinition.EntityName} '{app.SeededEntities.CustomEntityForUnstructuredDataTests.Title}' * dependency*");
+        }
+
+        [Fact]
+        public async Task WhenDeleted_SendsMessages()
+        {
+            var uniqueData = UNIQUE_PREFIX + nameof(WhenDeleted_SendsMessages);
+            var uniqueDataSlug = SlugFormatter.ToSlug(uniqueData);
+            using var app = _appFactory.Create();
+            var directory1Id = await app.TestData.PageDirectories().AddAsync(uniqueData);
+            var directory2Id = await app.TestData.PageDirectories().AddAsync("2", directory1Id);
+            var directory3Id = await app.TestData.PageDirectories().AddAsync("3", directory2Id);
+            var directory1PageId = await app.TestData.Pages().AddAsync("d1p1", directory1Id, c => c.Publish = true);
+            var directory3Page1Id = await app.TestData.Pages().AddAsync("d3p1", directory3Id, c => c.Publish = true);
+            var directory3Page2Id = await app.TestData.Pages().AddAsync("d3p2", directory3Id, c => c.Publish = true);
+
+            var contentRepository = app.Services.GetContentRepositoryWithElevatedPermissions();
+            await contentRepository
+                .PageDirectories()
+                .DeleteAsync(directory1Id);
+
+            var directoryMessages = new Dictionary<int, string>()
+            {
+                { directory1Id, $"/{uniqueDataSlug}" },
+                { directory2Id, $"/{uniqueDataSlug}/2" },
+                { directory3Id, $"/{uniqueDataSlug}/2/3" },
+            };
+
+            var pageMessages = new Dictionary<int, string>()
+            {
+                { directory1PageId, $"/{uniqueDataSlug}/d1p1" },
+                { directory3Page1Id, $"/{uniqueDataSlug}/2/3/d3p1" },
+                { directory3Page2Id, $"/{uniqueDataSlug}/2/3/d3p2" },
+            };
+
+            using (new AssertionScope())
+            {
+                foreach (var message in pageMessages)
+                {
+                    app.Mocks
+                        .CountMessagesPublished<PageDeletedMessage>(m =>
+                        {
+                            return m.PageId == message.Key && m.FullUrlPath == message.Value;
+                        })
+                        .Should().Be(1);
+                }
+                foreach (var message in directoryMessages)
+                {
+                    app.Mocks
+                        .CountMessagesPublished<PageDirectoryDeletedMessage>(m =>
+                        {
+                            return m.PageDirectoryId == message.Key && m.FullUrlPath == message.Value;
+                        })
+                        .Should().Be(1);
+                }
+            }
         }
 
         private async Task<bool> DoesDirectoryExistsAsync(int directoryId)

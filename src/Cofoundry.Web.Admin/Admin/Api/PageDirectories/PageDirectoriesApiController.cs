@@ -22,8 +22,6 @@ namespace Cofoundry.Web.Admin
             _apiResponseHelper = apiResponseHelper;
         }
 
-        #region queries
-
         public async Task<JsonResult> Get()
         {
             var results = await _queryExecutor.ExecuteAsync(new GetAllPageDirectoryRoutesQuery());
@@ -43,10 +41,6 @@ namespace Cofoundry.Web.Admin
             return _apiResponseHelper.SimpleQueryResponse(result);
         }
 
-        #endregion
-
-        #region commands
-
         public Task<JsonResult> Post([FromBody] AddPageDirectoryCommand command)
         {
             return _apiResponseHelper.RunCommandAsync(command);
@@ -57,6 +51,11 @@ namespace Cofoundry.Web.Admin
             return _apiResponseHelper.RunCommandAsync(pageDirectoryId, delta);
         }
 
+        public Task<JsonResult> PutUrl(int pageId, [FromBody] UpdatePageDirectoryUrlCommand command)
+        {
+            return _apiResponseHelper.RunCommandAsync(command);
+        }
+        
         public Task<JsonResult> Delete(int pageDirectoryId)
         {
             var command = new DeletePageDirectoryCommand();
@@ -64,7 +63,5 @@ namespace Cofoundry.Web.Admin
 
             return _apiResponseHelper.RunCommandAsync(command);
         }
-
-        #endregion
     }
 }

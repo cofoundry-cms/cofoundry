@@ -50,6 +50,10 @@ function (
 
         return $http.delete(getIdRoute(pageDirectoryId));
     }
+    service.updateUrl = function (command) {
+
+        return $http.put(getIdRoute(command.pageDirectoryId) + '/url', command);
+    }
 
     service.updateAccessRules = function (command) {
 

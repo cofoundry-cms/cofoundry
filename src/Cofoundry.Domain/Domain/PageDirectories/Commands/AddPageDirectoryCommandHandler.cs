@@ -1,5 +1,6 @@
 ﻿using Cofoundry.Core;
 using Cofoundry.Core.Data;
+using Cofoundry.Core.MessageAggregator;
 using Cofoundry.Core.Validation;
 using Cofoundry.Domain.CQS;
 using Cofoundry.Domain.Data;
@@ -20,6 +21,7 @@ namespace Cofoundry.Domain.Internal
         private readonly IPageDirectoryCache _cache;
         private readonly ITransactionScopeManager _transactionScopeFactory;
         private readonly IPageDirectoryStoredProcedures _pageDirectoryStoredProcedures;
+        private readonly IMessageAggregator _messageAggregator;
 
         public AddPageDirectoryCommandHandler(
             IQueryExecutor queryExecutor,
@@ -27,7 +29,8 @@ namespace Cofoundry.Domain.Internal
             EntityAuditHelper entityAuditHelper,
             IPageDirectoryCache cache,
             ITransactionScopeManager transactionScopeFactory,
-            IPageDirectoryStoredProcedures pageDirectoryStoredProcedures
+            IPageDirectoryStoredProcedures pageDirectoryStoredProcedures,
+            IMessageAggregator messageAggregator
             )
         {
             _dbContext = dbContext;
@@ -36,6 +39,7 @@ namespace Cofoundry.Domain.Internal
             _cache = cache;
             _transactionScopeFactory = transactionScopeFactory;
             _pageDirectoryStoredProcedures = pageDirectoryStoredProcedures;
+            _messageAggregator = messageAggregator;
         }
 
         public async Task ExecuteAsync(AddPageDirectoryCommand command, IExecutionContext executionContext)
@@ -56,11 +60,21 @@ namespace Cofoundry.Domain.Internal
                 await _dbContext.SaveChangesAsync();
                 await _pageDirectoryStoredProcedures.UpdatePageDirectoryClosureAsync();
 
-                scope.QueueCompletionTask(_cache.Clear);
+                scope.QueueCompletionTask(() => OnTransactionComplete(pageDirectory.PageDirectoryId));
                 await scope.CompleteAsync();
             }
 
             command.OutputPageDirectoryId = pageDirectory.PageDirectoryId;
+        }
+
+        private async Task OnTransactionComplete(int pageDirectoryId)
+        {
+            _cache.Clear();
+
+            await _messageAggregator.PublishAsync(new PageDirectoryAddedMessage() 
+            { 
+                PageDirectoryId = pageDirectoryId
+            });
         }
 
         private async Task<PageDirectory> GetParentDirectoryAsync(AddPageDirectoryCommand command)

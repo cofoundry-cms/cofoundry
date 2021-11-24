@@ -42,6 +42,11 @@ namespace Cofoundry.Domain.Internal
             return ExtendableContentRepository.ExecuteCommandAsync(command);
         }
 
+        public Task UpdateUrlAsync(UpdatePageDirectoryUrlCommand command)
+        {
+            return ExtendableContentRepository.ExecuteCommandAsync(command);
+        }
+
         public Task DeleteAsync(int PageDirectoryId)
         {
             var command = new DeletePageDirectoryCommand()

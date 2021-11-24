@@ -171,5 +171,23 @@ when not matched by target then
 	values (PageDirectoryId, FullUrlPath, Depth)
 when not matched by source then
 	delete;
+go
 
+/* 
+	#463: Page Directories: extract ChangePageUrlCommand from UpdatePageDirectoryCommand
+*/
 
+declare @UpdateUrlPermissionId int
+insert into Cofoundry.Permission (EntityDefinitionCode, PermissionCode) values ('COFDIR', 'UPDURL')
+set @UpdateUrlPermissionId = SCOPE_IDENTITY()
+
+-- Ensure anyone that had update permission also gets the new update url permission
+insert into Cofoundry.RolePermission (RoleId, PermissionId)
+select RoleId, @UpdateUrlPermissionId
+from Cofoundry.RolePermission rp
+inner join Cofoundry.Permission p on rp.PermissionId = p.PermissionId
+where p.EntityDefinitionCode = 'COFDIR' and p.PermissionCode = 'COMUPD'
+go
+-- Add missing constraint here to prevent self-referencing directories
+alter table Cofoundry.PageDirectory add constraint CK_PageDirectory_ParentNotSelf check (ParentPageDirectoryID <> PageDirectoryId)
+go

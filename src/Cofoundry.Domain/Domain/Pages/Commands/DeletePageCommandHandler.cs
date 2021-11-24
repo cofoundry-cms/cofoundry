@@ -1,4 +1,5 @@
-﻿using Cofoundry.Core.Data;
+﻿using Cofoundry.Core;
+using Cofoundry.Core.Data;
 using Cofoundry.Core.MessageAggregator;
 using Cofoundry.Domain.CQS;
 using Cofoundry.Domain.Data;
@@ -14,6 +15,7 @@ namespace Cofoundry.Domain.Internal
         , IPermissionRestrictedCommandHandler<DeletePageCommand>
     {
         private readonly CofoundryDbContext _dbContext;
+        private readonly IQueryExecutor _queryExecutor;
         private readonly IPageCache _pageCache;
         private readonly IMessageAggregator _messageAggregator;
         private readonly ITransactionScopeManager _transactionScopeFactory;
@@ -22,6 +24,7 @@ namespace Cofoundry.Domain.Internal
 
         public DeletePageCommandHandler(
             CofoundryDbContext dbContext,
+            IQueryExecutor queryExecutor,
             IPageCache pageCache,
             IMessageAggregator messageAggregator,
             ITransactionScopeManager transactionScopeFactory,
@@ -30,6 +33,7 @@ namespace Cofoundry.Domain.Internal
             )
         {
             _dbContext = dbContext;
+            _queryExecutor = queryExecutor;
             _pageCache = pageCache;
             _messageAggregator = messageAggregator;
             _transactionScopeFactory = transactionScopeFactory;
@@ -44,30 +48,33 @@ namespace Cofoundry.Domain.Internal
                 .FilterById(command.PageId)
                 .SingleOrDefaultAsync();
 
-            if (page != null)
+            if (page == null) return;
+
+            var pageRoute = await _queryExecutor.ExecuteAsync(new GetPageRouteByIdQuery(page.PageId), executionContext);
+            EntityNotFoundException.ThrowIfNull(pageRoute, command.PageId);
+
+            await _dependableEntityDeleteCommandValidator.ValidateAsync(PageEntityDefinition.DefinitionCode, command.PageId, executionContext);
+
+            _dbContext.Pages.Remove(page);
+
+            using (var scope = _transactionScopeFactory.Create(_dbContext))
             {
-                await _dependableEntityDeleteCommandValidator.ValidateAsync(PageEntityDefinition.DefinitionCode, command.PageId, executionContext);
+                await _dbContext.SaveChangesAsync();
+                await _pageStoredProcedures.UpdatePublishStatusQueryLookupAsync(command.PageId);
 
-                _dbContext.Pages.Remove(page);
-
-                using (var scope = _transactionScopeFactory.Create(_dbContext))
-                {
-                    await _dbContext.SaveChangesAsync();
-                    await _pageStoredProcedures.UpdatePublishStatusQueryLookupAsync(command.PageId);
-
-                    scope.QueueCompletionTask(() => OnTransactionComplete(command));
-                    await scope.CompleteAsync();
-                }
+                scope.QueueCompletionTask(() => OnTransactionComplete(pageRoute));
+                await scope.CompleteAsync();
             }
         }
 
-        private Task OnTransactionComplete(DeletePageCommand command)
+        private Task OnTransactionComplete(PageRoute page)
         {
-            _pageCache.Clear(command.PageId);
+            _pageCache.Clear(page.PageId);
 
             return _messageAggregator.PublishAsync(new PageDeletedMessage()
             {
-                PageId = command.PageId
+                PageId = page.PageId,
+                FullUrlPath = page.FullPath
             });
         }
 

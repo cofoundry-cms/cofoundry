@@ -203,6 +203,7 @@ namespace Cofoundry.Domain.Tests.Integration.Pages.Commands
         public async Task WhenUrlUpdated_SendsCorrectMessage(bool isPublished)
         {
             var uniqueData = UNIQUE_PREFIX + nameof(WhenUrlUpdated_SendsCorrectMessage) + isPublished.ToString()[0];
+            var uniqueDataSlug = SlugFormatter.ToSlug(uniqueData);
 
             using var app = _appFactory.Create();
             var directoryId = await app.TestData.PageDirectories().AddAsync(uniqueData);
@@ -221,7 +222,12 @@ namespace Cofoundry.Domain.Tests.Integration.Pages.Commands
                 });
 
             app.Mocks
-                .CountMessagesPublished<PageUrlChangedMessage>(m => m.PageId == pageId && m.HasPublishedVersionChanged == isPublished)
+                .CountMessagesPublished<PageUrlChangedMessage>(m =>
+                {
+                    return m.PageId == pageId
+                        && m.HasPublishedVersionChanged == isPublished
+                        && m.OldFullUrlPath == $"/{uniqueDataSlug}/{uniqueDataSlug}";
+                })
                 .Should().Be(1);
         }
     }

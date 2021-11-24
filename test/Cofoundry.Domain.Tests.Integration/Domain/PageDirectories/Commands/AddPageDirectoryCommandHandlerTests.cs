@@ -198,5 +198,23 @@ namespace Cofoundry.Domain.Tests.Integration.PageDirectories.Commands
                 directoryPath.FullUrlPath.Should().Be($"{sluggedPath}/red/blue/green");
             }
         }
+
+        [Fact]
+        public async Task WhenAdded_SendsMessage()
+        {
+            var uniqueData = UNIQUE_PREFIX + nameof(WhenAdded_SendsMessage);
+
+            using var app = _appFactory.Create();
+            var command = await app.TestData.PageDirectories().CreateAddCommandAsync(uniqueData);
+
+            var contentRepository = app.Services.GetContentRepositoryWithElevatedPermissions();
+            await contentRepository
+                .PageDirectories()
+                .AddAsync(command);
+
+            app.Mocks
+                .CountMessagesPublished<PageDirectoryAddedMessage>(m => m.PageDirectoryId == command.OutputPageDirectoryId)
+                .Should().Be(1);
+        }
     }
 }

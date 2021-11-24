@@ -1,16 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Globalization;
-using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Cofoundry.Core.Validation
 {
     /// <summary>
-    /// Ensures a propertys value does not match another properties value.
+    /// Ensures a property value does not match another properties value.
     /// </summary>
     /// <remarks>
     /// Adapted from http://stackoverflow.com/a/5742494/716689

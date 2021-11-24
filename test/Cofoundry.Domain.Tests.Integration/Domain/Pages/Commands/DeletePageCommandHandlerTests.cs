@@ -1,4 +1,5 @@
-﻿using Cofoundry.Domain.Data;
+﻿using Cofoundry.Core;
+using Cofoundry.Domain.Data;
 using FluentAssertions;
 using FluentAssertions.Execution;
 using Microsoft.EntityFrameworkCore;
@@ -141,7 +142,7 @@ namespace Cofoundry.Domain.Tests.Integration.Pages.Commands
         public async Task WhenDeleted_SendsMessage()
         {
             var uniqueData = UNIQUE_PREFIX + nameof(WhenDeleted_SendsMessage);
-
+            var uniqueDataSlug = SlugFormatter.ToSlug(uniqueData);
             using var app = _appFactory.Create();
             var directoryId = await app.TestData.PageDirectories().AddAsync(uniqueData);
             var pageId = await app.TestData.Pages().AddAsync(uniqueData, directoryId, c => c.Publish = true);
@@ -152,7 +153,10 @@ namespace Cofoundry.Domain.Tests.Integration.Pages.Commands
                 .DeleteAsync(pageId);
 
             app.Mocks
-                .CountMessagesPublished<PageDeletedMessage>(m => m.PageId == pageId)
+                .CountMessagesPublished<PageDeletedMessage>(m => 
+                {
+                    return m.PageId == pageId && m.FullUrlPath == $"/{uniqueDataSlug}/{uniqueDataSlug}";
+                })
                 .Should().Be(1);
         }
     }

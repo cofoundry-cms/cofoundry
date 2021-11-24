@@ -45,8 +45,6 @@ namespace Cofoundry.Domain.Tests.Integration.PageDirectories.Queries
                 command.Should().NotBeNull();
                 command.Name.Should().Be(addDirectoryCommand.Name);
                 command.PageDirectoryId.Should().Be(addDirectoryCommand.OutputPageDirectoryId);
-                command.ParentPageDirectoryId.Should().Be(parentDirectoryId);
-                command.UrlPath.Should().Be(command.UrlPath);
             }
         }
 

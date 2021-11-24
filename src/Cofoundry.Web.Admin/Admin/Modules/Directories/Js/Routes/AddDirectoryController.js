@@ -39,8 +39,6 @@ function (
             .then(redirectToList, vm.globalLoadState.off);
     }
 
-    /* PRIVATE FUNCS */
-
     function onDirectoriesLoaded() {
         vm.formLoadState.off();
     }
@@ -52,6 +50,8 @@ function (
     function cancel() {
         redirectToList();
     }
+
+    /* PRIVATE FUNCS */
 
     function redirectToList() {
         $location.path('/');

@@ -32,11 +32,20 @@ namespace Cofoundry.Domain
         Task<int> AddAsync(AddPageDirectoryCommand command);
 
         /// <summary>
-        /// Updates the properties of an existing page directory, including
-        /// properties to configure the directory path an hierarchy.
+        /// Updates the main properties of an existing page directory. To
+        /// update properties that affect the route, use <see cref="UpdateUrlAsync"/>.
         /// </summary>
         /// <param name="command">Command parameters.</param>
         Task UpdateAsync(UpdatePageDirectoryCommand command);
+
+        /// <summary>
+        /// Updates the url of a page directory. Changing a directory url
+        /// will cause the url of any child directories or pages to change. The command
+        /// will publish an <see cref="PageDirectoryUrlChangedMessage"/> or <see cref="PageUrlChangedMessage"/>
+        /// for any affected directories or pages.
+        /// </summary>
+        /// <param name="command">Command parameters.</param>
+        Task UpdateUrlAsync(UpdatePageDirectoryUrlCommand command);
 
         /// <summary>
         /// Removes a page directory from the system. The root directory cannot

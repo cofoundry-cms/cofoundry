@@ -1,8 +1,4 @@
 ﻿using Cofoundry.Domain.Extendable;
-using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Cofoundry.Domain.Internal
 {
@@ -19,18 +15,14 @@ namespace Cofoundry.Domain.Internal
 
         public IExtendableContentRepository ExtendableContentRepository { get; }
 
-        #region queries
-
-        public IContentRepositoryPageDirectoryByIdQueryBuilder GetById(int imageAssetId)
+        public IContentRepositoryPageDirectoryByIdQueryBuilder GetById(int pageDirectoryId)
         {
-            return new ContentRepositoryPageDirectoryByIdQueryBuilder(ExtendableContentRepository, imageAssetId);
+            return new ContentRepositoryPageDirectoryByIdQueryBuilder(ExtendableContentRepository, pageDirectoryId);
         }
 
         public IContentRepositoryPageDirectoryGetAllQueryBuilder GetAll()
         {
             return new ContentRepositoryPageDirectoryGetAllQueryBuilder(ExtendableContentRepository);
         }
-
-        #endregion
     }
 }

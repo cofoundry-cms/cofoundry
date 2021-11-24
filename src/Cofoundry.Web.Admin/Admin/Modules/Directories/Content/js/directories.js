@@ -65,6 +65,10 @@ function (
 
         return $http.delete(getIdRoute(pageDirectoryId));
     }
+    service.updateUrl = function (command) {
+
+        return $http.put(getIdRoute(command.pageDirectoryId) + '/url', command);
+    }
 
     service.updateAccessRules = function (command) {
 
@@ -178,6 +182,62 @@ function (
     }
 
 }]);
+angular.module('cms.directories').controller('ChangeDirectoryUrlController', [
+    '$scope',
+    '$q',
+    'shared.LoadState',
+    'directories.directoryService',
+    'options',
+    'close',
+function (
+    $scope,
+    $q,
+    LoadState,
+    directoryService,
+    options,
+    close) {
+
+    var vm = $scope;
+
+    init();
+    
+    /* INIT */
+
+    function init() {
+
+        initData();
+
+        vm.submitLoadState = new LoadState();
+
+        vm.save = save;
+        vm.close = close;
+    }
+
+    function initData() {
+        var pageDirectory = options.pageDirectory;
+
+        vm.pageDirectory = pageDirectory;
+        vm.selectableParentDirectories = options.selectableParentDirectories;
+        vm.hasChildContent = options.hasChildContent;
+        vm.command = {
+            pageDirectoryId: pageDirectory.pageDirectoryId,
+            urlPath: pageDirectory.urlPath,
+            parentPageDirectoryId: pageDirectory.parentPageDirectoryId
+        };
+    }
+
+    /* EVENTS */
+
+    function save() {
+        vm.submitLoadState.on();
+
+        directoryService
+            .updateUrl(vm.command)
+            .then(options.onSave)
+            .then(close)
+            .finally(vm.submitLoadState.off);
+    }
+}]);
 angular.module('cms.directories').controller('AddDirectoryController', [
     '$location',
     'shared.stringUtilities',
@@ -219,8 +279,6 @@ function (
             .then(redirectToList, vm.globalLoadState.off);
     }
 
-    /* PRIVATE FUNCS */
-
     function onDirectoriesLoaded() {
         vm.formLoadState.off();
     }
@@ -232,6 +290,8 @@ function (
     function cancel() {
         redirectToList();
     }
+
+    /* PRIVATE FUNCS */
 
     function redirectToList() {
         $location.path('/');
@@ -246,24 +306,24 @@ angular.module('cms.directories').controller('DirectoryDetailsController', [
     '$q',
     '$location',
     '_',
-    'shared.stringUtilities',
     'shared.LoadState',
     'shared.modalDialogService',
     'shared.permissionValidationService',
     'shared.userAreaService',
     'shared.internalModulePath',
+    'directories.modulePath',
     'directories.directoryService',
 function (
     $routeParams,
     $q,
     $location,
     _,
-    stringUtilities,
     LoadState,
     modalDialogService,
     permissionValidationService,
     userAreaService,
     sharedModulePath,
+    modulePath,
     directoryService
     ) {
 
@@ -284,7 +344,7 @@ function (
         vm.viewAccessRules = viewAccessRules;
 
         // Events
-        vm.onNameChanged = onNameChanged;
+        vm.changeUrl = changeUrl;
 
         // Properties
         vm.editMode = false;
@@ -293,6 +353,7 @@ function (
         vm.formLoadState = new LoadState(true);
 
         vm.canUpdate = permissionValidationService.canUpdate(ENTITY_DEFINITION_CODE);
+        vm.canUpdateUrl = permissionValidationService.hasPermission(ENTITY_DEFINITION_CODE + 'UPDURL');
         vm.canDelete = permissionValidationService.canDelete(ENTITY_DEFINITION_CODE);
 
         // Init
@@ -360,12 +421,18 @@ function (
         }
     }
 
-    /* EVENTS */
+    function changeUrl() {
 
-    function onNameChanged() {
-        if (!vm.hasChildContent) {
-            vm.command.urlPath = stringUtilities.slugify(vm.command.name);
-        }
+        modalDialogService.show({
+            templateUrl: modulePath + 'Routes/Modals/ChangeDirectoryUrl.html',
+            controller: 'ChangeDirectoryUrlController',
+            options: {
+                pageDirectory: vm.pageDirectory,
+                selectableParentDirectories: vm.selectableParentDirectories,
+                hasChildContent: vm.hasChildContent,
+                onSave: onSuccess.bind(null, 'Url Changed')
+            }
+        });
     }
 
     /* PRIVATE FUNCS */
@@ -386,11 +453,11 @@ function (
             return directoryService
                 .getTree()
                 .then(function loadDirectory(tree) {
-                    var pageDirectory = tree.findNodeById(pageDirectoryId),
-                        parentDirectories = tree.flatten(pageDirectoryId);
+                    var pageDirectory = tree.findNodeById(pageDirectoryId);
         
                     vm.pageDirectory = pageDirectory;
-                    vm.parentDirectories = parentDirectories;
+                    vm.parentDirectory = tree.findNodeById(pageDirectory.parentPageDirectoryId);
+                    vm.selectableParentDirectories = tree.flatten(pageDirectoryId);
                     vm.command = mapUpdateCommand(pageDirectory);
                     vm.editMode = false;
                     vm.hasChildContent = pageDirectory.numPages || pageDirectory.childPageDirectories.length;

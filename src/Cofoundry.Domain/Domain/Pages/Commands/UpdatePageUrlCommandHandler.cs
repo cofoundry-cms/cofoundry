@@ -48,21 +48,24 @@ namespace Cofoundry.Domain.Internal
 
             await ValidateIsPageUniqueAsync(command, page, executionContext);
 
+            var originalPageRoute = await _queryExecutor.ExecuteAsync(new GetPageRouteByIdQuery(page.PageId));
+            EntityNotFoundException.ThrowIfNull(originalPageRoute, page.PageId);
+
             await MapPageAsync(command, executionContext, page);
             var isPublished = page.PublishStatusCode == PublishStatusCode.Published;
 
             await _dbContext.SaveChangesAsync();
-
-            await _transactionScopeFactory.QueueCompletionTaskAsync(_dbContext, () => OnTransactionComplete(command, isPublished));
+            await _transactionScopeFactory.QueueCompletionTaskAsync(_dbContext, () => OnTransactionComplete(originalPageRoute, isPublished));
         }
 
-        private Task OnTransactionComplete(UpdatePageUrlCommand command, bool isPublished)
+        private Task OnTransactionComplete(PageRoute oldPageRoute, bool isPublished)
         {
-            _pageCache.Clear(command.PageId);
+            _pageCache.Clear(oldPageRoute.PageId);
 
             return _messageAggregator.PublishAsync(new PageUrlChangedMessage()
             {
-                PageId = command.PageId,
+                PageId = oldPageRoute.PageId,
+                OldFullUrlPath = oldPageRoute.FullPath,
                 HasPublishedVersionChanged = isPublished
             });
         }

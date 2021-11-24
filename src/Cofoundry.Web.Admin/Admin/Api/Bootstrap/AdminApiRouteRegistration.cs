@@ -174,6 +174,7 @@ namespace Cofoundry.Web.Admin
                 .MapPost()
                 .MapPatch(pageDirectoryIdRoute)
                 .MapDelete(pageDirectoryIdRoute)
+                .MapPut(pageDirectoryIdRoute + "/url", "PutUrl")
                 ;
 
             routeBuilder

@@ -26,7 +26,7 @@ namespace Cofoundry.Domain.Internal
             var dbResult = await _dbContext
                 .PageDirectories
                 .AsNoTracking()
-                .Where(w => w.PageDirectoryId == query.Id)
+                .FilterById(query.Id)
                 .SingleOrDefaultAsync();
 
             EntityNotFoundException.ThrowIfNull(dbResult, query.Id);
@@ -39,9 +39,7 @@ namespace Cofoundry.Domain.Internal
             var command = new UpdatePageDirectoryCommand()
             {
                 Name = dbResult.Name,
-                PageDirectoryId = dbResult.PageDirectoryId,
-                ParentPageDirectoryId = dbResult.ParentPageDirectoryId.Value,
-                UrlPath = dbResult.UrlPath
+                PageDirectoryId = dbResult.PageDirectoryId
             };
 
             return command;
