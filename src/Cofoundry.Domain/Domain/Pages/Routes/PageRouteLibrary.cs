@@ -44,7 +44,7 @@ namespace Cofoundry.Domain.Internal
         public string Page(IPageRoute route)
         {
             if (route == null) return string.Empty;
-            return route.FullPath;
+            return route.FullUrlPath;
         }
 
         /// <summary>

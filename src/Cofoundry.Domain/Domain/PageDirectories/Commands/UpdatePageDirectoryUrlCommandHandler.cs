@@ -160,7 +160,7 @@ namespace Cofoundry.Domain.Internal
                 var result = new PageUrlChangedMessage()
                 {
                     PageId = affectedPage.PageId,
-                    OldFullUrlPath = affectedPage.FullPath,
+                    OldFullUrlPath = affectedPage.FullUrlPath,
                     HasPublishedVersionChanged = affectedPage.PublishStatus == PublishStatus.Published
                 };
 

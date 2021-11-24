@@ -97,7 +97,7 @@ namespace Cofoundry.Web.Tests.Integration.Controllers
             using var app = _webApplicationFactory.CreateApp();
 
             var page = app.SeededEntities.TestDirectory.GenericPage;
-            var result = await client.GetAsync(page.FullPath);
+            var result = await client.GetAsync(page.FullUrlPath);
             var content = await result.Content.ReadAsStringAsync();
 
             result.StatusCode.Should().Be(HttpStatusCode.OK);

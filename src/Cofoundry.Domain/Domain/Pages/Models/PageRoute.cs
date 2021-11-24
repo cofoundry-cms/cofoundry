@@ -37,7 +37,7 @@ namespace Cofoundry.Domain
         /// includes the leading slash, but excludes a trailing slash 
         /// e.g. "/my-directory/my-page".
         /// </summary>
-        public string FullPath { get; set; }
+        public string FullUrlPath { get; set; }
 
         /// <summary>
         /// The title of the page for the currently published version, falling

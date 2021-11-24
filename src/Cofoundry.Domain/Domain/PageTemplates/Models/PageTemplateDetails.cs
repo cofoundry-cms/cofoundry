@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Cofoundry.Domain
 {
@@ -14,34 +11,34 @@ namespace Cofoundry.Domain
     public class PageTemplateDetails
     {
         /// <summary>
-        /// The database id of the template
+        /// The database id of the template.
         /// </summary>
         public int PageTemplateId { get; set; }
 
         /// <summary>
-        /// File name excluding extension and any leading underscores
+        /// File name excluding extension and any leading underscores.
         /// </summary>
         public string FileName { get; set; }
 
         /// <summary>
         /// Human readable display name. This is unique, so to avoid 
-        /// confusion when selecting a template from a list
+        /// confusion when selecting a template from a list.
         /// </summary>
         public string Name { get; set; }
 
         /// <summary>
-        /// Long description, nullable and can be empty
+        /// Long description, nullable and can be empty.
         /// </summary>
         public string Description { get; set; }
 
         /// <summary>
         /// Full virtual path to the view file including the filename. This will
-        /// be unique
+        /// be unique.
         /// </summary>
         public string FullPath { get; set; }
 
         /// <summary>
-        /// The number of pages that use this template
+        /// The number of pages that use this template.
         /// </summary>
         public int NumPages { get; set; }
 
@@ -84,8 +81,6 @@ namespace Cofoundry.Domain
         /// </summary>
         public bool IsArchived { get; set; }
 
-        #region Auditing
-
         /// <summary>
         /// The date the template was created
         /// </summary>
@@ -95,7 +90,5 @@ namespace Cofoundry.Domain
         /// The date the template was last updated
         /// </summary>
         public DateTime UpdateDate { get; set; }
-
-        #endregion
     }
 }

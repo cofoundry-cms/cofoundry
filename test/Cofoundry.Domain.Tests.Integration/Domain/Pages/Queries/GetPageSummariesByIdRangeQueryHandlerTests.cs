@@ -132,7 +132,7 @@ namespace Cofoundry.Domain.Tests.Integration.Pages.Queries
             page.AuditData.Creator.Should().NotBeNull();
             page.AuditData.Creator.UserId.Should().BePositive();
 
-            page.FullPath.Should().Be($"/{sluggedUniqueData}/{addPageCommand.UrlPath}");
+            page.FullUrlPath.Should().Be($"/{sluggedUniqueData}/{addPageCommand.UrlPath}");
 
             page.Should().NotBeNull();
             page.HasDraftVersion.Should().BeFalse();

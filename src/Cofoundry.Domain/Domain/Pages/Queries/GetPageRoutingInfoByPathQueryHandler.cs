@@ -36,10 +36,10 @@ namespace Cofoundry.Domain.Internal
             var allRoutes = await _queryExecutor.ExecuteAsync(new GetAllPageRoutesQuery(), executionContext);
 
             var pageRoutes = allRoutes
-                .Where(r => r.FullPath.Equals(path) || (r.PageType == PageType.CustomEntityDetails && IsCustomRoutingMatch(path, r.FullPath)))
+                .Where(r => r.FullUrlPath.Equals(path) || (r.PageType == PageType.CustomEntityDetails && IsCustomRoutingMatch(path, r.FullUrlPath)))
                 .Where(r => query.IncludeUnpublished || r.IsPublished())
                 .Where(r => r.Locale == null || MatchesLocale(r.Locale, query.LocaleId))
-                .OrderByDescending(r => r.FullPath.Equals(path))
+                .OrderByDescending(r => r.FullUrlPath.Equals(path))
                 .ThenByDescending(r => MatchesLocale(r.Locale, query.LocaleId))
                 .ToList();
 

@@ -123,7 +123,7 @@ namespace Cofoundry.Domain.Internal
                 var result = new PageDeletedMessage()
                 {
                     PageId = pageToDelete.PageId,
-                    FullUrlPath = pageToDelete.FullPath
+                    FullUrlPath = pageToDelete.FullUrlPath
                 };
 
                 results.Add(result.PageId, result);

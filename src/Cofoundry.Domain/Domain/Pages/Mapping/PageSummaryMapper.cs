@@ -63,7 +63,7 @@ namespace Cofoundry.Domain.Internal
 
                 var page = new PageSummary()
                 {
-                    FullPath = pageRoute.FullPath,
+                    FullUrlPath = pageRoute.FullUrlPath,
                     HasDraftVersion = pageRoute.HasDraftVersion,
                     HasPublishedVersion = pageRoute.HasPublishedVersion,
                     PublishDate = pageRoute.PublishDate,

@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Cofoundry.Domain
 {
@@ -56,7 +52,7 @@ namespace Cofoundry.Domain
         /// <summary>
         /// The full path of the default details page. 
         /// </summary>
-        public string FullPath { get; set; }
+        public string FullUrlPath { get; set; }
 
         /// <summary>
         /// Data for the latest version of the custom entity, which is not

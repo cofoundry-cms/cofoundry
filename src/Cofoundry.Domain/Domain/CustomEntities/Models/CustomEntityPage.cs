@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace Cofoundry.Domain
 {
@@ -21,7 +17,7 @@ namespace Cofoundry.Domain
         /// <summary>
         /// The full path of the page including directories and the locale. 
         /// </summary>
-        public string FullPath { get; set; }
+        public string FullUrlPath { get; set; }
 
         /// <summary>
         /// All region and block data for this custom entity page.

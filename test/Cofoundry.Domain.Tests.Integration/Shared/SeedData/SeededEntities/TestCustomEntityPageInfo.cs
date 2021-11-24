@@ -4,7 +4,7 @@
     {
         public TestGenericPageInfo(TestDirectoryInfo directory)
         {
-            FullPath = directory.FullPath + "/" + UrlPath;
+            FullUrlPath = directory.FullPath + "/" + UrlPath;
         }
 
         public int PageId { get; set; }
@@ -13,6 +13,6 @@
 
         public string Title = "Test Page with Generic Template";
 
-        public string FullPath { get; private set; }
+        public string FullUrlPath { get; private set; }
     }
 }

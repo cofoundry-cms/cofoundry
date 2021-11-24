@@ -25,6 +25,6 @@ namespace Cofoundry.Domain
         /// The url is formatted with the leading slash, but excluding the trailing 
         /// slash e.g. "/my-directory/example-page".
         /// </summary
-        public PathString OldFullUrlPath { get; set; }
+        public string OldFullUrlPath { get; set; }
     }
 }

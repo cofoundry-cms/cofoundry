@@ -105,7 +105,7 @@ namespace Cofoundry.Domain
             if (pageRoute == null) throw new ArgumentNullException(nameof(pageRoute));
             if (entityRoute == null) throw new ArgumentNullException(nameof(entityRoute));
 
-            return pageRoute.FullPath.Replace(RouteFormat, entityRoute.UrlSlug);
+            return pageRoute.FullUrlPath.Replace(RouteFormat, entityRoute.UrlSlug);
         }
 
         /// <summary>
@@ -115,9 +115,9 @@ namespace Cofoundry.Domain
         /// </summary>
         private string GetRoutingPart(string url, PageRoute pageRoute)
         {
-            if (pageRoute.FullPath.IndexOf(RouteFormat) == -1) return null;
+            if (pageRoute.FullUrlPath.IndexOf(RouteFormat) == -1) return null;
 
-            var pathRoot = pageRoute.FullPath.Replace(RouteFormat, string.Empty);
+            var pathRoot = pageRoute.FullUrlPath.Replace(RouteFormat, string.Empty);
             // if not found or there are other parameters in the route path not resolved.
             if (pathRoot.Contains('{')) return null;
 

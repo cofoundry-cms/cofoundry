@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Cofoundry.Domain
 {
@@ -18,7 +15,7 @@ namespace Cofoundry.Domain
         /// Database id of the page record.
         /// </summary>
         public int PageId { get; set; }
-        
+
         /// <summary>
         /// The path of the page within the directory.
         /// </summary>
@@ -27,7 +24,7 @@ namespace Cofoundry.Domain
         /// <summary>
         /// The full path of the page including directories and the locale. 
         /// </summary>
-        public string FullPath { get; set; }
+        public string FullUrlPath { get; set; }
 
         /// <summary>
         /// Indicates if the page is marked as published or not, which allows the page

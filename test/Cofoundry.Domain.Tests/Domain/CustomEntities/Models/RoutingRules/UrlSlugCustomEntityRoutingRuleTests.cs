@@ -17,7 +17,7 @@ namespace Cofoundry.Domain.Tests.Domain.CustomEntities.RoutingRules
             _rule = new UrlSlugCustomEntityRoutingRule();
             _pageRoute = new PageRoute()
             {
-                FullPath = PATH + _rule.RouteFormat,
+                FullUrlPath = PATH + _rule.RouteFormat,
                 CustomEntityDefinitionCode = "TSTCDE",
                 Locale = new ActiveLocale()
                 {

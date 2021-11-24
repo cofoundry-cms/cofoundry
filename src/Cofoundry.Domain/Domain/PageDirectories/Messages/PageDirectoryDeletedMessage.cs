@@ -19,6 +19,6 @@ namespace Cofoundry.Domain
         /// The full (relative) url of the deleted directory with the leading
         /// slash, but excluding the trailing slash e.g. "/parent-directory/child-directory".
         /// </summary
-        public PathString FullUrlPath { get; set; }
+        public string FullUrlPath { get; set; }
     }
 }

@@ -46,7 +46,7 @@ namespace Cofoundry.Domain.Tests.Integration.Pages.Queries
                 page2.Should().NotBeNull();
                 page2.PageId.Should().Be(page2Id);
 
-                page2.FullPath.Should().Be($"/{sluggedUniqueData}/{sluggedUniqueData}2");
+                page2.FullUrlPath.Should().Be($"/{sluggedUniqueData}/{sluggedUniqueData}2");
                 page2.HasDraftVersion.Should().BeTrue();
                 page2.HasPublishedVersion.Should().BeFalse();
                 page2.Locale.Should().BeNull();

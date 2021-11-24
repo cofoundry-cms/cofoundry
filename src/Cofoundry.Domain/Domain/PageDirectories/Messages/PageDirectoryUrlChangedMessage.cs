@@ -19,6 +19,6 @@ namespace Cofoundry.Domain
         /// The full (relative) url of the directory before the change, formatted with the leading
         /// slash but excluding the trailing slash e.g. "/parent-directory/child-directory".
         /// </summary
-        public PathString OldFullUrlPath { get; set; }
+        public string OldFullUrlPath { get; set; }
     }
 }

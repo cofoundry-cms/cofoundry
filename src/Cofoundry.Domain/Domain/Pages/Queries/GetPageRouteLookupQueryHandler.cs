@@ -184,7 +184,7 @@ namespace Cofoundry.Domain.Internal
                 }
 
                 // Set Full Path
-                pageRoute.FullPath = CreateFullPath(directoryPath, pageRoute.UrlPath, pageRoute.Locale);
+                pageRoute.FullUrlPath = CreateFullPath(directoryPath, pageRoute.UrlPath, pageRoute.Locale);
                 routes.Add(pageRoute.PageId, pageRoute);
             }
             return routes;

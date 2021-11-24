@@ -65,7 +65,7 @@ namespace Cofoundry.Domain.Internal
             return _messageAggregator.PublishAsync(new PageUrlChangedMessage()
             {
                 PageId = oldPageRoute.PageId,
-                OldFullUrlPath = oldPageRoute.FullPath,
+                OldFullUrlPath = oldPageRoute.FullUrlPath,
                 HasPublishedVersionChanged = isPublished
             });
         }

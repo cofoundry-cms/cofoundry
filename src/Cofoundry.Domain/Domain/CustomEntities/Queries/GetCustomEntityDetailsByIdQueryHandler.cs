@@ -160,7 +160,7 @@ namespace Cofoundry.Domain.Internal
             {
                 var page = new CustomEntityPage();
                 pages.Add(page);
-                page.FullPath = routing.CustomEntityRouteRule.MakeUrl(routing.PageRoute, routing.CustomEntityRoute);
+                page.FullUrlPath = routing.CustomEntityRouteRule.MakeUrl(routing.PageRoute, routing.CustomEntityRoute);
                 page.PageRoute = routing.PageRoute;
 
                 // Map Regions
@@ -193,9 +193,9 @@ namespace Cofoundry.Domain.Internal
 
             // Map default full path
 
-            entity.FullPath = pages
+            entity.FullUrlPath = pages
                 .OrderByDescending(p => p.PageRoute.Locale == null)
-                .Select(p => p.FullPath)
+                .Select(p => p.FullUrlPath)
                 .First();
         }
 

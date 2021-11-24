@@ -65,7 +65,7 @@ namespace Cofoundry.Domain.Internal
 
                 if (detailsRouting != null)
                 {
-                    entity.FullPath = detailsRouting.CustomEntityRouteRule.MakeUrl(detailsRouting.PageRoute, detailsRouting.CustomEntityRoute);
+                    entity.FullUrlPath = detailsRouting.CustomEntityRouteRule.MakeUrl(detailsRouting.PageRoute, detailsRouting.CustomEntityRoute);
                     entity.HasPublishedVersion = detailsRouting.CustomEntityRoute.HasPublishedVersion;
                 }
 

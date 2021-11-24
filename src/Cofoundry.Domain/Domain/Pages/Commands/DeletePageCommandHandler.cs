@@ -74,7 +74,7 @@ namespace Cofoundry.Domain.Internal
             return _messageAggregator.PublishAsync(new PageDeletedMessage()
             {
                 PageId = page.PageId,
-                FullUrlPath = page.FullPath
+                FullUrlPath = page.FullUrlPath
             });
         }
 
