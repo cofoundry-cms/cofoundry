@@ -17,8 +17,8 @@
 
         <cms-button-link cms-text="Browse to page"
                          cms-icon="eye-open"
-                         cms-href="{{vm.customEntity.fullPath}}"
-                         ng-if="vm.customEntity.fullPath"></cms-button-link>
+                         cms-href="{{vm.customEntity.fullUrlPath}}"
+                         ng-if="vm.customEntity.fullUrlPath"></cms-button-link>
 
         <cms-button cms-text="Publish"
                     ng-click="vm.publish()"
@@ -84,8 +84,8 @@
                                      cms-model="vm.customEntity.locale.ietfLanguageTag"
                                      ng-if="::vm.options.hasLocale"></cms-form-field-readonly>
 
-            <cms-form-field-container cms-title="Url" ng-if="vm.customEntity.fullPath">
-                <a ng-href="{{vm.customEntity.fullPath}}">{{vm.customEntity.fullPath}}</a>
+            <cms-form-field-container cms-title="Url" ng-if="vm.customEntity.fullUrlPath">
+                <a ng-href="{{vm.customEntity.fullUrlPath}}">{{vm.customEntity.fullUrlPath}}</a>
             </cms-form-field-container>
 
             <cms-form-field-readonly cms-title="Published Status"

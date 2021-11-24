@@ -633,7 +633,7 @@ function (
                 entityDefinitionCode: ENTITY_DEFINITION_CODE,
                 entityIdPrefix: 'page',
                 entityDefinitionName: 'Page',
-                entityDescription: vm.page.pageRoute.fullPath,
+                entityDescription: vm.page.pageRoute.fullUrlPath,
                 entityAccessLoader: pageAccessLoader,
                 saveAccess: pageService.updateAccessRules
             }

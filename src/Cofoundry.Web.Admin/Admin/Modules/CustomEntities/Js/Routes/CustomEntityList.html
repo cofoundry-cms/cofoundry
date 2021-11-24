@@ -78,7 +78,7 @@
                     </td>
                     <td>
                         <a href="#/{{::entity.customEntityId}}">{{::entity.title}}</a><br>
-                        <span ng-if="entity.fullPath">{{::entity.fullPath}}</span>
+                        <span ng-if="entity.fullUrlPath">{{::entity.fullUrlPath}}</span>
                     </td>
                     <td ng-if="vm.previewFields.fields.previewDescription">{{entity.model[vm.previewFields.fields.previewDescription.lowerName]}}</td>
                     <td ng-if="::!vm.options.autoPublish">
@@ -100,11 +100,11 @@
                            ng-if="::vm.canUpdate">
                             <i class="fa fa-pencil-square-o"></i>
                         </a>
-                        <a href="{{::entity.fullPath}}"
+                        <a href="{{::entity.fullUrlPath}}"
                            class="btn-icon"
                            title="View"
                            target="_blank"
-                           ng-if="::entity.fullPath">
+                           ng-if="::entity.fullUrlPath">
                             <i class="fa fa-external-link"></i>
                         </a>
                     </td>

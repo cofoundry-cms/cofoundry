@@ -101,7 +101,7 @@ function (
     service.visualEditorForPage = function (pageRoute, isEditMode) {
         if (!pageRoute) return '';
 
-        var path = pageRoute.fullPath;
+        var path = pageRoute.fullUrlPath;
 
         if (isEditMode) {
             path += '?mode=edit';
@@ -118,7 +118,7 @@ function (
     ) {
         if (!pageRoute) return '';
 
-        var url = pageRoute.fullPath + "?";
+        var url = pageRoute.fullUrlPath + "?";
 
         // Some of the latest version states will have a default view e.g. preview 
         // or live so check for these first before we defer to showing by version number
@@ -153,7 +153,7 @@ function (
     service.customEntityVisualEditor = function (customEntityDetails, isEditMode) {
         if (!customEntityDetails) return '';
 
-        var path = customEntityDetails.fullPath;
+        var path = customEntityDetails.fullUrlPath;
 
         if (!path) return path;
 

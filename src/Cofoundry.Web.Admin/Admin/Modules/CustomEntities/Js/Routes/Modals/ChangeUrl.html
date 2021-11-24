@@ -19,7 +19,7 @@
 
         <cms-page-body>
 
-            <cms-warning-message ng-if="customEntity.isPublished && customEntity.fullPath">
+            <cms-warning-message ng-if="customEntity.isPublished && customEntity.fullUrlPath">
                 WARNING: This {{::options.nameSingular.toLowerCase()}} has been published. Changing the url will
                 break external links to this page (e.g. via google search)
             </cms-warning-message>

@@ -76,7 +76,7 @@
                 </tr>
                 <tr ng-repeat="page in vm.result.items">
                     <td>
-                        <a href="#/{{::page.pageId }}">{{::page.fullPath }}</a><br>
+                        <a href="#/{{::page.pageId }}">{{::page.fullUrlPath }}</a><br>
                         <span>{{::page.title}}</span>
                     </td>
                     <!--<td>
@@ -88,7 +88,7 @@
                     <td>
                         <span>{{::page.getPublishStatusLabel()}}</span>
                         <br />
-                        <a href="{{::page.fullPath }}" ng-if="::page.hasDraftVersion && page.pageType == 'Generic'">(Pending Draft)</a>
+                        <a href="{{::page.fullUrlPath }}" ng-if="::page.hasDraftVersion && page.pageType == 'Generic'">(Pending Draft)</a>
                         <span ng-if="::page.hasDraftVersion && page.pageType != 'Generic'">(Pending Draft)</span>
                     </td>
                     <td>
@@ -115,7 +115,7 @@
                            ng-if="::vm.canUpdate">
                             <i class="fa fa-pencil-square-o"></i>
                         </a>
-                        <a href="{{::page.fullPath}}" 
+                        <a href="{{::page.fullUrlPath}}" 
                            class="btn-icon" 
                            title="Browse to page" 
                            target="_blank"
