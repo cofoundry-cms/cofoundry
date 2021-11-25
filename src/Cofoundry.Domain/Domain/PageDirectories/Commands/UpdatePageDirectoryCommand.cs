@@ -20,8 +20,7 @@ namespace Cofoundry.Domain
         /// <summary>
         /// User friendly display name of the directory.
         /// </summary>
-        [Required]
-        [StringLength(64)]
+        [StringLength(200)]
         [Display(Name = "Name", Description = "E.g. 'About the team' or 'Our products'")]
         public string Name { get; set; }
     }

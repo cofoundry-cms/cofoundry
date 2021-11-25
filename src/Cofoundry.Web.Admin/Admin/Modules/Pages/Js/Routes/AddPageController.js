@@ -87,7 +87,7 @@ function (
     }
 
     function onNameChanged() {
-        vm.command.urlPath = stringUtilities.slugify(vm.command.title);
+        vm.command.urlPath = stringUtilities.slugify(vm.command.title, 200);
     }
 
     function onPageTypeChanged() {

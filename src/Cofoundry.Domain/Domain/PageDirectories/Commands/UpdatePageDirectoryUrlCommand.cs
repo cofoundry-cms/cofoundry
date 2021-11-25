@@ -34,7 +34,7 @@ namespace Cofoundry.Domain
         /// contain any slashes, just alpha-numerical with dashes.
         /// </summary>
         [Required]
-        [StringLength(64)]
+        [StringLength(200)]
         [Display(Name = "Url path", Description = "e.g. 'about-the-team' or 'products'.")]
         [Slug]
         public string UrlPath { get; set; }

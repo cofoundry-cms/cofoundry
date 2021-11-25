@@ -9,18 +9,15 @@ namespace Cofoundry.Domain.Data
         public void Configure(EntityTypeBuilder<PageDirectory> builder)
         {
             builder.ToTable("PageDirectory", DbConstants.CofoundrySchema);
-
-            // Primary Key
             builder.HasKey(s => s.PageDirectoryId);
 
             // Properties
             builder.Property(s => s.Name)
-                .IsRequired()
-                .HasMaxLength(64);
+                .HasMaxLength(200);
 
             builder.Property(s => s.UrlPath)
                 .IsRequired()
-                .HasMaxLength(64);
+                .HasMaxLength(200);
 
             // Relationships
             builder.HasOne(s => s.ParentPageDirectory)
@@ -31,7 +28,6 @@ namespace Cofoundry.Domain.Data
                 .WithMany()
                 .HasForeignKey(s => s.UserAreaCodeForLoginRedirect);
 
-            // Relationships
             builder.HasOne(s => s.PageDirectoryPath)
                 .WithOne(d => d.PageDirectory)
                 .HasForeignKey<PageDirectoryPath>(s => s.PageDirectoryId);

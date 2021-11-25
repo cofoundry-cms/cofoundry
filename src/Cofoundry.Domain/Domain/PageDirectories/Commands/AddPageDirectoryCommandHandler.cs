@@ -44,11 +44,12 @@ namespace Cofoundry.Domain.Internal
 
         public async Task ExecuteAsync(AddPageDirectoryCommand command, IExecutionContext executionContext)
         {
+            Normalize(command);
             var parentDirectory = await GetParentDirectoryAsync(command);
             await ValidateIsUniqueAsync(command, executionContext);
 
             var pageDirectory = new PageDirectory();
-            pageDirectory.Name = command.Name.Trim();
+            pageDirectory.Name = command.Name;
             pageDirectory.UrlPath = command.UrlPath;
             pageDirectory.ParentPageDirectory = parentDirectory;
             _entityAuditHelper.SetCreated(pageDirectory, executionContext);
@@ -75,6 +76,12 @@ namespace Cofoundry.Domain.Internal
             { 
                 PageDirectoryId = pageDirectoryId
             });
+        }
+
+        private static void Normalize(AddPageDirectoryCommand command)
+        {
+            command.UrlPath = command.UrlPath.ToLowerInvariant();
+            command.Name = command.Name?.Trim();
         }
 
         private async Task<PageDirectory> GetParentDirectoryAsync(AddPageDirectoryCommand command)

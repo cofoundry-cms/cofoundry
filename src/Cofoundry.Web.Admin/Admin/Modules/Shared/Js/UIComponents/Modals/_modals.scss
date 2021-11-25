@@ -111,10 +111,17 @@
     background: #fff;
     top: 0;
     left: 0;
-    padding: 20px;
-    width: 100%;
+    right: 0;
+    padding: 20px 50px 20px 20px;
     border-bottom: 1px solid $color-lightgrey;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
     z-index: 10;
+
+    .modal-title {
+        display: inline;
+    }
 
     .close {
         position: absolute;

@@ -2,15 +2,18 @@
     @include transition(left .3s, padding .3s);
     position:fixed;
     z-index: 99998;
-    width:100%;
     background-color:#fff;
     padding:10px 30px;
     font-size:180%;
     font-weight:$fontweight-light;
     line-height: 50px;
     top:0;
+    right: 0;
     left:$nav-width-slim;
     border-bottom:1px solid #ccc;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
 
     @media screen and (min-width: 950px) {
         left:$nav-width;

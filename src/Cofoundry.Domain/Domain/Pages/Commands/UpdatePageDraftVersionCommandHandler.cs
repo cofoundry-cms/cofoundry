@@ -1,15 +1,13 @@
-﻿using System;
+﻿using Cofoundry.Core;
+using Cofoundry.Core.Data;
+using Cofoundry.Core.MessageAggregator;
+using Cofoundry.Domain.CQS;
+using Cofoundry.Domain.Data;
+using Cofoundry.Domain.Data.Internal;
+using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using Cofoundry.Domain.Data;
-using Cofoundry.Domain.CQS;
-using Microsoft.EntityFrameworkCore;
-using Cofoundry.Core.MessageAggregator;
-using Cofoundry.Core.Data;
-using Cofoundry.Core;
-using Cofoundry.Domain.Data.Internal;
 
 namespace Cofoundry.Domain.Internal
 {
@@ -18,12 +16,10 @@ namespace Cofoundry.Domain.Internal
     /// does not exist then one is created first from the currently
     /// published version.
     /// </summary>
-    public class UpdatePageDraftVersionCommandHandler 
+    public class UpdatePageDraftVersionCommandHandler
         : ICommandHandler<UpdatePageDraftVersionCommand>
         , IPermissionRestrictedCommandHandler<UpdatePageDraftVersionCommand>
     {
-        #region constructor
-        
         private readonly ICommandExecutor _commandExecutor;
         private readonly CofoundryDbContext _dbContext;
         private readonly IPageCache _pageCache;
@@ -49,10 +45,10 @@ namespace Cofoundry.Domain.Internal
             _pageStoredProcedures = pageStoredProcedures;
         }
 
-        #endregion
-
         public async Task ExecuteAsync(UpdatePageDraftVersionCommand command, IExecutionContext executionContext)
         {
+            Normalize(command);
+
             var draft = await GetDraftVersion(command.PageId).SingleOrDefaultAsync();
 
             using (var scope = _transactionScopeFactory.Create(_dbContext))
@@ -85,6 +81,14 @@ namespace Cofoundry.Domain.Internal
             });
         }
 
+        private void Normalize(UpdatePageDraftVersionCommand command)
+        {
+            command.Title = command.Title.Trim();
+            command.MetaDescription = command.MetaDescription?.Trim() ?? string.Empty;
+            command.OpenGraphTitle = command.OpenGraphTitle?.Trim();
+            command.OpenGraphDescription = command.OpenGraphDescription?.Trim();
+        }
+
         private IQueryable<PageVersion> GetDraftVersion(int pageId)
         {
             return _dbContext
@@ -109,13 +113,11 @@ namespace Cofoundry.Domain.Internal
 
             draft.Title = command.Title;
             draft.ExcludeFromSitemap = !command.ShowInSiteMap;
-            draft.MetaDescription = command.MetaDescription ?? string.Empty;
+            draft.MetaDescription = command.MetaDescription;
             draft.OpenGraphTitle = command.OpenGraphTitle;
             draft.OpenGraphDescription = command.OpenGraphDescription;
             draft.OpenGraphImageId = command.OpenGraphImageId;
         }
-
-        #region Permission
 
         public IEnumerable<IPermissionApplication> GetPermissions(UpdatePageDraftVersionCommand command)
         {
@@ -126,7 +128,5 @@ namespace Cofoundry.Domain.Internal
                 yield return new PagePublishPermission();
             }
         }
-
-        #endregion
     }
 }

@@ -177,17 +177,39 @@ go
 	#463: Page Directories: extract ChangePageUrlCommand from UpdatePageDirectoryCommand
 */
 
+declare @DirectoryDefinitionCode char(6) = 'COFDIR'
 declare @UpdateUrlPermissionId int
-insert into Cofoundry.Permission (EntityDefinitionCode, PermissionCode) values ('COFDIR', 'UPDURL')
-set @UpdateUrlPermissionId = SCOPE_IDENTITY()
 
--- Ensure anyone that had update permission also gets the new update url permission
-insert into Cofoundry.RolePermission (RoleId, PermissionId)
-select RoleId, @UpdateUrlPermissionId
-from Cofoundry.RolePermission rp
-inner join Cofoundry.Permission p on rp.PermissionId = p.PermissionId
-where p.EntityDefinitionCode = 'COFDIR' and p.PermissionCode = 'COMUPD'
+-- If the entity definition is not installed yet, then we don't need to worry about migrating the permission
+if (exists(select * from Cofoundry.EntityDefinition where EntityDefinitionCode = @DirectoryDefinitionCode))
+begin
+	insert into Cofoundry.Permission (EntityDefinitionCode, PermissionCode) values (@DirectoryDefinitionCode, 'UPDURL')
+	set @UpdateUrlPermissionId = SCOPE_IDENTITY()
+	
+	-- Ensure anyone that had update permission also gets the new update url permission
+	insert into Cofoundry.RolePermission (RoleId, PermissionId)
+	select RoleId, @UpdateUrlPermissionId
+	from Cofoundry.RolePermission rp
+	inner join Cofoundry.Permission p on rp.PermissionId = p.PermissionId
+	where p.EntityDefinitionCode = @DirectoryDefinitionCode and p.PermissionCode = 'COMUPD'
+end
 go
 -- Add missing constraint here to prevent self-referencing directories
-alter table Cofoundry.PageDirectory add constraint CK_PageDirectory_ParentNotSelf check (ParentPageDirectoryID <> PageDirectoryId)
+alter table Cofoundry.PageDirectory add constraint CK_PageDirectory_ParentNotSelf check (ParentPageDirectoryId <> PageDirectoryId)
+go
+
+/* 
+	#464: Page Directories: "Name" property is superflous
+	#466 : Pages / Directories: Increase maximum url slug length
+*/
+
+drop index UIX_Page_Path on Cofoundry.[Page]
+drop index UIX_PageDirectory_UrlPath on Cofoundry.PageDirectory
+go
+alter table Cofoundry.PageDirectory alter column [Name] nvarchar(200) null
+alter table Cofoundry.PageDirectory alter column UrlPath nvarchar(200) not null
+alter table Cofoundry.[Page] alter column UrlPath nvarchar(200) not null
+go
+create index UIX_Page_UrlPath on Cofoundry.[Page] (PageDirectoryId, LocaleId, UrlPath)
+create index UIX_PageDirectory_UrlPath on Cofoundry.PageDirectory (ParentPageDirectoryId, UrlPath)
 go

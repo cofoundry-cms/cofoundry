@@ -7227,7 +7227,7 @@ angular.module('cms.shared').factory('shared.stringUtilities', function () {
      * Converts the text into a valid url slug. Removes accents from Latin characters.
      * Adapted from code at http://stringjs.com/
      */
-    service.slugify = function (s) {
+    service.slugify = function (s, limitTo) {
         if (!s) return s;
         var result = service.latinise(s)
             .replace(/&/g, ' and ')
@@ -7238,7 +7238,8 @@ angular.module('cms.shared').factory('shared.stringUtilities', function () {
             .replace(/\s+/g, '-')
             .replace(/-+/g, '-');
 
-        if (result.charAt(0) === '-') result = result.substr(1);
+        if (s.length > limitTo) s = s.substring(0, limitTo);
+        if (result.charAt(0) === '-') result = result.substring(1);
 
         return result;
     }
@@ -7776,6 +7777,57 @@ function (
         return timeUtilities.format(date);
     }
 }]);
+/**
+ * Condenses down a url path to maximum length, limiting directory
+ * segments or omitting them completely if necessary. The last segment
+ * of the path is treated as the main identifier and is always preserved in full, 
+ * which may be longer than the max length. The aim is to keep the identifier
+ * segment in readable view.
+ */
+angular.module('cms.shared').filter('urlPathCondenser', function () {
+    return function limitUrlPath(path, maxLength, maxSegmentLength) {
+        maxLength = maxLength || 60;
+        maxSegmentLength = maxSegmentLength || 25;
+
+        if (!path) return '';
+
+        if (path.length < maxLength)
+        {
+            return path;
+        }
+
+        var segments = path.split('/');
+        var condensedUrl = '';
+
+        for (var i = segments.length -1; i >= 0; i--)
+        {
+            var segment = segments[i];
+            if (!segment) continue;
+            
+            // if we can only fit one segment, return it unadorned
+            var hasReachedMaxLength = condensedUrl.length + segment.length > maxLength;
+            if (hasReachedMaxLength && !condensedUrl) {
+                return segment;
+            }
+
+            // if the segement is too long, limit it
+            if (segment.length > maxSegmentLength) {
+
+                segment = segment.substring(0, maxSegmentLength -1) + '…';
+            }
+
+            // if we've reached the max-length even when condensed, return what we have
+            hasReachedMaxLength = condensedUrl.length + segment.length > maxLength;
+            if (hasReachedMaxLength) {
+                return '..' + condensedUrl;
+            }
+            
+            condensedUrl = '/' + segment + condensedUrl;
+        }
+
+        return condensedUrl;
+    }
+});
 angular.module('cms.shared').factory('authenticationService', [
     '$window',
     'shared.urlLibrary',
@@ -8203,70 +8255,6 @@ function (
     }
 
     return service;
-}]);
-angular.module('cms.shared').directive('cmsButton', [
-    'shared.internalModulePath',
-function (
-    modulePath) {
-
-    return {
-        restrict: 'E',
-        replace: true,
-        templateUrl: modulePath + 'UIComponents/Buttons/Button.html',
-        scope: {
-            text: '@cmsText'
-        }
-    };
-}]);
-angular.module('cms.shared').directive('cmsButtonIcon', [
-    'shared.internalModulePath',
-    function (modulePath) {
-
-    return {
-        restrict: 'E',
-        replace: false,
-        templateUrl: modulePath + 'UIComponents/Buttons/ButtonIcon.html',
-        scope: {
-            title: '@cmsTitle',
-            icon: '@cmsIcon',
-            href: '@cmsHref',
-            external: '@cmsExternal'
-        },
-        link: function (scope, el) {
-            if (scope.icon) {
-                scope.iconCls = 'fa-' + scope.icon;
-            }
-        }
-    };
-}]);
-angular.module('cms.shared').directive('cmsButtonLink', [
-    'shared.internalModulePath',
-    function (modulePath) {
-
-    return {
-        restrict: 'E',
-        replace: true,
-        templateUrl: modulePath + 'UIComponents/Buttons/ButtonLink.html',
-        scope: {
-            text: '@cmsText',
-            href: '@cmsHref'
-        }
-    };
-}]);
-angular.module('cms.shared').directive('cmsButtonSubmit', [
-    'shared.internalModulePath',
-function (
-    modulePath
-) {
-
-    return {
-        restrict: 'E',
-        replace: true,
-        templateUrl: modulePath + 'UIComponents/Buttons/ButtonSubmit.html',
-        scope: {
-            text: '@cmsText'
-        }
-    };
 }]);
 angular.module('cms.shared').controller('AddCustomEntityDialogController', [
     '$scope',
@@ -9168,6 +9156,70 @@ function (
 
     function Controller() {
     }
+}]);
+angular.module('cms.shared').directive('cmsButton', [
+    'shared.internalModulePath',
+function (
+    modulePath) {
+
+    return {
+        restrict: 'E',
+        replace: true,
+        templateUrl: modulePath + 'UIComponents/Buttons/Button.html',
+        scope: {
+            text: '@cmsText'
+        }
+    };
+}]);
+angular.module('cms.shared').directive('cmsButtonIcon', [
+    'shared.internalModulePath',
+    function (modulePath) {
+
+    return {
+        restrict: 'E',
+        replace: false,
+        templateUrl: modulePath + 'UIComponents/Buttons/ButtonIcon.html',
+        scope: {
+            title: '@cmsTitle',
+            icon: '@cmsIcon',
+            href: '@cmsHref',
+            external: '@cmsExternal'
+        },
+        link: function (scope, el) {
+            if (scope.icon) {
+                scope.iconCls = 'fa-' + scope.icon;
+            }
+        }
+    };
+}]);
+angular.module('cms.shared').directive('cmsButtonLink', [
+    'shared.internalModulePath',
+    function (modulePath) {
+
+    return {
+        restrict: 'E',
+        replace: true,
+        templateUrl: modulePath + 'UIComponents/Buttons/ButtonLink.html',
+        scope: {
+            text: '@cmsText',
+            href: '@cmsHref'
+        }
+    };
+}]);
+angular.module('cms.shared').directive('cmsButtonSubmit', [
+    'shared.internalModulePath',
+function (
+    modulePath
+) {
+
+    return {
+        restrict: 'E',
+        replace: true,
+        templateUrl: modulePath + 'UIComponents/Buttons/ButtonSubmit.html',
+        scope: {
+            text: '@cmsText'
+        }
+    };
 }]);
 angular.module('cms.shared').directive('cmsFormFieldDirectorySelector', [
     '_',
@@ -13522,8 +13574,9 @@ angular.module('cms.shared').directive('cmsPageFilter', function () {
 angular.module('cms.shared').directive('cmsPageHeader', function () {
     return {
         restrict: 'E',
-        template: '<h1 class="page-header"><a ng-href="{{parentHref ? parentHref : \'#/\'}}" ng-if="parentTitle">{{parentTitle}}</a><span ng-if="parentTitle && title"> &gt; </span>{{title}}</h1>',
+        template: '<h1 class="page-header"><a ng-href="{{parentHref ? parentHref : \'#/\'}}" ng-if="parentTitle">{{parentTitle}}</a><span ng-if="parentTitle && title"> &gt; </span><ng-transclude>{{title}}</ng-transclude></h1>',
         replace: true,
+        transclude: true,
         scope: {
             title: '@cmsTitle',
             parentTitle: '@cmsParentTitle',
@@ -15113,6 +15166,40 @@ function (
     }
 }]);
 
+/**
+ * A success status message, dislpayed in a green coloured box
+ */
+angular.module('cms.shared').directive('cmsSuccessMessage', [
+    'shared.internalModulePath',
+function (
+    modulePath
+    ) {
+
+    return {
+        restrict: 'E',
+        templateUrl: modulePath + 'UIComponents/StatusMessages/SuccessMessage.html',
+        replace: true,
+        transclude: true
+    };
+}]);
+
+/**
+ * A warning status message, dislpayed in a yellow coloured box
+ */
+angular.module('cms.shared').directive('cmsWarningMessage', [
+    'shared.internalModulePath',
+function (
+    modulePath
+    ) {
+
+    return {
+        restrict: 'E',
+        templateUrl: modulePath + 'UIComponents/StatusMessages/WarningMessage.html',
+        replace: true,
+        transclude: true
+    };
+}]);
+
 angular.module('cms.shared').directive('cmsPager', [
     'shared.internalModulePath',
 function (
@@ -15315,40 +15402,6 @@ angular.module('cms.shared').factory('shared.SearchQuery', ['$location', '_', fu
         }
     }
 }]);
-/**
- * A success status message, dislpayed in a green coloured box
- */
-angular.module('cms.shared').directive('cmsSuccessMessage', [
-    'shared.internalModulePath',
-function (
-    modulePath
-    ) {
-
-    return {
-        restrict: 'E',
-        templateUrl: modulePath + 'UIComponents/StatusMessages/SuccessMessage.html',
-        replace: true,
-        transclude: true
-    };
-}]);
-
-/**
- * A warning status message, dislpayed in a yellow coloured box
- */
-angular.module('cms.shared').directive('cmsWarningMessage', [
-    'shared.internalModulePath',
-function (
-    modulePath
-    ) {
-
-    return {
-        restrict: 'E',
-        templateUrl: modulePath + 'UIComponents/StatusMessages/WarningMessage.html',
-        replace: true,
-        transclude: true
-    };
-}]);
-
 angular.module('cms.shared').directive('cmsTableActions', [
     'shared.internalModulePath',
 function (
@@ -15611,6 +15664,54 @@ function (
         }
     }
 }]);
+/**
+ * If this element is in a modal popup or in a form in edit mode, then add a target="_blank" attribute
+ * so that links open in a new tab
+ */
+angular.module('cms.shared').directive('cmsAutoTargetBlank', function () {
+
+    return {
+        restrict: 'A',
+        require: ['?^^cmsModalDialogContainer', '?^^cmsForm'],
+        link: link
+    };
+
+    function link(scope, el, attributes, controllers) {
+        var modalDialogContainerController = controllers[0],
+            formController = controllers[1];
+
+        if (modalDialogContainerController) {
+            el.attr('target', '_blank');
+        } else if (formController) {
+            scope.formScope = formController.getFormScope();
+
+            // watches
+            scope.$watch('formScope.editMode', function () {
+                if (scope.formScope.editMode) {
+                    el.attr('target', '_blank');
+                } else {
+                    el.removeAttr('target');
+                }
+            });
+        }
+    }
+});
+/**
+ * Use this to turn a string date into a date object for ng model binding.
+ */
+angular.module('cms.shared').directive('cmsModelAsDate', function () {
+
+    return {
+        require: 'ngModel',
+        link: link
+    };
+
+    function link(scope, elem, attr, ngModelController) {
+        ngModelController.$formatters.push(function (modelValue) {
+            return modelValue ? new Date(modelValue) : null;
+        });
+    }
+});
 angular.module('cms.shared').directive('cmsTimeAgo', ['shared.internalModulePath', function (modulePath) {
 
     return {
@@ -15711,54 +15812,6 @@ function (
         vm.canRead = permissionValidationService.canRead('COFUSR');
     }
 }]);
-/**
- * If this element is in a modal popup or in a form in edit mode, then add a target="_blank" attribute
- * so that links open in a new tab
- */
-angular.module('cms.shared').directive('cmsAutoTargetBlank', function () {
-
-    return {
-        restrict: 'A',
-        require: ['?^^cmsModalDialogContainer', '?^^cmsForm'],
-        link: link
-    };
-
-    function link(scope, el, attributes, controllers) {
-        var modalDialogContainerController = controllers[0],
-            formController = controllers[1];
-
-        if (modalDialogContainerController) {
-            el.attr('target', '_blank');
-        } else if (formController) {
-            scope.formScope = formController.getFormScope();
-
-            // watches
-            scope.$watch('formScope.editMode', function () {
-                if (scope.formScope.editMode) {
-                    el.attr('target', '_blank');
-                } else {
-                    el.removeAttr('target');
-                }
-            });
-        }
-    }
-});
-/**
- * Use this to turn a string date into a date object for ng model binding.
- */
-angular.module('cms.shared').directive('cmsModelAsDate', function () {
-
-    return {
-        require: 'ngModel',
-        link: link
-    };
-
-    function link(scope, elem, attr, ngModelController) {
-        ngModelController.$formatters.push(function (modelValue) {
-            return modelValue ? new Date(modelValue) : null;
-        });
-    }
-});
 /**
   * Placeholder js file to solve issue with Azure and Bundle.IncludeDirectory, because
   * without this file the directory is empty.

@@ -5555,15 +5555,18 @@ input[type="color"] {
   transition: left 0.3s, padding 0.3s;
   position: fixed;
   z-index: 99998;
-  width: 100%;
   background-color: #fff;
   padding: 10px 30px;
   font-size: 180%;
   font-weight: 400;
   line-height: 50px;
   top: 0;
+  right: 0;
   left: 228px;
-  border-bottom: 1px solid #ccc; }
+  border-bottom: 1px solid #ccc;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap; }
   @media screen and (min-width: 950px) {
     .page-header {
       left: 288px;
@@ -6122,10 +6125,15 @@ form.loading, table.loading, div.loading, fieldset.loading {
   background: #fff;
   top: 0;
   left: 0;
-  padding: 20px;
-  width: 100%;
+  right: 0;
+  padding: 20px 50px 20px 20px;
   border-bottom: 1px solid #ebebeb;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
   z-index: 10; }
+  .modal-header .modal-title {
+    display: inline; }
   .modal-header .close {
     position: absolute;
     right: 10px;

@@ -1,7 +1,6 @@
-using System;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Cofoundry.Core;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Cofoundry.Domain.Data
 {
@@ -15,7 +14,7 @@ namespace Cofoundry.Domain.Data
 
             builder.Property(s => s.UrlPath)
                 .IsRequired()
-                .HasMaxLength(70);
+                .HasMaxLength(200);
 
             builder.Property(s => s.CustomEntityDefinitionCode)
                 .HasMaxLength(6)

@@ -38,7 +38,7 @@ namespace Cofoundry.Domain
         /// unique within the directory the page is parented to.
         /// E.g. 'about-the-team'
         /// </summary>
-        [StringLength(70)]
+        [StringLength(200)]
         [Slug]
         public virtual string UrlPath { get; set; }
 
@@ -47,7 +47,7 @@ namespace Cofoundry.Domain
         /// to a value that matches the RouteFormat of an existing
         /// ICustomEntityRoutingRule e.g. "{Id}/{UrlSlug}".
         /// </summary>
-        [StringLength(70)]
+        [StringLength(200)]
         public string CustomEntityRoutingRule { get; set; }
     }
 }

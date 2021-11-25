@@ -25,7 +25,6 @@ function (
 
         vm.save = save;
         vm.cancel = cancel;
-        vm.onNameChanged = onNameChanged;
         vm.onDirectoriesLoaded = onDirectoriesLoaded;
     }
 
@@ -41,10 +40,6 @@ function (
 
     function onDirectoriesLoaded() {
         vm.formLoadState.off();
-    }
-
-    function onNameChanged() {
-        vm.command.urlPath = stringUtilities.slugify(vm.command.name);
     }
 
     function cancel() {

@@ -51,12 +51,15 @@ namespace Cofoundry.Domain.Internal
 
         public async Task ExecuteAsync(UpdatePageDirectoryUrlCommand command, IExecutionContext executionContext)
         {
+            Normalize(command);
+
             var pageDirectory = await _dbContext
                 .PageDirectories
                 .FilterById(command.PageDirectoryId)
                 .SingleOrDefaultAsync();
             EntityNotFoundException.ThrowIfNull(pageDirectory, command.PageDirectoryId);
 
+            command.UrlPath = command.UrlPath.ToLowerInvariant();
             var changedPathProps = GetChangedPathProperties(command, pageDirectory).ToArray();
             if (!changedPathProps.Any()) return;
 
@@ -86,20 +89,25 @@ namespace Cofoundry.Domain.Internal
             }
         }
 
-        private void ValidateParentDirectory(UpdatePageDirectoryUrlCommand command, ICollection<int> affectedDirectoryIds)
-        {
-            if (affectedDirectoryIds.Contains(command.ParentPageDirectoryId))
-            {
-                throw ValidationErrorException.CreateWithProperties("The parent directory cannot be a child of this directory.", nameof(command.ParentPageDirectoryId));
-            }
-        }
-
         private async Task OnTransactionComplete(IReadOnlyCollection<PageDirectoryUrlChangedMessage> directoryMessages, IReadOnlyCollection<PageUrlChangedMessage> pageMessages)
         {
             _cache.Clear();
 
             await _messageAggregator.PublishBatchAsync(directoryMessages);
             await _messageAggregator.PublishBatchAsync(pageMessages);
+        }
+
+        private void Normalize(UpdatePageDirectoryUrlCommand command)
+        {
+            command.UrlPath = command.UrlPath.ToLowerInvariant();
+        }
+
+        private void ValidateParentDirectory(UpdatePageDirectoryUrlCommand command, ICollection<int> affectedDirectoryIds)
+        {
+            if (affectedDirectoryIds.Contains(command.ParentPageDirectoryId))
+            {
+                throw ValidationErrorException.CreateWithProperties("The parent directory cannot be a child of this directory.", nameof(command.ParentPageDirectoryId));
+            }
         }
 
         private IEnumerable<string> GetChangedPathProperties(UpdatePageDirectoryUrlCommand command, PageDirectory pageDirectory)

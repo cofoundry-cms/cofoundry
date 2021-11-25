@@ -17,7 +17,7 @@ namespace Cofoundry.Domain
         /// E.g. 'about-the-team'
         /// </summary>
         [Display(Name = "Url path", Description = "Lower case and containing only letter, numbers, underscores and hyphens. E.g. 'about-the-team'")]
-        [StringLength(70)]
+        [StringLength(200)]
         [Slug]
         public string UrlPath { get; set; }
 
@@ -101,7 +101,7 @@ namespace Cofoundry.Domain
         /// to a value that matches the RouteFormat of an existing
         /// ICustomEntityRoutingRule e.g. "{Id}/{UrlSlug}".
         /// </summary>
-        [StringLength(70)]
+        [StringLength(200)]
         public string CustomEntityRoutingRule { get; set; }
 
         /// <summary>

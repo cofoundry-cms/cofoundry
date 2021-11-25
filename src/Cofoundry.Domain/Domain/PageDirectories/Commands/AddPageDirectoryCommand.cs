@@ -14,13 +14,12 @@ namespace Cofoundry.Domain
         [Display(Name = "Parent directory", Description = "Choose the parent under which to create this new directory.")]
         public int ParentPageDirectoryId { get; set; }
 
-        [Required]
-        [StringLength(64)]
+        [StringLength(200)]
         [Display(Name = "Name", Description = "E.g. 'About the team' or 'Our products'")]
         public string Name { get; set; }
 
         [Required]
-        [StringLength(64)]
+        [StringLength(200)]
         [Display(Name = "Url path", Description = "e.g. 'about-the-team' or 'products'.")]
         [Slug]
         public string UrlPath { get; set; }

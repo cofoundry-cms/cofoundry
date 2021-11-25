@@ -3,6 +3,7 @@ using Cofoundry.Core.Data;
 using Cofoundry.Domain.CQS;
 using Cofoundry.Domain.Data;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -33,16 +34,23 @@ namespace Cofoundry.Domain.Internal
 
         public async Task ExecuteAsync(UpdatePageDirectoryCommand command, IExecutionContext executionContext)
         {
+            Normalize(command);
+
             var pageDirectory = await _dbContext
                 .PageDirectories
                 .FilterById(command.PageDirectoryId)
                 .SingleOrDefaultAsync();
             EntityNotFoundException.ThrowIfNull(pageDirectory, command.PageDirectoryId);
 
-            pageDirectory.Name = command.Name?.Trim();
+            pageDirectory.Name = command.Name;
 
             await _dbContext.SaveChangesAsync();
             _transactionScopeFactory.QueueCompletionTask(_dbContext, _cache.Clear);
+        }
+
+        private void Normalize(UpdatePageDirectoryCommand command)
+        {
+            command.Name = command.Name?.Trim();
         }
 
         public IEnumerable<IPermissionApplication> GetPermissions(UpdatePageDirectoryCommand command)

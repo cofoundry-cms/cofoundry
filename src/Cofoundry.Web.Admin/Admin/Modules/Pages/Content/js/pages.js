@@ -240,7 +240,7 @@ function (
 
     function onTitleChanged() {
         if (!$scope.isCustomEntityRoute) {
-            $scope.command.urlPath = stringUtilities.slugify($scope.command.title);
+            $scope.command.urlPath = stringUtilities.slugify($scope.command.title, 200);
         }
     }
 
@@ -364,7 +364,7 @@ function (
     }
 
     function onNameChanged() {
-        vm.command.urlPath = stringUtilities.slugify(vm.command.title);
+        vm.command.urlPath = stringUtilities.slugify(vm.command.title, 200);
     }
 
     function onPageTypeChanged() {

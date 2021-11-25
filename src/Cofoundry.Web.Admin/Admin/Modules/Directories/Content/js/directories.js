@@ -182,6 +182,29 @@ function (
     }
 
 }]);
+angular.module('cms.directories').directive('cmsDirectoryPath', [
+    'directories.modulePath',
+function (
+    modulePath) {
+
+    return {
+        restrict: 'E',
+        templateUrl: modulePath + 'UIComponents/DirectoryPath.html',
+        scope: {
+            pageDirectory: '=cmsDirectory'
+        },
+        replace: false,
+        controller: Controller,
+        controllerAs: 'vm',
+        bindToController: true
+    };
+
+    /* CONTROLLER */
+
+    function Controller() {
+    }
+
+}]);
 angular.module('cms.directories').controller('ChangeDirectoryUrlController', [
     '$scope',
     '$q',
@@ -265,7 +288,6 @@ function (
 
         vm.save = save;
         vm.cancel = cancel;
-        vm.onNameChanged = onNameChanged;
         vm.onDirectoriesLoaded = onDirectoriesLoaded;
     }
 
@@ -281,10 +303,6 @@ function (
 
     function onDirectoriesLoaded() {
         vm.formLoadState.off();
-    }
-
-    function onNameChanged() {
-        vm.command.urlPath = stringUtilities.slugify(vm.command.name);
     }
 
     function cancel() {
@@ -475,9 +493,7 @@ function (
 
         return _.pick(pageDirectory,
             'pageDirectoryId',
-            'name',
-            'urlPath',
-            'parentPageDirectoryId'
+            'name'
             );
     }
 

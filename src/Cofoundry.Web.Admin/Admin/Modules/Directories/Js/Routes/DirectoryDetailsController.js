@@ -172,9 +172,7 @@ function (
 
         return _.pick(pageDirectory,
             'pageDirectoryId',
-            'name',
-            'urlPath',
-            'parentPageDirectoryId'
+            'name'
             );
     }
 

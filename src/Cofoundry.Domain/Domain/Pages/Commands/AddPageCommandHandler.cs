@@ -48,7 +48,7 @@ namespace Cofoundry.Domain.Internal
 
         public async Task ExecuteAsync(AddPageCommand command, IExecutionContext executionContext)
         {
-            // Custom Validation
+            Normalize(command);
             await ValidateIsPageUniqueAsync(command, executionContext);
 
             var page = await MapPage(command, executionContext);
@@ -77,6 +77,15 @@ namespace Cofoundry.Domain.Internal
                 PageId = page.PageId,
                 HasPublishedVersionChanged = command.Publish
             });
+        }
+
+        private void Normalize(AddPageCommand command)
+        {
+            command.UrlPath = command.UrlPath?.ToLowerInvariant();
+            command.Title = command.Title.Trim();
+            command.MetaDescription = command.MetaDescription?.Trim() ?? string.Empty;
+            command.OpenGraphTitle = command.OpenGraphTitle?.Trim();
+            command.OpenGraphDescription = command.OpenGraphDescription?.Trim();
         }
 
         private Locale GetLocale(int? localeId)
@@ -143,7 +152,7 @@ namespace Cofoundry.Domain.Internal
             var pageVersion = new PageVersion();
             pageVersion.Title = command.Title;
             pageVersion.ExcludeFromSitemap = !command.ShowInSiteMap;
-            pageVersion.MetaDescription = command.MetaDescription ?? string.Empty;
+            pageVersion.MetaDescription = command.MetaDescription;
             pageVersion.OpenGraphTitle = command.OpenGraphTitle;
             pageVersion.OpenGraphDescription = command.OpenGraphDescription;
             pageVersion.OpenGraphImageId = command.OpenGraphImageId;

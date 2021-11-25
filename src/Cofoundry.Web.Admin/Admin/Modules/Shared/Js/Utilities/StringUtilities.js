@@ -58,7 +58,7 @@
      * Converts the text into a valid url slug. Removes accents from Latin characters.
      * Adapted from code at http://stringjs.com/
      */
-    service.slugify = function (s) {
+    service.slugify = function (s, limitTo) {
         if (!s) return s;
         var result = service.latinise(s)
             .replace(/&/g, ' and ')
@@ -69,7 +69,8 @@
             .replace(/\s+/g, '-')
             .replace(/-+/g, '-');
 
-        if (result.charAt(0) === '-') result = result.substr(1);
+        if (s.length > limitTo) s = s.substring(0, limitTo);
+        if (result.charAt(0) === '-') result = result.substring(1);
 
         return result;
     }

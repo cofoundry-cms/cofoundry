@@ -37,6 +37,8 @@ namespace Cofoundry.Domain.Internal
 
         public async Task ExecuteAsync(UpdatePageUrlCommand command, IExecutionContext executionContext)
         {
+            Normalize(command);
+
             var page = await _dbContext
                 .Pages
                 .Include(p => p.Locale)
@@ -68,6 +70,11 @@ namespace Cofoundry.Domain.Internal
                 OldFullUrlPath = oldPageRoute.FullUrlPath,
                 HasPublishedVersionChanged = isPublished
             });
+        }
+
+        private void Normalize(UpdatePageUrlCommand command)
+        {
+            command.UrlPath = command.UrlPath?.ToLowerInvariant();
         }
 
         private async Task MapPageAsync(UpdatePageUrlCommand command, IExecutionContext executionContext, Page page)

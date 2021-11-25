@@ -27,7 +27,7 @@
                                      cms-model="command.title"
                                      cms-description="A few words descriptive page title, e.g. 'About the team'."
                                      cms-change="onTitleChanged()"
-                                     maxlength="70"
+                                     maxlength="300"
                                      required></cms-form-field-text>
 
                 <cms-form-field-locale-selector cms-model="command.localeId"
@@ -39,7 +39,7 @@
                 <cms-form-field-text cms-title="Url path"
                                      cms-model="command.urlPath"
                                      cms-description="Lower case and containing only letter, numbers and hyphens. E.g. 'about-the-team'."
-                                     maxlength="70"
+                                     maxlength="200"
                                      ng-if="::!isCustomEntityRoute"
                                      required></cms-form-field-text>
 

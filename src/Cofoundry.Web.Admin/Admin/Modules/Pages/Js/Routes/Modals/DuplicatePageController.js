@@ -66,7 +66,7 @@ function (
 
     function onTitleChanged() {
         if (!$scope.isCustomEntityRoute) {
-            $scope.command.urlPath = stringUtilities.slugify($scope.command.title);
+            $scope.command.urlPath = stringUtilities.slugify($scope.command.title, 200);
         }
     }
 
