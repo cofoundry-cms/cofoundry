@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Cofoundry.Domain
 {
@@ -11,6 +8,7 @@ namespace Cofoundry.Domain
     /// page routing information. These route objects are cached 
     /// in order to make routing lookups speedy.
     /// </summary>
+    /// <inheritdoc/>
     public class CustomEntityRoute : IPublishableEntity
     {
         /// <summary>
@@ -37,25 +35,22 @@ namespace Cofoundry.Domain
         /// </summary>
         public string UrlSlug { get; set; }
 
-        /// <summary>
-        /// Indicates if the custom entity is marked as published or not, which allows the 
-        /// custom entity to be shown on the live site if the PublishDate has passed.
-        /// </summary>
         public PublishStatus PublishStatus { get; set; }
 
-        /// <summary>
-        /// The date after which the custom entity can be shown on the live site.
-        /// </summary>
         public DateTime? PublishDate { get; set; }
 
         /// <summary>
-        /// Indicates whether there is a draft version of this page available.
+        /// The date and time that the entity was last published. This can be different to
+        /// <see cref="PublishDate"/> which is generally the date the entity was originally
+        /// published, with this property relecting any subsequent updates. The <see cref="PublishDate"/> 
+        /// can be set manually to a future date when publishing, however the change is also 
+        /// reflected in <see cref="LastPublishDate"/> if it is scheduled ahead of the existing 
+        /// <see cref="LastPublishDate"/>.
         /// </summary>
+        public DateTime? LastPublishDate { get; set; }
+
         public bool HasDraftVersion { get; set; }
 
-        /// <summary>
-        /// Indicates whether there is a published version of this page available.
-        /// </summary>
         public bool HasPublishedVersion { get; set; }
 
         /// <summary>

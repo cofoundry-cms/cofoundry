@@ -1,18 +1,15 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Cofoundry.Core
 {
     /// <summary>
-    /// Exception to be used when an argument has an empty value (but not null)
-    /// e.g. String.Emtpy.
+    /// Exception to be used when an argument has an empty value (but not <see langword="null"/>)
+    /// e.g. <see cref="String.Empty"/>.
     /// </summary>
     public class ArgumentEmptyException : ArgumentException
     {
         public ArgumentEmptyException()
+            : base()
         {
         }
 

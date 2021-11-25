@@ -2,6 +2,7 @@
 using Cofoundry.Domain.Tests.Shared.Assertions;
 using FluentAssertions;
 using FluentAssertions.Execution;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Xunit;
@@ -23,9 +24,9 @@ namespace Cofoundry.Domain.Tests.Integration.Pages.Queries
         }
 
         [Fact]
-        public async Task ReturnsRequestedRoute()
+        public async Task MapsBasicData()
         {
-            var uniqueData = UNIQUE_PREFIX + nameof(ReturnsRequestedRoute);
+            var uniqueData = UNIQUE_PREFIX + nameof(MapsBasicData);
             var sluggedUniqueData = SlugFormatter.ToSlug(uniqueData);
 
             using var app = _appFactory.Create();
@@ -53,6 +54,8 @@ namespace Cofoundry.Domain.Tests.Integration.Pages.Queries
                 page2.PageId.Should().Be(page2Id);
                 page2.PageType.Should().Be(PageType.Generic);
                 page2.PublishStatus.Should().Be(PublishStatus.Unpublished);
+                page2.PublishDate.Should().BeNull();
+                page2.LastPublishDate.Should().BeNull();
                 page2.Title.Should().Be(uniqueData + "2");
                 page2.UrlPath.Should().Be(sluggedUniqueData + "2");
                 page2.Versions.Should().HaveCount(1);
@@ -75,7 +78,47 @@ namespace Cofoundry.Domain.Tests.Integration.Pages.Queries
                 version.VersionId.Should().BePositive();
                 version.WorkFlowStatus.Should().Be(WorkFlowStatus.Draft);
             }
+        }
 
+        [Fact]
+        public async Task MapsPublishedData()
+        {
+            var uniqueData = UNIQUE_PREFIX + nameof(MapsPublishedData);
+            var sluggedUniqueData = SlugFormatter.ToSlug(uniqueData);
+
+            using var app = _appFactory.Create();
+            var contentRepository = app.Services.GetContentRepositoryWithElevatedPermissions();
+            var rootDirectoryId = await app.TestData.PageDirectories().GetRootDirectoryIdAsync();
+            var directoryId = await app.TestData.PageDirectories().AddAsync(uniqueData);
+
+            // Set a future publish date
+            var publishDate = new DateTime(2021, 11, 25, 18, 15, 00);
+            app.Mocks.MockDateTime(publishDate.AddDays(-1));
+
+            var command = app.TestData.Pages().CreateAddCommand(uniqueData, directoryId);
+            command.Publish = true;
+            command.PublishDate = publishDate;
+            await contentRepository.ExecuteCommandAsync(command);
+
+            var page = await contentRepository
+                .Pages()
+                .GetById(command.OutputPageId)
+                .AsRoute()
+                .ExecuteAsync();
+
+            using (new AssertionScope())
+            {
+                page.Should().NotBeNull();
+                page.HasDraftVersion.Should().BeFalse();
+                page.HasPublishedVersion.Should().BeTrue();
+                page.PublishStatus.Should().Be(PublishStatus.Published);
+                page.PublishDate.Should().Be(publishDate);
+                page.LastPublishDate.Should().Be(publishDate);
+
+                var version = page.Versions.FirstOrDefault();
+                version.IsLatestPublishedVersion.Should().BeTrue();
+                version.WorkFlowStatus.Should().Be(WorkFlowStatus.Published);
+            }
         }
 
         [Fact]

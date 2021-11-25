@@ -43,6 +43,7 @@ namespace Cofoundry.Domain.Internal
                 UrlSlug = dbCustomEntity.UrlSlug,
                 Locale = locale,
                 PublishDate = DbDateTimeMapper.AsUtc(dbCustomEntity.PublishDate),
+                LastPublishDate = DbDateTimeMapper.AsUtc(dbCustomEntity.LastPublishDate),
                 PublishStatus = dbCustomEntity.PublishStatusCode == PublishStatusCode.Published ? PublishStatus.Published : PublishStatus.Unpublished,
                 Ordering = dbCustomEntity.Ordering
             };

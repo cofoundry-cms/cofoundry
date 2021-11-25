@@ -161,14 +161,12 @@ namespace Cofoundry.Domain.Internal
 
             if (command.Publish)
             {
-                page.PublishStatusCode = PublishStatusCode.Published;
-                page.PublishDate = command.PublishDate ?? executionContext.ExecutionDate;
+                page.SetPublished(executionContext.ExecutionDate, command.PublishDate);
                 pageVersion.WorkFlowStatusId = (int)WorkFlowStatus.Published;
             }
             else
             {
                 page.PublishStatusCode = PublishStatusCode.Unpublished;
-                page.PublishDate = command.PublishDate;
                 pageVersion.WorkFlowStatusId = (int)WorkFlowStatus.Draft;
             }
             _entityAuditHelper.SetCreated(pageVersion, executionContext);

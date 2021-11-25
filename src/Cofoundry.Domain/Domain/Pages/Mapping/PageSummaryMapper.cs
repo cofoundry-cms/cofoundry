@@ -67,6 +67,7 @@ namespace Cofoundry.Domain.Internal
                     HasDraftVersion = pageRoute.HasDraftVersion,
                     HasPublishedVersion = pageRoute.HasPublishedVersion,
                     PublishDate = pageRoute.PublishDate,
+                    LastPublishDate = pageRoute.LastPublishDate,
                     PublishStatus = pageRoute.PublishStatus,
                     Locale = pageRoute.Locale,
                     PageId = pageRoute.PageId,

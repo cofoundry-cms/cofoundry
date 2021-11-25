@@ -40,6 +40,16 @@ namespace Cofoundry.Domain
         public DateTime? PublishDate { get; set; }
 
         /// <summary>
+        /// The date and time that the entity was last published. This can be different to
+        /// <see cref="PublishDate"/> which is generally the date the entity was originally
+        /// published, with this property relecting any subsequent updates. The <see cref="PublishDate"/> 
+        /// can be set manually to a future date when publishing, however the change is also 
+        /// reflected in <see cref="LastPublishDate"/> if it is scheduled ahead of the existing 
+        /// <see cref="LastPublishDate"/>.
+        /// </summary>
+        public DateTime? LastPublishDate { get; set; }
+
+        /// <summary>
         /// Indicates whether there is a draft version of this entity available.
         /// </summary>
         public bool HasDraftVersion { get; set; }

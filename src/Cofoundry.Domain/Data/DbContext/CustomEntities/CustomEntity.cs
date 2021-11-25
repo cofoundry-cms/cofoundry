@@ -18,14 +18,9 @@ namespace Cofoundry.Domain.Data
     /// UnstructuredDataDependency table.
     /// </para>
     /// </summary>
-    public class CustomEntity : ICreateAuditable
+    /// <inheritdoc/>
+    public class CustomEntity : ICreateAuditable, IEntityPublishable
     {
-        public CustomEntity()
-        {
-            CustomEntityVersions = new List<CustomEntityVersion>();
-            CustomEntityPublishStatusQueries = new List<CustomEntityPublishStatusQuery>();
-        }
-
         /// <summary>
         /// Database id of the custom entity.
         /// </summary>
@@ -35,6 +30,11 @@ namespace Cofoundry.Domain.Data
         /// Unique 6 character code representing the type of custom entity.
         /// </summary>
         public string CustomEntityDefinitionCode { get; set; }
+
+        /// <summary>
+        /// Definition representing the type of custom entity.
+        /// </summary>
+        public virtual CustomEntityDefinition CustomEntityDefinition { get; set; }
 
         /// <summary>
         /// The string identifier slug which can
@@ -51,31 +51,22 @@ namespace Cofoundry.Domain.Data
         public int? LocaleId { get; set; }
 
         /// <summary>
+        /// Optional locale assigned to the custom entity
+        /// if used in a localized site.
+        /// </summary>
+        public virtual Locale Locale { get; set; }
+
+        /// <summary>
         /// Optional ordering value applied to the custom entity 
         /// in relation to other custom entities with the same definition.
         /// </summary>
         public int? Ordering { get; set; }
 
-        /// <summary>
-        /// D = draft, P = Published
-        /// </summary>
         public string PublishStatusCode { get; set; }
 
-        /// <summary>
-        /// Should be set if the status is Published.
-        /// </summary>
         public DateTime? PublishDate { get; set; }
 
-        /// <summary>
-        /// Definition representing the type of custom entity.
-        /// </summary>
-        public virtual CustomEntityDefinition CustomEntityDefinition { get; set; }
-
-        /// <summary>
-        /// Optional locale assigned to the custom entity
-        /// if used in a localized site.
-        /// </summary>
-        public virtual Locale Locale { get; set; }
+        public DateTime? LastPublishDate { get; set; }
 
         /// <summary>
         /// <para>
@@ -97,32 +88,19 @@ namespace Cofoundry.Domain.Data
         /// states.
         /// </param>
         /// </summary>
-        public virtual ICollection<CustomEntityVersion> CustomEntityVersions { get; set; }
+        public virtual ICollection<CustomEntityVersion> CustomEntityVersions { get; set; } = new List<CustomEntityVersion>();
 
         /// <summary>
         /// Lookup cache used for quickly finding the correct version for a
         /// specific publish status query e.g. 'Latest', 'Published', 
         /// 'PreferPublished'.
         /// </summary>
-        public virtual ICollection<CustomEntityPublishStatusQuery> CustomEntityPublishStatusQueries { get; internal set; }
+        public virtual ICollection<CustomEntityPublishStatusQuery> CustomEntityPublishStatusQueries { get; set; } = new List<CustomEntityPublishStatusQuery>();
 
-        #region ICreateAuditable
-
-        /// <summary>
-        /// The user that created the custom entity.
-        /// </summary>
-        public User Creator { get; set; }
-
-        /// <summary>
-        /// The date the custom entity was created.
-        /// </summary>
-        public DateTime CreateDate { get; set; }
-
-        /// <summary>
-        /// The database id of the user that created the custom entity.
-        /// </summary>
         public int CreatorId { get; set; }
 
-        #endregion
+        public User Creator { get; set; }
+
+        public DateTime CreateDate { get; set; }
     }
 }

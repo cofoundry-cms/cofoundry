@@ -1,4 +1,4 @@
-﻿/* 
+﻿/*
 	#187 Pages / Directories: Restrict by User Area
 */
 
@@ -100,15 +100,13 @@ create table Cofoundry.PageDirectoryPath (
 	constraint FK_PageDirectoryPath_PageDirectory foreign key (PageDirectoryId) references Cofoundry.PageDirectory (PageDirectoryId)
 )
 
-/* Add missing foreign key to custom entity table */
+-- Add missing foreign key to custom entity table
 
 alter table Cofoundry.CustomEntity add constraint FK_CustomEntity_CreatorUser foreign key (CreatorId) references Cofoundry.[User] (UserId)
 go
 
-/* ***************************************************************************** */
-/* Seed the PageDirectoryClosure and PageDirectoryPath tables with existing data */
-/* This is a copy of the Cofoundry.PageDirectory_UpdatePath stored procedure     */
-/* ***************************************************************************** */
+-- Seed the PageDirectoryClosure and PageDirectoryPath tables with existing data
+-- This is a copy of the Cofoundry.PageDirectory_UpdatePath stored procedure  
 
 with DirectoryCTE as 
 (
@@ -173,7 +171,8 @@ when not matched by source then
 	delete;
 go
 
-/* 
+
+/*
 	#463: Page Directories: extract ChangePageUrlCommand from UpdatePageDirectoryCommand
 */
 
@@ -198,7 +197,8 @@ go
 alter table Cofoundry.PageDirectory add constraint CK_PageDirectory_ParentNotSelf check (ParentPageDirectoryId <> PageDirectoryId)
 go
 
-/* 
+
+/*
 	#464: Page Directories: "Name" property is superflous
 	#466 : Pages / Directories: Increase maximum url slug length
 */
@@ -212,4 +212,75 @@ alter table Cofoundry.[Page] alter column UrlPath nvarchar(200) not null
 go
 create index UIX_Page_UrlPath on Cofoundry.[Page] (PageDirectoryId, LocaleId, UrlPath)
 create index UIX_PageDirectory_UrlPath on Cofoundry.PageDirectory (ParentPageDirectoryId, UrlPath)
+go
+
+
+/*
+	#288: Page & Custom Entity: Add update date
+*/
+
+alter table Cofoundry.[Page] add LastPublishDate datetime2(7) null
+alter table Cofoundry.CustomEntity add LastPublishDate datetime2(7) null
+go
+update Cofoundry.[Page] set LastPublishDate = PublishDate where PublishDate is not null
+update Cofoundry.CustomEntity set LastPublishDate = PublishDate where PublishDate is not null
+go
+
+-- Also increase precision of other dates to match c# DateTime type which can otherwise cause issues
+-- This index needs to be dropped before date precision, but isn't necessary, so let's not re-add it unless a need comes apparent
+drop index IX_ModuleUpdateError_Date on Cofoundry.ModuleUpdateError
+go
+alter table Cofoundry.AssetFileCleanupQueueItem alter column CreateDate datetime2(7) not null
+alter table Cofoundry.AssetFileCleanupQueueItem alter column LastAttemptDate datetime2(7) null
+alter table Cofoundry.AssetFileCleanupQueueItem alter column CompletedDate datetime2(7) null
+alter table Cofoundry.AssetFileCleanupQueueItem alter column AttemptPermittedDate datetime2(7) not null
+
+alter table Cofoundry.CustomEntity alter column CreateDate datetime2(7) not null
+alter table Cofoundry.CustomEntityVersion alter column CreateDate datetime2(7) not null
+
+alter table Cofoundry.DocumentAsset alter column CreateDate datetime2(7) not null
+alter table Cofoundry.DocumentAsset alter column UpdateDate datetime2(7) not null
+alter table Cofoundry.DocumentAsset alter column FileUpdateDate datetime2(7) not null
+alter table Cofoundry.DocumentAssetGroup alter column CreateDate datetime2(7) not null
+alter table Cofoundry.DocumentAssetGroupItem alter column CreateDate datetime2(7) not null
+alter table Cofoundry.DocumentAssetTag alter column CreateDate datetime2(7) not null
+
+alter table Cofoundry.ImageAsset alter column CreateDate datetime2(7) not null
+alter table Cofoundry.ImageAsset alter column UpdateDate datetime2(7) not null
+alter table Cofoundry.ImageAsset alter column FileUpdateDate datetime2(7) not null
+alter table Cofoundry.ImageAssetGroup alter column CreateDate datetime2(7) not null
+alter table Cofoundry.ImageAssetGroupItem alter column CreateDate datetime2(7) not null
+alter table Cofoundry.ImageAssetTag alter column CreateDate datetime2(7) not null
+
+alter table Cofoundry.ModuleUpdate alter column ExecutionDate datetime2(7) not null
+alter table Cofoundry.ModuleUpdateError alter column ExecutionDate datetime2(7) not null
+
+alter table Cofoundry.[Page] alter column CreateDate datetime2(7) not null
+alter table Cofoundry.PageAccessRule alter column CreateDate datetime2(7) not null
+alter table Cofoundry.PageBlockType alter column CreateDate datetime2(7) not null
+alter table Cofoundry.PageBlockType alter column UpdateDate datetime2(7) not null
+alter table Cofoundry.PageBlockTypeTemplate alter column CreateDate datetime2(7) not null
+alter table Cofoundry.PageDirectory alter column CreateDate datetime2(7) not null
+alter table Cofoundry.PageDirectoryAccessRule alter column CreateDate datetime2(7) not null
+alter table Cofoundry.PageDirectoryLocale alter column CreateDate datetime2(7) not null
+alter table Cofoundry.PageGroup alter column CreateDate datetime2(7) not null
+alter table Cofoundry.PageAccessRule alter column CreateDate datetime2(7) not null
+alter table Cofoundry.PageGroupItem alter column CreateDate datetime2(7) not null
+alter table Cofoundry.PageTag alter column CreateDate datetime2(7) not null
+alter table Cofoundry.PageTemplate alter column CreateDate datetime2(7) not null
+alter table Cofoundry.PageTemplate alter column UpdateDate datetime2(7) not null
+alter table Cofoundry.PageTemplateRegion alter column CreateDate datetime2(7) not null
+alter table Cofoundry.PageTemplateRegion alter column UpdateDate datetime2(7) not null
+alter table Cofoundry.PageVersion alter column CreateDate datetime2(7) not null
+alter table Cofoundry.PageVersionBlock alter column CreateDate datetime2(7) not null
+alter table Cofoundry.PageVersionBlock alter column UpdateDate datetime2(7) not null
+alter table Cofoundry.RewriteRule alter column CreateDate datetime2(7) not null
+alter table Cofoundry.Setting alter column CreateDate datetime2(7) not null
+alter table Cofoundry.Setting alter column UpdateDate datetime2(7) not null
+alter table Cofoundry.Tag alter column CreateDate datetime2(7) not null
+alter table Cofoundry.[User] alter column CreateDate datetime2(7) not null
+alter table Cofoundry.[User] alter column LastPasswordChangeDate datetime2(7) not null
+alter table Cofoundry.[User] alter column PreviousLoginDate datetime2(7) null
+alter table Cofoundry.[User] alter column LastLoginDate datetime2(7) null
+
 go

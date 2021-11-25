@@ -149,6 +149,7 @@ namespace Cofoundry.Domain.Internal
                     PageType = (PageType)dbPage.PageTypeId,
                     CustomEntityDefinitionCode = dbPage.CustomEntityDefinitionCode,
                     PublishDate = DbDateTimeMapper.AsUtc(dbPage.PublishDate),
+                    LastPublishDate = DbDateTimeMapper.AsUtc(dbPage.LastPublishDate),
                     PublishStatus = PublishStatusMapper.FromCode(dbPage.PublishStatusCode)
                 };
 

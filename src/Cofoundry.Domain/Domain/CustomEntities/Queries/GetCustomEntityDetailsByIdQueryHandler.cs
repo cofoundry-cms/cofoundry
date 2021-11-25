@@ -104,6 +104,7 @@ namespace Cofoundry.Domain.Internal
                 UrlSlug = dbVersion.CustomEntity.UrlSlug,             
                 PublishStatus = PublishStatusMapper.FromCode(dbVersion.CustomEntity.PublishStatusCode),
                 PublishDate = DbDateTimeMapper.AsUtc(dbVersion.CustomEntity.PublishDate),
+                LastPublishDate = DbDateTimeMapper.AsUtc(dbVersion.CustomEntity.LastPublishDate),
             };
 
             entity.AuditData = _auditDataMapper.MapCreateAuditData(dbVersion.CustomEntity);

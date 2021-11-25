@@ -63,6 +63,7 @@ namespace Cofoundry.Domain.Tests.Integration.Pages.Commands
                 page.LocaleId.Should().BeNull();
                 page.PageTypeId.Should().Be((int)PageType.Generic);
                 page.PublishDate.Should().BeNull();
+                page.LastPublishDate.Should().BeNull();
                 page.PublishStatusCode.Should().Be(PublishStatusCode.Unpublished);
                 page.CreateDate.Should().NotBeDefault();
                 page.PageVersions.Should().HaveCount(1);
@@ -198,6 +199,7 @@ namespace Cofoundry.Domain.Tests.Integration.Pages.Commands
             {
                 page.Should().NotBeNull();
                 page.PublishDate.Should().Be(now);
+                page.LastPublishDate.Should().Be(now);
                 page.PublishStatusCode.Should().Be(PublishStatusCode.Published);
                 pageVersion.Should().NotBeNull();
                 pageVersion.WorkFlowStatusId.Should().Be((int)WorkFlowStatus.Published);
@@ -240,6 +242,7 @@ namespace Cofoundry.Domain.Tests.Integration.Pages.Commands
             {
                 page.Should().NotBeNull();
                 page.PublishDate.Should().Be(publishDate);
+                page.LastPublishDate.Should().Be(publishDate);
                 page.PublishStatusCode.Should().Be(PublishStatusCode.Published);
                 pageVersion.Should().NotBeNull();
                 pageVersion.WorkFlowStatusId.Should().Be((int)WorkFlowStatus.Published);

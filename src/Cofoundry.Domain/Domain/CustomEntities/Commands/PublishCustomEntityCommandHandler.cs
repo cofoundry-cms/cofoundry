@@ -68,10 +68,9 @@ namespace Cofoundry.Domain.Internal
             var definition = _customEntityDefinitionRepository.GetRequiredByCode(version.CustomEntity.CustomEntityDefinitionCode);
             _permissionValidationService.EnforceCustomEntityPermission<CustomEntityPublishPermission>(definition.CustomEntityDefinitionCode, executionContext.UserContext);
 
-            UpdatePublishDate(command, executionContext, version);
+            var hasEntityPublishStatusChanged = version.CustomEntity.SetPublished(executionContext.ExecutionDate, command.PublishDate);
 
-            if (version.WorkFlowStatusId == (int)WorkFlowStatus.Published
-                && version.CustomEntity.PublishStatusCode == PublishStatusCode.Published)
+            if (version.WorkFlowStatusId == (int)WorkFlowStatus.Published && !hasEntityPublishStatusChanged)
             {
                 // only thing we can do with a published version is update the date
                 await _dbContext.SaveChangesAsync();
@@ -85,13 +84,11 @@ namespace Cofoundry.Domain.Internal
                 {
                     await UpdateUrlSlugIfRequiredAsync(version, definition, executionContext);
                     version.WorkFlowStatusId = (int)WorkFlowStatus.Published;
-                    version.CustomEntity.PublishStatusCode = PublishStatusCode.Published;
 
                     await _dbContext.SaveChangesAsync();
                     await _customEntityStoredProcedures.UpdatePublishStatusQueryLookupAsync(command.CustomEntityId);
 
                     scope.QueueCompletionTask(() => OnTransactionComplete(version));
-
                     await scope.CompleteAsync();
                 }
             }
@@ -106,18 +103,6 @@ namespace Cofoundry.Domain.Internal
                 CustomEntityId = version.CustomEntityId,
                 CustomEntityDefinitionCode = version.CustomEntity.CustomEntityDefinitionCode
             });
-        }
-
-        private static void UpdatePublishDate(PublishCustomEntityCommand command, IExecutionContext executionContext, CustomEntityVersion draftVersion)
-        {
-            if (command.PublishDate.HasValue)
-            {
-                draftVersion.CustomEntity.PublishDate = command.PublishDate;
-            }
-            else if (!draftVersion.CustomEntity.PublishDate.HasValue)
-            {
-                draftVersion.CustomEntity.PublishDate = executionContext.ExecutionDate;
-            }
         }
 
         /// <summary>

@@ -1,18 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Cofoundry.Core.Validation;
 using Cofoundry.Domain.CQS;
+using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using Cofoundry.Core.Validation;
 
 namespace Cofoundry.Domain
 {
     /// <summary>
     /// Adds a new custom entity with a draft version and optionally publishes it.
     /// </summary>
-    public class AddCustomEntityCommand : ICommand, ILoggableCommand, ICustomEntityDataModelCommand
+    public class AddCustomEntityCommand : ICommand, ILoggableCommand, ICustomEntityDataModelCommand, IValidatableObject
     {
         /// <summary>
         /// Unique 6 character code representing the type of custom entity.
@@ -41,7 +38,7 @@ namespace Cofoundry.Domain
         /// has AutoUrlSlug enabled, in which case it is auto-generated.
         /// </summary>
         [MaxLength(200)]
-        [Slug]  
+        [Slug]
         public string UrlSlug { get; set; }
 
         /// <summary>
@@ -67,8 +64,6 @@ namespace Cofoundry.Domain
         /// </summary>
         public DateTime? PublishDate { get; set; }
 
-        #region Ouput
-
         /// <summary>
         /// The database id of the newly created custom entity. This is set after the 
         /// command has been run.
@@ -76,6 +71,12 @@ namespace Cofoundry.Domain
         [OutputValue]
         public int OutputCustomEntityId { get; set; }
 
-        #endregion
+        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        {
+            if (!Publish && PublishDate.HasValue)
+            {
+                yield return new ValidationResult("A publish date can only be set when publishing.", new[] { nameof(PublishDate) });
+            }
+        }
     }
 }

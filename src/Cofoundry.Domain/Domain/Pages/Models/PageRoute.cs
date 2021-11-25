@@ -9,6 +9,7 @@ namespace Cofoundry.Domain
     /// A small page object focused on providing routing data. A PageRoute returned from one of the
     /// standard Cofoundry queries is typically stored in a cache to make sure access is fast.
     /// </summary>
+    /// <inheritdoc/>
     public class PageRoute : IPageRoute, IPublishableEntity
     {
         /// <summary>
@@ -47,14 +48,25 @@ namespace Cofoundry.Domain
 
         /// <summary>
         /// Indicates if the page is marked as published or not, which allows the page
-        /// to be shown on the live site if the PublishDate has passed.
+        /// to be shown on the live site if the <see cref="PublishDate"/> has passed.
         /// </summary>
         public PublishStatus PublishStatus { get; set; }
 
         /// <summary>
-        /// The date after which the page can be shown on the live site.
+        /// The date and time that the page was first published. This date can be set to a future date 
+        /// to indicate that page should not appear on the live site until this date has passed.
         /// </summary>
         public DateTime? PublishDate { get; set; }
+
+        /// <summary>
+        /// The date and time that the page was last published. This can be different to
+        /// <see cref="PublishDate"/> which is generally the date the page was originally
+        /// published, with this property relecting any subsequent updates. The <see cref="PublishDate"/> 
+        /// can be set manually to a future date when publishing, however the change is also 
+        /// reflected in <see cref="LastPublishDate"/> if it is scheduled ahead of the existing 
+        /// <see cref="LastPublishDate"/>.
+        /// </summary>
+        public DateTime? LastPublishDate { get; set; }
 
         /// <summary>
         /// Indicates whether there is a draft version of this page available.

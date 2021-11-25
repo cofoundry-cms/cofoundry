@@ -8,7 +8,8 @@ namespace Cofoundry.Domain
     /// of workflow status and should not be used in a version-sensitive context 
     /// such as a public webpage. Used primarily in the admin panel.
     /// </summary>
-    public class CustomEntitySummary : IUpdateAudited, IPageRoute//, IPublishableEntity
+    /// <inheritdoc/>
+    public class CustomEntitySummary : IUpdateAudited, IPageRoute, IPublishableEntity
     {
         /// <summary>
         /// The database id of the custom entity.
@@ -40,25 +41,22 @@ namespace Cofoundry.Domain
         /// </summary>
         public string FullUrlPath { get; set; }
 
-        /// <summary>
-        /// Indicates if the page is marked as published or not, which allows the page
-        /// to be shown on the live site if the PublishDate has passed.
-        /// </summary>
         public PublishStatus PublishStatus { get; set; }
 
-        /// <summary>
-        /// The date after which the page can be shown on the live site.
-        /// </summary>
         public DateTime? PublishDate { get; set; }
 
         /// <summary>
-        /// Indicates whether there is a draft version of this entity available.
+        /// The date and time that the entity was last published. This can be different to
+        /// <see cref="PublishDate"/> which is generally the date the entity was originally
+        /// published, with this property relecting any subsequent updates. The <see cref="PublishDate"/> 
+        /// can be set manually to a future date when publishing, however the change is also 
+        /// reflected in <see cref="LastPublishDate"/> if it is scheduled ahead of the existing 
+        /// <see cref="LastPublishDate"/>.
         /// </summary>
+        public DateTime? LastPublishDate { get; set; }
+
         public bool HasDraftVersion { get; set; }
 
-        /// <summary>
-        /// Indicates whether there is a published version of this entity available.
-        /// </summary>
         public bool HasPublishedVersion { get; set; }
 
         /// <summary>
@@ -85,9 +83,6 @@ namespace Cofoundry.Domain
         /// </summary>
         public ICustomEntityDataModel Model { get; set; }
 
-        /// <summary>
-        /// Simple audit data for custom entity creation.
-        /// </summary>
         public UpdateAuditData AuditData { get; set; }
     }
 }

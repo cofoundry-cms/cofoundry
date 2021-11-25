@@ -146,14 +146,6 @@ namespace Cofoundry.Domain.Internal
             return locale;
         }
 
-        private IQueryable<CustomEntityDefinition> QueryDbDefinition(AddCustomEntityCommand command)
-        {
-            return _dbContext
-                .CustomEntityDefinitions
-                .Include(d => d.EntityDefinition)
-                .Where(d => d.CustomEntityDefinitionCode == command.CustomEntityDefinitionCode);
-        }
-
         private async Task SetOrdering(CustomEntity customEntity, CustomEntityDefinitionSummary definition)
         {
             if (definition.Ordering == CustomEntityOrdering.Full)
@@ -192,14 +184,12 @@ namespace Cofoundry.Domain.Internal
 
             if (command.Publish)
             {
-                entity.PublishStatusCode = PublishStatusCode.Published;
-                entity.PublishDate = command.PublishDate ?? executionContext.ExecutionDate;
+                entity.SetPublished(executionContext.ExecutionDate, command.PublishDate);
                 version.WorkFlowStatusId = (int)WorkFlowStatus.Published;
             }
             else
             {
                 entity.PublishStatusCode = PublishStatusCode.Unpublished;
-                entity.PublishDate = command.PublishDate;
                 version.WorkFlowStatusId = (int)WorkFlowStatus.Draft;
             }
 

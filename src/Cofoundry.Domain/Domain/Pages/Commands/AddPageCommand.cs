@@ -153,6 +153,11 @@ namespace Cofoundry.Domain
             {
                 yield return new ValidationResult("Custom Entity routing rules should only be specified for custom entity details page types.", new[] { nameof(CustomEntityRoutingRule) });
             }
+
+            if (!Publish && PublishDate.HasValue)
+            {
+                yield return new ValidationResult("A publish date can only be set when a page is published.", new[] { nameof(PublishDate) });
+            }
         }
     }
 }

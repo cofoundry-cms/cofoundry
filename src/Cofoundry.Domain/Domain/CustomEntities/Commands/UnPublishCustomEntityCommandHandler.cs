@@ -1,15 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Cofoundry.Domain.Data;
-using Cofoundry.Domain.CQS;
-using Microsoft.EntityFrameworkCore;
-using Cofoundry.Core.MessageAggregator;
-using Cofoundry.Core;
+﻿using Cofoundry.Core;
 using Cofoundry.Core.Data;
+using Cofoundry.Core.MessageAggregator;
+using Cofoundry.Domain.CQS;
+using Cofoundry.Domain.Data;
 using Cofoundry.Domain.Data.Internal;
+using Microsoft.EntityFrameworkCore;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Cofoundry.Domain.Internal
 {
@@ -19,12 +16,10 @@ namespace Cofoundry.Domain.Internal
     /// can be used as a default when the user chooses to publish
     /// again.
     /// </summary>
-    public class UnPublishCustomEntityCommandHandler 
+    public class UnPublishCustomEntityCommandHandler
         : ICommandHandler<UnPublishCustomEntityCommand>
         , IIgnorePermissionCheckHandler
     {
-        #region constructor
-
         private readonly CofoundryDbContext _dbContext;
         private readonly ICustomEntityCache _customEntityCache;
         private readonly IMessageAggregator _messageAggregator;
@@ -48,8 +43,6 @@ namespace Cofoundry.Domain.Internal
             _transactionScopeFactory = transactionScopeFactory;
             _customEntityStoredProcedures = customEntityStoredProcedures;
         }
-
-        #endregion
 
         public async Task ExecuteAsync(UnPublishCustomEntityCommand command, IExecutionContext executionContext)
         {

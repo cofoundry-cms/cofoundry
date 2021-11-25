@@ -74,6 +74,7 @@ namespace Cofoundry.Domain.Tests.Integration.Pages.Commands
                 newPage.PageTypeId.Should().Be(originalPage.PageTypeId);
                 newPage.PageVersions.Should().HaveCount(1);
                 newPage.PublishDate.Should().BeNull();
+                newPage.LastPublishDate.Should().BeNull();
                 newPage.PublishStatusCode.Should().Be(PublishStatusCode.Unpublished);
                 newPage.UrlPath.Should().Be(command.UrlPath);
 

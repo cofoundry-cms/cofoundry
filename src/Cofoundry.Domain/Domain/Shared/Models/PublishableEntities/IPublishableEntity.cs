@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Cofoundry.Domain
 {
@@ -12,12 +10,13 @@ namespace Cofoundry.Domain
     {
         /// <summary>
         /// Indicates if the entity is marked as published or not, which allows the entity
-        /// to be shown on the live site if the PublishDate has passed.
+        /// to be shown on the live site if the <see cref="PublishDate"/> has passed.
         /// </summary>
         PublishStatus PublishStatus { get; set; }
 
         /// <summary>
-        /// The date after which the entity can be shown on the live site.
+        /// The date that the entity was first published. This date can be set to a future date 
+        /// to indicate that entity should not appear on the live site until this date has passed.
         /// </summary>
         DateTime? PublishDate { get; set; }
 

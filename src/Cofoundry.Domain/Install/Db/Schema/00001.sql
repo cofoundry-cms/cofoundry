@@ -43,7 +43,7 @@ create table Cofoundry.ModuleUpdate (
 	Module varchar(200) not null,
 	[Version] int not null,
 	[Description] varchar(200) not null,
-	ExecutionDate datetime2(4) not null,
+	ExecutionDate datetime2(7) not null,
 
 	constraint PK_ModuleUpdate primary key (Module,[Version], [Description])
 )
@@ -59,7 +59,7 @@ create table Cofoundry.ModuleUpdateError (
 	Module varchar(200) not null,
 	[Version] int null,
 	[Description] varchar(200) not null,
-	ExecutionDate datetime2(4) not null,
+	ExecutionDate datetime2(7) not null,
 	ExceptionMessage nvarchar(max) null,
 
 	constraint PK_ModuleUpdateError primary key (ModuleUpdateErrorId)

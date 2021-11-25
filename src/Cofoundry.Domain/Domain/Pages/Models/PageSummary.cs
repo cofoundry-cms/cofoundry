@@ -9,6 +9,7 @@ namespace Cofoundry.Domain
     /// to render content out to a live page, since the page may not be 
     /// published.
     /// </summary>
+    /// <inheritdoc/>
     public class PageSummary : ICreateAudited, IPageRoute, IPublishableEntity
     {
         /// <summary>
@@ -33,9 +34,20 @@ namespace Cofoundry.Domain
         public PublishStatus PublishStatus { get; set; }
 
         /// <summary>
-        /// The date after which the page can be shown on the live site.
+        /// The date that the entity was first published. This date can be set to a future date 
+        /// to indicate that entity should not appear on the live site until this date has passed.
         /// </summary>
         public DateTime? PublishDate { get; set; }
+
+        /// <summary>
+        /// The date and time that the page was last published. This can be different to
+        /// <see cref="PublishDate"/> which is generally the date the page was originally
+        /// published, with this property relecting any subsequent updates. The <see cref="PublishDate"/> 
+        /// can be set manually to a future date when publishing, however the change is also 
+        /// reflected in <see cref="LastPublishDate"/> if it is scheduled ahead of the existing 
+        /// <see cref="LastPublishDate"/>.
+        /// </summary>
+        public DateTime? LastPublishDate { get; set; }
 
         /// <summary>
         /// Indicates whether there is a draft version of this page available.
@@ -75,9 +87,6 @@ namespace Cofoundry.Domain
         /// </summary>
         public ICollection<string> Tags { get; set; }
 
-        /// <summary>
-        /// Simple audit data for entity creation.
-        /// </summary>
         public CreateAuditData AuditData { get; set; }
     }
 }

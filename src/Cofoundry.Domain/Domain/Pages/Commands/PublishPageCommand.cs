@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Cofoundry.Core.Validation;
 using Cofoundry.Domain.CQS;
-using Cofoundry.Core.Validation;
+using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace Cofoundry.Domain
 {
@@ -38,7 +34,7 @@ namespace Cofoundry.Domain
             PageId = pageId;
             PublishDate = publishDate;
         }
-        
+
         /// <summary>
         /// The database id of the page to publish.
         /// </summary>
@@ -48,7 +44,7 @@ namespace Cofoundry.Domain
 
         /// <summary>
         /// Optional time that the page should be published and made public. If
-        /// this is left null then the publish date is set to the current 
+        /// this is left <see langword="null"/> then the publish date is set to the current 
         /// date and the page is made immediately available.
         /// </summary>
         public DateTime? PublishDate { get; set; }

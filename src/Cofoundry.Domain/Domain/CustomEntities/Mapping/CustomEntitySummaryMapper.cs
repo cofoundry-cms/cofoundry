@@ -123,6 +123,7 @@ namespace Cofoundry.Domain.Internal
                 HasPublishedVersion = dbStatusQuery.CustomEntityVersion.WorkFlowStatusId == (int)WorkFlowStatus.Published,
                 PublishStatus = PublishStatusMapper.FromCode(dbStatusQuery.CustomEntity.PublishStatusCode),
                 PublishDate = DbDateTimeMapper.AsUtc(dbStatusQuery.CustomEntity.PublishDate),
+                LastPublishDate = DbDateTimeMapper.AsUtc(dbStatusQuery.CustomEntity.LastPublishDate),
                 Ordering = dbStatusQuery.CustomEntity.Ordering,
                 Title = dbStatusQuery.CustomEntityVersion.Title,
                 UrlSlug = dbStatusQuery.CustomEntity.UrlSlug

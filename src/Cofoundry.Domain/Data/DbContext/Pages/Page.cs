@@ -11,7 +11,7 @@ namespace Cofoundry.Domain.Data
     /// is rendered when the page is published. 
     /// </summary>
     /// <inheritdoc/>
-    public partial class Page : IEntityAccessRestrictable<PageAccessRule>, ICreateAuditable
+    public partial class Page : IEntityAccessRestrictable<PageAccessRule>, ICreateAuditable, IEntityPublishable
     {
         /// <summary>
         /// The auto-incrementing database id of the page.
@@ -64,19 +64,27 @@ namespace Cofoundry.Domain.Data
         /// </summary>
         public virtual CustomEntityDefinition CustomEntityDefinition { get; set; }
 
-        /// <summary>
-        /// U = unpublished, P = Published. This is mapped to the
-        /// <see cref="Cofoundry.Domain.PublishStatus"/> enum using
-        /// <see cref="Cofoundry.Domain.Internal.PublishStatusMapper"/>.
-        /// </summary>
         public string PublishStatusCode { get; set; }
 
         /// <summary>
         /// The date and time that the page is or should be published.
         /// The publish date should always be set if the <see cref="PublishStatusCode"/> 
-        /// is set to "P" (Published).
+        /// is set to "P" (Published). Generally this tracks the first or original publish 
+        /// date, with subsequent publishes only updating the <see cref="LastPublishDate"/>,
+        /// however the <see cref="PublishDate"/> can be set to a specific date to allow for
+        /// scheduled publishing.
         /// </summary>
         public DateTime? PublishDate { get; set; }
+
+        /// <summary>
+        /// The date and time that the page was last published. This can be different to
+        /// <see cref="PublishDate"/> which is generally the date the page was originally
+        /// published, with this property relecting any subsequent updates. The <see cref="PublishDate"/> 
+        /// can be set manually to a future date when publishing, however the change is also 
+        /// reflected in <see cref="LastPublishDate"/> if it is scheduled ahead of the existing 
+        /// <see cref="LastPublishDate"/>.
+        /// </summary>
+        public DateTime? LastPublishDate { get; set; }
 
         public int AccessRuleViolationActionId { get; set; }
 

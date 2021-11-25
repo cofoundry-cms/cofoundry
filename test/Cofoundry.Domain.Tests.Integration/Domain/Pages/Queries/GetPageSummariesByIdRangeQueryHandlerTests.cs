@@ -139,6 +139,7 @@ namespace Cofoundry.Domain.Tests.Integration.Pages.Queries
             page.Locale.Should().BeNull();
             page.PageType.Should().Be(addPageCommand.PageType);
             page.PublishDate.Should().NotBeNull().And.NotBeDefault();
+            page.LastPublishDate.Should().NotBeNull().And.NotBeDefault();
             page.PublishStatus.Should().Be(PublishStatus.Published);
             page.Tags.Should().ContainSingle(t => t == "Test");
             page.Title.Should().Be(addPageCommand.Title);

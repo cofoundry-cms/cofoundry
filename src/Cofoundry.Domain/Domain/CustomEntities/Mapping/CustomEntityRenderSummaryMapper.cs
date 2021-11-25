@@ -147,7 +147,8 @@ namespace Cofoundry.Domain.Internal
                 Title = dbResult.Title,
                 UrlSlug = dbResult.CustomEntity.UrlSlug,
                 WorkFlowStatus = (WorkFlowStatus)dbResult.WorkFlowStatusId,
-                PublishDate = DbDateTimeMapper.AsUtc(dbResult.CustomEntity.PublishDate)
+                PublishDate = DbDateTimeMapper.AsUtc(dbResult.CustomEntity.PublishDate),
+                LastPublishDate = DbDateTimeMapper.AsUtc(dbResult.CustomEntity.LastPublishDate)
             };
 
             entity.PublishStatus = PublishStatusMapper.FromCode(dbResult.CustomEntity.PublishStatusCode);
