@@ -21,11 +21,30 @@ namespace Cofoundry.Domain.Data
 
         /// <summary>
         /// Filters the roles collection to include only the role
+        /// with the specified <paramref name="roleId"/> if one if defined,
+        /// otherwise by <paramref name="roleCode"/>.
+        /// </summary>
+        /// <param name="roles">Collection of roles to filter.</param>
+        /// <param name="roleId">Id of the role to filter to.</param>
+        /// <param name="roleCode">3 character identifier of the role to filter to.</param>
+        /// <returns>The filtered role collection.</returns>
+        public static IQueryable<Role> FilterByIdOrCode(this IQueryable<Role> roles, int? roleId, string roleCode)
+        {
+            if (roleId.HasValue)
+            {
+                return roles.FilterById(roleId.Value);
+            }
+
+            return roles.FilterByRoleCode(roleCode);
+        }
+
+        /// <summary>
+        /// Filters the roles collection to include only the role
         /// with the specified <paramref name="roleCode"/>. Role codes are globally
         /// unique.
         /// </summary>
         /// <param name="roles">Collection of roles to filter.</param>
-        /// <param name="id">Id of the role to filter to.</param>
+        /// <param name="roleCode">3 character identifier of the role to filter to.</param>
         /// <returns>The filtered role collection.</returns>
         public static IQueryable<Role> FilterByRoleCode(this IQueryable<Role> roles, string roleCode)
         {

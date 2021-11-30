@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Cofoundry.Domain.Data;
@@ -26,13 +25,11 @@ namespace Cofoundry.Domain
     /// </para>
     /// </summary>
     public class InitiatePasswordResetRequestCommandHandler 
-        : IAsyncCommandHandler<InitiatePasswordResetRequestCommand>
+        : ICommandHandler<InitiatePasswordResetRequestCommand>
         , IIgnorePermissionCheckHandler
     {
         private const int MAX_PASSWORD_RESET_ATTEMPTS = 16;
         private const int MAX_PASSWORD_RESET_ATTEMPTS_NUMHOURS = 24;
-
-        #region construstor
 
         private readonly CofoundryDbContext _dbContext;
         private readonly ITransactionScopeManager _transactionScopeFactory;
@@ -67,8 +64,6 @@ namespace Cofoundry.Domain
             _executionContextFactory = executionContextFactory;
         }
 
-        #endregion
-
         public async Task ExecuteAsync(InitiatePasswordResetRequestCommand command, IExecutionContext executionContext)
         {
             var connectionInfo = _clientConnectionService.GetConnectionInfo();
@@ -83,9 +78,9 @@ namespace Cofoundry.Domain
                 .Where(r => r.UserId == user.UserId && !r.IsComplete)
                 .ToListAsync();
 
-            foreach (var req in existingIncompleteRequests)
+            foreach (var incokpleteRequest in existingIncompleteRequests)
             {
-                req.IsComplete = true;
+                incokpleteRequest.IsComplete = true;
             }
 
             var request = CreateRequest(user, connectionInfo, executionContext);

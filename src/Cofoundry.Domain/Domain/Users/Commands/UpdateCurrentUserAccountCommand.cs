@@ -1,13 +1,5 @@
-﻿using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
+﻿using Cofoundry.Domain.CQS;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml.Serialization;
-using Cofoundry.Domain.CQS;
-using Cofoundry.Core.Validation;
 
 namespace Cofoundry.Domain
 {
@@ -17,16 +9,14 @@ namespace Cofoundry.Domain
     public class UpdateCurrentUserAccountCommand : ICommand, ILoggableCommand
     {
         /// <summary>
-        /// The first name is required.
+        /// The first name is optional.
         /// </summary>
-        [Required]
         [StringLength(32)]
         public string FirstName { get; set; }
 
         /// <summary>
-        /// The last name is required.
+        /// The last name is optional.
         /// </summary>
-        [Required]
         [StringLength(32)]
         public string LastName { get; set; }
 

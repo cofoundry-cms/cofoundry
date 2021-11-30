@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Extensions.DependencyInjection;
+using System;
 
 namespace Cofoundry.Domain.Tests.Integration
 {
@@ -10,6 +11,7 @@ namespace Cofoundry.Domain.Tests.Integration
     {
         private readonly IServiceProvider _rootServiceProvider;
         private readonly SeededEntities _seededEntities;
+        private readonly IPermissionRepository _permissionRepository;
 
         public TestDataHelper(
             IServiceProvider rootServiceProvider,
@@ -18,6 +20,7 @@ namespace Cofoundry.Domain.Tests.Integration
         {
             _rootServiceProvider = rootServiceProvider;
             _seededEntities = seededEntities;
+            _permissionRepository = rootServiceProvider.GetRequiredService<IPermissionRepository>();
         }
 
         /// <summary>
@@ -61,7 +64,7 @@ namespace Cofoundry.Domain.Tests.Integration
         {
             return new UnstructuredDataTestDataHelper(_rootServiceProvider, _seededEntities);
         }
-        
+
         /// <summary>
         /// Used to make it easier to create users in test fixtures.
         /// </summary>
@@ -69,6 +72,13 @@ namespace Cofoundry.Domain.Tests.Integration
         {
             return new UserTestDataHelper(_rootServiceProvider, _seededEntities);
         }
-        
+
+        /// <summary>
+        /// Used to make it easier to create roles in test fixtures.
+        /// </summary>
+        public RoleTestDataHelper Roles()
+        {
+            return new RoleTestDataHelper(_rootServiceProvider, _seededEntities, _permissionRepository);
+        }
     }
 }

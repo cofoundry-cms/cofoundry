@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 
 namespace Cofoundry.Domain
 {
@@ -10,8 +7,6 @@ namespace Cofoundry.Domain
     /// </summary>
     public interface IAdvancedContentRepositoryUserRepository
     {
-        #region queries
-
         /// <summary>
         /// Retrieve the currently logged in user. If
         /// there are multiple users then this only applies to the
@@ -37,13 +32,9 @@ namespace Cofoundry.Domain
         /// <param name="query">Query parameters.</param>
         IDomainRepositoryQueryContext<bool> IsUsernameUnique(IsUsernameUniqueQuery query);
 
-        #endregion
-
-        #region commands
-
         /// <summary>
-        /// A generic user creation command for use with Cofoundry users and
-        /// other non-Cofoundry users. Does not send any email notifications.
+        /// A basic user creation command that adds data only and does not 
+        /// send any email notifications.
         /// </summary>
         /// <param name="command">Command parameters.</param>
         /// <returns>Id of the newly created user.</returns>
@@ -82,7 +73,5 @@ namespace Cofoundry.Domain
         /// </summary>
         /// <param name="command">Command parameters.</param>
         Task UpdateCurrentUserPasswordAsync(UpdateCurrentUserPasswordCommand command);
-
-        #endregion
     }
 }

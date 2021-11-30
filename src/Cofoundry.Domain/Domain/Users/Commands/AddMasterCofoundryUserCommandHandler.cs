@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
-using Cofoundry.Domain.Data;
+﻿using Cofoundry.Core;
 using Cofoundry.Domain.CQS;
-using Cofoundry.Core;
+using Cofoundry.Domain.Data;
+using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations;
+using System.Threading.Tasks;
 
 namespace Cofoundry.Domain.Internal
 {
@@ -19,28 +16,48 @@ namespace Cofoundry.Domain.Internal
         : ICommandHandler<AddMasterCofoundryUserCommand>
         , IIgnorePermissionCheckHandler
     {
-        #region constructor
-
         private readonly CofoundryDbContext _dbContext;
         private readonly IQueryExecutor _queryExecutor;
         private readonly IPasswordCryptographyService _passwordCryptographyService;
+        private readonly IEmailAddressNormalizer _emailAddressNormalizer;
 
         public AddMasterCofoundryUserCommandHandler(
             CofoundryDbContext dbContext,
             IQueryExecutor queryExecutor,
-            IPasswordCryptographyService passwordCryptographyService
+            IPasswordCryptographyService passwordCryptographyService,
+            IEmailAddressNormalizer emailAddressNormalizer
             )
         {
             _dbContext = dbContext;
             _queryExecutor = queryExecutor;
             _passwordCryptographyService = passwordCryptographyService;
+            _emailAddressNormalizer = emailAddressNormalizer;
         }
 
-        #endregion
-
-        #region execution
-
         public async Task ExecuteAsync(AddMasterCofoundryUserCommand command, IExecutionContext executionContext)
+        {
+            await ValidateIsNotSetupAsync(executionContext);
+
+            var role = await _dbContext
+                .Roles
+                .SingleOrDefaultAsync(r => r.RoleCode == SuperAdminRole.SuperAdminRoleCode);
+            EntityNotFoundException.ThrowIfNull(role, SuperAdminRole.SuperAdminRoleCode);
+
+            var userArea = await _dbContext
+                .UserAreas
+                .SingleOrDefaultAsync(a => a.UserAreaCode == CofoundryAdminUserArea.AreaCode);
+            EntityNotFoundException.ThrowIfNull(userArea, CofoundryAdminUserArea.AreaCode);
+
+            Normalize(command);
+            var user = MapUser(command, executionContext, role, userArea);
+
+            _dbContext.Users.Add(user);
+            await _dbContext.SaveChangesAsync();
+
+            command.OutputUserId = user.UserId;
+        }
+
+        private async Task ValidateIsNotSetupAsync(IExecutionContext executionContext)
         {
             var settings = await _queryExecutor.ExecuteAsync(new GetSettingsQuery<InternalSettings>(), executionContext);
 
@@ -56,28 +73,16 @@ namespace Cofoundry.Domain.Internal
             {
                 throw new ValidationException("Cannot create a master user when master users already exist in the database.");
             }
-
-            var role = await _dbContext
-                .Roles
-                .SingleOrDefaultAsync(r => r.RoleCode == SuperAdminRole.SuperAdminRoleCode);
-            EntityNotFoundException.ThrowIfNull(role, SuperAdminRole.SuperAdminRoleCode);
-
-            var userArea = await _dbContext
-                .UserAreas
-                .SingleOrDefaultAsync(a => a.UserAreaCode == CofoundryAdminUserArea.AreaCode);
-
-            var user = MapAndAddUser(command, executionContext, role, userArea);
-
-            await _dbContext.SaveChangesAsync();
-
-            command.OutputUserId = user.UserId;
         }
 
-        #endregion
+        private void Normalize(AddMasterCofoundryUserCommand command)
+        {
+            command.FirstName = command?.FirstName.Trim();
+            command.LastName = command?.LastName.Trim();
+            command.Email = _emailAddressNormalizer.Normalize(command.Email);
+        }
 
-        #region private helpers
-
-        private User MapAndAddUser(AddMasterCofoundryUserCommand command, IExecutionContext executionContext, Role superUserRole, UserArea userArea)
+        private User MapUser(AddMasterCofoundryUserCommand command, IExecutionContext executionContext, Role superUserRole, UserArea userArea)
         {
             var user = new User();
             user.FirstName = command.FirstName;
@@ -92,15 +97,9 @@ namespace Cofoundry.Domain.Internal
             var hashResult = _passwordCryptographyService.CreateHash(command.Password);
             user.Password = hashResult.Hash;
             user.PasswordHashVersion = hashResult.HashVersion;
-
             user.UserArea = userArea;
-            EntityNotFoundException.ThrowIfNull(user.UserArea, CofoundryAdminUserArea.AreaCode);
-
-            _dbContext.Users.Add(user);
 
             return user;
         }
-
-        #endregion
     }
 }

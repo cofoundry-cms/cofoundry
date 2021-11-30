@@ -1,5 +1,4 @@
 ﻿using Cofoundry.Core;
-using Cofoundry.Core.Data;
 using Cofoundry.Core.Validation;
 using Cofoundry.Domain.CQS;
 using Cofoundry.Domain.Data;
@@ -20,18 +19,21 @@ namespace Cofoundry.Domain.Internal
         private readonly IQueryExecutor _queryExecutor;
         private readonly IPermissionValidationService _permissionValidationService;
         private readonly IUserAreaDefinitionRepository _userAreaRepository;
+        private readonly IEmailAddressNormalizer _emailAddressNormalizer;
 
         public UpdateCurrentUserAccountCommandHandler(
             IQueryExecutor queryExecutor,
             CofoundryDbContext dbContext,
             IPermissionValidationService permissionValidationService,
-            IUserAreaDefinitionRepository userAreaRepository
+            IUserAreaDefinitionRepository userAreaRepository,
+            IEmailAddressNormalizer emailAddressNormalizer
             )
         {
             _queryExecutor = queryExecutor;
             _dbContext = dbContext;
             _permissionValidationService = permissionValidationService;
             _userAreaRepository = userAreaRepository;
+            _emailAddressNormalizer = emailAddressNormalizer;
         }
 
         public async Task ExecuteAsync(UpdateCurrentUserAccountCommand command, IExecutionContext executionContext)
@@ -47,12 +49,19 @@ namespace Cofoundry.Domain.Internal
 
             EntityNotFoundException.ThrowIfNull(user, userId);
 
+            Normalize(command);
             await UpdateEmailAsync(command, userId, user, executionContext);
-
-            user.FirstName = command.FirstName.Trim();
-            user.LastName = command.LastName.Trim();
+            user.FirstName = command.FirstName;
+            user.LastName = command.LastName;
 
             await _dbContext.SaveChangesAsync();
+        }
+
+        private void Normalize(UpdateCurrentUserAccountCommand command)
+        {
+            command.Email = _emailAddressNormalizer.Normalize(command.Email);
+            command.FirstName = command.FirstName?.Trim();
+            command.LastName = command.LastName?.Trim();
         }
 
         private async Task UpdateEmailAsync(
@@ -63,26 +72,25 @@ namespace Cofoundry.Domain.Internal
             )
         {
             var userArea = _userAreaRepository.GetRequiredByCode(user.UserAreaCode);
-            var newEmail = command.Email?.Trim();
 
-            if (userArea.UseEmailAsUsername && user.Username != newEmail)
+            if (userArea.UseEmailAsUsername && user.Username != command.Email)
             {
                 var uniqueQuery = new IsUsernameUniqueQuery()
                 {
-                    Username = newEmail,
+                    Username = command.Email,
                     UserId = userId,
-                    UserAreaCode = CofoundryAdminUserArea.AreaCode
+                    UserAreaCode = userArea.UserAreaCode
                 };
 
                 if (!await _queryExecutor.ExecuteAsync(uniqueQuery, executionContext))
                 {
-                    throw ValidationErrorException.CreateWithProperties("This email is already registered", "Email");
+                    throw ValidationErrorException.CreateWithProperties("This email is already registered", nameof(command.Email));
                 }
 
-                user.Username = newEmail;
+                user.Username = command.Email;
             }
 
-            user.Email = newEmail;
+            user.Email = command.Email;
         }
 
         public IEnumerable<IPermissionApplication> GetPermissions(UpdateCurrentUserAccountCommand command)

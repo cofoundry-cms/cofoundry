@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Cofoundry.Domain.Data;
+﻿using Cofoundry.Core;
 using Cofoundry.Domain.CQS;
+using Cofoundry.Domain.Data;
 using Microsoft.EntityFrameworkCore;
-using Cofoundry.Core;
+using System.Threading.Tasks;
 
 namespace Cofoundry.Domain.Internal
 {
@@ -14,8 +10,6 @@ namespace Cofoundry.Domain.Internal
         : ICommandHandler<EnsureUserAreaExistsCommand>
         , IIgnorePermissionCheckHandler
     {
-        #region constructor
-
         private readonly CofoundryDbContext _dbContext;
         private readonly IUserAreaDefinitionRepository _userAreaRepository;
 
@@ -27,10 +21,6 @@ namespace Cofoundry.Domain.Internal
             _dbContext = dbContext;
             _userAreaRepository = userAreaRepository;
         }
-
-        #endregion
-
-        #region Execute
 
         public async Task ExecuteAsync(EnsureUserAreaExistsCommand command, IExecutionContext executionContext)
         {
@@ -50,7 +40,5 @@ namespace Cofoundry.Domain.Internal
                 _dbContext.UserAreas.Add(dbUserArea);
             }
         }
-
-        #endregion
     }
 }

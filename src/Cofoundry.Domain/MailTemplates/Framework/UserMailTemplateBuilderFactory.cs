@@ -1,11 +1,8 @@
 ﻿using Cofoundry.Core;
-using Cofoundry.Domain.CQS;
 using Cofoundry.Domain.MailTemplates.AdminMailTemplates;
 using Cofoundry.Domain.MailTemplates.DefaultMailTemplates;
 using Microsoft.Extensions.DependencyInjection;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Cofoundry.Domain.MailTemplates
 {
@@ -13,17 +10,14 @@ namespace Cofoundry.Domain.MailTemplates
     {
         private readonly IServiceProvider _serviceProvider;
         private readonly IUserAreaDefinitionRepository _userAreaDefinitionRepository;
-        private readonly IPasswordResetUrlHelper _passwordResetUrlHelper;
 
         public UserMailTemplateBuilderFactory(
             IServiceProvider serviceProvider,
-            IUserAreaDefinitionRepository userAreaDefinitionRepository,
-            IPasswordResetUrlHelper passwordResetUrlHelper
+            IUserAreaDefinitionRepository userAreaDefinitionRepository
             )
         {
             _serviceProvider = serviceProvider;
             _userAreaDefinitionRepository = userAreaDefinitionRepository;
-            _passwordResetUrlHelper = passwordResetUrlHelper;
         }
 
         public IUserMailTemplateBuilder Create(string userAreaDefinitionCode)
@@ -49,7 +43,7 @@ namespace Cofoundry.Domain.MailTemplates
             var defaultBuilderType = typeof(DefaultMailTemplateBuilderWrapper<>).MakeGenericType(definitionType);
 
             // for other user areas fall back to the default builder
-            return (IUserMailTemplateBuilder)_serviceProvider.GetService(defaultBuilderType);
+            return (IUserMailTemplateBuilder)_serviceProvider.GetRequiredService(defaultBuilderType);
         }
     }
 }

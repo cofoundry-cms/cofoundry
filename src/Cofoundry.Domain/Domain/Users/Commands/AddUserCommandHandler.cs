@@ -1,66 +1,56 @@
-﻿using System;
+﻿using Cofoundry.Core;
+using Cofoundry.Core.Validation;
+using Cofoundry.Domain.CQS;
+using Cofoundry.Domain.Data;
+using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
-using Cofoundry.Domain.Data;
-using Cofoundry.Domain.CQS;
-using Cofoundry.Core.Validation;
-using Cofoundry.Core.Mail;
-using Cofoundry.Core;
 
 namespace Cofoundry.Domain.Internal
 {
     /// <summary>
-    /// A generic user creation command for use with Cofoundry users and
-    /// other non-Cofoundry users. Does not send any email notifications.
+    /// A basic user creation command that adds data only and does not 
+    /// send any email notifications.
     /// </summary>
-    public class AddUserCommandHandler 
+    public class AddUserCommandHandler
         : ICommandHandler<AddUserCommand>
         , IPermissionRestrictedCommandHandler<AddUserCommand>
     {
-        #region constructor
-
         private readonly CofoundryDbContext _dbContext;
         private readonly IQueryExecutor _queryExecutor;
         private readonly IPasswordCryptographyService _passwordCryptographyService;
-        private readonly IMailService _mailService;
         private readonly UserCommandPermissionsHelper _userCommandPermissionsHelper;
-        private readonly IPermissionValidationService _permissionValidationService;
         private readonly IUserAreaDefinitionRepository _userAreaRepository;
-        
+        private readonly IEmailAddressNormalizer _emailAddressNormalizer;
+
         public AddUserCommandHandler(
             CofoundryDbContext dbContext,
             IQueryExecutor queryExecutor,
             IPasswordCryptographyService passwordCryptographyService,
-            IMailService mailService,
             UserCommandPermissionsHelper userCommandPermissionsHelper,
-            IPermissionValidationService permissionValidationService,
-            IUserAreaDefinitionRepository userAreaRepository
+            IUserAreaDefinitionRepository userAreaRepository,
+            IEmailAddressNormalizer emailAddressNormalizer
             )
         {
             _dbContext = dbContext;
             _queryExecutor = queryExecutor;
             _passwordCryptographyService = passwordCryptographyService;
-            _mailService = mailService;
             _userCommandPermissionsHelper = userCommandPermissionsHelper;
-            _permissionValidationService = permissionValidationService;
             _userAreaRepository = userAreaRepository;
+            _emailAddressNormalizer = emailAddressNormalizer;
         }
-
-        #endregion
 
         public async Task ExecuteAsync(AddUserCommand command, IExecutionContext executionContext)
         {
+            Normalize(command);
+
             var userArea = _userAreaRepository.GetRequiredByCode(command.UserAreaCode);
-            var dbUserArea = await QueryUserArea(userArea).SingleOrDefaultAsync();
-            dbUserArea = AddUserAreaIfNotExists(userArea, dbUserArea);
+            var dbUserArea = await GetUserAreaAsync(userArea);
 
             ValidateCommand(command, userArea);
-            var isUnique = await _queryExecutor.ExecuteAsync(GetUniqueQuery(command, userArea), executionContext);
-            ValidateIsUnique(isUnique, userArea);
-            var newRole = await GetNewRole(command, executionContext);
+            await ValidateIsUniqueAsync(command, userArea, executionContext);
+            var newRole = await GetAndValidateRoleAsync(command, executionContext);
 
             await _userCommandPermissionsHelper.ValidateNewRoleAsync(newRole, null, command.UserAreaCode, executionContext);
 
@@ -70,32 +60,30 @@ namespace Cofoundry.Domain.Internal
             command.OutputUserId = user.UserId;
         }
 
-        private async Task<Role> GetNewRole(AddUserCommand command, IExecutionContext executionContext)
+        private void Normalize(AddUserCommand command)
         {
-            Role role;
+            command.FirstName = command.FirstName?.Trim();
+            command.LastName = command.LastName?.Trim();
+            command.Username = command.Username?.Trim();
+            command.Email = _emailAddressNormalizer.Normalize(command.Email);
+        }
 
-            if (command.RoleId.HasValue)
+        private async Task<UserArea> GetUserAreaAsync(IUserAreaDefinition userArea)
+        {
+            var dbUserArea = await _dbContext
+                .UserAreas
+                .Where(a => a.UserAreaCode == userArea.UserAreaCode)
+                .SingleOrDefaultAsync();
+
+            if (dbUserArea == null)
             {
-                role = await _dbContext
-                  .Roles
-                  .FilterById(command.RoleId.Value)
-                  .SingleOrDefaultAsync();
-
-                EntityNotFoundException.ThrowIfNull(role, command.RoleId.Value);
-            }
-            else
-            {
-                role = await _dbContext
-                  .Roles
-                  .FilterByRoleCode(command.RoleCode)
-                  .SingleOrDefaultAsync();
-
-                EntityNotFoundException.ThrowIfNull(role, command.RoleCode);
+                dbUserArea = new UserArea();
+                dbUserArea.UserAreaCode = userArea.UserAreaCode;
+                dbUserArea.Name = userArea.Name;
+                _dbContext.UserAreas.Add(dbUserArea);
             }
 
-            await _userCommandPermissionsHelper.ValidateNewRoleAsync(role, null, command.UserAreaCode, executionContext);
-
-            return role;
+            return dbUserArea;
         }
 
         /// <summary>
@@ -109,11 +97,11 @@ namespace Cofoundry.Domain.Internal
 
             if (userArea.AllowPasswordLogin && isPasswordEmpty)
             {
-                throw ValidationErrorException.CreateWithProperties("Password field is required", "Password");
+                throw ValidationErrorException.CreateWithProperties("Password field is required", nameof(command.Password));
             }
             else if (!userArea.AllowPasswordLogin && !isPasswordEmpty)
             {
-                throw ValidationErrorException.CreateWithProperties("Password field should be empty because the specified user area does not use passwords", "Password");
+                throw ValidationErrorException.CreateWithProperties("Password field should be empty because the specified user area does not use passwords", nameof(command.Password));
             }
 
             // Email
@@ -125,45 +113,69 @@ namespace Cofoundry.Domain.Internal
             // Username
             if (userArea.UseEmailAsUsername && !string.IsNullOrEmpty(command.Username))
             {
-                throw ValidationErrorException.CreateWithProperties("Username field should be empty becuase the specified user area uses the email as the username.", "Password");
+                throw ValidationErrorException.CreateWithProperties("Username field should be empty becuase the specified user area uses the email as the username.", nameof(command.Username));
             }
             else if (!userArea.UseEmailAsUsername && string.IsNullOrWhiteSpace(command.Username))
             {
-                throw ValidationErrorException.CreateWithProperties("Username field is required", "Username");
+                throw ValidationErrorException.CreateWithProperties("Username field is required", nameof(command.Username));
             }
         }
 
-        private IQueryable<UserArea> QueryUserArea(IUserAreaDefinition userArea)
+        private async Task ValidateIsUniqueAsync(AddUserCommand command, IUserAreaDefinition userArea, IExecutionContext executionContext)
         {
-            return _dbContext
-                .UserAreas
-                .Where(a => a.UserAreaCode == userArea.UserAreaCode);
-        }
-
-        private UserArea AddUserAreaIfNotExists(IUserAreaDefinition userArea, UserArea dbUserArea)
-        {
-            if (dbUserArea == null)
+            var query = new IsUsernameUniqueQuery()
             {
-                dbUserArea = new UserArea();
-                dbUserArea.UserAreaCode = userArea.UserAreaCode;
-                dbUserArea.Name = userArea.Name;
-                _dbContext.UserAreas.Add(dbUserArea);
-            }
+                Username = userArea.UseEmailAsUsername ? command.Email : command.Username,
+                UserAreaCode = command.UserAreaCode
+            };
+            var isUnique = await _queryExecutor.ExecuteAsync(query, executionContext);
 
-            return dbUserArea;
+            if (isUnique) return;
+
+            if (userArea.UseEmailAsUsername)
+            {
+                throw ValidationErrorException.CreateWithProperties("This email is already registered", "Email");
+            }
+            else
+            {
+                throw ValidationErrorException.CreateWithProperties("This username is already registered", "Username");
+            }
         }
 
-        private User MapAndAddUser(AddUserCommand command, IExecutionContext executionContext, Role role, IUserAreaDefinition userArea, UserArea dbUserArea)
+        private async Task<Role> GetAndValidateRoleAsync(AddUserCommand command, IExecutionContext executionContext)
         {
-            var user = new User();
-            user.FirstName = command.FirstName?.Trim();
-            user.LastName = command.LastName?.Trim();
-            user.Email = command.Email?.Trim();
-            user.RequirePasswordChange = command.RequirePasswordChange;
-            user.LastPasswordChangeDate = executionContext.ExecutionDate;
-            user.CreateDate = executionContext.ExecutionDate;
-            user.Role = role;
-            user.UserArea = dbUserArea;
+            var role = await _dbContext
+                  .Roles
+                  .FilterByIdOrCode(command.RoleId, command.RoleCode)
+                  .SingleOrDefaultAsync();
+            EntityNotFoundException.ThrowIfNull(role, command.RoleId?.ToString() ?? command.RoleCode);
+
+            await _userCommandPermissionsHelper.ValidateNewRoleAsync(role, null, command.UserAreaCode, executionContext);
+
+            return role;
+        }
+
+        private User MapAndAddUser(
+            AddUserCommand command, 
+            IExecutionContext executionContext, 
+            Role role,
+            IUserAreaDefinition userArea, 
+            UserArea dbUserArea
+            )
+        {
+            var user = new User()
+            {
+                Username = userArea.UseEmailAsUsername ? command.Email : command.Username,
+                FirstName = command.FirstName,
+                LastName = command.LastName,
+                Email = command.Email,
+                RequirePasswordChange = command.RequirePasswordChange,
+                LastPasswordChangeDate = executionContext.ExecutionDate,
+                CreateDate = executionContext.ExecutionDate,
+                Role = role,
+                UserArea = dbUserArea,
+                CreatorId = executionContext.UserContext.UserId,
+            };
 
             if (userArea.AllowPasswordLogin)
             {
@@ -172,53 +184,10 @@ namespace Cofoundry.Domain.Internal
                 user.PasswordHashVersion = hashResult.HashVersion;
             }
 
-            if (userArea.UseEmailAsUsername)
-            {
-                user.Username = command.Email?.Trim();
-            }
-            else
-            {
-                user.Username = command.Username?.Trim();
-            }
-
             _dbContext.Users.Add(user);
 
             return user;
         }
-
-        private void ValidateIsUnique(bool isUnique, IUserAreaDefinition userArea)
-        {
-            if (!isUnique)
-            {
-                if (userArea.UseEmailAsUsername)
-                {
-                    throw ValidationErrorException.CreateWithProperties("This email is already registered", "Email");
-                }
-                else
-                {
-                    throw ValidationErrorException.CreateWithProperties("This username is already registered", "Username");
-                }
-            }
-        }
-
-        private IsUsernameUniqueQuery GetUniqueQuery(AddUserCommand command, IUserAreaDefinition userArea)
-        {
-            var query = new IsUsernameUniqueQuery();
-
-            if (userArea.UseEmailAsUsername)
-            {
-                query.Username = command.Email?.Trim();
-            }
-            else
-            {
-                query.Username = command.Username?.Trim();
-            }
-            query.UserAreaCode = command.UserAreaCode;
-
-            return query;
-        }
-
-        #region Permission
 
         public IEnumerable<IPermissionApplication> GetPermissions(AddUserCommand command)
         {
@@ -231,7 +200,5 @@ namespace Cofoundry.Domain.Internal
                 yield return new NonCofoundryUserCreatePermission();
             }
         }
-
-        #endregion
     }
 }

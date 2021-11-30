@@ -1,11 +1,8 @@
-﻿using Newtonsoft.Json;
-using System;
+﻿using Cofoundry.Core.Validation;
+using Cofoundry.Domain.CQS;
+using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
-using Cofoundry.Domain.CQS;
-using Cofoundry.Core.Validation;
 
 namespace Cofoundry.Domain
 {
@@ -18,19 +15,17 @@ namespace Cofoundry.Domain
     /// explicitly and shouldn't allow any possible injection of passwords or
     /// user areas.
     /// </remarks>
-    public sealed class AddUserWithTemporaryPasswordCommand : ICommand, ILoggableCommand
+    public sealed class AddUserWithTemporaryPasswordCommand : ICommand, ILoggableCommand, IValidatableObject
     {
         /// <summary>
-        /// The first name is required.
+        /// The first name is optional.
         /// </summary>
-        [Required]
         [StringLength(32)]
         public string FirstName { get; set; }
 
         /// <summary>
-        /// The last name is required.
+        /// The last name is optional.
         /// </summary>
-        [Required]
         [StringLength(32)]
         public string LastName { get; set; }
 
@@ -45,7 +40,7 @@ namespace Cofoundry.Domain
         public string Email { get; set; }
 
         /// <summary>
-        /// The Cofoundry user system is partitioned into user areas a user
+        /// The Cofoundry user system is partitioned into user areas, a user
         /// must belong to one of these user areas.
         /// </summary>
         [Required]
@@ -53,15 +48,20 @@ namespace Cofoundry.Domain
         public string UserAreaCode { get; set; }
 
         /// <summary>
-        /// The role that this user is assigned to. The role is required and
-        /// determines the permissions available to the user. This must be a role
-        /// that belongs to the Cofoundry admin user area.
+        /// The id of the role that this user is assigned to. Either the
+        /// RoleId or RoleCode property must be filled in, but not both. The 
+        /// role is required and determines the permissions available to the user. 
         /// </summary>
-        [Required]
         [PositiveInteger]
-        public int RoleId { get; set; }
+        public int? RoleId { get; set; }
 
-        #region Output
+        /// <summary>
+        /// The code for the role that this user is assigned to. Either the
+        /// RoleId or RoleCode property must be filled in, but not both. The 
+        /// role is required and determines the permissions available to the user.
+        /// </summary>
+        [StringLength(3)]
+        public string RoleCode { get; set; }
 
         /// <summary>
         /// The database id of the newly created user. This is set after the command
@@ -70,6 +70,17 @@ namespace Cofoundry.Domain
         [OutputValue]
         public int OutputUserId { get; set; }
 
-        #endregion
+        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        {
+            if (string.IsNullOrWhiteSpace(RoleCode) && !RoleId.HasValue)
+            {
+                yield return new ValidationResult("Either a role id or role code must be defined.", new string[] { nameof(RoleId) });
+            }
+
+            if (!string.IsNullOrWhiteSpace(RoleCode) && RoleId.HasValue)
+            {
+                yield return new ValidationResult("Either a role id or role code must be defined, not both.", new string[] { nameof(RoleId) });
+            }
+        }
     }
 }

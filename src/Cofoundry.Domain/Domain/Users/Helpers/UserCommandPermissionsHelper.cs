@@ -1,37 +1,26 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
-using Cofoundry.Domain.Data;
+﻿using Cofoundry.Core;
+using Cofoundry.Core.Validation;
 using Cofoundry.Domain.CQS;
-using Cofoundry.Core;
+using Cofoundry.Domain.Data;
+using Microsoft.EntityFrameworkCore;
+using System;
+using System.Threading.Tasks;
 
 namespace Cofoundry.Domain.Internal
 {
     public class UserCommandPermissionsHelper
     {
-        #region constructor
-
         private readonly CofoundryDbContext _dbContext;
         private readonly IInternalRoleRepository _internalRoleRepository;
-        private readonly IUserAreaDefinitionRepository _userAreaRepository;
 
         public UserCommandPermissionsHelper(
             CofoundryDbContext dbContext,
-            IInternalRoleRepository internalRoleRepository,
-            IUserAreaDefinitionRepository userAreaRepository
+            IInternalRoleRepository internalRoleRepository
             )
         {
             _dbContext = dbContext;
             _internalRoleRepository = internalRoleRepository;
-            _userAreaRepository = userAreaRepository;
         }
-
-        #endregion
-
-        #region public methods
 
         public async Task ValidateNewRoleAsync(Role newRole, int? oldRoleId, string userAreaCode, IExecutionContext executionContext)
         {
@@ -40,7 +29,7 @@ namespace Cofoundry.Domain.Internal
             if (executionContext == null) throw new ArgumentNullException(nameof(executionContext));
 
             var executorRole = await GetExecutorRoleAsync(executionContext);
-            
+
             ValidateRole(userAreaCode, newRole, executorRole);
 
             await ValidateDeAssignmentAsync(oldRoleId, newRole, executorRole);
@@ -53,21 +42,17 @@ namespace Cofoundry.Domain.Internal
             return executorRole;
         }
 
-        #endregion
-
-        #region private helpers
-
         private void ValidateRole(string userAreaCode, Role newUserRole, RoleDetails executorRole)
         {
             // Anonymous role is not assignable to users, it's used when there is no user.
             if (newUserRole.RoleCode == AnonymousRole.AnonymousRoleCode)
             {
-                throw new NotPermittedException("Cannot assign the anonymous role.");
+                throw new ValidationErrorException("Cannot assign the anonymous role.");
             }
 
             if (userAreaCode != newUserRole.UserAreaCode)
             {
-                throw new NotPermittedException("Cannot assign a role from one user area to a user from a different user area.");
+                throw new ValidationErrorException("Cannot assign a role from one user area to a user from a different user area.");
             }
 
 
@@ -101,7 +86,5 @@ namespace Cofoundry.Domain.Internal
                 }
             }
         }
-
-        #endregion
     }
 }

@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Cofoundry.Domain.CQS;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
-using Cofoundry.Domain.CQS;
 using System.Runtime.Serialization;
 
 namespace Cofoundry.Domain
@@ -21,16 +17,14 @@ namespace Cofoundry.Domain
     public sealed class AddMasterCofoundryUserCommand : ICommand, ILoggableCommand
     {
         /// <summary>
-        /// The first name is required.
+        /// The first name is optional.
         /// </summary>
-        [Required]
         [StringLength(32)]
         public string FirstName { get; set; }
 
         /// <summary>
-        /// The last name is required.
+        /// The last name is optional.
         /// </summary>
-        [Required]
         [StringLength(32)]
         public string LastName { get; set; }
 
@@ -57,15 +51,11 @@ namespace Cofoundry.Domain
         /// </summary>
         public bool RequirePasswordChange { get; set; }
 
-        #region Output
-
         /// <summary>
         /// The database id of the newly created user. This is set after the command
         /// has been run.
         /// </summary>
         [OutputValue]
         public int OutputUserId { get; set; }
-
-        #endregion
     }
 }

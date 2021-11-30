@@ -1,4 +1,5 @@
-﻿using Cofoundry.Core.MessageAggregator;
+﻿using Cofoundry.Core.Mail;
+using Cofoundry.Core.MessageAggregator;
 using Cofoundry.Core.Time;
 using Cofoundry.Core.Time.Mocks;
 using Cofoundry.Domain.Tests.Integration.Mocks;
@@ -55,6 +56,26 @@ namespace Cofoundry.Domain.Tests.Integration
             }
 
             return auditableMessageAggregator.CountMessagesPublished(predicate);
+        }
+
+        /// <summary>
+        /// Return the number of mail messages that have been registered to this session that match the
+        /// specified search parameters.
+        /// </summary>
+        /// <param name="toEmail">The email address the message was dispatched to (case-insensitive comparisson.</param>
+        /// <param name="textPartsToMatch">
+        /// A set of text parts to look for in the message body. All text parts must be found in either
+        /// the text or html body to be matched. Comparisson is case-insensitive.
+        /// </param>
+        public int CountDispatchedMail(string toEmail, params string[] textPartsToMatch)
+        {
+            var auditableMailDispatchSession = _serviceScope.GetService<IMailDispatchSession>() as AuditableMailDispatchSession;
+            if (auditableMailDispatchSession == null)
+            {
+                throw new Exception($"{nameof(IMailDispatchSession)} is expected to be an instance of {nameof(AuditableMailDispatchSession)} in testing");
+            }
+
+            return auditableMailDispatchSession.CountDispatched(toEmail, textPartsToMatch);
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using Cofoundry.Core.MessageAggregator;
+﻿using Cofoundry.Core.Mail;
+using Cofoundry.Core.MessageAggregator;
 using Cofoundry.Core.Time;
 using Cofoundry.Core.Time.Mocks;
 using Cofoundry.Domain.Internal;
@@ -76,6 +77,7 @@ namespace Cofoundry.Domain.Tests.Integration
             services.AddScoped<IUserSessionService, InMemoryUserSessionService>();
             services.AddScoped<IImageAssetFileService, MockImageAssetFileService>();
             services.AddScoped<IMessageAggregator, AuditableMessageAggregator>();
+            services.AddScoped<IMailDispatchSession, AuditableMailDispatchSession>();
             services.AddScoped<IPageTemplateViewFileLocator, TestPageTemplateViewFileLocator>();
             services.AddSingleton<IClientConnectionService>(new MockClientConnectionService(c => c.IPAddress = "127.0.0.1"));
             services.AddTransient<IViewFileReader, TestViewFileReader>();

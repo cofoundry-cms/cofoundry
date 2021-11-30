@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Cofoundry.Domain
+﻿namespace Cofoundry.Domain
 {
     /// <summary>
     /// A very minimal representation of a user. Users are partitioned by
@@ -31,12 +25,12 @@ namespace Cofoundry.Domain
         public string Username { get; set; }
 
         /// <summary>
-        /// The first name is required.
+        /// The first name is optional.
         /// </summary>
         public string FirstName { get; set; }
 
         /// <summary>
-        /// The last name is required.
+        /// The last name is optional.
         /// </summary>
         public string LastName { get; set; }
 

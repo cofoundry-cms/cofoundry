@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -9,12 +8,13 @@ namespace Cofoundry.Core.Mail.Internal
 {
     /// <summary>
     /// This is a simple debug implementation that writes out mail
-    /// to a text file to make debugging templates easier.
+    /// to a text file to make debugging templates easier. This is 
+    /// also the default Cofoundry mail dispatch service and needs
+    /// to be overidden by a plugin in order to actually dispatch 
+    /// email.
     /// </summary>
     public class DebugMailDispatchSession : IMailDispatchSession
     {
-        #region constructor
-
         private readonly Queue<string> _mailQueue = new Queue<string>();
         private readonly MailSettings _mailSettings;
         private readonly IPathResolver _pathResolver;
@@ -30,10 +30,6 @@ namespace Cofoundry.Core.Mail.Internal
 
             _debugDropPath = GetDebugDropPath();
         }
-
-        #endregion
-
-        #region public
 
         /// <summary>
         /// Formats and adds a mail message to the queue of mail to be sent.
@@ -66,10 +62,6 @@ namespace Cofoundry.Core.Mail.Internal
         public void Dispose()
         {
         }
-
-        #endregion
-
-        #region private methods
 
         private StreamWriter CreateFileStream()
         {
@@ -173,7 +165,5 @@ namespace Cofoundry.Core.Mail.Internal
 
             return debugMailDropDirectory;
         }
-
-        #endregion
     }
 }

@@ -1,26 +1,25 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Cofoundry.Domain.CQS;
+﻿using Cofoundry.Core;
+using Cofoundry.Core.Data;
 using Cofoundry.Core.Mail;
+using Cofoundry.Domain.CQS;
+using Cofoundry.Domain.Data;
 using Cofoundry.Domain.MailTemplates;
 using Microsoft.AspNetCore.Html;
-using Cofoundry.Core;
-using Cofoundry.Core.Data;
-using Cofoundry.Domain.Data;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Cofoundry.Domain.Internal
 {
     /// <summary>
-    /// Adds a user to the Cofoundry user area and sends a welcome notification.
+    /// Adds a new user and sends a notification containing a generated 
+    /// password which must be changed at first login.
     /// </summary>
     public class AddUserWithTemporaryPasswordCommandHandler
         : ICommandHandler<AddUserWithTemporaryPasswordCommand>
         , IPermissionRestrictedCommandHandler<AddUserWithTemporaryPasswordCommand>
     {
-        #region constructor
-
+        private readonly CofoundryDbContext _dbContext;
         private readonly ICommandExecutor _commandExecutor;
         private readonly IPasswordGenerationService _passwordGenerationService;
         private readonly IMailService _mailService;
@@ -28,9 +27,10 @@ namespace Cofoundry.Domain.Internal
         private readonly IUserMailTemplateBuilderFactory _userMailTemplateBuilderFactory;
         private readonly IUserAreaDefinitionRepository _userAreaDefinitionRepository;
         private readonly ITransactionScopeManager _transactionScopeFactory;
-        private readonly CofoundryDbContext _dbContext;
+        private readonly IEmailAddressNormalizer _emailAddressNormalizer;
 
         public AddUserWithTemporaryPasswordCommandHandler(
+            CofoundryDbContext dbContext,
             ICommandExecutor commandExecutor,
             IPasswordGenerationService passwordGenerationService,
             IMailService mailService,
@@ -38,9 +38,10 @@ namespace Cofoundry.Domain.Internal
             IUserMailTemplateBuilderFactory userMailTemplateBuilderFactory,
             IUserAreaDefinitionRepository userAreaDefinitionRepository,
             ITransactionScopeManager transactionScopeFactory,
-            CofoundryDbContext dbContext
+            IEmailAddressNormalizer emailAddressNormalizer
             )
         {
+            _dbContext = dbContext;
             _commandExecutor = commandExecutor;
             _passwordGenerationService = passwordGenerationService;
             _mailService = mailService;
@@ -48,32 +49,36 @@ namespace Cofoundry.Domain.Internal
             _userMailTemplateBuilderFactory = userMailTemplateBuilderFactory;
             _userAreaDefinitionRepository = userAreaDefinitionRepository;
             _transactionScopeFactory = transactionScopeFactory;
-            _dbContext = dbContext;
+            _emailAddressNormalizer = emailAddressNormalizer;
         }
-
-        #endregion
 
         public async Task ExecuteAsync(AddUserWithTemporaryPasswordCommand command, IExecutionContext executionContext)
         {
             ValidateUserArea(command);
+            Normalize(command);
 
             using (var scope = _transactionScopeFactory.Create(_dbContext))
             {
-                var newUserCommand = MapCommand(command, executionContext);
+                var newUserCommand = MapCommand(command);
                 await _commandExecutor.ExecuteAsync(newUserCommand, executionContext);
-
-                await SendNotificationAsync(newUserCommand);
+                await SendNotificationAsync(newUserCommand, executionContext);
+                command.OutputUserId = newUserCommand.OutputUserId;
 
                 await scope.CompleteAsync();
             }
         }
 
-        private async Task SendNotificationAsync(AddUserCommand newUserCommand)
+        private void Normalize(AddUserWithTemporaryPasswordCommand command)
+        {
+            command.Email = _emailAddressNormalizer.Normalize(command.Email);
+        }
+
+        private async Task SendNotificationAsync(AddUserCommand newUserCommand, IExecutionContext executionContext)
         {
             // Send mail notification
             var mailTemplateBuilder = _userMailTemplateBuilderFactory.Create(newUserCommand.UserAreaCode);
 
-            var context = await CreateMailTemplateContextAsync(newUserCommand);
+            var context = await CreateMailTemplateContextAsync(newUserCommand, executionContext);
             var mailTemplate = await mailTemplateBuilder.BuildNewUserWithTemporaryPasswordTemplateAsync(context);
 
             // Null template means don't send a notification
@@ -97,7 +102,7 @@ namespace Cofoundry.Domain.Internal
             }
         }
 
-        private AddUserCommand MapCommand(AddUserWithTemporaryPasswordCommand command, IExecutionContext executionContext)
+        private AddUserCommand MapCommand(AddUserWithTemporaryPasswordCommand command)
         {
             var newUserCommand = new AddUserCommand()
             {
@@ -107,16 +112,17 @@ namespace Cofoundry.Domain.Internal
                 Password = _passwordGenerationService.Generate(),
                 RequirePasswordChange = true,
                 UserAreaCode = command.UserAreaCode,
-                RoleId = command.RoleId
+                RoleId = command.RoleId,
+                RoleCode = command.RoleCode
             };
 
             return newUserCommand;
         }
 
-        private async Task<NewUserWithTemporaryPasswordTemplateBuilderContext> CreateMailTemplateContextAsync(AddUserCommand newUserCommand)
+        private async Task<NewUserWithTemporaryPasswordTemplateBuilderContext> CreateMailTemplateContextAsync(AddUserCommand newUserCommand, IExecutionContext executionContext)
         {
             var query = new GetUserSummaryByIdQuery(newUserCommand.OutputUserId);
-            var user = await _queryExecutor.ExecuteAsync(query);
+            var user = await _queryExecutor.ExecuteAsync(query, executionContext);
             EntityNotFoundException.ThrowIfNull(user, newUserCommand.OutputUserId);
 
             var context = new NewUserWithTemporaryPasswordTemplateBuilderContext()
@@ -127,8 +133,6 @@ namespace Cofoundry.Domain.Internal
 
             return context;
         }
-
-        #region Permission
 
         public IEnumerable<IPermissionApplication> GetPermissions(AddUserWithTemporaryPasswordCommand command)
         {
@@ -141,7 +145,5 @@ namespace Cofoundry.Domain.Internal
                 yield return new NonCofoundryUserCreatePermission();
             }
         }
-
-        #endregion
     }
 }

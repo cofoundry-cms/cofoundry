@@ -13,7 +13,7 @@ namespace Cofoundry.Domain.Tests.Integration.Mocks
     /// </summary>
     public class AuditableMessageAggregator : IMessageAggregator
     {
-        private readonly List<object> Messages = new List<object>();
+        private readonly List<object> _messages = new List<object>();
         private readonly MessageAggregator _messageAggregator;
 
 
@@ -31,11 +31,11 @@ namespace Cofoundry.Domain.Tests.Integration.Mocks
         /// that the expected message is published only once.
         /// </summary>
         /// <typeparam name="TMessage">Type of message to look for.</typeparam>
-        /// <param name="expression">An expression to filter messages by.</param>
+        /// <param name="predicate">An expression to filter messages by.</param>
         /// <returns>The number of messages matched by the <paramref name="predicate"/>.</returns>
         public int CountMessagesPublished<TMessage>(Func<TMessage, bool> predicate)
         {
-            return Messages
+            return _messages
                 .Where(m => m is TMessage)
                 .Cast<TMessage>()
                 .Where(predicate)
@@ -44,13 +44,13 @@ namespace Cofoundry.Domain.Tests.Integration.Mocks
 
         public Task PublishAsync<TMessage>(TMessage message) where TMessage : class
         {
-            Messages.Add(message);
+            _messages.Add(message);
             return _messageAggregator.PublishAsync(message);
         }
 
         public Task PublishBatchAsync<TMessage>(IReadOnlyCollection<TMessage> messages) where TMessage : class
         {
-            Messages.AddRange(messages);
+            _messages.AddRange(messages);
             return _messageAggregator.PublishBatchAsync(messages);
         }
 

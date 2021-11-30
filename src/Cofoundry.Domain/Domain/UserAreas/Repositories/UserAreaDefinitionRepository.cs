@@ -47,14 +47,14 @@ namespace Cofoundry.Domain.Internal
 
         private void DetectInvalidDefinitions(IEnumerable<IUserAreaDefinition> definitions)
         {
-            var nullName = definitions
+            var nullCode = definitions
                 .Where(d => string.IsNullOrWhiteSpace(d.UserAreaCode))
                 .FirstOrDefault();
 
-            if (nullName != null)
+            if (nullCode != null)
             {
-                var message = nullName.GetType().Name + " does not have a definition code specified.";
-                throw new InvalidUserAreaDefinitionException(message, nullName, definitions);
+                var message = nullCode.GetType().Name + " does not have a definition code specified.";
+                throw new InvalidUserAreaDefinitionException(message, nullCode, definitions);
             }
 
             var duplicateCode = definitions
@@ -68,14 +68,34 @@ namespace Cofoundry.Domain.Internal
                 throw new InvalidUserAreaDefinitionException(message, duplicateCode.First(), definitions);
             }
 
-            var nameNot3Chars = definitions
+            var codeNot3Chars = definitions
                 .Where(d => d.UserAreaCode.Length != 3)
                 .FirstOrDefault();
 
-            if (nameNot3Chars != null)
+            if (codeNot3Chars != null)
             {
-                var message = nameNot3Chars.GetType().Name + " has a definition code that is not 3 characters in length. All user area definition codes must be 3 characters.";
-                throw new InvalidUserAreaDefinitionException(message, nameNot3Chars, definitions);
+                var message = codeNot3Chars.GetType().Name + " has a definition code that is not 3 characters in length. All user area definition codes must be 3 characters.";
+                throw new InvalidUserAreaDefinitionException(message, codeNot3Chars, definitions);
+            }
+
+            var nullName = definitions
+                .Where(d => string.IsNullOrWhiteSpace(d.Name))
+                .FirstOrDefault();
+
+            if (nullName != null)
+            {
+                var message = nullName.GetType().Name + " does not have a name specified.";
+                throw new InvalidUserAreaDefinitionException(message, nullName, definitions);
+            }
+
+            var nameTooLong = definitions
+                .Where(d => d.Name.Length > 20)
+                .FirstOrDefault();
+
+            if (nameTooLong != null)
+            {
+                var message = nameTooLong.GetType().Name + " has a name that is more than 20 characters in length. All user area definition names must be 20 characters or less.";
+                throw new InvalidUserAreaDefinitionException(message, codeNot3Chars, definitions);
             }
 
             var defaultUserAreas = definitions
@@ -85,7 +105,7 @@ namespace Cofoundry.Domain.Internal
             if (defaultUserAreas.Skip(1).FirstOrDefault() != null)
             {
                 var message = "More than one user area has IsDefaultAuthSchema defined. Only a single default user area can be defined. Duplicates: " + string.Join(", ", defaultUserAreas);
-                throw new InvalidUserAreaDefinitionException(message, nameNot3Chars, definitions);
+                throw new InvalidUserAreaDefinitionException(message, codeNot3Chars, definitions);
             }
         }
     }

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 
 namespace Cofoundry.Core.Mail
 {
@@ -15,13 +11,13 @@ namespace Cofoundry.Core.Mail
         /// <summary>
         /// Sends a mail message.
         /// </summary>
-        /// <param name="message">The MailMessage to send</param>
+        /// <param name="message">The <see cref="MailMessage"/> to send</param>
         Task DispatchAsync(MailMessage message);
 
         /// <summary>
         /// Creates a new mail session that can be used to send batches of mail.
         /// </summary>
-        /// <returns>New instance of an IMailDispatchSession</returns>
+        /// <returns>New instance of an <see cref="IMailDispatchSession"/>.</returns>
         IMailDispatchSession CreateSession();
     }
 }

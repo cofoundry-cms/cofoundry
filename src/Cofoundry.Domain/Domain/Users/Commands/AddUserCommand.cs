@@ -1,16 +1,14 @@
-﻿using System;
+﻿using Cofoundry.Core.Validation;
+using Cofoundry.Domain.CQS;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using Cofoundry.Domain.CQS;
-using Cofoundry.Core.Validation;
 using System.Runtime.Serialization;
 
 namespace Cofoundry.Domain
 {
     /// <summary>
-    /// A generic user creation command for use with Cofoundry users and
-    /// other non-Cofoundry users. Does not send any email notifications.
+    /// A basic user creation command that adds data only and does not 
+    /// send any email notifications.
     /// </summary>
     /// <remarks>
     /// Sealed because we should be setting these properties
@@ -89,18 +87,12 @@ namespace Cofoundry.Domain
         [StringLength(3)]
         public string RoleCode { get; set; }
 
-        #region Output
-
         /// <summary>
         /// The database id of the newly created user. This is set after the 
         /// command has been run.
         /// </summary>
         [OutputValue]
         public int OutputUserId { get; set; }
-
-        #endregion
-
-        #region IValidatableObject
 
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
@@ -114,7 +106,5 @@ namespace Cofoundry.Domain
                 yield return new ValidationResult("Either a role id or role code must be defined, not both.", new string[] { nameof(RoleId) });
             }
         }
-
-        #endregion
     }
 }

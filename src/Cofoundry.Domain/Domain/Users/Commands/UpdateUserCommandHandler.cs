@@ -19,6 +19,7 @@ namespace Cofoundry.Domain.Internal
         private readonly IPermissionValidationService _permissionValidationService;
         private readonly ITransactionScopeManager _transactionScopeManager;
         private readonly IUserContextCache _userContextCache;
+        private readonly IEmailAddressNormalizer _emailAddressNormalizer;
 
         public UpdateUserCommandHandler(
             IQueryExecutor queryExecutor,
@@ -27,7 +28,8 @@ namespace Cofoundry.Domain.Internal
             IUserAreaDefinitionRepository userAreaRepository,
             IPermissionValidationService permissionValidationService,
             ITransactionScopeManager transactionScopeManager,
-            IUserContextCache userContextCache
+            IUserContextCache userContextCache,
+            IEmailAddressNormalizer emailAddressNormalizer
             )
         {
             _queryExecutor = queryExecutor;
@@ -37,10 +39,13 @@ namespace Cofoundry.Domain.Internal
             _permissionValidationService = permissionValidationService;
             _transactionScopeManager = transactionScopeManager;
             _userContextCache = userContextCache;
+            _emailAddressNormalizer = emailAddressNormalizer;
         }
 
         public async Task ExecuteAsync(UpdateUserCommand command, IExecutionContext executionContext)
         {
+            Normalize(command);
+
             // Get User
             var user = await _dbContext
                 .Users
@@ -64,18 +69,24 @@ namespace Cofoundry.Domain.Internal
             _transactionScopeManager.QueueCompletionTask(_dbContext, () => _userContextCache.Clear(user.UserId));
         }
 
+        private void Normalize(UpdateUserCommand command)
+        {
+            command.FirstName = command.FirstName?.Trim();
+            command.LastName = command.LastName?.Trim();
+            command.Email = _emailAddressNormalizer.Normalize(command.Email);
+            command.Username = command.Username?.Trim();
+        }
+
         private void ValidateCommand(UpdateUserCommand command, IUserAreaDefinition userArea)
         {
-            // Email
             if (userArea.UseEmailAsUsername && string.IsNullOrEmpty(command.Email))
             {
-                throw ValidationErrorException.CreateWithProperties("Email field is required.", "Email");
+                throw ValidationErrorException.CreateWithProperties("Email field is required.", nameof(command.Email));
             }
 
-            // Username
             if (!userArea.UseEmailAsUsername && string.IsNullOrWhiteSpace(command.Username))
             {
-                throw ValidationErrorException.CreateWithProperties("Username field is required", "Username");
+                throw ValidationErrorException.CreateWithProperties("Username field is required", nameof(command.Username));
             }
         }
 
@@ -93,11 +104,11 @@ namespace Cofoundry.Domain.Internal
 
             if (userArea.UseEmailAsUsername)
             {
-                query.Username = command.Email?.Trim();
+                query.Username = command.Email;
             }
             else
             {
-                query.Username = command.Username.Trim();
+                query.Username = command.Username;
             }
 
             var isUnique = await _queryExecutor.ExecuteAsync(query, executionContext);
@@ -106,11 +117,11 @@ namespace Cofoundry.Domain.Internal
             {
                 if (userArea.UseEmailAsUsername)
                 {
-                    throw ValidationErrorException.CreateWithProperties("This email is already registered", "Email");
+                    throw ValidationErrorException.CreateWithProperties("This email is already registered", nameof(command.Email));
                 }
                 else
                 {
-                    throw ValidationErrorException.CreateWithProperties("This username is already registered", "Username");
+                    throw ValidationErrorException.CreateWithProperties("This username is already registered", nameof(command.Username));
                 }
             }
         }
@@ -129,13 +140,15 @@ namespace Cofoundry.Domain.Internal
 
         private async Task UpdateRoleAsync(UpdateUserCommand command, IExecutionContext executionContext, User user)
         {
-            if (command.RoleId != user.RoleId)
+            // if a code is supplied we assume we're updating the role, otherwise check the id has changed
+            if (!string.IsNullOrWhiteSpace(command.RoleCode) 
+                || (command.RoleId.HasValue && command.RoleId != user.RoleId))
             {
                 var newRole = await _dbContext
-                    .Roles
-                    .FilterById(command.RoleId)
-                    .SingleOrDefaultAsync();
-                EntityNotFoundException.ThrowIfNull(newRole, command.RoleId);
+                      .Roles
+                      .FilterByIdOrCode(command.RoleId, command.RoleCode)
+                      .SingleOrDefaultAsync();
+                EntityNotFoundException.ThrowIfNull(newRole, command.RoleId?.ToString() ?? command.RoleCode);
 
                 await _userCommandPermissionsHelper.ValidateNewRoleAsync(
                     newRole,
@@ -150,9 +163,9 @@ namespace Cofoundry.Domain.Internal
 
         private static void UpdateProperties(UpdateUserCommand command, User user, IUserAreaDefinition userArea)
         {
-            user.FirstName = command.FirstName?.Trim();
-            user.LastName = command.LastName?.Trim();
-            user.Email = command.Email?.Trim();
+            user.FirstName = command.FirstName;
+            user.LastName = command.LastName;
+            user.Email = command.Email;
 
             if (userArea.UseEmailAsUsername)
             {
@@ -160,10 +173,11 @@ namespace Cofoundry.Domain.Internal
             }
             else
             {
-                user.Username = command.Username?.Trim();
+                user.Username = command.Username;
             }
 
             user.RequirePasswordChange = command.RequirePasswordChange;
+            user.IsEmailConfirmed = command.IsEmailConfirmed;
         }
     }
 }

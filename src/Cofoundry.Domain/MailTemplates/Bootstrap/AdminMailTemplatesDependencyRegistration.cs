@@ -2,9 +2,6 @@
 using Cofoundry.Domain.MailTemplates;
 using Cofoundry.Domain.MailTemplates.AdminMailTemplates;
 using Cofoundry.Domain.MailTemplates.DefaultMailTemplates;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Cofoundry.Domain.Registration
 {
@@ -19,6 +16,7 @@ namespace Cofoundry.Domain.Registration
                 .Register<ICofoundryAdminMailTemplateBuilder, CofoundryAdminMailTemplateBuilder>()
                 .RegisterGeneric(typeof(IDefaultMailTemplateBuilder<>), typeof(DefaultMailTemplateBuilder<>))
                 .RegisterAllGenericImplementations(typeof(IUserMailTemplateBuilder<>))
+                .RegisterGeneric(typeof(DefaultMailTemplateBuilderWrapper<>), typeof(DefaultMailTemplateBuilderWrapper<>))
                 ;
         }
     }
