@@ -44,8 +44,7 @@ namespace Cofoundry.Domain.Internal
                 .SingleOrDefaultAsync();
             EntityNotFoundException.ThrowIfNull(user, userId);
 
-            var userArea = _userAreaDefinitionRepository.GetRequiredByCode(user.UserAreaCode);
-            await _userUpdateCommandHelper.UpdateEmailAsync(userArea, command.Email, null, user, executionContext);
+            await _userUpdateCommandHelper.UpdateEmailAndUsernameAsync(command.Email, command.Username, user, executionContext);
             user.FirstName = command.FirstName?.Trim();
             user.LastName = command.LastName?.Trim();
 

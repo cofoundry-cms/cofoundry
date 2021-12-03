@@ -138,6 +138,56 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Commands
         }
 
         [Fact]
+        public async Task CanUpdateUsername()
+        {
+            var uniqueData = UNIQUE_PREFIX + nameof(CanUpdateUsername);
+
+            using var app = _appFactory.Create();
+            var contentRepository = app.Services.GetContentRepository();
+            var dbContext = app.Services.GetRequiredService<CofoundryDbContext>();
+            var loginService = app.Services.GetRequiredService<ILoginService>();
+            var userAreaCode = UserAreaWithoutEmailAsUsername.Code;
+            var roleId = await app.TestData.Roles().AddAsync(uniqueData, userAreaCode);
+
+            var addCommand = new AddUserCommand()
+            {
+                Username = "NWatkins",
+                Password = PASSWORD,
+                RoleId = roleId,
+                UserAreaCode = userAreaCode
+            };
+
+            var userId = await contentRepository
+                .WithElevatedPermissions()
+                .Users()
+                .AddAsync(addCommand);
+
+            await loginService.LogAuthenticatedUserInAsync(userAreaCode, userId, true);
+
+            var updateCommand = new UpdateCurrentUserAccountCommand()
+            {
+                Username = "TBone"
+            };
+
+            await contentRepository
+                .Users()
+                .UpdateCurrentUserAccountAsync(updateCommand);
+
+            var user = await dbContext
+                .Users
+                .AsNoTracking()
+                .FilterById(userId)
+                .SingleOrDefaultAsync();
+
+            using (new AssertionScope())
+            {
+                user.Should().NotBeNull();
+                user.Username.Should().Be(updateCommand.Username);
+                user.UniqueUsername.Should().Be(updateCommand.Username.ToLowerInvariant());
+            }
+        }
+
+        [Fact]
         public async Task CanUnsetData()
         {
             var uniqueData = UNIQUE_PREFIX + nameof(CanUnsetData);
@@ -169,7 +219,10 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Commands
 
             await contentRepository
                 .Users()
-                .UpdateCurrentUserAccountAsync(new UpdateCurrentUserAccountCommand());
+                .UpdateCurrentUserAccountAsync(new UpdateCurrentUserAccountCommand()
+                {
+                    Username = addCommand.Username
+                });
 
             var user = await dbContext
                 .Users

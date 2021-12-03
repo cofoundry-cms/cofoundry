@@ -28,30 +28,5 @@ namespace Cofoundry.Domain.Internal
             User user,
             IExecutionContext executionContext
             );
-
-        /// <summary>
-        /// Updates the email properties (<see cref="User.Email"/>, 
-        /// <see cref="User.UniqueEmail"/>, <see cref="User.EmailDomainId"/>)  
-        /// on a user, handing normalization, uniquification and validation. If 
-        /// the user area settings indicate that the email address is used for 
-        /// the username, then these fields are also updated.
-        /// </summary>
-        /// <param name="userArea">The user area relating to the user being updated.</param>
-        /// <param name="email">The unformattted email command property to update.</param>
-        /// <param name="username">
-        /// The username command property, or <see langword="null"/> if the command doesn't 
-        /// have one. This is only required to validate it's been set correctly.
-        /// </param>
-        /// <param name="user">The new or existing user database record to update.</param>
-        /// <param name="executionContext">
-        /// The command execution context to pass down to any nested queries or commands.
-        /// </param>
-        Task UpdateEmailAsync(
-            IUserAreaDefinition userArea,
-            string email,
-            string username,
-            User user,
-            IExecutionContext executionContext
-            );
     }
 }

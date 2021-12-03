@@ -62,7 +62,7 @@ namespace Cofoundry.Domain.Internal
             }
         }
 
-        public async Task UpdateEmailAsync(
+        private async Task UpdateEmailAsync(
             IUserAreaDefinition userArea,
             string email,
             string username,
