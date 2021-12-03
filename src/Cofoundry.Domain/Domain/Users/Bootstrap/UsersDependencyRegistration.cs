@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Cofoundry.Core.DependencyInjection;
+﻿using Cofoundry.Core.DependencyInjection;
 using Cofoundry.Domain.Internal;
 
 namespace Cofoundry.Domain.Registration
@@ -12,6 +8,7 @@ namespace Cofoundry.Domain.Registration
         public void Register(IContainerRegister container)
         {
             container
+                .RegisterAll<IUserAreaDefinition>()
                 .Register<IUserAreaDefinitionRepository, UserAreaDefinitionRepository>()
                 .Register<IUserRepository, UserRepository>()
                 .Register<UserContextMapper>()
@@ -25,7 +22,9 @@ namespace Cofoundry.Domain.Registration
                 .Register<IUserDetailsMapper, UserDetailsMapper>()
                 .Register<IPasswordResetUrlHelper, PasswordResetUrlHelper>()
                 .Register<IUserContextCache, UserContextCache>(RegistrationOptions.Scoped())
-                .RegisterAll<IUserAreaDefinition>()
+                .Register<IUserDataFormatter, UserDataFormatter>()
+                .Register<IUserUpdateCommandHelper, UserUpdateCommandHelper>()
+                .RegisterAllGenericImplementations(typeof(IEmailAddressNormalizer<>))
                 ;
         }
     }

@@ -1,16 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Cofoundry.Domain.CQS;
+﻿using Cofoundry.Domain.CQS;
 
 namespace Cofoundry.Domain
 {
     /// <summary>
-    /// Finds a user with a specific username address in a specific user area 
-    /// returning null if the user could not be found. Note that depending on the
-    /// user area, the username may be a copy of the email address.
+    /// Finds a user with a specific username, returning <see langword="null"/> if the 
+    /// user could not be found. A user always has a username, however it may just
+    /// be a copy of the email address if the <see cref="IUserAreaDefinition.UseEmailAsUsername"/>
+    /// setting is set to true.
     /// </summary>
     public class GetUserMicroSummaryByUsernameQuery : IQuery<UserMicroSummary>
     {
@@ -33,7 +29,8 @@ namespace Cofoundry.Domain
         public string UserAreaCode { get; set; }
 
         /// <summary>
-        /// The username to use to locate the user.
+        /// The username to use to locate the user. The value will be normalized
+        /// before making the comparison.
         /// </summary>
         public string Username { get; set; }
     }

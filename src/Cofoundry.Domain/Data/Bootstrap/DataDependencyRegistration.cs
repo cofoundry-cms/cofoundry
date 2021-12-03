@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Cofoundry.Core.DependencyInjection;
+﻿using Cofoundry.Core.DependencyInjection;
 using Cofoundry.Domain.Data.Internal;
 using Microsoft.EntityFrameworkCore;
+using System;
 
 namespace Cofoundry.Domain.Data.Registration
 {
@@ -20,6 +17,7 @@ namespace Cofoundry.Domain.Data.Registration
                 .Register<IPageStoredProcedures, PageStoredProcedures>()
                 .Register<IAssetStoredProcedures, AssetStoredProcedures>()
                 .Register<IPageDirectoryStoredProcedures, PageDirectoryStoredProcedures>()
+                .Register<IUserStoredProcedures, UserStoredProcedures>()
                 ;
         }
     }

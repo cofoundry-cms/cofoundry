@@ -1,16 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using Microsoft.Data.SqlClient;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Cofoundry.Domain.Data;
+﻿using Cofoundry.Core.EntityFramework;
 using Cofoundry.Domain.CQS;
-using Cofoundry.Core.EntityFramework;
+using Cofoundry.Domain.Data;
+using Microsoft.Data.SqlClient;
+using System.Threading.Tasks;
 
 namespace Cofoundry.Domain.Internal
 {
-    public class HasExceededMaxLoginAttemptsQueryHandler 
+    public class HasExceededMaxLoginAttemptsQueryHandler
         : IQueryHandler<HasExceededMaxLoginAttemptsQuery, bool>
         , IIgnorePermissionCheckHandler
     {
@@ -39,7 +35,7 @@ namespace Cofoundry.Domain.Internal
             var isValid = await _sqlExecutor.ExecuteScalarAsync<int>(_dbContext,
                 "Cofoundry.FailedAuthticationAttempt_IsAttemptValid",
                 new SqlParameter("UserAreaCode", query.UserAreaCode),
-                new SqlParameter("Username", query.Username.Trim()),
+                new SqlParameter("Username", query.Username),
                 new SqlParameter("IPAddress", connectionInfo.IPAddress),
                 new SqlParameter("DateTimeNow", executionContext.ExecutionDate),
                 new SqlParameter("MaxIPAttempts", _authenticationSettings.MaxIPAttempts),

@@ -21,8 +21,8 @@ namespace Cofoundry.Domain
         public string LastName { get; set; }
 
         /// <summary>
-        /// The email address is required if the user area has UseEmailAsUsername 
-        /// set to true.
+        /// The email address is required if the user area has 
+        /// <see cref="IUserAreaDefinition.UseEmailAsUsername"/> set to <see langword="true"/>.
         /// </summary>
         [StringLength(150)]
         [EmailAddress(ErrorMessage = "Please use a valid email address")]

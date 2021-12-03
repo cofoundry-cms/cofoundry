@@ -1,18 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Cofoundry.Domain.CQS;
+using Cofoundry.Domain.Data;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
-using Cofoundry.Domain.Data;
-using Cofoundry.Domain.CQS;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.Extensions.Logging;
 
 namespace Cofoundry.Domain.Internal
 {
     /// <summary>
-    /// A query handler that gets information about a user if the specified credentials
-    /// pass an authentication check
+    /// Returns information about a user if the specified credentials
+    /// pass an authentication check.
     /// </summary>
     public class GetUserLoginInfoIfAuthenticatedQueryHandler
         : IQueryHandler<GetUserLoginInfoIfAuthenticatedQuery, UserLoginInfoAuthenticationResult>
@@ -23,13 +22,15 @@ namespace Cofoundry.Domain.Internal
         private readonly CofoundryDbContext _dbContext;
         private readonly IQueryExecutor _queryExecutor;
         private readonly ICommandExecutor _commandExecutor;
+        private readonly IUserDataFormatter _userDataFormatter;
 
         public GetUserLoginInfoIfAuthenticatedQueryHandler(
             ILogger<GetUserLoginInfoIfAuthenticatedQueryHandler> logger,
             CofoundryDbContext dbContext,
             UserAuthenticationHelper userAuthenticationHelper,
             IQueryExecutor queryExecutor,
-            ICommandExecutor commandExecutor
+            ICommandExecutor commandExecutor,
+            IUserDataFormatter userDataFormatter
             )
         {
             _userAuthenticationHelper = userAuthenticationHelper;
@@ -37,16 +38,18 @@ namespace Cofoundry.Domain.Internal
             _dbContext = dbContext;
             _queryExecutor = queryExecutor;
             _commandExecutor = commandExecutor;
+            _userDataFormatter = userDataFormatter;
         }
 
         public async Task<UserLoginInfoAuthenticationResult> ExecuteAsync(GetUserLoginInfoIfAuthenticatedQuery query, IExecutionContext executionContext)
         {
-            if (string.IsNullOrWhiteSpace(query.Username) || string.IsNullOrWhiteSpace(query.Password))
+            var uniqueUsername = _userDataFormatter.UniquifyUsername(query.UserAreaCode, query.Username);
+            if (string.IsNullOrWhiteSpace(uniqueUsername) || string.IsNullOrWhiteSpace(query.Password))
             {
                 return GetAuthenticationFailedForUnknownUserResult(query);
             }
 
-            var hasExceededMaxLoginAttempts = await HasExceededMaxLoginAttemptsAsync(query, executionContext);
+            var hasExceededMaxLoginAttempts = await HasExceededMaxLoginAttemptsAsync(query.UserAreaCode, uniqueUsername, executionContext);
             if (hasExceededMaxLoginAttempts)
             {
                 _logger.LogInformation("Authentication failed due to too many failed attempts {UserAreaCode}", query.UserAreaCode);
@@ -56,17 +59,17 @@ namespace Cofoundry.Domain.Internal
                 };
             }
 
-            var dbUser = await GetUserAsync(query);
+            var dbUser = await GetUserAsync(query.UserAreaCode, uniqueUsername);
             if (dbUser == null)
             {
-                await LogFailedLogginAttemptAsync(query);
+                await LogFailedLogginAttemptAsync(query.UserAreaCode, uniqueUsername, executionContext);
                 return GetAuthenticationFailedForUnknownUserResult(query);
             }
 
             var result = new UserLoginInfoAuthenticationResult();
             result.User = MapUser(query, dbUser);
 
-            await FinalizeResultAsync(query, result);
+            await FinalizeResultAsync(result, query.UserAreaCode, uniqueUsername, executionContext);
 
             return result;
         }
@@ -81,34 +84,32 @@ namespace Cofoundry.Domain.Internal
             return result;
         }
 
-        private Task<bool> HasExceededMaxLoginAttemptsAsync(GetUserLoginInfoIfAuthenticatedQuery inputQuery, IExecutionContext executionContext)
+        private Task<bool> HasExceededMaxLoginAttemptsAsync(string userAreaCode, string uniqueUsername,  IExecutionContext executionContext)
         {
             var hasExceededMaxLoginAttemptsQuery = new HasExceededMaxLoginAttemptsQuery()
             {
-                UserAreaCode = inputQuery.UserAreaCode,
-                Username = inputQuery.Username
+                UserAreaCode = userAreaCode,
+                Username = uniqueUsername
             };
 
             return _queryExecutor.ExecuteAsync(hasExceededMaxLoginAttemptsQuery, executionContext);
         }
 
-        private Task<User> GetUserAsync(GetUserLoginInfoIfAuthenticatedQuery query)
+        private Task<User> GetUserAsync(string userAreaCode, string uniqueUsername)
         {
             return _dbContext
                 .Users
                 .AsNoTracking()
-                .FilterByUserArea(query.UserAreaCode)
+                .FilterByUserArea(userAreaCode)
                 .FilterCanLogIn()
-                .Where(u => u.Username == query.Username)
+                .Where(u => u.UniqueUsername == uniqueUsername)
                 .FirstOrDefaultAsync();
         }
 
-        private async Task LogFailedLogginAttemptAsync(GetUserLoginInfoIfAuthenticatedQuery query)
+        private async Task LogFailedLogginAttemptAsync(string userAreaCode, string uniqueUsername, IExecutionContext executionContext)
         {
-            await _commandExecutor.ExecuteAsync(new LogFailedLoginAttemptCommand(
-                query.UserAreaCode,
-                query.Username
-                ));
+            var command = new LogFailedLoginAttemptCommand(userAreaCode, uniqueUsername);
+            await _commandExecutor.ExecuteAsync(command, executionContext);
         }
 
         private UserLoginInfo MapUser(GetUserLoginInfoIfAuthenticatedQuery query, User dbUser)
@@ -157,11 +158,16 @@ namespace Cofoundry.Domain.Internal
         /// The user has been mapped, so complete the mapping of the outer result and handle
         /// any side-effects
         /// </summary>
-        private async Task FinalizeResultAsync(GetUserLoginInfoIfAuthenticatedQuery query, UserLoginInfoAuthenticationResult result)
+        private async Task FinalizeResultAsync(
+            UserLoginInfoAuthenticationResult result, 
+            string userAreaCode, 
+            string uniqueUsername, 
+            IExecutionContext executionContext
+            )
         {
             if (result.User == null)
             {
-                await LogFailedLogginAttemptAsync(query);
+                await LogFailedLogginAttemptAsync(userAreaCode, uniqueUsername, executionContext);
 
                 result.Error = UserLoginInfoAuthenticationError.InvalidCredentials;
             }

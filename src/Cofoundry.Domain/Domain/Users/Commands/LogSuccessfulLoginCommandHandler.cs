@@ -1,13 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using Cofoundry.Core;
+using Cofoundry.Core.EntityFramework;
+using Cofoundry.Domain.CQS;
+using Cofoundry.Domain.Data;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
-using Cofoundry.Domain.Data;
-using Cofoundry.Domain.CQS;
-using Cofoundry.Core.EntityFramework;
-using Cofoundry.Core;
+using System.Threading.Tasks;
 
 namespace Cofoundry.Domain.Internal
 {
@@ -16,12 +13,10 @@ namespace Cofoundry.Domain.Internal
     /// the successful login. Does not do anything to login a user
     /// session.
     /// </summary>
-    public class LogSuccessfulLoginCommandHandler 
+    public class LogSuccessfulLoginCommandHandler
         : ICommandHandler<LogSuccessfulLoginCommand>
         , IIgnorePermissionCheckHandler
     {
-        #region constructor
-
         private readonly CofoundryDbContext _dbContext;
         private readonly IEntityFrameworkSqlExecutor _sqlExecutor;
         private readonly IClientConnectionService _clientConnectionService;
@@ -37,14 +32,11 @@ namespace Cofoundry.Domain.Internal
             _clientConnectionService = clientConnectionService;
         }
 
-        #endregion
-
         public async Task ExecuteAsync(LogSuccessfulLoginCommand command, IExecutionContext executionContext)
         {
-            var user = await Query(command.UserId).SingleOrDefaultAsync();
-            EntityNotFoundException.ThrowIfNull(user, command.UserId);
-
+            var user = await QueryUserAsync(command.UserId);
             var connectionInfo = _clientConnectionService.GetConnectionInfo();
+
             SetLoggedIn(user, executionContext);
             await _dbContext.SaveChangesAsync();
 
@@ -56,12 +48,14 @@ namespace Cofoundry.Domain.Internal
                 );
         }
 
-        private IQueryable<User> Query(int userId)
+        private async Task<User> QueryUserAsync(int userId)
         {
-            var user = _dbContext
+            var user = await _dbContext
                 .Users
                 .FilterById(userId)
-                .FilterCanLogIn();
+                .FilterCanLogIn()
+                .SingleOrDefaultAsync();
+            EntityNotFoundException.ThrowIfNull(user, userId);
 
             return user;
         }

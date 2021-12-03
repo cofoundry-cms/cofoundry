@@ -1,63 +1,55 @@
-﻿using System;
+﻿using Cofoundry.Domain.CQS;
+using Cofoundry.Domain.Data;
+using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using Cofoundry.Domain.Data;
-using Cofoundry.Domain.CQS;
-using Microsoft.EntityFrameworkCore;
 
 namespace Cofoundry.Domain.Internal
 {
     /// <summary>
-    /// Finds a user with a specific username address in a specific user area 
-    /// returning null if the user could not be found. Note that depending on the
-    /// user area, the username may be a copy of the email address.
+    /// Finds a user with a specific username, returning <see langword="null"/> if the 
+    /// user could not be found. A user always has a username, however it may just
+    /// be a copy of the email address if the <see cref="IUserAreaDefinition.UseEmailAsUsername"/>
+    /// setting is set to true.
     /// </summary>
     public class GetUserMicroSummaryByUsernameQueryHandler
         : IQueryHandler<GetUserMicroSummaryByUsernameQuery, UserMicroSummary>
         , IPermissionRestrictedQueryHandler<GetUserMicroSummaryByUsernameQuery, UserMicroSummary>
     {
-        #region constructor
-
         private readonly CofoundryDbContext _dbContext;
         private readonly IUserMicroSummaryMapper _userMicroSummaryMapper;
+        private readonly IUserDataFormatter _userDataFormatter;
 
         public GetUserMicroSummaryByUsernameQueryHandler(
             CofoundryDbContext dbContext,
-            IUserMicroSummaryMapper userMicroSummaryMapper
+            IUserMicroSummaryMapper userMicroSummaryMapper,
+            IUserDataFormatter userDataFormatter
             )
         {
             _dbContext = dbContext;
             _userMicroSummaryMapper = userMicroSummaryMapper;
+            _userDataFormatter = userDataFormatter;
         }
-
-        #endregion
-
-        #region execution
 
         public async Task<UserMicroSummary> ExecuteAsync(GetUserMicroSummaryByUsernameQuery query, IExecutionContext executionContext)
         {
             if (string.IsNullOrWhiteSpace(query.Username)) return null;
 
-            var dbResult = await Query(query).SingleOrDefaultAsync();
+            var uniqueUsername = _userDataFormatter.UniquifyUsername(query.UserAreaCode, query.Username);
+            if (uniqueUsername == null) return null;
+
+            var dbResult = await _dbContext
+                .Users
+                .AsNoTracking()
+                .FilterByUserArea(query.UserAreaCode)
+                .Where(u => u.UniqueUsername == uniqueUsername)
+                .SingleOrDefaultAsync();
 
             var user = _userMicroSummaryMapper.Map(dbResult);
 
             return user;
         }
-
-        private IQueryable<User> Query(GetUserMicroSummaryByUsernameQuery query)
-        {
-            return _dbContext
-                .Users
-                .AsNoTracking()
-                .Where(u => u.Username == query.Username && u.UserAreaCode == query.UserAreaCode);
-        }
-
-        #endregion
-
-        #region permissions
 
         public IEnumerable<IPermissionApplication> GetPermissions(GetUserMicroSummaryByUsernameQuery query)
         {
@@ -70,7 +62,5 @@ namespace Cofoundry.Domain.Internal
                 yield return new NonCofoundryUserReadPermission();
             }
         }
-
-        #endregion
     }
 }

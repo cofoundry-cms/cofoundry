@@ -2,6 +2,7 @@
 using Cofoundry.Core.Validation;
 using Cofoundry.Domain.Data;
 using Cofoundry.Domain.Tests.Shared.Assertions;
+using Cofoundry.Domain.Tests.Shared.SeedData;
 using FluentAssertions;
 using FluentAssertions.Execution;
 using Microsoft.EntityFrameworkCore;
@@ -102,14 +103,73 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Commands
 
             await loginService.LogAuthenticatedUserInAsync(userArea.UserAreaCode, userId, true);
 
+            var newEmailDomain = $"{UNIQUE_PREFIX}2.example.com";
+            var newEmailLocal = "TAFKAP@";
             var updateCommand = new UpdateCurrentUserAccountCommand()
             {
-                Email = $"TAFKAP" + EMAIL_DOMAIN,
+                Email = newEmailLocal + newEmailDomain,
             };
 
             await contentRepository
                 .Users()
                 .UpdateCurrentUserAccountAsync(updateCommand);
+
+            var user = await dbContext
+                .Users
+                .AsNoTracking()
+                .Include(u => u.EmailDomain)
+                .FilterById(userId)
+                .SingleOrDefaultAsync();
+
+            var normalizedDomain = newEmailDomain.ToLowerInvariant();
+            var newNormalizedEmail = newEmailLocal + normalizedDomain;
+            var newEmailLower = newNormalizedEmail.ToLowerInvariant();
+            using (new AssertionScope())
+            {
+                user.Should().NotBeNull();
+                user.FirstName.Should().Be(updateCommand.FirstName);
+                user.LastName.Should().Be(updateCommand.LastName);
+                user.Email.Should().Be(newNormalizedEmail);
+                user.UniqueEmail.Should().Be(newEmailLower);
+                user.Username.Should().Be(newNormalizedEmail);
+                user.UniqueUsername.Should().Be(newEmailLower);
+                user.EmailDomain.Name.Should().Be(normalizedDomain);
+            }
+        }
+
+        [Fact]
+        public async Task CanUnsetData()
+        {
+            var uniqueData = UNIQUE_PREFIX + nameof(CanUnsetData);
+
+            using var app = _appFactory.Create();
+            var contentRepository = app.Services.GetContentRepository();
+            var dbContext = app.Services.GetRequiredService<CofoundryDbContext>();
+            var loginService = app.Services.GetRequiredService<ILoginService>();
+            var userAreaCode = UserAreaWithoutEmailAsUsername.Code;
+            var roleId = await app.TestData.Roles().AddAsync(uniqueData, userAreaCode);
+
+            var addCommand = new AddUserCommand()
+            {
+                Email = $"e.razor" + EMAIL_DOMAIN,
+                Username = uniqueData,
+                FirstName = "John",
+                LastName = "Kruger",
+                Password = PASSWORD,
+                RoleId = roleId,
+                UserAreaCode = userAreaCode
+            };
+
+            var userId = await contentRepository
+                .WithElevatedPermissions()
+                .Users()
+                .AddAsync(addCommand);
+
+            await loginService.LogAuthenticatedUserInAsync(userAreaCode, userId, true);
+
+            await contentRepository
+                .Users()
+                .UpdateCurrentUserAccountAsync(new UpdateCurrentUserAccountCommand());
 
             var user = await dbContext
                 .Users
@@ -120,9 +180,13 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Commands
             using (new AssertionScope())
             {
                 user.Should().NotBeNull();
-                user.FirstName.Should().Be(updateCommand.FirstName);
-                user.LastName.Should().Be(updateCommand.LastName);
-                user.Email.Should().Be(updateCommand.Email);
+                user.FirstName.Should().BeNull();
+                user.LastName.Should().BeNull();
+                user.Email.Should().BeNull();
+                user.UniqueEmail.Should().BeNull();
+                user.EmailDomainId.Should().BeNull();
+                user.Username.Should().Be(addCommand.Username);
+                user.UniqueUsername.Should().Be(addCommand.Username.ToLowerInvariant());
             }
         }
 
@@ -162,6 +226,57 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Commands
             };
 
             await loginService.LogAuthenticatedUserInAsync(userArea.UserAreaCode, userId, true);
+
+            await contentRepository
+                .Awaiting(r => r.Users().UpdateCurrentUserAccountAsync(updateCommand))
+                .Should()
+                .ThrowAsync<ValidationErrorException>()
+                .WithMemberNames(nameof(updateCommand.Email))
+                .WithMessage("*already registered*");
+        }
+
+
+        [Fact]
+        public async Task WhenEmailNotUnique_Throws()
+        {
+            var uniqueData = UNIQUE_PREFIX + nameof(WhenEmailNotUnique_Throws);
+
+            using var app = _appFactory.Create();
+            var contentRepository = app.Services.GetContentRepository();
+            var loginService = app.Services.GetRequiredService<ILoginService>();
+            var userAreaCode = UserAreaWithoutEmailAsUsername.Code;
+            var roleId = await app.TestData.Roles().AddAsync(uniqueData, userAreaCode);
+
+            await contentRepository
+                .WithElevatedPermissions()
+                .Users()
+                .AddAsync(new AddUserCommand()
+                {
+                    Email = uniqueData + EMAIL_DOMAIN,
+                    Username = uniqueData,
+                    Password = PASSWORD,
+                    RoleId = roleId,
+                    UserAreaCode = userAreaCode
+                });
+
+            var userId = await contentRepository
+                .WithElevatedPermissions()
+                .Users()
+                .AddAsync(new AddUserCommand()
+                {
+                    Email = uniqueData + "2" + EMAIL_DOMAIN,
+                    Username = uniqueData + "2",
+                    Password = PASSWORD,
+                    RoleId = roleId,
+                    UserAreaCode = userAreaCode
+                });
+
+            var updateCommand = new UpdateCurrentUserAccountCommand()
+            {
+                Email = uniqueData + EMAIL_DOMAIN,
+            };
+
+            await loginService.LogAuthenticatedUserInAsync(userAreaCode, userId, true);
 
             await contentRepository
                 .Awaiting(r => r.Users().UpdateCurrentUserAccountAsync(updateCommand))

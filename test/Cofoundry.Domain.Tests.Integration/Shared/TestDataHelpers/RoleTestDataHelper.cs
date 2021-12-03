@@ -33,7 +33,7 @@ namespace Cofoundry.Domain.Tests.Integration
         /// <param name="userAreaCode">User area to assign the role to.</param>
         /// <param name="permissionInitializer">
         /// A filter function to indicate which permissions to add. If this is <see langword="null"/> 
-        /// then no permissions are added. This is the equivalent of an <see cref="IRoleInitializer"/>.
+        /// then all permissions are added. This is the equivalent of an <see cref="IRoleInitializer"/>.
         /// </param>
         public async Task<int> AddAsync(
             string uniqueData,
@@ -59,7 +59,7 @@ namespace Cofoundry.Domain.Tests.Integration
         /// <param name="userAreaCode">User area to assign the role to.</param>
         /// <param name="permissionInitializer">
         /// A filter function to indicate which permissions to add. If this is <see langword="null"/> 
-        /// then no permissions are added. This is the equivalent of an <see cref="IRoleInitializer"/>.
+        /// then all permissions are added. This is the equivalent of an <see cref="IRoleInitializer"/>.
         /// </param>
         public AddRoleCommand CreateAddCommand(string uniqueData, string userAreaCode, Func<IEnumerable<IPermission>, IEnumerable<IPermission>> permissionInitializer = null)
         {
@@ -69,17 +69,20 @@ namespace Cofoundry.Domain.Tests.Integration
                 UserAreaCode = userAreaCode
             };
 
+            var permissions = _permissionRepository.GetAll();
+
             if (permissionInitializer != null)
             {
-                var permissions = _permissionRepository.GetAll();
-                command.Permissions = permissionInitializer(permissions)
-                    .Select(p => new PermissionCommandData()
-                    {
-                        EntityDefinitionCode = (p as IEntityPermission)?.EntityDefinition.EntityDefinitionCode,
-                        PermissionCode = p.PermissionType.Code
-                    })
-                    .ToList();
+                permissions = permissionInitializer(permissions);
             }
+
+            command.Permissions = permissions
+                .Select(p => new PermissionCommandData()
+                {
+                    EntityDefinitionCode = (p as IEntityPermission)?.EntityDefinition.EntityDefinitionCode,
+                    PermissionCode = p.PermissionType.Code
+                })
+                .ToList();
 
             return command;
         }

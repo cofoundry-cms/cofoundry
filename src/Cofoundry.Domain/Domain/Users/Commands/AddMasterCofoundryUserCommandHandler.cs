@@ -19,38 +19,44 @@ namespace Cofoundry.Domain.Internal
         private readonly CofoundryDbContext _dbContext;
         private readonly IQueryExecutor _queryExecutor;
         private readonly IPasswordCryptographyService _passwordCryptographyService;
-        private readonly IEmailAddressNormalizer _emailAddressNormalizer;
+        private readonly IUserUpdateCommandHelper _userUpdateCommandHelper;
 
         public AddMasterCofoundryUserCommandHandler(
             CofoundryDbContext dbContext,
             IQueryExecutor queryExecutor,
             IPasswordCryptographyService passwordCryptographyService,
-            IEmailAddressNormalizer emailAddressNormalizer
+            IUserUpdateCommandHelper userUpdateCommandHelper
             )
         {
             _dbContext = dbContext;
             _queryExecutor = queryExecutor;
             _passwordCryptographyService = passwordCryptographyService;
-            _emailAddressNormalizer = emailAddressNormalizer;
+            _userUpdateCommandHelper = userUpdateCommandHelper;
         }
 
         public async Task ExecuteAsync(AddMasterCofoundryUserCommand command, IExecutionContext executionContext)
         {
             await ValidateIsNotSetupAsync(executionContext);
 
-            var role = await _dbContext
-                .Roles
-                .SingleOrDefaultAsync(r => r.RoleCode == SuperAdminRole.SuperAdminRoleCode);
-            EntityNotFoundException.ThrowIfNull(role, SuperAdminRole.SuperAdminRoleCode);
+            var role = await GetSuperAdminRoleAsync();
+            var userArea = await GetUserAreaAsync();
 
-            var userArea = await _dbContext
-                .UserAreas
-                .SingleOrDefaultAsync(a => a.UserAreaCode == CofoundryAdminUserArea.AreaCode);
-            EntityNotFoundException.ThrowIfNull(userArea, CofoundryAdminUserArea.AreaCode);
+            var user = new User()
+            {
+                FirstName = command.FirstName?.Trim(),
+                LastName = command.LastName?.Trim(),
+                RequirePasswordChange = command.RequirePasswordChange,
+                LastPasswordChangeDate = executionContext.ExecutionDate,
+                CreateDate = executionContext.ExecutionDate,
+                Role = role,
+            };
 
-            Normalize(command);
-            var user = MapUser(command, executionContext, role, userArea);
+            await _userUpdateCommandHelper.UpdateEmailAndUsernameAsync(command.Email, null, user, executionContext);
 
+            var hashResult = _passwordCryptographyService.CreateHash(command.Password);
+            user.Password = hashResult.Hash;
+            user.PasswordHashVersion = hashResult.HashVersion;
+            user.UserArea = userArea;
             _dbContext.Users.Add(user);
             await _dbContext.SaveChangesAsync();
 
@@ -75,31 +81,24 @@ namespace Cofoundry.Domain.Internal
             }
         }
 
-        private void Normalize(AddMasterCofoundryUserCommand command)
+        private async Task<UserArea> GetUserAreaAsync()
         {
-            command.FirstName = command?.FirstName.Trim();
-            command.LastName = command?.LastName.Trim();
-            command.Email = _emailAddressNormalizer.Normalize(command.Email);
+            var userArea = await _dbContext
+                .UserAreas
+                .SingleOrDefaultAsync(a => a.UserAreaCode == CofoundryAdminUserArea.AreaCode);
+            EntityNotFoundException.ThrowIfNull(userArea, CofoundryAdminUserArea.AreaCode);
+
+            return userArea;
         }
 
-        private User MapUser(AddMasterCofoundryUserCommand command, IExecutionContext executionContext, Role superUserRole, UserArea userArea)
+        private async Task<Role> GetSuperAdminRoleAsync()
         {
-            var user = new User();
-            user.FirstName = command.FirstName;
-            user.LastName = command.LastName;
-            user.Username = command.Email;
-            user.Email = command.Email;
-            user.RequirePasswordChange = command.RequirePasswordChange;
-            user.LastPasswordChangeDate = executionContext.ExecutionDate;
-            user.CreateDate = executionContext.ExecutionDate;
-            user.Role = superUserRole;
+            var role = await _dbContext
+                .Roles
+                .SingleOrDefaultAsync(r => r.RoleCode == SuperAdminRole.SuperAdminRoleCode);
+            EntityNotFoundException.ThrowIfNull(role, SuperAdminRole.SuperAdminRoleCode);
 
-            var hashResult = _passwordCryptographyService.CreateHash(command.Password);
-            user.Password = hashResult.Hash;
-            user.PasswordHashVersion = hashResult.HashVersion;
-            user.UserArea = userArea;
-
-            return user;
+            return role;
         }
     }
 }

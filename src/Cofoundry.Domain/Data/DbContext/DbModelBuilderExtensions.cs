@@ -76,6 +76,7 @@ namespace Cofoundry.Domain.Data
         public static ModelBuilder MapCofoundryUsers(this ModelBuilder modelBuilder)
         {
             modelBuilder
+                .ApplyConfiguration(new EmailDomainMap())
                 .ApplyConfiguration(new UserMap())
                 .ApplyConfiguration(new UserAreaMap())
                 .ApplyConfiguration(new RoleMap())

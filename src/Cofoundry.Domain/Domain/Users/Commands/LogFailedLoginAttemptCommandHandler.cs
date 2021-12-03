@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Cofoundry.Domain.CQS;
+﻿using Cofoundry.Core;
 using Cofoundry.Core.EntityFramework;
-using Microsoft.Data.SqlClient;
-using Cofoundry.Core;
+using Cofoundry.Domain.CQS;
 using Cofoundry.Domain.Data;
+using Microsoft.Data.SqlClient;
+using System.Threading.Tasks;
 
 namespace Cofoundry.Domain.Internal
 {
@@ -14,8 +11,6 @@ namespace Cofoundry.Domain.Internal
         : ICommandHandler<LogFailedLoginAttemptCommand>
         , IIgnorePermissionCheckHandler
     {
-        #region constructor
-
         private readonly CofoundryDbContext _dbContext;
         private readonly IEntityFrameworkSqlExecutor _sqlExecutor;
         private readonly IClientConnectionService _clientConnectionService;
@@ -30,7 +25,6 @@ namespace Cofoundry.Domain.Internal
             _sqlExecutor = sqlExecutor;
             _clientConnectionService = clientConnectionService;
         }
-        #endregion
 
         public async Task ExecuteAsync(LogFailedLoginAttemptCommand command, IExecutionContext executionContext)
         {

@@ -61,12 +61,7 @@ namespace Cofoundry.Domain
         /// role is required and determines the permissions available to the user.
         /// </summary>
         [StringLength(3)]
-        public string RoleCode
-        {
-            get { return _roleCode; }
-            set { _roleCode = value; RoleId = null; }
-        }
-        private string _roleCode;
+        public string RoleCode { get; set; }
 
         /// <summary>
         /// Indicates whether the user will be prompted to change their password the

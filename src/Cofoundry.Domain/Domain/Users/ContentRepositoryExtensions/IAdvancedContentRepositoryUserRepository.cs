@@ -27,10 +27,18 @@ namespace Cofoundry.Domain
 
         /// <summary>
         /// Determines if a username is unique within a specific UserArea.
-        /// Usernames only have to be unique per UserArea.
+        /// Usernames only have to be unique per user area.
         /// </summary>
         /// <param name="query">Query parameters.</param>
         IDomainRepositoryQueryContext<bool> IsUsernameUnique(IsUsernameUniqueQuery query);
+
+        /// <summary>
+        /// Determines if an email address is unique within a user area. Email
+        /// addresses must be unique per user area and can therefore appear in multiple
+        /// user areas.
+        /// </summary>
+        /// <param name="query">Query parameters.</param>
+        IDomainRepositoryQueryContext<bool> IsEmailUnique(IsEmailUniqueQuery query);
 
         /// <summary>
         /// A basic user creation command that adds data only and does not 

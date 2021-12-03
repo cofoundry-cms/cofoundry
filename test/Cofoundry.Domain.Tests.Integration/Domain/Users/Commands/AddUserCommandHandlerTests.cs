@@ -50,8 +50,11 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Commands
                 .Users
                 .AsNoTracking()
                 .Include(r => r.Role)
+                .Include(r => r.EmailDomain)
                 .FilterById(command.OutputUserId)
                 .SingleOrDefaultAsync();
+
+            var lowerEmail = command.Email.ToLowerInvariant();
 
             using (new AssertionScope())
             {
@@ -62,6 +65,7 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Commands
                 user.CreateDate.Should().NotBeDefault();
                 user.CreatorId.Should().BePositive();
                 user.Email.Should().Be(command.Email);
+                user.UniqueEmail.Should().Be(lowerEmail);
                 user.IsDeleted.Should().BeFalse();
                 user.IsEmailConfirmed.Should().BeFalse();
                 user.IsSystemAccount.Should().BeFalse();
@@ -75,6 +79,8 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Commands
                 user.RoleId.Should().BePositive();
                 user.UserAreaCode.Should().Be(command.UserAreaCode);
                 user.Username.Should().Be(command.Email);
+                user.UniqueUsername.Should().Be(lowerEmail);
+                user.EmailDomain.Name.Should().Be("example.com");
             }
         }
 
@@ -328,7 +334,7 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Commands
         [Fact]
         public async Task WithoutEmailAsUsername_ValidatesUsernameUnique()
         {
-            var uniqueData = UNIQUE_PREFIX + "WOEmaulUN_ValUnique";
+            var uniqueData = UNIQUE_PREFIX + "WOEmailUN_ValUnameUnique";
 
             using var app = _appFactory.Create();
             var contentRepository = app.Services.GetContentRepositoryWithElevatedPermissions();
@@ -338,7 +344,6 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Commands
 
             var command = new AddUserCommand()
             {
-                Email = "notunique@example.com",
                 Username = uniqueData,
                 Password = PASSWORD,
                 RoleId = roleId,
@@ -356,6 +361,40 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Commands
                 .ThrowAsync<ValidationErrorException>()
                 .WithMemberNames(nameof(command.Username))
                 .WithMessage("*username*already*registered*");
+        }
+
+        [Fact]
+        public async Task WithoutEmailAsUsername_ValidatesEmailUnique()
+        {
+            var uniqueData = UNIQUE_PREFIX + "WOEmailUN_ValEmailUnique";
+
+            using var app = _appFactory.Create();
+            var contentRepository = app.Services.GetContentRepositoryWithElevatedPermissions();
+            var dbContext = app.Services.GetRequiredService<CofoundryDbContext>();
+            var userAreaCode = UserAreaWithoutEmailAsUsername.Code;
+            var roleId = await app.TestData.Roles().AddAsync(uniqueData, userAreaCode);
+
+            var command = new AddUserCommand()
+            {
+                Email = uniqueData + EMAIL_DOMAIN,
+                Username = uniqueData,
+                Password = PASSWORD,
+                RoleId = roleId,
+                UserAreaCode = userAreaCode
+            };
+
+            await contentRepository
+                .Users()
+                .AddAsync(command);
+            command.Username = uniqueData + "2";
+            command.OutputUserId = 0;
+
+            await contentRepository
+                .Awaiting(r => r.Users().AddAsync(command))
+                .Should()
+                .ThrowAsync<ValidationErrorException>()
+                .WithMemberNames(nameof(command.Email))
+                .WithMessage("*email*already*registered*");
         }
     }
 }

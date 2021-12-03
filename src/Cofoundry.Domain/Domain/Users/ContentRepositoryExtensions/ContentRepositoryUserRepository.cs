@@ -1,7 +1,4 @@
 ﻿using Cofoundry.Domain.Extendable;
-using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Cofoundry.Domain.Internal
@@ -20,8 +17,6 @@ namespace Cofoundry.Domain.Internal
 
         public IExtendableContentRepository ExtendableContentRepository { get; }
 
-        #region queries
-
         public IContentRepositoryCurrentUserQueryBuilder GetCurrent()
         {
             return new ContentRepositoryCurrentUserQueryBuilder(ExtendableContentRepository);
@@ -30,6 +25,16 @@ namespace Cofoundry.Domain.Internal
         public IContentRepositoryUserByIdQueryBuilder GetById(int userId)
         {
             return new ContentRepositoryUserByIdQueryBuilder(ExtendableContentRepository, userId);
+        }
+
+        public IContentRepositoryUserByEmailQueryBuilder GetByEmail(string userAreaCode, string emailAddress)
+        {
+            return new ContentRepositoryUserByEmailQueryBuilder(ExtendableContentRepository, userAreaCode, emailAddress);
+        }
+
+        public IContentRepositoryUserByUsernameQueryBuilder GetByUsername(string userAreaCode, string username)
+        {
+            return new ContentRepositoryUserByUsernameQueryBuilder(ExtendableContentRepository, userAreaCode, username);
         }
 
         public IContentRepositoryUserSearchQueryBuilder Search()
@@ -42,9 +47,10 @@ namespace Cofoundry.Domain.Internal
             return DomainRepositoryQueryContextFactory.Create(query, ExtendableContentRepository);
         }
 
-        #endregion
-
-        #region commands
+        public IDomainRepositoryQueryContext<bool> IsEmailUnique(IsEmailUniqueQuery query)
+        {
+            return DomainRepositoryQueryContextFactory.Create(query, ExtendableContentRepository);
+        }
 
         public async Task<int> AddAsync(AddUserCommand command)
         {
@@ -77,7 +83,5 @@ namespace Cofoundry.Domain.Internal
         {
             return ExtendableContentRepository.ExecuteCommandAsync(command);
         }
-
-        #endregion
     }
 }

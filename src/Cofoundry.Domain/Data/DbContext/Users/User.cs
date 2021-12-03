@@ -26,16 +26,54 @@ namespace Cofoundry.Domain.Data
         public string LastName { get; set; }
 
         /// <summary>
-        /// The email address isn't always required depending on the 
-        /// user area settings.
+        /// The users primary email address whcih can be used to comminicate with the user.
+        /// This can be optional depending on the user area settings, if 
+        /// <see cref="IUserAreaDefinition.UseEmailAsUsername"/> is set to <see langword="true"/>
+        /// then this field is required and is used in the <see cref="Username"/> field. 
+        /// The formatting of this version should not be altered so that any privacy protections
+        /// are left in place e.g. tricks like "plus addressing" should not be removed.
         /// </summary>
         public string Email { get; set; }
 
         /// <summary>
-        /// The username is always required and depending on the user area
-        /// settings this might just be a copy of the email address.
+        /// A copy of <see cref="Email"/> that is used for uniqueness checks, which
+        /// can differ to prevent duplicates from legitimate variants that resolve 
+        /// to the same email inbox e.g. "plus addressing" or interchangeable domains.
+        /// </summary>
+        public string UniqueEmail { get; set; }
+
+        /// <summary>
+        /// The username that is used as the user identifier e.g. "JArnold" or "jarnold@example.com". 
+        /// It is always required and depending on the user area settings this might be a normalized 
+        /// copy of the email address. Although this version of the username does go through a normalization 
+        /// process it is generally unaltered, whereas the <see cref="UniqueUsername"/> field is formatted by a
+        /// "uniquification" process which can be more involved, because that field used for 
+        /// comparisons when logging in.
         /// </summary>
         public string Username { get; set; }
+
+        /// <summary>
+        /// A copy of <see cref="Username"/> that is formatted to standardize casing and any other
+        /// required formatting irregularities e.g. "jarnold" or "jarnold@example.com". This field 
+        /// is used for uniqueness checks and user lookups.
+        /// </summary>
+        public string UniqueUsername { get; set; }
+
+        /// <summary>
+        /// The domain name associated with the users <see cref="UniqueEmail"/> if one is supplied.
+        /// Note that the email domain may not be a direct mapping to the value in <see cref="Email"/> 
+        /// e.g. the user's mail provider maps multiple domains to the same host e.g. "googlemail.com"
+        /// and "gmail.com" may be consolidated depending on configuration.
+        /// </summary>
+        public int? EmailDomainId { get; set; }
+
+        /// <summary>
+        /// The domain name associated with the users <see cref="UniqueEmail"/> if one is supplied.
+        /// Note that the email domain may not be a direct mapping to the value in <see cref="Email"/> 
+        /// e.g. the user's mail provider maps multiple domains to the same host e.g. "googlemail.com"
+        /// and "gmail.com" may be consolidated depending on configuration.
+        /// </summary>
+        public EmailDomain EmailDomain { get; set; }
 
         /// <summary>
         /// The users hashed password value.
@@ -44,9 +82,9 @@ namespace Cofoundry.Domain.Data
 
         /// <summary>
         /// Cofoundry supports upgradable password hashing and this integer value
-        /// maps to the <see cref="Cofoundry.Domain.PasswordHashVersion"/> enum to 
+        /// maps to the <see cref="Domain.PasswordHashVersion"/> enum to 
         /// tell us which hash function type to use. An integer outside of the 
-        /// <see cref="Cofoundry.Domain.PasswordHashVersion"/> enum range
+        /// <see cref="Domain.PasswordHashVersion"/> enum range
         /// can be used to set up a completed custom hash provider.
         /// </summary>
         public int? PasswordHashVersion { get; set; }

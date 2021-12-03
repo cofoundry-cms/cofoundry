@@ -1,20 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Cofoundry.Domain.CQS;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Cofoundry.Domain.CQS;
-using Cofoundry.Core.Validation;
 
 namespace Cofoundry.Domain
 {
     public class LogFailedLoginAttemptCommand : ICommand
     {
-        public LogFailedLoginAttemptCommand()
-        {
-
-        }
+        public LogFailedLoginAttemptCommand() { }
 
         public LogFailedLoginAttemptCommand(string userAreaCode, string username)
         {
@@ -22,9 +13,18 @@ namespace Cofoundry.Domain
             UserAreaCode = userAreaCode;
         }
 
+        /// <summary>
+        /// The <see cref="IUserAreaDefinition.UserAreaCode"/> of the user area 
+        /// attempting to be logged in to.
+        /// </summary>
         [Required]
         public string UserAreaCode { get; set; }
 
+        /// <summary>
+        /// The username used in the login attempt. This is expected to be in a 
+        /// "uniquified" format, as this should have been already processed whenever 
+        /// this needs to be called.
+        /// </summary>
         [Required]
         public string Username { get; set; }
     }

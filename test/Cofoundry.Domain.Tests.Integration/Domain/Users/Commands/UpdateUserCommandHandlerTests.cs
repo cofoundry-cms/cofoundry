@@ -2,11 +2,11 @@
 using Cofoundry.Core.Validation;
 using Cofoundry.Domain.Data;
 using Cofoundry.Domain.Tests.Shared.Assertions;
+using Cofoundry.Domain.Tests.Shared.SeedData;
 using FluentAssertions;
 using FluentAssertions.Execution;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using System.Linq;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -31,6 +31,8 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Commands
         [Fact]
         public async Task CanUpdateBasicProperties()
         {
+            var alternateDomain = $"{UNIQUE_PREFIX}2.example.com";
+
             using var app = _appFactory.Create();
             var contentRepository = app.Services.GetContentRepositoryWithElevatedPermissions();
             var dbContext = app.Services.GetRequiredService<CofoundryDbContext>();
@@ -52,11 +54,72 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Commands
                 .AddAsync(addCommand);
 
             var updateCommand = MapUpdateCommand(addCommand);
-            updateCommand.Email = "E.john" + EMAIL_DOMAIN;
+            updateCommand.Email = "E.john@" + alternateDomain;
             updateCommand.FirstName = "Elton";
             updateCommand.LastName = "John";
             updateCommand.IsEmailConfirmed = true;
             updateCommand.RequirePasswordChange = true;
+
+            await contentRepository
+                .Users()
+                .UpdateUserAsync(updateCommand);
+
+            var user = await dbContext
+                .Users
+                .AsNoTracking()
+                .Include(u => u.EmailDomain)
+                .FilterById(userId)
+                .SingleOrDefaultAsync();
+
+            var normalizedDomain = alternateDomain.ToLowerInvariant();
+            var normalizedEmail = "E.john@" + normalizedDomain;
+            var lowerEmail = normalizedEmail.ToLowerInvariant();
+
+            using (new AssertionScope())
+            {
+                user.Should().NotBeNull();
+                user.FirstName.Should().Be(updateCommand.FirstName);
+                user.LastName.Should().Be(updateCommand.LastName);
+                user.Email.Should().Be(normalizedEmail);
+                user.UniqueEmail.Should().Be(lowerEmail);
+                user.Username.Should().Be(normalizedEmail);
+                user.UniqueUsername.Should().Be(lowerEmail);
+                user.IsEmailConfirmed.Should().BeTrue();
+                user.RequirePasswordChange.Should().BeTrue();
+                user.EmailDomain.Name.Should().Be(normalizedDomain);
+            }
+        }
+
+        [Fact]
+        public async Task CanUnsetData()
+        {
+            var uniqueData = UNIQUE_PREFIX + nameof(CanUnsetData);
+
+            using var app = _appFactory.Create();
+            var contentRepository = app.Services.GetContentRepositoryWithElevatedPermissions();
+            var dbContext = app.Services.GetRequiredService<CofoundryDbContext>();
+            var userAreaCode = UserAreaWithoutEmailAsUsername.Code;
+            var roleId = await app.TestData.Roles().AddAsync(uniqueData, userAreaCode);
+
+            var addCommand = new AddUserCommand()
+            {
+                Email = $"e.razor" + EMAIL_DOMAIN,
+                Username = uniqueData,
+                FirstName = "John",
+                LastName = "Kruger",
+                Password = PASSWORD,
+                RoleId = roleId,
+                UserAreaCode = userAreaCode
+            };
+
+            var userId = await contentRepository
+                .Users()
+                .AddAsync(addCommand);
+
+            var updateCommand = MapUpdateCommand(addCommand);
+            updateCommand.Email = null;
+            updateCommand.FirstName = null;
+            updateCommand.LastName = null;
 
             await contentRepository
                 .Users()
@@ -71,11 +134,13 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Commands
             using (new AssertionScope())
             {
                 user.Should().NotBeNull();
-                user.FirstName.Should().Be(updateCommand.FirstName);
-                user.LastName.Should().Be(updateCommand.LastName);
-                user.Email.Should().Be(updateCommand.Email);
-                user.IsEmailConfirmed.Should().BeTrue();
-                user.RequirePasswordChange.Should().BeTrue();
+                user.FirstName.Should().BeNull();
+                user.LastName.Should().BeNull();
+                user.Email.Should().BeNull();
+                user.UniqueEmail.Should().BeNull();
+                user.EmailDomainId.Should().BeNull();
+                user.Username.Should().Be(addCommand.Username);
+                user.UniqueUsername.Should().Be(addCommand.Username.ToLowerInvariant());
             }
         }
 
@@ -87,7 +152,6 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Commands
             using var app = _appFactory.Create();
             var contentRepository = app.Services.GetContentRepositoryWithElevatedPermissions();
             var dbContext = app.Services.GetRequiredService<CofoundryDbContext>();
-            var loginService = app.Services.GetRequiredService<ILoginService>();
             var userArea = app.SeededEntities.TestUserArea1;
             var roleId = await app.TestData.Roles().AddAsync(uniqueData, userArea.UserAreaCode);
 
@@ -132,7 +196,6 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Commands
             using var app = _appFactory.Create();
             var contentRepository = app.Services.GetContentRepositoryWithElevatedPermissions();
             var dbContext = app.Services.GetRequiredService<CofoundryDbContext>();
-            var loginService = app.Services.GetRequiredService<ILoginService>();
             var userArea = app.SeededEntities.TestUserArea1;
 
             var addCommand = new AddUserCommand()
@@ -176,7 +239,6 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Commands
             using var app = _appFactory.Create();
             var contentRepository = app.Services.GetContentRepositoryWithElevatedPermissions();
             var dbContext = app.Services.GetRequiredService<CofoundryDbContext>();
-            var loginService = app.Services.GetRequiredService<ILoginService>();
             var userArea1 = app.SeededEntities.TestUserArea1;
             var roleId = await app.TestData.Roles().AddAsync(uniqueData, app.SeededEntities.TestUserArea2.UserAreaCode);
 
@@ -211,7 +273,6 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Commands
             using var app = _appFactory.Create();
             var contentRepository = app.Services.GetContentRepositoryWithElevatedPermissions();
             var dbContext = app.Services.GetRequiredService<CofoundryDbContext>();
-            var loginService = app.Services.GetRequiredService<ILoginService>();
             var userArea1 = app.SeededEntities.TestUserArea1;
             var userArea2 = app.SeededEntities.TestUserArea2;
 
@@ -242,7 +303,6 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Commands
         {
             using var app = _appFactory.Create();
             var contentRepository = app.Services.GetContentRepositoryWithElevatedPermissions();
-            var loginService = app.Services.GetRequiredService<ILoginService>();
             var userArea = app.SeededEntities.TestUserArea1;
 
             await contentRepository
@@ -310,6 +370,7 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Commands
                 IsEmailConfirmed = false,
                 LastName = command.LastName,
                 RequirePasswordChange = command.RequirePasswordChange,
+                RoleId = command.RoleId,
                 RoleCode = command.RoleCode,
                 UserId = command.OutputUserId,
                 Username = command.Username

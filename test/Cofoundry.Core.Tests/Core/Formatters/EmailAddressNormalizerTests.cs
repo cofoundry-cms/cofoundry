@@ -1,5 +1,6 @@
-﻿using Cofoundry.Core.Internal;
+﻿using Cofoundry.Core.Extendable;
 using FluentAssertions;
+using FluentAssertions.Execution;
 using Xunit;
 
 namespace Cofoundry.Core.Tests.Core.Formatters
@@ -39,6 +40,9 @@ namespace Cofoundry.Core.Tests.Core.Formatters
         [InlineData("EXAMPLE@EXAMPLE.com", "EXAMPLE@example.com")]
         [InlineData("example@example.COM", "example@example.com")]
         [InlineData(" eXample@example.COm", "eXample@example.com")]
+        [InlineData(" MÜller@MÜller.example.Com", "MÜller@müller.example.com")]
+        [InlineData("EXAMPLE@😉.FM", "EXAMPLE@😉.fm")]
+        [InlineData("μαρια@μαρια.GR", "μαρια@μαρια.gr")]
         public void Normalize_LowercasesDomainOnly(string email, string expected)
         {
             var result = _emailAddressNormalizer.Normalize(email);
@@ -47,17 +51,36 @@ namespace Cofoundry.Core.Tests.Core.Formatters
         }
 
         [Theory]
-        [InlineData("μαρια@μαρια.gr", "μαρια@μαρια.gr")]
-        [InlineData("EXAMPLE@ονομα.gr", "EXAMPLE@ονομα.gr")]
-        [InlineData("example@😉.fm", "example@😉.fm")]
-        [InlineData("example@Σαμαράς.ελ ", "example@Σαμαράς.ελ")]
-        [InlineData(" example@Γιώργος.ελ", "example@Γιώργος.ελ")]
-        [InlineData(" MÜller@MÜller.example.com", "MÜller@MÜller.example.com")]
-        public void Normalize_IDNDomain_Ignores(string email, string expected)
+        [InlineData(null)]
+        [InlineData("")]
+        [InlineData(" ")]
+        [InlineData("   @   ")]
+        [InlineData("@@@")]
+        [InlineData("@example.com")]
+        [InlineData("example@")]
+        public void NormalizeAsParts_WhenInvalid_ReturnsNull(string email)
         {
-            var result = _emailAddressNormalizer.Normalize(email);
+            var result = _emailAddressNormalizer.NormalizeAsParts(email);
 
-            result.Should().Be(expected);
+            result.Should().BeNull();
+        }
+
+        [Fact]
+        public void NormalizeAsParts_CanNormalize()
+        {
+            const string FORMATTED_RESULT = "MÜller@müller.example.com";
+            var result = _emailAddressNormalizer.NormalizeAsParts(" MÜller@müller.example.com ");
+
+            using (new AssertionScope())
+            {
+                result.Should().NotBeNull();
+                result.Local.Should().Be("MÜller");
+                result.Domain.Should().NotBeNull();
+                result.Domain.Name.Should().Be("müller.example.com");
+                result.Domain.IdnName.Should().Be("xn--mller-kva.example.com");
+                result.ToEmailAddress().Should().Be(FORMATTED_RESULT);
+                result.ToString().Should().Be(FORMATTED_RESULT);
+            }
         }
     }
 }

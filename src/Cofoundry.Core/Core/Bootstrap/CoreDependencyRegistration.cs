@@ -1,5 +1,5 @@
 ﻿using Cofoundry.Core.DependencyInjection;
-using Cofoundry.Core.Internal;
+using Cofoundry.Core.Extendable;
 
 namespace Cofoundry.Core.Registration
 {
@@ -9,6 +9,9 @@ namespace Cofoundry.Core.Registration
         {
             container
                 .Register<IEmailAddressNormalizer, EmailAddressNormalizer>()
+                .Register<IEmailAddressUniquifier, EmailAddressUniquifier>()
+                .Register<IUsernameNormalizer, UsernameNormalizer>()
+                .Register<IUsernameUniquifier, UsernameUniquifier>()
                 ;
         }
     }

@@ -27,7 +27,7 @@ namespace Cofoundry.Domain.Internal
         private readonly IUserMailTemplateBuilderFactory _userMailTemplateBuilderFactory;
         private readonly IUserAreaDefinitionRepository _userAreaDefinitionRepository;
         private readonly ITransactionScopeManager _transactionScopeFactory;
-        private readonly IEmailAddressNormalizer _emailAddressNormalizer;
+        private readonly IUserDataFormatter _userDataFormatter;
 
         public AddUserWithTemporaryPasswordCommandHandler(
             CofoundryDbContext dbContext,
@@ -38,7 +38,7 @@ namespace Cofoundry.Domain.Internal
             IUserMailTemplateBuilderFactory userMailTemplateBuilderFactory,
             IUserAreaDefinitionRepository userAreaDefinitionRepository,
             ITransactionScopeManager transactionScopeFactory,
-            IEmailAddressNormalizer emailAddressNormalizer
+            IUserDataFormatter userDataFormatter
             )
         {
             _dbContext = dbContext;
@@ -49,7 +49,7 @@ namespace Cofoundry.Domain.Internal
             _userMailTemplateBuilderFactory = userMailTemplateBuilderFactory;
             _userAreaDefinitionRepository = userAreaDefinitionRepository;
             _transactionScopeFactory = transactionScopeFactory;
-            _emailAddressNormalizer = emailAddressNormalizer;
+            _userDataFormatter = userDataFormatter;
         }
 
         public async Task ExecuteAsync(AddUserWithTemporaryPasswordCommand command, IExecutionContext executionContext)
@@ -70,7 +70,7 @@ namespace Cofoundry.Domain.Internal
 
         private void Normalize(AddUserWithTemporaryPasswordCommand command)
         {
-            command.Email = _emailAddressNormalizer.Normalize(command.Email);
+            command.Email = _userDataFormatter.NormalizeEmail(command.UserAreaCode, command.Email);
         }
 
         private async Task SendNotificationAsync(AddUserCommand newUserCommand, IExecutionContext executionContext)

@@ -21,7 +21,14 @@ namespace Cofoundry.Domain.Data
             builder.Property(s => s.Email)
                 .HasMaxLength(150);
 
+            builder.Property(s => s.UniqueEmail)
+                .HasMaxLength(150);
+
             builder.Property(s => s.Username)
+                .IsRequired()
+                .HasMaxLength(150);
+
+            builder.Property(s => s.UniqueUsername)
                 .IsRequired()
                 .HasMaxLength(150);
 
@@ -34,12 +41,14 @@ namespace Cofoundry.Domain.Data
 
             // Relationships
 
+            builder.HasOne(s => s.EmailDomain)
+                .WithMany(d => d.Users)
+                .HasForeignKey(d => d.EmailDomainId);
+
             builder.HasOne(s => s.Role)
                 .WithMany()
                 .HasForeignKey(d => d.RoleId);
 
-            #region create auditable (ish)
-            
             builder.HasOne(s => s.Creator)
                 .WithMany()
                 .HasForeignKey(d => d.CreatorId);
@@ -47,8 +56,6 @@ namespace Cofoundry.Domain.Data
             builder.HasOne(s => s.UserArea)
                 .WithMany(d => d.Users)
                 .HasForeignKey(d => d.UserAreaCode);
-
-            #endregion
         }
     }
 }

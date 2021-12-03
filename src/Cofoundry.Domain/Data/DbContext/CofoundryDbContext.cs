@@ -123,6 +123,14 @@ namespace Cofoundry.Domain.Data
 
         public DbSet<EntityDefinition> EntityDefinitions { get; set; }
 
+        /// <summary>
+        /// A domain used as part of an email address i.e. the part after
+        /// the '@'. These are stored as "unique" email domains, whereby
+        /// multiple domains that resolve to the same mailboxes will only have
+        /// a single EmailDomain entry in the database.
+        /// </summary>
+        public DbSet<EmailDomain> EmailDomains { get; set; }
+
         public DbSet<DocumentAssetGroupItem> DocumentAssetGroupItems { get; set; }
 
         public DbSet<DocumentAssetGroup> DocumentAssetGroups { get; set; }

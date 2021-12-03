@@ -284,3 +284,46 @@ alter table Cofoundry.[User] alter column PreviousLoginDate datetime2(7) null
 alter table Cofoundry.[User] alter column LastLoginDate datetime2(7) null
 
 go
+
+/*
+	#468: Email Uniqueness: Support IDNs and improve uniqueness handling
+*/
+
+create table Cofoundry.EmailDomain (
+	EmailDomainId int not null identity(1,1),
+	[Name] nvarchar(255) not null,
+	NameHash binary(32) not null,
+	CreateDate datetime2(7) not null,
+
+	constraint PK_EmailDomain primary key (EmailDomainId)
+)
+
+create unique index UIX_EmailDomain_NameHash on Cofoundry.EmailDomain (NameHash)
+
+alter table Cofoundry.[User] add EmailDomainId int null
+alter table Cofoundry.[User] add UniqueEmail nvarchar(150) null
+alter table Cofoundry.[User] add UniqueUsername nvarchar(150) null
+go
+
+declare @dateNow datetime2(7) = GetUtcDate()
+insert into Cofoundry.EmailDomain ([Name], NameHash, CreateDate)
+select distinct
+	lower(right(u.Email, len(u.Email) - charindex('@', u.Email))), 
+	HashBytes('SHA2_256', lower(right(u.Email, len(u.Email) - charindex('@', u.Email)))), 
+	@dateNow
+from Cofoundry.[User] u
+where u.Email is not null
+
+update Cofoundry.[User] 
+set UniqueUsername = Lower([Username]), 
+	UniqueEmail = Lower([Email]),
+	EmailDomainId = (select EmailDomainId from Cofoundry.EmailDomain where [Name] = lower(right(Email, len(Email) - charindex('@', Email))))
+
+go
+alter table Cofoundry.[User] alter column UniqueUsername nvarchar(150) not null
+
+create unique index UIX_User_UniqueEmail on Cofoundry.[User] (UserAreaCode, UniqueEmail) where UniqueEmail is not null
+create unique index UIX_User_UniqueUsername on Cofoundry.[User] (UserAreaCode, UniqueUsername)
+
+go
+

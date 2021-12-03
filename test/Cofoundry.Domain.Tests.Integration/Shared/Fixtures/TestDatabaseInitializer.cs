@@ -57,7 +57,7 @@ namespace Cofoundry.Domain.Tests.Integration
                 delete from Cofoundry.ImageAssetGroup
                 delete from Cofoundry.[Page]
                 delete from Cofoundry.PageGroup
-                delete from Cofoundry.PageDirectory
+                delete from Cofoundry.PageDirectory where ParentPageDirectoryId is not null
                 delete from Cofoundry.PageTemplate where [FileName] not in ('TestTemplate', 'TestCustomEntityTemplate')
                 delete from Cofoundry.RewriteRule
                 delete from Cofoundry.Tag
