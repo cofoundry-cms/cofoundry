@@ -1,28 +1,39 @@
 ﻿using Cofoundry.Core;
-using Cofoundry.Core.Extendable;
 using Cofoundry.Domain;
 
 namespace Cofoundry.Samples.UserAreas
 {
-    public class CustomerEmailAddressUniquifier : EmailAddressUniquifier, IEmailAddressUniquifier<CustomerUserArea>
+    public class CustomerEmailAddressUniquifier : IEmailAddressUniquifier<CustomerUserArea>
     {
+        private readonly IEmailAddressNormalizer _emailAddressNormalizer;
+
         public CustomerEmailAddressUniquifier(IEmailAddressNormalizer emailAddressNormalizer)
-            : base(emailAddressNormalizer)
         {
+            _emailAddressNormalizer = emailAddressNormalizer;
         }
 
-        public override NormalizedEmailAddress UniquifyAsParts(NormalizedEmailAddress emailAddressParts)
+        public NormalizedEmailAddress UniquifyAsParts(string emailAddress)
+        {
+            var normalized = _emailAddressNormalizer.NormalizeAsParts(emailAddress);
+            return UniquifyAsParts(normalized);
+        }
+
+        public NormalizedEmailAddress UniquifyAsParts(NormalizedEmailAddress emailAddressParts)
         {
             const string GMAIL_DOMAIN = "gmail.com";
 
-            var uniqueEmail = base
-                .UniquifyAsParts(emailAddressParts)
-                // both gmail domains point to the same inbox
+            if (emailAddressParts == null) return null;
+
+            // merge both gmail domains as they point to the same inbox
+            // ignore any plus addressing and remove superflous dots for gmail addresses only
+            var uniqueEmail = emailAddressParts
                 .MergeDomains(GMAIL_DOMAIN, "googlemail.com")
-                // ignore plus addressing for uniqueness checks
-                .WithoutPlusAddressing()
-                // dots are superflous in gmail emails
-                .AlterLocalIf(r => r.HasDomain(GMAIL_DOMAIN), r => r.Replace(".", string.Empty));
+                .AlterIf(email => email.HasDomain(GMAIL_DOMAIN), email =>
+                {
+                    return email
+                        .WithoutPlusAddressing()
+                        .AlterLocal(local => local.Replace(".", string.Empty));
+                });
 
             return uniqueEmail;
         }

@@ -57,8 +57,7 @@ namespace Cofoundry.Core
         /// </param>
         /// <returns>
         /// If the locale is updated then a new <see cref="NormalizedEmailAddress"/> instance is returned; 
-        /// otherwise the existing
-        /// instance is returned.
+        /// otherwise the existing instance is returned.
         /// </returns>
         public NormalizedEmailAddress AlterLocalIf(Func<NormalizedEmailAddress, bool> predicate, Func<string, string> modifier)
         {
@@ -109,6 +108,29 @@ namespace Cofoundry.Core
             if (!predicate(this)) return this;
 
             return AlterDomain(modifier);
+        }
+
+        /// <summary>
+        /// Applies the <paramref name="modifier"/> function to the email address
+        /// only if the <paramref name="predicate"/> truth-test is passed.
+        /// </summary>
+        /// <param name="predicate">A trust-test function to determine if the change should be made.</param>
+        /// <param name="modifier">
+        /// Function to modify the email address if the <paramref name="predicate"/> returns <see langword="true"/>.
+        /// This function passes in the existing domain name and expects a modified version to be returned.
+        /// </param>
+        /// <returns>
+        /// If the email address is updated then a new <see cref="NormalizedEmailAddress"/> instance is returned; 
+        /// otherwise the existing instance is returned.
+        /// </returns>
+        public NormalizedEmailAddress AlterIf(Func<NormalizedEmailAddress, bool> predicate, Func<NormalizedEmailAddress, NormalizedEmailAddress> modifier)
+        {
+            if (predicate == null) throw new ArgumentNullException(nameof(predicate));
+            if (modifier == null) throw new ArgumentNullException(nameof(modifier));
+
+            if (!predicate(this)) return this;
+
+            return modifier(this);
         }
 
         /// <summary>
