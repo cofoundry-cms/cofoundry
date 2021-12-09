@@ -1,23 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Cofoundry.Domain.Extendable
 {
-    public static class IContentRepositoryExtendableExtensions
+    public static class IExtendableContentRepositoryExtensions
     {
         public static IExtendableContentRepository AsExtendableContentRepository(this IDomainRepository contentRepository)
-        {
-            return CastToExtendableContentRepository(contentRepository);
-        }
-
-        public static IExtendableContentRepository AsExtendableContentRepository(this IContentRepository contentRepository)
-        {
-            return CastToExtendableContentRepository(contentRepository);
-        }
-
-        public static IExtendableContentRepository AsExtendableContentRepository(this IAdvancedContentRepository contentRepository)
         {
             return CastToExtendableContentRepository(contentRepository);
         }

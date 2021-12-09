@@ -22,13 +22,15 @@ namespace Cofoundry.Domain.Internal
         private readonly UserCommandPermissionsHelper _userCommandPermissionsHelper;
         private readonly IUserAreaDefinitionRepository _userAreaRepository;
         private readonly IUserUpdateCommandHelper _userUpdateCommandHelper;
+        private readonly IPasswordPolicyService _newPasswordValidationService;
 
         public AddUserCommandHandler(
             CofoundryDbContext dbContext,
             IPasswordCryptographyService passwordCryptographyService,
             UserCommandPermissionsHelper userCommandPermissionsHelper,
             IUserAreaDefinitionRepository userAreaRepository,
-            IUserUpdateCommandHelper userUpdateCommandHelper
+            IUserUpdateCommandHelper userUpdateCommandHelper,
+            IPasswordPolicyService newPasswordValidationService
             )
         {
             _dbContext = dbContext;
@@ -36,13 +38,13 @@ namespace Cofoundry.Domain.Internal
             _userCommandPermissionsHelper = userCommandPermissionsHelper;
             _userAreaRepository = userAreaRepository;
             _userUpdateCommandHelper = userUpdateCommandHelper;
+            _newPasswordValidationService = newPasswordValidationService;
         }
 
         public async Task ExecuteAsync(AddUserCommand command, IExecutionContext executionContext)
         {
             var userArea = _userAreaRepository.GetRequiredByCode(command.UserAreaCode);
             var dbUserArea = await GetUserAreaAsync(userArea);
-            ValidatePassword(userArea, command);
             var role = await GetAndValidateRoleAsync(command, executionContext);
 
             var user = new User()
@@ -58,6 +60,7 @@ namespace Cofoundry.Domain.Internal
             };
 
             await _userUpdateCommandHelper.UpdateEmailAndUsernameAsync(command.Email, command.Username, user, executionContext);
+            await ValidatePasswordAsync(userArea, user, command);
 
             if (userArea.AllowPasswordLogin)
             {
@@ -90,7 +93,7 @@ namespace Cofoundry.Domain.Internal
             return dbUserArea;
         }
 
-        private void ValidatePassword(IUserAreaDefinition userArea, AddUserCommand command)
+        private async Task ValidatePasswordAsync(IUserAreaDefinition userArea, User user,AddUserCommand command)
         {
             var isPasswordEmpty = string.IsNullOrWhiteSpace(command.Password);
 
@@ -102,6 +105,12 @@ namespace Cofoundry.Domain.Internal
             {
                 throw ValidationErrorException.CreateWithProperties("Password field should be empty because the specified user area does not use passwords", nameof(command.Password));
             }
+
+            var context = NewPasswordValidationContext.MapFromUser(user);
+            context.Password = command.Password;
+            context.PropertyName = nameof(command.Password);
+
+            await _newPasswordValidationService.ValidateAsync(context);
         }
 
         private async Task<Role> GetAndValidateRoleAsync(AddUserCommand command, IExecutionContext executionContext)

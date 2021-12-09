@@ -169,12 +169,12 @@ function (
 angular.module('cms.account').controller('ChangePasswordController', [
     '$location',
     'shared.LoadState',
-    'shared.modalDialogService',
+    'shared.userAreaService',
     'account.accountService',
 function (
     $location,
     LoadState,
-    modalDialogService,
+    userAreaService,
     accountService
     ) {
 
@@ -226,6 +226,12 @@ function (
     }
 
     function initData() {
+
+        userAreaService
+            .getPasswordPolicy('COF')
+            .then(function(passwordPolicy) {
+                vm.passwordPolicy = passwordPolicy;
+            });
 
         return accountService
             .getAccountDetails()

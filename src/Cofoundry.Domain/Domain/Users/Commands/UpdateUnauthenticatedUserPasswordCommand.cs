@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Cofoundry.Domain.CQS;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
-using Cofoundry.Domain.CQS;
 using System.Runtime.Serialization;
 
 namespace Cofoundry.Domain
@@ -22,9 +18,17 @@ namespace Cofoundry.Domain
         [Required]
         public string UserAreaCode { get; set; }
 
+        /// <summary>
+        /// The users username, which is required to authenticate
+        /// the user before performing the update.
+        /// </summary>
         [Required]
         public string Username { get; set; }
 
+        /// <summary>
+        /// The users existing password. This is required to authenticate
+        /// the user before performing the update.
+        /// </summary>
         [Required]
         [DataType(DataType.Password)]
         [IgnoreDataMember]
@@ -32,15 +36,17 @@ namespace Cofoundry.Domain
         [System.Text.Json.Serialization.JsonIgnore]
         public string OldPassword { get; set; }
 
+        /// <summary>
+        /// The value to set as the new account password. The password will go through additional validation depending 
+        /// on the password policy configuration.
+        /// </summary>
         [Required]
-        [StringLength(300, MinimumLength = 8)]
+        [StringLength(PasswordOptions.MAX_LENGTH_BOUNDARY, MinimumLength = PasswordOptions.MIN_LENGTH_BOUNDARY)]
         [DataType(DataType.Password)]
         [IgnoreDataMember]
         [Newtonsoft.Json.JsonIgnore]
         [System.Text.Json.Serialization.JsonIgnore]
         public string NewPassword { get; set; }
-
-        #region Output
 
         /// <summary>
         /// The database id of the updated user. This is set after the command
@@ -48,7 +54,5 @@ namespace Cofoundry.Domain
         /// </summary>
         [OutputValue]
         public int OutputUserId { get; set; }
-
-        #endregion
     }
 }

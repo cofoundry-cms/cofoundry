@@ -129,7 +129,7 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Commands
             using var app = _appFactory.Create(s =>
             {
                 var mockPasswordGenerator = new Mock<IPasswordGenerationService>();
-                mockPasswordGenerator.Setup(m => m.Generate()).Returns(password);
+                mockPasswordGenerator.Setup(m => m.Generate(It.IsAny<int>())).Returns(password);
                 s.AddSingleton(mockPasswordGenerator.Object);
             });
             var contentRepository = app.Services.GetContentRepositoryWithElevatedPermissions();

@@ -17,8 +17,8 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Commands
     public class UpdateCurrentUserPasswordCommandHandlerTests
     {
         const string TEST_DOMAIN = "@UpdateCurrentUserPasswordCommandHandlerTests.example.com";
-        const string OLD_PASSWORD = "Gr!sh3nk0";
-        const string NEW_PASSWORD = "S3v3rn@ya";
+        const string OLD_PASSWORD = "Gr!sh3nk0!";
+        const string NEW_PASSWORD = "S3v3rn@ya!";
 
         private readonly DbDependentTestApplicationFactory _appFactory;
 

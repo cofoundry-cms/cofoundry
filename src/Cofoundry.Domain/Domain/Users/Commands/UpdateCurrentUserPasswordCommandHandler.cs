@@ -26,6 +26,7 @@ namespace Cofoundry.Domain.Internal
         private readonly IPasswordUpdateCommandHelper _passwordUpdateCommandHelper;
         private readonly ITransactionScopeManager _transactionScopeManager;
         private readonly IUserContextCache _userContextCache;
+        private readonly IPasswordPolicyService _newPasswordValidationService;
 
         public UpdateCurrentUserPasswordCommandHandler(
             CofoundryDbContext dbContext,
@@ -36,7 +37,8 @@ namespace Cofoundry.Domain.Internal
             IUserAreaDefinitionRepository userAreaRepository,
             IPasswordUpdateCommandHelper passwordUpdateCommandHelper,
             ITransactionScopeManager transactionScopeManager,
-            IUserContextCache userContextCache
+            IUserContextCache userContextCache,
+            IPasswordPolicyService newPasswordValidationService
             )
         {
             _dbContext = dbContext;
@@ -48,6 +50,7 @@ namespace Cofoundry.Domain.Internal
             _passwordUpdateCommandHelper = passwordUpdateCommandHelper;
             _transactionScopeManager = transactionScopeManager;
             _userContextCache = userContextCache;
+            _newPasswordValidationService = newPasswordValidationService;
         }
 
         public async Task ExecuteAsync(UpdateCurrentUserPasswordCommand command, IExecutionContext executionContext)
@@ -58,7 +61,13 @@ namespace Cofoundry.Domain.Internal
             EntityNotFoundException.ThrowIfNull(user, executionContext.UserContext.UserId);
 
             await ValidateMaxLoginAttemptsNotExceededAsync(user, executionContext);
-            await UpdatePasswordAsync(command, executionContext, user);
+            await AuthenticateAsync(command, user);
+            await ValidatePasswordAsync(command, user);
+
+            _passwordUpdateCommandHelper.UpdatePassword(command.NewPassword, user, executionContext);
+
+            await _dbContext.SaveChangesAsync();
+            _transactionScopeManager.QueueCompletionTask(_dbContext, () => _userContextCache.Clear(user.UserId));
         }
 
         private Task<User> GetUser(IExecutionContext executionContext)
@@ -86,12 +95,21 @@ namespace Cofoundry.Domain.Internal
             }
         }
 
-        private async Task UpdatePasswordAsync(UpdateCurrentUserPasswordCommand command, IExecutionContext executionContext, User user)
+        private async Task ValidatePasswordAsync(UpdateCurrentUserPasswordCommand command, User user)
         {
             var userArea = _userAreaRepository.GetRequiredByCode(user.UserAreaCode);
-
             _passwordUpdateCommandHelper.ValidateUserArea(userArea);
 
+            var context = NewPasswordValidationContext.MapFromUser(user);
+            context.CurrentPassword = command.OldPassword;
+            context.Password = command.NewPassword;
+            context.PropertyName = nameof(command.NewPassword);
+
+            await _newPasswordValidationService.ValidateAsync(context);
+        }
+
+        private async Task AuthenticateAsync(UpdateCurrentUserPasswordCommand command, User user)
+        {
             if (_userAuthenticationHelper.VerifyPassword(user, command.OldPassword) == PasswordVerificationResult.Failed)
             {
                 var logFailedAttemptCommand = new LogFailedLoginAttemptCommand(user.UserAreaCode, user.Username);
@@ -99,11 +117,6 @@ namespace Cofoundry.Domain.Internal
 
                 throw new InvalidCredentialsAuthenticationException(nameof(command.OldPassword), "Incorrect password");
             }
-
-            _passwordUpdateCommandHelper.UpdatePassword(command.NewPassword, user, executionContext);
-            await _dbContext.SaveChangesAsync();
-            _transactionScopeManager.QueueCompletionTask(_dbContext, () => _userContextCache.Clear(user.UserId));
-
         }
 
         public IEnumerable<IPermissionApplication> GetPermissions(UpdateCurrentUserPasswordCommand command)

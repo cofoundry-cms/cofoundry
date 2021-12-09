@@ -1,9 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Cryptography;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Cofoundry.Domain.Internal
 {
@@ -20,6 +15,7 @@ namespace Cofoundry.Domain.Internal
 
         public string Generate(int passwordLength)
         {
+            if (passwordLength < 6) throw new ArgumentOutOfRangeException(nameof(passwordLength), "Password length cannot be less than 6 characters");
             var generator = new RandomStringGenerator();
 
             return generator.Generate(passwordLength, ALLOWED_CHARACTERS);

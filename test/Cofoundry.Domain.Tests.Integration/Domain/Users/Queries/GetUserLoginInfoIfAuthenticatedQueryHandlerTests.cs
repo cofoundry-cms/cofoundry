@@ -16,7 +16,7 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Queries
     {
         const string TEST_DOMAIN = "@GetUserLoginInfoIfAuthenticatedQueryHandlerTests.example.com";
         const string VALID_USERNAME = "dade" + TEST_DOMAIN;
-        const string VALID_PASSWORD = "Z3r0c007";
+        const string VALID_PASSWORD = "-Z3r0c007-";
 
         private readonly DbDependentTestApplicationFactory _appFactory;
 

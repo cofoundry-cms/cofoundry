@@ -15,7 +15,7 @@
         var returnUrlInput = document.getElementById('ReturnUrl'),
             hash = window.location.hash;
 
-        if (returnUrlInput.value && hash) {
+        if (returnUrlInput && returnUrlInput.value && hash) {
             returnUrlInput.value = returnUrlInput.value + hash;
         }
     }

@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using Cofoundry.Domain;
 using Microsoft.AspNetCore.Mvc;
-using Cofoundry.Domain;
+using System.Threading.Tasks;
 
 namespace Cofoundry.Web.Admin
 {
@@ -25,10 +22,10 @@ namespace Cofoundry.Web.Admin
             var command = new SetupCofoundryCommand()
             {
                 ApplicationName = dto.ApplicationName,
-                UserEmail = dto.UserEmail,
-                UserFirstName = dto.UserFirstName,
-                UserLastName = dto.UserLastName,
-                UserPassword = dto.UserPassword
+                Email = dto.Email,
+                FirstName = dto.FirstName,
+                LastName = dto.LastName,
+                Password = dto.Password
             };
 
             return _apiResponseHelper.RunCommandAsync(command);

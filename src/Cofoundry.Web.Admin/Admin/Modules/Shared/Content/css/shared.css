@@ -5644,6 +5644,15 @@ input[type="color"] {
     .search-filter .form-actions input {
       margin-left: 5px; }
 
+.help-inline {
+  color: #413851;
+  font-style: italic;
+  display: block;
+  padding-top: 10px; }
+  .help-inline small {
+    font-size: 95%;
+    line-height: 105%; }
+
 .page-actions {
   position: fixed;
   width: 125px; }
@@ -5762,8 +5771,6 @@ input[type="color"] {
       -o-transition: all 0.2s;
       transition: all 0.2s;
       background-color: #fff;
-      color: #413851;
-      font-style: italic;
       display: block;
       padding: 0 20px 15px;
       position: relative;

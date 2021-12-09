@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Cofoundry.Core.DependencyInjection;
-using Cofoundry.Core.Validation;
-using Microsoft.Extensions.Options;
+﻿using Cofoundry.Core.Validation;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
+using System;
 
 namespace Cofoundry.Core.Configuration
 {
@@ -16,8 +12,6 @@ namespace Cofoundry.Core.Configuration
     /// <typeparam name="TSettings">Type of settings object to instantiate</typeparam>
     public class ConfigurationSettingsFactory<TSettings> : IConfigurationSettingsFactory<TSettings> where TSettings : class, IConfigurationSettings, new()
     {
-        #region constructor
-
         private readonly IServiceProvider _serviceProvider;
         private readonly IModelValidationService _modelValidationService;
 
@@ -29,10 +23,6 @@ namespace Cofoundry.Core.Configuration
             _serviceProvider = serviceProvider;
             _modelValidationService = modelValidationService;
         }
-
-        #endregion
-
-        #region public
 
         /// <summary>
         /// Creates an instance of a settings objects, extracting setting values from
@@ -58,7 +48,5 @@ namespace Cofoundry.Core.Configuration
 
             return settings;
         }
-
-        #endregion
     }
 }

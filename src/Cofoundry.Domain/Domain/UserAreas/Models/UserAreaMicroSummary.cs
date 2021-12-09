@@ -1,11 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Cofoundry.Domain
+﻿namespace Cofoundry.Domain
 {
+    /// <summary>
+    /// A lightweight projection of an <see cref="IUserAreaDefinition"/> 
+    /// implementation which contains only basic identification properties 
+    /// such as code and name. This is typically used as part of another 
+    /// aggregate projection.
+    /// </summary>
     public class UserAreaMicroSummary
     {
         /// <summary>

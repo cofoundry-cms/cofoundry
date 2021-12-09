@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Cofoundry.Domain;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
 
 namespace Cofoundry.Web.Admin
 {
@@ -11,21 +9,20 @@ namespace Cofoundry.Web.Admin
         [StringLength(50)]
         public string ApplicationName { get; set; }
 
-        [Required]
         [StringLength(32)]
-        public string UserFirstName { get; set; }
+        public string FirstName { get; set; }
 
-        [Required]
         [StringLength(32)]
-        public string UserLastName { get; set; }
+        public string LastName { get; set; }
 
         [Required]
         [StringLength(150)]
         [EmailAddress(ErrorMessage = "Please use a valid email address")]
-        public string UserEmail { get; set; }
+        [DataType(DataType.EmailAddress)]
+        public string Email { get; set; }
 
         [Required]
-        [StringLength(300, MinimumLength = 8)]
-        public string UserPassword { get; set; }
+        [StringLength(PasswordOptions.MAX_LENGTH_BOUNDARY, MinimumLength = PasswordOptions.MIN_LENGTH_BOUNDARY)]
+        public string Password { get; set; }
     }
 }

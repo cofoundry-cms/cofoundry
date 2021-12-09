@@ -26,29 +26,28 @@
                                  required></cms-form-field-text>
 
             <cms-form-field-text cms-title="First Name"
-                                 cms-model="vm.command.userFirstName"
+                                 cms-model="vm.command.firstName"
                                  maxlength="32"></cms-form-field-text>
 
             <cms-form-field-text cms-title="Last Name"
-                                 cms-model="vm.command.userLastName"
+                                 cms-model="vm.command.lastName"
                                  maxlength="32"></cms-form-field-text>
 
             <cms-form-field-email-address cms-title="Email"
-                                          cms-model="vm.command.userEmail"
+                                          cms-model="vm.command.email"
                                           maxlength="150"
                                           required></cms-form-field-email-address>
 
             <cms-form-field-password cms-title="Password"
-                                     cms-model="vm.command.userPassword"
-                                     minlength="8"
-                                     maxlength="300"
+                                     cms-model="vm.command.password"
+                                     cms-password-policy="vm.passwordPolicy"
                                      required></cms-form-field-password>
 
             <cms-form-field-password cms-title="Confirm password"
-                                     cms-model="vm.command.confirmUserPassword"
-                                     cms-match="vm.command.userPassword"
+                                     cms-model="vm.command.confirmPassword"
+                                     cms-match="vm.command.password"
                                      cms-match-val-msg="Passwords must match"
-                                     maxlength="300"
+                                     maxlength="2048"
                                      required></cms-form-field-password>
             
             <div class="actions">

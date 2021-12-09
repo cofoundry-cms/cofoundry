@@ -1,13 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Cofoundry.Domain;
+﻿using Cofoundry.Domain;
 using Cofoundry.Domain.CQS;
 using Cofoundry.Web.Identity;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
-using Microsoft.AspNetCore.Authorization;
+using System;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Cofoundry.Web.Admin
 {
@@ -16,8 +15,6 @@ namespace Cofoundry.Web.Admin
     public class AuthController : Controller
     {
         private static readonly string CONTROLLER_NAME = "Auth";
-
-        #region Constructors
 
         private readonly IQueryExecutor _queryExecutor;
         private readonly IUserContextService _userContextService;
@@ -37,10 +34,6 @@ namespace Cofoundry.Web.Admin
             _adminRouteLibrary = adminRouteLibrary;
         }
 
-        #endregion
-
-        #region OnActionExecuting
-
         public override async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
         {
             var settings = await _queryExecutor.ExecuteAsync(new GetSettingsQuery<InternalSettings>());
@@ -53,10 +46,6 @@ namespace Cofoundry.Web.Admin
                 await base.OnActionExecutionAsync(context, next);
             }
         }
-
-        #endregion
-
-        #region routes
 
         [AllowAnonymous]
         public ActionResult DefaultRedirect()
@@ -77,7 +66,7 @@ namespace Cofoundry.Web.Admin
             if (user.IsCofoundryUser()) return await GetLoggedInDefaultRedirectActionAsync();
 
             var viewPath = ViewPathFormatter.View(CONTROLLER_NAME, nameof(Login));
-            var vm = new LoginViewModel ();
+            var vm = new LoginViewModel();
 
             return View(viewPath, vm);
         }
@@ -178,7 +167,7 @@ namespace Cofoundry.Web.Admin
             var viewPath = ViewPathFormatter.View(CONTROLLER_NAME, nameof(ResetPassword));
             return View(viewPath, vm);
         }
-                
+
         [AllowAnonymous]
         public async Task<ActionResult> ChangePassword(string returnUrl)
         {
@@ -197,7 +186,7 @@ namespace Cofoundry.Web.Admin
             var viewPath = ViewPathFormatter.View(CONTROLLER_NAME, nameof(ChangePassword));
             return View(viewPath, new ChangePasswordViewModel());
         }
-        
+
         [AllowAnonymous]
         [HttpPost]
         public async Task<ActionResult> ChangePassword(string returnUrl, ChangePasswordViewModel vm)
@@ -222,10 +211,6 @@ namespace Cofoundry.Web.Admin
             return View(viewPath, vm);
         }
 
-        #endregion
-
-        #region helpers
-
         private async Task<ActionResult> GetLoggedInDefaultRedirectActionAsync()
         {
             var modules = await _queryExecutor.ExecuteAsync(new GetPermittedAdminModulesQuery());
@@ -245,7 +230,5 @@ namespace Cofoundry.Web.Admin
 
             return Redirect(dashboardModule.Url);
         }
-
-        #endregion
     }
 }

@@ -1,14 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Cofoundry.Domain.Data;
-using Cofoundry.Domain.CQS;
-using Microsoft.EntityFrameworkCore;
-using Cofoundry.Core.Data;
-using Cofoundry.Core;
+﻿using Cofoundry.Core;
 using Cofoundry.Core.Caching;
+using Cofoundry.Core.Data;
+using Cofoundry.Domain.CQS;
 using Cofoundry.Domain.CQS.Internal;
+using Cofoundry.Domain.Data;
+using Microsoft.EntityFrameworkCore;
+using System;
+using System.Threading.Tasks;
 
 namespace Cofoundry.Domain.Internal
 {
@@ -16,8 +14,6 @@ namespace Cofoundry.Domain.Internal
         : ICommandHandler<SetupCofoundryCommand>
         , IIgnorePermissionCheckHandler
     {
-        #region constructor
-
         private readonly ICommandExecutor _commandExecutor;
         private readonly IQueryExecutor _queryExecutor;
         private readonly CofoundryDbContext _dbContext;
@@ -41,10 +37,6 @@ namespace Cofoundry.Domain.Internal
             _userContextMapper = userContextMapper;
             _objectCacheFactory = objectCacheFactory;
         }
-
-        #endregion
-
-        #region Execute
 
         public async Task ExecuteAsync(SetupCofoundryCommand command, IExecutionContext executionContext)
         {
@@ -74,7 +66,7 @@ namespace Cofoundry.Domain.Internal
             }
         }
 
-        private async Task<ExecutionContext>  GetImpersonatedUserContext(IExecutionContext executionContext, int userId)
+        private async Task<ExecutionContext> GetImpersonatedUserContext(IExecutionContext executionContext, int userId)
         {
             var dbUser = await _dbContext
                 .Users
@@ -95,23 +87,17 @@ namespace Cofoundry.Domain.Internal
             return impersonatedExecutionContext;
         }
 
-        #endregion
-
-        #region private helpers
-
         private async Task<int> CreateAdminUser(SetupCofoundryCommand command)
         {
             var newUserCommand = new AddMasterCofoundryUserCommand();
-            newUserCommand.Email = command.UserEmail;
-            newUserCommand.FirstName = command.UserFirstName;
-            newUserCommand.LastName = command.UserLastName;
-            newUserCommand.Password = command.UserPassword;
+            newUserCommand.Email = command.Email;
+            newUserCommand.FirstName = command.FirstName;
+            newUserCommand.LastName = command.LastName;
+            newUserCommand.Password = command.Password;
             newUserCommand.RequirePasswordChange = command.RequirePasswordChange;
             await _commandExecutor.ExecuteAsync(newUserCommand);
 
             return newUserCommand.OutputUserId;
         }
-
-        #endregion
     }
 }

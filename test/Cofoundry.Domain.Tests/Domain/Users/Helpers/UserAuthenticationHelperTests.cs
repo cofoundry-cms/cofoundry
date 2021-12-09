@@ -77,7 +77,7 @@ namespace Cofoundry.Domain.Tests
 
         public UserAuthenticationHelper CreateUserAuthenticationHelper(params IUserAreaDefinition[] userAreaDefinitions)
         {
-            var userAreaRepository = new UserAreaDefinitionRepository(userAreaDefinitions);
+            var userAreaRepository = new UserAreaDefinitionRepository(userAreaDefinitions, new IdentitySettings());
 
             var passwordCryptographyServiceMock = new Mock<IPasswordCryptographyService>();
             passwordCryptographyServiceMock

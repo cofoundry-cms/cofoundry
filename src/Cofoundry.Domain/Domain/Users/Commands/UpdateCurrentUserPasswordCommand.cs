@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Cofoundry.Domain.CQS;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
-using Cofoundry.Domain.CQS;
 using System.Runtime.Serialization;
 
 namespace Cofoundry.Domain
@@ -14,6 +10,10 @@ namespace Cofoundry.Domain
     /// </summary>
     public class UpdateCurrentUserPasswordCommand : ICommand, ILoggableCommand
     {
+        /// <summary>
+        /// The users existing password. This is required to authenticate
+        /// the user before performing the update.
+        /// </summary>
         [Required]
         [DataType(DataType.Password)]
         [IgnoreDataMember]
@@ -21,8 +21,12 @@ namespace Cofoundry.Domain
         [System.Text.Json.Serialization.JsonIgnore]
         public string OldPassword { get; set; }
 
+        /// <summary>
+        /// The value to set as the new account password. The password will go through additional validation depending 
+        /// on the password policy configuration.
+        /// </summary>
         [Required]
-        [StringLength(300, MinimumLength = 8)]
+        [StringLength(PasswordOptions.MAX_LENGTH_BOUNDARY, MinimumLength = PasswordOptions.MIN_LENGTH_BOUNDARY)]
         [DataType(DataType.Password)]
         [IgnoreDataMember]
         [Newtonsoft.Json.JsonIgnore]

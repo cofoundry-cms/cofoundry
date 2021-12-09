@@ -8,24 +8,35 @@ namespace Cofoundry.Domain.Internal
     public class UserAreaDefinitionRepository : IUserAreaDefinitionRepository
     {
         private readonly Dictionary<string, IUserAreaDefinition> _userAreas;
+        private readonly Dictionary<string, UserAreaOptions> _options;
         private readonly IUserAreaDefinition _defaultUserArea;
 
         public UserAreaDefinitionRepository(
-            IEnumerable<IUserAreaDefinition> userAreas
+            IEnumerable<IUserAreaDefinition> userAreas,
+            IdentitySettings identitySettings
             )
         {
             DetectInvalidDefinitions(userAreas);
             _userAreas = userAreas.ToDictionary(k => k.UserAreaCode);
+            _options = ConfigureOptions(userAreas, identitySettings);
             _defaultUserArea = userAreas
                 .OrderByDescending(u => u.IsDefaultAuthScheme)
                 .ThenByDescending(u => u is CofoundryAdminUserArea)
                 .ThenBy(u => u.Name)
                 .FirstOrDefault();
+
+        }
+
+        public IUserAreaDefinition GetByCode(string userAreaCode)
+        {
+            var area = _userAreas.GetOrDefault(userAreaCode);
+
+            return area;
         }
 
         public IUserAreaDefinition GetRequiredByCode(string userAreaCode)
         {
-            var area = _userAreas.GetOrDefault(userAreaCode);
+            var area = GetByCode(userAreaCode);
 
             if (area == null)
             {
@@ -43,6 +54,19 @@ namespace Cofoundry.Domain.Internal
         public IUserAreaDefinition GetDefault()
         {
             return _defaultUserArea;
+        }
+
+        public UserAreaOptions GetOptionsByCode(string userAreaCode)
+        {
+            // Ensure exists
+            var userArea = GetRequiredByCode(userAreaCode);
+            var options = _options.GetOrDefault(userAreaCode);
+            if (options == null)
+            {
+                throw new EntityInvalidOperationException($"{nameof(UserAreaOptions)} instance expected but was not found.");
+            }
+
+            return options;
         }
 
         private void DetectInvalidDefinitions(IEnumerable<IUserAreaDefinition> definitions)
@@ -107,6 +131,20 @@ namespace Cofoundry.Domain.Internal
                 var message = "More than one user area has IsDefaultAuthSchema defined. Only a single default user area can be defined. Duplicates: " + string.Join(", ", defaultUserAreas);
                 throw new InvalidUserAreaDefinitionException(message, codeNot3Chars, definitions);
             }
+        }
+
+        private static Dictionary<string, UserAreaOptions> ConfigureOptions(IEnumerable<IUserAreaDefinition> userAreas, IdentitySettings identitySettings)
+        {
+            var result = new Dictionary<string, UserAreaOptions>();
+
+            foreach (var userArea in userAreas)
+            {
+                var options = UserAreaOptions.CopyFrom(identitySettings);
+                userArea.ConfigureOptions(options);
+                result.Add(userArea.UserAreaCode, options);
+            }
+
+            return result;
         }
     }
 }

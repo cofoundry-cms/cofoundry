@@ -1,16 +1,11 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Cofoundry.Domain.Extendable
+﻿namespace Cofoundry.Domain.Extendable
 {
     /// <summary>
     /// Used to mark up nested content repository parts such
     /// as query builders which allows for extension without 
     /// poluting the public api surface.
     /// </summary>
-    public interface IExtendableContentRepositoryPart
+    public interface IExtendableContentRepositoryPart : IContentRepositoryPart
     {
         /// <summary>
         /// The base content repository that can be leveraged in

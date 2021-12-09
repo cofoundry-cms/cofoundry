@@ -7,12 +7,13 @@ function (
     _,
     serviceBase) {
 
-    var service = {};
+    var service = {},
+    userAreaServiceBase = serviceBase + 'user-areas/';
 
     /* QUERIES */
 
     service.getAll = function () {
-        return $http.get(serviceBase + 'user-areas');
+        return $http.get(userAreaServiceBase);
     }
 
     service.getByCode = function (code) {
@@ -23,6 +24,10 @@ function (
                     return userArea.userAreaCode == code;
                 })
             });
+    }
+
+    service.getPasswordPolicy = function (code) {
+        return $http.get(userAreaServiceBase + code + '/password-policy');
     }
 
     return service;

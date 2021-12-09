@@ -6796,12 +6796,13 @@ function (
     _,
     serviceBase) {
 
-    var service = {};
+    var service = {},
+    userAreaServiceBase = serviceBase + 'user-areas/';
 
     /* QUERIES */
 
     service.getAll = function () {
-        return $http.get(serviceBase + 'user-areas');
+        return $http.get(userAreaServiceBase);
     }
 
     service.getByCode = function (code) {
@@ -6812,6 +6813,10 @@ function (
                     return userArea.userAreaCode == code;
                 })
             });
+    }
+
+    service.getPasswordPolicy = function (code) {
+        return $http.get(userAreaServiceBase + code + '/password-policy');
     }
 
     return service;
@@ -7213,6 +7218,7 @@ angular.module('cms.shared').factory('shared.stringUtilities', function () {
      * Checks if a string ends with the specified value. Case sensitive.
      */
     service.endsWith = function (s, suffix) {
+        if (!s) return false;
         return s.indexOf(suffix, s.length - suffix.length) !== -1;
     }
 
@@ -7220,6 +7226,8 @@ angular.module('cms.shared').factory('shared.stringUtilities', function () {
      * Checks if a string starts with the specified value. Case sensitive.
      */
     service.startsWith = function (s, prefix) {
+        if (!s) return false;
+
         return s.lastIndexOf(prefix, 0) === 0;
     }
 
@@ -12236,16 +12244,85 @@ function (
 
     var config = {
         templateUrl: modulePath + 'UIComponents/FormFields/FormFieldPassword.html',
+        scope: _.extend(baseFormFieldFactory.defaultConfig.scope, {
+            passwordPolicy: '=cmsPasswordPolicy'
+        }),
         passThroughAttributes: [
             'required',
             'minlength',
             'maxlength',
+            'pattern',
+            'passwordrules',
             'disabled',
             'cmsMatch'
-        ]
+        ],
+        link: link
     };
 
     return baseFormFieldFactory.create(config);
+
+    
+    function link(scope, element, attrs, controllers) {
+        var vm = scope.vm;
+
+        // call base
+        baseFormFieldFactory.defaultConfig.link.apply(this, arguments);
+        
+        init();
+
+        /* Init */
+
+        function init() {
+            scope.$watch('vm.passwordPolicy', onPasswordPolicyChange);
+        }
+
+        function onPasswordPolicyChange(policy) {
+                
+            vm.policyAttributes = {};
+
+            processAttribute('minlength', true);
+            processAttribute('maxlength', true);
+            processAttribute('placeholder');
+            processAttribute('pattern', true);
+            processAttribute('passwordrules');
+            processAttribute('title', false, policy ? policy.description : null);
+
+            function processAttribute(attribute, addValidator, defaultValue) {
+                var value;
+
+                if (attrs[attribute]) {
+                    value = attrs[attribute]
+                } 
+                else if (policy && policy.attributes[attribute]) {
+                    value = policy.attributes[attribute];
+                }
+
+                setAttributeValue(attribute, value, addValidator, defaultValue);
+            }
+
+            function setAttributeValue(attribute, value, addValidator, defaultValue) {
+
+                vm.policyAttributes[attribute] = value || defaultValue || '';
+                if (!addValidator) return;
+
+                var validator = _.findWhere(vm.validators, { name: attribute });
+
+                if (validator && (!value || !policy)) {
+                    vm.validators = _.without(vm.validators, validator);
+                }
+                else if (policy && value && validator) {
+                    validator.message = policy.description;
+                }
+                else if (policy && value && !validator)
+                {
+                    vm.validators.push({
+                        name: attribute,
+                        message: policy.description
+                    });
+                }
+            }
+        }
+    }
 }]);
 angular.module('cms.shared').directive('cmsFormFieldRadioList', [
     '_',
@@ -15166,40 +15243,6 @@ function (
     }
 }]);
 
-/**
- * A success status message, dislpayed in a green coloured box
- */
-angular.module('cms.shared').directive('cmsSuccessMessage', [
-    'shared.internalModulePath',
-function (
-    modulePath
-    ) {
-
-    return {
-        restrict: 'E',
-        templateUrl: modulePath + 'UIComponents/StatusMessages/SuccessMessage.html',
-        replace: true,
-        transclude: true
-    };
-}]);
-
-/**
- * A warning status message, dislpayed in a yellow coloured box
- */
-angular.module('cms.shared').directive('cmsWarningMessage', [
-    'shared.internalModulePath',
-function (
-    modulePath
-    ) {
-
-    return {
-        restrict: 'E',
-        templateUrl: modulePath + 'UIComponents/StatusMessages/WarningMessage.html',
-        replace: true,
-        transclude: true
-    };
-}]);
-
 angular.module('cms.shared').directive('cmsPager', [
     'shared.internalModulePath',
 function (
@@ -15402,6 +15445,40 @@ angular.module('cms.shared').factory('shared.SearchQuery', ['$location', '_', fu
         }
     }
 }]);
+/**
+ * A success status message, dislpayed in a green coloured box
+ */
+angular.module('cms.shared').directive('cmsSuccessMessage', [
+    'shared.internalModulePath',
+function (
+    modulePath
+    ) {
+
+    return {
+        restrict: 'E',
+        templateUrl: modulePath + 'UIComponents/StatusMessages/SuccessMessage.html',
+        replace: true,
+        transclude: true
+    };
+}]);
+
+/**
+ * A warning status message, dislpayed in a yellow coloured box
+ */
+angular.module('cms.shared').directive('cmsWarningMessage', [
+    'shared.internalModulePath',
+function (
+    modulePath
+    ) {
+
+    return {
+        restrict: 'E',
+        templateUrl: modulePath + 'UIComponents/StatusMessages/WarningMessage.html',
+        replace: true,
+        transclude: true
+    };
+}]);
+
 angular.module('cms.shared').directive('cmsTableActions', [
     'shared.internalModulePath',
 function (
@@ -15664,54 +15741,6 @@ function (
         }
     }
 }]);
-/**
- * If this element is in a modal popup or in a form in edit mode, then add a target="_blank" attribute
- * so that links open in a new tab
- */
-angular.module('cms.shared').directive('cmsAutoTargetBlank', function () {
-
-    return {
-        restrict: 'A',
-        require: ['?^^cmsModalDialogContainer', '?^^cmsForm'],
-        link: link
-    };
-
-    function link(scope, el, attributes, controllers) {
-        var modalDialogContainerController = controllers[0],
-            formController = controllers[1];
-
-        if (modalDialogContainerController) {
-            el.attr('target', '_blank');
-        } else if (formController) {
-            scope.formScope = formController.getFormScope();
-
-            // watches
-            scope.$watch('formScope.editMode', function () {
-                if (scope.formScope.editMode) {
-                    el.attr('target', '_blank');
-                } else {
-                    el.removeAttr('target');
-                }
-            });
-        }
-    }
-});
-/**
- * Use this to turn a string date into a date object for ng model binding.
- */
-angular.module('cms.shared').directive('cmsModelAsDate', function () {
-
-    return {
-        require: 'ngModel',
-        link: link
-    };
-
-    function link(scope, elem, attr, ngModelController) {
-        ngModelController.$formatters.push(function (modelValue) {
-            return modelValue ? new Date(modelValue) : null;
-        });
-    }
-});
 angular.module('cms.shared').directive('cmsTimeAgo', ['shared.internalModulePath', function (modulePath) {
 
     return {
@@ -15812,6 +15841,54 @@ function (
         vm.canRead = permissionValidationService.canRead('COFUSR');
     }
 }]);
+/**
+ * If this element is in a modal popup or in a form in edit mode, then add a target="_blank" attribute
+ * so that links open in a new tab
+ */
+angular.module('cms.shared').directive('cmsAutoTargetBlank', function () {
+
+    return {
+        restrict: 'A',
+        require: ['?^^cmsModalDialogContainer', '?^^cmsForm'],
+        link: link
+    };
+
+    function link(scope, el, attributes, controllers) {
+        var modalDialogContainerController = controllers[0],
+            formController = controllers[1];
+
+        if (modalDialogContainerController) {
+            el.attr('target', '_blank');
+        } else if (formController) {
+            scope.formScope = formController.getFormScope();
+
+            // watches
+            scope.$watch('formScope.editMode', function () {
+                if (scope.formScope.editMode) {
+                    el.attr('target', '_blank');
+                } else {
+                    el.removeAttr('target');
+                }
+            });
+        }
+    }
+});
+/**
+ * Use this to turn a string date into a date object for ng model binding.
+ */
+angular.module('cms.shared').directive('cmsModelAsDate', function () {
+
+    return {
+        require: 'ngModel',
+        link: link
+    };
+
+    function link(scope, elem, attr, ngModelController) {
+        ngModelController.$formatters.push(function (modelValue) {
+            return modelValue ? new Date(modelValue) : null;
+        });
+    }
+});
 /**
   * Placeholder js file to solve issue with Azure and Bundle.IncludeDirectory, because
   * without this file the directory is empty.

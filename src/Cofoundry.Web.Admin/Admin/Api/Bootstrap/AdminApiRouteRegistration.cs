@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Microsoft.AspNetCore.Routing;
+﻿using Microsoft.AspNetCore.Routing;
 
 namespace Cofoundry.Web.Admin
 {
@@ -292,9 +289,12 @@ namespace Cofoundry.Web.Admin
 
         private static void MapUserApiRoutes(IEndpointRouteBuilder routeBuilder)
         {
+            var userAreaCodeRoute = "{userAreaCode}";
+
             routeBuilder
                 .ForAdminApiController<UserAreasApiController>("user-areas")
                 .MapGet()
+                .MapGet(userAreaCodeRoute + "/password-policy", "GetPasswordPolicy")
                 ;
 
             var userIdRoute = "{userId:int}";

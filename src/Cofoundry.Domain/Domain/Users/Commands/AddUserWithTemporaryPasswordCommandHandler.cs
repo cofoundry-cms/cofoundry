@@ -90,7 +90,6 @@ namespace Cofoundry.Domain.Internal
         private void ValidateUserArea(AddUserWithTemporaryPasswordCommand command)
         {
             var userArea = _userAreaDefinitionRepository.GetRequiredByCode(command.UserAreaCode);
-            EntityNotFoundException.ThrowIfNull(userArea, command.UserAreaCode);
             if (!userArea.AllowPasswordLogin)
             {
                 throw new InvalidOperationException(nameof(AddUserWithTemporaryPasswordCommand) + " must be used with a user area that supports password based logins.");
@@ -104,12 +103,14 @@ namespace Cofoundry.Domain.Internal
 
         private AddUserCommand MapCommand(AddUserWithTemporaryPasswordCommand command)
         {
+            var options = _userAreaDefinitionRepository.GetOptionsByCode(command.UserAreaCode);
+
             var newUserCommand = new AddUserCommand()
             {
                 FirstName = command.FirstName,
                 LastName = command.LastName,
                 Email = command.Email,
-                Password = _passwordGenerationService.Generate(),
+                Password = _passwordGenerationService.Generate(options.Password.MinLength),
                 RequirePasswordChange = true,
                 UserAreaCode = command.UserAreaCode,
                 RoleId = command.RoleId,

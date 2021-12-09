@@ -38,8 +38,12 @@ namespace Cofoundry.Domain
         [DataType(DataType.EmailAddress)]
         public string Email { get; set; }
 
+        /// <summary>
+        /// The password for the master account. The password will go through
+        /// additional validation depending on the password policy configuration.
+        /// </summary>
         [Required]
-        [StringLength(300, MinimumLength = 8)]
+        [StringLength(PasswordOptions.MAX_LENGTH_BOUNDARY, MinimumLength = PasswordOptions.MIN_LENGTH_BOUNDARY)]
         [IgnoreDataMember]
         [Newtonsoft.Json.JsonIgnore]
         [System.Text.Json.Serialization.JsonIgnore]

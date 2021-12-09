@@ -94,10 +94,10 @@ namespace Cofoundry.Domain.Tests.Integration
                 await contentRepository.ExecuteCommandAsync(new SetupCofoundryCommand()
                 {
                     ApplicationName = "Test Site",
-                    UserEmail = seededEntities.AdminUser.Username,
-                    UserFirstName = "Test",
-                    UserLastName = "Admin",
-                    UserPassword = seededEntities.AdminUser.Password
+                    Email = seededEntities.AdminUser.Username,
+                    FirstName = "Test",
+                    LastName = "Admin",
+                    Password = seededEntities.AdminUser.Password
                 });
             }
 

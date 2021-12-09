@@ -26,6 +26,7 @@ namespace Cofoundry.Domain.Internal
         private readonly IUserMailTemplateBuilderFactory _userMailTemplateBuilderFactory;
         private readonly IExecutionContextFactory _executionContextFactory;
         private readonly IUserContextCache _userContextCache;
+        private readonly IPasswordPolicyService _newPasswordValidationService;
 
         public CompleteUserPasswordResetCommandHandler(
             CofoundryDbContext dbContext,
@@ -35,7 +36,8 @@ namespace Cofoundry.Domain.Internal
             IPasswordUpdateCommandHelper passwordUpdateCommandHelper,
             IUserMailTemplateBuilderFactory userMailTemplateBuilderFactory,
             IExecutionContextFactory transactionScopeManager,
-            IUserContextCache userContextCache
+            IUserContextCache userContextCache,
+            IPasswordPolicyService newPasswordValidationService
             )
         {
             _dbContext = dbContext;
@@ -46,6 +48,7 @@ namespace Cofoundry.Domain.Internal
             _userMailTemplateBuilderFactory = userMailTemplateBuilderFactory;
             _executionContextFactory = transactionScopeManager;
             _userContextCache = userContextCache;
+            _newPasswordValidationService = newPasswordValidationService;
         }
 
         public async Task ExecuteAsync(CompleteUserPasswordResetCommand command, IExecutionContext executionContext)
@@ -70,6 +73,15 @@ namespace Cofoundry.Domain.Internal
                 scope.QueueCompletionTask(() => _userContextCache.Clear(request.UserId));
                 await scope.CompleteAsync();
             }
+        }
+
+        private async Task ValidatePassword(UserPasswordResetRequest request, CompleteUserPasswordResetCommand command)
+        {
+            var context = NewPasswordValidationContext.MapFromUser(request.User);
+            context.Password = command.NewPassword;
+            context.PropertyName = nameof(command.NewPassword);
+
+            await _newPasswordValidationService.ValidateAsync(context);
         }
 
         private void UpdatePasswordAndSetComplete(UserPasswordResetRequest request, CompleteUserPasswordResetCommand command, IExecutionContext executionContext)

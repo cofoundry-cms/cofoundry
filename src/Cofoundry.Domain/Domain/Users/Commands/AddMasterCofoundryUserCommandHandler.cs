@@ -20,18 +20,21 @@ namespace Cofoundry.Domain.Internal
         private readonly IQueryExecutor _queryExecutor;
         private readonly IPasswordCryptographyService _passwordCryptographyService;
         private readonly IUserUpdateCommandHelper _userUpdateCommandHelper;
+        private readonly IPasswordPolicyService _newPasswordValidationService;
 
         public AddMasterCofoundryUserCommandHandler(
             CofoundryDbContext dbContext,
             IQueryExecutor queryExecutor,
             IPasswordCryptographyService passwordCryptographyService,
-            IUserUpdateCommandHelper userUpdateCommandHelper
+            IUserUpdateCommandHelper userUpdateCommandHelper,
+            IPasswordPolicyService newPasswordValidationService
             )
         {
             _dbContext = dbContext;
             _queryExecutor = queryExecutor;
             _passwordCryptographyService = passwordCryptographyService;
             _userUpdateCommandHelper = userUpdateCommandHelper;
+            _newPasswordValidationService = newPasswordValidationService;
         }
 
         public async Task ExecuteAsync(AddMasterCofoundryUserCommand command, IExecutionContext executionContext)
@@ -49,18 +52,29 @@ namespace Cofoundry.Domain.Internal
                 LastPasswordChangeDate = executionContext.ExecutionDate,
                 CreateDate = executionContext.ExecutionDate,
                 Role = role,
+                UserArea = userArea
             };
 
             await _userUpdateCommandHelper.UpdateEmailAndUsernameAsync(command.Email, null, user, executionContext);
+            await ValidatePasswordAsync(command, userArea, user);
 
             var hashResult = _passwordCryptographyService.CreateHash(command.Password);
             user.Password = hashResult.Hash;
             user.PasswordHashVersion = hashResult.HashVersion;
-            user.UserArea = userArea;
+
             _dbContext.Users.Add(user);
             await _dbContext.SaveChangesAsync();
 
             command.OutputUserId = user.UserId;
+        }
+
+        private async Task ValidatePasswordAsync(AddMasterCofoundryUserCommand command, UserArea userArea, User user)
+        {
+            var context = NewPasswordValidationContext.MapFromUser(user);
+            context.Password = command.Password;
+            context.PropertyName = nameof(command.Password);
+
+            await _newPasswordValidationService.ValidateAsync(context);
         }
 
         private async Task ValidateIsNotSetupAsync(IExecutionContext executionContext)

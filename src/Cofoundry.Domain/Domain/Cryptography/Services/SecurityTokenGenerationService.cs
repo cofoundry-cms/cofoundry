@@ -1,15 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Cofoundry.Domain.Internal
 {
     public class SecurityTokenGenerationService : ISecurityTokenGenerationService
     {
         private IRandomStringGenerator _randomStringGenerator;
-        
+
         public SecurityTokenGenerationService(
             IRandomStringGenerator randomStringGenerator
             )
@@ -27,7 +23,7 @@ namespace Cofoundry.Domain.Internal
             var guid = Guid.NewGuid().ToString().Replace("-", string.Empty);
             // Sprinkle some random padding
             var randomString = _randomStringGenerator.Generate(20);
-            // Encrypt the lot to obfuscate it
+            // Hash the lot to obfuscate it
             var token = Defuse.PasswordCryptographyV2.CreateHash(guid + randomString);
 
             return token;

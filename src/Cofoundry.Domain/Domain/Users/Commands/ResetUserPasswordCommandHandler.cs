@@ -65,7 +65,8 @@ namespace Cofoundry.Domain.Internal
             ValidatePermissions(user, executionContext);
             ValidateUserArea(user.UserAreaCode);
 
-            var temporaryPassword = _passwordGenerationService.Generate();
+            var options = _userAreaDefinitionRepository.GetOptionsByCode(user.UserAreaCode);
+            var temporaryPassword = _passwordGenerationService.Generate(options.Password.MinLength);
 
             var hashResult = _passwordCryptographyService.CreateHash(temporaryPassword);
             user.Password = hashResult.Hash;

@@ -117,6 +117,18 @@
     }
 }
 
+.help-inline {
+    color: $color-secondary;
+    font-style: italic;
+    display: block;
+    padding-top: 10px;
+
+    small {
+        font-size: 95%;
+        line-height: 105%;
+    }
+}
+
 .page-actions {
     position: fixed;
     width: 125px;
@@ -259,8 +271,6 @@
             .help-inline {
                 @include transition(all .2s);
                 background-color: #fff;
-                color: $color-secondary;
-                font-style: italic;
                 display: block;
                 padding: 0 20px 15px;
                 position: relative;

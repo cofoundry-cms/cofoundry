@@ -44,6 +44,7 @@
      * Checks if a string ends with the specified value. Case sensitive.
      */
     service.endsWith = function (s, suffix) {
+        if (!s) return false;
         return s.indexOf(suffix, s.length - suffix.length) !== -1;
     }
 
@@ -51,6 +52,8 @@
      * Checks if a string starts with the specified value. Case sensitive.
      */
     service.startsWith = function (s, prefix) {
+        if (!s) return false;
+
         return s.lastIndexOf(prefix, 0) === 0;
     }
 

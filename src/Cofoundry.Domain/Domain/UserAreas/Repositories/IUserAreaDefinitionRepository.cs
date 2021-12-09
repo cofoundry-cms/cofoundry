@@ -11,6 +11,14 @@ namespace Cofoundry.Domain
     {
         /// <summary>
         /// Returns a user area definition by it's unique <see cref="IUserAreaDefinition.UserAreaCode"/>. 
+        /// If the definition does not exist then <see langword="null"/> is returned.
+        /// </summary>
+        /// <param name="userAreaCode">The unique 3 character code that identifies the user area definition.</param>
+        /// <returns>Returns the matching <see cref="IUserAreaDefinition"/> instance, or <see langword="null"/> if it does not exist.</returns>
+        IUserAreaDefinition GetByCode(string userAreaCode);
+
+        /// <summary>
+        /// Returns a user area definition by it's unique <see cref="IUserAreaDefinition.UserAreaCode"/>. 
         /// If the definition does not exist then an <see cref="EntityNotFoundException{IUserAreaDefinition}"/>
         /// is thrown.
         /// </summary>
@@ -29,5 +37,15 @@ namespace Cofoundry.Domain
         /// property set to true, falling back to the Cofoundry Admin user area.
         /// </summary>
         IUserAreaDefinition GetDefault();
+
+        /// <summary>
+        /// Returns a set of <see cref="UserAreaOptions"/> configured for the
+        /// specified user area. Option configuration is layered starting with 
+        /// defaults, then layering on global <see cref="IdentitySettings"/> and
+        /// finally running <see cref="IUserAreaDefinition.ConfigureOptions"/>.
+        /// </summary>
+        /// <param name="userAreaCode">The unique 3 character code that identifies the user area definition.</param>
+        /// <returns>A configured <see cref="UserAreaOptions"/> instance.</returns>
+        UserAreaOptions GetOptionsByCode(string userAreaCode);
     }
 }

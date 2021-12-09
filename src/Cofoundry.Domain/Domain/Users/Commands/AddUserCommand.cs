@@ -31,9 +31,10 @@ namespace Cofoundry.Domain
 
         /// <summary>
         /// The password is required if the user area has AllowPasswordLogin set to 
-        /// true, otherwise it should be empty.
+        /// true, otherwise it should be empty. The password will go through
+        /// additional validation depending on the password policy configuration.
         /// </summary>
-        [StringLength(300, MinimumLength = 8)]
+        [StringLength(PasswordOptions.MAX_LENGTH_BOUNDARY, MinimumLength = PasswordOptions.MIN_LENGTH_BOUNDARY)]
         [DataType(DataType.Password)]
         [IgnoreDataMember]
         [Newtonsoft.Json.JsonIgnore]

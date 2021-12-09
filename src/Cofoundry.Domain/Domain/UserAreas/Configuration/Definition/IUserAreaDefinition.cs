@@ -55,5 +55,17 @@
         /// be set to this identity.
         /// </summary>
         bool IsDefaultAuthScheme { get; }
+
+        /// <summary>
+        /// Implement this method to change any additional options from
+        /// their defaults.
+        /// </summary>
+        /// <param name="options">
+        /// The current configuration with any defaults applied.
+        /// </param>
+        void ConfigureOptions(UserAreaOptions options)
+        {
+            // Default: No additional config
+        }
     }
 }

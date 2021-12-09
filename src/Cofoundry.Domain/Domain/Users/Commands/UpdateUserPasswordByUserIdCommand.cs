@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using Cofoundry.Core.Validation;
 using Cofoundry.Domain.CQS;
-using Cofoundry.Core.Validation;
+using System.ComponentModel.DataAnnotations;
 using System.Runtime.Serialization;
 
 namespace Cofoundry.Domain
@@ -15,8 +11,12 @@ namespace Cofoundry.Domain
         [PositiveInteger]
         public int UserId { get; set; }
 
+        /// <summary>
+        /// The value to set as the new account password. The password will go through additional validation depending 
+        /// on the password policy configuration.
+        /// </summary>
         [Required]
-        [StringLength(300, MinimumLength = 8)]
+        [StringLength(PasswordOptions.MAX_LENGTH_BOUNDARY, MinimumLength = PasswordOptions.MIN_LENGTH_BOUNDARY)]
         [DataType(DataType.Password)]
         [IgnoreDataMember]
         [Newtonsoft.Json.JsonIgnore]

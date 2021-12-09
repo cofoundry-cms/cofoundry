@@ -188,7 +188,7 @@ namespace Cofoundry.Domain.Tests
                 new TestUserArea1(), new TestUserArea2()
             };
             
-            return new UserAreaDefinitionRepository(areas);
+            return new UserAreaDefinitionRepository(areas, new IdentitySettings());
         }
     }
 }

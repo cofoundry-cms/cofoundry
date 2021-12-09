@@ -1,18 +1,16 @@
 ﻿
 angular.module('cms.setup').controller('SetupDetailsController', [
     '_',
-    '$q',
     'shared.LoadState',
     'shared.urlLibrary',
+    'shared.userAreaService',
     'setup.setupService',
-    'setup.modulePath',
 function (
     _,
-    $q,
     LoadState,
     urlLibrary,
-    settingsService,
-    modulePath
+    userAreaService,
+    settingsService
     ) {
 
     var vm = this;
@@ -23,16 +21,12 @@ function (
 
     function init() {
 
-        // UI actions
         vm.save = save;
 
-        // helpers
-        vm.doesPasswordMatch = doesPasswordMatch;
         vm.urlLibrary = urlLibrary;
-
-        // Properties
         vm.saveLoadState = new LoadState();
-        vm.command = {};
+
+        initData();
     }
 
     /* UI ACTIONS */
@@ -48,15 +42,18 @@ function (
         function onSuccess() {
             vm.isSetupComplete = true;
         }
-
     }
     
     /* PRIVATE FUNCS */
 
-    function doesPasswordMatch(value) {
-        if (!vm.command) return false;
+    function initData() {
+        vm.command = {};
 
-        return vm.command.userPassword === value;
+        return userAreaService
+            .getPasswordPolicy('COF')
+            .then(function(passwordPolicy) {
+                vm.passwordPolicy = passwordPolicy;
+            });
     }
 
 }]);
