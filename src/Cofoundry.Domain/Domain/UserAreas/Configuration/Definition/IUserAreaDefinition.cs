@@ -27,8 +27,10 @@
 
         /// <summary>
         /// Indicates if users in this area can login using a password. If this
-        /// is false the password field will be null and login will typically be via
-        /// SSO or some other method.
+        /// is <see langword="false"/> the password field will be <see langword="null"/> 
+        /// and login will typically be via SSO or some other method. If this is 
+        /// <see langword="true"/> then the email field is required, because it is
+        /// needed for password resets.
         /// </summary>
         bool AllowPasswordLogin { get; }
 

@@ -94,11 +94,6 @@ namespace Cofoundry.Domain.Internal
             {
                 throw new InvalidOperationException(nameof(AddUserWithTemporaryPasswordCommand) + " must be used with a user area that supports password based logins.");
             }
-
-            if (!userArea.UseEmailAsUsername)
-            {
-                throw new InvalidOperationException(nameof(AddUserWithTemporaryPasswordCommand) + " must be used with a user area that supports email logins.");
-            }
         }
 
         private AddUserCommand MapCommand(AddUserWithTemporaryPasswordCommand command)
@@ -110,6 +105,7 @@ namespace Cofoundry.Domain.Internal
                 FirstName = command.FirstName,
                 LastName = command.LastName,
                 Email = command.Email,
+                Username = command.Username,
                 Password = _passwordGenerationService.Generate(options.Password.MinLength),
                 RequirePasswordChange = true,
                 UserAreaCode = command.UserAreaCode,

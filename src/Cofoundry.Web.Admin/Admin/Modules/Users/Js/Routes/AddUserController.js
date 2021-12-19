@@ -38,9 +38,8 @@ function (
 
     function save() {
         vm.globalLoadState.on();
-
-        userService
-            .add(vm.command)
+        
+        userService.add(vm.command)
             .then(redirectToList)
             .finally(vm.globalLoadState.off);
     }

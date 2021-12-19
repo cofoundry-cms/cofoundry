@@ -98,7 +98,7 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Commands
             using var app = _appFactory.Create();
             var contentRepository = app.Services.GetContentRepositoryWithElevatedPermissions();
             var dbContext = app.Services.GetRequiredService<CofoundryDbContext>();
-            var userAreaCode = UserAreaWithoutEmailAsUsername.Code;
+            var userAreaCode = UserAreaWithoutPasswordLogin.Code;
             var roleId = await app.TestData.Roles().AddAsync(uniqueData, userAreaCode);
 
             var addCommand = new AddUserCommand()
@@ -107,7 +107,6 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Commands
                 Username = uniqueData,
                 FirstName = "John",
                 LastName = "Kruger",
-                Password = PASSWORD,
                 RoleId = roleId,
                 UserAreaCode = userAreaCode
             };

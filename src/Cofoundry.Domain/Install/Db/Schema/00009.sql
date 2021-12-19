@@ -322,8 +322,8 @@ set UniqueUsername = Lower([Username]),
 go
 alter table Cofoundry.[User] alter column UniqueUsername nvarchar(150) not null
 
-create unique index UIX_User_UniqueEmail on Cofoundry.[User] (UserAreaCode, UniqueEmail) where UniqueEmail is not null
-create unique index UIX_User_UniqueUsername on Cofoundry.[User] (UserAreaCode, UniqueUsername)
+create unique index UIX_User_UniqueEmail on Cofoundry.[User] (UserAreaCode, UniqueEmail) where UniqueEmail is not null and IsDeleted = 0
+create unique index UIX_User_UniqueUsername on Cofoundry.[User] (UserAreaCode, UniqueUsername) where UniqueEmail is not null and IsDeleted = 0
 
 go
 

@@ -21,11 +21,10 @@ namespace Cofoundry.Samples.UserAreas
         public const string Code = "PAR";
 
         /// <summary>
-        /// Indicates if users in this area can login using a password. If this is false
-        /// the password field will be null and login will typically be via SSO or some 
-        /// other method.
+        /// A unique 3 letter code identifying this user area. The cofoundry 
+        /// user are uses the code "COF" so you can pick anything else!
         /// </summary>
-        public bool AllowPasswordLogin => true;
+        public string UserAreaCode => Code;
 
         /// <summary>
         /// Display name of the area, used in the Cofoundry admin panel
@@ -35,17 +34,18 @@ namespace Cofoundry.Samples.UserAreas
         public string Name => "Partners";
 
         /// <summary>
+        /// Indicates if users in this area can login using a password. If this is false
+        /// the password field will be null and login will typically be via SSO or some 
+        /// other method.
+        /// </summary>
+        public bool AllowPasswordLogin => true;
+
+        /// <summary>
         /// Indicates whether the user should login using thier email address as the username.
         /// Some SSO systems might provide only a username and not an email address so in
         /// this case the email address is allowed to be null.
         /// </summary>
         public bool UseEmailAsUsername => true;
-
-        /// <summary>
-        /// A unique 3 letter code identifying this user area. The cofoundry 
-        /// user are uses the code "COF" so you can pick anything else!
-        /// </summary>
-        public string UserAreaCode => Code;
 
         /// <summary>
         /// The path to a login page to use when a user does not have permission to 

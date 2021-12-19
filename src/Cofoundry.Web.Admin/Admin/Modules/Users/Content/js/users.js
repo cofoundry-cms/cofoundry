@@ -114,9 +114,8 @@ function (
 
     function save() {
         vm.globalLoadState.on();
-
-        userService
-            .add(vm.command)
+        
+        userService.add(vm.command)
             .then(redirectToList)
             .finally(vm.globalLoadState.off);
     }
@@ -295,13 +294,16 @@ function (
             'userId',
             'firstName',
             'lastName',
-            'username',
-            'email'
+            'email',
+            'requirePasswordChange',
+            'isEmailConfirmed'
             );
 
         if (vm.user.role) {
             command.roleId = vm.user.role.roleId;
         }
+        
+        command.username = vm.userArea.useEmailAsUsername ? null : vm.user.username;
 
         return command;
     }
@@ -355,12 +357,7 @@ function (
         var entityDefinitionCode = options.userAreaCode === 'COF' ? 'COFUSR' : 'COFUSN';
         vm.canRead = permissionValidationService.canRead(entityDefinitionCode);
         vm.canUpdate = permissionValidationService.canUpdate(entityDefinitionCode);
-
-        // only allow create if we can end a temporary password notifcation otherwise 
-        // there isn't much point as the user will never be able to log in
-        vm.canCreate = permissionValidationService.canCreate(entityDefinitionCode)
-            && vm.userArea.allowPasswordLogin
-            && vm.userArea.useEmailAsUsername;
+        vm.canCreate = permissionValidationService.canCreate(entityDefinitionCode);
 
         toggleFilter(false);
 

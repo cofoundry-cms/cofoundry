@@ -55,25 +55,31 @@
             <cms-form-field-text cms-title="Username"
                                  cms-model="vm.command.username"
                                  ng-if="::!vm.userArea.useEmailAsUsername"
-                                 maxlength="150"
-                                 required></cms-form-field-text>
+                                 ng-required="::!vm.userArea.useEmailAsUsername"
+                                 cms-description="The username that the user uses to log in with."
+                                 maxlength="150"></cms-form-field-text>
 
             <cms-form-field-email-address cms-title="Email Address"
                                           cms-model="vm.command.email"
-                                          ng-if="::vm.userArea.useEmailAsUsername"
                                           maxlength="150"
-                                          required></cms-form-field-email-address>
+                                          ng-required="::vm.userArea.allowPasswordLogin || vm.userArea.useEmailAsUsername"></cms-form-field-email-address>
 
             <cms-form-field-dropdown cms-title="Role"
                                      cms-options="vm.roles"
                                      cms-option-name="title"
                                      cms-option-value="roleId"
                                      cms-model="vm.command.roleId"
+                                     cms-description="The role dictates which permissions a user has."
                                      required></cms-form-field-dropdown>
 
             <cms-form-field-checkbox cms-title="Require Password Change"
                                cms-model="vm.command.requirePasswordChange"
-                               ng-if="::vm.userArea.allowPasswordLogin"></cms-form-field-checkbox>
+                               ng-if="::vm.userArea.allowPasswordLogin"
+                               cms-description="If selected, the user will be required to change their password the next time they log in."></cms-form-field-checkbox>
+
+            <cms-form-field-checkbox cms-title="Is Email Confirmed"
+                                cms-model="vm.command.isEmailConfirmed"
+                                cms-description="Used to indicate that a users email has been verified as a valid working email."></cms-form-field-checkbox>
 
         </cms-form-section>
 

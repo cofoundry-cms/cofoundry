@@ -105,6 +105,10 @@ namespace Cofoundry.Domain.Internal
             {
                 throw ValidationErrorException.CreateWithProperties("Password field should be empty because the specified user area does not use passwords", nameof(command.Password));
             }
+            else if (!userArea.AllowPasswordLogin)
+            {
+                return;
+            }
 
             var context = NewPasswordValidationContext.MapFromUser(user);
             context.Password = command.Password;

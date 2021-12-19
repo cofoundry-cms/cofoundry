@@ -4,8 +4,6 @@ using Cofoundry.Domain.CQS;
 using Cofoundry.Domain.Data;
 using Cofoundry.Domain.MailTemplates;
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Cofoundry.Domain
@@ -88,7 +86,7 @@ namespace Cofoundry.Domain
 
             // Null template means don't send a notification
             if (mailTemplate == null) return;
-             
+
             await _mailService.SendAsync(user.Email, mailTemplate);
         }
 

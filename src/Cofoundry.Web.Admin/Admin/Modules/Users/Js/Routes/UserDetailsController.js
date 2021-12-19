@@ -140,13 +140,16 @@ function (
             'userId',
             'firstName',
             'lastName',
-            'username',
-            'email'
+            'email',
+            'requirePasswordChange',
+            'isEmailConfirmed'
             );
 
         if (vm.user.role) {
             command.roleId = vm.user.role.roleId;
         }
+        
+        command.username = vm.userArea.useEmailAsUsername ? null : vm.user.username;
 
         return command;
     }

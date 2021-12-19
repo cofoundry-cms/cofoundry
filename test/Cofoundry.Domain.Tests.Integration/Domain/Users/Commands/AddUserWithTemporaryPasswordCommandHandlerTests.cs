@@ -1,4 +1,5 @@
-﻿using Cofoundry.Core.Web;
+﻿using Cofoundry.Core.Validation;
+using Cofoundry.Core.Web;
 using Cofoundry.Domain.Data;
 using Cofoundry.Domain.Tests.Shared.Assertions;
 using Cofoundry.Domain.Tests.Shared.SeedData;
@@ -94,31 +95,6 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Commands
                 .Should()
                 .ThrowAsync<InvalidOperationException>()
                 .WithMessage("*must*support*password*logins*");
-        }
-
-        [Fact]
-        public async Task WhenNotEmailAsUsername_Throws()
-        {
-            var uniqueData = UNIQUE_PREFIX + nameof(WhenNotEmailAsUsername_Throws);
-
-            using var app = _appFactory.Create();
-            var contentRepository = app.Services.GetContentRepositoryWithElevatedPermissions();
-            var dbContext = app.Services.GetRequiredService<CofoundryDbContext>();
-            var userAreaCode = UserAreaWithoutEmailAsUsername.Code;
-            var roleId = await app.TestData.Roles().AddAsync(uniqueData, userAreaCode);
-
-            var command = new AddUserWithTemporaryPasswordCommand()
-            {
-                Email = uniqueData + EMAIL_DOMAIN,
-                RoleId = roleId,
-                UserAreaCode = userAreaCode
-            };
-
-            await contentRepository
-                .Awaiting(r => r.ExecuteCommandAsync(command))
-                .Should()
-                .ThrowAsync<InvalidOperationException>()
-                .WithMessage("*must*support*email*logins*");
         }
 
         [Fact]

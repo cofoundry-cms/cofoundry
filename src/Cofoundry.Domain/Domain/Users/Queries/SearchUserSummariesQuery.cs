@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Cofoundry.Domain.CQS;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
-using Cofoundry.Domain.CQS;
 
 namespace Cofoundry.Domain
 {
@@ -28,5 +24,10 @@ namespace Cofoundry.Domain
         /// Filter by email address
         /// </summary>
         public string Email { get; set; }
+
+        /// <summary>
+        /// Filter by username
+        /// </summary>
+        public string Username { get; set; }
     }
 }

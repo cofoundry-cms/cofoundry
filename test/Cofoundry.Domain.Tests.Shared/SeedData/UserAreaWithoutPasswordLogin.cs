@@ -14,7 +14,7 @@
 
         public bool AllowPasswordLogin => false;
 
-        public bool UseEmailAsUsername => true;
+        public bool UseEmailAsUsername => false;
 
         public string LoginPath => "/npw/login";
 

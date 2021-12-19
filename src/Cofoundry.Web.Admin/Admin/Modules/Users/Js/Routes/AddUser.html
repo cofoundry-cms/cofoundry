@@ -16,6 +16,8 @@
 
     <cms-page-body cms-content-type="form">
 
+        <cms-warning-message ng-if="vm.userArea.allowPasswordLogin">An email notification will be sent to the user with a temporary password.</cms-warning-message>
+
         <cms-form-status></cms-form-status>
 
         <cms-form-section cms-title="User Details">
@@ -28,16 +30,24 @@
                                  cms-model="vm.command.lastName"
                                  maxlength="32"></cms-form-field-text>
 
+            <cms-form-field-text cms-title="Username"
+                                cms-model="vm.command.username"
+                                maxlength="150"
+                                ng-if="::!vm.userArea.useEmailAsUsername"
+                                ng-required="::!vm.userArea.useEmailAsUsername"
+                                cms-description="The username that the user uses to log in with."></cms-form-field-text>
+
             <cms-form-field-email-address cms-title="Email"
                                           cms-model="vm.command.email"
                                           maxlength="150"
-                                          required></cms-form-field-email-address>
+                                          ng-required="::vm.userArea.allowPasswordLogin || vm.userArea.useEmailAsUsername"></cms-form-field-email-address>
 
             <cms-form-field-dropdown cms-title="Role"
                                      cms-options="vm.roles"
                                      cms-option-name="title"
                                      cms-option-value="roleId"
                                      cms-model="vm.command.roleId"
+                                     cms-description="The role dictates which permissions a user has."
                                      required></cms-form-field-dropdown>
 
         </cms-form-section>

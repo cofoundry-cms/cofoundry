@@ -12,13 +12,13 @@ namespace Cofoundry.Samples.UserAreas
     /// 
     /// For more info see https://www.cofoundry.org/docs/content-management/user-areas
     /// </summary>
-    public class CustomerUserArea : IUserAreaDefinition
+    public class PasswordlessUserArea : IUserAreaDefinition
     {
         /// <summary>
         /// By convention we add a constant for the user area code
         /// to make it easier to reference.
         /// </summary>
-        public const string Code = "CUS";
+        public const string Code = "NPW";
 
         /// <summary>
         /// A unique 3 letter code identifying this user area. The cofoundry 
@@ -31,14 +31,14 @@ namespace Cofoundry.Samples.UserAreas
         /// as the navigation link to manage your users. This should be singular
         /// because "Users" is appended to the link text.
         /// </summary>
-        public string Name => "Customer";
+        public string Name => "Passwordless";
 
         /// <summary>
         /// Indicates if users in this area can login using a password. If this is false
         /// the password field will be null and login will typically be via SSO or some 
         /// other method.
         /// </summary>
-        public bool AllowPasswordLogin => true;
+        public bool AllowPasswordLogin => false;
 
         /// <summary>
         /// Indicates whether the user should login using thier email address as the username.
@@ -47,19 +47,12 @@ namespace Cofoundry.Samples.UserAreas
         /// </summary>
         public bool UseEmailAsUsername => false;
 
-        /// <summary>
-        /// The path to a login page to use when a user does not have permission to 
-        /// access a resource. The path to the denied resource is appended to the query
-        /// string of the <see cref="LoginPath"/> using the parameter name "ReturnUrl".
-        /// If set to <see langword="null"/> then a 403 (Forbidden) error page will be 
-        /// returned instead of the loginredirect.
-        /// </summary>
-        public string LoginPath => "/customers/login/";
+        public string LoginPath => null;
 
         /// <summary>
         /// Setting this to true means that this user area will be used as the default login
         /// schema which means the HttpContext.User property will be set to this identity.
         /// </summary>
-        public bool IsDefaultAuthScheme => true;
+        public bool IsDefaultAuthScheme => false;
     }
 }

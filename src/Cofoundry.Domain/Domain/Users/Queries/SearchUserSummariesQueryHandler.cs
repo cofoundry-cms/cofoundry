@@ -15,26 +15,20 @@ namespace Cofoundry.Domain.Internal
         : IQueryHandler<SearchUserSummariesQuery, PagedQueryResult<UserSummary>>
         , IPermissionRestrictedQueryHandler<SearchUserSummariesQuery, PagedQueryResult<UserSummary>>
     {
-        #region constructor
-
         private readonly CofoundryDbContext _dbContext;
-        private readonly IQueryExecutor _queryExecutor;
         private readonly IUserSummaryMapper _userSummaryMapper;
+        private readonly IUserDataFormatter _userDataFormatter;
 
         public SearchUserSummariesQueryHandler(
             CofoundryDbContext dbContext,
-            IQueryExecutor queryExecutor,
-            IUserSummaryMapper userSummaryMapper
+            IUserSummaryMapper userSummaryMapper,
+            IUserDataFormatter userDataFormatter
             )
         {
             _dbContext = dbContext;
-            _queryExecutor = queryExecutor;
             _userSummaryMapper = userSummaryMapper;
+            _userDataFormatter = userDataFormatter;
         }
-
-        #endregion
-
-        #region execution
 
         public async Task<PagedQueryResult<UserSummary>> ExecuteAsync(SearchUserSummariesQuery query, IExecutionContext executionContext)
         {
@@ -58,7 +52,14 @@ namespace Cofoundry.Domain.Internal
 
             if (!string.IsNullOrEmpty(query.Email))
             {
-                dbQuery = dbQuery.Where(u => u.Email.Contains(query.Email));
+                var uniqueEmail = FormatEmailForSearch(query);
+                dbQuery = dbQuery.Where(u => u.UniqueEmail.Contains(uniqueEmail));
+            }
+
+            if (!string.IsNullOrEmpty(query.Username))
+            {
+                var uniqueUsername = _userDataFormatter.UniquifyUsername(query.UserAreaCode, query.Username);
+                dbQuery = dbQuery.Where(u => u.UniqueUsername.Contains(uniqueUsername));
             }
 
             // Filter by name
@@ -86,9 +87,33 @@ namespace Cofoundry.Domain.Internal
             return dbQuery;
         }
 
-        #endregion
+        private string FormatEmailForSearch(SearchUserSummariesQuery query)
+        {
+            const string PLACEHOLDER_DOMAIN = "@example.com";
 
-        #region permissions
+            var email = query.Email;
+            var isPartialEmail = !email.Contains("@");
+
+            if (isPartialEmail)
+            {
+                // we can only assume it's the local part of the email
+                email = query.Email + PLACEHOLDER_DOMAIN;
+            }
+
+            var uniqueEmail = _userDataFormatter.UniquifyEmail(query.UserAreaCode, email);
+
+            if (uniqueEmail == null)
+            {
+                // if it could not be parsed, just stick with the original
+                uniqueEmail = query.Email;
+            }
+            else if (isPartialEmail)
+            {
+                uniqueEmail = email.Replace(PLACEHOLDER_DOMAIN, string.Empty);
+            }
+
+            return uniqueEmail;
+        }
 
         public IEnumerable<IPermissionApplication> GetPermissions(SearchUserSummariesQuery query)
         {
@@ -101,7 +126,5 @@ namespace Cofoundry.Domain.Internal
                 yield return new NonCofoundryUserReadPermission();
             }
         }
-
-        #endregion
     }
 }

@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Cofoundry.Domain;
+﻿using Cofoundry.Domain;
 using Cofoundry.Domain.CQS;
+using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
 
 namespace Cofoundry.Web.Admin
 {
@@ -12,17 +9,18 @@ namespace Cofoundry.Web.Admin
     {
         private readonly IQueryExecutor _queryExecutor;
         private readonly IApiResponseHelper _apiResponseHelper;
+        private readonly IUserAreaDefinitionRepository _userAreaDefinitionRepository;
 
         public UsersApiController(
             IQueryExecutor queryExecutor,
-            IApiResponseHelper apiResponseHelper
+            IApiResponseHelper apiResponseHelper,
+            IUserAreaDefinitionRepository userAreaDefinitionRepository
             )
         {
             _queryExecutor = queryExecutor;
             _apiResponseHelper = apiResponseHelper;
+            _userAreaDefinitionRepository = userAreaDefinitionRepository;
         }
-
-        #region queries
 
         public async Task<JsonResult> Get([FromQuery] SearchUserSummariesQuery query)
         {
@@ -32,7 +30,7 @@ namespace Cofoundry.Web.Admin
             var results = await _queryExecutor.ExecuteAsync(query);
             return _apiResponseHelper.SimpleQueryResponse(results);
         }
-        
+
         public async Task<JsonResult> GetById(int userId)
         {
             var query = new GetUserDetailsByIdQuery(userId);
@@ -41,11 +39,27 @@ namespace Cofoundry.Web.Admin
             return _apiResponseHelper.SimpleQueryResponse(result);
         }
 
-        #endregion
+        public async Task<JsonResult> Post([FromBody] AddUserCommand command)
+        {
+            var userArea = _userAreaDefinitionRepository.GetRequiredByCode(command.UserAreaCode);
+            if (userArea.AllowPasswordLogin)
+            {
+                return await _apiResponseHelper.RunCommandAsync(new AddUserWithTemporaryPasswordCommand()
+                {
+                    Email = command.Email,
+                    FirstName = command.FirstName,
+                    LastName = command.LastName,
+                    RoleCode = command.RoleCode,
+                    RoleId = command.RoleId,
+                    UserAreaCode = command.UserAreaCode,
+                    Username = command.Username
+                });
+            }
 
-        #region commands
+            return await _apiResponseHelper.RunCommandAsync(command);
+        }
 
-        public async Task<JsonResult> Post([FromBody] AddUserWithTemporaryPasswordCommand command)
+        public async Task<JsonResult> PostWithTemporaryPassword([FromBody] AddUserWithTemporaryPasswordCommand command)
         {
             return await _apiResponseHelper.RunCommandAsync(command);
         }
@@ -62,7 +76,5 @@ namespace Cofoundry.Web.Admin
 
             return _apiResponseHelper.RunCommandAsync(command);
         }
-
-        #endregion
     }
 }

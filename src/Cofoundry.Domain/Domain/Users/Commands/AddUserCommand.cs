@@ -18,20 +18,20 @@ namespace Cofoundry.Domain
     public sealed class AddUserCommand : ICommand, ILoggableCommand, IValidatableObject
     {
         /// <summary>
-        /// The first name is not required.
+        /// The first name is optional.
         /// </summary>
         [StringLength(32)]
         public string FirstName { get; set; }
 
         /// <summary>
-        /// The last name is not required.
+        /// The last name is optional.
         /// </summary>
         [StringLength(32)]
         public string LastName { get; set; }
 
         /// <summary>
-        /// The password is required if the user area has AllowPasswordLogin set to 
-        /// true, otherwise it should be empty. The password will go through
+        /// The password is required if the user area has <see cref="IUserAreaDefinition.AllowPasswordLogin"/> 
+        /// set to <see langword="true"/>, otherwise it should be empty. The password will go through
         /// additional validation depending on the password policy configuration.
         /// </summary>
         [StringLength(PasswordOptions.MAX_LENGTH_BOUNDARY, MinimumLength = PasswordOptions.MIN_LENGTH_BOUNDARY)]
@@ -41,18 +41,23 @@ namespace Cofoundry.Domain
         [System.Text.Json.Serialization.JsonIgnore]
         public string Password { get; set; }
 
+        private string _email = null;
         /// <summary>
-        /// The email address is required if the user area has UseEmailAsUsername 
-        /// set to true.
+        /// The email address is required if the user area has <see cref="IUserAreaDefinition.UseEmailAsUsername"/> 
+        /// set to <see langword="true"/> or <see cref="IUserAreaDefinition.AllowPasswordLogin"/>.
         /// </summary>
         [StringLength(150)]
         [EmailAddress(ErrorMessage = "Please use a valid email address")]
         [DataType(DataType.EmailAddress)]
-        public string Email { get; set; }
+        public string Email 
+        { 
+            get { return _email; } 
+            set { _email = value == string.Empty ? null : value; } 
+        }
 
         /// <summary>
-        /// The username is required if the user area has UseEmailAsUsername set to 
-        /// false, otherwise it should be empty and the Email address will be used 
+        /// The username is required if the user area has <see cref="IUserAreaDefinition.UseEmailAsUsername"/> 
+        /// set to <see langword="false"/>, otherwise it should be empty and the <see cref="Email"/> will be used 
         /// as the username instead.
         /// </summary>
         [StringLength(150)]

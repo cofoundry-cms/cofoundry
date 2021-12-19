@@ -100,7 +100,7 @@ namespace Cofoundry.Domain.Internal
             user.FirstName = command.FirstName?.Trim();
             user.LastName = command.LastName?.Trim();
             user.RequirePasswordChange = command.RequirePasswordChange;
-            user.IsEmailConfirmed = command.IsEmailConfirmed;
+            user.IsEmailConfirmed = user.Email != null ? command.IsEmailConfirmed : false;
         }
     }
 }

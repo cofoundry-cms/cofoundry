@@ -151,6 +151,7 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Commands
 
             var addCommand = new AddUserCommand()
             {
+                Email = uniqueData + EMAIL_DOMAIN,
                 Username = "NWatkins",
                 Password = PASSWORD,
                 RoleId = roleId,
@@ -166,6 +167,7 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Commands
 
             var updateCommand = new UpdateCurrentUserAccountCommand()
             {
+                Email = addCommand.Email,
                 Username = "TBone"
             };
 
@@ -196,7 +198,7 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Commands
             var contentRepository = app.Services.GetContentRepository();
             var dbContext = app.Services.GetRequiredService<CofoundryDbContext>();
             var loginService = app.Services.GetRequiredService<ILoginService>();
-            var userAreaCode = UserAreaWithoutEmailAsUsername.Code;
+            var userAreaCode = UserAreaWithoutPasswordLogin.Code;
             var roleId = await app.TestData.Roles().AddAsync(uniqueData, userAreaCode);
 
             var addCommand = new AddUserCommand()
@@ -205,7 +207,6 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Commands
                 Username = uniqueData,
                 FirstName = "John",
                 LastName = "Kruger",
-                Password = PASSWORD,
                 RoleId = roleId,
                 UserAreaCode = userAreaCode
             };

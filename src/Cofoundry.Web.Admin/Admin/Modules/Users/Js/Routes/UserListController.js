@@ -33,12 +33,7 @@ function (
         var entityDefinitionCode = options.userAreaCode === 'COF' ? 'COFUSR' : 'COFUSN';
         vm.canRead = permissionValidationService.canRead(entityDefinitionCode);
         vm.canUpdate = permissionValidationService.canUpdate(entityDefinitionCode);
-
-        // only allow create if we can end a temporary password notifcation otherwise 
-        // there isn't much point as the user will never be able to log in
-        vm.canCreate = permissionValidationService.canCreate(entityDefinitionCode)
-            && vm.userArea.allowPasswordLogin
-            && vm.userArea.useEmailAsUsername;
+        vm.canCreate = permissionValidationService.canCreate(entityDefinitionCode);
 
         toggleFilter(false);
 

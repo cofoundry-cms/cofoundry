@@ -40,10 +40,7 @@ namespace Cofoundry.Domain.Internal
             var user = await GetUser(command.UserId);
             EntityNotFoundException.ThrowIfNull(user, command.UserId);
 
-            var userArea = _userAreaRepository.GetRequiredByCode(user.UserAreaCode);
-            _passwordUpdateCommandHelper.ValidateUserArea(userArea);
-            _passwordUpdateCommandHelper.ValidatePermissions(userArea, executionContext);
-            await ValidatePasswordAsync(command, user);
+            await ValidatePasswordAsync(command, user, executionContext);
             _passwordUpdateCommandHelper.UpdatePassword(command.NewPassword, user, executionContext);
 
             await _dbContext.SaveChangesAsync();
@@ -59,10 +56,15 @@ namespace Cofoundry.Domain.Internal
                 .SingleOrDefaultAsync();
         }
 
-        private async Task ValidatePasswordAsync(UpdateUserPasswordByUserIdCommand command, User user)
+        private async Task ValidatePasswordAsync(
+            UpdateUserPasswordByUserIdCommand command, 
+            User user,
+            IExecutionContext executionContext
+            )
         {
             var userArea = _userAreaRepository.GetRequiredByCode(user.UserAreaCode);
             _passwordUpdateCommandHelper.ValidateUserArea(userArea);
+            _passwordUpdateCommandHelper.ValidatePermissions(userArea, executionContext);
 
             var context = NewPasswordValidationContext.MapFromUser(user);
             context.Password = command.NewPassword;

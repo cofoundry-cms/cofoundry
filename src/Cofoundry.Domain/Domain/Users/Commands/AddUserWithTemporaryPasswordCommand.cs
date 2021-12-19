@@ -40,6 +40,14 @@ namespace Cofoundry.Domain
         public string Email { get; set; }
 
         /// <summary>
+        /// The username is required if the user area has <see cref="IUserAreaDefinition.UseEmailAsUsername"/> 
+        /// set to <see langword="false"/>, otherwise it should be empty and the <see cref="Email"/> will be used 
+        /// as the username instead.
+        /// </summary>
+        [StringLength(150)]
+        public string Username { get; set; }
+
+        /// <summary>
         /// The Cofoundry user system is partitioned into user areas, a user
         /// must belong to one of these user areas.
         /// </summary>

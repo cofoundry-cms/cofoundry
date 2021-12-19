@@ -287,6 +287,7 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Commands
 
             var command = new AddUserCommand()
             {
+                Email = uniqueData + EMAIL_DOMAIN,
                 Password = PASSWORD,
                 RoleId = roleId,
                 UserAreaCode = userAreaCode
@@ -344,6 +345,7 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Commands
 
             var command = new AddUserCommand()
             {
+                Email = uniqueData + EMAIL_DOMAIN,
                 Username = uniqueData,
                 Password = PASSWORD,
                 RoleId = roleId,
@@ -353,6 +355,8 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Commands
             await contentRepository
                 .Users()
                 .AddAsync(command);
+
+            command.Email = uniqueData + "2" + EMAIL_DOMAIN;
             command.OutputUserId = 0;
 
             await contentRepository
@@ -361,6 +365,43 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Commands
                 .ThrowAsync<ValidationErrorException>()
                 .WithMemberNames(nameof(command.Username))
                 .WithMessage("*username*already*registered*");
+        }
+
+        [Fact]
+        public async Task WhenNotPasswordLogin_EmailNotRequired()
+        {
+            var uniqueData = UNIQUE_PREFIX + "NotPWLogin_EmailNotReq";
+
+            using var app = _appFactory.Create();
+            var contentRepository = app.Services.GetContentRepositoryWithElevatedPermissions();
+            var dbContext = app.Services.GetRequiredService<CofoundryDbContext>();
+            var userAreaCode = UserAreaWithoutPasswordLogin.Code;
+            var roleId = await app.TestData.Roles().AddAsync(uniqueData, userAreaCode);
+
+            var command = new AddUserCommand()
+            {
+                Username = uniqueData,
+                RoleId = roleId,
+                UserAreaCode = userAreaCode
+            };
+
+            await contentRepository
+                .Users()
+                .AddAsync(command);
+
+            var user = await dbContext
+                .Users
+                .AsNoTracking()
+                .FilterById(command.OutputUserId)
+                .SingleOrDefaultAsync();
+
+            using (new AssertionScope())
+            {
+                command.OutputUserId.Should().BePositive();
+                user.Should().NotBeNull();
+                user.Username.Should().Be(command.Username);
+                user.Email.Should().BeNull();
+            }
         }
 
         [Fact]

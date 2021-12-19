@@ -5,7 +5,6 @@ using Cofoundry.Domain.CQS;
 using Cofoundry.Domain.Data;
 using Cofoundry.Domain.MailTemplates;
 using Microsoft.EntityFrameworkCore;
-using System;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
@@ -16,10 +15,9 @@ namespace Cofoundry.Domain.Internal
         : ICommandHandler<CompleteUserPasswordResetCommand>
         , IIgnorePermissionCheckHandler
     {
-        private const int NUMHOURS_PASSWORD_RESET_VALID = 16;
-
         private readonly CofoundryDbContext _dbContext;
         private readonly IQueryExecutor _queryExecutor;
+        private readonly IUserAreaDefinitionRepository _userAreaDefinitionRepository;
         private readonly IMailService _mailService;
         private readonly ITransactionScopeManager _transactionScopeManager;
         private readonly IPasswordUpdateCommandHelper _passwordUpdateCommandHelper;
@@ -31,6 +29,7 @@ namespace Cofoundry.Domain.Internal
         public CompleteUserPasswordResetCommandHandler(
             CofoundryDbContext dbContext,
             IQueryExecutor queryExecutor,
+            IUserAreaDefinitionRepository userAreaDefinitionRepository,
             IMailService mailService,
             ITransactionScopeManager transactionScopeFactory,
             IPasswordUpdateCommandHelper passwordUpdateCommandHelper,
@@ -42,6 +41,7 @@ namespace Cofoundry.Domain.Internal
         {
             _dbContext = dbContext;
             _queryExecutor = queryExecutor;
+            _userAreaDefinitionRepository = userAreaDefinitionRepository;
             _mailService = mailService;
             _transactionScopeManager = transactionScopeFactory;
             _passwordUpdateCommandHelper = passwordUpdateCommandHelper;
@@ -59,6 +59,7 @@ namespace Cofoundry.Domain.Internal
             var request = await QueryPasswordRequestIfToken(command).SingleOrDefaultAsync();
             EntityNotFoundException.ThrowIfNull(request, command.UserPasswordResetRequestId);
 
+            await ValidatePasswordAsync(request, command);
             UpdatePasswordAndSetComplete(request, command, executionContext);
 
             using (var scope = _transactionScopeManager.Create(_dbContext))
@@ -75,8 +76,11 @@ namespace Cofoundry.Domain.Internal
             }
         }
 
-        private async Task ValidatePassword(UserPasswordResetRequest request, CompleteUserPasswordResetCommand command)
+        private async Task ValidatePasswordAsync(UserPasswordResetRequest request, CompleteUserPasswordResetCommand command)
         {
+            var userArea = _userAreaDefinitionRepository.GetRequiredByCode(command.UserAreaCode);
+            _passwordUpdateCommandHelper.ValidateUserArea(userArea);
+
             var context = NewPasswordValidationContext.MapFromUser(request.User);
             context.Password = command.NewPassword;
             context.PropertyName = nameof(command.NewPassword);
@@ -117,11 +121,6 @@ namespace Cofoundry.Domain.Internal
             {
                 throw new ValidationException(result.Error.ToDisplayText());
             }
-        }
-
-        private bool IsPasswordRecoveryDateValid(DateTime dt, IExecutionContext executionContext)
-        {
-            return dt > executionContext.ExecutionDate.AddHours(-NUMHOURS_PASSWORD_RESET_VALID);
         }
 
         private async Task SendNotificationAsync(

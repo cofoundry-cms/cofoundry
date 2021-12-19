@@ -31,13 +31,18 @@ namespace Cofoundry.Domain
         [StringLength(32)]
         public string LastName { get; set; }
 
+        private string _email = null;
         /// <summary>
         /// The email address is required if the user area has 
         /// <see cref="IUserAreaDefinition.UseEmailAsUsername"/> set to <see langword="true"/>.
         /// </summary>
         [StringLength(150)]
         [EmailAddress(ErrorMessage = "Please use a valid email address")]
-        public string Email { get; set; }
+        public string Email
+        {
+            get { return _email; }
+            set { _email = value == string.Empty ? null : value; }
+        }
 
         /// <summary>
         /// The username is required if the user area has UseEmailAsUsername set to 

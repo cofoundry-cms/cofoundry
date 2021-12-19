@@ -79,7 +79,7 @@ namespace Cofoundry.Domain.Internal
             }
 
             var isEmailDefined = !string.IsNullOrWhiteSpace(email);
-            if (!isEmailDefined && userArea.UseEmailAsUsername)
+            if (!isEmailDefined && (userArea.UseEmailAsUsername || userArea.AllowPasswordLogin))
             {
                 throw ValidationErrorException.CreateWithProperties("Email field is required.", EMAIL_PROPERTY);
             }
@@ -88,6 +88,7 @@ namespace Cofoundry.Domain.Internal
                 user.Email = null;
                 user.UniqueEmail = null;
                 user.EmailDomainId = null;
+                user.IsEmailConfirmed = false;
 
                 return;
             }
@@ -106,6 +107,7 @@ namespace Cofoundry.Domain.Internal
             user.EmailDomainId = await GetEmailDomainIdAsync(emailFormatResult, executionContext);
             user.Email = emailFormatResult.NormalizedEmailAddress;
             user.UniqueEmail = emailFormatResult.UniqueEmailAddress;
+            user.IsEmailConfirmed = false;
 
             if (userArea.UseEmailAsUsername)
             {
