@@ -62,7 +62,7 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Commands
 
             await contentRepository
                 .Users()
-                .UpdateUserAsync(updateCommand);
+                .UpdateAsync(updateCommand);
 
             var user = await dbContext
                 .Users
@@ -122,7 +122,7 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Commands
 
             await contentRepository
                 .Users()
-                .UpdateUserAsync(updateCommand);
+                .UpdateAsync(updateCommand);
 
             var user = await dbContext
                 .Users
@@ -172,7 +172,7 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Commands
 
             await contentRepository
                 .Users()
-                .UpdateUserAsync(updateCommand);
+                .UpdateAsync(updateCommand);
 
             var user = await dbContext
                 .Users
@@ -214,7 +214,7 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Commands
 
             await contentRepository
                 .Users()
-                .UpdateUserAsync(updateCommand);
+                .UpdateAsync(updateCommand);
 
             var user = await dbContext
                 .Users
@@ -258,7 +258,7 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Commands
             updateCommand.RoleId = roleId;
 
             await contentRepository
-                .Awaiting(r => r.Users().UpdateUserAsync(updateCommand))
+                .Awaiting(r => r.Users().UpdateAsync(updateCommand))
                 .Should()
                 .ThrowAsync<ValidationErrorException>()
                 .WithMessage("*user area*");
@@ -291,7 +291,7 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Commands
             updateCommand.RoleCode = userArea2.RoleB.RoleCode;
 
             await contentRepository
-                .Awaiting(r => r.Users().UpdateUserAsync(updateCommand))
+                .Awaiting(r => r.Users().UpdateAsync(updateCommand))
                 .Should()
                 .ThrowAsync<ValidationErrorException>()
                 .WithMessage("*user area*");
@@ -330,7 +330,7 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Commands
             updateCommand.Email = $"djones" + EMAIL_DOMAIN;
 
             await contentRepository
-                .Awaiting(r => r.Users().UpdateUserAsync(updateCommand))
+                .Awaiting(r => r.Users().UpdateAsync(updateCommand))
                 .Should()
                 .ThrowAsync<ValidationErrorException>()
                 .WithMemberNames(nameof(updateCommand.Email))
@@ -355,7 +355,7 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Commands
             };
 
             await contentRepository
-                .Awaiting(r => r.Users().UpdateUserAsync(command))
+                .Awaiting(r => r.Users().UpdateAsync(command))
                 .Should()
                 .ThrowAsync<EntityNotFoundException>();
         }

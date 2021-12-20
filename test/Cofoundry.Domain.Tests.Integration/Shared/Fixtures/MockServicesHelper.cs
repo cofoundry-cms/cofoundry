@@ -55,7 +55,25 @@ namespace Cofoundry.Domain.Tests.Integration
                 throw new Exception($"{nameof(IMessageAggregator)} is expected to be an instance of {nameof(AuditableMessageAggregator)} in testing");
             }
 
+            if (predicate == null)
+            {
+                return auditableMessageAggregator.CountMessagesPublished<TMessage>();
+            }
+
             return auditableMessageAggregator.CountMessagesPublished(predicate);
+        }
+
+        /// <summary>
+        /// Returns the number of messages that have been published to this instance
+        /// that matches the <paramref name="predicate"/>. Use this to check to check
+        /// that the expected message is published only once.
+        /// </summary>
+        /// <typeparam name="TMessage">Type of message to look for.</typeparam>
+        /// <param name="expression">An expression to filter messages by.</param>
+        /// <returns>The number of messages matched by the <paramref name="predicate"/>.</returns>
+        public int CountMessagesPublished<TMessage>()
+        {
+            return CountMessagesPublished<TMessage>(null);
         }
 
         /// <summary>

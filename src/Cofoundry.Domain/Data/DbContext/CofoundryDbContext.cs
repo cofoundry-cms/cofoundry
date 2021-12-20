@@ -318,6 +318,12 @@ namespace Cofoundry.Domain.Data
         /// </summary>
         public DbSet<UserArea> UserAreas { get; set; }
 
+        /// <summary>
+        /// Users can initiate self-service password reset requests that
+        /// are verified by sending a message with a unique link, typically 
+        /// via email. This table tracks those requests and logs when they are 
+        /// completed.
+        /// </summary>
         public DbSet<UserPasswordResetRequest> UserPasswordResetRequests { get; set; }
 
         /// <summary>

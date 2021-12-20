@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Cofoundry.Domain
+﻿namespace Cofoundry.Domain
 {
     /// <summary>
     /// Contains the result of an authentication test on a password
@@ -13,7 +7,7 @@ namespace Cofoundry.Domain
     public class PasswordResetRequestAuthenticationResult
     {
         /// <summary>
-        /// True if the token is valid; otherwise false.
+        /// <see langword="true"/> if the token is valid; otherwise <see langword="false"/>.
         /// </summary>
         public bool IsValid { get; set; }
 

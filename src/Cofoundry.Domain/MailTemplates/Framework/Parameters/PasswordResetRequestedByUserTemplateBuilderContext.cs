@@ -28,7 +28,7 @@ namespace Cofoundry.Domain.MailTemplates
 
         /// <summary>
         /// The relative base path used to construct the reset url 
-        /// e.g. new Uri("/auth/forgot-password").
+        /// e.g. new Uri("/auth/forgot-password", UriKind.Relative).
         /// </summary>
         public Uri ResetUrlBase { get; set; }
     }

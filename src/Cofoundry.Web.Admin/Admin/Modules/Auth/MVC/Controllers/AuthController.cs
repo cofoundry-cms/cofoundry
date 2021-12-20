@@ -122,7 +122,7 @@ namespace Cofoundry.Web.Admin
         [HttpPost]
         public async Task<ViewResult> ForgotPassword(ForgotPasswordViewModel command)
         {
-            var resetUrl = new Uri(_adminRouteLibrary.Auth.ResetPasswordBase(), UriKind.Relative);
+            var resetUrl = _adminRouteLibrary.Auth.ResetPasswordBase();
             await _authenticationControllerHelper.SendPasswordResetNotificationAsync(this, command, resetUrl);
 
             var viewPath = ViewPathFormatter.View(CONTROLLER_NAME, nameof(ForgotPassword));

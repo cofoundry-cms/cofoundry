@@ -5,19 +5,29 @@ using System.Runtime.Serialization;
 
 namespace Cofoundry.Domain
 {
-    public class CompleteUserPasswordResetCommand : ICommand, ILoggableCommand
+    /// <summary>
+    /// Completes a password reset request initiated by
+    /// <see cref="InitiateUserPasswordResetRequestCommand"/>, updating the users
+    /// password if the request is verified.
+    /// </summary>
+    public class CompleteUserPasswordResetRequestCommand : ICommand, ILoggableCommand
     {
-        public CompleteUserPasswordResetCommand()
-        {
-            SendNotification = true;
-        }
-
+        /// <summary>
+        /// The identifier used to lookup the request.
+        /// </summary>
         [Required]
         public Guid UserPasswordResetRequestId { get; set; }
 
+        /// <summary>
+        /// The token used to verify the request.
+        /// </summary>
         [Required]
         public string Token { get; set; }
 
+        /// <summary>
+        /// The <see cref="IUserAreaDefinition.UserAreaCode"/> of the user area
+        /// the user belongs to.
+        /// </summary>
         [Required]
         public string UserAreaCode { get; set; }
 
@@ -37,6 +47,6 @@ namespace Cofoundry.Domain
         /// Indicates whether to send a notification to the user to let them
         /// know their password has been changed. Defaults to true.
         /// </summary>
-        public bool SendNotification { get; set; }
+        public bool SendNotification { get; set; } = true;
     }
 }

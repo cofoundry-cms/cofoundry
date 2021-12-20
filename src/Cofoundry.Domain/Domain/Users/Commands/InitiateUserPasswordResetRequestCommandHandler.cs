@@ -1,14 +1,14 @@
-﻿using System;
+﻿using Cofoundry.Core;
+using Cofoundry.Core.Mail;
+using Cofoundry.Core.MessageAggregator;
+using Cofoundry.Domain.CQS;
+using Cofoundry.Domain.Data;
+using Cofoundry.Domain.MailTemplates;
+using Microsoft.EntityFrameworkCore;
+using System;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
-using Cofoundry.Domain.Data;
-using Cofoundry.Domain.CQS;
-using Microsoft.EntityFrameworkCore;
-using System.ComponentModel.DataAnnotations;
-using Cofoundry.Core.Mail;
-using Cofoundry.Core.Data;
-using Cofoundry.Domain.MailTemplates;
-using Cofoundry.Core;
 
 namespace Cofoundry.Domain
 {
@@ -24,47 +24,47 @@ namespace Cofoundry.Domain
     /// attempts being initiated in a set period of time.
     /// </para>
     /// </summary>
-    public class InitiatePasswordResetRequestCommandHandler 
-        : ICommandHandler<InitiatePasswordResetRequestCommand>
+    public class InitiateUserPasswordResetRequestCommandHandler
+        : ICommandHandler<InitiateUserPasswordResetRequestCommand>
         , IIgnorePermissionCheckHandler
     {
         private const int MAX_PASSWORD_RESET_ATTEMPTS = 16;
         private const int MAX_PASSWORD_RESET_ATTEMPTS_NUMHOURS = 24;
 
         private readonly CofoundryDbContext _dbContext;
-        private readonly ITransactionScopeManager _transactionScopeFactory;
+        private readonly IDomainRepository _domainRepository;
         private readonly IClientConnectionService _clientConnectionService;
         private readonly ISecurityTokenGenerationService _securityTokenGenerationService;
         private readonly IMailService _mailService;
-        private readonly IQueryExecutor _queryExecutor;
         private readonly IUserAreaDefinitionRepository _userAreaDefinitionRepository;
         private readonly IUserMailTemplateBuilderFactory _userMailTemplateBuilderFactory;
-        private readonly IExecutionContextFactory _executionContextFactory;
+        private readonly IUserDataFormatter _userDataFormatter;
+        private readonly IMessageAggregator _messageAggregator;
 
-        public InitiatePasswordResetRequestCommandHandler(
+        public InitiateUserPasswordResetRequestCommandHandler(
             CofoundryDbContext dbContext,
-            ITransactionScopeManager transactionScopeFactory,
+            IDomainRepository domainRepository,
             IClientConnectionService clientConnectionService,
             ISecurityTokenGenerationService securityTokenGenerationService,
             IMailService mailService,
-            IQueryExecutor queryExecutor,
             IUserAreaDefinitionRepository userAreaDefinitionRepository,
             IUserMailTemplateBuilderFactory userMailTemplateBuilderFactory,
-            IExecutionContextFactory executionContextFactory
+            IUserDataFormatter userDataFormatter,
+            IMessageAggregator messageAggregator
             )
         {
             _dbContext = dbContext;
-            _transactionScopeFactory = transactionScopeFactory;
+            _domainRepository = domainRepository;
             _clientConnectionService = clientConnectionService;
             _securityTokenGenerationService = securityTokenGenerationService;
             _mailService = mailService;
-            _queryExecutor = queryExecutor;
             _userAreaDefinitionRepository = userAreaDefinitionRepository;
             _userMailTemplateBuilderFactory = userMailTemplateBuilderFactory;
-            _executionContextFactory = executionContextFactory;
+            _userDataFormatter = userDataFormatter;
+            _messageAggregator = messageAggregator;
         }
 
-        public async Task ExecuteAsync(InitiatePasswordResetRequestCommand command, IExecutionContext executionContext)
+        public async Task ExecuteAsync(InitiateUserPasswordResetRequestCommand command, IExecutionContext executionContext)
         {
             var connectionInfo = _clientConnectionService.GetConnectionInfo();
             await ValidateNumberOfAttempts(connectionInfo, executionContext);
@@ -78,20 +78,31 @@ namespace Cofoundry.Domain
                 .Where(r => r.UserId == user.UserId && !r.IsComplete)
                 .ToListAsync();
 
-            foreach (var incokpleteRequest in existingIncompleteRequests)
+            foreach (var incompleteRequest in existingIncompleteRequests)
             {
-                incokpleteRequest.IsComplete = true;
+                incompleteRequest.IsComplete = true;
             }
 
             var request = CreateRequest(user, connectionInfo, executionContext);
 
-            using (var scope = _transactionScopeFactory.Create(_dbContext))
+            using (var scope = _domainRepository.Transactions().CreateScope())
             {
                 await _dbContext.SaveChangesAsync();
-                await SendNotificationAsync(request, command, executionContext);
+                await SendNotificationAsync(request, command);
 
+                scope.QueueCompletionTask(() => OnTransactionComplete(request));
                 await scope.CompleteAsync();
             }
+        }
+
+        private async Task OnTransactionComplete(UserPasswordResetRequest request)
+        {
+            await _messageAggregator.PublishAsync(new UserPasswordResetInitiatedMessage()
+            {
+                UserAreaCode = request.User.UserAreaCode,
+                UserId = request.UserId,
+                UserPasswordResetRequestId = request.UserPasswordResetRequestId
+            });
         }
 
         private void ValidateUserArea(string userAreaCode)
@@ -122,20 +133,21 @@ namespace Cofoundry.Domain
             }
         }
 
-        private Task<User> GetUserAsync(InitiatePasswordResetRequestCommand command)
+        private Task<User> GetUserAsync(InitiateUserPasswordResetRequestCommand command)
         {
+            var username = _userDataFormatter.UniquifyUsername(command.UserAreaCode, command.Username);
             var user = _dbContext
                 .Users
                 .FilterByUserArea(command.UserAreaCode)
                 .FilterCanLogIn()
-                .SingleOrDefaultAsync(u => u.Username == command.Username.Trim());
+                .SingleOrDefaultAsync(u => u.Username == username);
 
             return user;
         }
 
         private UserPasswordResetRequest CreateRequest(
             User user,
-            ClientConnectionInfo connectionInfo, 
+            ClientConnectionInfo connectionInfo,
             IExecutionContext executionContext
             )
         {
@@ -156,15 +168,14 @@ namespace Cofoundry.Domain
         }
 
         private async Task SendNotificationAsync(
-            UserPasswordResetRequest request, 
-            InitiatePasswordResetRequestCommand command,
-            IExecutionContext executionContext
+            UserPasswordResetRequest request,
+            InitiateUserPasswordResetRequestCommand command
             )
         {
             // Send mail notification
             var mailTemplateBuilder = _userMailTemplateBuilderFactory.Create(request.User.UserAreaCode);
-            
-            var context = await CreateMailTemplateContextAsync(request, command, executionContext);
+
+            var context = await CreateMailTemplateContextAsync(request, command);
             var mailTemplate = await mailTemplateBuilder.BuildPasswordResetRequestedByUserTemplateAsync(context);
 
             // Null template means don't send a notification
@@ -174,25 +185,25 @@ namespace Cofoundry.Domain
         }
 
         private async Task<PasswordResetRequestedByUserTemplateBuilderContext> CreateMailTemplateContextAsync(
-            UserPasswordResetRequest request, 
-            InitiatePasswordResetRequestCommand command,
-            IExecutionContext executionContext
+            UserPasswordResetRequest request,
+            InitiateUserPasswordResetRequestCommand command
             )
         {
             // user is not likely logged in so we need to elevate user 
             // privilidges here to get the user data
-            var query = new GetUserSummaryByIdQuery(request.UserId);
-            var adminExecutionContext = await _executionContextFactory.CreateSystemUserExecutionContextAsync(executionContext);
-
-            var userSummary = await _queryExecutor.ExecuteAsync(query, adminExecutionContext);
+            var userSummary = await _domainRepository
+                .WithElevatedPermissions()
+                .ExecuteQueryAsync(new GetUserSummaryByIdQuery(request.UserId));
             EntityNotFoundException.ThrowIfNull(userSummary, request.UserId);
 
+            // Note: Uri format will have already been validated in the command
+            var baseUri = new Uri(command.ResetUrlBase, UriKind.Relative);
             var context = new PasswordResetRequestedByUserTemplateBuilderContext()
             {
                 User = userSummary,
                 Token = request.Token,
                 UserPasswordResetRequestId = request.UserPasswordResetRequestId,
-                ResetUrlBase = command.ResetUrlBase
+                ResetUrlBase = baseUri
             };
 
             return context;

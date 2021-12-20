@@ -1,11 +1,7 @@
-﻿using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using Cofoundry.Core.Validation;
 using Cofoundry.Domain.CQS;
-using Cofoundry.Core.Validation;
+using Newtonsoft.Json;
+using System.ComponentModel.DataAnnotations;
 
 namespace Cofoundry.Domain
 {
@@ -15,7 +11,7 @@ namespace Cofoundry.Domain
     /// will need to be changed at first login (if the user area supports 
     /// it). This is designed to be used from an admin screen rather than 
     /// a self-service reset which can be done via 
-    /// InitiatePasswordResetRequestCommand.
+    /// <see cref="InitiateUserPasswordResetRequestCommand"/>.
     /// </summary>
     public class ResetUserPasswordCommand : ICommand, ILoggableCommand
     {

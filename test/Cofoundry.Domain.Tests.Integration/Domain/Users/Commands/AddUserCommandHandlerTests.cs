@@ -437,5 +437,31 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Commands
                 .WithMemberNames(nameof(command.Email))
                 .WithMessage("*email*already*registered*");
         }
+
+        [Fact]
+        public async Task SendsMessage()
+        {
+            var uniqueData = UNIQUE_PREFIX + nameof(SendsMessage);
+
+            using var app = _appFactory.Create();
+            var contentRepository = app.Services.GetContentRepositoryWithElevatedPermissions();
+            var userArea = app.SeededEntities.TestUserArea1;
+
+            var command = new AddUserCommand()
+            {
+                Email = uniqueData + EMAIL_DOMAIN,
+                Password = PASSWORD,
+                RoleCode = userArea.RoleA.RoleCode,
+                UserAreaCode = userArea.UserAreaCode
+            };
+
+            await contentRepository
+                .Users()
+                .AddAsync(command);
+
+            app.Mocks
+                .CountMessagesPublished<UserAddedMessage>(m => m.UserId == command.OutputUserId && m.UserAreaCode == userArea.UserAreaCode)
+                .Should().Be(1);
+        }
     }
 }

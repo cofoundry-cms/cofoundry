@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Cofoundry.Domain
+﻿namespace Cofoundry.Domain
 {
     /// <summary>
     /// Defines the Cofoundry admin panel user area.
@@ -21,7 +15,7 @@ namespace Cofoundry.Domain
         /// <summary>
         /// Constant containing the Cofoundry admin area UserAreaCode.
         /// </summary>
-        public static string AreaCode = "COF";
+        public const string AreaCode = "COF";
 
         public string UserAreaCode { get; } = AreaCode;
 
@@ -31,7 +25,7 @@ namespace Cofoundry.Domain
 
         public bool UseEmailAsUsername { get; } = true;
 
-        public string LoginPath { get; private set;  }
+        public string LoginPath { get; private set; }
 
         /// <summary>
         /// Although this is set to false, it is the fall-back schema if no default schema is set.

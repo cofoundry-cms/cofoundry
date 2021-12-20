@@ -34,7 +34,7 @@ namespace Cofoundry.Domain.Tests.Integration
         /// <returns>The UserId of the newly created user.</returns>
         public async Task<int> AddAsync(
             string uniqueData,
-            Action<AddUserCommand> configration = null
+            Action<AddUserCommand> configration
             )
         {
             var command = CreateAddCommand(uniqueData);

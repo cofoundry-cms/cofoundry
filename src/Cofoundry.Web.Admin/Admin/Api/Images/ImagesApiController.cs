@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Cofoundry.Core;
 using Cofoundry.Domain;
 using Cofoundry.Domain.CQS;
-using Cofoundry.Core;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
 
 namespace Cofoundry.Web.Admin
 {
@@ -30,10 +27,8 @@ namespace Cofoundry.Web.Admin
             _imageAssetsSettings = imageAssetsSettings;
         }
 
-        #region queries
-
         public async Task<JsonResult> Get(
-            [FromQuery] SearchImageAssetSummariesQuery query, 
+            [FromQuery] SearchImageAssetSummariesQuery query,
             [FromQuery] GetImageAssetRenderDetailsByIdRangeQuery rangeQuery
             )
         {
@@ -60,17 +55,14 @@ namespace Cofoundry.Web.Admin
 
         public JsonResult GetSettings()
         {
-            return _apiResponseHelper.SimpleQueryResponse(new { 
+            return _apiResponseHelper.SimpleQueryResponse(new
+            {
                 _imageAssetsSettings.MaxUploadWidth,
                 _imageAssetsSettings.MaxUploadHeight
             });
         }
 
-        #endregion
-
-        #region commands
-
-        public Task<JsonResult> Post(AddImageAssetCommand command, IFormFile file) 
+        public Task<JsonResult> Post(AddImageAssetCommand command, IFormFile file)
         {
             command.File = _formFileUploadedFileFactory.Create(file);
             return _apiResponseHelper.RunCommandAsync(command);
@@ -89,7 +81,5 @@ namespace Cofoundry.Web.Admin
 
             return _apiResponseHelper.RunCommandAsync(command);
         }
-
-        #endregion
     }
 }

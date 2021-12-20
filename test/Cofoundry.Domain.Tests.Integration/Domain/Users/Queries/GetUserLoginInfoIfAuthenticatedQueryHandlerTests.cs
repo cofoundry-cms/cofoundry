@@ -307,6 +307,30 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Queries
             }
         }
 
+        [Fact]
+        public async Task WhenPasswordInvalid_SendsMessage()
+        {
+            await AddUserIfNotExistsAsync();
+
+            using var app = _appFactory.Create();
+            var repository = app.Services.GetService<IDomainRepository>();
+
+            var query = new GetUserLoginInfoIfAuthenticatedQuery()
+            {
+                UserAreaCode = TestUserArea1.Code,
+                Username = VALID_USERNAME,
+                Password = "test"
+            };
+            await repository.ExecuteQueryAsync(query);
+
+            app.Mocks
+                .CountMessagesPublished<UserAuthenticationFailedMessage>(m =>
+                {
+                    return m.Username == VALID_USERNAME.ToLowerInvariant() && m.UserAreaCode == TestUserArea1.Code;
+                })
+                .Should().Be(1);
+        }
+
         private async Task<int> AddUserIfNotExistsAsync(string username = VALID_USERNAME, Action<AddUserCommand> commandModifier = null)
         {
             if (commandModifier != null && username == VALID_USERNAME)

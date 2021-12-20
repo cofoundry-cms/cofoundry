@@ -140,8 +140,11 @@ namespace Cofoundry.Samples.UserAreas
         {
             // We need to pass in the url to our custom password reset action, which 
             // will then get included in the email notification
-            var resetUrl = new Uri("/partners/auth/password-reset", UriKind.Relative);
-            await _authenticationControllerHelper.SendPasswordResetNotificationAsync(this, command, resetUrl);
+            await _authenticationControllerHelper.SendPasswordResetNotificationAsync(
+                this,
+                command,
+                "/partners/auth/password-reset"
+                );
 
             return View(command);
         }

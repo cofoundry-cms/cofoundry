@@ -1,10 +1,8 @@
-﻿using Newtonsoft.Json;
+﻿using Cofoundry.Domain.CQS;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
-using Cofoundry.Domain.CQS;
 
 namespace Cofoundry.Domain
 {
@@ -20,7 +18,7 @@ namespace Cofoundry.Domain
     /// attempts being initiated in a set period of time.
     /// </para>
     /// </summary>
-    public class InitiatePasswordResetRequestCommand : ICommand, ILoggableCommand
+    public class InitiateUserPasswordResetRequestCommand : ICommand, ILoggableCommand, IValidatableObject
     {
         /// <summary>
         /// Required. The username to send the request for. If the username
@@ -37,11 +35,19 @@ namespace Cofoundry.Domain
         [Required]
         public string UserAreaCode { get; set; }
 
-        [Required]
         /// <summary>
         /// The relative base path used to construct the reset url 
-        /// e.g. new Uri("/auth/forgot-password").
+        /// e.g. "/auth/forgot-password".
         /// </summary>
-        public Uri ResetUrlBase { get; set; }
+        [Required]
+        public string ResetUrlBase { get; set; }
+
+        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        {
+            if (!Uri.IsWellFormedUriString(ResetUrlBase, UriKind.Relative))
+            {
+                yield return new ValidationResult($"{ResetUrlBase} must be a relative url.", new string[] { nameof(ResetUrlBase) });
+            }
+        }
     }
 }

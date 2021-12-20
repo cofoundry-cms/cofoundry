@@ -48,7 +48,7 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Commands
 
             await contentRepository
                 .Users()
-                .AddUserWithTemporaryPasswordAsync(command);
+                .AddWithTemporaryPasswordAsync(command);
 
             var user = await dbContext
                 .Users
@@ -122,7 +122,7 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Commands
 
             await contentRepository
                 .Users()
-                .AddUserWithTemporaryPasswordAsync(command);
+                .AddWithTemporaryPasswordAsync(command);
 
             app.Mocks
                 .CountDispatchedMail(

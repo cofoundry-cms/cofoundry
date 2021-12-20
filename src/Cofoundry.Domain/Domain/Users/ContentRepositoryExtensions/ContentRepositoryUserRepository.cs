@@ -58,18 +58,18 @@ namespace Cofoundry.Domain.Internal
             return command.OutputUserId;
         }
 
-        public async Task<int> AddUserWithTemporaryPasswordAsync(AddUserWithTemporaryPasswordCommand command)
+        public async Task<int> AddWithTemporaryPasswordAsync(AddUserWithTemporaryPasswordCommand command)
         {
             await ExtendableContentRepository.ExecuteCommandAsync(command);
             return command.OutputUserId;
         }
 
-        public Task UpdateUserAsync(UpdateUserCommand command)
+        public Task UpdateAsync(UpdateUserCommand command)
         {
             return ExtendableContentRepository.ExecuteCommandAsync(command);
         }
 
-        public Task DeleteUserAsync(int userId)
+        public Task DeleteAsync(int userId)
         {
             return ExtendableContentRepository.ExecuteCommandAsync(new DeleteUserCommand(userId));
         }
@@ -82,6 +82,19 @@ namespace Cofoundry.Domain.Internal
         public Task UpdateCurrentUserPasswordAsync(UpdateCurrentUserPasswordCommand command)
         {
             return ExtendableContentRepository.ExecuteCommandAsync(command);
+        }
+
+        public Task ResetPasswordAsync(int userId)
+        {
+            return ExtendableContentRepository.ExecuteCommandAsync(new ResetUserPasswordCommand()
+            {
+                UserId = userId
+            });
+        }
+
+        public IAdvancedContentRepositoryUserPasswordResetRequestsRepository PasswordResetRequests()
+        {
+            return new ContentRepositoryUserPasswordResetRequestsRepository(ExtendableContentRepository);
         }
     }
 }

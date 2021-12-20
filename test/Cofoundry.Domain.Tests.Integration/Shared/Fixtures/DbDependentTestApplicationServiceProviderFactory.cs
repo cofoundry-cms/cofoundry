@@ -4,6 +4,7 @@ using Cofoundry.Core.Time;
 using Cofoundry.Core.Time.Mocks;
 using Cofoundry.Domain.Internal;
 using Cofoundry.Domain.Tests.Integration.Mocks;
+using Cofoundry.Domain.Tests.Shared;
 using Cofoundry.Domain.Tests.Shared.Mocks;
 using Cofoundry.Web;
 using Microsoft.AspNetCore.Hosting;
@@ -79,7 +80,7 @@ namespace Cofoundry.Domain.Tests.Integration
             services.AddScoped<IMessageAggregator, AuditableMessageAggregator>();
             services.AddScoped<IMailDispatchSession, AuditableMailDispatchSession>();
             services.AddScoped<IPageTemplateViewFileLocator, TestPageTemplateViewFileLocator>();
-            services.AddSingleton<IClientConnectionService>(new MockClientConnectionService(c => c.IPAddress = "127.0.0.1"));
+            services.AddSingleton<IClientConnectionService>(new MockClientConnectionService(c => c.IPAddress = TestIPAddresses.Localhost));
             services.AddTransient<IViewFileReader, TestViewFileReader>();
 
             if (customServiceConfiguration != null)

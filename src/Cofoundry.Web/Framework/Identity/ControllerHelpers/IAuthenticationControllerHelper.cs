@@ -15,8 +15,6 @@ namespace Cofoundry.Web.Identity
         where TUserArea : IUserAreaDefinition
     {
 
-        #region auth
-
         /// <summary>
         /// Attempts to authenticate the login request, returning the result. This
         /// does not log the user in and can be used instead of LogUserInAsync when 
@@ -60,10 +58,6 @@ namespace Cofoundry.Web.Identity
         /// <returns>The return url if it is a valid local url; otherwise null.</returns>
         string GetAndValidateReturnUrl(Controller controller);
 
-        #endregion
-
-        #region ChangePasswordAsync
-
         /// <summary>
         /// Used to change a users password when it is required before login. Once
         /// completed the user should be redirected back to login to re-authenticate.
@@ -78,18 +72,10 @@ namespace Cofoundry.Web.Identity
             IChangePasswordViewModel vm
             );
 
-        #endregion
-
-        #region log out
-
         /// <summary>
         /// Signs the user out of the user area.
         /// </summary>
         Task LogoutAsync();
-
-        #endregion
-
-        #region forgot password
 
         /// <summary>
         /// Checks the ModelState is valid and then initiates
@@ -102,12 +88,12 @@ namespace Cofoundry.Web.Identity
         /// <param name="vm">The view-model data posted to the action.</param>
         /// <param name="resetUrlBase">
         /// The relative base path used to construct the reset url 
-        /// e.g. new Uri("/auth/forgot-password").
+        /// e.g. new Uri("/auth/forgot-password", UriKind.Relative).
         /// </param>
         Task SendPasswordResetNotificationAsync(
             Controller controller,
             IForgotPasswordViewModel vm,
-            Uri resetUrlBase
+            string resetUrlBase
             );
 
         /// <summary>
@@ -140,7 +126,5 @@ namespace Cofoundry.Web.Identity
             Controller controller,
             ICompletePasswordResetViewModel vm
             );
-
-        #endregion
     }
 }

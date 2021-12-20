@@ -27,6 +27,21 @@ namespace Cofoundry.Domain.Tests.Integration.Mocks
 
         /// <summary>
         /// Returns the number of messages that have been published to this instance
+        /// that matches the specified type. Use this to check to check
+        /// that the expected message is published only once.
+        /// </summary>
+        /// <typeparam name="TMessage">Type of message to look for.</typeparam>
+        /// <returns>The number of messages of the specified type.</returns>
+        public int CountMessagesPublished<TMessage>()
+        {
+            return _messages
+                .Where(m => m is TMessage)
+                .Cast<TMessage>()
+                .Count();
+        }
+
+        /// <summary>
+        /// Returns the number of messages that have been published to this instance
         /// that matches the <paramref name="predicate"/>. Use this to check to check
         /// that the expected message is published only once.
         /// </summary>

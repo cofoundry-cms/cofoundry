@@ -1,12 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using Cofoundry.Domain.CQS;
+﻿using Cofoundry.Core;
 using Cofoundry.Domain;
+using Cofoundry.Domain.CQS;
 using Microsoft.AspNetCore.Mvc;
-using System.Threading.Tasks;
-using Cofoundry.Core;
+using System;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Cofoundry.Web.Identity
 {
@@ -14,14 +13,11 @@ namespace Cofoundry.Web.Identity
     /// A helper class with shared functionality between controllers
     /// that manage user login.
     /// </summary>
-    public class AuthenticationControllerHelper<TUserArea>
-        : IAuthenticationControllerHelper<TUserArea>
+    public class AuthenticationControllerHelper<TUserArea> : IAuthenticationControllerHelper<TUserArea>
         where TUserArea : IUserAreaDefinition
     {
         private readonly IQueryExecutor _queryExecutor;
-        private readonly ICommandExecutor _commandExecutor;
         private readonly ILoginService _loginService;
-        private readonly IUserContextService _userContextService;
         private readonly IControllerResponseHelper _controllerResponseHelper;
         private readonly IPasswordResetUrlHelper _passwordResetUrlHelper;
         private readonly TUserArea _userAreaDefinition;
@@ -37,10 +33,8 @@ namespace Cofoundry.Web.Identity
             )
         {
             _queryExecutor = queryExecutor;
-            _commandExecutor = commandExecutor;
             _loginService = loginService;
             _controllerResponseHelper = controllerResponseHelper;
-            _userContextService = userContextService;
             _passwordResetUrlHelper = passwordResetUrlHelper;
             _userAreaDefinition = userAreaDefinition;
         }
@@ -104,7 +98,7 @@ namespace Cofoundry.Web.Identity
         /// the browser session.
         /// </param>
         public Task LogUserInAsync(
-            Controller controller, 
+            Controller controller,
             UserLoginInfo user,
             bool rememberUser
             )
@@ -144,7 +138,7 @@ namespace Cofoundry.Web.Identity
         //{
         //    if (controller == null) throw new ArgumentNullException(nameof(controller));
         //    if (viewModel == null) throw new ArgumentNullException(nameof(viewModel));
-            
+
         //    if (!controller.ModelState.IsValid) return LoginResult.Failed;
 
         //    var command = new LogUserInWithCredentialsCommand()
@@ -186,7 +180,7 @@ namespace Cofoundry.Web.Identity
         {
             var returnUrl = controller.Request.Query["ReturnUrl"].FirstOrDefault();
 
-            if (!string.IsNullOrEmpty(returnUrl) 
+            if (!string.IsNullOrEmpty(returnUrl)
                 && controller.Url.IsLocalUrl(returnUrl)
                 && !RelativePathHelper.IsWellFormattedAndEqual(controller.Request.Path, returnUrl)
                 )
@@ -250,14 +244,14 @@ namespace Cofoundry.Web.Identity
         /// e.g. new Uri("/auth/forgot-password").
         /// </param>
         public Task SendPasswordResetNotificationAsync(
-            Controller controller, 
+            Controller controller,
             IForgotPasswordViewModel vm,
-            Uri resetUrlBase
+            string resetUrlBase
             )
         {
             if (!controller.ModelState.IsValid) return Task.CompletedTask;
 
-            var command = new InitiatePasswordResetRequestCommand()
+            var command = new InitiateUserPasswordResetRequestCommand()
             {
                 Username = vm.Username,
                 UserAreaCode = _userAreaDefinition.UserAreaCode,
@@ -284,7 +278,7 @@ namespace Cofoundry.Web.Identity
             )
         {
             if (controller == null) throw new ArgumentNullException(nameof(controller));
-            
+
             var result = new PasswordResetRequestValidationResult();
             result.Error = PasswordResetRequestAuthenticationError.InvalidRequest;
 
@@ -327,19 +321,19 @@ namespace Cofoundry.Web.Identity
         /// </param>
         /// <param name="vm">The view-model data posted to the action.</param>
         public Task CompletePasswordResetAsync(
-            Controller controller, 
+            Controller controller,
             ICompletePasswordResetViewModel vm
             )
         {
             if (!controller.ModelState.IsValid) return Task.CompletedTask;
-            
+
             if (vm.UserPasswordResetRequestId == Guid.Empty)
             {
                 AddPasswordRequestInvalidError(controller);
                 return Task.CompletedTask;
             }
 
-            var command = new CompleteUserPasswordResetCommand()
+            var command = new CompleteUserPasswordResetRequestCommand()
             {
                 NewPassword = vm.NewPassword,
                 Token = vm.Token,

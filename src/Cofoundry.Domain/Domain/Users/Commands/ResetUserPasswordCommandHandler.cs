@@ -1,6 +1,6 @@
 ﻿using Cofoundry.Core;
-using Cofoundry.Core.Data;
 using Cofoundry.Core.Mail;
+using Cofoundry.Core.MessageAggregator;
 using Cofoundry.Domain.CQS;
 using Cofoundry.Domain.Data;
 using Cofoundry.Domain.MailTemplates;
@@ -24,8 +24,8 @@ namespace Cofoundry.Domain.Internal
         , IIgnorePermissionCheckHandler
     {
         private readonly CofoundryDbContext _dbContext;
-        private readonly ITransactionScopeManager _transactionScopeFactory;
         private readonly IMailService _mailService;
+        private readonly IDomainRepository _domainRepository;
         private readonly IQueryExecutor _queryExecutor;
         private readonly IUserMailTemplateBuilderFactory _userMailTemplateBuilderFactory;
         private readonly IPermissionValidationService _permissionValidationService;
@@ -33,30 +33,31 @@ namespace Cofoundry.Domain.Internal
         private readonly IPasswordCryptographyService _passwordCryptographyService;
         private readonly IPasswordGenerationService _passwordGenerationService;
         private readonly IUserContextCache _userContextCache;
+        private readonly IMessageAggregator _messageAggregator;
 
         public ResetUserPasswordCommandHandler(
             CofoundryDbContext dbContext,
-            ITransactionScopeManager transactionScopeFactory,
             IMailService mailService,
-            IQueryExecutor queryExecutor,
+            IDomainRepository domainRepository,
             IUserMailTemplateBuilderFactory userMailTemplateBuilderFactory,
             IPermissionValidationService permissionValidationService,
             IUserAreaDefinitionRepository userAreaDefinitionRepository,
             IPasswordCryptographyService passwordCryptographyService,
             IPasswordGenerationService passwordGenerationService,
-            IUserContextCache userContextCache
+            IUserContextCache userContextCache,
+            IMessageAggregator messageAggregator
             )
         {
             _dbContext = dbContext;
-            _transactionScopeFactory = transactionScopeFactory;
             _mailService = mailService;
-            _queryExecutor = queryExecutor;
+            _domainRepository = domainRepository;
             _userMailTemplateBuilderFactory = userMailTemplateBuilderFactory;
             _permissionValidationService = permissionValidationService;
             _userAreaDefinitionRepository = userAreaDefinitionRepository;
             _passwordCryptographyService = passwordCryptographyService;
             _passwordGenerationService = passwordGenerationService;
             _userContextCache = userContextCache;
+            _messageAggregator = messageAggregator;
         }
 
         public async Task ExecuteAsync(ResetUserPasswordCommand command, IExecutionContext executionContext)
@@ -74,14 +75,24 @@ namespace Cofoundry.Domain.Internal
             user.RequirePasswordChange = true;
             user.LastPasswordChangeDate = executionContext.ExecutionDate;
 
-            using (var scope = _transactionScopeFactory.Create(_dbContext))
+            using (var scope = _domainRepository.Transactions().CreateScope())
             {
                 await _dbContext.SaveChangesAsync();
-                await SendNotificationAsync(user, temporaryPassword);
+                await SendNotificationAsync(user, temporaryPassword, executionContext);
 
-                _transactionScopeFactory.QueueCompletionTask(_dbContext, () => _userContextCache.Clear());
+                scope.QueueCompletionTask(() => OnTransactionComplete(user));
                 await scope.CompleteAsync();
             }
+        }
+
+        private async Task OnTransactionComplete(User user)
+        {
+            _userContextCache.Clear();
+            await _messageAggregator.PublishAsync(new UserPasswordResetMessage()
+            {
+                UserAreaCode = user.UserAreaCode,
+                UserId = user.UserId
+            });
         }
 
         private Task<User> GetUserAsync(int userId)
@@ -110,12 +121,12 @@ namespace Cofoundry.Domain.Internal
             }
         }
 
-        private async Task SendNotificationAsync(User user, string temporaryPassword)
+        private async Task SendNotificationAsync(User user, string temporaryPassword, IExecutionContext executionContext)
         {
             // Send mail notification
             var mailTemplateBuilder = _userMailTemplateBuilderFactory.Create(user.UserAreaCode);
 
-            var context = await CreateMailTemplateContextAsync(user, temporaryPassword);
+            var context = await CreateMailTemplateContextAsync(user, temporaryPassword, executionContext);
             var mailTemplate = await mailTemplateBuilder.BuildPasswordResetByAdminTemplateAsync(context);
 
             // Null template means don't send a notification
@@ -126,11 +137,14 @@ namespace Cofoundry.Domain.Internal
 
         private async Task<PasswordResetByAdminTemplateBuilderContext> CreateMailTemplateContextAsync(
             User user,
-            string temporaryPassword
+            string temporaryPassword,
+            IExecutionContext executionContext
             )
         {
             var query = new GetUserSummaryByIdQuery(user.UserId);
-            var userSummary = await _queryExecutor.ExecuteAsync(query);
+            var userSummary = await _domainRepository
+                .WithExecutionContext(executionContext)
+                .ExecuteQueryAsync(query);
             EntityNotFoundException.ThrowIfNull(userSummary, user.UserId);
 
             var context = new PasswordResetByAdminTemplateBuilderContext()

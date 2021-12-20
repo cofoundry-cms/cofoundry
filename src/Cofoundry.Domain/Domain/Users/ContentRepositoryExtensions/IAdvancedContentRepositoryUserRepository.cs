@@ -54,20 +54,31 @@ namespace Cofoundry.Domain
         /// </summary>
         /// <param name="command">Command parameters.</param>
         /// <returns>Id of the newly created user.</returns>
-        Task<int> AddUserWithTemporaryPasswordAsync(AddUserWithTemporaryPasswordCommand command);
+        Task<int> AddWithTemporaryPasswordAsync(AddUserWithTemporaryPasswordCommand command);
 
         /// <summary>
         /// A generic user update command for use with Cofoundry users and
         /// other non-Cofoundry users.
         /// </summary>
         /// <param name="command">Command parameters.</param>
-        Task UpdateUserAsync(UpdateUserCommand command);
+        Task UpdateAsync(UpdateUserCommand command);
 
         /// <summary>
         /// Marks a user as deleted in the database (soft delete).
         /// </summary>
         /// <param name="userId">UserId of the role to delete.</param>
-        Task DeleteUserAsync(int userId);
+        Task DeleteAsync(int userId);
+
+        /// <summary>
+        /// Resets a users password to a randomly generated temporary value
+        /// and sends it in a mail a notification to the user. The password
+        /// will need to be changed at first login (if the user area supports 
+        /// it). This is designed to be used from an admin screen rather than 
+        /// a self-service reset which can be done via 
+        /// <see cref="InitiatePasswordResetRequest"/>.
+        /// </summary>
+        /// <param name="userId">Required. The database id of the user to reset the password to.</param>
+        Task ResetPasswordAsync(int userId);
 
         /// <summary>
         /// Updates the user account of the currently logged in user.
@@ -81,5 +92,12 @@ namespace Cofoundry.Domain
         /// </summary>
         /// <param name="command">Command parameters.</param>
         Task UpdateCurrentUserPasswordAsync(UpdateCurrentUserPasswordCommand command);
+
+        /// <summary>
+        /// Users can initiate self-service password reset requests that
+        /// are verified by sending a message with a unique link, typically 
+        /// via email.
+        /// </summary>
+        IAdvancedContentRepositoryUserPasswordResetRequestsRepository PasswordResetRequests();
     }
 }

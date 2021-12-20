@@ -1,4 +1,6 @@
 ﻿using Cofoundry.Core;
+using Cofoundry.Core.Data;
+using Cofoundry.Core.MessageAggregator;
 using Cofoundry.Core.Validation;
 using Cofoundry.Domain.CQS;
 using Cofoundry.Domain.Data;
@@ -23,6 +25,8 @@ namespace Cofoundry.Domain.Internal
         private readonly IUserAreaDefinitionRepository _userAreaRepository;
         private readonly IUserUpdateCommandHelper _userUpdateCommandHelper;
         private readonly IPasswordPolicyService _newPasswordValidationService;
+        private readonly ITransactionScopeManager _transactionScopeFactory;
+        private readonly IMessageAggregator _messageAggregator;
 
         public AddUserCommandHandler(
             CofoundryDbContext dbContext,
@@ -30,7 +34,9 @@ namespace Cofoundry.Domain.Internal
             UserCommandPermissionsHelper userCommandPermissionsHelper,
             IUserAreaDefinitionRepository userAreaRepository,
             IUserUpdateCommandHelper userUpdateCommandHelper,
-            IPasswordPolicyService newPasswordValidationService
+            IPasswordPolicyService newPasswordValidationService,
+            ITransactionScopeManager transactionScopeFactory,
+            IMessageAggregator messageAggregator
             )
         {
             _dbContext = dbContext;
@@ -39,6 +45,8 @@ namespace Cofoundry.Domain.Internal
             _userAreaRepository = userAreaRepository;
             _userUpdateCommandHelper = userUpdateCommandHelper;
             _newPasswordValidationService = newPasswordValidationService;
+            _transactionScopeFactory = transactionScopeFactory;
+            _messageAggregator = messageAggregator;
         }
 
         public async Task ExecuteAsync(AddUserCommand command, IExecutionContext executionContext)
@@ -61,18 +69,22 @@ namespace Cofoundry.Domain.Internal
 
             await _userUpdateCommandHelper.UpdateEmailAndUsernameAsync(command.Email, command.Username, user, executionContext);
             await ValidatePasswordAsync(userArea, user, command);
-
-            if (userArea.AllowPasswordLogin)
-            {
-                var hashResult = _passwordCryptographyService.CreateHash(command.Password);
-                user.Password = hashResult.Hash;
-                user.PasswordHashVersion = hashResult.HashVersion;
-            }
+            SetPassword(user, command, userArea);
 
             _dbContext.Users.Add(user);
             await _dbContext.SaveChangesAsync();
+            await _transactionScopeFactory.QueueCompletionTaskAsync(_dbContext, () => OnTransactionComplete(userArea, user));
 
             command.OutputUserId = user.UserId;
+        }
+
+        private async Task OnTransactionComplete(IUserAreaDefinition userArea, User user)
+        {
+            await _messageAggregator.PublishAsync(new UserAddedMessage()
+            {
+                UserAreaCode = userArea.UserAreaCode,
+                UserId = user.UserId
+            });
         }
 
         private async Task<UserArea> GetUserAreaAsync(IUserAreaDefinition userArea)
@@ -115,6 +127,16 @@ namespace Cofoundry.Domain.Internal
             context.PropertyName = nameof(command.Password);
 
             await _newPasswordValidationService.ValidateAsync(context);
+        }
+
+        private void SetPassword(User user, AddUserCommand command, IUserAreaDefinition userArea)
+        {
+            if (userArea.AllowPasswordLogin)
+            {
+                var hashResult = _passwordCryptographyService.CreateHash(command.Password);
+                user.Password = hashResult.Hash;
+                user.PasswordHashVersion = hashResult.HashVersion;
+            }
         }
 
         private async Task<Role> GetAndValidateRoleAsync(AddUserCommand command, IExecutionContext executionContext)

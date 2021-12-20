@@ -1,19 +1,21 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Cofoundry.Domain.CQS;
+using System;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Cofoundry.Domain.CQS;
 
 namespace Cofoundry.Domain
 {
+    /// <summary>
+    /// Determines if a password reset request is valid. The reslt is returned as a 
+    /// <see cref="PasswordResetRequestAuthenticationResult"/> which uses 
+    /// <see cref="PasswordResetRequestAuthenticationError"/> to describe specific types of error
+    /// that can occur.
+    /// </summary>
     public class ValidatePasswordResetRequestQuery : IQuery<PasswordResetRequestAuthenticationResult>
     {
         /// <summary>
         /// A unique identifier required to authenticate when 
-        /// resetting the password. May be Guid.Empty if the
-        /// value could not be parsed correctly.
+        /// resetting the password. May be <see cref="Guid.Empty"/> 
+        /// if the value could not be parsed correctly.
         /// </summary>
         [Required]
         public Guid UserPasswordResetRequestId { get; set; }

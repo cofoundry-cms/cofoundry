@@ -1,20 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
-using Microsoft.EntityFrameworkCore;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Cofoundry.Domain.CQS;
 using Cofoundry.Domain.Data;
-using Cofoundry.Domain.CQS;
+using Microsoft.EntityFrameworkCore;
+using System;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Cofoundry.Domain.Internal
 {
+    /// <summary>
+    /// Determines if a password reset request is valid. The reslt is returned as a 
+    /// <see cref="PasswordResetRequestAuthenticationResult"/> which uses 
+    /// <see cref="PasswordResetRequestAuthenticationError"/> to describe specific types of error
+    /// that can occur.
+    /// </summary>
     public class ValidatePasswordResetRequestQueryHandler
         : IQueryHandler<ValidatePasswordResetRequestQuery, PasswordResetRequestAuthenticationResult>
         , IIgnorePermissionCheckHandler
     {
-        #region constructor
-
         private readonly CofoundryDbContext _dbContext;
         private readonly IUserAreaDefinitionRepository _userAreaRepository;
         private readonly AuthenticationSettings _authenticationSettings;
@@ -29,8 +31,6 @@ namespace Cofoundry.Domain.Internal
             _userAreaRepository = userAreaRepository;
             _authenticationSettings = authenticationSettings;
         }
-        
-        #endregion
 
         public async Task<PasswordResetRequestAuthenticationResult> ExecuteAsync(ValidatePasswordResetRequestQuery query, IExecutionContext executionContext)
         {

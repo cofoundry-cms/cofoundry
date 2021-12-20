@@ -1,5 +1,5 @@
 ﻿using Cofoundry.Core;
-using Cofoundry.Core.Data;
+using Cofoundry.Core.MessageAggregator;
 using Cofoundry.Domain.CQS;
 using Cofoundry.Domain.Data;
 using Microsoft.EntityFrameworkCore;
@@ -10,31 +10,36 @@ using System.Threading.Tasks;
 namespace Cofoundry.Domain.Internal
 {
     /// <summary>
-    /// Marks a user as deleted in the database (soft delete).
+    /// Marks a user as deleted in the database (soft delete). A soft delete is
+    /// required because we can't realistically cascade deletions to all
+    /// entities with auditing dependencies.
     /// </summary>
     public class DeleteUserCommandHandler
         : ICommandHandler<DeleteUserCommand>
         , IPermissionRestrictedCommandHandler<DeleteUserCommand>
     {
         private readonly CofoundryDbContext _dbContext;
+        private readonly IDomainRepository _domainRepository;
         private readonly UserCommandPermissionsHelper _userCommandPermissionsHelper;
         private readonly IPermissionValidationService _permissionValidationService;
-        private readonly ITransactionScopeManager _transactionScopeManager;
         private readonly IUserContextCache _userContextCache;
+        private readonly IMessageAggregator _messageAggregator;
 
         public DeleteUserCommandHandler(
             CofoundryDbContext dbContext,
+            IDomainRepository domainRepository,
             UserCommandPermissionsHelper userCommandPermissionsHelper,
             IPermissionValidationService permissionValidationService,
-            ITransactionScopeManager transactionScopeManager,
-            IUserContextCache userContextCache
+            IUserContextCache userContextCache,
+            IMessageAggregator messageAggregator
             )
         {
             _dbContext = dbContext;
+            _domainRepository = domainRepository;
             _userCommandPermissionsHelper = userCommandPermissionsHelper;
             _permissionValidationService = permissionValidationService;
-            _transactionScopeManager = transactionScopeManager;
             _userContextCache = userContextCache;
+            _messageAggregator = messageAggregator;
         }
 
         public async Task ExecuteAsync(DeleteUserCommand command, IExecutionContext executionContext)
@@ -44,8 +49,29 @@ namespace Cofoundry.Domain.Internal
             ValidateCustomPermissions(user, executionContext, executorRole);
             MarkRecordDeleted(user, executionContext);
 
-            await _dbContext.SaveChangesAsync();
-            _transactionScopeManager.QueueCompletionTask(_dbContext, () => _userContextCache.Clear(command.UserId));
+            using (var scope = _domainRepository.Transactions().CreateScope())
+            {
+                // Since we soft-delete, we have to validate/delete unstructured dependencies here rather than in the trigger
+                await _domainRepository
+                    .WithExecutionContext(executionContext)
+                    .ExecuteCommandAsync(new DeleteUnstructuredDataDependenciesCommand(UserEntityDefinition.DefinitionCode, user.UserId));
+                await _dbContext.SaveChangesAsync();
+
+                scope.QueueCompletionTask(() => OnTransactionComplete(user));
+
+                await scope.CompleteAsync();
+            }
+        }
+
+        private async Task OnTransactionComplete(User user)
+        {
+            _userContextCache.Clear(user.UserId);
+
+            await _messageAggregator.PublishAsync(new UserDeletedMessage()
+            {
+                UserAreaCode = user.UserAreaCode,
+                UserId = user.UserId
+            });
         }
 
         private void MarkRecordDeleted(User user, IExecutionContext executionContext)
