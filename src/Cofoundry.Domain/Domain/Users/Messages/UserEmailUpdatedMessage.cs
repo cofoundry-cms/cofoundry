@@ -1,13 +1,16 @@
 ﻿namespace Cofoundry.Domain
 {
     /// <summary>
-    /// This message is published when the email for a user is updated.
+    /// Message published published when the email for a user is updated. The less
+    /// specific <see cref="UserUpdatedMessage"/> is also published when an email is 
+    /// updated, and if the email address is used as a username then a 
+    /// <see cref="UserUsernameUpdatedMessage"/> is published too.
     /// </summary>
     public class UserEmailUpdatedMessage
     {
         /// <summary>
         /// The <see cref="IUserAreaDefinition.UserAreaCode"/> of the user area
-        /// the user was added to.
+        /// the user belongs to.
         /// </summary>
         public string UserAreaCode { get; set; }
 

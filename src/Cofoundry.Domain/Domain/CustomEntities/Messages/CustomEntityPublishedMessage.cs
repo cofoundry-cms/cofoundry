@@ -1,16 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Cofoundry.Domain
+﻿namespace Cofoundry.Domain
 {
     /// <summary>
     /// Message published when a custom entity has gone from a draft to 
     /// publish state. This is not invoked when a new custom entity is
-    /// created, to capture that event use CustomEntityAddedMessage and check
-    /// the HasPublishedVersionChanged property.
+    /// created, to capture that event use <see cref="CustomEntityAddedMessage"/> and check
+    /// the <see cref="HasPublishedVersionChanged"/> property.
     /// </summary>
     public class CustomEntityPublishedMessage : ICustomEntityContentUpdatedMessage
     {

@@ -1,14 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Cofoundry.Domain
+﻿namespace Cofoundry.Domain
 {
     /// <summary>
     /// Message published when a page draft is published. Note that 
-    /// pages can also be published when created, use PageAddedMessage
+    /// pages can also be published when created, use <see cref="PageAddedMessage"/>
     /// to capture that event.
     /// </summary>
     public class PagePublishedMessage : IPageContentUpdatedMessage

@@ -1,15 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Cofoundry.Core.MessageAggregator;
 
 namespace Cofoundry.Domain
 {
     /// <summary>
     /// Message published when the ordering of a custom entity has been changed. This
     /// message is often published in a batch, so if you're handling this message it's
-    /// best to use IBatchMessageHandler
+    /// best to use <see cref="IBatchMessageHandler{CustomEntityOrderingUpdatedMessage}"/>.
     /// </summary>
     public class CustomEntityOrderingUpdatedMessage : ICustomEntityContentUpdatedMessage
     {

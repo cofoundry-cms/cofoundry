@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace Cofoundry.Domain
 {
     /// <summary>
-    /// Message published when a draft version is added to a page
+    /// Message published when a draft version is added to a page.
     /// </summary>
     public class PageDraftVersionAddedMessage
     {

@@ -1,12 +1,10 @@
-﻿using Microsoft.AspNetCore.Http;
-
-namespace Cofoundry.Domain
+﻿namespace Cofoundry.Domain
 {
     /// <summary>
-    /// Message published when properties that affect the url 
+    /// Message published when properties that affect the URL 
     /// of a page directory has changed (e.g. ParentPageDirectoryId or UrlSlug).
-    /// This message is also triggered when the url indirectly changes because a parent
-    /// directory url has changed.
+    /// This message is also triggered when the URL indirectly changes because a parent
+    /// directory URL has changed.
     /// </summary>
     public class PageDirectoryUrlChangedMessage
     {
@@ -16,7 +14,7 @@ namespace Cofoundry.Domain
         public int PageDirectoryId { get; set; }
 
         /// <summary>
-        /// The full (relative) url of the directory before the change, formatted with the leading
+        /// The full (relative) URL of the directory before the change, formatted with the leading
         /// slash but excluding the trailing slash e.g. "/parent-directory/child-directory".
         /// </summary
         public string OldFullUrlPath { get; set; }

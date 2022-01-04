@@ -1,13 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Cofoundry.Domain
+﻿namespace Cofoundry.Domain
 {
     /// <summary>
-    /// Message published when a custom entity has gone from published to 
+    /// Message published when a custom entity has moved from published to 
     /// draft state.
     /// </summary>
     public class CustomEntityUnPublishedMessage : ICustomEntityContentUpdatedMessage

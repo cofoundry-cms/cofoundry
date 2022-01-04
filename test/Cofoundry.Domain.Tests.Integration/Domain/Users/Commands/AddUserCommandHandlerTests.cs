@@ -459,9 +459,20 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Commands
                 .Users()
                 .AddAsync(command);
 
-            app.Mocks
-                .CountMessagesPublished<UserAddedMessage>(m => m.UserId == command.OutputUserId && m.UserAreaCode == userArea.UserAreaCode)
-                .Should().Be(1);
+            using (new AssertionScope())
+            {
+                app.Mocks
+                    .CountMessagesPublished<UserAddedMessage>(m => m.UserId == command.OutputUserId && m.UserAreaCode == userArea.UserAreaCode)
+                    .Should().Be(1);
+
+                app.Mocks
+                    .CountMessagesPublished<UserUsernameUpdatedMessage>()
+                    .Should().Be(0);
+
+                app.Mocks
+                    .CountMessagesPublished<UserEmailUpdatedMessage>()
+                    .Should().Be(0);
+            }
         }
     }
 }

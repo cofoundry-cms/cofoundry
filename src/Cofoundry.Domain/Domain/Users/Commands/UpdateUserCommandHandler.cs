@@ -51,13 +51,18 @@ namespace Cofoundry.Domain.Internal
             ValidatePermissions(userArea, executionContext);
 
             await UpdateRoleAsync(command, executionContext, user);
-            await _userUpdateCommandHelper.UpdateEmailAndUsernameAsync(command.Email, command.Username, user, executionContext);
+            var updateResult = await _userUpdateCommandHelper.UpdateEmailAndUsernameAsync(command.Email, command.Username, user, executionContext);
 
             UpdateProperties(command, user);
 
-            // Save
             await _dbContext.SaveChangesAsync();
-            _transactionScopeManager.QueueCompletionTask(_dbContext, () => _userContextCache.Clear(user.UserId));
+            await _transactionScopeManager.QueueCompletionTaskAsync(_dbContext, () => OnTransactionComplete(user, updateResult));
+        }
+
+        private async Task OnTransactionComplete(User user, UserUpdateCommandHelper.UpdateEmailAndUsernameResult updateResult)
+        {
+            _userContextCache.Clear(user.UserId);
+            await _userUpdateCommandHelper.PublishUpdateMessagesAsync(user, updateResult);
         }
 
         public void ValidatePermissions(IUserAreaDefinition userArea, IExecutionContext executionContext)

@@ -22,11 +22,18 @@ namespace Cofoundry.Domain.Internal
         /// <param name="executionContext">
         /// The command execution context to pass down to any nested queries or commands.
         /// </param>
-        Task UpdateEmailAndUsernameAsync(
+        Task<UserUpdateCommandHelper.UpdateEmailAndUsernameResult> UpdateEmailAndUsernameAsync(
             string email,
             string username,
             User user,
             IExecutionContext executionContext
             );
+
+        /// <summary>
+        /// Publishes the relevent message aggregator messages for the user update operation.
+        /// </summary>
+        /// <param name="user">The updated user record.</param>
+        /// <param name="updateResult">The result of the email and username update operation.</param>
+        Task PublishUpdateMessagesAsync(User user, UserUpdateCommandHelper.UpdateEmailAndUsernameResult updateResult);
     }
 }

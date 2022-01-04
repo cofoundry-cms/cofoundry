@@ -1,18 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Cofoundry.Domain
+﻿namespace Cofoundry.Domain
 {
     /// <summary>
     /// This message is published when page draft has been 
     /// updated. To be notified when any part of a page changes 
     /// (including page data and publish changes) you should 
-    /// subscribe to IPageContentUpdatedMessage
+    /// subscribe to <see cref="IPageContentUpdatedMessage"/>.
     /// </summary>
-    public class PageDraftVersionUpdatedMessage: IPageContentUpdatedMessage
+    public class PageDraftVersionUpdatedMessage : IPageContentUpdatedMessage
     {
         /// <summary>
         /// Id of the page with the draft version being updated

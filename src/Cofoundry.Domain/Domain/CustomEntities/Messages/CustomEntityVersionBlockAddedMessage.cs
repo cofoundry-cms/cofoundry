@@ -1,13 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Cofoundry.Domain
+﻿namespace Cofoundry.Domain
 {
     /// <summary>
-    /// Message published when a page block has been added to a custom entity
+    /// Message published when a page block has been added to a custom entity.
     /// </summary>
     public class CustomEntityVersionBlockAddedMessage : ICustomEntityContentUpdatedMessage
     {

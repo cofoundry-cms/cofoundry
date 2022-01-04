@@ -1,4 +1,7 @@
 ﻿using Cofoundry.Core;
+using Cofoundry.Core.Data;
+using Cofoundry.Core.Data.Internal;
+using Cofoundry.Core.MessageAggregator;
 using Cofoundry.Domain.CQS;
 using Cofoundry.Domain.Data;
 using Microsoft.EntityFrameworkCore;
@@ -15,21 +18,24 @@ namespace Cofoundry.Domain.Internal
         , IPermissionRestrictedCommandHandler<UpdateCurrentUserAccountCommand>
     {
         private readonly CofoundryDbContext _dbContext;
+        private readonly ITransactionScopeManager _transactionScopeManager;
         private readonly IPermissionValidationService _permissionValidationService;
         private readonly IUserUpdateCommandHelper _userUpdateCommandHelper;
-        private readonly IUserAreaDefinitionRepository _userAreaDefinitionRepository;
+        private readonly IMessageAggregator _messageAggregator;
 
         public UpdateCurrentUserAccountCommandHandler(
             CofoundryDbContext dbContext,
+            ITransactionScopeManager transactionScopeManager,
             IPermissionValidationService permissionValidationService,
             IUserUpdateCommandHelper userUpdateCommandHelper,
-            IUserAreaDefinitionRepository userAreaDefinitionRepository
+            IMessageAggregator messageAggregator
             )
         {
             _dbContext = dbContext;
+            _transactionScopeManager = transactionScopeManager;
             _permissionValidationService = permissionValidationService;
             _userUpdateCommandHelper = userUpdateCommandHelper;
-            _userAreaDefinitionRepository = userAreaDefinitionRepository;
+            _messageAggregator = messageAggregator;
         }
 
         public async Task ExecuteAsync(UpdateCurrentUserAccountCommand command, IExecutionContext executionContext)
@@ -44,11 +50,12 @@ namespace Cofoundry.Domain.Internal
                 .SingleOrDefaultAsync();
             EntityNotFoundException.ThrowIfNull(user, userId);
 
-            await _userUpdateCommandHelper.UpdateEmailAndUsernameAsync(command.Email, command.Username, user, executionContext);
+            var updateResult = await _userUpdateCommandHelper.UpdateEmailAndUsernameAsync(command.Email, command.Username, user, executionContext);
             user.FirstName = command.FirstName?.Trim();
             user.LastName = command.LastName?.Trim();
 
             await _dbContext.SaveChangesAsync();
+            await _transactionScopeManager.QueueCompletionTaskAsync(_dbContext, () => _userUpdateCommandHelper.PublishUpdateMessagesAsync(user, updateResult));
         }
 
         public IEnumerable<IPermissionApplication> GetPermissions(UpdateCurrentUserAccountCommand command)

@@ -4,7 +4,7 @@
     /// This message is published when the data directly
     /// associated with a page has been updated. To be notified
     /// when any part of a page (including versions) changes you
-    /// should subscribe to <see cref="IPageContentUpdatedMessage"/>
+    /// should subscribe to <see cref="IPageContentUpdatedMessage"/>.
     /// </summary>
     public class PageUpdatedMessage : IPageContentUpdatedMessage
     {

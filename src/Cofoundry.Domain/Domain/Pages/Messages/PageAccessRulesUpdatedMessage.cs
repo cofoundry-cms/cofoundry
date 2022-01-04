@@ -2,7 +2,7 @@
 {
     /// <summary>
     /// Message published when access rules have been updated on a 
-    /// page, including any additions, deletions or updates
+    /// page, including any additions, deletions or updates.
     /// </summary>
     public class PageAccessRulesUpdatedMessage
     {

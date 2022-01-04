@@ -1,4 +1,5 @@
-﻿using Cofoundry.Core.Validation;
+﻿using Cofoundry.Core.MessageAggregator;
+using Cofoundry.Core.Validation;
 using Cofoundry.Domain.CQS;
 using Cofoundry.Domain.Data;
 using Cofoundry.Domain.Data.Internal;
@@ -13,25 +14,28 @@ namespace Cofoundry.Domain.Internal
         private const string EMAIL_PROPERTY = "Email";
         private const string USERNAME_PROPERTY = "Username";
 
+        private readonly IQueryExecutor _queryExecutor;
         private readonly IUserAreaDefinitionRepository _userAreaRepository;
         private readonly IUserDataFormatter _userDataFormatter;
         private readonly IUserStoredProcedures _userStoredProcedures;
-        private readonly IQueryExecutor _queryExecutor;
+        private readonly IMessageAggregator _messageAggregator;
 
         public UserUpdateCommandHelper(
+            IQueryExecutor queryExecutor,
             IUserAreaDefinitionRepository userAreaRepository,
             IUserDataFormatter userDataFormatter,
             IUserStoredProcedures userStoredProcedures,
-            IQueryExecutor queryExecutor
+            IMessageAggregator messageAggregator
             )
         {
+            _queryExecutor = queryExecutor;
             _userAreaRepository = userAreaRepository;
             _userDataFormatter = userDataFormatter;
             _userStoredProcedures = userStoredProcedures;
-            _queryExecutor = queryExecutor;
+            _messageAggregator = messageAggregator;
         }
 
-        public async Task UpdateEmailAndUsernameAsync(
+        public async Task<UpdateEmailAndUsernameResult> UpdateEmailAndUsernameAsync(
             string email, 
             string username, 
             User user, 
@@ -47,8 +51,8 @@ namespace Cofoundry.Domain.Internal
                 throw new ArgumentException("user parameter must have a user area set.", nameof(user));
             }
             var userArea = _userAreaRepository.GetRequiredByCode(userAreaCode);
-            
-            await UpdateEmailAsync(userArea, email, username, user, executionContext);
+
+            var result = await UpdateEmailAsync(userArea, email, username, user, executionContext);
 
             if (!userArea.UseEmailAsUsername)
             {
@@ -58,11 +62,40 @@ namespace Cofoundry.Domain.Internal
                 }
 
                 var usernameFormatResult = _userDataFormatter.FormatUsername(userArea, username);
-                await UpdateUsernameAsync(userArea, usernameFormatResult, user, executionContext);
+                result.HasUsernameChanged = await UpdateUsernameAsync(userArea, usernameFormatResult, user, executionContext);
+            }
+
+            return result;
+        }
+
+        public async Task PublishUpdateMessagesAsync(User user, UpdateEmailAndUsernameResult updateResult)
+        {
+            await _messageAggregator.PublishAsync(new UserUpdatedMessage()
+            {
+                UserAreaCode = user.UserAreaCode,
+                UserId = user.UserId
+            });
+
+            if (updateResult.HasEmailChanged)
+            {
+                await _messageAggregator.PublishAsync(new UserEmailUpdatedMessage()
+                {
+                    UserAreaCode = user.UserAreaCode,
+                    UserId = user.UserId
+                });
+            }
+
+            if (updateResult.HasUsernameChanged)
+            {
+                await _messageAggregator.PublishAsync(new UserUsernameUpdatedMessage()
+                {
+                    UserAreaCode = user.UserAreaCode,
+                    UserId = user.UserId
+                });
             }
         }
 
-        private async Task UpdateEmailAsync(
+        private async Task<UpdateEmailAndUsernameResult> UpdateEmailAsync(
             IUserAreaDefinition userArea,
             string email,
             string username,
@@ -78,19 +111,26 @@ namespace Cofoundry.Domain.Internal
                 throw ValidationErrorException.CreateWithProperties("Username field should be empty becuase the specified user area uses the email as the username.", USERNAME_PROPERTY);
             }
 
+            var result = new UpdateEmailAndUsernameResult();
             var isEmailDefined = !string.IsNullOrWhiteSpace(email);
+
             if (!isEmailDefined && (userArea.UseEmailAsUsername || userArea.AllowPasswordLogin))
             {
                 throw ValidationErrorException.CreateWithProperties("Email field is required.", EMAIL_PROPERTY);
             }
-            else if (!isEmailDefined)
+            else if (!isEmailDefined && !string.IsNullOrWhiteSpace(user.Email))
             {
                 user.Email = null;
                 user.UniqueEmail = null;
                 user.EmailDomainId = null;
                 user.IsEmailConfirmed = false;
 
-                return;
+                result.HasEmailChanged = true;
+                return result;
+            }
+            else if (!isEmailDefined)
+            {
+                return result;
             }
 
             var emailFormatResult = _userDataFormatter.FormatEmailAddress(userArea, email);
@@ -99,8 +139,8 @@ namespace Cofoundry.Domain.Internal
                 throw ValidationErrorException.CreateWithProperties("Email is in an invalid format.", EMAIL_PROPERTY);
             }
 
-            var hasEmailChanged = user.Email != emailFormatResult.NormalizedEmailAddress || user.UniqueEmail != emailFormatResult.UniqueEmailAddress;
-            if (!hasEmailChanged) return;
+            result.HasEmailChanged = user.Email != emailFormatResult.NormalizedEmailAddress || user.UniqueEmail != emailFormatResult.UniqueEmailAddress;
+            if (!result.HasEmailChanged) return result;
 
             await ValidateNewEmailAsync(userArea, emailFormatResult, user, executionContext);
 
@@ -118,11 +158,13 @@ namespace Cofoundry.Domain.Internal
                     throw ValidationErrorException.CreateWithProperties("Email is invalid as a username.", EMAIL_PROPERTY);
                 }
 
-                await UpdateUsernameAsync(userArea, usernameFormatterResult, user, executionContext);
+                result.HasUsernameChanged = await UpdateUsernameAsync(userArea, usernameFormatterResult, user, executionContext);
             }
+
+            return result;
         }
 
-        private async Task UpdateUsernameAsync(
+        private async Task<bool> UpdateUsernameAsync(
             IUserAreaDefinition userArea,
             UsernameFormattingResult username,
             User user,
@@ -132,13 +174,15 @@ namespace Cofoundry.Domain.Internal
             if (user.Username == username.NormalizedUsername 
                 && user.UniqueUsername == username.UniqueUsername)
             {
-                return;
+                return false;
             }
 
             await ValidateNewUsernameAsync(userArea, username, user, executionContext);
 
             user.Username = username.NormalizedUsername;
             user.UniqueUsername = username.UniqueUsername;
+
+            return true;
         }
 
         private async Task ValidateNewEmailAsync(
@@ -209,6 +253,13 @@ namespace Cofoundry.Domain.Internal
                 );
 
             return emailDomainId;
+        }
+
+        public class UpdateEmailAndUsernameResult
+        {
+            public bool HasEmailChanged { get; set; }
+
+            public bool HasUsernameChanged { get; set; }
         }
     }
 }

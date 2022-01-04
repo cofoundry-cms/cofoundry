@@ -1,11 +1,9 @@
-﻿using Microsoft.AspNetCore.Http;
-
-namespace Cofoundry.Domain
+﻿namespace Cofoundry.Domain
 {
     /// <summary>
-    /// Message published when properties that affect the url 
+    /// Message published when properties that affect the URL 
     /// of a page has changed (e.g. PageDirectoryId, UrlSlug, 
-    /// LocaleId etc). This message is not triggered if the url
+    /// LocaleId etc). This message is not triggered if the URL
     /// indirectly changes e.g. if a parent directory changes.
     /// </summary>
     public class PageUrlChangedMessage : IPageContentUpdatedMessage

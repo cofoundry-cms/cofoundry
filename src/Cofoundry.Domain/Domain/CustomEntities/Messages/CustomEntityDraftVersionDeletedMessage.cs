@@ -1,13 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Cofoundry.Domain
+﻿namespace Cofoundry.Domain
 {
     /// <summary>
-    /// Message published when a custom entity draft version is deleted
+    /// Message published when a custom entity draft version is deleted.
     /// </summary>
     public class CustomEntityDraftVersionDeletedMessage : ICustomEntityContentUpdatedMessage
     {

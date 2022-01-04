@@ -360,20 +360,135 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Commands
                 .ThrowAsync<EntityNotFoundException>();
         }
 
-        private UpdateUserCommand MapUpdateCommand(AddUserCommand command)
+        [Fact]
+        public async Task WhenNameUpdated_SendsMessage()
         {
-            return new UpdateUserCommand()
+            var uniqueData = UNIQUE_PREFIX + "NameUpd_SM";
+
+            using var app = _appFactory.Create();
+            var contentRepository = app.Services.GetContentRepositoryWithElevatedPermissions();
+            var addCommand = app.TestData.Users().CreateAddCommand(uniqueData);
+
+            var userId = await contentRepository
+                .Users()
+                .AddAsync(addCommand);
+
+            var updateCommand = MapUpdateCommand(addCommand);
+            updateCommand.FirstName = uniqueData + "_X";
+
+            await contentRepository
+                .Users()
+                .UpdateAsync(updateCommand);
+
+            using (new AssertionScope())
             {
-                Email = command.Email,
-                FirstName = command.FirstName,
-                IsEmailConfirmed = false,
-                LastName = command.LastName,
-                RequirePasswordChange = command.RequirePasswordChange,
-                RoleId = command.RoleId,
-                RoleCode = command.RoleCode,
-                UserId = command.OutputUserId,
-                Username = command.Username
-            };
+                app.Mocks
+                    .CountMessagesPublished<UserUpdatedMessage>(m => m.UserId == addCommand.OutputUserId && m.UserAreaCode == addCommand.UserAreaCode)
+                    .Should().Be(1);
+
+                app.Mocks
+                    .CountMessagesPublished<UserUsernameUpdatedMessage>()
+                    .Should().Be(0);
+
+                app.Mocks
+                    .CountMessagesPublished<UserEmailUpdatedMessage>()
+                    .Should().Be(0);
+            }
         }
-    }
+
+        [Fact]
+        public async Task WhenEmailUpdated_SendsMessage()
+        {
+            var uniqueData = UNIQUE_PREFIX + "EmailUpd_SM";
+
+            using var app = _appFactory.Create();
+            var contentRepository = app.Services.GetContentRepositoryWithElevatedPermissions();
+            var addCommand = app.TestData.Users().CreateAddCommand(uniqueData);
+
+            var userId = await contentRepository
+                .Users()
+                .AddAsync(addCommand);
+
+            var updateCommand = MapUpdateCommand(addCommand);
+            updateCommand.Email = "x." + addCommand.Email;
+
+            await contentRepository
+                .Users()
+                .UpdateAsync(updateCommand);
+
+            using (new AssertionScope())
+            {
+                app.Mocks
+                    .CountMessagesPublished<UserUpdatedMessage>(m => m.UserId == addCommand.OutputUserId && m.UserAreaCode == addCommand.UserAreaCode)
+                    .Should().Be(1);
+
+                app.Mocks
+                    .CountMessagesPublished<UserEmailUpdatedMessage>(m => m.UserId == addCommand.OutputUserId && m.UserAreaCode == addCommand.UserAreaCode)
+                    .Should().Be(1);
+
+                app.Mocks
+                    .CountMessagesPublished<UserUsernameUpdatedMessage>(m => m.UserId == addCommand.OutputUserId && m.UserAreaCode == addCommand.UserAreaCode)
+                    .Should().Be(1);
+            }
+        }
+
+        [Fact]
+        public async Task WhenUsernameUpdated_SendsMessage()
+        {
+            var uniqueData = UNIQUE_PREFIX + "UsernameUpd_SM";
+
+            using var app = _appFactory.Create();
+            var contentRepository = app.Services.GetContentRepositoryWithElevatedPermissions();
+            var userAreaCode = UserAreaWithoutPasswordLogin.Code;
+            var roleId = await app.TestData.Roles().AddAsync(uniqueData, userAreaCode);
+            var addCommand = new AddUserCommand()
+            {
+                Username = uniqueData,
+                RoleId = roleId,
+                UserAreaCode = userAreaCode
+            };
+
+            var userId = await contentRepository
+                .Users()
+                .AddAsync(addCommand);
+
+            var updateCommand = MapUpdateCommand(addCommand);
+            updateCommand.Username = uniqueData + "_X";
+
+            await contentRepository
+                .Users()
+                .UpdateAsync(updateCommand);
+
+            using (new AssertionScope())
+            {
+                app.Mocks
+                    .CountMessagesPublished<UserUpdatedMessage>(m => m.UserId == addCommand.OutputUserId && m.UserAreaCode == addCommand.UserAreaCode)
+                    .Should().Be(1);
+
+                app.Mocks
+                    .CountMessagesPublished<UserEmailUpdatedMessage>(m => m.UserId == addCommand.OutputUserId && m.UserAreaCode == addCommand.UserAreaCode)
+                    .Should().Be(0);
+
+                app.Mocks
+                    .CountMessagesPublished<UserUsernameUpdatedMessage>(m => m.UserId == addCommand.OutputUserId && m.UserAreaCode == addCommand.UserAreaCode)
+                    .Should().Be(1);
+            }
+        }
+
+        private UpdateUserCommand MapUpdateCommand(AddUserCommand command)
+            {
+                return new UpdateUserCommand()
+                {
+                    Email = command.Email,
+                    FirstName = command.FirstName,
+                    IsEmailConfirmed = false,
+                    LastName = command.LastName,
+                    RequirePasswordChange = command.RequirePasswordChange,
+                    RoleId = command.RoleId,
+                    RoleCode = command.RoleCode,
+                    UserId = command.OutputUserId,
+                    Username = command.Username
+                };
+            }
+        }
 }
