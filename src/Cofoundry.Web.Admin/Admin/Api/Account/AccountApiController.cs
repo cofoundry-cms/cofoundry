@@ -25,20 +25,14 @@ namespace Cofoundry.Web.Admin
             _userContextService = userContextService;
         }
 
-        #region queries
-
         public async Task<JsonResult> Get()
         {
-            var query = new GetCurrentUserAccountDetailsQuery();
+            var query = new GetCurrentUserDetailsQuery();
 
             var results = await _queryExecutor.ExecuteAsync(query);
             return _apiResponseHelper.SimpleQueryResponse(results);
         }
         
-        #endregion
-
-        #region commands
-
         public async Task<JsonResult> Patch([FromBody] IDelta<UpdateCurrentUserAccountCommand> delta)
         {
             var userContext = await _userContextService.GetCurrentContextAsync();
@@ -57,7 +51,5 @@ namespace Cofoundry.Web.Admin
 
             return _apiResponseHelper.RunCommandAsync(command);
         }
-
-        #endregion
     }
 }

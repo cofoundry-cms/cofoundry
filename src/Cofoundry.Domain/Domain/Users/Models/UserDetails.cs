@@ -12,7 +12,7 @@ namespace Cofoundry.Domain
     /// user or could belong to a custom user area. Users cannot belong to 
     /// more than one user area.
     /// </summary>
-    public class UserDetails : UserMicroSummary
+    public class UserDetails : UserMicroSummary, ICreateAudited
     {
         /// <summary>
         /// Each user must be assigned to a role which provides

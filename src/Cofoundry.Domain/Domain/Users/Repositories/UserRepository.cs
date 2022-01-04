@@ -127,16 +127,6 @@ namespace Cofoundry.Domain
             return _queryExecutor.ExecuteAsync(new GetCurrentUserDetailsQuery(), executionContext);
         }
 
-        /// <summary>
-        /// Gets a UserAccountDetails object representing the currently logged in 
-        /// user. If the user is not logged in then null is returned.
-        /// </summary>
-        /// <param name="executionContext">Optional execution context to use when executing the query. Useful if you need to temporarily elevate your permission level.</param>
-        public Task<UserAccountDetails> GetCurrentUserAccountDetailsAsync(IExecutionContext executionContext = null)
-        {
-            return _queryExecutor.ExecuteAsync(new GetCurrentUserAccountDetailsQuery(), executionContext);
-        }
-
         #endregion
 
         #region searches

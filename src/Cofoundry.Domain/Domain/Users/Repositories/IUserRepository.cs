@@ -84,13 +84,6 @@ namespace Cofoundry.Domain
         /// <param name="executionContext">Optional execution context to use when executing the query. Useful if you need to temporarily elevate your permission level.</param>
         Task<UserDetails> GetCurrentUserDetailsAsync(IExecutionContext executionContext = null);
 
-        /// <summary>
-        /// Gets a UserAccountDetails object representing the currently logged in 
-        /// user. If the user is not logged in then null is returned.
-        /// </summary>
-        /// <param name="executionContext">Optional execution context to use when executing the query. Useful if you need to temporarily elevate your permission level.</param>
-        Task<UserAccountDetails> GetCurrentUserAccountDetailsAsync(IExecutionContext executionContext = null);
-
         #endregion
 
         #region searches
