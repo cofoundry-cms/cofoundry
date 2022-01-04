@@ -6,12 +6,6 @@
     public interface IContentRepositoryUserRepository
     {
         /// <summary>
-        /// Retrieve the currently logged in user. If there are multiple users then 
-        /// this only applies to the user area set as the ambient auth scheme.
-        /// </summary>
-        IContentRepositoryCurrentUserQueryBuilder GetCurrent();
-
-        /// <summary>
         /// Retrieve a user by a unique database id.
         /// </summary>
         /// <param name="userId">UserId of the user to get.</param>
@@ -48,5 +42,10 @@
         /// Search for users, returning paged lists of data.
         /// </summary>
         IContentRepositoryUserSearchQueryBuilder Search();
+
+        /// <summary>
+        /// Queries relating to the currently logged in user.
+        /// </summary>
+        IContentRepositoryCurrentUserRepository Current();
     }
 }

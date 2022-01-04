@@ -8,13 +8,6 @@ namespace Cofoundry.Domain
     public interface IAdvancedContentRepositoryUserRepository
     {
         /// <summary>
-        /// Retrieve the currently logged in user. If
-        /// there are multiple users then this only applies to the
-        /// UserArea set as the default schema.
-        /// </summary>
-        IContentRepositoryCurrentUserQueryBuilder GetCurrent();
-
-        /// <summary>
         /// Retrieve a user by a unique database id.
         /// </summary>
         /// <param name="userId">UserId of the user to get.</param>
@@ -81,23 +74,15 @@ namespace Cofoundry.Domain
         Task ResetPasswordAsync(int userId);
 
         /// <summary>
-        /// Updates the user account of the currently logged in user.
-        /// </summary>
-        /// <param name="command">Command parameters.</param>
-        Task UpdateCurrentUserAccountAsync(UpdateCurrentUserAccountCommand command);
-
-        /// <summary>
-        /// Updates the password of the currently logged in user, using the
-        /// OldPassword field to authenticate the request.
-        /// </summary>
-        /// <param name="command">Command parameters.</param>
-        Task UpdateCurrentUserPasswordAsync(UpdateCurrentUserPasswordCommand command);
-
-        /// <summary>
         /// Users can initiate self-service password reset requests that
         /// are verified by sending a message with a unique link, typically 
         /// via email.
         /// </summary>
         IAdvancedContentRepositoryUserPasswordResetRequestsRepository PasswordResetRequests();
+
+        /// <summary>
+        /// Queries and commands relating to the currently logged in user.
+        /// </summary>
+        IAdvancedContentRepositoryCurrentUserRepository Current();
     }
 }

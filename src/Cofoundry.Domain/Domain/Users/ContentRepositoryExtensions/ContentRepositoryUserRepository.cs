@@ -1,11 +1,9 @@
 ﻿using Cofoundry.Domain.Extendable;
-using System.Threading.Tasks;
 
 namespace Cofoundry.Domain.Internal
 {
     public class ContentRepositoryUserRepository
             : IContentRepositoryUserRepository
-            , IAdvancedContentRepositoryUserRepository
             , IExtendableContentRepositoryPart
     {
         public ContentRepositoryUserRepository(
@@ -16,11 +14,6 @@ namespace Cofoundry.Domain.Internal
         }
 
         public IExtendableContentRepository ExtendableContentRepository { get; }
-
-        public IContentRepositoryCurrentUserQueryBuilder GetCurrent()
-        {
-            return new ContentRepositoryCurrentUserQueryBuilder(ExtendableContentRepository);
-        }
 
         public IContentRepositoryUserByIdQueryBuilder GetById(int userId)
         {
@@ -42,59 +35,9 @@ namespace Cofoundry.Domain.Internal
             return new ContentRepositoryUserSearchQueryBuilder(ExtendableContentRepository);
         }
 
-        public IDomainRepositoryQueryContext<bool> IsUsernameUnique(IsUsernameUniqueQuery query)
+        public IContentRepositoryCurrentUserRepository Current()
         {
-            return DomainRepositoryQueryContextFactory.Create(query, ExtendableContentRepository);
-        }
-
-        public IDomainRepositoryQueryContext<bool> IsEmailUnique(IsEmailUniqueQuery query)
-        {
-            return DomainRepositoryQueryContextFactory.Create(query, ExtendableContentRepository);
-        }
-
-        public async Task<int> AddAsync(AddUserCommand command)
-        {
-            await ExtendableContentRepository.ExecuteCommandAsync(command);
-            return command.OutputUserId;
-        }
-
-        public async Task<int> AddWithTemporaryPasswordAsync(AddUserWithTemporaryPasswordCommand command)
-        {
-            await ExtendableContentRepository.ExecuteCommandAsync(command);
-            return command.OutputUserId;
-        }
-
-        public Task UpdateAsync(UpdateUserCommand command)
-        {
-            return ExtendableContentRepository.ExecuteCommandAsync(command);
-        }
-
-        public Task DeleteAsync(int userId)
-        {
-            return ExtendableContentRepository.ExecuteCommandAsync(new DeleteUserCommand(userId));
-        }
-
-        public Task UpdateCurrentUserAccountAsync(UpdateCurrentUserAccountCommand command)
-        {
-            return ExtendableContentRepository.ExecuteCommandAsync(command);
-        }
-
-        public Task UpdateCurrentUserPasswordAsync(UpdateCurrentUserPasswordCommand command)
-        {
-            return ExtendableContentRepository.ExecuteCommandAsync(command);
-        }
-
-        public Task ResetPasswordAsync(int userId)
-        {
-            return ExtendableContentRepository.ExecuteCommandAsync(new ResetUserPasswordCommand()
-            {
-                UserId = userId
-            });
-        }
-
-        public IAdvancedContentRepositoryUserPasswordResetRequestsRepository PasswordResetRequests()
-        {
-            return new ContentRepositoryUserPasswordResetRequestsRepository(ExtendableContentRepository);
+            return new ContentRepositoryCurrentUserRepository(ExtendableContentRepository);
         }
     }
 }

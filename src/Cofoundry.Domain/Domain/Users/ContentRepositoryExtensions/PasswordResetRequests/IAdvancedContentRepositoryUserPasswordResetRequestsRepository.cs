@@ -3,7 +3,7 @@
 namespace Cofoundry.Domain
 {
     /// <summary>
-    /// Queries and commands for page access rules.
+    /// Queries and commands for self-service password reset requests.
     /// </summary>
     public interface IAdvancedContentRepositoryUserPasswordResetRequestsRepository
     {

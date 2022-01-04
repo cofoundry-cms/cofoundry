@@ -62,7 +62,8 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Commands
 
             await contentRepository
                 .Users()
-                .UpdateCurrentUserAccountAsync(updateCommand);
+                .Current()
+                .UpdateAsync(updateCommand);
 
             var user = await dbContext
                 .Users
@@ -112,7 +113,8 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Commands
 
             await contentRepository
                 .Users()
-                .UpdateCurrentUserAccountAsync(updateCommand);
+                .Current()
+                .UpdateAsync(updateCommand);
 
             var user = await dbContext
                 .Users
@@ -173,7 +175,8 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Commands
 
             await contentRepository
                 .Users()
-                .UpdateCurrentUserAccountAsync(updateCommand);
+                .Current()
+                .UpdateAsync(updateCommand);
 
             var user = await dbContext
                 .Users
@@ -220,7 +223,8 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Commands
 
             await contentRepository
                 .Users()
-                .UpdateCurrentUserAccountAsync(new UpdateCurrentUserAccountCommand()
+                .Current()
+                .UpdateAsync(new UpdateCurrentUserAccountCommand()
                 {
                     Username = addCommand.Username
                 });
@@ -282,7 +286,7 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Commands
             await loginService.LogAuthenticatedUserInAsync(userArea.UserAreaCode, userId, true);
 
             await contentRepository
-                .Awaiting(r => r.Users().UpdateCurrentUserAccountAsync(updateCommand))
+                .Awaiting(r => r.Users().Current().UpdateAsync(updateCommand))
                 .Should()
                 .ThrowAsync<ValidationErrorException>()
                 .WithMemberNames(nameof(updateCommand.Email))
@@ -332,7 +336,7 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Commands
             await loginService.LogAuthenticatedUserInAsync(userAreaCode, userId, true);
 
             await contentRepository
-                .Awaiting(r => r.Users().UpdateCurrentUserAccountAsync(updateCommand))
+                .Awaiting(r => r.Users().Current().UpdateAsync(updateCommand))
                 .Should()
                 .ThrowAsync<ValidationErrorException>()
                 .WithMemberNames(nameof(updateCommand.Email))
@@ -346,7 +350,7 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Commands
             var contentRepository = app.Services.GetContentRepository();
 
             await contentRepository
-                .Awaiting(r => r.WithElevatedPermissions().Users().UpdateCurrentUserAccountAsync(new UpdateCurrentUserAccountCommand()))
+                .Awaiting(r => r.WithElevatedPermissions().Users().Current().UpdateAsync(new UpdateCurrentUserAccountCommand()))
                 .Should()
                 .ThrowAsync<EntityNotFoundException>();
         }
@@ -377,7 +381,8 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Commands
 
             await contentRepository
                 .Users()
-                .UpdateCurrentUserAccountAsync(updateCommand);
+                .Current()
+                .UpdateAsync(updateCommand);
 
             using (new AssertionScope())
             {
@@ -421,7 +426,8 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Commands
 
             await contentRepository
                 .Users()
-                .UpdateCurrentUserAccountAsync(updateCommand);
+                .Current()
+                .UpdateAsync(updateCommand);
 
             using (new AssertionScope())
             {
@@ -472,7 +478,8 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Commands
 
             await contentRepository
                 .Users()
-                .UpdateCurrentUserAccountAsync(updateCommand);
+                .Current()
+                .UpdateAsync(updateCommand);
 
             using (new AssertionScope())
             {

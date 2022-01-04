@@ -31,7 +31,8 @@ namespace Cofoundry.Samples.SPASite.Domain
 
             var user = await _contentRepository
                 .Users()
-                .GetCurrent()
+                .Current()
+                .Get()
                 .AsMicroSummary()
                 .ExecuteAsync();
 

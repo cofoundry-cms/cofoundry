@@ -22,7 +22,7 @@ namespace Cofoundry.Domain
         /// </summary>
         public static IAdvancedContentRepositoryUserRepository Users(this IAdvancedContentRepository contentRepository)
         {
-            return new ContentRepositoryUserRepository(contentRepository.AsExtendableContentRepository());
+            return new AdvancedContentRepositoryUserRepository(contentRepository.AsExtendableContentRepository());
         }
     }
 }
