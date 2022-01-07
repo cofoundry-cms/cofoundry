@@ -14,25 +14,28 @@ namespace Cofoundry.Domain.Internal
         private const string EMAIL_PROPERTY = "Email";
         private const string USERNAME_PROPERTY = "Username";
 
-        private readonly IQueryExecutor _queryExecutor;
         private readonly IUserAreaDefinitionRepository _userAreaRepository;
         private readonly IUserDataFormatter _userDataFormatter;
         private readonly IUserStoredProcedures _userStoredProcedures;
         private readonly IMessageAggregator _messageAggregator;
+        private readonly IEmailAddressValidator _emailAddressValidator;
+        private readonly IUsernameValidator _usernameValidator;
 
         public UserUpdateCommandHelper(
-            IQueryExecutor queryExecutor,
             IUserAreaDefinitionRepository userAreaRepository,
             IUserDataFormatter userDataFormatter,
             IUserStoredProcedures userStoredProcedures,
-            IMessageAggregator messageAggregator
+            IMessageAggregator messageAggregator,
+            IEmailAddressValidator emailAddressValidator,
+            IUsernameValidator usernameValidator
             )
         {
-            _queryExecutor = queryExecutor;
             _userAreaRepository = userAreaRepository;
             _userDataFormatter = userDataFormatter;
             _userStoredProcedures = userStoredProcedures;
             _messageAggregator = messageAggregator;
+            _emailAddressValidator = emailAddressValidator;
+            _usernameValidator = usernameValidator;
         }
 
         public async Task<UpdateEmailAndUsernameResult> UpdateEmailAndUsernameAsync(
@@ -192,21 +195,20 @@ namespace Cofoundry.Domain.Internal
             IExecutionContext executionContext
             )
         {
-            var query = new IsEmailUniqueQuery()
+            var context = new EmailAddressValidationContext()
             {
-                Email = emailAddress.UniqueEmailAddress,
+                Email = emailAddress,
+                ExecutionContext = executionContext,
+                PropertyName = EMAIL_PROPERTY,
                 UserAreaCode = userArea.UserAreaCode
             };
 
             if (user.UserId > 0)
             {
-                query.UserId = user.UserId;
+                context.UserId = user.UserId;
             }
 
-            if (!await _queryExecutor.ExecuteAsync(query, executionContext))
-            {
-                throw ValidationErrorException.CreateWithProperties("This email is already registered", EMAIL_PROPERTY);
-            }
+            await _emailAddressValidator.ValidateAsync(context);
         }
 
         private async Task ValidateNewUsernameAsync(
@@ -216,30 +218,20 @@ namespace Cofoundry.Domain.Internal
             IExecutionContext executionContext
             )
         {
-            var errorProperty = userArea.UseEmailAsUsername ? EMAIL_PROPERTY : USERNAME_PROPERTY;
-
-            if (username == null)
+            var context = new UsernameValidationContext()
             {
-                // This should rarely happen, only if the username contains only characters 
-                // stripped out through a custom normalization process
-                throw ValidationErrorException.CreateWithProperties("Username is in an invalid format.", errorProperty);
-            }
-
-            var query = new IsUsernameUniqueQuery()
-            {
-                Username = username.UniqueUsername,
+                Username = username,
+                ExecutionContext = executionContext,
+                PropertyName = userArea.UseEmailAsUsername ? EMAIL_PROPERTY : USERNAME_PROPERTY,
                 UserAreaCode = userArea.UserAreaCode
             };
 
             if (user.UserId > 0)
             {
-                query.UserId = user.UserId;
+                context.UserId = user.UserId;
             }
 
-            if (!await _queryExecutor.ExecuteAsync(query, executionContext))
-            {
-                throw ValidationErrorException.CreateWithProperties("This username is already registered", errorProperty);
-            }
+            await _usernameValidator.ValidateAsync(context);
         }
 
         private async Task<int?> GetEmailDomainIdAsync(EmailAddressFormattingResult emailAddress, IExecutionContext executionContext)

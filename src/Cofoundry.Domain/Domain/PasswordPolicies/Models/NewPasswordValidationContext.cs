@@ -1,4 +1,5 @@
-﻿using Cofoundry.Domain.Data;
+﻿using Cofoundry.Domain.CQS;
+using Cofoundry.Domain.Data;
 
 namespace Cofoundry.Domain.Internal
 {
@@ -18,6 +19,8 @@ namespace Cofoundry.Domain.Internal
         public string Username { get; set; }
 
         public string Email { get; set; }
+
+        public IExecutionContext ExecutionContext { get; set; }
 
         public static NewPasswordValidationContext MapFromUser(User user)
         {

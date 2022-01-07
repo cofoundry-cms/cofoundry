@@ -3,11 +3,9 @@ using Cofoundry.Domain.Internal;
 using Microsoft.AspNetCore.Identity;
 using Moq;
 using System;
-using System.Collections.Generic;
-using System.Text;
 using Xunit;
 
-namespace Cofoundry.Domain.Tests
+namespace Cofoundry.Domain.Tests.Users.Helpers
 {
     public class UserAuthenticationHelperTests
     {

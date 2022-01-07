@@ -34,8 +34,6 @@ namespace Cofoundry.Domain
         /// notification can be sent.
         /// </summary>
         [Required]
-        [StringLength(150)]
-        [EmailAddress(ErrorMessage = "Please use a valid email address")]
         [DataType(DataType.EmailAddress)]
         public string Email { get; set; }
 
@@ -44,7 +42,6 @@ namespace Cofoundry.Domain
         /// set to <see langword="false"/>, otherwise it should be empty and the <see cref="Email"/> will be used 
         /// as the username instead.
         /// </summary>
-        [StringLength(150)]
         public string Username { get; set; }
 
         /// <summary>

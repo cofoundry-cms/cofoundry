@@ -26,12 +26,29 @@ namespace Cofoundry.Domain
         IDomainRepositoryQueryContext<bool> IsUsernameUnique(IsUsernameUniqueQuery query);
 
         /// <summary>
+        /// Validates a username, returning any errors found. By default the validator checks that 
+        /// the format contains only the characters permitted by the <see cref="UsernameOptions"/> 
+        /// configuration settings, as well as checking for uniquness.
+        /// </summary>
+        /// <param name="query">Query parameters.</param>
+        IDomainRepositoryQueryContext<ValidationQueryResult> ValidateUsername(ValidateUsernameQuery query);
+
+        /// <summary>
         /// Determines if an email address is unique within a user area. Email
         /// addresses must be unique per user area and can therefore appear in multiple
         /// user areas.
         /// </summary>
         /// <param name="query">Query parameters.</param>
-        IDomainRepositoryQueryContext<bool> IsEmailUnique(IsEmailUniqueQuery query);
+        IDomainRepositoryQueryContext<bool> IsEmailAddressUnique(IsUserEmailAddressUniqueQuery query);
+
+        /// <summary>
+        /// Validates a user email address, returning any errors found. By default the validator
+        /// checks that the format contains only the characters permitted by the 
+        /// <see cref="EmailAddressOptions"/> configuration settings, as well as checking
+        /// for uniqueness if necessary.
+        /// </summary>
+        /// <param name="query">Query parameters.</param>
+        IDomainRepositoryQueryContext<ValidationQueryResult> ValidateEmailAddress(ValidateUserEmailAddressQuery query);
 
         /// <summary>
         /// A basic user creation command that adds data only and does not 

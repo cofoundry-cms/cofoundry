@@ -18,8 +18,6 @@ namespace Cofoundry.Domain
         public string LastName { get; set; }
 
         [Required]
-        [StringLength(150)]
-        [EmailAddress(ErrorMessage = "Please use a valid email address")]
         [DataType(DataType.EmailAddress)]
         public string Email { get; set; }
 

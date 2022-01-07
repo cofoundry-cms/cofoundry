@@ -12,14 +12,14 @@ namespace Cofoundry.Domain.Internal
     /// addresses must be unique per user area and can therefore appear in multiple
     /// user areas.
     /// </summary>
-    public class IsEmailUniqueQueryHandler
-        : IQueryHandler<IsEmailUniqueQuery, bool>
-        , IPermissionRestrictedQueryHandler<IsEmailUniqueQuery, bool>
+    public class IsUserEmailAddressUniqueQueryHandler
+        : IQueryHandler<IsUserEmailAddressUniqueQuery, bool>
+        , IPermissionRestrictedQueryHandler<IsUserEmailAddressUniqueQuery, bool>
     {
         private readonly CofoundryDbContext _dbContext;
         private readonly IUserDataFormatter _userDataFormatter;
 
-        public IsEmailUniqueQueryHandler(
+        public IsUserEmailAddressUniqueQueryHandler(
             CofoundryDbContext dbContext,
             IUserDataFormatter userDataFormatter
             )
@@ -28,7 +28,7 @@ namespace Cofoundry.Domain.Internal
             _userDataFormatter = userDataFormatter;
         }
 
-        public async Task<bool> ExecuteAsync(IsEmailUniqueQuery query, IExecutionContext executionContext)
+        public async Task<bool> ExecuteAsync(IsUserEmailAddressUniqueQuery query, IExecutionContext executionContext)
         {
             var uniqueEmailAddress = _userDataFormatter.UniquifyEmail(query.UserAreaCode, query.Email);
             if (string.IsNullOrWhiteSpace(uniqueEmailAddress)) return true;
@@ -44,7 +44,7 @@ namespace Cofoundry.Domain.Internal
             return !exists;
         }
 
-        public IEnumerable<IPermissionApplication> GetPermissions(IsEmailUniqueQuery query)
+        public IEnumerable<IPermissionApplication> GetPermissions(IsUserEmailAddressUniqueQuery query)
         {
             if (query.UserAreaCode == CofoundryAdminUserArea.AreaCode)
             {

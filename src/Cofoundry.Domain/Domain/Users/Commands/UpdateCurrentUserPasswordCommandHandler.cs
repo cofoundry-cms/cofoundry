@@ -62,7 +62,7 @@ namespace Cofoundry.Domain.Internal
 
             await ValidateMaxLoginAttemptsNotExceededAsync(user, executionContext);
             await AuthenticateAsync(command, user);
-            await ValidatePasswordAsync(command, user);
+            await ValidatePasswordAsync(command, user, executionContext);
 
             _passwordUpdateCommandHelper.UpdatePassword(command.NewPassword, user, executionContext);
 
@@ -95,7 +95,7 @@ namespace Cofoundry.Domain.Internal
             }
         }
 
-        private async Task ValidatePasswordAsync(UpdateCurrentUserPasswordCommand command, User user)
+        private async Task ValidatePasswordAsync(UpdateCurrentUserPasswordCommand command, User user, IExecutionContext executionContext)
         {
             var userArea = _userAreaRepository.GetRequiredByCode(user.UserAreaCode);
             _passwordUpdateCommandHelper.ValidateUserArea(userArea);
@@ -104,6 +104,7 @@ namespace Cofoundry.Domain.Internal
             context.CurrentPassword = command.OldPassword;
             context.Password = command.NewPassword;
             context.PropertyName = nameof(command.NewPassword);
+            context.ExecutionContext = executionContext;
 
             await _newPasswordValidationService.ValidateAsync(context);
         }

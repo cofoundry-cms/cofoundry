@@ -41,26 +41,18 @@ namespace Cofoundry.Domain
         [System.Text.Json.Serialization.JsonIgnore]
         public string Password { get; set; }
 
-        private string _email = null;
         /// <summary>
         /// The email address is required if the user area has <see cref="IUserAreaDefinition.UseEmailAsUsername"/> 
         /// set to <see langword="true"/> or <see cref="IUserAreaDefinition.AllowPasswordLogin"/>.
         /// </summary>
-        [StringLength(150)]
-        [EmailAddress(ErrorMessage = "Please use a valid email address")]
         [DataType(DataType.EmailAddress)]
-        public string Email 
-        { 
-            get { return _email; } 
-            set { _email = value == string.Empty ? null : value; } 
-        }
+        public string Email { get; set; }
 
         /// <summary>
         /// The username is required if the user area has <see cref="IUserAreaDefinition.UseEmailAsUsername"/> 
         /// set to <see langword="false"/>, otherwise it should be empty and the <see cref="Email"/> will be used 
         /// as the username instead.
         /// </summary>
-        [StringLength(150)]
         public string Username { get; set; }
 
         /// <summary>

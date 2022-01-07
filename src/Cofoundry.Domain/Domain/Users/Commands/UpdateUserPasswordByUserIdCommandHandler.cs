@@ -69,6 +69,7 @@ namespace Cofoundry.Domain.Internal
             var context = NewPasswordValidationContext.MapFromUser(user);
             context.Password = command.NewPassword;
             context.PropertyName = nameof(command.NewPassword);
+            context.ExecutionContext = executionContext;
 
             await _newPasswordValidationService.ValidateAsync(context);
         }

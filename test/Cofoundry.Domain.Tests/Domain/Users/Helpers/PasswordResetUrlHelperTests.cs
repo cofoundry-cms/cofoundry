@@ -1,11 +1,9 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.WebUtilities;
 using System;
-using System.Collections.Generic;
-using System.Text;
 using Xunit;
 
-namespace Cofoundry.Domain.Tests
+namespace Cofoundry.Domain.Tests.Users.Helpers
 {
     public class PasswordResetUrlHelperTests
     {

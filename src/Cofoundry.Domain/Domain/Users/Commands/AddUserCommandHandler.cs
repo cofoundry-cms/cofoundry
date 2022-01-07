@@ -68,7 +68,7 @@ namespace Cofoundry.Domain.Internal
             };
 
             await _userUpdateCommandHelper.UpdateEmailAndUsernameAsync(command.Email, command.Username, user, executionContext);
-            await ValidatePasswordAsync(userArea, user, command);
+            await ValidatePasswordAsync(userArea, user, command, executionContext);
             SetPassword(user, command, userArea);
 
             _dbContext.Users.Add(user);
@@ -105,7 +105,12 @@ namespace Cofoundry.Domain.Internal
             return dbUserArea;
         }
 
-        private async Task ValidatePasswordAsync(IUserAreaDefinition userArea, User user,AddUserCommand command)
+        private async Task ValidatePasswordAsync(
+            IUserAreaDefinition userArea, 
+            User user, 
+            AddUserCommand command,
+            IExecutionContext executionContext
+            )
         {
             var isPasswordEmpty = string.IsNullOrWhiteSpace(command.Password);
 
@@ -125,6 +130,7 @@ namespace Cofoundry.Domain.Internal
             var context = NewPasswordValidationContext.MapFromUser(user);
             context.Password = command.Password;
             context.PropertyName = nameof(command.Password);
+            context.ExecutionContext = executionContext;
 
             await _newPasswordValidationService.ValidateAsync(context);
         }

@@ -1,10 +1,6 @@
 ﻿using Cofoundry.Domain.Internal;
-using System;
-using System.Collections.Generic;
-using System.Text;
-using Xunit;
 
-namespace Cofoundry.Domain.Tests.Domain
+namespace Cofoundry.Domain.Tests.Users.Services
 {
     public class InMemoryUserSessionServiceTests : UserSessionServiceTests
     {

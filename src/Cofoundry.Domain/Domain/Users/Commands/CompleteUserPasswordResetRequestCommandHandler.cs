@@ -59,7 +59,7 @@ namespace Cofoundry.Domain.Internal
 
             var request = await GetUserPasswordResetRequestAsync(command);
 
-            await ValidatePasswordAsync(request, command);
+            await ValidatePasswordAsync(request, command, executionContext);
             UpdatePasswordAndSetComplete(request, command, executionContext);
 
             using (var scope = _domainRepository.Transactions().CreateScope())
@@ -131,7 +131,7 @@ namespace Cofoundry.Domain.Internal
             return request;
         }
 
-        private async Task ValidatePasswordAsync(UserPasswordResetRequest request, CompleteUserPasswordResetRequestCommand command)
+        private async Task ValidatePasswordAsync(UserPasswordResetRequest request, CompleteUserPasswordResetRequestCommand command, IExecutionContext executionContext)
         {
             var userArea = _userAreaDefinitionRepository.GetRequiredByCode(command.UserAreaCode);
             _passwordUpdateCommandHelper.ValidateUserArea(userArea);
@@ -139,6 +139,7 @@ namespace Cofoundry.Domain.Internal
             var context = NewPasswordValidationContext.MapFromUser(request.User);
             context.Password = command.NewPassword;
             context.PropertyName = nameof(command.NewPassword);
+            context.ExecutionContext = executionContext;
 
             await _newPasswordValidationService.ValidateAsync(context);
         }

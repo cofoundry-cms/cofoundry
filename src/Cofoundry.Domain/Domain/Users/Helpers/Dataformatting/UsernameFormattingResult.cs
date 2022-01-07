@@ -2,7 +2,7 @@
 {
     /// <summary>
     /// The result of a call to <see cref="IUserDataFormatter.FormatUsername"/>
-    /// which contains all the email address formats required to update the username 
+    /// which contains all the username formats required to update the username 
     /// on a <see cref="Data.User"/> record.
     /// </summary>
     public class UsernameFormattingResult

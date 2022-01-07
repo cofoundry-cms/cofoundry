@@ -1,6 +1,6 @@
 ﻿using Cofoundry.Domain;
 using Cofoundry.Domain.Internal;
-using Cofoundry.Domain.Tests;
+using Cofoundry.Domain.Tests.Users.Services;
 using Cofoundry.Web.Internal;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;

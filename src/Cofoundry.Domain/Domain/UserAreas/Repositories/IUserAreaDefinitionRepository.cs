@@ -43,6 +43,8 @@ namespace Cofoundry.Domain
         /// specified user area. Option configuration is layered starting with 
         /// defaults, then layering on global <see cref="IdentitySettings"/> and
         /// finally running <see cref="IUserAreaDefinition.ConfigureOptions"/>.
+        /// If the definition does not exist then an <see cref="EntityInvalidOperationException"/>
+        /// is thrown.
         /// </summary>
         /// <param name="userAreaCode">The unique 3 character code that identifies the user area definition.</param>
         /// <returns>A configured <see cref="UserAreaOptions"/> instance.</returns>

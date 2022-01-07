@@ -1,4 +1,5 @@
 ﻿using Cofoundry.Core.DependencyInjection;
+using Cofoundry.Domain.Extendable;
 using Cofoundry.Domain.Internal;
 
 namespace Cofoundry.Domain.Registration
@@ -24,6 +25,8 @@ namespace Cofoundry.Domain.Registration
                 .Register<IUserDataFormatter, UserDataFormatter>()
                 .Register<IUserUpdateCommandHelper, UserUpdateCommandHelper>()
                 .RegisterAllGenericImplementations(typeof(IEmailAddressNormalizer<>))
+                .Register<IEmailAddressValidator, EmailAddressValidator>()
+                .Register<IUsernameValidator, UsernameValidator>()
                 ;
         }
     }

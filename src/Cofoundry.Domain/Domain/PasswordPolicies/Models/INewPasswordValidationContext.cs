@@ -1,4 +1,6 @@
-﻿namespace Cofoundry.Domain
+﻿using Cofoundry.Domain.CQS;
+
+namespace Cofoundry.Domain
 {
     /// <summary>
     /// Describes a request to validate a new password for a user, including any
@@ -46,5 +48,10 @@
         /// if the user are does not require an email and one has not been supplied.
         /// </summary>
         public string Email { get; }
+
+        /// <summary>
+        /// The context of the currently executing query or command.
+        /// </summary>
+        public IExecutionContext ExecutionContext { get; }
     }
 }

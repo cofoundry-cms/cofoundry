@@ -41,7 +41,17 @@ namespace Cofoundry.Domain.Internal
             return DomainRepositoryQueryContextFactory.Create(query, ExtendableContentRepository);
         }
 
-        public IDomainRepositoryQueryContext<bool> IsEmailUnique(IsEmailUniqueQuery query)
+        public IDomainRepositoryQueryContext<ValidationQueryResult> ValidateUsername(ValidateUsernameQuery query)
+        {
+            return DomainRepositoryQueryContextFactory.Create(query, ExtendableContentRepository);
+        }
+
+        public IDomainRepositoryQueryContext<bool> IsEmailAddressUnique(IsUserEmailAddressUniqueQuery query)
+        {
+            return DomainRepositoryQueryContextFactory.Create(query, ExtendableContentRepository);
+        }
+
+        public IDomainRepositoryQueryContext<ValidationQueryResult> ValidateEmailAddress(ValidateUserEmailAddressQuery query)
         {
             return DomainRepositoryQueryContextFactory.Create(query, ExtendableContentRepository);
         }

@@ -2,13 +2,10 @@
 using Cofoundry.Domain.Tests.Shared;
 using FluentAssertions;
 using FluentAssertions.Execution;
-using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace Cofoundry.Domain.Tests
+namespace Cofoundry.Domain.Tests.Users.Services
 {
     public abstract class UserSessionServiceTests
     {
@@ -187,7 +184,7 @@ namespace Cofoundry.Domain.Tests
             {
                 new TestUserArea1(), new TestUserArea2()
             };
-            
+
             return new UserAreaDefinitionRepository(areas, new IdentitySettings());
         }
     }

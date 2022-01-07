@@ -8,7 +8,7 @@ namespace Cofoundry.Domain
     /// addresses must be unique per user area and can therefore appear in multiple
     /// user areas.
     /// </summary>
-    public class IsEmailUniqueQuery : IQuery<bool>
+    public class IsUserEmailAddressUniqueQuery : IQuery<bool>
     {
         /// <summary>
         /// The <see cref="IUserAreaDefinition.UserAreaCode"/> of the user area to check.
