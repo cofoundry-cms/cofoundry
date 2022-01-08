@@ -1,4 +1,5 @@
-﻿using FluentAssertions;
+﻿using Cofoundry.Domain.Tests.Shared.SeedData;
+using FluentAssertions;
 using FluentAssertions.Execution;
 using Microsoft.Extensions.DependencyInjection;
 using System.Linq;
@@ -158,6 +159,44 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Queries
                 .ExecuteAsync();
 
             AssertErrorMessage(result, "not-unique", "* already registered.");
+        }
+
+        [Fact]
+        public async Task WhenNotRequiredUnique_DoesNotValidateUnique()
+        {
+            var uniqueData = "NotUniq_NValUnq" + UNIQUE_DOMAIN;
+
+            var identitySettings = new IdentitySettings();
+            identitySettings.EmailAddress.RequireUnique = false;
+            using var app = _appFactory.Create(s =>
+            {
+                s.AddSingleton(identitySettings);
+            });
+
+            var contentRepository = app.Services.GetContentRepositoryWithElevatedPermissions();
+            var roleId = await app.TestData.Roles().AddAsync(uniqueData, UserAreaWithoutEmailAsUsername.Code);
+
+            await contentRepository
+                .Users()
+                .AddAsync(new AddUserCommand()
+                {
+                    Email = uniqueData,
+                    Username = uniqueData,
+                    UserAreaCode = UserAreaWithoutEmailAsUsername.Code,
+                    RoleId = roleId,
+                    Password = nameof(ValidateUserEmailAddressQueryHandlerTests)
+                });
+
+            var result = await contentRepository
+                .Users()
+                .ValidateEmailAddress(new ValidateUserEmailAddressQuery()
+                {
+                    UserAreaCode = UserAreaWithoutEmailAsUsername.Code,
+                    Email = uniqueData
+                })
+                .ExecuteAsync();
+
+            result.IsValid.Should().BeTrue();
         }
 
         private static void AssertErrorMessage(ValidationQueryResult result, string codeSuffix, string messagePattern)

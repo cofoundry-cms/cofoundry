@@ -405,11 +405,17 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Commands
         }
 
         [Fact]
-        public async Task WithoutEmailAsUsername_ValidatesEmailUnique()
+        public async Task WhenEmailRequiredUnique_ValidatesEmailUnique()
         {
-            var uniqueData = UNIQUE_PREFIX + "WOEmailUN_ValEmailUnique";
+            var uniqueData = UNIQUE_PREFIX + "EmailReqUniq_ValEmailUnique";
 
-            using var app = _appFactory.Create();
+            var identitySettings = new IdentitySettings();
+            identitySettings.EmailAddress.RequireUnique = true;
+            using var app = _appFactory.Create(s =>
+            {
+                s.AddSingleton(identitySettings);
+            });
+
             var contentRepository = app.Services.GetContentRepositoryWithElevatedPermissions();
             var dbContext = app.Services.GetRequiredService<CofoundryDbContext>();
             var userAreaCode = UserAreaWithoutEmailAsUsername.Code;
@@ -436,6 +442,45 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Commands
                 .ThrowAsync<ValidationErrorException>()
                 .WithMemberNames(nameof(command.Email))
                 .WithMessage("*email*already*registered*");
+        }
+
+        [Fact]
+        public async Task WhenEmailNotRequiredUnique_CanAddSameEmail()
+        {
+            var uniqueData = UNIQUE_PREFIX + "EmailNotReqUniq_CanAddSameEmail";
+
+            using var app = _appFactory.Create();
+            var contentRepository = app.Services.GetContentRepositoryWithElevatedPermissions();
+            var dbContext = app.Services.GetRequiredService<CofoundryDbContext>();
+            var userAreaCode = UserAreaWithoutEmailAsUsername.Code;
+            var roleId = await app.TestData.Roles().AddAsync(uniqueData, userAreaCode);
+
+            var command = new AddUserCommand()
+            {
+                Email = uniqueData + EMAIL_DOMAIN,
+                Username = uniqueData,
+                Password = PASSWORD,
+                RoleId = roleId,
+                UserAreaCode = userAreaCode
+            };
+
+            await contentRepository
+                .Users()
+                .AddAsync(command);
+            command.Username = uniqueData + "2";
+            command.OutputUserId = 0;
+
+            await contentRepository
+                .Users()
+                .AddAsync(command);
+
+            var user = await dbContext
+                .Users
+                .AsNoTracking()
+                .FilterById(command.OutputUserId)
+                .SingleOrDefaultAsync();
+
+            user.Should().NotBeNull();
         }
 
         [Fact]

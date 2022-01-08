@@ -301,8 +301,7 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Commands
             using var app = _appFactory.Create();
             var contentRepository = app.Services.GetContentRepository();
             var loginService = app.Services.GetRequiredService<ILoginService>();
-            var userAreaCode = UserAreaWithoutEmailAsUsername.Code;
-            var roleId = await app.TestData.Roles().AddAsync(uniqueData, userAreaCode);
+            var userArea = app.SeededEntities.TestUserArea1;
 
             await contentRepository
                 .WithElevatedPermissions()
@@ -310,10 +309,9 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Commands
                 .AddAsync(new AddUserCommand()
                 {
                     Email = uniqueData + EMAIL_DOMAIN,
-                    Username = uniqueData,
                     Password = PASSWORD,
-                    RoleId = roleId,
-                    UserAreaCode = userAreaCode
+                    RoleCode = userArea.RoleA.RoleCode,
+                    UserAreaCode = userArea.UserAreaCode
                 });
 
             var userId = await contentRepository
@@ -322,10 +320,9 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Commands
                 .AddAsync(new AddUserCommand()
                 {
                     Email = uniqueData + "2" + EMAIL_DOMAIN,
-                    Username = uniqueData + "2",
                     Password = PASSWORD,
-                    RoleId = roleId,
-                    UserAreaCode = userAreaCode
+                    RoleCode = userArea.RoleA.RoleCode,
+                    UserAreaCode = userArea.UserAreaCode
                 });
 
             var updateCommand = new UpdateCurrentUserAccountCommand()
@@ -333,7 +330,7 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Commands
                 Email = uniqueData + EMAIL_DOMAIN,
             };
 
-            await loginService.LogAuthenticatedUserInAsync(userAreaCode, userId, true);
+            await loginService.LogAuthenticatedUserInAsync(userArea.UserAreaCode, userId, true);
 
             await contentRepository
                 .Awaiting(r => r.Users().Current().UpdateAsync(updateCommand))

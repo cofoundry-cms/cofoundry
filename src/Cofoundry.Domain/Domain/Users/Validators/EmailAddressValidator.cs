@@ -135,6 +135,10 @@ namespace Cofoundry.Domain.Extendable
         /// </summary>
         protected virtual async Task<ValidationError> ValidateUniqueAsync(IEmailAddressValidationContext context)
         {
+            var userArea = _userAreaDefinitionRepository.GetRequiredByCode(context.UserAreaCode);
+            var options = _userAreaDefinitionRepository.GetOptionsByCode(context.UserAreaCode).EmailAddress;
+            if (!options.RequireUnique && !userArea.UseEmailAsUsername) return null;
+
             var query = new IsUserEmailAddressUniqueQuery()
             {
                 Email = context.Email.UniqueEmailAddress,
