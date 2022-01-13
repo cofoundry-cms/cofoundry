@@ -52,7 +52,7 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Queries
         {
             var uniqueData = UNIQUE_PREFIX + nameof(WhenTooLong_ReturnsInvalid);
 
-            var identitySettings = new IdentitySettings();
+            var identitySettings = new UsersSettings();
             identitySettings.Username.MaxLength = 15;
             using var app = _appFactory.Create(s =>
             {
@@ -77,7 +77,7 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Queries
         {
             var uniqueData = UNIQUE_PREFIX + "2S";
 
-            var identitySettings = new IdentitySettings();
+            var identitySettings = new UsersSettings();
             identitySettings.Username.MinLength = uniqueData.Length + 1;
             using var app = _appFactory.Create(s =>
             {
@@ -102,7 +102,7 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Queries
         {
             var uniqueData = UNIQUE_PREFIX + nameof(WhenInvalidFormat_ReturnsInvalid);
 
-            var identitySettings = new IdentitySettings();
+            var identitySettings = new UsersSettings();
             identitySettings.Username.AllowAnyCharacter = false;
             identitySettings.Username.AllowAnyLetter = false;
             using var app = _appFactory.Create(s =>

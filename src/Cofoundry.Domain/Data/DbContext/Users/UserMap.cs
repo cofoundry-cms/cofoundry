@@ -2,7 +2,6 @@ using Cofoundry.Core;
 using Cofoundry.Core.EntityFramework;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using System;
 
 namespace Cofoundry.Domain.Data
 {
@@ -38,6 +37,10 @@ namespace Cofoundry.Domain.Data
             builder.Property(s => s.UserAreaCode)
                 .IsRequired()
                 .IsCharType(3);
+
+            builder.Property(s => s.SecurityStamp)
+                .IsRequired()
+                .IsNVarCharMaxType();
 
             // Relationships
 

@@ -42,9 +42,16 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Commands
                 OldPassword = OLD_PASSWORD
             };
 
-           
+            User originalUserState;
             using (var app = _appFactory.Create())
             {
+                var dbContext = app.Services.GetService<CofoundryDbContext>();
+                originalUserState = await dbContext
+                    .Users
+                    .AsNoTracking()
+                    .FilterById(userId)
+                    .SingleOrDefaultAsync();
+
                 app.Mocks.MockDateTime(updateDate);
 
                 var loginService = app.Services.GetService<ILoginService>();
@@ -54,38 +61,39 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Commands
                 await repository.ExecuteCommandAsync(command);
             }
 
-            var query = new GetUserLoginInfoIfAuthenticatedQuery()
-            {
-                UserAreaCode = TestUserArea1.Code,
-                Username = username,
-                Password = NEW_PASSWORD
-            };
-
-            UserLoginInfoAuthenticationResult result;
+            UserLoginInfoAuthenticationResult authResult;
             User user = null;
 
             using (var app = _appFactory.Create())
             {
                 var repository = app.Services.GetService<IDomainRepository>();
                 var dbContext = app.Services.GetService<CofoundryDbContext>();
-                result = await repository.ExecuteQueryAsync(query);
 
-                if (result?.User != null)
+                // Use the auth query to verify the password has been changed
+                authResult = await repository.ExecuteQueryAsync(new GetUserLoginInfoIfAuthenticatedQuery()
+                {
+                    UserAreaCode = TestUserArea1.Code,
+                    Username = username,
+                    Password = NEW_PASSWORD
+                });
+
+                if (authResult?.User != null)
                 {
                     user = await dbContext
                         .Users
                         .AsNoTracking()
-                        .SingleOrDefaultAsync(u => u.UserId == result.User.UserId);
+                        .SingleOrDefaultAsync(u => u.UserId == authResult.User.UserId);
                 }
             }
 
             using (new AssertionScope())
             {
-                result.Should().NotBeNull();
-                result.User.Should().NotBeNull();
-                result.User.RequirePasswordChange.Should().BeFalse();
-                result.User.IsEmailConfirmed.Should().BeFalse();
+                authResult.Should().NotBeNull();
+                authResult.IsSuccess.Should().BeTrue();
+                user.RequirePasswordChange.Should().BeFalse();
+                user.IsEmailConfirmed.Should().BeFalse();
                 user.LastPasswordChangeDate.Should().Be(updateDate);
+                user.SecurityStamp.Should().NotBeNull().And.NotBe(originalUserState.SecurityStamp);
             }
         }
 
@@ -153,6 +161,38 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Commands
                 .Awaiting(r => r.ExecuteCommandAsync(command))
                 .Should()
                 .ThrowAsync<EntityNotFoundException<User>>();
+        }
+
+        [Fact]
+        public async Task SendsMessage()
+        {
+            var username = "SendsMessage" + TEST_DOMAIN;
+            var userId = await AddUserIfNotExistsAsync(username);
+
+            using var app = _appFactory.Create();
+            var contentRepository = app.Services.GetContentRepository();
+            var loginService = app.Services.GetRequiredService<ILoginService>();
+
+            await loginService.LogAuthenticatedUserInAsync(TestUserArea1.Code, userId, false);
+            await contentRepository
+                .Users()
+                .Current()
+                .UpdatePasswordAsync(new UpdateCurrentUserPasswordCommand()
+                {
+                    NewPassword = NEW_PASSWORD,
+                    OldPassword = OLD_PASSWORD
+                });
+
+            using (new AssertionScope())
+            {
+                app.Mocks
+                    .CountMessagesPublished<UserPasswordUpdatedMessage>(m => m.UserId == userId && m.UserAreaCode == TestUserArea1.Code)
+                    .Should().Be(1);
+
+                app.Mocks
+                    .CountMessagesPublished<UserSecurityStampUpdatedMessage>(m => m.UserId == userId && m.UserAreaCode == TestUserArea1.Code)
+                    .Should().Be(1);
+            }
         }
 
         private async Task<int> AddUserIfNotExistsAsync(string username)

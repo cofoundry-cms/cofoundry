@@ -326,3 +326,12 @@ create unique index UIX_User_UniqueUsername on Cofoundry.[User] (UserAreaCode, U
 
 go
 
+/*
+	#478: Users: Security stamp / session invalidation 
+*/
+
+alter table Cofoundry.[User] add SecurityStamp nvarchar(max) null
+go
+update Cofoundry.[User] set SecurityStamp = convert(nvarchar(max), CRYPT_GEN_RANDOM(16), 2)
+go
+alter table Cofoundry.[User] alter column SecurityStamp nvarchar(max) not null

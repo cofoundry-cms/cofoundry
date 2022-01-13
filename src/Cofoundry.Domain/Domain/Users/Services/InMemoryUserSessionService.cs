@@ -154,5 +154,11 @@ namespace Cofoundry.Domain.Internal
         {
             return _ambientUserAreaCode == userArea.UserAreaCode;
         }
+
+        public Task RefreshLoginAsync(string userAreaCode, int userId)
+        {
+            // No-op: nothing to refresh
+            return Task.CompletedTask;
+        }
     }
 }

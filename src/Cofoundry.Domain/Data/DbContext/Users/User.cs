@@ -90,6 +90,20 @@ namespace Cofoundry.Domain.Data
         public int? PasswordHashVersion { get; set; }
 
         /// <summary>
+        /// <para>
+        /// A random string that gets updated when key user identity fields are changed, such 
+        /// as a password or username. During user session validation this field is checked to
+        /// detect any changes and invalidate any out of date sessions. For example, if I am logged 
+        /// into the admin panel on a Latop and a PC, and change my password on the Laptop session, then
+        /// I would be logged out of the session on the PC.
+        /// </para>
+        /// <para>
+        /// This field is synonymous with the SecurityStamp field in ASP.NET Identity.
+        /// </para>
+        /// </summary>
+        public string SecurityStamp { get; set; }
+
+        /// <summary>
         /// Used for soft deletes so we can maintain old relations and
         /// archive data.
         /// </summary>

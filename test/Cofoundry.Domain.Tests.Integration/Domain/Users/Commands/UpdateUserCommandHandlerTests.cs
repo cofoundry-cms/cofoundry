@@ -15,7 +15,6 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Commands
     [Collection(nameof(DbDependentFixtureCollection))]
     public class UpdateUserCommandHandlerTests
     {
-
         private const string UNIQUE_PREFIX = "UpdUsrCHT-";
         private const string PASSWORD = "neverbr3@kthechange";
         private static string EMAIL_DOMAIN = $"@{UNIQUE_PREFIX}.example.com";
@@ -53,6 +52,12 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Commands
                 .Users()
                 .AddAsync(addCommand);
 
+            var originalUserState = await dbContext
+                .Users
+                .AsNoTracking()
+                .FilterById(userId)
+                .SingleOrDefaultAsync();
+
             var updateCommand = MapUpdateCommand(addCommand);
             updateCommand.Email = "E.john@" + alternateDomain;
             updateCommand.FirstName = "Elton";
@@ -87,6 +92,7 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Commands
                 user.IsEmailConfirmed.Should().BeTrue();
                 user.RequirePasswordChange.Should().BeTrue();
                 user.EmailDomain.Name.Should().Be(normalizedDomain);
+                user.SecurityStamp.Should().NotBeNull().And.NotBe(originalUserState.SecurityStamp);
             }
         }
 
@@ -115,6 +121,12 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Commands
                 .Users()
                 .AddAsync(addCommand);
 
+            var originalUserState = await dbContext
+                .Users
+                .AsNoTracking()
+                .FilterById(userId)
+                .SingleOrDefaultAsync();
+
             var updateCommand = MapUpdateCommand(addCommand);
             updateCommand.Email = null;
             updateCommand.FirstName = null;
@@ -140,6 +152,7 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Commands
                 user.EmailDomainId.Should().BeNull();
                 user.Username.Should().Be(addCommand.Username);
                 user.UniqueUsername.Should().Be(addCommand.Username.ToLowerInvariant());
+                user.SecurityStamp.Should().NotBeNull().And.NotBe(originalUserState.SecurityStamp);
             }
         }
 
@@ -393,6 +406,10 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Commands
                 app.Mocks
                     .CountMessagesPublished<UserEmailUpdatedMessage>()
                     .Should().Be(0);
+
+                app.Mocks
+                    .CountMessagesPublished<UserSecurityStampUpdatedMessage>(m => m.UserId == addCommand.OutputUserId && m.UserAreaCode == addCommand.UserAreaCode)
+                    .Should().Be(0);
             }
         }
 
@@ -428,6 +445,10 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Commands
 
                 app.Mocks
                     .CountMessagesPublished<UserUsernameUpdatedMessage>(m => m.UserId == addCommand.OutputUserId && m.UserAreaCode == addCommand.UserAreaCode)
+                    .Should().Be(1);
+
+                app.Mocks
+                    .CountMessagesPublished<UserSecurityStampUpdatedMessage>(m => m.UserId == addCommand.OutputUserId && m.UserAreaCode == addCommand.UserAreaCode)
                     .Should().Be(1);
             }
         }
@@ -471,6 +492,10 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Commands
 
                 app.Mocks
                     .CountMessagesPublished<UserUsernameUpdatedMessage>(m => m.UserId == addCommand.OutputUserId && m.UserAreaCode == addCommand.UserAreaCode)
+                    .Should().Be(1);
+
+                app.Mocks
+                    .CountMessagesPublished<UserSecurityStampUpdatedMessage>(m => m.UserId == addCommand.OutputUserId && m.UserAreaCode == addCommand.UserAreaCode)
                     .Should().Be(1);
             }
         }

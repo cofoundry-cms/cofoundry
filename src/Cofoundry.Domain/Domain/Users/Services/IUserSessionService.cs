@@ -61,5 +61,16 @@ namespace Cofoundry.Domain
         /// </param>
         /// <returns></returns>
         Task SetAmbientUserAreaAsync(string userAreaCode);
+
+        /// <summary>
+        /// Regenerates the user session, refreshing any cached data
+        /// such e.g. claims such as the security token. If the specified
+        /// user is not logged in then no action is taken.
+        /// </summary>
+        /// <param name="userAreaCode">
+        /// Unique code of the user area the user belongs to e.g. "COF" for the Cofundry admin user area.
+        /// </param>
+        /// <param name="userId">Database id of the user to refresh the session for.</param>
+        Task RefreshLoginAsync(string userAreaCode, int userId);
     }
 }

@@ -9,8 +9,8 @@ namespace Cofoundry.Domain.Tests.Users.Services
 {
     public abstract class UserSessionServiceTests
     {
-        const int AREA1_USERID = 2984;
-        const int AREA2_USERID = 838991;
+        protected const int AREA1_USERID = 2984;
+        protected int AREA2_USERID = 838991;
 
         [Fact]
         public void GetCurrentUserId_WhenNotLoggedIn_ReturnsNull()
@@ -150,16 +150,14 @@ namespace Cofoundry.Domain.Tests.Users.Services
         [Fact]
         public async Task SetAmbientUserAreaAsync_WhenChangedToNonDefault_CurrentUserIsAmbient()
         {
-            const int USER1_ID = 123456;
-            const int USER2_ID = 654321;
             var service = CreateService(CreateUserAreaRepository());
 
-            await service.LogUserInAsync(TestUserArea1.Code, USER1_ID, false);
-            await service.LogUserInAsync(TestUserArea2.Code, USER2_ID, false);
+            await service.LogUserInAsync(TestUserArea1.Code, AREA1_USERID, false);
+            await service.LogUserInAsync(TestUserArea2.Code, AREA2_USERID, false);
             await service.SetAmbientUserAreaAsync(TestUserArea2.Code);
             var userId = service.GetCurrentUserId();
 
-            userId.Should().Be(USER2_ID);
+            userId.Should().Be(AREA2_USERID);
         }
 
         [Fact]
@@ -176,6 +174,41 @@ namespace Cofoundry.Domain.Tests.Users.Services
             userId.Should().BeNull();
         }
 
+        [Fact]
+        public async Task RefreshLoginAsync_WhenLoggedIn_KeepsLoggedIn()
+        {
+            var service = CreateService(CreateUserAreaRepository());
+
+            await service.LogUserInAsync(TestUserArea1.Code, AREA1_USERID, true);
+            await service.RefreshLoginAsync(TestUserArea1.Code, AREA1_USERID);
+
+            var currentUserId = service.GetCurrentUserId();
+            var userId = await service.GetUserIdByUserAreaCodeAsync(TestUserArea1.Code);
+
+            using (new AssertionScope())
+            {
+                currentUserId.Should().Be(AREA1_USERID);
+                userId.Should().Be(AREA1_USERID);
+            }
+        }
+
+        [Fact]
+        public async Task RefreshLoginAsync_WhenLoggedOut_DoesNotLogIn()
+        {
+            var service = CreateService(CreateUserAreaRepository());
+
+            await service.RefreshLoginAsync(TestUserArea1.Code, AREA1_USERID);
+
+            var currentUserId = service.GetCurrentUserId();
+            var userId = await service.GetUserIdByUserAreaCodeAsync(TestUserArea1.Code);
+
+            using (new AssertionScope())
+            {
+                currentUserId.Should().BeNull();
+                userId.Should().BeNull();
+            }
+        }
+
         protected abstract IUserSessionService CreateService(IUserAreaDefinitionRepository repository);
 
         protected IUserAreaDefinitionRepository CreateUserAreaRepository()
@@ -185,7 +218,7 @@ namespace Cofoundry.Domain.Tests.Users.Services
                 new TestUserArea1(), new TestUserArea2()
             };
 
-            return new UserAreaDefinitionRepository(areas, new IdentitySettings());
+            return new UserAreaDefinitionRepository(areas, new UsersSettings());
         }
     }
 }

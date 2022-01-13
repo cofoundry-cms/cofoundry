@@ -1,0 +1,57 @@
+﻿using Cofoundry.Core.MessageAggregator;
+using Cofoundry.Domain.Data;
+using System;
+using System.Threading.Tasks;
+
+namespace Cofoundry.Domain.Internal
+{
+    public class UserSecurityStampUpdateHelper : IUserSecurityStampUpdateHelper
+    {
+        private readonly ISecurityStampGenerator _securityStampGenerator;
+        private readonly IUserSessionService _userSessionService;
+        private readonly IMessageAggregator _messageAggregator;
+
+        public UserSecurityStampUpdateHelper(
+            ISecurityStampGenerator securityStampGenerator,
+            IUserSessionService userSessionService,
+            IMessageAggregator messageAggregator
+            )
+        {
+            _securityStampGenerator = securityStampGenerator;
+            _userSessionService = userSessionService;
+            _messageAggregator = messageAggregator;
+        }
+
+        public void Update(User user)
+        {
+            if (user == null) throw new ArgumentNullException(nameof(user));
+
+            user.SecurityStamp = _securityStampGenerator.Generate();
+        }
+
+        public async Task OnTransactionCompleteAsync(User user)
+        {
+            if (user == null) throw new ArgumentNullException(nameof(user));
+
+            var userAreaCode = user.UserArea != null ? user.UserArea.UserAreaCode : user.UserAreaCode;
+
+            if (string.IsNullOrEmpty(userAreaCode))
+            {
+                throw new ArgumentException("User is not assigned to a user area.", nameof(user));
+            }
+
+            if (user.UserId < 1)
+            {
+                throw new ArgumentException("User has not been saved.", nameof(user));
+            }
+
+            await _messageAggregator.PublishAsync(new UserSecurityStampUpdatedMessage()
+            {
+                UserAreaCode = user.UserAreaCode,
+                UserId = user.UserId
+            });
+
+            await _userSessionService.RefreshLoginAsync(user.UserAreaCode, user.UserId);
+        }
+    }
+}

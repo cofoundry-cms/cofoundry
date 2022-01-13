@@ -26,16 +26,22 @@ namespace Cofoundry.Web.Internal
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IUserAreaDefinitionRepository _userAreaDefinitionRepository;
         private readonly IUserContextCache _userContextCache;
+        private readonly IClaimsPrincipalFactory _claimsPrincipalFactory;
+        private readonly IClaimsPrincipalBuilderContextRepository _claimsPrincipalBuilderContextRepository;
 
         public WebUserSessionService(
             IHttpContextAccessor httpContextAccessor,
             IUserAreaDefinitionRepository userAreaDefinitionRepository,
-            IUserContextCache userContextCache
+            IUserContextCache userContextCache,
+            IClaimsPrincipalFactory claimsPrincipalFactory,
+            IClaimsPrincipalBuilderContextRepository claimsPrincipalBuilderContextRepository
             )
         {
             _httpContextAccessor = httpContextAccessor;
             _userAreaDefinitionRepository = userAreaDefinitionRepository;
             _userContextCache = userContextCache;
+            _claimsPrincipalFactory = claimsPrincipalFactory;
+            _claimsPrincipalBuilderContextRepository = claimsPrincipalBuilderContextRepository;
             _inMemoryUserSessionService = new InMemoryUserSessionService(_userAreaDefinitionRepository, _userContextCache);
         }
 
@@ -88,16 +94,8 @@ namespace Cofoundry.Web.Internal
             if (userId < 1) throw new ArgumentOutOfRangeException(nameof(userId));
 
             var userArea = _userAreaDefinitionRepository.GetRequiredByCode(userAreaCode);
-            EntityNotFoundException.ThrowIfNull(userArea, userAreaCode);
-
+            var userPrincipal = await CreateUserPrincipal(userId, userArea);
             var scheme = AuthenticationSchemeNames.UserArea(userArea.UserAreaCode);
-            var claims = new[]
-            {
-                new Claim(ClaimTypes.NameIdentifier, Convert.ToString(userId))
-            };
-
-            var claimsIdentity = new ClaimsIdentity(claims, scheme);
-            var userPrincipal = new ClaimsPrincipal(claimsIdentity);
 
             if (rememberUser)
             {
@@ -147,6 +145,44 @@ namespace Cofoundry.Web.Internal
             await GetUserIdByUserAreaCodeAsync(userAreaCode);
 
             await _inMemoryUserSessionService.SetAmbientUserAreaAsync(userAreaCode);
+        }
+
+        public async Task RefreshLoginAsync(string userAreaCode, int userId)
+        {
+            if (userAreaCode == null) throw new ArgumentNullException(nameof(userAreaCode));
+            if (userId < 1) throw new ArgumentOutOfRangeException(nameof(userId));
+
+            var userArea = _userAreaDefinitionRepository.GetRequiredByCode(userAreaCode);
+            var loggedInUser = await GetUserIdByUserAreaCodeAsync(userAreaCode);
+
+            // Only refresh the login if the user is currently logged in
+            if (loggedInUser != userId) return;
+
+            var scheme = AuthenticationSchemeNames.UserArea(userArea.UserAreaCode);
+
+            var auth = await _httpContextAccessor.HttpContext.AuthenticateAsync(scheme);
+            var isPeristent = auth?.Properties?.IsPersistent ?? false;
+
+            await LogUserInAsync(userAreaCode, userId, isPeristent);
+        }
+
+        private async Task<ClaimsPrincipal> CreateUserPrincipal(int userId, IUserAreaDefinition userArea)
+        {
+            var context = await _claimsPrincipalBuilderContextRepository.GetAsync(userId);
+            EntityNotFoundException.ThrowIfNull(context, userId);
+
+            if (context.UserAreaCode != userArea.UserAreaCode)
+            {
+                throw new InvalidOperationException($"Cannot log user {userId} into user area {userArea.UserAreaCode} because they belong to user area {context.UserAreaCode}");
+            }
+
+            var userPrincipal = await _claimsPrincipalFactory.CreateAsync(context);
+            if (userPrincipal == null)
+            {
+                throw new InvalidOperationException($"{_claimsPrincipalFactory.GetType().Name}.{nameof(_claimsPrincipalFactory.CreateAsync)} did not return a value.");
+            }
+
+            return userPrincipal;
         }
     }
 }

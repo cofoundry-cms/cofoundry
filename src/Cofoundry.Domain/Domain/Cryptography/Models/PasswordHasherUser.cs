@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Cofoundry.Domain
+﻿namespace Cofoundry.Domain.Internal
 {
     /// <summary>
     /// Dummy user class to provide to the Microsoft.AspNetCore.Identity.IPasswordHasher 
     /// used by the PasswordCryptographyService. There's no implementation as it's not 
-    /// required by the defaulty hasher.
+    /// required by the default hasher.
     /// </summary>
     public class PasswordHasherUser
     {

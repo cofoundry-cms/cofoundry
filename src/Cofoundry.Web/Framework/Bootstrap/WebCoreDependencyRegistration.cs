@@ -58,6 +58,10 @@ namespace Cofoundry.Web.Registration
                 .Register<IResourceLocator, WebsiteResourceLocator>(lowPriorityOverrideRegistrationOptions)
                 .Register<IEmptyActionContextFactory, EmptyActionContextFactory>()
                 .RegisterFactory<IStaticResourceFileProvider, StaticResourceFileProvider, StaticResourceFileProviderFactory>(singletonRegistrationOptions)
+
+                .Register<IClaimsPrincipalFactory, ClaimsPrincipalFactory>()
+                .Register<IClaimsPrincipalValidator, ClaimsPrincipalValidator>()
+                .Register<IClaimsPrincipalBuilderContextRepository, ClaimsPrincipalBuilderContextRepository>()
                 ; 
         }
     }

@@ -18,6 +18,7 @@ namespace Cofoundry.Domain.Internal
         private readonly ITransactionScopeManager _transactionScopeManager;
         private readonly IUserContextCache _userContextCache;
         private readonly IUserUpdateCommandHelper _userUpdateCommandHelper;
+        private readonly IUserSecurityStampUpdateHelper _userSecurityStampUpdateHelper;
 
         public UpdateUserCommandHandler(
             CofoundryDbContext dbContext,
@@ -26,7 +27,8 @@ namespace Cofoundry.Domain.Internal
             IPermissionValidationService permissionValidationService,
             ITransactionScopeManager transactionScopeManager,
             IUserContextCache userContextCache,
-            IUserUpdateCommandHelper userUpdateCommandHelper
+            IUserUpdateCommandHelper userUpdateCommandHelper,
+            IUserSecurityStampUpdateHelper userSecurityStampUpdateHelper
             )
         {
             _dbContext = dbContext;
@@ -36,6 +38,7 @@ namespace Cofoundry.Domain.Internal
             _transactionScopeManager = transactionScopeManager;
             _userContextCache = userContextCache;
             _userUpdateCommandHelper = userUpdateCommandHelper;
+            _userSecurityStampUpdateHelper = userSecurityStampUpdateHelper;
         }
 
         public async Task ExecuteAsync(UpdateUserCommand command, IExecutionContext executionContext)
@@ -55,6 +58,11 @@ namespace Cofoundry.Domain.Internal
 
             UpdateProperties(command, user);
 
+            if (updateResult.HasEmailChanged || updateResult.HasUsernameChanged)
+            {
+                _userSecurityStampUpdateHelper.Update(user);
+            }
+
             await _dbContext.SaveChangesAsync();
             await _transactionScopeManager.QueueCompletionTaskAsync(_dbContext, () => OnTransactionComplete(user, updateResult));
         }
@@ -62,6 +70,12 @@ namespace Cofoundry.Domain.Internal
         private async Task OnTransactionComplete(User user, UserUpdateCommandHelper.UpdateEmailAndUsernameResult updateResult)
         {
             _userContextCache.Clear(user.UserId);
+
+            if (updateResult.HasEmailChanged || updateResult.HasUsernameChanged)
+            {
+                await _userSecurityStampUpdateHelper.OnTransactionCompleteAsync(user);
+            }
+
             await _userUpdateCommandHelper.PublishUpdateMessagesAsync(user, updateResult);
         }
 

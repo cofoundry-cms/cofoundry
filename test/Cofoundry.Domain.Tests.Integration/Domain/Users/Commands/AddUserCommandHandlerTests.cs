@@ -81,6 +81,7 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Commands
                 user.Username.Should().Be(command.Email);
                 user.UniqueUsername.Should().Be(lowerEmail);
                 user.EmailDomain.Name.Should().Be("example.com");
+                user.SecurityStamp.Should().NotBeNullOrEmpty().And.HaveLength(32);
             }
         }
 
@@ -409,7 +410,7 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Commands
         {
             var uniqueData = UNIQUE_PREFIX + "EmailReqUniq_ValEmailUnique";
 
-            var identitySettings = new IdentitySettings();
+            var identitySettings = new UsersSettings();
             identitySettings.EmailAddress.RequireUnique = true;
             using var app = _appFactory.Create(s =>
             {

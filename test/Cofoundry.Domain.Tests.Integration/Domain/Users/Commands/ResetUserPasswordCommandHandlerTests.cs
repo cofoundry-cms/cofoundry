@@ -57,6 +57,7 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Commands
                 originalUserState.Password.Should().NotBeNull();
                 user.Password.Should().NotBe(originalUserState.Password);
                 user.LastPasswordChangeDate.Should().BeAfter(originalUserState.LastPasswordChangeDate);
+                user.SecurityStamp.Should().NotBeNull().And.NotBe(originalUserState.SecurityStamp);
             }
         }
 
@@ -122,6 +123,14 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Commands
                 .CountMessagesPublished<UserPasswordResetMessage>(m =>
                 {
                     return m.UserId == userId && m.UserAreaCode == TestUserArea1.Code;
+                })
+                .Should().Be(1);
+
+            app.Mocks
+                .CountMessagesPublished<UserSecurityStampUpdatedMessage>(m =>
+                {
+                    return m.UserId == userId
+                        && m.UserAreaCode == TestUserArea1.Code;
                 })
                 .Should().Be(1);
         }

@@ -1,7 +1,5 @@
 ﻿using Cofoundry.Core;
 using Cofoundry.Core.Data;
-using Cofoundry.Core.Data.Internal;
-using Cofoundry.Core.MessageAggregator;
 using Cofoundry.Domain.CQS;
 using Cofoundry.Domain.Data;
 using Microsoft.EntityFrameworkCore;
@@ -21,21 +19,21 @@ namespace Cofoundry.Domain.Internal
         private readonly ITransactionScopeManager _transactionScopeManager;
         private readonly IPermissionValidationService _permissionValidationService;
         private readonly IUserUpdateCommandHelper _userUpdateCommandHelper;
-        private readonly IMessageAggregator _messageAggregator;
+        private readonly IUserSecurityStampUpdateHelper _userSecurityStampUpdateHelper;
 
         public UpdateCurrentUserAccountCommandHandler(
             CofoundryDbContext dbContext,
             ITransactionScopeManager transactionScopeManager,
             IPermissionValidationService permissionValidationService,
             IUserUpdateCommandHelper userUpdateCommandHelper,
-            IMessageAggregator messageAggregator
+            IUserSecurityStampUpdateHelper userSecurityStampUpdateHelper
             )
         {
             _dbContext = dbContext;
             _transactionScopeManager = transactionScopeManager;
             _permissionValidationService = permissionValidationService;
             _userUpdateCommandHelper = userUpdateCommandHelper;
-            _messageAggregator = messageAggregator;
+            _userSecurityStampUpdateHelper = userSecurityStampUpdateHelper;
         }
 
         public async Task ExecuteAsync(UpdateCurrentUserAccountCommand command, IExecutionContext executionContext)
@@ -54,8 +52,23 @@ namespace Cofoundry.Domain.Internal
             user.FirstName = command.FirstName?.Trim();
             user.LastName = command.LastName?.Trim();
 
+            if (updateResult.HasEmailChanged || updateResult.HasUsernameChanged)
+            {
+                _userSecurityStampUpdateHelper.Update(user);
+            }
+
             await _dbContext.SaveChangesAsync();
-            await _transactionScopeManager.QueueCompletionTaskAsync(_dbContext, () => _userUpdateCommandHelper.PublishUpdateMessagesAsync(user, updateResult));
+            await _transactionScopeManager.QueueCompletionTaskAsync(_dbContext, () => OnTransactionComplete(user, updateResult));
+        }
+
+        private async Task OnTransactionComplete(User user, UserUpdateCommandHelper.UpdateEmailAndUsernameResult updateResult)
+        {
+            if (updateResult.HasEmailChanged || updateResult.HasUsernameChanged)
+            {
+                await _userSecurityStampUpdateHelper.OnTransactionCompleteAsync(user);
+            }
+
+            await _userUpdateCommandHelper.PublishUpdateMessagesAsync(user, updateResult);
         }
 
         public IEnumerable<IPermissionApplication> GetPermissions(UpdateCurrentUserAccountCommand command)

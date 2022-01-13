@@ -26,12 +26,12 @@ namespace Cofoundry.Domain.Internal
         private readonly CofoundryDbContext _dbContext;
         private readonly IMailService _mailService;
         private readonly IDomainRepository _domainRepository;
-        private readonly IQueryExecutor _queryExecutor;
         private readonly IUserMailTemplateBuilderFactory _userMailTemplateBuilderFactory;
         private readonly IPermissionValidationService _permissionValidationService;
         private readonly IUserAreaDefinitionRepository _userAreaDefinitionRepository;
         private readonly IPasswordCryptographyService _passwordCryptographyService;
         private readonly IPasswordGenerationService _passwordGenerationService;
+        private readonly IUserSecurityStampUpdateHelper _userSecurityStampUpdateHelper;
         private readonly IUserContextCache _userContextCache;
         private readonly IMessageAggregator _messageAggregator;
 
@@ -44,6 +44,7 @@ namespace Cofoundry.Domain.Internal
             IUserAreaDefinitionRepository userAreaDefinitionRepository,
             IPasswordCryptographyService passwordCryptographyService,
             IPasswordGenerationService passwordGenerationService,
+            IUserSecurityStampUpdateHelper userSecurityStampUpdateHelper,
             IUserContextCache userContextCache,
             IMessageAggregator messageAggregator
             )
@@ -56,6 +57,7 @@ namespace Cofoundry.Domain.Internal
             _userAreaDefinitionRepository = userAreaDefinitionRepository;
             _passwordCryptographyService = passwordCryptographyService;
             _passwordGenerationService = passwordGenerationService;
+            _userSecurityStampUpdateHelper = userSecurityStampUpdateHelper;
             _userContextCache = userContextCache;
             _messageAggregator = messageAggregator;
         }
@@ -74,6 +76,7 @@ namespace Cofoundry.Domain.Internal
             user.PasswordHashVersion = hashResult.HashVersion;
             user.RequirePasswordChange = true;
             user.LastPasswordChangeDate = executionContext.ExecutionDate;
+            _userSecurityStampUpdateHelper.Update(user);
 
             using (var scope = _domainRepository.Transactions().CreateScope())
             {
@@ -88,6 +91,9 @@ namespace Cofoundry.Domain.Internal
         private async Task OnTransactionComplete(User user)
         {
             _userContextCache.Clear();
+
+            await _userSecurityStampUpdateHelper.OnTransactionCompleteAsync(user);
+
             await _messageAggregator.PublishAsync(new UserPasswordResetMessage()
             {
                 UserAreaCode = user.UserAreaCode,

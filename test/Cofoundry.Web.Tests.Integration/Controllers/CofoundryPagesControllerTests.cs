@@ -5,8 +5,6 @@ using Cofoundry.Domain.Tests.Shared.Assertions;
 using Cofoundry.Domain.Tests.Shared.Mocks;
 using Cofoundry.Web.Tests.Integration.TestWebApp;
 using FluentAssertions;
-using FluentAssertions.Execution;
-using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Net;
@@ -193,9 +191,9 @@ namespace Cofoundry.Web.Tests.Integration.Controllers
             var directoryId = await app.TestData.PageDirectories().AddAsync(uniqueData);
             var pageId = await app.TestData.Pages().AddAsync(uniqueData, directoryId, c => c.Publish = true);
             await app.TestData.Pages().AddAccessRuleAsync(
-                pageId, 
+                pageId,
                 app.SeededEntities.TestUserArea1.UserAreaCode,
-                app.SeededEntities.TestUserArea1.RoleA.RoleId, 
+                app.SeededEntities.TestUserArea1.RoleA.RoleId,
                 c => c.ViolationAction = routeAccessRuleViolationAction
                 );
 
@@ -216,9 +214,9 @@ namespace Cofoundry.Web.Tests.Integration.Controllers
             var directoryId = await app.TestData.PageDirectories().AddAsync(uniqueData);
             var pageId = await app.TestData.Pages().AddAsync(uniqueData, directoryId, c => c.Publish = true);
             await app.TestData.Pages().AddAccessRuleAsync(
-                pageId, 
+                pageId,
                 app.SeededEntities.TestUserArea1.UserAreaCode,
-                null, 
+                null,
                 c => c.UserAreaCodeForLoginRedirect = app.SeededEntities.TestUserArea1.UserAreaCode
                 );
 
@@ -280,9 +278,9 @@ namespace Cofoundry.Web.Tests.Integration.Controllers
             var directoryId = await app.TestData.PageDirectories().AddAsync(uniqueData);
             var pageId = await app.TestData.Pages().AddAsync(uniqueData, directoryId, c => c.Publish = true);
             await app.TestData.PageDirectories().AddAccessRuleAsync(
-                directoryId, 
-                app.SeededEntities.TestUserArea1.UserAreaCode, 
-                null, 
+                directoryId,
+                app.SeededEntities.TestUserArea1.UserAreaCode,
+                null,
                 c => c.ViolationAction = routeAccessRuleViolationAction
                 );
 
@@ -291,7 +289,6 @@ namespace Cofoundry.Web.Tests.Integration.Controllers
             var result = await client.GetAsync($"/{sluggedUniqueData}/{sluggedUniqueData}");
 
             await AssertAccessRuleResponseAsync(result, routeAccessRuleViolationAction);
-
         }
 
         [Fact]
@@ -327,7 +324,7 @@ namespace Cofoundry.Web.Tests.Integration.Controllers
             var directoryId = await app.TestData.PageDirectories().AddAsync(uniqueData);
             var pageId = await app.TestData.Pages().AddAsync(uniqueData, directoryId, c => c.Publish = true);
             await app.TestData.PageDirectories().AddAccessRuleAsync(
-                directoryId, 
+                directoryId,
                 app.SeededEntities.TestUserArea1.UserAreaCode,
                 app.SeededEntities.TestUserArea1.RoleA.RoleId,
                 c => c.ViolationAction = routeAccessRuleViolationAction

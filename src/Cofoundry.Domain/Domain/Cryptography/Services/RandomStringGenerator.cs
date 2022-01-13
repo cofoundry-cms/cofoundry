@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography;
-using System.Text;
 
 namespace Cofoundry.Domain.Internal
 {
@@ -90,11 +88,8 @@ namespace Cofoundry.Domain.Internal
                 throw new ArgumentException($"The {allowedCharacters} argument does not contain any characters that are not in the  {nameof(untrustworthyCharacters)} set ({untrustworthyCharacters})", nameof(allowedCharacters));
             }
 
-            using (var generator = RandomNumberGenerator.Create())
-            {
-                generator.GetBytes(randomBytes);
-            }
-            
+            RandomNumberGenerator.Fill(randomBytes);
+
             for (int i = 0; i < length; i++)
             {
                 if (previousCharacter.HasValue && untrustworthyCharacters.Contains(previousCharacter.Value))

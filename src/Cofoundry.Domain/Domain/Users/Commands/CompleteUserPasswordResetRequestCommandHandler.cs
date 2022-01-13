@@ -25,6 +25,7 @@ namespace Cofoundry.Domain.Internal
         private readonly IUserAreaDefinitionRepository _userAreaDefinitionRepository;
         private readonly IMailService _mailService;
         private readonly IPasswordUpdateCommandHelper _passwordUpdateCommandHelper;
+        private readonly IUserSecurityStampUpdateHelper _userSecurityStampUpdateHelper;
         private readonly IUserMailTemplateBuilderFactory _userMailTemplateBuilderFactory;
         private readonly IUserContextCache _userContextCache;
         private readonly IPasswordPolicyService _newPasswordValidationService;
@@ -36,6 +37,7 @@ namespace Cofoundry.Domain.Internal
             IUserAreaDefinitionRepository userAreaDefinitionRepository,
             IMailService mailService,
             IPasswordUpdateCommandHelper passwordUpdateCommandHelper,
+            IUserSecurityStampUpdateHelper userSecurityStampUpdateHelper,
             IUserMailTemplateBuilderFactory userMailTemplateBuilderFactory,
             IUserContextCache userContextCache,
             IPasswordPolicyService newPasswordValidationService,
@@ -47,6 +49,7 @@ namespace Cofoundry.Domain.Internal
             _userAreaDefinitionRepository = userAreaDefinitionRepository;
             _mailService = mailService;
             _passwordUpdateCommandHelper = passwordUpdateCommandHelper;
+            _userSecurityStampUpdateHelper = userSecurityStampUpdateHelper;
             _userMailTemplateBuilderFactory = userMailTemplateBuilderFactory;
             _userContextCache = userContextCache;
             _newPasswordValidationService = newPasswordValidationService;
@@ -79,6 +82,8 @@ namespace Cofoundry.Domain.Internal
         private async Task OnTransactionComplete(UserPasswordResetRequest request)
         {
             _userContextCache.Clear(request.UserId);
+
+            await _userSecurityStampUpdateHelper.OnTransactionCompleteAsync(request.User);
 
             await _messageAggregator.PublishAsync(new UserPasswordResetCompletedMessage()
             {
@@ -148,6 +153,7 @@ namespace Cofoundry.Domain.Internal
         {
             _passwordUpdateCommandHelper.UpdatePassword(command.NewPassword, request.User, executionContext);
 
+            _userSecurityStampUpdateHelper.Update(request.User);
             request.IsComplete = true;
         }
 

@@ -27,6 +27,7 @@ namespace Cofoundry.Domain.Internal
         private readonly IPasswordPolicyService _newPasswordValidationService;
         private readonly ITransactionScopeManager _transactionScopeFactory;
         private readonly IMessageAggregator _messageAggregator;
+        private readonly ISecurityStampGenerator _securityStampGenerator;
 
         public AddUserCommandHandler(
             CofoundryDbContext dbContext,
@@ -36,7 +37,8 @@ namespace Cofoundry.Domain.Internal
             IUserUpdateCommandHelper userUpdateCommandHelper,
             IPasswordPolicyService newPasswordValidationService,
             ITransactionScopeManager transactionScopeFactory,
-            IMessageAggregator messageAggregator
+            IMessageAggregator messageAggregator,
+            ISecurityStampGenerator securityStampGenerator
             )
         {
             _dbContext = dbContext;
@@ -47,6 +49,7 @@ namespace Cofoundry.Domain.Internal
             _newPasswordValidationService = newPasswordValidationService;
             _transactionScopeFactory = transactionScopeFactory;
             _messageAggregator = messageAggregator;
+            _securityStampGenerator = securityStampGenerator;
         }
 
         public async Task ExecuteAsync(AddUserCommand command, IExecutionContext executionContext)
@@ -65,6 +68,7 @@ namespace Cofoundry.Domain.Internal
                 Role = role,
                 UserArea = dbUserArea,
                 CreatorId = executionContext.UserContext.UserId,
+                SecurityStamp = _securityStampGenerator.Generate()
             };
 
             await _userUpdateCommandHelper.UpdateEmailAndUsernameAsync(command.Email, command.Username, user, executionContext);

@@ -27,6 +27,8 @@ namespace Cofoundry.Domain.Registration
                 .RegisterAllGenericImplementations(typeof(IEmailAddressNormalizer<>))
                 .Register<IEmailAddressValidator, EmailAddressValidator>()
                 .Register<IUsernameValidator, UsernameValidator>()
+                .Register<ISecurityStampGenerator, SecurityStampGenerator>()
+                .Register<IUserSecurityStampUpdateHelper, UserSecurityStampUpdateHelper>()
                 ;
         }
     }

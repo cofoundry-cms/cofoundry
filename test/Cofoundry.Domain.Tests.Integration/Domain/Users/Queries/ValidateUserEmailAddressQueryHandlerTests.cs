@@ -72,7 +72,7 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Queries
         {
             var uniqueData = nameof(WhenTooLong_ReturnsInvalid) + UNIQUE_DOMAIN;
 
-            var identitySettings = new IdentitySettings();
+            var identitySettings = new UsersSettings();
             identitySettings.EmailAddress.MaxLength = 15;
             using var app = _appFactory.Create(s =>
             {
@@ -97,7 +97,7 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Queries
         {
             var uniqueData = "2S" + UNIQUE_DOMAIN;
 
-            var identitySettings = new IdentitySettings();
+            var identitySettings = new UsersSettings();
             identitySettings.EmailAddress.MinLength = uniqueData.Length + 1;
             using var app = _appFactory.Create(s =>
             {
@@ -122,7 +122,7 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Queries
         {
             var uniqueData = nameof(WhenInvalidFormat_ReturnsInvalid) + UNIQUE_DOMAIN;
 
-            var identitySettings = new IdentitySettings();
+            var identitySettings = new UsersSettings();
             identitySettings.EmailAddress.AllowAnyCharacter = false;
             identitySettings.EmailAddress.AllowAnyLetter = false;
             using var app = _appFactory.Create(s =>
@@ -166,7 +166,7 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Queries
         {
             var uniqueData = "NotUniq_NValUnq" + UNIQUE_DOMAIN;
 
-            var identitySettings = new IdentitySettings();
+            var identitySettings = new UsersSettings();
             identitySettings.EmailAddress.RequireUnique = false;
             using var app = _appFactory.Create(s =>
             {

@@ -41,7 +41,7 @@ namespace Cofoundry.Domain
         /// <summary>
         /// Returns a set of <see cref="UserAreaOptions"/> configured for the
         /// specified user area. Option configuration is layered starting with 
-        /// defaults, then layering on global <see cref="IdentitySettings"/> and
+        /// defaults, then layering on global <see cref="UsersSettings"/> and
         /// finally running <see cref="IUserAreaDefinition.ConfigureOptions"/>.
         /// If the definition does not exist then an <see cref="EntityInvalidOperationException"/>
         /// is thrown.

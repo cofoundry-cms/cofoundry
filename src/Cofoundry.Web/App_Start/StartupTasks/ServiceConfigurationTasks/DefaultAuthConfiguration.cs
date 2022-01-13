@@ -1,6 +1,7 @@
 ﻿using Cofoundry.Core;
 using Cofoundry.Domain;
 using Cofoundry.Web.Auth.Internal;
+using Cofoundry.Web.Internal;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
@@ -9,7 +10,7 @@ using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Threading.Tasks;
 
-namespace Cofoundry.Web
+namespace Cofoundry.Web.Extendable
 {
     /// <summary>
     /// <para>
@@ -112,6 +113,7 @@ namespace Cofoundry.Web
             cookieOptions.Cookie.HttpOnly = true;
             cookieOptions.Cookie.IsEssential = true;
             cookieOptions.Cookie.SameSite = SameSiteMode.Lax;
+            cookieOptions.Events.OnValidatePrincipal = ValidateCookiePrincipal;
 
             if (!string.IsNullOrWhiteSpace(schemeRegistrationOptions.UserArea.LoginPath))
             {
@@ -123,6 +125,16 @@ namespace Cofoundry.Web
             }
 
             cookieOptions.Events.OnRedirectToAccessDenied = DefaultDenyAction;
+        }
+
+        /// <summary>
+        /// This method should be applied to the <see cref="CookieAuthenticationOptions.Events.OnValidatePrincipal"/>
+        /// event, delegating the validation to the registered <see cref="IClaimsPrincipalValidator"/>.
+        /// </summary>
+        protected Task ValidateCookiePrincipal(CookieValidatePrincipalContext context)
+        {
+            var claimsPrincipalValidator = context.HttpContext.RequestServices.GetRequiredService<IClaimsPrincipalValidator>();
+            return claimsPrincipalValidator.ValidateAsync(context);
         }
 
         /// <summary>

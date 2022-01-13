@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Linq;
 
 namespace Cofoundry.Domain.Data
 {
@@ -21,7 +17,8 @@ namespace Cofoundry.Domain.Data
 
         /// <summary>
         /// Filters the collection to only include users who have an active
-        /// account (i.e. not deleted)
+        /// account (i.e. not deleted). This includes the system user account; to exclude
+        /// it use <see cref="FilterCanLogIn"/> instead.
         /// </summary>
         public static IQueryable<User> FilterActive(this IQueryable<User> users)
         {

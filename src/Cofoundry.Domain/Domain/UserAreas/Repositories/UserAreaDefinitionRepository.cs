@@ -13,7 +13,7 @@ namespace Cofoundry.Domain.Internal
 
         public UserAreaDefinitionRepository(
             IEnumerable<IUserAreaDefinition> userAreas,
-            IdentitySettings identitySettings
+            UsersSettings identitySettings
             )
         {
             DetectInvalidDefinitions(userAreas);
@@ -133,7 +133,7 @@ namespace Cofoundry.Domain.Internal
             }
         }
 
-        private static Dictionary<string, UserAreaOptions> ConfigureOptions(IEnumerable<IUserAreaDefinition> userAreas, IdentitySettings identitySettings)
+        private static Dictionary<string, UserAreaOptions> ConfigureOptions(IEnumerable<IUserAreaDefinition> userAreas, UsersSettings identitySettings)
         {
             var result = new Dictionary<string, UserAreaOptions>();
 

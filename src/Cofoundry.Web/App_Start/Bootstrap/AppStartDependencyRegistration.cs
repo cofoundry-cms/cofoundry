@@ -1,4 +1,5 @@
 ﻿using Cofoundry.Core.DependencyInjection;
+using Cofoundry.Web.Extendable;
 
 namespace Cofoundry.Web.Registration
 {

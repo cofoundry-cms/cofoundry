@@ -28,7 +28,7 @@ namespace Cofoundry.Web.Tests.Integration.TestWebApp
         /// </param>
         public static Task ImpersonateUserAsync(this HttpClient httpClient, int userId)
         {
-            return httpClient.PostAsync($"/tests/impersonate-user/{userId}", null);
+            return httpClient.PostAsync($"/tests/users/impersonate/{userId}", null);
         }
     }
 }
